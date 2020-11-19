@@ -76,13 +76,22 @@ public interface ModelPackage extends EPackage {
 	int IDENTIFIABLE = 0;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDENTIFIABLE__LASTUPDATE = 0;
+
+	/**
 	 * The number of structural features of the '<em>Identifiable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDENTIFIABLE_FEATURE_COUNT = 0;
+	int IDENTIFIABLE_FEATURE_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.Deleteable <em>Deleteable</em>}' class.
@@ -132,13 +141,22 @@ public interface ModelPackage extends EPackage {
 	int IXID__DELETED = DELETEABLE__DELETED;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IXID__LASTUPDATE = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Domain</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IXID__DOMAIN = DELETEABLE_FEATURE_COUNT + 0;
+	int IXID__DOMAIN = DELETEABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Domain Id</b></em>' attribute.
@@ -147,7 +165,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IXID__DOMAIN_ID = DELETEABLE_FEATURE_COUNT + 1;
+	int IXID__DOMAIN_ID = DELETEABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Quality</b></em>' attribute.
@@ -156,7 +174,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IXID__QUALITY = DELETEABLE_FEATURE_COUNT + 2;
+	int IXID__QUALITY = DELETEABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>IXid</em>' class.
@@ -165,7 +183,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IXID_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 3;
+	int IXID_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IContact <em>IContact</em>}' class.
@@ -176,6 +194,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int ICONTACT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -438,6 +465,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IPERSON = 4;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__LASTUPDATE = ICONTACT__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -774,6 +810,15 @@ public interface ModelPackage extends EPackage {
 	int IORGANIZATION = 5;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__LASTUPDATE = ICONTACT__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1054,6 +1099,15 @@ public interface ModelPackage extends EPackage {
 	int ILABORATORY = 6;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__LASTUPDATE = IORGANIZATION__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1332,6 +1386,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IPATIENT = 7;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__LASTUPDATE = IPERSON__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -1731,6 +1794,15 @@ public interface ModelPackage extends EPackage {
 	int IMANDATOR = 8;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMANDATOR__LASTUPDATE = ICONTACT__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2011,13 +2083,22 @@ public interface ModelPackage extends EPackage {
 	int IUSER__DELETED = DELETEABLE__DELETED;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER__LASTUPDATE = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Username</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__USERNAME = DELETEABLE_FEATURE_COUNT + 0;
+	int IUSER__USERNAME = DELETEABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Hashed Password</b></em>' attribute.
@@ -2026,7 +2107,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__HASHED_PASSWORD = DELETEABLE_FEATURE_COUNT + 1;
+	int IUSER__HASHED_PASSWORD = DELETEABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Salt</b></em>' attribute.
@@ -2035,7 +2116,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__SALT = DELETEABLE_FEATURE_COUNT + 2;
+	int IUSER__SALT = DELETEABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Assigned Contact</b></em>' reference.
@@ -2044,7 +2125,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__ASSIGNED_CONTACT = DELETEABLE_FEATURE_COUNT + 3;
+	int IUSER__ASSIGNED_CONTACT = DELETEABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Roles</b></em>' reference list.
@@ -2053,7 +2134,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__ROLES = DELETEABLE_FEATURE_COUNT + 4;
+	int IUSER__ROLES = DELETEABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Active</b></em>' attribute.
@@ -2062,7 +2143,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__ACTIVE = DELETEABLE_FEATURE_COUNT + 5;
+	int IUSER__ACTIVE = DELETEABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Allow External</b></em>' attribute.
@@ -2071,7 +2152,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__ALLOW_EXTERNAL = DELETEABLE_FEATURE_COUNT + 6;
+	int IUSER__ALLOW_EXTERNAL = DELETEABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Administrator</b></em>' attribute.
@@ -2080,7 +2161,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__ADMINISTRATOR = DELETEABLE_FEATURE_COUNT + 7;
+	int IUSER__ADMINISTRATOR = DELETEABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of structural features of the '<em>IUser</em>' class.
@@ -2089,7 +2170,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 8;
+	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabItem <em>ILab Item</em>}' class.
@@ -2100,6 +2181,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int ILAB_ITEM = 10;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ITEM__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -2274,13 +2364,22 @@ public interface ModelPackage extends EPackage {
 	int ILAB_RESULT__DELETED = DELETEABLE__DELETED;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_RESULT__LASTUPDATE = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Result</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__RESULT = DELETEABLE_FEATURE_COUNT + 0;
+	int ILAB_RESULT__RESULT = DELETEABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Comment</b></em>' attribute.
@@ -2289,7 +2388,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__COMMENT = DELETEABLE_FEATURE_COUNT + 1;
+	int ILAB_RESULT__COMMENT = DELETEABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Reference Male</b></em>' attribute.
@@ -2298,7 +2397,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__REFERENCE_MALE = DELETEABLE_FEATURE_COUNT + 2;
+	int ILAB_RESULT__REFERENCE_MALE = DELETEABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Reference Female</b></em>' attribute.
@@ -2307,7 +2406,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__REFERENCE_FEMALE = DELETEABLE_FEATURE_COUNT + 3;
+	int ILAB_RESULT__REFERENCE_FEMALE = DELETEABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Unit</b></em>' attribute.
@@ -2316,7 +2415,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__UNIT = DELETEABLE_FEATURE_COUNT + 4;
+	int ILAB_RESULT__UNIT = DELETEABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Date</b></em>' attribute.
@@ -2325,7 +2424,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__DATE = DELETEABLE_FEATURE_COUNT + 5;
+	int ILAB_RESULT__DATE = DELETEABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Observation Time</b></em>' attribute.
@@ -2334,7 +2433,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__OBSERVATION_TIME = DELETEABLE_FEATURE_COUNT + 6;
+	int ILAB_RESULT__OBSERVATION_TIME = DELETEABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Analyse Time</b></em>' attribute.
@@ -2343,7 +2442,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__ANALYSE_TIME = DELETEABLE_FEATURE_COUNT + 7;
+	int ILAB_RESULT__ANALYSE_TIME = DELETEABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Transmission Time</b></em>' attribute.
@@ -2352,7 +2451,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__TRANSMISSION_TIME = DELETEABLE_FEATURE_COUNT + 8;
+	int ILAB_RESULT__TRANSMISSION_TIME = DELETEABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Pathologic</b></em>' attribute.
@@ -2361,7 +2460,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__PATHOLOGIC = DELETEABLE_FEATURE_COUNT + 9;
+	int ILAB_RESULT__PATHOLOGIC = DELETEABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Pathologic Description</b></em>' attribute.
@@ -2370,7 +2469,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__PATHOLOGIC_DESCRIPTION = DELETEABLE_FEATURE_COUNT + 10;
+	int ILAB_RESULT__PATHOLOGIC_DESCRIPTION = DELETEABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Origin</b></em>' reference.
@@ -2379,7 +2478,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__ORIGIN = DELETEABLE_FEATURE_COUNT + 11;
+	int ILAB_RESULT__ORIGIN = DELETEABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Item</b></em>' reference.
@@ -2388,7 +2487,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__ITEM = DELETEABLE_FEATURE_COUNT + 12;
+	int ILAB_RESULT__ITEM = DELETEABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Patient</b></em>' reference.
@@ -2397,7 +2496,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__PATIENT = DELETEABLE_FEATURE_COUNT + 13;
+	int ILAB_RESULT__PATIENT = DELETEABLE_FEATURE_COUNT + 14;
 
 	/**
 	 * The number of structural features of the '<em>ILab Result</em>' class.
@@ -2406,7 +2505,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 14;
+	int ILAB_RESULT_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabOrder <em>ILab Order</em>}' class.
@@ -2417,6 +2516,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int ILAB_ORDER = 12;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ORDER__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -2537,13 +2645,22 @@ public interface ModelPackage extends EPackage {
 	int ILAB_MAPPING__DELETED = DELETEABLE__DELETED;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_MAPPING__LASTUPDATE = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Item Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_MAPPING__ITEM_NAME = DELETEABLE_FEATURE_COUNT + 0;
+	int ILAB_MAPPING__ITEM_NAME = DELETEABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Item</b></em>' reference.
@@ -2552,7 +2669,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_MAPPING__ITEM = DELETEABLE_FEATURE_COUNT + 1;
+	int ILAB_MAPPING__ITEM = DELETEABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Origin</b></em>' reference.
@@ -2561,7 +2678,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_MAPPING__ORIGIN = DELETEABLE_FEATURE_COUNT + 2;
+	int ILAB_MAPPING__ORIGIN = DELETEABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Charge</b></em>' attribute.
@@ -2570,7 +2687,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_MAPPING__CHARGE = DELETEABLE_FEATURE_COUNT + 3;
+	int ILAB_MAPPING__CHARGE = DELETEABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>ILab Mapping</em>' class.
@@ -2579,7 +2696,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_MAPPING_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 4;
+	int ILAB_MAPPING_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IDocument <em>IDocument</em>}' class.
@@ -2590,6 +2707,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IDOCUMENT = 14;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -2811,6 +2937,15 @@ public interface ModelPackage extends EPackage {
 	int IDOCUMENT_LETTER = 17;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__LASTUPDATE = IDOCUMENT__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2965,13 +3100,22 @@ public interface ModelPackage extends EPackage {
 	int ISTICKER__DELETED = TypesPackage.COMPARABLE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTICKER__LASTUPDATE = TypesPackage.COMPARABLE_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Background</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__BACKGROUND = TypesPackage.COMPARABLE_FEATURE_COUNT + 1;
+	int ISTICKER__BACKGROUND = TypesPackage.COMPARABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Foreground</b></em>' attribute.
@@ -2980,7 +3124,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__FOREGROUND = TypesPackage.COMPARABLE_FEATURE_COUNT + 2;
+	int ISTICKER__FOREGROUND = TypesPackage.COMPARABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Visible</b></em>' attribute.
@@ -2989,7 +3133,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__VISIBLE = TypesPackage.COMPARABLE_FEATURE_COUNT + 3;
+	int ISTICKER__VISIBLE = TypesPackage.COMPARABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2998,7 +3142,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__NAME = TypesPackage.COMPARABLE_FEATURE_COUNT + 4;
+	int ISTICKER__NAME = TypesPackage.COMPARABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Importance</b></em>' attribute.
@@ -3007,7 +3151,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__IMPORTANCE = TypesPackage.COMPARABLE_FEATURE_COUNT + 5;
+	int ISTICKER__IMPORTANCE = TypesPackage.COMPARABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Image</b></em>' reference.
@@ -3016,7 +3160,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__IMAGE = TypesPackage.COMPARABLE_FEATURE_COUNT + 6;
+	int ISTICKER__IMAGE = TypesPackage.COMPARABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Attached To</b></em>' reference.
@@ -3025,7 +3169,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__ATTACHED_TO = TypesPackage.COMPARABLE_FEATURE_COUNT + 7;
+	int ISTICKER__ATTACHED_TO = TypesPackage.COMPARABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Attached To Data</b></em>' attribute.
@@ -3034,7 +3178,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__ATTACHED_TO_DATA = TypesPackage.COMPARABLE_FEATURE_COUNT + 8;
+	int ISTICKER__ATTACHED_TO_DATA = TypesPackage.COMPARABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The number of structural features of the '<em>ISticker</em>' class.
@@ -3043,7 +3187,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER_FEATURE_COUNT = TypesPackage.COMPARABLE_FEATURE_COUNT + 9;
+	int ISTICKER_FEATURE_COUNT = TypesPackage.COMPARABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}' class.
@@ -3091,6 +3235,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int ICODE_ELEMENT_BLOCK = 20;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICODE_ELEMENT_BLOCK__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3233,13 +3386,22 @@ public interface ModelPackage extends EPackage {
 	int IBILLABLE__TEXT = ICODE_ELEMENT__TEXT;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLABLE__LASTUPDATE = ICODE_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>IBillable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLABLE_FEATURE_COUNT = ICODE_ELEMENT_FEATURE_COUNT + 0;
+	int IBILLABLE_FEATURE_COUNT = ICODE_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>IBillable Verifier</em>' class.
@@ -3276,6 +3438,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int ISERVICE__TEXT = IBILLABLE__TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISERVICE__LASTUPDATE = IBILLABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3351,6 +3522,15 @@ public interface ModelPackage extends EPackage {
 	int ICUSTOM_SERVICE__TEXT = ISERVICE__TEXT;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICUSTOM_SERVICE__LASTUPDATE = ISERVICE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3394,6 +3574,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int ICUSTOM_SERVICE_FEATURE_COUNT = ISERVICE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3559,13 +3748,22 @@ public interface ModelPackage extends EPackage {
 	int IARTICLE_DEFAULT_SIGNATURE__DELETED = DELETEABLE__DELETED;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__LASTUPDATE = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Atc Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE__ATC_CODE = DELETEABLE_FEATURE_COUNT + 0;
+	int IARTICLE_DEFAULT_SIGNATURE__ATC_CODE = DELETEABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Morning</b></em>' attribute.
@@ -3574,7 +3772,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE__MORNING = DELETEABLE_FEATURE_COUNT + 1;
+	int IARTICLE_DEFAULT_SIGNATURE__MORNING = DELETEABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Noon</b></em>' attribute.
@@ -3583,7 +3781,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE__NOON = DELETEABLE_FEATURE_COUNT + 2;
+	int IARTICLE_DEFAULT_SIGNATURE__NOON = DELETEABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Evening</b></em>' attribute.
@@ -3592,7 +3790,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE__EVENING = DELETEABLE_FEATURE_COUNT + 3;
+	int IARTICLE_DEFAULT_SIGNATURE__EVENING = DELETEABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Night</b></em>' attribute.
@@ -3601,7 +3799,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE__NIGHT = DELETEABLE_FEATURE_COUNT + 4;
+	int IARTICLE_DEFAULT_SIGNATURE__NIGHT = DELETEABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Comment</b></em>' attribute.
@@ -3610,7 +3808,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE__COMMENT = DELETEABLE_FEATURE_COUNT + 5;
+	int IARTICLE_DEFAULT_SIGNATURE__COMMENT = DELETEABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Free Text</b></em>' attribute.
@@ -3619,7 +3817,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE__FREE_TEXT = DELETEABLE_FEATURE_COUNT + 6;
+	int IARTICLE_DEFAULT_SIGNATURE__FREE_TEXT = DELETEABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Medication Type</b></em>' attribute.
@@ -3628,7 +3826,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE__MEDICATION_TYPE = DELETEABLE_FEATURE_COUNT + 7;
+	int IARTICLE_DEFAULT_SIGNATURE__MEDICATION_TYPE = DELETEABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Disposal Type</b></em>' attribute.
@@ -3637,7 +3835,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_TYPE = DELETEABLE_FEATURE_COUNT + 8;
+	int IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_TYPE = DELETEABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>End Date</b></em>' attribute.
@@ -3646,7 +3844,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE__END_DATE = DELETEABLE_FEATURE_COUNT + 9;
+	int IARTICLE_DEFAULT_SIGNATURE__END_DATE = DELETEABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>IArticle Default Signature</em>' class.
@@ -3655,7 +3853,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 10;
+	int IARTICLE_DEFAULT_SIGNATURE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}' class.
@@ -3686,13 +3884,22 @@ public interface ModelPackage extends EPackage {
 	int IDIAGNOSIS__TEXT = ICODE_ELEMENT__TEXT;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS__LASTUPDATE = ICODE_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDIAGNOSIS__DESCRIPTION = ICODE_ELEMENT_FEATURE_COUNT + 0;
+	int IDIAGNOSIS__DESCRIPTION = ICODE_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>IDiagnosis</em>' class.
@@ -3701,7 +3908,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDIAGNOSIS_FEATURE_COUNT = ICODE_ELEMENT_FEATURE_COUNT + 1;
+	int IDIAGNOSIS_FEATURE_COUNT = ICODE_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IFreeTextDiagnosis <em>IFree Text Diagnosis</em>}' class.
@@ -3730,6 +3937,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IFREE_TEXT_DIAGNOSIS__TEXT = IDIAGNOSIS__TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IFREE_TEXT_DIAGNOSIS__LASTUPDATE = IDIAGNOSIS__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -3776,6 +3992,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IDIAGNOSIS_REFERENCE__TEXT = IDIAGNOSIS__TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS_REFERENCE__LASTUPDATE = IDIAGNOSIS__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -3831,6 +4056,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IDIAGNOSIS_TREE__TEXT = IDIAGNOSIS__TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS_TREE__LASTUPDATE = IDIAGNOSIS__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -3897,6 +4131,15 @@ public interface ModelPackage extends EPackage {
 	int ICUSTOM_DIAGNOSIS__TEXT = IDIAGNOSIS_TREE__TEXT;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICUSTOM_DIAGNOSIS__LASTUPDATE = IDIAGNOSIS_TREE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3952,13 +4195,22 @@ public interface ModelPackage extends EPackage {
 	int ICOVERAGE__DELETED = DELETEABLE__DELETED;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__LASTUPDATE = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Patient</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__PATIENT = DELETEABLE_FEATURE_COUNT + 0;
+	int ICOVERAGE__PATIENT = DELETEABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -3967,7 +4219,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__DESCRIPTION = DELETEABLE_FEATURE_COUNT + 1;
+	int ICOVERAGE__DESCRIPTION = DELETEABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Reason</b></em>' attribute.
@@ -3976,7 +4228,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__REASON = DELETEABLE_FEATURE_COUNT + 2;
+	int ICOVERAGE__REASON = DELETEABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Date From</b></em>' attribute.
@@ -3985,7 +4237,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__DATE_FROM = DELETEABLE_FEATURE_COUNT + 3;
+	int ICOVERAGE__DATE_FROM = DELETEABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Cost Bearer</b></em>' reference.
@@ -3994,7 +4246,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__COST_BEARER = DELETEABLE_FEATURE_COUNT + 4;
+	int ICOVERAGE__COST_BEARER = DELETEABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Insurance Number</b></em>' attribute.
@@ -4003,7 +4255,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__INSURANCE_NUMBER = DELETEABLE_FEATURE_COUNT + 5;
+	int ICOVERAGE__INSURANCE_NUMBER = DELETEABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Date To</b></em>' attribute.
@@ -4012,7 +4264,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__DATE_TO = DELETEABLE_FEATURE_COUNT + 6;
+	int ICOVERAGE__DATE_TO = DELETEABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Billing Proposal Date</b></em>' attribute.
@@ -4021,7 +4273,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__BILLING_PROPOSAL_DATE = DELETEABLE_FEATURE_COUNT + 7;
+	int ICOVERAGE__BILLING_PROPOSAL_DATE = DELETEABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Encounters</b></em>' reference list.
@@ -4030,7 +4282,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__ENCOUNTERS = DELETEABLE_FEATURE_COUNT + 8;
+	int ICOVERAGE__ENCOUNTERS = DELETEABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Billing System</b></em>' reference.
@@ -4039,7 +4291,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__BILLING_SYSTEM = DELETEABLE_FEATURE_COUNT + 9;
+	int ICOVERAGE__BILLING_SYSTEM = DELETEABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Guarantor</b></em>' reference.
@@ -4048,7 +4300,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__GUARANTOR = DELETEABLE_FEATURE_COUNT + 10;
+	int ICOVERAGE__GUARANTOR = DELETEABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The number of structural features of the '<em>ICoverage</em>' class.
@@ -4057,7 +4309,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 11;
+	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}' class.
@@ -4068,6 +4320,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IBILLING_SYSTEM_FACTOR = 34;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM_FACTOR__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>System</b></em>' attribute.
@@ -4125,6 +4386,15 @@ public interface ModelPackage extends EPackage {
 	int ICONFIG = 35;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONFIG__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4160,6 +4430,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IUSER_CONFIG = 36;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER_CONFIG__LASTUPDATE = ICONFIG__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -4206,6 +4485,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IPERIOD = 37;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERIOD__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4273,6 +4561,15 @@ public interface ModelPackage extends EPackage {
 	int IROLE = 39;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IROLE__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>System Role</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4308,6 +4605,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IBLOB = 40;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4354,6 +4660,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IENCOUNTER = 41;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IENCOUNTER__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4472,6 +4787,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IBILLED = 42;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLED__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4626,6 +4950,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IINVOICE_BILLED = 43;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__LASTUPDATE = IBILLED__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4789,6 +5122,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IINVOICE = 44;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4972,6 +5314,15 @@ public interface ModelPackage extends EPackage {
 	int ISTOCK = 45;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5043,6 +5394,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int ISTOCK_ENTRY = 46;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK_ENTRY__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5136,6 +5496,15 @@ public interface ModelPackage extends EPackage {
 	int IORDER_ENTRY = 47;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER_ENTRY__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5218,6 +5587,15 @@ public interface ModelPackage extends EPackage {
 	int IORDER = 48;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5271,6 +5649,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IADDRESS = 49;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IADDRESS__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5371,6 +5758,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IIMAGE = 50;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}' class.
@@ -5474,6 +5870,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IPRESCRIPTION = 52;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5631,6 +6036,15 @@ public interface ModelPackage extends EPackage {
 	int IRIGHT = 53;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRIGHT__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5723,6 +6137,15 @@ public interface ModelPackage extends EPackage {
 	int IRECIPE = 55;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5796,6 +6219,15 @@ public interface ModelPackage extends EPackage {
 	int IBLOB_SECONDARY = 56;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB_SECONDARY__LASTUPDATE = IBLOB__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5840,6 +6272,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IRELATED_CONTACT = 57;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5915,6 +6356,15 @@ public interface ModelPackage extends EPackage {
 	int IPAYMENT = 58;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5977,6 +6427,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IACCOUNT_TRANSACTION = 59;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -6107,6 +6566,15 @@ public interface ModelPackage extends EPackage {
 	int IMESSAGE = 61;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6207,6 +6675,15 @@ public interface ModelPackage extends EPackage {
 	int ITEXT_TEMPLATE = 62;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6259,6 +6736,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int ITEXT_TEMPLATE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__LASTUPDATE = IPERIOD__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -6440,6 +6926,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int IAPPOINTMENT_SERIES = 64;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT_SERIES__LASTUPDATE = IAPPOINTMENT__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -6711,6 +7206,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getIdentifiable();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.Identifiable#getLastupdate <em>Lastupdate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Lastupdate</em>'.
+	 * @see ch.elexis.core.model.Identifiable#getLastupdate()
+	 * @see #getIdentifiable()
+	 * @generated
+	 */
+	EAttribute getIdentifiable_Lastupdate();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Deleteable <em>Deleteable</em>}'.
@@ -11090,6 +11596,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IDENTIFIABLE = eINSTANCE.getIdentifiable();
+
+		/**
+		 * The meta object literal for the '<em><b>Lastupdate</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDENTIFIABLE__LASTUPDATE = eINSTANCE.getIdentifiable_Lastupdate();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.Deleteable <em>Deleteable</em>}' class.

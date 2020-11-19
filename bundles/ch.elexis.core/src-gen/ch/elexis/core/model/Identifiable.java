@@ -17,6 +17,12 @@ import java.util.List;
  * A representation of the model object '<em><b>Identifiable</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <p>
+ * The following features are supported:
+ * </p>
+ * <ul>
+ *   <li>{@link ch.elexis.core.model.Identifiable#getLastupdate <em>Lastupdate</em>}</li>
+ * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIdentifiable()
  * @model interface="true" abstract="true"
@@ -62,9 +68,12 @@ public interface Identifiable {
 	IXid getXid(String domain);
 
 	/**
+	 * Returns the value of the '<em><b>Lastupdate</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model kind="operation"
+	 * @return the value of the '<em>Lastupdate</em>' attribute.
+	 * @see ch.elexis.core.model.ModelPackage#getIdentifiable_Lastupdate()
+	 * @model unique="false" required="true" changeable="false"
 	 * @generated
 	 */
 	Long getLastupdate();

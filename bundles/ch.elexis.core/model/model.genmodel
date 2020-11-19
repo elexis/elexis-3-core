@@ -9,6 +9,7 @@
   <genPackages prefix="Model" basePackage="ch.elexis.core" disposableProviderFactory="true"
       ecorePackage="model.ecore#/">
     <genClasses image="false" ecoreClass="model.ecore#//Identifiable">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//Identifiable/lastupdate"/>
       <genOperations ecoreOperation="model.ecore#//Identifiable/getId"/>
       <genOperations ecoreOperation="model.ecore#//Identifiable/getLabel"/>
       <genOperations ecoreOperation="model.ecore#//Identifiable/addXid">
@@ -19,7 +20,6 @@
       <genOperations ecoreOperation="model.ecore#//Identifiable/getXid">
         <genParameters ecoreParameter="model.ecore#//Identifiable/getXid/domain"/>
       </genOperations>
-      <genOperations ecoreOperation="model.ecore#//Identifiable/getLastupdate"/>
       <genOperations ecoreOperation="model.ecore#//Identifiable/getChanged"/>
       <genOperations ecoreOperation="model.ecore#//Identifiable/addChanged">
         <genParameters ecoreParameter="model.ecore#//Identifiable/addChanged/changed"/>

@@ -20,7 +20,6 @@
     <eOperations name="getXid" eType="#//IXid">
       <eParameters name="domain" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
-    <eOperations name="getLastupdate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
     <eOperations name="getChanged">
       <eGenericType eClassifier="ecore:EClass types.ecore#//List">
         <eTypeArguments eClassifier="#//Identifiable"/>
@@ -30,6 +29,9 @@
       <eParameters name="changed" eType="#//Identifiable"/>
     </eOperations>
     <eOperations name="clearChanged"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastupdate" unique="false"
+        lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
+        changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Deleteable" abstract="true" interface="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="deleted" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
