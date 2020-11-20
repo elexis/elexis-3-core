@@ -38,6 +38,7 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ui.controls.AbstractSpotlightResultEntryDetailComposite;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.rgw.tools.Money;
 
 public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailComposite {
 	
@@ -195,8 +196,8 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			List<Number> balanceResult =
 				namedQuery.executeWithParameters(namedQuery.getParameterMap("patient", patient));
 			if (!balanceResult.isEmpty()) {
-				Long balance = balanceResult.get(0).longValue();
-				lblBalance.setText("CHF " + balance);
+				Double balance = balanceResult.get(0).doubleValue();
+				lblBalance.setText("CHF " + new Money(balance));
 				return;
 			}
 		}
@@ -298,7 +299,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			IQuery<ICoverage> firstKvgQuery = coreModelService.getQuery(ICoverage.class);
 			firstKvgQuery.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);
 			firstKvgQuery.and("gesetz", COMPARATOR.EQUALS, "KVG");
-			firstKvgQuery.orderBy("lastupdate", ORDER.DESC);
+			firstKvgQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 			firstKvgQuery.limit(1);
 			ICoverage firstKvg = firstKvgQuery.executeSingleResult().orElse(null);
 			IContact guarantor = firstKvg != null ? firstKvg.getGuarantor() : null;
