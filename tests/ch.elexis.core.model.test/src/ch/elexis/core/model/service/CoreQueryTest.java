@@ -359,7 +359,7 @@ public class CoreQueryTest {
 		query = modelService.getQuery(IContact.class);
 		query.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, currentTimeMillis);
 		List<IContact> execute = query.execute();
-		assertEquals(2, execute.size());
+		assertEquals(3, execute.size());
 	}
 	
 	@Test
