@@ -5,9 +5,14 @@ import java.util.function.Consumer;
 
 public interface ISpotlightService {
 	
-	void clearResult();
-	
-	void setSearchTerm(String searchTermin, Map<String, String> searchParams);
+	/**
+	 * Compute the result according to the given parameters. The computation will call the consumer
+	 * registered in {@link #setResultsChangedConsumer(Consumer)} multiple times.
+	 * 
+	 * @param searchInput
+	 * @param contextParameters
+	 */
+	void computeResult(String searchInput, Map<String, String> contextParameters);
 	
 	void setResultsChangedConsumer(Consumer<ISpotlightResult> resultsChangedConsumer);
 	

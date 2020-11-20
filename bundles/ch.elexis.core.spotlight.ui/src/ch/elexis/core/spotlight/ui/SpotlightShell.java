@@ -96,7 +96,7 @@ public class SpotlightShell extends Shell {
 		txtSearchInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtSearchInput.setTextLimit(256);
 		txtSearchInput.addModifyListener(change -> {
-			spotlightService.setSearchTerm(((Text) change.widget).getText(), null);
+			spotlightService.computeResult(((Text) change.widget).getText(), null);
 		});
 		txtSearchInput.addListener(SWT.Traverse, new Listener() {
 			public void handleEvent(Event event){
