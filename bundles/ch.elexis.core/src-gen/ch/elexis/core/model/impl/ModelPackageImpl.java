@@ -5788,6 +5788,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		addEOperation(iEncounterEClass, theTypesPackage.getInvoiceState(), "getInvoiceState", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		addEOperation(iEncounterEClass, ecorePackage.getEString(), "getHeadVersionInPlaintext", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iBilledEClass, IBilled.class, "IBilled", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIBilled_Billable(), this.getIBillable(), null, "billable", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIBilled_Encounter(), this.getIEncounter(), null, "encounter", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

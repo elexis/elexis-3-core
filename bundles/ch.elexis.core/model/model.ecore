@@ -632,6 +632,11 @@
       <eParameters name="billed" lowerBound="1" eType="#//IBilled"/>
     </eOperations>
     <eOperations name="getInvoiceState" eType="ecore:EDataType types.ecore#//InvoiceState"/>
+    <eOperations name="getHeadVersionInPlaintext" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Returns the head version of the consultation text in plaintext (masking possible SamDas XML formatting). Returns empty string if none found."/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeStamp" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">

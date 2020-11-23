@@ -304,4 +304,15 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 */
 	InvoiceState getInvoiceState();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns the head version of the consultation text in plaintext (masking possible SamDas XML formatting). Returns empty string if none found.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	String getHeadVersionInPlaintext();
+
 } // IEncounter
