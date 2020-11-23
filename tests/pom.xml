@@ -18,6 +18,7 @@
 		<tycho.showEclipseLog>false</tycho.showEclipseLog>
 		<maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
 		<elexis.ui.test.vmargs>-debug -DjdbcLink=org.h2.Driver:mem:mem_test;AUTO_SERVER=TRUE -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Delexis.test.mode=true</elexis.ui.test.vmargs>
+		<trimStackTrace>false</trimStackTrace>
 	</properties>
 
 	<modules>
