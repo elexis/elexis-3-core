@@ -421,6 +421,7 @@
         <genParameters ecoreParameter="model.ecore#//IEncounter/removeBilled/billed"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//IEncounter/getInvoiceState"/>
+      <genOperations ecoreOperation="model.ecore#//IEncounter/getHeadVersionInPlaintext"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBilled">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IBilled/billable"/>

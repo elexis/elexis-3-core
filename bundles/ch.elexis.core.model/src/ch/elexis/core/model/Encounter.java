@@ -17,6 +17,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.service.holder.ContextServiceHolder;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.VersionedResource;
 
 public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
@@ -213,5 +214,33 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		}
 		statusText += getInvoiceState().getLocaleText();
 		return statusText;
+	}
+	
+	@Override
+	public String getHeadVersionInPlaintext(){
+		String head = getVersionedEntry().getHead();
+		if (head != null) {
+			if (head.startsWith("<")) {
+				Samdas samdas = new Samdas(head);
+				String recordText = samdas.getRecordText();
+				recordText = maskHTML(recordText);
+				return recordText;
+			}
+			return head.trim();
+		}
+		return "";
+	}
+	
+	/**
+	 * From ch.elexis.core.ui.actions.HistoryLoader
+	 * 
+	 * @param input
+	 * @return
+	 */
+	private String maskHTML(String input){
+		String s = input.replaceAll("<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
+		s = s.replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$
+		s = s.replaceAll("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
+		return s;
 	}
 }
