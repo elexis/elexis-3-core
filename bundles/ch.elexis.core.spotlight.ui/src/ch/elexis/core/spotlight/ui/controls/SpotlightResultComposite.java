@@ -1,22 +1,23 @@
 package ch.elexis.core.spotlight.ui.controls;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import ch.elexis.core.spotlight.ISpotlightService;
-import ch.elexis.core.spotlight.ui.SpotlightUiUtil;
-
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.SWT;
+import ch.elexis.core.spotlight.ui.internal.ISpotlightResultEntryDetailCompositeService;
+import ch.elexis.core.spotlight.ui.internal.SpotlightUiUtil;
 
 public class SpotlightResultComposite extends Composite {
 	
 	private SpotlightResultListComposite resultListComposite;
 	private SpotlightResultDetailComposite resultDetailComposite;
 	
-	public SpotlightResultComposite(Composite parent, int style,
-		ISpotlightService spotlightService, SpotlightUiUtil uiUtil){
+	public SpotlightResultComposite(Composite parent, int style, ISpotlightService spotlightService,
+		SpotlightUiUtil uiUtil,
+		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService){
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(2, false);
 		gridLayout.marginHeight = 0;
@@ -26,12 +27,14 @@ public class SpotlightResultComposite extends Composite {
 		Label lblSeparator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		lblSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		resultListComposite = new SpotlightResultListComposite(this, SWT.NONE, spotlightService, uiUtil);
+		resultListComposite =
+			new SpotlightResultListComposite(this, SWT.NONE, spotlightService, uiUtil);
 		GridData gd_list = new GridData(SWT.LEFT, SWT.FILL, false, true, 1, 1);
 		gd_list.widthHint = 300;
 		resultListComposite.setLayoutData(gd_list);
 		
-		resultDetailComposite = new SpotlightResultDetailComposite(this, style);
+		resultDetailComposite =
+			new SpotlightResultDetailComposite(this, style, resultEntryDetailCompositeService);
 		GridData gd_resultDetailComposite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_resultDetailComposite.widthHint = 400;
 		resultDetailComposite.setLayoutData(gd_resultDetailComposite);

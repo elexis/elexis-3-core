@@ -1,4 +1,4 @@
-package ch.elexis.core.spotlight.ui;
+package ch.elexis.core.spotlight.ui.internal;
 
 import java.net.URL;
 
@@ -26,6 +26,7 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 public class SpotlightShell extends Shell {
 	
 	private ISpotlightService spotlightService;
+	private ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService;
 	
 	private Text txtSearchInput;
 	private SpotlightResultComposite resultComposite;
@@ -33,9 +34,11 @@ public class SpotlightShell extends Shell {
 	
 	private SpotlightUiUtil uiUtil;
 	
-	public SpotlightShell(Shell shell, ISpotlightService spotlightService){
+	public SpotlightShell(Shell shell, ISpotlightService spotlightService,
+		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService){
 		super(shell, SWT.NO_TRIM | SWT.TOOL);
 		this.spotlightService = spotlightService;
+		this.resultEntryDetailCompositeService = resultEntryDetailCompositeService;
 		
 		// ESC closes the shell
 		addListener(SWT.Traverse, event -> {
@@ -110,7 +113,8 @@ public class SpotlightShell extends Shell {
 			}
 		});
 		
-		resultComposite = new SpotlightResultComposite(this, SWT.NONE, spotlightService, uiUtil);
+		resultComposite = new SpotlightResultComposite(this, SWT.NONE, spotlightService, uiUtil,
+			resultEntryDetailCompositeService);
 		resultCompositeGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 		resultCompositeGridData.exclude = true;
 		resultComposite.setLayoutData(resultCompositeGridData);

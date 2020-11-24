@@ -17,9 +17,8 @@ public interface ISpotlightResult {
 	 * @param category this entry belongs to
 	 * @param label to show for the result
 	 * @param identifierString info on how to load this object, differs by category
-	 * @param iconUri
 	 */
-	void addEntry(Category category, String label, String identifierString, @Nullable String iconUri);
+	void addEntry(Category category, String label, String identifierString, @Nullable Object loadedObject);
 	
 	Set<Category> hasResultsIn();
 	

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" immediate="true" name="ch.elexis.core.spotlight.ui.internal.SpotlightResultEntryDetailCompositeService">
+   <service>
+      <provide interface="ch.elexis.core.spotlight.ui.internal.ISpotlightResultEntryDetailCompositeService"/>
+   </service>
+   <reference bind="bind" cardinality="0..n" field="spotlightResultEntryDetailDialogCompositContributors" interface="ch.elexis.core.spotlight.ui.ISpotlightResultEntryDetailCompositeContributor" name="spotlightResultEntryDetailDialogCompositContributors" policy="dynamic" policy-option="greedy" unbind="unbind"/>
+   <implementation class="ch.elexis.core.spotlight.ui.internal.SpotlightResultEntryDetailCompositeService"/>
+</scr:component>

@@ -3,6 +3,7 @@ package ch.elexis.core.spotlight.ui.controls.detail;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -36,11 +37,14 @@ import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
+import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
+import ch.elexis.core.spotlight.ui.ISpotlightResultEntryDetailComposite;
 import ch.elexis.core.spotlight.ui.controls.AbstractSpotlightResultEntryDetailComposite;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.rgw.tools.Money;
 
-public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailComposite {
+public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailComposite
+		implements ISpotlightResultEntryDetailComposite {
 	
 	@Inject
 	private IStickerService stickerService;
@@ -173,8 +177,13 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		
 		IPatient patient = null;
 		if (resultEntry != null) {
-			String patientId = resultEntry.getIdentifierString();
-			patient = coreModelService.load(patientId, IPatient.class).orElse(null);
+			Optional<Object> object = resultEntry.getObject();
+			if (!object.isPresent()) {
+				String patientId = resultEntry.getLoaderString();
+				patient = coreModelService.load(patientId, IPatient.class).orElse(null);
+			} else {
+				patient = (IPatient) object.get();
+			}
 		}
 		
 		clearPopulateStickerComposite(patient);
@@ -210,8 +219,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			IEncounter lastEncounter = encounterService.getLatestEncounter(patient).orElse(null);
 			if (lastEncounter != null) {
 				lblLastEncounter.setText("Letzte Konsultation " + lastEncounter.getDate());
-				String encounterText = lastEncounter.getVersionedEntry().getHead();
-				encounterText = util.parseEncounterText(encounterText);
+				String encounterText = lastEncounter.getHeadVersionInPlaintext();
 				lblLastEncounterText.setText(StringUtils.abbreviate(encounterText, 200));
 			} else {
 				lblLastEncounter.setText("Letzte Konsultation");
@@ -342,6 +350,11 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			}
 		}
 		lastLaboratoryComposite.layout();
+	}
+	
+	@Override
+	public Category appliedForCategory(){
+		return Category.PATIENT;
 	}
 	
 }

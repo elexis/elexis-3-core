@@ -6,7 +6,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import ch.elexis.core.model.IAppointment;
-import ch.elexis.core.text.model.Samdas;
 
 public class PatientDetailCompositeUtil {
 	
@@ -37,38 +36,5 @@ public class PatientDetailCompositeUtil {
 		}
 		composite.layout();
 	}
-	
-	/**
-	 * Extracted from ch.elexis.core.ui.actions.HistoryLoader
-	 * 
-	 * @param encounterText
-	 * @param multiline
-	 * @return
-	 */
-	String parseEncounterText(String encounterText){
-		System.out.println(encounterText);
-		if (encounterText != null) { 
-			if(encounterText.startsWith("<")) {
-				Samdas samdas = new Samdas(encounterText);
-				String recordText = samdas.getRecordText();
-				recordText = maskHTML(recordText);
-				return recordText;
-			}
-			return encounterText.trim();
-		}
-		return "";
-	}
-	
-	/**
-	 * From ch.elexis.core.ui.actions.HistoryLoader
-	 * 
-	 * @param input
-	 * @return
-	 */
-	private String maskHTML(String input){
-		String s = input.replaceAll("<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
-		s = s.replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$
-		s = s.replaceAll("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
-		return s;
-	}
+
 }

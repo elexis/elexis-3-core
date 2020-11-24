@@ -11,15 +11,18 @@ import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
 public class SpotlightResult implements ISpotlightResult {
 	
 	private Set<ISpotlightResultEntry> patientEntries;
+	private Set<ISpotlightResultEntry> encounterEntries;
 	
 	public SpotlightResult(){
 		patientEntries = Collections.synchronizedSet(new HashSet<>());
+		encounterEntries = Collections.synchronizedSet(new HashSet<>());
 	}
 	
 	@Override
-	public void addEntry(Category category, String label, String storeToString, String iconUri){
+	public void addEntry(Category category, String label, String storeToString,
+		Object loadedObject){
 		ISpotlightResultEntry entry =
-			new SpotlightResultEntry(category, label, storeToString, iconUri);
+			new SpotlightResultEntry(category, label, storeToString, loadedObject);
 		
 		switch (category) {
 		case PATIENT:
@@ -29,7 +32,7 @@ public class SpotlightResult implements ISpotlightResult {
 			
 			break;
 		case ENCOUNTER:
-			
+			encounterEntries.add(entry);
 			break;
 		case LETTER:
 			
@@ -43,6 +46,7 @@ public class SpotlightResult implements ISpotlightResult {
 	@Override
 	public void clear(){
 		patientEntries.clear();
+		encounterEntries.clear();
 	}
 	
 	@Override
@@ -50,6 +54,9 @@ public class SpotlightResult implements ISpotlightResult {
 		Set<Category> usedCategories = new HashSet<ISpotlightResultEntry.Category>(4);
 		if (patientEntries.size() > 0) {
 			usedCategories.add(Category.PATIENT);
+		}
+		if (encounterEntries.size() > 0) {
+			usedCategories.add(Category.ENCOUNTER);
 		}
 		return usedCategories;
 	}
@@ -59,7 +66,8 @@ public class SpotlightResult implements ISpotlightResult {
 		switch (category) {
 		case PATIENT:
 			return patientEntries;
-		
+		case ENCOUNTER:
+			return encounterEntries;
 		default:
 			break;
 		}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="ch.elexis.core.spotlight.ui.controls.detail.PatientSpotlightResultEntryDetailCompositeContributor">
+   <service>
+      <provide interface="ch.elexis.core.spotlight.ui.ISpotlightResultEntryDetailCompositeContributor"/>
+   </service>
+   <implementation class="ch.elexis.core.spotlight.ui.controls.detail.PatientSpotlightResultEntryDetailCompositeContributor"/>
+</scr:component>
