@@ -19,6 +19,11 @@ public class FallDataAccessor implements IDataAccess {
 	private static final String KOSTENTRAEGER_KUERZEL = "KostentraegerKuerzel";
 	private static final String KOSTENTRAEGER_ORT = "KostentraegerOrt";
 	
+	private static final String ARBEITGEBER = "Arbeitgeber";
+	private static final String ARBEITGEBER_KUERZEL = "ArbeitgeberKuerzel";
+	private static final String ZUWEISER = "Zuweiser";
+	private static final String ZUWEISER_KUERZEL = "ZuweiserKuerzel";
+	
 	ArrayList<Element> elementsList;
 	private Element[] elements = {
 		new Element(IDataAccess.TYPE.STRING, KOSTENTRAEGER_UMLAUT, "[Fall:-:-:Kostentraeger]", null,
@@ -26,7 +31,12 @@ public class FallDataAccessor implements IDataAccess {
 		new Element(IDataAccess.TYPE.STRING, KOSTENTRAEGER_KUERZEL_UMLAUT,
 			"[Fall:-:-:KostentraegerKuerzel]", null, 0),
 		new Element(IDataAccess.TYPE.STRING, KOSTENTRAEGER_ORT_UMLAUT,
-			"[Fall:-:-:KostentraegerOrt]", null, 0)
+			"[Fall:-:-:KostentraegerOrt]", null, 0),
+		new Element(IDataAccess.TYPE.STRING, ARBEITGEBER, "[Fall:-:-:Arbeitgeber]", null, 0),
+		new Element(IDataAccess.TYPE.STRING, ARBEITGEBER_KUERZEL, "[Fall:-:-:ArbeitgeberKuerzel]",
+			null, 0),
+		new Element(IDataAccess.TYPE.STRING, ZUWEISER, "[Fall:-:-:Zuweiser]", null, 0), new Element(
+			IDataAccess.TYPE.STRING, ZUWEISER_KUERZEL, "[Fall:-:-:ZuweiserKuerzel]", null, 0)
 	};
 	
 	public FallDataAccessor(){
@@ -38,12 +48,12 @@ public class FallDataAccessor implements IDataAccess {
 	
 	@Override
 	public String getName(){
-		return "Fall Kostenträger";
+		return "Fall erweitert";
 	}
 	
 	@Override
 	public String getDescription(){
-		return "Kostenträger eines Falles";
+		return "Fall erweitert";
 	}
 	
 	@Override
@@ -74,6 +84,32 @@ public class FallDataAccessor implements IDataAccess {
 			} else if (descriptor.equalsIgnoreCase(KOSTENTRAEGER_ORT)
 				|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_ORT_UMLAUT)) {
 				result = new Result<Object>(costBearer.getAnschrift().getOrt());
+			}
+		}
+		if (descriptor.equalsIgnoreCase(ARBEITGEBER)) {
+			Kontakt contact = fall.getRequiredContact(ARBEITGEBER);
+			if (contact != null && contact.exists()) {
+				result = new Result<Object>(contact.getPostAnschrift(true));
+			}
+		} else if (descriptor.equalsIgnoreCase(ARBEITGEBER_KUERZEL)) {
+			Kontakt contact = fall.getRequiredContact(ARBEITGEBER);
+			if (contact != null && contact.exists()) {
+				String label = contact.getLabel();
+				String fullName = label.substring(0, label.indexOf(","));
+				result = new Result<Object>(fullName);
+			}
+		}
+		if (descriptor.equalsIgnoreCase(ZUWEISER)) {
+			Kontakt contact = fall.getRequiredContact(ZUWEISER);
+			if (contact != null && contact.exists()) {
+				result = new Result<Object>(contact.getPostAnschrift(true));
+			}
+		} else if (descriptor.equalsIgnoreCase(ZUWEISER_KUERZEL)) {
+			Kontakt contact = fall.getRequiredContact(ZUWEISER);
+			if (contact != null && contact.exists()) {
+				String label = contact.getLabel();
+				String fullName = label.substring(0, label.indexOf(","));
+				result = new Result<Object>(fullName);
 			}
 		}
 		return result;
