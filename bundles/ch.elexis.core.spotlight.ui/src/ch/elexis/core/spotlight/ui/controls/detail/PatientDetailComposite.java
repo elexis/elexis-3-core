@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -50,6 +51,8 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 	private IStickerService stickerService;
 	@Inject
 	private IEncounterService encounterService;
+	
+	private static final String PATIENT_LABEL_FONT = "patient-label-font";
 	
 	private IModelService coreModelService;
 	private PatientDetailCompositeUtil util;
@@ -107,6 +110,16 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		patientLabelComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		lblPatientlabel = new Label(patientLabelComposite, SWT.NONE);
+		Font patientLabelFont;
+		if (JFaceResources.getFontRegistry().hasValueFor(PATIENT_LABEL_FONT)) {
+			patientLabelFont = JFaceResources.getFontRegistry().get(PATIENT_LABEL_FONT);
+		} else {
+			FontData[] fontData = lblPatientlabel.getFont().getFontData();
+			fontData[0].setHeight(fontData[0].getHeight() + 2);
+			JFaceResources.getFontRegistry().put(PATIENT_LABEL_FONT, fontData);
+			patientLabelFont = JFaceResources.getFontRegistry().getBold(PATIENT_LABEL_FONT);
+		}
+		lblPatientlabel.setFont(patientLabelFont);
 		new Label(patientLabelComposite, SWT.NONE);
 		lblStammarzt = new Label(patientLabelComposite, SWT.NONE);
 		lblInsuranceKVG = new Label(patientLabelComposite, SWT.NONE);
@@ -121,7 +134,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		appointmentComposite = new Composite(this, SWT.NONE);
 		appointmentComposite.setLayout(new FillLayout(SWT.VERTICAL));
 		GridData gd_appointmentComposite = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
-		gd_appointmentComposite.heightHint = 40;
+		gd_appointmentComposite.heightHint = 60;
 		appointmentComposite.setLayoutData(gd_appointmentComposite);
 		
 		lblAppointments = new Label(appointmentComposite, SWT.NONE);
@@ -205,7 +218,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			List<Number> balanceResult =
 				namedQuery.executeWithParameters(namedQuery.getParameterMap("patient", patient));
 			if (!balanceResult.isEmpty()) {
-				Double balance = balanceResult.get(0).doubleValue();
+				int balance = balanceResult.get(0).intValue();
 				lblBalance.setText("CHF " + new Money(balance));
 				return;
 			}
@@ -218,7 +231,8 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		if (patient != null) {
 			IEncounter lastEncounter = encounterService.getLatestEncounter(patient).orElse(null);
 			if (lastEncounter != null) {
-				lblLastEncounter.setText("Letzte Konsultation " + lastEncounter.getDate());
+				lblLastEncounter
+					.setText("Letzte Konsultation " + util.formatDate(lastEncounter.getDate()));
 				String encounterText = lastEncounter.getHeadVersionInPlaintext();
 				lblLastEncounterText.setText(StringUtils.abbreviate(encounterText, 200));
 			} else {
@@ -254,12 +268,6 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			lastAppointmentQuery.orderBy("tag", ORDER.DESC);
 			lastAppointmentQuery.limit(1);
 			IAppointment lastAppointment = lastAppointmentQuery.executeSingleResult().orElse(null);
-			
-			if (futureDates.isEmpty() && lastAppointment == null) {
-				Label label = new Label(appointmentComposite, SWT.None);
-				label.setText("-");
-				return;
-			}
 			
 			for (IAppointment appointment : futureDates) {
 				Label label = new Label(appointmentComposite, SWT.None);
@@ -346,7 +354,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			ILabResult latestResult = labResultQuery.executeSingleResult().orElse(null);
 			if (latestResult != null) {
 				Label label = new Label(lastLaboratoryComposite, SWT.NONE);
-				label.setText(latestResult.getDate() + "");
+				label.setText(util.formatDate(latestResult.getDate()) + "");
 			}
 		}
 		lastLaboratoryComposite.layout();

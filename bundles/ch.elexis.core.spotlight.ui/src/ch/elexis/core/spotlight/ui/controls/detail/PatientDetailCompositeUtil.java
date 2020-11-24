@@ -1,5 +1,6 @@
 package ch.elexis.core.spotlight.ui.controls.detail;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import org.eclipse.swt.widgets.Composite;
@@ -10,6 +11,7 @@ import ch.elexis.core.model.IAppointment;
 public class PatientDetailCompositeUtil {
 	
 	private DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("EE, dd.MM.yy HH:MM");
+	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 	
 	String getAppointmentLabel(IAppointment appointment){
 		return dayFormatter.format(appointment.getStartTime()) + " - " + appointment.getReason()
@@ -36,5 +38,9 @@ public class PatientDetailCompositeUtil {
 		}
 		composite.layout();
 	}
-
+	
+	public String formatDate(LocalDate date){
+		return dateFormatter.format(date);
+	}
+	
 }
