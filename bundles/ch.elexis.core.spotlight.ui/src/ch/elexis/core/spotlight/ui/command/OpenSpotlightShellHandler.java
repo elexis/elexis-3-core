@@ -9,16 +9,20 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
+
 import ch.elexis.core.spotlight.ISpotlightService;
-import ch.elexis.core.spotlight.ui.SpotlightShell;
+import ch.elexis.core.spotlight.ui.internal.ISpotlightResultEntryDetailCompositeService;
+import ch.elexis.core.spotlight.ui.internal.SpotlightShell;
 
 public class OpenSpotlightShellHandler {
 	
 	@Execute
 	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
-		ISpotlightService spotlightService){
+		ISpotlightService spotlightService,
+		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService){
 		
-		SpotlightShell spotlightShell = new SpotlightShell(shell, spotlightService);
+		SpotlightShell spotlightShell =
+			new SpotlightShell(shell, spotlightService, resultEntryDetailCompositeService);
 		
 		// center on the screen
 		Monitor primary = spotlightShell.getDisplay().getPrimaryMonitor();
@@ -77,6 +81,7 @@ public class OpenSpotlightShellHandler {
 	 * @see https://stackoverflow.com/questions/22431269/swt-shell-with-round-corners
 	 */
 	public static Region createRoundedRectangle(int x, int y, int W, int H, int r){
+		// TODO apply?
 		Region region = new Region();
 		int d = (2 * r); // diameter
 		

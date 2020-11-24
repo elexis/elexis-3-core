@@ -1,6 +1,6 @@
 package ch.elexis.core.spotlight.ui.controls;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -9,12 +9,15 @@ import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
-import ch.elexis.core.spotlight.ui.controls.detail.PatientDetailComposite;
+import ch.elexis.core.spotlight.ui.ISpotlightResultEntryDetailComposite;
+import ch.elexis.core.spotlight.ui.internal.ISpotlightResultEntryDetailCompositeService;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 public class SpotlightResultDetailComposite extends Composite {
 	
-	private AbstractSpotlightResultEntryDetailComposite activeDetailComposite;
+	private ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService;
+	
+	private ISpotlightResultEntryDetailComposite activeDetailComposite;
 	
 	/**
 	 * Create the composite.
@@ -22,8 +25,10 @@ public class SpotlightResultDetailComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public SpotlightResultDetailComposite(Composite parent, int style){
+	public SpotlightResultDetailComposite(Composite parent, int style,
+		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService){
 		super(parent, style);
+		this.resultEntryDetailCompositeService = resultEntryDetailCompositeService;
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
@@ -45,53 +50,25 @@ public class SpotlightResultDetailComposite extends Composite {
 	
 	protected void setSelection(ISpotlightResultEntry selectedEntry){
 		// TODO make category not selectable
-		if(selectedEntry != null) {
+		if (selectedEntry != null) {
 			assertComposite(selectedEntry.getCategory());
 		}
 		activeDetailComposite.setSpotlightEntry(selectedEntry);
 		this.layout();
-		
 	}
 	
 	private void assertComposite(Category category){
-		
-		Class<? extends AbstractSpotlightResultEntryDetailComposite> categoryComposite =
-			getCategoryComposite(category);
-		
 		if (activeDetailComposite != null) {
-			if (activeDetailComposite.getClass().equals(categoryComposite)) {
+			if (Objects.equals(category, activeDetailComposite.appliedForCategory())) {
 				return;
 			}
 			activeDetailComposite.dispose();
 		}
 		
-		try {
-			Class<?>[] cArg = new Class[2];
-			cArg[0] = Composite.class;
-			cArg[1] = int.class;
-			AbstractSpotlightResultEntryDetailComposite newInstance =
-				categoryComposite.getDeclaredConstructor(cArg).newInstance(this, SWT.None);
-			CoreUiUtil.injectServicesWithContext(newInstance);
-			activeDetailComposite = newInstance;
-			activeDetailComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-			
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-		}
-		
-	}
-	
-	private Class<? extends AbstractSpotlightResultEntryDetailComposite> getCategoryComposite(
-		Category category){
-		// TODO registry?
-		switch (category) {
-		case PATIENT:
-			return PatientDetailComposite.class;
-		default:
-			break;
-		}
-		return null;
+		activeDetailComposite =
+			resultEntryDetailCompositeService.instantiate(category, this, SWT.None);
+		CoreUiUtil.injectServicesWithContext(activeDetailComposite);
+		activeDetailComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
 	
 }

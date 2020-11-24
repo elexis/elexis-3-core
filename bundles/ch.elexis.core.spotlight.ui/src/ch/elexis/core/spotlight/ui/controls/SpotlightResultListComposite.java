@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import ch.elexis.core.spotlight.ISpotlightResult;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ISpotlightService;
-import ch.elexis.core.spotlight.ui.SpotlightShell;
-import ch.elexis.core.spotlight.ui.SpotlightUiUtil;
+import ch.elexis.core.spotlight.ui.internal.SpotlightShell;
+import ch.elexis.core.spotlight.ui.internal.SpotlightUiUtil;
 
 public class SpotlightResultListComposite extends Composite {
 	

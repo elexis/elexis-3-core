@@ -75,7 +75,7 @@ public class PatientCategorySpotlightResultContributor implements ISpotlightResu
 		
 		List<IPatient> patients = query.execute();
 		for (IPatient patient : patients) {
-			spotlightResult.addEntry(Category.PATIENT, patient.getLabel(), patient.getId(), null);
+			spotlightResult.addEntry(Category.PATIENT, patient.getLabel(), patient.getId(), patient);
 		}
 	}
 	

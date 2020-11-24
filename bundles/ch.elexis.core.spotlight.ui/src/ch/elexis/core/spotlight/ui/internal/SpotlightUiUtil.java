@@ -1,4 +1,4 @@
-package ch.elexis.core.spotlight.ui;
+package ch.elexis.core.spotlight.ui.internal;
 
 import javax.inject.Inject;
 
@@ -21,7 +21,7 @@ public class SpotlightUiUtil {
 		Category category = selected.getCategory();
 		switch (category) {
 		case PATIENT:
-			String patientId = selected.getIdentifierString();
+			String patientId = selected.getLoaderString();
 			IPatient patient =
 				CoreModelServiceHolder.get().load(patientId, IPatient.class).orElse(null);
 			contextService.setActivePatient(patient);
