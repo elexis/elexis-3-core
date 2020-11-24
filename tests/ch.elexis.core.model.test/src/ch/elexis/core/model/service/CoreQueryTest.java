@@ -328,8 +328,9 @@ public class CoreQueryTest {
 	}
 	
 	@Test
-	public void queryOrderByAndLastupdate(){
+	public void queryOrderByAndLastupdate() throws InterruptedException{
 		createContact("test1", "test1");
+		Thread.sleep(50);
 		IContact createContact = createContact("test2", "test2");
 		long currentTimeMillis = createContact.getLastupdate();
 		createContact("test3", "test3");
