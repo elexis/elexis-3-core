@@ -29,19 +29,6 @@ public class TextReplacementService implements ITextReplacementService {
 		matchTemplate = Pattern.compile(MATCH_TEMPLATE);
 	}
 	
-	@Override
-	public String performReplacement(IContext context, String template){
-		Matcher matcher = matchTemplate.matcher(template);
-		StringBuffer sb = new StringBuffer();
-		while (matcher.find()) {
-			String found = matcher.group();
-			matcher.appendReplacement(sb,
-				Matcher.quoteReplacement((String) replacePlaceholder(context, found)));
-		}
-		matcher.appendTail(sb);
-		return sb.toString();
-	}
-	
 	private String replacePlaceholder(IContext context, String placeholder){
 		String substring = placeholder.substring(1, placeholder.length() - 1);
 		String[] split = substring.split("\\.");
@@ -62,5 +49,18 @@ public class TextReplacementService implements ITextReplacementService {
 	@Override
 	public List<ITextPlaceholderResolver> getResolvers(){
 		return placeholderResolvers;
+	}
+	
+	@Override
+	public String performReplacement(IContext context, String template, String newLinePattern){
+		Matcher matcher = matchTemplate.matcher(template);
+		StringBuffer sb = new StringBuffer();
+		while (matcher.find()) {
+			String found = matcher.group();
+			matcher.appendReplacement(sb,
+				Matcher.quoteReplacement((String) replacePlaceholder(context, found)));
+		}
+		matcher.appendTail(sb);
+		return sb.toString().replaceAll("(\r\n|\n\r|\r|\n)", newLinePattern);
 	}
 }
