@@ -84,11 +84,15 @@ public class GenericTaskResultDetailComposite {
 		txtResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		StringBuilder sbResult = new StringBuilder();
 		task.getResult().forEach((k, v) -> {
-			String value = (String) v;
-			if (IIdentifiedRunnable.ReturnParameter.STRING_URL.equals(k)) {
-				value = hidePasswordInUrlString((String) v);
+			if(v instanceof String) {
+				String value = (String) v;
+				if (IIdentifiedRunnable.ReturnParameter.STRING_URL.equals(k)) {
+					value = hidePasswordInUrlString((String) v);
+				}
+				sbResult.append("- " + k + ": " + value + "\n");
+			} else {
+				sbResult.append("- " + k + ": " + v + "\n");
 			}
-			sbResult.append("- " + k + ": " + value + "\n");
 		});
 		txtResult.setText(sbResult.toString());
 		

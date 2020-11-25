@@ -59,7 +59,7 @@ public class TaskServiceImpl implements ITaskService {
 	private IModelService taskModelService;
 	
 	private ExecutorService parallelExecutorService;
-	private ExecutorService singletonExecutorService;
+	private Map<String, ExecutorService> perRunnableSingletonExecutorService;
 	private QuartzExecutor quartzExecutor;
 	private WatchServiceHolder watchServiceHolder;
 	private SysEventWatcher sysEventWatcher;
@@ -134,7 +134,7 @@ public class TaskServiceImpl implements ITaskService {
 	private void activateComponent(){
 		triggeredTasks = Collections.synchronizedList(new ArrayList<>());
 		parallelExecutorService = Executors.newCachedThreadPool();
-		singletonExecutorService = Executors.newSingleThreadExecutor();
+		perRunnableSingletonExecutorService = new HashMap<>();
 		
 		quartzExecutor = new QuartzExecutor();
 		try {
@@ -158,8 +158,10 @@ public class TaskServiceImpl implements ITaskService {
 		// TODO what about the running tasks in separate threads?
 		try {
 			quartzExecutor.shutdown();
+			parallelExecutorService.shutdown();
+			perRunnableSingletonExecutorService.forEach((c, e) -> e.shutdown());
 		} catch (SchedulerException e) {
-			logger.warn("Error stopping quartz scheduler", e);
+			logger.warn("Error stopping scheduler", e);
 		}
 		watchServiceHolder.stopPolling();
 	}
@@ -336,14 +338,21 @@ public class TaskServiceImpl implements ITaskService {
 		// TODO test if all runContext parameters are satisfied, else reject execution
 		task.setState(TaskState.QUEUED);
 		
-		boolean singletonRunnable =
-			instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId()).isSingleton();
+		String identifiedRunnableId = taskDescriptor.getIdentifiedRunnableId();
+		boolean singletonRunnable = instantiateRunnableById(identifiedRunnableId).isSingleton();
 		
 		try {
 			if (singletonRunnable || taskDescriptor.isSingleton()) {
-				// TODO per runnable singletonExecutorService
-				// no need to share one singleton executor for all runnables
-				singletonExecutorService.execute((Runnable) task);
+				// singleton tasks/runnables must not run in multiple instances in parallel
+				// hence we hold a separate thread for each of them
+				if (!perRunnableSingletonExecutorService.containsKey(identifiedRunnableId)) {
+					ExecutorService executorService = Executors.newSingleThreadExecutor();
+					perRunnableSingletonExecutorService.put(identifiedRunnableId, executorService);
+				}
+				ExecutorService executorService =
+					perRunnableSingletonExecutorService.get(identifiedRunnableId);
+				executorService.execute((Runnable) task);
+				
 			} else {
 				parallelExecutorService.execute((Runnable) task);
 			}
@@ -487,7 +496,8 @@ public class TaskServiceImpl implements ITaskService {
 	public Optional<ITask> findLatestExecution(ITaskDescriptor taskDescriptor){
 		IQuery<ITask> query = taskModelService.getQuery(ITask.class);
 		query.and(ModelPackage.Literals.ITASK__TASK_DESCRIPTOR, COMPARATOR.EQUALS, taskDescriptor);
-		query.orderBy(ch.elexis.core.model.ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
+		query.orderBy(ch.elexis.core.model.ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE,
+			ORDER.DESC);
 		query.limit(1);
 		List<ITask> result = query.execute();
 		return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
