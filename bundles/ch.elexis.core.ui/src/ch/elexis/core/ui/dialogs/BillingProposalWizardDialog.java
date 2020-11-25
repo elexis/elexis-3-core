@@ -409,6 +409,15 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					}
 				});
 			}
+			// filter coverage billing date
+			ArrayList<Konsultation> proposalCopy = new ArrayList<>(proposal);
+			TimeTool now = new TimeTool();
+			proposalCopy.forEach(k -> {
+				TimeTool billingDate = k.getFall().getBillingDate();
+				if (billingDate != null && billingDate.isAfter(now)) {
+					proposal.remove(k);
+				}
+			});
 			monitor.done();
 		}
 		
