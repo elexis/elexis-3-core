@@ -25,6 +25,18 @@ public interface ITextReplacementService {
 	 *            the source text
 	 * @return replaced result
 	 */
-	public String performReplacement(IContext context, String template);
+	public default String performReplacement(IContext context, String template){
+		return performReplacement(context, template, System.lineSeparator());
+	}
 	
+	/**
+	 * @param context
+	 *            to apply during replacement
+	 * @param template
+	 *            the source text
+	 * @param newLinePattern
+	 *            the new line to used in the resulting string
+	 * @return replaced result
+	 */
+	public String performReplacement(IContext context, String template, String newLinePattern);
 }
