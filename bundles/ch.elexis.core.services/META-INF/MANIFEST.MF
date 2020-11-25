@@ -27,6 +27,8 @@ Import-Package: bsh,
  org.apache.commons.codec;version="1.9.0",
  org.apache.commons.lang3;version="3.7.0",
  org.glassfish.jersey.client;version="2.24.1",
+ org.glassfish.jersey.media.multipart;version="2.24.1",
+ org.glassfish.jersey.media.multipart.file;version="2.24.1",
  org.json,
  org.slf4j
 Service-Component: OSGI-INF/*.xml
