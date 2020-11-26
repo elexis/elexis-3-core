@@ -2192,6 +2192,22 @@ WHERE kontakt.id IN (
 			<column name="PATIENTID" />
 		</createIndex>
 	</changeSet>
+	<changeSet author="marco"
+		id="manual_omnivore_add_documentstatus">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="CH_ELEXIS_OMNIVORE_DATA" />
+				<not>
+					<columnExists tableName="CH_ELEXIS_OMNIVORE_DATA"
+						columnName="DOCUMENT_STATUS" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="CH_ELEXIS_OMNIVORE_DATA">
+			<column name="DOCUMENT_STATUS" type="SMALLINT"
+				defaultValue="0" />
+		</addColumn>
+	</changeSet>
 	
     
 </databaseChangeLog>
