@@ -1,6 +1,7 @@
 package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -114,10 +115,16 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	}
 
 	public List<Diagnosis> getDiagnoses(){
+		if (diagnoses == null) {
+			diagnoses = new ArrayList<>();
+		}
 		return diagnoses;
 	}
 	
 	public List<Verrechnet> getBilled(){
+		if (billed == null) {
+			billed = new ArrayList<>();
+		}
 		return billed;
 	}
 
