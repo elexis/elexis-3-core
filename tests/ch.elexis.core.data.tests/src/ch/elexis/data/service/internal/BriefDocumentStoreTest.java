@@ -2,6 +2,7 @@ package ch.elexis.data.service.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,7 +76,7 @@ public class BriefDocumentStoreTest {
 		Assert.assertEquals( "docx", persistedDocument.getMimeType());
 		Assert.assertEquals("Test desc", persistedDocument.getDescription() );
 		Assert.assertEquals(BriefConstants.RECHNUNG, persistedDocument.getCategory().getName());
-		Assert.assertEquals( DocumentStatus.NEW, persistedDocument.getStatus());
+		Assert.assertEquals(Collections.singletonList(DocumentStatus.NEW), persistedDocument.getStatus());
 		
 		// save content
 		iDocumentStore.saveDocument(persistedDocument, IOUtils.toInputStream("test"));
