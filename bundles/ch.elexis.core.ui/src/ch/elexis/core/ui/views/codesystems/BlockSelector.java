@@ -53,7 +53,6 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.Identifiable;
@@ -224,7 +223,7 @@ public class BlockSelector extends CodeSelectorFactory {
 		exportAction = new Action("Blöcke exportieren") {
 			{
 				setImageDescriptor(Images.IMG_EXPORT.getImageDescriptor());
-				setToolTipText("Exportiert alle Blöcke in eine XML-Datei");
+				setToolTipText("Exportiert alle Blöcke in eine SGAM-xChange-Datei");
 			}
 			
 			@Override
