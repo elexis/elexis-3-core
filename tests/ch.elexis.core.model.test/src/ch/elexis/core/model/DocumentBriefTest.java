@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import org.junit.Test;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.test.AbstractTest;
+import ch.elexis.core.types.DocumentStatus;
 
 public class DocumentBriefTest extends AbstractTest {
 	
@@ -49,6 +51,7 @@ public class DocumentBriefTest extends AbstractTest {
 		IDocumentLetter letter = coreModelService.create(IDocumentLetter.class);
 		assertNotNull(letter);
 		assertTrue(letter instanceof IDocumentLetter);
+		assertEquals(Collections.singletonList(DocumentStatus.NEW), letter.getStatus());
 		
 		letter.setDescription("test letter 1");
 		letter.setAuthor(contact1);

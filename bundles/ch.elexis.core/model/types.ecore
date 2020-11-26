@@ -57,11 +57,26 @@
     <eLiterals name="OTHER" value="9" literal="OTHER"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="DocumentStatus">
-    <eLiterals name="NEW"/>
-    <eLiterals name="CHANGED" value="1"/>
-    <eLiterals name="VALIDATED" value="2"/>
-    <eLiterals name="SENT" value="3"/>
-    <eLiterals name="RECIVED" value="4"/>
+    <eLiterals name="NEW">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Newly added, no further actions taken until now."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="PREPROCESSED" value="1" literal="PREPROCESSED">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The document was automatically preprocessed, which may or may not happen. For PDF e.g. preprocessing includes performing OCR on scanned pdfs."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="INDEXED" value="2">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The document was indexed, that is it is available for extended search (used e.g. by SOLR)"/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="SENT" value="4">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The document was sent to an external contact."/>
+      </eAnnotations>
+    </eLiterals>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="PathologicDescription" instanceClassName="ch.elexis.core.types.PathologicDescription"/>
   <eClassifiers xsi:type="ecore:EDataType" name="LocalDateTime" instanceClassName="java.time.LocalDateTime"/>

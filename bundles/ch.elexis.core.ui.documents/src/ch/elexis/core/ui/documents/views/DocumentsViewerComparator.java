@@ -70,7 +70,7 @@ public class DocumentsViewerComparator extends ViewerComparator {
 			switch (propertyIndex) {
 			case 1:
 				if (bFlat || cat1.equals(cat2)) {
-					rc = dh1.getStatus().getName().compareTo(dh2.getStatus().getName());
+					rc = dh1.getStatus().get(0).getName().compareTo(dh2.getStatus().get(0).getName());
 				} else {
 					compareCategories = true;
 				}

@@ -42,10 +42,9 @@
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//DocumentStatus">
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/NEW"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/CHANGED"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/VALIDATED"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/PREPROCESSED"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/INDEXED"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/SENT"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/RECIVED"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//AppointmentType">
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//AppointmentType/DEFAULT"/>

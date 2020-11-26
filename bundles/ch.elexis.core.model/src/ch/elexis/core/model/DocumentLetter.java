@@ -9,9 +9,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +30,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 		implements IdentifiableWithXid, IDocumentLetter {
 	
 	private ICategory category;
-	private DocumentStatus status;
+	private Set<DocumentStatus> status;
 	private String storeId = "";
 	private List<IHistory> history;
 	private String keywords;
@@ -57,20 +60,29 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	}
 	
 	@Override
-	public DocumentStatus getStatus(){
+	public List<DocumentStatus> getStatus(){
 		if (status == null) {
+			DocumentStatus _status;
 			if (getEntity().getRecipient() != null) {
-				status = DocumentStatus.SENT;
+				_status = DocumentStatus.SENT;
 			} else {
-				status = DocumentStatus.NEW;
+				_status = DocumentStatus.NEW;
 			}
+			return Collections.singletonList(_status);
 		}
-		return status;
+		return new ArrayList<>(status);
 	}
 	
 	@Override
-	public void setStatus(DocumentStatus value){
-		this.status = value;
+	public void setStatus(DocumentStatus _status, boolean active){
+		if(status == null) {
+			status = new HashSet<>();
+		}
+		if (active) {
+			status.add(_status);
+		} else {
+			status.remove(_status);
+		}
 	}
 	
 	@Override

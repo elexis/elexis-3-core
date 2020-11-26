@@ -2745,7 +2745,7 @@ public interface ModelPackage extends EPackage {
 	int IDOCUMENT__DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * The feature id for the '<em><b>Status</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -2973,7 +2973,7 @@ public interface ModelPackage extends EPackage {
 	int IDOCUMENT_LETTER__DESCRIPTION = IDOCUMENT__DESCRIPTION;
 
 	/**
-	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * The feature id for the '<em><b>Status</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -8459,10 +8459,10 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIDocument_Description();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getStatus <em>Status</em>}'.
+	 * Returns the meta object for the attribute list '{@link ch.elexis.core.model.IDocument#getStatus <em>Status</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Status</em>'.
+	 * @return the meta object for the attribute list '<em>Status</em>'.
 	 * @see ch.elexis.core.model.IDocument#getStatus()
 	 * @see #getIDocument()
 	 * @generated
@@ -12546,7 +12546,7 @@ public interface ModelPackage extends EPackage {
 		EAttribute IDOCUMENT__DESCRIPTION = eINSTANCE.getIDocument_Description();
 
 		/**
-		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Status</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

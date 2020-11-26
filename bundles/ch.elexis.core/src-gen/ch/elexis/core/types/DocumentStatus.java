@@ -30,6 +30,9 @@ public enum DocumentStatus implements Enumerator {
 	 * The '<em><b>NEW</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Newly added, no further actions taken until now.
+	 * <!-- end-model-doc -->
 	 * @see #NEW_VALUE
 	 * @generated
 	 * @ordered
@@ -37,44 +40,39 @@ public enum DocumentStatus implements Enumerator {
 	NEW(0, "NEW", "NEW"),
 
 	/**
-	 * The '<em><b>CHANGED</b></em>' literal object.
+	 * The '<em><b>PREPROCESSED</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #CHANGED_VALUE
+	 * <!-- begin-model-doc -->
+	 * The document was automatically preprocessed, which may or may not happen. For PDF e.g. preprocessing includes performing OCR on scanned pdfs.
+	 * <!-- end-model-doc -->
+	 * @see #PREPROCESSED_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	CHANGED(1, "CHANGED", "CHANGED"),
-
-	/**
-	 * The '<em><b>VALIDATED</b></em>' literal object.
+	PREPROCESSED(1, "PREPROCESSED", "PREPROCESSED"), /**
+	 * The '<em><b>INDEXED</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #VALIDATED_VALUE
+	 * <!-- begin-model-doc -->
+	 * The document was indexed, that is it is available for extended search (used e.g. by SOLR)
+	 * <!-- end-model-doc -->
+	 * @see #INDEXED_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	VALIDATED(2, "VALIDATED", "VALIDATED"),
-
-	/**
+	INDEXED(2, "INDEXED", "INDEXED"), /**
 	 * The '<em><b>SENT</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The document was sent to an external contact.
+	 * <!-- end-model-doc -->
 	 * @see #SENT_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	SENT(3, "SENT", "SENT"),
-
-	/**
-	 * The '<em><b>RECIVED</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #RECIVED_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	RECIVED(4, "RECIVED", "RECIVED");
+	SENT(4, "SENT", "SENT");
 
 	/**
 	 * The '<em><b>NEW</b></em>' literal value.
@@ -84,6 +82,9 @@ public enum DocumentStatus implements Enumerator {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Newly added, no further actions taken until now.
+	 * <!-- end-model-doc -->
 	 * @see #NEW
 	 * @model
 	 * @generated
@@ -92,34 +93,32 @@ public enum DocumentStatus implements Enumerator {
 	public static final int NEW_VALUE = 0;
 
 	/**
-	 * The '<em><b>CHANGED</b></em>' literal value.
+	 * The '<em><b>PREPROCESSED</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>CHANGED</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @see #CHANGED
+	 * <!-- begin-model-doc -->
+	 * The document was automatically preprocessed, which may or may not happen. For PDF e.g. preprocessing includes performing OCR on scanned pdfs.
+	 * <!-- end-model-doc -->
+	 * @see #PREPROCESSED
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
-	public static final int CHANGED_VALUE = 1;
+	public static final int PREPROCESSED_VALUE = 1;
 
 	/**
-	 * The '<em><b>VALIDATED</b></em>' literal value.
+	 * The '<em><b>INDEXED</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>VALIDATED</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @see #VALIDATED
+	 * <!-- begin-model-doc -->
+	 * The document was indexed, that is it is available for extended search (used e.g. by SOLR)
+	 * <!-- end-model-doc -->
+	 * @see #INDEXED
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
-	public static final int VALIDATED_VALUE = 2;
+	public static final int INDEXED_VALUE = 2;
 
 	/**
 	 * The '<em><b>SENT</b></em>' literal value.
@@ -129,27 +128,15 @@ public enum DocumentStatus implements Enumerator {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The document was sent to an external contact.
+	 * <!-- end-model-doc -->
 	 * @see #SENT
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
-	public static final int SENT_VALUE = 3;
-
-	/**
-	 * The '<em><b>RECIVED</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>RECIVED</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #RECIVED
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int RECIVED_VALUE = 4;
+	public static final int SENT_VALUE = 4;
 
 	/**
 	 * An array of all the '<em><b>Document Status</b></em>' enumerators.
@@ -160,10 +147,9 @@ public enum DocumentStatus implements Enumerator {
 	private static final DocumentStatus[] VALUES_ARRAY =
 		new DocumentStatus[] {
 			NEW,
-			CHANGED,
-			VALIDATED,
+			PREPROCESSED,
+			INDEXED,
 			SENT,
-			RECIVED,
 		};
 
 	/**
@@ -221,10 +207,9 @@ public enum DocumentStatus implements Enumerator {
 	public static DocumentStatus get(int value) {
 		switch (value) {
 			case NEW_VALUE: return NEW;
-			case CHANGED_VALUE: return CHANGED;
-			case VALIDATED_VALUE: return VALIDATED;
+			case PREPROCESSED_VALUE: return PREPROCESSED;
+			case INDEXED_VALUE: return INDEXED;
 			case SENT_VALUE: return SENT;
-			case RECIVED_VALUE: return RECIVED;
 		}
 		return null;
 	}

@@ -57,7 +57,7 @@ public class BriefDocumentStoreTest {
 		// persist metadata of documents
 		IDocumentLetter letter = iModelService.create(IDocumentLetter.class);
 		letter.setPatient(iPatient);
-		letter.setStatus(DocumentStatus.RECIVED); // invalid state for a new document
+		letter.setStatus(DocumentStatus.SENT, true); // invalid state for a new document
 		letter.setDescription("Test desc");
 		letter.setMimeType("docx");
 		letter.setTitle("Test Brief");
