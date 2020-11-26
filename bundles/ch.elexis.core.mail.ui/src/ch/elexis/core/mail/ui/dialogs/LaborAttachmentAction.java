@@ -56,7 +56,7 @@ public class LaborAttachmentAction extends Action implements IAction {
 							: ""),
 					BriefConstants.LABOR);
 				document.setExtension("pdf");
-				document.setStatus(DocumentStatus.SENT);
+				document.setStatus(DocumentStatus.SENT, true);
 				try (FileInputStream fi = new FileInputStream((File) pdfFile)) {
 					BriefeDocumentStoreHolder.get().saveDocument(document, fi);
 				}

@@ -8,10 +8,12 @@ import ch.elexis.core.model.AllModelTests;
 import ch.elexis.core.model.BillingLawTest;
 import ch.elexis.core.model.service.CoreModelServiceTest;
 import ch.elexis.core.model.service.CoreQueryTest;
+import ch.elexis.core.types.AllTypesTests;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	CoreModelServiceTest.class, CoreQueryTest.class, AllModelTests.class, BillingLawTest.class
+	AllTypesTests.class, CoreModelServiceTest.class, CoreQueryTest.class, AllModelTests.class,
+	BillingLawTest.class
 })
 public class AllPluginTests {
 	

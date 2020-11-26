@@ -98,7 +98,8 @@ public interface IDocument extends Identifiable, Deleteable {
 	void setDescription(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Status</b></em>' attribute.
+	 * Returns the value of the '<em><b>Status</b></em>' attribute list.
+	 * The list contents are of type {@link ch.elexis.core.types.DocumentStatus}.
 	 * The literals are from the enumeration {@link ch.elexis.core.types.DocumentStatus}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -106,25 +107,16 @@ public interface IDocument extends Identifiable, Deleteable {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Status</em>' attribute.
+	 * <!-- begin-model-doc -->
+	 * One or multiple states this document may have. The states represented are bitwise appliable.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Status</em>' attribute list.
 	 * @see ch.elexis.core.types.DocumentStatus
-	 * @see #setStatus(DocumentStatus)
 	 * @see ch.elexis.core.model.ModelPackage#getIDocument_Status()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
-	DocumentStatus getStatus();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IDocument#getStatus <em>Status</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Status</em>' attribute.
-	 * @see ch.elexis.core.types.DocumentStatus
-	 * @see #getStatus()
-	 * @generated
-	 */
-	void setStatus(DocumentStatus value);
+	List<DocumentStatus> getStatus();
 
 	/**
 	 * Returns the value of the '<em><b>Created</b></em>' attribute.
@@ -392,5 +384,16 @@ public interface IDocument extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setContent(InputStream content);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Convenience method: Activate or deactive the given status for the document.
+	 * <!-- end-model-doc -->
+	 * @model statusRequired="true" activeRequired="true"
+	 * @generated
+	 */
+	void setStatus(DocumentStatus status, boolean active);
 
 } // IDocument

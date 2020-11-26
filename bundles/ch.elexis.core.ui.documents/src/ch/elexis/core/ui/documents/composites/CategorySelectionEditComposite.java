@@ -278,12 +278,12 @@ public class CategorySelectionEditComposite extends Composite {
 		public void setDescription(String value){}
 		
 		@Override
-		public DocumentStatus getStatus(){
+		public List<DocumentStatus> getStatus(){
 			return null;
 		}
 		
 		@Override
-		public void setStatus(DocumentStatus value){}
+		public void setStatus(DocumentStatus status, boolean active){}
 		
 		@Override
 		public Date getCreated(){

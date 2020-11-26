@@ -82,6 +82,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.documents.FilterCategory;
@@ -96,6 +97,8 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.handler.DocumentCrudHandler;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
+import ch.elexis.core.ui.documents.views.DocumentsView.ViewFilterProvider;
+import ch.elexis.core.ui.documents.views.DocumentsView.ViewLabelProvider;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.CoreUiUtil;
@@ -250,7 +253,7 @@ public class DocumentsView extends ViewPart {
 			case 0:
 				return "";
 			case 1:
-				return dh.getStatus().getName().substring(0, 1);
+				return dh.getStatus().stream().map(s->s.getName()).reduce((u, t) -> u + StringConstants.COMMA + t).get();
 			case 2:
 				return bFlat ? dh.getCategory().getName() : "";
 			case 3:

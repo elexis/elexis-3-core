@@ -70,9 +70,42 @@ public class DocHandle extends AbstractEntityWithId implements EntityWithId, Ent
 	@Column(length = 255)
 	protected String path;
 
+	@Column(name = "DOCUMENT_STATUS")
+	protected int status;
+	
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	protected byte[] doc;
+
+	@Override
+	public String getId(){
+		return id;
+	}
+
+	@Override
+	public void setId(String id){
+		this.id = id;
+	}
+
+	@Override
+	public Long getLastupdate(){
+		return lastupdate;
+	}
+
+	@Override
+	public void setLastupdate(Long lastupdate){
+		this.lastupdate = lastupdate;
+	}
+
+	@Override
+	public boolean isDeleted(){
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(boolean deleted){
+		this.deleted = deleted;
+	}
 
 	public Kontakt getKontakt() {
 		return kontakt;
@@ -133,9 +166,17 @@ public class DocHandle extends AbstractEntityWithId implements EntityWithId, Ent
 	public String getPath() {
 		return path;
 	}
-
+	
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public int getStatus(){
+		return status;
+	}
+	
+	public void setStatus(int status){
+		this.status = status;
 	}
 
 	public byte[] getDoc() {
@@ -144,35 +185,5 @@ public class DocHandle extends AbstractEntityWithId implements EntityWithId, Ent
 
 	public void setDoc(byte[] doc) {
 		this.doc = doc;
-	}
-
-	@Override
-	public boolean isDeleted(){
-		return deleted;
-	}
-	
-	@Override
-	public void setDeleted(boolean deleted){
-		this.deleted = deleted;
-	}
-	
-	@Override
-	public String getId(){
-		return id;
-	}
-	
-	@Override
-	public void setId(String id){
-		this.id = id;
-	}
-	
-	@Override
-	public Long getLastupdate(){
-		return lastupdate;
-	}
-	
-	@Override
-	public void setLastupdate(Long lastupdate){
-		this.lastupdate = lastupdate;
 	}
 }
