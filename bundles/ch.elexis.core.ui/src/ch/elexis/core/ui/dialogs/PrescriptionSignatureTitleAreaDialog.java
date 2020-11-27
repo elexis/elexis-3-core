@@ -41,13 +41,13 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent){
-		setTitle("Verordnungs Signatur");
+		setTitle("Verordnungssignatur");
 		setMessage(
 			"Die Signatur der Verordnung von " + article.getLabel());
 		Composite area = (Composite) super.createDialogArea(parent);
 		
 		btnAsDefault = new Button(area, SWT.CHECK);
-		btnAsDefault.setText("Als standard Signatur hinterlegen.");
+		btnAsDefault.setText("Als Standardsignatur hinterlegen.");
 		btnAsDefault.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
