@@ -10,13 +10,14 @@
  */
 package ch.elexis.core.tasks.model;
 
+import java.io.Serializable;
+import java.util.Map;
+
+import com.cronutils.model.Cron;
+
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
-
-import com.cronutils.model.Cron;
-import java.io.Serializable;
-import java.util.Map;
 
 /**
  * <!-- begin-user-doc -->
@@ -42,6 +43,7 @@ import java.util.Map;
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getTriggerParameters <em>Trigger Parameters</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getRunner <em>Runner</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#isSingleton <em>Singleton</em>}</li>
+ *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getTransientData <em>Transient Data</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.tasks.model.ModelPackage#getITaskDescriptor()
@@ -183,6 +185,7 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * @see #setIdentifiedRunnableId(String)
 	 * @see ch.elexis.core.tasks.model.ModelPackage#getITaskDescriptor_IdentifiedRunnableId()
 	 * @model required="true"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='runnableId'"
 	 * @generated
 	 */
 	String getIdentifiedRunnableId();
@@ -327,6 +330,20 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setSingleton(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Transient Data</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Used to transport internal data, not stored into table. (e.g. next execution time of cron triggered task descriptor)
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Transient Data</em>' attribute.
+	 * @see ch.elexis.core.tasks.model.ModelPackage#getITaskDescriptor_TransientData()
+	 * @model required="true" transient="true" changeable="false"
+	 * @generated
+	 */
+	Map<String, Object> getTransientData();
 
 	/**
 	 * <!-- begin-user-doc -->

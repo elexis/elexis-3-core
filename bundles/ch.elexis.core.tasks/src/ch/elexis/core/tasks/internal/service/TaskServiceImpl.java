@@ -57,13 +57,12 @@ public class TaskServiceImpl implements ITaskService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private IModelService taskModelService;
-	
+	private TaskServiceUtil util;
 	private ExecutorService parallelExecutorService;
 	private Map<String, ExecutorService> perRunnableSingletonExecutorService;
 	private QuartzExecutor quartzExecutor;
 	private WatchServiceHolder watchServiceHolder;
 	private SysEventWatcher sysEventWatcher;
-	
 	private List<ITask> triggeredTasks;
 	
 	//TODO OtherTaskService -> this
@@ -84,11 +83,9 @@ public class TaskServiceImpl implements ITaskService {
 	/**
 	 * do not execute these instances, they are used for documentation listing only
 	 */
-	private List<IIdentifiedRunnable> identifiedRunnables =
-		Collections.synchronizedList(new ArrayList<>());
+	private List<IIdentifiedRunnable> identifiedRunnables;
 	
-	private Map<String, IIdentifiedRunnableFactory> runnableIdToFactoryMap =
-		Collections.synchronizedMap(new HashMap<>());
+	private Map<String, IIdentifiedRunnableFactory> runnableIdToFactoryMap;
 	
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY, bind = "bindRunnableWithContextFactory", unbind = "unbindRunnableWithContextFactory")
 	private volatile List<IIdentifiedRunnableFactory> runnableWithContextFactories;
@@ -109,6 +106,8 @@ public class TaskServiceImpl implements ITaskService {
 			for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
 				runnableIdToFactoryMap.put(iIdentifiedRunnable.getId(), runnableWithContextFactory);
 				identifiedRunnables.add(iIdentifiedRunnable);
+				
+				loadIncurredForRunnable(iIdentifiedRunnable);
 			}
 			
 		} catch (Exception e) {
@@ -127,30 +126,34 @@ public class TaskServiceImpl implements ITaskService {
 		for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
 			runnableIdToFactoryMap.remove(iIdentifiedRunnable.getId());
 			identifiedRunnables.remove(iIdentifiedRunnable);
+			
+			unloadIncurredForRunnable(iIdentifiedRunnable);
 		}
+	}
+	
+	public TaskServiceImpl(){
+		identifiedRunnables = Collections.synchronizedList(new ArrayList<>());
+		runnableIdToFactoryMap = Collections.synchronizedMap(new HashMap<>());
+		triggeredTasks = Collections.synchronizedList(new ArrayList<>());
+		parallelExecutorService = Executors.newCachedThreadPool();
+		perRunnableSingletonExecutorService = new HashMap<>();
+		quartzExecutor = new QuartzExecutor();
+		sysEventWatcher = new SysEventWatcher();
+		util = new TaskServiceUtil();
 	}
 	
 	@Activate
 	private void activateComponent(){
-		triggeredTasks = Collections.synchronizedList(new ArrayList<>());
-		parallelExecutorService = Executors.newCachedThreadPool();
-		perRunnableSingletonExecutorService = new HashMap<>();
-		
-		quartzExecutor = new QuartzExecutor();
 		try {
 			quartzExecutor.start();
 		} catch (SchedulerException e) {
 			logger.warn("Error starting quartz scheduler", e);
 		}
 		
-		sysEventWatcher = new SysEventWatcher();
-		
 		watchServiceHolder = new WatchServiceHolder(this);
 		if (watchServiceHolder.triggerIsAvailable()) {
 			watchServiceHolder.startPolling();
 		}
-		
-		reloadIncurredTasks();
 	}
 	
 	@Deactivate
@@ -166,25 +169,37 @@ public class TaskServiceImpl implements ITaskService {
 		watchServiceHolder.stopPolling();
 	}
 	
+	//TODO: check - are there any TDs we are responsible for, and yet not loaded?
 	/**
-	 * Load all task descriptors we are responsible for and start (incur) them
+	 * Load a task descriptors we are responsible for and start (incur) them
 	 */
-	private void reloadIncurredTasks(){
-		IQuery<ITaskDescriptor> query = taskModelService.getQuery(ITaskDescriptor.class);
-		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__ACTIVE, COMPARATOR.EQUALS, true);
-		query.startGroup();
-		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__RUNNER, COMPARATOR.EQUALS,
-			contextService.getStationIdentifier());
-		query.or(ModelPackage.Literals.ITASK_DESCRIPTOR__RUNNER, COMPARATOR.EQUALS, null);
-		query.andJoinGroups();
-		List<ITaskDescriptor> execute = query.execute();
-		for (ITaskDescriptor iTaskDescriptor : execute) {
+	private void loadIncurredForRunnable(IIdentifiedRunnable identifiedRunnable){
+		List<ITaskDescriptor> taskDescriptors =
+			util.loadForIdentifiedRunnable(identifiedRunnable, taskModelService, contextService);
+		for (ITaskDescriptor iTaskDescriptor : taskDescriptors) {
 			try {
 				logger.info("incurring task descriptor [{}] reference id [{}]",
 					iTaskDescriptor.getId(), iTaskDescriptor.getReferenceId());
 				incur(iTaskDescriptor);
 			} catch (TaskException e) {
 				logger.warn("Can not incur taskdescriptor [{}]", iTaskDescriptor.getId(), e);
+			}
+		}
+	}
+	
+	/**
+	 * Unload (release) task descriptors we are responsible for
+	 */
+	private void unloadIncurredForRunnable(IIdentifiedRunnable identifiedRunnable){
+		List<ITaskDescriptor> taskDescriptors =
+			util.loadForIdentifiedRunnable(identifiedRunnable, taskModelService, contextService);
+		for (ITaskDescriptor iTaskDescriptor : taskDescriptors) {
+			try {
+				logger.info("releasing task descriptor [{}] reference id [{}]",
+					iTaskDescriptor.getId(), iTaskDescriptor.getReferenceId());
+				release(iTaskDescriptor);
+			} catch (TaskException e) {
+				logger.warn("Can not release taskdescriptor [{}]", iTaskDescriptor.getId(), e);
 			}
 		}
 	}
@@ -502,4 +517,25 @@ public class TaskServiceImpl implements ITaskService {
 		List<ITask> result = query.execute();
 		return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
 	}
+	
+	@Override
+	public List<ITask> getRunningTasks(){
+		return new ArrayList<ITask>(triggeredTasks);
+	}
+	
+	@Override
+	public List<ITaskDescriptor> getIncurredTasks(){
+		List<ITaskDescriptor> projectedTaskDescriptors = new ArrayList<ITaskDescriptor>();
+		Set<String[]> incurred = quartzExecutor.getIncurred();
+		incurred.stream().forEach(i -> {
+			ITaskDescriptor taskDescriptor =
+				taskModelService.load(i[0], ITaskDescriptor.class).orElse(null);
+			if (taskDescriptor != null) {
+				taskDescriptor.getTransientData().put("cron-next-exectime", i[1]);
+				projectedTaskDescriptors.add(taskDescriptor);
+			}
+		});
+		return projectedTaskDescriptors;
+	}
+	
 }

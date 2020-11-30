@@ -230,13 +230,14 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		
 		sb.append("(" + helpList.stream().reduce((u, t) -> u + " | " + t).orElse("") + ")\n");
 		for (String string : helpList) {
-			String methodKey = "__"+StringUtils.join(sub, "_")+"_"+string;
+			String methodKey = "__" + StringUtils.join(sub, "_") + "_" + string;
 			Method method = methods.get(methodKey);
-			if(method!=null) {
+			if (method != null) {
 				CmdAdvisor declaredAnnotation = method.getDeclaredAnnotation(CmdAdvisor.class);
-				addCommand(string, (declaredAnnotation!=null) ? declaredAnnotation.description(): "", sb);
+				addCommand(string,
+					(declaredAnnotation != null) ? declaredAnnotation.description() : "", sb);
 			} else {
-				sb.append("\t"+string+" - [see subcommand]\n");
+				sb.append("\t" + string + " - [see subcommand]\n");
 			}
 		}
 		
@@ -254,6 +255,31 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			addCommand(command, attributes, sb);
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * @see #prflp(String, int, boolean)
+	 */
+	public void prflp(String value, int length){
+		prflp(value, length, false);
+	}
+	
+	/**
+	 * print formatted line part
+	 * 
+	 * @param value
+	 *            to print (abbreviated and formated to length)
+	 * @param length
+	 *            max length this lines has
+	 * @param endLine
+	 *            if this is the last token of the line
+	 */
+	public void prflp(String value, int length, boolean endLine){
+		String abbreviated = StringUtils.abbreviate(value, length);
+		ci.print(String.format("%-" + length + "s", abbreviated));
+		if (endLine) {
+			ci.print("\n");
+		}
 	}
 	
 	/**

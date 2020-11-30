@@ -50,6 +50,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/triggerParameters"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/runner"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/singleton"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/transientData"/>
       <genOperations ecoreOperation="model.ecore#//ITaskDescriptor/setTriggerParameter">
         <genParameters ecoreParameter="model.ecore#//ITaskDescriptor/setTriggerParameter/key"/>
         <genParameters ecoreParameter="model.ecore#//ITaskDescriptor/setTriggerParameter/value"/>
@@ -130,6 +131,8 @@
       <genOperations ecoreOperation="model.ecore#//ITaskService/findLatestExecution">
         <genParameters ecoreParameter="model.ecore#//ITaskService/findLatestExecution/taskDescriptor"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/getRunningTasks"/>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/getIncurredTasks"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

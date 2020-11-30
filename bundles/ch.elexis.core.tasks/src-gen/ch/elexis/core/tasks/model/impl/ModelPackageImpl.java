@@ -325,6 +325,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getITaskDescriptor_TransientData() {
+		return (EAttribute)iTaskDescriptorEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getITask() {
 		return iTaskEClass;
 	}
@@ -590,6 +600,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__TRIGGER_PARAMETERS);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__RUNNER);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__SINGLETON);
+		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__TRANSIENT_DATA);
 
 		iTaskEClass = createEClass(ITASK);
 		createEAttribute(iTaskEClass, ITASK__ID);
@@ -681,6 +692,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getITaskDescriptor_TriggerParameters(), g1, "triggerParameters", null, 0, 1, ITaskDescriptor.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITaskDescriptor_Runner(), ecorePackage.getEString(), "runner", null, 0, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITaskDescriptor_Singleton(), ecorePackage.getEBoolean(), "singleton", "false", 0, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(ecorePackage.getEMap());
+		g2 = createEGenericType(ecorePackage.getEString());
+		g1.getETypeArguments().add(g2);
+		g2 = createEGenericType(ecorePackage.getEObject());
+		g1.getETypeArguments().add(g2);
+		initEAttribute(getITaskDescriptor_TransientData(), g1, "transientData", null, 1, 1, ITaskDescriptor.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		EOperation op = addEOperation(iTaskDescriptorEClass, null, "setTriggerParameter", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "key", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -822,6 +839,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 
+		op = addEOperation(iTaskServiceEClass, null, "getRunningTasks", 1, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getITask());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
+		op = addEOperation(iTaskServiceEClass, null, "getIncurredTasks", 1, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getITaskDescriptor());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
 		// Initialize enums and add enum literals
 		initEEnum(taskTriggerTypeEEnum, TaskTriggerType.class, "TaskTriggerType");
 		addEEnumLiteral(taskTriggerTypeEEnum, TaskTriggerType.MANUAL);
@@ -857,6 +886,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// http://elexis.info/jpa/entity/attribute/mapping
+		createMappingAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://elexis.info/jpa/entity/attribute/mapping</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createMappingAnnotations() {
+		String source = "http://elexis.info/jpa/entity/attribute/mapping";
+		addAnnotation
+		  (getITaskDescriptor_IdentifiedRunnableId(),
+		   source,
+		   new String[] {
+			   "attributeName", "runnableId"
+		   });
 	}
 
 } //ModelPackageImpl

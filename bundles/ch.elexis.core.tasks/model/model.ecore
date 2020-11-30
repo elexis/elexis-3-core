@@ -39,7 +39,11 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="identifiedRunnableId" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="runnableId"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="runContext" transient="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The context parameters to pass to ITask on being instantiated to a Job"/>
@@ -71,6 +75,16 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Whether concurrent executions of an instantiation of this ITaskDescriptor are allowed. Even if this is set to false, if the reference IIdentifiedRunnable is singleton, it will be enforced to be true on execution."/>
       </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transientData" lowerBound="1"
+        changeable="false" transient="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Used to transport internal data, not stored into table. (e.g. next execution time of cron triggered task descriptor)"/>
+      </eAnnotations>
+      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eTypeArguments eClassifier="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+      </eGenericType>
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ITask" abstract="true" interface="true"
@@ -261,6 +275,22 @@
         <eTypeArguments eClassifier="#//ITask"/>
       </eGenericType>
       <eParameters name="taskDescriptor" eType="#//ITaskDescriptor"/>
+    </eOperations>
+    <eOperations name="getRunningTasks" lowerBound="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Get the currently running tasks"/>
+      </eAnnotations>
+      <eGenericType eClassifier="ecore:EClass ../../ch.elexis.core/model/types.ecore#//List">
+        <eTypeArguments eClassifier="#//ITask"/>
+      </eGenericType>
+    </eOperations>
+    <eOperations name="getIncurredTasks" lowerBound="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Get the incurred tasks, that is, all task descriptors that are active (will be run on the given trigger) for this runner (i.e. station)"/>
+      </eAnnotations>
+      <eGenericType eClassifier="ecore:EClass ../../ch.elexis.core/model/types.ecore#//List">
+        <eTypeArguments eClassifier="#//ITaskDescriptor"/>
+      </eGenericType>
     </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="TaskTriggerType">
