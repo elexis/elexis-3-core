@@ -1,5 +1,9 @@
 package ch.elexis.core.tasks.internal.service.quartz;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
@@ -10,22 +14,30 @@ import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
+import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.matchers.GroupMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 
 public class QuartzExecutor {
-		
+	
+	private Logger logger;
+	
 	private SchedulerFactory sf;
 	private Scheduler sched;
 	
 	public QuartzExecutor(){
 		sf = new StdSchedulerFactory();
+		logger = LoggerFactory.getLogger(getClass());
 	}
 	
-	public void incur(ITaskService taskService, ITaskDescriptor taskDescriptor) throws TaskException{
+	public void incur(ITaskService taskService, ITaskDescriptor taskDescriptor)
+		throws TaskException{
 		
 		// test if the runnable can be instantiated
 		taskService.instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId());
@@ -45,20 +57,24 @@ public class QuartzExecutor {
 		try {
 			sched.scheduleJob(jobDetail, trigger);
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.warn("#incur - " + taskDescriptor.getId(), e);
 		}
 		
 	}
 	
 	public void release(ITaskDescriptor taskDescriptor) throws TaskException{
+		
 		JobKey jobKey = new JobKey(taskDescriptor.getId());
 		try {
+			if (sched.isShutdown()) {
+				return;
+			}
+			
 			boolean exists = sched.checkExists(jobKey);
 			if (exists) {
 				sched.deleteJob(jobKey);
 			} else {
-				// TODO log warn
+				logger.info("#release - job does not exist [" + jobKey + "]");
 			}
 		} catch (SchedulerException e) {
 			throw new TaskException(TaskException.TRIGGER_REGISTER_ERROR, e);
@@ -75,6 +91,26 @@ public class QuartzExecutor {
 	public void start() throws SchedulerException{
 		sched = sf.getScheduler();
 		sched.start();
+	}
+	
+	public Set<String[]> getIncurred(){
+		Set<String[]> incurred = new HashSet<String[]>();
+		try {
+			Set<JobKey> jobKeys = sched.getJobKeys(GroupMatcher.anyGroup());
+			for (JobKey jobKey : jobKeys) {
+				String taskDescriptorId = jobKey.getName();
+				if (sched.checkExists(jobKey)) {
+					Trigger trigger = sched.getTrigger(TriggerKey.triggerKey(taskDescriptorId));
+					Date nextFireTime = trigger.getNextFireTime();
+					incurred.add(new String[] {
+						taskDescriptorId, nextFireTime.toString()
+					});
+				}
+			}
+		} catch (SchedulerException e) {
+			logger.warn("#getIncurredTasks", e);
+		}
+		return incurred;
 	}
 	
 }

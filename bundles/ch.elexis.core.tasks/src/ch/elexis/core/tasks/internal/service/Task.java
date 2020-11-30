@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -278,24 +279,30 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			// TODO validate all required parameters are set, validate url
 			setState(TaskState.IN_PROGRESS);
 			// TODO what if it runs forever?
-			Map<String, Serializable> result =
-				runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
-			if (result == null) {
-				result = Collections.emptyMap();
+			try {
+				Map<String, Serializable> result =
+					runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
+				if (result == null) {
+					result = Collections.emptyMap();
+				}
+				
+				setResult(result);
+				TaskState exitState =
+					(result.containsKey(ReturnParameter.MARKER_WARN)) ? TaskState.COMPLETED_WARN
+							: TaskState.COMPLETED;
+				setState(exitState);
+				
+				if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
+					|| getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
+					// only if completion was successful
+					removeTaskRecord();
+				}
+			} catch (OperationCanceledException oce) {
+				setState(TaskState.CANCELLED);
+				setResult(Collections.singletonMap(IIdentifiedRunnable.ReturnParameter.RESULT_DATA,
+					oce.getMessage()));
 			}
-			
-			setResult(result);
-			TaskState exitState =
-				(result.containsKey(ReturnParameter.MARKER_WARN)) ? TaskState.COMPLETED_WARN
-						: TaskState.COMPLETED;
 			getEntity().setFinishedAt(System.currentTimeMillis());
-			setState(exitState);
-			
-			if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
-				|| getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
-				// only if completion was successful
-				removeTaskRecord();
-			}
 			
 		} catch (Exception e) {
 			setResult(Collections.singletonMap(

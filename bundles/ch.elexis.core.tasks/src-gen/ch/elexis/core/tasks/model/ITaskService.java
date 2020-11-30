@@ -129,4 +129,26 @@ public interface ITaskService {
 	 */
 	Optional<ITask> findLatestExecution(ITaskDescriptor taskDescriptor);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Get the currently running tasks
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" type="ch.elexis.core.types.List&lt;ch.elexis.core.tasks.model.ITask&gt;" required="true" many="false"
+	 * @generated
+	 */
+	List<ITask> getRunningTasks();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Get the incurred tasks, that is, all task descriptors that are active (will be run on the given trigger) for this runner (i.e. station)
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" type="ch.elexis.core.types.List&lt;ch.elexis.core.tasks.model.ITaskDescriptor&gt;" required="true" many="false"
+	 * @generated
+	 */
+	List<ITaskDescriptor> getIncurredTasks();
+
 } // ITaskService

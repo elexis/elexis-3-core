@@ -77,6 +77,15 @@ public interface ModelPackage extends EPackage {
 	int ITASK_DESCRIPTOR = 0;
 
 	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITASK_DESCRIPTOR__LASTUPDATE = ch.elexis.core.model.ModelPackage.IDENTIFIABLE__LASTUPDATE;
+
+	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -185,13 +194,22 @@ public interface ModelPackage extends EPackage {
 	int ITASK_DESCRIPTOR__SINGLETON = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>Transient Data</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITASK_DESCRIPTOR__TRANSIENT_DATA = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>ITask Descriptor</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 12;
+	int ITASK_DESCRIPTOR_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.tasks.model.ITask <em>ITask</em>}' class.
@@ -202,6 +220,15 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	int ITASK = 1;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITASK__LASTUPDATE = ch.elexis.core.model.ModelPackage.IDENTIFIABLE__LASTUPDATE;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -572,6 +599,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getITaskDescriptor_Singleton();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITaskDescriptor#getTransientData <em>Transient Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Transient Data</em>'.
+	 * @see ch.elexis.core.tasks.model.ITaskDescriptor#getTransientData()
+	 * @see #getITaskDescriptor()
+	 * @generated
+	 */
+	EAttribute getITaskDescriptor_TransientData();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.tasks.model.ITask <em>ITask</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -939,6 +977,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ITASK_DESCRIPTOR__SINGLETON = eINSTANCE.getITaskDescriptor_Singleton();
+
+		/**
+		 * The meta object literal for the '<em><b>Transient Data</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ITASK_DESCRIPTOR__TRANSIENT_DATA = eINSTANCE.getITaskDescriptor_TransientData();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.tasks.model.ITask <em>ITask</em>}' class.

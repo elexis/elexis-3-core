@@ -28,9 +28,12 @@ public class TaskDescriptor
 	
 	private transient Gson gson;
 	
+	private transient Map<String, Object> transientData;
+	
 	public TaskDescriptor(ch.elexis.core.jpa.entities.TaskDescriptor entity){
 		super(entity);
 		gson = new Gson();
+		transientData = new HashMap<String, Object>();
 	}
 	
 	@Override
@@ -196,6 +199,11 @@ public class TaskDescriptor
 	@Override
 	public IXid getXid(String domain){
 		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public Map<String, Object> getTransientData(){
+		return transientData;
 	}
 	
 }
