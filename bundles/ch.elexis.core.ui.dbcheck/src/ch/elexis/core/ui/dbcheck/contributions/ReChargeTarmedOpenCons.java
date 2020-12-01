@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
@@ -34,11 +36,15 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 	
 	private ServiceReference<ICodeElementService> serviceRef;
 	
+	private boolean currentMandantOnly;
+	
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
 		Integer count = 0;
 		
 		if (initCodeElementService()) {
+			getCurrentMandantOnly();
+			
 			// make sure not billing strict
 			boolean presetBillingStrict =
 				CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
@@ -94,6 +100,14 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 		return "Tarmed Leistungen von [" + count + "] Konsultationen des Jahres ["
 			+ getBeginOfYear().get(TimeTool.YEAR) + "] neu verrechnet"
 			+ getProblemsString();
+	}
+	
+	private void getCurrentMandantOnly(){
+		Display.getDefault().syncExec(() -> {
+			currentMandantOnly = MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
+				"Nur Mandant neu verrechnen",
+					"Sollen die offenen Konsultationen aller Mandanten (Nein), oder nur des aktiven (Ja) neu verrechnet werden?");
+		});
 	}
 	
 	protected TimeTool getBeginOfYear(){
@@ -189,11 +203,14 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 		return ret;
 	}
 	
-	public static List<Konsultation> getKonsultation(TimeTool from, TimeTool to){
+	public List<Konsultation> getKonsultation(TimeTool from, TimeTool to){
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		qbe.add(Konsultation.DATE, Query.GREATER_OR_EQUAL, from.toString(TimeTool.DATE_COMPACT));
 		if (to != null) {
 			qbe.add(Konsultation.DATE, Query.LESS_OR_EQUAL, to.toString(TimeTool.DATE_COMPACT));
+		}
+		if (currentMandantOnly) {
+			qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
 		}
 		return qbe.execute();
 	}
@@ -215,6 +232,6 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 	
 	@Override
 	public String getMaintenanceDescription(){
-		return "Tarmed Leistungen aller offenen Konsutlationen dieses Jahres neu verrechnen.";
+		return "Tarmed Leistungen aller offenen Konsultationen dieses Jahres neu verrechnen";
 	}
 }
