@@ -13,6 +13,6 @@ public class ReChargeTarmedOpenConsLastYear extends ReChargeTarmedOpenCons {
 	
 	@Override
 	public String getMaintenanceDescription(){
-		return "Tarmed Leistungen aller offenen Konsutlationen des letzten Jahres neu verrechnen.";
+		return "Tarmed Leistungen aller offenen Konsultationen des letzten Jahres neu verrechnen";
 	}
 }
