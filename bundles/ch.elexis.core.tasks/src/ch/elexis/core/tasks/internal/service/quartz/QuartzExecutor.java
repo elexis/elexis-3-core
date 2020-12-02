@@ -32,8 +32,15 @@ public class QuartzExecutor {
 	private Scheduler sched;
 	
 	public QuartzExecutor(){
-		sf = new StdSchedulerFactory();
 		logger = LoggerFactory.getLogger(getClass());
+		
+		sf = new StdSchedulerFactory();
+		try {
+			sched = sf.getScheduler();
+		} catch (SchedulerException e) {
+			logger.error("Error getting scheduler", e);
+			throw new IllegalStateException(e.getMessage());
+		}
 	}
 	
 	public void incur(ITaskService taskService, ITaskDescriptor taskDescriptor)
@@ -89,7 +96,6 @@ public class QuartzExecutor {
 	}
 	
 	public void start() throws SchedulerException{
-		sched = sf.getScheduler();
 		sched.start();
 	}
 	
