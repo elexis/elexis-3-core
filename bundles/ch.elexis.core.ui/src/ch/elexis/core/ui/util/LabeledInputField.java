@@ -710,10 +710,12 @@ public class LabeledInputField extends Composite {
 					}
 				}
 			} else {
-				if (val != null && val.length() > 0) {
+				if (val != null) {
 					Map ext = act.getMap(inp.sFeldname);
-					ext.put(inp.sHashname, val);
-					act.setMap(inp.sFeldname, ext);
+					if (!val.equals(ext.get(inp.sHashname))) {
+						ext.put(inp.sHashname, val);
+						act.setMap(inp.sFeldname, ext);
+					}
 				}
 			}
 		}
