@@ -6,6 +6,7 @@ Bundle-Version: 2.0.21
 Bundle-Vendor: pdfbox.apache.org
 Automatic-Module-Name: ch.elexis.core.pdfbox
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Multi-Release: true
 Bundle-ClassPath: lib/fontbox-2.0.21.jar,
  lib/pdfbox-2.0.21.jar,
  .
