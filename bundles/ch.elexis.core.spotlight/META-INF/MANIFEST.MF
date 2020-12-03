@@ -12,5 +12,5 @@ Service-Component: OSGI-INF/ch.elexis.core.spotlight.internal.SpotlightService.x
  OSGI-INF/ch.elexis.core.spotlight.internal.contributors.PatientCategorySpotlightResultContributor.xml
 Bundle-ActivationPolicy: lazy
 Require-Bundle: ch.rgw.utility;bundle-version="3.8.0",
- ch.elexis.core;bundle-version="3.9.0",
+ ch.elexis.core;bundle-version="3.8.0",
  org.apache.commons.lang3
