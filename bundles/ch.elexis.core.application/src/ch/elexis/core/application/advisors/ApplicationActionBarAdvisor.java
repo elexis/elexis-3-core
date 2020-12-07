@@ -259,23 +259,24 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		tbm.add(GlobalActions.resetPerspectiveAction);
 		
 		tbm.add(new Separator());
+		tbm.add(GlobalActions.printEtikette);
 		tbm.add(new Action("", Action.AS_DROP_DOWN_MENU) {
 			
 			private IMenuCreator menuCreator;
 			
 			@Override
 			public ImageDescriptor getImageDescriptor(){
-				return GlobalActions.printEtikette.getImageDescriptor();
+				return GlobalActions.printVersionedEtikette.getImageDescriptor();
 			}
 			
 			@Override
 			public String getText(){
-				return GlobalActions.printEtikette.getText();
+				return GlobalActions.printVersionedEtikette.getText();
 			}
 			
 			@Override
 			public String getToolTipText(){
-				return GlobalActions.printEtikette.getToolTipText();
+				return GlobalActions.printVersionedEtikette.getToolTipText();
 			}
 			
 			@Override
@@ -297,9 +298,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 								menu = new Menu(parent);
 								final MenuItem menuItem = new MenuItem(this.menu, SWT.PUSH);
 								final Image image =
-									GlobalActions.printEtikette.getImageDescriptor().createImage();
+									GlobalActions.printVersionedEtikette.getImageDescriptor()
+										.createImage();
 								menuItem.setImage(image);
-								menuItem.setText("Mehrfach " + GlobalActions.printEtikette.getText());
+								menuItem.setText(
+									"Mehrfach " + GlobalActions.printVersionedEtikette.getText());
 								
 								menuItem.addSelectionListener(new SelectionAdapter() {
 									@Override
@@ -321,7 +324,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 											String amountStr = inputDlg.getValue();
 											int amount = Integer.parseInt(amountStr);
 											while (amount > 0) {
-												GlobalActions.printEtikette.run();
+												GlobalActions.printVersionedEtikette.run();
 												amount--;
 											}
 										}
@@ -344,10 +347,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			
 			@Override
 			public void run(){
-				GlobalActions.printEtikette.run();
+				GlobalActions.printVersionedEtikette.run();
 			}
 		});
-		tbm.add(GlobalActions.printVersionedEtikette);
 		tbm.add(GlobalActions.printAdresse);
 		
 		coolBar.add(tbm);
