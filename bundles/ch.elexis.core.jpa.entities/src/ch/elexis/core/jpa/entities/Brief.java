@@ -88,11 +88,44 @@ public class Brief extends AbstractEntityWithId implements EntityWithId, EntityW
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean geloescht = false;
+	
+	@Column(name = "DOCUMENT_STATUS")
+	protected int status;
 
 	public Brief() {
 		super();
 		content = new Heap();
 		content.setId(getId());
+	}
+
+	@Override
+	public String getId(){
+		return id;
+	}
+
+	@Override
+	public void setId(String id){
+		this.id = id;
+	}
+
+	@Override
+	public Long getLastupdate(){
+		return lastupdate;
+	}
+
+	@Override
+	public void setLastupdate(Long lastupdate){
+		this.lastupdate = lastupdate;
+	}
+
+	@Override
+	public boolean isDeleted(){
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(boolean deleted){
+		this.deleted = deleted;
 	}
 
 	public String getSubject() {
@@ -206,34 +239,12 @@ public class Brief extends AbstractEntityWithId implements EntityWithId, EntityW
 	public void setNote(String note) {
 		this.note = note;
 	}
-
-	@Override
-	public boolean isDeleted(){
-		return deleted;
+	
+	public int getStatus(){
+		return status;
 	}
 	
-	@Override
-	public void setDeleted(boolean deleted){
-		this.deleted = deleted;
-	}
-	
-	@Override
-	public String getId(){
-		return id;
-	}
-	
-	@Override
-	public void setId(String id){
-		this.id = id;
-	}
-	
-	@Override
-	public Long getLastupdate(){
-		return lastupdate;
-	}
-	
-	@Override
-	public void setLastupdate(Long lastupdate){
-		this.lastupdate = lastupdate;
+	public void setStatus(int status){
+		this.status = status;
 	}
 }

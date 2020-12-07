@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -25,12 +24,12 @@ import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.types.DocumentStatus;
+import ch.elexis.core.types.DocumentStatusMapper;
 
 public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 		implements IdentifiableWithXid, IDocumentLetter {
 	
 	private ICategory category;
-	private Set<DocumentStatus> status;
 	private String storeId = "";
 	private List<IHistory> history;
 	private String keywords;
@@ -61,28 +60,24 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public List<DocumentStatus> getStatus(){
-		if (status == null) {
-			DocumentStatus _status;
-			if (getEntity().getRecipient() != null) {
-				_status = DocumentStatus.SENT;
-			} else {
-				_status = DocumentStatus.NEW;
-			}
-			return Collections.singletonList(_status);
+		int status = getEntity().getStatus();
+		Set<DocumentStatus> map = DocumentStatusMapper.map(status);
+		if (getEntity().getRecipient() != null) {
+			map.add(DocumentStatus.SENT);
 		}
-		return new ArrayList<>(status);
+		return new ArrayList<DocumentStatus>(map);
 	}
 	
 	@Override
 	public void setStatus(DocumentStatus _status, boolean active){
-		if(status == null) {
-			status = new HashSet<>();
-		}
-		if (active) {
-			status.add(_status);
+		Set<DocumentStatus> _statusSet = new HashSet<>(getStatus());
+		if(active) {
+			_statusSet.add(_status);
 		} else {
-			status.remove(_status);
+			_statusSet.remove(_status);
 		}
+		int value = DocumentStatusMapper.map(_statusSet);
+		getEntity().setStatus(value);
 	}
 	
 	@Override
@@ -223,7 +218,10 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	}
 	
 	@Override
-	public void setContent(InputStream content){
+	public void setContent(InputStream content) {
+		setStatus(DocumentStatus.PREPROCESSED, false);
+		setStatus(DocumentStatus.INDEXED, false);
+		
 		// set file content if configured 
 		if (ModelUtil.isExternFile() && getPatient() != null) {
 			Optional<File> file = ModelUtil.getExternFile(this);
