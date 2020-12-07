@@ -29,11 +29,23 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ICoolBarManager;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchCommandConstants;
@@ -51,6 +63,7 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.dialogs.base.InputDialog;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 
@@ -246,7 +259,94 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		tbm.add(GlobalActions.resetPerspectiveAction);
 		
 		tbm.add(new Separator());
-		tbm.add(GlobalActions.printEtikette);
+		tbm.add(new Action("", Action.AS_DROP_DOWN_MENU) {
+			
+			private IMenuCreator menuCreator;
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return GlobalActions.printEtikette.getImageDescriptor();
+			}
+			
+			@Override
+			public String getText(){
+				return GlobalActions.printEtikette.getText();
+			}
+			
+			@Override
+			public String getToolTipText(){
+				return GlobalActions.printEtikette.getToolTipText();
+			}
+			
+			@Override
+			public IMenuCreator getMenuCreator(){
+				if(menuCreator == null) {
+					menuCreator = new IMenuCreator() {
+						
+						private Menu menu;
+						
+						@Override
+						public Menu getMenu(Menu parent){
+							// TODO Auto-generated method stub
+							return null;
+						}
+						
+						@Override
+						public Menu getMenu(Control parent){
+							if (menu == null) {
+								menu = new Menu(parent);
+								final MenuItem menuItem = new MenuItem(this.menu, SWT.PUSH);
+								final Image image =
+									GlobalActions.printEtikette.getImageDescriptor().createImage();
+								menuItem.setImage(image);
+								menuItem.setText("Mehrfach " + GlobalActions.printEtikette.getText());
+								
+								menuItem.addSelectionListener(new SelectionAdapter() {
+									@Override
+									public void widgetSelected(SelectionEvent e){
+										InputDialog inputDlg = new InputDialog(
+											Display.getDefault().getActiveShell(), menuItem.getText(),
+											"Bitte die Anzahl eingeben", "1", new IInputValidator() {
+											@Override
+											public String isValid(String newText){
+													try {
+														Integer.parseInt(newText);
+													} catch (NumberFormatException e) {
+														return newText + " ist keine gültige Anzahl";
+													}
+												return null;
+											}
+										}, SWT.BORDER);
+										if (inputDlg.open() == Window.OK) {
+											String amountStr = inputDlg.getValue();
+											int amount = Integer.parseInt(amountStr);
+											while (amount > 0) {
+												GlobalActions.printEtikette.run();
+												amount--;
+											}
+										}
+									}
+								});
+								
+							}
+							return menu;
+						}
+						
+						@Override
+						public void dispose(){
+							menu.dispose();
+							menu = null;
+						}
+					}; 
+				}
+				return menuCreator;
+			}
+			
+			@Override
+			public void run(){
+				GlobalActions.printEtikette.run();
+			}
+		});
 		tbm.add(GlobalActions.printVersionedEtikette);
 		tbm.add(GlobalActions.printAdresse);
 		
