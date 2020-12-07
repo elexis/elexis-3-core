@@ -375,6 +375,8 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 				value ? Boolean.TRUE : Boolean.FALSE);
 		if (scope == Scope.GLOBAL) {
 			configService.set(name, value);
+		} else if (scope == Scope.LOCAL) {
+			configService.setLocal(name, value);
 		} else if (scope == Scope.MANDATOR) {
 			IMandator activeMandator = contextService.getActiveMandator()
 				.orElseThrow(() -> new IllegalStateException("No active mandator"));
