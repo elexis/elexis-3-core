@@ -1,19 +1,18 @@
 package ch.elexis.core.types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DocumentStatusMapper {
 	
-	public static List<DocumentStatus> map(int status){
-		List<DocumentStatus> stati = new ArrayList<>();
-		
+	public static Set<DocumentStatus> map(int status){
 		if (status == DocumentStatus.NEW_VALUE) {
-			return Collections.singletonList(DocumentStatus.NEW);
+			return Collections.singleton(DocumentStatus.NEW);
 		}
 		
+		Set<DocumentStatus> stati = new HashSet<>();
 		DocumentStatus[] values = DocumentStatus.values();
 		for (DocumentStatus documentStatus : values) {
 			if (documentStatus.getValue() == DocumentStatus.NEW_VALUE) {
@@ -32,7 +31,7 @@ public class DocumentStatusMapper {
 		return map(new HashSet<>(stati));
 	}
 	
-	public static int map(HashSet<DocumentStatus> _statusSet){
+	public static int map(Set<DocumentStatus> _statusSet){
 		int value = 0;
 		for (DocumentStatus documentStatus : _statusSet) {
 			value ^= documentStatus.getValue();
