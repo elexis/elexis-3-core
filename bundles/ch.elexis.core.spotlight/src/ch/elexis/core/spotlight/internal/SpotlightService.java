@@ -59,6 +59,9 @@ public class SpotlightService implements ISpotlightService {
 		List<Number> numericTerms = new ArrayList<Number>(searchTerms.length);
 		
 		for (String term : searchTerms) {
+			if (term.length() == 0) {
+				continue;
+			}
 			
 			if (term.charAt(0) >= 'a' && term.charAt(0) <= 'z') {
 				// early break, starts with char, must be alphanumeric
