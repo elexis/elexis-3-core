@@ -74,7 +74,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		prflp("ID", 27);
 		prflp("Descriptor Id/RefId", 27);
 		prflp("StartTime", 35);
-		prflp("Owner / Runner / Runnable", 50, true);
+		prflp("Owner / Runner / Runnable", 70, true);
 		
 		runningTasks.stream().forEach(t -> {
 			ITaskDescriptor td = t.getTaskDescriptor();
@@ -84,7 +84,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(td.getReferenceId(), 27);
 			prflp(t.getRunAt().toString(), 35);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
-			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 50, true);
+			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
 		
 		List<ITaskDescriptor> incurredTasks = taskService.getIncurredTasks();
@@ -95,7 +95,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(td.getReferenceId(), 27);
 			prflp("NR " + (String) td.getTransientData().get("cron-next-exectime"), 35);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
-			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 50, true);
+			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
 		
 		IQuery<ITaskDescriptor> tdQuery =
@@ -112,7 +112,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(td.getReferenceId(), 27);
 			prflp("", 35);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
-			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 50, true);
+			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
 	}
 	
