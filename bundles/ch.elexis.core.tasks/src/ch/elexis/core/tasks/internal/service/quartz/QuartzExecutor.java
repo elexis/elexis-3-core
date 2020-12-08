@@ -1,5 +1,6 @@
 package ch.elexis.core.tasks.internal.service.quartz;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,8 +32,11 @@ public class QuartzExecutor {
 	private SchedulerFactory sf;
 	private Scheduler sched;
 	
+	private final SimpleDateFormat FULL_ISO;
+	
 	public QuartzExecutor(){
 		logger = LoggerFactory.getLogger(getClass());
+		FULL_ISO = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		sf = new StdSchedulerFactory();
 		try {
@@ -109,7 +113,7 @@ public class QuartzExecutor {
 					Trigger trigger = sched.getTrigger(TriggerKey.triggerKey(taskDescriptorId));
 					Date nextFireTime = trigger.getNextFireTime();
 					incurred.add(new String[] {
-						taskDescriptorId, nextFireTime.toString()
+						taskDescriptorId, FULL_ISO.format(nextFireTime)
 					});
 				}
 			}
