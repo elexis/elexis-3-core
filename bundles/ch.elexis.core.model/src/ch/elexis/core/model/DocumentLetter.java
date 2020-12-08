@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -82,7 +83,11 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public Date getCreated(){
-		return toDate(getEntity().getCreationDate());
+		LocalDateTime creationDate = getEntity().getCreationDate();
+		if (creationDate != null) {
+			return toDate(getEntity().getCreationDate());
+		}
+		return null;
 	}
 	
 	@Override
