@@ -85,6 +85,9 @@ public class SpotlightShell extends Shell {
 			
 		});
 		
+		// clicking outside closes shell
+		addListener(SWT.Deactivate, event -> close());
+		
 		uiUtil = new SpotlightUiUtil();
 		CoreUiUtil.injectServicesWithContext(uiUtil);
 		
