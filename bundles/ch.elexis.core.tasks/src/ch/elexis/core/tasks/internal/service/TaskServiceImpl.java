@@ -490,6 +490,10 @@ public class TaskServiceImpl implements ITaskService {
 			}
 		}
 		
+		if (taskDescriptor.getOwner() == null) {
+			throw new TaskException(TaskException.PARAMETERS_MISSING, "Missing owner");
+		}
+		
 	}
 	
 	@Override

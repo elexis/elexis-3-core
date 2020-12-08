@@ -279,6 +279,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			// TODO validate all required parameters are set, validate url
 			setState(TaskState.IN_PROGRESS);
 			// TODO what if it runs forever?
+			// TODO progressMonitor handling
 			try {
 				Map<String, Serializable> result =
 					runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
@@ -303,6 +304,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 					oce.getMessage()));
 			}
 			getEntity().setFinishedAt(System.currentTimeMillis());
+			progressMonitor.done();
 			
 		} catch (Exception e) {
 			setResult(Collections.singletonMap(
