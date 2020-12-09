@@ -39,8 +39,14 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 	
 	private final String PARAMS = "-l deu";
 	
+	/**
+	 * The OCRMyPdf service we use currently accepts one request only. We can assert this for the
+	 * given Elexis instance by using synchronized.
+	 * 
+	 * @see https://ocrmypdf.readthedocs.io/en/latest/docker.html#using-the-ocrmypdf-web-service-wrapper
+	 */
 	@Override
-	public byte[] performOcr(byte[] in, String parameters) throws IOException{
+	public synchronized byte[] performOcr(byte[] in, String parameters) throws IOException{
 		if (in == null) {
 			throw new IllegalArgumentException("null");
 		}
@@ -57,7 +63,7 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 			if (re.getStatus() == 400 && re.getMessage().contains("already")) {
 				return in;
 			}
-			throw new IllegalStateException("invalid state", re);
+			throw new IllegalStateException("invalid state " + re.getStatus(), re);
 		}
 		
 	}
