@@ -1,6 +1,5 @@
 package ch.elexis.core.types;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,11 +7,12 @@ import java.util.Set;
 public class DocumentStatusMapper {
 	
 	public static Set<DocumentStatus> map(int status){
+		Set<DocumentStatus> stati = new HashSet<>();
 		if (status == DocumentStatus.NEW_VALUE) {
-			return Collections.singleton(DocumentStatus.NEW);
+			stati.add(DocumentStatus.NEW);
+			return stati;
 		}
 		
-		Set<DocumentStatus> stati = new HashSet<>();
 		DocumentStatus[] values = DocumentStatus.values();
 		for (DocumentStatus documentStatus : values) {
 			if (documentStatus.getValue() == DocumentStatus.NEW_VALUE) {
