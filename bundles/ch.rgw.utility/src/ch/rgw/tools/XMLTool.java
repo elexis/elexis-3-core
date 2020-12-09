@@ -19,8 +19,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.xml.transform.Source;
@@ -30,15 +28,12 @@ import javax.xml.validation.Validator;
 
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.jdom.Verifier;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-
-import ch.rgw.crypt.Base64Coder;
 
 /**
  * This class provides various helper methods for handling XML data.
@@ -277,49 +272,6 @@ public class XMLTool {
 	 */
 	public static String dateToXmlDate(String date){
 		return new TimeTool(date).toString(TimeTool.DATE_ISO);
-	}
-	
-	/**
-	 * Convert a HashMap of String/Object pairs into a SOAP compatible XML structure. Ad this time,
-	 * only String, int, long, byte, byte[] and Hashmaps thereof are supported as Object types
-	 * 
-	 * @param hash
-	 * @param name
-	 * @param ns
-	 * @return
-	 */
-	public static Element HashMapToXML(HashMap<String, Object> hash, String name, Namespace ns){
-		Element ret = new Element("hash", ns);
-		ret.setAttribute("name", name);
-		Set<Entry<String, Object>> vars = hash.entrySet();
-		for (Entry<String, Object> entry : vars) {
-			Element var;
-			String n = entry.getKey();
-			Object o = entry.getValue();
-			if (o instanceof String) {
-				var = new Element("string", ns);
-				var.setAttribute("name", n);
-				var.setText((String) o);
-			} else if ((o instanceof Integer) || (o instanceof Long) || (o instanceof Short)
-				|| (o instanceof Byte)) {
-				var = new Element("int", ns);
-				var.setAttribute("name", "n");
-				var.setText(o.toString());
-			} else if (o instanceof HashMap) {
-				var = HashMapToXML((HashMap) o, n, ns);
-			} else if (o instanceof byte[]) {
-				var = new Element("array", ns);
-				var.setAttribute("name", n);
-				var.setText(new String(Base64Coder.encode((byte[]) o)));
-			} else {
-				var = null;
-			}
-			if (var == null) {
-				return null;
-			}
-			ret.addContent(var);
-		}
-		return ret;
 	}
 	
 	public static HashMap<String, Object> XMLToHashMap(Element elem){
