@@ -30,6 +30,11 @@ public interface IVirtualFilesystemService {
 	 */
 	public interface IVirtualFilesystemHandle {
 		
+		/**
+		 * A stream to read the content from.
+		 * @return
+		 * @throws IOException
+		 */
 		public InputStream openInputStream() throws IOException;
 		
 		/**
