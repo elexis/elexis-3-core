@@ -22,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemhandleFilter;
@@ -323,14 +324,14 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		}
 		
 		if (!isDirectory()) {
-			throw new IOException("not a directory");
+			throw new IOException("[" + url + "] is not a directory");
 		}
 		
 		try {
 			return new VirtualFilesystemHandle(url.toURI().resolve(subFile).toURL());
 		} catch (URISyntaxException | MalformedURLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LoggerFactory.getLogger(getClass()).error("Error", e);
 		}
 		
 		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
