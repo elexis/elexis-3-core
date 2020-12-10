@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.medication.views;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -115,6 +116,7 @@ public class MedicationComposite extends Composite
 		new WritableValue(null, MedicationTableViewerItem.class);
 	private WritableValue<Identifiable> lastDisposal = new WritableValue(null, Identifiable.class);
 	
+	private DateTime dateStart;
 	private DateTime timeStopped;
 	private DateTime dateStopped;
 	private Button btnStopMedication;
@@ -321,7 +323,7 @@ public class MedicationComposite extends Composite
 	
 	private void medicationDetailComposite(){
 		compositeMedicationDetail = new Composite(this, SWT.BORDER);
-		GridLayout gl_compositeMedicationDetail = new GridLayout(6, false);
+		GridLayout gl_compositeMedicationDetail = new GridLayout(7, false);
 		gl_compositeMedicationDetail.marginBottom = 5;
 		gl_compositeMedicationDetail.marginRight = 5;
 		gl_compositeMedicationDetail.marginLeft = 5;
@@ -333,6 +335,15 @@ public class MedicationComposite extends Composite
 		compositeMedicationDetail.setLayoutData(compositeMedicationDetailLayoutData);
 		
 		{
+			dateStart = new DateTime(compositeMedicationDetail, SWT.DATE);
+			dateStart.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					activateConfirmButton(true);
+				}
+			});
+			dateStart.setToolTipText("Startdatum");
+			
 			stackCompositeDosage = new Composite(compositeMedicationDetail, SWT.NONE);
 			stackCompositeDosage
 				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -641,6 +652,13 @@ public class MedicationComposite extends Composite
 					newPrescription.setDosageInstruction(getDosisStringFromSignatureTextArray());
 					newPrescription.setRemark(txtIntakeOrder.getText());
 					newPrescription.setDisposalComment(txtDisposalComment.getText());
+					
+					LocalDate startDate = LocalDate.of(dateStart.getYear(),
+						dateStart.getMonth() + 1, dateStart.getDay());
+					if (!newPrescription.getDateFrom().toLocalDate().equals(startDate)) {
+						newPrescription.setDateFrom(
+							startDate.atTime(newPrescription.getDateFrom().toLocalTime()));
+					}
 					CoreModelServiceHolder.get().save(newPrescription);
 				}
 				// change always stops
@@ -722,8 +740,13 @@ public class MedicationComposite extends Composite
 			txtDisposalComment.setEnabled(!stopped);
 			txtStopComment.setEnabled(!stopped);
 			txtFreeText.setEnabled(!stopped);
+			dateStart.setEnabled(!stopped);
 			dateStopped.setEnabled(false);
 			timeStopped.setEnabled(false);
+			
+			LocalDateTime dateFrom = presc.getPrescription().getDateFrom();
+			dateStart.setDate(dateFrom.getYear(), dateFrom.getMonthValue() - 1,
+				dateFrom.getDayOfMonth());
 			
 			btnStopMedication.setEnabled(presc.isActiveMedication());
 			stackedMedicationDetailComposite.layout();
