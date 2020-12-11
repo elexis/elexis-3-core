@@ -106,6 +106,9 @@ public class CreatePrescriptionHelper {
 				selfDispense(prescription);
 			}
 		}
+		if (signature.getStartDate() != null) {
+			prescription.setDateFrom(signature.getStartDate().atStartOfDay());
+		}
 		CoreModelServiceHolder.get().save(prescription);
 	}
 	

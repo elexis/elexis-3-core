@@ -485,6 +485,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="medicationType" eType="ecore:EDataType types.ecore#//EntryType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="disposalType" eType="ecore:EDataType types.ecore#//EntryType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endDate" eType="ecore:EDataType types.ecore#//LocalDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startDate" eType="ecore:EDataType types.ecore#//LocalDate"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IDiagnosis" abstract="true" interface="true"
       eSuperTypes="#//ICodeElement #//Identifiable">
