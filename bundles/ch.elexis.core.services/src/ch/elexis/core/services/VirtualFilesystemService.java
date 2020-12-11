@@ -38,6 +38,12 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 		if (url != null) {
 			return url;
 		} else {
+			
+			if (StringUtils.startsWith(urlString, "\\\\")) {
+				String replaced = urlString.replace("\\", "/");
+				return isValidURL("smb:" + replaced);
+			}
+			
 			File file = new File(urlString);
 			try {
 				file.toPath();
@@ -45,10 +51,6 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 			} catch (InvalidPathException e) {
 			}
 			
-			if (StringUtils.startsWith(urlString, "\\\\")) {
-				String replaced = urlString.replace("\\", "/");
-				return isValidURL("smb:" + replaced);
-			}
 		}
 		
 		throw new IOException("Can not handle url string [" + urlString + "]");
