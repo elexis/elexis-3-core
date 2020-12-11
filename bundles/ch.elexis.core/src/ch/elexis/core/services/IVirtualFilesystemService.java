@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
 
@@ -142,6 +143,12 @@ public interface IVirtualFilesystemService {
 		 * @return
 		 */
 		public URL toURL();
+		
+		/**
+		 * 
+		 * @return
+		 */
+		public URI getURI();
 		
 		/**
 		 * 

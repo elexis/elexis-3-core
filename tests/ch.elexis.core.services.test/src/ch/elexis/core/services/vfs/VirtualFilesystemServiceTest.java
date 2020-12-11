@@ -31,4 +31,11 @@ public class VirtualFilesystemServiceTest {
 		assertEquals(new URL("smb://medeserv/elexisdata/folder_name"), unc_handle.toURL());
 	}
 	
+	@Test
+	public void hidePasswordInUrlString(){
+		String hidePasswordInUrlString = IVirtualFilesystemService
+			.hidePasswordInUrlString("smb://username:password@testsrv/share/folder");
+		assertEquals("smb://username:***@testsrv/share/folder", hidePasswordInUrlString);
+	}
+	
 }
