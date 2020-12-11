@@ -9,12 +9,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.services.internal.VirtualFilesystemHandle;
+import ch.elexis.core.utils.CoreUtil;
 
 @Component
 public class VirtualFilesystemService implements IVirtualFilesystemService {
 	
 	@Override
 	public IVirtualFilesystemHandle of(String urlString) throws IOException{
+		
+		if (StringUtils.startsWith(urlString, "\\\\")) {
+			if (CoreUtil.isWindows()) {
+				// UNC path and Windows - directly pass to OS
+				return of(new File(urlString));
+			} else {
+				String replaced = urlString.replace("\\", "/");
+				urlString = "smb:" + replaced;
+			}
+		}
+		
 		URL url = assertUrl(urlString);
 		return new VirtualFilesystemHandle(url);
 	}
@@ -38,18 +50,11 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 		if (url != null) {
 			return url;
 		} else {
-			
-			if (StringUtils.startsWith(urlString, "\\\\")) {
-				String replaced = urlString.replace("\\", "/");
-				return isValidURL("smb:" + replaced);
-			}
-			
 			File file = new File(urlString);
 			try {
 				file.toPath();
 				return file.toURI().toURL();
-			} catch (InvalidPathException e) {
-			}
+			} catch (InvalidPathException e) {}
 			
 		}
 		
