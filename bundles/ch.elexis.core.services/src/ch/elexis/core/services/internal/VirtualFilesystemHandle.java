@@ -328,29 +328,23 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	
 	@Override
 	public IVirtualFilesystemHandle subDir(String subDir) throws IOException{
-		
-		if (StringUtils.isBlank(subDir) || subDir.startsWith("/")) {
-			throw new IllegalArgumentException();
-		}
-		
 		subDir = subDir.replaceAll(" ", "%20");
-		return subFile(subDir + "/");
+		URI _uri = this.uri.resolve(subDir);
+		return new VirtualFilesystemHandle(_uri);
 	}
 	
 	@Override
 	public IVirtualFilesystemHandle subFile(String subFile) throws IOException{
-		
-		if (StringUtils.isBlank(subFile) || subFile.startsWith("/")) {
-			throw new IllegalArgumentException();
-		}
-		
-		subFile = subFile.replaceAll(" ", "%20");
-		
 		if (!isDirectory()) {
 			throw new IOException("[" + uri + "] is not a directory");
 		}
+		if (subFile.startsWith("/")) {
+			throw new IllegalArgumentException("must not start with /");
+		}
 		
-		return new VirtualFilesystemHandle(uri.resolve(subFile));
+		subFile = subFile.replaceAll(" ", "%20");
+		URI _uri = this.uri.resolve(subFile);
+		return new VirtualFilesystemHandle(_uri);
 	}
 	
 	@Override
