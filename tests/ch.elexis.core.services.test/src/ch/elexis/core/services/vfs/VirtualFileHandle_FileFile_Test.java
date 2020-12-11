@@ -147,7 +147,7 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 		createPopulateTestFile();
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testSubDir() throws IOException {
 		testDirectoryHandle.subDir("subdir");
 	}

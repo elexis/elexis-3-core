@@ -22,7 +22,6 @@ import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.URIUtil;
 import org.slf4j.LoggerFactory;
 
