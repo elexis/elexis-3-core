@@ -68,7 +68,11 @@ public class MedicationView extends ViewPart implements IRefreshable {
 						return;
 					}
 				}
-				updateUi(prescription.getPatient(), true);
+				// only update with info of selected patient
+				if (prescription.getPatient()
+					.equals(ContextServiceHolder.get().getActivePatient().orElse(null))) {
+					updateUi(prescription.getPatient(), true);
+				}
 			}
 		}
 	}
