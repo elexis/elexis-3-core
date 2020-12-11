@@ -951,6 +951,12 @@ public class MedicationComposite extends Composite
 	}
 	
 	public void setSelectedMedication(MedicationTableViewerItem presc){
+		if (btnConfirm.getEnabled() && selectedMedication.getValue() != null) {
+			if (MessageDialog.openQuestion(getShell(), "Speichern", "Sollen die Änderungen an "
+				+ selectedMedication.getValue().getArtikelLabel() + " gespeichert werden?")) {
+				applyDetailChanges();
+			}
+		}
 		selectedMedication.setValue(presc);
 		showMedicationDetailComposite(presc);
 		
