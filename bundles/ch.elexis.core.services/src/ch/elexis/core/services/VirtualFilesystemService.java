@@ -18,14 +18,16 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 	public IVirtualFilesystemHandle of(String urlString) throws IOException{
 		
 		if (StringUtils.startsWith(urlString, "\\\\")) {
+			String replaced = urlString.replace("\\", "/");
 			if (CoreUtil.isWindows()) {
-				// UNC path and Windows - directly pass to OS
-				return of(new File(urlString));
+				// https://wiki.eclipse.org/Eclipse/UNC_Paths
+				urlString = "file://" + replaced;
 			} else {
-				String replaced = urlString.replace("\\", "/");
 				urlString = "smb:" + replaced;
 			}
 		}
+		
+		System.out.println("of "+urlString);
 		
 		URL url = assertUrl(urlString);
 		return new VirtualFilesystemHandle(url);
