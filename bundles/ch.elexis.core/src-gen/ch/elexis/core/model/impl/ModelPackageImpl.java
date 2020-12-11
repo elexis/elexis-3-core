@@ -2450,6 +2450,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIArticleDefaultSignature_StartDate() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIDiagnosis() {
 		return iDiagnosisEClass;
 	}
@@ -4883,6 +4893,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__MEDICATION_TYPE);
 		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_TYPE);
 		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__END_DATE);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__START_DATE);
 
 		iDiagnosisEClass = createEClass(IDIAGNOSIS);
 		createEAttribute(iDiagnosisEClass, IDIAGNOSIS__DESCRIPTION);
@@ -5669,6 +5680,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIArticleDefaultSignature_MedicationType(), theTypesPackage.getEntryType(), "medicationType", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticleDefaultSignature_DisposalType(), theTypesPackage.getEntryType(), "disposalType", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticleDefaultSignature_EndDate(), theTypesPackage.getLocalDate(), "endDate", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticleDefaultSignature_StartDate(), theTypesPackage.getLocalDate(), "startDate", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iArticleDefaultSignatureEClass, null, "setArticle", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIArticle(), "article", 0, 1, IS_UNIQUE, IS_ORDERED);

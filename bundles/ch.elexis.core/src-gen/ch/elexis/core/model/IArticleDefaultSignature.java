@@ -33,6 +33,7 @@ import java.time.LocalDate;
  *   <li>{@link ch.elexis.core.model.IArticleDefaultSignature#getMedicationType <em>Medication Type</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticleDefaultSignature#getDisposalType <em>Disposal Type</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticleDefaultSignature#getEndDate <em>End Date</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticleDefaultSignature#getStartDate <em>Start Date</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIArticleDefaultSignature()
@@ -299,6 +300,28 @@ public interface IArticleDefaultSignature extends Deleteable, Identifiable, With
 	 * @generated
 	 */
 	void setEndDate(LocalDate value);
+
+	/**
+	 * Returns the value of the '<em><b>Start Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Start Date</em>' attribute.
+	 * @see #setStartDate(LocalDate)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticleDefaultSignature_StartDate()
+	 * @model dataType="ch.elexis.core.types.LocalDate"
+	 * @generated
+	 */
+	LocalDate getStartDate();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticleDefaultSignature#getStartDate <em>Start Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Start Date</em>' attribute.
+	 * @see #getStartDate()
+	 * @generated
+	 */
+	void setStartDate(LocalDate value);
 
 	/**
 	 * <!-- begin-user-doc -->

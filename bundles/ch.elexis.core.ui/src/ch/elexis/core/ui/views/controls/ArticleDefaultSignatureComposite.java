@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.controls;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
@@ -77,6 +79,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	private Composite compositeMedicationTypeDetail;
 	
 	private Label lblCalcEndDate;
+	private DateTime dateStart;
 	
 	private List<SavingTargetToModelStrategy> targetToModelStrategies;
 	
@@ -210,6 +213,11 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	}
 
 	private void createMedicationTypeDetails(Composite parent){
+		dateStart = new DateTime(parent, SWT.DATE);
+		dateStart.setToolTipText("Startdatum");
+		dateStart.setLayoutData(new GridData());
+		setStartVisible(false);
+		
 		compositeMedicationTypeDetail = new Composite(parent, SWT.NONE);
 		compositeMedicationTypeDetail.setLayout(new GridLayout(4, false));
 		compositeMedicationTypeDetail
@@ -280,6 +288,15 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		ToolBar toolbar = toolbarManager.getControl();
 		if (toolbar != null && !toolbar.isDisposed()) {
 			toolbar.setVisible(value);
+		}
+	}
+	
+	public void setStartVisible(boolean value){
+		if (dateStart != null && !dateStart.isDisposed()) {
+			dateStart.setVisible(value);
+			GridData data = (GridData) dateStart.getLayoutData();
+			data.exclude = !value;
+			dateStart.getParent().layout();
 		}
 	}
 	
@@ -465,6 +482,10 @@ public class ArticleDefaultSignatureComposite extends Composite {
 					signature.setEndDate(null);
 				}
 			}
+			if (dateStart != null && dateStart.isVisible()) {
+				signature.setStartDate(LocalDate.of(dateStart.getYear(), dateStart.getMonth() + 1,
+					dateStart.getDay()));
+			}
 		}
 		updateMedicationTypeDetails();
 	}
@@ -521,6 +542,11 @@ public class ArticleDefaultSignatureComposite extends Composite {
 				btnRadioOnAtcCode.setSelection(true);
 			} else {
 				btnRadioOnArticle.setSelection(true);
+			}
+			if (signature.getStartDate() != null && dateStart.isVisible()) {
+				dateStart.setDate(signature.getStartDate().getYear(),
+					signature.getStartDate().getMonthValue() - 1,
+					signature.getStartDate().getDayOfMonth());
 			}
 		}
 		updateMedicationTypeDetails();
@@ -588,7 +614,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		@Override
 		public void widgetSelected(SelectionEvent e){
 			updateModelNonDatabinding();
-			save();
+			if (btnRadioOnArticle.getEnabled() || btnRadioOnAtcCode.getEnabled()) {
+				save();
+			}
 		}
 	}
 	

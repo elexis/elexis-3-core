@@ -13,6 +13,7 @@ public class ArticleDefaultSignature
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.DefaultSignature>
 		implements IdentifiableWithXid, IArticleDefaultSignature {
 	
+	private LocalDate startDate;
 	private LocalDate endDate;
 	
 	public ArticleDefaultSignature(DefaultSignature entity){
@@ -189,5 +190,15 @@ public class ArticleDefaultSignature
 	@Override
 	public void setEndDate(LocalDate value){
 		this.endDate = value;
+	}
+	
+	@Override
+	public LocalDate getStartDate(){
+		return startDate;
+	}
+	
+	@Override
+	public void setStartDate(LocalDate value){
+		this.startDate = value;
 	}
 }

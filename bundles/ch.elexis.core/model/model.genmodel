@@ -329,6 +329,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticleDefaultSignature/medicationType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticleDefaultSignature/disposalType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticleDefaultSignature/endDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticleDefaultSignature/startDate"/>
       <genOperations ecoreOperation="model.ecore#//IArticleDefaultSignature/setArticle">
         <genParameters ecoreParameter="model.ecore#//IArticleDefaultSignature/setArticle/article"/>
       </genOperations>
