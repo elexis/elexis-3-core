@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
 
@@ -21,9 +22,42 @@ import java.util.Optional;
  */
 public interface IVirtualFilesystemService {
 	
+	/**
+	 * Generate a handle from an URL or UNC string. UNC paths (e.g. \\server\share\folder) are
+	 * directly passed to the OS in windows, and rewritten to URL format (e.g.
+	 * smb://server/share/folder) on other operating systems.
+	 * 
+	 * @param urlString
+	 *            or uncString
+	 * @return
+	 * @throws IOException
+	 */
 	public IVirtualFilesystemHandle of(String urlString) throws IOException;
 	
 	public IVirtualFilesystemHandle of(File file) throws IOException;
+	
+	/**
+	 * Hide the password that may be part of the URL
+	 * 
+	 * @param urlString
+	 * @return the same string, with the password replaced with <code>***</code>. If the URL is
+	 *         incorrect the exception message is returned.
+	 */
+	static String hidePasswordInUrlString(String urlString){
+		URL url;
+		try {
+			url = new URL(urlString);
+		} catch (MalformedURLException e) {
+			return e.getMessage();
+		}
+		
+		String userInfo = url.getUserInfo();
+		if (userInfo == null) {
+			return url.toString();
+		}
+		String replacement = userInfo.substring(0, userInfo.indexOf(':')) + ":***";
+		return urlString.replace(userInfo, replacement);
+	}
 	
 	/**
 	 * A handle for a file which may or may not exist.
@@ -32,6 +66,7 @@ public interface IVirtualFilesystemService {
 		
 		/**
 		 * A stream to read the content from.
+		 * 
 		 * @return
 		 * @throws IOException
 		 */
@@ -61,7 +96,8 @@ public interface IVirtualFilesystemService {
 		 * @throws IOException
 		 * @return handle reflecting the location of the copied file
 		 */
-		public IVirtualFilesystemHandle copyTo(IVirtualFilesystemHandle destination) throws IOException;
+		public IVirtualFilesystemHandle copyTo(IVirtualFilesystemHandle destination)
+			throws IOException;
 		
 		/**
 		 * 
@@ -147,7 +183,8 @@ public interface IVirtualFilesystemService {
 		 * Move this to the handle. If this is a file and handle is a directory, the filename is
 		 * kept and return references a file handle in the provided directory.
 		 * 
-		 * @param handle the target handle of this
+		 * @param handle
+		 *            the target handle of this
 		 * @throws IOException
 		 * @return the updated handle reflecting the new location
 		 */

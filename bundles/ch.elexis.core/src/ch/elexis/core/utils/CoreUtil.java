@@ -29,6 +29,26 @@ public class CoreUtil {
 	
 	private static Logger logger = LoggerFactory.getLogger(CoreUtil.class);
 	
+	// from com.sun.jna.Platform
+	private static final int osType;
+	public static final int UNSPECIFIED = -1;
+	public static final int MAC = 0;
+	public static final int WINDOWS = 2;
+	public static final int LINUX = 1;
+	
+	static {
+		String osName = System.getProperty("os.name");
+		if (osName.startsWith("Linux")) {
+			osType = LINUX;
+		} else if (osName.startsWith("Mac") || osName.startsWith("Darwin")) {
+			osType = MAC;
+		} else if (osName.startsWith("Windows")) {
+			osType = WINDOWS;
+		} else {
+			osType = UNSPECIFIED;
+		}
+	}
+	
 	/**
 	 * The system is started in basic test mode, this mode enforces:<br>
 	 * <ul>
@@ -72,7 +92,7 @@ public class CoreUtil {
 			return Optional.of(ret);
 		}
 		
-		if(System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null) {
+		if (System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null) {
 			DBConnection dbConnection = new DBConnection();
 			dbConnection.username =
 				System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME) != null
@@ -186,7 +206,7 @@ public class CoreUtil {
 	 * 
 	 * @param flat
 	 *            the byte array
-	 * 
+	 * 			
 	 * @return the original Hashtable or null if no Hashtable could be created from the array
 	 */
 	private static Object foldObject(final byte[] flat){
@@ -334,5 +354,17 @@ public class CoreUtil {
 			}
 		}
 		return getWritableUserDir();
+	}
+	
+	public static final boolean isWindows(){
+		return osType == WINDOWS;
+	}
+	
+	public static final boolean isMac(){
+		return osType == MAC;
+	}
+	
+	public static final boolean isLinux(){
+		return osType == LINUX;
 	}
 }
