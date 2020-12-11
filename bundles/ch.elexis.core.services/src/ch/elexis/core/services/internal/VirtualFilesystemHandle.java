@@ -328,7 +328,10 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	@Override
 	public IVirtualFilesystemHandle subDir(String subDir) throws IOException{
 		subDir = subDir.replaceAll(" ", "%20");
-		URI _uri = this.uri.resolve(subDir);
+		if (!subDir.endsWith("/")) {
+			subDir += "/";
+		}
+		URI _uri = URIUtil.append(uri, subDir);
 		return new VirtualFilesystemHandle(_uri);
 	}
 	
@@ -342,7 +345,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		}
 		
 		subFile = subFile.replaceAll(" ", "%20");
-		URI _uri = this.uri.resolve(subFile);
+		URI _uri = URIUtil.append(uri, subFile);
 		return new VirtualFilesystemHandle(_uri);
 	}
 	
