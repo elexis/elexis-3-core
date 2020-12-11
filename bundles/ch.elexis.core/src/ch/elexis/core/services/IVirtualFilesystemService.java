@@ -198,7 +198,7 @@ public interface IVirtualFilesystemService {
 		public IVirtualFilesystemHandle moveTo(IVirtualFilesystemHandle target) throws IOException;
 		
 		/**
-		 * Only if {@link #isDirectory()}: Create a possibly not yet existing sub-directory handle.
+		 * Create a possibly not yet existing sub-directory handle.
 		 * The actual directory addressed, must then be created using {@link #mkdir()}
 		 * 
 		 * @param string

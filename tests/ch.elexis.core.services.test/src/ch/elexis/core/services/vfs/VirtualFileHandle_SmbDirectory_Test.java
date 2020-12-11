@@ -1,6 +1,8 @@
 package ch.elexis.core.services.vfs;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
@@ -41,6 +43,20 @@ public class VirtualFileHandle_SmbDirectory_Test {
 			e.printStackTrace();
 			serviceIsReachable = false;
 		}
+	}
+	
+	@Test
+	public void isUNCLoadable() throws IOException{
+		assumeTrue(serviceIsReachable);
+		assertTrue(service.of("\\\\gitlab.medelexis.ch\\tests\\ZLErD3ZPHCcBj").isDirectory());
+	}
+	
+	@Test
+	public void isDirectory() throws IOException{
+		assumeTrue(serviceIsReachable);
+		assertTrue(service.of(PREFIX_NOAUTH_SAMBA + "/ZLErD3ZPHCcBj").isDirectory());
+		assertFalse(
+			service.of(PREFIX_NOAUTH_SAMBA + "/ZLErD3ZPHCcBj/zXlpZK7UC8qwp.txt").isDirectory());
 	}
 	
 	@Test
