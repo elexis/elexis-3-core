@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
@@ -161,4 +162,12 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 		testDirectoryHandle.mkdir();
 	}
 
+	@Test
+	public void testOpenInputStream() throws IOException{
+		try (InputStream is = testDirectoryHandle.openInputStream()) {
+			String string = IOUtils.toString(is, Charset.defaultCharset());
+			System.out.println(string);
+		}
+	}
+	
 }
