@@ -46,9 +46,13 @@ public class VirtualFileHandle_SmbDirectory_Test {
 	}
 	
 	@Test
-	public void isUNCLoadable() throws IOException{
+	public void canRead() throws IOException{
 		assumeTrue(serviceIsReachable);
-		assertTrue(service.of("\\\\gitlab.medelexis.ch\\tests\\ZLErD3ZPHCcBj").isDirectory());
+		assertTrue(service.of(PREFIX_NOAUTH_SAMBA + "testfile.txt").canRead());
+		assertTrue(service.of("\\\\gitlab.medelexis.ch\\tests\\testfile.txt").canRead());
+//		assertTrue(service.of(PREFIX_NOAUTH_SAMBA + "test file.txt").canRead());
+//		assertTrue(service.of("\\\\gitlab.medelexis.ch\\tests\\test file.txt").canRead());
+
 	}
 	
 	@Test
