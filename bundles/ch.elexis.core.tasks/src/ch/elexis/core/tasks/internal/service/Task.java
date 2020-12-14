@@ -130,7 +130,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				mandatorId);
 		} else if (TaskState.FAILED == state) {
 			logger.warn("state = {}", getState());
-		} else if (TaskState.COMPLETED == state) {
+		} else if (TaskState.COMPLETED == state || TaskState.CANCELLED == state) {
 			logger.info("state = {} result = [{}]", getState(), getResult());
 		} else {
 			logger.debug("state = {}", getState());
