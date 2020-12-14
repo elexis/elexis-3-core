@@ -38,13 +38,17 @@ public interface IVirtualFilesystemService {
 	public IVirtualFilesystemHandle of(File file) throws IOException;
 	
 	/**
-	 * Hide the password that may be part of the URL
+	 * Hide the password that may be part of the URL, accepts UNCs simply returning them
 	 * 
 	 * @param urlString
 	 * @return the same string, with the password replaced with <code>***</code>. If the URL is
 	 *         incorrect the exception message is returned.
 	 */
 	static String hidePasswordInUrlString(String urlString){
+		if (urlString.startsWith("\\\\")) {
+			return urlString;
+		}
+		
 		URL url;
 		try {
 			url = new URL(urlString);
@@ -198,8 +202,8 @@ public interface IVirtualFilesystemService {
 		public IVirtualFilesystemHandle moveTo(IVirtualFilesystemHandle target) throws IOException;
 		
 		/**
-		 * Create a possibly not yet existing sub-directory handle.
-		 * The actual directory addressed, must then be created using {@link #mkdir()}
+		 * Create a possibly not yet existing sub-directory handle. The actual directory addressed,
+		 * must then be created using {@link #mkdir()}
 		 * 
 		 * @param string
 		 * @return
