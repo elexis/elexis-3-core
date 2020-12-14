@@ -18,6 +18,7 @@ import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PRESCRIPTION;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
@@ -26,6 +27,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IOutputter;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
@@ -120,14 +122,17 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		updateTextLock();
 		List<Prescription> lines = rp.getLines();
 		String[][] fields = new String[lines.size()][];
-		if (replace.equals(Messages.RezeptBlatt_4)) {
-			fields = createRezeptListFields(lines);
-		} else {
-			fields = createTakingListFields(lines);
-		}
 		int[] wt = new int[] {
 			10, 70, 20
 		};
+		if (replace.equals(Messages.RezeptBlatt_4)) {
+			fields = createRezeptListFields(lines);
+		} else if (replace.equals(Messages.RezeptBlatt_4_Extended)) {
+			fields = createExtendedTakingListFields(lines);
+			wt = new int[] {
+				5, 45, 10, 10, 15, 15
+			};
+		}
 		rp.setBrief(actBrief);
 		if (text.getPlugin().insertTable(replace, 0, fields, wt)) {
 			if (text.getPlugin().isDirectOutput()) {
@@ -162,14 +167,19 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		updateTextLock();
 		List<Prescription> lines = Arrays.asList(prescriptions);
 		String[][] fields = new String[lines.size()][];
-		if (replace.equals(Messages.RezeptBlatt_4)) {
-			fields = createRezeptListFields(lines);
-		} else {
-			fields = createTakingListFields(lines);
-		}
 		int[] wt = new int[] {
 			10, 70, 20
 		};
+		if (replace.equals(Messages.RezeptBlatt_4)) {
+			fields = createRezeptListFields(lines);
+		} else if (replace.equals(Messages.RezeptBlatt_6)) {
+			fields = createTakingListFields(lines);
+		} else if (replace.equals(Messages.RezeptBlatt_6_Extended)) {
+			fields = createExtendedTakingListFields(lines);
+			wt = new int[] {
+				5, 45, 10, 10, 15, 15
+			};
+		}
 		if (text.getPlugin().insertTable(replace, 0, fields, wt)) {
 			if (text.getPlugin().isDirectOutput()) {
 				text.getPlugin().print(null, null, true);
@@ -225,8 +235,32 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		return fields;
 	}
 	
+	public String[][] createExtendedTakingListFields(List<Prescription> lines){
+		String[][] fields = new String[lines.size()][];
+		
+		for (int i = 0; i < fields.length; i++) {
+			Prescription p = lines.get(i);
+			fields[i] = new String[6];
+			if (p.getEntryType() != null && p.getEntryType() != EntryType.UNKNOWN) {
+				fields[i][0] = p.getEntryType().name().substring(0, 1);
+			} else {
+				fields[i][0] = "";
+			}
+			fields[i][1] = StringUtils.defaultString(p.getSimpleLabel());
+			fields[i][2] = StringUtils.defaultString(p.getDosis());
+			fields[i][3] = StringUtils.defaultString(p.getBeginDate());
+			fields[i][4] = StringUtils.defaultString(p.getBemerkung());
+			fields[i][5] = StringUtils.defaultString(p.getDisposalComment());
+		}
+		return fields;
+	}
+	
 	public boolean createRezept(Rezept rp){
-		if (createList(rp, TT_PRESCRIPTION, Messages.RezeptBlatt_4)) { //$NON-NLS-1$ //$NON-NLS-2$
+		boolean ret = createList(rp, TT_PRESCRIPTION, Messages.RezeptBlatt_4);
+		if (!ret) {
+			ret = createList(rp, TT_PRESCRIPTION, Messages.RezeptBlatt_4_Extended);
+		}
+		if (ret) { //$NON-NLS-1$ //$NON-NLS-2$
 			new OutputLog(rp, this);
 			return true;
 		}
@@ -234,7 +268,11 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	}
 	
 	public boolean createEinnahmeliste(Patient pat, Prescription[] pres){
-		return createList(pres, TT_INTAKE_LIST, Messages.RezeptBlatt_6); //$NON-NLS-1$ //$NON-NLS-2$
+		boolean ret = createList(pres, TT_INTAKE_LIST, Messages.RezeptBlatt_6);
+		if (!ret) {
+			ret = createList(pres, TT_INTAKE_LIST, Messages.RezeptBlatt_6_Extended);
+		}
+		return ret;
 	}
 	
 	@Override
