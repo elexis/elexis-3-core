@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import com.google.gson.annotations.JsonAdapter;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -21,6 +23,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @EntityListeners(EntityWithIdListener.class)
 @Table(name = "TASKDESCRIPTOR")
+@Cache(expiry = 15000)
 public class TaskDescriptor extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted {
 	
