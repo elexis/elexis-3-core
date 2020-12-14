@@ -11,7 +11,7 @@ public class TimeUtil {
 	public static DateTimeFormatter DATE_GER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 	
 	public static String formatSafe(LocalDateTime localDateTime){
-		if (localDateTime == null) {
+		if (localDateTime != null) {
 			return FULL_GER.format(localDateTime);
 		}
 		return "";
