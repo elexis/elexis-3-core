@@ -32,6 +32,7 @@ import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.ModelPackage;
 import ch.elexis.core.tasks.model.TaskTriggerType;
+import ch.elexis.core.time.TimeUtil;
 
 @Component(service = CommandProvider.class, immediate = true)
 public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
@@ -82,7 +83,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(td.getTriggerType().getName(), 10);
 			prflp(t.getId(), 27);
 			prflp(td.getReferenceId(), 27);
-			prflp(t.getRunAt().toString(), 35);
+			prflp(TimeUtil.formatSafe(t.getRunAt()), 35);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
 			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 50, true);
 		});

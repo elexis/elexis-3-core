@@ -2,8 +2,6 @@
 package ch.elexis.core.ui.tasks.parts;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.tasks.model.ITask;
+import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.tasks.ITaskResultDetailContributions;
 
 public class TaskDetailPart {
@@ -47,7 +46,7 @@ public class TaskDetailPart {
 		String runAt;
 		LocalDateTime _runAt = task.getRunAt();
 		if(_runAt != null) {
-			runAt = _runAt.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+			runAt = TimeUtil.formatSafe(_runAt);
 		} else {
 			runAt = "queued";
 		}
