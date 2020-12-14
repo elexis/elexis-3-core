@@ -38,8 +38,8 @@ public class VirtualFilesystemServiceTest {
 		assertEquals("smb://username:***@testsrv/share/folder", hidePasswordInUrlString);
 		
 		hidePasswordInUrlString =
-			IVirtualFilesystemService.hidePasswordInUrlString("\\\\medeserv\share\folder");
-		assertEquals("\\\\medeserv\share\folder", hidePasswordInUrlString);
+			IVirtualFilesystemService.hidePasswordInUrlString("\\\\medeserv\\share\\folder");
+		assertEquals("\\\\medeserv\\share\\folder", hidePasswordInUrlString);
 	}
 	
 }
