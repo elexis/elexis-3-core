@@ -41,6 +41,8 @@ public class TaskResultLabelProvider extends ColumnLabelProvider {
 			return Images.IMG_ACHTUNG;
 		case COMPLETED_MANUAL:
 			return Images.IMG_HAND;
+		case CANCELLED:
+			return Images.IMG_STOP;
 		case FAILED:
 			return Images.IMG_AUSRUFEZ;
 		case QUEUED:

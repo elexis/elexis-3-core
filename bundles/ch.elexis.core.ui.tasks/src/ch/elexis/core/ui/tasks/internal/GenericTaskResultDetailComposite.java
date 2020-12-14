@@ -1,7 +1,5 @@
 package ch.elexis.core.ui.tasks.internal;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.format.DateTimeFormatter;
 
 import org.eclipse.jface.resource.FontDescriptor;
@@ -13,9 +11,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import com.cronutils.utils.StringUtils;
-
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
+import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.tasks.model.ITask;
 
 public class GenericTaskResultDetailComposite {
@@ -84,10 +81,10 @@ public class GenericTaskResultDetailComposite {
 		txtResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		StringBuilder sbResult = new StringBuilder();
 		task.getResult().forEach((k, v) -> {
-			if(v instanceof String) {
+			if (v instanceof String) {
 				String value = (String) v;
 				if (IIdentifiedRunnable.ReturnParameter.STRING_URL.equals(k)) {
-					value = hidePasswordInUrlString((String) v);
+					value = IVirtualFilesystemService.hidePasswordInUrlString((String) v);
 				}
 				sbResult.append("- " + k + ": " + value + "\n");
 			} else {
@@ -106,28 +103,12 @@ public class GenericTaskResultDetailComposite {
 		task.getRunContext().forEach((k, v) -> {
 			String value = (String) v;
 			if (IIdentifiedRunnable.RunContextParameter.STRING_URL.equals(k)) {
-				value = hidePasswordInUrlString((String) v);
+				value = IVirtualFilesystemService.hidePasswordInUrlString((String) v);
 			}
 			sbRunContext.append("- " + k + ": " + value + "\n");
 		});
 		txtRunContext.setText(sbRunContext.toString());
 		
-	}
-	
-	private String hidePasswordInUrlString(String urlString){
-		URL url;
-		try {
-			url = new URL(urlString);
-		} catch (MalformedURLException e) {
-			return e.getMessage();
-		}
-		
-		String userInfo = url.getUserInfo();
-		if (StringUtils.isEmpty(userInfo)) {
-			return url.toString();
-		}
-		String replacement = userInfo.substring(0, userInfo.indexOf(':')) + ":***";
-		return urlString.replace(userInfo, replacement);
 	}
 	
 }
