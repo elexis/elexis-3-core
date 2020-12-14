@@ -1,6 +1,8 @@
 package ch.elexis.core.spotlight.ui.internal;
 
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -28,6 +30,7 @@ public class SpotlightShell extends Shell {
 	private ISpotlightService spotlightService;
 	private ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService;
 	
+	private Timer timer;
 	private Text txtSearchInput;
 	private SpotlightResultComposite resultComposite;
 	private GridData resultCompositeGridData;
@@ -102,7 +105,18 @@ public class SpotlightShell extends Shell {
 		txtSearchInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtSearchInput.setTextLimit(256);
 		txtSearchInput.addModifyListener(change -> {
-			spotlightService.computeResult(((Text) change.widget).getText(), null);
+			final String text = ((Text) change.widget).getText();
+			if (timer != null) {
+				timer.cancel();
+			}
+			timer = new Timer();
+			timer.schedule(new TimerTask() {
+				@Override
+				public void run(){
+					spotlightService.computeResult(text, null);
+				}
+			}, 200);
+			
 		});
 		txtSearchInput.addListener(SWT.Traverse, new Listener() {
 			public void handleEvent(Event event){
