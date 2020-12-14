@@ -10,8 +10,16 @@ public class ITaskComparators {
 		return Comparator.comparingLong(o -> ((ITask) o).getLastupdate());
 	}
 	
+	public static Comparator<ITask> ofRunAt(){
+		return Comparator.comparing(o -> ((ITask) o).getRunAt());
+	}
+	
 	public static Comparator<ITask> ofTaskDescriptorId(){
 		return Comparator.comparing((task) -> task.getTaskDescriptor().getId(),
 			String.CASE_INSENSITIVE_ORDER);
+	}
+	
+	public static Comparator<ITask> ofFinishedAt(){
+		return Comparator.comparing(o -> ((ITask) o).getFinishedAt());
 	}
 }

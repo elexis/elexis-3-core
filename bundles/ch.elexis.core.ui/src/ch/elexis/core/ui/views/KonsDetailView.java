@@ -80,6 +80,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -103,7 +104,6 @@ import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.controls.StickerComposite;
-import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.rgw.tools.Result;
@@ -625,7 +625,7 @@ public class KonsDetailView extends ViewPart
 			comboViewerFall.setSelection(new StructuredSelection(coverage));
 			comboViewerFall.getCombo().setEnabled(coverage.isOpen());
 			IMandator mandator = encounter.getMandator();
-			String encounterDate = CoreUtil.defaultDateFormat(encounter.getDate());
+			String encounterDate = TimeUtil.formatSafe(encounter.getDate());
 			lBeh.setText(encounterDate + " (" //$NON-NLS-1$
 				+ new TimeTool(encounter.getDate()).getDurationToNowString() + ")"); //$NON-NLS-1$
 			StringBuilder sb = new StringBuilder();

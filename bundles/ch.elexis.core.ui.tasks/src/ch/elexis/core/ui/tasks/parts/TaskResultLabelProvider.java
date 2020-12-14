@@ -58,4 +58,10 @@ public class TaskResultLabelProvider extends ColumnLabelProvider {
 		return null;
 	}
 	
+	@Override
+	public String getToolTipText(Object element){
+		ITask task = (ITask) element;
+		return task.getState().name();
+	}
+	
 }

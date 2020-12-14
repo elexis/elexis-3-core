@@ -260,52 +260,6 @@ public class CoreUtil {
 		}
 	}
 	
-	private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-	
-	/**
-	 * Get a formatted String version of the date.
-	 * 
-	 * @param date
-	 * @return
-	 */
-	public static String defaultDateFormat(LocalDate date){
-		if (date != null) {
-			return date.format(dateFormat);
-		}
-		return "?";
-	}
-	
-	private static DateTimeFormatter dateTimeFormat =
-		DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm");
-	
-	/**
-	 * Get a formatted String version of the datetime.
-	 * 
-	 * @param datetime
-	 * @return
-	 */
-	public static String defaultDateTimeFormat(LocalDateTime datetime){
-		if (datetime != null) {
-			return datetime.format(dateTimeFormat);
-		}
-		return "?";
-	}
-	
-	private static DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("hh:mm");
-	
-	/**
-	 * Get a formatted String version of the time part of the datetime.
-	 * 
-	 * @param date
-	 * @return
-	 */
-	public static String defaultTimeFormat(LocalDateTime datetime){
-		if (datetime != null) {
-			return datetime.format(timeFormat);
-		}
-		return "?";
-	}
-	
 	/**
 	 * return a directory suitable for plugin specific configuration data. If no such dir exists, it
 	 * will be created. If it could not be created, the application will refuse to start.

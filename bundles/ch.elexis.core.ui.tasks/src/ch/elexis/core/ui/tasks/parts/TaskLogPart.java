@@ -1,8 +1,5 @@
 package ch.elexis.core.ui.tasks.parts;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -38,12 +35,15 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.tasks.model.ITask;
+import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 
-public class TaskResultPart implements IDoubleClickListener {
+public class TaskLogPart implements IDoubleClickListener {
 	
 	@Inject
 	private ESelectionService selectionService;
@@ -83,52 +83,34 @@ public class TaskResultPart implements IDoubleClickListener {
 		tableViewerResults.setUseHashlookup(true);
 		tableViewerResults.addDoubleClickListener(this);
 		
-		TableViewerColumn tvcState = new TableViewerColumn(tableViewerResults, SWT.NONE);
-		tvcState.setLabelProvider(TaskResultLabelProvider.getInstance());
-		TableColumn tblclmnState = tvcState.getColumn();
-		tcLayout.setColumnData(tblclmnState, new ColumnPixelData(16, true, true));
-		tblclmnState.setText("Status");
-		
-		TableViewerColumn tvcLastUpdate = new TableViewerColumn(tableViewerResults, SWT.NONE);
-		tvcLastUpdate.setLabelProvider(new ColumnLabelProvider() {
+		TableViewerColumn tvcTaskDescriptor = new TableViewerColumn(tableViewerResults, SWT.NONE);
+		tvcTaskDescriptor.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
 				ITask task = (ITask) element;
-				LocalDateTime lastUpdateDt = LocalDateTime
-					.ofInstant(Instant.ofEpochMilli(task.getLastupdate()), ZoneId.systemDefault());
-				return lastUpdateDt.toString();
+				String referenceId = task.getTaskDescriptor().getReferenceId();
+				if (referenceId != null) {
+					return referenceId;
+				}
+				return task.getTaskDescriptor().getId();
 			}
 		});
-		TableColumn tblclmnLastupdate = tvcLastUpdate.getColumn();
-		tcLayout.setColumnData(tblclmnLastupdate, new ColumnPixelData(150, true, true));
-		tblclmnLastupdate.setText("Aktualisiert");
-		tblclmnLastupdate.addSelectionListener(new SelectionAdapter() {
+		TableColumn tblclmnTaskDescriptor = tvcTaskDescriptor.getColumn();
+		tcLayout.setColumnData(tblclmnTaskDescriptor, new ColumnPixelData(110, true, true));
+		tblclmnTaskDescriptor.setText("Task");
+		tblclmnTaskDescriptor.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				tableResults.setSortColumn(tblclmnLastupdate);
+				tableResults.setSortColumn(tblclmnTaskDescriptor);
 				if (tableResults.getSortDirection() == SWT.DOWN) {
-					contentProvider.setSortOrder(ITaskComparators.ofLastUpdate());
+					contentProvider.setSortOrder(ITaskComparators.ofTaskDescriptorId());
 					tableResults.setSortDirection(SWT.UP);
 				} else {
-					contentProvider.setSortOrder(ITaskComparators.ofLastUpdate().reversed());
+					contentProvider.setSortOrder(ITaskComparators.ofTaskDescriptorId().reversed());
 					tableResults.setSortDirection(SWT.DOWN);
 				}
 			}
 		});
-		tableResults.setSortColumn(tblclmnLastupdate);
-		tableResults.setSortDirection(SWT.DOWN);
-		
-		TableViewerColumn tvcOwner = new TableViewerColumn(tableViewerResults, SWT.NONE);
-		tvcOwner.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element){
-				ITask task = (ITask) element;
-				return task.getTaskDescriptor().getOwner().getId();
-			}
-		});
-		TableColumn tblclmnOwner = tvcOwner.getColumn();
-		tcLayout.setColumnData(tblclmnOwner, new ColumnPixelData(100, true, true));
-		tblclmnOwner.setText("User");
 		
 		TableViewerColumn tvcTrigger = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcTrigger.setLabelProvider(new ColumnLabelProvider() {
@@ -156,37 +138,78 @@ public class TaskResultPart implements IDoubleClickListener {
 			}
 		});
 		TableColumn tblclmnTrigger = tvcTrigger.getColumn();
-		tcLayout.setColumnData(tblclmnTrigger, new ColumnPixelData(18, true, true));
-		tblclmnTrigger.setText("Trigger");
+		tblclmnTrigger.setAlignment(SWT.CENTER);
+		tcLayout.setColumnData(tblclmnTrigger, new ColumnPixelData(22, true, false));
 		
-		TableViewerColumn tvcTaskDescriptor = new TableViewerColumn(tableViewerResults, SWT.NONE);
-		tvcTaskDescriptor.setLabelProvider(new ColumnLabelProvider() {
+		TableViewerColumn tvcStartTime = new TableViewerColumn(tableViewerResults, SWT.NONE);
+		tvcStartTime.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
 				ITask task = (ITask) element;
-				String referenceId = task.getTaskDescriptor().getReferenceId();
-				if (referenceId != null) {
-					return referenceId;
-				}
-				return task.getTaskDescriptor().getId();
+				return TimeUtil.formatSafe(task.getRunAt());
 			}
 		});
-		TableColumn tblclmnTaskDescriptor = tvcTaskDescriptor.getColumn();
-		tcLayout.setColumnData(tblclmnTaskDescriptor, new ColumnPixelData(100, true, true));
-		tblclmnTaskDescriptor.setText("Vorlage");
-		tblclmnTaskDescriptor.addSelectionListener(new SelectionAdapter() {
+		TableColumn tblclmnStartTime = tvcStartTime.getColumn();
+		tcLayout.setColumnData(tblclmnStartTime, new ColumnPixelData(110, true, true));
+		tblclmnStartTime.setText("Startzeit");
+		tblclmnStartTime.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				tableResults.setSortColumn(tblclmnTaskDescriptor);
+				tableResults.setSortColumn(tblclmnStartTime);
 				if (tableResults.getSortDirection() == SWT.DOWN) {
-					contentProvider.setSortOrder(ITaskComparators.ofTaskDescriptorId());
+					contentProvider.setSortOrder(ITaskComparators.ofRunAt());
 					tableResults.setSortDirection(SWT.UP);
 				} else {
-					contentProvider.setSortOrder(ITaskComparators.ofTaskDescriptorId().reversed());
+					contentProvider.setSortOrder(ITaskComparators.ofRunAt().reversed());
 					tableResults.setSortDirection(SWT.DOWN);
 				}
 			}
 		});
+		
+		TableViewerColumn tvcFinishTime = new TableViewerColumn(tableViewerResults, SWT.NONE);
+		tvcFinishTime.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				ITask task = (ITask) element;
+				return TimeUtil.formatSafe(task.getFinishedAt());
+			}
+		});
+		TableColumn tblclmnFinishTime = tvcFinishTime.getColumn();
+		tcLayout.setColumnData(tblclmnFinishTime, new ColumnPixelData(100, true, true));
+		tblclmnFinishTime.setText("Endzeit");
+		tblclmnFinishTime.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				tableResults.setSortColumn(tblclmnFinishTime);
+				if (tableResults.getSortDirection() == SWT.DOWN) {
+					contentProvider.setSortOrder(ITaskComparators.ofFinishedAt());
+					tableResults.setSortDirection(SWT.UP);
+				} else {
+					contentProvider.setSortOrder(ITaskComparators.ofFinishedAt().reversed());
+					tableResults.setSortDirection(SWT.DOWN);
+				}
+			}
+		});
+		tableResults.setSortColumn(tblclmnStartTime);
+		tableResults.setSortDirection(SWT.DOWN);
+		
+		TableViewerColumn tvcState = new TableViewerColumn(tableViewerResults, SWT.NONE);
+		tvcState.setLabelProvider(TaskResultLabelProvider.getInstance());
+		TableColumn tblclmnState = tvcState.getColumn();
+		tcLayout.setColumnData(tblclmnState, new ColumnPixelData(22, true, false));
+		tblclmnState.setText("");
+		
+		TableViewerColumn tvcOwner = new TableViewerColumn(tableViewerResults, SWT.NONE);
+		tvcOwner.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				ITask task = (ITask) element;
+				return task.getTaskDescriptor().getOwner().getId();
+			}
+		});
+		TableColumn tblclmnOwner = tvcOwner.getColumn();
+		tcLayout.setColumnData(tblclmnOwner, new ColumnPixelData(100, true, true));
+		tblclmnOwner.setText("User");
 		
 		tableViewerResults.addSelectionChangedListener(event -> {
 			IStructuredSelection selection = tableViewerResults.getStructuredSelection();
@@ -208,6 +231,7 @@ public class TaskResultPart implements IDoubleClickListener {
 	
 	public void refresh(){
 		IQuery<ITask> taskQuery = TaskModelServiceHolder.get().getQuery(ITask.class);
+		taskQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 		List<ITask> results = taskQuery.execute();
 		inputModel.set(results.toArray());
 	}
