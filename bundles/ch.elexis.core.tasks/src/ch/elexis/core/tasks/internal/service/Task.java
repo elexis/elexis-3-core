@@ -288,6 +288,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				}
 				
 				setResult(result);
+				getEntity().setFinishedAt(System.currentTimeMillis());
 				TaskState exitState =
 					(result.containsKey(ReturnParameter.MARKER_WARN)) ? TaskState.COMPLETED_WARN
 							: TaskState.COMPLETED;
@@ -300,10 +301,10 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				}
 			} catch (OperationCanceledException oce) {
 				setState(TaskState.CANCELLED);
+				getEntity().setFinishedAt(System.currentTimeMillis());
 				setResult(Collections.singletonMap(IIdentifiedRunnable.ReturnParameter.RESULT_DATA,
 					oce.getMessage()));
 			}
-			getEntity().setFinishedAt(System.currentTimeMillis());
 			progressMonitor.done();
 			
 		} catch (Exception e) {
