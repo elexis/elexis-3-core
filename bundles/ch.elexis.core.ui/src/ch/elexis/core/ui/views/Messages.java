@@ -467,6 +467,10 @@ public class Messages {
 	public static String ReminderView_sortByDueDateDescending = ch.elexis.core.l10n.Messages.ReminderView_sortByDueDateDescending;
 	public static String RezeptBlatt_4 = ch.elexis.core.l10n.Messages.RezeptBlatt_4;
 	public static String RezeptBlatt_6 = ch.elexis.core.l10n.Messages.RezeptBlatt_6;
+	public static String RezeptBlatt_4_Extended =
+		ch.elexis.core.l10n.Messages.RezeptBlatt_4_Extended;
+	public static String RezeptBlatt_6_Extended =
+		ch.elexis.core.l10n.Messages.RezeptBlatt_6_Extended;
 	public static String RezeptBlatt_TemplateNameList = ch.elexis.core.l10n.Messages.RezeptBlatt_TemplateNameList;
 	public static String RezeptBlatt_TemplateNamePrescription = ch.elexis.core.l10n.Messages.RezeptBlatt_TemplateNamePrescription;
 	public static String RezeptBlatt_number = ch.elexis.core.l10n.Messages.RezeptBlatt_number;
