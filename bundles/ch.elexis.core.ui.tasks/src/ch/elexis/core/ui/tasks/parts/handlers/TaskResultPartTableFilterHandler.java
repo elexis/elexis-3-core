@@ -8,7 +8,7 @@ import org.eclipse.jface.viewers.AcceptAllFilter;
 import org.eclipse.jface.viewers.IFilter;
 
 import ch.elexis.core.tasks.model.ITask;
-import ch.elexis.core.ui.tasks.parts.TaskResultPart;
+import ch.elexis.core.ui.tasks.parts.TaskLogPart;
 
 public class TaskResultPartTableFilterHandler {
 	
@@ -16,7 +16,7 @@ public class TaskResultPartTableFilterHandler {
 	
 	@Execute
 	public void execute(MPart part, MDirectToolItem item){
-		TaskResultPart taskResultPart = (TaskResultPart) part.getObject();
+		TaskLogPart taskResultPart = (TaskLogPart) part.getObject();
 		
 		if (item.isSelected()) {
 			if (showFailuresOnlyFilter == null) {

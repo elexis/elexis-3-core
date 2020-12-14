@@ -3,7 +3,6 @@ package ch.elexis.core.model;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ch.elexis.core.jpa.entities.Fall;
@@ -14,7 +13,7 @@ import ch.elexis.core.model.messages.Messages;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.service.holder.IBillingSystemServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
-import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.time.TimeUtil;
 
 public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 		implements IdentifiableWithXid, ICoverage {
@@ -175,9 +174,8 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 		ret.append(ges).append(": ").append(getReason()).append(" - "); //$NON-NLS-1$ //$NON-NLS-2$
 		ret.append(getDescription()).append("("); //$NON-NLS-1$
 		LocalDate dateTo = getDateTo();
-		ret.append(CoreUtil.defaultDateFormat(getDateFrom())).append("-") //$NON-NLS-1$
-			.append(dateTo == null ? Messages.Fall_Open : CoreUtil.defaultDateFormat(dateTo))
-			.append(")"); //$NON-NLS-1$
+		ret.append(TimeUtil.formatSafe(getDateFrom())).append("-") //$NON-NLS-1$
+			.append(dateTo == null ? Messages.Fall_Open : TimeUtil.formatSafe(dateTo)).append(")"); //$NON-NLS-1$
 		return ret.toString();
 	}
 	
