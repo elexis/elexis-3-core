@@ -84,7 +84,7 @@ public class GenericTaskResultDetailComposite {
 			if (v instanceof String) {
 				String value = (String) v;
 				if (IIdentifiedRunnable.ReturnParameter.STRING_URL.equals(k)) {
-					value = IVirtualFilesystemService.hidePasswordInUrlString((String) v);
+					value = IVirtualFilesystemService.hidePasswordInUrlString(value);
 				}
 				sbResult.append("- " + k + ": " + value + "\n");
 			} else {
