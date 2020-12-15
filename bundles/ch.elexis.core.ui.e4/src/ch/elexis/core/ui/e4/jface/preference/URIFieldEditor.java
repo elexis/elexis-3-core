@@ -68,6 +68,12 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 		if (uri.length() == 0 && isEmptyStringAllowed()) {
 			return true;
 		}
+		
+		if (uri.contains("*")) {
+			setErrorMessage("Passwort muss gesetzt sein");
+			return false;
+		}
+		
 		try {
 			VirtualFilesystemServiceHolder.get().of(uri);
 			return true;
