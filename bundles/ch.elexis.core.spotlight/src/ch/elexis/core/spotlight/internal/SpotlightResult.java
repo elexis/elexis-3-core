@@ -12,10 +12,17 @@ public class SpotlightResult implements ISpotlightResult {
 	
 	private Set<ISpotlightResultEntry> patientEntries;
 	private Set<ISpotlightResultEntry> encounterEntries;
+	private Set<ISpotlightResultEntry> documentEntries;
+	private Set<ISpotlightResultEntry> letterEntries;
+	
+	private Set<Category> usedCategories;
 	
 	public SpotlightResult(){
 		patientEntries = Collections.synchronizedSet(new HashSet<>());
 		encounterEntries = Collections.synchronizedSet(new HashSet<>());
+		documentEntries = Collections.synchronizedSet(new HashSet<>());
+		letterEntries = Collections.synchronizedSet(new HashSet<>());
+		usedCategories = new HashSet<ISpotlightResultEntry.Category>(4);
 	}
 	
 	@Override
@@ -29,13 +36,13 @@ public class SpotlightResult implements ISpotlightResult {
 			patientEntries.add(entry);
 			break;
 		case DOCUMENT:
-			
+			documentEntries.add(entry);
 			break;
 		case ENCOUNTER:
 			encounterEntries.add(entry);
 			break;
 		case LETTER:
-			
+			letterEntries.add(entry);
 			break;
 		default:
 			break;
@@ -47,16 +54,24 @@ public class SpotlightResult implements ISpotlightResult {
 	public void clear(){
 		patientEntries.clear();
 		encounterEntries.clear();
+		documentEntries.clear();
+		letterEntries.clear();
 	}
 	
 	@Override
 	public Set<Category> hasResultsIn(){
-		Set<Category> usedCategories = new HashSet<ISpotlightResultEntry.Category>(4);
-		if (patientEntries.size() > 0) {
+		usedCategories.clear();
+		if (!patientEntries.isEmpty()) {
 			usedCategories.add(Category.PATIENT);
 		}
-		if (encounterEntries.size() > 0) {
+		if (!encounterEntries.isEmpty()) {
 			usedCategories.add(Category.ENCOUNTER);
+		}
+		if (!documentEntries.isEmpty()) {
+			usedCategories.add(Category.DOCUMENT);
+		}
+		if (!letterEntries.isEmpty()) {
+			usedCategories.add(Category.LETTER);
 		}
 		return usedCategories;
 	}
@@ -68,6 +83,10 @@ public class SpotlightResult implements ISpotlightResult {
 			return patientEntries;
 		case ENCOUNTER:
 			return encounterEntries;
+		case DOCUMENT:
+			return documentEntries;
+		case LETTER:
+			return letterEntries;
 		default:
 			break;
 		}
