@@ -62,8 +62,11 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 		} catch (RequestException re) {
 			if (re.getStatus() == 400 && re.getMessage().contains("already")) {
 				return in;
+			} else if (re.getStatus() == 400 && re.getMessage().contains("encrypted")) {
+				throw new IllegalStateException("Input PDF is encrypted");
 			}
-			throw new IllegalStateException("invalid state " + re.getStatus(), re);
+			throw new IllegalStateException(
+				"invalid state " + re.getStatus() + ": " + re.getMessage(), re);
 		}
 		
 	}
