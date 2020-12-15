@@ -59,7 +59,13 @@ public class SpotlightResultLabelProvider extends LabelProvider
 			if (element instanceof ISpotlightResultEntry) {
 				return ((ISpotlightResultEntry) element).getLabel();
 			}
-			return ((Category) element).name();
+			Category category = (Category) element;
+			switch (category) {
+			case ENCOUNTER:
+				return "KONSULTATION";
+			default:
+				return category.name();
+			}
 		}
 		return "";
 	}

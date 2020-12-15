@@ -45,7 +45,7 @@ public class SpotlightService implements ISpotlightService {
 	public void computeResult(String searchInput, Map<String, String> searchParams){
 		spotlightResult.clear();
 		
-		if (searchInput == null) {
+		if (searchInput == null || searchInput.length() == 0) {
 			// TODO or show initial set
 			return;
 		}

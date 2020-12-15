@@ -31,6 +31,7 @@ public class SpotlightResultListComposite extends Composite {
 	
 	private TableViewer tvSpotlightResults;
 	private Table tableSpotlightResults;
+	private SpotlightUiUtil uiUtil;
 	
 	/**
 	 * Create the composite.
@@ -43,6 +44,9 @@ public class SpotlightResultListComposite extends Composite {
 	public SpotlightResultListComposite(Composite parent, int style,
 		ISpotlightService spotlightService, SpotlightUiUtil uiUtil){
 		super(parent, style);
+		
+		this.uiUtil = uiUtil;
+		
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Composite composite = new Composite(this, SWT.NONE);
@@ -78,7 +82,6 @@ public class SpotlightResultListComposite extends Composite {
 			switch (keyCode) {
 			case SWT.ARROW_UP:
 			case SWT.ARROW_DOWN:
-				System.out.println("event");
 				return;
 			case SWT.ARROW_RIGHT:
 				// try to focus detail composite
@@ -143,5 +146,20 @@ public class SpotlightResultListComposite extends Composite {
 	
 	void setDetailComposite(SpotlightResultDetailComposite resultDetailComposite){
 		this.resultDetailComposite = resultDetailComposite;
+	}
+	
+	/**
+	 * Perform the default enter action on the first element in the list. Does nothing if no
+	 * element.
+	 * 
+	 * @return <code>true</code> if action was performed
+	 */
+	public boolean handleEnterOnFirstSpotlightResultEntry(){
+		Object element = tvSpotlightResults.getElementAt(1);
+		if (element instanceof ISpotlightResultEntry) {
+			uiUtil.handleEnter((ISpotlightResultEntry) element);
+			return true;
+		}
+		return false;
 	}
 }

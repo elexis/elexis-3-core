@@ -52,4 +52,8 @@ public class SpotlightResultComposite extends Composite {
 		return resultListComposite.setFocus();
 	}
 	
+	public boolean handleEnterOnFirstSpotlightResultEntry(){
+		return resultListComposite.handleEnterOnFirstSpotlightResultEntry();
+	}
+
 }

@@ -14,9 +14,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.osgi.framework.FrameworkUtil;
@@ -115,14 +113,18 @@ public class SpotlightShell extends Shell {
 			}, 200);
 			
 		});
-		txtSearchInput.addListener(SWT.Traverse, new Listener() {
-			public void handleEvent(Event event){
-				switch (event.keyCode) {
-				case SWT.ARROW_DOWN:
-					event.detail = SWT.TRAVERSE_NONE;
-					event.doit = false;
-					resultComposite.setFocus();
-					break;
+		txtSearchInput.addListener(SWT.Traverse, event -> {
+			if (event.keyCode == SWT.ARROW_DOWN) {
+				event.detail = SWT.TRAVERSE_NONE;
+				event.doit = false;
+				resultComposite.setFocus();
+			}
+		});
+		txtSearchInput.addListener(SWT.KeyDown, event -> {
+			if (event.keyCode == 13) {
+				boolean success = resultComposite.handleEnterOnFirstSpotlightResultEntry();
+				if (success) {
+					close();
 				}
 			}
 		});
