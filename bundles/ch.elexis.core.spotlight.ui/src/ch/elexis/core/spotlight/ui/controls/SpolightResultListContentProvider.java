@@ -16,6 +16,12 @@ public class SpolightResultListContentProvider implements IStructuredContentProv
 		
 		Set<Object> results = new LinkedHashSet<>();
 		Set<Category> hasResultsIn = result.hasResultsIn();
+		// Patients always first in list
+		if (hasResultsIn.contains(Category.PATIENT)) {
+			results.add(Category.PATIENT);
+			results.addAll(result.getResultPerCategory(Category.PATIENT));
+		}
+		hasResultsIn.remove(Category.PATIENT);
 		for (Category category : hasResultsIn) {
 			results.add(category);
 			results.addAll(result.getResultPerCategory(category));
