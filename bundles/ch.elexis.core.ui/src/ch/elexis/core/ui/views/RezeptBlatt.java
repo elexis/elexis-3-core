@@ -33,6 +33,7 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.text.EditLocalDocumentUtil;
+import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
@@ -180,7 +181,8 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 				5, 45, 10, 10, 15, 15
 			};
 		}
-		if (text.getPlugin().insertTable(replace, 0, fields, wt)) {
+		if (text.getPlugin().insertTable(replace,
+			(wt.length > 3 ? ITextPlugin.FIRST_ROW_IS_HEADER : 0), fields, wt)) {
 			if (text.getPlugin().isDirectOutput()) {
 				text.getPlugin().print(null, null, true);
 				getSite().getPage().hideView(this);
@@ -236,10 +238,18 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	}
 	
 	public String[][] createExtendedTakingListFields(List<Prescription> lines){
-		String[][] fields = new String[lines.size()][];
+		String[][] fields = new String[lines.size() + 1][];
 		
-		for (int i = 0; i < fields.length; i++) {
-			Prescription p = lines.get(i);
+		fields[0] = new String[6];
+		fields[0][0] = "";
+		fields[0][1] = "Medikament";
+		fields[0][2] = "Einnahme";
+		fields[0][3] = "Von bis und mit";
+		fields[0][4] = "Anwendungsinstruktion";
+		fields[0][5] = "Anwendungsgrund";
+		
+		for (int i = 1; i < fields.length; i++) {
+			Prescription p = lines.get(i - 1);
 			fields[i] = new String[6];
 			if (p.getEntryType() != null && p.getEntryType() != EntryType.UNKNOWN) {
 				fields[i][0] = p.getEntryType().name().substring(0, 1);
