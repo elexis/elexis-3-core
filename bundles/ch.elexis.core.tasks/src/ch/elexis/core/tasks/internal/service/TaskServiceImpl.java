@@ -158,7 +158,27 @@ public class TaskServiceImpl implements ITaskService {
 	
 	@Deactivate
 	private void deactivateComponent(){
-		// TODO what about the running tasks in separate threads?
+		
+		List<ITask> runningTasks = getRunningTasks();
+		long start = System.currentTimeMillis();
+		while (!runningTasks.isEmpty() && (System.currentTimeMillis() - start < 10000)) {
+			for (ITask task : runningTasks) {
+				IProgressMonitor progressMonitor = task.getProgressMonitor();
+				if (!progressMonitor.isCanceled()) {
+					logger.info("Canceling task " + task.getLabel());
+					task.getProgressMonitor().setCanceled(true);
+				}
+			}
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {}
+			runningTasks = getRunningTasks();
+			logger.info("Waiting max 10 seconds for tasks to gracefully stop");
+		}
+		
+		getRunningTasks()
+			.forEach(task -> logger.warn("Could not gracefully stop task " + task.getLabel()));
+		
 		try {
 			quartzExecutor.shutdown();
 			parallelExecutorService.shutdown();
