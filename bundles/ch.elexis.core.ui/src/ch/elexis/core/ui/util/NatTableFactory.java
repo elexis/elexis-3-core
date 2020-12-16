@@ -115,8 +115,11 @@ public class NatTableFactory {
 		@Override
 		public void controlResized(ControlEvent e){
 			if(e.widget instanceof NatTable) {
+				
 				this.bodyDataLayer.setColumnWidthByPosition(0,
-					((NatTable) e.widget).getBounds().width - 25);
+					(((NatTable) e.widget).getBounds().width > 25
+							? ((NatTable) e.widget).getBounds().width - 25
+							: ((NatTable) e.widget).getBounds().width));
 			}
 		}
 	}
