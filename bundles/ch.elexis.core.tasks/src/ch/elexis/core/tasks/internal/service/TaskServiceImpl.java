@@ -161,19 +161,19 @@ public class TaskServiceImpl implements ITaskService {
 		
 		List<ITask> runningTasks = getRunningTasks();
 		long start = System.currentTimeMillis();
-		while (!runningTasks.isEmpty() && (System.currentTimeMillis() - start < 10000)) {
+		while (!runningTasks.isEmpty() && (System.currentTimeMillis() - start < 30000)) {
 			for (ITask task : runningTasks) {
 				IProgressMonitor progressMonitor = task.getProgressMonitor();
 				if (!progressMonitor.isCanceled()) {
-					logger.info("Canceling task " + task.getLabel());
+					logger.info("Canceling " + task.getLabel());
 					task.getProgressMonitor().setCanceled(true);
 				}
 			}
 			try {
-				Thread.sleep(200);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {}
 			runningTasks = getRunningTasks();
-			logger.info("Waiting max 10 seconds for tasks to gracefully stop");
+			logger.info("Waiting max 30 seconds for tasks to gracefully stop");
 		}
 		
 		getRunningTasks()
