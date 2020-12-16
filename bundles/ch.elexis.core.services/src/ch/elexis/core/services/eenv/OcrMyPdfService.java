@@ -43,10 +43,13 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 	 * The OCRMyPdf service we use currently accepts one request only. We can assert this for the
 	 * given Elexis instance by using synchronized.
 	 * 
+	 * @throws OcrMyPdfException
+	 * 
 	 * @see https://ocrmypdf.readthedocs.io/en/latest/docker.html#using-the-ocrmypdf-web-service-wrapper
 	 */
 	@Override
-	public synchronized byte[] performOcr(byte[] in, String parameters) throws IOException{
+	public synchronized byte[] performOcr(byte[] in, String parameters)
+		throws IOException, OcrMyPdfException{
 		if (in == null) {
 			throw new IllegalArgumentException("null");
 		}
@@ -63,7 +66,9 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 			if (re.getStatus() == 400 && re.getMessage().contains("already")) {
 				return in;
 			} else if (re.getStatus() == 400 && re.getMessage().contains("encrypted")) {
-				throw new IllegalStateException("Input PDF is encrypted");
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.ENCRYPTED_FILE);
+			} else if (re.getStatus() == 400 && re.getMessage().contains("dynamic XFA")) {
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.UNREADABLE_XFA_FORM_FILE);
 			}
 			throw new IllegalStateException(
 				"invalid state " + re.getStatus() + ": " + re.getMessage(), re);

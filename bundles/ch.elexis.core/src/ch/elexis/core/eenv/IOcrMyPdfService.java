@@ -17,5 +17,43 @@ public interface IOcrMyPdfService {
 	 * @throws IOException
 	 * @see https://github.com/jbarlow83/OCRmyPDF/blob/master/misc/webservice.py
 	 */
-	public byte[] performOcr(byte[] input, @Nullable String parameters) throws IOException;
+	public byte[] performOcr(byte[] input, @Nullable String parameters) throws IOException, OcrMyPdfException;
+	
+	/**
+	 * An exception that is thrown by the OCRMyPdf Service. That is, the file was received, but
+	 * there was some error in performing the OCR process on it.
+	 */
+	public static class OcrMyPdfException extends Exception {
+		
+		private static final long serialVersionUID = -6129161457684126686L;
+		
+		public enum TYPE {
+				/** File could not be accessed, as its encrypted **/
+				ENCRYPTED_FILE,
+				/** File is a pdf form **/
+				UNREADABLE_XFA_FORM_FILE;
+		};
+		
+		private final TYPE type;
+		
+		public OcrMyPdfException(TYPE type){
+			this.type = type;
+		}
+		
+		public TYPE getType(){
+			return type;
+		}
+		
+		public String getMessage(){
+			switch (getType()) {
+			case ENCRYPTED_FILE:
+				return "Unreadable - Input PDF is encrypted";
+			case UNREADABLE_XFA_FORM_FILE:
+				return "Unreadable -  PDF contains dynamic XFA forms";
+			default:
+				return "UNKOWN";
+			}
+		}
+		
+	}
 }
