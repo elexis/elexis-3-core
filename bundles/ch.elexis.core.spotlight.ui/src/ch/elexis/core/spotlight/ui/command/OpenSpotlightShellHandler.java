@@ -1,8 +1,12 @@
 
 package ch.elexis.core.spotlight.ui.command;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Named;
 
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.swt.graphics.Rectangle;
@@ -10,6 +14,7 @@ import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.spotlight.ISpotlightService;
 import ch.elexis.core.spotlight.ui.internal.ISpotlightResultEntryDetailCompositeService;
 import ch.elexis.core.spotlight.ui.internal.SpotlightShell;
@@ -17,12 +22,29 @@ import ch.elexis.core.spotlight.ui.internal.SpotlightShell;
 public class OpenSpotlightShellHandler {
 	
 	@Execute
-	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
+	public void execute(@Named(IServiceConstants.ACTIVE_SHELL)
+	Shell shell, ParameterizedCommand command, IContextService contextService,
 		ISpotlightService spotlightService,
 		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService){
 		
-		SpotlightShell spotlightShell =
-			new SpotlightShell(shell, spotlightService, resultEntryDetailCompositeService);
+		Map<String, String> spotlightContextParameters = null;
+		String filter = (String) command.getParameterMap()
+			.get("ch.elexis.core.spotlight.ui.commandparameter.spotlightshellfilter");
+		if (filter != null) {
+			spotlightContextParameters = new HashMap<>();
+			
+			if ("patientFiltered".equals(filter)) {
+				String patientId =
+					contextService.getActivePatient().map(p -> p.getId()).orElse(null);
+				if (patientId != null) {
+					spotlightContextParameters.put(ISpotlightService.CONTEXT_FILTER_PATIENT_ID,
+						patientId);
+				}
+			}
+		}
+		
+		SpotlightShell spotlightShell = new SpotlightShell(shell, spotlightService,
+			resultEntryDetailCompositeService, spotlightContextParameters);
 		
 		// center on the screen
 		Monitor primary = spotlightShell.getDisplay().getPrimaryMonitor();

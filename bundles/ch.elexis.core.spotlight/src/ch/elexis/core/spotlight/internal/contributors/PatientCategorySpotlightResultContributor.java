@@ -15,6 +15,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.spotlight.ISpotlightResult;
 import ch.elexis.core.spotlight.ISpotlightResultContributor;
+import ch.elexis.core.spotlight.ISpotlightService;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
 
 @Component
@@ -27,6 +28,13 @@ public class PatientCategorySpotlightResultContributor implements ISpotlightResu
 	public void computeResult(List<String> stringTerms, List<LocalDate> dateTerms,
 		List<Number> numericTerms, ISpotlightResult spotlightResult,
 		Map<String, String> searchParams){
+		
+		if (searchParams != null
+			&& searchParams.containsKey(ISpotlightService.CONTEXT_FILTER_PATIENT_ID)) {
+			// search context is limited to a specific patient
+			// no interest in the list of the patients ...
+			return;
+		}
 		
 		IQuery<IPatient> query = modelService.getQuery(IPatient.class);
 		
@@ -75,7 +83,8 @@ public class PatientCategorySpotlightResultContributor implements ISpotlightResu
 		
 		List<IPatient> patients = query.execute();
 		for (IPatient patient : patients) {
-			spotlightResult.addEntry(Category.PATIENT, patient.getLabel(), patient.getId(), patient);
+			spotlightResult.addEntry(Category.PATIENT, patient.getLabel(), patient.getId(),
+				patient);
 		}
 	}
 	
