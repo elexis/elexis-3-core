@@ -3,6 +3,10 @@ package ch.elexis.core.time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import ch.elexis.core.jdt.Nullable;
 
 public class TimeUtil {
 	
@@ -22,6 +26,15 @@ public class TimeUtil {
 			return date.format(DATE_GER);
 		}
 		return "";
+	}
+	
+	public static @Nullable LocalDate toLocalDate(Date date){
+		if (date == null) {
+			return null;
+		}
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(date.getTime());
+		return gc.toZonedDateTime().toLocalDate();
 	}
 	
 }
