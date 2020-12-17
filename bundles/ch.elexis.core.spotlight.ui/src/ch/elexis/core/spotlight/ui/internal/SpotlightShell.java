@@ -1,6 +1,7 @@
 package ch.elexis.core.spotlight.ui.internal;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,6 +15,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -27,19 +29,23 @@ public class SpotlightShell extends Shell {
 	
 	private ISpotlightService spotlightService;
 	private ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService;
+	private Map<String, String> spotlightContextParameters;
 	
 	private Timer timer;
 	private Text txtSearchInput;
+	private Composite filterComposite;
 	private SpotlightResultComposite resultComposite;
 	private GridData resultCompositeGridData;
 	
 	private SpotlightUiUtil uiUtil;
 	
 	public SpotlightShell(Shell shell, ISpotlightService spotlightService,
-		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService){
+		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService,
+		Map<String, String> spotlightContextParameters){
 		super(shell, SWT.NO_TRIM | SWT.TOOL);
 		this.spotlightService = spotlightService;
 		this.resultEntryDetailCompositeService = resultEntryDetailCompositeService;
+		this.spotlightContextParameters = spotlightContextParameters;
 		
 		// ESC closes the shell
 		addListener(SWT.Traverse, event -> {
@@ -68,7 +74,7 @@ public class SpotlightShell extends Shell {
 	 * @param spotlightService
 	 */
 	protected void createContents(){
-		GridLayout gridLayout = new GridLayout(2, false);
+		GridLayout gridLayout = new GridLayout(3, false);
 		setLayout(gridLayout);
 		
 		Label lblIcon = new Label(this, SWT.NONE);
@@ -83,6 +89,22 @@ public class SpotlightShell extends Shell {
 		}
 		lblIcon.setImage(logo);
 		lblIcon.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		
+		filterComposite = new Composite(this, SWT.None);
+		filterComposite.setLayout(new GridLayout(1, false));
+		filterComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		filterComposite.setBackground(this.getBackground());
+		
+		if (spotlightContextParameters != null) {
+			if (spotlightContextParameters
+				.containsKey(ISpotlightService.CONTEXT_FILTER_PATIENT_ID)) {
+				
+				Label patientFilter = new Label(filterComposite, SWT.None);
+				patientFilter.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+				patientFilter.setText("PF");
+				patientFilter.setBackground(getDisplay().getSystemColor(SWT.COLOR_GRAY));
+			}
+		}
 		
 		txtSearchInput = new Text(this, SWT.None);
 		txtSearchInput.setBackground(this.getBackground());
@@ -108,7 +130,7 @@ public class SpotlightShell extends Shell {
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run(){
-					spotlightService.computeResult(text, null);
+					spotlightService.computeResult(text, spotlightContextParameters);
 				}
 			}, 200);
 			
@@ -131,7 +153,7 @@ public class SpotlightShell extends Shell {
 		
 		resultComposite = new SpotlightResultComposite(this, SWT.NONE, spotlightService, uiUtil,
 			resultEntryDetailCompositeService);
-		resultCompositeGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+		resultCompositeGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
 		resultCompositeGridData.exclude = true;
 		resultComposite.setLayoutData(resultCompositeGridData);
 		
