@@ -69,6 +69,8 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 				throw new OcrMyPdfException(OcrMyPdfException.TYPE.ENCRYPTED_FILE);
 			} else if (re.getStatus() == 400 && re.getMessage().contains("dynamic XFA")) {
 				throw new OcrMyPdfException(OcrMyPdfException.TYPE.UNREADABLE_XFA_FORM_FILE);
+			} else if (re.getStatus() == 400) {
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, re.getMessage());
 			}
 			throw new IllegalStateException(
 				"invalid state " + re.getStatus() + ": " + re.getMessage(), re);
