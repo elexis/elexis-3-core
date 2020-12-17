@@ -71,6 +71,9 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 				throw new OcrMyPdfException(OcrMyPdfException.TYPE.UNREADABLE_XFA_FORM_FILE);
 			} else if (re.getStatus() == 400) {
 				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, re.getMessage());
+			} else if (re.getStatus() == 413) {
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER,
+					"(HTTP 413) PDF is too large.");
 			}
 			throw new IllegalStateException(
 				"invalid state " + re.getStatus() + ": " + re.getMessage(), re);
