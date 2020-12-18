@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -26,9 +27,9 @@ import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IConfigServiceTest extends AbstractServiceTest {
-
+	
 	private IConfigService configService = OsgiServiceUtil.getService(IConfigService.class).get();
-
+	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testUserConfigBlob(){
@@ -88,7 +89,7 @@ public class IConfigServiceTest extends AbstractServiceTest {
 	@SuppressWarnings("unchecked")
 	private boolean mapsContentEquals(Map<Object, Object> left, Map<Object, Object> right){
 		for (Object key : left.keySet()) {
-			if(left.get(key) instanceof Map) {
+			if (left.get(key) instanceof Map) {
 				if (!mapsContentEquals((Map<Object, Object>) left.get(key),
 					(Map<Object, Object>) right.get(key))) {
 					return false;
@@ -105,35 +106,37 @@ public class IConfigServiceTest extends AbstractServiceTest {
 	}
 	
 	@Test
-	public void getSetUserconfig() {
-		IPerson person = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson", "TestPerson", LocalDate.now(),
-				Gender.FEMALE).mandator().buildAndSave();
-		IPerson person2 = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson2", "TestPerson2", LocalDate.now(),
-				Gender.FEMALE).mandator().buildAndSave();
-
+	public void getSetUserconfig(){
+		IPerson person = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson",
+			"TestPerson", LocalDate.now(), Gender.FEMALE).mandator().buildAndSave();
+		IPerson person2 = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson2",
+			"TestPerson2", LocalDate.now(), Gender.FEMALE).mandator().buildAndSave();
+		
 		assertTrue(configService.set(person, "key", "value"));
 		assertTrue(configService.set(person2, "key", "value2"));
-
+		
 		assertEquals("value", configService.get(person, "key", null));
 		assertEquals("value2", configService.get(person2, "key", null));
-
+		
 		assertTrue(configService.set(person, "key", null));
 		assertNull(configService.get(person, "key", null));
 		assertFalse(configService.set(person, "key", null));
 	}
-
+	
 	@Test
-	public void getSetConfig() {
+	public void getSetConfig(){
 		assertTrue(configService.set("key", "value"));
 		assertEquals("value", configService.get("key", null));
 		assertTrue(configService.set("key", null));
 		assertFalse(configService.set("key", null));
 	}
-
+	
 	@Test
-	public void getSetAsList() {
+	public void getSetAsList(){
 		String TEST_KEY_SET = "TestKeySet";
-		List<String> values = Arrays.asList(new String[] { "TestValue", "TestValue2", "TestValue3" });
+		List<String> values = Arrays.asList(new String[] {
+			"TestValue", "TestValue2", "TestValue3"
+		});
 		configService.set(TEST_KEY_SET, null);
 		configService.setFromList(TEST_KEY_SET, values);
 		List<String> asSet = configService.getAsList(TEST_KEY_SET, Collections.emptyList());
@@ -144,7 +147,7 @@ public class IConfigServiceTest extends AbstractServiceTest {
 	}
 	
 	@Test
-	public void getSetBoolean() {
+	public void getSetBoolean(){
 		configService.set("keyBoolA", "1");
 		configService.set("keyBoolB", "true");
 		configService.set("keyBoolC", "bla");
@@ -154,5 +157,17 @@ public class IConfigServiceTest extends AbstractServiceTest {
 		assertFalse(configService.get("keyBoolC", true));
 		assertFalse(configService.get("keyBoolD", true));
 	}
-
+	
+	@Test
+	public void setWithWithoutTrace(){
+		assertTrue(configService.set("asdfkeyWoTrace", "valueNoTrace", false));
+		assertTrue(configService.set("asdfkeyWTrace", "valueTrace", true));
+		
+		String insertStatement = "SELECT action FROM TRACES WHERE action LIKE '%asdfkeyW%'";
+		List<String> traces = coreModelService.executeNativeQuery(insertStatement)
+			.map(o -> o.toString()).collect(Collectors.toList());
+		assertEquals(1, traces.size());
+		assertTrue(traces.get(0).startsWith("W globalCfg key [asdfkeyWTrace"));
+	}
+	
 }
