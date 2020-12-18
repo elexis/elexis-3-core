@@ -580,15 +580,20 @@ public class SWTHelper {
 	 * @param viewID
 	 */
 	public static void reloadViewPart(String viewID){
-		IViewPart page =
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(viewID);
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(page);
-		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewID);
-		} catch (PartInitException e) {
-			Status status =
-				new Status(IStatus.ERROR, Hub.PLUGIN_ID, "Error reopening viewPart " + viewID, e);
-			StatusManager.getManager().handle(status, StatusManager.SHOW);
+		if (PlatformUI.getWorkbench() != null
+			&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+			&& PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
+			IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.findView(viewID);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(page);
+			try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.showView(viewID);
+			} catch (PartInitException e) {
+				Status status = new Status(IStatus.ERROR, Hub.PLUGIN_ID,
+					"Error reopening viewPart " + viewID, e);
+				StatusManager.getManager().handle(status, StatusManager.SHOW);
+			}
 		}
 	}
 	
