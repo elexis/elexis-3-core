@@ -115,16 +115,26 @@ public class ConfigService implements IConfigService {
 	
 	@Override
 	public boolean set(String key, String value){
+		return set(key, value, true);
+	}
+	
+	@Override
+	public boolean set(String key, String value, boolean addTraceEntry){
 		Optional<IConfig> entry = modelService.load(key, IConfig.class);
 		if (value != null) {
 			IConfig _entry = entry.orElse(modelService.create(IConfig.class));
 			_entry.setKey(key);
 			_entry.setValue(value);
-			addTraceEntry("W globalCfg key [" + key + "] => value [" + value + "]");
+			if (addTraceEntry) {
+				addTraceEntry("W globalCfg key [" + key + "] => value [" + value + "]");
+			}
+			
 			return modelService.save(_entry);
 		} else {
 			if (entry.isPresent()) {
-				addTraceEntry("W globalCfg key [" + key + "] => removed");
+				if (addTraceEntry) {
+					addTraceEntry("W globalCfg key [" + key + "] => removed");
+				}
 				return modelService.remove(entry.get());
 			}
 		}

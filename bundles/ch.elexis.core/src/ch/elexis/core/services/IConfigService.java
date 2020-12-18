@@ -13,7 +13,8 @@ import ch.elexis.core.model.Identifiable;
 public interface IConfigService {
 	
 	/**
-	 * Set a global configuration entry. Overwrites existing values. Performs save operation.
+	 * Set a global configuration entry. Overwrites existing values. Performs save operation. Adds a
+	 * trace entry.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -22,6 +23,17 @@ public interface IConfigService {
 	 * @return <code>true</code> if the value was successfully set
 	 */
 	public boolean set(String key, String value);
+	
+	/**
+	 * Set a global configuration entry. Overwrites existing values. Performs save operation.
+	 * 
+	 * @param key
+	 * @param value
+	 * @param addTraceEntry
+	 *            add an entry to trace table to allow retracing changes
+	 * @return if the value was successfully set
+	 */
+	public boolean set(String key, String value, boolean addTraceEntry);
 	
 	/**
 	 * Set a local configuration entry. Overwrites existing values.
@@ -68,7 +80,8 @@ public interface IConfigService {
 	public boolean setLocal(String name, int value);
 	
 	/**
-	 * Set a global configuration entry. Overwrites existing values. Performs save operation.
+	 * Set a global configuration entry. Overwrites existing values. Performs save operation. Adds a
+	 * trace entry.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -160,7 +173,7 @@ public interface IConfigService {
 	
 	/**
 	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
-	 * operation.
+	 * operation. Adds a trace entry.
 	 * 
 	 * @param contact
 	 *            the contact this configuration entry is accounted to, not <code>null</code>
@@ -174,7 +187,7 @@ public interface IConfigService {
 	
 	/**
 	 * Set a global configuration entry. Overwrites existing value. Performs save operation. Cares
-	 * for list order.
+	 * for list order. Adds a trace entry.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -186,7 +199,7 @@ public interface IConfigService {
 	
 	/**
 	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
-	 * operation. Cares for list order.
+	 * operation. Cares for list order. Adds a trace entry.
 	 * 
 	 * @param contact
 	 *            the contact this configuration entry is accounted to, not <code>null</code>
@@ -240,7 +253,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	public boolean get(String key, boolean defaultValue);
-
+	
 	/**
 	 * Convenience method wrapping {@link #getLocal(String, String)}
 	 * 
@@ -273,7 +286,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	public String getActiveMandator(String key, String defaultValue);
-
+	
 	/**
 	 * Convenience method wrapping {@link #getActiveMandator(String, String)}
 	 * 
@@ -304,7 +317,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	public String getActiveUserContact(String key, String defaultValue);
-
+	
 	/**
 	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user
 	 * via {@link IContextService}
@@ -335,7 +348,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	public int get(String key, int defaultValue);
-
+	
 	/**
 	 * Get a stored value for a given contact specific configuration entry, or return the value
 	 * provided as default if not found.
@@ -387,13 +400,14 @@ public interface IConfigService {
 	public List<String> getAsList(String key, List<String> defaultValue);
 	
 	/**
-	 * Retrieve a value as a list for a global configuration entry. Retains the
-	 * order it was persisted.
+	 * Retrieve a value as a list for a global configuration entry. Retains the order it was
+	 * persisted.
 	 * 
-	 * @param key identifying the configuration entry
+	 * @param key
+	 *            identifying the configuration entry
 	 * @return the stored entries, or an empty, immutable list
 	 */
-	public default List<String> getAsList(String key) {
+	public default List<String> getAsList(String key){
 		return getAsList(key, Collections.emptyList());
 	}
 	
