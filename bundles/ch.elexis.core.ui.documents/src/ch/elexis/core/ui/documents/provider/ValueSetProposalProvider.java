@@ -3,7 +3,6 @@ package ch.elexis.core.ui.documents.provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
@@ -29,7 +28,7 @@ public class ValueSetProposalProvider implements IContentProposalProvider {
 				.filter(
 					o -> o.getDisplay().toLowerCase().contains(searchString.trim().toLowerCase()))
 				.map(o -> new CodingContentProposal(o.getDisplay(), o))
-				.toArray(ContentProposal[]::new);
+				.toArray(e -> new IContentProposal[]{});
 			
 		}
 		return ret.toArray(new IContentProposal[ret.size()]);
