@@ -125,9 +125,9 @@ public class DocumentStore {
 	public String saveContentToFile(IDocument document, String filePath) throws ElexisException{
 		Optional<InputStream> in = getService(document.getStoreId()).loadContent(document);
 		if (in.isPresent()) {
-			try {
+			try (InputStream _in = in.get()) {
 				File file = new File(filePath);
-				FileUtils.copyInputStreamToFile(in.get(), file);
+				FileUtils.copyInputStreamToFile(_in, file);
 				return file.getAbsolutePath();
 			} catch (IOException e) {
 				throw new ElexisException("cannot save content", e);
