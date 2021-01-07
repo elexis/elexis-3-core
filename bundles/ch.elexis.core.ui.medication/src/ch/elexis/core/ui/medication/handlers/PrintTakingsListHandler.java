@@ -109,6 +109,8 @@ public class PrintTakingsListHandler extends AbstractHandler {
 			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
 		} else if ("reserve".equals(medicationType)) {
 			return patient.getMedication(Arrays.asList(EntryType.RESERVE_MEDICATION));
+		} else if ("symptomatic".equals(medicationType)) {
+			return patient.getMedication(Arrays.asList(EntryType.SYMPTOMATIC_MEDICATION));
 		}
 		return Collections.emptyList();
 	}

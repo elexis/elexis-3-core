@@ -178,6 +178,17 @@
                   value="reserve">
             </parameter>
          </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.PrintTakingsList"
+               icon="icon://IMG_PRINT_SYMPTOMATIC"
+               label="Symptomatische Medikation Einnahmeliste drucken"
+               style="push"
+               tooltip="Symptomatische Medikation Einnahmeliste drucken">
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.medication"
+                  value="symptomatic">
+            </parameter>
+         </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -213,6 +224,17 @@
             <parameter
                   name="ch.elexis.core.ui.medication.commandParameter.medication"
                   value="reserve">
+            </parameter>
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.PrintRecipe"
+               icon="icon://IMG_RECIPE_SYMPTOMATIC"
+               label="Symptomatische Medikation rezeptieren"
+               style="push"
+               tooltip="Symptomatische Medikation rezeptieren">
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.medication"
+                  value="symptomatic">
             </parameter>
          </command>
       </menuContribution>
