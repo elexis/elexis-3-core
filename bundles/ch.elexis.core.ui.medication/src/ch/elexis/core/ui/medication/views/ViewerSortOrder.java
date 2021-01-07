@@ -19,6 +19,7 @@ public enum ViewerSortOrder {
 	private static final int DESCENDING = 1;
 	private static int direction = DESCENDING;
 	private static int propertyIdx = 0;
+	private static boolean atcSort = true;
 	private static TimeTool time1 = new TimeTool();
 	private static TimeTool time2 = new TimeTool();
 	
@@ -30,6 +31,10 @@ public enum ViewerSortOrder {
 	
 	public int getDirection(){
 		return direction == 1 ? SWT.DOWN : SWT.UP;
+	}
+	
+	public void setAtcSort(boolean value){
+		atcSort = value;
 	}
 	
 	public void setColumn(int column){
@@ -73,6 +78,19 @@ public enum ViewerSortOrder {
 		public int compare(Viewer viewer, Object e1, Object e2){
 			MedicationTableViewerItem p1 = (MedicationTableViewerItem) e1;
 			MedicationTableViewerItem p2 = (MedicationTableViewerItem) e2;
+			// ignore colums and sort by atc
+			if (atcSort) {
+				String atc1 = p1.getAtc();
+				String atc2 = p2.getAtc();
+				if (atc1 == null) {
+					atc1 = "";
+				}
+				if (atc2 == null) {
+					atc2 = "";
+				}
+				return atc2.compareTo(atc1);
+			}
+			// sort by column
 			int rc = 0;
 			switch (propertyIdx) {
 			case 0:
