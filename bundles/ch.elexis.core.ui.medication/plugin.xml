@@ -34,6 +34,11 @@
                label="Rezept"
                style="pulldown">
          </command>
+         <command
+               commandId="ch.elexis.core.ui.medication.ApplyAtcSorting"
+               icon="icon://IMG_CATEGORY_GROUP"
+               style="toggle">
+         </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -261,6 +266,14 @@
             description="Reserve Medikation"
             id="ch.elexis.core.ui.medication.SetAsReserveMedication"
             name="Reserve Medikation">
+      </command>
+      <command
+            id="ch.elexis.core.ui.medication.ApplyAtcSorting"
+            name="Nach Wirkstoff sortieren">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:true"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
       </command>
       <command
             id="ch.elexis.core.ui.medication.ApplyCustomSorting"
@@ -532,6 +545,10 @@
             </with>
             </and>
          </activeWhen>
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.medication.handlers.ApplyAtcSortingHandler"
+            commandId="ch.elexis.core.ui.medication.ApplyAtcSorting">
       </handler>    
    </extension>
    <extension

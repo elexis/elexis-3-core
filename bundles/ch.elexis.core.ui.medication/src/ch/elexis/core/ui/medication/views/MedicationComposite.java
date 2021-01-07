@@ -136,6 +136,8 @@ public class MedicationComposite extends Composite
 	private MedicationContentProviderComposite contentProviderComp;
 	private InteractionLink interactionLink;
 	
+	private ViewerSortOrder sortOrder;
+	
 	/**
 	 * Create the composite.
 	 * 
@@ -220,6 +222,7 @@ public class MedicationComposite extends Composite
 	}
 	
 	public void setViewerSortOrder(ViewerSortOrder vso){
+		sortOrder = vso;
 		medicationTableComposite.getTableViewer().setComparator(vso.vc);
 		medicationHistoryTableComposite.getTableViewer().setComparator(vso.vc);
 		
@@ -228,6 +231,10 @@ public class MedicationComposite extends Composite
 		Command command = service.getCommand(ApplyCustomSortingHandler.CMD_ID);
 		command.getState(ApplyCustomSortingHandler.STATE_ID)
 			.setValue(vso.equals(ViewerSortOrder.MANUAL));
+	}
+	
+	public ViewerSortOrder getViewerSortOrder(){
+		return sortOrder;
 	}
 	
 	private void stateComposite(){

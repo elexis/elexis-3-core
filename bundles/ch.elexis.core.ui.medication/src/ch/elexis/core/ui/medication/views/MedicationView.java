@@ -116,6 +116,10 @@ public class MedicationView extends ViewPart implements IRefreshable {
 		ConfigServiceHolder.setUser(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, order.val);
 	}
 	
+	public ViewerSortOrder getMedicationTableViewerComparator(){
+		return tpc.getViewerSortOrder();
+	}
+	
 	@Override
 	public void setFocus(){
 		tpc.setFocus();

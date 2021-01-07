@@ -158,6 +158,10 @@ public class MedicationTableViewerItem {
 		return lastDisposed;
 	}
 	
+	public String getAtc(){
+		return prescription.getArticle().getAtcCode();
+	}
+	
 	public EntryType getEntryType(){
 		return prescription.getEntryType();
 	}
