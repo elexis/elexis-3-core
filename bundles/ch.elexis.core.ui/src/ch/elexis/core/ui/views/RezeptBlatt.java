@@ -33,7 +33,6 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.text.EditLocalDocumentUtil;
-import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
@@ -128,23 +127,34 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		};
 		if (replace.equals(Messages.RezeptBlatt_4)) {
 			fields = createRezeptListFields(lines);
-		} else if (replace.equals(Messages.RezeptBlatt_4_Extended)) {
+		}
+		rp.setBrief(actBrief);
+		if (insertTable(replace, fields, wt, Brief.RP)) {
+			return true;
+		} else {
+			replace = Messages.RezeptBlatt_4_Extended;
 			fields = createExtendedTakingListFields(lines);
 			wt = new int[] {
 				5, 45, 10, 10, 15, 15
 			};
+			if (insertTable(replace, fields, wt, Brief.RP)) {
+				return true;
+			}
 		}
-		rp.setBrief(actBrief);
+		text.saveBrief(actBrief, Brief.RP);
+		return false;
+	}
+	
+	private boolean insertTable(String replace, String[][] fields, int[] wt, String typ){
 		if (text.getPlugin().insertTable(replace, 0, fields, wt)) {
 			if (text.getPlugin().isDirectOutput()) {
 				text.getPlugin().print(null, null, true);
 				getSite().getPage().hideView(this);
 			}
-			text.saveBrief(actBrief, Brief.RP);
+			text.saveBrief(actBrief, typ);
 			EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 			return true;
 		}
-		text.saveBrief(actBrief, Brief.RP);
 		return false;
 	}
 	
@@ -175,21 +185,29 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			fields = createRezeptListFields(lines);
 		} else if (replace.equals(Messages.RezeptBlatt_6)) {
 			fields = createTakingListFields(lines);
-		} else if (replace.equals(Messages.RezeptBlatt_6_Extended)) {
-			fields = createExtendedTakingListFields(lines);
-			wt = new int[] {
-				5, 45, 10, 10, 15, 15
-			};
 		}
-		if (text.getPlugin().insertTable(replace,
-			(wt.length > 3 ? ITextPlugin.FIRST_ROW_IS_HEADER : 0), fields, wt)) {
-			if (text.getPlugin().isDirectOutput()) {
-				text.getPlugin().print(null, null, true);
-				getSite().getPage().hideView(this);
-			}
-			text.saveBrief(actBrief, Brief.UNKNOWN);
-			EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
+		if (insertTable(replace, fields, wt, Brief.UNKNOWN)) {
 			return true;
+		} else {
+			if (replace.equals(Messages.RezeptBlatt_4)) {
+				replace = Messages.RezeptBlatt_4_Extended;
+				fields = createExtendedTakingListFields(lines);
+				wt = new int[] {
+					5, 45, 10, 10, 15, 15
+				};
+				if (insertTable(replace, fields, wt, Brief.RP)) {
+					return true;
+				}
+			} else if (replace.equals(Messages.RezeptBlatt_6)) {
+				replace = Messages.RezeptBlatt_6_Extended;
+				fields = createExtendedTakingListFields(lines);
+				wt = new int[] {
+					5, 45, 10, 10, 15, 15
+				};
+				if (insertTable(replace, fields, wt, Brief.UNKNOWN)) {
+					return true;
+				}
+			}
 		}
 		text.saveBrief(actBrief, Brief.UNKNOWN);
 		return false;
@@ -251,7 +269,8 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		for (int i = 1; i < fields.length; i++) {
 			Prescription p = lines.get(i - 1);
 			fields[i] = new String[6];
-			if (p.getEntryType() != null && p.getEntryType() != EntryType.UNKNOWN) {
+			if (p.getEntryType() != null && p.getEntryType() != EntryType.RECIPE
+				&& p.getEntryType() != EntryType.UNKNOWN) {
 				fields[i][0] = p.getEntryType().name().substring(0, 1);
 			} else {
 				fields[i][0] = "";
@@ -267,9 +286,6 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	
 	public boolean createRezept(Rezept rp){
 		boolean ret = createList(rp, TT_PRESCRIPTION, Messages.RezeptBlatt_4);
-		if (!ret) {
-			ret = createList(rp, TT_PRESCRIPTION, Messages.RezeptBlatt_4_Extended);
-		}
 		if (ret) { //$NON-NLS-1$ //$NON-NLS-2$
 			new OutputLog(rp, this);
 			return true;
@@ -278,11 +294,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	}
 	
 	public boolean createEinnahmeliste(Patient pat, Prescription[] pres){
-		boolean ret = createList(pres, TT_INTAKE_LIST, Messages.RezeptBlatt_6);
-		if (!ret) {
-			ret = createList(pres, TT_INTAKE_LIST, Messages.RezeptBlatt_6_Extended);
-		}
-		return ret;
+		return createList(pres, TT_INTAKE_LIST, Messages.RezeptBlatt_6);
 	}
 	
 	@Override
