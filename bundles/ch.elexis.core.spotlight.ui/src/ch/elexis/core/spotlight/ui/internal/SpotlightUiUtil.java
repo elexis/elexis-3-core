@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.documents.DocumentStore;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IAppointment;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
@@ -71,6 +73,19 @@ public class SpotlightUiUtil {
 			System.out.println("No default enter action");
 			break;
 		}
+	}
+	
+	public boolean handleEnter(IAppointment appointment){
+		if (appointment != null) {
+			IContact contact = appointment.getContact();
+			if (contact != null) {
+				IPatient patient =
+					CoreModelServiceHolder.get().load(contact.getId(), IPatient.class).orElse(null);
+				contextService.setActivePatient(patient);
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

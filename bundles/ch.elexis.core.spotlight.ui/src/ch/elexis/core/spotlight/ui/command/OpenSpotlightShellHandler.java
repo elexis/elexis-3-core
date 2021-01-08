@@ -18,13 +18,14 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.spotlight.ISpotlightService;
 import ch.elexis.core.spotlight.ui.internal.ISpotlightResultEntryDetailCompositeService;
 import ch.elexis.core.spotlight.ui.internal.SpotlightShell;
+import ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyService;
 
 public class OpenSpotlightShellHandler {
 	
 	@Execute
 	public void execute(@Named(IServiceConstants.ACTIVE_SHELL)
 	Shell shell, ParameterizedCommand command, IContextService contextService,
-		ISpotlightService spotlightService,
+		ISpotlightService spotlightService, SpotlightReadyService spotlightReadyService,
 		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService){
 		
 		Map<String, String> spotlightContextParameters = null;
@@ -44,7 +45,7 @@ public class OpenSpotlightShellHandler {
 		}
 		
 		SpotlightShell spotlightShell = new SpotlightShell(shell, spotlightService,
-			resultEntryDetailCompositeService, spotlightContextParameters);
+			resultEntryDetailCompositeService, spotlightReadyService, spotlightContextParameters);
 		
 		// center on the screen
 		Monitor primary = spotlightShell.getDisplay().getPrimaryMonitor();

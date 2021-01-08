@@ -4,7 +4,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
 import ch.elexis.core.spotlight.ISpotlightService;
 import ch.elexis.core.spotlight.ui.internal.ISpotlightResultEntryDetailCompositeService;
@@ -23,9 +22,6 @@ public class SpotlightResultComposite extends Composite {
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
-		
-		Label lblSeparator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
-		lblSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		resultListComposite =
 			new SpotlightResultListComposite(this, SWT.NONE, spotlightService, uiUtil);
