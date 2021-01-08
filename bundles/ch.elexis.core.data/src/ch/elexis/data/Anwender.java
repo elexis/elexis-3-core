@@ -52,6 +52,7 @@ public class Anwender extends Person {
 	public static final String FLD_LABEL = "Label"; // contains username
 	public static final String FLD_JOINT_REMINDERS = "Reminders";
 	public static final String FLD_EXTINFO_MANDATORS = "Mandant";
+	public static final String FLD_EXTINFO_STDMANDATOR = "StdMandant";
 	
 	static {
 		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, Kontakt.FLD_IS_USER,
@@ -172,6 +173,27 @@ public class Anwender extends Person {
 		setExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS, edList.isEmpty() ? "" : ts(edList));
 	}
 
+	public void setStdExecutiveDoctorWorkingFor(Mandant m){
+		if (m == null) {
+			setExtInfoStoredObjectByKey(FLD_EXTINFO_STDMANDATOR, null);
+		} else {
+			setExtInfoStoredObjectByKey(FLD_EXTINFO_STDMANDATOR, m.getLabel());
+		}
+	}
+	
+	public Mandant getStdExecutiveDoctorWorkingFor(){
+		String stdMandator = (String) getExtInfoStoredObjectByKey(FLD_EXTINFO_STDMANDATOR);
+		if (stdMandator != null && !stdMandator.isEmpty()) {
+			List<Mandant> mandantenList = CoreHub.getMandantenList();
+			for (Mandant mandant : mandantenList) {
+				if (mandant.getLabel().equals(stdMandator)) {
+					return mandant;
+				}
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	protected String getConstraint(){
 		return Kontakt.FLD_IS_USER + StringTool.equals + JdbcLink.wrap(StringConstants.ONE);
@@ -230,10 +252,15 @@ public class Anwender extends Person {
 		Mandant initialMandator = null;
 		List<Mandant> workingFor = getExecutiveDoctorsWorkingFor();
 		if (workingFor != null && !workingFor.isEmpty()) {
+			Mandant stdWorkingFor = getStdExecutiveDoctorWorkingFor();
 			initialMandator = workingFor.get(0);
 			for (Mandant mandant : workingFor) {
 				if (mandant.equals(this)) {
 					initialMandator = mandant;
+					break;
+				}
+				if (stdWorkingFor != null && mandant.equals(stdWorkingFor)) {
+					initialMandator = stdWorkingFor;
 					break;
 				}
 			}

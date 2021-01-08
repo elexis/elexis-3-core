@@ -9,6 +9,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -24,6 +25,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -607,6 +609,53 @@ public class UserManagementPreferencePage extends PreferencePage
 					"There is no contact assigned to user " + user.getLabel());
 			}
 		});
+		MenuManager menuManager = new MenuManager();
+		menuManager.setRemoveAllWhenShown(true);
+		menuManager.addMenuListener(new IMenuListener() {
+			
+			@Override
+			public void menuAboutToShow(IMenuManager manager){
+				IStructuredSelection selection =
+					checkboxTableViewerAssociation.getStructuredSelection();
+				if (!selection.isEmpty()) {
+					Object selected = selection.getFirstElement();
+					if (selected instanceof Mandant) {
+						User user = (User) wvUser.getValue();
+						if (user != null) {
+							Anwender anw = user.getAssignedContact();
+							if (anw != null) {
+								Mandant stdWorkingFor = anw.getStdExecutiveDoctorWorkingFor();
+								if (stdWorkingFor != null && stdWorkingFor.equals(selected)) {
+									manager.add(new Action() {
+										public String getText(){
+											return "Std. Mandant entfernen";
+										};
+										
+										public void run(){
+											anw.setStdExecutiveDoctorWorkingFor(null);
+											checkboxTableViewerAssociation.refresh();
+										};
+									});
+								} else {
+									manager.add(new Action() {
+										public String getText(){
+											return "Std. Mandant setzen";
+										};
+										
+										public void run(){
+											anw.setStdExecutiveDoctorWorkingFor((Mandant) selected);
+											checkboxTableViewerAssociation.refresh();
+										};
+									});
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+		Menu contextMenu = menuManager.createContextMenu(checkboxTableViewerAssociation.getTable());
+		checkboxTableViewerAssociation.getTable().setMenu(contextMenu);
 		
 		Group grpRoles = new Group(compositeAccounting, SWT.NONE);
 		grpRoles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -642,8 +691,17 @@ public class UserManagementPreferencePage extends PreferencePage
 		checkboxTableViewerAssociation.setLabelProvider(new DefaultLabelProvider() {
 			@Override
 			public String getColumnText(Object element, int columnIndex){
+				Mandant stdWorkingFor = null;
+				User user = (User) wvUser.getValue();
+				if (user != null) {
+					Anwender anw = user.getAssignedContact();
+					if (anw != null) {
+						stdWorkingFor = anw.getStdExecutiveDoctorWorkingFor();
+					}
+				}
+				
 				Mandant m = (Mandant) element;
-				return m.getName() + " " + m.getVorname();
+				return (m.equals(stdWorkingFor) ? "* " : "") + m.getName() + " " + m.getVorname();
 			}
 		});
 		updateRoles();
