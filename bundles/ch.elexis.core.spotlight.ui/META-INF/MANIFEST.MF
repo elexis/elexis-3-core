@@ -22,6 +22,7 @@ Import-Package: ch.elexis.core.documents,
  org.slf4j;version="1.6.6"
 Automatic-Module-Name: ch.elexis.core.spotlight.ui
 Service-Component: OSGI-INF/ch.elexis.core.spotlight.ui.controls.detail.PatientSpotlightResultEntryDetailCompositeContributor.xml,
- OSGI-INF/ch.elexis.core.spotlight.ui.internal.SpotlightResultEntryDetailCompositeService.xml
+ OSGI-INF/ch.elexis.core.spotlight.ui.internal.SpotlightResultEntryDetailCompositeService.xml,
+ OSGI-INF/ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyService.xml
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.spotlight.ui

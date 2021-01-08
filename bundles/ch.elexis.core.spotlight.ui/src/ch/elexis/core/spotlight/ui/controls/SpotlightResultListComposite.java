@@ -13,7 +13,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -46,6 +45,7 @@ public class SpotlightResultListComposite extends Composite {
 		super(parent, style);
 		
 		this.uiUtil = uiUtil;
+		final SpotlightShell _spotlightShell = (SpotlightShell) this.getShell();
 		
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
@@ -98,13 +98,14 @@ public class SpotlightResultListComposite extends Composite {
 				ISpotlightResultEntry selected = (ISpotlightResultEntry) tvSpotlightResults
 					.getStructuredSelection().getFirstElement();
 				uiUtil.handleEnter(selected);
-				((Shell) getParent().getParent()).close();
+				_spotlightShell.close();
 				return;
 			default:
 				break;
 			}
+			
 			// user wants to modify the filter
-			((SpotlightShell) parent.getParent()).setFocusAppendChar(event.character);
+			_spotlightShell.setFocusAppendChar(event.character);
 		});
 		
 		tvSpotlightResults.addSelectionChangedListener(sel -> {
@@ -116,11 +117,10 @@ public class SpotlightResultListComposite extends Composite {
 			}
 		});
 		
-		final SpotlightShell _spotlightShell = (SpotlightShell) this.getShell();
 		Consumer<ISpotlightResult> resultsChangedConsumer = newInput -> {
 			_spotlightShell.getDisplay().asyncExec(() -> {
+				tableSpotlightResults.clearAll();
 				tvSpotlightResults.setInput(newInput);
-				_spotlightShell.refresh();
 			});
 		};
 		spotlightService.setResultsChangedConsumer(resultsChangedConsumer);

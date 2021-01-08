@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -23,28 +25,35 @@ import org.osgi.framework.FrameworkUtil;
 
 import ch.elexis.core.spotlight.ISpotlightService;
 import ch.elexis.core.spotlight.ui.controls.SpotlightResultComposite;
+import ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyComposite;
+import ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyService;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 public class SpotlightShell extends Shell {
 	
 	private ISpotlightService spotlightService;
 	private ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService;
+	private SpotlightReadyService spotlightReadyService;
 	private Map<String, String> spotlightContextParameters;
 	
 	private Timer timer;
 	private Text txtSearchInput;
 	private Composite filterComposite;
+	private Composite layeredComposite;
 	private SpotlightResultComposite resultComposite;
-	private GridData resultCompositeGridData;
+	private SpotlightReadyComposite readyComposite;
+	private StackLayout detailCompositeStackLayout;
 	
 	private SpotlightUiUtil uiUtil;
 	
 	public SpotlightShell(Shell shell, ISpotlightService spotlightService,
 		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService,
+		SpotlightReadyService spotlightReadyService,
 		Map<String, String> spotlightContextParameters){
 		super(shell, SWT.NO_TRIM | SWT.TOOL);
 		this.spotlightService = spotlightService;
 		this.resultEntryDetailCompositeService = resultEntryDetailCompositeService;
+		this.spotlightReadyService = spotlightReadyService;
 		this.spotlightContextParameters = spotlightContextParameters;
 		
 		// ESC closes the shell
@@ -55,13 +64,17 @@ public class SpotlightShell extends Shell {
 				event.detail = SWT.TRAVERSE_NONE;
 				event.doit = false;
 				break;
+			case SWT.TRAVERSE_RETURN:
+				// TODO globally handle enter here?
+				System.out.println("ENTER");
+				break;
 			}
 		});
 		
 		uiUtil = new SpotlightUiUtil();
 		CoreUiUtil.injectServicesWithContext(uiUtil);
 		
-		setSize(700, 40);
+		setSize(700, 400);
 		createContents();
 	}
 	
@@ -126,6 +139,12 @@ public class SpotlightShell extends Shell {
 			if (timer != null) {
 				timer.cancel();
 			}
+			if (StringUtils.isEmpty(text)) {
+				detailCompositeStackLayout.topControl = readyComposite;
+			} else {
+				detailCompositeStackLayout.topControl = resultComposite;
+			}
+			layeredComposite.layout(true, true);
 			timer = new Timer();
 			timer.schedule(new TimerTask() {
 				@Override
@@ -133,13 +152,12 @@ public class SpotlightShell extends Shell {
 					spotlightService.computeResult(text, spotlightContextParameters);
 				}
 			}, 200);
-			
 		});
 		txtSearchInput.addListener(SWT.Traverse, event -> {
 			if (event.keyCode == SWT.ARROW_DOWN) {
 				event.detail = SWT.TRAVERSE_NONE;
 				event.doit = false;
-				resultComposite.setFocus();
+				detailCompositeStackLayout.topControl.setFocus();
 			}
 		});
 		txtSearchInput.addListener(SWT.KeyDown, event -> {
@@ -151,17 +169,24 @@ public class SpotlightShell extends Shell {
 			}
 		});
 		
-		resultComposite = new SpotlightResultComposite(this, SWT.NONE, spotlightService, uiUtil,
-			resultEntryDetailCompositeService);
-		resultCompositeGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
-		resultCompositeGridData.exclude = true;
-		resultComposite.setLayoutData(resultCompositeGridData);
+		Label lblSeparator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
+		lblSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		
+		layeredComposite = new Composite(this, SWT.NONE);
+		detailCompositeStackLayout = new StackLayout();
+		layeredComposite.setLayout(detailCompositeStackLayout);
+		layeredComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+		
+		readyComposite =
+			new SpotlightReadyComposite(layeredComposite, SWT.NONE, spotlightReadyService, uiUtil);
+		detailCompositeStackLayout.topControl = readyComposite;
+		resultComposite = new SpotlightResultComposite(layeredComposite, SWT.NONE, spotlightService,
+			uiUtil, resultEntryDetailCompositeService);
 		
 		txtSearchInput.setFocus();
 	}
 	
 	public void refresh(){
-		resultCompositeGridData.exclude = false;
 		setSize(700, 400);
 	}
 	
