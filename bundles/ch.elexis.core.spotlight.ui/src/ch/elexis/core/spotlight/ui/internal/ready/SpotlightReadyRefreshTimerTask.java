@@ -73,7 +73,7 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 	}
 
 	private static final String QUERY_TEMPLATE_INBOX =
-		"SELECT COUNT(ID) FROM at_medevit_elexis_inbox WHERE mandant ='%s' AND state = '0' AND object LIKE '%s%%'";
+		"SELECT COUNT(ID) FROM at_medevit_elexis_inbox WHERE deleted = '0' AND mandant ='%s' AND state = '0' AND object LIKE '%s%%'";
 	
 	private void refreshOpenDocuments(){
 		String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
