@@ -2,6 +2,7 @@ package ch.elexis.core.spotlight.ui.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
@@ -27,10 +28,10 @@ public class SpotlightUiUtil {
 	
 	@Inject
 	private DocumentStore documentStore;
-	
-	public void handleEnter(ISpotlightResultEntry selected){
+
+	private boolean handleEnter(ISpotlightResultEntry selected){
 		if (selected == null) {
-			return;
+			return false;
 		}
 		
 		Category category = selected.getCategory();
@@ -41,7 +42,7 @@ public class SpotlightUiUtil {
 			IPatient patient =
 				CoreModelServiceHolder.get().load(objectId, IPatient.class).orElse(null);
 			contextService.setActivePatient(patient);
-			break;
+			return true;
 		case DOCUMENT:
 			IDocument document = documentStore
 				.loadDocument(objectId, documentStore.getDefaultDocumentStore().getId())
@@ -60,7 +61,7 @@ public class SpotlightUiUtil {
 						objectId, e);
 				}
 			}
-			break;
+			return true;
 		case ENCOUNTER:
 			IEncounter encounter =
 				CoreModelServiceHolder.get().load(objectId, IEncounter.class).orElse(null);
@@ -68,14 +69,14 @@ public class SpotlightUiUtil {
 				contextService.getRootContext().setTyped(encounter);
 			}
 			// TODO open kons view?
-			break;
+			return true;
 		default:
 			System.out.println("No default enter action");
-			break;
+			return false;
 		}
 	}
 	
-	public boolean handleEnter(IAppointment appointment){
+	private boolean handleEnter(IAppointment appointment){
 		if (appointment != null) {
 			IContact contact = appointment.getContact();
 			if (contact != null) {
@@ -84,6 +85,31 @@ public class SpotlightUiUtil {
 				contextService.setActivePatient(patient);
 				return true;
 			}
+		}
+		return false;
+	}
+	
+	private boolean handleEnter(String string){
+		if (string.startsWith(Category.PATIENT.name())) {
+			IPatient patient = CoreModelServiceHolder.get()
+				.load(string.substring(Category.PATIENT.name().length() + 2), IPatient.class)
+				.orElse(null);
+			contextService.setActivePatient(patient);
+			return true;
+		}
+		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean handleEnter(Object selectedElement){
+		if (selectedElement instanceof IAppointment) {
+			return handleEnter((IAppointment) selectedElement);
+		} else if (selectedElement instanceof ISpotlightResultEntry) {
+			return handleEnter((ISpotlightResultEntry) selectedElement);
+		} else if (selectedElement instanceof Supplier<?>) {
+			return ((Supplier<Boolean>) selectedElement).get();
+		} else if (selectedElement instanceof String) {
+			return handleEnter((String) selectedElement);
 		}
 		return false;
 	}

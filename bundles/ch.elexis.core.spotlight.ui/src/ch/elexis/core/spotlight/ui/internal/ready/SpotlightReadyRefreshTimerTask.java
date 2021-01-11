@@ -21,7 +21,7 @@ import ch.elexis.core.services.IQuery.ORDER;
 
 public class SpotlightReadyRefreshTimerTask extends TimerTask {
 	
-	private static String NO_NEXT_APPOINTMENT_LABEL = "-";
+	private static String NO_NEXT_APPOINTMENT_LABEL = "Heute keine weiteren Termine";
 	
 	private long lastRunTime;
 	
@@ -60,19 +60,25 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 		lastRunTime = System.currentTimeMillis();
 		
 		refreshNextAppointment();
+		refreshReminders();
 		refreshOpenLabValues();
 		refreshOpenDocuments();
 		
 		lastUpdateHandled = lastRunTime;
 	}
 	
-	private static final String QUERY_TEMPLATE =
+	private void refreshReminders(){
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static final String QUERY_TEMPLATE_INBOX =
 		"SELECT COUNT(ID) FROM at_medevit_elexis_inbox WHERE mandant ='%s' AND state = '0' AND object LIKE '%s%%'";
 	
 	private void refreshOpenDocuments(){
 		String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
 		if (mandatorId != null) {
-			String query = String.format(QUERY_TEMPLATE, mandatorId, "ch.elexis.omnivore");
+			String query = String.format(QUERY_TEMPLATE_INBOX, mandatorId, "ch.elexis.omnivore");
 			Number result =
 				(Number) coreModelService.executeNativeQuery(query).findFirst().orElse(null);
 			newDocumentsCount = result.longValue();
@@ -85,7 +91,7 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 	private void refreshOpenLabValues(){
 		String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
 		if (mandatorId != null) {
-			String query = String.format(QUERY_TEMPLATE, mandatorId, "ch.elexis.data.labresult");
+			String query = String.format(QUERY_TEMPLATE_INBOX, mandatorId, "ch.elexis.data.labresult");
 			Number result =
 				(Number) coreModelService.executeNativeQuery(query).findFirst().orElse(null);
 			newLabValuesCount = result.longValue();

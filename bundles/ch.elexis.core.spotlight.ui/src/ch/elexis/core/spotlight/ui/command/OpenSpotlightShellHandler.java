@@ -9,6 +9,7 @@ import javax.inject.Named;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Monitor;
@@ -24,7 +25,7 @@ public class OpenSpotlightShellHandler {
 	
 	@Execute
 	public void execute(@Named(IServiceConstants.ACTIVE_SHELL)
-	Shell shell, ParameterizedCommand command, IContextService contextService,
+	Shell shell, ParameterizedCommand command, EPartService partService, IContextService contextService,
 		ISpotlightService spotlightService, SpotlightReadyService spotlightReadyService,
 		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService){
 		
@@ -44,7 +45,7 @@ public class OpenSpotlightShellHandler {
 			}
 		}
 		
-		SpotlightShell spotlightShell = new SpotlightShell(shell, spotlightService,
+		SpotlightShell spotlightShell = new SpotlightShell(shell, partService, spotlightService, 
 			resultEntryDetailCompositeService, spotlightReadyService, spotlightContextParameters);
 		
 		// center on the screen
