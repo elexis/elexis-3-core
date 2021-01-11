@@ -572,7 +572,6 @@ public class LabImportUtil implements ILabImportUtil {
 		
 		List<ILabOrder> existing = getLabOrders(transientLabResult.getPatient(),
 			transientLabResult.getLabItem(), LabOrderState.ORDERED);
-		
 		ILabOrder labOrder = null;
 		if (existing == null || existing.isEmpty()) {
 			
@@ -591,6 +590,7 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 		
 		labOrder.setState(LabOrderState.DONE_IMPORT);
+		modelService.save(labOrder);
 		
 		return labResult;
 	}
