@@ -8,6 +8,7 @@ import java.util.TimerTask;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -18,6 +19,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -31,6 +33,7 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 public class SpotlightShell extends Shell {
 	
+	private EPartService partService;
 	private ISpotlightService spotlightService;
 	private ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService;
 	private SpotlightReadyService spotlightReadyService;
@@ -46,29 +49,40 @@ public class SpotlightShell extends Shell {
 	
 	private SpotlightUiUtil uiUtil;
 	
-	public SpotlightShell(Shell shell, ISpotlightService spotlightService,
+	private Object selectedElement;
+	
+	public SpotlightShell(Shell shell, EPartService partService, ISpotlightService spotlightService,
 		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService,
 		SpotlightReadyService spotlightReadyService,
 		Map<String, String> spotlightContextParameters){
 		super(shell, SWT.NO_TRIM | SWT.TOOL);
+		this.partService = partService;
 		this.spotlightService = spotlightService;
 		this.resultEntryDetailCompositeService = resultEntryDetailCompositeService;
 		this.spotlightReadyService = spotlightReadyService;
 		this.spotlightContextParameters = spotlightContextParameters;
 		
-		// ESC closes the shell
+		// globally handle ESC and ENTER
 		addListener(SWT.Traverse, event -> {
 			switch (event.detail) {
+			// ESC closes the shell
 			case SWT.TRAVERSE_ESCAPE:
+				System.out.println(shell.getDisplay().getFocusControl().getClass().getName());
 				close();
 				event.detail = SWT.TRAVERSE_NONE;
 				event.doit = false;
 				break;
+			// ENTER performs the action defined for the selected element
 			case SWT.TRAVERSE_RETURN:
-				// TODO globally handle enter here?
-				System.out.println("ENTER");
+				boolean ok = uiUtil.handleEnter(selectedElement);
+				if (ok) {
+					close();
+				}
+				event.detail = SWT.TRAVERSE_NONE;
+				event.doit = true;
 				break;
 			}
+			
 		});
 		
 		// clicking outside closes shell
@@ -106,7 +120,7 @@ public class SpotlightShell extends Shell {
 		lblIcon.setImage(logo);
 		lblIcon.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
-		filterComposite = new Composite(this, SWT.None);
+		filterComposite = new Composite(this, SWT.NO_FOCUS);
 		filterComposite.setLayout(new GridLayout(1, false));
 		filterComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		filterComposite.setBackground(this.getBackground());
@@ -142,12 +156,11 @@ public class SpotlightShell extends Shell {
 			if (timer != null) {
 				timer.cancel();
 			}
-			if (StringUtils.isEmpty(text)) {
-				detailCompositeStackLayout.topControl = readyComposite;
-			} else {
-				detailCompositeStackLayout.topControl = resultComposite;
-			}
+			
+			boolean isReadyMode = StringUtils.isEmpty(text);
+			switchReadyResultMode(isReadyMode);
 			layeredComposite.layout(true, true);
+			
 			timer = new Timer();
 			timer.schedule(new TimerTask() {
 				@Override
@@ -156,20 +169,16 @@ public class SpotlightShell extends Shell {
 				}
 			}, 200);
 		});
-		txtSearchInput.addListener(SWT.Traverse, event -> {
-			if (event.keyCode == SWT.ARROW_DOWN) {
-				event.detail = SWT.TRAVERSE_NONE;
-				event.doit = false;
-				detailCompositeStackLayout.topControl.setFocus();
-			}
-		});
 		txtSearchInput.addListener(SWT.KeyDown, event -> {
 			if (event.keyCode == 13) {
 				boolean success = resultComposite.handleEnterOnFirstSpotlightResultEntry();
 				if (success) {
 					close();
 				}
+			} else if (event.keyCode == SWT.ARROW_DOWN) {
+				layeredComposite.setFocus();
 			}
+			
 		});
 		
 		Label lblSeparator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -181,12 +190,38 @@ public class SpotlightShell extends Shell {
 		layeredComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
 		
 		readyComposite =
-			new SpotlightReadyComposite(layeredComposite, SWT.NONE, spotlightReadyService, uiUtil);
+			new SpotlightReadyComposite(layeredComposite, SWT.NONE, partService, spotlightReadyService);
 		detailCompositeStackLayout.topControl = readyComposite;
+		
 		resultComposite = new SpotlightResultComposite(layeredComposite, SWT.NONE, spotlightService,
 			uiUtil, resultEntryDetailCompositeService);
 		
+		setTabList(new Control[] {
+			txtSearchInput, layeredComposite
+		});
+		
+		switchReadyResultMode(true);
+		
 		txtSearchInput.setFocus();
+	}
+	
+	private void switchReadyResultMode(boolean setReadyMode){
+		if (setReadyMode) {
+			resultComposite.setEnabled(false);
+			readyComposite.setEnabled(true);
+			detailCompositeStackLayout.topControl = readyComposite;
+			layeredComposite.setTabList(new Control[] {
+				readyComposite
+			});
+		} else {
+			resultComposite.setEnabled(true);
+			readyComposite.setEnabled(false);
+			detailCompositeStackLayout.topControl = resultComposite;
+			layeredComposite.setTabList(new Control[] {
+				resultComposite
+			});
+		}
+		
 	}
 	
 	public void refresh(){
@@ -209,6 +244,10 @@ public class SpotlightShell extends Shell {
 	@Override
 	protected void checkSubclass(){
 		// Disable the check that prevents subclassing of SWT components
+	}
+	
+	public void setSelectedElement(Object element){
+		this.selectedElement = element;
 	}
 	
 }

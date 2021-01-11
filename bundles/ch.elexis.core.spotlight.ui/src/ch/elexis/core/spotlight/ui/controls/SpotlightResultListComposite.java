@@ -93,13 +93,6 @@ public class SpotlightResultListComposite extends Composite {
 			case SWT.ARROW_LEFT:
 				// ignore
 				return;
-			case 13:
-				// enter, handle and close
-				ISpotlightResultEntry selected = (ISpotlightResultEntry) tvSpotlightResults
-					.getStructuredSelection().getFirstElement();
-				uiUtil.handleEnter(selected);
-				_spotlightShell.close();
-				return;
 			default:
 				break;
 			}
@@ -108,12 +101,23 @@ public class SpotlightResultListComposite extends Composite {
 			_spotlightShell.setFocusAppendChar(event.character);
 		});
 		
+		tableSpotlightResults.addListener(SWT.FocusIn, event -> {
+			int itemCount = tableSpotlightResults.getItemCount();
+			if (itemCount >= 1) {
+				Object item = tableSpotlightResults.getItem(1).getData();
+				tvSpotlightResults.setSelection(new StructuredSelection(item));
+			}
+		});
+		
+		tableSpotlightResults.addListener(SWT.FocusOut, event -> {
+			tvSpotlightResults.setSelection(null);
+		});
+		
 		tvSpotlightResults.addSelectionChangedListener(sel -> {
 			Object firstElement = sel.getStructuredSelection().getFirstElement();
 			if (firstElement instanceof ISpotlightResultEntry) {
 				resultDetailComposite.setSelection((ISpotlightResultEntry) firstElement);
-			} else {
-				resultDetailComposite.setSelection(null);
+				((SpotlightShell) getShell()).setSelectedElement(firstElement);
 			}
 		});
 		
@@ -129,14 +133,7 @@ public class SpotlightResultListComposite extends Composite {
 	
 	@Override
 	public boolean setFocus(){
-		boolean result = tableSpotlightResults.setFocus();
-		// first non category element
-		int itemCount = tableSpotlightResults.getItemCount();
-		if (itemCount >= 1) {
-			Object item = tableSpotlightResults.getItem(1).getData();
-			tvSpotlightResults.setSelection(new StructuredSelection(item));
-		}
-		return result;
+		return tableSpotlightResults.setFocus();
 	}
 	
 	@Override
@@ -156,10 +153,6 @@ public class SpotlightResultListComposite extends Composite {
 	 */
 	public boolean handleEnterOnFirstSpotlightResultEntry(){
 		Object element = tvSpotlightResults.getElementAt(1);
-		if (element instanceof ISpotlightResultEntry) {
-			uiUtil.handleEnter((ISpotlightResultEntry) element);
-			return true;
-		}
-		return false;
+		return uiUtil.handleEnter(element);
 	}
 }

@@ -49,7 +49,7 @@ public class SpotlightReadyService {
 	}
 	
 	/**
-	 * @return the last 5 selected patients in format [IPatient, String (selection time), String
+	 * @return the last 5 selected patients in format [patient id, String (selection time), String
 	 *         (patient label)]
 	 */
 	@SuppressWarnings("unchecked")
