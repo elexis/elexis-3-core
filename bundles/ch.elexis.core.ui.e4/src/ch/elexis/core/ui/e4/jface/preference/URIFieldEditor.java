@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 
 import ch.elexis.core.services.IVirtualFilesystemService;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 
 /**
@@ -75,8 +76,8 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 		}
 		
 		try {
-			VirtualFilesystemServiceHolder.get().of(uri);
-			return true;
+			IVirtualFilesystemHandle vfsHandle = VirtualFilesystemServiceHolder.get().of(uri);
+			return vfsHandle.isDirectory() && vfsHandle.canWrite() && vfsHandle.canRead();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
