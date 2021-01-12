@@ -1,19 +1,15 @@
 package ch.elexis.core.model;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
@@ -23,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.jpa.entities.Brief;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.model.util.internal.DocumentLetterUtil;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.DocumentStatusMapper;
 
@@ -35,8 +33,11 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	private List<IHistory> history;
 	private String keywords;
 	
+	private DocumentLetterUtil util;
+	
 	public DocumentLetter(Brief entity){
 		super(entity);
+		util = new DocumentLetterUtil();
 	}
 	
 	@Override
@@ -72,7 +73,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	@Override
 	public void setStatus(DocumentStatus _status, boolean active){
 		Set<DocumentStatus> _statusSet = new HashSet<>(getStatus());
-		if(active) {
+		if (active) {
 			_statusSet.add(_status);
 		} else {
 			_statusSet.remove(_status);
@@ -153,10 +154,9 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public String getExtension(){
-		return ModelUtil.evaluateFileExtension(getEntity().getMimetype());
+		return util.evaluateFileExtension(getEntity().getMimetype());
 	}
 	
-
 	@Override
 	public void setExtension(String value){
 		getEntity().setMimetype(value);
@@ -204,17 +204,16 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public InputStream getContent(){
-		// test for file content first
-		if (ModelUtil.isExternFile() && getPatient() != null) {
-			Optional<File> file = ModelUtil.getExternFile(this);
-			if (file.isPresent()) {
-				try {
-					return new FileInputStream(file.get());
-				} catch (FileNotFoundException e) {
-					LoggerFactory.getLogger(getClass()).error("Error getting document content", e);
-				}
+		IVirtualFilesystemHandle vfsHandle = util.getExternalHandleIfApplicable(this);
+		if (vfsHandle != null) {
+			try {
+				return vfsHandle.openInputStream();
+			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass())
+					.warn("Exception getting InputStream for Letter [{}]", getId(), e);
 			}
 		}
+		
 		// fallback to Heap content
 		if (getEntity().getContent() != null) {
 			return new ByteArrayInputStream(getEntity().getContent().getInhalt());
@@ -223,22 +222,18 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	}
 	
 	@Override
-	public void setContent(InputStream content) {
+	public void setContent(InputStream content){
 		setStatus(DocumentStatus.PREPROCESSED, false);
 		setStatus(DocumentStatus.INDEXED, false);
 		
-		// set file content if configured 
-		if (ModelUtil.isExternFile() && getPatient() != null) {
-			Optional<File> file = ModelUtil.getExternFile(this);
-			if (!file.isPresent()) {
-				file = ModelUtil.createExternFile(this);
-			}
-			if (file.isPresent()) {
-				try (FileOutputStream fileOutput = new FileOutputStream(file.get())) {
-					IOUtils.copy(content, fileOutput);
-				} catch (IOException e) {
-					LoggerFactory.getLogger(getClass()).error("Error setting document content", e);
-				}
+		IVirtualFilesystemHandle vfsHandle = util.getExternalHandleIfApplicable(this);
+		if (vfsHandle != null) {
+			try (OutputStream outputStream = vfsHandle.openOutputStream()) {
+				IOUtils.copy(content, outputStream);
+				return;
+			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass())
+					.error("Error setting document content, will write to HEAP", e);
 			}
 		}
 		

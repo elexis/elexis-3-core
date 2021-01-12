@@ -7,27 +7,34 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.test.AbstractTest;
 import ch.elexis.core.types.DocumentStatus;
 
-public class DocumentBriefTest extends AbstractTest {
+public class DocumentLetterTest extends AbstractTest {
 	
 	private IContact contact1;
 	private IPatient patient1;
 	
+	@Override
 	@Before
 	public void before(){
 		super.before();
@@ -39,6 +46,7 @@ public class DocumentBriefTest extends AbstractTest {
 		coreModelService.save(patient1);
 	}
 	
+	@Override
 	@After
 	public void after(){
 		coreModelService.remove(contact1);
@@ -99,4 +107,35 @@ public class DocumentBriefTest extends AbstractTest {
 		coreModelService.remove(letter1);
 		coreModelService.remove(letter2);
 	}
+	
+	@Test
+	public void storeAndReadExternal() throws IOException{
+		Path tempDirectory = Files.createTempDirectory(getClass().getName() + "_test");
+		ConfigServiceHolder.get().set(Preferences.P_TEXT_EXTERN_FILE, true);
+		ConfigServiceHolder.get().set(Preferences.P_TEXT_EXTERN_FILE_PATH,
+			tempDirectory.toUri().toString());
+		
+		IDocumentLetter letter1 = coreModelService.create(IDocumentLetter.class);
+		letter1.setDescription("test letter external");
+		letter1.setPatient(patient1);
+		letter1.setAuthor(contact1);
+		letter1.setMimeType("txt");
+		letter1
+			.setContent(new ByteArrayInputStream("My name is Mr. Me seeks, look at me".getBytes()));
+		coreModelService.save(letter1);
+		
+		File file = tempDirectory.resolve(patient1.getPatientNr()).resolve(letter1.getId() + ".txt")
+			.toFile();
+		assertTrue(file.exists());
+		
+		byte[] content;
+		try (InputStream is = letter1.getContent()) {
+			content = IOUtils.toByteArray(is);
+		}
+		assertTrue(new String(content).startsWith("My name is"));
+		
+		FileUtils.deleteDirectory(tempDirectory.toFile());
+		ConfigServiceHolder.get().set(Preferences.P_TEXT_EXTERN_FILE, false);
+	}
+	
 }
