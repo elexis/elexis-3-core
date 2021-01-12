@@ -21,7 +21,7 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 @SuiteClasses({
 	AccessControlServiceTest.class, IAppointmentServiceTest.class, IBillingServiceTest.class,
 	IConfigServiceTest.class, IElexisEnvironmentServiceTest.class, ILabServiceTest.class,
-	IStoreToStringServiceTest.class, IStickerServiceTest.class,
+	IStoreToStringServiceTest.class, IStickerServiceTest.class, BriefDocumentStoreTest.class,
 	IUserServiceTest.class, IMessageServiceTest.class, IVirtualFilesystemServiceTest.class,
 	IXidServiceTest.class, IMedicationServiceTest.class, ITextReplacementServiceTest.class
 })

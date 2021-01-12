@@ -1,4 +1,4 @@
-package ch.elexis.data.service.internal;
+package ch.elexis.core.services;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,11 +17,9 @@ import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.services.IDocumentStore;
-import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.internal.dto.CategoryDocumentDTO;
 import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.utils.OsgiServiceUtil;
-import ch.elexis.data.dto.CategoryDocumentDTO;
 
 public class BriefDocumentStoreTest {
 	
@@ -37,7 +35,8 @@ public class BriefDocumentStoreTest {
 		iModelService =
 			modelService.orElseThrow(() -> new IllegalStateException("No service available"));
 		
-		Optional<IDocumentStore> documentService = OsgiServiceUtil.getService(IDocumentStore.class);
+		Optional<IDocumentStore> documentService = OsgiServiceUtil.getService(IDocumentStore.class,
+			"(storeid=ch.elexis.data.store.brief)");
 		iDocumentStore =
 			documentService.orElseThrow(() -> new IllegalStateException("No service available"));
 		
@@ -72,10 +71,11 @@ public class BriefDocumentStoreTest {
 		IDocument persistedDocument = documents.get(0);
 		Assert.assertTrue(persistedDocument.getId() != null);
 		Assert.assertEquals("Test Brief", persistedDocument.getTitle());
-		Assert.assertEquals( "docx", persistedDocument.getMimeType());
-		Assert.assertEquals("Test desc", persistedDocument.getDescription() );
+		Assert.assertEquals("docx", persistedDocument.getMimeType());
+		Assert.assertEquals("Test desc", persistedDocument.getDescription());
 		Assert.assertEquals(BriefConstants.RECHNUNG, persistedDocument.getCategory().getName());
-		Assert.assertEquals(Collections.singletonList(DocumentStatus.NEW), persistedDocument.getStatus());
+		Assert.assertEquals(Collections.singletonList(DocumentStatus.NEW),
+			persistedDocument.getStatus());
 		
 		// save content
 		iDocumentStore.saveDocument(persistedDocument, IOUtils.toInputStream("test"));
