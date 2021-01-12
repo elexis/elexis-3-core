@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.ui.UiDesk;
 
-@Component(property = EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE_NOTIFICATION + "/*")
+@Component(property = EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE_NOTIFICATION + "*")
 public class OsgiMessageEventListener implements EventHandler {
 	
 	@Override
