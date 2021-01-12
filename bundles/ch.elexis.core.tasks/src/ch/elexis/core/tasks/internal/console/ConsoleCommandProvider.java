@@ -65,12 +65,6 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 
 		IQuery<ITask> query = taskModelService.getQuery(ITask.class);
 
-		if (args.size() > 0) {
-			query.limit(Integer.valueOf(args.get(0)));
-		} else {
-			query.limit(20);
-		}
-
 		if (args.size() > 1) {
 			ITaskDescriptor taskDescriptor =
 				taskService.findTaskDescriptorByIdOrReferenceId(args.get(1)).orElse(null);
@@ -83,7 +77,6 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			}
 		}
 		query.orderBy(ModelPackage.Literals.ITASK__FINISHED_AT, ORDER.DESC);
-
 		List<ITask> finishedTasks = query.execute();
 		prflp("State", 8);
 		prflp("Descriptor Id/RefId", 27);
@@ -91,7 +84,6 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		prflp("FinishTime", 25);
 		prflp("CreateTime", 25);
 		ci.print("Result\n");
-
 		finishedTasks.stream().forEach(t -> {
 			prflp(t.getState().name(), 8);
 			prflp(t.getTaskDescriptor().getReferenceId(), 27);
@@ -101,7 +93,6 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			ci.print(t.getResult() + "\n");
 		});
 	}
-
 	@CmdAdvisor(description = "list tasks and current state")
 	public void __task_list(){
 		List<ITask> runningTasks = taskService.getRunningTasks();
@@ -199,7 +190,6 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	@CmdAdvisor(description = "create or modify a task descriptor from a json file")
 	public void __task_descriptor_url(@CmdParam(description = "url referencing json file")
 	String urlString) throws IOException, TaskException{
-
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		IVirtualFilesystemHandle of = vfsService.of(urlString);
 		String content = new String(of.readAllBytes(), StandardCharsets.UTF_8);
@@ -211,7 +201,6 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	public void __task_descriptor_json(
 		@CmdParam(description = "id or referenceId of the task descriptor")
 		String idOrReferenceId){
-
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Optional<ITaskDescriptor> taskDescriptor =
 			taskService.findTaskDescriptorByIdOrReferenceId(idOrReferenceId);
