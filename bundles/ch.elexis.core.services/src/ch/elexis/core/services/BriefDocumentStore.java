@@ -1,4 +1,4 @@
-package ch.elexis.core.data.service.internal;
+package ch.elexis.core.services;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -8,8 +8,6 @@ import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.exceptions.PersistenceException;
@@ -21,21 +19,16 @@ import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ITag;
 import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.services.IDocumentStore;
-import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.data.Brief;
-import ch.elexis.data.dto.CategoryDocumentDTO;
+import ch.elexis.core.services.internal.dto.CategoryDocumentDTO;
 
 @Component(property = "storeid=ch.elexis.data.store.brief")
 public class BriefDocumentStore implements IDocumentStore {
 	
 	private static final String STORE_ID = "ch.elexis.data.store.brief";
-	private static Logger log = LoggerFactory.getLogger(BriefDocumentStore.class);
 	
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	private IModelService coreModelService;
 	
 	@Override
 	public String getId(){
@@ -51,13 +44,13 @@ public class BriefDocumentStore implements IDocumentStore {
 	public List<IDocument> getDocuments(String patientId, String authorId, ICategory category,
 		List<ITag> tag){
 		
-		Optional<IPatient> patient = modelService.load(patientId, IPatient.class);
+		Optional<IPatient> patient = coreModelService.load(patientId, IPatient.class);
 		if (patient.isPresent()) {
-			IQuery<IDocumentLetter> query = modelService.getQuery(IDocumentLetter.class);
+			IQuery<IDocumentLetter> query = coreModelService.getQuery(IDocumentLetter.class);
 			query.and(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, patient.get());
 			
 			if (authorId != null) {
-				Optional<IContact> author = modelService.load(authorId, IContact.class);
+				Optional<IContact> author = coreModelService.load(authorId, IContact.class);
 				author.ifPresent(a -> {
 					query.and(ModelPackage.Literals.IDOCUMENT__AUTHOR, COMPARATOR.EQUALS, a);
 				});
@@ -90,9 +83,10 @@ public class BriefDocumentStore implements IDocumentStore {
 	
 	@Override
 	public void removeDocument(IDocument document){
-		Optional<IDocumentLetter> existing = modelService.load(document.getId(), IDocumentLetter.class);
+		Optional<IDocumentLetter> existing =
+			coreModelService.load(document.getId(), IDocumentLetter.class);
 		existing.ifPresent(d -> {
-			modelService.delete(d);
+			coreModelService.delete(d);
 		});
 	}
 	
@@ -111,7 +105,7 @@ public class BriefDocumentStore implements IDocumentStore {
 			if (content != null) {
 				document.setContent(content);
 			}
-			modelService.save(document);
+			coreModelService.save(document);
 			return document;
 		} catch (PersistenceException e) {
 			throw new ElexisException("cannot save", e);
@@ -121,7 +115,7 @@ public class BriefDocumentStore implements IDocumentStore {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Optional<IDocument> loadDocument(String id){
-		return (Optional<IDocument>) (Optional<?>) modelService.load(id, IDocumentLetter.class);
+		return (Optional<IDocument>) (Optional<?>) coreModelService.load(id, IDocumentLetter.class);
 	}
 	
 	@Override
@@ -139,10 +133,10 @@ public class BriefDocumentStore implements IDocumentStore {
 	
 	@Override
 	public IDocument createDocument(String patientId, String title, String categoryName){
-		IDocumentLetter letter = modelService.create(IDocumentLetter.class);
+		IDocumentLetter letter = coreModelService.create(IDocumentLetter.class);
 		letter.setStoreId(STORE_ID);
 		letter.setTitle(title);
-		letter.setPatient(modelService.load(patientId, IPatient.class).orElse(null));
+		letter.setPatient(coreModelService.load(patientId, IPatient.class).orElse(null));
 		ICategory iCategory =
 			categoryName != null ? new CategoryDocumentDTO(categoryName) : getCategoryDefault();
 		letter.setCategory(iCategory);
@@ -151,12 +145,13 @@ public class BriefDocumentStore implements IDocumentStore {
 	
 	@Override
 	public ICategory getCategoryDefault(){
-		return new CategoryDocumentDTO(Brief.UNKNOWN);
+		return new CategoryDocumentDTO(BriefConstants.UNKNOWN);
 	}
 	
 	@Override
 	public Optional<Object> getPersistenceObject(IDocument iDocument){
-		return Optional.of(Brief.load(iDocument.getId()));
+		return Optional.ofNullable(
+			coreModelService.load(iDocument.getId(), IDocumentLetter.class).orElse(null));
 	}
 	
 	@Override

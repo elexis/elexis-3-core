@@ -1,4 +1,4 @@
-package ch.elexis.data.dto;
+package ch.elexis.core.services.internal.dto;
 
 import ch.elexis.core.model.ICategory;
 
