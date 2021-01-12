@@ -61,17 +61,16 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		Composite comp = new Composite(parent, SWT.None);
 		comp.setLayout(new GridLayout(2, false));
 		
-		Label lblNachname = new Label(comp, SWT.NONE);
-		lblNachname.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		
-		lblNachname.setText(Messages.KontaktBlatt_LastName);
+		Label lblVorname = new Label(comp, SWT.NONE);
+		lblVorname.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, false, 1, 1));
+		lblVorname.setText(Messages.KontaktBlatt_FirstName);
 		
 		textVorname = new Text(comp, SWT.BORDER);
 		textVorname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblVorname = new Label(comp, SWT.NONE);
-		lblVorname.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, false, 1, 1));
-		lblVorname.setText(Messages.KontaktBlatt_FirstName);
+		Label lblNachname = new Label(comp, SWT.NONE);
+		lblNachname.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNachname.setText(Messages.KontaktBlatt_LastName);
 		
 		textNachname = new Text(comp, SWT.BORDER);
 		textNachname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
