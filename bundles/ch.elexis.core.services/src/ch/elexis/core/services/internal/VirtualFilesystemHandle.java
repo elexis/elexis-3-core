@@ -297,6 +297,23 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	}
 	
 	@Override
+	public boolean canWrite(){
+		Optional<File> file = toFile();
+		if (file.isPresent()) {
+			return file.get().canWrite();
+		}
+		
+		Optional<SmbFile> smbFile = toSmbFile();
+		if (smbFile.isPresent()) {
+			try {
+				return smbFile.get().canWrite();
+			} catch (SmbException e) {}
+		}
+		
+		return false;
+	}
+	
+	@Override
 	public String getAbsolutePath(){
 		return uri.toString();
 	}
@@ -368,6 +385,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
 	
+	@Override
 	public URI getURI(){
 		return uri;
 	}

@@ -1,14 +1,11 @@
 package ch.elexis.core.model.util.internal;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +16,10 @@ import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.Userconfig;
 import ch.elexis.core.jpa.model.adapter.AbstractModelService;
 import ch.elexis.core.model.Config;
-import ch.elexis.core.model.DocumentLetter;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IDiagnosisReference;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.Identifiable;
@@ -39,7 +34,6 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStoreToStringContribution;
 import ch.elexis.core.utils.CoreUtil;
-import ch.rgw.tools.MimeTool;
 
 /**
  * Utility class with core model specific methods
@@ -55,39 +49,6 @@ public class ModelUtil {
 	private static DateTimeFormatter defaultDateFormatter =
 		DateTimeFormatter.ofPattern("dd.MM.yyyy");
 	
-	/**
-	 * Get the file extension part of the input String.
-	 * 
-	 * @param input
-	 * @return
-	 */
-	public static String evaluateFileExtension(String input){
-		String ext = MimeTool.getExtension(input);
-		if (StringUtils.isEmpty(ext)) {
-			ext = FilenameUtils.getExtension(input);
-			if (StringUtils.isEmpty(ext)) {
-				ext = input;
-			}
-		}
-		return ext;
-	}
-	
-	/**
-	 * Test if configuration of {@value Preferences#P_TEXT_EXTERN_FILE} is set and pointing to a
-	 * valid directory.
-	 * 
-	 * @return
-	 */
-	public static boolean isExternFile(){
-		if (isConfig(Preferences.P_TEXT_EXTERN_FILE, false)) {
-			String path = getExternFilePath();
-			if (path != null) {
-				return pathExistsAndCanWrite(path, true);
-			}
-		}
-		return false;
-	}
-	
 	public static String getExternFilePath(){
 		return getAsExternFilePath(getConfig(Preferences.P_TEXT_EXTERN_FILE_PATH, null));
 	}
@@ -100,96 +61,6 @@ public class ModelUtil {
 					+ "] in extern file path result is [" + path + "]");
 		}
 		return path;
-	}
-	
-	/**
-	 * Read the configured {@value Preferences#P_TEXT_EXTERN_FILE_PATH} and return a {@link File}
-	 * representation of the document.
-	 * 
-	 * @param documentBrief
-	 * @return
-	 */
-	public static Optional<File> getExternFile(DocumentLetter documentBrief){
-		String path = getExternFilePath();
-		if (pathExistsAndCanWrite(path, true)) {
-			File dir = new File(path);
-			StringBuilder sb = new StringBuilder();
-			IPatient patient = documentBrief.getPatient();
-			if (patient != null) {
-				sb.append(patient.getPatientNr()).append(File.separator)
-					.append(documentBrief.getId())
-					.append("." + evaluateFileExtension(documentBrief.getMimeType()));
-				File ret = new File(dir, sb.toString());
-				if (ret.exists() && ret.isFile()) {
-					return Optional.of(ret);
-				} else {
-					logger.warn("File [" + ret.getAbsolutePath() + "] not valid e=" + ret.exists()
-						+ " f=" + ret.isFile());
-				}
-			} else {
-				logger.warn("No patient for [" + documentBrief.getId() + "]");
-			}
-		}
-		return Optional.empty();
-	}
-	
-	/**
-	 * Create a external file at the directory configured with
-	 * {@value Preferences#P_TEXT_EXTERN_FILE_PATH} and the patient number.
-	 * 
-	 * @param documentBrief
-	 * @return
-	 */
-	public static Optional<File> createExternFile(DocumentLetter documentBrief){
-		String path = getExternFilePath();
-		if (pathExistsAndCanWrite(path, true)) {
-			File dir = new File(path);
-			IPatient patient = documentBrief.getPatient();
-			if (patient != null) {
-				File patPath = new File(dir, patient.getPatientNr());
-				if (!patPath.exists()) {
-					patPath.mkdirs();
-				}
-				File ret = new File(patPath, documentBrief.getId() + "."
-					+ evaluateFileExtension(documentBrief.getMimeType()));
-				if (!ret.exists()) {
-					try {
-						ret.createNewFile();
-					} catch (IOException e) {
-						logger.error("Error creating file", e);
-						return Optional.empty();
-					}
-				}
-				return Optional.of(ret);
-			} else {
-				logger.warn("No patient for [" + documentBrief.getId() + "]");
-			}
-		}
-		return Optional.empty();
-	}
-	
-	/**
-	 * Test if the path exists is directory and application has write permissions.
-	 * 
-	 * @param path
-	 * @param log
-	 * @return
-	 */
-	public static boolean pathExistsAndCanWrite(String path, boolean log){
-		if (path != null) {
-			File dir = new File(path);
-			if (dir.exists() && dir.isDirectory() && dir.canWrite()) {
-				return true;
-			} else {
-				if (log) {
-					logger.warn("Configured path [" + path + "] not valid e=" + dir.exists() + " d="
-						+ dir.isDirectory() + " w=" + dir.canWrite());
-				}
-			}
-		} else if (log) {
-			logger.warn("No path configured");
-		}
-		return false;
 	}
 	
 	/**

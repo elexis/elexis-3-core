@@ -38,14 +38,14 @@ public interface IVirtualFilesystemService {
 	public IVirtualFilesystemHandle of(File file) throws IOException;
 	
 	/**
-	 * Hide the password that may be part of the URL, accepts UNCs simply returning them
+	 * Hide the password that may be part of the URL, accepts UNCs or unix paths simply returning them
 	 * 
 	 * @param urlString
 	 * @return the same string, with the password replaced with <code>***</code>. If the URL is
 	 *         incorrect the exception message is returned.
 	 */
 	static String hidePasswordInUrlString(String urlString){
-		if (urlString.startsWith("\\\\")) {
+		if (urlString.startsWith("\\\\") || urlString.startsWith("/")) {
 			return urlString;
 		}
 		
@@ -183,6 +183,12 @@ public interface IVirtualFilesystemService {
 		 * @return
 		 */
 		public boolean canRead();
+		
+		/**
+		 * 
+		 * @return
+		 */
+		public boolean canWrite();
 		
 		/**
 		 * 
