@@ -11,25 +11,15 @@
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
-
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -40,20 +30,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.ILocalDocumentService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.e4.jface.preference.URIFieldEditor;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Brief;
-import ch.elexis.data.Query;
 
 /**
  * Einstellungen zur Verknüpfung mit einem externen Texterstellungs-Modul
@@ -62,9 +50,8 @@ import ch.elexis.data.Query;
  */
 public class Texterstellung extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	
-	private Text externPath;
 	private ControlDecoration externPathDeco;
-	private Button allExtern;
+	private Label allExtern;
 	
 	public Texterstellung(){
 		super(GRID);
@@ -78,13 +65,12 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		List<IConfigurationElement> list =
 			Extensions.getExtensions(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
 		addField(new BooleanFieldEditor(Preferences.P_TEXT_SUPPORT_LEGACY,
-				Messages.Texterstellung_Support_Legacy, getFieldEditorParent()));
+			Messages.Texterstellung_Support_Legacy, getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Preferences.P_TEXT_RENAME_WITH_F2,
-				Messages.Texterstellung_Rename_with_F2, getFieldEditorParent()));
+			Messages.Texterstellung_Rename_with_F2, getFieldEditorParent()));
 		
 		addField(new BooleanFieldEditor(Preferences.P_TEXT_EDIT_LOCAL,
-			Messages.Texterstellung_texteditlocaldesc,
-			getFieldEditorParent()));
+			Messages.Texterstellung_texteditlocaldesc, getFieldEditorParent()));
 		
 		if (LocalDocumentServiceHolder.getService().isPresent()) {
 			ILocalDocumentService documentService = LocalDocumentServiceHolder.getService().get();
@@ -98,7 +84,6 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			backupDir.setEditable(false);
 		}
 		
-				
 		String[][] rows = new String[list.size()][];
 		int i = 0;
 		for (IConfigurationElement ice : list) {
@@ -117,6 +102,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		Composite compExtern = new Composite(getFieldEditorParent(), SWT.NONE);
 		compExtern.setLayout(new GridLayout(2, false));
 		compExtern.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		
 		Button check = new Button(compExtern, SWT.CHECK);
 		check.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1));
 		check.setText(Messages.Texterstellung_external_save);
@@ -125,101 +111,25 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				ConfigServiceHolder.setGlobal(Preferences.P_TEXT_EXTERN_FILE, check.getSelection());
-				externPath.setEnabled(check.getSelection());
 				allExtern.setEnabled(check.getSelection());
 				externPathDeco.hide();
 			}
 		});
-		externPath = new Text(compExtern, SWT.BORDER);
-		externPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		externPath.setText(ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, StringUtils.EMPTY));
-		externPath.setEnabled(check.getSelection());
-		externPath.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent e){
-				updateExternPathDeco(externPath.getText());
-			}
-		});
-		externPathDeco = new ControlDecoration(externPath, SWT.LEFT | SWT.TOP);
 		
-		allExtern = new Button(compExtern, SWT.PUSH);
+		Composite comp = new Composite(compExtern, SWT.None);
+		comp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		URIFieldEditor storePath =
+			new URIFieldEditor(Preferences.P_TEXT_EXTERN_FILE_PATH, "", comp);
+		storePath.setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
+		storePath.setEmptyStringAllowed(true);
+		addField(storePath);
+		
+		allExtern = new Label(compExtern, SWT.WRAP);
 		allExtern.setText(Messages.Texterstellung_save_all_letters_externally);
-		allExtern.setEnabled(check.getSelection());
-		allExtern.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent ev){
-				if (MessageDialog.openQuestion(getShell(), Messages.Texterstellung_dlg_title_save_external,
-					Messages.Texterstellung_dlg_msg_save_external)) {
-					ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
-					try {
-						progressDialog.run(true, true, new IRunnableWithProgress() {
-							public void run(IProgressMonitor monitor)
-								throws InvocationTargetException, InterruptedException{
-								Query<Brief> query = new Query<>(Brief.class);
-								List<Brief> allBrief = query.execute();
-								monitor.beginTask(Messages.Texterstellung_save_all_letters_externally, allBrief.size());
-								for (Brief brief : allBrief) {
-									BriefExternUtil.exportToExtern(brief);
-									monitor.worked(1);
-								}
-							}
-						});
-					} catch (InvocationTargetException | InterruptedException e) {
-						MessageDialog.openError(getShell(), Messages.Texterstellung_title_error_saving_external,
-							Messages.Texterstellung_detail_error_saving_external);
-						LoggerFactory.getLogger(getClass())
-							.error("Error creating saving Brief extern", e); //$NON-NLS-1$
-					}
-				}
-			}
-		});
-		if (check.getSelection()) {
-			updateExternPathDeco(externPath.getText());
-		}
-	}
-	
-	private void updateExternPathDeco(String path){
-		path = BriefExternUtil.getAsExternFilePath(path);
-		if (BriefExternUtil.isValidExternPath(path, false)) {
-			externPathDeco.hide();
-			allExtern.setEnabled(true);
-		} else {
-			externPathDeco.setImage(FieldDecorationRegistry.getDefault()
-				.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage());
-			externPathDeco.setDescriptionText(getPathDiagnoseString(path));
-			externPathDeco.show();
-			allExtern.setEnabled(false);
-		}
-	}
-	
-	private String getPathDiagnoseString(String path){
-		if (path == null) {
-			return Messages.Texterstellung_path_not_set;
-		} else {
-			File dir = new File(path);
-			if (!dir.exists()) {
-				return Messages.Texterstellung_path_does_not_exist;
-			}
-			if (!dir.isDirectory()) {
-				return Messages.Texterstellung_path_is_not_directory;
-			}
-			if (!dir.canWrite()) {
-				return Messages.Texterstellung_path_not_writable;
-			}
-		}
-		return Messages.Texterstellung_unkown_error;
+		allExtern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 	}
 	
 	@Override
-	public boolean performOk(){
-		if (externPath != null && !externPath.isDisposed()
-			&& BriefExternUtil.isValidExternPath(
-				BriefExternUtil.getAsExternFilePath(externPath.getText()), false)) {
-			ConfigServiceHolder.setGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, externPath.getText());
-		}
-		return super.performOk();
-	}
-	
 	public void init(IWorkbench workbench){}
 	
 }

@@ -11,21 +11,21 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Optional;
+import java.io.InputStream;
+import java.util.Date;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.io.Files;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.interfaces.IOutputter;
-import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.model.BriefConstants;
+import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.text.XRefExtensionConstants;
-import ch.rgw.compress.CompEx;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -88,6 +88,19 @@ public class Brief extends PersistentObject {
 		return new Brief(id);
 	}
 	
+	/**
+	 * Convenience conversion method, loads object via model service
+	 * 
+	 * @return
+	 * @since 3.8
+	 * @throws IllegalStateException
+	 *             if entity could not be loaded
+	 */
+	public IDocument toIDocument(){
+		return CoreModelServiceHolder.get().load(getId(), IDocumentLetter.class).orElseThrow(
+			() -> new IllegalStateException("Could not convert Brief [" + getId() + "]"));
+	}
+	
 	/** Einen neuen Briefeintrag erstellen */
 	public Brief(String Betreff, TimeTool Datum, Kontakt Absender, Kontakt dest, Konsultation bh,
 		String typ){
@@ -136,37 +149,40 @@ public class Brief extends PersistentObject {
 	
 	/** Speichern als Text */
 	public boolean save(String cnt){
-		Content c = getOrCreateContent();
-		c.save(cnt);
-		set(FLD_DATE_MODIFIED, new TimeTool().toString(TimeTool.TIMESTAMP));
-		return true;
+		return save(cnt.getBytes(), "txt");
 	}
 	
 	/** Speichern in Binärformat */
 	public boolean save(byte[] in, String mimetype){
-		if (in != null) {
-			set(FLD_MIME_TYPE, mimetype);
-			Content c = getOrCreateContent();
-			c.save(in);
-			set(FLD_DATE_MODIFIED, new TimeTool().toString(TimeTool.TIMESTAMP));
+		try (ByteArrayInputStream inputStream = new ByteArrayInputStream(in)) {
+			IDocument iDocument = toIDocument();
+			iDocument.setMimeType(mimetype);
+			iDocument.setContent(inputStream);
+			iDocument.setLastchanged(new Date());
+			CoreModelServiceHolder.get().save(iDocument);
 			return true;
+		} catch (IOException e) {
+			LoggerFactory.getLogger(getClass()).warn("Error saving content of Brief [{}]", getId(),
+				e);
 		}
 		return false;
 	}
 	
 	/** Binärformat laden */
 	public byte[] loadBinary(){
-		Content c = getContent().orElse(Content.DUMMY);
-		if (c instanceof HeapContent) {
-			((HeapContent) c).setDBConnection(getDBConnection());
+		byte[] content = null;
+		try (InputStream is = toIDocument().getContent()) {
+			content = IOUtils.toByteArray(is);
+		} catch (IOException e) {
+			LoggerFactory.getLogger(getClass()).warn("Error loading content of Brief [{}]", getId(),
+				e);
 		}
-		return c.getBinary();
+		return content;
 	}
 	
 	/** Textformat laden */
 	public String read(){
-		Content c = getContent().orElse(Content.DUMMY);
-		return c.read();
+		return new String(loadBinary());
 	}
 	
 	/** Mime-Typ des Inhalts holen */
@@ -185,8 +201,8 @@ public class Brief extends PersistentObject {
 		return true;
 	}
 	
+	@Override
 	public boolean delete(){
-		getContent().ifPresent(c -> c.delete());
 		String konsID = get(FLD_KONSULTATION_ID);
 		if (!StringTool.isNothing(konsID) && (!konsID.equals(SYS_TEMPLATE))) {
 			Konsultation kons = Konsultation.load(konsID);
@@ -194,6 +210,7 @@ public class Brief extends PersistentObject {
 				kons.removeXRef(XRefExtensionConstants.providerID, getId());
 			}
 		}
+		CoreModelServiceHolder.get().delete(toIDocument());
 		return super.delete();
 	}
 	
@@ -207,8 +224,9 @@ public class Brief extends PersistentObject {
 	 * @return
 	 */
 	public boolean removeContent(){
-		Content content = getContent().orElse(Content.DUMMY);
-		return content.remove();
+		IDocument iDocument = toIDocument();
+		iDocument.setContent(null);
+		return CoreModelServiceHolder.get().save(iDocument);
 	}
 	
 	public String getBetreff(){
@@ -240,284 +258,9 @@ public class Brief extends PersistentObject {
 		return null;
 	}
 	
+	@Override
 	public String getLabel(){
 		return checkNull(get(FLD_DATE)) + StringTool.space + checkNull(get(FLD_SUBJECT));
 	}
-	
-	/**
-	 * Get an existing {@link Content} implementation for the {@link Brief}. Create a new one if no existing is found.
-	 * 
-	 * @return
-	 */
-	private Content getOrCreateContent(){
-		Optional<Content> existing = getContent();
-		if(existing.isPresent()) {
-			return existing.get();
-		} else {
-			if (BriefExternUtil.isExternFile() && getPatient() != null) {
-				return FileContent.create(this);
-			} else {
-				return new HeapContent(this);
-			}
-		}
-	}
-	
-	/**
-	 * Get a existing {@link Content} implementation for the {@link Brief}. {@link Optional#empty()}
-	 * if none exists.
-	 * 
-	 * @return
-	 */
-	private Optional<Content> getContent(){
-		Content ret = null;
-		if (BriefExternUtil.isExternFile() && getPatient() != null) {
-			Optional<File> file = BriefExternUtil.getExternFile(this);
-			if (file.isPresent()) {
-				ret = new FileContent(file.get());
-			} else {
-				// lookup in heap even if extern configured
-				HeapContent heap = HeapContent.load(getId());
-				if (heap.isAvailable()) {
-					ret = heap;
-				}
-			}
-		} else {
-			HeapContent heap = HeapContent.load(getId());
-			if (heap.isAvailable()) {
-				ret = heap;
-			}
-		}
-		return Optional.ofNullable(ret);
-	}
-	
-	/**
-	 * Interface for different {@link Brief} content providers.
-	 * 
-	 * @author thomas
-	 *
-	 */
-	private static interface Content {
-		/**
-		 * Dummy implementation, can be used if no real implementation present.
-		 */
-		Content DUMMY = new Content() {
-			
-			@Override
-			public byte[] getBinary(){
-				return new byte[0];
-			}
-			
-			@Override
-			public String read(){
-				return "";
-			}
-			
-			@Override
-			public void save(String contents){
-				// ignore
-			}
-			
-			@Override
-			public void save(byte[] contents){
-				// ignore
-			}
-			
-			@Override
-			public boolean delete(){
-				return false;
-			}
-			
-			@Override
-			public boolean remove(){
-				return false;
-			}
-		};
-		
-		/**
-		 * Get contents binary
-		 * 
-		 * @return
-		 */
-		public byte[] getBinary();
-		
-		/**
-		 * Read the contents
-		 * 
-		 * @return
-		 */
-		public String read();
-		
-		/**
-		 * Save the contents
-		 * 
-		 * @param contents
-		 */
-		public void save(String contents);
-		
-		/**
-		 * Save the contents
-		 * 
-		 * @param contents
-		 */
-		public void save(byte[] contents);
-		
-		/**
-		 * Mark as deleted
-		 * 
-		 * @return
-		 */
-		public boolean delete();
-		
-		/**
-		 * Remove from persistence
-		 * 
-		 * @return
-		 */
-		public boolean remove();
-	}
-	
-	/**
-	 * Brief content Provider from {@link File} based persistence.
-	 * 
-	 * @author thomas
-	 *
-	 */
-	private static class FileContent implements Content {
-		
-		private File file;
-		
-		public FileContent(File file){
-			this.file = file;
-		}
-		
-		public static FileContent create(Brief brief){
-			Optional<File> created = BriefExternUtil.createExternFile(brief);
-			return new FileContent(created.get());
-		}
-		
-		@Override
-		public byte[] getBinary(){
-			try {
-				return Files.toByteArray(file);
-			} catch (IOException e) {
-				LoggerFactory.getLogger(getClass()).error("Could not access file", e);
-			}
-			return new byte[0];
-		}
-		
-		@Override
-		public String read(){
-			try {
-				return Files.toString(file, Charset.defaultCharset());
-			} catch (IOException e) {
-				LoggerFactory.getLogger(getClass()).error("Could not access file", e);
-			}
-			return new String();
-		}
-		
-		@Override
-		public void save(String contents){
-			try {
-				Files.write(contents, file, Charset.defaultCharset());
-			} catch (IOException e) {
-				LoggerFactory.getLogger(getClass()).error("Could not access file", e);
-			}
-		}
-		
-		@Override
-		public void save(byte[] contents){
-			try {
-				Files.write(contents, file);
-			} catch (IOException e) {
-				LoggerFactory.getLogger(getClass()).error("Could not access file", e);
-			}
-		}
-		
-		@Override
-		public boolean delete(){
-			// do nothing, Brief is marked deleted, file is not seen in elexis
-			return true;
-		}
-		
-		@Override
-		public boolean remove(){
-			return file.delete();
-		}
-	}
-	
-	/**
-	 * Brief content provider for HEAP database table based persistence.
-	 * 
-	 */
-	private static class HeapContent extends PersistentObject implements Content {
-		private static final String CONTENTS = "inhalt";
-		static final String CONTENT_TABLENAME = "HEAP";
-		
-		static {
-			addMapping(CONTENT_TABLENAME, CONTENTS);
-		}
-		
-		private HeapContent(Brief br){
-			create(br.getId());
-		}
-		
-		private HeapContent(String id){
-			super(id);
-		}
-		
-		public byte[] getBinary(){
-			System.out.println("Getting binary of " + getId());
-			return getBinary(CONTENTS);
-		}
-		
-		public String read(){
-			byte[] raw = getBinary();
-			if (raw != null) {
-				byte[] ret = CompEx.expand(raw);
-				return StringTool.createString(ret);
-			}
-			return "";
-		}
-		
-		public void save(String contents){
-			byte[] comp = CompEx.Compress(contents, CompEx.BZIP2);
-			setBinary(CONTENTS, comp);
-		}
-		
-		public void save(byte[] contents){
-			System.out.println("Setting binary of " + getId() + " " + contents.length);
-			setBinary(CONTENTS, contents);
-		}
-		
-		@Override
-		public String getLabel(){
-			return getId();
-		}
-		
-		static HeapContent load(String id){
-			return new HeapContent(id);
-		}
-		
-		@Override
-		protected String getTableName(){
-			return CONTENT_TABLENAME;
-		}
-		
-		@Override
-		public boolean remove(){
-			try {
-				getConnection().exec("DELETE FROM HEAP WHERE ID=" + getWrappedId());
-			} catch (Throwable ex) {
-				ExHandler.handle(ex);
-				return false;
-			}
-			return true;
-		}
-		
-		@Override
-		public boolean delete(){
-			getConnection().exec("UPDATE HEAP SET deleted='1' WHERE ID=" + getWrappedId());
-			return true;
-		}
-	}
+
 }

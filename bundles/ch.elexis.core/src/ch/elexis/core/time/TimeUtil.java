@@ -2,6 +2,7 @@ package ch.elexis.core.time;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -35,6 +36,22 @@ public class TimeUtil {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(date.getTime());
 		return gc.toZonedDateTime().toLocalDate();
+	}
+	
+	public static LocalDateTime toLocalDateTime(Date date){
+		if (date == null) {
+			return null;
+		}
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(date.getTime());
+		return gc.toZonedDateTime().toLocalDateTime();
+	}
+	
+	public static Date toDate(LocalDateTime localDateTime){
+		if (localDateTime == null) {
+			return null;
+		}
+		return java.util.Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
 	
 }
