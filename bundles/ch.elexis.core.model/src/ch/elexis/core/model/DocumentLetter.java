@@ -19,9 +19,10 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.jpa.entities.Brief;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.model.util.internal.DocumentLetterUtil;
+import ch.elexis.core.model.util.DocumentLetterUtil;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.DocumentStatusMapper;
 
@@ -33,11 +34,9 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	private List<IHistory> history;
 	private String keywords;
 	
-	private DocumentLetterUtil util;
 	
 	public DocumentLetter(Brief entity){
 		super(entity);
-		util = new DocumentLetterUtil();
 	}
 	
 	@Override
@@ -98,12 +97,12 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public Date getLastchanged(){
-		return new Date(getEntity().getLastupdate().longValue());
+		return TimeUtil.toDate(getEntity().getModifiedDate());
 	}
 	
 	@Override
 	public void setLastchanged(Date value){
-		getEntityMarkDirty().setLastupdate(value.getTime());
+		getEntityMarkDirty().setModifiedDate(TimeUtil.toLocalDateTime(value));
 	}
 	
 	@Override
@@ -154,7 +153,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public String getExtension(){
-		return util.evaluateFileExtension(getEntity().getMimetype());
+		return DocumentLetterUtil.evaluateFileExtension(getEntity().getMimetype());
 	}
 	
 	@Override
@@ -204,8 +203,9 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public InputStream getContent(){
-		IVirtualFilesystemHandle vfsHandle = util.getExternalHandleIfApplicable(this);
-		if (vfsHandle != null) {
+		// try to open from external file if applicable
+		IVirtualFilesystemHandle vfsHandle = DocumentLetterUtil.getExternalHandleIfApplicable(this);
+		if (vfsHandle != null && vfsHandle.canRead()) {
 			try {
 				return vfsHandle.openInputStream();
 			} catch (IOException e) {
@@ -214,7 +214,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 			}
 		}
 		
-		// fallback to Heap content
+		// read from heap content
 		if (getEntity().getContent() != null) {
 			return new ByteArrayInputStream(getEntity().getContent().getInhalt());
 		}
@@ -226,20 +226,34 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 		setStatus(DocumentStatus.PREPROCESSED, false);
 		setStatus(DocumentStatus.INDEXED, false);
 		
-		IVirtualFilesystemHandle vfsHandle = util.getExternalHandleIfApplicable(this);
+		IVirtualFilesystemHandle vfsHandle = DocumentLetterUtil.getExternalHandleIfApplicable(this);
 		if (vfsHandle != null) {
-			try (OutputStream outputStream = vfsHandle.openOutputStream()) {
-				IOUtils.copy(content, outputStream);
-				return;
-			} catch (IOException e) {
-				LoggerFactory.getLogger(getClass())
-					.error("Error setting document content, will write to HEAP", e);
+			
+			if (content == null) {
+				try {
+					vfsHandle.delete();
+					return;
+				} catch (IOException e) {
+					LoggerFactory.getLogger(getClass()).error("Error deleting document content", e);
+				}
+			} else {
+				try (OutputStream outputStream = vfsHandle.openOutputStream()) {
+					IOUtils.copy(content, outputStream);
+					return;
+				} catch (IOException e) {
+					LoggerFactory.getLogger(getClass())
+						.error("Error setting document content, will write to HEAP", e);
+				}
 			}
 		}
 		
 		if (getEntity().getContent() != null) {
 			try {
-				getEntity().getContent().setInhalt(IOUtils.toByteArray(content));
+				if(content == null) {
+					getEntity().setContent(null);
+				} else {
+					getEntity().getContent().setInhalt(IOUtils.toByteArray(content));
+				}
 			} catch (IOException e) {
 				LoggerFactory.getLogger(getClass()).error("Error setting document content", e);
 			} finally {

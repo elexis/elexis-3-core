@@ -1,4 +1,4 @@
-package ch.elexis.core.model.util.internal;
+package ch.elexis.core.model.util;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.model.DocumentLetter;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -18,7 +18,7 @@ import ch.rgw.tools.MimeTool;
 
 public class DocumentLetterUtil {
 	
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	private static Logger logger = LoggerFactory.getLogger(DocumentLetterUtil.class);
 	
 	/**
 	 * If the installation is configured to use external storage for Briefe, and the path is valid,
@@ -27,8 +27,8 @@ public class DocumentLetterUtil {
 	 * @param documentLetter
 	 * @return
 	 */
-	public @Nullable IVirtualFilesystemHandle getExternalHandleIfApplicable(
-		DocumentLetter documentLetter){
+	public static @Nullable IVirtualFilesystemHandle getExternalHandleIfApplicable(
+		IDocumentLetter documentLetter){
 		
 		if (ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)) {
 			String path = ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
@@ -72,7 +72,7 @@ public class DocumentLetterUtil {
 	 * @param input
 	 * @return
 	 */
-	public String evaluateFileExtension(String input){
+	public static String evaluateFileExtension(String input){
 		String ext = MimeTool.getExtension(input);
 		if (StringUtils.isEmpty(ext)) {
 			ext = FilenameUtils.getExtension(input);
@@ -82,5 +82,7 @@ public class DocumentLetterUtil {
 		}
 		return ext;
 	}
+	
+	
 	
 }

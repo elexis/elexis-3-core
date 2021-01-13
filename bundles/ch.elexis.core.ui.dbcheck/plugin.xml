@@ -88,6 +88,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.ReChargeLabOpenCons">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.MoveAllLettersToExternalStorage">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>
