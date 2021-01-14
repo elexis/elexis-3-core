@@ -20,7 +20,7 @@ public class SendMailTaskWithProgress {
 	
 	public ITask execute(Shell activeShell, ITaskDescriptor taskDescriptor){
 		try {
-			new ProgressMonitorDialog(activeShell).run(false, false,
+			new ProgressMonitorDialog(activeShell).run(true, false,
 				new IRunnableWithProgress() {
 					
 					@Override
