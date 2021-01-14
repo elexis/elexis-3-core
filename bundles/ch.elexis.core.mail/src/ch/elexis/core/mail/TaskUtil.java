@@ -83,15 +83,9 @@ public class TaskUtil {
 	
 	public static ITask executeTaskSync(ITaskDescriptor iTaskDescriptor,
 		IProgressMonitor progressMonitor) throws TaskException{
-		ITask task = taskService.trigger(iTaskDescriptor, progressMonitor, TaskTriggerType.MANUAL,
+		ITask task = taskService.triggerSync(iTaskDescriptor, progressMonitor,
+			TaskTriggerType.MANUAL,
 			Collections.emptyMap());
-		while (!task.isFinished()) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				// ignore
-			}
-		}
 		return task;
 	}
 }

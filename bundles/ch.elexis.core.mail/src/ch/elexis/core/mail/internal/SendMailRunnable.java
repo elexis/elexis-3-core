@@ -50,7 +50,10 @@ public class SendMailRunnable implements IIdentifiedRunnable {
 		MailMessage message = MailMessage.fromJson(runContext.get("message"));
 		Optional<MailAccount> account = mailClient.getAccount(accountId);
 		if (message != null && account.isPresent()) {
-			mailClient.sendMail(account.get(), message);
+			if (!mailClient.sendMail(account.get(), message)) {
+				throw new TaskException(TaskException.EXECUTION_ERROR,
+					"Send mail failed, see log for details");
+			}
 		}
 		return null;
 	}
