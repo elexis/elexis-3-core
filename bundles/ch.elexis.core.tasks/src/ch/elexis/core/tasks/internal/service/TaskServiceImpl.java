@@ -362,8 +362,23 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	
 	@Override
+	public ITask triggerSync(ITaskDescriptor taskDescriptor, IProgressMonitor progressMonitor,
+		TaskTriggerType triggerType, Map<String, String> runContext) throws TaskException{
+		if (triggerType != TaskTriggerType.MANUAL) {
+			throw new IllegalArgumentException("Only TaskTriggerType.MANUAL can be executed sync");
+		}
+		return trigger(taskDescriptor, progressMonitor, triggerType, runContext, true);
+	}
+	
+	@Override
 	public ITask trigger(ITaskDescriptor taskDescriptor, IProgressMonitor progressMonitor,
 		TaskTriggerType triggerType, Map<String, String> runContext) throws TaskException{
+		return trigger(taskDescriptor, progressMonitor, triggerType, runContext, false);
+	}
+	
+	public ITask trigger(ITaskDescriptor taskDescriptor, IProgressMonitor progressMonitor,
+		TaskTriggerType triggerType, Map<String, String> runContext, boolean sync)
+		throws TaskException{
 		
 		logger.info("[{}] trigger taskDesc [{}/{}] runContext [{}]", triggerType,
 			taskDescriptor.getId(), taskDescriptor.getReferenceId(), runContext);
@@ -377,21 +392,27 @@ public class TaskServiceImpl implements ITaskService {
 		boolean singletonRunnable = instantiateRunnableById(identifiedRunnableId).isSingleton();
 		
 		try {
-			if (singletonRunnable || taskDescriptor.isSingleton()) {
-				// singleton tasks/runnables must not run in multiple instances in parallel
-				// hence we hold a separate thread for each of them
-				if (!perRunnableSingletonExecutorService.containsKey(identifiedRunnableId)) {
-					ExecutorService executorService = Executors.newSingleThreadExecutor();
-					perRunnableSingletonExecutorService.put(identifiedRunnableId, executorService);
-				}
-				ExecutorService executorService =
-					perRunnableSingletonExecutorService.get(identifiedRunnableId);
-				executorService.execute((Runnable) task);
-				
+			if (sync) {
+				// execute in context of calling thread
+				task.run();
 			} else {
-				parallelExecutorService.execute((Runnable) task);
+				if (singletonRunnable || taskDescriptor.isSingleton()) {
+					// singleton tasks/runnables must not run in multiple instances in parallel
+					// hence we hold a separate thread for each of them
+					if (!perRunnableSingletonExecutorService.containsKey(identifiedRunnableId)) {
+						ExecutorService executorService = Executors.newSingleThreadExecutor();
+						perRunnableSingletonExecutorService.put(identifiedRunnableId,
+							executorService);
+					}
+					ExecutorService executorService =
+						perRunnableSingletonExecutorService.get(identifiedRunnableId);
+					executorService.execute((Runnable) task);
+					
+				} else {
+					parallelExecutorService.execute((Runnable) task);
+				}
+				triggeredTasks.add(task);
 			}
-			triggeredTasks.add(task);
 		} catch (RejectedExecutionException re) {
 			task.setState(TaskState.CANCELLED);
 			// TODO triggering failed, where to show?
@@ -561,5 +582,4 @@ public class TaskServiceImpl implements ITaskService {
 		});
 		return projectedTaskDescriptors;
 	}
-	
 }
