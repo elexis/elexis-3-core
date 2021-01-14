@@ -851,6 +851,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 
+		op = addEOperation(iTaskServiceEClass, this.getITask(), "triggerSync", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getITaskDescriptor(), "taskDescriptor", 1, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIProgressMonitor(), "progressMonitor", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getTaskTriggerType(), "trigger", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(ecorePackage.getEMap());
+		g2 = createEGenericType(ecorePackage.getEString());
+		g1.getETypeArguments().add(g2);
+		g2 = createEGenericType(ecorePackage.getEString());
+		g1.getETypeArguments().add(g2);
+		addEParameter(op, g1, "runContext", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEException(op, this.getTaskException());
+
 		// Initialize enums and add enum literals
 		initEEnum(taskTriggerTypeEEnum, TaskTriggerType.class, "TaskTriggerType");
 		addEEnumLiteral(taskTriggerTypeEEnum, TaskTriggerType.MANUAL);

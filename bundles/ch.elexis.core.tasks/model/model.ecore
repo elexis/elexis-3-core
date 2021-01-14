@@ -292,6 +292,24 @@
         <eTypeArguments eClassifier="#//ITaskDescriptor"/>
       </eGenericType>
     </eOperations>
+    <eOperations name="triggerSync" eType="#//ITask" eExceptions="#//TaskException">
+      <eParameters name="taskDescriptor" lowerBound="1" eType="#//ITaskDescriptor"/>
+      <eParameters name="progressMonitor" eType="#//IProgressMonitor">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="The progress monitor to report to. If null the task will initialise its own progress monitor."/>
+        </eAnnotations>
+      </eParameters>
+      <eParameters name="trigger" eType="#//TaskTriggerType"/>
+      <eParameters name="runContext">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="key value pairs to add to the task run context already populated out of ITaskDescriptor#runContext (e.g. the file system trigger adds the file triggering the event)"/>
+        </eAnnotations>
+        <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+          <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eGenericType>
+      </eParameters>
+    </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="TaskTriggerType">
     <eLiterals name="MANUAL" literal="MANUAL"/>

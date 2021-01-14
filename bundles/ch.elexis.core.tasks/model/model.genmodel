@@ -133,6 +133,12 @@
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//ITaskService/getRunningTasks"/>
       <genOperations ecoreOperation="model.ecore#//ITaskService/getIncurredTasks"/>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/triggerSync">
+        <genParameters ecoreParameter="model.ecore#//ITaskService/triggerSync/taskDescriptor"/>
+        <genParameters ecoreParameter="model.ecore#//ITaskService/triggerSync/progressMonitor"/>
+        <genParameters ecoreParameter="model.ecore#//ITaskService/triggerSync/trigger"/>
+        <genParameters ecoreParameter="model.ecore#//ITaskService/triggerSync/runContext"/>
+      </genOperations>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

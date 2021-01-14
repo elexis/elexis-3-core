@@ -151,4 +151,16 @@ public interface ITaskService {
 	 */
 	List<ITaskDescriptor> getIncurredTasks();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * @param progressMonitor The progress monitor to report to. If null the task will initialise its own progress monitor.
+	 * @param runContext key value pairs to add to the task run context already populated out of ITaskDescriptor#runContext (e.g. the file system trigger adds the file triggering the event)
+	 * <!-- end-model-doc -->
+	 * @model exceptions="ch.elexis.core.tasks.model.TaskException" taskDescriptorRequired="true" progressMonitorDataType="ch.elexis.core.tasks.model.IProgressMonitor"
+	 * @generated
+	 */
+	ITask triggerSync(ITaskDescriptor taskDescriptor, IProgressMonitor progressMonitor, TaskTriggerType trigger, Map<String, String> runContext) throws TaskException;
+
 } // ITaskService
