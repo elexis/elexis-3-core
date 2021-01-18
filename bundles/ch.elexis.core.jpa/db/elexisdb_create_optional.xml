@@ -2224,5 +2224,49 @@ WHERE kontakt.id IN (
 				defaultValue="0" />
 		</addColumn>
 	</changeSet>
+
+	<changeSet author="Marco" id="1610974994-1">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="AT_MEDEVIT_ELEXIS_INBOX" />
+			</not>
+		</preConditions>
+		<createTable tableName="AT_MEDEVIT_ELEXIS_INBOX">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_ID_AT_MEDEVIT_ELEXIS_INBOX" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+			<column name="PATIENT" type="VARCHAR(128)" />
+			<column name="MANDANT" type="VARCHAR(128)" />
+			<column name="STATE" type="VARCHAR(1)" />
+			<column name="OBJECT" type="VARCHAR(128)" />
+		</createTable>
+	</changeSet>
+	<changeSet author="Marco" id="1610974994-2">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="AT_MEDEVIT_ELEXIS_INBOX"
+					indexName="INBOX1" />
+			</not>
+		</preConditions>
+		<createIndex indexName="INBOX1"
+			tableName="AT_MEDEVIT_ELEXIS_INBOX">
+			<column name="PATIENT" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="Marco" id="1610974994-3">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="AT_MEDEVIT_ELEXIS_INBOX"
+					indexName="INBOX2" />
+			</not>
+		</preConditions>
+		<createIndex indexName="INBOX2"
+			tableName="AT_MEDEVIT_ELEXIS_INBOX">
+			<column name="MANDANT" />
+		</createIndex>
+	</changeSet>
     
 </databaseChangeLog>
