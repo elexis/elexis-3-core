@@ -14,6 +14,8 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
+import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.CoreUtil.OS;
 import ch.rgw.tools.MimeTool;
 
 public class DocumentLetterUtil {
@@ -31,7 +33,7 @@ public class DocumentLetterUtil {
 		IDocumentLetter documentLetter){
 		
 		if (ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)) {
-			String path = ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+			String path = getOperatingSystemSpecificExternalStoragePath();
 			if (path != null) {
 				IPatient patient = documentLetter.getPatient();
 				if (patient != null) {
@@ -66,6 +68,32 @@ public class DocumentLetterUtil {
 		return null;
 	}
 	
+	public static String getOperatingSystemSpecificExternalStoragePath(){
+		OS operatingSystem = CoreUtil.getOperatingSystemType();
+		String setting;
+		switch (operatingSystem) {
+		case WINDOWS:
+			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_WINDOWS;
+			break;
+		case MAC:
+			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_MAC;
+			break;
+		case LINUX:
+			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_LINUX;
+			break;
+		default:
+			setting = Preferences.P_TEXT_EXTERN_FILE_PATH;
+			break;
+		}
+		String path = ConfigServiceHolder.getGlobal(setting, null);
+		if (path == null) {
+			LoggerFactory.getLogger(DocumentLetterUtil.class)
+				.warn("No OS specific path set, reverting to generic setting");
+			path = ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+		}
+		return path;
+	}
+	
 	/**
 	 * Get the file extension part of the input String.
 	 * 
@@ -82,7 +110,5 @@ public class DocumentLetterUtil {
 		}
 		return ext;
 	}
-	
-	
 	
 }

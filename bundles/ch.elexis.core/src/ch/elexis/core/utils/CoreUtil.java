@@ -5,9 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Hashtable;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
@@ -29,23 +26,22 @@ public class CoreUtil {
 	
 	private static Logger logger = LoggerFactory.getLogger(CoreUtil.class);
 	
-	// from com.sun.jna.Platform
-	private static final int osType;
-	public static final int UNSPECIFIED = -1;
-	public static final int MAC = 0;
-	public static final int WINDOWS = 2;
-	public static final int LINUX = 1;
+	public static enum OS {
+			UNSPECIFIED, MAC, LINUX, WINDOWS
+	};
+	
+	private static final OS osType;
 	
 	static {
 		String osName = System.getProperty("os.name");
 		if (osName.startsWith("Linux")) {
-			osType = LINUX;
+			osType = OS.LINUX;
 		} else if (osName.startsWith("Mac") || osName.startsWith("Darwin")) {
-			osType = MAC;
+			osType = OS.MAC;
 		} else if (osName.startsWith("Windows")) {
-			osType = WINDOWS;
+			osType = OS.WINDOWS;
 		} else {
-			osType = UNSPECIFIED;
+			osType = OS.UNSPECIFIED;
 		}
 	}
 	
@@ -239,6 +235,7 @@ public class CoreUtil {
 			ZipEntry entry = zis.getNextEntry();
 			if (entry != null) {
 				try (ObjectInputStream ois = new ObjectInputStream(zis) {
+					@Override
 					protected java.lang.Class<?> resolveClass(java.io.ObjectStreamClass desc)
 						throws IOException, ClassNotFoundException{
 						if (resolver != null) {
@@ -310,15 +307,23 @@ public class CoreUtil {
 		return getWritableUserDir();
 	}
 	
+	/**
+	 * @return the operating system type as integer. See {@link #MAC}, {@link #LINUX},
+	 *         {@link #WINDOWS} or {@link #UNSPECIFIED}
+	 */
+	public static final OS getOperatingSystemType(){
+		return osType;
+	}
+	
 	public static final boolean isWindows(){
-		return osType == WINDOWS;
+		return osType == OS.WINDOWS;
 	}
 	
 	public static final boolean isMac(){
-		return osType == MAC;
+		return osType == OS.MAC;
 	}
 	
 	public static final boolean isLinux(){
-		return osType == LINUX;
+		return osType == OS.LINUX;
 	}
 }
