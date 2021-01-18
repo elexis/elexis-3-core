@@ -14,18 +14,26 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.util.LocalLock;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.util.DocumentLetterUtil;
 import ch.elexis.core.services.IConflictHandler;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.ILocalDocumentService;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
+import ch.elexis.data.Brief;
 
 public class StartEditLocalDocumentHandler extends AbstractHandler implements IHandler {
 	
@@ -48,30 +56,38 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 						.getConnectionStatus() == ConnectionStatus.REMOTE) {
 						if (object instanceof IPersistentObject) {
 							IPersistentObject lockObject = (IPersistentObject) object;
-							AcquireLockUi.aquireAndRun(lockObject, new ILockHandler() {
-								@Override
-								public void lockFailed(){
-									// no action required ...
-								}
-								
-								@Override
-								public void lockAcquired(){
-									startEditLocal(lockObject, service, parentShell);
-								}
-							});
+							boolean isHandledByExternalOpen = tryHandleExternalIfApplicable(lockObject);
+							if(!isHandledByExternalOpen) {
+								AcquireLockUi.aquireAndRun(lockObject, new ILockHandler() {
+									@Override
+									public void lockFailed(){
+										// no action required ...
+									}
+									
+									@Override
+									public void lockAcquired(){
+										startEditLocal(lockObject, service, parentShell);
+									}
+								});
+							}
+
 						} else if (object instanceof Identifiable) {
 							Identifiable lockObject = (Identifiable) object;
-							AcquireLockUi.aquireAndRun(lockObject, new ILockHandler() {
-								@Override
-								public void lockFailed(){
-									// no action required ...
-								}
-								
-								@Override
-								public void lockAcquired(){
-									startEditLocal(lockObject, service, parentShell);
-								}
-							});
+							boolean isHandledExternalOpen = tryHandleExternalIfApplicable(lockObject);
+							if(!isHandledExternalOpen) {
+								AcquireLockUi.aquireAndRun(lockObject, new ILockHandler() {
+									@Override
+									public void lockFailed(){
+										// no action required ...
+									}
+									
+									@Override
+									public void lockAcquired(){
+										startEditLocal(lockObject, service, parentShell);
+									}
+								});
+							}
+
 						}
 					} else {
 						LocalLock lock = new LocalLock(object);
@@ -102,6 +118,42 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 		return null;
 	}
 	
+	/**
+	 * Opens the document with an external Program if {@link Preferences#P_TEXT_EXTERN_FILE} is
+	 * <code>true</code> and a valid path was set
+	 * 
+	 * @param lockObject
+	 * @return <code>true</code> if was handled by external program, else <code>false</code>
+	 */
+	private boolean tryHandleExternalIfApplicable(Object lockObject){
+		if (ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)
+			&& lockObject != null) {
+			IDocumentLetter document = null;
+			if (lockObject instanceof Brief) {
+				document = ((Brief) lockObject).toIDocument();
+			} else if (lockObject instanceof IDocumentLetter) {
+				document = (IDocumentLetter) lockObject;
+			} else {
+				LoggerFactory.getLogger(getClass()).error("Invalid argument [{}]",
+					lockObject.getClass());
+				return false;
+			}
+			
+			IVirtualFilesystemHandle handle =
+				DocumentLetterUtil.getExternalHandleIfApplicable(document);
+			Optional<File> file = handle.toFile();
+			if (file.isPresent()) {
+				Program.launch(file.get().getAbsolutePath());
+			} else {
+				MessageDialog.openError(UiDesk.getTopShell(),
+					Messages.StartEditLocalDocumentHandler_errortitle,
+					Messages.StartEditLocalDocumentHandler_errormessage);
+			}
+			return true;
+		}
+		return false;
+	}
+
 	private void startEditLocal(Object object, ILocalDocumentService service, Shell parentShell){
 		Optional<File> file = service.add(object, new IConflictHandler() {
 			@Override

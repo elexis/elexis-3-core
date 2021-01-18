@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.data.Brief;
 
 /**
@@ -15,15 +14,6 @@ import ch.elexis.data.Brief;
  */
 public class BriefExternUtil {
 	
-	public static String getAsExternFilePath(String path){
-		if (path != null && path.contains("[home]")) {
-			path = path.replace("[home]", CoreHub.getWritableUserDir().getAbsolutePath());
-			LoggerFactory.getLogger(BriefExternUtil.class)
-				.warn("Replaced [home] -> [" + CoreHub.getWritableUserDir().getAbsolutePath()
-					+ "] in extern file path result is [" + path + "]");
-		}
-		return path;
-	}
 	
 	/**
 	 * Test if the configured Path is available.
