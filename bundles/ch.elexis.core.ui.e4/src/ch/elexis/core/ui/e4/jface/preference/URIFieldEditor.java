@@ -71,12 +71,12 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 	
 	@Override
 	protected void doStore(){
-		// TODO Auto-generated method stub
-		super.doStore();
+		getPreferenceStore().setValue(getPreferenceName(), unmaskedValue);
 	}
 	
 	@Override
 	protected boolean doCheckState(){
+		setErrorMessage("");
 		String uri = unmaskedValue.trim();
 		if (uri.length() == 0 && isEmptyStringAllowed()) {
 			return true;
@@ -89,7 +89,19 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 		
 		try {
 			IVirtualFilesystemHandle vfsHandle = VirtualFilesystemServiceHolder.get().of(uri);
-			return vfsHandle.isDirectory() && vfsHandle.canWrite() && vfsHandle.canRead();
+			if (!vfsHandle.isDirectory()) {
+				setErrorMessage("Pfad ist kein Verzeichnis");
+				return false;
+			}
+			if (!vfsHandle.canWrite()) {
+				setErrorMessage("Verzeichnis ist nicht beschreibbar");
+				return false;
+			}
+			if (!vfsHandle.canRead()) {
+				setErrorMessage("Verzeichnis ist nicht lesbar");
+				return false;
+			}
+			return true;
 		} catch (IOException e) {
 			setErrorMessage(e.getMessage());
 			LoggerFactory.getLogger(getClass()).warn("Error setting path", e);
