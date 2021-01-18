@@ -4,9 +4,7 @@ import java.io.File;
 
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.Brief;
 
 /**
@@ -16,11 +14,6 @@ import ch.elexis.data.Brief;
  *
  */
 public class BriefExternUtil {
-
-	public static String getExternFilePath(){
-		return getAsExternFilePath(
-			ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, null));
-	}
 	
 	public static String getAsExternFilePath(String path){
 		if (path != null && path.contains("[home]")) {

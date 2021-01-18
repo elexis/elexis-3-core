@@ -19,12 +19,17 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -42,6 +47,8 @@ import ch.elexis.core.ui.e4.jface.preference.URIFieldEditor;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.CoreUtil.OS;
 
 /**
  * Einstellungen zur Verknüpfung mit einem externen Texterstellungs-Modul
@@ -117,16 +124,52 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		});
 		
 		Composite comp = new Composite(compExtern, SWT.None);
-		comp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		comp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		
+		Combo comboOs = new Combo(comp, SWT.None);
+		ComboViewer cvOs = new ComboViewer(comboOs);
+		comboOs.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		cvOs.setContentProvider(ArrayContentProvider.getInstance());
+		cvOs.setLabelProvider(new LabelProvider() {
+			@Override
+			public String getText(Object element){
+				return ((CoreUtil.OS) element).name();
+			}
+		});
+		cvOs.setInput(CoreUtil.OS.values());
+		
 		URIFieldEditor storePath =
 			new URIFieldEditor(Preferences.P_TEXT_EXTERN_FILE_PATH, "", comp);
 		storePath.setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 		storePath.setEmptyStringAllowed(true);
 		addField(storePath);
 		
+		cvOs.addSelectionChangedListener(event -> {
+			CoreUtil.OS selection = (OS) event.getStructuredSelection().getFirstElement();
+			String preferenceName;
+			switch (selection) {
+			case MAC:
+				preferenceName = Preferences.P_TEXT_EXTERN_FILE_PATH_MAC;
+				break;
+			case WINDOWS:
+				preferenceName = Preferences.P_TEXT_EXTERN_FILE_PATH_WINDOWS;
+				break;
+			case LINUX:
+				preferenceName = Preferences.P_TEXT_EXTERN_FILE_PATH_LINUX;
+				break;
+			default:
+				preferenceName = Preferences.P_TEXT_EXTERN_FILE_PATH;
+				break;
+			}
+			storePath.setPreferenceName(preferenceName);
+			storePath.load();
+		});
+		
 		allExtern = new Label(compExtern, SWT.WRAP);
 		allExtern.setText(Messages.Texterstellung_save_all_letters_externally);
 		allExtern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		
+		cvOs.setSelection(new StructuredSelection(CoreUtil.getOperatingSystemType()));
 	}
 	
 	@Override
