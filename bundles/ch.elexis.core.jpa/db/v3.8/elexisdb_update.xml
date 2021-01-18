@@ -14,4 +14,15 @@
 			<column name="PRIO" defaultValueNumeric="0" type="INT" />
 		</addColumn>
 	</changeSet>
+
+	<changeSet author="thomas" id="manual_idx2_BRIEFE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="BRIEFE_IDX2" />
+			</not>
+		</preConditions>
+		<createIndex indexName="BRIEFE_IDX2" tableName="BRIEFE">
+			<column name="TYP" />
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>

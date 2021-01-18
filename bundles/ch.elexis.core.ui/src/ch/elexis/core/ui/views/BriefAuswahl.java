@@ -15,6 +15,7 @@ package ch.elexis.core.ui.views;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
@@ -37,6 +39,8 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -54,6 +58,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -64,17 +69,24 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.BriefConstants;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.commands.BriefNewHandler;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockRequestingAction;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
@@ -83,21 +95,17 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.Message;
-import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
-import ch.elexis.core.ui.util.viewers.DefaultContentProvider;
+import ch.elexis.core.ui.util.viewers.CommonViewerContentProvider;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
-import ch.rgw.tools.TimeTool;
 
-public class BriefAuswahl extends ViewPart implements
-		ch.elexis.core.data.events.ElexisEventListener, IActivationListener {
+public class BriefAuswahl extends ViewPart implements IRefreshable {
 	
 	public final static String ID = "ch.elexis.BriefAuswahlView"; //$NON-NLS-1$
 	private final FormToolkit tk;
@@ -108,14 +116,51 @@ public class BriefAuswahl extends ViewPart implements
 	private ViewMenus menus;
 	private ArrayList<sPage> pages = new ArrayList<sPage>();
 	CTabFolder ctab;
-	private ElexisEventListener updateListener =
-		new ElexisUiEventListenerImpl(Brief.class, ElexisEvent.EVENT_RELOAD) {
-			@Override
-			public void runInUi(ElexisEvent ev){
-				relabel();
-			}
-	};
 
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+	
+	@Inject
+	void activePatient(@Optional
+	IPatient patient){
+		Display.getDefault().asyncExec(() -> {
+			refresh();
+		});
+	}
+	
+	@Inject
+	@Optional
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD)
+	Class<?> clazz){
+		if (IDocumentLetter.class.equals(clazz)) {
+			relabel();
+		}
+	}
+	
+	@Override
+	public void refresh(){
+		refreshSelectedViewer();
+	}
+	
+	public void refreshSelectedViewer(){
+		if (CoreUiUtil.isActiveControl(ctab)) {
+			CTabItem sel = ctab.getSelection();
+			if ((sel != null)) {
+				CommonViewer cv = (CommonViewer) sel.getData();
+				cv.notify(CommonViewer.Message.update);
+			}
+		}
+	}
+	
+	public void refreshCV(Message updateKeeplabels){
+		if (ctab != null && CoreUiUtil.isActiveControl(ctab)) {
+			CTabItem sel = ctab.getSelection();
+			if (sel != null) {
+				CommonViewer cv = (CommonViewer) sel.getData();
+				cv.notify(updateKeeplabels);
+			}
+		}
+	}
+	
 	// private ViewMenus menu;
 	// private IAction delBriefAction;
 	public BriefAuswahl(){
@@ -164,9 +209,9 @@ public class BriefAuswahl extends ViewPart implements
 			}
 			ct.setData(page.cv);
 			ct.setControl(page);
-			page.cv.addDoubleClickListener(new PoDoubleClickListener() {
+			page.cv.getViewerWidget().addDoubleClickListener(new IDoubleClickListener() {
 				@Override
-				public void doubleClicked(PersistentObject obj, CommonViewer cv){
+				public void doubleClick(DoubleClickEvent event){
 					briefLadenAction.run();
 				}
 			});
@@ -181,18 +226,16 @@ public class BriefAuswahl extends ViewPart implements
 			
 		});
 		
-		GlobalEventDispatcher.addActivationListener(this, this);
 		menus.createMenu(briefNeuAction, briefLadenAction, editNameAction, deleteAction);
 		menus.createToolbar(briefNeuAction, briefLadenAction, deleteAction);
 		ctab.setSelection(0);
-		relabel();
+		//	relabel();
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
 	@Override
 	public void dispose(){
-		ElexisEventDispatcher.getInstance().removeListeners(this);
-		GlobalEventDispatcher.removeActivationListener(this, this);
-		
+		getSite().getPage().removePartListener(udpateOnVisible);
 		for (sPage page : pages) {
 			page.getCommonViewer().getConfigurer().getContentProvider().stopListening();
 		}
@@ -239,34 +282,54 @@ public class BriefAuswahl extends ViewPart implements
 			super(parent, SWT.NONE);
 			setLayout(new GridLayout());
 			cv = new CommonViewer();
-			vc = new ViewerConfigurer(new DefaultContentProvider(cv, Brief.class, new String[] {
-				Brief.FLD_DATE
-			}, true) {
-				
-				@Override
-				public Object[] getElements(final Object inputElement){
-					Patient actPat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-					if (actPat != null) {
-						Query<Brief> qbe = new Query<Brief>(Brief.class);
-						qbe.add(Brief.FLD_PATIENT_ID, Query.EQUALS, actPat.getId());
-						if (cat.equals(Messages.BriefAuswahlAllLetters2)) { //$NON-NLS-1$
-							qbe.add(Brief.FLD_TYPE, Query.NOT_EQUAL, Brief.TEMPLATE);
+			DefaultControlFieldProvider controlFieldProvider = new DefaultControlFieldProvider(cv, new String[] {
+				"subject=Titel" //$NON-NLS-1$
+			});
+			CommonViewerContentProvider contentProvider =
+				new ch.elexis.core.ui.util.viewers.CommonViewerContentProvider(cv) {
+					
+					private static final int QUERY_LIMIT = 500;
+					
+					@Override
+					public Object[] getElements(final Object inputElement){
+						java.util.Optional<IPatient> actPat =
+							ContextServiceHolder.get().getActivePatient();
+						if (actPat.isPresent()) {
+							IQuery<?> query = getBaseQuery();
+							query.and(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS,
+								actPat.get());
+							if (cat.equals(Messages.BriefAuswahlAllLetters2)) { //$NON-NLS-1$
+								query.and(ModelPackage.Literals.IDOCUMENT__CATEGORY,
+									COMPARATOR.NOT_EQUALS, BriefConstants.TEMPLATE);
+							} else {
+								query.and(ModelPackage.Literals.IDOCUMENT__CATEGORY,
+									COMPARATOR.EQUALS, cat);
+							}
+							// apply filters from control field provider
+							controlFieldProvider.setQuery(query);
+							List<?> elements = query.execute();
+							return elements.toArray(new Object[elements.size()]);
 						} else {
-							qbe.add(Brief.FLD_TYPE, Query.EQUALS, cat);
+							return new Object[0];
 						}
-						cv.getConfigurer().getControlFieldProvider().setQuery(qbe);
-						
-						List<Brief> list = qbe.execute();
-						return list.toArray();
-					} else {
-						return new Brief[0];
 					}
-				}
-				
-			}, new DefaultLabelProvider(), new DefaultControlFieldProvider(cv, new String[] {
-				"Betreff=Titel" //$NON-NLS-1$
-			}), new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
-				SimpleWidgetProvider.TYPE_TABLE, SWT.V_SCROLL | SWT.FULL_SELECTION, cv));
+					
+					@Override
+					protected IQuery<?> getBaseQuery(){
+						IQuery<IDocumentLetter> ret =
+							CoreModelServiceHolder.get().getQuery(IDocumentLetter.class);
+						if (!ignoreLimit) {
+							ret.limit(QUERY_LIMIT);
+						}
+						return ret;
+					}
+					
+				};
+			vc = new ViewerConfigurer(contentProvider, new DefaultLabelProvider(),
+				controlFieldProvider, new ViewerConfigurer.DefaultButtonProvider(),
+				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TABLE,
+					SWT.V_SCROLL | SWT.FULL_SELECTION, cv));
+			vc.setContentType(ContentType.GENERICOBJECT);
 			cv.create(vc, this, SWT.NONE, getViewSite());
 			
 			tableViewer = (TableViewer) cv.getViewerWidget();
@@ -308,10 +371,11 @@ public class BriefAuswahl extends ViewPart implements
 			col.getColumn().setWidth(100);
 			col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 0));
 			col.setLabelProvider(new ColumnLabelProvider() {
+				private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 				@Override
 				public String getText(Object element){
-					Brief b = (Brief) element;
-					return b.getDatum();
+					IDocumentLetter b = (IDocumentLetter) element;
+					return dateFormat.format(b.getCreated());
 				}
 			});
 			
@@ -323,8 +387,8 @@ public class BriefAuswahl extends ViewPart implements
 			col.setLabelProvider(new ColumnLabelProvider() {
 				@Override
 				public String getText(Object element){
-					Brief b = (Brief) element;
-					return b.getBetreff();
+					IDocumentLetter b = (IDocumentLetter) element;
+					return b.getTitle();
 				}
 				
 				@Override
@@ -355,13 +419,9 @@ public class BriefAuswahl extends ViewPart implements
 		class LetterViewerComparator extends ViewerComparator {
 			private int propertyIndex;
 			private boolean direction = true;
-			private TimeTool time1;
-			private TimeTool time2;
 			
 			public LetterViewerComparator(){
 				this.propertyIndex = 0;
-				time1 = new TimeTool();
-				time2 = new TimeTool();
 			}
 			
 			/**
@@ -386,18 +446,16 @@ public class BriefAuswahl extends ViewPart implements
 			
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2){
-				if (e1 instanceof Brief && e2 instanceof Brief) {
-					Brief b1 = (Brief) e1;
-					Brief b2 = (Brief) e2;
+				if (e1 instanceof IDocumentLetter && e2 instanceof IDocumentLetter) {
+					IDocumentLetter b1 = (IDocumentLetter) e1;
+					IDocumentLetter b2 = (IDocumentLetter) e2;
 					int rc = 0;
 					switch (propertyIndex) {
 					case 0:
-						time1.set((b1).getDatum());
-						time2.set((b2).getDatum());
-						rc = time1.compareTo(time2);
+						rc = b1.getCreated().compareTo(b2.getCreated());
 						break;
 					case 1:
-						rc = b1.getBetreff().compareTo(b2.getBetreff());
+						rc = b1.getTitle().compareTo(b2.getTitle());
 						break;
 					default:
 						rc = 0;
@@ -431,41 +489,36 @@ public class BriefAuswahl extends ViewPart implements
 			@Override
 			public void run(){
 				try {
-					CTabItem sel = ctab.getSelection();
-					if (sel != null) {
-						CommonViewer cv = (CommonViewer) sel.getData();
-						Object[] o = cv.getSelection();
-						if ((o != null) && (o.length > 0)) {
-							Brief brief = (Brief) o[0];
-							if (CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
-								startLocalEditAction.run();
-							} else {
-								TextView tv =
-									(TextView) getViewSite().getPage().showView(TextView.ID);
-								if (brief.getMimeType().equalsIgnoreCase("pdf")) { //$NON-NLS-1$
-									try {
-										File temp = File.createTempFile("letter_", ".pdf"); //$NON-NLS-1$ //$NON-NLS-2$
-										temp.deleteOnExit();
-										try (FileOutputStream fos = new FileOutputStream(temp)) {
-											fos.write(brief.loadBinary());
-										}
-										Program.launch(temp.getAbsolutePath());
-									} catch (IOException e) {
-										ExHandler.handle(e);
-										SWTHelper.alert(Messages.BriefAuswahlErrorHeading, //$NON-NLS-1$
-											Messages.BriefAuswahlCouldNotLoadText); //$NON-NLS-1$
+					Brief brief = getSelectedBrief();
+					if (brief != null) {
+						if (CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
+							startLocalEditAction.run();
+						} else {
+							TextView tv = (TextView) getViewSite().getPage().showView(TextView.ID);
+							if (brief.getMimeType().equalsIgnoreCase("pdf")) { //$NON-NLS-1$
+								try {
+									File temp = File.createTempFile("letter_", ".pdf"); //$NON-NLS-1$ //$NON-NLS-2$
+									temp.deleteOnExit();
+									try (FileOutputStream fos = new FileOutputStream(temp)) {
+										fos.write(brief.loadBinary());
 									}
-								} else if (tv.openDocument(brief) == false) {
+									Program.launch(temp.getAbsolutePath());
+								} catch (IOException e) {
+									ExHandler.handle(e);
 									SWTHelper.alert(Messages.BriefAuswahlErrorHeading, //$NON-NLS-1$
 										Messages.BriefAuswahlCouldNotLoadText); //$NON-NLS-1$
 								}
+							} else if (tv.openDocument(brief) == false) {
+								SWTHelper.alert(Messages.BriefAuswahlErrorHeading, //$NON-NLS-1$
+									Messages.BriefAuswahlCouldNotLoadText); //$NON-NLS-1$
 							}
-						} else {
-							TextView tv = (TextView) getViewSite().getPage().showView(TextView.ID);
-							tv.createDocument(null, null);
 						}
-						cv.notify(CommonViewer.Message.update);
+					} else {
+						TextView tv = (TextView) getViewSite().getPage().showView(TextView.ID);
+						tv.createDocument(null, null);
 					}
+					CommonViewer cv = (CommonViewer) ctab.getSelection().getData();
+					cv.notify(CommonViewer.Message.update);
 				} catch (PartInitException e) {
 					ExHandler.handle(e);
 				}
@@ -486,17 +539,7 @@ public class BriefAuswahl extends ViewPart implements
 			
 			@Override
 			public Brief getTargetedObject(){
-				CTabItem sel = ctab.getSelection();
-				if ((sel != null)) { //$NON-NLS-1$
-					CommonViewer cv = (CommonViewer) sel.getData();
-					Object[] o = cv.getSelection();
-					if ((o != null) && (o.length > 0)) {
-						if (o[0] instanceof Brief) {
-							return (Brief) o[0];
-						}
-					}
-				}
-				return null;
+				return getSelectedBrief();
 			}
 		};
 		editNameAction = new LockRequestingAction<Brief>(Messages.BriefAuswahlRenameButtonText) { //$NON-NLS-1$
@@ -518,17 +561,7 @@ public class BriefAuswahl extends ViewPart implements
 			
 			@Override
 			public Brief getTargetedObject(){
-				CTabItem sel = ctab.getSelection();
-				if (sel != null) { //$NON-NLS-1$
-					CommonViewer cv = (CommonViewer) sel.getData();
-					Object[] o = cv.getSelection();
-					if ((o != null) && (o.length > 0)) {
-						if (o[0] instanceof Brief) {
-							return (Brief) o[0];
-						}
-					}
-				}
-				return null;
+				return getSelectedBrief();
 			}
 		};
 		startLocalEditAction = new Action() {
@@ -544,7 +577,7 @@ public class BriefAuswahl extends ViewPart implements
 			
 			@Override
 			public void run(){
-				Brief brief = getSelectedBrief();
+				IDocumentLetter brief = getSelected();
 				if (brief != null) {
 					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
 						.getService(ICommandService.class);
@@ -577,7 +610,7 @@ public class BriefAuswahl extends ViewPart implements
 			
 			@Override
 			public void run(){
-				Brief brief = getSelectedBrief();
+				IDocumentLetter brief = getSelected();
 				if (brief != null) {
 					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 					Command command =
@@ -610,7 +643,7 @@ public class BriefAuswahl extends ViewPart implements
 			
 			@Override
 			public void run(){
-				Brief brief = getSelectedBrief();
+				IDocumentLetter brief = getSelected();
 				if (brief != null) {
 					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
 						.getService(ICommandService.class);
@@ -646,72 +679,37 @@ public class BriefAuswahl extends ViewPart implements
 		deleteAction.setToolTipText(Messages.BriefAuswahlDeleteDocument); //$NON-NLS-1$
 	}
 	
-	public Brief getSelectedBrief(){
+	public IDocumentLetter getSelected(){
 		CTabItem sel = ctab.getSelection();
 		if ((sel != null)) {
 			CommonViewer cv = (CommonViewer) sel.getData();
 			Object[] o = cv.getSelection();
 			if ((o != null) && (o.length > 0)) {
-				if (o[0] instanceof Brief) {
-					return (Brief) o[0];
+				if (o[0] instanceof IDocumentLetter) {
+					return (IDocumentLetter) o[0];
 				}
 			}
 		}
 		return null;
 	}
 	
-	public void refreshSelectedViewer(){
+	public Brief getSelectedBrief(){
 		CTabItem sel = ctab.getSelection();
 		if ((sel != null)) {
 			CommonViewer cv = (CommonViewer) sel.getData();
-			cv.notify(CommonViewer.Message.update);
+			Object[] o = cv.getSelection();
+			if ((o != null) && (o.length > 0)) {
+				if (o[0] instanceof IDocumentLetter) {
+					return (Brief) NoPoUtil.loadAsPersistentObject((Identifiable) o[0]);
+				}
+			}
 		}
-	}
-	
-	@Override
-	public void activation(final boolean mode){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void visible(final boolean mode){
-		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(this);
-			ElexisEventDispatcher.getInstance().addListeners(updateListener);
-			relabel();
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(this);
-			ElexisEventDispatcher.getInstance().removeListeners(updateListener);
-		}
+		return null;
 	}
 	
 	@Optional
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
 		CoreUiUtil.updateFixLayout(part, currentState);
-	}
-	
-	@Override
-	public void catchElexisEvent(ElexisEvent ev){
-		relabel();
-	}
-	
-	private static ElexisEvent template = new ElexisEvent(null, Patient.class,
-		ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED);
-	
-	@Override
-	public ElexisEvent getElexisEventFilter(){
-		return template;
-	}
-	
-	public void refreshCV(Message updateKeeplabels){
-		if (ctab != null && !ctab.isDisposed()) {
-			CTabItem sel = ctab.getSelection();
-			if (sel != null) {
-				CommonViewer cv = (CommonViewer) sel.getData();
-				cv.notify(updateKeeplabels);
-			}
-		}
 	}
 }
