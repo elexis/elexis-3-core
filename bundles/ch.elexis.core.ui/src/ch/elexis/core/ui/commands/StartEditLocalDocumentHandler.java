@@ -90,27 +90,30 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 
 						}
 					} else {
-						LocalLock lock = new LocalLock(object);
-						if (!lock.tryLock()) {
-							if ((service.contains(object)
-								&& lock.hasLock(CoreHub.getLoggedInContact().getLabel()))
-								|| MessageDialog.openQuestion(parentShell,
-									Messages.StartEditLocalDocumentHandler_warning,
-									Messages.StartEditLocalDocumentHandler_alreadyOpenStart
-										+ lock.getLockMessage()
-										+ Messages.StartEditLocalDocumentHandler_alreadyOpenEnd)) {
-								lock.unlock();
-								if (!lock.tryLock()) {
-									MessageDialog.openError(parentShell,
-										Messages.StartEditLocalDocumentHandler_errortitle,
-										Messages.StartEditLocalDocumentHandler_errormessage);
+						boolean isHandledExternalOpen = tryHandleExternalIfApplicable(object);
+						if (!isHandledExternalOpen) {
+							LocalLock lock = new LocalLock(object);
+							if (!lock.tryLock()) {
+								if ((service.contains(object)
+									&& lock.hasLock(CoreHub.getLoggedInContact().getLabel()))
+									|| MessageDialog.openQuestion(parentShell,
+										Messages.StartEditLocalDocumentHandler_warning,
+										Messages.StartEditLocalDocumentHandler_alreadyOpenStart
+											+ lock.getLockMessage()
+											+ Messages.StartEditLocalDocumentHandler_alreadyOpenEnd)) {
+									lock.unlock();
+									if (!lock.tryLock()) {
+										MessageDialog.openError(parentShell,
+											Messages.StartEditLocalDocumentHandler_errortitle,
+											Messages.StartEditLocalDocumentHandler_errormessage);
+										return null;
+									}
+								} else {
 									return null;
 								}
-							} else {
-								return null;
 							}
+							startEditLocal(object, service, parentShell);
 						}
-						startEditLocal(object, service, parentShell);
 					}
 				}
 			}
