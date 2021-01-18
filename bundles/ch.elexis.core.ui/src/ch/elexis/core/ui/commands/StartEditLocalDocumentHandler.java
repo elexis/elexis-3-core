@@ -15,16 +15,19 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.util.DocumentLetterUtil;
 import ch.elexis.core.services.IConflictHandler;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.ILocalDocumentService;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
@@ -46,8 +49,11 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 			for (Object object : selected) {
 				object = getAsPersistentObject(object);
 				// direct extern open if Brief on file system
-				if (object instanceof Brief && BriefExternUtil.isExternFile()) {
-					Optional<File> file = BriefExternUtil.getExternFile((Brief) object);
+				if (object instanceof Brief
+					&& ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)) {
+					IVirtualFilesystemHandle handle = DocumentLetterUtil
+						.getExternalHandleIfApplicable(((Brief) object).toIDocument());
+					Optional<File> file = handle.toFile();
 					if (file.isPresent()) {
 						Program.launch(file.get().getAbsolutePath());
 					} else {
