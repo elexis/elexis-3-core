@@ -161,6 +161,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 				preferenceName = Preferences.P_TEXT_EXTERN_FILE_PATH;
 				break;
 			}
+			storePath.store();
 			storePath.setPreferenceName(preferenceName);
 			storePath.load();
 		});
