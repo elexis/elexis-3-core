@@ -96,7 +96,7 @@ public class Brief extends PersistentObject {
 	 * @throws IllegalStateException
 	 *             if entity could not be loaded
 	 */
-	public IDocument toIDocument(){
+	public IDocumentLetter toIDocument(){
 		return CoreModelServiceHolder.get().load(getId(), IDocumentLetter.class).orElseThrow(
 			() -> new IllegalStateException("Could not convert Brief [" + getId() + "]"));
 	}

@@ -8,6 +8,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
@@ -24,6 +25,11 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 	 * Initial path for the Browse dialog.
 	 */
 	private File filterPath = null;
+	
+	/**
+	 * The password-unmasked URI value
+	 */
+	private String unmaskedValue = null;
 	
 	/**
 	 * Creates a new directory field editor
@@ -59,13 +65,19 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 			return null;
 		}
 		
-		return d.getAbsolutePath();
+		unmaskedValue = d.getAbsolutePath();
+		return unmaskedValue;
+	}
+	
+	@Override
+	protected void doStore(){
+		// TODO Auto-generated method stub
+		super.doStore();
 	}
 	
 	@Override
 	protected boolean doCheckState(){
-		String uri = getTextControl().getText();
-		uri = uri.trim();
+		String uri = unmaskedValue.trim();
 		if (uri.length() == 0 && isEmptyStringAllowed()) {
 			return true;
 		}
@@ -79,8 +91,8 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 			IVirtualFilesystemHandle vfsHandle = VirtualFilesystemServiceHolder.get().of(uri);
 			return vfsHandle.isDirectory() && vfsHandle.canWrite() && vfsHandle.canRead();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			setErrorMessage(e.getMessage());
+			LoggerFactory.getLogger(getClass()).warn("Error setting path", e);
 			return false;
 		}
 	}
@@ -88,8 +100,8 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 	@Override
 	protected void doLoad(){
 		if (getTextControl() != null) {
-			String value = getPreferenceStore().getString(getPreferenceName());
-			value = IVirtualFilesystemService.hidePasswordInUrlString(value);
+			unmaskedValue = getPreferenceStore().getString(getPreferenceName());
+			String value = IVirtualFilesystemService.hidePasswordInUrlString(unmaskedValue);
 			getTextControl().setText(value);
 			oldValue = value;
 		}

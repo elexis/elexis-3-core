@@ -37,6 +37,7 @@ Require-Bundle: org.eclipse.core.runtime,
  ch.elexis.core.l10n,
  ch.elexis.core;bundle-version="3.2.0",
  ch.elexis.core.data;bundle-version="3.2.0",
+ ch.elexis.core.model;bundle-version="1.0.0",
  ch.elexis.core.ui.icons;bundle-version="3.0.0",
  javax.inject,
  ch.elexis.core.ui.e4
