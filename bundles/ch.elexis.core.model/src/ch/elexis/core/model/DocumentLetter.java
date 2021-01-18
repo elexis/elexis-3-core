@@ -264,6 +264,6 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public String getLabel(){
-		return new SimpleDateFormat("dd.MM.yyyy").format(getLastchanged()) + " " + getTitle();
+		return new SimpleDateFormat("dd.MM.yyyy").format(getCreated()) + " " + getTitle();
 	}
 }
