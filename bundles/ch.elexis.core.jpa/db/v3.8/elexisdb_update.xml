@@ -25,4 +25,14 @@
 			<column name="TYP" />
 		</createIndex>
 	</changeSet>
+	<changeSet author="thomas" id="manual_idx3_BRIEFE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="BRIEFE_IDX3" />
+			</not>
+		</preConditions>
+		<createIndex indexName="BRIEFE_IDX3" tableName="BRIEFE">
+			<column name="PATIENTID" />
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>
