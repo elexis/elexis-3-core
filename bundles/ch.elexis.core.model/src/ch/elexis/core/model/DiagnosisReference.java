@@ -16,6 +16,8 @@ public class DiagnosisReference
 	public DiagnosisReference(ch.elexis.core.jpa.entities.Diagnosis entity){
 		super(entity);
 		codeSystemClassMap.put("ch.elexis.data.TICode", "TI-Code");
+		codeSystemClassMap.put("ch.elexis.icpc.IcpcCode", "ICPC");
+		codeSystemClassMap.put("ch.elexis.data.ICD10", "ICD-10");
 	}
 	
 	@Override
