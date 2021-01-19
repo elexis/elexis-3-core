@@ -11,9 +11,19 @@ import ch.elexis.core.jdt.Nullable;
 
 public class TimeUtil {
 	
+	/**
+	 * dd.MM.yyyy, HH:mm:ss
+	 */
 	public static final DateTimeFormatter FULL_GER =
 		DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm:ss");
+	/**
+	 * dd.MM.yyyy
+	 */
 	public static DateTimeFormatter DATE_GER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	/**
+	 * dd.MM.yy
+	 */
+	public static DateTimeFormatter DATE_GER_SHORT = DateTimeFormatter.ofPattern("dd.MM.yy");
 	
 	public static String formatSafe(LocalDateTime localDateTime){
 		if (localDateTime != null) {
@@ -22,9 +32,19 @@ public class TimeUtil {
 		return "";
 	}
 	
+	/**
+	 * Format with default format {@link #DATE_GER}
+	 */
 	public static String formatSafe(LocalDate date){
 		if (date != null) {
 			return date.format(DATE_GER);
+		}
+		return "";
+	}
+	
+	public static String formatSafe(LocalDate date, DateTimeFormatter formatter){
+		if (date != null) {
+			return formatter.format(date);
 		}
 		return "";
 	}
@@ -52,6 +72,14 @@ public class TimeUtil {
 			return null;
 		}
 		return java.util.Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	public static Date toDate(LocalDate localDate){
+		if (localDate == null) {
+			return null;
+		}
+		return java.util.Date
+			.from(localDate.atTime(9, 0).atZone(ZoneId.systemDefault()).toInstant());
 	}
 	
 }
