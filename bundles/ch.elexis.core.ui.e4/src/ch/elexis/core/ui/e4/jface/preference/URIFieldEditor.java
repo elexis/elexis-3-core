@@ -8,7 +8,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
@@ -77,6 +76,7 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 	@Override
 	protected boolean doCheckState(){
 		setErrorMessage("");
+		unmaskedValue = getTextControl().getText();
 		String uri = unmaskedValue.trim();
 		if (uri.length() == 0 && isEmptyStringAllowed()) {
 			return true;
@@ -102,9 +102,8 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 				return false;
 			}
 			return true;
-		} catch (IOException e) {
+		} catch (IOException | IllegalArgumentException e) {
 			setErrorMessage(e.getMessage());
-			LoggerFactory.getLogger(getClass()).warn("Error setting path", e);
 			return false;
 		}
 	}
