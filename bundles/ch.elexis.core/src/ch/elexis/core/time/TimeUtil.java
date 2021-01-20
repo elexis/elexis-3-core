@@ -49,6 +49,13 @@ public class TimeUtil {
 		return "";
 	}
 	
+	public static String formatSafe(Long lastUpdate){
+		if (lastUpdate == null) {
+			return "";
+		}
+		return formatSafe(toLocalDateTime(new Date(lastUpdate)));
+	}
+	
 	public static @Nullable LocalDate toLocalDate(Date date){
 		if (date == null) {
 			return null;
@@ -73,7 +80,7 @@ public class TimeUtil {
 		}
 		return java.util.Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
-
+	
 	public static Date toDate(LocalDate localDate){
 		if (localDate == null) {
 			return null;
