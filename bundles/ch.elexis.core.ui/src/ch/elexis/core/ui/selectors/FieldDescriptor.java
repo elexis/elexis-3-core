@@ -24,6 +24,16 @@ public class FieldDescriptor<T> {
 	Object ext;
 	Listener listener;
 	int eventType;
+	boolean ignoreCase = true;
+	
+	public boolean isIgnoreCase(){
+		return ignoreCase;
+	}
+	
+	public FieldDescriptor<T> ignoreCase(boolean value){
+		this.ignoreCase = value;
+		return this;
+	}
 	
 	/** Retrieve the visible label of the field */
 	public String getLabel(){
