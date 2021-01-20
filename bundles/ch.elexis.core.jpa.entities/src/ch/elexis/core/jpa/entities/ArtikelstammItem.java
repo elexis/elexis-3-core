@@ -67,6 +67,9 @@ public class ArtikelstammItem extends AbstractEntityWithId
 	private String dscr;
 
 	@Column(length = 50)
+	private String ldscr;
+	
+	@Column(length = 50)
 	private String adddscr;
 
 	@Column(length = 10)
