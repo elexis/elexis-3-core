@@ -7,7 +7,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -18,10 +17,10 @@ import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
-@Table(name = "AT_MEDEVIT_ELEXIS_OUTBOX")
+@Table(name = "AT_MEDEVIT_ELEXIS_INBOX")
 @Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
-public class OutboxElement extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
+public class InboxElement extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -76,8 +75,8 @@ public class OutboxElement extends AbstractEntityWithId implements EntityWithId,
 	@Column(length = 1)
 	private String state;
 	
-	@Column(length = 255)
-	private String uri;
+	@Column(length = 128)
+	private String object;
 	
 	public Kontakt getPatient(){
 		return patient;
@@ -103,11 +102,11 @@ public class OutboxElement extends AbstractEntityWithId implements EntityWithId,
 		this.state = state;
 	}
 	
-	public String getUri(){
-		return uri;
+	public String getObject(){
+		return object;
 	}
 	
-	public void setUri(String uri){
-		this.uri = uri;
+	public void setObject(String storeToString){
+		this.object = storeToString;
 	}
 }
