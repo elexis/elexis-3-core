@@ -35,4 +35,32 @@
 			<column name="PATIENTID" />
 		</createIndex>
 	</changeSet>
+	
+	<changeSet author="thomas" id="manual_update_ARTIKELSTAMM_CH_LDSCR">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="ARTIKELSTAMM_CH"
+					columnName="LDSCR" />
+			</not>
+		</preConditions>
+		<addColumn tableName="ARTIKELSTAMM_CH">
+			<column name="LDSCR" type="VARCHAR(100)" />
+		</addColumn>
+		<sql>
+<![CDATA[
+UPDATE artikelstamm_ch SET LDSCR=LOWER(DSCR);
+]]>
+	    </sql>
+	</changeSet>
+    <changeSet author="thomas" id="manual_idx_IDXAILDSCR">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="IDXAILDSCR" />
+			</not>
+		</preConditions>
+        <createIndex indexName="IDXAILDSCR" tableName="ARTIKELSTAMM_CH">
+            <column name="LDSCR"/>
+        </createIndex>
+    </changeSet>
+	
 </databaseChangeLog>
