@@ -518,7 +518,7 @@ public class LabImportUtil implements ILabImportUtil {
 		String result, String comment, String refVal, ILaboratory laboratory, String subId,
 		ILabOrder labOrder, String orderId, IMandator mandator, TimeTool observationTime){
 		
-		logger.debug("Creating result with patient [" + patient.getId() + "] labitem [" + labItem
+		logger.info("Creating result with patient [" + patient.getId() + "] labitem [" + labItem
 			+ "] origin [" + laboratory + "] observationTime [" + observationTime + "] labOrder ["
 			+ labOrder + "]");
 		

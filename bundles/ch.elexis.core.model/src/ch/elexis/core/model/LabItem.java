@@ -228,4 +228,9 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		sb.append("[" + getGroup() + ", " + getPriority() + "]");
 		return sb.toString();
 	}
+	
+	@Override
+	public String toString(){
+		return super.toString() + " " + getLabel();
+	}
 }
