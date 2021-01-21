@@ -19,6 +19,7 @@ import ch.elexis.core.console.AbstractConsoleCommandProvider;
 import ch.elexis.core.console.CmdAdvisor;
 import ch.elexis.core.console.CmdParam;
 import ch.elexis.core.console.ConsoleProgressMonitor;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.IContextService;
@@ -28,6 +29,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.internal.service.TaskDescriptor;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
@@ -61,20 +63,20 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		executeCommand("task", ci);
 	}
 	
-	@CmdAdvisor(description = "show last executed tasks [ (max: default=20) (taskdescriptorId) ]")
-	public void __task_last(List<String> args){
+	@CmdAdvisor(description = "show last executed tasks")
+	public void __task_last(@CmdParam(required = false, description = "max: default=20")
+	String maxEntries, @CmdParam(required = false, description = "tdIdOrRefId")
+	String tdIdOrRefId){
 		
 		IQuery<ITask> query = taskModelService.getQuery(ITask.class);
-		
-		if (args.size() > 0) {
-			query.limit(Integer.valueOf(args.get(0)));
+		if (maxEntries != null) {
+			query.limit(Integer.valueOf(maxEntries));
 		} else {
 			query.limit(20);
 		}
-		
-		if (args.size() > 1) {
+		if (tdIdOrRefId != null) {
 			ITaskDescriptor taskDescriptor =
-				taskService.findTaskDescriptorByIdOrReferenceId(args.get(1)).orElse(null);
+				taskService.findTaskDescriptorByIdOrReferenceId(tdIdOrRefId).orElse(null);
 			if (taskDescriptor == null) {
 				fail("Unknown descriptorId or descriptorReferenceId");
 				return;
@@ -110,14 +112,14 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		prflp("State", 8);
 		prflp("Trigger", 10);
 		prflp("ID", 27);
-		prflp("Descriptor Id/RefId", 35);
+		prflp("Descriptor Id/RefId", 27);
 		prflp("StartTime", 25);
 		prflp("Owner / Runner / Runnable", 70, true);
 		
 		runningTasks.stream().forEach(t -> {
 			ITaskDescriptor td = t.getTaskDescriptor();
 			prflp("RUN", 8);
-			prflp(td.getTriggerType().getName(), 11);
+			prflp(td.getTriggerType().getName(), 10);
 			prflp(t.getId(), 27);
 			prflp(td.getReferenceId(), 27);
 			prflp(TimeUtil.formatSafe(t.getRunAt()), 25);
@@ -128,9 +130,9 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		List<ITaskDescriptor> incurredTasks = taskService.getIncurredTasks();
 		incurredTasks.stream().forEach(td -> {
 			prflp("INC", 8);
-			prflp(td.getTriggerType().getName(), 11);
+			prflp(td.getTriggerType().getName(), 10);
 			prflp("", 27);
-			prflp(td.getReferenceId(), 35);
+			prflp(td.getReferenceId(), 27);
 			prflp("NR " + (String) td.getTransientData().get("cron-next-exectime"), 25);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
 			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 70, true);
@@ -155,9 +157,8 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	}
 	
 	@CmdAdvisor(description = "Activate a task descriptor for execution")
-	public String __task_activate(
-		@CmdParam(description = "task id OR task descriptor id or referenceId")
-		String idOrReferenceId) throws TaskException{
+	public String __task_activate(@CmdParam(description = "taskId | tdIdOrTdRefId")
+	String idOrReferenceId) throws TaskException{
 		Optional<ITaskDescriptor> taskDescriptor =
 			taskService.findTaskDescriptorByIdOrReferenceId(idOrReferenceId);
 		if (!taskDescriptor.isPresent()) {
@@ -168,9 +169,8 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	}
 	
 	@CmdAdvisor(description = "Deactivate a task descriptor for execution")
-	public String __task_deactivate(
-		@CmdParam(description = "task id OR task descriptor id or referenceId")
-		String idOrReferenceId) throws TaskException{
+	public String __task_deactivate(@CmdParam(description = "taskId | tdIdOrTdRefId")
+	String idOrReferenceId) throws TaskException{
 		Optional<ITaskDescriptor> taskDescriptor =
 			taskService.findTaskDescriptorByIdOrReferenceId(idOrReferenceId);
 		if (!taskDescriptor.isPresent()) {
@@ -181,9 +181,8 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	}
 	
 	@CmdAdvisor(description = "Gracefully cancel a running task")
-	public void __task_cancel(
-		@CmdParam(description = "task id OR task descriptor id or referenceId")
-		String id){
+	public void __task_cancel(@CmdParam(description = "taskId | tdIdOrTdRefId")
+	String id){
 		List<ITask> activeTasks = taskService.getRunningTasks();
 		for (ITask task : activeTasks) {
 			if (id.equals(task.getId()) || id.equals(task.getTaskDescriptor().getId())
@@ -198,7 +197,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	}
 	
 	@CmdAdvisor(description = "create or modify a task descriptor from a json file")
-	public void __task_descriptor_url(@CmdParam(description = "url referencing json file")
+	public void __task_descriptor_url(@CmdParam(description = "url")
 	String urlString) throws IOException, TaskException{
 		
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -209,10 +208,9 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	}
 	
 	@CmdAdvisor(description = "serialize a task descriptor to a json string")
-	public void __task_descriptor_json(
-		@CmdParam(description = "id or referenceId of the task descriptor")
-		String idOrReferenceId){
-			
+	public void __task_descriptor_json(@CmdParam(description = "tdIdOrTdRefId")
+	String idOrReferenceId){
+		
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Optional<ITaskDescriptor> taskDescriptor =
 			taskService.findTaskDescriptorByIdOrReferenceId(idOrReferenceId);
@@ -221,12 +219,50 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			String json = gson.toJson(iTaskDescriptor, TaskDescriptor.class);
 			ci.println(json);
 		} else {
-			fail("object not found");
+			fail("taskDescriptor not found");
 		}
 	}
 	
+	@CmdAdvisor(description = "set attributes on a task descriptor")
+	public String __task_descriptor_set(@CmdParam(description = "tdIdOrTdRefId")
+	String idOrReferenceId, @CmdParam(description = "key")
+	String key, @CmdParam(description = "value")
+	String value){
+		ITaskDescriptor taskDescriptor =
+			taskService.findTaskDescriptorByIdOrReferenceId(idOrReferenceId).orElse(null);
+		if (taskDescriptor != null) {
+			System.out.println(key.toLowerCase());
+			switch (key.toLowerCase()) {
+			case "owner":
+				IUser user = CoreModelServiceHolder.get().load(value, IUser.class).orElse(null);
+				if (user != null) {
+					taskDescriptor.setOwner(user);
+				} else {
+					return "userId not found";
+				}
+				break;
+			case "runner":
+				taskDescriptor.setRunner(value);
+				break;
+			case "referenceid":
+				taskDescriptor.setReferenceId(value);
+				break;
+			default:
+				if (key.toLowerCase().startsWith("runcontext.")) {
+					String keyVal = key.substring("runContext.".length());
+					taskDescriptor.setRunContextParameter(keyVal, value);
+				}
+				break;
+			}
+			taskModelService.save(taskDescriptor);
+		} else {
+			return "taskDescriptor not found";
+		}
+		return ok();
+	}
+	
 	@CmdAdvisor(description = "manually trigger execution of a task descriptor")
-	public void __task_trigger(@CmdParam(description = "id or referenceId of the task descriptor")
+	public void __task_trigger(@CmdParam(description = "tdIdOrTdRefId")
 	String idOrReferenceId) throws TaskException{
 		Optional<ITaskDescriptor> taskDescriptor =
 			taskService.findTaskDescriptorByIdOrReferenceId(idOrReferenceId);
@@ -240,9 +276,8 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	}
 	
 	@CmdAdvisor(description = "deactivate and remove a task descriptor")
-	public void __task_descriptor_remove(
-		@CmdParam(description = "id or referenceId of the task descriptor")
-		String idOrReferenceId) throws TaskException{
+	public void __task_descriptor_remove(@CmdParam(description = "tdIdOrTdRefId")
+	String idOrReferenceId) throws TaskException{
 		Optional<ITaskDescriptor> taskDescriptor =
 			taskService.findTaskDescriptorByIdOrReferenceId(idOrReferenceId);
 		if (taskDescriptor.isPresent()) {

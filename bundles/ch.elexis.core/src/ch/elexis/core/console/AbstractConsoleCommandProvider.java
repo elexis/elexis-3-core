@@ -1,6 +1,7 @@
 package ch.elexis.core.console;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +45,6 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 	
 	protected void register(Class<?> clazz){
 		for (Method method : clazz.getMethods()) {
-			
 			if (method.getName().startsWith("__")) {
 				methods.put(method.getName(), method);
 			} else if (method.getName().startsWith("_")) {
@@ -52,7 +52,6 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 				String description = (advisor != null) ? advisor.description() : "";
 				commandsHelp.put(method.getName().substring(1), description);
 			}
-			
 		}
 	}
 	
@@ -98,18 +97,25 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			outcomeMessage = null;
 			Object result = null;
 			if (method.getParameterCount() > 0) {
-				Class<?> clazz = method.getParameterTypes()[0];
-				if (clazz.equals(Iterator.class)) {
-					NoThrowExceptionIterator<String> nullContinueIterator =
-						new NoThrowExceptionIterator<>(Arrays.asList(subArguments).iterator());
-					result = method.invoke(this, nullContinueIterator);
-				} else if (clazz.equals(List.class)) {
-					result = method.invoke(this, Arrays.asList(subArguments));
-				} else if (clazz.equals(String.class)) {
-					result = method.invoke(this, subArguments.length > 0 ? subArguments[0] : "");
-				} else {
-					ci.println("invalid parameter type " + clazz);
+				Object[] args = new Object[method.getParameterCount()];
+				
+				Class<?>[] parameterTypes = method.getParameterTypes();
+				for (int j = 0; j < parameterTypes.length; j++) {
+					Class<?> clazz = parameterTypes[j];
+					if (clazz.equals(Iterator.class)) {
+						NoThrowExceptionIterator<String> nullContinueIterator =
+							new NoThrowExceptionIterator<>(Arrays.asList(subArguments).iterator());
+						args[j] = nullContinueIterator;
+					} else if (clazz.equals(List.class)) {
+						args[j] = Arrays.asList(subArguments);
+						result = method.invoke(this, Arrays.asList(subArguments));
+					} else if (clazz.equals(String.class)) {
+						args[j] = subArguments.length > j ? subArguments[j] : null;
+					} else {
+						ci.println("invalid parameter type " + clazz);
+					}
 				}
+				result = method.invoke(this, args);
 			} else {
 				result = method.invoke(this);
 			}
@@ -185,9 +191,12 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 	}
 	
 	/** Private helper method for getHelp. Formats the command descriptions. */
-	private void addCommand(String command, String description, StringBuilder help){
-		help.append("\t");
+	private void addCommand(String command, String params, String description, StringBuilder help){
+		help.append("   ");
 		help.append(command);
+		if (params != null) {
+			help.append(params + " ");
+		}
 		help.append(" - "); //$NON-NLS-1$
 		help.append(description);
 		help.append("\n");
@@ -233,14 +242,32 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			String methodKey = "__" + StringUtils.join(sub, "_") + "_" + string;
 			Method method = methods.get(methodKey);
 			if (method != null) {
-				CmdAdvisor declaredAnnotation = method.getDeclaredAnnotation(CmdAdvisor.class);
-				addCommand(string,
-					(declaredAnnotation != null) ? declaredAnnotation.description() : "", sb);
+				CmdAdvisor advisor = method.getDeclaredAnnotation(CmdAdvisor.class);
+				String _advisor = (advisor != null) ? advisor.description() : "";
+				Parameter[] parameters = method.getParameters();
+				String params = buildParamsBNFString(parameters);
+				addCommand(string, params, _advisor, sb);
 			} else {
-				sb.append("\t" + string + " - [see subcommand]\n");
+				sb.append("   " + string + " - [see subcommand]\n");
 			}
 		}
 		
+		return sb.toString();
+	}
+	
+	private String buildParamsBNFString(Parameter[] params){
+		StringBuilder sb = new StringBuilder();
+		for (Parameter cmdParam : params) {
+			CmdParam annotation = cmdParam.getAnnotation(CmdParam.class);
+			if (annotation != null) {
+				sb.append(" ");
+				if (annotation.required()) {
+					sb.append(annotation.description().toUpperCase());
+				} else {
+					sb.append("[" + annotation.description().toUpperCase() + "]");
+				}
+			}
+		}
 		return sb.toString();
 	}
 	
@@ -252,7 +279,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			Entry<String, String> entry = i.next();
 			String command = entry.getKey();
 			String attributes = entry.getValue();
-			addCommand(command, attributes, sb);
+			addCommand(command, "", attributes, sb);
 		}
 		return sb.toString();
 	}
