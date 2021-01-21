@@ -275,7 +275,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 	 *            if this is the last token of the line
 	 */
 	public void prflp(String value, int length, boolean endLine){
-		String abbreviated = StringUtils.abbreviate(value, length);
+		String abbreviated = StringUtils.abbreviate(value, ".. ", length);
 		ci.print(String.format("%-" + length + "s", abbreviated));
 		if (endLine) {
 			ci.print("\n");
