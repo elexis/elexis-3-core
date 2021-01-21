@@ -2,6 +2,7 @@ package ch.elexis.core.tasks.internal.console;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -255,8 +256,22 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	@CmdAdvisor(description = "list all available identified runnables")
 	public void __task_runnable_list(){
 		List<IIdentifiedRunnable> availableRunnables = taskService.getIdentifiedRunnables();
-		availableRunnables.stream().forEach(e -> ci.println("\t(" + e.getClass().getName() + ") "
-			+ e.getId() + " - " + e.getLocalizedDescription()));
+		
+		prflp("Runnable ID", 30);
+		prflp("Bundle", 60);
+		ci.print("Description\n");
+		
+		availableRunnables.stream().sorted(Comparator.comparing(ii -> ii.getId())).forEach(ii -> {
+			prflp(ii.getId(), 30);
+			String classNameShortened = abbreviatePackageNames(ii.getClass().getName());
+			prflp(classNameShortened, 60);
+			ci.print(ii.getLocalizedDescription() + "\n");
+		});
+	}
+	
+	private String abbreviatePackageNames(String name){
+		return name.replace("ch.elexis", "c.e").replace("ch.medelexis", "c.m")
+			.replace("at.medevit", "a.m").replace("core", "c");
 	}
 	
 }
