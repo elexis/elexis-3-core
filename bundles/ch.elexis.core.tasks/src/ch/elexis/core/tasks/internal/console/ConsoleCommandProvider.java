@@ -110,14 +110,14 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		prflp("State", 8);
 		prflp("Trigger", 10);
 		prflp("ID", 27);
-		prflp("Descriptor Id/RefId", 27);
+		prflp("Descriptor Id/RefId", 35);
 		prflp("StartTime", 25);
 		prflp("Owner / Runner / Runnable", 70, true);
 		
 		runningTasks.stream().forEach(t -> {
 			ITaskDescriptor td = t.getTaskDescriptor();
 			prflp("RUN", 8);
-			prflp(td.getTriggerType().getName(), 10);
+			prflp(td.getTriggerType().getName(), 11);
 			prflp(t.getId(), 27);
 			prflp(td.getReferenceId(), 27);
 			prflp(TimeUtil.formatSafe(t.getRunAt()), 25);
@@ -128,9 +128,9 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		List<ITaskDescriptor> incurredTasks = taskService.getIncurredTasks();
 		incurredTasks.stream().forEach(td -> {
 			prflp("INC", 8);
-			prflp(td.getTriggerType().getName(), 10);
+			prflp(td.getTriggerType().getName(), 11);
 			prflp("", 27);
-			prflp(td.getReferenceId(), 27);
+			prflp(td.getReferenceId(), 35);
 			prflp("NR " + (String) td.getTransientData().get("cron-next-exectime"), 25);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
 			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 70, true);
