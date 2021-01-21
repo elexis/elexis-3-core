@@ -364,9 +364,6 @@ public class TaskServiceImpl implements ITaskService {
 	@Override
 	public ITask triggerSync(ITaskDescriptor taskDescriptor, IProgressMonitor progressMonitor,
 		TaskTriggerType triggerType, Map<String, String> runContext) throws TaskException{
-		if (triggerType != TaskTriggerType.MANUAL) {
-			throw new IllegalArgumentException("Only TaskTriggerType.MANUAL can be executed sync");
-		}
 		return trigger(taskDescriptor, progressMonitor, triggerType, runContext, true);
 	}
 	
@@ -379,6 +376,19 @@ public class TaskServiceImpl implements ITaskService {
 	public ITask trigger(ITaskDescriptor taskDescriptor, IProgressMonitor progressMonitor,
 		TaskTriggerType triggerType, Map<String, String> runContext, boolean sync)
 		throws TaskException{
+		
+		if (sync && triggerType != TaskTriggerType.MANUAL) {
+			throw new IllegalArgumentException("OnlyTriggerType MANUAL can be executed sync");
+		}
+		if (triggerType == TaskTriggerType.OTHER_TASK
+			&& TaskTriggerType.OTHER_TASK != taskDescriptor.getTriggerType()) {
+			throw new TaskException(TaskException.EXECUTION_REJECTED,
+				"Task Descriptor [" + taskDescriptor.getId() + "] is not TriggerType OTHER_TASK");
+		}
+		if (!taskDescriptor.isActive()) {
+			throw new TaskException(TaskException.EXECUTION_REJECTED,
+				"Task Descriptor [" + taskDescriptor.getId() + "] is not active");
+		}
 		
 		logger.info("[{}] trigger taskDesc [{}/{}] runContext [{}]", triggerType,
 			taskDescriptor.getId(), taskDescriptor.getReferenceId(), runContext);
@@ -406,10 +416,10 @@ public class TaskServiceImpl implements ITaskService {
 					}
 					ExecutorService executorService =
 						perRunnableSingletonExecutorService.get(identifiedRunnableId);
-					executorService.execute((Runnable) task);
+					executorService.execute(task);
 					
 				} else {
-					parallelExecutorService.execute((Runnable) task);
+					parallelExecutorService.execute(task);
 				}
 				triggeredTasks.add(task);
 			}
@@ -468,7 +478,7 @@ public class TaskServiceImpl implements ITaskService {
 	
 	@Override
 	public void saveTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException{
-		boolean save = taskModelService.save((TaskDescriptor) taskDescriptor);
+		boolean save = taskModelService.save(taskDescriptor);
 		if (!save) {
 			throw new TaskException(TaskException.PERSISTENCE_ERROR);
 		}
