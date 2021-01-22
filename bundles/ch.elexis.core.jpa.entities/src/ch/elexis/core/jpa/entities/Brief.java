@@ -92,12 +92,6 @@ public class Brief extends AbstractEntityWithId implements EntityWithId, EntityW
 	@Column(name = "DOCUMENT_STATUS")
 	protected int status;
 
-	public Brief() {
-		super();
-		content = new Heap();
-		content.setId(getId());
-	}
-
 	@Override
 	public String getId(){
 		return id;
@@ -246,5 +240,13 @@ public class Brief extends AbstractEntityWithId implements EntityWithId, EntityW
 	
 	public void setStatus(int status){
 		this.status = status;
+	}
+	
+	public Heap getOrCreateContent(){
+		if (content == null) {
+			content = new Heap();
+			content.setId(getId());
+		}
+		return content;
 	}
 }
