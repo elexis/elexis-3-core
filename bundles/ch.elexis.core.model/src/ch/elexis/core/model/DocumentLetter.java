@@ -247,18 +247,16 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 			}
 		}
 		
-		if (getEntity().getContent() != null) {
-			try {
-				if(content == null) {
-					getEntity().setContent(null);
-				} else {
-					getEntity().getContent().setInhalt(IOUtils.toByteArray(content));
-				}
-			} catch (IOException e) {
-				LoggerFactory.getLogger(getClass()).error("Error setting document content", e);
-			} finally {
-				IOUtils.closeQuietly(content);
+		try {
+			if (content == null) {
+				getEntity().setContent(null);
+			} else {
+				getEntity().getOrCreateContent().setInhalt(IOUtils.toByteArray(content));
 			}
+		} catch (IOException e) {
+			LoggerFactory.getLogger(getClass()).error("Error setting document content", e);
+		} finally {
+			IOUtils.closeQuietly(content);
 		}
 	}
 	
