@@ -62,5 +62,16 @@ UPDATE artikelstamm_ch SET LDSCR=LOWER(DSCR);
             <column name="LDSCR"/>
         </createIndex>
     </changeSet>
-	
+	 
+	 <changeSet author="thomas" id="manual_inbox3_AT_MEDEVIT_ELEXIS_INBOX">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="inbox3" />
+			</not>
+		</preConditions>
+        <createIndex indexName="inbox3" tableName="AT_MEDEVIT_ELEXIS_INBOX">
+            <column name="mandant"/>
+            <column name="state"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
