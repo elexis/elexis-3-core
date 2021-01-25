@@ -336,6 +336,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIAppointmentSeriesAdapter();
 			}
 			@Override
+			public Adapter caseISickCertificate(ISickCertificate object) {
+				return createISickCertificateAdapter();
+			}
+			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
 				return createComparableAdapter();
 			}
@@ -1252,6 +1256,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIAppointmentSeriesAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ISickCertificate <em>ISick Certificate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ISickCertificate
+	 * @generated
+	 */
+	public Adapter createISickCertificateAdapter() {
 		return null;
 	}
 

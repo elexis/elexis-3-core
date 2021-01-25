@@ -616,6 +616,14 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.ISICK_CERTIFICATE: {
+				ISickCertificate iSickCertificate = (ISickCertificate)theEObject;
+				T1 result = caseISickCertificate(iSickCertificate);
+				if (result == null) result = caseIdentifiable(iSickCertificate);
+				if (result == null) result = caseDeleteable(iSickCertificate);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -1577,6 +1585,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIAppointmentSeries(IAppointmentSeries object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ISick Certificate</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ISick Certificate</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseISickCertificate(ISickCertificate object) {
 		return null;
 	}
 

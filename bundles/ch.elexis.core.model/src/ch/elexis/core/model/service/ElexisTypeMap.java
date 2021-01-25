@@ -2,6 +2,7 @@ package ch.elexis.core.model.service;
 
 import java.util.HashMap;
 
+import ch.elexis.core.jpa.entities.AUF;
 import ch.elexis.core.jpa.entities.Artikel;
 import ch.elexis.core.jpa.entities.ArtikelstammItem;
 import ch.elexis.core.jpa.entities.Behandlung;
@@ -80,6 +81,7 @@ public class ElexisTypeMap {
 	public static final String TYPE_MANDANT = "ch.elexis.data.Mandant";
 	public static final String TYPE_BESTELLUNG = "ch.elexis.data.Bestellung";
 	public static final String TYPE_BESTELLUNGENTRY = "ch.elexis.data.BestellungEntry";
+	public static final String TYPE_AUF = "ch.elexis.data.AUF";
 	
 	static {
 		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
@@ -128,6 +130,8 @@ public class ElexisTypeMap {
 		classToStsMap.put(Bestellung.class, TYPE_BESTELLUNG);
 		stsToClassMap.put(TYPE_BESTELLUNGENTRY, BestellungEntry.class);
 		classToStsMap.put(BestellungEntry.class, TYPE_LEISTUNGSBLOCK);
+		stsToClassMap.put(TYPE_AUF, AUF.class);
+		classToStsMap.put(AUF.class, TYPE_AUF);
 		
 		// uni-directional mappable
 		stsToClassMap.put(TYPE_ARTIKEL, Artikel.class);
