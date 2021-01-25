@@ -1,6 +1,7 @@
 package ch.elexis.core.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -121,5 +122,18 @@ public class SickCertificate extends AbstractIdDeleteModelAdapter<AUF>
 	@Override
 	public void setNote(String value){
 		getEntityMarkDirty().setNote(value);
+	}
+	
+	@Override
+	public String getLabel(){
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		
+		StringBuilder sb = new StringBuilder();
+		if (getDate() != null) {
+			sb.append("[").append(dateFormat.format(getDate())).append("]: ");
+		}
+		sb.append(dateFormat.format(getStart())).append("-").append(dateFormat.format(getEnd()))
+			.append(": ").append(getPercent()).append("% (").append(getReason()).append(")");
+		return sb.toString();
 	}
 }

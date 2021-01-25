@@ -22,7 +22,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "AUF")
 @EntityListeners(EntityWithIdListener.class)
-@NamedQuery(name = "AUF.patient", query = "SELECT a FROM AUF a WHERE a.deleted = false AND a.patient = :patient")
+@NamedQuery(name = "AUF.patient", query = "SELECT a FROM AUF a WHERE a.deleted = false AND a.patient = :patient ORDER BY a.dateFrom DESC")
 public class AUF extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
