@@ -4,9 +4,15 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
+import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.ui.views.AUFZeugnis;
 import ch.rgw.tools.ExHandler;
 
@@ -19,7 +25,16 @@ public class AufPrintHandler extends AbstractHandler implements IHandler {
 			IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 				.getActivePage().showView(AUFZeugnis.ID);
 			if (viewPart instanceof AUFZeugnis) {
-				((AUFZeugnis) viewPart).createAUZ();
+				ISickCertificate selectedCertificate =
+					ContextServiceHolder.get().getTyped(ISickCertificate.class).orElse(null);
+				if (selectedCertificate != null) {
+					ElexisEventDispatcher
+						.fireSelectionEvent(NoPoUtil.loadAsPersistentObject(selectedCertificate));
+					((AUFZeugnis) viewPart).createAUZ();
+				} else {
+					MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+						"AUF drucken", "Es ist keine AUF selektiert.");
+				}
 			}
 		} catch (Exception ex) {
 			ExHandler.handle(ex);

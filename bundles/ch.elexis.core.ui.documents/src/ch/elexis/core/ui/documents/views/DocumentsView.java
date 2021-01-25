@@ -91,19 +91,17 @@ import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.handler.DocumentCrudHandler;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
-import ch.elexis.core.ui.documents.views.DocumentsView.ViewFilterProvider;
-import ch.elexis.core.ui.documents.views.DocumentsView.ViewLabelProvider;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.AUF;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -529,14 +527,16 @@ public class DocumentsView extends ViewPart {
 					commandService.createCommand("ch.elexis.core.ui.commands.AufNew", null);
 				if (cmd != null) {
 					Object createdAuf = handlerService.executeHandler(cmd);
-					if (createdAuf instanceof AUF) {
-						ElexisEventDispatcher.fireSelectionEvent((AUF) createdAuf);
+					if (createdAuf instanceof ISickCertificate) {
+						ContextServiceHolder.get().getRootContext().setTyped(createdAuf);
 						// print
 						cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufPrint",
 							null);
 						if (cmd != null) {
 							handlerService.executeHandler(cmd);
 						}
+						ContextServiceHolder.get().getRootContext()
+							.removeTyped(ISickCertificate.class);
 					}
 				}
 				super.run();

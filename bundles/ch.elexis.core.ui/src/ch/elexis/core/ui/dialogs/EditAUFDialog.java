@@ -12,12 +12,18 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -25,11 +31,12 @@ import org.eclipse.swt.widgets.Text;
 import com.tiff.common.ui.datepicker.DatePicker;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.ISickCertificate;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.AUF;
-import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -40,16 +47,26 @@ import ch.rgw.tools.TimeTool;
  * @author gerry
  */
 public class EditAUFDialog extends TitleAreaDialog {
-	private AUF auf;
-	private Fall fall;
+	private ISickCertificate auf;
+	private ICoverage fall;
 	private DatePicker dpVon, dpBis;
 	private Text tProzent, tGrund, tZusatz;
 	TimeTool tt = new TimeTool();
 	
-	public EditAUFDialog(Shell shell, AUF a, Fall fall){
+	public EditAUFDialog(Shell shell, ISickCertificate a, ICoverage fall){
 		super(shell);
 		auf = a;
+		if (auf != null && fall == null) {
+			fall = auf.getCoverage();
+		}
 		this.fall = fall;
+		if (this.fall == null) {
+			this.close();
+			Display.getDefault().asyncExec(() -> {
+				MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+					"Neue AUF", "Bitte wählen Sie zuerst einen Fall für diese AUF aus");
+			});
+		}
 	}
 	
 	@Override
@@ -76,25 +93,26 @@ public class EditAUFDialog extends TitleAreaDialog {
 		tZusatzLayout.heightHint = 150;
 		tZusatz.setLayoutData(tZusatzLayout);
 		if (auf != null) {
-			dpVon.setDate(auf.getBeginn().getTime());
-			dpBis.setDate(auf.getEnd().getTime());
-			tGrund.setText(auf.getGrund());
-			tProzent.setText(auf.getProzent());
-			tZusatz.setText(auf.getZusatz());
+			dpVon.setDate(asDate(auf.getStart()));
+			dpBis.setDate(asDate(auf.getEnd()));
+			tGrund.setText(auf.getReason());
+			tProzent.setText(Integer.toString(auf.getPercent()));
+			tZusatz.setText(auf.getNote());
 		} else {
-			if (fall == null) {
-				fall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-			}
-			if (fall != null) {
-				tGrund.setText(fall.getGrund());
-			} else {
-				setMessage("Bitte wählen Sie zuerst einen Fall für diese AUF aus");
-			}
+			tGrund.setText(fall.getReason());
 			tProzent.setText("100"); //$NON-NLS-1$
 			dpVon.setDate(tt.getTime());
 			dpBis.setDate(tt.getTime());
 		}
 		return ret;
+	}
+	
+	private Date asDate(LocalDate localDate){
+		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
+	
+	private LocalDate asLocalDate(Date date){
+		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 	
 	@Override
@@ -114,34 +132,25 @@ public class EditAUFDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		TimeTool tt = new TimeTool();
-		tt.setTimeInMillis(dpVon.getDate().getTime());
-		String von = tt.toString(TimeTool.DATE_GER);
-		tt.setTimeInMillis(dpBis.getDate().getTime());
-		String bis = tt.toString(TimeTool.DATE_GER);
 		String zus = tZusatz.getText();
-		// Fall fall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 		if (auf == null) {
-			auf = new AUF(fall, von, bis, tProzent.getText(), tGrund.getText());
-			if (!StringTool.isNothing(zus)) {
-				auf.set(AUF.FLD_ZUSATZ, zus);
-			}
-		} else {
-			fall = auf.getFall();
-			String[] parms = new String[] {
-				AUF.FLD_CASE_ID, AUF.FLD_REASON, AUF.FLD_PERCENT, AUF.FLD_ZUSATZ
-			};
-			String[] vals = new String[] {
-				fall.getId(), tGrund.getText(), tProzent.getText(), zus
-			};
-			auf.set(parms, vals);
-			auf.set(AUF.FLD_DATE_FROM, von);
-			auf.set(AUF.FLD_DATE_UNTIL, bis);
+			auf = CoreModelServiceHolder.get().create(ISickCertificate.class);
+			auf.setDate(LocalDate.now());
+			auf.setPatient(fall.getPatient());
 		}
+		auf.setCoverage(fall);
+		auf.setStart(asLocalDate(dpVon.getDate()));
+		auf.setEnd(asLocalDate(dpBis.getDate()));
+		auf.setPercent(Integer.parseInt(tProzent.getText()));
+		auf.setReason(tGrund.getText());
+		if (!StringTool.isNothing(zus)) {
+			auf.setNote(zus);
+		}
+		CoreModelServiceHolder.get().save(auf);
 		super.okPressed();
 	}
 	
-	public AUF getAuf(){
+	public ISickCertificate getAuf(){
 		return auf;
 	}
 }

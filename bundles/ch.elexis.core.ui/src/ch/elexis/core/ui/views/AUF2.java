@@ -24,8 +24,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -35,28 +37,27 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISickCertificate;
+import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.commands.AufNewHandler;
 import ch.elexis.core.ui.commands.AufPrintHandler;
 import ch.elexis.core.ui.dialogs.EditAUFDialog;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
-import ch.elexis.data.AUF;
-import ch.elexis.data.Patient;
-import ch.elexis.data.Query;
 
 /**
  * Arbeitsunfähigkeitszeugnisse erstellen und verwalten.
@@ -64,35 +65,74 @@ import ch.elexis.data.Query;
  * @author gerry
  * 
  */
-public class AUF2 extends ViewPart implements IActivationListener {
+public class AUF2 extends ViewPart implements IRefreshable {
 	public static final String ID = "ch.elexis.auf"; //$NON-NLS-1$
 	TableViewer tv;
 	private Action newAUF, delAUF, modAUF, printAUF;
-	private ElexisEventListener eli_auf = new ElexisUiEventListenerImpl(AUF.class) {
-		
-		@Override
-		public void runInUi(ElexisEvent ev){
-			boolean bSelect = (ev.getType() == ElexisEvent.EVENT_SELECTED);
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+	
+	//	private ElexisEventListener eli_auf = new ElexisUiEventListenerImpl(AUF.class) {
+	//		
+	//		@Override
+	//		public void runInUi(ElexisEvent ev){
+	//			boolean bSelect = (ev.getType() == ElexisEvent.EVENT_SELECTED);
+	//			modAUF.setEnabled(bSelect);
+	//			delAUF.setEnabled(bSelect);
+	//			
+	//			if (bSelect && tv != null) {
+	//				// refresh & select only if not already selected
+	//				if (ev.getObject() instanceof AUF && !Objects.equals(tv.getStructuredSelection(),
+	//					new StructuredSelection(ev.getObject()))) {
+	//					tv.refresh(false);
+	//					tv.setSelection(new StructuredSelection(ev.getObject()));
+	//				}
+	//			}
+	//		}
+	//	};
+	
+	@Inject
+	void activePatient(@Optional
+	ISickCertificate certificate){
+		Display.getDefault().asyncExec(() -> {
+			boolean bSelect = certificate != null;
 			modAUF.setEnabled(bSelect);
 			delAUF.setEnabled(bSelect);
 			
 			if (bSelect && tv != null) {
 				// refresh & select only if not already selected
-				if (ev.getObject() instanceof AUF && !Objects.equals(tv.getStructuredSelection(),
-					new StructuredSelection(ev.getObject()))) {
+				if (!Objects.equals(tv.getStructuredSelection(),
+					new StructuredSelection(certificate))) {
 					tv.refresh(false);
-					tv.setSelection(new StructuredSelection(ev.getObject()));
+					tv.setSelection(new StructuredSelection(certificate));
 				}
 			}
-		}
-	};
-	private ElexisEventListener eli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-		
-		@Override
-		public void runInUi(ElexisEvent ev){
-			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
+		});
+	}
+	
+	//	private ElexisEventListener eli_pat = new ElexisUiEventListenerImpl(Patient.class) {
+	//		
+	//		@Override
+	//		public void runInUi(ElexisEvent ev){
+	//			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
+	//				tv.refresh();
+	//				ElexisEventDispatcher.clearSelection(AUF.class);
+	//				newAUF.setEnabled(true);
+	//			} else {
+	//				newAUF.setEnabled(false);
+	//				modAUF.setEnabled(false);
+	//				delAUF.setEnabled(false);
+	//				
+	//			}
+	//		}
+	//	};
+	
+	@Inject
+	void activePatient(@Optional
+	IPatient patient){
+		Display.getDefault().asyncExec(() -> {
+			if (patient != null) {
 				tv.refresh();
-				ElexisEventDispatcher.clearSelection(AUF.class);
+				ContextServiceHolder.get().getRootContext().removeTyped(ISickCertificate.class);
 				newAUF.setEnabled(true);
 			} else {
 				newAUF.setEnabled(false);
@@ -100,8 +140,8 @@ public class AUF2 extends ViewPart implements IActivationListener {
 				delAUF.setEnabled(false);
 				
 			}
-		}
-	};
+		});
+	}
 	
 	public AUF2(){
 		setTitleImage(Images.IMG_VIEW_WORK_INCAPABLE.getImage());
@@ -119,8 +159,16 @@ public class AUF2 extends ViewPart implements IActivationListener {
 		menus.createMenu(newAUF, delAUF, modAUF, printAUF);
 		menus.createToolbar(newAUF, delAUF, printAUF);
 		tv.setUseHashlookup(true);
-		GlobalEventDispatcher.addActivationListener(this, this);
-		tv.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
+		tv.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event){
+				if (event.getStructuredSelection().getFirstElement() instanceof ISickCertificate) {
+					ContextServiceHolder.get().getRootContext()
+						.setTyped(event.getStructuredSelection().getFirstElement());
+				}
+			}
+		});
 		tv.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
 			public void doubleClick(DoubleClickEvent event){
@@ -140,17 +188,19 @@ public class AUF2 extends ViewPart implements IActivationListener {
 				IStructuredSelection selection = (IStructuredSelection) tv.getSelection();
 				StringBuilder sb = new StringBuilder();
 				if (selection != null && !selection.isEmpty()) {
-					AUF auf = (AUF) selection.getFirstElement();
-					sb.append(auf.storeToString()).append(","); //$NON-NLS-1$
+					ISickCertificate auf = (ISickCertificate) selection.getFirstElement();
+					sb.append(StoreToStringServiceHolder.getStoreToString(auf)).append(","); //$NON-NLS-1$
 				}
 				event.data = sb.toString().replace(",$", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
+		
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
 	@Override
 	public void dispose(){
-		GlobalEventDispatcher.removeActivationListener(this, this);
+		getSite().getPage().removePartListener(udpateOnVisible);
 	}
 	
 	@Override
@@ -172,9 +222,10 @@ public class AUF2 extends ViewPart implements IActivationListener {
 					(IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 				try {
 					Object createdAuf = handlerService.executeCommand(AufNewHandler.CMD_ID, null);
-					if (createdAuf instanceof AUF) {
-						ElexisEventDispatcher.fireSelectionEvent((AUF) createdAuf);
+					if (createdAuf instanceof ISickCertificate) {
+						ContextServiceHolder.get().getRootContext().setTyped(createdAuf);
 					}
+					refresh();
 				} catch (Exception e) {
 					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e);
 				}
@@ -188,11 +239,11 @@ public class AUF2 extends ViewPart implements IActivationListener {
 			
 			@Override
 			public void run(){
-				AUF sel = getSelectedAUF();
+				ISickCertificate sel = getSelectedCertificate();
 				if (sel != null) {
 					if (MessageDialog.openConfirm(getViewSite().getShell(),
 						Messages.AUF2_deleteReally, Messages.AUF2_doyoywantdeletereally)) { //$NON-NLS-1$ //$NON-NLS-2$
-						sel.delete();
+						CoreModelServiceHolder.get().delete(sel);
 						tv.refresh(false);
 					}
 				}
@@ -206,9 +257,9 @@ public class AUF2 extends ViewPart implements IActivationListener {
 			
 			@Override
 			public void run(){
-				AUF sel = getSelectedAUF();
+				ISickCertificate sel = getSelectedCertificate();
 				if (sel != null) {
-					new EditAUFDialog(getViewSite().getShell(), sel, sel.getFall()).open();
+					new EditAUFDialog(getViewSite().getShell(), sel, sel.getCoverage()).open();
 					tv.refresh(true);
 				}
 			}
@@ -232,27 +283,29 @@ public class AUF2 extends ViewPart implements IActivationListener {
 		};
 	}
 	
-	private ch.elexis.data.AUF getSelectedAUF(){
+	private ISickCertificate getSelectedCertificate(){
 		IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
 		if ((sel == null) || (sel.isEmpty())) {
 			return null;
 		}
-		return (AUF) sel.getFirstElement();
+		return (ISickCertificate) sel.getFirstElement();
 	}
 	
 	class AUFContentProvider implements IStructuredContentProvider {
 		
 		@Override
 		public Object[] getElements(Object inputElement){
-			Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-			if (pat == null) {
-				return new Object[0];
+			// Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
+			java.util.Optional<IPatient> patient = ContextServiceHolder.get().getActivePatient();
+			
+			if (patient.isPresent()) {
+				INamedQuery<ISickCertificate> query =
+					CoreModelServiceHolder.get().getNamedQuery(ISickCertificate.class, "patient");
+				List<ISickCertificate> list =
+					query.executeWithParameters(query.getParameterMap("patient", patient.get()));
+				return list.toArray();
 			}
-			Query<AUF> qbe = new Query<AUF>(AUF.class);
-			qbe.add(AUF.FLD_PATIENT_ID, Query.EQUALS, pat.getId());
-			qbe.orderBy(true, AUF.FLD_DATE_FROM, AUF.FLD_DATE_UNTIL);
-			List<AUF> list = qbe.execute();
-			return list.toArray();
+			return new Object[0];
 		}
 		
 		@Override
@@ -266,25 +319,16 @@ public class AUF2 extends ViewPart implements IActivationListener {
 		
 	}
 	
-	@Override
-	public void activation(boolean mode){ /* egal */
-	}
-	
-	@Override
-	public void visible(boolean mode){
-		if (mode) {
-			ElexisEventDispatcher.getInstance().addListeners(eli_auf, eli_pat);
-			eli_pat
-				.catchElexisEvent(new ElexisEvent(ElexisEventDispatcher.getSelected(Patient.class),
-					null, ElexisEvent.EVENT_SELECTED));
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eli_auf, eli_pat);
-		}
-	}
-	
 	@Optional
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
 		CoreUiUtil.updateFixLayout(part, currentState);
+	}
+	
+	@Override
+	public void refresh(){
+		if (CoreUiUtil.isActiveControl(tv.getControl())) {
+			tv.refresh();
+		}
 	}
 }
