@@ -1048,4 +1048,16 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="rootAppointment" eType="#//IAppointment"
         changeable="false"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ISickCertificate" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//Deleteable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//IPatient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverage" eType="#//ICoverage"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="letter" eType="#//IDocumentLetter"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="percent" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="start" eType="ecore:EDataType types.ecore#//LocalDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="end" eType="ecore:EDataType types.ecore#//LocalDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reason" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="note" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
 </ecore:EPackage>

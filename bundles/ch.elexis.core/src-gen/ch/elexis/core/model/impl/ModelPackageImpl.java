@@ -74,6 +74,7 @@ import ch.elexis.core.model.IRelatedContact;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IService;
+import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
@@ -549,6 +550,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iAppointmentSeriesEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iSickCertificateEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -4660,6 +4668,106 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getISickCertificate() {
+		return iSickCertificateEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getISickCertificate_Patient() {
+		return (EReference)iSickCertificateEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getISickCertificate_Coverage() {
+		return (EReference)iSickCertificateEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getISickCertificate_Letter() {
+		return (EReference)iSickCertificateEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getISickCertificate_Percent() {
+		return (EAttribute)iSickCertificateEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getISickCertificate_Date() {
+		return (EAttribute)iSickCertificateEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getISickCertificate_Start() {
+		return (EAttribute)iSickCertificateEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getISickCertificate_End() {
+		return (EAttribute)iSickCertificateEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getISickCertificate_Reason() {
+		return (EAttribute)iSickCertificateEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getISickCertificate_Note() {
+		return (EAttribute)iSickCertificateEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -5151,6 +5259,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iAppointmentSeriesEClass, IAPPOINTMENT_SERIES__ENDING_PATTERN_STRING);
 		createEAttribute(iAppointmentSeriesEClass, IAPPOINTMENT_SERIES__PERSISTENT);
 		createEReference(iAppointmentSeriesEClass, IAPPOINTMENT_SERIES__ROOT_APPOINTMENT);
+
+		iSickCertificateEClass = createEClass(ISICK_CERTIFICATE);
+		createEReference(iSickCertificateEClass, ISICK_CERTIFICATE__PATIENT);
+		createEReference(iSickCertificateEClass, ISICK_CERTIFICATE__COVERAGE);
+		createEReference(iSickCertificateEClass, ISICK_CERTIFICATE__LETTER);
+		createEAttribute(iSickCertificateEClass, ISICK_CERTIFICATE__PERCENT);
+		createEAttribute(iSickCertificateEClass, ISICK_CERTIFICATE__DATE);
+		createEAttribute(iSickCertificateEClass, ISICK_CERTIFICATE__START);
+		createEAttribute(iSickCertificateEClass, ISICK_CERTIFICATE__END);
+		createEAttribute(iSickCertificateEClass, ISICK_CERTIFICATE__REASON);
+		createEAttribute(iSickCertificateEClass, ISICK_CERTIFICATE__NOTE);
 	}
 
 	/**
@@ -5299,6 +5418,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iTextTemplateEClass.getESuperTypes().add(this.getDeleteable());
 		iAppointmentEClass.getESuperTypes().add(this.getIPeriod());
 		iAppointmentSeriesEClass.getESuperTypes().add(this.getIAppointment());
+		iSickCertificateEClass.getESuperTypes().add(this.getIdentifiable());
+		iSickCertificateEClass.getESuperTypes().add(this.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -6072,6 +6193,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIAppointmentSeries_RootAppointment(), this.getIAppointment(), null, "rootAppointment", null, 0, 1, IAppointmentSeries.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iAppointmentSeriesEClass, ecorePackage.getEString(), "getAsSeriesExtension", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iSickCertificateEClass, ISickCertificate.class, "ISickCertificate", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getISickCertificate_Patient(), this.getIPatient(), null, "patient", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getISickCertificate_Coverage(), this.getICoverage(), null, "coverage", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getISickCertificate_Letter(), this.getIDocumentLetter(), null, "letter", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getISickCertificate_Percent(), ecorePackage.getEInt(), "percent", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getISickCertificate_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getISickCertificate_Start(), theTypesPackage.getLocalDate(), "start", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getISickCertificate_End(), theTypesPackage.getLocalDate(), "end", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getISickCertificate_Reason(), ecorePackage.getEString(), "reason", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getISickCertificate_Note(), ecorePackage.getEString(), "note", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

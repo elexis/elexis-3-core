@@ -31,6 +31,7 @@
 		<class>ch.elexis.core.jpa.entities.AccountTransaction</class>
 		<class>ch.elexis.core.jpa.entities.ArtikelstammItem</class>
 		<class>ch.elexis.core.jpa.entities.Artikel</class>
+		<class>ch.elexis.core.jpa.entities.AUF</class>
 		<class>ch.elexis.core.jpa.entities.Behandlung</class>
 		<class>ch.elexis.core.jpa.entities.BerchtoldPrivatLeistung</class>
 		<class>ch.elexis.core.jpa.entities.Bestellung</class>

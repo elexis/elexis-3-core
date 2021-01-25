@@ -677,5 +677,16 @@
       <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//IAppointmentSeries/rootAppointment"/>
       <genOperations ecoreOperation="model.ecore#//IAppointmentSeries/getAsSeriesExtension"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//ISickCertificate">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ISickCertificate/patient"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ISickCertificate/coverage"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ISickCertificate/letter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISickCertificate/percent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISickCertificate/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISickCertificate/start"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISickCertificate/end"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISickCertificate/reason"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISickCertificate/note"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>
