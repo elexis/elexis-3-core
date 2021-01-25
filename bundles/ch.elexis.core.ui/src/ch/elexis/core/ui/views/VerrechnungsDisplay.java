@@ -45,6 +45,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.KeyEvent;
@@ -278,6 +280,23 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		table = viewer.getTable();
 		table.setMenu(createVerrMenu());
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
+		viewer.setComparator(new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2){
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					int ret = 0;
+					String c1 = ((IBilled) e1).getCode();
+					String c2 = ((IBilled) e2).getCode();
+					IBillable b1 = ((IBilled) e1).getBillable();
+					IBillable b2 = ((IBilled) e2).getBillable();
+					if (b1 != null && b2 != null) {
+						ret = b1.getCodeSystemName().compareTo(b2.getCodeSystemName());
+					}
+					return ret != 0 ? ret : c1.compareTo(c2);
+				}
+				return super.compare(viewer, e1, e2);
+			}
+		});
 		
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
