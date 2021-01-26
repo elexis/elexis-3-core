@@ -338,4 +338,9 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 			}
 		}
 	}
+	
+	@Override
+	public String toString(){
+		return super.toString() + " " + getLabel();
+	}
 }
