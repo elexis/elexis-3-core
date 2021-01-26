@@ -1,6 +1,7 @@
 package ch.elexis.core.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,5 +84,15 @@ public class Recipe extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.enti
 		} else {
 			getEntityMarkDirty().setBrief(null);
 		}
+	}
+	
+	@Override
+	public String getLabel(){
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		IMandator m = getMandator();
+		if (m == null) {
+			return dateFormat.format(getDate()) + " (unbekannt)";
+		}
+		return dateFormat.format(getDate()) + " " + m.getLabel();
 	}
 }
