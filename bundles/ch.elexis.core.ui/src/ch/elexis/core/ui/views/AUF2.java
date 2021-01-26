@@ -91,7 +91,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 	//	};
 	
 	@Inject
-	void activePatient(@Optional
+	void activeCertificate(@Optional
 	ISickCertificate certificate){
 		Display.getDefault().asyncExec(() -> {
 			boolean bSelect = certificate != null;

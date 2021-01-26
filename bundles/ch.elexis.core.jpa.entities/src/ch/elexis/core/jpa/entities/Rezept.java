@@ -11,6 +11,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -22,6 +23,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "rezepte")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "Rezept.patient", query = "SELECT r FROM Rezept r WHERE r.deleted = false AND r.patient = :patient ORDER BY r.datum, r.lastupdate DESC")
 public class Rezept extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 	
 	// Transparently updated by the EntityListener
