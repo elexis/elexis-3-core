@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Cache;
@@ -73,6 +74,7 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "behandlung")
+	@OrderBy("klasse ASC, leistungenCode ASC")
 	private List<Verrechnet> billed;
 
 	@Mutable
