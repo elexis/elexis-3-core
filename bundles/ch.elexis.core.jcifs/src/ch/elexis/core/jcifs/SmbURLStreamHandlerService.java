@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
 import org.osgi.service.url.URLConstants;
@@ -27,7 +26,9 @@ public class SmbURLStreamHandlerService extends AbstractURLStreamHandlerService 
 			new NtlmPasswordAuthentication(context, url.getUserInfo());
 		CIFSContext credentials =
 			SingletonContext.getInstance().withCredentials(ntlmPasswordAuthentication);
-		return new SmbFile(url, credentials);
+		// https://github.com/AgNO3/jcifs-ng/issues/271
+		String _url = url.toExternalForm().replaceAll("%20", " ");
+		return new SmbFile(_url, credentials);
 		
 	}
 	

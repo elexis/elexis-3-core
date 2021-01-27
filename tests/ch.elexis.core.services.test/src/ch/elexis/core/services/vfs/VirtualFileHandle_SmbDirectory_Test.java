@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 
 import org.junit.BeforeClass;
@@ -70,6 +71,10 @@ public class VirtualFileHandle_SmbDirectory_Test {
 		IVirtualFilesystemHandle[] listHandles = service.of(PREFIX_NOAUTH_SAMBA).listHandles();
 		// 1 directory, 2 files
 		assertEquals(3, listHandles.length);
+	
+		try(InputStream is = listHandles[1].openInputStream()) {
+			// #21875 to test if spaces are correctly opened
+		}
 	}
 	
 	@Test
