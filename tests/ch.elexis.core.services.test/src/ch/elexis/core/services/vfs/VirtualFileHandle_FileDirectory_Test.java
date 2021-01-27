@@ -75,10 +75,19 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 	public void testListHandles() throws IOException{
 		File file = new File(testDirectoryHandle.toFile().get(), "listingFile.txt");
 		assertTrue(file.createNewFile());
+		File fileWithSpace = new File(testDirectoryHandle.toFile().get(), "space listingFile.txt");
+		assertTrue(fileWithSpace.createNewFile());
 		IVirtualFilesystemHandle[] listHandles = testDirectoryHandle.listHandles();
-		assertEquals(1, listHandles.length);
-		assertEquals(file, listHandles[0].toFile().get());
+		assertEquals(2, listHandles.length);
+		for (IVirtualFilesystemHandle ivfsh : listHandles) {
+			if(ivfsh.getName().contains("space")) {
+				assertEquals(fileWithSpace, ivfsh.toFile().get());
+			} else {
+				assertEquals(file, ivfsh.toFile().get());
+			}
+		}
 		assertTrue(file.delete());
+		assertTrue(fileWithSpace.delete());
 	}
 	
 	@Test

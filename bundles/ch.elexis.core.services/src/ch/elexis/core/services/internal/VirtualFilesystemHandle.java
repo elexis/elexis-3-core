@@ -47,7 +47,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	}
 	
 	public VirtualFilesystemHandle(File file) throws IOException{
-		this.uri = file.toURI();
+		this(file.toURI());
 	}
 	
 	@Override
@@ -56,7 +56,8 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		if (file != null) {
 			return new FileInputStream(file);
 		}
-		return uri.toURL().openStream();
+		URL url = URIUtil.toURL(uri);
+		return url.openStream();
 	}
 	
 	@Override
@@ -201,7 +202,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	@Override
 	public URL toURL(){
 		try {
-			return uri.toURL();
+			return URIUtil.toURL(this.uri);
 		} catch (MalformedURLException e) {
 			LoggerFactory.getLogger(getClass()).warn("toURL()", e);
 		}
