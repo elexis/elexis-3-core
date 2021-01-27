@@ -23,7 +23,6 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.TimeTool;
 
-@SuppressWarnings("deprecation")
 public class AllDataAccessor implements IDataAccess {
 	
 	private Element[] elements = {
@@ -91,23 +90,23 @@ public class AllDataAccessor implements IDataAccess {
 		TimeTool date = new TimeTool();
 		
 		for (Fall fall : patient.getFaelle()) {
+			sb.append("* Fall " + fall.getLabel() + "\n\n");
+			
 			for (Konsultation kons : fall.getBehandlungen(true)) {
 				date.set(kons.getDatum());
-				sb.append(date.toString(TimeTool.DATE_GER));
+				sb.append("- " + date.toString(TimeTool.DATE_GER) + " - "
+					+ kons.getMandant().getLabel(false));
 				
 				if (withFall) {
 					sb.append(" ");
-					sb.append(kons.getMandant().getLabel(false));
-					sb.append(" - ");
 					sb.append(fall.getBezeichnung());
-					sb.append(" ");
 				}
 				
 				sb.append("\n"); //$NON-NLS-1$
 				
 				Samdas samdas = new Samdas(kons.getEintrag().getHead());
 				sb.append(samdas.getRecordText());
-				sb.append("\n"); //$NON-NLS-1$
+				sb.append("\n\n"); //$NON-NLS-1$
 			}
 		}
 		
