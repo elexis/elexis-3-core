@@ -663,8 +663,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 							}
 						}
 						// refresh with sorted billed list
-						CoreModelServiceHolder.get().refresh(actEncounter, true);
-						setEncounter(actEncounter);
+						Display.getDefault().asyncExec(() -> {
+							CoreModelServiceHolder.get().refresh(actEncounter, true);
+							setEncounter(actEncounter);
+						});
 						
 						List<ICodeElement> diff = block.getDiffToReferences(elements);
 						if (!diff.isEmpty()) {
