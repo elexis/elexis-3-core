@@ -66,6 +66,19 @@ public class Person extends Contact implements IPerson {
 	}
 	
 	@Override
+	public LocalDateTime getDateOfDeath(){
+		if (getEntity().getDod() != null) {
+			return getEntity().getDod().atStartOfDay();
+		}
+		return null;
+	}
+	
+	@Override
+	public void setDateOfDeath(LocalDateTime value){
+		getEntityMarkDirty().setDod(value.toLocalDate());
+	}
+	
+	@Override
 	public void setFirstName(String value){
 		getEntityMarkDirty().setDescription2(value);
 	}

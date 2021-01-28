@@ -32,6 +32,7 @@ import ch.elexis.core.types.Gender;
  *   <li>{@link ch.elexis.core.model.IPerson#getLastName <em>Last Name</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPerson#getMaritalStatus <em>Marital Status</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPerson#getLegalGuardian <em>Legal Guardian</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPerson#getDateOfDeath <em>Date Of Death</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPerson()
@@ -243,6 +244,28 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	void setLegalGuardian(IPerson value);
+
+	/**
+	 * Returns the value of the '<em><b>Date Of Death</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Date Of Death</em>' attribute.
+	 * @see #setDateOfDeath(LocalDateTime)
+	 * @see ch.elexis.core.model.ModelPackage#getIPerson_DateOfDeath()
+	 * @model dataType="ch.elexis.core.types.LocalDateTime"
+	 * @generated
+	 */
+	LocalDateTime getDateOfDeath();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getDateOfDeath <em>Date Of Death</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Date Of Death</em>' attribute.
+	 * @see #getDateOfDeath()
+	 * @generated
+	 */
+	void setDateOfDeath(LocalDateTime value);
 
 	/**
 	 * <!-- begin-user-doc -->
