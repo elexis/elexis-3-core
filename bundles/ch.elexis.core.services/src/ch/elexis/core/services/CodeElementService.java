@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +21,7 @@ public class CodeElementService implements ICodeElementService {
 	
 	private HashMap<String, ICodeElementServiceContribution> contributions = new HashMap<>();
 	
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
 	public void setCodeElementServiceContribution(ICodeElementServiceContribution contribution){
 		ICodeElementServiceContribution previous =
 			contributions.put(contribution.getSystem(), contribution);
