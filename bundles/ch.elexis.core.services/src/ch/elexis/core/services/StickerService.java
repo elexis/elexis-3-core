@@ -87,7 +87,8 @@ public class StickerService implements IStickerService {
 	private ISticker loadStickerForStickerObjectLink(StickerObjectLink stickerObjectLink,
 		Identifiable identifiable){
 		ISticker sticker =
-			iModelService.load(stickerObjectLink.getEtikette(), ISticker.class).orElse(null);
+			iModelService.load(stickerObjectLink.getEtikette(), ISticker.class, false, false)
+				.orElse(null);
 		if (sticker != null) {
 			sticker.setAttachedTo(identifiable);
 			sticker.setAttachedToData(stickerObjectLink.getData());
