@@ -225,13 +225,12 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	
 	@CmdAdvisor(description = "set attributes on a task descriptor")
 	public String __task_descriptor_set(@CmdParam(description = "tdIdOrTdRefId")
-	String idOrReferenceId, @CmdParam(description = "key")
-	String key, @CmdParam(description = "value")
+	String idOrReferenceId, @CmdParam(description = "(owner | runner | referenceid | trigger)")
+	String key, @CmdParam(description = "value ")
 	String value){
 		ITaskDescriptor taskDescriptor =
 			taskService.findTaskDescriptorByIdOrReferenceId(idOrReferenceId).orElse(null);
 		if (taskDescriptor != null) {
-			System.out.println(key.toLowerCase());
 			switch (key.toLowerCase()) {
 			case "owner":
 				IUser user = CoreModelServiceHolder.get().load(value, IUser.class).orElse(null);
@@ -246,6 +245,14 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 				break;
 			case "referenceid":
 				taskDescriptor.setReferenceId(value);
+				break;
+			case "trigger":
+				TaskTriggerType ttt = TaskTriggerType.getByName(value.toUpperCase());
+				if (ttt != null) {
+					taskDescriptor.setTriggerType(ttt);
+				} else {
+					return "TaskTriggerType not found";
+				}
 				break;
 			default:
 				if (key.toLowerCase().startsWith("runcontext.")) {
