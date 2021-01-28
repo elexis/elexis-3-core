@@ -23,8 +23,11 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -35,15 +38,20 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.nebula.widgets.cdatetime.CDT;
+import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
@@ -68,14 +76,15 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -222,6 +231,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	Hyperlink hHA;
 	private InputData comboGeschlecht;
 	StickerComposite stickerComposite;
+	private Button deceasedBtn;
+	private CDateTime deceasedDate;
 	
 	void recreateUserpanel(){
 		// cUserfields.setRedraw(false);
@@ -491,6 +502,47 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		Composite cPersonalien = tk.createComposite(form.getBody());
 		cPersonalien.setLayout(new GridLayout(2, false));
 		cPersonalien.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		deceasedBtn = tk.createButton(cPersonalien, "verstorben", SWT.CHECK);
+		deceasedBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				if (actPatient != null) {
+					IPatient patient =
+						NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
+					patient.setDeceased(deceasedBtn.getSelection());
+					CoreModelServiceHolder.get().save(patient);
+					if (deceasedBtn.getSelection()) {
+						((GridData) deceasedDate.getLayoutData()).exclude = false;
+						deceasedDate.setVisible(true);
+						deceasedDate.setFocus();
+					} else {
+						((GridData) deceasedDate.getLayoutData()).exclude = true;
+						deceasedDate.setVisible(false);
+					}
+					form.getBody().layout();
+				}
+			}
+		});
+		deceasedDate = new CDateTime(cPersonalien,
+			CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TEXT_TRAIL);
+		deceasedDate.setLayoutData(new GridData());
+		((GridData) deceasedDate.getLayoutData()).exclude = false;
+		deceasedDate.setVisible(false);
+		deceasedDate.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
+				Date selected = deceasedDate.getSelection();
+				if (selected != null) {
+					patient.setDateOfDeath(
+						LocalDateTime.ofInstant(selected.toInstant(), ZoneId.systemDefault()));
+				} else {
+					patient.setDateOfDeath(null);
+				}
+				CoreModelServiceHolder.get().save(patient);
+			}
+		});
+		
 		hHA = tk.createHyperlink(cPersonalien, Messages.Patientenblatt2_postal, SWT.NONE); // $NON-NLS-1$
 		hHA.addHyperlinkListener(hr);
 		hHA.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
@@ -814,7 +866,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void setPatient(final Patient p){
 		actPatient = p;
 		
@@ -831,10 +882,28 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		if (actPatient == null) {
 			form.setText(Messages.Patientenblatt2_noPatientSelected); // $NON-NLS-1$
 			inpAdresse.setText(StringConstants.EMPTY, false, false);
+			deceasedBtn.setSelection(false);
 			inpZusatzAdresse.clear();
 			setUnlocked(false);
 			return;
 		}
+		IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
+		deceasedBtn.setSelection(patient.isDeceased());
+		if (patient.isDeceased()) {
+			if (patient.getDateOfDeath() != null) {
+				deceasedDate.setSelection(
+					Date.from(patient.getDateOfDeath().atZone(ZoneId.systemDefault()).toInstant()));
+			} else {
+				deceasedDate.setSelection(null);
+			}
+			((GridData) deceasedDate.getLayoutData()).exclude = false;
+			deceasedDate.setVisible(true);
+		} else {
+			deceasedDate.setSelection(null);
+			((GridData) deceasedDate.getLayoutData()).exclude = true;
+			deceasedDate.setVisible(false);
+		}
+		
 		stickerComposite.setPatient(
 			CoreModelServiceHolder.get().load(actPatient.getId(), IPatient.class).orElse(null));
 		form.setText(StringTool.unNull(actPatient.getName()) + StringConstants.SPACE
