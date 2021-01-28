@@ -48,6 +48,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IContact#getPostalAddress <em>Postal Address</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getImage <em>Image</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getRelatedContacts <em>Related Contacts</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IContact#isDeceased <em>Deceased</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIContact()
@@ -710,6 +711,28 @@ public interface IContact extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	List<IRelatedContact> getRelatedContacts();
+
+	/**
+	 * Returns the value of the '<em><b>Deceased</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Deceased</em>' attribute.
+	 * @see #setDeceased(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIContact_Deceased()
+	 * @model
+	 * @generated
+	 */
+	boolean isDeceased();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#isDeceased <em>Deceased</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Deceased</em>' attribute.
+	 * @see #isDeceased()
+	 * @generated
+	 */
+	void setDeceased(boolean value);
 
 	/**
 	 * <!-- begin-user-doc -->

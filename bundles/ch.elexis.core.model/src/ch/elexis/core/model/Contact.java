@@ -84,6 +84,16 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	}
 
 	@Override
+	public boolean isDeceased(){
+		return getEntity().isDeceased();
+	}
+	
+	@Override
+	public void setDeceased(boolean value){
+		getEntityMarkDirty().setDeceased(value);
+	}
+	
+	@Override
 	public String getDescription1() {
 		return getEntity().getDescription1();
 	}

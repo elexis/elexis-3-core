@@ -448,13 +448,22 @@ public interface ModelPackage extends EPackage {
 	int ICONTACT__RELATED_CONTACTS = IDENTIFIABLE_FEATURE_COUNT + 26;
 
 	/**
+	 * The feature id for the '<em><b>Deceased</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__DECEASED = IDENTIFIABLE_FEATURE_COUNT + 27;
+
+	/**
 	 * The number of structural features of the '<em>IContact</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 27;
+	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 28;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
@@ -719,6 +728,15 @@ public interface ModelPackage extends EPackage {
 	int IPERSON__RELATED_CONTACTS = ICONTACT__RELATED_CONTACTS;
 
 	/**
+	 * The feature id for the '<em><b>Deceased</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__DECEASED = ICONTACT__DECEASED;
+
+	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -791,13 +809,22 @@ public interface ModelPackage extends EPackage {
 	int IPERSON__LEGAL_GUARDIAN = ICONTACT_FEATURE_COUNT + 7;
 
 	/**
+	 * The feature id for the '<em><b>Date Of Death</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__DATE_OF_DEATH = ICONTACT_FEATURE_COUNT + 8;
+
+	/**
 	 * The number of structural features of the '<em>IPerson</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPERSON_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 8;
+	int IPERSON_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.
@@ -1060,6 +1087,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IORGANIZATION__RELATED_CONTACTS = ICONTACT__RELATED_CONTACTS;
+
+	/**
+	 * The feature id for the '<em><b>Deceased</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__DECEASED = ICONTACT__DECEASED;
 
 	/**
 	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
@@ -1351,6 +1387,15 @@ public interface ModelPackage extends EPackage {
 	int ILABORATORY__RELATED_CONTACTS = IORGANIZATION__RELATED_CONTACTS;
 
 	/**
+	 * The feature id for the '<em><b>Deceased</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__DECEASED = IORGANIZATION__DECEASED;
+
+	/**
 	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1640,6 +1685,15 @@ public interface ModelPackage extends EPackage {
 	int IPATIENT__RELATED_CONTACTS = IPERSON__RELATED_CONTACTS;
 
 	/**
+	 * The feature id for the '<em><b>Deceased</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__DECEASED = IPERSON__DECEASED;
+
+	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1710,6 +1764,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPATIENT__LEGAL_GUARDIAN = IPERSON__LEGAL_GUARDIAN;
+
+	/**
+	 * The feature id for the '<em><b>Date Of Death</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__DATE_OF_DEATH = IPERSON__DATE_OF_DEATH;
 
 	/**
 	 * The feature id for the '<em><b>Family Doctor</b></em>' reference.
@@ -2044,6 +2107,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IMANDATOR__RELATED_CONTACTS = ICONTACT__RELATED_CONTACTS;
+
+	/**
+	 * The feature id for the '<em><b>Deceased</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMANDATOR__DECEASED = ICONTACT__DECEASED;
 
 	/**
 	 * The feature id for the '<em><b>Biller</b></em>' reference.
@@ -7706,6 +7778,17 @@ public interface ModelPackage extends EPackage {
 	EReference getIContact_RelatedContacts();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#isDeceased <em>Deceased</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Deceased</em>'.
+	 * @see ch.elexis.core.model.IContact#isDeceased()
+	 * @see #getIContact()
+	 * @generated
+	 */
+	EAttribute getIContact_Deceased();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7802,6 +7885,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getIPerson_LegalGuardian();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPerson#getDateOfDeath <em>Date Of Death</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date Of Death</em>'.
+	 * @see ch.elexis.core.model.IPerson#getDateOfDeath()
+	 * @see #getIPerson()
+	 * @generated
+	 */
+	EAttribute getIPerson_DateOfDeath();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}'.
@@ -12123,6 +12217,14 @@ public interface ModelPackage extends EPackage {
 		EReference ICONTACT__RELATED_CONTACTS = eINSTANCE.getIContact_RelatedContacts();
 
 		/**
+		 * The meta object literal for the '<em><b>Deceased</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICONTACT__DECEASED = eINSTANCE.getIContact_Deceased();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -12195,6 +12297,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IPERSON__LEGAL_GUARDIAN = eINSTANCE.getIPerson_LegalGuardian();
+
+		/**
+		 * The meta object literal for the '<em><b>Date Of Death</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPERSON__DATE_OF_DEATH = eINSTANCE.getIPerson_DateOfDeath();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.

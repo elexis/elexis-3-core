@@ -74,4 +74,17 @@ UPDATE artikelstamm_ch SET LDSCR=LOWER(DSCR);
             <column name="state"/>
         </createIndex>
     </changeSet>
+    
+    <changeSet author="thomas" id="manual_deceased_KONTAKT">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="KONTAKT"
+					columnName="prio" />
+			</not>
+		</preConditions>
+		<addColumn tableName="KONTAKT">
+			<column defaultValue="0" name="ISTVERSTORBEN" type="CHAR(1)"/>
+			<column name="STERBEDATUM" type="CHAR(8)"/>
+		</addColumn>
+    </changeSet>
 </databaseChangeLog>

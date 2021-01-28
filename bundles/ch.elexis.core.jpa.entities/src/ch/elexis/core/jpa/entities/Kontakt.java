@@ -132,6 +132,9 @@ public class Kontakt extends AbstractEntityWithId
 	@Column(name = "geburtsdatum", length = 8)
 	protected LocalDate dob;
 
+	@Column(name = "sterbedatum", length = 8)
+	protected LocalDate dod;
+	
 	@Convert(converter = FuzzyGenderToEnumConverter.class)
 	@Column(name = "geschlecht")
 	protected Gender gender;
@@ -163,6 +166,10 @@ public class Kontakt extends AbstractEntityWithId
 	@Column(name = "istLabor")
 	protected boolean laboratory;
 
+	@Convert(converter = BooleanCharacterConverterSafe.class)
+	@Column(name = "istVerstorben")
+	protected boolean deceased;
+	
 	@Column(length = 3, name = "land")
 	@Convert(converter = FuzzyCountryToEnumConverter.class)
 	protected Country country;
@@ -293,6 +300,14 @@ public class Kontakt extends AbstractEntityWithId
 		this.dob = dob;
 	}
 
+	public LocalDate getDod(){
+		return dod;
+	}
+	
+	public void setDod(LocalDate dob){
+		this.dod = dob;
+	}
+	
 	public String getGruppe() {
 		return gruppe;
 	}
@@ -317,6 +332,14 @@ public class Kontakt extends AbstractEntityWithId
 		this.laboratory = laboratory;
 	}
 
+	public boolean isDeceased(){
+		return deceased;
+	}
+	
+	public void setDeceased(boolean deceased){
+		this.deceased = deceased;
+	}
+	
 	public String getCity() {
 		return city;
 	}
