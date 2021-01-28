@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.services.ICodeElementService"/>
    </service>
-   <reference bind="setCodeElementServiceContribution" cardinality="0..n" interface="ch.elexis.core.services.ICodeElementServiceContribution" name="CodeElementServiceContribution" policy="dynamic" policy-option="greedy" unbind="unsetCodeElementServiceContribution"/>
+   <reference bind="setCodeElementServiceContribution" cardinality="0..n" interface="ch.elexis.core.services.ICodeElementServiceContribution" name="CodeElementServiceContribution" policy-option="greedy" unbind="unsetCodeElementServiceContribution"/>
    <implementation class="ch.elexis.core.services.CodeElementService"/>
 </scr:component>
