@@ -345,7 +345,6 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	
 	@Override
 	public IVirtualFilesystemHandle subDir(String subDir) throws IOException{
-		subDir = subDir.replaceAll(" ", "%20");
 		if (!subDir.endsWith("/")) {
 			subDir += "/";
 		}
@@ -361,8 +360,6 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		if (subFile.startsWith("/")) {
 			throw new IllegalArgumentException("must not start with /");
 		}
-		
-		subFile = subFile.replaceAll(" ", "%20");
 		URI _uri = URIUtil.append(uri, subFile);
 		return new VirtualFilesystemHandle(_uri);
 	}

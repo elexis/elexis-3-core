@@ -7,6 +7,7 @@ import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 
 import org.junit.BeforeClass;
@@ -27,6 +28,10 @@ public class VirtualFileHandle_SmbDirectory_Test {
 	 * NOAUTH is expected to read, but not modify
 	 */
 	public static String PREFIX_NOAUTH_SAMBA = "smb://gitlab.medelexis.ch/tests/";
+	
+	public static String PREFIX_AUTH_SAMBA = "smb://smbuser:qs9fifn9q1gx@gitlab.medelexis.ch/restrictedtests/";
+	public static String USER = "smbuser";
+	public static String PASS = "qs9fifn9q1gx";
 	
 	@BeforeClass
 	public static void beforeClass() throws IOException{
@@ -75,6 +80,24 @@ public class VirtualFileHandle_SmbDirectory_Test {
 		try(InputStream is = listHandles[1].openInputStream()) {
 			// #21875 to test if spaces are correctly opened
 		}
+	}
+	
+	@Test
+	public void testCreateAndMoveToAndDelete() throws IOException {
+		IVirtualFilesystemHandle dir = service.of(PREFIX_AUTH_SAMBA);
+		IVirtualFilesystemHandle subFile = dir.subFile("Test File.txt");
+		try(PrintWriter p = new PrintWriter(subFile.openOutputStream())) {
+			p.write("TestFile\n");
+		}
+		assertTrue(subFile.exists());
+		assertTrue(subFile.canRead());
+		IVirtualFilesystemHandle subFileRenamed = dir.subFile("Test File renamed.txt");
+		subFile.moveTo(subFileRenamed);
+		assertFalse(subFile.exists());
+		assertTrue(subFileRenamed.exists());
+		assertTrue(subFileRenamed.canRead());
+		subFileRenamed.delete();
+		assertFalse(subFileRenamed.exists());
 	}
 	
 	@Test
