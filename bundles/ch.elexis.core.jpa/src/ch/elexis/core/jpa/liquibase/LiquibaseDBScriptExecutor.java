@@ -49,6 +49,8 @@ public class LiquibaseDBScriptExecutor {
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on
 			logger.warn("Exception on DB execute script [" + changeId + "]", e);
+			System.out.println("Exception on DB execute script ["+changeId+"]");
+			e.printStackTrace();
 			return false;
 		} finally {
 			try {
