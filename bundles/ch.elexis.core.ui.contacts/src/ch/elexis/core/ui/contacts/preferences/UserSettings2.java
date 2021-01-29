@@ -17,6 +17,9 @@ import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EX
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_REMEMBER_STATE;
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
@@ -35,6 +38,7 @@ import ch.elexis.core.ui.preferences.inputs.ComboFieldEditor;
 import ch.elexis.core.ui.preferences.inputs.MultilineFieldEditor;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
+import ch.elexis.data.Sticker;
 import ch.rgw.tools.StringTool;
 
 public class UserSettings2 extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
@@ -92,7 +96,19 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 			.setText(Messages.UserSettings2_AddidtionalFields);
 		addField(new MultilineFieldEditor(Patientenblatt2.CFG_EXTRAFIELDS, StringTool.leer, 5,
 			SWT.NONE, true, getFieldEditorParent()));
-		
+		new Label(getFieldEditorParent(), SWT.NONE).setText("");
+		ComboFieldEditor editor = new ComboFieldEditor(Preferences.CFG_DECEASED_STICKER,
+			"Sticker für verstorbene", getStickerComboItems(), getFieldEditorParent());
+		editor.setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
+		addField(editor);
+	}
+	
+	private String[] getStickerComboItems(){
+		List<Sticker> stickers = Sticker.getStickersForClass(Patient.class);
+		List<String> stickerNames =
+			stickers.stream().map(s -> s.getLabel()).collect(Collectors.toList());
+		stickerNames.add(0, "");
+		return stickerNames.toArray(new String[stickerNames.size()]);
 	}
 	
 	public void init(IWorkbench workbench){

@@ -14,4 +14,6 @@ package ch.elexis.core.model.messages;
 public final class Messages{
 	public static String Fall_Open = ch.elexis.core.l10n.Messages.Fall_Open;
 	public static String Fall_CLOSED = ch.elexis.core.l10n.Messages.Fall_CLOSED;
+	
+	public static String Patient_deceased = ch.elexis.core.l10n.Messages.Patient_deceased;
 }

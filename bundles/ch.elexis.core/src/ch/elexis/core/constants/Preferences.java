@@ -43,6 +43,8 @@ public class Preferences {
 	// Locale
 	/** 5292 assert network wide locale equality **/
 	public static final String CFG_LOCALE = "locale"; //$NON-NLS-1$
+	// Global Sticker config
+	public static final String CFG_DECEASED_STICKER = "sticker/patient/deceased";
 	
 	// Station
 	public static final String STATION_IDENT_ID = "station/identId"; //$NON-NLS-1$
