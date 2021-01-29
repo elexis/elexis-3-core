@@ -89,7 +89,8 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	@Override
 	public IVirtualFilesystemHandle copyTo(IVirtualFilesystemHandle target) throws IOException{
 		if (target.isDirectory()) {
-			URI targetURI = target.getURI().resolve(this.getName());
+			String targetString = this.getName().replace(" ", "%20");
+			URI targetURI = target.getURI().resolve(targetString);
 			target = new VirtualFilesystemHandle(targetURI);
 			return copyTo(target);
 		}
@@ -322,7 +323,8 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	@Override
 	public IVirtualFilesystemHandle moveTo(IVirtualFilesystemHandle target) throws IOException{
 		if (target.isDirectory()) {
-			URI targetURI = target.getURI().resolve(this.getName());
+			String targetString = this.getName().replace(" ", "%20");
+			URI targetURI = target.getURI().resolve(targetString);
 			target = new VirtualFilesystemHandle(targetURI);
 			return moveTo(target);
 		}

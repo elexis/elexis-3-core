@@ -29,7 +29,8 @@ public class VirtualFileHandle_SmbDirectory_Test {
 	 */
 	public static String PREFIX_NOAUTH_SAMBA = "smb://gitlab.medelexis.ch/tests/";
 	
-	public static String PREFIX_AUTH_SAMBA = "smb://smbuser:qs9fifn9q1gx@gitlab.medelexis.ch/restrictedtests/";
+	public static String PREFIX_AUTH_SAMBA =
+		"smb://smbuser:qs9fifn9q1gx@gitlab.medelexis.ch/restrictedtests/";
 	public static String USER = "smbuser";
 	public static String PASS = "qs9fifn9q1gx";
 	
@@ -56,9 +57,9 @@ public class VirtualFileHandle_SmbDirectory_Test {
 		assumeTrue(serviceIsReachable);
 		assertTrue(service.of(PREFIX_NOAUTH_SAMBA + "testfile.txt").canRead());
 		assertTrue(service.of("\\\\gitlab.medelexis.ch\\tests\\testfile.txt").canRead());
-//		assertTrue(service.of(PREFIX_NOAUTH_SAMBA + "test file.txt").canRead());
-//		assertTrue(service.of("\\\\gitlab.medelexis.ch\\tests\\test file.txt").canRead());
-
+		//		assertTrue(service.of(PREFIX_NOAUTH_SAMBA + "test file.txt").canRead());
+		//		assertTrue(service.of("\\\\gitlab.medelexis.ch\\tests\\test file.txt").canRead());
+		
 	}
 	
 	@Test
@@ -75,18 +76,18 @@ public class VirtualFileHandle_SmbDirectory_Test {
 		
 		IVirtualFilesystemHandle[] listHandles = service.of(PREFIX_NOAUTH_SAMBA).listHandles();
 		// 1 directory, 2 files
-		assertEquals(3, listHandles.length);
-	
-		try(InputStream is = listHandles[1].openInputStream()) {
+		assertEquals(4, listHandles.length);
+		
+		try (InputStream is = listHandles[1].openInputStream()) {
 			// #21875 to test if spaces are correctly opened
 		}
 	}
 	
 	@Test
-	public void testCreateAndMoveToAndDelete() throws IOException {
+	public void testCreateAndMoveToAndDelete() throws IOException{
 		IVirtualFilesystemHandle dir = service.of(PREFIX_AUTH_SAMBA);
 		IVirtualFilesystemHandle subFile = dir.subFile("Test File.txt");
-		try(PrintWriter p = new PrintWriter(subFile.openOutputStream())) {
+		try (PrintWriter p = new PrintWriter(subFile.openOutputStream())) {
 			p.write("TestFile\n");
 		}
 		assertTrue(subFile.exists());
@@ -98,6 +99,21 @@ public class VirtualFileHandle_SmbDirectory_Test {
 		assertTrue(subFileRenamed.canRead());
 		subFileRenamed.delete();
 		assertFalse(subFileRenamed.exists());
+	}
+	
+	@Test
+	public void testCopyToAndDelete() throws IOException{
+		IVirtualFilesystemHandle[] listHandles = service.of(PREFIX_NOAUTH_SAMBA)
+			.listHandles(handle -> "pdf".equalsIgnoreCase(handle.getExtension()));
+		assertEquals(1, listHandles.length);
+		
+		IVirtualFilesystemHandle target =
+			service.of(PREFIX_AUTH_SAMBA).subFile(listHandles[0].getName());
+		IVirtualFilesystemHandle _target = listHandles[0].copyTo(target);
+		assertTrue(_target.exists());
+		assertTrue(_target.canRead());
+		_target.delete();
+		assertFalse(_target.exists());
 	}
 	
 	@Test
