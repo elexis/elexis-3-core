@@ -85,6 +85,8 @@ public class VirtualFileHandle_SmbDirectory_Test {
 	
 	@Test
 	public void testCreateAndMoveToAndDelete() throws IOException{
+		assumeTrue(serviceIsReachable);
+
 		IVirtualFilesystemHandle dir = service.of(PREFIX_AUTH_SAMBA);
 		IVirtualFilesystemHandle subFile = dir.subFile("Test File.txt");
 		try (PrintWriter p = new PrintWriter(subFile.openOutputStream())) {
@@ -103,6 +105,8 @@ public class VirtualFileHandle_SmbDirectory_Test {
 	
 	@Test
 	public void testCopyToAndDelete() throws IOException{
+		assumeTrue(serviceIsReachable);
+		
 		IVirtualFilesystemHandle[] listHandles = service.of(PREFIX_NOAUTH_SAMBA)
 			.listHandles(handle -> "pdf".equalsIgnoreCase(handle.getExtension()));
 		assertEquals(1, listHandles.length);
