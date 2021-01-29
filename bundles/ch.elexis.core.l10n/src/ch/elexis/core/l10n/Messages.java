@@ -803,6 +803,7 @@ public class Messages extends NLS {
 	public static String Patient_female_long;
 	public static String PatientErfassenDialog_firstName;
 	public static String Patient_male_short;
+	public static String Patient_deceased;
 	public static String Patient_male_long;
 	public static String PatientErfassenDialog_personExists;
 	public static String PatientErfassenDialog_personWithThisNameExists;

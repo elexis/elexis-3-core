@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
@@ -11,7 +12,9 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StickerServiceHolder;
 
 public class Patient extends Person implements IPatient {
 	
@@ -141,4 +144,37 @@ public class Patient extends Person implements IPatient {
 		}
 	}
 	
+	@Override
+	public void setDeceased(boolean value){
+		super.setDeceased(value);
+		String configSticker = ConfigServiceHolder.get().get(Preferences.CFG_DECEASED_STICKER, "");
+		if (configSticker == null || configSticker.isEmpty()) {
+			configSticker = ch.elexis.core.model.messages.Messages.Patient_deceased;
+		}
+		ISticker sticker = getOrCreateSticker(configSticker, "ffffff", "000000");
+		applyOrRemoveSticker(sticker, value);
+	}
+	
+	private ISticker getOrCreateSticker(String stickername, String foreground, String background){
+		for (ISticker iSticker : StickerServiceHolder.get().getStickersForClass(IPatient.class)) {
+			if (iSticker.getName().equalsIgnoreCase(stickername)) {
+				return iSticker;
+			}
+		}
+		ISticker ret = CoreModelServiceHolder.get().create(ISticker.class);
+		ret.setName(stickername);
+		ret.setForeground(foreground);
+		ret.setBackground(background);
+		CoreModelServiceHolder.get().save(ret);
+		StickerServiceHolder.get().setStickerAddableToClass(IPatient.class, ret);
+		return ret;
+	}
+	
+	private void applyOrRemoveSticker(ISticker sticker, boolean apply){
+		if (apply) {
+			StickerServiceHolder.get().addSticker(sticker, this);
+		} else {
+			StickerServiceHolder.get().removeSticker(sticker, this);
+		}
+	}
 }

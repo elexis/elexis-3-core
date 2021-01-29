@@ -519,7 +519,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						((GridData) deceasedDate.getLayoutData()).exclude = true;
 						deceasedDate.setVisible(false);
 					}
-					form.getBody().layout();
+					refreshUi();
 				}
 			}
 		});
