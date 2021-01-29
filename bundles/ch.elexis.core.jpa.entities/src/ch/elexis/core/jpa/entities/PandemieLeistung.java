@@ -20,7 +20,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC")
 @EntityListeners(EntityWithIdListener.class)
-@NamedQuery(name = "PandemieLeistung.code", query = "SELECT pl FROM PandemieLeistung pl WHERE pl.code = :code")
+@NamedQuery(name = "PandemieLeistung.code", query = "SELECT pl FROM PandemieLeistung pl WHERE pl.deleted = false AND pl.code = :code")
+@NamedQuery(name = "PandemieLeistung.pandemic.code.validFrom", query = "SELECT pl FROM PandemieLeistung pl WHERE pl.deleted = false AND pl.pandemic = :pandemic AND pl.code = :code AND pl.validFrom = :validFrom")
 public class PandemieLeistung extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted {
 	
