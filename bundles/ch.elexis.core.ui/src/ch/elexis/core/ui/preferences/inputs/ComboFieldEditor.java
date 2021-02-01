@@ -12,6 +12,9 @@
 
 package ch.elexis.core.ui.preferences.inputs;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -55,9 +58,13 @@ public class ComboFieldEditor extends FieldEditor {
 	protected void doLoad(){
 		if (combo != null) {
 			String value = getPreferenceStore().getString(getPreferenceName());
-			// int idx=StringTool.getIndex(values, value);
 			combo.setText(value);
-			// combo.select(idx);
+			if (value != null && values != null) {
+				ArrayList<String> list = new ArrayList<>(Arrays.asList(values));
+				if (list.contains(value)) {
+					combo.select(list.indexOf(value));
+				}
+			}
 		}
 		
 	}
