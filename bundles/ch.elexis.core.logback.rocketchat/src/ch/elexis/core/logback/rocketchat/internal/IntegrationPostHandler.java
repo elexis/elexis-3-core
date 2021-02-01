@@ -133,6 +133,8 @@ public class IntegrationPostHandler {
 		con.setDoInput(true);
 		con.setDoOutput(true);
 		con.setUseCaches(false);
+		con.setConnectTimeout(2000);
+		con.setReadTimeout(5000);
 		con.setRequestProperty("Content-Type", "application/json");
 		con.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
 		con.getOutputStream().write(postDataBytes);
