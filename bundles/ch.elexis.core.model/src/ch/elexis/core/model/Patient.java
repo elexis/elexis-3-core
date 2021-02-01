@@ -172,7 +172,10 @@ public class Patient extends Person implements IPatient {
 	
 	private void applyOrRemoveSticker(ISticker sticker, boolean apply){
 		if (apply) {
-			StickerServiceHolder.get().addSticker(sticker, this);
+			ISticker existing = StickerServiceHolder.get().getSticker(this, sticker);
+			if (existing == null) {
+				StickerServiceHolder.get().addSticker(sticker, this);
+			}
 		} else {
 			StickerServiceHolder.get().removeSticker(sticker, this);
 		}

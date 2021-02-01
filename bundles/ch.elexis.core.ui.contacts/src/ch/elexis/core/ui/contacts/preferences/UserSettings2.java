@@ -17,18 +17,35 @@ import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EX
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_REMEMBER_STATE;
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQueryCursor;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
@@ -101,6 +118,61 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 			"Sticker für verstorbene", getStickerComboItems(), getFieldEditorParent());
 		editor.setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 		addField(editor);
+		Button migrateButton = new Button(getFieldEditorParent(), SWT.PUSH);
+		migrateButton.setText("Verstorben Info aus Sticker übernehmen");
+		migrateButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				String cfgSticker =
+					editor.getCombo().getItem(editor.getCombo().getSelectionIndex());
+				ISticker sticker = getSticker(cfgSticker);
+				if(sticker != null) {
+					if (MessageDialog.openQuestion(getShell(), "Verstorben Info",
+						"Soll bei Patienten mit dem Sticker " + cfgSticker
+							+ " die verstorben Information gesetzt werden?\nAchtung, der Vorgang kann nicht rückgängig gemacht werden.")) {
+						ProgressMonitorDialog progressDialog =
+							new ProgressMonitorDialog(getShell());
+						try {
+							progressDialog.run(true, true, new IRunnableWithProgress() {
+								public void run(IProgressMonitor monitor)
+									throws InvocationTargetException, InterruptedException{
+									IQuery<IPatient> query =
+										CoreModelServiceHolder.get().getQuery(IPatient.class);
+									try (IQueryCursor<IPatient> cursor = query.executeAsCursor()) {
+										monitor.beginTask("Verstorben Migration", cursor.size());
+										while (cursor.hasNext()) {
+											IPatient patient = cursor.next();
+											ISticker existing = StickerServiceHolder.get()
+												.getSticker(patient, sticker);
+											if (existing != null && !patient.isDeceased()) {
+												patient.setDeceased(true);
+												CoreModelServiceHolder.get().save(patient);
+											}
+											monitor.worked(1);
+										}
+									}
+								}
+							});
+						} catch (InvocationTargetException | InterruptedException ex) {
+							MessageDialog.openError(getShell(), "Verstorben Sticker",
+								"Fehler beim verstorben Information setzen.");
+							LoggerFactory.getLogger(getClass())
+								.error("Error migration of deceased sticker", ex);
+						}
+					}					
+				} else {
+					MessageDialog.openError(getShell(), "Verstorben Sticker", "Es konnte kein Sticker mit dem Namen " + cfgSticker + " für Patient gefunden werden.");
+				}
+			}
+		});
+		editor.getCombo().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				migrateButton.setEnabled(editor.getCombo().getSelectionIndex() > 0);
+			}
+		});
+		migrateButton.setEnabled(StringUtils
+			.isNotBlank(ConfigServiceHolder.getGlobal(Preferences.CFG_DECEASED_STICKER, "")));
 	}
 	
 	private String[] getStickerComboItems(){
@@ -109,6 +181,15 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 			stickers.stream().map(s -> s.getLabel()).collect(Collectors.toList());
 		stickerNames.add(0, "");
 		return stickerNames.toArray(new String[stickerNames.size()]);
+	}
+	
+	private ISticker getSticker(String stickername){
+		for (ISticker iSticker : StickerServiceHolder.get().getStickersForClass(IPatient.class)) {
+			if (iSticker.getName().equalsIgnoreCase(stickername)) {
+				return iSticker;
+			}
+		}
+		return null;
 	}
 	
 	public void init(IWorkbench workbench){

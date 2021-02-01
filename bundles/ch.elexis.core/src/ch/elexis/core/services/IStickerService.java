@@ -39,8 +39,8 @@ public interface IStickerService {
 	 * 
 	 * @param identifiable
 	 * @param sticker
-	 * @return the attached instance, with {@link ISticker#getAttachedTo()} being non
-	 *         <code>null</code>
+	 * @return <code>null</code> or the attached instance, with {@link ISticker#getAttachedTo()}
+	 *         being non <code>null</code>
 	 */
 	public ISticker getSticker(Identifiable identifiable, ISticker sticker);
 	
