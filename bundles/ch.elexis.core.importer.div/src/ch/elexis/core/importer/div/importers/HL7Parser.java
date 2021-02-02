@@ -143,7 +143,7 @@ public class HL7Parser {
 			OrcMessage orcMessage = hl7Reader.getOrcMessage();
 			if (orcMessage != null) {
 				if (orcMessage.getNames().isEmpty()) {
-					logger.warn("Cannot parse mandant name for ORC message");
+					logger.info("Cannot parse mandant name for ORC message");
 				}
 			}
 			
