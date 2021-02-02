@@ -172,15 +172,13 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 			logger.debug(
 					"editable={},failsEncounterHasToBeTodayConstraint={},valIsOnlyOneKonsToday={},autoAddBillableEncounter={}",
 					editable, failsEncounterHasToBeTodayConstraint, valIsOnlyOneKonsToday, autoAddBillableEncounter);
-		}
+		} 
 
 		if (validEncounter == null && encounterSelector != null) {
 			String konsId = encounterSelector.createOrOpenConsultation(patient);
 			if (konsId != null) {
 				validEncounter = coreModelService.load(konsId, IEncounter.class).get();
 			}
-		} else {
-			logger.warn("encounterSelector==null: kons={}", kons);
 		}
 
 		return Optional.ofNullable(validEncounter);
