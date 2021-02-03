@@ -35,6 +35,6 @@ public class ArticleUtil {
 				ret = (String) value;
 			}
 		}
-		return StringTool.pad(StringTool.LEFT, '0', ret, 7);
+		return StringTool.pad(StringTool.LEFT, '0', StringUtils.defaultString(ret), 7);
 	}
 }
