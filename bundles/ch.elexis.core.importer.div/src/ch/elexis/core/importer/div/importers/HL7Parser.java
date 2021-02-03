@@ -120,8 +120,8 @@ public class HL7Parser {
 			ILaboratory labor = labResolver.getLabContact(myLab, hl7Reader.getSender());
 			// stop here if lab does not exist
 			if (labor == null) {
-				logger.info("Exiting parsing process as labor is null");
-				return new Result<Object>("OK");
+				logger.warn("Exiting parsing process as labor is null");
+				return new Result<>(SEVERITY.ERROR, 2, "Labor contact is null", "", true);
 			}
 			
 			ObservationMessage obsMessage =
