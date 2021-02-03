@@ -727,14 +727,14 @@ public class BestellView extends ViewPart {
 	 *            title of the dialog
 	 * @return the supplier or null if none could be resolved.
 	 */
-	public static Kontakt resolveDefaultSupplier(String cfgSupplier, String selDialogTitle){
-		Kontakt supplier = null;
+	public static IContact resolveDefaultSupplier(String cfgSupplier, String selDialogTitle){
+		IContact supplier = null;
 		if (cfgSupplier != null && !cfgSupplier.isEmpty()) {
-			supplier = Kontakt.load(cfgSupplier);
+			supplier = CoreModelServiceHolder.get().load(cfgSupplier, IContact.class).orElse(null);
 		}
 		
 		//warn that there is no supplier
-		if (supplier == null || !supplier.exists()) {
+		if (supplier == null) {
 			MessageDialog.openWarning(UiDesk.getTopShell(), selDialogTitle,
 				Messages.BestellView_CantOrderNoSupplier);
 		}
