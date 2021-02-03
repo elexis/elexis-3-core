@@ -44,7 +44,12 @@ public class HL7ImporterLabContactResolver implements ILabContactResolver {
 		
 		@Override
 		public ILaboratory getContact(String message){
-			ILaboratory laboratory;
+			if (identifier == null) {
+				logger.warn("identifier is null");
+				return null;
+			}
+			
+			ILaboratory laboratory = null;
 			IQuery<ILaboratory> query = coreModelService.getQuery(ILaboratory.class);
 			query.and(ModelPackage.Literals.ICONTACT__CODE, COMPARATOR.LIKE,
 				"%" + identifier + "%");
@@ -63,11 +68,18 @@ public class HL7ImporterLabContactResolver implements ILabContactResolver {
 				laboratory = new IContactBuilder.LaboratoryBuilder(coreModelService, identifier)
 					.buildAndSave();
 			} else {
-				laboratory = results.get(0);
-				if (results.size() > 1) {
+				if (results.size() == 1) {
+					return results.get(0);
+				} else {
+					for (ILaboratory lab : results) {
+						if (lab.getCode().equalsIgnoreCase(identifier.trim())) {
+							return lab;
+						}
+					}
+					laboratory = results.get(0);
 					logger.warn(
-						"Found more than one Labor for identifier [{}]. This can cause problems when importing results.",
-						identifier);
+						"Found more than one Labor for identifier [{}] but no exact match, returning [{}]",
+						identifier, laboratory.getCode());
 				}
 			}
 			
