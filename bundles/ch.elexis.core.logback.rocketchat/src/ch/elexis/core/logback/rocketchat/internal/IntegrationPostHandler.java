@@ -86,15 +86,28 @@ public class IntegrationPostHandler {
 		if (eventObject.getThrowableProxy() != null) {
 			StringBuilder sbException = new StringBuilder();
 			IThrowableProxy throwableProxy = eventObject.getThrowableProxy();
+			IThrowableProxy cause = throwableProxy.getCause();
 			
 			sbException.append("```\n");
 			StackTraceElementProxy[] st = throwableProxy.getStackTraceElementProxyArray();
 			for (int j = 0; j < st.length; j++) {
 				StackTraceElementProxy stackTraceElementProxy = st[j];
 				StackTraceElement stackTraceElement = stackTraceElementProxy.getStackTraceElement();
+				if (j > 0) {
+					sbException.append(" at ");
+				}
 				sbException.append(stackTraceElement + "\n");
-				if (j == 5) {
+				if (j == 3) {
 					break;
+				}
+			}
+			if (cause != null) {
+				sbException.append("Caused by: " + cause.getMessage() + "\n");
+				StackTraceElementProxy[] causeStackTraceElement =
+					cause.getStackTraceElementProxyArray();
+				if (causeStackTraceElement != null && causeStackTraceElement.length > 0) {
+					sbException
+						.append(" at " + causeStackTraceElement[0].getStackTraceElement() + "\n");
 				}
 			}
 			sbException.append("```");
@@ -143,7 +156,8 @@ public class IntegrationPostHandler {
 		if (responseCode == 200) {
 			return Status.OK_STATUS;
 		}
-		return new Status(Status.ERROR, "ch.elexis.core.logback.rocketchat", "Error sending, with response code: " + responseCode);
+		return new Status(Status.ERROR, "ch.elexis.core.logback.rocketchat",
+			"Error sending, with response code: " + responseCode);
 	}
 	
 }
