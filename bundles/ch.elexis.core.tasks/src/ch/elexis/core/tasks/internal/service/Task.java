@@ -338,7 +338,8 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public String getLabel(){
-		return "Task [" + getId() + "] (triggered by " + getTriggerEvent() + "): " + getState();
+		return "Task [" + getId() + "/" + getTaskDescriptor().getReferenceId() + "] <= ("
+			+ getTriggerEvent() + "): " + getState();
 	}
 	
 	@Override

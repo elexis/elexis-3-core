@@ -35,6 +35,8 @@ public class MessageCode {
 		public static final String Severity_INFO = "info";
 
 		public static final String Severity_WARN = "warn";
+		
+		public static final String Severity_ERROR = "error";
 	}
 
 }

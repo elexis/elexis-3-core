@@ -341,11 +341,13 @@ public class TaskServiceImpl implements ITaskService {
 		if (TaskState.FAILED == state) {
 			resultText =
 				(String) task.getResult().get(ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE);
-			message.addMessageCode(MessageCode.Key.Severity, MessageCode.Value.Severity_WARN);
+			message.addMessageCode(MessageCode.Key.Severity, MessageCode.Value.Severity_ERROR);
 		} else {
+			String severity = (TaskState.COMPLETED_WARN == state) ? MessageCode.Value.Severity_WARN
+					: MessageCode.Value.Severity_INFO;
 			// TODO handle result type
 			resultText = (String) task.getResult().get(ReturnParameter.RESULT_DATA);
-			message.addMessageCode(MessageCode.Key.Severity, MessageCode.Value.Severity_INFO);
+			message.addMessageCode(MessageCode.Key.Severity, severity);
 		}
 		
 		StringBuilder sb = new StringBuilder();
