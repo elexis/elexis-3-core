@@ -47,17 +47,24 @@ public class Trace {
 			
 			String insertStatement = "INSERT INTO " + TABLENAME + " VALUES(?, ?, ?, ?)";
 			
-			PreparedStatement statement = connection.getPreparedStatement(insertStatement);
-			try {
-				statement.setLong(1, System.currentTimeMillis());
-				statement.setString(2, _workstation);
-				statement.setString(3, _username);
-				statement.setString(4, _action);
-				statement.execute();
-			} catch (SQLException e) {
-				LoggerFactory.getLogger(Trace.class).error("Catched this - FIX IT", e);
-			} finally {
-				connection.releasePreparedStatement(statement);
+			if (connection != null) {
+				PreparedStatement statement = connection.getPreparedStatement(insertStatement);
+				try {
+					statement.setLong(1, System.currentTimeMillis());
+					statement.setString(2, _workstation);
+					statement.setString(3, _username);
+					statement.setString(4, _action);
+					statement.execute();
+				} catch (SQLException e) {
+					LoggerFactory.getLogger(Trace.class).error("Catched this - FIX IT", e);
+				} finally {
+					connection.releasePreparedStatement(statement);
+				}
+			} else {
+				// connection already gone ...
+				LoggerFactory.getLogger(Trace.class).warn(
+					"No DB connection for trace [station{} user{} action{}]", _workstation,
+					_username, _action);
 			}
 		});
 	}
