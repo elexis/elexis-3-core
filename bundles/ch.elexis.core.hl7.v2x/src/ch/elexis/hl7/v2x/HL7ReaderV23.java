@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.model.Variable;
 import ca.uhn.hl7v2.model.v23.datatype.CE;
 import ca.uhn.hl7v2.model.v23.datatype.ED;
 import ca.uhn.hl7v2.model.v23.datatype.FT;
@@ -335,7 +336,15 @@ public class HL7ReaderV23 extends HL7Reader {
 					value = parseTextValue(value);
 				}
 			} else if (tmp instanceof FT) {
-				value = parseFormattedTextValue(((FT) tmp).getValue());
+				StringBuilder sb = new StringBuilder(((FT) tmp).getValue());
+				if (((FT) tmp).getExtraComponents() != null
+					&& ((FT) tmp).getExtraComponents().numComponents() > 0) {
+					for (int i = 0; i < ((FT) tmp).getExtraComponents().numComponents(); i++) {
+						Variable comp = ((FT) tmp).getExtraComponents().getComponent(i);
+						sb.append("\n\n" + comp.getData().toString());
+					}
+				}
+				value = parseFormattedTextValue(sb.toString());
 			} else if (tmp instanceof NM) {
 				value = ((NM) tmp).getValue();
 			} else if (tmp instanceof SN) {
