@@ -64,7 +64,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	
 	private PredicateGroupStack predicateGroups;
 	private PredicateHandler predicateHandler;
-
+	
 	public AbstractModelQuery(Class<T> clazz, boolean refreshCache, EntityManager entityManager,
 		boolean includeDeleted){
 		this.clazz = clazz;
@@ -83,7 +83,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (EntityWithDeleted.class.isAssignableFrom(entityClazz) && !includeDeleted) {
 			and(ModelPackage.Literals.DELETEABLE__DELETED, COMPARATOR.NOT_EQUALS, true);
 		}
-
+		
 		MappingEntry mappingForInterface = adapterFactory.getMappingForInterface(clazz);
 		mappingForInterface.applyQueryPrecondition(this);
 	}
@@ -125,6 +125,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		predicateHandler.or(entityAttributeName, comparator, value, ignoreCase);
 	}
 	
+	@Override
 	public void orderBy(EStructuralFeature feature, ORDER order){
 		String entityAttributeName = predicateHandler.getAttributeName(feature, entityClazz);
 		@SuppressWarnings("rawtypes")
@@ -154,6 +155,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		}
 	}
 	
+	@Override
 	public void orderBy(String fieldOrderBy, ORDER order){
 		@SuppressWarnings("rawtypes")
 		Optional<SingularAttribute> attribute =
@@ -209,6 +211,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		return caseExpression;
 	}
 	
+	@Override
 	public void orderBy(Map<String, Object> caseContext, ORDER order){
 		if (caseContext != null && !caseContext.isEmpty()) {
 			Case<Object> caseExpression = getCaseExpression(caseContext);
@@ -321,8 +324,8 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 					}
 				}
 				LoggerFactory.getLogger(getClass()).warn(
-					"Multiple results where single expected, returning first element",
-					new Throwable(info.toString()));
+					"Multiple results where single expected. Returning first element of [{}]",
+					info.toString(), new Throwable());
 			}
 			return Optional.of(result.get(0));
 		}
