@@ -240,6 +240,7 @@ public class BestellView extends ViewPart {
 								// SINGLE SHOT ORDER
 								actOrder.addEntry(art, null, null, 1);
 							}
+							CoreModelServiceHolder.get().save(actOrder);
 						}
 					}
 					if (!stockEntriesToOrder.isEmpty()) {

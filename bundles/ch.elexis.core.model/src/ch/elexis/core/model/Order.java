@@ -64,7 +64,7 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		List<IOrderEntry> entries = getEntries();
 		for (IOrderEntry iOrderEntry : entries) {
 			if (((iOrderEntry.getStock() == null && stock == null)
-				|| (iOrderEntry.getStock().equals(stock)))
+				|| (iOrderEntry.getStock() != null && iOrderEntry.getStock().equals(stock)))
 				&& iOrderEntry.getArticle().equals(article)) {
 				return iOrderEntry;
 			}
