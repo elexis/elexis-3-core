@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.After;
@@ -56,6 +57,20 @@ public class CoreQueryTest {
 		List<IContact> results = query.execute();
 		assertNotNull(results);
 		assertTrue(results.isEmpty());
+	}
+	
+	@Test
+	public void queryExecuteSingleResult() {
+		IContact contact1 = createContact("McCloud", "Connor");
+		IContact contact2 = createContact("McCloud", "Connor");
+		
+		IQuery<IContact> query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.EQUALS, "McCloud");
+		Optional<IContact> singleResult = query.executeSingleResult();
+		assertEquals(contact1, singleResult.get());
+		
+		modelService.remove(contact1);
+		modelService.remove(contact2);
 	}
 	
 	@Test
