@@ -16,6 +16,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.eenv.IElexisEnvironmentService;
+import ch.elexis.core.model.message.MessageCode;
 import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IMessageTransporter;
@@ -73,12 +74,18 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 	}
 	
 	private String prepareRocketchatMessage(TransientMessage message){
+		
+		String severity = message.getMessageCodes().get(MessageCode.Key.Severity);
+		if (severity == null) {
+			severity = MessageCode.Value.Severity_INFO;
+		}
+		
 		JSONObject json = new JSONObject();
 		json.put("username", message.getSender());
 		
 		StringBuilder header = new StringBuilder();
-		header
-			.append("@" + message.getReceiver().substring(message.getReceiver().indexOf(':') + 1));
+		header.append(severityToEmoji(severity) + " @"
+			+ message.getReceiver().substring(message.getReceiver().indexOf(':') + 1));
 		
 		Set<Entry<String, String>> entrySet = message.getMessageCodes().entrySet();
 		if (!entrySet.isEmpty()) {
@@ -90,7 +97,7 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 		json.put("text", header.toString());
 		
 		Map<String, Object> params = new HashMap<>();
-		params.put("color", "#0000FF");
+		params.put("color", severityToColor(severity));
 		params.put("text", message.getMessageText());
 		
 		json.put("attachments", Collections.singletonList(params));
@@ -114,6 +121,28 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 		}
 		return new Status(IStatus.ERROR, Bundle.ID,
 			"Error sending, with response code: " + responseCode);
+	}
+	
+	private String severityToColor(String severity){
+		switch (severity) {
+		case MessageCode.Value.Severity_WARN:
+			return "#FFDB00";
+		case MessageCode.Value.Severity_ERROR:
+			return "#FF0000";
+		default:
+			return "#0000FF";
+		}
+	}
+	
+	private String severityToEmoji(String severity){
+		switch (severity) {
+		case MessageCode.Value.Severity_ERROR:
+			return ":stop_sign:";
+		case MessageCode.Value.Severity_WARN:
+			return ":warning:";
+		default:
+			return "";
+		}
 	}
 	
 }
