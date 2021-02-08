@@ -2,6 +2,8 @@ package ch.elexis.core.model.issue;
 
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.interfaces.INumericEnum;
 
@@ -39,10 +41,16 @@ public enum Type implements INumericEnum, ILocalizedEnum {
 	}
 
 	public static Type byNumericSafe(String actionTypeIn) {
-		int numeric = Integer.parseInt(actionTypeIn);
-		for (Type actionType : Type.values()) {
-			if (actionType.numericValue() == numeric) {
-				return actionType;
+		if (StringUtils.isNotBlank(actionTypeIn)) {
+			try {
+				int numeric = Integer.parseInt(actionTypeIn);
+				for (Type actionType : Type.values()) {
+					if (actionType.numericValue() == numeric) {
+						return actionType;
+					}
+				}
+			} catch (NumberFormatException ne) {
+				// ignore return common
 			}
 		}
 		return Type.COMMON;
