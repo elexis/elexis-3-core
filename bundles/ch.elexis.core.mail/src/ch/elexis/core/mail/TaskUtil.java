@@ -49,6 +49,7 @@ public class TaskUtil {
 			try {
 				ITaskDescriptor descriptor =
 					taskService.createTaskDescriptor(sendMailRunnable.get());
+				descriptor.setActive(true);
 				return Optional.of(configureTaskDescriptor(descriptor, accountId, message));
 			} catch (TaskException e) {
 				LoggerFactory.getLogger(TaskUtil.class).error("Error creating mail task descriptor",
