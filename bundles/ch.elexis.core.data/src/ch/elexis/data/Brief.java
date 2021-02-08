@@ -14,7 +14,6 @@ package ch.elexis.data;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.LoggerFactory;
@@ -158,7 +157,6 @@ public class Brief extends PersistentObject {
 			IDocument iDocument = toIDocument();
 			iDocument.setMimeType(mimetype);
 			iDocument.setContent(inputStream);
-			iDocument.setLastchanged(new Date());
 			CoreModelServiceHolder.get().save(iDocument);
 			return true;
 		} catch (IOException e) {

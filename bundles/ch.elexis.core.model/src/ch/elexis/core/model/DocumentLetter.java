@@ -225,10 +225,9 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	public void setContent(InputStream content){
 		setStatus(DocumentStatus.PREPROCESSED, false);
 		setStatus(DocumentStatus.INDEXED, false);
-		
+		setLastchanged(new Date());
 		IVirtualFilesystemHandle vfsHandle = DocumentLetterUtil.getExternalHandleIfApplicable(this);
 		if (vfsHandle != null) {
-			
 			if (content == null) {
 				try {
 					vfsHandle.delete();
