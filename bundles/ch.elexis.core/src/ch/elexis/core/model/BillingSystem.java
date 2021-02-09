@@ -4,6 +4,8 @@ import ch.elexis.core.model.ch.BillingLaw;
 
 public class BillingSystem implements IBillingSystem {
 	
+	public static BillingSystem UNKNOWN = new BillingSystem("UNKNOWN", null);
+	
 	private final String name;
 	private final BillingLaw law;
 	
@@ -21,5 +23,4 @@ public class BillingSystem implements IBillingSystem {
 	public BillingLaw getLaw(){
 		return law;
 	}
-	
 }
