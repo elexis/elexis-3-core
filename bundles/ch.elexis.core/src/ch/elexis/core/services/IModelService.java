@@ -277,12 +277,20 @@ public interface IModelService {
 	public INativeQuery getNativeQuery(String sql);
 	
 	/**
-	 * Execute the native query and return the result list.
+	 * Execute the native query and return the result stream.
 	 * 
 	 * @param sql
 	 * @return
 	 */
 	public Stream<?> executeNativeQuery(String sql);
+	
+	/**
+	 * Execute the native query and return the result stream of type T.
+	 * 
+	 * @param sql
+	 * @return
+	 */
+	public <T> Stream<T> executeNativeQuery(String sql, Class<T> interfaceClazz);
 	
 	/**
 	 * Execute the native update and return the number of affected rows. After the update is execute

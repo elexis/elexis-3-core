@@ -431,6 +431,14 @@ public abstract class AbstractModelService implements IModelService {
 		return query.getResultStream();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public <T> Stream<T> executeNativeQuery(String sql, Class<T> interfaceClazz){
+		Class<? extends EntityWithId> entityClazz = adapterFactory.getEntityClass(interfaceClazz);
+		Query query = getEntityManager(true).createNativeQuery(sql, entityClazz);
+		return query.getResultStream()
+			.map(e -> adapterFactory.getModelAdapter((EntityWithId) e, interfaceClazz, true).get());
+	}
+	
 	@Override
 	public int executeNativeUpdate(String sql, boolean invalidateCache){
 		EntityManager em = getEntityManager(false);
