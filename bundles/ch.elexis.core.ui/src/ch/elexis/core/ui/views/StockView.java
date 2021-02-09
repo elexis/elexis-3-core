@@ -746,17 +746,9 @@ public class StockView extends ViewPart implements IRefreshable {
 				loader = new StockEntryLoader(viewer, search);
 				loader.schedule();
 			} else {
-				if (StockEntryLoader.filterOrderOnly) {
-					loader = new StockEntryLoader(viewer);
-					loader.schedule();
-				} else {
-					try (IQueryCursor<IStockEntry> allEntries = CoreModelServiceHolder.get()
-						.getQuery(IStockEntry.class).executeAsCursor()) {
-						viewer.setInput(Collections.singletonList(
-							new String("Es sind " + allEntries.size() + " Lagereinträge vorhanden")));
-					}
-				}
-			}		
+				loader = new StockEntryLoader(viewer);
+				loader.schedule();
+			}
 		}
 	}
 }
