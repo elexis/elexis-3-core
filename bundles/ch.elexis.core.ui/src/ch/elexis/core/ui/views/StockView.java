@@ -68,7 +68,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
@@ -80,18 +79,19 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.services.IStockService.Availability;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.StockSelectorDialog;
 import ch.elexis.core.ui.editors.KontaktSelektorDialogCellEditor;
 import ch.elexis.core.ui.editors.NumericCellEditorValidator;
 import ch.elexis.core.ui.editors.ReflectiveEditingSupport;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -104,7 +104,7 @@ import ch.elexis.scripting.CSVWriter;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 
-public class StockView extends ViewPart implements IActivationListener {
+public class StockView extends ViewPart implements IRefreshable {
 	public StockView(){}
 	
 	public static final String ID = "ch.elexis.core.ui.views.StockView"; //$NON-NLS-1$
@@ -119,6 +119,8 @@ public class StockView extends ViewPart implements IActivationListener {
 	private ViewMenus viewMenus;
 	private IAction refreshAction, exportAction;
 	
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+	
 	String[] columns = {
 		Messages.LagerView_stock, Messages.LagerView_pharmacode, Messages.LagerView_gtin,
 		Messages.LagerView_name, Messages.LagerView_vkPreis, Messages.LagerView_minBestand, Messages.LagerView_istBestand,
@@ -127,26 +129,6 @@ public class StockView extends ViewPart implements IActivationListener {
 	int[] colwidth = {
 		50, 75, 90, 250, 50, 35, 35, 35, 150
 	};
-	
-	private void refreshConsiderFilter(){
-		if (!refreshUseFilter()) {
-			loader = new StockEntryLoader(viewer);
-			loader.schedule();
-		}
-	}
-	
-	private boolean refreshUseFilter(){
-		String search = filterText.getText();
-		if (search != null && search.length() > 2) {
-			if (loader != null) {
-				loader.cancel();
-			}
-			loader = new StockEntryLoader(viewer, search);
-			loader.schedule();
-			return true;
-		}
-		return false;
-	}
 	
 	@Override
 	public void createPartControl(Composite parent){
@@ -159,13 +141,7 @@ public class StockView extends ViewPart implements IActivationListener {
 		filterText.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e){
-				if (!refreshUseFilter()) {
-					// reload all if empty
-					if (filterText.getText().isEmpty()) {
-						loader = new StockEntryLoader(viewer);
-						loader.schedule();
-					}
-				}
+				refresh();
 			}
 		});
 		ToolBarManager tbm = new ToolBarManager();
@@ -183,7 +159,7 @@ public class StockView extends ViewPart implements IActivationListener {
 			@Override
 			public void run(){
 				StockEntryLoader.setFilterOrderOnly(isChecked());
-				refreshConsiderFilter();
+				refresh();
 			}
 		});
 		tbm.createControl(parent);
@@ -360,7 +336,7 @@ public class StockView extends ViewPart implements IActivationListener {
 		viewMenus.createToolbar(refreshAction);
 		viewMenus.createMenu(exportAction);
 		
-		GlobalEventDispatcher.addActivationListener(this, this);
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
 	@Optional
@@ -381,7 +357,7 @@ public class StockView extends ViewPart implements IActivationListener {
 			
 			@Override
 			public void run(){
-				refreshConsiderFilter();
+				refresh();
 			}
 		};
 		
@@ -492,7 +468,7 @@ public class StockView extends ViewPart implements IActivationListener {
 	
 	@Override
 	public void dispose(){
-		GlobalEventDispatcher.removeActivationListener(this, this);
+		getSite().getPage().removePartListener(udpateOnVisible);
 		super.dispose();
 	}
 		
@@ -760,15 +736,27 @@ public class StockView extends ViewPart implements IActivationListener {
 	}
 	
 	@Override
-	public void activation(boolean mode){}
-	
-	@Override
-	public void visible(boolean mode){
-		List<IStockEntry> allEntries =
-			CoreModelServiceHolder.get().getQuery(IStockEntry.class).execute();
+	public void refresh(){
 		if (viewer != null && !viewer.getControl().isDisposed()) {
-			viewer.setInput(Collections.singletonList(
-				new String("Es sind " + allEntries.size() + " Lagereinträge vorhanden")));
+			String search = filterText.getText();
+			if (search != null && search.length() > 2) {
+				if (loader != null) {
+					loader.cancel();
+				}
+				loader = new StockEntryLoader(viewer, search);
+				loader.schedule();
+			} else {
+				if (StockEntryLoader.filterOrderOnly) {
+					loader = new StockEntryLoader(viewer);
+					loader.schedule();
+				} else {
+					try (IQueryCursor<IStockEntry> allEntries = CoreModelServiceHolder.get()
+						.getQuery(IStockEntry.class).executeAsCursor()) {
+						viewer.setInput(Collections.singletonList(
+							new String("Es sind " + allEntries.size() + " Lagereinträge vorhanden")));
+					}
+				}
+			}		
 		}
 	}
 }
