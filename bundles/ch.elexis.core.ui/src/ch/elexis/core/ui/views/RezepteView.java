@@ -13,11 +13,16 @@
 package ch.elexis.core.ui.views;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -26,6 +31,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -115,17 +121,21 @@ public class RezepteView extends ViewPart implements IRefreshable {
 	
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 	
+	private IPatient actPatient;
+	private RecipeLoader loader;
+	
 	@Inject
 	void activePatient(@Optional
 	IPatient patient){
+		actPatient = patient;
 		Display.getDefault().asyncExec(() -> {
+			tv.setInput(Collections.emptyList());
 			ContextServiceHolder.get().getRootContext().removeTyped(IRecipe.class);
 			if (patient != null) {
 				addLineAction.setEnabled(false);
 				printAction.setEnabled(false);
 				master.setText(patient.getLabel());
 			}
-			
 			refresh();
 		});
 	}
@@ -158,31 +168,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 		master.getBody().setLayout(new FillLayout());
 		SashForm sash = new SashForm(master.getBody(), SWT.NONE);
 		tv = new TableViewer(sash, SWT.V_SCROLL | SWT.FULL_SELECTION);
-		tv.setContentProvider(new IStructuredContentProvider() {
-			
-			@Override
-			public Object[] getElements(final Object inputElement){
-				IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
-				if (patient != null) {
-					INamedQuery<IRecipe> query =
-						CoreModelServiceHolder.get().getNamedQuery(IRecipe.class, "patient");
-					List<IRecipe> list =
-						query.executeWithParameters(query.getParameterMap("patient", patient));
-					return list.toArray();
-				}
-				return new Object[0];
-			}
-			
-			@Override
-			public void dispose(){ /* leer */
-			}
-			
-			@Override
-			public void inputChanged(final Viewer viewer, final Object oldInput,
-				final Object newInput){ /* leer */
-			}
-			
-		});
+		tv.setContentProvider(ArrayContentProvider.getInstance());
 		tv.setLabelProvider(new LabelProvider() {
 			
 			@Override
@@ -342,7 +328,6 @@ public class RezepteView extends ViewPart implements IRefreshable {
 			}
 			
 		});
-		
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
@@ -359,7 +344,11 @@ public class RezepteView extends ViewPart implements IRefreshable {
 	
 	public void refresh(){
 		if (CoreUiUtil.isActiveControl(tv.getControl())) {
-			tv.refresh();
+			if(loader != null) {
+				loader.cancel();
+			}
+			loader = new RecipeLoader(tv, actPatient);
+			loader.schedule();
 		}
 	}
 	
@@ -585,5 +574,43 @@ public class RezepteView extends ViewPart implements IRefreshable {
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
 	boolean currentState){
 		CoreUiUtil.updateFixLayout(part, currentState);
+	}
+	
+	private static class RecipeLoader extends Job {
+		private Viewer viewer;
+		private IPatient patient;
+		
+		private List<ch.elexis.core.model.IRecipe> loaded;
+		
+		public RecipeLoader(Viewer viewer, IPatient patient){
+			super("Recipe loading ...");
+			this.viewer = viewer;
+			this.patient = patient;
+		}
+		
+		@Override
+		protected IStatus run(IProgressMonitor monitor){
+			monitor.beginTask("Recipe loading ...", IProgressMonitor.UNKNOWN);
+			if (patient != null) {
+				INamedQuery<IRecipe> query =
+					CoreModelServiceHolder.get().getNamedQuery(IRecipe.class, "patient");
+				loaded = query.executeWithParameters(query.getParameterMap("patient", patient));
+			} else {
+				loaded = Collections.emptyList();
+			}
+			
+			if (monitor.isCanceled()) {
+				return Status.CANCEL_STATUS;
+			}
+			monitor.done();
+			Display.getDefault().asyncExec(new Runnable() {
+				
+				@Override
+				public void run(){
+					viewer.setInput(loaded);
+				}
+			});
+			return Status.OK_STATUS;
+		}
 	}
 }
