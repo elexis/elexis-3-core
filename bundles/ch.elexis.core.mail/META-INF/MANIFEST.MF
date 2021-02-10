@@ -29,4 +29,4 @@ Import-Package: ch.elexis.core.documents,
  org.eclipse.core.runtime;version="3.5.0",
  org.eclipse.osgi.util;version="1.1.0",
  org.json,
- org.slf4j;version="1.7.30"
+ org.slf4j;version="1.7.2"
