@@ -12,14 +12,19 @@
 
 package ch.elexis.core.ui.views.artikel;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -29,6 +34,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.part.ViewPart;
 
@@ -79,18 +85,7 @@ public class ArtikelSelektor extends ViewPart {
 		Table table = new Table(c, SWT.SIMPLE | SWT.V_SCROLL);
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tv = new TableViewer(table);
-		tv.setContentProvider(new IStructuredContentProvider() {
-			
-			public Object[] getElements(final Object inputElement){
-				return StockServiceHolder.get().getAllStockEntries().toArray();
-			}
-			
-			public void dispose(){}
-			
-			public void inputChanged(final Viewer viewer, final Object oldInput,
-				final Object newInput){}
-			
-		});
+		tv.setContentProvider(ArrayContentProvider.getInstance());
 		tv.setLabelProvider(new StockEntryLabelProvider() {
 			@Override
 			public String getColumnText(Object element, int columnIndex){
@@ -108,7 +103,8 @@ public class ArtikelSelektor extends ViewPart {
 				}
 			}
 		});
-		tv.setInput(this);
+		StockEntryLoader loader = new StockEntryLoader(tv);
+		loader.schedule();
 	}
 	
 	@Override
@@ -184,6 +180,42 @@ public class ArtikelSelektor extends ViewPart {
 			}
 			
 		}
+	}
+	
+	private static class StockEntryLoader extends Job {
+		private Viewer viewer;
 		
+		private List<ch.elexis.core.model.IStockEntry> loaded;
+		
+		public StockEntryLoader(Viewer viewer){
+			super("Stock loading ...");
+			this.viewer = viewer;
+		}
+		
+		@Override
+		protected IStatus run(IProgressMonitor monitor){
+			monitor.beginTask("Stock loading ...", IProgressMonitor.UNKNOWN);
+			loaded = StockServiceHolder.get().getAllStockEntries();
+			
+			loaded.sort((l, r) -> {
+				if (l.getArticle() != null && r.getArticle() != null) {
+					return l.getArticle().getLabel().compareTo(r.getArticle().getLabel());
+				}
+				return 0;
+			});
+			
+			if (monitor.isCanceled()) {
+				return Status.CANCEL_STATUS;
+			}
+			monitor.done();
+			Display.getDefault().asyncExec(new Runnable() {
+				
+				@Override
+				public void run(){
+					viewer.setInput(loaded);
+				}
+			});
+			return Status.OK_STATUS;
+		}
 	}
 }
