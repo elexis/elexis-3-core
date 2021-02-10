@@ -48,7 +48,7 @@ public class MailClientProperties {
 			}
 
 		}
-		props.put("mail.debug", "true");
+//		props.put("mail.debug", "true");
 		
 		return props;
 	}
