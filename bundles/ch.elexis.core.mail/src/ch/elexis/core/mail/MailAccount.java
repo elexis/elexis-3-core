@@ -26,7 +26,7 @@ public class MailAccount {
 	 *
 	 */
 	public enum TYPE {
-			SMTP, IMAP
+			SMTP, IMAP, IMAPS
 	}
 	
 	private String id;

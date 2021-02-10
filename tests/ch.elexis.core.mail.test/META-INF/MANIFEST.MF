@@ -7,4 +7,6 @@ Fragment-Host: ch.elexis.core.mail
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit
 Bundle-ClassPath: lib/dumbster1.6.jar,
+ lib/greenmail-1.6.2.jar,
+ lib/greenmail-junit4-1.6.2.jar,
  .

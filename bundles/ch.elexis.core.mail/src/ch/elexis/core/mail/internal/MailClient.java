@@ -5,6 +5,7 @@ import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,9 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.activation.MailcapCommandMap;
 import javax.mail.AuthenticationFailedException;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -21,6 +25,8 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
+import javax.mail.event.MessageCountEvent;
+import javax.mail.event.MessageCountListener;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -33,6 +39,11 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.imap.IMAPMessage;
+import com.sun.mail.imap.IMAPStore;
+
+import ch.elexis.core.mail.IMAPMailMessage;
 import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
@@ -50,6 +61,8 @@ public class MailClient implements IMailClient {
 	private static final String ACCOUNTS_SEPARATOR = ",";
 	
 	private ErrorTyp lastError;
+	
+	private IMAPStore imapStore;
 	
 	@Activate
 	private void activate(){
@@ -157,6 +170,7 @@ public class MailClient implements IMailClient {
 			if (account.getType() == TYPE.SMTP) {
 				Session session =
 					Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
+						@Override
 						protected PasswordAuthentication getPasswordAuthentication(){
 							return new PasswordAuthentication(account.getUsername(),
 								account.getPassword());
@@ -168,6 +182,7 @@ public class MailClient implements IMailClient {
 			} else if (account.getType() == TYPE.IMAP) {
 				Session session =
 					Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
+						@Override
 						protected PasswordAuthentication getPasswordAuthentication(){
 							return new PasswordAuthentication(account.getUsername(),
 								account.getPassword());
@@ -198,11 +213,12 @@ public class MailClient implements IMailClient {
 			if (account.getType() == TYPE.SMTP) {
 				Session session =
 					Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication(){
+						@Override
+						protected PasswordAuthentication getPasswordAuthentication(){
 							return new PasswordAuthentication(account.getUsername(),
 								account.getPassword());
-					}
-				});
+						}
+					});
 				
 				MimeMessage mimeMessage = new MimeMessage(session);
 				mimeMessage.addHeader("X-ElexisMail", "ch.elexis.core.mail");
@@ -263,6 +279,111 @@ public class MailClient implements IMailClient {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public List<IMAPMailMessage> getMessages(MailAccount account, String path)
+		throws MessagingException{
+		if (account.getType() != TYPE.IMAP) {
+			logger.warn("Invalid account type for receiving [" + account.getType() + "].");
+			lastError = ErrorTyp.CONFIGTYP;
+			return Collections.emptyList();
+		}
+		
+		if (path == null) {
+			path = "INBOX";
+		}
+		
+		MailClientProperties properties = new MailClientProperties(account);
+		Session session =
+			Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
+				@Override
+				protected PasswordAuthentication getPasswordAuthentication(){
+					return new PasswordAuthentication(account.getUsername(), account.getPassword());
+				}
+			});
+		imapStore = (IMAPStore) session.getStore();
+		imapStore.connect();
+		List<IMAPMailMessage> listMessages = new ArrayList<IMAPMailMessage>();
+		Folder folder = imapStore.getFolder(path);
+		folder.open(Folder.READ_ONLY);
+		Message[] messages = folder.getMessages();
+		for (Message _message : messages) {
+			IMAPMailMessage of = IMAPMailMessage.of((IMAPMessage) _message);
+			listMessages.add(of);
+		}
+		return listMessages;
+		
+	}
+	
+	@Override
+	public void moveMessage(IMAPMailMessage message, String targetFolder) throws MessagingException{
+		if (imapStore == null || !imapStore.isConnected()) {
+			throw new MessagingException("store is null or not connected");
+		}
+		Folder sourceFolder = message.toIMAPMessage().getFolder();
+		IMAPFolder _targetFolder = (IMAPFolder) imapStore.getFolder(targetFolder);
+		try {
+			if (sourceFolder.isOpen()) {
+				sourceFolder.close(false);
+			}
+			if (_targetFolder.isOpen()) {
+				_targetFolder.close(false);
+			}
+			sourceFolder.open(Folder.READ_WRITE);
+			_targetFolder.open(Folder.READ_WRITE);
+			monitorMove(_targetFolder);
+			Message[] messages = new Message[] {
+				message.toIMAPMessage()
+			};
+			sourceFolder.setFlags(messages, new Flags(Flags.Flag.SEEN), true);
+			sourceFolder.copyMessages(messages, _targetFolder);
+			waitForMoveCompletion(_targetFolder, 2000);
+			sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+		} finally {
+			sourceFolder.close(true);
+			if (_targetFolder.isOpen()) {
+				_targetFolder.close(false);
+			}
+		}
+	}
+	
+	private void monitorMove(Folder folder){
+		folder.addMessageCountListener(new MessageCountListener() {
+			@Override
+			public void messagesAdded(MessageCountEvent e){
+				synchronized (folder) {
+					folder.notify();
+				}
+			}
+			
+			@Override
+			public void messagesRemoved(MessageCountEvent arg0){}
+		});
+	}
+	
+	private void waitForMoveCompletion(Folder folder, int waitTimeout){
+		synchronized (folder) {
+			try {
+				folder.wait(waitTimeout);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@Override
+	public void closeStore(MailAccount account){
+		if (imapStore != null && imapStore.isConnected()) {
+			try {
+				imapStore.close();
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		imapStore = null;
 	}
 	
 	private void handleException(MessagingException e){
