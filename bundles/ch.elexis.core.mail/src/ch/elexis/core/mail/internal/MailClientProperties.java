@@ -33,6 +33,7 @@ public class MailClientProperties {
 			props.put("mail.store.protocol", "imap");
 			props.put("mail.imap.host", account.getHost());
 			props.put("mail.imap.port", account.getPort());
+			props.put("mail.smtp.starttls.enable", Boolean.toString(account.isStarttls()));
 			
 			if (account.getUsername() != null && account.getPassword() != null) {
 				props.put("mail.imap.user", account.getUsername());

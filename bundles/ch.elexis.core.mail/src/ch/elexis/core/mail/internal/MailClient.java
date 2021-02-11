@@ -188,10 +188,23 @@ public class MailClient implements IMailClient {
 								account.getPassword());
 						}
 					});
-				Store store = session.getStore("imaps");
+				Store store = session.getStore("imap");
 				
 				store.connect();
 				store.close();
+			} else if (account.getType() == TYPE.IMAPS) {
+				Session session =
+						Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
+							@Override
+							protected PasswordAuthentication getPasswordAuthentication(){
+								return new PasswordAuthentication(account.getUsername(),
+									account.getPassword());
+							}
+						});
+					Store store = session.getStore("imaps");
+					
+					store.connect();
+					store.close();
 			} else {
 				logger.warn("Unknown account type [" + account.getType() + "].");
 				lastError = ErrorTyp.CONFIGTYP;
@@ -199,6 +212,7 @@ public class MailClient implements IMailClient {
 			}
 		} catch (MessagingException e) {
 			logger.warn("Error testing account [" + account.getId() + "]", e);
+			lastError = ErrorTyp.CONNECTION;
 			handleException(e);
 			return false;
 		}
