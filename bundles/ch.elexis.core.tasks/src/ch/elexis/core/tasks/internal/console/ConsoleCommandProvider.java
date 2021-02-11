@@ -110,7 +110,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		List<ITask> runningTasks = taskService.getRunningTasks();
 		// Trigger	ID	Descriptor Id/RefId		StartTime		Progress (%)
 		prflp("State", 8);
-		prflp("Trigger", 10);
+		prflp("Trigger", 11);
 		prflp("ID", 27);
 		prflp("Descriptor Id/RefId", 27);
 		prflp("StartTime", 25);
@@ -119,23 +119,23 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		runningTasks.stream().forEach(t -> {
 			ITaskDescriptor td = t.getTaskDescriptor();
 			prflp("RUN", 8);
-			prflp(td.getTriggerType().getName(), 10);
+			prflp(td.getTriggerType().getName(), 11);
 			prflp(t.getId(), 27);
 			prflp(td.getReferenceId(), 27);
 			prflp(TimeUtil.formatSafe(t.getRunAt()), 25);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
-			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 70, true);
+			prflp(owner + " / " + formatRunner(td.getRunner()) + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
 		
 		List<ITaskDescriptor> incurredTasks = taskService.getIncurredTasks();
 		incurredTasks.stream().forEach(td -> {
 			prflp("INC", 8);
-			prflp(td.getTriggerType().getName(), 10);
+			prflp(td.getTriggerType().getName(), 11);
 			prflp("", 27);
 			prflp(td.getReferenceId(), 27);
 			prflp("NR " + (String) td.getTransientData().get("cron-next-exectime"), 25);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
-			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 70, true);
+			prflp(owner + " / " + formatRunner(td.getRunner()) + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
 		
 		IQuery<ITaskDescriptor> tdQuery =
@@ -152,10 +152,18 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(td.getReferenceId(), 27);
 			prflp("", 25);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
-			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 70, true);
+			prflp(owner + " / " +formatRunner(td.getRunner()) + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
 	}
 	
+	private String formatRunner(String runner){
+		if (contextService.getStationIdentifier().equalsIgnoreCase(runner)) {
+			return runner.toUpperCase();
+		} else {
+			return runner.toLowerCase();
+		}
+	}
+
 	@CmdAdvisor(description = "Activate a task descriptor for execution")
 	public String __task_activate(@CmdParam(description = "taskId | tdIdOrTdRefId")
 	String idOrReferenceId) throws TaskException{
