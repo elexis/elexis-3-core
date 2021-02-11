@@ -298,7 +298,7 @@ public class MailClient implements IMailClient {
 	@Override
 	public List<IMAPMailMessage> getMessages(MailAccount account, String path)
 		throws MessagingException{
-		if (account.getType() != TYPE.IMAP) {
+		if (account.getType() == TYPE.SMTP) {
 			logger.warn("Invalid account type for receiving [" + account.getType() + "].");
 			lastError = ErrorTyp.CONFIGTYP;
 			return Collections.emptyList();
