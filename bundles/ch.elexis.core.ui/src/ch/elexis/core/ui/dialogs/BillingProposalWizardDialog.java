@@ -256,7 +256,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		private Money excludeKonsByMoney;
 		
 		public QueryProposalRunnable(){
-			query = new Query<>(Konsultation.class);
+			query = new Query<>(Konsultation.class, "BEHANDLUNGEN", false, new String[] {
+				Konsultation.DATE, Konsultation.FLD_TIME, Konsultation.FLD_MANDATOR_ID,
+				Konsultation.FLD_BILL_ID, Konsultation.FLD_CASE_ID
+			});
 			query.add(Konsultation.FLD_BILL_ID, Query.EQUALS, null);
 			query.add(Konsultation.FLD_BILLABLE, Query.EQUALS, "1");
 			if (timeSpanOnly.getSelection()) {
