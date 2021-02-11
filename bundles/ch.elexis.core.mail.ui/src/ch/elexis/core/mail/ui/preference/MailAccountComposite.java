@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
@@ -16,10 +16,10 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.databinding.viewers.ViewerSupport;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -46,12 +46,17 @@ import ch.elexis.data.Mandant;
 
 public class MailAccountComposite extends Composite {
 
-	private WritableValue value;
+	private WritableValue<MailAccount> value;
 	private DataBindingContext context;
 	
 	private Label fromAddressLabel;
 	private Text fromAddress;
-	private WritableList mandantInput;
+	private WritableList<Mandant> mandantInput;
+	private Text txtPort;
+	private Text txtHost;
+	private Text txtPassword;
+	private Text txtUsername;
+	private Text txtId;
 	
 	public MailAccountComposite(Composite parent, int style){
 		super(parent, style);
@@ -67,9 +72,9 @@ public class MailAccountComposite extends Composite {
 		
 		Label lbl = new Label(this, SWT.NONE);
 		lbl.setText("ID");
-		Text txt = new Text(this, SWT.BORDER);
-		txt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		IObservableValue target = WidgetProperties.text(SWT.Modify).observe(txt);
+		txtId = new Text(this, SWT.BORDER);
+		txtId.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		IObservableValue target = WidgetProperties.text(SWT.Modify).observe(txtId);
 		IObservableValue model =
 			PojoProperties.value("id", MailAccount.class).observeDetail(value);
 		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
@@ -85,52 +90,67 @@ public class MailAccountComposite extends Composite {
 
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Typ");
-		ComboViewer viewer = new ComboViewer(this, SWT.DROP_DOWN);
-		viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		viewer.setContentProvider(ArrayContentProvider.getInstance());
-		viewer.setLabelProvider(new LabelProvider() {
+		ComboViewer typeViewer = new ComboViewer(this, SWT.DROP_DOWN);
+		typeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		typeViewer.setContentProvider(ArrayContentProvider.getInstance());
+		typeViewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
-				TYPE type = (TYPE)element;
+				TYPE type = (TYPE) element;
 				if (type == TYPE.IMAP) {
-					return "Eingehend " + "(" + type.name() + ")";
+					return "Eingehend (" + type.name() + ")";
+				} else if (type == TYPE.IMAPS) {
+					return "Ausgehend (IMAP over SSL)";
 				} else if (type == TYPE.SMTP) {
-					return "Ausgehend " + "(" + type.name() + ")";
+					return "Ausgehend (" + type.name() + ")";
 				} else {
 					return ((TYPE) element).name();
 				}
 			}
 		});
-		viewer.setInput(TYPE.values());
-		IViewerObservableValue viewerTarget = ViewerProperties.singleSelection().observe(viewer);
+		typeViewer.setInput(TYPE.values());
+		IViewerObservableValue viewerTarget = ViewerProperties.singleSelection().observe(typeViewer);
 		model = PojoProperties.value("type", MailAccount.class).observeDetail(value);
 		context.bindValue(viewerTarget, model);
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+		typeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event){
+				TYPE type = (TYPE) typeViewer.getStructuredSelection().getFirstElement();
+				switch (type) {
+				case IMAP:
+					txtPort.setText("143");
+					break;
+				case IMAPS:
+					txtPort.setText("993");
+					break;
+				case SMTP:
+					txtPort.setText("25");
+					break;
+				default:
+					break;
+				}
 				updateUi();
 			}
 		});
 		
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Username");
-		txt = new Text(this, SWT.BORDER);
-		txt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		target = WidgetProperties.text(SWT.Modify).observe(txt);
+		txtUsername = new Text(this, SWT.BORDER);
+		txtUsername.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		target = WidgetProperties.text(SWT.Modify).observe(txtUsername);
 		model = PojoProperties.value("username", MailAccount.class).observeDetail(value);
 		context.bindValue(target, model);
 		
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Password");
-		txt = new Text(this, SWT.BORDER | SWT.PASSWORD);
-		txt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		target = WidgetProperties.text(SWT.Modify).observe(txt);
+		txtPassword = new Text(this, SWT.BORDER | SWT.PASSWORD);
+		txtPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		target = WidgetProperties.text(SWT.Modify).observe(txtPassword);
 		model = PojoProperties.value("password", MailAccount.class).observeDetail(value);
 		context.bindValue(target, model);
 		
 		fromAddressLabel = new Label(this, SWT.NONE);
 		fromAddressLabel.setText("Von Adresse");
-		fromAddressLabel.setLayoutData(new GridData());
 		fromAddress = new Text(this, SWT.BORDER);
 		fromAddress.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		target = WidgetProperties.text(SWT.Modify).observe(fromAddress);
@@ -139,9 +159,9 @@ public class MailAccountComposite extends Composite {
 		
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Host");
-		txt = new Text(this, SWT.BORDER);
-		txt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		target = WidgetProperties.text(SWT.Modify).observe(txt);
+		txtHost = new Text(this, SWT.BORDER);
+		txtHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		target = WidgetProperties.text(SWT.Modify).observe(txtHost);
 		model = PojoProperties.value("host", MailAccount.class).observeDetail(value);
 		targetToModel = new UpdateValueStrategy();
 		targetToModel.setAfterGetValidator((o1) -> {
@@ -156,9 +176,9 @@ public class MailAccountComposite extends Composite {
 		
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Port");
-		txt = new Text(this, SWT.BORDER);
-		txt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		target = WidgetProperties.text(SWT.Modify).observe(txt);
+		txtPort = new Text(this, SWT.BORDER);
+		txtPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		target = WidgetProperties.text(SWT.Modify).observe(txtPort);
 		model = PojoProperties.value("port", String.class).observeDetail(value);
 		targetToModel = new UpdateValueStrategy();
 		targetToModel.setAfterGetValidator((o1) -> {
@@ -173,9 +193,8 @@ public class MailAccountComposite extends Composite {
 		
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Start TLS");
-		Button btn = new Button(this, SWT.CHECK);
-		btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-		target = WidgetProperties.selection().observe(btn);
+		Button btnStartTls = new Button(this, SWT.CHECK);
+		target = WidgetProperties.buttonSelection().observe(btnStartTls);
 		model = PojoProperties.value("starttls", Boolean.class).observeDetail(value);
 		context.bindValue(target, model);
 		
@@ -183,7 +202,7 @@ public class MailAccountComposite extends Composite {
 		lbl.setText("Mandanten");
 		TableViewer mandantViewer = new TableViewer(this, SWT.BORDER);
 		mandantViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		mandantInput = new WritableList(new ArrayList<Mandant>(), Mandant.class);
+		mandantInput = new WritableList<>(new ArrayList<Mandant>(), Mandant.class);
 		ViewerSupport.bind(mandantViewer, mandantInput, PojoProperties.values(new String[] {
 			"label"
 		}));
@@ -278,6 +297,6 @@ public class MailAccountComposite extends Composite {
 	}
 	
 	public MailAccount getAccount(){
-		return (MailAccount) value.getValue();
+		return value.getValue();
 	}
 }
