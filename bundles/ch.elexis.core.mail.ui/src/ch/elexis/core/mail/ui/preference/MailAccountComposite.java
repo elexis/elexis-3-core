@@ -116,18 +116,20 @@ public class MailAccountComposite extends Composite {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event){
 				TYPE type = (TYPE) typeViewer.getStructuredSelection().getFirstElement();
-				switch (type) {
-				case IMAP:
-					txtPort.setText("143");
-					break;
-				case IMAPS:
-					txtPort.setText("993");
-					break;
-				case SMTP:
-					txtPort.setText("25");
-					break;
-				default:
-					break;
+				if (type != null) {
+					switch (type) {
+					case IMAP:
+						txtPort.setText("143");
+						break;
+					case IMAPS:
+						txtPort.setText("993");
+						break;
+					case SMTP:
+						txtPort.setText("25");
+						break;
+					default:
+						break;
+					}
 				}
 				updateUi();
 			}
