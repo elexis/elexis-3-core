@@ -40,34 +40,34 @@ import ch.elexis.core.time.TimeUtil;
 
 @Component(service = CommandProvider.class, immediate = true)
 public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
-
+	
 	@Reference
 	private ITaskService taskService;
-
+	
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.tasks.model)")
 	private IModelService taskModelService;
-
+	
 	@Reference
 	private IContextService contextService;
-
+	
 	@Reference
 	private IVirtualFilesystemService vfsService;
-
+	
 	@Activate
 	public void activate(){
 		register(this.getClass());
 	}
-
+	
 	@CmdAdvisor(description = "task management")
 	public void _task(CommandInterpreter ci){
 		executeCommand("task", ci);
 	}
-
+	
 	@CmdAdvisor(description = "show last executed tasks")
 	public void __task_last(@CmdParam(required = false, description = "max: default=20")
 	String maxEntries, @CmdParam(required = false, description = "tdIdOrRefId")
 	String tdIdOrRefId){
-
+		
 		IQuery<ITask> query = taskModelService.getQuery(ITask.class);
 		if (maxEntries != null) {
 			query.limit(Integer.valueOf(maxEntries));
@@ -86,6 +86,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			}
 		}
 		query.orderBy(ModelPackage.Literals.ITASK__FINISHED_AT, ORDER.DESC);
+		
 		List<ITask> finishedTasks = query.execute();
 		prflp("State", 8);
 		prflp("Descriptor Id/RefId", 27);
@@ -93,6 +94,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		prflp("FinishTime", 25);
 		prflp("CreateTime", 25);
 		ci.print("Result\n");
+		
 		finishedTasks.stream().forEach(t -> {
 			prflp(t.getState().name(), 8);
 			prflp(t.getTaskDescriptor().getReferenceId(), 27);
@@ -102,39 +104,40 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			ci.print(t.getResult() + "\n");
 		});
 	}
+	
 	@CmdAdvisor(description = "list tasks and current state")
 	public void __task_list(){
 		List<ITask> runningTasks = taskService.getRunningTasks();
 		// Trigger	ID	Descriptor Id/RefId		StartTime		Progress (%)
 		prflp("State", 8);
-		prflp("Trigger", 10);
+		prflp("Trigger", 11);
 		prflp("ID", 27);
 		prflp("Descriptor Id/RefId", 27);
 		prflp("StartTime", 25);
 		prflp("Owner / Runner / Runnable", 70, true);
-
+		
 		runningTasks.stream().forEach(t -> {
 			ITaskDescriptor td = t.getTaskDescriptor();
 			prflp("RUN", 8);
-			prflp(td.getTriggerType().getName(), 10);
+			prflp(td.getTriggerType().getName(), 11);
 			prflp(t.getId(), 27);
 			prflp(td.getReferenceId(), 27);
 			prflp(TimeUtil.formatSafe(t.getRunAt()), 25);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
-			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 50, true);
+			prflp(owner + " / " + formatRunner(td.getRunner()) + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
-
+		
 		List<ITaskDescriptor> incurredTasks = taskService.getIncurredTasks();
 		incurredTasks.stream().forEach(td -> {
 			prflp("INC", 8);
-			prflp(td.getTriggerType().getName(), 10);
+			prflp(td.getTriggerType().getName(), 11);
 			prflp("", 27);
 			prflp(td.getReferenceId(), 27);
 			prflp("NR " + (String) td.getTransientData().get("cron-next-exectime"), 25);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
-			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 50, true);
+			prflp(owner + " / " + formatRunner(td.getRunner()) + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
-
+		
 		IQuery<ITaskDescriptor> tdQuery =
 			taskModelService.getQuery(ITaskDescriptor.class, true, false);
 		tdQuery.orderBy(ModelPackage.Literals.ITASK_DESCRIPTOR__ACTIVE, ORDER.DESC);
@@ -149,8 +152,16 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(td.getReferenceId(), 27);
 			prflp("", 25);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
-			prflp(owner + " / " + td.getRunner() + " / " + td.getIdentifiedRunnableId(), 50, true);
+			prflp(owner + " / " +formatRunner(td.getRunner()) + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
+	}
+	
+	private String formatRunner(String runner){
+		if (contextService.getStationIdentifier().equalsIgnoreCase(runner)) {
+			return runner.toUpperCase();
+		} else {
+			return runner.toLowerCase();
+		}
 	}
 
 	@CmdAdvisor(description = "Activate a task descriptor for execution")
@@ -164,7 +175,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		taskService.setActive(taskDescriptor.get(), true);
 		return ok();
 	}
-
+	
 	@CmdAdvisor(description = "Deactivate a task descriptor for execution")
 	public String __task_deactivate(@CmdParam(description = "taskId | tdIdOrTdRefId")
 	String idOrReferenceId) throws TaskException{
@@ -176,7 +187,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		taskService.setActive(taskDescriptor.get(), false);
 		return ok();
 	}
-
+	
 	@CmdAdvisor(description = "Gracefully cancel a running task")
 	public void __task_cancel(@CmdParam(description = "taskId | tdIdOrTdRefId")
 	String id){
@@ -184,7 +195,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		for (ITask task : activeTasks) {
 			if (id.equals(task.getId()) || id.equals(task.getTaskDescriptor().getId())
 				|| id.equalsIgnoreCase(task.getTaskDescriptor().getReferenceId())) {
-
+				
 				task.getProgressMonitor().setCanceled(true);
 				ok("Sent setCanceled to Task " + task.getId());
 				return;
@@ -192,21 +203,22 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		}
 		fail("No matching task for given id");
 	}
-
+	
 	@CmdAdvisor(description = "create or modify a task descriptor from a json file")
 	public void __task_descriptor_url(@CmdParam(description = "url")
 	String urlString) throws IOException, TaskException{
+		
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		IVirtualFilesystemHandle of = vfsService.of(urlString);
 		String content = new String(of.readAllBytes(), StandardCharsets.UTF_8);
 		TaskDescriptor fromJson = gson.fromJson(content, TaskDescriptor.class);
 		taskService.saveTaskDescriptor(fromJson);
 	}
-
+	
 	@CmdAdvisor(description = "serialize a task descriptor to a json string")
 	public void __task_descriptor_json(@CmdParam(description = "tdIdOrTdRefId")
 	String idOrReferenceId){
-
+		
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Optional<ITaskDescriptor> taskDescriptor =
 			taskService.findTaskDescriptorByIdOrReferenceId(idOrReferenceId);
@@ -218,7 +230,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			fail("taskDescriptor not found");
 		}
 	}
-
+	
 	@CmdAdvisor(description = "set attributes on a task descriptor")
 	public String __task_descriptor_set(@CmdParam(description = "tdIdOrTdRefId")
 	String idOrReferenceId, @CmdParam(description = "(owner | runner | referenceid | trigger)")
@@ -263,7 +275,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		}
 		return ok();
 	}
-
+	
 	@CmdAdvisor(description = "manually trigger execution of a task descriptor")
 	public void __task_trigger(@CmdParam(description = "tdIdOrTdRefId")
 	String idOrReferenceId) throws TaskException{
@@ -277,7 +289,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			fail("Invalid or ambiguous id argument");
 		}
 	}
-
+	
 	@CmdAdvisor(description = "deactivate and remove a task descriptor")
 	public void __task_descriptor_remove(@CmdParam(description = "tdIdOrTdRefId")
 	String idOrReferenceId) throws TaskException{
@@ -290,15 +302,15 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			fail("Invalid or ambiguous id argument");
 		}
 	}
-
+	
 	@CmdAdvisor(description = "list all available identified runnables")
 	public void __task_runnable_list(){
 		List<IIdentifiedRunnable> availableRunnables = taskService.getIdentifiedRunnables();
-
+		
 		prflp("Runnable ID", 30);
 		prflp("Bundle", 60);
 		ci.print("Description\n");
-
+		
 		availableRunnables.stream().sorted(Comparator.comparing(ii -> ii.getId())).forEach(ii -> {
 			prflp(ii.getId(), 30);
 			String classNameShortened = abbreviatePackageNames(ii.getClass().getName());
@@ -306,10 +318,10 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			ci.print(ii.getLocalizedDescription() + "\n");
 		});
 	}
-
+	
 	private String abbreviatePackageNames(String name){
 		return name.replace("ch.elexis", "c.e").replace("ch.medelexis", "c.m")
 			.replace("at.medevit", "a.m").replace("core", "c");
 	}
-
+	
 }
