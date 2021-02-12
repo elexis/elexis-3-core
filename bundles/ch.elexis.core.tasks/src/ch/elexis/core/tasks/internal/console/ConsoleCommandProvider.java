@@ -144,7 +144,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		taskDescriptors.stream().forEach(td -> {
 			String state = td.isActive() ? "ACT" : "INACT";
 			prflp(state, 8);
-			prflp(td.getTriggerType().getName(), 10);
+			prflp(td.getTriggerType().getName(), 11);
 			prflp("", 27);
 			prflp(td.getReferenceId(), 27);
 			prflp("", 25);
