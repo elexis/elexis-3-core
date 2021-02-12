@@ -84,10 +84,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	@Override
 	public Date getCreated(){
 		LocalDateTime creationDate = getEntity().getCreationDate();
-		if (creationDate != null) {
-			return toDate(getEntity().getCreationDate());
-		}
-		return null;
+		return creationDate != null ? toDate(creationDate) : getLastchanged();
 	}
 	
 	@Override
