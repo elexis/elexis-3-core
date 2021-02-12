@@ -10,6 +10,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
+import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.io.IOUtils;
 
@@ -42,7 +43,8 @@ public class IMAPMailMessage {
 	}
 	
 	private void extractContent() throws MessagingException{
-		sender = message.getSender().toString();
+		InternetAddress _sender = (InternetAddress) message.getSender();
+		sender = _sender.getAddress();
 		sentDate = message.getSentDate();
 		subject = message.getSubject();
 		
