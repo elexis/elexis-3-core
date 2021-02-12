@@ -309,6 +309,13 @@ public class BestellView extends ViewPart {
 			list.add(iOrderEntry);
 			ret.put(iOrderEntry.getProvider(), list);
 		}
+		for (List<IOrderEntry> best : ret.values()) {
+			best.sort((IOrderEntry left, IOrderEntry right) -> {
+				String s1 = left.getArticle().getName();
+				String s2 = right.getArticle().getName();
+				return s1.compareTo(s2);
+			});
+		}
 		return ret;
 	}
 	
