@@ -387,7 +387,7 @@ public class TaskServiceImpl implements ITaskService {
 			throw new TaskException(TaskException.EXECUTION_REJECTED,
 				"Task Descriptor [" + taskDescriptor.getId() + "] is not TriggerType OTHER_TASK");
 		}
-		if (!taskDescriptor.isActive()) {
+		if (!taskDescriptor.isActive() && TaskTriggerType.MANUAL != triggerType) {
 			throw new TaskException(TaskException.EXECUTION_REJECTED,
 				"Task Descriptor [" + taskDescriptor.getId() + "] is not active");
 		}
