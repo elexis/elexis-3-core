@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Pdfbox library
-Bundle-SymbolicName: ch.elexis.core.pdfbox
-Bundle-Version: 2.0.22.1
+Bundle-SymbolicName: ch.elexis.core.pdfbox;singleton:=true
+Bundle-Version: 2.0.22.2
 Bundle-Vendor: pdfbox.apache.org
 Automatic-Module-Name: ch.elexis.core.pdfbox
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -73,4 +73,7 @@ Export-Package: org.apache.fontbox,
  org.apache.pdfbox.text,
  org.apache.pdfbox.util,
  org.apache.pdfbox.util.filetypedetector
-Require-Bundle: org.apache.commons.logging;bundle-version="1.2.0"
+Require-Bundle: org.eclipse.osgi;bundle-version="3.15.200",
+ org.apache.commons.logging;bundle-version="1.2.0"
+Bundle-Activator: ch.elexis.core.pdfbox.Activator
+Bundle-ActivationPolicy: lazy
