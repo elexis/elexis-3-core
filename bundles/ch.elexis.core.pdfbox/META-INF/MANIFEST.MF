@@ -9,7 +9,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Multi-Release: true
 Bundle-ClassPath: .,
  lib/fontbox-2.0.22.jar,
- lib/pdfbox-2.0.22.jar
+ lib/pdfbox-2.0.22.jar,
+ lib/jbig2-imageio-3.0.3.jar
 Export-Package: org.apache.fontbox,
  org.apache.fontbox.afm,
  org.apache.fontbox.cff,
