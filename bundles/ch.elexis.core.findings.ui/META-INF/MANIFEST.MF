@@ -24,10 +24,6 @@ Require-Bundle: ch.elexis.core.data,
  ch.elexis.core.findings.templates,
  ch.elexis.core.ui.dbcheck
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/ch.elexis.core.findings.ui.services.FindingsServiceComponent.xml,
- OSGI-INF/ch.elexis.core.findings.ui.services.CodingServiceComponent.xml,
- OSGI-INF/ch.elexis.core.findings.ui.services.MigratorServiceComponent.xml,
- OSGI-INF/ch.elexis.core.findings.ui.services.FindingsTemplateServiceComponent.xml
 Import-Package: ch.elexis.core.services.holder,
  ch.rgw.io,
  ch.rgw.tools,
@@ -37,3 +33,7 @@ Import-Package: ch.elexis.core.services.holder,
  org.eclipse.e4.core.contexts
 Export-Package: ch.elexis.core.findings.ui.composites,
  ch.elexis.core.findings.ui.util
+Service-Component: OSGI-INF/ch.elexis.core.findings.ui.services.FindingsTemplateServiceComponent.xml,
+ OSGI-INF/ch.elexis.core.findings.ui.services.FindingsServiceComponent.xml,
+ OSGI-INF/ch.elexis.core.findings.ui.services.CodingServiceComponent.xml,
+ OSGI-INF/ch.elexis.core.findings.ui.services.MigratorServiceComponent.xml

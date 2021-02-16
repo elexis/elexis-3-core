@@ -12,7 +12,8 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.graphics.Point;
 
-import ch.elexis.data.PersistentObject;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.data.PersistentObjectFactory;
 
 public class DragAndDropSupport implements DragSourceListener, DropTargetListener {
@@ -59,8 +60,9 @@ public class DragAndDropSupport implements DragSourceListener, DropTargetListene
 	}
 	
 	private Object getStringForObject(Object object){
-		if (object instanceof PersistentObject) {
-			return ((PersistentObject) object).storeToString();
+		if (object instanceof Identifiable) {
+			return StoreToStringServiceHolder.get().storeToString((Identifiable) object)
+				.orElse(object.toString());
 		}
 		return object.toString();
 	}

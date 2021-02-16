@@ -66,9 +66,9 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.UserTextPref;
+import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
-import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Konsultation;
 import ch.rgw.tools.GenericRange;
@@ -339,7 +339,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		});
 		rangeTracker = new RangeTracker();
 		text.addExtendedModifyListener(rangeTracker);
-		new PersistentObjectDropTarget(text, dropper);
+		new GenericObjectDropTarget(text, dropper);
 		
 		dirty = false;
 	}

@@ -12,14 +12,16 @@
 package ch.elexis.core.ui.text;
 
 import java.util.Hashtable;
+import java.util.List;
 
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.graphics.Point;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.util.GenericObjectDropTarget.IReceiver;
 import ch.elexis.core.ui.util.IKonsExtension;
-import ch.elexis.core.ui.util.PersistentObjectDropTarget.IReceiver;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
 
@@ -41,37 +43,7 @@ public class ETFDropReceiver implements IReceiver {
 		targets.remove(clazz);
 	}
 	
-	public boolean accept(final PersistentObject o){
-		/*
-		 * if(targets.get(o.getClass())!=null){ return true; } return false;
-		 */
-		return true;
-	}
-	
-	public void dropped(final PersistentObject o, final DropTargetEvent ev){
-		Point point = UiDesk.getDisplay().getCursorLocation();
-		Point mapped = UiDesk.getDisplay().map(null, etf.text, point);
-		Point maxOffset = etf.text.getLocationAtOffset(etf.text.getCharCount());
-		int pos = etf.text.getCharCount();
-		if (mapped.y < maxOffset.y) {
-			pos = etf.text.getOffsetAtLocation(new Point(0, mapped.y));
-		}
-		IKonsExtension rec = getTargetForObject(o);
-		if (rec != null) {
-			rec.insert(o, pos);
-		} else {
-			Konsultation actKons =
-				(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-			if (actKons != null) {
-				etf.text.insert(o.getLabel());
-				actKons.updateEintrag(etf.getContentsAsXML(), false);
-			}
-			
-		}
-		
-	}
-	
-	private IKonsExtension getTargetForObject(PersistentObject o){
+	private IKonsExtension getTargetForObject(Object o){
 		IKonsExtension ret = targets.get(o.getClass());
 		if (ret == null) {
 			// check the interfaces
@@ -86,5 +58,45 @@ public class ETFDropReceiver implements IReceiver {
 			}
 		}
 		return ret;
+	}
+	
+	@Override
+	public void dropped(List<Object> list, DropTargetEvent e){
+		if (list != null && !list.isEmpty()) {
+			Point point = UiDesk.getDisplay().getCursorLocation();
+			Point mapped = UiDesk.getDisplay().map(null, etf.text, point);
+			Point maxOffset = etf.text.getLocationAtOffset(etf.text.getCharCount());
+			int pos = etf.text.getCharCount();
+			if (mapped.y < maxOffset.y) {
+				pos = etf.text.getOffsetAtLocation(new Point(0, mapped.y));
+			}
+			Object object = list.get(0);
+			IKonsExtension rec = getTargetForObject(object);
+			
+			if (rec != null) {
+				rec.insert(object, pos);
+			} else {
+				Konsultation actKons =
+					(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+				if (actKons != null) {
+					etf.text.insert(getLabel(object));
+					actKons.updateEintrag(etf.getContentsAsXML(), false);
+				}
+			}
+		}
+	}
+	
+	private String getLabel(Object object){
+		if (object instanceof PersistentObject) {
+			return ((PersistentObject) object).getLabel();
+		} else if (object instanceof Identifiable) {
+			return ((Identifiable) object).getLabel();
+		}
+		return object.toString();
+	}
+	
+	@Override
+	public boolean accept(List<Object> list){
+		return true;
 	}
 }

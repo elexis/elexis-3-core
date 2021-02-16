@@ -14,13 +14,13 @@ import ch.elexis.core.findings.ui.action.AddFindingAction;
 import ch.elexis.core.findings.ui.handler.FindingEditHandler;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.text.model.Samdas.XRef;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.text.EnhancedTextField;
 import ch.elexis.core.ui.text.IRichTextDisplay;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.PersistentObject;
 
 public class KonsExtension implements IKonsExtension {
 	IRichTextDisplay mine;
@@ -47,9 +47,7 @@ public class KonsExtension implements IKonsExtension {
 			FindingsServiceComponent.getService().findById(refID, IObservation.class);
 		observation.ifPresent(obs -> {
 			// open edit dialog
-			Boolean ret =
-				(Boolean) FindingsUiUtil.executeCommand(FindingEditHandler.COMMAND_ID, obs);
-			ElexisEventDispatcher.fireSelectionEvent((PersistentObject) obs);
+			FindingsUiUtil.executeCommand(FindingEditHandler.COMMAND_ID, obs);
 		});
 		return true;
 	}
@@ -78,7 +76,7 @@ public class KonsExtension implements IKonsExtension {
 				(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 			
 			mine.insertXRef(pos, getXRefText(observation),
-				EXTENSION_ID, ((PersistentObject) observation).getId());
+				EXTENSION_ID, ((Identifiable) observation).getId());
 			k.updateEintrag(mine.getContentsAsXML(), false);
 			ElexisEventDispatcher.update(k);
 		}
