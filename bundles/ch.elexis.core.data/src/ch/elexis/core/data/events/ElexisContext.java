@@ -153,15 +153,8 @@ public class ElexisContext {
 		if (f.equals(currentSelection.get(Fall.class)))
 			return;
 		
-		Patient p = f.getPatient();
-		if (p != null) {
-			newSelection.put(Patient.class, p);
-			newSelection.put(Fall.class, f);
-			newSelection.put(Konsultation.class, f.getLetzteBehandlung());
-		} else {
-			log.error("Fall " + f + " without Patient!");
-			return;
-		}
+		newSelection.put(Fall.class, f);
+		newSelection.put(Konsultation.class, f.getLetzteBehandlung());
 	}
 	
 	/**
@@ -178,24 +171,7 @@ public class ElexisContext {
 		if (k.equals(currentSelection.get(Konsultation.class)))
 			return;
 		
-		Patient p = null;
-		Fall f = k.getFall();
-		
-		if (f != null) {
-			p = f.getPatient();
-		} else {
-			log.error("Konsultation " + k + " without Fall!");
-			return;
-		}
-		
-		if (p != null) {
-			newSelection.put(Patient.class, p);
-			newSelection.put(Fall.class, f);
-			newSelection.put(Konsultation.class, k);
-		} else {
-			log.error("Fall " + f + " without Patient!");
-			return;
-		}
+		newSelection.put(Konsultation.class, k);
 	}
 	
 	/**
