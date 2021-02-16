@@ -142,42 +142,44 @@ public class HistoryLoader extends BackgroundJob {
 						continue;
 					}
 				}
-				VersionedResource vr = k.getVersionedEntry();
-				String s = vr.getHead();
-				if (s != null) {
-					if (s.startsWith("<")) { //$NON-NLS-1$
-						Samdas samdas = new Samdas(s);
-						s = samdas.getRecordText();
+				if (k != null) {
+					VersionedResource vr = k.getVersionedEntry();
+					String s = vr.getHead();
+					if (s != null) {
+						if (s.startsWith("<")) { //$NON-NLS-1$
+							Samdas samdas = new Samdas(s);
+							s = samdas.getRecordText();
+						}
+						s = maskHTML(s);
+						if (multiline) {
+							// TODO use system line separator
+							// replace Windows line separator
+							s = s.replaceAll("\r\n", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+							// replace remaining "manual" line separators
+							s = s.replaceAll("\n", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+						}
+						
+					} else {
+						s = ""; //$NON-NLS-1$
 					}
-					s = maskHTML(s);
-					if (multiline) {
-						// TODO use system line separator
-						// replace Windows line separator
-						s = s.replaceAll("\r\n", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
-						// replace remaining "manual" line separators
-						s = s.replaceAll("\n", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
-					}
-					
-				} else {
-					s = ""; //$NON-NLS-1$
-				}
-				String label = maskHTML(k.getLabel());
-				// make kons text grey if kons Fall is not the selected Fall
-				if (selectedFall != null && !selectedFall.equals(k.getCoverage())) {
-					sb.append("<p><a href=\"") //$NON-NLS-1$
+					String label = maskHTML(k.getLabel());
+					// make kons text grey if kons Fall is not the selected Fall
+					if (selectedFall != null && !selectedFall.equals(k.getCoverage())) {
+						sb.append("<p><a href=\"") //$NON-NLS-1$
+							.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
+							.append(label).append("</a><br/>") //$NON-NLS-1$
+							.append("<span color=\"gruen\">") //$NON-NLS-1$
+							.append(maskHTML(k.getCoverage().getLabel()))
+							.append("</span><br/><span color=\"gruen\">") //$NON-NLS-1$
+							.append(s).append("</span></p>"); //$NON-NLS-1$
+					} else {
+						sb.append("<p><a href=\"") //$NON-NLS-1$
 						.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
 						.append(label).append("</a><br/>") //$NON-NLS-1$
 						.append("<span color=\"gruen\">") //$NON-NLS-1$
-						.append(maskHTML(k.getCoverage().getLabel()))
-						.append("</span><br/><span color=\"gruen\">") //$NON-NLS-1$
-						.append(s).append("</span></p>"); //$NON-NLS-1$
-				} else {
-					sb.append("<p><a href=\"") //$NON-NLS-1$
-					.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
-					.append(label).append("</a><br/>") //$NON-NLS-1$
-					.append("<span color=\"gruen\">") //$NON-NLS-1$
-					.append(maskHTML(k.getCoverage().getLabel())).append("</span><br/>") //$NON-NLS-1$
-					.append(s).append("</p>"); //$NON-NLS-1$
+							.append(maskHTML(k.getCoverage().getLabel())).append("</span><br/>") //$NON-NLS-1$
+							.append(s).append("</p>"); //$NON-NLS-1$
+					}
 				}
 				monitor.worked(1);
 				
