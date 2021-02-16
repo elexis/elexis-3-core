@@ -13,24 +13,32 @@
 package ch.elexis.core.data.events;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.server.ServerEventMapper;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.data.Anwender;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -184,15 +192,14 @@ public final class ElexisEventDispatcher implements Runnable {
 				|| eventType == ElexisEvent.EVENT_DESELECTED) {
 				
 				List<ElexisEvent> eventsToThrow = null;
-				eventsToThrow =
-					elexisUIContext.setSelection(ee.getObjectClass(),
+				synchronized (eventQueue) {
+					eventsToThrow = elexisUIContext.setSelection(ee.getObjectClass(),
 						(eventType == ElexisEvent.EVENT_SELECTED) ? ee.getObject() : null);
-				
-				for (ElexisEvent elexisEvent : eventsToThrow) {
-					synchronized (eventQueue) {
+					
+					for (ElexisEvent elexisEvent : eventsToThrow) {
+						removeExisting(elexisEvent);
 						eventQueue.offer(elexisEvent);
 					}
-					
 				}
 				continue;
 			} else if (eventType == ElexisEvent.EVENT_MANDATOR_CHANGED) {
@@ -209,6 +216,20 @@ public final class ElexisEventDispatcher implements Runnable {
 				ch.elexis.core.common.ElexisEvent mapEvent = ServerEventMapper.mapEvent(ee);
 				if(mapEvent!=null) {
 					ElexisServerServiceHolder.get().postEvent(mapEvent);
+				}
+			}
+		}
+	}
+	
+	private void removeExisting(ElexisEvent elexisEvent){
+		Iterator<ElexisEvent> queueIter = eventQueue.iterator();
+		while (queueIter.hasNext()) {
+			ElexisEvent queuedEvent = (ElexisEvent) queueIter.next();
+			if (queuedEvent.getType() == elexisEvent.getType()
+				&& queuedEvent.getObjectClass() == elexisEvent.getObjectClass()) {
+				// remove old selection of same class
+				if (elexisEvent.getType() == ElexisEvent.EVENT_SELECTED) {
+					queueIter.remove();
 				}
 			}
 		}
@@ -446,5 +467,24 @@ public final class ElexisEventDispatcher implements Runnable {
 		void startCatchEvent(ElexisEvent ee, ElexisEventListener listener);
 		
 		void endCatchEvent(ElexisEvent ee, ElexisEventListener listener);
+	}
+	
+	@Optional
+	@Inject
+	void activePatient(IPatient patient){
+		fire(new ElexisEvent(Patient.load(patient.getId()), Patient.class,
+				ElexisEvent.EVENT_SELECTED));
+	}
+	
+	@Optional
+	@Inject
+	void activeCoverage(ICoverage coverage){
+		fire(new ElexisEvent(Fall.load(coverage.getId()), Fall.class, ElexisEvent.EVENT_SELECTED));
+	}
+	
+	@Optional
+	@Inject
+	void activeEncounter(IEncounter encounter){
+		fire(new ElexisEvent(Konsultation.load(encounter.getId()), Konsultation.class, ElexisEvent.EVENT_SELECTED));
 	}
 }
