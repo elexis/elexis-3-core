@@ -172,6 +172,7 @@ public class ElexisContext {
 			return;
 		
 		newSelection.put(Konsultation.class, k);
+		newSelection.put(Fall.class, k.getFall());
 	}
 	
 	/**
