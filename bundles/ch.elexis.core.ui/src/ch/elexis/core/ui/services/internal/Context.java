@@ -6,17 +6,9 @@ import java.util.function.Supplier;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.IEncounter;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContext;
-import ch.elexis.data.Fall;
-import ch.elexis.data.Konsultation;
-import ch.elexis.data.Patient;
 
 public class Context implements IContext {
 	
@@ -70,7 +62,6 @@ public class Context implements IContext {
 					eclipseContext.set(object.getClass().getName(), object);
 				}
 			}
-			updateElexisEventDispatcher(object);
 		} else {
 			throw new IllegalArgumentException("object must not be null, use #removeTyped");
 		}
@@ -118,31 +109,6 @@ public class Context implements IContext {
 		}
 		if (eclipseContext != null) {
 			eclipseContext.set(name, object);
-		}
-	}
-	
-	private void updateElexisEventDispatcher(Object object){
-		// if the selection is not same in ElexisEventDispatcher fire a selection event
-		if (object instanceof IPatient) {
-			Patient poPatient = Patient.load(((IPatient) object).getId());
-			Patient poSelected = ElexisEventDispatcher.getSelectedPatient();
-			if (poSelected == null || !poSelected.equals(poPatient)) {
-				ElexisEventDispatcher.fireSelectionEvent(poPatient);
-			}
-		}
-		if (object instanceof ICoverage) {
-			Fall po = Fall.load(((ICoverage) object).getId());
-			IPersistentObject selected = ElexisEventDispatcher.getSelected(Fall.class);
-			if (selected == null || !selected.equals(po)) {
-				ElexisEventDispatcher.fireSelectionEvent(po);
-			}
-		}
-		if (object instanceof IEncounter) {
-			Konsultation po = Konsultation.load(((IEncounter) object).getId());
-			IPersistentObject selected = ElexisEventDispatcher.getSelected(Konsultation.class);
-			if (selected == null || !selected.equals(po)) {
-				ElexisEventDispatcher.fireSelectionEvent(po);
-			}
 		}
 	}
 	
