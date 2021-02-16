@@ -48,6 +48,7 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.dialogs.SelectFallNoObligationDialog;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
@@ -182,6 +183,8 @@ public class ContextService implements IContextService, EventHandler {
 				logger.info("SET APPLICATION CONTEXT " + applicationContext);
 				((Context) getRootContext()).setEclipseContext(applicationContext);
 			}
+			CoreUiUtil.injectServices(ElexisEventDispatcher.getInstance(),
+				applicationContext);
 		}
 		// set initial values for injection
 		applicationContext.set(IUser.class, getRootContext().getTyped(IUser.class).orElse(null));
