@@ -155,7 +155,9 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		lblLastEncounter.setFont(boldDefaultFont);
 		
 		lblLastEncounterText = new Label(encounterComposite, SWT.WRAP | SWT.LEFT);
-		lblLastEncounterText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		GridData gd_lblLastEncounterText = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
+		gd_lblLastEncounterText.heightHint = 60;
+		lblLastEncounterText.setLayoutData(gd_lblLastEncounterText);
 		
 		fixedMedicationComposite = new Composite(this, SWT.NONE);
 		fixedMedicationComposite.setLayout(new FillLayout(SWT.VERTICAL));
