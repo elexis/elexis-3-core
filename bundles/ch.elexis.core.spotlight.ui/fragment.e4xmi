@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_lIvrsB0CEeuK3vfwFBDgiw">
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_lIvrsB0CEeuK3vfwFBDgiw">
   <imports xsi:type="commands:BindingContext" xmi:id="_-epGgB0OEeuK3vfwFBDgiw" elementId="org.eclipse.ui.contexts.dialogAndWindow"/>
+  <imports xsi:type="basic:TrimBar" xmi:id="_2p9XcHD7EeuOmdLv6hhe2A" elementId="org.eclipse.ui.main.toolbar"/>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_PmCwgB0IEeuK3vfwFBDgiw" featurename="bindingTables" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:BindingTable" xmi:id="_SqbHgB0IEeuK3vfwFBDgiw" elementId="ch.elexis.core.spotlight.ui.bindingtable" bindingContext="_-epGgB0OEeuK3vfwFBDgiw">
       <bindings xmi:id="_l9mkMB0PEeuK3vfwFBDgiw" elementId="ch.elexis.core.spotlight.ui.keybinding.0" keySequence="M3+SPACE" command="_XXVikB0IEeuK3vfwFBDgiw"/>
@@ -16,5 +17,15 @@
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_5fVioB0IEeuK3vfwFBDgiw" featurename="handlers" parentElementId="xpath:/">
     <elements xsi:type="commands:Handler" xmi:id="_7t2ooB0IEeuK3vfwFBDgiw" elementId="ch.elexis.core.spotlight.ui.handler.OpenSpotlightShell" contributionURI="bundleclass://ch.elexis.core.spotlight.ui/ch.elexis.core.spotlight.ui.command.OpenSpotlightShellHandler" command="_XXVikB0IEeuK3vfwFBDgiw"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_w7OTAHD7EeuOmdLv6hhe2A" featurename="trimContributions" parentElementId="xpath:/">
+    <elements xsi:type="menu:TrimContribution" xmi:id="_0SxdoHD7EeuOmdLv6hhe2A" elementId="ch.elexis.core.spotlight.ui.trimcontribution.0" parentId="org.eclipse.ui.main.toolbar">
+      <children xsi:type="menu:ToolBar" xmi:id="_7y7cYHD7EeuOmdLv6hhe2A" elementId="ch.elexis.core.spotlight.ui.toolbar.0">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_8OU-8HD7EeuOmdLv6hhe2A" elementId="ch.elexis.core.spotlight.ui.handledtoolitem.0" iconURI="platform:/plugin/ch.elexis.core.spotlight.ui/rsc/icons/magnifier.png" tooltip="Spotlight" command="_XXVikB0IEeuK3vfwFBDgiw"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_VIbPkHD9EeuOmdLv6hhe2A" elementId="ch.elexis.core.spotlight.ui.handledtoolitem.1" iconURI="platform:/plugin/ch.elexis.core.spotlight.ui/rsc/icons/magnifier-zoom-fit.png" tooltip="Spotlight on Patient" command="_XXVikB0IEeuK3vfwFBDgiw">
+          <parameters xmi:id="_dTt2AHD9EeuOmdLv6hhe2A" elementId="ch.elexis.core.spotlight.ui.parameter.1" name="ch.elexis.core.spotlight.ui.commandparameter.spotlightshellfilter" value="patientFiltered"/>
+        </children>
+      </children>
+    </elements>
   </fragments>
 </fragment:ModelFragments>
