@@ -156,8 +156,8 @@ public class FaelleView extends ViewPart implements IRefreshable {
 
 	@Inject
 	void activeCoverage(@Optional ICoverage iCoverage){
-		Display.getDefault().asyncExec(() -> {
-			if (CoreUiUtil.isActiveControl(tv.getControl())) {
+		Display.getDefault().syncExec(() -> {
+			if (tv != null && CoreUiUtil.isActiveControl(tv.getControl())) {
 				tv.refresh(true);
 				ICoverage currentFall = iCoverage;
 				if (currentFall != null) {
@@ -172,7 +172,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	}
 	
 	private void refreshTableViewer(){
-		if (CoreUiUtil.isActiveControl(tv.getControl())) {
+		if (tv != null && CoreUiUtil.isActiveControl(tv.getControl())) {
 			tv.refresh(true);
 		}
 	}
