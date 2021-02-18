@@ -94,7 +94,13 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public Date getLastchanged(){
-		return TimeUtil.toDate(getEntity().getModifiedDate());
+		if (getEntity().getModifiedDate() != null) {
+			return toDate(getEntity().getModifiedDate());
+		}
+		if (getEntity().getLastupdate() != null) {
+			return new Date(getEntity().getLastupdate().longValue());
+		}
+		return new Date(0);
 	}
 	
 	@Override
