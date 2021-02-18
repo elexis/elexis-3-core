@@ -37,6 +37,7 @@ import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.Brief;
+import ch.elexis.data.Kontakt;
 import ch.elexis.data.OutputLog;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
@@ -49,7 +50,10 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	TextContainer text;
 	Brief actBrief;
 	
+	private boolean addressSelection;
+	
 	public RezeptBlatt(){
+		addressSelection = false;
 	}
 	
 	@Override
@@ -116,8 +120,9 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		if (actBrief != null) {
 			LocalLockServiceHolder.get().releaseLock(actBrief);
 		}
-		actBrief = text.createFromTemplateName(text.getAktuelleKons(), template, Brief.RP,
-			(Patient) ElexisEventDispatcher.getSelected(Patient.class),
+		Kontakt adressat =
+			addressSelection ? null : (Kontakt) ElexisEventDispatcher.getSelected(Patient.class);
+		actBrief = text.createFromTemplateName(text.getAktuelleKons(), template, Brief.RP, adressat,
 			template + " " + rp.getDate());
 		updateTextLock();
 		List<Prescription> lines = rp.getLines();
@@ -336,5 +341,13 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	@Override
 	public Image getSymbol(){
 		return Images.IMG_PRINTER.getImage();
+	}
+	
+	public boolean isAddressSelection(){
+		return addressSelection;
+	}
+	
+	public void setAddressSelection(boolean value){
+		this.addressSelection = value;
 	}
 }

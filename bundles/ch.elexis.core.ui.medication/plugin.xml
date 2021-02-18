@@ -123,6 +123,20 @@
             </parameter>
          </command>
          <command
+               commandId="ch.elexis.core.ui.medication.PrintRecipe"
+               icon="icon://IMG_VIEW_RECIPES"
+               label="Rezept mit Adressat drucken"
+               style="push">
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.medication"
+                  value="selection">
+            </parameter>
+            <parameter
+                  name="ch.elexis.core.ui.medication.commandParameter.address"
+                  value="select">
+            </parameter>
+         </command>         
+         <command
                commandId="ch.elexis.core.ui.medication.Dispense"
                icon="icon://IMG_VIEW_CONSULTATION_DETAIL"
                style="push">
@@ -248,6 +262,12 @@
                id="ch.elexis.core.ui.medication.commandParameter.medication"
                name="Medication"
                optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.ui.medication.commandParameter.address"
+               name="Address"
+               optional="true"
+               values="select">
          </commandParameter>
       </command>
       <command

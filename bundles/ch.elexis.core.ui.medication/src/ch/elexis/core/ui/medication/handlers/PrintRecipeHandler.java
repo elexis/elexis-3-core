@@ -50,6 +50,9 @@ public class PrintRecipeHandler extends AbstractHandler {
 			medicationType = "selection";
 		}
 		
+		String address =
+			event.getParameter("ch.elexis.core.ui.medication.commandParameter.address"); //$NON-NLS-1$
+		
 		List<IPrescription> prescRecipes = getPrescriptions(patient, medicationType, event);
 		if (!prescRecipes.isEmpty()) {
 			prescRecipes = sortPrescriptions(prescRecipes, event);
@@ -60,7 +63,10 @@ public class PrintRecipeHandler extends AbstractHandler {
 			try {
 				rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getActivePage().showView(ElexisConfigurationConstants.rezeptausgabe);
+				boolean previousAddressSelection = rpb.isAddressSelection();
+				rpb.setAddressSelection("select".equals(address));
 				rpb.createRezept(Rezept.load(recipe.getId()));
+				rpb.setAddressSelection(previousAddressSelection);
 				
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, recipe);
 			} catch (PartInitException e) {
