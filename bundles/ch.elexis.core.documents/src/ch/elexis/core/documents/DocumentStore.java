@@ -22,6 +22,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.exceptions.ElexisException;
@@ -171,6 +172,8 @@ public class DocumentStore {
 			} catch (IOException e) {
 				throw new ElexisException("cannot save content", e);
 			}
+		} else {
+			LoggerFactory.getLogger(getClass()).warn("No content for document " + document);
 		}
 		return null;
 	}
