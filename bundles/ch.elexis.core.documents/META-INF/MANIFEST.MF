@@ -11,7 +11,7 @@ Import-Package: org.apache.commons.io;version="2.4.0",
  org.apache.commons.lang3;version="3.1.0",
  org.osgi.service.component.annotations,
  org.osgi.service.event;version="1.4.0",
- org.slf4j;version="1.7.30"
+ org.slf4j
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.documents.DocumentStore.xml
 Export-Package: ch.elexis.core.documents
