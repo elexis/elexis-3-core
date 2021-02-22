@@ -73,7 +73,7 @@ Export-Package: org.apache.fontbox,
  org.apache.pdfbox.text,
  org.apache.pdfbox.util,
  org.apache.pdfbox.util.filetypedetector
-Require-Bundle: org.eclipse.osgi;bundle-version="3.15.200",
+Require-Bundle: org.eclipse.osgi;bundle-version="3.13.100",
  org.apache.commons.logging;bundle-version="1.2.0"
 Bundle-Activator: ch.elexis.core.pdfbox.Activator
 Bundle-ActivationPolicy: lazy
