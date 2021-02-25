@@ -86,9 +86,11 @@ public class BillingSystemService implements IBillingSystemService {
 	@Override
 	public Optional<IBillingSystem> getBillingSystem(String name){
 		try {
-			BillingSystem ret = cache.get(name);
-			if (ret != BillingSystem.UNKNOWN) {
-				return Optional.of(ret);
+			if (name != null) {
+				BillingSystem ret = cache.get(name);
+				if (ret != BillingSystem.UNKNOWN) {
+					return Optional.of(ret);
+				}
 			}
 		} catch (ExecutionException e) {
 			LoggerFactory.getLogger(getClass()).warn("Error getting billing system [" + name + "]",
