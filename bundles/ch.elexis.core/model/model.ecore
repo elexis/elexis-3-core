@@ -420,6 +420,13 @@
       <eParameters name="value" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     </eOperations>
     <eOperations name="clearContext"/>
+    <eOperations name="remove">
+      <eGenericType eClassifier="ecore:EClass types.ecore#//Result">
+        <eTypeArguments eClassifier="#//IBilled"/>
+      </eGenericType>
+      <eParameters name="billed" eType="#//IBilled"/>
+      <eParameters name="encounter" eType="#//IEncounter"/>
+    </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IService" abstract="true" interface="true"
       eSuperTypes="#//IBillable #//Identifiable #//Deleteable">

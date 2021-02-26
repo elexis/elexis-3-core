@@ -77,5 +77,13 @@ public interface IBillableOptifier<T extends IBillable> {
 	 * @generated
 	 */
 	void clearContext();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBilled&gt;"
+	 * @generated
+	 */
+	Result<IBilled> remove(IBilled billed, IEncounter encounter);
 	
 } // IBillableOptifier

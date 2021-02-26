@@ -886,7 +886,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
 							@Override
 							public void lockAcquired(){
-								actEncounter.removeBilled(billed);
+								BillingServiceHolder.get().removeBilled(billed, actEncounter);
 							}
 						});
 					}
