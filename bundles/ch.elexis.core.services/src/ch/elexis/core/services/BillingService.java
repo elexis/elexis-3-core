@@ -226,9 +226,13 @@ public class BillingService implements IBillingService {
 			return editable;
 		}
 		
-		encounter.removeBilled(billed);
-		
 		IBillable billable = billed.getBillable();
+		if (billable != null && billable.getOptifier() != null) {
+			billable.getOptifier().remove(billed, encounter);
+		} else {
+			encounter.removeBilled(billed);
+		}
+		
 		if(billable instanceof IArticle) {
 			
 			// TODO stock return via event

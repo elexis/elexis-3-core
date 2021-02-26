@@ -53,6 +53,12 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 		return new Result<IBilled>(billed);
 	}
 	
+	@Override
+	public Result<IBilled> remove(IBilled billed, IEncounter encounter){
+		encounter.removeBilled(billed);
+		return new Result<IBilled>(billed);
+	}
+	
 	/**
 	 * Set the actual price of <b>one</b> billable in the {@link IBilled} instance. The encounter
 	 * reference of the {@link IBilled} should be set.

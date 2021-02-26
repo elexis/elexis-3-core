@@ -5780,6 +5780,14 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		addEOperation(iBillableOptifierEClass, null, "clearContext", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		op = addEOperation(iBillableOptifierEClass, null, "remove", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIBilled(), "billed", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIEncounter(), "encounter", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getResult());
+		g2 = createEGenericType(this.getIBilled());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
 		initEClass(iServiceEClass, IService.class, "IService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIService_Price(), theTypesPackage.getMoney(), "price", null, 0, 1, IService.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIService_NetPrice(), theTypesPackage.getMoney(), "netPrice", null, 0, 1, IService.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
