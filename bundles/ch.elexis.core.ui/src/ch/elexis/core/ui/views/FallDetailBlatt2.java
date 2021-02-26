@@ -361,14 +361,18 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		dpBis = new CDateTime(top, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
 		dpBis.setSelection(new Date());
 		dpBis.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e){
-					IFall fall = getSelectedFall();
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				IFall fall = getSelectedFall();
+				if (dpBis.getSelection() != null) {
 					TimeTool selectedDate = new TimeTool(dpBis.getSelection());
 					fall.setEndDatum(selectedDate.dump());
-					fireSelectedFallUpdateEvent();
+				} else {
+					fall.setEndDatum(null);
 				}
-			});
+				fireSelectedFallUpdateEvent();
+			}
+		});
 		dpBis.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		ddc = new DayDateCombo(top, Messages.FallDetailBlatt2_ProposeForBillingIn,
 			Messages.FallDetailBlatt2_DaysOrAfter, Messages.FallDetailBlatt2_ProposeForBillingNeg,
@@ -976,10 +980,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			if (newValue != null && !newValue.isEmpty()
 				&& !newValue.equals(Messages.FallDetailBlatt2_29)) {
 				actFall.set(Fall.FLD_BEZEICHNUNG, newValue);
-			}
-			if (dpBis.getSelection() == null) {
-				// This must be called to enable the user to delete a given endDate
-				actFall.setEndDatum(null);
 			}
 			
 			// save reacts
