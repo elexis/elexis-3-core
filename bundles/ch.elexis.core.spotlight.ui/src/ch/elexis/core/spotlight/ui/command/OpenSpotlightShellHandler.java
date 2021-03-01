@@ -55,7 +55,7 @@ public class OpenSpotlightShellHandler {
 		int x = bounds.x + (bounds.width - rect.width) / 2;
 		int y = bounds.y + (bounds.height - rect.height) / 2;
 		
-		y -= 200; // slightly more to the top - dialog will get bigger on opening results
+		y -= 100; // slightly more to the top - dialog will get bigger on opening results
 		
 		spotlightShell.setLocation(x, y);
 		

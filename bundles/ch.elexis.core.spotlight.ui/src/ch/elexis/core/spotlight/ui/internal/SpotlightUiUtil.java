@@ -6,6 +6,8 @@ import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.swt.program.Program;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +30,13 @@ public class SpotlightUiUtil {
 	
 	@Inject
 	private DocumentStore documentStore;
-
+	
+	private EPartService partService;
+	
+	public SpotlightUiUtil(EPartService partService){
+		this.partService = partService;
+	}
+	
 	private boolean handleEnter(ISpotlightResultEntry selected){
 		if (selected == null) {
 			return false;
@@ -65,15 +73,21 @@ public class SpotlightUiUtil {
 		case ENCOUNTER:
 			IEncounter encounter =
 				CoreModelServiceHolder.get().load(objectId, IEncounter.class).orElse(null);
-			if (encounter != null) {
-				contextService.getRootContext().setTyped(encounter);
-			}
-			// TODO open kons view?
-			return true;
+			return handleEnter(encounter);
 		default:
 			System.out.println("No default enter action");
 			return false;
 		}
+	}
+	
+	private boolean handleEnter(IEncounter encounter){
+		if (encounter != null) {
+			contextService.getRootContext().setTyped(encounter.getPatient());
+			contextService.getRootContext().setTyped(encounter);
+			partService.showPart("ch.elexis.Konsdetail", PartState.ACTIVATE);
+			return true;
+		}
+		return false;
 	}
 	
 	private boolean handleEnter(IAppointment appointment){
@@ -95,7 +109,19 @@ public class SpotlightUiUtil {
 				.load(string.substring(Category.PATIENT.name().length() + 2), IPatient.class)
 				.orElse(null);
 			contextService.setActivePatient(patient);
-			return true;
+			return patient != null;
+		} else if (string.startsWith("balance")) {
+			// show patients balance
+			// expects balance::patientId
+			boolean ok = handleEnter(
+				Category.PATIENT.name() + "::" + string.substring("balance".length() + 2));
+			if (ok) {
+				// switched to patient
+				partService.showPart("ch.elexis.core.ui.views.rechnung.InvoiceListView",
+					PartState.ACTIVATE);
+				return true;
+			}
+			return false;
 		}
 		return false;
 	}
@@ -104,6 +130,8 @@ public class SpotlightUiUtil {
 	public boolean handleEnter(Object selectedElement){
 		if (selectedElement instanceof IAppointment) {
 			return handleEnter((IAppointment) selectedElement);
+		} else if (selectedElement instanceof IEncounter) {
+			return handleEnter((IEncounter) selectedElement);
 		} else if (selectedElement instanceof ISpotlightResultEntry) {
 			return handleEnter((ISpotlightResultEntry) selectedElement);
 		} else if (selectedElement instanceof Supplier<?>) {
