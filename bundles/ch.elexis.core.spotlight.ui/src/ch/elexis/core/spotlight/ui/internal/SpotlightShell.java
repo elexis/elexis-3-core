@@ -56,7 +56,7 @@ public class SpotlightShell extends Shell {
 		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService,
 		SpotlightReadyService spotlightReadyService,
 		Map<String, String> spotlightContextParameters){
-		super(shell, SWT.NO_TRIM | SWT.TOOL);
+		super(shell, SWT.NO_TRIM | SWT.TOOL | SWT.BORDER);
 		this.partService = partService;
 		this.spotlightService = spotlightService;
 		this.resultEntryDetailCompositeService = resultEntryDetailCompositeService;
@@ -77,7 +77,9 @@ public class SpotlightShell extends Shell {
 			case SWT.TRAVERSE_RETURN:
 				boolean ok = uiUtil.handleEnter(selectedElement);
 				if (ok) {
-					close();
+					if(!isDisposed()) {
+						close();
+					}
 				}
 				event.detail = SWT.TRAVERSE_NONE;
 				event.doit = true;
@@ -89,10 +91,10 @@ public class SpotlightShell extends Shell {
 		// clicking outside closes shell
 		addListener(SWT.Deactivate, event -> close());
 		
-		uiUtil = new SpotlightUiUtil();
+		uiUtil = new SpotlightUiUtil(partService);
 		CoreUiUtil.injectServicesWithContext(uiUtil);
 		
-		setSize(700, 400);
+		setSize(700, 500);
 		createContents();
 	}
 	
@@ -224,10 +226,6 @@ public class SpotlightShell extends Shell {
 			});
 		}
 		
-	}
-	
-	public void refresh(){
-		setSize(700, 400);
 	}
 	
 	public boolean setFocusAppendChar(char charachter){

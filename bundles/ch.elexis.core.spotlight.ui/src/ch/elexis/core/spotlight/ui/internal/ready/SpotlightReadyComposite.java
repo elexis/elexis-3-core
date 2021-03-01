@@ -125,9 +125,9 @@ public class SpotlightReadyComposite extends Composite {
 		//		listOpenReminders.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		//		listOpenReminders.setBackground(getBackground());
 		//		
-		Label lblNewMessages = new Label(compositeRight, SWT.NONE);
-		lblNewMessages.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblNewMessages.setText("? neue Nachrichten");
+//		Label lblNewMessages = new Label(compositeRight, SWT.NONE);
+//		lblNewMessages.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		lblNewMessages.setText("? neue Nachrichten");
 		
 		Supplier<Boolean> jumpToInboxViewSupplier = () -> {
 			partService.showPart("at.medevit.elexis.inbox.ui.view", PartState.ACTIVATE);
