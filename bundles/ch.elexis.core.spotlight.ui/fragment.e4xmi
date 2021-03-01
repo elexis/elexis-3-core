@@ -5,7 +5,7 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_PmCwgB0IEeuK3vfwFBDgiw" featurename="bindingTables" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:BindingTable" xmi:id="_SqbHgB0IEeuK3vfwFBDgiw" elementId="ch.elexis.core.spotlight.ui.bindingtable" bindingContext="_-epGgB0OEeuK3vfwFBDgiw">
       <bindings xmi:id="_l9mkMB0PEeuK3vfwFBDgiw" elementId="ch.elexis.core.spotlight.ui.keybinding.0" keySequence="M3+SPACE" command="_XXVikB0IEeuK3vfwFBDgiw"/>
-      <bindings xmi:id="_TxVqkEBaEeu0YZrvScFhvg" elementId="ch.elexis.core.spotlight.ui.keybinding.1" keySequence="M2+SPACE" command="_XXVikB0IEeuK3vfwFBDgiw">
+      <bindings xmi:id="_TxVqkEBaEeu0YZrvScFhvg" elementId="ch.elexis.core.spotlight.ui.keybinding.1" keySequence="M3+F" command="_XXVikB0IEeuK3vfwFBDgiw">
         <parameters xmi:id="_Afs6cEBdEeu0YZrvScFhvg" elementId="ch.elexis.core.spotlight.ui.parameter.0" name="ch.elexis.core.spotlight.ui.commandparameter.spotlightshellfilter" value="patientFiltered"/>
       </bindings>
     </elements>
