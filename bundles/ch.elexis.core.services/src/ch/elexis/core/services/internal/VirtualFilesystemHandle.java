@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemhandleFilter;
+import jcifs.SmbTreeHandle;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileFilter;
@@ -339,10 +340,27 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				return new VirtualFilesystemHandle(path.toFile());
 			}
 		}
-		// TODO SMB if on same resource - use rename method
-		copyTo(target);
-		delete();
-		return target;
+		
+		Optional<SmbFile> smbFile = toSmbFile();
+		if (smbFile.isPresent()) {
+			Optional<SmbFile> smbFileTarget = ((VirtualFilesystemHandle) target).toSmbFile();
+			if(smbFileTarget.isPresent()) {
+				
+				SmbTreeHandle smbFileTh = smbFile.get().getTreeHandle();
+				SmbTreeHandle smbFileThTarget = smbFileTarget.get().getTreeHandle();
+
+				if(smbFileTh.isSameTree(smbFileThTarget)) {
+					// both resources on same share
+					smbFile.get().renameTo(smbFileTarget.get());
+				} else {
+					smbFile.get().copyTo(smbFileTarget.get());
+					smbFile.get().delete();
+				}
+			}
+			return target;
+		}
+		
+		throw new IOException("Invalid type");
 	}
 	
 	@Override
