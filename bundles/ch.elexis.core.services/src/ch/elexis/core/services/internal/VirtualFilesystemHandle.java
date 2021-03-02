@@ -344,17 +344,19 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		Optional<SmbFile> smbFile = toSmbFile();
 		if (smbFile.isPresent()) {
 			Optional<SmbFile> smbFileTarget = ((VirtualFilesystemHandle) target).toSmbFile();
-			if(smbFileTarget.isPresent()) {
+			if (smbFileTarget.isPresent()) {
 				
-				SmbTreeHandle smbFileTh = smbFile.get().getTreeHandle();
-				SmbTreeHandle smbFileThTarget = smbFileTarget.get().getTreeHandle();
-
-				if(smbFileTh.isSameTree(smbFileThTarget)) {
-					// both resources on same share
-					smbFile.get().renameTo(smbFileTarget.get());
-				} else {
-					smbFile.get().copyTo(smbFileTarget.get());
-					smbFile.get().delete();
+				try (SmbTreeHandle smbFileTh = smbFile.get().getTreeHandle();
+						SmbTreeHandle smbFileThTarget = smbFileTarget.get().getTreeHandle()) {
+					
+					if (smbFileTh.isSameTree(smbFileThTarget)) {
+						
+						// both resources on same share
+						smbFile.get().renameTo(smbFileTarget.get());
+					} else {
+						smbFile.get().copyTo(smbFileTarget.get());
+						smbFile.get().delete();
+					}
 				}
 			}
 			return target;
