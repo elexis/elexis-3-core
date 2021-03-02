@@ -12,9 +12,18 @@
 package ch.elexis.core.ui.preferences;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -35,6 +44,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -49,6 +59,7 @@ import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.core.utils.CoreUtil.OS;
+import ch.elexis.data.Brief;
 
 /**
  * Einstellungen zur Verknüpfung mit einem externen Texterstellungs-Modul
@@ -82,13 +93,21 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		if (LocalDocumentServiceHolder.getService().isPresent()) {
 			ILocalDocumentService documentService = LocalDocumentServiceHolder.getService().get();
 			Composite compBackupDir = new Composite(getFieldEditorParent(), SWT.NONE);
-			compBackupDir.setLayout(new GridLayout(1, false));
+			compBackupDir.setLayout(new GridLayout(2, false));
 			compBackupDir.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			new Label(compBackupDir, SWT.NONE).setText(Messages.Texterstellung_backupdir);
 			Text backupDir = new Text(compBackupDir, SWT.BORDER);
 			backupDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			backupDir.setText(documentService.getDocumentCachePath() + File.separator + "backup");
 			backupDir.setEditable(false);
+			Button restore = new Button(compBackupDir, SWT.PUSH);
+			restore.setText("wiederherstellen");
+			restore.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					restoreLocalDocuments(documentService);
+				}
+			});
 		}
 		
 		String[][] rows = new String[list.size()][];
@@ -176,4 +195,58 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 	@Override
 	public void init(IWorkbench workbench){}
 	
+	private void restoreLocalDocuments(ILocalDocumentService documentService){
+		File backupDir =
+			new File(documentService.getDocumentCachePath() + File.separator + "backup");
+		if (backupDir.exists()) {
+			Map<File, Brief> existing = new HashMap<>();
+			for (File file : backupDir.listFiles()) {
+				String id = getBriefId(file);
+				if (StringUtils.isNotBlank(id)) {
+					Brief loaded = Brief.load(id);
+					if (loaded.exists()) {
+						existing.put(file, loaded);
+					}
+				}
+			}
+			if (existing.isEmpty()) {
+				MessageDialog.openInformation(getShell(), "Briefe wiederherstellen",
+					"Es wurden keine wiederherstellbaren Briefe gefunden");
+			} else {
+				Date fileFrom = new Date(
+					existing.keySet().stream().mapToLong(f -> f.lastModified()).min().getAsLong());
+				Date fileTo = new Date(
+					existing.keySet().stream().mapToLong(f -> f.lastModified()).max().getAsLong());
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+				if (MessageDialog.openQuestion(getShell(), "Briefe wiederherstellen",
+					"Sollen die " + existing.size() + " Briefe aus Datei(en) vom "
+						+ dateFormat.format(fileFrom) + " bis " + dateFormat.format(fileTo)
+						+ " wiederhergestellt werden?")) {
+					for (File backupFile : existing.keySet()) {
+						Brief brief = existing.get(backupFile);
+						try (FileInputStream fin = new FileInputStream(backupFile)) {
+							byte[] contentToStore = new byte[(int) backupFile.length()];
+							fin.read(contentToStore);
+							brief.save(contentToStore,
+								FilenameUtils.getExtension(backupFile.getName()));
+							backupFile.delete();
+						} catch (IOException e) {
+							LoggerFactory.getLogger(getClass())
+								.error("Error restoring local backup", e);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private String getBriefId(File file){
+		String filename = file.getName();
+		int startIndex = filename.lastIndexOf('[');
+		int endIndex = filename.lastIndexOf(']');
+		if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+			return filename.substring(startIndex + 1, endIndex);
+		}
+		return null;
+	}
 }
