@@ -39,7 +39,7 @@ public class TaskException extends Exception {
 	}
 	
 	public TaskException(int exceptionCode, Throwable re){
-		this(exceptionCode, null, re);
+		this(exceptionCode, (re != null) ? re.getMessage() : null, re);
 	}
 	
 	public TaskException(int exceptionCode){
