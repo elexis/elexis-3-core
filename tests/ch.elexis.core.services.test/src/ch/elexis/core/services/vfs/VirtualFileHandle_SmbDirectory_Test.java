@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -95,7 +96,38 @@ public class VirtualFileHandle_SmbDirectory_Test {
 		assertTrue(subFile.exists());
 		assertTrue(subFile.canRead());
 		IVirtualFilesystemHandle subFileRenamed = dir.subFile("Test File renamed.txt");
+		
 		subFile.moveTo(subFileRenamed);
+		
+		assertFalse(subFile.exists());
+		assertTrue(subFileRenamed.exists());
+		assertTrue(subFileRenamed.canRead());
+		subFileRenamed.delete();
+		assertFalse(subFileRenamed.exists());
+	}
+	
+	@Test
+	public void testCreateAndMoveToBetweenHosts() throws UnknownHostException, IOException {
+		assumeTrue(serviceIsReachable);
+		
+		boolean ee_medevit_atIsReachable = InetAddress.getByName("192.168.0.23").isReachable(300)
+				|| InetAddress.getAllByName("192.168.0.23")[0].isReachable(300);
+		
+		assumeTrue(ee_medevit_atIsReachable);
+		
+		IVirtualFilesystemHandle dir = service.of("smb://192.168.0.23/scan/processed/");
+		IVirtualFilesystemHandle subFile = dir.subFile("Test File.txt");
+		try (PrintWriter p = new PrintWriter(subFile.openOutputStream())) {
+			p.write("TestFile\n");
+		}
+		assertTrue(subFile.exists());
+		assertTrue(subFile.canRead());
+		
+		IVirtualFilesystemHandle dirOtherResource = service.of(PREFIX_AUTH_SAMBA);
+		IVirtualFilesystemHandle subFileRenamed = dirOtherResource.subFile("Test File renamed.txt");
+		
+		subFile.moveTo(subFileRenamed);
+		
 		assertFalse(subFile.exists());
 		assertTrue(subFileRenamed.exists());
 		assertTrue(subFileRenamed.canRead());
