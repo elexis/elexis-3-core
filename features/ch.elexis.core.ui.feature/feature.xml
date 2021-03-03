@@ -169,13 +169,13 @@
          unpack="false"/>
 
    <plugin
-         id="ch.elexis.core.pdfbox"
+         id="ch.elexis.core.pdfbox.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="ch.elexis.core.pdfbox.ui"
+         id="ch.elexis.core.pdfbox"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
