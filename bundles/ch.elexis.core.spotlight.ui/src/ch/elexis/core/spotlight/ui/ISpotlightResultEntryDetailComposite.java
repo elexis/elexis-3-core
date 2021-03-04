@@ -28,5 +28,7 @@ public interface ISpotlightResultEntryDetailComposite {
 	 * The {@link Category} this Composite is meant to be applied on
 	 */
 	public abstract Category appliedForCategory();
+
+	public abstract boolean handleAltKeyPressed(int keyCode);
 	
 }

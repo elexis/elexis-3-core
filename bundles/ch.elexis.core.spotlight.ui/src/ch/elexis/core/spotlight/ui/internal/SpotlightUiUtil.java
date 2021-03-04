@@ -19,17 +19,29 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
 
 public class SpotlightUiUtil {
 	
+	public static final String ACTION_SHOW_LATEST_LABORATORY = "sll::";
+	public static final String ACTION_SHOW_LATEST_ENCOUNTER = "sle::";
+	public static final String ACTION_SHOW_FIXED_MEDICATION = "sfm::";
+	// show dialog for a specific appointment, requires appointmentId
+	public static final String ACTION_SHOW_APPOINTMENT = "sam::";
+	// show patients balance requires patientId
+	public static final String ACTION_SHOW_BALANCE = "sb::";
+	
 	@Inject
 	private IContextService contextService;
 	
 	@Inject
 	private DocumentStore documentStore;
+	
+	@Inject
+	private IEncounterService encounterService;
 	
 	private EPartService partService;
 	
@@ -105,23 +117,48 @@ public class SpotlightUiUtil {
 	
 	private boolean handleEnter(String string){
 		if (string.startsWith(Category.PATIENT.name())) {
-			IPatient patient = CoreModelServiceHolder.get()
-				.load(string.substring(Category.PATIENT.name().length() + 2), IPatient.class)
-				.orElse(null);
+			String patientId = string.substring(Category.PATIENT.name().length() + 2);
+			IPatient patient =
+				CoreModelServiceHolder.get().load(patientId, IPatient.class).orElse(null);
+			if (patient == null) {
+				System.out.println("Could not load patient " + patientId);
+			}
 			contextService.setActivePatient(patient);
 			return patient != null;
-		} else if (string.startsWith("balance")) {
-			// show patients balance
-			// expects balance::patientId
-			boolean ok = handleEnter(
-				Category.PATIENT.name() + "::" + string.substring("balance".length() + 2));
-			if (ok) {
-				// switched to patient
-				partService.showPart("ch.elexis.core.ui.views.rechnung.InvoiceListView",
-					PartState.ACTIVATE);
-				return true;
+		} else if (string.startsWith(ACTION_SHOW_BALANCE)) {
+			return performActionShowBalance(string.substring(ACTION_SHOW_BALANCE.length()));
+			
+		} else if (string.startsWith(ACTION_SHOW_LATEST_LABORATORY)) {
+			return performActionShowLatestLaboratory(
+				string.substring(ACTION_SHOW_LATEST_LABORATORY.length()));
+			
+		} else if (string.startsWith(ACTION_SHOW_LATEST_ENCOUNTER)) {
+			return performActionShowLatestEncounter(
+				string.substring(ACTION_SHOW_LATEST_ENCOUNTER.length()));
+		}
+		return false;
+	}
+	
+	private boolean performActionShowLatestEncounter(String patientId){
+		boolean ok = handleEnter(Category.PATIENT.name() + "::" + patientId);
+		if (ok) {
+			IPatient patient = contextService.getActivePatient().orElse(null);
+			if (patient != null) {
+				IEncounter latestEncounter =
+					encounterService.getLatestEncounter(patient).orElse(null);
+				if (latestEncounter != null) {
+					return handleEnter(latestEncounter);
+				}
 			}
-			return false;
+		}
+		return false;
+	}
+	
+	private boolean performActionShowLatestLaboratory(String patientId){
+		boolean ok = handleEnter(Category.PATIENT.name() + "::" + patientId);
+		if (ok) {
+			partService.showPart("ch.elexis.Labor", PartState.ACTIVATE);
+			return true;
 		}
 		return false;
 	}
@@ -138,6 +175,16 @@ public class SpotlightUiUtil {
 			return ((Supplier<Boolean>) selectedElement).get();
 		} else if (selectedElement instanceof String) {
 			return handleEnter((String) selectedElement);
+		}
+		return false;
+	}
+	
+	private boolean performActionShowBalance(String patientId){
+		boolean ok = handleEnter(Category.PATIENT.name() + "::" + patientId);
+		if (ok) {
+			partService.showPart("ch.elexis.core.ui.views.rechnung.InvoiceListView",
+				PartState.ACTIVATE);
+			return true;
 		}
 		return false;
 	}

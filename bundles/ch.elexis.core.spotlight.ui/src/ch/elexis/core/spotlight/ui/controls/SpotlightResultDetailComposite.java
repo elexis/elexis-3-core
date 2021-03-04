@@ -71,5 +71,9 @@ public class SpotlightResultDetailComposite extends Composite {
 		CoreUiUtil.injectServicesWithContext(activeDetailComposite);
 		activeDetailComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
+
+	public boolean handleAltKeyPressed(int keyCode){
+		return activeDetailComposite.handleAltKeyPressed(keyCode);
+	}
 	
 }
