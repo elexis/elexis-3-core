@@ -75,7 +75,7 @@ public class SpotlightShell extends Shell {
 				break;
 			// ENTER performs the action defined for the selected element
 			case SWT.TRAVERSE_RETURN:
-				boolean ok = uiUtil.handleEnter(selectedElement);
+				boolean ok = handleSelectedElement();
 				if (ok) {
 					if(!isDisposed()) {
 						close();
@@ -181,6 +181,14 @@ public class SpotlightShell extends Shell {
 				}
 			} else if (event.keyCode == SWT.ARROW_DOWN) {
 				layeredComposite.setFocus();
+			} 
+		
+			if(event.stateMask == SWT.ALT) {
+				event.doit=false;
+				boolean success = resultComposite.handleAltKeyPressed(event.keyCode);
+				if (success) {
+					close();
+				}
 			}
 			
 		});
@@ -248,6 +256,10 @@ public class SpotlightShell extends Shell {
 	
 	public void setSelectedElement(Object element){
 		this.selectedElement = element;
+	}
+	
+	public boolean handleSelectedElement() {
+		return uiUtil.handleEnter(selectedElement);
 	}
 	
 }

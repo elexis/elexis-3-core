@@ -1,87 +1,66 @@
 package ch.elexis.core.spotlight.ui.controls.detail;
 
-import java.time.LocalDate;
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
-import ch.elexis.core.model.IAccountTransaction;
 import ch.elexis.core.model.IAppointment;
-import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
-import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.ISticker;
-import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.INamedQuery;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
 import ch.elexis.core.spotlight.ui.ISpotlightResultEntryDetailComposite;
 import ch.elexis.core.spotlight.ui.controls.AbstractSpotlightResultEntryDetailComposite;
-import ch.elexis.core.spotlight.ui.internal.CustomLinkWithOptionalImage;
 import ch.elexis.core.spotlight.ui.internal.SpotlightShell;
+import ch.elexis.core.spotlight.ui.internal.SpotlightUiUtil;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.rgw.tools.Money;
 
 public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailComposite
 		implements ISpotlightResultEntryDetailComposite {
+	
+	private static final String PATIENT_LABEL_FONT = "patient-label-font";
 	
 	@Inject
 	private IStickerService stickerService;
 	@Inject
 	private IEncounterService encounterService;
 	
-	private static final String PATIENT_LABEL_FONT = "patient-label-font";
-	
 	private IModelService coreModelService;
 	private PatientDetailCompositeUtil util;
 	
 	private Label lblPatientlabel;
 	private Composite stickerComposite;
-	private Label lblStammarzt;
-	private Label lblInsuranceKVG;
-	private Label lblAppointments;
-	private CustomLinkWithOptionalImage lastEncounter;
-	private Composite encounterComposite;
-	private Label lblLastEncounterText;
-	private Label lblPendenzen;
-	private CustomLinkWithOptionalImage balance;
-	//	private Label lblBalance;
-	private Label lblFixedMedication;
-	private Composite fixedMedicationComposite;
-	private Label lblLastLaboratory;
-	private Composite lastLaboratoryComposite;
+	private StyledText styledText;
 	
-	private ListViewer lvAppointments;
+	private IPatient selectedPatient;
+	private IAppointment selectedNextAppointment;
+	private IAppointment selectedPreviousAppointment;
 	
 	/**
 	 * Create the composite.
@@ -103,14 +82,14 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		lblPatientlabel = new Label(this, SWT.NONE);
 		
 		Font patientLabelFont;
-		//		if (JFaceResources.getFontRegistry().hasValueFor(PATIENT_LABEL_FONT)) {
-		//			patientLabelFont = JFaceResources.getFontRegistry().get(PATIENT_LABEL_FONT);
-		//		} else {
-		FontData[] fontData = lblPatientlabel.getFont().getFontData();
-		fontData[0].setHeight(fontData[0].getHeight() + 1);
-		JFaceResources.getFontRegistry().put(PATIENT_LABEL_FONT, fontData);
-		patientLabelFont = JFaceResources.getFontRegistry().get(PATIENT_LABEL_FONT);
-		//		}
+		if (JFaceResources.getFontRegistry().hasValueFor(PATIENT_LABEL_FONT)) {
+			patientLabelFont = JFaceResources.getFontRegistry().get(PATIENT_LABEL_FONT);
+		} else {
+			FontData[] fontData = lblPatientlabel.getFont().getFontData();
+			fontData[0].setHeight(fontData[0].getHeight() + 1);
+			JFaceResources.getFontRegistry().put(PATIENT_LABEL_FONT, fontData);
+			patientLabelFont = JFaceResources.getFontRegistry().get(PATIENT_LABEL_FONT);
+		}
 		lblPatientlabel.setFont(patientLabelFont);
 		lblPatientlabel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		lblPatientlabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
@@ -125,103 +104,28 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		gd_stickerComposite.heightHint = 16;
 		stickerComposite.setLayoutData(gd_stickerComposite);
 		
-		// Stammarzt, Versicherung
-		lblStammarzt = new Label(this, SWT.NONE);
-		lblStammarzt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblInsuranceKVG = new Label(this, SWT.NONE);
-		lblInsuranceKVG.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		// Reminders
-		Composite pendenzenComposite = new Composite(this, SWT.NONE);
-		pendenzenComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
-		pendenzenComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		
-		lblPendenzen = new Label(pendenzenComposite, SWT.NONE);
-		lblPendenzen.setText("Keine Pendenzen (TODO)");
-		
-		// Balance
-		balance = new CustomLinkWithOptionalImage(this, SWT.None, null);
-		//		lblBalance = new Label(this, SWT.NONE);
-		//		lblBalance.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-		
-		// Appointments
-		lblAppointments = new Label(this, SWT.NONE);
-		Font boldDefaultFont = JFaceResources.getFontRegistry().getBold("default");
-		lblAppointments.setText("Termine");
-		lblAppointments.setFont(boldDefaultFont);
-		lblAppointments.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		
-		lvAppointments = new ListViewer(this, SWT.V_SCROLL);
-		lvAppointments.setContentProvider(ArrayContentProvider.getInstance());
-		lvAppointments.setLabelProvider(new LabelProvider() {
-			@Override
-			public String getText(Object element){
-				return util.getAppointmentLabel(((IAppointment) element));
+		styledText = new StyledText(this, SWT.WRAP);
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		styledText.setEditable(false);
+		// TODO setEnabled?
+		styledText.setBackground(getBackground());
+		styledText.setTabStops(new int[] {
+			100, 350
+		});
+		styledText.setLineSpacingProvider(lineIndex -> 3);
+		styledText.addListener(SWT.MouseDown, event -> {
+			int offset = styledText.getOffsetAtPoint(new Point(event.x, event.y));
+			if (offset != -1) {
+				try {
+					StyleRange sr = styledText.getStyleRangeAtOffset(offset);
+					if (sr != null && sr.data instanceof String) {
+						String linkAction = (String) sr.data;
+						handleAltKeyPressed(linkAction.charAt(0));
+					}
+				} catch (IllegalArgumentException e) {
+					// no character under event.x, event.y
+				}
 			}
-		});
-		lvAppointments.addSelectionChangedListener(event -> {
-			IAppointment firstElement =
-				(IAppointment) event.getStructuredSelection().getFirstElement();
-			if (firstElement != null) {
-				((SpotlightShell) getShell()).setSelectedElement(firstElement);
-			} else {
-				((SpotlightShell) getShell()).setSelectedElement(null);
-			}
-			
-		});
-		org.eclipse.swt.widgets.List listAppointments = lvAppointments.getList();
-		listAppointments.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		listAppointments.setBackground(getBackground());
-		listAppointments.addListener(SWT.FocusIn, event -> {
-			@SuppressWarnings("unchecked")
-			List<IAppointment> input = ((List<IAppointment>) lvAppointments.getInput());
-			if (input != null && !input.isEmpty()) {
-				lvAppointments.setSelection(new StructuredSelection(input.get(0)));
-			} else {
-				lvAppointments.setSelection(null);
-			}
-		});
-		listAppointments.addListener(SWT.FocusOut, event -> {
-			lvAppointments.setSelection(null);
-		});
-		
-		// Encounter
-		lastEncounter = new CustomLinkWithOptionalImage(this, SWT.NONE, null);
-		lastEncounter.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		lastEncounter.getLink().setText("Letzte Konsultation");
-		lastEncounter.getLink().setFont(boldDefaultFont);
-		lastEncounter.setFont(boldDefaultFont);
-		
-		encounterComposite = new Composite(this, SWT.NONE);
-		GridLayout gl_encounterComposite = new GridLayout(1, false);
-		gl_encounterComposite.marginHeight = 0;
-		gl_encounterComposite.marginWidth = 0;
-		encounterComposite.setLayout(gl_encounterComposite);
-		encounterComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		
-		lblLastEncounterText = new Label(encounterComposite, SWT.WRAP | SWT.LEFT);
-		GridData gd_lblLastEncounterText = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
-		gd_lblLastEncounterText.heightHint = 60;
-		lblLastEncounterText.setLayoutData(gd_lblLastEncounterText);
-		
-		fixedMedicationComposite = new Composite(this, SWT.NONE);
-		fixedMedicationComposite.setLayout(new FillLayout(SWT.VERTICAL));
-		fixedMedicationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		
-		lblFixedMedication = new Label(fixedMedicationComposite, SWT.NONE);
-		lblFixedMedication.setText("Fixmedikation");
-		lblFixedMedication.setFont(boldDefaultFont);
-		
-		lastLaboratoryComposite = new Composite(this, SWT.NONE);
-		lastLaboratoryComposite.setLayout(new FillLayout(SWT.VERTICAL));
-		lastLaboratoryComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		
-		lblLastLaboratory = new Label(lastLaboratoryComposite, SWT.NONE);
-		lblLastLaboratory.setText("Letztes Labor");
-		lblLastLaboratory.setFont(boldDefaultFont);
-		
-		setTabList(new Control[] {
-			balance, listAppointments, lastEncounter
 		});
 		
 		setSpotlightEntry(null);
@@ -230,7 +134,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 	
 	@Override
 	public boolean setFocus(){
-		return balance.setFocus();
+		return styledText.setFocus();
 	}
 	
 	@Override
@@ -241,100 +145,118 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 	@Override
 	public void setSpotlightEntry(ISpotlightResultEntry resultEntry){
 		
-		IPatient patient = null;
+		selectedPatient = null;
+		selectedNextAppointment = null;
+		selectedPreviousAppointment = null;
+		
 		if (resultEntry != null) {
 			Optional<Object> object = resultEntry.getObject();
 			if (!object.isPresent()) {
 				String patientId = resultEntry.getLoaderString();
-				patient = coreModelService.load(patientId, IPatient.class).orElse(null);
+				selectedPatient = coreModelService.load(patientId, IPatient.class).orElse(null);
 			} else {
-				patient = (IPatient) object.get();
+				selectedPatient = (IPatient) object.get();
 			}
 		}
 		
-		clearPopulatePatientLabelComposite(patient);
-		clearPopulateStickerComposite(patient);
-		clearPopulateReminders(patient);
-		clearUpdateBalance(patient);
-		updateAppointments(patient);
-		updateLastEncounter(patient);
-		clearPopulateFixedMedicationComposite(patient);
-		clearUpdateLastLaboratoryComposite(patient);
+		clearPopulatePatientLabelComposite(selectedPatient);
+		clearPopulateStickerComposite(selectedPatient);
+		updateStyledText(selectedPatient);
 		
 		layout(true);
 	}
 	
-	private void clearPopulateReminders(IPatient patient){
-		// TODO Auto-generated method stub
-	}
+	//@formatter:off
+	private final String TEMPLATE = "Stammarzt\t{0}\r\n" 
+			+ "Versicherung\t{1}\r\n" 
+			+ "Konto\t{2}\t<m0>ALT+B</m>\r\n\r\n"
+			+ "<lt>Nächster Termin</l>\t{3}\t<m0>ALT+T</m>\r\n"
+			+ "<l0>Letzter Termin</l>\t{4}\r\n"
+			+ "<ll>Letztes Labor</l>\t{5}\t<m0>ALT+L</m>\r\n\r\n"
+			+ "<lk>Letzte Kons</l>\t{6}\t<m0>ALT+K</m>\r\n" 
+			+ "{7}\r\n\r\n"
+			+ "<lf>Fixmedikation</l>\t\t<m0>ALT+F</m>\r\n"
+			+ "{8}";
+	//@formatter:on
 	
-	private void clearUpdateBalance(IPatient patient){
-		balance.setData(null);
+	private void updateStyledText(IPatient patient){
+		
+		styledText.setStyleRange(null);
+		
+		Object[] values = new Object[9];
+		Arrays.fill(values, "-");
+		
+		values[0] = util.getFormattedFamilyDoctor(patient);
+		values[1] = util.getFormattedInsurance(coreModelService, patient);
+		values[2] = util.getFormattedPatientBalance(coreModelService, patient);
+		
+		selectedNextAppointment = util.getNextAppointment(coreModelService, patient);
+		values[3] = util.getAppointmentLabel(selectedNextAppointment);
+		
+		selectedPreviousAppointment = util.getPreviousAppointment(coreModelService, patient);
+		values[4] = util.getAppointmentLabel(selectedPreviousAppointment);
+		
+		values[5] = util.getFormattedLatestLaboratoryDate(coreModelService, patient);
+		
 		if (patient != null) {
-			INamedQuery<Number> namedQuery = coreModelService.getNamedQuery(Number.class,
-				IAccountTransaction.class, true, "balance.patient");
-			List<Number> balanceResult =
-				namedQuery.executeWithParameters(namedQuery.getParameterMap("patient", patient));
-			balance.setData("balance::" + patient.getId());
-			if (!balanceResult.isEmpty()) {
-				int _balance = balanceResult.get(0).intValue();
-				balance.getLink().setText("Konto: CHF " + new Money(_balance));
-				return;
+			IEncounter _latestEncounter = encounterService.getLatestEncounter(patient).orElse(null);
+			if (_latestEncounter != null) {
+				values[6] = util.formatDate(_latestEncounter.getDate());
+				String encounterText =
+					_latestEncounter.getHeadVersionInPlaintext().trim().replaceAll("\n", " ");
+				String[] encounterValue = new String[4];
+				final int stepWidth = 65; // TODO calculate by dimension?
+				encounterValue[0] = StringUtils.substring(encounterText, 0, stepWidth);
+				encounterValue[1] = StringUtils.substring(encounterText, stepWidth, stepWidth * 2);
+				encounterValue[2] =
+					StringUtils.substring(encounterText, stepWidth * 2, stepWidth * 3);
+				encounterValue[3] =
+					StringUtils.substring(encounterText, stepWidth * 3, stepWidth * 4);
+				values[7] = StringUtils.join(encounterValue, "\n");
 			}
-		}
-		balance.getLink().setText("Konto: -");
-	}
-	
-	private void updateLastEncounter(IPatient patient){
-		lastEncounter.setData(null);
-		if (patient != null) {
-			IEncounter _lastEncounter = encounterService.getLatestEncounter(patient).orElse(null);
-			if (_lastEncounter != null) {
-				lastEncounter.setData(_lastEncounter);
-				lastEncounter.getLink()
-					.setText("Letzte Konsultation " + util.formatDate(_lastEncounter.getDate()));
-				String encounterText = _lastEncounter.getHeadVersionInPlaintext();
-				lblLastEncounterText.setText(StringUtils.abbreviate(encounterText, 200));
-			} else {
-				lastEncounter.getLink().setText("Letzte Konsultation");
-				lblLastEncounterText.setText("-");
-			}
-		} else {
-			lastEncounter.getLink().setText("");
-			lblLastEncounterText.setText("");
 		}
 		
-		encounterComposite.layout();
+		values[8] = util.getFormattedFixedMedication(coreModelService, patient);
+		
+		String text = MessageFormat.format(TEMPLATE, values);
+		StyleRange[] styleRanges = generateStyleRanges(text);
+		String replaceAll = text.replaceAll("<(.+?)>", "");
+		
+		styledText.setText(replaceAll);
+		styledText.setStyleRanges(styleRanges);
 	}
 	
-	private void updateAppointments(IPatient patient){
-		if (patient != null) {
-			IQuery<IAppointment> futureAppointmentsQuery =
-				coreModelService.getQuery(IAppointment.class);
-			futureAppointmentsQuery.and(ModelPackage.Literals.IAPPOINTMENT__SUBJECT_OR_PATIENT,
-				COMPARATOR.EQUALS, patient.getId());
-			futureAppointmentsQuery.and("tag", COMPARATOR.GREATER, LocalDate.now());
-			futureAppointmentsQuery.orderBy("tag", ORDER.ASC);
-			futureAppointmentsQuery.limit(2);
-			List<IAppointment> relevantAppointments = futureAppointmentsQuery.execute();
-			
-			IQuery<IAppointment> lastAppointmentQuery =
-				coreModelService.getQuery(IAppointment.class);
-			lastAppointmentQuery.and(ModelPackage.Literals.IAPPOINTMENT__SUBJECT_OR_PATIENT,
-				COMPARATOR.EQUALS, patient.getId());
-			lastAppointmentQuery.and("tag", COMPARATOR.LESS_OR_EQUAL, LocalDate.now());
-			lastAppointmentQuery.orderBy("tag", ORDER.DESC);
-			lastAppointmentQuery.limit(1);
-			IAppointment lastAppointment = lastAppointmentQuery.executeSingleResult().orElse(null);
-			
-			if (lastAppointment != null) {
-				relevantAppointments.add(lastAppointment);
+	private final Pattern TAG_PATTERN = Pattern.compile("<([a-z])([0a-z])>(.+?)</[a-z]>");
+	
+	private StyleRange[] generateStyleRanges(String text){
+		List<StyleRange> ranges = new ArrayList<StyleRange>();
+		
+		int matchedFormatChars = 0;
+		
+		Matcher matcher = TAG_PATTERN.matcher(text);
+		while (matcher.find()) {
+			StyleRange sr = new StyleRange();
+			String tag = matcher.group(1).intern();
+			String keybindingCode = matcher.group(2).intern();
+			sr.start = matcher.start() - matchedFormatChars;
+			sr.length = matcher.group(3).length();
+			switch (tag) {
+			case "l":
+				sr.underline = true;
+				sr.underlineStyle = SWT.UNDERLINE_LINK;
+				sr.data = keybindingCode;
+				break;
+			case "m":
+				sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_GRAY);
+				break;
+			default:
+				break;
 			}
-			
-			lvAppointments.setInput(relevantAppointments);
-		} else {
-			lvAppointments.setInput(null);
+			matchedFormatChars += 8; // the no of surrounding chars removed
+			ranges.add(sr);
 		}
+		
+		return ranges.toArray(new StyleRange[] {});
 	}
 	
 	private void clearPopulateStickerComposite(IPatient patient){
@@ -352,76 +274,64 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 	}
 	
 	private void clearPopulatePatientLabelComposite(IPatient patient){
-		
 		if (patient == null) {
 			lblPatientlabel.setText("");
-			lblStammarzt.setText("");
-			lblInsuranceKVG.setText("");
 		} else {
 			lblPatientlabel
 				.setText(patient.getLabel() + " (" + patient.getAgeInYears() + " Jahre)");
-			IContact familyDoctor = patient.getFamilyDoctor();
-			if (familyDoctor != null) {
-				String label =
-					familyDoctor.getDescription1() + ", " + familyDoctor.getDescription2();
-				if (StringUtils.isNotEmpty(familyDoctor.getCode())) {
-					label += " (" + familyDoctor.getCode() + ")";
-				}
-				lblStammarzt.setText("Stammarzt: " + label);
-			} else {
-				lblStammarzt.setText("Stammarzt: -");
-			}
-			IQuery<ICoverage> firstKvgQuery = coreModelService.getQuery(ICoverage.class);
-			firstKvgQuery.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);
-			firstKvgQuery.and("gesetz", COMPARATOR.EQUALS, "KVG");
-			firstKvgQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
-			firstKvgQuery.limit(1);
-			ICoverage firstKvg = firstKvgQuery.executeSingleResult().orElse(null);
-			IContact guarantor = firstKvg != null ? firstKvg.getGuarantor() : null;
-			if (guarantor != null) {
-				lblInsuranceKVG.setText("Versicherung KVG: " + guarantor.getLabel());
-			} else {
-				lblInsuranceKVG.setText("Versicherung KVG: -");
-			}
 		}
-		
-	}
-	
-	private void clearPopulateFixedMedicationComposite(IPatient patient){
-		util.clearComposite(fixedMedicationComposite, lblFixedMedication);
-		
-		if (patient != null) {
-			List<IPrescription> fixedMedication =
-				patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
-			for (IPrescription medication : fixedMedication) {
-				Label label = new Label(fixedMedicationComposite, SWT.None);
-				label.setText(medication.getLabel());
-			}
-		}
-		fixedMedicationComposite.layout();
-	}
-	
-	private void clearUpdateLastLaboratoryComposite(IPatient patient){
-		util.clearComposite(lastLaboratoryComposite, lblLastLaboratory);
-		
-		if (patient != null) {
-			IQuery<ILabResult> labResultQuery = coreModelService.getQuery(ILabResult.class);
-			labResultQuery.and(ModelPackage.Literals.ILAB_RESULT__PATIENT, COMPARATOR.EQUALS,
-				patient);
-			labResultQuery.orderBy(ModelPackage.Literals.ILAB_RESULT__DATE, ORDER.DESC);
-			labResultQuery.limit(1);
-			ILabResult latestResult = labResultQuery.executeSingleResult().orElse(null);
-			if (latestResult != null) {
-				Label label = new Label(lastLaboratoryComposite, SWT.NONE);
-				label.setText(util.formatDate(latestResult.getDate()) + "");
-			}
-		}
-		lastLaboratoryComposite.layout();
 	}
 	
 	@Override
 	public Category appliedForCategory(){
 		return Category.PATIENT;
+	}
+	
+	@Override
+	public boolean handleAltKeyPressed(int keyCode){
+		Object selectedElement = null;
+		
+		if (selectedPatient != null) {
+			switch (keyCode) {
+			case 'b':
+			case 'B':
+				selectedElement = SpotlightUiUtil.ACTION_SHOW_BALANCE + selectedPatient.getId();
+				break;
+			case 't':
+			case 'T':
+				String id =
+					(selectedNextAppointment != null) ? selectedNextAppointment.getId() : null;
+				if (id != null) {
+					selectedElement = SpotlightUiUtil.ACTION_SHOW_APPOINTMENT + id;
+				}
+				break;
+			case 'k':
+			case 'K':
+				selectedElement =
+					SpotlightUiUtil.ACTION_SHOW_LATEST_ENCOUNTER + selectedPatient.getId();
+				break;
+			case 'l':
+			case 'L':
+				selectedElement =
+					SpotlightUiUtil.ACTION_SHOW_LATEST_LABORATORY + selectedPatient.getId();
+				break;
+			case 'f':
+			case 'F':
+				selectedElement =
+					SpotlightUiUtil.ACTION_SHOW_FIXED_MEDICATION + selectedPatient.getId();
+				break;
+			default:
+				break;
+			}
+		}
+		
+		if (selectedElement != null) {
+			SpotlightShell shell = (SpotlightShell) getShell();
+			shell.setSelectedElement(selectedElement);
+			return shell.handleSelectedElement();
+		}
+		
+		return false;
 	}
 	
 }

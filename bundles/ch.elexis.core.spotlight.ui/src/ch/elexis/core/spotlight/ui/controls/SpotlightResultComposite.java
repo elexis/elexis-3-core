@@ -53,4 +53,8 @@ public class SpotlightResultComposite extends Composite {
 		return resultListComposite.handleEnterOnFirstSpotlightResultEntry();
 	}
 
+	public boolean handleAltKeyPressed(int keyCode){
+		return resultDetailComposite.handleAltKeyPressed(keyCode);
+	}
+
 }

@@ -35,5 +35,10 @@ public class FallbackDetailComposite extends Composite implements ISpotlightResu
 	public Category appliedForCategory(){
 		return null;
 	}
+
+	@Override
+	public boolean handleAltKeyPressed(int keyCode){
+		return true;
+	}
 	
 }
