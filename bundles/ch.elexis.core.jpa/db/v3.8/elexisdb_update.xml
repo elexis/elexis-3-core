@@ -79,7 +79,7 @@ UPDATE artikelstamm_ch SET LDSCR=LOWER(DSCR);
     	<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="KONTAKT"
-					columnName="prio" />
+					columnName="ISTVERSTORBEN" />
 			</not>
 		</preConditions>
 		<addColumn tableName="KONTAKT">
