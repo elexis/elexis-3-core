@@ -158,7 +158,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 					SmbFile _file = listFiles[i];
 					
 					try {
-						String fileURL = _file.getURL().toString().replaceAll(" ", "%20");
+						String fileURL = convertToURLEscapingIllegalCharacters(_file.getURL());
 						URI _fileUri = new URI(fileURL);
 						retVal[i] = new VirtualFilesystemHandle(_fileUri);
 					} catch (URISyntaxException e) {
@@ -423,14 +423,31 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			
 			VirtualFilesystemHandle pathnameVfsHandle;
 			try {
-				String fileURL = file.getURL().toString().replaceAll(" ", "%20");
+				String fileURL = convertToURLEscapingIllegalCharacters(file.getURL());
 				URI fileUri = new URI(fileURL);
 				pathnameVfsHandle = new VirtualFilesystemHandle(fileUri);
 				return ff.accept(pathnameVfsHandle);
-			} catch (URISyntaxException e) {
+			} catch (URISyntaxException | MalformedURLException e) {
 				throw new IllegalArgumentException(e);
 			}
 		}
 		
+	}
+	
+	/**
+	 * https://en.wikipedia.org/wiki/Percent-encoding of reserved characters
+	 * 
+	 * @param toEscape
+	 * @return
+	 * @throws MalformedURLException
+	 * @throws URISyntaxException
+	 * @see adapted from https://stackoverflow.com/a/30640843/905817
+	 */
+	private String convertToURLEscapingIllegalCharacters(URL url)
+		throws MalformedURLException, URISyntaxException{
+		URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(),
+			url.getPath(), url.getQuery(), url.getRef());
+		//if a % is included in the toEscape string, it will be re-encoded to %25 and we don't want re-encoding, just encoding
+		return uri.toString().replace("%25", "%");
 	}
 }
