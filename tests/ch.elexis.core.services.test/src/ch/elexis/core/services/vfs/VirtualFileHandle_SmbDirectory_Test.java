@@ -75,8 +75,7 @@ public class VirtualFileHandle_SmbDirectory_Test {
 		assumeTrue(serviceIsReachable);
 		
 		IVirtualFilesystemHandle[] listHandles = service.of(PREFIX_NOAUTH_SAMBA).listHandles();
-		// 1 directory, 2 files
-		assertEquals(4, listHandles.length);
+		assertEquals(5, listHandles.length);
 		
 		try (InputStream is = listHandles[1].openInputStream()) {
 			// #21875 to test if spaces are correctly opened
@@ -109,7 +108,7 @@ public class VirtualFileHandle_SmbDirectory_Test {
 		
 		IVirtualFilesystemHandle[] listHandles = service.of(PREFIX_NOAUTH_SAMBA)
 			.listHandles(handle -> "pdf".equalsIgnoreCase(handle.getExtension()));
-		assertEquals(1, listHandles.length);
+		assertEquals(2, listHandles.length);
 		
 		IVirtualFilesystemHandle target =
 			service.of(PREFIX_AUTH_SAMBA).subFile(listHandles[0].getName());
