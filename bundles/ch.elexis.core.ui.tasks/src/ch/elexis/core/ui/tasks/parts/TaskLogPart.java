@@ -78,7 +78,7 @@ public class TaskLogPart implements IDoubleClickListener {
 		tableResults = tableViewerResults.getTable();
 		tableResults.setHeaderVisible(true);
 		tableResults.setLinesVisible(true);
-		contentProvider = new DeferredContentProvider(ITaskComparators.ofLastUpdate().reversed());
+		contentProvider = new DeferredContentProvider(ITaskComparators.ofRunAt());
 		tableViewerResults.setContentProvider(contentProvider);
 		tableViewerResults.setUseHashlookup(true);
 		tableViewerResults.addDoubleClickListener(this);
@@ -156,15 +156,17 @@ public class TaskLogPart implements IDoubleClickListener {
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				tableResults.setSortColumn(tblclmnStartTime);
-				if (tableResults.getSortDirection() == SWT.DOWN) {
+				if (tableResults.getSortDirection() == SWT.UP) {
 					contentProvider.setSortOrder(ITaskComparators.ofRunAt());
-					tableResults.setSortDirection(SWT.UP);
+					tableResults.setSortDirection(SWT.DOWN);
 				} else {
 					contentProvider.setSortOrder(ITaskComparators.ofRunAt().reversed());
-					tableResults.setSortDirection(SWT.DOWN);
+					tableResults.setSortDirection(SWT.UP);
 				}
 			}
 		});
+		tableResults.setSortColumn(tblclmnStartTime);
+		tableResults.setSortDirection(SWT.DOWN);
 		
 		TableViewerColumn tvcFinishTime = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcFinishTime.setLabelProvider(new ColumnLabelProvider() {
@@ -181,17 +183,15 @@ public class TaskLogPart implements IDoubleClickListener {
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				tableResults.setSortColumn(tblclmnFinishTime);
-				if (tableResults.getSortDirection() == SWT.DOWN) {
+				if (tableResults.getSortDirection() == SWT.UP) {
 					contentProvider.setSortOrder(ITaskComparators.ofFinishedAt());
-					tableResults.setSortDirection(SWT.UP);
+					tableResults.setSortDirection(SWT.DOWN);
 				} else {
 					contentProvider.setSortOrder(ITaskComparators.ofFinishedAt().reversed());
-					tableResults.setSortDirection(SWT.DOWN);
+					tableResults.setSortDirection(SWT.UP);
 				}
 			}
 		});
-		tableResults.setSortColumn(tblclmnStartTime);
-		tableResults.setSortDirection(SWT.DOWN);
 		
 		TableViewerColumn tvcState = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcState.setLabelProvider(TaskResultLabelProvider.getInstance());
@@ -199,6 +199,7 @@ public class TaskLogPart implements IDoubleClickListener {
 		tcLayout.setColumnData(tblclmnState, new ColumnPixelData(22, true, false));
 		tblclmnState.setText("");
 		
+		// OWNER
 		TableViewerColumn tvcOwner = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcOwner.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -208,8 +209,47 @@ public class TaskLogPart implements IDoubleClickListener {
 			}
 		});
 		TableColumn tblclmnOwner = tvcOwner.getColumn();
-		tcLayout.setColumnData(tblclmnOwner, new ColumnPixelData(100, true, true));
+		tcLayout.setColumnData(tblclmnOwner, new ColumnPixelData(70, true, true));
 		tblclmnOwner.setText("User");
+		tblclmnOwner.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				tableResults.setSortColumn(tblclmnOwner);
+				if (tableResults.getSortDirection() == SWT.DOWN) {
+					contentProvider.setSortOrder(ITaskComparators.ofOwner());
+					tableResults.setSortDirection(SWT.UP);
+				} else {
+					contentProvider.setSortOrder(ITaskComparators.ofOwner().reversed());
+					tableResults.setSortDirection(SWT.DOWN);
+				}
+			}
+		});
+		
+		// RUNNER
+		TableViewerColumn tvcRunner = new TableViewerColumn(tableViewerResults, SWT.NONE);
+		tvcRunner.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				ITask task = (ITask) element;
+				return task.getRunner();
+			}
+		});
+		TableColumn tblclmnRunner = tvcRunner.getColumn();
+		tcLayout.setColumnData(tblclmnRunner, new ColumnPixelData(80, true, true));
+		tblclmnRunner.setText("Runner");
+		tblclmnRunner.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				tableResults.setSortColumn(tblclmnRunner);
+				if (tableResults.getSortDirection() == SWT.DOWN) {
+					contentProvider.setSortOrder(ITaskComparators.ofRunner());
+					tableResults.setSortDirection(SWT.UP);
+				} else {
+					contentProvider.setSortOrder(ITaskComparators.ofRunner().reversed());
+					tableResults.setSortDirection(SWT.DOWN);
+				}
+			}
+		});
 		
 		tableViewerResults.addSelectionChangedListener(event -> {
 			IStructuredSelection selection = tableViewerResults.getStructuredSelection();
@@ -243,7 +283,8 @@ public class TaskLogPart implements IDoubleClickListener {
 	
 	@Optional
 	@Inject
-	void deleteTask(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) ITask iTask){
+	void deleteTask(@UIEventTopic(ElexisEventTopics.EVENT_DELETE)
+	ITask iTask){
 		inputModel.removeAll(new ITask[] {
 			iTask
 		});
