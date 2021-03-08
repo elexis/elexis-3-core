@@ -7,11 +7,12 @@ import ch.elexis.core.tasks.model.ITask;
 public class ITaskComparators {
 	
 	public static Comparator<ITask> ofLastUpdate(){
-		return Comparator.comparingLong(o -> ((ITask) o).getLastupdate());
+		return Comparator.comparingLong(o -> o.getLastupdate());
 	}
 	
 	public static Comparator<ITask> ofRunAt(){
-		return Comparator.comparing(o -> ((ITask) o).getRunAt());
+		return Comparator.comparing(ITask::getRunAt,
+			Comparator.nullsFirst(Comparator.naturalOrder()));
 	}
 	
 	public static Comparator<ITask> ofTaskDescriptorId(){
@@ -20,6 +21,16 @@ public class ITaskComparators {
 	}
 	
 	public static Comparator<ITask> ofFinishedAt(){
-		return Comparator.comparing(o -> ((ITask) o).getFinishedAt());
+		return Comparator.comparing(ITask::getFinishedAt,
+			Comparator.nullsFirst(Comparator.naturalOrder()));
+	}
+	
+	public static Comparator<ITask> ofRunner(){
+		return Comparator.comparing(ITask::getRunner,
+			Comparator.nullsFirst(Comparator.naturalOrder()));
+	}
+	
+	public static Comparator<ITask> ofOwner(){
+		return Comparator.comparing((task) -> task.getTaskDescriptor().getOwner().getId());
 	}
 }
