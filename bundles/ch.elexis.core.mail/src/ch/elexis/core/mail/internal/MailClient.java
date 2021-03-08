@@ -194,17 +194,17 @@ public class MailClient implements IMailClient {
 				store.close();
 			} else if (account.getType() == TYPE.IMAPS) {
 				Session session =
-						Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
-							@Override
-							protected PasswordAuthentication getPasswordAuthentication(){
-								return new PasswordAuthentication(account.getUsername(),
-									account.getPassword());
-							}
-						});
-					Store store = session.getStore("imaps");
-					
-					store.connect();
-					store.close();
+					Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
+						@Override
+						protected PasswordAuthentication getPasswordAuthentication(){
+							return new PasswordAuthentication(account.getUsername(),
+								account.getPassword());
+						}
+					});
+				Store store = session.getStore("imaps");
+				
+				store.connect();
+				store.close();
 			} else {
 				logger.warn("Unknown account type [" + account.getType() + "].");
 				lastError = ErrorTyp.CONFIGTYP;
@@ -381,21 +381,15 @@ public class MailClient implements IMailClient {
 			try {
 				folder.wait(waitTimeout);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.warn("Interrupted #waitForMoveCompletion", e);
 			}
 		}
 	}
 	
 	@Override
-	public void closeStore(MailAccount account){
+	public void closeStore(MailAccount account) throws MessagingException{
 		if (imapStore != null && imapStore.isConnected()) {
-			try {
-				imapStore.close();
-			} catch (MessagingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			imapStore.close();
 		}
 		imapStore = null;
 	}
