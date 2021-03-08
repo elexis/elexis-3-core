@@ -111,7 +111,9 @@ public interface IMailClient {
 	 * Close the connection to the IMAP server.
 	 * 
 	 * @param account
+	 * @throws MessagingException
+	 *             if there is an error while closing the store
 	 */
-	public void closeStore(MailAccount account);
+	public void closeStore(MailAccount account) throws MessagingException;
 	
 }
