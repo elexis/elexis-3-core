@@ -76,6 +76,29 @@ public class MailClientImapTest {
 		assertTrue(accounts.isEmpty());
 	}
 	
+	public void aassgetMailsInFolder() throws MessagingException, IOException{
+		MailAccount account = new MailAccount();
+		account.setId("testImapAccount");
+		account.setType(TYPE.IMAP);
+		account.setUsername("igidev@medevit.at");
+		account.setPassword("AL6Gz#5l!f");
+		account.setHost("imap.world4you.com");
+		account.setPort("143");
+		
+		List<IMAPMailMessage> messages = client.getMessages(account, "ElexisInbox", false, false);
+		for (IMAPMailMessage message : messages) {
+			
+			String subject = message.getSubject();
+			String sentDate = message.getSentDate().toString();
+			String messageContent = message.getText();
+			String attachFiles;
+			
+			System.out.println("\t Subject: " + subject);
+			System.out.println("\t Sent Date: " + sentDate);
+			System.out.println("\t Message: " + messageContent);
+		}
+	}
+	
 	@Test
 	public void getMailsInFolderSimpleMail() throws MessagingException, IOException{
 		Session smtpSession = greenMail.getSmtp().createSession();
@@ -156,7 +179,7 @@ public class MailClientImapTest {
 		List<IMAPMailMessage> messages = client.getMessages(account, null, false, false);
 		assertEquals(2, messages.size());
 		assertEquals("Fetch me via IMAP", messages.get(0).getText());
-		client.moveMessage(account, messages.get(0), null, "archive");
+		client.moveMessage(account, messages.get(0), null, "archive", true);
 		
 		messages = client.getMessages(account, null, false, false);
 		assertEquals(1, messages.size());
