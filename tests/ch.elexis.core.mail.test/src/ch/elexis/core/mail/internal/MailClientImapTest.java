@@ -76,30 +76,6 @@ public class MailClientImapTest {
 		assertTrue(accounts.isEmpty());
 	}
 	
-	public void aassgetMailsInFolder() throws MessagingException, IOException{
-		MailAccount account = new MailAccount();
-		account.setId("testImapAccount");
-		account.setType(TYPE.IMAP);
-		account.setUsername("igidev@medevit.at");
-		account.setPassword("AL6Gz#5l!f");
-		account.setHost("imap.world4you.com");
-		account.setPort("143");
-		
-		List<IMAPMailMessage> messages = client.getMessages(account, "ElexisInbox");
-		for (IMAPMailMessage message : messages) {
-			
-			String subject = message.getSubject();
-			String sentDate = message.getSentDate().toString();
-			String messageContent = message.getText();
-			String attachFiles;
-			
-			System.out.println("\t Subject: " + subject);
-			System.out.println("\t Sent Date: " + sentDate);
-			System.out.println("\t Message: " + messageContent);
-		}
-		client.closeStore(account);
-	}
-	
 	@Test
 	public void getMailsInFolderSimpleMail() throws MessagingException, IOException{
 		Session smtpSession = greenMail.getSmtp().createSession();
@@ -110,11 +86,10 @@ public class MailClientImapTest {
 		msg.setText("Fetch me via IMAP");
 		Transport.send(msg);
 		
-		List<IMAPMailMessage> messages = client.getMessages(account, null);
+		List<IMAPMailMessage> messages = client.getMessages(account, null, false, false);
 		assertEquals(1, messages.size());
 		assertEquals("Fetch me via IMAP", messages.get(0).getText());
 		assertEquals("foo@example.com", messages.get(0).getSender());
-		client.closeStore(account);
 	}
 	
 	@Test
@@ -146,14 +121,13 @@ public class MailClientImapTest {
 		
 		Transport.send(msg);
 		
-		List<IMAPMailMessage> messages = client.getMessages(account, null);
+		List<IMAPMailMessage> messages = client.getMessages(account, null, false, false);
 		assertEquals(1, messages.size());
 		assertTrue(messages.get(0).getText().startsWith("Sehr geehrter"));
 		assertEquals(1, messages.get(0).getAttachments().size());
 		assertEquals("1_Testperson_Armeswesen_Laborblatt_Mail_17082020_145507.pdf",
 			messages.get(0).getAttachments().get(0).getFilename());
 		assertEquals("foo@example.com", messages.get(0).getSender());
-		client.closeStore(account);
 	}
 	
 	@Test
@@ -172,19 +146,24 @@ public class MailClientImapTest {
 		msg.setText("Fetch me via IMAP");
 		Transport.send(msg);
 		
-		List<IMAPMailMessage> messages = client.getMessages(account, null);
-		assertEquals(1, messages.size());
+		Message msg2 = new MimeMessage(smtpSession);
+		msg2.setFrom(new InternetAddress("foobert@example.com"));
+		msg2.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+		msg2.setSubject("Email sent to GreenMail via plain JavaMail, another one");
+		msg2.setText("Fetch me via IMAP - additional blabla");
+		Transport.send(msg2);
+		
+		List<IMAPMailMessage> messages = client.getMessages(account, null, false, false);
+		assertEquals(2, messages.size());
 		assertEquals("Fetch me via IMAP", messages.get(0).getText());
-		client.moveMessage(messages.get(0), "archive");
-		client.closeStore(account);
+		client.moveMessage(account, messages.get(0), null, "archive");
 		
-		messages = client.getMessages(account, null);
-		assertEquals(0, messages.size());
-		client.closeStore(account);
-		
-		messages = client.getMessages(account, "archive");
+		messages = client.getMessages(account, null, false, false);
 		assertEquals(1, messages.size());
-		client.closeStore(account);
+		
+		messages = client.getMessages(account, "archive", false, false);
+		assertEquals(1, messages.size());
+		assertEquals("Email sent to GreenMail via plain JavaMail", messages.get(0).getSubject());
 	}
 	
 }
