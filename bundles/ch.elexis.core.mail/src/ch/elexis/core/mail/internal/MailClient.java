@@ -350,7 +350,7 @@ public class MailClient implements IMailClient {
 	
 	@Override
 	public void moveMessage(MailAccount account, IMAPMailMessage message, @Nullable
-	String sourceFolder, String targetFolder) throws MessagingException{
+	String sourceFolder, String targetFolder, boolean removeFlag) throws MessagingException{
 		
 		if (sourceFolder == null) {
 			sourceFolder = "INBOX";
@@ -383,6 +383,10 @@ public class MailClient implements IMailClient {
 				Message[] _message = new Message[] {
 					matches[0]
 				};
+				
+				if (removeFlag) {
+					_message[0].setFlag(Flag.FLAGGED, false);
+				}
 				
 				_sourceFolder.setFlags(_message, new Flags(Flags.Flag.SEEN), true);
 				// TODO support direct move operation,
