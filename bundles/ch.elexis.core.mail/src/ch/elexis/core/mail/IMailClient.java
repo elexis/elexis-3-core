@@ -7,6 +7,8 @@ import javax.mail.MessagingException;
 
 import com.sun.mail.imap.IMAPMessage;
 
+import ch.elexis.core.jdt.Nullable;
+
 /**
  * Interface to the email functionality of Elexis. Configure and access {@link MailAccount}
  * instances, and use those to send or receive email.
@@ -81,39 +83,39 @@ public interface IMailClient {
 	public boolean sendMail(MailAccount account, MailMessage message);
 	
 	/**
-	 * Retrieve all messages from a {@link MailAccount.TYPE#IMAP}. Opens a connection to the IMAP
-	 * server. Be sure to {@link #closeStore(MailAccount)} after you're done.
+	 * Retrieve all messages from a {@link MailAccount.TYPE#IMAP}. Creates a self-sustainable copy
+	 * of the message.
 	 * 
 	 * @param account
 	 *            the IMAP account to fetch the messages from
 	 * @param folderPath
 	 *            a relative folder path, defaults no <code>INBOX</code> if <code>null</code>
+	 * @param flag
+	 *            flag fetched messages
+	 * @param onlyFetchUnflagged
+	 *            only fetch messages that are not flagged
 	 * @throws MessagingException
 	 *             if there is an error opening the connection
 	 * @return
 	 */
-	public List<IMAPMailMessage> getMessages(MailAccount account, String folderPath)
-		throws MessagingException;
+	public List<IMAPMailMessage> getMessages(MailAccount account, String folderPath, boolean flag,
+		boolean onlyFetchUnflagged) throws MessagingException;
 	
 	/**
-	 * Move a message from a given source folder to a target folder. Uses the connection to the IMAP
-	 * server that was opened during {@link #getMessages(MailAccount, String)}.
+	 * Try to move a message from a given source folder to a target folder.
 	 * 
+	 * @param account
+	 *            the IMAP account to fetch the messages from
 	 * @param message
 	 *            to move
+	 * @param sourceFolder
+	 *            a relative folder path, defaults no <code>INBOX</code> if <code>null</code>
 	 * @param targetFolder
+	 *            not <code>null</code>
 	 * @throws MessagingException
 	 *             if there is an error while moving the {@link IMAPMessage}
 	 */
-	public void moveMessage(IMAPMailMessage message, String targetFolder) throws MessagingException;
-	
-	/**
-	 * Close the connection to the IMAP server.
-	 * 
-	 * @param account
-	 * @throws MessagingException
-	 *             if there is an error while closing the store
-	 */
-	public void closeStore(MailAccount account) throws MessagingException;
+	public void moveMessage(MailAccount account, IMAPMailMessage message, @Nullable
+	String sourceFolder, String targetFolder) throws MessagingException;
 	
 }
