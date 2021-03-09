@@ -112,10 +112,12 @@ public interface IMailClient {
 	 *            a relative folder path, defaults no <code>INBOX</code> if <code>null</code>
 	 * @param targetFolder
 	 *            not <code>null</code>
+	 * @param removeFlag
+	 *            remove the flag that may have been set
 	 * @throws MessagingException
 	 *             if there is an error while moving the {@link IMAPMessage}
 	 */
 	public void moveMessage(MailAccount account, IMAPMailMessage message, @Nullable
-	String sourceFolder, String targetFolder) throws MessagingException;
+	String sourceFolder, String targetFolder, boolean removeFlag) throws MessagingException;
 	
 }
