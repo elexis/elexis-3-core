@@ -39,6 +39,10 @@ public class ConfigServiceHolder {
 		return configService.get(key, defaultValue);
 	}
 	
+	public static String getGlobalCached(String key, String defaultValue){
+		return configService.get(key, defaultValue, false);
+	}
+	
 	public static int getGlobal(String key, int defaultValue){
 		return configService.get(key, defaultValue);
 	}
@@ -98,6 +102,10 @@ public class ConfigServiceHolder {
 		return configService.getActiveUserContact(key, defaultValue);
 	}
 	
+	public static String getUserCached(String key, String defaultValue){
+		return configService.getActiveUserContact(key, defaultValue, false);
+	}
+	
 	public static boolean getUser(String key, boolean defaultValue){
 		return configService.getActiveUserContact(key, defaultValue);
 	}
@@ -151,6 +159,10 @@ public class ConfigServiceHolder {
 	
 	public static String getMandator(String key, String defaultValue){
 		return configService.getActiveMandator(key, defaultValue);
+	}
+	
+	public static String getMandatorCached(String key, String defaultValue){
+		return configService.getActiveMandator(key, defaultValue, false);
 	}
 	
 	public static boolean getMandator(String key, boolean defaultValue){

@@ -189,8 +189,8 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
-	public String get(String key, String defaultValue){
-		Optional<IConfig> configEntry = modelService.load(key, IConfig.class);
+	public String get(String key, String defaultValue, boolean refreshCache){
+		Optional<IConfig> configEntry = modelService.load(key, IConfig.class, false, refreshCache);
 		return configEntry.map(IConfig::getValue).orElse(defaultValue);
 	}
 	
@@ -308,10 +308,10 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
-	public String get(IContact contact, String key, String defaultValue){
+	public String get(IContact contact, String key, String defaultValue, boolean refreshCache){
 		if (contact != null) {
 			INamedQuery<IUserConfig> configQuery = CoreModelServiceHolder.get()
-				.getNamedQuery(IUserConfig.class, true, "ownerid", "param");
+				.getNamedQuery(IUserConfig.class, refreshCache, "ownerid", "param");
 			List<IUserConfig> configs = configQuery.executeWithParameters(
 				configQuery.getParameterMap("ownerid", contact.getId(), "param", key));
 			if (!configs.isEmpty()) {
@@ -462,11 +462,11 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
-	public String getActiveMandator(String key, String defaultValue) {
+	public String getActiveMandator(String key, String defaultValue, boolean refreshCache){
 		if (contextService != null) {
 			Optional<IMandator> activeMandator = contextService.getActiveMandator();
 			if (activeMandator.isPresent()) {
-				return get(activeMandator.get(), key, defaultValue);
+				return get(activeMandator.get(), key, defaultValue, refreshCache);
 			}
 		} else {
 			LoggerFactory.getLogger(getClass()).warn("IContextService not available, returning defaultValue");
@@ -496,11 +496,11 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
-	public String getActiveUserContact(String key, String defaultValue){
+	public String getActiveUserContact(String key, String defaultValue, boolean refreshCache){
 		if (contextService != null) {
 			Optional<IContact> activeUser = contextService.getActiveUserContact();
 			if (activeUser.isPresent()) {
-				return get(activeUser.get(), key, defaultValue);
+				return get(activeUser.get(), key, defaultValue, refreshCache);
 			}
 		} else {
 			LoggerFactory.getLogger(getClass()).warn("IContextService not available, returning defaultValue");
