@@ -5,11 +5,13 @@
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_GA0S0I6WEeq69IgL7XvkGA" featurename="commands" parentElementId="xpath:/">
     <elements xsi:type="commands:Command" xmi:id="_HwYL8I6WEeq69IgL7XvkGA" elementId="ch.elexis.core.ui.command.encounter.create" commandName="%encounter.create" description="%encounter.create.description" category="_Pj4vEI6XEeq69IgL7XvkGA"/>
+    <elements xsi:type="commands:Command" xmi:id="_uu0MoIGgEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.command.part.refresh" commandName="%part.refresh" description="%part.refresh.description"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_OS5oUI6XEeq69IgL7XvkGA" featurename="categories" parentElementId="xpath:/">
     <elements xsi:type="commands:Category" xmi:id="_Pj4vEI6XEeq69IgL7XvkGA" elementId="ch.elexis.core.ui.category.treatment.administration" name="%category.treatment.administration" description="%category.treatment.administration.description"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_jzQLYI6XEeq69IgL7XvkGA" featurename="handlers" parentElementId="xpath:/">
     <elements xsi:type="commands:Handler" xmi:id="_lFl9AI6XEeq69IgL7XvkGA" elementId="ch.elexis.core.ui.handler.encounter.create" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.handlers.EncounterCreateHandler" command="_HwYL8I6WEeq69IgL7XvkGA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_Wrv_wIGhEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.handler.part.refresh" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.handlers.RefreshPartHandler" command="_uu0MoIGgEeuh_oRSm2ExFw"/>
   </fragments>
 </fragment:ModelFragments>
