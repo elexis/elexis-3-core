@@ -229,7 +229,25 @@ public interface IConfigService {
 	 *            to return if configuration entry does not exist
 	 * @return
 	 */
-	public String get(String key, String defaultValue);
+	public default String get(String key, String defaultValue){
+		return get(key, defaultValue, true);
+	}
+	
+	/**
+	 * Get a stored value for a given global configuration entry, or return the value provided as
+	 * default if not found.
+	 * 
+	 * If refreshCache is true the value is always fetched from the database, else the cached value
+	 * is used if present.
+	 * 
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param defaultValue
+	 *            to return if configuration entry does not exist
+	 * @param refreshCache
+	 * @return
+	 */
+	public String get(String key, String defaultValue, boolean refreshCache);
 	
 	/**
 	 * Get a stored value for a given local configuration entry, or return the value provided as
@@ -285,7 +303,24 @@ public interface IConfigService {
 	 *            to return if no active mandator found or entry does not exist
 	 * @return
 	 */
-	public String getActiveMandator(String key, String defaultValue);
+	public default String getActiveMandator(String key, String defaultValue){
+		return getActiveMandator(key, defaultValue, true);
+	}
+	
+	/**
+	 * Get a stored value for the current active {@link IMandator} configuration. The current
+	 * mandator is resolved via the {@link IContextService}
+	 * 
+	 * If refreshCache is true the value is always fetched from the database, else the cached value
+	 * is used if present.
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 *            to return if no active mandator found or entry does not exist
+	 * @param refreshCache
+	 * @return
+	 */
+	public String getActiveMandator(String key, String defaultValue, boolean refreshCache);
 	
 	/**
 	 * Convenience method wrapping {@link #getActiveMandator(String, String)}
@@ -316,7 +351,23 @@ public interface IConfigService {
 	 * @param defaultValue
 	 * @return
 	 */
-	public String getActiveUserContact(String key, String defaultValue);
+	public default String getActiveUserContact(String key, String defaultValue) {
+		return getActiveUserContact(key, defaultValue, true);
+	}
+	
+	/**
+	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user
+	 * via {@link IContextService}.
+	 * 
+	 * If refreshCache is true the value is always fetched from the database, else the cached value
+	 * is used if present.
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @param refreshCache
+	 * @return
+	 */
+	public String getActiveUserContact(String key, String defaultValue, boolean refreshCache);
 	
 	/**
 	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user
@@ -361,7 +412,27 @@ public interface IConfigService {
 	 *            to return if configuration entry does not exist
 	 * @return
 	 */
-	public String get(IContact contact, String key, String defaultValue);
+	public default String get(IContact contact, String key, String defaultValue){
+		return get(contact, key, defaultValue, true);
+	}
+	
+	/**
+	 * Get a stored value for a given contact specific configuration entry, or return the value
+	 * provided as default if not found.
+	 * 
+	 * If refreshCache is true the value is always fetched from the database, else the cached value
+	 * is used if present.
+	 * 
+	 * @param contact
+	 *            the contact this configuration entry is accounted to, not <code>null</code>
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param defaultValue
+	 *            to return if configuration entry does not exist
+	 * @param refreshCache
+	 * @return
+	 */
+	public String get(IContact contact, String key, String defaultValue, boolean refreshCache);
 	
 	/**
 	 * Convenience method wrapping {@link #get(IContact, String, String)}
