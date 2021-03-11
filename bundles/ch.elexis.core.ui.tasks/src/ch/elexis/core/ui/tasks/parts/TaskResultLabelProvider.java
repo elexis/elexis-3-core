@@ -20,12 +20,18 @@ public class TaskResultLabelProvider extends ColumnLabelProvider {
 	}
 	
 	public String getIconURI(Object element){
+		if (element == null) {
+			return null;
+		}
 		Images icon = getImages(element);
 		return (icon != null) ? icon.getIconURI() : null;
 	}
 	
 	@Override
 	public Image getImage(Object element){
+		if (element == null) {
+			return null;
+		}
 		Images icon = getImages(element);
 		return (icon != null) ? icon.getImage() : null;
 	}
@@ -60,6 +66,9 @@ public class TaskResultLabelProvider extends ColumnLabelProvider {
 	
 	@Override
 	public String getToolTipText(Object element){
+		if (element == null) {
+			return null;
+		}
 		ITask task = (ITask) element;
 		return task.getState().name();
 	}

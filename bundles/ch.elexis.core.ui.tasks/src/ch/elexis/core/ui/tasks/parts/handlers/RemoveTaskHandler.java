@@ -12,11 +12,12 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 
-public class RemoveIdentifiableHandler {
+public class RemoveTaskHandler {
 	
 	@Execute
-	public void execute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) List<ITask> task){
-		TaskModelServiceHolder.get().remove(task);
+	public void execute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION)
+	List<ITask> tasks){
+		TaskModelServiceHolder.get().remove(tasks);
 	}
-		
+	
 }

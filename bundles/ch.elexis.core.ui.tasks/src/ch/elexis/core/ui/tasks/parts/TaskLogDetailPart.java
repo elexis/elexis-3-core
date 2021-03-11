@@ -21,7 +21,7 @@ import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.tasks.ITaskResultDetailContributions;
 
-public class TaskDetailPart {
+public class TaskLogDetailPart {
 	
 	@Inject
 	@Named(IServiceConstants.ACTIVE_SHELL)
