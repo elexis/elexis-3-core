@@ -8,8 +8,11 @@ import javax.inject.Inject;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.services.EMenuService;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -40,13 +43,20 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.time.TimeUtil;
+import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 
-public class TaskLogPart implements IDoubleClickListener {
+public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 	
 	@Inject
 	private ESelectionService selectionService;
+	
+	@Inject
+	private EModelService modelService;
+	
+	@Inject
+	private MApplication application;
 	
 	@Inject
 	private EPartService partService;
@@ -56,6 +66,8 @@ public class TaskLogPart implements IDoubleClickListener {
 	private TableViewer tableViewerResults;
 	private SetModel inputModel;
 	private DeferredContentProvider contentProvider;
+	
+	// TODO only Admin should see all, else only current user
 	
 	@PostConstruct
 	public void createControls(Composite parent, EMenuService menuService){
@@ -269,6 +281,7 @@ public class TaskLogPart implements IDoubleClickListener {
 		return contentProvider;
 	}
 	
+	@Override
 	public void refresh(){
 		IQuery<ITask> taskQuery = TaskModelServiceHolder.get().getQuery(ITask.class);
 		taskQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
@@ -279,6 +292,7 @@ public class TaskLogPart implements IDoubleClickListener {
 	@Focus
 	public void setFocus(){
 		tableResults.setFocus();
+		refresh();
 	}
 	
 	@Optional
@@ -289,6 +303,7 @@ public class TaskLogPart implements IDoubleClickListener {
 			iTask
 		});
 		tableResults.deselectAll();
+		refresh();
 	}
 	
 	@Override
@@ -297,6 +312,14 @@ public class TaskLogPart implements IDoubleClickListener {
 		MPart taskDetailPart =
 			partService.createPart("ch.elexis.core.ui.tasks.partdescriptor.taskdetail");
 		taskDetailPart.getTransientData().put("task", selectedTask);
-		partService.showPart(taskDetailPart, PartState.CREATE);
+		
+		MPartStack detailPartStack = (MPartStack) modelService
+			.find("ch.elexis.core.ui.tasks.partstack.details", application);
+		if (detailPartStack != null && detailPartStack.isVisible()) {
+			detailPartStack.getChildren().add(taskDetailPart);
+			partService.activate(taskDetailPart);
+		} else {
+			partService.showPart(taskDetailPart, PartState.CREATE);
+		}
 	}
 }

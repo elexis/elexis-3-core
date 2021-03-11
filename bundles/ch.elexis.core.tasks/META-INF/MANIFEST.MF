@@ -33,7 +33,8 @@ Export-Package: ch.elexis.core.tasks,
  com.cronutils.model.time.generator,
  com.cronutils.parser,
  com.cronutils.utils,
- com.cronutils.validation
+ com.cronutils.validation,
+ org.quartz
 Require-Bundle: org.eclipse.osgi.services;bundle-version="3.7.100",
  org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
