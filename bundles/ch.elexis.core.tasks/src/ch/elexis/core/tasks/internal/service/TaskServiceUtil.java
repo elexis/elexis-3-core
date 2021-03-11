@@ -12,6 +12,15 @@ import ch.elexis.core.tasks.model.ModelPackage;
 
 public class TaskServiceUtil {
 	
+	/**
+	 * Load the (active) task descriptors for a given runnable we are responsible for (that is, assigned as
+	 * runner)
+	 * 
+	 * @param identifiedRunnable
+	 * @param taskModelService
+	 * @param contextService
+	 * @return
+	 */
 	List<ITaskDescriptor> loadForIdentifiedRunnable(IIdentifiedRunnable identifiedRunnable,
 		IModelService taskModelService, IContextService contextService){
 		IQuery<ITaskDescriptor> query = taskModelService.getQuery(ITaskDescriptor.class);
