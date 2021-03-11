@@ -9,7 +9,6 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.ui.cons.KonsExtension;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
-import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Konsultation;
 
@@ -41,10 +40,7 @@ public class AddFindingAction extends Action implements IAction {
 			if (kons != null) {
 				IObservation observation = (IObservation) created;
 				if (LocalLockServiceHolder.get().acquireLock(kons).isOk()) {
-					kons.addXRef(KonsExtension.EXTENSION_ID,
-						((Identifiable) observation).getId(), -1,
-						konsExtension.getXRefText(observation));
-					LocalLockServiceHolder.get().releaseLock(kons);
+					konsExtension.insert(observation, -1);
 				}
 			}
 		}
