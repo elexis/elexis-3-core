@@ -97,6 +97,7 @@ public class FindingsTextUtil {
 		String title = coding.isPresent() ? coding.get().getDisplay() : "";
 		
 		if (ObservationType.TEXT.equals(observation.getObservationType())) {
+			stringBuilder.append(title);
 			stringBuilder.append(" ");
 			stringBuilder.append(observation.getStringValue().orElse(""));
 			if (observation.getComment().isPresent()) {
