@@ -279,6 +279,8 @@ public class TaskServiceImpl implements ITaskService {
 		String stationIdentifier = contextService.getRootContext().getStationIdentifier();
 		taskDescriptor.setRunner(StringUtils.abbreviate(stationIdentifier, 64));
 		
+		taskDescriptor.setReferenceId(System.currentTimeMillis()+"");
+		
 		contextService.getActiveUser().ifPresent(u -> taskDescriptor.setOwner(u));
 		
 		saveTaskDescriptor(taskDescriptor);
