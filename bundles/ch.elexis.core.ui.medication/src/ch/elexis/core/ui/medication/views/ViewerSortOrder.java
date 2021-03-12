@@ -57,15 +57,7 @@ public enum ViewerSortOrder {
 			MedicationTableViewerItem p1 = (MedicationTableViewerItem) e1;
 			MedicationTableViewerItem p2 = (MedicationTableViewerItem) e2;
 			
-			int sos1 = p1.getOrder();
-			int sos2 = p2.getOrder();
-			
-			if (sos1 == 0 && sos2 == 0)
-				return 0;
-				
-			int val1 = sos1 == 0 ? Integer.MAX_VALUE : sos1;
-			int val2 = sos2 == 0 ? Integer.MAX_VALUE : sos2;
-			return Integer.compare(val1, val2);
+			return Integer.compare(p1.getOrder(), p2.getOrder());
 		}
 	}
 	

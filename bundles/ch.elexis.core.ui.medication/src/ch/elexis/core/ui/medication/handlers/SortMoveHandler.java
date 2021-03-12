@@ -52,11 +52,6 @@ public class SortMoveHandler extends AbstractHandler implements IHandler {
 					}
 					
 					activeViewer.refresh();
-					if (directionIsUp(direction)) {
-						activeViewer.getTable().setSelection(selectionIndex - 1);
-					} else {
-						activeViewer.getTable().setSelection(selectionIndex + 1);
-					}
 				}
 			}
 		}
