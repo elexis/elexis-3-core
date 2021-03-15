@@ -3,6 +3,7 @@
    <service>
       <provide interface="ch.elexis.core.model.tasks.IIdentifiedRunnableFactory"/>
    </service>
+   <reference bind="setModelService" interface="ch.elexis.core.services.IModelService" name="ModelService" target="(service.model.name=ch.elexis.core.tasks.model)"/>
    <reference cardinality="1..1" field="virtualFilsystemService" interface="ch.elexis.core.services.IVirtualFilesystemService" name="virtualFilsystemService"/>
    <implementation class="ch.elexis.core.tasks.internal.service.IdentifiedRunnableFactoryImpl"/>
 </scr:component>
