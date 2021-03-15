@@ -166,7 +166,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 				String value = values[i].getText();
 				if ((savedValues == null && !value.isEmpty())
 						|| (savedValues[i] != null && !savedValues[i].equals(value))) {
-					k.setInfoElement(fields[i], value);
+					k.setExtInfoStoredObjectByKey(fields[i], value);
 					String xid = xids.get(fields[i]);
 					if (xid != null) {
 						k.addXid(xid, value, true);
