@@ -1697,7 +1697,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		byte[] bin = flatten((Hashtable) map);
 		getDBConnection().getCache().put(getKey(field), map, getCacheTime());
-		setBinary(field, bin);
+		setBinaryRaw(field, bin);
 	}
 	
 	/**
