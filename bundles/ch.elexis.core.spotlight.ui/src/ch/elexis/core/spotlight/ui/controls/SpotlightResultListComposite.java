@@ -123,8 +123,10 @@ public class SpotlightResultListComposite extends Composite {
 		
 		Consumer<ISpotlightResult> resultsChangedConsumer = newInput -> {
 			_spotlightShell.getDisplay().asyncExec(() -> {
-				tableSpotlightResults.clearAll();
-				tvSpotlightResults.setInput(newInput);
+				if (!tableSpotlightResults.isDisposed()) {
+					tableSpotlightResults.clearAll();
+					tvSpotlightResults.setInput(newInput);
+				}
 			});
 		};
 		spotlightService.setResultsChangedConsumer(resultsChangedConsumer);
