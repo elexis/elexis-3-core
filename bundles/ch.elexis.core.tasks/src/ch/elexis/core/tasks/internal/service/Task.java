@@ -42,16 +42,15 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Task>
 		implements Identifiable, ITask, Runnable {
 	
-	private Logger logger;
+	private static final Gson GSON = new Gson();
 	
+	private Logger logger;
 	private IProgressMonitor progressMonitor;
 	
-	private final Gson gson;
 	private String taskId;
 	
 	public Task(ch.elexis.core.jpa.entities.Task entity){
 		super(entity);
-		gson = new Gson();
 	}
 	
 	/**
@@ -79,7 +78,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.TaskDescriptor>) taskDescriptor)
 				.getEntityMarkDirty());
 		if (runContext != null) {
-			getEntity().setRunContext(gson.toJson(runContext));
+			getEntity().setRunContext(GSON.toJson(runContext));
 		}
 		String stationIdentifier =
 			ContextServiceHolder.get().getRootContext().getStationIdentifier();
@@ -107,7 +106,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public Map<String, Serializable> getRunContext(){
 		String json = getEntity().getRunContext();
 		if (json != null) {
-			return gson.fromJson(json, Map.class);
+			return GSON.fromJson(json, Map.class);
 		}
 		return new HashMap<>();
 	}
@@ -141,7 +140,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 	
 	private void setResult(Map<String, Serializable> result){
-		String json = gson.toJson(result);
+		String json = GSON.toJson(result);
 		getEntity().setResult(json);
 		CoreModelServiceHolder.get().save(this);
 	}
@@ -164,7 +163,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public Map<String, Serializable> getResult(){
 		String json = getEntity().getResult();
 		if (json != null) {
-			return gson.fromJson(json, Map.class);
+			return GSON.fromJson(json, Map.class);
 		}
 		return new HashMap<>();
 	}
@@ -173,9 +172,9 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public <T> List<T> getResultEntryAsTypedList(String key, Class<T> clazz){
 		List<?> list = (List<?>) getResult().get(key);
 		if (list != null && !list.isEmpty()) {
-			String json = gson.toJson(list);
+			String json = GSON.toJson(list);
 			Type type = TypeToken.getParameterized(ArrayList.class, clazz).getType();
-			return gson.fromJson(json, type);
+			return GSON.fromJson(json, type);
 		}
 		return Collections.emptyList();
 	}
@@ -187,7 +186,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			JSONObject map = new JSONObject(json);
 			try {
 				String valueToString = JSONObject.valueToString(map.get(key));
-				return gson.fromJson(valueToString, clazz);
+				return GSON.fromJson(valueToString, clazz);
 			} catch (JSONException e) {
 				// do nothing
 			}
@@ -200,7 +199,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		Map<String, Serializable> map = getRunContext();
 		try {
 			String valueToString = JSONObject.valueToString(map.get(key));
-			return gson.fromJson(valueToString, clazz);
+			return GSON.fromJson(valueToString, clazz);
 		} catch (JSONException e) {
 			// do nothing
 		}
@@ -275,7 +274,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			effectiveRunContext.putAll(originTaskDescriptor.getRunContext());
 			effectiveRunContext.putAll(getRunContext());
 			
-			getEntity().setRunContext(gson.toJson(effectiveRunContext));
+			getEntity().setRunContext(GSON.toJson(effectiveRunContext));
 			// TODO validate all required parameters are set, validate url
 			setState(TaskState.IN_PROGRESS);
 			// TODO what if it runs forever?
