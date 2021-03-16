@@ -114,6 +114,8 @@ public class RunnableAndContextConfigurationComposite
 				for (IIdentifiedRunnable iIdentifiedRunnable : identifiedRunnables) {
 					if (identifiedRunnableId.equalsIgnoreCase(iIdentifiedRunnable.getId())) {
 						selectedRunnable = iIdentifiedRunnable;
+						taskDescriptor.setIdentifiedRunnableId(selectedRunnable.getId());
+						saveTaskDescriptor();
 						break;
 					}
 				}
@@ -162,7 +164,7 @@ public class RunnableAndContextConfigurationComposite
 					btnValue.setText("active");
 					btnValue.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 					
-				} else if (defaultValue instanceof String) {
+				} else {
 					RunContextTextWithDefaultValue txtValue = new RunContextTextWithDefaultValue(
 						compAssisted, this, key, Objects.toString(defaultValue, null),
 						Objects.toString(configuredValue, null));

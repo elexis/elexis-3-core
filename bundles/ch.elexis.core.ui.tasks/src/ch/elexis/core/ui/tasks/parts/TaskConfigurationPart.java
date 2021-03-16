@@ -171,6 +171,15 @@ public class TaskConfigurationPart implements IRefreshablePart {
 		return tableDescriptors.setFocus();
 	}
 	
+	@Optional
+	@Inject
+	void refreshTaskDescriptor(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE)
+	ITaskDescriptor taskDescriptor){
+		if (taskDescriptor != null) {
+			tvTaskDescriptors.update(taskDescriptor, null);
+		}
+	}
+	
 	@Override
 	public void refresh(){
 		IQuery<ITaskDescriptor> taskQuery =
