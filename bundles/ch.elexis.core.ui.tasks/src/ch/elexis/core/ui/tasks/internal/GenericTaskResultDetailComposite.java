@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.tasks.internal;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.swt.SWT;
@@ -101,9 +102,7 @@ public class GenericTaskResultDetailComposite {
 		txtRunContext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		StringBuilder sbRunContext = new StringBuilder();
 		task.getRunContext().forEach((k, v) -> {
-	// TODO if v instanceof Double
-			
-			String value = (String) v;
+			String value = Objects.toString(v);
 			if (IIdentifiedRunnable.RunContextParameter.STRING_URL.equals(k)) {
 				value = IVirtualFilesystemService.hidePasswordInUrlString((String) v);
 			}
