@@ -7,25 +7,18 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.tasks.ITaskResultDetailContributions;
 
 public class TaskLogDetailPart {
-	
-	@Inject
-	@Named(IServiceConstants.ACTIVE_SHELL)
-	Shell shell;
 	
 	@Inject
 	ITaskResultDetailContributions taskResultDetailDialogContributions;
@@ -45,12 +38,12 @@ public class TaskLogDetailPart {
 		
 		String runAt;
 		LocalDateTime _runAt = task.getRunAt();
-		if(_runAt != null) {
+		if (_runAt != null) {
 			runAt = TimeUtil.formatSafe(_runAt);
 		} else {
 			runAt = "queued";
 		}
-	
+		
 		String partLabel = task.getTaskDescriptor().getReferenceId() + " - " + runAt;
 		part.setLabel(partLabel);
 		
