@@ -2,11 +2,13 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -59,37 +61,43 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	protected TaskDescriptor taskDescriptor;
 	
-	@Column
+	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected String runContext;
 	
-	@Column
+	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected String result;
 	
 	@Column(length = 64)
 	protected String runner;
 	
+	@Override
 	public String getId(){
 		return id;
 	}
 	
+	@Override
 	public void setId(String id){
 		this.id = id;
 	}
 	
+	@Override
 	public boolean isDeleted(){
 		return deleted;
 	}
 	
+	@Override
 	public void setDeleted(boolean deleted){
 		this.deleted = deleted;
 	}
 	
+	@Override
 	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
+	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
