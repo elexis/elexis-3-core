@@ -112,7 +112,7 @@ public abstract class PagingComposite extends Composite {
 				textToolItem.setToolTipText("Gesamtanzahl: " + elementsCount);
 			}
 			
-			gd.exclude = !isVisible();
+			gd.exclude = !(currentPage > 0);
 			getParent().layout(true, true);
 		}
 	}
