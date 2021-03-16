@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.ORDER;
@@ -168,12 +169,12 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				tableResults.setSortColumn(tblclmnStartTime);
-				if (tableResults.getSortDirection() == SWT.UP) {
+				if (tableResults.getSortDirection() == SWT.DOWN) {
 					contentProvider.setSortOrder(ITaskComparators.ofRunAt());
-					tableResults.setSortDirection(SWT.DOWN);
+					tableResults.setSortDirection(SWT.UP);
 				} else {
 					contentProvider.setSortOrder(ITaskComparators.ofRunAt().reversed());
-					tableResults.setSortDirection(SWT.UP);
+					tableResults.setSortDirection(SWT.DOWN);
 				}
 			}
 		});
@@ -195,12 +196,12 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				tableResults.setSortColumn(tblclmnFinishTime);
-				if (tableResults.getSortDirection() == SWT.UP) {
+				if (tableResults.getSortDirection() == SWT.DOWN) {
 					contentProvider.setSortOrder(ITaskComparators.ofFinishedAt());
-					tableResults.setSortDirection(SWT.DOWN);
+					tableResults.setSortDirection(SWT.UP);
 				} else {
 					contentProvider.setSortOrder(ITaskComparators.ofFinishedAt().reversed());
-					tableResults.setSortDirection(SWT.UP);
+					tableResults.setSortDirection(SWT.DOWN);
 				}
 			}
 		});
@@ -217,7 +218,8 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 			@Override
 			public String getText(Object element){
 				ITask task = (ITask) element;
-				return task.getTaskDescriptor().getOwner().getId();
+				IUser owner = task.getTaskDescriptor().getOwner();
+				return (owner != null) ? owner.getId() : "NO-OWNER";
 			}
 		});
 		TableColumn tblclmnOwner = tvcOwner.getColumn();
@@ -283,6 +285,7 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 	
 	@Override
 	public void refresh(){
+		// TODO only show all if Administrator or owner (-> TaskDescriptor)
 		IQuery<ITask> taskQuery = TaskModelServiceHolder.get().getQuery(ITask.class);
 		taskQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 		List<ITask> results = taskQuery.execute();
@@ -292,7 +295,6 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 	@Focus
 	public void setFocus(){
 		tableResults.setFocus();
-		refresh();
 	}
 	
 	@Optional

@@ -2,6 +2,8 @@ package ch.elexis.core.ui.tasks.parts.controls;
 
 import org.eclipse.swt.widgets.Composite;
 
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 
@@ -16,7 +18,9 @@ public abstract class AbstractTaskDescriptorConfigurationComposite extends Compo
 	protected boolean saveTaskDescriptor(){
 		// TODO update resp entry in list
 		if (taskDescriptor != null) {
-			return TaskModelServiceHolder.get().save(taskDescriptor);
+			boolean ok = TaskModelServiceHolder.get().save(taskDescriptor);
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, taskDescriptor);
+			return ok;
 		}
 		return false;
 	}

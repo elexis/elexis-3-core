@@ -101,6 +101,8 @@ public class GenericTaskResultDetailComposite {
 		txtRunContext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		StringBuilder sbRunContext = new StringBuilder();
 		task.getRunContext().forEach((k, v) -> {
+	// TODO if v instanceof Double
+			
 			String value = (String) v;
 			if (IIdentifiedRunnable.RunContextParameter.STRING_URL.equals(k)) {
 				value = IVirtualFilesystemService.hidePasswordInUrlString((String) v);

@@ -7,8 +7,11 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -102,7 +105,7 @@ public class TaskTriggerTypeConfigurationComposite
 	
 	private void createCompositeParameters_CRON(){
 		String cron =
-			(taskDescriptor != null) ? taskDescriptor.getTriggerParameters().get("cron") : null;
+			(taskDescriptor != null) ? taskDescriptor.getTriggerParameters().get("cron") : "";
 		
 		Label label = new Label(compositeParameters, SWT.None);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
@@ -118,14 +121,25 @@ public class TaskTriggerTypeConfigurationComposite
 			
 			boolean isValidCron = validateAndupdateCronExpressionDescriptor(value, valid);
 			if (isValidCron) {
-				taskDescriptor.getTriggerParameters().put("cron", value);
+				taskDescriptor.setTriggerParameter("cron", value);
 				saveTaskDescriptor();
 			}
 		});
+		
+		Button btnEveryMinute = new Button(compositeParameters, getStyle());
+		btnEveryMinute.setText("set every minute");
+		btnEveryMinute.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				text.setText("0 * * * * ?");
+			}
+		});
+		
 		validateAndupdateCronExpressionDescriptor(cron, valid);
 	}
 	
 	private boolean validateAndupdateCronExpressionDescriptor(String cron, Label label){
+		cron = (cron == null) ? "" : cron;
 		boolean validExpression = CronExpression.isValidExpression(cron);
 		if (validExpression) {
 			try {
