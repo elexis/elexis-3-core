@@ -61,10 +61,12 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	protected TaskDescriptor taskDescriptor;
 	
+	@Column
 	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected String runContext;
 	
+	@Column
 	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected String result;
