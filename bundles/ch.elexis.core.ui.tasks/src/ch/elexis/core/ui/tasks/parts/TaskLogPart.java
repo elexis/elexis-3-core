@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.tasks.parts;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -286,7 +287,8 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 	}
 	
 	@Override
-	public void refresh(){
+	public void refresh(Map<Object, Object> filterParameters){
+		// TODO only show all if Administrator or owner (-> TaskDescriptor)
 		Job job = Job.create("Update table", (ICoreRunnable) monitor -> {
 			IQuery<ITask> taskQuery = TaskModelServiceHolder.get().getQuery(ITask.class);
 			taskQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
