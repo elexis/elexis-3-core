@@ -52,7 +52,7 @@ public class SpotlightService implements ISpotlightService {
 		
 		// TODO on math operations allow resp. input
 		String[] searchTerms =
-			searchInput.trim().toLowerCase().replaceAll("[^a-z0-9 .,=]", "").split(" ");
+			searchInput.trim().toLowerCase().replaceAll("[^a-z0-9 .,=%]", "").split(" ");
 		
 		List<String> stringTerms = new ArrayList<String>(searchTerms.length);
 		List<LocalDate> dateTerms = new ArrayList<LocalDate>(searchTerms.length);
@@ -63,7 +63,8 @@ public class SpotlightService implements ISpotlightService {
 				continue;
 			}
 			
-			if (term.charAt(0) >= 'a' && term.charAt(0) <= 'z') {
+			if ((term.charAt(0) >= 'a' && term.charAt(0) <= 'z')
+				|| (term.length() > 1 && term.charAt(0) == '%')) {
 				// early break, starts with char, must be alphanumeric
 				stringTerms.add(term);
 				continue;
@@ -89,6 +90,10 @@ public class SpotlightService implements ISpotlightService {
 			// TODO calculations -> numeric and maths operator
 			// TODO context setting -> if key=value add to contextParameters
 			// TODO Command integration
+		}
+		
+		if (stringTerms.isEmpty() && dateTerms.isEmpty() && numericTerms.isEmpty()) {
+			return;
 		}
 		
 		// only parallel fetch the first 5 of every category? show total count?

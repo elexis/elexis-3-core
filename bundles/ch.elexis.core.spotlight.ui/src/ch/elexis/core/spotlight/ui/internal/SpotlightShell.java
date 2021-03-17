@@ -186,7 +186,7 @@ public class SpotlightShell extends Shell {
 			if(event.stateMask == SWT.ALT) {
 				event.doit=false;
 				boolean success = resultComposite.handleAltKeyPressed(event.keyCode);
-				if (success) {
+				if (success && !isDisposed()) {
 					close();
 				}
 			}
