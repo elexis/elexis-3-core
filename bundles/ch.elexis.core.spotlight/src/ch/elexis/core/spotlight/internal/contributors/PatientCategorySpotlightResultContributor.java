@@ -15,8 +15,8 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.spotlight.ISpotlightResult;
 import ch.elexis.core.spotlight.ISpotlightResultContributor;
-import ch.elexis.core.spotlight.ISpotlightService;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
+import ch.elexis.core.spotlight.ISpotlightService;
 
 @Component
 public class PatientCategorySpotlightResultContributor implements ISpotlightResultContributor {
@@ -42,23 +42,23 @@ public class PatientCategorySpotlightResultContributor implements ISpotlightResu
 			// only single name - don't know if part of firstname or lastname
 			query.startGroup();
 			query.or(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE,
-				"%" + stringTerms.get(0) + "%", true);
+				stringTerms.get(0) + "%", true);
 			query.or(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE,
-				"%" + stringTerms.get(0) + "%", true);
+				stringTerms.get(0) + "%", true);
 			
 		} else if (stringTerms.size() > 1) {
 			// two names, could either be parts of "firstname lastname" or "lastname firstname"
 			query.startGroup();
 			query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE,
-				"%" + stringTerms.get(0) + "%", true);
+				stringTerms.get(0) + "%", true);
 			query.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE,
-				"%" + stringTerms.get(1) + "%", true);
+				stringTerms.get(1) + "%", true);
 			
 			query.startGroup();
 			query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE,
-				"%" + stringTerms.get(1) + "%", true);
+				stringTerms.get(1) + "%", true);
 			query.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE,
-				"%" + stringTerms.get(0) + "%", true);
+				stringTerms.get(0) + "%", true);
 			query.orJoinGroups();
 		}
 		

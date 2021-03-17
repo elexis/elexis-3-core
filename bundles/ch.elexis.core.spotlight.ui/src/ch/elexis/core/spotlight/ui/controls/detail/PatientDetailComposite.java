@@ -148,22 +148,34 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		selectedPatient = null;
 		selectedNextAppointment = null;
 		selectedPreviousAppointment = null;
-		
+		clearPopulatePatientLabelComposite(null);
+		clearPopulateStickerComposite(null);
+		updateStyledText(null);
+
 		if (resultEntry != null) {
-			Optional<Object> object = resultEntry.getObject();
-			if (!object.isPresent()) {
-				String patientId = resultEntry.getLoaderString();
-				selectedPatient = coreModelService.load(patientId, IPatient.class).orElse(null);
-			} else {
-				selectedPatient = (IPatient) object.get();
-			}
+			lblPatientlabel.setText("Lade Datensatz ...");
+			getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run(){
+					if (resultEntry != null) {
+						Optional<Object> object = resultEntry.getObject();
+						if (!object.isPresent()) {
+							String patientId = resultEntry.getLoaderString();
+							selectedPatient =
+								coreModelService.load(patientId, IPatient.class).orElse(null);
+						} else {
+							selectedPatient = (IPatient) object.get();
+						}
+					}
+					
+					clearPopulatePatientLabelComposite(selectedPatient);
+					clearPopulateStickerComposite(selectedPatient);
+					updateStyledText(selectedPatient);
+					
+					layout(true);
+				}
+			});
 		}
-		
-		clearPopulatePatientLabelComposite(selectedPatient);
-		clearPopulateStickerComposite(selectedPatient);
-		updateStyledText(selectedPatient);
-		
-		layout(true);
 	}
 	
 	//@formatter:off
