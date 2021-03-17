@@ -2,6 +2,7 @@
 package ch.elexis.core.ui.tasks.parts;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -181,7 +182,7 @@ public class TaskConfigurationPart implements IRefreshablePart {
 	}
 	
 	@Override
-	public void refresh(){
+	public void refresh(Map<Object, Object> filterParameters){
 		IQuery<ITaskDescriptor> taskQuery =
 			TaskModelServiceHolder.get().getQuery(ITaskDescriptor.class, true, false);
 		List<ITaskDescriptor> taskDescriptors = taskQuery.execute();
