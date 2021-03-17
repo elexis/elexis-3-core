@@ -15,6 +15,7 @@ import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_
 import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -46,6 +47,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceActions;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
@@ -56,11 +58,12 @@ import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
+import ch.elexis.data.Patient;
 import ch.elexis.data.Rechnung;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.Money;
 
-public class InvoiceListView extends ViewPart {
+public class InvoiceListView extends ViewPart implements IRefreshablePart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceListView"; //$NON-NLS-1$
 	
 	private Settings rnStellerSettings;
@@ -95,8 +98,15 @@ public class InvoiceListView extends ViewPart {
 		}
 	};
 	
-	public void refresh(){
+	@Override
+	public void refresh(Map<Object, Object> filterParameters){
 		if (invoiceListContentProvider != null) {
+			if (filterParameters.containsKey(ch.elexis.core.model.IPatient.class)) {
+				ch.elexis.core.model.IPatient patient =
+					(ch.elexis.core.model.IPatient) filterParameters
+						.get(ch.elexis.core.model.IPatient.class);
+				invoiceListHeaderComposite.setSelectedPatientId(Patient.load(patient.getId()));
+			}
 			invoiceListContentProvider.reload();
 		}
 	}
@@ -340,7 +350,7 @@ public class InvoiceListView extends ViewPart {
 		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
 		viewMenuManager.add(invoiceActions.printListeAction);
 		viewMenuManager.add(invoiceActions.addAccountExcessAction);
-
+		
 		MenuManager menuManager = new MenuManager();
 		menuManager.add(invoiceActions.rnExportAction);
 		menuManager.add(invoiceActions.addPaymentAction);
@@ -356,8 +366,7 @@ public class InvoiceListView extends ViewPart {
 		menuManager.addMenuListener((mats) -> {
 			@SuppressWarnings("unchecked")
 			List<InvoiceEntry> selectedElements =
-				(List<InvoiceEntry>) ((StructuredSelection) tableViewerInvoiceList.getSelection())
-					.toList();
+				((StructuredSelection) tableViewerInvoiceList.getSelection()).toList();
 			
 			boolean allDefective = selectedElements.stream()
 				.allMatch(f -> InvoiceState.DEFECTIVE == f.getInvoiceState());
