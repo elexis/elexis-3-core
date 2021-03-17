@@ -2,10 +2,15 @@ package ch.elexis.core.spotlight.ui.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.swt.program.Program;
@@ -24,6 +29,7 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
 
+@SuppressWarnings("restriction")
 public class SpotlightUiUtil {
 	
 	public static final String ACTION_SHOW_LATEST_LABORATORY = "sll::";
@@ -42,6 +48,15 @@ public class SpotlightUiUtil {
 	
 	@Inject
 	private IEncounterService encounterService;
+	
+	@Inject
+	private ECommandService commandService;
+	
+	@Inject
+	private EHandlerService handlerService;
+	
+	@Inject
+	private IEclipseContext eclipseContext;
 	
 	private EPartService partService;
 	
@@ -182,8 +197,12 @@ public class SpotlightUiUtil {
 	private boolean performActionShowBalance(String patientId){
 		boolean ok = handleEnter(Category.PATIENT.name() + "::" + patientId);
 		if (ok) {
-			partService.showPart("ch.elexis.core.ui.views.rechnung.InvoiceListView",
-				PartState.ACTIVATE);
+			ParameterizedCommand command =
+				commandService.createCommand("ch.elexis.core.ui.e4.command.part.show.invoicelist",
+					Collections.singletonMap("filterOnCurrentPatient", "true"));
+			// needs EPartService of main window https://stackoverflow.com/a/50861257/905817
+			eclipseContext.set(EPartService.class, partService);
+			handlerService.executeHandler(command, eclipseContext);
 			return true;
 		}
 		return false;

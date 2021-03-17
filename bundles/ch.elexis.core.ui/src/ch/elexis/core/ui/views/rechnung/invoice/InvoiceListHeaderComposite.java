@@ -332,6 +332,11 @@ public class InvoiceListHeaderComposite extends Composite {
 		return null;
 	}
 	
+	public void setSelectedPatientId(Patient patient) {
+		actPatient = patient;
+		lblPatientname.setText(actPatient.getLabel());
+	}
+	
 	String getSelectedInvoiceId(){
 		return txtInvoiceno.getText();
 	}
