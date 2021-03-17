@@ -5,6 +5,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.eclipse.core.runtime.ICoreRunnable;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -285,11 +287,13 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 	
 	@Override
 	public void refresh(){
-		// TODO only show all if Administrator or owner (-> TaskDescriptor)
-		IQuery<ITask> taskQuery = TaskModelServiceHolder.get().getQuery(ITask.class);
-		taskQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
-		List<ITask> results = taskQuery.execute();
-		inputModel.set(results.toArray());
+		Job job = Job.create("Update table", (ICoreRunnable) monitor -> {
+			IQuery<ITask> taskQuery = TaskModelServiceHolder.get().getQuery(ITask.class);
+			taskQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
+			List<ITask> results = taskQuery.execute();
+			inputModel.set(results.toArray());
+		});
+		job.schedule();
 	}
 	
 	@Focus
