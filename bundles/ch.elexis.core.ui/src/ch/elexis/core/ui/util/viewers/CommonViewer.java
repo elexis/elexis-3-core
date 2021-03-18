@@ -191,7 +191,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 			verticalBar.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e){
-					if (showDisableLimit && table.getItemCount() > 100) {
+					if (showDisableLimit && table.getItemCount() > 25) {
 						scrolledToBottom = verticalBar.getSelection() + verticalBar.getThumb() == verticalBar
 								.getMaximum();
 						if (scrolledToBottom) {
@@ -508,13 +508,25 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		Display.getDefault().asyncExec(() -> {
 			if(value) {
 				addLimitButton(limit);
-				if (scrolledToBottom) {
+				if (scrolledToBottom || isNoScroll()) {
 					showDisableLimitButton();
 				}
 			} else {
 				hideDisableLimitButton();
 			}
 		});
+	}
+	
+	private boolean isNoScroll(){
+		if (viewer.getControl() instanceof Table) {
+			// test if table elements do not reach bottom
+			Table table = (Table) viewer.getControl();
+			ScrollBar verticalBar = table.getVerticalBar();
+			if(verticalBar != null) {
+				return verticalBar.getSelection() + verticalBar.getThumb() == verticalBar.getMaximum();
+			}
+		}
+		return false;
 	}
 	
 	private void addLimitButton(int limit){
