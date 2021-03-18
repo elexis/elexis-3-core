@@ -5,10 +5,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -22,10 +22,13 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
+import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.model.message.MessageCode;
 import ch.elexis.core.model.message.MessageCodeMessageId;
 import ch.elexis.core.model.message.TransientMessage;
@@ -34,89 +37,93 @@ import ch.elexis.core.model.tasks.SerializableBoolean;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
+import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IMessageService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.CoverageServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.services.holder.LabServiceHolder;
 import ch.elexis.core.services.holder.MessageServiceHolder;
+import ch.elexis.core.time.TimeUtil;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.TimeTool;
 
 /**
- * @see at.medevit.elexis.roche.labor.billing.AddLabToKons for original
- *      implementation
+ * @see at.medevit.elexis.roche.labor.billing.AddLabToKons for original implementation
  */
 public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRunnable {
-
+	
 	/**
 	 * @see at.medevit.elexis.roche.labor.preference.RochePreferencePage
 	 */
 	public class Parameters {
-		public static final String ADDCONS_SAMEDAY = "at.medevit.elexis.roche.labor.bill.addcons.sameday";
 		public static final String ADDCONS = "at.medevit.elexis.roche.labor.bill.addcons";
 		/**
-		 * Automatically add a billable encounter if the latest encounter is not
-		 * billable. The billing law of the latest encounter is copied. If there is no
-		 * previous encounter, the task will fail. Default <code>true</code>
+		 * Automatically add a billable encounter if the latest encounter is not billable. The
+		 * billing law of the latest encounter is copied. If there is no previous encounter, the
+		 * task will fail. Default <code>true</code>
 		 */
-		public static final String BOOLEAN_AUTO_ADD_BILLABLE_ENCOUNTER = "autoCreateBillalbeEncounter";
+		public static final String BOOLEAN_AUTO_ADD_BILLABLE_ENCOUNTER =
+			"autoCreateBillalbeEncounter";
 		/**
 		 * Send a notification that an encounter was created. Default <code>true</code>
 		 */
-		public static final String BOOLEAN_NOTIFY_ON_AUTO_ADD_ENCOUNTER = "notifyOnAutoAddEncounter";
+		public static final String BOOLEAN_NOTIFY_ON_AUTO_ADD_ENCOUNTER =
+			"notifyOnAutoAddEncounter";
 	}
-
+	
 	public static final String RUNNABLE_ID = "billLabResultOnCreation";
-
+	
 	private static final int MAX_WAIT = 40;
-
+	
 	private static Object addTarifLock = new Object();
 	private static Logger logger;
-
+	
 	private final IModelService coreModelService;
 	private final EncounterSelector encounterSelector;
-
+	
 	public BillLabResultOnCreationIdentifiedRunnable(IModelService coreModelService,
-			EncounterSelector encounterSelection) {
+		EncounterSelector encounterSelection){
 		this.coreModelService = coreModelService;
 		this.encounterSelector = encounterSelection;
-
+		
 		logger = LoggerFactory.getLogger(BillLabResultOnCreationIdentifiedRunnable.class);
 	}
-
+	
 	public interface EncounterSelector {
 		String createOrOpenConsultation(IPatient patient);
 	}
-
-	private IBillable getKonsVerrechenbar(IEncounter kons) {
+	
+	private IBillable getKonsVerrechenbar(IEncounter kons){
 		if (kons.getCoverage() != null) {
 			TimeTool date = new TimeTool(kons.getDate());
 			String law = kons.getCoverage().getBillingSystem().getName();
 			Map<Object, Object> context = new HashMap<>();
 			context.put(ICodeElementService.ContextKeys.LAW, law);
 			context.put(ICodeElementService.ContextKeys.DATE, date.toLocalDate());
-			Optional<ICodeElement> tarmed = CodeElementServiceHolder.get().loadFromString("Tarmed", "00.0010", context);
+			Optional<ICodeElement> tarmed =
+				CodeElementServiceHolder.get().loadFromString("Tarmed", "00.0010", context);
 			if (tarmed.isPresent()) {
 				return (IBillable) tarmed.get();
 			}
 		}
 		return null;
 	}
-
-	private boolean isLabResultReady(ILabResult labResult) {
+	
+	private boolean isLabResultReady(ILabResult labResult){
 		// TODO move to model?
 		// TODO still required?
 		List<Object> values = new ArrayList<>();
 		values.add(labResult.getOrigin());
 		values.add(labResult.getItem());
 		values.add(labResult.getPatient());
-
+		
 		for (Object string : values) {
 			if (string == null) {
 				return false;
@@ -124,150 +131,160 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		}
 		return true;
 	}
-
+	
 	/**
 	 * Retrieve a consultation that meets the requirements to be billed upon
 	 * 
 	 * @param patient
-	 * @param autoAddBillableEncounter see
-	 *                                 {@link Parameters#BOOLEAN_AUTO_ADD_BILLABLE_ENCOUNTER}
-	 * @param notifyOnAutoAddEncounter see
-	 *                                 {@link Parameters#BOOLEAN_NOTIFY_ON_AUTO_ADD_ENCOUNTER}
+	 * @param autoAddBillableEncounter
+	 *            see {@link Parameters#BOOLEAN_AUTO_ADD_BILLABLE_ENCOUNTER}
+	 * @param notifyOnAutoAddEncounter
+	 *            see {@link Parameters#BOOLEAN_NOTIFY_ON_AUTO_ADD_ENCOUNTER}
 	 * @return
+	 * @throws TaskException
+	 * @see https://redmine.medelexis.ch/issues/22266
 	 */
-	private Optional<IEncounter> getBillableEncounter(IPatient patient, boolean onlyUseTodaysEncounterForBilling,
-			boolean autoAddBillableEncounter, boolean notifyOnAutoAddEncounter) {
+	private Optional<IEncounter> getBillableEncounter(IPatient patient,
+		boolean autoAddBillableEncounter, boolean notifyOnAutoAddEncounter) throws TaskException{
+		
 		IEncounter validEncounter = null;
-
-		IEncounter kons = EncounterServiceHolder.get().getLatestEncounter(patient).orElse(null);
-		if (kons != null) {
-			Result<IEncounter> editable = BillingServiceHolder.get().isEditable(kons);
-			boolean failsEncounterHasToBeTodayConstraint = true;
-			boolean valIsOnlyOneKonsToday = false;
-			if (editable.isOK()) {
-
-				failsEncounterHasToBeTodayConstraint = failsEncounterHasToBeTodayConstraint(kons,
-						onlyUseTodaysEncounterForBilling);
-				valIsOnlyOneKonsToday = isOnlyOneKonsToday(patient, onlyUseTodaysEncounterForBilling);
-				if (!failsEncounterHasToBeTodayConstraint && valIsOnlyOneKonsToday) {
-					validEncounter = kons;
+		
+		IQuery<ICoverage> openCoverageQuery =
+			CoreModelServiceHolder.get().getQuery(ICoverage.class);
+		openCoverageQuery.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);
+		openCoverageQuery.and(ModelPackage.Literals.ICOVERAGE__DATE_TO, COMPARATOR.EQUALS, null);
+		List<ICoverage> openCoverages = openCoverageQuery.execute();
+		
+		List<IEncounter> todaysOpenBillableEncounters = null;
+		if (!openCoverages.isEmpty()) {
+			todaysOpenBillableEncounters =
+				openCoverages.stream().flatMap(cv -> cv.getEncounters().stream())
+					.filter(encounter -> TimeUtil.isToday(encounter.getDate()))
+					.filter(encounter -> BillingServiceHolder.get().isEditable(encounter).isOK())
+					.collect(Collectors.toList());
+			
+			if (todaysOpenBillableEncounters.size() == 1) {
+				validEncounter = todaysOpenBillableEncounters.get(0);
+			} else if (todaysOpenBillableEncounters.size() > 1) {
+				// KVG encounter available?
+				validEncounter = todaysOpenBillableEncounters.stream()
+					.filter(enc -> enc.getCoverage().getBillingSystem().getLaw() == BillingLaw.KVG)
+					.findFirst().orElse(null);
+				if (validEncounter == null) {
+					// no - use the first available encounter
+					validEncounter = todaysOpenBillableEncounters.get(0);
 				}
-			} else {
-
-				if (autoAddBillableEncounter) {
-					if (kons.getCoverage().isOpen()) {
-						validEncounter = new IEncounterBuilder(coreModelService, kons.getCoverage(), kons.getMandator())
-								.buildAndSave();
-						logger.info("Added encounter [{}] to bill results", validEncounter.getId());
-						if (notifyOnAutoAddEncounter) {
-							IStatus result = sendMessageToOwner(patient);
-							if (!result.isOK()) {
-								logger.warn("Could not send notification message.");
-							}
-						}
-					}
-				}
-
 			}
-			logger.debug(
-					"editable={},failsEncounterHasToBeTodayConstraint={},valIsOnlyOneKonsToday={},autoAddBillableEncounter={}",
-					editable, failsEncounterHasToBeTodayConstraint, valIsOnlyOneKonsToday, autoAddBillableEncounter);
-		} 
-
-		if (validEncounter == null && encounterSelector != null) {
+		}
+		
+		if (encounterSelector != null) {
 			String konsId = encounterSelector.createOrOpenConsultation(patient);
 			if (konsId != null) {
 				validEncounter = coreModelService.load(konsId, IEncounter.class).get();
 			}
 		}
-
+		
+		if (validEncounter != null) {
+			return Optional.of(validEncounter);
+		}
+		
+		if (!autoAddBillableEncounter) {
+			return Optional.empty();
+		}
+		
+		boolean createdCoverage = false;
+		ICoverage coverageToCreateIEncounterUpon;
+		
+		if (openCoverages.isEmpty()) {
+			coverageToCreateIEncounterUpon = createDefaultCoverage(coreModelService, patient);
+			createdCoverage = true;
+		} else if (openCoverages.size() == 1) {
+			coverageToCreateIEncounterUpon = openCoverages.get(0);
+		} else {
+			// KVG coverage available?
+			coverageToCreateIEncounterUpon = openCoverages.stream()
+				.filter(coverage -> coverage.getBillingSystem().getLaw() == BillingLaw.KVG)
+				.findFirst().orElse(null);
+			if (coverageToCreateIEncounterUpon == null) {
+				// No - UVG coverage available?
+				coverageToCreateIEncounterUpon = openCoverages.stream()
+					.filter(coverage -> coverage.getBillingSystem().getLaw() == BillingLaw.UVG)
+					.findFirst().orElse(null);
+			}
+			if (coverageToCreateIEncounterUpon == null) {
+				// No create default KVG coverage
+				coverageToCreateIEncounterUpon = createDefaultCoverage(coreModelService, patient);
+				createdCoverage = true;
+			}
+		}
+		
+		if (createdCoverage) {
+			logger.info("Created new coverage [{}] as no applicable found.",
+				coverageToCreateIEncounterUpon);
+		}
+		
+		IMandator mandatorToBillUpon = null;
+		if (todaysOpenBillableEncounters != null && !todaysOpenBillableEncounters.isEmpty()) {
+			mandatorToBillUpon = todaysOpenBillableEncounters.get(0).getMandator();
+		} else {
+			List<IEncounter> allEncountersForPatient =
+				EncounterServiceHolder.get().getAllEncountersForPatient(patient);
+			if (!allEncountersForPatient.isEmpty()) {
+				mandatorToBillUpon = allEncountersForPatient.get(0).getMandator();
+			}
+		}
+		if (mandatorToBillUpon == null) {
+			List<IMandator> mandators = coreModelService.getQuery(IMandator.class).execute();
+			if (mandators.isEmpty()) {
+				logger.warn(
+					"Could not determine a mandator for patient, and no mandators available!");
+				throw new TaskException(TaskException.EXECUTION_ERROR,
+					"Could not determine a mandator for patient, and no mandators available!");
+			} else {
+				mandatorToBillUpon = mandators.get(0);
+				logger.warn("Could not determine existing mandator for patient, using [{}]",
+					mandatorToBillUpon);
+			}
+		}
+		
+		validEncounter = new IEncounterBuilder(coreModelService, coverageToCreateIEncounterUpon,
+			mandatorToBillUpon).buildAndSave();
+		logger.info("Added encounter [{}] to bill results", validEncounter.getId());
+		
+		if (notifyOnAutoAddEncounter) {
+			IStatus result = sendMessageToOwner(patient);
+			if (!result.isOK()) {
+				logger.warn("Could not send notification message.");
+			}
+		}
+		
 		return Optional.ofNullable(validEncounter);
 	}
-
-	private IStatus sendMessageToOwner(IPatient patient) {
+	
+	private ICoverage createDefaultCoverage(IModelService coreModelService2, IPatient patient){
+		ICoverageService iCoverageService = CoverageServiceHolder.get();
+		return new ICoverageBuilder(coreModelService, patient,
+			iCoverageService.getDefaultCoverageLabel(), iCoverageService.getDefaultCoverageReason(),
+			iCoverageService.getDefaultCoverageLaw()).buildAndSave();
+	}
+	
+	private IStatus sendMessageToOwner(IPatient patient){
 		IUser owner = ContextServiceHolder.get().getActiveUser().orElse(null);
-		TransientMessage transientMessage = MessageServiceHolder.get().prepare(getClass().getSimpleName(),
+		TransientMessage transientMessage =
+			MessageServiceHolder.get().prepare(getClass().getSimpleName(),
 				IMessageService.INTERNAL_MESSAGE_URI_SCHEME + ":" + owner.getId());
 		transientMessage.addMessageCode(MessageCode.Key.MessageId,
-				MessageCodeMessageId.INFO_BILLING_AUTO_CREATE_ENCOUNTER.name());
+			MessageCodeMessageId.INFO_BILLING_AUTO_CREATE_ENCOUNTER.name());
 		transientMessage.addMessageCode(MessageCode.Key.MessageIdParam, patient.getPatientNr());
 		transientMessage.setSenderAcceptsAnswer(false);
-		transientMessage.setMessageText("No billable encounter for patient " + patient.getPatientNr()
+		transientMessage
+			.setMessageText("No billable encounter for patient " + patient.getPatientNr()
 				+ " found. A new encounter was created to bill the imported values on.");
 		return MessageServiceHolder.get().send(transientMessage);
 	}
-
-	private List<IEncounter> getOpenKons(IPatient patient) {
-		List<ICoverage> coverages = patient.getCoverages();
-		if (coverages.isEmpty()) {
-			return null;
-		}
-
-		IQuery<IEncounter> qbe = coreModelService.getQuery(IEncounter.class);
-		qbe.startGroup();
-
-		boolean termInserted = false;
-		for (ICoverage fall : coverages) {
-			if (fall.isOpen()) {
-				qbe.or(ModelPackage.Literals.IENCOUNTER__COVERAGE, COMPARATOR.EQUALS, fall);
-				termInserted = true;
-			}
-		}
-		if (!termInserted) {
-			return null;
-		}
-		// qbe.endGroup();
-		qbe.orderBy(ModelPackage.Literals.IENCOUNTER__DATE, ORDER.DESC);
-		return qbe.execute();
-	}
-
-	private List<IEncounter> getTodaysOpenKons(IPatient patient) {
-		List<IEncounter> ret = new ArrayList<IEncounter>();
-		List<IEncounter> list = getOpenKons(patient);
-
-		for (IEncounter konsultation : list) {
-			TimeTool konsDate = new TimeTool(konsultation.getDate());
-			if (konsDate.isSameDay(new TimeTool())) {
-				ret.add(konsultation);
-			}
-		}
-		return ret;
-	}
-
-	private boolean isOnlyOneKonsToday(IPatient patient, boolean onlyUseTodaysEncounterForBilling) {
-		// if today kons option is not set do not lookup ...
-		if (!onlyUseTodaysEncounterForBilling) {
-			// TODO task? who is the active mandator?
-			return true;
-		}
-		// relevant is not the kons but the fall
-		// 2 kons of the same fall are ok
-		HashSet<String> set = new HashSet<String>();
-		List<IEncounter> list = getTodaysOpenKons(patient);
-		for (IEncounter konsultation : list) {
-			ICoverage fall = konsultation.getCoverage();
-			set.add(fall.getId());
-		}
-		if (set.size() == 1) {
-			return true;
-		}
-		return false;
-	}
-
-	private boolean failsEncounterHasToBeTodayConstraint(IEncounter kons, boolean onlyUseTodaysEncounterForBilling) {
-		// see RochePreferencePage.LABORRESULTS_BILL_ADDCONS_SAMEDAY
-		if (onlyUseTodaysEncounterForBilling) {
-			// constraint is active
-			TimeTool konsDate = new TimeTool(kons.getDate());
-			if (!konsDate.isSameDay(new TimeTool())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
+	
 	private Result<?> addTarifToKons(IBillable tarif, IEncounter kons,
-			boolean autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter) throws TaskException {
+		boolean autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter) throws TaskException{
 		// see RochePreferencePage.LABORRESULTS_BILL_ADDCONS
 		if (autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter) {
 			synchronized (kons) {
@@ -276,7 +293,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				for (IBilled verrechnet : leistungen) {
 					IBillable verrechenbar = verrechnet.getBillable();
 					if (verrechenbar != null && verrechenbar.getCodeSystemName().equals("Tarmed")
-							&& verrechenbar.getCode().equals("00.0010")) {
+						&& verrechenbar.getCode().equals("00.0010")) {
 						addCons = false;
 						break;
 					}
@@ -284,7 +301,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				if (addCons) {
 					IBillable consVerrechenbar = getKonsVerrechenbar(kons);
 					if (consVerrechenbar != null) {
-						Result<?> result = BillingServiceHolder.get().bill(consVerrechenbar, kons, 1);
+						Result<?> result =
+							BillingServiceHolder.get().bill(consVerrechenbar, kons, 1);
 						if (!result.isOK()) {
 							throw new TaskException(TaskException.EXECUTION_ERROR, result);
 						}
@@ -292,67 +310,68 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				}
 			}
 		}
-
-		logger.info(String.format("Adding EAL tarif [%s] to [%s]", tarif.getCode(), kons.getLabel()));
+		
+		logger
+			.info(String.format("Adding EAL tarif [%s] to [%s]", tarif.getCode(), kons.getLabel()));
 		Result<?> result = BillingServiceHolder.get().bill(tarif, kons, 1);
 		if (!result.isOK()) {
 			throw new TaskException(TaskException.EXECUTION_ERROR, result);
 		}
 		return result;
 	}
-
-	private IBillable getLabor2009TarifByCode(String ealCode) {
+	
+	private IBillable getLabor2009TarifByCode(String ealCode){
 		Map<Object, Object> context = CodeElementServiceHolder.createContext();
 		context.put(ContextKeys.DATE, LocalDate.now());
-		Optional<ICodeElement> tarif = CodeElementServiceHolder.get().loadFromString("EAL 2009", ealCode, context);
+		Optional<ICodeElement> tarif =
+			CodeElementServiceHolder.get().loadFromString("EAL 2009", ealCode, context);
 		if (tarif.isPresent() && tarif.get() instanceof IBillable) {
 			return (IBillable) tarif.get();
 		}
 		return null;
 	}
-
+	
 	@Override
-	public String getId() {
+	public String getId(){
 		return RUNNABLE_ID;
 	}
-
+	
 	@Override
-	public String getLocalizedDescription() {
+	public String getLocalizedDescription(){
 		return "Bill an EAL 2009 service on a patients encounter on creation of a Labresult";
 	}
-
+	
 	@Override
-	public Map<String, Serializable> getDefaultRunContext() {
+	public Map<String, Serializable> getDefaultRunContext(){
 		Map<String, Serializable> defaultRunContext = new HashMap<>();
-		defaultRunContext.put(RunContextParameter.IDENTIFIABLE_ID, RunContextParameter.VALUE_MISSING_REQUIRED);
+		defaultRunContext.put(RunContextParameter.IDENTIFIABLE_ID,
+			RunContextParameter.VALUE_MISSING_REQUIRED);
 		defaultRunContext.put(Parameters.ADDCONS, Boolean.FALSE);
-		defaultRunContext.put(Parameters.ADDCONS_SAMEDAY, Boolean.TRUE);
 		defaultRunContext.put(Parameters.BOOLEAN_AUTO_ADD_BILLABLE_ENCOUNTER, Boolean.TRUE);
 		defaultRunContext.put(Parameters.BOOLEAN_NOTIFY_ON_AUTO_ADD_ENCOUNTER, Boolean.TRUE);
 		return defaultRunContext;
 	}
-
+	
 	@Override
-	public Map<String, Serializable> run(Map<String, Serializable> runContext, IProgressMonitor progressMonitor,
-			Logger logger) throws TaskException {
-
+	public Map<String, Serializable> run(Map<String, Serializable> runContext,
+		IProgressMonitor progressMonitor, Logger logger) throws TaskException{
+		
 		String labresultId = (String) runContext.get(RunContextParameter.IDENTIFIABLE_ID);
 		Optional<ILabResult> _labResult = coreModelService.load(labresultId, ILabResult.class);
 		if (!_labResult.isPresent()) {
 			throw new TaskException(TaskException.EXECUTION_ERROR,
-					"LabResult [" + labresultId + "] could not be loaded");
+				"LabResult [" + labresultId + "] could not be loaded");
 		}
-
-		boolean autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter = SerializableBoolean.valueOf(runContext,
-				Parameters.ADDCONS);
-		boolean onlyUseTodaysEncounterForBilling = SerializableBoolean.valueOf(runContext, Parameters.ADDCONS_SAMEDAY);
-		boolean autoAddBillableEncounter = SerializableBoolean.valueOf(runContext,
-				Parameters.BOOLEAN_AUTO_ADD_BILLABLE_ENCOUNTER);
+		
+		boolean autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter =
+			SerializableBoolean.valueOf(runContext, Parameters.ADDCONS);
+		boolean autoAddBillableEncounter =
+			SerializableBoolean.valueOf(runContext, Parameters.BOOLEAN_AUTO_ADD_BILLABLE_ENCOUNTER);
 		boolean notifyOnAutoAddEncounter = SerializableBoolean.valueOf(runContext,
-				Parameters.BOOLEAN_NOTIFY_ON_AUTO_ADD_ENCOUNTER);
-
+			Parameters.BOOLEAN_NOTIFY_ON_AUTO_ADD_ENCOUNTER);
+		
 		ILabResult labResult = _labResult.get();
-
+		
 		// we have to wait for the fields to be set, as this gets called on creation,
 		// and the fields
 		// are set afterwards
@@ -370,38 +389,41 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				}
 			}
 			if (waitForFields == MAX_WAIT) {
-				String errorMessage = String.format("Could not get data from result [%s].", labResult.getId());
+				String errorMessage =
+					String.format("Could not get data from result [%s].", labResult.getId());
 				logger.warn(errorMessage);
 				throw new TaskException(TaskException.EXECUTION_ERROR, errorMessage);
 			}
 		}
-
+		
 		// all properties are available
-		Optional<ILabMapping> mapping = LabServiceHolder.get().getLabMappingByContactAndItem(labResult.getOrigin(),
-				labResult.getItem());
+		Optional<ILabMapping> mapping = LabServiceHolder.get()
+			.getLabMappingByContactAndItem(labResult.getOrigin(), labResult.getItem());
 		if (mapping.isPresent() && mapping.get().isCharge()) {
 			String ealCode = labResult.getItem().getBillingCode();
-			logger.info(String.format("Adding EAL tarif [%s] from [%s]", ealCode, labResult.getOrigin().getLabel()));
+			logger.info(String.format("Adding EAL tarif [%s] from [%s]", ealCode,
+				labResult.getOrigin().getLabel()));
 			if (ealCode != null && !ealCode.isEmpty()) {
 				IBillable tarif = getLabor2009TarifByCode(ealCode);
 				if (tarif == null) {
 					String errorString = String.format("Item %s: EAL tarif [%s] does not exist.",
-							labResult.getItem().getLabel(), ealCode);
+						labResult.getItem().getLabel(), ealCode);
 					logger.warn(errorString);
 					throw new TaskException(TaskException.EXECUTION_ERROR, errorString);
 				}
-
+				
 				synchronized (addTarifLock) {
 					Optional<IEncounter> kons = getBillableEncounter(labResult.getPatient(),
-							onlyUseTodaysEncounterForBilling, autoAddBillableEncounter, notifyOnAutoAddEncounter);
+						autoAddBillableEncounter, notifyOnAutoAddEncounter);
 					if (kons.isPresent()) {
 						Result<?> addTarifToKons = addTarifToKons(tarif, kons.get(),
-								autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter);
-						return Collections.singletonMap(ReturnParameter.RESULT_DATA, addTarifToKons.toString());
+							autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter);
+						return Collections.singletonMap(ReturnParameter.RESULT_DATA,
+							addTarifToKons.toString());
 					} else {
 						String errorString = String.format(
-								"Could not add tarif [%s] for result of patient [%s] because no billable kons found.",
-								ealCode, labResult.getPatient().getLabel());
+							"Could not add tarif [%s] for result of patient [%s] because no billable kons found.",
+							ealCode, labResult.getPatient().getLabel());
 						logger.warn(errorString);
 						Map<String, Serializable> resultMap = new HashMap<String, Serializable>();
 						resultMap.put(ReturnParameter.MARKER_WARN, null);

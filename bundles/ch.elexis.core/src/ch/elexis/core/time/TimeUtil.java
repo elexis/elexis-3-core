@@ -89,4 +89,8 @@ public class TimeUtil {
 			.from(localDate.atTime(9, 0).atZone(ZoneId.systemDefault()).toInstant());
 	}
 	
+	public static boolean isToday(LocalDate date){
+		return LocalDate.now().isEqual(date);
+	}
+	
 }
