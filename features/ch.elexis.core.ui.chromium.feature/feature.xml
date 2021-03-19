@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.ui.chromium.feature"
       label="Elexis Chromium UI Feature"
-      version="1.0.0.qualifier"
+      version="1.0.1.qualifier"
       provider-name="elexis.info"
       arch="x86_64">
 
