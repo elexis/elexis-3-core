@@ -3,6 +3,7 @@ target "Elexis" with source allEnvironments
 location "https://dl.maketechnology.io/chromium-swt-ee/medelexis/p2" {
 	com.make.chromium.cef.feature.feature.group lazy
 	org.eclipse.swt.chromium.feature.feature.group lazy
+	org.eclipse.swt.chromium.64b lazy
 }
 
 location "https://download.elexis.info/elexis/3.8/p2/target/" {
