@@ -100,6 +100,9 @@
 
    <plugin
          id="org.eclipse.swt.chromium.64b"
+         os="linux,macosx,win32"
+         ws="cocoa,gtk,win32"
+         arch="x86_64"
          download-size="0"
          install-size="0"
          version="0.0.0"
