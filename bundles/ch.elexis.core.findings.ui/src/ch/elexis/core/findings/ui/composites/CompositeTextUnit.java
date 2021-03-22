@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -155,6 +157,17 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 			GridData gdUnit = new GridData(SWT.FILL, SWT.TOP, false, false);
 			gdUnit.widthHint = 40;
 			lblTmp.setLayoutData(gdUnit);
+			
+			fieldText.addTraverseListener(new TraverseListener() {
+				
+				@Override
+				public void keyTraversed(TraverseEvent e){
+					if (e.detail == SWT.TRAVERSE_TAB_NEXT
+						|| e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+						e.doit = true;
+					}
+				}
+			});
 		}
 	}
 	
