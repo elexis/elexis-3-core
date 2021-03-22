@@ -109,6 +109,7 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<FindingsTemplate> getFindingsTemplates() {
 		if (findingsTemplates == null) {
 			findingsTemplates = new EObjectContainmentEList<FindingsTemplate>(FindingsTemplate.class, this, ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES);
@@ -121,6 +122,7 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DataType getDataType() {
 		return dataType;
 	}
@@ -130,6 +132,7 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTextSeparator() {
 		return textSeparator;
 	}
@@ -139,6 +142,7 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTextSeparator(String newTextSeparator) {
 		String oldTextSeparator = textSeparator;
 		textSeparator = newTextSeparator;
@@ -243,7 +247,7 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (dataType: ");
 		result.append(dataType);
 		result.append(", textSeparator: ");

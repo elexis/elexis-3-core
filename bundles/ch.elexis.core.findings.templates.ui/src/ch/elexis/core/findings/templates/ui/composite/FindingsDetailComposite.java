@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -23,17 +24,22 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
+import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.templates.model.CodeElement;
 import ch.elexis.core.findings.templates.model.DataType;
@@ -49,8 +55,9 @@ import ch.elexis.core.findings.templates.model.ModelPackage;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
-import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.base.InputDialog;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
@@ -73,6 +80,7 @@ public class FindingsDetailComposite extends Composite {
 	private boolean openedFromDialog;
 
 	private List<FindingsTemplate> findingTemplatesToMove = new ArrayList<>();
+	private Label lblColorCooser;
 	
 	public FindingsDetailComposite(Composite parent, FindingsTemplates model,
 		boolean openedFromDialog){
@@ -132,6 +140,32 @@ public class FindingsDetailComposite extends Composite {
 		gl.marginHeight = 0;
 		gl.marginWidth = 0;
 		compositeType.setLayout(gl);
+		
+		Label lblColor = new Label(this, SWT.NONE);
+		lblColor.setText("Farbe");
+		
+		lblColorCooser = new Label(this, SWT.NONE);
+		lblColorCooser.setText("ändern..");
+		lblColorCooser.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e){
+				if (FindingsDetailComposite.this.selection == null) {
+					return;
+				}
+				ColorDialog cd = new ColorDialog(UiDesk.getTopShell());
+				cd.setRGB(lblColorCooser.getBackground().getRGB());
+				RGB rgb = cd.open();
+				
+				// set color
+				if (rgb != null) {
+					String colorString = UiDesk.createColor(rgb);
+					FindingsTemplate template = FindingsDetailComposite.this.selection;
+					template.setColor(colorString);
+					lblColorCooser.setBackground(CoreUiUtil.getColorForString(colorString));
+					lblColorCooser.redraw();
+				}
+			}
+		});
 		
 		WidgetFactory.createLabel(this, "LOINC"); //$NON-NLS-1$
 		
@@ -503,6 +537,12 @@ public class FindingsDetailComposite extends Composite {
 			else if (selection.getInputData() instanceof InputDataGroupComponent) {
 				comboInputData.setSelection(new StructuredSelection(
 					((InputDataGroupComponent) selection.getInputData()).getDataType()));
+			}
+			
+			if (selection.getColor() != null && StringUtils.isNotBlank(selection.getColor())) {
+				lblColorCooser.setBackground(CoreUiUtil.getColorForString(selection.getColor()));
+			} else {
+				lblColorCooser.setBackground(UiDesk.getColor(UiDesk.COL_LIGHTGREY));
 			}
 			
 			selectCode(null);

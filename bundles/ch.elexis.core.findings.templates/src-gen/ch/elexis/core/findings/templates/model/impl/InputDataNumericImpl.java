@@ -134,6 +134,7 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getUnit() {
 		return unit;
 	}
@@ -143,6 +144,7 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUnit(String newUnit) {
 		String oldUnit = unit;
 		unit = newUnit;
@@ -155,6 +157,7 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getDecimalPlace() {
 		return decimalPlace;
 	}
@@ -164,6 +167,7 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDecimalPlace(int newDecimalPlace) {
 		int oldDecimalPlace = decimalPlace;
 		decimalPlace = newDecimalPlace;
@@ -176,6 +180,7 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DataType getDataType() {
 		return dataType;
 	}
@@ -185,6 +190,7 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getScript() {
 		return script;
 	}
@@ -194,6 +200,7 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setScript(String newScript) {
 		String oldScript = script;
 		script = newScript;
@@ -292,7 +299,7 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (unit: ");
 		result.append(unit);
 		result.append(", decimalPlace: ");

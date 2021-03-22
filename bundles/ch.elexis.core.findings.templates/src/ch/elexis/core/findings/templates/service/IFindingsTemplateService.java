@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
@@ -87,4 +88,12 @@ public interface IFindingsTemplateService {
 	 * @return
 	 */
 	public String getTypeAsText(Type element);
+	
+	/**
+	 * Get a {@link FindingsTemplate} matching the {@link ICoding}.
+	 * 
+	 * @param localCode
+	 * @return
+	 */
+	public Optional<FindingsTemplate> getFindingsTemplate(ICoding localCode);
 }

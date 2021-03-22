@@ -2,18 +2,25 @@ package ch.elexis.core.findings.ui.cons;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.graphics.Color;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
+import ch.elexis.core.findings.codes.CodingSystem;
+import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.ui.action.AddFindingAction;
 import ch.elexis.core.findings.ui.handler.FindingEditHandler;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.findings.ui.services.FindingsTemplateServiceComponent;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -24,6 +31,7 @@ import ch.elexis.core.text.model.Samdas.XRef;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.text.EnhancedTextField;
 import ch.elexis.core.ui.text.IRichTextDisplay;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.IKonsExtension;
 
 public class KonsExtension implements IKonsExtension {
@@ -46,6 +54,25 @@ public class KonsExtension implements IKonsExtension {
 	@Override
 	public boolean doLayout(StyleRange styleRange, String provider, String id){
 		styleRange.background = UiDesk.getColor(UiDesk.COL_LIGHTGREY);
+		Optional<IObservation> observation =
+			FindingsServiceComponent.getService().findById(id, IObservation.class);
+		if (observation.isPresent()) {
+			Optional<ICoding> localCode = ModelUtil.getCodeBySystem(observation.get().getCoding(),
+				CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
+			if (localCode.isPresent()) {
+				Optional<FindingsTemplate> template =
+					FindingsTemplateServiceComponent.getService()
+						.getFindingsTemplate(localCode.get());
+				if (template.isPresent()) {
+					if (StringUtils.isNotBlank(template.get().getColor())) {
+						Color color = CoreUiUtil.getColorForString(template.get().getColor());
+						if (color != null) {
+							styleRange.background = color;
+						}
+					}
+				}
+			}
+		}
 		return true;
 	}
 	

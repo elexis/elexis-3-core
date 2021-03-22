@@ -159,13 +159,22 @@ public interface ModelPackage extends EPackage {
 	int FINDINGS_TEMPLATE__CODE_ELEMENT = 3;
 
 	/**
+	 * The feature id for the '<em><b>Color</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINDINGS_TEMPLATE__COLOR = 4;
+
+	/**
 	 * The number of structural features of the '<em>Findings Template</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FINDINGS_TEMPLATE_FEATURE_COUNT = 4;
+	int FINDINGS_TEMPLATE_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Findings Template</em>' class.
@@ -579,6 +588,17 @@ public interface ModelPackage extends EPackage {
 	EReference getFindingsTemplate_CodeElement();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getColor <em>Color</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Color</em>'.
+	 * @see ch.elexis.core.findings.templates.model.FindingsTemplate#getColor()
+	 * @see #getFindingsTemplate()
+	 * @generated
+	 */
+	EAttribute getFindingsTemplate_Color();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.InputDataNumeric <em>Input Data Numeric</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -899,6 +919,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference FINDINGS_TEMPLATE__CODE_ELEMENT = eINSTANCE.getFindingsTemplate_CodeElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Color</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FINDINGS_TEMPLATE__COLOR = eINSTANCE.getFindingsTemplate_Color();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl <em>Input Data Numeric</em>}' class.

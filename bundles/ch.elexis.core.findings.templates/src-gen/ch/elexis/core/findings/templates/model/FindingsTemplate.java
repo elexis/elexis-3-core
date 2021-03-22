@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getTitle <em>Title</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getInputData <em>Input Data</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getCodeElement <em>Code Element</em>}</li>
+ *   <li>{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getColor <em>Color</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.findings.templates.model.ModelPackage#getFindingsTemplate()
@@ -130,5 +131,27 @@ public interface FindingsTemplate extends EObject {
 	 * @generated
 	 */
 	void setCodeElement(CodeElement value);
+
+	/**
+	 * Returns the value of the '<em><b>Color</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Color</em>' attribute.
+	 * @see #setColor(String)
+	 * @see ch.elexis.core.findings.templates.model.ModelPackage#getFindingsTemplate_Color()
+	 * @model
+	 * @generated
+	 */
+	String getColor();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.findings.templates.model.FindingsTemplate#getColor <em>Color</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Color</em>' attribute.
+	 * @see #getColor()
+	 * @generated
+	 */
+	void setColor(String value);
 
 } // FindingsTemplate

@@ -128,7 +128,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link ModelPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -142,7 +142,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		if (isInited) return (ModelPackage)EPackage.Registry.INSTANCE.getEPackage(ModelPackage.eNS_URI);
 
 		// Obtain or create and register package
-		ModelPackageImpl theModelPackage = (ModelPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ModelPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ModelPackageImpl());
+		Object registeredModelPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		ModelPackageImpl theModelPackage = registeredModelPackage instanceof ModelPackageImpl ? (ModelPackageImpl)registeredModelPackage : new ModelPackageImpl();
 
 		isInited = true;
 
@@ -155,7 +156,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		// Mark meta-data to indicate it can't be changed
 		theModelPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(ModelPackage.eNS_URI, theModelPackage);
 		return theModelPackage;
@@ -166,6 +166,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFindingsTemplates() {
 		return findingsTemplatesEClass;
 	}
@@ -175,6 +176,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFindingsTemplates_FindingsTemplates() {
 		return (EReference)findingsTemplatesEClass.getEStructuralFeatures().get(0);
 	}
@@ -184,6 +186,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFindingsTemplates_Id() {
 		return (EAttribute)findingsTemplatesEClass.getEStructuralFeatures().get(1);
 	}
@@ -193,6 +196,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFindingsTemplates_Title() {
 		return (EAttribute)findingsTemplatesEClass.getEStructuralFeatures().get(2);
 	}
@@ -202,6 +206,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFindingsTemplate() {
 		return findingsTemplateEClass;
 	}
@@ -211,6 +216,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFindingsTemplate_Type() {
 		return (EAttribute)findingsTemplateEClass.getEStructuralFeatures().get(0);
 	}
@@ -220,6 +226,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFindingsTemplate_Title() {
 		return (EAttribute)findingsTemplateEClass.getEStructuralFeatures().get(1);
 	}
@@ -229,6 +236,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFindingsTemplate_InputData() {
 		return (EReference)findingsTemplateEClass.getEStructuralFeatures().get(2);
 	}
@@ -238,6 +246,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFindingsTemplate_CodeElement() {
 		return (EReference)findingsTemplateEClass.getEStructuralFeatures().get(3);
 	}
@@ -247,6 +256,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public EAttribute getFindingsTemplate_Color() {
+		return (EAttribute)findingsTemplateEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getInputDataNumeric() {
 		return inputDataNumericEClass;
 	}
@@ -256,6 +276,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInputDataNumeric_Unit() {
 		return (EAttribute)inputDataNumericEClass.getEStructuralFeatures().get(0);
 	}
@@ -265,6 +286,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInputDataNumeric_DecimalPlace() {
 		return (EAttribute)inputDataNumericEClass.getEStructuralFeatures().get(1);
 	}
@@ -274,6 +296,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInputDataNumeric_DataType() {
 		return (EAttribute)inputDataNumericEClass.getEStructuralFeatures().get(2);
 	}
@@ -283,6 +306,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInputDataNumeric_Script() {
 		return (EAttribute)inputDataNumericEClass.getEStructuralFeatures().get(3);
 	}
@@ -292,6 +316,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getInputDataText() {
 		return inputDataTextEClass;
 	}
@@ -301,6 +326,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInputDataText_DataType() {
 		return (EAttribute)inputDataTextEClass.getEStructuralFeatures().get(0);
 	}
@@ -310,6 +336,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getInputDataGroup() {
 		return inputDataGroupEClass;
 	}
@@ -319,6 +346,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getInputDataGroup_FindingsTemplates() {
 		return (EReference)inputDataGroupEClass.getEStructuralFeatures().get(0);
 	}
@@ -328,6 +356,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInputDataGroup_DataType() {
 		return (EAttribute)inputDataGroupEClass.getEStructuralFeatures().get(1);
 	}
@@ -337,6 +366,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getInputDataGroupComponent() {
 		return inputDataGroupComponentEClass;
 	}
@@ -346,6 +376,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getInputDataGroupComponent_FindingsTemplates() {
 		return (EReference)inputDataGroupComponentEClass.getEStructuralFeatures().get(0);
 	}
@@ -355,6 +386,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInputDataGroupComponent_DataType() {
 		return (EAttribute)inputDataGroupComponentEClass.getEStructuralFeatures().get(1);
 	}
@@ -364,6 +396,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInputDataGroupComponent_TextSeparator() {
 		return (EAttribute)inputDataGroupComponentEClass.getEStructuralFeatures().get(2);
 	}
@@ -373,6 +406,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCodeElement() {
 		return codeElementEClass;
 	}
@@ -382,6 +416,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getCodeElement_Code() {
 		return (EAttribute)codeElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -391,6 +426,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getCodeElement_System() {
 		return (EAttribute)codeElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -400,6 +436,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getCodeElement_Display() {
 		return (EAttribute)codeElementEClass.getEStructuralFeatures().get(2);
 	}
@@ -409,6 +446,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getInputData() {
 		return inputDataEClass;
 	}
@@ -418,6 +456,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getDataType() {
 		return dataTypeEEnum;
 	}
@@ -427,6 +466,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getType() {
 		return typeEEnum;
 	}
@@ -436,6 +476,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -469,6 +510,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(findingsTemplateEClass, FINDINGS_TEMPLATE__TITLE);
 		createEReference(findingsTemplateEClass, FINDINGS_TEMPLATE__INPUT_DATA);
 		createEReference(findingsTemplateEClass, FINDINGS_TEMPLATE__CODE_ELEMENT);
+		createEAttribute(findingsTemplateEClass, FINDINGS_TEMPLATE__COLOR);
 
 		inputDataEClass = createEClass(INPUT_DATA);
 
@@ -544,6 +586,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getFindingsTemplate_Title(), ecorePackage.getEString(), "title", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFindingsTemplate_InputData(), this.getInputData(), null, "inputData", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFindingsTemplate_CodeElement(), this.getCodeElement(), null, "codeElement", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFindingsTemplate_Color(), ecorePackage.getEString(), "color", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(inputDataEClass, InputData.class, "InputData", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
