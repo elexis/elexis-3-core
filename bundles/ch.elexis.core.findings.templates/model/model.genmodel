@@ -29,12 +29,14 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//FindingsTemplate/title"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//FindingsTemplate/inputData"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//FindingsTemplate/codeElement"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//FindingsTemplate/color"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//InputData"/>
     <genClasses image="false" ecoreClass="model.ecore#//InputDataNumeric">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//InputDataNumeric/unit"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//InputDataNumeric/decimalPlace"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//InputDataNumeric/dataType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//InputDataNumeric/script"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//InputDataText">
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//InputDataText/dataType"/>
@@ -46,6 +48,7 @@
     <genClasses image="false" ecoreClass="model.ecore#//InputDataGroupComponent">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//InputDataGroupComponent/findingsTemplates"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//InputDataGroupComponent/dataType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//InputDataGroupComponent/textSeparator"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//CodeElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//CodeElement/code"/>

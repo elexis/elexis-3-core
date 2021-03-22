@@ -111,6 +111,7 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<FindingsTemplate> getFindingsTemplates() {
 		if (findingsTemplates == null) {
 			findingsTemplates = new EObjectContainmentEList<FindingsTemplate>(FindingsTemplate.class, this, ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES);
@@ -123,6 +124,7 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -132,6 +134,7 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
@@ -144,6 +147,7 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTitle() {
 		return title;
 	}
@@ -153,6 +157,7 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTitle(String newTitle) {
 		String oldTitle = title;
 		title = newTitle;
@@ -263,7 +268,7 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (id: ");
 		result.append(id);
 		result.append(", title: ");

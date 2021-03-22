@@ -68,6 +68,7 @@ public class InputDataTextImpl extends MinimalEObjectImpl.Container implements I
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DataType getDataType() {
 		return dataType;
 	}
@@ -109,7 +110,7 @@ public class InputDataTextImpl extends MinimalEObjectImpl.Container implements I
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (dataType: ");
 		result.append(dataType);
 		result.append(')');

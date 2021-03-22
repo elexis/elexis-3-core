@@ -15,6 +15,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="codeElement" eType="#//CodeElement"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="color" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="DataType">
     <eLiterals name="NUMERIC" value="1"/>

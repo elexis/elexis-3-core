@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getTitle <em>Title</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getInputData <em>Input Data</em>}</li>
  *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getCodeElement <em>Code Element</em>}</li>
+ *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getColor <em>Color</em>}</li>
  * </ul>
  *
  * @generated
@@ -93,6 +94,26 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected CodeElement codeElement;
 
 	/**
+	 * The default value of the '{@link #getColor() <em>Color</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getColor()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String COLOR_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getColor() <em>Color</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getColor()
+	 * @generated
+	 * @ordered
+	 */
+	protected String color = COLOR_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -116,6 +137,7 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Type getType() {
 		return type;
 	}
@@ -125,6 +147,7 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(Type newType) {
 		Type oldType = type;
 		type = newType == null ? TYPE_EDEFAULT : newType;
@@ -137,6 +160,7 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTitle() {
 		return title;
 	}
@@ -146,6 +170,7 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTitle(String newTitle) {
 		String oldTitle = title;
 		title = newTitle;
@@ -158,6 +183,7 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public InputData getInputData() {
 		return inputData;
 	}
@@ -182,6 +208,7 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInputData(InputData newInputData) {
 		if (newInputData != inputData) {
 			NotificationChain msgs = null;
@@ -201,6 +228,7 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CodeElement getCodeElement() {
 		return codeElement;
 	}
@@ -225,6 +253,7 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCodeElement(CodeElement newCodeElement) {
 		if (newCodeElement != codeElement) {
 			NotificationChain msgs = null;
@@ -237,6 +266,29 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, newCodeElement, newCodeElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getColor() {
+		return color;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setColor(String newColor) {
+		String oldColor = color;
+		color = newColor;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__COLOR, oldColor, color));
 	}
 
 	/**
@@ -271,6 +323,8 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 				return getInputData();
 			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
 				return getCodeElement();
+			case ModelPackage.FINDINGS_TEMPLATE__COLOR:
+				return getColor();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -296,6 +350,9 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
 				setCodeElement((CodeElement)newValue);
 				return;
+			case ModelPackage.FINDINGS_TEMPLATE__COLOR:
+				setColor((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -320,6 +377,9 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
 				setCodeElement((CodeElement)null);
 				return;
+			case ModelPackage.FINDINGS_TEMPLATE__COLOR:
+				setColor(COLOR_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -340,6 +400,8 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 				return inputData != null;
 			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
 				return codeElement != null;
+			case ModelPackage.FINDINGS_TEMPLATE__COLOR:
+				return COLOR_EDEFAULT == null ? color != null : !COLOR_EDEFAULT.equals(color);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -353,11 +415,13 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (type: ");
 		result.append(type);
 		result.append(", title: ");
 		result.append(title);
+		result.append(", color: ");
+		result.append(color);
 		result.append(')');
 		return result.toString();
 	}

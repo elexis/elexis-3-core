@@ -52,6 +52,8 @@ import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.core.model.IBlob;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.data.Patient;
 
 @Component()
@@ -74,24 +76,9 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		Optional<IBlob> blob =
 			coreModelService.load(FINDINGS_TEMPLATE_ID_PREFIX + templateId, IBlob.class);
 		if (blob.isPresent()) {
-			String stringContent = blob.get().getStringContent();
-			if (stringContent != null && !stringContent.isEmpty()) {
-				try {
-					Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-					Map<String, Object> m = reg.getExtensionToFactoryMap();
-					m.put("xmi", new XMIResourceFactoryImpl());
-					// Obtain a new resource set
-					ResourceSet resSet = new ResourceSetImpl();
-					
-					// Get the resource
-					Resource resource =
-						resSet.createResource(URI.createURI("findingsTemplate.xml"));
-					resource.load(new URIConverter.ReadableInputStream(stringContent), null);
-					return (FindingsTemplates) resource.getContents().get(0);
-				} catch (IOException e) {
-					LoggerFactory.getLogger(FindingsTemplateService.class)
-						.error("read findings templates error", e);
-				}
+			Optional<FindingsTemplates> loaded = loadFindingsTemplates(blob.get());
+			if (loaded.isPresent()) {
+				return loaded.get();
 			}
 		}
 		
@@ -100,6 +87,28 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		findingsTemplates.setId(FINDINGS_TEMPLATE_ID_PREFIX + templateId);
 		findingsTemplates.setTitle("Standard Vorlagen");
 		return findingsTemplates;
+	}
+	
+	private Optional<FindingsTemplates> loadFindingsTemplates(IBlob iBlob){
+		String stringContent = iBlob.getStringContent();
+		if (stringContent != null && !stringContent.isEmpty()) {
+			try {
+				Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+				Map<String, Object> m = reg.getExtensionToFactoryMap();
+				m.put("xmi", new XMIResourceFactoryImpl());
+				// Obtain a new resource set
+				ResourceSet resSet = new ResourceSetImpl();
+				
+				// Get the resource
+				Resource resource = resSet.createResource(URI.createURI("findingsTemplate.xml"));
+				resource.load(new URIConverter.ReadableInputStream(stringContent), null);
+				return Optional.ofNullable((FindingsTemplates) resource.getContents().get(0));
+			} catch (IOException e) {
+				LoggerFactory.getLogger(FindingsTemplateService.class)
+					.error("read findings templates error", e);
+			}
+		}
+		return Optional.empty();
 	}
 	
 	private String createXMI(FindingsTemplates findingsTemplates){
@@ -497,5 +506,31 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 			return "";
 		
 		}
+	}
+	
+	@Override
+	public Optional<FindingsTemplate> getFindingsTemplate(ICoding localCode){
+		IQuery<IBlob> query = coreModelService.getQuery(IBlob.class);
+		query.and("id", COMPARATOR.LIKE, FINDINGS_TEMPLATE_ID_PREFIX + "%");
+		List<IBlob> templatesBlobs = query.execute();
+		for (IBlob iBlob : templatesBlobs) {
+			Optional<FindingsTemplates> templates = loadFindingsTemplates(iBlob);
+			if(templates.isPresent()) {
+				for (FindingsTemplate template : templates.get().getFindingsTemplates()) {
+					if (template.getCodeElement() != null) {
+						if (localCode.getSystem().equals(template.getCodeElement().getSystem())
+							&& localCode.getCode().equals(template.getCodeElement().getCode())) {
+							return Optional.of(template);
+						}
+					}
+				}
+				for (FindingsTemplate template : templates.get().getFindingsTemplates()) {
+					if (template.getTitle().equals(localCode.getCode())) {
+						return Optional.of(template);
+					}
+				}
+			}
+		}
+		return Optional.empty();
 	}
 }

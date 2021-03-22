@@ -112,6 +112,7 @@ public class CodeElementImpl extends MinimalEObjectImpl.Container implements Cod
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getCode() {
 		return code;
 	}
@@ -121,6 +122,7 @@ public class CodeElementImpl extends MinimalEObjectImpl.Container implements Cod
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;
@@ -133,6 +135,7 @@ public class CodeElementImpl extends MinimalEObjectImpl.Container implements Cod
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSystem() {
 		return system;
 	}
@@ -142,6 +145,7 @@ public class CodeElementImpl extends MinimalEObjectImpl.Container implements Cod
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSystem(String newSystem) {
 		String oldSystem = system;
 		system = newSystem;
@@ -154,6 +158,7 @@ public class CodeElementImpl extends MinimalEObjectImpl.Container implements Cod
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDisplay() {
 		return display;
 	}
@@ -163,6 +168,7 @@ public class CodeElementImpl extends MinimalEObjectImpl.Container implements Cod
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplay(String newDisplay) {
 		String oldDisplay = display;
 		display = newDisplay;
@@ -257,7 +263,7 @@ public class CodeElementImpl extends MinimalEObjectImpl.Container implements Cod
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (code: ");
 		result.append(code);
 		result.append(", system: ");
