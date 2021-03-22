@@ -121,6 +121,7 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 		// wrap the data provider with a label data provider
 		DataLayer bodyDataLayer =
 			new DataLayer(new LabelDataProvider(dataProvider, new ObservationLabelProvider()));
+		bodyDataLayer.setColumnPercentageSizing(true);
 		// disable drawing cells lines
 		SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer) {
 			private CellLayerPainter painter = new CellLayerPainter();
@@ -138,7 +139,7 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 			new ColumnHeaderLayer(columnHeaderDataLayer, viewportLayer, selectionLayer);
 		
 		// build the row header layer
-		DataLayer rowHeaderDataLayer = new DataLayer(rowDataProvider);
+		DataLayer rowHeaderDataLayer = new DataLayer(rowDataProvider, 150, 20);
 		ILayer rowHeaderLayer =
 			new RowHeaderLayer(rowHeaderDataLayer, viewportLayer, selectionLayer);
 		
@@ -151,7 +152,7 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 		// build the grid layer
 		GridLayer gridLayer =
 			new GridLayer(viewportLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer);
-
+		
 		natTable =
 			new NatTable(main, NatTable.DEFAULT_STYLE_OPTIONS | SWT.BORDER, gridLayer, false);
 		natTable.setBackground(natTable.getDisplay().getSystemColor(SWT.COLOR_WHITE));
