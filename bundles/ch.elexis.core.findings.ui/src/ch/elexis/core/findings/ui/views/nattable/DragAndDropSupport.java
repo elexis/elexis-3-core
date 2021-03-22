@@ -32,7 +32,7 @@ public class DragAndDropSupport implements DragSourceListener, DropTargetListene
 	
 	@Override
 	public void dragStart(DragSourceEvent event){
-		if (this.tableWrapper.getSelection().isEmpty()) {
+		if (this.tableWrapper.getSelectionLayer().getSelectedRowCount() == 0) {
 			event.doit = false;
 		} else if (!this.tableWrapper.getNatTable().getRegionLabelsByXY(event.x, event.y)
 			.hasLabel(GridRegion.BODY)) {
