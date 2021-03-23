@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -25,9 +24,6 @@ import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandl
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHandleTest {
-	
-	static Path tempDirectory;
-	static File testDirectory;
 	
 	// TODO change to directory
 	
@@ -80,7 +76,7 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 		IVirtualFilesystemHandle[] listHandles = testDirectoryHandle.listHandles();
 		assertEquals(2, listHandles.length);
 		for (IVirtualFilesystemHandle ivfsh : listHandles) {
-			if(ivfsh.getName().contains("space")) {
+			if (ivfsh.getName().contains("space")) {
 				assertEquals(fileWithSpace, ivfsh.toFile().get());
 			} else {
 				assertEquals(file, ivfsh.toFile().get());

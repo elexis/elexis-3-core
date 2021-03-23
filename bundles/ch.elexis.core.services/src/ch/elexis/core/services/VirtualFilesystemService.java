@@ -3,7 +3,8 @@ package ch.elexis.core.services;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.InvalidPathException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
@@ -31,10 +32,22 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 			uriString = "file:" + uriString;
 		}
 		
-		uriString = uriString.replaceAll(" ", "%20");
+		URL url = new URL(uriString);
+		// url may contain '#' characters which in a URL is referred to as a fragment (leading to a getRef())
+		// We don't use it as those, that is we don't have fragments, so we need to pass
+		// this to the path
+		String path = url.getPath();
+		if (url.getRef() != null) {
+			path += "#" + url.getRef();
+		}
 		
-		URI uri = assertUri(uriString);
-		return new VirtualFilesystemHandle(uri);
+		try {
+			URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(),
+				path, url.getQuery(), null);
+			return new VirtualFilesystemHandle(uri);
+		} catch (URISyntaxException e) {
+			throw new IOException("Error handling uri string [" + uriString + "]", e);
+		}
 	}
 	
 	@Override
@@ -45,35 +58,6 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 		
 		URI uri = file.toURI();
 		return new VirtualFilesystemHandle(uri);
-	}
-	
-	private URI assertUri(String uriString) throws IOException{
-		if (StringUtils.isBlank(uriString)) {
-			throw new IOException("urlString is null");
-		}
-		
-		URI uri = isValidURI(uriString);
-		if (uri != null) {
-			return uri;
-		} else {
-			File file = new File(uriString);
-			try {
-				file.toPath();
-				return file.toURI();
-			} catch (InvalidPathException e) {}
-			
-		}
-		
-		throw new IOException("Can not handle uri string [" + uriString + "]");
-	}
-	
-	private URI isValidURI(String uriString){
-		try {
-			URI url = new URI(uriString);
-			return url;
-		} catch (Exception exception) {
-			return null;
-		}
 	}
 	
 }
