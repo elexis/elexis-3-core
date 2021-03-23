@@ -27,9 +27,14 @@ public class SmbURLStreamHandlerService extends AbstractURLStreamHandlerService 
 		CIFSContext credentials =
 			SingletonContext.getInstance().withCredentials(ntlmPasswordAuthentication);
 		// https://github.com/AgNO3/jcifs-ng/issues/271
-		String _url = url.toExternalForm().replaceAll("%20", " ").replaceAll("%23", "#");
+		String _url = replaceEach(url.toExternalForm());
 		return new SmbFile(_url, credentials);
 		
+	}
+	
+	private String replaceEach(String externalForm){
+		return externalForm.replaceAll("%20", " ").replaceAll("%23", "#").replaceAll("%5B", "[")
+			.replaceAll("%5D", "]");
 	}
 	
 }
