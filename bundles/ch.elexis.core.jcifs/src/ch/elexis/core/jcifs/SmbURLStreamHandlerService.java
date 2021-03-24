@@ -8,6 +8,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
 import org.osgi.service.url.URLConstants;
 import org.osgi.service.url.URLStreamHandlerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jcifs.CIFSContext;
 import jcifs.context.SingletonContext;
@@ -19,6 +21,8 @@ import jcifs.smb.SmbFile;
 })
 public class SmbURLStreamHandlerService extends AbstractURLStreamHandlerService {
 	
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Override
 	public URLConnection openConnection(URL url) throws IOException{
 		SingletonContext context = SingletonContext.getInstance();
@@ -28,6 +32,7 @@ public class SmbURLStreamHandlerService extends AbstractURLStreamHandlerService 
 			SingletonContext.getInstance().withCredentials(ntlmPasswordAuthentication);
 		// https://github.com/AgNO3/jcifs-ng/issues/271
 		String _url = replaceEach(url.toExternalForm());
+		logger.debug("openConnection [{}]", _url);
 		return new SmbFile(_url, credentials);
 		
 	}
