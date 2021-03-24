@@ -38,7 +38,7 @@ public class SmbURLStreamHandlerService extends AbstractURLStreamHandlerService 
 	}
 	
 	private String replaceEach(String externalForm){
-		return externalForm.replaceAll("%20", " ").replaceAll("%23", "#").replaceAll("%5B", "[")
+		return externalForm.replaceAll("%25",  "%").replaceAll("%20", " ").replaceAll("%23", "#").replaceAll("%5B", "[")
 			.replaceAll("%5D", "]");
 	}
 	
