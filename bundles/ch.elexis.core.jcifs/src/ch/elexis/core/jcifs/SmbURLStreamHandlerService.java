@@ -32,7 +32,7 @@ public class SmbURLStreamHandlerService extends AbstractURLStreamHandlerService 
 			SingletonContext.getInstance().withCredentials(ntlmPasswordAuthentication);
 		// https://github.com/AgNO3/jcifs-ng/issues/271
 		String _url = replaceEach(url.toExternalForm());
-		logger.debug("openConnection [{}]", _url);
+		logger.debug("openConnection [{}] [{}]", url, _url);
 		return new SmbFile(_url, credentials);
 		
 	}
