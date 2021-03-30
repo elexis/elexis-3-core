@@ -128,9 +128,9 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			logger.info("state = {}, activeUserId = {}, activeMandatorId = {}", getState(), userId,
 				mandatorId);
 		} else if (TaskState.FAILED == state) {
-			logger.warn("state = {}", getState());
+			logger.warn("state = {}, result = [{}]", getState(), getResult());
 		} else if (TaskState.COMPLETED == state || TaskState.CANCELLED == state) {
-			logger.info("state = {} result = [{}]", getState(), getResult());
+			logger.info("state = {}, result = [{}]", getState(), getResult());
 		} else {
 			logger.debug("state = {}", getState());
 		}
@@ -309,7 +309,8 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		} catch (Exception e) {
 			setResult(Collections.singletonMap(
 				IIdentifiedRunnable.ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE, e.getMessage()));
-			logger.warn(e.getMessage(), e);
+			Throwable throwable = (e.getCause() != null) ? e.getCause() : e;
+			logger.warn(e.getMessage(), throwable);
 			getEntity().setFinishedAt(System.currentTimeMillis());
 			setState(TaskState.FAILED);
 		} finally {
