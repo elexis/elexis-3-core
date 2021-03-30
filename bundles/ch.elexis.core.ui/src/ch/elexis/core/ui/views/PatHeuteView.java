@@ -297,7 +297,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 				
 			}, null, new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
 				SimpleWidgetProvider.TYPE_LIST, SWT.V_SCROLL, cv));
-		cv.create(vc, parent, SWT.BORDER, getViewSite());
+		cv.create(vc, parent, SWT.NONE, getViewSite());
 		
 		form = tk.createForm(parent);
 		form.setText(Messages.PatHeuteView_all); //$NON-NLS-1$

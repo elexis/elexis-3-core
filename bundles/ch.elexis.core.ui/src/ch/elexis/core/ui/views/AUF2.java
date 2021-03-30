@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -151,7 +152,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 	public void createPartControl(Composite parent){
 		// setTitleImage(Desk.getImage(ICON));
 		setPartName(Messages.AUF2_certificate); //$NON-NLS-1$
-		tv = new TableViewer(parent);
+		tv = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		tv.setLabelProvider(new DefaultLabelProvider());
 		tv.setContentProvider(new AUFContentProvider());
 		makeActions();
