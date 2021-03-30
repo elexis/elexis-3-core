@@ -80,7 +80,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 				start();
 			}
 		};
-		scrolledComposite = new ScrolledComposite(this, SWT.V_SCROLL | SWT.BORDER);
+		scrolledComposite = new ScrolledComposite(this, SWT.V_SCROLL);
 		scrolledComposite.setLayout(SWTHelper.createGridLayout(true, 1));
 		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		

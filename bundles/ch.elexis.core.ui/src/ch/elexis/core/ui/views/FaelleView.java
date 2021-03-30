@@ -37,6 +37,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -186,7 +187,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	public void createPartControl(final Composite parent){
 		setPartName(Messages.FaelleView_partName); //$NON-NLS-1$
 		parent.setLayout(new GridLayout());
-		tv = new TableViewer(parent);
+		tv = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		tv.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tv.setContentProvider(new FaelleContentProvider());
 		tv.setLabelProvider(new FaelleLabelProvider());
