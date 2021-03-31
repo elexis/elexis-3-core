@@ -103,11 +103,13 @@ public class SelectBestellungDialog extends SelectionDialog {
 			public int compare(Viewer viewer, Object b1, Object b2){
 				setTimeTool((IOrder) b1, t1);
 				setTimeTool((IOrder) b2, t2);
-				if (t1.after(t2))
+				if (t1.after(t2)) {
 					return -1;
-				if (t2.after(t1))
+				} else if (t2.after(t1)) {
 					return 1;
-				return 0;
+				}
+				return Long.valueOf(((IOrder) b1).getLastupdate())
+					.compareTo(Long.valueOf(((IOrder) b2).getLastupdate()));
 			}
 			
 			private void setTimeTool(IOrder order, TimeTool timeTool){
