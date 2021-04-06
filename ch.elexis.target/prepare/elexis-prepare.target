@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1616159588">
+<target name="Elexis" sequenceNumber="1617707259">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="com.make.chromium.cef.feature.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.0.0"/>
-      <repository location="https://dl.maketechnology.io/chromium-swt-ee/medelexis/p2"/>
+      <repository location="https://download.elexis.info/elexis/master/p2/target/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.14.0.v20200113020001"/>
