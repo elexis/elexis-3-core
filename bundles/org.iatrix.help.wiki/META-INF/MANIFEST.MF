@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  ch.rgw.utility,
  ch.elexis.core.data;bundle-version="3.2.0",
- ch.elexis.core.ui;bundle-version="3.2.0"
+ ch.elexis.core.ui;bundle-version="3.2.0",
+ org.eclipse.swt.chromium
 Import-Package: ch.elexis.core.services.holder,
  javax.inject;version="1.0.0",
  org.eclipse.e4.core.di.annotations;version="1.6.0",
