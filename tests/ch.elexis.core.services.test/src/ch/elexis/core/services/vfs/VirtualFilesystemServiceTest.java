@@ -29,6 +29,16 @@ public class VirtualFilesystemServiceTest {
 	public void of_windows_share_UNC_Notation() throws IOException{
 		IVirtualFilesystemHandle unc_handle = service.of("\\\\medeserv\\elexisdata\\folder_name");
 		assertEquals(new URL("smb://medeserv/elexisdata/folder_name"), unc_handle.toURL());
+		IVirtualFilesystemHandle subDir = unc_handle.subDir("subdir");
+		assertEquals("smb://medeserv/elexisdata/folder_name/subdir/", subDir.toURL().toString());
+	}
+	
+	@Test
+	public void of_windows_C_Notation() throws IOException{
+		IVirtualFilesystemHandle handle = service.of("C:/Windows/Test/");
+		assertEquals("file://C:/Windows/Test/", handle.toURL().toString());
+		IVirtualFilesystemHandle subDir = handle.subDir("subdir");
+		assertEquals("file://C:/Windows/Test/subdir/", subDir.toURL().toString());
 	}
 	
 	@Test
@@ -40,6 +50,10 @@ public class VirtualFilesystemServiceTest {
 		hidePasswordInUrlString =
 			IVirtualFilesystemService.hidePasswordInUrlString("\\\\medeserv\\share\\folder");
 		assertEquals("\\\\medeserv\\share\\folder", hidePasswordInUrlString);
+		
+		hidePasswordInUrlString =
+				IVirtualFilesystemService.hidePasswordInUrlString("C:/Windows/Test");
+			assertEquals("C:/Windows/Test", hidePasswordInUrlString);
 	}
 	
 }

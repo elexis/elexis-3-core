@@ -25,6 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.URIUtil;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemhandleFilter;
 import jcifs.SmbTreeHandle;
@@ -370,7 +371,24 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		if (!subDir.endsWith("/")) {
 			subDir += "/";
 		}
-		URI _uri = URIUtil.append(uri, subDir);
+		
+		URI _uri = null;
+		if (uri.getAuthority() != null && uri.getAuthority().length() > 0
+			&& uri.getAuthority().charAt(1) == ':') {
+			// workaround - URIUtil "swallows" C: authority
+			String _cur = uri.toString();
+			if (!_cur.endsWith("/")) {
+				_cur += "/";
+			}
+			try {
+				_uri = IVirtualFilesystemService.stringToURI(_cur + subDir);
+			} catch (MalformedURLException | URISyntaxException e) {
+				throw new IOException(e);
+			}
+		} else {
+			_uri = URIUtil.append(uri, subDir);
+		}
+		
 		return new VirtualFilesystemHandle(_uri);
 	}
 	
@@ -382,7 +400,18 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		if (subFile.startsWith("/")) {
 			throw new IllegalArgumentException("must not start with /");
 		}
-		URI _uri = URIUtil.append(uri, subFile);
+		URI _uri = null;
+		if (uri.getAuthority() != null && uri.getAuthority().length() > 0
+			&& uri.getAuthority().charAt(1) == ':') {
+			// workaround - URIUtil "swallows" C: authority
+			try {
+				_uri = IVirtualFilesystemService.stringToURI( uri.toString() + subFile);
+			} catch (MalformedURLException | URISyntaxException e) {
+				throw new IOException(e);
+			}
+		} else {
+			_uri = URIUtil.append(uri, subFile);
+		}
 		return new VirtualFilesystemHandle(_uri);
 	}
 	
