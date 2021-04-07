@@ -2,6 +2,9 @@ package ch.elexis.core.ui.e4.jface.preference;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.eclipse.jface.preference.StringButtonFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
@@ -10,7 +13,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 
 import ch.elexis.core.services.IVirtualFilesystemService;
-import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 
 /**
@@ -88,19 +90,7 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 		}
 		
 		try {
-			IVirtualFilesystemHandle vfsHandle = VirtualFilesystemServiceHolder.get().of(uri);
-			if (!vfsHandle.isDirectory()) {
-				setErrorMessage("Pfad ist kein Verzeichnis");
-				return false;
-			}
-			if (!vfsHandle.canWrite()) {
-				setErrorMessage("Verzeichnis ist nicht beschreibbar");
-				return false;
-			}
-			if (!vfsHandle.canRead()) {
-				setErrorMessage("Verzeichnis ist nicht lesbar");
-				return false;
-			}
+			VirtualFilesystemServiceHolder.get().of(uri);
 			return true;
 		} catch (IOException | IllegalArgumentException e) {
 			setErrorMessage(e.getMessage());
@@ -112,9 +102,19 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 	protected void doLoad(){
 		if (getTextControl() != null) {
 			unmaskedValue = getPreferenceStore().getString(getPreferenceName());
-			String value = IVirtualFilesystemService.hidePasswordInUrlString(unmaskedValue);
-			getTextControl().setText(value);
-			oldValue = value;
+			try {
+				URI uri = IVirtualFilesystemService.stringToURI(unmaskedValue);
+				String maskedValue = IVirtualFilesystemService.hidePasswordInUrlString(uri.toString());
+				if(maskedValue.contains("*")) {
+					getTextControl().setText(maskedValue);
+					oldValue = maskedValue;
+				} else {
+					getTextControl().setText(unmaskedValue);
+					oldValue = unmaskedValue;
+				}
+			} catch (MalformedURLException | URISyntaxException e) {
+				setErrorMessage(e.getMessage());
+			}
 		}
 	}
 	
@@ -155,5 +155,7 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 	public void setFilterPath(File path){
 		filterPath = path;
 	}
+	
+	
 	
 }
