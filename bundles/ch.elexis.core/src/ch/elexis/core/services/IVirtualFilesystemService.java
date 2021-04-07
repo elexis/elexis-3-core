@@ -6,8 +6,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
+
+import ch.elexis.core.utils.CoreUtil;
 
 /**
  * Service to handle filesystem resources. These resources may be located on the local computer, or
@@ -38,7 +43,8 @@ public interface IVirtualFilesystemService {
 	public IVirtualFilesystemHandle of(File file) throws IOException;
 	
 	/**
-	 * Hide the password that may be part of the URL, accepts UNCs or unix paths simply returning them
+	 * Hide the password that may be part of the URL, accepts UNCs or unix paths simply returning
+	 * them
 	 * 
 	 * @param urlString
 	 * @return the same string, with the password replaced with <code>***</code>. If the URL is
@@ -49,10 +55,10 @@ public interface IVirtualFilesystemService {
 			return urlString;
 		}
 		
-		URL url;
+		URI url;
 		try {
-			url = new URL(urlString);
-		} catch (MalformedURLException e) {
+			url = new URI(urlString);
+		} catch (URISyntaxException e) {
 			return e.getMessage();
 		}
 		
@@ -237,6 +243,59 @@ public interface IVirtualFilesystemService {
 	@FunctionalInterface
 	public interface IVirtualFilesystemhandleFilter {
 		boolean accept(IVirtualFilesystemHandle handle);
+	}
+	
+	/**
+	 * Convert a string to an URI. Tries to support as many cross platform paths as required and
+	 * translate them to a usable format.
+	 * 
+	 * @param value
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws MalformedURLException
+	 */
+	public static URI stringToURI(String value) throws URISyntaxException, MalformedURLException{
+		
+		// C:\main.c++ -> file:/C:/main.c++
+		if (value.length() > 2 && value.charAt(1) == ':') {
+			String replaced = value.replace("\\", "/");
+			value = "file://" + replaced;
+		}
+		
+		// UNC Path
+		if (StringUtils.startsWith(value, "\\\\")) {
+			String replaced = value.replace("\\", "/");
+			if (CoreUtil.isWindows()) {
+				// https://wiki.eclipse.org/Eclipse/UNC_Paths
+				value = "file://" + replaced;
+			} else {
+				value = "smb:" + replaced;
+			}
+		}
+		
+		// absolute unixoid path
+		if (value.startsWith("/")) {
+			value = "file:" + value;
+		}
+		
+		URL url = new URL(value);
+		// url may contain '#' characters which in a URL is referred to as a fragment (leading to a getRef())
+		// We don't use it as those, that is we don't have fragments, so we need to pass
+		// this to the path
+		String path = url.getPath();
+		if (url.getRef() != null) {
+			path += "#" + url.getRef();
+		}
+		
+		if (url.getAuthority() != null && url.getAuthority().length() > 0
+			&& url.getAuthority().charAt(1) == ':') {
+			URI uri = new URI("file", url.getAuthority(), url.getPath(), url.getQuery(), null);
+			return uri;
+		}
+		
+		URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), path,
+			url.getQuery(), null);
+		return uri;
 	}
 	
 }
