@@ -23,6 +23,10 @@ public class MimeTool {
 			"pps", "application/mspowerpoint"
 		}, {
 			"png", "image/png"
+		}, {
+			"docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+		}, {
+			"doc", "application/msword"
 		}
 	};
 	
