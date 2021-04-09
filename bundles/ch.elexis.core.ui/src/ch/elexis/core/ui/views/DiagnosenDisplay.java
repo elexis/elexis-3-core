@@ -59,6 +59,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDiagnosis;
@@ -66,6 +67,7 @@ import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.FreeTextDiagnoseDialog;
@@ -264,8 +266,13 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 						actKons.addDiagnose((IDiagnose) object);
 					} else if (object instanceof IDiagnosis) {
 						IDiagnosis diagnosis = (IDiagnosis) object;
-						actEncounter.addDiagnosis(diagnosis);
-						CoreModelServiceHolder.get().save(actEncounter);
+						if (EncounterServiceHolder.get().isEditable(actEncounter)) {
+							actEncounter.addDiagnosis(diagnosis);
+							CoreModelServiceHolder.get().save(actEncounter);
+						} else {
+							MessageEvent.fireError("Fall geschlossen",
+								"Diese Konsultation gehört zu einem abgeschlossenen Fall");
+						}
 					}
 				}
 				viewer.setInput(actEncounter.getDiagnoses());
