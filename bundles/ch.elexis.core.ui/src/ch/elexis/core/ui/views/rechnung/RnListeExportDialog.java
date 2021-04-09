@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -133,8 +134,10 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 			CSVWriteTable();
 	}
 	
+	@Override
 	public void save(){}
 	
+	@Override
 	public boolean saveAs(){
 		return false;
 	}
@@ -187,6 +190,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				Fall fall = rn.getFall();
 				Patient p = fall.getPatient();
 				String[] line = new String[header.length];
+				Arrays.fill(line, "");
 				line[0] = ""; //201512210402js: Leere Spalte zum Eintragen der gewünschten Aktion.
 				line[1] = rn.getNr();
 				line[2] = rn.getDatumRn();
@@ -216,6 +220,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 					//Die Uhrzeiten rauswerfen:
 					a = a.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
 					//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+					a = a.replaceAll("\r\n", ", ");
 					a = a.replaceAll(", ", "\n");
 					//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 					line[12] = a.substring(1, a.length() - 1);
@@ -228,6 +233,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 						rnStatus =
 							rnStatus.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
 						//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+						rnStatus = rnStatus.replaceAll("\r\n", ", ");
 						rnStatus = rnStatus.replaceAll(", ", "\n");
 						//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 						line[13] = rnStatus.substring(1, rnStatus.length() - 1);
@@ -239,6 +245,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 					//Die Uhrzeiten rauswerfen:
 					rnOutput = rnOutput.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
 					//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+					rnOutput = rnOutput.replaceAll("\r\n", ", ");
 					rnOutput = rnOutput.replaceAll(", ", "\n");
 					//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 					line[14] = rnOutput.substring(1, rnOutput.length() - 1);
@@ -249,6 +256,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 					//Die Uhrzeiten rauswerfen:
 					rnPayment = rnPayment.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
 					//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+					rnPayment = rnPayment.replaceAll("\r\n", ", ");
 					rnPayment = rnPayment.replaceAll(", ", "\n");
 					//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 					line[15] = rnPayment.substring(1, rnPayment.length() - 1);
