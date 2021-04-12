@@ -184,10 +184,12 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		return name + " [" + macro + "]";
 	}
 	
+	@Override
 	public String getText(){
 		return get(FLD_NAME);
 	}
 	
+	@Override
 	public String getCode(){
 		return get(FLD_NAME);
 	}
@@ -407,7 +409,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 			if(direction) {
 				int offset = -1;
 				if (index + offset >= 0) {
-						ICodeElement pervElement = elements.get((int) (index + offset));
+						ICodeElement pervElement = elements.get(index + offset);
 						long nextElementCount = getNumberOf(pervElement);
 						if (nextElementCount > 1) {
 							offset = ((int) nextElementCount) * -1;
@@ -479,6 +481,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		return st.toString().replaceFirst(",$", StringConstants.EMPTY); //$NON-NLS-1$
 	}
 	
+	@Override
 	public String getCodeSystemName(){
 		return "Block"; //$NON-NLS-1$
 	}
@@ -512,10 +515,11 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		qbe.endGroup();
 		qbe.and();
 		qbe.startGroup();
-		qbe.add(Leistungsblock.FLD_MANDANT_ID, Query.EQUALS,
-			selectedMandator.getId());
+		qbe.add(Leistungsblock.FLD_MANDANT_ID, Query.EQUALS, selectedMandator.getId());
 		qbe.or();
 		qbe.add(Leistungsblock.FLD_MANDANT_ID, Query.EQUALS, StringTool.leer);
+		qbe.or();
+		qbe.addToken(Leistungsblock.FLD_MANDANT_ID + " IS NULL");
 		qbe.endGroup();
 		
 		List<Leistungsblock> execute = qbe.execute();
