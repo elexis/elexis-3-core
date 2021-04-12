@@ -233,6 +233,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	StickerComposite stickerComposite;
 	private Button deceasedBtn;
 	private CDateTime deceasedDate;
+	private Button increasedTreatmentBtn;
 	
 	void recreateUserpanel(){
 		// cUserfields.setRedraw(false);
@@ -502,7 +503,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		Composite cPersonalien = tk.createComposite(form.getBody());
 		cPersonalien.setLayout(new GridLayout(2, false));
 		cPersonalien.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		deceasedBtn = tk.createButton(cPersonalien, "verstorben", SWT.CHECK);
+		deceasedBtn = tk.createButton(cPersonalien, Messages.Patient_deceased, SWT.CHECK);
 		deceasedBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
@@ -542,6 +543,23 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				CoreModelServiceHolder.get().save(patient);
 			}
 		});
+		
+		// "erhöhter Behandlungsbedarf"
+		increasedTreatmentBtn =
+			tk.createButton(cPersonalien, Messages.Patientenblatt2_increasedTreatment, SWT.CHECK);
+		increasedTreatmentBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				if (actPatient != null) {
+					IPatient patient =
+						NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
+					patient.setExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT,
+						Boolean.toString(increasedTreatmentBtn.getSelection()));
+					CoreModelServiceHolder.get().save(patient);
+				}
+			}
+		});
+		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		
 		hHA = tk.createHyperlink(cPersonalien, Messages.Patientenblatt2_postal, SWT.NONE); // $NON-NLS-1$
 		hHA.addHyperlinkListener(hr);
@@ -883,12 +901,19 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			form.setText(Messages.Patientenblatt2_noPatientSelected); // $NON-NLS-1$
 			inpAdresse.setText(StringConstants.EMPTY, false, false);
 			deceasedBtn.setSelection(false);
+			increasedTreatmentBtn.setSelection(false);
 			inpZusatzAdresse.clear();
 			setUnlocked(false);
 			return;
 		}
 		IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
 		deceasedBtn.setSelection(patient.isDeceased());
+		if (patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT) instanceof String) {
+			increasedTreatmentBtn.setSelection(Boolean.parseBoolean(
+				(String) patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT)));
+		} else {
+			increasedTreatmentBtn.setSelection(false);
+		}
 		if (patient.isDeceased()) {
 			if (patient.getDateOfDeath() != null) {
 				deceasedDate.setSelection(
