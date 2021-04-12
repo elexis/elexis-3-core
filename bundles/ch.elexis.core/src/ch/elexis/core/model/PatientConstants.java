@@ -6,6 +6,8 @@ public class PatientConstants {
 	public static final String FLD_EXTINFO_DATE_OF_DEATH = "DateOfDeath";
 	public static final String FLD_EXTINFO_PROFESSION = "Profession";
 	public static final String FLD_EXTINFO_BIRTHNAME = "BirthName";
+	public static final String FLD_EXTINFO_INCREASEDTREATMENT = "IncreasedTreatment";
+	
 	/**
 	 * {@link MaritalStatus}
 	 */
