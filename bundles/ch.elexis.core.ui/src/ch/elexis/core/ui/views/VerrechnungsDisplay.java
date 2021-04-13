@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
 
 import javax.inject.Inject;
 
@@ -659,16 +660,25 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					} else if (object instanceof ICodeElementBlock) {
 						ICodeElementBlock block = (ICodeElementBlock) object;
 						List<ICodeElement> elements = block.getElements();
+						StringJoiner notOkResults = new StringJoiner("\n");
 						for (ICodeElement element : elements) {
 							if (element instanceof IBillable) {
-								Display.getDefault().asyncExec(() -> {
-									Result<?> billResult = BillingServiceHolder.get()
-										.bill((IBillable) element, actEncounter, 1.0);
-									if (!billResult.isOK()) {
-										ResultDialog.show(billResult);
+								Result<?> billResult = BillingServiceHolder.get()
+									.bill((IBillable) element, actEncounter, 1.0);
+								if (!billResult.isOK()) {
+									String message = element.getCode() + " - "
+										+ ResultDialog.getResultMessage(billResult);
+									if (!notOkResults.toString().contains(message)) {
+										notOkResults.add(message);
 									}
-								});
+								}
 							}
+						}
+						if (!notOkResults.toString().isEmpty()) {
+							Display.getDefault().asyncExec(() -> {
+								MessageDialog.openWarning(getShell(), Messages.ResultDialog_Warning,
+									notOkResults.toString());
+							});
 						}
 						// refresh with sorted billed list
 						Display.getDefault().asyncExec(() -> {
