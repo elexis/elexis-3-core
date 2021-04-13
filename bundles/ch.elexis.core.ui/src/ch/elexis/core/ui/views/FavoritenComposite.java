@@ -44,7 +44,6 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -158,15 +157,7 @@ public class FavoritenComposite extends Composite {
 						Favorite fav = (Favorite) ss.getFirstElement();
 						Optional<Identifiable> po = fav.getObject();
 						if (po.isPresent()) {
-							if (po.get() instanceof ICodeElementBlock) {
-								ICodeElementBlock lb = (ICodeElementBlock) po.get();
-								for (ch.elexis.core.model.ICodeElement iCodeElement : lb
-									.getElements()) {
-									target.codeSelected(iCodeElement);
-								}
-							} else {
-								target.codeSelected(po.get());
-							}
+							target.codeSelected(po.get());
 						}
 					}
 				}

@@ -1,13 +1,14 @@
 package ch.elexis.core.ui.text;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICodeElement;
@@ -16,6 +17,7 @@ import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.ui.dialogs.ResultDialog;
 import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Leistungsblock;
@@ -42,17 +44,25 @@ public class BlockMakro implements IKonsMakro {
 		IEncounter encounter = CoreModelServiceHolder.get().load(actKons.getId(), IEncounter.class).orElse(null);
 		if (elementBlock != null && encounter != null) {
 			List<ch.elexis.core.model.ICodeElement> elements = elementBlock.getElements();
+			StringJoiner notOkResults = new StringJoiner("\n");
 			for (ICodeElement ice : elements) {
 				if (ice instanceof IBillable) {
 					Result<IBilled> res =
 						BillingServiceHolder.get().bill((IBillable) ice, encounter, 1.0);
 					if (!res.isOK()) {
-						MessageEvent.fireError("Error", res.toString());
+						String message = ice.getCode() + " - " + ResultDialog.getResultMessage(res);
+						if (!notOkResults.toString().contains(message)) {
+							notOkResults.add(message);
+						}
 					}
 				} else if (ice instanceof IDiagnosis) {
 					encounter.addDiagnosis((IDiagnosis) ice);
 					CoreModelServiceHolder.get().save(encounter);
 				}
+			}
+			if (!notOkResults.toString().isEmpty()) {
+				MessageDialog.openWarning(Display.getDefault().getActiveShell(),
+					Messages.ResultDialog_Warning, notOkResults.toString());
 			}
 			java.util.List<ICodeElement> diff = elementBlock.getDiffToReferences(elements);
 			if (!diff.isEmpty()) {

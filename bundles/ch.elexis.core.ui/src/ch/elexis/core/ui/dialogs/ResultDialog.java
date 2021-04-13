@@ -6,9 +6,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.l10n.Messages;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
-import ch.elexis.core.l10n.Messages;
 
 public class ResultDialog {
 	
@@ -47,7 +47,7 @@ public class ResultDialog {
 		MessageDialog.openInformation(getShell(), Messages.ResultDialog_Info, getResultMessage(result));
 	}
 	
-	private static String getResultMessage(Result<?> result){
+	public static String getResultMessage(Result<?> result){
 		StringJoiner sj = new StringJoiner("\n\n");
 		for (Result<?>.msg message : result.getMessages()) {
 			sj.add(message.getText());
