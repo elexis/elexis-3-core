@@ -235,6 +235,7 @@ public class Preferences {
 	public final static String LEISTUNGSCODES_COLOR = "billing/color/"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS =
 		"billing/eigenleistung/usemultiplier/systems"; //$NON-NLS-1$
+	public final static String LEISTUNGSCODES_ALLOWOVERRIDE_STRICT = "billing/allowoverride/strict"; //$NON-NLS-1$
 	
 	// Medication
 	public static final String MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT =

@@ -274,6 +274,20 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bOptify.setSelection(ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_OPTIFY, true));
 		bOptify.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
+		final Button bAllowOverrideStrict = new Button(ret, SWT.CHECK);
+		bAllowOverrideStrict.setText("Nur Warnung bei nicht zulässigen Leistungspositionen");
+		bAllowOverrideStrict.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e){
+				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT,
+					bAllowOverrideStrict.getSelection());
+			}
+			
+		});
+		bAllowOverrideStrict.setSelection(
+			ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT, false));
+		bAllowOverrideStrict.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
+		
 		final Button bOptifyXray = new Button(ret, SWT.CHECK);
 		bOptifyXray.setText(Messages.Leistungscodes_optifyXrayPositions);
 		bOptifyXray.addSelectionListener(new SelectionAdapter() {
