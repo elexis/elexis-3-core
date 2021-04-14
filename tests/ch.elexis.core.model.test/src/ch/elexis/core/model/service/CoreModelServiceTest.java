@@ -17,6 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
@@ -319,6 +320,12 @@ public class CoreModelServiceTest {
 		long modifiedlastUpdate = modelService.getHighestLastUpdate(IPatient.class);
 		assertTrue(modifiedlastUpdate != 0);
 		assertTrue(modifiedlastUpdate > lastUpdate);
+	}
+	
+	@Test
+	public void getLastUpdateOnEmptyTable() {
+		long lastUpdate = modelService.getHighestLastUpdate(IAppointment.class);
+		assertTrue(lastUpdate == 0);
 	}
 	
 	private class CreatePerson implements Runnable {
