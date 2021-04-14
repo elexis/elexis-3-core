@@ -487,7 +487,7 @@ public abstract class AbstractModelService implements IModelService {
 	
 	@Override
 	public <T> long getHighestLastUpdate(Class<T> clazz){
-		INativeQuery nativeQuery = getNativeQuery("SELECT MAX(LASTUPDATE) FROM "
+		INativeQuery nativeQuery = getNativeQuery("SELECT COALESCE(MAX(LASTUPDATE),0) FROM "
 			+ getTableName(getEntityManager(true), getEntityClass(clazz)));
 		Optional<?> result = nativeQuery.executeWithParameters(Collections.emptyMap()).findFirst();
 		if (result.isPresent()) {
