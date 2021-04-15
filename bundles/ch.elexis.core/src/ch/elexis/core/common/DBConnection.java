@@ -178,6 +178,9 @@ public class DBConnection implements Serializable {
 	}
 
 	public static Optional<String> getHostName(String url) {
+		if (url == null) {
+			return Optional.empty();
+		}
 		if (url.startsWith("jdbc:")) {
 			url = url.substring(5);
 		}
