@@ -38,6 +38,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -71,12 +72,15 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.documents.DocumentStore;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IDiagnosisReference;
+import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IInvoiceBilled;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
@@ -87,6 +91,8 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.e4.controls.IIdentifiableModifiableListComposite;
+import ch.elexis.core.ui.e4.dialog.GenericSelectionDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
@@ -96,6 +102,7 @@ import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -113,6 +120,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	
 	private static final String KEY_RECHNUNGSBLATT = "RechnungsBlatt/"; //$NON-NLS-1$
 	IViewSite site;
+	IIdentifiableModifiableListComposite<IDocument> attachments;
 	ListViewer buchungen;
 	org.eclipse.swt.widgets.List lbJournal;
 	org.eclipse.swt.widgets.List lbOutputs;
@@ -125,6 +133,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	ListViewer konsultationenViewer;
 	ListViewer stornoViewer;
 	
+	private final ExpandableComposite ecAttachments;
 	private final ExpandableComposite ecBuchungen;
 	private final ExpandableComposite ecBemerkungen;
 	private final ExpandableComposite ecInternalRemarks;
@@ -141,6 +150,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	private static LabeledInputField.IContentProvider openAmountContentProvider =
 		new LabeledInputField.IContentProvider() {
 			
+			@Override
 			public void displayContent(Object po, InputData ltf){
 				Rechnung invoice = (Rechnung) po;
 				Money openAmount = invoice.getOffenerBetrag();
@@ -152,6 +162,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				}
 			}
 			
+			@Override
 			public void reloadContent(Object po, InputData ltf){
 				Rechnung invoice = (Rechnung) po;
 				if (InvoiceState.CANCELLED.numericValue() == invoice.getStatus()) {
@@ -187,12 +198,14 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		new InputData(Messages.RechnungsBlatt_billState, Rechnung.BILL_STATE,
 			new LabeledInputField.IContentProvider() {
 				
+				@Override
 				public void displayContent(Object po, InputData ltf){
 					Rechnung r = (Rechnung) po;
 					ltf.setText(RnStatus.getStatusText(r.getStatus()));
 					
 				}
 				
+				@Override
 				public void reloadContent(Object po, InputData ltf){
 					if (new RnDialogs.StatusAendernDialog(
 						Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -217,6 +230,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE
 			| ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED) {
 		
+		@Override
 		public void runInUi(ElexisEvent ev){
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_UPDATE:
@@ -240,6 +254,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	private final ElexisEventListenerImpl eeli_user =
 		new ElexisUiEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
 			
+			@Override
 			public void runInUi(ElexisEvent ev){
 				display();
 			}
@@ -248,6 +263,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	private final ElexisEventListenerImpl eeli_patient = new ElexisUiEventListenerImpl(
 		Patient.class, ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED) {
 		
+		@Override
 		public void runInUi(ElexisEvent ev){
 			Patient pat = (Patient) ev.getObject();
 			switch (ev.getType()) {
@@ -269,6 +285,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		}
 	};
 	
+	@SuppressWarnings("unchecked")
 	public RechnungsBlatt(Composite parent, IViewSite site){
 		super(parent, SWT.NONE);
 		this.site = site;
@@ -297,6 +314,59 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			
 		};
 		
+		ecAttachments =
+			WidgetFactory.createExpandableComposite(tk, form, Messages.RechnungsBlatt_attachments);
+		ecAttachments.addExpansionListener(ecExpansionListener);
+		attachments =
+			new IIdentifiableModifiableListComposite<IDocument>(ecAttachments, getStyle());
+		GridData gd =
+			SWTHelper.setGridDataHeight(attachments.getStructuredViewer().getControl(), 4, true);
+		gd.widthHint = 300;
+		attachments.getStructuredViewer().setContentProvider(new IStructuredContentProvider() {
+			
+			@Override
+			public Object[] getElements(Object inputElement){
+				Rechnung actRn = (Rechnung) inputElement;
+				if (actRn != null) {
+					IInvoice invoice = actRn.toIInvoice();
+					return invoice.getAttachments().toArray(new IDocument[] {});
+				}
+				return null;
+			}
+		});
+		attachments.setAddElementHandler(() -> {
+			if (actRn != null) {
+				IPatient patient = actRn.getFall().getPatient().toIPatient();
+				DocumentStore documentStore =
+					OsgiServiceUtil.getService(DocumentStore.class).orElse(null);
+				if (documentStore != null) {
+					List<IDocument> documents =
+						documentStore.getDocuments(patient.getId(), null, null, null);
+					GenericSelectionDialog gsd = new GenericSelectionDialog(getShell(), documents);
+					int result = gsd.open();
+					if (result == Dialog.OK) {
+						IInvoice invoice = actRn.toIInvoice();
+						IStructuredSelection selection = gsd.getSelection();
+						if (!selection.isEmpty()) {
+							selection.forEach(obj -> invoice.addAttachment((IDocument) obj));
+						}
+						CoreModelServiceHolder.get().save(invoice);
+					}
+				}
+			}
+			
+		});
+		attachments.setRemoveElementHandler((element) -> {
+			if (actRn != null) {
+				IInvoice invoice = actRn.toIInvoice();
+				invoice.removeAttachment(element);
+				CoreModelServiceHolder.get().save(invoice);
+			}
+		});
+		tk.adapt(attachments, true, true);
+		ecAttachments.setClient(attachments);
+		attachments.getStructuredViewer().setInput(null);
+		
 		ecBuchungen =
 			WidgetFactory.createExpandableComposite(tk, form, Messages.RechnungsBlatt_bookings); //$NON-NLS-1$
 		ecBuchungen.addExpansionListener(ecExpansionListener);
@@ -305,10 +375,13 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		// TableWrapData twd=new TableWrapData(TableWrapData.FILL_GRAB);
 		SWTHelper.setGridDataHeight(buchungen.getControl(), 4, true);
 		buchungen.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public void dispose(){}
 			
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
 			
+			@Override
 			public Object[] getElements(Object inputElement){
 				Rechnung actRn = (Rechnung) inputElement;
 				if (actRn == null) {
@@ -324,6 +397,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		tk.adapt(buchungen.getControl(), true, true);
 		ecBuchungen.setClient(buchungen.getControl());
 		buchungen.setLabelProvider(new DefaultLabelProvider() {
+			@Override
 			public String getColumnText(Object element, int columnIndex){
 				return getText(element);
 			}
@@ -356,8 +430,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					Zahlung zahlung = (Zahlung) ((StructuredSelection) selection).getFirstElement();
 					// get the command
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					ICommandService cmdService =
-						(ICommandService) window.getService(ICommandService.class);
+					ICommandService cmdService = window.getService(ICommandService.class);
 					Command cmd =
 						cmdService.getCommand("ch.elexis.ebanking_ch.command.openESRWithInvoiceId");
 					if (cmd != null) {
@@ -372,9 +445,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 							ParameterizedCommand pc =
 								ParameterizedCommand.generateCommand(cmd, param);
 							// execute the command
-							IHandlerService handlerService =
-								(IHandlerService) PlatformUI.getWorkbench()
-									.getActiveWorkbenchWindow().getService(IHandlerService.class);
+							IHandlerService handlerService = PlatformUI.getWorkbench()
+								.getActiveWorkbenchWindow().getService(IHandlerService.class);
 							handlerService.executeCommand(pc, null);
 						} catch (ExecutionException | NotDefinedException | NotEnabledException
 								| NotHandledException e) {
@@ -406,7 +478,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		});
 		ecBemerkungen.setClient(tBemerkungen);
 		
-		ecInternalRemarks = WidgetFactory.createExpandableComposite(tk, form, Messages.RechnungsBlatt_internalRemarks); //$NON-NLS-1$
+		ecInternalRemarks = WidgetFactory.createExpandableComposite(tk, form,
+			Messages.RechnungsBlatt_internalRemarks); //$NON-NLS-1$
 		ecInternalRemarks.addExpansionListener(ecExpansionListener);
 		tInternalRemarks = SWTHelper.createText(tk, ecInternalRemarks, 5, SWT.BORDER);
 		tInternalRemarks.addFocusListener(new FocusAdapter() {
@@ -448,6 +521,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		ecKons.setClient(konsultationenViewer.getList());
 		
 		konsultationenViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public Object[] getElements(Object inputElement){
 				List<Object> elements = new ArrayList<Object>();
 				if (actRn != null) {
@@ -465,15 +539,18 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				return elements.toArray();
 			}
 			
+			@Override
 			public void dispose(){
 				// nothing to do
 			}
 			
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
 				// nothing to do
 			}
 		});
 		konsultationenViewer.setLabelProvider(new LabelProvider() {
+			@Override
 			public String getText(Object element){
 				if (element instanceof IEncounter) {
 					
@@ -631,8 +708,9 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		} else if (mode.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED)) {
 			ec.setExpanded(false);
 		} else {
-			String state = ConfigServiceHolder.getUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
-				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
+			String state =
+				ConfigServiceHolder.getUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
+					USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
 			if (state.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED)) {
 				ec.setExpanded(false);
 			} else {
@@ -647,10 +725,12 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		super.dispose();
 	}
 	
+	@Override
 	public void activation(boolean mode){
 		/* egal */
 	}
 	
+	@Override
 	public void visible(boolean mode){
 		if (mode) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_rn, eeli_user, eeli_patient);
@@ -666,6 +746,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	private void doSelect(Rechnung rn){
 		actRn = rn;
 		UiDesk.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run(){
 				display();
 			}
@@ -681,9 +762,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		
 		if (actRn != null) {
 			Kontakt adressat = actRn.getFall().getInvoiceRecipient();
-			rnAdressat
-				.setText(Messages.RechnungsBlatt_adressee
-					+ ((adressat != null) ? adressat.getLabel() : ""));
+			rnAdressat.setText(
+				Messages.RechnungsBlatt_adressee + ((adressat != null) ? adressat.getLabel() : ""));
 			form.setText(actRn.getLabel());
 			List<String> trace = actRn.getTrace(Rechnung.STATUS_CHANGED);
 			for (String s : trace) {
@@ -715,6 +795,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			form.setText(null);
 		}
 		
+		attachments.getStructuredViewer().setInput(actRn);
 		buchungen.setInput(actRn);
 		konsultationenViewer.refresh();
 		stornoViewer.refresh();
