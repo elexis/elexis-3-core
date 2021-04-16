@@ -31,7 +31,9 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.IInvoiceService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -48,6 +50,11 @@ public class Rechnung extends PersistentObject {
 	 * Public remarks, printed on invoice
 	 */
 	public static final String FLD_EXT_REMARK = "Bemerkung";
+	/**
+	 * Attachments (i.e. linked documents -> list of StoreToStrings)
+	 * @since 3.8 - get/set implemented via NoPO!
+	 */
+	public static final String FLD_EXT_ATTACHMENTS = "Attachments";
 	/**
 	 * Not printed on invoices, only privately visible
 	 */
@@ -105,6 +112,7 @@ public class Rechnung extends PersistentObject {
 	 * 
 	 * @deprecated use {@link IInvoiceService} to create invoices instead
 	 */
+	@Deprecated
 	public static Result<Rechnung> build(final List<Konsultation> behandlungen){
 		System.out.println("js Rechnung: build() begin");
 		
@@ -394,6 +402,7 @@ public class Rechnung extends PersistentObject {
 	 * @since 3.3
 	 * @deprecated {@link IInvoiceService} to cancel invoices instead
 	 */
+	@Deprecated
 	public List<Konsultation> stornoBill(final boolean reopen){
 		InvoiceState invoiceState = InvoiceState.fromState(getStatus());
 		List<Konsultation> kons = null;
@@ -1036,5 +1045,17 @@ public class Rechnung extends PersistentObject {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Convenience conversion method, loads object via model service
+	 * 
+	 * @return
+	 * @since 3.8
+	 * @throws IllegalStateException if entity could not be loaded
+	 */
+	public IInvoice toIInvoice() {
+		return CoreModelServiceHolder.get().load(getId(), IInvoice.class)
+				.orElseThrow(() -> new IllegalStateException("Could not convert invoice [" + getId() + "]"));
 	}
 }

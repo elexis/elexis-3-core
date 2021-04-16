@@ -739,6 +739,12 @@
       <eParameters name="rejectCode" eType="ecore:EDataType types.ecore#//InvoiceRejectCode"/>
       <eParameters name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
+    <eOperations name="addAttachment">
+      <eParameters name="attachment" lowerBound="1" eType="#//IDocument"/>
+    </eOperations>
+    <eOperations name="removeAttachment">
+      <eParameters name="attachment" lowerBound="1" eType="#//IDocument"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="ecore:EDataType types.ecore#//InvoiceState"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         changeable="false"/>
@@ -764,6 +770,8 @@
         eType="#//IPayment" changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transactions" upperBound="-1"
         eType="#//IAccountTransaction" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attachments" upperBound="-1"
+        eType="#//IDocument"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IStock" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">

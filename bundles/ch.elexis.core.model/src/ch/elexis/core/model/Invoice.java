@@ -4,7 +4,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
@@ -12,6 +15,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.InvoiceState.REJECTCODE;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
+import ch.elexis.core.model.service.holder.StoreToStringServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.INamedQuery;
 import ch.rgw.tools.Money;
@@ -278,14 +282,66 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		}
 		return ret.isNegative() ? ret.multiply(-1d) : ret;
 	}
-
+	
 	@Override
 	public LocalDate getStateDate(){
 		return getEntity().getStatusDate();
 	}
-
+	
 	@Override
 	public void setStateDate(LocalDate value){
 		getEntityMarkDirty().setStatusDate(value);
 	}
+	
+	private List<String> getAttachmentsInternal(){
+		byte[] raw =
+			(byte[]) extInfoHandler.getExtInfo(ch.elexis.core.jpa.entities.Invoice.ATTACHMENTS);
+		List<String> storeToStrings = null;
+		if (raw != null) {
+			storeToStrings = StringTool.unpack(raw);
+		}
+		if (storeToStrings == null || storeToStrings.isEmpty()) {
+			storeToStrings = new ArrayList<String>();
+		}
+		return storeToStrings;
+	}
+	
+	@Override
+	public List<IDocument> getAttachments(){
+		List<IDocument> documents = new ArrayList<IDocument>();
+		for (String storeToString : getAttachmentsInternal()) {
+			Optional<Identifiable> loadFromString =
+				StoreToStringServiceHolder.get().loadFromString(storeToString);
+			if (loadFromString.isPresent()) {
+				documents.add((IDocument) loadFromString.get());
+			} else {
+				LoggerFactory.getLogger(getClass())
+					.warn("[{}] Unable to load attached IDocument [{}]", getId(), storeToString);
+			}
+		}
+		return documents;
+	}
+	
+	@Override
+	public void addAttachment(IDocument attachment){
+		String storeToString = StoreToStringServiceHolder.getStoreToString(attachment);
+		List<String> attachmentsInternal = getAttachmentsInternal();
+		if (!attachmentsInternal.contains(storeToString)) {
+			attachmentsInternal.add(storeToString);
+			extInfoHandler.setExtInfo(ch.elexis.core.jpa.entities.Invoice.ATTACHMENTS,
+				StringTool.pack(attachmentsInternal));
+		}
+	}
+	
+	@Override
+	public void removeAttachment(IDocument attachment){
+		String storeToString = StoreToStringServiceHolder.getStoreToString(attachment);
+		List<String> attachmentsInternal = getAttachmentsInternal();
+		if (attachmentsInternal.contains(storeToString)) {
+			attachmentsInternal.remove(storeToString);
+			extInfoHandler.setExtInfo(ch.elexis.core.jpa.entities.Invoice.ATTACHMENTS,
+				StringTool.pack(attachmentsInternal));
+		}
+	}
+	
 }
