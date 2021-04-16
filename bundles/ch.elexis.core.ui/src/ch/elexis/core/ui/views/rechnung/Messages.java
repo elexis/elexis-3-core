@@ -101,6 +101,7 @@ public class Messages {
 	public static String RechnungsBlatt_billNumber = ch.elexis.core.l10n.Messages.RechnungsBlatt_billNumber;
 	public static String RechnungsBlatt_billState = ch.elexis.core.l10n.Messages.RechnungsBlatt_billState;
 	public static String RechnungsBlatt_bookings = ch.elexis.core.l10n.Messages.RechnungsBlatt_bookings;
+	public static String RechnungsBlatt_attachments = ch.elexis.core.l10n.Messages.RechnungsBlatt_attachments;
 	public static String RechnungsBlatt_consultations = ch.elexis.core.l10n.Messages.RechnungsBlatt_consultations;
 	public static String RechnungsBlatt_errorMessages = ch.elexis.core.l10n.Messages.RechnungsBlatt_errorMessages;
 	public static String RechnungsBlatt_noBillSelected = ch.elexis.core.l10n.Messages.RechnungsBlatt_noBillSelected;

@@ -176,6 +176,7 @@ public class Messages extends NLS {
 	public static String RechnungsBlatt_billNumber;
 	public static String RechnungsBlatt_billState;
 	public static String RechnungsBlatt_bookings;
+	public static String RechnungsBlatt_attachments;
 	public static String RechnungsBlatt_consultations;
 	public static String RechnungsBlatt_errorMessages;
 	public static String RechnungsBlatt_noBillSelected;
