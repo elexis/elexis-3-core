@@ -42,6 +42,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IInvoice#getStateDate <em>State Date</em>}</li>
  *   <li>{@link ch.elexis.core.model.IInvoice#getPayments <em>Payments</em>}</li>
  *   <li>{@link ch.elexis.core.model.IInvoice#getTransactions <em>Transactions</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getAttachments <em>Attachments</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIInvoice()
@@ -379,6 +380,18 @@ public interface IInvoice extends Identifiable, Deleteable, WithExtInfo {
 	List<IAccountTransaction> getTransactions();
 
 	/**
+	 * Returns the value of the '<em><b>Attachments</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IDocument}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Attachments</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_Attachments()
+	 * @model
+	 * @generated
+	 */
+	List<IDocument> getAttachments();
+
+	/**
 	 * Returns the value of the '<em><b>State Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -431,4 +444,20 @@ public interface IInvoice extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	void reject(REJECTCODE rejectCode, String message);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model attachmentRequired="true"
+	 * @generated
+	 */
+	void addAttachment(IDocument attachment);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model attachmentRequired="true"
+	 * @generated
+	 */
+	void removeAttachment(IDocument attachment);
 } // IInvoice

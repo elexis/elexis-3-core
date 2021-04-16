@@ -3348,6 +3348,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getIInvoice_Attachments() {
+		return (EReference)iInvoiceEClass.getEStructuralFeatures().get(17);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getIInvoice_StateDate() {
 		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(14);
 	}
@@ -5128,6 +5138,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iInvoiceEClass, IINVOICE__STATE_DATE);
 		createEReference(iInvoiceEClass, IINVOICE__PAYMENTS);
 		createEReference(iInvoiceEClass, IINVOICE__TRANSACTIONS);
+		createEReference(iInvoiceEClass, IINVOICE__ATTACHMENTS);
 
 		iStockEClass = createEClass(ISTOCK);
 		createEAttribute(iStockEClass, ISTOCK__CODE);
@@ -6007,6 +6018,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIInvoice_StateDate(), theTypesPackage.getLocalDate(), "stateDate", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIInvoice_Payments(), this.getIPayment(), null, "payments", null, 0, -1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIInvoice_Transactions(), this.getIAccountTransaction(), null, "transactions", null, 0, -1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIInvoice_Attachments(), this.getIDocument(), null, "attachments", null, 0, -1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iInvoiceEClass, null, "addTrace", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -6025,6 +6037,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		op = addEOperation(iInvoiceEClass, null, "reject", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theTypesPackage.getInvoiceRejectCode(), "rejectCode", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "message", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iInvoiceEClass, null, "addAttachment", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIDocument(), "attachment", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iInvoiceEClass, null, "removeAttachment", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIDocument(), "attachment", 1, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iStockEClass, IStock.class, "IStock", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIStock_Code(), ecorePackage.getEString(), "code", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

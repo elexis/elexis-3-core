@@ -42,6 +42,7 @@ public class Invoice extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	public static final String REMARK = "Bemerkung";
+	public static final String ATTACHMENTS = "Attachments";
 	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
