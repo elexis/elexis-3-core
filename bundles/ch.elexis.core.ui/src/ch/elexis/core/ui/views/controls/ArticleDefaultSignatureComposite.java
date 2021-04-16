@@ -93,6 +93,8 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout(7, false));
 		
+		this.setData("org.eclipse.e4.ui.css.CssClassName", "CustomComposite");
+		
 		signatureType = new Composite(this, SWT.NONE);
 		signatureType.setLayout(new RowLayout());
 		signatureType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 6, 1));
