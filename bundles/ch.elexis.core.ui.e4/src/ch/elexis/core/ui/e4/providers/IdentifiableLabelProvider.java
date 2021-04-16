@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.util.viewers;
+package ch.elexis.core.ui.e4.providers;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
