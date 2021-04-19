@@ -153,11 +153,11 @@ public class PlatzhalterView extends ViewPart {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		
-		Text txtInfo = new Text(composite, SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.WRAP);
+		Text txtInfo = new Text(composite, SWT.MULTI | SWT.READ_ONLY | SWT.WRAP);
 		txtInfo.setText(Messages.PlatzhalterView_message_Info);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(txtInfo);
 		
-		viewer = new TreeViewer(composite);
+		viewer = new TreeViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(viewer.getTree());
 		
 		viewer.setLabelProvider(new PlatzhalterLabelProvider());
