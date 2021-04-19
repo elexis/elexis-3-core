@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -17,7 +17,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.model.Identifiable;
@@ -26,15 +25,25 @@ import ch.elexis.core.model.Identifiable;
  * Dialog for managing the selection from a list of objects. For each Object a checkbox with text is
  * displayed. For Identifiable instances the Label property is displayed, else toString.
  */
-public class GenericSelectionDialog extends Dialog {
+public class GenericSelectionDialog extends TitleAreaDialog {
 	
 	private List<?> input;
 	private Map<Object, Button> buttonMap = new HashMap<>();
 	private List<Object> selection = new LinkedList<>();
 	
-	public GenericSelectionDialog(Shell parentShell, List<?> input){
+	private String title;
+	private String message;
+	
+	public GenericSelectionDialog(Shell parentShell, List<?> input, String title, String message){
 		super(parentShell);
+		this.title = title;
+		this.message = message;
 		this.input = input;
+		setBlockOnOpen(true);
+	}
+	
+	public GenericSelectionDialog(Shell parentShell, List<?> input){
+		this(parentShell, input, "Auswahl", null);
 	}
 	
 	public void setSelection(List<Object> selection){
@@ -47,6 +56,9 @@ public class GenericSelectionDialog extends Dialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent){
+		setTitle(title);
+		setMessage(message);
+		
 		Composite ret = (Composite) super.createDialogArea(parent);
 		ScrolledComposite sc = new ScrolledComposite(ret, SWT.H_SCROLL | SWT.V_SCROLL);
 		
@@ -57,8 +69,6 @@ public class GenericSelectionDialog extends Dialog {
 		data.heightHint = 400;
 		sc.setLayoutData(data);
 		
-		Label title = new Label(child, SWT.NONE);
-		title.setText("Auswahl:");
 		// create the UI
 		for (Object object : input) {
 			Button button = new Button(child, SWT.CHECK);
@@ -75,10 +85,12 @@ public class GenericSelectionDialog extends Dialog {
 			});
 			buttonMap.put(object, button);
 		}
+		
 		sc.setMinSize(child.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		sc.setExpandHorizontal(true);
 		sc.setExpandVertical(true);
 		sc.setContent(child);
+		
 		
 		updateSelectionUi();
 		

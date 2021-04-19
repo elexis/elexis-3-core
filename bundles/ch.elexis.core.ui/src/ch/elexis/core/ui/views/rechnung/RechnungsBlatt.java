@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
@@ -342,15 +343,21 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				if (documentStore != null) {
 					List<IDocument> documents =
 						documentStore.getDocuments(patient.getId(), null, null, null);
-					GenericSelectionDialog gsd = new GenericSelectionDialog(getShell(), documents);
+					List<IDocument> pdfDocuments =
+						documents.stream().filter(doc -> doc.getMimeType().endsWith("pdf"))
+							.collect(Collectors.toList());
+					
+					GenericSelectionDialog gsd =
+						new GenericSelectionDialog(getShell(), pdfDocuments, "Dokument w\u00E4hlen",
+							"Nur PDF k\u00F6nnen angeh\u00E4ngt werden");
 					int result = gsd.open();
 					if (result == Dialog.OK) {
 						IInvoice invoice = actRn.toIInvoice();
 						IStructuredSelection selection = gsd.getSelection();
 						if (!selection.isEmpty()) {
 							selection.forEach(obj -> invoice.addAttachment((IDocument) obj));
+							CoreModelServiceHolder.get().save(invoice);
 						}
-						CoreModelServiceHolder.get().save(invoice);
 					}
 				}
 			}
