@@ -29,6 +29,7 @@ public class DocumentsSelectionDialog extends CheckedTreeSelectionDialog {
 	public DocumentsSelectionDialog(Shell parent, ILabelProvider labelProvider,
 		ITreeContentProvider contentProvider, int style){
 		super(parent, labelProvider, contentProvider, style);
+		setStatusLineAboveButtons(false);
 		lastSevenFilter = new LastSevenViewerFilter();
 	}
 	
