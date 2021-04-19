@@ -39,6 +39,7 @@ public class AttachmentsComposite extends Composite {
 	
 	public AttachmentsComposite(Composite parent, int style){
 		super(parent, style);
+		this.setData("org.eclipse.e4.ui.css.CssClassName", "CustomComposite");
 		ICommandService commandService =
 			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		createRocheLaborCommand =
