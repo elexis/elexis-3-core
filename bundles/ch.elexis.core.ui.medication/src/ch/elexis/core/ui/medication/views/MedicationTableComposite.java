@@ -45,7 +45,7 @@ public class MedicationTableComposite extends Composite {
 		layout = new TableColumnLayout();
 		setLayout(layout);
 		
-		viewer = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		viewer = new TableViewer(this, SWT.FULL_SELECTION | SWT.MULTI);
 		viewer.getTable().setHeaderVisible(true);
 		ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.NO_RECREATE);
 		

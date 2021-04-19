@@ -70,7 +70,7 @@ public class BillingProposalView extends ViewPart {
 	
 	@Override
 	public void createPartControl(Composite parent){
-		viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.VIRTUAL);
+		viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
 		
 		viewer.getTable().setHeaderVisible(true);
 		viewer.setContentProvider(new BillingInformationContentProvider(viewer));

@@ -40,7 +40,6 @@ import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FallDetailView;
-import ch.elexis.core.ui.views.rechnung.invoice.InvoiceActions;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
@@ -139,7 +138,7 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TREE, SWT.V_SCROLL | SWT.MULTI, cv));
 		// rnFilter=FilterFactory.createFilter(Rechnung.class,"Rn
 		// Nummer","Name","Vorname","Betrag");
-		cv.create(vc, comp, SWT.BORDER, getViewSite());
+		cv.create(vc, comp, SWT.NONE, getViewSite());
 		
 		cv.addDoubleClickListener(new PoDoubleClickListener() {
 			@Override
