@@ -39,6 +39,7 @@ public class NumberInput extends Composite {
 	 */
 	public NumberInput(Composite parent, String label){
 		super(parent, SWT.NONE);
+		this.setData("org.eclipse.e4.ui.css.CssClassName", "CustomComposite");
 		setLayout(new GridLayout());
 		new Label(this, SWT.NONE).setText(label);
 		inp = new Spinner(this, SWT.NONE);
