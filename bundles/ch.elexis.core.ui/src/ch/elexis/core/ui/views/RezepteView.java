@@ -75,6 +75,9 @@ import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.builder.IRecipeBuilder;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.ICodeElementService;
+import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
+import ch.elexis.core.services.ICodeElementServiceContribution;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -91,6 +94,7 @@ import ch.elexis.core.ui.util.GenericObjectDragSource;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.core.ui.views.codesystems.CodeSystemDescription;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Brief;
@@ -123,6 +127,9 @@ public class RezepteView extends ViewPart implements IRefreshable {
 	
 	private IPatient actPatient;
 	private RecipeLoader loader;
+	
+	@Inject
+	private ICodeElementService codeElementService;
 	
 	@Inject
 	void activePatient(@Optional
@@ -409,7 +416,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 					MessageFormat.format(Messages.RezepteView_deletePrescriptionConfirm,
 						recipe.getDate()))) {
 					CoreModelServiceHolder.get().delete(recipe);
-					tv.refresh();
+					refresh();
 				}
 			}
 		};
@@ -518,13 +525,30 @@ public class RezepteView extends ViewPart implements IRefreshable {
 				(LeistungenView) getViewSite().getPage().showView(LeistungenView.ID);
 			CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 			CTabItem[] tabItems = lv1.ctab.getItems();
+			
+			List<ICodeElementServiceContribution> articleCodeContributions =
+				codeElementService.getContributionsByTyp(CodeElementTyp.ARTICLE);
+			
 			for (CTabItem tab : tabItems) {
-				ICodeElement ics = (ICodeElement) tab.getData();
-				if (ics instanceof Artikel) {
-					lv1.ctab.setSelection(tab);
-					break;
+				if (tab.getData() instanceof ICodeElement) {
+					ICodeElement ics = (ICodeElement) tab.getData();
+					if (ics instanceof Artikel) {
+						lv1.ctab.setSelection(tab);
+						lv1.setSelected(tab);
+						break;
+					}
+				} else if (tab.getData() instanceof CodeSystemDescription) {
+					CodeSystemDescription desc = (CodeSystemDescription) tab.getData();
+					if (articleCodeContributions.stream()
+						.filter(ac -> ac.getSystem().equals(desc.getCodeSystemName())).findFirst()
+						.isPresent()) {
+						lv1.ctab.setSelection(tab);
+						lv1.setSelected(tab);
+						break;
+					}
 				}
 			}
+			lv1.setFocus();
 		} catch (PartInitException ex) {
 			ExHandler.handle(ex);
 		}
