@@ -157,14 +157,14 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				SmbFile[] listFiles = smbFile.listFiles(new IVFSFileFilterAdapter(ff));
 				IVirtualFilesystemHandle[] retVal = new IVirtualFilesystemHandle[listFiles.length];
 				for (int i = 0; i < listFiles.length; i++) {
-					SmbFile _file = listFiles[i];
 					
-					try {
+					try (SmbFile _file = listFiles[i]) {
 						String fileURL = convertToURLEscapingIllegalCharacters(_file.getURL());
 						URI _fileUri = new URI(fileURL);
 						retVal[i] = new VirtualFilesystemHandle(_fileUri);
 					} catch (URISyntaxException e) {
-						e.printStackTrace();
+						LoggerFactory.getLogger(getClass()).warn("listHandles() [{}]", listFiles[i],
+							e);
 					}
 					
 				}
@@ -405,7 +405,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			&& uri.getAuthority().charAt(1) == ':') {
 			// workaround - URIUtil "swallows" C: authority
 			try {
-				_uri = IVirtualFilesystemService.stringToURI( uri.toString() + subFile);
+				_uri = IVirtualFilesystemService.stringToURI(uri.toString() + subFile);
 			} catch (MalformedURLException | URISyntaxException e) {
 				throw new IOException(e);
 			}
