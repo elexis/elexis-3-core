@@ -1079,9 +1079,9 @@ public class MedicationComposite extends Composite
 							LocalDateTime.now());
 						dropChangePrescription
 							.setStopReason("Ersetzt durch " + article.getName());
-						dropChangePrescription = null;
 						CoreModelServiceHolder.get()
 							.save(Arrays.asList(dropChangePrescription, changedPrescription));
+						dropChangePrescription = null;
 					}
 					refresh();
 				}
