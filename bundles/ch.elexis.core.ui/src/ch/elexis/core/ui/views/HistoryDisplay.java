@@ -174,11 +174,12 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 	 * @param pat
 	 * @param ev
 	 */
-	public void load(IPatient pat, boolean showLoadingScreen){
+	public synchronized void load(IPatient pat, boolean showLoadingScreen){
 		int page = 1;
 		// remember page if patient did not change
 		if (actPatient != null && actPatient.equals(pat)) {
 			page = pagingComposite.getCurrentPage();
+			return;
 		}
 		if (showLoadingScreen) {
 			UiDesk.getDisplay().syncExec(new Runnable() {
