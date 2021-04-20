@@ -47,12 +47,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
@@ -197,6 +199,11 @@ public class BillingProposalView extends ViewPart {
 					if (selection.getFirstElement() instanceof BillingInformation) {
 						Konsultation kons =
 							((BillingInformation) selection.getFirstElement()).getKonsultation();
+						// patient change has to be done before changing kons
+						Patient pat = kons.getFall().getPatient();
+						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(pat,
+							pat.getClass(), ElexisEvent.EVENT_SELECTED, ElexisEvent.PRIORITY_SYNC));
+						
 						ElexisEventDispatcher.fireSelectionEvent(kons);
 					}
 				}
