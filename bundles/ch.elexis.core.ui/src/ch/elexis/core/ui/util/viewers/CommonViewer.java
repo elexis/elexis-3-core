@@ -184,7 +184,11 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		viewer.getControl().setLayoutData(gdView);
 		viewer.setContentProvider(viewerConfigurer.getContentProvider());
 		viewer.setLabelProvider(viewerConfigurer.getLabelProvider());
-		viewer.addSelectionChangedListener(this);
+		if (viewerConfigurer.getSelectionChangedListener() != null) {
+			viewer.addSelectionChangedListener(viewerConfigurer.getSelectionChangedListener());
+		} else {
+			viewer.addSelectionChangedListener(this);
+		}
 		if (viewer.getControl() instanceof Table) {
 			Table table = (Table) viewer.getControl();
 			ScrollBar verticalBar = table.getVerticalBar();

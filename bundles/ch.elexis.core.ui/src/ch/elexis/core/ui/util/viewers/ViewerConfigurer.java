@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -58,6 +59,7 @@ public class ViewerConfigurer {
 	private ButtonProvider buttonProvider;
 	private WidgetProvider widgetProvider;
 	private IDoubleClickListener doubleClickListener;
+	private ISelectionChangedListener selectionChangedListener;
 	
 	protected ISelectionRenderer poSelectionRenderer;
 	protected GenericObjectDragSource.ISelectionRenderer goSelectionRenderer;
@@ -122,6 +124,18 @@ public class ViewerConfigurer {
 	 */
 	public ViewerConfigurer setDoubleClickListener(IDoubleClickListener listener){
 		this.doubleClickListener = listener;
+		return this;
+	}
+	
+	/**
+	 * Set a {@link ISelectionChangedListener} that will be added to the {@link CommonViewer} viewer
+	 * instead of the default listener.
+	 * 
+	 * @param listener
+	 * @return
+	 */
+	public ViewerConfigurer setSelectionChangedListener(ISelectionChangedListener listener){
+		this.selectionChangedListener = listener;
 		return this;
 	}
 	
@@ -377,6 +391,10 @@ public class ViewerConfigurer {
 	
 	public IDoubleClickListener getDoubleClickListener(){
 		return doubleClickListener;
+	}
+	
+	public ISelectionChangedListener getSelectionChangedListener(){
+		return selectionChangedListener;
 	}
 	
 	public void addDragSourceSelectionRenderer(ISelectionRenderer iSelectionRenderer){
