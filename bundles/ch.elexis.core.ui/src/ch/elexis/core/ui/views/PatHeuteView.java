@@ -296,7 +296,33 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 				}
 				
 			}, null, new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
-				SimpleWidgetProvider.TYPE_LIST, SWT.V_SCROLL, cv));
+				SimpleWidgetProvider.TYPE_LIST, SWT.V_SCROLL, cv))
+					.setSelectionChangedListener(new ISelectionChangedListener() {
+						
+						@Override
+						public void selectionChanged(SelectionChangedEvent event){
+							if (event.getStructuredSelection() != null
+								&& !event.getStructuredSelection().isEmpty()) {
+								if (event.getStructuredSelection()
+									.getFirstElement() instanceof Konsultation) {
+									Konsultation selectedKons = (Konsultation) event
+										.getStructuredSelection().getFirstElement();
+									if (selectedKons.getFall() != null
+										&& selectedKons.getFall().getPatient() != null) {
+										Patient pat = selectedKons.getFall().getPatient();
+										// patient change has to be done before changing kons
+										ElexisEventDispatcher.getInstance()
+											.fire(new ElexisEvent(pat, pat.getClass(),
+												ElexisEvent.EVENT_SELECTED,
+												ElexisEvent.PRIORITY_SYNC));
+										
+										ElexisEventDispatcher.fireSelectionEvent(selectedKons);
+									}
+								}
+							}
+							
+						}
+					});
 		cv.create(vc, parent, SWT.NONE, getViewSite());
 		
 		form = tk.createForm(parent);
@@ -346,9 +372,11 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv){
 				Konsultation k = (Konsultation) obj;
+				Patient pat = k.getFall().getPatient();
+				// patient change has to be done before changing kons
+				ElexisEventDispatcher.getInstance().fire(new ElexisEvent(pat, pat.getClass(),
+					ElexisEvent.EVENT_SELECTED, ElexisEvent.PRIORITY_SYNC));
 				ElexisEventDispatcher.fireSelectionEvent(k);
-				ElexisEventDispatcher.fireSelectionEvent(k.getFall());
-				ElexisEventDispatcher.fireSelectionEvent(k.getFall().getPatient());
 				try {
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 						.showView(KonsDetailView.ID);
