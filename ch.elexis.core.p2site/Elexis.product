@@ -6,7 +6,8 @@
    <aboutInfo>
       <image path="rsc/elexislogo2.png"/>
       <text>
-         Elexis 3.8 - www.elexis.info
+         Elexis 3.9 - www.elexis.info
+         Copyright 2005-2021 G. Weirich und Elexis-Team
       </text>
    </aboutInfo>
 
@@ -32,6 +33,7 @@
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
@@ -61,16 +63,18 @@
    <configurations>
       <plugin id="ch.elexis.core.jpa.datasource" autoStart="true" startLevel="3" />
       <plugin id="ch.elexis.core.jpa.entities" autoStart="true" startLevel="3" />
-      <plugin id="ch.elexis.core.logging" autoStart="true" startLevel="2" />
+      <plugin id="ch.elexis.core.logging.osgi" autoStart="true" startLevel="2" />
       <plugin id="ch.elexis.core.ui.p2" autoStart="true" startLevel="4" />
       <plugin id="ch.qos.logback.classic" autoStart="true" startLevel="2" />
       <plugin id="ch.qos.logback.core" autoStart="true" startLevel="2" />
       <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.console" autoStart="true" startLevel="4" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.p2.transport.ecf" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.gemini.jpa" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="2" />
