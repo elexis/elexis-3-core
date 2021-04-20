@@ -402,7 +402,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 				}
 				IRecipe recipe = new IRecipeBuilder(CoreModelServiceHolder.get(), patient,
 					ContextServiceHolder.get().getActiveMandator().orElse(null)).buildAndSave();
-				tv.refresh();
+				refresh();
 				doSelectNewRezept(recipe);
 				doAddLine();
 			}
@@ -517,6 +517,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 	private void doSelectNewRezept(IRecipe rezept){
 		tv.getTable().setFocus();
 		tv.setSelection(new StructuredSelection(rezept), true);
+		ContextServiceHolder.get().getRootContext().setTyped(rezept);
 	}
 	
 	private void doAddLine(){
