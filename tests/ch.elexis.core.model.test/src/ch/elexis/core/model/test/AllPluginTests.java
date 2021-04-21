@@ -6,7 +6,6 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import ch.elexis.core.model.AllModelTests;
 import ch.elexis.core.model.BillingLawTest;
-import ch.elexis.core.model.builder.AllBuilderTests;
 import ch.elexis.core.model.service.CoreModelServiceTest;
 import ch.elexis.core.model.service.CoreQueryTest;
 import ch.elexis.core.types.AllTypesTests;
@@ -14,7 +13,7 @@ import ch.elexis.core.types.AllTypesTests;
 @RunWith(Suite.class)
 @SuiteClasses({
 	AllTypesTests.class, CoreModelServiceTest.class, CoreQueryTest.class, AllModelTests.class,
-	AllBuilderTests.class, BillingLawTest.class
+	BillingLawTest.class
 })
 public class AllPluginTests {
 	

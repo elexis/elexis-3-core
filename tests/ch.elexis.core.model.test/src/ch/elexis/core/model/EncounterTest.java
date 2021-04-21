@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Optional;
 
@@ -27,7 +26,6 @@ public class EncounterTest extends AbstractTest {
 	
 	public IMandator mandator;
 	
-	@Override
 	@Before
 	public void before(){
 		super.before();
@@ -45,7 +43,7 @@ public class EncounterTest extends AbstractTest {
 	@Test
 	public void createFindDeleteEncounter(){
 		IEncounter encounter = new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
-		LocalDateTime date = LocalDateTime.of(2018, Month.SEPTEMBER, 21, 13, 20);
+		LocalDate date = LocalDate.of(2018, Month.SEPTEMBER, 21);
 		encounter.setDate(date);
 		VersionedResource vr = VersionedResource.load(null);
 		vr.update("Test consultation\nWith some test text.", "Administrator");
@@ -167,13 +165,13 @@ public class EncounterTest extends AbstractTest {
 	public void changeCoverage(){
 		IEncounter encounter =
 			new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
-		LocalDateTime date = LocalDateTime.of(2018, Month.SEPTEMBER, 21, 13, 20);
+		LocalDate date = LocalDate.of(2018, Month.SEPTEMBER, 21);
 		encounter.setDate(date);
 		coreModelService.save(encounter);
 
 		IEncounter encounter1 =
 			new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
-		LocalDateTime date1 = LocalDateTime.of(2018, Month.SEPTEMBER, 22, 13, 30, 15);
+		LocalDate date1 = LocalDate.of(2018, Month.SEPTEMBER, 22);
 		encounter.setDate(date1);
 		coreModelService.save(encounter1);
 		

@@ -68,7 +68,6 @@ public class EncounterService implements IEncounterService {
 		return editable;
 	}
 	
-	@Override
 	public Result<IEncounter> transferToCoverage(IEncounter encounter, ICoverage coverage,
 		boolean ignoreEditable){
 		if (encounter.getCoverage().equals(coverage)) {
@@ -121,7 +120,7 @@ public class EncounterService implements IEncounterService {
 					
 				} else {
 					Optional<IBillingSystemFactor> systemFactor = billingService
-						.getBillingSystemFactor(billable.getCodeSystemName(), encounter.getDate().toLocalDate());
+						.getBillingSystemFactor(billable.getCodeSystemName(), encounter.getDate());
 					if (systemFactor.isPresent()) {
 						billed.setFactor(systemFactor.get().getFactor());
 					} else {

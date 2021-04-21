@@ -159,7 +159,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		if (!openCoverages.isEmpty()) {
 			todaysOpenBillableEncounters =
 				openCoverages.stream().flatMap(cv -> cv.getEncounters().stream())
-					.filter(encounter -> TimeUtil.isToday(encounter.getDate().toLocalDate()))
+					.filter(encounter -> TimeUtil.isToday(encounter.getDate()))
 					.filter(encounter -> BillingServiceHolder.get().isEditable(encounter).isOK())
 					.collect(Collectors.toList());
 			

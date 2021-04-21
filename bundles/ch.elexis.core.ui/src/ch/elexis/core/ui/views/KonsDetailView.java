@@ -361,7 +361,7 @@ public class KonsDetailView extends ViewPart
 	
 	private void refreshContributionItemState(){
 		ICommandService commandService =
-			PlatformUI.getWorkbench().getService(ICommandService.class);
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		commandService.refreshElements(ToggleCurrentKonsultationLockHandler.COMMAND_ID, null);
 	}
 	
@@ -664,7 +664,7 @@ public class KonsDetailView extends ViewPart
 				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_GREY60));
 				lBeh.setBackground(UiDesk.getColor(UiDesk.COL_GREY20));
 			}
-			if (LocalDate.now().isEqual(encounter.getDate().toLocalDate())) {
+			if (encounter.getDate().isEqual(LocalDate.now())) {
 				text.setTextBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 			} else {
 				text.setTextBackground(UiDesk.getColorFromRGB("FAFAFA"));

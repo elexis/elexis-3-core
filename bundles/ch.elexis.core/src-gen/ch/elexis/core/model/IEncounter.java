@@ -24,6 +24,7 @@ import java.util.List;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link ch.elexis.core.model.IEncounter#getTimeStamp <em>Time Stamp</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getDate <em>Date</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#isBillable <em>Billable</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getPatient <em>Patient</em>}</li>
@@ -40,6 +41,32 @@ import java.util.List;
  * @generated
  */
 public interface IEncounter extends Identifiable, Deleteable {
+	/**
+	 * Returns the value of the '<em><b>Time Stamp</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Time Stamp</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Time Stamp</em>' attribute.
+	 * @see #setTimeStamp(LocalDateTime)
+	 * @see ch.elexis.core.model.ModelPackage#getIEncounter_TimeStamp()
+	 * @model dataType="ch.elexis.core.types.LocalDateTime"
+	 * @generated
+	 */
+	LocalDateTime getTimeStamp();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IEncounter#getTimeStamp <em>Time Stamp</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Time Stamp</em>' attribute.
+	 * @see #getTimeStamp()
+	 * @generated
+	 */
+	void setTimeStamp(LocalDateTime value);
+
 	/**
 	 * Returns the value of the '<em><b>Patient</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -148,13 +175,13 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Date</em>' attribute.
-	 * @see #setDate(LocalDateTime)
+	 * @see #setDate(LocalDate)
 	 * @see ch.elexis.core.model.ModelPackage#getIEncounter_Date()
-	 * @model dataType="ch.elexis.core.types.LocalDateTime"
+	 * @model dataType="ch.elexis.core.types.LocalDate"
 	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='datum'"
 	 * @generated
 	 */
-	LocalDateTime getDate();
+	LocalDate getDate();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IEncounter#getDate <em>Date</em>}' attribute.
@@ -164,7 +191,7 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 * @see #getDate()
 	 * @generated
 	 */
-	void setDate(LocalDateTime value);
+	void setDate(LocalDate value);
 
 	/**
 	 * Returns the value of the '<em><b>Billable</b></em>' attribute.
