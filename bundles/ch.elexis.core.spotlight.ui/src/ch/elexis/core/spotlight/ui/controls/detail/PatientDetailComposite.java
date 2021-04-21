@@ -213,7 +213,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		if (patient != null) {
 			IEncounter _latestEncounter = encounterService.getLatestEncounter(patient).orElse(null);
 			if (_latestEncounter != null) {
-				values[6] = util.formatDate(_latestEncounter.getDate());
+				values[6] = util.formatDate(_latestEncounter.getDate().toLocalDate());
 				String encounterText =
 					_latestEncounter.getHeadVersionInPlaintext().trim().replaceAll("\n", " ");
 				String[] encounterValue = new String[4];
