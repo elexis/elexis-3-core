@@ -152,7 +152,7 @@ public class InvoiceService implements IInvoiceService {
 					"Ungültiges Datum bei Konsultation " + encounter.getLabel(), ret, true);
 				continue;
 			}
-			actDate = actDate.with(encounter.getDate().toLocalDate());
+			actDate = actDate.with(encounter.getDate());
 			if (actDate.isBefore(startDate)) {
 				startDate = startDate.with(actDate);
 			}
