@@ -68,6 +68,9 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	@Column(length = 8)
 	private LocalDate datum;
 
+	@Column(length = 6, name = "Zeit")
+	private String time;
+	
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "behdl_dg_joint", joinColumns = @JoinColumn(name = "BehandlungsID"), inverseJoinColumns = @JoinColumn(name = "DiagnoseID"))
 	private List<Diagnosis> diagnoses;
@@ -178,4 +181,13 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	public void setBillable(boolean value){
 		this.billable = value;
 	}
+
+	public String getTime(){
+		return time;
+	}
+	
+	public void setTime(String time){
+		this.time = time;
+	}
+	
 }
