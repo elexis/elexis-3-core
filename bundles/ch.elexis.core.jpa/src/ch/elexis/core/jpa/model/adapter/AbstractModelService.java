@@ -211,6 +211,10 @@ public abstract class AbstractModelService implements IModelService {
 					EntityWithId dbObject = dbObjects.get(identifiable);
 					if (dbObject != null) {
 						boolean newlyCreatedObject = (dbObject.getLastupdate() == null);
+						// if entity was merged before due to reference from other entity
+						// lastupdate gets overwritten with value of detached entity 
+						// so prepare with current lastupdate
+						dbObject.setLastupdate(System.currentTimeMillis());
 						EntityWithId merged = em.merge(dbObject);
 						mergedEntities.put(identifiable, merged);
 						if (newlyCreatedObject) {
