@@ -34,7 +34,7 @@ public class EncounterCreateHandler extends RestrictedHandler {
 	
 	@Execute
 	public void execute(IContextService contextService, IConfigService configService,
-		IEncounterService encounterService, IBillingSystemService billingSystemService) {
+		IEncounterService encounterService, IBillingSystemService billingSystemService){
 		
 		// determine coverage
 		ICoverage coverage = contextService.getActiveCoverage().orElse(null);
@@ -85,7 +85,7 @@ public class EncounterCreateHandler extends RestrictedHandler {
 		// does there already exist an encounter for today on the given coverage?
 		List<IEncounter> encounters = coverage.getEncounters();
 		for (IEncounter iEncounter : encounters) {
-			if (LocalDate.now().equals(iEncounter.getDate())) {
+			if (LocalDate.now().isEqual(iEncounter.getDate().toLocalDate())) {
 				if (UserDialog.question(Messages.GlobalActions_SecondForToday,
 					Messages.GlobalActions_SecondForTodayQuestion) == false) {
 					return;
