@@ -2,6 +2,7 @@ package ch.elexis.core.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,23 +23,13 @@ import ch.rgw.tools.VersionedResource;
 
 public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		implements IdentifiableWithXid, IEncounter {
-
+	
+	private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
+	
 	public Encounter(Behandlung entity){
 		super(entity);
 	}
-
-	@Override
-	public LocalDateTime getTimeStamp(){
-		// TODO looses information
-		return getEntity().getDatum().atStartOfDay();
-	}
-
-	@Override
-	public void setTimeStamp(LocalDateTime value){
-		// TODO looses information
-		getEntityMarkDirty().setDatum(value.toLocalDate());
-	}
-
+	
 	@Override
 	public IPatient getPatient(){
 		if (getEntity().getFall() != null) {
@@ -46,12 +37,12 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		}
 		return null;
 	}
-
+	
 	@Override
 	public ICoverage getCoverage(){
 		return ModelUtil.getAdapter(getEntity().getFall(), ICoverage.class);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setCoverage(ICoverage value){
@@ -70,12 +61,12 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 			addChanged(value);
 		}
 	}
-
+	
 	@Override
 	public IMandator getMandator(){
 		return ModelUtil.getAdapter(getEntity().getMandant(), IMandator.class);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setMandator(IMandator value){
@@ -85,7 +76,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 			getEntityMarkDirty().setMandant(null);
 		}
 	}
-
+	
 	@Override
 	public List<IBilled> getBilled(){
 		CoreModelServiceHolder.get().refresh(this);
@@ -99,20 +90,23 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	}
 	
 	@Override
-	public LocalDate getDate(){
-		return getEntity().getDatum();
+	public LocalDateTime getDate(){
+		LocalTime time = LocalTime.parse(getEntity().getTime(), timeFormatter);
+		return LocalDateTime.of(getEntity().getDatum(), time);
 	}
-
+	
 	@Override
-	public void setDate(LocalDate value){
-		getEntityMarkDirty().setDatum(value);
+	public void setDate(LocalDateTime value){
+		Behandlung entity = getEntityMarkDirty();
+		entity.setDatum(value.toLocalDate());
+		entity.setTime(timeFormatter.format(value));
 	}
-
+	
 	@Override
 	public VersionedResource getVersionedEntry(){
 		return getEntity().getEintrag();
 	}
-
+	
 	@Override
 	public void setVersionedEntry(VersionedResource value){
 		getEntityMarkDirty().setEintrag(value);
@@ -185,7 +179,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		IMandator mandator = getMandator();
 		IMandator activeMandator = ContextServiceHolder.get().getActiveMandator().orElse(null);
 		if ((mandator != null && activeMandator != null) && (mandator.equals(activeMandator))) {
-			if (getDate().isEqual(LocalDate.now())) {
+			if (LocalDate.now().isEqual(getDate().toLocalDate())) {
 				return InvoiceState.FROM_TODAY;
 			} else {
 				return InvoiceState.NOT_FROM_TODAY;
@@ -200,8 +194,8 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		StringBuffer ret = new StringBuffer();
 		IMandator m = getMandator();
 		
-		ret.append(getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))).append(" (").append(getInvoiceStateText()).append(") - ")
-			.append((m == null) ? "?" : m.getLabel());
+		ret.append(getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))).append(" (")
+			.append(getInvoiceStateText()).append(") - ").append((m == null) ? "?" : m.getLabel());
 		return ret.toString();
 	}
 	

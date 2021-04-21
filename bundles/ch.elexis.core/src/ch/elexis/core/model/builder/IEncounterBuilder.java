@@ -1,6 +1,6 @@
 package ch.elexis.core.model.builder;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
@@ -23,10 +23,10 @@ public class IEncounterBuilder extends AbstractBuilder<IEncounter> {
 		object = modelService.create(IEncounter.class);
 		object.setCoverage(coverage);
 		object.setMandator(mandator);
-		object.setDate(LocalDate.now());
+		object.setDate(LocalDateTime.now());
 	}
 	
-	public IEncounterBuilder date(LocalDate date){
+	public IEncounterBuilder date(LocalDateTime date){
 		object.setDate(date);
 		return this;
 	}

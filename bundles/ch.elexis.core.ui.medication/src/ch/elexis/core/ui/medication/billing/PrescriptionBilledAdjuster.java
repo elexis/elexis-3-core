@@ -92,7 +92,7 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 	
 	private LocalDateTime getBilledDateTime(IBilled billed){
 		IEncounter encounter = billed.getEncounter();
-		return encounter.getTimeStamp();
+		return encounter.getDate();
 	}
 	
 	private IPrescription createDispensationPrescription(IArticle article, IPatient patient,

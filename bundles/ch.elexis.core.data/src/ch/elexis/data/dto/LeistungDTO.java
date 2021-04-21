@@ -91,7 +91,7 @@ public class LeistungDTO {
 		if (iVerrechenbar != null) {
 			Optional<IBillingSystemFactor> billingFactor =
 				BillingServiceHolder.get().getBillingSystemFactor(iVerrechenbar.getCodeSystemName(),
-					verrechnet.getEncounter().getDate());
+					verrechnet.getEncounter().getDate().toLocalDate());
 			if (billingFactor.isPresent()) {
 				return billingFactor.get().getFactor();
 			}

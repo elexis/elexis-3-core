@@ -479,7 +479,7 @@ public class TestDatabaseInitializer {
 		if (!isBehandlungInitialized) {
 			behandlung =
 				new IEncounterBuilder(modelService, getFall(), getMandant()).buildAndSave();
-			behandlung.setDate(LocalDate.of(2016, Month.SEPTEMBER, 21));
+			behandlung.setDate(LocalDateTime.of(2016, Month.SEPTEMBER, 21, 13, 20));
 			VersionedResource vr = VersionedResource.load(null);
 			vr.update("Test consultation\nWith some test text.", "Administrator");
 			vr.update("Test consultation\n pdate done by user", "user");

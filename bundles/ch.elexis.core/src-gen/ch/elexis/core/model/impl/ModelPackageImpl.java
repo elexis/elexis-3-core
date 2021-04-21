@@ -2908,7 +2908,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIEncounter_TimeStamp() {
+	public EAttribute getIEncounter_Date() {
 		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2918,7 +2918,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIEncounter_Date() {
+	public EAttribute getIEncounter_Billable() {
 		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -2928,18 +2928,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIEncounter_Billable() {
-		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getIEncounter_Patient() {
-		return (EReference)iEncounterEClass.getEStructuralFeatures().get(3);
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2949,7 +2939,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EReference getIEncounter_Mandator() {
-		return (EReference)iEncounterEClass.getEStructuralFeatures().get(4);
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2959,7 +2949,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EReference getIEncounter_Billed() {
-		return (EReference)iEncounterEClass.getEStructuralFeatures().get(5);
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2969,7 +2959,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EReference getIEncounter_Diagnoses() {
-		return (EReference)iEncounterEClass.getEStructuralFeatures().get(6);
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -2979,7 +2969,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EReference getIEncounter_Coverage() {
-		return (EReference)iEncounterEClass.getEStructuralFeatures().get(7);
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -2989,7 +2979,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EAttribute getIEncounter_VersionedEntry() {
-		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(8);
+		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -2999,7 +2989,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EReference getIEncounter_Invoice() {
-		return (EReference)iEncounterEClass.getEStructuralFeatures().get(9);
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -5090,7 +5080,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iBlobEClass, IBLOB__DATE);
 
 		iEncounterEClass = createEClass(IENCOUNTER);
-		createEAttribute(iEncounterEClass, IENCOUNTER__TIME_STAMP);
 		createEAttribute(iEncounterEClass, IENCOUNTER__DATE);
 		createEAttribute(iEncounterEClass, IENCOUNTER__BILLABLE);
 		createEReference(iEncounterEClass, IENCOUNTER__PATIENT);
@@ -5946,8 +5935,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, g1, "map", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iEncounterEClass, IEncounter.class, "IEncounter", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIEncounter_TimeStamp(), theTypesPackage.getLocalDateTime(), "timeStamp", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIEncounter_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIEncounter_Date(), theTypesPackage.getLocalDateTime(), "date", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIEncounter_Billable(), ecorePackage.getEBoolean(), "billable", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIEncounter_Patient(), this.getIPatient(), null, "patient", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIEncounter_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

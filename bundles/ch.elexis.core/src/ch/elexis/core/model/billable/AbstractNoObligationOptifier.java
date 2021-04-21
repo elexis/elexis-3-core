@@ -48,7 +48,7 @@ public abstract class AbstractNoObligationOptifier<T extends IBillable>
 					(Optional<ICoverage>) contextService.getNamed("SelectFallNoObligationDialog");
 				if (selectedCoverage.isPresent()) {
 					noOblEncounter =
-						getEncounterByDate(selectedCoverage.get(), encounter.getDate())
+						getEncounterByDate(selectedCoverage.get(), encounter.getDate().toLocalDate())
 							.orElse(null);
 					// create new Konsultation if there is none matching
 					if (noOblEncounter == null) {
