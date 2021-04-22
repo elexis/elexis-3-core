@@ -6,6 +6,7 @@ import java.util.Optional;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
@@ -86,5 +87,11 @@ public interface IEncounterService {
 	 */
 	public List<IBilled> getBilledByBillable(IEncounter encounter, IBillable billable);
 	
-
+	/**
+	 * Adds the users default {@link IDiagnosis} (if set) to the encounter. Saves the encounter.
+	 * 
+	 * @param encounter
+	 */
+	public void addDefaultDiagnosis(IEncounter encounter);
+	
 }
