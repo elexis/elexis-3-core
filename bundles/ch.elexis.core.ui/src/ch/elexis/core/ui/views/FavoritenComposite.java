@@ -131,7 +131,8 @@ public class FavoritenComposite extends Composite {
 				switch (event.index) {
 				case 0:
 					event.gc.setFont(defaultFont);
-					event.gc.drawText(fav.getMacroString(), event.x + 3, event.y + yOffset, true);
+					event.gc.drawText(fav.getMacroString() != null ? fav.getMacroString() : "",
+						event.x + 3, event.y + yOffset, true);
 					break;
 				case 1:
 					event.gc.setFont(boldFont);
