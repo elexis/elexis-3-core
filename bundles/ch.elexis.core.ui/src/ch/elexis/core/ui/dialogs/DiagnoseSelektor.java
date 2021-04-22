@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 import org.eclipse.ui.internal.WorkbenchMessages;
 
-import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.service.CodeElementServiceHolder;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IXid;
@@ -40,6 +39,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 	
 	private List<IDiagnosis> diagnoses = new ArrayList<IDiagnosis>();
 	
+	@SuppressWarnings("unchecked")
 	public DiagnoseSelektor(Shell shell){
 		super(shell);
 		setTitle(Messages.DiagnoseSelektorDialog_Title);
@@ -60,7 +60,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 				if (element == null) {
 					return "";
 				}
-				return ((IDiagnose) element).getLabel();
+				return ((IDiagnosis) element).getLabel();
 			}
 		});
 		
@@ -70,8 +70,8 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 				if (element == null) {
 					return "";
 				}
-				return ((IDiagnose) element).getCodeSystemName() + " "
-					+ ((IDiagnose) element).getLabel();
+				return ((IDiagnosis) element).getCodeSystemName() + " "
+					+ ((IDiagnosis) element).getLabel();
 			}
 		});
 	}
@@ -124,7 +124,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 			
 			@Override
 			public boolean matchItem(Object item){
-				IDiagnose diag = (IDiagnose) item;
+				IDiagnosis diag = (IDiagnosis) item;
 				
 				return matches(diag.getLabel());
 			}
@@ -132,10 +132,11 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 	}
 	
 	@Override
-	protected Comparator getItemsComparator(){
-		return new Comparator<IDiagnose>() {
+	protected Comparator<IDiagnosis> getItemsComparator(){
+		return new Comparator<IDiagnosis>() {
 			
-			public int compare(IDiagnose o1, IDiagnose o2){
+			@Override
+			public int compare(IDiagnosis o1, IDiagnosis o2){
 				return o1.getLabel().compareTo(o2.getLabel());
 			}
 		};
@@ -155,7 +156,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 	
 	@Override
 	public String getElementName(Object item){
-		IDiagnose diag = (IDiagnose) item;
+		IDiagnosis diag = (IDiagnosis) item;
 		return diag.getLabel();
 	}
 	
