@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views.artikel;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -170,6 +171,7 @@ public class ArtikelSelektor extends ViewPart {
 					
 					cv.addDoubleClickListener(new CommonViewer.PoDoubleClickListener() {
 						
+						@Override
 						public void doubleClicked(final PersistentObject obj,
 							final CommonViewer cv){
 							EditEigenartikelUi.executeWithParams(obj);
@@ -196,13 +198,7 @@ public class ArtikelSelektor extends ViewPart {
 		protected IStatus run(IProgressMonitor monitor){
 			monitor.beginTask("Stock loading ...", IProgressMonitor.UNKNOWN);
 			loaded = StockServiceHolder.get().getAllStockEntries();
-			
-			loaded.sort((l, r) -> {
-				if (l.getArticle() != null && r.getArticle() != null) {
-					return l.getArticle().getLabel().compareTo(r.getArticle().getLabel());
-				}
-				return 0;
-			});
+			loaded.sort(compareArticleLabel());
 			
 			if (monitor.isCanceled()) {
 				return Status.CANCEL_STATUS;
@@ -217,5 +213,12 @@ public class ArtikelSelektor extends ViewPart {
 			});
 			return Status.OK_STATUS;
 		}
+		
+		private Comparator<IStockEntry> compareArticleLabel(){
+			return Comparator.comparing(
+				o -> o.getArticle() != null ? o.getArticle().getLabel() : null,
+				Comparator.nullsLast(Comparator.naturalOrder()));
+		}
+
 	}
 }
