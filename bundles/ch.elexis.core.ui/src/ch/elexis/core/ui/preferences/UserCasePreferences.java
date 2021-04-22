@@ -41,7 +41,9 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.SortedList;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.dialogs.DiagnoseSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -87,6 +89,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 			Messages.UserCasePreferences_DefaultBillingSystem, getFieldEditorParent()));
 	}
 	
+	@Override
 	public void init(IWorkbench workbench){
 		getPreferenceStore().setValue(Preferences.USR_DEFCASELABEL, Fall.getDefaultCaseLabel());
 		getPreferenceStore().setValue(Preferences.USR_DEFCASEREASON, Fall.getDefaultCaseReason());
@@ -145,8 +148,9 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 				if (dsl.open() == Dialog.OK) {
 					Object[] sel = dsl.getResult();
 					if (sel != null && sel.length > 0) {
-						PersistentObject diagnose = (PersistentObject) sel[0];
-						ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, diagnose.storeToString());
+						Identifiable diagnose = (Identifiable) sel[0];
+						String storeToString = StoreToStringServiceHolder.getStoreToString(diagnose);
+						ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, storeToString);
 						diagnoseTxt.setText(diagnose.getLabel());
 					} else {
 						ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, "");
