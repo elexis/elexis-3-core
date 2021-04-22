@@ -101,6 +101,7 @@ public class EncounterCreateHandler extends RestrictedHandler {
 		
 		IEncounter enounter =
 			new IEncounterBuilder(CoreModelServiceHolder.get(), coverage, mandator).buildAndSave();
+		encounterService.addDefaultDiagnosis(enounter);
 		contextService.getRootContext().setTyped(enounter);
 	}
 	

@@ -18,10 +18,12 @@ import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
@@ -32,6 +34,7 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.CoverageServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -39,6 +42,9 @@ import ch.rgw.tools.Result.SEVERITY;
 
 @Component
 public class EncounterService implements IEncounterService {
+	
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService coreModelService;
 	
 	@Reference
 	private IAccessControlService accessControlService;
@@ -48,6 +54,9 @@ public class EncounterService implements IEncounterService {
 	
 	@Reference
 	private IBillingService billingService;
+	
+	@Reference
+	private IConfigService configService;
 	
 	@Override
 	public boolean isEditable(IEncounter encounter){
@@ -68,6 +77,7 @@ public class EncounterService implements IEncounterService {
 		return editable;
 	}
 	
+	@Override
 	public Result<IEncounter> transferToCoverage(IEncounter encounter, ICoverage coverage,
 		boolean ignoreEditable){
 		if (encounter.getCoverage().equals(coverage)) {
@@ -298,5 +308,18 @@ public class EncounterService implements IEncounterService {
 			"behandlung", "leistungenCode");
 		return query.executeWithParameters(
 			query.getParameterMap("behandlung", encounter, "leistungenCode", billable.getId()));
+	}
+	
+	@Override
+	public void addDefaultDiagnosis(IEncounter encounter){
+		String diagnosisSts = configService.getActiveUserContact(Preferences.USR_DEFDIAGNOSE, "");
+		if (diagnosisSts.length() > 1) {
+			Optional<Identifiable> diagnose =
+				StoreToStringServiceHolder.get().loadFromString(diagnosisSts);
+			if (diagnose.isPresent()) {
+				encounter.addDiagnosis((IDiagnosis) diagnose.get());
+				coreModelService.save(encounter);
+			}
+		}
 	}
 }
