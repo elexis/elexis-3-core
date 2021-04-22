@@ -39,7 +39,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.SortedList;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -49,7 +48,6 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
-import ch.elexis.data.PersistentObject;
 import ch.rgw.io.InMemorySettings;
 import ch.rgw.tools.StringTool;
 
@@ -135,7 +133,8 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		diagnoseTxt.setEditable(false);
 		String diagnoseId = ConfigServiceHolder.getUser(Preferences.USR_DEFDIAGNOSE, "");
 		if (diagnoseId.length() > 1) {
-			PersistentObject diagnose = CoreHub.poFactory.createFromString(diagnoseId);
+			Identifiable diagnose =
+				StoreToStringServiceHolder.get().loadFromString(diagnoseId).orElse(null);
 			if (diagnose != null)
 				diagnoseTxt.setText(diagnose.getLabel());
 		}
