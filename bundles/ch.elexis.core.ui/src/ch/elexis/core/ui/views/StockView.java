@@ -14,7 +14,7 @@ package ch.elexis.core.ui.views;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,7 +79,6 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.services.IStockService.Availability;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
@@ -304,7 +303,7 @@ public class StockView extends ViewPart implements IRefreshable {
 									if (stock != null) {
 										StockServiceHolder.get().storeArticleInStock(stock,
 											StoreToStringServiceHolder
-												.getStoreToString((IArticle) identifiable));
+												.getStoreToString(identifiable));
 										viewer.refresh();
 									}
 								}
@@ -686,12 +685,7 @@ public class StockView extends ViewPart implements IRefreshable {
 					.collect(Collectors.toList());
 			}
 			
-			loaded.sort((l, r) -> {
-				if(l.getArticle() != null && r.getArticle() != null) {
-					return l.getArticle().getLabel().compareTo(r.getArticle().getLabel());
-				}
-				return 0;
-			});
+			loaded.sort(compareArticleLabel());
 			
 			if (monitor.isCanceled()) {
 				return Status.CANCEL_STATUS;
@@ -707,6 +701,12 @@ public class StockView extends ViewPart implements IRefreshable {
 			return Status.OK_STATUS;
 		}
 		
+		private Comparator<IStockEntry> compareArticleLabel(){
+			return Comparator.comparing(
+				o -> o.getArticle() != null ? o.getArticle().getLabel() : null,
+				Comparator.nullsLast(Comparator.naturalOrder()));
+		}
+
 		private boolean selectOrderOnly(IStockEntry se){
 			Availability availability = StockServiceHolder.get().determineAvailability(se);
 			if (availability != null) {
