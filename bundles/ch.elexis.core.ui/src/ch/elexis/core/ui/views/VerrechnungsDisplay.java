@@ -494,7 +494,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				sum.addMoney(preis);
 				IBillable billable = billed.getBillable();
 				if (billable instanceof IService) {
-					sumMinutes += ((IService) billable).getMinutes();
+					sumMinutes += (((IService) billable).getMinutes() * billed.getAmount());
 				}
 				if (billable instanceof IArticle) {
 					IArticle art = (IArticle) billable;
