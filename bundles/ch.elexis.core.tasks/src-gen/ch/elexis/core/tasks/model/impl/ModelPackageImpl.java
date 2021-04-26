@@ -325,8 +325,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getITaskDescriptor_TransientData() {
+	public EAttribute getITaskDescriptor_System() {
 		return (EAttribute)iTaskDescriptorEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getITaskDescriptor_TransientData() {
+		return (EAttribute)iTaskDescriptorEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
@@ -457,6 +467,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	@Override
 	public EAttribute getITask_Runner() {
 		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getITask_System() {
+		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
@@ -600,6 +620,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__TRIGGER_PARAMETERS);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__RUNNER);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__SINGLETON);
+		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__SYSTEM);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__TRANSIENT_DATA);
 
 		iTaskEClass = createEClass(ITASK);
@@ -615,6 +636,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iTaskEClass, ITASK__FINISHED);
 		createEReference(iTaskEClass, ITASK__TASK_DESCRIPTOR);
 		createEAttribute(iTaskEClass, ITASK__RUNNER);
+		createEAttribute(iTaskEClass, ITASK__SYSTEM);
 
 		iTaskServiceEClass = createEClass(ITASK_SERVICE);
 
@@ -692,6 +714,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getITaskDescriptor_TriggerParameters(), g1, "triggerParameters", null, 0, 1, ITaskDescriptor.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITaskDescriptor_Runner(), ecorePackage.getEString(), "runner", null, 0, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITaskDescriptor_Singleton(), ecorePackage.getEBoolean(), "singleton", "false", 0, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getITaskDescriptor_System(), ecorePackage.getEBoolean(), "system", null, 0, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		g1 = createEGenericType(ecorePackage.getEMap());
 		g2 = createEGenericType(ecorePackage.getEString());
 		g1.getETypeArguments().add(g2);
@@ -732,6 +755,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getITask_Finished(), ecorePackage.getEBoolean(), "finished", "false", 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getITask_TaskDescriptor(), this.getITaskDescriptor(), null, "taskDescriptor", null, 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITask_Runner(), ecorePackage.getEString(), "runner", null, 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getITask_System(), ecorePackage.getEBoolean(), "system", null, 0, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iTaskEClass, null, "getResultEntryAsTypedList", 0, 1, IS_UNIQUE, IS_ORDERED);
 		ETypeParameter t1 = addETypeParameter(op, "T");

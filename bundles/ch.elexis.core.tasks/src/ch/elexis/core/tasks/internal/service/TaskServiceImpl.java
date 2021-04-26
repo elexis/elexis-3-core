@@ -398,6 +398,7 @@ public class TaskServiceImpl implements ITaskService {
 			taskDescriptor.getId(), taskDescriptor.getReferenceId(), runContext);
 		
 		Task task = new Task(taskDescriptor, triggerType, progressMonitor, runContext);
+		task.setSystem(taskDescriptor.isSystem());
 		
 		// TODO test if all runContext parameters are satisfied, else reject execution
 		task.setState(TaskState.QUEUED);

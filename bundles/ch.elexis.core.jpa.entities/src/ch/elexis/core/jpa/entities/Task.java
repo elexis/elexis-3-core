@@ -74,6 +74,10 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	@Column(length = 64)
 	protected String runner;
 	
+	@Column
+	@Convert(converter = BooleanCharacterConverterSafe.class)
+	protected boolean system = false;
+	
 	@Override
 	public String getId(){
 		return id;
@@ -110,6 +114,14 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	
 	public int getState(){
 		return this.state;
+	}
+	
+	public boolean isSystem(){
+		return system;
+	}
+	
+	public void setSystem(boolean system){
+		this.system = system;
 	}
 	
 	public int getTriggerEvent(){

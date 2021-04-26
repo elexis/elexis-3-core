@@ -31,13 +31,16 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
+import ch.elexis.core.tasks.model.ModelPackage;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 import ch.elexis.core.ui.tasks.parts.controls.GeneralConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.controls.RunnableAndContextConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.controls.TaskTriggerTypeConfigurationComposite;
+import ch.elexis.core.ui.tasks.parts.handlers.TaskPartSystemFilterHandler;
 
 public class TaskConfigurationPart implements IRefreshablePart {
 	
@@ -185,6 +188,13 @@ public class TaskConfigurationPart implements IRefreshablePart {
 	public void refresh(Map<Object, Object> filterParameters){
 		IQuery<ITaskDescriptor> taskQuery =
 			TaskModelServiceHolder.get().getQuery(ITaskDescriptor.class, true, false);
+		boolean showSystemTasks =
+			filterParameters.get(TaskPartSystemFilterHandler.SHOW_SYSTEM_TASKS) != null
+					? (boolean) filterParameters.get(TaskPartSystemFilterHandler.SHOW_SYSTEM_TASKS)
+					: false;
+		if (!showSystemTasks) {
+			taskQuery.and(ModelPackage.Literals.ITASK_DESCRIPTOR__SYSTEM, COMPARATOR.EQUALS, false);
+		}
 		List<ITaskDescriptor> taskDescriptors = taskQuery.execute();
 		tvTaskDescriptors.setInput(taskDescriptors);
 		tvTaskDescriptors.refresh(true);

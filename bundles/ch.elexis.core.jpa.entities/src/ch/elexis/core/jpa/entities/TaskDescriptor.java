@@ -76,12 +76,24 @@ public class TaskDescriptor extends AbstractEntityWithId
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean singleton = false;
 	
+	@Column
+	@Convert(converter = BooleanCharacterConverterSafe.class)
+	protected boolean system = false;
+	
 	public boolean isSingleton(){
 		return singleton;
 	}
 	
 	public void setSingleton(boolean singleton){
 		this.singleton = singleton;
+	}
+	
+	public boolean isSystem(){
+		return system;
+	}
+	
+	public void setSystem(boolean system){
+		this.system = system;
 	}
 	
 	public int getTriggerType(){

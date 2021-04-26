@@ -76,6 +76,11 @@
         <details key="documentation" value="Whether concurrent executions of an instantiation of this ITaskDescriptor are allowed. Even if this is set to false, if the reference IIdentifiedRunnable is singleton, it will be enforced to be true on execution."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="system" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="If true this task descriptor was programmatically generated and is relevant to the operational state of Elexis. Modification or deletion of this task descriptor and its derived task log entries leads to change of productive data."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="transientData" lowerBound="1"
         changeable="false" transient="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -190,6 +195,11 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" changeable="false">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The station this task was run on"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="system" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

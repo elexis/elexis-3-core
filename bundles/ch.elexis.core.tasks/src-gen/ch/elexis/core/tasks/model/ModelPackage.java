@@ -194,13 +194,22 @@ public interface ModelPackage extends EPackage {
 	int ITASK_DESCRIPTOR__SINGLETON = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>System</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITASK_DESCRIPTOR__SYSTEM = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
 	 * The feature id for the '<em><b>Transient Data</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__TRANSIENT_DATA = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 12;
+	int ITASK_DESCRIPTOR__TRANSIENT_DATA = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The number of structural features of the '<em>ITask Descriptor</em>' class.
@@ -209,7 +218,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 13;
+	int ITASK_DESCRIPTOR_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.tasks.model.ITask <em>ITask</em>}' class.
@@ -348,13 +357,22 @@ public interface ModelPackage extends EPackage {
 	int ITASK__RUNNER = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
+	 * The feature id for the '<em><b>System</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITASK__SYSTEM = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 13;
+
+	/**
 	 * The number of structural features of the '<em>ITask</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 13;
+	int ITASK_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.tasks.model.ITaskService <em>ITask Service</em>}' class.
@@ -599,6 +617,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getITaskDescriptor_Singleton();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITaskDescriptor#isSystem <em>System</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>System</em>'.
+	 * @see ch.elexis.core.tasks.model.ITaskDescriptor#isSystem()
+	 * @see #getITaskDescriptor()
+	 * @generated
+	 */
+	EAttribute getITaskDescriptor_System();
+
+	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITaskDescriptor#getTransientData <em>Transient Data</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -750,6 +779,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getITask_Runner();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITask#isSystem <em>System</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>System</em>'.
+	 * @see ch.elexis.core.tasks.model.ITask#isSystem()
+	 * @see #getITask()
+	 * @generated
+	 */
+	EAttribute getITask_System();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.tasks.model.ITaskService <em>ITask Service</em>}'.
@@ -979,6 +1019,14 @@ public interface ModelPackage extends EPackage {
 		EAttribute ITASK_DESCRIPTOR__SINGLETON = eINSTANCE.getITaskDescriptor_Singleton();
 
 		/**
+		 * The meta object literal for the '<em><b>System</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ITASK_DESCRIPTOR__SYSTEM = eINSTANCE.getITaskDescriptor_System();
+
+		/**
 		 * The meta object literal for the '<em><b>Transient Data</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1091,6 +1139,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ITASK__RUNNER = eINSTANCE.getITask_Runner();
+
+		/**
+		 * The meta object literal for the '<em><b>System</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ITASK__SYSTEM = eINSTANCE.getITask_System();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.tasks.model.ITaskService <em>ITask Service</em>}' class.
