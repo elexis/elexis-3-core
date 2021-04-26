@@ -11,6 +11,7 @@
       <toolbar xmi:id="_DEarkA-AEeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.toolbar.0">
         <children xsi:type="menu:HandledToolItem" xmi:id="_vRnV0A-HEeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.log.handledtoolitem.part.refresh" iconURI="icon://IMG_REFRESH" tooltip="" command="_hobvwIGhEeuh_oRSm2ExFw"/>
         <children xsi:type="menu:DirectToolItem" xmi:id="__a4IUFGGEeqQlOVlpEDNRg" elementId="ch.elexis.core.ui.tasks.directtoolitem.0" iconURI="icon://IMG_ACHTUNG" tooltip="Show Failures Only" type="Check" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.TaskResultPartTableFilterHandler"/>
+        <children xsi:type="menu:DirectToolItem" xmi:id="_23CZsKZ7EeuYfoGOWnAecQ" elementId="ch.elexis.core.ui.tasks.directtoolitem.1" iconURI="icon://IMG_GEAR" tooltip="Show System Tasks" type="Check" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.TaskPartSystemFilterHandler"/>
       </toolbar>
     </elements>
     <elements xsi:type="basic:PartDescriptor" xmi:id="_LHyLYBBMEeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.partdescriptor.taskdetail" label="Task Detail" allowMultiple="true" closeable="true" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.TaskLogDetailPart"/>
@@ -26,6 +27,7 @@
       </menus>
       <toolbar xmi:id="_v8gSUIGhEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.toolbar.1">
         <children xsi:type="menu:HandledToolItem" xmi:id="_wVJb0IGhEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.config.handledtoolitem.part.refresh" iconURI="icon://IMG_REFRESH" command="_hobvwIGhEeuh_oRSm2ExFw"/>
+        <children xsi:type="menu:DirectToolItem" xmi:id="_jEXOgKZ9EeuYfoGOWnAecQ" elementId="ch.elexis.core.ui.tasks.directtoolitem.2" iconURI="icon://IMG_GEAR" tooltip="Show System Tasks" type="Check" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.TaskPartSystemFilterHandler"/>
       </toolbar>
     </elements>
   </fragments>

@@ -13,6 +13,7 @@ package ch.elexis.core.tasks.model;
 import java.io.Serializable;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import com.cronutils.model.Cron;
 
 import ch.elexis.core.model.Deleteable;
@@ -43,6 +44,7 @@ import ch.elexis.core.model.Identifiable;
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getTriggerParameters <em>Trigger Parameters</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getRunner <em>Runner</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#isSingleton <em>Singleton</em>}</li>
+ *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#isSystem <em>System</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getTransientData <em>Transient Data</em>}</li>
  * </ul>
  *
@@ -64,6 +66,7 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * @model id="true" required="true" changeable="false"
 	 * @generated
 	 */
+	@Override
 	String getId();
 
 	/**
@@ -330,6 +333,31 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setSingleton(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>System</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If true this task descriptor was programmatically generated and is relevant to the operational state of Elexis. Modification or deletion of this task descriptor and its derived task log entries leads to change of productive data.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>System</em>' attribute.
+	 * @see #setSystem(boolean)
+	 * @see ch.elexis.core.tasks.model.ModelPackage#getITaskDescriptor_System()
+	 * @model
+	 * @generated
+	 */
+	boolean isSystem();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.tasks.model.ITaskDescriptor#isSystem <em>System</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>System</em>' attribute.
+	 * @see #isSystem()
+	 * @generated
+	 */
+	void setSystem(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Transient Data</b></em>' attribute.

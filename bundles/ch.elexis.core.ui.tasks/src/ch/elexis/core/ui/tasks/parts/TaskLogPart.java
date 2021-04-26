@@ -44,12 +44,14 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
+import ch.elexis.core.ui.tasks.parts.handlers.TaskPartSystemFilterHandler;
 
 public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 	
@@ -292,6 +294,15 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 		Job job = Job.create("Update table", (ICoreRunnable) monitor -> {
 			IQuery<ITask> taskQuery = TaskModelServiceHolder.get().getQuery(ITask.class);
 			taskQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
+			boolean showSystemTasks =
+				filterParameters.get(TaskPartSystemFilterHandler.SHOW_SYSTEM_TASKS) != null
+						? (boolean) filterParameters
+							.get(TaskPartSystemFilterHandler.SHOW_SYSTEM_TASKS)
+						: false;
+			if (!showSystemTasks) {
+				taskQuery.and(ch.elexis.core.tasks.model.ModelPackage.Literals.ITASK__SYSTEM,
+					COMPARATOR.EQUALS, false);
+			}
 			List<ITask> results = taskQuery.execute();
 			inputModel.set(results.toArray());
 		});

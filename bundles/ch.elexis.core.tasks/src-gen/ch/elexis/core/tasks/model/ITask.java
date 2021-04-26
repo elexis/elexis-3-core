@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  *   <li>{@link ch.elexis.core.tasks.model.ITask#isFinished <em>Finished</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getTaskDescriptor <em>Task Descriptor</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getRunner <em>Runner</em>}</li>
+ *   <li>{@link ch.elexis.core.tasks.model.ITask#isSystem <em>System</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.tasks.model.ModelPackage#getITask()
@@ -221,6 +222,28 @@ public interface ITask extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	String getRunner();
+
+	/**
+	 * Returns the value of the '<em><b>System</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>System</em>' attribute.
+	 * @see #setSystem(boolean)
+	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_System()
+	 * @model
+	 * @generated
+	 */
+	boolean isSystem();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.tasks.model.ITask#isSystem <em>System</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>System</em>' attribute.
+	 * @see #isSystem()
+	 * @generated
+	 */
+	void setSystem(boolean value);
 
 	/**
 	 * <!-- begin-user-doc -->

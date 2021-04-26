@@ -2268,5 +2268,27 @@ WHERE kontakt.id IN (
 			<column name="MANDANT" />
 		</createIndex>
 	</changeSet>
+	<changeSet id="taskdescriptor_addsystemflag_22507" author="marco">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="TASKDESCRIPTOR"
+					columnName="SYSTEM" />
+			</not>
+		</preConditions>
+		<addColumn tableName="TASKDESCRIPTOR">
+			<column defaultValue="0" name="SYSTEM" type="CHAR(1)" />
+		</addColumn>
+	</changeSet>
+		<changeSet id="task_addsystemflag_22507" author="marco">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="TASK"
+					columnName="SYSTEM" />
+			</not>
+		</preConditions>
+		<addColumn tableName="TASK">
+			<column defaultValue="0" name="SYSTEM" type="CHAR(1)" />
+		</addColumn>
+	</changeSet>
     
 </databaseChangeLog>

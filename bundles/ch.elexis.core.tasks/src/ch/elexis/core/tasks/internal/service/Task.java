@@ -361,4 +361,14 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public LocalDateTime getFinishedAt(){
 		return getEntity().getFinishedAtLocalDateTime();
 	}
+
+	@Override
+	public boolean isSystem(){
+		return getEntity().isSystem();
+	}
+
+	@Override
+	public void setSystem(boolean value){
+		getEntity().setSystem(value);
+	}
 }

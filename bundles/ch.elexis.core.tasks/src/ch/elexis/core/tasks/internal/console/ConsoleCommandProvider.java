@@ -110,7 +110,8 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	}
 	
 	@CmdAdvisor(description = "list tasks and current state")
-	public void __task_list(){
+	public void __task_list(@CmdParam(required = false, description = "boolean: show system tasks")
+	String showSystemTasks){
 		List<ITask> runningTasks = taskService.getRunningTasks();
 		// Trigger	ID	Descriptor Id/RefId		StartTime		Progress (%)
 		prflp("State", 8);
@@ -148,6 +149,9 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		
 		IQuery<ITaskDescriptor> tdQuery =
 			taskModelService.getQuery(ITaskDescriptor.class, true, false);
+		if (!"true".equalsIgnoreCase(showSystemTasks)) {
+			tdQuery.and(ModelPackage.Literals.ITASK_DESCRIPTOR__SYSTEM, COMPARATOR.EQUALS, false);
+		}
 		tdQuery.orderBy(ModelPackage.Literals.ITASK_DESCRIPTOR__ACTIVE, ORDER.DESC);
 		tdQuery.orderBy(ModelPackage.Literals.ITASK_DESCRIPTOR__RUNNER, ORDER.DESC);
 		List<ITaskDescriptor> taskDescriptors = tdQuery.execute();
@@ -157,7 +161,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(state, 8);
 			prflp(td.getTriggerType().getName(), 11);
 			prflp("", 27);
-			prflp(td.getReferenceId(), 27);
+			prflp((td.isSystem() ? "S-" : "") + td.getReferenceId(), 27);
 			prflp("", 25);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
 			prflp(

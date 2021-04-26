@@ -80,8 +80,10 @@ public class RemoveTaskLogEntriesRunnable implements IIdentifiedRunnable {
 		IQuery<ITask> query = taskModelService.getQuery(ITask.class);
 		query.and(ModelPackage.Literals.ITASK__FINISHED_AT, COMPARATOR.LESS_OR_EQUAL,
 			ageBarrierInMilliseconds);
+		query.and(ModelPackage.Literals.ITASK__SYSTEM, COMPARATOR.EQUALS, false);
 		if (onlyNoError) {
-			query.and(ModelPackage.Literals.ITASK__STATE, COMPARATOR.EQUALS, TaskState.COMPLETED.getValue());
+			query.and(ModelPackage.Literals.ITASK__STATE, COMPARATOR.EQUALS,
+				TaskState.COMPLETED.getValue());
 		}
 		
 		List<ITask> itemsToDelete = query.execute();

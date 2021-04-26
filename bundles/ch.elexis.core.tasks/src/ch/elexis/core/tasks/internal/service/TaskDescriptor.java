@@ -205,5 +205,15 @@ public class TaskDescriptor
 	public Map<String, Object> getTransientData(){
 		return transientData;
 	}
+
+	@Override
+	public boolean isSystem(){
+		return getEntity().isSystem();
+	}
+
+	@Override
+	public void setSystem(boolean value){
+		getEntity().setSystem(value);
+	}
 	
 }
