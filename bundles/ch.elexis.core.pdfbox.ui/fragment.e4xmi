@@ -3,7 +3,6 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_SV2CgCNGEeuZOu9MR0MdyQ" featurename="descriptors" parentElementId="xpath:/">
     <elements xsi:type="basic:PartDescriptor" xmi:id="_TsfFUCNGEeuZOu9MR0MdyQ" elementId="ch.elexis.core.pdfbox.ui.partdescriptor.pdfpreview" label="PDF Vorschau" iconURI="platform:/plugin/ch.elexis.core.pdfbox.ui/rsc/icons/document-pdf.png" category="Dokumente" contributionURI="bundleclass://ch.elexis.core.pdfbox.ui/ch.elexis.core.pdfbox.ui.parts.PdfPreviewPart">
       <tags>View</tags>
-      <handlers xmi:id="_aP6HECPrEeuZOu9MR0MdyQ" elementId="ch.elexis.core.pdfbox.ui.handler.zoom" contributionURI="bundleclass://ch.elexis.core.pdfbox.ui/ch.elexis.core.pdfbox.ui.parts.handlers.PdfPreviewPartZoomHandler"/>
       <toolbar xmi:id="_jKVEYCPrEeuZOu9MR0MdyQ" elementId="ch.elexis.core.pdfbox.ui.toolbar.0">
         <children xsi:type="menu:DirectToolItem" xmi:id="_lu5S4CPrEeuZOu9MR0MdyQ" elementId="ch.elexis.core.pdfbox.ui.directtoolitem.zoom.in" label="" iconURI="platform:/plugin/ch.elexis.core.pdfbox.ui/rsc/icons/magnifier-zoom-in.png" contributionURI="bundleclass://ch.elexis.core.pdfbox.ui/ch.elexis.core.pdfbox.ui.parts.handlers.PdfPreviewPartZoomHandler">
           <tags>ZoomIn</tags>
