@@ -123,6 +123,13 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 	void activePatient(@Optional
 	IPatient patient){
 		Display.getDefault().asyncExec(() -> {
+			if (form != null && !form.isDisposed()) {
+				if (patient == null) {
+					form.setText(Messages.BriefAuswahlNoPatientSelected); //$NON-NLS-1$
+				} else {
+					form.setText(patient.getLabel());
+				}
+			}
 			refresh();
 		});
 	}
