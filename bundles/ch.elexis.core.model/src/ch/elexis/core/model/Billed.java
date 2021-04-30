@@ -84,7 +84,8 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 				oldEntity.getBilled().remove(getEntity());
 				addChanged(getEncounter());
 			}
-			Behandlung valueEntity = ((AbstractIdModelAdapter<Behandlung>) value).getEntity();
+			Behandlung valueEntity =
+				((AbstractIdModelAdapter<Behandlung>) value).getEntityMarkDirty();
 			// set both sides
 			getEntityMarkDirty().setBehandlung(valueEntity);
 			valueEntity.getBilled().add(getEntity());
