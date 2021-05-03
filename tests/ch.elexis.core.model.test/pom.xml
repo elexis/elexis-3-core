@@ -445,6 +445,11 @@
               <autoStart>true</autoStart>
             </bundle>
             <bundle>
+              <id>ch.elexis.core.test.context</id>
+              <level>4</level>
+              <autoStart>true</autoStart>
+            </bundle>
+            <bundle>
               <id>jakarta.persistence</id>
               <level>1</level>
               <autoStart>true</autoStart>
