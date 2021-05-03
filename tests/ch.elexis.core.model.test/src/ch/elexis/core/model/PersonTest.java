@@ -22,12 +22,14 @@ import ch.elexis.core.test.AbstractTest;
 
 public class PersonTest extends AbstractTest {
 
+	@Override
 	@Before
 	public void before() {
 		super.before();
-		super.createPerson();
+		super.createUserSetActiveInContext();
 	}
 
+	@Override
 	@After
 	public void after() {
 		super.after();
@@ -48,13 +50,12 @@ public class PersonTest extends AbstractTest {
 		IPerson findById = coreModelService.load(id, IPerson.class).get();
 		assertNotNull(findById);
 		assertEquals(MaritalStatus.MARRIED, findById.getMaritalStatus());
-		coreModelService.delete(person);
 	}
 
 	@Test
 	public void searchPersonByBirthDate() {
 		IQuery<IPerson> query = coreModelService.getQuery(IPerson.class);
-		Date theBirthDate = new GregorianCalendar(2016, 8, 1).getTime();
+		Date theBirthDate = new GregorianCalendar(1979, 6, 26).getTime();
 		LocalDate localDate = Instant.ofEpochMilli(theBirthDate.getTime()).atZone(ZoneId.systemDefault())
 				.toLocalDate();
 		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, localDate);

@@ -14,7 +14,7 @@ public class MessageTest extends AbstractTest {
 	@Before
 	public void before(){
 		super.before();
-		super.createUser();
+		super.createUserSetActiveInContext();
 	}
 	
 	@After

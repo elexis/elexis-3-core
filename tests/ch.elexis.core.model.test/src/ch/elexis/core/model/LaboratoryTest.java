@@ -12,59 +12,57 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.test.AbstractTest;
 
-public class LaboratoryTest {
-	private IModelService modelService;
+public class LaboratoryTest extends AbstractTest {
 	
+	@Override
 	@Before
 	public void before(){
-		modelService = OsgiServiceUtil.getService(IModelService.class,
-			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+		super.before();
 	}
 	
+	@Override
 	@After
 	public void after(){
-		OsgiServiceUtil.ungetService(modelService);
-		modelService = null;
+		super.after();
 	}
 	
 	@Test
 	public void create(){
-		ILaboratory laboratory = modelService.create(ILaboratory.class);
+		ILaboratory laboratory = coreModelService.create(ILaboratory.class);
 		assertNotNull(laboratory);
 		assertTrue(laboratory instanceof ILaboratory);
-		
+		assertTrue(laboratory.isLaboratory());
 		laboratory.setCode("TestLab");
 		laboratory.setDescription1("Laboratory Test");
-		assertTrue(modelService.save(laboratory));
+		assertTrue(coreModelService.save(laboratory));
 		
 		Optional<ILaboratory> loadedLaboratory =
-			modelService.load(laboratory.getId(), ILaboratory.class);
+			coreModelService.load(laboratory.getId(), ILaboratory.class);
 		assertTrue(loadedLaboratory.isPresent());
 		assertFalse(laboratory == loadedLaboratory.get());
 		assertEquals(laboratory, loadedLaboratory.get());
 		assertEquals(laboratory.getCode(), loadedLaboratory.get().getCode());
 		assertEquals(laboratory.getDescription1(), loadedLaboratory.get().getDescription1());
 		
-		modelService.remove(laboratory);
+		coreModelService.remove(laboratory);
 	}
 	
 	@Test
 	public void query(){
-		ILaboratory laboratory1 = modelService.create(ILaboratory.class);
+		ILaboratory laboratory1 = coreModelService.create(ILaboratory.class);
 		laboratory1.setCode("TestLab1");
 		laboratory1.setDescription1("Laboratory Test 1");
-		modelService.save(laboratory1);
-		ILaboratory laboratory2 = modelService.create(ILaboratory.class);
+		coreModelService.save(laboratory1);
+		ILaboratory laboratory2 = coreModelService.create(ILaboratory.class);
 		laboratory2.setCode("TestLab2");
 		laboratory2.setDescription1("Laboratory Test 2");
-		modelService.save(laboratory2);
+		coreModelService.save(laboratory2);
 		
-		IQuery<ILaboratory> query = modelService.getQuery(ILaboratory.class);
+		IQuery<ILaboratory> query = coreModelService.getQuery(ILaboratory.class);
 		query.startGroup();
 		query.or(ModelPackage.Literals.ICONTACT__CODE, COMPARATOR.LIKE, "%TestLab%");
 		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "%TestLab%");
@@ -73,7 +71,7 @@ public class LaboratoryTest {
 		assertFalse(existing.isEmpty());
 		assertEquals(2, existing.size());
 		
-		query = modelService.getQuery(ILaboratory.class);
+		query = coreModelService.getQuery(ILaboratory.class);
 		query.startGroup();
 		query.or(ModelPackage.Literals.ICONTACT__CODE, COMPARATOR.LIKE, "%Lab1%");
 		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "%Lab1%");
@@ -84,7 +82,7 @@ public class LaboratoryTest {
 		assertEquals(laboratory1.getCode(), existing.get(0).getCode());
 		assertEquals(laboratory1.getDescription1(), existing.get(0).getDescription1());
 		
-		modelService.remove(laboratory1);
-		modelService.remove(laboratory2);
+		coreModelService.remove(laboratory1);
+		coreModelService.remove(laboratory2);
 	}
 }

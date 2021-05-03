@@ -25,12 +25,14 @@ import ch.rgw.tools.TimeTool;
 
 public class PatientTest extends AbstractTest {
 	
+	@Override
 	@Before
 	public void before(){
 		super.before();
 		super.createPatient();
 	}
 	
+	@Override
 	@After
 	public void after(){
 		super.after();
@@ -52,7 +54,6 @@ public class PatientTest extends AbstractTest {
 		IContact findById = coreModelService.load(id, IContact.class).get();
 		assertNotNull(findById);
 		assertEquals("Birthname", findById.getExtInfo(PatientConstants.FLD_EXTINFO_BIRTHNAME));
-		coreModelService.delete(patient);
 	}
 	
 	@Test
@@ -90,7 +91,7 @@ public class PatientTest extends AbstractTest {
 		loaded = query.execute();
 		assertTrue(loaded.isEmpty());
 		
-		CoreModelServiceHolder.get().remove(patient1);
+		assertTrue(CoreModelServiceHolder.get().remove(patient1));
 	}
 	
 	@Test

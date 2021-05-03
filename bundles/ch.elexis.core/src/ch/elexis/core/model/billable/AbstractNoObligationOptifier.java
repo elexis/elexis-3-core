@@ -24,7 +24,7 @@ public abstract class AbstractNoObligationOptifier<T extends IBillable>
 	
 	public AbstractNoObligationOptifier(IModelService coreModelService,
 		IConfigService configService, IContextService contextService){
-		super(coreModelService);
+		super(coreModelService, contextService);
 		this.configService = configService;
 		this.contextService = contextService;
 	}

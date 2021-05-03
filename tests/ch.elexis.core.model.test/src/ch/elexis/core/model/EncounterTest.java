@@ -8,36 +8,35 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Optional;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.test.AbstractTest;
-import ch.elexis.core.types.Gender;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.VersionedResource;
 
 public class EncounterTest extends AbstractTest {
 	
-	public IMandator mandator;
-	
+	@Override
 	@Before
 	public void before(){
 		super.before();
-		createPatient();
-		createCoverage();
-		
-		IPerson mandatorPerson = new IContactBuilder.PersonBuilder(coreModelService, "Money", "Man",
-			LocalDate.now(), Gender.MALE).build();
-		mandatorPerson.setMandator(true);
-		coreModelService.save(mandatorPerson);
-		
-		mandator = coreModelService.load(mandatorPerson.getId(), IMandator.class).get();
+		super.createUserSetActiveInContext();
+		super.createMandator();
+		super.createPatient();
+		super.createCoverage();
+	}
+	
+	@Override
+	@After
+	public void after() {
+		super.after();
 	}
 	
 	@Test

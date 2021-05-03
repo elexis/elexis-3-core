@@ -26,12 +26,14 @@ import ch.elexis.core.types.RelationshipType;
 
 public class ContactTest extends AbstractTest {
 
+	@Override
 	@Before
 	public void before() {
 		super.before();
-		createPerson();
+		super.createPerson();
 	}
 
+	@Override
 	@After
 	public void after() {
 		super.after();
@@ -51,7 +53,7 @@ public class ContactTest extends AbstractTest {
 	public void getAgeInYears() {
 		IPerson findById = coreModelService.load(person.getId(), IPerson.class).get();
 		assertEquals(person.getId(), findById.getId());
-		assertEquals(LocalDate.of(2016, 9, 1), person.getDateOfBirth().toLocalDate());
+		assertEquals(LocalDate.of(1979, 7, 26), person.getDateOfBirth().toLocalDate());
 		int ageInYears = findById.getAgeInYears();
 		assertTrue(ageInYears >= 2);
 	}

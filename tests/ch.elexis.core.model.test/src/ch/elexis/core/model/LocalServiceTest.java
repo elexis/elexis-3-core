@@ -5,38 +5,36 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.test.AbstractTest;
-import ch.elexis.core.types.Gender;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 
 public class LocalServiceTest extends AbstractTest {
 	
-	public IMandator mandator;
-	
+	@Override
 	@Before
 	public void before(){
 		super.before();
-		createPatient();
-		createCoverage();
-		
-		IPerson mandatorPerson = new IContactBuilder.PersonBuilder(coreModelService, "Money", "Man",
-			LocalDate.now(), Gender.MALE).build();
-		mandatorPerson.setMandator(true);
-		coreModelService.save(mandatorPerson);
-		
-		mandator = coreModelService.load(mandatorPerson.getId(), IMandator.class).get();
+		super.createUserSetActiveInContext();
+		super.createMandator();
+		super.createPatient();
+		super.createCoverage();
+	}
+	
+	@Override
+	@After
+	public void after(){
+		super.after();
 	}
 	
 	@Test
@@ -51,7 +49,8 @@ public class LocalServiceTest extends AbstractTest {
 		service.setPrice(new Money(1024));
 		coreModelService.save(service);
 		
-		Optional<ICustomService> loaded = coreModelService.load(service.getId(), ICustomService.class);
+		Optional<ICustomService> loaded =
+			coreModelService.load(service.getId(), ICustomService.class);
 		assertTrue(loaded.isPresent());
 		assertFalse(service == loaded.get());
 		assertEquals(service, loaded.get());
@@ -90,6 +89,7 @@ public class LocalServiceTest extends AbstractTest {
 		coreModelService.remove(service1);
 	}
 	
+	
 	@Test
 	public void optifier(){
 		ICustomService service = coreModelService.create(ICustomService.class);
@@ -99,7 +99,9 @@ public class LocalServiceTest extends AbstractTest {
 		service.setPrice(new Money(13));
 		coreModelService.save(service);
 		
-		IEncounter encounter = new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
+		IEncounter encounter =
+			new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
+		// DER LEGT HIER IRGENDWIE EINEN PATIENT ZUSÄTZLICH AN!!
 		Result<IBilled> result = service.getOptifier().add(service, encounter, 1.5);
 		assertTrue(result.isOK());
 		assertFalse(encounter.getBilled().isEmpty());
@@ -109,6 +111,8 @@ public class LocalServiceTest extends AbstractTest {
 		assertEquals(service.getNetPrice(), billed.getNetPrice());
 		assertEquals(service.getText(), billed.getText());
 		
+		coreModelService.remove(billed);
+		coreModelService.remove(encounter);
 		coreModelService.remove(service);
 	}
 }

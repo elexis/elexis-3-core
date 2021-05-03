@@ -14,6 +14,7 @@ import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
@@ -44,6 +45,8 @@ public class AllServiceTests {
 		tdb.initializeMandant();
 		tdb.initializeLabResult();
 		tdb.initializePrescription();
+		
+		ContextServiceHolder.get().setActiveUser(tdb.getUser());
 	}
 	
 	public static IModelService getModelService(){

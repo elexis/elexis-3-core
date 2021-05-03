@@ -16,10 +16,11 @@ public class UserTest extends AbstractTest {
 	private IRole userRole;
 	private IRole testRole;
 	
+	@Override
 	@Before
 	public void before(){
 		super.before();
-		createPerson();
+		super.createPerson();
 		
 		userRole = coreModelService.create(IRole.class);
 		userRole.setSystemRole(true);
@@ -32,6 +33,7 @@ public class UserTest extends AbstractTest {
 		coreModelService.save(testRole);
 	}
 	
+	@Override
 	@After
 	public void after(){
 		coreModelService.remove(userRole);
