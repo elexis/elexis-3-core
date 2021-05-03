@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
@@ -61,31 +62,31 @@ public abstract class AbstractTest {
 		contextService.setActiveUser(null);
 		
 		if (encounter != null) {
-			coreModelService.remove(encounter);
+			assertTrue(coreModelService.remove(encounter));
 		}
 		if (coverage != null) {
-			coreModelService.remove(coverage);
+			assertTrue(coreModelService.remove(coverage));
 		}
 		if (localArticle != null) {
-			coreModelService.remove(localArticle);
-		}
-		if (person != null) {
-			coreModelService.remove(person);
-		}
-		if (mandator != null) {
-			coreModelService.remove(mandator);
-		}
-		if (patient != null) {
-			coreModelService.remove(patient);
+			assertTrue(coreModelService.remove(localArticle));
 		}
 		if (user != null) {
-			coreModelService.remove(user);
+			assertTrue(coreModelService.remove(user));
 		}
+		if (person != null) {
+			assertTrue(coreModelService.remove(person));
+		}
+		if (mandator != null) {
+			assertTrue(coreModelService.remove(mandator));
+		}
+		if (patient != null) {
+			assertTrue(coreModelService.remove(patient));
+		}
+
 		List<IPerson> execute = coreModelService.getQuery(IPerson.class, true, true).execute();
 		int size = execute.size();
-		if(size >0) {
-			new Throwable().printStackTrace();
-			System.out.println(execute);
+		if (size > 0) {
+			LoggerFactory.getLogger(getClass()).warn("multiple IPerson [{}]", execute.size(), new Throwable());
 		}
 		OsgiServiceUtil.ungetService(coreModelService);
 		coreModelService = null;
@@ -103,7 +104,7 @@ public abstract class AbstractTest {
 		contextService.setActiveUser(user);
 	}
 	
-	public void createPerson(){
+	public IPerson createPerson(){
 		LocalDate dob = LocalDate.of(1979, 7, 26);
 		person = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson", "TestPerson",
 			dob, Gender.FEMALE).buildAndSave();
@@ -112,6 +113,7 @@ public abstract class AbstractTest {
 		assertFalse(person.isOrganization());
 		assertFalse(person.isLaboratory());
 		assertFalse(person.isMandator());
+		return person;
 	}
 	
 	public void createMandator(){
