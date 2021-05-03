@@ -181,6 +181,12 @@ public abstract class AbstractModelService implements IModelService {
 					// clear dirty state before setting merged entity
 					setDbObject(identifiable, merged, true);
 				}
+				if (identifiable.getRefresh() != null) {
+					for (Identifiable toRefresh : identifiable.getRefresh()) {
+						refresh(toRefresh, true);
+					}
+					identifiable.clearRefresh();
+				}
 				if (newlyCreatedObject) {
 					postElexisEvent(getCreateEvent(identifiable));
 					postEvent(ElexisEventTopics.EVENT_CREATE, identifiable);
@@ -228,6 +234,12 @@ public abstract class AbstractModelService implements IModelService {
 				identifiables.stream().forEach(i -> {
 					if (i instanceof AbstractIdModelAdapter) {
 						setDbObject(i, mergedEntities.get(i), true);
+						if (i.getRefresh() != null) {
+							for (Identifiable toRefresh : i.getRefresh()) {
+								refresh(toRefresh, true);
+							}
+							i.clearRefresh();
+						}
 					}
 				});
 				createdEvents.stream().forEach(e -> postElexisEvent(e));

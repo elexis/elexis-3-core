@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Kontakt;
-import ch.elexis.core.jpa.entities.Rezept;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.prescription.Constants;
@@ -177,16 +176,11 @@ public class Prescription
 		if (value instanceof AbstractIdModelAdapter) {
 			// remove from existing
 			if (getRecipe() != null) {
-				Rezept oldEntity =
-					((AbstractIdModelAdapter<Rezept>) getRecipe()).getEntityMarkDirty();
-				oldEntity.getPrescriptions().remove(getEntity());
-				addChanged(getRecipe());
+				addRefresh(getRecipe());
 			}
-			Rezept valueEntity = ((AbstractIdModelAdapter<Rezept>) value).getEntity();
 			// set both sides
 			getEntityMarkDirty().setRezeptID(value.getId());
-			valueEntity.getPrescriptions().add(getEntity());
-			addChanged(value);
+			addRefresh(value);
 		}
 	}
 	

@@ -77,19 +77,14 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	@Override
 	public void setEncounter(IEncounter value){
 		if (value instanceof AbstractIdModelAdapter) {
-			// remove from existing
+			// refresh existing
 			if (getEncounter() != null) {
-				Behandlung oldEntity =
-					((AbstractIdModelAdapter<Behandlung>) getEncounter()).getEntityMarkDirty();
-				oldEntity.getBilled().remove(getEntity());
-				addChanged(getEncounter());
+				addRefresh(getEncounter());
 			}
 			Behandlung valueEntity =
-				((AbstractIdModelAdapter<Behandlung>) value).getEntityMarkDirty();
-			// set both sides
+				((AbstractIdModelAdapter<Behandlung>) value).getEntity();
 			getEntityMarkDirty().setBehandlung(valueEntity);
-			valueEntity.getBilled().add(getEntity());
-			addChanged(value);
+			addRefresh(value);
 		}
 	}
 	

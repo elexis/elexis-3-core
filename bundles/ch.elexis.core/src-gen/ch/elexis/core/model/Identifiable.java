@@ -112,4 +112,37 @@ public interface Identifiable {
 	default void clearChanged(){
 		
 	}
+
+	/**
+	 * <!-- begin-user-doc -->Add {@link Identifiable} to the list of {@link Identifiable} which are
+	 * affected by changes of this {@link Identifiable}. Used for example when setting
+	 * references.<!-- end-user-doc -->
+	 * 
+	 * @model kind="operation"
+	 *        type="ch.elexis.core.types.List&lt;ch.elexis.core.model.Identifiable&gt;" many="false"
+	 * @generated NOT
+	 */
+	default List<Identifiable> getRefresh(){
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @model
+	 * @generated NOT
+	 */
+	default void addRefresh(Identifiable changed){
+		
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @model
+	 * @generated NOT
+	 */
+	default void clearRefresh(){
+		
+	}
 } // Identifiable
