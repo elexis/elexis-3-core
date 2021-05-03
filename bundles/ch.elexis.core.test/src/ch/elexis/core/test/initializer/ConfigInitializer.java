@@ -17,6 +17,8 @@ public class ConfigInitializer {
 	public static final String UVG_REQUIREMENTS = "Kostenträger\\:K;Unfallnummer\\:T;Unfalldatum\\:D";
 
 	public void initializeConfiguration(IConfigService configService) {
+		// test_initSampleContacts initializes patient 1 and 2
+		configService.set("PatientNummer", "2");
 		initializeFallConfiguration(configService);
 	}
 
