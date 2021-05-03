@@ -29,6 +29,15 @@
       <eParameters name="changed" eType="#//Identifiable"/>
     </eOperations>
     <eOperations name="clearChanged"/>
+    <eOperations name="getRefresh">
+      <eGenericType eClassifier="ecore:EClass types.ecore#//List">
+        <eTypeArguments eClassifier="#//Identifiable"/>
+      </eGenericType>
+    </eOperations>
+    <eOperations name="addRefresh">
+      <eParameters name="changed" eType="#//Identifiable"/>
+    </eOperations>
+    <eOperations name="clearRefresh"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastupdate" unique="false"
         lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
         changeable="false"/>

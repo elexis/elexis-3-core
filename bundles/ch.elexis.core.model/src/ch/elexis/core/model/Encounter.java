@@ -63,16 +63,12 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		if (value != null) {
 			// remove from existing
 			if (getCoverage() != null) {
-				Fall oldEntity =
-					((AbstractIdModelAdapter<Fall>) getCoverage()).getEntityMarkDirty();
-				oldEntity.getConsultations().remove(getEntity());
-				addChanged(getCoverage());
+				addRefresh(getCoverage());
 			}
-			Fall valueEntity = ((AbstractIdModelAdapter<Fall>) value).getEntityMarkDirty();
+			Fall valueEntity = ((AbstractIdModelAdapter<Fall>) value).getEntity();
 			// set both sides
 			getEntityMarkDirty().setFall(valueEntity);
-			valueEntity.getConsultations().add(getEntity());
-			addChanged(value);
+			addRefresh(value);
 		}
 	}
 	

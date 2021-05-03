@@ -17,6 +17,7 @@ import ch.elexis.core.services.IModelService;
 
 public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements Identifiable {
 	
+	protected List<Identifiable> refreshList;
 	protected List<Identifiable> changedList;
 	protected ExtInfoHandler extInfoHandler;
 	
@@ -103,6 +104,24 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	@Override
 	public Long getLastupdate(){
 		return getEntity().getLastupdate() != null ? getEntity().getLastupdate() : 0L;
+	}
+	
+	@Override
+	public void addRefresh(Identifiable changed){
+		if (refreshList == null) {
+			refreshList = new ArrayList<Identifiable>();
+		}
+		refreshList.add(changed);
+	}
+	
+	@Override
+	public List<Identifiable> getRefresh(){
+		return refreshList;
+	}
+	
+	@Override
+	public void clearRefresh(){
+		refreshList = null;
 	}
 	
 	@Override
