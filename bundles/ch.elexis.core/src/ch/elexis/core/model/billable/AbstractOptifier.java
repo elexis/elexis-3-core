@@ -5,14 +5,17 @@ import java.util.List;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.builder.IBilledBuilder;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.rgw.tools.Result;
 
 public abstract class AbstractOptifier<T extends IBillable> implements IBillableOptifier<T> {
 	
 	protected IModelService coreModelService;
+	protected IContextService contextService;
 	
 	/**
 	 * Create an {@link AbstractOptifier} instance, and provide an {@link IModelService} for
@@ -20,8 +23,9 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 	 * 
 	 * @param coreModelService
 	 */
-	public AbstractOptifier(IModelService coreModelService){
+	public AbstractOptifier(IModelService coreModelService, IContextService contextService){
 		this.coreModelService = coreModelService;
+		this.contextService = contextService;
 	}
 	
 	@Override
@@ -43,7 +47,9 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 			}
 		}
 		if (!added) {
-			billed = new IBilledBuilder(coreModelService, billable, encounter).build();
+			IContact activeUserContact = contextService.getActiveUserContact().get();
+			billed = new IBilledBuilder(coreModelService, billable, encounter, activeUserContact)
+				.build();
 			setPrice(billable, billed);
 			billed.setAmount(amount);
 			if (save) {

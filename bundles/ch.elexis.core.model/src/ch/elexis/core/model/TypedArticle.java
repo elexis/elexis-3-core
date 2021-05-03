@@ -15,6 +15,7 @@ import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.ModelUtil;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.VatInfo;
@@ -263,7 +264,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	@Override
 	public synchronized IBillableOptifier<TypedArticle> getOptifier(){
 		if (optifier == null) {
-			optifier = new AbstractOptifier<TypedArticle>(CoreModelServiceHolder.get()) {
+			optifier = new AbstractOptifier<TypedArticle>(CoreModelServiceHolder.get(), ContextServiceHolder.get()) {
 				
 				@Override
 				protected void setPrice(TypedArticle billable, IBilled billed){

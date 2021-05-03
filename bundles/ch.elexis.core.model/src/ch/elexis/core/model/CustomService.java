@@ -9,6 +9,7 @@ import ch.elexis.core.model.billable.DefaultVerifier;
 import ch.elexis.core.model.localservice.Constants;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.rgw.tools.Money;
 
 public class CustomService
@@ -61,7 +62,7 @@ public class CustomService
 	@Override
 	public synchronized IBillableOptifier<CustomService> getOptifier(){
 		if (optifier == null) {
-			optifier = new AbstractOptifier<CustomService>(CoreModelServiceHolder.get()) {
+			optifier = new AbstractOptifier<CustomService>(CoreModelServiceHolder.get(), ContextServiceHolder.get()) {
 				
 				@Override
 				protected void setPrice(CustomService billable, IBilled billed){

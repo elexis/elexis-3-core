@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,14 +24,17 @@ import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.IBillingSystemService;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.rgw.tools.Money;
 
 public abstract class AbstractTest {
 	
 	protected IModelService coreModelService;
+	protected IContextService contextService;
 	
 	protected IUser user;
 	protected IPerson person;
@@ -44,6 +48,7 @@ public abstract class AbstractTest {
 	public void before(){
 		coreModelService = OsgiServiceUtil.getService(IModelService.class,
 			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+		contextService = OsgiServiceUtil.getService(IContextService.class).get();
 	}
 	
 	/**
@@ -52,6 +57,9 @@ public abstract class AbstractTest {
 	 */
 	@After
 	public void after(){
+		
+		contextService.setActiveUser(null);
+		
 		if (encounter != null) {
 			coreModelService.remove(encounter);
 		}
@@ -73,20 +81,30 @@ public abstract class AbstractTest {
 		if (user != null) {
 			coreModelService.remove(user);
 		}
-		
+		List<IPerson> execute = coreModelService.getQuery(IPerson.class, true, true).execute();
+		int size = execute.size();
+		if(size >0) {
+			new Throwable().printStackTrace();
+			System.out.println(execute);
+		}
 		OsgiServiceUtil.ungetService(coreModelService);
 		coreModelService = null;
 	}
 	
-	public void createUser(){
+	/**
+	 * includes {@link #createPerson()}
+	 */
+	public void createUserSetActiveInContext(){
 		if (person == null) {
 			createPerson();
 		}
 		user = new IUserBuilder(coreModelService, "b_a_barracus", person).buildAndSave();
+		
+		contextService.setActiveUser(user);
 	}
 	
 	public void createPerson(){
-		LocalDate dob = LocalDate.of(2016, 9, 1);
+		LocalDate dob = LocalDate.of(1979, 7, 26);
 		person = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson", "TestPerson",
 			dob, Gender.FEMALE).buildAndSave();
 		assertTrue(person.isPerson());
@@ -108,7 +126,7 @@ public abstract class AbstractTest {
 	
 	public void createPatient(){
 		LocalDate dob = LocalDate.of(2016, 9, 1);
-		patient = (IPatient) new IContactBuilder.PatientBuilder(coreModelService, "TestPatient",
+		patient = new IContactBuilder.PatientBuilder(coreModelService, "TestPatient",
 			"TestPatient", dob, Gender.MALE).buildAndSave();
 		assertTrue(patient.isPerson());
 		assertTrue(patient.isPatient());
@@ -156,6 +174,8 @@ public abstract class AbstractTest {
 		localArticle.setGtin("0000001111111");
 		localArticle.setPackageSize(12);
 		localArticle.setSellingSize(12);
+		localArticle.setSellingPrice(new Money(150));
+		localArticle.setPurchasePrice(new Money(100));
 		coreModelService.save(localArticle);
 	}
 }
