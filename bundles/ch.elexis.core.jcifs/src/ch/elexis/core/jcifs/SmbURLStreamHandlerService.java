@@ -3,6 +3,7 @@ package ch.elexis.core.jcifs;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Properties;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jcifs.CIFSContext;
+import jcifs.CIFSException;
 import jcifs.context.SingletonContext;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
@@ -22,6 +24,20 @@ import jcifs.smb.SmbFile;
 public class SmbURLStreamHandlerService extends AbstractURLStreamHandlerService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	static {
+		try {
+			// provide system properties as described in
+			// https://github.com/AgNO3/jcifs-ng/blob/master/src/main/java/jcifs/config/PropertyConfiguration.java
+			Properties properties = new Properties();
+			if (System.getProperty("jcifs.smb.client.responseTimeout") == null) {
+				properties.setProperty("jcifs.smb.client.responseTimeout", "15000");
+			}
+			SingletonContext.init(properties);
+		} catch (CIFSException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@Override
 	public URLConnection openConnection(URL url) throws IOException{
