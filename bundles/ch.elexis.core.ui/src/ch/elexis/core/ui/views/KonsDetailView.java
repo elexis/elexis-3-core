@@ -83,12 +83,12 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.dialogs.AssignStickerDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
@@ -120,7 +120,7 @@ import ch.rgw.tools.VersionedResource.ResourceItem;
  * 
  */
 public class KonsDetailView extends ViewPart
-		implements IActivationListener, IUnlockable {
+		implements IUnlockable {
 	
 	public static final String ID = "ch.elexis.Konsdetail"; //$NON-NLS-1$
 	
@@ -158,6 +158,38 @@ public class KonsDetailView extends ViewPart
 	
 	private boolean created = false;
 	
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this) {
+		
+		public void partActivated(org.eclipse.ui.IWorkbenchPartReference partRef){
+			if (isMatchingPart(partRef)) {
+				if (actEncounter != null && !text.isDirty()) {
+					setKonsText(actEncounter, actEncounter.getVersionedEntry().getHeadVersion());
+				}
+			}
+		};
+		
+		public void partDeactivated(org.eclipse.ui.IWorkbenchPartReference partRef){
+			if (isMatchingPart(partRef)) {
+				// save entry on deactivation if text was edited
+				if (actEncounter != null && (text.isDirty())) {
+					actEncounter.getVersionedEntry().update(text.getContentsAsXML(),
+						getVersionRemark());
+					text.setDirty(false);
+					CoreModelServiceHolder.get().save(actEncounter);
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+						actEncounter);
+				}
+			}
+		};
+		
+		public void partVisible(org.eclipse.ui.IWorkbenchPartReference partRef){
+			// do not call super and refresh, should be handled by partActivated
+			if (isMatchingPart(partRef)) {
+				adaptMenus();
+			}
+		};
+	};
+	
 	@Optional
 	@Inject
 	void udpatePatient(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient){
@@ -186,15 +218,6 @@ public class KonsDetailView extends ViewPart
 		}
 	}
 	
-	//	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class,
-	//		ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_RELOAD) {
-	//		@Override
-	//		public void runInUi(ElexisEvent ev){
-	//			actPat = null; // make sure patient will be updated
-	//			setPatient((Patient) ev.getObject());
-	//		};
-	//	};
-	
 	@Inject
 	void changedMandator(
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser mandator){
@@ -205,28 +228,12 @@ public class KonsDetailView extends ViewPart
 		}
 	}
 	
-	//	private final ElexisEventListener eeli_user =
-	//		new ElexisUiEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
-	//			@Override
-	//			public void runInUi(ElexisEvent ev){
-	//				adaptMenus();
-	//			}
-	//		};
-	
 	@Inject
 	void reloadCoverage(@Optional @UIEventTopic(ElexisEventTopics.EVENT_RELOAD) ICoverage coverage){
 		if (created) {
 			updateFallCombo();
 		}
 	}
-	
-	//	private final ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class,
-	//		ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_DELETE) {
-	//		@Override
-	//		public void runInUi(ElexisEvent ev){
-	//			updateFallCombo();
-	//		};
-	//	};
 	
 	@Inject
 	void lockPreRelease(
@@ -237,17 +244,6 @@ public class KonsDetailView extends ViewPart
 			}
 		}
 	}
-	
-	//	private final ElexisEventListener eeli_kons_sync =
-	//		new ElexisUiSyncEventListenerImpl(Konsultation.class, ElexisEvent.EVENT_LOCK_PRERELEASE) {
-	//			@Override
-	//			public void runInUi(ElexisEvent ev){
-	//				Konsultation kons = (Konsultation) ev.getObject();
-	//				if (kons.equals(actEncounter)) {
-	//					save();
-	//				}
-	//			}
-	//		};
 	
 	@Inject
 	void selectedEncounter(@Optional IEncounter encounter){
@@ -312,45 +308,6 @@ public class KonsDetailView extends ViewPart
 			}
 		}
 	}
-	
-	//	private final ElexisEventListener eeli_kons =
-	//		new ElexisUiEventListenerImpl(Konsultation.class,
-	//			ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED
-	//				| ElexisEvent.EVENT_LOCK_AQUIRED | ElexisEvent.EVENT_LOCK_RELEASED
-	//				| ElexisEvent.EVENT_UPDATE) {
-	//			@Override
-	//			public void runInUi(ElexisEvent ev){
-	//				Konsultation kons = (Konsultation) ev.getObject();
-	//				Konsultation deselectedKons = null;
-	//				switch (ev.getType()) {
-	//				case ElexisEvent.EVENT_SELECTED:
-	//					deselectedKons = actEncounter;
-	//					setKons(kons);
-	//					releaseAndRefreshLock(deselectedKons,
-	//						ToggleCurrentKonsultationLockHandler.COMMAND_ID);
-	//					break;
-	//				case ElexisEvent.EVENT_UPDATE:
-	//					if (kons != null && kons.equals(actEncounter)) {
-	//						setKons(kons);
-	//					}
-	//					break;
-	//				case ElexisEvent.EVENT_DESELECTED:
-	//					deselectedKons = actEncounter;
-	//					setKons(null);
-	//					releaseAndRefreshLock(deselectedKons,
-	//						ToggleCurrentKonsultationLockHandler.COMMAND_ID);
-	//					break;
-	//				case ElexisEvent.EVENT_LOCK_AQUIRED:
-	//				case ElexisEvent.EVENT_LOCK_RELEASED:
-	//					if (kons.equals(actEncounter)) {
-	//						setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
-	//					}
-	//					break;
-	//				default:
-	//					break;
-	//				}
-	//			}
-	//		};
 	
 	private void releaseAndRefreshLock(Object object){
 		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
@@ -518,6 +475,8 @@ public class KonsDetailView extends ViewPart
 		// initialize with currently selected encounter
 		created = true;
 		ContextServiceHolder.get().getTyped(IEncounter.class).ifPresent(e -> selectedEncounter(e));
+		
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
 	@Override
@@ -561,11 +520,10 @@ public class KonsDetailView extends ViewPart
 	@Override
 	public void dispose(){
 		created = false;
-		//		GlobalEventDispatcher.removeActivationListener(this, this);
+		getSite().getPage().removePartListener(udpateOnVisible);
 		if (text != null) {
 			text.disconnectGlobalActions(getViewSite());
 		}
-		// emFont.dispose();
 		super.dispose();
 	}
 	
@@ -848,30 +806,6 @@ public class KonsDetailView extends ViewPart
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
 		CoreUiUtil.updateFixLayout(part, currentState);
-	}
-	
-	@Override
-	public void activation(boolean mode){
-		if (mode == false) {
-			// save entry on deactivation if text was edited
-			if (actEncounter != null && (text.isDirty())) {
-				actEncounter.getVersionedEntry().update(text.getContentsAsXML(),
-					getVersionRemark());
-				text.setDirty(false);
-			}
-		} else {
-			// load newest version on activation, if there are no local changes
-			if (actEncounter != null && !text.isDirty()) {
-				setKonsText(actEncounter, actEncounter.getVersionedEntry().getHeadVersion());
-			}
-		}
-	}
-	
-	@Override
-	public void visible(boolean mode){
-		if (mode == true) {
-			adaptMenus();
-		}
 	}
 	
 	private class ComboFallSelectionListener implements ISelectionChangedListener {
