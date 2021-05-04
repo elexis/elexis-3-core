@@ -277,7 +277,7 @@ public class ContextService implements IContextService, EventHandler {
 						postEvent(ElexisEventTopics.EVENT_RELOAD,
 							modelClass.get());
 					} else {
-						logger.warn(
+						logger.debug(
 							"Could not get model class for [" + object + "] ignored reload event");
 					}
 				} else {
