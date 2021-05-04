@@ -93,6 +93,7 @@ public class TestDatabaseInitializer {
 	
 	private IModelService modelService;
 	private IElexisEntityManager entityManager;
+	private IConfigService configService;
 	
 	public TestDatabaseInitializer(IModelService modelService, IElexisEntityManager entityManager){
 		this.modelService = modelService;
@@ -100,7 +101,11 @@ public class TestDatabaseInitializer {
 	}
 	
 	public synchronized void initializeDb() throws IOException, SQLException{
-		initializeDb(null);
+		initializeDb(configService);
+	}
+	
+	public void setConfigService(IConfigService configService){
+		this.configService = configService;
 	}
 	
 	/**
@@ -592,5 +597,7 @@ public class TestDatabaseInitializer {
 	public IArticle getArticle(){
 		return article;
 	}
+
+
 	
 }
