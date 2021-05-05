@@ -132,6 +132,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 				ElexisEventDispatcher.fireSelectionEvent(load);
 				Fall f = load.getFall();
 				if (f != null) {
+					ElexisEventDispatcher.fireSelectionEvent(f.getPatient());
 					ElexisEventDispatcher.fireSelectionEvent(f);
 				}
 			}
