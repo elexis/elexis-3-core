@@ -26,10 +26,14 @@ public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJo
 
 	@Override
 	public void setMyContact(IContact value) {
+		if (getMyContact() != null) {
+			addRefresh(getMyContact());
+		}
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
 				getEntityMarkDirty()
 					.setMyKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+				addRefresh(value);
 			}
 		} else {
 			getEntityMarkDirty().setMyKontakt(null);
@@ -46,10 +50,14 @@ public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJo
 
 	@Override
 	public void setOtherContact(IContact value) {
+		if (getOtherContact() != null) {
+			addRefresh(getOtherContact());
+		}
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
 				getEntityMarkDirty()
 					.setOtherKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+				addRefresh(value);
 			}
 		} else {
 			getEntityMarkDirty().setOtherKontakt(null);

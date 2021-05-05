@@ -96,10 +96,14 @@ public class Address extends AbstractIdDeleteModelAdapter<ZusatzAdresse>
 	
 	@Override
 	public void setContact(IContact value){
+		if (getContact() != null) {
+			addRefresh(getContact());
+		}
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
 				getEntityMarkDirty()
 					.setContact((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+				addRefresh(value);
 			}
 		} else {
 			getEntityMarkDirty().setContact(null);

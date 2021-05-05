@@ -65,8 +65,8 @@ public class ContactTest extends AbstractTest {
 		nursingHome.setStreet2("Street2");
 		nursingHome.setZip("6840");
 		nursingHome.setCountry(Country.AT);
-		person.addAddress(nursingHome);
-		coreModelService.save(Arrays.asList(nursingHome, person));
+		nursingHome.setContact(person);
+		coreModelService.save(Arrays.asList(person, nursingHome));
 
 		assertTrue(person.getAddress().contains(nursingHome));
 		coreModelService.delete(nursingHome);
@@ -93,6 +93,16 @@ public class ContactTest extends AbstractTest {
 	}
 
 	@Test
+	public void createWithDefaultAddress(){
+		IOrganization employer =
+			new IContactBuilder.OrganizationBuilder(coreModelService, "MEDEVIT")
+				.defaultAddress("street", "zip", "city", Country.NDF).buildAndSave();
+		
+		assertNotNull(employer);
+		assertFalse(employer.getAddress().isEmpty());
+	}
+	
+	@Test
 	public void createRemoveRelatedContact() {
 		IOrganization employer = new IContactBuilder.OrganizationBuilder(coreModelService, "MEDEVIT").buildAndSave();
 		IPerson findById = coreModelService.load(person.getId(), IPerson.class).get();
@@ -102,8 +112,8 @@ public class ContactTest extends AbstractTest {
 		relatedContact.setMyType(RelationshipType.BUSINESS_EMPLOYEE);
 		relatedContact.setOtherType(RelationshipType.BUSINESS_EMPLOYER);
 		relatedContact.setRelationshipDescription("blabla");
-		relatedContact = findById.addRelatedContact(relatedContact);
-		coreModelService.save(Arrays.asList(relatedContact, findById));
+		relatedContact.setMyContact(findById);
+		coreModelService.save(relatedContact);
 
 		IRelatedContact iRelatedContact = findById.getRelatedContacts().get(0);
 		assertEquals(relatedContact.getId(), iRelatedContact.getId());

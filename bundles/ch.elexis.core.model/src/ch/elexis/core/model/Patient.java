@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
-import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.IQuery;
@@ -95,15 +93,6 @@ public class Patient extends Person implements IPatient {
 		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getFaelle().stream().filter(f -> !f.isDeleted())
 			.map(f -> ModelUtil.getAdapter(f, ICoverage.class)).collect(Collectors.toList());
-	}
-
-
-	@Override
-	public ICoverage addCoverage(ICoverage coverage){
-		@SuppressWarnings("unchecked")
-		Fall fall = ((AbstractIdModelAdapter<Fall>) coverage).getEntity();
-		getEntityMarkDirty().getFaelle().add(fall);
-		return coverage;
 	}
 
 	@Override

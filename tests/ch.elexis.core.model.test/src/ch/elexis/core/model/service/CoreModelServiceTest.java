@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -279,12 +280,14 @@ public class CoreModelServiceTest {
 	public void deepCascadedRefresh(){
 		IContact contact = modelService.create(IContact.class);
 		contact.setDescription1("testContact");
-		IRelatedContact relatedContact1 = modelService.create(IRelatedContact.class);
-		contact.addRelatedContact(relatedContact1);
-		IRelatedContact relatedContact2 = modelService.create(IRelatedContact.class);
-		contact.addRelatedContact(relatedContact2);
-		assertEquals(2, contact.getRelatedContacts().size());
 		modelService.save(contact);
+		IRelatedContact relatedContact1 = modelService.create(IRelatedContact.class);
+		relatedContact1.setMyContact(contact);
+		IRelatedContact relatedContact2 = modelService.create(IRelatedContact.class);
+		relatedContact2.setMyContact(contact);
+		modelService.save(Arrays.asList(relatedContact1, relatedContact2));
+		assertEquals(2, contact.getRelatedContacts().size());
+		
 		
 		EntityManager em = (EntityManager) OsgiServiceUtil.getService(IElexisEntityManager.class)
 			.get().getEntityManager(true);

@@ -530,7 +530,6 @@ public class TestDatabaseInitializer {
 			mapping.setOrigin(laboratory2);
 			mapping.setItemName("TEST_NUMERIC_EXT");
 			modelService.save(mapping);
-			labItem.addMapping(mapping);
 			modelService.save(labItem);
 			
 			ILabItem textILabItem = new ILabItemBuilder(modelService, "TEST TEXT",

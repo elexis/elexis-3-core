@@ -232,14 +232,6 @@ public interface IPatient extends IPerson {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model coverageRequired="true"
-	 * @generated
-	 */
-	ICoverage addCoverage(ICoverage coverage);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
 	 * @model type="ch.elexis.core.types.List&lt;ch.elexis.core.model.IPrescription&gt;" many="false" filterTypeDataType="ch.elexis.core.types.EntryType" filterTypeMany="true"
 	 * @generated
 	 */

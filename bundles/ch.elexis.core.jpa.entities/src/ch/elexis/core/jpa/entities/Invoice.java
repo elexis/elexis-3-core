@@ -89,20 +89,16 @@ public class Invoice extends AbstractEntityWithId
 	@Column(length = 8, name = "Betrag")
 	protected String amount;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "rechnungid")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.REFRESH)
 	private List<VerrechnetCopy> invoiceBilled;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "rechnungsid")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.REFRESH)
 	private List<Behandlung> encounters;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "rechnungsid")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.REFRESH)
 	private List<Zahlung> payments;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "rechnungsid")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.REFRESH)
 	private List<AccountTransaction> transactions;
 	
 	public String getNumber() {

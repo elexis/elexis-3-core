@@ -75,8 +75,7 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	@JoinTable(name = "behdl_dg_joint", joinColumns = @JoinColumn(name = "BehandlungsID"), inverseJoinColumns = @JoinColumn(name = "DiagnoseID"))
 	private List<Diagnosis> diagnoses;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "behandlung")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "behandlung", cascade = CascadeType.REFRESH)
 	@OrderBy("klasse ASC, leistungenCode ASC")
 	private List<Verrechnet> billed;
 

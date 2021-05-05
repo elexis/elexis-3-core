@@ -27,10 +27,15 @@ public class AccountTransaction
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setInvoice(IInvoice value){
+		if (getInvoice() != null) {
+			addRefresh(getInvoice());
+		}
 		if (value instanceof AbstractIdModelAdapter) {
-			// TODO modify patient if opposite reference is available
 			getEntityMarkDirty().setInvoice(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
+			addRefresh(value);
+		} else if (value == null) {
+			getEntityMarkDirty().setInvoice(null);
 		}
 	}
 	

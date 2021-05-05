@@ -80,7 +80,9 @@ public class IContactBuilder {
 			defaultAddress.setZip(zip);
 			defaultAddress.setCity(city);
 			defaultAddress.setCountry(country);
-			object.addAddress(defaultAddress);
+			defaultAddress.setContact(object);
+			// include address on save by adding to changed
+			object.addChanged(defaultAddress);
 			return this;
 		}
 	}

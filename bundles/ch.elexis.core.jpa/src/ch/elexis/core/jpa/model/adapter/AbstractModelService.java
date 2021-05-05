@@ -6,15 +6,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
@@ -203,8 +200,10 @@ public abstract class AbstractModelService implements IModelService {
 	@Override
 	public boolean save(List<? extends Identifiable> identifiables){
 		identifiables = addChanged(identifiables);
-		Map<Identifiable, EntityWithId> dbObjects = identifiables.parallelStream()
-			.collect(Collectors.toMap(Function.identity(), i -> getDbObject(i).orElse(null)));
+		Map<Identifiable, EntityWithId> dbObjects = new HashMap<Identifiable, EntityWithId>();
+		for (Identifiable identifiable : identifiables) {
+			dbObjects.put(identifiable, getDbObject(identifiable).orElse(null));
+		}
 		if (!dbObjects.isEmpty()) {
 			EntityManager em = getEntityManager(false);
 			try {
@@ -213,14 +212,11 @@ public abstract class AbstractModelService implements IModelService {
 				List<Identifiable> createdIdentifiables = new ArrayList<>();
 				Map<Identifiable, EntityWithId> mergedEntities = new HashMap<>();
 				em.getTransaction().begin();
-				for (Identifiable identifiable : dbObjects.keySet()) {
+				for (Identifiable identifiable : identifiables) {
 					EntityWithId dbObject = dbObjects.get(identifiable);
 					if (dbObject != null) {
 						boolean newlyCreatedObject = (dbObject.getLastupdate() == null);
-						// if entity was merged before due to reference from other entity
-						// lastupdate gets overwritten with value of detached entity 
-						// so prepare with current lastupdate
-						dbObject.setLastupdate(System.currentTimeMillis());
+						
 						EntityWithId merged = em.merge(dbObject);
 						mergedEntities.put(identifiable, merged);
 						if (newlyCreatedObject) {
@@ -255,17 +251,20 @@ public abstract class AbstractModelService implements IModelService {
 	}
 	
 	protected List<? extends Identifiable> addChanged(List<? extends Identifiable> identifiables){
-		HashSet<Identifiable> uniqIdentifiables = new HashSet<Identifiable>();
+		List<Identifiable> ret = new ArrayList<Identifiable>();
+		ret.addAll(identifiables);
 		identifiables.forEach(
 			i -> {
 				if(i.getChanged() != null) {
-					uniqIdentifiables.addAll(i.getChanged());
+					for (Identifiable changed : i.getChanged()) {
+						if (!ret.contains(changed)) {
+							ret.add(changed);
+						}
+					}
 					i.clearChanged();
-				} else {
-					uniqIdentifiables.add(i);
 				}
 			});
-		return new ArrayList<Identifiable>(uniqIdentifiables);
+		return ret;
 	}
 	
 	@Override

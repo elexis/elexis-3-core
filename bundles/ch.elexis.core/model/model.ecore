@@ -65,12 +65,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IContact" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable #//WithExtInfo">
-    <eOperations name="addAddress" eType="#//IAddress">
-      <eParameters name="address" eType="#//IAddress"/>
-    </eOperations>
-    <eOperations name="addRelatedContact" eType="#//IRelatedContact">
-      <eParameters name="relatedContact" eType="#//IRelatedContact"/>
-    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="user" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="patient" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -147,9 +141,6 @@
     <eOperations name="setPatientNr">
       <eParameters name="patientNr" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
-    <eOperations name="addCoverage" eType="#//ICoverage">
-      <eParameters name="coverage" lowerBound="1" eType="#//ICoverage"/>
-    </eOperations>
     <eOperations name="getMedication">
       <eGenericType eClassifier="ecore:EClass types.ecore#//List">
         <eTypeArguments eClassifier="#//IPrescription"/>
@@ -199,12 +190,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ILabItem" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
-    <eOperations name="addMapping" eType="#//ILabMapping">
-      <eParameters name="mapping" lowerBound="1" eType="#//ILabMapping"/>
-    </eOperations>
-    <eOperations name="removeMapping" lowerBound="1">
-      <eParameters name="mapping" eType="#//ILabMapping"/>
-    </eOperations>
     <eOperations name="getVariableName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="the variable name of this LabItem as used in LabItems of type formula for cross-reference"/>

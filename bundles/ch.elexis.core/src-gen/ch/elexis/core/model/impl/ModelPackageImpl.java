@@ -5541,12 +5541,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIContact_RelatedContacts(), this.getIRelatedContact(), null, "relatedContacts", null, 0, -1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIContact_Deceased(), ecorePackage.getEBoolean(), "deceased", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		op = addEOperation(iContactEClass, this.getIAddress(), "addAddress", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getIAddress(), "address", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		op = addEOperation(iContactEClass, this.getIRelatedContact(), "addRelatedContact", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getIRelatedContact(), "relatedContact", 0, 1, IS_UNIQUE, IS_ORDERED);
-
 		initEClass(iPersonEClass, IPerson.class, "IPerson", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIPerson_DateOfBirth(), theTypesPackage.getLocalDateTime(), "dateOfBirth", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPerson_Gender(), theTypesPackage.getGender(), "gender", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -5583,9 +5577,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(iPatientEClass, null, "setPatientNr", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "patientNr", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		op = addEOperation(iPatientEClass, this.getICoverage(), "addCoverage", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getICoverage(), "coverage", 1, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = addEOperation(iPatientEClass, null, "getMedication", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theTypesPackage.getEntryType(), "filterType", 0, -1, IS_UNIQUE, IS_ORDERED);
@@ -5635,12 +5626,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getILabItem_BillingCode(), ecorePackage.getEString(), "billingCode", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabItem_Export(), ecorePackage.getEString(), "export", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getILabItem_Mappings(), this.getILabMapping(), null, "mappings", null, 0, -1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		op = addEOperation(iLabItemEClass, this.getILabMapping(), "addMapping", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getILabMapping(), "mapping", 1, 1, IS_UNIQUE, IS_ORDERED);
-
-		op = addEOperation(iLabItemEClass, null, "removeMapping", 1, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getILabMapping(), "mapping", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		addEOperation(iLabItemEClass, ecorePackage.getEString(), "getVariableName", 0, 1, IS_UNIQUE, IS_ORDERED);
 

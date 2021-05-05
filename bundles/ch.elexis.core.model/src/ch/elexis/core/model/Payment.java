@@ -26,9 +26,13 @@ public class Payment
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setInvoice(IInvoice value){
+		if (getInvoice() != null) {
+			addRefresh(getInvoice());
+		}
 		if (value instanceof AbstractIdModelAdapter) {
 			getEntityMarkDirty().setInvoice(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
+			addRefresh(value);
 		} else if (value == null) {
 			getEntityMarkDirty().setInvoice(null);
 		}

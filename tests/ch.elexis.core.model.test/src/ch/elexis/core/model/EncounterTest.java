@@ -2,11 +2,15 @@ package ch.elexis.core.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
@@ -129,6 +133,7 @@ public class EncounterTest extends AbstractTest {
 		coreModelService.remove(encounter);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void modifyBilled(){
 		ICustomService service = coreModelService.create(ICustomService.class);
@@ -158,6 +163,54 @@ public class EncounterTest extends AbstractTest {
 		
 		coreModelService.remove(service);
 		coreModelService.remove(encounter);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void multiThreadMappedProperties() throws InterruptedException{
+		IEncounter encounter =
+			new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
+		coreModelService.save(encounter);
+		
+		ExecutorService executor = Executors.newFixedThreadPool(3);
+		
+		for (int i = 0; i < 100; i++) {
+			final int number = i;
+			executor.execute(() -> {
+				contextService.setActiveUser(user);
+				
+				ICustomService service = coreModelService.create(ICustomService.class);
+				service.setCode("code" + number);
+				service.setNetPrice(new Money(number));
+				service.setPrice(new Money(number));
+				service.setText("test" + number);
+				coreModelService.save(service);
+				
+				Result<IBilled> result = service.getOptifier().add(service, encounter, 1);
+				assertNotNull(result);
+				assertTrue(result.isOK());
+			});
+			executor.execute(() -> {
+				VersionedResource vr = VersionedResource.load(null);
+				vr.update("Test consultation\nmulti billing " + number, "Administrator");
+				encounter.setVersionedEntry(vr);
+				coreModelService.save(encounter);
+			});
+		}
+		executor.shutdown();
+		executor.awaitTermination(5, TimeUnit.SECONDS);
+		assertEquals(100, encounter.getBilled().size());
+		assertTrue(encounter.getLastupdate() > 0);
+		for (IBilled billed : encounter.getBilled()) {
+			assertTrue(billed.getLastupdate() > 0);
+		}
+		
+		coreModelService.remove(encounter);
+		
+		IQuery<ICustomService> query = coreModelService.getQuery(ICustomService.class);
+		for (ICustomService service : query.execute()) {
+			coreModelService.remove(service);
+		}
 	}
 	
 	@Test

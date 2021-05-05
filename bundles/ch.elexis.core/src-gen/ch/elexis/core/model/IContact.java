@@ -734,20 +734,4 @@ public interface IContact extends Identifiable, Deleteable, WithExtInfo {
 	 */
 	void setDeceased(boolean value);
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	IAddress addAddress(IAddress address);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	IRelatedContact addRelatedContact(IRelatedContact relatedContact);
-
 } // IContact
