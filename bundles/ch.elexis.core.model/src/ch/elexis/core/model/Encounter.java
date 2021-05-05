@@ -160,14 +160,14 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setInvoice(IInvoice value){
+		if (getInvoice() != null) {
+			addRefresh(getInvoice());
+		}
 		if (value != null) {
 			getEntityMarkDirty().setInvoice(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
 			addRefresh(value);
 		} else {
-			if (getInvoice() != null) {
-				addRefresh(getInvoice());
-			}
 			getEntityMarkDirty().setInvoice(null);
 		}
 	}
