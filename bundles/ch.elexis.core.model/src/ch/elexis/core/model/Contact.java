@@ -11,7 +11,6 @@ import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.KontaktAdressJoint;
 import ch.elexis.core.jpa.entities.ZusatzAdresse;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.format.PostalAddress;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
@@ -283,18 +282,9 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	@Override
 	public List<IAddress> getAddress() {
 		CoreModelServiceHolder.get().refresh(this);
-		ArrayList<ZusatzAdresse> addresses = new ArrayList<>(getEntity().getAddresses().values());
+		ArrayList<ZusatzAdresse> addresses = new ArrayList<>(getEntity().getAddresses());
 		return addresses.parallelStream().filter(f -> !f.isDeleted())
 				.map(f -> ModelUtil.getAdapter(f, IAddress.class, true)).collect(Collectors.toList());
-	}
-
-	@Override
-	public IAddress addAddress(IAddress address) {
-		address.setContact(this);
-		@SuppressWarnings("unchecked")
-		ZusatzAdresse addresse = ((AbstractIdModelAdapter<ZusatzAdresse>) address).getEntity();
-		getEntityMarkDirty().getAddresses().put(address.getId(), addresse);
-		return address;
 	}
 
 	@Override
@@ -339,18 +329,9 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	@Override
 	public List<IRelatedContact> getRelatedContacts() {
 		CoreModelServiceHolder.get().refresh(this);
-		ArrayList<KontaktAdressJoint> relatedContacts = new ArrayList<>(getEntity().getRelatedContacts().values());
+		ArrayList<KontaktAdressJoint> relatedContacts =
+			new ArrayList<>(getEntity().getRelatedContacts());
 		return relatedContacts.parallelStream().filter(f -> !f.isDeleted())
 				.map(f -> ModelUtil.getAdapter(f, IRelatedContact.class, true)).collect(Collectors.toList());
-	}
-
-	@Override
-	public IRelatedContact addRelatedContact(IRelatedContact relatedContact) {
-		relatedContact.setMyContact(this);
-		addChanged(relatedContact);
-		@SuppressWarnings("unchecked")
-		KontaktAdressJoint kaj = ((AbstractIdModelAdapter<KontaktAdressJoint>) relatedContact).getEntity();
-		getEntityMarkDirty().getRelatedContacts().put(kaj.getId(), kaj);
-		return relatedContact;
 	}
 }

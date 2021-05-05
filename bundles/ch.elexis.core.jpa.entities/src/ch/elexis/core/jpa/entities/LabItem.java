@@ -1,7 +1,6 @@
 package ch.elexis.core.jpa.entities;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -94,9 +93,8 @@ public class LabItem extends AbstractEntityWithId implements EntityWithId, Entit
 	@Column(length = 255)
 	private String formula;
 	
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "labitemid")
-	protected Collection<LabMapping> mappings = new HashSet<>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "labItem")
+	private List<LabMapping> mappings;
 
 	/**
 	 * @return the variable name of this LabItem as used in LabItems of type
@@ -265,11 +263,7 @@ public class LabItem extends AbstractEntityWithId implements EntityWithId, Entit
 		this.lastupdate = lastupdate;
 	}
 	
-	public Collection<LabMapping> getMappings(){
+	public List<LabMapping> getMappings(){
 		return mappings;
-	}
-	
-	public void setMappings(Collection<LabMapping> mappings){
-		this.mappings = mappings;
 	}
 }

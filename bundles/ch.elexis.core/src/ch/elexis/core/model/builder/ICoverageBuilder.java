@@ -28,8 +28,6 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 		// only to transport the name of the IBillingSystem,
 		// not validating whether it exists
 		object.setBillingSystem(new BillingSystem(billingSystem, null));
-		
-		patient.addCoverage(object);
 	}
 	
 	/**
@@ -59,8 +57,6 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 		// only to transport the name of the IBillingSystem,
 		// not validating whether it exists
 		object.setBillingSystem(new BillingSystem(billingSystem, null));
-		
-		patient.addCoverage(object);
 	}
 	
 	@Override

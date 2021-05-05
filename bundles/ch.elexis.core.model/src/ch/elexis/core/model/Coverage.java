@@ -45,8 +45,12 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setPatient(IPatient value){
+		if (getPatient() != null) {
+			addRefresh(getPatient());
+		}
 		if (value != null) {
 			getEntityMarkDirty().setPatient(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			addRefresh(value);
 		} else {
 			getEntityMarkDirty().setPatient(null);
 		}

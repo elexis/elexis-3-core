@@ -427,22 +427,6 @@ public interface ILabItem extends Identifiable, Deleteable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model mappingRequired="true"
-	 * @generated
-	 */
-	ILabMapping addMapping(ILabMapping mapping);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	void removeMapping(ILabMapping mapping);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * the variable name of this LabItem as used in LabItems of type formula for cross-reference
 	 * <!-- end-model-doc -->

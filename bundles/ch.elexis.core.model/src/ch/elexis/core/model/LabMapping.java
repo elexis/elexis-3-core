@@ -28,10 +28,14 @@ public class LabMapping extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	
 	@Override
 	public void setItem(ILabItem value){
+		if (getItem() != null) {
+			addRefresh(getItem());
+		}
 		if (value instanceof AbstractIdModelAdapter) {
 			getEntityMarkDirty().setLabItem(
 				(ch.elexis.core.jpa.entities.LabItem) ((AbstractIdModelAdapter<?>) value)
 					.getEntity());
+			addRefresh(value);
 		} else if (value == null) {
 			getEntityMarkDirty().setLabItem(null);
 		}

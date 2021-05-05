@@ -1,14 +1,13 @@
 package ch.elexis.core.model;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 
 public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.LabItem>
@@ -171,35 +170,9 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public List<ILabMapping> getMappings(){
+		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getMappings().parallelStream().filter(f -> !f.isDeleted())
 			.map(f -> ModelUtil.getAdapter(f, ILabMapping.class)).collect(Collectors.toList());
-	}
-	
-	@Override
-	public ILabMapping addMapping(ILabMapping mapping){
-		if (mapping instanceof AbstractIdDeleteModelAdapter) {
-			mapping.setItem(this);
-			Set<ch.elexis.core.jpa.entities.LabMapping> mappings =
-				new HashSet<>(getEntity().getMappings());
-			mappings.add(
-				(ch.elexis.core.jpa.entities.LabMapping) ((AbstractIdDeleteModelAdapter<?>) mapping)
-					.getEntity());
-			getEntityMarkDirty().setMappings(mappings);
-		}
-		return mapping;
-	}
-	
-	@Override
-	public void removeMapping(ILabMapping mapping){
-		if (mapping instanceof AbstractIdDeleteModelAdapter) {
-			Set<ch.elexis.core.jpa.entities.LabMapping> mappings =
-				new HashSet<>(getEntity().getMappings());
-			mappings.remove(
-				(ch.elexis.core.jpa.entities.LabMapping) ((AbstractIdDeleteModelAdapter<?>) mapping)
-					.getEntity());
-			getEntityMarkDirty().setMappings(mappings);
-		}
-		
 	}
 	
 	@Override

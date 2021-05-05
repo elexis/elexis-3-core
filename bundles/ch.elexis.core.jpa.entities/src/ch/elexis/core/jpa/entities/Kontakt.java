@@ -12,10 +12,7 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -25,9 +22,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.MapKey;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -221,18 +216,18 @@ public class Kontakt extends AbstractEntityWithId
 	 * All related {@link Fall} entities; modifications ignored
 	 */
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "patientKontakt")
-	protected List<Fall> faelle = new ArrayList<>();
+	private List<Fall> faelle = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = CascadeType.ALL)
-	@MapKey(name = "id")
-	protected Map<String, ZusatzAdresse> addresses = new HashMap<>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = {
+		CascadeType.REFRESH, CascadeType.REMOVE // cascade remove, ZusatzAdresse#contact is foreign key
+	})
+	private List<ZusatzAdresse> addresses;
 
 	/**
 	 * Contacts we relate to (egress reference)
 	 */
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "myKontakt", cascade = CascadeType.REFRESH)
-	@MapKey(name = "id")
-	protected Map<String, KontaktAdressJoint> relatedContacts = new HashMap<>();
+	private List<KontaktAdressJoint> relatedContacts;
 
 	/**
 	 * Contacts we are related by (ingress reference); modifications ignored<br>
@@ -240,9 +235,8 @@ public class Kontakt extends AbstractEntityWithId
 	 * referenced via {@link KontaktAdressJoint#getMyKontakt()} as we are the
 	 * {@link KontaktAdressJoint#getOtherKontakt()}
 	 */
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "otherID", updatable = false, insertable = false, nullable = false)
-	protected Collection<KontaktAdressJoint> relatedByContacts;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "otherKontakt", cascade = CascadeType.REFRESH)
+	private List<KontaktAdressJoint> relatedByContacts;
 
 	public String getAnschrift() {
 		return anschrift;
@@ -404,28 +398,16 @@ public class Kontakt extends AbstractEntityWithId
 		this.faelle = faelle;
 	}
 
-	public Map<String, ZusatzAdresse> getAddresses() {
+	public List<ZusatzAdresse> getAddresses(){
 		return addresses;
 	}
 
-	public void setAddresses(Map<String, ZusatzAdresse> addresses) {
-		this.addresses = addresses;
-	}
-
-	public Map<String, KontaktAdressJoint> getRelatedContacts() {
+	public List<KontaktAdressJoint> getRelatedContacts(){
 		return relatedContacts;
 	}
 	
-	public void setRelatedContacts(Map<String, KontaktAdressJoint> relatedContacts) {
-		this.relatedContacts = relatedContacts;
-	}
-
-	public Collection<KontaktAdressJoint> getRelatedByContacts() {
+	public List<KontaktAdressJoint> getRelatedByContacts(){
 		return relatedByContacts;
-	}
-
-	public void setRelatedByContacts(Collection<KontaktAdressJoint> relatedByContacts) {
-		this.relatedByContacts = relatedByContacts;
 	}
 
 	public String getPhone2() {

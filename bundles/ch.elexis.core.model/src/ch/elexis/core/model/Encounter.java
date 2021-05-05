@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.Behandlung;
 import ch.elexis.core.jpa.entities.Diagnosis;
-import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
@@ -60,15 +59,15 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setCoverage(ICoverage value){
-		if (value != null) {
-			// remove from existing
-			if (getCoverage() != null) {
-				addRefresh(getCoverage());
-			}
-			Fall valueEntity = ((AbstractIdModelAdapter<Fall>) value).getEntity();
-			// set both sides
-			getEntityMarkDirty().setFall(valueEntity);
+		if (getCoverage() != null) {
+			addRefresh(getCoverage());
+		}
+		if (value instanceof AbstractIdModelAdapter) {
+			getEntityMarkDirty().setFall(
+				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Fall>) value).getEntity());
 			addRefresh(value);
+		} else if (value == null) {
+			getEntityMarkDirty().setFall(null);
 		}
 	}
 	
@@ -164,7 +163,11 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		if (value != null) {
 			getEntityMarkDirty().setInvoice(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
+			addRefresh(value);
 		} else {
+			if (getInvoice() != null) {
+				addRefresh(getInvoice());
+			}
 			getEntityMarkDirty().setInvoice(null);
 		}
 	}
