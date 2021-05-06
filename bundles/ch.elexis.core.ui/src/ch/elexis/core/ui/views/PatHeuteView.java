@@ -421,8 +421,12 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 	}
 	
 	private int getMinutes(IEncounter encounter){
-		return encounter.getBilled().stream().map(b -> b.getBillable())
-			.filter(b -> b instanceof IService).mapToInt(b -> ((IService) b).getMinutes()).sum();
+		return encounter.getBilled().stream().mapToInt(b -> { 
+				if(b.getBillable() instanceof IService) {
+				return (int) (((IService) b.getBillable()).getMinutes() * b.getAmount());
+				}
+				return 0;
+			}).sum();
 	}
 	
 	@Override
@@ -650,7 +654,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 									if (lfiltered[j].equals(b.getBillable())) {
 										sumAll += preis.getCents();
 										if (b.getBillable() instanceof IService) {
-											sumTime += ((IService) b.getBillable()).getMinutes();
+											sumTime += ((IService) b.getBillable()).getMinutes()
+												* b.getAmount();
 										}
 									}
 								}
