@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test Context for Unit Tests (do not use in UI)
 Bundle-SymbolicName: ch.elexis.core.test.context
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: ch.elexis
-Fragment-Host: ch.elexis.core.test;bundle-version="1.0.0"
+Fragment-Host: ch.elexis.core.test;bundle-version="3.9.0"
 Automatic-Module-Name: ch.elexis.core.test.context
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.test.context.TestContextService.xml

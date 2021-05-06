@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -186,6 +186,7 @@ public class Xid extends PersistentObject implements IXid {
 	 * 
 	 * @return the quality
 	 */
+	@Override
 	public int getQuality(){
 		return checkZero(get(FLD_QUALITY));
 	}
@@ -195,6 +196,7 @@ public class Xid extends PersistentObject implements IXid {
 	 * 
 	 * @return true if so.
 	 */
+	@Override
 	public boolean isGUID(){
 		return (getQuality() & QUALITY_GUID) != 0;
 	}
@@ -204,6 +206,7 @@ public class Xid extends PersistentObject implements IXid {
 	 * 
 	 * @return
 	 */
+	@Override
 	public String getDomain(){
 		return get(FLD_DOMAIN);
 	}
@@ -213,6 +216,7 @@ public class Xid extends PersistentObject implements IXid {
 	 * 
 	 * @return
 	 */
+	@Override
 	public String getDomainId(){
 		return get(FLD_ID_IN_DOMAIN);
 	}
@@ -222,6 +226,7 @@ public class Xid extends PersistentObject implements IXid {
 	 * 
 	 * @return the object or null if it could not be restored.
 	 */
+	@Override
 	public IPersistentObject getObject(){
 		PersistentObject po =
 			CoreHub.poFactory.createFromString(get(FLD_TYPE) + "::" + get(FLD_OBJECT));

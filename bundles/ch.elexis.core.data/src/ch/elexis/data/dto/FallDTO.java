@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IXid;
@@ -157,6 +157,7 @@ public class FallDTO implements IFall {
 		informChanged(false);
 	}
 	
+	@Override
 	public void setBezeichnung(String bezeichnung){
 		if (!StringUtils.equals(this.bezeichnung, bezeichnung)) {
 			informChanged(false);
@@ -175,6 +176,7 @@ public class FallDTO implements IFall {
 	}
 
 	/// readonly fields	
+	@Override
 	public String getId(){
 		return iFall.getId();
 	}

@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core Services Test
 Bundle-SymbolicName: ch.elexis.core.services.test;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: medevit.at
-Fragment-Host: ch.elexis.core.services;bundle-version="1.0.0"
+Fragment-Host: ch.elexis.core.services;bundle-version="3.9.0"
 Automatic-Module-Name: ch.elexis.core.services.test
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit,
- ch.elexis.core.model;bundle-version="1.0.0",
- ch.elexis.core.test;bundle-version="1.0.0"
+ ch.elexis.core.model;bundle-version="3.9.0",
+ ch.elexis.core.test;bundle-version="3.9.0"
 Import-Package: org.apache.commons.io

@@ -78,7 +78,7 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public void removeRole(IRole role){
 		if (role instanceof AbstractIdDeleteModelAdapter) {
 			Set<Role> roles = new HashSet<Role>(getEntity().getRoles());
-			roles.remove((Role) ((AbstractIdDeleteModelAdapter<?>) role).getEntity());
+			roles.remove(((AbstractIdDeleteModelAdapter<?>) role).getEntity());
 			getEntityMarkDirty().setRoles(roles);
 		}
 	}

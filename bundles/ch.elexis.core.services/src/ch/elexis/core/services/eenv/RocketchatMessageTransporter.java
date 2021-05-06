@@ -3,7 +3,6 @@ package ch.elexis.core.services.eenv;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,9 +10,10 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
+import com.google.gson.Gson;
 
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.model.message.MessageCode;
@@ -73,15 +73,12 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 				+ "] found in local config or malformed url.");
 	}
 	
-	private String prepareRocketchatMessage(TransientMessage message){
+	protected String prepareRocketchatMessage(TransientMessage message){
 		
 		String severity = message.getMessageCodes().get(MessageCode.Key.Severity);
 		if (severity == null) {
 			severity = MessageCode.Value.Severity_INFO;
 		}
-		
-		JSONObject json = new JSONObject();
-		json.put("username", message.getSender());
 		
 		StringBuilder header = new StringBuilder();
 		header.append(severityToEmoji(severity) + " @"
@@ -94,15 +91,15 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 				.forEach(c -> header.append(c.getKey() + ":" + c.getValue() + " "));
 		}
 		
-		json.put("text", header.toString());
-		
 		Map<String, Object> params = new HashMap<>();
 		params.put("color", severityToColor(severity));
 		params.put("text", message.getMessageText());
 		
-		json.put("attachments", Collections.singletonList(params));
-		
-		return json.toString();
+		RocketchatMessage rocketchatMessage = new RocketchatMessage();
+		rocketchatMessage.setSender(message.getSender());
+		rocketchatMessage.setText(header.toString());
+		rocketchatMessage.setAttachments(params);
+		return new Gson().toJson(rocketchatMessage);
 	}
 	
 	private IStatus send(URL url, byte[] postDataBytes) throws IOException{

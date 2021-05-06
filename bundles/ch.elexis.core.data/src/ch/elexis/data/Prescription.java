@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
@@ -77,6 +77,7 @@ public class Prescription extends PersistentObject {
 	 * Prescription is a direct distribution within a consultation
 	 * @deprecated use {@link Prescription#setEntryType(EntryType)} instead
 	 */
+	@Deprecated
 	public static final String FLD_REZEPTID_VAL_DIREKTABGABE = "Direktabgabe";
 	/**
 	 * ID of the {@link Verrechnet} if {@link #FLD_REZEPTID_VAL_DIREKTABGABE}
@@ -394,7 +395,7 @@ public class Prescription extends PersistentObject {
 	 */
 	public String getDisposalComment(){
 		return checkNull(
-			(String) getExtInfoStoredObjectByKey(Constants.FLD_EXT_DISPOSAL_COMMENT));
+			getExtInfoStoredObjectByKey(Constants.FLD_EXT_DISPOSAL_COMMENT));
 	}
 	
 	/**
@@ -414,7 +415,7 @@ public class Prescription extends PersistentObject {
 	 */
 	public Boolean isApplied(){
 		String value =
-			checkNull((String) getExtInfoStoredObjectByKey(Constants.FLD_EXT_IS_APPLIED));
+			checkNull(getExtInfoStoredObjectByKey(Constants.FLD_EXT_IS_APPLIED));
 		return Boolean.valueOf(value);
 	}
 	
@@ -435,7 +436,7 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public int getRecipeOrder(){
-		String value = checkNull((String) getExtInfoStoredObjectByKey(Constants.FLD_EXT_RECIPE_ORDER));
+		String value = checkNull(getExtInfoStoredObjectByKey(Constants.FLD_EXT_RECIPE_ORDER));
 		if (value != null && !value.isEmpty()) {
 			try {
 				return Integer.valueOf(value);

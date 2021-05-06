@@ -1,6 +1,6 @@
 package ch.elexis.data;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -99,6 +99,7 @@ public class BestellungEntry extends PersistentObject implements IOrderEntry {
 		return null;
 	}
 	
+	@Override
 	public Stock getStock(){
 		String stockId = get(FLD_STOCK);
 		if (StringUtils.isNotBlank(stockId)) {

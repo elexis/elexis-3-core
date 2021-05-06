@@ -2,7 +2,7 @@ package ch.elexis.data;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.data.interfaces.IStock;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
@@ -84,6 +84,7 @@ public class Stock extends PersistentObject implements IStock {
 		return super.removeFromDatabase();
 	}
 	
+	@Override
 	public Integer getPriority(){
 		String val = get(FLD_PRIORITY);
 		if (StringUtils.isNotBlank(val)) {
@@ -98,6 +99,7 @@ public class Stock extends PersistentObject implements IStock {
 		setInt(FLD_PRIORITY, value);
 	}
 	
+	@Override
 	public String getCode(){
 		return get(FLD_CODE);
 	}
@@ -122,6 +124,7 @@ public class Stock extends PersistentObject implements IStock {
 		set(FLD_LOCATION, location);
 	}
 	
+	@Override
 	public Mandant getOwner(){
 		String mandatorId = get(FLD_OWNER);
 		if (StringUtils.isNotBlank(mandatorId)) {
@@ -154,6 +157,7 @@ public class Stock extends PersistentObject implements IStock {
 		set(FLD_RESPONSIBLE, null);
 	}
 	
+	@Override
 	public String getDriverUuid(){
 		return get(FLD_DRIVER_UUID);
 	}
@@ -162,6 +166,7 @@ public class Stock extends PersistentObject implements IStock {
 		set(FLD_DRIVER_UUID, driverUuid);
 	}
 	
+	@Override
 	public String getDriverConfig(){
 		return get(FLD_DRIVER_CONFIG);
 	}
