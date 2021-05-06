@@ -31,12 +31,12 @@ import java.util.TimerTask;
 import java.util.Vector;
 import java.util.logging.Level;
 
-import org.apache.commons.dbcp.ConnectionFactory;
-import org.apache.commons.dbcp.DriverConnectionFactory;
-import org.apache.commons.dbcp.PoolableConnectionFactory;
-import org.apache.commons.dbcp.PoolingDataSource;
-import org.apache.commons.pool.impl.GenericObjectPool;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.dbcp2.ConnectionFactory;
+import org.apache.commons.dbcp2.DriverConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnection;
+import org.apache.commons.dbcp2.PoolableConnectionFactory;
+import org.apache.commons.dbcp2.PoolingDataSource;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * Weiterer Abstraktionslayer zum einfacheren Zugriff auf eine jdbc-fähige Datenbank
@@ -60,7 +60,7 @@ public class JdbcLink {
 	private String sUser;
 	private String sPwd;
 	private PoolingDataSource dataSource;
-	private GenericObjectPool<Connection> connectionPool;
+	private GenericObjectPool<PoolableConnection> connectionPool;
 	// prepared statements are not released properly up until now, so keep 1 connection open
 	private Connection preparedStatementConnection;
 	
@@ -273,20 +273,25 @@ public class JdbcLink {
 			
 			ConnectionFactory connectionFactory =
 				new DriverConnectionFactory(driver, sConn, properties);
+			
+			PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
+			poolableConnectionFactory.setValidationQuery(VALIDATION_QUERY);
+			poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
+			poolableConnectionFactory.setDefaultAutoCommit(Boolean.TRUE);
+			
 			//
 			// Next we'll create the PoolableConnectionFactory, which wraps
 			// the "real" Connections created by the ConnectionFactory with
 			// the classes that implement the pooling functionality.
 			//
-			connectionPool = new GenericObjectPool<Connection>(null);
+			connectionPool = new GenericObjectPool<PoolableConnection>(poolableConnectionFactory);
 			// configure the connection pool
-			connectionPool.setMaxActive(32);
+			connectionPool.setMaxTotal(32);
 			connectionPool.setMinIdle(2);
-			connectionPool.setMaxWait(10000);
+			connectionPool.setMaxWaitMillis(10000);
 			connectionPool.setTestOnBorrow(true);
+			poolableConnectionFactory.setPool(connectionPool);
 			
-			new PoolableConnectionFactory(connectionFactory, connectionPool, null, VALIDATION_QUERY,
-				false, true);
 			dataSource = new PoolingDataSource(connectionPool);
 			
 			// test establishing a connection
@@ -332,6 +337,7 @@ public class JdbcLink {
 	 * @deprecated only escapes for DBFLAVOR_MYSQL, use {@link JdbcLink#wrapFlavored(String)} for
 	 *             correct wrapping
 	 */
+	@Deprecated
 	public static String wrap(String s){
 		if (StringTool.isNothing(s)) {
 			return "''";
@@ -423,6 +429,7 @@ public class JdbcLink {
 	 * @deprecated
 	 * @return
 	 */
+	@Deprecated
 	public Connection getConnection(){
 		try {
 			return dataSource.getConnection();
@@ -534,6 +541,7 @@ public class JdbcLink {
 	 *            Abfrage für das statement (eizusetzende Parameter müssen als ? gesetzt sein
 	 * @return das vorkompilierte PreparedStatement
 	 */
+	@Deprecated
 	public synchronized PreparedStatement prepareStatement(String sql){
 		checkLink();
 		try {

@@ -1,6 +1,6 @@
 package ch.elexis.data;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -70,6 +70,7 @@ public class StockEntry extends PersistentObject implements IStockEntry {
 		return TABLENAME;
 	}
 	
+	@Override
 	public Artikel getArticle(){
 		String[] vals = get(false, FLD_ARTICLE_TYPE, FLD_ARTICLE_ID);
 		if (StringUtils.isNotBlank(vals[1])) {
@@ -91,6 +92,7 @@ public class StockEntry extends PersistentObject implements IStockEntry {
 		}
 	}
 	
+	@Override
 	public Stock getStock(){
 		return Stock.load(get(FLD_STOCK));
 	}
@@ -99,10 +101,12 @@ public class StockEntry extends PersistentObject implements IStockEntry {
 		set(FLD_STOCK, stock.getId());
 	}
 	
+	@Override
 	public int getCurrentStock(){
 		return getInt(FLD_CURRENT);
 	}
 	
+	@Override
 	public void setCurrentStock(int currentStock){
 		// ACHTUNG ConfigServiceHolder.getGlobal(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES
 		/**
@@ -115,10 +119,12 @@ public class StockEntry extends PersistentObject implements IStockEntry {
 		setInt(FLD_CURRENT, currentStock);
 	}
 	
+	@Override
 	public int getMinimumStock(){
 		return getInt(FLD_MIN);
 	}
 	
+	@Override
 	public int getMaximumStock(){
 		return getInt(FLD_MAX);
 	}

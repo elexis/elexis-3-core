@@ -3,7 +3,7 @@ package ch.elexis.data.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.exceptions.ElexisException;

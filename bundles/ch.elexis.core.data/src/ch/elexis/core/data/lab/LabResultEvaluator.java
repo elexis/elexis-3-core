@@ -1,6 +1,6 @@
 package ch.elexis.core.data.lab;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.interfaces.ILabItem;

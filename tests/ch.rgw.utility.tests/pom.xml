@@ -1,35 +1,38 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>ch.elexis.core</groupId>
-    <artifactId>ch.elexis.core.tests</artifactId>
-    <version>3.9.0-SNAPSHOT</version>
-  </parent>
-  <artifactId>ch.rgw.utility.tests</artifactId>
-  <packaging>eclipse-test-plugin</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<version>3.9.100-SNAPSHOT</version>
+	<parent>
+		<groupId>ch.elexis.core</groupId>
+		<artifactId>ch.elexis.core.tests</artifactId>
+		<version>3.9.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>ch.rgw.utility.tests</artifactId>
+	<packaging>eclipse-test-plugin</packaging>
 
-  <build>
-    <sourceDirectory>src</sourceDirectory>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-surefire-plugin</artifactId>
-        <version>${tycho.version}</version>
-        <configuration>
-          <useUIHarness>false</useUIHarness>
-          <useUIThread>true</useUIThread>
-          <appArgLine>-nl es_AR</appArgLine> <!-- es_AR: unsupported language, forces fallback.
-          This is important, as the de translations moved to a different fragment bundle -->
-          <dependencies>
-            <dependency>
-              <type>eclipse-plugin</type>
-			    <groupId>ch.elexis.core</groupId>
-              <artifactId>ch.elexis.core.l10n</artifactId>
-            </dependency>
-          </dependencies>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-<version>3.2.0-SNAPSHOT</version>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<useUIHarness>false</useUIHarness>
+					<useUIThread>true</useUIThread>
+					<appArgLine>-nl es_AR</appArgLine> <!-- es_AR: unsupported language, forces fallback. This is important, as 
+						the de translations moved to a different fragment bundle -->
+					<dependencies>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<groupId>ch.elexis.core</groupId>
+							<artifactId>ch.elexis.core.l10n</artifactId>
+						</dependency>
+					</dependencies>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

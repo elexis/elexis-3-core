@@ -2,23 +2,20 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eigendiagnosen
 Bundle-SymbolicName: ch.elexis.core.eigendiagnosen;singleton:=true
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: elexis.info
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
- ch.rgw.utility;bundle-version="3.0.0",
- ch.elexis.core;bundle-version="3.0.0",
- ch.elexis.core.data;bundle-version="3.0.0",
- ch.elexis.core.l10n;bundle-version="3.5.0",
- ch.elexis.core.jpa;bundle-version="1.0.0",
- ch.elexis.core.jpa.entities;bundle-version="1.0.0",
- org.eclipse.osgi.services;bundle-version="3.6.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: ch.elexis.core.l10n;bundle-version="3.9.0",
+ ch.rgw.utility;bundle-version="3.9.100",
+ ch.elexis.core;bundle-version="3.9.0",
+ ch.elexis.core.data;bundle-version="3.9.0",
+ ch.elexis.core.jpa;bundle-version="3.9.0",
+ ch.elexis.core.jpa.entities;bundle-version="3.9.0"
 Export-Package: ch.elexis.core.eigendiagnosen
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.services.holder,
  javax.persistence;version="2.2.3",
- javax.persistence.criteria;version="2.2.3",
- org.osgi.service.event
+ javax.persistence.criteria;version="2.2.3"
 Service-Component: OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.DiagnosisModelService.xml,
  OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.ModelUtil.xml,
  OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.CodeElementContribution.xml

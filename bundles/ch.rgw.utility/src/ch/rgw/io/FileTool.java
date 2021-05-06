@@ -43,7 +43,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import org.h2.util.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Log;
