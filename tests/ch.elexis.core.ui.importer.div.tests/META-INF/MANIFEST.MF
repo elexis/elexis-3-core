@@ -2,11 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test fragment for elexis-importer
 Bundle-SymbolicName: ch.elexis.core.ui.importer.div.tests
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: ch.elexis
-Fragment-Host: ch.elexis.core.ui.importer.div
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Fragment-Host: ch.elexis.core.ui.importer.div;bundle-version="3.9.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit;bundle-version="[4.0.0,5.0.0)",
  ch.elexis.core.application;bundle-version="3.0.0"
 Import-Package: ch.elexis.core.services.holder,
- org.apache.commons.io
+ org.apache.commons.io,
+ org.apache.commons.lang3;version="3.12.0"

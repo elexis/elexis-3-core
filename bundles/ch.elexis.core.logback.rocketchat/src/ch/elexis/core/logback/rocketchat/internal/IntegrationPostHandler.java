@@ -8,13 +8,13 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.json.JSONObject;
+
+import com.google.gson.Gson;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -42,10 +42,10 @@ public class IntegrationPostHandler {
 			logLevel = Level.INFO;
 		}
 		
-		JSONObject json = new JSONObject();
+		RocketchatLogMessage rlm = new RocketchatLogMessage();
 		
 		if (identification != null) {
-			json.put("username", identification);
+			rlm.setUsername(identification);
 		}
 		
 		ZonedDateTime eventTimeStamp =
@@ -59,7 +59,7 @@ public class IntegrationPostHandler {
 		String exception = parseException(eventObject);
 		
 		if (attachment) {
-			json.put("text", sbHeaderString);
+			rlm.setText(sbHeaderString);
 			
 			Map<String, Object> params = new HashMap<>();
 			params.put("color", levelToColor(logLevel));
@@ -68,7 +68,7 @@ public class IntegrationPostHandler {
 				params.put("text", eventObject.getFormattedMessage() + exception);
 			}
 			
-			json.put("attachments", Collections.singletonList(params));
+			rlm.setAttachments(params);
 		} else {
 			StringBuilder sbBody = new StringBuilder();
 			sbBody.append(levelToEmoji(logLevel));
@@ -76,10 +76,11 @@ public class IntegrationPostHandler {
 			if (exception != null) {
 				sbBody.append("\n" + exception);
 			}
-			json.put("text", sbHeader + sbBody.toString());
+			rlm.setText(sbHeader + sbBody.toString());
 		}
 		
-		return send(json.toString().getBytes(), url);
+		String jsonMessage = new Gson().toJson(rlm);
+		return send(jsonMessage.getBytes(), url);
 	}
 	
 	private String parseException(ILoggingEvent eventObject2){

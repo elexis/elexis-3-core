@@ -2,15 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Spotlight Like Single Line Search
 Bundle-SymbolicName: ch.elexis.core.spotlight
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: elexis.info
 Automatic-Module-Name: ch.elexis.core.spotlight
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: ch.elexis.core.spotlight
-Import-Package: org.osgi.service.component.annotations
-Service-Component: OSGI-INF/ch.elexis.core.spotlight.internal.SpotlightService.xml,
- OSGI-INF/ch.elexis.core.spotlight.internal.contributors.PatientCategorySpotlightResultContributor.xml
+Import-Package: org.apache.commons.lang3;version="3.12.0"
 Bundle-ActivationPolicy: lazy
 Require-Bundle: ch.rgw.utility;bundle-version="3.8.0",
- ch.elexis.core;bundle-version="3.9.0",
- org.apache.commons.lang3
+ ch.elexis.core;bundle-version="3.9.0"
+Service-Component: OSGI-INF/ch.elexis.core.spotlight.internal.contributors.PatientCategorySpotlightResultContributor.xml,
+ OSGI-INF/ch.elexis.core.spotlight.internal.SpotlightService.xml

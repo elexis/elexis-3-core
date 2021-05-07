@@ -3,20 +3,17 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: ch.elexis.core.findings.templates;singleton:=true
 Automatic-Module-Name: ch.elexis.core.findings.templates
-Bundle-Version: 3.0.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: ch.elexis.core.findings.templates.model,
  ch.elexis.core.findings.templates.model.impl,
  ch.elexis.core.findings.templates.model.util,
  ch.elexis.core.findings.templates.service
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport,
- ch.elexis.core.data;bundle-version="3.3.0",
- ch.elexis.core.findings;bundle-version="1.0.0"
+Require-Bundle: ch.elexis.core.data;bundle-version="3.9.0",
+ ch.elexis.core.findings;bundle-version="3.9.0"
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.commons.io;version="2.4.0",
- org.eclipse.emf.ecore.xmi.impl,
- org.osgi.service.component.annotations;version="1.2.0"
+ org.eclipse.emf.ecore.xmi.impl

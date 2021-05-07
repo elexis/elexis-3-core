@@ -22,5 +22,5 @@ Import-Package: ch.elexis.core.services.holder,
  org.eclipse.e4.ui.workbench.modeling
 Export-Package: ch.elexis.core.application,
  ch.elexis.core.application.perspectives
-Service-Component: OSGI-INF/ch.elexis.core.application.ElexisDatasourceHolder.xml,
- OSGI-INF/ch.elexis.core.application.listeners.OsgiMessageEventListener.xml
+Service-Component: OSGI-INF/ch.elexis.core.application.listeners.OsgiMessageEventListener.xml,
+ OSGI-INF/ch.elexis.core.application.ElexisDatasourceHolder.xml

@@ -1,7 +1,7 @@
 package ch.elexis.core.importer.div.importers;
 
 import java.util.List;
-
+import org.eclipse.emf.ecore.EAttribute;
 import org.slf4j.Logger;
 
 import ch.elexis.core.model.IPatient;

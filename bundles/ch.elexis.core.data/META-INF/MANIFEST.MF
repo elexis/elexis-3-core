@@ -58,3 +58,4 @@ Export-Package: .,
  ch.elexis.data.dto,
  ch.elexis.util
 Automatic-Module-Name: ch.elexis.core.data
+Bundle-ActivationPolicy: lazy

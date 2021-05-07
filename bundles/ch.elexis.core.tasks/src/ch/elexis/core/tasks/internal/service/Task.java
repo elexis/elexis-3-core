@@ -13,8 +13,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,13 +181,15 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public <T> T getResultEntryTyped(String key, Class<T> clazz){
 		String json = getEntity().getResult();
 		if (json != null) {
-			JSONObject map = new JSONObject(json);
-			try {
-				String valueToString = JSONObject.valueToString(map.get(key));
-				return GSON.fromJson(valueToString, clazz);
-			} catch (JSONException e) {
+			Map map = GSON.fromJson(json, Map.class);
+//			JSONObect map = new JSONObject(json);
+//			try {
+//				String valueToString = JSONObject.valueToString(map.get(key));
+//			GSON.from
+				return GSON.fromJson((String) map.get(key), clazz);
+//			} catch (JSONException e) {
 				// do nothing
-			}
+//			}
 		}
 		return null;
 	}
@@ -197,13 +197,13 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	@Override
 	public <T> T getRunContextEntryTyped(String key, Class<T> clazz){
 		Map<String, Serializable> map = getRunContext();
-		try {
-			String valueToString = JSONObject.valueToString(map.get(key));
-			return GSON.fromJson(valueToString, clazz);
-		} catch (JSONException e) {
+//		try {
+//			String valueToString = JSONObject.valueToString(map.get(key));
+			return GSON.fromJson((String) map.get(key), clazz);
+//		} catch (JSONException e) {
 			// do nothing
-		}
-		return null;
+//		}
+//		return null;
 	}
 	
 	@Override

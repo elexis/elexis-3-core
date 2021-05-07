@@ -2,32 +2,26 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Shared importer data
 Bundle-SymbolicName: ch.elexis.core.importer.div
-Bundle-Version: 3.2.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Multi-Release: true
+Bundle-Version: 3.9.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: elexis.info
-Require-Bundle: ch.rgw.utility,
- ch.elexis.core;bundle-version="3.1.0",
- ch.elexis.core.services;bundle-version="1.0.0",
- org.eclipse.osgi;bundle-version="3.9.1",
+Require-Bundle: ch.elexis.core.l10n;bundle-version="3.9.0",
+ ch.rgw.utility;bundle-version="3.9.100",
+ ch.elexis.core;bundle-version="3.9.0",
+ ch.elexis.core.services;bundle-version="3.9.0",
  ch.elexis.core.hl7.v2x;bundle-version="3.2.0",
- ch.elexis.core.l10n;bundle-version="3.5.0",
- org.apache.commons.lang3;bundle-version="3.1.0",
  org.apache.poi;bundle-version="3.9.0",
  org.apache.poi.ooxml;bundle-version="3.9.0",
- org.apache.poi.ooxml.schemas;bundle-version="3.9.0",
- com.healthmarketscience.jackcess;bundle-version="2.1.9";visibility:=reexport,
- org.apache.commons.io
+ org.apache.poi.ooxml.schemas;bundle-version="3.9.0"
 Export-Package: ch.elexis.core.importer.div.importers,
  ch.elexis.core.importer.div.importers.multifile,
  ch.elexis.core.importer.div.importers.multifile.strategy,
  ch.elexis.core.importer.div.service.holder,
  ch.elexis.core.importer.div.tasks
-Import-Package: org.eclipse.core.runtime;version="3.5.0",
- org.osgi.service.component.annotations;version="[1.3.0,2.0.0)";resolution:=optional,
- org.slf4j
-Service-Component: OSGI-INF/ch.elexis.core.importer.div.importers.internal.LabImportUtil.xml,
- OSGI-INF/ch.elexis.core.importer.div.service.holder.LabImportUtilHolder.xml,
- OSGI-INF/ch.elexis.core.importer.div.tasks.internal.HL7ImporterIdentifiedRunnableFactory.xml,
- OSGI-INF/ch.elexis.core.importer.div.service.holder.OmnivoreDocumentStoreServiceHolder.xml
 Bundle-ActivationPolicy: lazy
+Import-Package: com.healthmarketscience.jackcess;version="4.0.0",
+ org.apache.commons.lang3;version="3.12.0"
+Service-Component: OSGI-INF/ch.elexis.core.importer.div.service.holder.LabImportUtilHolder.xml,
+ OSGI-INF/ch.elexis.core.importer.div.importers.internal.LabImportUtil.xml,
+ OSGI-INF/ch.elexis.core.importer.div.service.holder.OmnivoreDocumentStoreServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.importer.div.tasks.internal.HL7ImporterIdentifiedRunnableFactory.xml
