@@ -2,31 +2,25 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Spotlight Like Single Line Search UI
 Bundle-SymbolicName: ch.elexis.core.spotlight.ui;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: elexis.info
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.17.100",
- org.eclipse.e4.ui.model.workbench;bundle-version="2.1.700.v20200113-1422",
+Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
+ ch.elexis.core;bundle-version="3.9.0",
+ ch.elexis.core.spotlight;bundle-version="3.9.0",
+ ch.elexis.core.services;bundle-version="3.9.0",
+ ch.elexis.core.ui.e4;bundle-version="3.9.0",
  org.eclipse.swt;bundle-version="3.114.0",
  org.eclipse.jface;bundle-version="3.19.0",
- org.eclipse.e4.core.di,
- ch.elexis.core;bundle-version="3.9.0",
- ch.elexis.core.services;bundle-version="1.0.0",
- ch.elexis.core.ui.e4;bundle-version="1.0.0",
- ch.elexis.core.spotlight,
- ch.rgw.utility,
  org.apache.commons.lang3;bundle-version="3.7.0",
- ch.elexis.core.ui.icons;bundle-version="3.3.0",
- org.eclipse.e4.ui.workbench,
- org.eclipse.e4.core.commands,
- org.eclipse.e4.core.contexts
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+ ch.elexis.core.ui.icons;bundle-version="3.3.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: ch.elexis.core.documents,
  javax.inject;version="1.0.0",
  org.eclipse.e4.ui.services,
  org.slf4j;version="1.6.6"
 Automatic-Module-Name: ch.elexis.core.spotlight.ui
-Service-Component: OSGI-INF/ch.elexis.core.spotlight.ui.controls.detail.PatientSpotlightResultEntryDetailCompositeContributor.xml,
- OSGI-INF/ch.elexis.core.spotlight.ui.internal.SpotlightResultEntryDetailCompositeService.xml,
- OSGI-INF/ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyService.xml
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.spotlight.ui
+Service-Component: OSGI-INF/ch.elexis.core.spotlight.ui.internal.SpotlightResultEntryDetailCompositeService.xml,
+ OSGI-INF/ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyService.xml,
+ OSGI-INF/ch.elexis.core.spotlight.ui.controls.detail.PatientSpotlightResultEntryDetailCompositeContributor.xml

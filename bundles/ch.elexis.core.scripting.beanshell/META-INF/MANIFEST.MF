@@ -2,12 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Beanshell scripting for Elexis
 Bundle-SymbolicName: ch.elexis.core.scripting.beanshell;singleton:=true
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: elexis.info
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.core.runtime,
- ch.rgw.utility;bundle-version="2.0.0",
- ch.elexis.core.data;bundle-version="3.0.0",
- ch.elexis.core,
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: ch.elexis.core;bundle-version="3.9.0",
+ ch.rgw.utility;bundle-version="3.9.100",
+ ch.elexis.core.data;bundle-version="3.9.0",
  org.beanshell.bsh;bundle-version="2.0.0"
 Bundle-ClassPath: .

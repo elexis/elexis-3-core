@@ -10,5 +10,5 @@ Require-Bundle: ch.elexis.core;bundle-version="3.9.0",
 Import-Package: org.apache.commons.io;version="2.4.0",
  org.apache.commons.lang3;version="3.1.0"
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/ch.elexis.core.documents.DocumentStore.xml
 Export-Package: ch.elexis.core.documents
+Service-Component: OSGI-INF/ch.elexis.core.documents.DocumentStore.xml

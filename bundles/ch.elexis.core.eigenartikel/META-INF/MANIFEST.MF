@@ -10,5 +10,5 @@ Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
  ch.elexis.core.data;bundle-version="3.9.0"
 Export-Package: ch.elexis.core.eigenartikel,
  ch.elexis.core.eigenartikel.acl
-Service-Component: OSGI-INF/ch.elexis.core.eigenartikel.service.EigenartikelCodeElementService.xml
 Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/ch.elexis.core.eigenartikel.service.EigenartikelCodeElementService.xml

@@ -2,29 +2,23 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Templates UI
 Bundle-SymbolicName: ch.elexis.core.findings.templates.ui;singleton:=true
-Bundle-Version: 3.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.eclipse.core.runtime,
+Bundle-Version: 3.9.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
+ ch.elexis.core.data;bundle-version="3.9.0",
+ ch.elexis.core.findings;bundle-version="3.9.0",
+ ch.elexis.core.findings.util;bundle-version="3.9.0",
+ ch.elexis.core.findings.ui;bundle-version="3.9.0",
+ ch.elexis.core.ui;bundle-version="3.9.0",
+ ch.elexis.core.ui.icons;bundle-version="3.3.0",
  org.eclipse.ui,
- ch.elexis.core,
- org.eclipse.core.expressions,
- ch.elexis.core.findings.templates,
- ch.elexis.core.findings.templates.edit,
- ch.elexis.core.data,
+ ch.elexis.core.findings.templates;bundle-version="3.9.0",
+ ch.elexis.core.findings.templates.edit;bundle-version="3.9.0",
  org.eclipse.ui.views;bundle-version="3.8.102",
- ch.elexis.core.ui;bundle-version="3.2.0"
+ org.eclipse.emf.edit.ui;bundle-version="2.19.0"
 Bundle-Vendor: medevit.at
 Bundle-ActivationPolicy: lazy
-Import-Package: ch.elexis.core.findings,
- ch.elexis.core.findings.codes,
- ch.elexis.core.findings.ui.composites,
- ch.elexis.core.findings.ui.util,
- ch.elexis.core.findings.util,
- ch.elexis.core.findings.util.commands,
- ch.elexis.core.findings.util.model,
- ch.elexis.core.ui.icons,
- ch.rgw.tools,
- org.apache.commons.lang3;version="3.1.0",
+Import-Package: org.apache.commons.lang3;version="3.1.0",
  org.apache.commons.lang3.math;version="3.1.0",
  org.eclipse.core.databinding,
  org.eclipse.core.databinding.beans,
@@ -36,7 +30,6 @@ Import-Package: ch.elexis.core.findings,
  org.eclipse.core.databinding.property.value,
  org.eclipse.e4.core.contexts,
  org.eclipse.emf.databinding,
- org.eclipse.emf.edit.ui.provider,
  org.eclipse.jface.databinding.swt,
  org.eclipse.jface.databinding.viewers,
  org.osgi.service.component.annotations;version="1.2.0"

@@ -2,26 +2,27 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Selbstdefinierte Diagnosen
 Bundle-SymbolicName: ch.elexis.core.ui.eigendiagnosen;singleton:=true
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: elexis.ch
-Require-Bundle: ch.elexis.core;bundle-version="3.0.0",
- ch.elexis.core.data;bundle-version="3.0.0",
+Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
+ ch.elexis.core;bundle-version="3.9.0",
+ ch.elexis.core.data;bundle-version="3.9.0",
  ch.elexis.core.ui;bundle-version="3.0.0",
  ch.elexis.core.ui.icons;bundle-version="3.0.0",
  org.eclipse.core.runtime,
  org.eclipse.ui,
  ch.elexis.core.ui.importer.div,
  org.eclipse.ui.forms,
- ch.rgw.utility,
  ch.elexis.core.eigendiagnosen;bundle-version="3.0.0",
  ch.elexis.core.l10n;bundle-version="3.5.0",
- org.eclipse.osgi.services;bundle-version="3.6.0"
+ org.eclipse.osgi.services;bundle-version="3.6.0",
+ com.opencsv;bundle-version="3.10.0"
 Created-By: Buildr
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Service-Component: OSGI-INF/ch.elexis.core.ui.eigendiagnosen.ModelServiceHolder.xml
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.commons.lang3;version="3.1.0",
  javax.inject;version="1.0.0",
  org.eclipse.e4.core.di.annotations,
  org.eclipse.e4.ui.di
+Service-Component: OSGI-INF/ch.elexis.core.ui.eigendiagnosen.ModelServiceHolder.xml
 

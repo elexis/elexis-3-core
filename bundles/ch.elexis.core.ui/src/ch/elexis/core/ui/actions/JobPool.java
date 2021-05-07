@@ -15,7 +15,6 @@ package ch.elexis.core.ui.actions;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
@@ -56,9 +55,8 @@ public class JobPool implements BackgroundJobListener {
 	private static JobPool thePool;
 	
 	private JobPool(){
-		IJobManager jobman = Platform.getJobManager();
+		IJobManager jobman = Job.getJobManager();
 		changeLock = jobman.newLock();
-		
 	}
 	
 	public void dispose(){
@@ -183,6 +181,7 @@ public class JobPool implements BackgroundJobListener {
 	/**
 	 * Diese Funktion ist für internen Gebrauch. Organisation der Warteschlange
 	 */
+	@Override
 	public void jobFinished(BackgroundJob j){
 		try {
 			changeLock.acquire();

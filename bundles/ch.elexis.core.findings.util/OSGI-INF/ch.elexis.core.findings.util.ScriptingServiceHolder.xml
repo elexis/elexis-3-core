@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.findings.util.ScriptingServiceHolder">
-   <reference bind="setScriptingService" cardinality="0..1" interface="ch.elexis.core.services.IScriptingService" name="ScriptingService" policy="static"/>
+   <reference bind="setScriptingService" cardinality="0..1" interface="ch.elexis.core.services.IScriptingService" name="ScriptingService"/>
    <implementation class="ch.elexis.core.findings.util.ScriptingServiceHolder"/>
 </scr:component>

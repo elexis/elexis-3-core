@@ -3,8 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Perspective
 Bundle-SymbolicName: ch.elexis.core.ui.perspective;singleton:=true
 Bundle-Vendor: elexis.info
-Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Version: 3.9.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: ch.elexis.core.data.activator,
  ch.elexis.core.ui,
  ch.elexis.core.ui.compatibility,
@@ -12,26 +12,18 @@ Import-Package: ch.elexis.core.data.activator,
  org.apache.commons.io.filefilter;version="2.4.0",
  org.eclipse.core.commands,
  org.eclipse.core.runtime;version="3.5.0",
- org.eclipse.e4.core.contexts,
- org.eclipse.e4.ui.internal.workbench,
- org.eclipse.e4.ui.model.application,
- org.eclipse.e4.ui.model.application.ui,
- org.eclipse.e4.ui.model.application.ui.advanced,
- org.eclipse.e4.ui.model.application.ui.basic,
- org.eclipse.e4.ui.model.application.ui.menu,
- org.eclipse.e4.ui.workbench,
- org.eclipse.e4.ui.workbench.modeling,
  org.eclipse.emf.common.util,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.resource,
  org.eclipse.emf.ecore.xmi.impl,
  org.osgi.service.component.annotations;version="1.2.0",
  org.slf4j
-Require-Bundle: org.eclipse.ui.workbench,
+Require-Bundle: ch.elexis.core.ui.e4;bundle-version="3.9.0",
+ org.eclipse.ui.workbench,
  org.eclipse.ui
-Service-Component: OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveImportHandler.xml,
- OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveExportHandler.xml,
- OSGI-INF/ch.elexis.core.ui.perspective.service.internal.PerspectiveExportService.xml,
- OSGI-INF/ch.elexis.core.ui.perspective.service.internal.PerspectiveImportService.xml
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui.perspective.service
+Service-Component: OSGI-INF/ch.elexis.core.ui.perspective.service.internal.PerspectiveExportService.xml,
+ OSGI-INF/ch.elexis.core.ui.perspective.service.internal.PerspectiveImportService.xml,
+ OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveExportHandler.xml,
+ OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveImportHandler.xml

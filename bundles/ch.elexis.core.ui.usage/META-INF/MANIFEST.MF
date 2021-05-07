@@ -6,34 +6,30 @@ Bundle-Version: 3.9.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: ch.elexis.core.ui.usage.model,
  ch.elexis.core.ui.usage.model.impl,
  ch.elexis.core.ui.usage.model.util
-Require-Bundle: org.eclipse.ui,
+Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
+ ch.elexis.core.data;bundle-version="3.9.0",
+ org.eclipse.ui,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.ui.workbench,
- org.eclipse.osgi.services,
  org.eclipse.e4.core.services,
- org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.jface.databinding,
- ch.rgw.utility,
- ch.elexis.core.data,
  org.eclipse.ui.monitoring;bundle-version="1.1.600"
 Import-Package: ch.elexis.core.services.holder,
  ch.elexis.core.ui.icons,
  ch.elexis.core.ui.util,
  org.apache.commons.io;version="2.4.0",
  org.apache.commons.io.filefilter;version="2.4.0",
- org.apache.commons.lang.time;version="2.6.0",
+ org.apache.commons.lang3.time;version="3.12.0",
  org.eclipse.core.databinding.observable.map,
  org.eclipse.core.databinding.property,
  org.eclipse.core.databinding.property.list,
  org.eclipse.core.databinding.property.value,
  org.eclipse.core.runtime;version="3.5.0",
  org.eclipse.emf.databinding,
- org.eclipse.emf.ecore.xmi.impl,
- org.slf4j
-Service-Component: OSGI-INF/ch.elexis.core.ui.usage.StartupHandler.xml
+ org.eclipse.emf.ecore.xmi.impl
 Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/ch.elexis.core.ui.usage.StartupHandler.xml

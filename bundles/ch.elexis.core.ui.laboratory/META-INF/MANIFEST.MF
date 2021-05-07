@@ -2,28 +2,26 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Core Laboratory
 Bundle-SymbolicName: ch.elexis.core.ui.laboratory;singleton:=true
-Bundle-Version: 3.7.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Activator: ch.elexis.core.ui.laboratory.Activator
 Bundle-Vendor: elexis.info
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: ch.elexis.core.l10n;bundle-version="3.9.0",
+ ch.rgw.utility;bundle-version="3.9.100",
+ ch.elexis.core;bundle-version="3.9.0",
+ ch.elexis.core.data;bundle-version="3.9.0",
+ org.eclipse.ui,
  org.eclipse.ui.forms;bundle-version="3.5.200",
- ch.rgw.utility,
- ch.elexis.core;bundle-version="3.0.0",
- ch.elexis.core.data;bundle-version="3.0.0",
  ch.elexis.core.ui;bundle-version="3.0.0",
  ch.elexis.core.ui.icons;bundle-version="3.0.0",
- org.jdom,
- ch.elexis.core.l10n;bundle-version="3.5.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+ org.jdom
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.services.holder,
  javax.inject;version="1.0.0",
- org.apache.commons.lang;version="2.6.0",
+ org.apache.commons.lang3;version="3.12.0",
  org.eclipse.e4.core.di.annotations;version="1.6.0",
- org.eclipse.e4.ui.model.application.ui.basic,
- org.slf4j
+ org.eclipse.e4.ui.model.application.ui.basic
 Export-Package: ch.elexis.core.ui.laboratory.actions,
  ch.elexis.core.ui.laboratory.controls,
  ch.elexis.core.ui.laboratory.dialogs,

@@ -21,5 +21,5 @@ Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsM
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelService.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.LocalCodingContribution.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsService.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.CodingService.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.DocumentStoreHolder.xml
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.DocumentStoreHolder.xml,
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.CodingService.xml

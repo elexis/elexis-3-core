@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: ch.elexis.core.tasks.test
-Bundle-Version: 1.0.0.qualifier
-Fragment-Host: ch.elexis.core.tasks;bundle-version="1.0.0"
+Bundle-Version: 3.9.0.qualifier
+Fragment-Host: ch.elexis.core.tasks;bundle-version="3.9.0"
 Automatic-Module-Name: ch.elexis.core.jobs.test
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
  ch.elexis.core.services;bundle-version="1.0.0",

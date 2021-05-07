@@ -2,16 +2,16 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Iatrix Help Wiki
 Bundle-SymbolicName: org.iatrix.help.wiki; singleton:=true
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Activator: org.iatrix.help.wiki.Activator
 Bundle-Vendor: org.iatrix
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- ch.rgw.utility,
- ch.elexis.core.data;bundle-version="3.2.0",
- ch.elexis.core.ui;bundle-version="3.2.0",
+Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
+ ch.elexis.core.data;bundle-version="3.9.0",
+ ch.elexis.core.ui;bundle-version="3.9.0",
+ ch.elexis.core.ui.e4;bundle-version="3.9.0",
+ org.eclipse.ui,
  org.eclipse.swt.chromium
 Import-Package: ch.elexis.core.services.holder,
  javax.inject;version="1.0.0",
- org.eclipse.e4.core.di.annotations;version="1.6.0",
  org.eclipse.e4.ui.model.application.ui.basic
+Bundle-RequiredExecutionEnvironment: JavaSE-11

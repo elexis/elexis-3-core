@@ -14,6 +14,7 @@ import org.junit.runners.Parameterized.Parameters;
 import ch.elexis.core.common.DBConnection;
 import ch.elexis.core.common.DBConnection.DBType;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.services.IElexisDataSource;
 import ch.elexis.core.utils.OsgiServiceUtil;
@@ -41,6 +42,7 @@ public class AbstractPersistentObjectTest {
 	public AbstractPersistentObjectTest(JdbcLink link, boolean deleteTables){
 		this.link = link;
 		assertNotNull(link);
+		assertNotNull(CoreHub.localCfg);
 		if (deleteTables) {
 			PersistentObject.connect(link);
 			PersistentObject.deleteAllTables();

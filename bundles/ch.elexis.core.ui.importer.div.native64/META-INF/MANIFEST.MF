@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Native64 bit libraries for importer.div
 Bundle-SymbolicName: ch.elexis.core.ui.importer.div.native64
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: elexis.info
 Fragment-Host: ch.elexis.core.ui.importer.div;bundle-version="3.2.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Eclipse-PlatformFilter:  (& (|(osgi.os=win32) (osgi.os=linux)) (osgi.arch=x86_64))
 Bundle-NativeCode: lib/librxtxSerial.so ;
         osname = Linux ;

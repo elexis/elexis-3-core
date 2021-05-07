@@ -2,17 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis-Environment Ui
 Bundle-SymbolicName: ch.elexis.core.ui.eenv;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: elexis.info
-Require-Bundle: org.eclipse.ui;bundle-version="3.110.0",
+Require-Bundle: ch.elexis.core;bundle-version="3.9.0",
+ org.eclipse.ui;bundle-version="3.110.0",
  org.eclipse.swt,
- ch.elexis.core,
  org.eclipse.swt.chromium;bundle-version="0.10.2";resolution:=optional,
- com.fasterxml.jackson.core.jackson-core;bundle-version="2.9.9",
- com.fasterxml.jackson.core.jackson-databind;bundle-version="2.9.93",
  ch.elexis.core.services;bundle-version="1.0.0"
 Automatic-Module-Name: ch.elexis.core.ui.eenv
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: javax.annotation,
  javax.inject;version="1.0.0",
  org.apache.commons.io;version="2.5.0",
@@ -28,5 +26,5 @@ Bundle-ClassPath: .,
  lib/jjwt-api-0.11.1.jar,
  lib/jjwt-impl-0.11.1.jar,
  lib/jjwt-jackson-0.11.1.jar
-Service-Component: OSGI-INF/ch.elexis.core.ui.eenv.login.ElexisEnvironmentLoginContributor.xml
 Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/ch.elexis.core.ui.eenv.login.ElexisEnvironmentLoginContributor.xml

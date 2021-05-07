@@ -2,15 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: ch.elexis.core.findings.templates.edit;singleton:=true
-Bundle-Version: 3.0.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: ch.elexis.core.findings.templates.model.provider.ModelEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: ch.elexis.core.findings.templates.model.provider
-Require-Bundle: org.eclipse.core.runtime,
- ch.elexis.core.findings.templates;visibility:=reexport,
+Require-Bundle: ch.elexis.core.findings.templates;bundle-version="3.9.0";visibility:=reexport,
+ org.eclipse.core.runtime,
  org.eclipse.emf.edit;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.emf.databinding

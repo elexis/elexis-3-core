@@ -17,5 +17,5 @@ Import-Package: ch.elexis.core.services.holder,
  javax.persistence;version="2.2.3",
  javax.persistence.criteria;version="2.2.3"
 Service-Component: OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.DiagnosisModelService.xml,
- OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.ModelUtil.xml,
- OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.CodeElementContribution.xml
+ OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.CodeElementContribution.xml,
+ OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.ModelUtil.xml

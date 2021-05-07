@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -59,8 +60,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Objects;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
@@ -160,6 +159,7 @@ public class KonsDetailView extends ViewPart
 	
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this) {
 		
+		@Override
 		public void partActivated(org.eclipse.ui.IWorkbenchPartReference partRef){
 			if (isMatchingPart(partRef)) {
 				if (actEncounter != null && !text.isDirty()) {
@@ -168,6 +168,7 @@ public class KonsDetailView extends ViewPart
 			}
 		};
 		
+		@Override
 		public void partDeactivated(org.eclipse.ui.IWorkbenchPartReference partRef){
 			if (isMatchingPart(partRef)) {
 				// save entry on deactivation if text was edited
@@ -182,6 +183,7 @@ public class KonsDetailView extends ViewPart
 			}
 		};
 		
+		@Override
 		public void partVisible(org.eclipse.ui.IWorkbenchPartReference partRef){
 			// do not call super and refresh, should be handled by partActivated
 			if (isMatchingPart(partRef)) {
@@ -246,7 +248,7 @@ public class KonsDetailView extends ViewPart
 	void lockPreRelease(
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_PRERELEASE) IEncounter encounter){
 		if (created) {
-			if (Objects.equal(encounter, actEncounter)) {
+			if (Objects.equals(encounter, actEncounter)) {
 				save();
 			}
 		}
@@ -286,7 +288,7 @@ public class KonsDetailView extends ViewPart
 	void lockedEncounter(
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IEncounter encounter){
 		if (created) {
-			if (Objects.equal(encounter, actEncounter)) {
+			if (Objects.equals(encounter, actEncounter)) {
 				IEncounter db_encounter = CoreModelServiceHolder.get()
 					.load(encounter.getId(), IEncounter.class, false, true).get();
 				long db_lastupdate = db_encounter.getLastupdate();
@@ -309,7 +311,7 @@ public class KonsDetailView extends ViewPart
 	void unlockedEncounter(
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IEncounter encounter){
 		if (created) {
-			if (Objects.equal(encounter, actEncounter)) {
+			if (Objects.equals(encounter, actEncounter)) {
 				setUnlocked(false);
 				refreshContributionItemState();
 			}
@@ -325,7 +327,7 @@ public class KonsDetailView extends ViewPart
 	
 	private void refreshContributionItemState(){
 		ICommandService commandService =
-			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+			PlatformUI.getWorkbench().getService(ICommandService.class);
 		commandService.refreshElements(ToggleCurrentKonsultationLockHandler.COMMAND_ID, null);
 	}
 	

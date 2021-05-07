@@ -27,12 +27,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
+import com.opencsv.CSVReader;
 
-import au.com.bytecode.opencsv.CSVReader;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.l10n.Messages;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -325,6 +324,7 @@ public class Interaction extends PersistentObject {
 				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(shell);
 				try {
 					progressDialog.run(true, true, new IRunnableWithProgress() {
+						@Override
 						public void run(IProgressMonitor monitor)
 							throws InvocationTargetException, InterruptedException{
 							monitor.beginTask(String.format(
