@@ -26,7 +26,7 @@ public class GenericTaskResultDetailComposite {
 	private static Font boldFont;
 	
 	public GenericTaskResultDetailComposite(Composite parent, ITask task){
-		dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy dd:HH:mm.ss");
+		dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm.ss");
 		
 		Composite container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
