@@ -7,28 +7,27 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.ConnectionFactory;
-import org.apache.commons.dbcp2.DriverConnectionFactory;
-import org.apache.commons.dbcp2.PoolableConnection;
-import org.apache.commons.dbcp2.PoolableConnectionFactory;
-import org.apache.commons.dbcp2.PoolingDataSource;
+import org.apache.commons.dbcp.ConnectionFactory;
+import org.apache.commons.dbcp.DriverConnectionFactory;
+import org.apache.commons.dbcp.PoolableConnectionFactory;
+import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool.impl.GenericObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.DBConnection;
 
-public class ElexisPoolingDataSource extends PoolingDataSource<PoolableConnection> implements DataSource {
+public class ElexisPoolingDataSource extends PoolingDataSource implements DataSource {
 	
 	private static Logger log = LoggerFactory.getLogger(ElexisPoolingDataSource.class);
 	
 	private DBConnection dbConnection;
 	
-	private GenericObjectPool<PoolableConnection> connectionPool;
+	private ObjectPool<Connection> connectionPool;
 	
 	public ElexisPoolingDataSource(DBConnection dbConnection){
-		super(createConnectionPool(dbConnection));
 		this.dbConnection = dbConnection;
 	}
 	
@@ -36,6 +35,7 @@ public class ElexisPoolingDataSource extends PoolingDataSource<PoolableConnectio
 		throws InstantiationException, IllegalAccessException, ClassNotFoundException{
 		connectionPool = createConnectionPool(dbConnection);
 		if (connectionPool != null) {
+			setPool(connectionPool);
 			try (Connection conn = getConnection()) {
 				log.info("db connection pool [" + dbConnection.connectionString
 					+ "] initialization success");
@@ -60,20 +60,14 @@ public class ElexisPoolingDataSource extends PoolingDataSource<PoolableConnectio
 		}
 	}
 	
-	private static GenericObjectPool<PoolableConnection> createConnectionPool(DBConnection dbConnection)
-		 {
+	private ObjectPool<Connection> createConnectionPool(DBConnection dbConnection)
+		throws InstantiationException, IllegalAccessException, ClassNotFoundException{
 		String driverName = StringUtils.defaultString(dbConnection.rdbmsType.driverName);
 		String username = StringUtils.defaultString(dbConnection.username);
 		String password = StringUtils.defaultString(dbConnection.password);
 		String jdbcString = StringUtils.defaultString(dbConnection.connectionString);
 		
-		Driver driver = null;
-		try {
-			driver = (Driver) Class.forName(driverName).newInstance();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			e.printStackTrace();
-			log.error("Error getting database driver class", e);
-		}
+		Driver driver = (Driver) Class.forName(driverName).newInstance();
 		
 		Properties properties = new Properties();
 		properties.put("user", username);
@@ -85,18 +79,14 @@ public class ElexisPoolingDataSource extends PoolingDataSource<PoolableConnectio
 		ConnectionFactory connectionFactory =
 			new DriverConnectionFactory(driver, jdbcString, properties);
 		
-		PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
-		poolableConnectionFactory.setValidationQuery("SELECT 1;");
-		poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
-		poolableConnectionFactory.setDefaultAutoCommit(Boolean.TRUE);
-		
-		GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<PoolableConnection>(poolableConnectionFactory);
-		connectionPool.setMaxTotal(32);
+		GenericObjectPool<Connection> connectionPool = new GenericObjectPool<>(null);
+		connectionPool.setMaxActive(32);
 		connectionPool.setMinIdle(8);
-		connectionPool.setMaxWaitMillis(10000);
+		connectionPool.setMaxWait(10000);
 		connectionPool.setTestOnBorrow(true);
-		poolableConnectionFactory.setPool(connectionPool);
-	
+		
+		new PoolableConnectionFactory(connectionFactory, connectionPool, null, "SELECT 1;", false,
+			true);
 		return connectionPool;
 		
 	}

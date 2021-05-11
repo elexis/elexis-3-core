@@ -59,15 +59,16 @@
         <setEntry value="javax.el@default:default"/>
         <setEntry value="javax.inject@default:default"/>
         <setEntry value="javax.servlet@default:default"/>
+        <setEntry value="javax.transaction@default:default"/>
         <setEntry value="javax.xml@default:default"/>
         <setEntry value="org.apache.commons.collections@default:default"/>
         <setEntry value="org.apache.commons.commons-beanutils@default:default"/>
         <setEntry value="org.apache.commons.commons-codec@default:default"/>
-        <setEntry value="org.apache.commons.commons-dbcp2@default:default"/>
-        <setEntry value="org.apache.commons.commons-pool2@default:default"/>
+        <setEntry value="org.apache.commons.dbcp@default:default"/>
         <setEntry value="org.apache.commons.io@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.commons.logging@default:default"/>
+        <setEntry value="org.apache.commons.pool@default:default"/>
         <setEntry value="org.apache.felix.gogo.command@default:default"/>
         <setEntry value="org.apache.felix.gogo.runtime@default:default"/>
         <setEntry value="org.apache.felix.gogo.shell@default:default"/>
@@ -144,7 +145,6 @@
         <setEntry value="ch.rgw.utility.tests@default:false"/>
         <setEntry value="ch.rgw.utility@default:default"/>
         <setEntry value="jakarta.xml.bind-api@default:false"/>
-        <setEntry value="javax.transaction@default:false"/>
         <setEntry value="org.osgi.framework.system.packages.extra@default:false"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
