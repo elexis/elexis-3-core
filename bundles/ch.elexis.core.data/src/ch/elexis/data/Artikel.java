@@ -253,7 +253,7 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 	
 	public boolean isVaccination(){
 		String atcCode = getATC_code();
-		if (atcCode != null && atcCode.length() > 4) {
+		if (atcCode != null) {
 			if (atcCode.toUpperCase().startsWith("J07")
 				&& !atcCode.toUpperCase().startsWith("J07AX")) {
 				return true;
