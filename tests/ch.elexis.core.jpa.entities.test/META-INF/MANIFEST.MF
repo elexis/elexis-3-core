@@ -2,9 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core JPA Entities Test
 Bundle-SymbolicName: ch.elexis.core.jpa.entities.test
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: medevit.at
-Fragment-Host: ch.elexis.core.jpa.entities;bundle-version="1.0.0"
-Automatic-Module-Name: ch.elexis.core.jpa.entities.test
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Fragment-Host: ch.elexis.core.jpa.entities
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit;bundle-version="4.12.0"

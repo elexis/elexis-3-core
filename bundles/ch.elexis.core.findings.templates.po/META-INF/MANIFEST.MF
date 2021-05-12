@@ -9,6 +9,6 @@ Require-Bundle: ch.elexis.core.data;bundle-version="3.9.0",
  ch.elexis.core.findings;bundle-version="1.0.0",
  ch.elexis.core.findings.templates;bundle-version="3.0.0"
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/ch.elexis.core.findings.templates.service.FindingsTemplateService.xml
 Import-Package: org.apache.commons.io;version="2.6.0",
  org.eclipse.emf.ecore.xmi.impl
+Service-Component: OSGI-INF/ch.elexis.core.findings.templates.service.FindingsTemplateService.xml
