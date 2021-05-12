@@ -19,14 +19,11 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.osgi"/>
-      <import plugin="javax.servlet"/>
       <import plugin="org.eclipse.osgi.services" version="3.3.100" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="uk.org.lidalia.sysout-over-slf4j"/>
-      <import plugin="ch.qos.logback.core"/>
-      <import plugin="ch.qos.logback.classic"/>
-      <import plugin="org.slf4j.api"/>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.slf4j.api" version="1.7.30" match="equivalent"/>
+      <import plugin="org.eclipse.equinox.common"/>
+      <import plugin="ch.qos.logback.classic" version="1.0.7" match="greaterOrEqual"/>
    </requires>
 
    <plugin
