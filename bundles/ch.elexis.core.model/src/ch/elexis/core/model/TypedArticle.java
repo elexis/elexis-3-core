@@ -339,8 +339,9 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	@Override
 	public boolean isVaccination() {
 		String atcCode = getAtcCode();
-		if (atcCode != null && atcCode.length() > 4) {
-			if (atcCode.toUpperCase().startsWith("J07") && !atcCode.toUpperCase().startsWith("J07AX")) {
+		if (atcCode != null) {
+			if (atcCode.toUpperCase().startsWith("J07")
+				&& !atcCode.toUpperCase().startsWith("J07AX")) {
 				return true;
 			}
 		}
