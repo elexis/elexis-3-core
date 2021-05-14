@@ -2689,13 +2689,22 @@ public interface ModelPackage extends EPackage {
 	int ILAB_ORDER__STATE = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
+	 * The feature id for the '<em><b>Group Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ORDER__GROUP_NAME = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
 	 * The number of structural features of the '<em>ILab Order</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ORDER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int ILAB_ORDER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabMapping <em>ILab Mapping</em>}' class.
@@ -8603,6 +8612,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getILabOrder_State();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabOrder#getGroupName <em>Group Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Group Name</em>'.
+	 * @see ch.elexis.core.model.ILabOrder#getGroupName()
+	 * @see #getILabOrder()
+	 * @generated
+	 */
+	EAttribute getILabOrder_GroupName();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ILabMapping <em>ILab Mapping</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12853,6 +12873,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ILAB_ORDER__STATE = eINSTANCE.getILabOrder_State();
+
+		/**
+		 * The meta object literal for the '<em><b>Group Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_ORDER__GROUP_NAME = eINSTANCE.getILabOrder_GroupName();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ILabMapping <em>ILab Mapping</em>}' class.
