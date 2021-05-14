@@ -122,7 +122,7 @@ public class TransientLabResult {
 	}
 	
 	public ILabResult persist(ILabOrder labOrder, String orderId,
-		IMandator mandantor, TimeTool time){
+		IMandator mandantor, TimeTool time, String groupName){
 		// determine gender, set refVal
 		String refVal;
 		if (Gender.MALE == patient.getGender()) {
@@ -133,7 +133,7 @@ public class TransientLabResult {
 		
 		ILabResult labResult =
 			labImportUtil.createLabResult(patient, date, labItem, result, comment, refVal, origin,
-				subId, labOrder, orderId, mandantor, time);
+				subId, labOrder, orderId, mandantor, time, groupName);
 		
 		setFieldsAndInterpret(labResult);
 		

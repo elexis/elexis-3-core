@@ -180,6 +180,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ILabOrder/mandator"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabOrder/orderId"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabOrder/state"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabOrder/groupName"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILabMapping">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabMapping/itemName"/>

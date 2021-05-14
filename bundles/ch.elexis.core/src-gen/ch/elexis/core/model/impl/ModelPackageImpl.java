@@ -1728,6 +1728,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getILabOrder_GroupName() {
+		return (EAttribute)iLabOrderEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getILabMapping() {
 		return iLabMappingEClass;
 	}
@@ -4943,6 +4953,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iLabOrderEClass, ILAB_ORDER__MANDATOR);
 		createEAttribute(iLabOrderEClass, ILAB_ORDER__ORDER_ID);
 		createEAttribute(iLabOrderEClass, ILAB_ORDER__STATE);
+		createEAttribute(iLabOrderEClass, ILAB_ORDER__GROUP_NAME);
 
 		iLabMappingEClass = createEClass(ILAB_MAPPING);
 		createEAttribute(iLabMappingEClass, ILAB_MAPPING__ITEM_NAME);
@@ -5655,6 +5666,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getILabOrder_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabOrder_OrderId(), ecorePackage.getEString(), "orderId", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabOrder_State(), theTypesPackage.getLabOrderState(), "state", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getILabOrder_GroupName(), ecorePackage.getEString(), "groupName", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iLabMappingEClass, ILabMapping.class, "ILabMapping", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getILabMapping_ItemName(), ecorePackage.getEString(), "itemName", null, 0, 1, ILabMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

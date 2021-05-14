@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
  *   <li>{@link ch.elexis.core.model.ILabOrder#getMandator <em>Mandator</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabOrder#getOrderId <em>Order Id</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabOrder#getState <em>State</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabOrder#getGroupName <em>Group Name</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getILabOrder()
@@ -271,5 +272,27 @@ public interface ILabOrder extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setState(LabOrderState value);
+
+	/**
+	 * Returns the value of the '<em><b>Group Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group Name</em>' attribute.
+	 * @see #setGroupName(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabOrder_GroupName()
+	 * @model
+	 * @generated
+	 */
+	String getGroupName();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabOrder#getGroupName <em>Group Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Group Name</em>' attribute.
+	 * @see #getGroupName()
+	 * @generated
+	 */
+	void setGroupName(String value);
 
 } // ILabOrder

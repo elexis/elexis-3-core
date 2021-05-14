@@ -516,7 +516,8 @@ public class LabImportUtil implements ILabImportUtil {
 	@Override
 	public ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem,
 		String result, String comment, String refVal, ILaboratory laboratory, String subId,
-		ILabOrder labOrder, String orderId, IMandator mandator, TimeTool observationTime){
+		ILabOrder labOrder, String orderId, IMandator mandator, TimeTool observationTime,
+		String groupName){
 		
 		logger.info("Creating result with patient [" + patient.getId() + "] labitem [" + labItem
 			+ "] origin [" + laboratory + "] observationTime [" + observationTime + "] labOrder ["
@@ -550,9 +551,11 @@ public class LabImportUtil implements ILabImportUtil {
 			order.setTimeStamp(LocalDateTime.now());
 			order.setObservationTime(observationTime.toLocalDateTime());
 			order.setMandator(mandator);
+			order.setGroupName(groupName);
 			if (orderId != null) {
 				order.setOrderId(orderId);
 			}
+			ContextServiceHolder.get().getActiveUserContact().ifPresent(uc -> order.setUser(uc));
 			modelService.save(order);
 		} else {
 			labOrder.setResult(labResult);
@@ -580,13 +583,13 @@ public class LabImportUtil implements ILabImportUtil {
 				time = transientLabResult.getDate();
 			}
 			
-			labResult = transientLabResult.persist(null, orderId, mandantor, time);
+			labResult = transientLabResult.persist(null, orderId, mandantor, time, "Import");
 			labOrder = (ILabOrder) labResult.getLabOrder();
 			
 		} else {
 			// TODO for multiple entries we could check on which one the observationtime matches
 			labOrder = existing.get(0);
-			labResult = transientLabResult.persist(labOrder, null, null, null);
+			labResult = transientLabResult.persist(labOrder, null, null, null, null);
 		}
 		
 		labOrder.setState(LabOrderState.DONE_IMPORT);

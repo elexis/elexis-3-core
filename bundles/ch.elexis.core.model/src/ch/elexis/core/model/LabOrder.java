@@ -2,6 +2,8 @@ package ch.elexis.core.model;
 
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
@@ -138,5 +140,15 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	@Override
 	public String toString(){
 		return super.toString() + " " + getLabel();
+	}
+	
+	@Override
+	public String getGroupName(){
+		return StringUtils.defaultString(getEntity().getGroupname());
+	}
+	
+	@Override
+	public void setGroupName(String value){
+		getEntityMarkDirty().setGroupname(value);
 	}
 }
