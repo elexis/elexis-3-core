@@ -91,7 +91,9 @@ public class EncounterService implements IEncounterService {
 		Result<IEncounter> result = new Result<IEncounter>(encounter);
 		
 		ICoverage encounterCovearage = encounter.getCoverage();
+		// transfer encounter and save to clear dirty flag
 		encounter.setCoverage(coverage);
+		coreModelService.save(encounter);
 		if (encounterCovearage != null) {
 			ch.elexis.core.services.ICodeElementService codeElementService =
 				CodeElementServiceHolder.get();
@@ -116,7 +118,8 @@ public class EncounterService implements IEncounterService {
 						.loadFromString(billable.getCodeSystemName(), billable.getCode(), context);
 					if (matchingIBillable.isPresent()) {
 						double amount = billed.getAmount();
-						billingService.removeBilled(billed, encounter);
+						// do not use billing service / optifier to remove the billed, as that could also modify other billed (tarmed bezug)
+						encounter.removeBilled(billed);
 						for (int i = 0; i < amount; i++) {
 							billingService.bill((IBillable) matchingIBillable.get(), encounter, 1);
 						}
