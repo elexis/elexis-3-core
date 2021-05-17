@@ -20,6 +20,7 @@ import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EX
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES;
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -664,6 +665,9 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			}
 		});
 		stornoViewer.setLabelProvider(new LabelProvider() {
+			
+			private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+			
 			@Override
 			public String getText(Object element){
 				if (element instanceof IInvoiceBilled) {
@@ -672,6 +676,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 						+ vc.getTotal().toString() + ")"; //$NON-NLS-1$
 				} else if (element instanceof Konsultation) {
 					return "Konsultation " + ((Konsultation) element).getDatum();
+				} else if (element instanceof IEncounter) {
+					return "Konsultation " + dateFormatter.format(((IEncounter) element).getDate());
 				} else {
 					return element.toString();
 				}
