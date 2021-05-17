@@ -255,4 +255,9 @@ public class InvoiceBilled extends AbstractIdDeleteModelAdapter<VerrechnetCopy>
 	public void copy(IBilled to){
 		throw new UnsupportedOperationException();
 	}
+	
+	@Override
+	public String getLabel(){
+		return getText();
+	}
 }
