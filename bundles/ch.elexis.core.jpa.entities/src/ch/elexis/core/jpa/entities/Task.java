@@ -74,7 +74,7 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	@Column(length = 64)
 	protected String runner;
 	
-	@Column
+	@Column(name = "is_system")
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean system = false;
 	

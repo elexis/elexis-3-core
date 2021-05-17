@@ -76,7 +76,7 @@ public class TaskDescriptor extends AbstractEntityWithId
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean singleton = false;
 	
-	@Column
+	@Column(name = "is_system")
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean system = false;
 	
