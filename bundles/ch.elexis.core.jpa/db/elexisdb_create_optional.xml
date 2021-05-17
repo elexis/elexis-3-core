@@ -2290,5 +2290,19 @@ WHERE kontakt.id IN (
 			<column defaultValue="0" name="SYSTEM" type="CHAR(1)" />
 		</addColumn>
 	</changeSet>
+	<changeSet id="task_renreswordsystem" author="marco">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="TASK" columnName="SYSTEM" />
+		</preConditions>
+		<renameColumn tableName="TASK" oldColumnName="SYSTEM"
+			newColumnName="IS_SYSTEM" columnDataType="CHAR(1)" />
+	</changeSet>
+	<changeSet id="taskdescriptor_renreswordsystem" author="marco">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="TASKDESCRIPTOR" columnName="SYSTEM" />
+		</preConditions>
+		<renameColumn tableName="TASKDESCRIPTOR" oldColumnName="SYSTEM"
+			newColumnName="IS_SYSTEM" columnDataType="CHAR(1)" />
+	</changeSet>
     
 </databaseChangeLog>
