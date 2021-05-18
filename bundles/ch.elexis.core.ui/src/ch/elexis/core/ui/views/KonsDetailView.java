@@ -236,6 +236,13 @@ public class KonsDetailView extends ViewPart
 	}
 	
 	@Inject
+	void updateCoverage(@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICoverage coverage){
+		if (created) {
+			updateFallCombo();
+		}
+	}
+	
+	@Inject
 	void lockPreRelease(
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_PRERELEASE) IEncounter encounter){
 		if (created) {
