@@ -139,12 +139,13 @@ public class EncounterService implements IEncounterService {
 					} else {
 						billed.setFactor(1.0);
 					}
-					CoreModelServiceHolder.get().save(billed);
+					coreModelService.save(billed);
 				}
 			}
 		}
-		CoreModelServiceHolder.get().save(encounter);
+		coreModelService.save(encounter);
 		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+		ContextServiceHolder.get().setActiveCoverage(coverage);
 		return result;
 	}
 	
