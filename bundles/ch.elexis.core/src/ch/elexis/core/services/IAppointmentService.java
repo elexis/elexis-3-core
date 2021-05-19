@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import ch.elexis.core.model.IAppointment;
@@ -122,4 +123,12 @@ public interface IAppointmentService {
 	 * @param appointment
 	 */
 	public void deleteAppointmentSeries(IAppointmentSeries appointmentSeries);
+	
+	/**
+	 * Get a map with the configured preferred durations with appointment type as key.
+	 * 
+	 * @param areaName
+	 * @return
+	 */
+	public Map<String, Integer> getPreferredDurations(String areaName);
 }

@@ -10,13 +10,17 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
@@ -46,6 +50,7 @@ public class AppointmentService implements IAppointmentService {
 	public static final String AG_BEREICHE = "agenda/bereiche"; //$NON-NLS-1$
 	public static final String AG_BEREICH_PREFIX = "agenda/bereich/"; //$NON-NLS-1$
 	public static final String AG_BEREICH_TYPE_POSTFIX = "/type"; //$NON-NLS-1$
+	public static final String AG_TIMEPREFERENCES = "agenda/zeitvorgaben"; //$NON-NLS-1$
 	
 	private static final int TYPE_FREE = 0; //frei
 	private static final int TYPE_RESERVED = 1; //reserviert
@@ -498,5 +503,36 @@ public class AppointmentService implements IAppointmentService {
 			List<IAppointment> appointments = query.execute();
 			CoreModelServiceHolder.get().delete(appointments);
 		}
+	}
+	
+	@Override
+	public Map<String, Integer> getPreferredDurations(String areaName){
+		Map<String, Integer> ret = new HashMap<String, Integer>();
+		if (StringUtils.isNotBlank(areaName)) {
+			String mTimes = iConfigService.get(AG_TIMEPREFERENCES + "/" + areaName, ""); //$NON-NLS-1$ //$NON-NLS-2$
+			if (StringUtils.isNotBlank(mTimes)) {
+				String[] types = mTimes.split("::"); //$NON-NLS-1$
+				for (String t : types) {
+					String[] line = t.split("="); //$NON-NLS-1$
+					if (line.length != 2) {
+						LoggerFactory.getLogger(getClass())
+							.warn("Error in preferred duration preference [" + mTimes + "]");
+						continue;
+					}
+					try {
+						Integer duration = Integer.parseInt(line[1].trim());
+						ret.put(line[0], duration);
+					} catch (NumberFormatException e) {
+						LoggerFactory.getLogger(getClass())
+							.warn("Duration not numeric in preference [" + mTimes + "]");
+						continue;
+					}
+				}
+			}
+			if (ret.get("std") == null) { //$NON-NLS-1$
+				ret.put("std", 30); //$NON-NLS-1$
+			}
+		}
+		return ret;
 	}
 }
