@@ -73,7 +73,7 @@ public class InvoiceService implements IInvoiceService {
 			} else {
 				List<IBilled> encounterBilled = encounter.getBilled();
 				for (IBilled billed : encounterBilled) {
-					if (billed.getNetPrice().isZero() && isBillingCheckZero()) {
+					if (billed.getPrice().isZero() && isBillingCheckZero()) {
 						IPatient pat = encounter.getCoverage().getPatient();
 						String msg = "Die Konsultation vom "
 							+ encounter.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
