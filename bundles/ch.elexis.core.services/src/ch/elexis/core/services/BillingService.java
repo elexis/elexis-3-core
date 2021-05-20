@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
@@ -35,6 +36,7 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.status.StatusUtil;
@@ -313,12 +315,22 @@ public class BillingService implements IBillingService {
 			return Status.OK_STATUS;
 		}
 		
+		IStatus ret = Status.OK_STATUS;
+		boolean bAllowOverrideStrict = ConfigServiceHolder.get()
+			.getActiveUserContact(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT, false);
+		
 		double difference = newAmount - oldAmount;
 		if (difference > 0) {
 			IBillable billable = billed.getBillable();
 			for (int i = 0; i < difference; i++) {
 				Result<IBilled> result = bill(billable, encounter, 1.0);
-				if (!result.isOK()) {
+				if (bAllowOverrideStrict) {
+					if (ret.isOK() && !result.isOK()) {
+						String message = result.getMessages().stream().map(m -> m.getText())
+							.collect(Collectors.joining(", "));
+						ret = new Status(Status.WARNING, "ch.elexis.core.services", message);
+					}
+				} else if (!result.isOK()) {
 					String message = result.getMessages().stream().map(m -> m.getText())
 						.collect(Collectors.joining(", "));
 					return new Status(Status.ERROR, "ch.elexis.core.services", message);
@@ -328,7 +340,7 @@ public class BillingService implements IBillingService {
 			changeAmount(billed, newAmount);
 		}
 		
-		return Status.OK_STATUS;
+		return ret;
 	}
 	
 	@Override
