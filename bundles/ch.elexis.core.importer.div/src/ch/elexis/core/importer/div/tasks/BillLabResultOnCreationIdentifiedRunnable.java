@@ -177,7 +177,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 			}
 		}
 		
-		if (encounterSelector != null) {
+		// only use encounterSelector if no validEncounter is found
+		if (validEncounter == null && encounterSelector != null) {
 			String konsId = encounterSelector.createOrOpenConsultation(patient);
 			if (konsId != null) {
 				validEncounter = coreModelService.load(konsId, IEncounter.class).get();
