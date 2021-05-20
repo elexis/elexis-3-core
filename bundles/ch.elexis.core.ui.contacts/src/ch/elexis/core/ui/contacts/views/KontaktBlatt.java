@@ -242,7 +242,7 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 			
 			if (b.getSelection() == true) {
 				if (type.equals("istOrganisation")) { //$NON-NLS-1$
-					select("1", "x", "0", "0", "0", "0"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+					select("1", "x", "0", "0", "x", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					def[0].setLabel(BEZEICHNUNG);
 					def[1].setLabel(ZUSATZ);
 					def[2].setLabel(ANSPRECHPERSON);
