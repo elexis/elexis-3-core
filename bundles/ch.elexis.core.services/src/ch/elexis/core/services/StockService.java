@@ -212,25 +212,28 @@ public class StockService implements IStockService {
 	
 	@Override
 	public Availability getCumulatedAvailabilityForArticle(IArticle article){
-		INamedQuery<Long> query = null;
+		INamedQuery<Integer> query = null;
 		if (isTriggerStockAvailabilityOnBelow()) {
-			query = CoreModelServiceHolder.get().getNamedQueryByName(Long.class,
+			query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class,
 				IStockEntry.class, "StockEntry_AvailableCurrentBelowStock.articleId.articleType");
 		} else {
-			query = CoreModelServiceHolder.get().getNamedQueryByName(Long.class,
+			query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class,
 				IStockEntry.class, "StockEntry_AvailableCurrentStock.articleId.articleType");
 		}
-		List<Long> results = query.executeWithParameters(query.getParameterMap("articleId",
-			article.getId(), "articleType",
-				article.getCodeSystemName()));
-		if (!results.isEmpty()) {
-			Long value = results.get(0);
-			if (value > 1) {
-				return Availability.IN_STOCK;
-			} else if (value == 1) {
-				return Availability.CRITICAL_STOCK;
+		Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(article);
+		if (storeToString.isPresent()) {
+			String[] parts = storeToString.get().split(IStoreToStringContribution.DOUBLECOLON);
+			List<Integer> results = query.executeWithParameters(
+				query.getParameterMap("articleId", parts[1], "articleType", parts[0]));
+			if (!results.isEmpty()) {
+				Integer value = results.get(0);
+				if (value > 1) {
+					return Availability.IN_STOCK;
+				} else if (value == 1) {
+					return Availability.CRITICAL_STOCK;
+				}
+				return Availability.OUT_OF_STOCK;
 			}
-			return Availability.OUT_OF_STOCK;
 		}
 		return null;
 	}
