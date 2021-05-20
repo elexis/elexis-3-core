@@ -97,8 +97,8 @@ public class PredicateHandler {
 		EStructuralFeature otherFeature){
 		String entityAttributeName = getAttributeName(feature, entityClazz);
 		String entityOtherAttributeName = getAttributeName(otherFeature, entityClazz);
-		andCompare(rootQuery, entityClazz, entityAttributeName, comparator,
-			entityOtherAttributeName);
+		andCompare(rootQuery, entityClazz, entityOtherAttributeName, comparator,
+			entityAttributeName);
 	}
 	
 	@SuppressWarnings("rawtypes")
