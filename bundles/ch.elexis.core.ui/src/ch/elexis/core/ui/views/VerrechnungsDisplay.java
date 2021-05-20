@@ -1093,7 +1093,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					IStatus status = BillingServiceHolder.get().changeAmountValidated(billed, changeAnzahl);
 					if(!status.isOK()) {
 						StatusDialog.show(status);
-						return;
 					}
 					billed.setText(text);
 					CoreModelServiceHolder.get().save(billed);
