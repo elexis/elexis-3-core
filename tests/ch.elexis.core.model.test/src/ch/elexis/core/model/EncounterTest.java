@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -191,15 +192,18 @@ public class EncounterTest extends AbstractTest {
 				assertTrue(result.isOK());
 			});
 			executor.execute(() -> {
-				VersionedResource vr = VersionedResource.load(null);
-				vr.update("Test consultation\nmulti billing " + number, "Administrator");
-				encounter.setVersionedEntry(vr);
+				if (!encounter.getVersionedEntry()
+					.update("Test consultation\nmulti billing " + number, "Administrator")) {
+					fail();
+				}
 				coreModelService.save(encounter);
 			});
 		}
 		executor.shutdown();
 		executor.awaitTermination(5, TimeUnit.SECONDS);
 		assertEquals(100, encounter.getBilled().size());
+		// versioned resource access is not thread safe
+		// 		assertEquals(100, encounter.getVersionedEntry().getHeadVersion());
 		assertTrue(encounter.getLastupdate() > 0);
 		for (IBilled billed : encounter.getBilled()) {
 			assertTrue(billed.getLastupdate() > 0);
