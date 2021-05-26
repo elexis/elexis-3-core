@@ -15,6 +15,7 @@ package ch.elexis.core.ui.dialogs;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -225,8 +226,8 @@ public class AssignStickerDialog extends TitleAreaDialog {
 				
 				switch (propertyIndex) {
 				case 0:
-					String label1 = s1.getLabel().toLowerCase();
-					String label2 = s2.getLabel().toLowerCase();
+					String label1 = StringUtils.defaultString(s1.getLabel()).toLowerCase();
+					String label2 = StringUtils.defaultString(s2.getLabel()).toLowerCase();
 					rc = label1.compareTo(label2);
 					break;
 				case 1:
