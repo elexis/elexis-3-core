@@ -2,6 +2,8 @@ package ch.elexis.core.model;
 
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.jpa.entities.DbImage;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
@@ -116,7 +118,7 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public String getLabel(){
-		return getEntity().getName();
+		return StringUtils.defaultString(getEntity().getName());
 	}
 	
 	
