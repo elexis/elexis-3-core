@@ -172,10 +172,10 @@ public class KonsDetailView extends ViewPart
 			if (isMatchingPart(partRef)) {
 				// save entry on deactivation if text was edited
 				if (actEncounter != null && (text.isDirty())) {
-					actEncounter.getVersionedEntry().update(text.getContentsAsXML(),
+					EncounterServiceHolder.get().updateVersionedEntry(actEncounter,
+						text.getContentsAsXML(),
 						getVersionRemark());
 					text.setDirty(false);
-					CoreModelServiceHolder.get().save(actEncounter);
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
 						actEncounter);
 				}
@@ -577,8 +577,9 @@ public class KonsDetailView extends ViewPart
 	 */
 	private synchronized void setKons(final IEncounter encounter){
 		if (actEncounter != null && text.isDirty()) {
-			actEncounter.getVersionedEntry().update(text.getContentsAsXML(), getVersionRemark());
-			CoreModelServiceHolder.get().save(actEncounter);
+			EncounterServiceHolder.get().updateVersionedEntry(encounter, text.getContentsAsXML(),
+				getVersionRemark());
+			text.setDirty(false);
 		}
 		
 		if (encounter != null) {
@@ -794,10 +795,9 @@ public class KonsDetailView extends ViewPart
 	public void save(){
 		if (actEncounter != null) {
 			if (text.isDirty()) {
-				actEncounter.getVersionedEntry().update(text.getContentsAsXML(),
-					getVersionRemark());
+				EncounterServiceHolder.get().updateVersionedEntry(actEncounter,
+					text.getContentsAsXML(), getVersionRemark());
 				text.setDirty(false);
-				CoreModelServiceHolder.get().save(actEncounter);
 			}
 			setKons(actEncounter);
 		} else {

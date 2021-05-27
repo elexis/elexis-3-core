@@ -202,8 +202,6 @@ public class EncounterTest extends AbstractTest {
 		executor.shutdown();
 		executor.awaitTermination(5, TimeUnit.SECONDS);
 		assertEquals(100, encounter.getBilled().size());
-		// versioned resource access is not thread safe
-		// 		assertEquals(100, encounter.getVersionedEntry().getHeadVersion());
 		assertTrue(encounter.getLastupdate() > 0);
 		for (IBilled billed : encounter.getBilled()) {
 			assertTrue(billed.getLastupdate() > 0);

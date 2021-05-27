@@ -283,8 +283,17 @@ public class EncounterService implements IEncounterService {
 	}
 	
 	@Override
-	public void updateVersionedEntry(IEncounter encounter, Samdas samdas){
-		encounter.getVersionedEntry().update(samdas.toString(), getVersionRemark());
+	public synchronized void updateVersionedEntry(IEncounter encounter, Samdas samdas){
+		updateVersionedEntry(encounter, samdas.toString(), getVersionRemark());
+	}
+	
+	@Override
+	public synchronized void updateVersionedEntry(IEncounter encounter, String entryXml,
+		String remark){
+		// make sure we are working with latest info from the database
+		coreModelService.refresh(encounter, true);
+		encounter.getVersionedEntry().update(entryXml, remark);
+		coreModelService.save(encounter);
 	}
 	
 	@Override

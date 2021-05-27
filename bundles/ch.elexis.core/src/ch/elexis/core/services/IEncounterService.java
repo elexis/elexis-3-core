@@ -63,12 +63,22 @@ public interface IEncounterService {
 	
 	/**
 	 * Update the encounter text with the content of {@link Samdas}. A new {@link VersionedResource}
-	 * is created as head.
+	 * is created as head. Change is persisted.
 	 * 
 	 * @param enc
 	 * @param samdas
 	 */
 	public void updateVersionedEntry(IEncounter enc, Samdas samdas);
+	
+	/**
+	 * Update the encounter text with the content of entryXml. A new {@link VersionedResource} is
+	 * created as head. Change is persisted.
+	 * 
+	 * @param enc
+	 * @param entryXml
+	 * @param remark
+	 */
+	public void updateVersionedEntry(IEncounter enc, String entryXml, String remark);
 	
 	/**
 	 * Get the sales amount of the {@link IEncounter}.

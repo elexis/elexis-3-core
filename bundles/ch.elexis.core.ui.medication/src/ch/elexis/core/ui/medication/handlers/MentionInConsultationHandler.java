@@ -17,7 +17,6 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;
@@ -61,7 +60,6 @@ public class MentionInConsultationHandler extends AbstractHandler {
 					recText += sb.toString();
 					rec.setText(recText);
 					EncounterServiceHolder.get().updateVersionedEntry(enc, samdas);
-					CoreModelServiceHolder.get().save(enc);
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, enc);
 				});
 			}
