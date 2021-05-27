@@ -53,12 +53,14 @@ import org.jdom.Document;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.text.model.SSDRange;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
@@ -70,7 +72,6 @@ import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Konsultation;
 import ch.rgw.tools.GenericRange;
 import ch.rgw.tools.StringTool;
 
@@ -604,7 +605,8 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 						e.doit = false;
 						doFormat(getContentsAsXML());
 						text.setCaretOffset(start + replace.toString().length());
-						ElexisEventDispatcher.update(Konsultation.load(actEncounter.getId()));
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+							actEncounter);
 					}
 					
 				}
