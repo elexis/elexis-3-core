@@ -157,7 +157,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	@Optional
 	@Inject
 	public void udpateEncounter(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
-		if (encounter != null && encounter.equals(actEncounter)) {
+		if (encounter != null && encounter.equals(actEncounter) && isViewerCreated()) {
 			setEncounter(actEncounter);
 		}
 	}
@@ -166,8 +166,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	@Inject
 	public void udpateBilled(
 		@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IBilled billed){
-		if (billed != null && viewer != null && viewer.getTable() != null
-			&& !viewer.getTable().isDisposed()) {
+		if (billed != null && isViewerCreated()) {
 			viewer.update(billed, null);
 		}
 	}
@@ -484,6 +483,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	public void clear(){
 		actEncounter = null;
 		setEncounter(actEncounter);
+	}
+	
+	private boolean isViewerCreated(){
+		return viewer != null && viewer.getTable() != null && !viewer.getTable().isDisposed();
 	}
 	
 	private void updateBilledLabel(){
