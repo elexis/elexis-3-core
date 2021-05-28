@@ -29,7 +29,7 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public String getBackground(){
-		return getEntity().getBackground();
+		return StringUtils.defaultString(getEntity().getBackground(), "ffffff");
 	}
 	
 	@Override
@@ -39,7 +39,7 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public String getForeground(){
-		return getEntity().getForeground();
+		return StringUtils.defaultString(getEntity().getForeground(), "000000");
 	}
 	
 	@Override
