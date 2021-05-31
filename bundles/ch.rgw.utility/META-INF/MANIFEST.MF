@@ -10,19 +10,19 @@ Export-Package: ch.rgw.compress,
  ch.rgw.tools,
  ch.rgw.tools.net,
  org.apache.commons.compress.bzip2
-Require-Bundle: ch.elexis.core.l10n;bundle-version="3.9.0"
-Import-Package: com.mysql.cj;version="8.0.23",
- org.apache.commons.codec;version="1.15.0",
- org.apache.commons.codec.binary;version="1.15.0",
+Require-Bundle: ch.elexis.core.l10n;bundle-version="3.9.0",
+ com.mysql.cj;bundle-version="8.0.22",
+ com.h2database;bundle-version="1.4.200",
+ org.postgresql.jdbc;bundle-version="42.2.19"
+Import-Package: org.apache.commons.codec;version="1.14.0",
+ org.apache.commons.codec.binary;version="1.14.0",
  org.apache.commons.dbcp;version="1.4.0",
  org.apache.commons.io;version="2.6.0",
  org.apache.commons.logging;version="1.2.0",
  org.apache.commons.pool;version="1.6.0",
  org.apache.commons.pool.impl;version="1.6.0",
- org.h2;version="1.4.200",
  org.jdom;version="1.1.1",
  org.jdom.output;version="1.1.1",
- org.postgresql;version="42.2.19",
  org.slf4j
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ClassPath: .
