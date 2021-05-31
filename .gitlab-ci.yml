@@ -1,6 +1,6 @@
 # Build script used by gitlab.medelexis.ch
 variables:
-   ORIGIN_BRANCH: "master" 
+   ORIGIN_BRANCH: "target-2021-03-java11" 
 
 stages:
     - build
@@ -8,6 +8,9 @@ stages:
 
 build:
   stage: build
+  tags:
+  - java11
+  - maven
   script:
   - unset JAVA_HOME
   - env
