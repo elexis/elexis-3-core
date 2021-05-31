@@ -24,7 +24,7 @@
 	<repositories>
 		<repository>
 			<id>elexis.3.target</id>
-			<url>https://download.elexis.info/target/elexis/${elexis.target}</url>
+			<url>https://download.elexis.info/elexis/target/${elexis.target}/</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>
