@@ -9,7 +9,7 @@
 		<artifactId>ch.elexis.core.tests</artifactId>
 		<version>3.9.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>ch.elexis.core.hl7.v2x.tests</artifactId>
+	<artifactId>ch.elexis.core.mail.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -22,6 +22,11 @@
 						<extraRequirements>
 							<requirement>
 								<type>eclipse-plugin</type>
+								<id>ch.elexis.core.mail.test</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
 								<id>ch.elexis.core.jpa.logging.slf4j</id>
 								<versionRange>0.0.0</versionRange>
 							</requirement>
@@ -32,12 +37,7 @@
 							</requirement>
 							<requirement>
 								<type>eclipse-plugin</type>
-								<id>ch.elexis.core.hl7.v2x.tests</id>
-								<versionRange>0.0.0</versionRange>
-							</requirement>
-							<requirement>
-								<type>eclipse-plugin</type>
-								<id>ch.elexis.core.logback.rocketchat</id>
+								<id>ch.elexis.core.test.context</id>
 								<versionRange>0.0.0</versionRange>
 							</requirement>
 							<requirement>
@@ -79,9 +79,9 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<configuration>
 					<useUIHarness>false</useUIHarness>
-					<testClass>ch.elexis.core.hl7.v2x.AllTests</testClass>
+					<testClass>ch.elexis.core.mail.test.AllTests</testClass>
 					<showEclipseLog>true</showEclipseLog>
-					<argLine>-Delexis.test.mode=true</argLine>
+					<argLine>-Delexis.test.mode=true -Djavax.net.debug=all -Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</argLine>
 					<dependencies>
 						<dependency>
 							<type>eclipse-plugin</type>
@@ -116,6 +116,11 @@
 						<dependency>
 							<type>eclipse-plugin</type>
 							<artifactId>org.apache.commons.lang3</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>com.sun.mail.jakarta.mail</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
@@ -160,6 +165,11 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
+							<artifactId>org.apache.felix.gogo.command</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
 							<artifactId>org.eclipse.ant.core</artifactId>
 							<version>0.0.0</version>
 						</dependency>
@@ -175,7 +185,22 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
+							<artifactId>org.apache.felix.gogo.shell</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
 							<artifactId>ch.qos.logback.slf4j</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>org.apache.felix.gogo.runtime</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>org.eclipse.equinox.console</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
@@ -236,6 +261,11 @@
 						<dependency>
 							<type>eclipse-plugin</type>
 							<artifactId>org.eclipse.gemini.jpa</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>org.apache.poi.ooxml</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
@@ -345,6 +375,11 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
+							<artifactId>org.apache.poi.ooxml.schemas</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
 							<artifactId>com.sun.xml.bind</artifactId>
 							<version>0.0.0</version>
 						</dependency>
@@ -366,6 +401,11 @@
 						<dependency>
 							<type>eclipse-plugin</type>
 							<artifactId>javax.xml</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>org.apache.poi</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
