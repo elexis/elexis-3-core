@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Import-Package: com.sun.xml.bind.v2
-Comment:Java 9+ support

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -16,7 +15,6 @@
 
   <modules>
     <module>org.osgi.framework.system.packages.extra</module>
-    <module>jaxb-api-impl-import-java9</module>
     <module>ch.elexis.core.test</module>
     <module>ch.elexis.core.test.context</module>
     <module>ch.elexis.core.test.logging</module>
