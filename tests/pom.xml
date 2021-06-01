@@ -24,9 +24,9 @@
 	<modules>
 		<!--
 		<module>ch.elexis.core.jpa.test</module>
+		<module>ch.elexis.core.jpa.entities.test</module>
 -->
 		<module>ch.elexis.core.jcifs.test</module>
-		<module>ch.elexis.core.jpa.entities.test</module>
 		<module>ch.elexis.core.model.test</module>
 		<module>ch.elexis.core.services.test</module>
 		<module>ch.elexis.core.data.tests</module>
