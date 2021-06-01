@@ -9,7 +9,6 @@
   </parent>
   <artifactId>ch.elexis.core.jpa.entities.test</artifactId>
   <packaging>eclipse-test-plugin</packaging>
-  <version>1.0.0-SNAPSHOT</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
