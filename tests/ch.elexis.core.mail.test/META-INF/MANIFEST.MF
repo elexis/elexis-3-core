@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mail Test
 Bundle-SymbolicName: ch.elexis.core.mail.test
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Fragment-Host: ch.elexis.core.mail
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit
 Bundle-ClassPath: lib/dumbster1.6.jar,
  lib/greenmail-1.6.2.jar,

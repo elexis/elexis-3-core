@@ -61,9 +61,9 @@
         <setEntry value="javax.inject@default:default"/>
         <setEntry value="javax.transaction@default:false"/>
         <setEntry value="javax.xml@1:default"/>
+        <setEntry value="org.apache.commons.codec@default:default"/>
         <setEntry value="org.apache.commons.collections@default:default"/>
         <setEntry value="org.apache.commons.commons-beanutils@default:default"/>
-        <setEntry value="org.apache.commons.commons-codec@default:default"/>
         <setEntry value="org.apache.commons.dbcp@default:default"/>
         <setEntry value="org.apache.commons.io@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
@@ -76,7 +76,6 @@
         <setEntry value="org.eclipse.ant.core@default:default"/>
         <setEntry value="org.eclipse.core.contenttype@default:default"/>
         <setEntry value="org.eclipse.core.expressions@default:default"/>
-        <setEntry value="org.eclipse.core.filesystem.macosx@default:false"/>
         <setEntry value="org.eclipse.core.filesystem@default:default"/>
         <setEntry value="org.eclipse.core.jobs@default:default"/>
         <setEntry value="org.eclipse.core.resources@default:default"/>
@@ -114,10 +113,8 @@
         <setEntry value="osgi.enterprise@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
-        <setEntry value="ch.elexis.core.jcifs.test@default:false"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
-        <setEntry value="ch.elexis.core.jpa.entities.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa.entities@3:true"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
         <setEntry value="ch.elexis.core.jpa@default:false"/>
@@ -126,11 +123,9 @@
         <setEntry value="ch.elexis.core.model.test@default:false"/>
         <setEntry value="ch.elexis.core.model@default:true"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
-        <setEntry value="ch.elexis.core.test.context@default:false"/>
-        <setEntry value="ch.elexis.core.test.logging@default:false"/>
+        <setEntry value="ch.elexis.core.test.context@default:default"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
-        <setEntry value="ch.rgw.utility.tests@default:false"/>
         <setEntry value="ch.rgw.utility@default:default"/>
         <setEntry value="jakarta.xml.bind-api@default:false"/>
     </setAttribute>

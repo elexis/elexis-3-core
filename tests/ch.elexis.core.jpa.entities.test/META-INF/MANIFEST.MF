@@ -4,6 +4,6 @@ Bundle-Name: Core JPA Entities Test
 Bundle-SymbolicName: ch.elexis.core.jpa.entities.test
 Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: medevit.at
-Fragment-Host: ch.elexis.core.jpa.entities
+Fragment-Host: ch.elexis.core.jpa.entities;bundle-version="3.9.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit;bundle-version="4.12.0"
