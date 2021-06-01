@@ -81,10 +81,7 @@
 					<useUIHarness>false</useUIHarness>
 					<testClass>ch.elexis.core.services.test.AllTests</testClass>
 					<showEclipseLog>true</showEclipseLog>
-					<argLine>-Delexis.test.mode=true
-						-Djcifs.smb.client.signingPreferred=false
-						-Djcifs.smb.client.signingEnforced=false
-						-Djcifs.smb.client.ipcSigningEnforced=false</argLine>
+					<argLine>-Delexis.test.mode=true -Djcifs.smb.client.signingPreferred=false -Djcifs.smb.client.signingEnforced=false -Djcifs.smb.client.ipcSigningEnforced=false</argLine>
 					<dependencies>
 						<dependency>
 							<type>eclipse-plugin</type>
@@ -188,7 +185,17 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
+							<artifactId>org.glassfish.hk2.external.aopalliance-repackaged</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
 							<artifactId>com.sun.jna</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>org.glassfish.hk2.utils</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
@@ -368,6 +375,11 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
+							<artifactId>javassist</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
 							<artifactId>ch.qos.logback.classic</artifactId>
 							<version>0.0.0</version>
 						</dependency>
@@ -383,7 +395,22 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
+							<artifactId>org.glassfish.hk2.locator</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>org.glassfish.jersey.inject.jersey-hk2</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
 							<artifactId>com.sun.xml.bind</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>org.glassfish.hk2.api</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
@@ -399,6 +426,11 @@
 						<dependency>
 							<type>eclipse-plugin</type>
 							<artifactId>com.eclipsesource.jaxrs.consumer</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>org.glassfish.hk2.external.jakarta.inject</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
