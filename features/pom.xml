@@ -15,7 +15,6 @@
   </parent>
   <modules>
     <module>ch.elexis.core.persistence.feature</module>
-    <module>ch.elexis.jre.feature</module>
     <module>ch.elexis.core.application.feature</module>
     <module>ch.elexis.core.common.feature</module>
     <module>ch.elexis.core.tasks.feature</module>

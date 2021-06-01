@@ -31,7 +31,6 @@
       <import plugin="jakarta.ws.rs-api"/>
       <import plugin="jakarta.xml.bind"/>
       <import plugin="org.apache.commons.lang3"/>
-      <import plugin="org.apache.commons.commons-codec"/>
       <import plugin="org.apache.commons.dbcp"/>
       <import plugin="org.apache.commons.io"/>
       <import plugin="org.apache.commons.logging"/>
@@ -246,6 +245,13 @@
 
    <plugin
          id="info.elexis.target.hapi.fhir"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.codec"
          download-size="0"
          install-size="0"
          version="0.0.0"

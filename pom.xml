@@ -57,7 +57,6 @@
 
 	<modules>
 <!-- 		<module>ch.elexis.target</module> -->
-		<module>jre.bundles</module>
 		<module>bundles</module>
 		<module>features</module>
 		<module>tests</module>
@@ -126,6 +125,11 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
+               <dependency-resolution>
+                   <profileProperties>
+                     <org.eclipse.justj.buildtime>true</org.eclipse.justj.buildtime>
+                   </profileProperties>
+                 </dependency-resolution>
 				</configuration>
 			</plugin>
 			<plugin>
