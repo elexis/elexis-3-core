@@ -131,6 +131,7 @@ public class BestellView extends ViewPart {
 		tvcNumber.getColumn().setWidth(40);
 		ReflectiveEditingSupport poes =
 			new ReflectiveEditingSupport(tv, ModelPackage.Literals.IORDER_ENTRY__AMOUNT.getName());
+		poes.setModelService(CoreModelServiceHolder.get());
 		tvcNumber.setEditingSupport(poes);
 		
 		TableViewerColumn tvcArticle = new TableViewerColumn(tv, SWT.LEFT);
