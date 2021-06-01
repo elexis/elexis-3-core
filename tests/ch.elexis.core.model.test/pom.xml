@@ -76,7 +76,7 @@
 					<useUIHarness>false</useUIHarness>
 					<testClass>ch.elexis.core.model.test.AllPluginTests</testClass>
 					<showEclipseLog>true</showEclipseLog>
-					<argLine>-Delexis.test.mode=true -Delexis.test.dbtrace=true</argLine>
+					<argLine>-Delexis.test.mode=true</argLine>
 					<dependencies>
 						<dependency>
 							<type>eclipse-plugin</type>

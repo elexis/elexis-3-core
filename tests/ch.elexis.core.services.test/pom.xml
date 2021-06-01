@@ -79,7 +79,7 @@
           <useUIHarness>false</useUIHarness>
           <testClass>ch.elexis.core.services.test.AllTests</testClass>
           <showEclipseLog>true</showEclipseLog>
-          <argLine>-Delexis.test.mode=true -Delexis.test.dbtrace=true -Djcifs.smb.client.signingPreferred=false -Djcifs.smb.client.signingEnforced=false -Djcifs.smb.client.ipcSigningEnforced=false</argLine>
+          <argLine>-Delexis.test.mode=true -Djcifs.smb.client.signingPreferred=false -Djcifs.smb.client.signingEnforced=false -Djcifs.smb.client.ipcSigningEnforced=false</argLine>
           <dependencies>
             <dependency>
               <type>eclipse-plugin</type>
