@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Services
-Bundle-SymbolicName: ch.elexis.core.services
+Bundle-SymbolicName: ch.elexis.core.services;singleton:=true
 Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.services
