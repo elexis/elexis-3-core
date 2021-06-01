@@ -1,8 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<version>3.9.100-SNAPSHOT</version>
 	<parent>
 		<groupId>ch.elexis.core</groupId>
 		<artifactId>ch.elexis.core.tests</artifactId>
@@ -10,29 +11,29 @@
 	</parent>
 	<artifactId>ch.rgw.utility.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
-
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-surefire-plugin</artifactId>
-				<version>${tycho.version}</version>
+				<artifactId>target-platform-configuration</artifactId>
 				<configuration>
-					<useUIHarness>false</useUIHarness>
-					<useUIThread>true</useUIThread>
-					<appArgLine>-nl es_AR</appArgLine> <!-- es_AR: unsupported language, forces fallback. This is important, as 
-						the de translations moved to a different fragment bundle -->
-					<dependencies>
-						<dependency>
-							<type>eclipse-plugin</type>
-							<groupId>ch.elexis.core</groupId>
-							<artifactId>ch.elexis.core.l10n</artifactId>
-						</dependency>
-					</dependencies>
+					<dependency-resolution>
+						<extraRequirements></extraRequirements>
+					</dependency-resolution>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<testClass>ch.rgw.utility.AllTests</testClass>
+					<showEclipseLog>true</showEclipseLog>
+					<dependencies></dependencies>
+					<bundleStartLevel></bundleStartLevel>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
