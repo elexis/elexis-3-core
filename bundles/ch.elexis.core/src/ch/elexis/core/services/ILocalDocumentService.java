@@ -64,6 +64,15 @@ public interface ILocalDocumentService {
 		throws IllegalStateException;
 	
 	/**
+	 * Get a temporary {@link File} for the documentSource. Throws an {@link IllegalStateException}
+	 * if no {@link ILoadHandler} found for the documentSource.
+	 * 
+	 * @param documentSource
+	 * @return
+	 */
+	public Optional<File> getTempFile(Object documentSource);
+	
+	/**
 	 * Remove the document from the managed list. Document will be removed even if local file is not
 	 * accessible.
 	 * 
