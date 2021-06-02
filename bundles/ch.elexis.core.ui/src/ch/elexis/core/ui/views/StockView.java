@@ -71,6 +71,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
@@ -99,6 +100,7 @@ import ch.elexis.core.ui.util.dnd.IdentifiableDragSource;
 import ch.elexis.core.ui.util.dnd.IdentifiableDropTarget;
 import ch.elexis.core.ui.views.provider.StockEntryLabelProvider;
 import ch.elexis.core.ui.views.provider.StockEntryLabelProvider.ColumnStockEntryLabelProvider;
+import ch.elexis.data.PersistentObject;
 import ch.elexis.scripting.CSVWriter;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
@@ -212,6 +214,11 @@ public class StockView extends ViewPart implements IRefreshable {
 					
 					@Override
 					protected void setValue(Object element, Object value){
+						if(value instanceof PersistentObject) {
+							value = NoPoUtil.loadAsIdentifiable((PersistentObject) value,
+								IContact.class).orElse(null);
+						}
+							
 						IStockEntry se = (IStockEntry) element;
 						if (se == null) {
 							return;
@@ -264,7 +271,7 @@ public class StockView extends ViewPart implements IRefreshable {
 				@Override
 				protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event){
 					ViewerCell cell = (ViewerCell) event.getSource();
-					return cell.getColumnIndex() > 3 && cell.getColumnIndex() < 7;
+					return cell.getColumnIndex() > 4 && cell.getColumnIndex() < 9;
 				}
 			};
 		TableViewerEditor.create(viewer, focusCellManager, editorActivationStrategy,
