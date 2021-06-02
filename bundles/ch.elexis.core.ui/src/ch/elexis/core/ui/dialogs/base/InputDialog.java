@@ -17,7 +17,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class InputDialog extends org.eclipse.jface.dialogs.InputDialog {
+	
 	private final int style;
+	private int widthHint;
 	
 	private final static int HEIGHT_MULTILINE = 100;
 	
@@ -35,6 +37,7 @@ public class InputDialog extends org.eclipse.jface.dialogs.InputDialog {
 		String initialValue, IInputValidator validator, int style){
 		super(parentShell, dialogTitle, dialogMessage, initialValue, validator);
 		this.style = style;
+		this.widthHint = -1;
 	}
 	
 	@Override
@@ -42,6 +45,9 @@ public class InputDialog extends org.eclipse.jface.dialogs.InputDialog {
 		return style;
 	}
 	
+	public void setWidthHint(int hint){
+		this.widthHint = hint;
+	}
 
 	@Override
 	protected Control createDialogArea(Composite parent){
@@ -54,6 +60,9 @@ public class InputDialog extends org.eclipse.jface.dialogs.InputDialog {
 				Object layoutData = text.getLayoutData();
 				if (layoutData instanceof GridData) {
 					((GridData) layoutData).heightHint = HEIGHT_MULTILINE;
+					if (widthHint != -1) {
+						((GridData) layoutData).widthHint = widthHint;
+					}
 				}
 			}
 		}
