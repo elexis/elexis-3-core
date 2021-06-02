@@ -45,6 +45,23 @@ public class LocalDocumentService implements ILocalDocumentService {
 	private HashMap<Class<?>, ILoadHandler> registeredLoadHandler = new HashMap<>();
 	
 	@Override
+	public Optional<File> getTempFile(Object documentSource){
+		if (documentSource != null) {
+			ILoadHandler loadHandler = getRegisteredLoadHandler(documentSource.getClass());
+			if (loadHandler == null) {
+				throw new IllegalStateException("No load handler for [" + documentSource + "]");
+			}
+			
+			String fileName = System.currentTimeMillis() + "_" + getFileName(documentSource);
+			InputStream in = loadHandler.load(documentSource);
+			if (in != null) {
+				return writeLocalTempFile(fileName, in);
+			}
+		}
+		return Optional.empty();
+	}
+	
+	@Override
 	public Optional<File> add(Object documentSource, IConflictHandler conflictHandler)
 		throws IllegalStateException{
 		boolean readOnly = false;
@@ -221,12 +238,26 @@ public class LocalDocumentService implements ILocalDocumentService {
 			} else if (result == Result.KEEP) {
 				return Optional.of(filePath.toFile());
 			} else if (result == Result.OVERWRITE) {
-				return Optional.ofNullable(writeFile(filePath, content, readOnly));
+				return Optional.ofNullable(writeFile(filePath, content, readOnly, false));
 			}
 		} else {
-			return Optional.ofNullable(writeFile(filePath, content, readOnly));
+			return Optional.ofNullable(writeFile(filePath, content, readOnly, false));
 		}
 		return Optional.empty();
+	}
+	
+	private Optional<File> writeLocalTempFile(String fileName, InputStream content){
+		Path dirPath = Paths.get(getDocumentTempPath());
+		if (!Files.exists(dirPath, new LinkOption[0])) {
+			try {
+				Files.createDirectories(dirPath);
+			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass()).error("Could not create directory", e);
+				return Optional.empty();
+			}
+		}
+		Path filePath = Paths.get(getDocumentCachePath() + File.separator, fileName);
+		return Optional.ofNullable(writeFile(filePath, content, true, true));
 	}
 	
 	@Override
@@ -235,7 +266,12 @@ public class LocalDocumentService implements ILocalDocumentService {
 		
 	}
 	
-	private File writeFile(Path path, InputStream content, boolean readOnly){
+	private String getDocumentTempPath(){
+		return CoreHub.getWritableUserDir().getAbsolutePath() + File.separator + ".localdoctemp";
+		
+	}
+	
+	private File writeFile(Path path, InputStream content, boolean readOnly, boolean deleteOnExit){
 		try {
 			Files.deleteIfExists(path);
 			
@@ -243,6 +279,9 @@ public class LocalDocumentService implements ILocalDocumentService {
 			Files.copy(content, newFile, StandardCopyOption.REPLACE_EXISTING);
 			File ret = newFile.toFile();
 			ret.setWritable(!readOnly);
+			if (deleteOnExit) {
+				ret.deleteOnExit();
+			}
 			return ret;
 		} catch (IOException e) {
 			LoggerFactory.getLogger(getClass()).error("Error writing file", e);
