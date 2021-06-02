@@ -559,6 +559,9 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 						brief.getBetreff(), null);
 					if (id.open() == Dialog.OK) {
 						brief.setBetreff(id.getValue());
+						// refresh the model
+						CoreModelServiceHolder.get().load(brief.getId(), IDocumentLetter.class,
+							false, true);
 					}
 					CTabItem sel = ctab.getSelection();
 					CommonViewer cv = (CommonViewer) sel.getData();
