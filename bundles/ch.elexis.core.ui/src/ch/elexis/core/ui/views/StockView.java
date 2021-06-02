@@ -730,8 +730,12 @@ public class StockView extends ViewPart implements IRefreshable {
 		
 		private boolean selectFilter(IStockEntry se, String filter){
 			if (se.getArticle() != null && se.getArticle().getLabel() != null) {
-				return se.getArticle().getLabel().toLowerCase().contains(filter.toLowerCase())
-					|| se.getArticle().getGtin().contains(filter);
+				if (se.getArticle().getLabel().toLowerCase().contains(filter.toLowerCase())) {
+					return true;
+				} else if (se.getArticle().getGtin() != null
+					&& se.getArticle().getGtin().contains(filter)) {
+					return true;
+				}
 			}
 			return false;
 		}
