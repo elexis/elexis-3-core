@@ -171,6 +171,20 @@ public class Desk implements IApplication {
 	}
 		
 	protected void initIdentifiers(){
+		int waiting = 0;
+		while (!ConfigServiceHolder.isPresent()) {
+			try {
+				// max 5 sek
+				if (waiting++ > 50) {
+					log.warn("No ConfigService available after 5 sec. skipping identifier init");
+					return;
+				}
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// continue waiting
+			}
+		}
+		
 		if (ConfigServiceHolder.getGlobal(Preferences.INSTALLATION_TIMESTAMP, null) == null) {
 			LocalLock localLock = new LocalLock("initInstallationTimestamp");
 			if (localLock.tryLock()) {
