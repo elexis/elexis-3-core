@@ -82,6 +82,27 @@ public class PersonFormatUtil {
 		return sb.toString();
 	}
 	
+	public static String getFullName(IPerson person){
+		StringBuilder sb = new StringBuilder(64);
+		
+		if (StringUtils.isNoneEmpty(person.getTitel())) {
+			sb.append(person.getTitel());
+		}
+		if (StringUtils.isNotBlank(sb.toString())) {
+			sb.append(" ");
+		}
+		if (StringUtils.isNoneEmpty(person.getLastName())) {
+			sb.append(person.getLastName());
+		}
+		if (StringUtils.isNotBlank(sb.toString())) {
+			sb.append(" ");
+		}
+		if (StringUtils.isNoneEmpty(person.getFirstName())) {
+			sb.append(person.getFirstName());
+		}
+		return sb.toString();
+	}
+	
 	public static String getSalutation(IPerson person){
 		if (person.getGender().equals(Gender.MALE)) {
 			return Messages.KontakteView_SalutationM;
