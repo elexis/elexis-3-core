@@ -178,7 +178,7 @@ public class DBConnection implements Serializable {
 	}
 
 	public static Optional<String> getHostName(String url) {
-		if (url == null) {
+		if (url == null || url.startsWith("jdbc:h2:")) {
 			return Optional.empty();
 		}
 		if (url.startsWith("jdbc:")) {
@@ -193,6 +193,13 @@ public class DBConnection implements Serializable {
 	}
 
 	public static Optional<String> getDatabaseName(String url) {
+		if (url.startsWith("jdbc:h2:")) {
+			url = url.substring("jdbc:h2:".length());
+			if (url.indexOf(';') > -1) {
+				url = url.substring(0, url.indexOf(';'));
+				return Optional.of(url);
+			}
+		}
 		if (url.startsWith("jdbc:")) {
 			url = url.substring(5);
 		}
