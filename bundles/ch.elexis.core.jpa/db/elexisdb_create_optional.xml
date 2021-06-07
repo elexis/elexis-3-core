@@ -1211,6 +1211,22 @@
             <column name="DOC" type="${blob_type}"/>
         </createTable>
     </changeSet>
+	<changeSet author="thomas"
+		id="manual_table_CH_ELEXIS_OMNIVORE_DATA_CATEGORY">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="CH_ELEXIS_OMNIVORE_DATA" />
+				<not>
+					<columnExists tableName="CH_ELEXIS_OMNIVORE_DATA"
+						columnName="CATEGORY" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="CH_ELEXIS_OMNIVORE_DATA">
+			<column name="CATEGORY" type="VARCHAR(80)" />
+		</addColumn>
+	</changeSet>
+    
     <changeSet author="thomas (generated)" id="1527175239251-146">
         <preConditions onFail="MARK_RAN">
 			<not>
