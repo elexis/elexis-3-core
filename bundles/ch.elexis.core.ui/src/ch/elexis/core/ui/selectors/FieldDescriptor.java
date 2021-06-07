@@ -25,6 +25,7 @@ public class FieldDescriptor<T> {
 	Listener listener;
 	int eventType;
 	boolean ignoreCase = true;
+	boolean valueToLower = false;
 	
 	public boolean isIgnoreCase(){
 		return ignoreCase;
@@ -32,6 +33,15 @@ public class FieldDescriptor<T> {
 	
 	public FieldDescriptor<T> ignoreCase(boolean value){
 		this.ignoreCase = value;
+		return this;
+	}
+	
+	public boolean isValueToLower(){
+		return valueToLower;
+	}
+	
+	public FieldDescriptor<T> valueToLower(boolean value){
+		this.valueToLower = value;
 		return this;
 	}
 	
