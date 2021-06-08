@@ -82,7 +82,6 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.l10n.Messages;
@@ -101,7 +100,6 @@ import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -641,12 +639,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		
 		@Override
 		public void dropped(List<Object> list, DropTargetEvent e){
-			if(!EncounterServiceHolder.get().isEditable(actEncounter)) {
-				MessageEvent.fireError("Fall geschlossen",
-						"Diese Konsultation gehört zu einem abgeschlossenen Fall");
+			Result<IEncounter> editable = BillingServiceHolder.get().isEditable(actEncounter);
+			if (!editable.isOK()) {
+				ResultDialog.show(editable);
 				return;
 			}
-			
 			if (actEncounter != null && accept(list)) {
 				for (Object object : list) {
 					if (object instanceof PersistentObject) {
