@@ -4,6 +4,7 @@ Bundle-Name: Elexis Core Ui Tests
 Bundle-SymbolicName: ch.elexis.core.ui.tests
 Bundle-Version: 3.9.0.qualifier
 Fragment-Host: ch.elexis.core.ui;bundle-version="3.9.0"
-Require-Bundle: org.junit
+Require-Bundle: org.junit,
+ ch.elexis.core.test;bundle-version="3.9.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: ch.elexis.data

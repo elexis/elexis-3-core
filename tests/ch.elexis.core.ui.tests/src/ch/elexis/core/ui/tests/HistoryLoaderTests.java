@@ -19,6 +19,8 @@ import org.junit.Test;
 
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.test.initializer.ConfigInitializer;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.HistoryLoader;
@@ -38,6 +40,8 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 		patSter = new Patient("Stermann", "Dirk", "07.12.65", Patient.MALE);
 		patKum = new Patient("Kummer", "Christa", "08.09.64", Patient.FEMALE);
 		patPaal = new Patient("Paal", "Günther", "23.03.62", Patient.MALE);
+		
+		new ConfigInitializer().initializeBillingSystems(ConfigServiceHolder.get());
 	}
 	
 	private int finishedLoaders;
