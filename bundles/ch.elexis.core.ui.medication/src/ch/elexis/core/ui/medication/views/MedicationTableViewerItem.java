@@ -159,7 +159,10 @@ public class MedicationTableViewerItem {
 	}
 	
 	public String getAtc(){
-		return prescription.getArticle().getAtcCode();
+		if (article != null) {
+			return article.getAtcCode();
+		}
+		return "?";
 	}
 	
 	public EntryType getEntryType(){
