@@ -20,7 +20,7 @@
 					<application>ch.elexis.core.application.ElexisApp</application>
 					<testClass>ch.elexis.core.ui.tests.AllTests</testClass>
 					<argLine>${elexis.ui.test.vmargs} ${os-jvm-flags}</argLine>
-					<useUIThread>true</useUIThread>
+					<useUIThread>false</useUIThread>
 					<useUIHarness>true</useUIHarness>
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
 					<dependencies>
