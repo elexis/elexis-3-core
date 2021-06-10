@@ -10,6 +10,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.service.CodeElementServiceHolder;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
@@ -143,6 +144,8 @@ public class CreatePrescriptionHelper {
 				Result<IBilled> result =
 					BillingServiceHolder.get().bill(dispensationArticle, encounter.get(), 1);
 				if (result.isOK()) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+						encounter.get());
 					// work is done
 					return;
 				}
