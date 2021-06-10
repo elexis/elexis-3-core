@@ -19,21 +19,23 @@ public class ConfigInitializer {
 	public void initializeConfiguration(IConfigService configService) {
 		// test_initSampleContacts initializes patient 1 and 2
 		configService.set("PatientNummer", "2");
-		initializeFallConfiguration(configService);
+		initializeBillingSystems(configService);
 	}
 
-	public  void initializeFallConfiguration(IConfigService configService) {
+	public void initializeBillingSystems(IConfigService configService) {
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/name", KVG_NAME);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/gesetz", "KVG");
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/leistungscodes", CONST_TARMED_LEISTUNG);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/standardausgabe", CONST_TARMED_DRUCKER);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/bedingungen", KVG_REQUIREMENTS);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/defaultBillingLaw", "KVG");
 
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/name", UVG_NAME);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/leistungscodes", CONST_TARMED_LEISTUNG);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/standardausgabe", CONST_TARMED_DRUCKER);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/bedingungen", UVG_REQUIREMENTS);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/gesetz", "UVG");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/defaultBillingLaw", "UVG");
 
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/name", IV_NAME);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/leistungscodes", CONST_TARMED_LEISTUNG);
@@ -41,12 +43,14 @@ public class ConfigInitializer {
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/bedingungen",
 				"Kostenträger:K;Fallnummer:T");
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/gesetz", "IVG");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/defaultBillingLaw", "IVG");
 
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/name", MV_NAME);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/leistungscodes", CONST_TARMED_LEISTUNG);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/standardausgabe", CONST_TARMED_DRUCKER);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/bedingungen", "Kostenträger:K");
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/gesetz", "MVG");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/defaultBillingLaw", "MVG");
 
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/name", PRIVATE_NAME);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/leistungscodes",
@@ -60,6 +64,7 @@ public class ConfigInitializer {
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/standardausgabe", CONST_TARMED_DRUCKER);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/bedingungen", KVG_REQUIREMENTS);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/gesetz", "VVG");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/defaultBillingLaw", "VVG");
 	}
 
 }
