@@ -13,6 +13,7 @@ import javax.mail.MessagingException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.dumbster.smtp.SimpleSmtpServer;
@@ -22,16 +23,21 @@ import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailMessage;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class MailClientTest {
 	
-	private IMailClient client;
+	private static IMailClient client;
 	
 	private SimpleSmtpServer server;
 	
+	@BeforeClass
+	public static void beforeClass() throws InterruptedException {
+		client = OsgiServiceUtil.getService(IMailClient.class).get();
+	}
+	
 	@Before
 	public void before(){
-		client = new MailClient();
 		server = SimpleSmtpServer.start(10025);
 	}
 	
