@@ -26,6 +26,7 @@ import javax.mail.internet.MimeMultipart;
 import org.eclipse.core.runtime.FileLocator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -38,10 +39,11 @@ import ch.elexis.core.mail.IMAPMailMessage;
 import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class MailClientImapTest {
 	
-	private IMailClient client;
+	private static IMailClient client;
 	
 	@Rule
 	public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.SMTP_IMAP);
@@ -49,9 +51,13 @@ public class MailClientImapTest {
 	private GreenMailUser user;
 	private MailAccount account;
 	
+	@BeforeClass
+	public static void beforeClass() {
+		client = OsgiServiceUtil.getService(IMailClient.class).get();
+	}
+	
 	@Before
 	public void before(){
-		client = new MailClient();
 		user = greenMail.setUser("to@localhost", "login-id", "password");
 		
 		account = new MailAccount();
