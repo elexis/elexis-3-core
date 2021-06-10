@@ -1,5 +1,6 @@
-<project xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd' 
-	xmlns='http://maven.apache.org/POM/4.0.0' 
+<project
+	xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd'
+	xmlns='http://maven.apache.org/POM/4.0.0'
 	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -9,26 +10,19 @@
 	</parent>
 	<artifactId>ch.elexis.core.ui.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
-	<dependencies>
-		<dependency>
-			<type>eclipse-feature</type>
-			<groupId>ch.elexis.core</groupId>
-			<artifactId>ch.elexis.core.application.feature</artifactId>
-			<version>3.9.0-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
-				<version>${tycho.version}</version>
 				<configuration>
 					<application>ch.elexis.core.application.ElexisApp</application>
+					<testClass>ch.elexis.core.ui.tests.AllTests</testClass>
 					<argLine>${elexis.ui.test.vmargs} ${os-jvm-flags}</argLine>
 					<useUIThread>true</useUIThread>
 					<useUIHarness>true</useUIHarness>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
 					<dependencies>
 						<dependency>
 							<type>eclipse-feature</type>
