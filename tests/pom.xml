@@ -25,8 +25,8 @@
 		<!--
 		<module>ch.elexis.core.jpa.test</module>
 		<module>ch.elexis.core.jpa.entities.test</module>
+		-->
 		<module>ch.elexis.core.ui.tests</module>
--->
 		<module>ch.elexis.core.mail.test</module>
 		<module>ch.elexis.core.jcifs.test</module>
 		<module>ch.elexis.core.model.test</module>
