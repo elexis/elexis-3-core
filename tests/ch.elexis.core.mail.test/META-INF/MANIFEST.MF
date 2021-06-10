@@ -5,7 +5,8 @@ Bundle-SymbolicName: ch.elexis.core.mail.test
 Bundle-Version: 3.9.0.qualifier
 Fragment-Host: ch.elexis.core.mail
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.junit
+Require-Bundle: org.junit,
+ ch.elexis.core.model;bundle-version="3.9.0"
 Bundle-ClassPath: lib/dumbster1.6.jar,
  lib/greenmail-1.6.2.jar,
  lib/greenmail-junit4-1.6.2.jar,
