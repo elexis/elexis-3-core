@@ -21,6 +21,7 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 import org.osgi.service.event.Event;
@@ -43,7 +44,6 @@ import ch.elexis.core.services.INativeQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.rgw.tools.net.NetTool;
-import liquibase.util.StringUtils;
 
 public abstract class AbstractModelService implements IModelService {
 	
