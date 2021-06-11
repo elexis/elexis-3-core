@@ -10,12 +10,12 @@
 
 
 	<properties>
-		<tycho.version>2.3.0</tycho.version>
 		<elexis.target>2021-03-java11</elexis.target>
+		<git.core.branch>2021-03-java11</git.core.branch>
+
+		<tycho.version>2.3.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
-		<git.target.branch>master</git.target.branch>
-		<git.core.branch>master</git.core.branch>
 		<!-- vvv required empty vvv -->
 		<os-jvm-flags />
 		<jarsigner.plugin.version>3.0.0</jarsigner.plugin.version>
@@ -28,7 +28,6 @@
 			<layout>p2</layout>
 		</repository>
 	</repositories>
-
 
 	<organization>
 		<name>elexis.info</name>
@@ -56,7 +55,6 @@
 	<description>Elexis-Server for headless operation</description>
 
 	<modules>
-<!-- 		<module>ch.elexis.target</module> -->
 		<module>bundles</module>
 		<module>features</module>
 		<module>tests</module>
