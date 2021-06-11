@@ -43,6 +43,7 @@ import ch.elexis.core.services.INativeQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.rgw.tools.net.NetTool;
+import liquibase.util.StringUtils;
 
 public abstract class AbstractModelService implements IModelService {
 	
@@ -60,24 +61,27 @@ public abstract class AbstractModelService implements IModelService {
 	@Override
 	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted,
 		boolean refreshCache){
-		EntityManager em = getEntityManager(true);
-		Class<? extends EntityWithId> dbObjectClass = adapterFactory.getEntityClass(clazz);
-		HashMap<String, Object> queryHints = new HashMap<>();
-		if (refreshCache) {
-			queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
-		}
-		EntityWithId dbObject = em.find(dbObjectClass, id, queryHints);
-		if (dbObject != null) {
-			// check for deleted
-			if (!includeDeleted && (dbObject instanceof EntityWithDeleted)) {
-				if (((EntityWithDeleted) dbObject).isDeleted()) {
-					return Optional.empty();
-				}
+		if (StringUtils.isNotEmpty(id)) {
+			EntityManager em = getEntityManager(true);
+			Class<? extends EntityWithId> dbObjectClass = adapterFactory.getEntityClass(clazz);
+			HashMap<String, Object> queryHints = new HashMap<>();
+			if (refreshCache) {
+				queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
 			}
-			Optional<Identifiable> modelObject =
-				adapterFactory.getModelAdapter(dbObject, clazz, true);
-			if (modelObject.isPresent() && clazz.isAssignableFrom(modelObject.get().getClass())) {
-				return (Optional<T>) modelObject;
+			EntityWithId dbObject = em.find(dbObjectClass, id, queryHints);
+			if (dbObject != null) {
+				// check for deleted
+				if (!includeDeleted && (dbObject instanceof EntityWithDeleted)) {
+					if (((EntityWithDeleted) dbObject).isDeleted()) {
+						return Optional.empty();
+					}
+				}
+				Optional<Identifiable> modelObject =
+					adapterFactory.getModelAdapter(dbObject, clazz, true);
+				if (modelObject.isPresent()
+					&& clazz.isAssignableFrom(modelObject.get().getClass())) {
+					return (Optional<T>) modelObject;
+				}
 			}
 		}
 		return Optional.empty();
