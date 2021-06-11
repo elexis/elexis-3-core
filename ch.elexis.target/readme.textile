@@ -1,24 +1,5 @@
-h1. Howto update the Elexis target
+h1. IDE Target
 
-To be less dependent on a lot of external downloads links, we assemble
-first all our external dependencies into a single repository using
-ch.elexis.target/prepare and then use the generated repository
-http://download.elexis.info/elexis/master/p2/target for the IDE and
-and maven builds.
+Fetch the update ide.target file from http://download.elexis.info/elexis/target/2021-03-java11/
 
-h2. Update steps for prepare-target
-
-# Inside the Eclipse IDE add/remove/change the desired features/plugins by editing @ch.elexis.target/prepare/elexis-prepare.tpd@.
-#  Via set context menu run "Set as Target Rlatform". This will update @ch.elexis.target/prepare/elexis-prepare.target@.
-# Verify that the build passes by calling inside the  @ch.elexis.target/prepare@ directory the command @ant -DBRANCH_SELECTOR=origin/master -file build.xml build.local.target.platform.repo -DtargetFile=elexis-prepare.target@.
-# Commit and push the changes done in @ch.elexis.target/prepare@
-# Go to "https://srv.elexis.info/jenkins/job/Build_Elexis_branch-productive-target/":https://srv.elexis.info/jenkins/job/Build_Elexis_branch-productive-target/ and trigger a build for the given branch
-# Wait till the build output appear in "http://download.elexis.info/elexis/master/p2/target":http://download.elexis.info/elexis/master/p2/target
-
-h2. Update steps for  ch.elexis.target/elexis.target
-
-# Inside the Eclipse IDE add/remove/change the desired features/plugins by editing @ch.elexis.target/elexis.tpd@.
-#  Via set context menu run "Set as Target Rlatform". This will update @ch.elexis.target/elexis.target@.
-# Make your other adjustements via the Eclipse IDE or your favorite editor
-# Verify that the maven build passes
-# Commit and push the changes
+TODO update
