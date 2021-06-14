@@ -127,6 +127,7 @@ public class IConfigServiceTest extends AbstractServiceTest {
 	public void getSetConfig(){
 		assertTrue(configService.set("key", "value"));
 		assertEquals("value", configService.get("key", null));
+		// remove value
 		assertTrue(configService.set("key", null));
 		assertFalse(configService.set("key", null));
 	}
@@ -152,10 +153,12 @@ public class IConfigServiceTest extends AbstractServiceTest {
 		configService.set("keyBoolB", "true");
 		configService.set("keyBoolC", "bla");
 		configService.set("keyBoolD", "0");
+		configService.set("keyBoolE", "false");
 		assertTrue(configService.get("keyBoolA", false));
 		assertTrue(configService.get("keyBoolB", false));
 		assertFalse(configService.get("keyBoolC", true));
 		assertFalse(configService.get("keyBoolD", true));
+		assertFalse(configService.get("keyBoolE", true));
 	}
 	
 	@Test
