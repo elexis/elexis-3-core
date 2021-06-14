@@ -523,7 +523,20 @@ public interface IConfigService {
 	 * @param key
 	 * @return
 	 */
-	public List<String> getSubNodes(String key);
+	default public List<String> getSubNodes(String key){
+		return getSubNodes(key, false);
+	}
+	
+	/**
+	 * Get a list of all possible sub nodes for the provided key.
+	 * 
+	 * If refreshCache is true the value is always fetched from the database, else the cached value
+	 * is used if present.
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public List<String> getSubNodes(String key, boolean refreshCache);
 	
 	/**
 	 * Get a new {@link ILocalLock} instance for the provided object. Currently {@link String} and
