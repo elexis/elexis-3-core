@@ -452,6 +452,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		
 		private List<Konsultation> getSeries(Fall fall){
 			return Arrays.asList(fall.getBehandlungen(false)).parallelStream()
+				.filter(k -> k.isBillable())
 				.filter(k -> k.getRechnung() == null || !k.getRechnung().exists())
 				.collect(Collectors.toList());
 		}
