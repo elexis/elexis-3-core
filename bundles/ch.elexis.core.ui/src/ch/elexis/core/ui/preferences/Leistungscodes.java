@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.Action;
@@ -76,12 +78,13 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.MultiplikatorList;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ch.BillingLaw;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.provider.ILocalizedEnumLabelProvider;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.MultiplikatorEditor;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -93,8 +96,6 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class Leistungscodes extends PreferencePage implements IWorkbenchPreferencePage {
-	public Leistungscodes() {
-	}
 	private static Logger log = LoggerFactory.getLogger(Leistungscodes.class);
 	private static final String DEFINITIONSDELIMITER = ";"; //$NON-NLS-1$
 	private static final String ARGUMENTSSDELIMITER = ":"; //$NON-NLS-1$
@@ -104,7 +105,6 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		Extensions.getExtensions(ExtensionPointConstantsData.RECHNUNGS_MANAGER); //$NON-NLS-1$
 	List<IConfigurationElement> liste_CS_codes =
 		Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
-	List<String> systeme = ConfigServiceHolder.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 	Table table;
 	String[] tableCols = {
 		Messages.Leistungscodes_nameOfBillingSystem, Messages.Leistungscodes_billingSystem,
@@ -115,6 +115,13 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	};
 	Button bCheckZero;
 	Button bStrictCheck;
+	
+	@Inject
+	private IConfigService configService;
+	
+	public Leistungscodes(){
+		CoreUiUtil.injectServicesWithContext(this);
+	}
 	
 	@Override
 	protected Control createContents(final Composite parent){
@@ -135,22 +142,21 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					String[] result = at.getResult();
 					String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + result[0]; //$NON-NLS-1$
 					log.info("Dialog.OK localized values: name {} leistung {} ausgabe {}", result[0], result[1], result[2]);
-					String leistungscode = getDbAusgabeName(result[1]);
+					String leistungscode = getDbLeistungscodeName(result[1]);
 					String rnOutputter = getDbAusgabeName(result[2]);
 					log.info("Dialog.OK dbNames values: name {} leistung {} ausgabe {}", result[0], leistungscode, rnOutputter);
 
-					ConfigServiceHolder.setGlobal(key + "/name", result[0]); //$NON-NLS-1$
-					ConfigServiceHolder.setGlobal(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
-					ConfigServiceHolder.setGlobal(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
-					ConfigServiceHolder.setGlobal(key + "/bedingungen", result[3]); //$NON-NLS-1$
-					ConfigServiceHolder.setGlobal(key + "/fakultativ", result[4]); //$NON-NLS-1$
-					ConfigServiceHolder.setGlobal(key + "/unused", result[5]); //$NON-NLS-1$
-					ConfigServiceHolder.setGlobal(key + "/disabled", result[6]); //$NON-NLS-1$
+					configService.set(key + "/name", result[0]); //$NON-NLS-1$
+					configService.set(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
+					configService.set(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
+					configService.set(key + "/bedingungen", result[3]); //$NON-NLS-1$
+					configService.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
+					configService.set(key + "/unused", result[5]); //$NON-NLS-1$
+					configService.set(key + "/disabled", result[6]); //$NON-NLS-1$
 					BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_BILLINGLAW,
 						result[7]);
 					BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_NOCOSTBEARER,
 						result[8]);
-					systeme = ConfigServiceHolder.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 					reload();
 				}
 			}
@@ -164,7 +170,6 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					MessageFormat.format(Messages.Leistungscodes_reallyDelete, bName),
 					Messages.Leistungscodes_notUndoable)) {
 					BillingSystem.removeAbrechnungssystem(bName);
-					systeme = ConfigServiceHolder.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 					reload();
 				}
 			}
@@ -186,7 +191,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				if (idx != -1) {
 					TableItem sel = table.getItem(idx);
 					String ssel = sel.getText(0);
-					for (String s1 : systeme) {
+					for (String s1 : configService.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY,
+						true)) {
 						if (s1.equals(ssel)) {
 							String[] pre = new String[9];
 							log.info("ssel {} cs {} rn {}", ssel, BillingSystem.getCodeSystem(s1),
@@ -212,20 +218,17 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 								String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + result[0]; //$NON-NLS-1$
 								log.info("Dialog.OK db values: name '{}' leistung '{}' ausgabe '{}' key '{}'", 
 										result[0], leistungscode, rnOutputter, key);
-								ConfigServiceHolder.setGlobal(key + "/name", result[0]); //$NON-NLS-1$
-								ConfigServiceHolder.setGlobal(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
-								ConfigServiceHolder.setGlobal(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
-								ConfigServiceHolder.setGlobal(key + "/bedingungen", result[3]); //$NON-NLS-1$
-								ConfigServiceHolder.setGlobal(key + "/fakultativ", result[4]); //$NON-NLS-1$
-								ConfigServiceHolder.setGlobal(key + "/unused", result[5]); //$NON-NLS-1$
-								ConfigServiceHolder.setGlobal(key + "/disabled", result[6]); //$NON-NLS-1$
+								configService.set(key + "/name", result[0]); //$NON-NLS-1$
+								configService.set(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
+								configService.set(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
+								configService.set(key + "/bedingungen", result[3]); //$NON-NLS-1$
+								configService.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
+								configService.set(key + "/unused", result[5]); //$NON-NLS-1$
+								configService.set(key + "/disabled", result[6]); //$NON-NLS-1$
 								BillingSystem.setConfigurationValue(result[0],
 									BillingSystem.CFG_BILLINGLAW, result[7]);
 								BillingSystem.setConfigurationValue(result[0],
 									BillingSystem.CFG_NOCOSTBEARER, result[8]);
-								systeme =
-									ConfigServiceHolder
-										.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 								reload();
 							}
 						}
@@ -241,12 +244,13 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bCheckZero.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK,
+				configService.setActiveUserContact(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK,
 					bCheckZero.getSelection());
 			}
 		});
 		bCheckZero.setSelection(
-			ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false));
+			configService.getActiveUserContact(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK,
+				false));
 		bCheckZero.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		bStrictCheck = new Button(ret, SWT.CHECK);
@@ -254,12 +258,13 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bStrictCheck.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_BILLING_STRICT,
+				configService.setActiveUserContact(Preferences.LEISTUNGSCODES_BILLING_STRICT,
 					bStrictCheck.getSelection());
 			}
 		});
 		bStrictCheck
-			.setSelection(ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, true));
+			.setSelection(configService
+				.getActiveUserContact(Preferences.LEISTUNGSCODES_BILLING_STRICT, true));
 		bStrictCheck.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		final Button bOptify = new Button(ret, SWT.CHECK);
@@ -267,11 +272,13 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bOptify.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_OPTIFY, bOptify.getSelection());
+				configService.setActiveUserContact(Preferences.LEISTUNGSCODES_OPTIFY,
+					bOptify.getSelection());
 			}
 			
 		});
-		bOptify.setSelection(ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_OPTIFY, true));
+		bOptify.setSelection(
+			configService.getActiveUserContact(Preferences.LEISTUNGSCODES_OPTIFY, true));
 		bOptify.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		final Button bAllowOverrideStrict = new Button(ret, SWT.CHECK);
@@ -279,13 +286,14 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bAllowOverrideStrict.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT,
+				configService.setActiveUserContact(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT,
 					bAllowOverrideStrict.getSelection());
 			}
 			
 		});
 		bAllowOverrideStrict.setSelection(
-			ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT, false));
+			configService.getActiveUserContact(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT,
+				false));
 		bAllowOverrideStrict.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		final Button bOptifyXray = new Button(ret, SWT.CHECK);
@@ -293,12 +301,13 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bOptifyXray.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_OPTIFY_XRAY,
+				configService.setActiveUserContact(Preferences.LEISTUNGSCODES_OPTIFY_XRAY,
 					bOptifyXray.getSelection());
 			}
 			
 		});
-		bOptifyXray.setSelection(ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_OPTIFY_XRAY, true));
+		bOptifyXray.setSelection(
+			configService.getActiveUserContact(Preferences.LEISTUNGSCODES_OPTIFY_XRAY, true));
 		bOptifyXray.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		// *** checkbox for enforcing separate Fall for obligations and non obligations
@@ -307,12 +316,13 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bObligation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_OBLIGATION,
+				configService.setActiveUserContact(Preferences.LEISTUNGSCODES_OBLIGATION,
 					bObligation.getSelection());
 			}
 			
 		});
-		bObligation.setSelection(ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_OBLIGATION, false));
+		bObligation.setSelection(
+			configService.getActiveUserContact(Preferences.LEISTUNGSCODES_OBLIGATION, false));
 		bObligation.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		// *** checkbox for removing open reminders if bill is fully payed
@@ -321,13 +331,13 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bRemoveOpenReminders.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				ConfigServiceHolder.setGlobal(Preferences.RNN_REMOVE_OPEN_REMINDER,
+				configService.set(Preferences.RNN_REMOVE_OPEN_REMINDER,
 					bRemoveOpenReminders.getSelection());
 			}
 			
 		});
 		bRemoveOpenReminders
-			.setSelection(ConfigServiceHolder.getGlobal(Preferences.RNN_REMOVE_OPEN_REMINDER, false));
+			.setSelection(configService.get(Preferences.RNN_REMOVE_OPEN_REMINDER, false));
 		bRemoveOpenReminders.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		// *** populate the table with items
@@ -340,6 +350,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	 * (re)build the table for the billing systems, populate the table with items
 	 */
 	public void reload(){
+		List<String> systeme =
+			configService.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY, true);
 		// *** remove all items first
 		table.removeAll();
 		// *** and rebuild the table contents
@@ -347,10 +359,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			for (String s : systeme) {
 				String cfgkey = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + s + "/"; //$NON-NLS-1$ //$NON-NLS-2$
 				TableItem it = new TableItem(table, SWT.NONE);
-				String name = ConfigServiceHolder.getGlobal(cfgkey + "name", "default"); //$NON-NLS-1$ //$NON-NLS-2$
+				String name = configService.get(cfgkey + "name", "default"); //$NON-NLS-1$ //$NON-NLS-2$
 				it.setText(0, name);
-				String code = ConfigServiceHolder.getGlobal(cfgkey + "leistungscodes", "?");//$NON-NLS-1$ //$NON-NLS-2$
-				String ausgabe =  ConfigServiceHolder.getGlobal(cfgkey + "standardausgabe", "?");//$NON-NLS-1$ //$NON-NLS-2$
+				String code = configService.get(cfgkey + "leistungscodes", "?");//$NON-NLS-1$ //$NON-NLS-2$
+				String ausgabe = configService.get(cfgkey + "standardausgabe", "?");//$NON-NLS-1$ //$NON-NLS-2$
 				it.setText(1,  getLocalizedLeistungscode(code)); //$NON-NLS-1$ //$NON-NLS-2$
 				it.setText(2, getLocalizedAusgabe(ausgabe)); 
 				StringBuilder sql = new StringBuilder();
