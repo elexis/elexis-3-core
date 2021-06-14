@@ -350,9 +350,11 @@ public class ConfigService implements IConfigService {
 		return defaultValue;
 	}
 	
-	public List<String> getSubNodes(String key){
+	@Override
+	public List<String> getSubNodes(String key, boolean refreshCache){
 		Set<String> ret = new HashSet<>();
-		IQuery<IConfig> query = CoreModelServiceHolder.get().getQuery(IConfig.class);
+		IQuery<IConfig> query =
+			CoreModelServiceHolder.get().getQuery(IConfig.class, refreshCache, false);
 		query.and("param", COMPARATOR.LIKE, key + "/%");
 		List<IConfig> found = query.execute();
 		for (IConfig iConfig : found) {
