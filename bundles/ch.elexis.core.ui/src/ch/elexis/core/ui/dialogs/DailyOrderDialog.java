@@ -50,8 +50,8 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.ui.e4.providers.IdentifiableLabelProvider;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.util.viewers.PersistentObjectLabelProvider;
 import ch.rgw.tools.TimeTool;
 
 
@@ -116,7 +116,7 @@ public class DailyOrderDialog extends TitleAreaDialog {
 						Display.getDefault().getActiveShell(),
 						CoreModelServiceHolder.get().getQuery(IMandator.class).execute(),
 						ArrayContentProvider.getInstance(),
-						PersistentObjectLabelProvider.getInstance(), Messages.DailyOrderMandant);
+						IdentifiableLabelProvider.getInstance(), Messages.DailyOrderMandant);
 					int open = lsd.open();
 					if (open == Dialog.OK) {
 						modifyArticlesUsedOn(selectedDate, false); // clear old list
@@ -172,7 +172,8 @@ public class DailyOrderDialog extends TitleAreaDialog {
 	 */
 	private void modifyArticlesUsedOn(TimeTool priorDate, boolean add){
 		IQuery<IEncounter> query = CoreModelServiceHolder.get().getQuery(IEncounter.class);
-		query.and(ModelPackage.Literals.IENCOUNTER__DATE, COMPARATOR.EQUALS, priorDate.toDBString(false));
+		query.and(ModelPackage.Literals.IENCOUNTER__DATE, COMPARATOR.EQUALS,
+			priorDate.toLocalDate());
 		if (!limitationList.isEmpty()) {
 			query.startGroup();
 			limitationList.stream().forEach(m -> {
