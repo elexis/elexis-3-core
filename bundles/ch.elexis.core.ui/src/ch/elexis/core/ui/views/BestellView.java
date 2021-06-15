@@ -239,17 +239,18 @@ public class BestellView extends ViewPart {
 									continue;
 								}
 								// SINGLE SHOT ORDER
-								actOrder.addEntry(art, null, null, 1);
+								IOrderEntry orderEntry = actOrder.addEntry(art, null, null, 1);
+								CoreModelServiceHolder.get().save(orderEntry);
 							}
-							CoreModelServiceHolder.get().save(actOrder);
 						}
 					}
 					if (!stockEntriesToOrder.isEmpty()) {
 						for (IStockEntry iStockEntry : stockEntriesToOrder) {
-							actOrder.addEntry(iStockEntry.getArticle(), iStockEntry.getStock(),
+							IOrderEntry orderEntry =
+								actOrder.addEntry(iStockEntry.getArticle(), iStockEntry.getStock(),
 								iStockEntry.getProvider(), 1);
+							CoreModelServiceHolder.get().save(orderEntry);
 						}
-						CoreModelServiceHolder.get().save(actOrder);
 					}
 					
 					tv.refresh();
@@ -408,7 +409,8 @@ public class BestellView extends ViewPart {
 						@SuppressWarnings("unchecked")
 						List<IOrderEntry> selections = sel.toList();
 						for (IOrderEntry entry : selections) {
-							actOrder.removeEntry(entry);
+							CoreModelServiceHolder.get().remove(entry);
+							CoreModelServiceHolder.get().refresh(actOrder, true);
 						}
 						tv.refresh();
 					}
@@ -712,8 +714,8 @@ public class BestellView extends ViewPart {
 		
 		for (IArticle article : articlesToOrder) {
 			// SINGLE SHOT ORDER
-			actOrder.addEntry(article, null, null, 1);
-			CoreModelServiceHolder.get().save(actOrder);
+			IOrderEntry orderEntry = actOrder.addEntry(article, null, null, 1);
+			CoreModelServiceHolder.get().save(orderEntry);
 		}
 		if (tv != null && !tv.getControl().isDisposed()) {
 			tv.refresh();

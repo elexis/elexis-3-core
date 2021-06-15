@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 
 import ch.elexis.core.data.service.ContextServiceHolder;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.IArticle;
@@ -50,6 +49,7 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.e4.providers.IdentifiableLabelProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.TimeTool;
@@ -200,10 +200,23 @@ public class DailyOrderDialog extends TitleAreaDialog {
 						amount *= -1;
 					}
 					if (stockEntry != null) {
-						currOrder.addEntry(stockEntry.getArticle(), stockEntry.getStock(),
+						IOrderEntry orderEntry =
+							currOrder.addEntry(stockEntry.getArticle(), stockEntry.getStock(),
 							stockEntry.getProvider(), amount);
+						if (orderEntry.getAmount() == 0) {
+							CoreModelServiceHolder.get().remove(orderEntry);
+							CoreModelServiceHolder.get().refresh(currOrder, true);
+						} else {
+							CoreModelServiceHolder.get().save(orderEntry);
+						}
 					} else {
-						currOrder.addEntry(art, null, null, amount);
+						IOrderEntry orderEntry = currOrder.addEntry(art, null, null, amount);
+						if (orderEntry.getAmount() == 0) {
+							CoreModelServiceHolder.get().remove(orderEntry);
+							CoreModelServiceHolder.get().refresh(currOrder, true);
+						} else {
+							CoreModelServiceHolder.get().save(orderEntry);
+						}
 					}
 				}
 			}
