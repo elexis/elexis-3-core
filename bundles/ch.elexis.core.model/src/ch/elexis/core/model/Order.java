@@ -4,12 +4,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.Bestellung;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
-import ch.elexis.core.services.INamedQuery;
 
 public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Bestellung>
 		implements IdentifiableWithXid, IOrder {
@@ -20,9 +21,10 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	
 	@Override
 	public List<IOrderEntry> getEntries(){
-		INamedQuery<IOrderEntry> query =
-			ModelUtil.getModelService().getNamedQuery(IOrderEntry.class, "bestellung");
-		return query.executeWithParameters(query.getParameterMap("bestellung", this));
+		CoreModelServiceHolder.get().refresh(this);
+		return getEntity().getEntries().parallelStream().filter(b -> !b.isDeleted())
+			.map(b -> ModelUtil.getAdapter(b, IOrderEntry.class, true))
+			.collect(Collectors.toList());
 	}
 	
 	@Override
@@ -46,21 +48,13 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 			orderEntry.setStock(stock);
 			orderEntry.setProvider(provider);
 			orderEntry.setAmount(amount);
-			addEntry(orderEntry);
+			orderEntry.setOrder(this);
 		}
 		return orderEntry;
 	}
 	
 	@Override
-	public void addEntry(IOrderEntry entry){
-		IOrderEntry existing = findOrderEntry(entry.getStock(), entry.getArticle());
-		if (existing == null) {
-			entry.setOrder(this);
-			addChanged(entry);
-		}
-	}
-	
-	private IOrderEntry findOrderEntry(IStock stock, IArticle article){
+	public IOrderEntry findOrderEntry(IStock stock, IArticle article){
 		List<IOrderEntry> entries = getEntries();
 		for (IOrderEntry iOrderEntry : entries) {
 			if (((iOrderEntry.getStock() == null && stock == null)
@@ -70,13 +64,6 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	public void removeEntry(IOrderEntry entry){
-		if (entry != null && getEntries().contains(entry)) {
-			ModelUtil.getModelService().remove(entry);
-		}
 	}
 	
 	@Override

@@ -111,25 +111,17 @@ public interface IOrder extends Identifiable, Deleteable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	void removeEntry(IOrderEntry entry);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	void addEntry(IOrderEntry entry);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	boolean isDone();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	IOrderEntry findOrderEntry(IStock stock, IArticle article);
 
 } // IOrder

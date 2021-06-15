@@ -105,12 +105,19 @@ public class OrderEntryTest {
 		entry2.setStock(stock);
 		entry2.setArticle(article1);
 		entry2.setAmount(1);
-		order.addEntry(entry2);
-		modelService.save(order);
+		entry2.setOrder(order);
+		modelService.save(entry2);
 		assertEquals(2, order.getEntries().size());
 		
-		order.removeEntry(entry);
-		order.removeEntry(entry2);
+		IOrderEntry entry3 = order.addEntry(article1, stock, null, 3);
+		modelService.save(entry3);
+		assertEquals(4, entry3.getAmount());
+		assertEquals(entry2, entry3);
+		
+		// delete not allowed as FK prevents order removal
+		modelService.remove(entry);
+		modelService.remove(entry2);
+		modelService.refresh(order, true);
 		assertEquals(0, order.getEntries().size());
 	}
 	
@@ -141,7 +148,10 @@ public class OrderEntryTest {
 		assertEquals(2, order.getEntries().size());
 		assertEquals(2, existing.get(0).getOrder().getEntries().size());
 		
-		order.removeEntry(entry);
-		order.removeEntry(entry1);
+		// delete not allowed as FK prevents order removal
+		modelService.remove(entry);
+		modelService.remove(entry1);
+		modelService.refresh(order, true);
+		assertEquals(0, order.getEntries().size());
 	}
 }
