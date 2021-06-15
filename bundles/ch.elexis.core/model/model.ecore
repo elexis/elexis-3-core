@@ -804,13 +804,11 @@
       <eParameters name="provider" eType="#//IContact"/>
       <eParameters name="amount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eOperations>
-    <eOperations name="removeEntry">
-      <eParameters name="entry" eType="#//IOrderEntry"/>
-    </eOperations>
-    <eOperations name="addEntry">
-      <eParameters name="entry" eType="#//IOrderEntry"/>
-    </eOperations>
     <eOperations name="isDone" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="findOrderEntry" eType="#//IOrderEntry">
+      <eParameters name="stock" eType="#//IStock"/>
+      <eParameters name="article" eType="#//IArticle"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entries" upperBound="-1"
         eType="#//IOrderEntry"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timestamp" eType="ecore:EDataType types.ecore#//LocalDateTime"/>

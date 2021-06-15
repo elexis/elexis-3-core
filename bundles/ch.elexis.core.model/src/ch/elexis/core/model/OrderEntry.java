@@ -32,6 +32,7 @@ public class OrderEntry
 		} else if (value == null) {
 			getEntityMarkDirty().setBestellung(null);
 		}
+		addRefresh(value);
 	}
 	
 	@Override

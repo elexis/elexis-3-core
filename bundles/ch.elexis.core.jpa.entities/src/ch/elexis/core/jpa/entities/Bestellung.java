@@ -1,13 +1,18 @@
 package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Cache;
@@ -73,5 +78,15 @@ public class Bestellung extends AbstractEntityWithId implements EntityWithId, En
 	
 	public void setDate(LocalDate date){
 		this.date = date;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bestellung", cascade = CascadeType.REFRESH)
+	private List<BestellungEntry> entries;
+	
+	public List<BestellungEntry> getEntries(){
+		if (entries == null) {
+			entries = new ArrayList<>();
+		}
+		return entries;
 	}
 }

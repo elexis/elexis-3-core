@@ -2320,5 +2320,19 @@ WHERE kontakt.id IN (
 		<renameColumn tableName="TASKDESCRIPTOR" oldColumnName="SYSTEM"
 			newColumnName="IS_SYSTEM" columnDataType="CHAR(1)" />
 	</changeSet>
-    
+    <changeSet author="thomas"
+		id="manual_idxDateTime_BEHANDLUNGEN">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists
+					indexName="idxDateTime" />
+			</not>
+		</preConditions>
+		<createIndex
+			indexName="idxDateTime"
+			tableName="BEHANDLUNGEN">
+			<column name="DATUM" />
+			<column name="ZEIT" />
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>

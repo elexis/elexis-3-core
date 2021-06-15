@@ -526,13 +526,11 @@
         <genParameters ecoreParameter="model.ecore#//IOrder/addEntry/provider"/>
         <genParameters ecoreParameter="model.ecore#//IOrder/addEntry/amount"/>
       </genOperations>
-      <genOperations ecoreOperation="model.ecore#//IOrder/removeEntry">
-        <genParameters ecoreParameter="model.ecore#//IOrder/removeEntry/entry"/>
-      </genOperations>
-      <genOperations ecoreOperation="model.ecore#//IOrder/addEntry.1">
-        <genParameters ecoreParameter="model.ecore#//IOrder/addEntry.1/entry"/>
-      </genOperations>
       <genOperations ecoreOperation="model.ecore#//IOrder/isDone"/>
+      <genOperations ecoreOperation="model.ecore#//IOrder/findOrderEntry">
+        <genParameters ecoreParameter="model.ecore#//IOrder/findOrderEntry/stock"/>
+        <genParameters ecoreParameter="model.ecore#//IOrder/findOrderEntry/article"/>
+      </genOperations>
     </genClasses>
     <genClasses ecoreClass="model.ecore#//IAddress">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAddress/street1"/>
