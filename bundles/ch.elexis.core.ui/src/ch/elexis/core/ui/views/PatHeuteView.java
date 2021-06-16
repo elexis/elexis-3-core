@@ -91,9 +91,9 @@ import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.Log;
-import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -136,7 +136,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 	private int numPat;
 	private double sumTime;
 	private double sumAll;
-	PersistentObjectDropTarget dropTarget;
+	GenericObjectDropTarget dropTarget;
 	ListDisplay<IBillable> ldFilter;
 	// private double sumSelected;
 	private final Query<Konsultation> qbe;
@@ -169,7 +169,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			
 			@Override
 			public String getLabel(final Object o){
-				return ((IBillable) o).getCode();
+				return ((IBillable) o).getLabel();
 			}
 			
 			@Override
@@ -187,6 +187,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 					}
 				} else if (l.equals(STAT_LEEREN)) {
 					ldFilter.clear();
+					parent.layout(true);
 				}
 				
 			}
@@ -195,7 +196,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 		ldFilter.addHyperlinks(LEISTUNG_HINZU, STAT_LEEREN);
 		ldFilter.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		((GridData) ldFilter.getLayoutData()).heightHint = 0;
-		dropTarget = new PersistentObjectDropTarget("Statfilter", ldFilter, //$NON-NLS-1$
+		dropTarget = new GenericObjectDropTarget("Statfilter", ldFilter, //$NON-NLS-1$
 			new DropReceiver());
 		Composite top = new Composite(parent, SWT.BORDER);
 		top.setLayout(new RowLayout());
@@ -594,12 +595,14 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 				@Override
 				public boolean select(final Object toTest){
 					if (filterAction.isChecked()) {
-						IEncounter encounter = NoPoUtil
-							.loadAsIdentifiable((Konsultation) toTest, IEncounter.class).get();
 						List<IBillable> lFilt = ldFilter.getAll();
-						for (IBilled b : encounter.getBilled()) {
-							if (lFilt.contains(b.getBillable())) {
-								return true;
+						if (lFilt != null && !lFilt.isEmpty()) {
+							IEncounter encounter = NoPoUtil
+								.loadAsIdentifiable((Konsultation) toTest, IEncounter.class).get();
+							for (IBilled b : encounter.getBilled()) {
+								if (lFilt.contains(b.getBillable())) {
+									return true;
+								}
 							}
 						}
 						return false;
@@ -831,25 +834,22 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			};
 		
 		filterAction = new Action(Messages.PatHeuteView_filterAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
-					setToolTipText(Messages.PatHeuteView_filterToolTip); //$NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
+				setToolTipText(Messages.PatHeuteView_filterToolTip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				GridData gd = (GridData) ldFilter.getLayoutData();
+				if (filterAction.isChecked()) {
+					gd.heightHint = SWT.DEFAULT;
+				} else {
+					gd.heightHint = 0;
 				}
-				
-				@Override
-				public void run(){
-					GridData gd = (GridData) ldFilter.getLayoutData();
-					if (filterAction.isChecked()) {
-						gd.heightHint = 50;
-						// gd.minimumHeight=15;
-					} else {
-						gd.heightHint = 0;
-					}
-					parent.layout(true);
-				}
-				
-			};
-		
+				parent.layout(true);
+			}
+		};
 	}
 	
 	class TerminListeDialog extends TitleAreaDialog implements ICallback {
@@ -966,20 +966,28 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 		}
 	}
 	
-	private final class DropReceiver implements PersistentObjectDropTarget.IReceiver {
+	private final class DropReceiver implements GenericObjectDropTarget.IReceiver {
+		
 		@Override
-		public void dropped(final PersistentObject o, final DropTargetEvent ev){
-			if (o instanceof IBillable) {
-				ldFilter.add((IBillable) o);
+		public void dropped(List<Object> list, DropTargetEvent e){
+			for (Object o : list) {
+				if (o instanceof IBillable) {
+					ldFilter.add((IBillable) o);
+				}
 			}
+			ldFilter.getDisplay().asyncExec(() -> {
+				parent.layout(true);
+			});
 		}
 		
 		@Override
-		public boolean accept(final PersistentObject o){
-			if (o instanceof IBillable) {
-				return true;
+		public boolean accept(List<Object> list){
+			for (Object o : list) {
+				if (!(o instanceof IBillable)) {
+					return false;
+				}
 			}
-			return false;
+			return true;
 		}
 	}
 }
