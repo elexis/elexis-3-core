@@ -18,6 +18,7 @@ import liquibase.database.DatabaseConnection;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
+import liquibase.exception.ValidationFailedException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
@@ -51,7 +52,14 @@ public class LiquibaseDBInitializer {
 				liquibase.update("");
 			} else {
 				logger.info("Synchronize liquibase log of database [" + connection + "]");
-				liquibase.changeLogSync("");
+				try {
+					liquibase.changeLogSync("");
+				} catch (ValidationFailedException e) {
+					logger.info("Validation failed clear checksums and retry");
+					// removes current checksums from database, on next run checksums will be recomputed
+					liquibase.clearCheckSums();
+					liquibase.changeLogSync("");
+				}
 			}
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on
