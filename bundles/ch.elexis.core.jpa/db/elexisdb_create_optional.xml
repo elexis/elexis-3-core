@@ -2320,6 +2320,18 @@ WHERE kontakt.id IN (
 		<renameColumn tableName="TASKDESCRIPTOR" oldColumnName="SYSTEM"
 			newColumnName="IS_SYSTEM" columnDataType="CHAR(1)" />
 	</changeSet>
+	
+	<changeSet author="thomas" id="manual_BEHANDLUNGEN_ADD_ZEIT">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="BEHANDLUNGEN"
+					columnName="ZEIT" />
+			</not>
+		</preConditions>
+		<addColumn tableName="BEHANDLUNGEN">
+			<column name="ZEIT" type="CHAR(6)" defaultValue="000000" />
+		</addColumn>
+	</changeSet>
     <changeSet author="thomas"
 		id="manual_idxDateTime_BEHANDLUNGEN">
 		<preConditions onFail="MARK_RAN">

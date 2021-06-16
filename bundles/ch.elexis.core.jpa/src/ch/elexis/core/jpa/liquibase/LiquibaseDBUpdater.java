@@ -14,6 +14,7 @@ import liquibase.database.DatabaseConnection;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
+import liquibase.exception.ValidationFailedException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
@@ -40,8 +41,16 @@ public class LiquibaseDBUpdater {
 			Database targetDb = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(database);
 
 			Liquibase liquibase = new Liquibase(changelogXmlUrl, resourceAccessor, targetDb);
+			
 			logger.info("Updating database [" + connection + "] with liquibase");
-			liquibase.update("");
+			try {
+				liquibase.update("");
+			} catch (ValidationFailedException e) {
+				logger.info("Validation failed clear checksums and retry");
+				// removes current checksums from database, on next run checksums will be recomputed
+				liquibase.clearCheckSums();
+				liquibase.update("");
+			}
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on
 			logger.warn("Exception on DB init.", e);
