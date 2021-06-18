@@ -5,5 +5,22 @@ Bundle-SymbolicName: ch.elexis.core.ui.importer.div.native64
 Bundle-Version: 3.2.0.qualifier
 Bundle-Vendor: elexis.info
 Fragment-Host: ch.elexis.core.ui.importer.div;bundle-version="3.2.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Eclipse-PlatformFilter:  (& (osgi.os=win32) (osgi.arch=x86_64))
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Eclipse-PlatformFilter:  (& (|(osgi.os=win32) (osgi.os=linux)) (osgi.arch=x86_64))
+Bundle-NativeCode: lib/librxtxSerial.so ;
+        osname = Linux ;
+        processor = x86-64 ,
+    lib/rxtxSerial.dll ;
+        osname = Windows7 ;
+        osname = Windows8 ;
+        osname = Windows10 ;
+        osname = WindowsServer2008 ;
+        osname = WindowsServer2008R2 ;
+        osname = WindowsServer2012 ;
+        osname = WindowsServer2012R2 ;
+        osname = WindowsServer2015 ;
+        osname = WindowsServer2015R2 ;
+        osname = WindowsServer2016 ;
+        processor = x86-64,
+    *
+Bundle-ClassPath: lib/
