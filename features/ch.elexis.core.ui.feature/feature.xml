@@ -153,7 +153,7 @@
 
    <plugin
          id="ch.elexis.core.ui.importer.div.native64"
-         os="win32"
+         os="linux,win32"
          arch="x86_64"
          download-size="0"
          install-size="0"
