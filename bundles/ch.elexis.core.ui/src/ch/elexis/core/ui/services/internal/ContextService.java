@@ -1,7 +1,6 @@
 package ch.elexis.core.ui.services.internal;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,12 +39,9 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.dialogs.SelectFallNoObligationDialog;
 import ch.elexis.core.ui.util.CoreUiUtil;
@@ -346,29 +342,6 @@ public class ContextService implements IContextService, EventHandler {
 				Optional<IUser> iUser =
 					coreModelService.load(((User) object).getId(), IUser.class);
 				iUser.ifPresent(u -> root.setTyped(u));
-			} else if (object instanceof Anwender) {
-				Optional<IContact> iMandatorContact =
-					coreModelService.load(((Anwender) object).getId(), IContact.class);
-				if (iMandatorContact.isPresent()) {
-					if (!iMandatorContact.get().isMandator()) {
-						iMandatorContact.get().setMandator(true);
-						coreModelService.save(iMandatorContact.get());
-					}
-					Optional<IMandator> iMandator =
-						coreModelService.load(iMandatorContact.get().getId(), IMandator.class);
-					root.setTyped(iMandator.get());
-					
-					IQuery<IUser> userQuery = coreModelService.getQuery(IUser.class);
-					userQuery.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.EQUALS,
-						iMandator.get());
-					List<IUser> foundUsers = userQuery.execute();
-					if (!foundUsers.isEmpty()) {
-						root.setTyped(foundUsers.get(0));
-					}
-				} else {
-					root.removeTyped(IMandator.class);
-					root.removeTyped(IUser.class);
-				}
 			}
 			
 			IUser user = root.getTyped(IUser.class).orElse(null);
