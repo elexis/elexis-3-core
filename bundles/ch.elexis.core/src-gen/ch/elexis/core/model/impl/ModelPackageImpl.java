@@ -1228,6 +1228,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIMandator_Active() {
+		return (EAttribute)iMandatorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIUser() {
 		return iUserEClass;
 	}
@@ -4899,6 +4909,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		iMandatorEClass = createEClass(IMANDATOR);
 		createEReference(iMandatorEClass, IMANDATOR__BILLER);
+		createEAttribute(iMandatorEClass, IMANDATOR__ACTIVE);
 
 		iUserEClass = createEClass(IUSER);
 		createEAttribute(iUserEClass, IUSER__USERNAME);
@@ -5598,6 +5609,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(iMandatorEClass, IMandator.class, "IMandator", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIMandator_Biller(), this.getIContact(), null, "biller", null, 0, 1, IMandator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIMandator_Active(), ecorePackage.getEBoolean(), "active", null, 0, 1, IMandator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iUserEClass, IUser.class, "IUser", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIUser_Username(), ecorePackage.getEString(), "username", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

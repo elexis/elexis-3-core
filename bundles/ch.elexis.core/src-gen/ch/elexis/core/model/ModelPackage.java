@@ -2127,13 +2127,22 @@ public interface ModelPackage extends EPackage {
 	int IMANDATOR__BILLER = ICONTACT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Active</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMANDATOR__ACTIVE = ICONTACT_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>IMandator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMANDATOR_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 1;
+	int IMANDATOR_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IUser <em>IUser</em>}' class.
@@ -8066,6 +8075,17 @@ public interface ModelPackage extends EPackage {
 	EReference getIMandator_Biller();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMandator#isActive <em>Active</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Active</em>'.
+	 * @see ch.elexis.core.model.IMandator#isActive()
+	 * @see #getIMandator()
+	 * @generated
+	 */
+	EAttribute getIMandator_Active();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IUser <em>IUser</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12465,6 +12485,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IMANDATOR__BILLER = eINSTANCE.getIMandator_Biller();
+
+		/**
+		 * The meta object literal for the '<em><b>Active</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMANDATOR__ACTIVE = eINSTANCE.getIMandator_Active();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IUser <em>IUser</em>}' class.
