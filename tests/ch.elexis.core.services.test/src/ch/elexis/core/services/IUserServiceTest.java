@@ -7,9 +7,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.RoleConstants;
@@ -17,24 +21,54 @@ import ch.elexis.core.test.TestEntities;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IUserServiceTest extends AbstractServiceTest {
-
+	
 	private IUserService service = OsgiServiceUtil.getService(IUserService.class).get();
-
+	
+	private IUser user;
+	
+	@Before
+	public void before(){
+		createTestMandantPatientFallBehandlung();
+		user = coreModelService.load(TestEntities.USER_USER_ID, IUser.class).orElse(null);
+		user.getAssignedContact().setExtInfo("StdMandant", testMandators.get(0).getId());
+		user.getAssignedContact().setExtInfo("Mandant", testMandators.get(0).getLabel());
+		coreModelService.save(user.getAssignedContact());
+	}
+	
+	@After
+	public void after(){
+		cleanup();
+	}
+	
 	@Test
-	public void userLoadChangeVerifyPassword() {
-		Optional<IUser> load = coreModelService.load(TestEntities.USER_USER_ID, IUser.class);
-		assertTrue(load.isPresent());
-		assertNotNull(load.get().getHashedPassword());
-		assertNotNull(load.get().getSalt());
-		Collection<IRole> roles = load.get().getRoles();
+	public void userLoadChangeVerifyPassword(){
+		assertNotNull(user.getHashedPassword());
+		assertNotNull(user.getSalt());
+		Collection<IRole> roles = user.getRoles();
 		assertNotNull(roles);
 		assertEquals(RoleConstants.SYSTEMROLE_LITERAL_USER, roles.iterator().next().getId());
-
-		assertFalse(service.verifyPassword(load.get(), "invalid".toCharArray()));
-		service.setPasswordForUser(load.get(), "password");
-		assertTrue(service.verifyPassword(load.get(), "password".toCharArray()));
-
-		Optional<IRole> userRole = coreModelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class);
-		assertTrue(load.get().getRoles().contains(userRole.get()));
+		
+		assertFalse(service.verifyPassword(user, "invalid".toCharArray()));
+		service.setPasswordForUser(user, "password");
+		assertTrue(service.verifyPassword(user, "password".toCharArray()));
+		
+		Optional<IRole> userRole =
+			coreModelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class);
+		assertTrue(user.getRoles().contains(userRole.get()));
 	}
+	
+	@Test
+	public void getExecutiveDoctorsWorkingFor(){
+		Set<IMandator> executiveDoctorsWorkingFor =
+			service.getExecutiveDoctorsWorkingFor(user.getAssignedContact());
+		assertEquals(testMandators.get(0), executiveDoctorsWorkingFor.iterator().next());
+	}
+	
+	@Test
+	public void getDefaultExecutiveDoctorWorkingFor(){
+		Optional<IMandator> defaultExecutiveDoctorWorkingFor =
+			service.getDefaultExecutiveDoctorWorkingFor(user.getAssignedContact());
+		assertEquals(testMandators.get(0), defaultExecutiveDoctorWorkingFor.get());
+	}
+	
 }

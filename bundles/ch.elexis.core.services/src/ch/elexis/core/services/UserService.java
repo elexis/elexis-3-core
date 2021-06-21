@@ -2,12 +2,21 @@ package ch.elexis.core.services;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.rgw.tools.PasswordEncryptionService;
 
@@ -50,6 +59,30 @@ public class UserService implements IUserService {
 			}
 		}
 		
+	}
+	
+	@Override
+	public Set<IMandator> getExecutiveDoctorsWorkingFor(IContact user){
+		String mandators = (String) user.getExtInfo("Mandant");
+		if (mandators == null) {
+			return Collections.emptySet();
+		}
+		
+		List<IMandator> allActivateMandators = modelService.getQuery(IMandator.class).execute()
+			.parallelStream().filter(IMandator::isActive).collect(Collectors.toList());
+		
+		List<String> mandatorsIdList = Arrays.asList(mandators.split(","));
+		return allActivateMandators.stream().filter(p -> mandatorsIdList.contains(p.getLabel()))
+			.collect(Collectors.toSet());
+	}
+	
+	@Override
+	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact userContact){
+		String defaultMandatorId = (String) userContact.getExtInfo("StdMandant");
+		if (StringUtils.isNotEmpty(defaultMandatorId)) {
+			return modelService.load(defaultMandatorId, IMandator.class);
+		}
+		return Optional.empty();
 	}
 	
 }

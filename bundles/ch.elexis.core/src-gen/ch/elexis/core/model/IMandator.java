@@ -21,6 +21,7 @@ package ch.elexis.core.model;
  * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IMandator#getBiller <em>Biller</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IMandator#isActive <em>Active</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIMandator()
@@ -54,4 +55,29 @@ public interface IMandator extends IContact {
 	 * @generated
 	 */
 	void setBiller(IContact value);
+
+	/**
+	 * Returns the value of the '<em><b>Active</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Whether this IMandator is allowed to bill
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Active</em>' attribute.
+	 * @see #setActive(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIMandator_Active()
+	 * @model
+	 * @generated
+	 */
+	boolean isActive();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IMandator#isActive <em>Active</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Active</em>' attribute.
+	 * @see #isActive()
+	 * @generated
+	 */
+	void setActive(boolean value);
 } // IMandator
