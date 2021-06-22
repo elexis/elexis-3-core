@@ -95,9 +95,6 @@ public class Connection implements PortEventListener {
 		}
 		if (mySettings.length >= 6 && mySettings[5] != null) {
 			sp.setFlowControlOut(Integer.parseInt(mySettings[5]));
-		} else {
-			sp.setFlowControlOut(SerialPort.FLOWCONTROL_RTSCTS_OUT);
-			log.info("Setting default flow control RTSCTS OUT");
 		}
 		try {
 			if (simulate != null) {
