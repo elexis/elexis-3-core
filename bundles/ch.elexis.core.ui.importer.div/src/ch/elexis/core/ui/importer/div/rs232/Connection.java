@@ -86,10 +86,17 @@ public class Connection implements PortEventListener {
 		sp.setDatabits(mySettings[1]);
 		sp.setParity(mySettings[2]);
 		sp.setStopbits(mySettings[3]);
-		if (mySettings.length >= 5 && mySettings[4] != null)
+		// since update to rxtx 2.2pre2 flow control should be activated per default 
+		if (mySettings.length >= 5 && mySettings[4] != null) {
 			sp.setFlowControlIn(Integer.parseInt(mySettings[4]));
-		if (mySettings.length >= 6 && mySettings[5] != null)
+		} else {
+			sp.setFlowControlIn(SerialPort.FLOWCONTROL_RTSCTS_IN);
+		}
+		if (mySettings.length >= 6 && mySettings[5] != null) {
 			sp.setFlowControlOut(Integer.parseInt(mySettings[5]));
+		} else {
+			sp.setFlowControlOut(SerialPort.FLOWCONTROL_RTSCTS_OUT);
+		}
 		try {
 			if (simulate != null) {
 				final Connection mine = this;
