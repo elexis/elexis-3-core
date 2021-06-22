@@ -5,7 +5,8 @@ Bundle-SymbolicName: ch.elexis.core.ui.importer.div;singleton:=true
 Bundle-Version: 3.2.0.qualifier
 Bundle-Vendor: elexis.info
 Bundle-ClassPath: .,
- RXTXcomm.jar
+ lib/rxtx-api-2.2-stabilize-SNAPSHOT.jar,
+ lib/rxtxSerial-2.2-stabilize-SNAPSHOT.jar
 Export-Package: ch.elexis.core.ui.importer.div.importers;
   uses:="org.eclipse.jface.wizard,
    org.eclipse.core.runtime,
@@ -43,4 +44,5 @@ Import-Package: org.osgi.service.component.annotations;version="[1.3.0,2.0.0)";r
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.ui.importer.div.services.ModelServiceHolder.xml,
- OSGI-INF/ch.elexis.core.ui.importer.div.services.LabImportUtilHolder.xml
+ OSGI-INF/ch.elexis.core.ui.importer.div.services.LabImportUtilHolder.xml,
+ OSGI-INF/ch.elexis.core.ui.importer.div.services.RxTxActivate.xml

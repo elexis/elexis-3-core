@@ -222,7 +222,6 @@ public class Connection implements PortEventListener {
 		try {
 			sPort
 				.setFlowControlMode(parameters.getFlowControlIn() | parameters.getFlowControlOut());
-			sPort.setDTR(true);
 		} catch (UnsupportedCommOperationException e) {
 			throw new SerialConnectionException("Unsupported flow control"); //$NON-NLS-1$
 		}
