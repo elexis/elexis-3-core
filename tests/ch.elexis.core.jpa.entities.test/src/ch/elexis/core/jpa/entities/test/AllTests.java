@@ -9,6 +9,6 @@ import ch.elexis.core.jpa.entities.converter.auto.AllConverterTests;
 
 @RunWith(Suite.class)
 @SuiteClasses({ AllConverterTests.class })
-public class AllTest {
+public class AllTests {
 
 }

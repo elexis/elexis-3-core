@@ -4,5 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="RXTXcomm.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/rxtx-api-2.2-stabilize-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/rxtxSerial-2.2-stabilize-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
