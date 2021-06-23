@@ -487,7 +487,7 @@ public class BestellView extends ViewPart {
 							IOrderEntry open = OrderServiceHolder.get()
 								.findOpenOrderEntryForStockEntry(stockEntry);
 							// only add if not on an open order
-							if (open == null) {
+							if (open != null) {
 								continue;
 							}
 						}
