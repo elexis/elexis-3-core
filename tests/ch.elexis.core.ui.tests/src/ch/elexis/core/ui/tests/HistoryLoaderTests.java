@@ -272,6 +272,7 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 	}
 	
 	@Test
+	@Ignore
 	public void testExecuteLikeHistoryDisplay() throws InterruptedException{
 		historyDisplaylKons = new ArrayList<Konsultation>(20);
 		
