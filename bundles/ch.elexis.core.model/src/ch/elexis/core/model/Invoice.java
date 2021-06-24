@@ -25,8 +25,6 @@ import ch.rgw.tools.TimeTool;
 public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Invoice>
 		implements IdentifiableWithXid, IInvoice {
 	
-	public static final String REJECTED = "Zurückgewiesen";
-	
 	public Invoice(ch.elexis.core.jpa.entities.Invoice entity){
 		super(entity);
 	}
@@ -54,6 +52,7 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@Override
 	public void setState(InvoiceState value){
 		getEntityMarkDirty().setState(value);
+		addTrace(InvoiceConstants.STATUS_CHANGED, Integer.toString(value.numericValue()));
 	}
 	
 	@Override
@@ -266,7 +265,7 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@Override
 	public void reject(REJECTCODE rejectCode, String message){
 		setState(InvoiceState.DEFECTIVE);
-		addTrace(REJECTED, rejectCode.toString() + ", " + message);
+		addTrace(InvoiceConstants.REJECTED, rejectCode.toString() + ", " + message);
 	}
 	
 	@Override
