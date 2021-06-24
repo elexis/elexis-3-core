@@ -148,6 +148,7 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 	}
 	
 	@Test
+	@Ignore
 	public void testExecuteFromDifferentThreads() throws InterruptedException, ExecutionException{
 		// init some test data
 		int nrConsSter = 50;
