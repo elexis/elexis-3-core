@@ -9,5 +9,6 @@ Automatic-Module-Name: ch.elexis.core.services.test
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit,
  ch.elexis.core.model;bundle-version="3.9.0",
- ch.elexis.core.test;bundle-version="3.9.0"
+ ch.elexis.core.test;bundle-version="3.9.0",
+ info.elexis.target.jaxws.core;bundle-version="4.1.0"
 Import-Package: org.apache.commons.io
