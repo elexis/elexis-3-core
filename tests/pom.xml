@@ -30,6 +30,7 @@
 		<module>ch.elexis.core.mail.test</module>
 		<module>ch.elexis.core.jcifs.test</module>
 		<module>ch.elexis.core.model.test</module>
+		<module>ch.elexis.core.services.test.ws</module>
 		<module>ch.elexis.core.services.test</module>
 		<module>ch.elexis.core.data.tests</module>
 		<module>ch.elexis.core.findings.test</module>

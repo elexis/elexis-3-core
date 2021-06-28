@@ -1,4 +1,4 @@
-package ch.elexis.core.services;
+package ch.elexis.core.java;
 
 import static org.junit.Assert.assertEquals;
 
