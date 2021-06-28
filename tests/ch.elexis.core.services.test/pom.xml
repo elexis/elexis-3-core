@@ -70,6 +70,11 @@
 								<id>org.eclipse.osgi.compatibility.state</id>
 								<versionRange>0.0.0</versionRange>
 							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>ch.elexis.core.services.test.ws</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
 						</extraRequirements>
 					</dependency-resolution>
 				</configuration>
