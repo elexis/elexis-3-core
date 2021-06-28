@@ -53,6 +53,7 @@
     <module>ch.elexis.core.mail</module>
     <module>ch.elexis.core.product</module>
     <module>ch.elexis.core.scripting.beanshell</module>
+    <module>ch.elexis.core.serial</module>
     <module>ch.elexis.core.spotlight</module>
     <module>ch.elexis.core.spotlight.ui</module>
     <module>ch.elexis.core.tasks</module>
