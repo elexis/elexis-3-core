@@ -10,8 +10,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit,
  ch.elexis.core.model;bundle-version="3.9.0",
  ch.elexis.core.test;bundle-version="3.9.0",
- info.elexis.target.jaxws.core;bundle-version="4.1.0"
+ info.elexis.target.jaxws.core;bundle-version="4.1.0",
+ ch.elexis.core.services.test.ws;bundle-version="3.9.0"
 Import-Package: javax.xml.bind,
  javax.xml.bind.annotation,
  org.apache.commons.io
-Export-Package: com.wstutorial.ws
