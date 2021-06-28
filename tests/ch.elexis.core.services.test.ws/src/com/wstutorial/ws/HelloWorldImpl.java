@@ -1,4 +1,5 @@
 package com.wstutorial.ws;
+
 import javax.jws.WebService;
 
 @WebService(endpointInterface = "com.wstutorial.ws.HelloWorld")

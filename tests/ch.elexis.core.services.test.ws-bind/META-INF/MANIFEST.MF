@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Contribute WS Service Test package
+Bundle-SymbolicName: ch.elexis.core.services.test.ws-bind
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: elexis.info
+Fragment-Host: info.elexis.target.jaxws.core;bundle-version="4.1.0"
+Automatic-Module-Name: ch.elexis.core.services.test.ws
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Import-Package: com.wstutorial.ws

@@ -123,11 +123,10 @@
         <setEntry value="ch.elexis.core.model.test@default:false"/>
         <setEntry value="ch.elexis.core.model@default:true"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
-        <setEntry value="ch.elexis.core.test.context@default:default"/>
+        <setEntry value="ch.elexis.core.test.context@default:false"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
-        <setEntry value="jakarta.xml.bind-api@default:false"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <booleanAttribute key="tracing" value="false"/>
