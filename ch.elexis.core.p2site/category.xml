@@ -49,6 +49,7 @@
    <bundle id="ch.elexis.core.test.logging">
       <category name="test"/>
    </bundle>
+   <bundle id="ch.elexis.core.serial"/>
    <category-def name="elexis_3_core" label="Elexis 3 Kern"/>
    <category-def name="divers" label="Sonstige"/>
    <category-def name="test" label="a For software tests only[invisible]"/>
