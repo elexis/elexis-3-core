@@ -29,11 +29,22 @@ With OOMP 1.3.0 the https-URL did not work and you must add the Elexis.setup via
 # Right click on  ch.elexis.target/elexis.tpd and select "Set as Target Platform", wait for "Resolving Target Definition" to finish,
 # Rebuild everything via the menu Project..Clean
 # If a window "Errors in Workspace" pops up, ignore or correct the errors.
-# ensure that you have as default java a Java-8 version or compiling via maven will fail
-# Double-click on ch.elexis.core.p2site/Elexis.product. Click (somewhere near the top right) on the button "Launch an Eclipse application in Debug mode"
+# ensure that you have as default java a Java-8 version or compiling via maven will fail. Check it using @mvn -version@
 # You must run first on the command-line @mvn -V clean verify -DskipTests@ to guild the needed directories src-gen in ch.elexis.core.jpa.entities, etc.
+# Double-click on @ch.elexis.core.p2site/Elexis.product@. Click the "Launch an Eclipse application in Debug mode". Ignore the warning and you should get a dialog to select a database for elexis.
 # If you want to restart debugging, then open the menu "Run..Debug Configuration" and select in the left selection pane the "Eclipse application/Elexis.product" item. Adapt the arguments etc to suit your needs "Startoptionen":https://wiki.elexis.info/Startoptionen contains hints for commonly used option !images/debug_configuration.png!
 # Press Debug to launch a very minimal Elexis.
+# Ignore warnings in the pop-up windows for @org.osgi.framework.system.packages.extra@ and @commons-logging@, @woodstox-core-asl@
+# Open @Run..Debug Configurations..@  Copy Elexis.product and give it a name. If you set in the @Arguments@ tab @VM Arguments@ to
+
+bc. -Duser.language=de -Duser.region=CH -Dfile.encoding=utf-8
+-Dch.elexis.dbFlavor=h2 -Dch.elexis.dbSpec='jdbc:h2:~/h2_elexis_rcptt_de/db;AUTO_SERVER=TRUE'
+-Dch.elexis.dbUser=sa -Dch.elexis.dbPw=
+-Dch.elexis.firstMandantName=Mustermann -Dch.elexis.firstMandantPassword=elexisTest -Dch.elexis.firstMandantEmail=mmustermann@elexis.info
+-Dch.elexis.username=Mustermann -Dch.elexis.password=elexisTest
+
+	you will connect directly to a newly created h2-database.
+
 
 h2. Troubleshooting
 
