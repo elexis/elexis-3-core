@@ -125,7 +125,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 					value = k.getXid(xid);
 				}
 				if (value.length() == 0) {
-					value = (String) k.getInfoElement(fields[i]);
+					value = (String) k.getExtInfoStoredObjectByKey(fields[i]);
 				}
 				// The old implementation used fieldnames as visible label
 				// This is ugly (eg. TarmedKanton instead of Tarmed Kanton)
