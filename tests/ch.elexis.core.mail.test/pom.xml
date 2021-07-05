@@ -330,7 +330,7 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>jakarta.xml.bind</artifactId>
+							<artifactId>jaxb-api</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
