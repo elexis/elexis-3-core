@@ -419,7 +419,7 @@ public class Xid extends PersistentObject implements IXid {
 	
 	private static void storeDomains(){
 		StringBuilder sb = new StringBuilder();
-		for (String k : domains.keySet()) {
+		for (String k : domains.keySet().toArray(new String[domains.size()])) {
 			XIDDomain xd = domains.get(k);
 			sb.append(k).append("#").append(xd.getQuality()).append("#").append(xd.getSimpleName())
 				.append("#").append(xd.getDisplayOptions()).append(";");
