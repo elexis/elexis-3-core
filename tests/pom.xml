@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>ch.elexis.core.tests</artifactId>
-	<name>Elexis-Server tests</name>
+	<name>Elexis Core Tests</name>
 	<packaging>pom</packaging>
 
 	<parent>
@@ -70,7 +70,7 @@
 		<dependency>
 			<groupId>ch.elexis.core</groupId>
 			<artifactId>ch.elexis.core.persistence.feature</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>3.9.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
