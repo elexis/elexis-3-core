@@ -300,11 +300,6 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>jakarta.xml.bind</artifactId>
-							<version>0.0.0</version>
-						</dependency>
-						<dependency>
-							<type>eclipse-plugin</type>
 							<artifactId>com.mysql.cj</artifactId>
 							<version>0.0.0</version>
 						</dependency>
@@ -340,7 +335,7 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>com.sun.xml.bind</artifactId>
+							<artifactId>com.sun.xml.bind.jaxb-osgi</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
@@ -360,7 +355,7 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>javax.xml</artifactId>
+							<artifactId>jaxb-api</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
