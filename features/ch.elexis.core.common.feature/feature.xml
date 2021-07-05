@@ -29,7 +29,6 @@
       <import plugin="ch.rgw.utility" version="3.9.100" match="greaterOrEqual"/>
       <import plugin="ch.elexis.core.l10n" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="jakarta.ws.rs-api"/>
-      <import plugin="jakarta.xml.bind"/>
       <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.apache.commons.dbcp"/>
       <import plugin="org.apache.commons.io"/>

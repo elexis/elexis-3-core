@@ -27,17 +27,17 @@
 							</requirement>
 							<requirement>
 								<type>eclipse-plugin</type>
+								<id>ch.elexis.core.test.context</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
 								<id>ch.elexis.core.jpa.logging.slf4j</id>
 								<versionRange>0.0.0</versionRange>
 							</requirement>
 							<requirement>
 								<type>eclipse-plugin</type>
 								<id>ch.elexis.core.logging.default_configuration</id>
-								<versionRange>0.0.0</versionRange>
-							</requirement>
-							<requirement>
-								<type>eclipse-plugin</type>
-								<id>ch.elexis.core.test.context</id>
 								<versionRange>0.0.0</versionRange>
 							</requirement>
 							<requirement>
@@ -170,6 +170,11 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
+							<artifactId>com.sun.xml.bind.jaxb-osgi</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
 							<artifactId>ch.qos.logback.slf4j</artifactId>
 							<version>0.0.0</version>
 						</dependency>
@@ -270,6 +275,11 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
+							<artifactId>jaxb-api</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
 							<artifactId>org.eclipse.core.jobs</artifactId>
 							<version>0.0.0</version>
 						</dependency>
@@ -295,22 +305,12 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>javax.xml</artifactId>
-							<version>0.0.0</version>
-						</dependency>
-						<dependency>
-							<type>eclipse-plugin</type>
 							<artifactId>org.eclipse.core.expressions</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
 							<artifactId>org.apache.commons.logging</artifactId>
-							<version>0.0.0</version>
-						</dependency>
-						<dependency>
-							<type>eclipse-plugin</type>
-							<artifactId>jakarta.xml.bind</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
@@ -346,11 +346,6 @@
 						<dependency>
 							<type>eclipse-plugin</type>
 							<artifactId>org.eclipse.core.resources</artifactId>
-							<version>0.0.0</version>
-						</dependency>
-						<dependency>
-							<type>eclipse-plugin</type>
-							<artifactId>com.sun.xml.bind</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
@@ -434,11 +429,6 @@
 							<id>org.eclipse.equinox.common</id>
 							<level>2</level>
 							<autoStart>true</autoStart>
-						</bundle>
-						<bundle>
-							<id>javax.xml</id>
-							<level>1</level>
-							<autoStart>false</autoStart>
 						</bundle>
 						<bundle>
 							<id>org.eclipse.osgi</id>
