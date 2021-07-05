@@ -18,6 +18,7 @@ Bundle-ClassPath: .,
  lib/hapi-structures-v281-2.3.jar,
  lib/hapi-structures-v28-2.3.jar
 Export-Package: ca.uhn.hl7v2,
+ ca.uhn.hl7v2.model,
  ch.elexis.hl7,
  ch.elexis.hl7.data,
  ch.elexis.hl7.model,
