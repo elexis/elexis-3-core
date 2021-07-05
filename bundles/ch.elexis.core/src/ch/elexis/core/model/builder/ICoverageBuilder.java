@@ -70,7 +70,7 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 	 * @param configService
 	 * @return the default coverage label as defined by the user
 	 */
-	public String getDefaultCoverageLabel(IConfigService configService){
+	public static String getDefaultCoverageLabel(IConfigService configService){
 		return configService.getActiveUserContact(Preferences.USR_DEFCASELABEL,
 			Preferences.USR_DEFCASELABEL_DEFAULT);
 	}
@@ -80,7 +80,7 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 	 * @param configService
 	 * @return the default coverage reason as defined by the user
 	 */
-	public String getDefaultCoverageReason(IConfigService configService){
+	public static String getDefaultCoverageReason(IConfigService configService){
 		return configService.getActiveUserContact(Preferences.USR_DEFCASEREASON,
 			Preferences.USR_DEFCASEREASON_DEFAULT);
 	}
