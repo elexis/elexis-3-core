@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
@@ -166,8 +167,13 @@ public class BillingSystemService implements IBillingSystemService {
 	
 	@Override
 	public List<IBillingSystem> getBillingSystems(){
-		// TODO implement
-		return null;
+		List<String> subNodes = configService.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
+		if (!subNodes.isEmpty()) {
+			return subNodes.stream().map(node -> getBillingSystem(node).orElse(null))
+				.filter(bs -> bs != null).collect(Collectors.toList());
+		}
+		LoggerFactory.getLogger(getClass()).warn("No billing systems configured");
+		return Collections.emptyList();
 	}
 	
 	@Override
