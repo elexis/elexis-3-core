@@ -375,7 +375,7 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>com.sun.xml.bind</artifactId>
+							<artifactId>com.sun.xml.bind.jaxb-osgi</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
