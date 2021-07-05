@@ -2,16 +2,16 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Pdf Preview using Apache PdfBox
 Bundle-SymbolicName: ch.elexis.core.pdfbox.ui;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Require-Bundle: org.eclipse.swt,
  ch.elexis.core.pdfbox;bundle-version="2.0.21",
  org.eclipse.e4.ui.model.workbench;bundle-version="2.1.700.v20200113-1422",
  org.eclipse.e4.ui.di,
  org.eclipse.e4.core.di,
- ch.elexis.core,
- ch.elexis.core.ui.e4;bundle-version="1.0.0"
+ ch.elexis.core;bundle-version="3.9.0",
+ ch.elexis.core.ui.e4;bundle-version="3.9.0"
 Automatic-Module-Name: ch.elexis.core.pdfbox.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: javax.annotation;version="1.0.0";resolution:=optional,
  javax.inject;version="1.0.0",
  org.slf4j;version="1.6.6"
