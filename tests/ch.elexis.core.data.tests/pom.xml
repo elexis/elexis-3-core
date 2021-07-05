@@ -27,11 +27,6 @@
 							</requirement>
 							<requirement>
 								<type>eclipse-plugin</type>
-								<id>org.osgi.framework.system.packages.extra</id>
-								<versionRange>0.0.0</versionRange>
-							</requirement>
-							<requirement>
-								<type>eclipse-plugin</type>
 								<id>ch.elexis.core.test.context</id>
 								<versionRange>0.0.0</versionRange>
 							</requirement>
@@ -53,6 +48,11 @@
 							<requirement>
 								<type>eclipse-plugin</type>
 								<id>org.eclipse.persistence.oracle</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.core.filesystem.macosx</id>
 								<versionRange>0.0.0</versionRange>
 							</requirement>
 							<requirement>
@@ -190,6 +190,11 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
+							<artifactId>com.sun.xml.bind.jaxb-osgi</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
 							<artifactId>ch.qos.logback.slf4j</artifactId>
 							<version>0.0.0</version>
 						</dependency>
@@ -300,6 +305,11 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
+							<artifactId>jaxb-api</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
 							<artifactId>org.eclipse.core.jobs</artifactId>
 							<version>0.0.0</version>
 						</dependency>
@@ -336,11 +346,6 @@
 						<dependency>
 							<type>eclipse-plugin</type>
 							<artifactId>org.apache.commons.logging</artifactId>
-							<version>0.0.0</version>
-						</dependency>
-						<dependency>
-							<type>eclipse-plugin</type>
-							<artifactId>jakarta.xml.bind</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
@@ -385,11 +390,6 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>com.sun.xml.bind</artifactId>
-							<version>0.0.0</version>
-						</dependency>
-						<dependency>
-							<type>eclipse-plugin</type>
 							<artifactId>javax.inject</artifactId>
 							<version>0.0.0</version>
 						</dependency>
@@ -406,11 +406,6 @@
 						<dependency>
 							<type>eclipse-plugin</type>
 							<artifactId>com.eclipsesource.jaxrs.consumer</artifactId>
-							<version>0.0.0</version>
-						</dependency>
-						<dependency>
-							<type>eclipse-plugin</type>
-							<artifactId>javax.xml</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
