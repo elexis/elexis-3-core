@@ -52,11 +52,6 @@
 							</requirement>
 							<requirement>
 								<type>eclipse-plugin</type>
-								<id>org.eclipse.core.filesystem.macosx</id>
-								<versionRange>0.0.0</versionRange>
-							</requirement>
-							<requirement>
-								<type>eclipse-plugin</type>
 								<id>ch.qos.logback.slf4j</id>
 								<versionRange>0.0.0</versionRange>
 							</requirement>
