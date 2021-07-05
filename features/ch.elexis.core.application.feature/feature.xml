@@ -881,13 +881,6 @@
          unpack="false"/>
 
    <plugin
-         id="jakarta.xml.bind"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="bcprov"
          download-size="0"
          install-size="0"
@@ -994,6 +987,13 @@
 
    <plugin
          id="org.apache.commons.math3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.sun.xml.bind.jaxb-osgi"
          download-size="0"
          install-size="0"
          version="0.0.0"
