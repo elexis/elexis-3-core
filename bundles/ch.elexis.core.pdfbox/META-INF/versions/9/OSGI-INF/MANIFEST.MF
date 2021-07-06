@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Import-Package:  javax.xml.bind,
- javax.xml.bind.annotation,
- javax.xml.bind.annotation.adapters,
- javax.activation
-Comment:Java 9+ support
