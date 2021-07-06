@@ -145,7 +145,9 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 	
 	@Override
 	public void refresh(){
-		refreshSelectedViewer();
+		Display.getDefault().asyncExec(() -> {
+			refreshSelectedViewer();
+		});
 	}
 	
 	public void refreshSelectedViewer(){
