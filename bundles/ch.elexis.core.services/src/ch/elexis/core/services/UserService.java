@@ -18,33 +18,35 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.rgw.tools.PasswordEncryptionService;
 
 @Component
 public class UserService implements IUserService {
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
-	
+
 	@Override
-	public boolean verifyPassword(IUser user, char[] attemptedPassword){
+	public boolean verifyPassword(IUser user, char[] attemptedPassword) {
 		boolean ret = false;
-		
+
 		if (user != null) {
 			PasswordEncryptionService pes = new PasswordEncryptionService();
 			try {
 				ret = pes.authenticate(attemptedPassword, user.getHashedPassword(), user.getSalt());
 			} catch (NoSuchAlgorithmException | InvalidKeySpecException | DecoderException e) {
-				LoggerFactory.getLogger(getClass()).warn("Error verifying password for user [{}].",
-					user.getLabel(), e);
+				LoggerFactory.getLogger(getClass()).warn("Error verifying password for user [{}].", user.getLabel(), e);
 			}
 		}
-		
+
 		return ret;
 	}
-	
+
 	@Override
-	public void setPasswordForUser(IUser user, String password){
+	public void setPasswordForUser(IUser user, String password) {
 		if (user != null) {
 			PasswordEncryptionService pes = new PasswordEncryptionService();
 			try {
@@ -54,35 +56,49 @@ public class UserService implements IUserService {
 				user.setHashedPassword(hashed_pw);
 				modelService.save(user);
 			} catch (NoSuchAlgorithmException | InvalidKeySpecException | DecoderException e) {
-				LoggerFactory.getLogger(getClass()).warn("Error setting password for user [{}].",
-					user.getLabel(), e);
+				LoggerFactory.getLogger(getClass()).warn("Error setting password for user [{}].", user.getLabel(), e);
 			}
 		}
-		
+
 	}
-	
+
 	@Override
-	public Set<IMandator> getExecutiveDoctorsWorkingFor(IContact user){
+	public Set<IMandator> getExecutiveDoctorsWorkingFor(IContact user) {
 		String mandators = (String) user.getExtInfo("Mandant");
 		if (mandators == null) {
 			return Collections.emptySet();
 		}
-		
-		List<IMandator> allActivateMandators = modelService.getQuery(IMandator.class).execute()
-			.parallelStream().filter(IMandator::isActive).collect(Collectors.toList());
-		
+
+		List<IMandator> allActivateMandators = modelService.getQuery(IMandator.class).execute().parallelStream()
+				.filter(IMandator::isActive).collect(Collectors.toList());
+
 		List<String> mandatorsIdList = Arrays.asList(mandators.split(","));
 		return allActivateMandators.stream().filter(p -> mandatorsIdList.contains(p.getLabel()))
-			.collect(Collectors.toSet());
+				.collect(Collectors.toSet());
 	}
-	
+
 	@Override
-	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact userContact){
+	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact userContact) {
 		String defaultMandatorId = (String) userContact.getExtInfo("StdMandant");
 		if (StringUtils.isNotEmpty(defaultMandatorId)) {
 			return modelService.load(defaultMandatorId, IMandator.class);
 		}
 		return Optional.empty();
 	}
-	
+
+	@Override
+	public Optional<IUser> findByContact(IContact contact) {
+		if (contact == null) {
+			return Optional.empty();
+		}
+		IQuery<IUser> qre = CoreModelServiceHolder.get().getQuery(IUser.class);
+		qre.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.EQUALS, contact);
+		List<IUser> result = qre.execute();
+		if (result.size() == 1) {
+			return Optional.of(result.get(0));
+		} else {
+			return Optional.empty();
+		}
+	}
+
 }

@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Messages;
 import ch.elexis.core.model.ModelPackage;
@@ -52,12 +53,12 @@ public class AppointmentService implements IAppointmentService {
 	public static final String AG_BEREICH_TYPE_POSTFIX = "/type"; //$NON-NLS-1$
 	public static final String AG_TIMEPREFERENCES = "agenda/zeitvorgaben"; //$NON-NLS-1$
 	
-	private static final int TYPE_FREE = 0; //frei
-	private static final int TYPE_RESERVED = 1; //reserviert
-	private static final int TYPE_DEFAULT = 2; //standard
+	private static final int TYPE_FREE = 0; // frei
+	private static final int TYPE_RESERVED = 1; // reserviert
+	private static final int TYPE_DEFAULT = 2; // standard
 	
-	private static final int STATE_EMPTY = 0; //leer
-	private static final int STATE_DEFAULT = 1; //standard
+	private static final int STATE_EMPTY = 0; // leer
+	private static final int STATE_DEFAULT = 1; // standard
 	
 	private List<String> states = null;
 	
@@ -77,7 +78,7 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Activate
 	public void activate(){
-		//@TODO server support ?
+		// @TODO server support ?
 		states = getStates();
 	}
 	
@@ -94,7 +95,7 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Override
 	public boolean delete(IAppointment appointment, boolean whole){
-		//@TODO checkLock is deprecated not needed ?
+		// @TODO checkLock is deprecated not needed ?
 		
 		// check if appointment isLinked
 		if (!StringTool.isNothing(appointment.getLinkgroup())) {
@@ -112,8 +113,8 @@ public class AppointmentService implements IAppointmentService {
 						}
 						moveto.setSubjectOrPatient(appointment.getSubjectOrPatient());
 						moveto.setReason(appointment.getReason());
-						//TODO created by not working
-						//moveto.set(Termin.FLD_CREATOR, get(Termin.FLD_CREATOR));
+						// TODO created by not working
+						// moveto.set(Termin.FLD_CREATOR, get(Termin.FLD_CREATOR));
 						moveto.setCreatedBy(appointment.getCreatedBy());
 						moveto.setExtension(appointment.getExtension());
 						iModelService.save(moveto);
@@ -230,7 +231,7 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Override
 	public void addState(String state){
-		//TODO cannot add new states in Termin.java
+		// TODO cannot add new states in Termin.java
 		String tt = StringTool.join(states, ",") + "," + state;
 		iConfigService.set(AG_TERMINSTATUS, tt);
 		states = iConfigService.getAsList(AG_TERMINSTATUS, null);
@@ -315,12 +316,10 @@ public class AppointmentService implements IAppointmentService {
 		root.setType("series");
 		LocalDate rootStartDate = getRootTerminStartTime(appointmentSeries).toLocalDate();
 		appointmentSeries.setSeriesStartDate(rootStartDate);
-		root.setStartTime(
-			LocalDateTime.of(appointmentSeries.getSeriesStartDate(),
-				appointmentSeries.getSeriesStartTime()));
-		root.setEndTime(
-			LocalDateTime.of(appointmentSeries.getSeriesStartDate(),
-				appointmentSeries.getSeriesEndTime()));
+		root.setStartTime(LocalDateTime.of(appointmentSeries.getSeriesStartDate(),
+			appointmentSeries.getSeriesStartTime()));
+		root.setEndTime(LocalDateTime.of(appointmentSeries.getSeriesStartDate(),
+			appointmentSeries.getSeriesEndTime()));
 		root.setExtension(appointmentSeries.getAsSeriesExtension());
 		
 		series.add(root);
@@ -338,15 +337,16 @@ public class AppointmentService implements IAppointmentService {
 		switch (appointmentSeries.getSeriesType()) {
 		case DAILY:
 			return tt;
-			
+		
 		case WEEKLY:
 			Calendar cal2 = Calendar.getInstance();
 			cal2.setTime(cal.getTime());
-			int firstDay = Integer.parseInt(appointmentSeries.getSeriesPatternString().split(",")[1].charAt(0) + "");
+			int firstDay = Integer
+				.parseInt(appointmentSeries.getSeriesPatternString().split(",")[1].charAt(0) + "");
 			cal2.set(Calendar.DAY_OF_WEEK, firstDay);
 			TimeTool ret = new TimeTool(cal2.getTime());
 			return ret;
-			
+		
 		case MONTHLY:
 			int monthDay = Integer.parseInt(appointmentSeries.getSeriesPatternString());
 			Calendar calendarMonth = Calendar.getInstance();
@@ -360,13 +360,14 @@ public class AppointmentService implements IAppointmentService {
 			}
 			calendarMonth.set(Calendar.DAY_OF_MONTH, monthDay);
 			return new TimeTool(calendarMonth.getTime());
-			
+		
 		case YEARLY:
 			Calendar targetCal = Calendar.getInstance();
 			targetCal.clear();
 			targetCal.set(Calendar.YEAR, tt.get(TimeTool.YEAR));
 			int day = Integer.parseInt(appointmentSeries.getSeriesPatternString().substring(0, 2));
-			int month = Integer.parseInt(appointmentSeries.getSeriesPatternString().substring(2, 4));
+			int month =
+				Integer.parseInt(appointmentSeries.getSeriesPatternString().substring(2, 4));
 			targetCal.set(Calendar.DAY_OF_MONTH, day);
 			targetCal.set(Calendar.MONTH, month - 1);
 			TimeTool target = new TimeTool(targetCal.getTime());
@@ -389,8 +390,7 @@ public class AppointmentService implements IAppointmentService {
 		if (appointmentSeries.getEndingType().equals(EndingType.AFTER_N_OCCURENCES)) {
 			occurences = (Integer.parseInt(appointmentSeries.getEndingPatternString()) - 1);
 		} else {
-			endingDate =
-				new TimeTool(appointmentSeries.getSeriesEndDate());
+			endingDate = new TimeTool(appointmentSeries.getSeriesEndDate());
 		}
 		
 		switch (appointmentSeries.getSeriesType()) {
@@ -534,5 +534,19 @@ public class AppointmentService implements IAppointmentService {
 			}
 		}
 		return ret;
+	}
+	
+	@Override
+	public Optional<IContact> resolveAreaAssignedContact(String areaName){
+		if (areaName != null) {
+			String areaType =
+				ConfigServiceHolder.get().get("agenda/bereich/" + areaName + "/type", null);
+			if (areaType != null && areaType.startsWith(AreaType.CONTACT.name())) {
+				String contactId = areaType.substring(AreaType.CONTACT.name().length() + 1);
+				return CoreModelServiceHolder.get().load(contactId, IContact.class);
+			}
+		}
+		
+		return Optional.empty();
 	}
 }

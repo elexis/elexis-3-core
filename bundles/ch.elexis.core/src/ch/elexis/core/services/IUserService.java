@@ -8,7 +8,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 
 public interface IUserService {
-	
+
 	/**
 	 * Verify the provided password for the given user
 	 * 
@@ -17,16 +17,16 @@ public interface IUserService {
 	 * @return <code>true</code> if password matched
 	 */
 	public boolean verifyPassword(IUser user, char[] attemptedPassword);
-	
+
 	/**
-	 * Set the password for a given user. Will store the password in encrypted format. Performs save
-	 * operation.
+	 * Set the password for a given user. Will store the password in encrypted
+	 * format. Performs save operation.
 	 * 
 	 * @param user
 	 * @param password
 	 */
 	public void setPasswordForUser(IUser user, String password);
-	
+
 	/**
 	 * Retrieve the set of mandators this user is working for.
 	 * 
@@ -34,7 +34,7 @@ public interface IUserService {
 	 * @return
 	 */
 	Set<IMandator> getExecutiveDoctorsWorkingFor(IContact user);
-	
+
 	/**
 	 * Retrieve the default executive doctor this user is working for.
 	 * 
@@ -42,5 +42,14 @@ public interface IUserService {
 	 * @return
 	 */
 	Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact user);
-	
+
+	/**
+	 * Find the user associated with a given contact, if available
+	 * 
+	 * @param contact
+	 * @return
+	 * @since 3.9
+	 */
+	Optional<IUser> findByContact(IContact contact);
+
 }
