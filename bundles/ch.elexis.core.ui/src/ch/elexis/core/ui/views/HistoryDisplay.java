@@ -89,9 +89,9 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		
 		text = UiDesk.getToolkit().createFormText(scrolledComposite, false);
 		text.setWhitespaceNormalized(true);
-		text.setColor(UiDesk.COL_BLUE, UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
-		text.setColor(UiDesk.COL_GREEN, UiDesk.getColorRegistry().get(UiDesk.COL_LIGHTGREY));
-		text.setColor(UiDesk.COL_DARKGREY, UiDesk.getColorRegistry().get(UiDesk.COL_DARKGREY));
+//		text.setColor(UiDesk.COL_BLUE, UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
+//		text.setColor(UiDesk.COL_GREEN, UiDesk.getColorRegistry().get(UiDesk.COL_LIGHTGREY));
+//		text.setColor(UiDesk.COL_DARKGREY, UiDesk.getColorRegistry().get(UiDesk.COL_DARKGREY));
 		text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 		scrolledComposite.setContent(text);
 		text.addHyperlinkListener(new HyperlinkAdapter() {
