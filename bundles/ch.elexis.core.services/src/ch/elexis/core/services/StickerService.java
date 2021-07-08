@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +62,9 @@ public class StickerService implements IStickerService {
 	
 	@Override
 	public List<ISticker> getStickers(Identifiable identifiable){
+		if(identifiable == null) {
+			return Collections.emptyList();
+		}
 		List<StickerObjectLink> stickerObjectLinks =
 			getStickerObjectLinksForId(identifiable.getId());
 		List<ISticker> loadedStickers = new ArrayList<>();
