@@ -67,8 +67,6 @@ public class SelectBestellungDialog extends SelectionDialog {
 		
 		setComparator();
 		
-		fTableViewer.setInput(this);
-		
 		fTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event){
 				if (fAddCancelButton) {
@@ -96,11 +94,12 @@ public class SelectBestellungDialog extends SelectionDialog {
 	
 	private void setComparator(){
 		fTableViewer.setComparator(new ViewerComparator() {
-			private TimeTool t1 = new TimeTool();
-			private TimeTool t2 = new TimeTool();
 			
 			@Override
 			public int compare(Viewer viewer, Object b1, Object b2){
+				TimeTool t1 = new TimeTool();
+				TimeTool t2 = new TimeTool();
+				
 				setTimeTool((IOrder) b1, t1);
 				setTimeTool((IOrder) b2, t2);
 				if (t1.after(t2)) {
