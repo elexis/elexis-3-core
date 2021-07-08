@@ -2,6 +2,7 @@ package ch.elexis.core.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import ch.elexis.core.jpa.entities.Bestellung;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.rgw.tools.TimeTool;
 
 public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Bestellung>
 		implements IdentifiableWithXid, IOrder {
@@ -72,7 +74,13 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		if (id != null) {
 			String[] parts = id.split(":");
 			if (parts.length >= 2) {
-				return LocalDateTime.parse(parts[1], timestampFormatter);
+				try {
+					return LocalDateTime.parse(parts[1], timestampFormatter);
+				} catch (DateTimeParseException e) {
+					// fallback using TimeTool parser
+					TimeTool tool = new TimeTool(parts[1]);
+					return tool.toLocalDateTime();
+				}
 			}
 		}
 		return null;
