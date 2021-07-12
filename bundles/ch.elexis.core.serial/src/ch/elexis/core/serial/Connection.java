@@ -20,7 +20,23 @@ public class Connection implements SerialPortDataListener {
 	private static Logger logger = LoggerFactory.getLogger(Connection.class);
 	
 	public interface ComPortListener {
-		public void gotChunk(Connection conn, String chunk);
+		/**
+		 * Called with chunk as {@link String} with default charset. Overwrite if {@link String}
+		 * access to data is enough.
+		 * 
+		 * @param conn
+		 * @param chunk
+		 */
+		public default void gotChunk(Connection conn, String chunk){};
+		
+		/**
+		 * Called with chunk as byte array. Overwrite if binary access to data is needed or charset
+		 * control is needed.
+		 * 
+		 * @param conn
+		 * @param data
+		 */
+		public default void gotData(Connection conn, byte[] data){};
 	}
 	
 	private ComPortListener listener;
@@ -198,7 +214,7 @@ public class Connection implements SerialPortDataListener {
 				while (hasChunk(buffer)) {
 					byte[] bytes = buffer.toByteArray();
 					int endIndex = indexOf(bytes, endOfChunk);
-					fireChunk(getChunk(bytes, endIndex));
+					fireData(getChunk(bytes, endIndex));
 					// start new buffer
 					buffer = new ByteArrayOutputStream();
 					// if any remaining bytes add to new buffer 
@@ -211,7 +227,14 @@ public class Connection implements SerialPortDataListener {
 				logger.error("Exception buffering chunk", ex);
 			}
 		} else {
-			fireChunk(new String(newData));
+			fireData(newData);
+		}
+	}
+	
+	private void fireData(byte[] data){
+		if (data != null && data.length > 0) {
+			listener.gotData(this, data);
+			fireChunk(new String(data));
 		}
 	}
 	
@@ -226,7 +249,7 @@ public class Connection implements SerialPortDataListener {
 		return indexOf(buffer.toByteArray(), endOfChunk) != -1;
 	}
 	
-	private String getChunk(byte[] buffer, int endIndex){
+	private byte[] getChunk(byte[] buffer, int endIndex){
 		if (startOfChunk != null) {
 			int startIndex = indexOf(buffer, startOfChunk);
 			if(startIndex == -1) {
@@ -236,16 +259,15 @@ public class Connection implements SerialPortDataListener {
 				byte[] chunkBytes =
 					Arrays.copyOfRange(buffer, startIndex + startOfChunk.length, endIndex);
 				int startOffset = getStartOffset(chunkBytes);
-				return new String(Arrays.copyOfRange(chunkBytes, startOffset, chunkBytes.length));
+				return Arrays.copyOfRange(chunkBytes, startOffset, chunkBytes.length);
 			} else {
-				return new String(
-					Arrays.copyOfRange(buffer, startIndex, endIndex + endOfChunk.length));
+				return Arrays.copyOfRange(buffer, startIndex, endIndex + endOfChunk.length);
 			}
 		} else {
 			if (excludeDelimiters) {
-				return new String(Arrays.copyOfRange(buffer, 0, endIndex));
+				return Arrays.copyOfRange(buffer, 0, endIndex);
 			} else {
-				return new String(Arrays.copyOfRange(buffer, 0, endIndex + endOfChunk.length));
+				return Arrays.copyOfRange(buffer, 0, endIndex + endOfChunk.length);
 			}
 		}
 	}
@@ -278,7 +300,7 @@ public class Connection implements SerialPortDataListener {
 	}
 	
 	public void close(){
-		close(5000);
+		close(1000);
 	}
 	
 	public void close(int sleepTime){
