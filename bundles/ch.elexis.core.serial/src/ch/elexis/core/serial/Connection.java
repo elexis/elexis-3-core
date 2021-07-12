@@ -12,6 +12,9 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 
 public class Connection implements SerialPortDataListener {
 	
+	public static final int STX = 0x02;
+	public static final int ETX = 0x03;
+	
 	private static Logger logger = LoggerFactory.getLogger(Connection.class);
 	
 	public interface ComPortListener {
