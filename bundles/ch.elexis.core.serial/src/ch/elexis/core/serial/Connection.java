@@ -2,7 +2,9 @@ package ch.elexis.core.serial;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +30,10 @@ public class Connection implements SerialPortDataListener {
 	
 	private SerialPort serialPort;
 	
+	private byte[] startOfChunk;
 	private byte[] endOfChunk;
 	private ByteArrayOutputStream buffer;
+	private boolean excludeDelimiters = false;
 	
 	public Connection(final String portName, final String port, final String settings,
 		final ComPortListener l){
@@ -52,14 +56,28 @@ public class Connection implements SerialPortDataListener {
 	}
 	
 	/**
-	 * Data is collected in buffer until end of chunk bytes are received. ComPortListener#gotChunk
-	 * is only called with data including end of chunk.
+	 * Data is collected in buffer until end of chunk bytes are received.
+	 * {@link ComPortListener#gotChunk(Connection, String)} is only called with data including end
+	 * of chunk.
 	 * 
 	 * @param endOfChunk
 	 * @return
 	 */
 	public Connection withEndOfChunk(byte[] endOfChunk){
 		this.endOfChunk = endOfChunk;
+		return this;
+	}
+	
+	/**
+	 * Data is collected in buffer until end of chunk bytes (see {@link #withEndOfChunk(byte[])})
+	 * are received. {@link ComPortListener#gotChunk(Connection, String)} is called with data
+	 * starting from start of chunk, including end of chunk.
+	 * 
+	 * @param endOfChunk
+	 * @return
+	 */
+	public Connection withStartOfChunk(byte[] startOfChunk){
+		this.startOfChunk = startOfChunk;
 		return this;
 	}
 	
@@ -159,37 +177,104 @@ public class Connection implements SerialPortDataListener {
 			if (numRead != newData.length) {
 				logger.warn("Failed to read [" + newData.length + "] bytes, got [" + numRead + "]");
 			}
-			if (endOfChunk != null) {
-				try {
-					if (buffer == null) {
-						buffer = new ByteArrayOutputStream();
-					}
-					buffer.write(newData);
-					if (find(buffer.toByteArray(), endOfChunk)) {
-						listener.gotChunk(this, new String(buffer.toByteArray()));
-						// start new buffer
-						buffer = new ByteArrayOutputStream();
-					}
-				} catch (Exception ex) {
-					logger.error("Exception buffering chunk", ex);
+			setData(newData);
+		}
+	}
+	
+	/**
+	 * If {@link Connection#endOfChunk} is set the data is buffered, else the data is passed to the
+	 * {@link ComPortListener}. This method is also used as entry point to test the data buffer
+	 * handling.
+	 * 
+	 * @param newData
+	 */
+	protected void setData(byte[] newData){
+		if (endOfChunk != null) {
+			try {
+				if (buffer == null) {
+					buffer = new ByteArrayOutputStream();
 				}
+				buffer.write(newData);
+				while (hasChunk(buffer)) {
+					byte[] bytes = buffer.toByteArray();
+					int endIndex = indexOf(bytes, endOfChunk);
+					fireChunk(getChunk(bytes, endIndex));
+					// start new buffer
+					buffer = new ByteArrayOutputStream();
+					// if any remaining bytes add to new buffer 
+					if (bytes.length > endIndex + endOfChunk.length) {
+						buffer.write(
+							Arrays.copyOfRange(bytes, endIndex + endOfChunk.length, bytes.length));
+					}
+				}
+			} catch (Exception ex) {
+				logger.error("Exception buffering chunk", ex);
+			}
+		} else {
+			fireChunk(new String(newData));
+		}
+	}
+	
+	private void fireChunk(String chunk){
+		if(StringUtils.isNotBlank(chunk)) {
+			logger.info("Serial chunk [" + chunk + "]");
+			listener.gotChunk(this, chunk);			
+		}
+	}
+	
+	private boolean hasChunk(ByteArrayOutputStream buffer){
+		return indexOf(buffer.toByteArray(), endOfChunk) != -1;
+	}
+	
+	private String getChunk(byte[] buffer, int endIndex){
+		if (startOfChunk != null) {
+			int startIndex = indexOf(buffer, startOfChunk);
+			if(startIndex == -1) {
+				startIndex = 0;
+			}
+			if (excludeDelimiters) {
+				byte[] chunkBytes =
+					Arrays.copyOfRange(buffer, startIndex + startOfChunk.length, endIndex);
+				int startOffset = getStartOffset(chunkBytes);
+				return new String(Arrays.copyOfRange(chunkBytes, startOffset, chunkBytes.length));
 			} else {
-				listener.gotChunk(this, new String(newData));
+				return new String(
+					Arrays.copyOfRange(buffer, startIndex, endIndex + endOfChunk.length));
+			}
+		} else {
+			if (excludeDelimiters) {
+				return new String(Arrays.copyOfRange(buffer, 0, endIndex));
+			} else {
+				return new String(Arrays.copyOfRange(buffer, 0, endIndex + endOfChunk.length));
 			}
 		}
 	}
 	
-	private boolean find(byte[] buffer, byte[] key){
-		for (int i = 0; i <= buffer.length - key.length; i++) {
-			int j = 0;
-			while (j < key.length && buffer[i + j] == key[j]) {
-				j++;
-			}
-			if (j == key.length) {
-				return true;
-			}
+	private int getStartOffset(byte[] buffer){
+		int ret = 0;
+		int offset = indexOf(buffer, startOfChunk);
+		while (offset != -1) {
+			ret = ret + offset + startOfChunk.length;
+			buffer = Arrays.copyOfRange(buffer, offset + startOfChunk.length, buffer.length);
+			offset = indexOf(buffer, startOfChunk);
 		}
-		return false;
+		return ret;
+	}
+	
+	private int indexOf(byte[] array, byte[] target){
+		if (target.length == 0) {
+			return 0;
+		}
+		
+		outer: for (int i = 0; i < array.length - target.length + 1; i++) {
+			for (int j = 0; j < target.length; j++) {
+				if (array[i + j] != target[j]) {
+					continue outer;
+				}
+			}
+			return i;
+		}
+		return -1;
 	}
 	
 	public void close(){
@@ -268,5 +353,17 @@ public class Connection implements SerialPortDataListener {
 	@Override
 	public int getListeningEvents(){
 		return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+	}
+	
+	/**
+	 * If set to true the configured delimiters (see {@link Connection#withEndOfChunk(byte[])} and
+	 * {@link Connection#withStartOfChunk(byte[])}) the delimiters are not included in the chunk.
+	 * 
+	 * @param excludeDelimiters
+	 * @return
+	 */
+	public Connection excludeDelimiters(boolean excludeDelimiters){
+		this.excludeDelimiters = excludeDelimiters;
+		return this;
 	}
 }
