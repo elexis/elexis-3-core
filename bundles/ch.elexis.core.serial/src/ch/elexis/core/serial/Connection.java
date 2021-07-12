@@ -34,6 +34,7 @@ public class Connection implements SerialPortDataListener {
 		myPort = port;
 		mySettings = settings.split(","); //$NON-NLS-1$
 		name = portName;
+		logger.info("SerialPort config: [" + portName + "][" + port + "][" + settings + "]");
 	}
 	
 	public boolean connect(){
@@ -80,27 +81,62 @@ public class Connection implements SerialPortDataListener {
 	 * Sets the connection parameters to the settings.
 	 */
 	public void setConnectionParameters() {
-		
-		//		sp.setPortName(myPort);
 		serialPort.setComPortParameters(Integer.parseInt(mySettings[0]),
 			Integer.parseInt(mySettings[1]), Integer.parseInt(mySettings[3]),
 			getParity(mySettings[2]));
-		//		sp.setBaudRate(mySettings[0]);
-		//		sp.setDatabits(mySettings[1]);
-		//		sp.setParity(mySettings[2]);
-		//		sp.setStopbits(mySettings[3]);
-		// TODO serialPort.setFlowControl(getListeningEvents())
-		//		serialPort.setFlowControl(
-		//			SerialPort.FLOW_CONTROL_RTS_ENABLED | SerialPort.FLOW_CONTROL_CTS_ENABLED);
-		//		if (mySettings.length >= 5 && mySettings[4] != null) {
-		//			sp.setFlowControlIn(Integer.parseInt(mySettings[4]));
-		//		}
-		//		if (mySettings.length >= 6 && mySettings[5] != null) {
-		//			sp.setFlowControlOut(Integer.parseInt(mySettings[5]));
-		//		}
+		
+		int flowControl = -1;
+		if (mySettings.length >= 5 && mySettings[4] != null && mySettings.length >= 6
+			&& mySettings[5] != null) {
+			flowControl = getFlowControl(mySettings[4]);
+		}
+		if (mySettings.length >= 6 && mySettings[5] != null) {
+			flowControl = flowControl | getFlowControl(mySettings[5]);
+		}
+		if (flowControl > -1) {
+			serialPort.setFlowControl(flowControl);
+		}
 	}
 	
-
+	/**
+	 * Get the flow control value for the provided {@link String}. Values matching an rxtx config
+	 * value are translated to jserial config values.<br/>
+	 * <br/>
+	 * RXTX flow control constants:<br/>
+	 * <li>FLOWCONTROL_NONE = 0</li>
+	 * <li>FLOWCONTROL_RTSCTS_IN = 1</li>
+	 * <li>FLOWCONTROL_RTSCTS_OUT = 2</li>
+	 * <li>FLOWCONTROL_XONXOFF_IN = 4</li>
+	 * <li>FLOWCONTROL_XONXOFF_OUT = 8</li> <br/>
+	 * <br/>
+	 * JSERIAL flow control constants:<br/>
+	 * <li>FLOW_CONTROL_DISABLED = 0</li>
+	 * <li>FLOW_CONTROL_RTS_ENABLED = 1</li>
+	 * <li>FLOW_CONTROL_CTS_ENABLED = 16</li>
+	 * <li>FLOW_CONTROL_DSR_ENABLED = 256</li>
+	 * <li>FLOW_CONTROL_DTR_ENABLED = 4096</li>
+	 * <li>FLOW_CONTROL_XONXOFF_IN_ENABLED = 65536</li>
+	 * <li>FLOW_CONTROL_XONXOFF_OUT_ENABLED = 1048576</li>
+	 * 
+	 * @param string
+	 * @return
+	 */
+	private int getFlowControl(String string){
+		try {
+			int value = Integer.parseInt(string);
+			if (value == 2) {
+				value = SerialPort.FLOW_CONTROL_CTS_ENABLED;
+			} else if (value == 4) {
+				value = SerialPort.FLOW_CONTROL_XONXOFF_IN_ENABLED;
+			} else if (value == 8) {
+				value = SerialPort.FLOW_CONTROL_XONXOFF_OUT_ENABLED;
+			}
+			return value;
+		} catch (NumberFormatException e) {
+			logger.warn("Non numeric flow control [" + string + "]");
+		}
+		return -1;
+	}
 	
 	private int getParity(String parity){
 		if (parity.equalsIgnoreCase("Even")) { //$NON-NLS-1$
