@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: ch.elexis.core.jcifs.test
-Bundle-Version: 1.0.0.qualifier
-Fragment-Host: ch.elexis.core.jcifs;bundle-version="2.1.2"
+Bundle-Version: 2.1.6.qualifier
+Fragment-Host: ch.elexis.core.jcifs;bundle-version="2.1.6"
 Automatic-Module-Name: ch.elexis.core.jcifs.test
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.apache.commons.io;bundle-version="2.5.0",
  org.junit
 Import-Package: org.junit;version="4.12.0"
