@@ -11,8 +11,8 @@ target "Elexis" with source allEnvironments
 //}
 
 location "https://dl.maketechnology.io/chromium-swt-ee/medelexis/p2" {
-	com.make.chromium.cef.feature.feature.group lazy
-	org.eclipse.swt.chromium.feature.feature.group lazy
+	com.equo.chromium.feature.feature.group lazy
+	com.equo.chromium.cef.feature.feature.group lazy
 }
 
 // We a mirror https://download.eclipse.org/technology/babel/update-site/R0.16.0/photon as
