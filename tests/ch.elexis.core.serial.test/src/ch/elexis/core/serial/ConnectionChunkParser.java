@@ -74,4 +74,22 @@ public class ConnectionChunkParser {
 		assertEquals("test2", portListener.getChunks().get(2));
 		assertEquals("test3", portListener.getChunks().get(3));
 	}
+	
+	@Test
+	public void testStartVaraibleEndOfChunkMulti() throws IOException{
+		TestComPortListener portListener = new TestComPortListener();
+		Connection conn = new Connection("ConnectionChunkParser", "", "", portListener)
+			.withEndOfChunk("END OF CHUNK".getBytes(), "....".getBytes())
+			.withStartOfChunk("START OF CHUNK".getBytes()).excludeDelimiters(true);
+		byte[] bytes = AllTests.readBytes("/rsc/test_startvariableendofchunk");
+		// set bytes sequential
+		for (byte b : bytes) {
+			conn.setData(new byte[] {
+				b
+			});
+		}
+		assertTrue(portListener.getChunks().size() == 2);
+		assertTrue(portListener.getChunks().get(0).contains("LINE 1"));
+		assertTrue(portListener.getChunks().get(1).contains("LINE 1\nLINE 2"));
+	}
 }

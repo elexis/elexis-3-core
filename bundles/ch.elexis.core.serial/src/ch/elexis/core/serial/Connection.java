@@ -3,6 +3,7 @@ package ch.elexis.core.serial;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -47,7 +48,7 @@ public class Connection implements SerialPortDataListener {
 	private SerialPort serialPort;
 	
 	private byte[] startOfChunk;
-	private byte[] endOfChunk;
+	private List<byte[]> endOfChunk;
 	private ByteArrayOutputStream buffer;
 	private boolean excludeDelimiters = false;
 	
@@ -72,15 +73,19 @@ public class Connection implements SerialPortDataListener {
 	}
 	
 	/**
-	 * Data is collected in buffer until end of chunk bytes are received.
+	 * Data is collected in buffer until one of the provided end of chunk bytes are received.
 	 * {@link ComPortListener#gotChunk(Connection, String)} is only called with data including end
 	 * of chunk.
 	 * 
 	 * @param endOfChunk
 	 * @return
 	 */
-	public Connection withEndOfChunk(byte[] endOfChunk){
-		this.endOfChunk = endOfChunk;
+	public Connection withEndOfChunk(byte[]... endOfChunk){
+		if (endOfChunk != null) {
+			this.endOfChunk = Arrays.asList(endOfChunk);
+		} else {
+			this.endOfChunk = null;
+		}
 		return this;
 	}
 	
@@ -213,14 +218,19 @@ public class Connection implements SerialPortDataListener {
 				buffer.write(newData);
 				while (hasChunk(buffer)) {
 					byte[] bytes = buffer.toByteArray();
-					int endIndex = indexOf(bytes, endOfChunk);
-					fireData(getChunk(bytes, endIndex));
-					// start new buffer
-					buffer = new ByteArrayOutputStream();
-					// if any remaining bytes add to new buffer 
-					if (bytes.length > endIndex + endOfChunk.length) {
-						buffer.write(
-							Arrays.copyOfRange(bytes, endIndex + endOfChunk.length, bytes.length));
+					for (byte[] bs : endOfChunk) {
+						int endIndex = indexOf(bytes, bs);
+						if (endIndex != -1) {
+							fireData(getChunk(bytes, bs, endIndex));
+							// start new buffer
+							buffer = new ByteArrayOutputStream();
+							// if any remaining bytes add to new buffer 
+							if (bytes.length > endIndex + bs.length) {
+								buffer.write(
+									Arrays.copyOfRange(bytes, endIndex + bs.length,
+									bytes.length));
+							}
+						}
 					}
 				}
 			} catch (Exception ex) {
@@ -246,13 +256,18 @@ public class Connection implements SerialPortDataListener {
 	}
 	
 	private boolean hasChunk(ByteArrayOutputStream buffer){
-		return indexOf(buffer.toByteArray(), endOfChunk) != -1;
+		for (byte[] bs : endOfChunk) {
+			if (indexOf(buffer.toByteArray(), bs) != -1) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
-	private byte[] getChunk(byte[] buffer, int endIndex){
+	private byte[] getChunk(byte[] buffer, byte[] matchingEndOfChunk, int endIndex){
 		if (startOfChunk != null) {
 			int startIndex = indexOf(buffer, startOfChunk);
-			if(startIndex == -1) {
+			if (startIndex == -1) {
 				startIndex = 0;
 			}
 			if (excludeDelimiters) {
@@ -261,13 +276,13 @@ public class Connection implements SerialPortDataListener {
 				int startOffset = getStartOffset(chunkBytes);
 				return Arrays.copyOfRange(chunkBytes, startOffset, chunkBytes.length);
 			} else {
-				return Arrays.copyOfRange(buffer, startIndex, endIndex + endOfChunk.length);
+				return Arrays.copyOfRange(buffer, startIndex, endIndex + matchingEndOfChunk.length);
 			}
 		} else {
 			if (excludeDelimiters) {
 				return Arrays.copyOfRange(buffer, 0, endIndex);
 			} else {
-				return Arrays.copyOfRange(buffer, 0, endIndex + endOfChunk.length);
+				return Arrays.copyOfRange(buffer, 0, endIndex + matchingEndOfChunk.length);
 			}
 		}
 	}
