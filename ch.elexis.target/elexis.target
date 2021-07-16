@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1618380561">
+<target name="Elexis" sequenceNumber="1621586997">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.swt.chromium.feature.feature.group" version="76.0.15.202104120141"/>
-      <unit id="com.make.chromium.cef.feature.feature.group" version="76.0.2.202012180206"/>
+      <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.0.0"/>
+      <unit id="com.make.chromium.cef.feature.feature.group" version="0.0.0"/>
       <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
       <unit id="org.slf4j.ext" version="1.7.30.v20200204-2150"/>
       <unit id="org.slf4j.jcl" version="1.7.2.v20130115-1340"/>
