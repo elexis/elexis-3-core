@@ -25,9 +25,10 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
-import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
+
+import com.equo.chromium.swt.Browser;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.ui.util.CoreUiUtil;

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
-<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1621586997">
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1626422979">
   <locations>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.0.0"/>
-      <unit id="com.make.chromium.cef.feature.feature.group" version="0.0.0"/>
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.medelexis.ch/p2/chromium-swt-ee/"/>
+	    <unit id="com.equo.chromium.cef.feature.feature.group" version="80.0.2.202107080415"/>
+	    <unit id="com.equo.chromium.feature.feature.group" version="80.0.2.202107080428"/>
+    </location>
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
       <unit id="org.slf4j.ext" version="1.7.30.v20200204-2150"/>
       <unit id="org.slf4j.jcl" version="1.7.2.v20130115-1340"/>

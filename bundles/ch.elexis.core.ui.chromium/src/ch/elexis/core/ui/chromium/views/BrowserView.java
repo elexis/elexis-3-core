@@ -3,10 +3,11 @@ package ch.elexis.core.ui.chromium.views;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
+
+import com.equo.chromium.swt.Browser;
 
 public class BrowserView extends ViewPart {
 	 
