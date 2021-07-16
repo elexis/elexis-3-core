@@ -1,13 +1,11 @@
 target "Elexis" with source allEnvironments
 
-location "https://download.medelexis.ch/p2/chromium-swt-ee/" {
-	// TESTING ONLY
-	org.eclipse.swt.chromium.feature.feature.group lazy
-	com.make.chromium.cef.feature.feature.group lazy
-	// TESTING ONLY
-}
 
 location "https://download.elexis.info/elexis/master/p2/target/" {
+	// TESTING ONLY
+	com.equo.chromium.feature.feature.group lazy
+	com.equo.chromium.cef.feature.feature.group lazy
+	// TESTING ONLY
 	org.slf4j.api [1.7.30.v20200204-2150,1.7.30.v20200204-2150]
 	org.slf4j.ext
 	org.slf4j.jcl
