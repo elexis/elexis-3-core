@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.Behandlung;
@@ -33,7 +34,11 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	@Override
 	public LocalDateTime getTimeStamp(){
 		String time = getEntity().getTime();
-		return LocalDateTime.of(getEntity().getDatum(), LocalTime.parse(time, timeFormatter));
+		if (StringUtils.isNotBlank(time)) {
+			return LocalDateTime.of(getEntity().getDatum(), LocalTime.parse(time, timeFormatter));
+		} else {
+			return getDate().atStartOfDay();
+		}
 	}
 	
 	@Override
