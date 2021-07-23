@@ -3,7 +3,7 @@ package ch.elexis.core.ui.commands;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +25,10 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.mail.AttachmentsUtil;
+import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Patient;
 
@@ -36,21 +40,23 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-		Brief brief = (Brief) ElexisEventDispatcher.getSelected(Brief.class);
-		if (brief != null) {
-			List<File> attachments = new ArrayList<File>();
-			Optional<File> tmpFile = getTempFile(brief);
-			if (tmpFile.isPresent()) {
-				attachments.add(tmpFile.get());
+		Optional<IDocumentLetter> selectedDocument =
+			ContextServiceHolder.get().getTyped(IDocumentLetter.class);
+		if (selectedDocument.isPresent()) {
+			List<?> iDocuments = Collections.singletonList(selectedDocument.get());
+			
+			if (!iDocuments.isEmpty()) {
 				ICommandService commandService = (ICommandService) HandlerUtil
 					.getActiveWorkbenchWindow(event).getService(ICommandService.class);
 				try {
-					String attachmentsString = getAttachmentsString(attachments);
+					@SuppressWarnings("unchecked")
+					String documentsString =
+						AttachmentsUtil.getDocumentsString((List<IDocument>) (List<?>) iDocuments);
 					Command sendMailCommand =
 						commandService.getCommand("ch.elexis.core.mail.ui.sendMail");
 					
 					HashMap<String, String> params = new HashMap<String, String>();
-					params.put("ch.elexis.core.mail.ui.sendMail.attachments", attachmentsString);
+					params.put("ch.elexis.core.mail.ui.sendMail.documents", documentsString);
 					Patient patient = ElexisEventDispatcher.getSelectedPatient();
 					if (patient != null) {
 						params.put("ch.elexis.core.mail.ui.sendMail.subject",
@@ -65,7 +71,6 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 					throw new RuntimeException("ch.elexis.core.mail.ui.sendMail not found", ex);
 				}
 			}
-			removeTempAttachments(attachments);
 		}
 		return null;
 	}
