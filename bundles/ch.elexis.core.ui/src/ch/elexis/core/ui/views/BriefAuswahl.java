@@ -122,6 +122,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 	@Inject
 	void activePatient(@Optional
 	IPatient patient){
+		ContextServiceHolder.get().getRootContext().removeTyped(IDocumentLetter.class);
 		Display.getDefault().asyncExec(() -> {
 			if (form != null && !form.isDisposed()) {
 				if (patient == null) {
