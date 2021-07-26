@@ -854,12 +854,13 @@ public class Rechnung extends PersistentObject {
 	 */
 	public static Rechnung getFromNr(final String Rnnr){
 		String id = new Query<Rechnung>(Rechnung.class).findSingle(BILL_NUMBER, Query.EQUALS, Rnnr);
-		Rechnung ret = load(id);
-		if (ret.isValid()) {
-			return ret;
-		} else {
-			return null;
+		if (id != null) {
+			Rechnung ret = load(id);
+			if (ret.isValid()) {
+				return ret;
+			}
 		}
+		return null;
 	}
 	
 	/** Die nächste Rechnungsnummer holen. */
