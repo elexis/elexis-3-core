@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -71,8 +72,15 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		CoreModelServiceHolder.get().remove(encounter);
 	}
 	
+	@Before
+	public void before(){
+		createTestMandantPatientFallBehandlung();
+		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
+	}
+	
 	@After
 	public void after(){
+		ContextServiceHolder.get().setActiveMandator(null);
 		customArticleStockEntry.setCurrentStock(1);
 		coreModelService.save(customArticleStockEntry);
 		
@@ -82,7 +90,7 @@ public class IBillingServiceTest extends AbstractServiceTest {
 	@Test
 	public void billCustomService() throws InterruptedException{
 		Result<IBilled> billed = billingService.bill(customService, encounter, 1.0);
-		assertTrue(billed.isOK());
+		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
 		List<IBilled> billedList = encounter.getBilled();
 		
 		assertEquals(1, billedList.size());
@@ -114,7 +122,6 @@ public class IBillingServiceTest extends AbstractServiceTest {
 	
 	@Test
 	public void isNonEditableCoverageHasEndDate(){
-		createTestMandantPatientFallBehandlung();
 		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
 		
 		Result<IEncounter> isEditable = billingService.isEditable(testEncounters.get(0));
@@ -130,7 +137,6 @@ public class IBillingServiceTest extends AbstractServiceTest {
 	
 	@Test
 	public void isNonEditableAsInvoiceIsSet(){
-		createTestMandantPatientFallBehandlung();
 		ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
 		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
 		ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(),
@@ -155,7 +161,7 @@ public class IBillingServiceTest extends AbstractServiceTest {
 	@Test
 	public void billArticleAndDecrementStock(){
 		Result<IBilled> billed = billingService.bill(customArticle, encounter, 1.0);
-		assertTrue(billed.isOK());
+		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
 		CoreModelServiceHolder.get().remove(billed.get());
 		
 		IStockEntry stockEntry = StockServiceHolder.get().findStockEntryForArticleInStock(
@@ -169,7 +175,7 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		coreModelService.save(customArticleStockEntry);
 		
 		Result<IBilled> billed = billingService.bill(customArticle, encounter, 1.0);
-		assertTrue(billed.isOK());
+		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
 		
 		billingService.changeAmountValidated(billed.get(), 4);
 		IStockEntry stockEntry = StockServiceHolder.get().findStockEntryForArticleInStock(

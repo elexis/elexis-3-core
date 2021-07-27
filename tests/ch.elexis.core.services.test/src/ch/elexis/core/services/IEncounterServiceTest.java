@@ -47,6 +47,7 @@ public class IEncounterServiceTest extends AbstractServiceTest {
 			final int number = i;
 			executor.execute(() -> {
 				ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
+				ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
 				
 				ICustomService service = coreModelService.create(ICustomService.class);
 				service.setCode("code" + number);

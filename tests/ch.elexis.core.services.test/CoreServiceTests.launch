@@ -50,31 +50,18 @@
         <setEntry value="com.google.gson@default:default"/>
         <setEntry value="com.google.guava@default:default"/>
         <setEntry value="com.mysql.cj@default:default"/>
-        <setEntry value="com.sun.activation.javax.activation@default:default"/>
         <setEntry value="jakarta.persistence@default:default"/>
-        <setEntry value="javax.activation@default:default"/>
-        <setEntry value="javax.el@default:default"/>
-        <setEntry value="javax.enterprise.cdi-api@default:default"/>
-        <setEntry value="javax.inject@default:default"/>
-        <setEntry value="javax.interceptor-api@default:default"/>
-        <setEntry value="javax.servlet@default:default"/>
-        <setEntry value="javax.transaction-api@default:default"/>
-        <setEntry value="javax.transaction.jta@default:default"/>
-        <setEntry value="javax.xml.stream.stax-api@default:default"/>
-        <setEntry value="javax.xml@1:default"/>
-        <setEntry value="jaxb-api@default:default"/>
+        <setEntry value="javax.ws.rs.jsr311-api@default:default"/>
         <setEntry value="org.apache.commons.beanutils@default:default"/>
         <setEntry value="org.apache.commons.codec@default:default"/>
         <setEntry value="org.apache.commons.collections4@default:default"/>
         <setEntry value="org.apache.commons.collections@default:default"/>
         <setEntry value="org.apache.commons.dbcp@default:default"/>
         <setEntry value="org.apache.commons.io*2.5.0@default:default"/>
+        <setEntry value="org.apache.commons.io*2.6.0.v20190123-2029@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
-        <setEntry value="org.apache.commons.lang@default:default"/>
         <setEntry value="org.apache.commons.logging@default:default"/>
         <setEntry value="org.apache.commons.pool@default:default"/>
-        <setEntry value="org.apache.felix.gogo.runtime@default:default"/>
-        <setEntry value="org.apache.felix.gogo.shell@default:default"/>
         <setEntry value="org.apache.felix.scr@1:true"/>
         <setEntry value="org.beanshell.bsh@default:default"/>
         <setEntry value="org.bouncycastle.bcprov@default:default"/>
@@ -91,7 +78,6 @@
         <setEntry value="org.eclipse.emf.ecore@default:default"/>
         <setEntry value="org.eclipse.equinox.app@default:default"/>
         <setEntry value="org.eclipse.equinox.common@2:true"/>
-        <setEntry value="org.eclipse.equinox.console@default:default"/>
         <setEntry value="org.eclipse.equinox.event@default:default"/>
         <setEntry value="org.eclipse.equinox.preferences@default:default"/>
         <setEntry value="org.eclipse.equinox.registry@default:default"/>
@@ -113,7 +99,6 @@
         <setEntry value="org.junit@default:default"/>
         <setEntry value="org.postgresql.jdbc42@default:default"/>
         <setEntry value="org.slf4j.api@default:default"/>
-        <setEntry value="org.slf4j.nop@default:false"/>
         <setEntry value="osgi.enterprise@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
@@ -137,7 +122,7 @@
         <setEntry value="ch.elexis.core@default:default"/>
         <setEntry value="ch.rgw.utility.tests@default:false"/>
         <setEntry value="ch.rgw.utility@default:default"/>
-        <setEntry value="jaxb-api-impl-import-java9@default:false"/>
+        <setEntry value="org.osgi.framework.system.packages.extra@default:false"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <booleanAttribute key="tracing" value="false"/>
