@@ -15,6 +15,18 @@
 		</addColumn>
 	</changeSet>
 
+	<changeSet author="thomas" id="manual_update_CH_ELEXIS_CORE_FINDINGS_LOCALCODING_code">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="CH_ELEXIS_CORE_FINDINGS_LOCALCODING"/>
+				<columnExists tableName="CH_ELEXIS_CORE_FINDINGS_LOCALCODING"
+						columnName="code" />
+			</and>
+		</preConditions>
+		<modifyDataType tableName="CH_ELEXIS_CORE_FINDINGS_LOCALCODING"
+			columnName="CODE" newDataType="VARCHAR(100)" />
+	</changeSet>
+
 	<changeSet author="thomas" id="manual_idx2_BRIEFE">
 		<preConditions onFail="MARK_RAN">
 			<not>
