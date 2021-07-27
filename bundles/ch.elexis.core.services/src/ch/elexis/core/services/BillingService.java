@@ -148,6 +148,10 @@ public class BillingService implements IBillingService {
 	
 	@Override
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount){
+		Result<IEncounter> editable = isEditable(encounter);
+		if (!editable.isOK()) {
+			return translateResult(editable);
+		}
 		IBillable beforeAdjust = billable;
 		CoreModelServiceHolder.get().refresh(encounter, true);
 		logger.info("Billing [" + amount + "] of [" + billable + "] on [" + encounter + "]");
@@ -256,7 +260,7 @@ public class BillingService implements IBillingService {
 		return Result.OK();
 	}
 
-	private Result<IBilled> translateResult(Result<IBillable> verificationResult){
+	private Result<IBilled> translateResult(Result<?> verificationResult){
 		Result<IBilled> ret = new Result<>();
 		verificationResult.getMessages()
 			.forEach(msg -> ret.addMessage(msg.getSeverity(), msg.getText()));
