@@ -639,11 +639,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		
 		@Override
 		public void dropped(List<Object> list, DropTargetEvent e){
-			Result<IEncounter> editable = BillingServiceHolder.get().isEditable(actEncounter);
-			if (!editable.isOK()) {
-				ResultDialog.show(editable);
-				return;
-			}
 			if (actEncounter != null && accept(list)) {
 				for (Object object : list) {
 					if (object instanceof PersistentObject) {
