@@ -279,7 +279,7 @@ public class StockService implements IStockService {
 	public List<IStock> getAllStocks(boolean includeCommissioningSystems){
 		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class);
 		if(!includeCommissioningSystems) {
-			query.and("DRIVER_UUID", COMPARATOR.EQUALS, null);
+			query.and("driverConfig", COMPARATOR.EQUALS, null);
 		}
 		query.orderBy("PRIORITY", ORDER.ASC);
 		return query.execute();

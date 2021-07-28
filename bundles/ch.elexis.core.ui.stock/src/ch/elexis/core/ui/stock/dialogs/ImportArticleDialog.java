@@ -47,22 +47,20 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.service.CodeElementServiceHolder;
-import ch.elexis.core.data.service.LocalLockServiceHolder;
-import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
+import ch.elexis.core.services.holder.CodeElementServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.LocalLockServiceHolder;
+import ch.elexis.core.services.holder.StockServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Query;
-import ch.elexis.data.Stock;
-import ch.elexis.data.StockEntry;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -87,7 +85,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		
 		comboStockType = new ComboViewer(ret, SWT.BORDER | SWT.READ_ONLY);
 		comboStockType.setContentProvider(ArrayContentProvider.getInstance());
-		comboStockType.setInput(new Query<Stock>(Stock.class).execute());
+		comboStockType.setInput(StockServiceHolder.get().getAllStocks(false));
 		comboStockType.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event){
@@ -102,8 +100,8 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		comboStockType.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
-				if (element instanceof Stock) {
-					Stock stock = (Stock) element;
+				if (element instanceof IStock) {
+					IStock stock = (IStock) element;
 					return stock.getLabel();
 				}
 				return super.getText(element);
@@ -111,7 +109,8 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		});
 		comboStockType.getCombo().setLayoutData(SWTHelper.getFillGridData(2, false, 1, false));
 		
-		comboStockType.setSelection(new StructuredSelection(Stock.load(Stock.DEFAULT_STOCK_ID)));
+		comboStockType
+			.setSelection(new StructuredSelection(StockServiceHolder.get().getDefaultStock()));
 		
 		new Label(ret, SWT.NONE).setText("Quelldatei auswählen");
 		
@@ -197,7 +196,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		if (iSelection.isEmpty()) {
 			buf.append("Bitte wählen Sie ein Lager aus.");
 		} else {
-			final Stock stock = (Stock) iSelection.getFirstElement();
+			final IStock stock = (IStock) iSelection.getFirstElement();
 			
 			// check src file
 			String path = tFilePath.getText();
@@ -240,7 +239,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		}
 	}
 	
-	private void runImport(StringBuffer buf, final Stock stock, ExcelWrapper xl,
+	private void runImport(StringBuffer buf, final IStock stock, ExcelWrapper xl,
 		boolean overrideStockEntries){
 		ProgressMonitorDialog progress = new ProgressMonitorDialog(getShell());
 		try {
@@ -274,22 +273,23 @@ public class ImportArticleDialog extends TitleAreaDialog {
 						opArticle = findArticleByGtin(gtin);
 						
 						if (opArticle.isPresent()) {
+							String articleStoreToString = StoreToStringServiceHolder.get()
+								.storeToString(opArticle.get()).get();
 							// check if article is present in stock
 							IStockEntry stockEntry =
-								StockServiceHolder.get().findStockEntryForArticleInStock(stock.toIStock(),
-									((Artikel) opArticle.get()).storeToString());
+								StockServiceHolder.get().findStockEntryForArticleInStock(stock,
+									
+									articleStoreToString);
 							
 							String result = "MODIFY";
 							if (stockEntry == null) {
-								PersistentObject article = (PersistentObject) opArticle.get();
-								stockEntry = StockServiceHolder.get().storeArticleInStock(stock.toIStock(),
-									article.storeToString());
+								stockEntry = StockServiceHolder.get().storeArticleInStock(stock,
+									articleStoreToString);
 								result = "ADDITION";
 							}
 							
-							if (stockEntry instanceof StockEntry) {
-								StockEntry poStockEntry = (StockEntry) stockEntry;
-								if (LocalLockServiceHolder.get().acquireLock(poStockEntry).isOk()) {
+							if (stockEntry instanceof IStockEntry) {
+								if (LocalLockServiceHolder.get().acquireLock(stockEntry).isOk()) {
 									// do import
 									stockEntry.setCurrentStock(
 										overrideStockEntries ? StringTool.parseSafeInt(stockCount)
@@ -306,7 +306,8 @@ public class ImportArticleDialog extends TitleAreaDialog {
 									importCount++;
 									addToReport("OK " + result + " '" + stock.getLabel() + "'",
 										articleName, gtin);
-									LocalLockServiceHolder.get().releaseLock(poStockEntry);
+									CoreModelServiceHolder.get().save(stockEntry);
+									LocalLockServiceHolder.get().releaseLock(stockEntry);
 								} else {
 									addToReport("NO LOCK", articleName, gtin);
 									unexpectedErrors++;

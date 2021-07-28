@@ -1,5 +1,7 @@
 package ch.elexis.core.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
@@ -70,5 +72,12 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		} else {
 			getEntityMarkDirty().setOwner(null);
 		}
+	}
+	
+	@Override
+	public String getLabel(){
+		return StringUtils.isNotBlank(getEntity().getDescription())
+				? "[" + getCode() + "] " + getEntity().getDescription()
+				: getCode();
 	}
 }
