@@ -99,4 +99,38 @@ UPDATE artikelstamm_ch SET LDSCR=LOWER(DSCR);
 			<column name="STERBEDATUM" type="CHAR(8)"/>
 		</addColumn>
     </changeSet>
+    
+	<changeSet author="thomas" id="manual_update_CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC_fixlinebreak">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC" />
+		</preConditions>
+		<sql>
+<![CDATA[
+UPDATE CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC SET TITLE = TRIM('\n' FROM TITLE);
+UPDATE CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC SET TITLE = TRIM('\r' FROM TITLE);
+]]>
+	    </sql>
+	</changeSet>
+	<changeSet author="thomas" id="manual_update_LEISTUNGEN_fixlinebreak">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="LEISTUNGEN" />
+		</preConditions>
+		<sql>
+<![CDATA[
+UPDATE LEISTUNGEN SET LEISTG_TXT = TRIM('\n' FROM LEISTG_TXT);
+UPDATE LEISTUNGEN SET LEISTG_TXT = TRIM('\r' FROM LEISTG_TXT);
+]]>
+	    </sql>
+	</changeSet>
+	<changeSet author="thomas" id="manual_update_VERRECHNETCOPY_fixlinebreak">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="VERRECHNETCOPY" />
+		</preConditions>
+		<sql>
+<![CDATA[
+UPDATE VERRECHNETCOPY SET LEISTG_TXT = TRIM('\n' FROM LEISTG_TXT);
+UPDATE VERRECHNETCOPY SET LEISTG_TXT = TRIM('\r' FROM LEISTG_TXT);
+]]>
+	    </sql>
+	</changeSet>		
 </databaseChangeLog>
