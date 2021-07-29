@@ -46,4 +46,11 @@ public interface IElexisEntityManager {
 	 * 
 	 */
 	void clearCache();
+	
+	/**
+	 * Test if all database updates were executed successfully.
+	 * 
+	 * @return
+	 */
+	public boolean isUpdateSuccess();
 }
