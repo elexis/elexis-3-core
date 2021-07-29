@@ -31,7 +31,7 @@ public class LiquibaseDBUpdater {
 		this.changelogXmlUrl = "/db/elexisdb_master_update.xml";
 	}
 	
-	public void update() {
+	public boolean update(){
 		ResourceAccessor resourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader());
 
 		Connection connection = null;
@@ -53,7 +53,8 @@ public class LiquibaseDBUpdater {
 			}
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on
-			logger.warn("Exception on DB init.", e);
+			logger.warn("Exception on DB update.", e);
+			return false;
 		} finally {
 			try {
 				if (connection != null) {
@@ -63,5 +64,6 @@ public class LiquibaseDBUpdater {
 				// ignore
 			}
 		}
+		return true;
 	}
 }

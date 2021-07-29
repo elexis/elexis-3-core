@@ -33,9 +33,11 @@ import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.services.IElexisDataSource;
+import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.io.FileTool;
 
@@ -133,6 +135,18 @@ public class Desk implements IApplication {
 		
 		// close splash
 		context.applicationRunning();
+		
+		Optional<IElexisEntityManager> entityManager =
+			OsgiServiceUtil.getService(IElexisEntityManager.class, "(id=default)");
+		if (entityManager.isPresent()) {
+			if (!entityManager.get().isUpdateSuccess()) {
+				cod.openInformation("DB Update Fehler",
+					"Beim Datenbank Update ist ein Fehler aufgetreten.\n"
+						+ "Ihre Datenbank wurde nicht aktualisiert.\n"
+						+ "Details dazu finden Sie in der log Datei.");
+			}
+			OsgiServiceUtil.ungetService(entityManager.get());
+		}
 		
 		// perform login
 		cod.performLogin(new Shell(UiDesk.getDisplay()));

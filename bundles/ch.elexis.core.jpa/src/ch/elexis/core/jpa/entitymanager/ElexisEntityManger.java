@@ -46,6 +46,8 @@ public class ElexisEntityManger implements IElexisEntityManager {
 	
 	private ScheduledExecutorService entityManagerCollector;
 	
+	private boolean updateSuccess;
+	
 	public ElexisEntityManger(){
 		threadLocal = new ThreadLocal<EntityManager>();
 		threadManagerMap = new ConcurrentHashMap<>();
@@ -54,6 +56,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 	
 	@Activate
 	public void activate(){
+		updateSuccess = false;
 		// collect EntityManagers of terminated threads
 		entityManagerCollector.scheduleAtFixedRate(new EntityManagerCollector(), 2, 2,
 			TimeUnit.SECONDS);
@@ -95,7 +98,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 				LiquibaseDBInitializer initializer = new LiquibaseDBInitializer(dataSource);
 				initializer.init();
 				LiquibaseDBUpdater updater = new LiquibaseDBUpdater(dataSource);
-				updater.update();
+				updateSuccess = updater.update();
 				// initialize the entity manager factory
 				HashMap<String, Object> props = new HashMap<String, Object>();
 				props.put(PersistenceUnitProperties.DDL_GENERATION, PersistenceUnitProperties.NONE);
@@ -127,6 +130,11 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		} else {
 			throw new IllegalStateException("No EntityManagerFactory available");
 		}
+	}
+	
+	@Override
+	public boolean isUpdateSuccess(){
+		return updateSuccess;
 	}
 	
 	private EntityManager createManagedEntityManager(){
