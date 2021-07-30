@@ -254,6 +254,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 				getEntity().setContent(null);
 			} else {
 				getEntity().getOrCreateContent().setInhalt(IOUtils.toByteArray(content));
+				addChanged(ModelUtil.getAdapter(getEntity().getOrCreateContent(), IBlob.class));
 			}
 		} catch (IOException e) {
 			LoggerFactory.getLogger(getClass()).error("Error setting document content", e);
