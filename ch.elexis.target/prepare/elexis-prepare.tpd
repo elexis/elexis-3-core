@@ -10,7 +10,7 @@ target "Elexis" with source allEnvironments
 //	com.make.chromium.cef.feature.feature.group
 //}
 
-location "https://dl.maketechnology.io/chromium-swt-ee/medelexis/p2" {
+location "https://dl.equoplatform.com/chromium-swt-ee/medelexis/p2/80" {
 	com.equo.chromium.feature.feature.group lazy
 	com.equo.chromium.cef.feature.feature.group lazy
 }
