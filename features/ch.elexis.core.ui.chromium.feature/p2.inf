@@ -1,2 +1,2 @@
-instructions.install=org.eclipse.equinox.p2.touchpoint.eclipse.addJvmArg(jvmArg:-Dchromium.args=--disable-web-security);
-instructions.uninstall=org.eclipse.equinox.p2.touchpoint.eclipse.addJvmArg.removeJvmArg(jvmArg:-Dchromium.args=--disable-web-security);
+instructions.configure=org.eclipse.equinox.p2.touchpoint.eclipse.addJvmArg(jvmArg:-Dchromium.args=--disable-web-security);
+instructions.unconfigure=org.eclipse.equinox.p2.touchpoint.eclipse.addJvmArg.removeJvmArg(jvmArg:-Dchromium.args=--disable-web-security);
