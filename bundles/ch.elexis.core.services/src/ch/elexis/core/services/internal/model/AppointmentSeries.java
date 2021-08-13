@@ -191,6 +191,26 @@ public class AppointmentSeries implements IAppointmentSeries {
 	}
 	
 	@Override
+	public int getInsuranceType(){
+		return appointment.getInsuranceType();
+	}
+	
+	@Override
+	public void setInsuranceType(int value){
+		appointment.setInsuranceType(value);
+	}
+	
+	@Override
+	public int getCaseType(){
+		return appointment.getCaseType();
+	}
+	
+	@Override
+	public void setCaseType(int value){
+		appointment.setCaseType(value);
+	}
+	
+	@Override
 	public String getLinkgroup(){
 		return groupId;
 	}
