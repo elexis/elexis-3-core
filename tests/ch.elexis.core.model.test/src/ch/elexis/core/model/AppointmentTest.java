@@ -18,12 +18,14 @@ import ch.elexis.core.test.AbstractTest;
 
 public class AppointmentTest extends AbstractTest {
 	
+	@Override
 	@Before
 	public void before(){
 		super.before();
 		super.createPatient();
 	}
 	
+	@Override
 	@After
 	public void after(){
 		super.after();
@@ -42,6 +44,9 @@ public class AppointmentTest extends AbstractTest {
 		appointment.setType("gesperrt");
 		appointment.setSchedule("Notfall");
 		appointment.setSubjectOrPatient(patient.getId());
+		appointment.setTreatmentReason(1);
+		appointment.setCaseType(2);
+		appointment.setInsuranceType(3);
 		coreModelService.save(appointment);
 		
 		IQuery<IAppointment> query = coreModelService.getQuery(IAppointment.class);
@@ -55,6 +60,9 @@ public class AppointmentTest extends AbstractTest {
 		assertEquals("geplant", stored.getState());
 		assertEquals("gesperrt", stored.getType());
 		assertEquals("Notfall", stored.getSchedule());
+		assertEquals(1, stored.getTreatmentReason());
+		assertEquals(2, stored.getCaseType());
+		assertEquals(3, stored.getInsuranceType());
 		coreModelService.remove(appointment);
 	}
 	

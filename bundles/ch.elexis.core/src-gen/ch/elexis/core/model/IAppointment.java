@@ -10,8 +10,6 @@
  */
 package ch.elexis.core.model;
 
-import java.time.LocalDateTime;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>IAppointment</b></em>'.
@@ -30,6 +28,8 @@ import java.time.LocalDateTime;
  *   <li>{@link ch.elexis.core.model.IAppointment#getSubjectOrPatient <em>Subject Or Patient</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getPriority <em>Priority</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getTreatmentReason <em>Treatment Reason</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#getCaseType <em>Case Type</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#getInsuranceType <em>Insurance Type</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getLinkgroup <em>Linkgroup</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getExtension <em>Extension</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getCreated <em>Created</em>}</li>
@@ -252,6 +252,9 @@ public interface IAppointment extends IPeriod {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Enumerated reason why this appointment was created. Currently used by RH connector
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Treatment Reason</em>' attribute.
 	 * @see #setTreatmentReason(int)
 	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_TreatmentReason()
@@ -269,6 +272,56 @@ public interface IAppointment extends IPeriod {
 	 * @generated
 	 */
 	void setTreatmentReason(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Case Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Enumerated case type of this appointment. Currently used by RH connector
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Case Type</em>' attribute.
+	 * @see #setCaseType(int)
+	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_CaseType()
+	 * @model
+	 * @generated
+	 */
+	int getCaseType();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getCaseType <em>Case Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Case Type</em>' attribute.
+	 * @see #getCaseType()
+	 * @generated
+	 */
+	void setCaseType(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Insurance Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Enumerated insurance type of this appointment. Currently used by RH connector
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Insurance Type</em>' attribute.
+	 * @see #setInsuranceType(int)
+	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_InsuranceType()
+	 * @model
+	 * @generated
+	 */
+	int getInsuranceType();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getInsuranceType <em>Insurance Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Insurance Type</em>' attribute.
+	 * @see #getInsuranceType()
+	 * @generated
+	 */
+	void setInsuranceType(int value);
 
 	/**
 	 * Returns the value of the '<em><b>Linkgroup</b></em>' attribute.

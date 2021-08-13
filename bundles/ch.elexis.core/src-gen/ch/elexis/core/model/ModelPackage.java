@@ -6972,13 +6972,31 @@ public interface ModelPackage extends EPackage {
 	int IAPPOINTMENT__TREATMENT_REASON = IPERIOD_FEATURE_COUNT + 8;
 
 	/**
+	 * The feature id for the '<em><b>Case Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__CASE_TYPE = IPERIOD_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Insurance Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__INSURANCE_TYPE = IPERIOD_FEATURE_COUNT + 10;
+
+	/**
 	 * The feature id for the '<em><b>Linkgroup</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__LINKGROUP = IPERIOD_FEATURE_COUNT + 9;
+	int IAPPOINTMENT__LINKGROUP = IPERIOD_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Extension</b></em>' attribute.
@@ -6987,7 +7005,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__EXTENSION = IPERIOD_FEATURE_COUNT + 10;
+	int IAPPOINTMENT__EXTENSION = IPERIOD_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Created</b></em>' attribute.
@@ -6996,7 +7014,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__CREATED = IPERIOD_FEATURE_COUNT + 11;
+	int IAPPOINTMENT__CREATED = IPERIOD_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Last Edit</b></em>' attribute.
@@ -7005,7 +7023,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__LAST_EDIT = IPERIOD_FEATURE_COUNT + 12;
+	int IAPPOINTMENT__LAST_EDIT = IPERIOD_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>State History</b></em>' attribute.
@@ -7014,7 +7032,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__STATE_HISTORY = IPERIOD_FEATURE_COUNT + 13;
+	int IAPPOINTMENT__STATE_HISTORY = IPERIOD_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Recurring</b></em>' attribute.
@@ -7023,7 +7041,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__RECURRING = IPERIOD_FEATURE_COUNT + 14;
+	int IAPPOINTMENT__RECURRING = IPERIOD_FEATURE_COUNT + 16;
 
 	/**
 	 * The number of structural features of the '<em>IAppointment</em>' class.
@@ -7032,7 +7050,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT_FEATURE_COUNT = IPERIOD_FEATURE_COUNT + 15;
+	int IAPPOINTMENT_FEATURE_COUNT = IPERIOD_FEATURE_COUNT + 17;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IAppointmentSeries <em>IAppointment Series</em>}' class.
@@ -7160,6 +7178,24 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IAPPOINTMENT_SERIES__TREATMENT_REASON = IAPPOINTMENT__TREATMENT_REASON;
+
+	/**
+	 * The feature id for the '<em><b>Case Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT_SERIES__CASE_TYPE = IAPPOINTMENT__CASE_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Insurance Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT_SERIES__INSURANCE_TYPE = IAPPOINTMENT__INSURANCE_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Linkgroup</b></em>' attribute.
@@ -11921,6 +11957,28 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIAppointment_TreatmentReason();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getCaseType <em>Case Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Case Type</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getCaseType()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_CaseType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getInsuranceType <em>Insurance Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Insurance Type</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getInsuranceType()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_InsuranceType();
+
+	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getLinkgroup <em>Linkgroup</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15451,6 +15509,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IAPPOINTMENT__TREATMENT_REASON = eINSTANCE.getIAppointment_TreatmentReason();
+
+		/**
+		 * The meta object literal for the '<em><b>Case Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__CASE_TYPE = eINSTANCE.getIAppointment_CaseType();
+
+		/**
+		 * The meta object literal for the '<em><b>Insurance Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__INSURANCE_TYPE = eINSTANCE.getIAppointment_InsuranceType();
 
 		/**
 		 * The meta object literal for the '<em><b>Linkgroup</b></em>' attribute feature.

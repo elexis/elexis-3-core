@@ -659,6 +659,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/subjectOrPatient"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/priority"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/treatmentReason"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/caseType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/insuranceType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/linkgroup"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/extension"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/created"/>
