@@ -178,6 +178,26 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	public void setTreatmentReason(int value){
 		getEntityMarkDirty().setTreatmentReason(value);
 	}
+	
+	@Override
+	public int getCaseType(){
+		return getEntity().getCaseType();
+	}
+	
+	@Override
+	public void setCaseType(int value){
+		getEntityMarkDirty().setCaseType(value);
+	}
+	
+	@Override
+	public int getInsuranceType(){
+		return getEntity().getInsuranceType();
+	}
+	
+	@Override
+	public void setInsuranceType(int value){
+		getEntityMarkDirty().setInsuranceType(value);
+	}
 
 	@Override
 	public String getLinkgroup(){

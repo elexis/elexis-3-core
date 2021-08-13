@@ -3828,7 +3828,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIAppointment_Linkgroup() {
+	public EAttribute getIAppointment_CaseType() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -3838,7 +3838,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIAppointment_Extension() {
+	public EAttribute getIAppointment_InsuranceType() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(10);
 	}
 
@@ -3848,7 +3848,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIAppointment_Created() {
+	public EAttribute getIAppointment_Linkgroup() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -3858,7 +3858,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIAppointment_LastEdit() {
+	public EAttribute getIAppointment_Extension() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(12);
 	}
 
@@ -3868,7 +3868,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIAppointment_StateHistory() {
+	public EAttribute getIAppointment_Created() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(13);
 	}
 
@@ -3878,8 +3878,28 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIAppointment_Recurring() {
+	public EAttribute getIAppointment_LastEdit() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(14);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIAppointment_StateHistory() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(15);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIAppointment_Recurring() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(16);
 	}
 
 	/**
@@ -5296,6 +5316,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__SUBJECT_OR_PATIENT);
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__PRIORITY);
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__TREATMENT_REASON);
+		createEAttribute(iAppointmentEClass, IAPPOINTMENT__CASE_TYPE);
+		createEAttribute(iAppointmentEClass, IAPPOINTMENT__INSURANCE_TYPE);
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__LINKGROUP);
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__EXTENSION);
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__CREATED);
@@ -6236,6 +6258,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIAppointment_SubjectOrPatient(), ecorePackage.getEString(), "subjectOrPatient", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAppointment_Priority(), ecorePackage.getEInt(), "priority", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAppointment_TreatmentReason(), ecorePackage.getEInt(), "treatmentReason", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAppointment_CaseType(), ecorePackage.getEInt(), "caseType", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAppointment_InsuranceType(), ecorePackage.getEInt(), "insuranceType", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAppointment_Linkgroup(), ecorePackage.getEString(), "linkgroup", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAppointment_Extension(), ecorePackage.getEString(), "extension", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAppointment_Created(), ecorePackage.getEString(), "created", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
