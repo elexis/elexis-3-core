@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,5 +43,13 @@ public interface IUserService {
 	 * @return
 	 */
 	Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact user);
+	
+	/**
+	 * Retrieve the users associated with a given contact
+	 * 
+	 * @param user
+	 * @return
+	 */
+	List<IUser> getUsersByAssociatedContact(IContact user);
 	
 }

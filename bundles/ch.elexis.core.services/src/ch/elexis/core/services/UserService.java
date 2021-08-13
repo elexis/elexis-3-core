@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.rgw.tools.PasswordEncryptionService;
 
 @Component
@@ -83,6 +85,16 @@ public class UserService implements IUserService {
 			return modelService.load(defaultMandatorId, IMandator.class);
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public List<IUser> getUsersByAssociatedContact(IContact contact){
+		if (contact == null) {
+			return Collections.emptyList();
+		}
+		IQuery<IUser> qre = modelService.getQuery(IUser.class);
+		qre.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.EQUALS, contact);
+		return qre.execute();
 	}
 	
 }
