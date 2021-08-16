@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.BeforeClass;
@@ -43,9 +44,8 @@ public class ILabServiceTest extends AbstractServiceTest {
 	@BeforeClass
 	public static void before(){
 		
-		laboratory =
-			new IContactBuilder.LaboratoryBuilder(CoreModelServiceHolder.get(), "myLab")
-				.buildAndSave();
+		laboratory = new IContactBuilder.LaboratoryBuilder(CoreModelServiceHolder.get(), "myLab")
+			.buildAndSave();
 		laboratory.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, "ABXMicrosEmi", true);
 		
 		_04_500 = new ILabItemBuilder(coreModelService, "TCHO-P", "TCHO-P", "3.88-5.66",
@@ -60,6 +60,13 @@ public class ILabServiceTest extends AbstractServiceTest {
 		_04_510_LDL_CALCULATED.setFormula(FORMULA);
 		coreModelService.save(_04_510_LDL_CALCULATED);
 		
+		new ILabResultBuilder(coreModelService, _04_500, getPatient()).result("5.33")
+			.buildLabOrder("1").buildAndSave();
+		new ILabResultBuilder(coreModelService, _04_501, getPatient()).result("1.82")
+			.buildLabOrder("1").buildAndSave();
+		new ILabResultBuilder(coreModelService, _04_520, getPatient()).result("1.85")
+			.buildLabOrder("1").buildAndSave();
+		
 		assertEquals("04_500", _04_500.getVariableName());
 		assertEquals("04_501", _04_501.getVariableName());
 		assertEquals("04_520", _04_520.getVariableName());
@@ -68,12 +75,6 @@ public class ILabServiceTest extends AbstractServiceTest {
 	
 	@Test
 	public void evaluate(){
-		new ILabResultBuilder(coreModelService, _04_500, getPatient()).result("5.33")
-			.buildLabOrder("1").buildAndSave();
-		new ILabResultBuilder(coreModelService, _04_501, getPatient()).result("1.82")
-			.buildLabOrder("1").buildAndSave();
-		new ILabResultBuilder(coreModelService, _04_520, getPatient()).result("1.85")
-			.buildLabOrder("1").buildAndSave();
 		
 		ILabResult ldlHldResult =
 			new ILabResultBuilder(coreModelService, _04_510_LDL_CALCULATED, getPatient())
@@ -87,16 +88,36 @@ public class ILabServiceTest extends AbstractServiceTest {
 		assertTrue(result.isOK());
 		assertNotNull(result.get());
 		assertEquals("2.67", result.get());
+		
+		CoreModelServiceHolder.get().remove(ldlHldResult);
 	}
 	
 	@Test
-	public void resolveLabMapping() {
+	public void resolveLabMapping(){
 		assertFalse(labService.getLabMappingByContactAndItem(laboratory, _04_501).isPresent());
 		
-		Optional<ILabMapping> mapping = labService.getLabMappingByContactAndItem(laboratory, _04_500);
+		Optional<ILabMapping> mapping =
+			labService.getLabMappingByContactAndItem(laboratory, _04_500);
 		assertTrue(mapping.isPresent());
 		assertEquals("TCHO-P", mapping.get().getItemName());
+		
+	}
+	
+	@Test
+	public void getLabResultsForPatientWithItemType(){
+		ILabResult labResult = new ILabResultBuilder(coreModelService, _04_500, getPatient())
+			.result("9.37").buildLabOrder("1").buildAndSave();
 
+		List<ILabResult> results =
+			labService.getLabResultsForPatientWithItemType(getPatient(), LabItemTyp.NUMERIC, false);
+		assertEquals(7, results.size());
+		
+		CoreModelServiceHolder.get().delete(labResult);
+		results =
+			labService.getLabResultsForPatientWithItemType(getPatient(), LabItemTyp.NUMERIC, false);
+		assertEquals(6, results.size());
+		
+		CoreModelServiceHolder.get().remove(labResult);
 	}
 	
 }

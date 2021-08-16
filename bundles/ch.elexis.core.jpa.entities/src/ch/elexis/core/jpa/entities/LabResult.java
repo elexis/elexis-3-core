@@ -32,6 +32,7 @@ import ch.elexis.core.types.PathologicDescription.Description;
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
 @NamedQuery(name = "LabResult.patient.item", query = "SELECT lr FROM LabResult lr WHERE lr.deleted = false AND lr.patient = :patient AND lr.item = :item")
+@NamedQuery(name = "LabResult.patient.itemtype.includesDeleted", query = "SELECT lr FROM LabResult lr WHERE lr.patient = :patient AND lr.item.typ = :itemtype")
 public class LabResult extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 

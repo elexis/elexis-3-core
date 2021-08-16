@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -126,7 +127,7 @@ public class LabService implements ILabService {
 		boolean bMatched = false;
 		labresults = sortResultsDescending(labresults);
 		for (ILabResult result : labresults) {
-			String var = ((ILabItem) result.getItem()).getVariableName();
+			String var = result.getItem().getVariableName();
 			if (formula.indexOf(var) != -1) {
 				if (result.getResult() != null && !result.getResult().isEmpty()
 					&& !result.getResult().equals("?")) { //$NON-NLS-1$
@@ -172,8 +173,8 @@ public class LabService implements ILabService {
 		Collections.sort(results, new Comparator<ILabResult>() {
 			@Override
 			public int compare(ILabResult lr1, ILabResult lr2){
-				int var1Length = ((ILabItem) lr1.getItem()).getVariableName().length();
-				int var2Length = ((ILabItem) lr2.getItem()).getVariableName().length();
+				int var1Length = lr1.getItem().getVariableName().length();
+				int var2Length = lr2.getItem().getVariableName().length();
 				
 				if (var1Length < var2Length) {
 					return 1;
@@ -207,6 +208,23 @@ public class LabService implements ILabService {
 		qbe.and(ModelPackage.Literals.ILAB_MAPPING__ORIGIN, COMPARATOR.EQUALS, contact);
 		qbe.and(ModelPackage.Literals.ILAB_MAPPING__ITEM, COMPARATOR.EQUALS, item);
 		return qbe.executeSingleResult();
+	}
+
+	@Override
+	public List<ILabResult> getLabResultsForPatientWithItemType(IPatient patient, LabItemTyp type,
+		boolean includeDeleted){
+		
+		INamedQuery<ILabResult> query =
+			modelService.getNamedQuery(ILabResult.class, "patient", "itemtype", "includesDeleted");
+		Map<String, Object> parameterMap =
+			query.getParameterMap("patient", patient, "itemtype", type);
+		List<ILabResult> results = query.executeWithParameters(parameterMap);
+		
+		if (!includeDeleted) {
+			return results.stream().filter(lr -> !lr.isDeleted()).collect(Collectors.toList());
+		}
+		
+		return results;
 	}
 	
 }
