@@ -61,6 +61,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	protected boolean includeDeleted;
 	protected boolean refreshCache;
 	protected int limit;
+	protected int offset;
 	
 	private PredicateGroupStack predicateGroups;
 	private PredicateHandler predicateHandler;
@@ -172,6 +173,11 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	@Override
 	public void limit(int limit){
 		this.limit = limit;
+	}
+	
+	@Override
+	public void offset(int offset) {
+		this.offset = offset;
 	}
 	
 	@SuppressWarnings({
@@ -287,6 +293,9 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		}
 		if (limit > 0) {
 			query.setMaxResults(limit);
+		}
+		if(offset > 0) {
+			query.setFirstResult(offset);
 		}
 		return query;
 	}

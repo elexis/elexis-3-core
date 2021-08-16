@@ -355,11 +355,15 @@ public class CoreQueryTest {
 		query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION2, ORDER.ASC);
 		List<IContact> ordered = query.execute();
 		assertEquals("test1", ordered.get(0).getDescription1());
+		// test sorting for cursor
+		assertEquals("test1", query.executeAsCursor().next().getDescription1());
 		
 		query = modelService.getQuery(IContact.class);
 		query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION2, ORDER.DESC);
 		ordered = query.execute();
 		assertEquals("test4", ordered.get(0).getDescription1());
+		// test sorting for cursor
+		assertEquals("test4", query.executeAsCursor().next().getDescription1());
 		
 		query = modelService.getQuery(IContact.class);
 		Map<String, Object> caseContext = new HashMap<>();
@@ -376,6 +380,25 @@ public class CoreQueryTest {
 		query.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, currentTimeMillis);
 		List<IContact> execute = query.execute();
 		assertEquals(3, execute.size());
+	
+	}
+	
+	@Test
+	public void limitAndOffset() {
+		createContact("test1", "test1");
+		IContact test2 = createContact("test2", "test2");
+		IContact test3 = createContact("test3", "test3");
+		createContact("test4", "test4");
+		
+		IQuery<IContact> query = modelService.getQuery(IContact.class);
+		query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION2, ORDER.ASC);
+		query.offset(1);
+		query.limit(2);
+		List<IContact> execute = query.execute();
+		assertEquals(2, execute.size());
+		assertEquals(test2, execute.get(0));
+		assertEquals(test3, execute.get(1));
+		
 	}
 	
 	@Test
