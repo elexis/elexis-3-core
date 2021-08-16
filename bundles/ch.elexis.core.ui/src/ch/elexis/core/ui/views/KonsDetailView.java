@@ -577,7 +577,7 @@ public class KonsDetailView extends ViewPart
 	 */
 	private synchronized void setKons(final IEncounter encounter){
 		if (actEncounter != null && text.isDirty()) {
-			EncounterServiceHolder.get().updateVersionedEntry(encounter, text.getContentsAsXML(),
+			EncounterServiceHolder.get().updateVersionedEntry(actEncounter, text.getContentsAsXML(),
 				getVersionRemark());
 			text.setDirty(false);
 		}
