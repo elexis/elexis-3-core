@@ -214,4 +214,11 @@ public interface IQuery<T> {
 	 * @param limit
 	 */
 	public void limit(int limit);
+	
+	/**
+	 * The result index to start from.
+	 * 
+	 * @param offset
+	 */
+	public void offset(int offset);
 }
