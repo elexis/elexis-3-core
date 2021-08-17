@@ -371,6 +371,11 @@ public class CategorySelectionEditComposite extends Composite {
 		
 		@Override
 		public void setContent(InputStream content){}
+
+		@Override
+		public long getContentLength(){
+			return 0;
+		}
 		
 	}
 	
