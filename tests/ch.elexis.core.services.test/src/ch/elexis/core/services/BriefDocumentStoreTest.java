@@ -53,6 +53,7 @@ public class BriefDocumentStoreTest extends AbstractServiceTest {
 		letter.setTitle("Test Brief");
 		letter.setCategory(new CategoryDocumentDTO(BriefConstants.RECHNUNG));
 		letter.setEncounter(testEncounters.get(0));
+		letter.setContent(getClass().getResourceAsStream("/rsc/Testdocument.docx"));
 		iDocumentStore.saveDocument(letter);
 		
 		// search documents
@@ -68,6 +69,7 @@ public class BriefDocumentStoreTest extends AbstractServiceTest {
 		Assert.assertEquals(BriefConstants.RECHNUNG, persistedDocument.getCategory().getName());
 		Assert.assertEquals(Collections.singletonList(DocumentStatus.NEW),
 			persistedDocument.getStatus());
+		Assert.assertEquals(5554, persistedDocument.getContentLength());
 		Assert.assertEquals(testEncounters.get(0), persistedDocument.getEncounter());
 		
 		// save content

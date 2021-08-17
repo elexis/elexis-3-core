@@ -69,9 +69,12 @@ public class VirtualFileHandle_SmbDirectory_Test {
 
 		IVirtualFilesystemHandle dir = service.of(PREFIX_AUTH_SAMBA);
 		IVirtualFilesystemHandle subFile = dir.subFile("Test File.txt");
+		assertEquals(0, subFile.getContentLenght());
 		try (PrintWriter p = new PrintWriter(subFile.openOutputStream())) {
 			p.write("TestFile\n");
+			p.flush();
 		}
+		assertEquals(9, subFile.getContentLenght());
 		assertTrue(subFile.exists());
 		assertTrue(subFile.canRead());
 		IVirtualFilesystemHandle subFileRenamed = dir.subFile("Test File renamed.txt");

@@ -72,6 +72,21 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	}
 	
 	@Override
+	public long getContentLenght() throws IOException{
+		File file = URIUtil.toFile(uri);
+		if (file != null) {
+			return file.length();
+		}
+		URLConnection connection = uri.toURL().openConnection();
+		if (connection instanceof SmbFile) {
+			try (SmbFile smbFile = (SmbFile) connection) {
+				return smbFile.getContentLengthLong();
+			}
+		}
+		throw new IOException("Can not determine content length on ["+connection.getClass()+"]");
+	}
+	
+	@Override
 	public OutputStream openOutputStream() throws IOException{
 		if (!isDirectory()) {
 			File file = URIUtil.toFile(uri);
