@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.exceptions.ElexisException;
@@ -21,46 +21,38 @@ import ch.elexis.core.services.internal.dto.CategoryDocumentDTO;
 import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
-public class BriefDocumentStoreTest {
+public class BriefDocumentStoreTest extends AbstractServiceTest {
 	
 	static IDocumentStore iDocumentStore;
 	
-	static IModelService iModelService;
-	
-	static IPatient iPatient;
-	
-	@BeforeClass
-	public static void beforeClass(){
-		Optional<IModelService> modelService = OsgiServiceUtil.getService(IModelService.class);
-		iModelService =
-			modelService.orElseThrow(() -> new IllegalStateException("No service available"));
-		
+	@Before
+	public void before(){
 		Optional<IDocumentStore> documentService = OsgiServiceUtil.getService(IDocumentStore.class,
 			"(storeid=ch.elexis.data.store.brief)");
 		iDocumentStore =
 			documentService.orElseThrow(() -> new IllegalStateException("No service available"));
 		
-		iPatient = iModelService.create(IPatient.class);
-		iPatient.setFirstName("test");
-		iPatient.setLastName("patient");
-		iModelService.save(iPatient);
+		createTestMandantPatientFallBehandlung();
 	}
 	
-	@AfterClass
-	public static void afterClass(){
+	@After
+	public void after(){
+		cleanup();
 		OsgiServiceUtil.ungetService(iDocumentStore);
-		OsgiServiceUtil.ungetService(iModelService);
 	}
 	
 	@Test
 	public void testCrudAndSearchDocuments() throws IOException, ElexisException{
+		IPatient iPatient = testPatients.get(0);
+		
 		// persist metadata of documents
-		IDocumentLetter letter = iModelService.create(IDocumentLetter.class);
+		IDocumentLetter letter = coreModelService.create(IDocumentLetter.class);
 		letter.setPatient(iPatient);
 		letter.setDescription("Test desc");
 		letter.setMimeType("docx");
 		letter.setTitle("Test Brief");
 		letter.setCategory(new CategoryDocumentDTO(BriefConstants.RECHNUNG));
+		letter.setEncounter(testEncounters.get(0));
 		iDocumentStore.saveDocument(letter);
 		
 		// search documents
@@ -68,7 +60,7 @@ public class BriefDocumentStoreTest {
 		List<IDocument> documents = iDocumentStore.getDocuments(iPatient.getId(), null, null, null);
 		Assert.assertEquals(1, documents.size());
 		
-		IDocument persistedDocument = documents.get(0);
+		IDocumentLetter persistedDocument = (IDocumentLetter) documents.get(0);
 		Assert.assertTrue(persistedDocument.getId() != null);
 		Assert.assertEquals("Test Brief", persistedDocument.getTitle());
 		Assert.assertEquals("docx", persistedDocument.getMimeType());
@@ -76,6 +68,7 @@ public class BriefDocumentStoreTest {
 		Assert.assertEquals(BriefConstants.RECHNUNG, persistedDocument.getCategory().getName());
 		Assert.assertEquals(Collections.singletonList(DocumentStatus.NEW),
 			persistedDocument.getStatus());
+		Assert.assertEquals(testEncounters.get(0), persistedDocument.getEncounter());
 		
 		// save content
 		iDocumentStore.saveDocument(persistedDocument, IOUtils.toInputStream("test"));
@@ -91,7 +84,7 @@ public class BriefDocumentStoreTest {
 		Assert.assertEquals(1, documents.size());
 		
 		// verify content
-		persistedDocument = documents.get(0);
+		persistedDocument = (IDocumentLetter) documents.get(0);
 		Assert.assertTrue(persistedDocument.getId() != null);
 		Assert.assertEquals("Test Brief", persistedDocument.getTitle());
 		Optional<InputStream> in = iDocumentStore.loadContent(persistedDocument);

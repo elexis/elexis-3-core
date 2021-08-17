@@ -33,7 +33,7 @@ public abstract class AbstractServiceTest {
 	static IModelService coreModelService = AllServiceTests.getModelService();
 	
 	public List<IMandator> testMandators = new ArrayList<IMandator>();
-	public List<IContact> testPatients = new ArrayList<IContact>();
+	public List<IPatient> testPatients = new ArrayList<IPatient>();
 	public List<ICoverage> testCoverages = new ArrayList<ICoverage>();
 	public List<IEncounter> testEncounters = new ArrayList<IEncounter>();
 	
@@ -58,7 +58,7 @@ public abstract class AbstractServiceTest {
 		testCoverages.add(testCoverage);
 		
 		IEncounter behandlung =
-			new IEncounterBuilder(coreModelService, testCoverage, (IMandator) mandator).buildAndSave();
+			new IEncounterBuilder(coreModelService, testCoverage, mandator).buildAndSave();
 		testEncounters.add(behandlung);
 	}
 	
@@ -107,12 +107,15 @@ public abstract class AbstractServiceTest {
 		// Create a trust manager that does not validate certificate chains
 		TrustManager[] trustAllCerts = new TrustManager[] {
 			new X509TrustManager() {
+				@Override
 				public java.security.cert.X509Certificate[] getAcceptedIssuers(){
 					return null;
 				}
 				
+				@Override
 				public void checkClientTrusted(X509Certificate[] certs, String authType){}
 				
+				@Override
 				public void checkServerTrusted(X509Certificate[] certs, String authType){}
 			}
 		};
@@ -124,6 +127,7 @@ public abstract class AbstractServiceTest {
 		
 		// Create all-trusting host name verifier
 		HostnameVerifier allHostsValid = new HostnameVerifier() {
+			@Override
 			public boolean verify(String hostname, SSLSession session){
 				return true;
 			}
