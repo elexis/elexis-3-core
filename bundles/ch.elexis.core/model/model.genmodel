@@ -220,7 +220,9 @@
     <genClasses image="false" ecoreClass="model.ecore#//ICategory">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICategory/name"/>
     </genClasses>
-    <genClasses ecoreClass="model.ecore#//IDocumentLetter"/>
+    <genClasses ecoreClass="model.ecore#//IDocumentLetter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDocumentLetter/encounter"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ISticker">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/background"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/foreground"/>

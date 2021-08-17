@@ -16,6 +16,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.jpa.entities.Behandlung;
 import ch.elexis.core.jpa.entities.Brief;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
@@ -266,5 +267,21 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	@Override
 	public String getLabel(){
 		return new SimpleDateFormat("dd.MM.yyyy").format(getCreated()) + " " + getTitle();
+	}
+
+	@Override
+	public IEncounter getEncounter(){
+		return ModelUtil.getAdapter(getEntity().getConsultation(), IEncounter.class);
+	}
+
+	@Override
+	public void setEncounter(IEncounter value){
+		if (value instanceof AbstractIdDeleteModelAdapter) {
+			getEntityMarkDirty()
+				.setConsultation((Behandlung) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+		} else if (value == null) {
+			getEntityMarkDirty().setConsultation(null);
+		}
+		
 	}
 }

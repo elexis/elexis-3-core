@@ -3162,13 +3162,22 @@ public interface ModelPackage extends EPackage {
 	int IDOCUMENT_LETTER__AUTHOR = IDOCUMENT__AUTHOR;
 
 	/**
+	 * The feature id for the '<em><b>Encounter</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__ENCOUNTER = IDOCUMENT_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>IDocument Letter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT_LETTER_FEATURE_COUNT = IDOCUMENT_FEATURE_COUNT + 0;
+	int IDOCUMENT_LETTER_FEATURE_COUNT = IDOCUMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}' class.
@@ -8924,6 +8933,17 @@ public interface ModelPackage extends EPackage {
 	EClass getIDocumentLetter();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IDocumentLetter#getEncounter <em>Encounter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Encounter</em>'.
+	 * @see ch.elexis.core.model.IDocumentLetter#getEncounter()
+	 * @see #getIDocumentLetter()
+	 * @generated
+	 */
+	EReference getIDocumentLetter_Encounter();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13127,6 +13147,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IDOCUMENT_LETTER = eINSTANCE.getIDocumentLetter();
+
+		/**
+		 * The meta object literal for the '<em><b>Encounter</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IDOCUMENT_LETTER__ENCOUNTER = eINSTANCE.getIDocumentLetter_Encounter();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}' class.
