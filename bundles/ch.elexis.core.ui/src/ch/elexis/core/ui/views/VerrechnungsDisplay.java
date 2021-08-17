@@ -93,6 +93,7 @@ import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IService;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IBillingService;
@@ -641,6 +642,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		public void dropped(List<Object> list, DropTargetEvent e){
 			if (actEncounter != null && accept(list)) {
 				for (Object object : list) {
+					// map prescription to article
+					if (object instanceof IPrescription) {
+						object = ((IPrescription) object).getArticle();
+					}
+					
 					if (object instanceof PersistentObject) {
 						addPersistentObject((PersistentObject) object);
 					} else if (object instanceof IBillable) {
@@ -712,7 +718,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						return false;
 					}
 				} else if (object instanceof ch.elexis.core.model.ICodeElement) {
-					accept((ch.elexis.core.model.ICodeElement) object);
+					return accept((ch.elexis.core.model.ICodeElement) object);
 				}
 			}
 			return true;
