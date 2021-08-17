@@ -100,6 +100,14 @@ public interface IVirtualFilesystemService {
 		public byte[] readAllBytes() throws IOException;
 		
 		/**
+		 * Return the length of the of the content
+		 * 
+		 * @return
+		 * @throws IOException
+		 */
+		public long getContentLenght() throws IOException;
+		
+		/**
 		 * Copy the contents of this handle to a new handle, where the underlying resource might not
 		 * actually exist yet.
 		 * 

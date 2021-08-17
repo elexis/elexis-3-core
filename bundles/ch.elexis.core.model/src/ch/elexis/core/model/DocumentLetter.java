@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +23,9 @@ import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.util.DocumentLetterUtil;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.services.INativeQuery;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.DocumentStatusMapper;
@@ -223,6 +226,25 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 			return new ByteArrayInputStream(getEntity().getContent().getInhalt());
 		}
 		return null;
+	}
+	
+	@Override
+	public long getContentLength(){
+		IVirtualFilesystemHandle vfsHandle = DocumentLetterUtil.getExternalHandleIfApplicable(this);
+		if (vfsHandle != null && vfsHandle.canRead()) {
+			try {
+				return vfsHandle.getContentLenght();
+			} catch (IOException e) {}
+		}
+		INativeQuery nativeQuery = CoreModelServiceHolder.get()
+			.getNativeQuery("SELECT LENGTH(INHALT) FROM HEAP WHERE ID = ?1");
+		Iterator<?> result = nativeQuery
+			.executeWithParameters(nativeQuery.getIndexedParameterMap(Integer.valueOf(1), getId()))
+			.iterator();
+		if (result.hasNext()) {
+			return Long.parseLong(result.next().toString());
+		}
+		return -1;
 	}
 	
 	@Override

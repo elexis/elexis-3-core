@@ -211,6 +211,7 @@
         <genParameters ecoreParameter="model.ecore#//IDocument/setStatus/status"/>
         <genParameters ecoreParameter="model.ecore#//IDocument/setStatus/active"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IDocument/getContentLength"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IHistory">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IHistory/date"/>

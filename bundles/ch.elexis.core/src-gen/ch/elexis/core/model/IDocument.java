@@ -396,4 +396,15 @@ public interface IDocument extends Identifiable, Deleteable {
 	 */
 	void setStatus(DocumentStatus status, boolean active);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Return the size of the content without fetching it, returns -1 if it could not be determined
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	long getContentLength();
+
 } // IDocument

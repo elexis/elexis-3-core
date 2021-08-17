@@ -8,7 +8,7 @@ import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandl
 
 public abstract class AbstractVirtualFileHandleTest {
 
-	static IVirtualFilesystemHandle testDirectoryHandle;	
+	static IVirtualFilesystemHandle testHandle;	
 	static IVirtualFilesystemService service;	
 	
 	static Path tempDirectory;

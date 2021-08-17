@@ -32,8 +32,8 @@ public class VirtualFileHandle_Combined_Test extends AbstractVirtualFileHandleTe
 		testDirectory = new File(tempDirectory.toFile(), "subDir/");
 		assertTrue(testDirectory.mkdir());
 		testDirectory.deleteOnExit();
-		testDirectoryHandle = service.of(testDirectory);
-		assertTrue(testDirectoryHandle.isDirectory());
+		testHandle = service.of(testDirectory);
+		assertTrue(testHandle.isDirectory());
 	}
 	
 	@AfterClass

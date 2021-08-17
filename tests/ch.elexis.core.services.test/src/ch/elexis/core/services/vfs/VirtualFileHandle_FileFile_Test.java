@@ -40,7 +40,7 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 		testFile = Files.createTempFile(tempDirectory, "test", ".txt").toFile();
 		testFile.deleteOnExit();
 		createPopulateTestFile();
-		testDirectoryHandle = service.of(testFile);
+		testHandle = service.of(testFile);
 	}
 	
 	@AfterClass
@@ -54,41 +54,43 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 
 	@Test
 	public void testOpenOutputStream() throws IOException {
-		try (OutputStream os = testDirectoryHandle.openOutputStream()) {
+		assertEquals(19, testHandle.getContentLenght());
+		try (OutputStream os = testHandle.openOutputStream()) {
 			IOUtils.write(LocalDateTime.now().toString(), os, Charset.defaultCharset());
 		}
+		assertEquals(23, testHandle.getContentLenght());
 	}
 
 	@Test
 	public void testCopyTo() throws IOException {
 		File copyToFile = new File(testDirectory, "copyToFile");
-		testDirectoryHandle.copyTo(service.of(copyToFile));
+		testHandle.copyTo(service.of(copyToFile));
 		byte[] readAllBytes = Files.readAllBytes(copyToFile.toPath());
 		assertArrayEquals("meaninglessTestText".getBytes(), readAllBytes);
-		assertTrue(testDirectoryHandle.exists());
+		assertTrue(testHandle.exists());
 		assertTrue(copyToFile.delete());
 	}
 
 	@Test
 	public void testGetParent() throws IOException {
-		IVirtualFilesystemHandle parent = testDirectoryHandle.getParent();
+		IVirtualFilesystemHandle parent = testHandle.getParent();
 		assertEquals(testDirectory, parent.toFile().get());
-		assertTrue(testDirectoryHandle.getAbsolutePath()+" ["+parent.getName()+"]", parent.getName().startsWith("virtualFilesystemTest_filefile"));
+		assertTrue(testHandle.getAbsolutePath()+" ["+parent.getName()+"]", parent.getName().startsWith("virtualFilesystemTest_filefile"));
 	}
 
 	@Test(expected = IOException.class)
 	public void testListHandles() throws IOException {
-		testDirectoryHandle.listHandles();
+		testHandle.listHandles();
 	}
 
 	@Test(expected = IOException.class)
 	public void testListHandlesIVirtualFilesystemhandleFilter() throws IOException {
-		testDirectoryHandle.listHandles(null);
+		testHandle.listHandles(null);
 	}
 
 	@Test
 	public void testDelete() throws IOException {
-		testDirectoryHandle.delete();
+		testHandle.delete();
 		assertFalse(testFile.exists());
 		assertTrue(testFile.createNewFile());
 		createPopulateTestFile();
@@ -96,75 +98,75 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 
 	@Test
 	public void testToURL() throws MalformedURLException {
-		assertEquals(testFile.toURI().toURL(), testDirectoryHandle.toURL());
+		assertEquals(testFile.toURI().toURL(), testHandle.toURL());
 	}
 
 	@Test
 	public void testIsDirectory() throws IOException {
-		assertFalse(testDirectoryHandle.isDirectory());
+		assertFalse(testHandle.isDirectory());
 	}
 
 	@Test
 	public void testToFile() {
-		assertEquals(testFile, testDirectoryHandle.toFile().get());
+		assertEquals(testFile, testHandle.toFile().get());
 	}
 
 	@Test
 	public void testGetExtension() {
-		assertEquals("txt", testDirectoryHandle.getExtension());
+		assertEquals("txt", testHandle.getExtension());
 	}
 
 	@Test
 	public void testExists() throws IOException {
 		assertTrue(testFile.delete());
-		assertFalse(testDirectoryHandle.exists());
+		assertFalse(testHandle.exists());
 		createPopulateTestFile();
-		assertTrue(testDirectoryHandle.exists());
+		assertTrue(testHandle.exists());
 	}
 
 	@Test
 	public void testGetName() {
-		assertEquals(testFile.getName(), testDirectoryHandle.getName());
+		assertEquals(testFile.getName(), testHandle.getName());
 	}
 
 	@Test
 	public void testCanRead() {
-		assertTrue(testDirectoryHandle.canRead());
+		assertTrue(testHandle.canRead());
 	}
 
 	@Test
 	public void testGetAbsolutePath() {
-		assertEquals(testFile.toURI().toString(), testDirectoryHandle.getAbsolutePath());
+		assertEquals(testFile.toURI().toString(), testHandle.getAbsolutePath());
 	}
 
 	@Test
 	public void testMoveTo() throws IOException {
 		File moveToFile = new File(testDirectory, "moveToFile");
-		testDirectoryHandle.moveTo(service.of(moveToFile));
+		testHandle.moveTo(service.of(moveToFile));
 		byte[] readAllBytes = Files.readAllBytes(moveToFile.toPath());
 		assertArrayEquals("meaninglessTestText".getBytes(), readAllBytes);
-		assertFalse(testDirectoryHandle.exists());
+		assertFalse(testHandle.exists());
 		createPopulateTestFile();
 	}
 
 	@Test
 	public void testSubDir() throws IOException {
-		testDirectoryHandle.subDir("subdir");
+		testHandle.subDir("subdir");
 	}
 
 	@Test(expected = IOException.class)
 	public void testSubFile() throws IOException {
-		testDirectoryHandle.subFile("subfile");
+		testHandle.subFile("subfile");
 	}
 
 	public void testMkdir() throws IOException {
 		// TODO behavior?
-		testDirectoryHandle.mkdir();
+		testHandle.mkdir();
 	}
 
 	@Test
 	public void testOpenInputStream() throws IOException{
-		try (InputStream is = testDirectoryHandle.openInputStream()) {
+		try (InputStream is = testHandle.openInputStream()) {
 			String string = IOUtils.toString(is, Charset.defaultCharset());
 			System.out.println(string);
 		}
