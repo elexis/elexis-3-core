@@ -166,6 +166,9 @@ public abstract class AbstractModelService implements IModelService {
 	
 	@Override
 	public void save(Identifiable identifiable){
+		if(identifiable == null) {
+			return;
+		}
 		if (identifiable.getChanged() != null) {
 			save(Collections.singletonList(identifiable));
 			return;
@@ -205,6 +208,9 @@ public abstract class AbstractModelService implements IModelService {
 	
 	@Override
 	public void save(List<? extends Identifiable> identifiables){
+		if(identifiables == null || identifiables.isEmpty()) {
+			return;
+		}
 		identifiables = addChanged(identifiables);
 		Map<Identifiable, EntityWithId> dbObjects = new HashMap<Identifiable, EntityWithId>();
 		for (Identifiable identifiable : identifiables) {
