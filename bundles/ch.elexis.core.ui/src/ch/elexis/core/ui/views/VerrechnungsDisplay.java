@@ -634,6 +634,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return true;
 			} else if (codeElement instanceof ICodeElementBlock) {
 				return true;
+			} else if (codeElement instanceof IBillable) {
+				return true;
 			}
 			return false;
 		}
