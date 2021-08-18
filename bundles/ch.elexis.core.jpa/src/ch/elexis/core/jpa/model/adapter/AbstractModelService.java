@@ -193,7 +193,15 @@ public abstract class AbstractModelService implements IModelService {
 					identifiable.clearRefresh();
 				}
 				if (newlyCreatedObject) {
-					postElexisEvent(getCreateEvent(identifiable));
+					ElexisEvent createEvent = getCreateEvent(identifiable);
+					if (ContextServiceHolder.isPresent()) {
+						String userId = ContextServiceHolder.get().getActiveUser()
+							.map(Identifiable::getId).orElse(null);
+						if (userId != null) {
+							createEvent.getProperties().put(ElexisEventTopics.PROPKEY_USER, userId);
+						}
+					}
+					postElexisEvent(createEvent);
 					postEvent(ElexisEventTopics.EVENT_CREATE, identifiable);
 				}
 				return;
