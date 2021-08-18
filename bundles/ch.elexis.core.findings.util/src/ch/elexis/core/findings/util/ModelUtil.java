@@ -64,8 +64,8 @@ public class ModelUtil {
 		return findingsModelService.create(clazz);
 	}
 	
-	public static boolean saveFinding(Identifiable identifiable){
-		return findingsModelService.save(identifiable);
+	public static void saveFinding(Identifiable identifiable){
+		findingsModelService.save(identifiable);
 	}
 	
 	public static void deleteFinding(Deleteable deleteable){

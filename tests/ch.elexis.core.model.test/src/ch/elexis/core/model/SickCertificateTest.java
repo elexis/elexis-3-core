@@ -48,7 +48,7 @@ public class SickCertificateTest extends AbstractTest {
 		certificate.setEnd(LocalDate.of(2000, 1, 5));
 		certificate.setReason("is sick");
 		certificate.setNote("test");
-		assertTrue(coreModelService.save(certificate));
+		coreModelService.save(certificate);
 		
 		Optional<ISickCertificate> loadedCertificate =
 			coreModelService.load(certificate.getId(), ISickCertificate.class);

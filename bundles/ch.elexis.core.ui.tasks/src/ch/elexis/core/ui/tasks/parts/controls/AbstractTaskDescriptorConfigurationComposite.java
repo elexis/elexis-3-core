@@ -18,9 +18,9 @@ public abstract class AbstractTaskDescriptorConfigurationComposite extends Compo
 	protected boolean saveTaskDescriptor(){
 		// TODO update resp entry in list
 		if (taskDescriptor != null) {
-			boolean ok = TaskModelServiceHolder.get().save(taskDescriptor);
+			TaskModelServiceHolder.get().save(taskDescriptor);
 			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, taskDescriptor);
-			return ok;
+			return true;
 		}
 		return false;
 	}

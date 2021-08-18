@@ -29,7 +29,7 @@ public class BilledTest extends AbstractTest {
 		assertEquals(1.0, billed.getAmount(), 0.001);
 		assertEquals(0.02, billed.getTotal().doubleValue(), 0.001);
 		
-		assertTrue(coreModelService.save(billed));
+		coreModelService.save(billed);
 		
 		Optional<IBilled> loadedBilled = coreModelService.load(billed.getId(), IBilled.class);
 		assertTrue(loadedBilled.isPresent());
@@ -50,7 +50,7 @@ public class BilledTest extends AbstractTest {
 		billed.setPrimaryScale(100);
 		billed.setSecondaryScale(100);
 		billed.setAmount(2.5);
-		assertTrue(coreModelService.save(billed));
+		coreModelService.save(billed);
 		
 		assertTrue(billed.isNonIntegerAmount());
 		assertFalse(billed.isChangedPrice());
@@ -78,7 +78,7 @@ public class BilledTest extends AbstractTest {
 		billed.setSecondaryScale(100);
 		billed.setAmount(1);
 		billed.setPrice(new Money(2.5));
-		assertTrue(coreModelService.save(billed));
+		coreModelService.save(billed);
 		
 		assertFalse(billed.isNonIntegerAmount());
 		assertTrue(billed.isChangedPrice());
@@ -96,7 +96,7 @@ public class BilledTest extends AbstractTest {
 		assertTrue(exception instanceof IllegalStateException);
 		// integer amount change is still possible
 		billed.setAmount(3.0);
-		assertTrue(coreModelService.save(billed));
+		coreModelService.save(billed);
 		
 		assertFalse(billed.isNonIntegerAmount());
 		assertTrue(billed.isChangedPrice());
@@ -114,7 +114,7 @@ public class BilledTest extends AbstractTest {
 		billed.setFactor(1);
 		billed.setPrimaryScale(3);
 		billed.setPrice(new Money(105));
-		assertTrue(coreModelService.save(billed));
+		coreModelService.save(billed);
 		
 		// test1: 1.05 x 0.03 x 1 x 2 = 0.063
 		Money moneyNewTotal = billed.getTotal();

@@ -36,21 +36,21 @@ public class LabMappingTest {
 		item1.setCode("testItem1");
 		item1.setName("test item name 1");
 		item1.setTyp(LabItemTyp.NUMERIC);
-		assertTrue(modelService.save(item1));
+		modelService.save(item1);
 		
 		item2 = modelService.create(ILabItem.class);
 		item2.setCode("testItem2");
 		item2.setName("test item name 2");
 		item2.setTyp(LabItemTyp.TEXT);
-		assertTrue(modelService.save(item2));
+		modelService.save(item2);
 		
 		origin1 = modelService.create(IContact.class);
 		origin1.setDescription1("test origin 1");
-		assertTrue(modelService.save(origin1));
+		modelService.save(origin1);
 		
 		origin2 = modelService.create(IContact.class);
 		origin2.setDescription1("test origin 2");
-		assertTrue(modelService.save(origin2));
+		modelService.save(origin2);
 	}
 	
 	@After
@@ -74,7 +74,7 @@ public class LabMappingTest {
 		mapping.setItemName("TestItemMap1");
 		mapping.setItem(item1);
 		mapping.setOrigin(origin1);
-		assertTrue(modelService.save(mapping));
+		modelService.save(mapping);
 		
 		Optional<ILabMapping> loadedMapping = modelService.load(mapping.getId(), ILabMapping.class);
 		assertTrue(loadedMapping.isPresent());

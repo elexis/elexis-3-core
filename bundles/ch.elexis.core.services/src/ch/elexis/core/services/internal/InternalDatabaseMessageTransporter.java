@@ -29,12 +29,12 @@ public class InternalDatabaseMessageTransporter implements IMessageTransporter {
 		idbMessage.setCreateDateTime(message.getCreateDateTime());
 		idbMessage.setSenderAcceptsAnswer(message.isSenderAcceptsAnswer());
 
-		boolean save = CoreModelServiceHolder.get().save(idbMessage);
-		if (save) {
+		try  {
+			CoreModelServiceHolder.get().save(idbMessage);
 			return ObjectStatus.OK_STATUS(idbMessage.getId(), null);
+		} catch (IllegalStateException e) {
+			return ObjectStatus.ERROR_STATUS("Could not save message", e);
 		}
-
-		return ObjectStatus.ERROR_STATUS("Could not save message", null);
 	}
 
 	@Override

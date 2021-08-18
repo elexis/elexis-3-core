@@ -91,7 +91,7 @@ public class PatientTest extends AbstractTest {
 		loaded = query.execute();
 		assertTrue(loaded.isEmpty());
 		
-		assertTrue(CoreModelServiceHolder.get().remove(patient1));
+		CoreModelServiceHolder.get().remove(patient1);
 	}
 	
 	@Test

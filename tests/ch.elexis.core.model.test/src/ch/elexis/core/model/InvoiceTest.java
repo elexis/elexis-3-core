@@ -43,7 +43,7 @@ public class InvoiceTest extends AbstractTest {
 		invoice.setDate(LocalDate.now());
 		invoice.setDateFrom(LocalDate.now());
 		invoice.setRemark("remark");
-		assertTrue(coreModelService.save(invoice));
+		coreModelService.save(invoice);
 		
 		// attachments
 		assertTrue(Long.valueOf(invoice.getNumber()) > 0);
@@ -67,7 +67,7 @@ public class InvoiceTest extends AbstractTest {
 		invoice.setDate(LocalDate.now());
 		invoice.setDateFrom(LocalDate.now());
 		invoice.setRemark("remark");
-		assertTrue(coreModelService.save(invoice));
+		coreModelService.save(invoice);
 		
 		List<Identifiable> created = new ArrayList<>();
 		

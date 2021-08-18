@@ -54,7 +54,7 @@ public class XidTest {
 		xid.setDomain("http://www.test.info");
 		xid.setDomainId("testId");
 		xid.setObject(contact1);
-		assertTrue(modelService.save(xid));
+		modelService.save(xid);
 
 		Optional<IXid> loadedXid = modelService.load(xid.getId(), IXid.class);
 		assertTrue(loadedXid.isPresent());
@@ -71,13 +71,13 @@ public class XidTest {
 		xid1.setDomain("http://www.test.info");
 		xid1.setDomainId("testId1");
 		xid1.setObject(contact1);
-		assertTrue(modelService.save(xid1));
+		modelService.save(xid1);
 
 		IXid xid2 = modelService.create(IXid.class);
 		xid2.setDomain("http://www.test.info");
 		xid2.setDomainId("testId2");
 		xid2.setObject(contact2);
-		assertTrue(modelService.save(xid2));
+		modelService.save(xid2);
 
 		IQuery<IXid> query = modelService.getQuery(IXid.class);
 		query.and(ModelPackage.Literals.IXID__DOMAIN, COMPARATOR.EQUALS, "http://www.test.info");

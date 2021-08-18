@@ -1,7 +1,5 @@
 package ch.elexis.core.services;
 
-import static org.junit.Assert.assertTrue;
-
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -76,15 +74,15 @@ public abstract class AbstractServiceTest {
 			//				System.out.println(" [OK]");
 			//			}
 			
-			assertTrue(coreModelService.remove(cons));
+			coreModelService.remove(cons);
 		}
 		testEncounters.clear();
 		for (ICoverage fall : testCoverages) {
-			assertTrue(coreModelService.remove(fall));
+			coreModelService.remove(fall);
 		}
 		testCoverages.clear();
 		for (IContact contact : testPatients) {
-			assertTrue(coreModelService.remove(contact));
+			coreModelService.remove(contact);
 		}
 		testPatients.clear();
 		for (IMandator mandator : testMandators) {
@@ -92,7 +90,7 @@ public abstract class AbstractServiceTest {
 			if (mandator.equals(activeMandator)) {
 				ContextServiceHolder.get().setActiveMandator(null);
 			}
-			assertTrue(coreModelService.remove(mandator));
+			coreModelService.remove(mandator);
 		}
 		testMandators.clear();
 	}

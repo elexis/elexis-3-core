@@ -64,7 +64,7 @@ public class DocumentLetterTest extends AbstractTest {
 		letter.setDescription("test letter 1");
 		letter.setAuthor(contact1);
 		letter.setContent(new ByteArrayInputStream("test content".getBytes()));
-		assertTrue(coreModelService.save(letter));
+		coreModelService.save(letter);
 		
 		Optional<IDocumentLetter> loadedLetter =
 			coreModelService.load(letter.getId(), IDocumentLetter.class);
@@ -86,13 +86,13 @@ public class DocumentLetterTest extends AbstractTest {
 		letter1.setDescription("test letter 1");
 		letter1.setAuthor(contact1);
 		letter1.setContent(new ByteArrayInputStream("test content 1".getBytes()));
-		assertTrue(coreModelService.save(letter1));
+		coreModelService.save(letter1);
 		IDocumentLetter letter2 = coreModelService.create(IDocumentLetter.class);
 		letter2.setDescription("test letter 2");
 		letter2.setAuthor(contact1);
 		letter2.setPatient(patient1);
 		letter2.setContent(new ByteArrayInputStream("test content 2".getBytes()));
-		assertTrue(coreModelService.save(letter2));
+		coreModelService.save(letter2);
 		
 		IQuery<IDocumentLetter> query = coreModelService.getQuery(IDocumentLetter.class);
 		query.and(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, patient1);

@@ -29,7 +29,7 @@ public class ConfigTest  extends AbstractTest {
 		
 		config.setKey("test key1");
 		config.setValue("test value 1");
-		assertTrue(coreModelService.save(config));
+		coreModelService.save(config);
 		
 		Optional<IConfig> loadedConfig = coreModelService.load(config.getId(), IConfig.class);
 		assertTrue(loadedConfig.isPresent());
@@ -45,11 +45,11 @@ public class ConfigTest  extends AbstractTest {
 		IConfig config1 = coreModelService.create(IConfig.class);
 		config1.setKey("test key 1");
 		config1.setValue("test value 1");
-		assertTrue(coreModelService.save(config1));
+		coreModelService.save(config1);
 		IConfig config2 = coreModelService.create(IConfig.class);
 		config2.setKey("test key 2");
 		config2.setValue("test value 2");
-		assertTrue(coreModelService.save(config2));
+		coreModelService.save(config2);
 		
 		IQuery<IConfig> query = coreModelService.getQuery(IConfig.class);
 		query.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, "test key 2");
@@ -74,7 +74,7 @@ public class ConfigTest  extends AbstractTest {
 		IConfig config1 = coreModelService.create(IConfig.class);
 		config1.setKey("test key 1");
 		config1.setValue("test value 1");
-		assertTrue(coreModelService.save(config1));
+		coreModelService.save(config1);
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		executor.execute(new Runnable() {
 			@Override

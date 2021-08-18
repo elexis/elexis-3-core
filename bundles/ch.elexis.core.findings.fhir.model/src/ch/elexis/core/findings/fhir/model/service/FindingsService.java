@@ -62,7 +62,7 @@ public class FindingsService implements IFindingsService {
 					IAllergyIntolerance.class));
 			}
 		}
-		return (List<T>) ret;
+		return ret;
 	}
 	
 	private <T> List<T> queryByPatientId(String patientId, Class<T> clazz){
@@ -114,7 +114,7 @@ public class FindingsService implements IFindingsService {
 				}
 			}
 		}
-		return (List<T>) ret;
+		return ret;
 	}
 	
 	private <T> List<T> queryByEncounterId(String consultationId, Class<T> clazz){
@@ -127,8 +127,8 @@ public class FindingsService implements IFindingsService {
 	}
 	
 	@Override
-	public boolean saveFinding(IFinding finding){
-		return findingsModelService.save(finding);
+	public void saveFinding(IFinding finding){
+		findingsModelService.save(finding);
 	}
 	
 	@Override

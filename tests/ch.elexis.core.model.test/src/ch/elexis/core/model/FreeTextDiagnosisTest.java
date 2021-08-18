@@ -20,7 +20,7 @@ public class FreeTextDiagnosisTest extends AbstractTest {
 		assertTrue(diagnosis instanceof IFreeTextDiagnosis);
 		
 		diagnosis.setText("test free text");
-		assertTrue(coreModelService.save(diagnosis));
+		coreModelService.save(diagnosis);
 		
 		Optional<IFreeTextDiagnosis> loaded =
 			coreModelService.load(diagnosis.getId(), IFreeTextDiagnosis.class);

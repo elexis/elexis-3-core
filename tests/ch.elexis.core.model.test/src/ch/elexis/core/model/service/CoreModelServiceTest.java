@@ -64,7 +64,7 @@ public class CoreModelServiceTest {
 		
 		contact.setDescription1("test description 1");
 		contact.setDescription2("test description 2");
-		assertTrue(modelService.save(contact));
+		modelService.save(contact);
 		
 		Optional<IContact> loadedContact = modelService.load(contact.getId(), IContact.class);
 		assertTrue(loadedContact.isPresent());
@@ -78,7 +78,7 @@ public class CoreModelServiceTest {
 		IContact contact = modelService.create(IContact.class);
 		assertNotNull(contact);
 		assertTrue(contact instanceof IContact);
-		assertTrue(modelService.save(contact));
+		modelService.save(contact);
 		
 		Optional<IContact> loadedContact = modelService.load(contact.getId(), IContact.class);
 		assertTrue(loadedContact.isPresent());
@@ -97,7 +97,7 @@ public class CoreModelServiceTest {
 		
 		patient.setLastName("test lastname");
 		patient.setFirstName("test first name");
-		assertTrue(modelService.save(patient));
+		modelService.save(patient);
 		
 		Optional<IPatient> loadedPatient = modelService.load(patient.getId(), IPatient.class);
 		assertTrue(loadedPatient.isPresent());
@@ -115,7 +115,7 @@ public class CoreModelServiceTest {
 		
 		person.setLastName("test lastname");
 		person.setFirstName("test first name");
-		assertTrue(modelService.save(person));
+		modelService.save(person);
 		
 		Optional<IPerson> loadedPerson = modelService.load(person.getId(), IPerson.class);
 		assertTrue(loadedPerson.isPresent());
@@ -135,7 +135,7 @@ public class CoreModelServiceTest {
 				IPerson person = modelService.create(IPerson.class);
 				person.setLastName("test lastname");
 				person.setFirstName("test first name");
-				assertTrue(modelService.save(person));
+				modelService.save(person);
 				multiThreadPersonId = person.getId();
 			}
 		});
@@ -200,13 +200,13 @@ public class CoreModelServiceTest {
 		IPerson owner = modelService.create(IPerson.class);
 		owner.setLastName("test lastname 1");
 		owner.setFirstName("test first name 1");
-		assertTrue(modelService.save(owner));
+		modelService.save(owner);
 		
 		IUserConfig config1 = modelService.create(IUserConfig.class);
 		config1.setOwner(owner);
 		config1.setKey("test key 1");
 		config1.setValue("test value 1");
-		assertTrue(modelService.save(config1));
+		modelService.save(config1);
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		executor.execute(new Runnable() {
 			@Override
@@ -343,7 +343,7 @@ public class CoreModelServiceTest {
 			IPerson person = modelService.create(IPerson.class);
 			person.setLastName("test lastname " + index);
 			person.setFirstName("test first name " + index);
-			assertTrue(modelService.save(person));
+			modelService.save(person);
 		}
 	}
 	

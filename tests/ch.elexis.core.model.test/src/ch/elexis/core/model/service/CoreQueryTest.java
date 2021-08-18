@@ -460,7 +460,7 @@ public class CoreQueryTest {
 		
 		contact.setDescription1(desc1);
 		contact.setDescription2(desc2);
-		assertTrue(modelService.save(contact));
+		modelService.save(contact);
 		return contact;
 	}
 	
@@ -473,7 +473,7 @@ public class CoreQueryTest {
 		patient.setLastName(lastName);
 		patient.setFirstName(firstName);
 		patient.setDateOfBirth(birthDate.atStartOfDay());
-		assertTrue(modelService.save(patient));
+		modelService.save(patient);
 		
 		return patient;
 	}

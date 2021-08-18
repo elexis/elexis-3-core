@@ -129,13 +129,15 @@ public class ConfigService implements IConfigService {
 				addTraceEntry("W globalCfg key [" + key + "] => value [" + value + "]");
 			}
 			
-			return modelService.save(_entry);
+			modelService.save(_entry);
+			return true;
 		} else {
 			if (entry.isPresent()) {
 				if (addTraceEntry) {
 					addTraceEntry("W globalCfg key [" + key + "] => removed");
 				}
-				return modelService.remove(entry.get());
+				modelService.remove(entry.get());
+				return true;
 			}
 		}
 		return false;
@@ -219,7 +221,7 @@ public class ConfigService implements IConfigService {
 	public boolean set(IContact contact, String key, String value){
 		Optional<IUserConfig> loaded = Optional.empty();
 		if (contact != null) {
-			INamedQuery<IUserConfig> configQuery = CoreModelServiceHolder.get()
+			INamedQuery<IUserConfig> configQuery = modelService
 				.getNamedQuery(IUserConfig.class, true, "ownerid", "param");
 			List<IUserConfig> configs = configQuery.executeWithParameters(
 				configQuery.getParameterMap("ownerid", contact.getId(), "param", key));
@@ -232,7 +234,7 @@ public class ConfigService implements IConfigService {
 			}
 			if (value != null) {
 				IUserConfig config = loaded.orElseGet(() -> {
-					IUserConfig ret = CoreModelServiceHolder.get().create(IUserConfig.class);
+					IUserConfig ret = modelService.create(IUserConfig.class);
 					ret.setOwner(contact);
 					ret.setKey(key);
 					return ret;
@@ -240,12 +242,14 @@ public class ConfigService implements IConfigService {
 				config.setValue(value);
 				addTraceEntry("W userCfg [" + contact.getId() + "] key [" + key + "] => value ["
 					+ value + "]");
-				return CoreModelServiceHolder.get().save(config);
+				modelService.save(config);
+				return true;
 			} else {
 				if (loaded.isPresent()) {
 					addTraceEntry(
 						"W userCfg [" + contact.getId() + "] key [" + key + "] => removed");
-					return CoreModelServiceHolder.get().remove(loaded.get());
+					modelService.remove(loaded.get());
+					return true;
 				}
 			}
 		}
@@ -539,6 +543,7 @@ public class ConfigService implements IConfigService {
 		return localConfig.get(key, defaultValue);
 	}
 	
+	@Override
 	public boolean getActiveMandator(String key, boolean defaultValue) {
 		String defaultValueString = Boolean.toString(defaultValue);
 		String result = getActiveMandator(key, defaultValueString);
@@ -601,7 +606,7 @@ public class ConfigService implements IConfigService {
 				lockString = "local_" + (String) object + "_lock";
 			} else if (object instanceof Identifiable) {
 				String storeToString =
-					StoreToStringServiceHolder.getStoreToString((Identifiable) object);
+					StoreToStringServiceHolder.getStoreToString(object);
 				lockString = "local_" + storeToString + "_lock"; //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				throw new IllegalStateException("Unknown object type [" + object + "]");

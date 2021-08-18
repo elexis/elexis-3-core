@@ -414,7 +414,8 @@ public class TestDatabaseInitializer {
 			article.setGtin("0000001111111");
 			article.setPackageSize(12);
 			article.setSellingSize(12);
-			isArticleInitialized = modelService.save(article);
+			modelService.save(article);
+			isArticleInitialized = true;
 			
 		}
 		

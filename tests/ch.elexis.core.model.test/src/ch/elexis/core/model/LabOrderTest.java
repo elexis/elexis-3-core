@@ -71,7 +71,7 @@ public class LabOrderTest extends AbstractTest {
 		order.setItem(item1);
 		order.setPatient(patient);
 		order.setState(LabOrderState.ORDERED);
-		assertTrue(coreModelService.save(order));
+		coreModelService.save(order);
 		assertNotNull(order.getOrderId());
 		
 		Optional<ILabOrder> loadedOrder = coreModelService.load(order.getId(), ILabOrder.class);
@@ -85,7 +85,7 @@ public class LabOrderTest extends AbstractTest {
 		ILabOrder order1 = coreModelService.create(ILabOrder.class);
 		order.setItem(item1);
 		order.setPatient(patient);
-		assertTrue(coreModelService.save(order1));
+		coreModelService.save(order1);
 		assertEquals(1,
 			Integer.parseInt(order1.getOrderId()) - Integer.parseInt(order.getOrderId()));
 		
@@ -98,13 +98,13 @@ public class LabOrderTest extends AbstractTest {
 		order1.setItem(item1);
 		order1.setPatient(patient);
 		order1.setResult(result1);
-		assertTrue(coreModelService.save(order1));
+		coreModelService.save(order1);
 		
 		ILabOrder order2 = coreModelService.create(ILabOrder.class);
 		order2.setItem(item1);
 		order2.setPatient(patient2);
 		order2.setResult(result2);
-		assertTrue(coreModelService.save(order2));
+		coreModelService.save(order2);
 		
 		IQuery<ILabOrder> query = coreModelService.getQuery(ILabOrder.class);
 		query.and(ModelPackage.Literals.ILAB_ORDER__ITEM, COMPARATOR.EQUALS, item1);

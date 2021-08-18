@@ -38,7 +38,7 @@ public class LaboratoryTest extends AbstractTest {
 		assertTrue(laboratory.isLaboratory());
 		laboratory.setCode("TestLab");
 		laboratory.setDescription1("Laboratory Test");
-		assertTrue(coreModelService.save(laboratory));
+		coreModelService.save(laboratory);
 		
 		Optional<ILaboratory> loadedLaboratory =
 			coreModelService.load(laboratory.getId(), ILaboratory.class);

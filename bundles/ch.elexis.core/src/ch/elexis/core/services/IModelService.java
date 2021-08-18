@@ -117,29 +117,27 @@ public interface IModelService {
 	 * Save the model object.
 	 * 
 	 * @param object
-	 * @return
+	 * @throws IllegalStateException
 	 */
-	public boolean save(Identifiable identifiable);
+	public void save(Identifiable identifiable);
 	
 	/**
 	 * Save the model objects.
 	 * 
 	 * @param objects
-	 * @return
+	 * @throws IllegalStateException
 	 */
-	public boolean save(List<? extends Identifiable> identifiables);
+	public void save(List<? extends Identifiable> identifiables);
 	
 	/**
 	 * Remove the {@link Identifiable} from the database.
 	 * 
 	 * @param identifiable
-	 * @return
 	 */
-	public boolean remove(Identifiable identifiable);
+	public void remove(Identifiable identifiable);
 	
 	/**
 	 * Remove a list of {@link Identifiable} from the database in a single transaction.
-	 * 
 	 * 
 	 * @param identifiables
 	 */
@@ -253,8 +251,7 @@ public interface IModelService {
 	public void delete(Deleteable deletable);
 	
 	/**
-	 * Convenience method setting deleted property of a List of deleteables and save the {@link Deleteable}.
-	 * 
+	 * @see #delete(Deleteable)
 	 * @param deletables
 	 */
 	public void delete(List<? extends Deleteable> deletables);

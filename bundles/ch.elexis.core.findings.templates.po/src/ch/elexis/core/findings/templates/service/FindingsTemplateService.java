@@ -70,6 +70,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 	
+	@Override
 	public FindingsTemplates getFindingsTemplates(String templateId){
 		Assert.isNotNull(templateId);
 		templateId = templateId.replaceAll(" ", "_");
@@ -132,18 +133,18 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		return null;
 	}
 	
+	@Override
 	public String saveFindingsTemplates(Optional<FindingsTemplates> findingsTemplates){
 		if (findingsTemplates.isPresent()) {
 			String xmi = createXMI(findingsTemplates.get());
 			String id = findingsTemplates.get().getId();
-			if (saveXmiToNamedBlob(xmi, id)) {
-				return xmi;
-			}
+			saveXmiToNamedBlob(xmi, id);
+			return xmi;
 		}
 		return null;
 	}
 	
-	private boolean saveXmiToNamedBlob(String xmi, String blobId){
+	private void saveXmiToNamedBlob(String xmi, String blobId){
 		if (xmi != null && blobId != null) { 
 			IBlob blob = coreModelService.load(blobId, IBlob.class).orElse(null);
 			if (blob == null) {
@@ -151,15 +152,15 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 				blob.setId(blobId);
 			}
 			blob.setStringContent(xmi);
-			return coreModelService.save(blob);
+			coreModelService.save(blob);
 		} else {
 			//cannot save
 			LoggerFactory.getLogger(FindingsTemplateService.class)
 				.warn("cannot save template - xmi string is null");
-			return false;
 		}
 	}
 	
+	@Override
 	public void exportTemplateToFile(FindingsTemplates findingsTemplates, String path)
 		throws IOException{
 		if (findingsTemplates != null) {
@@ -171,14 +172,14 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		}
 	}
 	
+	@Override
 	public FindingsTemplates importTemplateFromFile(String path) throws IOException{
 		if (path != null) {
 			File toImport = new File(path);
 			String xmi = FileUtils.readFileToString(toImport);
-			if (saveXmiToNamedBlob(xmi,
-				FINDINGS_TEMPLATE_ID_PREFIX + "Standard Vorlagen".replaceAll(" ", "_"))) {
-				return getFindingsTemplates("Standard Vorlagen");
-			}
+			saveXmiToNamedBlob(xmi,
+				FINDINGS_TEMPLATE_ID_PREFIX + "Standard Vorlagen".replaceAll(" ", "_"));
+			return getFindingsTemplates("Standard Vorlagen");
 		}
 		return null;
 	}
@@ -204,6 +205,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		}
 	}
 	
+	@Override
 	public IFinding createFinding(Patient patient, FindingsTemplate findingsTemplate)
 		throws ElexisException{
 		IFinding iFinding = null;
@@ -321,6 +323,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		}
 	}
 	
+	@Override
 	public void validateCycleDetection(FindingsTemplate findingsTemplate, int depth, int maxDepth)
 		throws ElexisException{
 		if (++depth > maxDepth) {
@@ -417,7 +420,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 	private List<IFinding> getObservations(String patientId){
 		return findingsService.getPatientsFindings(patientId, IObservation.class).stream()
 			.filter(item -> {
-				IObservation iObservation = (IObservation) item;
+				IObservation iObservation = item;
 				ObservationCategory category = iObservation.getCategory();
 				if (category == ObservationCategory.VITALSIGNS
 					|| category == ObservationCategory.SOAP_SUBJECTIVE
@@ -473,6 +476,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		return null;
 	}
 	
+	@Override
 	public String getTypeAsText(Type type){
 		if (type != null) {
 			switch (type) {
@@ -492,6 +496,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		return "";
 	}
 	
+	@Override
 	public String getDataTypeAsText(DataType dataType){
 		switch (dataType) {
 		case GROUP:

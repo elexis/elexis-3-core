@@ -21,7 +21,7 @@ public class DiagnosisReferenceTest extends AbstractTest {
 		
 		diagnosis.setCode("test code");
 		diagnosis.setReferredClass("test.class.name");
-		assertTrue(coreModelService.save(diagnosis));
+		coreModelService.save(diagnosis);
 		
 		Optional<IDiagnosisReference> loadedConfig =
 			coreModelService.load(diagnosis.getId(), IDiagnosisReference.class);

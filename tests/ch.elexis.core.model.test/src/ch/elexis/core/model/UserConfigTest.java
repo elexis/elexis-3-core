@@ -53,7 +53,7 @@ public class UserConfigTest {
 		config.setOwner(contact1);
 		config.setKey("test key1");
 		config.setValue("test value 1");
-		assertTrue(modelService.save(config));
+		modelService.save(config);
 		
 		// modelService.load is string only, hence not applicable to Userconfig
 //		Optional<IUserConfig> loadedConfig = modelService.load(config.getId(), IUserConfig.class);
@@ -72,13 +72,13 @@ public class UserConfigTest {
 		config1.setOwner(contact1);
 		config1.setKey("test key 1");
 		config1.setValue("test value 1");
-		assertTrue(modelService.save(config1));
+		modelService.save(config1);
 		
 		IUserConfig config2 = modelService.create(IUserConfig.class);
 		config2.setOwner(contact2);
 		config2.setKey("test key 2");
 		config2.setValue("test value 2");
-		assertTrue(modelService.save(config2));
+		modelService.save(config2);
 		
 		IQuery<IUserConfig> query = modelService.getQuery(IUserConfig.class);
 		query.and(ModelPackage.Literals.IUSER_CONFIG__OWNER, COMPARATOR.EQUALS, contact2.getId());

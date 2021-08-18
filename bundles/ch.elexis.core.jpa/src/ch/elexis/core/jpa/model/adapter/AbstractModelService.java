@@ -90,7 +90,7 @@ public abstract class AbstractModelService implements IModelService {
 	@Override
 	public <T> List<T> findAll(Class<T> clazz){
 		IQuery<T> query = getQuery(clazz);
-		return (List<T>) query.execute();
+		return query.execute();
 	}
 	
 	@Override
@@ -98,7 +98,7 @@ public abstract class AbstractModelService implements IModelService {
 		IQuery<T> query = getQuery(clazz);
 		if (ids != null && !ids.isEmpty()) {
 			query.and("id", COMPARATOR.IN, ids);
-			return (List<T>) query.execute();
+			return query.execute();
 		}
 		return Collections.emptyList();
 	}
@@ -165,9 +165,10 @@ public abstract class AbstractModelService implements IModelService {
 	}
 	
 	@Override
-	public boolean save(Identifiable identifiable){
+	public void save(Identifiable identifiable){
 		if (identifiable.getChanged() != null) {
-			return save(Collections.singletonList(identifiable));
+			save(Collections.singletonList(identifiable));
+			return;
 		}
 		Optional<EntityWithId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
@@ -192,17 +193,18 @@ public abstract class AbstractModelService implements IModelService {
 					postElexisEvent(getCreateEvent(identifiable));
 					postEvent(ElexisEventTopics.EVENT_CREATE, identifiable);
 				}
-				return true;
+				return;
 			} finally {
 				closeEntityManager(em);
 			}
 		}
-		LoggerFactory.getLogger(getClass()).error("Could not save [{}]", identifiable);
-		return false;
+		String message = "Could not save ["+identifiable+"]";
+		LoggerFactory.getLogger(getClass()).error(message);
+		throw new IllegalStateException(message);
 	}
 	
 	@Override
-	public boolean save(List<? extends Identifiable> identifiables){
+	public void save(List<? extends Identifiable> identifiables){
 		identifiables = addChanged(identifiables);
 		Map<Identifiable, EntityWithId> dbObjects = new HashMap<Identifiable, EntityWithId>();
 		for (Identifiable identifiable : identifiables) {
@@ -245,13 +247,14 @@ public abstract class AbstractModelService implements IModelService {
 				createdEvents.stream().forEach(e -> postElexisEvent(e));
 				createdIdentifiables.stream()
 					.forEach(i -> postEvent(ElexisEventTopics.EVENT_CREATE, i));
-				return true;
+				return;
 			} finally {
 				closeEntityManager(em);
 			}
 		}
-		LoggerFactory.getLogger(getClass()).error("Could not save list [{}]", identifiables);
-		return false;
+		String message = "Could not save list ["+identifiables+"]";
+		LoggerFactory.getLogger(getClass()).error(message);
+		throw new IllegalStateException(message);
 	}
 	
 	protected List<? extends Identifiable> addChanged(List<? extends Identifiable> identifiables){
@@ -272,7 +275,7 @@ public abstract class AbstractModelService implements IModelService {
 	}
 	
 	@Override
-	public boolean remove(Identifiable identifiable){
+	public void remove(Identifiable identifiable){
 		Optional<EntityWithId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
 			EntityManager em = getEntityManager(false);
@@ -282,13 +285,14 @@ public abstract class AbstractModelService implements IModelService {
 				em.remove(object);
 				em.getTransaction().commit();
 				postEvent(ElexisEventTopics.EVENT_DELETE, identifiable);
-				return true;
+				return;
 			} finally {
 				closeEntityManager(em);
 			}
 		}
-		LoggerFactory.getLogger(getClass()).error("Could not remove [{}]", identifiable);
-		return false;
+		String message = "Could not remove ["+identifiable+"]";
+		LoggerFactory.getLogger(getClass()).error(message);
+		throw new IllegalStateException(message);
 	}
 	
 	@Override
@@ -450,6 +454,7 @@ public abstract class AbstractModelService implements IModelService {
 		return query.getResultStream();
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T> Stream<T> executeNativeQuery(String sql, Class<T> interfaceClazz){
 		Class<? extends EntityWithId> entityClazz = adapterFactory.getEntityClass(interfaceClazz);
@@ -494,14 +499,14 @@ public abstract class AbstractModelService implements IModelService {
 	public <R, T> INamedQuery<R> getNamedQuery(Class<R> returnValueclazz, Class<T> definitionClazz,
 		boolean refreshCache, String... properties){
 		return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory,
-			(EntityManager) getEntityManager(true), getNamedQueryName(definitionClazz, properties));
+			getEntityManager(true), getNamedQueryName(definitionClazz, properties));
 	}
 	
 	@Override
 	public <R, T> INamedQuery<R> getNamedQueryByName(Class<R> returnValueclazz,
 		Class<T> definitionClazz, boolean refreshCache, String queryName){
 		return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory,
-			(EntityManager) getEntityManager(true), queryName);
+			getEntityManager(true), queryName);
 	}
 	
 	@Override

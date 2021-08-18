@@ -62,25 +62,25 @@ public abstract class AbstractTest {
 		contextService.setActiveUser(null);
 		
 		if (encounter != null) {
-			assertTrue(coreModelService.remove(encounter));
+			coreModelService.remove(encounter);
 		}
 		if (coverage != null) {
-			assertTrue(coreModelService.remove(coverage));
+			coreModelService.remove(coverage);
 		}
 		if (localArticle != null) {
-			assertTrue(coreModelService.remove(localArticle));
+			coreModelService.remove(localArticle);
 		}
 		if (user != null) {
-			assertTrue(coreModelService.remove(user));
+			coreModelService.remove(user);
 		}
 		if (person != null) {
-			assertTrue(coreModelService.remove(person));
+			coreModelService.remove(person);
 		}
 		if (mandator != null) {
-			assertTrue(coreModelService.remove(mandator));
+			coreModelService.remove(mandator);
 		}
 		if (patient != null) {
-			assertTrue(coreModelService.remove(patient));
+			coreModelService.remove(patient);
 		}
 
 		List<IPerson> execute = coreModelService.getQuery(IPerson.class, true, true).execute();

@@ -27,7 +27,7 @@ public class BillingSystemFactorTest extends AbstractTest {
 		factor.setFactor(0.98);
 		factor.setValidFrom(LocalDate.of(2000, 1, 1));
 		factor.setValidTo(LocalDate.of(9999, 12, 31));
-		assertTrue(coreModelService.save(factor));
+		coreModelService.save(factor);
 		
 		Optional<IBillingSystemFactor> loadedFactor =
 			coreModelService.load(factor.getId(), IBillingSystemFactor.class);
@@ -46,14 +46,14 @@ public class BillingSystemFactorTest extends AbstractTest {
 		factor.setFactor(0.98);
 		factor.setValidFrom(LocalDate.of(2000, 1, 1));
 		factor.setValidTo(LocalDate.of(9999, 12, 31));
-		assertTrue(coreModelService.save(factor));
+		coreModelService.save(factor);
 		
 		IBillingSystemFactor factor1 = coreModelService.create(IBillingSystemFactor.class);
 		factor1.setSystem("testsystem");
 		factor1.setFactor(0.90);
 		factor1.setValidFrom(LocalDate.of(1990, 1, 1));
 		factor1.setValidTo(LocalDate.of(1999, 12, 31));
-		assertTrue(coreModelService.save(factor1));
+		coreModelService.save(factor1);
 		
 		IQuery<IBillingSystemFactor> query = coreModelService.getQuery(IBillingSystemFactor.class);
 		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__SYSTEM, COMPARATOR.EQUALS,

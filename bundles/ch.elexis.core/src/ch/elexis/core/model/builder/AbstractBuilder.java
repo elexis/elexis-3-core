@@ -26,8 +26,7 @@ public abstract class AbstractBuilder<T extends Identifiable> {
 	
 	public T buildAndSave(){
 		build();
-		boolean success = modelService.save(object);
-		// TODO what if false?
+		modelService.save(object);
 		return object;
 	}
 	

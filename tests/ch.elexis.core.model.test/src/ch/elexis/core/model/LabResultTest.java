@@ -60,7 +60,7 @@ public class LabResultTest extends AbstractTest {
 		result.setReferenceMale("<30");
 		result.setResult("22.56");
 		result.setExtInfo("testInfo", "testInfo");
-		assertTrue(coreModelService.save(result));
+		coreModelService.save(result);
 		
 		Optional<ILabResult> loadedResult = coreModelService.load(result.getId(), ILabResult.class);
 		assertTrue(loadedResult.isPresent());
@@ -84,7 +84,7 @@ public class LabResultTest extends AbstractTest {
 		result1.setReferenceMale("<30");
 		result1.setResult("22.56");
 		result1.setObservationTime(LocalDateTime.of(2018, 1, 1, 10, 0));
-		assertTrue(coreModelService.save(result1));
+		coreModelService.save(result1);
 		
 		ILabResult result2 = coreModelService.create(ILabResult.class);
 		result2.setPatient(patient2);
@@ -93,7 +93,7 @@ public class LabResultTest extends AbstractTest {
 		result2.setReferenceMale("<30");
 		result2.setResult("35.85");
 		result2.setObservationTime(LocalDateTime.of(2018, 1, 2, 15, 0));
-		assertTrue(coreModelService.save(result2));
+		coreModelService.save(result2);
 		
 		IQuery<ILabResult> query = coreModelService.getQuery(ILabResult.class);
 		query.and(ModelPackage.Literals.ILAB_RESULT__ITEM, COMPARATOR.EQUALS, item1);

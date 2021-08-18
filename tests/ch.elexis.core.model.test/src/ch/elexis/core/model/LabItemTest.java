@@ -29,7 +29,7 @@ public class LabItemTest extends AbstractTest {
 		item.setReferenceFemale("<25");
 		item.setReferenceMale("<30");
 		item.setTyp(LabItemTyp.NUMERIC);
-		assertTrue(coreModelService.save(item));
+		coreModelService.save(item);
 		
 		Optional<ILabItem> loadedItem = coreModelService.load(item.getId(), ILabItem.class);
 		assertTrue(loadedItem.isPresent());
@@ -68,7 +68,7 @@ public class LabItemTest extends AbstractTest {
 		item1.setReferenceFemale("<25");
 		item1.setReferenceMale("<30");
 		item1.setTyp(LabItemTyp.NUMERIC);
-		assertTrue(coreModelService.save(item1));
+		coreModelService.save(item1);
 		
 		ILabItem item2 = coreModelService.create(ILabItem.class);
 		item2.setCode("testItem2");
@@ -76,7 +76,7 @@ public class LabItemTest extends AbstractTest {
 		item2.setReferenceFemale("<25");
 		item2.setReferenceMale("<30");
 		item2.setTyp(LabItemTyp.TEXT);
-		assertTrue(coreModelService.save(item2));
+		coreModelService.save(item2);
 		
 		IQuery<ILabItem> query = coreModelService.getQuery(ILabItem.class);
 		query.and(ModelPackage.Literals.ILAB_ITEM__CODE, COMPARATOR.EQUALS, "testItem2");

@@ -303,7 +303,8 @@ public class TaskServiceImpl implements ITaskService {
 		List<ITask> execute = taskQuery.execute();
 		execute.stream().forEach(task -> taskModelService.remove(task));
 		
-		return taskModelService.remove(taskDescriptor);
+		taskModelService.remove(taskDescriptor);
+		return true;
 	}
 	
 	void notify(ITask task){
@@ -483,9 +484,10 @@ public class TaskServiceImpl implements ITaskService {
 	
 	@Override
 	public void saveTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException{
-		boolean save = taskModelService.save(taskDescriptor);
-		if (!save) {
-			throw new TaskException(TaskException.PERSISTENCE_ERROR);
+		try {
+			taskModelService.save(taskDescriptor);
+		} catch (IllegalStateException e) {
+			throw new TaskException(TaskException.PERSISTENCE_ERROR, e);
 		}
 	}
 	

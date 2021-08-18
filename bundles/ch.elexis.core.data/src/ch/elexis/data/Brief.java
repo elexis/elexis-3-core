@@ -221,10 +221,10 @@ public class Brief extends PersistentObject {
 	 * 
 	 * @return
 	 */
-	public boolean removeContent(){
+	public void removeContent(){
 		IDocument iDocument = toIDocument();
 		iDocument.setContent(null);
-		return CoreModelServiceHolder.get().save(iDocument);
+		CoreModelServiceHolder.get().save(iDocument);
 	}
 	
 	public String getBetreff(){
