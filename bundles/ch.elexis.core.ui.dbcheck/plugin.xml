@@ -92,7 +92,7 @@
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.MoveAllLettersToExternalStorage">
             </ExternalMaintenance>
             <ExternalMaintenance
-                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.RemoveVatFromPandemieVerrechnet">
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.RemoveVatFromVerrechnet">
             </ExternalMaintenance>
    </extension>
 
