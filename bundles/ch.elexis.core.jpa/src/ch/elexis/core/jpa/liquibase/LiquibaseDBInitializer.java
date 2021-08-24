@@ -76,7 +76,7 @@ public class LiquibaseDBInitializer {
 	}
 	
 	private boolean isFirstStart(Connection connection){
-		return getDbTables(connection).isEmpty();
+		return !getDbTables(connection).contains("CONFIG");
 	}
 	
 	private static List<String> getDbTables(Connection con){
@@ -91,7 +91,7 @@ public class LiquibaseDBInitializer {
 			
 			while (result.next()) {
 				String tableName = result.getString("TABLE_NAME");
-				ret.add(tableName);
+				ret.add(tableName.toUpperCase());
 			}
 		} catch (SQLException ex) {
 			throw new IllegalStateException(
