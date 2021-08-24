@@ -1,5 +1,7 @@
 package ch.elexis.core.test.initializer;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -517,7 +519,7 @@ public class TestDatabaseInitializer {
 			laboratory2 =
 				new IContactBuilder.LaboratoryBuilder(modelService, "Labor Test2").build();
 			laboratory2.setDescription2("Test2");
-			laboratory2.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, "ZURANA", true);
+			assertTrue(laboratory2.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, "ZURANA", true));
 			modelService.save(laboratory2);
 			
 			labItem = new ILabItemBuilder(modelService, "TEST NUMERIC",
