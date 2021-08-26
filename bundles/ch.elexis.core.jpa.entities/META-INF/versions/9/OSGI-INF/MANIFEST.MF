@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Import-Package: ch.elexis.core.constants,
+ ch.elexis.core.model,
+ ch.elexis.core.model.issue,
+ ch.elexis.core.model.prescription,
+ ch.elexis.core.services,
+ ch.elexis.core.types,
+ ch.rgw.compress,
+ ch.rgw.tools,
+ javax.xml.bind.annotation,
+ javax.annotation,
+ com.google.gson;version="2.8.0",
+ com.google.gson.annotations;version="2.8.0",
+ com.google.gson.stream;version="2.8.0",
+ org.apache.commons.lang3;version="3.1.0",
+ org.osgi.service.component.annotations;version="[1.3.0,2.0.0)";resolution:=optional,
+ org.slf4j
+Comment:Java 9+ support

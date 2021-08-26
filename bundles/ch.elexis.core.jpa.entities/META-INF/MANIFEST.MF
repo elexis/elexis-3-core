@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.jpa.entities
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Multi-Release: true
 Export-Package: ch.elexis.core.jpa.entities
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.persistence.antlr;bundle-version="3.5.2",
