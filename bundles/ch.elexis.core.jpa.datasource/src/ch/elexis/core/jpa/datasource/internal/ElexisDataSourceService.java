@@ -1,14 +1,20 @@
 package ch.elexis.core.jpa.datasource.internal;
 
+import static ch.elexis.core.constants.ElexisEnvironmentPropertyConstants.DB_DATABASE;
+import static ch.elexis.core.constants.ElexisEnvironmentPropertyConstants.DB_HOST;
+import static ch.elexis.core.constants.ElexisEnvironmentPropertyConstants.DB_JDBC_PARAMETER_STRING;
+import static ch.elexis.core.constants.ElexisEnvironmentPropertyConstants.DB_PASSWORD;
+import static ch.elexis.core.constants.ElexisEnvironmentPropertyConstants.DB_TYPE;
+import static ch.elexis.core.constants.ElexisEnvironmentPropertyConstants.DB_USERNAME;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.sql.DataSource;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
@@ -18,10 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.DBConnection;
 import ch.elexis.core.common.DBConnection.DBType;
-
-import static ch.elexis.core.constants.ElexisEnvironmentPropertyConstants.*;
 import ch.elexis.core.jpa.datasource.test.TestDatabaseConnection;
 import ch.elexis.core.services.IElexisDataSource;
+import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.utils.CoreUtil;
 
 @Component(immediate = true, property = "id=default")
@@ -32,16 +37,18 @@ public class ElexisDataSourceService implements IElexisDataSource {
 	private static ServiceRegistration<DataSource> servReg;
 	private static ElexisPoolingDataSource currentDataSource;
 	
+	private IStatus connectionStatus;
+	
 	@Activate
 	public void activate(){
 		System.out.println("Activating ElexisDataSourceService ...");
 		log.debug("Activating ...");
 		if (CoreUtil.isTestMode()) {
 			log.warn("- test-mode -");
-			IStatus setDBConnection = setDBConnection(new TestDatabaseConnection());
-			if (!setDBConnection.isOK()) {
-				log.error("Error setting db connection", setDBConnection.getMessage());
-				System.out.println("ERROR " + setDBConnection.getMessage());
+			connectionStatus = setDBConnection(new TestDatabaseConnection());
+			if (!connectionStatus.isOK()) {
+				log.error("Error setting db connection", connectionStatus.getMessage());
+				System.out.println("ERROR " + connectionStatus.getMessage());
 			}
 			return;
 		}
@@ -49,16 +56,25 @@ public class ElexisDataSourceService implements IElexisDataSource {
 		DBConnection connection = getEnvironmentProvidedDbConnection();
 		if (connection != null) {
 			log.info("Initializing Database connection via environment variables.");
-			IStatus setDBConnection = setDBConnection(connection);
-			if (!setDBConnection.isOK()) {
-				log.error("Error setting db connection", setDBConnection.getMessage());
-				System.out.println("ERROR " + setDBConnection.getMessage());
+			connectionStatus = setDBConnection(connection);
+			if (!connectionStatus.isOK()) {
+				log.error("Error setting db connection", connectionStatus.getMessage());
+				System.out.println("ERROR " + connectionStatus.getMessage());
 			}
 		}
 		
 	}
 	
+	@Override
 	public IStatus setDBConnection(DBConnection dbConnection){
+		int code = 3;
+		if (dbConnection instanceof TestDatabaseConnection) {
+			code = 1;
+		} else if (dbConnection instanceof ElexisEnvironmentDBConnection) {
+			code = 2;
+		}
+		
+		log.info("setDBConnection [{}] " + dbConnection, code);
 		try {
 			if (servReg != null) {
 				log.info("Unregistering service registration");
@@ -74,13 +90,16 @@ public class ElexisDataSourceService implements IElexisDataSource {
 			properties.put("id", "default");
 			servReg = FrameworkUtil.getBundle(getClass()).getBundleContext()
 				.registerService(DataSource.class, currentDataSource, properties);
-			return Status.OK_STATUS;
+			connectionStatus = new ObjectStatus(IStatus.OK, "ch.elexis.core.jpa.datasource", code,
+				"ok", null, dbConnection);
+			return connectionStatus;
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			// Logging might not even been initialized yet
 			// so leave the stack trace to sysout
 			e.printStackTrace();
-			
-			return new Status(Status.ERROR, "ch.elexis.core.jpa.datasource", e.getMessage());
+			connectionStatus = new ObjectStatus(IStatus.ERROR, "ch.elexis.core.jpa.datasource",
+				code, e.getMessage(), e, dbConnection);
+			return connectionStatus;
 		}
 	}
 	
@@ -124,6 +143,17 @@ public class ElexisDataSourceService implements IElexisDataSource {
 			}
 		}
 		
+	}
+
+	@Override
+	public ObjectStatus getCurrentConnectionStatus(){
+		if (connectionStatus instanceof ObjectStatus) {
+			return ((ObjectStatus) connectionStatus);
+		}
+		if (connectionStatus != null) {
+			return new ObjectStatus(connectionStatus, null);
+		}
+		return null;
 	}
 	
 }
