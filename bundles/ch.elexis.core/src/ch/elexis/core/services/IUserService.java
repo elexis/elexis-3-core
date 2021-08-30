@@ -45,11 +45,12 @@ public interface IUserService {
 	Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact user);
 	
 	/**
-	 * Retrieve the users associated with a given contact
+	 * Retrieve the active users associated with a given contact.
 	 * 
-	 * @param user
-	 * @return
+	 * @param contact
+	 * @return active users associated with the contact (excludes users marked as deleted and not
+	 *         active)
 	 */
-	List<IUser> getUsersByAssociatedContact(IContact user);
+	List<IUser> getUsersByAssociatedContact(IContact contact);
 	
 }

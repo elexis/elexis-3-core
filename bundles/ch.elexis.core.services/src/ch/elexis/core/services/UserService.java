@@ -94,6 +94,7 @@ public class UserService implements IUserService {
 		}
 		IQuery<IUser> qre = modelService.getQuery(IUser.class);
 		qre.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.EQUALS, contact);
+		qre.and(ModelPackage.Literals.IUSER__ACTIVE, COMPARATOR.EQUALS, true);
 		return qre.execute();
 	}
 	
