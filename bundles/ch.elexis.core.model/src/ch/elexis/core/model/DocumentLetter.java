@@ -241,8 +241,9 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 		Iterator<?> result = nativeQuery
 			.executeWithParameters(nativeQuery.getIndexedParameterMap(Integer.valueOf(1), getId()))
 			.iterator();
-		if (result.hasNext()) {
-			return Long.parseLong(result.next().toString());
+		Object next = result.next();
+		if(next != null) {
+			return Long.parseLong(next.toString());
 		}
 		return -1;
 	}
