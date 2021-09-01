@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+import ch.elexis.core.jdt.Nullable;
+
 public interface IQuery<T> {
 	public static enum COMPARATOR {
 			LIKE, EQUALS, LESS, LESS_OR_EQUAL, GREATER, NOT_LIKE, NOT_EQUALS, GREATER_OR_EQUAL, IN
@@ -112,11 +114,27 @@ public interface IQuery<T> {
 	public List<T> execute();
 	
 	/**
-	 * Execute the query and return a stream with the resulting objects.
+	 * Execute the query and return a stream with the resulting objects.<br>
+	 * While iterating the cursor the now detached elements do NOT load attributes marked as lazy.
+	 * If this behavior is required, use {@link #executeAsCursor(Map)}
 	 * 
 	 * @return
 	 */
 	public IQueryCursor<T> executeAsCursor();
+	
+	/**
+	 * Execute the query with the given queryHints and return a stream with the resulting
+	 * objects.<br>
+	 * If access to lazy loaded attributes is required, set QueryHints.MAINTAIN_CACHE to true.
+	 * (QueryHints.SCROLLABLE_CURSOR is always added, as mandatory for execution as cursor).<br>
+	 * Be sure to clear the cursor and release it, if maintaining cache, to prevent a memory leak.
+	 * 
+	 * @param queryHints
+	 *            if <code>null</code> behavior is the same as {@link #executeAsCursor()}
+	 * @return
+	 */
+	public IQueryCursor<T> executeAsCursor(@Nullable
+	Map<String, Object> queryHints);
 	
 	/**
 	 * Execute the query and return a single result. If more than one result

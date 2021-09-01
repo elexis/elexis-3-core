@@ -1,23 +1,30 @@
 package ch.elexis.core.model.service;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
@@ -27,6 +34,7 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.services.ISubQuery;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.utils.OsgiServiceUtil;
@@ -439,6 +447,39 @@ public class CoreQueryTest {
 			.forEachRemaining(p -> cursorList.add(p));
 		assertTrue(executeList.size() == cursorList.size() && executeList.containsAll(cursorList)
 			&& cursorList.containsAll(executeList));
+	}
+	
+	@Test
+	public void compareExecuteCursorQueryWithLazyBlob(){
+		IBlob blob = modelService.create(IBlob.class);
+		byte[] b = new byte[100];
+		new Random().nextBytes(b);
+		blob.setId("testblobid");
+		blob.setDate(LocalDate.now());
+		blob.setContent(b);
+		modelService.save(blob);
+		
+		List<IBlob> list = modelService.getQuery(IBlob.class).execute();
+		assertEquals(1, list.size());
+		IBlob iBlob = list.get(0);
+		byte[] content = iBlob.getContent();
+		assertArrayEquals(b, content);
+		
+		try (IQueryCursor<IBlob> cursor = modelService.getQuery(IBlob.class).executeAsCursor()) {
+			iBlob = cursor.next();
+			content = iBlob.getContent();
+			assertNull(content);
+		}
+		
+		try (IQueryCursor<IBlob> cursor = modelService.getQuery(IBlob.class).executeAsCursor(
+			Collections.singletonMap(QueryHints.MAINTAIN_CACHE, HintValues.TRUE))) {
+			iBlob = cursor.next();
+			content = iBlob.getContent();
+			assertArrayEquals(b, content);
+			cursor.clear();
+		}
+		
+		modelService.remove(blob);
 	}
 	
 	private void clearContacts(){

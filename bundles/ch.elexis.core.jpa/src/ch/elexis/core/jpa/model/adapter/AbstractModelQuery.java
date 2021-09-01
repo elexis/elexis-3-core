@@ -302,8 +302,17 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	
 	@Override
 	public IQueryCursor<T> executeAsCursor(){
+		return executeAsCursor(null);
+	}
+	
+	@Override
+	public IQueryCursor<T> executeAsCursor(Map<String, Object> queryHints){
 		TypedQuery<?> query = getTypedQuery();
-		query.setHint(QueryHints.MAINTAIN_CACHE, HintValues.FALSE);
+		if(queryHints == null) {
+			query.setHint(QueryHints.MAINTAIN_CACHE, HintValues.FALSE);
+		} else {
+			queryHints.forEach((hintName, value) -> query.setHint(hintName, value));
+		}
 		query.setHint(QueryHints.SCROLLABLE_CURSOR, HintValues.TRUE);
 		ScrollableCursor cursor = (ScrollableCursor) query.getSingleResult();
 		return new QueryCursor<T>(cursor, adapterFactory, clazz);
