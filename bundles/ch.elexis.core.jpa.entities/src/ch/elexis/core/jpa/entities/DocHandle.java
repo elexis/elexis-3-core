@@ -15,12 +15,15 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "CH_ELEXIS_OMNIVORE_DATA")
+@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 public class DocHandle extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
@@ -66,8 +69,9 @@ public class DocHandle extends AbstractEntityWithId implements EntityWithId, Ent
 	@Column(name = "DOCUMENT_STATUS")
 	protected int status;
 	
-	@Lob
+	@Column
 	@Basic(fetch = FetchType.LAZY)
+	@Lob
 	protected byte[] doc;
 
 	@Override
