@@ -116,6 +116,19 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		}
 	}
 	
+	@Inject
+	@Optional
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD)
+	Class<?> clazz){
+		if (IPatient.class.equals(clazz)) {
+			if (created) {
+				Display.getDefault().asyncExec(() -> {
+					reload();
+				});
+			}
+		}
+	}
+	
 	@Override
 	public void dispose() {
 		plcp.stopListening();
