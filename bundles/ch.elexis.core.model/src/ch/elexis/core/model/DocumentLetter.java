@@ -230,20 +230,24 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public long getContentLength(){
-		IVirtualFilesystemHandle vfsHandle = DocumentLetterUtil.getExternalHandleIfApplicable(this);
-		if (vfsHandle != null && vfsHandle.canRead()) {
-			try {
+		try {
+			IVirtualFilesystemHandle vfsHandle =
+				DocumentLetterUtil.getExternalHandleIfApplicable(this);
+			if (vfsHandle != null && vfsHandle.canRead()) {
 				return vfsHandle.getContentLenght();
-			} catch (IOException e) {}
-		}
+			}
+		} catch (IOException e) {}
+		
 		INativeQuery nativeQuery = CoreModelServiceHolder.get()
 			.getNativeQuery("SELECT LENGTH(INHALT) FROM HEAP WHERE ID = ?1");
 		Iterator<?> result = nativeQuery
 			.executeWithParameters(nativeQuery.getIndexedParameterMap(Integer.valueOf(1), getId()))
 			.iterator();
-		Object next = result.next();
-		if(next != null) {
-			return Long.parseLong(next.toString());
+		if (result.hasNext()) {
+			Object next = result.next();
+			if (next != null) {
+				return Long.parseLong(next.toString());
+			}
 		}
 		return -1;
 	}
