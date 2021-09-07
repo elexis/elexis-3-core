@@ -140,6 +140,7 @@ public class ElexisServerService implements IElexisServerService {
 	public IStatus postEvent(ElexisEvent elexisEvent){
 		if (eventService != null) {
 			try {
+				elexisEvent.putProperty("systemuuid", systemUuid.toString());
 				eventService.postEvent(elexisEvent);
 				return Status.OK_STATUS;
 			} catch (Exception e) {
@@ -149,6 +150,7 @@ public class ElexisServerService implements IElexisServerService {
 		return new Status(Status.ERROR, Bundle.ID, "No EventService available");
 	}
 	
+	@Override
 	public boolean deliversRemoteEvents(){
 		return !(eventService instanceof NoRemoteEventService);
 	}
