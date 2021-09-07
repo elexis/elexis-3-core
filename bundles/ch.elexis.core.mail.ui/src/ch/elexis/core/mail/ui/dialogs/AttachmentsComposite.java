@@ -11,6 +11,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -133,6 +134,11 @@ public class AttachmentsComposite extends Composite {
 			for (String string : documentsParts) {
 				Label label = new Label(attachmentsParent, SWT.NONE);
 				String tmpFile = AttachmentsUtil.toAttachment(string);
+				if (!tmpFile.endsWith(".pdf")) {
+					MessageDialog.openWarning(getShell(), "Warnung",
+						"Dokument " + FilenameUtils.getName(tmpFile)
+							+ " konnte nicht konvertiert werden, bzw. ist kein pdf.\nBitte prüfen ob ein editierbares Dokument versendet werden soll.");
+				}
 				label.setText(FilenameUtils.getName(tmpFile));
 				label.setData(string);
 				label.setToolTipText("Mit Doppelklick öffnen (keine Änderungen)");
