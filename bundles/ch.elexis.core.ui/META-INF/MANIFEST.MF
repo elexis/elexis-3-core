@@ -101,4 +101,5 @@ Service-Component: OSGI-INF/ch.elexis.core.ui.util.CoreUiUtil.xml,
  OSGI-INF/ch.elexis.core.ui.internal.CoreOperationAdvisor.xml,
  OSGI-INF/ch.elexis.core.ui.services.EncounterServiceHolder.xml,
  OSGI-INF/ch.elexis.core.ui.startup.StartupHandler.xml,
- OSGI-INF/ch.elexis.core.ui.locks.LockStatusDialogHandler.xml
+ OSGI-INF/ch.elexis.core.ui.locks.LockStatusDialogHandler.xml,
+ OSGI-INF/ch.elexis.core.ui.events.ElexisServerCreateEventForwarderEventHandler.xml
