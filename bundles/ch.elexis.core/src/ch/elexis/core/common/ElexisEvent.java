@@ -32,6 +32,10 @@ public class ElexisEvent {
 		this.properties = properties;
 	}
 	
+	public void putProperty(String key, String value) {
+		properties.put(key, value);
+	}
+	
 	/**
 	 * Create an ElexisEvent
 	 * 
