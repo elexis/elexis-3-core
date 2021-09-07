@@ -19,6 +19,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -27,6 +29,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "USER_")
 @EntityListeners(EntityWithIdListener.class)
 @XmlRootElement(name = "user")
+@Cache(expiry = 15000)
 @NamedQuery(name = "User.kontakt", query = "SELECT u FROM User u WHERE u.deleted = false AND u.kontakt = :kontakt")
 public class User extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
