@@ -21,4 +21,9 @@ public class TestComPortListener implements ComPortListener {
 	public List<String> getChunks(){
 		return chunks;
 	}
+	
+	@Override
+	public void closed(){
+		// ignore
+	}
 }
