@@ -2,15 +2,14 @@ package ch.elexis.core.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.LabPathologicEvaluator;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.IQuery;
@@ -192,17 +191,19 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 	
 	@Override
 	public ILabOrder getLabOrder(){
-		IQuery<ILabOrder> query = ModelUtil.getQuery(ILabOrder.class);
-		query.and(ModelPackage.Literals.ILAB_ORDER__RESULT, COMPARATOR.EQUALS, this);
-		List<ILabOrder> results = query.execute();
-		if (results.size() > 0) {
-			if (results.size() > 1) {
-				LoggerFactory.getLogger(getClass())
-					.warn("Multiple LabOrders for LabResult [{}] found, please check", getId());
-			}
-			return results.get(0);
+		return getLabOrder(false);
+	}
+	
+	@Override
+	public ILabOrder getLabOrder(boolean includeDeleted){
+		IQuery<ILabOrder> query;
+		if(includeDeleted) {
+			query = CoreModelServiceHolder.get().getQuery(ILabOrder.class, true);
+		} else {
+			query = ModelUtil.getQuery(ILabOrder.class);
 		}
-		return null;
+		query.and(ModelPackage.Literals.ILAB_ORDER__RESULT, COMPARATOR.EQUALS, this);
+		return query.executeSingleResult().orElse(null);
 	}
 	
 	/**

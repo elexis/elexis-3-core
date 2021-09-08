@@ -358,6 +358,18 @@ public interface ILabResult extends Deleteable, Identifiable, WithExtInfo {
 	void setPatient(IPatient value);
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Load the associated LabOrder entry. Returns null if not found or LabOrder marked as deleted.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 * @since 3.5
+	 */
+	ILabOrder getLabOrder();
+
+	/**
 	 * Returns the value of the '<em><b>Pathologic Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -409,11 +421,18 @@ public interface ILabResult extends Deleteable, Identifiable, WithExtInfo {
 	 */
 	void setOrigin(IContact value);
 
+
 	/**
-	 * @return the {@link ILabOrder} linked to this {@link ILabResult} or <code>null</code>
-	 * @since 3.5
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Value	Load the associated LabOrder entry. Returns null if not found.
+	 * @param includeDeleted Load the Laborder even if marked as deleted
+	 * <!-- end-model-doc -->
+	 * @model
+	 * @generated
 	 */
-	ILabOrder getLabOrder();
+	ILabOrder getLabOrder(boolean includeDeleted);
 	
 
 } // ILabResult
