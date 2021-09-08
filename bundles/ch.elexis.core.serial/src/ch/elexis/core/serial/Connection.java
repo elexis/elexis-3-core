@@ -37,7 +37,12 @@ public class Connection implements SerialPortDataListener {
 		 * @param conn
 		 * @param data
 		 */
-		public default void gotData(Connection conn, byte[] data){};
+		public default void gotData(Connection conn, byte[] data){}
+		
+		/**
+		 * Called after {@link Connection#close()} or {@link Connection#close(int)} is executed.
+		 */
+		public void closed();
 	}
 	
 	private ComPortListener listener;
@@ -331,6 +336,7 @@ public class Connection implements SerialPortDataListener {
 				}
 			}
 		}).start();
+		listener.closed();
 	}
 	
 	/**
