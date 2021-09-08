@@ -41,6 +41,8 @@ public class ILabServiceTest extends AbstractServiceTest {
 	static ILabItem _04_520;
 	static ILabItem _04_510_LDL_CALCULATED;
 	
+	static ILabResult _04_500_labResult;
+	
 	@BeforeClass
 	public static void before(){
 		
@@ -60,7 +62,7 @@ public class ILabServiceTest extends AbstractServiceTest {
 		_04_510_LDL_CALCULATED.setFormula(FORMULA);
 		coreModelService.save(_04_510_LDL_CALCULATED);
 		
-		new ILabResultBuilder(coreModelService, _04_500, getPatient()).result("5.33")
+		_04_500_labResult = new ILabResultBuilder(coreModelService, _04_500, getPatient()).result("5.33")
 			.buildLabOrder("1").buildAndSave();
 		new ILabResultBuilder(coreModelService, _04_501, getPatient()).result("1.82")
 			.buildLabOrder("1").buildAndSave();
@@ -118,6 +120,13 @@ public class ILabServiceTest extends AbstractServiceTest {
 		assertEquals(6, results.size());
 		
 		CoreModelServiceHolder.get().remove(labResult);
+	}
+	
+	@Test
+	public void getLabOrdersInSameOrderIdGroup(){
+		List<ILabOrder> labOrdersInSameOrderIdGroup =
+			labService.getLabOrdersInSameOrderIdGroup(_04_500_labResult.getLabOrder(), false);
+		assertEquals(3, labOrdersInSameOrderIdGroup.size());
 	}
 	
 }

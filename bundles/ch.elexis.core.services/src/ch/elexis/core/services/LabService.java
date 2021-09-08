@@ -83,26 +83,9 @@ public class LabService implements ILabService {
 	 * @return
 	 */
 	private List<ILabResult> findAllLabResultsForLabOrderIdGroup(ILabOrder labOrder){
-		List<ILabOrder> ordersWithResult = findAllLabOrdersInSameOrderIdGroupWithResults(labOrder);
+		List<ILabOrder> ordersWithResult = getLabOrdersInSameOrderIdGroup(labOrder, true);
 		return ordersWithResult.stream().map(owr -> owr.getResult())
 			.filter(result -> !result.isDeleted()).collect(Collectors.toList());
-	}
-	
-	/**
-	 * Find all {@link LabOrder} that are equal to the provided {@link LabOrder#getOrderid()} and
-	 * {@link LabOrder#getPatient()}
-	 * 
-	 * @param labOrder
-	 * @return
-	 */
-	private List<ILabOrder> findAllLabOrdersInSameOrderIdGroupWithResults(ILabOrder labOrder){
-		IQuery<ILabOrder> query = modelService.getQuery(ILabOrder.class);
-		query.and(ModelPackage.Literals.ILAB_ORDER__PATIENT, COMPARATOR.EQUALS,
-			labOrder.getPatient());
-		query.and(ModelPackage.Literals.ILAB_ORDER__ORDER_ID, COMPARATOR.EQUALS,
-			labOrder.getOrderId());
-		query.and(ModelPackage.Literals.ILAB_ORDER__RESULT, COMPARATOR.NOT_EQUALS, null);
-		return query.execute();
 	}
 	
 	private String evaluate(ILabItem labItem, IPatient patient, TimeTool date){
@@ -111,6 +94,20 @@ public class LabService implements ILabService {
 		qbe.and(ModelPackage.Literals.ILAB_RESULT__DATE, COMPARATOR.EQUALS, date.toLocalDate());
 		List<ILabResult> results = qbe.execute();
 		return evaluate(labItem, patient, results);
+	}
+	
+	@Override
+	public List<ILabOrder> getLabOrdersInSameOrderIdGroup(ILabOrder labOrder,
+		boolean nonEmptyResultsOnly){
+		IQuery<ILabOrder> query = modelService.getQuery(ILabOrder.class);
+		query.and(ModelPackage.Literals.ILAB_ORDER__PATIENT, COMPARATOR.EQUALS,
+			labOrder.getPatient());
+		query.and(ModelPackage.Literals.ILAB_ORDER__ORDER_ID, COMPARATOR.EQUALS,
+			labOrder.getOrderId());
+		if(nonEmptyResultsOnly) {
+			query.and(ModelPackage.Literals.ILAB_ORDER__RESULT, COMPARATOR.NOT_EQUALS, null);
+		}
+		return query.execute();
 	}
 	
 	private static final Pattern varPattern =
