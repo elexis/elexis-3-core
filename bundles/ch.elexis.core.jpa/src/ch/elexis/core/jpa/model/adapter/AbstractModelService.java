@@ -190,14 +190,17 @@ public abstract class AbstractModelService implements IModelService {
 				}
 				if (newlyCreatedObject) {
 					ElexisEvent createEvent = getCreateEvent(identifiable);
-					if (ContextServiceHolder.isPresent()) {
-						String userId = ContextServiceHolder.get().getActiveUser()
-							.map(Identifiable::getId).orElse(null);
-						if (userId != null) {
-							createEvent.getProperties().put(ElexisEventTopics.PROPKEY_USER, userId);
+					if (createEvent != null) {
+						if (ContextServiceHolder.isPresent()) {
+							String userId = ContextServiceHolder.get().getActiveUser()
+								.map(Identifiable::getId).orElse(null);
+							if (userId != null) {
+								createEvent.getProperties().put(ElexisEventTopics.PROPKEY_USER,
+									userId);
+							}
 						}
+						postElexisEvent(createEvent);
 					}
-					postElexisEvent(createEvent);
 					postEvent(ElexisEventTopics.EVENT_CREATE, identifiable);
 				}
 				return true;
@@ -232,7 +235,18 @@ public abstract class AbstractModelService implements IModelService {
 						EntityWithId merged = em.merge(dbObject);
 						mergedEntities.put(identifiable, merged);
 						if (newlyCreatedObject) {
-							createdEvents.add(getCreateEvent(identifiable));
+							ElexisEvent createEvent = getCreateEvent(identifiable);
+							if (createEvent != null) {
+								if (ContextServiceHolder.isPresent()) {
+									String userId = ContextServiceHolder.get().getActiveUser()
+										.map(Identifiable::getId).orElse(null);
+									if (userId != null) {
+										createEvent.getProperties()
+											.put(ElexisEventTopics.PROPKEY_USER, userId);
+									}
+								}
+								createdEvents.add(createEvent);
+							}
 							createdIdentifiables.add(identifiable);
 						}
 					}
