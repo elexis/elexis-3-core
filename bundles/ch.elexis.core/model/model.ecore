@@ -219,6 +219,21 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ILabResult" abstract="true" interface="true"
       eSuperTypes="#//Deleteable #//Identifiable #//WithExtInfo">
+    <eOperations name="getLabOrder" eType="#//ILabOrder">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Load the associated LabOrder entry. Returns null if not found or LabOrder marked as deleted."/>
+      </eAnnotations>
+    </eOperations>
+    <eOperations name="getLabOrder" eType="#//ILabOrder">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Value&#x9;Load the associated LabOrder entry. Returns null if not found."/>
+      </eAnnotations>
+      <eParameters name="includeDeleted" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="Load the Laborder even if marked as deleted"/>
+        </eAnnotations>
+      </eParameters>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="result" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceMale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

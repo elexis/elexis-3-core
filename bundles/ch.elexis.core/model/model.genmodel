@@ -170,6 +170,10 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ILabResult/origin"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ILabResult/item"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ILabResult/patient"/>
+      <genOperations ecoreOperation="model.ecore#//ILabResult/getLabOrder"/>
+      <genOperations ecoreOperation="model.ecore#//ILabResult/getLabOrder.1">
+        <genParameters ecoreParameter="model.ecore#//ILabResult/getLabOrder.1/includeDeleted"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILabOrder">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ILabOrder/result"/>
