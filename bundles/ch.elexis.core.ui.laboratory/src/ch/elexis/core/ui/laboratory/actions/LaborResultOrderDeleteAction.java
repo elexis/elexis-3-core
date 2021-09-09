@@ -1,9 +1,11 @@
 package ch.elexis.core.ui.laboratory.actions;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Shell;
@@ -37,11 +39,26 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 	
 	@Override
 	public void run(){
-				
+		
+		String[] dialogButtonLabels;
+		if (selectedOrdersOrResults.size() > 1) {
+			dialogButtonLabels = new String[] {
+				IDialogConstants.YES_LABEL, IDialogConstants.YES_TO_ALL_LABEL,
+				IDialogConstants.NO_LABEL, IDialogConstants.NO_TO_ALL_LABEL
+			};
+		} else {
+			dialogButtonLabels = new String[] {
+				IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL
+			};
+		}
+		
+		Boolean persistedDelete = null;
+		
 		for (Object object : selectedOrdersOrResults) {
 			
 			LabResult result;
 			LabOrder order;
+			Boolean delete = null;
 			
 			if (object instanceof LabOrder) {
 				order = (LabOrder) object;
@@ -58,11 +75,30 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 					+ object.getClass());
 			}
 			
-			boolean delete = MessageDialog.openConfirm(shell, "Resultat/Verordnung entfernen",
-				"Soll das Resultat [" + result
-					+ "] sowie die zugeh. Verordnung wirklich entfernt werden?");
+			if (persistedDelete == null) {
+				final MessageDialog dialog =
+					new MessageDialog(shell, "Resultat/Verordnung entfernen", null,
+						"Soll das Resultat [" + result
+							+ "] sowie die zugeh. Verordnung wirklich entfernt werden?",
+						MessageDialog.CONFIRM, dialogButtonLabels, dialogButtonLabels.length);
+				int open = dialog.open();
+				if (dialogButtonLabels.length == 2) {
+					delete = (open == 0);
+				} else {
+					if (open == 0) {
+						delete = true;
+					} else if (open == 1) {
+						persistedDelete = true;
+					} else if (open == 2) {
+						delete = false;
+					} else if (open == 3) {
+						persistedDelete = false;
+					}
+				}
+			}
 			
-			if (delete) {
+			if (Objects.equals(Boolean.TRUE, delete)
+				|| Objects.equals(Boolean.TRUE, persistedDelete)) {
 				AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
 					@Override
 					public void lockFailed(){
