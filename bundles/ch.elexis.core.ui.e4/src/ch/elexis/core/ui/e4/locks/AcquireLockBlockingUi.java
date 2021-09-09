@@ -11,12 +11,19 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
+import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.services.holder.LocalLockServiceHolder;
 
 public class AcquireLockBlockingUi {
 	private static Logger logger = LoggerFactory.getLogger(AcquireLockBlockingUi.class);
 	
 	public static void aquireAndRun(Identifiable identifiable, ILockHandler handler){
+		if (ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE) {
+			handler.lockAcquired();
+			return;
+		}
+		
 		Display display = Display.getDefault();
 		display.syncExec(new Runnable() {
 			
@@ -59,6 +66,7 @@ public class AcquireLockBlockingUi {
 						}
 					});
 					monitor.beginTask("Releasing lock ...", IProgressMonitor.UNKNOWN);
+					LocalLockServiceHolder.get().releaseLock(result.getLockInfo());
 					monitor.done();
 				} else {
 					display.syncExec(new Runnable() {
