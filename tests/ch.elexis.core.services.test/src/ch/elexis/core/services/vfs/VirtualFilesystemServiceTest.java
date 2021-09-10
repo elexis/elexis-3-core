@@ -56,4 +56,22 @@ public class VirtualFilesystemServiceTest {
 			assertEquals("C:/Windows/Test", hidePasswordInUrlString);
 	}
 	
+	@Test
+	public void parseHandlingWithSpaces() throws IOException {
+		IVirtualFilesystemHandle dirWithSpace = service.of("C:\\Users\\mad\\Documents\\Arbeit\\Testing\\Omnivore\\Abstand mit\\");
+		URL url = dirWithSpace.toURL();
+		assertEquals(new URL("file://C:/Users/mad/Documents/Arbeit/Testing/Omnivore/Abstand%20mit/"), url);
+		IVirtualFilesystemHandle dirWithSpaceSubdir = dirWithSpace.subDir("1");
+		url = dirWithSpaceSubdir.toURL();
+		assertEquals(new URL("file://C:/Users/mad/Documents/Arbeit/Testing/Omnivore/Abstand%20mit/1/"), url);
+	
+		// multiple spaces
+		dirWithSpace = service.of("C:\\Users\\mad\\Documents\\Arbeit\\Testing\\Omni  vore\\Abstand mit\\");
+		url = dirWithSpace.toURL();
+		assertEquals(new URL("file://C:/Users/mad/Documents/Arbeit/Testing/Omni%20%20vore/Abstand%20mit/"), url);
+		dirWithSpaceSubdir = dirWithSpace.subDir("1");
+		url = dirWithSpaceSubdir.toURL();
+		assertEquals(new URL("file://C:/Users/mad/Documents/Arbeit/Testing/Omni%20%20vore/Abstand%20mit/1/"), url);
+	}
+	
 }
