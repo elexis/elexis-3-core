@@ -828,6 +828,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 															billed.setExtInfo(Verrechnet.INDICATED,
 																"true");
 														}
+														CoreModelServiceHolder.get().save(billed);
 													}
 												});
 										}
