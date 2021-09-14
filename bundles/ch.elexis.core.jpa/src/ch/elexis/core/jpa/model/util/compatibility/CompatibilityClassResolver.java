@@ -14,15 +14,15 @@ public class CompatibilityClassResolver {
 	
 	public Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException{
 		if (desc.getName().equals("ch.elexis.data.Kontakt$statL")) {
-			return Thread.currentThread().getContextClassLoader()
+			return CompatibilityClassResolver.class.getClassLoader()
 				.loadClass("ch.elexis.core.jpa.model.util.compatibility.Kontakt$statL");
 		}
 		if (desc.getName().equals("ch.elexis.util.MFUList")) {
-			return Thread.currentThread().getContextClassLoader()
+			return CompatibilityClassResolver.class.getClassLoader()
 				.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList");
 		}
 		if (desc.getName().equals("ch.elexis.util.MFUList$Entry")) {
-			return Thread.currentThread().getContextClassLoader()
+			return CompatibilityClassResolver.class.getClassLoader()
 				.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList$Entry");
 		}
 		return null;
