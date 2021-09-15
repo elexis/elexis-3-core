@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -33,10 +34,14 @@ import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
+import ch.elexis.core.findings.templates.model.FindingsTemplate;
+import ch.elexis.core.findings.templates.model.InputData;
+import ch.elexis.core.findings.templates.model.InputDataGroup;
 import ch.elexis.core.findings.ui.action.DateAction;
 import ch.elexis.core.findings.ui.composites.CompositeGroup;
 import ch.elexis.core.findings.ui.composites.ICompositeSaveable;
 import ch.elexis.core.findings.ui.services.CodingServiceComponent;
+import ch.elexis.core.findings.ui.services.FindingsTemplateServiceComponent;
 import ch.elexis.core.findings.util.commands.FindingDeleteCommand;
 import ch.elexis.core.findings.util.commands.ILockingProvider;
 import ch.elexis.core.lock.types.LockResponse;
@@ -336,5 +341,46 @@ public class FindingsUiUtil {
 				.error("cannot execute command with id: " + commandId, e);
 		}
 		return null;
+	}
+	
+	public static boolean isCodingForGroup(ICoding c){
+		Optional<FindingsTemplate> template =
+			FindingsTemplateServiceComponent.getService().getFindingsTemplate(c);
+		if (template.isPresent()) {
+			return template.get().getInputData() instanceof InputDataGroup;
+		}
+		return false;
+	}
+	
+	public static List<ICoding> getCodesOfGroup(ICoding iCoding){
+		Optional<FindingsTemplate> template =
+			FindingsTemplateServiceComponent.getService().getFindingsTemplate(iCoding);
+		if (template.isPresent()) {
+			List<ICoding> ret = new ArrayList<>();
+			InputData inputData = template.get().getInputData();
+			if (inputData instanceof InputDataGroup) {
+				ret.addAll(getCodesOfGroup((InputDataGroup) inputData));
+			} else {
+				ret.add(iCoding);
+			}
+			return ret;
+		}
+		return Collections.emptyList();
+	}
+	
+	private static List<ICoding> getCodesOfGroup(InputDataGroup inputData){
+		List<ICoding> ret = new ArrayList<>();
+		EList<FindingsTemplate> subTemplates = inputData.getFindingsTemplates();
+		for (FindingsTemplate findingsTemplate : subTemplates) {
+			if (findingsTemplate.getInputData() instanceof InputDataGroup) {
+				ret.addAll(getCodesOfGroup((InputDataGroup) findingsTemplate.getInputData()));
+			} else {
+				CodingServiceComponent.getService()
+					.getCode(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem(),
+						findingsTemplate.getTitle())
+					.ifPresent(c -> ret.add(c));
+			}
+		}
+		return ret;
 	}
 }
