@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.views;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -229,6 +230,9 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 	private void updateCodingsSelection(StructuredSelection selection){
 		@SuppressWarnings("unchecked")
 		List<ICoding> shownCodings = (List<ICoding>) selection.toList();
+		// convert groups to contents
+		shownCodings = expandGroups(shownCodings);
+		
 		shownCodings.sort(new Comparator<ICoding>() {
 			
 			@Override
@@ -244,6 +248,23 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 		});
 		dataProvider.setShownCodings(shownCodings);
 		natTable.refresh(true);
+	}
+	
+	private List<ICoding> expandGroups(List<ICoding> codings){
+		List<ICoding> ret = new ArrayList<>();
+		for (ICoding iCoding : codings) {
+			if (FindingsUiUtil.isCodingForGroup(iCoding)) {
+				List<ICoding> codesOfGroup = FindingsUiUtil.getCodesOfGroup(iCoding);
+				for (ICoding codeOfGroup : codesOfGroup) {
+					if (!ret.contains(codeOfGroup)) {
+						ret.add(codeOfGroup);
+					}
+				}
+			} else {
+				ret.add(iCoding);
+			}
+		}
+		return ret;
 	}
 	
 	public void refresh(){
