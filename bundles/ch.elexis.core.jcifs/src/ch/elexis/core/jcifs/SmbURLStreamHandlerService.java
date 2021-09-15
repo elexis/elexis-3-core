@@ -56,6 +56,7 @@ public class SmbURLStreamHandlerService extends AbstractURLStreamHandlerService 
 	}
 	
 	private String replaceEach(String externalForm) throws UnsupportedEncodingException{
+		externalForm = externalForm.replaceAll("%25",  "%");
 		return URLDecoder.decode(externalForm, "UTF-8");
 	}
 	
