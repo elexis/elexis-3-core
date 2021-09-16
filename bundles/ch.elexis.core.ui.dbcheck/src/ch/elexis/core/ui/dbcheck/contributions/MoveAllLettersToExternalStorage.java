@@ -33,7 +33,7 @@ public class MoveAllLettersToExternalStorage extends ExternalMaintenance {
 			while (letters.hasNext()) {
 				IDocumentLetter letter = letters.next();
 				try {
-					boolean ok = exportToExtern(letter);
+					boolean ok = exportToExtern(letter, result);
 					if (ok) {
 						okCount++;
 					} else {
@@ -60,24 +60,32 @@ public class MoveAllLettersToExternalStorage extends ExternalMaintenance {
 	/**
 	 * Try to save the {@link IDocumentLetter} on external storage. Extern file configuration has to
 	 * be valid.
+	 * @param result 
 	 * 
 	 * @param brief
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean exportToExtern(IDocumentLetter letter) throws IOException{
+	public boolean exportToExtern(IDocumentLetter letter, StringBuilder result) throws IOException{
 		IVirtualFilesystemHandle externalHandle =
 			DocumentLetterUtil.getExternalHandleIfApplicable(letter);
 		if (externalHandle != null && externalHandle.exists() && externalHandle.canRead()) {
 			return true;
 		} else {
-			byte[] content;
-			try (InputStream is = letter.getContent()) {
-				content = IOUtils.toByteArray(is);
+			byte[] content = null;
+			try (InputStream letterInputStream = letter.getContent()) {
+				if (letterInputStream != null) {
+					content = IOUtils.toByteArray(letterInputStream);
+				} else {
+					result.append("[" + letter.getId() + "] content is null\n");
+				}
 			}
-			try (InputStream is = new ByteArrayInputStream(content)) {
-				letter.setContent(is);
+			if (content != null) {
+				try (InputStream is = new ByteArrayInputStream(content)) {
+					letter.setContent(is);
+				}
 			}
+			
 			return true;
 		}
 	}
