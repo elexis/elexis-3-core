@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.Behandlung;
 import ch.elexis.core.jpa.entities.Brief;
+import ch.elexis.core.jpa.entities.Heap;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.util.DocumentLetterUtil;
@@ -222,8 +223,12 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 		}
 		
 		// read from heap content
-		if (getEntity().getContent() != null) {
-			return new ByteArrayInputStream(getEntity().getContent().getInhalt());
+		Heap content = getEntity().getContent();
+		if (content != null) {
+			byte[] inhalt = content.getInhalt();
+			if (inhalt != null) {
+				return new ByteArrayInputStream(inhalt);
+			}
 		}
 		return null;
 	}
