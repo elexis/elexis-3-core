@@ -94,7 +94,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public void setCreated(Date value){
-		getEntityMarkDirty().setCreationDate(toLocalDate(value));
+		getEntityMarkDirty().setCreationDate(TimeUtil.toLocalDateTime(value));
 	}
 	
 	@Override
