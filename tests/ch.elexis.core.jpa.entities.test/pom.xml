@@ -271,7 +271,7 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>javax.servlet</artifactId>
+							<artifactId>jakarta.servlet-api</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
