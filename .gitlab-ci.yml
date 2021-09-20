@@ -1,6 +1,6 @@
 # Build script used by gitlab.medelexis.ch
 variables:
-   ORIGIN_BRANCH: "target-2021-03-java11" 
+   ORIGIN_BRANCH: "target-2021-06-java11" 
 
 stages:
     - build
