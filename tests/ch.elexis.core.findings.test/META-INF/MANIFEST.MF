@@ -9,6 +9,8 @@ Require-Bundle: ch.elexis.core.data;bundle-version="3.9.0",
  ch.elexis.core.model;bundle-version="3.9.0",
  ch.elexis.core.findings;bundle-version="3.9.0",
  ch.elexis.core.coding;bundle-version="3.9.0",
+ ch.elexis.core.findings.fhir.model;bundle-version="3.9.0",
+ ch.elexis.core.hapi.fhir;bundle-version="4.1.0",
  org.junit
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.commons.io;version="2.4.0"
