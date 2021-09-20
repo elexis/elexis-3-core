@@ -477,6 +477,11 @@
 							<autoStart>true</autoStart>
 						</bundle>
 						<bundle>
+							<id>org.eclipse.equinox.event</id>
+							<level>1</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<bundle>
 							<id>org.eclipse.core.runtime</id>
 							<level>4</level>
 							<autoStart>true</autoStart>
