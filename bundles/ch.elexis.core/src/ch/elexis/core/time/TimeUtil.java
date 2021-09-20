@@ -74,7 +74,7 @@ public class TimeUtil {
 		return formatSafe(toLocalDateTime(new Date(lastUpdate)));
 	}
 	
-	public static @Nullable LocalDate toLocalDate(Date date){
+	public static @Nullable LocalDate toLocalDate(@Nullable Date date){
 		if (date == null) {
 			return null;
 		}
@@ -83,7 +83,7 @@ public class TimeUtil {
 		return gc.toZonedDateTime().toLocalDate();
 	}
 	
-	public static LocalDateTime toLocalDateTime(Date date){
+	public static @Nullable LocalDateTime toLocalDateTime(@Nullable Date date){
 		if (date == null) {
 			return null;
 		}
