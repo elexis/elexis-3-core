@@ -12,8 +12,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.locks.AcquireLockUi;
@@ -44,22 +46,28 @@ public class DeleteHandler extends AbstractHandler {
 				IStructuredSelection strucSelection = (IStructuredSelection) selection;
 				Iterator<MedicationTableViewerItem> selectionList = strucSelection.iterator();
 				while (selectionList.hasNext()) {
-					MedicationTableViewerItem item = selectionList.next();
-					IPrescription prescription = item.getPrescription();
-					AcquireLockUi.aquireAndRun(prescription, new ILockHandler() {
+					
+					boolean hasRight = AccessControlServiceHolder.get().request(AccessControlDefaults.DELETE_MEDICATION);
+					if(hasRight) {
 						
-						@Override
-						public void lockFailed(){
-							// do nothing
-						}
+						MedicationTableViewerItem item = selectionList.next();
+						IPrescription prescription = item.getPrescription();
+						AcquireLockUi.aquireAndRun(prescription, new ILockHandler() {
+							
+							@Override
+							public void lockFailed(){
+								// do nothing
+							}
+							
+							@Override
+							public void lockAcquired(){
+								CoreModelServiceHolder.get().delete(prescription);
+								ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+									prescription);
+							}
+						});
 						
-						@Override
-						public void lockAcquired(){
-							CoreModelServiceHolder.get().remove(prescription);
-							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
-								prescription);
-						}
-					});
+					}
 				}
 			}
 		}
