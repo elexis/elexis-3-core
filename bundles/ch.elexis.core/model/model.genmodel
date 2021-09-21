@@ -660,7 +660,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/type"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/durationMinutes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/schedule"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IAppointment/createdBy"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/subjectOrPatient"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/priority"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/treatmentReason"/>
@@ -672,6 +671,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/lastEdit"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/stateHistory"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/recurring"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/createdBy"/>
       <genOperations ecoreOperation="model.ecore#//IAppointment/getContact"/>
       <genOperations ecoreOperation="model.ecore#//IAppointment/getStateHistoryFormatted">
         <genParameters ecoreParameter="model.ecore#//IAppointment/getStateHistoryFormatted/formatPattern"/>

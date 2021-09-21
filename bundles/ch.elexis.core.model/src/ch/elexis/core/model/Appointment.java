@@ -129,13 +129,16 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	}
 	
 	@Override
-	public IUser getCreatedBy(){
-		return null;
+	public String getCreatedBy(){
+		return getEntity().getErstelltVon();
 	}
 	
 	@Override
-	public void setCreatedBy(IUser value){
-		// TODO Auto-generated method stub
+	public void setCreatedBy(String value){
+		if (value != null) {
+			value = StringUtils.abbreviate(value, 25);
+		}
+		getEntityMarkDirty().setErstelltVon(value);
 	}
 
 	@Override

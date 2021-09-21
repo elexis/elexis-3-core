@@ -6936,22 +6936,13 @@ public interface ModelPackage extends EPackage {
 	int IAPPOINTMENT__SCHEDULE = IPERIOD_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Created By</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IAPPOINTMENT__CREATED_BY = IPERIOD_FEATURE_COUNT + 5;
-
-	/**
 	 * The feature id for the '<em><b>Subject Or Patient</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__SUBJECT_OR_PATIENT = IPERIOD_FEATURE_COUNT + 6;
+	int IAPPOINTMENT__SUBJECT_OR_PATIENT = IPERIOD_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Priority</b></em>' attribute.
@@ -6960,7 +6951,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__PRIORITY = IPERIOD_FEATURE_COUNT + 7;
+	int IAPPOINTMENT__PRIORITY = IPERIOD_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Treatment Reason</b></em>' attribute.
@@ -6969,7 +6960,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__TREATMENT_REASON = IPERIOD_FEATURE_COUNT + 8;
+	int IAPPOINTMENT__TREATMENT_REASON = IPERIOD_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Case Type</b></em>' attribute.
@@ -6978,7 +6969,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__CASE_TYPE = IPERIOD_FEATURE_COUNT + 9;
+	int IAPPOINTMENT__CASE_TYPE = IPERIOD_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Insurance Type</b></em>' attribute.
@@ -6987,7 +6978,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__INSURANCE_TYPE = IPERIOD_FEATURE_COUNT + 10;
+	int IAPPOINTMENT__INSURANCE_TYPE = IPERIOD_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Linkgroup</b></em>' attribute.
@@ -6996,7 +6987,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__LINKGROUP = IPERIOD_FEATURE_COUNT + 11;
+	int IAPPOINTMENT__LINKGROUP = IPERIOD_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Extension</b></em>' attribute.
@@ -7005,7 +6996,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__EXTENSION = IPERIOD_FEATURE_COUNT + 12;
+	int IAPPOINTMENT__EXTENSION = IPERIOD_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Created</b></em>' attribute.
@@ -7014,7 +7005,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__CREATED = IPERIOD_FEATURE_COUNT + 13;
+	int IAPPOINTMENT__CREATED = IPERIOD_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Last Edit</b></em>' attribute.
@@ -7023,7 +7014,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__LAST_EDIT = IPERIOD_FEATURE_COUNT + 14;
+	int IAPPOINTMENT__LAST_EDIT = IPERIOD_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>State History</b></em>' attribute.
@@ -7032,7 +7023,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__STATE_HISTORY = IPERIOD_FEATURE_COUNT + 15;
+	int IAPPOINTMENT__STATE_HISTORY = IPERIOD_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Recurring</b></em>' attribute.
@@ -7041,7 +7032,16 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__RECURRING = IPERIOD_FEATURE_COUNT + 16;
+	int IAPPOINTMENT__RECURRING = IPERIOD_FEATURE_COUNT + 15;
+
+	/**
+	 * The feature id for the '<em><b>Created By</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__CREATED_BY = IPERIOD_FEATURE_COUNT + 16;
 
 	/**
 	 * The number of structural features of the '<em>IAppointment</em>' class.
@@ -7144,15 +7144,6 @@ public interface ModelPackage extends EPackage {
 	int IAPPOINTMENT_SERIES__SCHEDULE = IAPPOINTMENT__SCHEDULE;
 
 	/**
-	 * The feature id for the '<em><b>Created By</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IAPPOINTMENT_SERIES__CREATED_BY = IAPPOINTMENT__CREATED_BY;
-
-	/**
 	 * The feature id for the '<em><b>Subject Or Patient</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7250,6 +7241,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IAPPOINTMENT_SERIES__RECURRING = IAPPOINTMENT__RECURRING;
+
+	/**
+	 * The feature id for the '<em><b>Created By</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT_SERIES__CREATED_BY = IAPPOINTMENT__CREATED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Series Type</b></em>' attribute.
@@ -11913,15 +11913,15 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIAppointment_Schedule();
 
 	/**
-	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IAppointment#getCreatedBy <em>Created By</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getCreatedBy <em>Created By</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Created By</em>'.
+	 * @return the meta object for the attribute '<em>Created By</em>'.
 	 * @see ch.elexis.core.model.IAppointment#getCreatedBy()
 	 * @see #getIAppointment()
 	 * @generated
 	 */
-	EReference getIAppointment_CreatedBy();
+	EAttribute getIAppointment_CreatedBy();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getSubjectOrPatient <em>Subject Or Patient</em>}'.
@@ -15479,12 +15479,12 @@ public interface ModelPackage extends EPackage {
 		EAttribute IAPPOINTMENT__SCHEDULE = eINSTANCE.getIAppointment_Schedule();
 
 		/**
-		 * The meta object literal for the '<em><b>Created By</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Created By</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference IAPPOINTMENT__CREATED_BY = eINSTANCE.getIAppointment_CreatedBy();
+		EAttribute IAPPOINTMENT__CREATED_BY = eINSTANCE.getIAppointment_CreatedBy();
 
 		/**
 		 * The meta object literal for the '<em><b>Subject Or Patient</b></em>' attribute feature.

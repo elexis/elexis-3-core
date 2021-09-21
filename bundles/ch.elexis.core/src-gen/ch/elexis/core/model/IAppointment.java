@@ -24,7 +24,6 @@ package ch.elexis.core.model;
  *   <li>{@link ch.elexis.core.model.IAppointment#getType <em>Type</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getDurationMinutes <em>Duration Minutes</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getSchedule <em>Schedule</em>}</li>
- *   <li>{@link ch.elexis.core.model.IAppointment#getCreatedBy <em>Created By</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getSubjectOrPatient <em>Subject Or Patient</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getPriority <em>Priority</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getTreatmentReason <em>Treatment Reason</em>}</li>
@@ -36,6 +35,7 @@ package ch.elexis.core.model;
  *   <li>{@link ch.elexis.core.model.IAppointment#getLastEdit <em>Last Edit</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getStateHistory <em>State History</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#isRecurring <em>Recurring</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#getCreatedBy <em>Created By</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIAppointment()
@@ -164,30 +164,30 @@ public interface IAppointment extends IPeriod {
 	void setSchedule(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Created By</b></em>' reference.
+	 * Returns the value of the '<em><b>Created By</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Created By</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Created By</em>' reference.
-	 * @see #setCreatedBy(IUser)
+	 * @return the value of the '<em>Created By</em>' attribute.
+	 * @see #setCreatedBy(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_CreatedBy()
 	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='erstelltvon'"
 	 * @generated
 	 */
-	IUser getCreatedBy();
+	String getCreatedBy();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getCreatedBy <em>Created By</em>}' reference.
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getCreatedBy <em>Created By</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Created By</em>' reference.
+	 * @param value the new value of the '<em>Created By</em>' attribute.
 	 * @see #getCreatedBy()
 	 * @generated
 	 */
-	void setCreatedBy(IUser value);
+	void setCreatedBy(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Subject Or Patient</b></em>' attribute.

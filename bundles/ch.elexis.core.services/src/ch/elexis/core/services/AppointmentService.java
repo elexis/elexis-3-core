@@ -94,14 +94,12 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Override
 	public boolean delete(IAppointment appointment, boolean whole){
-		//@TODO checkLock is deprecated not needed ?
-		
 		// check if appointment isLinked
 		if (!StringTool.isNothing(appointment.getLinkgroup())) {
 			List<IAppointment> linked = getLinkedAppoinments(appointment);
 			if (whole) {
 				// delete whole series
-				iModelService.delete(linked.get(0));
+				iModelService.delete(linked);
 			} else {
 				if (appointment.getId().equals(appointment.getLinkgroup())) {
 					if (linked.size() > 1) {
@@ -112,8 +110,6 @@ public class AppointmentService implements IAppointmentService {
 						}
 						moveto.setSubjectOrPatient(appointment.getSubjectOrPatient());
 						moveto.setReason(appointment.getReason());
-						//TODO created by not working
-						//moveto.set(Termin.FLD_CREATOR, get(Termin.FLD_CREATOR));
 						moveto.setCreatedBy(appointment.getCreatedBy());
 						moveto.setExtension(appointment.getExtension());
 						iModelService.save(moveto);
@@ -288,7 +284,9 @@ public class AppointmentService implements IAppointmentService {
 		IAppointment appointment = CoreModelServiceHolder.get().create(IAppointment.class);
 		// set some default values
 		appointment.setSchedule(getAreas().get(0).getName());
-		appointment.setCreatedBy(ContextServiceHolder.get().getActiveUser().orElse(null));
+		ContextServiceHolder.get().getActiveUser().ifPresent(au -> {
+			appointment.setCreatedBy(au.getLabel());
+		});
 		LocalDate monday = LocalDate.now().with(DayOfWeek.MONDAY);
 		appointment.setStartTime(LocalDateTime.of(monday, LocalTime.of(8, 0, 0)));
 		appointment.setEndTime(LocalDateTime.of(monday, LocalTime.of(8, 30, 0)));
