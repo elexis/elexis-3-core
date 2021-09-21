@@ -76,6 +76,7 @@
       <import plugin="bcprov"/>
       <import plugin="org.junit"/>
       <import plugin="info.elexis.target.hapi.fhir" version="4.1.0" match="greaterOrEqual"/>
+      <import plugin="ch.elexis.core.serial"/>
    </requires>
 
    <plugin
