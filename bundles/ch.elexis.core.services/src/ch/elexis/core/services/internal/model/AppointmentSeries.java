@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
@@ -151,12 +150,12 @@ public class AppointmentSeries implements IAppointmentSeries {
 	}
 	
 	@Override
-	public IUser getCreatedBy(){
+	public String getCreatedBy(){
 		return appointment.getCreatedBy();
 	}
 	
 	@Override
-	public void setCreatedBy(IUser value){
+	public void setCreatedBy(String value){
 		appointment.setCreatedBy(value);
 	}
 	

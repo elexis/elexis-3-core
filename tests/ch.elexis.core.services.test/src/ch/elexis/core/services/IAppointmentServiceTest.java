@@ -1,12 +1,16 @@
 package ch.elexis.core.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,8 +21,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.model.IAppointment;
+import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.model.agenda.AreaType;
+import ch.elexis.core.model.agenda.EndingType;
+import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.AppointmentState;
@@ -110,8 +117,42 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		assertEquals(1, coreModelService.getQuery(IAppointment.class).execute().size());
 		appointmentService.delete(savedAppointment, false);
 		assertEquals(0, coreModelService.getQuery(IAppointment.class).execute().size());
+	}
+	
+	@Test
+	public void series(){
+		// create series
+		LocalDate previousMonday =
+			LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+		LocalDateTime seriesStart = previousMonday.atTime(10, 30);
+		LocalTime seriesEnd = LocalTime.of(11, 00);
 		
-		//@todo delete with linkgroup
+		IAppointmentSeries series = appointmentService.createAppointmentSeries();
+		series.setStartTime(seriesStart);
+		series.setSeriesEndTime(seriesEnd);
+		series.setReason("test");
+		
+		series.setSeriesType(SeriesType.WEEKLY);
+		series.setSeriesPatternString("1,246");
+		series.setEndingType(EndingType.AFTER_N_OCCURENCES);
+		series.setEndingPatternString("2");
+		List<IAppointment> appointments = appointmentService.saveAppointmentSeries(series);
+		assertNotNull(appointments);
+		assertEquals(6, appointments.size());
+		assertTrue(appointments.get(0).isRecurring() && appointments.get(3).isRecurring());
+		assertEquals("test", appointments.get(0).getReason());
+		assertEquals("test", appointments.get(3).getReason());
+		
+		// delete series, only first
+		appointmentService.delete(appointments.get(0), false);
+		assertTrue(appointments.get(0).isRecurring() && appointments.get(3).isRecurring());
+		assertTrue(appointments.get(0).isDeleted());
+		assertFalse(appointments.get(3).isDeleted());
+		// delete series, all		
+		appointmentService.delete(appointments.get(3), true);
+		assertTrue(appointments.get(2).isDeleted());
+		assertTrue(appointments.get(3).isDeleted());
+		assertTrue(appointments.get(4).isDeleted());
 	}
 	
 	@Test
