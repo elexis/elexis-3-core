@@ -365,15 +365,14 @@ public class Rechnungslauf implements IRunnableWithProgress {
 					ICoverage encounterCoverage = encounter.getCoverage();
 					List<Konsultation> matchingKons = new ArrayList<>();
 					
-					for (Konsultation k2 : kons) {
-						IEncounter encounter2 =
-							NoPoUtil.loadAsIdentifiable((Konsultation) k2, IEncounter.class).get();
-						ICoverage encounter2Coverage = encounter.getCoverage();
-						
-						if (encounterCoverage != null && encounter2Coverage != null
-							&& encounterCoverage.equals(encounter2Coverage)) {
-							matchingKons.add(k2);
-							for (IBilled vr : encounter2.getBilled()) {
+					List<IEncounter> encounters = encounterCoverage.getEncounters();
+					for (IEncounter sameCoverageEncounter : encounters) {
+						Konsultation sameCoverageKonsultation =
+							Konsultation.load(sameCoverageEncounter.getId());
+						int index = kons.indexOf(sameCoverageKonsultation);
+						if (index > -1) {
+							matchingKons.add(kons.get(index));
+							for (IBilled vr : sameCoverageEncounter.getBilled()) {
 								sum.addMoney(vr.getTotal());
 							}
 						}
