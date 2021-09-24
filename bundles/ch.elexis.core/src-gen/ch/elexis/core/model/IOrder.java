@@ -124,4 +124,12 @@ public interface IOrder extends Identifiable, Deleteable {
 	 */
 	IOrderEntry findOrderEntry(IStock stock, IArticle article);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	boolean isPartialDone();
+
 } // IOrder

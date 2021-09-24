@@ -539,6 +539,7 @@
         <genParameters ecoreParameter="model.ecore#//IOrder/findOrderEntry/stock"/>
         <genParameters ecoreParameter="model.ecore#//IOrder/findOrderEntry/article"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IOrder/isPartialDone"/>
     </genClasses>
     <genClasses ecoreClass="model.ecore#//IAddress">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAddress/street1"/>

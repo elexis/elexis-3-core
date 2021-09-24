@@ -840,6 +840,7 @@
       <eParameters name="stock" eType="#//IStock"/>
       <eParameters name="article" eType="#//IArticle"/>
     </eOperations>
+    <eOperations name="isPartialDone" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entries" upperBound="-1"
         eType="#//IOrderEntry"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timestamp" eType="ecore:EDataType types.ecore#//LocalDateTime"/>

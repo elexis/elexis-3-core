@@ -134,6 +134,9 @@ public class SelectBestellungDialog extends SelectionDialog {
 				if (order.isDone()) {
 					return "*";
 				} else {
+					if (order.isPartialDone()) {
+						return "/";
+					}
 					return "";
 				}
 			}

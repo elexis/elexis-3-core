@@ -6148,6 +6148,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, this.getIStock(), "stock", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIArticle(), "article", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		addEOperation(iOrderEClass, ecorePackage.getEBoolean(), "isPartialDone", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iAddressEClass, IAddress.class, "IAddress", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIAddress_Street1(), ecorePackage.getEString(), "street1", null, 0, 1, IAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAddress_Street2(), ecorePackage.getEString(), "street2", null, 0, 1, IAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
