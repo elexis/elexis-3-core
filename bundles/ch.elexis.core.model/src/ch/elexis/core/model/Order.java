@@ -131,4 +131,18 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		}
 		return true;
 	}
+	
+	@Override
+	public boolean isPartialDone(){
+		boolean foundDone = false;
+		boolean foundNotDone = false;
+		for (IOrderEntry iOrderEntry : getEntries()) {
+			if (iOrderEntry.getState() == OrderEntryState.DONE) {
+				foundDone = true;
+			} else {
+				foundNotDone = true;
+			}
+		}
+		return foundDone && foundNotDone;
+	}
 }
