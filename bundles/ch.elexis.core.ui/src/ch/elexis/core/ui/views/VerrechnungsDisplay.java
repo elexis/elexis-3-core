@@ -660,7 +660,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						} else {
 							// refresh with sorted billed list
 							CoreModelServiceHolder.get().refresh(actEncounter, true);
-							setEncounter(actEncounter);
 						}
 					} else if (object instanceof ICodeElementBlock) {
 						ICodeElementBlock block = (ICodeElementBlock) object;
@@ -677,6 +676,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 										notOkResults.add(message);
 									}
 								}
+							} else if (element instanceof IDiagnosis) {
+								actEncounter.addDiagnosis((IDiagnosis) element);
+								CoreModelServiceHolder.get().save(actEncounter);
 							}
 						}
 						if (!notOkResults.toString().isEmpty()) {
@@ -686,10 +688,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 							});
 						}
 						// refresh with sorted billed list
-						Display.getDefault().asyncExec(() -> {
-							CoreModelServiceHolder.get().refresh(actEncounter, true);
-							setEncounter(actEncounter);
-						});
+						CoreModelServiceHolder.get().refresh(actEncounter, true);
 						
 						List<ICodeElement> diff = block.getDiffToReferences(elements);
 						if (!diff.isEmpty()) {
@@ -709,6 +708,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						CoreModelServiceHolder.get().save(actEncounter);
 					}
 				}
+				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, actEncounter);
 			}
 		}
 		

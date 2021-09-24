@@ -7,6 +7,7 @@ import java.util.StringJoiner;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IBillable;
@@ -78,6 +79,7 @@ public class BlockMakro implements IKonsMakro {
 					"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
 						+ sb.toString());
 			}
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
 		}
 	}
 }
