@@ -21,6 +21,7 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.text.EditLocalDocumentUtil;
@@ -29,6 +30,7 @@ import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Konsultation;
+import ch.elexis.data.Kontakt;
 
 public class AUFZeugnis extends ViewPart implements ICallback, IActivationListener {
 	public static final String ID = "ch.elexis.AUFView"; //$NON-NLS-1$
@@ -60,9 +62,14 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 	}
 	
 	public void createAUZ(){
+		Kontakt adressat = null;
+		if (DocumentSelectDialog.getDontAskForAddresseeForThisTemplateName(TT_AUF_CERT)) {
+			// trick: just supply a dummy address for creating the doc
+			adressat = Kontakt.load("-1"); //$NON-NLS-1$
+		}
 		actBrief =
 			text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_AUF_CERT, Brief.AUZ, //$NON-NLS-1$
-				null, null);
+				adressat, null);
 		updateTextLock();
 		// text.getPlugin().setFormat(PageFormat.A5);
 		if (text.getPlugin().isDirectOutput()) {
