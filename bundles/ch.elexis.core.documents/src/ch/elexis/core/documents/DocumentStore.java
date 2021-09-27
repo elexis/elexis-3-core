@@ -52,6 +52,10 @@ public class DocumentStore {
 		services.remove(store.getId());
 	}
 	
+	public IDocumentStore getServiceById(String serviceId){
+		return services.get(serviceId);
+	}
+	
 	/**
 	 * Returns all documents from each registered store
 	 * 
