@@ -120,7 +120,6 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		// TODO move to model?
 		// TODO still required?
 		List<Object> values = new ArrayList<>();
-		values.add(labResult.getOrigin());
 		values.add(labResult.getItem());
 		values.add(labResult.getPatient());
 		
