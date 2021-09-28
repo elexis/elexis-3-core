@@ -100,6 +100,14 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createCodeElementAdapter();
 			}
 			@Override
+			public Adapter caseInputDataBoolean(InputDataBoolean object) {
+				return createInputDataBooleanAdapter();
+			}
+			@Override
+			public Adapter caseInputDataDate(InputDataDate object) {
+				return createInputDataDateAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -214,6 +222,34 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createCodeElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.findings.templates.model.InputDataBoolean <em>Input Data Boolean</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.findings.templates.model.InputDataBoolean
+	 * @generated
+	 */
+	public Adapter createInputDataBooleanAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.findings.templates.model.InputDataDate <em>Input Data Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.findings.templates.model.InputDataDate
+	 * @generated
+	 */
+	public Adapter createInputDataDateAdapter() {
 		return null;
 	}
 

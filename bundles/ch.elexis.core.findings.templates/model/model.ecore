@@ -22,6 +22,8 @@
     <eLiterals name="TEXT" value="100"/>
     <eLiterals name="GROUP" value="200" literal="GROUP"/>
     <eLiterals name="GROUP_COMPONENT" value="300" literal="GROUP_COMPONENT"/>
+    <eLiterals name="BOOLEAN" value="10"/>
+    <eLiterals name="DATE" value="20"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Type">
     <eLiterals name="OBSERVATION_VITAL" value="1" literal="OBSERVATION_VITAL"/>
@@ -59,5 +61,13 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="system" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputDataBoolean" eSuperTypes="#//InputData">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
+        changeable="false" defaultValueLiteral="BOOLEAN"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputDataDate" eSuperTypes="#//InputData">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
+        changeable="false" defaultValueLiteral="DATE"/>
   </eClassifiers>
 </ecore:EPackage>

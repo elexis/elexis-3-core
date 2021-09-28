@@ -22,9 +22,12 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
+import ch.elexis.core.findings.IObservation.ObservationType;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.ui.action.DateAction;
+import ch.elexis.core.findings.ui.composites.CompositeBoolean;
+import ch.elexis.core.findings.ui.composites.CompositeDate;
 import ch.elexis.core.findings.ui.composites.CompositeGroup;
 import ch.elexis.core.findings.ui.composites.CompositeTextUnit;
 import ch.elexis.core.findings.ui.composites.ICompositeSaveable;
@@ -83,7 +86,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			Collections.reverse(refChildrens);
 			List<ObservationComponent> compChildrens = item.getComponents();
 			if (refChildrens.isEmpty() && compChildrens.isEmpty()) {
-				current = new CompositeTextUnit((Composite) current, item, null);
+				current = createComposite((Composite) current, item, null);
 			} else {
 				if (!refChildrens.isEmpty()) {
 					current =
@@ -130,8 +133,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 					
 					for (ObservationComponent child : compChildrens) {
 						i++;
-						ICompositeSaveable childComposite =
-							new CompositeTextUnit(group, iFinding, child);
+						ICompositeSaveable childComposite = createComposite(group, iFinding, child);
 						current.getChildComponents().add(childComposite);
 						if (allUnitsSame) {
 							if (childComposite instanceof CompositeTextUnit) {
@@ -144,12 +146,31 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				}
 			}
 		} else {
-			current = new CompositeTextUnit((Composite) current, iFinding, null);
+			current = createComposite((Composite) current, iFinding, null);
 		}
 		
 		return current;
 	}
 	
+	
+	private ICompositeSaveable createComposite(Composite parent, IFinding iFinding,
+		ObservationComponent backboneComponent){
+		if (iFinding instanceof IObservation) {
+			ObservationType type = ((IObservation) iFinding).getObservationType();
+			switch (type) {
+			case NUMERIC:
+			case TEXT:
+				return new CompositeTextUnit(parent, iFinding, backboneComponent);
+			case BOOLEAN:
+				return new CompositeBoolean(parent, iFinding, backboneComponent);
+			case DATE:
+				return new CompositeDate(parent, iFinding, backboneComponent);
+			default:
+				throw new IllegalStateException("No composite for observation type [" + type + "]");
+			}
+		}
+		throw new IllegalStateException("No composite for finding [" + iFinding + "]");
+	}
 	
 	/**
 	 * Create contents of the button bar.

@@ -15,6 +15,7 @@ public class ObservationComponent {
 	private BigDecimal numericValue;
 	private String numericValueUnit;
 	private String stringValue;
+	private Boolean booleanValue;
 	private final String id;
 	private Map<String, String> extensions = new HashMap<>();
 	
@@ -71,6 +72,16 @@ public class ObservationComponent {
 	
 	public Optional<String> getStringValue(){
 		return Optional.ofNullable(stringValue);
+	}
+	
+	public Optional<Boolean> getBooleanValue(){
+		return Optional.ofNullable(booleanValue);
+	}
+	
+	public void setBooleanValue(Boolean booleanValue){
+		this.booleanValue = booleanValue;
+		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
+			ObservationType.BOOLEAN.name());
 	}
 	
 	public void setExtensions(Map<String, String> extensions){

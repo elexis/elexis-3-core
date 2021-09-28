@@ -12,6 +12,8 @@
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//DataType/TEXT"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//DataType/GROUP"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//DataType/GROUP_COMPONENT"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//DataType/BOOLEAN"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//DataType/DATE"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="model.ecore#//Type">
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//Type/OBSERVATION_VITAL"/>
@@ -54,6 +56,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//CodeElement/code"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//CodeElement/system"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//CodeElement/display"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//InputDataBoolean">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//InputDataBoolean/dataType"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//InputDataDate">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//InputDataDate/dataType"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

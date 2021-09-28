@@ -471,6 +471,80 @@ public interface ModelPackage extends EPackage {
 	int CODE_ELEMENT_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.impl.InputDataBooleanImpl <em>Input Data Boolean</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.findings.templates.model.impl.InputDataBooleanImpl
+	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getInputDataBoolean()
+	 * @generated
+	 */
+	int INPUT_DATA_BOOLEAN = 8;
+
+	/**
+	 * The feature id for the '<em><b>Data Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_BOOLEAN__DATA_TYPE = INPUT_DATA_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Input Data Boolean</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_BOOLEAN_FEATURE_COUNT = INPUT_DATA_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Input Data Boolean</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_BOOLEAN_OPERATION_COUNT = INPUT_DATA_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.impl.InputDataDateImpl <em>Input Data Date</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.findings.templates.model.impl.InputDataDateImpl
+	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getInputDataDate()
+	 * @generated
+	 */
+	int INPUT_DATA_DATE = 9;
+
+	/**
+	 * The feature id for the '<em><b>Data Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_DATE__DATA_TYPE = INPUT_DATA_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Input Data Date</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_DATE_FEATURE_COUNT = INPUT_DATA_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Input Data Date</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INPUT_DATA_DATE_OPERATION_COUNT = INPUT_DATA_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.DataType <em>Data Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -478,7 +552,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getDataType()
 	 * @generated
 	 */
-	int DATA_TYPE = 8;
+	int DATA_TYPE = 10;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.findings.templates.model.Type <em>Type</em>}' enum.
@@ -488,7 +562,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getType()
 	 * @generated
 	 */
-	int TYPE = 9;
+	int TYPE = 11;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.FindingsTemplates <em>Findings Templates</em>}'.
@@ -792,6 +866,48 @@ public interface ModelPackage extends EPackage {
 	EAttribute getCodeElement_Display();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.InputDataBoolean <em>Input Data Boolean</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Input Data Boolean</em>'.
+	 * @see ch.elexis.core.findings.templates.model.InputDataBoolean
+	 * @generated
+	 */
+	EClass getInputDataBoolean();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.InputDataBoolean#getDataType <em>Data Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Data Type</em>'.
+	 * @see ch.elexis.core.findings.templates.model.InputDataBoolean#getDataType()
+	 * @see #getInputDataBoolean()
+	 * @generated
+	 */
+	EAttribute getInputDataBoolean_DataType();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.InputDataDate <em>Input Data Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Input Data Date</em>'.
+	 * @see ch.elexis.core.findings.templates.model.InputDataDate
+	 * @generated
+	 */
+	EClass getInputDataDate();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.findings.templates.model.InputDataDate#getDataType <em>Data Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Data Type</em>'.
+	 * @see ch.elexis.core.findings.templates.model.InputDataDate#getDataType()
+	 * @see #getInputDataDate()
+	 * @generated
+	 */
+	EAttribute getInputDataDate_DataType();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.findings.templates.model.InputData <em>Input Data</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1081,6 +1197,42 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CODE_ELEMENT__DISPLAY = eINSTANCE.getCodeElement_Display();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.impl.InputDataBooleanImpl <em>Input Data Boolean</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.findings.templates.model.impl.InputDataBooleanImpl
+		 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getInputDataBoolean()
+		 * @generated
+		 */
+		EClass INPUT_DATA_BOOLEAN = eINSTANCE.getInputDataBoolean();
+
+		/**
+		 * The meta object literal for the '<em><b>Data Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INPUT_DATA_BOOLEAN__DATA_TYPE = eINSTANCE.getInputDataBoolean_DataType();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.impl.InputDataDateImpl <em>Input Data Date</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.findings.templates.model.impl.InputDataDateImpl
+		 * @see ch.elexis.core.findings.templates.model.impl.ModelPackageImpl#getInputDataDate()
+		 * @generated
+		 */
+		EClass INPUT_DATA_DATE = eINSTANCE.getInputDataDate();
+
+		/**
+		 * The meta object literal for the '<em><b>Data Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INPUT_DATA_DATE__DATA_TYPE = eINSTANCE.getInputDataDate_DataType();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.findings.templates.model.InputData <em>Input Data</em>}' class.
