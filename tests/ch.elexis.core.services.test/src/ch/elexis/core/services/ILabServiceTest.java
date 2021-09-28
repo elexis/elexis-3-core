@@ -103,6 +103,7 @@ public class ILabServiceTest extends AbstractServiceTest {
 		assertTrue(mapping.isPresent());
 		assertEquals("TCHO-P", mapping.get().getItemName());
 		
+		assertFalse(labService.getLabMappingByContactAndItem(null, _04_501).isPresent());
 	}
 	
 	@Test
