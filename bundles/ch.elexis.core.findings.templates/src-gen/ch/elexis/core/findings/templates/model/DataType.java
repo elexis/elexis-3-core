@@ -54,7 +54,23 @@ public enum DataType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	GROUP_COMPONENT(300, "GROUP_COMPONENT", "GROUP_COMPONENT");
+	GROUP_COMPONENT(300, "GROUP_COMPONENT", "GROUP_COMPONENT"), /**
+	 * The '<em><b>BOOLEAN</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #BOOLEAN_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	BOOLEAN(10, "BOOLEAN", "BOOLEAN"), /**
+	 * The '<em><b>DATE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #DATE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	DATE(20, "DATE", "DATE");
 
 	/**
 	 * The '<em><b>NUMERIC</b></em>' literal value.
@@ -117,6 +133,28 @@ public enum DataType implements Enumerator {
 	public static final int GROUP_COMPONENT_VALUE = 300;
 
 	/**
+	 * The '<em><b>BOOLEAN</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #BOOLEAN
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BOOLEAN_VALUE = 10;
+
+	/**
+	 * The '<em><b>DATE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #DATE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int DATE_VALUE = 20;
+
+	/**
 	 * An array of all the '<em><b>Data Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -128,6 +166,8 @@ public enum DataType implements Enumerator {
 			TEXT,
 			GROUP,
 			GROUP_COMPONENT,
+			BOOLEAN,
+			DATE,
 		};
 
 	/**
@@ -188,6 +228,8 @@ public enum DataType implements Enumerator {
 			case TEXT_VALUE: return TEXT;
 			case GROUP_VALUE: return GROUP;
 			case GROUP_COMPONENT_VALUE: return GROUP_COMPONENT;
+			case BOOLEAN_VALUE: return BOOLEAN;
+			case DATE_VALUE: return DATE;
 		}
 		return null;
 	}

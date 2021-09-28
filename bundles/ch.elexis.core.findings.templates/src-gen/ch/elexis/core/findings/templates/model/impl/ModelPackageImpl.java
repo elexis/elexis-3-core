@@ -7,6 +7,8 @@ import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.InputData;
+import ch.elexis.core.findings.templates.model.InputDataBoolean;
+import ch.elexis.core.findings.templates.model.InputDataDate;
 import ch.elexis.core.findings.templates.model.InputDataGroup;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.model.InputDataNumeric;
@@ -78,6 +80,20 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass codeElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass inputDataBooleanEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass inputDataDateEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -447,6 +463,46 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getInputDataBoolean() {
+		return inputDataBooleanEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getInputDataBoolean_DataType() {
+		return (EAttribute)inputDataBooleanEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getInputDataDate() {
+		return inputDataDateEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getInputDataDate_DataType() {
+		return (EAttribute)inputDataDateEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getInputData() {
 		return inputDataEClass;
 	}
@@ -537,6 +593,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(codeElementEClass, CODE_ELEMENT__SYSTEM);
 		createEAttribute(codeElementEClass, CODE_ELEMENT__DISPLAY);
 
+		inputDataBooleanEClass = createEClass(INPUT_DATA_BOOLEAN);
+		createEAttribute(inputDataBooleanEClass, INPUT_DATA_BOOLEAN__DATA_TYPE);
+
+		inputDataDateEClass = createEClass(INPUT_DATA_DATE);
+		createEAttribute(inputDataDateEClass, INPUT_DATA_DATE__DATA_TYPE);
+
 		// Create enums
 		dataTypeEEnum = createEEnum(DATA_TYPE);
 		typeEEnum = createEEnum(TYPE);
@@ -574,6 +636,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		inputDataTextEClass.getESuperTypes().add(this.getInputData());
 		inputDataGroupEClass.getESuperTypes().add(this.getInputData());
 		inputDataGroupComponentEClass.getESuperTypes().add(this.getInputData());
+		inputDataBooleanEClass.getESuperTypes().add(this.getInputData());
+		inputDataDateEClass.getESuperTypes().add(this.getInputData());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(findingsTemplatesEClass, FindingsTemplates.class, "FindingsTemplates", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -613,12 +677,20 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getCodeElement_System(), ecorePackage.getEString(), "system", null, 0, 1, CodeElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCodeElement_Display(), ecorePackage.getEString(), "display", null, 0, 1, CodeElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(inputDataBooleanEClass, InputDataBoolean.class, "InputDataBoolean", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getInputDataBoolean_DataType(), this.getDataType(), "dataType", "BOOLEAN", 0, 1, InputDataBoolean.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(inputDataDateEClass, InputDataDate.class, "InputDataDate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getInputDataDate_DataType(), this.getDataType(), "dataType", "DATE", 0, 1, InputDataDate.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		// Initialize enums and add enum literals
 		initEEnum(dataTypeEEnum, DataType.class, "DataType");
 		addEEnumLiteral(dataTypeEEnum, DataType.NUMERIC);
 		addEEnumLiteral(dataTypeEEnum, DataType.TEXT);
 		addEEnumLiteral(dataTypeEEnum, DataType.GROUP);
 		addEEnumLiteral(dataTypeEEnum, DataType.GROUP_COMPONENT);
+		addEEnumLiteral(dataTypeEEnum, DataType.BOOLEAN);
+		addEEnumLiteral(dataTypeEEnum, DataType.DATE);
 
 		initEEnum(typeEEnum, Type.class, "Type");
 		addEEnumLiteral(typeEEnum, Type.OBSERVATION_VITAL);

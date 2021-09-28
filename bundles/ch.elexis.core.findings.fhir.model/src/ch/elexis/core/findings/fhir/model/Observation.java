@@ -333,6 +333,24 @@ public class Observation
 	}
 	
 	@Override
+	public void setBooleanValue(Boolean value){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setBooleanValue((DomainResource) resource.get(), value);
+			saveResource(resource.get());
+		}
+	}
+	
+	@Override
+	public Optional<Boolean> getBooleanValue(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getBooleanValue((DomainResource) resource.get());
+		}
+		return Optional.empty();
+	}
+	
+	@Override
 	public Optional<String> getNumericValueUnit(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {

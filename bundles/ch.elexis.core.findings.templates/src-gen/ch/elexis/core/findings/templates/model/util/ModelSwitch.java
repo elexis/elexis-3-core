@@ -118,6 +118,20 @@ public class ModelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.INPUT_DATA_BOOLEAN: {
+				InputDataBoolean inputDataBoolean = (InputDataBoolean)theEObject;
+				T result = caseInputDataBoolean(inputDataBoolean);
+				if (result == null) result = caseInputData(inputDataBoolean);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.INPUT_DATA_DATE: {
+				InputDataDate inputDataDate = (InputDataDate)theEObject;
+				T result = caseInputDataDate(inputDataDate);
+				if (result == null) result = caseInputData(inputDataDate);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -224,6 +238,36 @@ public class ModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseCodeElement(CodeElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Input Data Boolean</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Input Data Boolean</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInputDataBoolean(InputDataBoolean object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Input Data Date</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Input Data Date</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInputDataDate(InputDataDate object) {
 		return null;
 	}
 

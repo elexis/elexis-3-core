@@ -44,6 +44,8 @@ import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.InputData;
+import ch.elexis.core.findings.templates.model.InputDataBoolean;
+import ch.elexis.core.findings.templates.model.InputDataDate;
 import ch.elexis.core.findings.templates.model.InputDataGroup;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.model.InputDataNumeric;
@@ -392,7 +394,12 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 			}
 		} else if (inputData instanceof InputDataText) {
 			iObservation.setObservationType(ObservationType.TEXT);
+		} else if (inputData instanceof InputDataBoolean) {
+			iObservation.setObservationType(ObservationType.BOOLEAN);
+		} else if (inputData instanceof InputDataDate) {
+			iObservation.setObservationType(ObservationType.DATE);
 		}
+		
 		return iObservation;
 	}
 	
@@ -502,6 +509,10 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 			return "Numerisch";
 		case TEXT:
 			return "Text";
+		case BOOLEAN:
+			return "Checkbox";
+		case DATE:
+			return "Datum";
 		default:
 			return "";
 		

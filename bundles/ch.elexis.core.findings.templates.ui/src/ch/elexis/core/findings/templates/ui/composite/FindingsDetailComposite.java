@@ -46,6 +46,8 @@ import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.InputData;
+import ch.elexis.core.findings.templates.model.InputDataBoolean;
+import ch.elexis.core.findings.templates.model.InputDataDate;
 import ch.elexis.core.findings.templates.model.InputDataGroup;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.model.InputDataNumeric;
@@ -488,6 +490,18 @@ public class FindingsDetailComposite extends Composite {
 					: ModelFactory.eINSTANCE.createInputDataText();
 			selection.setInputData(inputDataText);
 			break;
+		case BOOLEAN:
+			InputDataBoolean inputDataBoolean = selection.getInputData() instanceof InputDataBoolean
+					? (InputDataBoolean) selection.getInputData()
+					: ModelFactory.eINSTANCE.createInputDataBoolean();
+			selection.setInputData(inputDataBoolean);
+			break;
+		case DATE:
+			InputDataDate inputDataDate = selection.getInputData() instanceof InputDataDate
+					? (InputDataDate) selection.getInputData()
+					: ModelFactory.eINSTANCE.createInputDataDate();
+			selection.setInputData(inputDataDate);
+			break;
 		default:
 			break;
 		}
@@ -526,17 +540,19 @@ public class FindingsDetailComposite extends Composite {
 			comboType.setSelection(new StructuredSelection(selection.getType()));
 			if (selection.getInputData() instanceof InputDataNumeric) {
 				comboInputData.setSelection(new StructuredSelection(DataType.NUMERIC));
-				
 			} else if (selection.getInputData() instanceof InputDataText) {
 				comboInputData.setSelection(new StructuredSelection(DataType.TEXT));
-				
 			} else if (selection.getInputData() instanceof InputDataGroup) {
 				comboInputData.setSelection(new StructuredSelection(
 					((InputDataGroup) selection.getInputData()).getDataType()));
-			}
-			else if (selection.getInputData() instanceof InputDataGroupComponent) {
+			} else if (selection.getInputData() instanceof InputDataGroupComponent) {
 				comboInputData.setSelection(new StructuredSelection(
 					((InputDataGroupComponent) selection.getInputData()).getDataType()));
+			} else if (selection.getInputData() instanceof InputDataDate) {
+				comboInputData.setSelection(new StructuredSelection(DataType.DATE));
+			} else if (selection.getInputData() instanceof InputDataBoolean) {
+				comboInputData.setSelection(new StructuredSelection(DataType.BOOLEAN));
+				
 			}
 			
 			if (selection.getColor() != null && StringUtils.isNotBlank(selection.getColor())) {

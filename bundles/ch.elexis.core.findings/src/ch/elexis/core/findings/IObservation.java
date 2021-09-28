@@ -48,7 +48,7 @@ public interface IObservation extends IFinding {
 	}
 	
 	public enum ObservationType {
-			COMP, REF, NUMERIC, TEXT
+			COMP, REF, NUMERIC, TEXT, DATE, BOOLEAN
 	}
 	
 	public enum ObservationCode {
@@ -231,6 +231,20 @@ public interface IObservation extends IFinding {
 	 * @return
 	 */
 	public Optional<String> getStringValue();
+	
+	/**
+	 * Set the booleanValue of the observation.
+	 * 
+	 * @return
+	 */
+	public void setBooleanValue(Boolean value);
+	
+	/**
+	 * Get the booleanValue
+	 * 
+	 * @return
+	 */
+	public Optional<Boolean> getBooleanValue();
 	
 	/**
 	 * Get the Unit

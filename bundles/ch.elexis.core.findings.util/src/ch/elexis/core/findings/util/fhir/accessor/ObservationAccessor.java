@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.hl7.fhir.dstu3.model.BooleanType;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.DateTimeType;
@@ -267,6 +268,26 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 			(org.hl7.fhir.dstu3.model.Observation) resource;
 		if (fhirObservation.hasValueStringType()) {
 			StringType value = (StringType) fhirObservation.getValue();
+			if (value.getValue() != null) {
+				return Optional.of(value.getValue());
+			}
+		}
+		return Optional.empty();
+	}
+	
+	public void setBooleanValue(DomainResource resource, Boolean value){
+		org.hl7.fhir.dstu3.model.Observation fhirObservation =
+			(org.hl7.fhir.dstu3.model.Observation) resource;
+		BooleanType q = new BooleanType();
+		q.setValue(value);
+		fhirObservation.setValue(q);
+	}
+	
+	public Optional<Boolean> getBooleanValue(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Observation fhirObservation =
+			(org.hl7.fhir.dstu3.model.Observation) resource;
+		if (fhirObservation.hasValueBooleanType()) {
+			BooleanType value = (BooleanType) fhirObservation.getValue();
 			if (value.getValue() != null) {
 				return Optional.of(value.getValue());
 			}
