@@ -156,7 +156,7 @@ public class StockService implements IStockService {
 		
 		IStockEntry se =
 			findPreferredStockEntryForArticle(StoreToStringServiceHolder.getStoreToString(article),
-				null);
+				mandatorId);
 		if (se == null) {
 			return new Status(Status.WARNING, "ch.elexis.core.services",
 				"No stock entry for article found");
