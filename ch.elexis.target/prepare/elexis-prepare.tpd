@@ -1,16 +1,6 @@
 target "Elexis" with source allEnvironments
 
-// temporary test
-//location "https://dl.maketechnology.io/chromium-swt/rls/repository" {
-//	org.eclipse.swt.chromium.feature.feature.group
-//}
-
-// temporary test
-//location "https://dl.maketechnology.io/chromium-cef/rls/repository" {
-//	com.make.chromium.cef.feature.feature.group
-//}
-
-location "https://dl.equoplatform.com/chromium-swt-ee/medelexis/p2/80" {
+location "https://download.medelexis.ch/p2/chromium-swt-ee/" {
 	com.equo.chromium.feature.feature.group lazy
 	com.equo.chromium.cef.feature.feature.group lazy
 }
