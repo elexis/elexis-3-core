@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
@@ -165,30 +166,37 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 			for (String req : reqs.split(";")) { //$NON-NLS-1$
 				String localReq = ""; //$NON-NLS-1$
 				String[] r = req.split(":"); //$NON-NLS-1$
-				if ((r[1].equalsIgnoreCase("X")) && (r.length > 2)) { //$NON-NLS-1$
-					// *** support for additional field types (checkboxes with
-					// multiple items are
-					// special)
-					String[] items = r[2].split("\t"); //$NON-NLS-1$
-					if (items.length > 1) {
-						for (int rIx = 0; rIx < items.length; rIx++) {
-							localReq = getInfoString(r[0] + "_" + items[rIx]); //$NON-NLS-1$
-							if (StringTool.isNothing(localReq)) {
-								return false;
+				if (r != null && r.length > 1) {
+					if ((r[1].equalsIgnoreCase("X")) && (r.length > 2)) { //$NON-NLS-1$
+						// *** support for additional field types (checkboxes with
+						// multiple items are
+						// special)
+						String[] items = r[2].split("\t"); //$NON-NLS-1$
+						if (items.length > 1) {
+							for (int rIx = 0; rIx < items.length; rIx++) {
+								localReq = getInfoString(r[0] + "_" + items[rIx]); //$NON-NLS-1$
+								if (StringTool.isNothing(localReq)) {
+									return false;
+								}
 							}
+						}
+					} else {
+						localReq = getInfoString(r[0]);
+						if (StringTool.isNothing(localReq)) {
+							return false;
+						}
+					}
+					if (r[1].equals("K")) { //$NON-NLS-1$
+						Kontakt k = Kontakt.load(localReq);
+						if (!k.isValid()) {
+							return false;
 						}
 					}
 				} else {
-					localReq = getInfoString(r[0]);
-					if (StringTool.isNothing(localReq)) {
-						return false;
-					}
-				}
-				if (r[1].equals("K")) { //$NON-NLS-1$
-					Kontakt k = Kontakt.load(localReq);
-					if (!k.isValid()) {
-						return false;
-					}
+					LoggerFactory.getLogger(getClass())
+						.warn("Invalid requirements [" + reqs + "] on billing system ["
+							+ getAbrechnungsSystem()
+							+ "]");
 				}
 			}
 		}
