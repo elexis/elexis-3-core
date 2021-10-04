@@ -12,7 +12,6 @@
 
 package ch.elexis.core.application.advisors;
 
-import static ch.elexis.admin.AccessControlDefaults.AC_SHOWVIEW;
 import static ch.elexis.core.ui.actions.GlobalActions.fixLayoutAction;
 import static ch.elexis.core.ui.actions.GlobalActions.perspectiveMenu;
 import static ch.elexis.core.ui.actions.GlobalActions.resetPerspectiveAction;
@@ -55,10 +54,12 @@ import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.services.IAccessControlService;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -87,6 +88,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		super(configurer);
 	}
 	
+	@Override
 	protected void makeActions(final IWorkbenchWindow win){
 		// Creates the actions and registers them.
 		// Registering is needed to ensure that key bindings work.
@@ -155,18 +157,19 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 					if(id==null) {
 						continue;
 					}
+					IAccessControlService acl = AccessControlServiceHolder.get();
 					switch (id) {
 					case IWorkbenchCommandConstants.FILE_EXIT:
-						action.setEnabled(CoreHub.acl.request(AccessControlDefaults.AC_EXIT));
+						action.setEnabled(acl.request(AccessControlDefaults.AC_EXIT));
 						break;
 					case IWorkbenchCommandConstants.WINDOW_NEW_WINDOW:
-						action.setEnabled(CoreHub.acl.request(AccessControlDefaults.AC_NEWWINDOW));
+						action.setEnabled(acl.request(AccessControlDefaults.AC_NEWWINDOW));
 						break;
 					case IWorkbenchCommandConstants.HELP_ABOUT:
-						action.setEnabled(CoreHub.acl.request(AccessControlDefaults.AC_ABOUT));
+						action.setEnabled(acl.request(AccessControlDefaults.AC_ABOUT));
 						break;
 					case IWorkbenchCommandConstants.WINDOW_PREFERENCES:
-						action.setEnabled(CoreHub.acl.request(AccessControlDefaults.AC_PREFS));
+						action.setEnabled(acl.request(AccessControlDefaults.AC_PREFS));
 						break;
 					default:
 						break;
@@ -176,6 +179,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		}
 	};
 	
+	@Override
 	protected void fillMenuBar(IMenuManager menuBar){
 		
 		fileMenu =
@@ -233,7 +237,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 				IContributionItem[] items = manager.getItems();
 				for (IContributionItem iContributionItem : items) {
 					if( "viewsShortlist".equals(iContributionItem.getId())) {
-						iContributionItem.setVisible(CoreHub.acl.request(AC_SHOWVIEW));
+						iContributionItem.setVisible(AccessControlServiceHolder.get().request(AccessControlDefaults.AC_SHOWVIEW));
 					}
 				}
 			}
@@ -252,6 +256,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	 * @see org.eclipse.ui.application.ActionBarAdvisor#fillCoolBar(org.eclipse.jface
 	 * .action.ICoolBarManager )
 	 */
+	@Override
 	protected void fillCoolBar(ICoolBarManager coolBar){
 		ToolBarManager tbm = new ToolBarManager();
 		
@@ -352,10 +357,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		});
 		tbm.add(GlobalActions.printAdresse);
 		
-		coolBar.add(tbm);
 		if (CoreHub.localCfg.get(Preferences.SHOWTOOLBARITEMS, Boolean.toString(true))
 			.equalsIgnoreCase(Boolean.toString(true))) {
-			ToolBarManager tb2 = new ToolBarManager();
 			
 			List<IAction> l = new ArrayList<>();
 			for (IAction action : openPerspectiveActions) {
@@ -373,13 +376,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 				}
 			});
 			
-			// ci.getToolBarManager().add(new Separator());
-			for (IAction action : l) {
-				tb2.add(action);
+			if(!l.isEmpty()) {
+				tbm.add(new Separator());
 			}
-			coolBar.add(tb2);
+			
+			for (IAction action : l) {
+				tbm.add(action);
+			}
 		}
 		
+		coolBar.add(tbm);
 	}
 	
 	/**
@@ -413,6 +419,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			this.perspectiveDescriptor = perspectiveDescriptor;
 		}
 		
+		@Override
 		public void run(){
 			try {
 				IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
