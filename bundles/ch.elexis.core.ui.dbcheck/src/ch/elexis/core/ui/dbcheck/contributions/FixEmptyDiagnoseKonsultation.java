@@ -2,13 +2,19 @@ package ch.elexis.core.ui.dbcheck.contributions;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -44,14 +50,17 @@ public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 				
 				// add the diagnose if default diagnose is defined
 				if (diagnoseId != null && !diagnoseId.isEmpty()) {
-					IDiagnose diagnose = (IDiagnose) CoreHub.poFactory.createFromString(diagnoseId);
-					if (diagnose == null) {
-						diagnoseLabel = diagnoseId + " existiert nicht";
+					Optional<Identifiable> diagnose =
+						StoreToStringServiceHolder.get().loadFromString(diagnoseId);
+					if (diagnose.isPresent()) {
+						IEncounter encounter =
+							NoPoUtil.loadAsIdentifiable(k, IEncounter.class).get();
+						encounter.addDiagnosis((IDiagnosis) diagnose.get());
+						CoreModelServiceHolder.get().save(encounter);
+						diagnoseLabel = diagnose.get().getLabel();
 					} else {
-						k.addDiagnose(diagnose);
-						diagnoseLabel = diagnose.getLabel();
+						diagnoseLabel = diagnoseId + " existiert nicht";
 					}
-					
 				}
 				
 				// add to the map for output in the end
