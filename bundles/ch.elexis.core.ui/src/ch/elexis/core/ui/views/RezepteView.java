@@ -136,7 +136,9 @@ public class RezepteView extends ViewPart implements IRefreshable {
 	IPatient patient){
 		actPatient = patient;
 		Display.getDefault().asyncExec(() -> {
-			tv.setInput(Collections.emptyList());
+			if(CoreUiUtil.isActiveControl(tv.getControl())) {
+				tv.setInput(Collections.emptyList());
+			}
 			ContextServiceHolder.get().getRootContext().removeTyped(IRecipe.class);
 			if (patient != null) {
 				addLineAction.setEnabled(false);
@@ -349,6 +351,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 		getSite().getPage().removePartListener(udpateOnVisible);
 	}
 	
+	@Override
 	public void refresh(){
 		if (CoreUiUtil.isActiveControl(tv.getControl())) {
 			if(loader != null) {
