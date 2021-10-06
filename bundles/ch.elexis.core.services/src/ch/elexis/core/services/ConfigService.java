@@ -382,7 +382,7 @@ public class ConfigService implements IConfigService {
 			}
 		} else {
 			LoggerFactory.getLogger(getClass())
-				.warn("IContextService not available, returning defaultValue");
+				.warn("(getActiveUserContactAsMap) IContextService not available, returning null");
 		}
 		return null;
 	}
@@ -475,7 +475,7 @@ public class ConfigService implements IConfigService {
 				return get(activeMandator.get(), key, defaultValue, refreshCache);
 			}
 		} else {
-			LoggerFactory.getLogger(getClass()).warn("IContextService not available, returning defaultValue");
+			LoggerFactory.getLogger(getClass()).warn("(getActiveMandator) IContextService not available, returning defaultValue for [{}]", key);
 		}
 		return defaultValue;
 	}
@@ -509,7 +509,7 @@ public class ConfigService implements IConfigService {
 				return get(activeUser.get(), key, defaultValue, refreshCache);
 			}
 		} else {
-			LoggerFactory.getLogger(getClass()).warn("IContextService not available, returning defaultValue");
+			LoggerFactory.getLogger(getClass()).warn("(getActiveUserContact) IContextService not available, returning defaultValue for [{}]", key);
 		}
 		return defaultValue;
 	}
@@ -566,7 +566,7 @@ public class ConfigService implements IConfigService {
 			}
 		} else {
 			LoggerFactory.getLogger(getClass())
-				.warn("IContextService not available, returning defaultValue");
+				.warn("(getActiveUserContact) IContextService not available, returning defaultValue for [{}]", key);
 		}
 		return defaultValue;
 	}
@@ -580,7 +580,7 @@ public class ConfigService implements IConfigService {
 			}
 		} else {
 			LoggerFactory.getLogger(getClass())
-				.warn("IContextService not available, returning defaultValue");
+				.warn("(getActiveMandator) IContextService not available, returning defaultValue for [{}]", key);
 		}
 		return defaultValue;
 	}
