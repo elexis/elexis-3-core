@@ -52,7 +52,7 @@
 				<groupId>org.eclipse.tycho </groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
 				<configuration>
-					<includeAllDependencies>false</includeAllDependencies>
+					<includeAllDependencies>true</includeAllDependencies>
 					<skipArchive>false</skipArchive>
 					<profileProperties>
 						<macosx-bundled>true</macosx-bundled>
@@ -79,7 +79,7 @@
 				<configuration>
 					<products>
 						<product>
-              				<id>Elexis3</id> <!-- Name of final EXE/zip file -->
+              <id>Elexis3</id> <!-- Name of final EXE/zip file -->
 							<attachId>ElexisApp</attachId>
 							<rootFolder />
 							<rootFolders>
