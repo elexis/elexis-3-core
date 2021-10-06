@@ -135,6 +135,7 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 	
 	@Override
 	public ILabItem getItem(){
+		CoreModelServiceHolder.get().refresh(this);
 		return ModelUtil.getAdapter(getEntity().getItem(), ILabItem.class);
 	}
 	
@@ -176,6 +177,7 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 	
 	@Override
 	public IPatient getPatient(){
+		CoreModelServiceHolder.get().refresh(this);
 		return ModelUtil.getAdapter(getEntity().getPatient(), IPatient.class);
 	}
 	

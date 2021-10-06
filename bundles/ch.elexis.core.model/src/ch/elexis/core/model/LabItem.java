@@ -29,7 +29,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public String getReferenceMale(){
-		return getEntity().getReferenceMale();
+		return StringUtils.defaultString(getEntity().getReferenceMale());
 	}
 	
 	@Override
