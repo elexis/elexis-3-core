@@ -13,8 +13,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.test.AbstractTest;
 import ch.elexis.core.types.LabItemTyp;
 
@@ -73,6 +75,37 @@ public class LabResultTest extends AbstractTest {
 		assertEquals(result.getExtInfo("testInfo"), loadedResult.get().getExtInfo("testInfo"));
 		
 		coreModelService.remove(result);
+	}
+	
+	@Test
+	public void getReference(){
+		ILabItem item = coreModelService.create(ILabItem.class);
+		item.setCode("testItemRef");
+		item.setName("test item reference name");
+		item.setTyp(LabItemTyp.NUMERIC);
+		coreModelService.save(item);
+		assertEquals("", item.getReferenceMale());
+		assertEquals("", item.getReferenceFemale());
+		
+		ILabResult result = coreModelService.create(ILabResult.class);
+		result.setPatient(patient);
+		result.setItem(item);
+		result.setReferenceMale("<0.35");
+		result.setResult("3.26");
+		coreModelService.save(result);
+		
+		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+		// if item ref is empty ref of result is used
+		assertEquals("<0.35", result.getReferenceMale());
+		// test if item ref is used when set
+		item.setReferenceMale("<0.34");
+		coreModelService.save(item);
+		assertEquals("<0.34", result.getReferenceMale());
+		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
+		assertEquals("<0.35", result.getReferenceMale());
+		
+		coreModelService.remove(result);
+		coreModelService.remove(item);
 	}
 	
 	@Test
