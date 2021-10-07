@@ -10,7 +10,7 @@
 
 
 	<properties>
-		<elexis.target>2021-06-java11</elexis.target>
+		<elexis.target>2021-09-java11</elexis.target>
 
 		<tycho.version>2.5.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

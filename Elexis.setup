@@ -253,7 +253,7 @@
   <setupTask
       xsi:type="pde:TargetPlatformTask"
       id="elexis-target.ide.target"
-      name="Elexis Target IDE 2021-06-java11"/>
+      name="Elexis Target IDE 2021-09-java11"/>
   <project name="Medelexis"
       label="">
     <setupTask
