@@ -12,6 +12,7 @@ package ch.elexis.core.findings;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Optional;
@@ -245,6 +246,20 @@ public interface IObservation extends IFinding {
 	 * @return
 	 */
 	public Optional<Boolean> getBooleanValue();
+	
+	/**
+	 * Set the dateTimeValue of the observation.
+	 * 
+	 * @return
+	 */
+	public void setDateTimeValue(Date value);
+	
+	/**
+	 * Get the dateTimeValue
+	 * 
+	 * @return
+	 */
+	public Optional<Date> getDateTimeValue();
 	
 	/**
 	 * Get the Unit

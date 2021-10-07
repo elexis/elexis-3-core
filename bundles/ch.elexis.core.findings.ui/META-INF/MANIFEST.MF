@@ -22,7 +22,8 @@ Require-Bundle: ch.elexis.core.data,
  org.eclipse.core.databinding.beans,
  org.eclipse.core.runtime,
  ch.elexis.core.findings.templates,
- ch.elexis.core.ui.dbcheck
+ ch.elexis.core.ui.dbcheck,
+ org.eclipse.nebula.widgets.cdatetime
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.services.holder,
  ch.rgw.io,

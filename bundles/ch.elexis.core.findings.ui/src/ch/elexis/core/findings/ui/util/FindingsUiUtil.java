@@ -2,8 +2,10 @@ package ch.elexis.core.findings.ui.util;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -184,6 +186,16 @@ public class FindingsUiUtil {
 				} catch (NumberFormatException e) {
 					LoggerFactory.getLogger(FindingsUiUtil.class)
 						.warn("cannot save number illegal format", e);
+				}
+			} else if (ObservationType.BOOLEAN.equals(observationType)) {
+				if (StringUtils.isNotBlank(text)) {
+					iObservation.setBooleanValue(Boolean.valueOf(text));
+				}
+			} else if (ObservationType.DATE.equals(observationType)) {
+				if (StringUtils.isNotBlank(text)) {
+					LocalDateTime dateTime = LocalDateTime.parse(text);
+					iObservation.setDateTimeValue(
+						Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()));
 				}
 			}
 		}

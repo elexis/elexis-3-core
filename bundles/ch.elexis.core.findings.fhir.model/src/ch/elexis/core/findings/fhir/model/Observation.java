@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -346,6 +347,24 @@ public class Observation
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			return accessor.getBooleanValue((DomainResource) resource.get());
+		}
+		return Optional.empty();
+	}
+	
+	@Override
+	public void setDateTimeValue(Date value){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setDateTimeValue((DomainResource) resource.get(), value);
+			saveResource(resource.get());
+		}
+	}
+	
+	@Override
+	public Optional<Date> getDateTimeValue(){
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getDateTimeValue((DomainResource) resource.get());
 		}
 		return Optional.empty();
 	}

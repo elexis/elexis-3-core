@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,10 @@ public class FindingsTextUtil {
 				} else if (ObservationType.TEXT.equals(iObservation.getObservationType())) {
 					stringBuilder.append(getObservationText(iObservation, shouldSet));
 				} else if (ObservationType.NUMERIC.equals(iObservation.getObservationType())) {
+					stringBuilder.append(getObservationText(iObservation, shouldSet));
+				} else if (ObservationType.BOOLEAN.equals(iObservation.getObservationType())) {
+					stringBuilder.append(getObservationText(iObservation, shouldSet));
+				} else if (ObservationType.DATE.equals(iObservation.getObservationType())) {
 					stringBuilder.append(getObservationText(iObservation, shouldSet));
 				} else {
 					LoggerFactory.getLogger(FindingsTextUtil.class)
@@ -103,7 +108,6 @@ public class FindingsTextUtil {
 			if (observation.getComment().isPresent()) {
 				stringBuilder.append(" [" + observation.getComment().get() + "]");
 			}
-			
 		} else if (ObservationType.NUMERIC.equals(observation.getObservationType())) {
 			try {
 				stringBuilder.append(title);
@@ -118,6 +122,27 @@ public class FindingsTextUtil {
 				}
 			} catch (NumberFormatException e) {
 				LoggerFactory.getLogger(FindingsTextUtil.class).warn("number illegal format", e);
+			}
+		} else if (ObservationType.BOOLEAN.equals(observation.getObservationType())) {
+			stringBuilder.append(title);
+			stringBuilder.append(" ");
+			observation.getBooleanValue().ifPresent(value -> {
+				stringBuilder.append(value ? "Ja" : "Nein");
+			});
+			
+			if (observation.getComment().isPresent()) {
+				stringBuilder.append(" [" + observation.getComment().get() + "]");
+			}
+		} else if (ObservationType.DATE.equals(observation.getObservationType())) {
+			stringBuilder.append(title);
+			stringBuilder.append(" ");
+			observation.getDateTimeValue().ifPresent(value -> {
+				
+				stringBuilder.append(new SimpleDateFormat("dd.MM.yyyy").format(value));
+			});
+			
+			if (observation.getComment().isPresent()) {
+				stringBuilder.append(" [" + observation.getComment().get() + "]");
 			}
 		} else if (ObservationType.COMP.equals(observation.getObservationType())) {
 			stringBuilder.append(title + " ");
