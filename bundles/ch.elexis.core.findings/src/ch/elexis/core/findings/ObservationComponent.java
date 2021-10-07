@@ -2,6 +2,7 @@ package ch.elexis.core.findings;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ public class ObservationComponent {
 	private String numericValueUnit;
 	private String stringValue;
 	private Boolean booleanValue;
+	private Date dateTimeValue;
 	private final String id;
 	private Map<String, String> extensions = new HashMap<>();
 	
@@ -82,6 +84,16 @@ public class ObservationComponent {
 		this.booleanValue = booleanValue;
 		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
 			ObservationType.BOOLEAN.name());
+	}
+	
+	public Optional<Date> getDateTimeValue(){
+		return Optional.ofNullable(dateTimeValue);
+	}
+	
+	public void setDateTimeValue(Date dateTimeValue){
+		this.dateTimeValue = dateTimeValue;
+		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
+			ObservationType.DATE.name());
 	}
 	
 	public void setExtensions(Map<String, String> extensions){

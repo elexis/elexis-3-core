@@ -1,22 +1,23 @@
 package ch.elexis.core.findings.ui.composites;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.nebula.widgets.cdatetime.CDT;
+import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
@@ -27,14 +28,12 @@ import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.findings.util.ModelUtil;
-import ch.elexis.core.ui.util.SWTHelper;
 
 public class CompositeDate extends Composite implements ICompositeSaveable {
-	private Text fieldText;
 	private IFinding iFinding;
 	private ObservationComponent backboneComponent;
-	private Label lblUnit;
 	private Label lbl;
+	private CDateTime dateTime;
 	private List<Action> toolbarActions = new ArrayList<>();
 	
 	private ObservationType observationType;
@@ -52,36 +51,24 @@ public class CompositeDate extends Composite implements ICompositeSaveable {
 		
 		setLayout(gd);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		String unit = null;
-		String numeric = null;
 		List<ICoding> codings = null;
 		String title = null;
-		String textValue = null;
+		Date value = null;
 		
 		if (backboneComponent != null) {
 			
 			this.observationType = backboneComponent.getTypeFromExtension(ObservationType.class);
 			
-			if (ObservationType.TEXT.equals(observationType)) {
-				textValue = backboneComponent.getStringValue().orElse("");
-			} else if (ObservationType.NUMERIC.equals(observationType)) {
-				unit = backboneComponent.getNumericValueUnit().orElse("");
-				numeric = backboneComponent.getNumericValue().isPresent()
-						? backboneComponent.getNumericValue().get().toPlainString() : "";
-			}
+			value = backboneComponent.getDateTimeValue().orElse(new Date());
+			
 			codings = backboneComponent.getCoding();
 		} else if (iFinding instanceof IObservation) {
 			IObservation iObservation = (IObservation) iFinding;
 			
 			this.observationType = iObservation.getObservationType();
 			
-			if (ObservationType.TEXT.equals(iObservation.getObservationType())) {
-				textValue = iObservation.getStringValue().orElse("");
-			} else if (ObservationType.NUMERIC.equals(iObservation.getObservationType())) {
-				unit = iObservation.getNumericValueUnit().orElse("");
-				numeric = iObservation.getNumericValue().isPresent()
-						? iObservation.getNumericValue().get().toPlainString() : "";
-			}
+			value = iObservation.getDateTimeValue().orElse(new Date());
+			
 			codings = iObservation.getCoding();
 		}
 		
@@ -94,71 +81,26 @@ public class CompositeDate extends Composite implements ICompositeSaveable {
 			title = iFinding.getText().orElse("");
 		}
 		
-		createContents(title, textValue, unit, numeric, backboneComponent != null);
+		createContents(title, value, backboneComponent != null);
 	}
 	
-	private void createContents(String title, String textValue, String unit, String numeric,
+	private void createContents(String title, Date value,
 		boolean componentChild){
-		Composite c = new Composite(this, SWT.NONE);
-		c.setLayout(SWTHelper.createGridLayout(true, 2));
-		c.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
-		
-		lbl = new Label(c, SWT.NONE);
+		lbl = new Label(this, SWT.NONE);
 		lbl.setText(title);
 		
-		GridData minGD = new GridData(SWT.LEFT, SWT.BOTTOM, true, false, 1, 1);
+		GridData minGD = new GridData(SWT.LEFT, SWT.BOTTOM, false, false);
 		lbl.setLayoutData(minGD);
 		
-		if (numeric != null && unit != null) {
-			if (!componentChild && iFinding instanceof IObservation) {
-				toolbarActions.addAll(
-					FindingsUiUtil.createToolbarSubComponents(c, (IObservation) iFinding, 1));
-			}
-			fieldText = new Text(this, SWT.BORDER);
-			fieldText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-			fieldText.setText(numeric);
+		if (dateTime == null) {
+			dateTime = new CDateTime(this,
+				CDT.HORIZONTAL | CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
+			GridData gdFieldText = new GridData(SWT.LEFT, SWT.CENTER, true, false);
+			dateTime.setLayoutData(gdFieldText);
+			dateTime.setSelection(value);
+
 			
-			fieldText.addVerifyListener(new VerifyListener() {
-				@Override
-				public void verifyText(VerifyEvent e){
-					// checks if a numeric text is inserted
-					String txt = e.text;
-					if (!txt.isEmpty()) {
-						StringBuilder builder = new StringBuilder(((Text) e.widget).getText());
-						if (e.start == e.end) {
-							builder.insert(e.start, txt);
-						} else {
-							builder.replace(e.start, e.end, txt);
-						}
-						if (!builder.toString().matches("-?(\\d+\\.)?\\d*$")) {
-							e.doit = false;
-						}
-					}
-					
-				}
-			});
-			lblUnit = new Label(this, SWT.NONE);
-			GridData gdUnit = new GridData(SWT.FILL, SWT.TOP, false, false);
-			gdUnit.widthHint = 40;
-			lblUnit.setLayoutData(gdUnit);
-			lblUnit.setAlignment(SWT.CENTER);
-			lblUnit.setText(unit);
-		}
-		
-		if (fieldText == null) {
-			fieldText = new Text(this, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-			GridData gdFieldText = new GridData(SWT.FILL, SWT.TOP, true, false);
-			gdFieldText.heightHint = 40;
-			fieldText.setLayoutData(gdFieldText);
-			fieldText.setText(textValue != null ? textValue : "");
-			
-			Label lblTmp = new Label(this, SWT.NONE);
-			lblTmp.setText("");
-			GridData gdUnit = new GridData(SWT.FILL, SWT.TOP, false, false);
-			gdUnit.widthHint = 40;
-			lblTmp.setLayoutData(gdUnit);
-			
-			fieldText.addTraverseListener(new TraverseListener() {
+			dateTime.addTraverseListener(new TraverseListener() {
 				
 				@Override
 				public void keyTraversed(TraverseEvent e){
@@ -181,16 +123,8 @@ public class CompositeDate extends Composite implements ICompositeSaveable {
 	
 	@Override
 	public void hideLabel(boolean all){
-		if (lblUnit != null && all) {
-			lblUnit.setVisible(false);
-			GridData minGD = new GridData(SWT.FILL, SWT.TOP, false, false);
-			minGD.widthHint = 0;
-			minGD.heightHint = 0;
-			lblUnit.setLayoutData(minGD);
-		}
 		if (lbl != null) {
-			fieldText.setToolTipText(lbl.getText());
-			fieldText.setMessage(lbl.getText());
+			dateTime.setToolTipText(lbl.getText());
 			lbl.setVisible(false);
 			((GridData) lbl.getLayoutData()).widthHint = 0;
 			((GridData) lbl.getLayoutData()).heightHint = 0;
@@ -230,7 +164,8 @@ public class CompositeDate extends Composite implements ICompositeSaveable {
 	
 	@Override
 	public String getFieldTextValue(){
-		return fieldText != null ? fieldText.getText() : "";
+		return dateTime != null ? LocalDateTime
+			.ofInstant(dateTime.getSelection().toInstant(), ZoneId.systemDefault()).toString() : "";
 	}
 	
 	@Override
@@ -240,7 +175,6 @@ public class CompositeDate extends Composite implements ICompositeSaveable {
 	
 	@Override
 	public ObservationType getObservationType(){
-		// TODO Auto-generated method stub
 		return observationType;
 	}
 }

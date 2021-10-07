@@ -287,7 +287,27 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		org.hl7.fhir.dstu3.model.Observation fhirObservation =
 			(org.hl7.fhir.dstu3.model.Observation) resource;
 		if (fhirObservation.hasValueBooleanType()) {
-			BooleanType value = (BooleanType) fhirObservation.getValue();
+			BooleanType value = fhirObservation.getValueBooleanType();
+			if (value.getValue() != null) {
+				return Optional.of(value.getValue());
+			}
+		}
+		return Optional.empty();
+	}
+	
+	public void setDateTimeValue(DomainResource resource, Date value){
+		org.hl7.fhir.dstu3.model.Observation fhirObservation =
+			(org.hl7.fhir.dstu3.model.Observation) resource;
+		DateTimeType q = new DateTimeType();
+		q.setValue(value);
+		fhirObservation.setValue(q);
+	}
+	
+	public Optional<Date> getDateTimeValue(DomainResource resource){
+		org.hl7.fhir.dstu3.model.Observation fhirObservation =
+			(org.hl7.fhir.dstu3.model.Observation) resource;
+		if (fhirObservation.hasValueDateTimeType()) {
+			DateTimeType value = (DateTimeType) fhirObservation.getValueDateTimeType();
 			if (value.getValue() != null) {
 				return Optional.of(value.getValue());
 			}

@@ -82,9 +82,6 @@ public class CompositeBoolean extends Composite implements ICompositeSaveable {
 	
 	private void createContents(String title, Boolean value,
 		boolean componentChild){
-		//		Composite c = new Composite(this, SWT.NONE);
-		//		c.setLayout(SWTHelper.createGridLayout(true, 2));
-		//		c.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
 		
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText(title);
@@ -97,12 +94,6 @@ public class CompositeBoolean extends Composite implements ICompositeSaveable {
 			GridData gdFieldText = new GridData(SWT.LEFT, SWT.CENTER, true, false);
 			fieldButton.setLayoutData(gdFieldText);
 			fieldButton.setSelection(value);
-			
-			//			Label lblTmp = new Label(this, SWT.NONE);
-			//			lblTmp.setText("");
-			//			GridData gdUnit = new GridData(SWT.FILL, SWT.TOP, false, false);
-			//			gdUnit.widthHint = 40;
-			//			lblTmp.setLayoutData(gdUnit);
 			
 			fieldButton.addTraverseListener(new TraverseListener() {
 				
@@ -168,7 +159,7 @@ public class CompositeBoolean extends Composite implements ICompositeSaveable {
 	
 	@Override
 	public String getFieldTextValue(){
-		return fieldButton != null ? (fieldButton.getSelection() ? "Ja" : "Nein") : "";
+		return fieldButton != null ? Boolean.valueOf(fieldButton.getSelection()).toString() : "";
 	}
 	
 	@Override
