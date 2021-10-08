@@ -3,6 +3,7 @@ package ch.elexis.core.mail;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.mail.internet.AddressException;
@@ -38,6 +39,16 @@ public class MailMessage implements Serializable {
 	
 	public static MailMessage fromJson(Serializable serializable){
 		return gson.fromJson(serializable.toString(), MailMessage.class);
+	}
+	
+	public static MailMessage fromMap(@SuppressWarnings("rawtypes")
+	Map map){
+		MailMessage mailMessage = new MailMessage();
+		mailMessage.setSubject((String) map.get("subject"));
+		mailMessage.setTo((String) map.get("to"));
+		mailMessage.setCc((String) map.get("cc"));
+		mailMessage.setText((String) map.get("text"));
+		return mailMessage;
 	}
 	
 	private String to;
