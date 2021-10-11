@@ -9,12 +9,13 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ModelPackage;
+import ch.elexis.core.tasks.model.TaskTriggerType;
 
 public class TaskServiceUtil {
 	
 	/**
 	 * Load the (active) task descriptors for a given runnable we are responsible for (that is, assigned as
-	 * runner)
+	 * runner). Task descriptors with {@link TaskTriggerType#MANUAL} are not considered.
 	 * 
 	 * @param identifiedRunnable
 	 * @param taskModelService
@@ -27,6 +28,8 @@ public class TaskServiceUtil {
 		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__ACTIVE, COMPARATOR.EQUALS, true);
 		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__IDENTIFIED_RUNNABLE_ID, COMPARATOR.EQUALS,
 			identifiedRunnable.getId());
+		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__TRIGGER_TYPE, COMPARATOR.NOT_EQUALS,
+			TaskTriggerType.MANUAL.ordinal());
 		query.startGroup();
 		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__RUNNER, COMPARATOR.EQUALS,
 			contextService.getStationIdentifier());
