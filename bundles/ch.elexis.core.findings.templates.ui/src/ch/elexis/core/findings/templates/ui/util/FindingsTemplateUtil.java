@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
+import ch.elexis.core.findings.templates.model.InputDataBoolean;
+import ch.elexis.core.findings.templates.model.InputDataDate;
 import ch.elexis.core.findings.templates.model.InputDataGroup;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
 import ch.elexis.core.findings.templates.model.InputDataNumeric;
@@ -30,6 +32,10 @@ public class FindingsTemplateUtil {
 				return Images.IMG_DOCUMENT.getImage();
 			} else if (findingsTemplate.getInputData() instanceof InputDataText) {
 				return Images.IMG_DOCUMENT.getImage();
+			} else if (findingsTemplate.getInputData() instanceof InputDataBoolean) {
+				return Images.IMG_CHECKBOX.getImage();
+			} else if (findingsTemplate.getInputData() instanceof InputDataDate) {
+				return Images.IMG_CALENDAR.getImage();
 			}
 		} else if (object instanceof FindingsTemplates) {
 			return Images.IMG_FOLDER.getImage();
