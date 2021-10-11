@@ -6,7 +6,7 @@
       <page
             class="ch.elexis.core.findings.ui.preferences.FindingsSettings"
             id="ch.elexis.core.findings.ui"
-            name="Befunde">
+            name="%page.name">
       </page>
    </extension>
    <extension
@@ -44,17 +44,17 @@
       <command
             defaultHandler="ch.elexis.core.findings.ui.handler.FindingDeleteHandler"
             id="ch.elexis.core.findings.ui.commandDelete"
-            name="Delete Finding">
+            name="%command.name">
       </command>
       <command
             defaultHandler="ch.elexis.core.findings.ui.handler.FindingEditHandler"
             id="ch.elexis.core.findings.ui.commandEdit"
-            name="Edit Finding">
+            name="%command.name.0">
       </command>
       <command
             defaultHandler="ch.elexis.core.findings.ui.handler.SelectVisibleCodesHandler"
             id="ch.elexis.core.findings.ui.command.codes.visible"
-            name="Select visible codes">
+            name="%command.name.1">
       </command>
    </extension>
       <extension
@@ -64,7 +64,7 @@
             class="ch.elexis.core.findings.ui.views.FindingsViewDynamic"
             icon="icons/chart_curve.png"
             id="ch.elexis.core.findings.ui.views.FindingsView"
-            name="Befunde Neu">
+            name="%view.name">
       </view>
    </extension>
    <extension
@@ -75,13 +75,13 @@
          <command
                commandId="ch.elexis.core.findings.ui.commandDelete"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/delete.gif"
-               label="Löschen"
+               label="%command.label"
                style="push">
          </command>
          <command
                commandId="ch.elexis.core.findings.ui.commandEdit"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/edit.png"
-               label="Bearbeiten"
+               label="%command.label.0"
                style="push">
          </command>
       </menuContribution>
@@ -91,7 +91,7 @@
          <command
                commandId="ch.elexis.core.findings.ui.command.codes.visible"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/filter_ps.png"
-               label="Codes Sichtbarkeit"
+               label="%command.label.1"
                style="push">
          </command>
       </menuContribution>

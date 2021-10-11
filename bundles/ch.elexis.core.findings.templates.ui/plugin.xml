@@ -5,7 +5,7 @@
          point="org.eclipse.ui.commands">
       <command
             id="ch.elexis.core.findings.templates.ui.command.finding.create"
-            name="Create Finding">
+            name="%command.name">
       </command>
    </extension>
    <extension
@@ -23,7 +23,7 @@
          <command
                commandId="ch.elexis.core.findings.templates.ui.command.finding.create"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/new.png"
-               label="Neuen Befund anlegen"
+               label="%command.label"
                style="push">
          </command>
       </menuContribution>
@@ -34,13 +34,13 @@
             category="ch.elexis.core.findings.ui"
             class="ch.elexis.core.findings.templates.ui.perferences.FindingsTemplateSettings"
             id="ch.elexis.core.findings.templates.ui.perferences.FindingsTemplateSettings"
-            name="Vorlagen">
+            name="%page.name">
       </page>
       <page
             category="ch.elexis.core.findings.ui"
             class="ch.elexis.core.findings.templates.ui.perferences.CodeSystemSettings"
             id="ch.elexis.core.findings.templates.ui.perferences.CodeSystemSettings"
-            name="Codesysteme">
+            name="%page.name.0">
       </page>
    </extension>
    <extension
