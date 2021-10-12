@@ -97,6 +97,9 @@ public class ArtikelstammItem extends AbstractEntityWithId
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	private boolean sl_entry;
 
+	@Convert(converter = BooleanCharacterConverterSafe.class)
+	private boolean k70_entry;
+	
 	@Column(length = 1)
 	private String ikscat;
 
@@ -278,6 +281,14 @@ public class ArtikelstammItem extends AbstractEntityWithId
 		this.sl_entry = sl_entry;
 	}
 
+	public boolean isK70_entry(){
+		return k70_entry;
+	}
+	
+	public void setK70_entry(boolean k70_entry){
+		this.k70_entry = k70_entry;
+	}
+	
 	public void setLppv(boolean lppv) {
 		this.lppv = lppv;
 	}
