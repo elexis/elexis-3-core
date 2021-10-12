@@ -61,7 +61,7 @@ FORCE_TAG_NUMERIC = (MAX_ID.to_s*4).to_i
 DATE_FORMAT = '%Y.%m.%d'
 MEDIAWIKI_FILE = 'Changelog.mediawiki'
 Issue = Struct.new(:id, :subject, :fixed_version, :git_version,  :status, :project, :last_api_fetch)
-CommitInfo = Struct.new(:ticket, :author_date, :committer_date, :text)
+CommitInfo = Struct.new(:repo, :ticket, :author_date, :committer_date, :text)
 class CommitInfo
   def commit_week
     date = Date.parse(committer_date)
@@ -179,7 +179,7 @@ def get_history(old_id, newer_id, git_version)
     ticket = ticket_id ? read_issue(ticket_id) : Issue.new
     ticket.git_version = git_version if ticket
     line = "#{commit.oid} #{commit.author[:time]} #{sprintf('%20s', author)} #{commit.message.split("\n").first}"
-    info.commits  << CommitInfo.new(ticket, commit.author[:time].strftime(DATE_FORMAT), commit.committer[:time].strftime(DATE_FORMAT), line)
+    info.commits  << CommitInfo.new(File.basename(File.dirname(@repo.path)), ticket, commit.author[:time].strftime(DATE_FORMAT), commit.committer[:time].strftime(DATE_FORMAT), line)
     info.authors[author] ||= 0
     info.authors[author] += 1
   end
@@ -258,14 +258,18 @@ def emit_mediawiki_changelog(all_commits, file)
       mediawiki.puts ""
     end
   else
-    all_commits.find_all{|x| x.ticket.fixed_version.eql?(short_version)}.sort{|left, right| left.committer_date <=> right.committer_date}
-    sorted_by_ticket  = sorted.sort{|left, right| left.ticket.id <=> right.ticket.id}
-    emitted_ids = []
-    sorted_by_ticket.each do|commit|
-      next if emitted_ids.index(commit.ticket.id)
-      line = "* #{sprintf("%14s", "'''([https://redmine.medelexis.ch/issues/" + commit.ticket.id + ' ' + commit.ticket.id + "])'''")} #{commit.ticket.subject.gsub(/\n|\r\n/, ',').strip}"
-      mediawiki.puts line
-      emitted_ids << commit.ticket.id
+    to_sort = all_commits.find_all{|x| x.ticket&.fixed_version.eql?(short_version)}
+    if to_sort
+      to_sort.sort{|left, right| left.committer_date <=> right.committer_date}
+      sorted_by_ticket  = to_sort.sort{|left, right| left.ticket.id <=> right.ticket.id}
+      emitted_ids = []
+      sorted_by_ticket.each do|commit|
+        next if emitted_ids.index(commit.ticket.id)
+        proprietary = !sorted_by_ticket.find_all{|x| x.ticket.id == commit.ticket.id}.collect{|x| x.repo}.uniq.find{ |x| x.match(/^elexis/)}
+        line = "* #{proprietary ? 'Medelexis:' : 'OpenSource'} #{sprintf("%14s", "'''([https://redmine.medelexis.ch/issues/" + commit.ticket.id + ' ' + commit.ticket.id + "])'''")}#{commit.ticket.subject.gsub(/\n|\r\n/, ',').strip}"
+        mediawiki.puts line
+        emitted_ids << commit.ticket.id
+      end
     end
   end
   mediawiki.close
@@ -357,7 +361,7 @@ if @options[:mediawiki]
       from_id = from_tag.commit_id
     else
       from_tag ||= @repo.branches[@options[:from]]
-      from_id = from_tag.target.oid
+      from_id = from_tag&.target.oid
     end
     unless from_tag
       puts "Skipping #{repo} as there is no tag #{@options[:from]}"
