@@ -132,5 +132,17 @@ UPDATE VERRECHNETCOPY SET LEISTG_TXT = REPLACE(LEISTG_TXT, '\n', '');
 UPDATE VERRECHNETCOPY SET LEISTG_TXT = REPLACE(LEISTG_TXT, '\r', '');
 ]]>
 	    </sql>
-	</changeSet>		
+	</changeSet>
+	
+    <changeSet author="thomas" id="manual_K70_ENTRY_ARTIKELSTAMM_CH">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="ARTIKELSTAMM_CH"
+					columnName="K70_ENTRY" />
+			</not>
+		</preConditions>
+		<addColumn tableName="ARTIKELSTAMM_CH">
+			<column defaultValue="0" name="K70_ENTRY" type="CHAR(1)"/>
+		</addColumn>
+    </changeSet>	
 </databaseChangeLog>
