@@ -2,7 +2,6 @@ package ch.elexis.core.findings.ui.dialogs;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -82,8 +81,6 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			StringBuilder sb = new StringBuilder();
 			refChildrens.stream().forEach(o -> sb.append(o.getCoding().get(0).getDisplay())
 				.append((o).isDeleted()).append(","));
-			// use reverse order for references to create ui components
-			Collections.reverse(refChildrens);
 			List<ObservationComponent> compChildrens = item.getComponents();
 			if (refChildrens.isEmpty() && compChildrens.isEmpty()) {
 				current = createComposite((Composite) current, item, null);
@@ -158,6 +155,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 		if (iFinding instanceof IObservation) {
 			ObservationType type = ((IObservation) iFinding).getObservationType();
 			switch (type) {
+			case COMP:
 			case NUMERIC:
 			case TEXT:
 				return new CompositeTextUnit(parent, iFinding, backboneComponent);
@@ -166,7 +164,9 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			case DATE:
 				return new CompositeDate(parent, iFinding, backboneComponent);
 			default:
-				throw new IllegalStateException("No composite for observation type [" + type + "]");
+				throw new IllegalStateException(
+					"No composite for observation type [" + type + "] of ["
+						+ iFinding + "]");
 			}
 		}
 		throw new IllegalStateException("No composite for finding [" + iFinding + "]");
