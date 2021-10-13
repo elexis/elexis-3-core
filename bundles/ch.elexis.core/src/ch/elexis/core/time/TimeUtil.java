@@ -74,7 +74,8 @@ public class TimeUtil {
 		return formatSafe(toLocalDateTime(new Date(lastUpdate)));
 	}
 	
-	public static @Nullable LocalDate toLocalDate(@Nullable Date date){
+	public static @Nullable LocalDate toLocalDate(@Nullable
+	Date date){
 		if (date == null) {
 			return null;
 		}
@@ -83,7 +84,8 @@ public class TimeUtil {
 		return gc.toZonedDateTime().toLocalDate();
 	}
 	
-	public static @Nullable LocalDateTime toLocalDateTime(@Nullable Date date){
+	public static @Nullable LocalDateTime toLocalDateTime(@Nullable
+	Date date){
 		if (date == null) {
 			return null;
 		}
@@ -153,8 +155,16 @@ public class TimeUtil {
 		return xcal.toGregorianCalendar().toZonedDateTime().toLocalDate();
 	}
 	
+	/**
+	 * Convert the {@link XMLGregorianCalendar} value to a LocalDateTime in the systems default
+	 * timezone.
+	 * 
+	 * @param xcal with a time zone
+	 * @return value adapted to local timezone
+	 */
 	public static LocalDateTime toLocalDateTime(XMLGregorianCalendar xcal){
-		return xcal.toGregorianCalendar().toZonedDateTime().toLocalDateTime();
+		return xcal.toGregorianCalendar().toZonedDateTime()
+			.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
 	}
 	
 	public static LocalDateTime toLocalDateTime(BigInteger timestamp){
@@ -168,7 +178,7 @@ public class TimeUtil {
 		gc.setTimeInMillis(timestamp);
 		return gc.toZonedDateTime().toLocalDateTime();
 	}
-
+	
 	public static LocalDate toLocalDate(BigInteger timestamp){
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(timestamp.longValue());
