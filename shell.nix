@@ -1,4 +1,5 @@
 # Helper script for Niklaus to be able to work under NixOS
+# To get into a fish shell call in this directory: nix-shell --run fish
 { pkgs ? import <nixpkgs> {} }:
 let mvn = pkgs.maven.override { jdk = pkgs.openjdk8; };
 in pkgs.mkShell {
