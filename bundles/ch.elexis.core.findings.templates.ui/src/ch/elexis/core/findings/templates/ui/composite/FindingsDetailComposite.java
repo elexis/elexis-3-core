@@ -5,15 +5,19 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.databinding.EMFUpdateValueStrategy;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -41,6 +45,7 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.templates.model.CodeElement;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
@@ -57,6 +62,7 @@ import ch.elexis.core.findings.templates.model.ModelPackage;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
+import ch.elexis.core.findings.util.model.TransientCoding;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.base.InputDialog;
 import ch.elexis.core.ui.util.CoreUiUtil;
@@ -200,10 +206,31 @@ public class FindingsDetailComposite extends Composite {
 		createObservationComposite();
 
 		DataBindingContext bindingContext = new DataBindingContext();
-		IObservableValue<?> observeTextTitle = WidgetProperties.text(SWT.Modify).observe(textTitle);
-		IObservableValue<?> observeValueTextTitle =
+		IObservableValue<String> observeTextTitle =
+			WidgetProperties.text(SWT.Modify).observe(textTitle);
+		IObservableValue<String> observeValueTextTitle =
 			EMFProperties.value(ModelPackage.Literals.FINDINGS_TEMPLATE__TITLE).observeDetail(item);
-		bindingContext.bindValue(observeTextTitle, observeValueTextTitle);
+		UpdateValueStrategy<String, String> modelToTarget =
+			new UpdateValueStrategy<String, String>();
+		UpdateValueStrategy<String, String> targetToModel =
+			new UpdateValueStrategy<String, String>();
+		targetToModel.setBeforeSetValidator(new IValidator<String>() {
+			public org.eclipse.core.runtime.IStatus validate(String value){
+				Optional<FindingsTemplate> existing =
+					FindingsServiceHolder.findingsTemplateService.getFindingsTemplate(
+					new TransientCoding(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem(), value,
+						""));
+				if (existing.isPresent()) {
+					return ValidationStatus.error(
+						"Eine lokale Vorlage mit dem Code [" + value + "] existiert bereits.");
+				}
+				return ValidationStatus.ok();
+			};
+		});
+		Binding bindValue =
+			bindingContext.bindValue(observeTextTitle, observeValueTextTitle, targetToModel,
+				modelToTarget);
+		ControlDecorationSupport.create(bindValue, SWT.TOP | SWT.LEFT);
 		
 		setVisible(false);
 	}
