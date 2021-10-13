@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -81,6 +82,9 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		if (blob.isPresent()) {
 			Optional<FindingsTemplates> loaded = loadFindingsTemplates(blob.get());
 			if (loaded.isPresent()) {
+				// sort templates alphabetically
+				ECollections.sort(loaded.get().getFindingsTemplates(),
+					(l, r) -> l.getTitle().compareTo(r.getTitle()));
 				return loaded.get();
 			}
 		}
