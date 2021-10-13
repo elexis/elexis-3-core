@@ -169,15 +169,29 @@ public class CodesSelectionComposite extends Composite implements ISelectionProv
 		
 		@Override
 		public void run(){
+			int currentSelectionSize = currentSelection.size();
 			currentSelection.clear();
 			IContributionItem[] items = manager.getItems();
-			for (IContributionItem iContributionItem : items) {
-				if (iContributionItem instanceof ActionContributionItem) {
-					IAction action = ((ActionContributionItem) iContributionItem).getAction();
-					if (action instanceof CodeSelectionAction) {
-						CodeSelectionAction csAction = (CodeSelectionAction) action;
-						csAction.setChecked(true);
-						currentSelection.add(csAction);
+			// clear if all items (exclude all item) are already selected
+			if (currentSelectionSize == (items.length - 1)) {
+				for (IContributionItem iContributionItem : items) {
+					if (iContributionItem instanceof ActionContributionItem) {
+						IAction action = ((ActionContributionItem) iContributionItem).getAction();
+						if (action instanceof CodeSelectionAction) {
+							CodeSelectionAction csAction = (CodeSelectionAction) action;
+							csAction.setChecked(false);
+						}
+					}
+				}
+			} else {
+				for (IContributionItem iContributionItem : items) {
+					if (iContributionItem instanceof ActionContributionItem) {
+						IAction action = ((ActionContributionItem) iContributionItem).getAction();
+						if (action instanceof CodeSelectionAction) {
+							CodeSelectionAction csAction = (CodeSelectionAction) action;
+							csAction.setChecked(true);
+							currentSelection.add(csAction);
+						}
 					}
 				}
 			}
