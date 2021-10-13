@@ -1,7 +1,6 @@
 package ch.elexis.core.findings.util;
 
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +33,6 @@ public class FindingsTextUtil {
 			
 			List<IObservation> children =
 				observation.getTargetObseravtions(ObservationLinkType.REF);
-			Collections.reverse(children);
 			for (int i = 0; i < children.size(); i++) {
 				if (i > 0) {
 					stringBuilder.append(", ");
