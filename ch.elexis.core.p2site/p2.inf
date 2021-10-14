@@ -1,1 +1,7 @@
-instructions.configure=org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/eclipsec.exe);
+# https://help.eclipse.org/latest/index.jsp?topic=/org.eclipse.platform.doc.isv/guide/p2_actions_touchpoints.html
+instructions.configure = \
+	org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/eclipsec.exe);\
+	org.eclipse.equinox.p2.touchpoint.eclipse.installFeature(feature:org.eclipse.justj.openjdk.hotspot.jre.full,featureId:default,version:default);
+	
+instructions.unconfigure = \
+	org.eclipse.equinox.p2.touchpoint.eclipse.uninstallFeature(feature:org.eclipse.justj.openjdk.hotspot.jre.full,featureId:default,version:default);
