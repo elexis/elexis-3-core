@@ -2,28 +2,31 @@
 <feature
       id="ch.elexis.jre.feature"
       label="%Bundle-Name"
-      version="3.9.0.qualifier"
+      version="3.9.1.qualifier"
       provider-name="%Bundle-Vendor">
 
    <plugin
          id="ch.elexis.jre.macosx.x86_64"
-         version="0.0.0"
          os="macosx"
          arch="x86_64"
-         unpack="true"/>
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
    <plugin
          id="ch.elexis.jre.linux.x86_64"
-         version="0.0.0"
          os="linux"
          arch="x86_64"
-         unpack="true"/>
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
    <plugin
          id="ch.elexis.jre.win32.x86_64"
-         version="0.0.0"
          os="win32"
          arch="x86_64"
-         unpack="true"/>
-   
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>
