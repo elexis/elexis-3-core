@@ -2,7 +2,6 @@ package ch.elexis.core.findings.templates.ui.dlg;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -177,8 +176,7 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		
 		List<FindingsTemplate> templatesTemp = null;
 		if (current != null) {
-			if (current.getInputData() instanceof InputDataGroupComponent)
-			{
+			if (current.getInputData() instanceof InputDataGroupComponent) {
 				// remove component selections
 				templatesTemp = model.getFindingsTemplates().stream()
 					.filter(item -> !(item.getInputData() instanceof InputDataGroup
@@ -191,16 +189,12 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 						templatesTemp.add(findingsTemplate);
 					}
 				}
-			}
-			else {
+			} else {
 				// remove self selection
 				templatesTemp = model.getFindingsTemplates().stream()
-					.filter(item -> !item.equals(current))
-					.collect(Collectors.toList());
+					.filter(item -> !item.equals(current)).collect(Collectors.toList());
 			}
-			
-		}
-		else {
+		} else {
 			templatesTemp = model.getFindingsTemplates();
 		}
 		
@@ -208,26 +202,25 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 			
 			eTemplates.addAll(templatesTemp);
 			// sort
-			ECollections.sort(eTemplates, new Comparator<FindingsTemplate>() {
-				
-				@Override
-				public int compare(FindingsTemplate o1, FindingsTemplate o2){
-					if (o1 == null || o2 == null) {
-						return o1 != null ? 1 : -1;
-					}
-					else if (o1.getInputData() instanceof InputDataGroup) {
-						return -1;
-					} else if (o2.getInputData() instanceof InputDataGroup) {
-						return 1;
-					}
-					else if (o1.getInputData() instanceof InputDataGroupComponent) {
-						return -1;
-					}
-					else if (o2.getInputData() instanceof InputDataGroupComponent) {
-						return 1;
-					}
-					return ObjectUtils.compare(o1.getTitle(), o2.getTitle());
+			ECollections.sort(eTemplates, (l, r) -> {
+				if (l == null || r == null) {
+					return l != null ? 1 : -1;
 				}
+				int titleCompare =
+					ObjectUtils.compare(l.getTitle().toLowerCase(), r.getTitle().toLowerCase());
+				if (l.getInputData() instanceof InputDataGroup
+					|| r.getInputData() instanceof InputDataGroup) {
+					if (l.getInputData().getClass() != r.getInputData().getClass()) {
+						return l.getInputData() instanceof InputDataGroup ? -1 : 1;
+					}
+				}
+				if (l.getInputData() instanceof InputDataGroupComponent
+					|| r.getInputData() instanceof InputDataGroupComponent) {
+					if (l.getInputData().getClass() != r.getInputData().getClass()) {
+						return l.getInputData() instanceof InputDataGroupComponent ? -1 : 1;
+					}
+				}
+				return titleCompare;
 			});
 		}
 		viewer.setInput(eTemplates);

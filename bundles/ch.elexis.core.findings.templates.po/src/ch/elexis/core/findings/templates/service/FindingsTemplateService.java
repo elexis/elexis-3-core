@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.URI;
@@ -83,8 +84,12 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 			Optional<FindingsTemplates> loaded = loadFindingsTemplates(blob.get());
 			if (loaded.isPresent()) {
 				// sort templates alphabetically
-				ECollections.sort(loaded.get().getFindingsTemplates(),
-					(l, r) -> l.getTitle().compareTo(r.getTitle()));
+				ECollections.sort(loaded.get().getFindingsTemplates(), (l, r) -> {
+					if (l == null || r == null) {
+						return l != null ? 1 : -1;
+						}
+					return ObjectUtils.compare(l.getTitle(), r.getTitle());
+				});
 				return loaded.get();
 			}
 		}
