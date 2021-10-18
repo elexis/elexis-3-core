@@ -12,6 +12,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.20.100";visibility:=r
  org.eclipse.osgi.services;bundle-version="3.10.0";visibility:=reexport,
  org.slf4j.api;bundle-version="1.7.30";visibility:=reexport,
  org.eclipse.emf.ecore;bundle-version="2.23.0";visibility:=reexport,
+ org.apache.commons.lang3;bundle-version="3.12.0";visibility:=reexport,
  ch.rgw.utility;bundle-version="3.9.100",
  ch.elexis.core.l10n;bundle-version="3.9.0"
 Bundle-ActivationPolicy: lazy
@@ -58,7 +59,6 @@ Import-Package: javax.ws.rs;version="[2.0.0,2.2.0)",
  javax.ws.rs.core;version="[2.0.0,2.2.0)",
  javax.xml.bind,
  javax.xml.bind.annotation,
- org.apache.commons.lang3;version="3.1.0",
  org.jdom;version="1.1.1",
  org.jdom.input;version="1.1.1",
  org.jdom.output;version="1.1.1"
