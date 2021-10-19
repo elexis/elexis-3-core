@@ -104,12 +104,6 @@
   </setupTask>
   <setupTask
       xsi:type="git:GitCloneTask"
-      id="elexis.target.clone"
-      remoteURI="elexis/elexis-target">
-    <description>Elexis Target</description>
-  </setupTask>
-  <setupTask
-      xsi:type="git:GitCloneTask"
       id="core.git.clone"
       remoteURI="elexis/elexis-3-core">
     <annotation
@@ -182,13 +176,6 @@
   </setupTask>
   <setupTask
       xsi:type="setup.workingsets:WorkingSetTask">
-    <workingSet
-        name="elexis-target"
-        id="elexis-target">
-      <predicate
-          xsi:type="predicates:RepositoryPredicate"
-          project="elexis-target"/>
-    </workingSet>
     <workingSet
         name="elexis-3-core">
       <predicate
@@ -308,46 +295,6 @@
     <stream
         name="master"/>
     <description>Commercially developed version of Elexis, development environment</description>
-  </project>
-  <project name="Austria">
-    <setupTask
-        xsi:type="git:GitCloneTask"
-        id="austria.git.clone"
-        remoteURI="elexis/elexis-3-austria">
-      <annotation
-          source="http://www.eclipse.org/oomph/setup/InducedChoices">
-        <detail
-            key="inherit">
-          <value>github.remoteURIs</value>
-        </detail>
-        <detail
-            key="label">
-          <value>${scope.project.label} Github repository</value>
-        </detail>
-        <detail
-            key="target">
-          <value>remoteURI</value>
-        </detail>
-      </annotation>
-      <description>Elexis 3 Österreich Plug-Ins</description>
-    </setupTask>
-    <setupTask
-        xsi:type="projects:ProjectsImportTask">
-      <sourceLocator
-          rootFolder="${austria.git.clone.location}"/>
-    </setupTask>
-    <setupTask
-        xsi:type="setup.workingsets:WorkingSetTask">
-      <workingSet
-          name="elexis-3-austria">
-        <predicate
-            xsi:type="predicates:RepositoryPredicate"
-            project="at.medevit.elexis.at"/>
-      </workingSet>
-    </setupTask>
-    <stream
-        name="master"/>
-    <description>Elexis Österreich Plug-Ins</description>
   </project>
   <stream name="master"/>
   <logicalProjectContainer

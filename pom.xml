@@ -51,7 +51,7 @@
 		<system>Github</system>
 	</issueManagement>
 
-	<description>Elexis-Server for headless operation</description>
+	<description>Elexis 3 Core Project</description>
 
 	<modules>
 		<module>bundles</module>
