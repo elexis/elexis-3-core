@@ -2,14 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Pdfbox library
 Bundle-SymbolicName: ch.elexis.core.pdfbox;singleton:=true
-Bundle-Version: 2.0.22.3
+Bundle-Version: 2.0.24
 Bundle-Vendor: pdfbox.apache.org
 Automatic-Module-Name: ch.elexis.core.pdfbox
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Multi-Release: true
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ClassPath: .,
- lib/fontbox-2.0.22.jar,
- lib/pdfbox-2.0.22.jar,
+ lib/fontbox-2.0.24.jar,
+ lib/pdfbox-2.0.24.jar,
  lib/jbig2-imageio-3.0.3.jar
 Export-Package: org.apache.fontbox,
  org.apache.fontbox.afm,

@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: ch.elexis.core.serial.test
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: medevit.at
-Fragment-Host: ch.elexis.core.serial;bundle-version="1.0.0"
+Fragment-Host: ch.elexis.core.serial;bundle-version="3.9.0"
 Automatic-Module-Name: ch.elexis.core.serial.test
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: junit;bundle-version="4.8.2"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.junit;bundle-version="4.13.0"
 Import-Package: org.apache.commons.io

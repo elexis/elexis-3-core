@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
@@ -106,7 +106,7 @@ public class NoPoUtil {
 			for (PersistentObject persistentObject : persistentObjects) {
 				loadAsIdentifiable(persistentObject, type)
 					.ifPresent(identifiable -> {
-						ret.add((T) identifiable);
+						ret.add(identifiable);
 					});
 			}
 			return ret;

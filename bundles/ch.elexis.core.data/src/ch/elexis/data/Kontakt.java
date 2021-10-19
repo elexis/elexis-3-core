@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
@@ -80,6 +80,7 @@ public class Kontakt extends PersistentObject {
 	
 	volatile String Bezug;
 	
+	@Override
 	protected String getTableName(){
 		return TABLENAME;
 	}
@@ -119,6 +120,7 @@ public class Kontakt extends PersistentObject {
 	 * 
 	 * @return a string describing this Kontakt.
 	 */
+	@Override
 	public String getLabel(){
 		// return the long label
 		return getLabel(false);
@@ -164,6 +166,7 @@ public class Kontakt extends PersistentObject {
 		return bld.toString();
 	}
 	
+	@Override
 	public boolean isValid(){
 		if (!super.isValid()) {
 			return false;
@@ -346,17 +349,17 @@ public class Kontakt extends PersistentObject {
 		// }
 		//
 		if (including_phone) {
-			String thisAddressFLD_PHONE1 = (String) get(FLD_PHONE1);
+			String thisAddressFLD_PHONE1 = get(FLD_PHONE1);
 			if (!StringTool.isNothing(thisAddressFLD_PHONE1)) {
 				thisAddress.append(thisAddressFLD_PHONE1 + System.getProperty("line.separator"));
 			}
 			
-			String thisAddressFLD_PHONE2 = (String) get(FLD_PHONE2);
+			String thisAddressFLD_PHONE2 = get(FLD_PHONE2);
 			if (!StringTool.isNothing(thisAddressFLD_PHONE2)) {
 				thisAddress.append(thisAddressFLD_PHONE2 + System.getProperty("line.separator"));
 			}
 			
-			String thisAddressFLD_MOBILEPHONE = (String) get(FLD_MOBILEPHONE);
+			String thisAddressFLD_MOBILEPHONE = get(FLD_MOBILEPHONE);
 			if (!StringTool.isNothing(thisAddressFLD_MOBILEPHONE)) {
 				// With a colon after the label:
 				thisAddress.append(FLD_MOBILEPHONE + ":" + StringTool.space
@@ -366,12 +369,12 @@ public class Kontakt extends PersistentObject {
 			}
 		}
 		
-		String thisAddressFLD_FAX = (String) get(FLD_FAX);
+		String thisAddressFLD_FAX = get(FLD_FAX);
 		if (!StringTool.isNothing(thisAddressFLD_FAX)) {
 			thisAddress.append("Fax:" + StringTool.space + thisAddressFLD_FAX
 				+ System.getProperty("line.separator"));
 		}
-		String thisAddressFLD_E_MAIL = (String) get(FLD_E_MAIL);
+		String thisAddressFLD_E_MAIL = get(FLD_E_MAIL);
 		if (!StringTool.isNothing(thisAddressFLD_E_MAIL)) {
 			thisAddress.append(thisAddressFLD_E_MAIL + System.getProperty("line.separator"));
 		}
@@ -409,6 +412,7 @@ public class Kontakt extends PersistentObject {
 	 *            ein Text, der die Beziehung dieser Adresse zum Kontakt definiert (z.B.
 	 *            "Geschäftlich" oder "Orthopäde" oder so)
 	 */
+	@Deprecated
 	public BezugsKontakt addBezugsKontakt(Kontakt adr, String sBezug){
 		if ((adr != null) && (sBezug != null)) {
 			return new BezugsKontakt(this, adr, sBezug);
@@ -463,6 +467,7 @@ public class Kontakt extends PersistentObject {
 	 * 
 	 * @deprecated please use {@link PersistentObject#getExtInfoStoredObjectByKey(Object)}
 	 */
+	@Deprecated
 	public Object getInfoElement(String elem){
 		return getMap(FLD_EXTINFO).get(elem);
 	}
@@ -476,7 +481,7 @@ public class Kontakt extends PersistentObject {
 	 *         ausreichen
 	 */
 	public String getInfoString(String elem){
-		return checkNull((String) getExtInfoStoredObjectByKey(elem));
+		return checkNull(getExtInfoStoredObjectByKey(elem));
 	}
 	
 	/**
@@ -490,6 +495,7 @@ public class Kontakt extends PersistentObject {
 	 *            Inhalt des Elements 2.9.2007 emoved the checks g. weirich
 	 * @deprecated use {@link PersistentObject#setExtInfoStoredObjectByKey(Object, Object)}
 	 */
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public void setInfoElement(String elem, Object val){
 		Map extinfos = getMap(FLD_EXTINFO);
@@ -507,6 +513,7 @@ public class Kontakt extends PersistentObject {
 	 *            die zuvor mit getInfoStore() erhaltene Hashtable.
 	 * @deprecated use {@link PersistentObject#setExtInfoStoredObjectByKey(Object, Object)}
 	 */
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public void flushInfoStore(Map store){
 		setMap(FLD_EXTINFO, store);
@@ -527,6 +534,7 @@ public class Kontakt extends PersistentObject {
 	 * 
 	 * @deprecated performance will suffer. don't query infostore - create separate table
 	 */
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public static Kontakt findKontaktfromInfoStore(Class clazz, String field, String value){
 		Query qbe = new Query(clazz);
@@ -626,6 +634,7 @@ public class Kontakt extends PersistentObject {
 			c = 1;
 		}
 		
+		@Override
 		public int compareTo(statL ot){
 			return ot.c - c;
 		}

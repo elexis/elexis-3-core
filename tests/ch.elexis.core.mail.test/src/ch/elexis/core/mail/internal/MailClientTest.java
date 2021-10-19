@@ -12,7 +12,7 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -29,16 +29,17 @@ public class MailClientTest {
 	
 	private static IMailClient client;
 	
-	private SimpleSmtpServer server;
+	private static SimpleSmtpServer server;
 	
 	@BeforeClass
 	public static void beforeClass() throws InterruptedException {
 		client = OsgiServiceUtil.getService(IMailClient.class).get();
+		server = SimpleSmtpServer.start(10025);
 	}
 	
-	@Before
-	public void before(){
-		server = SimpleSmtpServer.start(10025);
+	@AfterClass
+	public static void afterClass() {
+		server.stop();
 	}
 	
 	@After
@@ -52,7 +53,7 @@ public class MailClientTest {
 		}
 		accounts = client.getAccounts();
 		assertTrue(accounts.isEmpty());
-		server.stop();
+		
 	}
 	
 	@Test

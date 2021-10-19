@@ -8,7 +8,6 @@
 	</parent>
 	<artifactId>ch.elexis.core.ui.importer.div.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
-
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -59,5 +58,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<version>3.2.0-SNAPSHOT</version>
 </project>

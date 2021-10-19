@@ -16,9 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.codec.DecoderException;
-import org.apache.commons.lang.StringUtils;
-import org.jboss.aerogear.security.otp.Totp;
-import org.jboss.aerogear.security.otp.api.Base32;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
@@ -169,8 +167,7 @@ public class User extends PersistentObject {
 	 * @since 3.6
 	 */
 	public boolean verifyTotp(String otp) {
-		Totp totp = new Totp(getTotp());
-		return totp.verify(otp);
+		return false;
 	}
 	
 	/**
@@ -178,8 +175,7 @@ public class User extends PersistentObject {
 	 * @since 3.6
 	 */
 	public void resetTotp() {
-		String totp = Base32.random();
-		set(FLD_TOTP, totp);
+		new UnsupportedOperationException();
 	}
 	
 	/**

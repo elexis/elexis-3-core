@@ -54,11 +54,12 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 
 	@Test
 	public void testOpenOutputStream() throws IOException {
+		String now = LocalDateTime.now().toString();
 		assertEquals(19, testHandle.getContentLenght());
 		try (OutputStream os = testHandle.openOutputStream()) {
-			IOUtils.write(LocalDateTime.now().toString(), os, Charset.defaultCharset());
+			IOUtils.write(now, os, Charset.defaultCharset());
 		}
-		assertEquals(23, testHandle.getContentLenght());
+		assertEquals(now.length(), testHandle.getContentLenght());
 	}
 
 	@Test

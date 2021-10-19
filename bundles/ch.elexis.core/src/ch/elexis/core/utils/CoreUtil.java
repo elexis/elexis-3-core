@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Hashtable;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
@@ -62,6 +64,15 @@ public class CoreUtil {
 			}
 		}
 		return false;
+	}
+	
+	public static Path getElexisServerHomeDirectory() {
+		String userHomeProp = System.getProperty("user.home");
+		File homedir = new File(new File(userHomeProp), "elexis-server");
+		if (!homedir.exists()) {
+			homedir.mkdir();
+		}
+		return Paths.get(homedir.toURI());
 	}
 	
 	/**

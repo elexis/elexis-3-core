@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.persistence.feature"
       label="Core JPA Persistence Feature"
-      version="1.0.0.qualifier"
+      version="3.9.0.qualifier"
       provider-name="medevit.at">
 
    <description url="http://www.example.com/description">
@@ -97,6 +97,28 @@
 
    <plugin
          id="jakarta.persistence"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.transaction"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.dbcp"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.pool"
          download-size="0"
          install-size="0"
          version="0.0.0"

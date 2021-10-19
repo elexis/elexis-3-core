@@ -44,7 +44,7 @@ public class EncounterUtil {
 		
 		if ("sendMailFromContext".equals(taskDescriptor.getIdentifiedRunnableId())) {
 			Optional<ITask> execution = TaskServiceHolder.get().findLatestExecution(taskDescriptor);
-			MailMessage msg = MailMessage.fromJson(taskDescriptor.getRunContext().get("message"));
+			MailMessage msg = MailMessage.fromMap((Map) taskDescriptor.getRunContext().get("message"));
 			if (msg != null) {
 				sb.append("Mail an ").append(msg.getTo());
 				execution.ifPresent(task -> {

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-structures-v21-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-structures-v23-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-structures-v24-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-structures-v251-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-structures-v25-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-structures-v281-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-structures-v28-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-structures-v22-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-structures-v231-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-structures-v27-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-structures-v26-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hapi-base-2.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
 			<accessrule kind="accessible" pattern="ca/uhn/**"/>

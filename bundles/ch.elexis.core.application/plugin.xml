@@ -546,8 +546,7 @@
        </property>
        <property
              name="aboutText"
-             value="Elexis 3.9 - www.elexis.info
-         Copyright 2005-2021 G. Weirich und Elexis-Team">
+             value="Elexis 3.9 - www.elexis.info&#x0A;         Copyright 2005-2021 G. Weirich und Elexis-Team">
        </property>
        <property
              name="aboutImage"

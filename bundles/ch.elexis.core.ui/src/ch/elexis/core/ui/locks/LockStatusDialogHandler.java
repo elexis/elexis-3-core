@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.locks;
 
 import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,8 +14,6 @@ import org.eclipse.ui.menus.UIElement;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
-
-import com.google.common.base.Objects;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.server.ILockService;
@@ -66,9 +65,9 @@ public class LockStatusDialogHandler extends AbstractHandler
 	@Override
 	public void handleEvent(Event event){
 		Object property = event.getProperty(ElexisEventTopics.ECLIPSE_E4_DATA);
-		if (Objects.equal(property, ILockService.class)) {
+		if (Objects.equals(property, ILockService.class)) {
 			ICommandService commandService =
-				(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+				PlatformUI.getWorkbench().getService(ICommandService.class);
 			commandService.refreshElements(COMMAND_ID, null);
 		}
 	}

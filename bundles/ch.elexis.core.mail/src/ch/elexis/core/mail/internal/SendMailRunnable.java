@@ -47,7 +47,8 @@ public class SendMailRunnable implements IIdentifiedRunnable {
 	public Map<String, Serializable> run(Map<String, Serializable> runContext,
 		IProgressMonitor progressMonitor, Logger logger) throws TaskException{
 		String accountId = (String) runContext.get("accountId"); //$NON-NLS-1$
-		MailMessage message = MailMessage.fromJson(runContext.get("message"));
+		Serializable _message = runContext.get("message");
+		MailMessage message = MailMessage.fromMap((Map) _message);
 		Optional<MailAccount> account = mailClient.getAccount(accountId);
 		if (message != null && account.isPresent()) {
 			if (!mailClient.sendMail(account.get(), message)) {

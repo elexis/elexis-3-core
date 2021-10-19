@@ -3,14 +3,13 @@ package ch.elexis.core.mail;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.apache.commons.lang.StringUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
@@ -39,13 +38,17 @@ public class MailMessage implements Serializable {
 	private static Gson gson = new Gson();
 	
 	public static MailMessage fromJson(Serializable serializable){
-		try {
-			String valueToString = JSONObject.valueToString(serializable);
-			return gson.fromJson(valueToString, MailMessage.class);
-		} catch (JSONException e) {
-			// do nothing
-		}
-		return null;
+		return gson.fromJson(serializable.toString(), MailMessage.class);
+	}
+	
+	public static MailMessage fromMap(@SuppressWarnings("rawtypes")
+	Map map){
+		MailMessage mailMessage = new MailMessage();
+		mailMessage.setSubject((String) map.get("subject"));
+		mailMessage.setTo((String) map.get("to"));
+		mailMessage.setCc((String) map.get("cc"));
+		mailMessage.setText((String) map.get("text"));
+		return mailMessage;
 	}
 	
 	private String to;

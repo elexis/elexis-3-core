@@ -1,6 +1,6 @@
 package ch.elexis.data;
 
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.interfaces.ITransferable;

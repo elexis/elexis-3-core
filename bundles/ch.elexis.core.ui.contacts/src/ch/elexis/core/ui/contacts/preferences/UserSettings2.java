@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -134,6 +134,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 							new ProgressMonitorDialog(getShell());
 						try {
 							progressDialog.run(true, true, new IRunnableWithProgress() {
+								@Override
 								public void run(IProgressMonitor monitor)
 									throws InvocationTargetException, InterruptedException{
 									IQuery<IPatient> query =
@@ -192,6 +193,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 		return null;
 	}
 	
+	@Override
 	public void init(IWorkbench workbench){
 		// TODO Auto-generated method stub
 		

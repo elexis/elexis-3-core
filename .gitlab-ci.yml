@@ -1,6 +1,6 @@
 # Build script used by gitlab.medelexis.ch
 variables:
-   ORIGIN_BRANCH: "master" 
+   ORIGIN_BRANCH: "2021-09-java11" 
 
 stages:
     - build
@@ -8,15 +8,17 @@ stages:
 
 build:
   stage: build
+  tags:
+  - java11
+  - maven
   script:
   - unset JAVA_HOME
   - env
   - xvfb-run mvn -V clean verify -B -Pall-archs -DelexisJcfsTest=true
   - eval $(ssh-agent -s)
   - ssh-add <(echo "$SSH_PRIVATE_KEY_ED25519_BASE64" | base64 -d)
+  - rsync -aiv --delete --mkpath -e ssh ch.elexis.core.p2site/target/repository/ deploy@download.medelexis.ch:download.elexis.info/elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core/
   - rsync -aiv --no-recursive -e ssh ch.elexis.core.p2site/target/products/* deploy@download.medelexis.ch:download.elexis.info/elexis/$CI_COMMIT_REF_NAME/products/
-  - rsync -aiv --delete -e ssh ch.elexis.core.p2site/target/repository/ deploy@download.medelexis.ch:download.elexis.info/elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core/
-  - eval $(ssh-agent -k)
   artifacts:
     reports:
       junit:
@@ -25,6 +27,7 @@ build:
   - master@elexis/elexis-3-core
   - /^\d*[.]\d*$/@elexis/elexis-3-core
   - /^[bf]\d*$/@elexis/elexis-3-core
+  - 2021-09-java11@elexis/elexis-3-core
 
 trigger_elexis-3-base_build:
     stage: trigger_other_builds
@@ -34,3 +37,4 @@ trigger_elexis-3-base_build:
     - master@elexis/elexis-3-core
     - /^\d*[.]\d*$/@elexis/elexis-3-core
     - /^[bf]\d*$/@elexis/elexis-3-core
+    - 2021-09-java11@elexis/elexis-3-core

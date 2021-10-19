@@ -1,28 +1,32 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.elexis.core</groupId>
 	<artifactId>elexis-3-core</artifactId>
 	<version>3.9.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Elexis-Core</name>
+
+
+	<properties>
+		<elexis.target>2021-09-java11</elexis.target>
+
+		<tycho.version>2.5.0</tycho.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
+		<!-- vvv required empty vvv -->
+		<os-jvm-flags />
+		<jarsigner.plugin.version>3.0.0</jarsigner.plugin.version>
+	</properties>
+
 	<repositories>
 		<repository>
 			<id>elexis.3.target</id>
-			<url>https://download.elexis.info/elexis/${git.target.branch}/p2/target</url>
+			<url>https://download.elexis.info/elexis/target/${elexis.target}/</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>
-	<properties>
-		<tycho.version>1.7.0</tycho.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
-		<git.target.branch>master</git.target.branch>
-		<git.core.branch>master</git.core.branch>
-		<!-- vvv required empty vvv-->
-		<os-jvm-flags/>
-		<jarsigner.plugin.version>3.0.0</jarsigner.plugin.version>
-	</properties>
 
 	<organization>
 		<name>elexis.info</name>
@@ -50,8 +54,6 @@
 	<description>Elexis-Server for headless operation</description>
 
 	<modules>
-		<module>ch.elexis.target</module>
-		<module>jre.bundles</module>
 		<module>bundles</module>
 		<module>features</module>
 		<module>tests</module>
@@ -97,31 +99,36 @@
 	</profiles>
 	<build>
 		<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<pomDependencies>consider</pomDependencies>
-							<environments>
-								<environment>
-									<os>linux</os>
-									<ws>gtk</ws>
-									<arch>x86_64</arch>
-								</environment>
-								<environment>
-									<os>win32</os>
-									<ws>win32</ws>
-									<arch>x86_64</arch>
-								</environment>
-								<environment>
-									<os>macosx</os>
-									<ws>cocoa</ws>
-									<arch>x86_64</arch>
-								</environment>
-							</environments>
-						</configuration>
-					</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<pomDependencies>consider</pomDependencies>
+					<environments>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+               <dependency-resolution>
+                   <profileProperties>
+                     <org.eclipse.justj.buildtime>true</org.eclipse.justj.buildtime>
+                   </profileProperties>
+                 </dependency-resolution>
+				</configuration>
+			</plugin>
 			<plugin>
 				<!--https://books.sonatype.com/mcookbook/reference/ch02s03.html#ex-groovy-script-ex -->
 				<groupId>org.codehaus.gmavenplus</groupId>
@@ -185,7 +192,8 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
   branch = createVersionProperties('bundles/ch.elexis.core.data/rsc/version.properties')
   createRepoProperties('ch.elexis.core.p2site/repo.properties', branch)
 }
-]]>								</script>
+]]>
+								</script>
 							</scripts>
 						</configuration>
 					</execution>
@@ -250,7 +258,8 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -284,27 +293,15 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 				<plugin>
 					<!-- Use compiler plugin with tycho as the adapter to the JDT compiler. -->
 					<artifactId>maven-compiler-plugin </artifactId>
-					<version>3.1</version>
+					<version>3.8</version>
 					<configuration>
-						<source>1.8</source>
-						<target>1.8 </target>
-						<compilerId>jdt</compilerId>
-						<compilerArgument>-err:nullAnnot,null </compilerArgument>
-						<!-- insert your warn/err configuration here -->
+						<release>11</release>
 					</configuration>
-					<dependencies>
-						<!-- This dependency provides the implementation of compiler "jdt": -->
-						<dependency>
-							<groupId>org.eclipse.tycho</groupId>
-							<artifactId>tycho-compiler-jdt </artifactId>
-							<version>${tycho.version}</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 				<plugin>
-					<!-- we want to ensure that the bin directory created by the Eclipse gets cleaned, too.
-Without it Maven would put two versions of each class file into the jars
--->
+					<!-- we want to ensure that the bin directory created by the Eclipse 
+						gets cleaned, too. Without it Maven would put two versions of each class 
+						file into the jars -->
 					<artifactId>maven-clean-plugin </artifactId>
 					<version>2.5</version>
 					<configuration>
@@ -326,8 +323,8 @@ Without it Maven would put two versions of each class file into the jars
 					<version>${tycho.version}</version>
 					<configuration>
 						<compilerArguments>
-							<inlineJSR/>
-							<enableJavadoc/>
+							<inlineJSR />
+							<enableJavadoc />
 							<!-- Removed due to bug #2105 <encoding>ISO-8859-1</encoding> -->
 						</compilerArguments>
 					</configuration>
@@ -349,8 +346,8 @@ Without it Maven would put two versions of each class file into the jars
 						<timestampProvider>jgit</timestampProvider>
 						<timestampProvider>jgit</timestampProvider>
 						<jgit.ignore>
-             pom.xml
-             .polyglot.build.properties
+							pom.xml
+							.polyglot.build.properties
 						</jgit.ignore>
 						<jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
 					</configuration>
@@ -417,7 +414,7 @@ Without it Maven would put two versions of each class file into the jars
 					</reportSet>
 				</reportSets>
 			</plugin>
-			<plugin>				<!-- maven-jxr-plugin is needed for linkXRef  -->
+			<plugin>				<!-- maven-jxr-plugin is needed for linkXRef -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
 				<version>2.5</version>

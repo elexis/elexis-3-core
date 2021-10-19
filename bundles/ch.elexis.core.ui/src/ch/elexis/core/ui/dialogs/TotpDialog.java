@@ -1,9 +1,5 @@
 package ch.elexis.core.ui.dialogs;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Hashtable;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -14,13 +10,10 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
@@ -28,17 +21,7 @@ import org.eclipse.swt.widgets.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-
-import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.data.Kontakt;
 import ch.elexis.data.User;
 
 public class TotpDialog extends TitleAreaDialog {
@@ -72,48 +55,48 @@ public class TotpDialog extends TitleAreaDialog {
 	}
 	
 	private void createOtpQRCodeImage(){
-		if (image != null) {
-			image.dispose();
-		}
-		
-		String issuer = "Elexis";
-		
-		String selfContactId = ConfigServiceHolder.getGlobal(Preferences.SELFCONTACT_ID, "");
-		if (!StringUtils.isEmpty(selfContactId)) {
-			Kontakt selfContact = Kontakt.load(selfContactId);
-			if (selfContact.isAvailable()) {
-				try {
-					issuer =
-						URLEncoder.encode(selfContact.get(Kontakt.FLD_NAME1), "UTF-8").toString();
-				} catch (UnsupportedEncodingException e) {
-					log.error("Error encoding issuer", e);
-				}
-			}
-		}
-		
-		String otpAuthString = String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s", "Elexis",
-			user.getId(), user.getTotp(), issuer);
-		Hashtable<EncodeHintType, Object> hintMap = new Hashtable<>();
-		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-		QRCodeWriter qrCodeWriter = new QRCodeWriter();
-		try {
-			BitMatrix bitMatrix =
-				qrCodeWriter.encode(otpAuthString, BarcodeFormat.QR_CODE, 164, 164, hintMap);
-			int width = bitMatrix.getWidth();
-			int height = bitMatrix.getHeight();
-			
-			ImageData data =
-				new ImageData(width, height, 24, new PaletteData(0xFF, 0xFF00, 0xFF0000));
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
-					data.setPixel(x, y, bitMatrix.get(x, y) ? 0x000000 : 0xFFFFFF);
-				}
-			}
-			image = new Image(Display.getDefault(), data);
-		} catch (WriterException ex) {
-			LoggerFactory.getLogger(getClass()).error("Error creating QR", ex);
-			
-		}
+//		if (image != null) {
+//			image.dispose();
+//		}
+//		
+//		String issuer = "Elexis";
+//		
+//		String selfContactId = ConfigServiceHolder.getGlobal(Preferences.SELFCONTACT_ID, "");
+//		if (!StringUtils.isEmpty(selfContactId)) {
+//			Kontakt selfContact = Kontakt.load(selfContactId);
+//			if (selfContact.isAvailable()) {
+//				try {
+//					issuer =
+//						URLEncoder.encode(selfContact.get(Kontakt.FLD_NAME1), "UTF-8").toString();
+//				} catch (UnsupportedEncodingException e) {
+//					log.error("Error encoding issuer", e);
+//				}
+//			}
+//		}
+//		
+//		String otpAuthString = String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s", "Elexis",
+//			user.getId(), user.getTotp(), issuer);
+//		Hashtable<EncodeHintType, Object> hintMap = new Hashtable<>();
+//		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+//		QRCodeWriter qrCodeWriter = new QRCodeWriter();
+//		try {
+//			BitMatrix bitMatrix =
+//				qrCodeWriter.encode(otpAuthString, BarcodeFormat.QR_CODE, 164, 164, hintMap);
+//			int width = bitMatrix.getWidth();
+//			int height = bitMatrix.getHeight();
+//			
+//			ImageData data =
+//				new ImageData(width, height, 24, new PaletteData(0xFF, 0xFF00, 0xFF0000));
+//			for (int y = 0; y < height; y++) {
+//				for (int x = 0; x < width; x++) {
+//					data.setPixel(x, y, bitMatrix.get(x, y) ? 0x000000 : 0xFFFFFF);
+//				}
+//			}
+//			image = new Image(Display.getDefault(), data);
+//		} catch (WriterException ex) {
+//			LoggerFactory.getLogger(getClass()).error("Error creating QR", ex);
+//			
+//		}
 	}
 	
 	/**
