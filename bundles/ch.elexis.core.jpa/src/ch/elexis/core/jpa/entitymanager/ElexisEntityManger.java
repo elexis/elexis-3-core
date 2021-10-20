@@ -23,6 +23,7 @@ import org.osgi.service.jpa.EntityManagerFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBInitializer;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBScriptExecutor;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBUpdater;
@@ -53,6 +54,9 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		threadManagerMap = new ConcurrentHashMap<>();
 		entityManagerCollector = Executors.newSingleThreadScheduledExecutor();
 	}
+	
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	private IDatabaseUpdateUi updateProgress;
 	
 	@Activate
 	public void activate(){
@@ -88,17 +92,31 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		this.factoryBuilder = factoryBuilder;
 	}
 	
+	private void dbInitAndUpdate(){
+		// make sure database is up to date
+		LiquibaseDBInitializer initializer = new LiquibaseDBInitializer(dataSource);
+		initializer.init();
+		LiquibaseDBUpdater updater = new LiquibaseDBUpdater(dataSource);
+		updateSuccess = updater.update();
+	}
+	
 	@Override
 	public synchronized EntityManager getEntityManager(boolean managed){
 		// do lazy initialization on first access
 		if (factory == null) {
 			// try to initialize
 			if (factoryBuilder != null) {
-				// make sure database is up to date
-				LiquibaseDBInitializer initializer = new LiquibaseDBInitializer(dataSource);
-				initializer.init();
-				LiquibaseDBUpdater updater = new LiquibaseDBUpdater(dataSource);
-				updateSuccess = updater.update();
+				if (updateProgress != null) {
+					try {
+						updateProgress.executeWithProgress(() -> {
+							dbInitAndUpdate();
+						});
+					} catch (Exception e) {
+						logger.warn("Exeption executing database update with ui", e);
+					}
+				} else {
+					dbInitAndUpdate();
+				}
 				// initialize the entity manager factory
 				HashMap<String, Object> props = new HashMap<String, Object>();
 				props.put(PersistenceUnitProperties.DDL_GENERATION, PersistenceUnitProperties.NONE);

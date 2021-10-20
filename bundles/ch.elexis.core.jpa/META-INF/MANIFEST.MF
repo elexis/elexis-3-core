@@ -34,7 +34,8 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/liquibase-core-3.10.3.jar,
  lib/snakeyaml-1.28.jar,
  .
-Export-Package: ch.elexis.core.jpa.model.adapter,
+Export-Package: ch.elexis.core.jpa.entitymanager.ui,
+ ch.elexis.core.jpa.model.adapter,
  ch.elexis.core.jpa.model.adapter.mixin,
  ch.elexis.core.jpa.model.adapter.proxy,
  ch.elexis.core.jpa.model.util,

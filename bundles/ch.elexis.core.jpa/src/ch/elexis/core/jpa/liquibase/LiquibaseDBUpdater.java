@@ -34,13 +34,14 @@ public class LiquibaseDBUpdater {
 	public boolean update(){
 		ResourceAccessor resourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader());
 
+		Liquibase liquibase = null;
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
 			final DatabaseConnection database = new JdbcConnection(connection);
 			Database targetDb = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(database);
 
-			Liquibase liquibase = new Liquibase(changelogXmlUrl, resourceAccessor, targetDb);
+			liquibase = new Liquibase(changelogXmlUrl, resourceAccessor, targetDb);
 			
 			logger.info("Updating database [" + connection + "] with liquibase");
 			try {
@@ -57,10 +58,13 @@ public class LiquibaseDBUpdater {
 			return false;
 		} finally {
 			try {
+				if (liquibase != null) {
+					liquibase.close();
+				}
 				if (connection != null) {
 					connection.close();
 				}
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// ignore
 			}
 		}

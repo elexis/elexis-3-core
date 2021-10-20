@@ -38,13 +38,14 @@ public class LiquibaseDBInitializer {
 	public void init() {
 		ResourceAccessor resourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader());
 
+		Liquibase liquibase = null;
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
 			final DatabaseConnection database = new JdbcConnection(connection);
 			Database targetDb = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(database);
 
-			Liquibase liquibase = new Liquibase(changelogXmlUrl, resourceAccessor, targetDb);
+			liquibase = new Liquibase(changelogXmlUrl, resourceAccessor, targetDb);
 			// only execute if the db does not exist already
 			// else sync the changelog as the db already exists
 			if (isFirstStart(connection)) {
@@ -66,10 +67,13 @@ public class LiquibaseDBInitializer {
 			logger.warn("Exception on DB init.", e);
 		} finally {
 			try {
+				if (liquibase != null) {
+					liquibase.close();
+				}
 				if (connection != null) {
 					connection.close();
 				}
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// ignore
 			}
 		}
