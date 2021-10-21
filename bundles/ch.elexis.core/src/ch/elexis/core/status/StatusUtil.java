@@ -54,7 +54,7 @@ public class StatusUtil {
 			}
 		} else if (status instanceof ObjectStatus) {
 			ObjectStatus os = (ObjectStatus) status;
-			printStream.println((os != null) ? os.getObject().toString() : null);
+			printStream.println(os.getObject().toString());
 		} else {
 			printStream.println(indent + status.getMessage());
 		}

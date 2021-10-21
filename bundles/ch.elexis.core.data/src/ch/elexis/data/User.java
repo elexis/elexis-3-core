@@ -175,7 +175,7 @@ public class User extends PersistentObject {
 	 * @since 3.6
 	 */
 	public void resetTotp() {
-		new UnsupportedOperationException();
+		throw new UnsupportedOperationException();
 	}
 	
 	/**

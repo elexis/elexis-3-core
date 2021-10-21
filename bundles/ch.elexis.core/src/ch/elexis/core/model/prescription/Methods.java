@@ -13,6 +13,7 @@ public class Methods {
 	 * @since 3.2.0 relocated from Prescription
 	 * @deprecated use {@link IMedicationService} method instead.
 	 */
+	@Deprecated
 	public static String[] getSignatureAsStringArray(String signature){
 		String[] daytimeSignature = new String[4];
 		Arrays.fill(daytimeSignature, "");
@@ -84,7 +85,6 @@ public class Methods {
 		
 		// build up freetext field
 		String freetext = createFreetextString(morn, noon, eve, night);
-		freetext.trim();
 		values[0] = freetext;
 		return values;
 	}
@@ -103,7 +103,7 @@ public class Methods {
 			}
 			sb.append(val);
 		}
-		return sb.toString();
+		return sb.toString().trim();
 	}
 	
 }
