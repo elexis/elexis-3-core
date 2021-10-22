@@ -36,7 +36,6 @@ import org.apache.commons.dbcp.DriverConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.slf4j.LoggerFactory;
 
 /**
  * Weiterer Abstraktionslayer zum einfacheren Zugriff auf eine jdbc-fähige Datenbank
@@ -717,6 +716,7 @@ public class JdbcLink {
 			try {
 				if (conn != null && !conn.isClosed()) {
 					conn.close();
+					connectionPool.invalidateObject(conn);
 				}
 				log.log(Level.WARNING, "JdbcLink.Stm - trying reconnect");
 				conn = getConnection();
@@ -729,6 +729,9 @@ public class JdbcLink {
 				return false;
 			} catch (JdbcLinkException je) {
 				log.log(Level.SEVERE, "JdbcLink.Stm - Reconnect failed " + je.getMessage());
+				return false;
+			} catch (Exception e) {
+				log.log(Level.SEVERE, "JdbcLink.Stm - Reconnect failed " + e.getMessage());
 				return false;
 			}
 		}
@@ -818,7 +821,7 @@ public class JdbcLink {
 		 * @param SQLText
 		 *            ein Query String in von der Datenbank verstandener Syntax
 		 * @return ein ResultSet oder null bei Fehler
-		 * @throws JdbcException
+		 * @throws ch.rgw.tools.JdbcException
 		 */
 		public ResultSet query(final String SQLText){
 			return internalQuery(SQLText, false);
