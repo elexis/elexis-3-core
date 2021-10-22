@@ -48,7 +48,7 @@ public class ContactRefElement extends XChangeElement {
 		setAttribute(CONTACTREF_REFID, id);
 	}
 	
-	public String getId(){
+	public String getContactRefId(){
 		return getAttr(CONTACTREF_REFID);
 	}
 }

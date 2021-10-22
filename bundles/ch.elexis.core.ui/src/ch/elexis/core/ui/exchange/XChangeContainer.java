@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -135,6 +136,7 @@ public class XChangeContainer {
 		eRoot = doc.getRootElement();
 	}
 	
+	@Override
 	public String toString(){
 		Format format = Format.getPrettyFormat();
 		format.setEncoding("utf-8");
@@ -283,7 +285,7 @@ public class XChangeContainer {
 			}
 		}
 		String name = trace[trace.length - 1];
-		if (trace.equals("*")) { //$NON-NLS-1$
+		if (Objects.equals(name, "*")) { //$NON-NLS-1$
 			return runner.getChildren();
 		}
 		return runner.getChildren(name, ns);
