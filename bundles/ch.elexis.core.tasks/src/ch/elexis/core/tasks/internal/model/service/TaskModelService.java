@@ -113,7 +113,7 @@ public class TaskModelService extends AbstractModelService
 				Class<Identifiable> clazz = (Class<Identifiable>) TaskModelService.class.getClassLoader()
 						.loadClass(type);
 					if (clazz != null) {
-						adapterFactory.getEntityClass(clazz);
+						return adapterFactory.getEntityClass(clazz);
 					}
 				} catch (ClassNotFoundException e) {
 					LoggerFactory.getLogger(getClass())
