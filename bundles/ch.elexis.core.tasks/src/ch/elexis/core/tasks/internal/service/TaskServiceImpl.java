@@ -137,19 +137,12 @@ public class TaskServiceImpl implements ITaskService {
 		triggeredTasks = Collections.synchronizedList(new ArrayList<>());
 		parallelExecutorService = Executors.newCachedThreadPool();
 		perRunnableSingletonExecutorService = new HashMap<>();
-		quartzExecutor = new QuartzExecutor();
 		sysEventWatcher = new SysEventWatcher();
 		util = new TaskServiceUtil();
 	}
 	
 	@Activate
 	private void activateComponent(){
-		try {
-			quartzExecutor.start();
-		} catch (SchedulerException e) {
-			logger.warn("Error starting quartz scheduler", e);
-		}
-		
 		watchServiceHolder = new WatchServiceHolder(this);
 		if (watchServiceHolder.triggerIsAvailable()) {
 			watchServiceHolder.startPolling();
@@ -179,14 +172,36 @@ public class TaskServiceImpl implements ITaskService {
 		getRunningTasks()
 			.forEach(task -> logger.warn("Could not gracefully stop task " + task.getLabel()));
 		
-		try {
-			quartzExecutor.shutdown();
-			parallelExecutorService.shutdown();
-			perRunnableSingletonExecutorService.forEach((c, e) -> e.shutdown());
-		} catch (SchedulerException e) {
-			logger.warn("Error stopping scheduler", e);
+		if (quartzExecutor != null) {
+			try {
+				quartzExecutor.shutdown();
+				quartzExecutor = null;
+			} catch (SchedulerException e) {
+				logger.warn("Error stopping quartz scheduler", e);
+			}
 		}
+		
+		parallelExecutorService.shutdown();
+		perRunnableSingletonExecutorService.forEach((c, e) -> e.shutdown());
 		watchServiceHolder.stopPolling();
+	}
+	
+	/**
+	 * Assert that the quartzExecutor is available and started
+	 * 
+	 * @throws TaskException
+	 */
+	private synchronized void assertQuartzExecutor() throws TaskException{
+		if (quartzExecutor == null) {
+			quartzExecutor = new QuartzExecutor();
+			try {
+				quartzExecutor.start();
+			} catch (SchedulerException e) {
+				quartzExecutor = null;
+				throw new TaskException(TaskException.TRIGGER_NOT_AVAILABLE,
+					"Error starting quartz scheduler", e);
+			}
+		}
 	}
 	
 	//TODO: check - are there any TDs we are responsible for, and yet not loaded?
@@ -235,6 +250,7 @@ public class TaskServiceImpl implements ITaskService {
 		if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()) {
 			watchServiceHolder.incur(taskDescriptor);
 		} else if (TaskTriggerType.CRON == taskDescriptor.getTriggerType()) {
+			assertQuartzExecutor();
 			quartzExecutor.incur(this, taskDescriptor);
 		} else if (TaskTriggerType.MANUAL == taskDescriptor.getTriggerType()) {
 			// nothing to be done
@@ -258,7 +274,9 @@ public class TaskServiceImpl implements ITaskService {
 		if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()) {
 			watchServiceHolder.release(taskDescriptor);
 		} else if (TaskTriggerType.CRON == taskDescriptor.getTriggerType()) {
-			quartzExecutor.release(taskDescriptor);
+			if(quartzExecutor != null) {
+				quartzExecutor.release(taskDescriptor);
+			}
 		} else if (TaskTriggerType.SYSTEM_EVENT == taskDescriptor.getTriggerType()) {
 			sysEventWatcher.release(taskDescriptor);
 		}
@@ -588,15 +606,17 @@ public class TaskServiceImpl implements ITaskService {
 	@Override
 	public List<ITaskDescriptor> getIncurredTasks(){
 		List<ITaskDescriptor> projectedTaskDescriptors = new ArrayList<ITaskDescriptor>();
-		Set<String[]> incurred = quartzExecutor.getIncurred();
-		incurred.stream().forEach(i -> {
-			ITaskDescriptor taskDescriptor =
-				taskModelService.load(i[0], ITaskDescriptor.class).orElse(null);
-			if (taskDescriptor != null) {
-				taskDescriptor.getTransientData().put("cron-next-exectime", i[1]);
-				projectedTaskDescriptors.add(taskDescriptor);
-			}
-		});
+		if (quartzExecutor != null) {
+			Set<String[]> incurred = quartzExecutor.getIncurred();
+			incurred.stream().forEach(i -> {
+				ITaskDescriptor taskDescriptor =
+					taskModelService.load(i[0], ITaskDescriptor.class).orElse(null);
+				if (taskDescriptor != null) {
+					taskDescriptor.getTransientData().put("cron-next-exectime", i[1]);
+					projectedTaskDescriptors.add(taskDescriptor);
+				}
+			});
+		}
 		return projectedTaskDescriptors;
 	}
 }
