@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2021-09-java11" sequenceNumber="1634633385">
+<target name="Elexis IDE 2021-09-java11" sequenceNumber="1634831041">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="11.0.12.v20211011-1323"/>
@@ -52,6 +52,7 @@
       <unit id="org.apache.poi" version="4.1.1.v20200604-1524"/>
       <unit id="org.apache.poi.ooxml" version="4.1.1.v20200820-1148"/>
       <unit id="org.apache.poi.ooxml.schemas" version="4.1.1.v20200922-2105"/>
+      <unit id="org.apache.xmlbeans" version="3.1.0.v20200922-1359"/>
       <unit id="org.beanshell.bsh" version="2.0.0.0b4"/>
       <unit id="com.opencsv" version="3.10.0"/>
       <unit id="jakarta.mail-api" version="1.6.7"/>
@@ -77,8 +78,8 @@
       <unit id="org.eclipse.nebula.widgets.nattable.extension.glazedlists" version="2.0.1.202106070924"/>
       <unit id="ca.odell.glazedlists" version="1.11.0.v20190926-1838"/>
       <unit id="org.eclipse.collections" version="10.4.0.v20200820-2049"/>
-      <unit id="com.equo.chromium.feature.feature.group" version="80.0.9.202110140605"/>
-      <unit id="com.equo.chromium.cef.feature.feature.group" version="80.0.7.202110140419"/>
+      <unit id="com.equo.chromium.feature.feature.group" version="80.0.10.202110202229"/>
+      <unit id="com.equo.chromium.cef.feature.feature.group" version="80.0.8.202110202117"/>
       <unit id="org.eclipse.jetty.deploy" version="10.0.6"/>
       <unit id="org.eclipse.jetty.webapp" version="10.0.6"/>
       <unit id="org.eclipse.jetty.xml" version="10.0.6"/>
