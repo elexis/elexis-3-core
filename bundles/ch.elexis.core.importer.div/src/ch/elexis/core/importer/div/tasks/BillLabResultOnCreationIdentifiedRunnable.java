@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICodeElement;
@@ -35,7 +36,6 @@ import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.SerializableBoolean;
 import ch.elexis.core.model.tasks.TaskException;
-import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IMessageService;
@@ -52,7 +52,6 @@ import ch.elexis.core.services.holder.LabServiceHolder;
 import ch.elexis.core.services.holder.MessageServiceHolder;
 import ch.elexis.core.time.TimeUtil;
 import ch.rgw.tools.Result;
-import ch.rgw.tools.TimeTool;
 
 /**
  * @see at.medevit.elexis.roche.labor.billing.AddLabToKons for original implementation
@@ -102,11 +101,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	
 	private IBillable getKonsVerrechenbar(IEncounter kons){
 		if (kons.getCoverage() != null) {
-			TimeTool date = new TimeTool(kons.getDate());
-			String law = kons.getCoverage().getBillingSystem().getName();
-			Map<Object, Object> context = new HashMap<>();
-			context.put(ICodeElementService.ContextKeys.LAW, law);
-			context.put(ICodeElementService.ContextKeys.DATE, date.toLocalDate());
+			Map<Object, Object> context = CodeElementServiceHolder.createContext(kons);
 			Optional<ICodeElement> tarmed =
 				CodeElementServiceHolder.get().loadFromString("Tarmed", "00.0010", context);
 			if (tarmed.isPresent()) {
@@ -306,6 +301,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 						if (!result.isOK()) {
 							throw new TaskException(TaskException.EXECUTION_ERROR, result);
 						}
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, kons);
 					}
 				}
 			}
