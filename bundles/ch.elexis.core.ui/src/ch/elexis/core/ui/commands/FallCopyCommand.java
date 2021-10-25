@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.services.holder.CoverageServiceHolder;
 import ch.elexis.core.ui.services.EncounterServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.FallDetailView;
@@ -27,29 +28,30 @@ public class FallCopyCommand extends AbstractHandler {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		FallDetailView fallDetailView = (FallDetailView) activePage.findView(FallDetailView.ID);
 		Fall activeFall = fallDetailView.getActiveFall();
-		if (activeFall == null)
-			return null;
-		Fall clone = createFallClone(activeFall);
-		
-		// only ask for consultation transfer if case is still open 
-		if (activeFall.isOpen()) {
-			Konsultation[] consultations = activeFall.getBehandlungen(true);
-			if (consultations != null && consultations.length > 0) {
-				boolean transferCons =
-					SWTHelper.askYesNo(Messages.FallCopyCommand_RelatedConsultations,
-						Messages.FallCopyCommand_TransferConsultations
-							+ Messages.FallCopyCommand_AttentionTransferConsultations);
-				if (transferCons) {
-					logger.debug("trying to transfer consulations");
-					for (Konsultation cons : consultations) {
-						if (cons.isEditable(false)) {
-							Result<IEncounter> result =
-								EncounterServiceHolder.get().transferToCoverage(
-									NoPoUtil.loadAsIdentifiable(cons, IEncounter.class).get(),
-									NoPoUtil.loadAsIdentifiable(clone, ICoverage.class).get(),
-									false);
-							if (!result.isOK()) {
-								SWTHelper.alert("Error", result.toString());
+		if (activeFall != null) {
+			ICoverage clone = createFallClone(
+				NoPoUtil.loadAsIdentifiable(activeFall, ICoverage.class).orElse(null));
+			if (clone != null) {
+				// only ask for consultation transfer if case is still open 
+				if (activeFall.isOpen()) {
+					Konsultation[] consultations = activeFall.getBehandlungen(true);
+					if (consultations != null && consultations.length > 0) {
+						boolean transferCons =
+							SWTHelper.askYesNo(Messages.FallCopyCommand_RelatedConsultations,
+								Messages.FallCopyCommand_TransferConsultations
+									+ Messages.FallCopyCommand_AttentionTransferConsultations);
+						if (transferCons) {
+							logger.debug("trying to transfer consulations");
+							for (Konsultation cons : consultations) {
+								if (cons.isEditable(false)) {
+									Result<IEncounter> result = EncounterServiceHolder.get()
+										.transferToCoverage(NoPoUtil
+											.loadAsIdentifiable(cons, IEncounter.class).get(),
+											clone, false);
+									if (!result.isOK()) {
+										SWTHelper.alert("Error", result.toString());
+									}
+								}
 							}
 						}
 					}
@@ -59,7 +61,10 @@ public class FallCopyCommand extends AbstractHandler {
 		return null;
 	}
 	
-	private Fall createFallClone(Fall fall){
-		return fall.createCopy();
+	private ICoverage createFallClone(ICoverage fall){
+		if (fall != null) {
+			return CoverageServiceHolder.get().createCopy(fall);
+		}
+		return null;
 	}
 }

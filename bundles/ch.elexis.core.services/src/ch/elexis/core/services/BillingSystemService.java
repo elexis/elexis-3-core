@@ -37,6 +37,13 @@ public class BillingSystemService implements IBillingSystemService {
 	}
 	
 	@Override
+	public String getOptionals(IBillingSystem system){
+		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+			+ system.getName() + "/fakultativ", null); //$NON-NLS-1$
+		return value;
+	}
+	
+	@Override
 	public String getRequirements(IBillingSystem system){
 		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ system.getName() + "/bedingungen", null);

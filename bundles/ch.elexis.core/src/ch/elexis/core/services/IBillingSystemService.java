@@ -9,6 +9,18 @@ import ch.elexis.core.model.ch.BillingLaw;
 public interface IBillingSystemService {
 	
 	/**
+	 * Retrieve optionals of a given {@link IBillingSystem}.
+	 * 
+	 * @param billingSystem
+	 * @return a ; separated String of fields name:type where type is one of K,T,D for Kontakt,
+	 *         Text, Date TM Text Multiline TS Text Styled CS Combo saved as string CN Combo saved
+	 *         as numeric (selected index) LS List items, saved as strings, tab-delimited LN List
+	 *         items, saved as numerics, tab-delimited (selected indexes) X CheckBox always saved as
+	 *         numeric RS Radios, saved as string RN Radios, saved as numeric, selected index
+	 */
+	public String getOptionals(IBillingSystem system);
+	
+	/**
 	 * Retrieve requirements of a given {@link IBillingSystem}.
 	 * 
 	 * @param billingSystem

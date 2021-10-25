@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.BillingSystem;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IBillingSystemService;
@@ -28,6 +29,18 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 		// only to transport the name of the IBillingSystem,
 		// not validating whether it exists
 		object.setBillingSystem(new BillingSystem(billingSystem, null));
+	}
+	
+	public ICoverageBuilder(IModelService modelService, ICoverage coverage){
+		super(modelService);
+		this.patient = coverage.getPatient();
+		
+		object = modelService.create(ICoverage.class);
+		object.setPatient(patient);
+		object.setDescription(coverage.getLabel());
+		object.setReason(coverage.getReason());
+		object.setDateFrom(LocalDate.now());
+		object.setBillingSystem(coverage.getBillingSystem());
 	}
 	
 	/**
@@ -97,4 +110,23 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 			billingSystemService.getDefaultBillingSystem().getLaw().name());
 	}
 	
+	public ICoverageBuilder guarantor(IContact guarantor){
+		object.setGuarantor(guarantor);
+		return this;
+	}
+	
+	public ICoverageBuilder costBearer(IContact costBearer){
+		object.setCostBearer(costBearer);
+		return this;
+	}
+	
+	public ICoverageBuilder billingProposalDate(LocalDate billingProposalDate){
+		object.setBillingProposalDate(billingProposalDate);
+		return this;
+	}
+	
+	public ICoverageBuilder dateFrom(LocalDate dateFrom){
+		object.setDateFrom(dateFrom);
+		return this;
+	}
 }

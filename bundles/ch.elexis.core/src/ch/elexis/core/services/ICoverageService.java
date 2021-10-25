@@ -67,4 +67,13 @@ public interface ICoverageService {
 	public String getDefaultCoverageReason();
 	
 	public String getDefaultCoverageLaw();
+	
+	/**
+	 * Create a copy of the provided {@link ICoverage} including billing systems required and
+	 * optional data fields.
+	 * 
+	 * @param coverage
+	 * @return
+	 */
+	public ICoverage createCopy(ICoverage coverage);
 }
