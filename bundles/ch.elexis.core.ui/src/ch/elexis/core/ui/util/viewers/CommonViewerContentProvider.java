@@ -163,7 +163,7 @@ public abstract class CommonViewerContentProvider implements ICommonViewerConten
 				}
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 	
 	/**
