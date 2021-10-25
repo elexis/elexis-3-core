@@ -10,7 +10,13 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class HL7Helper {
+	
+	private static final SimpleDateFormat SDF_DATE_TIME_PATTERN;
 	private static final String DTM_DATE_TIME_PATTERN = "yyyyMMddHHmmss"; //$NON-NLS-1$
+	
+	static {
+		SDF_DATE_TIME_PATTERN = new SimpleDateFormat(DTM_DATE_TIME_PATTERN);
+	}
 	
 	/**
 	 * Transformiert einen HL7 Date/Time String in ein java.util.Date
@@ -24,8 +30,7 @@ public class HL7Helper {
 		}
 		
 		if (dateTimeStr.length() >= 14) {
-			SimpleDateFormat sdf = new SimpleDateFormat(DTM_DATE_TIME_PATTERN.substring(0, 14));
-			return sdf.parse(dateTimeStr);
+			return SDF_DATE_TIME_PATTERN.parse(dateTimeStr);
 		} else {
 			SimpleDateFormat sdf =
 				new SimpleDateFormat(DTM_DATE_TIME_PATTERN.substring(0, dateTimeStr.length()));
@@ -45,18 +50,7 @@ public class HL7Helper {
 		}
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(date);
-		String pattern = DTM_DATE_TIME_PATTERN;
-		if (cal.get(Calendar.SECOND) == 0) {
-			pattern.substring(0, pattern.length() - 2);
-		}
-		if (cal.get(Calendar.MINUTE) == 0) {
-			pattern.substring(0, pattern.length() - 2);
-		}
-		if (cal.get(Calendar.HOUR) == 0) {
-			pattern.substring(0, pattern.length() - 2);
-		}
-		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-		return sdf.format(cal.getTime());
+		return SDF_DATE_TIME_PATTERN.format(cal.getTime());
 	}
 	
 	public static String dateToString(LocalDateTime localDateTime){
