@@ -36,6 +36,7 @@ import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.CoverageServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.data.Fall;
@@ -911,7 +912,9 @@ public class BillingUtil {
 		
 		private void copyFall(){
 			srcFall = Optional.of(rechnung.getFall());
-			copyFall = Optional.of(srcFall.get().createCopy());
+			ICoverage copy = CoverageServiceHolder.get()
+				.createCopy(NoPoUtil.loadAsIdentifiable(srcFall.get(), ICoverage.class).get());
+			copyFall = Optional.of((Fall) NoPoUtil.loadAsPersistentObject(copy));
 			acquireLock(locks, copyFall.get(), true);
 			log.debug("invoice correction: copied fall from id [{}] to id [{}] ",
 				srcFall.get().getId(), copyFall.get().getId());
