@@ -25,6 +25,7 @@ public class ElexisPoolingDataSource extends PoolingDataSource implements DataSo
 	
 	private DBConnection dbConnection;
 	
+	private Driver driver;
 	private ObjectPool<Connection> connectionPool;
 	
 	public ElexisPoolingDataSource(DBConnection dbConnection){
@@ -37,14 +38,14 @@ public class ElexisPoolingDataSource extends PoolingDataSource implements DataSo
 		if (connectionPool != null) {
 			setPool(connectionPool);
 			try (Connection conn = getConnection()) {
-				log.info("db connection pool [" + dbConnection.connectionString
+				log.info("db connection pool [" + driver + ", " + dbConnection.connectionString
 					+ "] initialization success");
 			} catch (SQLException e) {
-				log.error("db connection pool [" + dbConnection.connectionString
+				log.error("db connection pool [" + driver + ", " + dbConnection.connectionString
 					+ "] initialization error", e);
 			}
 		} else {
-			log.error("db connection pool [" + dbConnection.connectionString
+			log.error("db connection pool [" + driver + ", " + dbConnection.connectionString
 				+ "] initialization failed - no connection pool");
 		}
 	}
@@ -67,13 +68,13 @@ public class ElexisPoolingDataSource extends PoolingDataSource implements DataSo
 		String password = StringUtils.defaultString(dbConnection.password);
 		String jdbcString = StringUtils.defaultString(dbConnection.connectionString);
 		
-		Driver driver = (Driver) Class.forName(driverName).newInstance();
+		driver = (Driver) Class.forName(driverName).newInstance();
 		
 		Properties properties = new Properties();
 		properties.put("user", username);
 		properties.put("password", password);
 		
-		log.info("db connection pool [" + driver + ", " + jdbcString + ", " + username
+		log.debug("db connection pool [" + driver + ", " + jdbcString + ", " + username
 			+ "] initialization");
 		
 		ConnectionFactory connectionFactory =

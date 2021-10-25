@@ -19,6 +19,7 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +42,8 @@ public class ElexisDataSourceService implements IElexisDataSource {
 	
 	@Activate
 	public void activate(){
-		System.out.println("Activating ElexisDataSourceService ...");
-		log.debug("Activating ...");
+		log.debug("@Activate");
+		
 		if (CoreUtil.isTestMode()) {
 			log.warn("- test-mode -");
 			connectionStatus = setDBConnection(new TestDatabaseConnection());
@@ -60,9 +61,14 @@ public class ElexisDataSourceService implements IElexisDataSource {
 			if (!connectionStatus.isOK()) {
 				log.error("Error setting db connection", connectionStatus.getMessage());
 				System.out.println("ERROR " + connectionStatus.getMessage());
-			}
+			} 
+			return;
 		}
-		
+	}
+	
+	@Deactivate
+	public void deactivate() {
+		log.debug("@Deactivate");
 	}
 	
 	@Override
@@ -74,7 +80,7 @@ public class ElexisDataSourceService implements IElexisDataSource {
 			code = 2;
 		}
 		
-		log.info("setDBConnection [{}] " + dbConnection, code);
+		log.debug("setDBConnection [{}] " + dbConnection, code);
 		try {
 			if (servReg != null) {
 				log.info("Unregistering service registration");
