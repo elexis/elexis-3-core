@@ -37,7 +37,7 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 		
 		object = modelService.create(ICoverage.class);
 		object.setPatient(patient);
-		object.setDescription(coverage.getLabel());
+		object.setDescription(coverage.getDescription());
 		object.setReason(coverage.getReason());
 		object.setDateFrom(LocalDate.now());
 		object.setBillingSystem(coverage.getBillingSystem());
