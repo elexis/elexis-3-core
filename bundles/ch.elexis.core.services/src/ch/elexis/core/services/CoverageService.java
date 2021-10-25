@@ -1,5 +1,7 @@
 package ch.elexis.core.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +13,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -139,12 +142,20 @@ public class CoverageService implements ICoverageService {
 		return Tiers.GARANT;
 	}
 	
-	@Override
+	/**
+	 * Test if on billing with the provided {@link ICoverage} a copy for the patient should be
+	 * generated.
+	 * 
+	 */
 	public boolean getCopyForPatient(ICoverage coverage){
 		return StringConstants.ONE
 			.equals(coverage.getExtInfo(FallConstants.FLD_EXT_COPY_FOR_PATIENT));
 	}
 	
+	/**
+	 * Set if on billing with the provided {@link ICoverage} a copy for the patient should be
+	 * generated.
+	 */
 	@Override
 	public void setCopyForPatient(ICoverage coverage, boolean copy){
 		coverage.setExtInfo(FallConstants.FLD_EXT_COPY_FOR_PATIENT,
@@ -198,5 +209,40 @@ public class CoverageService implements ICoverageService {
 		return "defaultBillingSystem";
 		//		return ConfigServiceHolder.getUser(Preferences.USR_DEFLAW,
 		//			BillingSystem.getAbrechnungsSysteme()[0]);
+	}
+	
+	@Override
+	public ICoverage createCopy(ICoverage coverage){
+		ICoverage ret = new ICoverageBuilder(CoreModelServiceHolder.get(), coverage)
+			.guarantor(coverage.getGuarantor()).costBearer(coverage.getCostBearer())
+			.billingProposalDate(coverage.getBillingProposalDate()).dateFrom(coverage.getDateFrom())
+			.build();
+		
+		copyExtInfoFields(loadFieldKeys(BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem())), coverage, ret);
+		copyExtInfoFields(
+			loadFieldKeys(
+				BillingSystemServiceHolder.get().getOptionals(coverage.getBillingSystem())),
+			coverage, ret);
+		
+		CoreModelServiceHolder.get().save(ret);
+		return ret;
+	}
+	
+	private void copyExtInfoFields(List<String> fieldKeys, ICoverage from, ICoverage to){
+		for (String fieldKey : fieldKeys) {
+			to.setExtInfo(fieldKey, from.getExtInfo(fieldKey));
+		}
+	}
+	
+	private List<String> loadFieldKeys(String fieldString){
+		List<String> keys = new ArrayList<String>();
+		if (StringUtils.isNotBlank(fieldString)) {
+			String[] fields = fieldString.split(";");
+			for (String field : fields) {
+				String[] nameType = field.split(":");
+				keys.add(nameType[0]);
+			}
+		}
+		return keys;
 	}
 }
