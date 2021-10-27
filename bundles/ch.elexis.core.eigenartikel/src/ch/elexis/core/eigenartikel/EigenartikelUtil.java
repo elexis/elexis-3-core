@@ -18,19 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.interfaces.IOptifier;
-import ch.elexis.core.data.service.ContextServiceHolder;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 
 public class EigenartikelUtil {
-	
-	private static IOptifier OPTIFIER;
 	
 	/**
 	 * Synchronizes a products description with is "child" packages and adds as package to product
@@ -65,41 +62,4 @@ public class EigenartikelUtil {
 		}
 		CoreModelServiceHolder.get().save((List<Identifiable>) (List<?>) eaPackages);
 	}
-	
-	
-
-	
-//	@Override
-//	public IOptifier getOptifier(){
-//		if (OPTIFIER == null) {
-//			OPTIFIER = new DefaultOptifier() {
-//				@Override
-//				public Result<IVerrechenbar> add(IVerrechenbar code, Konsultation kons){
-//					boolean valid = true;
-//					// test VVG if is typ EigenartikelTyp.COMPLEMENTARY
-//					if (code instanceof Eigenartikel) {
-//						Eigenartikel article = (Eigenartikel) code;
-//						if (article.getTyp() == EigenartikelTyp.COMPLEMENTARY) {
-//							String gesetz = kons.getFall().getConfiguredBillingSystemLaw().name();
-//							String system = kons.getFall().getAbrechnungsSystem();
-//							if (gesetz.isEmpty()) {
-//								if (!"vvg".equalsIgnoreCase(system)) {
-//									valid = false;
-//								}
-//							} else {
-//								if (!"vvg".equalsIgnoreCase(gesetz)) {
-//									valid = false;
-//								}
-//							}
-//						}
-//					}
-//					return valid ? super.add(code, kons)
-//							: new Result<IVerrechenbar>(Result.SEVERITY.WARNING, 0,
-//								"Komplementärmedizinische Artikel können nur auf eine Fall mit Gesetz oder Name VVG verrechnet werden.",
-//								null, false);
-//				}
-//			};
-//		}
-//		return OPTIFIER;
-//	}
 }

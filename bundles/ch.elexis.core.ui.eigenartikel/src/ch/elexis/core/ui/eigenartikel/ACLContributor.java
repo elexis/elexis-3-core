@@ -1,4 +1,4 @@
-package ch.elexis.core.eigenartikel.acl;
+package ch.elexis.core.ui.eigenartikel;
 
 import ch.elexis.admin.ACE;
 import ch.elexis.admin.AbstractAccessControl;
