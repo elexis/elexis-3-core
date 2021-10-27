@@ -218,7 +218,9 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		stockDetailComposite.setEnabled(unlocked);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({
+		"unchecked", "deprecation", "rawtypes"
+	})
 	protected DataBindingContext initDataBindings(){
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
@@ -258,22 +260,27 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		ISWTObservableValue observeTextTxtExfPriceObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtExfPrice);
 		IObservableValue<String> drugPackageEigenartikelEKPreisObserveDetailValue =
-			PojoProperties.value(IArticle.class, "purchasePrice", String.class)
+			PojoProperties.value(IArticle.class, "purchasePrice", Money.class)
 				.observeDetail(drugPackageEigenartikel);
+		SavingUpdateValueStrategy target2ModelStrategy =
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel);
+		target2ModelStrategy.setConverter(new String2MoneyConverter());
+		UpdateValueStrategy model2TargetStrategy = new UpdateValueStrategy<>();
+		model2TargetStrategy.setConverter(new Money2StringConverter());
 		bindingContext.bindValue(observeTextTxtExfPriceObserveWidget,
 			drugPackageEigenartikelEKPreisObserveDetailValue,
-			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
-			null);
+			target2ModelStrategy,
+			model2TargetStrategy);
 		//		//
 		ISWTObservableValue observeTextTxtpubPriceObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtpubPrice);
 		IObservableValue<Money> drugPackageEigenartikelVKPreisObserveDetailValue =
 			PojoProperties.value(IArticle.class, "sellingPrice", Money.class)
 				.observeDetail(drugPackageEigenartikel);
-		SavingUpdateValueStrategy target2ModelStrategy =
+		target2ModelStrategy =
 			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel);
 		target2ModelStrategy.setConverter(new String2MoneyConverter());
-		UpdateValueStrategy model2TargetStrategy = new UpdateValueStrategy<>();
+		model2TargetStrategy = new UpdateValueStrategy<>();
 		model2TargetStrategy.setConverter(new Money2StringConverter());
 		bindingContext.bindValue(observeTextTxtpubPriceObserveWidget,
 			drugPackageEigenartikelVKPreisObserveDetailValue,
