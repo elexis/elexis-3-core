@@ -27,6 +27,7 @@ import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.core.ui.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockRequestingRestrictedAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
