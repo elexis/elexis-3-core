@@ -1,4 +1,4 @@
-package ch.elexis.core.data.service;
+package ch.elexis.core.services;
 
 import java.util.List;
 import java.util.Map;
@@ -12,9 +12,6 @@ import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.localservice.Constants;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
-import ch.elexis.core.services.ICodeElementServiceContribution;
-import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.INamedQuery;
 
 @Component
 public class EigenleistungCodeElementService implements ICodeElementServiceContribution {
