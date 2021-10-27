@@ -29,6 +29,8 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -106,6 +108,12 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 					(ch.elexis.core.model.IPatient) filterParameters
 						.get(ch.elexis.core.model.IPatient.class);
 				invoiceListHeaderComposite.setSelectedPatientId(Patient.load(patient.getId()));
+			}
+			// reset comparator, do not comparing lazy loaded fields
+			if (tableViewerInvoiceList != null && !tableViewerInvoiceList.getTable().isDisposed()
+				&& tableViewerInvoiceList.getComparator() != null) {
+				tableViewerInvoiceList.setComparator(null);
+				setSortOrder(tableViewerInvoiceList.getTable().getColumn(3), SWT.UP);
 			}
 			invoiceListContentProvider.reload();
 		}
@@ -231,6 +239,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 				return super.getText(element);
 			}
 		});
+		tblclmnLaw.addSelectionListener(sortViewerAdapter);
 		
 		TableViewerColumn tvcPayerType = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnType = tvcPayerType.getColumn();
@@ -245,6 +254,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 				return super.getText(element);
 			}
 		});
+		tblclmnType.addSelectionListener(sortViewerAdapter);
 		
 		TableViewerColumn tvcReceiver = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnReceiver = tvcReceiver.getColumn();
@@ -277,6 +287,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 				return super.getBackground(element);
 			}
 		});
+		tblclmnReceiver.addSelectionListener(sortViewerAdapter);
 		
 		TableViewerColumn tvcTreatmentPeriod =
 			new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
@@ -398,10 +409,72 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 				tableViewerInvoiceList.getTable().setSortColumn(selectedColumn);
 				sortDirection = SWT.UP;
 			}
-			
+			tableViewerInvoiceList.setComparator(null);
 			setSortOrder(selectedColumn, sortDirection);
 		}
 		
+	};
+	
+	private SelectionAdapter sortViewerAdapter = new SelectionAdapter() {
+		@Override
+		public void widgetSelected(SelectionEvent e){
+			TableColumn sortColumn = tableViewerInvoiceList.getTable().getSortColumn();
+			TableColumn selectedColumn = (TableColumn) e.widget;
+			int sortDirection = tableViewerInvoiceList.getTable().getSortDirection();
+			if (sortColumn == selectedColumn) {
+				sortDirection = sortDirection == SWT.UP ? SWT.DOWN : SWT.UP;
+			} else {
+				tableViewerInvoiceList.getTable().setSortColumn(selectedColumn);
+				sortDirection = SWT.UP;
+			}
+			tableViewerInvoiceList.getTable().setSortDirection(sortDirection);
+			tableViewerInvoiceList.setComparator(sortViewerComparator);
+			tableViewerInvoiceList.refresh();
+		}
+	};
+	
+	private ViewerComparator sortViewerComparator = new ViewerComparator() {
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2){
+			TableColumn sortColumn = ((TableViewer) viewer).getTable().getSortColumn();
+			int sortDirection = ((TableViewer) viewer).getTable().getSortDirection();
+			if (tableViewerInvoiceList.getTable().indexOf(sortColumn) == 6) {
+				InvoiceEntry l = (InvoiceEntry) e1;
+				InvoiceEntry r = (InvoiceEntry) e2;
+				resolve(l);
+				resolve(r);
+				String s1 = l.getReceiverLabel();
+				String s2 = r.getReceiverLabel();
+				return getComparator().compare(s1, s2) * (sortDirection == SWT.UP ? 1 : -1);
+			} else if (tableViewerInvoiceList.getTable().indexOf(sortColumn) == 5) {
+				InvoiceEntry l = (InvoiceEntry) e1;
+				InvoiceEntry r = (InvoiceEntry) e2;
+				resolve(l);
+				resolve(r);
+				String s1 = l.getPayerType();
+				String s2 = r.getPayerType();
+				return getComparator().compare(s1, s2) * (sortDirection == SWT.UP ? 1 : -1);
+			} else if (tableViewerInvoiceList.getTable().indexOf(sortColumn) == 4) {
+				InvoiceEntry l = (InvoiceEntry) e1;
+				InvoiceEntry r = (InvoiceEntry) e2;
+				resolve(l);
+				resolve(r);
+				String s1 = l.getBillingSystem();
+				String s2 = r.getBillingSystem();
+				return getComparator().compare(s1, s2) * (sortDirection == SWT.UP ? 1 : -1);
+			}
+			return super.compare(viewer, e1, e2);
+		}
+		
+		private void resolve(InvoiceEntry entry){
+			while (!entry.isResolved()) {
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					// ignore
+				}
+			}
+		}
 	};
 	
 	private void setSortOrder(TableColumn selectedColumn, int sortDirection){
