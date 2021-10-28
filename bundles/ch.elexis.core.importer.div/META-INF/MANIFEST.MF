@@ -12,7 +12,9 @@ Require-Bundle: ch.elexis.core.l10n;bundle-version="3.9.0",
  ch.elexis.core.hl7.v2x;bundle-version="3.2.0",
  org.apache.poi;bundle-version="3.9.0",
  org.apache.poi.ooxml;bundle-version="3.9.0",
- org.apache.poi.ooxml.schemas;bundle-version="3.9.0"
+ org.apache.poi.ooxml.schemas;bundle-version="3.9.0",
+ org.apache.commons.commons-compress;bundle-version="1.21.0",
+ org.apache.xmlbeans;bundle-version="3.1.0"
 Export-Package: ch.elexis.core.importer.div.importers,
  ch.elexis.core.importer.div.importers.multifile,
  ch.elexis.core.importer.div.importers.multifile.strategy,
@@ -21,7 +23,7 @@ Export-Package: ch.elexis.core.importer.div.importers,
 Bundle-ActivationPolicy: lazy
 Import-Package: com.healthmarketscience.jackcess;version="4.0.0",
  org.apache.commons.lang3;version="3.12.0"
-Service-Component: OSGI-INF/ch.elexis.core.importer.div.service.holder.LabImportUtilHolder.xml,
- OSGI-INF/ch.elexis.core.importer.div.importers.internal.LabImportUtil.xml,
+Service-Component: OSGI-INF/ch.elexis.core.importer.div.importers.internal.LabImportUtil.xml,
+ OSGI-INF/ch.elexis.core.importer.div.service.holder.LabImportUtilHolder.xml,
  OSGI-INF/ch.elexis.core.importer.div.service.holder.OmnivoreDocumentStoreServiceHolder.xml,
  OSGI-INF/ch.elexis.core.importer.div.tasks.internal.HL7ImporterIdentifiedRunnableFactory.xml
