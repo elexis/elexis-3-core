@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.cache.IPersistentObjectCache;
@@ -132,6 +133,11 @@ public class DBConnection {
 		else
 			dbDriver = "invalid";
 		if (!dbDriver.equalsIgnoreCase("invalid")) {
+			if (dbConnectString.startsWith("jdbc:h2:")
+					&& System.getProperty(ElexisSystemPropertyConstants.CONN_DB_H2_AUTO_SERVER) != null
+					&& !dbConnectString.contains(";AUTO_SERVER")) {
+				dbConnectString = dbConnectString + ";AUTO_SERVER=TRUE";
+			}
 			jdbcLink = new JdbcLink(dbDriver, dbConnectString, dbFlavor);
 			boolean ret = jdbcLink.connect(dbUser, dbPw);
 			if (ret) {
