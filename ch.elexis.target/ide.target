@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2021-09-java11" sequenceNumber="1634831041">
+<target name="Elexis IDE 2021-09-java11" sequenceNumber="1635925643">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="11.0.12.v20211011-1323"/>
@@ -78,8 +78,8 @@
       <unit id="org.eclipse.nebula.widgets.nattable.extension.glazedlists" version="2.0.1.202106070924"/>
       <unit id="ca.odell.glazedlists" version="1.11.0.v20190926-1838"/>
       <unit id="org.eclipse.collections" version="10.4.0.v20200820-2049"/>
-      <unit id="com.equo.chromium.feature.feature.group" version="80.0.10.202110202229"/>
-      <unit id="com.equo.chromium.cef.feature.feature.group" version="80.0.8.202110202117"/>
+      <unit id="com.equo.chromium.feature.feature.group" version="80.0.11.202110280411"/>
+      <unit id="com.equo.chromium.cef.feature.feature.group" version="80.0.9.202110280424"/>
       <unit id="org.eclipse.jetty.deploy" version="10.0.6"/>
       <unit id="org.eclipse.jetty.webapp" version="10.0.6"/>
       <unit id="org.eclipse.jetty.xml" version="10.0.6"/>
