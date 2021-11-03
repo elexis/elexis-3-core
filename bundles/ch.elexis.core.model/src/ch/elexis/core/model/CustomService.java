@@ -90,7 +90,11 @@ public class CustomService
 	
 	@Override
 	public String getCode(){
-		return getEntity().getCode();
+		String ret = getEntity().getCode();
+		if (ret == null || ret.isEmpty()) {
+			ret = getId();
+		}
+		return ret;
 	}
 	
 	@Override
