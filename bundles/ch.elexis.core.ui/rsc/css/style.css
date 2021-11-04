@@ -1,4 +1,3 @@
-
 Text {
     color: black;
     background-color: white;
@@ -11,7 +10,6 @@ Text {
     color: white;
     font: Verdana 8px;
 }
-
 
 /*Patientendetails*/
 
@@ -40,6 +38,8 @@ CTabFolder#Links-folder {
   visibility: visible;
 }
 
+
+/*Compositionen */
 Composite{
   /* actual values */
   background-color: #FFFFFF;
