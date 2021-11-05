@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2021-09-java11" sequenceNumber="1635925643">
+<target name="Elexis IDE 2021-09-java11" sequenceNumber="1636027229">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="11.0.12.v20211011-1323"/>
@@ -68,6 +68,7 @@
       <unit id="info.elexis.target.commons.feature.group" version="0.0.0"/>
       <unit id="info.elexis.target.jaxwsrs.core.feature.group" version="0.0.0"/>
       <unit id="info.elexis.target.apache.shiro.feature.group" version="0.0.0"/>
+      <unit id="org.apache.shiro.web" version="0.0.0"/>
       <unit id="ag.ion.bion.workbench.office.editor.core" version="2.0.14"/>
       <unit id="ag.ion.noa" version="2.2.3"/>
       <unit id="ag.ion.noa4e.ui" version="2.0.14"/>
