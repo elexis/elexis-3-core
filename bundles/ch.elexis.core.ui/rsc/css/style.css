@@ -12,7 +12,6 @@ Text {
 }
 
 /*Patientendetails*/
-
 CTabFolder#Links-folder {
   /* actual values */
   background-color: #FFFFFF;
@@ -42,7 +41,8 @@ CTabFolder#Links-folder {
 /*Compositionen */
 Composite{
   /* actual values */
-  background-color: #FFFFFF;
+  //background-color: #FFFFFF;
+  background-color: red;
   background-image: none;
   color: #000000;
   font-family: "Segoe UI";
@@ -53,6 +53,8 @@ Composite{
   text-transform: none;
   visibility: visible;
 }
+
+/*Links */
 
 ImageHyperlink, Hyperlink{
   /* actual values */

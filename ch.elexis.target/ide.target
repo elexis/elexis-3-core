@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
-<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2021-09-java11" sequenceNumber="1635925643">
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis IDE 2021-09-java11" sequenceNumber="1635925643">
   <locations>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="11.0.12.v20211011-1323"/>
       <unit id="org.eclipse.platform.feature.group" version="4.21.0.v20210906-0842"/>
       <unit id="org.eclipse.e4.rcp.feature.group" version="4.21.0.v20210906-0842"/>
@@ -130,5 +129,20 @@
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_it" version="4.21.0.v20210925020001"/>
       <repository location="https://download.elexis.info/elexis/target/2021-09-java11/"/>
     </location>
+	  <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		  <repository location="https://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest"/>
+		  <unit id="org.eclipse.e4.tools.css.spy.feature.feature.group" version="0.14.0.v20200923-1237"/>
+	  </location>
+	  <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		  <repository location="http://eclipse.jeeeyul.net/update/"/>
+		  <unit id="net.jeeeyul.eclipse.themes.feature.feature.group" version="2.3.16.I20201130-122417"/>
+		  <unit id="net.jeeeyul.pdetools.feature.feature.group" version="1.2.17.I20201125-123138"/>
+		  <unit id="net.jeeeyul.swtend.feature.feature.group" version="2.2.6.I20200702-084710"/>
+	  </location>
+	  <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		  <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
+		  <unit id="org.eclipse.xtext.sdk.feature.group" version="2.25.0.v20210301-1429"/>
+		  <unit id="com.google.guava" version="30.1.0.v20210127-2300"/>
+	  </location>
   </locations>
 </target>
