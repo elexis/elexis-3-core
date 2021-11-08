@@ -242,6 +242,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	//Nebula floatingText	
 	final Group group;
 	
+	//Nebula floatingText	
+	final Group group;
+	
 	void recreateUserpanel(){
 		// cUserfields.setRedraw(false);
 		if (ipp != null) {
