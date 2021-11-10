@@ -1,5 +1,6 @@
 package ch.elexis.core.jpa.model.adapter.internal;
 
+import java.util.Iterator;
 import java.util.Stack;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -56,6 +57,7 @@ public class PredicateGroupStack {
 	 * @return
 	 */
 	public PredicateGroup andPredicateGroups(){
+		removeInvalidGroups();
 		if (predicateGroups.size() > 1) {
 			PredicateGroup top = predicateGroups.pop();
 			PredicateGroup join = predicateGroups.pop();
@@ -67,12 +69,26 @@ public class PredicateGroupStack {
 	}
 	
 	/**
+	 * Remove any {@link PredicateGroup} without a predicate.
+	 * 
+	 */
+	private void removeInvalidGroups(){
+		for (Iterator<PredicateGroup> iterator = predicateGroups.iterator(); iterator.hasNext();) {
+			PredicateGroup predicateGroup = (PredicateGroup) iterator.next();
+			if (predicateGroup.getPredicate() == null) {
+				iterator.remove();
+			}
+		}
+	}
+	
+	/**
 	 * Join the 2 last created {@link PredicateGroup}s with or, and return the resulting
 	 * {@link PredicateGroup}. It is also the new top of the stack.
 	 * 
 	 * @return
 	 */
 	public PredicateGroup orPredicateGroups(){
+		removeInvalidGroups();
 		if (predicateGroups.size() > 1) {
 			PredicateGroup top = predicateGroups.pop();
 			PredicateGroup join = predicateGroups.pop();

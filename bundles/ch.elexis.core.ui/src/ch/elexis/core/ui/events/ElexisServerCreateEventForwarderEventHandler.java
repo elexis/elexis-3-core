@@ -36,7 +36,9 @@ public class ElexisServerCreateEventForwarderEventHandler implements EventHandle
 		remoteEvent.setTopic(event.getTopic());
 		String[] propertyNames = event.getPropertyNames();
 		for (String name : propertyNames) {
-			remoteEvent.putProperty(name, event.getProperty(name).toString());
+			String value =
+				event.getProperty(name) != null ? event.getProperty(name).toString() : null;
+			remoteEvent.putProperty(name, value);
 		}
 		return remoteEvent;
 	}
