@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: HAPI FHIR library
 Bundle-SymbolicName: ch.elexis.core.hapi.fhir
-Bundle-Version: 4.1.0.qualifier
+Bundle-Version: 5.4.2.qualifier
 Bundle-Vendor: hapifhir.io
 Automatic-Module-Name: ch.elexis.core.hapi-fhir
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: info.elexis.target.hapi.fhir;bundle-version="4.1.0";visibility:=reexport
+Require-Bundle: info.elexis.target.hapi.fhir;bundle-version="5.4.2";visibility:=reexport
 Export-Package: ch.elexis.core.hapi.fhir

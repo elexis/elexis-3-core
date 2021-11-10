@@ -63,6 +63,9 @@ public class FavoritenComposite extends Composite {
 		TextTransfer.getInstance()
 	};
 	
+	private Font defaultFont;
+	private Font boldFont;
+	
 	private ElexisUiEventListenerImpl reloadListener =
 		new ElexisUiEventListenerImpl(Favorite.class, ElexisEvent.EVENT_RELOAD) {
 			@Override
@@ -106,6 +109,7 @@ public class FavoritenComposite extends Composite {
 		});
 		
 		table.addListener(SWT.PaintItem, new Listener() {
+			
 			@Override
 			public void handleEvent(Event event){
 				TableItem item = (TableItem) event.item;
@@ -123,10 +127,12 @@ public class FavoritenComposite extends Composite {
 				/* center column 1 vertically */
 				int yOffset = 0;
 				
-				Font defaultFont = event.gc.getFont();
-				FontDescriptor boldDescriptor =
-					FontDescriptor.createFrom(defaultFont).setStyle(SWT.BOLD);
-				Font boldFont = boldDescriptor.createFont(event.display);
+				if (defaultFont == null && boldFont == null) {
+					defaultFont = event.gc.getFont();
+					FontDescriptor boldDescriptor =
+						FontDescriptor.createFrom(defaultFont).setStyle(SWT.BOLD);
+					boldFont = boldDescriptor.createFont(event.display);
+				}
 				
 				switch (event.index) {
 				case 0:
@@ -271,6 +277,12 @@ public class FavoritenComposite extends Composite {
 	@Override
 	public void dispose(){
 		ElexisEventDispatcher.getInstance().removeListeners(reloadListener);
+		if (defaultFont != null) {
+			defaultFont.dispose();
+		}
+		if (boldFont != null) {
+			boldFont.dispose();
+		}
 	}
 	
 	@Override

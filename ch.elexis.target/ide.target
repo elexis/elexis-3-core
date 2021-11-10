@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2021-09-java11" sequenceNumber="1635925643">
+<target name="Elexis IDE 2021-09-java11" sequenceNumber="1636453351">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="11.0.12.v20211011-1323"/>
@@ -34,12 +34,12 @@
       <unit id="osgi.enterprise" version="4.2.0.v201108120515"/>
       <unit id="javax.transaction" version="1.1.1.v201105210645"/>
       <unit id="jakarta.persistence" version="2.2.3"/>
-      <unit id="com.eclipsesource.jaxrs.consumer" version="5.3.1.202110141129"/>
-      <unit id="com.eclipsesource.jaxrs.publisher" version="5.3.1.202110141129"/>
-      <unit id="com.eclipsesource.jaxrs.provider.gson" version="2.3.0.202110141129"/>
-      <unit id="com.eclipsesource.jaxrs.provider.multipart" version="2.2.0.202110141129"/>
-      <unit id="com.eclipsesource.jaxrs.provider.security" version="2.2.0.202110141129"/>
-      <unit id="com.eclipsesource.jaxrs.provider.swagger" version="1.1.2.202110141129"/>
+      <unit id="com.eclipsesource.jaxrs.consumer" version="0.0.0"/>
+      <unit id="com.eclipsesource.jaxrs.publisher" version="0.0.0"/>
+      <unit id="com.eclipsesource.jaxrs.provider.gson" version="0.0.0"/>
+      <unit id="com.eclipsesource.jaxrs.provider.multipart" version="0.0.0"/>
+      <unit id="com.eclipsesource.jaxrs.provider.security" version="0.0.0"/>
+      <unit id="com.eclipsesource.jaxrs.provider.swagger" version="0.0.0"/>
       <unit id="bcprov" version="1.66.0"/>
       <unit id="info.elexis.target.hapi.fhir" version="0.0.0"/>
       <unit id="info.elexis.target.jaxws.core" version="0.0.0"/>
@@ -55,6 +55,7 @@
       <unit id="org.apache.xmlbeans" version="3.1.0.v20200922-1359"/>
       <unit id="org.beanshell.bsh" version="2.0.0.0b4"/>
       <unit id="com.opencsv" version="3.10.0"/>
+      <unit id="com.google.protobuf" version="3.11.4"/>
       <unit id="jakarta.mail-api" version="1.6.7"/>
       <unit id="com.healthmarketscience.jackcess" version="4.0.0"/>
       <unit id="com.google.zxing.core" version="3.4.1"/>
@@ -68,6 +69,7 @@
       <unit id="info.elexis.target.commons.feature.group" version="0.0.0"/>
       <unit id="info.elexis.target.jaxwsrs.core.feature.group" version="0.0.0"/>
       <unit id="info.elexis.target.apache.shiro.feature.group" version="0.0.0"/>
+      <unit id="org.apache.shiro.web" version="0.0.0"/>
       <unit id="ag.ion.bion.workbench.office.editor.core" version="2.0.14"/>
       <unit id="ag.ion.noa" version="2.2.3"/>
       <unit id="ag.ion.noa4e.ui" version="2.0.14"/>
