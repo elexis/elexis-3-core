@@ -2,9 +2,9 @@ package ch.elexis.core.findings.fhir.model;
 
 import java.util.Optional;
 
-import org.hl7.fhir.dstu3.model.DomainResource;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
@@ -33,8 +33,8 @@ public class DocumentReference
 	public void setPatientId(String patientId){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.DocumentReference fhirDocumentReference =
-				(org.hl7.fhir.dstu3.model.DocumentReference) resource
+			org.hl7.fhir.r4.model.DocumentReference fhirDocumentReference =
+				(org.hl7.fhir.r4.model.DocumentReference) resource
 					.get();
 			fhirDocumentReference.setSubject(new Reference(new IdDt("Patient", patientId)));
 			saveResource(resource.get());

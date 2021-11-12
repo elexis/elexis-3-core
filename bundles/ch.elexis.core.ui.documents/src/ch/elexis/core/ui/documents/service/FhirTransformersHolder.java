@@ -12,6 +12,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 
+
 @Component
 public class FhirTransformersHolder {
 	private static List<IFhirTransformer<?, ?>> transformers =

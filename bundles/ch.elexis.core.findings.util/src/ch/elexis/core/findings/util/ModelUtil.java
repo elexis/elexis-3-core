@@ -7,11 +7,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Coding;
-import org.hl7.fhir.dstu3.model.IdType;
-import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Narrative;
+import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,7 @@ public class ModelUtil {
 		findingsModelService.delete(deleteable);
 	}
 	
-	private static FhirContext context = FhirContext.forDstu3();
+	private static FhirContext context = FhirContext.forR4();
 	
 	private static IParser getJsonParser() {
 		return context.newJsonParser();
@@ -179,6 +180,7 @@ public class ModelUtil {
 			text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("§", "'&sect;'")
 				.replaceAll("&", "&amp;").replaceAll("(\r\n|\r|\n)", "<br />");
 		narrative.setDivAsString(divEncodedText);
+		narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
 	}
 	
 	/**
@@ -267,51 +269,52 @@ public class ModelUtil {
 	 */
 	public static <T extends IFinding> void initFhir(T created, Class<T> type){
 		if (type.equals(IEncounter.class)) {
-			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
-				new org.hl7.fhir.dstu3.model.Encounter();
+			org.hl7.fhir.r4.model.Encounter fhirEncounter =
+				new org.hl7.fhir.r4.model.Encounter();
 			fhirEncounter
 				.setId(new IdType(fhirEncounter.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirEncounter, created);
 		} else if (type.equals(IObservation.class)) {
-			org.hl7.fhir.dstu3.model.Observation fhirObservation =
-				new org.hl7.fhir.dstu3.model.Observation();
+			org.hl7.fhir.r4.model.Observation fhirObservation =
+				new org.hl7.fhir.r4.model.Observation();
 			fhirObservation
 				.setId(new IdType(fhirObservation.getClass().getSimpleName(), created.getId()));
+			fhirObservation.setStatus(ObservationStatus.FINAL);
 			ModelUtil.saveResource(fhirObservation, created);
 		} else if (type.equals(ICondition.class)) {
-			org.hl7.fhir.dstu3.model.Condition fhirCondition =
-				new org.hl7.fhir.dstu3.model.Condition();
+			org.hl7.fhir.r4.model.Condition fhirCondition =
+				new org.hl7.fhir.r4.model.Condition();
 			fhirCondition
 				.setId(new IdType(fhirCondition.getClass().getSimpleName(), created.getId()));
-			fhirCondition.setAssertedDate(new Date());
+			fhirCondition.setRecordedDate(new Date());
 			ModelUtil.saveResource(fhirCondition, created);
 		} else if (type.equals(IProcedureRequest.class)) {
-			org.hl7.fhir.dstu3.model.ProcedureRequest fhirProcedureRequest =
-				new org.hl7.fhir.dstu3.model.ProcedureRequest();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
+				new org.hl7.fhir.r4.model.ServiceRequest();
 			fhirProcedureRequest.setId(
 				new IdType(fhirProcedureRequest.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirProcedureRequest, created);
 		} else if (type.equals(IFamilyMemberHistory.class)) {
-			org.hl7.fhir.dstu3.model.FamilyMemberHistory fhirFamilyMemberHistory =
-				new org.hl7.fhir.dstu3.model.FamilyMemberHistory();
+			org.hl7.fhir.r4.model.FamilyMemberHistory fhirFamilyMemberHistory =
+				new org.hl7.fhir.r4.model.FamilyMemberHistory();
 			fhirFamilyMemberHistory.setId(
 				new IdType(fhirFamilyMemberHistory.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirFamilyMemberHistory, created);
 		} else if (type.equals(IAllergyIntolerance.class)) {
-			org.hl7.fhir.dstu3.model.AllergyIntolerance fhirAllergyIntolerance =
-				new org.hl7.fhir.dstu3.model.AllergyIntolerance();
+			org.hl7.fhir.r4.model.AllergyIntolerance fhirAllergyIntolerance =
+				new org.hl7.fhir.r4.model.AllergyIntolerance();
 			fhirAllergyIntolerance.setId(
 				new IdType(fhirAllergyIntolerance.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirAllergyIntolerance, created);
 		} else if (type.equals(IClinicalImpression.class)) {
-			org.hl7.fhir.dstu3.model.ClinicalImpression fhirClinicalImpression =
-				new org.hl7.fhir.dstu3.model.ClinicalImpression();
+			org.hl7.fhir.r4.model.ClinicalImpression fhirClinicalImpression =
+				new org.hl7.fhir.r4.model.ClinicalImpression();
 			fhirClinicalImpression.setId(
 				new IdType(fhirClinicalImpression.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirClinicalImpression, created);
 		} else if (type.equals(IDocumentReference.class)) {
-			org.hl7.fhir.dstu3.model.DocumentReference fhirDocumentReference =
-				new org.hl7.fhir.dstu3.model.DocumentReference();
+			org.hl7.fhir.r4.model.DocumentReference fhirDocumentReference =
+				new org.hl7.fhir.r4.model.DocumentReference();
 			fhirDocumentReference.setId(
 				new IdType(fhirDocumentReference.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirDocumentReference, created);

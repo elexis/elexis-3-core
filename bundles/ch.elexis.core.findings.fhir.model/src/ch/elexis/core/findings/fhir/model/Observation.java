@@ -11,9 +11,9 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hl7.fhir.dstu3.model.DomainResource;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
@@ -110,9 +110,9 @@ public class Observation
 	public void setEncounter(IEncounter encounter){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.Observation fhirObservation =
-				(org.hl7.fhir.dstu3.model.Observation) resource.get();
-			fhirObservation.setContext(new Reference(new IdDt("Encounter", encounter.getId())));
+			org.hl7.fhir.r4.model.Observation fhirObservation =
+				(org.hl7.fhir.r4.model.Observation) resource.get();
+			fhirObservation.setEncounter(new Reference(new IdDt("Encounter", encounter.getId())));
 			
 			saveResource(resource.get());
 		}
@@ -406,7 +406,7 @@ public class Observation
 	public void setComment(String comment){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			accessor.setComment((DomainResource) resource.get(), comment);
+			accessor.setNote((DomainResource) resource.get(), comment);
 			saveResource(resource.get());
 		}
 	}
@@ -415,7 +415,8 @@ public class Observation
 	public Optional<String> getComment(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			return accessor.getComment((DomainResource) resource.get());
+			List<String> notes = accessor.getNotes((DomainResource) resource.get());
+			return Optional.of(String.join(" " , notes));
 		}
 		return Optional.empty();
 	}
