@@ -10,6 +10,10 @@
  ******************************************************************************/
 package ch.elexis.core.ui.eigenleistung;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -18,6 +22,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 
+import ch.elexis.core.model.ICustomService;
+import ch.elexis.core.model.localservice.Constants;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.PersistentObject;
@@ -28,6 +35,15 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 	private Text textEKP;
 	private Text textVKP;
 	private Text textZeit;
+	
+	@Inject
+	public void selection(@Optional
+	@Named("ch.elexis.core.ui.eigenleistung.selection")
+	ICustomService customService){
+		if (textCode != null && !textCode.isDisposed()) {
+			display(customService);
+		}
+	}
 	
 	/**
 	 * @wbp.parser.entryPoint
@@ -96,17 +112,26 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 	
 	@Override
 	public void display(Object obj){
-		Eigenleistung e = (Eigenleistung) obj;
-		textCode.setText(e.get(Eigenleistung.CODE));
-		textBezeichnung.setText(e.get(Eigenleistung.BEZEICHNUNG));
-		textEKP.setText(e.get(Eigenleistung.EK_PREIS));
-		textVKP.setText(e.get(Eigenleistung.VK_PREIS));
-		textZeit.setText(e.get(Eigenleistung.TIME));
+		if (obj instanceof ICustomService) {
+			ICustomService customService = (ICustomService) obj;
+			textCode.setText(
+				(String) CoreModelServiceHolder.get().getEntityProperty("code", customService));
+			textBezeichnung.setText(customService.getText());
+			textEKP.setText(customService.getNetPrice().getCentsAsString());
+			textVKP.setText(customService.getPrice().getCentsAsString());
+			textZeit.setText(Integer.toString(customService.getMinutes()));
+		} else {
+			textCode.setText("");
+			textBezeichnung.setText("");
+			textEKP.setText("");
+			textVKP.setText("");
+			textZeit.setText("");
+		}
 	}
 	
 	@Override
 	public String getTitle(){
-		return Eigenleistung.CODESYSTEM_NAME;
+		return Constants.TYPE_NAME;
 	}
 	
 }
