@@ -9,12 +9,16 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
+import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "EIGENLEISTUNGEN")
+@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Eigenleistung.code", query = "SELECT ei FROM Eigenleistung ei WHERE ei.deleted = false AND ei.code = :code")
 public class Eigenleistung extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
@@ -44,7 +48,8 @@ public class Eigenleistung extends AbstractEntityWithId implements EntityWithId,
 	private String salePrice;
 
 	@Column(length = 4, name = "ZEIT")
-	private String time;
+	@Convert(converter = IntegerStringConverter.class)
+	private int time;
 
 	public String getCode() {
 		return code;
@@ -78,11 +83,11 @@ public class Eigenleistung extends AbstractEntityWithId implements EntityWithId,
 		this.salePrice = salePrice;
 	}
 
-	public String getTime() {
+	public int getTime(){
 		return time;
 	}
 
-	public void setTime(String time) {
+	public void setTime(int time){
 		this.time = time;
 	}
 	

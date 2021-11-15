@@ -121,6 +121,13 @@ public class CoreUtil {
 				System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null
 						? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC)
 						: "";
+			if (dbConnection.connectionString.startsWith("jdbc:h2:") &&
+					System.getProperty(ElexisSystemPropertyConstants.CONN_DB_H2_AUTO_SERVER) != null) {
+				logger.info("Adding AUTO_SERVER to "+ dbConnection.connectionString );
+				dbConnection.connectionString  = dbConnection.connectionString  + ";AUTO_SERVER=TRUE";
+
+			}
+
 			return Optional.of(dbConnection);
 		}
 		

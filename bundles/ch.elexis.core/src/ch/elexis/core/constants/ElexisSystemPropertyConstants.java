@@ -14,6 +14,7 @@ public class ElexisSystemPropertyConstants {
 	public static final String CONN_DB_USERNAME = "ch.elexis.dbUser";
 	public static final String CONN_DB_PASSWORD = "ch.elexis.dbPw";
 	public static final String CONN_DB_FLAVOR = "ch.elexis.dbFlavor";
+	public static final String CONN_DB_H2_AUTO_SERVER = "ch.elexis.dbH2AutoServer";
 	public static final String CONN_DB_SPEC = "ch.elexis.dbSpec";
 	
 	// Demo database related properties

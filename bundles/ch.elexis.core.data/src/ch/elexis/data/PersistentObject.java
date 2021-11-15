@@ -256,7 +256,6 @@ public abstract class PersistentObject implements IPersistentObject {
 				if (password == null) {
 					dbConnection.setDBPassword(StringTool.leer);
 				}
-				
 				return dbConnection.connect() && connect(dbConnection);
 			} catch (JdbcLinkException je) {
 				ElexisStatus status = translateJdbcException(je);
@@ -266,6 +265,12 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		} else if (dbConnection.isDirectConnectConfigured()) {
 			// open direct database connection according to system properties
+			if ( dbConnection.getDBConnectString().startsWith("jdbc:h2:") &&
+					System.getProperty(ElexisSystemPropertyConstants.CONN_DB_H2_AUTO_SERVER) != null) {
+				log.info("Adding AUTO_SERVER to " + dbConnection.getDBConnectString());
+				String h2_with = dbConnection.getDBConnectString() + ";AUTO_SERVER=TRUE";
+				dbConnection.setDBConnectString(h2_with);
+			}
 			return (PersistentObject.connect(dbConnection, true) && connect(dbConnection));
 		} else if (dbConnection.isRunningFromScratch()) {
 			// run from scratch configuration with a temporary database

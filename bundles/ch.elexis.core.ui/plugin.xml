@@ -865,7 +865,6 @@
                    elexisClassName="ch.elexis.data.Eigenleistung"
                    name="Eigenleistung"
                    localizedName="%Leistungen.Eigenleistung"
-                   statistics="ch.elexis.data.Eigenleistung"
                    system="Eigenleistung">
       </Leistung>
              <Leistung

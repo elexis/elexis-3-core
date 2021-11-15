@@ -119,11 +119,11 @@ public class CustomService
 	
 	@Override
 	public int getMinutes(){
-		return 0;
+		return getEntity().getTime();
 	}
 	
 	@Override
 	public void setMinutes(int value){
-		throw new UnsupportedOperationException();
+		getEntityMarkDirty().setTime(value);
 	}
 }

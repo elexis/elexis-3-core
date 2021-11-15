@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2021-09-java11" sequenceNumber="1636453351">
+<target name="Elexis IDE 2021-09-java11" sequenceNumber="1636969896">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="11.0.12.v20211011-1323"/>
@@ -76,6 +76,7 @@
       <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.1.0.202106201019"/>
       <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.5.0.202106201019"/>
       <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.2.0.202106201019"/>
+      <unit id="org.eclipse.nebula.widgets.floatingtext.feature.feature.group" version="1.0.0.202106201019"/>
       <unit id="org.eclipse.nebula.widgets.nattable.core" version="2.0.1.202106070924"/>
       <unit id="org.eclipse.nebula.widgets.nattable.extension.glazedlists" version="2.0.1.202106070924"/>
       <unit id="ca.odell.glazedlists" version="1.11.0.v20190926-1838"/>
