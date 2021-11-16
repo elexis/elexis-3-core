@@ -63,7 +63,11 @@ public class PdfPreviewPartLoadHandler {
 				// cleanup existing controls, show user feedback
 				previewComposite.getDisplay().syncExec(() -> {
 					headLabel = new Label(previewComposite, SWT.None);
-					headLabel.setText("Loading ....");
+//					if(previewComposite.getDisplay() != null) {
+//						headLabel.setText("Loading ....");
+//					}
+//					headLabel.setText("Loading ....");
+					headLabel.setText("Kein PDF selektiert");
 					previewComposite.layout(true, true);
 					scrolledComposite.layout(true, true);
 					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
