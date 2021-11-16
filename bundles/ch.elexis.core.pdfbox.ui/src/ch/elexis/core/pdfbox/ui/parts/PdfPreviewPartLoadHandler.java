@@ -22,6 +22,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.l10n.Messages;
+
 public class PdfPreviewPartLoadHandler {
 	
 	private static ExecutorService loader = Executors.newSingleThreadExecutor();
@@ -63,11 +65,7 @@ public class PdfPreviewPartLoadHandler {
 				// cleanup existing controls, show user feedback
 				previewComposite.getDisplay().syncExec(() -> {
 					headLabel = new Label(previewComposite, SWT.None);
-//					if(previewComposite.getDisplay() != null) {
-//						headLabel.setText("Loading ....");
-//					}
-//					headLabel.setText("Loading ....");
-					headLabel.setText("Kein PDF selektiert");
+					headLabel.setText(Messages.PdfPreview_NoPDFSelected);
 					previewComposite.layout(true, true);
 					scrolledComposite.layout(true, true);
 					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));

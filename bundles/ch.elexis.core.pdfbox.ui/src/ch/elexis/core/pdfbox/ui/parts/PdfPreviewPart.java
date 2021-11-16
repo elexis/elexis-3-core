@@ -15,8 +15,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.e4.ui.di.UISynchronize;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.ui.e4.events.ElexisUiEventTopics;
@@ -44,9 +44,8 @@ public class PdfPreviewPart {
 		
 		previewComposite.setLayout(new GridLayout(1, false));
 		
-		// Bug: Lokale anstatt Instanz Variable initialisiert.
 		label = new Label(previewComposite, SWT.None);
-		label.setText("Kein PDF selektiert");
+		label.setText(Messages.PdfPreview_NoPDFSelected);
 		
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
@@ -81,12 +80,7 @@ public class PdfPreviewPart {
 	@Inject
 	void activePatient(@Optional IPatient patient){
 		Display.getDefault().asyncExec(() -> {
-//			if(pdfPreviewPartLoadHandler.equals(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF == null)) {
-//			updatePreview(null);
-//			}
 			updatePreview(null);
-			label.setText("Kein PDF selektiert");
-			// refresh view here, but how?
 		});
 	}
 }
