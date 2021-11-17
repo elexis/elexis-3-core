@@ -2,8 +2,8 @@ package ch.elexis.core.findings.fhir.model;
 
 import java.util.Optional;
 
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.IClinicalImpression;
@@ -28,7 +28,7 @@ public class ClinicalImpression
 	public void setPatientId(String patientId){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.ClinicalImpression fhirClinicalImpression = (org.hl7.fhir.dstu3.model.ClinicalImpression) resource
+			org.hl7.fhir.r4.model.ClinicalImpression fhirClinicalImpression = (org.hl7.fhir.r4.model.ClinicalImpression) resource
 					.get();
 			fhirClinicalImpression.setSubject(new Reference(new IdDt("Patient", patientId)));
 			saveResource(resource.get());
@@ -50,10 +50,10 @@ public class ClinicalImpression
 	public void setEncounter(IEncounter encounter){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.ClinicalImpression fhirClinicalImpression =
-				(org.hl7.fhir.dstu3.model.ClinicalImpression) resource.get();
+			org.hl7.fhir.r4.model.ClinicalImpression fhirClinicalImpression =
+				(org.hl7.fhir.r4.model.ClinicalImpression) resource.get();
 			fhirClinicalImpression
-				.setContext(new Reference(new IdDt("Encounter", encounter.getId())));
+				.setEncounter(new Reference(new IdDt("Encounter", encounter.getId())));
 			saveResource(resource.get());
 		}
 		

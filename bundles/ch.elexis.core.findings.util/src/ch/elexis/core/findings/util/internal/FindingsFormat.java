@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,9 +46,26 @@ public abstract class FindingsFormat {
 		return matches;
 	}
 	
+	protected boolean checkRequiredField(JsonStructuralFeature jsonStructuralFeature, JsonObject jsonObject) {
+		for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+			if (jsonStructuralFeature != null && jsonStructuralFeature.getName().equals(entry.getKey())
+					&& jsonStructuralFeature.isSameType(entry.getValue())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	protected Optional<String> convert(
 		Map<String, JsonStructuralFeatureTransformation> transformMap, JsonObject jsonObject){
 		JsonObject newObject = new JsonObject();
+
+		Map<String, JsonStructuralFeatureTransformation> addAfterMap = transformMap.entrySet().stream()
+				.filter(e -> e.getKey().startsWith("!addAfter!"))
+				.collect(Collectors.toMap(e -> e.getKey().replace("!addAfter!", ""), e -> e.getValue()));
+
+		transformMap = transformMap.entrySet().stream().filter(e -> !e.getKey().startsWith("!addAfter!"))
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
 
 		for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 			JsonStructuralFeatureTransformation transformation = transformMap.get(entry.getKey());
@@ -56,6 +74,10 @@ public abstract class FindingsFormat {
 					transformation.transformValue(entry.getValue()));
 			} else {
 				newObject.add(entry.getKey(), entry.getValue());
+			}
+			JsonStructuralFeatureTransformation addAfterTransformation = addAfterMap.get(entry.getKey());
+			if (addAfterTransformation != null) {
+				addAfterTransformation.transformValue(newObject);
 			}
 		}
 		return Optional.of(getGson().toJson(newObject));
