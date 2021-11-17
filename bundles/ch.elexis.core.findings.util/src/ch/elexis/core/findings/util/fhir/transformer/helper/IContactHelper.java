@@ -22,7 +22,7 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.IXidService;
 import ch.elexis.core.types.Gender;
 
@@ -30,10 +30,12 @@ public class IContactHelper extends AbstractHelper {
 	
 	private IModelService modelService;
 	private IXidService xidService;
+	private IUserService userService;
 	
-	public IContactHelper(IModelService modelService, IXidService xidService){
+	public IContactHelper(IModelService modelService, IXidService xidService, IUserService userService){
 		this.modelService = modelService;
 		this.xidService = xidService;
+		this.userService = userService;
 	}
 	
 	public List<HumanName> getHumanNames(IPerson person){
@@ -48,12 +50,10 @@ public class IContactHelper extends AbstractHelper {
 			ret.add(humanName);
 		}
 		if (person.isUser()) {
-			INamedQuery<IUser> query = modelService.getNamedQuery(IUser.class, "kontakt");
-			List<IUser> usersLocal =
-				query.executeWithParameters(query.getParameterMap("kontakt", person));
-			if (!usersLocal.isEmpty()) {
+			List<IUser> userLocalObject = userService.getUsersByAssociatedContact(person);
+			if (!userLocalObject.isEmpty()) {
 				HumanName sysName = new HumanName();
-				sysName.setText(usersLocal.get(0).getId());
+				sysName.setText(userLocalObject.get(0).getId());
 				sysName.setUse(NameUse.ANONYMOUS);
 				ret.add(sysName);
 			}

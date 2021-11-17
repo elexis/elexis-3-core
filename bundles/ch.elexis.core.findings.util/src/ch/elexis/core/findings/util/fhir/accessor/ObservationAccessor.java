@@ -11,19 +11,20 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.hl7.fhir.dstu3.model.BooleanType;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Coding;
-import org.hl7.fhir.dstu3.model.DateTimeType;
-import org.hl7.fhir.dstu3.model.DomainResource;
-import org.hl7.fhir.dstu3.model.Element;
-import org.hl7.fhir.dstu3.model.Extension;
-import org.hl7.fhir.dstu3.model.Observation.ObservationComponentComponent;
-import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.Quantity;
-import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.StringType;
-import org.hl7.fhir.dstu3.model.Type;
+import org.hl7.fhir.r4.model.Annotation;
+import org.hl7.fhir.r4.model.BooleanType;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.DateTimeType;
+import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.Element;
+import org.hl7.fhir.r4.model.Extension;
+import org.hl7.fhir.r4.model.Observation.ObservationComponentComponent;
+import org.hl7.fhir.r4.model.Period;
+import org.hl7.fhir.r4.model.Quantity;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.Type;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
@@ -36,12 +37,12 @@ import ch.elexis.core.findings.util.ModelUtil;
 public class ObservationAccessor extends AbstractFindingsAccessor {
 	
 	private EnumMapping categoryMapping =
-		new EnumMapping(org.hl7.fhir.dstu3.model.codesystems.ObservationCategory.class, null,
+		new EnumMapping(org.hl7.fhir.r4.model.codesystems.ObservationCategory.class, null,
 			ch.elexis.core.findings.IObservation.ObservationCategory.class, null);
 	
 	public Optional<LocalDateTime> getEffectiveTime(DomainResource resource){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		Type effective = fhirObservation.getEffective();
 		if (effective instanceof DateTimeType) {
 			return Optional.of(getLocalDateTime(((DateTimeType) effective).getValue()));
@@ -59,19 +60,20 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public void setEffectiveTime(DomainResource resource, LocalDateTime time){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		fhirObservation.setEffective(new DateTimeType(getDate(time)));
 	}
 	
 	public ObservationCategory getCategory(DomainResource resource){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		if (!fhirObservation.getCategory().isEmpty()) {
 			for (CodeableConcept categoryConcept : fhirObservation.getCategory()) {
 				List<Coding> coding = categoryConcept.getCoding();
 				for (Coding code : coding) {
-					if (code.getSystem().equals("http://hl7.org/fhir/observation-category")) {
+					if (code.getSystem().equals("http://hl7.org/fhir/observation-category")
+							|| code.getSystem().equals("http://terminology.hl7.org/CodeSystem/observation-category")) {
 						ch.elexis.core.findings.IObservation.ObservationCategory mappedCategory =
 							(ch.elexis.core.findings.IObservation.ObservationCategory) categoryMapping
 								.getLocalEnumValueByCode(code.getCode().toUpperCase());
@@ -93,8 +95,8 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public void setCategory(DomainResource resource, ObservationCategory category){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		CodeableConcept categoryCode = new CodeableConcept();
 		if (category.name().startsWith("SOAP_")) {
 			// elexis soap categories
@@ -102,8 +104,8 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 				Collections.singletonList(new Coding(IdentifierSystem.ELEXIS_SOAP.getSystem(),
 					category.getCode(), category.getLocalized())));
 		} else {
-			org.hl7.fhir.dstu3.model.codesystems.ObservationCategory fhirCategoryCode =
-				(org.hl7.fhir.dstu3.model.codesystems.ObservationCategory) categoryMapping
+			org.hl7.fhir.r4.model.codesystems.ObservationCategory fhirCategoryCode =
+				(org.hl7.fhir.r4.model.codesystems.ObservationCategory) categoryMapping
 					.getFhirEnumValueByEnum(category);
 			if (fhirCategoryCode != null) {
 				// lookup matching fhir category
@@ -120,8 +122,8 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public List<ICoding> getCoding(DomainResource resource){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		CodeableConcept codeableConcept = fhirObservation.getCode();
 		if (codeableConcept != null) {
 			return ModelUtil.getCodingsFromConcept(codeableConcept);
@@ -130,8 +132,8 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public void setCoding(DomainResource resource, List<ICoding> coding){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		CodeableConcept codeableConcept = fhirObservation.getCode();
 		if (codeableConcept == null) {
 			codeableConcept = new CodeableConcept();
@@ -141,14 +143,14 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public void setPatientId(DomainResource resource, String patientId){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		fhirObservation.setSubject(new Reference(new IdDt("Patient", patientId)));
 	}
 	
 	public void addComponent(DomainResource resource, ObservationComponent iComponent){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		ObservationComponentComponent observationComponentComponent =
 			new ObservationComponentComponent();
 		observationComponentComponent.setId(UUID.randomUUID().toString());
@@ -195,8 +197,8 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public List<ObservationComponent> getComponents(DomainResource resource){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		List<ObservationComponent> components = new ArrayList<>();
 		
 		for (ObservationComponentComponent o : fhirObservation.getComponent()) {
@@ -221,8 +223,8 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public void updateComponent(DomainResource resource, ObservationComponent component){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		
 		for (ObservationComponentComponent o : fhirObservation.getComponent()) {
 			if (component.getId().equals(o.getId())) {
@@ -256,16 +258,16 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public void setStringValue(DomainResource resource, String value){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		StringType q = new StringType();
 		q.setValue(value);
 		fhirObservation.setValue(q);
 	}
 	
 	public Optional<String> getStringValue(DomainResource resource){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		if (fhirObservation.hasValueStringType()) {
 			StringType value = (StringType) fhirObservation.getValue();
 			if (value.getValue() != null) {
@@ -276,16 +278,16 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public void setBooleanValue(DomainResource resource, Boolean value){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		BooleanType q = new BooleanType();
 		q.setValue(value);
 		fhirObservation.setValue(q);
 	}
 	
 	public Optional<Boolean> getBooleanValue(DomainResource resource){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		if (fhirObservation.hasValueBooleanType()) {
 			BooleanType value = fhirObservation.getValueBooleanType();
 			if (value.getValue() != null) {
@@ -296,18 +298,18 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public void setDateTimeValue(DomainResource resource, Date value){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		DateTimeType q = new DateTimeType();
 		q.setValue(value);
 		fhirObservation.setValue(q);
 	}
 	
 	public Optional<Date> getDateTimeValue(DomainResource resource){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		if (fhirObservation.hasValueDateTimeType()) {
-			DateTimeType value = (DateTimeType) fhirObservation.getValueDateTimeType();
+			DateTimeType value = fhirObservation.getValueDateTimeType();
 			if (value.getValue() != null) {
 				return Optional.of(value.getValue());
 			}
@@ -316,8 +318,8 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public void setNumericValue(DomainResource resource, BigDecimal value, String unit){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		Quantity q = new Quantity();
 		q.setUnit(unit);
 		q.setValue(value);
@@ -325,8 +327,8 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public Optional<BigDecimal> getNumericValue(DomainResource resource){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		if (fhirObservation.hasValueQuantity()) {
 			Quantity quantity = (Quantity) fhirObservation.getValue();
 			if (quantity.getValue() != null) {
@@ -337,8 +339,8 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 	}
 	
 	public Optional<String> getNumericValueUnit(DomainResource resource){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
 		if (fhirObservation.hasValueQuantity()) {
 			Quantity quantity = (Quantity) fhirObservation.getValue();
 			if (quantity.getUnit() != null) {
@@ -348,18 +350,36 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 		return Optional.empty();
 	}
 	
-	public void setComment(DomainResource resource, String comment){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
-		fhirObservation.setComment(comment);
+	public void addNote(DomainResource resource, String text){
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
+		Annotation annotation = new Annotation();
+		annotation.setText(text);
+		fhirObservation.addNote(annotation);
 	}
 	
-	public Optional<String> getComment(DomainResource resource){
-		org.hl7.fhir.dstu3.model.Observation fhirObservation =
-			(org.hl7.fhir.dstu3.model.Observation) resource;
-		if (fhirObservation.hasComment()) {
-			return Optional.of(fhirObservation.getComment());
-		}
-		return Optional.empty();
+	public void removeNote(DomainResource resource, String text){
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
+		List<Annotation> notes = new ArrayList<Annotation>(fhirObservation.getNote());
+		notes = notes.stream().filter(annotation -> !text.equals(annotation.getText()))
+			.collect(Collectors.toList());
+		fhirObservation.setNote(notes);
 	}
+	
+	public List<String> getNotes(DomainResource resource){
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
+		List<Annotation> notes = fhirObservation.getNote();
+		return notes.stream().map(annotation -> annotation.getText()).collect(Collectors.toList());
+	}
+
+	public void setNote(DomainResource resource, String comment){
+		org.hl7.fhir.r4.model.Observation fhirObservation =
+			(org.hl7.fhir.r4.model.Observation) resource;
+		Annotation annotation = new Annotation();
+		annotation.setText(comment);
+		fhirObservation.setNote(Collections.singletonList(annotation));
+	}
+	
 }

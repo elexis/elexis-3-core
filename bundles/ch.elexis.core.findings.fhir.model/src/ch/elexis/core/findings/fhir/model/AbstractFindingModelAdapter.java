@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.hl7.fhir.dstu3.model.DomainResource;
-import org.hl7.fhir.dstu3.model.Extension;
-import org.hl7.fhir.dstu3.model.Narrative;
-import org.hl7.fhir.dstu3.model.StringType;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.Extension;
+import org.hl7.fhir.r4.model.Narrative;
+import org.hl7.fhir.r4.model.StringType;
 
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.util.ModelUtil;
@@ -59,6 +59,7 @@ public abstract class AbstractFindingModelAdapter<T extends EntityWithId>
 		}
 	}
 	
+	@Override
 	public void addStringExtension(String theUrl, String theValue){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent() && resource.get() instanceof DomainResource) {
@@ -70,6 +71,7 @@ public abstract class AbstractFindingModelAdapter<T extends EntityWithId>
 		}
 	}
 	
+	@Override
 	public Map<String, String> getStringExtensions(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent() && resource.get() instanceof DomainResource) {

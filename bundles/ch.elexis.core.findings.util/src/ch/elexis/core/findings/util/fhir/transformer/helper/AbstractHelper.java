@@ -8,19 +8,23 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Optional;
 
-import org.hl7.fhir.dstu3.model.DomainResource;
-import org.hl7.fhir.dstu3.model.Narrative;
-import org.hl7.fhir.dstu3.model.Reference;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.Narrative;
+import org.hl7.fhir.r4.model.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.util.ModelUtil;
+import ch.elexis.core.lock.types.LockInfo;
+import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.LocalLockServiceHolder;
 
 public class AbstractHelper {
 	
-	private static Logger logger = LoggerFactory.getLogger(AbstractHelper.class);
+private static Logger logger = LoggerFactory.getLogger(AbstractHelper.class);
 	
 	protected Date getDate(LocalDateTime localDateTime){
 		ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
@@ -57,6 +61,28 @@ public class AbstractHelper {
 	
 	public Reference getReference(String resourceType, Identifiable dbObject){
 		return new Reference(new IdDt("Patient", dbObject.getId()));
+	}
+	
+	public static void acquireAndReleaseLock(Identifiable dbObj){
+		LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(dbObj, 5, new NullProgressMonitor());
+		if (lr.isOk()) {
+			LockResponse lrs = LocalLockServiceHolder.get().releaseLock(lr);
+			if (!lrs.isOk()) {
+				logger.warn("Could not release lock for [{}] [{}]", dbObj.getClass().getName(),
+					dbObj.getId());
+			}
+		} else {
+			logger.warn("Could not acquire lock for [{}] [{}]", dbObj.getClass().getName(),
+				dbObj.getId());
+		}
+	}
+	
+	public static LockResponse acquireLock(Identifiable dbObj){
+		return LocalLockServiceHolder.get().acquireLockBlocking(dbObj, 5, new NullProgressMonitor());
+	}
+	
+	public static void releaseLock(LockInfo lockInfo){
+		LocalLockServiceHolder.get().releaseLock(lockInfo);
 	}
 	
 	public void setText(DomainResource domainResource, String text){

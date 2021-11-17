@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.DateTimeType;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.DateTimeType;
+import org.hl7.fhir.r4.model.Reference;
 import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.primitive.IdDt;
@@ -36,8 +36,8 @@ public class ProcedureRequest
 	public void setPatientId(String patientId){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.ProcedureRequest fhirProcedureRequest =
-				(org.hl7.fhir.dstu3.model.ProcedureRequest) resource.get();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
+				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
 			fhirProcedureRequest.setSubject(new Reference(new IdDt("Patient", patientId)));
 			saveResource(resource.get());
 		}
@@ -48,8 +48,8 @@ public class ProcedureRequest
 	public List<ICoding> getCoding(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.ProcedureRequest fhirProcedureRequest =
-				(org.hl7.fhir.dstu3.model.ProcedureRequest) resource.get();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
+				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
 			CodeableConcept codeableConcept = fhirProcedureRequest.getCode();
 			if (codeableConcept != null) {
 				return ModelUtil.getCodingsFromConcept(codeableConcept);
@@ -62,8 +62,8 @@ public class ProcedureRequest
 	public void setCoding(List<ICoding> coding){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.ProcedureRequest fhirProcedureRequest =
-				(org.hl7.fhir.dstu3.model.ProcedureRequest) resource.get();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
+				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
 			CodeableConcept codeableConcept = fhirProcedureRequest.getCode();
 			if (codeableConcept == null) {
 				codeableConcept = new CodeableConcept();
@@ -87,10 +87,10 @@ public class ProcedureRequest
 	public void setEncounter(IEncounter encounter){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.ProcedureRequest fhirProcedureRequest =
-				(org.hl7.fhir.dstu3.model.ProcedureRequest) resource.get();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
+				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
 			fhirProcedureRequest
-				.setContext(new Reference(new IdDt("Encounter", encounter.getId())));
+				.setEncounter(new Reference(new IdDt("Encounter", encounter.getId())));
 			
 			saveResource(resource.get());
 		}
@@ -107,8 +107,8 @@ public class ProcedureRequest
 	public Optional<LocalDateTime> getScheduledTime(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.ProcedureRequest fhirProcedureRequest =
-				(org.hl7.fhir.dstu3.model.ProcedureRequest) resource.get();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
+				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
 			try {
 				if (fhirProcedureRequest.hasOccurrence()) {
 					return Optional.of(getLocalDateTime(
@@ -126,8 +126,8 @@ public class ProcedureRequest
 	public void setScheduledTime(LocalDateTime time){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.ProcedureRequest fhirProcedureRequest =
-				(org.hl7.fhir.dstu3.model.ProcedureRequest) resource.get();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
+				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
 			fhirProcedureRequest.setOccurrence(new DateTimeType(getDate(time)));
 			
 			saveResource(resource.get());

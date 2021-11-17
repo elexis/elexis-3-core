@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hl7.fhir.dstu3.model.DomainResource;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
@@ -35,8 +35,8 @@ public class Encounter
 	public void setPatientId(String patientId){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
-				(org.hl7.fhir.dstu3.model.Encounter) resource
+			org.hl7.fhir.r4.model.Encounter fhirEncounter =
+				(org.hl7.fhir.r4.model.Encounter) resource
 					.get();
 			fhirEncounter.setSubject(new Reference(new IdDt("Patient", patientId)));
 			saveResource(resource.get());
@@ -112,6 +112,7 @@ public class Encounter
 		getEntity().setMandatorId(mandatorId);
 	}
 	
+	@Override
 	public void setType(List<ICoding> coding){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
@@ -120,6 +121,7 @@ public class Encounter
 		}
 	}
 	
+	@Override
 	public List<ICoding> getType(){
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {

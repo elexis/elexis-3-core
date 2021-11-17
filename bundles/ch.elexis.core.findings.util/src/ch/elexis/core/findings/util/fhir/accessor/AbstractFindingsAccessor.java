@@ -10,17 +10,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.hl7.fhir.dstu3.model.DomainResource;
-import org.hl7.fhir.dstu3.model.Extension;
-import org.hl7.fhir.dstu3.model.Narrative;
-import org.hl7.fhir.dstu3.model.StringType;
+import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.Extension;
+import org.hl7.fhir.r4.model.Narrative;
+import org.hl7.fhir.r4.model.StringType;
 
 import ch.elexis.core.findings.util.ModelUtil;
 
 public abstract class AbstractFindingsAccessor {
 	
 	public Optional<String> getText(DomainResource resource){
-		Narrative narrative = ((DomainResource) resource).getText();
+		Narrative narrative = resource.getText();
 		if (narrative != null && narrative.getDivAsString() != null) {
 			return ModelUtil.getNarrativeAsString(narrative);
 		}

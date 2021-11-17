@@ -9,7 +9,7 @@ import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 
 public class FhirUtil {
 
-	private static FhirContext context = FhirContext.forDstu3();
+	private static FhirContext context = FhirContext.forR4();
 
 	private static IParser getJsonParser() {
 		return context.newJsonParser();
