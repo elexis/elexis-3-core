@@ -57,7 +57,9 @@ public class ConditionAccessor extends AbstractFindingsAccessor {
 			if (!coding.isEmpty()) {
 				for (Coding categoryCoding : coding) {
 					if (categoryCoding.getSystem()
-						.equals("http://hl7.org/fhir/condition-category")) {
+							.equals("http://hl7.org/fhir/condition-category")
+							|| categoryCoding.getSystem()
+									.equals("http://terminology.hl7.org/CodeSystem/condition-category")) {
 						return (ConditionCategory) categoryMapping
 							.getLocalEnumValueByCode(categoryCoding.getCode().toUpperCase());
 					}
