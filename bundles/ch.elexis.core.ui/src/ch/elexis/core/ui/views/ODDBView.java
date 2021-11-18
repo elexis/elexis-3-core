@@ -55,7 +55,7 @@ public class ODDBView extends ViewPart {
 			
 		});
 		// browser.setUrl("http://ch.oddb.org");
-		browser.setUrl("http://santesuisse.oddb.org/");
+		browser.setUrl("https://just-medical.oddb.org/");
 		
 	}
 	
