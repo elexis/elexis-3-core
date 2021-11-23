@@ -33,8 +33,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ElexisText;
@@ -158,13 +161,14 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		
 		createSelectors(fields.length);
 		for (int i = 0; i < selectors.length; i++) {
-			selectors[i] = new ElexisText(tk.createText(inner, "", SWT.BORDER)); //$NON-NLS-1$
+			selectors[i] = new ElexisText(tk.createText(inner, "", SWT.NONE)); //$NON-NLS-1$
 			selectors[i].addModifyListener(ml);
 			selectors[i].addSelectionListener(sl);
 			selectors[i].setToolTipText(Messages.DefaultControlFieldProvider_enterFilter); //$NON-NLS-1$
 			selectors[i].setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			SWTHelper.setSelectOnFocus((Text) selectors[i].getWidget());
 		}
+		selectors[1].setFocus();
 	}
 	
 	@Override
