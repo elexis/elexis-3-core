@@ -42,7 +42,7 @@ public interface ICondition extends IFinding {
 	}
 
 	public enum ConditionStatus {
-			UNKNOWN, ACTIVE, RELAPSE, REMISSION, RESOLVED;
+			UNKNOWN, RECURRENCE, ACTIVE, RELAPSE, INACTIVE, REMISSION, RESOLVED;
 		
 		public String getLocalized(){
 			try {

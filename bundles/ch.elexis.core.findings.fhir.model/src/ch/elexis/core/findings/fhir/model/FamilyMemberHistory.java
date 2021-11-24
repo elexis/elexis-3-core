@@ -2,8 +2,8 @@ package ch.elexis.core.findings.fhir.model;
 
 import java.util.Optional;
 
-import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.DomainResource;
 
 import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.util.fhir.accessor.FamilyMemberHistoryAccessor;

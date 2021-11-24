@@ -14,6 +14,7 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.mapper.IPatientPatientAttributeMapper;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.IXidService;
 
 @Component(property = IFhirTransformer.TRANSFORMERID + "=Patient.IPatient")
@@ -25,11 +26,14 @@ public class PatientIPatientTransformer implements IFhirTransformer<Patient, IPa
 	@Reference
 	private IXidService xidService;
 	
+	@Reference
+	private IUserService userService;
+	
 	private IPatientPatientAttributeMapper attributeMapper;
 
 	@Activate
 	private void activate() {
-		attributeMapper = new IPatientPatientAttributeMapper(modelService, xidService);
+		attributeMapper = new IPatientPatientAttributeMapper(modelService, xidService, userService);
 	}
 
 	@Override

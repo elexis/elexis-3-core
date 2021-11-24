@@ -16,10 +16,16 @@ import ch.elexis.core.findings.util.FindingsFormatUtilTest;
 @SuiteClasses({ FindingsFormatUtilTest.class })
 public class AllTests {
 
-	private static FhirContext context = FhirContext.forDstu3();
+	private static FhirContext context3 = FhirContext.forDstu3();
 
-	public static IParser getJsonParser() {
-		return context.newJsonParser();
+	private static FhirContext context4 = FhirContext.forR4();
+
+	public static IParser getJsonParser3() {
+		return context3.newJsonParser();
+	}
+
+	public static IParser getJsonParser4() {
+		return context4.newJsonParser();
 	}
 
 	public static String getResourceAsString(String resourcePath) throws IOException {

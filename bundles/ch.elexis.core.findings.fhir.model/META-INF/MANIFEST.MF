@@ -16,10 +16,10 @@ Bundle-ActivationPolicy: lazy
 Import-Package: javax.persistence;version="2.2.3",
  javax.persistence.criteria;version="2.2.3",
  org.apache.commons.lang3;version="3.1.0"
-Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelServiceHolder.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.ValueSetService.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelService.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.LocalCodingContribution.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsService.xml,
+Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.model.service.CodingService.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.DocumentStoreHolder.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.CodingService.xml
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelService.xml,
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsService.xml,
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.LocalCodingContribution.xml,
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.ValueSetService.xml

@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.laboratory.dialogs;
 
+import org.apache.commons.lang3.RegExUtils;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -14,7 +15,11 @@ public class LabItemViewerFilter extends ViewerFilter {
 	
 	public void setSearchText(String s){
 		// Search must be a substring of the existing value
-		this.searchString = ".*" + s + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
+		this.searchString = ".*" + escapeRegexCharacters(s) + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+	
+	private String escapeRegexCharacters(String string){
+		return RegExUtils.replacePattern(string, "([~!@#$%^&*()_+{}\\[\\]:;,.<>/?-])", "\\\\$1");
 	}
 	
 	@Override

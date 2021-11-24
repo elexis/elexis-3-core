@@ -94,6 +94,7 @@ public class EigenLeistungDialog extends TitleAreaDialog {
 		if (result == null) {
 			result =
 				new Eigenleistung(tKurz.getText(), tName.getText(), tEK.getText(), tVK.getText());
+			((Eigenleistung) result).set(Eigenleistung.TIME, tTime.getText());
 		} else if (result instanceof Eigenleistung) {
 			((Eigenleistung) result).set(new String[] {
 				Eigenleistung.CODE, Eigenleistung.BEZEICHNUNG, Eigenleistung.EK_PREIS,

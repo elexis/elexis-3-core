@@ -20,6 +20,7 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.IXidService;
 
 @Component
@@ -31,11 +32,14 @@ public class PractitionerIMandatorTransformer implements IFhirTransformer<Practi
 	@Reference
 	private IXidService xidService;
 	
+	@Reference
+	private IUserService userService;
+	
 	private IContactHelper contactHelper;
 	
 	@Activate
 	private void activate(){
-		contactHelper = new IContactHelper(modelService, xidService);
+		contactHelper = new IContactHelper(modelService, xidService, userService);
 	}
 	
 	@Override
