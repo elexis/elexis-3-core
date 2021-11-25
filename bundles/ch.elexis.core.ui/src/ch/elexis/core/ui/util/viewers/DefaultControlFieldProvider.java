@@ -161,14 +161,13 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		
 		createSelectors(fields.length);
 		for (int i = 0; i < selectors.length; i++) {
-			selectors[i] = new ElexisText(tk.createText(inner, "", SWT.NONE)); //$NON-NLS-1$
+			selectors[i] = new ElexisText(tk.createText(inner, "", SWT.BORDER)); //$NON-NLS-1$
 			selectors[i].addModifyListener(ml);
 			selectors[i].addSelectionListener(sl);
 			selectors[i].setToolTipText(Messages.DefaultControlFieldProvider_enterFilter); //$NON-NLS-1$
 			selectors[i].setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			SWTHelper.setSelectOnFocus((Text) selectors[i].getWidget());
 		}
-		selectors[1].setFocus();
 	}
 	
 	@Override
