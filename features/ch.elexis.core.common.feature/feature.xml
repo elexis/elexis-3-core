@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.common.feature"
       label="Elexis OpenSource Common Bundles Feature"
-      version="3.9.0.qualifier"
+      version="3.10.0.qualifier"
       provider-name="elexis.info">
 
    <description>
@@ -11,7 +11,7 @@
    </description>
 
    <copyright url="http://elexis.info/de_contributers.html">
-      Gerry Weirich, 2007-2013 und viele andere
+      Gerry Weirich, 2007-2021 und viele andere
    </copyright>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
@@ -44,7 +44,7 @@
       <import plugin="org.eclipse.e4.core.di.annotations"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.equinox.app"/>
-      <import plugin="ch.elexis.core.data" version="3.9.0" match="greaterOrEqual"/>
+      <import plugin="ch.elexis.core.data" version="3.10.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.security" version="1.0.0" match="compatible"/>
       <import plugin="ch.elexis.core.jpa" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="ch.elexis.core.jpa.entities" version="3.9.0" match="greaterOrEqual"/>
