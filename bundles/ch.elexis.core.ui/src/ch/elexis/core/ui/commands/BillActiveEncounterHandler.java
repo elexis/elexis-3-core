@@ -10,6 +10,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -40,24 +41,33 @@ public class BillActiveEncounterHandler extends AbstractHandler implements IHand
 					Rechnung invoice = Rechnung.load(results.get(0).get().getId());
 					new RnOutputDialog(UiDesk.getTopShell(), Collections.singletonList(invoice))
 						.open();
-				}
-			} else {
-				StringBuilder sb = new StringBuilder();
-				for (@SuppressWarnings("rawtypes")
-				msg message : result.getMessages()) {
-					if (message.getSeverity() != SEVERITY.OK) {
-						if (sb.length() > 0) {
-							sb.append(" / ");
+				} else {
+					for (Result<IInvoice> invoiceResult : results) {
+						if (!invoiceResult.isOK()) {
+							showResult(invoiceResult, HandlerUtil.getActiveShell(event));
 						}
-						sb.append(message.getText());
 					}
 				}
-				MessageDialog.openInformation(HandlerUtil.getActiveShell(event),
-					"Nicht verrechenbar",
-					"Die Konsultation kann nicht verrechnet werden.\n\n" + sb.toString());
+			} else {
+				showResult(result, HandlerUtil.getActiveShell(event));
 			}
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private void showResult(Result<?> result, Shell shell){
+		StringBuilder sb = new StringBuilder();
+		for (msg message : result.getMessages()) {
+			if (message.getSeverity() != SEVERITY.OK) {
+				if (sb.length() > 0) {
+					sb.append(" / ");
+				}
+				sb.append(message.getText());
+			}
+		}
+		MessageDialog.openInformation(shell, "Nicht verrechenbar",
+			"Die Konsultation kann nicht verrechnet werden.\n\n" + sb.toString());
 	}
 	
 	private Map<Rechnungssteller, Map<Fall, List<Konsultation>>> getBillMap(
