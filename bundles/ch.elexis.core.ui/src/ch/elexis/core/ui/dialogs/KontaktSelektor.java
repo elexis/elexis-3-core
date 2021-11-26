@@ -63,7 +63,7 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickListener {
-	
+
 	// Name, Vorname, gebdat, strasse, plz, ort, tel, zusatz, fax, email
 	public static final int HINTSIZE = 12;
 	
@@ -329,7 +329,9 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 		bOrgs.addSelectionListener(fba);
 		initContactTypeSelection();
 		
-		cv.create(vc, ret, SWT.NONE, "1");
+		cv.create(vc, ret, SWT.NONE, "1");		
+		((DefaultControlFieldProvider)vc.getControlFieldProvider()).setFocusField(1);
+		vc.getControlFieldProvider().setFocus();
 		GridData gd = SWTHelper.getFillGridData(1, true, 1, true);
 		gd.heightHint = 100;
 		cv.getViewerWidget().getControl().setLayoutData(gd);
