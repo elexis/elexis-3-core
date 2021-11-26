@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.ui.feature"
       label="Elexis Core UI Feature"
-      version="3.9.0.qualifier"
+      version="3.10.0.qualifier"
       provider-name="elexis.info">
 
    <description>
@@ -19,7 +19,7 @@
    </license>
 
    <requires>
-      <import feature="ch.elexis.core.common.feature" version="3.9.0.qualifier"/>
+      <import feature="ch.elexis.core.common.feature" version="3.10.0.qualifier"/>
    </requires>
 
    <plugin
