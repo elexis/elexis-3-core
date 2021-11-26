@@ -23,10 +23,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.ListDisplaySelectionProvider;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.views.IRefreshable;
 
 /**
  * Eine platzsparende View zur Anzeige der Dauermedikation
@@ -34,10 +36,12 @@ import ch.elexis.core.ui.util.SWTHelper;
  * @author gerry
  * 
  */
-public class DauerMediView extends ViewPart {
+public class DauerMediView extends ViewPart implements IRefreshable {
 	public final static String ID = "ch.elexis.dauermedikationview"; //$NON-NLS-1$
 	private IAction toClipBoardAction;
 	FixMediDisplay dmd;
+	
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 	
 	public DauerMediView(){
 		
@@ -54,16 +58,19 @@ public class DauerMediView extends ViewPart {
 		
 		makeActions();
 		getViewSite().getActionBars().getToolBarManager().add(toClipBoardAction);
+		
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
 	public void dispose(){
+		getSite().getPage().removePartListener(udpateOnVisible);
+		
 		dmd.dispose();
 	}
 	
 	@Override
 	public void setFocus(){
-		// TODO Auto-generated method stub
-		
+		dmd.setFocus();
 	}
 	
 	private void makeActions(){
@@ -85,5 +92,12 @@ public class DauerMediView extends ViewPart {
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
 		CoreUiUtil.updateFixLayout(part, currentState);
+	}
+	
+	@Override
+	public void refresh(){
+		if (dmd != null && !dmd.isDisposed()) {
+			dmd.reload();
+		}
 	}
 }
