@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>ch.elexis.core</groupId>
 			<artifactId>ch.elexis.core.common.feature</artifactId>
-			<version>3.9.0-SNAPSHOT</version>
+			<version>3.10.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
