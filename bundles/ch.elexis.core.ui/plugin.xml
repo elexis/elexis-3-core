@@ -372,6 +372,16 @@
                tooltip="Konsultation verrechnen und ausgeben">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.chromium.views.BrowserView">
+              <command
+               commandId="ch.elexis.core.ui.chromium.handler.OpenUrlHandler"
+               icon="icon://IMG_WEB"
+               label="Adresse eingeben"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -1001,6 +1011,10 @@
                </and>
             </enabledWhen>
          </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.OpenUrlHandler"
+               commandId="ch.elexis.core.ui.chromium.handler.OpenUrlHandler">
+         </handler>
       </extension>
       <extension
             point="org.eclipse.core.expressions.propertyTesters">
@@ -1026,4 +1040,15 @@
              class="ch.elexis.core.ui.services.internal.ContextService">
        </processor>
 	   </extension>
+      <extension
+            point="org.eclipse.ui.views">
+         <view
+               category="ch.elexis.core.ui.eenv.category"
+               class="ch.elexis.core.ui.views.BrowserView"
+               icon="icon://IMG_WEB"
+               id="ch.elexis.core.ui.chromium.views.BrowserView"
+               name="Chromium Browser"
+               restorable="true">
+         </view>
+      </extension>
 </plugin>
