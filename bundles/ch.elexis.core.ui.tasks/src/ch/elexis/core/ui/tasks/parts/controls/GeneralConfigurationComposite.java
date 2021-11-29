@@ -153,7 +153,7 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 		new Label(this, SWT.NONE);
 		btnActive = new Button(this, SWT.CHECK);
 		btnActive.setText("active");
-		btnSingleton.addSelectionListener(new SelectionAdapter() {
+		btnActive.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				boolean selection = ((Button) e.widget).getSelection();
