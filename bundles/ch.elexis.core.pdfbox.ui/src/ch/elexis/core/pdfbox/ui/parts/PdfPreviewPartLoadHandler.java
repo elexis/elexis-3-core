@@ -27,17 +27,12 @@ import ch.elexis.core.l10n.Messages;
 public class PdfPreviewPartLoadHandler {
 	
 	private static ExecutorService loader = Executors.newSingleThreadExecutor();
-	
 	private final ScrolledComposite scrolledComposite;
 	private final Composite previewComposite;
-	
 	private float scalingFactor;
-	
 	private Label headLabel;
 	private int numberOfPages;
-	
 	private Image[] images;
-	
 	private PDDocument pdDocument;
 	
 	public PdfPreviewPartLoadHandler(InputStream pdfInputStream, Float scalingFactor,
@@ -50,8 +45,14 @@ public class PdfPreviewPartLoadHandler {
 		loader.submit(new LoaderRunnable(pdfInputStream));
 	}
 	
+	public void unLoadDocument() throws IOException{
+		if (pdDocument != null) {
+			pdDocument.close();
+			pdDocument = null;
+		}
+	}
+	
 	private class LoaderRunnable implements Runnable {
-		
 		private InputStream pdfInputStream;
 		
 		public LoaderRunnable(InputStream pdfInputStream){
@@ -61,32 +62,41 @@ public class PdfPreviewPartLoadHandler {
 		@Override
 		public void run(){
 			try {
-				
 				// cleanup existing controls, show user feedback
 				previewComposite.getDisplay().syncExec(() -> {
 					headLabel = new Label(previewComposite, SWT.None);
 					headLabel.setText(Messages.PdfPreview_NoPDFSelected);
 					previewComposite.layout(true, true);
 					scrolledComposite.layout(true, true);
-					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+					scrolledComposite
+						.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 					
 					Control[] children = previewComposite.getChildren();
 					for (Control control : children) {
-						if(headLabel.equals(control)) {
+						if (headLabel.equals(control)) {
 							continue;
 						}
 						control.dispose();
 					}
-					previewComposite.layout(true, true);
+					previewComposite.layout (true, true);
 					
 				});
 				
+				//@Marco: Musste ich auskommentieren, da sonst beim Dokument das Zoomen nicht mehr geht.				
+//				if (pdfInputStream == null) {
+//					return;
+//				}
+				
 				// load pdf document if not already loaded
 				if (pdDocument == null) {
+					if(pdfInputStream != null) {
 					pdDocument = PDDocument.load(pdfInputStream);
 					numberOfPages = pdDocument.getNumberOfPages();
 					images = new Image[numberOfPages];
+				} else if (pdfInputStream == null && pdDocument == null) {
+					return;
 				}
+			}
 				
 				// render pages and display
 				PDFRenderer renderer = new PDFRenderer(pdDocument);
@@ -117,7 +127,7 @@ public class PdfPreviewPartLoadHandler {
 				
 			} catch (IOException e) {
 				previewComposite.getDisplay().asyncExec(() -> {
-					if(headLabel != null) {
+					if (headLabel != null) {
 						headLabel.dispose();
 					}
 					headLabel = new Label(previewComposite, SWT.None);
@@ -132,12 +142,12 @@ public class PdfPreviewPartLoadHandler {
 		}
 	}
 	
+	//Zoom
 	public void changeScalingFactor(Float scalingFactor){
-		this.scalingFactor = scalingFactor;		
-		loader.submit(new LoaderRunnable(null));
+		this.scalingFactor = scalingFactor;
+		loader.submit(new LoaderRunnable(null));	
 	}
-
-
+	
 	public void close(){
 		if (pdDocument != null) {
 			try {

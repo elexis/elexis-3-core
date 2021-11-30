@@ -1,12 +1,9 @@
-
 package ch.elexis.core.pdfbox.ui.parts;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.swt.SWT;
@@ -15,38 +12,29 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.ui.e4.events.ElexisUiEventTopics;
 
-
 public class PdfPreviewPart {
-	
 	
 	@Inject
 	private IConfigService configService;
-	
 	private Composite previewComposite;
 	private ScrolledComposite scrolledComposite;
 	private PdfPreviewPartLoadHandler pdfPreviewPartLoadHandler;
-
-	//private Object patientConstant; //diese Variable wird nicht benutzt
-	//private IPatient actPatient; // so den Patienten merken?
 	private Label label;
 	
 	@PostConstruct
 	public void postConstruct(Composite parent) throws IOException{
 		scrolledComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		previewComposite = new Composite(scrolledComposite, SWT.NONE);
-		scrolledComposite.setContent(previewComposite);
+		label = new Label(previewComposite, SWT.None);
 		
 		previewComposite.setLayout(new GridLayout(1, false));
-		
-		label = new Label(previewComposite, SWT.None);
 		label.setText(Messages.PdfPreview_NoPDFSelected);
-		
+		scrolledComposite.setContent(previewComposite);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
@@ -59,6 +47,13 @@ public class PdfPreviewPart {
 		
 		
 		if (pdfPreviewPartLoadHandler != null) {
+			if(pdfInputStream == null) {
+				try {
+					pdfPreviewPartLoadHandler.unLoadDocument();
+				}catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 			pdfPreviewPartLoadHandler.close();
 		}
 		
@@ -66,8 +61,7 @@ public class PdfPreviewPart {
 			Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
 		
 		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfInputStream,
-			new Float(zoomLevel), previewComposite, scrolledComposite);
-		
+			new Float(zoomLevel), previewComposite, scrolledComposite);	
 	}
 	
 	public void changeScalingFactor(Float _zoomLevel){
@@ -77,10 +71,18 @@ public class PdfPreviewPart {
 	/*
 	 * if we change patient the PDF view should refresh 
 	 */
+	
+//	@Inject
+//	void activePatient(@Optional
+//	IPatient patient){
+//		Display.getDefault().asyncExec(() -> {
+//			updatePreview(null);
+//		});
+//	}
+	
 	@Inject
-	void activePatient(@Optional IPatient patient){
-		Display.getDefault().asyncExec(() -> {
+	@Optional
+	void activePatient(IPatient patient){
 			updatePreview(null);
-		});
 	}
 }
