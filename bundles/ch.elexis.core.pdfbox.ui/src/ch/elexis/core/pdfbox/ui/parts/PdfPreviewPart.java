@@ -13,17 +13,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.e4.ui.di.UISynchronize;
 
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.ui.e4.events.ElexisUiEventTopics;
 
-
 public class PdfPreviewPart {
-	
 	
 	@Inject
 	private IConfigService configService;
@@ -31,10 +26,6 @@ public class PdfPreviewPart {
 	private Composite previewComposite;
 	private ScrolledComposite scrolledComposite;
 	private PdfPreviewPartLoadHandler pdfPreviewPartLoadHandler;
-
-	//private Object patientConstant; //diese Variable wird nicht benutzt
-	//private IPatient actPatient; // so den Patienten merken?
-	private Label label;
 	
 	@PostConstruct
 	public void postConstruct(Composite parent) throws IOException{
@@ -44,8 +35,7 @@ public class PdfPreviewPart {
 		
 		previewComposite.setLayout(new GridLayout(1, false));
 		
-		// Bug: Lokale anstatt Instanz Variable initialisiert.
-		label = new Label(previewComposite, SWT.None);
+		Label label = new Label(previewComposite, SWT.None);
 		label.setText("Kein PDF selektiert");
 		
 		scrolledComposite.setExpandHorizontal(true);
@@ -57,7 +47,6 @@ public class PdfPreviewPart {
 	@Optional
 	void updatePreview(
 		@UIEventTopic(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF) InputStream pdfInputStream){
-		
 		
 		if (pdfPreviewPartLoadHandler != null) {
 			pdfPreviewPartLoadHandler.close();
@@ -75,18 +64,4 @@ public class PdfPreviewPart {
 		pdfPreviewPartLoadHandler.changeScalingFactor(_zoomLevel);
 	}
 	
-	/*
-	 * if we change patient the PDF view should refresh 
-	 */
-	@Inject
-	void activePatient(@Optional IPatient patient){
-		Display.getDefault().asyncExec(() -> {
-//			if(pdfPreviewPartLoadHandler.equals(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF == null)) {
-//			updatePreview(null);
-//			}
-			updatePreview(null);
-			label.setText("Kein PDF selektiert");
-			// refresh view here, but how?
-		});
-	}
 }
