@@ -40,53 +40,48 @@ public class PdfPreviewPart {
 		scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 	
+	/*
+	 * if we change patient the PDF view should refresh 
+	 */
+	
+	@Inject
+	@Optional
+	void activePatient(IPatient patient) throws IOException{
+		updatePreview(null);
+		//if pdfPreviewPartloadHandler already exist: unloadDokument 
+		if (pdfPreviewPartLoadHandler != null) {
+			pdfPreviewPartLoadHandler.unLoadDocument();
+		}
+	}
 	
 	/*
 	 * wird nur mit null ausgeführt wenn bereits im PDFPreviewPartLoadhandler im PDFInputStream schon null ist.
 	 */
 	@Inject
 	@Optional
-	void updatePreview(
-		@UIEventTopic(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF) InputStream pdfInputStream){
-		
+	void updatePreview(@UIEventTopic(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF)
+	InputStream pdfInputStream){
 		
 		if (pdfPreviewPartLoadHandler != null) {
-			if(pdfInputStream == null) {
+			if (pdfInputStream == null) {
 				try {
 					pdfPreviewPartLoadHandler.unLoadDocument();
-				}catch (IOException e) {
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 			pdfPreviewPartLoadHandler.close();
 		}
-	
+		
 		String zoomLevel = configService.getActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
 			Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
 		
 		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfInputStream,
-			new Float(zoomLevel), previewComposite, scrolledComposite);	
+			new Float(zoomLevel), previewComposite, scrolledComposite);
 	}
 	
 	public void changeScalingFactor(Float _zoomLevel){
 		pdfPreviewPartLoadHandler.changeScalingFactor(_zoomLevel);
 	}
 	
-	/*
-	 * if we change patient the PDF view should refresh 
-	 */
-	
-//	@Inject
-//	void activePatient(@Optional
-//	IPatient patient){
-//		Display.getDefault().asyncExec(() -> {
-//			updatePreview(null);
-//		});
-//	}
-	
-	@Inject
-	@Optional
-	void activePatient(IPatient patient){
-			updatePreview(null);
-	}
 }

@@ -83,11 +83,6 @@ public class PdfPreviewPartLoadHandler {
 					
 				});
 				
-				//@Marco: Musste ich auskommentieren, da sonst beim Dokument das Zoomen nicht mehr geht.				
-				//				if (pdfInputStream == null) {
-				//					return;
-				//				}
-				
 				// load pdf document if not already loaded
 				if (pdDocument == null) {
 					if (pdfInputStream != null) {
