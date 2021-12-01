@@ -40,6 +40,10 @@ public class PdfPreviewPart {
 		scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 	
+	
+	/*
+	 * wird nur mit null ausgeführt wenn bereits im PDFPreviewPartLoadhandler im PDFInputStream schon null ist.
+	 */
 	@Inject
 	@Optional
 	void updatePreview(
@@ -56,7 +60,7 @@ public class PdfPreviewPart {
 			}
 			pdfPreviewPartLoadHandler.close();
 		}
-		
+	
 		String zoomLevel = configService.getActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
 			Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
 		

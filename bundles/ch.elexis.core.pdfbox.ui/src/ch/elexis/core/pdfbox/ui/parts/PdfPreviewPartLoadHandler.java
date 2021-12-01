@@ -45,6 +45,7 @@ public class PdfPreviewPartLoadHandler {
 		loader.submit(new LoaderRunnable(pdfInputStream));
 	}
 	
+	//When Documend is loaded, shows pdf
 	public void unLoadDocument() throws IOException{
 		if (pdDocument != null) {
 			pdDocument.close();
@@ -78,25 +79,25 @@ public class PdfPreviewPartLoadHandler {
 						}
 						control.dispose();
 					}
-					previewComposite.layout (true, true);
+					previewComposite.layout(true, true);
 					
 				});
 				
 				//@Marco: Musste ich auskommentieren, da sonst beim Dokument das Zoomen nicht mehr geht.				
-//				if (pdfInputStream == null) {
-//					return;
-//				}
+				//				if (pdfInputStream == null) {
+				//					return;
+				//				}
 				
 				// load pdf document if not already loaded
 				if (pdDocument == null) {
-					if(pdfInputStream != null) {
-					pdDocument = PDDocument.load(pdfInputStream);
-					numberOfPages = pdDocument.getNumberOfPages();
-					images = new Image[numberOfPages];
-				} else if (pdfInputStream == null && pdDocument == null) {
-					return;
+					if (pdfInputStream != null) {
+						pdDocument = PDDocument.load(pdfInputStream);
+						numberOfPages = pdDocument.getNumberOfPages();
+						images = new Image[numberOfPages];
+					} else if (pdfInputStream == null && pdDocument == null) {
+						return;
+					}
 				}
-			}
 				
 				// render pages and display
 				PDFRenderer renderer = new PDFRenderer(pdDocument);
@@ -145,7 +146,7 @@ public class PdfPreviewPartLoadHandler {
 	//Zoom
 	public void changeScalingFactor(Float scalingFactor){
 		this.scalingFactor = scalingFactor;
-		loader.submit(new LoaderRunnable(null));	
+		loader.submit(new LoaderRunnable(null));
 	}
 	
 	public void close(){
