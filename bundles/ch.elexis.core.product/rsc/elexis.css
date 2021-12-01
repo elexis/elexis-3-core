@@ -1,0 +1,196 @@
+
+
+Text {
+    color: black;
+    background-color: white;
+}
+ 
+
+/* background uses a gradient */
+.MTrimBar {
+    background-color:  #FFFFFF;
+    color: white;
+    font: Verdana 8px;
+}
+
+
+/*Patientendetails*/
+
+CTabFolder#Links-folder {
+  /* actual values */
+  //background-color: #FFFFFF;
+  background-image: none;
+  border-visible: true;
+  color: #000000;
+  font-family: "Segoe UI";
+  font-size: 9;
+  font-style: normal;
+  font-weight: normal;
+  swt-background-mode: none;
+  swt-maximize-visible: true;
+  swt-maximized: false;
+  swt-minimize-visible: true;
+  swt-minimized: false;
+  swt-simple: true;
+  swt-single: false;
+  swt-tab-height: 22;
+  swt-tab-position: top;
+  swt-unselected-close-visible: false;
+  swt-unselected-image-visible: true;
+  text-transform: none;
+  visibility: visible;
+}
+
+Composite{
+  /* actual values */
+  background-color: #FFFFFF;
+  background-image: none;
+  color: #000000;
+  font-family: "Segoe UI";
+  font-size: 9;
+  font-style: normal;
+  font-weight: normal;
+  swt-background-mode: none;
+  text-transform: none;
+  visibility: visible;
+}
+
+ImageHyperlink, Hyperlink{
+  /* actual values */
+  background-color: #FFFFFF;
+  background-image: none;
+  color: #0066cc;
+  font-family: "Segoe UI";
+  font-size: 9;
+  font-style: normal;
+  font-weight: normal;
+  swt-background-mode: none;
+  text-transform: none;
+  visibility: visible;
+}
+
+
+LabeledInputField, LabeledInputField-AutoForm, Label, ScrolledComposite,
+InputPanel, Combo{
+  /* actual values */
+  background-color: #FFFFFF;
+  background-image: none;
+  color: #000000;
+  font-family: "Segoe UI";
+  font-size: 9;
+  font-style: normal;
+  font-weight: normal;
+  swt-background-mode: none;
+  text-transform: none;
+  visibility: visible;
+}
+
+
+/*Konsultation*/
+
+StyledText {
+  /* actual values */
+  background-color: #ffffff;
+  background-image: none;
+  color: #000000;
+  cursor: auto;
+  font-family: "Segoe UI";
+  font-size: 12;
+  font-style: normal;
+  font-weight: normal;
+  swt-background-mode: none;
+  text-transform: none;
+  visibility: visible;
+}
+
+Hyperlink {
+  /* actual values */
+  background-color: #ffffff;	/* declared in CSS: rgb(255, 255, 255) */
+  background-image: none;	/* declared in CSS: none */
+  color: #0066cc;	/* declared in CSS: rgb(0, 102, 204) */
+  font-family: "Segoe UI";	/* declared in CSS: Segoe UI */
+  font-size: 9;	/* declared in CSS: 9 */
+  font-style: normal;	/* declared in CSS: normal */
+  font-weight: normal;	/* declared in CSS: normal */
+  swt-background-mode: none;	/* declared in CSS: none */
+  text-transform: none;	/* declared in CSS: none */
+  visibility: visible;	/* declared in CSS: visible */
+}
+
+Button {
+  /* actual values */
+  background-color: #ffffff;
+  background-image: none;
+  color: #000000;
+  font-family: "Segoe UI";
+  font-size: 9;
+  font-style: normal;
+  font-weight: normal;
+  swt-alignment: center;
+  text-align: center;
+  text-transform: none;
+  visibility: visible;
+}
+
+Link {
+  /* actual values */
+  background-color: #ffffff;
+  background-image: none;
+  color: #000000;
+  font-family: "Segoe UI";
+  font-size: 9;
+  font-style: normal;
+  font-weight: normal;
+  text-transform: none;
+  visibility: visible;
+}
+
+TitleRegion Label{
+  /* actual values */
+  background-color: #ffffff;
+  background-image: none;
+  color: #0078d7;
+  font-family: "Segoe UI";
+  font-size: 20;
+  font-style: normal;
+  font-weight: bold;
+  swt-background-mode: none;
+  text-transform: none;
+  visibility: visible;
+}
+
+ScrolledComposite {
+  /* actual values */
+  background-color: #ffffff;	/* declared in CSS: rgb(255, 255, 255) */
+  background-image: none;	/* declared in CSS: none */
+  color: #000000;	/* declared in CSS: rgb(0, 0, 0) */
+  font-family: "Segoe UI";	/* declared in CSS: Segoe UI */
+  font-size: 9;	/* declared in CSS: 9 */
+  font-style: normal;	/* declared in CSS: normal */
+  font-weight: normal;	/* declared in CSS: normal */
+  swt-background-mode: none;	/* declared in CSS: none */
+  swt-scrollbar-Themed: true;
+  text-transform: none;	/* declared in CSS: none */
+  visibility: visible;	/* declared in CSS: visible */
+}
+
+Composite Button{
+  /* actual values */
+  background-color: #ffffff;	/* declared in CSS: rgb(255, 255, 255) */
+  background-image: none;	/* declared in CSS: none */
+  color: #000000;	/* declared in CSS: rgb(0, 0, 0) */
+  font-family: "Segoe UI";	/* declared in CSS: Segoe UI */
+  font-size: 9;	/* declared in CSS: 9 */
+  text-align: centre;
+  visibility: visible;	/* declared in CSS: visible */
+}
+
+ToolBar {
+  /* actual values */
+  background-color: #ffffff;
+  background-image: none;
+  color: #000000;
+  font-family: "Segoe UI";
+  font-size: 9;
+  animiation: hoverOut 500ms ease-out;
+}
