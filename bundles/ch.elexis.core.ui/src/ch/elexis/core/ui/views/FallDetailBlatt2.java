@@ -25,6 +25,10 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposalListener;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.nebula.widgets.cdatetime.CDT;
 import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
@@ -51,6 +55,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import com.tiff.common.ui.datepicker.DatePickerCombo;
@@ -61,14 +66,19 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IFall;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.preferences.UserCasePreferences;
+import ch.elexis.core.ui.proposals.IdentifiableContentProposal;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.DayDateCombo;
@@ -105,18 +115,18 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 	private IFall actFall;
 	DayDateCombo ddc;
-
+	
 	String itemsErrorMessage = "parameters not supplied;please control parameters;in preferences"; //$NON-NLS-1$
 	
 	public static final String[] Reasons = {
-			FallConstants.TYPE_DISEASE, FallConstants.TYPE_ACCIDENT, FallConstants.TYPE_MATERNITY, FallConstants.TYPE_PREVENTION,
-			FallConstants.TYPE_BIRTHDEFECT, FallConstants.TYPE_OTHER
+		FallConstants.TYPE_DISEASE, FallConstants.TYPE_ACCIDENT, FallConstants.TYPE_MATERNITY,
+		FallConstants.TYPE_PREVENTION, FallConstants.TYPE_BIRTHDEFECT, FallConstants.TYPE_OTHER
 	};
 	public static final String[] dgsys = null;
 	Combo cAbrechnung, cReason;
 	CDateTime dpVon, dpBis;
 	Text tBezeichnung, tGarant, tCostBearer;
-	Hyperlink autoFill, hlGarant, hlCostBearer;
+	Hyperlink autoFill, hlGarant, hlCostBearer, newContact;
 	List<Control> lReqs = new ArrayList<Control>();
 	List<Control> keepEditable = new ArrayList<Control>();
 	Button btnCopyForPatient;
@@ -127,7 +137,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	boolean invoiceCorrection = false;
 	
 	@Override
-	public void setUnlocked(boolean unlock) {
+	public void setUnlocked(boolean unlock){
 		allowFieldUpdate(unlock);
 	}
 	
@@ -341,21 +351,21 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		cReason.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(top, Messages.FallDetailBlatt2_StartDate); //$NON-NLS-1$
 		dpVon = new CDateTime(top, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
-		if (getSelectedFall() == null ) {
+		if (getSelectedFall() == null) {
 			dpVon.setSelection(new TimeTool().getTime());
 		} else {
 			dpVon.setSelection(new TimeTool(getSelectedFall().getBeginnDatum()).getTime());
 		}
 		dpVon.addSelectionListener(new SelectionAdapter() {
-				
-				@Override
-				public void widgetSelected(SelectionEvent e){
-					IFall fall = getSelectedFall();
-					TimeTool selectedDate = new TimeTool(dpVon.getSelection());
-					fall.setBeginnDatum(selectedDate.dump());
-					fireSelectedFallUpdateEvent();
-				}
-			});
+			
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				IFall fall = getSelectedFall();
+				TimeTool selectedDate = new TimeTool(dpVon.getSelection());
+				fall.setBeginnDatum(selectedDate.dump());
+				fireSelectedFallUpdateEvent();
+			}
+		});
 		dpVon.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		tk.createLabel(top, Messages.FallDetailBlatt2_EndDate); //$NON-NLS-1$
 		dpBis = new CDateTime(top, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
@@ -411,9 +421,16 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				fireSelectedFallUpdateEvent();
 			};
 		});
+		new Label(top, SWT.NONE);
 		
-		new Label(top, SWT.NONE);	
-		hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
+		Composite tGarantComposite = new Composite(top, SWT.NONE);
+		GridLayout gridLayouttGarant = new GridLayout(2, false);
+		tGarantComposite.setLayout(gridLayouttGarant);
+		tGarantComposite.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+		gridLayouttGarant.horizontalSpacing = 10;
+		gridLayouttGarant.marginWidth = 0;
+		
+		hlGarant = tk.createHyperlink(tGarantComposite, RECHNUNGSEMPFAENGER, SWT.NONE);
 		hlGarant.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(final HyperlinkEvent e){
@@ -430,10 +447,62 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 			}
 		});
+		
+		ImageHyperlink hClrG = tk.createImageHyperlink(tGarantComposite, SWT.NONE); //$NON-NLS-1$
+		hClrG.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
+		hClrG.setImage(Images.IMG_CLEAR.getImage());
+		hClrG.addHyperlinkListener(new HyperlinkAdapter() {
+			
+			@SuppressWarnings("null")
+			@Override
+			public void linkActivated(final HyperlinkEvent e){
+				tGarant.setText("");
+				tGarant.setMessage(Messages.FallDetailBlatt2_SelectGuarantorBody);
+				actFall.setGarant(null);
+			}
+		});
+		
 		tGarant = tk.createText(top, StringTool.leer);
 		tGarant.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-
-		hlCostBearer = tk.createHyperlink(top, KOSTENTRAEGER, SWT.NONE);
+		
+		AsyncContentProposalProvider<IContact> aopp =
+			new AsyncContentProposalProvider<IContact>("description1", "description2") {
+				@Override
+				public IQuery<IContact> createBaseQuery(){
+					return CoreModelServiceHolder.get().getQuery(IContact.class);
+				}
+				
+				@Override
+				public Text getWidget(){
+					return tGarant;
+				}
+			};
+		
+		ContentProposalAdapter cppa =
+			new ContentProposalAdapter(tGarant, new TextContentAdapter(), aopp, null, null);
+		aopp.configureContentProposalAdapter(cppa);
+		
+		cppa.addContentProposalListener(new IContentProposalListener() {
+			
+			@SuppressWarnings("unchecked")
+			@Override
+			public void proposalAccepted(IContentProposal proposal){
+				IdentifiableContentProposal<IContact> prop =
+					(IdentifiableContentProposal<IContact>) proposal;
+				tGarant.setText(prop.getLabel());
+				tGarant.setData(prop.getIdentifiable());
+				actFall.setGarant(Kontakt.load(prop.getIdentifiable().getId()));
+			}
+		});
+		
+		Composite hlCostBearerComposite = new Composite(top, SWT.NONE);
+		GridLayout gridLayoutCostBearer = new GridLayout(2, false);
+		hlCostBearerComposite.setLayout(gridLayoutCostBearer);
+		hlCostBearerComposite.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+		gridLayoutCostBearer.horizontalSpacing = 82;
+		gridLayoutCostBearer.marginWidth = 0;
+		
+		hlCostBearer = tk.createHyperlink(hlCostBearerComposite, KOSTENTRAEGER, SWT.NONE);
 		hlCostBearer.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e){
@@ -443,7 +512,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				Kontakt selection = null;
 				if (ksl.open() == Dialog.OK) {
 					selection = (Kontakt) ksl.getSelection();
-				} 
+				}
 				IFall fall = getSelectedFall();
 				if (fall != null) {
 					fall.setCostBearer(selection);
@@ -451,21 +520,67 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 			}
 		});
-		tCostBearer = tk.createText(top,  StringTool.leer);
+		
+		ImageHyperlink hClrK = tk.createImageHyperlink(hlCostBearerComposite, SWT.NONE); //$NON-NLS-1$
+		hClrK.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
+		hClrK.setImage(Images.IMG_CLEAR.getImage());
+		hClrK.setToolTipText("Kostenträger entfernen");
+		hClrK.addHyperlinkListener(new HyperlinkAdapter() {
+			
+			@Override
+			public void linkActivated(final HyperlinkEvent e){
+				tCostBearer.setText("");
+				tCostBearer.setMessage(Messages.FallDetailBlatt2_SelectCostBearerBody);
+				actFall.setCostBearer(null);
+			}
+			
+		});
+		
+		tCostBearer = tk.createText(top, StringTool.leer);
 		tCostBearer.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		
+		AsyncContentProposalProvider<IContact> aopp2 =
+			new AsyncContentProposalProvider<IContact>("description1", "description2") {
+				@Override
+				public IQuery<IContact> createBaseQuery(){
+					return CoreModelServiceHolder.get().getQuery(IContact.class);
+				}
+				
+				@Override
+				public Text getWidget(){
+					return tCostBearer;
+				}
+			};
+		
+		ContentProposalAdapter cppa2 =
+			new ContentProposalAdapter(tCostBearer, new TextContentAdapter(), aopp2, null, null);
+		aopp2.configureContentProposalAdapter(cppa2);
+		
+		cppa2.addContentProposalListener(new IContentProposalListener() {
+			
+			@SuppressWarnings("unchecked")
+			@Override
+			public void proposalAccepted(IContentProposal proposal){
+				IdentifiableContentProposal<IContact> prop =
+					(IdentifiableContentProposal<IContact>) proposal;
+				tCostBearer.setText(prop.getLabel());
+				tCostBearer.setData(prop.getIdentifiable());
+				actFall.setCostBearer(Kontakt.load(prop.getIdentifiable().getId()));
+			}
+		});
 		
 		tk.paintBordersFor(top);
 		setFall(getSelectedFall());
 		
 	}
 	
-
 	/**
 	 * reload the billing systems menu (user dependent) and ensure that the right item is still
 	 * selected
 	 */
 	public void reloadBillingSystemsMenu(){
-		Abrechnungstypen = UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
+		Abrechnungstypen =
+			UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 		String currItem = cAbrechnung.getText();
 		cAbrechnung.setItems(Abrechnungstypen);
 		cAbrechnung.setText(currItem);
@@ -551,8 +666,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			} else if (control instanceof org.eclipse.swt.widgets.List) {
 				int[] selection = ((org.eclipse.swt.widgets.List) control).getSelectionIndices();
 				String delim = StringTool.leer;
-				String kind =
-					(String) ((org.eclipse.swt.widgets.List) control).getData("kind"); //$NON-NLS-1$
+				String kind = (String) ((org.eclipse.swt.widgets.List) control).getData("kind"); //$NON-NLS-1$
 				if (kind.equalsIgnoreCase("S")) { // save as string list, tab delimited   //$NON-NLS-1$
 					for (int ii = 0; ii < selection.length; ii++) {
 						newval = newval + delim
@@ -667,7 +781,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		tGarant.setToolTipText(null);
 		Kontakt garant = f.getGarant();
 		String garantLabel = garant.getLabel();
-		if(garant.isDeleted()) {
+		if (garant.isDeleted()) {
 			tGarant.setBackground(UiDesk.getColor(UiDesk.COL_RED));
 			garantLabel = "*** " + garantLabel;
 			tGarant.setToolTipText(Messages.Contact_is_marked_deleted);
