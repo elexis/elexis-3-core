@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,8 +13,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,9 +58,6 @@ public class LocalLockService implements ILocalLockService {
 	
 	@Reference
 	private IConfigService configService;
-	
-	@Reference
-	private EventAdmin eventAdmin;
 	
 	@Reference
 	private IStoreToStringService storeToStringService;
@@ -457,17 +451,10 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	private void postEvent(String topic, Object object, boolean synchronous){
-		if (eventAdmin != null) {
-			Map<String, Object> properites = new HashMap<>();
-			properites.put("org.eclipse.e4.data", object);
-			Event event = new Event(topic, properites);
-			if (synchronous) {
-				eventAdmin.sendEvent(event);
-			} else {
-				eventAdmin.postEvent(event);
-			}
+		if (synchronous) {
+			contextService.postEvent(topic, object);
 		} else {
-			throw new IllegalStateException("No EventAdmin available");
+			contextService.sendEvent(topic, object);
 		}
 	}
 	
