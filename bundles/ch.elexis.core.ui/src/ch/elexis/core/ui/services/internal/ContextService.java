@@ -212,16 +212,24 @@ public class ContextService implements IContextService, EventHandler {
 		}
 	}
 	
-	@Override
-	public void postEvent(String topic, Object object){
+	private void postEvent(String topic, Object object, boolean synchronous) {
 		if (eventAdmin != null) {
 			Map<String, Object> properites = new HashMap<>();
 			properites.put("org.eclipse.e4.data", object);
 			Event event = new Event(topic, properites);
-			eventAdmin.postEvent(event);
+			if(synchronous) {
+				eventAdmin.sendEvent(event);
+			} else {
+				eventAdmin.postEvent(event);
+			}
 		} else {
 			throw new IllegalStateException("No EventAdmin available");
 		}
+	}
+	
+	@Override
+	public void postEvent(String topic, Object object){
+		postEvent(topic, object, false);
 	}
 	
 	private class LockingEventDispatcherListener extends ElexisEventListenerImpl {
@@ -247,7 +255,7 @@ public class ContextService implements IContextService, EventHandler {
 					getModelObjectForPersistentObject(object));
 			} else if (ev.getType() == ElexisEvent.EVENT_LOCK_PRERELEASE) {
 				postEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE,
-					getModelObjectForPersistentObject(object));
+					getModelObjectForPersistentObject(object), true);
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.locks;
 
+import java.util.Optional;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -20,8 +22,10 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.data.PersistentObject;
 
 public class LockStatusDialog extends TitleAreaDialog {
@@ -62,7 +66,14 @@ public class LockStatusDialog extends TitleAreaDialog {
 				LockInfo li = (LockInfo) element;
 				PersistentObject po =
 					CoreHub.poFactory.createFromString(li.getElementStoreToString());
-				return li.getElementType() + ": " + po.getLabel();
+				String label;
+				if(po != null) {
+					label = po.getLabel();
+				} else {
+					Optional<Identifiable> identifiable = StoreToStringServiceHolder.get().loadFromString(li.getElementStoreToString());
+					label = (identifiable.isPresent()) ? identifiable.get().getLabel() : "null";
+				}
+				return li.getElementType() + ": " + label;
 			}
 		});
 		checkboxTableViewer.setInput(LocalLockServiceHolder.get().getCopyOfAllHeldLocks());
