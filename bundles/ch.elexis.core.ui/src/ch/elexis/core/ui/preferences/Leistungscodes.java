@@ -79,6 +79,7 @@ import ch.elexis.core.data.util.MultiplikatorList;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.IConfigService;
+import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.provider.ILocalizedEnumLabelProvider;
@@ -894,7 +895,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					|| (result[6].equalsIgnoreCase("0")) || (result[6].equalsIgnoreCase("false"))) //$NON-NLS-1$ //$NON-NLS-2$
 					checked = false;
 				cbDisabled.setSelection(checked);
-				cbLaw.setSelection(new StructuredSelection(BillingLaw.valueOf(result[7])));
+				cbLaw.setSelection(new StructuredSelection(
+					BillingSystemServiceHolder.get().getBillingLaw(result[7])));
 				bNoCostBearer.setSelection(Boolean.valueOf(result[8]));
 				name = result[0];
 			}
