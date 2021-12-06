@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -12,9 +14,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.common.InstanceStatus;
 import ch.elexis.core.common.InstanceStatus.STATE;
 import ch.elexis.core.constants.Preferences;
@@ -34,6 +39,7 @@ import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.ILocalLockService;
+import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.data.PersistentObject;
 
 /**
@@ -55,6 +61,12 @@ public class LocalLockService implements ILocalLockService {
 	
 	@Reference
 	private IConfigService configService;
+	
+	@Reference
+	private EventAdmin eventAdmin;
+	
+	@Reference
+	private IStoreToStringService storeToStringService;
 	
 	private final HashMap<String, Integer> lockCount = new HashMap<String, Integer>();
 	private final HashMap<String, LockInfo> locks = new HashMap<String, LockInfo>();
@@ -230,6 +242,13 @@ public class LocalLockService implements ILocalLockService {
 					if (po != null) {
 						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(po, po.getClass(),
 							ElexisEvent.EVENT_LOCK_PRERELEASE, ElexisEvent.PRIORITY_SYNC));
+					} else {
+						Optional<Identifiable> identifiable =
+							storeToStringService.loadFromString(lockInfo.getElementStoreToString());
+						if (identifiable.isPresent()) {
+							postEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE, identifiable.get(),
+								true);
+						}
 					}
 				}
 				
@@ -243,12 +262,23 @@ public class LocalLockService implements ILocalLockService {
 					// lock is granted only if we have non-exception on acquire
 					locks.put(lockInfo.getElementId(), lockInfo);
 					incrementLockCount(lockInfo);
+					
+					// PersistentObject compatibility
 					PersistentObject po =
 						CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
 					if (po != null) {
 						ElexisEventDispatcher.getInstance().fire(
 							new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_AQUIRED));
+						return lr;
 					}
+					// End
+					
+					Optional<Identifiable> identifiable =
+						storeToStringService.loadFromString(lockInfo.getElementStoreToString());
+					if (identifiable.isPresent()) {
+						postEvent(ElexisEventTopics.EVENT_LOCK_AQUIRED, identifiable.get(), false);
+					}
+					
 				}
 				
 				return lr;
@@ -274,7 +304,17 @@ public class LocalLockService implements ILocalLockService {
 					if (po != null) {
 						ElexisEventDispatcher.getInstance().fire(
 							new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_RELEASED));
+					} else {
+						// e4 should not be connected with else here,
+						// but we have to avoid double calls
+						Optional<Identifiable> identifiable =
+							storeToStringService.loadFromString(lockInfo.getElementStoreToString());
+						if (identifiable.isPresent()) {
+							postEvent(ElexisEventTopics.EVENT_LOCK_RELEASED, identifiable.get(),
+								false);
+						}
 					}
+					
 				}
 			}
 		}
@@ -283,7 +323,7 @@ public class LocalLockService implements ILocalLockService {
 	private void incrementLockCount(LockInfo lockInfo){
 		Integer count = lockCount.get(lockInfo.getElementId());
 		if (count == null) {
-			count = new Integer(0);
+			count = Integer.valueOf(0);
 		}
 		lockCount.put(lockInfo.getElementId(), ++count);
 		logger.debug("Increment to " + count + " locks on " + lockInfo.getElementId());
@@ -303,7 +343,7 @@ public class LocalLockService implements ILocalLockService {
 	private Integer getCurrentLockCount(LockInfo lockInfo){
 		Integer count = lockCount.get(lockInfo.getElementId());
 		if (count == null) {
-			count = new Integer(0);
+			count = Integer.valueOf(0);
 		}
 		logger.debug("Got currently " + count + " locks on " + lockInfo.getElementId());
 		return count;
@@ -431,6 +471,21 @@ public class LocalLockService implements ILocalLockService {
 			} catch (Exception e) {
 				LoggerFactory.getLogger(LockRefreshTask.class).error("Execution error", e);
 			}
+		}
+	}
+	
+	private void postEvent(String topic, Object object, boolean synchronous){
+		if (eventAdmin != null) {
+			Map<String, Object> properites = new HashMap<>();
+			properites.put("org.eclipse.e4.data", object);
+			Event event = new Event(topic, properites);
+			if (synchronous) {
+				eventAdmin.sendEvent(event);
+			} else {
+				eventAdmin.postEvent(event);
+			}
+		} else {
+			throw new IllegalStateException("No EventAdmin available");
 		}
 	}
 	
