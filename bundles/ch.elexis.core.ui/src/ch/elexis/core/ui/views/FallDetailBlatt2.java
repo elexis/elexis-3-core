@@ -571,7 +571,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		
 		tk.paintBordersFor(top);
 		setFall(getSelectedFall());
-		
 	}
 	
 	/**
