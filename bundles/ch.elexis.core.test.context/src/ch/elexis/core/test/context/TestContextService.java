@@ -74,4 +74,15 @@ public class TestContextService implements IContextService {
 		}
 	}
 	
+	@Override
+	public void sendEvent(String topic, Object object){
+		if (eventAdmin != null) {
+			Map<String, Object> properites = new HashMap<>();
+			properites.put("org.eclipse.e4.data", object);
+			Event event = new Event(topic, properites);
+			eventAdmin.sendEvent(event);
+		} else {
+			throw new IllegalStateException("No EventAdmin available");
+		}
+	}
 }
