@@ -232,6 +232,11 @@ public class ContextService implements IContextService, EventHandler {
 		postEvent(topic, object, false);
 	}
 	
+	@Override
+	public void sendEvent(String topic, Object object){
+		postEvent(topic, object, true);
+	}
+	
 	private class LockingEventDispatcherListener extends ElexisEventListenerImpl {
 		public LockingEventDispatcherListener(){
 			super(null, null, ElexisEvent.EVENT_LOCK_AQUIRED | ElexisEvent.EVENT_LOCK_RELEASED
