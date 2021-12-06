@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
@@ -107,6 +108,23 @@ public class BillingSystemService implements IBillingSystemService {
 		return Optional.empty();
 	}
 	
+	@Override
+	public BillingLaw getBillingLaw(String law){
+		if (StringUtils.isNotBlank(law)) {
+			// compatibility with changed BillingLaw enum (ticket #15019)
+			if ("MVG".equals(law)) {
+				law = "MV";
+			}
+			if ("IVG".equals(law)) {
+				law = "IV";
+			}
+			return BillingLaw.valueOf(law);
+		} else {
+			LoggerFactory.getLogger(getClass()).warn("Could not determine law [" + law + "]");
+		}
+		return null;
+	}
+	
 	private class BillingSystemLoader extends CacheLoader<String, BillingSystem> {
 		
 		@Override
@@ -114,18 +132,14 @@ public class BillingSystemService implements IBillingSystemService {
 			String billingSystemName = getConfigurationValue(key, "name", null);
 			if (billingSystemName != null) {
 				String configuredLaw = getConfigurationValue(key, CFG_KEY_BILLINGLAW, null);
-				// compatibility with changed BillingLaw enum (ticket #15019)
-				if ("MVG".equals(configuredLaw)) {
-					configuredLaw = "MV";
-				}
-				if ("IVG".equals(configuredLaw)) {
-					configuredLaw = "IV";
-				}
+				
 				if (configuredLaw != null) {
-					BillingLaw law = BillingLaw.valueOf(configuredLaw);
-					BillingSystem billingSystem = new BillingSystem(key, law);
-					// TODO more attributes
-					return billingSystem;
+					BillingLaw law = getBillingLaw(configuredLaw);
+					if (law != null) {
+						BillingSystem billingSystem = new BillingSystem(key, law);
+						// TODO more attributes
+						return billingSystem;
+					}
 				} else {
 					LoggerFactory.getLogger(getClass())
 						.warn("Could not determine law for billing system [" + key + "]");

@@ -79,4 +79,12 @@ public interface IBillingSystemService {
 	 */
 	public IBillingSystem addOrModifyBillingSystem(String name, String serviceCode,
 		String defaultPrinter, String requirements, BillingLaw law);
+	
+	/**
+	 * Get a matching {@link BillingLaw} instance for the provided law short name.
+	 * 
+	 * @param law
+	 * @return
+	 */
+	public BillingLaw getBillingLaw(String law);
 }
