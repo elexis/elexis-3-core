@@ -190,12 +190,12 @@ public class DocumentsView extends ViewPart {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
-	@SuppressWarnings("restriction")
 	@Inject
-	ECommandService commandService;
-	@SuppressWarnings("restriction")
+	private ECommandService commandService;
+	
 	@Inject
-	EHandlerService handlerService;
+	private EHandlerService handlerService;
+	
 	private DocumentsTreeContentProvider contentProvider;
 	
 	class ViewFilterProvider extends ViewerFilter {
@@ -330,7 +330,7 @@ public class DocumentsView extends ViewPart {
 		for (int i = 0; i < colLabels.length; i++) {
 			cols[i] = new TreeColumn(table, SWT.NONE);
 			cols[i].setText(colLabels[i]);
-			cols[i].setData(new Integer(i));
+			cols[i].setData(Integer.valueOf(i));
 		}
 		applyUsersColumnWidthSetting();
 		
@@ -505,7 +505,6 @@ public class DocumentsView extends ViewPart {
 			{
 				setImageDescriptor(Images.IMG_DOCUMENT_ADD.getImageDescriptor());
 			}
-			@SuppressWarnings("restriction")
 			@Override
 			public void run(){
 				ParameterizedCommand cmd =
@@ -520,7 +519,6 @@ public class DocumentsView extends ViewPart {
 			{
 				setImageDescriptor(Images.IMG_VIEW_WORK_INCAPABLE.getImageDescriptor());
 			}
-			@SuppressWarnings("restriction")
 			@Override
 			public void run(){
 				ParameterizedCommand cmd =
@@ -538,21 +536,6 @@ public class DocumentsView extends ViewPart {
 						ContextServiceHolder.get().getRootContext()
 							.removeTyped(ISickCertificate.class);
 					}
-				}
-				super.run();
-			}
-		});
-		tMenuManager.add(new Action("Import", Action.AS_PUSH_BUTTON) {
-			{
-				setImageDescriptor(Images.IMG_IMPORT.getImageDescriptor());
-			}
-			@SuppressWarnings("restriction")
-			@Override
-			public void run(){
-				ParameterizedCommand cmd =
-					commandService.createCommand(DocumentCrudHandler.CMD_NEW_DOCUMENT, null);
-				if (cmd != null) {
-					handlerService.executeHandler(cmd);
 				}
 				super.run();
 			}
