@@ -27,12 +27,17 @@ import ch.elexis.core.l10n.Messages;
 public class PdfPreviewPartLoadHandler {
 	
 	private static ExecutorService loader = Executors.newSingleThreadExecutor();
+	
 	private final ScrolledComposite scrolledComposite;
 	private final Composite previewComposite;
+	
 	private float scalingFactor;
+	
 	private Label headLabel;
 	private int numberOfPages;
+	
 	private Image[] images;
+	
 	private PDDocument pdDocument;
 	
 	public PdfPreviewPartLoadHandler(InputStream pdfInputStream, Float scalingFactor,
@@ -54,6 +59,7 @@ public class PdfPreviewPartLoadHandler {
 	}
 	
 	private class LoaderRunnable implements Runnable {
+		
 		private InputStream pdfInputStream;
 		
 		public LoaderRunnable(InputStream pdfInputStream){
@@ -63,18 +69,18 @@ public class PdfPreviewPartLoadHandler {
 		@Override
 		public void run(){
 			try {
+				
 				// cleanup existing controls, show user feedback
 				previewComposite.getDisplay().syncExec(() -> {
 					headLabel = new Label(previewComposite, SWT.None);
 					headLabel.setText(Messages.PdfPreview_NoPDFSelected);
 					previewComposite.layout(true, true);
 					scrolledComposite.layout(true, true);
-					scrolledComposite
-						.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 					
 					Control[] children = previewComposite.getChildren();
 					for (Control control : children) {
-						if (headLabel.equals(control)) {
+						if(headLabel.equals(control)) {
 							continue;
 						}
 						control.dispose();
@@ -123,7 +129,7 @@ public class PdfPreviewPartLoadHandler {
 				
 			} catch (IOException e) {
 				previewComposite.getDisplay().asyncExec(() -> {
-					if (headLabel != null) {
+					if(headLabel != null) {
 						headLabel.dispose();
 					}
 					headLabel = new Label(previewComposite, SWT.None);
