@@ -213,13 +213,15 @@
                commandId="ch.elexis.core.ui.documents.commandCreate"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/import.gif"
                label="%command.label.5"
-               style="push">
+               style="push"
+               tooltip="%command.label.5">
          </command>
          <command
                commandId="ch.elexis.core.ui.documents.commandExport"
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/export.ico"
                label="%command.label.6"
-               style="push">
+               style="push"
+               tooltip="%command.label.6">
          </command>
          <command
                commandId="ch.elexis.core.ui.documents.commandLocalEditOverview"
