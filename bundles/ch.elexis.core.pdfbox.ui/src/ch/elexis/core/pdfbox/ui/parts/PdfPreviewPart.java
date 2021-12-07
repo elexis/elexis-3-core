@@ -27,7 +27,6 @@ public class PdfPreviewPart {
 	private Composite previewComposite;
 	private ScrolledComposite scrolledComposite;
 	private PdfPreviewPartLoadHandler pdfPreviewPartLoadHandler;
-	private Label label;
 	
 	@PostConstruct
 	public void postConstruct(Composite parent) throws IOException{
@@ -37,7 +36,7 @@ public class PdfPreviewPart {
 		
 		previewComposite.setLayout(new GridLayout(1, false));
 		
-		label = new Label(previewComposite, SWT.None);
+		Label label = new Label(previewComposite, SWT.None);
 		label.setText("Kein PDF selektiert");
 		
 		scrolledComposite.setExpandHorizontal(true);
@@ -45,23 +44,15 @@ public class PdfPreviewPart {
 		scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 	
-	/*
-	 * if we change patient the PDF view should refresh 
-	 */
-	
 	@Inject
 	@Optional
 	void activePatient(IPatient patient) throws IOException{
 		updatePreview(null);
-		//if pdfPreviewPartloadHandler already exist: unloadDokument 
 		if (pdfPreviewPartLoadHandler != null) {
-			pdfPreviewPartLoadHandler.unLoadDocument();
+			pdfPreviewPartLoadHandler.unloadDocument();
 		}
 	}
 	
-	/*
-	 * wird nur mit null ausgeführt wenn bereits im PDFPreviewPartLoadhandler im PDFInputStream schon null ist.
-	 */
 	@Inject
 	@Optional
 	void updatePreview(@UIEventTopic(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF)
@@ -70,7 +61,7 @@ public class PdfPreviewPart {
 		if (pdfPreviewPartLoadHandler != null) {
 			if (pdfInputStream == null) {
 				try {
-					pdfPreviewPartLoadHandler.unLoadDocument();
+					pdfPreviewPartLoadHandler.unloadDocument();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -82,7 +73,7 @@ public class PdfPreviewPart {
 			Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
 		
 		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfInputStream,
-			new Float(zoomLevel), previewComposite, scrolledComposite);
+			Float.valueOf(zoomLevel), previewComposite, scrolledComposite);
 		
 	}
 	

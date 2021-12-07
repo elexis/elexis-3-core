@@ -50,8 +50,7 @@ public class PdfPreviewPartLoadHandler {
 		loader.submit(new LoaderRunnable(pdfInputStream));
 	}
 	
-	//When Documend is loaded, shows pdf
-	public void unLoadDocument() throws IOException{
+	protected void unloadDocument() throws IOException{
 		if (pdDocument != null) {
 			pdDocument.close();
 			pdDocument = null;
@@ -76,11 +75,12 @@ public class PdfPreviewPartLoadHandler {
 					headLabel.setText(Messages.PdfPreview_NoPDFSelected);
 					previewComposite.layout(true, true);
 					scrolledComposite.layout(true, true);
-					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+					scrolledComposite
+						.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 					
 					Control[] children = previewComposite.getChildren();
 					for (Control control : children) {
-						if(headLabel.equals(control)) {
+						if (headLabel.equals(control)) {
 							continue;
 						}
 						control.dispose();
@@ -129,7 +129,7 @@ public class PdfPreviewPartLoadHandler {
 				
 			} catch (IOException e) {
 				previewComposite.getDisplay().asyncExec(() -> {
-					if(headLabel != null) {
+					if (headLabel != null) {
 						headLabel.dispose();
 					}
 					headLabel = new Label(previewComposite, SWT.None);
