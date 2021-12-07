@@ -314,7 +314,10 @@ public class LocalLockService implements ILocalLockService {
 		if (object == null) {
 			return false;
 		}
-		
+		// handle not lockable local object (DTO)
+		if (!isLockable(object)) {
+			return true;
+		}
 		if (elexisServerService.isStandalone()) {
 			return true;
 		}
@@ -325,10 +328,25 @@ public class LocalLockService implements ILocalLockService {
 		return false;
 	}
 	
+	/**
+	 * Only persistent objects with an id can be locked. Local data transfer objects (DTO) can not
+	 * be locked.
+	 * 
+	 * @param object
+	 * @return
+	 */
+	private boolean isLockable(Object object){
+		return object instanceof Identifiable || object instanceof PersistentObject;
+	}
+	
 	@Override
 	public boolean isLocked(Object object){
 		if (object == null) {
 			return false;
+		}
+		// handle not lockable local object (DTO)
+		if (!isLockable(object)) {
+			return true;
 		}
 		logger.debug("Checking lock on [" + object + "]");
 		
