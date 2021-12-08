@@ -495,14 +495,14 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		});
 		
-		Composite hlCostBearerComposite = new Composite(top, SWT.NONE);
+		Composite CostBearerComposite = new Composite(top, SWT.NONE);
 		GridLayout gridLayoutCostBearer = new GridLayout(2, false);
-		hlCostBearerComposite.setLayout(gridLayoutCostBearer);
-		hlCostBearerComposite.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+		CostBearerComposite.setLayout(gridLayoutCostBearer);
+		CostBearerComposite.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 		gridLayoutCostBearer.horizontalSpacing = 82;
 		gridLayoutCostBearer.marginWidth = 0;
 		
-		hlCostBearer = tk.createHyperlink(hlCostBearerComposite, KOSTENTRAEGER, SWT.NONE);
+		hlCostBearer = tk.createHyperlink(CostBearerComposite, KOSTENTRAEGER, SWT.NONE);
 		hlCostBearer.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e){
@@ -521,7 +521,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		});
 		
-		ImageHyperlink hClrK = tk.createImageHyperlink(hlCostBearerComposite, SWT.NONE); //$NON-NLS-1$
+		ImageHyperlink hClrK = tk.createImageHyperlink(CostBearerComposite, SWT.NONE); //$NON-NLS-1$
 		hClrK.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
 		hClrK.setImage(Images.IMG_CLEAR.getImage());
 		hClrK.setToolTipText("Kostenträger entfernen");
