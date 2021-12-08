@@ -126,7 +126,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	Combo cAbrechnung, cReason;
 	CDateTime dpVon, dpBis;
 	Text tBezeichnung, tGarant, tCostBearer;
-	Hyperlink autoFill, hlGarant, hlCostBearer, newContact;
+	Hyperlink autoFill, hlGarant, hlCostBearer;
 	List<Control> lReqs = new ArrayList<Control>();
 	List<Control> keepEditable = new ArrayList<Control>();
 	Button btnCopyForPatient;
