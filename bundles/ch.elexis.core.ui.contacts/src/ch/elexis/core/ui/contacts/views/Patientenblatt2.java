@@ -251,11 +251,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			ipp.dispose();
 			ipp = null;
 		}
-				
+		
+		//ArrayList for floatingText
+		ArrayList<FloatingText> sections = new ArrayList<FloatingText>(20);	
+		
+		//Nebula floatingText
 		final FloatingText name = new FloatingText(cUserfields, SWT.BORDER);
 		name.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-		//getText(Ausgabe der patientenvalues).setMessage(Name des Inputfeldes)
-		name.getText(Patient.FLD_NAME).setMessage(Patient.FLD_NAME);
+		//getText(Ausgabe der patientenvalues).setMessage(Name des Inputfelders)
+		name.getText(Patient.FLD_NAME).setMessage(Messages.Patientenblatt2_name);
 		
 		final FloatingText firstname = new FloatingText(cUserfields, SWT.BORDER);
 		firstname.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
@@ -286,7 +290,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		group.getText(Messages.Patientenblatt2_group).setMessage(Patient.FLD_GROUP);
 		
 		
-		ArrayList<InputData> fields = new ArrayList<InputData>(20);				
+		ArrayList<InputData> fields = new ArrayList<InputData>(20);			
 		fields.add(new InputData(Messages.Patientenblatt2_name, Patient.FLD_NAME,
 			InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_firstname, Patient.FLD_FIRSTNAME,
@@ -344,7 +348,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					}
 					return super.getText(element);
 				}
-			}, isr, MaritalStatus.values()));		
+			}, isr, MaritalStatus.values()));
+		
 		fields.add(new InputData(Messages.Patientenblatt2_phone1, Patient.FLD_PHONE1,
 			InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_phone2, Patient.FLD_PHONE2,
@@ -372,7 +377,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						StatusManager.getManager().handle(status, StatusManager.SHOW);
 					}
 				}
-			}));		
+			}));
 		fields.add(new InputData(Messages.Patientenblatt2_group, Patient.FLD_GROUP,
 			InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_balance, Patient.FLD_BALANCE,
@@ -528,7 +533,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 		layout(true);
 	}
-
+	
 	Patientenblatt2(final Composite parent, final IViewSite site){
 		super(parent, SWT.NONE);
 		viewsite = site;
