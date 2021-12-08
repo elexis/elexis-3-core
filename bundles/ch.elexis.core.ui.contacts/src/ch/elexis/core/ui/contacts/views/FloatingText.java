@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.contacts.views;
 
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Color;
@@ -17,11 +16,6 @@ import org.eclipse.swt.widgets.Widget;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 
 public class FloatingText extends Composite{
-	public enum Type {
-		STRING, INT, CURRENCY, LIST, HYPERLINK, DATE, COMBO, EXECSTRING, CHECKBOX,
-		CHECKBOXTRISTATE, COMBO_VIEWER
-	}
-	
 	private Text fText;
 	private Label fLabel;
 	private int fStyle;
@@ -127,11 +121,9 @@ public class FloatingText extends Composite{
 	}
 
 	/**
-	 * @param fldName 
 	 * @return the underlying text widget.
 	 */
-	
-	//added new string
+	//added String value
 	public Text getText(String name) {
 		return fText;
 	}
@@ -229,7 +221,8 @@ public class FloatingText extends Composite{
 	}
 
 	private void doSetLabelText() {
-		String message = getMessage();
+		//added previous defined values
+		String message = getMessage(null, null, null, null);
 		if (message.isEmpty()) {
 			return;
 		}
@@ -267,7 +260,8 @@ public class FloatingText extends Composite{
 		return gridData;
 	}
 
-	private String getMessage() {
+	//changed values in method
+	private String getMessage(String anzeige, String feldname, Typ feldtyp, String hashname) {
 		String message = fText.getMessage();
 		if (message == null || message.trim().isEmpty()) {
 			message = fText.getMessage();
