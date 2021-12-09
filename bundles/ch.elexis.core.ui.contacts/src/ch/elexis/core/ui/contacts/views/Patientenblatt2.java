@@ -138,8 +138,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private final FormToolkit tk;
 	private InputPanel ipp;
 	private IAction removeZAAction, showZAAction, showBKAction,
-			copySelectedContactInfosToClipboardAction, copySelectedAddressesToClipboardAction,
-			removeAdditionalAddressAction, showAdditionalAddressAction;
+			copySelectedContactInfosToClipboardAction,
+			copySelectedAddressesToClipboardAction, removeAdditionalAddressAction,
+			showAdditionalAddressAction;
 	// MenuItem delZA;
 	public final static String CFG_BEZUGSKONTAKTTYPEN = "views/patientenblatt/Bezugskontakttypen"; //$NON-NLS-1$
 	public final static String CFG_EXTRAFIELDS = "views/patientenblatt/extrafelder"; //$NON-NLS-1$
@@ -201,14 +202,17 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		};
 	
 	private ArrayList<String> lbExpandable =
-		new ArrayList<>(Arrays.asList(Messages.Patientenblatt2_diagnosesLbl,
-			Messages.Patientenblatt2_persAnamnesisLbl, Messages.Patientenblatt2_allergiesLbl,
-			Messages.Patientenblatt2_risksLbl, Messages.Patientenblatt2_remarksLbk));
+		new ArrayList<>(Arrays.asList(
+		Messages.Patientenblatt2_diagnosesLbl, Messages.Patientenblatt2_persAnamnesisLbl,
+		Messages.Patientenblatt2_allergiesLbl, Messages.Patientenblatt2_risksLbl,
+		Messages.Patientenblatt2_remarksLbk
+	));
 	private final List<Text> txExpandable = new ArrayList<>();
 	private ArrayList<String> dfExpandable =
-		new ArrayList<>(Arrays.asList("Diagnosen", "PersAnamnese", //$NON-NLS-1$ //$NON-NLS-2$
-			"Allergien", "Risiken", "Bemerkung" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		));
+		new ArrayList<>(Arrays.asList(
+		"Diagnosen", "PersAnamnese", //$NON-NLS-1$ //$NON-NLS-2$
+		"Allergien", "Risiken", "Bemerkung" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+	));
 	private final List<ExpandableComposite> ec = new ArrayList<>();
 	private final static String FIXMEDIKATION = Messages.Patientenblatt2_fixmedication; // $NON-NLS-1$
 	// private final static String[] lbLists={"Fixmedikation"/*,"Reminders" */};
@@ -368,7 +372,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 				
 				public void reloadContent(Object po, InputData ltf){
-					if (bLocked) {
+					if(bLocked) {
 						return;
 					}
 					KontaktSelektor ks = new KontaktSelektor(getShell(), Kontakt.class,
@@ -396,7 +400,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 				
 				public void reloadContent(final Object po, final InputData ltf){
-					if (bLocked) {
+					if(bLocked) {
 						return;
 					}
 					ArrayList<String> extFlds = new ArrayList<String>();
@@ -435,7 +439,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				
 				@Override
 				public void reloadContent(Object po, InputData ltf){
-					if (bLocked) {
+					if(bLocked) {
 						return;
 					}
 					KontaktSelektor ks = new KontaktSelektor(getShell(), Kontakt.class,
@@ -629,14 +633,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
 						Messages.Patientenblatt2_contactForAdditionalAddress,
 						Messages.Patientenblatt2_pleaseSelectardress, sortFields); // $NON-NLS-1$
-																																																				// //$NON-NLS-2$
+																																																		// //$NON-NLS-2$
 					if (ksl.open() == Dialog.OK && actPatient != null) {
 						Kontakt k = (Kontakt) ksl.getSelection();
 						if (k != null) {
-							BezugsKontaktAuswahl bza =
-								new BezugsKontaktAuswahl(actPatient.getLabel(true),
-									k.istPerson() ? Person.load(k.getId()).getLabel(true)
-											: k.getLabel(true));
+							BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(
+								actPatient.getLabel(true), k.istPerson()
+										? Person.load(k.getId()).getLabel(true) : k.getLabel(true));
 							if (bza.open() == Dialog.OK) {
 								BezugsKontakt bk =
 									actPatient.addBezugsKontakt(k, bza.getBezugKonkaktRelation());
@@ -818,6 +821,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat_sync, eeli_pat, eeli_user);
 		tk.paintBordersFor(form.getBody());
 	}
+
+	
 	
 	protected void save(){
 		if (actPatient != null) {
@@ -930,7 +935,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			+ StringTool.unNull(actPatient.getVorname()) + " (" //$NON-NLS-1$
 			+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
 		inpAdresse.setText(actPatient.getPostAnschrift(false), false, false);
-		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
+		UserSettings.setExpandedState(ecZA,  "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
 		inpZusatzAdresse.clear();
 		for (BezugsKontakt za : actPatient.getBezugsKontakte()) {
 			inpZusatzAdresse.add(za);
@@ -1143,7 +1148,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 							if (p.getGeschlecht().equals(Person.MALE)) {
 								salutation = Messages.KontakteView_SalutationM; // $NON-NLS-1$
 							} else // We do not use any default salutation for
-									// unknown sex to avoid
+								// unknown sex to avoid
 									// errors!
 							if (p.getGeschlecht().equals(Person.FEMALE)) {
 								salutation = Messages.KontakteView_SalutationF; // $NON-NLS-1$
