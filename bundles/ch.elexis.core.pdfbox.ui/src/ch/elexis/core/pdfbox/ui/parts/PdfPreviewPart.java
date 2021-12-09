@@ -47,9 +47,9 @@ public class PdfPreviewPart {
 	@Inject
 	@Optional
 	void activePatient(IPatient patient) throws IOException{
-		updatePreview(null);
 		if (pdfPreviewPartLoadHandler != null) {
 			pdfPreviewPartLoadHandler.unloadDocument();
+			updatePreview(null);
 		}
 	}
 	
