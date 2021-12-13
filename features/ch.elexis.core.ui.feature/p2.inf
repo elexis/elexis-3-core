@@ -1,0 +1,3 @@
+# chromium configuration
+instructions.configure=org.eclipse.equinox.p2.touchpoint.eclipse.addJvmArg(jvmArg:-Dchromium.args=--disable-web-security);
+instructions.unconfigure=org.eclipse.equinox.p2.touchpoint.eclipse.removeJvmArg(jvmArg:-Dchromium.args=--disable-web-security);
