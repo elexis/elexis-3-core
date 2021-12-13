@@ -217,7 +217,9 @@ public class MedicationTableViewerItem {
 	 * Resolve the properties, blocks until resolved.
 	 */
 	public void resolve(){
-		new ResolveLazyFieldsRunnable(null, this).run();
+		if (!resolved) {
+			new ResolveLazyFieldsRunnable(null, this).run();
+		}
 	}
 	
 	private static class ResolveLazyFieldsRunnable implements Runnable {

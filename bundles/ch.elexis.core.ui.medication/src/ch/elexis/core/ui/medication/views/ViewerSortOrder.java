@@ -90,13 +90,13 @@ public enum ViewerSortOrder {
 				EntryType et1 = p1.getEntryType();
 				EntryType et2 = p2.getEntryType();
 				rc = Integer.compare(et1.numericValue(), et2.numericValue());
-				if (rc == 0) {
-					time1.set(p1.getBeginDate());
-					time2.set(p2.getBeginDate());
-					rc = time1.compareTo(time2);
+				// sort article label if type is equal
+				if (rc != 0) {
+					break;
 				}
-				break;
 			case 1:
+				p1.resolve();
+				p2.resolve();
 				String l1 = p1.getArtikelLabel();
 				String l2 = p2.getArtikelLabel();
 				if (l1 == null) {
@@ -105,7 +105,7 @@ public enum ViewerSortOrder {
 				if (l2 == null) {
 					l2 = "";
 				}
-				rc = l1.compareTo(l2);
+				rc = l2.compareTo(l1);
 				break;
 			case 2:
 				String dose1 = p1.getDosis();
