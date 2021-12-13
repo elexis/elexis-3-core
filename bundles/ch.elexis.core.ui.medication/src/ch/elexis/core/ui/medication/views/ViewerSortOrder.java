@@ -19,7 +19,7 @@ public enum ViewerSortOrder {
 	private static final int DESCENDING = 1;
 	private static int direction = DESCENDING;
 	private static int propertyIdx = 0;
-	private static boolean atcSort = true;
+	private static boolean atcSort = false;
 	private static TimeTool time1 = new TimeTool();
 	private static TimeTool time2 = new TimeTool();
 	
@@ -66,6 +66,7 @@ public enum ViewerSortOrder {
 	 * and then by natural article name
 	 */
 	public static class DefaultViewerComparator extends ViewerComparator {
+		
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2){
 			MedicationTableViewerItem p1 = (MedicationTableViewerItem) e1;
@@ -89,6 +90,11 @@ public enum ViewerSortOrder {
 				EntryType et1 = p1.getEntryType();
 				EntryType et2 = p2.getEntryType();
 				rc = Integer.compare(et1.numericValue(), et2.numericValue());
+				if (rc == 0) {
+					time1.set(p1.getBeginDate());
+					time2.set(p2.getBeginDate());
+					rc = time1.compareTo(time2);
+				}
 				break;
 			case 1:
 				String l1 = p1.getArtikelLabel();

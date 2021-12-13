@@ -6,6 +6,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.ui.medication.PreferenceConstants;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.medication.views.ViewerSortOrder;
 
@@ -22,6 +24,7 @@ public class ApplyAtcSortingHandler extends AbstractHandler {
 		ViewerSortOrder curSortOrder = medicationView.getMedicationTableViewerComparator();
 		if (curSortOrder == ViewerSortOrder.DEFAULT) {
 			curSortOrder.setAtcSort(useAtc);
+			ConfigServiceHolder.setUser(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ATC, useAtc);
 			medicationView.getMedicationComposite().getActiveTableViewer().refresh();
 		}
 		return null;
