@@ -102,6 +102,9 @@ public class MedicationView extends ViewPart implements IRefreshable {
 		int sorter = ConfigServiceHolder.getUser(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, 1);
 		tpc.setViewerSortOrder(ViewerSortOrder.getSortOrderPerValue(sorter));
 		
+		ViewerSortOrder.getSortOrderPerValue(sorter).setAtcSort(
+			ConfigServiceHolder
+				.getUser(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ATC, false));
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
