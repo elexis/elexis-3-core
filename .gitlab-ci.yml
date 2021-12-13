@@ -32,6 +32,8 @@ build:
 trigger_elexis-3-base_build:
     stage: trigger_other_builds
     trigger: elexis/elexis-3-base
+    variables:
+      ref: $CI_COMMIT_REF_NAMEdd
     only:
     - master@elexis/elexis-3-core
     - /^\d*[.]\d*$/@elexis/elexis-3-core
