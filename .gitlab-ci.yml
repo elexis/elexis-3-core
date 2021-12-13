@@ -31,7 +31,9 @@ build:
 
 trigger_elexis-3-base_build:
     stage: trigger_other_builds
-    trigger: elexis/elexis-3-base
+    trigger:
+      project: elexis/elexis-3-base
+      branch: $CI_COMMIT_REF_NAME
     only:
     - master@elexis/elexis-3-core
     - /^\d*[.]\d*$/@elexis/elexis-3-core
