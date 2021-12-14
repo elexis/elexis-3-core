@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -36,6 +38,8 @@ public class LocalLock {
 		this.lockObject = object;
 		if (object instanceof IPersistentObject) {
 			lockString = "local_" + ((IPersistentObject) object).storeToString() + "_lock"; //$NON-NLS-1$ //$NON-NLS-2$
+		} else if (object instanceof Identifiable) {
+			lockString = "local_" + StoreToStringServiceHolder.getStoreToString(object) + "_lock"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else if (object instanceof String) {
 			lockString = "local_" + (String) object + "_lock";
 		}
