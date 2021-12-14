@@ -158,18 +158,26 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 	}
 
 	private void startEditLocal(Object object, ILocalDocumentService service, Shell parentShell){
-		Optional<File> file = service.add(object, new IConflictHandler() {
-			@Override
-			public Result getResult(){
-				if (MessageDialog.openQuestion(parentShell,
-					Messages.StartEditLocalDocumentHandler_conflicttitle,
-					Messages.StartEditLocalDocumentHandler_conflictmessage)) {
-					return Result.KEEP;
-				} else {
-					return Result.OVERWRITE;
+		Optional<File> file = Optional.empty();
+		if (object instanceof IDocumentLetter) {
+			file = service.add(object, new IConflictHandler() {
+				@Override
+				public Result getResult(){
+					if (MessageDialog.openQuestion(parentShell,
+						Messages.StartEditLocalDocumentHandler_conflicttitle,
+						Messages.StartEditLocalDocumentHandler_conflictmessage)) {
+						return Result.KEEP;
+					} else {
+						return Result.OVERWRITE;
+					}
 				}
-			}
-		});
+			});
+		} else {
+			// non editable temp file is opened, unlock possible existing lock
+			LocalLock lock = new LocalLock(object);
+			lock.unlock();
+			file = service.getTempFile(object);
+		}
 		if (file.isPresent()) {
 			Program.launch(file.get().getAbsolutePath());
 		} else {
