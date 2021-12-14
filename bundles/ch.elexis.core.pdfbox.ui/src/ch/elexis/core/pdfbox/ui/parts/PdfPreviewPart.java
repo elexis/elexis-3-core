@@ -15,6 +15,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.ui.e4.events.ElexisUiEventTopics;
 
@@ -36,7 +38,7 @@ public class PdfPreviewPart {
 		previewComposite.setLayout(new GridLayout(1, false));
 		
 		Label label = new Label(previewComposite, SWT.None);
-		label.setText("Kein PDF selektiert");
+		label.setText(Messages.PdfPreview_NoPDFSelected);
 		
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
@@ -45,10 +47,26 @@ public class PdfPreviewPart {
 	
 	@Inject
 	@Optional
-	void updatePreview(
-		@UIEventTopic(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF) InputStream pdfInputStream){
+	void activePatient(IPatient patient) throws IOException{
+		if (pdfPreviewPartLoadHandler != null) {
+			pdfPreviewPartLoadHandler.unloadDocument();
+			updatePreview(null);
+		}
+	}
+	
+	@Inject
+	@Optional
+	void updatePreview(@UIEventTopic(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF)
+	InputStream pdfInputStream){
 		
 		if (pdfPreviewPartLoadHandler != null) {
+			if (pdfInputStream == null) {
+				try {
+					pdfPreviewPartLoadHandler.unloadDocument();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 			pdfPreviewPartLoadHandler.close();
 		}
 		
@@ -56,7 +74,7 @@ public class PdfPreviewPart {
 			Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
 		
 		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfInputStream,
-			new Float(zoomLevel), previewComposite, scrolledComposite);
+			Float.valueOf(zoomLevel), previewComposite, scrolledComposite);
 		
 	}
 	

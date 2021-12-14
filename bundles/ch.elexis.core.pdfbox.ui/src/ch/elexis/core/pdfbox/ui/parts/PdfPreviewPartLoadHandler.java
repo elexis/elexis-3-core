@@ -22,6 +22,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.l10n.Messages;
+
 public class PdfPreviewPartLoadHandler {
 	
 	private static ExecutorService loader = Executors.newSingleThreadExecutor();
@@ -48,6 +50,13 @@ public class PdfPreviewPartLoadHandler {
 		loader.submit(new LoaderRunnable(pdfInputStream));
 	}
 	
+	protected void unloadDocument() throws IOException{
+		if (pdDocument != null) {
+			pdDocument.close();
+			pdDocument = null;
+		}
+	}
+	
 	private class LoaderRunnable implements Runnable {
 		
 		private InputStream pdfInputStream;
@@ -63,14 +72,15 @@ public class PdfPreviewPartLoadHandler {
 				// cleanup existing controls, show user feedback
 				previewComposite.getDisplay().syncExec(() -> {
 					headLabel = new Label(previewComposite, SWT.None);
-					headLabel.setText("Loading ....");
+					headLabel.setText(Messages.PdfPreview_NoPDFSelected);
 					previewComposite.layout(true, true);
 					scrolledComposite.layout(true, true);
-					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+					scrolledComposite
+						.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 					
 					Control[] children = previewComposite.getChildren();
 					for (Control control : children) {
-						if(headLabel.equals(control)) {
+						if (headLabel.equals(control)) {
 							continue;
 						}
 						control.dispose();
@@ -81,9 +91,13 @@ public class PdfPreviewPartLoadHandler {
 				
 				// load pdf document if not already loaded
 				if (pdDocument == null) {
-					pdDocument = PDDocument.load(pdfInputStream);
-					numberOfPages = pdDocument.getNumberOfPages();
-					images = new Image[numberOfPages];
+					if (pdfInputStream != null) {
+						pdDocument = PDDocument.load(pdfInputStream);
+						numberOfPages = pdDocument.getNumberOfPages();
+						images = new Image[numberOfPages];
+					} else if (pdfInputStream == null && pdDocument == null) {
+						return;
+					}
 				}
 				
 				// render pages and display
@@ -115,7 +129,7 @@ public class PdfPreviewPartLoadHandler {
 				
 			} catch (IOException e) {
 				previewComposite.getDisplay().asyncExec(() -> {
-					if(headLabel != null) {
+					if (headLabel != null) {
 						headLabel.dispose();
 					}
 					headLabel = new Label(previewComposite, SWT.None);
@@ -130,12 +144,12 @@ public class PdfPreviewPartLoadHandler {
 		}
 	}
 	
+	//Zoom
 	public void changeScalingFactor(Float scalingFactor){
-		this.scalingFactor = scalingFactor;		
+		this.scalingFactor = scalingFactor;
 		loader.submit(new LoaderRunnable(null));
 	}
-
-
+	
 	public void close(){
 		if (pdDocument != null) {
 			try {
