@@ -662,7 +662,8 @@ public class MedicationComposite extends Composite
 					
 					LocalDate startDate = LocalDate.of(dateStart.getYear(),
 						dateStart.getMonth() + 1, dateStart.getDay());
-					if (!newPrescription.getDateFrom().toLocalDate().equals(startDate)) {
+					// compare with old prescription for changed test, new prescription has now as start
+					if (!oldPrescription.getDateFrom().toLocalDate().equals(startDate)) {
 						newPrescription.setDateFrom(
 							startDate.atTime(newPrescription.getDateFrom().toLocalTime()));
 					}
