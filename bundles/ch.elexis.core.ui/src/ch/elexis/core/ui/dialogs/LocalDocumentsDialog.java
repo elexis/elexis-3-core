@@ -41,6 +41,8 @@ import org.eclipse.ui.commands.ICommandService;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.ILocalDocumentService;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -112,6 +114,8 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 			public String getText(Object element){
 				if (element instanceof IPersistentObject) {
 					return ((IPersistentObject) element).getLabel();
+				} else if (element instanceof Identifiable) {
+					return ((Identifiable) element).getLabel();
 				} else {
 					return element.toString();
 				}
@@ -162,7 +166,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 	}
 	
 	private String getReflectivePatientText(Object element){
-		Method getPatientMethod = getGetPatientMethod(element.getClass());
+		Method getPatientMethod = getGetPatientMethod(element.getClass(), Person.class);
 		if (getPatientMethod != null) {
 			try {
 				Person patient = (Person) getPatientMethod.invoke(element, new Object[0]);
@@ -174,14 +178,26 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 				// ignore ? will be returned
 			}
 		}
+		getPatientMethod = getGetPatientMethod(element.getClass(), IPatient.class);
+		if (getPatientMethod != null) {
+			try {
+				IPatient patient = (IPatient) getPatientMethod.invoke(element, new Object[0]);
+				if (patient != null) {
+					return patient.getLabel();
+				}
+			} catch (IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
+				// ignore ? will be returned
+			}
+		}
 		return "?"; //$NON-NLS-1$
 	}
 	
-	private Method getGetPatientMethod(Class<? extends Object> clazz){
+	private Method getGetPatientMethod(Class<? extends Object> clazz, Class<? extends Object> type){
 		Method[] methods = clazz.getMethods();
 		for (Method method : methods) {
 			if (method.getName().equalsIgnoreCase("getpatient") //$NON-NLS-1$
-				&& Person.class.isAssignableFrom(method.getReturnType())
+				&& type.isAssignableFrom(method.getReturnType())
 				&& method.getParameterTypes().length == 0) {
 				return method;
 			}
