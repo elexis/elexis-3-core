@@ -2789,6 +2789,7 @@ public class Messages extends NLS {
 	public static String DailyOrderMandant;
 	public static String DailyOrderMandantOnlyFollowing;
 	public static String DailyOrderMandantNone;
+	public static String PdfPreview_NoPDFSelected;
 	
 	
 	static { // load message values from bundle file
