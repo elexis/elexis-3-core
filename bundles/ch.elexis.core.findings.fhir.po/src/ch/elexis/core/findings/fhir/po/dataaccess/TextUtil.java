@@ -58,12 +58,14 @@ public class TextUtil {
 	 */
 	public static String getText(ICondition condition, ICodingService codingService){
 		StringBuilder sb = new StringBuilder();
-		sb.append("(");
 		Optional<String> start = condition.getStart();
-		sb.append(start.orElse("")).append(" - ");
 		Optional<String> end = condition.getEnd();
-		sb.append(end.orElse(""));
-		sb.append(") ");
+		if (start.isPresent() || end.isPresent()) {
+			sb.append("(");
+			sb.append(start.orElse("")).append(" - ");
+			sb.append(end.orElse(""));
+			sb.append(") ");
+		}
 		
 		Optional<String> text = condition.getText();
 		boolean multiline = text.isPresent() && text.get().contains("\n");
