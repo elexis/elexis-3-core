@@ -1,10 +1,14 @@
 package ch.elexis.core.ui.commands;
 
+import java.io.File;
+import java.util.Optional;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.program.Program;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -12,6 +16,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.IDocumentTemplate;
+import ch.elexis.core.model.util.DocumentLetterUtil;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.TextView;
@@ -45,6 +53,19 @@ public class LoadTemplateCommand extends AbstractHandler {
 					ch.elexis.core.ui.commands.Messages.LoadTemplateCommand_NoTextTemplate);
 				return null;
 			}
+			// try to open file if applicable
+			IDocumentTemplate documentTemplate = CoreModelServiceHolder.get()
+				.load(template.getId(), IDocumentTemplate.class).orElse(null);
+			if (documentTemplate != null) {
+				IVirtualFilesystemHandle handle =
+					DocumentLetterUtil.getExternalHandleIfApplicable(documentTemplate);
+				Optional<File> file = handle.toFile();
+				if (file.isPresent()) {
+					Program.launch(file.get().getAbsolutePath());
+					return null;
+				}
+			}
+			// open in text view 
 			IWorkbenchPage activePage =
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			TextView textView = (TextView) activePage.showView(TextView.ID);
