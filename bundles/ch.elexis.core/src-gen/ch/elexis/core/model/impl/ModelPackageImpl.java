@@ -48,6 +48,7 @@ import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IHistory;
@@ -221,6 +222,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iDocumentLetterEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iDocumentTemplateEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2010,6 +2018,36 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	@Override
 	public EReference getIDocumentLetter_Encounter() {
 		return (EReference)iDocumentLetterEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getIDocumentTemplate() {
+		return iDocumentTemplateEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIDocumentTemplate_TemplateTyp() {
+		return (EAttribute)iDocumentTemplateEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIDocumentTemplate_Mandator() {
+		return (EReference)iDocumentTemplateEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -5028,6 +5066,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iDocumentLetterEClass = createEClass(IDOCUMENT_LETTER);
 		createEReference(iDocumentLetterEClass, IDOCUMENT_LETTER__ENCOUNTER);
 
+		iDocumentTemplateEClass = createEClass(IDOCUMENT_TEMPLATE);
+		createEAttribute(iDocumentTemplateEClass, IDOCUMENT_TEMPLATE__TEMPLATE_TYP);
+		createEReference(iDocumentTemplateEClass, IDOCUMENT_TEMPLATE__MANDATOR);
+
 		iStickerEClass = createEClass(ISTICKER);
 		createEAttribute(iStickerEClass, ISTICKER__BACKGROUND);
 		createEAttribute(iStickerEClass, ISTICKER__FOREGROUND);
@@ -5418,6 +5460,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iDocumentEClass.getESuperTypes().add(this.getIdentifiable());
 		iDocumentEClass.getESuperTypes().add(this.getDeleteable());
 		iDocumentLetterEClass.getESuperTypes().add(this.getIDocument());
+		iDocumentTemplateEClass.getESuperTypes().add(this.getIDocument());
 		g1 = createEGenericType(theTypesPackage.getComparable());
 		EGenericType g2 = createEGenericType(this.getISticker());
 		g1.getETypeArguments().add(g2);
@@ -5760,6 +5803,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(iDocumentLetterEClass, IDocumentLetter.class, "IDocumentLetter", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIDocumentLetter_Encounter(), this.getIEncounter(), null, "encounter", null, 0, 1, IDocumentLetter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		addEOperation(iDocumentLetterEClass, ecorePackage.getEBoolean(), "isTemplate", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iDocumentTemplateEClass, IDocumentTemplate.class, "IDocumentTemplate", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIDocumentTemplate_TemplateTyp(), ecorePackage.getEString(), "templateTyp", null, 0, 1, IDocumentTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIDocumentTemplate_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, IDocumentTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iStickerEClass, ISticker.class, "ISticker", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getISticker_Background(), ecorePackage.getEString(), "background", null, 0, 1, ISticker.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

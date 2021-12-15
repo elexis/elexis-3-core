@@ -225,6 +225,15 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IDOCUMENT_TEMPLATE: {
+				IDocumentTemplate iDocumentTemplate = (IDocumentTemplate)theEObject;
+				T1 result = caseIDocumentTemplate(iDocumentTemplate);
+				if (result == null) result = caseIDocument(iDocumentTemplate);
+				if (result == null) result = caseIdentifiable(iDocumentTemplate);
+				if (result == null) result = caseDeleteable(iDocumentTemplate);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.ISTICKER: {
 				ISticker iSticker = (ISticker)theEObject;
 				T1 result = caseISticker(iSticker);
@@ -895,6 +904,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIDocumentLetter(IDocumentLetter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IDocument Template</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IDocument Template</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIDocumentTemplate(IDocumentTemplate object) {
 		return null;
 	}
 

@@ -148,6 +148,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIDocumentLetterAdapter();
 			}
 			@Override
+			public Adapter caseIDocumentTemplate(IDocumentTemplate object) {
+				return createIDocumentTemplateAdapter();
+			}
+			@Override
 			public Adapter caseISticker(ISticker object) {
 				return createIStickerAdapter();
 			}
@@ -612,6 +616,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIDocumentLetterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDocumentTemplate <em>IDocument Template</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IDocumentTemplate
+	 * @generated
+	 */
+	public Adapter createIDocumentTemplateAdapter() {
 		return null;
 	}
 

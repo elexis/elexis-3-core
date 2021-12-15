@@ -37,6 +37,7 @@
 		<class>ch.elexis.core.jpa.entities.Bestellung</class>
 		<class>ch.elexis.core.jpa.entities.BestellungEntry</class>
 		<class>ch.elexis.core.jpa.entities.Brief</class>
+		<class>ch.elexis.core.jpa.entities.BriefVorlage</class>
 		<class>ch.elexis.core.jpa.entities.Config</class>
 		<class>ch.elexis.core.jpa.entities.DefaultSignature</class>
 		<class>ch.elexis.core.jpa.entities.Diagnosis</class>

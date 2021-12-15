@@ -333,11 +333,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IDocumentLetter" abstract="true" interface="true"
       eSuperTypes="#//IDocument">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="encounter" eType="#//IEncounter">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+    <eOperations name="isTemplate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="encounter" eType="#//IEncounter"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IDocumentTemplate" abstract="true" interface="true"
+      eSuperTypes="#//IDocument">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="templateTyp" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mandator" eType="#//IMandator"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ISticker" abstract="true" interface="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
