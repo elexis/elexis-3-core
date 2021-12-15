@@ -50,4 +50,12 @@ public interface IDocumentLetter extends IDocument {
 	 * @generated
 	 */
 	void setEncounter(IEncounter value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	boolean isTemplate();
 } // IDocumentLetter

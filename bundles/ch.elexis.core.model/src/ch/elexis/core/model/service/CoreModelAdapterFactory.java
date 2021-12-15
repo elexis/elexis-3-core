@@ -2,6 +2,7 @@ package ch.elexis.core.model.service;
 
 import ch.elexis.core.jpa.entities.Behandlung;
 import ch.elexis.core.jpa.entities.Brief;
+import ch.elexis.core.jpa.entities.BriefVorlage;
 import ch.elexis.core.jpa.entities.DbImage;
 import ch.elexis.core.jpa.entities.Diagnosis;
 import ch.elexis.core.jpa.entities.Eigenleistung;
@@ -31,6 +32,7 @@ import ch.elexis.core.model.Coverage;
 import ch.elexis.core.model.CustomService;
 import ch.elexis.core.model.DiagnosisReference;
 import ch.elexis.core.model.DocumentLetter;
+import ch.elexis.core.model.DocumentTemplate;
 import ch.elexis.core.model.Encounter;
 import ch.elexis.core.model.FreeTextDiagnosis;
 import ch.elexis.core.model.IAccountTransaction;
@@ -49,6 +51,7 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IImage;
@@ -205,6 +208,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			KontaktAdressJoint.class));
 		
 		addMapping(new MappingEntry(IDocumentLetter.class, DocumentLetter.class, Brief.class));
+		addMapping(
+			new MappingEntry(IDocumentTemplate.class, DocumentTemplate.class, BriefVorlage.class));
 		
 		addMapping(new MappingEntry(IPrescription.class, Prescription.class,
 			ch.elexis.core.jpa.entities.Prescription.class));

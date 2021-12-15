@@ -17,8 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.jpa.entities.Behandlung;
-import ch.elexis.core.jpa.entities.Brief;
+import ch.elexis.core.jpa.entities.BriefVorlage;
 import ch.elexis.core.jpa.entities.Heap;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
@@ -31,8 +30,8 @@ import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.DocumentStatusMapper;
 
-public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
-		implements IdentifiableWithXid, IDocumentLetter {
+public class DocumentTemplate extends AbstractIdDeleteModelAdapter<BriefVorlage>
+		implements IdentifiableWithXid, IDocumentTemplate {
 	
 	private ICategory category;
 	private String storeId = "";
@@ -40,7 +39,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	private String keywords;
 	
 	
-	public DocumentLetter(Brief entity){
+	public DocumentTemplate(BriefVorlage entity){
 		super(entity);
 	}
 	
@@ -181,32 +180,22 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public IPatient getPatient(){
-		return ModelUtil.getAdapter(getEntity().getPatient(), IPatient.class);
+		return null;
 	}
 	
 	@Override
 	public void setPatient(IPatient value){
-		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntityMarkDirty()
-				.setPatient((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
-		} else if (value == null) {
-			getEntityMarkDirty().setPatient(null);
-		}
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
 	public IContact getAuthor(){
-		return ModelUtil.getAdapter(getEntity().getSender(), IContact.class);
+		return null;
 	}
 	
 	@Override
 	public void setAuthor(IContact value){
-		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntityMarkDirty()
-				.setSender((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
-		} else if (value == null) {
-			getEntityMarkDirty().setSender(null);
-		}
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
@@ -302,26 +291,27 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	}
 
 	@Override
-	public IEncounter getEncounter(){
-		return ModelUtil.getAdapter(getEntity().getConsultation(), IEncounter.class);
-	}
-
-	@Override
-	public void setEncounter(IEncounter value){
-		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntityMarkDirty()
-				.setConsultation((Behandlung) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
-		} else if (value == null) {
-			getEntityMarkDirty().setConsultation(null);
-		}
-		
+	public String getTemplateTyp(){
+		return getEntity().getTemplateTyp();
 	}
 	
 	@Override
-	public boolean isTemplate(){
-		if (getCategory() != null) {
-			return BriefConstants.TEMPLATE.equals(getCategory().getName());
+	public void setTemplateTyp(String value){
+		getEntityMarkDirty().setTemplateTyp(value);
+	}
+	
+	@Override
+	public IMandator getMandator(){
+		return ModelUtil.getAdapter(getEntity().getRecipient(), IMandator.class);
+	}
+	
+	@Override
+	public void setMandator(IMandator value){
+		if (value instanceof AbstractIdDeleteModelAdapter) {
+			getEntityMarkDirty()
+				.setRecipient((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+		} else if (value == null) {
+			getEntityMarkDirty().setRecipient(null);
 		}
-		return false;
 	}
 }
