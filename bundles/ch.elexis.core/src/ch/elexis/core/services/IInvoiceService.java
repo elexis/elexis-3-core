@@ -4,10 +4,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import ch.elexis.core.model.IAccountTransaction;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPayment;
 import ch.elexis.core.model.InvoiceState;
+import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 
 public interface IInvoiceService {
@@ -62,4 +65,23 @@ public interface IInvoiceService {
 	 * @return
 	 */
 	public String getCombinedId(IInvoice invoice);
+	
+	/**
+	 * Remove the {@link IPayment} from the {@link IInvoice}. If there is a matching
+	 * {@link IAccountTransaction} for the {@link IPayment} it is removed.
+	 * 
+	 * @param payment
+	 */
+	public void removePayment(IPayment payment);
+	
+	/**
+	 * Add a {@link IPayment} to the {@link IInvoice}. Also creates a {@link IAccountTransaction}
+	 * for the {@link IPayment}.
+	 * 
+	 * @param invoice
+	 * @param amount
+	 * @param remark
+	 * @return
+	 */
+	public IPayment addPayment(IInvoice invoice, Money amount, String remark);
 }
