@@ -942,7 +942,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="IAccountTransaction" abstract="true"
       interface="true" eSuperTypes="#//Identifiable #//Deleteable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="invoice" eType="#//IInvoice"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="payment" eType="#//IPayment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="payment" eType="#//IPayment">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="zahlung"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//IPatient"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="amount" eType="ecore:EDataType types.ecore#//Money"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="remark" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
