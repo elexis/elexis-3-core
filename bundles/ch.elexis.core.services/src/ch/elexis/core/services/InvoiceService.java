@@ -25,10 +25,13 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPayment;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.InvoiceConstants;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.IAccountTransactionBuilder;
 import ch.elexis.core.model.builder.IInvoiceBilledBuilder;
 import ch.elexis.core.model.builder.IPaymentBuilder;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -333,5 +336,27 @@ public class InvoiceService implements IInvoiceService {
 		}
 		String nr = StringUtils.leftPad(invoice.getNumber(), 6, '0');
 		return pid + nr;
+	}
+	
+	@Override
+	public void removePayment(IPayment payment){
+		IQuery<IAccountTransaction> query =
+			CoreModelServiceHolder.get().getQuery(IAccountTransaction.class);
+		query.and(ModelPackage.Literals.IACCOUNT_TRANSACTION__PAYMENT, COMPARATOR.EQUALS, payment);
+		CoreModelServiceHolder.get().remove(query.execute());
+		
+		if (payment.getInvoice() != null) {
+			payment.getInvoice().addTrace(InvoiceConstants.CORRECTION, "Zahlung gelöscht");
+		}
+		CoreModelServiceHolder.get().delete(payment);
+	}
+	
+	@Override
+	public IPayment addPayment(IInvoice invoice, Money amount, String remark){
+		IPayment payment =
+			new IPaymentBuilder(CoreModelServiceHolder.get(), invoice, amount, remark)
+				.buildAndSave();
+		new IAccountTransactionBuilder(CoreModelServiceHolder.get(), payment).buildAndSave();
+		return payment;
 	}
 }
