@@ -6651,6 +6651,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 			   "attributeName", "dateUntil"
 		   });
 		addAnnotation
+		  (getIAccountTransaction_Payment(),
+		   source,
+		   new String[] {
+			   "attributeName", "zahlung"
+		   });
+		addAnnotation
 		  (getIAppointment_Reason(),
 		   source,
 		   new String[] {

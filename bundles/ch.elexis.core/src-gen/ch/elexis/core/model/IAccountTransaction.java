@@ -73,7 +73,7 @@ public interface IAccountTransaction extends Identifiable, Deleteable {
 	 * @return the value of the '<em>Payment</em>' reference.
 	 * @see #setPayment(IPayment)
 	 * @see ch.elexis.core.model.ModelPackage#getIAccountTransaction_Payment()
-	 * @model
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='zahlung'"
 	 * @generated
 	 */
 	IPayment getPayment();
