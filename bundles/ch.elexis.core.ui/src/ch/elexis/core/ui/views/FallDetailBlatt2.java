@@ -23,8 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.cdatetime.CDT;
 import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
@@ -64,6 +69,7 @@ import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
+import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -108,12 +114,13 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 	String itemsErrorMessage = "parameters not supplied;please control parameters;in preferences"; //$NON-NLS-1$
 	
-	public static final String[] Reasons = {
-			FallConstants.TYPE_DISEASE, FallConstants.TYPE_ACCIDENT, FallConstants.TYPE_MATERNITY, FallConstants.TYPE_PREVENTION,
-			FallConstants.TYPE_BIRTHDEFECT, FallConstants.TYPE_OTHER
-	};
+	//	public static final String[] Reasons = {
+	//			FallConstants.TYPE_DISEASE, FallConstants.TYPE_ACCIDENT, FallConstants.TYPE_MATERNITY, FallConstants.TYPE_PREVENTION,
+	//			FallConstants.TYPE_BIRTHDEFECT, FallConstants.TYPE_OTHER
+	//	};
 	public static final String[] dgsys = null;
-	Combo cAbrechnung, cReason;
+	Combo cAbrechnung;
+	ComboViewer cReason;
 	CDateTime dpVon, dpBis;
 	Text tBezeichnung, tGarant, tCostBearer;
 	Hyperlink autoFill, hlGarant, hlCostBearer;
@@ -272,19 +279,12 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					
 				}
 				
-				// auto select accident if uvg is selected
-				if ("UVG".equals(abrechungsMethodeStr)) {
-					int idx = ArrayUtils.indexOf(Reasons, FallConstants.TYPE_ACCIDENT);
-					if (fall != null && idx > -1) {
-						fall.setGrund(Reasons[idx]);
-						
-						int ix = cReason.indexOf(Reasons[idx]);
-						if (ix == -1) {
-							ix = 0;
-						}
-						cReason.select(ix);
-					}
-				}
+				// auto select default insurance reason for billing system
+				BillingSystemServiceHolder.get().getBillingSystem(abrechungsMethodeStr)
+					.ifPresent(bs -> {
+						cReason.setSelection(new StructuredSelection(
+							BillingSystemServiceHolder.get().getDefaultInsuranceReason(bs)));
+					});
 			}
 		});
 		
@@ -325,20 +325,26 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		});
 		tBezeichnung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(top, Messages.FallDetailBlatt2_ReasonForInsurance); //$NON-NLS-1$
-		cReason = new Combo(top, SWT.READ_ONLY);
-		cReason.setItems(Reasons);
-		cReason.addSelectionListener(new SelectionAdapter() {
+		cReason = new ComboViewer(top, SWT.READ_ONLY);
+		cReason.setContentProvider(ArrayContentProvider.getInstance());
+		cReason.setLabelProvider(new LabelProvider());
+		cReason.setInput(new String[] {
+			FallConstants.TYPE_DISEASE, FallConstants.TYPE_ACCIDENT, FallConstants.TYPE_MATERNITY,
+			FallConstants.TYPE_PREVENTION, FallConstants.TYPE_BIRTHDEFECT, FallConstants.TYPE_OTHER
+		});
+		cReason.addSelectionChangedListener(new ISelectionChangedListener() {
+			
 			@Override
-			public void widgetSelected(final SelectionEvent e){
-				int i = cReason.getSelectionIndex();
+			public void selectionChanged(SelectionChangedEvent event){
+				String selected = (String) event.getStructuredSelection().getFirstElement();
 				IFall fall = getSelectedFall();
 				if (fall != null) {
-					fall.setGrund(Reasons[i]);
+					fall.setGrund(selected);
 					fireSelectedFallUpdateEvent();
 				}
 			}
 		});
-		cReason.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		cReason.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(top, Messages.FallDetailBlatt2_StartDate); //$NON-NLS-1$
 		dpVon = new CDateTime(top, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
 		if (getSelectedFall() == null ) {
@@ -626,7 +632,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			form.setText(Messages.FallDetailBlatt2_NoCaseSelected); //$NON-NLS-1$
 			tBezeichnung.setText("");
 			tBezeichnung.setMessage(Messages.FallDetailBlatt2_29);
-			cReason.select(0);
+			cReason.setSelection(new StructuredSelection(FallConstants.TYPE_DISEASE));
 			return;
 		}
 		
@@ -637,11 +643,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		
 		// *** set Grund (Krankheit/Unfall/...)
 		String grund = f.getGrund();
-		int ix = cReason.indexOf(grund);
-		if (ix == -1) {
-			ix = 0;
-		}
-		cReason.select(ix);
+		cReason.setSelection(new StructuredSelection(grund));
 		
 		String billingSystem = f.getAbrechnungsSystem();
 		cAbrechnung.setText(billingSystem);
@@ -935,7 +937,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		dpBis.setEnabled(lockEnabled); // coverage must be endable - even if invoices exist
 		
 		cAbrechnung.setEnabled(enable);
-		cReason.setEnabled(enable);
+		cReason.getControl().setEnabled(enable);
 		hlGarant.setEnabled(enable);
 		tGarant.setForeground(
 			enable ? UiDesk.getColor(UiDesk.COL_BLACK) : UiDesk.getColor(UiDesk.COL_GREY60));

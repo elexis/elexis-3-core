@@ -19,6 +19,7 @@ import com.google.common.cache.LoadingCache;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.BillingSystem;
+import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.IBillingSystem;
 import ch.elexis.core.model.ch.BillingLaw;
 
@@ -55,6 +56,20 @@ public class BillingSystemService implements IBillingSystemService {
 	public String getDefaultPrintSystem(IBillingSystem system){
 		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ system.getName() + "/standardausgabe", null);
+		return value;
+	}
+	
+	@Override
+	public String getDefaultInsuranceReason(IBillingSystem system){
+		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+			+ system.getName() + "/standardgrund", null);
+		if (value == null) {
+			if (system.getLaw() == BillingLaw.UVG) {
+				value = FallConstants.TYPE_ACCIDENT;
+			} else {
+				value = FallConstants.TYPE_DISEASE;
+			}
+		}
 		return value;
 	}
 	
