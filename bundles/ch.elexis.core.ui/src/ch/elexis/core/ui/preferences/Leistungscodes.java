@@ -32,6 +32,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -77,6 +78,7 @@ import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.MultiplikatorList;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
@@ -150,6 +152,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					configService.set(key + "/name", result[0]); //$NON-NLS-1$
 					configService.set(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
 					configService.set(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
+					configService.set(key + "/standardgrund", result[9]); //$NON-NLS-1$
 					configService.set(key + "/bedingungen", result[3]); //$NON-NLS-1$
 					configService.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
 					configService.set(key + "/unused", result[5]); //$NON-NLS-1$
@@ -195,7 +198,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					for (String s1 : configService.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY,
 						true)) {
 						if (s1.equals(ssel)) {
-							String[] pre = new String[9];
+							String[] pre = new String[10];
 							log.info("ssel {} cs {} rn {}", ssel, BillingSystem.getCodeSystem(s1),
 									BillingSystem.getDefaultPrintSystem(s1));
 							pre[0] = s1;
@@ -209,6 +212,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 								BillingSystem.CFG_BILLINGLAW, BillingLaw.KVG.name());
 							pre[8] = BillingSystem.getConfigurationValue(s1,
 								BillingSystem.CFG_NOCOSTBEARER, Boolean.FALSE.toString());
+							pre[9] = BillingSystemServiceHolder.get().getDefaultInsuranceReason(
+								BillingSystemServiceHolder.get().getBillingSystem(s1).get());
 							
 							AbrechnungsTypDialog at = new AbrechnungsTypDialog(getShell(), pre);
 							if (at.open() == Dialog.OK) {
@@ -222,6 +227,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 								configService.set(key + "/name", result[0]); //$NON-NLS-1$
 								configService.set(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
 								configService.set(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
+								configService.set(key + "/standardgrund", result[9]); //$NON-NLS-1$
 								configService.set(key + "/bedingungen", result[3]); //$NON-NLS-1$
 								configService.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
 								configService.set(key + "/unused", result[5]); //$NON-NLS-1$
@@ -788,6 +794,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	class AbrechnungsTypDialog extends TitleAreaDialog {
 		Text tName;
 		Combo cbLstg;
+		ComboViewer cbReason;
 		Combo cbRechn;
 		ComboViewer cbLaw;
 		Button cbDisabled;
@@ -850,6 +857,18 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				cbLstg.add(getLocalizedLeistungscode(name));
 			}
 			
+			// *** label/combo for default reason
+			new Label(upperPartComp, SWT.NONE).setText(Messages.Leistungscodes_defaultReasonLabel);
+			cbReason = new ComboViewer(upperPartComp, SWT.READ_ONLY);
+			cbReason.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			cbReason.setContentProvider(ArrayContentProvider.getInstance());
+			cbReason.setLabelProvider(new LabelProvider());
+			cbReason.setInput(new String[] {
+				FallConstants.TYPE_DISEASE, FallConstants.TYPE_ACCIDENT,
+				FallConstants.TYPE_MATERNITY, FallConstants.TYPE_PREVENTION,
+				FallConstants.TYPE_BIRTHDEFECT, FallConstants.TYPE_OTHER
+			});
+
 			// *** label/combo for default output for bills
 			new Label(upperPartComp, SWT.NONE).setText(Messages.Leistungscodes_defaultOutputLabel);
 			cbRechn = new Combo(upperPartComp, SWT.READ_ONLY);
@@ -898,6 +917,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				cbLaw.setSelection(new StructuredSelection(
 					BillingSystemServiceHolder.get().getBillingLaw(result[7])));
 				bNoCostBearer.setSelection(Boolean.valueOf(result[8]));
+				cbReason.setSelection(new StructuredSelection(result[9]));
 				name = result[0];
 			}
 			
@@ -1114,7 +1134,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		 */
 		@Override
 		protected void okPressed(){
-			result = new String[9];
+			result = new String[10];
 			result[0] = tName.getText();
 			result[1] = cbLstg.getText();
 			result[2] = cbRechn.getText();
@@ -1136,6 +1156,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			}
 			result[7] = ((BillingLaw) cbLaw.getStructuredSelection().getFirstElement()).name();
 			result[8] = Boolean.toString(bNoCostBearer.getSelection());
+			result[9] = (String) cbReason.getStructuredSelection().getFirstElement();
 			super.okPressed();
 		}
 		

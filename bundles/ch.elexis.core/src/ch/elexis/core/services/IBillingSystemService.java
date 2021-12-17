@@ -40,6 +40,15 @@ public interface IBillingSystemService {
 	 */
 	public String getDefaultPrintSystem(IBillingSystem system);
 	
+	/**
+	 * Get the configured default insurance reason for a given {@link IBillingSystem}. If no
+	 * configuration is found default value based on the law is returned.
+	 * 
+	 * @param system
+	 * @return
+	 */
+	public String getDefaultInsuranceReason(IBillingSystem system);
+	
 	public List<String> getBillingSystemConstants(IBillingSystem billingSystem);
 	
 	public String getBillingSystemConstant(IBillingSystem billingSystem, String name);
@@ -54,10 +63,10 @@ public interface IBillingSystemService {
 	/**
 	 * Find a billing system by its name
 	 * 
-	 * @param gesetz
+	 * @param name
 	 * @return
 	 */
-	public Optional<IBillingSystem> getBillingSystem(String gesetz);
+	public Optional<IBillingSystem> getBillingSystem(String name);
 	
 	/**
 	 * Find all installed billing systems.
