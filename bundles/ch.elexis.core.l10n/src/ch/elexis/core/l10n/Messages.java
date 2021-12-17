@@ -2403,6 +2403,7 @@ public class Messages extends NLS {
 	public static String Leistungscodes_dateHL;
 	public static String Leistungscodes_defaultOutput;
 	public static String Leistungscodes_defaultOutputLabel;
+	public static String Leistungscodes_defaultReasonLabel;
 	public static String Leistungscodes_defineBillingSystem;
 	public static String Leistungscodes_definitionAlreadyExistsInDestination;
 	public static String Leistungscodes_definitionAlreadyExistsSomewhere;
