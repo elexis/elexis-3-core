@@ -38,6 +38,18 @@ public interface IEncounterService {
 	public Result<IEncounter> transferToCoverage(IEncounter encounter, ICoverage coverage, boolean ignoreEditable);
 
 	/**
+	 * Transfer the {@link IEncounter} to the {@link IMandator}. Existing {@link IBilled} will be
+	 * updated according to the information of the {@link IMandator}.
+	 * 
+	 * @param encounter
+	 * @param mandator
+	 * @param ignoreEditable
+	 * @return
+	 */
+	public Result<IEncounter> transferToMandator(IEncounter encounter, IMandator mandator,
+		boolean ignoreEditable);
+	
+	/**
 	 * Get the last {@link IEncounter} that was performed on patient by the active
 	 * {@link IMandator}. If create is true a new {@link IEncounter} is created if
 	 * non exists.

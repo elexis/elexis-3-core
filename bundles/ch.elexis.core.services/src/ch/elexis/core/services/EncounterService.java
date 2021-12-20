@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -81,6 +80,30 @@ public class EncounterService implements IEncounterService {
 	}
 
 	@Override
+	public Result<IEncounter> transferToMandator(IEncounter encounter, IMandator mandator,
+			boolean ignoreEditable) {
+		if (encounter.getMandator().equals(mandator)) {
+			return Result.OK();
+		}
+		Result<IEncounter> editableResult = billingService.isEditable(encounter);
+		if (!editableResult.isOK() && !ignoreEditable) {
+			return editableResult;
+		}
+		
+		Result<IEncounter> result = new Result<IEncounter>(encounter);
+		
+		// transfer encounter and save to clear dirty flag
+		encounter.setMandator(mandator);
+		CoreModelServiceHolder.get().save(encounter);
+		
+		result = reBillEncounter(encounter);
+		coreModelService.save(encounter);
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+		
+		return result;
+	}
+	
+	@Override
 	public Result<IEncounter> transferToCoverage(IEncounter encounter, ICoverage coverage, boolean ignoreEditable) {
 		if (encounter.getCoverage().equals(coverage)) {
 			return Result.OK();
@@ -97,7 +120,27 @@ public class EncounterService implements IEncounterService {
 		encounter.setCoverage(coverage);
 		coreModelService.save(encounter);
 		if (encounterCovearage != null) {
-			ch.elexis.core.services.ICodeElementService codeElementService = CodeElementServiceHolder.get();
+			result = reBillEncounter(encounter);
+
+		}
+
+		coreModelService.save(encounter);
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+		fallBackConsumer = ContextServiceHolder.get().getRootContext().getNamed(ContextServiceHolder.SELECTIONFALLBACK);
+		if (fallBackConsumer.isPresent() && fallBackConsumer.get() instanceof Consumer) {
+			ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, coverage);
+		} else {
+			ContextServiceHolder.get().setActiveCoverage(coverage);
+		}
+
+		return result;
+	}
+
+
+	private Result<IEncounter> reBillEncounter(IEncounter encounter){
+		Result<IEncounter> result = new Result<IEncounter>(encounter);
+
+		ch.elexis.core.services.ICodeElementService codeElementService = CodeElementServiceHolder.get();
 			HashMap<Object, Object> context = getCodeElementServiceContext(encounter);
 			List<IBilled> encounterBilled = encounter.getBilled();
 
@@ -143,16 +186,7 @@ public class EncounterService implements IEncounterService {
 					coreModelService.save(billed);
 				}
 			}
-		}
-		coreModelService.save(encounter);
-		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
-		fallBackConsumer = ContextServiceHolder.get().getRootContext()
-				.getNamed(ContextServiceHolder.SELECTIONFALLBACK);
-		if (fallBackConsumer.isPresent() && fallBackConsumer.get() instanceof Consumer) {
-			ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, coverage);
-		} else {
-			ContextServiceHolder.get().setActiveCoverage(coverage);
-		}
+
 		return result;
 	}
 
