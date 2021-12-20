@@ -399,10 +399,9 @@ public class KonsDetailView extends ViewPart
 					IMandator mandator = CoreModelServiceHolder.get()
 						.load(((Mandant) ksl.getSelection()).getId(), IMandator.class).orElse(null);
 					if (mandator != null) {
-						actEncounter.setMandator(mandator);
-						CoreModelServiceHolder.get().save(actEncounter);
+						EncounterServiceHolder.get().transferToMandator(actEncounter, mandator,
+							false);
 					}
-					setKons(actEncounter);
 				}
 				ElexisEventDispatcher.fireSelectionEvent(currentMandant);
 			}
