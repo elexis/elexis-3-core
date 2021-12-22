@@ -91,6 +91,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.RemoveVatFromPandemieVerrechnet">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.SetFallCopyForPatient">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>
