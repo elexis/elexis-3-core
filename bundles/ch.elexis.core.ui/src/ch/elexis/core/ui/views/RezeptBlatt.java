@@ -135,7 +135,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		}
 		rp.setBrief(actBrief);
 		if (insertTable(replace, fields, wt, Brief.RP)) {
-			return true;
+			// save and open
 		} else {
 			replace = Messages.RezeptBlatt_4_Extended;
 			fields = createExtendedTakingListFields(lines);
@@ -143,11 +143,12 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 				5, 45, 10, 10, 15, 15
 			};
 			if (insertTable(replace, fields, wt, Brief.RP)) {
-				return true;
+				// save and open
 			}
 		}
 		text.saveBrief(actBrief, Brief.RP);
-		return false;
+		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
+		return true;
 	}
 	
 	private boolean insertTable(String replace, String[][] fields, int[] wt, String typ){
@@ -156,8 +157,6 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 				text.getPlugin().print(null, null, true);
 				getSite().getPage().hideView(this);
 			}
-			text.saveBrief(actBrief, typ);
-			EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 			return true;
 		}
 		return false;
@@ -192,7 +191,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			fields = createTakingListFields(lines);
 		}
 		if (insertTable(replace, fields, wt, Brief.UNKNOWN)) {
-			return true;
+			// save and open
 		} else {
 			if (replace.equals(Messages.RezeptBlatt_4)) {
 				replace = Messages.RezeptBlatt_4_Extended;
@@ -201,7 +200,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 					5, 45, 10, 10, 15, 15
 				};
 				if (insertTable(replace, fields, wt, Brief.RP)) {
-					return true;
+					// save and open
 				}
 			} else if (replace.equals(Messages.RezeptBlatt_6)) {
 				replace = Messages.RezeptBlatt_6_Extended;
@@ -210,12 +209,13 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 					5, 45, 10, 10, 15, 15
 				};
 				if (insertTable(replace, fields, wt, Brief.UNKNOWN)) {
-					return true;
+					// save and open
 				}
 			}
 		}
 		text.saveBrief(actBrief, Brief.UNKNOWN);
-		return false;
+		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
+		return true;
 	}
 	
 	public String[][] createRezeptListFields(List<Prescription> lines){

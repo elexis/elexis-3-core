@@ -325,7 +325,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 								// not existing - create prescription and opens
 								// RezeptBlatt
 								ElexisEventDispatcher.fireSelectionEvent(rezept);
-								rp.createRezept(Rezept.load(recipe.getId()));
+								rp.createRezept(rezept);
 								CoreModelServiceHolder.get().refresh(recipe, true);
 								refresh();
 							}
