@@ -292,7 +292,7 @@ public class FavoritenComposite extends Composite {
 	
 	@Override
 	public void update(){
-		if (tv != null) {
+		if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
 			tv.setInput(VerrechenbarFavorites.getFavorites());
 		}
 	}
