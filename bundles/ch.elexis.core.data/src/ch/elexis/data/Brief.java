@@ -23,6 +23,7 @@ import ch.elexis.core.data.interfaces.IOutputter;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.rgw.tools.ExHandler;
@@ -95,9 +96,14 @@ public class Brief extends PersistentObject {
 	 * @throws IllegalStateException
 	 *             if entity could not be loaded
 	 */
-	public IDocumentLetter toIDocument(){
-		return CoreModelServiceHolder.get().load(getId(), IDocumentLetter.class).orElseThrow(
-			() -> new IllegalStateException("Could not convert Brief [" + getId() + "]"));
+	public IDocument toIDocument(){
+		if (BriefConstants.TEMPLATE.equals(getTyp())) {
+			return CoreModelServiceHolder.get().load(getId(), IDocumentTemplate.class).orElseThrow(
+				() -> new IllegalStateException("Could not convert Brief [" + getId() + "]"));
+		} else {
+			return CoreModelServiceHolder.get().load(getId(), IDocumentLetter.class).orElseThrow(
+				() -> new IllegalStateException("Could not convert Brief [" + getId() + "]"));
+		}
 	}
 	
 	/** Einen neuen Briefeintrag erstellen */

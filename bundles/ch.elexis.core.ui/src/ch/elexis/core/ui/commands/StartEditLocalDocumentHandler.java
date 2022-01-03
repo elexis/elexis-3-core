@@ -20,6 +20,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.util.LocalLock;
+import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.util.DocumentLetterUtil;
@@ -131,7 +132,7 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 	private boolean tryHandleExternalIfApplicable(Object lockObject){
 		if (ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)
 			&& lockObject != null) {
-			IDocumentLetter document = null;
+			IDocument document = null;
 			if (lockObject instanceof Brief) {
 				document = ((Brief) lockObject).toIDocument();
 			} else if (lockObject instanceof IDocumentLetter) {
