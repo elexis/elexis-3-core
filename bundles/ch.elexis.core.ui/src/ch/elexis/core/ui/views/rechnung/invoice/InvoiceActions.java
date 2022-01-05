@@ -13,7 +13,10 @@ import org.eclipse.ui.IViewSite;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.Handler;
 import ch.elexis.core.ui.commands.MahnlaufCommand;
@@ -24,6 +27,7 @@ import ch.elexis.core.ui.locks.MultiLockRequestingAction;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.rechnung.Messages;
 import ch.elexis.core.ui.views.rechnung.RnDialogs;
+import ch.elexis.core.ui.views.rechnung.RnDialogs.StornoDialog;
 import ch.elexis.core.ui.views.rechnung.RnListeDruckDialog;
 import ch.elexis.core.ui.views.rechnung.RnOutputDialog;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider.InvoiceEntry;
@@ -34,6 +38,7 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.TimeTool;
 
 public class InvoiceActions {
 	
@@ -153,17 +158,37 @@ public class InvoiceActions {
 				setToolTipText(Messages.RnActions_stornoActionTooltip);
 			}
 
+			private int dialogResult = -1;
+			private boolean dialogReopen = false;
+			
 			@Override
 			public List<? extends PersistentObject> getTargetedObjects(){
+				// reset dialog result for new selection
+				dialogResult = -1;
+				dialogReopen = false;
 				return getInvoiceSelections(viewer);
 			}
 
 			@Override
 			public void doRun(PersistentObject po){
 				Rechnung actRn = (Rechnung) po;
-				if (new RnDialogs.StornoDialog(UiDesk.getTopShell(), actRn).open() == Dialog.OK) {
-					ElexisEventDispatcher.update(actRn);
+				// only show dialog for new selection
+				if (dialogResult == -1) {
+					StornoDialog stornoDialog = new RnDialogs.StornoDialog(UiDesk.getTopShell(), actRn);
+					dialogResult = stornoDialog.open();
+					dialogReopen = stornoDialog.getReopen();
+				} else if (dialogResult == Dialog.OK) {
+					if (Rechnung.isStorno(actRn)
+						|| Rechnung.hasStornoBeforeDate(actRn, new TimeTool())) {
+						SWTHelper.alert(Messages.RnActions_stornoAction,
+							Messages.RnActions_stornoActionNotPossibleText);
+					} else {
+						NoPoUtil.loadAsIdentifiable(actRn, IInvoice.class).ifPresent(invoice -> {
+							InvoiceServiceHolder.get().cancel(invoice, dialogReopen);
+						});
+					}
 				}
+				ElexisEventDispatcher.update(actRn);
 			}
 			
 		};
