@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +82,7 @@ import ch.elexis.core.ui.util.DayDateCombo;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
+import ch.elexis.data.Fall.Tiers;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -128,6 +130,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	List<Control> keepEditable = new ArrayList<Control>();
 	Button btnCopyForPatient;
 	
+	Set<String> ignoreFocusreacts = new HashSet<String>();
 	List<Focusreact> focusreacts = new ArrayList<Focusreact>();
 	boolean lockUpdate = true;
 	
@@ -417,6 +420,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				fireSelectedFallUpdateEvent();
 			};
 		});
+		ignoreFocusReact(Fall.FLD_EXT_COPY_FOR_PATIENT);
 		
 		new Label(top, SWT.NONE);	
 		hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
@@ -433,6 +437,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						fall.setGarant(sel);
 						setFall(fall);
 					}
+					updateCopyForPatient(getFall());
 				}
 			}
 		});
@@ -455,6 +460,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					fall.setCostBearer(selection);
 					setFall(fall);
 				}
+				updateCopyForPatient(getFall());
 			}
 		});
 		tCostBearer = tk.createText(top,  StringTool.leer);
@@ -464,8 +470,17 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		setFall(getSelectedFall());
 		
 	}
-	
 
+	private void updateCopyForPatient(Fall fall){
+		if (fall != null
+			&& ConfigServiceHolder.get().get(Preferences.COVERAGE_COPY_TO_PATIENT, false)
+			&& ((Fall) fall).getTiersType() == Tiers.PAYANT) {
+			getFall().setCopyForPatient(true);
+			fireSelectedFallUpdateEvent();
+			btnCopyForPatient.setSelection(true);
+		}
+	}
+	
 	/**
 	 * reload the billing systems menu (user dependent) and ensure that the right item is still
 	 * selected
@@ -527,7 +542,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 		
 		public void save(){
-			if (!control.isDisposed()) {
+			if (!control.isDisposed() && !ignore()) {
 				String newValue = getValue(control);
 				IFall fall = getSelectedFall();
 				if (fall != null) {
@@ -542,6 +557,10 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					}
 				}
 			}
+		}
+		
+		private boolean ignore(){
+			return ignoreFocusreacts.contains(field);
 		}
 		
 		public String getValue(Control control){
@@ -1400,6 +1419,10 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		ddc.setDates(bt);
 		form.reflow(true);
 		form.redraw();
+	}
+	
+	private void ignoreFocusReact(String field) {
+		ignoreFocusreacts.add(field);
 	}
 	
 	private void addFocusReact(Control dataField, String field){
