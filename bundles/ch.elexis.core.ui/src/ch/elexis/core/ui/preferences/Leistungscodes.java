@@ -347,6 +347,21 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			.setSelection(configService.get(Preferences.RNN_REMOVE_OPEN_REMINDER, false));
 		bRemoveOpenReminders.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
+		// *** checkbox for automatic setting CopyForPatient on TP coverage extinfo
+		final Button bCoverageCopyForPatient = new Button(ret, SWT.CHECK);
+		bCoverageCopyForPatient.setText(Messages.Leistungscodes_setCopyForPatient);
+		bCoverageCopyForPatient.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e){
+				configService.set(Preferences.COVERAGE_COPY_TO_PATIENT,
+					bCoverageCopyForPatient.getSelection());
+			}
+			
+		});
+		bCoverageCopyForPatient
+			.setSelection(configService.get(Preferences.COVERAGE_COPY_TO_PATIENT, false));
+		bCoverageCopyForPatient.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
+		
 		// *** populate the table with items
 		reload();
 		

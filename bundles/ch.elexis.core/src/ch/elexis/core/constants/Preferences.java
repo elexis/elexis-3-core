@@ -237,6 +237,9 @@ public class Preferences {
 		"billing/eigenleistung/usemultiplier/systems"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_ALLOWOVERRIDE_STRICT = "billing/allowoverride/strict"; //$NON-NLS-1$
 	
+	// Fall
+	public static final String COVERAGE_COPY_TO_PATIENT = "coverage/copytopatient";
+	
 	// Medication
 	public static final String MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT =
 			"medication/settings/emediplanHeaderComment";
