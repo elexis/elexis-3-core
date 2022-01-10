@@ -862,6 +862,7 @@ public class Messages extends NLS {
 	public static String LagerverwaltungPrefs_markOrdered;
 	public static String Leistungscodes_optifyXrayPositions;
 	
+	public static String Leistungscodes_setCopyForPatient;
 	public static String Leistungscodes_removeOpenReminders;
 	public static String Leistungscodes_separateObligations;
 	public static String Leistungscodes_defaultLawLabel;
