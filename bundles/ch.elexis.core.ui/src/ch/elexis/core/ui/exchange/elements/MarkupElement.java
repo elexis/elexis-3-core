@@ -50,7 +50,7 @@ public class MarkupElement extends XChangeElement {
 	private void addContent(XChangeExporter home, XRef xref){
 		if(xref.getProvider().toLowerCase().contains("privatnotizen")) {
 			NamedBlob2 contentBlob = NamedBlob2.load(xref.getID());
-			if (contentBlob.exists()) {
+			if (contentBlob != null && contentBlob.exists()) {
 				addMeta("content", contentBlob.getString());
 			}
 		}

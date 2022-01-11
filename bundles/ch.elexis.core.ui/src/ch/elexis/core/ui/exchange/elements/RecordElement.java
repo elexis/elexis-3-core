@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.jdom.Element;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;
 import ch.elexis.core.text.model.Samdas.XRef;
@@ -83,7 +82,8 @@ public class RecordElement extends XChangeElement {
 	private boolean shouldAddXRef(XRef xref){
 		// only add privatnotizen of current mandant
 		if (xref.getProvider().toLowerCase().contains("privatnotizen")) {
-			return xref.getID().startsWith(CoreHub.actMandant.getId());
+			//return xref.getID().startsWith(CoreHub.actMandant.getId());
+			return false;
 		}
 		return true;
 	}
