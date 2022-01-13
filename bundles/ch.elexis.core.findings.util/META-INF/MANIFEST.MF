@@ -39,6 +39,7 @@ Service-Component: OSGI-INF/ch.elexis.core.findings.util.FindingsServiceHolder.x
  OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.ObservationLabResultTransformer.xml,
  OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.OrganizationKontaktTransformer.xml,
  OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.PatientIPatientTransformer.xml,
+ OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.PersonIPersonTransformer.xml,
  OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.PractitionerIMandatorTransformer.xml,
  OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.PractitionerRoleUserTransformer.xml,
  OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.ScheduleStringTransformer.xml,
