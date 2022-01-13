@@ -1,8 +1,10 @@
 package ch.elexis.core.jcifs;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.util.Properties;
 
 import org.osgi.service.component.annotations.Component;
@@ -53,9 +55,9 @@ public class SmbURLStreamHandlerService extends AbstractURLStreamHandlerService 
 		
 	}
 	
-	private String replaceEach(String externalForm){
-		return externalForm.replaceAll("%25",  "%").replaceAll("%20", " ").replaceAll("%23", "#").replaceAll("%5B", "[")
-			.replaceAll("%5D", "]");
+	private String replaceEach(String externalForm) throws UnsupportedEncodingException{
+		externalForm = externalForm.replaceAll("%25",  "%");
+		return URLDecoder.decode(externalForm, "UTF-8");
 	}
 	
 }
