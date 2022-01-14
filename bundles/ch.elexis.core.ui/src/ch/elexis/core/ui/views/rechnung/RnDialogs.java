@@ -474,6 +474,7 @@ public class RnDialogs {
 		private List<IRnOutputter> lo;
 		private boolean alwaysReactive = false;
 		private List<Konsultation> konsultations;
+		private boolean reopen = false;
 		
 		public StornoDialog(Shell shell, Rechnung r){
 			super(shell);
@@ -566,9 +567,14 @@ public class RnDialogs {
 			//setMessage(Messages.getString("RnDialogs.reactivateConsultations")); //$NON-NLS-1$
 		}
 		
+		public boolean getReopen(){
+			return reopen;
+		}
+		
 		@Override
 		protected void okPressed(){
-			konsultations = rn.stornoBill(bReactivate.getSelection() || alwaysReactive);
+			reopen = bReactivate.getSelection() || alwaysReactive;
+			konsultations = rn.stornoBill(reopen);
 			for (Button exporter : exporters) {
 				if (exporter.getSelection()) {
 					IRnOutputter iro = (IRnOutputter) exporter.getData();
