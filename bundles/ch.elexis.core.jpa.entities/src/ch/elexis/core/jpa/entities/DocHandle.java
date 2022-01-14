@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -25,6 +26,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "CH_ELEXIS_OMNIVORE_DATA")
 @Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "DocHandle.select.category.names", query = "SELECT DISTINCT dh.title FROM DocHandle dh WHERE dh.deleted = false AND dh.mimetype='text/category' ORDER BY dh.title")
 public class DocHandle extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	public static final String CATEGORY_CATEGORY = "text/category";
