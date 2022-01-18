@@ -180,7 +180,7 @@ public class MedicationService implements IMedicationService {
 		IQuery<IArticleDefaultSignature> query =
 			CoreModelServiceHolder.get().getQuery(IArticleDefaultSignature.class);
 		query.and("article", COMPARATOR.LIKE,
-			"%$" + StoreToStringServiceHolder.getStoreToString(article));
+			"%" + StoreToStringServiceHolder.getStoreToString(article));
 		return query.executeSingleResult();
 	}
 	
