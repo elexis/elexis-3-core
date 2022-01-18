@@ -77,11 +77,14 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	private Composite compositeFreeTextDosage;
 	private Composite stackCompositeDosage;
 	private Composite compositeMedicationTypeDetail;
+	private Text txtEnddate;
 	
 	private Label lblCalcEndDate;
 	private DateTime dateStart;
 	
 	private List<SavingTargetToModelStrategy> targetToModelStrategies;
+	
+	private boolean createDefault = false;
 	
 	/**
 	 * Create the composite.
@@ -226,7 +229,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
-		Text txtEnddate = new Text(compositeMedicationTypeDetail, SWT.BORDER | SWT.CENTER);
+		txtEnddate = new Text(compositeMedicationTypeDetail, SWT.BORDER | SWT.CENTER);
 		txtEnddate.setText("");
 		gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
 		gd.widthHint = 30;
@@ -282,7 +285,13 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			compositeMedicationTypeDetail.setVisible(visible);
 			GridData data = (GridData) compositeMedicationTypeDetail.getLayoutData();
 			data.exclude = !visible;
-			compositeMedicationTypeDetail.getParent().layout();
+			// layout parents as size of composite changed
+			if (getParent().getParent() != null) {
+				getParent().getParent().layout();
+			} else if (getParent() != null) {
+				getParent().layout();
+			}
+			txtEnddate.setText("");
 		}
 	}
 	
@@ -291,6 +300,8 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		if (toolbar != null && !toolbar.isDisposed()) {
 			toolbar.setVisible(value);
 		}
+		// only create default signature if toolbar is not visible
+		createDefault = !value;
 	}
 	
 	public void setStartVisible(boolean value){
@@ -422,15 +433,22 @@ public class ArticleDefaultSignatureComposite extends Composite {
 					MedicationServiceHolder.get().getDefaultSignature(article);
 				
 				if (!defSignature.isPresent()) {
-					IArticleDefaultSignature transientSignature =
-						MedicationServiceHolder.get().getTransientDefaultSignature(article);
-					signatureItem.setValue(transientSignature);
+					if (createDefault) {
+						signatureItem.setValue(
+							MedicationServiceHolder.get().getTransientDefaultSignature(article));
+					} else {
+						signatureItem.setValue(null);
+					}
 				} else {
 					signatureItem.setValue(defSignature.get());
 				}
 			} else {
-				signatureItem
-					.setValue(MedicationServiceHolder.get().getTransientDefaultSignature(article));
+				if (createDefault) {
+					signatureItem.setValue(
+						MedicationServiceHolder.get().getTransientDefaultSignature(article));
+				} else {
+					signatureItem.setValue(null);
+				}
 			}
 			updateTargetNonDatabinding();
 			// update the toolbar
