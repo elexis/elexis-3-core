@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2021-09-java11" sequenceNumber="1639485050">
+<target name="Elexis IDE 2021-09-java11" sequenceNumber="1642146300">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="11.0.12.v20211011-1323"/>
@@ -31,7 +31,7 @@
       <unit id="com.h2database" version="1.4.200"/>
       <unit id="com.mysql.cj" version="8.0.22"/>
       <unit id="org.postgresql.jdbc" version="42.2.19.jre7"/>
-      <unit id="org.eclipse.persistence.jpa.feature.group" version="2.7.9.v20210604-2c549e2208"/>
+      <unit id="org.eclipse.persistence.jpa.feature.group" version="2.7.10.v20211216-fe64cd39c3"/>
       <unit id="org.eclipse.gemini.jpa.feature.feature.group" version="1.2.0.202105280757"/>
       <unit id="osgi.enterprise" version="4.2.0.v201108120515"/>
       <unit id="javax.transaction" version="1.1.1.v201105210645"/>
@@ -92,7 +92,7 @@
       <unit id="org.eclipse.nebula.widgets.nattable.extension.glazedlists" version="2.0.1.202106070924"/>
       <unit id="ca.odell.glazedlists" version="1.11.0.v20190926-1838"/>
       <unit id="org.eclipse.collections" version="10.4.0.v20200820-2049"/>
-      <unit id="com.equo.chromium.feature.feature.group" version="80.0.15.202112130135"/>
+      <unit id="com.equo.chromium.feature.feature.group" version="80.0.16.202201102351"/>
       <unit id="com.equo.chromium.cef.feature.feature.group" version="80.0.11.202112130128"/>
       <unit id="org.eclipse.jetty.deploy" version="10.0.6"/>
       <unit id="org.eclipse.jetty.webapp" version="10.0.6"/>
@@ -106,42 +106,42 @@
       <unit id="org.eclipse.jdt.junit.runtime" version="3.6.100.v20210708-1502"/>
       <unit id="org.eclipse.jdt.junit4.runtime" version="1.2.0.v20210326-1251"/>
       <unit id="org.eclipse.pde.junit.runtime" version="3.6.0.v20210513-1344"/>
-      <unit id="org.eclipse.swt.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.swt.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.swt.nl_it" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.workbench.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.workbench.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.workbench.nl_it" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.e4.ui.swt.gtk.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.e4.ui.swt.gtk.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.e4.ui.swt.gtk.nl_it" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_it" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.jface.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.jface.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.jface.nl_it" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.browser.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.browser.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.browser.nl_it" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.views.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.views.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.views.nl_it" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.equinox.p2.ui.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.equinox.p2.ui.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.equinox.p2.ui.nl_it" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.ui.nl_it" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.platform.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.platform.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.platform.nl_it" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.jdt.ui.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.jdt.ui.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.jdt.ui.nl_it" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.e4.ui.workbench.swt.nl_de" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.e4.ui.workbench.swt.nl_fr" version="4.21.0.v20210925020001"/>
-      <unit id="org.eclipse.e4.ui.workbench.swt.nl_it" version="4.21.0.v20210925020001"/>
+      <unit id="org.eclipse.swt.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.swt.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.swt.nl_it" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.workbench.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.workbench.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.workbench.nl_it" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_it" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_it" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.jface.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.jface.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.jface.nl_it" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.browser.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.browser.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.browser.nl_it" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.views.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.views.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.views.nl_it" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_it" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.ui.nl_it" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.platform.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.platform.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.platform.nl_it" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.jdt.ui.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.jdt.ui.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.jdt.ui.nl_it" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.e4.ui.workbench.swt.nl_de" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.e4.ui.workbench.swt.nl_fr" version="4.21.0.v20211218075928"/>
+      <unit id="org.eclipse.e4.ui.workbench.swt.nl_it" version="4.21.0.v20211218075928"/>
       <repository location="https://download.elexis.info/elexis/target/2021-09-java11/"/>
     </location>
   </locations>
