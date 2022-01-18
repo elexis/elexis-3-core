@@ -23,6 +23,11 @@ public interface IElexisEnvironmentService {
 	public static final String ES_STATION_ID_DEFAULT = "ELEXIS-SERVER";
 
 	/**
+	 * The ID of the keycloak realm
+	 */
+	public static final String EE_KEYCLOAK_REALM_ID = "ElexisEnvironment";
+	
+	/**
 	 * @return the entry hostname of the elexis-environment
 	 */
 	public String getHostname();
