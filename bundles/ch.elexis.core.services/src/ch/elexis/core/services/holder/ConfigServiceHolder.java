@@ -70,10 +70,12 @@ public class ConfigServiceHolder {
 		return raw.split(",");
 	}
 	
+	@Deprecated
 	public static boolean setGlobal(String key, String value){
 		return configService.set(key, value);
 	}
 	
+	@Deprecated
 	public static boolean setGlobal(String key, boolean value){
 		return configService.set(key, value);
 	}
