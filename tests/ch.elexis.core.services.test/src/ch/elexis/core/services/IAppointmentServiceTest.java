@@ -55,6 +55,13 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 			appointmentService.getState(AppointmentState.DEFAULT)).buildAndSave();
 	}
 	
+	@After
+	public void after(){
+		//cleanup
+		coreModelService.remove(coreModelService.getQuery(IAppointment.class).execute());
+		assertEquals(0, coreModelService.getQuery(IAppointment.class).execute().size());
+	}
+	
 	@Test
 	public void testCommon(){
 		Optional<IAppointment> load =
@@ -156,6 +163,26 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 	}
 	
 	@Test
+	public void setAreaType() {
+		appointmentService.setAreaType("Arzt 1", AreaType.GENERIC, null);
+		appointmentService.setAreaType("Notfall", AreaType.CONTACT, "be5370812884c8fc5019123");
+		
+		List<Area> areas = appointmentService.getAreas();
+		assertEquals(5, areas.size());
+		for (Area area : areas) {
+			if ("Notfall".equals(area.getName())) {
+				assertEquals(AreaType.CONTACT, area.getType());
+				assertEquals("be5370812884c8fc5019123", area.getContactId());
+			} else {
+				assertEquals(AreaType.GENERIC, area.getType());
+			}
+		}
+		
+		appointmentService.setAreaType("Notfall", AreaType.GENERIC, null);
+		appointmentService.setAreaType("Arzt 1", AreaType.CONTACT, "be5370812884c8fc5019123");
+	}
+	
+	@Test
 	public void getAreas(){
 		List<Area> areas = appointmentService.getAreas();
 		assertEquals(5, areas.size());
@@ -169,11 +196,5 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		}
 	}
 	
-	@After
-	public void after(){
-		//cleanup
-		coreModelService.remove(coreModelService.getQuery(IAppointment.class).execute());
-		assertEquals(0, coreModelService.getQuery(IAppointment.class).execute().size());
-		
-	}
+
 }

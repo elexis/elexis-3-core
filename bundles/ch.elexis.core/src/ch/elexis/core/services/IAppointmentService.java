@@ -80,6 +80,19 @@ public interface IAppointmentService {
 	 * @return
 	 */
 	public List<Area> getAreas();
+	
+	/**
+	 * Define the {@link AreaType} of an area
+	 * 
+	 * @param area
+	 *            the id of the area
+	 * @param areaType
+	 *            the type to define
+	 * @param value
+	 *            to set, for {@link AreaType#CONTACT} the {@link IContact#getId()}
+	 * @since 3.10
+	 */
+	public void setAreaType(String area, AreaType areaType, String value);
 
 	/**
 	 * Get all configured type strings

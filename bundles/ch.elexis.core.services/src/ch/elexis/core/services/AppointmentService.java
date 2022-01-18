@@ -22,6 +22,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.IContact;
@@ -255,6 +256,18 @@ public class AppointmentService implements IAppointmentService {
 			ret.add(new Area(entry, type, contactId));
 		});
 		return ret;
+	}
+	
+	@Override
+	public void setAreaType(String area, AreaType areaType, String value){
+		String key = Preferences.AG_BEREICH_PREFIX + area + Preferences.AG_BEREICH_TYPE_POSTFIX;
+		switch (areaType) {
+		case CONTACT:
+			iConfigService.set(key, areaType.name() + "/" + value);
+			break;
+		default:
+			iConfigService.set(key, null);
+		}
 	}
 	
 	@Override

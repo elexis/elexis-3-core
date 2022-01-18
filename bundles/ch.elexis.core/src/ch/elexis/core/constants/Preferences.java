@@ -245,4 +245,9 @@ public class Preferences {
 	public static final String MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT =
 			"medication/settings/emediplanHeaderComment";
 	
+	// Agenda
+	public static final String AG_BEREICHE = "agenda/bereiche"; //$NON-NLS-1$
+	public static final String AG_BEREICH_PREFIX = "agenda/bereich/"; //$NON-NLS-1$
+	public static final String AG_BEREICH_TYPE_POSTFIX = "/type"; //$NON-NLS-1$
+	
 }
