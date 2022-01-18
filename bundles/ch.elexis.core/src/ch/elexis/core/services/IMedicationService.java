@@ -35,12 +35,21 @@ public interface IMedicationService {
 	public float getDailyDosageAsFloat(IPrescription prescription);
 	
 	/**
-	 * Lookup a matching {@link IArticleDefaultSignature} for the {@link IArticle}.
+	 * Lookup a matching {@link IArticleDefaultSignature} for the {@link IArticle}. If no direct
+	 * match by article is found a lookup with the atc code of the article is performed.
 	 * 
 	 * @param article
 	 * @return
 	 */
 	public Optional<IArticleDefaultSignature> getDefaultSignature(IArticle article);
+	
+	/**
+	 * Lookup a matching {@link IArticleDefaultSignature} for the atc code.
+	 * 
+	 * @param atcCode
+	 * @return
+	 */
+	public Optional<IArticleDefaultSignature> getDefaultSignature(String atcCode);
 	
 	/**
 	 * Get a transient {@link IArticleDefaultSignature} for the {@link IArticle}.
