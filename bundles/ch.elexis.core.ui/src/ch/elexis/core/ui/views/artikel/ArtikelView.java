@@ -96,9 +96,12 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 							IDetailDisplay det = (IDetailDisplay) selected.getData(KEY_DETAIL);
 							IConfigurationElement ce =
 								(IConfigurationElement) selected.getData(KEY_CE);
-							CodeSelectorFactory cs =
+							CodeSelectorFactory codeSelectorFactory =
 								(CodeSelectorFactory) ce
 									.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+							if(codeSelectorFactory != null) {
+								CoreUiUtil.injectServices(codeSelectorFactory);
+							}
 							String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 							ImporterPage ip = null;
 							if (a != null) {
@@ -108,7 +111,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 								}
 							}
 							
-							page = new MasterDetailsPage(ctab, cs, det);
+							page = new MasterDetailsPage(ctab, codeSelectorFactory, det);
 							selected.setControl(page);
 							selected.setData(det);
 						} catch (Exception ex) {
