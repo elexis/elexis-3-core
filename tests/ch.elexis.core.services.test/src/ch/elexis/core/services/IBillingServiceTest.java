@@ -190,4 +190,26 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		CoreModelServiceHolder.get().remove(billed.get());
 	}
 	
+	@Test
+	public void billSellingSizeSmallerPackageSize(){
+		IArticle customArticle_2 = coreModelService.create(IArticle.class);
+		customArticle_2.setText("Actimove Gilchrist Plus");
+		customArticle_2.setTyp(ArticleTyp.EIGENARTIKEL);
+		customArticle_2.setPackageSize(10);
+		customArticle_2.setSellingPrice(new Money(6350));
+		customArticle_2.setSellingSize(1);
+		coreModelService.save(customArticle_2);
+		
+		Result<IBilled> billed = billingService.bill(customArticle_2, encounter, 1.0);
+		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
+		double billed_amount = billed.get().getAmount();
+		double billed_price = billed.get().getPrice().getCents();
+		
+		coreModelService.remove(billed.get());
+		coreModelService.remove(customArticle_2);
+		
+		assertEquals(1, billed_amount, 0.1);
+		assertEquals(new Money(635).getCents(), billed_price, 0.1);
+	}
+	
 }
