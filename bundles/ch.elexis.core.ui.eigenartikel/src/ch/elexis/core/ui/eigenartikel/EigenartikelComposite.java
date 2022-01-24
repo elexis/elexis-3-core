@@ -333,14 +333,30 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 			drugPackageEigenartikelPharmaCodeObserveDetailValue,
 			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
 			noIdCodeUpdateValuStrategy);
-		//		//
-		//		ISWTObservableValue observeTextTxtSellUnitObserveWidget =
-		//			WidgetProperties.text(SWT.Modify).observe(txtSellUnit);
-		//		IObservableValue<String> drugPackageEigenartikelSellUnitObserveDetailValue =
-		//			PojoProperties.value(Eigenartikel.class, "sellUnit", String.class)
-		//				.observeDetail(drugPackageEigenartikel);
-		//		bindingContext.bindValue(observeTextTxtSellUnitObserveWidget,
-		//			drugPackageEigenartikelSellUnitObserveDetailValue, null, null);
+		
+		
+		ISWTObservableValue observeTextTxtSellUnitObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txtSellUnit);
+		IObservableValue<Integer> drugPackageEigenartikelSellUnitObserveDetailValue =
+			PojoProperties.value(IArticle.class, "sellingSize", Integer.class)
+				.observeDetail(drugPackageEigenartikel);
+		bindingContext.bindValue(observeTextTxtSellUnitObserveWidget,
+			drugPackageEigenartikelSellUnitObserveDetailValue,
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
+			null);
+		observeTextTxtSellUnitObserveWidget.addValueChangeListener(new IValueChangeListener() {
+			@Override
+			public void handleValueChange(ValueChangeEvent event){
+				if (drugPackageEigenartikel.getValue() != null) {
+					if (event.diff.getOldValue() != null
+						&& !event.diff.getOldValue().toString().isEmpty()) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+							drugPackageEigenartikel.getValue());
+					}
+				}
+			}
+		});
+		
 		//		//
 		//		ISWTObservableValue observeTooltipTextTxtPackageSizeStringObserveWidget =
 		//			WidgetProperties.text(SWT.Modify).observe(txtPackageSizeString);
