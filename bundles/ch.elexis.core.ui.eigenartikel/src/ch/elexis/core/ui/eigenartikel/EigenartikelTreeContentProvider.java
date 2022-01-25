@@ -58,6 +58,8 @@ public class EigenartikelTreeContentProvider
 		}
 		if (!showProducts) {
 			query.and(ModelPackage.Literals.IARTICLE__PRODUCT, COMPARATOR.NOT_EQUALS, null);
+		} else {
+			query.and(ModelPackage.Literals.IARTICLE__PRODUCT, COMPARATOR.EQUALS, null);
 		}
 		query.orderBy(ModelPackage.Literals.IARTICLE__NAME, ORDER.ASC);
 		return query.execute().toArray();
