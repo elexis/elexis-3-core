@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2021-09-java11" sequenceNumber="1642663601">
+<target name="Elexis IDE 2021-09-java11" sequenceNumber="1643111006">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="11.0.12.v20211011-1323"/>
@@ -28,6 +28,7 @@
       <unit id="javax.activation" version="1.2.2.v20201119-1642"/>
       <unit id="jaxb-api" version="2.3.1"/>
       <unit id="com.sun.xml.bind.jaxb-osgi" version="2.3.4"/>
+      <unit id="jakarta.xml.bind-api" version="2.3.3.202201251239"/>
       <unit id="com.h2database" version="1.4.200"/>
       <unit id="com.mysql.cj" version="8.0.22"/>
       <unit id="org.postgresql.jdbc" version="42.2.19.jre7"/>
