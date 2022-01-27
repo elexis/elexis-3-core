@@ -39,7 +39,6 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	private List<IHistory> history;
 	private String keywords;
 	
-	
 	public DocumentLetter(Brief entity){
 		super(entity);
 	}
@@ -300,17 +299,17 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	public String getLabel(){
 		return new SimpleDateFormat("dd.MM.yyyy").format(getCreated()) + " " + getTitle();
 	}
-
+	
 	@Override
 	public IEncounter getEncounter(){
 		return ModelUtil.getAdapter(getEntity().getConsultation(), IEncounter.class);
 	}
-
+	
 	@Override
 	public void setEncounter(IEncounter value){
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntityMarkDirty()
-				.setConsultation((Behandlung) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty().setConsultation(
+				(Behandlung) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
 			getEntityMarkDirty().setConsultation(null);
 		}

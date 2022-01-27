@@ -60,7 +60,8 @@ public class MoveAllLettersToExternalStorage extends ExternalMaintenance {
 	/**
 	 * Try to save the {@link IDocumentLetter} on external storage. Extern file configuration has to
 	 * be valid.
-	 * @param result 
+	 * 
+	 * @param result
 	 * 
 	 * @param brief
 	 * @return

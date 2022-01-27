@@ -37,9 +37,8 @@ public class CreateMandantTemplateCommand extends AbstractHandler {
 				TextTemplate textTemplate = (TextTemplate) firstElement;
 				Brief template = textTemplate.getTemplate();
 				
-				Brief specTemplate =
-					new Brief(template.getBetreff(), null, CoreHub.getLoggedInContact(), mandant, null,
-						Brief.TEMPLATE);
+				Brief specTemplate = new Brief(template.getBetreff(), null,
+					CoreHub.getLoggedInContact(), mandant, null, Brief.TEMPLATE);
 				specTemplate.save(template.loadBinary(), template.getMimeType());
 				
 				TextTemplate specTextTemplate =
