@@ -6,6 +6,8 @@ public enum CodingSystem {
 		ELEXIS_TARMED_CODESYSTEM("www.elexis.info/billing/tarmed"),
 		ELEXIS_LOCAL_CODESYSTEM("www.elexis.info/coding/local"),
 		ELEXIS_COVERAGE_TYPE("www.elexis.info/coverage/type"),
+		ELEXIS_COVERAGE_REASON("www.elexis.info/coverage/reason"),
+		ELEXIS_COVERAGE_UVG_ACCIDENTDATE("www.elexis.info/coverage/uvg/accidentdate"),
 		ELEXIS_DIAGNOSE_TESSINERCODE("www.elexis.info/diagnose/tessinercode"),
 		ELEXIS_ENCOUNTER_TYPE("www.elexis.info/encounter/type"),
 		ELEXIS_PRACTITIONER_ROLE("www.elexis.info/practitioner/role"),

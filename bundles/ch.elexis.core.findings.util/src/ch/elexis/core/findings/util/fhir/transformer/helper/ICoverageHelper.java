@@ -2,37 +2,45 @@ package ch.elexis.core.findings.util.fhir.transformer.helper;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Coverage;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.codes.CodingSystem;
+import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ch.BillingLaw;
+import ch.rgw.tools.TimeTool;
 
 public class ICoverageHelper extends AbstractHelper {
 	
 	public String getDependent(ICoverage coverage){
-		String ret = coverage.getInsuranceNumber();
-		if (ret == null) {
-			ret = (String) coverage.getExtInfo("Versicherungsnummer");
+		BillingLaw law = coverage.getBillingSystem().getLaw();
+		if (BillingLaw.UVG == law) {
+			return (String) coverage.getExtInfo(FallConstants.UVG_UNFALLNUMMER);
 		}
-		return ret;
+		if (BillingLaw.IV == law) {
+			return (String) coverage.getExtInfo(FallConstants.IV_FALLNUMMER);
+		}
+		return null;
 	}
 	
-	public void setBin(ICoverage coverage, String bin){
+	public void setDependent(ICoverage coverage, String bin){
 		String billingSystem = coverage.getBillingSystem().getName();
 		if (billingSystem != null && !billingSystem.isEmpty()) {
 			if (billingSystem.equals("UVG")) {
-				coverage.setExtInfo("Unfallnummer", bin);
+				coverage.setExtInfo(FallConstants.UVG_UNFALLNUMMER, bin);
 			} else {
-				coverage.setExtInfo("Versicherungsnummer", bin);
+				coverage.setExtInfo(FallConstants.IV_FALLNUMMER, bin);
 			}
 		}
 	}
@@ -45,14 +53,20 @@ public class ICoverageHelper extends AbstractHelper {
 		return null;
 	}
 	
-	public Reference getIssuerReference(ICoverage fall){
+	public Reference getPolicyHolderReference(ICoverage coverage){
+		IContact costBearer = coverage.getGuarantor();
+		if (costBearer != null) {
+			String contactType = costBearer.isOrganization() ? "Organization" : "Person";
+			return new Reference(new IdDt(contactType, costBearer.getId()));
+		}
+		return null;
+	}
+	
+	public Reference getPayor(ICoverage fall){
 		IContact kostenTr = fall.getCostBearer();
 		if (kostenTr != null) {
-			if (kostenTr.isOrganization()) {
-				return new Reference(new IdDt("Organization", kostenTr.getId()));
-			} else if (kostenTr.isPatient()) {
-				return new Reference(new IdDt("Patient", kostenTr.getId()));
-			}
+			String contactType = kostenTr.isOrganization() ? "Organization" : "Person";
+			return new Reference(new IdDt(contactType, kostenTr.getId()));
 		}
 		return null;
 	}
@@ -103,16 +117,15 @@ public class ICoverageHelper extends AbstractHelper {
 		return ret.toString();
 	}
 	
-	public Optional<CodeableConcept> getType(ICoverage coverage){
-		CodeableConcept ret = new CodeableConcept();
+	public Optional<Coding> getType(ICoverage coverage){
 		String billingSystem = coverage.getBillingSystem().getName();
 		if (billingSystem != null) {
 			Coding coding = new Coding();
 			coding.setSystem(CodingSystem.ELEXIS_COVERAGE_TYPE.getSystem());
 			coding.setCode(billingSystem);
-			ret.addCoding(coding);
+			return Optional.of(coding);
 		}
-		return Optional.of(ret);
+		return Optional.empty();
 	}
 	
 	public Optional<String> getType(Coverage fhirObject){
@@ -120,6 +133,43 @@ public class ICoverageHelper extends AbstractHelper {
 		for (Coding coding : fhirType.getCoding()) {
 			if (coding.getSystem().equals(CodingSystem.ELEXIS_COVERAGE_TYPE.getSystem())) {
 				return Optional.ofNullable(coding.getCode());
+			}
+		}
+		return Optional.empty();
+	}
+	
+	public Optional<Coding> getReason(ICoverage coverage){
+		String reason = coverage.getReason();
+		if (reason != null) {
+			Coding coding = new Coding();
+			coding.setSystem(CodingSystem.ELEXIS_COVERAGE_REASON.getSystem());
+			coding.setCode(reason);
+			return Optional.of(coding);
+		}
+		return Optional.empty();
+	}
+	
+	public Optional<Identifier> getInsuranceNumber(ICoverage coverage){
+		String insuranceNumber = coverage.getInsuranceNumber();
+		if (insuranceNumber != null) {
+			Identifier identifier = new Identifier();
+			identifier.setSystem("urn:oid:2.16.756.5.30.1.123.100.1.1.1");
+			identifier.setValue(insuranceNumber);
+			return Optional.of(identifier);
+		}
+		
+		return Optional.empty();
+	}
+	
+	public Optional<Coding> getAccidentDate(ICoverage localObject){
+		if (Objects.equals(BillingLaw.UVG, localObject.getBillingSystem().getLaw())) {
+			String accidentDate = (String) localObject.getExtInfo(FallConstants.UVG_UNFALLDATUM);
+			if (accidentDate != null) {
+				TimeTool timeTool = new TimeTool(accidentDate);
+				Coding coding = new Coding();
+				coding.setSystem(CodingSystem.ELEXIS_COVERAGE_UVG_ACCIDENTDATE.getSystem());
+				coding.setCode(timeTool.toString(TimeTool.DATETIME_XML));
+				return Optional.of(coding);
 			}
 		}
 		return Optional.empty();

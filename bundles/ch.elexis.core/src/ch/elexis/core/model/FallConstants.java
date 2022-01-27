@@ -17,4 +17,9 @@ public class FallConstants {
 	public static final String TYPE_PREVENTION = Messages.Fall_Prevention; //$NON-NLS-1$
 	public static final String TYPE_BIRTHDEFECT = Messages.Fall_Birthdefect; //$NON-NLS-1$
 	public static final String TYPE_OTHER = Messages.Fall_Other;
+	
+	public static final String UVG_UNFALLNUMMER = "Unfallnummer";
+	public static final String UVG_UNFALLDATUM = "Unfalldatum";
+	public static final String IV_FALLNUMMER = "Fallnummer";
+	
 }

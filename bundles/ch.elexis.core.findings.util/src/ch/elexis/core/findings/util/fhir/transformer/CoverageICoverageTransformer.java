@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
+import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coverage;
+import org.hl7.fhir.r4.model.Coverage.CoverageStatus;
 import org.hl7.fhir.r4.model.Period;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -45,17 +47,51 @@ public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, 
 		coverage.setId(new IdDt("Coverage", localObject.getId()));
 		coverage.addIdentifier(getElexisObjectIdentifier(localObject));
 		
-		coverage.setDependent(coverageHelper.getDependent(localObject));
-		coverage.setBeneficiary(coverageHelper.getBeneficiaryReference(localObject));
-		coverage
-			.setPayor(Collections.singletonList(coverageHelper.getIssuerReference(localObject)));
-		coverage.setPeriod(coverageHelper.getPeriod(localObject));
+		// Bezeichnung
+		coverageHelper.setText(coverage, coverageHelper.getFallText(localObject));
 		
+		CodeableConcept type = new CodeableConcept();
+		
+		// Abrechnungsmethode
 		coverageHelper.getType(localObject).ifPresent(coding -> {
-			coverage.setType(coding);
+			type.addCoding(coding);
 		});
 		
-		coverageHelper.setText(coverage, coverageHelper.getFallText(localObject));
+		// Versicherungsgrund
+		coverageHelper.getReason(localObject).ifPresent(coding -> {
+			type.addCoding(coding);
+		});
+		
+		// Unfalldatum
+		coverageHelper.getAccidentDate(localObject).ifPresent(coding -> {
+			type.addCoding(coding);
+		});
+		
+		coverage.setType(type);
+		
+		// Versicherungsnummer (KVG)
+		coverageHelper.getInsuranceNumber(localObject).ifPresent(identifier -> {
+			coverage.addIdentifier(identifier);
+		});
+		
+		// Startdatum, Enddatum
+		coverage.setPeriod(coverageHelper.getPeriod(localObject));
+		
+		// Rechnunsempfaenger
+		coverage.setPolicyHolder(coverageHelper.getPolicyHolderReference(localObject));
+		
+		// Kostenträger
+		coverage
+			.setPayor(Collections.singletonList(coverageHelper.getPayor(localObject)));
+		
+		// Patient
+		coverage.setBeneficiary(coverageHelper.getBeneficiaryReference(localObject));
+		
+		// FallNummer (IVG), UnfallNummer (UVG)
+		coverage.setDependent(coverageHelper.getDependent(localObject));
+		
+		// active
+		coverage.setStatus(localObject.isOpen() ? CoverageStatus.ACTIVE : CoverageStatus.CANCELLED);
 		
 		return Optional.of(coverage);
 	}
@@ -88,7 +124,7 @@ public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, 
 					"online created", FallConstants.TYPE_DISEASE, type.get()).buildAndSave();
 				String dependent = fhirObject.getDependent();
 				if (dependent != null) {
-					coverageHelper.setBin(created, dependent);
+					coverageHelper.setDependent(created, dependent);
 				}
 				Period period = fhirObject.getPeriod();
 				if (period != null && period.getStart() != null) {

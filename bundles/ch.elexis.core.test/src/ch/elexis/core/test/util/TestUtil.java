@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class TestUtil {
+import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.WithAssignableId;
 
+public class TestUtil {
+	
 	public static String loadFile(Class<?> classLoader, String resourceName) throws IOException{
 		StringBuffer sb = new StringBuffer();
 		String line;
@@ -22,5 +26,17 @@ public class TestUtil {
 		return sb.toString();
 	}
 	
+	/**
+	 * Set the id of an entity which is not {@link WithAssignableId}, does not save!
+	 * 
+	 * @param identifiable
+	 * @param id
+	 */
+	public static void setId(Identifiable identifiable, String id){
+		@SuppressWarnings("rawtypes")
+		AbstractIdModelAdapter _identifiable = ((AbstractIdModelAdapter) identifiable);
+		_identifiable.getEntityMarkDirty().setId(id);
+		
+	}
+	
 }
-

@@ -9,7 +9,9 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.osgi.services;bundle-version="3.7.100",
  ch.elexis.core;bundle-version="3.7.0",
  ch.elexis.core.l10n;bundle-version="3.8.0"
-Import-Package: ch.rgw.tools,
+Import-Package: ch.elexis.core.jpa.entities,
+ ch.elexis.core.jpa.model.adapter,
+ ch.rgw.tools,
  org.apache.commons.collections;version="3.2.2",
  org.eclipse.core.runtime;version="3.5.0",
  org.junit;version="4.12.0",
