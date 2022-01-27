@@ -180,8 +180,23 @@ public class MedicationService implements IMedicationService {
 		IQuery<IArticleDefaultSignature> query =
 			CoreModelServiceHolder.get().getQuery(IArticleDefaultSignature.class);
 		query.and("article", COMPARATOR.LIKE,
-			"%$" + StoreToStringServiceHolder.getStoreToString(article));
-		return query.executeSingleResult();
+			"%" + StoreToStringServiceHolder.getStoreToString(article));
+		Optional<IArticleDefaultSignature> ret = query.executeSingleResult();
+		if (!ret.isPresent()) {
+			ret = getDefaultSignature(article.getAtcCode());
+		}
+		return ret;
+	}
+	
+	@Override
+	public Optional<IArticleDefaultSignature> getDefaultSignature(String atcCode){
+		if (StringUtils.isNotBlank(atcCode)) {
+			IQuery<IArticleDefaultSignature> query =
+				CoreModelServiceHolder.get().getQuery(IArticleDefaultSignature.class);
+			query.and("atccode", COMPARATOR.LIKE, atcCode);
+			return query.executeSingleResult();
+		}
+		return Optional.empty();
 	}
 	
 	@Override

@@ -182,4 +182,12 @@ public interface IContextService {
 	 * @param object
 	 */
 	public void postEvent(String eventTopic, Object object);
+	
+	/**
+	 * Send an Event using a topic (see {@link ElexisEventTopics}), and an optional object.
+	 * 
+	 * @param eventTopic
+	 * @param object
+	 */
+	public void sendEvent(String eventTopic, Object object);
 }
