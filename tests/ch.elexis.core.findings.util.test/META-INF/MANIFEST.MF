@@ -10,6 +10,7 @@ Import-Package: ch.elexis.core.jpa.entities,
  ch.elexis.core.l10n;version="3.5.0.qualifier",
  org.apache.commons.io
 Require-Bundle: org.junit;bundle-version="4.0.0",
+ ch.elexis.core.model;bundle-version="3.9.0",
  ch.elexis.core.findings.fhir.model;bundle-version="3.9.0",
  ch.elexis.core.test;bundle-version="3.9.0"
 Bundle-ClassPath: .
