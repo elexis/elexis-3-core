@@ -19,6 +19,7 @@ import ch.elexis.core.jpa.entities.StickerObjectLink;
 import ch.elexis.core.jpa.entities.StickerObjectLinkId;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 @Component
 public class StickerService implements IStickerService {
@@ -40,6 +41,14 @@ public class StickerService implements IStickerService {
 		return query.getResultList();
 	}
 	
+	private List<StickerObjectLink> getStickerObjectLinksForSticker(ISticker iSticker){
+		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
+		TypedQuery<StickerObjectLink> query =
+			em.createNamedQuery("StickerObjectLink.etikette", StickerObjectLink.class);
+		query.setParameter("etikette", iSticker.getId());
+		return query.getResultList();
+	}
+	
 	private StickerObjectLink getStickerObjectLink(String id, String etikette){
 		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
 		return em.find(StickerObjectLink.class, new StickerObjectLinkId(id, etikette));
@@ -58,6 +67,17 @@ public class StickerService implements IStickerService {
 		query.setParameter("obj", identifiable.getId());
 		query.setParameter("etikette", iSticker.getId());
 		return query.getResultList();
+	}
+	
+	@Override
+	public <T> List<T> getObjectsWithSticker(ISticker sticker, Class<T> type){
+		List<StickerObjectLink> objectLinks = getStickerObjectLinksForSticker(sticker);
+		if (!objectLinks.isEmpty()) {
+			return objectLinks.stream()
+				.map(ol -> CoreModelServiceHolder.get().load(ol.getObj(), type).orElse(null))
+				.filter(o -> o != null).collect(Collectors.toList());
+		}
+		return Collections.emptyList();
 	}
 	
 	@Override
