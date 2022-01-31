@@ -89,4 +89,14 @@ public interface IStickerService {
 	 */
 	public List<ISticker> getStickersForClass(Class<?> clazz);
 	
+	/**
+	 * Find all objects of the provided type marked with the {@link ISticker}.
+	 * 
+	 * @param <T>
+	 * @param sticker
+	 * @param type
+	 * @return
+	 */
+	public <T> List<T> getObjectsWithSticker(ISticker sticker, Class<T> type);
+	
 }
