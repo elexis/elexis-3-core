@@ -56,7 +56,7 @@ public class ICoverageHelper extends AbstractHelper {
 	public Reference getPolicyHolderReference(ICoverage coverage){
 		IContact costBearer = coverage.getGuarantor();
 		if (costBearer != null) {
-			String contactType = costBearer.isOrganization() ? "Organization" : "Person";
+			String contactType = costBearer.isOrganization() ? "Organization" : "Patient";
 			return new Reference(new IdDt(contactType, costBearer.getId()));
 		}
 		return null;
@@ -65,7 +65,8 @@ public class ICoverageHelper extends AbstractHelper {
 	public Reference getPayor(ICoverage fall){
 		IContact kostenTr = fall.getCostBearer();
 		if (kostenTr != null) {
-			String contactType = kostenTr.isOrganization() ? "Organization" : "Person";
+			// TODO Person instances are never directly referenced as actors
+			String contactType = kostenTr.isOrganization() ? "Organization" : "Patient";
 			return new Reference(new IdDt(contactType, kostenTr.getId()));
 		}
 		return null;

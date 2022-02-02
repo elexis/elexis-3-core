@@ -24,7 +24,7 @@
 		]
 	},
 	"policyHolder": {
-		"reference": "Person/c8c506aa2e1a4626b296d0ef0"
+		"reference": "Patient/c8c506aa2e1a4626b296d0ef0"
 	},
 	"beneficiary": {
 		"reference": "Patient/c8c506aa2e1a4626b296d0ef0"

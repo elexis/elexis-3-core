@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.Address.AddressUse;
 import org.hl7.fhir.r4.model.ContactPoint;
@@ -19,7 +20,6 @@ import org.hl7.fhir.r4.model.StringType;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPerson;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IUserService;
@@ -46,21 +46,40 @@ public class IContactHelper extends AbstractHelper {
 			humanName.addGiven(person.getFirstName());
 			humanName.addPrefix(person.getTitel());
 			humanName.addSuffix(person.getTitelSuffix());
+			humanName.setText(createLabel(person));
 			humanName.setUse(NameUse.OFFICIAL);
 			ret.add(humanName);
 		}
-		if (person.isUser()) {
-			List<IUser> userLocalObject = userService.getUsersByAssociatedContact(person);
-			if (!userLocalObject.isEmpty()) {
-				HumanName sysName = new HumanName();
-				sysName.setText(userLocalObject.get(0).getId());
-				sysName.setUse(NameUse.ANONYMOUS);
-				ret.add(sysName);
-			}
-		}
+//		if (person.isUser()) {
+//			List<IUser> userLocalObject = userService.getUsersByAssociatedContact(person);
+//			if (!userLocalObject.isEmpty()) {
+//				HumanName sysName = new HumanName();
+//				sysName.setText(userLocalObject.get(0).getId());
+//				sysName.setUse(NameUse..ANONYMOUS);
+//				ret.add(sysName);
+//			}
+//		}
 		return ret;
 	}
 	
+	private String createLabel(IPerson person){
+		StringBuilder sb = new StringBuilder();
+		String titel = person.getTitel();
+		String firstName = person.getFirstName();
+		String lastName = person.getLastName();
+		String titelSuffix = person.getTitelSuffix();
+		
+		if (StringUtils.isNotBlank(titel)) {
+			sb.append(titel + " ");
+		}
+		sb.append(firstName);
+		sb.append(" " + lastName);
+		if (StringUtils.isNotBlank(titelSuffix)) {
+			sb.append(", " + titelSuffix);
+		}
+		return sb.toString();
+	}
+
 	public String getOrganizationName(IOrganization organization){
 		StringBuilder sb = new StringBuilder();
 		if (organization.isOrganization()) {
