@@ -1,8 +1,10 @@
 package ch.elexis.core.ui.views.rechnung.invoice;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
@@ -13,6 +15,7 @@ import org.eclipse.ui.IViewSite;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IInvoice;
@@ -160,6 +163,7 @@ public class InvoiceActions {
 
 			private int dialogResult = -1;
 			private boolean dialogReopen = false;
+			private List<IRnOutputter> dialogExporters;
 			
 			@Override
 			public List<? extends PersistentObject> getTargetedObjects(){
@@ -177,6 +181,7 @@ public class InvoiceActions {
 					StornoDialog stornoDialog = new RnDialogs.StornoDialog(UiDesk.getTopShell(), actRn);
 					dialogResult = stornoDialog.open();
 					dialogReopen = stornoDialog.getReopen();
+					dialogExporters = stornoDialog.getExporters();
 				} else if (dialogResult == Dialog.OK) {
 					if (Rechnung.isStorno(actRn)
 						|| Rechnung.hasStornoBeforeDate(actRn, new TimeTool())) {
@@ -185,6 +190,11 @@ public class InvoiceActions {
 					} else {
 						NoPoUtil.loadAsIdentifiable(actRn, IInvoice.class).ifPresent(invoice -> {
 							InvoiceServiceHolder.get().cancel(invoice, dialogReopen);
+							for (IRnOutputter iro : dialogExporters) {
+								iro.doOutput(IRnOutputter.TYPE.STORNO, Arrays.asList(new Rechnung[] {
+									actRn
+								}), new Properties());
+							}
 						});
 					}
 				}
