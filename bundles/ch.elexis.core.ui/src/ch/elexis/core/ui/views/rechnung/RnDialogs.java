@@ -471,6 +471,7 @@ public class RnDialogs {
 		Rechnung rn;
 		Button bReactivate;
 		List<Button> exporters = new ArrayList<Button>();
+		private List<IRnOutputter> selectedRnOutputters;
 		private List<IRnOutputter> lo;
 		private boolean alwaysReactive = false;
 		private List<Konsultation> konsultations;
@@ -571,19 +572,26 @@ public class RnDialogs {
 			return reopen;
 		}
 		
+		public List<IRnOutputter> getExporters(){
+			if (selectedRnOutputters == null) {
+				selectedRnOutputters = new ArrayList<>();
+				for (Button exporter : exporters) {
+					if (exporter.getSelection() && (IRnOutputter) exporter.getData() != null) {
+						selectedRnOutputters.add((IRnOutputter) exporter.getData());
+					}
+				}
+			}
+			return selectedRnOutputters;
+		}
+		
 		@Override
 		protected void okPressed(){
 			reopen = bReactivate.getSelection() || alwaysReactive;
 			konsultations = rn.stornoBill(reopen);
-			for (Button exporter : exporters) {
-				if (exporter.getSelection()) {
-					IRnOutputter iro = (IRnOutputter) exporter.getData();
-					if (iro != null) {
-						iro.doOutput(IRnOutputter.TYPE.STORNO, Arrays.asList(new Rechnung[] {
-							rn
-						}), new Properties());
-					}
-				}
+			for (IRnOutputter iro : getExporters()) {
+				iro.doOutput(IRnOutputter.TYPE.STORNO, Arrays.asList(new Rechnung[] {
+					rn
+				}), new Properties());
 			}
 			super.okPressed();
 		}
