@@ -1317,6 +1317,7 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_legalGuardian;
 	public static String Patientenblatt2_selectLegalGuardianTitle;
 	public static String Patientenblatt2_selectLegalGuardianMessage;
+	public static String Patientenblatt2_increasedTreatment;
 	public static String ReminderView_activatePatientAction;
 	public static String ReminderView_activatePatientTooltip;
 	public static String ReminderView_toggleSelectPatientActionTooltip;
