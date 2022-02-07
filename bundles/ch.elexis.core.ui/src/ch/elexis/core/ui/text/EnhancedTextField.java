@@ -621,7 +621,10 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 					 * StyleRange n=new StyleRange(); n.start=lineStart; n.length=line.length();
 					 * n.fontStyle=SWT.BOLD; text.setStyleRange(n);
 					 */
+					// workaround #23705
+					int caretOffset = text.getCaretOffset();
 					createMarkup('*', lineStart, line.length());
+					text.setCaretOffset(caretOffset);
 				}
 			}
 			// Wenn ein *, _ oder / gedrückt wurde, prüfen, ob vor dem aktuellen
