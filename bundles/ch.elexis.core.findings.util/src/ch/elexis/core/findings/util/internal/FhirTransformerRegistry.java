@@ -35,14 +35,16 @@ public class FhirTransformerRegistry implements IFhirTransformerRegistry {
 		transformers.remove(transformer);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public IFhirTransformer<?, ?> getTransformerFor(Class<?> fhirClazz, Class<?> localClazz){
+	public <FHIR, LOCAL> IFhirTransformer<FHIR, LOCAL> getTransformerFor(Class<FHIR> fhirClazz,
+		Class<LOCAL> localClazz){
 		String lookupString = fhirClazz.getName() + "-" + localClazz.getName();
-		IFhirTransformer<?, ?> ret = cache.get(lookupString);
+		IFhirTransformer<FHIR, LOCAL> ret = (IFhirTransformer<FHIR, LOCAL>) cache.get(lookupString);
 		if (ret == null) {
 			for (IFhirTransformer<?, ?> iFhirTransformer : transformers) {
 				if (iFhirTransformer.matchesTypes(fhirClazz, localClazz)) {
-					ret = iFhirTransformer;
+					ret = (IFhirTransformer<FHIR, LOCAL>) iFhirTransformer;
 					cache.put(lookupString, iFhirTransformer);
 					break;
 				}

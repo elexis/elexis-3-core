@@ -14,5 +14,5 @@ public interface IFhirTransformerRegistry {
 	 * @param localClazz
 	 * @return
 	 */
-	public IFhirTransformer<?, ?> getTransformerFor(Class<?> fhirClazz, Class<?> localClazz);
+	public <FHIR, LOCAL> IFhirTransformer<FHIR, LOCAL> getTransformerFor(Class<FHIR> fhirClazz, Class<LOCAL> localClazz);
 }

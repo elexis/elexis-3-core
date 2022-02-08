@@ -16,7 +16,7 @@ import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.helper.CodeSystemHelper;
+import ch.elexis.core.findings.util.fhir.transformer.helper.CodeSystemUtil;
 
 @Component
 public class CodeSystemStringTransformer implements IFhirTransformer<CodeSystem, String> {
@@ -30,8 +30,8 @@ public class CodeSystemStringTransformer implements IFhirTransformer<CodeSystem,
 	public Optional<CodeSystem> getFhirObject(String localObject, SummaryEnum summaryEnum,
 		Set<Include> includes){
 		CodeSystem ret = null;
-		Optional<String> idString = CodeSystemHelper.getIdForString(localObject);
-		Optional<String> systemString = CodeSystemHelper.getSystemForId(idString.get());
+		Optional<String> idString = CodeSystemUtil.getIdForString(localObject);
+		Optional<String> systemString = CodeSystemUtil.getSystemForId(idString.get());
 		if (idString.isPresent()) {
 			ret = idMap.get(idString.get());
 			if (ret == null) {

@@ -54,12 +54,14 @@ public class MedicationIArticleTransformer implements IFhirTransformer<Medicatio
 		
 		code.addCoding(medicationHelper.getGtinCoding(localObject.getGtin()));
 		
+		
 		List<Coding> atcCodings = medicationHelper.getAtcCodings(localObject.getAtcCode());
 		for (Coding atcCoding : atcCodings) {
 			code.addCoding(atcCoding);
 		}
 		
 		medication.setCode(code);
+		
 		
 		if (!localObject.isProduct()) {
 			medication.setAmount(medicationHelper.determineAmount(localObject));
