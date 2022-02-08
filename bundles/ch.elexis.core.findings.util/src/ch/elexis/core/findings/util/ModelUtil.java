@@ -179,7 +179,7 @@ public class ModelUtil {
 		String divEncodedText =
 			text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("§", "'&sect;'")
 				.replaceAll("&", "&amp;").replaceAll("(\r\n|\r|\n)", "<br />");
-		narrative.setDivAsString(text);
+		narrative.setDivAsString(divEncodedText);
 		narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
 	}
 	
