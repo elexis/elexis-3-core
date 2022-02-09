@@ -132,7 +132,11 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 		if (getEntity().getGarantKontakt() == null || getEntity().getGarantKontakt().isDeleted()) {
 			return getPatient();
 		}
-		return ModelUtil.getAdapter(getEntity().getGarantKontakt(), IContact.class);
+		IContact ret = ModelUtil.getAdapter(getEntity().getGarantKontakt(), IContact.class);
+		if (ret != null && ret.isPatient()) {
+			ret = ModelUtil.getAdapter(getEntity().getGarantKontakt(), IPatient.class);
+		}
+		return ret;
 	}
 	
 	@SuppressWarnings("unchecked")
