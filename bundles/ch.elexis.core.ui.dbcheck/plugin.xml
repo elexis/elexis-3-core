@@ -97,6 +97,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.SetFallCopyForPatient">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.UnsetFallCopyForPatient">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>
