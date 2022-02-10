@@ -8,12 +8,6 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
 
-/**
- * JAXB {@link ForcedAutoDiscoverable} that registers all necessary JAXB features into the injection
- * manager directly.
- *
- * @author Jakub Podlesak
- */
 public final class GsonAutoDiscoverable implements ForcedAutoDiscoverable {
 	
 	@Override
