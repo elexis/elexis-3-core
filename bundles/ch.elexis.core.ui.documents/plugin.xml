@@ -124,13 +124,12 @@
                style="push">
             <visibleWhen
                   checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="and">
-                  <instanceof
-                        value="ch.elexis.core.model.IDocument">
-                  </instanceof>
-               </iterate>
+               <not>
+                  <test
+                  		forcePluginActivation="true"
+                        property="ch.elexis.core.ui.documents.isExternFile">
+                  </test>
+               </not>
             </visibleWhen>
          </command>
          <command
@@ -140,13 +139,12 @@
                style="push">
             <visibleWhen
                   checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="and">
-                  <instanceof
-                        value="ch.elexis.core.model.IDocument">
-                  </instanceof>
-               </iterate>
+               <not>
+                  <test
+                  		forcePluginActivation="true"
+                        property="ch.elexis.core.ui.documents.isExternFile">
+                  </test>
+               </not>
             </visibleWhen>
          </command>
          <command
@@ -156,13 +154,12 @@
                style="push">
             <visibleWhen
                   checkEnabled="false">
-               <iterate
-                     ifEmpty="false"
-                     operator="and">
-                  <instanceof
-                        value="ch.elexis.core.model.IDocument">
-                  </instanceof>
-               </iterate>
+               <not>
+                  <test
+                  		forcePluginActivation="true"
+                        property="ch.elexis.core.ui.documents.isExternFile">
+                  </test>
+               </not>
             </visibleWhen>
          </command>
          <separator
@@ -320,7 +317,7 @@
             class="ch.elexis.core.ui.documents.tester.DocumentsPropertyTester"
             id="ch.elexis.core.ui.documents.propertyTester"
             namespace="ch.elexis.core.ui.documents"
-            properties="isMimeType"
+            properties="isMimeType,isExternFile"
             type="java.lang.Object">
       </propertyTester>
    </extension>
