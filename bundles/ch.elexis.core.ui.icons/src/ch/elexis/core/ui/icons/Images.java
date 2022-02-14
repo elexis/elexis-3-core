@@ -287,7 +287,7 @@ public enum Images {
 		IMG_SCANNER,
 		IMG_DRAWER,
 		IMG_DRAWER_ARROW,
-		IMG_ADD;
+		IMG_ADD, IMG_INBOX, IMG_OUTBOX;
 		
 	private static int deviceZoom;
 	

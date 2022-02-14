@@ -201,15 +201,19 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 		File file, int eventType){
 		DocumentsMetaDataDialog documentsMetaDataDialog =
 			new DocumentsMetaDataDialog(document, shell);
-		if (documentsMetaDataDialog.open() == Dialog.OK && file != null) {
-			try (InputStream fin = new FileInputStream(file)) {
-				IDocument savedDocument =
-					DocumentStoreServiceHolder.getService().saveDocument(document, fin);
-				ElexisEventDispatcher.getInstance().fire(new ElexisEvent(savedDocument,
-					IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
-				// publish changes
-				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, document);
-				return Optional.of(savedDocument);
+		if (documentsMetaDataDialog.open() == Dialog.OK) {
+			try {
+				if (file != null) {
+					try (InputStream fin = new FileInputStream(file)) {
+						IDocument savedDocument =
+							DocumentStoreServiceHolder.getService().saveDocument(document, fin);
+						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(savedDocument,
+							IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
+						return Optional.of(savedDocument);
+					}
+				} else {
+					DocumentStoreServiceHolder.getService().saveDocument(document);
+				}
 			} catch (IOException e) {
 				logger.error("file not found", e);
 				SWTHelper.showError(Messages.DocumentView_importErrorCaption,
@@ -219,6 +223,8 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 				SWTHelper.showError(Messages.DocumentView_saveErrorCaption,
 					Messages.DocumentView_saveErrorText);
 			}
+			// publish changes
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, document);
 		}
 		return Optional.empty();
 	}
