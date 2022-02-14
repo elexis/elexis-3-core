@@ -23,7 +23,10 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.nebula.widgets.cdatetime.CDT;
+import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -74,6 +77,8 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 
 	private final boolean categoryCrudAllowed;
 
+	private CDateTime creationDate;
+
 	public DocumentsMetaDataDialog(IDocument document, Shell parent) {
 		super(parent);
 
@@ -104,6 +109,14 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Title);
 		tTitle = SWTHelper.createText(ret, 1, SWT.NONE);
 		tTitle.setText(document.getTitle());
+
+		new Label(ret, SWT.NONE).setText("Erstelldatum");
+		creationDate = new CDateTime(ret, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
+		GridData gd_archivingDate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_archivingDate.widthHint = 150;
+		creationDate.setLayoutData(gd_archivingDate);
+		creationDate.setSelection(document.getCreated());
+
 		createUIDocumentReferences(ret);
 		return ret;
 	}
@@ -207,6 +220,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		keywords = tKeywords.getText();
 		document.setKeywords(keywords);
 		document.setAuthor((IContact) AutoCompleteTextUtil.getData(tAuthor));
+		document.setCreated(creationDate.getSelection());
 
 		saveDocumentReference();
 		super.okPressed();

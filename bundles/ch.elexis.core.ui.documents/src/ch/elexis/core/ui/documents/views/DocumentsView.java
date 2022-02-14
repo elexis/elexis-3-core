@@ -18,12 +18,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -41,20 +41,22 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceAdapter;
@@ -75,7 +77,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -90,6 +91,8 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.documents.FilterCategory;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.findings.IDocumentReference;
+import ch.elexis.core.findings.util.FindingsServiceHolder;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
@@ -98,6 +101,7 @@ import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.handler.DocumentCrudHandler;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
@@ -121,14 +125,13 @@ public class DocumentsView extends ViewPart {
 	private static Logger logger = LoggerFactory.getLogger(DocumentsView.class);
 
 	private TreeViewer viewer;
-	private Tree table;
 
 	private IStructuredSelection currentDragSelection;
 
 	private final String[] colLabels = { "", "", Messages.DocumentView_categoryColumn,
-			Messages.DocumentView_lastChangedColumn, Messages.DocumentView_titleColumn,
+			Messages.DocumentView_titleColumn, Messages.DocumentView_dateCreatedColumn,
 			Messages.DocumentView_keywordsColumn };
-	private final String colWidth = "20,20,100,100,200,500";
+	private final String colWidth = "20,20,150,250,100,500";
 	private final String sortSettings = "0,1,-1,false";
 	private String searchTitle = "";
 
@@ -155,7 +158,7 @@ public class DocumentsView extends ViewPart {
 					.get();
 			contentProvider.updateElement(document);
 			// the selection of TreeItem is disposed after updating a document with a dialog
-			table.deselectAll();
+			viewer.getTree().deselectAll();
 			viewer.refresh();
 		}
 	}
@@ -238,56 +241,6 @@ public class DocumentsView extends ViewPart {
 
 	}
 
-	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
-		public String getColumnText(Object obj, int index) {
-			if (obj instanceof ICategory) {
-				if (index == 2) {
-					return ((ICategory) obj).getName();
-				}
-				return null;
-
-			}
-
-			IDocument dh = (IDocument) obj;
-			switch (index) {
-			case 0:
-				return "";
-			case 1:
-				return dh.getStatus().stream().map(s -> s.getName()).reduce((u, t) -> u + StringConstants.COMMA + t)
-						.get();
-			case 2:
-				return bFlat ? dh.getCategory().getName() : "";
-			case 3:
-				return new TimeTool(dh.getLastchanged()).toString(TimeTool.FULL_GER);
-			case 4:
-				return dh.getTitle();
-			case 5:
-				return dh.getKeywords();
-			default:
-				return "?";
-			}
-		}
-
-		public Image getColumnImage(Object obj, int index) {
-			if (index == 4) {
-				if (obj instanceof IDocument && LocalDocumentServiceHolder.getService().isPresent()) {
-					java.util.Optional<Identifiable> opt = DocumentStoreServiceHolder.getService()
-							.getPersistenceObject((IDocument) obj);
-					if (opt.isPresent() && LocalDocumentServiceHolder.getService().get().contains(opt.get())) {
-						return Images.IMG_EDIT.getImage();
-					}
-				}
-			} else if (index == 2 && obj instanceof ICategory) {
-				return Images.IMG_FOLDER.getImage();
-			}
-			return null;
-		}
-
-		public Image getImage(Object obj) {
-			return null;
-		}
-	}
-
 	/**
 	 * The constructor.
 	 */
@@ -326,27 +279,146 @@ public class DocumentsView extends ViewPart {
 
 		createFlatMenu(filterComposite);
 		// Table to display documents
-		table = new Tree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
-		TreeColumn[] cols = new TreeColumn[colLabels.length];
+		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.NO_RECREATE);
+		List<TreeViewerColumn> viewerColumns = new ArrayList<>();
 		for (int i = 0; i < colLabels.length; i++) {
-			cols[i] = new TreeColumn(table, SWT.NONE);
-			cols[i].setText(colLabels[i]);
-			cols[i].setData(new Integer(i));
+			final TreeViewerColumn viewerColumn = new TreeViewerColumn(viewer, SWT.NONE);
+			viewerColumns.add(viewerColumn);
+			final TreeColumn column = viewerColumn.getColumn();
+			column.setText(colLabels[i]);
+			column.setData(Integer.valueOf(i));
+			column.setResizable(true);
+			column.setMoveable(false);
 		}
+		viewerColumns.get(0).setLabelProvider(new ColumnLabelProvider());
+		viewerColumns.get(1).setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return "";
+			}
+
+			@Override
+			public String getToolTipText(Object element) {
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					if (!doc.getStatus().isEmpty()) {
+						return doc.getStatus().stream().map(s -> s.getName())
+								.reduce((u, t) -> u + StringConstants.COMMA + t).get();
+					}
+				}
+				return super.getToolTipText(element);
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					java.util.Optional<DocumentStatus> sent = doc.getStatus().stream()
+							.filter(s -> s == DocumentStatus.SENT).findFirst();
+					if (sent.isPresent()) {
+						return Images.IMG_OUTBOX.getImage();
+					}
+					return Images.IMG_INBOX.getImage();
+				}
+				return super.getImage(element);
+			}
+		});
+		viewerColumns.get(2).setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					return bFlat ? doc.getCategory().getName() : "";
+				} else if (element instanceof ICategory) {
+					ICategory cat = (ICategory) element;
+					return cat.getName();
+				}
+				return "";
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				if (element instanceof ICategory) {
+					return Images.IMG_FOLDER.getImage();
+				}
+				return super.getImage(element);
+			}
+		});
+		viewerColumns.get(3).setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					return doc.getTitle();
+				}
+				return "";
+			}
+			
+			@Override
+			public Image getImage(Object element){
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					java.util.Optional<Identifiable> opt =
+							DocumentStoreServiceHolder.getService().getPersistenceObject(doc);
+					if (opt.isPresent()
+							&& LocalDocumentServiceHolder.getService().get().contains(opt.get())) {
+						return Images.IMG_EDIT.getImage();
+					}
+				}
+				return super.getImage(element);
+			}
+		});
+		viewerColumns.get(4).setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					return new TimeTool(doc.getCreated()).toString(TimeTool.DATE_GER);
+				}
+				return "";
+			}
+			
+			@Override
+			public String getToolTipText(Object element){
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					return new TimeTool(doc.getCreated()).toString(TimeTool.LARGE_GER);
+				}
+				return super.getToolTipText(element);
+			}
+		});
+		viewerColumns.get(5).setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					List<IDocumentReference> documentReferences = FindingsServiceHolder.getiFindingsService()
+							.getDocumentFindings(doc.getId(), IDocumentReference.class);
+					if (documentReferences.isEmpty()) {
+						return java.util.Optional.ofNullable(doc.getKeywords()).orElse("");
+					} else {
+						return java.util.Optional
+								.ofNullable(
+										Objects.toString(documentReferences.get(0).getKeywords(), doc.getKeywords()))
+								.orElse("");
+					}
+				}
+				return "";
+			}
+		});
+
 		applyUsersColumnWidthSetting();
 
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
-
-		viewer = new TreeViewer(table);
+		viewer.getTree().setHeaderVisible(true);
+		viewer.getTree().setLinesVisible(true);
+		viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 
 		DocumentsFilterBarComposite filterBarComposite = addFilterBar(parent);
 
 		contentProvider = new DocumentsTreeContentProvider(viewer)
 				.selectFilterCategory(filterBarComposite.getSelection());
 		viewer.setContentProvider(contentProvider);
-		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setUseHashlookup(true);
 		viewer.addFilter(new ViewFilterProvider());
 
@@ -607,7 +679,7 @@ public class DocumentsView extends ViewPart {
 	}
 
 	private void applyUsersColumnWidthSetting() {
-		TreeColumn[] treeColumns = table.getColumns();
+		TreeColumn[] treeColumns = viewer.getTree().getColumns();
 		String[] userColWidth = colWidth.split(",");
 		/*
 		 * if (ConfigServiceHolder.getUser(PreferencePage.SAVE_COLUM_WIDTH, false)) {
