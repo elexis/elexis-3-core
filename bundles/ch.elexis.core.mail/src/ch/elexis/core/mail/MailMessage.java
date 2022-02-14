@@ -38,7 +38,7 @@ public class MailMessage implements Serializable {
 	private static Gson gson = new Gson();
 	
 	public static MailMessage fromJson(Serializable serializable){
-		return gson.fromJson(serializable.toString(), MailMessage.class);
+		return gson.fromJson(gson.toJson(serializable), MailMessage.class);
 	}
 	
 	public static MailMessage fromMap(@SuppressWarnings("rawtypes")
