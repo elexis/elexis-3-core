@@ -46,7 +46,7 @@ public class PractitionerIMandatorTransformer implements IFhirTransformer<Practi
 	public Optional<Practitioner> getFhirObject(IMandator localObject,SummaryEnum summaryEnum, Set<Include> includes){
 		Practitioner practitioner = new Practitioner();
 		
-		practitioner.setId(new IdDt("Practitioner", localObject.getId()));
+		practitioner.setId(new IdDt("Practitioner", localObject.getId(), Long.toString(localObject.getLastupdate())));
 		
 		List<Identifier> identifiers = contactHelper.getIdentifiers(localObject);
 		identifiers.add(getElexisObjectIdentifier(localObject));

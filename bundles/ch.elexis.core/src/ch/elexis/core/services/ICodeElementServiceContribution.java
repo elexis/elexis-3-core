@@ -21,6 +21,13 @@ public interface ICodeElementServiceContribution {
 	
 	public CodeElementTyp getTyp();
 	
+	public enum CONTEXT_KEYS {
+		/**
+		 * Search filter: Display Name
+		 */
+		DISPLAY
+	}
+	
 	/**
 	 * Load a {@link ICodeElement} instance using a code of the code system. Implementations should
 	 * always be able to load using the code attribute of the {@link ICodeElement}, but also can
