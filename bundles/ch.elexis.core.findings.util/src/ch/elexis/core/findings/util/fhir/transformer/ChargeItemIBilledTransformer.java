@@ -157,7 +157,7 @@ public class ChargeItemIBilledTransformer implements IFhirTransformer<ChargeItem
 		
 		ICodeElement _iCodeElement = iCodeElement.get();
 		if (!(_iCodeElement instanceof IBillable)) {
-			throw new IFhirTransformerException("WARNING", "Non billable codeElement found", 412);
+			throw new IFhirTransformerException("WARNING", "Non-billable codeElement found", 412);
 		}
 		return (IBillable) _iCodeElement;
 	}
@@ -167,7 +167,7 @@ public class ChargeItemIBilledTransformer implements IFhirTransformer<ChargeItem
 		String encounterId = referenceElement.getIdPart();
 		if (StringUtils.isBlank(encounterId)) {
 			// currently context is encounter only
-			throw new IFhirTransformerException("WARNING", "Invalid encounter", 412);
+			throw new IFhirTransformerException("WARNING", "Missing encounter parameter", 412);
 		}
 		
 		IEncounter encounter = coreModelService.load(encounterId, IEncounter.class).orElse(null);
