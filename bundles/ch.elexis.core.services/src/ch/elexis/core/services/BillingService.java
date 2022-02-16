@@ -260,9 +260,9 @@ public class BillingService implements IBillingService {
 		return Result.OK();
 	}
 
-	private Result<IBilled> translateResult(Result<?> verificationResult){
-		Result<IBilled> ret = new Result<>();
-		verificationResult.getMessages()
+	private Result<IBilled> translateResult(Result<?> vfcResult){
+		Result<IBilled> ret = new Result<>(vfcResult.getSeverity(), null);
+		vfcResult.getMessages()
 			.forEach(msg -> ret.addMessage(msg.getSeverity(), msg.getText()));
 		return ret;
 	}
