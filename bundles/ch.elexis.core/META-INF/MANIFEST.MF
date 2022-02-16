@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: ch.elexis.core;singleton:=true
 Automatic-Module-Name: ch.elexis.core
-Bundle-Version: 3.9.0.qualifier
+Bundle-Version: 3.10.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -23,6 +23,7 @@ Export-Package: ch.elexis.core.ac,
  ch.elexis.core.eenv,
  ch.elexis.core.events,
  ch.elexis.core.exceptions,
+ ch.elexis.core.fhir,
  ch.elexis.core.interfaces,
  ch.elexis.core.jdt,
  ch.elexis.core.lock.types,
