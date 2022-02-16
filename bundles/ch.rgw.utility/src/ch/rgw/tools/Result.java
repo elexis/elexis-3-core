@@ -15,6 +15,7 @@ package ch.rgw.tools;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Universelles Rückgabe-Objekt. Ein Result beinhaltet die Information, ob ein Fehler erfolgt ist,
@@ -58,6 +59,13 @@ public class Result<T> {
 	
 	public List<msg> getMessages(){
 		return list;
+	}
+	
+	/**
+	 * @since 3.10 
+	 */
+	public String getCombinedMessages(){
+		return getMessages().stream().map(m -> m.getText()).collect(Collectors.joining(", "));
 	}
 	
 	/**

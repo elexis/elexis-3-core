@@ -60,7 +60,7 @@ public class StatusUtil {
 		}
 	}
 
-	private static String getSeverityString(int severity) {
+	public static String getSeverityString(int severity) {
 		switch (severity) {
 		case Status.OK:
 			return "OK";
