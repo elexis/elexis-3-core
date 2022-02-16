@@ -24,7 +24,7 @@ public class CodeElementService implements ICodeElementService {
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
 	public void setCodeElementServiceContribution(ICodeElementServiceContribution contribution){
 		ICodeElementServiceContribution previous =
-			contributions.put(contribution.getSystem(), contribution);
+			contributions.put(contribution.getSystem().toLowerCase(), contribution);
 		if (previous != null) {
 			LoggerFactory.getLogger(getClass())
 				.warn("Possible ICodeElementServiceContribution collision previous [" + previous
@@ -33,13 +33,13 @@ public class CodeElementService implements ICodeElementService {
 	}
 	
 	public void unsetCodeElementServiceContribution(ICodeElementServiceContribution store){
-		contributions.remove(store.getSystem());
+		contributions.remove(store.getSystem().toLowerCase());
 	}
 	
 	@Override
 	public Optional<ICodeElement> loadFromString(String system, String code,
 		Map<Object, Object> context){
-		ICodeElementServiceContribution contribution = contributions.get(system);
+		ICodeElementServiceContribution contribution = contributions.get(system.toLowerCase());
 		if (contribution != null) {
 			if (context == null) {
 				context = Collections.emptyMap();
@@ -80,6 +80,6 @@ public class CodeElementService implements ICodeElementService {
 	@Override
 	public Optional<ICodeElementServiceContribution> getContribution(CodeElementTyp typ,
 		String codeSystemName){
-		return Optional.ofNullable(contributions.get(codeSystemName));
+		return Optional.ofNullable(contributions.get(codeSystemName.toLowerCase()));
 	}
 }

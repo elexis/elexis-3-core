@@ -11,7 +11,7 @@ import ch.elexis.core.model.ICodeElement;
 /**
  * Interface for a service that can be used to load and store {@link ICodeElement} instances.
  * 
- * @author thomas
+ * @since 3.10 - system and code are case insensitive in lookup
  *
  */
 public interface ICodeElementService {
