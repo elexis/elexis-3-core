@@ -145,4 +145,10 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		}
 		return foundDone && foundNotDone;
 	}
+	
+	@Override
+	public String getLabel(){
+		return getName() + ": " //$NON-NLS-1$
+			+ DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").format(getTimestamp()); //$NON-NLS-2$
+	}
 }

@@ -658,7 +658,9 @@ public class OrderImportDialog extends TitleAreaDialog {
 			created = StockServiceHolder.get().storeArticleInStock(stock,
 				StoreToStringServiceHolder.getStoreToString(article));
 			created.setMinimumStock(0);
+			created.setCurrentStock(0);
 			created.setMaximumStock(0);
+			CoreModelServiceHolder.get().save(created);
 			return created;
 		}
 		
