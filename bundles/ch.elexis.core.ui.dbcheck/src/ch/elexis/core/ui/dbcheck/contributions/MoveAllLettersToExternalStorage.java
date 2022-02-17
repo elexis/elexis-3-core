@@ -6,6 +6,9 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDocumentLetter;
@@ -18,10 +21,18 @@ import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 
 public class MoveAllLettersToExternalStorage extends ExternalMaintenance {
 	
+	private int whichLetters;
+	
 	public MoveAllLettersToExternalStorage(){}
 	
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
+		Display.getDefault().syncExec(() -> {
+			whichLetters = MessageDialog.open(MessageDialog.QUESTION,
+				Display.getDefault().getActiveShell(), "Export letters",
+				"Select which letters to export.", SWT.SHEET, "All letters", "Only templates");
+		});
+		boolean onlyTemplates = whichLetters == 1;
 		
 		StringBuilder result = new StringBuilder();
 		int okCount = 0;
@@ -33,6 +44,10 @@ public class MoveAllLettersToExternalStorage extends ExternalMaintenance {
 			while (letters.hasNext()) {
 				IDocumentLetter letter = letters.next();
 				try {
+					if (onlyTemplates && !letter.isTemplate()) {
+						// skip all non template letters
+						continue;
+					}
 					boolean ok = exportToExtern(letter, result);
 					if (ok) {
 						okCount++;
