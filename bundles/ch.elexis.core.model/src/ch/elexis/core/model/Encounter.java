@@ -18,6 +18,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.service.holder.ContextServiceHolder;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.time.TimeUtil;
 import ch.rgw.tools.VersionedResource;
@@ -135,15 +136,21 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	
 	@Override
 	public void addDiagnosis(IDiagnosis diagnosis){
-		if (!(diagnosis instanceof IDiagnosisReference)) {
-			diagnosis = ModelUtil.getOrCreateDiagnosisReference(diagnosis);
+		IDiagnosisReference diagnosisRef = null;
+		if (diagnosis instanceof IDiagnosisReference) {
+			diagnosisRef = (IDiagnosisReference) diagnosis;
+		} else {
+			diagnosisRef = ModelUtil.getOrCreateDiagnosisReference(diagnosis);
 		}
-		addChanged(diagnosis);
+		addChanged(diagnosisRef);
 		@SuppressWarnings("unchecked")
-		Diagnosis diag = ((AbstractIdModelAdapter<Diagnosis>) diagnosis).getEntity();
+		Diagnosis diag = ((AbstractIdModelAdapter<Diagnosis>) diagnosisRef).getEntity();
 		if (!getEntity().getDiagnoses().contains(diag)) {
 			getEntityMarkDirty().getDiagnoses().add(diag);
 		}
+		CodeElementServiceHolder.updateStatistics(diagnosis,
+			ContextServiceHolder.get().getActiveUserContact().orElse(null));
+		CodeElementServiceHolder.updateStatistics(diagnosis, getPatient());
 	}
 	
 	@Override
