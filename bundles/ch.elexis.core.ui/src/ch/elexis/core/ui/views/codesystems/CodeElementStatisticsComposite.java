@@ -18,9 +18,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import ch.elexis.core.data.service.CodeElementServiceHolder;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.util.GenericObjectDragSource;

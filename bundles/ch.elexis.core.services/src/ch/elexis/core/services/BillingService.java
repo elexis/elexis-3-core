@@ -36,6 +36,7 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -198,6 +199,11 @@ public class BillingService implements IBillingService {
 				if (optifierResult.get() != null) {
 					for (IBilledAdjuster iBilledAdjuster : billedAdjusters) {
 						iBilledAdjuster.adjust(optifierResult.get());
+					}
+					if (optifierResult.isOK()) {
+						CodeElementServiceHolder.updateStatistics(billable,
+							ContextServiceHolder.get().getActiveUserContact().orElse(null));
+						CodeElementServiceHolder.updateStatistics(billable, encounter.getPatient());
 					}
 				}
 				
