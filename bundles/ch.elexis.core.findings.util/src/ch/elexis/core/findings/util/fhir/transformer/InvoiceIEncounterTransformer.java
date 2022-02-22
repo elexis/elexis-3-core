@@ -20,7 +20,6 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
@@ -36,10 +35,11 @@ public class InvoiceIEncounterTransformer implements IFhirTransformer<Invoice, I
 	
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 		+ "=ch.elexis.core.model)")
-	private IModelService modelService;
+	private IModelService coreModelService;
 	
-	@org.osgi.service.component.annotations.Reference
-	private IFhirTransformerRegistry transformerRegistry;
+	@org.osgi.service.component.annotations.Reference(target = "(" + IFhirTransformer.TRANSFORMERID
+		+ "=ChargeItem.IBilled)")
+	private IFhirTransformer<ChargeItem, IBilled> chargeItemTransformer;
 	
 	private final CodeableConcept TYPE_VIRTUAL =
 		new CodeableConcept(new Coding("", "encounter-only", ""));
@@ -74,9 +74,7 @@ public class InvoiceIEncounterTransformer implements IFhirTransformer<Invoice, I
 			new InvoiceLineItemComponent(FhirUtil.getReference(iBilled));
 		
 		if (includes.contains(new Include("Invoice.lineItem.chargeItem"))) {
-			IFhirTransformer<ChargeItem, IBilled> transformer =
-				transformerRegistry.getTransformerFor(ChargeItem.class, IBilled.class);
-			ChargeItem chargeItem = transformer.getFhirObject(iBilled).get();
+			ChargeItem chargeItem = chargeItemTransformer.getFhirObject(iBilled).get();
 			((Reference) ilic.getChargeItem()).setResource(chargeItem);
 		}
 		

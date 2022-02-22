@@ -35,7 +35,6 @@ import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.internal.model.AppointmentSeries;
@@ -96,7 +95,7 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Override
 	public boolean delete(IAppointment appointment, boolean whole){
-
+		
 		// @TODO checkLock is deprecated not needed ?
 		
 		// check if appointment isLinked
@@ -115,7 +114,7 @@ public class AppointmentService implements IAppointmentService {
 						}
 						moveto.setSubjectOrPatient(appointment.getSubjectOrPatient());
 						moveto.setReason(appointment.getReason());
-
+						
 						// TODO created by not working
 						// moveto.set(Termin.FLD_CREATOR, get(Termin.FLD_CREATOR));
 						moveto.setCreatedBy(appointment.getCreatedBy());
@@ -156,8 +155,8 @@ public class AppointmentService implements IAppointmentService {
 		}
 		
 		@SuppressWarnings("unchecked")
-		Hashtable<String, String> map = StringTool.foldStrings(
-			ConfigServiceHolder.get().get("agenda/tagesvorgaben" + "/" + schedule, null));
+		Hashtable<String, String> map = StringTool
+			.foldStrings(iConfigService.get("agenda/tagesvorgaben" + "/" + schedule, null));
 		if (map == null) {
 			map = new Hashtable<String, String>();
 		}
@@ -556,8 +555,7 @@ public class AppointmentService implements IAppointmentService {
 	@Override
 	public Optional<IContact> resolveAreaAssignedContact(String areaName){
 		if (areaName != null) {
-			String areaType =
-				ConfigServiceHolder.get().get("agenda/bereich/" + areaName + "/type", null);
+			String areaType = iConfigService.get("agenda/bereich/" + areaName + "/type", null);
 			if (areaType != null && areaType.startsWith(AreaType.CONTACT.name())) {
 				String contactId = areaType.substring(AreaType.CONTACT.name().length() + 1);
 				return CoreModelServiceHolder.get().load(contactId, IContact.class);
@@ -565,5 +563,15 @@ public class AppointmentService implements IAppointmentService {
 		}
 		
 		return Optional.empty();
+	}
+	
+	@Override
+	public String resolveAreaByAssignedContact(IContact contact){
+		if (contact != null) {
+			Optional<Area> area = getAreas().stream()
+				.filter(a -> StringUtils.equals(contact.getId(), a.getContactId())).findFirst();
+			return area.map(Area::getName).orElse(null);
+		}
+		return null;
 	}
 }

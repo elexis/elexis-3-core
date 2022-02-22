@@ -161,4 +161,13 @@ public interface IAppointmentService {
 	 * @since 3.9
 	 */
 	Optional<IContact> resolveAreaAssignedContact(String areaName);
+	
+	/**
+	 * Resolves the areadId allocated to a specific contact. Reverse operation to {@link #resolveAreaAssignedContact(String)}
+	 * 
+	 * @param contact
+	 * @return the areaId allocated to this contact, <code>null</code> if not available
+	 * @since 3.10
+	 */
+	String resolveAreaByAssignedContact(IContact contact);
 }

@@ -18,6 +18,7 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.findings.util.fhir.IFhirTransformerException;
 import ch.elexis.core.findings.util.fhir.transformer.helper.AbstractHelper;
 import ch.elexis.core.findings.util.fhir.transformer.helper.ICoverageHelper;
 import ch.elexis.core.model.FallConstants;
@@ -109,8 +110,7 @@ public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, 
 	
 	@Override
 	public Optional<ICoverage> updateLocalObject(Coverage fhirObject, ICoverage localObject){
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
@@ -118,6 +118,9 @@ public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, 
 		if (fhirObject.hasBeneficiary()) {
 			Optional<IPatient> patient = modelService.load(
 				fhirObject.getBeneficiary().getReferenceElement().getIdPart(), IPatient.class);
+			if(patient.isEmpty()) {
+				throw new IFhirTransformerException("WARNING", "Invalid patient", 412);
+			}
 			Optional<String> type = coverageHelper.getType(fhirObject);
 			if (patient.isPresent() && type.isPresent()) {
 				ICoverage created = new ICoverageBuilder(modelService, patient.get(),

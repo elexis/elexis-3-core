@@ -35,7 +35,6 @@ public class CoverageICoverageTransformerTest {
 	private static IFhirTransformer<Coverage, ICoverage> transformer;
 	private static IPatient patient;
 	
-	@SuppressWarnings("unchecked")
 	@BeforeClass
 	public static void beforeClass(){
 		
