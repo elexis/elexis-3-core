@@ -637,8 +637,11 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 				while (--start >= 0) {
 					t = text.getTextRange(start, 1);
 					if (t.equals(e.text)) {
+						// workaround #23758
+						int caretOffset = text.getCaretOffset();
 						createMarkup(t.charAt(0), start, e.start - start);
 						e.doit = true;
+						text.setCaretOffset(caretOffset);
 						break;
 					}
 					if (t.matches(Messages.EnhancedTextField_5)) {
