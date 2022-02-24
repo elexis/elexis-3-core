@@ -193,7 +193,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 
 						home.results = new String[fileNames.length];
 						for (int i = 0; i < fileNames.length; i++) {
-							home.results[i] = fdl.getFilterPath()+"/"+fileNames[i];
+							home.results[i] = fdl.getFilterPath()+ File.separator +fileNames[i];
 						}
 						
 						CoreHub.localCfg.set(
