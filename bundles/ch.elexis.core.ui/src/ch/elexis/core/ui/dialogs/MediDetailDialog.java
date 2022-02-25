@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -242,19 +241,16 @@ public class MediDetailDialog extends TitleAreaDialog {
 						IPrescription oldPrescription = prescription;
 						IPrescription newPrescription =
 							MedicationServiceHolder.get().createPrescriptionCopy(oldPrescription);
-						if (LocalLockServiceHolder.get().acquireLock(newPrescription).isOk()) {
-							newPrescription.setDosageInstruction(dosis);
-							newPrescription.setRemark(intakeOrder);
-							newPrescription.setDisposalComment(disposalComment);
-							CoreModelServiceHolder.get().save(newPrescription);
-							MedicationServiceHolder.get().stopPrescription(oldPrescription,
-								LocalDateTime.now(),
-								"Geändert durch " + CoreHub.getLoggedInContact().getLabel());
-							CoreModelServiceHolder.get().save(oldPrescription);
-							LocalLockServiceHolder.get().releaseLock(newPrescription);
-							ElexisEventDispatcher.getInstance().fire(new ElexisEvent(
-								newPrescription, Prescription.class, ElexisEvent.EVENT_UPDATE));
-						}
+						newPrescription.setDosageInstruction(dosis);
+						newPrescription.setRemark(intakeOrder);
+						newPrescription.setDisposalComment(disposalComment);
+						CoreModelServiceHolder.get().save(newPrescription);
+						MedicationServiceHolder.get().stopPrescription(oldPrescription,
+							LocalDateTime.now(),
+							"Geändert durch " + CoreHub.getLoggedInContact().getLabel());
+						CoreModelServiceHolder.get().save(oldPrescription);
+						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(newPrescription,
+							Prescription.class, ElexisEvent.EVENT_UPDATE));
 						
 					} else {
 						// no history entry for example recipe
