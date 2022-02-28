@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.ui.e4.events.ElexisUiEventTopics;
@@ -50,15 +51,18 @@ public class PdfPreviewPart {
 	void activePatient(IPatient patient) throws IOException{
 		if (pdfPreviewPartLoadHandler != null) {
 			pdfPreviewPartLoadHandler.unloadDocument();
-			updatePreview(null);
+			updatePreview((InputStream) null);
 		}
 	}
 	
 	@Inject
 	@Optional
-	void updatePreview(@UIEventTopic(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF)
-	InputStream pdfInputStream){
-		
+	void updatePreview(
+		@UIEventTopic(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF) IDocument pdfIDocument){
+		updatePreview(pdfIDocument != null ? pdfIDocument.getContent() : null);
+	}
+	
+	private void updatePreview(InputStream pdfInputStream){
 		if (pdfPreviewPartLoadHandler != null) {
 			if (pdfInputStream == null) {
 				try {
