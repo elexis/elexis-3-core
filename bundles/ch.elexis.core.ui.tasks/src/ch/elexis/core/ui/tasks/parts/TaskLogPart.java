@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.core.runtime.ICoreRunnable;
 import org.eclipse.core.runtime.jobs.Job;
@@ -41,6 +42,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
@@ -49,6 +51,7 @@ import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 import ch.elexis.core.ui.tasks.parts.handlers.TaskPartSystemFilterHandler;
@@ -340,5 +343,12 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 		} else {
 			partService.showPart(taskDetailPart, PartState.CREATE);
 		}
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

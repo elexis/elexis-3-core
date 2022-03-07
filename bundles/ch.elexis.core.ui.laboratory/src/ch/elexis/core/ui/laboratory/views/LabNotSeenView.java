@@ -14,6 +14,11 @@ package ch.elexis.core.ui.laboratory.views;
 
 import java.util.logging.Level;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -46,6 +51,7 @@ import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.LabResult;
@@ -135,7 +141,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		heartbeat();
 		CoreHub.heart.addListener(this, ConfigServiceHolder
 			.getUser(Preferences.LABSETTINGS_CFG_LABNEW_HEARTRATE, Heartbeat.FREQUENCY_HIGH));
-			
+		
 		tv.setInput(this);
 	}
 	
@@ -151,8 +157,8 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		
 	}
 	
-	static class LabNotSeenLabelProvider extends LabelProvider implements ITableLabelProvider,
-			IColorProvider {
+	static class LabNotSeenLabelProvider extends LabelProvider
+			implements ITableLabelProvider, IColorProvider {
 		
 		public Image getColumnImage(final Object element, final int columnIndex){
 			// TODO Auto-generated method stub
@@ -264,10 +270,9 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 				
 				@Override
 				public void doRun(){
-					boolean openConfirm =
-						MessageDialog.openConfirm(getViewSite().getShell(),
-							Messages.LabNotSeenView_reallyMarkCaption, //$NON-NLS-1$
-							Messages.LabNotSeenView_markAllToolTip);
+					boolean openConfirm = MessageDialog.openConfirm(getViewSite().getShell(),
+						Messages.LabNotSeenView_reallyMarkCaption, //$NON-NLS-1$
+						Messages.LabNotSeenView_markAllToolTip);
 					if (openConfirm) //$NON-NLS-1$
 					{
 						tv.setAllChecked(true);
@@ -278,25 +283,31 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 				}
 				
 			};
-		markPersonAction =
-			new RestrictedAction(AccessControlDefaults.LAB_SEEN,
-				Messages.LabNotSeenView_markAllofPatient) { //$NON-NLS-1$
-				{
-					setToolTipText(Messages.LabNotSeenView_markAllOfPatientToolTip); //$NON-NLS-1$
-					setImageDescriptor(Images.IMG_PERSON_OK.getImageDescriptor());
-				}
-				
-				@Override
-				public void doRun(){
-					Patient act = ElexisEventDispatcher.getSelectedPatient();
-					for (LabResult lr : unseen) {
-						if (lr.getPatient().equals(act)) {
-							lr.removeFromUnseen();
-							tv.setChecked(lr, true);
-						}
+		markPersonAction = new RestrictedAction(AccessControlDefaults.LAB_SEEN,
+			Messages.LabNotSeenView_markAllofPatient) { //$NON-NLS-1$
+			{
+				setToolTipText(Messages.LabNotSeenView_markAllOfPatientToolTip); //$NON-NLS-1$
+				setImageDescriptor(Images.IMG_PERSON_OK.getImageDescriptor());
+			}
+			
+			@Override
+			public void doRun(){
+				Patient act = ElexisEventDispatcher.getSelectedPatient();
+				for (LabResult lr : unseen) {
+					if (lr.getPatient().equals(act)) {
+						lr.removeFromUnseen();
+						tv.setChecked(lr, true);
 					}
 				}
-			};
+			}
+		};
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
 }

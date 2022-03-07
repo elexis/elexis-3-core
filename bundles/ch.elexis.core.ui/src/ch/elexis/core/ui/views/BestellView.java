@@ -233,7 +233,7 @@ public class BestellView extends ViewPart {
 								IStockEntry stockEntry =
 									StockServiceHolder.get().findPreferredStockEntryForArticle(
 										StoreToStringServiceHolder.getStoreToString(art), null);
-										
+								
 								if (stockEntry != null) {
 									stockEntriesToOrder.add(stockEntry);
 									continue;
@@ -246,9 +246,8 @@ public class BestellView extends ViewPart {
 					}
 					if (!stockEntriesToOrder.isEmpty()) {
 						for (IStockEntry iStockEntry : stockEntriesToOrder) {
-							IOrderEntry orderEntry =
-								actOrder.addEntry(iStockEntry.getArticle(), iStockEntry.getStock(),
-								iStockEntry.getProvider(), 1);
+							IOrderEntry orderEntry = actOrder.addEntry(iStockEntry.getArticle(),
+								iStockEntry.getStock(), iStockEntry.getProvider(), 1);
 							CoreModelServiceHolder.get().save(orderEntry);
 						}
 					}
@@ -697,7 +696,8 @@ public class BestellView extends ViewPart {
 	
 	@org.eclipse.e4.core.di.annotations.Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	

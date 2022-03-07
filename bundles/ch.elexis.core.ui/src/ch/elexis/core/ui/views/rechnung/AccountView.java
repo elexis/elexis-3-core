@@ -281,7 +281,6 @@ public class AccountView extends ViewPart implements IActivationListener {
 		// viewer.setSorter(new NameSorter());
 		accountViewer.setInput(getViewSite());
 		
-
 		/*
 		 * makeActions(); hookContextMenu(); hookDoubleClickAction(); contributeToActionBars();
 		 */
@@ -292,8 +291,8 @@ public class AccountView extends ViewPart implements IActivationListener {
 											 */);
 		removePaymentAction.setEnabled(false);
 		GlobalEventDispatcher.addActivationListener(this, this);
-		accountViewer.addSelectionChangedListener(GlobalEventDispatcher.getInstance()
-			.getDefaultListener());
+		accountViewer
+			.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
 		
 		if (sortColumn == DATE) {
 			sortReverse = true;
@@ -326,8 +325,8 @@ public class AccountView extends ViewPart implements IActivationListener {
 	public void dispose(){
 		finishJobs();
 		GlobalEventDispatcher.removeActivationListener(this, this);
-		accountViewer.removeSelectionChangedListener(GlobalEventDispatcher.getInstance()
-			.getDefaultListener());
+		accountViewer.removeSelectionChangedListener(
+			GlobalEventDispatcher.getInstance().getDefaultListener());
 		super.dispose();
 	}
 	
@@ -404,7 +403,8 @@ public class AccountView extends ViewPart implements IActivationListener {
 	
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
@@ -419,39 +419,39 @@ public class AccountView extends ViewPart implements IActivationListener {
 	
 	private void makeActions(){
 		addPaymentAction = new Action(Messages.AccountView_addBookingCaption) { //$NON-NLS-1$
-				{
-					setToolTipText(Messages.AccountView_addBookingBody); //$NON-NLS-1$
-					setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
+			{
+				setToolTipText(Messages.AccountView_addBookingBody); //$NON-NLS-1$
+				setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
+			}
+			
+			@Override
+			public void run(){
+				if (new AddBuchungDialog(getViewSite().getShell(), actPatient)
+					.open() == Dialog.OK) {
+					setPatient(actPatient);
 				}
-				
-				@Override
-				public void run(){
-					if (new AddBuchungDialog(getViewSite().getShell(), actPatient).open() == Dialog.OK) {
+			}
+		};
+		removePaymentAction = new Action(Messages.AccountView_deleteBookingAction) { //$NON-NLS-1$
+			{
+				setToolTipText(Messages.AccountView_deleteBookingTooltip); //$NON-NLS-1$
+				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
+			}
+			
+			@Override
+			public void run(){
+				AccountTransaction at = (AccountTransaction) ElexisEventDispatcher
+					.getSelected(AccountTransaction.class);
+				if (at != null) {
+					if (SWTHelper.askYesNo(Messages.AccountView_deleteBookingConfirmCaption, //$NON-NLS-1$
+						Messages.AccountView_deleteBookingConfirmBody)) { //$NON-NLS-1$
+						at.delete();
 						setPatient(actPatient);
 					}
 				}
-			};
-		removePaymentAction = new Action(Messages.AccountView_deleteBookingAction) { //$NON-NLS-1$
-				{
-					setToolTipText(Messages.AccountView_deleteBookingTooltip); //$NON-NLS-1$
-					setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-				}
-				
-				@Override
-				public void run(){
-					AccountTransaction at =
-						(AccountTransaction) ElexisEventDispatcher
-							.getSelected(AccountTransaction.class);
-					if (at != null) {
-						if (SWTHelper.askYesNo(Messages.AccountView_deleteBookingConfirmCaption, //$NON-NLS-1$
-							Messages.AccountView_deleteBookingConfirmBody)) { //$NON-NLS-1$
-							at.delete();
-							setPatient(actPatient);
-						}
-					}
-				}
-				
-			};
+			}
+			
+		};
 	}
 	
 	class AccountExcessJob extends BackgroundJob {

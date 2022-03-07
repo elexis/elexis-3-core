@@ -85,12 +85,12 @@ import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.Log;
@@ -266,64 +266,61 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 		bOpenKons.setSelection(bOpen);
 		bClosedKons.setSelection(bClosed);
 		cv = new CommonViewer();
-		vc =
-			new ViewerConfigurer(new DefaultContentProvider(cv, Patient.class) {
-				@Override
-				public Object[] getElements(final Object inputElement){
-					if (!CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_STATS)) {
-						return new Konsultation[0];
+		vc = new ViewerConfigurer(new DefaultContentProvider(cv, Patient.class) {
+			@Override
+			public Object[] getElements(final Object inputElement){
+				if (!CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_STATS)) {
+					return new Konsultation[0];
+				}
+				if (kons == null) {
+					kons = new Konsultation[0];
+					kload.schedule();
+				}
+				
+				return kons;
+			}
+		}, new DefaultLabelProvider() {
+			
+			@Override
+			public String getText(final Object element){
+				if (element instanceof Konsultation) {
+					Fall fall = ((Konsultation) element).getFall();
+					if (fall == null) {
+						return Messages.PatHeuteView_noCase + ((Konsultation) element).getLabel(); //$NON-NLS-1$
 					}
-					if (kons == null) {
-						kons = new Konsultation[0];
-						kload.schedule();
-					}
+					Patient pat = fall.getPatient();
+					return pat.getLabel();
+				}
+				return super.getText(element);
+			}
+			
+		}, null, new ViewerConfigurer.DefaultButtonProvider(),
+			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LIST, SWT.V_SCROLL, cv))
+				.setSelectionChangedListener(new ISelectionChangedListener() {
 					
-					return kons;
-				}
-			}, new DefaultLabelProvider() {
-				
-				@Override
-				public String getText(final Object element){
-					if (element instanceof Konsultation) {
-						Fall fall = ((Konsultation) element).getFall();
-						if (fall == null) {
-							return Messages.PatHeuteView_noCase
-								+ ((Konsultation) element).getLabel(); //$NON-NLS-1$
-						}
-						Patient pat = fall.getPatient();
-						return pat.getLabel();
-					}
-					return super.getText(element);
-				}
-				
-			}, null, new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
-				SimpleWidgetProvider.TYPE_LIST, SWT.V_SCROLL, cv))
-					.setSelectionChangedListener(new ISelectionChangedListener() {
-						
-						@Override
-						public void selectionChanged(SelectionChangedEvent event){
-							if (event.getStructuredSelection() != null
-								&& !event.getStructuredSelection().isEmpty()) {
-								if (event.getStructuredSelection()
-									.getFirstElement() instanceof Konsultation) {
-									Konsultation selectedKons = (Konsultation) event
-										.getStructuredSelection().getFirstElement();
-									if (selectedKons.getFall() != null
-										&& selectedKons.getFall().getPatient() != null) {
-										Patient pat = selectedKons.getFall().getPatient();
-										// patient change has to be done before changing kons
-										ElexisEventDispatcher.getInstance()
-											.fire(new ElexisEvent(pat, pat.getClass(),
-												ElexisEvent.EVENT_SELECTED,
-												ElexisEvent.PRIORITY_SYNC));
-										
-										ElexisEventDispatcher.fireSelectionEvent(selectedKons);
-									}
+					@Override
+					public void selectionChanged(SelectionChangedEvent event){
+						if (event.getStructuredSelection() != null
+							&& !event.getStructuredSelection().isEmpty()) {
+							if (event.getStructuredSelection()
+								.getFirstElement() instanceof Konsultation) {
+								Konsultation selectedKons =
+									(Konsultation) event.getStructuredSelection().getFirstElement();
+								if (selectedKons.getFall() != null
+									&& selectedKons.getFall().getPatient() != null) {
+									Patient pat = selectedKons.getFall().getPatient();
+									// patient change has to be done before changing kons
+									ElexisEventDispatcher.getInstance()
+										.fire(new ElexisEvent(pat, pat.getClass(),
+											ElexisEvent.EVENT_SELECTED, ElexisEvent.PRIORITY_SYNC));
+									
+									ElexisEventDispatcher.fireSelectionEvent(selectedKons);
 								}
 							}
-							
 						}
-					});
+						
+					}
+				});
 		cv.create(vc, parent, SWT.NONE, getViewSite());
 		
 		form = tk.createForm(parent);
@@ -422,12 +419,12 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 	}
 	
 	private int getMinutes(IEncounter encounter){
-		return encounter.getBilled().stream().mapToInt(b -> { 
-				if(b.getBillable() instanceof IService) {
+		return encounter.getBilled().stream().mapToInt(b -> {
+			if (b.getBillable() instanceof IService) {
 				return (int) (((IService) b.getBillable()).getMinutes() * b.getAmount());
-				}
-				return 0;
-			}).sum();
+			}
+			return 0;
+		}).sum();
 	}
 	
 	@Override
@@ -446,7 +443,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 	
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
@@ -495,9 +493,11 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 				public void run(){
 					FileDialog fd = new FileDialog(getSite().getShell(), SWT.SAVE);
 					fd.setFilterExtensions(new String[] {
-						"*.csv", "*.*"}); //$NON-NLS-1$ //$NON-NLS-2$
+						"*.csv", "*.*" //$NON-NLS-1$//$NON-NLS-2$
+					});
 					fd.setFilterNames(new String[] {
-						"CSV", Messages.PatHeuteView_allFiles}); //$NON-NLS-1$ //$NON-NLS-2$
+						"CSV", Messages.PatHeuteView_allFiles //$NON-NLS-1$
+					}); //$NON-NLS-2$
 					fd.setFileName("elexis-stat.csv"); //$NON-NLS-1$
 					String fname = fd.open();
 					if (fname != null) {
@@ -526,9 +526,12 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 									code == null ? "" : code) //$NON-NLS-1$
 									.append("; ").append(text).append(";") //$NON-NLS-1$ //$NON-NLS-2$
 									.append(st.num).append(";").append( //$NON-NLS-1$
-										st.cost.getAmountAsString()).append(";").append( //$NON-NLS-1$
-										st.sum.getAmountAsString()).append(";").append( //$NON-NLS-1$
-										st.getGewinn().getAmountAsString()).append("\r\n"); //$NON-NLS-1$
+										st.cost.getAmountAsString())
+									.append(";").append( //$NON-NLS-1$
+										st.sum.getAmountAsString())
+									.append(";").append( //$NON-NLS-1$
+										st.getGewinn().getAmountAsString())
+									.append("\r\n"); //$NON-NLS-1$
 								fw.write(sb.toString());
 							}
 							fw.close();
@@ -797,41 +800,41 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 	
 	private void makeActions(){
 		statAction = new Action(Messages.PatHeuteView_statisticsAction) { //$NON-NLS-1$
-				{
-					setToolTipText(Messages.PatHeuteView_statisticsToolTip); //$NON-NLS-1$
-				}
-				
-				@Override
-				public void run(){
-					StatLoader loader = new StatLoader();
-					loader.schedule();
-				}
-			};
+			{
+				setToolTipText(Messages.PatHeuteView_statisticsToolTip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				StatLoader loader = new StatLoader();
+				loader.schedule();
+			}
+		};
 		printAction = new Action(Messages.PatHeuteView_printList) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
-					setToolTipText(Messages.PatHeuteView_printListToolTip); //$NON-NLS-1$
-				}
-				
-				@Override
-				public void run(){
-					TerminListeDialog tld = new TerminListeDialog(getViewSite().getShell());
-					tld.open();
-				}
-			};
+			{
+				setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
+				setToolTipText(Messages.PatHeuteView_printListToolTip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				TerminListeDialog tld = new TerminListeDialog(getViewSite().getShell());
+				tld.open();
+			}
+		};
 		
 		reloadAction = new Action(Messages.PatHeuteView_reloadAction) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
-					setToolTipText(Messages.PatHeuteView_reloadToolTip); //$NON-NLS-1$
-				}
-				
-				@Override
-				public void run(){
-					kons = null;
-					kload.schedule();
-				}
-			};
+			{
+				setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
+				setToolTipText(Messages.PatHeuteView_reloadToolTip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				kons = null;
+				kload.schedule();
+			}
+		};
 		
 		filterAction = new Action(Messages.PatHeuteView_filterAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 			{
@@ -925,7 +928,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 					StringBuilder sb = new StringBuilder();
 					sb.append(Messages.PatHeuteView_billedTotal).append(numLeistung[i]).append( //$NON-NLS-1$
 						Messages.PatHeuteView_times).append( //$NON-NLS-1$
-						perLeistung[i].getAmountAsString());
+							perLeistung[i].getAmountAsString());
 					table[kons.length + 2 + i][1] = sb.toString();
 				}
 			}

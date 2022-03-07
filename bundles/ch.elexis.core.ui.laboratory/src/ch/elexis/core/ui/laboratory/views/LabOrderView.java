@@ -10,10 +10,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
@@ -32,11 +39,10 @@ public class LabOrderView extends ViewPart implements ICallback {
 	private String[] headers;
 	
 	public LabOrderView(){
-		headers =
-			new String[] {
-				Messages.LabOrderView_Order, Messages.LabOrderView_RefValue,
-				Messages.LabOrderView_DateTime, Messages.LabOrderView_Value
-			};
+		headers = new String[] {
+			Messages.LabOrderView_Order, Messages.LabOrderView_RefValue,
+			Messages.LabOrderView_DateTime, Messages.LabOrderView_Value
+		};
 	}
 	
 	@Override
@@ -46,9 +52,8 @@ public class LabOrderView extends ViewPart implements ICallback {
 	}
 	
 	public boolean createLabOrderPrint(Patient pat, List<LabOrder> labOrders){
-		Brief br =
-			text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_LABORDERS, Brief.LABOR,
-				pat, null);
+		Brief br = text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_LABORDERS,
+			Brief.LABOR, pat, null);
 		// leave if template couldn't be created
 		if (br == null) {
 			return false;
@@ -163,5 +168,12 @@ public class LabOrderView extends ViewPart implements ICallback {
 	@Override
 	public boolean saveAs(){
 		return false;
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }
