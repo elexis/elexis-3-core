@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.model.ICustomService;
@@ -39,7 +38,6 @@ public class IEncounterServiceTest extends AbstractServiceTest {
 		cleanup();
 	}
 	
-	@Ignore("race condtion on build server")
 	@Test
 	public void multiThreadUpdate() throws InterruptedException{
 
