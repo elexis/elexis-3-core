@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.model.builder.ICoverageBuilder;
@@ -168,7 +167,6 @@ public class EncounterTest extends AbstractTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Ignore("race condtion on build server")
 	@Test
 	public void multiThreadMappedProperties() throws InterruptedException{
 		IEncounter encounter =
