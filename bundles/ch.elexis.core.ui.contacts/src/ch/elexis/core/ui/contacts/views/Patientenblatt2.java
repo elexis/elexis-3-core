@@ -53,7 +53,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
@@ -69,10 +68,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.statushandlers.StatusManager;
-import org.osgi.service.http.runtime.dto.FailedListenerDTO;
-
-//Nebula floatingText import
-import ch.elexis.core.ui.contacts.views.FloatingText;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
@@ -238,12 +233,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	StickerComposite stickerComposite;
 	private Button deceasedBtn;
 	private CDateTime deceasedDate;
-	
-	//Nebula floatingText	
-	final Group group;
-	
-	//Nebula floatingText	
-	final Group group;
+	private Button increasedTreatmentBtn;
 	
 	void recreateUserpanel(){
 		// cUserfields.setRedraw(false);
@@ -252,45 +242,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			ipp = null;
 		}
 		
-		//ArrayList for floatingText
-		ArrayList<FloatingText> sections = new ArrayList<FloatingText>(20);	
-		
-		//Nebula floatingText
-		final FloatingText name = new FloatingText(cUserfields, SWT.BORDER);
-		name.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-		//getText(Ausgabe der patientenvalues).setMessage(Name des Inputfelders)
-		name.getText(Patient.FLD_NAME).setMessage(Messages.Patientenblatt2_name);
-		
-		final FloatingText firstname = new FloatingText(cUserfields, SWT.BORDER);
-		firstname.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-		firstname.getText(Messages.Patientenblatt2_firstname).setMessage(Patient.FLD_FIRSTNAME);
-		
-		final FloatingText birthdate = new FloatingText(cUserfields, SWT.BORDER);
-		birthdate.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-		birthdate.getText(Messages.Patientenblatt2_birthdate).setMessage(Patient.BIRTHDATE);
-		
-		final FloatingText phone1 = new FloatingText(cUserfields, SWT.BORDER);
-		phone1.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-		phone1.getText(Messages.Patientenblatt2_phone1).setMessage(Patient.FLD_PHONE1);
-
-		final FloatingText phone2 = new FloatingText(cUserfields, SWT.BORDER);
-		phone2.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-		phone2.getText(Messages.Patientenblatt2_phone2).setMessage(Patient.FLD_PHONE2);
-		
-		final FloatingText mobile = new FloatingText(cUserfields, SWT.BORDER);
-		mobile.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-		mobile.getText(Messages.Patientenblatt2_mobile).setMessage(Patient.FLD_MOBILEPHONE);
-		
-		final FloatingText fax = new FloatingText(cUserfields, SWT.BORDER);
-		fax.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-		fax.getText(Messages.Patientenblatt2_fax).setMessage(Patient.FLD_FAX);
-		
-		final FloatingText group = new FloatingText(cUserfields, SWT.BORDER);
-		group.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-		group.getText(Messages.Patientenblatt2_group).setMessage(Patient.FLD_GROUP);
-		
-		
-		ArrayList<InputData> fields = new ArrayList<InputData>(20);			
+		ArrayList<InputData> fields = new ArrayList<InputData>(20);
 		fields.add(new InputData(Messages.Patientenblatt2_name, Patient.FLD_NAME,
 			InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_firstname, Patient.FLD_FIRSTNAME,
@@ -307,7 +259,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 			}
 		};
-
 		comboGeschlecht = new InputData(Messages.Patientenblatt2_sex, Patient.FLD_SEX, null,
 			Typ.COMBO_VIEWER, ArrayContentProvider.getInstance(), new LabelProvider() {
 				
@@ -336,7 +287,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				return new StructuredSelection(selection);
 			}
 		};
-		
 		fields.add(new InputData(Messages.Patientenblatt2_civilState, Patient.FLD_EXTINFO,
 			PatientConstants.FLD_EXTINFO_MARITAL_STATUS, Typ.COMBO_VIEWER,
 			ArrayContentProvider.getInstance(), new LabelProvider() {
@@ -439,7 +389,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						}
 						displayContent(po, ltf);
 					}
-				}				
+				}
 			}));
 		
 		fields.add(new InputData(Messages.Patientenblatt2_ahvNumber, XidConstants.DOMAIN_AHV,
@@ -553,7 +503,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		Composite cPersonalien = tk.createComposite(form.getBody());
 		cPersonalien.setLayout(new GridLayout(2, false));
 		cPersonalien.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		deceasedBtn = tk.createButton(cPersonalien, "verstorben", SWT.CHECK);
+		deceasedBtn = tk.createButton(cPersonalien, Messages.Patient_deceased, SWT.CHECK);
 		deceasedBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
@@ -593,6 +543,23 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				CoreModelServiceHolder.get().save(patient);
 			}
 		});
+		
+		// "erhöhter Behandlungsbedarf"
+		increasedTreatmentBtn =
+			tk.createButton(cPersonalien, Messages.Patientenblatt2_increasedTreatment, SWT.CHECK);
+		increasedTreatmentBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				if (actPatient != null) {
+					IPatient patient =
+						NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
+					patient.setExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT,
+						Boolean.toString(increasedTreatmentBtn.getSelection()));
+					CoreModelServiceHolder.get().save(patient);
+				}
+			}
+		});
+		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		
 		hHA = tk.createHyperlink(cPersonalien, Messages.Patientenblatt2_postal, SWT.NONE); // $NON-NLS-1$
 		hHA.addHyperlinkListener(hr);
@@ -845,9 +812,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 		
 		viewmenu = new ViewMenus(viewsite);
-		//Nebula floatingText
-		this.group = null;
-		//
 		viewmenu.createMenu(GlobalActions.printEtikette, GlobalActions.printAdresse,
 			GlobalActions.printBlatt, GlobalActions.showBlatt, GlobalActions.printRoeBlatt,
 			copySelectedContactInfosToClipboardAction, copySelectedAddressesToClipboardAction);
@@ -937,12 +901,19 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			form.setText(Messages.Patientenblatt2_noPatientSelected); // $NON-NLS-1$
 			inpAdresse.setText(StringConstants.EMPTY, false, false);
 			deceasedBtn.setSelection(false);
+			increasedTreatmentBtn.setSelection(false);
 			inpZusatzAdresse.clear();
 			setUnlocked(false);
 			return;
 		}
 		IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
 		deceasedBtn.setSelection(patient.isDeceased());
+		if (patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT) instanceof String) {
+			increasedTreatmentBtn.setSelection(Boolean.parseBoolean(
+				(String) patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT)));
+		} else {
+			increasedTreatmentBtn.setSelection(false);
+		}
 		if (patient.isDeceased()) {
 			if (patient.getDateOfDeath() != null) {
 				deceasedDate.setSelection(
