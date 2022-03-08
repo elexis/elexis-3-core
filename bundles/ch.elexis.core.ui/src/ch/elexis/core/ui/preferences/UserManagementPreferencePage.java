@@ -29,7 +29,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -704,6 +706,8 @@ public class UserManagementPreferencePage extends PreferencePage
 				return (m.equals(stdWorkingFor) ? "* " : "") + m.getName() + " " + m.getVorname();
 			}
 		});
+		checkboxTableViewerAssociation.setComparator(new MandantViewerComparator(checkboxTableViewerAssociation));
+		
 		updateRoles();
 		updateAssociations();
 		
@@ -889,5 +893,16 @@ public class UserManagementPreferencePage extends PreferencePage
 		checkboxTableViewerAssociation.getTable().setEnabled(unlocked);
 		checkboxTableViewerRoles.getTable().setEnabled(unlocked);
 		lblRespPhysColor.setEnabled(unlocked);
+	}
+	
+	public class MandantViewerComparator extends ViewerComparator{
+		
+		public MandantViewerComparator(Viewer viewer) {}
+		
+		public int compare(Viewer viewer, Object o1, Object o2) {
+			Mandant m1 = (Mandant) o1;
+			Mandant m2 = (Mandant) o2;
+			return m1.getName().compareToIgnoreCase(m2.getName());
+		}
 	}
 }
