@@ -35,7 +35,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public String getState(){
-		return getEntity().getTerminStatus();
+		return StringUtils.defaultString(getEntity().getTerminStatus());
 	}
 	
 	@Override
@@ -49,7 +49,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public String getType(){
-		return getEntity().getTerminTyp();
+		return StringUtils.defaultString(getEntity().getTerminTyp());
 	}
 	
 	@Override
