@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.ISticker;
+import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -74,7 +75,6 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	/** open a system template of the given mandator for editing or export */
 	public static final int TYPE_LOAD_SYSTEMPLATE = 4;
 	
-	protected static String DONTASKFORADDRESSEE_STICKER = "brief_dontaskforaddressee-*-&"; //$NON-NLS-1$
 	protected static boolean dontAskForAddresseeStickerCreated = false;
 	
 	static final int TEMPLATE = TYPE_LOAD_TEMPLATE | TYPE_LOAD_SYSTEMPLATE;
@@ -321,7 +321,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 */
 	public static String getDontAskForAddresseeStickerID(){
 		Query<Sticker> qry = new Query<Sticker>(Sticker.class);
-		qry.add(Sticker.FLD_NAME, Query.EQUALS, DONTASKFORADDRESSEE_STICKER);
+		qry.add(Sticker.FLD_NAME, Query.EQUALS, BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER);
 		List<Sticker> stickerList = qry.execute();
 		if (stickerList.size() > 0)
 			return stickerList.get(0).getId();
@@ -337,7 +337,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 */
 	public static Sticker getDontAskForAddresseeSticker(){
 		Query<Sticker> qry = new Query<Sticker>(Sticker.class);
-		qry.add(Sticker.FLD_NAME, Query.EQUALS, DONTASKFORADDRESSEE_STICKER);
+		qry.add(Sticker.FLD_NAME, Query.EQUALS, BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER);
 		List<Sticker> stickerList = qry.execute();
 		if (stickerList.size() > 0)
 			return stickerList.get(0);
@@ -354,7 +354,8 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		// much faster if doing a boolean check for dontAskForAddresseeStickerCreated
 		if (!dontAskForAddresseeStickerCreated) {
 			if (getDontAskForAddresseeSticker() == null) {
-				Sticker newSticker = new Sticker(DONTASKFORADDRESSEE_STICKER, null, null);
+				Sticker newSticker =
+					new Sticker(BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER, null, null);
 				newSticker.setClassForSticker(Brief.class);
 				newSticker.setVisible(false);
 			}
@@ -399,7 +400,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		
 		List<ISticker> stickers = template.getStickers();
 		for (ISticker st : stickers) {
-			if (st.getLabel().equalsIgnoreCase(DONTASKFORADDRESSEE_STICKER))
+			if (st.getLabel().equalsIgnoreCase(BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER))
 				return true;
 		}
 		return false;

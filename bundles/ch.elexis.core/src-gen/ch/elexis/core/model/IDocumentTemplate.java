@@ -22,6 +22,7 @@ package ch.elexis.core.model;
  * <ul>
  *   <li>{@link ch.elexis.core.model.IDocumentTemplate#getTemplateTyp <em>Template Typ</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocumentTemplate#getMandator <em>Mandator</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IDocumentTemplate#isAskForAddressee <em>Ask For Addressee</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIDocumentTemplate()
@@ -72,5 +73,27 @@ public interface IDocumentTemplate extends IDocument {
 	 * @generated
 	 */
 	void setMandator(IMandator value);
+
+	/**
+	 * Returns the value of the '<em><b>Ask For Addressee</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Ask For Addressee</em>' attribute.
+	 * @see #setAskForAddressee(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIDocumentTemplate_AskForAddressee()
+	 * @model
+	 * @generated
+	 */
+	boolean isAskForAddressee();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IDocumentTemplate#isAskForAddressee <em>Ask For Addressee</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Ask For Addressee</em>' attribute.
+	 * @see #isAskForAddressee()
+	 * @generated
+	 */
+	void setAskForAddressee(boolean value);
 
 } // IDocumentTemplate

@@ -3343,13 +3343,22 @@ public interface ModelPackage extends EPackage {
 	int IDOCUMENT_TEMPLATE__MANDATOR = IDOCUMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Ask For Addressee</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_TEMPLATE__ASK_FOR_ADDRESSEE = IDOCUMENT_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>IDocument Template</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT_TEMPLATE_FEATURE_COUNT = IDOCUMENT_FEATURE_COUNT + 2;
+	int IDOCUMENT_TEMPLATE_FEATURE_COUNT = IDOCUMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}' class.
@@ -9184,6 +9193,17 @@ public interface ModelPackage extends EPackage {
 	EReference getIDocumentTemplate_Mandator();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocumentTemplate#isAskForAddressee <em>Ask For Addressee</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Ask For Addressee</em>'.
+	 * @see ch.elexis.core.model.IDocumentTemplate#isAskForAddressee()
+	 * @see #getIDocumentTemplate()
+	 * @generated
+	 */
+	EAttribute getIDocumentTemplate_AskForAddressee();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13443,6 +13463,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IDOCUMENT_TEMPLATE__MANDATOR = eINSTANCE.getIDocumentTemplate_Mandator();
+
+		/**
+		 * The meta object literal for the '<em><b>Ask For Addressee</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT_TEMPLATE__ASK_FOR_ADDRESSEE = eINSTANCE.getIDocumentTemplate_AskForAddressee();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}' class.
