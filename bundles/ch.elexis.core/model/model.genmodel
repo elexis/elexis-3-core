@@ -232,6 +232,7 @@
     <genClasses ecoreClass="model.ecore#//IDocumentTemplate">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDocumentTemplate/templateTyp"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDocumentTemplate/mandator"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDocumentTemplate/askForAddressee"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ISticker">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/background"/>

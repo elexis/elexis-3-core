@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.ISticker;
+import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.text.MimeTypeUtil;
 import ch.elexis.core.ui.views.textsystem.TextTemplatePrintSettings;
@@ -71,7 +72,8 @@ public class TextTemplate {
 		
 		// set askForAddress flag
 		ISticker sticker = template.getSticker();
-		if (sticker != null && sticker.getLabel().equals(Brief.DONT_ASK_FOR_ADDRESS_STICKER)) {
+		if (sticker != null
+			&& sticker.getLabel().equals(BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER)) {
 			setAskForAddress(false);
 		} else {
 			setAskForAddress(true);

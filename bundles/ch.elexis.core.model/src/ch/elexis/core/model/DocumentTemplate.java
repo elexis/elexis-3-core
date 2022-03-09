@@ -26,6 +26,7 @@ import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.INativeQuery;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.DocumentStatusMapper;
@@ -313,5 +314,17 @@ public class DocumentTemplate extends AbstractIdDeleteModelAdapter<BriefVorlage>
 		} else if (value == null) {
 			getEntityMarkDirty().setRecipient(null);
 		}
+	}
+	
+	@Override
+	public boolean isAskForAddressee(){
+		return !StickerServiceHolder.get().getStickers(this).stream()
+			.filter(s -> s.getName().equals(BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER))
+			.findFirst().isPresent();
+	}
+	
+	@Override
+	public void setAskForAddressee(boolean value){
+		throw new UnsupportedOperationException();
 	}
 }

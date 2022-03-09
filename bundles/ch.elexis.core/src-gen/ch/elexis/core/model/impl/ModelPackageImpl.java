@@ -2056,6 +2056,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIDocumentTemplate_AskForAddressee() {
+		return (EAttribute)iDocumentTemplateEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getISticker() {
 		return iStickerEClass;
 	}
@@ -5069,6 +5079,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iDocumentTemplateEClass = createEClass(IDOCUMENT_TEMPLATE);
 		createEAttribute(iDocumentTemplateEClass, IDOCUMENT_TEMPLATE__TEMPLATE_TYP);
 		createEReference(iDocumentTemplateEClass, IDOCUMENT_TEMPLATE__MANDATOR);
+		createEAttribute(iDocumentTemplateEClass, IDOCUMENT_TEMPLATE__ASK_FOR_ADDRESSEE);
 
 		iStickerEClass = createEClass(ISTICKER);
 		createEAttribute(iStickerEClass, ISTICKER__BACKGROUND);
@@ -5809,6 +5820,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iDocumentTemplateEClass, IDocumentTemplate.class, "IDocumentTemplate", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIDocumentTemplate_TemplateTyp(), ecorePackage.getEString(), "templateTyp", null, 0, 1, IDocumentTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIDocumentTemplate_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, IDocumentTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIDocumentTemplate_AskForAddressee(), ecorePackage.getEBoolean(), "askForAddressee", null, 0, 1, IDocumentTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iStickerEClass, ISticker.class, "ISticker", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getISticker_Background(), ecorePackage.getEString(), "background", null, 0, 1, ISticker.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
