@@ -242,7 +242,7 @@ public class TextContainer {
 	 */
 	public Brief createFromTemplate(final Konsultation kons, final Brief template, final String typ,
 		Kontakt adressat, final String subject){
-		if (adressat == null) {
+		if (adressat == null && template.isAskForAddressee()) {
 			KontaktSelektor ksel = new KontaktSelektor(shell, Kontakt.class,
 				Messages.TextContainer_SelectDestinationHeader,
 				Messages.TextContainer_SelectDestinationBody, Kontakt.DEFAULT_SORT);

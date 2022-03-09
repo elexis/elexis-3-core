@@ -63,7 +63,8 @@ public class Brief extends PersistentObject {
 	
 	public static final String MIMETYPE_OO2 = "application/vnd.oasis.opendocument.text";
 	public static final String SYS_TEMPLATE = "SYS";
-	public static final String DONT_ASK_FOR_ADDRESS_STICKER = "brief_dontaskforaddressee-*-&";
+	
+	private Sticker dontAskForAddresseeSticker;
 	
 	@Override
 	protected String getTableName(){
@@ -267,4 +268,8 @@ public class Brief extends PersistentObject {
 		return checkNull(get(FLD_DATE)) + StringTool.space + checkNull(get(FLD_SUBJECT));
 	}
 
+	public boolean isAskForAddressee(){
+		return !getStickers().stream().filter(s -> ((Sticker) s).get(Sticker.FLD_NAME)
+			.equals(BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER)).findFirst().isPresent();
+	}
 }
