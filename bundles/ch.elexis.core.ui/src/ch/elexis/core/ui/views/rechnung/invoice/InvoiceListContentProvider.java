@@ -39,6 +39,7 @@ import ch.elexis.core.ui.views.rechnung.RnFilterDialog;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider.InvoiceEntry.QueryBuilder;
 import ch.elexis.data.DBConnection;
 import ch.elexis.data.Fall;
+import ch.elexis.data.Fall.Tiers;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
@@ -666,13 +667,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			private void resolvePayerType(){
 				payerType = "TG";
 				if (fall != null) {
-					Kontakt costBearer = fall.getCostBearer();
-					if (costBearer != null) {
-						if (garantId != null && garantId.equals(costBearer.getId())) {
-							payerType = "TP";
-							return;
-						}
-					}
+					payerType = fall.getTiersType() == Tiers.GARANT ? "TG" : "TP";
 				}
 			}
 			
