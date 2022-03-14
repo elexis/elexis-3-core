@@ -25,9 +25,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -38,6 +43,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontMetrics;
@@ -97,6 +103,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockedAction;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
 import ch.elexis.core.ui.services.EncounterServiceHolder;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.Importer;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TemplateDrucker;
@@ -271,8 +278,35 @@ public class GlobalActions {
 		savePerspectiveAsAction = ActionFactory.SAVE_PERSPECTIVE.create(window);
 
 		// ActionFactory.SAVE_PERSPECTIVE.create(window);
-		resetPerspectiveAction = ActionFactory.RESET_PERSPECTIVE.create(window);
-		resetPerspectiveAction.setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
+		resetPerspectiveAction = new Action(Messages.GlobalActions_Home) { //$NON-NLS-1$
+			
+			@Inject
+			private EPartService partService;
+			
+			@Override
+			public void run(){
+				CoreUiUtil.injectServicesWithContext(this);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.resetPerspective();
+				
+				if (partService != null) {
+					// refresh whole parts to get correct toolbar
+					for (MPart part : partService.getParts()) {
+						if (part.getWidget() instanceof Composite
+							&& ((Composite) part.getWidget()).isVisible()) {
+							partService.hidePart(part);
+							partService.showPart(part, PartState.VISIBLE);
+						}
+					}
+				}
+			}
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_REFRESH.getImageDescriptor();
+			}
+			
+		};
 
 		homeAction = new Action(Messages.GlobalActions_Home) { // $NON-NLS-1$
 			{
