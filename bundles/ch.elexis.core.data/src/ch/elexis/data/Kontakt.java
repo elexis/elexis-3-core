@@ -142,10 +142,35 @@ public class Kontakt extends PersistentObject {
 	 * @return a string describing this Kontakt.
 	 */
 	public String getLabel(boolean shortLabel){
+		return getLabel(shortLabel, false);
+	}
+	
+	/**
+	 * Returns a label describing this Kontakt.
+	 * 
+	 * The default implementation returns "Bezeichnung1" for the short label, and "Bezeichnung1",
+	 * "Bezeichnung2", "Strasse", "Plz" and "Ort", separated with a comma, for the long label.
+	 * 
+	 * Subclasses can overwrite this method and define their own label(s). If short is true, they
+	 * should return a short label suitable for addresses. If short is false, they should return a
+	 * long label describing all important properties of this Kontakt for unique identification by
+	 * the user.
+	 * 
+	 * @param shortLabel
+	 *            return a short label for true, and a long label otherwise
+	 * @param withSurname
+	 *            if true appends the surname ("Bezeichnung2") to the contact
+	 * @return a string describing this Kontakt.
+	 */
+	public String getLabel(boolean shortLabel, boolean withSurname){
 		StringBuilder bld = new StringBuilder();
 		
 		if (shortLabel) {
-			bld.append(get(FLD_NAME1));
+			if (withSurname) {
+				bld.append(get(FLD_NAME1) + " " + get(FLD_NAME2));
+			} else {
+				bld.append(get(FLD_NAME1));
+			}
 			String bez3 = get(FLD_NAME3);
 			if (!StringTool.isNothing(bez3)) {
 				bld.append("(").append(bez3).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
