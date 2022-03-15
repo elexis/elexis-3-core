@@ -21,7 +21,11 @@ public class SaveAccountAction extends Action {
 	public void run(){
 		MailAccount account = accountComposite.getAccount();
 		if (account != null) {
-			MailClientComponent.getMailClient().saveAccount(account);
+			if (MailClientComponent.isVirtLocal(account)) {
+				MailClientComponent.getMailClient().saveAccountLocal(account);
+			} else {
+				MailClientComponent.getMailClient().saveAccount(account);
+			}
 			preference.updateAccountsCombo();
 		}
 	}
