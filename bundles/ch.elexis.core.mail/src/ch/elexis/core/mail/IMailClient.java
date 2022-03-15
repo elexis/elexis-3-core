@@ -36,11 +36,25 @@ public interface IMailClient {
 	public void saveAccount(MailAccount account);
 	
 	/**
+	 * Save a {@link MailAccount} to the local config.
+	 * 
+	 * @param account
+	 */
+	public void saveAccountLocal(MailAccount account);
+	
+	/**
 	 * Remove a {@link MailAccount} from the global config.
 	 * 
 	 * @param account
 	 */
 	public void removeAccount(MailAccount account);
+	
+	/**
+	 * Remove a {@link MailAccount} from the local config.
+	 * 
+	 * @param account
+	 */
+	public void removeAccountLocal(MailAccount account);
 	
 	/**
 	 * Get a specific {@link MailAccount} via its id.
@@ -56,6 +70,13 @@ public interface IMailClient {
 	 * @return
 	 */
 	public List<String> getAccounts();
+	
+	/**
+	 * Get all configured {@link MailAccount} instances.
+	 * 
+	 * @return
+	 */
+	public List<String> getAccountsLocal();
 	
 	/**
 	 * Do a basic connection test if the mail service specified by the {@link MailAccount} is
