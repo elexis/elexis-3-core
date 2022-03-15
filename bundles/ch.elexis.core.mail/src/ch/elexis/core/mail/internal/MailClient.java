@@ -90,7 +90,10 @@ public class MailClient implements IMailClient {
 	@Override
 	public Optional<MailAccount> getAccount(String id){
 		MailAccount ret = null;
-		String accountString = configService.get(CONFIG_ACCOUNT + "/" + id, null);
+		String accountString = configService.getLocal(CONFIG_ACCOUNT + "/" + id, null);
+		if (accountString == null) {
+			accountString = configService.get(CONFIG_ACCOUNT + "/" + id, null);
+		}
 		if (accountString != null) {
 			ret = MailAccount.from(accountString);
 		}
@@ -109,11 +112,50 @@ public class MailClient implements IMailClient {
 	}
 	
 	@Override
+	public List<String> getAccountsLocal(){
+		List<String> ret = new ArrayList<String>();
+		String accountIds = configService.getLocal(CONFIG_ACCOUNTS, null);
+		if (accountIds != null) {
+			String[] currentIds = accountIds.split(ACCOUNTS_SEPARATOR);
+			ret.addAll(Arrays.asList(currentIds));
+		}
+		return ret;
+	}
+	
+	@Override
 	public void saveAccount(MailAccount account){
 		if (account != null && account.getId() != null) {
 			addAccountId(account.getId());
 			configService.set(CONFIG_ACCOUNT + "/" + account.getId(),
 				account.toString());
+		}
+	}
+	
+	@Override
+	public void saveAccountLocal(MailAccount account){
+		if (account != null && account.getId() != null) {
+			addAccountIdLocal(account.getId());
+			configService.setLocal(CONFIG_ACCOUNT + "/" + account.getId(), account.toString());
+		}
+	}
+	
+	private void addAccountIdLocal(String id){
+		if (id.contains(ACCOUNTS_SEPARATOR)) {
+			throw new IllegalStateException(
+				"Id can not contain separator [" + ACCOUNTS_SEPARATOR + "]");
+		}
+		String accountIds = configService.getLocal(CONFIG_ACCOUNTS, null);
+		if (accountIds == null) {
+			configService.setLocal(CONFIG_ACCOUNTS, id);
+		} else {
+			String[] currentIds = accountIds.split(ACCOUNTS_SEPARATOR);
+			for (String string : currentIds) {
+				if (string.equals(id)) {
+					return;
+				}
+			}
+			// not already in list
+			configService.setLocal(CONFIG_ACCOUNTS, accountIds + ACCOUNTS_SEPARATOR + id);
 		}
 	}
 	
@@ -142,6 +184,36 @@ public class MailClient implements IMailClient {
 		if (account != null && account.getId() != null) {
 			removeAccountId(account.getId());
 			configService.set(CONFIG_ACCOUNT + "/" + account.getId(), null);
+		}
+	}
+	
+	@Override
+	public void removeAccountLocal(MailAccount account){
+		if (account != null && account.getId() != null) {
+			removeAccountIdLocal(account.getId());
+			configService.setLocal(CONFIG_ACCOUNT + "/" + account.getId(), null);
+		}
+	}
+	
+	private void removeAccountIdLocal(String id){
+		String accountIds = configService.getLocal(CONFIG_ACCOUNTS, null);
+		if (accountIds != null) {
+			StringBuilder sb = new StringBuilder();
+			String[] currentIds = accountIds.split(ACCOUNTS_SEPARATOR);
+			for (String string : currentIds) {
+				if (!string.equals(id)) {
+					if (sb.length() > 0) {
+						sb.append(ACCOUNTS_SEPARATOR);
+					}
+					sb.append(string);
+				}
+			}
+			// write new list
+			if (StringUtils.isNotBlank(sb.toString())) {
+				configService.setLocal(CONFIG_ACCOUNTS, sb.toString());
+			} else {
+				configService.setLocal(CONFIG_ACCOUNTS, null);
+			}
 		}
 	}
 	
