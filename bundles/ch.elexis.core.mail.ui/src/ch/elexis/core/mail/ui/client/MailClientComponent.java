@@ -7,10 +7,13 @@ import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.IMailClient.ErrorTyp;
+import ch.elexis.core.mail.MailAccount;
 
 @Component
 public class MailClientComponent {
 
+	private static String virtLocalId = " [virt_local]";
+	
 	private static IMailClient mailClient;
 	
 	@Reference
@@ -49,4 +52,17 @@ public class MailClientComponent {
 		}
 		return message;
 	}
+	
+	public static boolean isVirtLocal(String accountId){
+		return accountId.endsWith(virtLocalId);
+	}
+	
+	public static boolean isVirtLocal(MailAccount account){
+		return isVirtLocal(account.getId());
+	}
+	
+	public static String getVirtLocalId(MailAccount account){
+		return account.getId() + virtLocalId;
+	}
+	
 }

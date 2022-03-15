@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -287,15 +288,22 @@ public class SendMailDialog extends TitleAreaDialog {
 				IMandator selectedMandant =
 					ContextServiceHolder.get().getActiveMandator().orElse(null);
 				if (selectedMandant != null) {
-					List<String> accounts = MailClientComponent.getMailClient().getAccounts();
-					for (String string : accounts) {
-						Optional<MailAccount> accountOptional =
-							MailClientComponent.getMailClient().getAccount(string);
-						if (accountOptional.isPresent()
-							&& accountOptional.get().isForMandant(selectedMandant.getId())) {
-							accountsViewer.setSelection(
-								new StructuredSelection(accountOptional.get().getId()));
-						}
+					List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
+					Optional<String> mandantAccount = accounts.stream().filter(
+						aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+						.filter(aid -> MailClientComponent.getMailClient().getAccount(aid)
+							.get().isForMandant(selectedMandant.getId()))
+						.findFirst();
+					if (!mandantAccount.isPresent()) {
+						accounts = MailClientComponent.getMailClient().getAccounts();
+						mandantAccount = accounts.stream().filter(
+							aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+							.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
+								.isForMandant(selectedMandant.getId()))
+							.findFirst();
+					}
+					if (mandantAccount.isPresent()) {
+						accountsViewer.setSelection(new StructuredSelection(mandantAccount.get()));
 					}
 				}
 			}
@@ -357,16 +365,18 @@ public class SendMailDialog extends TitleAreaDialog {
 	
 	private List<String> getSendMailAccounts(){
 		List<String> ret = new ArrayList<String>();
-		List<String> accounts = MailClientComponent.getMailClient().getAccounts();
-		for (String accountId : accounts) {
-			Optional<MailAccount> accountOptional =
-				MailClientComponent.getMailClient().getAccount(accountId);
-			if (accountOptional.isPresent()) {
-				if (accountOptional.get().getType() == TYPE.SMTP) {
-					ret.add(accountId);
-				}
-			}
-		}
+		List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
+		ret.addAll(accounts.stream()
+			.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+			.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
+				.getType() == TYPE.SMTP)
+			.collect(Collectors.toList()));
+		accounts = MailClientComponent.getMailClient().getAccounts();
+		ret.addAll(accounts.stream()
+			.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+			.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
+				.getType() == TYPE.SMTP)
+			.collect(Collectors.toList()));
 		return ret;
 	}
 	
