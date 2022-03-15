@@ -61,11 +61,20 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 					String accountId = (String) selection.getFirstElement();
 					if (accountId != null) {
-						Optional<MailAccount> selectedAccount =
-							MailClientComponent.getMailClient().getAccount(accountId);
-						if (selectedAccount.isPresent()) {
-							accountComposite.setAccount(selectedAccount.get());
-							testButton.setEnabled(true);
+						if (MailClientComponent.isVirtLocal(accountId)) {
+							Optional<MailAccount> selectedAccount =
+								MailClientComponent.getMailClient().getAccount(accountId);
+							if (selectedAccount.isPresent()) {
+								accountComposite.setAccount(selectedAccount.get());
+								testButton.setEnabled(true);
+							}
+						} else {
+							Optional<MailAccount> selectedAccount =
+								MailClientComponent.getMailClient().getAccount(accountId);
+							if (selectedAccount.isPresent()) {
+								accountComposite.setAccount(selectedAccount.get());
+								testButton.setEnabled(true);
+							}
 						}
 					}
 				}
@@ -96,6 +105,7 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 		});
 		
 		ToolBarManager accountsToolMgr = new ToolBarManager(accountsTool);
+		accountsToolMgr.add(new CopyVirtLocalAccountAction(accountComposite, this));
 		accountsToolMgr.add(new SaveAccountAction(accountComposite, this));
 		accountsToolMgr.add(new RemoveAccountAction(accountComposite, this));
 		accountsToolMgr.update(true);
@@ -107,7 +117,11 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 	public boolean performOk(){
 		MailAccount account = accountComposite.getAccount();
 		if (account != null) {
-			MailClientComponent.getMailClient().saveAccount(account);
+			if (MailClientComponent.isVirtLocal(account)) {
+				MailClientComponent.getMailClient().saveAccountLocal(account);
+			} else {
+				MailClientComponent.getMailClient().saveAccount(account);
+			}
 		}
 		return super.performOk();
 	}
@@ -115,7 +129,8 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 	protected void updateAccountsCombo(){
 		if (MailClientComponent.getMailClient() != null) {
 			accountsViewer.getControl().setEnabled(true);
-			List<String> accountsInput = MailClientComponent.getMailClient().getAccounts();
+			List<String> accountsInput = MailClientComponent.getMailClient().getAccountsLocal();
+			accountsInput.addAll(MailClientComponent.getMailClient().getAccounts());
 			accountsInput.add(0, "Neu erstellen");
 			accountsViewer.setInput(accountsInput);
 			if (accountComposite != null) {

@@ -21,7 +21,11 @@ public class RemoveAccountAction extends Action {
 	public void run(){
 		MailAccount account = accountComposite.getAccount();
 		if (account != null) {
-			MailClientComponent.getMailClient().removeAccount(account);
+			if (MailClientComponent.isVirtLocal(account)) {
+				MailClientComponent.getMailClient().removeAccountLocal(account);
+			} else {
+				MailClientComponent.getMailClient().removeAccount(account);
+			}
 			accountComposite.setAccount(null);
 			preference.updateAccountsCombo();
 		}
