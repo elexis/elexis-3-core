@@ -292,4 +292,8 @@ public class MailAccount {
 			mandants = sb.toString();
 		}
 	}
+	
+	public MailAccount copy(){
+		return MailAccount.from(toString());
+	}
 }
