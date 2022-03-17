@@ -180,8 +180,7 @@ To build an alternate target platform (eg., Juno) for JBT:
 			</classpath>
 			<arg line=" -nosplash -data ${tmpdir}/workspace -consolelog -application org.eclipse.ant.core.antRunner" />
 			<arg line=" -f ${targetFile}.p2mirror.xml -DfollowStrict=true -DrepoDir=${repoDir}" />
-			<arg line=" -Ddebug=true -vmargs -Dosgi.locking=none -XX:MaxPermSize=128m" />
-			<jvmarg value="-XX:MaxPermSize=128m" />
+			<arg line=" -Ddebug=true -vmargs -Dosgi.locking=none" />
 		</java>
 	</target>
 

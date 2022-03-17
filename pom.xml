@@ -6,20 +6,20 @@
 	<version>3.6.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Elexis-Core</name>
-
     <repositories>
       <repository>
         <id>elexis.3.server</id>
-        <url>http://download.elexis.info/elexis-server/1.5/p2/elexis-server/</url>
+        <url>https://archive.elexis.info/elexis-server/1.5/p2/elexis-server/</url>
         <layout>p2</layout>
       </repository>
       <repository>
         <id>elexis.3.target</id>
-        <url>http://download.elexis.info/elexis/${git.target.branch}/p2/target</url>
+        <url>${targetRepo}</url>
         <layout>p2</layout>
       </repository>
     </repositories>
     <properties>
+    <targetRepo>https://archive.elexis.info/elexis/${git.target.branch}/p2/target</targetRepo>
 		<tycho.version>1.0.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
