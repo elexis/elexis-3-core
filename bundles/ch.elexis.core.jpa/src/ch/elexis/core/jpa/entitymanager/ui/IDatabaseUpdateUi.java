@@ -2,6 +2,8 @@ package ch.elexis.core.jpa.entitymanager.ui;
 
 public interface IDatabaseUpdateUi {
 	
-	void executeWithProgress(Runnable object);
+	void executeWithProgress(String message, Runnable runnable);
+	
+	void setMessage(String message);
 	
 }

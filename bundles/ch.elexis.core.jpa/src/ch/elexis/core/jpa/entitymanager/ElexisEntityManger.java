@@ -92,14 +92,6 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		this.factoryBuilder = factoryBuilder;
 	}
 	
-	private void dbInitAndUpdate(){
-		// make sure database is up to date
-		LiquibaseDBInitializer initializer = new LiquibaseDBInitializer(dataSource);
-		initializer.init();
-		LiquibaseDBUpdater updater = new LiquibaseDBUpdater(dataSource);
-		updateSuccess = updater.update();
-	}
-	
 	@Override
 	public synchronized EntityManager getEntityManager(boolean managed){
 		// do lazy initialization on first access
@@ -108,14 +100,18 @@ public class ElexisEntityManger implements IElexisEntityManager {
 			if (factoryBuilder != null) {
 				if (updateProgress != null) {
 					try {
-						updateProgress.executeWithProgress(() -> {
-							dbInitAndUpdate();
+						updateProgress.executeWithProgress("Database Init", () -> {
+							dbInit(updateProgress);
+						});
+						updateProgress.executeWithProgress("Database Update", () -> {
+							dbUpdate(updateProgress);
 						});
 					} catch (Exception e) {
 						logger.warn("Exeption executing database update with ui", e);
 					}
 				} else {
-					dbInitAndUpdate();
+					dbInit(null);
+					dbUpdate(null);
 				}
 				// initialize the entity manager factory
 				HashMap<String, Object> props = new HashMap<String, Object>();
@@ -148,6 +144,16 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		} else {
 			throw new IllegalStateException("No EntityManagerFactory available");
 		}
+	}
+	
+	private void dbUpdate(IDatabaseUpdateUi updateProgress2){
+		LiquibaseDBUpdater updater = new LiquibaseDBUpdater(dataSource, updateProgress);
+		updateSuccess = updater.update();
+	}
+	
+	private void dbInit(IDatabaseUpdateUi updateProgress2){
+		LiquibaseDBInitializer initializer = new LiquibaseDBInitializer(dataSource, updateProgress);
+		initializer.init();
 	}
 	
 	@Override

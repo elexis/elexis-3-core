@@ -38,18 +38,18 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 		Composite contentComposite = new Composite(shell, SWT.NONE);
 		contentComposite.setLayout(new GridLayout());
 		
-		messageLabel = new Label(contentComposite, SWT.LEFT | SWT.WRAP);
-		messageLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
+		messageLabel = new Label(contentComposite, SWT.CENTER | SWT.WRAP);
+		messageLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		// progress indicator
 		progressIndicator = new ProgressIndicator(contentComposite);
-		progressIndicator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		progressIndicator.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
 		
 		shell.pack();
 		shell.open();
 		Rectangle displayBounds = display.getBounds();
-		shell.setLocation((displayBounds.width / 2) - (shell.getBounds().width / 2),
+		shell.setSize(500, 50);
+		shell.setLocation(((displayBounds.width / 2) - (shell.getBounds().width / 2)),
 			(displayBounds.height / 2) + (shell.getBounds().height / 2) + 150);
-		
 		runEventLoop();
 	}
 	
@@ -63,14 +63,14 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 		});
 	}
 	
-	public void openProgress(){
+	public void openProgress(String message){
 		Display display = Display.getDefault();
 		display.syncExec(() -> {
 			if (shell == null) {
 				createAndOpenShell(display);
 			}
 			progressIndicator.beginAnimatedTask();
-			messageLabel.setText("Database Update");
+			messageLabel.setText(message);
 			shell.pack();
 		});
 	}
@@ -91,8 +91,8 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 	}
 	
 	@Override
-	public void executeWithProgress(Runnable updateRunnable){
-		openProgress();
+	public void executeWithProgress(String message, Runnable updateRunnable){
+		openProgress(message);
 		execute(updateRunnable);
 		while (isExecuting()) {
 			runEventLoop();
@@ -112,5 +112,19 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 		} catch (InterruptedException e) {
 			// ignore
 		}
+	}
+	
+	@Override
+	public void setMessage(String message){
+		Display.getDefault().syncExec(() -> {
+			if (shell != null && !shell.isDisposed()) {
+				shell.setSize(500, 100);
+				Rectangle displayBounds = shell.getDisplay().getBounds();
+				shell.setLocation(((displayBounds.width / 2) - (shell.getBounds().width / 2)),
+					(displayBounds.height / 2) + (shell.getBounds().height / 2) + 150);
+				this.messageLabel.setText(message);
+				this.messageLabel.getParent().layout();
+			}
+		});
 	}
 }
