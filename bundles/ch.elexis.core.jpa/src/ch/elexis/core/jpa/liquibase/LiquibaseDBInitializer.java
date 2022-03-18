@@ -24,6 +24,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.exception.ValidationFailedException;
+import liquibase.lockservice.DatabaseChangeLogLock;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
@@ -54,6 +55,17 @@ public class LiquibaseDBInitializer {
 			Database targetDb = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(database);
 
 			liquibase = new Liquibase(changelogXmlUrl, resourceAccessor, targetDb);
+			DatabaseChangeLogLock[] existinglocks = liquibase.listLocks();
+			if (existinglocks.length > 0) {
+				long timestamp = existinglocks[0].getLockGranted().getTime();
+				if (((System.currentTimeMillis() - timestamp) / 1000) > 14400) {
+					logger.warn("Releasing lock older than 4h");
+					liquibase.forceReleaseLocks();
+				} else {
+					updateProgress.setMessage("Database locked: " + existinglocks[0].getLockedBy()
+						+ "@" + existinglocks[0].getLockGranted());
+				}
+			}
 			if (updateProgress != null) {
 				liquibase.setChangeExecListener(new AbstractChangeExecListener() {
 					
