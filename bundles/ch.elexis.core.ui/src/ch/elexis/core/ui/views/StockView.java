@@ -50,9 +50,12 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -122,10 +125,22 @@ public class StockView extends ViewPart implements IRefreshable {
 	
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 	
+	private static final int STOCK = 0;
+	private static final int PHARMACODE = 1;
+	private static final int GTIN = 2;
+	private static final int NAME = 3;
+	private static final int VP = 4;
+	private static final int MIN = 5;
+	private static final int IST = 6;
+	private static final int MAX = 7;
+	private static final int SUPPLIER = 8;
+	
+	private StockViewComparator comparator;
+	
 	String[] columns = {
 		Messages.LagerView_stock, Messages.LagerView_pharmacode, Messages.LagerView_gtin,
-		Messages.LagerView_name, Messages.LagerView_vkPreis, Messages.LagerView_minBestand, Messages.LagerView_istBestand,
-		Messages.LagerView_maxBestand, Messages.LagerView_dealer
+		Messages.LagerView_name, Messages.LagerView_vkPreis, Messages.LagerView_minBestand,
+		Messages.LagerView_istBestand, Messages.LagerView_maxBestand, Messages.LagerView_dealer
 	};
 	int[] colwidth = {
 		50, 75, 90, 250, 50, 35, 35, 35, 150
@@ -180,6 +195,15 @@ public class StockView extends ViewPart implements IRefreshable {
 			tc.setData(i);
 			tvc.setLabelProvider(new ColumnStockEntryLabelProvider(i, labelProvider));
 			
+			final int columnIndex = i;
+			tc.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					comparator.setColumn(columnIndex);
+					refresh();
+				}
+			});
+			
 			ReflectiveEditingSupport poes = null;
 			if (i == 5) {
 				poes = new ReflectiveEditingSupport(viewer,
@@ -214,11 +238,12 @@ public class StockView extends ViewPart implements IRefreshable {
 					
 					@Override
 					protected void setValue(Object element, Object value){
-						if(value instanceof PersistentObject) {
-							value = NoPoUtil.loadAsIdentifiable((PersistentObject) value,
-								IContact.class).orElse(null);
+						if (value instanceof PersistentObject) {
+							value = NoPoUtil
+								.loadAsIdentifiable((PersistentObject) value, IContact.class)
+								.orElse(null);
 						}
-							
+						
 						IStockEntry se = (IStockEntry) element;
 						if (se == null) {
 							return;
@@ -337,17 +362,23 @@ public class StockView extends ViewPart implements IRefreshable {
 		Menu menu = contextMenu.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
 		
+		viewer.setInput(getViewSite());
+		comparator = new StockViewComparator();
+		viewer.setComparator(comparator);
+		
 		makeActions();
 		viewMenus = new ViewMenus(getViewSite());
 		viewMenus.createToolbar(refreshAction);
 		viewMenus.createMenu(exportAction);
 		
 		getSite().getPage().addPartListener(udpateOnVisible);
+		
 	}
 	
 	@Optional
 	@Inject
-	public void udpate(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IStockEntry entry){
+	public void udpate(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE)
+	IStockEntry entry){
 		if (entry != null) {
 			if (viewer != null && !viewer.getControl().isDisposed()) {
 				viewer.update(entry, null);
@@ -393,8 +424,7 @@ public class StockView extends ViewPart implements IRefreshable {
 								"Name", "Pharmacode", "EAN", "Max", "Min",
 								"Aktuell Packung an Lager", "Aktuell an Lager (Anbruch)",
 								" Stück pro Packung", "Stück pro Abgabe", "Einkaufspreis",
-								"Verkaufspreis",
-								"Typ (P, N, ...)", "Lieferant"
+								"Verkaufspreis", "Typ (P, N, ...)", "Lieferant"
 							};
 							csv.writeNext(header);
 							
@@ -427,9 +457,8 @@ public class StockView extends ViewPart implements IRefreshable {
 									success++;
 								} else {
 									errorUnkownArticle++;
-									log.warn(
-										"cannot export: id [" + iStockEntry.getId() + "] "
-											+ iStockEntry.getLabel());
+									log.warn("cannot export: id [" + iStockEntry.getId() + "] "
+										+ iStockEntry.getLabel());
 								}
 							}
 							csv.close();
@@ -477,7 +506,7 @@ public class StockView extends ViewPart implements IRefreshable {
 		getSite().getPage().removePartListener(udpateOnVisible);
 		super.dispose();
 	}
-		
+	
 	public class FullMachineInventoryAction extends Action {
 		private Viewer viewer;
 		
@@ -599,9 +628,8 @@ public class StockView extends ViewPart implements IRefreshable {
 				if (stockEntry.getArticle() != null) {
 					IOrderEntry orderEntry =
 						OrderServiceHolder.get().findOpenOrderEntryForStockEntry(stockEntry);
-					OrderImportDialog dialog =
-						new OrderImportDialog(viewer.getControl().getShell(),
-							orderEntry.getOrder());
+					OrderImportDialog dialog = new OrderImportDialog(viewer.getControl().getShell(),
+						orderEntry.getOrder());
 					dialog.open();
 					viewer.refresh();
 				}
@@ -713,7 +741,7 @@ public class StockView extends ViewPart implements IRefreshable {
 				o -> o.getArticle() != null ? o.getArticle().getLabel() : null,
 				Comparator.nullsLast(Comparator.naturalOrder()));
 		}
-
+		
 		private boolean selectOrderOnly(IStockEntry se){
 			Availability availability = StockServiceHolder.get().determineAvailability(se);
 			if (availability != null) {
@@ -743,7 +771,8 @@ public class StockView extends ViewPart implements IRefreshable {
 	
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
@@ -762,5 +791,57 @@ public class StockView extends ViewPart implements IRefreshable {
 				loader.schedule();
 			}
 		}
+	}
+	
+	public class StockViewComparator extends ViewerComparator {
+		private int propertyIndex;
+		
+		private int direction = 1;
+		
+		public void setColumn(int column){
+			if (column == propertyIndex) {
+				direction *= -1;
+			}
+			this.propertyIndex = column;
+		}
+		
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2){
+			IStockEntry s1 = (IStockEntry) e1;
+			IStockEntry s2 = (IStockEntry) e2;
+			
+			switch (propertyIndex) {
+			case STOCK:
+				return s1.getStock().getCode().compareTo(s2.getStock().getCode()) * direction;
+			case PHARMACODE:
+				return s1.getId().compareTo(s2.getId()) * direction;
+			case GTIN:
+				return s1.getStock().getId().compareTo(s2.getId()) * direction;
+			case NAME:
+				return s1.getArticle().getName().compareTo(s2.getArticle().getName()) * direction;
+			case VP:
+				return s1.getArticle().getSellingPrice()
+					.compareTo(s2.getArticle().getSellingPrice()) * direction;
+			case MIN:
+				return Integer.compare(s1.getMinimumStock(), s2.getMinimumStock()) * direction;
+			case IST:
+				return Integer.compare(s1.getCurrentStock(), s2.getCurrentStock()) * direction;
+			case MAX:
+				return Integer.compare(s1.getMaximumStock(), s2.getMaximumStock()) * direction;
+			case SUPPLIER: {
+				String lieferant1 = "";
+				String lieferant2 = "";
+				if (s1.getProvider() != null) {
+					lieferant1 = s1.getProvider().getLabel();
+				}
+				if (s2.getProvider() != null) {
+					lieferant2 = s2.getProvider().getLabel();
+				}
+				return lieferant1.compareTo(lieferant2) * direction;
+			}
+			}
+			
+			return super.compare(viewer, e1, e2);
+		}	
 	}
 }
