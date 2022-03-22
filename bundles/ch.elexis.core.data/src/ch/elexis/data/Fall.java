@@ -601,6 +601,14 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	}
 	
 	public void setGrund(final String g){
+		if (getConfiguredBillingSystemLaw() != null
+			&& getConfiguredBillingSystemLaw() == BillingLaw.UVG) {
+			if ("Krankheit".equals(g)) {
+				LoggerFactory.getLogger(getClass()).warn(
+					"Setting reason [" + g + "] for coverage [" + getId() + "]",
+					new Throwable("Set reason bug"));
+			}
+		}
 		set(FLD_GRUND, g);
 	}
 	
