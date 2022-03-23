@@ -190,13 +190,16 @@ public class CategorySelectionEditComposite extends Composite {
 	}
 	
 	private void addAndSelectCategory(String categoryName) {
-		document.setCategory(DocumentStoreServiceHolder.getService()
-			.createCategory(document, categoryName));
-		if (!((List<?>) cbCategories.getInput()).contains(document.getCategory())) {
-			cbCategories.add(document.getCategory());
+		if (categoryName == null) {
+			cbCategories.setSelection(new StructuredSelection());
+		} else {
+			document.setCategory(
+				DocumentStoreServiceHolder.getService().createCategory(document, categoryName));
+			if (!((List<?>) cbCategories.getInput()).contains(document.getCategory())) {
+				cbCategories.add(document.getCategory());
+			}
+			cbCategories.setSelection(new StructuredSelection(document.getCategory()), true);
 		}
-		cbCategories.setSelection(new StructuredSelection(document.getCategory()),
-			true);
 	}
 	
 	@Override
