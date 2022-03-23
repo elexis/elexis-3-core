@@ -745,24 +745,26 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			// alphabetically
 			for (String unusedPart : allUnused) {
 				int posColon = unusedPart.indexOf(ARGUMENTSSDELIMITER);
-				String key = unusedPart.substring(0, posColon);
-				// *** do not show if already displayed in required or optional
-				// fields
-				boolean alreadyDisplayed = false;
-				for (int reqI = 0; reqI < reqsArray.length; reqI++) {
-					if (key.equalsIgnoreCase(reqsArray[reqI])) {
-						alreadyDisplayed = true;
+				if (posColon != -1) {
+					String key = unusedPart.substring(0, posColon);
+					// *** do not show if already displayed in required or optional
+					// fields
+					boolean alreadyDisplayed = false;
+					for (int reqI = 0; reqI < reqsArray.length; reqI++) {
+						if (key.equalsIgnoreCase(reqsArray[reqI])) {
+							alreadyDisplayed = true;
+						}
 					}
-				}
-				for (int reqI = 0; reqI < optsArray.length; reqI++) {
-					if (key.equalsIgnoreCase(optsArray[reqI])) {
-						alreadyDisplayed = true;
+					for (int reqI = 0; reqI < optsArray.length; reqI++) {
+						if (key.equalsIgnoreCase(optsArray[reqI])) {
+							alreadyDisplayed = true;
+						}
 					}
-				}
-				if (!alreadyDisplayed) {
-					String value = unusedPart.substring(posColon + 1);
-					unusedHash.put(key, value);
-					unused.add(unusedPart);
+					if (!alreadyDisplayed) {
+						String value = unusedPart.substring(posColon + 1);
+						unusedHash.put(key, value);
+						unused.add(unusedPart);
+					}
 				}
 			}
 		}
