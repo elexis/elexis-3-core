@@ -51,9 +51,8 @@ public class DateSelectorDialog extends Dialog {
 		Composite ret = new Composite(parent, SWT.None);
 		ret.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		ret.setLayout(new GridLayout(1, false));
-		dp = new CDateTime(ret, CDT.TAB_FIELDS | CDT.DROP_DOWN | CDT.DATE_SHORT);
+		dp = new CDateTime(ret, CDT.SIMPLE | CDT.DATE_SHORT);
 		GridData gd_dp = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
-		gd_dp.widthHint = 100;
 		dp.setLayoutData(gd_dp);
 		dp.setSelection(preSelectedDate.getTime());
 		getShell().setText(shellTitle);
