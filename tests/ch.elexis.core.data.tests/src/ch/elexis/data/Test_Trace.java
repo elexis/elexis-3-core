@@ -20,19 +20,20 @@ public class Test_Trace extends AbstractPersistentObjectTest {
 	public void testAddTraceEntry() throws SQLException, InterruptedException{
 		Trace.addTraceEntry("testUser", "testWorkstation", "testAction");
 		// trace is written async
-		Thread.sleep(10);
 		
-		Stm statement = link.getStatement();
-		ResultSet rs = statement
-			.query("SELECT * FROM " + Trace.TABLENAME);
-		while(rs.next()) {
-			String string = rs.getString("ACTION");
-			if("testAction".equals(string)) {
-				link.releaseStatement(statement);
-				return;
+		for (int i = 0; i < 10; i++) {
+			Stm statement = link.getStatement();
+			ResultSet rs = statement.query("SELECT * FROM " + Trace.TABLENAME);
+			while (rs.next()) {
+				String string = rs.getString("ACTION");
+				if ("testAction".equals(string)) {
+					link.releaseStatement(statement);
+					return;
+				}
 			}
+			link.releaseStatement(statement);
+			Thread.sleep(100);
 		}
-		link.releaseStatement(statement);
 		fail();
 	}
 	
