@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -162,15 +163,25 @@ public class IConfigServiceTest extends AbstractServiceTest {
 	}
 	
 	@Test
-	public void setWithWithoutTrace(){
+	public void setWithWithoutTrace() throws InterruptedException{
 		assertTrue(configService.set("asdfkeyWoTrace", "valueNoTrace", false));
 		assertTrue(configService.set("asdfkeyWTrace", "valueTrace", true));
+		// trace gets added async
 		
 		String insertStatement = "SELECT action FROM TRACES WHERE action LIKE '%asdfkeyW%'";
-		List<String> traces = coreModelService.executeNativeQuery(insertStatement)
-			.map(o -> o.toString()).collect(Collectors.toList());
-		assertEquals(1, traces.size());
-		assertTrue(traces.get(0).startsWith("W globalCfg key [asdfkeyWTrace"));
+		for (int i = 0; i < 10; i++) {
+			List<String> traces = coreModelService
+					.executeNativeQuery(insertStatement).map(o -> o.toString())
+					.collect(Collectors.toList());
+			if (traces.size() > 0) {
+				assertEquals(1, traces.size());
+				assertTrue(traces.get(0)
+						.startsWith("W globalCfg key [asdfkeyWTrace"));
+				return;
+			}
+			Thread.sleep(100);
+		}
+		fail("could not find trace");
 	}
 	
 }
