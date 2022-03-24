@@ -18,6 +18,7 @@ build:
   - eval $(ssh-agent -s)
   - ssh-add <(echo "$SSH_PRIVATE_KEY_ED25519_BASE64" | base64 -d)
   - rsync -aiv --delete --mkpath -e ssh ch.elexis.core.p2site/target/repository/ deploy@download.medelexis.ch:download.elexis.info/elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core/
+  - [[ -d "ch.elexis.core.p2site/target/products/" ]] && rsync -aiv --no-recursive -e ssh ch.elexis.core.p2site/target/products/* deploy@download.medelexis.ch:download.elexis.info/elexis/$CI_COMMIT_REF_NAME/products/
   - eval $(ssh-agent -k)
   artifacts:
     reports:
