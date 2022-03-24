@@ -131,16 +131,17 @@
 			</plugin>
 			<plugin>
 				<!--https://books.sonatype.com/mcookbook/reference/ch02s03.html#ex-groovy-script-ex -->
-				<groupId>org.codehaus.gmavenplus</groupId>
-				<artifactId>gmavenplus-plugin</artifactId>
-				<version>1.5</version>
-				<executions>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.13.1</version>
+        <executions>
 					<execution>
 						<phase>compile</phase>
 						<goals>
 							<goal>execute</goal>
 						</goals>
 						<configuration>
+							<allowSystemExits>true</allowSystemExits>
 							<scripts>
 								<script><![CDATA[
   import java.text.SimpleDateFormat;
