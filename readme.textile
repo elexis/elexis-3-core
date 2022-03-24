@@ -43,6 +43,7 @@ Explanation of the used options
 * -Dtycho.localArtifacts=ignore: Do not use any locally built maven artefacts
 * -DskipTests: Skip unit tests (Use it only if you want to speed up the build)
 * --quiet: Used for travis builds to generate Quiet output - only show errors. Without it the log would bee too long and make the travis-build fail.
+* If the environment variable NO_MATERIALIZE_PRODUCTS is set, no zip files will be produced, which speeds up the build
 
 It will be built for your OS/Window-System/Architecture combination. You will find the executables under @ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp/*/*/*@
 
