@@ -9,10 +9,11 @@
 	<packaging>eclipse-repository</packaging>
 	<profiles>
     <profile>
-      <id>no_materialize_products</id>
+      <id>NO_MATERIALIZE_PRODUCTS</id>
       <activation>
         <property>
-           <name>!no_materialize_products</name>
+           <name>NO_MATERIALIZE_PRODUCTS</name>
+           <value>true</value>
         </property>
       </activation>
       <build>
