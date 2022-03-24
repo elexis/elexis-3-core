@@ -87,4 +87,4 @@ wait_for_bypassing
 kill_descendent_pids $$
 echo rm -rfv $PWD/test_db.*.db
 
-exit 0
+echo $0 finished without any problems
