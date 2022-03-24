@@ -9,10 +9,10 @@
 	<packaging>eclipse-repository</packaging>
 	<profiles>
     <profile>
-      <id>create_p2_site</id>
+      <id>no_materialize_products</id>
       <activation>
         <property>
-           <name>!without_p2_site</name>
+           <name>!no_materialize_products</name>
         </property>
       </activation>
       <build>
