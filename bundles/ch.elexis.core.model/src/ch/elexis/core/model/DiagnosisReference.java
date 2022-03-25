@@ -18,6 +18,7 @@ public class DiagnosisReference
 		codeSystemClassMap.put("ch.elexis.data.TICode", "TI-Code");
 		codeSystemClassMap.put("ch.elexis.icpc.IcpcCode", "ICPC");
 		codeSystemClassMap.put("ch.elexis.data.ICD10", "ICD-10");
+		codeSystemClassMap.put("ch.elexis.data.FreeTextDiagnose", "freetext");
 	}
 	
 	@Override

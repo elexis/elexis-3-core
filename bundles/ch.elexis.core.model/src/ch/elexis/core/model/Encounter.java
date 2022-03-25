@@ -142,7 +142,6 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		} else {
 			diagnosisRef = ModelUtil.getOrCreateDiagnosisReference(diagnosis);
 		}
-		addChanged(diagnosisRef);
 		@SuppressWarnings("unchecked")
 		Diagnosis diag = ((AbstractIdModelAdapter<Diagnosis>) diagnosisRef).getEntity();
 		if (!getEntity().getDiagnoses().contains(diag)) {
