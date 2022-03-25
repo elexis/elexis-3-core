@@ -241,6 +241,7 @@ public class ModelUtil {
 				reference.setCode(diagnosis.getCode());
 				reference.setReferredClass(parts[0]);
 				reference.setText(diagnosis.getText());
+				CoreModelServiceHolder.get().save(reference);
 				return reference;
 			}
 		}
