@@ -1,8 +1,9 @@
 # Build script used by gitlab.medelexis.ch
 variables:
    ORIGIN_BRANCH: "master" 
-   # Set to false in manual execution to build products
-   NO_MATERIALIZE_PRODUCTS: "true"
+   # Set to true in manual execution to build products
+   #    see ch.elexis.core.p2site/pom.xml
+   MATERIALIZE_PRODUCTS: "false"
 
 stages:
     - build
