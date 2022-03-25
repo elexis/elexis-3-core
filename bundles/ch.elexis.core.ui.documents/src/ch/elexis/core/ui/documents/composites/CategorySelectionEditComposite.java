@@ -189,6 +189,7 @@ public class CategorySelectionEditComposite extends Composite {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void addAndSelectCategory(String categoryName) {
 		if (categoryName == null) {
 			cbCategories.setSelection(new StructuredSelection());
@@ -196,7 +197,17 @@ public class CategorySelectionEditComposite extends Composite {
 			document.setCategory(
 				DocumentStoreServiceHolder.getService().createCategory(document, categoryName));
 			if (!((List<?>) cbCategories.getInput()).contains(document.getCategory())) {
-				cbCategories.add(document.getCategory());
+				List<ICategory> input = ((List<ICategory>) (List<?>) cbCategories.getInput());
+				if (input != null) {
+					input.add(document.getCategory());
+					input.sort((l, r) -> {
+						return l.getName().compareTo(r.getName());
+					});
+				} else {
+					cbCategories
+						.setInput(DocumentStoreServiceHolder.getService().getCategories(document));
+				}
+				cbCategories.refresh();
 			}
 			cbCategories.setSelection(new StructuredSelection(document.getCategory()), true);
 		}
