@@ -246,14 +246,14 @@ public class Connection implements SerialPortDataListener {
 		}
 	}
 	
-	private void fireData(byte[] data){
+	protected void fireData(byte[] data){
 		if (data != null && data.length > 0) {
 			listener.gotData(this, data);
 			fireChunk(new String(data));
 		}
 	}
 	
-	private void fireChunk(String chunk){
+	protected void fireChunk(String chunk){
 		if(StringUtils.isNotBlank(chunk)) {
 			logger.info("Serial chunk [" + chunk + "]");
 			listener.gotChunk(this, chunk);			
@@ -348,10 +348,13 @@ public class Connection implements SerialPortDataListener {
 		return serialPort != null && serialPort.isOpen();
 	}
 	
+	public boolean send(byte[] bytes){
+		return serialPort.writeBytes(bytes, bytes.length) == bytes.length;
+	}
+	
 	public boolean send(final String data){
 		try {
-			byte[] bytes = data.getBytes();
-			return serialPort.writeBytes(bytes, bytes.length) == bytes.length;
+			return send(data.getBytes());
 		} catch (Exception ex) {
 			logger.error("Exception sending data [" + data + "]");
 			return false;
