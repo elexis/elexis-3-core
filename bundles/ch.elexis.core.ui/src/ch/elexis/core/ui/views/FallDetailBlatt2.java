@@ -340,9 +340,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event){
 				String selected = (String) event.getStructuredSelection().getFirstElement();
-				IFall fall = getSelectedFall();
-				if (fall != null) {
-					fall.setGrund(selected);
+				if (actFall != null) {
+					actFall.setGrund(selected);
 					fireSelectedFallUpdateEvent();
 				}
 			}
