@@ -8,6 +8,6 @@ repos:
       files: '.*yaml|.*yml'
     - id: mixed-line-ending
       files: '.*java'
-      fixlf: true
+      args: ['--fix=lf']
     - id: file-contents-sorter
       files: 'plugin.*properties|messages.*properties' # but not build.properties
