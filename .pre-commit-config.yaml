@@ -9,3 +9,5 @@ repos:
     - id: mixed-line-ending
       files: '.*java'
       fixlf: true
+    - id: file-contents-sorter
+      files: 'plugin.*properties|messages.*properties' # but not build.properties
