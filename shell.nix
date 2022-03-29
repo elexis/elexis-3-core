@@ -3,7 +3,12 @@
 { pkgs ? import <nixpkgs> {} }:
 let mvn = pkgs.maven.override { jdk = pkgs.openjdk11; };
 in pkgs.mkShell {
-  buildInputs = [ mvn pkgs.jq pkgs.adoptopenjdk-hotspot-bin-11 pkgs.ruby pkgs.rubyPackages.rugged];
+  buildInputs = [ mvn
+  pkgs.adoptopenjdk-hotspot-bin-11
+  pkgs.ruby pkgs.rubyPackages.rugged
+  pkgs.eclipses.eclipse-rcp
+  pkgs.python39Packages.pre-commit
+  ];
 }
 # Tested with the following commands after calling nix-shell
 # mvn -V clean verify  -Dtycho.localArtifacts=ignore -DskipTests

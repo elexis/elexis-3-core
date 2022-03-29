@@ -1,0 +1,23 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v1.2.3
+    hooks:
+    - id: check-xml
+      files: '.*xml'
+    - id: check-yaml
+      files: '.*yaml|.*yml'
+    - id: file-contents-sorter
+      files: 'plugin.*properties|messages.*properties' # but not build.properties
+    - id: trailing-whitespace
+      files: '.*java'
+    - id: mixed-line-ending
+      files: '.*java'
+      fix: 'fixlf'
+    - id: end-of-file-fixer
+      files: '.*java|.*properties'
+-   repo: https://github.com/ngiger/pre-commit
+    rev: '0.1.1' 
+    hooks: 
+    - id: enforce-eclipse-format
+      files: '.*java'
+
