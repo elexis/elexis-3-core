@@ -10,21 +10,29 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.controls;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -34,6 +42,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.data.PersistentObject;
 
@@ -46,14 +55,15 @@ import ch.elexis.data.PersistentObject;
  */
 public class GenericSelectionComposite extends Composite implements ISelectionProvider {
 	
-	private ListenerList selectionListeners = new ListenerList();
+	private ListenerList<ISelectionChangedListener> selectionListeners =
+		new ListenerList<ISelectionChangedListener>();
 	
 	private List<?> input;
 	private IStructuredSelection selection;
 	
 	private Label selectLabel;
 	private Button selectButton;
-
+	
 	public GenericSelectionComposite(Composite parent, int style){
 		super(parent, style);
 		createContent();
@@ -74,7 +84,9 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				if (input != null && !input.isEmpty()) {
-					GenericSelectionDialog dialog = new GenericSelectionDialog(getShell(), input);
+					
+					GenericSelectionDialog dialog =
+						new GenericSelectionDialog(getShell(), input, "Auswahl", null);
 					if (selection != null) {
 						dialog.setSelection(selection.toList());
 					}
@@ -156,14 +168,22 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 	 * @author thomas
 	 *
 	 */
-	public static class GenericSelectionDialog extends Dialog {
+	public static class GenericSelectionDialog extends TitleAreaDialog {
 		
 		private List<?> input;
-		private Map<Object, Button> buttonMap = new HashMap<>();
 		private List<Object> selection = new LinkedList<>();
 		
-		public GenericSelectionDialog(Shell parentShell, List<?> input){
+		private String title;
+		private String message;
+		
+		private CheckboxTableViewer listViewer;
+		private SearchDataDialog filter;
+		
+		public GenericSelectionDialog(Shell parentShell, List<?> input, String title,
+			String message){
 			super(parentShell);
+			this.title = title;
+			this.message = message;
 			this.input = input;
 		}
 		
@@ -177,49 +197,77 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 		
 		@Override
 		protected Control createDialogArea(Composite parent){
+			setTitle(title);
+			setMessage(message);
+			
 			Composite ret = (Composite) super.createDialogArea(parent);
-			ScrolledComposite sc = new ScrolledComposite(ret, SWT.H_SCROLL | SWT.V_SCROLL);
 			
-			Composite child = new Composite(sc, SWT.NONE);
-			child.setLayout(new GridLayout());
+			Text text = new Text(ret, SWT.BORDER);
 			
-			GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-			data.heightHint = 400;
-			sc.setLayoutData(data);
-
-			Label title = new Label(child, SWT.NONE);
-			title.setText("Auswahl:");
-			// create the UI
-			for (Object object : input) {
-				Button button = new Button(child, SWT.CHECK);
-				button.setText(getLabel(object));
-				button.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e){
-						if (button.getSelection()) {
-							selection.add(object);
-						} else {
-							selection.remove(object);
-						}
+			GridData textData = new GridData();
+			textData.grabExcessVerticalSpace = false;
+			textData.grabExcessHorizontalSpace = true;
+			textData.horizontalAlignment = GridData.FILL;
+			textData.verticalAlignment = GridData.BEGINNING;
+			text.setLayoutData(textData);
+			
+			listViewer = CheckboxTableViewer.newCheckList(ret, SWT.NONE);
+			GridData checkBoxData = new GridData(GridData.FILL_BOTH);
+			checkBoxData.heightHint = 250;
+			checkBoxData.widthHint = 300;
+			listViewer.getTable().setLayoutData(checkBoxData);
+			listViewer.setContentProvider(ArrayContentProvider.getInstance());
+			
+			Collections.sort(input, new Comparator<Object>() {
+				
+				@Override
+				public int compare(Object o1, Object o2){
+					if (o1 instanceof PersistentObject) {
+						return ((PersistentObject) o1).getLabel()
+							.compareToIgnoreCase(((PersistentObject) o2).getLabel());
 					}
-				});
-				buttonMap.put(object, button);
-			}
-			sc.setMinSize(child.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-			sc.setExpandHorizontal(true);
-			sc.setExpandVertical(true);
-		    sc.setContent(child);
-
-			updateSelectionUi();
+					return 0;
+				}
+				
+			});
+			
+			listViewer.setLabelProvider(new LabelProvider() {
+				public String getText(Object elements){
+					if (elements instanceof PersistentObject) {
+						return ((PersistentObject) elements).getLabel();
+					} else if (elements != null) {
+						return elements.toString();
+					}
+					return null;
+				}
+			});
+			listViewer.setInput(input.toArray());
+			
+			text.addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent keyEvent){
+					filter.setSearchText(text.getText());
+					listViewer.refresh();
+					isLastElement();
+				}
+			});
+			
+			filter = new SearchDataDialog();
+			listViewer.addFilter(filter);
 			
 			return ret;
 		}
 		
-		private void updateSelectionUi(){
-			if (selection != null && !selection.isEmpty() && !buttonMap.isEmpty()) {
-				for (Object object : selection) {
-					buttonMap.get(object).setSelection(true);
-				}
+		@Override
+		protected void okPressed(){
+			this.selection = Arrays.asList(listViewer.getCheckedElements());
+			super.okPressed();
+		}
+		
+		private void isLastElement(){
+			if (listViewer.getTable().getItems().length == 1) {
+				listViewer.getTable().getItem(0).setChecked(true);
+			} else {
+				listViewer.setAllChecked(false);
 			}
 		}
 		
@@ -231,6 +279,34 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			} else {
 				return "";
 			}
+		}
+	}
+	
+	public static class SearchDataDialog extends ViewerFilter {
+		
+		private String searchString;
+		
+		public void setSearchText(String search){
+			this.searchString = ".*" + search + ".*";
+		}
+		
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element){
+			if (searchString == null || searchString.length() == 0) {
+				return true;
+			}
+			
+			if (element instanceof PersistentObject) {
+				PersistentObject pObject = (PersistentObject) element;
+				if (pObject.getLabel().toLowerCase().matches(searchString.toLowerCase())) {
+					return true;
+				}
+			} else if (element != null) {
+				if (element.toString().toLowerCase().matches(searchString.toLowerCase())) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }
