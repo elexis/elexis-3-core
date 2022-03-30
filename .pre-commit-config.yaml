@@ -1,3 +1,4 @@
+default_stages: [commit, push]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v1.2.3
@@ -16,4 +17,5 @@ repos:
     hooks: 
     - id: enforce-eclipse-format
       args: ['.']
+      stages: [manual]
 
