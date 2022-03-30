@@ -131,7 +131,7 @@ At the moment we use the following hooks:
 * end-of-file-fixer
 * enforce-eclipse-format
 
-As the enforce-eclipse-format takes a long time (over 60 seconds on my machine) it is only called manually and as a github action. To run in use `pre-commit run --hook-stage manual enforce-eclipse-format`
+As the enforce-eclipse-format takes a long time (over 60 seconds on my machine) it is only called manually and as a github action. To run in use `pre-commit run --hook-stage manual enforce-eclipse-format --all-files`
 
 ### Submitting patches
 
