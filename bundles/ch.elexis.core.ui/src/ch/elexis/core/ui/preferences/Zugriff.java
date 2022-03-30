@@ -29,39 +29,39 @@ import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
 
 public class Zugriff extends PreferencePage implements IWorkbenchPreferencePage {
 	ACLPreferenceTree apt;
-	
-	public Zugriff(){
+
+	public Zugriff() {
 		super(Messages.Zugriff_AccessRights);
 	}
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		if (CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
 			List<ACE> lAcls = ACE.getAllDefinedACElements();
-			apt = new ACLPreferenceTree(parent,lAcls.toArray(new ACE[lAcls.size()]));
+			apt = new ACLPreferenceTree(parent, lAcls.toArray(new ACE[lAcls.size()]));
 			return apt;
 		} else {
 			return new PrefAccessDenied(parent);
 		}
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
-	public boolean performOk(){
+	public boolean performOk() {
 		if (apt != null) {
 			apt.flush();
 		}
 		return super.performOk();
 	}
-	
+
 	@Override
-	protected void performDefaults(){
+	protected void performDefaults() {
 		if (apt != null) {
 			apt.reload();
 		}
 	}
-	
+
 }

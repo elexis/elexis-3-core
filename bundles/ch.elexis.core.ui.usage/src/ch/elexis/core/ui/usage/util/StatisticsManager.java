@@ -30,55 +30,54 @@ import ch.elexis.core.ui.usage.model.Statistics;
 import ch.rgw.tools.TimeTool;
 
 public enum StatisticsManager {
-	
-		INSTANCE;
-	
+
+	INSTANCE;
+
 	private Statistics statistics = ModelFactory.eINSTANCE.createStatistics();
-	
+
 	private EventPerformanceStatisticHandler eventStatisticHandler;
-	
+
 	private boolean disableAutoExport = false;
-	
-	public StatisticsManager getInstance(){
+
+	public StatisticsManager getInstance() {
 		return INSTANCE;
 	}
-	
-	public void setEventPerformanceStatisticHandler(EventPerformanceStatisticHandler eventStatisticHandler){
+
+	public void setEventPerformanceStatisticHandler(EventPerformanceStatisticHandler eventStatisticHandler) {
 		this.eventStatisticHandler = eventStatisticHandler;
 	}
-	
+
 	/**
 	 * Creates a new statistics entry for a call of a view or perspective
 	 * 
 	 * @param action
 	 * @param type
 	 */
-	public void addCallingStatistic(String action, boolean isPerspective){
+	public void addCallingStatistic(String action, boolean isPerspective) {
 		String type = isPerspective ? "call: perspective" : "call: view";
 		IStatistic lastItem = findLastElementOfType(action, type);
-		
+
 		if (lastItem != null) {
 			updateStastic(lastItem.getAction() + " -> " + action,
-				isPerspective ? "switch: perspective" : "switch: view");
+					isPerspective ? "switch: perspective" : "switch: view");
 		}
-		
+
 		updateStastic(action, type);
 	}
-	
+
 	/**
 	 * Creates a new statistics entry for a closing of a view or perspective
 	 * 
 	 * @param action
 	 * @param type
 	 */
-	public void addClosingStatistic(String action, boolean isPerpsective){
+	public void addClosingStatistic(String action, boolean isPerpsective) {
 		updateStastic(action, isPerpsective ? "close: perspective" : "close: view");
 	}
-	
-	private void updateStastic(String action, String type){
+
+	private void updateStastic(String action, String type) {
 		Optional<IStatistic> opStastics = statistics.getStatistics().stream()
-			.filter(p -> p.getAction().equals(action) && p.getActionType().equals(type))
-			.findFirst();
+				.filter(p -> p.getAction().equals(action) && p.getActionType().equals(type)).findFirst();
 		if (opStastics.isPresent()) {
 			opStastics.get().setValue(opStastics.get().getValue() + 1);
 			opStastics.get().setTime(new Date(System.currentTimeMillis()));
@@ -93,30 +92,30 @@ public enum StatisticsManager {
 		}
 		statistics.setTo(new Date());
 	}
-	
-	private IStatistic findLastElementOfType(String action, String type){
+
+	private IStatistic findLastElementOfType(String action, String type) {
 		List<IStatistic> list = statistics.getStatistics().stream()
-			.filter(p -> p.getActionType().equals(type) && !p.getAction().equals(action))
-			.collect(Collectors.toList());
+				.filter(p -> p.getActionType().equals(type) && !p.getAction().equals(action))
+				.collect(Collectors.toList());
 		list.sort((p1, p2) -> p2.getTime().compareTo(p1.getTime()));
 		if (list.size() > 0) {
 			return list.get(0);
 		}
 		return null;
 	}
-	
-	public Statistics getStatistics(){
+
+	public Statistics getStatistics() {
 		return statistics;
 	}
-	
+
 	/**
-	 * Automatically exports the usage statistics to a file. All files older then 30 days from the
-	 * statistics directory will be deleted. This method can only be executed once.
+	 * Automatically exports the usage statistics to a file. All files older then 30
+	 * days from the statistics directory will be deleted. This method can only be
+	 * executed once.
 	 * 
 	 * @throws IOException
 	 */
-	public void autoExportStatistics()
-		throws IOException{
+	public void autoExportStatistics() throws IOException {
 		TimeTool t = new TimeTool(System.currentTimeMillis());
 		String dir = CoreHub.getWritableUserDir().getAbsolutePath() + File.separator + "statistics";
 		String fileName = "usage" + t.toString(TimeTool.TIMESTAMP) + ".xml";
@@ -125,12 +124,12 @@ public enum StatisticsManager {
 				File directory = new File(dir);
 				if (directory.isDirectory()) {
 					Collection<File> filesToDelete = FileUtils.listFiles(directory,
-						new AgeFileFilter(DateUtils.addDays(new Date(), -30)), TrueFileFilter.TRUE);
+							new AgeFileFilter(DateUtils.addDays(new Date(), -30)), TrueFileFilter.TRUE);
 					for (File file : filesToDelete) {
 						boolean success = FileUtils.deleteQuietly(file);
 						if (!success) {
 							LoggerFactory.getLogger(getClass())
-								.warn("Cannot delete old file at: " + file.getAbsolutePath());
+									.warn("Cannot delete old file at: " + file.getAbsolutePath());
 						}
 					}
 				}
@@ -139,15 +138,14 @@ public enum StatisticsManager {
 			}
 			exportStatisticsToFile(dir + File.separator + fileName);
 			if (eventStatisticHandler != null) {
-				exportEventStatisticsToFile(dir + File.separator + "evt_" + fileName,
-					eventStatisticHandler);
+				exportEventStatisticsToFile(dir + File.separator + "evt_" + fileName, eventStatisticHandler);
 			}
 			disableAutoExport = true;
 		}
 	}
-	
-	private void exportEventStatisticsToFile(String path,
-		EventPerformanceStatisticHandler eventStatisticHandler) throws IOException{
+
+	private void exportEventStatisticsToFile(String path, EventPerformanceStatisticHandler eventStatisticHandler)
+			throws IOException {
 		if (eventStatisticHandler != null) {
 			Statistics statistics = ModelFactory.eINSTANCE.createStatistics();
 			statistics.getStatistics().addAll(eventStatisticHandler.getStatistics());
@@ -158,8 +156,8 @@ public enum StatisticsManager {
 			}
 		}
 	}
-	
-	public void exportStatisticsToFile(String path) throws IOException{
+
+	public void exportStatisticsToFile(String path) throws IOException {
 		if (statistics != null) {
 			File toExport = new File(path);
 			String content = createXMI(statistics);
@@ -168,8 +166,8 @@ public enum StatisticsManager {
 			}
 		}
 	}
-	
-	private String createXMI(Statistics statistics){
+
+	private String createXMI(Statistics statistics) {
 		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		Map<String, Object> m = reg.getExtensionToFactoryMap();
 		m.put("xmi", new XMIResourceFactoryImpl());
@@ -177,7 +175,7 @@ public enum StatisticsManager {
 		Resource resource = resSet.createResource(URI.createURI("statistics.xml"));
 		resource.getContents().add(statistics);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		
+
 		try {
 			resource.save(os, Collections.EMPTY_MAP);
 			os.flush();
@@ -189,5 +187,5 @@ public enum StatisticsManager {
 		}
 		return null;
 	}
-	
+
 }

@@ -62,18 +62,18 @@ public class StatusUtil {
 
 	public static String getSeverityString(int severity) {
 		switch (severity) {
-		case Status.OK:
-			return "OK";
-		case Status.WARNING:
-			return "WARNING";
-		case Status.ERROR:
-			return "ERROR";
-		case Status.INFO:
-			return "INFO";
-		case Status.CANCEL:
-			return "CANCEL";
-		default:
-			return "? " + severity + " ?";
+			case Status.OK :
+				return "OK";
+			case Status.WARNING :
+				return "WARNING";
+			case Status.ERROR :
+				return "ERROR";
+			case Status.INFO :
+				return "INFO";
+			case Status.CANCEL :
+				return "CANCEL";
+			default :
+				return "? " + severity + " ?";
 		}
 	}
 
@@ -91,12 +91,13 @@ public class StatusUtil {
 	 * Log a status to the corresponding log-level; does nothing if
 	 * {@link Status#isOK()}
 	 * 
-	 * @param prependMessage              an optional message to prepend the status
-	 *                                    message
+	 * @param prependMessage
+	 *            an optional message to prepend the status message
 	 * @param log
 	 * @param status
 	 * @param includeExceptionIfAvailable
-	 * @param logDebugIfOk                log to level debug if the status is ok
+	 * @param logDebugIfOk
+	 *            log to level debug if the status is ok
 	 */
 	public static void logStatus(String prependMessage, @NonNull Logger log, @NonNull IStatus status,
 			boolean includeExceptionIfAvailable, boolean logDebugIfOk) {
@@ -119,33 +120,33 @@ public class StatusUtil {
 
 		int severity = status.getSeverity();
 		switch (severity) {
-		case Status.ERROR:
-			if (includeException) {
-				log.error(message, status.getException());
-			} else {
-				log.error(message);
-			}
-			break;
-		case Status.WARNING:
-			if (includeException) {
-				log.warn(message, status.getException());
-			} else {
-				log.warn(message);
-			}
-			break;
-		case Status.INFO:
-		case Status.CANCEL:
-			if (includeException) {
-				log.info(message, status.getException());
-			} else {
-				log.info(message);
-			}
-			break;
-		case Status.OK:
-			log.debug(message);
-			break;
-		default:
-			break;
+			case Status.ERROR :
+				if (includeException) {
+					log.error(message, status.getException());
+				} else {
+					log.error(message);
+				}
+				break;
+			case Status.WARNING :
+				if (includeException) {
+					log.warn(message, status.getException());
+				} else {
+					log.warn(message);
+				}
+				break;
+			case Status.INFO :
+			case Status.CANCEL :
+				if (includeException) {
+					log.info(message, status.getException());
+				} else {
+					log.info(message);
+				}
+				break;
+			case Status.OK :
+				log.debug(message);
+				break;
+			default :
+				break;
 		}
 
 		if (status.isMultiStatus()) {

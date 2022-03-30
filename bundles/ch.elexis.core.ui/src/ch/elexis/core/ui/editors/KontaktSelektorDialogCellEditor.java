@@ -12,22 +12,23 @@ import ch.elexis.data.Kontakt;
 /**
  * 
  * 
- * @deprecated use {@link IContact} based {@link ContactSelektorDialogCellEditor} instead.
+ * @deprecated use {@link IContact} based
+ *             {@link ContactSelektorDialogCellEditor} instead.
  *
  */
 public class KontaktSelektorDialogCellEditor extends DialogCellEditor {
-	
+
 	private String title;
 	private String message;
-	
-	public KontaktSelektorDialogCellEditor(Composite composite, String title, String message){
+
+	public KontaktSelektorDialogCellEditor(Composite composite, String title, String message) {
 		super(composite);
 		this.title = title;
 		this.message = message;
 	}
-	
+
 	@Override
-	protected void updateContents(Object value){
+	protected void updateContents(Object value) {
 		if (value instanceof Kontakt) {
 			Kontakt contact = (Kontakt) value;
 			if (contact != null) {
@@ -43,11 +44,11 @@ public class KontaktSelektorDialogCellEditor extends DialogCellEditor {
 		}
 		super.updateContents(null);
 	}
-	
+
 	@Override
-	protected Object openDialogBox(Control cellEditorWindow){
-		KontaktSelektor ksl = new KontaktSelektor(cellEditorWindow.getShell(), Kontakt.class, title,
-			message, Kontakt.DEFAULT_SORT);
+	protected Object openDialogBox(Control cellEditorWindow) {
+		KontaktSelektor ksl = new KontaktSelektor(cellEditorWindow.getShell(), Kontakt.class, title, message,
+				Kontakt.DEFAULT_SORT);
 		if (getValue() instanceof Kontakt) {
 			Kontakt contact = (Kontakt) getValue();
 			if (contact != null) {
@@ -59,5 +60,5 @@ public class KontaktSelektorDialogCellEditor extends DialogCellEditor {
 		}
 		return null;
 	}
-	
+
 }

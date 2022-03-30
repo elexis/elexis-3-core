@@ -26,9 +26,9 @@ import ch.rgw.tools.LazyTree.LazyTreeListener;
 import ch.rgw.tools.Tree;
 
 /**
- * Ein Job, der eine Baumstruktur "Lazy" aus der Datenbank lädt. D.h. es werden immer nur die gerade
- * benötigten Elemente geladen. Die Baumstruktur muss so in einer Tabelle abgelegt sein, dass eine
- * Spalte auf das Elternelement verweist.
+ * Ein Job, der eine Baumstruktur "Lazy" aus der Datenbank lädt. D.h. es werden
+ * immer nur die gerade benötigten Elemente geladen. Die Baumstruktur muss so in
+ * einer Tabelle abgelegt sein, dass eine Spalte auf das Elternelement verweist.
  * 
  * @author gerry
  * 
@@ -40,28 +40,27 @@ public class LazyTreeLoader<T> extends AbstractDataLoaderJob implements LazyTree
 	String parentField;
 	IFilter filter;
 	IProgressMonitor monitor;
-	
-	public LazyTreeLoader(final String Jobname, final Query q, final String parent,
-		final String[] orderBy){
+
+	public LazyTreeLoader(final String Jobname, final Query q, final String parent, final String[] orderBy) {
 		super(Jobname, q, orderBy);
 		setReverseOrder(true);
 		parentColumn = parent;
 	}
-	
-	public void setFilter(final IFilter f){
+
+	public void setFilter(final IFilter f) {
 		filter = f;
 		if (isValid() == true) {
 			((Tree) result).setFilter(f);
 		}
 	}
-	
-	public void setParentField(final String f){
+
+	public void setParentField(final String f) {
 		parentField = f;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public IStatus execute(final IProgressMonitor moni){
+	public IStatus execute(final IProgressMonitor moni) {
 		monitor = moni;
 		if (monitor != null) {
 			monitor.subTask(getJobname());
@@ -81,14 +80,14 @@ public class LazyTreeLoader<T> extends AbstractDataLoaderJob implements LazyTree
 		}
 		return Status.OK_STATUS;
 	}
-	
+
 	@Override
-	public int getSize(){
+	public int getSize() {
 		return qbe.size();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public boolean fetchChildren(final LazyTree l){
+	public boolean fetchChildren(final LazyTree l) {
 		qbe.clear();
 		PersistentObject obj = (PersistentObject) l.contents;
 		if (obj != null) {
@@ -101,10 +100,10 @@ public class LazyTreeLoader<T> extends AbstractDataLoaderJob implements LazyTree
 		}
 		return false;
 	}
-	
-	public boolean hasChildren(final LazyTree l){
+
+	public boolean hasChildren(final LazyTree l) {
 		fetchChildren(l);
 		return (l.getFirstChild() != null);
 	}
-	
+
 }

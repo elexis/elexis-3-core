@@ -60,10 +60,10 @@ import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.data.Kontakt;
 
 public class SendMailDialog extends TitleAreaDialog {
-	
+
 	@Inject
 	private ITextReplacementService textReplacement;
-	
+
 	private ComboViewer accountsViewer;
 	private MailAccount account;
 	private Text toText;
@@ -75,35 +75,35 @@ public class SendMailDialog extends TitleAreaDialog {
 	private Text textText;
 	private String textString = "";
 	private AttachmentsComposite attachments;
-	
+
 	private String accountId;
 	private String attachmentsString;
 	private String documentsString;
 	private boolean disableOutbox;
 	private ComboViewer templatesViewer;
-	
+
 	private LocalDateTime sentTime;
-	
-	public SendMailDialog(Shell parentShell){
+
+	public SendMailDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		
+
 		CoreUiUtil.injectServices(this);
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		if (MailClientComponent.getMailClient() != null) {
 			setTitle("E-Mail versenden");
 		} else {
 			setTitle("E-Mail versand nicht möglich");
 		}
-		
+
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
+
 		if (MailClientComponent.getMailClient() != null) {
 			Label lbl = new Label(container, SWT.NONE);
 			lbl.setText("Von");
@@ -111,28 +111,25 @@ public class SendMailDialog extends TitleAreaDialog {
 			accountsViewer.setContentProvider(ArrayContentProvider.getInstance());
 			accountsViewer.setLabelProvider(new LabelProvider());
 			accountsViewer.setInput(getSendMailAccounts());
-			accountsViewer.getControl()
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			accountsViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			if (accountId != null) {
 				accountsViewer.setSelection(new StructuredSelection(accountId));
 			}
-			
+
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("An");
 			toText = new Text(container, SWT.BORDER);
 			toText.setText(toString);
 			toText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			ContentProposalAdapter toAddressProposalAdapter = new ContentProposalAdapter(toText,
-				new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
+					new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
 			toAddressProposalAdapter.addContentProposalListener(new IContentProposalListener() {
 				@Override
-				public void proposalAccepted(IContentProposal proposal){
-					int index =
-						MailAddressContentProposalProvider.getLastAddressIndex(toText.getText());
+				public void proposalAccepted(IContentProposal proposal) {
+					int index = MailAddressContentProposalProvider.getLastAddressIndex(toText.getText());
 					StringBuilder sb = new StringBuilder();
 					if (index != 0) {
-						sb.append(toText.getText().substring(0, index)).append(", ")
-							.append(proposal.getContent());
+						sb.append(toText.getText().substring(0, index)).append(", ").append(proposal.getContent());
 					} else {
 						sb.append(proposal.getContent());
 					}
@@ -144,25 +141,24 @@ public class SendMailDialog extends TitleAreaDialog {
 			MenuManager menuManager = new MenuManager();
 			menuManager.add(new Action("email zu Kontakt") {
 				@Override
-				public void run(){
-					KontaktSelektor selector =
-						new KontaktSelektor(getShell(), Kontakt.class, "Kontakt auswahl",
+				public void run() {
+					KontaktSelektor selector = new KontaktSelektor(getShell(), Kontakt.class, "Kontakt auswahl",
 							"Kontakt für die E-Mail Adresse auswählen", Kontakt.DEFAULT_SORT);
 					if (selector.open() == Dialog.OK) {
 						Kontakt selected = (Kontakt) selector.getSelection();
 						selected.set(Kontakt.FLD_E_MAIL, toText.getSelectionText());
 					}
 				}
-				
+
 				@Override
-				public boolean isEnabled(){
+				public boolean isEnabled() {
 					String text = toText.getSelectionText();
 					return text != null && !text.isEmpty() && text.contains("@");
 				}
 			});
 			menuManager.addMenuListener(new IMenuListener() {
 				@Override
-				public void menuAboutToShow(IMenuManager manager){
+				public void menuAboutToShow(IMenuManager manager) {
 					IContributionItem[] items = manager.getItems();
 					for (IContributionItem iContributionItem : items) {
 						iContributionItem.update();
@@ -170,23 +166,21 @@ public class SendMailDialog extends TitleAreaDialog {
 				}
 			});
 			toText.setMenu(menuManager.createContextMenu(toText));
-			
+
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Cc");
 			ccText = new Text(container, SWT.BORDER);
 			ccText.setText(ccString);
 			ccText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			ContentProposalAdapter ccAddressProposalAdapter = new ContentProposalAdapter(ccText,
-				new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
+					new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
 			ccAddressProposalAdapter.addContentProposalListener(new IContentProposalListener() {
 				@Override
-				public void proposalAccepted(IContentProposal proposal){
-					int index =
-						MailAddressContentProposalProvider.getLastAddressIndex(ccText.getText());
+				public void proposalAccepted(IContentProposal proposal) {
+					int index = MailAddressContentProposalProvider.getLastAddressIndex(ccText.getText());
 					StringBuilder sb = new StringBuilder();
 					if (index != 0) {
-						sb.append(ccText.getText().substring(0, index)).append(", ")
-							.append(proposal.getContent());
+						sb.append(ccText.getText().substring(0, index)).append(", ").append(proposal.getContent());
 					} else {
 						sb.append(proposal.getContent());
 					}
@@ -197,25 +191,24 @@ public class SendMailDialog extends TitleAreaDialog {
 			menuManager = new MenuManager();
 			menuManager.add(new Action("email zu Kontakt") {
 				@Override
-				public void run(){
-					KontaktSelektor selector =
-						new KontaktSelektor(getShell(), Kontakt.class, "Kontakt auswahl",
+				public void run() {
+					KontaktSelektor selector = new KontaktSelektor(getShell(), Kontakt.class, "Kontakt auswahl",
 							"Kontakt für die E-Mail Adresse auswählen", Kontakt.DEFAULT_SORT);
 					if (selector.open() == Dialog.OK) {
 						Kontakt selected = (Kontakt) selector.getSelection();
 						selected.set(Kontakt.FLD_E_MAIL, ccText.getSelectionText());
 					}
 				}
-				
+
 				@Override
-				public boolean isEnabled(){
+				public boolean isEnabled() {
 					String text = ccText.getSelectionText();
 					return text != null && !text.isEmpty() && text.contains("@");
 				}
 			});
 			menuManager.addMenuListener(new IMenuListener() {
 				@Override
-				public void menuAboutToShow(IMenuManager manager){
+				public void menuAboutToShow(IMenuManager manager) {
 					IContributionItem[] items = manager.getItems();
 					for (IContributionItem iContributionItem : items) {
 						iContributionItem.update();
@@ -229,28 +222,25 @@ public class SendMailDialog extends TitleAreaDialog {
 			subjectText = new Text(container, SWT.BORDER);
 			subjectText.setText(subjectString);
 			subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			
+
 			attachments = new AttachmentsComposite(container, SWT.NONE);
 			attachments.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			attachments.setAttachments(attachmentsString);
 			attachments.setDocuments(documentsString);
 			attachments.setPostfix(toString);
-			
+
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Vorlage");
 			templatesViewer = new ComboViewer(container);
-			templatesViewer.getControl()
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			templatesViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			templatesViewer.setContentProvider(new ArrayContentProvider());
 			templatesViewer.setLabelProvider(new LabelProvider() {
 				@Override
-				public String getText(Object element){
+				public String getText(Object element) {
 					if (element instanceof ITextTemplate) {
-						return ((ITextTemplate) element).getName()
-							+ (((ITextTemplate) element).getMandator() != null
-									? " (" + ((ITextTemplate) element).getMandator().getLabel()
-										+ ")"
-									: "");
+						return ((ITextTemplate) element).getName() + (((ITextTemplate) element).getMandator() != null
+								? " (" + ((ITextTemplate) element).getMandator().getLabel() + ")"
+								: "");
 					}
 					return super.getText(element);
 				}
@@ -261,46 +251,44 @@ public class SendMailDialog extends TitleAreaDialog {
 			templatesViewer.setInput(templatesInput);
 			templatesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				@Override
-				public void selectionChanged(SelectionChangedEvent event){
-					if (event.getStructuredSelection() != null && event.getStructuredSelection()
-						.getFirstElement() instanceof ITextTemplate) {
-						ITextTemplate selectedTemplate =
-							(ITextTemplate) event.getStructuredSelection().getFirstElement();
-						textText.setText(textReplacement.performReplacement(
-							ContextServiceHolder.get().getRootContext(),
-							selectedTemplate.getTemplate()));
+				public void selectionChanged(SelectionChangedEvent event) {
+					if (event.getStructuredSelection() != null
+							&& event.getStructuredSelection().getFirstElement() instanceof ITextTemplate) {
+						ITextTemplate selectedTemplate = (ITextTemplate) event.getStructuredSelection()
+								.getFirstElement();
+						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
+								selectedTemplate.getTemplate()));
 					} else {
 						textText.setText("");
 					}
 					updateLayout();
 				}
 			});
-			
+
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Text");
 			textText = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 			textText.setLayoutData(gd);
 			textText.setText(textString);
-			
+
 			if (accountId == null) {
 				// set selected account for mandant
-				IMandator selectedMandant =
-					ContextServiceHolder.get().getActiveMandator().orElse(null);
+				IMandator selectedMandant = ContextServiceHolder.get().getActiveMandator().orElse(null);
 				if (selectedMandant != null) {
 					List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
-					Optional<String> mandantAccount = accounts.stream().filter(
-						aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
-						.filter(aid -> MailClientComponent.getMailClient().getAccount(aid)
-							.get().isForMandant(selectedMandant.getId()))
-						.findFirst();
+					Optional<String> mandantAccount = accounts.stream()
+							.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+							.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
+									.isForMandant(selectedMandant.getId()))
+							.findFirst();
 					if (!mandantAccount.isPresent()) {
 						accounts = MailClientComponent.getMailClient().getAccounts();
-						mandantAccount = accounts.stream().filter(
-							aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
-							.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
-								.isForMandant(selectedMandant.getId()))
-							.findFirst();
+						mandantAccount = accounts.stream()
+								.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+								.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
+										.isForMandant(selectedMandant.getId()))
+								.findFirst();
 					}
 					if (mandantAccount.isPresent()) {
 						accountsViewer.setSelection(new StructuredSelection(mandantAccount.get()));
@@ -308,12 +296,10 @@ public class SendMailDialog extends TitleAreaDialog {
 				}
 			}
 			// set template if there is no text, and a default configured
-			String defaultTemplateId =
-				ConfigServiceHolder.get().get(PreferenceConstants.PREF_DEFAULT_TEMPLATE, null);
+			String defaultTemplateId = ConfigServiceHolder.get().get(PreferenceConstants.PREF_DEFAULT_TEMPLATE, null);
 			if (defaultTemplateId != null && StringUtils.isEmpty(textText.getText())) {
 				for (Object object : templatesInput) {
-					if (object instanceof ITextTemplate
-						&& ((ITextTemplate) object).getId().equals(defaultTemplateId)) {
+					if (object instanceof ITextTemplate && ((ITextTemplate) object).getId().equals(defaultTemplateId)) {
 						Display.getDefault().asyncExec(() -> {
 							templatesViewer.setSelection(new StructuredSelection(object));
 						});
@@ -333,55 +319,51 @@ public class SendMailDialog extends TitleAreaDialog {
 		updateLayout();
 		return area;
 	}
-	
-	public void setAttachments(String attachments){
+
+	public void setAttachments(String attachments) {
 		this.attachments.setAttachments(attachments);
 		getShell().layout(true, true);
 	}
-	
-	public void setDocuments(String documents){
+
+	public void setDocuments(String documents) {
 		this.attachments.setDocuments(documents);
 		getShell().layout(true, true);
 	}
-	
-	public void setTo(String to){
+
+	public void setTo(String to) {
 		if (to != null && !to.isEmpty()) {
 			toString = to;
 		}
 	}
-	
-	public void setSubject(String subject){
+
+	public void setSubject(String subject) {
 		if (subject != null && !subject.isEmpty()) {
 			subjectString = subject;
 		}
 	}
-	
-	public void setText(String text){
+
+	public void setText(String text) {
 		if (text != null && !text.isEmpty()) {
 			textString = text;
 		}
 		updateLayout();
 	}
-	
-	private List<String> getSendMailAccounts(){
+
+	private List<String> getSendMailAccounts() {
 		List<String> ret = new ArrayList<String>();
 		List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
-		ret.addAll(accounts.stream()
-			.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
-			.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
-				.getType() == TYPE.SMTP)
-			.collect(Collectors.toList()));
+		ret.addAll(accounts.stream().filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+				.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get().getType() == TYPE.SMTP)
+				.collect(Collectors.toList()));
 		accounts = MailClientComponent.getMailClient().getAccounts();
-		ret.addAll(accounts.stream()
-			.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
-			.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
-				.getType() == TYPE.SMTP)
-			.collect(Collectors.toList()));
+		ret.addAll(accounts.stream().filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+				.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get().getType() == TYPE.SMTP)
+				.collect(Collectors.toList()));
 		return ret;
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		String validation = getValidation();
 		if (validation != null) {
 			setErrorMessage(validation);
@@ -389,9 +371,9 @@ public class SendMailDialog extends TitleAreaDialog {
 		}
 		super.okPressed();
 	}
-	
+
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		Button outboxBtn = createButton(parent, -1, "in Outbox ablegen", false);
 		super.createButtonsForButtonBar(parent);
 		if (getButton(IDialogConstants.OK_ID) != null) {
@@ -399,8 +381,7 @@ public class SendMailDialog extends TitleAreaDialog {
 			okButton.setText("Senden");
 			if (sentTime != null) {
 				setTitle("E-Mail Anzeige");
-				setMessage(
-					"Diese E-Mail wurde versendet am "
+				setMessage("Diese E-Mail wurde versendet am "
 						+ sentTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
 				// hide all buttons if already sent
 				for (Control control : parent.getChildren()) {
@@ -412,11 +393,10 @@ public class SendMailDialog extends TitleAreaDialog {
 				}
 			}
 		}
-		outboxBtn.setEnabled(
-			!disableOutbox && OutboxUtil.isOutboxAvailable());
+		outboxBtn.setEnabled(!disableOutbox && OutboxUtil.isOutboxAvailable());
 		outboxBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				String validation = getValidation();
 				if (validation != null) {
 					setErrorMessage(validation);
@@ -426,14 +406,12 @@ public class SendMailDialog extends TitleAreaDialog {
 				}
 				createOutboxElement();
 			}
-			
-			private void createOutboxElement(){
-				MailMessage message =
-					new MailMessage().to(getTo()).cc(getCc()).subject(getSubject()).text(getText());
+
+			private void createOutboxElement() {
+				MailMessage message = new MailMessage().to(getTo()).cc(getCc()).subject(getSubject()).text(getText());
 				message.setAttachments(attachments.getAttachments());
 				message.setDocuments(attachments.getDocuments());
-				Optional<ITaskDescriptor> descriptor =
-					TaskUtil.createSendMailTaskDescriptor(account.getId(), message);
+				Optional<ITaskDescriptor> descriptor = TaskUtil.createSendMailTaskDescriptor(account.getId(), message);
 				if (descriptor.isPresent()) {
 					OutboxUtil.getOrCreateElement(descriptor.get(), false);
 				}
@@ -443,84 +421,83 @@ public class SendMailDialog extends TitleAreaDialog {
 		});
 		parent.layout();
 	}
-	
-	private String getValidation(){
+
+	private String getValidation() {
 		StructuredSelection accountSelection = (StructuredSelection) accountsViewer.getSelection();
 		if (accountSelection == null || accountSelection.isEmpty()) {
 			return "Kein Konto ausgewählt.";
 		}
 		String accountId = (String) accountSelection.getFirstElement();
-		Optional<MailAccount> optionalAccount =
-			MailClientComponent.getMailClient().getAccount(accountId);
+		Optional<MailAccount> optionalAccount = MailClientComponent.getMailClient().getAccount(accountId);
 		if (!optionalAccount.isPresent()) {
 			return "Kein Konto ausgewählt.";
 		} else {
 			account = optionalAccount.get();
 		}
-		
+
 		String to = toText.getText();
-		if(to == null || to.isEmpty()) {
+		if (to == null || to.isEmpty()) {
 			return "Keine an E-Mail Adresse.";
 		}
 		toString = to;
-		
+
 		ccString = ccText.getText();
-		
+
 		subjectString = subjectText.getText();
-		
+
 		textString = textText.getText();
-		
+
 		return null;
 	}
-	
-	public String getTo(){
+
+	public String getTo() {
 		return toString;
 	}
-	
-	public String getCc(){
+
+	public String getCc() {
 		return ccString;
 	}
-	
-	public void setCc(String cc){
+
+	public void setCc(String cc) {
 		this.ccString = cc;
 	}
-	
-	public String getSubject(){
+
+	public String getSubject() {
 		return subjectString;
 	}
-	
-	public String getText(){
+
+	public String getText() {
 		return textString;
 	}
-	
-	public void setAccountId(String accountId){
+
+	public void setAccountId(String accountId) {
 		this.accountId = accountId;
 	}
-	
-	public MailAccount getAccount(){
+
+	public MailAccount getAccount() {
 		return account;
 	}
-	
-	public String getAttachmentsString(){
+
+	public String getAttachmentsString() {
 		return attachments.getAttachments();
 	}
-	
-	public String getDocumentsString(){
+
+	public String getDocumentsString() {
 		return attachments.getDocuments();
 	}
-	
-	public void setMailMessage(MailMessage message){
+
+	public void setMailMessage(MailMessage message) {
 		setTo(StringUtils.defaultString(message.getTo()));
 		setCc(StringUtils.defaultString(message.getCc()));
 		setSubject(StringUtils.defaultString(message.getSubject()));
 		setText(StringUtils.defaultString(message.getText()));
 		attachmentsString = message.getAttachmentsString();
 		documentsString = message.getDocumentsString();
-		
+
 		updateLayout();
 	}
-	
-	private void updateLayout(){
+
+	private void updateLayout() {
 		if (textText != null && !textText.isDisposed()) {
 			GridData gd = (GridData) textText.getLayoutData();
 			String text = textText.getText();
@@ -540,20 +517,20 @@ public class SendMailDialog extends TitleAreaDialog {
 			}
 		}
 	}
-	
-	public void disableOutbox(){
+
+	public void disableOutbox() {
 		this.disableOutbox = true;
 	}
-	
-	public void setDocumentsString(String documents){
+
+	public void setDocumentsString(String documents) {
 		this.documentsString = documents;
 	}
-	
-	public void setAttachmentsString(String attachments){
+
+	public void setAttachmentsString(String attachments) {
 		this.attachmentsString = attachments;
 	}
-	
-	public void sent(LocalDateTime sentTime){
+
+	public void sent(LocalDateTime sentTime) {
 		this.sentTime = sentTime;
 	}
 }

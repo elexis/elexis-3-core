@@ -21,16 +21,16 @@ import ch.rgw.compress.CompEx;
  */
 @Converter
 public class ElexisDBCompressedStringConverter implements AttributeConverter<String, byte[]> {
-	
+
 	@Override
-	public byte[] convertToDatabaseColumn(String objectValue){
+	public byte[] convertToDatabaseColumn(String objectValue) {
 		if (objectValue == null)
 			return new byte[0];
 		return CompEx.Compress((String) objectValue, CompEx.ZIP);
 	}
-	
+
 	@Override
-	public String convertToEntityAttribute(byte[] dataValue){
+	public String convertToEntityAttribute(byte[] dataValue) {
 		if (dataValue == null || dataValue.length == 0)
 			return "";
 		try {

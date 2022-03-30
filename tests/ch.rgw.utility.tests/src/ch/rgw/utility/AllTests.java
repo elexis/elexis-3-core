@@ -24,13 +24,11 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
-	ch.rgw.tools.Test_VersionInfo.class, ch.rgw.tools.Test_Money.class,
-	ch.rgw.tools.Test_JdbcLink.class, Test_SqlSettings.class, Test_TimeTool.class,
-	Test_StringTool.class, PasswordValidatorTest.class, PasswordEncryptionServiceTest.class
-})
+@Suite.SuiteClasses({ch.rgw.tools.Test_VersionInfo.class, ch.rgw.tools.Test_Money.class,
+		ch.rgw.tools.Test_JdbcLink.class, Test_SqlSettings.class, Test_TimeTool.class, Test_StringTool.class,
+		PasswordValidatorTest.class, PasswordEncryptionServiceTest.class})
 public class AllTests {
-	public static Test suite() throws ClassNotFoundException{
+	public static Test suite() throws ClassNotFoundException {
 		TestSuite suite = new TestSuite("ch.rgw.utility tests");
 		return suite;
 	}

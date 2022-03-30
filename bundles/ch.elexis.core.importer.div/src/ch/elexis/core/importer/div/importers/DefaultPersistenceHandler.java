@@ -12,21 +12,22 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 /**
- * since 3.8 moved from ch.elexis.core.ui.importer.div.importers.PersistenceHandler
+ * since 3.8 moved from
+ * ch.elexis.core.ui.importer.div.importers.PersistenceHandler
  */
 public class DefaultPersistenceHandler implements IPersistenceHandler {
-	
+
 	@Override
-	public List<ILabOrder> getLabOrdersByOrderId(String orderId){
+	public List<ILabOrder> getLabOrdersByOrderId(String orderId) {
 		IQuery<ILabOrder> query = CoreModelServiceHolder.get().getQuery(ILabOrder.class);
 		query.and(ModelPackage.Literals.ILAB_ORDER__ORDER_ID, COMPARATOR.EQUALS, orderId);
 		query.and("ID", COMPARATOR.NOT_EQUALS, StringConstants.VERSION_LITERAL);
 		return query.execute();
 	}
 
-	public IPatient loadPatient(String id){
+	public IPatient loadPatient(String id) {
 		Optional<IPatient> loaded = CoreModelServiceHolder.get().load(id, IPatient.class);
 		return loaded.orElse(null);
 	}
-	
+
 }

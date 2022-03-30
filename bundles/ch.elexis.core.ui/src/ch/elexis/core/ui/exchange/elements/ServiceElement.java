@@ -28,7 +28,7 @@ import ch.elexis.data.dto.CodeElementDTO;
 import ch.rgw.tools.TimeTool;
 
 public class ServiceElement extends XChangeElement {
-	
+
 	private static final long serialVersionUID = 6382517263003793221L;
 	public static final String XMLNAME = "service";
 	public static final String ATTR_NAME = "name";
@@ -38,8 +38,8 @@ public class ServiceElement extends XChangeElement {
 	public static final String ATTR_COST = "cost";
 	public static final String ATTR_PRICE = "price";
 	public static final String ELEMENT_XID = XidElement.XMLNAME;
-	
-	public ServiceElement asExporter(XChangeExporter p, IVerrechenbar iv){
+
+	public ServiceElement asExporter(XChangeExporter p, IVerrechenbar iv) {
 		asExporter(p);
 		setAttribute(ATTR_NAME, iv.getText());
 		setAttribute(ATTR_CONTRACT_CODE, iv.getCode());
@@ -50,8 +50,8 @@ public class ServiceElement extends XChangeElement {
 		add(new XidElement().asExporter(p, iv));
 		return this;
 	}
-	
-	public ServiceElement asExporter(XChangeExporter sender, CodeElementDTO ic){
+
+	public ServiceElement asExporter(XChangeExporter sender, CodeElementDTO ic) {
 		asExporter(sender);
 		setAttribute(ATTR_NAME, ic.getText());
 		setAttribute(ATTR_CONTRACT_CODE, ic.getCode());
@@ -59,8 +59,7 @@ public class ServiceElement extends XChangeElement {
 		// optional fields for IVerrechenbar
 		ICodeElementService service = PoCodeElementServiceHolder.get();
 		if (service != null) {
-			Optional<ICodeElement> element =
-				service.createFromString(ic.getCodeSystemName(), ic.getCode(),
+			Optional<ICodeElement> element = service.createFromString(ic.getCodeSystemName(), ic.getCode(),
 					CodeElementServiceHolder.emtpyContext());
 			if (element.isPresent() && element.get() instanceof IVerrechenbar) {
 				IVerrechenbar iv = (IVerrechenbar) element.get();
@@ -72,8 +71,8 @@ public class ServiceElement extends XChangeElement {
 		}
 		return this;
 	}
-	
-	public IVerrechenbar createObject(XChangeContainer home, Element el){
+
+	public IVerrechenbar createObject(XChangeContainer home, Element el) {
 		XidElement xide = (XidElement) getChild(XidElement.XMLNAME, XidElement.class);
 		List<IPersistentObject> objs = xide.findObject();
 		for (IPersistentObject po : objs) {
@@ -81,15 +80,13 @@ public class ServiceElement extends XChangeElement {
 				return (IVerrechenbar) po;
 			}
 		}
-		Eigenleistung egl =
-			new Eigenleistung(el.getAttributeValue(ATTR_CONTRACT_CODE),
-				el.getAttributeValue(ATTR_NAME), el.getAttributeValue(ATTR_COST),
-				el.getAttributeValue(ATTR_PRICE));
+		Eigenleistung egl = new Eigenleistung(el.getAttributeValue(ATTR_CONTRACT_CODE), el.getAttributeValue(ATTR_NAME),
+				el.getAttributeValue(ATTR_COST), el.getAttributeValue(ATTR_PRICE));
 		return egl;
 	}
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
 }

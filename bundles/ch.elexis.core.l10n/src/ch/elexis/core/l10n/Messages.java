@@ -32,7 +32,7 @@ public class Messages extends NLS {
 	public static String RelationshipType_WELFARE_CONSULTANT;
 	public static String RelationshipType_WELFARE_INSURER;
 	public static String RelationshipType_WELFARE_INSUREE;
-	
+
 	public static String ArticleDefaultSignatureComposite_applicationInstruction;
 	public static String ArticleDefaultSignatureComposite_dispensation;
 	public static String ArticleDefaultSignatureComposite_dosage;
@@ -47,12 +47,12 @@ public class Messages extends NLS {
 	public static String ArticleDefaultSignatureComposite_reserve;
 	public static String ArticleDefaultSignatureComposite_sympomatic;
 	public static String ArticleDefaultSignatureComposite_date_none;
-	
+
 	public static String KontaktSelectionComposite_message;
 	public static String KontaktSelectionComposite_title;
 	public static String LaborSelectionComposite_message;
 	public static String LaborSelectionComposite_title;
-	
+
 	public static String StockDetailComposite_availableInStock;
 	public static String AccountListView_accountList;
 	public static String AccountListView_balance;
@@ -126,7 +126,7 @@ public class Messages extends NLS {
 	public static String InvoiceState_OWING;
 	public static String InvoiceState_STOP_LEGAL_PROCEEDING;
 	public static String InvoiceState_DEPRECIATED;
-	public static String InvoiceState_REJECTED	;
+	public static String InvoiceState_REJECTED;
 	public static String KonsZumVerrechnenView_RealleCreateBillsCaption;
 	public static String KonsZumVerrechnenView_ReallyCreateBillsBody;
 	public static String KonsZumVerrechnenView_allOpenCons;
@@ -529,7 +529,7 @@ public class Messages extends NLS {
 	public static String GlobalActions_ac_openhandbook;
 	public static String GlobalActions_plaBill;
 	public static String GlobalActions_saveasstartperspective;
-	
+
 	public static String GlobalMessage_noNumericValue;
 	public static String GlobalMessage_valueNotSet;
 
@@ -851,7 +851,7 @@ public class Messages extends NLS {
 	public static String LocalDocumentsDialog_errortitle;
 
 	public static String LocalDocumentsDialog_patient;
-	
+
 	public static String LabSettings_showOrdersActiveMandant;
 	public static String LabSettings_useLocalLabRefValues;
 	public static String LabSettings_validateMappings;
@@ -861,7 +861,7 @@ public class Messages extends NLS {
 
 	public static String LagerverwaltungPrefs_markOrdered;
 	public static String Leistungscodes_optifyXrayPositions;
-	
+
 	public static String Leistungscodes_setCopyForPatient;
 	public static String Leistungscodes_removeOpenReminders;
 	public static String Leistungscodes_separateObligations;
@@ -1160,7 +1160,7 @@ public class Messages extends NLS {
 	public static String KontaktBlatt_LawCode;
 	public static String KontaktBlatt_Group;
 	public static String KontaktBlatt_Allergies;
-	
+
 	public static String KontakteView_create;
 	public static String KontakteView_delete;
 	public static String KontakteView_duplicate;
@@ -1329,7 +1329,7 @@ public class Messages extends NLS {
 	public static String ReminderView_importantRemindersCaption;
 	public static String ReminderView_sortByDueDate;
 	public static String ReminderView_sortByDueDateAscending;
-	public static String ReminderView_sortByDueDateDescending;	
+	public static String ReminderView_sortByDueDateDescending;
 	public static String ArtikelContextMenu_create;
 	public static String ArtikelContextMenu_deleteAction;
 	public static String ArtikelContextMenu_deleteActionConfirmCaption;
@@ -1688,13 +1688,13 @@ public class Messages extends NLS {
 	public static String FallPlaneRechnung_PlanBillingAfterDays;
 	public static String FallPlaneRechnung_PlanBillingHeading;
 	public static String FallPlaneRechnung_PlanBillingPleaseEnterPositiveInteger;
-	
+
 	public static String FallCopyCommand_RelatedConsultations;
 	public static String FallCopyCommand_TransferConsultations;
 	public static String FallCopyCommand_AttentionTransferConsultations;
 	public static String LoadTemplateCommand_Error;
 	public static String LoadTemplateCommand_NoTextTemplate;
-	
+
 	public static String StartEditLocalDocumentHandler_alreadyOpenEnd;
 
 	public static String StartEditLocalDocumentHandler_alreadyOpenStart;
@@ -1806,8 +1806,8 @@ public class Messages extends NLS {
 	public static String AccessControlDefaults_user;
 	public static String AccessControlDefaults_viewAll;
 	public static String AccessControlDefaults_GroupAdminLaboratory;
-    public static String AccessControlDefaults_EditLaboratoryParameter;
-    public static String AccessControl_GroupAll;
+	public static String AccessControlDefaults_EditLaboratoryParameter;
+	public static String AccessControl_GroupAll;
 	public static String AnwenderPref_12;
 	public static String AnwenderPref_fuerMandant;
 	public static String AnwenderPref_gruppe;
@@ -2463,8 +2463,8 @@ public class Messages extends NLS {
 	public static String Mandanten_password;
 	public static String Mandanten_pleaseSelectBiller;
 	public static String Mandanten_selectBiller;
-	public static String MaritalStatus_ANNULLED;         
-	public static String MaritalStatus_DIVORCED;        
+	public static String MaritalStatus_ANNULLED;
+	public static String MaritalStatus_DIVORCED;
 	public static String MaritalStatus_DOMESTIC_PARTNER;
 	public static String MaritalStatus_INTERLOCUTORY;
 	public static String MaritalStatus_LEGALLY_SEPARATED;
@@ -2658,7 +2658,7 @@ public class Messages extends NLS {
 	public static String TimeTool_may;
 	public static String TimeTool_mo;
 	public static String TimeTool_monday;
-	public static String TimeTool_monthAgoFormat ;
+	public static String TimeTool_monthAgoFormat;
 	public static String TimeTool_monthToFormat;
 	public static String TimeTool_monthsAgoFormat;
 	public static String TimeTool_monthsToFormat;
@@ -2742,7 +2742,7 @@ public class Messages extends NLS {
 	public static String Verifier_NameHeading;
 	public static String Verifier_PleaseSelectCorrectContact;
 	public static String ViewerConfigurer_createNew;
-	public static String Warning_tooManyMessage ;
+	public static String Warning_tooManyMessage;
 	public static String Warning_tooManyTitle;
 	public static String WikipediaSearchAction_DisplayName;
 	public static String XIDEdit_Display;
@@ -2791,8 +2791,7 @@ public class Messages extends NLS {
 	public static String DailyOrderMandantOnlyFollowing;
 	public static String DailyOrderMandantNone;
 	public static String PdfPreview_NoPDFSelected;
-	
-	
+
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

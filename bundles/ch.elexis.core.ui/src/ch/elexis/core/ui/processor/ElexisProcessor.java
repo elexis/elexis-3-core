@@ -18,55 +18,51 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ElexisProcessor {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ElexisProcessor.class);
-	
+
 	private MApplication mApplication;
 	private EModelService eModelService;
-	
-	private static String[] removeModelElements = new String[] {
-		"ch.elexis.SchwarzesBrett"
-	};
-	
-	public ElexisProcessor(){}
-	
+
+	private static String[] removeModelElements = new String[]{"ch.elexis.SchwarzesBrett"};
+
+	public ElexisProcessor() {
+	}
+
 	@Execute
-	public void execute(MApplication mApplication, EModelService eModelService){
+	public void execute(MApplication mApplication, EModelService eModelService) {
 		this.mApplication = mApplication;
 		this.eModelService = eModelService;
 
 		if (eModelService != null) {
 			updateModelVersions(mApplication, eModelService);
 		}
-		
+
 		updateToolbar();
-		
+
 		updateInjectViews();
-		
+
 		updateE4Views();
 	}
-	
+
 	/**
-	 * Clears the persisted state for the main toolbar, otherwise the positioning of the
-	 * toolbar-elements are in an incorrect order. That means all persisted toolbar-elements are
-	 * positioned before the dynamically created elements from
+	 * Clears the persisted state for the main toolbar, otherwise the positioning of
+	 * the toolbar-elements are in an incorrect order. That means all persisted
+	 * toolbar-elements are positioned before the dynamically created elements from
 	 * ApplicationActionBarAdvisor#fillCoolBar.
 	 * 
 	 **/
-	private void updateToolbar(){
-		MTrimBar mTrimBar =
-			(MTrimBar) eModelService.find("org.eclipse.ui.main.toolbar", mApplication);
+	private void updateToolbar() {
+		MTrimBar mTrimBar = (MTrimBar) eModelService.find("org.eclipse.ui.main.toolbar", mApplication);
 		if (mTrimBar != null && mTrimBar.getChildren() != null) {
 			mTrimBar.getChildren().clear();
 		}
 	}
-	
-	private String[] e4ViewIds = {
-		"at.medevit.elexis.agenda.ui.view.agenda", "at.medevit.elexis.agenda.ui.view.parallel",
-		"at.medevit.elexis.agenda.ui.view.week"
-	};
-	
-	private void updateInjectViews(){
+
+	private String[] e4ViewIds = {"at.medevit.elexis.agenda.ui.view.agenda",
+			"at.medevit.elexis.agenda.ui.view.parallel", "at.medevit.elexis.agenda.ui.view.week"};
+
+	private void updateInjectViews() {
 		List<MPart> foundParts = eModelService.findElements(mApplication, null, MPart.class, null);
 		for (MPart mPart : foundParts) {
 			// add inject to all compatibility views
@@ -78,22 +74,20 @@ public class ElexisProcessor {
 			}
 		}
 	}
-	
-	private void updateE4Views(){
+
+	private void updateE4Views() {
 		for (String viewId : e4ViewIds) {
-			List<MPart> foundParts =
-				eModelService.findElements(mApplication, viewId, MPart.class, null);
+			List<MPart> foundParts = eModelService.findElements(mApplication, viewId, MPart.class, null);
 			for (MPart mPart : foundParts) {
 				// remove references to old CompatibilityView part
-				if (mPart.getContributionURI() == null
-					|| mPart.getContributionURI().endsWith("CompatibilityView")) {
+				if (mPart.getContributionURI() == null || mPart.getContributionURI().endsWith("CompatibilityView")) {
 					EcoreUtil.delete((EObject) mPart);
 				}
 			}
 		}
 	}
-	
-	private void updateModelVersions(MApplication mApplication, EModelService eModelService){
+
+	private void updateModelVersions(MApplication mApplication, EModelService eModelService) {
 		try {
 			List<MWindow> windows = mApplication.getChildren();
 			if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
@@ -104,8 +98,7 @@ public class ElexisProcessor {
 					if (element != null) {
 						if (element instanceof MPerspective) {
 							eModelService.removePerspectiveModel((MPerspective) element, mWindow);
-							logger.info(
-								"model element (perspective): " + modelElementId + " removed!");
+							logger.info("model element (perspective): " + modelElementId + " removed!");
 						} else {
 							MElementContainer<MUIElement> parent = element.getParent();
 							parent.getChildren().remove(element);

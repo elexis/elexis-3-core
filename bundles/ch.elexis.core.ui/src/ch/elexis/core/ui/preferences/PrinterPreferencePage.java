@@ -40,7 +40,7 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 	private static final String PAPER_PLAIN_A4 = Messages.PrinterPreferencePage_PaperA4Plain;
 	private static final String PAPER_PLAIN_A5 = Messages.PrinterPreferencePage_PaperA5Plain;
 	private static final String SHEETFEEDER = Messages.PrinterPreferencePage_SheetFeeder;
-	
+
 	Text tEtiketten, tEtikettenschacht, tA5, tA5Schacht, tA4ESR, tA4ESRSchacht, tA4, tA4Schacht;
 	Text tEinzelblatt;
 	Text tEinzelblattSchacht;
@@ -48,9 +48,9 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 	Button cEtiketten;
 	Button bClear;
 	PrinterSelector psel;
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		psel = new PrinterSelector();
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(3, false));
@@ -71,11 +71,11 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		cEtiketten.setText(Messages.PrinterPreferencePage_ChosePrinterAlways);
 		cEtiketten.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		cEtiketten.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				setEtikettenSelection(cEtiketten.getSelection());
 			}
 		});
-		
+
 		new Label(ret, SWT.NONE).setText(PRINTERWITH + PAPER_ESR);
 		tA4ESR = new Text(ret, SWT.BORDER | SWT.READ_ONLY);
 		tA4ESR.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -87,7 +87,7 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		tA4ESRSchacht = new Text(ret, SWT.BORDER);
 		tA4ESRSchacht.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE);
-		
+
 		new Label(ret, SWT.NONE).setText(PRINTERWITH + PAPER_PLAIN_A4);
 		tA4 = new Text(ret, SWT.BORDER | SWT.READ_ONLY);
 		tA4.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -99,7 +99,7 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		tA4Schacht = new Text(ret, SWT.BORDER);
 		tA4Schacht.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE);
-		
+
 		new Label(ret, SWT.NONE).setText(PRINTERWITH + PAPER_PLAIN_A5);
 		tA5 = new Text(ret, SWT.BORDER | SWT.READ_ONLY);
 		tA5.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -111,7 +111,7 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		tA5Schacht = new Text(ret, SWT.BORDER);
 		tA5Schacht.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE);
-		
+
 		new Label(ret, SWT.NONE).setText(PRINTERWITH + SHEETFEEDER);
 		tEinzelblatt = new Text(ret, SWT.BORDER | SWT.READ_ONLY);
 		tEinzelblatt.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -123,12 +123,11 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		tEinzelblattSchacht = new Text(ret, SWT.BORDER);
 		tEinzelblattSchacht.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE);
-		
+
 		tEtiketten.setText(CoreHub.localCfg.get("Drucker/Etiketten/Name", StringTool.leer)); //$NON-NLS-1$
-		tEtikettenschacht.setText(CoreHub.localCfg
-			.get("Drucker/Etiketten/Schacht", StringTool.leer)); //$NON-NLS-1$
+		tEtikettenschacht.setText(CoreHub.localCfg.get("Drucker/Etiketten/Schacht", StringTool.leer)); //$NON-NLS-1$
 		boolean selection = CoreHub.localCfg.get("Drucker/Etiketten/Choose", false); //$NON-NLS-1$
-		cEtiketten.setSelection(selection); //$NON-NLS-1$
+		cEtiketten.setSelection(selection); // $NON-NLS-1$
 		setEtikettenSelection(selection);
 		tA4ESR.setText(CoreHub.localCfg.get("Drucker/A4ESR/Name", StringTool.leer)); //$NON-NLS-1$
 		tA4ESRSchacht.setText(CoreHub.localCfg.get("Drucker/A4ESR/Schacht", StringTool.leer)); //$NON-NLS-1$
@@ -137,16 +136,14 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		tA5.setText(CoreHub.localCfg.get("Drucker/A5/Name", StringTool.leer)); //$NON-NLS-1$
 		tA5Schacht.setText(CoreHub.localCfg.get("Drucker/A5/Schacht", StringTool.leer)); //$NON-NLS-1$
 		tEinzelblatt.setText(CoreHub.localCfg.get("Drucker/Einzelblatt/Name", StringTool.leer)); //$NON-NLS-1$
-		tEinzelblattSchacht.setText(CoreHub.localCfg.get(
-			"Drucker/Einzelblatt/Schacht", StringTool.leer)); //$NON-NLS-1$
-		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(3,
-			true, 1, false));
+		tEinzelblattSchacht.setText(CoreHub.localCfg.get("Drucker/Einzelblatt/Schacht", StringTool.leer)); //$NON-NLS-1$
+		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 		bClear = new Button(ret, SWT.PUSH);
 		bClear.setText(Messages.PrinterPreferencePage_ClearPrinterSettings);
 		bClear.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 		bClear.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				tEtiketten.setText(StringTool.leer);
 				tA4.setText(StringTool.leer);
 				tA4ESR.setText(StringTool.leer);
@@ -155,10 +152,10 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		});
 		return ret;
 	}
-	
+
 	class PrinterSelector extends SelectionAdapter {
 		@Override
-		public void widgetSelected(SelectionEvent e){
+		public void widgetSelected(SelectionEvent e) {
 			PrintDialog pd = new PrintDialog(getShell());
 			PrinterData pdata = pd.open();
 			if (pdata != null) {
@@ -167,27 +164,27 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 				tx.setData(pdata);
 			}
 		}
-		
+
 	};
-	
-	private void setEtikettenSelection(boolean selection){
+
+	private void setEtikettenSelection(boolean selection) {
 		if (selection) {
 			tEtiketten.setText(StringTool.leer);
 			tEtiketten.setData(null);
 			tEtikettenschacht.setText(StringTool.leer);
 		}
-		
+
 		tEtiketten.setEnabled(!selection);
 		tEtikettenschacht.setEnabled(!selection);
 		bEtiketten.setEnabled(!selection);
 	}
-	
-	public void init(IWorkbench workbench){
-		
+
+	public void init(IWorkbench workbench) {
+
 	}
-	
+
 	@Override
-	public boolean performOk(){
+	public boolean performOk() {
 		CoreHub.localCfg.set("Drucker/Etiketten/Name", tEtiketten.getText()); //$NON-NLS-1$
 		CoreHub.localCfg.set("Drucker/Etiketten/Schacht", tEtikettenschacht.getText()); //$NON-NLS-1$
 		CoreHub.localCfg.set("Drucker/Etiketten/Choose", cEtiketten.getSelection()); //$NON-NLS-1$
@@ -198,7 +195,7 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		} else {
 			CoreHub.localCfg.set("Drucker/Etiketten/Driver", StringTool.leer); //$NON-NLS-1$
 		}
-		
+
 		CoreHub.localCfg.set("Drucker/A4ESR/Name", tA4ESR.getText()); //$NON-NLS-1$
 		CoreHub.localCfg.set("Drucker/A4ESR/Schacht", tA4ESRSchacht.getText()); //$NON-NLS-1$
 		CoreHub.localCfg.set("Drucker/A4/Name", tA4.getText()); //$NON-NLS-1$
@@ -207,8 +204,8 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		CoreHub.localCfg.set("Drucker/A5/Schacht", tA5Schacht.getText()); //$NON-NLS-1$
 		CoreHub.localCfg.set("Drucker/Einzelblatt/Name", tEinzelblatt.getText()); //$NON-NLS-1$
 		CoreHub.localCfg.set("Drucker/Einzelblatt/Schacht", tEinzelblattSchacht.getText()); //$NON-NLS-1$
-		
+
 		return super.performOk();
 	}
-	
+
 }

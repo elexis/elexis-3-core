@@ -31,46 +31,46 @@ public class Observation extends AbstractEntityWithId implements EntityWithId, E
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean referenced = false;
@@ -104,10 +104,10 @@ public class Observation extends AbstractEntityWithId implements EntityWithId, E
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "target")
 	protected List<ObservationLink> targetLinks = new ArrayList<>();
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "source")
 	protected List<ObservationLink> sourceLinks = new ArrayList<>();
-	
+
 	public String getPatientId() {
 		return patientid;
 	}
@@ -187,12 +187,12 @@ public class Observation extends AbstractEntityWithId implements EntityWithId, E
 	public void setType(String type) {
 		this.type = type;
 	}
-	
-	public List<ObservationLink> getSourceLinks(){
+
+	public List<ObservationLink> getSourceLinks() {
 		return sourceLinks;
 	}
-	
-	public List<ObservationLink> getTargetLinks(){
+
+	public List<ObservationLink> getTargetLinks() {
 		return targetLinks;
 	}
 }

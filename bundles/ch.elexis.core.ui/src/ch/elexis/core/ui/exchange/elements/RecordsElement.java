@@ -15,10 +15,10 @@ package ch.elexis.core.ui.exchange.elements;
 import ch.elexis.core.ui.exchange.XChangeContainer;
 
 public class RecordsElement extends XChangeElement {
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XChangeContainer.ENCLOSE_RECORDS;
 	}
-	
+
 }

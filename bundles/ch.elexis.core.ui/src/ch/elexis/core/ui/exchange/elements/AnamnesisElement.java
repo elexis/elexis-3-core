@@ -24,34 +24,34 @@ import ch.elexis.data.PersistentObject;
 
 public class AnamnesisElement extends XChangeElement {
 	public static final String XMLNAME = "anamnesis";
-	
+
 	HashMap<IDiagnose, EpisodeElement> hLink = new HashMap<IDiagnose, EpisodeElement>();
 	HashMap<Element, IDiagnose> hBacklink;
 	HashMap<String, Element> hElements;
 	MedicalElement eMed;
-	
-	public AnamnesisElement(XChangeExporter sender){
+
+	public AnamnesisElement(XChangeExporter sender) {
 		setWriter(sender);
 	}
-	
-	public String getXMLName(){
+
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
-	public List<EpisodeElement> getEpisodes(){
-		List<EpisodeElement> lep =
-			(List<EpisodeElement>) getChildren(EpisodeElement.XMLNAME, EpisodeElement.class);
+
+	public List<EpisodeElement> getEpisodes() {
+		List<EpisodeElement> lep = (List<EpisodeElement>) getChildren(EpisodeElement.XMLNAME, EpisodeElement.class);
 		return lep;
 	}
-	
+
 	/**
-	 * link a record element to this anamnesis (every episode has a number of treatments related to
-	 * that episode) We try to find an episode for each of the diagnoses of the Konsultation given
+	 * link a record element to this anamnesis (every episode has a number of
+	 * treatments related to that episode) We try to find an episode for each of the
+	 * diagnoses of the Konsultation given
 	 * 
 	 * @param k
 	 * @param r
 	 */
-	public void link(Konsultation k, RecordElement r){
+	public void link(Konsultation k, RecordElement r) {
 		List<IDiagnose> kdl = k.getDiagnosen();
 		for (IDiagnose dg : kdl) {
 			EpisodeElement episode = hLink.get(dg);
@@ -64,11 +64,10 @@ public class AnamnesisElement extends XChangeElement {
 			r.add(episodeRef);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void doImport(RecordElement r, Konsultation k){
-		List<EpisodeElement> eRefs =
-			(List<EpisodeElement>) r.getChildren(EpisodeElement.XMLNAME, EpisodeElement.class);
+	public void doImport(RecordElement r, Konsultation k) {
+		List<EpisodeElement> eRefs = (List<EpisodeElement>) r.getChildren(EpisodeElement.XMLNAME, EpisodeElement.class);
 		if (eRefs != null) {
 			for (EpisodeElement eRef : eRefs) {
 				String id = eRef.getAttr(ATTR_ID);
@@ -82,8 +81,8 @@ public class AnamnesisElement extends XChangeElement {
 			}
 		}
 	}
-	
-	public PersistentObject doImport(PersistentObject context){
+
+	public PersistentObject doImport(PersistentObject context) {
 		return null;
 	}
 }

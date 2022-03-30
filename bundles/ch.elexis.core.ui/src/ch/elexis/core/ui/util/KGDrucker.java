@@ -32,36 +32,35 @@ public class KGDrucker {
 	IWorkbenchPage kgPage;
 	// IProgressMonitor monitor;
 	Patient patient;
-	
-	public void doPrint(Patient pat){
+
+	public void doPrint(Patient pat) {
 		this.patient = pat;
 		kgPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-		
+
 		try {
 			kgp = (KGPrintView) kgPage.showView(KGPrintView.ID);
-			progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
-				new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor){
-						monitor.beginTask(Messages.KGDrucker_printEMR, 1); //$NON-NLS-1$
-						// gw 23.7.2006 an neues Selectionmodell angepasst
-						Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
-						if (kgp.doPrint(actPatient, monitor) == false) {
-							ErrorDialog.openError(null, Messages.KGDrucker_errorPrinting,
-								Messages.KGDrucker_couldntprint + patient.getLabel()
-									+ Messages.KGDrucker_emr, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-							
-						}
-						
-						monitor.done();
+			progressService.runInUI(PlatformUI.getWorkbench().getProgressService(), new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) {
+					monitor.beginTask(Messages.KGDrucker_printEMR, 1); // $NON-NLS-1$
+					// gw 23.7.2006 an neues Selectionmodell angepasst
+					Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
+					if (kgp.doPrint(actPatient, monitor) == false) {
+						ErrorDialog.openError(null, Messages.KGDrucker_errorPrinting,
+								Messages.KGDrucker_couldntprint + patient.getLabel() + Messages.KGDrucker_emr, null); // $NON-NLS-1$
+																														// //$NON-NLS-2$
+																														// //$NON-NLS-3$
+
 					}
-				}, null);
-			
+
+					monitor.done();
+				}
+			}, null);
+
 			kgPage.hideView(kgp);
-			
+
 		} catch (Exception ex) {
-			ElexisStatus status =
-				new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 					Messages.KGDrucker_errorPrinting + ": " + Messages.KGDrucker_couldntShow, ex);
 			StatusManager.getManager().handle(status);
 		}

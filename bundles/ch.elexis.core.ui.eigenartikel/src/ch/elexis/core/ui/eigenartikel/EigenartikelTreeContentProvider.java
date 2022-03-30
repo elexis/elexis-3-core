@@ -15,46 +15,46 @@ import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
 
-public class EigenartikelTreeContentProvider
-		implements ITreeContentProvider, ICommonViewerContentProvider {
-	
+public class EigenartikelTreeContentProvider implements ITreeContentProvider, ICommonViewerContentProvider {
+
 	public static String FILTER_KEY = "Name";
 	private CommonViewer commonViewer;
 	private String filter = null;
-	
+
 	private boolean showProducts;
-	
-	public EigenartikelTreeContentProvider(CommonViewer cv){
+
+	public EigenartikelTreeContentProvider(CommonViewer cv) {
 		this.commonViewer = cv;
 	}
-	
+
 	@Override
-	public void reorder(String field){}
-	
+	public void reorder(String field) {
+	}
+
 	@Override
-	public void selected(){}
-	
+	public void selected() {
+	}
+
 	@Override
-	public void init(){}
-	
+	public void init() {
+	}
+
 	@Override
-	public void startListening(){
+	public void startListening() {
 		commonViewer.getConfigurer().getControlFieldProvider().addChangeListener(this);
 	}
-	
+
 	@Override
-	public void stopListening(){
+	public void stopListening() {
 		commonViewer.getConfigurer().getControlFieldProvider().removeChangeListener(this);
 	}
-	
+
 	@Override
-	public Object[] getElements(Object inputElement){
+	public Object[] getElements(Object inputElement) {
 		IQuery<IArticle> query = CoreModelServiceHolder.get().getQuery(IArticle.class);
-		query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS,
-			ArticleTyp.EIGENARTIKEL);
+		query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS, ArticleTyp.EIGENARTIKEL);
 		if (filter != null) {
-			query.and(ModelPackage.Literals.IARTICLE__NAME, COMPARATOR.LIKE, "%" + filter + "%",
-				true);
+			query.and(ModelPackage.Literals.IARTICLE__NAME, COMPARATOR.LIKE, "%" + filter + "%", true);
 		}
 		if (!showProducts) {
 			query.and(ModelPackage.Literals.IARTICLE__PRODUCT, COMPARATOR.NOT_EQUALS, null);
@@ -64,9 +64,9 @@ public class EigenartikelTreeContentProvider
 		query.orderBy(ModelPackage.Literals.IARTICLE__NAME, ORDER.ASC);
 		return query.execute().toArray();
 	}
-	
+
 	@Override
-	public Object[] getChildren(Object parentElement){
+	public Object[] getChildren(Object parentElement) {
 		if (!showProducts) {
 			return null;
 		}
@@ -78,23 +78,23 @@ public class EigenartikelTreeContentProvider
 		}
 		return null;
 	}
-	
+
 	@Override
-	public Object getParent(Object element){
+	public Object getParent(Object element) {
 		return null;
 	}
-	
+
 	@Override
-	public boolean hasChildren(Object element){
+	public boolean hasChildren(Object element) {
 		if (!showProducts) {
 			return false;
 		}
 		IArticle ea = (IArticle) element;
 		return ea.isProduct() && ea.getPackages().size() > 0;
 	}
-	
+
 	@Override
-	public void changed(HashMap<String, String> values){
+	public void changed(HashMap<String, String> values) {
 		String filterValue = values.get(FILTER_KEY).toLowerCase();
 		if (filterValue != null && filterValue.length() > 1) {
 			filter = filterValue;
@@ -103,10 +103,10 @@ public class EigenartikelTreeContentProvider
 		}
 		commonViewer.notify(CommonViewer.Message.update);
 	}
-	
-	public void setShowProducts(boolean checked){
+
+	public void setShowProducts(boolean checked) {
 		this.showProducts = checked;
 		commonViewer.notify(CommonViewer.Message.update);
 	}
-	
+
 }

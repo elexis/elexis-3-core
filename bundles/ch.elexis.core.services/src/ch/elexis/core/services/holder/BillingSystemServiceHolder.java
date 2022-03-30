@@ -8,13 +8,13 @@ import ch.elexis.core.services.IBillingSystemService;
 @Component
 public class BillingSystemServiceHolder {
 	private static IBillingSystemService billingSystemService;
-	
+
 	@Reference
-	public void setBillingSystemService(IBillingSystemService billingSystemService){
+	public void setBillingSystemService(IBillingSystemService billingSystemService) {
 		BillingSystemServiceHolder.billingSystemService = billingSystemService;
 	}
-	
-	public static IBillingSystemService get(){
+
+	public static IBillingSystemService get() {
 		return billingSystemService;
 	}
 }

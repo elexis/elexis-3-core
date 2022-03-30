@@ -17,5 +17,5 @@ public class Messages {
 	public static String EigenleistungContextMenu_pleaseEnterNameForArticle = ch.elexis.core.l10n.Messages.EigenleistungContextMenu_pleaseEnterNameForArticle;
 	public static String EigenleistungContextMenu_propertiesAction = ch.elexis.core.l10n.Messages.EigenleistungContextMenu_propertiesAction;
 	public static String EigenleistungContextMenu_propertiesTooltip = ch.elexis.core.l10n.Messages.EigenleistungContextMenu_propertiesTooltip;
-	
+
 }

@@ -22,29 +22,28 @@ import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class BriefDocumentStoreTest extends AbstractServiceTest {
-	
+
 	static IDocumentStore iDocumentStore;
-	
+
 	@Before
-	public void before(){
+	public void before() {
 		Optional<IDocumentStore> documentService = OsgiServiceUtil.getService(IDocumentStore.class,
-			"(storeid=ch.elexis.data.store.brief)");
-		iDocumentStore =
-			documentService.orElseThrow(() -> new IllegalStateException("No service available"));
-		
+				"(storeid=ch.elexis.data.store.brief)");
+		iDocumentStore = documentService.orElseThrow(() -> new IllegalStateException("No service available"));
+
 		createTestMandantPatientFallBehandlung();
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		cleanup();
 		OsgiServiceUtil.ungetService(iDocumentStore);
 	}
-	
+
 	@Test
-	public void testCrudAndSearchDocuments() throws IOException, ElexisException{
+	public void testCrudAndSearchDocuments() throws IOException, ElexisException {
 		IPatient iPatient = testPatients.get(0);
-		
+
 		// persist metadata of documents
 		IDocumentLetter letter = coreModelService.create(IDocumentLetter.class);
 		letter.setPatient(iPatient);
@@ -55,36 +54,35 @@ public class BriefDocumentStoreTest extends AbstractServiceTest {
 		letter.setEncounter(testEncounters.get(0));
 		letter.setContent(getClass().getResourceAsStream("/rsc/Testdocument.docx"));
 		iDocumentStore.saveDocument(letter);
-		
+
 		// search documents
 		Assert.assertEquals(0, iDocumentStore.getDocuments("WRONG ID", null, null, null).size());
 		List<IDocument> documents = iDocumentStore.getDocuments(iPatient.getId(), null, null, null);
 		Assert.assertEquals(1, documents.size());
-		
+
 		IDocumentLetter persistedDocument = (IDocumentLetter) documents.get(0);
 		Assert.assertTrue(persistedDocument.getId() != null);
 		Assert.assertEquals("Test Brief", persistedDocument.getTitle());
 		Assert.assertEquals("docx", persistedDocument.getMimeType());
 		Assert.assertEquals("Test desc", persistedDocument.getDescription());
 		Assert.assertEquals(BriefConstants.RECHNUNG, persistedDocument.getCategory().getName());
-		Assert.assertEquals(Collections.singletonList(DocumentStatus.NEW),
-			persistedDocument.getStatus());
+		Assert.assertEquals(Collections.singletonList(DocumentStatus.NEW), persistedDocument.getStatus());
 		Assert.assertEquals(5554, persistedDocument.getContentLength());
 		Assert.assertEquals(testEncounters.get(0), persistedDocument.getEncounter());
-		
+
 		// save content
 		iDocumentStore.saveDocument(persistedDocument, IOUtils.toInputStream("test"));
-		
+
 		// search with wrong category
 		documents = iDocumentStore.getDocuments(iPatient.getId(), null,
-			new CategoryDocumentDTO(BriefConstants.BESTELLUNG), null);
+				new CategoryDocumentDTO(BriefConstants.BESTELLUNG), null);
 		Assert.assertEquals(0, documents.size());
-		
+
 		// search with true category
 		documents = iDocumentStore.getDocuments(iPatient.getId(), null,
-			new CategoryDocumentDTO(BriefConstants.RECHNUNG), null);
+				new CategoryDocumentDTO(BriefConstants.RECHNUNG), null);
 		Assert.assertEquals(1, documents.size());
-		
+
 		// verify content
 		persistedDocument = (IDocumentLetter) documents.get(0);
 		Assert.assertTrue(persistedDocument.getId() != null);
@@ -93,12 +91,10 @@ public class BriefDocumentStoreTest extends AbstractServiceTest {
 		Assert.assertTrue(in.isPresent());
 		String s = IOUtils.toString(in.get());
 		Assert.assertEquals("test", s);
-		
+
 		// remove document
-		Assert.assertEquals(1,
-			iDocumentStore.getDocuments(iPatient.getId(), null, null, null).size());
+		Assert.assertEquals(1, iDocumentStore.getDocuments(iPatient.getId(), null, null, null).size());
 		iDocumentStore.removeDocument(persistedDocument);
-		Assert.assertEquals(0,
-			iDocumentStore.getDocuments(iPatient.getId(), null, null, null).size());
+		Assert.assertEquals(0, iDocumentStore.getDocuments(iPatient.getId(), null, null, null).size());
 	}
 }

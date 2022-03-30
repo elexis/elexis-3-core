@@ -10,7 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.exchange;
 
-public class Messages  {
+public class Messages {
 	public static String BlockContainer_Blockbeschreibung = ch.elexis.core.l10n.Messages.BlockContainer_Blockbeschreibung;
 	public static String BlockContainer_xchangefiles = ch.elexis.core.l10n.Messages.BlockContainer_xchangefiles;
 	public static String KontaktMatcher_noauto1 = ch.elexis.core.l10n.Messages.KontaktMatcher_noauto1;

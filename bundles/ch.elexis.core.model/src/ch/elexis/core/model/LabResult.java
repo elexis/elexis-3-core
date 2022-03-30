@@ -17,61 +17,63 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.PathologicDescription;
 
 public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.LabResult>
-		implements IdentifiableWithXid, ILabResult {
-	
+		implements
+			IdentifiableWithXid,
+			ILabResult {
+
 	private LabPathologicEvaluator labPathologicEvaluator;
 
-	public LabResult(ch.elexis.core.jpa.entities.LabResult entity){
+	public LabResult(ch.elexis.core.jpa.entities.LabResult entity) {
 		super(entity);
 	}
-	
+
 	@Override
-	public String getUnit(){
+	public String getUnit() {
 		return getEntity().getUnit();
 	}
-	
+
 	@Override
-	public void setUnit(String value){
+	public void setUnit(String value) {
 		getEntityMarkDirty().setUnit(value);
 	}
-	
+
 	@Override
-	public LocalDateTime getAnalyseTime(){
+	public LocalDateTime getAnalyseTime() {
 		return getEntity().getAnalysetime();
 	}
-	
+
 	@Override
-	public void setAnalyseTime(LocalDateTime value){
+	public void setAnalyseTime(LocalDateTime value) {
 		getEntityMarkDirty().setAnalysetime(value);
 	}
-	
+
 	@Override
-	public LocalDateTime getObservationTime(){
+	public LocalDateTime getObservationTime() {
 		return getEntity().getObservationtime();
 	}
-	
+
 	@Override
-	public void setObservationTime(LocalDateTime value){
+	public void setObservationTime(LocalDateTime value) {
 		getEntityMarkDirty().setObservationtime(value);
 	}
-	
+
 	@Override
-	public LocalDateTime getTransmissionTime(){
+	public LocalDateTime getTransmissionTime() {
 		return getEntity().getTransmissiontime();
 	}
-	
+
 	@Override
-	public void setTransmissionTime(LocalDateTime value){
+	public void setTransmissionTime(LocalDateTime value) {
 		getEntityMarkDirty().setTransmissiontime(value);
 	}
-	
+
 	@Override
-	public boolean isPathologic(){
+	public boolean isPathologic() {
 		return getEntity().isFlagged(LabResultConstants.PATHOLOGIC);
 	}
-	
+
 	@Override
-	public void setPathologic(boolean value){
+	public void setPathologic(boolean value) {
 		int oldFlags = getEntity().getFlags();
 		if (value) {
 			getEntityMarkDirty().setFlags(oldFlags | LabResultConstants.PATHOLOGIC);
@@ -79,127 +81,124 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 			getEntityMarkDirty().setFlags(oldFlags & ~LabResultConstants.PATHOLOGIC);
 		}
 	}
-	
+
 	@Override
-	public String getResult(){
+	public String getResult() {
 		return getEntity().getResult();
 	}
-	
+
 	@Override
-	public void setResult(String value){
+	public void setResult(String value) {
 		getEntityMarkDirty().setResult(value);
 		setPathologic(getLabPathologicEvaluator().isPathologic(this));
 	}
-	
+
 	@Override
-	public String getComment(){
+	public String getComment() {
 		return getEntity().getComment();
 	}
-	
+
 	@Override
-	public void setComment(String value){
+	public void setComment(String value) {
 		getEntityMarkDirty().setComment(value);
 	}
-	
+
 	@Override
-	public String getReferenceMale(){
+	public String getReferenceMale() {
 		return resolvePreferredRefValue(getItem().getReferenceMale(), getEntity().getRefMale());
 	}
-	
+
 	@Override
-	public void setReferenceMale(String value){
+	public void setReferenceMale(String value) {
 		getEntityMarkDirty().setRefMale(value);
 		setPathologic(getLabPathologicEvaluator().isPathologic(this));
 	}
-	
+
 	@Override
-	public String getReferenceFemale(){
+	public String getReferenceFemale() {
 		return resolvePreferredRefValue(getItem().getReferenceFemale(), getEntity().getRefFemale());
 	}
-	
+
 	@Override
-	public void setReferenceFemale(String value){
+	public void setReferenceFemale(String value) {
 		getEntityMarkDirty().setRefFemale(value);
 		setPathologic(getLabPathologicEvaluator().isPathologic(this));
 	}
-	
+
 	@Override
-	public LocalDate getDate(){
+	public LocalDate getDate() {
 		return getEntity().getDate();
 	}
-	
+
 	@Override
-	public void setDate(LocalDate value){
+	public void setDate(LocalDate value) {
 		getEntityMarkDirty().setDate(value);
 	}
-	
+
 	@Override
-	public ILabItem getItem(){
+	public ILabItem getItem() {
 		CoreModelServiceHolder.get().refresh(this);
 		return ModelUtil.getAdapter(getEntity().getItem(), ILabItem.class);
 	}
-	
+
 	@Override
-	public void setItem(ILabItem value){
+	public void setItem(ILabItem value) {
 		if (value instanceof AbstractIdDeleteModelAdapter) {
 			getEntityMarkDirty().setItem(
-				(ch.elexis.core.jpa.entities.LabItem) ((AbstractIdDeleteModelAdapter<?>) value)
-					.getEntity());
+					(ch.elexis.core.jpa.entities.LabItem) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
 			getEntityMarkDirty().setItem(null);
 		}
 	}
-	
+
 	@Override
-	public PathologicDescription getPathologicDescription(){
+	public PathologicDescription getPathologicDescription() {
 		return getEntity().getPathologicDescription();
 	}
-	
+
 	@Override
-	public void setPathologicDescription(PathologicDescription value){
+	public void setPathologicDescription(PathologicDescription value) {
 		getEntityMarkDirty().setPathologicDescription(value);
 	}
-	
+
 	@Override
-	public IContact getOrigin(){
+	public IContact getOrigin() {
 		return ModelUtil.getAdapter(getEntity().getOrigin(), IContact.class);
 	}
-	
+
 	@Override
-	public void setOrigin(IContact value){
+	public void setOrigin(IContact value) {
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntityMarkDirty()
-				.setOrigin((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty().setOrigin((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
 			getEntityMarkDirty().setOrigin(null);
 		}
 	}
-	
+
 	@Override
-	public IPatient getPatient(){
+	public IPatient getPatient() {
 		CoreModelServiceHolder.get().refresh(this);
 		return ModelUtil.getAdapter(getEntity().getPatient(), IPatient.class);
 	}
-	
+
 	@Override
-	public void setPatient(IPatient value){
+	public void setPatient(IPatient value) {
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntityMarkDirty()
-				.setPatient((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty().setPatient((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
 			getEntityMarkDirty().setPatient(null);
 		}
 	}
-	
+
 	@Override
-	public ILabOrder getLabOrder(){
+	public ILabOrder getLabOrder() {
 		return getLabOrder(false);
 	}
-	
+
 	@Override
-	public ILabOrder getLabOrder(boolean includeDeleted){
+	public ILabOrder getLabOrder(boolean includeDeleted) {
 		IQuery<ILabOrder> query;
-		if(includeDeleted) {
+		if (includeDeleted) {
 			query = CoreModelServiceHolder.get().getQuery(ILabOrder.class, true);
 		} else {
 			query = ModelUtil.getQuery(ILabOrder.class);
@@ -207,20 +206,21 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 		query.and(ModelPackage.Literals.ILAB_ORDER__RESULT, COMPARATOR.EQUALS, this);
 		return query.executeSingleResult().orElse(null);
 	}
-	
+
 	/**
-	 * Get reference value based on user settings (either from local system (LabItem) or device sent
-	 * (LabResult)).
+	 * Get reference value based on user settings (either from local system
+	 * (LabItem) or device sent (LabResult)).
 	 * 
 	 * @param itemRef
 	 *            {@link LabItem} reference
 	 * @param resultRef
 	 *            {@link LabResult} reference
-	 * @return Preferred refValue. Per default reference of {@link LabItem} is returned
+	 * @return Preferred refValue. Per default reference of {@link LabItem} is
+	 *         returned
 	 */
-	private String resolvePreferredRefValue(String itemRef, String resultRef){
+	private String resolvePreferredRefValue(String itemRef, String resultRef) {
 		boolean useLocalRefs = ModelUtil.isUserConfig(ModelUtil.getActiveUserContact().orElse(null),
-			Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+				Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
 		if (useLocalRefs && itemRef != null && !itemRef.isEmpty()) {
 			return itemRef;
 		} else {
@@ -231,36 +231,36 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 			return ref;
 		}
 	}
-	
-	private synchronized LabPathologicEvaluator getLabPathologicEvaluator(){
+
+	private synchronized LabPathologicEvaluator getLabPathologicEvaluator() {
 		if (labPathologicEvaluator == null) {
 			labPathologicEvaluator = new LabPathologicEvaluator();
 		}
 		return labPathologicEvaluator;
 	}
-	
+
 	@Override
-	public Object getExtInfo(Object key){
+	public Object getExtInfo(Object key) {
 		return extInfoHandler.getExtInfo(key);
 	}
-	
+
 	@Override
-	public void setExtInfo(Object key, Object value){
+	public void setExtInfo(Object key, Object value) {
 		extInfoHandler.setExtInfo(key, value);
 	}
-	
+
 	@Override
-	public Map<Object, Object> getMap(){
+	public Map<Object, Object> getMap() {
 		return extInfoHandler.getMap();
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		return getItem().getLabel() + ", " + getDate() + ": " + getResult();
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return super.toString() + " " + getLabel();
 	}
 }

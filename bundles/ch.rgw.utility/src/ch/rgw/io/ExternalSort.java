@@ -17,23 +17,25 @@ import java.util.Vector;
 /**
  * Goal: offer a generic external-memory sorting program in Java.
  * 
- * It must be : - hackable (easy to adapt) - scalable to large files - sensibly efficient.
+ * It must be : - hackable (easy to adapt) - scalable to large files - sensibly
+ * efficient.
  * 
  * This software is in the public domain.
  * 
  * By Daniel Lemire, April 2010 http://www.daniel-lemire.com/
  */
 public class ExternalSort {
-	
+
 	/**
-	 * This will simply load the file by blocks of x rows, then sort them in-memory, and write the
-	 * result to a bunch of temporary files that have to be merged later.
+	 * This will simply load the file by blocks of x rows, then sort them in-memory,
+	 * and write the result to a bunch of temporary files that have to be merged
+	 * later.
 	 * 
 	 * @param file
 	 *            some flat file
 	 * @return a list of temporary flat files
 	 */
-	public static List<File> sortInBatch(File file, Comparator<String> cmp) throws IOException{
+	public static List<File> sortInBatch(File file, Comparator<String> cmp) throws IOException {
 		List<File> files = new Vector<File>();
 		BufferedReader fbr = new BufferedReader(new FileReader(file));
 		long totalrowread = 0;
@@ -43,8 +45,8 @@ public class ExternalSort {
 			try {
 				while (line != null) {
 					tmplist = new Vector<String>();
-					while ((Runtime.getRuntime().freeMemory() > 2097152)
-						&& ((line = fbr.readLine()) != null)) { // as long
+					while ((Runtime.getRuntime().freeMemory() > 2097152) && ((line = fbr.readLine()) != null)) { // as
+																													// long
 						// as you
 						// have 2MB
 						tmplist.add(line);
@@ -63,8 +65,8 @@ public class ExternalSort {
 		}
 		return files;
 	}
-	
-	public static File sortAndSave(List<String> tmplist, Comparator<String> cmp) throws IOException{
+
+	public static File sortAndSave(List<String> tmplist, Comparator<String> cmp) throws IOException {
 		Collections.sort(tmplist, cmp);
 		File newtmpfile = File.createTempFile("sortInBatch", "flatfile");
 		newtmpfile.deleteOnExit();
@@ -79,7 +81,7 @@ public class ExternalSort {
 		}
 		return newtmpfile;
 	}
-	
+
 	/**
 	 * This merges a bunch of temporary flat files
 	 * 
@@ -87,8 +89,7 @@ public class ExternalSort {
 	 * @param output
 	 *            file
 	 */
-	public static int mergeSortedFiles(List<File> files, File outputfile, Comparator<String> cmp)
-		throws IOException{
+	public static int mergeSortedFiles(List<File> files, File outputfile, Comparator<String> cmp) throws IOException {
 		PriorityQueue<BinaryFileBuffer> pq = new PriorityQueue<BinaryFileBuffer>();
 		for (File f : files) {
 			BinaryFileBuffer bfb = new BinaryFileBuffer(f, cmp);
@@ -115,8 +116,8 @@ public class ExternalSort {
 		}
 		return rowcounter;
 	}
-	
-	public static void main(String[] args) throws IOException{
+
+	public static void main(String[] args) throws IOException {
 		if (args.length < 2) {
 			System.out.println("please provide input and output file names");
 			return;
@@ -124,19 +125,19 @@ public class ExternalSort {
 		String inputfile = args[0];
 		String outputfile = args[1];
 		Comparator<String> comparator = new Comparator<String>() {
-			public int compare(String r1, String r2){
+			public int compare(String r1, String r2) {
 				return r1.compareTo(r2);
 			}
 		};
 		List<File> l = sortInBatch(new File(inputfile), comparator);
 		mergeSortedFiles(l, new File(outputfile), comparator);
 	}
-	
-	public void sortFile(File in, File out, Comparator<String> cmp) throws IOException{
+
+	public void sortFile(File in, File out, Comparator<String> cmp) throws IOException {
 		List<File> l = sortInBatch(in, cmp);
 		mergeSortedFiles(l, out, cmp);
 	}
-	
+
 	static class BinaryFileBuffer implements Comparable<BinaryFileBuffer> {
 		public static int BUFFERSIZE = 512;
 		public BufferedReader fbr;
@@ -144,34 +145,35 @@ public class ExternalSort {
 		int currentpointer = 0;
 		Comparator<String> mCMP;
 		public File originalfile;
-		
-		public BinaryFileBuffer(File f, Comparator<String> cmp) throws IOException{
+
+		public BinaryFileBuffer(File f, Comparator<String> cmp) throws IOException {
 			originalfile = f;
 			mCMP = cmp;
 			fbr = new BufferedReader(new FileReader(f));
 			reload();
 		}
-		
-		public boolean empty(){
+
+		public boolean empty() {
 			return buf.size() == 0;
 		}
-		
-		private void reload() throws IOException{
+
+		private void reload() throws IOException {
 			buf.clear();
 			try {
 				String line;
 				while ((buf.size() < BUFFERSIZE) && ((line = fbr.readLine()) != null))
 					buf.add(line);
-			} catch (EOFException oef) {}
+			} catch (EOFException oef) {
+			}
 		}
-		
-		public String peek(){
+
+		public String peek() {
 			if (empty())
 				return null;
 			return buf.get(currentpointer);
 		}
-		
-		public String pop() throws IOException{
+
+		public String pop() throws IOException {
 			String answer = peek();
 			++currentpointer;
 			if (currentpointer == buf.size()) {
@@ -180,10 +182,10 @@ public class ExternalSort {
 			}
 			return answer;
 		}
-		
-		public int compareTo(BinaryFileBuffer b){
+
+		public int compareTo(BinaryFileBuffer b) {
 			return mCMP.compare(peek(), b.peek());
 		}
-		
+
 	}
 }

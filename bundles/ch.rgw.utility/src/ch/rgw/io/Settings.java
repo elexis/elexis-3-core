@@ -32,18 +32,19 @@ import ch.rgw.tools.TimeTool;
 
 /**
  * Abstrakte Basisklasse für die Speicherung applikationsspezifischer Daten.<br>
- * Änderungen der Settings sind immer volatil. Erst mit dem Auruf von flush() erfolgt eine
- * persistierende Speicherung (deren genaues Ziel Sache der konkreten Implementation ist. mit undo()
- * kann jeweils der Stand nach dem letzten flush() wiederhergestellt werden. Es erfolgt euch keine
- * implizite Speicherung beim Programmende! Alle Änderungen, die nicht explizit mit flush()
- * gesichert werden, sind verloren.
+ * Änderungen der Settings sind immer volatil. Erst mit dem Auruf von flush()
+ * erfolgt eine persistierende Speicherung (deren genaues Ziel Sache der
+ * konkreten Implementation ist. mit undo() kann jeweils der Stand nach dem
+ * letzten flush() wiederhergestellt werden. Es erfolgt euch keine implizite
+ * Speicherung beim Programmende! Alle Änderungen, die nicht explizit mit
+ * flush() gesichert werden, sind verloren.
  */
 
 public abstract class Settings implements Serializable, Cloneable {
-	public static String Version(){
+	public static String Version() {
 		return "4.2.2";
 	}
-	
+
 	private static int SerializedVersion = 5;
 	private static final long serialVersionUID = 0xdcb17fe20021006L + SerializedVersion;
 	protected static Logger log = null;
@@ -52,63 +53,63 @@ public abstract class Settings implements Serializable, Cloneable {
 	private volatile boolean dirty = false;
 	private ISettingChangedListener settingChangedListener = null;
 	// protected String name;
-	
+
 	static {
 		if (log == null)
 			log = LoggerFactory.getLogger("Settings"); //$NON-NLS-1$
 	}
-	
-	protected Settings(){
+
+	protected Settings() {
 		node = new Hashtable();
 		dirty = false;
 	}
-	
-	protected Settings(byte[] flat){
+
+	protected Settings(byte[] flat) {
 		node = StringTool.fold(flat, StringTool.NONE, null);
 		dirty = true;
 	}
-	
-	protected Settings(Hashtable n){
+
+	protected Settings(Hashtable n) {
 		node = (n == null) ? new Hashtable() : n;
 		dirty = true;
 	}
-	
-	public void setSettingChangedListener(ISettingChangedListener settingChangedListener){
+
+	public void setSettingChangedListener(ISettingChangedListener settingChangedListener) {
 		this.settingChangedListener = settingChangedListener;
 	}
-	
-	public ISettingChangedListener getSettingChangedListener(){
+
+	public ISettingChangedListener getSettingChangedListener() {
 		return settingChangedListener;
 	}
-	
-	protected void cleaned(){
+
+	protected void cleaned() {
 		dirty = false;
 	}
-	
-	public boolean isDirty(){
+
+	public boolean isDirty() {
 		return dirty;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return StringTool.enPrintable(StringTool.flatten(node, StringTool.NONE, null));
 	}
-	
-	protected String getPath(){
+
+	protected String getPath() {
 		if (path == null) {
 			return "";
 		}
 		return path;
 	}
-	
+
 	/*
 	 * protected void finalize() { flush(); }
 	 */
-	public void clear(){
+	public void clear() {
 		node.clear();
 		dirty = true;
 	}
-	
-	public double get(String key, double defvalue){
+
+	public double get(String key, double defvalue) {
 		String res = get(key, null);
 		if (res == null) {
 			return defvalue;
@@ -121,8 +122,8 @@ public abstract class Settings implements Serializable, Cloneable {
 			return defvalue;
 		}
 	}
-	
-	public String get(String key, String defvalue){
+
+	public String get(String key, String defvalue) {
 		Hashtable subnode = findParent(key, false);
 		if (subnode == null) {
 			return defvalue;
@@ -130,21 +131,21 @@ public abstract class Settings implements Serializable, Cloneable {
 		Object v = subnode.get(getLeaf(key));
 		return (StringTool.isNothing(v)) ? defvalue : (String) v;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public boolean set(String key, String value){
+	public boolean set(String key, String value) {
 		if ((key == null) || (value == null)) {
 			return false;
 		}
 		Hashtable subnode = findParent(key, true);
 		dirty = true;
-		if(settingChangedListener!=null) {
+		if (settingChangedListener != null) {
 			settingChangedListener.settingChanged(key, value);
 		}
 		return (subnode.put(getLeaf(key), value) != null);
 	}
-	
-	private String getLeaf(String key){
+
+	private String getLeaf(String key) {
 		int id = key.lastIndexOf('/');
 		if (id != -1) {
 			String leaf = key.substring(id + 1);
@@ -152,9 +153,9 @@ public abstract class Settings implements Serializable, Cloneable {
 		}
 		return key;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private Hashtable findParent(String key, boolean CreateIfNeeded){
+	private Hashtable findParent(String key, boolean CreateIfNeeded) {
 		String[] path1 = key.split("/");
 		Hashtable subnode = node;
 		for (int i = 0; i < path1.length - 1; i++) {
@@ -172,9 +173,9 @@ public abstract class Settings implements Serializable, Cloneable {
 		}
 		return subnode;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public String[] keys(String nod){
+	public String[] keys(String nod) {
 		Settings sn = getBranch(nod, false);
 		if (sn == null) {
 			return null;
@@ -182,9 +183,9 @@ public abstract class Settings implements Serializable, Cloneable {
 		ArrayList al = sn.keys();
 		return (String[]) al.toArray(new String[0]);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public String[] nodes(String nod){
+	public String[] nodes(String nod) {
 		Settings sn = getBranch(nod, false);
 		if (sn == null) {
 			return null;
@@ -192,11 +193,11 @@ public abstract class Settings implements Serializable, Cloneable {
 		ArrayList al = sn.nodes();
 		return (String[]) al.toArray(new String[0]);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public ArrayList keys(){
+	public ArrayList keys() {
 		Enumeration en = node.keys();
-		
+
 		ArrayList dest = new ArrayList();
 		while (en.hasMoreElements()) {
 			Object k = en.nextElement();
@@ -207,9 +208,9 @@ public abstract class Settings implements Serializable, Cloneable {
 		}
 		return dest;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public ArrayList nodes(){
+	public ArrayList nodes() {
 		Enumeration en = node.keys();
 		ArrayList dest = new ArrayList();
 		while (en.hasMoreElements()) {
@@ -220,12 +221,13 @@ public abstract class Settings implements Serializable, Cloneable {
 		}
 		return dest;
 	}
-	
+
 	/**
 	 * Einen Zweig dieser Settings holen oder erstellen.<br>
-	 * Die Implementation ist Sache der Unterklasse. In der Registry kann ein Zweig direkt auf einem
-	 * Zweig abgebildet werden, ein XML-File kann einen entsprechenden Node erstellen, ein Flatfile
-	 * wird einfach Einträge des Typs präfix/eintrag erstellen.
+	 * Die Implementation ist Sache der Unterklasse. In der Registry kann ein Zweig
+	 * direkt auf einem Zweig abgebildet werden, ein XML-File kann einen
+	 * entsprechenden Node erstellen, ein Flatfile wird einfach Einträge des Typs
+	 * präfix/eintrag erstellen.
 	 * 
 	 * @param name
 	 *            Der Name des Zweigs
@@ -234,7 +236,7 @@ public abstract class Settings implements Serializable, Cloneable {
 	 * @return ein neues Settings-Object, das den Zweig repräsentiert
 	 */
 	@SuppressWarnings("unchecked")
-	public Settings getBranch(String name, boolean CreateIfNotExist){
+	public Settings getBranch(String name, boolean CreateIfNotExist) {
 		Hashtable parent = findParent(name, CreateIfNotExist);
 		if (parent == null) {
 			return null;
@@ -259,28 +261,28 @@ public abstract class Settings implements Serializable, Cloneable {
 			}
 			n.node = (Hashtable) k;
 			return n;
-			
+
 		} catch (CloneNotSupportedException e) {
 			// TODO Auto-generated catch block
 			ExHandler.handle(e);
 			return null;
 		}
 	}
-	
-	public ArrayList<String> getAll(){
+
+	public ArrayList<String> getAll() {
 		ArrayList<String> ret = new ArrayList<String>();
 		addNode(ret, "", node);
 		return ret;
 	}
-	
-	public Iterator<String> iterator(){
+
+	public Iterator<String> iterator() {
 		ArrayList<String> al = getAll();
 		Iterator<String> it = al.iterator();
 		return it;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private void addNode(ArrayList dest, String name, Hashtable n){
+	private void addNode(ArrayList dest, String name, Hashtable n) {
 		Enumeration en = n.keys();
 		while (en.hasMoreElements()) {
 			String k = (String) en.nextElement();
@@ -292,7 +294,7 @@ public abstract class Settings implements Serializable, Cloneable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Einen Fingerprint über alle Einträge erstellen.<br>
 	 * 
@@ -301,7 +303,7 @@ public abstract class Settings implements Serializable, Cloneable {
 	 * @return den hashcode
 	 * @todo Dies sollte auf einen MD5 oder SHA-hash umgstellt werden
 	 */
-	private long getHashCode(String ex){
+	private long getHashCode(String ex) {
 		long hc = 0;
 		ArrayList<String> keys = getAll();
 		for (int i = 0; i < keys.size(); i++) {
@@ -317,13 +319,13 @@ public abstract class Settings implements Serializable, Cloneable {
 		}
 		return hc;
 	}
-	
-	public long createHashCode(String ex){
+
+	public long createHashCode(String ex) {
 		long ret = getHashCode(ex);
 		set(ex, Long.toString(ret));
 		return ret;
 	}
-	
+
 	/**
 	 * Den mit createHashCode erstellten Fingerprint überprüfen.
 	 * 
@@ -331,12 +333,12 @@ public abstract class Settings implements Serializable, Cloneable {
 	 *            Eintrag, der den hashcode enthült
 	 * @return true bei übereinstimmung
 	 */
-	public boolean checkHashCode(String ex){
+	public boolean checkHashCode(String ex) {
 		long oldval = Long.parseLong(get(ex, "-1"));
 		long nval = getHashCode(ex);
 		return (nval == oldval);
 	}
-	
+
 	/**
 	 * Einen Integer-Wert setzen.
 	 * 
@@ -345,10 +347,10 @@ public abstract class Settings implements Serializable, Cloneable {
 	 * @param value
 	 *            Wert
 	 */
-	public void set(String key, int value){
+	public void set(String key, int value) {
 		set(key, Integer.toString(value));
 	}
-	
+
 	/**
 	 * Ein Rechteck eintragen.
 	 * 
@@ -357,15 +359,14 @@ public abstract class Settings implements Serializable, Cloneable {
 	 * @param rec
 	 *            Wert
 	 */
-	public void set(String key, Rectangle rec){
+	public void set(String key, Rectangle rec) {
 		if (rec == null)
 			return;
-		String v =
-			Integer.toString(rec.x) + "," + Integer.toString(rec.y) + ","
-				+ Integer.toString(rec.width) + "," + Integer.toString(rec.height);
+		String v = Integer.toString(rec.x) + "," + Integer.toString(rec.y) + "," + Integer.toString(rec.width) + ","
+				+ Integer.toString(rec.height);
 		set(key, v);
 	}
-	
+
 	/**
 	 * Einen Datum/Zeitwert eintragen.
 	 * 
@@ -374,27 +375,27 @@ public abstract class Settings implements Serializable, Cloneable {
 	 * @param d
 	 *            Datum/Zeit als ch.rgw.tools.timeTool
 	 */
-	public void set(String key, TimeTool d){
+	public void set(String key, TimeTool d) {
 		set(key, d.toString(TimeTool.FULL_MYSQL));
 	}
-	
+
 	/**
 	 * Einen Schlüssel entfernen.
 	 * 
 	 * @param key
 	 *            der Schlüssel
 	 */
-	public void remove(String key){
+	public void remove(String key) {
 		Hashtable p = findParent(key, false);
 		if (p != null) {
-			if(settingChangedListener!=null) {
+			if (settingChangedListener != null) {
 				settingChangedListener.settingRemoved(key);
 			}
 			p.remove(getLeaf(key));
 			dirty = true;
 		}
 	}
-	
+
 	/**
 	 * Einen Integerwert auslesen.
 	 * 
@@ -404,7 +405,7 @@ public abstract class Settings implements Serializable, Cloneable {
 	 *            Defaultwert, falls der Schlüssel nicht existiert
 	 * @return der Wert resp. der Defaultwet
 	 */
-	public int get(String key, int defvalue){
+	public int get(String key, int defvalue) {
 		String v = get(key, Integer.toString(defvalue));
 		try {
 			return Integer.parseInt(v);
@@ -415,7 +416,7 @@ public abstract class Settings implements Serializable, Cloneable {
 			return defvalue;
 		}
 	}
-	
+
 	/**
 	 * Einen String auslesen, dabei alle \ nach / wandeln.
 	 * 
@@ -425,28 +426,28 @@ public abstract class Settings implements Serializable, Cloneable {
 	 *            Defaultwert, falls der Schlüssel nicht existiert
 	 * @return Wert
 	 */
-	public String getQuoted(String key, String defvalue){
+	public String getQuoted(String key, String defvalue) {
 		String vorl = get(key, defvalue);
 		return vorl.replaceAll("\\\\", "/");
 	}
-	
-	public String[] getStringArray(String key){
+
+	public String[] getStringArray(String key) {
 		String raw = get(key, null);
 		if (StringTool.isNothing(raw)) {
 			return null;
 		}
 		return raw.split(",");
 	}
-	
+
 	/**
 	 * Einen Datum/Zeitwert auslesen.
 	 * 
 	 * @param key
 	 *            Schlüssel
-	 * @return ein ch.rgw.timeTool oder null, wenn der Schlüssel nicht existiert oder ein ungültiges
-	 *         Format hat.
+	 * @return ein ch.rgw.timeTool oder null, wenn der Schlüssel nicht existiert
+	 *         oder ein ungültiges Format hat.
 	 */
-	public TimeTool getDate(String key){
+	public TimeTool getDate(String key) {
 		String d = get(key, "");
 		if (d.equals(""))
 			return null;
@@ -457,28 +458,28 @@ public abstract class Settings implements Serializable, Cloneable {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Einen rechteck-Wert auslesen.
 	 * 
 	 * @param key
 	 *            Schlüssel
-	 * @return das Rectangle oder null, wenn der Schlüssel nicht existiert oder der Eintrag ein
-	 *         ungültiges Format hat.
+	 * @return das Rectangle oder null, wenn der Schlüssel nicht existiert oder der
+	 *         Eintrag ein ungültiges Format hat.
 	 */
-	public Rectangle get(String key){
+	public Rectangle get(String key) {
 		String v = get(key, "");
 		if (v == null)
 			return null;
 		String[] r = v.split(",");
 		if (r.length != 4)
 			return null;
-		
+
 		return new Rectangle(Integer.parseInt(r[0]), Integer.parseInt(r[1]), Integer.parseInt(r[2]),
-			Integer.parseInt(r[3]));
+				Integer.parseInt(r[3]));
 	}
-	
-	public boolean get(String key, boolean defvalue){
+
+	public boolean get(String key, boolean defvalue) {
 		String v = get(key, null);
 		if (v == null) {
 			return defvalue;
@@ -491,31 +492,31 @@ public abstract class Settings implements Serializable, Cloneable {
 		}
 		return false;
 	}
-	
-	public boolean set(String key, boolean value){
+
+	public boolean set(String key, boolean value) {
 		return set(key, value ? "1" : "0");
 	}
-	
+
 	/**
-	 * Alle Änderungen sichern. Bei Programmabbruch ohne flush werden alle Änderungen seit dem
-	 * letzten flush() resp. Programmstart verworfen
+	 * Alle Änderungen sichern. Bei Programmabbruch ohne flush werden alle
+	 * Änderungen seit dem letzten flush() resp. Programmstart verworfen
 	 * 
 	 */
-	public void flush(){
+	public void flush() {
 		if (dirty == true) {
 			flush_absolute();
 			dirty = false;
 		}
 	}
-	
+
 	protected abstract void flush_absolute();
-	
+
 	/**
 	 * Alle Änderungen seit dem letzten flush() bzw. Programmstart verwerfen.
 	 * 
 	 */
 	public abstract void undo();
-	
+
 	/**
 	 * Ein anderes Settings-Objekt einfügen
 	 */
@@ -523,10 +524,10 @@ public abstract class Settings implements Serializable, Cloneable {
 	public static final int OVL_REPLACE_EXISTING = 2; // Existierende mit other überlagern
 	public static final int OVL_ADD_MISSING = 4; // Nur fehlende aus other nehmen
 	public static final int OVL_ALL = 6; // Alle Existierenden und neuen
-	
-	public void overlay(Settings other, int mode){
+
+	public void overlay(Settings other, int mode) {
 		ArrayList<String> otherEntries = other.getAll();
-		
+
 		if ((mode & OVL_REPLACE) != 0) {
 			node.clear();
 		}
@@ -542,16 +543,16 @@ public abstract class Settings implements Serializable, Cloneable {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * 
 	 * @param key
 	 * @return the results or an empty list
 	 * @since 3.6
 	 */
-	public List<String> getAsList(String key){
+	public List<String> getAsList(String key) {
 		String string = get(key, (String) null);
 		if (string != null) {
 			String[] split = string.split(",");
@@ -561,21 +562,21 @@ public abstract class Settings implements Serializable, Cloneable {
 		}
 		return Collections.emptyList();
 	}
-	
+
 	/**
 	 * 
 	 * @param key
-	 * @param values an empty collection will remove the resp. key
+	 * @param values
+	 *            an empty collection will remove the resp. key
 	 * @since 3.6
 	 */
-	public void setAsList(String key, List<String> values){
-		Optional<String> value =
-			values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t);
+	public void setAsList(String key, List<String> values) {
+		Optional<String> value = values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t);
 		if (value.isPresent()) {
 			set(key, value.get());
 		} else {
 			remove(key);
 		}
 	}
-	
+
 }

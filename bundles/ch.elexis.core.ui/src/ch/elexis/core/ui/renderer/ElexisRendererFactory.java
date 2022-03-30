@@ -8,13 +8,13 @@ import org.eclipse.e4.ui.workbench.renderers.swt.WorkbenchRendererFactory;
 @SuppressWarnings("restriction")
 public class ElexisRendererFactory extends WorkbenchRendererFactory {
 	private ElexisStackRenderer stackRenderer;
-	
-	public ElexisRendererFactory(){
+
+	public ElexisRendererFactory() {
 		super();
 	}
-	
+
 	@Override
-	public AbstractPartRenderer getRenderer(MUIElement uiElement, Object parent){
+	public AbstractPartRenderer getRenderer(MUIElement uiElement, Object parent) {
 		if (uiElement instanceof MPartStack) {
 			if (stackRenderer == null) {
 				stackRenderer = new ElexisStackRenderer();

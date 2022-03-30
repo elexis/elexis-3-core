@@ -34,23 +34,21 @@ import ch.rgw.tools.StringTool;
 public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 	Form form;
 	LabeledInputField.AutoForm tblPls;
-	InputData[] data = new InputData[] {
-		new InputData(Messages.EigendiagnoseSelector_Shortcut_Label, "code",
-			InputData.Typ.STRING, null),
-		new InputData(Messages.EigendiagnoseSelector_Text_Label, "text",
-			InputData.Typ.STRING, null)
-	
+	InputData[] data = new InputData[]{
+			new InputData(Messages.EigendiagnoseSelector_Shortcut_Label, "code", InputData.Typ.STRING, null),
+			new InputData(Messages.EigendiagnoseSelector_Text_Label, "text", InputData.Typ.STRING, null)
+
 	};
 	Text tComment;
-	
-	public Composite createDisplay(Composite parent, IViewSite site){
+
+	public Composite createDisplay(Composite parent, IViewSite site) {
 		form = UiDesk.getToolkit().createForm(parent);
 		TableWrapLayout twl = new TableWrapLayout();
 		form.getBody().setLayout(twl);
-		
+
 		tblPls = new LabeledInputField.AutoForm(form.getBody(), data);
 		tblPls.setModelService(ModelServiceHolder.get());
-		
+
 		TableWrapData twd = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd.grabHorizontal = true;
 		tblPls.setLayoutData(twd);
@@ -59,8 +57,8 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 		tComment.setLayoutData(twd2);
 		return form.getBody();
 	}
-	
-	public void display(Object obj){
+
+	public void display(Object obj) {
 		if (obj instanceof IDiagnosisTree) {
 			IDiagnosisTree diag = (IDiagnosisTree) obj;
 			form.setText(diag.getLabel());
@@ -72,19 +70,18 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 			tComment.setText("");
 		}
 	}
-	
-	public Class<?> getElementClass(){
+
+	public Class<?> getElementClass() {
 		return IDiagnosisTree.class;
 	}
-	
+
 	@Inject
-	public void selection(
-		@Optional @Named("ch.elexis.core.ui.eigendiagnosen.selection") IDiagnosisTree diagnose){
+	public void selection(@Optional @Named("ch.elexis.core.ui.eigendiagnosen.selection") IDiagnosisTree diagnose) {
 		display(diagnose);
 	}
-	
-	public String getTitle(){
+
+	public String getTitle() {
 		return Messages.Eigendiagnosen_CodeSystemName;
 	}
-	
+
 }

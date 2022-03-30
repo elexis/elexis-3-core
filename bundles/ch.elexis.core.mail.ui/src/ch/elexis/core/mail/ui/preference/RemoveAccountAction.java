@@ -8,17 +8,17 @@ import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.ui.icons.Images;
 
 public class RemoveAccountAction extends Action {
-	
+
 	private MailAccountComposite accountComposite;
 	private Preference preference;
-	
-	public RemoveAccountAction(MailAccountComposite accountComposite, Preference preference){
+
+	public RemoveAccountAction(MailAccountComposite accountComposite, Preference preference) {
 		this.accountComposite = accountComposite;
 		this.preference = preference;
 	}
-	
+
 	@Override
-	public void run(){
+	public void run() {
 		MailAccount account = accountComposite.getAccount();
 		if (account != null) {
 			if (MailClientComponent.isVirtLocal(account)) {
@@ -30,14 +30,14 @@ public class RemoveAccountAction extends Action {
 			preference.updateAccountsCombo();
 		}
 	}
-	
+
 	@Override
-	public ImageDescriptor getImageDescriptor(){
+	public ImageDescriptor getImageDescriptor() {
 		return Images.IMG_DELETE.getImageDescriptor();
 	}
-	
+
 	@Override
-	public boolean isEnabled(){
+	public boolean isEnabled() {
 		return MailClientComponent.getMailClient() != null;
 	}
 }

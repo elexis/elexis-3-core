@@ -25,28 +25,28 @@ import ch.elexis.core.model.IContact;
  * @author Annamalai Chockalingam
  * 
  */
-public class TableDecoratingLabelProvider extends DecoratingLabelProvider implements
-		ITableLabelProvider {
-	
+public class TableDecoratingLabelProvider extends DecoratingLabelProvider implements ITableLabelProvider {
+
 	ITableLabelProvider provider;
 	ILabelDecorator decorator;
-	
+
 	/**
 	 * @param provider
 	 * @param decorator
 	 */
-	public TableDecoratingLabelProvider(ILabelProvider provider, ILabelDecorator decorator){
+	public TableDecoratingLabelProvider(ILabelProvider provider, ILabelDecorator decorator) {
 		super(provider, decorator);
 		this.provider = (ITableLabelProvider) provider;
 		this.decorator = decorator;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.
+	 * Object, int)
 	 */
-	public Image getColumnImage(Object element, int columnIndex){
+	public Image getColumnImage(Object element, int columnIndex) {
 		Image image = provider.getColumnImage(element, columnIndex);
 		if (decorator != null) {
 			Image decorated = decorator.decorateImage(image, element);
@@ -56,13 +56,15 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 		}
 		return image;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+	 * @see
+	 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
+	 * int)
 	 */
-	public String getColumnText(Object element, int columnIndex){
+	public String getColumnText(Object element, int columnIndex) {
 		String text = provider.getColumnText(element, columnIndex);
 		if (decorator != null) {
 			String decorated = decorator.decorateText(text, element);
@@ -72,12 +74,11 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 		}
 		return text;
 	}
-	
+
 	@Override
-	public Color getForeground(Object element){
+	public Color getForeground(Object element) {
 		if (element instanceof ch.elexis.core.data.interfaces.IContact) {
-			ch.elexis.core.data.interfaces.IContact c =
-				(ch.elexis.core.data.interfaces.IContact) element;
+			ch.elexis.core.data.interfaces.IContact c = (ch.elexis.core.data.interfaces.IContact) element;
 			if (c.isDeleted())
 				return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 		} else if (element instanceof IContact) {
@@ -87,5 +88,5 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 		}
 		return null;
 	}
-	
+
 }

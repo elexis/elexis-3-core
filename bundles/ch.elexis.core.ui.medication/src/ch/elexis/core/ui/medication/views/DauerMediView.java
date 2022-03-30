@@ -40,62 +40,62 @@ public class DauerMediView extends ViewPart implements IRefreshable {
 	public final static String ID = "ch.elexis.dauermedikationview"; //$NON-NLS-1$
 	private IAction toClipBoardAction;
 	FixMediDisplay dmd;
-	
+
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
-	
-	public DauerMediView(){
-		
+
+	public DauerMediView() {
+
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout());
 		dmd = new FixMediDisplay(parent, getViewSite());
 		dmd.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ListDisplaySelectionProvider selDisplay = new ListDisplaySelectionProvider(dmd);
 		getSite().registerContextMenu(FixMediDisplay.ID, dmd.getMenuManager(), selDisplay);
 		getSite().setSelectionProvider(selDisplay);
-		
+
 		makeActions();
 		getViewSite().getActionBars().getToolBarManager().add(toClipBoardAction);
-		
+
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 		getSite().getPage().removePartListener(udpateOnVisible);
-		
+
 		dmd.dispose();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		dmd.setFocus();
 	}
-	
-	private void makeActions(){
-		toClipBoardAction = new Action(Messages.DauerMediView_copy) { //$NON-NLS-1$
-				{
-					setToolTipText(Messages.DauerMediView_copyToClipboard); //$NON-NLS-1$
-					setImageDescriptor(Images.IMG_CLIPBOARD.getImageDescriptor());
-				}
-				
-				@Override
-				public void run(){
-					dmd.toClipBoard(true);
-				}
-				
-			};
+
+	private void makeActions() {
+		toClipBoardAction = new Action(Messages.DauerMediView_copy) { // $NON-NLS-1$
+			{
+				setToolTipText(Messages.DauerMediView_copyToClipboard); // $NON-NLS-1$
+				setImageDescriptor(Images.IMG_CLIPBOARD.getImageDescriptor());
+			}
+
+			@Override
+			public void run() {
+				dmd.toClipBoard(true);
+			}
+
+		};
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 	@Override
-	public void refresh(){
+	public void refresh() {
 		if (dmd != null && !dmd.isDisposed()) {
 			dmd.reload();
 		}

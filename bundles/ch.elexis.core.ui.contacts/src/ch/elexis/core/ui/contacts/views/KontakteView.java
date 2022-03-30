@@ -65,12 +65,12 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	IAction dupKontakt, delKontakt, createKontakt, printList;
 	PersistentObjectLoader loader;
 
-	private final String[] fields = { Kontakt.FLD_SHORT_LABEL + Query.EQUALS + Messages.KontakteView_shortLabel, // $NON-NLS-1$
+	private final String[] fields = {Kontakt.FLD_SHORT_LABEL + Query.EQUALS + Messages.KontakteView_shortLabel, // $NON-NLS-1$
 			Kontakt.FLD_NAME1 + Query.EQUALS + Messages.KontakteView_text1, // $NON-NLS-1$
 			Kontakt.FLD_NAME2 + Query.EQUALS + Messages.KontakteView_text2, // $NON-NLS-1$
 			Kontakt.FLD_STREET + Query.EQUALS + Messages.KontakteView_street, // $NON-NLS-1$
 			Kontakt.FLD_ZIP + Query.EQUALS + Messages.KontakteView_zip, // $NON-NLS-1$
-			Kontakt.FLD_PLACE + Query.EQUALS + Messages.KontakteView_place }; // $NON-NLS-1$
+			Kontakt.FLD_PLACE + Query.EQUALS + Messages.KontakteView_place}; // $NON-NLS-1$
 	private ViewMenus menu;
 
 	public KontakteView() {
@@ -82,7 +82,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		cv = new CommonViewer();
 		loader = new FlatDataLoader(cv, new Query<Kontakt>(Kontakt.class));
 		loader.setOrderFields(
-				new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_STREET, Kontakt.FLD_PLACE });
+				new String[]{Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_STREET, Kontakt.FLD_PLACE});
 		vc = new ViewerConfigurer(loader, new KontaktLabelProvider(), new DefaultControlFieldProvider(cv, fields),
 				new ViewerConfigurer.DefaultButtonProvider(),
 				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.MULTI, null));
@@ -100,7 +100,8 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 				try {
 					KontaktDetailView kdv = (KontaktDetailView) getSite().getPage().showView(KontaktDetailView.ID);
 					ElexisEventDispatcher.fireSelectionEvent(obj);
-					//					kdv.kb.catchElexisEvent(new ElexisEvent(obj, obj.getClass(), ElexisEvent.EVENT_SELECTED));
+					// kdv.kb.catchElexisEvent(new ElexisEvent(obj, obj.getClass(),
+					// ElexisEvent.EVENT_SELECTED));
 				} catch (PartInitException e) {
 					ElexisStatus es = new ElexisStatus(ElexisStatus.ERROR, Activator.PLUGIN_ID, ElexisStatus.CODE_NONE,
 							"Fehler beim Öffnen", e);
@@ -131,8 +132,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	}
 
 	/**
-	 * ENTER has been pressed in the control fields, select the first listed
-	 * patient
+	 * ENTER has been pressed in the control fields, select the first listed patient
 	 */
 	// this is also implemented in PatientenListeView
 	public void selected() {
@@ -142,11 +142,10 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		if (elements != null && elements.length > 0) {
 			Object element = elements[0];
 			/*
-			 * just selecting the element in the viewer doesn't work if the
-			 * control fields are not empty (i. e. the size of items changes):
-			 * cv.setSelection(element, true); bug in TableViewer with style
-			 * VIRTUAL? work-arount: just globally select the element without
-			 * visual representation in the viewer
+			 * just selecting the element in the viewer doesn't work if the control fields
+			 * are not empty (i. e. the size of items changes): cv.setSelection(element,
+			 * true); bug in TableViewer with style VIRTUAL? work-arount: just globally
+			 * select the element without visual representation in the viewer
 			 */
 			if (element instanceof PersistentObject) {
 				// globally select this object
@@ -157,7 +156,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 
@@ -201,7 +200,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 			@Override
 			public void run() {
 				String[] flds = cv.getConfigurer().getControlFieldProvider().getValues();
-				String[] predef = new String[] { flds[1], flds[2], StringConstants.EMPTY, flds[3], flds[4], flds[5] };
+				String[] predef = new String[]{flds[1], flds[2], StringConstants.EMPTY, flds[3], flds[4], flds[5]};
 				KontaktErfassenDialog ked = new KontaktErfassenDialog(getViewSite().getShell(), predef);
 				ked.open();
 			}
@@ -222,8 +221,8 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 					gpl.create();
 					for (int i = 0; i < sel.length; i++) {
 						Kontakt k = (Kontakt) sel[i];
-						String[] f = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3,
-								Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1 };
+						String[] f = new String[]{Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3,
+								Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1};
 						String[] v = new String[f.length];
 						k.get(f, v);
 						adrs[i] = new String[4];
@@ -244,8 +243,8 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 
 		@Override
 		public String getText(Object element) {
-			String[] fields = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3,
-					Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1 };
+			String[] fields = new String[]{Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3, Kontakt.FLD_STREET,
+					Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1};
 			String[] values = new String[fields.length];
 			((Kontakt) element).get(fields, values);
 			return StringTool.join(values, StringConstants.COMMA);

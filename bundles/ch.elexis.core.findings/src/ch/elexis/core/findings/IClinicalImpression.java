@@ -19,10 +19,10 @@ public interface IClinicalImpression extends IFinding {
 	 * @return
 	 */
 	public Optional<IEncounter> getEncounter();
-	
+
 	/**
-	 * Update the {@link IEncounter} referenced. Also updates the patientId with the value of the
-	 * {@link IEncounter}.
+	 * Update the {@link IEncounter} referenced. Also updates the patientId with the
+	 * value of the {@link IEncounter}.
 	 * 
 	 * @param encounter
 	 */

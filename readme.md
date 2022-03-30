@@ -98,7 +98,13 @@ our developers still use VT-80 terminals.
 To ensure a consistent look, we use the [this pre-commit framework](https://pre-commit.com/).
 For details have look at the [.pre-commit-config.yaml](https:.pre-commit-config.yaml)
 
-To use it, install the pre-commit framework, either via your distribution or via `pip install pre-commit`. Under Debian run `apt install pre-commit`.
+To use it, install the pre-commit framework, either via your distribution or via `pip install pre-commit`. Under Debian run `apt install pre-commit`. The call once `pre-commit install` to activate the pre-commit trigger for git.
+
+It needs flatpak and an installed flatpak org.eclipse.jdt.core.Java app. Under Debian run the following commands
+
+* `sudo apt install flatpak`
+* `flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo`
+* `flatpak --assumeyes --user --noninteractive install flathub org.eclipse.Java`
 
 The different parts can be run on the command line, eg. 
 

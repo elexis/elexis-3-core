@@ -10,9 +10,7 @@ import ch.elexis.core.services.AllServiceTests;
 import ch.elexis.core.services.eenv.RocketchatMessageTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-	AllJavaTests.class, AllBuilderTests.class, AllServiceTests.class, RocketchatMessageTest.class
-})
+@SuiteClasses({AllJavaTests.class, AllBuilderTests.class, AllServiceTests.class, RocketchatMessageTest.class})
 public class AllTests {
-	
+
 }

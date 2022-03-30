@@ -12,18 +12,15 @@ import ch.elexis.core.jpa.entitymanger.ExecuteScript;
 import ch.elexis.core.jpa.entitymanger.InitPersistenceUnit;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-	InitPersistenceUnit.class, ExecuteScript.class
-})
+@SuiteClasses({InitPersistenceUnit.class, ExecuteScript.class})
 public class AllPluginTests {
-	
-	public static String loadFile(String string) throws IOException{
+
+	public static String loadFile(String string) throws IOException {
 		BufferedReader reader = null;
 		StringBuffer sb = new StringBuffer();
 		String line;
 		try {
-			reader = new BufferedReader(
-				new InputStreamReader(AllPluginTests.class.getResourceAsStream(string)));
+			reader = new BufferedReader(new InputStreamReader(AllPluginTests.class.getResourceAsStream(string)));
 			while ((line = reader.readLine()) != null) {
 				sb.append(line + "\n");
 			}

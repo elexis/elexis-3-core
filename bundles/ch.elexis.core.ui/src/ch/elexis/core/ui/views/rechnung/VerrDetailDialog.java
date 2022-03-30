@@ -44,9 +44,9 @@ public class VerrDetailDialog extends TitleAreaDialog {
 	Patient pat;
 	Tree tree;
 	Hashtable<Fall, List<Konsultation>> faelle;
-	
+
 	@SuppressWarnings("unchecked")
-	public VerrDetailDialog(Shell shell, Tree subTree){
+	public VerrDetailDialog(Shell shell, Tree subTree) {
 		super(shell);
 		Object o = subTree.contents;
 		this.tree = subTree;
@@ -72,19 +72,19 @@ public class VerrDetailDialog extends TitleAreaDialog {
 			faelle.put(fall, lKons);
 		}
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new FillLayout());
 		TreeViewer tv = new TreeViewer(ret, SWT.V_SCROLL);
 		tv.setContentProvider(new ITreeContentProvider() {
-			
-			public Object[] getChildren(Object parentElement){
+
+			public Object[] getChildren(Object parentElement) {
 				Tree[] ret = (Tree[]) ((Tree) parentElement).getChildren().toArray(new Tree[0]);
 				Arrays.sort(ret, new Comparator<Tree>() {
-					public int compare(Tree t1, Tree t2){
+					public int compare(Tree t1, Tree t2) {
 						if (t1.contents instanceof Konsultation) {
 							Konsultation k1 = (Konsultation) t1.contents;
 							return k1.compareTo((Konsultation) t2.contents);
@@ -94,29 +94,31 @@ public class VerrDetailDialog extends TitleAreaDialog {
 				});
 				return ret;
 			}
-			
-			public Object getParent(Object element){
+
+			public Object getParent(Object element) {
 				return ((Tree) element).getParent();
 			}
-			
-			public boolean hasChildren(Object element){
+
+			public boolean hasChildren(Object element) {
 				return ((Tree) element).hasChildren();
 			}
-			
-			public Object[] getElements(Object inputElement){
+
+			public Object[] getElements(Object inputElement) {
 				Tree[] ret = (Tree[]) tree.getChildren().toArray(new Tree[0]);
 				return ret;
 			}
-			
-			public void dispose(){}
-			
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
-			
+
+			public void dispose() {
+			}
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			}
+
 		});
 		tv.setLabelProvider(new LabelProvider() {
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				Object o = ((Tree) element).contents;
 				if (o instanceof Fall) {
 					Fall f = (Fall) o;
@@ -134,32 +136,31 @@ public class VerrDetailDialog extends TitleAreaDialog {
 				}
 				return super.getText(element);
 			}
-			
+
 		});
 		tv.setInput(this);
 		return ret;
 	}
-	
-	private Money calcKons(Konsultation k){
-		IEncounter encounter =
-			NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
+
+	private Money calcKons(Konsultation k) {
+		IEncounter encounter = NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
 		Money ret = new Money();
 		for (IBilled v : encounter.getBilled()) {
 			ret.addMoney(v.getTotal());
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		if (pat != null) {
 			setTitle(pat.getLabel());
 		} else {
-			setTitle(Messages.VerrDetailDialog_NoPatientSelected); //$NON-NLS-1$
+			setTitle(Messages.VerrDetailDialog_NoPatientSelected); // $NON-NLS-1$
 		}
-		setMessage(Messages.VerrDetailDialog_detailsOfOpenKons); //$NON-NLS-1$
-		getShell().setText(Messages.VerrDetailDialog_billingData); //$NON-NLS-1$
+		setMessage(Messages.VerrDetailDialog_detailsOfOpenKons); // $NON-NLS-1$
+		getShell().setText(Messages.VerrDetailDialog_billingData); // $NON-NLS-1$
 	}
-	
+
 }

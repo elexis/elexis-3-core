@@ -16,27 +16,27 @@ import ch.elexis.core.constants.StringConstants;
 import ch.rgw.tools.StringTool;
 
 /**
- * This class is only needed to denote a person or organization that can make a bill. It is simply a
- * contact.
+ * This class is only needed to denote a person or organization that can make a
+ * bill. It is simply a contact.
  * 
  * @author Gerry
  * 
  */
 public class Rechnungssteller extends Kontakt {
-	
-	public static Rechnungssteller load(String id){
+
+	public static Rechnungssteller load(String id) {
 		return new Rechnungssteller(id);
 	}
-	
-	protected Rechnungssteller(String id){
+
+	protected Rechnungssteller(String id) {
 		super(id);
 	}
-	
+
 	/**
 	 * usually but not mandatory, the biller will be a user
 	 */
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		if (get(FLD_IS_USER).equals(StringConstants.ONE)) {
 			String l = get("Label");
 			if (!StringTool.isNothing(l)) {
@@ -45,6 +45,7 @@ public class Rechnungssteller extends Kontakt {
 		}
 		return super.getLabel();
 	}
-	
-	protected Rechnungssteller(){}
+
+	protected Rechnungssteller() {
+	}
 }

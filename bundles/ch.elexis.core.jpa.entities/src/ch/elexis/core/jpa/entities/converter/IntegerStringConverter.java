@@ -11,21 +11,21 @@ import org.slf4j.LoggerFactory;
 public class IntegerStringConverter implements AttributeConverter<Integer, String> {
 
 	private Logger log = LoggerFactory.getLogger(IntegerStringConverter.class);
-	
+
 	@Override
-	public String convertToDatabaseColumn(Integer objectValue){
+	public String convertToDatabaseColumn(Integer objectValue) {
 		return Integer.toString((int) objectValue);
 	}
 
 	@Override
-	public Integer convertToEntityAttribute(String dataValue){
+	public Integer convertToEntityAttribute(String dataValue) {
 		if (StringUtils.isEmpty(dataValue)) {
 			return 0;
 		}
 		try {
 			return Integer.parseInt(((String) dataValue).trim());
 		} catch (NumberFormatException ex) {
-			log.warn("Number format exception "+dataValue, ex);
+			log.warn("Number format exception " + dataValue, ex);
 			return 0;
 		}
 	}

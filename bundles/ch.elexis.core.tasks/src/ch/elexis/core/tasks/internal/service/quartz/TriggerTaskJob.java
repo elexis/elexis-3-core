@@ -11,21 +11,19 @@ import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 
 public class TriggerTaskJob implements Job {
-	
+
 	@Override
-	public void execute(JobExecutionContext executionContext) throws JobExecutionException{
-		ITaskService taskService =
-			(ITaskService) executionContext.getMergedJobDataMap().get("taskService");
-		ITaskDescriptor taskDescriptor =
-			(ITaskDescriptor) executionContext.getMergedJobDataMap().get("taskDescriptor");
-		
+	public void execute(JobExecutionContext executionContext) throws JobExecutionException {
+		ITaskService taskService = (ITaskService) executionContext.getMergedJobDataMap().get("taskService");
+		ITaskDescriptor taskDescriptor = (ITaskDescriptor) executionContext.getMergedJobDataMap().get("taskDescriptor");
+
 		try {
 			taskService.trigger(taskDescriptor, null, TaskTriggerType.CRON, null);
 		} catch (TaskException e) {
 			LoggerFactory.getLogger(getClass().getName() + "_" + taskDescriptor.getId())
-				.warn("Error triggering taskDescriptor", e);
+					.warn("Error triggering taskDescriptor", e);
 		}
-		
+
 	}
-	
+
 }

@@ -16,31 +16,31 @@ import org.junit.Test;
 import ch.elexis.core.test.AbstractTest;
 
 public class SickCertificateTest extends AbstractTest {
-	
+
 	private IPatient patient1;
-	
+
 	@Override
 	@Before
-	public void before(){
+	public void before() {
 		super.before();
 		patient1 = coreModelService.create(IPatient.class);
 		patient1.setDescription1("test patient 1");
 		coreModelService.save(patient1);
 	}
-	
+
 	@Override
 	@After
-	public void after(){
+	public void after() {
 		coreModelService.remove(patient1);
 		super.after();
 	}
-	
+
 	@Test
-	public void create() throws IOException{
+	public void create() throws IOException {
 		ISickCertificate certificate = coreModelService.create(ISickCertificate.class);
 		assertNotNull(certificate);
 		assertTrue(certificate instanceof ISickCertificate);
-		
+
 		certificate.setPatient(patient1);
 		certificate.setPercent(23);
 		certificate.setDate(LocalDate.of(2000, 1, 1));
@@ -49,9 +49,9 @@ public class SickCertificateTest extends AbstractTest {
 		certificate.setReason("is sick");
 		certificate.setNote("test");
 		coreModelService.save(certificate);
-		
-		Optional<ISickCertificate> loadedCertificate =
-			coreModelService.load(certificate.getId(), ISickCertificate.class);
+
+		Optional<ISickCertificate> loadedCertificate = coreModelService.load(certificate.getId(),
+				ISickCertificate.class);
 		assertTrue(loadedCertificate.isPresent());
 		assertEquals(patient1, loadedCertificate.get().getPatient());
 		assertFalse(certificate == loadedCertificate.get());

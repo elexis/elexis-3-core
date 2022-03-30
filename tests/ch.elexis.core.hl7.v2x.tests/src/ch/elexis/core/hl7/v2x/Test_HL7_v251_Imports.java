@@ -28,25 +28,25 @@ import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
 
 public class Test_HL7_v251_Imports {
-	
+
 	private static DummyPatientResolver resolver;
-	
+
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception{
-		IPatient dummyPatient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(),
-			"Christoph", "Grissemann", LocalDate.of(1966, 5, 17), Gender.MALE).buildAndSave();
+	public static void setUpBeforeClass() throws Exception {
+		IPatient dummyPatient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Christoph",
+				"Grissemann", LocalDate.of(1966, 5, 17), Gender.MALE).buildAndSave();
 		resolver = new DummyPatientResolver(dummyPatient);
 	}
-	
+
 	@Test
-	public void testGetSender() throws ElexisException, IOException{
+	public void testGetSender() throws ElexisException, IOException {
 		File[] files = loadv251Files();
 		assertNotSame(0, files.length);
-		
+
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
 			System.out.println("TESTING Hl7 Version of... " + file.getAbsolutePath());
-			
+
 			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
 			assertNotNull(hl7Readers);
 			assertEquals(1, hl7Readers.size());
@@ -56,12 +56,12 @@ public class Test_HL7_v251_Imports {
 			System.out.println("Sender [" + reader.getSender() + "]");
 		}
 	}
-	
+
 	@Test
-	public void testGetPatient() throws ElexisException, IOException{
+	public void testGetPatient() throws ElexisException, IOException {
 		File[] files = loadv251Files();
 		assertNotSame(0, files.length);
-		
+
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
 			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
@@ -69,29 +69,29 @@ public class Test_HL7_v251_Imports {
 			assertEquals(1, hl7Readers.size());
 			HL7Reader reader = hl7Readers.get(0);
 			reader.readObservation(resolver, false);
-			
+
 			IPatient patient = reader.getPatient();
 			assertEquals("Grissemann", patient.getLastName());
 			assertTrue(patient.getDateOfBirth().atZone(ZoneId.systemDefault())
-				.isEqual(LocalDate.of(1966, 5, 17).atStartOfDay(ZoneId.systemDefault())));
+					.isEqual(LocalDate.of(1966, 5, 17).atStartOfDay(ZoneId.systemDefault())));
 			assertEquals(Gender.MALE, patient.getGender());
 		}
 	}
-	
+
 	@Test
-	public void testReadObservation() throws ElexisException, IOException{
+	public void testReadObservation() throws ElexisException, IOException {
 		File[] files = loadv251Files();
 		assertNotSame(0, files.length);
-		
+
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
 			System.out.println("TESTING Hl7 Observation of... " + file.getAbsolutePath());
-			
+
 			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
 			assertNotNull(hl7Readers);
 			assertEquals(1, hl7Readers.size());
 			HL7Reader reader = hl7Readers.get(0);
-			
+
 			ObservationMessage observationMsg = reader.readObservation(resolver, false);
 			List<IValueType> observations = observationMsg.getObservations();
 			System.out.println("Observations [" + observations.size() + "]");
@@ -110,16 +110,15 @@ public class Test_HL7_v251_Imports {
 			assertTrue(valueFound);
 		}
 	}
-	
-	private File[] loadv251Files(){
-		File directory = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
-			"rsc/v251");
-		
+
+	private File[] loadv251Files() {
+		File directory = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"), "rsc/v251");
+
 		if (directory.exists() && directory.isDirectory()) {
 			return directory.listFiles();
 		}
-		return new File[] {};
-		
+		return new File[]{};
+
 	}
-	
+
 }

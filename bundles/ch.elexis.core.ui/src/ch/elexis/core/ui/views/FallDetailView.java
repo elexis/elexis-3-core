@@ -40,85 +40,84 @@ import ch.elexis.data.Fall;
 public class FallDetailView extends ViewPart {
 	public static final String ID = "ch.elexis.FallDetailView"; //$NON-NLS-1$
 	FallDetailBlatt2 fdb;
-	
+
 	private final ElexisEventListener eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
-		ElexisEvent.EVENT_USER_CHANGED) {
-		
+			ElexisEvent.EVENT_USER_CHANGED) {
+
 		@Override
-		public void runInUi(ElexisEvent ev){
+		public void runInUi(ElexisEvent ev) {
 			fdb.reloadBillingSystemsMenu();
 		}
 	};
-	
+
 	private final ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class) {
 		@Override
-		public void runInUi(final ElexisEvent ev){
+		public void runInUi(final ElexisEvent ev) {
 			Fall fall = (Fall) ev.getObject();
 			Fall deselectedFall = null;
 			switch (ev.getType()) {
-			case ElexisEvent.EVENT_SELECTED:
-				deselectedFall = fdb.getFall();
-				fdb.setFall(fall);
-				if (deselectedFall != null) {
-					releaseAndRefreshLock(deselectedFall, ToggleCurrentCaseLockHandler.COMMAND_ID);
-				}
-				break;
-			case ElexisEvent.EVENT_DESELECTED:
-				deselectedFall = fdb.getFall();
-				fdb.setFall(null);
-				if (deselectedFall != null) {
-					releaseAndRefreshLock(deselectedFall, ToggleCurrentCaseLockHandler.COMMAND_ID);
-				}
-				break;
-			case ElexisEvent.EVENT_LOCK_AQUIRED:
-			case ElexisEvent.EVENT_LOCK_RELEASED:
-				if(fall.equals(fdb.getFall())) {
-					fdb.setUnlocked(ev.getType()==ElexisEvent.EVENT_LOCK_AQUIRED);
-				}
-				break;
-			default:
-				break;
+				case ElexisEvent.EVENT_SELECTED :
+					deselectedFall = fdb.getFall();
+					fdb.setFall(fall);
+					if (deselectedFall != null) {
+						releaseAndRefreshLock(deselectedFall, ToggleCurrentCaseLockHandler.COMMAND_ID);
+					}
+					break;
+				case ElexisEvent.EVENT_DESELECTED :
+					deselectedFall = fdb.getFall();
+					fdb.setFall(null);
+					if (deselectedFall != null) {
+						releaseAndRefreshLock(deselectedFall, ToggleCurrentCaseLockHandler.COMMAND_ID);
+					}
+					break;
+				case ElexisEvent.EVENT_LOCK_AQUIRED :
+				case ElexisEvent.EVENT_LOCK_RELEASED :
+					if (fall.equals(fdb.getFall())) {
+						fdb.setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
+					}
+					break;
+				default :
+					break;
 			}
 		}
 	};
-	
-	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
+
+	private void releaseAndRefreshLock(IPersistentObject object, String commandId) {
 		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
 			LocalLockServiceHolder.get().releaseLock(object);
 		}
-		ICommandService commandService =
-			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		commandService.refreshElements(commandId, null);
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout());
 		fdb = new FallDetailBlatt2(parent);
 		fdb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		fdb.setUnlocked(false);
 		ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_user);
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		Fall f = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 		fdb.setFall(f);
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_user);
 		super.dispose();
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
-	public Fall getActiveFall(){
+
+	public Fall getActiveFall() {
 		return fdb.getFall();
 	}
 }

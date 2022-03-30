@@ -40,73 +40,71 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 
 public class EigendiagnoseSelector extends CodeSelectorFactory {
-	
+
 	private CommonViewer commonViewer;
-	
+
 	@Override
-	public ViewerConfigurer createViewerConfigurer(CommonViewer cv){
+	public ViewerConfigurer createViewerConfigurer(CommonViewer cv) {
 		commonViewer = cv;
-		ViewerConfigurer vc =
-			new ViewerConfigurer(new EigendiagnoseContentProvider(commonViewer),
-				new DefaultLabelProvider(), new DefaultControlFieldProvider(commonViewer,
-					new String[] {
-						"code=" + Messages.EigendiagnoseSelector_Shortcut_Label,
-						"title=" + Messages.EigendiagnoseSelector_Text_Label
-					}), new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
-					SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null));
-					
+		ViewerConfigurer vc = new ViewerConfigurer(new EigendiagnoseContentProvider(commonViewer),
+				new DefaultLabelProvider(),
+				new DefaultControlFieldProvider(commonViewer,
+						new String[]{"code=" + Messages.EigendiagnoseSelector_Shortcut_Label,
+								"title=" + Messages.EigendiagnoseSelector_Text_Label}),
+				new ViewerConfigurer.DefaultButtonProvider(),
+				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null));
+
 		commonViewer.setNamedSelection("ch.elexis.core.ui.eigendiagnosen.selection");
 		vc.setContentType(ContentType.GENERICOBJECT);
 		return vc;
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
-	public String getCodeSystemName(){
+	public String getCodeSystemName() {
 		return Messages.Eigendiagnosen_CodeSystemName;
 	}
-	
+
 	@Override
-	public Class getElementClass(){
+	public Class getElementClass() {
 		return IDiagnosisTree.class;
 	}
-	
+
 	@Inject
 	@Optional
-	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz){
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
 		if (IDiagnosisTree.class.equals(clazz)) {
 			if (commonViewer != null && !commonViewer.isDisposed()) {
 				commonViewer.getViewerWidget().refresh();
 			}
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IDiagnosisTree object){
+	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IDiagnosisTree object) {
 		if (commonViewer != null && object != null) {
 			commonViewer.getViewerWidget().update(object, null);
 		}
 	}
-	
-	private class EigendiagnoseContentProvider extends CommonViewerContentProvider
-			implements ITreeContentProvider {
-		
-		public EigendiagnoseContentProvider(CommonViewer commonViewer){
+
+	private class EigendiagnoseContentProvider extends CommonViewerContentProvider implements ITreeContentProvider {
+
+		public EigendiagnoseContentProvider(CommonViewer commonViewer) {
 			super(commonViewer);
 		}
-		
+
 		@Override
-		protected IQuery<?> getBaseQuery(){
+		protected IQuery<?> getBaseQuery() {
 			return ModelServiceHolder.get().getQuery(IDiagnosisTree.class);
 		}
-		
+
 		@Override
-		public Object[] getElements(Object inputElement){
+		public Object[] getElements(Object inputElement) {
 			// CommonViewer inputElement can be ignored
 			List<IDiagnosisTree> roots = Collections.emptyList();
 			@SuppressWarnings("unchecked")
@@ -123,8 +121,7 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 				}
 				List<IDiagnosisTree> found = query.execute();
 				List<IDiagnosisTree> foundCopy = new ArrayList<>(found);
-				roots = found.parallelStream().filter(d -> shouldBeVisible(d, foundCopy))
-					.collect(Collectors.toList());
+				roots = found.parallelStream().filter(d -> shouldBeVisible(d, foundCopy)).collect(Collectors.toList());
 			} else {
 				query.startGroup();
 				query.or(ModelPackage.Literals.IDIAGNOSIS_TREE__PARENT, COMPARATOR.EQUALS, null);
@@ -137,9 +134,9 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 			}
 			return roots.toArray();
 		}
-		
-		private boolean hasActiveFilter(Map<String, String> fieldFilterValues){
-			if(fieldFilterValues != null && !fieldFilterValues.isEmpty()) {
+
+		private boolean hasActiveFilter(Map<String, String> fieldFilterValues) {
+			if (fieldFilterValues != null && !fieldFilterValues.isEmpty()) {
 				for (String key : fieldFilterValues.keySet()) {
 					String value = fieldFilterValues.get(key);
 					if (StringUtils.isNotBlank(value)) {
@@ -150,7 +147,7 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 			return false;
 		}
 
-		private boolean shouldBeVisible(IDiagnosisTree diagnosis, List<IDiagnosisTree> foundCopy){
+		private boolean shouldBeVisible(IDiagnosisTree diagnosis, List<IDiagnosisTree> foundCopy) {
 			List<IDiagnosisTree> children = diagnosis.getChildren();
 			// leafs are always visible
 			if (children.isEmpty()) {
@@ -164,25 +161,25 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 			}
 			return false;
 		}
-		
+
 		@Override
-		public Object[] getChildren(Object parentElement){
+		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof IDiagnosisTree) {
 				return ((IDiagnosisTree) parentElement).getChildren().toArray();
 			}
 			return null;
 		}
-		
+
 		@Override
-		public Object getParent(Object element){
+		public Object getParent(Object element) {
 			if (element instanceof IDiagnosisTree) {
 				return ((IDiagnosisTree) element).getParent();
 			}
 			return null;
 		}
-		
+
 		@Override
-		public boolean hasChildren(Object element){
+		public boolean hasChildren(Object element) {
 			if (element instanceof IDiagnosisTree) {
 				return !((IDiagnosisTree) element).getChildren().isEmpty();
 			}

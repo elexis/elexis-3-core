@@ -18,27 +18,26 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 
-public class DokumentKategorie extends FieldEditorPreferencePage implements
-		IWorkbenchPreferencePage {
-	
-	public DokumentKategorie(){
+public class DokumentKategorie extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+
+	public DokumentKategorie() {
 		super(GRID);
 		setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 		setDescription(Messages.DokumentKategorie_dokumentKategorien);
-		
+
 	}
-	
+
 	@Override
-	public void createFieldEditors(){
+	public void createFieldEditors() {
 		/*
-		 * addField(new Agenda.StringInput( PreferenceConstants.DOC_CATEGORY, "Dokumentkategorien",
-		 * getFieldEditorParent() ));
+		 * addField(new Agenda.StringInput( PreferenceConstants.DOC_CATEGORY,
+		 * "Dokumentkategorien", getFieldEditorParent() ));
 		 */
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
+
 }

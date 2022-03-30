@@ -19,34 +19,34 @@ import org.eclipse.swt.widgets.Spinner;
 import ch.elexis.core.ui.UiDesk;
 
 public class SpinnerField extends ActiveControl {
-	
-	public SpinnerField(Composite parent, int displayBits, String displayName, int min, int max){
+
+	public SpinnerField(Composite parent, int displayBits, String displayName, int min, int max) {
 		super(parent, displayBits, displayName);
 		final Spinner spinner = new Spinner(this, SWT.NONE);
 		spinner.setMaximum(max);
 		spinner.setMinimum(min);
 		spinner.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				int v = spinner.getSelection();
 				textContents = Integer.toString(v);
 				fireChangedEvent();
 			}
-			
+
 		});
 		setControl(spinner);
-		
+
 	}
-	
+
 	@Override
-	protected void push(){
+	protected void push() {
 		UiDesk.syncExec(new Runnable() {
-			public void run(){
+			public void run() {
 				Spinner spinner = (Spinner) ctl;
 				spinner.setSelection(Integer.parseInt(textContents));
 			}
 		});
 	}
-	
+
 }

@@ -38,18 +38,19 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
 /**
- * Aktion für das "Zauberstab"-Icon in der KonsZumVerrechnen View -> Dialog mit verschiedenen
- * Kriterien zur Konsultationsauswahl und Rechnungslauf anhand dieser Auswahl
+ * Aktion für das "Zauberstab"-Icon in der KonsZumVerrechnen View -> Dialog mit
+ * verschiedenen Kriterien zur Konsultationsauswahl und Rechnungslauf anhand
+ * dieser Auswahl
  * 
  * @author gerry
  * 
  */
 public class Rechnungslauf implements IRunnableWithProgress {
 	private static Logger log = LoggerFactory.getLogger(Rechnungslauf.class);
-	
+
 	private KonsZumVerrechnenView kzv;
 	private Mandant mandant;
-	
+
 	private List<Konsultation> kons;
 	private List<Konsultation> subResults;
 	private List<Fall> skipCase;
@@ -57,10 +58,9 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	private boolean quarterFilter, billFlagged, skip;
 	private Money lowerLimit;
 	private String accountSys;
-	
-	public Rechnungslauf(KonsZumVerrechnenView kzv, boolean billFlagged, TimeTool ttFirstBefore,
-		TimeTool ttLastBefore, Money lowerLimit, boolean quarterFilter, boolean skip,
-		TimeTool ttFrom, TimeTool ttTo, String accountSys){
+
+	public Rechnungslauf(KonsZumVerrechnenView kzv, boolean billFlagged, TimeTool ttFirstBefore, TimeTool ttLastBefore,
+			Money lowerLimit, boolean quarterFilter, boolean skip, TimeTool ttFrom, TimeTool ttTo, String accountSys) {
 		this.ttFirstBefore = ttFirstBefore;
 		this.ttLastBefore = ttLastBefore;
 		this.ttFrom = ttFrom;
@@ -69,24 +69,23 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		this.quarterFilter = quarterFilter;
 		this.skip = skip;
 		this.accountSys = accountSys;
-		
+
 		this.billFlagged = billFlagged;
 		this.kzv = kzv;
-		
+
 		now = new TimeTool();
 		calcQuarterLimit();
 	}
-	
-	public void run(IProgressMonitor monitor) throws InvocationTargetException,
-		InterruptedException{
+
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		mandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
-		
+
 		List<Konsultation> dbList = getAllKonsultationen(monitor);
 		kons = skipInvalidConsultations(dbList);
 		subResults = new ArrayList<Konsultation>();
 		skipCase = new ArrayList<Fall>();
 		tmpTime = new TimeTool();
-		
+
 		applyBillingFlagFilter(monitor);
 		applyAccountSystemFilter(monitor);
 		applyStartedFilter(monitor);
@@ -94,63 +93,61 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		applyMinPaymentLimit(monitor);
 		applyQuarterFilter(monitor);
 		applyTimespanFilter(monitor);
-		
+
 		// make sure any kons that could be from a skip case is removed
 		for (Fall f : skipCase) {
 			for (Konsultation k : f.getBehandlungen(false)) {
 				kons.remove(k);
 			}
 		}
-		
-		monitor.subTask(Messages.Rechnungslauf_creatingLists); //$NON-NLS-1$
+
+		monitor.subTask(Messages.Rechnungslauf_creatingLists); // $NON-NLS-1$
 		for (Konsultation k : kons) {
 			kzv.selectKonsultation(k);
 			monitor.worked(1);
 		}
-		
+
 		if (skip) {
-			monitor.subTask(Messages.Rechnungslauf_creatingBills); //$NON-NLS-1$
+			monitor.subTask(Messages.Rechnungslauf_creatingBills); // $NON-NLS-1$
 			ErstelleRnnCommand.ExecuteWithParams(kzv.getViewSite(), kzv.tSelection);
 		}
 		monitor.done();
 	}
-	
+
 	/**
 	 * skip invalid consultations
 	 * 
 	 * @param dbList
 	 * @return a list of relevant (valid)konsultations
 	 */
-	private List<Konsultation> skipInvalidConsultations(List<Konsultation> dbList){
+	private List<Konsultation> skipInvalidConsultations(List<Konsultation> dbList) {
 		// get Rechnungssteller of current Mandant
 		String rsId = mandant.getRechnungssteller().getId();
 		List<Konsultation> list = new ArrayList<Konsultation>();
-		
+
 		for (Konsultation k : dbList) {
 			// skip if no valid mandant is set
 			if (k.getMandant() == null) {
-				ElexisStatus status =
-					new ElexisStatus(ElexisStatus.WARNING, "ch.elexis",
-						ElexisStatus.CODE_NOFEEDBACK, Messages.Rechnungslauf_warnInvalidMandant,
-						ElexisStatus.LOG_ERRORS);
+				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, "ch.elexis", ElexisStatus.CODE_NOFEEDBACK,
+						Messages.Rechnungslauf_warnInvalidMandant, ElexisStatus.LOG_ERRORS);
 				StatusManager.getManager().handle(status);
 				log.warn("...skip Kons [" + k.getId() + "] with invalid mandant");
 				continue;
 			}
-			
+
 			// skip if fall is not set or inexisting
 			Fall fall = k.getFall();
 			if ((fall == null) || (!fall.exists())) {
 				log.warn("...skip Kons [" + k.getId() + "] fall is null/inexisting");
 				continue;
 			}
-			
+
 			Patient pat = fall.getPatient();
 			if ((pat == null) || (!pat.exists())) {
 				log.warn("...skip Kons [" + k.getId() + "] patient is null/inexisting");
 				continue;
 			}
-			
+
 			if (rsId.equals(k.getMandant().getRechnungssteller().getId())) {
 				list.add(k);
 			} else {
@@ -159,30 +156,30 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * get all kons. that are not billed yet
 	 * 
 	 * @param monitor
 	 * @return list of all not yet billed konsultationen
 	 */
-	private List<Konsultation> getAllKonsultationen(IProgressMonitor monitor){
+	private List<Konsultation> getAllKonsultationen(IProgressMonitor monitor) {
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		qbe.add(Konsultation.FLD_BILL_ID, StringConstants.EMPTY, null);
 		qbe.add(Konsultation.FLD_BILLABLE, Query.EQUALS, "1");
-		monitor.beginTask(Messages.Rechnungslauf_analyzingConsultations, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-		monitor.subTask(Messages.Rechnungslauf_readingConsultations); //$NON-NLS-1$
-		
+		monitor.beginTask(Messages.Rechnungslauf_analyzingConsultations, IProgressMonitor.UNKNOWN); // $NON-NLS-1$
+		monitor.subTask(Messages.Rechnungslauf_readingConsultations); // $NON-NLS-1$
+
 		return qbe.execute();
 	}
-	
+
 	/**
 	 * calculate the past quarter
 	 */
-	private void calcQuarterLimit(){
+	private void calcQuarterLimit() {
 		String today = now.toString(TimeTool.DATE_COMPACT).substring(4);
 		quarterLimit = new TimeTool();
-		
+
 		if (today.compareTo("0930") > 0) {
 			quarterLimit.set(TimeTool.MONTH, 9);
 		} else if (today.compareTo("0630") > 0) {
@@ -193,13 +190,13 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			quarterLimit.set(TimeTool.MONTH, 1);
 		}
 	}
-	
+
 	/**
 	 * removes all kons. that are not flagged for billing
 	 * 
 	 * @param monitor
 	 */
-	private void applyBillingFlagFilter(IProgressMonitor monitor){
+	private void applyBillingFlagFilter(IProgressMonitor monitor) {
 		if (billFlagged) {
 			log.debug("filter all that are flagged for billing");
 			monitor.subTask("Filtern zum Abrechnen vorgemerkter Fälle ...");
@@ -207,7 +204,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 				if (accepted(k)) {
 					Fall fall = k.getFall();
 					tmpTime = fall.getBillingDate();
-					
+
 					if ((tmpTime != null) && tmpTime.isBeforeOrEqual(now)) {
 						for (Konsultation k2 : kons) {
 							String fid = k2.get(Konsultation.FLD_CASE_ID);
@@ -226,20 +223,20 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			}
 		}
 	}
-	
+
 	/**
 	 * only keeps the ones that match the selected account system
 	 * 
 	 * @param monitor
 	 */
-	private void applyAccountSystemFilter(IProgressMonitor monitor){
+	private void applyAccountSystemFilter(IProgressMonitor monitor) {
 		if (accountSys != null) {
 			log.debug("apply filter for accounting system: " + accountSys);
 			monitor.subTask("Filtern nach Abrechnungssystem ...");
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
 					Fall fall = k.getFall();
-					
+
 					if (fall != null && fall.getAbrechnungsSystem().equals(accountSys)) {
 						subResults.add(k);
 					}
@@ -248,28 +245,26 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			updateKonsList();
 		}
 	}
-	
+
 	/**
 	 * all series which started before a specific date
 	 * 
 	 * @param monitor
 	 */
-	private void applyStartedFilter(IProgressMonitor monitor){
+	private void applyStartedFilter(IProgressMonitor monitor) {
 		if (ttFirstBefore != null) {
-			log.debug("apply start time [" + ttFirstBefore.toString(TimeTool.DATE_COMPACT)
-				+ "] filter");
+			log.debug("apply start time [" + ttFirstBefore.toString(TimeTool.DATE_COMPACT) + "] filter");
 			monitor.subTask("Filtern nach Anfangsdatum ...");
 			List<Fall> treated = new ArrayList<Fall>();
-			
+
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
 					tmpTime.set(k.getDatum());
 					Fall kCase = k.getFall();
 					if (tmpTime.isBefore(ttFirstBefore)) {
-						if (kCase != null && !(treated.contains(kCase))
-							&& !(skipCase.contains(kCase))) {
+						if (kCase != null && !(treated.contains(kCase)) && !(skipCase.contains(kCase))) {
 							treated.add(kCase);
-							
+
 							Konsultation[] caseKons = kCase.getBehandlungen(false);
 							for (Konsultation cK : caseKons) {
 								if (kons.contains(cK)) {
@@ -287,16 +282,15 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			updateKonsList();
 		}
 	}
-	
+
 	/**
 	 * all series which finished after a specific date
 	 * 
 	 * @param monitor
 	 */
-	private void applyFinishedFilter(IProgressMonitor monitor){
+	private void applyFinishedFilter(IProgressMonitor monitor) {
 		if (ttLastBefore != null) {
-			log.debug("apply finish time [" + ttLastBefore.toString(TimeTool.DATE_COMPACT)
-				+ "] filter");
+			log.debug("apply finish time [" + ttLastBefore.toString(TimeTool.DATE_COMPACT) + "] filter");
 			monitor.subTask("Filtern Enddatum ...");
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
@@ -322,16 +316,16 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			updateKonsList();
 		}
 	}
-	
+
 	/**
 	 * all series between the given timespan
 	 * 
 	 * @param monitor
 	 */
-	private void applyTimespanFilter(IProgressMonitor monitor){
+	private void applyTimespanFilter(IProgressMonitor monitor) {
 		if (ttFrom != null && ttTo != null) {
-			log.debug("apply filter for timestpan [" + ttFrom.toString(TimeTool.DATE_COMPACT)
-				+ " - " + ttTo.toString(TimeTool.DATE_COMPACT));
+			log.debug("apply filter for timestpan [" + ttFrom.toString(TimeTool.DATE_COMPACT) + " - "
+					+ ttTo.toString(TimeTool.DATE_COMPACT));
 			monitor.subTask("Filtern nach Zeitspanne ...");
 			// make sure 23:59 and 00:00 are not equal
 			tmpTime.setResolution(1);
@@ -345,30 +339,28 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			}
 			updateKonsList();
 		}
-		
+
 	}
-	
+
 	/**
 	 * minimal payment amount filter
 	 * 
 	 * @param monitor
 	 */
-	private void applyMinPaymentLimit(IProgressMonitor monitor){
+	private void applyMinPaymentLimit(IProgressMonitor monitor) {
 		if (lowerLimit != null) {
 			log.debug("apply filter for minimal payment amount");
 			monitor.subTask("Filtern nach Betragshöhe ...");
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
 					Money sum = new Money();
-					IEncounter encounter =
-						NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
+					IEncounter encounter = NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
 					ICoverage encounterCoverage = encounter.getCoverage();
 					List<Konsultation> matchingKons = new ArrayList<>();
-					
+
 					List<IEncounter> encounters = encounterCoverage.getEncounters();
 					for (IEncounter sameCoverageEncounter : encounters) {
-						Konsultation sameCoverageKonsultation =
-							Konsultation.load(sameCoverageEncounter.getId());
+						Konsultation sameCoverageKonsultation = Konsultation.load(sameCoverageEncounter.getId());
 						int index = kons.indexOf(sameCoverageKonsultation);
 						if (index > -1) {
 							matchingKons.add(kons.get(index));
@@ -377,7 +369,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 							}
 						}
 					}
-					
+
 					if (sum.isMoreThan(lowerLimit)) {
 						for (Konsultation match : matchingKons) {
 							if (!subResults.contains(match)) {
@@ -394,13 +386,13 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			updateKonsList();
 		}
 	}
-	
+
 	/**
 	 * applies the filter for the past quarter
 	 * 
 	 * @param monitor
 	 */
-	private void applyQuarterFilter(IProgressMonitor monitor){
+	private void applyQuarterFilter(IProgressMonitor monitor) {
 		if (quarterFilter) {
 			log.debug("applying quarter filter");
 			monitor.subTask("Filtern nach Quartal ...");
@@ -415,21 +407,21 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			updateKonsList();
 		}
 	}
-	
+
 	/**
 	 * check if it isn't already in the list or on the skip list
 	 * 
 	 * @param k
 	 * @return
 	 */
-	private boolean accepted(Konsultation k){
+	private boolean accepted(Konsultation k) {
 		if (subResults.contains(k) || skipCase.contains(k.getFall())) {
 			return false;
 		}
 		return true;
 	}
-	
-	private void updateKonsList(){
+
+	private void updateKonsList() {
 		kons.clear();
 		kons.addAll(subResults);
 		subResults.clear();

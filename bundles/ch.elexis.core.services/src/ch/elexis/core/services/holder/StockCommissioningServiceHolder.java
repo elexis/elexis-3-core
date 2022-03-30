@@ -7,15 +7,15 @@ import ch.elexis.core.services.IStockCommissioningSystemService;
 
 @Component
 public class StockCommissioningServiceHolder {
-	
+
 	private static IStockCommissioningSystemService stockService;
-	
+
 	@Reference
-	public void setStockCommissioningSystemService(IStockCommissioningSystemService stockService){
+	public void setStockCommissioningSystemService(IStockCommissioningSystemService stockService) {
 		StockCommissioningServiceHolder.stockService = stockService;
 	}
-	
-	public static IStockCommissioningSystemService get(){
+
+	public static IStockCommissioningSystemService get() {
 		if (stockService == null) {
 			throw new IllegalStateException("No IStockCommissioningSystemService available");
 		}

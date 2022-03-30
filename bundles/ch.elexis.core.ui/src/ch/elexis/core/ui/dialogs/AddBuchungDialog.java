@@ -36,48 +36,48 @@ import ch.rgw.tools.Money;
  * 
  */
 public class AddBuchungDialog extends TitleAreaDialog {
-	
+
 	Text betrag, text;
 	// int result;
 	Patient pat;
-	
-	public AddBuchungDialog(Shell parentShell, Patient p){
+
+	public AddBuchungDialog(Shell parentShell, Patient p) {
 		super(parentShell);
 		pat = p;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout());
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		new Label(ret, SWT.NONE).setText(Messages.AddBuchungDialog_amountAs000); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.AddBuchungDialog_amountAs000); // $NON-NLS-1$
 		betrag = new Text(ret, SWT.BORDER);
 		betrag.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
-		new Label(ret, SWT.NONE).setText(Messages.AddBuchungDialog_textForBooking); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.AddBuchungDialog_textForBooking); // $NON-NLS-1$
 		text = SWTHelper.createText(ret, 4, SWT.NONE);
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
-		setTitle(Messages.AddBuchungDialog_enterBooking); //$NON-NLS-1$
-		setMessage(Messages.AddBuchungDialog_dontManual); //$NON-NLS-1$
+		setTitle(Messages.AddBuchungDialog_enterBooking); // $NON-NLS-1$
+		setMessage(Messages.AddBuchungDialog_dontManual); // $NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
-		getShell().setText(Messages.AddBuchungDialog_manual); //$NON-NLS-1$
+		getShell().setText(Messages.AddBuchungDialog_manual); // $NON-NLS-1$
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		try {
 			Money mBetrag = MoneyInput.getFromTextField(betrag);
 			new AccountTransaction(pat, null, mBetrag, null, text.getText());
 		} catch (Exception ex) {
 			SWTHelper.showError(Messages.AddBuchungDialog_ErrorInAmount,
-				Messages.AddBuchungDialog_CannotInterpretAmount); //$NON-NLS-1$ //$NON-NLS-2$
+					Messages.AddBuchungDialog_CannotInterpretAmount); // $NON-NLS-1$ //$NON-NLS-2$
 		}
 		super.okPressed();
 	}
-	
+
 }

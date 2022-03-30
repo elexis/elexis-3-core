@@ -17,13 +17,12 @@ import ch.rgw.tools.net.NetTool;
  * Trace actions done in the system by a user.
  */
 public class Trace {
-	
+
 	public static final String TABLENAME = "traces";
-	
+
 	private static ExecutorService executor = Executors.newSingleThreadExecutor();
-	
-	public static void addTraceEntry(final String username, final String workstation,
-		final String action){
+
+	public static void addTraceEntry(final String username, final String workstation, final String action) {
 		executor.execute(() -> {
 			String _username = username;
 			if (StringUtils.isEmpty(username)) {
@@ -32,21 +31,19 @@ public class Trace {
 					_username = user.getId();
 				}
 			}
-			_username = (StringUtils.isEmpty(_username)) ? "unknown"
-					: StringUtils.abbreviate(_username, 30);
-			
+			_username = (StringUtils.isEmpty(_username)) ? "unknown" : StringUtils.abbreviate(_username, 30);
+
 			String _workstation = workstation;
 			if (StringUtils.isEmpty(workstation)) {
 				_workstation = NetTool.hostname;
 			}
-			_workstation = (StringUtils.isEmpty(_workstation)) ? "unknown"
-					: StringUtils.abbreviate(_workstation, 40);
+			_workstation = (StringUtils.isEmpty(_workstation)) ? "unknown" : StringUtils.abbreviate(_workstation, 40);
 			String _action = (StringUtils.isEmpty(action)) ? "" : action;
-			
+
 			JdbcLink connection = PersistentObject.getConnection();
-			
+
 			String insertStatement = "INSERT INTO " + TABLENAME + " VALUES(?, ?, ?, ?)";
-			
+
 			if (connection != null) {
 				PreparedStatement statement = connection.getPreparedStatement(insertStatement);
 				try {
@@ -62,15 +59,14 @@ public class Trace {
 				}
 			} else {
 				// connection already gone ...
-				LoggerFactory.getLogger(Trace.class).warn(
-					"No DB connection for trace [station{} user{} action{}]", _workstation,
-					_username, _action);
+				LoggerFactory.getLogger(Trace.class).warn("No DB connection for trace [station{} user{} action{}]",
+						_workstation, _username, _action);
 			}
 		});
 	}
-	
-	public static void addTraceEntry(String action){
+
+	public static void addTraceEntry(String action) {
 		addTraceEntry(null, null, action);
 	}
-	
+
 }

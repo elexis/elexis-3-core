@@ -20,10 +20,10 @@ import java.util.List;
  * 
  */
 public interface IObjectLink<T> {
-	
+
 	public String getValueFromObject(T t, String fieldname);
-	
+
 	public void setValueToObject(T t, String fieldname);
-	
+
 	public List<T> getObjectsForValue(String fieldname, String value, boolean bMatchExact);
 }

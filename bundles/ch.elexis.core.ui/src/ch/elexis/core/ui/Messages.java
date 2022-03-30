@@ -9,8 +9,7 @@
  **********************************************************************/
 package ch.elexis.core.ui;
 
-
-public class Messages  {
+public class Messages {
 	public static final String LoginDialog_loginHeader = ch.elexis.core.l10n.Messages.LoginDialog_loginHeader;
 	public static String Hub_message_birthday = ch.elexis.core.l10n.Messages.Hub_message_birthday;
 	public static String Hub_message_configuration = ch.elexis.core.l10n.Messages.Hub_message_configuration;

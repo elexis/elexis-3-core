@@ -7,15 +7,14 @@ import ch.rgw.tools.JdbcLink;
 public abstract class RefIntegrityCheck {
 	StringBuilder oklog;
 	StringBuilder errlog;
-	
-	public String getErrorLog(){
+
+	public String getErrorLog() {
 		return errlog.toString();
 	}
-	
-	public String getOutputLog(){
+
+	public String getOutputLog() {
 		return oklog.toString();
 	}
-	
-	public abstract String checkReferentialIntegrityStateCoreTables(JdbcLink j,
-		IProgressMonitor monitor);
+
+	public abstract String checkReferentialIntegrityStateCoreTables(JdbcLink j, IProgressMonitor monitor);
 }

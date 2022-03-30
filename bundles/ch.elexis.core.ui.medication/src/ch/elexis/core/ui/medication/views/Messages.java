@@ -10,7 +10,7 @@
 package ch.elexis.core.ui.medication.views;
 
 public class Messages {
-	
+
 	public static String DauerMediView_copy = ch.elexis.core.l10n.Messages.DauerMediView_copy;
 	public static String DauerMediView_copyToClipboard = ch.elexis.core.l10n.Messages.DauerMediView_copyToClipboard;
 	public static String FixMediDisplay_AddItem = ch.elexis.core.l10n.Messages.FixMediDisplay_AddItem;
@@ -27,7 +27,7 @@ public class Messages {
 	public static String FixMediDisplay_UsageList = ch.elexis.core.l10n.Messages.FixMediDisplay_UsageList;
 	public static String FixMediDisplay_AddDefaultSignature = ch.elexis.core.l10n.Messages.FixMediDisplay_AddDefaultSignature;
 	public static String FixMediDisplay_AddDefaultSignature_Tooltip = ch.elexis.core.l10n.Messages.FixMediDisplay_AddDefaultSignature_Tooltip;
-	
+
 	public static String TherapieplanComposite_btnIsFixmedication_text = ch.elexis.core.l10n.Messages.TherapieplanComposite_btnIsFixmedication_text;
 	public static String TherapieplanComposite_tblclmnArticle_text = ch.elexis.core.l10n.Messages.TherapieplanComposite_tblclmnArticle_text;
 	public static String TherapieplanComposite_txtArticle_message = ch.elexis.core.l10n.Messages.TherapieplanComposite_txtArticle_message;
@@ -60,7 +60,7 @@ public class Messages {
 	public static String MedicationComposite_tooltipDosageType = ch.elexis.core.l10n.Messages.MedicationComposite_tooltipDosageType;
 	public static String MedicationComposite_isVaccinationTitle = ch.elexis.core.l10n.Messages.MedicationComposite_isVaccinationTitle;
 	public static String MedicationComposite_isVaccinationText = ch.elexis.core.l10n.Messages.MedicationComposite_isVaccinationText;
-	
+
 	public static String MovePrescriptionPositionInTableUpAction_Label = ch.elexis.core.l10n.Messages.MovePrescriptionPositionInTableUpAction_Label;
 	public static String MovePrescriptionPositionInTableDownAction_Label = ch.elexis.core.l10n.Messages.MovePrescriptionPositionInTableDownAction_Label;
 	public static String MedicationComposite_btnCheckButton_text = ch.elexis.core.l10n.Messages.MedicationComposite_btnCheckButton_text;
@@ -71,5 +71,5 @@ public class Messages {
 	public static String MedicationComposite_column_beginDate = ch.elexis.core.l10n.Messages.MedicationComposite_column_beginDate;
 	public static String MedicationComposite_column_endDate = ch.elexis.core.l10n.Messages.MedicationComposite_column_endDate;
 	public static String MedicationComposite_column_mandant = ch.elexis.core.l10n.Messages.MedicationComposite_column_mandant;
-	
+
 }

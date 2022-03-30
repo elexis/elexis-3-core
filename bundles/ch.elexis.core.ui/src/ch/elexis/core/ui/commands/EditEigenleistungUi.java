@@ -31,14 +31,13 @@ import ch.elexis.data.PersistentObject;
 public class EditEigenleistungUi extends AbstractHandler {
 	public static final String COMMANDID = "ch.elexis.eigenleistung.edit"; //$NON-NLS-1$
 	public static final String PARAMETERID = "ch.elexis.eigenleistung.edit.selected"; //$NON-NLS-1$
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			// get the parameter
 			String param = event.getParameter(PARAMETERID);
-			IVerrechenbar verrechenbar =
-				(IVerrechenbar) event.getCommand().getParameterType(PARAMETERID)
+			IVerrechenbar verrechenbar = (IVerrechenbar) event.getCommand().getParameterType(PARAMETERID)
 					.getValueConverter().convertToObject(param);
 			// create and open the dialog with the parameter
 			Shell parent = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
@@ -49,8 +48,8 @@ public class EditEigenleistungUi extends AbstractHandler {
 		}
 		return null;
 	}
-	
-	public static void executeWithParams(PersistentObject parameter){
+
+	public static void executeWithParams(PersistentObject parameter) {
 		try {
 			// get the command
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -62,8 +61,7 @@ public class EditEigenleistungUi extends AbstractHandler {
 			// build the parameterized command
 			ParameterizedCommand pc = ParameterizedCommand.generateCommand(cmd, param);
 			// execute the command
-			IHandlerService handlerService =
-				(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getService(IHandlerService.class);
 			handlerService.executeCommand(pc, null);
 		} catch (Exception ex) {

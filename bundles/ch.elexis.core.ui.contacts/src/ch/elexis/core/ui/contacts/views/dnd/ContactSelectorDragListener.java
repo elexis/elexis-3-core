@@ -19,28 +19,30 @@ import org.eclipse.swt.dnd.TextTransfer;
 import ch.elexis.core.model.IContact;
 
 public class ContactSelectorDragListener implements DragSourceListener {
-	
+
 	private final TableViewer viewer;
-	
-	public ContactSelectorDragListener(TableViewer viewer){
+
+	public ContactSelectorDragListener(TableViewer viewer) {
 		this.viewer = viewer;
 	}
-	
+
 	@Override
-	public void dragStart(DragSourceEvent event){}
-	
+	public void dragStart(DragSourceEvent event) {
+	}
+
 	@Override
-	public void dragSetData(DragSourceEvent event){
+	public void dragSetData(DragSourceEvent event) {
 		// Here you do the convertion to the type which is expected.
 		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 		IContact firstElement = (IContact) selection.getFirstElement();
-		
+
 		if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
 			event.data = firstElement.getId();
 		}
 	}
-	
+
 	@Override
-	public void dragFinished(DragSourceEvent event){}
-	
+	public void dragFinished(DragSourceEvent event) {
+	}
+
 }

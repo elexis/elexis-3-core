@@ -21,12 +21,11 @@ import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
 
 @Component(immediate = true, service = URLStreamHandlerService.class, property = {
-	URLConstants.URL_HANDLER_PROTOCOL + ":String=smb"
-})
+		URLConstants.URL_HANDLER_PROTOCOL + ":String=smb"})
 public class SmbURLStreamHandlerService extends AbstractURLStreamHandlerService {
-	
+
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	static {
 		try {
 			// provide system properties as described in
@@ -40,24 +39,23 @@ public class SmbURLStreamHandlerService extends AbstractURLStreamHandlerService 
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	public URLConnection openConnection(URL url) throws IOException{
+	public URLConnection openConnection(URL url) throws IOException {
 		SingletonContext context = SingletonContext.getInstance();
-		NtlmPasswordAuthentication ntlmPasswordAuthentication =
-			new NtlmPasswordAuthentication(context, url.getUserInfo());
-		CIFSContext credentials =
-			SingletonContext.getInstance().withCredentials(ntlmPasswordAuthentication);
+		NtlmPasswordAuthentication ntlmPasswordAuthentication = new NtlmPasswordAuthentication(context,
+				url.getUserInfo());
+		CIFSContext credentials = SingletonContext.getInstance().withCredentials(ntlmPasswordAuthentication);
 		// https://github.com/AgNO3/jcifs-ng/issues/271
 		String _url = replaceEach(url.toExternalForm());
 		logger.debug("openConnection [{}] [{}]", url, _url);
 		return new SmbFile(_url, credentials);
-		
+
 	}
-	
-	private String replaceEach(String externalForm) throws UnsupportedEncodingException{
-		externalForm = externalForm.replaceAll("%25",  "%");
+
+	private String replaceEach(String externalForm) throws UnsupportedEncodingException {
+		externalForm = externalForm.replaceAll("%25", "%");
 		return URLDecoder.decode(externalForm, "UTF-8");
 	}
-	
+
 }

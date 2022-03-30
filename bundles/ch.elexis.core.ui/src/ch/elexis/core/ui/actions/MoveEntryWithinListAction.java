@@ -18,11 +18,11 @@ import ch.elexis.core.ui.preferences.Messages;
  * @since 3.7
  */
 public class MoveEntryWithinListAction extends Action {
-	
+
 	private StructuredViewer structuredViewer;
 	private List<String> targetCollection;
 	private final boolean moveUpwards;
-	
+
 	/**
 	 * 
 	 * @param listViewerArea
@@ -30,12 +30,12 @@ public class MoveEntryWithinListAction extends Action {
 	 * @param moveUpwards
 	 *            move entry upwards (true) or downwards (false) on execution
 	 */
-	public MoveEntryWithinListAction(StructuredViewer structuredViewer,
-		List<String> targetCollection, boolean moveUpwards){
+	public MoveEntryWithinListAction(StructuredViewer structuredViewer, List<String> targetCollection,
+			boolean moveUpwards) {
 		this.structuredViewer = structuredViewer;
 		this.targetCollection = targetCollection;
 		this.moveUpwards = moveUpwards;
-		
+
 		if (moveUpwards) {
 			setImageDescriptor(Images.IMG_ARROWUP.getImageDescriptor());
 			setText(Messages.Leistungscodes_moveItemUp);
@@ -45,24 +45,23 @@ public class MoveEntryWithinListAction extends Action {
 			setText(Messages.Leistungscodes_moveItemDown);
 			setAccelerator(SWT.COMMAND + SWT.ARROW_DOWN);
 		}
-		
+
 		structuredViewer.getControl().addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e){
+			public void keyPressed(KeyEvent e) {
 				if (e.stateMask == SWT.COMMAND && e.keyCode == SWT.ARROW_UP && moveUpwards) {
 					run();
 					e.doit = false;
-				} else if (e.stateMask == SWT.COMMAND && e.keyCode == SWT.ARROW_DOWN
-					&& !moveUpwards) {
+				} else if (e.stateMask == SWT.COMMAND && e.keyCode == SWT.ARROW_DOWN && !moveUpwards) {
 					run();
 					e.doit = false;
 				}
 			}
 		});
 	}
-	
+
 	@Override
-	public void run(){
+	public void run() {
 		boolean empty = structuredViewer.getSelection().isEmpty();
 		if (!empty) {
 			Object selectedElement = structuredViewer.getStructuredSelection().getFirstElement();
@@ -72,10 +71,10 @@ public class MoveEntryWithinListAction extends Action {
 				Collections.swap(targetCollection, j, destination);
 			}
 		}
-		
+
 		structuredViewer.refresh();
-		
+
 		super.run();
 	}
-	
+
 }

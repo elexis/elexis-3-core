@@ -11,24 +11,26 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.util.JpaModelUtil;
 
 public class BlobSecondary extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Heap2>
-		implements IdentifiableWithXid, IBlobSecondary {
-	
-	public BlobSecondary(Heap2 entity){
+		implements
+			IdentifiableWithXid,
+			IBlobSecondary {
+
+	public BlobSecondary(Heap2 entity) {
 		super(entity);
 	}
-	
+
 	@Override
-	public byte[] getContent(){
+	public byte[] getContent() {
 		return JpaModelUtil.getExpanded(getEntity().getContents());
 	}
-	
+
 	@Override
-	public void setContent(byte[] value){
+	public void setContent(byte[] value) {
 		getEntityMarkDirty().setContents(JpaModelUtil.getCompressed(value));
 	}
-	
+
 	@Override
-	public String getStringContent(){
+	public String getStringContent() {
 		byte[] comp = getContent();
 		if ((comp == null) || (comp.length == 0)) {
 			return "";
@@ -42,39 +44,39 @@ public class BlobSecondary extends AbstractIdDeleteModelAdapter<ch.elexis.core.j
 			return null;
 		}
 	}
-	
+
 	@Override
-	public void setStringContent(String value){
+	public void setStringContent(String value) {
 		byte[] comp = JpaModelUtil.getCompressed(value);
 		setContent(comp);
 	}
-	
+
 	@Override
-	public LocalDate getDate(){
+	public LocalDate getDate() {
 		return getEntity().getDatum();
 	}
-	
+
 	@Override
-	public void setDate(LocalDate value){
+	public void setDate(LocalDate value) {
 		getEntityMarkDirty().setDatum(value);
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		getEntity().setId(id);
 	}
-	
+
 	@Override
-	public Map<Object, Object> getMapContent(){
+	public Map<Object, Object> getMapContent() {
 		byte[] comp = getContent();
 		if ((comp == null) || (comp.length == 0)) {
 			return Collections.emptyMap();
 		}
 		return JpaModelUtil.extInfoFromBytes(comp);
 	}
-	
+
 	@Override
-	public void setMapContent(Map<Object, Object> map){
+	public void setMapContent(Map<Object, Object> map) {
 		setContent(JpaModelUtil.extInfoToBytes(map));
 	}
 }

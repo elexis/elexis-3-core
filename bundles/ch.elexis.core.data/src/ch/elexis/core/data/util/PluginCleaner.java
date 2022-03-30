@@ -18,8 +18,8 @@ import ch.rgw.io.FileTool;
 /** @deprecated do not use */
 @Deprecated
 public class PluginCleaner {
-	
-	public static void clean(String basedir){
+
+	public static void clean(String basedir) {
 		// basedir="d:/apps/elexis-1.2.0";
 		HashMap<String, String> plugins = new HashMap<String, String>();
 		File pluginDir = new File(basedir, "plugins");
@@ -44,13 +44,11 @@ public class PluginCleaner {
 						} else {
 							for (int i = 0; i < vNew.length; i++) {
 								if (vExists[i].compareTo(vNew[i]) < 0) {
-									FileTool.deltree(pluginDir.getAbsolutePath() + File.separator
-										+ exists);
+									FileTool.deltree(pluginDir.getAbsolutePath() + File.separator + exists);
 									plugins.put(basename, file);
 									break;
 								} else if (vExists[i].compareTo(vNew[i]) > 0) {
-									FileTool.deltree(pluginDir.getAbsolutePath() + File.separator
-										+ file);
+									FileTool.deltree(pluginDir.getAbsolutePath() + File.separator + file);
 									break;
 								}
 							}
@@ -59,6 +57,6 @@ public class PluginCleaner {
 				}
 			}
 		}
-		
+
 	}
 }

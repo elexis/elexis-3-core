@@ -80,7 +80,7 @@ public class DateConverter {
 	public LocalDate convertToLocalDate(Date date) {
 		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
-	
+
 	public LocalDate convertToLocalDate(BigInteger timestamp) {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(timestamp.longValue());

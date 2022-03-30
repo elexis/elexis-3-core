@@ -13,16 +13,17 @@
 package ch.elexis.core.data.interfaces;
 
 /**
- * Diagnosen sind ebensop wie Leistungen "Pluggable" definiert, damit neue Codesysteme leicht
- * eingebaut werden können. Ein neues Diagnosesystem muss das Interface Diagnose implementieren, und
- * sich im Erweiterungspunkt ch.elexis.Diagnosecodes einhängen
+ * Diagnosen sind ebensop wie Leistungen "Pluggable" definiert, damit neue
+ * Codesysteme leicht eingebaut werden können. Ein neues Diagnosesystem muss das
+ * Interface Diagnose implementieren, und sich im Erweiterungspunkt
+ * ch.elexis.Diagnosecodes einhängen
  * 
  * @author gerry
  * 
  */
 public interface IDiagnose extends ICodeElement {
-	
+
 	/** Einen kurzen Text zur Diagnose liefern */
 	public String getLabel();
-	
+
 }

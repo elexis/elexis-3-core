@@ -10,36 +10,36 @@ import javax.persistence.criteria.Predicate;
  *
  */
 public class PredicateGroup {
-	
+
 	private Predicate currentPredicate;
 	private CriteriaBuilder criteriaBuilder;
-	
-	public PredicateGroup(CriteriaBuilder criteriaBuilder){
+
+	public PredicateGroup(CriteriaBuilder criteriaBuilder) {
 		this(criteriaBuilder, null);
 	}
-	
-	public PredicateGroup(CriteriaBuilder criteriaBuilder, Predicate predicate){
+
+	public PredicateGroup(CriteriaBuilder criteriaBuilder, Predicate predicate) {
 		this.criteriaBuilder = criteriaBuilder;
 		this.currentPredicate = predicate;
 	}
-	
-	public void and(Predicate p){
+
+	public void and(Predicate p) {
 		if (currentPredicate == null) {
 			currentPredicate = p;
 		} else {
 			currentPredicate = criteriaBuilder.and(currentPredicate, p);
 		}
 	}
-	
-	public void or(Predicate p){
+
+	public void or(Predicate p) {
 		if (currentPredicate == null) {
 			currentPredicate = p;
 		} else {
 			currentPredicate = criteriaBuilder.or(currentPredicate, p);
 		}
 	}
-	
-	public Predicate getPredicate(){
+
+	public Predicate getPredicate() {
 		return currentPredicate;
 	}
 }

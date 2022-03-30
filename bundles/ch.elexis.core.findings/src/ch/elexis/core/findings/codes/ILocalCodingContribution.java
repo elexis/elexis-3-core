@@ -16,7 +16,7 @@ public interface ILocalCodingContribution extends ICodingContribution {
 	 * @param coding
 	 */
 	public void addCoding(ICoding coding);
-	
+
 	/**
 	 * Remove a {@link ICoding} from the code system.
 	 * 

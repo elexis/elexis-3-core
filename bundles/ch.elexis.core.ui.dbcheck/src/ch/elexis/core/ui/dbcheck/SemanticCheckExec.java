@@ -12,9 +12,9 @@ import ch.elexis.core.ui.dbcheck.semantic.SemanticCheckMySQL;
 import ch.elexis.core.ui.dbcheck.semantic.SemanticCheckPGSQL;
 
 public class SemanticCheckExec extends CheckExec {
-	
+
 	public static SemanticCheck sc = null;
-	
+
 	/**
 	 * Semantic Check on the current state of the database
 	 * 
@@ -22,8 +22,8 @@ public class SemanticCheckExec extends CheckExec {
 	 * 
 	 * @return
 	 */
-	public static String doSemanticCheckOffCore(IProgressMonitor monitor){
-		
+	public static String doSemanticCheckOffCore(IProgressMonitor monitor) {
+
 		if (sqlDriver.equalsIgnoreCase(MYSQL_DB)) {
 			sc = new SemanticCheckMySQL();
 			sc.checkSemanticStateCoreTables(j, monitor);
@@ -36,14 +36,14 @@ public class SemanticCheckExec extends CheckExec {
 		}
 		return "Nicht unterstützer Datenbanktyp; Unterstüztung derzeit für MySQL und PostgreSQL";
 	}
-	
-	public static String getOutputLog(){
+
+	public static String getOutputLog() {
 		if (sc != null)
 			return sc.getOutputLog();
 		return "";
 	}
-	
-	public static String getErrorLog(){
+
+	public static String getErrorLog() {
 		if (sc != null)
 			return sc.getErrorLog();
 		return "";

@@ -44,14 +44,14 @@ import ch.rgw.tools.Tree;
  */
 public class ACLPreferenceTree extends Composite {
 	private Logger log = LoggerFactory.getLogger(this.getClass().getName());
-	
+
 	Tree<ACE> acls;
 	TreeViewer tv;
 	org.eclipse.swt.widgets.List lbGroups;
 	org.eclipse.swt.widgets.List lbUsers;
 	List<Anwender> lUsers;
-	
-	private Tree<ACE> findParent(ACE t){
+
+	private Tree<ACE> findParent(ACE t) {
 		ACE parent = t.getParent();
 		if (parent.equals(ACE.ACE_ROOT)) {
 			return acls;
@@ -66,10 +66,10 @@ public class ACLPreferenceTree extends Composite {
 			return new Tree<ACE>(acls, parent);
 		}
 		return new Tree<ACE>(grandParentTree, parent);
-		
+
 	}
-	
-	public ACLPreferenceTree(Composite parent, ACE... acl){
+
+	public ACLPreferenceTree(Composite parent, ACE... acl) {
 		super(parent, SWT.NONE);
 		acls = new Tree<ACE>(null, null);
 		for (ACE s : acl) {
@@ -83,47 +83,47 @@ public class ACLPreferenceTree extends Composite {
 				}
 			}
 		}
-		
+
 		setLayout(new GridLayout());
 		setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tv = new TreeViewer(this);
 		tv.setContentProvider(new ITreeContentProvider() {
-			
-			public Object[] getChildren(Object parentElement){
+
+			public Object[] getChildren(Object parentElement) {
 				Tree tree = (Tree) parentElement;
 				return tree.getChildren().toArray();
 			}
-			
-			public Object getParent(Object element){
+
+			public Object getParent(Object element) {
 				return ((Tree) element).getParent();
 			}
-			
-			public boolean hasChildren(Object element){
+
+			public boolean hasChildren(Object element) {
 				Tree tree = (Tree) element;
 				return tree.hasChildren();
 			}
-			
-			public Object[] getElements(Object inputElement){
+
+			public Object[] getElements(Object inputElement) {
 				return acls.getChildren().toArray();
 			}
-			
-			public void dispose(){
+
+			public void dispose() {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 		tv.setLabelProvider(new LabelProvider() {
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return (String) ((Tree<ACE>) element).contents.getLocalizedName();
 			}
-			
+
 		});
 		tv.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		Composite cBottom = new Composite(this, SWT.NONE);
@@ -139,98 +139,97 @@ public class ACLPreferenceTree extends Composite {
 		for (Anwender an : lUsers) {
 			lbUsers.add(an.getLabel());
 		}
-//		List<String> lGroups = CoreHub.acl.getGroups();
-//		for (String s : lGroups) {
-//			lbGroups.add(s);
-//		}
+		// List<String> lGroups = CoreHub.acl.getGroups();
+		// for (String s : lGroups) {
+		// lbGroups.add(s);
+		// }
 		tv.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			/**
-			 * if the user selects an ACL from the TreeViewer, we want to select users and groups
-			 * that are granted this acl in the lbGroups and lbUsers ListBoxes
+			 * if the user selects an ACL from the TreeViewer, we want to select users and
+			 * groups that are granted this acl in the lbGroups and lbUsers ListBoxes
 			 */
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 				lbGroups.deselectAll();
 				lbUsers.deselectAll();
-//				if (!sel.isEmpty()) {
-//					Tree<ACE> acl = (Tree<ACE>) sel.getFirstElement();
-//					ACE right = acl.contents;
-//					List<String> grps = CoreHub.acl.groupsForGrant(right);
-//					List<Anwender> users = CoreHub.acl.usersForGrant(right);
-//					for (String g : grps) {
-//						int idx = StringTool.getIndex(lbGroups.getItems(), g);
-//						if (idx != -1) {
-//							lbGroups.select(idx);
-//						}
-//					}
-//					for (Anwender an : users) {
-//						int idx = StringTool.getIndex(lbUsers.getItems(), an.getLabel());
-//						if (idx != -1) {
-//							lbUsers.select(idx);
-//						}
-//					}
-//				}
-				
+				// if (!sel.isEmpty()) {
+				// Tree<ACE> acl = (Tree<ACE>) sel.getFirstElement();
+				// ACE right = acl.contents;
+				// List<String> grps = CoreHub.acl.groupsForGrant(right);
+				// List<Anwender> users = CoreHub.acl.usersForGrant(right);
+				// for (String g : grps) {
+				// int idx = StringTool.getIndex(lbGroups.getItems(), g);
+				// if (idx != -1) {
+				// lbGroups.select(idx);
+				// }
+				// }
+				// for (Anwender an : users) {
+				// int idx = StringTool.getIndex(lbUsers.getItems(), an.getLabel());
+				// if (idx != -1) {
+				// lbUsers.select(idx);
+				// }
+				// }
+				// }
+
 			}
-			
+
 		});
 		lbGroups.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("unchecked")
-			public void widgetSelected(SelectionEvent arg0){
+			public void widgetSelected(SelectionEvent arg0) {
 				IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
 				if (!sel.isEmpty()) {
 					Tree<ACE> acl = (Tree<ACE>) sel.getFirstElement();
 					ACE right = acl.contents;
 					String[] gsel = lbGroups.getSelection();
 					for (String g : lbGroups.getItems()) {
-//						CoreHub.acl.revoke(g, right);
+						// CoreHub.acl.revoke(g, right);
 					}
 					for (String g : gsel) {
 						CoreHub.acl.grant(g, right);
 					}
 				}
 			}
-			
+
 		});
 		lbUsers.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("unchecked")
-			public void widgetSelected(SelectionEvent arg0){
+			public void widgetSelected(SelectionEvent arg0) {
 				IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
 				if (!sel.isEmpty()) {
 					Tree<ACE> acl = (Tree<ACE>) sel.getFirstElement();
 					ACE right = acl.contents;
 					int[] uSel = lbUsers.getSelectionIndices();
 					for (Anwender an : lUsers) {
-//						CoreHub.acl.revoke(an, right);
+						// CoreHub.acl.revoke(an, right);
 					}
 					for (int i : uSel) {
-//						CoreHub.acl.grant(lUsers.get(i), right);
+						// CoreHub.acl.grant(lUsers.get(i), right);
 					}
 				}
 			}
 		});
 		tv.setSorter(new ViewerSorter() {
-			
+
 			@SuppressWarnings("unchecked")
 			@Override
-			public int compare(Viewer viewer, Object e1, Object e2){
+			public int compare(Viewer viewer, Object e1, Object e2) {
 				Tree<ACE> t1 = (Tree<ACE>) e1;
 				Tree<ACE> t2 = (Tree<ACE>) e2;
-				return t1.contents.getLocalizedName().compareToIgnoreCase(
-					t2.contents.getLocalizedName());
+				return t1.contents.getLocalizedName().compareToIgnoreCase(t2.contents.getLocalizedName());
 			}
-			
+
 		});
 		tv.setInput(this);
-		
+
 	}
-	
-	public void reload(){
-		
+
+	public void reload() {
+
 	}
-	
-	public void flush(){
+
+	public void flush() {
 		CoreHub.acl.flush();
 	}
 }

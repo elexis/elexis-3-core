@@ -16,34 +16,30 @@ import ch.elexis.core.spotlight.ui.ISpotlightResultEntryDetailComposite;
 import ch.elexis.core.spotlight.ui.ISpotlightResultEntryDetailCompositeContributor;
 
 @Component(immediate = true)
-public class SpotlightResultEntryDetailCompositeService
-		implements ISpotlightResultEntryDetailCompositeService {
-	
-	private Map<Category, ISpotlightResultEntryDetailCompositeContributor> instantiationMapper =
-		new HashMap<>();
-	
+public class SpotlightResultEntryDetailCompositeService implements ISpotlightResultEntryDetailCompositeService {
+
+	private Map<Category, ISpotlightResultEntryDetailCompositeContributor> instantiationMapper = new HashMap<>();
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY, bind = "bind", unbind = "unbind")
 	private volatile List<ISpotlightResultEntryDetailCompositeContributor> spotlightResultEntryDetailDialogCompositContributors;
-	
-	protected void bind(ISpotlightResultEntryDetailCompositeContributor contributor){
+
+	protected void bind(ISpotlightResultEntryDetailCompositeContributor contributor) {
 		instantiationMapper.put(contributor.appliedForCategory(), contributor);
 	}
-	
-	protected void unbind(ISpotlightResultEntryDetailCompositeContributor contributor){
+
+	protected void unbind(ISpotlightResultEntryDetailCompositeContributor contributor) {
 		instantiationMapper.remove(contributor.appliedForCategory());
 	}
-	
+
 	@Override
-	public ISpotlightResultEntryDetailComposite instantiate(Category category, Composite parent,
-		int style){
-		
-		ISpotlightResultEntryDetailCompositeContributor contributor =
-			instantiationMapper.get(category);
-		
-		if(contributor != null) {
+	public ISpotlightResultEntryDetailComposite instantiate(Category category, Composite parent, int style) {
+
+		ISpotlightResultEntryDetailCompositeContributor contributor = instantiationMapper.get(category);
+
+		if (contributor != null) {
 			return contributor.createDetailComposite(parent, style);
 		}
-		
+
 		// TODO fallback
 		return new FallbackDetailComposite(parent, style);
 	}

@@ -17,19 +17,19 @@ import ch.elexis.core.tasks.internal.runnables.TriggerTaskForEveryFileInDirector
 
 @Component
 public class IdentifiedRunnableFactoryImpl implements IIdentifiedRunnableFactory {
-	
+
 	@Reference
 	private IVirtualFilesystemService virtualFilsystemService;
-	
+
 	private IModelService taskModelService;
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.tasks.model)")
-	private void setModelService(IModelService modelService){
+	private void setModelService(IModelService modelService) {
 		taskModelService = modelService;
 	}
-	
+
 	@Override
-	public List<IIdentifiedRunnable> getProvidedRunnables(){
+	public List<IIdentifiedRunnable> getProvidedRunnables() {
 		List<IIdentifiedRunnable> ret = new ArrayList<>();
 		ret.add(new LogResultContextIdentifiedRunnable());
 		ret.add(new DeleteFileIdentifiedRunnable());
@@ -37,5 +37,5 @@ public class IdentifiedRunnableFactoryImpl implements IIdentifiedRunnableFactory
 		ret.add(new RemoveTaskLogEntriesRunnable(taskModelService));
 		return ret;
 	}
-	
+
 }

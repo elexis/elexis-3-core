@@ -17,19 +17,19 @@ import java.util.List;
 import org.eclipse.emf.common.util.Enumerator;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Owner Task Notification</b></em>',
- * and utility methods for working with them.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration
+ * '<em><b>Owner Task Notification</b></em>', and utility methods for working
+ * with them. <!-- end-user-doc -->
+ * 
  * @see ch.elexis.core.tasks.model.ModelPackage#getOwnerTaskNotification()
  * @model
  * @generated
  */
 public enum OwnerTaskNotification implements Enumerator {
 	/**
-	 * The '<em><b>NEVER</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The '<em><b>NEVER</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #NEVER_VALUE
 	 * @generated
 	 * @ordered
@@ -37,9 +37,9 @@ public enum OwnerTaskNotification implements Enumerator {
 	NEVER(0, "NEVER", "NEVER"),
 
 	/**
-	 * The '<em><b>WHEN FINISHED</b></em>' literal object.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>WHEN FINISHED</b></em>' literal object. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #WHEN_FINISHED_VALUE
 	 * @generated
 	 * @ordered
@@ -47,9 +47,9 @@ public enum OwnerTaskNotification implements Enumerator {
 	WHEN_FINISHED(1, "WHEN_FINISHED", "WHEN_FINISHED"),
 
 	/**
-	 * The '<em><b>WHEN FINISHED FAILED</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The '<em><b>WHEN FINISHED FAILED</b></em>' literal object. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #WHEN_FINISHED_FAILED_VALUE
 	 * @generated
 	 * @ordered
@@ -57,13 +57,13 @@ public enum OwnerTaskNotification implements Enumerator {
 	WHEN_FINISHED_FAILED(2, "WHEN_FINISHED_FAILED", "WHEN_FINISHED_FAILED");
 
 	/**
-	 * The '<em><b>NEVER</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>NEVER</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>NEVER</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>NEVER</b></em>' literal object isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #NEVER
 	 * @model
 	 * @generated
@@ -72,13 +72,13 @@ public enum OwnerTaskNotification implements Enumerator {
 	public static final int NEVER_VALUE = 0;
 
 	/**
-	 * The '<em><b>WHEN FINISHED</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>WHEN FINISHED</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>WHEN FINISHED</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #WHEN_FINISHED
 	 * @model
 	 * @generated
@@ -87,13 +87,14 @@ public enum OwnerTaskNotification implements Enumerator {
 	public static final int WHEN_FINISHED_VALUE = 1;
 
 	/**
-	 * The '<em><b>WHEN FINISHED FAILED</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>WHEN FINISHED FAILED</b></em>' literal value. <!-- begin-user-doc
+	 * -->
 	 * <p>
-	 * If the meaning of '<em><b>WHEN FINISHED FAILED</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>WHEN FINISHED FAILED</b></em>' literal object isn't
+	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #WHEN_FINISHED_FAILED
 	 * @model
 	 * @generated
@@ -103,30 +104,27 @@ public enum OwnerTaskNotification implements Enumerator {
 
 	/**
 	 * An array of all the '<em><b>Owner Task Notification</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	private static final OwnerTaskNotification[] VALUES_ARRAY =
-		new OwnerTaskNotification[] {
-			NEVER,
-			WHEN_FINISHED,
-			WHEN_FINISHED_FAILED,
-		};
+	private static final OwnerTaskNotification[] VALUES_ARRAY = new OwnerTaskNotification[]{NEVER, WHEN_FINISHED,
+			WHEN_FINISHED_FAILED,};
 
 	/**
-	 * A public read-only list of all the '<em><b>Owner Task Notification</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * A public read-only list of all the '<em><b>Owner Task Notification</b></em>'
+	 * enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static final List<OwnerTaskNotification> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Owner Task Notification</b></em>' literal with the specified literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param literal the literal.
+	 * Returns the '<em><b>Owner Task Notification</b></em>' literal with the
+	 * specified literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param literal
+	 *            the literal.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
@@ -141,10 +139,11 @@ public enum OwnerTaskNotification implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Owner Task Notification</b></em>' literal with the specified name.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param name the name.
+	 * Returns the '<em><b>Owner Task Notification</b></em>' literal with the
+	 * specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param name
+	 *            the name.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
@@ -159,47 +158,51 @@ public enum OwnerTaskNotification implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Owner Task Notification</b></em>' literal with the specified integer value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the integer value.
+	 * Returns the '<em><b>Owner Task Notification</b></em>' literal with the
+	 * specified integer value. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the integer value.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static OwnerTaskNotification get(int value) {
 		switch (value) {
-			case NEVER_VALUE: return NEVER;
-			case WHEN_FINISHED_VALUE: return WHEN_FINISHED;
-			case WHEN_FINISHED_FAILED_VALUE: return WHEN_FINISHED_FAILED;
+			case NEVER_VALUE :
+				return NEVER;
+			case WHEN_FINISHED_VALUE :
+				return WHEN_FINISHED;
+			case WHEN_FINISHED_FAILED_VALUE :
+				return WHEN_FINISHED_FAILED;
 		}
 		return null;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final int value;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final String name;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final String literal;
 
 	/**
-	 * Only this class can construct instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Only this class can construct instances. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private OwnerTaskNotification(int value, String name, String literal) {
@@ -209,44 +212,44 @@ public enum OwnerTaskNotification implements Enumerator {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public int getValue() {
-	  return value;
+		return value;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String getName() {
-	  return name;
+		return name;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String getLiteral() {
-	  return literal;
+		return literal;
 	}
 
 	/**
-	 * Returns the literal value of the enumerator, which is its string representation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the literal value of the enumerator, which is its string
+	 * representation. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
 		return literal;
 	}
-	
-} //OwnerTaskNotification
+
+} // OwnerTaskNotification

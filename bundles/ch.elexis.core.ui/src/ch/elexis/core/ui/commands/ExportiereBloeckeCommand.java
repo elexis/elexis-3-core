@@ -25,8 +25,8 @@ import ch.rgw.tools.ExHandler;
 
 public class ExportiereBloeckeCommand extends AbstractHandler {
 	public static final String ID = "serviceblocks.export";
-	
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Query<Leistungsblock> qbe = new Query<Leistungsblock>(Leistungsblock.class);
 		List<Leistungsblock> bloecke = qbe.execute();
 		BlockExporter bc = new BlockExporter();
@@ -37,7 +37,7 @@ public class ExportiereBloeckeCommand extends AbstractHandler {
 				ExHandler.handle(xx);
 			}
 		}
-		
+
 		try {
 			bc.finalizeExport();
 		} catch (XChangeException e) {
@@ -46,5 +46,5 @@ public class ExportiereBloeckeCommand extends AbstractHandler {
 		}
 		return null;
 	}
-	
+
 }

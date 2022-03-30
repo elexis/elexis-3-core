@@ -16,41 +16,41 @@ import java.util.logging.Logger;
 public class ElexisException extends Exception {
 	private static final long serialVersionUID = -4535064606049686854L;
 	private static Logger log = Logger.getLogger(ElexisException.class.getName());
-	
+
 	public static final int EE_DUPLICATE_DISPATCHER = 1;
 	public static final int EE_BAD_DISPATCHER = 2;
 	public static final int EE_UNEXPECTED_RESPONSE = 3;
 	public static final int EE_FILE_ERROR = 4;
 	public static final int EE_NOT_SUPPORTED = 5;
 	public static final int EE_NOT_FOUND = 6;
-	
+
 	Class<?> clazz;
 	int errcode;
-	
-	public ElexisException(Class<?> clazz, String errmsg, int errcode){
+
+	public ElexisException(Class<?> clazz, String errmsg, int errcode) {
 		this(clazz, errmsg, errcode, false);
 	}
-	
-	public ElexisException(Class<?> clazz, String errmsg, int errcode, boolean doLog){
+
+	public ElexisException(Class<?> clazz, String errmsg, int errcode, boolean doLog) {
 		super(errmsg);
 		this.clazz = clazz;
 		this.errcode = errcode;
 		log.severe(clazz.getName() + ": " + errmsg + " " + Integer.toString(errcode));
 	}
-	
-	public ElexisException(String errmsg, Throwable throwable){
+
+	public ElexisException(String errmsg, Throwable throwable) {
 		super(errmsg, throwable);
 	}
-	
-	public ElexisException(String errmsg){
+
+	public ElexisException(String errmsg) {
 		super(errmsg);
 	}
-	
-	public Class<?> getThrowingClass(){
+
+	public Class<?> getThrowingClass() {
 		return clazz;
 	}
-	
-	public int getErrCode(){
+
+	public int getErrCode() {
 		return errcode;
 	}
 }

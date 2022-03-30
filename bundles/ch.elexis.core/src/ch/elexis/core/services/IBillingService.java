@@ -13,17 +13,17 @@ import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 
 public interface IBillingService {
-	
+
 	/**
-	 * Get a {@link IBillingSystemFactor} for the system at the provided date, empty if no such
-	 * factor is defined.
+	 * Get a {@link IBillingSystemFactor} for the system at the provided date, empty
+	 * if no such factor is defined.
 	 * 
 	 * @param system
 	 * @param date
 	 * @return
 	 */
 	public Optional<IBillingSystemFactor> getBillingSystemFactor(String system, LocalDate date);
-	
+
 	/**
 	 * 
 	 * @param from
@@ -32,7 +32,7 @@ public interface IBillingService {
 	 * @param system
 	 */
 	public void setBillingSystemFactor(LocalDate from, LocalDate to, double factor, String system);
-	
+
 	/**
 	 * Test if the {@link IEncounter} is editable in the context of billing.
 	 * 
@@ -40,43 +40,43 @@ public interface IBillingService {
 	 * @return
 	 */
 	public Result<IEncounter> isEditable(IEncounter encounter);
-	
+
 	/**
-	 * Try to bill the amount of {@link IBillable} using the {@link IEncounter}. Test the result to
-	 * see if billing was successful or there was a problem.
+	 * Try to bill the amount of {@link IBillable} using the {@link IEncounter}.
+	 * Test the result to see if billing was successful or there was a problem.
 	 * 
 	 * @param billable
 	 * @param encounter
 	 * @param amount
-	 * @return a {@link Result} that returns a {@link SEVERITY#WARNING} if only a partial amount
-	 *         could be billed
+	 * @return a {@link Result} that returns a {@link SEVERITY#WARNING} if only a
+	 *         partial amount could be billed
 	 */
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount);
-	
+
 	/**
-	 * Remove a billed service from the encounter. This will only work if the encounter is editable.
-	 * This method additionally takes care of side-effects like e.g. returning an article to stock
-	 * if removed
+	 * Remove a billed service from the encounter. This will only work if the
+	 * encounter is editable. This method additionally takes care of side-effects
+	 * like e.g. returning an article to stock if removed
 	 * 
 	 * @param billed
 	 * @param encounter
 	 * @return
 	 */
 	public Result<?> removeBilled(IBilled billed, IEncounter encounter);
-	
+
 	/**
-	 * Change the amount for this service or article, considering the rules given by the resp.
-	 * optifiers.
+	 * Change the amount for this service or article, considering the rules given by
+	 * the resp. optifiers.
 	 * 
 	 * @param billed
 	 * @param newCount
 	 * @return
 	 */
 	public IStatus changeAmountValidated(IBilled billed, double newAmount);
-	
+
 	/**
-	 * Change the amount for this service or article. If it is an {@link IArticle}, the store will
-	 * be updated accordingly
+	 * Change the amount for this service or article. If it is an {@link IArticle},
+	 * the store will be updated accordingly
 	 * 
 	 * @param newAmount
 	 *            new count this service is to be billed.

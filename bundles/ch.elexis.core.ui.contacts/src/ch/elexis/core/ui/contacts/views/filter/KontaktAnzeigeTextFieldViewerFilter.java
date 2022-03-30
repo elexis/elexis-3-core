@@ -16,15 +16,15 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import ch.elexis.core.model.IContact;
 
 public class KontaktAnzeigeTextFieldViewerFilter extends ViewerFilter {
-	
+
 	private String searchString;
-	
+
 	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element){
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (searchString == null)
 			return true;
 		IContact k = (IContact) element;
-		
+
 		if (searchString.startsWith("$")) {
 			// Nothing to do here, we have a formula evaluation
 			return true;
@@ -38,33 +38,31 @@ public class KontaktAnzeigeTextFieldViewerFilter extends ViewerFilter {
 		} else {
 			String desc1 = (k.getDescription1() != null) ? k.getDescription1().toLowerCase() : "";
 			String desc2 = (k.getDescription2() != null) ? k.getDescription2().toLowerCase() : "";
-			
+
 			String[] searchListComma = searchString.split(",");
 			for (String string : searchListComma) {
 				if (string.contains(" ")) {
 					String searchA = desc1 + " " + desc2;
 					String searchB = desc2 + " " + desc1;
-					if (searchA.matches(".*" + string + ".*")
-						|| searchB.matches(".*" + string + ".*"))
+					if (searchA.matches(".*" + string + ".*") || searchB.matches(".*" + string + ".*"))
 						return true;
-				} else if (desc1.matches(".*" + string + ".*")
-					|| desc2.matches(".*" + string + ".*")) {
+				} else if (desc1.matches(".*" + string + ".*") || desc2.matches(".*" + string + ".*")) {
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
-	public void setSearchText(String s){
+
+	public void setSearchText(String s) {
 		if (s == null || s.length() == 0 || s.startsWith("#"))
 			searchString = s;
 		else
-			searchString = s.toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
+			searchString = s.toLowerCase(); // $NON-NLS-1$ //$NON-NLS-2$
 		// filter "dirty" characters
 		if (searchString != null)
 			searchString = searchString.replaceAll("[^#$, a-zA-Z0-9]", "");
 	}
-	
+
 }

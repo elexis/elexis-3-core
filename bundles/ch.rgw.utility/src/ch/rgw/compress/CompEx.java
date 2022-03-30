@@ -36,15 +36,15 @@ import ch.rgw.tools.StringTool;
  */
 public class CompEx {
 	public static final Logger log = LoggerFactory.getLogger(CompEx.class);
-	
+
 	public static final int NONE = 0;
 	public static final int GLZ = 1 << 29;
 	public static final int RLL = 2 << 29;
 	public static final int HUFF = 3 << 29;
 	public static final int BZIP2 = 4 << 29;
 	public static final int ZIP = 5 << 29;
-	
-	public static final byte[] Compress(String in, int mode){
+
+	public static final byte[] Compress(String in, int mode) {
 		if (StringTool.isNothing(in)) {
 			return null;
 		}
@@ -55,24 +55,24 @@ public class CompEx {
 			return null;
 		}
 	}
-	
-	public static final byte[] Compress(byte[] in, int mode){
+
+	public static final byte[] Compress(byte[] in, int mode) {
 		if (in == null) {
 			return null;
 		}
 		ByteArrayInputStream bais = new ByteArrayInputStream(in);
 		return Compress(bais, mode);
 	}
-	
-	public static final byte[] Compress(InputStream in, int mode){
+
+	public static final byte[] Compress(InputStream in, int mode) {
 		try {
 			switch (mode) {
-			case GLZ:
-				return CompressGLZ(in);
-			case BZIP2:
-				return CompressBZ2(in);
-			case ZIP:
-				return CompressZIP(in);
+				case GLZ :
+					return CompressGLZ(in);
+				case BZIP2 :
+					return CompressBZ2(in);
+				case ZIP :
+					return CompressZIP(in);
 				// case HUFF: return CompressHuff(in);
 			}
 		} catch (Exception ex) {
@@ -80,8 +80,8 @@ public class CompEx {
 		}
 		return null;
 	}
-	
-	public static byte[] CompressGLZ(InputStream in) throws IOException{
+
+	public static byte[] CompressGLZ(InputStream in) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buf = new byte[4];
 		// BinConverter.intToByteArray(0,buf,0);
@@ -93,17 +93,16 @@ public class CompEx {
 		total |= GLZ;
 		BinConverter.intToByteArray((int) total, ret, 0);
 		return ret;
-		
+
 	}
-	
-	public static byte[] CompressBZ2(InputStream in) throws Exception{
+
+	public static byte[] CompressBZ2(InputStream in) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buf = new byte[8192];
 		baos.write(buf, 0, 4); // Länge des Originalstroms
 		CBZip2OutputStream bzo = new CBZip2OutputStream(baos);
 		int l;
-		int total = 0;
-		;
+		int total = 0;;
 		while ((l = in.read(buf, 0, buf.length)) != -1) {
 			bzo.write(buf, 0, l);
 			total += l;
@@ -116,16 +115,15 @@ public class CompEx {
 		BinConverter.intToByteArray(total, ret, 0);
 		return ret;
 	}
-	
-	public static byte[] CompressZIP(InputStream in) throws Exception{
+
+	public static byte[] CompressZIP(InputStream in) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buf = new byte[8192];
 		baos.write(buf, 0, 4); // Länge des Originalstroms
 		ZipOutputStream zo = new ZipOutputStream(baos);
 		zo.putNextEntry(new ZipEntry("Data"));
 		int l;
-		long total = 0;
-		;
+		long total = 0;;
 		while ((l = in.read(buf, 0, buf.length)) != -1) {
 			zo.write(buf, 0, l);
 			total += l;
@@ -138,16 +136,16 @@ public class CompEx {
 		BinConverter.intToByteArray((int) total, ret, 0);
 		return ret;
 	}
-	
-	public static byte[] expand(byte[] in){
+
+	public static byte[] expand(byte[] in) {
 		if (in == null) {
 			return null;
 		}
 		ByteArrayInputStream bais = new ByteArrayInputStream(in);
 		return expand(bais);
 	}
-	
-	public static byte[] expand(InputStream in){
+
+	public static byte[] expand(InputStream in) {
 		ByteArrayOutputStream baos;
 		byte[] siz = new byte[4];
 		try {
@@ -166,52 +164,52 @@ public class CompEx {
 				return empty.getBytes();
 			}
 			byte[] ret = new byte[(int) size];
-			
+
 			switch ((int) typ) {
-			case BZIP2:
-				CBZip2InputStream bzi = new CBZip2InputStream(in);
-				int off = 0;
-				int l = 0;
-				while ((l = bzi.read(ret, off, ret.length - off)) > 0) {
-					off += l;
-				}
-				
-				bzi.close();
-				in.close();
-				return ret;
-			case GLZ:
-				GLZ glz = new GLZ();
-				baos = new ByteArrayOutputStream();
-				glz.expand(in, baos);
-				return baos.toByteArray();
-			case HUFF:
-				HuffmanInputStream hin = new HuffmanInputStream(in);
-				off = 0;
-				l = 0;
-				while ((l = hin.read(ret, off, ret.length - off)) > 0) {
-					off += l;
-				}
-				hin.close();
-				return ret;
-			case ZIP:
-				ZipInputStream zi = new ZipInputStream(in);
-				zi.getNextEntry();
-				off = 0;
-				l = 0;
-				while ((l = zi.read(ret, off, ret.length - off)) > 0) {
-					off += l;
-				}
-				
-				zi.close();
-				return ret;
-			default:
-				throw new Exception("Invalid compress format");
+				case BZIP2 :
+					CBZip2InputStream bzi = new CBZip2InputStream(in);
+					int off = 0;
+					int l = 0;
+					while ((l = bzi.read(ret, off, ret.length - off)) > 0) {
+						off += l;
+					}
+
+					bzi.close();
+					in.close();
+					return ret;
+				case GLZ :
+					GLZ glz = new GLZ();
+					baos = new ByteArrayOutputStream();
+					glz.expand(in, baos);
+					return baos.toByteArray();
+				case HUFF :
+					HuffmanInputStream hin = new HuffmanInputStream(in);
+					off = 0;
+					l = 0;
+					while ((l = hin.read(ret, off, ret.length - off)) > 0) {
+						off += l;
+					}
+					hin.close();
+					return ret;
+				case ZIP :
+					ZipInputStream zi = new ZipInputStream(in);
+					zi.getNextEntry();
+					off = 0;
+					l = 0;
+					while ((l = zi.read(ret, off, ret.length - off)) > 0) {
+						off += l;
+					}
+
+					zi.close();
+					return ret;
+				default :
+					throw new Exception("Invalid compress format");
 			}
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return null;
 		}
-		
+
 	}
-	
+
 }

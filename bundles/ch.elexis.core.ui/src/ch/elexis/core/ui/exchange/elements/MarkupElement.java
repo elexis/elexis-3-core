@@ -28,13 +28,13 @@ public class MarkupElement extends XChangeElement {
 	public static final String ATTR_TEXT = "text";
 	public static final String ATTRIB_HINT = "hint";
 	public static final String ELEME_META = "meta";
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
-	public MarkupElement asExporter(XChangeExporter home, XRef xref){
+
+	public MarkupElement asExporter(XChangeExporter home, XRef xref) {
 		asExporter(home);
 		setAttribute(ATTR_POS, Integer.toString(xref.getPos()));
 		setAttribute(ATTR_LEN, Integer.toString(xref.getLength()));
@@ -46,21 +46,21 @@ public class MarkupElement extends XChangeElement {
 		}
 		return this;
 	}
-	
-	private void addContent(XChangeExporter home, XRef xref){
-		if(xref.getProvider().toLowerCase().contains("privatnotizen")) {
+
+	private void addContent(XChangeExporter home, XRef xref) {
+		if (xref.getProvider().toLowerCase().contains("privatnotizen")) {
 			NamedBlob2 contentBlob = NamedBlob2.load(xref.getID());
 			if (contentBlob != null && contentBlob.exists()) {
 				addMeta("content", contentBlob.getString());
 			}
 		}
 	}
-	
-	private boolean shouldAddContent(XRef xref){
+
+	private boolean shouldAddContent(XRef xref) {
 		return xref.getProvider().toLowerCase().contains("privatnotizen");
 	}
-	
-	public void doImport(Konsultation kons){
+
+	public void doImport(Konsultation kons) {
 		if (getMeta("content") != null) {
 			if (getMeta("provider") != null) {
 				String provider = getMeta("provider").getAttr(ATTR_VALUE);
@@ -68,15 +68,14 @@ public class MarkupElement extends XChangeElement {
 			}
 		}
 	}
-	
-	private void importContent(Konsultation kons, String provider, MetaElement metaId,
-		MetaElement metaContent){
+
+	private void importContent(Konsultation kons, String provider, MetaElement metaId, MetaElement metaContent) {
 		String id = metaId.getAttr(ATTR_VALUE);
 		String content = metaContent.getAttr(ATTR_VALUE);
 		Integer pos = Integer.parseInt(getAttr(ATTR_POS));
 		Integer length = Integer.parseInt(getAttr(ATTR_LEN));
 		if (provider.toLowerCase().contains("privatnotizen") && id.contains(":")) {
-			// reset id 
+			// reset id
 			String[] idparts = id.split(":");
 			if (idparts.length > 1) {
 				id = kons.getMandant().getId() + ":" + idparts[1];
@@ -91,15 +90,14 @@ public class MarkupElement extends XChangeElement {
 		}
 	}
 
-	public void addMeta(String name, String value){
+	public void addMeta(String name, String value) {
 		MetaElement meta = new MetaElement().asExporter(sender, name, value);
 		add(meta);
 	}
-	
-	public MetaElement getMeta(String name){
+
+	public MetaElement getMeta(String name) {
 		@SuppressWarnings("unchecked")
-		List<MetaElement> meta =
-			(List<MetaElement>) getChildren(MetaElement.XMLNAME, MetaElement.class);
+		List<MetaElement> meta = (List<MetaElement>) getChildren(MetaElement.XMLNAME, MetaElement.class);
 		if (meta != null && !meta.isEmpty()) {
 			for (MetaElement metaElement : meta) {
 				if (name.equals(metaElement.getAttr(MetaElement.ATTR_NAME))) {

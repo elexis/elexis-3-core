@@ -27,50 +27,50 @@ public class ScannerEvents implements Listener {
 	private static int BUF_LIMIT = 500;
 	private static int BUF_MINIMUM = 30;
 	private static ScannerEvents input;
-	
+
 	private int prefixCode = 0;
 	private int postfixCode = 0;
 	private int barcodeLength = 13;
-	
+
 	private final ArrayList<IScannerListener> listenerList;
 	private StringBuffer inputBuffer = new StringBuffer();
-	
+
 	private boolean prefixOn = false;
-	
-	ScannerEvents(){
+
+	ScannerEvents() {
 		listenerList = new ArrayList<IScannerListener>();
 		reloadCodes();
 	}
-	
-	public static ScannerEvents getInstance(){
+
+	public static ScannerEvents getInstance() {
 		if (input == null) {
 			input = new ScannerEvents();
 		}
 		return input;
 	}
-	
+
 	/**
 	 * Codes werden neu geladen
 	 */
-	public void reloadCodes(){
+	public void reloadCodes() {
 		prefixCode = ConfigServiceHolder.getGlobal(Preferences.SCANNER_PREFIX_CODE, 0);
 		postfixCode = ConfigServiceHolder.getGlobal(Preferences.SCANNER_POSTFIX_CODE, 0);
 		barcodeLength = ConfigServiceHolder.getGlobal(Preferences.BARCODE_LENGTH, 13);
 	}
-	
-	public static void addListenerToDisplay(Display display){
+
+	public static void addListenerToDisplay(Display display) {
 		display.addFilter(SWT.KeyDown, getInstance());
 	}
-	
+
 	/**
-	 * Barcode aus Buffer extrahieren. Ist sehr heuristische Methode. Es werden die letzten Zeichen
-	 * aus dem Buffer gelesen. Alle CR's entfernt und dann die letzten, z.b. 13 bei EAN13,
-	 * retourniert.
+	 * Barcode aus Buffer extrahieren. Ist sehr heuristische Methode. Es werden die
+	 * letzten Zeichen aus dem Buffer gelesen. Alle CR's entfernt und dann die
+	 * letzten, z.b. 13 bei EAN13, retourniert.
 	 * 
 	 * @param strBuf
 	 * @return
 	 */
-	private String getBarcode(StringBuffer strBuf){
+	private String getBarcode(StringBuffer strBuf) {
 		String barcode = strBuf.toString();
 		barcode = barcode.replaceAll(new Character(SWT.CR).toString(), ""); //$NON-NLS-1$
 		barcode = barcode.replaceAll(new Character(SWT.LF).toString(), ""); //$NON-NLS-1$
@@ -80,12 +80,12 @@ public class ScannerEvents implements Listener {
 		}
 		return barcode;
 	}
-	
+
 	/**
-	 * Verarbeitet jedes Key-Event und entscheidet danach ob es sich um ein Scanner-Event handelt
-	 * oder nicht.
+	 * Verarbeitet jedes Key-Event und entscheidet danach ob es sich um ein
+	 * Scanner-Event handelt oder nicht.
 	 */
-	public void handleEvent(Event event){
+	public void handleEvent(Event event) {
 		if (listenerList.size() > 0) {
 			if (event.keyCode == prefixCode) {
 				prefixOn = true;
@@ -105,16 +105,16 @@ public class ScannerEvents implements Listener {
 			inputBuffer.append(event.character);
 		}
 	}
-	
-	public void addScannerListener(IScannerListener listener){
+
+	public void addScannerListener(IScannerListener listener) {
 		listenerList.add(listener);
 	}
-	
-	public void removeScannerListener(IScannerListener listener){
+
+	public void removeScannerListener(IScannerListener listener) {
 		listenerList.remove(listener);
 	}
-	
-	public void fireScannerInput(Widget widget, String input){
+
+	public void fireScannerInput(Widget widget, String input) {
 		Event e = new Event();
 		e.widget = widget;
 		e.text = input;
@@ -122,8 +122,8 @@ public class ScannerEvents implements Listener {
 			listener.scannerInput(e);
 		}
 	}
-	
-	public static void beep(){
+
+	public static void beep() {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getDisplay().beep();
 	}
 }

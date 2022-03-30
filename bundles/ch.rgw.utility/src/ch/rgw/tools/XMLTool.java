@@ -43,13 +43,13 @@ import org.xml.sax.SAXParseException;
 
 public class XMLTool {
 	static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema"; //$NON-NLS-1$
-	
-	public static List<String> validateSchema(String schemaUrl, Source source){
+
+	public static List<String> validateSchema(String schemaUrl, Source source) {
 		MyErrorHandler errorHandler = new MyErrorHandler();
 		try {
 			// 1. Lookup a factory for the W3C XML Schema language
 			SchemaFactory factory = SchemaFactory.newInstance(W3C_XML_SCHEMA);
-			
+
 			// 2. Compile the schema.
 			// Here the schema is loaded from a java.io.File, but you could use
 			// a java.net.URL or a javax.xml.transform.Source instead.
@@ -58,10 +58,10 @@ public class XMLTool {
 				File schemaLocation = new File(schemaUrl);
 				schema = factory.newSchema(schemaLocation);
 			}
-			
+
 			// 3. Get a validator from the schema.
 			Validator validator = schema.newValidator();
-			
+
 			// 5. Check the document
 			validator.setErrorHandler(errorHandler);
 			validator.validate(source);
@@ -70,30 +70,30 @@ public class XMLTool {
 		}
 		return errorHandler.getMessageList();
 	}
-	
+
 	private static class MyErrorHandler implements ErrorHandler {
 		public List<Exception> exceptions = new Vector<Exception>();
-		
+
 		@Override
-		public void error(SAXParseException exception) throws SAXException{
+		public void error(SAXParseException exception) throws SAXException {
 			exceptions.add(exception);
 		}
-		
+
 		@Override
-		public void fatalError(SAXParseException exception) throws SAXException{
+		public void fatalError(SAXParseException exception) throws SAXException {
 			exceptions.add(exception);
 		}
-		
+
 		@Override
-		public void warning(SAXParseException exception) throws SAXException{
+		public void warning(SAXParseException exception) throws SAXException {
 			// Nothing
 		}
-		
-		public void exception(Exception exception){
+
+		public void exception(Exception exception) {
 			// Nothing this is not an xml related error
 		}
-		
-		public List<String> getMessageList(){
+
+		public List<String> getMessageList() {
 			List<String> messageList = new Vector<String>();
 			for (Exception ex : exceptions) {
 				String msg = ex.getMessage();
@@ -105,35 +105,35 @@ public class XMLTool {
 			return messageList;
 		}
 	}
-	
-	public static String moneyToXmlDouble(Money money){
+
+	public static String moneyToXmlDouble(Money money) {
 		int cents = money.getCents();
-		
+
 		// we force to use a literal "."
-		
+
 		// honor signum
 		int absCents = Math.abs(cents);
 		int signum = Integer.signum(cents);
 		int abs = absCents / 100;
 		int frac = absCents % 100;
-		
+
 		String xmlDouble = String.format("%d.%02d", signum * abs, frac);
 		return xmlDouble;
-		
+
 	}
-	
-	public static Money xmlDoubleToMoney(String xmlDouble) throws NumberFormatException{
+
+	public static Money xmlDoubleToMoney(String xmlDouble) throws NumberFormatException {
 		if (xmlDouble == null) {
 			throw new NumberFormatException("xmlDouble must not be null");
 		}
 		Double d = Double.parseDouble(xmlDouble);
 		return new Money(d);
 	}
-	
+
 	/**
-	 * Convert a double value to String conforming to the double datatype of the XML specification.
-	 * (This means mainly, that we have to use the swiss "." also if the PC's locale is set to
-	 * germany or austria.)
+	 * Convert a double value to String conforming to the double datatype of the XML
+	 * specification. (This means mainly, that we have to use the swiss "." also if
+	 * the PC's locale is set to germany or austria.)
 	 * 
 	 * @param value
 	 *            the value to be converted
@@ -141,7 +141,7 @@ public class XMLTool {
 	 *            the number of digits after the point
 	 * @return the formated String
 	 */
-	public static String doubleToXmlDouble(double value, int factionalDigits){
+	public static String doubleToXmlDouble(double value, int factionalDigits) {
 		long cents = Math.round(value * 100);
 		// we force to use a literal "."
 		/*
@@ -159,26 +159,26 @@ public class XMLTool {
 		if ((abs == 0) && (signum < 0)) {
 			dec = "-" + dec;
 		}
-		
+
 		String xmlDouble = String.format(dec, signum * abs, frac);
 		return xmlDouble;
-		
+
 	}
-	
+
 	/**
-	 * Convert a XML-Table formatted like &lt;table&gt; &lt;row&gt; &lt;col1&gt;Col 1&lt;col1/&gt;
-	 * &lt;col2&gt;Col 2&lt;col2/&gt; &lt;/row&gt; &lt;row&gt; ... &lt;/row&gt; &lt;/table&gt; to a
-	 * csv table
+	 * Convert a XML-Table formatted like &lt;table&gt; &lt;row&gt; &lt;col1&gt;Col
+	 * 1&lt;col1/&gt; &lt;col2&gt;Col 2&lt;col2/&gt; &lt;/row&gt; &lt;row&gt; ...
+	 * &lt;/row&gt; &lt;/table&gt; to a csv table
 	 * 
 	 * @param table
 	 *            the table to convert
 	 * @param separator
 	 *            String that separates columns
-	 * @return a string containing the csv table. Rows separated by \n, colums separated by
-	 *         separator
+	 * @return a string containing the csv table. Rows separated by \n, colums
+	 *         separated by separator
 	 */
 	@SuppressWarnings("unchecked")
-	public static String XMLTableToCSVTable(Element table, String separator){
+	public static String XMLTableToCSVTable(Element table, String separator) {
 		List<Element> rows = table.getChildren();
 		StringBuilder ret = new StringBuilder();
 		for (Element row : rows) {
@@ -190,18 +190,18 @@ public class XMLTool {
 		}
 		return ret.toString();
 	}
-	
+
 	/**
-	 * Convert a XML-Table formatted like &lt;table&gt; &lt;row&gt; &lt;col1&gt;Col 1&lt;col1/&gt;
-	 * &lt;col2&gt;Col 2&lt;col2/&gt; &lt;/row&gt; &lt;row&gt; ... &lt;/row&gt; &lt;/table&gt; to a
-	 * html table
+	 * Convert a XML-Table formatted like &lt;table&gt; &lt;row&gt; &lt;col1&gt;Col
+	 * 1&lt;col1/&gt; &lt;col2&gt;Col 2&lt;col2/&gt; &lt;/row&gt; &lt;row&gt; ...
+	 * &lt;/row&gt; &lt;/table&gt; to a html table
 	 * 
 	 * @param table
 	 *            the table to convert
 	 * @return a string containing the html table.
 	 */
 	@SuppressWarnings("unchecked")
-	public static String XMLTableToHTMLTable(Element table){
+	public static String XMLTableToHTMLTable(Element table) {
 		List<Element> rows = table.getChildren();
 		StringBuilder ret = new StringBuilder();
 		ret.append("<table>");
@@ -216,18 +216,18 @@ public class XMLTool {
 		ret.append("</table>");
 		return ret.toString();
 	}
-	
+
 	/**
-	 * Conversion betweeen Elexis id's and XML ID types. XML id types must not begin with a number
-	 * but may contain letters and numbers. Elexis ID's are always hexadecimal strings thus will
-	 * never contain a letter other than a-f but might start with a number. Thus if it starts with a
-	 * number, we prefix an "x"
+	 * Conversion betweeen Elexis id's and XML ID types. XML id types must not begin
+	 * with a number but may contain letters and numbers. Elexis ID's are always
+	 * hexadecimal strings thus will never contain a letter other than a-f but might
+	 * start with a number. Thus if it starts with a number, we prefix an "x"
 	 * 
 	 * @param id
 	 *            an elexis id
 	 * @return a String conforming to tghe XML ID type
 	 */
-	public static String idToXMLID(String id){
+	public static String idToXMLID(String id) {
 		if (id != null) {
 			if (id.matches("[0-9].+")) {
 				return "x" + id;
@@ -235,16 +235,16 @@ public class XMLTool {
 		}
 		return id;
 	}
-	
+
 	/**
-	 * Since elexis id's never contain the letter "x" we can be sure that a starting letter x can be
-	 * removed to leave us with the original elexis id
+	 * Since elexis id's never contain the letter "x" we can be sure that a starting
+	 * letter x can be removed to leave us with the original elexis id
 	 * 
 	 * @param xmlid
 	 *            an XML ID
 	 * @return the conforming elexis id
 	 */
-	public static String xmlIDtoID(String xmlid){
+	public static String xmlIDtoID(String xmlid) {
 		if (xmlid != null) {
 			if (xmlid.startsWith("x")) {
 				return xmlid.substring(1);
@@ -252,39 +252,39 @@ public class XMLTool {
 		}
 		return xmlid;
 	}
-	
+
 	/**
 	 * Convert a TimeTool into an XML dateTime type
 	 * 
 	 * @param dateTime
 	 * @return
 	 */
-	public static String dateTimeToXmlDateTime(String dateTime){
+	public static String dateTimeToXmlDateTime(String dateTime) {
 		TimeTool tt = new TimeTool(dateTime);
 		return tt.toString(TimeTool.DATETIME_XML);
 	}
-	
+
 	/**
 	 * Copnvert a date part of a TimeTool to an XML date type
 	 * 
 	 * @param date
 	 * @return
 	 */
-	public static String dateToXmlDate(String date){
+	public static String dateToXmlDate(String date) {
 		return new TimeTool(date).toString(TimeTool.DATE_ISO);
 	}
-	
-	public static HashMap<String, Object> XMLToHashMap(Element elem){
+
+	public static HashMap<String, Object> XMLToHashMap(Element elem) {
 		HashMap<String, Object> ret = new HashMap<String, Object>();
 		List<Element> vars = elem.getChildren();
 		for (Element var : vars) {
 			String type = var.getName();
-			
+
 		}
 		return null;
 	}
-	
-	public static boolean writeXMLDocument(Document doc, String dest){
+
+	public static boolean writeXMLDocument(Document doc, String dest) {
 		try {
 			FileOutputStream fout = new FileOutputStream(dest);
 			OutputStreamWriter cout = new OutputStreamWriter(fout, "UTF-8");
@@ -297,10 +297,10 @@ public class XMLTool {
 			ExHandler.handle(e);
 			return false;
 		}
-		
+
 	}
-	
-	public static String getValidXMLString(String source){
+
+	public static String getValidXMLString(String source) {
 		StringBuilder ret = new StringBuilder();
 		for (int i = 0, len = source.length(); i < len; i++) {
 			// skip non valid XML characters

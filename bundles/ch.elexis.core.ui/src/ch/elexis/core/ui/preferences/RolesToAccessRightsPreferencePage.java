@@ -63,88 +63,90 @@ import ch.elexis.data.Query;
 import ch.elexis.data.Role;
 
 public class RolesToAccessRightsPreferencePage extends PreferencePage
-		implements IWorkbenchPreferencePage, IValueChangeListener {
+		implements
+			IWorkbenchPreferencePage,
+			IValueChangeListener {
 	private DataBindingContext m_bindingContext;
-	
+
 	private WritableValue wv = new WritableValue(null, Role.class);
-	
+
 	private Text txti18n;
 	private TreeViewer treeViewer;
-	
+
 	private Text txtRoleName;
 	private MenuItem mntmNewRole;
 	private TableViewer tableViewerRoles;
 	private MenuItem mntmRemoveRole;
-	
+
 	/**
 	 * Create the preference page.
 	 */
-	public RolesToAccessRightsPreferencePage(){
+	public RolesToAccessRightsPreferencePage() {
 		setTitle("Rollen und Rechte");
 		noDefaultAndApplyButton();
 	}
-	
+
 	/**
 	 * Create contents of the preference page.
 	 * 
 	 * @param parent
 	 */
 	@Override
-	public Control createContents(Composite parent){
+	public Control createContents(Composite parent) {
 		if (!CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
 			return new PrefAccessDenied(parent);
 		}
-		
+
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
-		
+
 		SashForm sashForm = new SashForm(container, SWT.NONE);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		Composite compositeRoles = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_compositeRoles = new GridLayout(1, false);
 		gl_compositeRoles.verticalSpacing = 2;
 		gl_compositeRoles.marginWidth = 0;
 		gl_compositeRoles.marginHeight = 0;
 		compositeRoles.setLayout(gl_compositeRoles);
-		
+
 		tableViewerRoles = new TableViewer(compositeRoles, SWT.BORDER);
 		Table tableRoles = tableViewerRoles.getTable();
 		tableRoles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		Menu menu = new Menu(tableRoles);
 		tableRoles.setMenu(menu);
 		menu.addMenuListener(new MenuAdapter() {
 			@Override
-			public void menuShown(MenuEvent e){
+			public void menuShown(MenuEvent e) {
 				super.menuShown(e);
 				Role r = (Role) wv.getValue();
 				mntmRemoveRole.setEnabled(!r.isSystemRole());
 			}
 		});
-		
+
 		mntmNewRole = new MenuItem(menu, SWT.NONE);
 		mntmNewRole.setText("Rolle hinzufügen");
 		mntmNewRole.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				Role newRole = new Role(false);
 				updateRolesList();
 				tableViewerRoles.setSelection(new StructuredSelection(newRole));
 			}
 		});
-		
+
 		mntmRemoveRole = new MenuItem(menu, SWT.NONE);
 		mntmRemoveRole.setText("Rolle löschen");
 		mntmRemoveRole.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				Role r = (Role) wv.getValue();
 				r.delete();
 				updateRolesList();
 			}
 		});
-		
+
 		Composite composite = new Composite(compositeRoles, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(2, false);
 		gl_composite.marginWidth = 0;
@@ -153,16 +155,16 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		gl_composite.marginHeight = 0;
 		composite.setLayout(gl_composite);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		
+
 		txtRoleName = new Text(composite, SWT.BORDER);
 		txtRoleName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtRoleName.setMessage("Bezeichnung");
-		
+
 		Link linkChangeRoleName = new Link(composite, SWT.NONE);
 		linkChangeRoleName.setText(UserManagementPreferencePage.CHANGE_LINK);
 		linkChangeRoleName.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				String newRoleName = txtRoleName.getText();
 				if (Role.verifyRoleNameNotTaken(newRoleName)) {
 					setErrorMessage(null);
@@ -175,16 +177,16 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 				}
 			}
 		});
-		
+
 		txti18n = new Text(compositeRoles, SWT.BORDER);
 		txti18n.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txti18n.setMessage("Lokale Bezeichnung");
 		txti18n.setBounds(0, 0, 64, 19);
-		
+
 		tableViewerRoles.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewerRoles.setLabelProvider(new DefaultLabelProvider() {
 			@Override
-			public Image getColumnImage(Object element, int columnIndex){
+			public Image getColumnImage(Object element, int columnIndex) {
 				Role r = (Role) element;
 				if (r.isSystemRole()) {
 					return Images.IMG_LOCK_CLOSED.getImage();
@@ -193,36 +195,36 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 				}
 			}
 		});
-		
+
 		tableViewerRoles.addSelectionChangedListener((e) -> {
 			StructuredSelection ss = (StructuredSelection) e.getSelection();
 			wv.setValue(ss == null ? null : ss.getFirstElement());
 		});
-		
+
 		treeViewer = new TreeViewer(sashForm, SWT.FULL_SELECTION);
 		final Tree tree = treeViewer.getTree();
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);
-		
+
 		treeViewer.setContentProvider(new ACETreeContentProvider());
 		treeViewer.setLabelProvider(new CellLabelProvider() {
-			
+
 			@Override
-			public void update(ViewerCell cell){
+			public void update(ViewerCell cell) {
 				ACE a = (ACE) cell.getElement();
 				cell.setText(a.getLocalizedName());
 			}
 		});
-		
+
 		treeViewer.setSorter(new ViewerSorter() {
 			@Override
-			public int compare(Viewer viewer, Object e1, Object e2){
+			public int compare(Viewer viewer, Object e1, Object e2) {
 				ACE t1 = (ACE) e1;
 				ACE t2 = (ACE) e2;
 				return t1.getLocalizedName().compareToIgnoreCase(t2.getLocalizedName());
 			}
 		});
-		
+
 		TreeViewerColumn tvc_right = new TreeViewerColumn(treeViewer, SWT.NONE);
 		TreeColumn tc_right = tvc_right.getColumn();
 		tc_right.setWidth(-1);
@@ -230,47 +232,47 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		tc_right.setText("Recht");
 		tvc_right.setLabelProvider(new CellLabelProvider() {
 			@Override
-			public void update(ViewerCell cell){
+			public void update(ViewerCell cell) {
 				ACE a = (ACE) cell.getElement();
 				cell.setText(a.getLocalizedName());
 			}
 		});
-		
+
 		final CheckboxCellEditor cbce = new CheckboxCellEditor();
 		final CellLabelProvider clp = new CellLabelProvider() {
 			@Override
-			public void update(ViewerCell cell){
+			public void update(ViewerCell cell) {
 				TreeColumn tc = tree.getColumn(cell.getColumnIndex());
 				Role role = (Role) tc.getData("role");
 				ACE ace = (ACE) cell.getElement();
-				
+
 				int val = determineChildAndSelfStates(role, ace);
 				switch (val) {
-				case 3:
-					if (ace.getChildren(true).size() > 1) {
-						cell.setText("A");
-						cell.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
-					} else {
+					case 3 :
+						if (ace.getChildren(true).size() > 1) {
+							cell.setText("A");
+							cell.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
+						} else {
+							cell.setText("x");
+							cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
+						}
+
+						break;
+					case 2 :
+						cell.setText("...");
+						cell.setForeground(UiDesk.getColor(UiDesk.COL_LIGHTGREY));
+						break;
+					case 1 :
 						cell.setText("x");
 						cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
-					}
-					
-					break;
-				case 2:
-					cell.setText("...");
-					cell.setForeground(UiDesk.getColor(UiDesk.COL_LIGHTGREY));
-					break;
-				case 1:
-					cell.setText("x");
-					cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
-					break;
-				default:
-					cell.setText("");
-					cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
+						break;
+					default :
+						cell.setText("");
+						cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 				}
 			}
 		};
-		
+
 		Query<Role> qbe = new Query<Role>(Role.class);
 		List<Role> roles = qbe.execute();
 		for (Role role : roles) {
@@ -288,24 +290,24 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 			}
 			tvc.setLabelProvider(clp);
 			EditingSupport es = new EditingSupport(tvc.getViewer()) {
-				
+
 				@Override
-				protected void setValue(Object element, Object value){
+				protected void setValue(Object element, Object value) {
 					BusyIndicator.showWhile(UiDesk.getDisplay(), new Runnable() {
 						@Override
-						public void run(){
+						public void run() {
 							Role role = (Role) tc.getData("role");
 							ACE ace = (ACE) element;
 							if (ace != null) {
 								boolean hasChildren = !ace.getChildren(false).isEmpty();
 								boolean selfChecked = CoreHub.acl.request(role, ace);
-								
+
 								if (selfChecked) {
 									CoreHub.acl.revoke(role, ace);
 								} else {
 									CoreHub.acl.grant(role, ace);
 								}
-								
+
 								// update check status of all childrens
 								if (hasChildren) {
 									boolean checked = CoreHub.acl.request(role, ace);
@@ -320,7 +322,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 									}
 								}
 								getViewer().update(element, null);
-								
+
 								// refresh parent states
 								int maxDepth = 100; // max depth
 								ACE parent = ace.getParent();
@@ -330,151 +332,149 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 								}
 							}
 						}
-						
+
 					});
 				}
-				
+
 				@Override
-				protected Object getValue(Object element){
+				protected Object getValue(Object element) {
 					// irrelevant, not represented in UI;
 					// done via LabelProvider, hence
 					// we skip evaluation of this value
 					return true;
 				}
-				
+
 				@Override
-				protected CellEditor getCellEditor(Object element){
+				protected CellEditor getCellEditor(Object element) {
 					return cbce;
 				}
-				
+
 				@Override
-				protected boolean canEdit(Object element){
+				protected boolean canEdit(Object element) {
 					return true;
 				}
 			};
 			tvc.setEditingSupport(es);
 		}
-		
-		sashForm.setWeights(new int[] {
-			3, 7
-		});
-		
+
+		sashForm.setWeights(new int[]{3, 7});
+
 		Composite compositeBottom = new Composite(container, SWT.NONE);
 		compositeBottom.setLayout(new GridLayout(2, false));
 		compositeBottom.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false, 1, 1));
-		
+
 		Group g = new Group(compositeBottom, SWT.NONE);
 		g.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
 		g.setLayout(new GridLayout(1, false));
-		
+
 		new Label(g, SWT.NONE).setText("A  Alle Kindelemente sind ausgewählt.");
 		new Label(g, SWT.NONE).setText("...  Zumindest ein Kindelement ist ausgewählt.");
 		new Label(g, SWT.NONE).setText("x  Das Element ist ausgewählt.");
-		
+
 		Link linkResetDefaults = new Link(compositeBottom, 0);
 		linkResetDefaults.setLayoutData(new GridData(SWT.TOP, SWT.FILL, true, false, 1, 1));
 		linkResetDefaults.setText("<a>Standard-Rechte wiederherstellen</a>");
 		linkResetDefaults.setBounds(0, 0, 43, 15);
 		linkResetDefaults.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
-				boolean ret = MessageDialog.openQuestion(UiDesk.getTopShell(),
-					"Standard-Rechte wiederherstellen", "Sind Sie sicher?");
+			public void widgetSelected(SelectionEvent e) {
+				boolean ret = MessageDialog.openQuestion(UiDesk.getTopShell(), "Standard-Rechte wiederherstellen",
+						"Sind Sie sicher?");
 				if (ret) {
 					ACE.initializeACEDefaults(true);
 					refreshViewer();
 				}
 			}
 		});
-		
+
 		m_bindingContext = initDataBindings();
 		wv.addValueChangeListener(this);
 		treeViewer.setInput(ACE.getAllDefinedRootACElements());
-		
+
 		tableViewerRoles.setInput(roles);
-		
-		
+
 		return container;
 	}
-	
-	private void updateRolesList(){
+
+	private void updateRolesList() {
 		Query<Role> qbe = new Query<Role>(Role.class);
 		tableViewerRoles.setInput(qbe.execute());
 	}
-	
+
 	/**
 	 * Initialize the preference page.
 	 */
 	@Override
-	public void init(IWorkbench workbench){
+	public void init(IWorkbench workbench) {
 		// Initialize the preference page
 	}
-	
+
 	// the user selected a different role
 	@Override
-	public void handleValueChange(ValueChangeEvent event){
+	public void handleValueChange(ValueChangeEvent event) {
 		Role r = (Role) wv.getValue();
 		txtRoleName.setText((r == null) ? "" : r.getRoleName());
 	}
-	
-	private void refreshViewer(){
+
+	private void refreshViewer() {
 		treeViewer.refresh();
 	}
-	
+
 	private class ACETreeContentProvider implements ITreeContentProvider {
-		
+
 		@Override
-		public void dispose(){}
-		
+		public void dispose() {
+		}
+
 		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
-		
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
+
 		@Override
-		public Object[] getElements(Object inputElement){
+		public Object[] getElements(Object inputElement) {
 			return (Object[]) inputElement;
 		}
-		
+
 		@Override
-		public Object[] getChildren(Object parentElement){
+		public Object[] getChildren(Object parentElement) {
 			ACE a = (ACE) parentElement;
-			return ACE.getAllDefinedACElements().stream().filter(p -> p.getParent().equals(a))
-				.toArray();
+			return ACE.getAllDefinedACElements().stream().filter(p -> p.getParent().equals(a)).toArray();
 		}
-		
+
 		@Override
-		public Object getParent(Object element){
+		public Object getParent(Object element) {
 			ACE a = (ACE) element;
 			ACE parent = a.getParent();
 			if (ACE.ACE_ROOT.equals(parent))
 				return null;
 			return parent;
 		}
-		
+
 		@Override
-		public boolean hasChildren(Object element){
+		public boolean hasChildren(Object element) {
 			ACE a = (ACE) element;
-			return ACE.getAllDefinedACElements().stream().filter(p -> p.getParent().equals(a))
-				.count() > 0d;
+			return ACE.getAllDefinedACElements().stream().filter(p -> p.getParent().equals(a)).count() > 0d;
 		}
 	}
-	
-	private boolean isGrayed(ACE ace, Role role){
+
+	private boolean isGrayed(ACE ace, Role role) {
 		if (role == null || ace == null)
 			return false;
-			
+
 		int state = determineChildAndSelfStates(role, ace);
 		return (state == 1 || state == 2);
 	}
-	
-	private boolean isChecked(ACE ace, Role r){
+
+	private boolean isChecked(ACE ace, Role r) {
 		if (r == null || ace == null)
 			return false;
 		int state = determineChildAndSelfStates(r, ace);
 		return (state > 0);
 	}
-	
+
 	/**
-	 * Check the state of the current ACE its parents and children, where <code>state</code> is
+	 * Check the state of the current ACE its parents and children, where
+	 * <code>state</code> is
 	 * <ul>
 	 * <li><code>0</code>: not allowed, none of the children, and no parents</li>
 	 * <li><code>1</code>: allowed via grant to a parent</li>
@@ -486,13 +486,13 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 	 * @param ace
 	 * @return <code>state</code> as determined
 	 */
-	private int determineChildAndSelfStates(@NonNull Role r, @NonNull ACE ace){
+	private int determineChildAndSelfStates(@NonNull Role r, @NonNull ACE ace) {
 		if (CoreHub.acl.request(r, ace.getParent()))
 			return 1;
-			
+
 		List<ACE> chain = ace.getChildren(true);
-		List<Boolean> chainRights =
-			chain.stream().map(ace2 -> CoreHub.acl.request(r, ace2)).collect(Collectors.toList());
+		List<Boolean> chainRights = chain.stream().map(ace2 -> CoreHub.acl.request(r, ace2))
+				.collect(Collectors.toList());
 		long trues = chainRights.stream().filter(p -> p.booleanValue() == true).count();
 		if (trues == 0)
 			return 0;
@@ -500,26 +500,22 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 			return 3;
 		return 2;
 	}
-	
-	protected DataBindingContext initDataBindings(){
+
+	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		IObservableValue observeTextTxti18nObserveWidget =
-			WidgetProperties.text(SWT.Modify).observe(txti18n);
-		IObservableValue wvTranslatedLabelObserveDetailValue =
-			PojoProperties.value(Role.class, "translatedLabel", String.class).observeDetail(wv);
-		bindingContext.bindValue(observeTextTxti18nObserveWidget,
-			wvTranslatedLabelObserveDetailValue, null, null);
+		IObservableValue observeTextTxti18nObserveWidget = WidgetProperties.text(SWT.Modify).observe(txti18n);
+		IObservableValue wvTranslatedLabelObserveDetailValue = PojoProperties
+				.value(Role.class, "translatedLabel", String.class).observeDetail(wv);
+		bindingContext.bindValue(observeTextTxti18nObserveWidget, wvTranslatedLabelObserveDetailValue, null, null);
 		//
-		IObservableValue observeEnabledTxtRoleNameObserveWidget =
-			WidgetProperties.enabled().observe(txtRoleName);
-		IObservableValue wvSystemRoleObserveDetailValue =
-			PojoProperties.value(Role.class, "systemRole", Boolean.class).observeDetail(wv);
+		IObservableValue observeEnabledTxtRoleNameObserveWidget = WidgetProperties.enabled().observe(txtRoleName);
+		IObservableValue wvSystemRoleObserveDetailValue = PojoProperties.value(Role.class, "systemRole", Boolean.class)
+				.observeDetail(wv);
 		UpdateValueStrategy strategy = new UpdateValueStrategy();
 		strategy.setConverter(new BooleanNotConverter());
-		bindingContext.bindValue(observeEnabledTxtRoleNameObserveWidget,
-			wvSystemRoleObserveDetailValue,
-			new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), strategy);
+		bindingContext.bindValue(observeEnabledTxtRoleNameObserveWidget, wvSystemRoleObserveDetailValue,
+				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), strategy);
 		//
 		return bindingContext;
 	}

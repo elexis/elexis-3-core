@@ -21,15 +21,14 @@ import ch.elexis.core.ui.views.artikel.ArtikelSelektor;
 
 public class BestellPerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.bestellperspektive"; //$NON-NLS-1$
-	
-	public void createInitialLayout(IPageLayout layout){
+
+	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
-		
+
 		layout.addView(ArtikelSelektor.ID, SWT.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA);
-		IFolderLayout ifl =
-			layout.createFolder("iflRight", SWT.RIGHT, 0.6f, IPageLayout.ID_EDITOR_AREA);
+		IFolderLayout ifl = layout.createFolder("iflRight", SWT.RIGHT, 0.6f, IPageLayout.ID_EDITOR_AREA);
 		ifl.addView(BestellView.ID);
 	}
-	
+
 }

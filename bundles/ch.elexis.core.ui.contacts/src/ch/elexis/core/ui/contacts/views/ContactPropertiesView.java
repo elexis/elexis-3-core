@@ -18,27 +18,28 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.PropertySheet;
 
 public class ContactPropertiesView extends PropertySheet {
-	
+
 	public static final String ID = "ch.elexis.core.ui.contacts.views.ContactPropertiesView";
-	
-	public ContactPropertiesView(){}
-	
+
+	public ContactPropertiesView() {
+	}
+
 	private ISelectionProvider isp = new ProxySelectionProvider();
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
 		getSite().setSelectionProvider(isp);
 	}
-	
+
 	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection sel){
+	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
 		super.selectionChanged(part, sel);
 		isp.setSelection(sel);
 	}
-	
+
 	@Override
-	protected boolean isImportant(IWorkbenchPart part){
+	protected boolean isImportant(IWorkbenchPart part) {
 		// Only listen to selections made in the ContactSelectorView
 		if (part.getSite().getId().equals(ContactSelectorView.ID)) {
 			if (isPinned()) {
@@ -47,30 +48,32 @@ public class ContactPropertiesView extends PropertySheet {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	// To declaratively provide commands in the toolbar of this view the
 	// command has to be able to access the current selection by means of the
-	// HandlerUtil. It is only capable to do so, if the view serves a 
+	// HandlerUtil. It is only capable to do so, if the view serves a
 	// SelectionProvider.
 	private class ProxySelectionProvider implements ISelectionProvider {
 		ISelection current;
-		
+
 		@Override
-		public void addSelectionChangedListener(ISelectionChangedListener listener){}
-		
+		public void addSelectionChangedListener(ISelectionChangedListener listener) {
+		}
+
 		@Override
-		public ISelection getSelection(){
+		public ISelection getSelection() {
 			return current;
 		}
-		
+
 		@Override
-		public void removeSelectionChangedListener(ISelectionChangedListener listener){}
-		
+		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+		}
+
 		@Override
-		public void setSelection(ISelection selection){
+		public void setSelection(ISelection selection) {
 			current = selection;
 		}
 	}

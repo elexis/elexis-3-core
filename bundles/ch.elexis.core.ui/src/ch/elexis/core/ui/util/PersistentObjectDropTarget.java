@@ -39,15 +39,18 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 	private final Color normalColor;
 	private final Color highlightColor;
 	private final Control mine;
-	
+
 	/**
-	 * Register the provided target as {@link DropTarget} for a {@link PersistentObject}
+	 * Register the provided target as {@link DropTarget} for a
+	 * {@link PersistentObject}
+	 * 
 	 * @param target
 	 * @param r
-	 * @param colorizeControl whether the target control should change color during selection
+	 * @param colorizeControl
+	 *            whether the target control should change color during selection
 	 * @since 3.1.0
 	 */
-	public PersistentObjectDropTarget(String name, Control target, IReceiver r, boolean colorizeControl){
+	public PersistentObjectDropTarget(String name, Control target, IReceiver r, boolean colorizeControl) {
 		if (colorizeControl) {
 			normalColor = target.getBackground();
 			highlightColor = target.getDisplay().getSystemColor(SWT.COLOR_RED);
@@ -55,94 +58,92 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 			normalColor = null;
 			highlightColor = null;
 		}
-		
+
 		this.name = name;
 		mine = target;
 		rc = r;
 		DropTarget dtarget = new DropTarget(target, DND.DROP_COPY);
 		final TextTransfer textTransfer = TextTransfer.getInstance();
-		Transfer[] types = new Transfer[] {
-			textTransfer
-		};
+		Transfer[] types = new Transfer[]{textTransfer};
 		dtarget.setTransfer(types);
 		dtarget.addDropListener(this);
 	}
-	
-	public PersistentObjectDropTarget(Control target, IReceiver r){
+
+	public PersistentObjectDropTarget(Control target, IReceiver r) {
 		this("", target, r, true);
 	}
-	
-	public PersistentObjectDropTarget(String name, Control target, IReceiver r){
+
+	public PersistentObjectDropTarget(String name, Control target, IReceiver r) {
 		this(name, target, r, true);
 	}
-	
-	public void dragEnter(DropTargetEvent event){
-		
+
+	public void dragEnter(DropTargetEvent event) {
+
 		boolean bOk = false;
 		PersistentObject dropped = PersistentObjectDragSource.getDraggedObject();
 
 		if (rc.accept(dropped)) {
 			bOk = true;
 		}
-		
+
 		if (bOk) {
 			event.detail = DND.DROP_COPY;
 		} else {
 			event.detail = DND.DROP_NONE;
-		}		
+		}
 	}
-	
-	public void dragLeave(DropTargetEvent event){
+
+	public void dragLeave(DropTargetEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void dragOperationChanged(DropTargetEvent event){
+
+	public void dragOperationChanged(DropTargetEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void dragOver(DropTargetEvent event){
+
+	public void dragOver(DropTargetEvent event) {
 		// TODO Auto-generated method stub
 	}
-	
-	public void drop(DropTargetEvent event){
+
+	public void drop(DropTargetEvent event) {
 		String drp = (String) event.data;
 		String[] dl = drp.split(","); //$NON-NLS-1$
 		for (String obj : dl) {
 			PersistentObject dropped = CoreHub.poFactory.createFromString(obj);
-			if(dropped != null) {
+			if (dropped != null) {
 				rc.dropped(dropped, event);
 			}
 		}
 	}
-	
-	public void dropAccept(DropTargetEvent event){
+
+	public void dropAccept(DropTargetEvent event) {
 		if (!rc.accept(PersistentObjectDragSource.getDraggedObject())) {
 			event.detail = DND.DROP_NONE;
 		}
 	}
-	
-	public void codeSelected(PersistentObject obj){
+
+	public void codeSelected(PersistentObject obj) {
 		rc.dropped(obj, null);
 	}
-	
+
 	@Override
-	public void codeSelected(Object obj){
+	public void codeSelected(Object obj) {
 		throw new UnsupportedOperationException();
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
-	public void registered(boolean bIsRegistered){
+
+	public void registered(boolean bIsRegistered) {
 		if (normalColor != null)
 			highlight(bIsRegistered);
-		
+
 	}
-	
-	private void highlight(boolean bOn){
+
+	private void highlight(boolean bOn) {
 		Control highlightControl = getHighLightControl();
 		if (!highlightControl.isDisposed()) {
 			if (bOn) {
@@ -152,20 +153,20 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 			}
 		}
 	}
-	
+
 	/**
-	 * Override if mine is a {@link Table} that shows column background. On Win Platform setting
-	 * background of Table disables all column background.
+	 * Override if mine is a {@link Table} that shows column background. On Win
+	 * Platform setting background of Table disables all column background.
 	 * 
 	 * @return
 	 */
-	protected Control getHighLightControl(){
+	protected Control getHighLightControl() {
 		return mine;
 	}
-	
+
 	public interface IReceiver {
 		public void dropped(PersistentObject o, DropTargetEvent e);
-		
+
 		public boolean accept(PersistentObject o);
 	}
 }

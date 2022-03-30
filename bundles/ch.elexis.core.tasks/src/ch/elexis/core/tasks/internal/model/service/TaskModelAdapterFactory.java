@@ -8,26 +8,25 @@ import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 
 public class TaskModelAdapterFactory extends AbstractModelAdapterFactory {
-	
+
 	private static TaskModelAdapterFactory instance;
-	
-	public static synchronized TaskModelAdapterFactory getInstance(){
+
+	public static synchronized TaskModelAdapterFactory getInstance() {
 		if (instance == null) {
 			instance = new TaskModelAdapterFactory();
 		}
 		return instance;
 	}
-	
-	private TaskModelAdapterFactory(){
+
+	private TaskModelAdapterFactory() {
 		super();
 	}
-	
+
 	@Override
-	protected void initializeMappings(){
+	protected void initializeMappings() {
 		addMapping(new MappingEntry(ITaskDescriptor.class, TaskDescriptor.class,
-			ch.elexis.core.jpa.entities.TaskDescriptor.class));
-		addMapping(
-			new MappingEntry(ITask.class, Task.class, ch.elexis.core.jpa.entities.Task.class));
+				ch.elexis.core.jpa.entities.TaskDescriptor.class));
+		addMapping(new MappingEntry(ITask.class, Task.class, ch.elexis.core.jpa.entities.Task.class));
 	}
-	
+
 }

@@ -12,18 +12,17 @@ package ch.elexis.core.model;
 
 import java.util.List;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IRole</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IRole</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IRole#isSystemRole <em>System Role</em>}</li>
- *   <li>{@link ch.elexis.core.model.IRole#getAssignedRights <em>Assigned Rights</em>}</li>
+ * <li>{@link ch.elexis.core.model.IRole#isSystemRole <em>System Role</em>}</li>
+ * <li>{@link ch.elexis.core.model.IRole#getAssignedRights <em>Assigned
+ * Rights</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIRole()
@@ -33,13 +32,14 @@ import java.util.List;
 public interface IRole extends Identifiable, WithAssignableId {
 
 	/**
-	 * Returns the value of the '<em><b>System Role</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>System Role</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>System Role</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>System Role</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>System Role</em>' attribute.
 	 * @see #setSystemRole(boolean)
 	 * @see ch.elexis.core.model.ModelPackage#getIRole_SystemRole()
@@ -49,10 +49,12 @@ public interface IRole extends Identifiable, WithAssignableId {
 	boolean isSystemRole();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IRole#isSystemRole <em>System Role</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>System Role</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IRole#isSystemRole
+	 * <em>System Role</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>System Role</em>' attribute.
 	 * @see #isSystemRole()
 	 * @generated
 	 */
@@ -60,13 +62,14 @@ public interface IRole extends Identifiable, WithAssignableId {
 
 	/**
 	 * Returns the value of the '<em><b>Assigned Rights</b></em>' reference list.
-	 * The list contents are of type {@link ch.elexis.core.model.IRight}.
-	 * <!-- begin-user-doc -->
+	 * The list contents are of type {@link ch.elexis.core.model.IRight}. <!--
+	 * begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Assigned Rights</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Assigned Rights</em>' reference list.
 	 * @see ch.elexis.core.model.ModelPackage#getIRole_AssignedRights()
 	 * @model changeable="false"

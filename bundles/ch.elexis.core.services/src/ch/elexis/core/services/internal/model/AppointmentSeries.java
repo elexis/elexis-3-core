@@ -19,49 +19,50 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.XidServiceHolder;
 
 public class AppointmentSeries implements IAppointmentSeries {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(AppointmentSeries.class);
-	
+
 	private IAppointment appointment;
-	
+
 	private String groupId;
-	
+
 	private IAppointment rootAppointment;
-	
+
 	private SeriesType seriesType;
 	private EndingType endingType;
 	private String seriesPatternString;
 	private String endingPatternString;
-	
+
 	private LocalDate endsOnDate;
-	
+
 	private LocalDate startDate;
 	private LocalTime startTime;
-	
+
 	private LocalTime endTime;
-	
+
 	private boolean rootPresistent;
-	
+
 	private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
 	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
-	
-	public AppointmentSeries(IAppointment appointment){
+
+	public AppointmentSeries(IAppointment appointment) {
 		this.appointment = appointment;
 		groupId = appointment.getLinkgroup();
-		// load including already deleted root appointment, no special handling on delete of root needed
-		Optional<IAppointment> foundRoot =
-			CoreModelServiceHolder.get().load(groupId, IAppointment.class, true);
+		// load including already deleted root appointment, no special handling on
+		// delete of root needed
+		Optional<IAppointment> foundRoot = CoreModelServiceHolder.get().load(groupId, IAppointment.class, true);
 		rootPresistent = foundRoot.isPresent();
 		rootAppointment = foundRoot.orElse(appointment);
-		
+
 		if (rootPresistent) {
 			parseSerienTerminConfigurationString(rootAppointment.getExtension());
 		}
 	}
-	
+
 	/**
-	 * Initialize a {@link SerienTermin} according to a <i>serientermin configuration string</i>
-	 * such as for example <code>1200,1230;W,1,3|4;04042008,EA,10</code> for the syntax see the
+	 * Initialize a {@link SerienTermin} according to a <i>serientermin
+	 * configuration string</i> such as for example
+	 * <code>1200,1230;W,1,3|4;04042008,EA,10</code> for the syntax see the
 	 * documentation in. the {@link SerienTermin} class <br>
 	 * <br>
 	 * Use with care, malformed strings will not be treated defensively!
@@ -70,10 +71,10 @@ public class AppointmentSeries implements IAppointmentSeries {
 	 * 
 	 * @param serienTerminConfigurationString
 	 */
-	private void parseSerienTerminConfigurationString(String serienTerminConfigurationString){
+	private void parseSerienTerminConfigurationString(String serienTerminConfigurationString) {
 		String[] terms = serienTerminConfigurationString.split(";");
 		String[] termin = terms[0].split(",");
-		
+
 		try {
 			startTime = LocalTime.parse(termin[0], timeFormatter);
 			endTime = LocalTime.parse(termin[1], timeFormatter);
@@ -81,346 +82,346 @@ public class AppointmentSeries implements IAppointmentSeries {
 		} catch (Exception e) {
 			logger.error("unexpected exception", e);
 		}
-		
+
 		char seriesTypeCharacter = terms[1].toUpperCase().charAt(0);
 		setSeriesType(SeriesType.getForCharacter(seriesTypeCharacter));
 		seriesPatternString = terms[2];
-		
+
 		char endingTypeCharacter = terms[4].toUpperCase().charAt(0);
 		endingType = EndingType.getForCharacter(endingTypeCharacter);
 		endingPatternString = terms[5];
-		
+
 		switch (endingType) {
-		case ON_SPECIFIC_DATE:
-			try {
-				endsOnDate = LocalDate.parse(endingPatternString, dateFormatter);
-			} catch (Exception e) {
-				logger.error("unexpected exception", e);
-			}
-			break;
-		default:
-			break;
+			case ON_SPECIFIC_DATE :
+				try {
+					endsOnDate = LocalDate.parse(endingPatternString, dateFormatter);
+				} catch (Exception e) {
+					logger.error("unexpected exception", e);
+				}
+				break;
+			default :
+				break;
 		}
-		
+
 	}
-	
+
 	@Override
-	public String getReason(){
+	public String getReason() {
 		return appointment.getReason();
 	}
-	
+
 	@Override
-	public void setReason(String value){
+	public void setReason(String value) {
 		appointment.setReason(value);
 	}
-	
+
 	@Override
-	public String getState(){
+	public String getState() {
 		return appointment.getState();
 	}
-	
+
 	@Override
-	public void setState(String value){
+	public void setState(String value) {
 		appointment.setState(value);
 	}
-	
+
 	@Override
-	public String getType(){
+	public String getType() {
 		return appointment.getType();
 	}
-	
+
 	@Override
-	public void setType(String value){
+	public void setType(String value) {
 		appointment.setType(value);
 	}
-	
+
 	@Override
-	public Integer getDurationMinutes(){
+	public Integer getDurationMinutes() {
 		return appointment.getDurationMinutes();
 	}
-	
+
 	@Override
-	public String getSchedule(){
+	public String getSchedule() {
 		return appointment.getSchedule();
 	}
-	
+
 	@Override
-	public void setSchedule(String value){
+	public void setSchedule(String value) {
 		appointment.setSchedule(value);
 	}
-	
+
 	@Override
-	public String getCreatedBy(){
+	public String getCreatedBy() {
 		return appointment.getCreatedBy();
 	}
-	
+
 	@Override
-	public void setCreatedBy(String value){
+	public void setCreatedBy(String value) {
 		appointment.setCreatedBy(value);
 	}
-	
+
 	@Override
-	public String getSubjectOrPatient(){
+	public String getSubjectOrPatient() {
 		return appointment.getSubjectOrPatient();
 	}
-	
+
 	@Override
-	public void setSubjectOrPatient(String value){
+	public void setSubjectOrPatient(String value) {
 		appointment.setSubjectOrPatient(value);
 	}
-	
+
 	@Override
-	public int getPriority(){
+	public int getPriority() {
 		return appointment.getPriority();
 	}
-	
+
 	@Override
-	public void setPriority(int value){
+	public void setPriority(int value) {
 		appointment.setPriority(value);
 	}
-	
+
 	@Override
-	public int getTreatmentReason(){
+	public int getTreatmentReason() {
 		return appointment.getTreatmentReason();
 	}
-	
+
 	@Override
-	public void setTreatmentReason(int value){
+	public void setTreatmentReason(int value) {
 		appointment.setTreatmentReason(value);
 	}
-	
+
 	@Override
-	public int getInsuranceType(){
+	public int getInsuranceType() {
 		return appointment.getInsuranceType();
 	}
-	
+
 	@Override
-	public void setInsuranceType(int value){
+	public void setInsuranceType(int value) {
 		appointment.setInsuranceType(value);
 	}
-	
+
 	@Override
-	public int getCaseType(){
+	public int getCaseType() {
 		return appointment.getCaseType();
 	}
-	
+
 	@Override
-	public void setCaseType(int value){
+	public void setCaseType(int value) {
 		appointment.setCaseType(value);
 	}
-	
+
 	@Override
-	public String getLinkgroup(){
+	public String getLinkgroup() {
 		return groupId;
 	}
-	
+
 	@Override
-	public void setLinkgroup(String value){
+	public void setLinkgroup(String value) {
 		appointment.setLinkgroup(value);
 	}
-	
+
 	@Override
-	public String getExtension(){
+	public String getExtension() {
 		return appointment.getExtension();
 	}
-	
+
 	@Override
-	public void setExtension(String value){
+	public void setExtension(String value) {
 		appointment.setExtension(value);
 	}
-	
+
 	@Override
-	public String getCreated(){
+	public String getCreated() {
 		return appointment.getCreated();
 	}
-	
+
 	@Override
-	public void setCreated(String value){
+	public void setCreated(String value) {
 		appointment.setCreated(value);
 	}
-	
+
 	@Override
-	public String getLastEdit(){
+	public String getLastEdit() {
 		return appointment.getLastEdit();
 	}
-	
+
 	@Override
-	public void setLastEdit(String value){
+	public void setLastEdit(String value) {
 		appointment.setLastEdit(value);
 	}
-	
+
 	@Override
-	public String getStateHistory(){
+	public String getStateHistory() {
 		return appointment.getStateHistory();
 	}
-	
+
 	@Override
-	public void setStateHistory(String value){
+	public void setStateHistory(String value) {
 		appointment.setStateHistory(value);
 	}
-	
+
 	@Override
-	public boolean isRecurring(){
+	public boolean isRecurring() {
 		return appointment.isRecurring();
 	}
-	
+
 	@Override
-	public IContact getContact(){
+	public IContact getContact() {
 		return appointment.getContact();
 	}
-	
+
 	@Override
-	public String getStateHistoryFormatted(String formatPattern){
+	public String getStateHistoryFormatted(String formatPattern) {
 		return appointment.getStateHistoryFormatted(formatPattern);
 	}
-	
+
 	@Override
-	public LocalDateTime getStartTime(){
+	public LocalDateTime getStartTime() {
 		return appointment.getStartTime();
 	}
-	
+
 	@Override
-	public void setStartTime(LocalDateTime value){
-		
+	public void setStartTime(LocalDateTime value) {
+
 	}
-	
+
 	@Override
-	public LocalDateTime getEndTime(){
+	public LocalDateTime getEndTime() {
 		return appointment.getEndTime();
 	}
-	
+
 	@Override
-	public void setEndTime(LocalDateTime value){
-		
+	public void setEndTime(LocalDateTime value) {
+
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return appointment.getId();
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		return appointment.getLabel();
 	}
-	
+
 	@Override
-	public boolean addXid(String domain, String id, boolean updateIfExists){
+	public boolean addXid(String domain, String id, boolean updateIfExists) {
 		return XidServiceHolder.get().addXid(appointment, domain, id, updateIfExists);
 	}
-	
+
 	@Override
-	public IXid getXid(String domain){
+	public IXid getXid(String domain) {
 		return XidServiceHolder.get().getXid(appointment, domain);
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return appointment.getLastupdate();
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return appointment.isDeleted();
 	}
-	
+
 	@Override
-	public void setDeleted(boolean value){
+	public void setDeleted(boolean value) {
 		appointment.setDeleted(value);
 	}
-	
+
 	@Override
-	public SeriesType getSeriesType(){
+	public SeriesType getSeriesType() {
 		return seriesType;
 	}
-	
+
 	@Override
-	public void setSeriesType(SeriesType value){
+	public void setSeriesType(SeriesType value) {
 		seriesType = value;
 	}
-	
+
 	@Override
-	public EndingType getEndingType(){
+	public EndingType getEndingType() {
 		return endingType;
 	}
-	
+
 	@Override
-	public void setEndingType(EndingType value){
+	public void setEndingType(EndingType value) {
 		endingType = value;
 	}
-	
+
 	@Override
-	public LocalDate getSeriesStartDate(){
+	public LocalDate getSeriesStartDate() {
 		return startDate;
 	}
-	
+
 	@Override
-	public void setSeriesStartDate(LocalDate value){
+	public void setSeriesStartDate(LocalDate value) {
 		startDate = value;
 	}
-	
+
 	@Override
-	public LocalDate getSeriesEndDate(){
+	public LocalDate getSeriesEndDate() {
 		return endsOnDate;
 	}
-	
+
 	@Override
-	public void setSeriesEndDate(LocalDate value){
+	public void setSeriesEndDate(LocalDate value) {
 		endsOnDate = value;
 	}
-	
+
 	@Override
-	public String getSeriesPatternString(){
+	public String getSeriesPatternString() {
 		return seriesPatternString;
 	}
-	
+
 	@Override
-	public void setSeriesPatternString(String value){
+	public void setSeriesPatternString(String value) {
 		seriesPatternString = value;
 	}
-	
+
 	@Override
-	public String getEndingPatternString(){
+	public String getEndingPatternString() {
 		return endingPatternString;
 	}
-	
+
 	@Override
-	public void setEndingPatternString(String value){
+	public void setEndingPatternString(String value) {
 		endingPatternString = value;
 	}
-	
+
 	@Override
-	public LocalTime getSeriesStartTime(){
+	public LocalTime getSeriesStartTime() {
 		return startTime;
 	}
-	
+
 	@Override
-	public void setSeriesStartTime(LocalTime value){
+	public void setSeriesStartTime(LocalTime value) {
 		startTime = value;
 	}
-	
+
 	@Override
-	public LocalTime getSeriesEndTime(){
+	public LocalTime getSeriesEndTime() {
 		return endTime;
 	}
-	
+
 	@Override
-	public void setSeriesEndTime(LocalTime value){
+	public void setSeriesEndTime(LocalTime value) {
 		endTime = value;
 	}
-	
+
 	@Override
-	public boolean isPersistent(){
+	public boolean isPersistent() {
 		return rootPresistent;
 	}
-	
+
 	@Override
-	public IAppointment getRootAppointment(){
+	public IAppointment getRootAppointment() {
 		return rootAppointment;
 	}
-	
+
 	@Override
-	public String getAsSeriesExtension(){
+	public String getAsSeriesExtension() {
 		// BEGINTIME,ENDTIME;SERIES_TYPE;[SERIES_PATTERN];BEGINDATE;[ENDING_TYPE];[ENDING_PATTERN]
 		StringBuilder sb = new StringBuilder();
 		try {
@@ -436,16 +437,16 @@ public class AppointmentSeries implements IAppointmentSeries {
 			sb.append(";");
 			sb.append(endingType.getEndingTypeChar());
 			sb.append(";");
-			
+
 			switch (getEndingType()) {
-			case AFTER_N_OCCURENCES:
-				sb.append(endingPatternString);
-				break;
-			case ON_SPECIFIC_DATE:
-				sb.append(dateFormatter.format(endsOnDate));
-				break;
-			default:
-				break;
+				case AFTER_N_OCCURENCES :
+					sb.append(endingPatternString);
+					break;
+				case ON_SPECIFIC_DATE :
+					sb.append(dateFormatter.format(endsOnDate));
+					break;
+				default :
+					break;
 			}
 		} catch (NullPointerException npe) {
 			sb.append("incomplete configuration string: " + npe.getMessage());

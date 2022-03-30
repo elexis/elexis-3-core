@@ -33,11 +33,10 @@ import ch.rgw.io.FileTool;
 public class BriefExport {
 	Sticker sticker = null;
 	PatFilterImpl pf = new PatFilterImpl();
-	
-	public String doExport(String filename, String stickerName){
+
+	public String doExport(String filename, String stickerName) {
 		if (stickerName != null) {
-			List<Sticker> ls =
-				new Query<Sticker>(Sticker.class, Sticker.FLD_NAME, stickerName).execute();
+			List<Sticker> ls = new Query<Sticker>(Sticker.class, Sticker.FLD_NAME, stickerName).execute();
 			if (ls != null && ls.size() > 0) {
 				sticker = ls.get(0);
 			} else {
@@ -46,12 +45,8 @@ public class BriefExport {
 		}
 		if (filename == null) {
 			FileDialog fd = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
-			fd.setFilterExtensions(new String[] {
-				"*.csv"
-			});
-			fd.setFilterNames(new String[] {
-				"Comma Separated Values (CVS)"
-			});
+			fd.setFilterExtensions(new String[]{"*.csv"});
+			fd.setFilterNames(new String[]{"Comma Separated Values (CVS)"});
 			fd.setOverwrite(true);
 			filename = fd.open();
 		}
@@ -63,15 +58,9 @@ public class BriefExport {
 			dir.mkdirs();
 			try {
 				CSVWriter writer = new CSVWriter(new FileWriter(csv));
-				String[] header = new String[] {
-					"Betreff", "Datum", "Adressat", "Mimetype", "Typ", "Patient", "Pfad"
-				};
-				String[] fields =
-					new String[] {
-						Brief.FLD_SUBJECT, Brief.FLD_DATE, Brief.FLD_DESTINATION_ID,
-						Brief.FLD_MIME_TYPE, Brief.FLD_TYPE, Brief.FLD_PATIENT_ID,
-						Brief.FLD_PATIENT_ID
-					};
+				String[] header = new String[]{"Betreff", "Datum", "Adressat", "Mimetype", "Typ", "Patient", "Pfad"};
+				String[] fields = new String[]{Brief.FLD_SUBJECT, Brief.FLD_DATE, Brief.FLD_DESTINATION_ID,
+						Brief.FLD_MIME_TYPE, Brief.FLD_TYPE, Brief.FLD_PATIENT_ID, Brief.FLD_PATIENT_ID};
 				writer.writeNext(header);
 				for (Brief brief : briefe) {
 					Person pers = brief.getPatient();
@@ -96,8 +85,7 @@ public class BriefExport {
 								FileOutputStream fos = new FileOutputStream(f);
 								fos.write(bin);
 								fos.close();
-								line[line.length - 1] =
-									dir.getName() + File.separator + subdir.getName()
+								line[line.length - 1] = dir.getName() + File.separator + subdir.getName()
 										+ File.separator + f.getName();
 								writer.writeNext(line);
 							}
@@ -107,8 +95,7 @@ public class BriefExport {
 				writer.close();
 				return "Export ok";
 			} catch (Exception ex) {
-				ElexisStatus status =
-					new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+				ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 						"Fehler beim Export: " + ex.getMessage(), ex);
 				throw new ScriptingException(status);
 			}

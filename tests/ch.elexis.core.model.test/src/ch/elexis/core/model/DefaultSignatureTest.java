@@ -15,35 +15,34 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.test.AbstractTest;
 
 public class DefaultSignatureTest extends AbstractTest {
-	
+
 	@Before
-	public void before(){
+	public void before() {
 		super.before();
 		createPatient();
 		createMandator();
 		createLocalArticle();
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		super.after();
 	}
-	
+
 	@Test
-	public void create(){
-		IArticleDefaultSignature defaultSignature =
-			coreModelService.create(IArticleDefaultSignature.class);
+	public void create() {
+		IArticleDefaultSignature defaultSignature = coreModelService.create(IArticleDefaultSignature.class);
 		assertNotNull(defaultSignature);
 		assertTrue(defaultSignature instanceof IArticleDefaultSignature);
-		
+
 		defaultSignature.setArticle(localArticle);
 		defaultSignature.setDisposalType(EntryType.FIXED_MEDICATION);
 		defaultSignature.setMorning("1");
 		defaultSignature.setEvening("1");
 		coreModelService.save(defaultSignature);
-		
-		Optional<IArticleDefaultSignature> loaded =
-			coreModelService.load(defaultSignature.getId(), IArticleDefaultSignature.class);
+
+		Optional<IArticleDefaultSignature> loaded = coreModelService.load(defaultSignature.getId(),
+				IArticleDefaultSignature.class);
 		assertTrue(loaded.isPresent());
 		assertFalse(defaultSignature == loaded.get());
 		assertEquals(defaultSignature, loaded.get());
@@ -51,7 +50,7 @@ public class DefaultSignatureTest extends AbstractTest {
 		assertEquals(defaultSignature.getNoon(), loaded.get().getNoon());
 		assertEquals(defaultSignature.getDisposalType(), loaded.get().getDisposalType());
 		assertEquals("1-0-1-0", loaded.get().getSignatureAsDosisString());
-		
+
 		coreModelService.remove(defaultSignature);
 	}
 }

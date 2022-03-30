@@ -35,21 +35,21 @@ import ch.elexis.data.Query;
 import ch.rgw.tools.Result;
 
 public class Helpers {
-	
+
 	/*
-	 * For running the tests we have to copy the
-	 * files under RSC to a work directory, as the the HL7 importer moves the
-	 * incoming files to files containing a timestamp
+	 * For running the tests we have to copy the files under RSC to a work
+	 * directory, as the the HL7 importer moves the incoming files to files
+	 * containing a timestamp
 	 *
 	 * @author: Niklaus Giger
+	 * 
 	 * @return: The path of the temp directory
 	 */
-	static Path copyRscToTempDirectory(){
+	static Path copyRscToTempDirectory() {
 		Path path = null;
 		try {
 			path = Files.createTempDirectory("HL7_Test");
-			File src =
-				new File(PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"), "rsc");
+			File src = new File(PlatformHelper.getBasePath("ch.elexis.core.ui.importer.div.tests"), "rsc");
 			System.out.println("src: " + src.toString());
 			FileUtils.copyDirectory(src, path.toFile());
 		} catch (IOException e) {
@@ -58,27 +58,27 @@ public class Helpers {
 		}
 		return path;
 	}
-	
-	static void removeTempDirectory(Path path){
+
+	static void removeTempDirectory(Path path) {
 		try {
 			FileUtils.deleteDirectory(path.toFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void removeAllPatientsAndDependants(){
+
+	public static void removeAllPatientsAndDependants() {
 		Query<Patient> qr = new Query<Patient>(Patient.class);
 		List<Patient> qrr = qr.execute();
 		for (int j = 0; j < qrr.size(); j++) {
 			qrr.get(j).delete(true);
 		}
-		
+
 		qr = new Query<Patient>(Patient.class);
 		qrr = qr.execute();
 	}
-	
-	public static void removeAllLaboWerte(){
+
+	public static void removeAllLaboWerte() {
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
 		for (int j = 0; j < qrr.size(); j++) {
@@ -106,19 +106,19 @@ public class Helpers {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void parseOneHL7file(HL7Parser hlp, File f, boolean deleteAll,
-		boolean alsoFailing) throws IOException{
+
+	public static void parseOneHL7file(HL7Parser hlp, File f, boolean deleteAll, boolean alsoFailing)
+			throws IOException {
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
 			if (f.getName().equalsIgnoreCase("01TEST5005.hl7")
-				|| f.getName().equalsIgnoreCase("1_Kunde_20090612083757162_10009977_.HL7")) {
+					|| f.getName().equalsIgnoreCase("1_Kunde_20090612083757162_10009977_.HL7")) {
 				if (!alsoFailing) {
 					// System.out.println("Skipping " + name);
 					return;
 				}
 			}
-			// System.out.println("parseOneHL7file " + name + "  " + f.length() + " bytes ");
+			// System.out.println("parseOneHL7file " + name + " " + f.length() + " bytes ");
 			Result<?> rs = hlp.importFile(f, f.getParentFile(), true);
 			if (!rs.isOK()) {
 				String info = "Datei " + name + " fehlgeschlagen";

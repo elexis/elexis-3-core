@@ -35,10 +35,11 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.LimitSizeStack;
 
 /**
- * A Panel to display ActiveControls as views to fields of a single PersistentObject
+ * A Panel to display ActiveControls as views to fields of a single
+ * PersistentObject
  * 
  * @author gerry
- * 		
+ * 
  */
 public class DisplayPanel extends Composite implements ActiveControlListener {
 	private boolean bCeaseFire, bExclusive, bAutosave;
@@ -49,9 +50,8 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 	private ToolBar tb;
 	private IAction aClr;
 	private Object actObject;
-	
-	public DisplayPanel(Composite parent, FieldDescriptor<?>[] fields,
-		int minCols, int maxCols, IAction... actions){
+
+	public DisplayPanel(Composite parent, FieldDescriptor<?>[] fields, int minCols, int maxCols, IAction... actions) {
 		super(parent, SWT.NONE);
 		bAutosave = false;
 		setBackground(parent.getBackground());
@@ -60,14 +60,14 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		layout.marginRight = 0;
 		setLayout(layout);
 		tActions = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
-		
+
 		aClr = new Action(Messages.SelectorPanel_clearFields) {
 			{
 				setImageDescriptor(Images.IMG_CLEAR.getImageDescriptor());
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				// clearValues();
 			}
 		};
@@ -82,13 +82,11 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		tb = tActions.createControl(this);
 		// For the Jubula GUI tests we create unique identifiers for all tool items
 		if (parent.getData("TEST_COMP_NAME") != null) {
-			for (int idx = 0; idx < tb.getItemCount(); idx++)
-			{
-				tb.getItem(idx).setData("TEST_COMP_NAME",
-					parent.getData("TEST_COMP_NAME") + "_" + idx + "_tbi");
+			for (int idx = 0; idx < tb.getItemCount(); idx++) {
+				tb.getItem(idx).setData("TEST_COMP_NAME", parent.getData("TEST_COMP_NAME") + "_" + idx + "_tbi");
 			}
 		}
-		
+
 		FormData fdActions = new FormData();
 		fdActions.top = new FormAttachment(0, 0);
 		fdActions.right = new FormAttachment(100, 0);
@@ -99,31 +97,31 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		fd.top = new FormAttachment(0, 0);
 		fd.right = new FormAttachment(100, 0);
 		cFields.setLayoutData(fd);
-		
+
 		ColumnLayout cl = new ColumnLayout();
 		cl.minNumColumns = minCols > 0 ? minCols : 1;
 		cl.maxNumColumns = maxCols > minCols ? maxCols : minCols + 2;
 		cFields.setLayout(cl);
-		
+
 		for (FieldDescriptor<?> field : fields) {
 			ActiveControl ac = null;
 			switch (field.getFieldType()) {
-			case HYPERLINK:
-			case STRING:
-				ac = new TextField(cFields, 0, field.getLabel());
-				break;
-			case CURRENCY:
-				ac = new MoneyField(cFields, 0, field.getLabel());
-				break;
-			case DATE:
-				ac = new DateField(cFields, 0, field.getLabel());
-				break;
-				
-			case COMBO:
-				ac = new ComboField(cFields, 0, field.getLabel(), (String[]) field.getExtension());
-				break;
-			case INT:
-				ac = new IntegerField(cFields, 0, field.getLabel());
+				case HYPERLINK :
+				case STRING :
+					ac = new TextField(cFields, 0, field.getLabel());
+					break;
+				case CURRENCY :
+					ac = new MoneyField(cFields, 0, field.getLabel());
+					break;
+				case DATE :
+					ac = new DateField(cFields, 0, field.getLabel());
+					break;
+
+				case COMBO :
+					ac = new ComboField(cFields, 0, field.getLabel(), (String[]) field.getExtension());
+					break;
+				case INT :
+					ac = new IntegerField(cFields, 0, field.getLabel());
 			}
 			if (ac != null) {
 				ac.setData(ActiveControl.PROP_FIELDNAME, field.getFieldname());
@@ -133,15 +131,15 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 			pack();
 		}
 	}
-	
+
 	/**
 	 * Set the Object to display
 	 * 
 	 * @param po
-	 *            a PersistentObject that must have all fields defined, that are referenced by
-	 *            ActiveControls of this Panel
+	 *            a PersistentObject that must have all fields defined, that are
+	 *            referenced by ActiveControls of this Panel
 	 */
-	public void setObject(PersistentObject po){
+	public void setObject(PersistentObject po) {
 		actObject = po;
 		List<ActiveControl> ctls = getControls();
 		for (ActiveControl ac : ctls) {
@@ -150,15 +148,15 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		}
 		layout();
 	}
-	
+
 	/**
 	 * Set the Object to display
 	 * 
 	 * @param po
-	 *            a PersistentObject that must have all fields defined, that are referenced by
-	 *            ActiveControls of this Panel
+	 *            a PersistentObject that must have all fields defined, that are
+	 *            referenced by ActiveControls of this Panel
 	 */
-	public void setObject(Identifiable identifiable){
+	public void setObject(Identifiable identifiable) {
 		actObject = identifiable;
 		List<ActiveControl> ctls = getControls();
 		for (ActiveControl ac : ctls) {
@@ -167,37 +165,38 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 				ac.setText(BeanUtils.getProperty(actObject, field));
 			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 				LoggerFactory.getLogger(getClass())
-					.error("Error getting property [" + field + "] of [" + actObject + "]", e);
+						.error("Error getting property [" + field + "] of [" + actObject + "]", e);
 			}
 		}
 		layout();
 	}
-	
+
 	/**
 	 * Set autosave behaviour
 	 * 
 	 * @param doSave
-	 *            if true: changed fields are written back to the database. false: No weiting occurs
+	 *            if true: changed fields are written back to the database. false:
+	 *            No weiting occurs
 	 */
-	public void setAutosave(boolean doSave){
+	public void setAutosave(boolean doSave) {
 		bAutosave = doSave;
 	}
-	
+
 	/**
 	 * Add a field to the panel
 	 * 
 	 * @param ac
 	 */
-	public void addField(ActiveControl ac){
+	public void addField(ActiveControl ac) {
 		ac.addListener(this);
 	}
-	
+
 	/**
 	 * Add a number of fields to the Panel
 	 * 
 	 * @param activeControls
 	 */
-	public void addFields(ActiveControl... activeControls){
+	public void addFields(ActiveControl... activeControls) {
 		ActiveControl last = null;
 		for (ActiveControl ac : activeControls) {
 			ac.addListener(this);
@@ -211,8 +210,8 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		}
 		layout();
 	}
-	
-	public void contentsChanged(ActiveControl ac){
+
+	public void contentsChanged(ActiveControl ac) {
 		if (ac != null) {
 			new TraceElement(ac);
 		}
@@ -227,8 +226,8 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 						try {
 							BeanUtils.setProperty(actObject, field, ac.getText());
 						} catch (IllegalAccessException | InvocationTargetException e) {
-							LoggerFactory.getLogger(getClass()).error(
-								"Error setting property [" + field + "] of [" + actObject + "]", e);
+							LoggerFactory.getLogger(getClass())
+									.error("Error setting property [" + field + "] of [" + actObject + "]", e);
 						}
 					}
 				}
@@ -239,38 +238,38 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 			bCeaseFire = false;
 		}
 	}
-	
-	public void invalidContents(ActiveControl field){
+
+	public void invalidContents(ActiveControl field) {
 		aClr.setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());
 		aClr.setToolTipText((String) field.getData(ActiveControl.PROP_ERRMSG));
-		
+
 	}
-	
+
 	/**
-	 * Add a listener to the list of listeners that will be notified, if one of the fields has been
-	 * changed
+	 * Add a listener to the list of listeners that will be notified, if one of the
+	 * fields has been changed
 	 * 
 	 * @param l
 	 */
-	public void addSelectorListener(ActiveControlListener l){
+	public void addSelectorListener(ActiveControlListener l) {
 		listeners.add(l);
 	}
-	
+
 	/**
 	 * Remove a listener from the list of SelectorListeners
 	 * 
 	 * @param l
 	 */
-	public void removeSelectorListener(ActiveControlListener l){
+	public void removeSelectorListener(ActiveControlListener l) {
 		listeners.remove(l);
 	}
-	
+
 	/**
-	 * From ActiveControlListener: Notify that the user clicked the label of a field This will in
-	 * turn notify the SelectorListeners attached to this panel
+	 * From ActiveControlListener: Notify that the user clicked the label of a field
+	 * This will in turn notify the SelectorListeners attached to this panel
 	 */
-	
-	public void titleClicked(final ActiveControl field){
+
+	public void titleClicked(final ActiveControl field) {
 		if (!bCeaseFire) {
 			bCeaseFire = true;
 			for (ActiveControlListener lis : listeners) {
@@ -278,15 +277,15 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 			}
 			bCeaseFire = true;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Return all ActiveControls attached to this panel
 	 * 
 	 * @return al List that might be empty but is never null
 	 */
-	public List<ActiveControl> getControls(){
+	public List<ActiveControl> getControls() {
 		LinkedList<ActiveControl> ret = new LinkedList<ActiveControl>();
 		for (Control c : cFields.getChildren()) {
 			if (c instanceof ActiveControl) {
@@ -296,16 +295,16 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		}
 		return ret;
 	}
-	
+
 	private class TraceElement {
 		ActiveControl control;
 		String value;
-		
-		TraceElement(ActiveControl ac){
+
+		TraceElement(ActiveControl ac) {
 			control = ac;
 			value = ac.getText();
 			undoList.push(this);
 		}
 	}
-	
+
 }

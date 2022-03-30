@@ -32,35 +32,34 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.slf4j.Logger;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Factory</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!--
+ * end-user-doc -->
+ * 
  * @generated
  */
 public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates the default factory implementation. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static ModelFactory init() {
 		try {
-			ModelFactory theModelFactory = (ModelFactory)EPackage.Registry.INSTANCE.getEFactory(ModelPackage.eNS_URI);
+			ModelFactory theModelFactory = (ModelFactory) EPackage.Registry.INSTANCE.getEFactory(ModelPackage.eNS_URI);
 			if (theModelFactory != null) {
 				return theModelFactory;
 			}
-		}
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new ModelFactoryImpl();
 	}
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	public ModelFactoryImpl() {
@@ -68,94 +67,98 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			default:
+			default :
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case ModelPackage.TASK_TRIGGER_TYPE:
+			case ModelPackage.TASK_TRIGGER_TYPE :
 				return createTaskTriggerTypeFromString(eDataType, initialValue);
-			case ModelPackage.TASK_STATE:
+			case ModelPackage.TASK_STATE :
 				return createTaskStateFromString(eDataType, initialValue);
-			case ModelPackage.OWNER_TASK_NOTIFICATION:
+			case ModelPackage.OWNER_TASK_NOTIFICATION :
 				return createOwnerTaskNotificationFromString(eDataType, initialValue);
-			case ModelPackage.TASK_EXCEPTION:
+			case ModelPackage.TASK_EXCEPTION :
 				return createTaskExceptionFromString(eDataType, initialValue);
-			case ModelPackage.IIDENTIFIED_RUNNABLE:
+			case ModelPackage.IIDENTIFIED_RUNNABLE :
 				return createIIdentifiedRunnableFromString(eDataType, initialValue);
-			case ModelPackage.IPROGRESS_MONITOR:
+			case ModelPackage.IPROGRESS_MONITOR :
 				return createIProgressMonitorFromString(eDataType, initialValue);
-			case ModelPackage.LOGGER:
+			case ModelPackage.LOGGER :
 				return createLoggerFromString(eDataType, initialValue);
-			case ModelPackage.SERIALIZABLE:
+			case ModelPackage.SERIALIZABLE :
 				return createSerializableFromString(eDataType, initialValue);
-			case ModelPackage.CRON:
+			case ModelPackage.CRON :
 				return createCronFromString(eDataType, initialValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+			default :
+				throw new IllegalArgumentException(
+						"The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-			case ModelPackage.TASK_TRIGGER_TYPE:
+			case ModelPackage.TASK_TRIGGER_TYPE :
 				return convertTaskTriggerTypeToString(eDataType, instanceValue);
-			case ModelPackage.TASK_STATE:
+			case ModelPackage.TASK_STATE :
 				return convertTaskStateToString(eDataType, instanceValue);
-			case ModelPackage.OWNER_TASK_NOTIFICATION:
+			case ModelPackage.OWNER_TASK_NOTIFICATION :
 				return convertOwnerTaskNotificationToString(eDataType, instanceValue);
-			case ModelPackage.TASK_EXCEPTION:
+			case ModelPackage.TASK_EXCEPTION :
 				return convertTaskExceptionToString(eDataType, instanceValue);
-			case ModelPackage.IIDENTIFIED_RUNNABLE:
+			case ModelPackage.IIDENTIFIED_RUNNABLE :
 				return convertIIdentifiedRunnableToString(eDataType, instanceValue);
-			case ModelPackage.IPROGRESS_MONITOR:
+			case ModelPackage.IPROGRESS_MONITOR :
 				return convertIProgressMonitorToString(eDataType, instanceValue);
-			case ModelPackage.LOGGER:
+			case ModelPackage.LOGGER :
 				return convertLoggerToString(eDataType, instanceValue);
-			case ModelPackage.SERIALIZABLE:
+			case ModelPackage.SERIALIZABLE :
 				return convertSerializableToString(eDataType, instanceValue);
-			case ModelPackage.CRON:
+			case ModelPackage.CRON :
 				return convertCronToString(eDataType, instanceValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+			default :
+				throw new IllegalArgumentException(
+						"The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public TaskTriggerType createTaskTriggerTypeFromString(EDataType eDataType, String initialValue) {
 		TaskTriggerType result = TaskTriggerType.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertTaskTriggerTypeToString(EDataType eDataType, Object instanceValue) {
@@ -163,19 +166,21 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public TaskState createTaskStateFromString(EDataType eDataType, String initialValue) {
 		TaskState result = TaskState.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertTaskStateToString(EDataType eDataType, Object instanceValue) {
@@ -183,19 +188,21 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public OwnerTaskNotification createOwnerTaskNotificationFromString(EDataType eDataType, String initialValue) {
 		OwnerTaskNotification result = OwnerTaskNotification.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertOwnerTaskNotificationToString(EDataType eDataType, Object instanceValue) {
@@ -203,17 +210,17 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public TaskException createTaskExceptionFromString(EDataType eDataType, String initialValue) {
-		return (TaskException)super.createFromString(eDataType, initialValue);
+		return (TaskException) super.createFromString(eDataType, initialValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertTaskExceptionToString(EDataType eDataType, Object instanceValue) {
@@ -221,17 +228,17 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IIdentifiedRunnable createIIdentifiedRunnableFromString(EDataType eDataType, String initialValue) {
-		return (IIdentifiedRunnable)super.createFromString(eDataType, initialValue);
+		return (IIdentifiedRunnable) super.createFromString(eDataType, initialValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertIIdentifiedRunnableToString(EDataType eDataType, Object instanceValue) {
@@ -239,17 +246,17 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IProgressMonitor createIProgressMonitorFromString(EDataType eDataType, String initialValue) {
-		return (IProgressMonitor)super.createFromString(eDataType, initialValue);
+		return (IProgressMonitor) super.createFromString(eDataType, initialValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertIProgressMonitorToString(EDataType eDataType, Object instanceValue) {
@@ -257,17 +264,17 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Logger createLoggerFromString(EDataType eDataType, String initialValue) {
-		return (Logger)super.createFromString(eDataType, initialValue);
+		return (Logger) super.createFromString(eDataType, initialValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertLoggerToString(EDataType eDataType, Object instanceValue) {
@@ -275,17 +282,17 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Serializable createSerializableFromString(EDataType eDataType, String initialValue) {
-		return (Serializable)super.createFromString(eDataType, initialValue);
+		return (Serializable) super.createFromString(eDataType, initialValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertSerializableToString(EDataType eDataType, Object instanceValue) {
@@ -293,17 +300,17 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Cron createCronFromString(EDataType eDataType, String initialValue) {
-		return (Cron)super.createFromString(eDataType, initialValue);
+		return (Cron) super.createFromString(eDataType, initialValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertCronToString(EDataType eDataType, Object instanceValue) {
@@ -311,18 +318,18 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public ModelPackage getModelPackage() {
-		return (ModelPackage)getEPackage();
+		return (ModelPackage) getEPackage();
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @deprecated
 	 * @generated
 	 */
@@ -331,4 +338,4 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 		return ModelPackage.eINSTANCE;
 	}
 
-} //ModelFactoryImpl
+} // ModelFactoryImpl

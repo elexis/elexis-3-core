@@ -18,22 +18,22 @@ import ch.elexis.core.tasks.model.ITaskService;
 
 @Component
 public class TestExecutionContextIdentifiedRunnableFactory implements IIdentifiedRunnableFactory {
-	
+
 	@Reference
 	private IContextService contextService;
-	
+
 	@Override
-	public void initialize(Object taskService){
+	public void initialize(Object taskService) {
 		assertTrue(taskService instanceof ITaskService);
-		
-		Optional<ITaskDescriptor> findTaskDescriptorByIdOrReferenceId =
-			((ITaskService) taskService).findTaskDescriptorByIdOrReferenceId("thisIsJustAnAccessTest");
+
+		Optional<ITaskDescriptor> findTaskDescriptorByIdOrReferenceId = ((ITaskService) taskService)
+				.findTaskDescriptorByIdOrReferenceId("thisIsJustAnAccessTest");
 		assertFalse(findTaskDescriptorByIdOrReferenceId.isPresent());
 	}
-	
+
 	@Override
-	public List<IIdentifiedRunnable> getProvidedRunnables(){
+	public List<IIdentifiedRunnable> getProvidedRunnables() {
 		return Arrays.asList(new TestExecutionContextRunnable(contextService));
 	}
-	
+
 }

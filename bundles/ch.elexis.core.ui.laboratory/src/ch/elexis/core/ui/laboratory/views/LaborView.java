@@ -80,122 +80,121 @@ import ch.rgw.tools.TimeTool;
 /**
  * Anzeige von Laboritems und Anzeige und Eingabemöglichkeit von Laborwerten.
  * 
- * Der Algorithmus geht so: Zuerst werden alle Laboritems eingesammelt und gemäss ihren Gruppen und
- * Prioritäten sortiert (nur beim create) Beim Einlesen eines neuen Patienten werden zunächst alle
- * Daten gesammelt, an denen für diesen Patienten Laborwerte vorliegen. Diese werden nach Alter
- * sortiert und mit den jeweiligen Laborwerten zusammengefasst. Jeweils NUMCOLUMNS Daten werden auf
- * einer Anzeigeseite angezeigt. Der Anwender kann auf den Seiten blättern, aber es werden alle
- * Laborwerte des aktuellen Patienten im Speicher gehalten.
+ * Der Algorithmus geht so: Zuerst werden alle Laboritems eingesammelt und
+ * gemäss ihren Gruppen und Prioritäten sortiert (nur beim create) Beim Einlesen
+ * eines neuen Patienten werden zunächst alle Daten gesammelt, an denen für
+ * diesen Patienten Laborwerte vorliegen. Diese werden nach Alter sortiert und
+ * mit den jeweiligen Laborwerten zusammengefasst. Jeweils NUMCOLUMNS Daten
+ * werden auf einer Anzeigeseite angezeigt. Der Anwender kann auf den Seiten
+ * blättern, aber es werden alle Laborwerte des aktuellen Patienten im Speicher
+ * gehalten.
  * 
  * @author gerry
  */
 public class LaborView extends ViewPart implements IRefreshable {
-	
+
 	public static final String ID = "ch.elexis.Labor"; //$NON-NLS-1$
 	private static Log log = Log.get("LaborView"); //$NON-NLS-1$
-	
+
 	private CTabFolder tabFolder;
 	private LaborResultsComposite resultsComposite;
 	private LaborOrdersComposite ordersComposite;
-	
-	private Action fwdAction, backAction, printAction, importAction, xmlAction, newAction,
-			newColumnAction, refreshAction, expandAllAction, collapseAllAction;
+
+	private Action fwdAction, backAction, printAction, importAction, xmlAction, newAction, newColumnAction,
+			refreshAction, expandAllAction, collapseAllAction;
 	private ViewMenus menu;
-	
+
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
-	
+
 	private ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		@Override
-		public void runInUi(ElexisEvent ev){
-			if(!resultsComposite.isDisposed() && !ordersComposite.isDisposed()) {
+		public void runInUi(ElexisEvent ev) {
+			if (!resultsComposite.isDisposed() && !ordersComposite.isDisposed()) {
 				resultsComposite.selectPatient((Patient) ev.getObject());
 				ordersComposite.selectPatient((Patient) ev.getObject());
 			}
 		}
 	};
-	
+
 	private ElexisEventListener eeli_labitem = new ElexisEventListener() {
-		private final ElexisEvent eetmpl = new ElexisEvent(null, LabItem.class,
-			ElexisEvent.EVENT_RELOAD);
-		
+		private final ElexisEvent eetmpl = new ElexisEvent(null, LabItem.class, ElexisEvent.EVENT_RELOAD);
+
 		@Override
-		public ElexisEvent getElexisEventFilter(){
+		public ElexisEvent getElexisEventFilter() {
 			return eetmpl;
 		}
-		
+
 		@Override
-		public void catchElexisEvent(ElexisEvent ev){
+		public void catchElexisEvent(ElexisEvent ev) {
 			UiDesk.getDisplay().asyncExec(new Runnable() {
 				@Override
-				public void run(){
+				public void run() {
 					resultsComposite.reload();
 				}
 			});
 		}
 	};
-	
+
 	private ElexisEventListener eeli_labresult = new ElexisEventListener() {
-		private final ElexisEvent eetmpl = new ElexisEvent(null, LabResult.class,
-			ElexisEvent.EVENT_RELOAD);
-		
+		private final ElexisEvent eetmpl = new ElexisEvent(null, LabResult.class, ElexisEvent.EVENT_RELOAD);
+
 		@Override
-		public ElexisEvent getElexisEventFilter(){
+		public ElexisEvent getElexisEventFilter() {
 			return eetmpl;
 		}
-		
+
 		@Override
-		public void catchElexisEvent(ElexisEvent ev){
+		public void catchElexisEvent(ElexisEvent ev) {
 			UiDesk.getDisplay().asyncExec(new Runnable() {
 				@Override
-				public void run(){
+				public void run() {
 					resultsComposite.reload();
 					ordersComposite.reload();
 				}
 			});
 		}
 	};
-	
+
 	private ElexisEventListener eeli_laborder = new ElexisEventListener() {
-		private final ElexisEvent eetmpl = new ElexisEvent(null, LabOrder.class,
-			ElexisEvent.EVENT_RELOAD);
-		
+		private final ElexisEvent eetmpl = new ElexisEvent(null, LabOrder.class, ElexisEvent.EVENT_RELOAD);
+
 		@Override
-		public ElexisEvent getElexisEventFilter(){
+		public ElexisEvent getElexisEventFilter() {
 			return eetmpl;
 		}
-		
+
 		@Override
-		public void catchElexisEvent(ElexisEvent ev){
+		public void catchElexisEvent(ElexisEvent ev) {
 			UiDesk.getDisplay().asyncExec(new Runnable() {
 				@Override
-				public void run(){
+				public void run() {
 					ordersComposite.reload();
 				}
 			});
 		}
 	};
-	
+
 	@Override
-	public void createPartControl(final Composite parent){
+	public void createPartControl(final Composite parent) {
 		setTitleImage(Images.IMG_VIEW_LABORATORY.getImage());
-		
+
 		tabFolder = new CTabFolder(parent, SWT.TOP);
 		tabFolder.setLayout(new FillLayout());
-		
+
 		final CTabItem resultsTabItem = new CTabItem(tabFolder, SWT.NULL);
 		resultsTabItem.setText("Resultate");
 		resultsComposite = new LaborResultsComposite(tabFolder, SWT.NONE);
 		resultsTabItem.setControl(resultsComposite);
-		
+
 		final CTabItem ordersTabItem = new CTabItem(tabFolder, SWT.NULL);
 		ordersTabItem.setText("Verordnungen");
 		ordersComposite = new LaborOrdersComposite(tabFolder, SWT.NONE);
 		ordersTabItem.setControl(ordersComposite);
-		
+
 		tabFolder.setSelection(0);
 		tabFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				resultsComposite.reload();
 				ordersComposite.reload();
 			}
@@ -204,16 +203,15 @@ public class LaborView extends ViewPart implements IRefreshable {
 		menu = new ViewMenus(getViewSite());
 		menu.createMenu(newAction, backAction, fwdAction, printAction, importAction, xmlAction);
 		// Orders
-		final LaborOrderPulldownMenuCreator menuCreator =
-			new LaborOrderPulldownMenuCreator(parent.getShell());
+		final LaborOrderPulldownMenuCreator menuCreator = new LaborOrderPulldownMenuCreator(parent.getShell());
 		if (menuCreator.getSelected() != null) {
 			IAction dropDownAction = menuCreator.getAction();
-			
+
 			IActionBars actionBars = getViewSite().getActionBars();
 			IToolBarManager toolbar = actionBars.getToolBarManager();
-			
+
 			toolbar.add(dropDownAction);
-			
+
 			// Set data
 			dropDownAction.setText(menuCreator.getSelected().getText());
 			dropDownAction.setToolTipText(menuCreator.getSelected().getToolTipText());
@@ -221,10 +219,8 @@ public class LaborView extends ViewPart implements IRefreshable {
 		}
 		// Importers
 		IToolBarManager tm = getViewSite().getActionBars().getToolBarManager();
-		List<IAction> importers =
-			Extensions.getClasses(
-				Extensions.getExtensions(ExtensionPointConstantsUi.LABORDATENIMPORT),
-				"ToolbarAction", //$NON-NLS-1$ //$NON-NLS-2$
+		List<IAction> importers = Extensions.getClasses(
+				Extensions.getExtensions(ExtensionPointConstantsUi.LABORDATENIMPORT), "ToolbarAction", //$NON-NLS-1$ //$NON-NLS-2$
 				false);
 		for (IAction ac : importers) {
 			tm.add(ac);
@@ -240,43 +236,41 @@ public class LaborView extends ViewPart implements IRefreshable {
 		tm.add(expandAllAction);
 		tm.add(collapseAllAction);
 		tm.add(printAction);
-		
+
 		// register event listeners
-		ElexisEventDispatcher.getInstance().addListeners(eeli_labitem, eeli_laborder,
-			eeli_labresult, eeli_pat);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_labitem, eeli_laborder, eeli_labresult, eeli_pat);
 		Patient act = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 		if ((act != null && act != resultsComposite.getPatient())) {
 			resultsComposite.selectPatient(act);
 		}
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		getSite().getPage().removePartListener(udpateOnVisible);
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_labitem, eeli_laborder,
-			eeli_labresult, eeli_pat);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_labitem, eeli_laborder, eeli_labresult, eeli_pat);
 		super.dispose();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		if (resultsComposite.isVisible()) {
 			resultsComposite.setFocus();
 		} else if (ordersComposite.isVisible()) {
 			ordersComposite.setFocus();
 		}
 	}
-	
+
 	@Override
-	public void refresh(){
+	public void refresh() {
 		eeli_pat.catchElexisEvent(ElexisEvent.createPatientEvent());
 	}
-	
-	private void makeActions(){
+
+	private void makeActions() {
 		fwdAction = new Action(Messages.LaborView_nextPage) {
 			@Override
-			public void run(){
+			public void run() {
 				resultsComposite.setColumnOffset(resultsComposite.getColumnOffset() + 1);
 				resultsComposite.reload();
 				tabFolder.setSelection(0);
@@ -284,7 +278,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 		};
 		backAction = new Action(Messages.LaborView_prevPage) {
 			@Override
-			public void run(){
+			public void run() {
 				resultsComposite.setColumnOffset(resultsComposite.getColumnOffset() - 1);
 				resultsComposite.reload();
 				tabFolder.setSelection(0);
@@ -292,13 +286,12 @@ public class LaborView extends ViewPart implements IRefreshable {
 		};
 		printAction = new Action(Messages.LaborView_print) {
 			@Override
-			public void run(){
+			public void run() {
 				try {
-					LaborblattView lb =
-						(LaborblattView) getViewSite().getPage().showView(LaborblattView.ID);
+					LaborblattView lb = (LaborblattView) getViewSite().getPage().showView(LaborblattView.ID);
 					Patient pat = ElexisEventDispatcher.getSelectedPatient();
-					lb.createLaborblatt(pat, resultsComposite.getPrintHeaders(),
-						resultsComposite.getPrintRows(), resultsComposite.getSkipIndex());
+					lb.createLaborblatt(pat, resultsComposite.getPrintHeaders(), resultsComposite.getPrintRows(),
+							resultsComposite.getSkipIndex());
 				} catch (Exception ex) {
 					ExHandler.handle(ex);
 				}
@@ -309,12 +302,10 @@ public class LaborView extends ViewPart implements IRefreshable {
 				setImageDescriptor(Images.IMG_IMPORT.getImageDescriptor());
 				setToolTipText(Messages.LaborView_importToolTip);
 			}
-			
+
 			@Override
-			public void run(){
-				Importer imp =
-					new Importer(getViewSite().getShell(),
-						ExtensionPointConstantsUi.LABORDATENIMPORT); //$NON-NLS-1$
+			public void run() {
+				Importer imp = new Importer(getViewSite().getShell(), ExtensionPointConstantsUi.LABORDATENIMPORT); // $NON-NLS-1$
 				imp.create();
 				imp.setMessage(Messages.LaborView_selectDataSource);
 				imp.getShell().setText(Messages.LaborView_labImporterCaption);
@@ -324,12 +315,10 @@ public class LaborView extends ViewPart implements IRefreshable {
 		};
 		xmlAction = new Action(Messages.LaborView_xmlExport) {
 			@Override
-			public void run(){
+			public void run() {
 				Document doc = makeXML();
 				if (doc != null) {
-					FileDialog fsel =
-						new FileDialog(Hub.plugin.getWorkbench().getActiveWorkbenchWindow()
-							.getShell());
+					FileDialog fsel = new FileDialog(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell());
 					String fname = fsel.open();
 					if (fname != null) {
 						try {
@@ -341,9 +330,8 @@ public class LaborView extends ViewPart implements IRefreshable {
 							fout.close();
 						} catch (Exception ex) {
 							ExHandler.handle(ex);
-							SWTHelper.alert(Messages.LaborView_ErrorCaption,
-								Messages.LaborView_couldntwrite + fname);
-							
+							SWTHelper.alert(Messages.LaborView_ErrorCaption, Messages.LaborView_couldntwrite + fname);
+
 						}
 					}
 				}
@@ -351,21 +339,20 @@ public class LaborView extends ViewPart implements IRefreshable {
 		};
 		newColumnAction = new Action(Messages.LaborView_newDate) {
 			@Override
-			public void run(){
+			public void run() {
 				tabFolder.setSelection(0);
 				resultsComposite.toggleNewColumn();
 			}
 		};
 		newAction = new Action(Messages.LaborView_newDate) {
 			@Override
-			public void run(){
+			public void run() {
 				Patient patient = ElexisEventDispatcher.getSelectedPatient();
 				if (patient == null) {
 					return;
 				}
 				TimeTool date = new TimeTool();
-				LaborVerordnungDialog dialog =
-					new LaborVerordnungDialog(getSite().getShell(), patient, date);
+				LaborVerordnungDialog dialog = new LaborVerordnungDialog(getSite().getShell(), patient, date);
 				if (dialog.open() == LaborVerordnungDialog.OK) {
 					tabFolder.setSelection(1);
 				}
@@ -373,38 +360,38 @@ public class LaborView extends ViewPart implements IRefreshable {
 		};
 		refreshAction = new Action(Messages.LaborView_Refresh) {
 			@Override
-			public void run(){
+			public void run() {
 				resultsComposite.reload();
 				ordersComposite.reload();
 			}
 		};
 		expandAllAction = new Action(Messages.LaborView_expand_all) {
 			@Override
-			public void run(){
+			public void run() {
 				if (tabFolder.getSelectionIndex() == 0) {
 					resultsComposite.expandAll();
 				}
 			}
-			
+
 			@Override
-			public ImageDescriptor getImageDescriptor(){
+			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_ARROWDOWN.getImageDescriptor();
 			}
 		};
 		collapseAllAction = new Action(Messages.LaborView_collapse_all) {
 			@Override
-			public void run(){
+			public void run() {
 				if (tabFolder.getSelectionIndex() == 0) {
 					resultsComposite.collapseAll();
 				}
 			}
-			
+
 			@Override
-			public ImageDescriptor getImageDescriptor(){
+			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_ARROWUP.getImageDescriptor();
 			}
 		};
-		
+
 		newColumnAction.setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 		newAction.setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
 		fwdAction.setImageDescriptor(Images.IMG_NEXT.getImageDescriptor());
@@ -413,14 +400,14 @@ public class LaborView extends ViewPart implements IRefreshable {
 		xmlAction.setImageDescriptor(Images.IMG_EXPORT.getImageDescriptor());
 		refreshAction.setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
 	}
-	
-	public Document makeXML(){
+
+	public Document makeXML() {
 		Document doc = null;
 		try {
 			doc = new Document();
 			Element r = new Element("Laborblatt"); //$NON-NLS-1$
 			r.setAttribute("Erstellt", new TimeTool() //$NON-NLS-1$
-				.toString(TimeTool.FULL_GER));
+					.toString(TimeTool.FULL_GER));
 			Patient actpat = ElexisEventDispatcher.getSelectedPatient();
 			if (actpat == null) {
 				return doc;
@@ -428,28 +415,28 @@ public class LaborView extends ViewPart implements IRefreshable {
 			r.setAttribute("Patient", actpat.getLabel()); //$NON-NLS-1$
 			doc.setRootElement(r);
 			Element Daten = new Element("Daten"); //$NON-NLS-1$
-			
+
 			r.setAttribute("Patient", actpat.getLabel()); //$NON-NLS-1$
-			
-			HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> groupedResults =
-				LabResult.getGrouped(actpat);
-			
+
+			HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> groupedResults = LabResult
+					.getGrouped(actpat);
+
 			List<String> dates = getDates(groupedResults);
-			
+
 			for (String d : dates) {
 				Element dat = new Element("Datum"); //$NON-NLS-1$
 				dat.setAttribute("Tag", d); //$NON-NLS-1$
 				Daten.addContent(dat);
 			}
 			r.addContent(Daten);
-			
+
 			ArrayList<String> groupNames = new ArrayList<String>();
 			groupNames.addAll(groupedResults.keySet());
-			
+
 			for (String g : groupNames) {
 				Element eGroup = new Element("Gruppe"); //$NON-NLS-1$
 				eGroup.setAttribute("Name", g); //$NON-NLS-1$
-				
+
 				HashMap<String, HashMap<String, List<LabResult>>> itemMap = groupedResults.get(g);
 				List<LabItem> items = getItems(itemMap);
 				if (items == null) {
@@ -464,11 +451,10 @@ public class LaborView extends ViewPart implements IRefreshable {
 					eItem.setAttribute("Name", it.getName()); //$NON-NLS-1$
 					eItem.setAttribute("Kürzel", it.getKuerzel()); //$NON-NLS-1$
 					eItem.setAttribute("Einheit", it.getEinheit()); //$NON-NLS-1$
-					
-					HashMap<String, List<LabResult>> resultsPerDate =
-						itemMap.get(it.getShortLabel());
+
+					HashMap<String, List<LabResult>> resultsPerDate = itemMap.get(it.getShortLabel());
 					Set<String> resultDates = resultsPerDate.keySet();
-					
+
 					for (String date : resultDates) {
 						List<LabResult> results = resultsPerDate.get(date);
 						Element eResult = new Element("Resultat"); //$NON-NLS-1$
@@ -493,8 +479,8 @@ public class LaborView extends ViewPart implements IRefreshable {
 		}
 		return doc;
 	}
-	
-	private List<LabItem> getItems(HashMap<String, HashMap<String, List<LabResult>>> itemMap){
+
+	private List<LabItem> getItems(HashMap<String, HashMap<String, List<LabResult>>> itemMap) {
 		Set<String> keys = itemMap.keySet();
 		ArrayList<LabItem> ret = new ArrayList<LabItem>();
 		for (String string : keys) {
@@ -510,9 +496,8 @@ public class LaborView extends ViewPart implements IRefreshable {
 		}
 		return ret;
 	}
-	
-	public List<String> getDates(
-		HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> map){
+
+	public List<String> getDates(HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> map) {
 		ArrayList<String> ret = new ArrayList<String>();
 		HashSet<String> dateStrings = new HashSet<String>();
 		for (String group : map.keySet()) {
@@ -525,18 +510,19 @@ public class LaborView extends ViewPart implements IRefreshable {
 		Collections.sort(ret);
 		return ret;
 	}
-	
-	public void activation(final boolean mode){}
-	
+
+	public void activation(final boolean mode) {
+	}
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
-	public void reloadContents(final Class clazz){
+
+	public void reloadContents(final Class clazz) {
 		if (clazz.equals(LabItem.class)) {
-			
+
 		}
 	}
 }

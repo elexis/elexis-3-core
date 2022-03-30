@@ -53,14 +53,15 @@ import ch.rgw.tools.StringTool;
 /** statische Hilfsfunktionen für SWT-Objekte */
 public class SWTHelper {
 	/**
-	 * Singleton-Variable, die einen FocusListener enthaelt, der in einem Text-Control den Text
-	 * selektiert, wenn das Control den Focus erhaelt. Siehe setSelectOnFocus().
+	 * Singleton-Variable, die einen FocusListener enthaelt, der in einem
+	 * Text-Control den Text selektiert, wenn das Control den Focus erhaelt. Siehe
+	 * setSelectOnFocus().
 	 */
 	private static FocusListener selectOnFocusListener = null;
 	private static Log log = Log.get("Global: "); //$NON-NLS-1$
-	
+
 	/** Ein Objekt innerhalb des parents zentrieren */
-	public static void center(final Shell parent, final Composite child){
+	public static void center(final Shell parent, final Composite child) {
 		if (parent != null && child != null) {
 			Rectangle par = parent.getBounds();
 			Rectangle ch = child.getBounds();
@@ -71,9 +72,9 @@ public class SWTHelper {
 			}
 		}
 	}
-	
+
 	/** Ein Objekt innerhalb des parents zentrieren */
-	public static void center(final Shell parent, final Shell child){
+	public static void center(final Shell parent, final Shell child) {
 		if (parent != null && child != null) {
 			Rectangle par = parent.getBounds();
 			Rectangle ch = child.getBounds();
@@ -84,12 +85,12 @@ public class SWTHelper {
 			}
 		}
 	}
-	
+
 	/**
-	 * Ein Objekt auf dem Bildschirm zentrieren. Robust. Sollte nie eine Exception werfen. Ändert im
-	 * Zweifelsfall nichts an der Position.
-	 * */
-	public static void center(final Shell child){
+	 * Ein Objekt auf dem Bildschirm zentrieren. Robust. Sollte nie eine Exception
+	 * werfen. Ändert im Zweifelsfall nichts an der Position.
+	 */
+	public static void center(final Shell child) {
 		if (child != null) {
 			Display display = UiDesk.getDisplay();
 			if (display != null) {
@@ -105,23 +106,23 @@ public class SWTHelper {
 					}
 				}
 			}
-			
+
 		}
 	}
-	
+
 	/** Einen Text zentriert in ein Rechteck schreiben */
-	public static void writeCentered(final GC gc, final String text, final Rectangle bounds){
+	public static void writeCentered(final GC gc, final String text, final Rectangle bounds) {
 		int w = gc.getFontMetrics().getAverageCharWidth();
 		int h = gc.getFontMetrics().getHeight();
 		int woff = (bounds.width - text.length() * w) >> 1;
 		int hoff = (bounds.height - h) >> 1;
 		gc.drawString(text, bounds.x + woff, bounds.y + hoff);
 	}
-	
+
 	/** Eine Alertbox anzeigen (synchron) */
-	public static void alert(final String title, final String message){
+	public static void alert(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
-			public void run(){
+			public void run() {
 				Shell shell = UiDesk.getDisplay().getActiveShell();
 				if (shell == null) {
 					shell = new Shell(UiDesk.getDisplay());
@@ -133,7 +134,7 @@ public class SWTHelper {
 			}
 		});
 	}
-	
+
 	/**
 	 * Eine Standard-Fehlermeldung asynchron im UI-Thread zeigen
 	 * 
@@ -142,16 +143,16 @@ public class SWTHelper {
 	 * @param message
 	 *            Nachricht
 	 */
-	public static void showError(final String title, final String message){
+	public static void showError(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
-			
-			public void run(){
+
+			public void run() {
 				Shell shell = UiDesk.getTopShell();
 				MessageDialog.openError(shell, title, message);
 			}
 		});
 	}
-	
+
 	/**
 	 * Eine Standard-Fehlermeldung asynchron zeigen und loggen
 	 * 
@@ -160,16 +161,16 @@ public class SWTHelper {
 	 * @param message
 	 *            Nachricht
 	 */
-	public static void showError(final String logHeader, final String title, final String message){
+	public static void showError(final String logHeader, final String title, final String message) {
 		log.log(logHeader + ": " + title + "->" + message, Log.ERRORS); //$NON-NLS-1$ //$NON-NLS-2$
 		UiDesk.getDisplay().syncExec(new Runnable() {
-			public void run(){
+			public void run() {
 				Shell shell = UiDesk.getDisplay().getActiveShell();
 				MessageDialog.openError(shell, title, message);
 			}
 		});
 	}
-	
+
 	/**
 	 * Eine Standard-Infomeldung asynchron zeigen
 	 * 
@@ -178,16 +179,16 @@ public class SWTHelper {
 	 * @param message
 	 *            Nachricht
 	 */
-	public static void showInfo(final String title, final String message){
+	public static void showInfo(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
-			
-			public void run(){
+
+			public void run() {
 				Shell shell = UiDesk.getTopShell();
 				MessageDialog.openInformation(shell, title, message);
 			}
 		});
 	}
-	
+
 	/**
 	 * Eine mit Ja oder Nein zu beantwortende Frage im UI-Thread zeigen
 	 * 
@@ -197,27 +198,27 @@ public class SWTHelper {
 	 *            Nachricht
 	 * @return true: User hat Ja geklickt
 	 */
-	public static boolean askYesNo(final String title, final String message){
+	public static boolean askYesNo(final String title, final String message) {
 		InSync rn = new InSync(title, message);
 		UiDesk.getDisplay().syncExec(rn);
 		return rn.ret;
 	}
-	
+
 	private static class InSync implements Runnable {
 		boolean ret;
 		String title, message;
-		
-		InSync(final String title, final String message){
+
+		InSync(final String title, final String message) {
 			this.title = title;
 			this.message = message;
 		}
-		
-		public void run(){
+
+		public void run() {
 			Shell shell = UiDesk.getTopShell();
 			ret = MessageDialog.openConfirm(shell, title, message);
 		}
 	}
-	
+
 	/**
 	 * Eine mit Ja, Nein oder Abbrechen zu beantwortende Frage im UI-Thread zeigen
 	 * 
@@ -227,32 +228,33 @@ public class SWTHelper {
 	 *            Nachricht
 	 * @return true: User hat Ja geklickt
 	 */
-	public static Boolean askYesNoCancel(final String title, final String message){
+	public static Boolean askYesNoCancel(final String title, final String message) {
 		InSyncYesNoCancel rn = new InSyncYesNoCancel(title, message);
 		UiDesk.getDisplay().syncExec(rn);
 		return rn.ret;
 	}
-	
+
 	private static class InSyncYesNoCancel implements Runnable {
 		Boolean ret = null;
 		String title, message;
-		
-		InSyncYesNoCancel(final String title, final String message){
+
+		InSyncYesNoCancel(final String title, final String message) {
 			this.title = title;
 			this.message = message;
 		}
-		
-		public void run(){
+
+		public void run() {
 			Shell shell = UiDesk.getTopShell();
 			MessageDialog dialog = new MessageDialog(shell, title, null, // accept
-				// the
-				// default
-				// window
-				// icon
-				message, MessageDialog.QUESTION, new String[] {
-					Messages.SWTHelper_yes, Messages.SWTHelper_no, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					Messages.SWTHelper_cancel
-				}, 0);
+					// the
+					// default
+					// window
+					// icon
+					message, MessageDialog.QUESTION, new String[]{Messages.SWTHelper_yes, Messages.SWTHelper_no, // $NON-NLS-1$
+																													// //$NON-NLS-2$
+																													// //$NON-NLS-3$
+							Messages.SWTHelper_cancel},
+					0);
 			// ok is the default
 			int result = dialog.open();
 			if (result != 2) {
@@ -260,18 +262,19 @@ public class SWTHelper {
 			}
 		}
 	}
-	
+
 	/**
 	 * Shortcut for getFillGridData(1,true,1,true);
 	 * 
 	 * @return
 	 */
-	public static GridData getFillGridData(){
+	public static GridData getFillGridData() {
 		return getFillGridData(1, true, 1, true);
 	}
-	
+
 	/**
-	 * Ein GridData-Objekt erzeugen, das den horizontalen und/oder vertikalen Freiraum ausfüllt.
+	 * Ein GridData-Objekt erzeugen, das den horizontalen und/oder vertikalen
+	 * Freiraum ausfüllt.
 	 * 
 	 * @param horizontal
 	 *            true, wenn horizontal gefüllt werden soll
@@ -279,8 +282,7 @@ public class SWTHelper {
 	 *            true, wenn vertikal gefüllt werden soll.
 	 * @return ein neu erzeugtes, direkt verwendbares GridData-Objekt
 	 */
-	public static GridData getFillGridData(final int hSpan, final boolean hFill, final int vSpan,
-		final boolean vFill){
+	public static GridData getFillGridData(final int hSpan, final boolean hFill, final int vSpan, final boolean vFill) {
 		int ld = 0;
 		if (hFill) {
 			ld = GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL;
@@ -293,15 +295,15 @@ public class SWTHelper {
 		ret.verticalSpan = vSpan < 1 ? 1 : vSpan;
 		return ret;
 	}
-	
-	public static GridData fillGrid(final Composite parent, final int cols){
+
+	public static GridData fillGrid(final Composite parent, final int cols) {
 		parent.setLayout(new GridLayout(cols, false));
 		return getFillGridData(1, true, 1, true);
 	}
-	
+
 	/**
-	 * Set a GridData to the given Control that sets the specified height in lines calculated with
-	 * the control's current font.
+	 * Set a GridData to the given Control that sets the specified height in lines
+	 * calculated with the control's current font.
 	 * 
 	 * @param control
 	 *            the control
@@ -311,32 +313,30 @@ public class SWTHelper {
 	 *            true if the control should require all horizontal space
 	 * @return the GridData (that is already set to the control)
 	 */
-	public static GridData setGridDataHeight(final Control control, final int lines,
-		final boolean fillHorizontal){
+	public static GridData setGridDataHeight(final Control control, final int lines, final boolean fillHorizontal) {
 		int h = Math.round(control.getFont().getFontData()[0].height);
 		GridData gd = getFillGridData(1, fillHorizontal, 1, false);
 		gd.heightHint = lines * (h + 2);
 		control.setLayoutData(gd);
 		return gd;
 	}
-	
+
 	/**
 	 * Constructor wrapper for TableWrapLayout, so that parameters are identical to
 	 * GridLayout(numColumns, makeColumnsEqualWidth)
 	 */
-	public static TableWrapLayout createTableWrapLayout(final int numColumns,
-		final boolean makeColumnsEqualWidth){
+	public static TableWrapLayout createTableWrapLayout(final int numColumns, final boolean makeColumnsEqualWidth) {
 		TableWrapLayout layout = new TableWrapLayout();
-		
+
 		layout.numColumns = numColumns;
 		layout.makeColumnsEqualWidth = makeColumnsEqualWidth;
-		
+
 		return layout;
 	}
-	
+
 	/**
-	 * Ein TableWrapDAta-Objekt erzeugen, das den horizontalen und/oder vertikalen Freiraum
-	 * ausfüllt.
+	 * Ein TableWrapDAta-Objekt erzeugen, das den horizontalen und/oder vertikalen
+	 * Freiraum ausfüllt.
 	 * 
 	 * @param horizontal
 	 *            true, wenn horizontal gefüllt werden soll
@@ -344,10 +344,10 @@ public class SWTHelper {
 	 *            true, wenn vertikal gefüllt werden soll.
 	 * @return ein neu erzeugtes, direkt verwendbares GridData-Objekt
 	 */
-	public static TableWrapData getFillTableWrapData(final int hSpan, final boolean hFill,
-		final int vSpan, final boolean vFill){
+	public static TableWrapData getFillTableWrapData(final int hSpan, final boolean hFill, final int vSpan,
+			final boolean vFill) {
 		TableWrapData layoutData = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP);
-		
+
 		if (hFill) {
 			layoutData.grabHorizontal = true;
 			layoutData.align = TableWrapData.FILL;
@@ -356,13 +356,13 @@ public class SWTHelper {
 			layoutData.grabVertical = true;
 			layoutData.valign = TableWrapData.FILL;
 		}
-		
+
 		layoutData.colspan = (hSpan < 1 ? 1 : hSpan);
 		layoutData.rowspan = (vSpan < 1 ? 1 : vSpan);
-		
+
 		return layoutData;
 	}
-	
+
 	/**
 	 * Return a color that contrasts optimally to the given color
 	 * 
@@ -370,14 +370,14 @@ public class SWTHelper {
 	 *            an SWT Color
 	 * @return black if col was rather bright, white if col was rather dark.
 	 */
-	public static Color getContrast(final Color col){
+	public static Color getContrast(final Color col) {
 		double val = col.getRed() * 0.56 + col.getGreen() * 0.33 + col.getBlue() * 0.11;
 		if (val <= 110) {
 			return UiDesk.getDisplay().getSystemColor(SWT.COLOR_WHITE);
 		}
 		return UiDesk.getDisplay().getSystemColor(SWT.COLOR_BLACK);
 	}
-	
+
 	/**
 	 * Return a Label that acts as a hyperlink
 	 * 
@@ -389,26 +389,25 @@ public class SWTHelper {
 	 *            hyperlink listener that is called on Mouse click
 	 * @return a Label
 	 */
-	public static Label createHyperlink(final Composite parent, final String text,
-		final IHyperlinkListener lis){
+	public static Label createHyperlink(final Composite parent, final String text, final IHyperlinkListener lis) {
 		final Label ret = new Label(parent, SWT.NONE);
 		ret.setText(text);
-		ret.setForeground(UiDesk.getColorRegistry().get(Messages.SWTHelper_blue)); //$NON-NLS-1$
+		ret.setForeground(UiDesk.getColorRegistry().get(Messages.SWTHelper_blue)); // $NON-NLS-1$
 		ret.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(final MouseEvent e){
+			public void mouseDown(final MouseEvent e) {
 				if (lis != null) {
 					lis.linkActivated(new HyperlinkEvent(ret, ret, text, e.stateMask));
 				}
 			}
-			
+
 		});
 		return ret;
 	}
-	
+
 	/**
-	 * Create a multiline text widget with a specified height in lines (calculated with the Text's
-	 * default font)
+	 * Create a multiline text widget with a specified height in lines (calculated
+	 * with the Text's default font)
 	 * 
 	 * @param parent
 	 *            parent composite
@@ -418,7 +417,7 @@ public class SWTHelper {
 	 *            creation flags (SWT.MULTI and SWT.WRAP are added automatocally)
 	 * @return a Text control
 	 */
-	public static Text createText(final Composite parent, final int lines, final int flags){
+	public static Text createText(final Composite parent, final int lines, final int flags) {
 		int lNum = SWT.SINGLE;
 		if (lines > 1) {
 			lNum = SWT.MULTI | SWT.WRAP;
@@ -431,9 +430,8 @@ public class SWTHelper {
 		ret.setLayoutData(gd);
 		return ret;
 	}
-	
-	public static Text createText(final FormToolkit tk, final Composite parent, final int lines,
-		final int flags){
+
+	public static Text createText(final FormToolkit tk, final Composite parent, final int lines, final int flags) {
 		int lNum = SWT.SINGLE;
 		if (lines > 1) {
 			lNum = SWT.MULTI | SWT.WRAP;
@@ -446,14 +444,14 @@ public class SWTHelper {
 		ret.setLayoutData(gd);
 		return ret;
 	}
-	
+
 	public static LabeledInputField createLabeledField(final Composite parent, final String label,
-		final LabeledInputField.Typ typ){
+			final LabeledInputField.Typ typ) {
 		LabeledInputField ret = new LabeledInputField(parent, label, typ);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		return ret;
 	}
-	
+
 	/**
 	 * Check whether the String is empty and give an error message if so
 	 * 
@@ -463,30 +461,32 @@ public class SWTHelper {
 	 *            the name for the String
 	 * @return false if it was empty
 	 */
-	public static boolean blameEmptyString(final String test, final String name){
+	public static boolean blameEmptyString(final String test, final String name) {
 		if (StringTool.isNothing(test)) {
-			showError(Messages.SWTHelper_BadParameter, name + Messages.SWTHelper_HasNoValidContents); //$NON-NLS-1$ //$NON-NLS-2$
+			showError(Messages.SWTHelper_BadParameter, name + Messages.SWTHelper_HasNoValidContents); // $NON-NLS-1$
+																										// //$NON-NLS-2$
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
-	 * Adds a FocusListener to <code>text</code> so that the text is selected as soon as the control
-	 * gets the focus. The selection is cleared when the focus is lost.
+	 * Adds a FocusListener to <code>text</code> so that the text is selected as
+	 * soon as the control gets the focus. The selection is cleared when the focus
+	 * is lost.
 	 * 
 	 * @param text
 	 *            the Text control to add a focus listener to
 	 */
-	public static void setSelectOnFocus(final Text text){
+	public static void setSelectOnFocus(final Text text) {
 		if (selectOnFocusListener == null) {
 			selectOnFocusListener = new FocusListener() {
-				public void focusGained(final FocusEvent e){
+				public void focusGained(final FocusEvent e) {
 					Text t = (Text) e.widget;
 					t.selectAll();
 				}
-				
-				public void focusLost(final FocusEvent e){
+
+				public void focusLost(final FocusEvent e) {
 					Text t = (Text) e.widget;
 					if (t.getSelectionCount() > 0) {
 						t.clearSelection();
@@ -494,73 +494,73 @@ public class SWTHelper {
 				}
 			};
 		}
-		
+
 		text.addFocusListener(selectOnFocusListener);
 	}
-	
+
 	public static class SimpleDialog extends Dialog {
 		IControlProvider dialogAreaProvider;
-		
-		public SimpleDialog(final IControlProvider control){
+
+		public SimpleDialog(final IControlProvider control) {
 			super(UiDesk.getTopShell());
 			dialogAreaProvider = control;
 		}
-		
+
 		@Override
-		protected Control createDialogArea(final Composite parent){
+		protected Control createDialogArea(final Composite parent) {
 			return dialogAreaProvider.getControl(parent);
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			dialogAreaProvider.beforeClosing();
 			super.okPressed();
 		}
-		
+
 	}
-	
+
 	public interface IControlProvider {
 		public Control getControl(Composite parent);
-		
+
 		public void beforeClosing();
 	}
-	
-	public static java.awt.Font createAWTFontFromSWTFont(final Font swtFont){
+
+	public static java.awt.Font createAWTFontFromSWTFont(final Font swtFont) {
 		String name = swtFont.getFontData()[0].getName();
 		int style = swtFont.getFontData()[0].getStyle();
 		int height = swtFont.getFontData()[0].getHeight();
 		java.awt.Font awtFont = new java.awt.Font(name, style, height);
 		return awtFont;
 	}
-	
-	public static int size(final Rectangle r){
+
+	public static int size(final Rectangle r) {
 		if (r == null) {
 			return 0;
 		}
 		return (r.width - r.x) * (r.height - r.y);
 	}
-	
-	public static Point getStringBounds(Composite c, String s){
+
+	public static Point getStringBounds(Composite c, String s) {
 		GC gc = new GC(c);
 		Point ret = gc.textExtent(s);
 		gc.dispose();
 		return ret;
 	}
-	
+
 	/**
 	 * Convenience method to add a separator bar to the composite.
 	 * <p>
-	 * The parent composite must have a <code>GridLayout</code>. The separator bar will span all
-	 * columns of the parent grid layout. <br>
+	 * The parent composite must have a <code>GridLayout</code>. The separator bar
+	 * will span all columns of the parent grid layout. <br>
 	 * <br>
-	 * Code from: http://www.softwarerevolution.com/blueprints/ The Software Revolution Inc. by
-	 * Thomas Holland under GPLv3
+	 * Code from: http://www.softwarerevolution.com/blueprints/ The Software
+	 * Revolution Inc. by Thomas Holland under GPLv3
 	 * </p>
 	 * 
 	 * @param parent
 	 *            <code>Composite</code>
 	 */
-	public static void addSeparator(Composite parent){
+	public static void addSeparator(Composite parent) {
 		Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
 		Layout parentlayout = parent.getLayout();
 		if (parentlayout instanceof GridLayout) {
@@ -569,34 +569,31 @@ public class SWTHelper {
 			separator.setLayoutData(gridData);
 		}
 	}
-	
+
 	/**
-	 * This method "reloads" a view, by closing and opening it. It is the programmatical equivalent
-	 * to closing a view and then select Open/View/and the view ID.
+	 * This method "reloads" a view, by closing and opening it. It is the
+	 * programmatical equivalent to closing a view and then select Open/View/and the
+	 * view ID.
 	 * 
-	 * This method should NOT be used, as it identifies an architectural problem. The UI itself
-	 * should support the respective update.
+	 * This method should NOT be used, as it identifies an architectural problem.
+	 * The UI itself should support the respective update.
 	 * 
 	 * @param viewID
 	 */
-	public static void reloadViewPart(String viewID){
-		if (PlatformUI.getWorkbench() != null
-			&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-			&& PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-			IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.findView(viewID);
+	public static void reloadViewPart(String viewID) {
+		if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+				&& PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
+			IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(viewID);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(page);
 			try {
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-					.showView(viewID);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewID);
 			} catch (PartInitException e) {
-				Status status = new Status(IStatus.ERROR, Hub.PLUGIN_ID,
-					"Error reopening viewPart " + viewID, e);
+				Status status = new Status(IStatus.ERROR, Hub.PLUGIN_ID, "Error reopening viewPart " + viewID, e);
 				StatusManager.getManager().handle(status, StatusManager.SHOW);
 			}
 		}
 	}
-	
+
 	/**
 	 * Creates a new GridLayout and can set all spaces and gaps to zero
 	 * 
@@ -604,7 +601,7 @@ public class SWTHelper {
 	 * @param numColumns
 	 * @return
 	 */
-	public static GridLayout createGridLayout(boolean noGaps, int numColumns){
+	public static GridLayout createGridLayout(boolean noGaps, int numColumns) {
 		GridLayout gd = new GridLayout(numColumns, false);
 		if (noGaps) {
 			gd.horizontalSpacing = 0;

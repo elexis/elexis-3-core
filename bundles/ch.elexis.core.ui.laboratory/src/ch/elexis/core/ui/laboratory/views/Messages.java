@@ -46,11 +46,11 @@ public class Messages {
 	public static String LaborView_xmlExport = ch.elexis.core.l10n.Messages.LaborView_xmlExport;
 	public static String LaborblattView_LabTemplateName = ch.elexis.core.l10n.Messages.LaborblattView_LabTemplateName;
 	public static String LaborblattView_created = ch.elexis.core.l10n.Messages.LaborblattView_created;
-	
+
 	public static String LabOrderView_Order = ch.elexis.core.l10n.Messages.LabOrderView_Order;
 	public static String LabOrderView_RefValue = ch.elexis.core.l10n.Messages.LabOrderView_RefValue;
 	public static String LabOrderView_DateTime = ch.elexis.core.l10n.Messages.LabOrderView_DateTime;
 	public static String LabOrderView_Value = ch.elexis.core.l10n.Messages.LabOrderView_Value;
 	public static String LabOrderView_OrderNumber = ch.elexis.core.l10n.Messages.LabOrderView_OrderNumber;
-	
+
 }

@@ -30,13 +30,15 @@ import ch.elexis.data.PersistentObject.TristateBoolean;
  */
 
 /**
- * A tristate checkbox. The states cycle through "filled with a square"/undefined/"partly selected",
- * checked/true and unchecked/false.<br>
+ * A tristate checkbox. The states cycle through "filled with a
+ * square"/undefined/"partly selected", checked/true and unchecked/false.<br>
  * The starting state is undef/filled with a square<br>
- * To set the tristate selection state of the tristate checkbox use {@link #getTristate()}.<br>
+ * To set the tristate selection state of the tristate checkbox use
+ * {@link #getTristate()}.<br>
  * To set the tristate selection state of the tristate checkbox use.<br>
  * {@link #setTristate(TristateBoolean)}.<br>
- * To set the cycling order use {@link #setCyclingOrder(boolean)}. Default is false after undef.
+ * To set the cycling order use {@link #setCyclingOrder(boolean)}. Default is
+ * false after undef.
  * 
  * @author H. Marlovits
  * @since 3.0.0
@@ -44,55 +46,57 @@ import ch.elexis.data.PersistentObject.TristateBoolean;
 public class TristateCheckbox extends Button {
 	private static final TristateBoolean START_STATE = TristateBoolean.UNDEF;
 	private static final boolean START_FALSEFIRST = true;
-	
+
 	protected boolean falseFirst = START_FALSEFIRST;
-	
+
 	/**
-	 * Constructs a new instance of a checkbox-style button with tristate behaviour. False state
-	 * follows after undefined.
+	 * Constructs a new instance of a checkbox-style button with tristate behaviour.
+	 * False state follows after undefined.
 	 * 
 	 * @param parent
-	 *            a composite control which will be the parent of the new instance (cannot be null)
+	 *            a composite control which will be the parent of the new instance
+	 *            (cannot be null)
 	 * @param style
-	 *            the style of control to construct. You do not need to set SWT.CHECK which is
-	 *            automatically set.
+	 *            the style of control to construct. You do not need to set
+	 *            SWT.CHECK which is automatically set.
 	 * @author H. Marlovits
 	 */
-	public TristateCheckbox(Composite parent, int style){
+	public TristateCheckbox(Composite parent, int style) {
 		super(parent, (style | SWT.CHECK));
 		addSelectionListener(new TristateSelectionListener(false));
 		setTristate(START_STATE);
 		setCyclingOrder(true);
 	}
-	
+
 	/**
 	 * Constructs a new instance of a checkbox-style button with tristate behaviour.
 	 * 
 	 * @param parent
-	 *            a composite control which will be the parent of the new instance (cannot be null)
+	 *            a composite control which will be the parent of the new instance
+	 *            (cannot be null)
 	 * @param style
-	 *            the style of control to construct. You do not need to set SWT.CHECK which is
-	 *            automatically set.
+	 *            the style of control to construct. You do not need to set
+	 *            SWT.CHECK which is automatically set.
 	 * @param falseFirst
-	 *            set how the states are cycling through. true if unchecked follows after undefined,
-	 *            false if checked follows after undefined.
+	 *            set how the states are cycling through. true if unchecked follows
+	 *            after undefined, false if checked follows after undefined.
 	 * @author H. Marlovits
 	 */
-	public TristateCheckbox(Composite parent, int style, boolean falseFirst){
+	public TristateCheckbox(Composite parent, int style, boolean falseFirst) {
 		super(parent, (style | SWT.CHECK));
 		addSelectionListener(new TristateSelectionListener(false));
 		setTristate(START_STATE);
 		setCyclingOrder(falseFirst);
 	}
-	
+
 	/**
 	 * get the current tristate selection state
 	 * 
-	 * @return the current tristate selection state, one of TristateCheckbox.TristateValue
-	 *         (TRUE/FALSE/UNDEF)
+	 * @return the current tristate selection state, one of
+	 *         TristateCheckbox.TristateValue (TRUE/FALSE/UNDEF)
 	 * @author H. Marlovits
 	 */
-	public TristateBoolean getTristate(){
+	public TristateBoolean getTristate() {
 		checkWidget();
 		boolean selection = getSelection();
 		boolean grayed = getGrayed();
@@ -106,16 +110,16 @@ public class TristateCheckbox extends Button {
 			return TristateBoolean.FALSE;
 		}
 	}
-	
+
 	/**
-	 * get the current tristate selection state as String as it will be saved in the db. Usually
-	 * you'll use {@link #getTristate()}.
+	 * get the current tristate selection state as String as it will be saved in the
+	 * db. Usually you'll use {@link #getTristate()}.
 	 * 
 	 * @return the current tristate selection state as String, one of
 	 *         StringConstants.ONE/StringConstants.ZERO/StringConstants.EMPTY
 	 * @author H. Marlovits
 	 */
-	public String getTristateDbValue(){
+	public String getTristateDbValue() {
 		checkWidget();
 		boolean selection = getSelection();
 		boolean grayed = getGrayed();
@@ -129,16 +133,16 @@ public class TristateCheckbox extends Button {
 			return StringConstants.ZERO;
 		}
 	}
-	
+
 	/**
 	 * set the tristate selection state
 	 * 
 	 * @param newState
-	 *            the new tristate selection state, one of TristateCheckbox.TristateValue
-	 *            (TRUE/FALSE/UNDEF)
+	 *            the new tristate selection state, one of
+	 *            TristateCheckbox.TristateValue (TRUE/FALSE/UNDEF)
 	 * @author H. Marlovits
 	 */
-	public void setTristate(TristateBoolean newState){
+	public void setTristate(TristateBoolean newState) {
 		checkWidget();
 		if (newState == TristateBoolean.TRUE) {
 			setSelection(true);
@@ -151,17 +155,18 @@ public class TristateCheckbox extends Button {
 			setGrayed(true);
 		}
 	}
-	
+
 	/**
-	 * set the tristate selection state by using a String as it will be saved in the db. Usually
-	 * you'll use {@link #setTristate(TristateBoolean)}.
+	 * set the tristate selection state by using a String as it will be saved in the
+	 * db. Usually you'll use {@link #setTristate(TristateBoolean)}.
 	 * 
 	 * @param newState
-	 *            the new tristate selection as a String value as it is saved in the db, one of
+	 *            the new tristate selection as a String value as it is saved in the
+	 *            db, one of
 	 *            StringConstants.ONE/StringConstants.ZERO/StringConstants.EMPTY
 	 * @author H. Marlovits
 	 */
-	public void setTristateDbValue(String newState){
+	public void setTristateDbValue(String newState) {
 		checkWidget();
 		if (newState.equalsIgnoreCase(StringConstants.ONE)) {
 			setSelection(true);
@@ -174,7 +179,7 @@ public class TristateCheckbox extends Button {
 			setGrayed(true);
 		}
 	}
-	
+
 	/**
 	 * set how the states of the tristate checkbox are cycling through<br>
 	 * undef->false->true OR<br>
@@ -183,42 +188,43 @@ public class TristateCheckbox extends Button {
 	 * 
 	 * @author H. Marlovits
 	 */
-	public void setCyclingOrder(boolean falseFirst){
+	public void setCyclingOrder(boolean falseFirst) {
 		this.falseFirst = falseFirst;
 	}
-	
+
 	/**
-	 * I explicitly want to subclass... Shouldn't cause any problems since I just implement a
-	 * constructor calling super and implement some new methods.
+	 * I explicitly want to subclass... Shouldn't cause any problems since I just
+	 * implement a constructor calling super and implement some new methods.
 	 * 
 	 * @author H. Marlovits
 	 */
-	protected void checkSubclass(){}
-	
+	protected void checkSubclass() {
+	}
+
 	/**
-	 * a class for implementing a tristate behaviour for checkboxes. Just add this as a selection
-	 * listener to the checkbox. The states cycle through undefined -> checked -> unchecked or
-	 * undefined -> unchecked -> checked
+	 * a class for implementing a tristate behaviour for checkboxes. Just add this
+	 * as a selection listener to the checkbox. The states cycle through undefined
+	 * -> checked -> unchecked or undefined -> unchecked -> checked
 	 * 
 	 * @author H. Marlovits
 	 */
 	public class TristateSelectionListener implements SelectionListener {
 		boolean falseFirst = true;
-		
+
 		/**
 		 * Create a new TristateSelectionListener.
 		 * 
 		 * @param falseFirst
-		 *            specifies the order of the states. if true then false follows after undef, if
-		 *            false then true follows after undef
+		 *            specifies the order of the states. if true then false follows
+		 *            after undef, if false then true follows after undef
 		 * @author H. Marlovits
 		 */
-		TristateSelectionListener(boolean falseFirst){
+		TristateSelectionListener(boolean falseFirst) {
 			this.falseFirst = falseFirst;
 		}
-		
+
 		@Override
-		public void widgetSelected(SelectionEvent e){
+		public void widgetSelected(SelectionEvent e) {
 			Button button = ((Button) e.getSource());
 			boolean selection = !button.getSelection();
 			boolean grayed = button.getGrayed();
@@ -250,8 +256,9 @@ public class TristateCheckbox extends Button {
 				}
 			}
 		}
-		
+
 		@Override
-		public void widgetDefaultSelected(SelectionEvent e){}
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
 	}
 }

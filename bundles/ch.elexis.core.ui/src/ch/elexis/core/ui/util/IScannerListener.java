@@ -13,6 +13,6 @@ package ch.elexis.core.ui.util;
 import org.eclipse.swt.widgets.Event;
 
 public interface IScannerListener {
-	
+
 	public void scannerInput(Event e);
 }

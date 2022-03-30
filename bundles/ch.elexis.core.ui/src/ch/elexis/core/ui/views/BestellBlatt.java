@@ -45,27 +45,23 @@ public class BestellBlatt extends ViewPart implements ICallback {
 	public final static String ID = "ch.elexis.BestellBlatt"; //$NON-NLS-1$
 	TextContainer text;
 	Brief actBest;
-	private static final String ERRMSG_CAPTION = Messages.BestellBlatt_CouldNotCreateOrder; //$NON-NLS-1$
-	private static final String ERRMSG_BODY = Messages.BestellBlatt_CouldNotCreateOrderBody; //$NON-NLS-1$
-	
+	private static final String ERRMSG_CAPTION = Messages.BestellBlatt_CouldNotCreateOrder; // $NON-NLS-1$
+	private static final String ERRMSG_BODY = Messages.BestellBlatt_CouldNotCreateOrderBody; // $NON-NLS-1$
+
 	@Override
-	public void createPartControl(final Composite parent){
+	public void createPartControl(final Composite parent) {
 		setTitleImage(Images.IMG_PRINTER.getImage());
 		text = new TextContainer(getViewSite());
 		text.getPlugin().createContainer(parent, this);
 	}
-	
-	public void createOrder(final IContact receiver, final List<IOrderEntry> toOrder){
-		List<IOrderEntry> orders =
-			toOrder.stream().filter(oe -> oe.getArticle() != null).collect(Collectors.toList());
+
+	public void createOrder(final IContact receiver, final List<IOrderEntry> toOrder) {
+		List<IOrderEntry> orders = toOrder.stream().filter(oe -> oe.getArticle() != null).collect(Collectors.toList());
 		String[][] tbl = new String[orders.size() + 2][];
 		int i = 1;
 		Money sum = new Money();
-		tbl[0] = new String[] {
-			Messages.BestellBlatt_Number, Messages.BestellBlatt_Pharmacode,
-			Messages.BestellBlatt_Name, Messages.BestellBlatt_UnitPrice,
-			Messages.BestellBlatt_LinePrice
-		};
+		tbl[0] = new String[]{Messages.BestellBlatt_Number, Messages.BestellBlatt_Pharmacode,
+				Messages.BestellBlatt_Name, Messages.BestellBlatt_UnitPrice, Messages.BestellBlatt_LinePrice};
 		for (IOrderEntry orderEntry : orders) {
 			String[] row = new String[5];
 			row[0] = Integer.toString(orderEntry.getAmount());
@@ -78,20 +74,18 @@ public class BestellBlatt extends ViewPart implements ICallback {
 			sum.addMoney(amount);
 			tbl[i++] = row;
 		}
-		tbl[i] = new String[] {
-			Messages.BestellBlatt_Sum, StringTool.leer, StringTool.leer, StringTool.leer,
-			sum.getAmountAsString()
-				//$NON-NLS-1$
+		tbl[i] = new String[]{Messages.BestellBlatt_Sum, StringTool.leer, StringTool.leer, StringTool.leer,
+				sum.getAmountAsString()
+				// $NON-NLS-1$
 		};
-		actBest = text.createFromTemplateName(null, TT_ORDER, Brief.BESTELLUNG,
-			Kontakt.load(receiver.getId()), null);
+		actBest = text.createFromTemplateName(null, TT_ORDER, Brief.BESTELLUNG, Kontakt.load(receiver.getId()), null);
 		if (actBest == null) {
 			SWTHelper.showError(ERRMSG_CAPTION, ERRMSG_BODY + "'" + TT_ORDER + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 			this.getSite().getPage().hideView(this);
 		} else {
 			actBest.setPatient(CoreHub.getLoggedInContact());
 			text.getPlugin().insertTable("[" + TT_ORDER + "]", //$NON-NLS-1$ //$NON-NLS-2$
-				ITextPlugin.FIRST_ROW_IS_HEADER | ITextPlugin.GRID_VISIBLE, tbl, null);
+					ITextPlugin.FIRST_ROW_IS_HEADER | ITextPlugin.GRID_VISIBLE, tbl, null);
 			if (text.getPlugin().isDirectOutput()) {
 				text.getPlugin().print(null, null, true);
 				getSite().getPage().hideView(this);
@@ -101,19 +95,20 @@ public class BestellBlatt extends ViewPart implements ICallback {
 			openLocalDocument(this, actBest);
 		}
 	}
-	
+
 	/**
-	 * Open the {@link Brief} as local document. Changes to the local document are not saved.
+	 * Open the {@link Brief} as local document. Changes to the local document are
+	 * not saved.
 	 * 
 	 * @param view
 	 * @param brief
 	 */
-	private void openLocalDocument(BestellBlatt view, Brief brief){
+	private void openLocalDocument(BestellBlatt view, Brief brief) {
 		ILocalDocumentService service = LocalDocumentServiceHolder.getService().orElse(null);
 		if (service != null) {
 			Optional<File> file = service.add(brief, new IConflictHandler() {
 				@Override
-				public Result getResult(){
+				public Result getResult() {
 					return Result.OVERWRITE;
 				}
 			});
@@ -121,34 +116,34 @@ public class BestellBlatt extends ViewPart implements ICallback {
 				Program.launch(file.get().getAbsolutePath());
 			} else {
 				MessageDialog.openError(getSite().getShell(),
-					ch.elexis.core.ui.commands.Messages.StartEditLocalDocumentHandler_errortitle,
-					ch.elexis.core.ui.commands.Messages.StartEditLocalDocumentHandler_errormessage);
+						ch.elexis.core.ui.commands.Messages.StartEditLocalDocumentHandler_errortitle,
+						ch.elexis.core.ui.commands.Messages.StartEditLocalDocumentHandler_errormessage);
 			}
 			if (service.contains(brief)) {
 				Optional<LocalLock> lock = LocalLock.getManagedLock(brief);
 				lock.ifPresent(localDocumentLock -> localDocumentLock.unlock());
-				
+
 				service.remove(brief, false);
 			}
 			view.getSite().getPage().hideView(view);
 		}
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
+
 	@Override
-	public void save(){
+	public void save() {
 		if (actBest != null) {
 			actBest.save(text.getPlugin().storeToByteArray(), text.getPlugin().getMimeType());
 		}
 	}
-	
+
 	@Override
-	public boolean saveAs(){
+	public boolean saveAs() {
 		// TODO Automatisch erstellter Methoden-Stub
 		return false;
 	}

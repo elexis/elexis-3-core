@@ -29,19 +29,19 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	/**
-	 * The stock priority. That is, if an article exists in multiple stocks it
-	 * will be drawn in order of stock priority - with 0 being highest.
+	 * The stock priority. That is, if an article exists in multiple stocks it will
+	 * be drawn in order of stock priority - with 0 being highest.
 	 * 
 	 * May be overriden by {@link #owner}
 	 */
@@ -67,10 +67,10 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	String location;
 
 	/**
-	 * If not <code>null</code> defines this as a private stock for a mandator.
-	 * Only services accounted to this mandator may draw articles from this
-	 * stock. If a private stock exists for a mandator, it will always be
-	 * preferred in drawing articles.
+	 * If not <code>null</code> defines this as a private stock for a mandator. Only
+	 * services accounted to this mandator may draw articles from this stock. If a
+	 * private stock exists for a mandator, it will always be preferred in drawing
+	 * articles.
 	 */
 	@OneToOne
 	@JoinColumn(name = "OWNER", insertable = false)
@@ -84,15 +84,15 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	Kontakt responsible;
 
 	/**
-	 * The UUID of a stock commissioning service for this stock. If not a
-	 * machine, <code>null</code>
+	 * The UUID of a stock commissioning service for this stock. If not a machine,
+	 * <code>null</code>
 	 */
 	@Column(name = "driver_uuid", length = 64)
 	String driverUuid;
 
 	/**
-	 * The configuration for the driver identified by its UUID.
-	 * <code>null</code> if not a machine
+	 * The configuration for the driver identified by its UUID. <code>null</code> if
+	 * not a machine
 	 */
 	@Lob
 	@Column(name = "driver_config")
@@ -179,34 +179,34 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	public void setEntries(List<StockEntry> entries) {
 		this.entries = entries;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

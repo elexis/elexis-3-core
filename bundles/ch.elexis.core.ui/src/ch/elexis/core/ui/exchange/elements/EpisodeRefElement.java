@@ -16,13 +16,13 @@ import ch.elexis.core.ui.exchange.XChangeExporter;
 
 public class EpisodeRefElement extends XChangeElement {
 	public static final String XMLNAME = "episode";
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
-	public EpisodeRefElement asExporter(XChangeExporter parent, EpisodeElement episode){
+
+	public EpisodeRefElement asExporter(XChangeExporter parent, EpisodeElement episode) {
 		asExporter(parent);
 		setAttribute("ref", episode.getAttr(ATTR_ID));
 		return this;

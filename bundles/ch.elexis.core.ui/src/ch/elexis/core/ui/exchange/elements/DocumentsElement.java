@@ -15,10 +15,10 @@ package ch.elexis.core.ui.exchange.elements;
 import ch.elexis.core.ui.exchange.XChangeContainer;
 
 public class DocumentsElement extends XChangeElement {
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XChangeContainer.ENCLOSE_DOCUMENTS;
 	}
-	
+
 }

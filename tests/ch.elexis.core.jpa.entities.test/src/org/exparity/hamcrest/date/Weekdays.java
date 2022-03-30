@@ -14,13 +14,10 @@ import java.util.Locale;
  */
 public enum Weekdays {
 
-	MONDAY(Calendar.MONDAY, DayOfWeek.MONDAY),
-	TUESDAY(Calendar.TUESDAY, DayOfWeek.TUESDAY),
-	WEDNESDAY(Calendar.WEDNESDAY, DayOfWeek.WEDNESDAY),
-	THURSDAY(Calendar.THURSDAY, DayOfWeek.THURSDAY),
-	FRIDAY(Calendar.FRIDAY, DayOfWeek.FRIDAY),
-	SATURDAY(Calendar.SATURDAY, DayOfWeek.SATURDAY),
-	SUNDAY(Calendar.SUNDAY, DayOfWeek.SUNDAY);
+	MONDAY(Calendar.MONDAY, DayOfWeek.MONDAY), TUESDAY(Calendar.TUESDAY, DayOfWeek.TUESDAY), WEDNESDAY(
+			Calendar.WEDNESDAY, DayOfWeek.WEDNESDAY), THURSDAY(Calendar.THURSDAY,
+					DayOfWeek.THURSDAY), FRIDAY(Calendar.FRIDAY, DayOfWeek.FRIDAY), SATURDAY(Calendar.SATURDAY,
+							DayOfWeek.SATURDAY), SUNDAY(Calendar.SUNDAY, DayOfWeek.SUNDAY);
 
 	private final int calendarDay;
 	private final DayOfWeek dayOfWeek;

@@ -100,22 +100,21 @@ import ch.elexis.data.Kontakt;
 import ch.rgw.tools.ExHandler;
 
 public class BestellView extends ViewPart {
-	
+
 	public static final String ID = "ch.elexis.BestellenView"; //$NON-NLS-1$
-	
+
 	private Form form;
 	private FormToolkit tk = UiDesk.getToolkit();
 	private TableViewer tv;
 	private IOrder actOrder;
 	private ViewMenus viewmenus;
-	private IAction removeAction, dailyWizardAction, wizardAction, loadAction, printAction,
-			sendAction, newAction;
+	private IAction removeAction, dailyWizardAction, wizardAction, loadAction, printAction, sendAction, newAction;
 	private IAction exportClipboardAction, checkInAction;
-	
+
 	private BestellungLabelProvider blp;
-	
+
 	@Override
-	public void createPartControl(final Composite parent){
+	public void createPartControl(final Composite parent) {
 		parent.setLayout(new FillLayout());
 		form = tk.createForm(parent);
 		Composite body = form.getBody();
@@ -125,26 +124,26 @@ public class BestellView extends ViewPart {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(false);
 		tv = new TableViewer(table);
-		
+
 		TableViewerColumn tvcNumber = new TableViewerColumn(tv, SWT.CENTER);
 		tvcNumber.getColumn().setText(Messages.BestellView_Number);
 		tvcNumber.getColumn().setWidth(40);
-		ReflectiveEditingSupport poes =
-			new ReflectiveEditingSupport(tv, ModelPackage.Literals.IORDER_ENTRY__AMOUNT.getName());
+		ReflectiveEditingSupport poes = new ReflectiveEditingSupport(tv,
+				ModelPackage.Literals.IORDER_ENTRY__AMOUNT.getName());
 		poes.setModelService(CoreModelServiceHolder.get());
 		tvcNumber.setEditingSupport(poes);
-		
+
 		TableViewerColumn tvcArticle = new TableViewerColumn(tv, SWT.LEFT);
 		tvcArticle.getColumn().setText(Messages.BestellView_Article);
 		tvcArticle.getColumn().setWidth(280);
-		
+
 		TableViewerColumn tvcDealer = new TableViewerColumn(tv, SWT.LEFT);
 		tvcDealer.getColumn().setText(Messages.BestellView_Dealer);
 		tvcDealer.getColumn().setWidth(250);
 		tvcDealer.setEditingSupport(new EditingSupport(tv) {
-			
+
 			@Override
-			protected void setValue(Object element, Object value){
+			protected void setValue(Object element, Object value) {
 				IOrderEntry se = (IOrderEntry) element;
 				if (se == null) {
 					return;
@@ -153,24 +152,24 @@ public class BestellView extends ViewPart {
 				ch.elexis.core.services.holder.CoreModelServiceHolder.get().save(se);
 				getViewer().refresh(element, true);
 			}
-			
+
 			@Override
-			protected Object getValue(Object element){
+			protected Object getValue(Object element) {
 				IOrderEntry se = (IOrderEntry) element;
 				if (se == null) {
 					return null;
 				}
 				return (IContact) se.getProvider();
 			}
-			
+
 			@Override
-			protected CellEditor getCellEditor(Object element){
+			protected CellEditor getCellEditor(Object element) {
 				return new ContactSelectionDialogCellEditor(((TableViewer) getViewer()).getTable(),
-					"Lieferant auswählen", "Bitte selektieren Sie den Lieferant");
+						"Lieferant auswählen", "Bitte selektieren Sie den Lieferant");
 			}
-			
+
 			@Override
-			protected boolean canEdit(Object element){
+			protected boolean canEdit(Object element) {
 				IOrderEntry be = (IOrderEntry) element;
 				return (be != null);
 			}
@@ -178,32 +177,29 @@ public class BestellView extends ViewPart {
 		TableViewerColumn tvc3 = new TableViewerColumn(tv, SWT.LEFT);
 		tvc3.getColumn().setText("Lager"); //$NON-NLS-1$
 		tvc3.getColumn().setWidth(50);
-		
+
 		tv.setContentProvider(new BestellungContentProvider());
 		blp = new BestellungLabelProvider();
 		tv.setLabelProvider(blp);
-		
+
 		new TableViewerSorter(tv);
-		
-		Transfer[] types = new Transfer[] {
-			TextTransfer.getInstance()
-		};
+
+		Transfer[] types = new Transfer[]{TextTransfer.getInstance()};
 		tv.addDropSupport(DND.DROP_COPY, types, new DropTargetAdapter() {
-			
+
 			@Override
-			public void dragEnter(final DropTargetEvent event){
+			public void dragEnter(final DropTargetEvent event) {
 				event.detail = DND.DROP_COPY;
 			}
-			
+
 			@Override
-			public void drop(final DropTargetEvent event){
+			public void drop(final DropTargetEvent event) {
 				if (event.data instanceof String) {
 					String[] parts = ((String) event.data).split(StringConstants.COMMA);
-					
+
 					if (actOrder == null) {
-						NeueBestellungDialog nbDlg = new NeueBestellungDialog(
-							getViewSite().getShell(), Messages.BestellView_CreateNewOrder,
-							Messages.BestellView_EnterOrderTitle);
+						NeueBestellungDialog nbDlg = new NeueBestellungDialog(getViewSite().getShell(),
+								Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
 						if (nbDlg.open() == Dialog.OK) {
 							IOrder created = CoreModelServiceHolder.get().create(IOrder.class);
 							created.setTimestamp(LocalDateTime.now());
@@ -214,12 +210,11 @@ public class BestellView extends ViewPart {
 							return;
 						}
 					}
-					
+
 					List<IStockEntry> stockEntriesToOrder = new ArrayList<IStockEntry>();
-					
+
 					for (String storeToString : parts) {
-						Optional<Identifiable> dropped =
-							StoreToStringServiceHolder.get().loadFromString(storeToString);
+						Optional<Identifiable> dropped = StoreToStringServiceHolder.get().loadFromString(storeToString);
 						if (dropped.isPresent()) {
 							if (dropped.get() instanceof IStockEntry) {
 								stockEntriesToOrder.add((IStockEntry) dropped.get());
@@ -230,10 +225,9 @@ public class BestellView extends ViewPart {
 									return;
 								}
 								// use StockEntry if possible
-								IStockEntry stockEntry =
-									StockServiceHolder.get().findPreferredStockEntryForArticle(
+								IStockEntry stockEntry = StockServiceHolder.get().findPreferredStockEntryForArticle(
 										StoreToStringServiceHolder.getStoreToString(art), null);
-										
+
 								if (stockEntry != null) {
 									stockEntriesToOrder.add(stockEntry);
 									continue;
@@ -246,33 +240,29 @@ public class BestellView extends ViewPart {
 					}
 					if (!stockEntriesToOrder.isEmpty()) {
 						for (IStockEntry iStockEntry : stockEntriesToOrder) {
-							IOrderEntry orderEntry =
-								actOrder.addEntry(iStockEntry.getArticle(), iStockEntry.getStock(),
-								iStockEntry.getProvider(), 1);
+							IOrderEntry orderEntry = actOrder.addEntry(iStockEntry.getArticle(), iStockEntry.getStock(),
+									iStockEntry.getProvider(), 1);
 							CoreModelServiceHolder.get().save(orderEntry);
 						}
 					}
-					
+
 					tv.refresh();
 				}
 			}
-			
+
 		});
 		makeActions();
 		viewmenus = new ViewMenus(getViewSite());
-		viewmenus.createToolbar(newAction, dailyWizardAction, wizardAction, loadAction, printAction,
-			sendAction);
+		viewmenus.createToolbar(newAction, dailyWizardAction, wizardAction, loadAction, printAction, sendAction);
 		viewmenus.createMenu(exportClipboardAction);
-		viewmenus.createViewerContextMenu(tv, new IAction[] {
-			removeAction
-		});
+		viewmenus.createViewerContextMenu(tv, new IAction[]{removeAction});
 		form.getToolBarManager().add(checkInAction);
 		form.updateToolBar();
 		setOrder(null);
 		tv.setInput(getViewSite());
 	}
-	
-	private void setOrder(final IOrder order){
+
+	private void setOrder(final IOrder order) {
 		actOrder = order;
 		if (order != null && !form.isDisposed()) {
 			form.setText(order.getName());
@@ -283,8 +273,8 @@ public class BestellView extends ViewPart {
 			checkInAction.setToolTipText(Messages.BestellView_NoOrder);
 		}
 	}
-	
-	private void updateCheckIn(){
+
+	private void updateCheckIn() {
 		if (actOrder.isDone()) {
 			checkInAction.setEnabled(false);
 			checkInAction.setToolTipText(Messages.BestellView_OrderIsClosed);
@@ -293,15 +283,15 @@ public class BestellView extends ViewPart {
 			checkInAction.setToolTipText(Messages.BestellView_CheckInCaption);
 		}
 	}
-	
+
 	@Override
-	public void setFocus(){
-		
+	public void setFocus() {
+
 	}
-	
-	private Map<IContact, List<IOrderEntry>> prepareOrderMap(){
+
+	private Map<IContact, List<IOrderEntry>> prepareOrderMap() {
 		Map<IContact, List<IOrderEntry>> ret = new HashMap<>();
-		
+
 		List<IOrderEntry> list = actOrder.getEntries();
 		for (IOrderEntry iOrderEntry : list) {
 			list = ret.get(iOrderEntry.getProvider());
@@ -320,8 +310,8 @@ public class BestellView extends ViewPart {
 		}
 		return ret;
 	}
-	
-	private List<IOrderEntry> prepareOrderList(IContact receiver){
+
+	private List<IOrderEntry> prepareOrderList(IContact receiver) {
 		ArrayList<IOrderEntry> best = new ArrayList<IOrderEntry>();
 		List<IOrderEntry> list = actOrder.getEntries();
 		for (IOrderEntry iOrderEntry : list) {
@@ -331,8 +321,7 @@ public class BestellView extends ViewPart {
 					continue;
 				}
 			}
-			if (iOrderEntry.getProvider() != null
-				&& iOrderEntry.getProvider().getId().equals(receiver.getId())) {
+			if (iOrderEntry.getProvider() != null && iOrderEntry.getProvider().getId().equals(receiver.getId())) {
 				best.add(iOrderEntry);
 			}
 		}
@@ -343,66 +332,65 @@ public class BestellView extends ViewPart {
 		});
 		return best;
 	}
-	
+
 	private class BestellungLabelProvider extends LabelProvider implements ITableLabelProvider {
-		
+
 		@Override
-		public Image getColumnImage(final Object element, final int columnIndex){
+		public Image getColumnImage(final Object element, final int columnIndex) {
 			return null;
 		}
-		
+
 		@Override
-		public String getColumnText(final Object element, final int columnIndex){
+		public String getColumnText(final Object element, final int columnIndex) {
 			IOrderEntry entry = (IOrderEntry) element;
 			switch (columnIndex) {
-			case 0:
-				return Integer.toString(entry.getAmount());
-			case 1:
-				return entry.getArticle().getLabel();
-			case 2:
-				IContact k = entry.getProvider();
-				return (k != null) ? k.getLabel() : Messages.BestellView_Unknown;
-			case 3:
-				IStock s = entry.getStock();
-				return (s != null) ? s.getCode() : StringConstants.EMPTY;
-			default:
-				return "?"; //$NON-NLS-1$
+				case 0 :
+					return Integer.toString(entry.getAmount());
+				case 1 :
+					return entry.getArticle().getLabel();
+				case 2 :
+					IContact k = entry.getProvider();
+					return (k != null) ? k.getLabel() : Messages.BestellView_Unknown;
+				case 3 :
+					IStock s = entry.getStock();
+					return (s != null) ? s.getCode() : StringConstants.EMPTY;
+				default :
+					return "?"; //$NON-NLS-1$
 			}
 		}
 	}
-	
-	private class BestellungContentProvider
-			implements IStructuredContentProvider, IColumnContentProvider {
-		
+
+	private class BestellungContentProvider implements IStructuredContentProvider, IColumnContentProvider {
+
 		@Override
-		public Comparable<?> getValue(Object element, int columnIndex){
+		public Comparable<?> getValue(Object element, int columnIndex) {
 			if (columnIndex == 0) {
 				return ((IOrderEntry) element).getAmount();
 			}
 			return blp.getColumnText(element, columnIndex);
 		}
-		
+
 		@Override
-		public Object[] getElements(Object inputElement){
+		public Object[] getElements(Object inputElement) {
 			if (actOrder != null) {
 				return actOrder.getEntries().toArray();
 			}
 			return new Object[0];
 		}
 	}
-	
-	private IOrder createOrder(String name){
+
+	private IOrder createOrder(String name) {
 		IOrder order = CoreModelServiceHolder.get().create(IOrder.class);
 		order.setTimestamp(LocalDateTime.now());
 		order.setName(name);
 		CoreModelServiceHolder.get().save(order);
 		return order;
 	}
-	
-	private void makeActions(){
-		removeAction = new Action(Messages.BestellView_RemoveArticle) { //$NON-NLS-1$
+
+	private void makeActions() {
+		removeAction = new Action(Messages.BestellView_RemoveArticle) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
 				if ((sel != null) && (!sel.isEmpty())) {
 					if (actOrder != null) {
@@ -422,9 +410,9 @@ public class BestellView extends ViewPart {
 				setToolTipText(Messages.BestellView_CreateAutomaticDailyOrder);
 				setImageDescriptor(Images.IMG_WIZ_DAY.getImageDescriptor());
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				if (actOrder == null) {
 					IOrder order = CoreModelServiceHolder.get().create(IOrder.class);
 					order.setTimestamp(LocalDateTime.now());
@@ -433,8 +421,8 @@ public class BestellView extends ViewPart {
 					setOrder(order);
 				} else {
 					if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
-						if (MessageDialog.openQuestion(getSite().getShell(),
-							Messages.BestellView_Title, Messages.BestellView_WizardAskNewOrder)) {
+						if (MessageDialog.openQuestion(getSite().getShell(), Messages.BestellView_Title,
+								Messages.BestellView_WizardAskNewOrder)) {
 							setOrder(createOrder(Messages.BestellView_Automatic));
 						}
 					}
@@ -445,68 +433,64 @@ public class BestellView extends ViewPart {
 				tv.refresh(true);
 			}
 		};
-		
-		wizardAction = new Action(Messages.BestellView_AutomaticOrder) { //$NON-NLS-1$
+
+		wizardAction = new Action(Messages.BestellView_AutomaticOrder) { // $NON-NLS-1$
 			{
-				setToolTipText(Messages.BestellView_CreateAutomaticOrder); //$NON-NLS-1$
+				setToolTipText(Messages.BestellView_CreateAutomaticOrder); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_WIZARD.getImageDescriptor());
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				if (actOrder == null) {
 					setOrder(createOrder(Messages.BestellView_Automatic));
 				} else {
 					if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
-						if (MessageDialog.openQuestion(getSite().getShell(),
-							Messages.BestellView_Title, Messages.BestellView_WizardAskNewOrder)) {
+						if (MessageDialog.openQuestion(getSite().getShell(), Messages.BestellView_Title,
+								Messages.BestellView_WizardAskNewOrder)) {
 							setOrder(createOrder(Messages.BestellView_Automatic));
 						}
 					}
 				}
-				
+
 				int trigger = ConfigServiceHolder.get().get(
-					ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
-					ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
-				boolean isInventoryBelow =
-					trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
-				
+						ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
+						ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
+				boolean isInventoryBelow = trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
+
 				boolean excludeAlreadyOrderedItems = ConfigServiceHolder.get().get(
-					Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
-					Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT);
-				
-				IQuery<IStockEntry> query =
-					CoreModelServiceHolder.get().getQuery(IStockEntry.class);
+						Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
+						Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT);
+
+				IQuery<IStockEntry> query = CoreModelServiceHolder.get().getQuery(IStockEntry.class);
 				query.andFeatureCompare(ModelPackage.Literals.ISTOCK_ENTRY__CURRENT_STOCK,
-					isInventoryBelow ? COMPARATOR.LESS : COMPARATOR.LESS_OR_EQUAL,
-					ModelPackage.Literals.ISTOCK_ENTRY__MINIMUM_STOCK);
+						isInventoryBelow ? COMPARATOR.LESS : COMPARATOR.LESS_OR_EQUAL,
+						ModelPackage.Literals.ISTOCK_ENTRY__MINIMUM_STOCK);
 				List<IStockEntry> stockEntries = query.execute();
 				for (IStockEntry stockEntry : stockEntries) {
 					if (stockEntry.getArticle() != null) {
 						if (excludeAlreadyOrderedItems) {
-							IOrderEntry open = OrderServiceHolder.get()
-								.findOpenOrderEntryForStockEntry(stockEntry);
+							IOrderEntry open = OrderServiceHolder.get().findOpenOrderEntryForStockEntry(stockEntry);
 							// only add if not on an open order
 							if (open != null) {
 								continue;
 							}
 						}
-						OrderServiceHolder.get().addRefillForStockEntryToOrder(stockEntry,
-							actOrder);
+						OrderServiceHolder.get().addRefillForStockEntryToOrder(stockEntry, actOrder);
 					} else {
-						LoggerFactory.getLogger(getClass()).warn("Could not resolve article "
-							+ stockEntry.getLabel() + " of stock entry " + stockEntry.getId());
+						LoggerFactory.getLogger(getClass()).warn("Could not resolve article " + stockEntry.getLabel()
+								+ " of stock entry " + stockEntry.getId());
 					}
 				}
 				updateCheckIn();
 				tv.refresh(true);
 			}
 		};
-		newAction = new Action(Messages.BestellView_CreateNewOrder) { //$NON-NLS-1$
+		newAction = new Action(Messages.BestellView_CreateNewOrder) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				NeueBestellungDialog nbDlg = new NeueBestellungDialog(getViewSite().getShell(),
-					Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
+						Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
 				if (nbDlg.open() == Dialog.OK) {
 					setOrder(createOrder(nbDlg.getTitle()));
 				} else {
@@ -515,40 +499,35 @@ public class BestellView extends ViewPart {
 				tv.refresh();
 			}
 		};
-		printAction = new Action(Messages.BestellView_PrintOrder) { //$NON-NLS-1$
+		printAction = new Action(Messages.BestellView_PrintOrder) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				if (actOrder != null) {
 					Map<IContact, List<IOrderEntry>> orderMap = prepareOrderMap();
-					
+
 					for (IContact receiver : orderMap.keySet()) {
 						List<IOrderEntry> entries = orderMap.get(receiver);
 						if (receiver == null) {
-							KontaktSelektor ksel = new KontaktSelektor(getViewSite().getShell(),
-								Kontakt.class,
-								ch.elexis.core.ui.text.Messages.TextContainer_SelectDestinationHeader,
-								"Addressat für Einträge ohne Lieferanten", Kontakt.DEFAULT_SORT);
+							KontaktSelektor ksel = new KontaktSelektor(getViewSite().getShell(), Kontakt.class,
+									ch.elexis.core.ui.text.Messages.TextContainer_SelectDestinationHeader,
+									"Addressat für Einträge ohne Lieferanten", Kontakt.DEFAULT_SORT);
 							if (ksel.open() == Dialog.OK) {
-								receiver =
-									NoPoUtil.loadAsIdentifiable((Kontakt) ksel.getSelection(),
-										IContact.class).orElse(null);
+								receiver = NoPoUtil.loadAsIdentifiable((Kontakt) ksel.getSelection(), IContact.class)
+										.orElse(null);
 							}
 						}
 						if (receiver != null) {
 							try {
-								BestellBlatt bb =
-									(BestellBlatt) getViewSite().getPage().showView(BestellBlatt.ID,
+								BestellBlatt bb = (BestellBlatt) getViewSite().getPage().showView(BestellBlatt.ID,
 										receiver.getId(), IWorkbenchPage.VIEW_CREATE);
 								bb.createOrder(receiver, entries);
-								entries.stream()
-									.forEach(oe -> oe.setState(OrderEntryState.ORDERED));
+								entries.stream().forEach(oe -> oe.setState(OrderEntryState.ORDERED));
 								tv.refresh();
 							} catch (Exception e) {
-								LoggerFactory.getLogger(getClass()).error("Error printing order",
-									e);
+								LoggerFactory.getLogger(getClass()).error("Error printing order", e);
 								MessageDialog.openError(getViewSite().getShell(), "Fehler",
-									"Beim Druck der Bestellung an " + receiver.getLabel()
-										+ " ist ein Fehler aufgetren.");
+										"Beim Druck der Bestellung an " + receiver.getLabel()
+												+ " ist ein Fehler aufgetren.");
 							}
 						}
 					}
@@ -557,10 +536,10 @@ public class BestellView extends ViewPart {
 		};
 		sendAction = new Action(Messages.BestellView_SendOrder) {
 			@Override
-			public void run(){
+			public void run() {
 				if (actOrder == null)
 					return;
-				
+
 				// organise items in supplier and non-supplier lists
 				List<IOrderEntry> orderableItems = new ArrayList<IOrderEntry>();
 				List<IOrderEntry> noSupplierItems = new ArrayList<IOrderEntry>();
@@ -572,7 +551,7 @@ public class BestellView extends ViewPart {
 						noSupplierItems.add(orderEntry);
 					}
 				}
-				
+
 				boolean runOrder = true;
 				if (!noSupplierItems.isEmpty()) {
 					StringBuilder sb = new StringBuilder();
@@ -580,35 +559,31 @@ public class BestellView extends ViewPart {
 						sb.append(noSupItem.getArticle().getLabel());
 						sb.append("\n");
 					}
-					runOrder =
-						SWTHelper.askYesNo(Messages.BestellView_NoSupplierArticle, MessageFormat
-							.format(Messages.BestellView_NoSupplierArticleMsg, sb.toString()));
+					runOrder = SWTHelper.askYesNo(Messages.BestellView_NoSupplierArticle,
+							MessageFormat.format(Messages.BestellView_NoSupplierArticleMsg, sb.toString()));
 				}
-				
+
 				if (runOrder) {
-					List<IConfigurationElement> list =
-						Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER);
+					List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER);
 					for (IConfigurationElement ic : list) {
 						String handler = ic.getAttribute("type");
 						if (handler != null && handler.contains(Bestellung.class.getName())) {
 							try {
-								IDataSender sender = (IDataSender) ic.createExecutableExtension(
-									ExtensionPointConstantsUi.TRANSPORTER_EXPC);
-								
+								IDataSender sender = (IDataSender) ic
+										.createExecutableExtension(ExtensionPointConstantsUi.TRANSPORTER_EXPC);
+
 								sender.store(actOrder);
 								sender.finalizeExport();
 								SWTHelper.showInfo(Messages.BestellView_OrderSentCaption,
-									Messages.BestellView_OrderSentBody);
+										Messages.BestellView_OrderSentBody);
 								tv.refresh();
-								
-								orderableItems.stream()
-									.forEach(oe -> oe.setState(OrderEntryState.ORDERED));
+
+								orderableItems.stream().forEach(oe -> oe.setState(OrderEntryState.ORDERED));
 							} catch (CoreException ex) {
 								ExHandler.handle(ex);
 							} catch (XChangeException xx) {
 								SWTHelper.showError(Messages.BestellView_OrderNotPossible,
-									Messages.BestellView_NoAutomaticOrderAvailable
-										+ xx.getLocalizedMessage());
+										Messages.BestellView_NoAutomaticOrderAvailable + xx.getLocalizedMessage());
 							}
 						}
 					}
@@ -617,12 +592,12 @@ public class BestellView extends ViewPart {
 		};
 		loadAction = new Action(Messages.BestellView_OpenOrder) {
 			@Override
-			public void run(){
-				
+			public void run() {
+
 				SelectBestellungDialog dlg = new SelectBestellungDialog(getViewSite().getShell());
-				dlg.setMessage(Messages.BestellView_SelectOrder); //$NON-NLS-1$
-				dlg.setTitle(Messages.BestellView_ReadOrder); //$NON-NLS-1$
-				
+				dlg.setMessage(Messages.BestellView_SelectOrder); // $NON-NLS-1$
+				dlg.setTitle(Messages.BestellView_ReadOrder); // $NON-NLS-1$
+
 				if (dlg.open() == Dialog.OK) {
 					if (dlg.getResult().length > 0) {
 						setOrder((IOrder) dlg.getResult()[0]);
@@ -638,80 +613,75 @@ public class BestellView extends ViewPart {
 		sendAction.setToolTipText(Messages.BestellView_transmitOrder);
 		loadAction.setImageDescriptor(Images.IMG_IMPORT.getImageDescriptor());
 		loadAction.setToolTipText(Messages.BestellView_loadEarlierOrder);
-		
+
 		exportClipboardAction = new Action(Messages.BestellView_copyToClipboard) {
 			{
 				setToolTipText(Messages.BestellView_copyToClipBioardForGalexis);
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				if (actOrder != null) {
 					List<IOrderEntry> toOrder = prepareOrderList(null);
-					
+
 					StringBuffer export = new StringBuffer();
 					for (IOrderEntry orderEntry : toOrder) {
 						String code = orderEntry.getArticle().getCode();
 						int num = orderEntry.getAmount();
 						String name = orderEntry.getArticle().getName();
 						String line = code + ", " + num + ", " + name; //$NON-NLS-1$ //$NON-NLS-2$
-						
+
 						export.append(line);
 						export.append(System.getProperty("line.separator")); //$NON-NLS-1$
 					}
-					
+
 					String clipboardText = export.toString();
 					Clipboard clipboard = new Clipboard(UiDesk.getDisplay());
 					TextTransfer textTransfer = TextTransfer.getInstance();
-					Transfer[] transfers = new Transfer[] {
-						textTransfer
-					};
-					Object[] data = new Object[] {
-						clipboardText
-					};
+					Transfer[] transfers = new Transfer[]{textTransfer};
+					Object[] data = new Object[]{clipboardText};
 					clipboard.setContents(data, transfers);
 					clipboard.dispose();
 				}
 			}
 		};
-		checkInAction = new Action(Messages.BestellView_CheckInCaption) { //$NON-NLS-1$
+		checkInAction = new Action(Messages.BestellView_CheckInCaption) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_TICK.getImageDescriptor());
-				setToolTipText(Messages.BestellView_CheckInBody); //$NON-NLS-1$
+				setToolTipText(Messages.BestellView_CheckInBody); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				if (actOrder != null) {
-					OrderImportDialog dialog =
-						new OrderImportDialog(getSite().getShell(), actOrder);
+					OrderImportDialog dialog = new OrderImportDialog(getSite().getShell(), actOrder);
 					dialog.open();
 					updateCheckIn();
 				} else {
-					SWTHelper.alert(Messages.BestellView_NoOrder, //$NON-NLS-1$
-						Messages.BestellView_NoOrderLoaded); //$NON-NLS-1$
+					SWTHelper.alert(Messages.BestellView_NoOrder, // $NON-NLS-1$
+							Messages.BestellView_NoOrderLoaded); // $NON-NLS-1$
 				}
 			}
 		};
 	}
-	
+
 	@org.eclipse.e4.core.di.annotations.Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
-	public void addItemsToOrder(List<IArticle> articlesToOrder){
+
+	public void addItemsToOrder(List<IArticle> articlesToOrder) {
 		if (actOrder == null) {
 			NeueBestellungDialog nbDlg = new NeueBestellungDialog(getViewSite().getShell(),
-				Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
+					Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
 			if (nbDlg.open() == Dialog.OK) {
 				setOrder(createOrder(nbDlg.getTitle()));
 			} else {
 				return;
 			}
 		}
-		
+
 		for (IArticle article : articlesToOrder) {
 			// SINGLE SHOT ORDER
 			IOrderEntry orderEntry = actOrder.addEntry(article, null, null, 1);
@@ -721,14 +691,14 @@ public class BestellView extends ViewPart {
 			tv.refresh();
 		}
 	}
-	
+
 	/**
 	 * @return the current defined {@link IOrder} in this view
 	 */
-	public IOrder getOrder(){
+	public IOrder getOrder() {
 		return actOrder;
 	}
-	
+
 	/**
 	 * Find the default supplier. Shows a warning if supplier is null or inexisting
 	 * 
@@ -738,16 +708,15 @@ public class BestellView extends ViewPart {
 	 *            title of the dialog
 	 * @return the supplier or null if none could be resolved.
 	 */
-	public static IContact resolveDefaultSupplier(String cfgSupplier, String selDialogTitle){
+	public static IContact resolveDefaultSupplier(String cfgSupplier, String selDialogTitle) {
 		IContact supplier = null;
 		if (cfgSupplier != null && !cfgSupplier.isEmpty()) {
 			supplier = CoreModelServiceHolder.get().load(cfgSupplier, IContact.class).orElse(null);
 		}
-		
-		//warn that there is no supplier
+
+		// warn that there is no supplier
 		if (supplier == null) {
-			MessageDialog.openWarning(UiDesk.getTopShell(), selDialogTitle,
-				Messages.BestellView_CantOrderNoSupplier);
+			MessageDialog.openWarning(UiDesk.getTopShell(), selDialogTitle, Messages.BestellView_CantOrderNoSupplier);
 		}
 		return supplier;
 	}

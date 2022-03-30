@@ -14,8 +14,7 @@ import java.util.Date;
 public abstract class Moments {
 
 	/**
-	 * Return a {@link Date} instance representing now down to millisecond
-	 * accuracy
+	 * Return a {@link Date} instance representing now down to millisecond accuracy
 	 */
 	public static Date now() {
 		return new Date();
@@ -45,10 +44,8 @@ public abstract class Moments {
 	private static DayMonthYear aRelativeDayMonthYear(final int adjustment, final int datePart) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(datePart, adjustment);
-		return new DayMonthYear(
-		        calendar.get(datePart),
-		            fromCalendar(calendar.get(Calendar.MONTH)),
-		            calendar.get(Calendar.YEAR));
+		return new DayMonthYear(calendar.get(datePart), fromCalendar(calendar.get(Calendar.MONTH)),
+				calendar.get(Calendar.YEAR));
 	}
 
 }

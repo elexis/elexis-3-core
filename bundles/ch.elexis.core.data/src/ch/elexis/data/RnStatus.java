@@ -44,14 +44,14 @@ public class RnStatus {
 	public static final int MAHNSTOPP = 25;
 	public static final int ABGESCHRIEBEN = 26; // Storniert und Kons nicht mehr freigegeben
 	public static final int ZURUECKGEWIESEN = 27;
-	
+
 	/**
-	 * Decide whether this state means an "active" state, i.e. the bill ist not paid or closed by
-	 * any means
+	 * Decide whether this state means an "active" state, i.e. the bill ist not paid
+	 * or closed by any means
 	 * 
 	 * @return true if there are still payments awaited
 	 */
-	public static boolean isActive(int state){
+	public static boolean isActive(int state) {
 		if (state > LAUFEND && state < TEILVERLUST) {
 			return true;
 		}
@@ -63,42 +63,37 @@ public class RnStatus {
 		}
 		return false;
 	}
-	
-	private static final String[] Text = {
-		"Unbekannt", "Verrechnet", "Nicht verrechnen", "laufend", "Rn. offen",
-		"Offen und gedruckt", "Zahlungserinnerung", "Zahlungserinnerung gedruckt", "2. Mahnung",
-		"2. Mahnung gedruckt", "3. Mahnung", "3. Mahnung gedruckt", "In Betreibung", "Teilverlust",
-		"Totalverlust", "Teilw. bezahlt", "Bezahlt", "Zuviel bezahlt", "Storniert", "von heute",
-		"nicht von heute", "nicht von Ihnen", "fehlerhaft", "zu Drucken", "ausstehend",
-		"mahnstopp", "abgeschrieben", "zurückgewiesen"
-	};
-	
+
+	private static final String[] Text = {"Unbekannt", "Verrechnet", "Nicht verrechnen", "laufend", "Rn. offen",
+			"Offen und gedruckt", "Zahlungserinnerung", "Zahlungserinnerung gedruckt", "2. Mahnung",
+			"2. Mahnung gedruckt", "3. Mahnung", "3. Mahnung gedruckt", "In Betreibung", "Teilverlust", "Totalverlust",
+			"Teilw. bezahlt", "Bezahlt", "Zuviel bezahlt", "Storniert", "von heute", "nicht von heute",
+			"nicht von Ihnen", "fehlerhaft", "zu Drucken", "ausstehend", "mahnstopp", "abgeschrieben",
+			"zurückgewiesen"};
+
 	public static enum REJECTCODE {
-		RG_KONS_NO_BILLABLES_NOR_REVENUE, NO_DIAG, NO_MANDATOR, NO_CASE, NO_DEBITOR, NO_GUARANTOR,
-			VALIDATION_ERROR, REJECTED_BY_PEER, SUM_MISMATCH, INTERNAL_ERROR;
+		RG_KONS_NO_BILLABLES_NOR_REVENUE, NO_DIAG, NO_MANDATOR, NO_CASE, NO_DEBITOR, NO_GUARANTOR, VALIDATION_ERROR, REJECTED_BY_PEER, SUM_MISMATCH, INTERNAL_ERROR;
 	};
-	
-	private static final String[] RejectStrings = {
-		"Keine Diagnose", "Kein Rechnungsempfänger", "Kein Garant", "Validierungsfehler",
-		"Vom Empfänger zurückgewiesen"
-	};
-	
-	public static String[] getStatusTexts(){
+
+	private static final String[] RejectStrings = {"Keine Diagnose", "Kein Rechnungsempfänger", "Kein Garant",
+			"Validierungsfehler", "Vom Empfänger zurückgewiesen"};
+
+	public static String[] getStatusTexts() {
 		return Text;
 	}
-	
-	public static String getStatusText(int idx){
+
+	public static String getStatusText(int idx) {
 		if (idx > 0 && idx < Text.length) {
 			return Text[idx];
 		}
 		return "??";
 	}
-	
-	public static String[] getRejectStrings(){
+
+	public static String[] getRejectStrings() {
 		return RejectStrings;
 	}
-	
-	public static String getRejectString(REJECTCODE code){
+
+	public static String getRejectString(REJECTCODE code) {
 		return RejectStrings[code.ordinal()];
 	}
 }

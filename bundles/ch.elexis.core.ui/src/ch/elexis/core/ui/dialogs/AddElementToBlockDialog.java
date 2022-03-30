@@ -27,40 +27,40 @@ import ch.elexis.data.Leistungsblock;
 public class AddElementToBlockDialog extends TitleAreaDialog {
 	CommonViewer cv;
 	Leistungsblock result;
-	
-	public AddElementToBlockDialog(Shell shell){
+
+	public AddElementToBlockDialog(Shell shell) {
 		super(shell);
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		cv = new CommonViewer();
 		BlockSelector bs = new BlockSelector();
 		ViewerConfigurer vc = bs.createViewerConfigurer(cv);
 		cv.create(vc, parent, SWT.NONE, this);
 		return cv.getViewerWidget().getControl();
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
-		setTitle(Messages.AddElementToBlockDialog_blockSelection); //$NON-NLS-1$
-		setMessage(Messages.AddElementToBlockDialog_selectBlock); //$NON-NLS-1$
+		setTitle(Messages.AddElementToBlockDialog_blockSelection); // $NON-NLS-1$
+		setMessage(Messages.AddElementToBlockDialog_selectBlock); // $NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
-		getShell().setText(Messages.AddElementToBlockDialog_block); //$NON-NLS-1$
+		getShell().setText(Messages.AddElementToBlockDialog_block); // $NON-NLS-1$
 	}
-	
-	public Leistungsblock getResult(){
+
+	public Leistungsblock getResult() {
 		return result;
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		Object[] lb = cv.getSelection();
 		if ((lb != null) && (lb.length > 0) && (lb[0] instanceof Leistungsblock)) {
 			result = (Leistungsblock) lb[0];
 		}
 		super.okPressed();
 	}
-	
+
 }

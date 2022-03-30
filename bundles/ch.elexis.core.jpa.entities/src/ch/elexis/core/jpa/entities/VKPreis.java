@@ -19,7 +19,7 @@ public class VKPreis extends AbstractEntityWithId implements EntityWithId {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(length = 25)
@@ -76,14 +76,14 @@ public class VKPreis extends AbstractEntityWithId implements EntityWithId {
 	public void setMultiplikator(String multiplikator) {
 		this.multiplikator = multiplikator;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

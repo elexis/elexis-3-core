@@ -16,30 +16,30 @@ import ch.elexis.core.findings.IFinding.RawContentFormat;
 
 public class FindingsContentHelper {
 	private static FhirContext context = FhirContext.forR4();
-	
+
 	private IParser jsonParser;
-	
-	public IParser getJsonParser(){
+
+	public IParser getJsonParser() {
 		if (jsonParser == null) {
 			jsonParser = context.newJsonParser();
 		}
 		return jsonParser;
 	}
-	
+
 	private IParser xmlParser;
-	
-	public IParser getXmlParser(){
+
+	public IParser getXmlParser() {
 		if (xmlParser == null) {
 			xmlParser = context.newXmlParser();
 		}
 		return xmlParser;
 	}
-	
-	private Logger getLogger(){
+
+	private Logger getLogger() {
 		return LoggerFactory.getLogger(FindingsContentHelper.class);
 	}
-	
-	public Optional<IBaseResource> getResource(IFinding finding) throws DataFormatException{
+
+	public Optional<IBaseResource> getResource(IFinding finding) throws DataFormatException {
 		IBaseResource resource = null;
 		if (finding != null) {
 			RawContentFormat contentFormat = finding.getRawContentFormat();
@@ -58,22 +58,20 @@ public class FindingsContentHelper {
 					}
 				}
 			} else {
-				getLogger().error("Could not get resource because of unknown content format ["
-					+ contentFormat + "]");
+				getLogger().error("Could not get resource because of unknown content format [" + contentFormat + "]");
 			}
 		}
 		return Optional.ofNullable(resource);
 	}
-	
-	public void setResource(BaseResource resource, IFinding finding) throws DataFormatException{
+
+	public void setResource(BaseResource resource, IFinding finding) throws DataFormatException {
 		RawContentFormat contentFormat = finding.getRawContentFormat();
 		if (contentFormat == RawContentFormat.FHIR_JSON) {
 			String jsonContent = finding.getRawContent();
 			if (jsonContent != null && !jsonContent.isEmpty()) {
 				if (resource != null) {
 					if (resource.getId() == null) {
-						resource.setId(
-							new IdType(resource.getClass().getSimpleName(), finding.getId()));
+						resource.setId(new IdType(resource.getClass().getSimpleName(), finding.getId()));
 					}
 					String resourceJson = getJsonParser().encodeResourceToString(resource);
 					finding.setRawContent(resourceJson);
@@ -84,16 +82,14 @@ public class FindingsContentHelper {
 			if (xmlContent != null && !xmlContent.isEmpty()) {
 				if (resource != null) {
 					if (resource.getIdElement() == null) {
-						resource.setId(
-							new IdType(resource.getClass().getSimpleName(), finding.getId()));
+						resource.setId(new IdType(resource.getClass().getSimpleName(), finding.getId()));
 					}
 					String resourceJson = getXmlParser().encodeResourceToString(resource);
 					finding.setRawContent(resourceJson);
 				}
 			}
 		} else {
-			getLogger().error(
-				"Could not get resource because of unknown content format [" + contentFormat + "]");
+			getLogger().error("Could not get resource because of unknown content format [" + contentFormat + "]");
 		}
 	}
 }

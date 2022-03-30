@@ -34,33 +34,33 @@ public class KonsFilter {
 	private boolean caseSensitive;
 	private boolean asRegEx;
 	private List<Constraint> lc = new LinkedList<Constraint>();
-	
-	public void setFall(ICoverage f){
+
+	public void setFall(ICoverage f) {
 		fall = f;
 	}
-	
-	public void addConstraint(int link, String word){
+
+	public void addConstraint(int link, String word) {
 		lc.add(new Constraint(link, word));
 	}
-	
-	public void clear(){
+
+	public void clear() {
 		lc.clear();
 	}
-	
+
 	/**
 	 * Festlegen, ob Suchausdrücke case-sensitive betrachtet werden sollen
 	 */
-	public void setCaseSensitive(boolean caseSensitive){
+	public void setCaseSensitive(boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
 	}
-	
+
 	/**
 	 * Festlegen, ob Suchausdrücke als Regular Expressions betrachtet werden sollen
 	 */
-	public void setAsRegEx(boolean asRegEx){
+	public void setAsRegEx(boolean asRegEx) {
 		this.asRegEx = asRegEx;
 	}
-	
+
 	/**
 	 * Entscheiden, ob eine bestimmte Konsultation durch den Filter geht
 	 * 
@@ -68,7 +68,7 @@ public class KonsFilter {
 	 *            die Konsultation, die getestet werden soll
 	 * @return true: Kons. geht durch (default)
 	 */
-	public boolean pass(IEncounter k){
+	public boolean pass(IEncounter k) {
 		if (k == null) {
 			return false;
 		}
@@ -116,12 +116,12 @@ public class KonsFilter {
 		}
 		return lastVal;
 	}
-	
+
 	private static class Constraint {
 		int mode;
 		String word;
-		
-		Constraint(int m, String w){
+
+		Constraint(int m, String w) {
 			mode = m;
 			word = w;
 		}

@@ -29,52 +29,50 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 
 public class IInvoiceServiceTest extends AbstractServiceTest {
-	private IBillingService billingService =
-		OsgiServiceUtil.getService(IBillingService.class).get();
-	private IInvoiceService invoiceService =
-		OsgiServiceUtil.getService(IInvoiceService.class).get();
-	
+	private IBillingService billingService = OsgiServiceUtil.getService(IBillingService.class).get();
+	private IInvoiceService invoiceService = OsgiServiceUtil.getService(IInvoiceService.class).get();
+
 	private static ICustomService customService;
 	private static IEncounter encounter;
-	
+
 	@BeforeClass
-	public static void beforeClass(){
+	public static void beforeClass() {
 		customService = coreModelService.create(ICustomService.class);
 		customService.setText("test service");
 		customService.setCode("1234");
 		customService.setNetPrice(new Money(512));
 		customService.setPrice(new Money(1024));
 		coreModelService.save(customService);
-		
-		encounter = new IEncounterBuilder(CoreModelServiceHolder.get(),
-			AllServiceTests.getCoverage(), AllServiceTests.getMandator()).buildAndSave();
+
+		encounter = new IEncounterBuilder(CoreModelServiceHolder.get(), AllServiceTests.getCoverage(),
+				AllServiceTests.getMandator()).buildAndSave();
 	}
-	
+
 	@AfterClass
-	public static void afterClass(){
+	public static void afterClass() {
 		CoreModelServiceHolder.get().remove(encounter);
 	}
-	
+
 	@Before
-	public void before(){
+	public void before() {
 		createTestMandantPatientFallBehandlung();
 		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		ContextServiceHolder.get().setActiveMandator(null);
-		
+
 		cleanup();
 	}
-	
+
 	@Test
-	public void removePayment(){
+	public void removePayment() {
 		ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
 		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
 		ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(),
-			ch.elexis.core.constants.Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
-		
+				ch.elexis.core.constants.Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
+
 		Result<IBilled> billed = billingService.bill(customService, encounter, 1.0);
 		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
 		IFreeTextDiagnosis diagnosis = coreModelService.create(IFreeTextDiagnosis.class);
@@ -86,21 +84,20 @@ public class IInvoiceServiceTest extends AbstractServiceTest {
 		Result<IInvoice> invoice = invoiceService.invoice(testEncounters);
 		assertTrue(invoice.toString(), invoice.isOK());
 
-		IQuery<IAccountTransaction> transactionQuery =
-				CoreModelServiceHolder.get().getQuery(IAccountTransaction.class);
-		transactionQuery.and(ModelPackage.Literals.IACCOUNT_TRANSACTION__PATIENT, COMPARATOR.EQUALS, invoice.get().getCoverage().getPatient());
+		IQuery<IAccountTransaction> transactionQuery = CoreModelServiceHolder.get().getQuery(IAccountTransaction.class);
+		transactionQuery.and(ModelPackage.Literals.IACCOUNT_TRANSACTION__PATIENT, COMPARATOR.EQUALS,
+				invoice.get().getCoverage().getPatient());
 		assertTrue(transactionQuery.execute().isEmpty());
 
-		
 		IPayment payment = invoiceService.addPayment(invoice.get(), new Money(128), "test");
 		assertNotNull(payment);
 		assertEquals(1.28, invoice.get().getPayedAmount().getAmount(), 0.0001);
 		assertFalse(transactionQuery.execute().isEmpty());
-		
+
 		invoiceService.removePayment(payment);
 		assertEquals(0.0, invoice.get().getPayedAmount().getAmount(), 0.0001);
 		assertTrue(transactionQuery.execute().isEmpty());
-		
+
 		CoreModelServiceHolder.get().remove(payment);
 		CoreModelServiceHolder.get().remove(billed.get());
 		CoreModelServiceHolder.get().remove(invoice.get());

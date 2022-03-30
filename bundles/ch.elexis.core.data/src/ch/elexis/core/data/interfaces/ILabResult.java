@@ -18,9 +18,9 @@ import ch.rgw.tools.TimeTool;
  * Copy of core interface, used while refactoring.
  */
 public interface ILabResult {
-	
+
 	String getId();
-	
+
 	String getRefMale();
 
 	void setRefMale(String value);
@@ -72,8 +72,8 @@ public interface ILabResult {
 	PathologicDescription getPathologicDescription();
 
 	void setPathologicDescription(PathologicDescription value);
-	
+
 	String getLabel();
-	
+
 	LabOrder getLabOrder();
 }

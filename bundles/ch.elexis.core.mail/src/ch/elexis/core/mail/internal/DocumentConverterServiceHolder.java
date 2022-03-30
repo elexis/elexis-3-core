@@ -13,17 +13,17 @@ import ch.elexis.core.services.IDocumentConverter;
 @Component(service = {})
 public class DocumentConverterServiceHolder {
 	private static IDocumentConverter documentConverter;
-	
+
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policyOption = ReferencePolicyOption.GREEDY)
-	public void bind(IDocumentConverter service){
+	public void bind(IDocumentConverter service) {
 		DocumentConverterServiceHolder.documentConverter = service;
 	}
-	
-	public static void unbind(DocumentStore service){
+
+	public static void unbind(DocumentStore service) {
 		DocumentConverterServiceHolder.documentConverter = null;
 	}
-	
-	public static Optional<IDocumentConverter> get(){
+
+	public static Optional<IDocumentConverter> get() {
 		return Optional.ofNullable(documentConverter);
 	}
 }

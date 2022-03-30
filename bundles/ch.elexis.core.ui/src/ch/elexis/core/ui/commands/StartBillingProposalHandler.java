@@ -27,35 +27,34 @@ import ch.elexis.core.ui.dialogs.BillingProposalWizardDialog;
 import ch.elexis.core.ui.views.rechnung.BillingProposalView;
 
 /**
- * Handler opening a {@link BillingProposalWizardDialog} and setting the input of the
- * {@link BillingProposalView}.
+ * Handler opening a {@link BillingProposalWizardDialog} and setting the input
+ * of the {@link BillingProposalView}.
  * 
  * @author thomas
  *
  */
 public class StartBillingProposalHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		BillingProposalView view = getOpenView(event);
 		if (view != null) {
-			BillingProposalWizardDialog dialog =
-				new BillingProposalWizardDialog(HandlerUtil.getActiveShell(event));
+			BillingProposalWizardDialog dialog = new BillingProposalWizardDialog(HandlerUtil.getActiveShell(event));
 			if (dialog.open() == Dialog.OK) {
 				view.setInput(dialog.getProposal().orElse(Collections.emptyList()));
 			}
 		}
 		return null;
 	}
-	
-	private BillingProposalView getOpenView(ExecutionEvent event){
+
+	private BillingProposalView getOpenView(ExecutionEvent event) {
 		try {
 			IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 			IWorkbenchPage page = window.getActivePage();
 			return (BillingProposalView) page.showView(BillingProposalView.ID);
 		} catch (PartInitException e) {
 			MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
-				"Konnte Rechnungs-Vorschlag View nicht öffnen");
+					"Konnte Rechnungs-Vorschlag View nicht öffnen");
 		}
 		return null;
 	}

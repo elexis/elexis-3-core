@@ -61,53 +61,53 @@ import ch.rgw.tools.TimeSpan;
 import ch.rgw.tools.TimeTool;
 
 public class BillingProposalWizardDialog extends TitleAreaDialog {
-	
+
 	private List<Konsultation> proposal;
-	
+
 	private Button insurerOnly;
 	private KontaktSelectionComposite insurerSelection;
-	
+
 	private Button timeSpanOnly;
 	private TimeSpanSelectionComposite timeSpanSelection;
-	
+
 	private Button beforeTimeOnly;
 
 	private ExcludeKonsByMoneyComposite excludeKonsByMoneyComposite;
-	
+
 	private DaysOrDateSelectionComposite beforeDaysOrDate;
-	
+
 	private Button mandatorOnly;
 	private GenericSelectionComposite mandatorSelector;
-	
+
 	private Button accountingOnly;
 	private GenericSelectionComposite accountingSelector;
-	
+
 	private Button errorneousOnly;
-	
-	public BillingProposalWizardDialog(Shell parentShell){
+
+	public BillingProposalWizardDialog(Shell parentShell) {
 		super(parentShell);
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		setTitle("Rechnungs-Vorschlag Auswahl");
 		setMessage(Messages.KonsZumVerrechnenWizardDialog_createProposal);
 		getShell().setText("Rechnungs-Vorschlag");
 	}
-	
+
 	@Override
-	protected Control createDialogArea(final Composite parent){
+	protected Control createDialogArea(final Composite parent) {
 		Composite ret = (Composite) super.createDialogArea(parent);
 		Composite content = new Composite(ret, SWT.NONE);
 		content.setLayout(new GridLayout(2, false));
 		content.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
+
 		timeSpanOnly = new Button(content, SWT.CHECK);
 		timeSpanOnly.setText("Offene Konsultationen innerhalb des Zeitraums");
 		timeSpanOnly.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (timeSpanOnly.getSelection()) {
 					beforeTimeOnly.setSelection(false);
 				}
@@ -117,7 +117,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		timeSpanSelection.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		timeSpanSelection.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getSelection() != null && !event.getSelection().isEmpty()) {
 					timeSpanOnly.setSelection(true);
 					beforeTimeOnly.setSelection(false);
@@ -127,15 +127,13 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			}
 		});
 		LocalDate dateNow = LocalDate.now();
-		timeSpanSelection
-			.setTimeSpan(
-				new TimeSpan(new TimeTool(dateNow.withDayOfMonth(1)), new TimeTool(dateNow)));
-		
+		timeSpanSelection.setTimeSpan(new TimeSpan(new TimeTool(dateNow.withDayOfMonth(1)), new TimeTool(dateNow)));
+
 		beforeTimeOnly = new Button(content, SWT.CHECK);
 		beforeTimeOnly.setText("Offene Behandlungsserien vor Tagen oder Datum");
 		beforeTimeOnly.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (beforeTimeOnly.getSelection()) {
 					timeSpanOnly.setSelection(false);
 				}
@@ -146,7 +144,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		beforeDaysOrDate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		beforeDaysOrDate.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getSelection() != null && !event.getSelection().isEmpty()) {
 					beforeTimeOnly.setSelection(true);
 					timeSpanOnly.setSelection(false);
@@ -158,14 +156,14 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		beforeDaysOrDate.setDate(LocalDate.now().minusDays(30));
 
 		excludeKonsByMoneyComposite = new ExcludeKonsByMoneyComposite(content);
-		
+
 		insurerOnly = new Button(content, SWT.CHECK);
 		insurerOnly.setText("nur von folgendem Versicherer");
 		insurerSelection = new KontaktSelectionComposite(content, SWT.NONE | SWT.MULTI);
 		insurerSelection.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		insurerSelection.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getSelection() != null && !event.getSelection().isEmpty()) {
 					insurerOnly.setSelection(true);
 				} else {
@@ -173,7 +171,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		
+
 		mandatorOnly = new Button(content, SWT.CHECK);
 		mandatorOnly.setText("nur von folgenden Mandanten");
 		mandatorSelector = new GenericSelectionComposite(content, SWT.NONE);
@@ -181,7 +179,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		mandatorSelector.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		mandatorSelector.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getSelection() != null && !event.getSelection().isEmpty()) {
 					mandatorOnly.setSelection(true);
 				} else {
@@ -189,7 +187,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		
+
 		accountingOnly = new Button(content, SWT.CHECK);
 		accountingOnly.setText("nur von folgenden Abrechnungssystemen");
 		accountingSelector = new GenericSelectionComposite(content, SWT.NONE);
@@ -197,7 +195,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		accountingSelector.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		accountingSelector.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getSelection() != null && !event.getSelection().isEmpty()) {
 					accountingOnly.setSelection(true);
 				} else {
@@ -205,19 +203,18 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		
+
 		errorneousOnly = new Button(content, SWT.CHECK);
 		errorneousOnly.setText("nur fehlerhafte");
 		new Label(content, SWT.NONE);
 		new Label(content, SWT.NONE);
 		new Label(content, SWT.NONE);
-		new Label(content, SWT.NONE); //GAPS
+		new Label(content, SWT.NONE); // GAPS
 		return ret;
 	}
 
-	
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		ProgressMonitorDialog progress = new ProgressMonitorDialog(getShell());
 		QueryProposalRunnable runnable = new QueryProposalRunnable();
 		try {
@@ -228,68 +225,59 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				proposal = runnable.getProposal();
 			}
 		} catch (InvocationTargetException | InterruptedException e) {
-			LoggerFactory.getLogger(BillingProposalWizardDialog.class)
-				.error("Error running proposal query", e);
-			MessageDialog.openError(getShell(), "Fehler",
-				"Fehler beim Ausführen des Rechnungs-Vorschlags.");
+			LoggerFactory.getLogger(BillingProposalWizardDialog.class).error("Error running proposal query", e);
+			MessageDialog.openError(getShell(), "Fehler", "Fehler beim Ausführen des Rechnungs-Vorschlags.");
 			return;
 		}
-		
+
 		super.okPressed();
 	}
-	
+
 	public Optional<List<Konsultation>> getProposal() {
 		return Optional.ofNullable(proposal);
 	}
-	
+
 	private class QueryProposalRunnable implements IRunnableWithProgress {
-		
+
 		private boolean canceled = false;
 		private List<Konsultation> proposal = new ArrayList<>();
-		
+
 		private IFilter insurerOnlyFilter;
 		private IFilter accountingOnlyFilter;
 		private IFilter errorneousOnlyFilter;
 		private Query<Konsultation> query;
-		
+
 		private boolean addSeries;
 		private Money excludeKonsByMoney;
-		
-		public QueryProposalRunnable(){
-			query = new Query<>(Konsultation.class, "BEHANDLUNGEN", false, new String[] {
-				Konsultation.DATE, Konsultation.FLD_TIME, Konsultation.FLD_MANDATOR_ID,
-				Konsultation.FLD_BILL_ID, Konsultation.FLD_CASE_ID
-			});
+
+		public QueryProposalRunnable() {
+			query = new Query<>(Konsultation.class, "BEHANDLUNGEN", false,
+					new String[]{Konsultation.DATE, Konsultation.FLD_TIME, Konsultation.FLD_MANDATOR_ID,
+							Konsultation.FLD_BILL_ID, Konsultation.FLD_CASE_ID});
 			query.add(Konsultation.FLD_BILL_ID, Query.EQUALS, null);
 			query.add(Konsultation.FLD_BILLABLE, Query.EQUALS, "1");
 			if (timeSpanOnly.getSelection()) {
-				IStructuredSelection selection =
-					(IStructuredSelection) timeSpanSelection.getSelection();
+				IStructuredSelection selection = (IStructuredSelection) timeSpanSelection.getSelection();
 				if (selection != null && !selection.isEmpty()) {
 					TimeSpan timeSpan = (TimeSpan) selection.getFirstElement();
-					query.add(Konsultation.DATE, Query.GREATER_OR_EQUAL,
-						timeSpan.from.toString(TimeTool.DATE_COMPACT));
-					query.add(Konsultation.DATE, Query.LESS_OR_EQUAL,
-						timeSpan.until.toString(TimeTool.DATE_COMPACT));
+					query.add(Konsultation.DATE, Query.GREATER_OR_EQUAL, timeSpan.from.toString(TimeTool.DATE_COMPACT));
+					query.add(Konsultation.DATE, Query.LESS_OR_EQUAL, timeSpan.until.toString(TimeTool.DATE_COMPACT));
 				}
 			}
 			if (beforeTimeOnly.getSelection()) {
 				addSeries = true;
-				IStructuredSelection selection =
-					(IStructuredSelection) beforeDaysOrDate.getSelection();
+				IStructuredSelection selection = (IStructuredSelection) beforeDaysOrDate.getSelection();
 				if (selection != null && !selection.isEmpty()) {
 					LocalDate fromDate = (LocalDate) selection.getFirstElement();
 					TimeTool fromTool = new TimeTool(fromDate);
-					query.add(Konsultation.DATE, Query.LESS_OR_EQUAL,
-						fromTool.toString(TimeTool.DATE_COMPACT));					
+					query.add(Konsultation.DATE, Query.LESS_OR_EQUAL, fromTool.toString(TimeTool.DATE_COMPACT));
 					if (excludeKonsByMoneyComposite.isSelected()) {
 						excludeKonsByMoney = excludeKonsByMoneyComposite.getMoney();
 					}
 				}
 			}
 			if (mandatorOnly.getSelection()) {
-				IStructuredSelection selection =
-					(IStructuredSelection) mandatorSelector.getSelection();
+				IStructuredSelection selection = (IStructuredSelection) mandatorSelector.getSelection();
 				if (selection != null && !selection.isEmpty()) {
 					@SuppressWarnings("unchecked")
 					List<Mandant> mandators = selection.toList();
@@ -298,23 +286,21 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 						if (i > 0) {
 							query.or();
 						}
-						query.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS,
-							mandators.get(i).getId());
+						query.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, mandators.get(i).getId());
 					}
 					query.endGroup();
 				}
 			}
-			
+
 			if (insurerOnly.getSelection()) {
 				insurerOnlyFilter = new IFilter() {
-					
+
 					@SuppressWarnings("unchecked")
-					private List<Kontakt> insurers =
-						(List<Kontakt>) ((IStructuredSelection) insurerSelection.getSelection())
-							.toList();
-					
+					private List<Kontakt> insurers = (List<Kontakt>) ((IStructuredSelection) insurerSelection
+							.getSelection()).toList();
+
 					@Override
-					public boolean select(Object element){
+					public boolean select(Object element) {
 						Fall fall = ((Konsultation) element).getFall();
 						Kontakt costBearer = fall.getCostBearer();
 						if (costBearer != null) {
@@ -330,13 +316,13 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			}
 			if (accountingOnly.getSelection()) {
 				accountingOnlyFilter = new IFilter() {
-					
+
 					@SuppressWarnings("unchecked")
-					private List<String> accountings =
-						((IStructuredSelection) accountingSelector.getSelection()).toList();
-					
+					private List<String> accountings = ((IStructuredSelection) accountingSelector.getSelection())
+							.toList();
+
 					@Override
-					public boolean select(Object element){
+					public boolean select(Object element) {
 						Fall fall = ((Konsultation) element).getFall();
 						String accounting = fall.getAbrechnungsSystem();
 						return accountings.contains(accounting);
@@ -346,20 +332,19 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			if (errorneousOnly.getSelection()) {
 				errorneousOnlyFilter = new IFilter() {
 					@Override
-					public boolean select(Object element){
+					public boolean select(Object element) {
 						return !BillingUtil.getBillableResult((Konsultation) element).isOK();
 					}
 				};
 			}
-			
+
 		}
-		
+
 		@Override
-		public void run(IProgressMonitor monitor)
-			throws InvocationTargetException, InterruptedException{
+		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 			List<Konsultation> initialList = query.execute();
 			SubMonitor progress = SubMonitor.convert(monitor, 100);
-			
+
 			progress.setTaskName("Vorschlag filter");
 			if (addSeries) {
 				progress.setWorkRemaining(initialList.size() * 2);
@@ -378,11 +363,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				proposal.add(konsultation);
 				progress.worked(1);
 			}
-			if(addSeries) {
+			if (addSeries) {
 				progress.setTaskName("Behandlungsserien laden");
 				HashSet<String> knownIds = new HashSet<>();
-				knownIds.addAll(
-					proposal.parallelStream().map(k -> k.getId()).collect(Collectors.toList()));
+				knownIds.addAll(proposal.parallelStream().map(k -> k.getId()).collect(Collectors.toList()));
 				ArrayList<Konsultation> proposalCopy = new ArrayList<>(proposal);
 				proposalCopy.forEach(k -> {
 					List<Konsultation> series = getSeries(k.getFall());
@@ -391,8 +375,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 						Money totalForKonsSerie = getSeriesTotal(series);
 						if (excludeKonsByMoney.isMoreThan(totalForKonsSerie)) {
 							// exclude whole series
-							knownIds.addAll(series.parallelStream().map(sk -> sk.getId())
-								.collect(Collectors.toList()));
+							knownIds.addAll(series.parallelStream().map(sk -> sk.getId()).collect(Collectors.toList()));
 							proposal.remove(k);
 						}
 					}
@@ -423,21 +406,22 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			});
 			monitor.done();
 		}
-		
-		private Money getSeriesTotal(List<Konsultation> series){
+
+		private Money getSeriesTotal(List<Konsultation> series) {
 			Money ret = new Money();
 			series.forEach(sk -> ret.addMoney(BillingUtil.getTotal(sk)));
 			return ret;
 		}
-		
+
 		/**
-		 * Apply the filters to the {@link Konsultation} return false if any filter matches, true if
-		 * it passes all filters. Filters can have performance implications.
+		 * Apply the filters to the {@link Konsultation} return false if any filter
+		 * matches, true if it passes all filters. Filters can have performance
+		 * implications.
 		 * 
 		 * @param konsultation
 		 * @return
 		 */
-		private boolean applyFilters(Konsultation konsultation){
+		private boolean applyFilters(Konsultation konsultation) {
 			if (insurerOnlyFilter != null && !insurerOnlyFilter.select(konsultation)) {
 				return false;
 			}
@@ -449,34 +433,32 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			}
 			return true;
 		}
-		
-		private List<Konsultation> getSeries(Fall fall){
-			return Arrays.asList(fall.getBehandlungen(false)).parallelStream()
-				.filter(k -> k.isBillable())
-				.filter(k -> k.getRechnung() == null || !k.getRechnung().exists())
-				.collect(Collectors.toList());
+
+		private List<Konsultation> getSeries(Fall fall) {
+			return Arrays.asList(fall.getBehandlungen(false)).parallelStream().filter(k -> k.isBillable())
+					.filter(k -> k.getRechnung() == null || !k.getRechnung().exists()).collect(Collectors.toList());
 		}
-		
-		public boolean isCanceled(){
+
+		public boolean isCanceled() {
 			return canceled;
 		}
-		
-		public List<Konsultation> getProposal(){
+
+		public List<Konsultation> getProposal() {
 			return proposal;
 		}
 	}
-	
+
 	private class ExcludeKonsByMoneyComposite extends Composite {
 		private MoneyInput txtExcludeKonsByMoney;
 		private Button checkExcludeKonsByMoney;
-		
-		public ExcludeKonsByMoneyComposite(Composite parent){
+
+		public ExcludeKonsByMoneyComposite(Composite parent) {
 			super(parent, SWT.NONE);
 			setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1));
 			setLayout(SWTHelper.createGridLayout(true, 2));
 		}
-		
-		private void createContents(){
+
+		private void createContents() {
 			checkExcludeKonsByMoney = new Button(this, SWT.CHECK);
 			checkExcludeKonsByMoney.setText("Offene Behandlungsserien ausschliessen");
 			Composite c = new Composite(this, SWT.NONE);
@@ -484,18 +466,18 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			c.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 			Label lblBeforeTimeOnlyValueLessThen = new Label(c, SWT.NONE);
 			lblBeforeTimeOnlyValueLessThen.setText("Betrag kleiner CHF");
-		
+
 			txtExcludeKonsByMoney = new MoneyInput(c);
 			txtExcludeKonsByMoney.getControl().addListener(SWT.Verify, new Listener() {
-				public void handleEvent(Event e){
+				public void handleEvent(Event e) {
 					// limits only the input the value validation happens at focus lost
 					String string = e.text;
-					
+
 					char[] chars = new char[string.length()];
 					string.getChars(0, chars.length, chars, 0);
 					for (int i = 0; i < chars.length; i++) {
-						if (!( ('0' <= chars[i] && chars[i] <= '9') || (e.start > 0 && (chars[i] == '.'
-								|| chars[i] == ',')))) {
+						if (!(('0' <= chars[i] && chars[i] <= '9')
+								|| (e.start > 0 && (chars[i] == '.' || chars[i] == ',')))) {
 							e.doit = false;
 							return;
 						}
@@ -503,30 +485,29 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				}
 			});
 		}
-		
-		public void changeVisibility(boolean show){
+
+		public void changeVisibility(boolean show) {
 			removeAllChildrens();
 			if (show) {
 				createContents();
 			}
 			getParent().layout(true, true);
 		}
-		
-		private void removeAllChildrens(){
+
+		private void removeAllChildrens() {
 			for (Control c : getChildren()) {
 				c.dispose();
-				
+
 			}
 		}
-		
+
 		public boolean isSelected() {
-			return isVisible() && checkExcludeKonsByMoney != null
-					&& !checkExcludeKonsByMoney.isDisposed() && checkExcludeKonsByMoney.getSelection();
+			return isVisible() && checkExcludeKonsByMoney != null && !checkExcludeKonsByMoney.isDisposed()
+					&& checkExcludeKonsByMoney.getSelection();
 		}
-		
-		public Money getMoney(){
-			if (isVisible() && txtExcludeKonsByMoney != null
-					&& !txtExcludeKonsByMoney.isDisposed()) {
+
+		public Money getMoney() {
+			if (isVisible() && txtExcludeKonsByMoney != null && !txtExcludeKonsByMoney.isDisposed()) {
 				return txtExcludeKonsByMoney.getMoney(true);
 			}
 			return null;

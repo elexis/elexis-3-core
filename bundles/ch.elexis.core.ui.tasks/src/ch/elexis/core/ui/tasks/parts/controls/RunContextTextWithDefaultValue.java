@@ -8,19 +8,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 public class RunContextTextWithDefaultValue extends Text {
-	
-	public RunContextTextWithDefaultValue(Composite compAssisted,
-		AbstractTaskDescriptorConfigurationComposite atdcc, String key, String defaultValue,
-		String configuredValue){
+
+	public RunContextTextWithDefaultValue(Composite compAssisted, AbstractTaskDescriptorConfigurationComposite atdcc,
+			String key, String defaultValue, String configuredValue) {
 		super(compAssisted, SWT.BORDER);
-		
+
 		setMessage(defaultValue != null ? defaultValue : "");
 		setText(configuredValue != null ? configuredValue : "");
-		
+
 		addModifyListener(new ModifyListener() {
-			
+
 			@Override
-			public void modifyText(ModifyEvent e){
+			public void modifyText(ModifyEvent e) {
 				if (StringUtils.isNotBlank(getText())) {
 					atdcc.taskDescriptor.setRunContextParameter(key, getText().trim());
 				} else {
@@ -30,8 +29,9 @@ public class RunContextTextWithDefaultValue extends Text {
 			}
 		});
 	}
-	
+
 	@Override
-	protected void checkSubclass(){}
-	
+	protected void checkSubclass() {
+	}
+
 }

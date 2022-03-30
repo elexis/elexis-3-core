@@ -29,16 +29,18 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 /**
- * Ein Laboritem, also ein anzeigbarer Laborwert. Jedes Laboritem hat einen Titel, ein Kürzel, ein
- * Labor, aus dem es stammt, einen Normbereich. Ausserdem gehört jedes Laboritem zu einer Itemgruppe
- * (Beispielsweise Hämatologie oder Vitamine) und hat eine Priorität innerhalb dieser Gruppe. Gruppe
- * und Priorität beeinflussen die Darstellungsreihenfolge und Gruppierung auf dem Laborblatt.
+ * Ein Laboritem, also ein anzeigbarer Laborwert. Jedes Laboritem hat einen
+ * Titel, ein Kürzel, ein Labor, aus dem es stammt, einen Normbereich. Ausserdem
+ * gehört jedes Laboritem zu einer Itemgruppe (Beispielsweise Hämatologie oder
+ * Vitamine) und hat eine Priorität innerhalb dieser Gruppe. Gruppe und
+ * Priorität beeinflussen die Darstellungsreihenfolge und Gruppierung auf dem
+ * Laborblatt.
  * 
  * @author Gerry
- * 		
+ * 
  */
 public class LabItem extends PersistentObject implements Comparable<LabItem>, ILabItem {
-	
+
 	public static final String REF_MALE = "RefMann"; //$NON-NLS-1$
 	public static final String REF_FEMALE_OR_TEXT = "RefFrauOrTx"; //$NON-NLS-1$
 	public static final String PRIO = "prio"; //$NON-NLS-1$
@@ -49,33 +51,32 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	public static final String TITLE = "titel"; //$NON-NLS-1$
 	public static final String SHORTNAME = "kuerzel"; //$NON-NLS-1$
 	public static final String EXPORT = "export"; //$NON-NLS-1$
-	
+
 	public static final String FORMULA = "formula"; //$NON-NLS-1$
 	public static final String DIGITS = "digits"; //$NON-NLS-1$
 	public static final String VISIBLE = "visible"; //$NON-NLS-1$
 	public static final String BILLINGCODE = "billingcode"; //$NON-NLS-1$
 	public static final String LOINCCODE = "loinccode"; //$NON-NLS-1$
-	
+
 	static final String LABITEMS = "LABORITEMS"; //$NON-NLS-1$
-	private static final Pattern varPattern =
-		Pattern.compile(TextContainerConstants.MATCH_TEMPLATE);
-	
+	private static final Pattern varPattern = Pattern.compile(TextContainerConstants.MATCH_TEMPLATE);
+
 	/**
-	 * Denotes that a labitem does not have a reference value, and hence
-	 * by definition always is considered non-pathologic (e.g. eye color - blue)
+	 * Denotes that a labitem does not have a reference value, and hence by
+	 * definition always is considered non-pathologic (e.g. eye color - blue)
 	 */
 	public static final String REFVAL_INCONCLUSIVE = "inconclusive";
-		
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return LABITEMS;
 	}
-	
+
 	static {
-		addMapping(LABITEMS, SHORTNAME, TITLE, LAB_ID, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE,
-			GROUP, PRIO, EXPORT, FORMULA, DIGITS, VISIBLE, BILLINGCODE, LOINCCODE);
+		addMapping(LABITEMS, SHORTNAME, TITLE, LAB_ID, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE, GROUP, PRIO, EXPORT,
+				FORMULA, DIGITS, VISIBLE, BILLINGCODE, LOINCCODE);
 	}
-	
+
 	/**
 	 * Erstellt ein neues LaborItem.
 	 * 
@@ -99,17 +100,16 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	 *            Sequenz-Nummer
 	 */
 	public LabItem(String code, String title, Kontakt labor, String RefMann, String RefFrau, String Unit,
-		LabItemTyp type, String grp, String seq){
-		this(code, title, (labor != null) ? labor.getId() : null, RefMann, RefFrau, Unit, type, grp,
-			seq);
+			LabItemTyp type, String grp, String seq) {
+		this(code, title, (labor != null) ? labor.getId() : null, RefMann, RefFrau, Unit, type, grp, seq);
 	}
-	
+
 	/**
 	 * @since 3.2
 	 * @since 3.4 new LabItems are by default set to visible
 	 */
 	public LabItem(String code, String title, String laborId, String RefMann, String RefFrau, String Unit,
-		LabItemTyp type, String grp, String seq){
+			LabItemTyp type, String grp, String seq) {
 		String tp = "1"; //$NON-NLS-1$
 		if (type == LabItemTyp.NUMERIC) {
 			tp = "0"; //$NON-NLS-1$
@@ -131,112 +131,110 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 			Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
 			String labid = qbe.findSingle(Kontakt.FLD_IS_LAB, Query.EQUALS, StringConstants.ONE);
 			if (labid == null) {
-				laborId =
-					new Labor(Messages.LabItem_shortOwnLab, Messages.LabItem_longOwnLab).getId();
+				laborId = new Labor(Messages.LabItem_shortOwnLab, Messages.LabItem_longOwnLab).getId();
 			}
 		}
-		set(new String[] {
-			SHORTNAME, TITLE, LAB_ID, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE, GROUP, PRIO, VISIBLE
-		}, code, title, laborId, RefMann, RefFrau, Unit, tp, grp, seq, StringConstants.ONE);
+		set(new String[]{SHORTNAME, TITLE, LAB_ID, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE, GROUP, PRIO, VISIBLE},
+				code, title, laborId, RefMann, RefFrau, Unit, tp, grp, seq, StringConstants.ONE);
 	}
-	
-	protected LabItem(){/* leer */
+
+	protected LabItem() {/* leer */
 	}
-	
-	protected LabItem(String id){
+
+	protected LabItem(String id) {
 		super(id);
 	}
-	
-	public static LabItem load(String id){
+
+	public static LabItem load(String id) {
 		return new LabItem(id);
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return getLabel();
 	}
-	
+
 	@Override
-	public int getCacheTime(){
+	public int getCacheTime() {
 		return 60;
 	}
-	
+
 	/**
-	 * This is the value that will be used for a LabResult if there is no other unit value
-	 * available. The effective unit value is moved to the LabResult.
+	 * This is the value that will be used for a LabResult if there is no other unit
+	 * value available. The effective unit value is moved to the LabResult.
 	 */
-	public String getEinheit(){
+	public String getEinheit() {
 		return checkNull(get(UNIT));
 	}
-	
+
 	/**
-	 * This is the value that will be used for a LabResult if there is no other unit value
-	 * available. The effective unit value is moved to the LabResult.
+	 * This is the value that will be used for a LabResult if there is no other unit
+	 * value available. The effective unit value is moved to the LabResult.
 	 */
-	public void setEinheit(String unit){
+	public void setEinheit(String unit) {
 		set(UNIT, unit);
 	}
-	
-	public String getGroup(){
+
+	public String getGroup() {
 		return checkNull(get(GROUP));
 	}
-	
-	public void setGroup(String group){
+
+	public void setGroup(String group) {
 		set(GROUP, group);
 	}
-	
-	public String getPrio(){
+
+	public String getPrio() {
 		return checkNull(get(PRIO));
 	}
-	
-	public void setPrio(String prio){
+
+	public void setPrio(String prio) {
 		set(PRIO, prio);
 	}
-	
-	public String getKuerzel(){
+
+	public String getKuerzel() {
 		return checkNull(get(SHORTNAME));
 	}
-	
-	public void setKuerzel(String shortname){
+
+	public void setKuerzel(String shortname) {
 		set(SHORTNAME, shortname);
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return checkNull(get(TITLE));
 	}
-	
-	public void setName(String title){
+
+	public void setName(String title) {
 		set(TITLE, title);
 	}
-	
+
 	/**
 	 * @deprecated The labor has been moved to the LabOrder.
 	 */
-	public Labor getLabor(){
+	public Labor getLabor() {
 		return Labor.load(get(LAB_ID));
 	}
-	
-	public String getExport(){
+
+	public String getExport() {
 		return checkNull(get(EXPORT));
 	}
-	
-	public void setExport(String export){
+
+	public void setExport(String export) {
 		set(EXPORT, export);
 	}
-	
-	public void setTyp(LabItemTyp typ){
+
+	public void setTyp(LabItemTyp typ) {
 		set(TYPE, Integer.toString(typ.getType()));
 	}
-	
-	public LabItemTyp getTyp(){
+
+	public LabItemTyp getTyp() {
 		LabItemTyp type = LabItemTyp.fromType(get(TYPE));
 		if (type != null) {
 			return type;
 		}
 		return LabItemTyp.TEXT;
 	}
-	
-	public String evaluateNew(Patient pat, TimeTool date, List<ILabResult> results){
+
+	public String evaluateNew(Patient pat, TimeTool date, List<ILabResult> results) {
 		String formel = getFormula();
 		formel = formel.substring(Script.SCRIPT_MARKER.length());
 		results = sortResultsDescending(results);
@@ -246,16 +244,16 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 				formel = formel.replaceAll(var, result.getResult());
 			}
 		}
-		
+
 		try {
 			return Script.executeScript(formel, pat).toString();
 		} catch (ElexisException e) {
 			return "?formel?"; //$NON-NLS-1$
 		}
-		
+
 	}
-	
-	public String evaluate(Patient pat, List<ILabResult> results) throws ElexisException{
+
+	public String evaluate(Patient pat, List<ILabResult> results) throws ElexisException {
 		if (!getTyp().equals(LabItemTyp.FORMULA)) {
 			return null;
 		}
@@ -268,8 +266,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		for (ILabResult result : results) {
 			String var = ((LabItem) result.getItem()).makeVarName();
 			if (formel.indexOf(var) != -1) {
-				if (result.getResult() != null && !result.getResult().isEmpty()
-					&& !result.getResult().equals("?")) { //$NON-NLS-1$
+				if (result.getResult() != null && !result.getResult().isEmpty() && !result.getResult().equals("?")) { //$NON-NLS-1$
 					formel = formel.replaceAll(var, result.getResult());
 					bMatched = true;
 				}
@@ -278,7 +275,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		Matcher matcher = varPattern.matcher(formel);
 		// Suche Variablen der Form [Patient.Alter]
 		StringBuffer sb = new StringBuffer();
-		
+
 		while (matcher.find()) {
 			String var = matcher.group();
 			String[] fields = var.split("\\."); //$NON-NLS-1$
@@ -293,7 +290,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		if (!bMatched) {
 			return null;
 		}
-		
+
 		Interpreter scripter = Script.getInterpreterFor(formel);
 		try {
 			String result = scripter.run(sb.toString(), false).toString();
@@ -302,14 +299,14 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 			return "?formel?"; //$NON-NLS-1$
 		}
 	}
-	
-	private List<ILabResult> sortResultsDescending(List<ILabResult> results){
+
+	private List<ILabResult> sortResultsDescending(List<ILabResult> results) {
 		Collections.sort(results, new Comparator<ILabResult>() {
 			@Override
-			public int compare(ILabResult lr1, ILabResult lr2){
+			public int compare(ILabResult lr1, ILabResult lr2) {
 				int var1Length = ((LabItem) lr1.getItem()).makeVarName().length();
 				int var2Length = ((LabItem) lr2.getItem()).makeVarName().length();
-				
+
 				if (var1Length < var2Length) {
 					return 1;
 				} else if (var1Length > var2Length) {
@@ -320,42 +317,43 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		});
 		return results;
 	}
-	
+
 	/**
-	 * Evaluate a formula-based LabItem for a given Patient at a given date. It will try to retrieve
-	 * all LabValues it depends on of that Patient and date and then calculate the result. If there
-	 * are not all necessare values given, it will return "?formula?". The formula can be a
-	 * beanshell-script by itself (for compatibility with previous versions), or the name of a
-	 * script prefixed with SCRIPT:, e.g. SCRIPT:mdrd($krea=c_10). Variable names are the group and
+	 * Evaluate a formula-based LabItem for a given Patient at a given date. It will
+	 * try to retrieve all LabValues it depends on of that Patient and date and then
+	 * calculate the result. If there are not all necessare values given, it will
+	 * return "?formula?". The formula can be a beanshell-script by itself (for
+	 * compatibility with previous versions), or the name of a script prefixed with
+	 * SCRIPT:, e.g. SCRIPT:mdrd($krea=c_10). Variable names are the group and
 	 * priority values of a lab item separated with an underscore.
 	 * 
 	 * @param date
 	 *            The date to consider for calculating
 	 * @return the result or "?formel?" if no result could be calculated.
 	 */
-	public String evaluate(Patient pat, TimeTool date) throws ElexisException{
+	public String evaluate(Patient pat, TimeTool date) throws ElexisException {
 		if (!getTyp().equals(LabItemTyp.FORMULA)) {
 			return null;
 		}
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
 		qbe.add(LabResult.PATIENT_ID, Query.EQUALS, pat.getId());
 		qbe.add(LabResult.DATE, Query.EQUALS, date.toString(TimeTool.DATE_COMPACT));
-		List<ILabResult> results = (List<ILabResult>)(List<?>) qbe.execute();
+		List<ILabResult> results = (List<ILabResult>) (List<?>) qbe.execute();
 		return evaluate(pat, results);
 	}
-	
+
 	/**
 	 * Return the variable Name that identifies this item (in a script)
 	 * 
 	 * @return a name that is made of the group and the priority values.
 	 */
-	public String makeVarName(){
+	public String makeVarName() {
 		String[] group = getGroup().split(StringTool.space, 2);
 		String num = getPrio().trim();
 		return group[0] + "_" + num; //$NON-NLS-1$
 	}
-	
-	public int getDigits(){
+
+	public int getDigits() {
 		String digits = checkNull(get(DIGITS));
 		if (digits.isEmpty()) {
 			return 0;
@@ -363,12 +361,12 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 			return Integer.parseInt(digits);
 		}
 	}
-	
-	public void setDigits(int digits){
+
+	public void setDigits(int digits) {
 		set(DIGITS, Integer.toString(digits));
 	}
-	
-	public boolean isVisible(){
+
+	public boolean isVisible() {
 		String visible = get(VISIBLE);
 		// not set defaults to true
 		if (visible == null || visible.isEmpty()) {
@@ -377,107 +375,103 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		}
 		return visible.equals(StringConstants.ONE);
 	}
-	
-	public void setVisible(boolean visible){
+
+	public void setVisible(boolean visible) {
 		if (visible) {
 			set(VISIBLE, StringConstants.ONE);
 		} else {
 			set(VISIBLE, StringConstants.ZERO);
 		}
 	}
-	
+
 	/**
-	 * This is the value that will be used for a LabResult if there is no other Ref value available.
-	 * The effective Ref value is moved to the LabResult.
+	 * This is the value that will be used for a LabResult if there is no other Ref
+	 * value available. The effective Ref value is moved to the LabResult.
 	 */
-	public String getRefW(){
+	public String getRefW() {
 		String ret = checkNull(get(REF_FEMALE_OR_TEXT)).split("##")[0]; //$NON-NLS-1$
 		return ret;
 	}
-	
+
 	/**
-	 * This is the value that will be used for a LabResult if there is no other Ref value available.
-	 * The effective Ref value is moved to the LabResult.
+	 * This is the value that will be used for a LabResult if there is no other Ref
+	 * value available. The effective Ref value is moved to the LabResult.
 	 */
-	public String getRefM(){
+	public String getRefM() {
 		return checkNull(get(REF_MALE));
 	}
-	
+
 	/**
-	 * This is the value that will be used for a LabResult if there is no other Ref value available.
-	 * The effective Ref value is moved to the LabResult.
+	 * This is the value that will be used for a LabResult if there is no other Ref
+	 * value available. The effective Ref value is moved to the LabResult.
 	 */
-	public void setRefW(String r){
+	public void setRefW(String r) {
 		set(REF_FEMALE_OR_TEXT, r);
 	}
-	
+
 	/**
-	 * This is the value that will be used for a LabResult if there is no other Ref value available.
-	 * The effective Ref value is moved to the LabResult.
+	 * This is the value that will be used for a LabResult if there is no other Ref
+	 * value available. The effective Ref value is moved to the LabResult.
 	 */
-	public void setRefM(String r){
+	public void setRefM(String r) {
 		set(REF_MALE, r);
 	}
-	
-	public void setFormula(String f){
+
+	public void setFormula(String f) {
 		set(FORMULA, f);
 	}
-	
-	public String getFormula(){
+
+	public String getFormula() {
 		String formula = get(FORMULA);
-		
+
 		if (formula == null || formula.isEmpty()) {
 			String[] refWEntry = get(REF_FEMALE_OR_TEXT).split("##");
 			formula = refWEntry.length > 1 ? refWEntry[1] : "";
-			
+
 			if (formula != null && !formula.isEmpty()) {
 				setFormula(formula);
 			}
 		}
 		return formula;
 	}
-	
-	public String getLoincCode(){
+
+	public String getLoincCode() {
 		return checkNull(get(LOINCCODE));
 	}
-	
-	public void setLoincCode(String code){
+
+	public void setLoincCode(String code) {
 		set(LOINCCODE, code);
 	}
-	
-	public String getBillingCode(){
+
+	public String getBillingCode() {
 		return checkNull(get(BILLINGCODE));
 	}
-	
-	public void setBillingCode(String code){
+
+	public void setBillingCode(String code) {
 		set(BILLINGCODE, code);
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		StringBuilder sb = new StringBuilder();
-		String[] fields = {
-			SHORTNAME, TITLE, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE, GROUP, PRIO
-		};
+		String[] fields = {SHORTNAME, TITLE, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE, GROUP, PRIO};
 		String[] vals = new String[fields.length];
 		get(fields, vals);
 		sb.append(vals[0]).append(", ").append(vals[1]); //$NON-NLS-1$
 		if (StringConstants.ZERO.equals(vals[5])) {
 			sb.append(" (").append(vals[2]).append("/").append(getRefW()).append(StringTool.space) //$NON-NLS-1$ //$NON-NLS-2$
-				.append(vals[4]).append(")"); //$NON-NLS-1$
+					.append(vals[4]).append(")"); //$NON-NLS-1$
 		} else {
 			sb.append(" (").append(getRefW()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		sb.append("[").append(vals[6]).append(", ").append(vals[7]).append("]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return sb.toString();
-		
+
 	}
-	
-	public String getShortLabel(){
+
+	public String getShortLabel() {
 		StringBuilder sb = new StringBuilder();
-		String[] fields = {
-			TITLE, UNIT, LAB_ID
-		};
+		String[] fields = {TITLE, UNIT, LAB_ID};
 		String[] vals = new String[fields.length];
 		get(fields, vals);
 		Labor lab = Labor.load(vals[2]);
@@ -488,13 +482,13 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		sb.append(vals[0]).append(" (").append(vals[1]).append("; ").append(labName).append(")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return sb.toString();
 	}
-	
-	public int compareTo(LabItem other){
+
+	public int compareTo(LabItem other) {
 		// check for null; put null values at the end
 		if (other == null) {
 			return -1;
 		}
-		
+
 		// first, compare the groups
 		String mineGroup = getGroup();
 		String otherGroup = other.getGroup();
@@ -502,7 +496,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 			// groups differ, just compare groups
 			return mineGroup.compareTo(otherGroup);
 		}
-		
+
 		// compare item priorities
 		String mine = getPrio().trim();
 		String others = other.getPrio().trim();
@@ -513,24 +507,23 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		}
 		return mine.compareTo(others);
 	}
-	
+
 	/**
 	 * Get a List of all LabItems from the database
 	 * 
 	 * @return List of {@link LabItem}
 	 * @since 3.7 use query with prefetch
 	 */
-	public static List<LabItem> getLabItems(){
-		Query<LabItem> qbe = new Query<>(LabItem.class, LABITEMS, false, new String[] {
-			LabItem.TITLE, LabItem.SHORTNAME, LabItem.LOINCCODE, LabItem.UNIT,
-			LabItem.REF_MALE, LabItem.REF_FEMALE_OR_TEXT, LabItem.GROUP, LabItem.PRIO
-		});
+	public static List<LabItem> getLabItems() {
+		Query<LabItem> qbe = new Query<>(LabItem.class, LABITEMS, false,
+				new String[]{LabItem.TITLE, LabItem.SHORTNAME, LabItem.LOINCCODE, LabItem.UNIT, LabItem.REF_MALE,
+						LabItem.REF_FEMALE_OR_TEXT, LabItem.GROUP, LabItem.PRIO});
 		return qbe.execute();
 	}
-	
+
 	/**
-	 * Get a List of LabItems matching the specified parameters in the database By specifying null
-	 * parameters the LabItem selection can be broadened.
+	 * Get a List of LabItems matching the specified parameters in the database By
+	 * specifying null parameters the LabItem selection can be broadened.
 	 * 
 	 * @param laborId
 	 *            the Id of the lab the items belong to
@@ -542,11 +535,10 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	 *            the female reference value for the items
 	 * @param unit
 	 *            the unit for the items
-	 * 			
+	 * 
 	 * @return List of {@link LabItem}
 	 */
-	public static List<LabItem> getLabItems(String laborId, String shortDesc, String refM,
-		String refW, String unit){
+	public static List<LabItem> getLabItems(String laborId, String shortDesc, String refM, String refW, String unit) {
 		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
 		if (laborId != null && laborId.length() > 0) {
 			qbe.add("LaborID", "=", laborId); //$NON-NLS-1$ //$NON-NLS-2$
@@ -569,19 +561,19 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		}
 		return qbe.execute();
 	}
-	
+
 	/**
-	 * Copies all LabResults from the source LabItem to this LabItem. ATTENTION this can not be
-	 * reverted. The properties (originId,refW,refM,unit) will be updated from the source LabItem to
-	 * the LabResult if not already set.
+	 * Copies all LabResults from the source LabItem to this LabItem. ATTENTION this
+	 * can not be reverted. The properties (originId,refW,refM,unit) will be updated
+	 * from the source LabItem to the LabResult if not already set.
 	 * 
 	 * @param source
 	 */
-	public void mergeWith(LabItem source){
+	public void mergeWith(LabItem source) {
 		Query<LabResult> qsr = new Query<LabResult>(LabResult.class);
 		qsr.add(LabResult.ITEM_ID, Query.EQUALS, source.getId());
 		List<LabResult> sourceResults = qsr.execute();
-		
+
 		for (LabResult labResult : sourceResults) {
 			// update data from the LabItem to the LabResult
 			if (labResult.getOrigin() == null) {
@@ -606,47 +598,47 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	}
 
 	@Override
-	public String getReferenceMale(){
+	public String getReferenceMale() {
 		return getRefM();
 	}
 
 	@Override
-	public void setReferenceMale(String value){
+	public void setReferenceMale(String value) {
 		setRefM(value);
 	}
 
 	@Override
-	public String getReferenceFemale(){
+	public String getReferenceFemale() {
 		return getRefW();
 	}
 
 	@Override
-	public void setReferenceFemale(String value){
+	public void setReferenceFemale(String value) {
 		setRefW(value);
 	}
 
 	@Override
-	public String getPriority(){
+	public String getPriority() {
 		return getPrio();
 	}
 
 	@Override
-	public void setPriority(String value){
+	public void setPriority(String value) {
 		setPrio(value);
 	}
 
 	@Override
-	public String getUnit(){
+	public String getUnit() {
 		return getEinheit();
 	}
 
 	@Override
-	public void setUnit(String value){
+	public void setUnit(String value) {
 		setEinheit(value);
 	}
 
 	@Override
-	public boolean isNoReferenceValueItem(){
+	public boolean isNoReferenceValueItem() {
 		String[] values = get(true, REF_MALE, REF_FEMALE_OR_TEXT);
 		return (REFVAL_INCONCLUSIVE.equals(values[0]) && REFVAL_INCONCLUSIVE.equals(values[1]));
 	}

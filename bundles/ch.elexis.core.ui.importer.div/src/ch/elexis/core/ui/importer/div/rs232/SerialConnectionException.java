@@ -34,30 +34,31 @@ import gnu.io.PortInUseException;
  */
 
 public class SerialConnectionException extends Exception {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3576687247807264427L;
-	
+
 	/**
-	 * Constructs a <code>SerialConnectionException</code> with the specified detail message.
+	 * Constructs a <code>SerialConnectionException</code> with the specified detail
+	 * message.
 	 * 
 	 * @param s
 	 *            the detail message.
 	 */
-	public SerialConnectionException(final String str){
+	public SerialConnectionException(final String str) {
 		super(str);
 	}
-	
+
 	/**
 	 * Constructs a <code>SerialConnectionException</code> with no detail message.
 	 */
-	public SerialConnectionException(){
+	public SerialConnectionException() {
 		super();
 	}
-	
-	public SerialConnectionException(String message, PortInUseException e){
+
+	public SerialConnectionException(String message, PortInUseException e) {
 		super(message, e);
 	}
 }

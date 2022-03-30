@@ -15,48 +15,42 @@ import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 
 public class SendMailTaskWithProgress {
-	
+
 	private ITask task;
-	
-	public ITask execute(Shell activeShell, ITaskDescriptor taskDescriptor){
+
+	public ITask execute(Shell activeShell, ITaskDescriptor taskDescriptor) {
 		try {
-			new ProgressMonitorDialog(activeShell).run(true, false,
-				new IRunnableWithProgress() {
-					
-					@Override
-					public void run(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException{
-						try {
-							monitor.beginTask("Send Mail ...", IProgressMonitor.UNKNOWN);
-							task = TaskUtil.executeTaskSync(taskDescriptor, monitor);
-							if (task.isSucceeded()) {
-								OutboxUtil.getOrCreateElement(taskDescriptor, true);
-								EncounterUtil.addMailToEncounter(taskDescriptor);
-							}
-							monitor.done();
-						} catch (TaskException e) {
-							MessageDialog.openError(activeShell, "Fehler",
-								"Versenden konnte nicht gestartet werden.");
+			new ProgressMonitorDialog(activeShell).run(true, false, new IRunnableWithProgress() {
+
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					try {
+						monitor.beginTask("Send Mail ...", IProgressMonitor.UNKNOWN);
+						task = TaskUtil.executeTaskSync(taskDescriptor, monitor);
+						if (task.isSucceeded()) {
+							OutboxUtil.getOrCreateElement(taskDescriptor, true);
+							EncounterUtil.addMailToEncounter(taskDescriptor);
 						}
+						monitor.done();
+					} catch (TaskException e) {
+						MessageDialog.openError(activeShell, "Fehler", "Versenden konnte nicht gestartet werden.");
 					}
-				});
+				}
+			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			MessageDialog.openError(activeShell, "Fehler",
-				"Versenden konnte nicht gestartet werden.");
+			MessageDialog.openError(activeShell, "Fehler", "Versenden konnte nicht gestartet werden.");
 		}
 		if (!task.isSucceeded()) {
 			String errorMessage = MailClientComponent.getLastErrorMessage();
 			if (errorMessage.isEmpty()) {
-				MessageDialog.openError(activeShell, "Fehler",
-					"Versenden konnte nicht gestartet werden.");
+				MessageDialog.openError(activeShell, "Fehler", "Versenden konnte nicht gestartet werden.");
 			} else {
 				MessageDialog.openError(activeShell, "Fehler", errorMessage);
 			}
 		} else {
-			MessageDialog.openInformation(activeShell, "E-Mail versand",
-				"E-Mail erfolgreich versendet.");
+			MessageDialog.openInformation(activeShell, "E-Mail versand", "E-Mail erfolgreich versendet.");
 		}
 		return task;
 	}
-	
+
 }

@@ -23,27 +23,26 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.ui.documents.views.DocumentsTreeContentProvider;
 
 public class DocumentsSelectionDialog extends CheckedTreeSelectionDialog {
-	
+
 	private LastSevenViewerFilter lastSevenFilter;
-	
-	public DocumentsSelectionDialog(Shell parent, ILabelProvider labelProvider,
-		ITreeContentProvider contentProvider, int style){
+
+	public DocumentsSelectionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider,
+			int style) {
 		super(parent, labelProvider, contentProvider, style);
 		setStatusLineAboveButtons(false);
 		lastSevenFilter = new LastSevenViewerFilter();
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		if (getTreeViewer().getContentProvider() instanceof DocumentsTreeContentProvider) {
-			((DocumentsTreeContentProvider) getTreeViewer().getContentProvider())
-				.setViewer(getTreeViewer());
+			((DocumentsTreeContentProvider) getTreeViewer().getContentProvider()).setViewer(getTreeViewer());
 		}
 	}
-	
+
 	@Override
-	protected Composite createSelectionButtons(Composite composite){
+	protected Composite createSelectionButtons(Composite composite) {
 		Composite buttonComposite = new Composite(composite, SWT.RIGHT);
 		GridLayout layout = new GridLayout();
 		buttonComposite.setLayout(layout);
@@ -54,7 +53,7 @@ public class DocumentsSelectionDialog extends CheckedTreeSelectionDialog {
 		lastSevenButton.setText("Dokumente der letzten 7 Tage");
 		lastSevenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (lastSevenButton.getSelection()) {
 					getTreeViewer().addFilter(lastSevenFilter);
 					getTreeViewer().expandAll();
@@ -66,16 +65,15 @@ public class DocumentsSelectionDialog extends CheckedTreeSelectionDialog {
 		});
 		return buttonComposite;
 	}
-	
+
 	private class LastSevenViewerFilter extends ViewerFilter {
-		
+
 		@Override
-		public boolean select(Viewer viewer, Object parentElement, Object element){
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof IDocument) {
 				IDocument document = (IDocument) element;
 				LocalDate lastChange = LocalDateTime
-					.ofInstant(document.getLastchanged().toInstant(), ZoneId.systemDefault())
-					.toLocalDate();
+						.ofInstant(document.getLastchanged().toInstant(), ZoneId.systemDefault()).toLocalDate();
 				return ChronoUnit.DAYS.between(lastChange, LocalDate.now()) < 8;
 			}
 			return true;

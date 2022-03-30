@@ -15,8 +15,8 @@ import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 public class CorrectGender {
-	
-	public void run(){
+
+	public void run() {
 		Query<Person> qbe = new Query<Person>(Person.class);
 		for (Person p : qbe.execute()) {
 			String g = p.get(Person.SEX);

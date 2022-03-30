@@ -32,42 +32,40 @@ import ch.elexis.core.ui.views.RezeptBlatt;
 import ch.elexis.data.Rezept;
 
 public class PrintRecipeHandler extends AbstractHandler {
-	
+
 	public static final String COMMAND_ID = "ch.elexis.core.ui.medication.PrintRecipe";
-	
+
 	private static Logger log = LoggerFactory.getLogger(PrintRecipeHandler.class);
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 		if (patient == null)
 			return null;
-		
-		String medicationType =
-			event.getParameter("ch.elexis.core.ui.medication.commandParameter.medication"); //$NON-NLS-1$
+
+		String medicationType = event.getParameter("ch.elexis.core.ui.medication.commandParameter.medication"); //$NON-NLS-1$
 		// if not set use selection
 		if (medicationType == null || medicationType.isEmpty()) {
 			medicationType = "selection";
 		}
-		
-		String address =
-			event.getParameter("ch.elexis.core.ui.medication.commandParameter.address"); //$NON-NLS-1$
-		
+
+		String address = event.getParameter("ch.elexis.core.ui.medication.commandParameter.address"); //$NON-NLS-1$
+
 		List<IPrescription> prescRecipes = getPrescriptions(patient, medicationType, event);
 		if (!prescRecipes.isEmpty()) {
 			prescRecipes = sortPrescriptions(prescRecipes, event);
-			
+
 			IRecipe recipe = MedicationServiceHolder.get().createRecipe(patient, prescRecipes);
-			
+
 			RezeptBlatt rpb;
 			try {
-				rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().showView(ElexisConfigurationConstants.rezeptausgabe);
+				rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+						.showView(ElexisConfigurationConstants.rezeptausgabe);
 				boolean previousAddressSelection = rpb.isAddressSelection();
 				rpb.setAddressSelection("select".equals(address));
 				rpb.createRezept(Rezept.load(recipe.getId()));
 				rpb.setAddressSelection(previousAddressSelection);
-				
+
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, recipe);
 			} catch (PartInitException e) {
 				log.error("Error outputting recipe", e);
@@ -75,9 +73,8 @@ public class PrintRecipeHandler extends AbstractHandler {
 		}
 		return null;
 	}
-	
-	private List<IPrescription> sortPrescriptions(List<IPrescription> prescRecipes,
-		ExecutionEvent event){
+
+	private List<IPrescription> sortPrescriptions(List<IPrescription> prescRecipes, ExecutionEvent event) {
 		SorterAdapter sorter = new SorterAdapter(event);
 		IWorkbenchPart part = HandlerUtil.getActivePart(event);
 		if (part instanceof MedicationView) {
@@ -85,19 +82,17 @@ public class PrintRecipeHandler extends AbstractHandler {
 		}
 		return prescRecipes;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private List<IPrescription> getPrescriptions(IPatient patient, String medicationType,
-		ExecutionEvent event){
+	private List<IPrescription> getPrescriptions(IPatient patient, String medicationType, ExecutionEvent event) {
 		if ("selection".equals(medicationType)) {
-			ISelection selection =
-				HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+			ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 			if (selection != null && !selection.isEmpty()) {
 				List<IPrescription> ret = new ArrayList<IPrescription>();
 				IStructuredSelection strucSelection = (IStructuredSelection) selection;
 				if (strucSelection.getFirstElement() instanceof MedicationTableViewerItem) {
-					List<MedicationTableViewerItem> mtvItems =
-						(List<MedicationTableViewerItem>) strucSelection.toList();
+					List<MedicationTableViewerItem> mtvItems = (List<MedicationTableViewerItem>) strucSelection
+							.toList();
 					for (MedicationTableViewerItem mtvItem : mtvItems) {
 						IPrescription p = mtvItem.getPrescription();
 						if (p != null) {
@@ -110,8 +105,8 @@ public class PrintRecipeHandler extends AbstractHandler {
 				return ret;
 			}
 		} else if ("all".equals(medicationType)) {
-			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
-				EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION));
+			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
+					EntryType.SYMPTOMATIC_MEDICATION));
 		} else if ("fix".equals(medicationType)) {
 			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
 		} else if ("reserve".equals(medicationType)) {

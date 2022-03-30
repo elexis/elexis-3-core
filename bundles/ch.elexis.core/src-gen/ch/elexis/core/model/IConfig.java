@@ -10,18 +10,16 @@
  */
 package ch.elexis.core.model;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IConfig</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IConfig</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IConfig#getKey <em>Key</em>}</li>
- *   <li>{@link ch.elexis.core.model.IConfig#getValue <em>Value</em>}</li>
+ * <li>{@link ch.elexis.core.model.IConfig#getKey <em>Key</em>}</li>
+ * <li>{@link ch.elexis.core.model.IConfig#getValue <em>Value</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIConfig()
@@ -30,39 +28,43 @@ package ch.elexis.core.model;
  */
 public interface IConfig extends Identifiable {
 	/**
-	 * Returns the value of the '<em><b>Key</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Key</b></em>' attribute. <!-- begin-user-doc
+	 * -->
 	 * <p>
-	 * If the meaning of the '<em>Key</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Key</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Key</em>' attribute.
 	 * @see #setKey(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIConfig_Key()
-	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='param'"
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping
+	 *        attributeName='param'"
 	 * @generated
 	 */
 	String getKey();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IConfig#getKey <em>Key</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Key</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IConfig#getKey
+	 * <em>Key</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Key</em>' attribute.
 	 * @see #getKey()
 	 * @generated
 	 */
 	void setKey(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Value</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Value</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Value</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Value</em>' attribute.
 	 * @see #setValue(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIConfig_Value()
@@ -72,10 +74,11 @@ public interface IConfig extends Identifiable {
 	String getValue();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IConfig#getValue <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Value</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IConfig#getValue
+	 * <em>Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Value</em>' attribute.
 	 * @see #getValue()
 	 * @generated
 	 */

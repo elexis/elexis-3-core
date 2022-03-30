@@ -26,24 +26,23 @@ import ch.elexis.core.model.prescription.EntryType;
 @Table(name = "patient_artikel_joint")
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
-public class Prescription extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Prescription extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Lob
 	protected byte[] extInfo;
-	
+
 	@Column(length = 3)
 	private String anzahl;
 
@@ -73,14 +72,14 @@ public class Prescription extends AbstractEntityWithId
 	@OneToOne
 	@JoinColumn(name = "prescriptor")
 	private Kontakt prescriptor;
-	
+
 	@Column(length = 25)
 	private String rezeptID;
 
 	@Column(length = 3)
 	@Convert(converter = IntegerStringConverter.class)
 	private int sortorder;
-	
+
 	public String getAnzahl() {
 		return anzahl;
 	}
@@ -89,11 +88,11 @@ public class Prescription extends AbstractEntityWithId
 		this.anzahl = anzahl;
 	}
 
-	public String getArtikel(){
+	public String getArtikel() {
 		return artikel;
 	}
 
-	public void setArtikel(String artikel){
+	public void setArtikel(String artikel) {
 		this.artikel = artikel;
 	}
 
@@ -121,8 +120,8 @@ public class Prescription extends AbstractEntityWithId
 		this.dateUntil = dateUntil;
 	}
 
-	public EntryType getEntryType(){
-		if(entryType == EntryType.UNKNOWN) {
+	public EntryType getEntryType() {
+		if (entryType == EntryType.UNKNOWN) {
 			String rezeptId = getRezeptID();
 			if (rezeptId != null && !rezeptId.isEmpty()) {
 				// this is necessary due to a past impl. where self dispensed was
@@ -141,7 +140,7 @@ public class Prescription extends AbstractEntityWithId
 		return entryType;
 	}
 
-	public void setEntryType(EntryType entryType){
+	public void setEntryType(EntryType entryType) {
 		this.entryType = entryType;
 	}
 
@@ -161,15 +160,15 @@ public class Prescription extends AbstractEntityWithId
 		this.patient = patient;
 	}
 
-	public Kontakt getPrescriptor(){
+	public Kontakt getPrescriptor() {
 		return prescriptor;
 	}
-	
-	public void setPrescriptor(Kontakt patient){
+
+	public void setPrescriptor(Kontakt patient) {
 		this.prescriptor = patient;
 	}
-	
-	public String getRezeptID(){
+
+	public String getRezeptID() {
 		return rezeptID;
 	}
 
@@ -177,51 +176,51 @@ public class Prescription extends AbstractEntityWithId
 		this.rezeptID = rezeptID;
 	}
 
-	public int getSortorder(){
+	public int getSortorder() {
 		return sortorder;
 	}
-	
-	public void setSortorder(int sortorder){
+
+	public void setSortorder(int sortorder) {
 		this.sortorder = sortorder;
 	}
-	
+
 	@Override
-	public byte[] getExtInfo(){
+	public byte[] getExtInfo() {
 		return extInfo;
 	}
-	
+
 	@Override
-	public void setExtInfo(byte[] extInfo){
+	public void setExtInfo(byte[] extInfo) {
 		this.extInfo = extInfo;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

@@ -36,59 +36,58 @@ import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
 
 public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
-	
+
 	private List<IDiagnosis> diagnoses = new ArrayList<IDiagnosis>();
-	
+
 	@SuppressWarnings("unchecked")
-	public DiagnoseSelektor(Shell shell){
+	public DiagnoseSelektor(Shell shell) {
 		super(shell);
 		setTitle(Messages.DiagnoseSelektorDialog_Title);
-		
+
 		diagnoses.add(new NoDiagnose());
-		
-		List<ICodeElementServiceContribution> diagnoseContributions =
-			CodeElementServiceHolder.get().getContributionsByTyp(CodeElementTyp.DIAGNOSE);
-		
+
+		List<ICodeElementServiceContribution> diagnoseContributions = CodeElementServiceHolder.get()
+				.getContributionsByTyp(CodeElementTyp.DIAGNOSE);
+
 		for (ICodeElementServiceContribution iCodeElementServiceContribution : diagnoseContributions) {
 			diagnoses.addAll((Collection<? extends IDiagnosis>) iCodeElementServiceContribution
-				.getElements(CodeElementServiceHolder.createContext()));
+					.getElements(CodeElementServiceHolder.createContext()));
 		}
-		
+
 		setListLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element == null) {
 					return "";
 				}
 				return ((IDiagnosis) element).getLabel();
 			}
 		});
-		
+
 		setDetailsLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element == null) {
 					return "";
 				}
-				return ((IDiagnosis) element).getCodeSystemName() + " "
-					+ ((IDiagnosis) element).getLabel();
+				return ((IDiagnosis) element).getCodeSystemName() + " " + ((IDiagnosis) element).getLabel();
 			}
 		});
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		String oldListLabel = WorkbenchMessages.FilteredItemsSelectionDialog_listLabel;
-		
+
 		setMessage(Messages.DiagnoseSelektorDialog_Message);
 		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = ""; //$NON-NLS-1$
 		Control ret = super.createDialogArea(parent);
-		
+
 		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = oldListLabel;
 		return ret;
 	}
-	
-	private void addDiagnoses(ITreeContentProvider tcp, Object[] roots){
+
+	private void addDiagnoses(ITreeContentProvider tcp, Object[] roots) {
 		for (Object object : roots) {
 			if (tcp.hasChildren(object)) {
 				addDiagnoses(tcp, tcp.getChildren(object));
@@ -97,55 +96,55 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 			}
 		}
 	}
-	
+
 	@Override
-	protected Control createExtendedContentArea(Composite parent){
+	protected Control createExtendedContentArea(Composite parent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	protected IDialogSettings getDialogSettings(){
+	protected IDialogSettings getDialogSettings() {
 		return new DialogSettings("diagnoseselektor"); //$NON-NLS-1$
 	}
-	
+
 	@Override
-	protected IStatus validateItem(Object item){
+	protected IStatus validateItem(Object item) {
 		return Status.OK_STATUS;
 	}
-	
+
 	@Override
-	protected ItemsFilter createFilter(){
+	protected ItemsFilter createFilter() {
 		return new ItemsFilter() {
 			@Override
-			public boolean isConsistentItem(Object item){
+			public boolean isConsistentItem(Object item) {
 				return true;
 			}
-			
+
 			@Override
-			public boolean matchItem(Object item){
+			public boolean matchItem(Object item) {
 				IDiagnosis diag = (IDiagnosis) item;
-				
+
 				return matches(diag.getLabel());
 			}
 		};
 	}
-	
+
 	@Override
-	protected Comparator<IDiagnosis> getItemsComparator(){
+	protected Comparator<IDiagnosis> getItemsComparator() {
 		return new Comparator<IDiagnosis>() {
-			
+
 			@Override
-			public int compare(IDiagnosis o1, IDiagnosis o2){
+			public int compare(IDiagnosis o1, IDiagnosis o2) {
 				return o1.getLabel().compareTo(o2.getLabel());
 			}
 		};
 	}
-	
+
 	@Override
-	protected void fillContentProvider(AbstractContentProvider contentProvider,
-		ItemsFilter itemsFilter, IProgressMonitor progressMonitor) throws CoreException{
-		
+	protected void fillContentProvider(AbstractContentProvider contentProvider, ItemsFilter itemsFilter,
+			IProgressMonitor progressMonitor) throws CoreException {
+
 		for (IDiagnosis diagnose : diagnoses) {
 			if (progressMonitor.isCanceled()) {
 				return;
@@ -153,83 +152,83 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 			contentProvider.add(diagnose, itemsFilter);
 		}
 	}
-	
+
 	@Override
-	public String getElementName(Object item){
+	public String getElementName(Object item) {
 		IDiagnosis diag = (IDiagnosis) item;
 		return diag.getLabel();
 	}
-	
+
 	private class NoDiagnose implements IDiagnosis {
-		
+
 		@Override
-		public String getCodeSystemName(){
+		public String getCodeSystemName() {
 			return "";
 		}
-		
+
 		@Override
-		public String getCodeSystemCode(){
+		public String getCodeSystemCode() {
 			return "";
 		}
-		
+
 		@Override
-		public String getId(){
+		public String getId() {
 			return "";
 		}
-		
+
 		@Override
-		public String getCode(){
+		public String getCode() {
 			return "";
 		}
-		
+
 		@Override
-		public String getText(){
+		public String getText() {
 			return " keine ";
 		}
-		
+
 		@Override
-		public String getLabel(){
+		public String getLabel() {
 			return getText();
 		}
-		
+
 		@Override
-		public void setCode(String value){
+		public void setCode(String value) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 		@Override
-		public void setText(String value){
+		public void setText(String value) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 		@Override
-		public boolean addXid(String domain, String id, boolean updateIfExists){
+		public boolean addXid(String domain, String id, boolean updateIfExists) {
 			// TODO Auto-generated method stub
 			return false;
 		}
-		
+
 		@Override
-		public IXid getXid(String domain){
+		public IXid getXid(String domain) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
-		public String getDescription(){
+		public String getDescription() {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
-		public void setDescription(String value){
+		public void setDescription(String value) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 		@Override
-		public Long getLastupdate(){
+		public Long getLastupdate() {
 			// TODO Auto-generated method stub
 			return null;
 		}

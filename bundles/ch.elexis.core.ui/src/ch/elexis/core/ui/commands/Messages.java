@@ -29,13 +29,13 @@ public class Messages {
 	public static String FallPlaneRechnung_PlanBillingAfterDays = ch.elexis.core.l10n.Messages.FallPlaneRechnung_PlanBillingAfterDays;
 	public static String FallPlaneRechnung_PlanBillingHeading = ch.elexis.core.l10n.Messages.FallPlaneRechnung_PlanBillingHeading;
 	public static String FallPlaneRechnung_PlanBillingPleaseEnterPositiveInteger = ch.elexis.core.l10n.Messages.FallPlaneRechnung_PlanBillingPleaseEnterPositiveInteger;
-	
+
 	public static String FallCopyCommand_RelatedConsultations = ch.elexis.core.l10n.Messages.FallCopyCommand_RelatedConsultations;
 	public static String FallCopyCommand_TransferConsultations = ch.elexis.core.l10n.Messages.FallCopyCommand_TransferConsultations;
 	public static String FallCopyCommand_AttentionTransferConsultations = ch.elexis.core.l10n.Messages.FallCopyCommand_AttentionTransferConsultations;
 	public static String LoadTemplateCommand_Error = ch.elexis.core.l10n.Messages.LoadTemplateCommand_Error;
 	public static String LoadTemplateCommand_NoTextTemplate = ch.elexis.core.l10n.Messages.LoadTemplateCommand_NoTextTemplate;
-	
+
 	public static String StartEditLocalDocumentHandler_alreadyOpenEnd = ch.elexis.core.l10n.Messages.StartEditLocalDocumentHandler_alreadyOpenEnd;
 
 	public static String StartEditLocalDocumentHandler_alreadyOpenStart = ch.elexis.core.l10n.Messages.StartEditLocalDocumentHandler_alreadyOpenStart;

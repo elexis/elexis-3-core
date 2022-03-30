@@ -8,23 +8,23 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import ch.elexis.core.findings.IFinding;
 
 public class LabelDataProvider implements IDataProvider {
-	
+
 	private IDataProvider dataProvider;
 	private LabelProvider labelProvider;
-	
-	public LabelDataProvider(IDataProvider dataProvider, LabelProvider labelProvider){
+
+	public LabelDataProvider(IDataProvider dataProvider, LabelProvider labelProvider) {
 		this.dataProvider = dataProvider;
 		this.labelProvider = labelProvider;
 	}
-	
+
 	@Override
-	public int getColumnCount(){
+	public int getColumnCount() {
 		return dataProvider.getColumnCount();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object getDataValue(int columnIndex, int rowIndex){
+	public Object getDataValue(int columnIndex, int rowIndex) {
 		Object data = dataProvider.getDataValue(columnIndex, rowIndex);
 		if (data instanceof List) {
 			StringBuilder sb = new StringBuilder();
@@ -39,14 +39,14 @@ public class LabelDataProvider implements IDataProvider {
 		}
 		return "";
 	}
-	
+
 	@Override
-	public int getRowCount(){
+	public int getRowCount() {
 		return dataProvider.getRowCount();
 	}
-	
+
 	@Override
-	public void setDataValue(int columnIndex, int rowIndex, Object newValue){
+	public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
 		dataProvider.setDataValue(columnIndex, rowIndex, newValue);
 	}
 }

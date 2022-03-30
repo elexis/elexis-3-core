@@ -12,19 +12,17 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 
 public class ContactSelectionLabelProvider extends DefaultLabelProvider {
-	
-	private static DateTimeFormatter dateOfBirthFormatter =
-		DateTimeFormatter.ofPattern("dd.MM.yyyy");
-	
+
+	private static DateTimeFormatter dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
 	@Override
-	public String getText(Object element){
+	public String getText(Object element) {
 		if (element instanceof IContact) {
 			IContact contact = (IContact) element;
-			
+
 			String label = contact.getLabel();
 			if (contact.isPerson()) {
-				Optional<IPerson> person =
-					CoreModelServiceHolder.get().load(contact.getId(), IPerson.class);
+				Optional<IPerson> person = CoreModelServiceHolder.get().load(contact.getId(), IPerson.class);
 				String dateOfBirthString = (person.get().getDateOfBirth() != null
 						? person.get().getDateOfBirth().format(dateOfBirthFormatter)
 						: "?");
@@ -32,7 +30,7 @@ public class ContactSelectionLabelProvider extends DefaultLabelProvider {
 			}
 			if (contact.isUser()) {
 				label = StringUtils.defaultString(contact.getDescription1()) + " "
-					+ StringUtils.defaultString(contact.getDescription2()) + " - " + label;
+						+ StringUtils.defaultString(contact.getDescription2()) + " - " + label;
 			}
 			return label;
 		} else if (element instanceof Identifiable) {
@@ -40,8 +38,8 @@ public class ContactSelectionLabelProvider extends DefaultLabelProvider {
 		}
 		return element.toString();
 	}
-	
-	public String getColumnText(Object element, int columnIndex){
+
+	public String getColumnText(Object element, int columnIndex) {
 		return getText(element);
 	}
 }

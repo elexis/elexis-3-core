@@ -14,26 +14,29 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Input Data Numeric</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Input
+ * Data Numeric</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getUnit <em>Unit</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getDecimalPlace <em>Decimal Place</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getDataType <em>Data Type</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getScript <em>Script</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getUnit
+ * <em>Unit</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getDecimalPlace
+ * <em>Decimal Place</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getDataType
+ * <em>Data Type</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataNumericImpl#getScript
+ * <em>Script</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class InputDataNumericImpl extends MinimalEObjectImpl.Container implements InputDataNumeric {
 	/**
-	 * The default value of the '{@link #getUnit() <em>Unit</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getUnit() <em>Unit</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getUnit()
 	 * @generated
 	 * @ordered
@@ -41,9 +44,9 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	protected static final String UNIT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getUnit() <em>Unit</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getUnit() <em>Unit</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getUnit()
 	 * @generated
 	 * @ordered
@@ -51,9 +54,9 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	protected String unit = UNIT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDecimalPlace() <em>Decimal Place</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDecimalPlace() <em>Decimal Place</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getDecimalPlace()
 	 * @generated
 	 * @ordered
@@ -61,9 +64,9 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	protected static final int DECIMAL_PLACE_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getDecimalPlace() <em>Decimal Place</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDecimalPlace() <em>Decimal Place</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getDecimalPlace()
 	 * @generated
 	 * @ordered
@@ -71,9 +74,9 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	protected int decimalPlace = DECIMAL_PLACE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDataType() <em>Data Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDataType() <em>Data Type</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getDataType()
 	 * @generated
 	 * @ordered
@@ -81,9 +84,9 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	protected static final DataType DATA_TYPE_EDEFAULT = DataType.NUMERIC;
 
 	/**
-	 * The cached value of the '{@link #getDataType() <em>Data Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDataType() <em>Data Type</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getDataType()
 	 * @generated
 	 * @ordered
@@ -92,8 +95,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 
 	/**
 	 * The default value of the '{@link #getScript() <em>Script</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getScript()
 	 * @generated
 	 * @ordered
@@ -102,8 +105,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 
 	/**
 	 * The cached value of the '{@link #getScript() <em>Script</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getScript()
 	 * @generated
 	 * @ordered
@@ -111,8 +114,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	protected String script = SCRIPT_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected InputDataNumericImpl() {
@@ -120,8 +123,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -130,8 +133,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -140,8 +143,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -149,12 +152,13 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 		String oldUnit = unit;
 		unit = newUnit;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.INPUT_DATA_NUMERIC__UNIT, oldUnit, unit));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.INPUT_DATA_NUMERIC__UNIT, oldUnit,
+					unit));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -163,8 +167,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -172,12 +176,13 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 		int oldDecimalPlace = decimalPlace;
 		decimalPlace = newDecimalPlace;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE, oldDecimalPlace, decimalPlace));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE,
+					oldDecimalPlace, decimalPlace));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -186,8 +191,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -196,8 +201,8 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -205,65 +210,66 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 		String oldScript = script;
 		script = newScript;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.INPUT_DATA_NUMERIC__SCRIPT, oldScript, script));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.INPUT_DATA_NUMERIC__SCRIPT, oldScript,
+					script));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_NUMERIC__UNIT:
+			case ModelPackage.INPUT_DATA_NUMERIC__UNIT :
 				return getUnit();
-			case ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE:
+			case ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE :
 				return getDecimalPlace();
-			case ModelPackage.INPUT_DATA_NUMERIC__DATA_TYPE:
+			case ModelPackage.INPUT_DATA_NUMERIC__DATA_TYPE :
 				return getDataType();
-			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT:
+			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT :
 				return getScript();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_NUMERIC__UNIT:
-				setUnit((String)newValue);
+			case ModelPackage.INPUT_DATA_NUMERIC__UNIT :
+				setUnit((String) newValue);
 				return;
-			case ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE:
-				setDecimalPlace((Integer)newValue);
+			case ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE :
+				setDecimalPlace((Integer) newValue);
 				return;
-			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT:
-				setScript((String)newValue);
+			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT :
+				setScript((String) newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_NUMERIC__UNIT:
+			case ModelPackage.INPUT_DATA_NUMERIC__UNIT :
 				setUnit(UNIT_EDEFAULT);
 				return;
-			case ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE:
+			case ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE :
 				setDecimalPlace(DECIMAL_PLACE_EDEFAULT);
 				return;
-			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT:
+			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT :
 				setScript(SCRIPT_EDEFAULT);
 				return;
 		}
@@ -271,33 +277,34 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_NUMERIC__UNIT:
+			case ModelPackage.INPUT_DATA_NUMERIC__UNIT :
 				return UNIT_EDEFAULT == null ? unit != null : !UNIT_EDEFAULT.equals(unit);
-			case ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE:
+			case ModelPackage.INPUT_DATA_NUMERIC__DECIMAL_PLACE :
 				return decimalPlace != DECIMAL_PLACE_EDEFAULT;
-			case ModelPackage.INPUT_DATA_NUMERIC__DATA_TYPE:
+			case ModelPackage.INPUT_DATA_NUMERIC__DATA_TYPE :
 				return dataType != DATA_TYPE_EDEFAULT;
-			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT:
+			case ModelPackage.INPUT_DATA_NUMERIC__SCRIPT :
 				return SCRIPT_EDEFAULT == null ? script != null : !SCRIPT_EDEFAULT.equals(script);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (unit: ");
@@ -312,4 +319,4 @@ public class InputDataNumericImpl extends MinimalEObjectImpl.Container implement
 		return result.toString();
 	}
 
-} //InputDataNumericImpl
+} // InputDataNumericImpl

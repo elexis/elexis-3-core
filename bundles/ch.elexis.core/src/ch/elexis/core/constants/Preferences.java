@@ -20,7 +20,7 @@ import ch.elexis.core.preferences.Messages;
 public class Preferences {
 	// Preference store settings default prefix
 	public static final String SETTINGS_PREFERENCE_STORE_DEFAULT = "_default"; //$NON-NLS-1$
-	
+
 	// Datenbank
 	public static final String DB_CLASS = "verbindung/Connector"; //$NON-NLS-1$
 	public static final String DB_CONNECT = "verbindung/Connectstring"; //$NON-NLS-1$
@@ -39,32 +39,32 @@ public class Preferences {
 	public static final String CFG_FOLDED_CONNECTION_TYPE = "typ";
 	public static final String CFG_FOLDED_CONNECTION_CONNECTSTRING = "connectionstring";
 	public static final String CFG_STORED_JDBC_CONN = "verbindung/storedJDBCConnections/connection";
-	
+
 	// Locale
 	/** 5292 assert network wide locale equality **/
 	public static final String CFG_LOCALE = "locale"; //$NON-NLS-1$
 	// Global Sticker config
 	public static final String CFG_DECEASED_STICKER = "sticker/patient/deceased";
-	
+
 	// Station
 	public static final String STATION_IDENT_ID = "station/identId"; //$NON-NLS-1$
 	public static final String STATION_IDENT_TEXT = "station/identText"; //$NON-NLS-1$
-	
+
 	/**
 	 * The contact representing the customer organization itself
 	 * 
 	 * @since 3.6
 	 */
 	public static final String SELFCONTACT_ID = "mainContactId"; //$NON-NLS-1$
-	
+
 	/**
-	 * Time stamp of the first time an Elexis was connected to the database. Used as identifier of
-	 * the installation.
+	 * Time stamp of the first time an Elexis was connected to the database. Used as
+	 * identifier of the installation.
 	 * 
 	 * @since 3.3
 	 */
 	public static final String INSTALLATION_TIMESTAMP = "installation/timestamp";
-	
+
 	/**
 	 * OID of the running software. Can be uninitialized.
 	 * 
@@ -75,7 +75,7 @@ public class Preferences {
 	 * OID subdomain that will be used in Elexis for patient master data.
 	 */
 	public static final String OID_SUBDOMAIN_PATIENTMASTERDATA = "100";
-	
+
 	// Ablauf
 	public static final String ABL_LANGUAGE = "ablauf/sprache"; //$NON-NLS-1$
 	public static final String ABL_LOGFILE = "ablauf/Log-Datei"; //$NON-NLS-1$
@@ -86,13 +86,13 @@ public class Preferences {
 	public static final String ABL_CACHELIFETIME = "ablauf/cachelifetime"; //$NON-NLS-1$
 	public static final String ABL_UPDATESITE = "ablauf/updatesite"; //$NON-NLS-1$
 	public static final String ABL_HEARTRATE = "ablauf/heartrate"; //$NON-NLS-1$
-	
+
 	// Sample
 	public static final String P_PATH = "sample/pathPreference"; //$NON-NLS-1$
 	public static final String P_BOOLEAN = "sample/booleanPreference"; //$NON-NLS-1$
 	public static final String P_CHOICE = "sample/choicePreference"; //$NON-NLS-1$
 	public static final String P_STRING = "sample/stringPreference"; //$NON-NLS-1$
-	
+
 	// Texterstellung
 	public static final String P_TEXTMODUL = "briefe/Textmodul"; //$NON-NLS-1$
 	public static final String P_TEXT_SUPPORT_LEGACY = "briefe/Textmodul_Support_Legacy"; //$NON-NLS-1$
@@ -104,10 +104,10 @@ public class Preferences {
 	public static final String P_TEXT_EXTERN_FILE_PATH_WINDOWS = "briefe/Textmodul_Extern_File_Path_WINDOWS"; //$NON-NLS-1$
 	public static final String P_TEXT_EXTERN_FILE_PATH_MAC = "briefe/Textmodul_Extern_File_Path_MAC"; //$NON-NLS-1$
 	public static final String P_TEXT_EXTERN_FILE_PATH_LINUX = "briefe/Textmodul_Extern_File_Path_LINUX"; //$NON-NLS-1$
-	
+
 	// Gruppen und Rechte
 	public static final String ACC_GROUPS = "groupNames"; //$NON-NLS-1$
-	
+
 	// Zugriffsrechte -> Diese gehören sowieso nach AccessControlDefaults
 	@Deprecated
 	public static final String ACC_EXIT = "exitAction"; //$NON-NLS-1$
@@ -117,16 +117,16 @@ public class Preferences {
 	public static final String ACC_PREFS = "prefsAction"; //$NON-NLS-1$
 	@Deprecated
 	public static final String ACC_SHOWVIEW = "showViewAction"; //$NON-NLS-1$
-	
+
 	// Briefe
 	public static final String DOC_CATEGORY = "dokumente/kategorien"; //$NON-NLS-1$
-	
+
 	// Sidebar/Perspektivenauswahl
 	public final static String SIDEBAR = "sidebar/pages"; //$NON-NLS-1$
 	public static final String SHOWSIDEBAR = "sidebar/show"; //$NON-NLS-1$
 	public static final String SHOWPERSPECTIVESELECTOR = "sidebar/perspective"; //$NON-NLS-1$
 	public static final String SHOWTOOLBARITEMS = "sidebar/toolbaritems"; //$NON-NLS-1$
-	
+
 	// Persönliche Präferenzen
 	public static final String USR_DEFCASELABEL = "fall/std_label"; //$NON-NLS-1$
 	public static final String USR_DEFCASELABEL_DEFAULT = Messages.PreferenceConstants_general;
@@ -145,11 +145,9 @@ public class Preferences {
 	public static final String USR_REMINDER_PAT_LABEL_AVAILABLE = "reminder/patientlabel/available";
 	public static final String USR_REMINDER_AUTO_SELECT_PATIENT = "reminder/autoSelectPatient"; //$NON-NLS-1$
 	public static final String USR_REMINDER_FILTER_DUE_DAYS = "reminder/filterDueDays"; //$NON-NLS-1$
-	public static final String USR_REMINDER_DEFAULT_PATIENT_RELATED =
-		"reminder/defaultPatientRelated"; //$NON-NLS-1$
+	public static final String USR_REMINDER_DEFAULT_PATIENT_RELATED = "reminder/defaultPatientRelated"; //$NON-NLS-1$
 	public static final String USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT = "reminder/defaultSelectedResponsibles"; //$NON-NLS-1$
-	public static final String USR_REMINDER_DEFAULT_RESPONSIBLE_SELF =
-		"reminder/defaultResponsibleSelf"; //$NON-NLS-1$
+	public static final String USR_REMINDER_DEFAULT_RESPONSIBLE_SELF = "reminder/defaultResponsibleSelf"; //$NON-NLS-1$
 	public static final String USR_REMINDER_VIEWER_SELECTION = "reminder/viewerSelection"; //$NON-NLS-1$
 	public static final String USR_MFU_LIST_SIZE = "mfulist/size"; //$NON-NLS-1$
 	public static final String USR_PLAF = "anwender/plaf"; //$NON-NLS-1$
@@ -170,11 +168,11 @@ public class Preferences {
 	public static final String USR_SERVICES_DIAGNOSES_DIAGNOSE = "servicediagnose/diagnose";
 	public static final String USR_SERVICES_DIAGNOSES_CODES = "servicediagnose/codes";
 	public static final String USR_AGENDAFONT = "anwender/agendafont"; //$NON-NLS-1$
-	
+
 	// Menu item "lock perspectives" (GlobalActions.fixLayoutAction)
 	public static final String USR_FIX_LAYOUT = "perspectives/fix_layout"; //$NON-NLS-1$
 	public static final boolean USR_FIX_LAYOUT_DEFAULT = false;
-	
+
 	// Rechnungen
 	public static final String RNN_DEFAULTEXPORTMODE = "rechnung/default_target"; //$NON-NLS-1$
 	public static final String RNN_DAYSUNTIL1ST = "rechnung/days_until_1st"; //$NON-NLS-1$
@@ -187,45 +185,39 @@ public class Preferences {
 	// Lager
 	public static final String INVENTORY_CHECK_ILLEGAL_VALUES = "inventory/check_values"; //$NON-NLS-1$
 	public static final boolean INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT = true;
-	public static final String INVENTORY_DEFAULT_ARTICLE_PROVIDER =
-		"inventory/defaultArticleProvider"; //$NON-NLS-1$
-	public static final String INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES =
-		"inventory/machineOutlayPartialPackages"; //$NON-NLS-1$
+	public static final String INVENTORY_DEFAULT_ARTICLE_PROVIDER = "inventory/defaultArticleProvider"; //$NON-NLS-1$
+	public static final String INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES = "inventory/machineOutlayPartialPackages"; //$NON-NLS-1$
 	public static final boolean INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT = false;
 	// Should the stock commissioning system suspend its outlay
-	public static final String INVENTORY_MACHINE_SUSPEND_OUTLAY = "inventory/machineOutlaySuspended";  //$NON-NLS-1$
+	public static final String INVENTORY_MACHINE_SUSPEND_OUTLAY = "inventory/machineOutlaySuspended"; //$NON-NLS-1$
 	public static final boolean INVENTORY_MACHINE_SUSPEND_OUTLAY_DEFAULT = false;
 	public static final String INVENTORY_ORDER_TRIGGER = "inventory/order_trigger";
 	public static final int INVENTORY_ORDER_TRIGGER_EQUAL = 1;
 	public static final int INVENTORY_ORDER_TRIGGER_BELOW = 0;
 	public static final int INVENTORY_ORDER_TRIGGER_DEFAULT = INVENTORY_ORDER_TRIGGER_BELOW;
-	public static final String INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER =
-		"inventory/order_exclude_already_ordered_items"; //$NON-NLS-1$
+	public static final String INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER = "inventory/order_exclude_already_ordered_items"; //$NON-NLS-1$
 	public static final boolean INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT = false;
-	
+
 	// Labor
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$
-	
+
 	// Labsettings
 	public static final String LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS = "lab/keepUnseen"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_LABNEW_HEARTRATE = "lab/heartrate_unseen"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_LOCAL_REFVALUES = "lab/localRefValues"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_SHOW_MANDANT_ORDERS_ONLY = "lab/showMandantOnly"; //$NON-NLS-1$
 	public static final String LABSETTINGS_PREFIX_CFG_EVAL = "lab/eval/"; //$NON-NLS-1$
-	public static final String LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT =
-		LABSETTINGS_PREFIX_CFG_EVAL + "tAbsolut/"; //$NON-NLS-1$
-	public static final String LABSETTINGS_CFG_EVAL_PREFIX_TYPE_TEXT =
-		LABSETTINGS_PREFIX_CFG_EVAL + "tText/"; //$NON-NLS-1$
-	public static final String LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC =
-		"refValNonEqualResValMeansPath"; //$NON-NLS-1$
-	public static final String LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES =
-		LABSETTINGS_PREFIX_CFG_EVAL + "missingPathologicFlagMeansNonPathologicFor"; //$NON-NLS-1$
-	
+	public static final String LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT = LABSETTINGS_PREFIX_CFG_EVAL + "tAbsolut/"; //$NON-NLS-1$
+	public static final String LABSETTINGS_CFG_EVAL_PREFIX_TYPE_TEXT = LABSETTINGS_PREFIX_CFG_EVAL + "tText/"; //$NON-NLS-1$
+	public static final String LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC = "refValNonEqualResValMeansPath"; //$NON-NLS-1$
+	public static final String LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES = LABSETTINGS_PREFIX_CFG_EVAL
+			+ "missingPathologicFlagMeansNonPathologicFor"; //$NON-NLS-1$
+
 	// Scanner
 	public static final String SCANNER_PREFIX_CODE = "scanner/prefixcode"; //$NON-NLS-1$
 	public static final String SCANNER_POSTFIX_CODE = "scanner/postfixcode"; //$NON-NLS-1$
 	public static final String BARCODE_LENGTH = "scanner/barcodelength"; //$NON-NLS-1$
-	
+
 	// Leistungscodes
 	public final static String LEISTUNGSCODES_OBLIGATION = "billing/obligation"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_CFG_KEY = "billing/systems"; //$NON-NLS-1$
@@ -234,20 +226,18 @@ public class Preferences {
 	public final static String LEISTUNGSCODES_OPTIFY = "billing/optify"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_OPTIFY_XRAY = "billing/optify/XRAY"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_COLOR = "billing/color/"; //$NON-NLS-1$
-	public final static String LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS =
-		"billing/eigenleistung/usemultiplier/systems"; //$NON-NLS-1$
+	public final static String LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS = "billing/eigenleistung/usemultiplier/systems"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_ALLOWOVERRIDE_STRICT = "billing/allowoverride/strict"; //$NON-NLS-1$
-	
+
 	// Fall
 	public static final String COVERAGE_COPY_TO_PATIENT = "coverage/copytopatient";
-	
+
 	// Medication
-	public static final String MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT =
-			"medication/settings/emediplanHeaderComment";
-	
+	public static final String MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT = "medication/settings/emediplanHeaderComment";
+
 	// Agenda
 	public static final String AG_BEREICHE = "agenda/bereiche"; //$NON-NLS-1$
 	public static final String AG_BEREICH_PREFIX = "agenda/bereich/"; //$NON-NLS-1$
 	public static final String AG_BEREICH_TYPE_POSTFIX = "/type"; //$NON-NLS-1$
-	
+
 }

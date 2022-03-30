@@ -29,13 +29,12 @@ public class NetTool {
 	static final String Version = "1.0.1";
 	public static final java.util.ArrayList<String> IPs = new java.util.ArrayList<String>();
 	public static String hostname;
-	
+
 	static {
-		Enumeration<NetworkInterface> nis = null;
-		;
+		Enumeration<NetworkInterface> nis = null;;
 		try {
 			nis = NetworkInterface.getNetworkInterfaces();
-			
+
 			while (nis.hasMoreElements()) {
 				NetworkInterface ni = nis.nextElement();
 				Enumeration<InetAddress> ias = ni.getInetAddresses();
@@ -56,15 +55,15 @@ public class NetTool {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// Windows only
-	public static String getMacAddress() throws IOException{
+	public static String getMacAddress() throws IOException {
 		Process proc = Runtime.getRuntime().exec("cmd /c ipconfig /all");
 		Scanner s = new Scanner(proc.getInputStream());
 		return s.findInLine("\\p{XDigit}\\p{XDigit}(-\\p{XDigit}\\p{XDigit}){5}");
 	}
-	
-	public static void main(String[] args) throws IOException{
+
+	public static void main(String[] args) throws IOException {
 		System.out.println(getMacAddress());
 	}
 }

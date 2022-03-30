@@ -11,14 +11,14 @@ public class SaveAccountAction extends Action {
 
 	private MailAccountComposite accountComposite;
 	private Preference preference;
-	
-	public SaveAccountAction(MailAccountComposite accountComposite, Preference preference){
+
+	public SaveAccountAction(MailAccountComposite accountComposite, Preference preference) {
 		this.accountComposite = accountComposite;
 		this.preference = preference;
 	}
-	
+
 	@Override
-	public void run(){
+	public void run() {
 		MailAccount account = accountComposite.getAccount();
 		if (account != null) {
 			if (MailClientComponent.isVirtLocal(account)) {
@@ -29,14 +29,14 @@ public class SaveAccountAction extends Action {
 			preference.updateAccountsCombo();
 		}
 	}
-	
+
 	@Override
-	public ImageDescriptor getImageDescriptor(){
+	public ImageDescriptor getImageDescriptor() {
 		return Images.IMG_DISK.getImageDescriptor();
 	}
 
 	@Override
-	public boolean isEnabled(){
+	public boolean isEnabled() {
 		return MailClientComponent.getMailClient() != null;
 	}
 }

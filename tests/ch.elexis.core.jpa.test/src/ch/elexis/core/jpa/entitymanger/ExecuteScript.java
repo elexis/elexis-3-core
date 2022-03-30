@@ -12,16 +12,15 @@ import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class ExecuteScript {
-	
+
 	@Test
-	public void execute() throws IOException{
-		Optional<IElexisEntityManager> elexisEntityManager =
-			OsgiServiceUtil.getService(IElexisEntityManager.class);
+	public void execute() throws IOException {
+		Optional<IElexisEntityManager> elexisEntityManager = OsgiServiceUtil.getService(IElexisEntityManager.class);
 		assertTrue(elexisEntityManager.isPresent());
-		
+
 		assertTrue(elexisEntityManager.get().executeSQLScript("testScriptId",
-			AllPluginTests.loadFile("/rsc/testContacts.sql")));
+				AllPluginTests.loadFile("/rsc/testContacts.sql")));
 		OsgiServiceUtil.ungetService(elexisEntityManager.get());
 	}
-	
+
 }

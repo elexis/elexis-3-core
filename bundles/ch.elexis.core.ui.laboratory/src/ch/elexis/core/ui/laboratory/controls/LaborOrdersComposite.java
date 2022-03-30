@@ -44,77 +44,75 @@ import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
 public class LaborOrdersComposite extends Composite {
-	
+
 	private final FormToolkit tk = UiDesk.getToolkit();
 	private Form form;
-	
+
 	private TableViewer viewer;
-	
+
 	private int sortColumn = -1;
 	private boolean revert = false;
-	
+
 	private boolean reloadPending;
-	
+
 	private boolean includeDone;
-	
+
 	private Patient actPatient;
 	private Composite toolComposite;
 	private ToolBarManager toolbar;
-	
-	public LaborOrdersComposite(Composite parent, int style){
+
+	public LaborOrdersComposite(Composite parent, int style) {
 		super(parent, style);
-		
+
 		createContent();
 		selectPatient(ElexisEventDispatcher.getSelectedPatient());
 	}
-	
-	private void createContent(){
+
+	private void createContent() {
 		setLayout(new GridLayout());
 		form = tk.createForm(this);
 		form.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		Composite body = form.getBody();
 		body.setLayout(new GridLayout());
-		
+
 		toolComposite = new Composite(body, SWT.NONE);
 		toolComposite.setLayout(new FillLayout(SWT.VERTICAL));
 		toolComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		
+
 		toolbar = new ToolBarManager();
 		toolbar.add(new Action("", Action.AS_CHECK_BOX) {
-			
+
 			@Override
-			public String getText(){
+			public String getText() {
 				return Messages.LaborOrdersComposite_actionTooltipShowHistory;
 			}
-			
+
 			@Override
-			public String getToolTipText(){
+			public String getToolTipText() {
 				return Messages.LaborOrdersComposite_actionTooltipShowHistory;
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				setIncludeDone(!includeDone);
 			}
 		});
 		tk.adapt(toolbar.createControl(toolComposite));
 		tk.adapt(toolComposite);
-		
-		viewer =
-			new TableViewer(body,
-				SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
+
+		viewer = new TableViewer(body, SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
 		viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		viewer.getTable().setHeaderVisible(true);
 		viewer.getTable().setLinesVisible(true);
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
 		viewer.setSorter(new LaborOrdersSorter(this));
-		
+
 		final MenuManager mgr = new MenuManager();
 		mgr.setRemoveAllWhenShown(true);
 		mgr.addMenuListener(new IMenuListener() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public void menuAboutToShow(IMenuManager manager){
+			public void menuAboutToShow(IMenuManager manager) {
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 				if (selection != null && !selection.isEmpty()) {
 					List<LaborOrderViewerItem> orders = selection.toList();
@@ -127,30 +125,30 @@ public class LaborOrdersComposite extends Composite {
 			}
 		});
 		viewer.getControl().setMenu(mgr.createContextMenu(viewer.getControl()));
-		
+
 		TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(100);
 		column.getColumn().setText(Messages.LaborOrdersComposite_columnState);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(0, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof LaborOrderViewerItem) {
 					return LabOrder.getStateLabel(((LaborOrderViewerItem) element).getState());
 				}
 				return ""; //$NON-NLS-1$
 			}
 		});
-		
+
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(125);
 		column.getColumn().setText(Messages.LaborOrdersComposite_columnDate);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(1, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof LaborOrderViewerItem) {
 					TimeTool time = ((LaborOrderViewerItem) element).getTime();
 					if (time != null) {
@@ -162,71 +160,71 @@ public class LaborOrdersComposite extends Composite {
 				return ""; //$NON-NLS-1$
 			}
 		});
-		
+
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(75);
 		column.getColumn().setText(Messages.LaborOrdersComposite_columnOrdernumber);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(2, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof LaborOrderViewerItem) {
 					return ((LaborOrderViewerItem) element).getOrderId().orElse("");
 				}
 				return ""; //$NON-NLS-1$
 			}
 		});
-		
+
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(75);
 		column.getColumn().setText(Messages.LaborOrdersComposite_columnGroup);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(3, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof LaborOrderViewerItem) {
 					return ((LaborOrderViewerItem) element).getOrderGroupName().orElse("");
 				}
 				return ""; //$NON-NLS-1$
 			}
 		});
-		
+
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(300);
 		column.getColumn().setText(Messages.LaborOrdersComposite_columnParameter);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(4, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof LaborOrderViewerItem) {
 					return ((LaborOrderViewerItem) element).getLabItemLabel().orElse("");
 				}
 				return ""; //$NON-NLS-1$
 			}
 		});
-		
+
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(75);
 		column.getColumn().setText(Messages.LaborOrdersComposite_columnValue);
 		column.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof LaborOrderViewerItem) {
 					return ((LaborOrderViewerItem) element).getLabResultString().orElse("?");
 				}
 				return ""; //$NON-NLS-1$
 			}
 		});
-		
+
 		column.setEditingSupport(new LabOrderEditingSupport(viewer));
-		
+
 		form.setText(Messages.LaborOrdersComposite_NoPatientSelected);
 	}
-	
-	public void selectPatient(Patient patient){
+
+	public void selectPatient(Patient patient) {
 		setRedraw(false);
 		if (patient != null) {
 			if (!patient.equals(actPatient)) {
@@ -240,18 +238,18 @@ public class LaborOrdersComposite extends Composite {
 		}
 		setRedraw(true);
 	}
-	
-	public void setIncludeDone(boolean value){
+
+	public void setIncludeDone(boolean value) {
 		if (value != includeDone) {
 			includeDone = value;
 			reload();
 		}
 	}
-	
+
 	/**
 	 * If visible full reload from database
 	 */
-	public void reload(){
+	public void reload() {
 		if (!isVisible()) {
 			reloadPending = true;
 			return;
@@ -263,34 +261,34 @@ public class LaborOrdersComposite extends Composite {
 		}
 		setRedraw(true);
 	}
-	
+
 	@Override
-	public boolean setFocus(){
+	public boolean setFocus() {
 		if (reloadPending) {
 			reload();
 		}
 		return super.setFocus();
 	}
-	
-	private List<LaborOrderViewerItem> getOrders(){
+
+	private List<LaborOrderViewerItem> getOrders() {
 		if (actPatient != null) {
 			List<LabOrder> orders = null;
 			if (ConfigServiceHolder.getUser(Preferences.LABSETTINGS_CFG_SHOW_MANDANT_ORDERS_ONLY, false)) {
-				orders = LabOrder.getLabOrders(actPatient, CoreHub.actMandant, null, null, null,
-					null, includeDone ? null : State.ORDERED);
+				orders = LabOrder.getLabOrders(actPatient, CoreHub.actMandant, null, null, null, null,
+						includeDone ? null : State.ORDERED);
 			} else {
 				orders = LabOrder.getLabOrders(actPatient, null, null, null, null, null,
-					includeDone ? null : State.ORDERED);
+						includeDone ? null : State.ORDERED);
 			}
 			// Sorting by priority of labItem
 			if (orders != null) {
 				List<LaborOrderViewerItem> viewerItems = new ArrayList<>();
 				orders.forEach(order -> viewerItems.add(new LaborOrderViewerItem(viewer, order)));
-				
+
 				Collections.sort(viewerItems, new Comparator<LaborOrderViewerItem>() {
-					
+
 					@Override
-					public int compare(LaborOrderViewerItem lo1, LaborOrderViewerItem lo2){
+					public int compare(LaborOrderViewerItem lo1, LaborOrderViewerItem lo2) {
 						String prio1 = lo1.getLabItemPrio().orElse("");
 						String prio2 = lo2.getLabItemPrio().orElse("");
 						return prio1.compareTo(prio2);
@@ -301,38 +299,38 @@ public class LaborOrdersComposite extends Composite {
 		}
 		return Collections.emptyList();
 	}
-	
-	public StructuredViewer getViewer(){
+
+	public StructuredViewer getViewer() {
 		return viewer;
 	}
-	
-	public int getSortColumn(){
+
+	public int getSortColumn() {
 		return sortColumn;
 	}
-	
-	public void setSortColumn(int sortColumn){
+
+	public void setSortColumn(int sortColumn) {
 		this.sortColumn = sortColumn;
 	}
-	
-	public boolean isRevert(){
+
+	public boolean isRevert() {
 		return revert;
 	}
-	
-	public void setRevert(boolean revert){
+
+	public void setRevert(boolean revert) {
 		this.revert = revert;
 	}
-	
+
 	private static class LaborOrdersSortSelection extends SelectionAdapter {
 		private int columnIndex;
 		private LaborOrdersComposite composite;
-		
-		public LaborOrdersSortSelection(int columnIndex, LaborOrdersComposite composite){
+
+		public LaborOrdersSortSelection(int columnIndex, LaborOrdersComposite composite) {
 			this.columnIndex = columnIndex;
 			this.composite = composite;
 		}
-		
+
 		@Override
-		public void widgetSelected(final SelectionEvent e){
+		public void widgetSelected(final SelectionEvent e) {
 			if (composite.getSortColumn() == columnIndex) {
 				composite.setRevert(!composite.isRevert());
 			} else {
@@ -342,88 +340,88 @@ public class LaborOrdersComposite extends Composite {
 			composite.getViewer().refresh();
 		}
 	}
-	
+
 	private static class LaborOrdersSorter extends ViewerSorter {
 		private LaborOrdersComposite composite;
-		
-		public LaborOrdersSorter(LaborOrdersComposite composite){
+
+		public LaborOrdersSorter(LaborOrdersComposite composite) {
 			this.composite = composite;
 		}
-		
+
 		@Override
-		public int compare(final Viewer viewer, final Object e1, final Object e2){
+		public int compare(final Viewer viewer, final Object e1, final Object e2) {
 			if (e1 instanceof LaborOrderViewerItem && e2 instanceof LaborOrderViewerItem) {
 				LaborOrderViewerItem labOrder1 = (LaborOrderViewerItem) e1;
 				LaborOrderViewerItem labOrder2 = (LaborOrderViewerItem) e2;
 				switch (composite.getSortColumn()) {
-				case 0:
-					if (composite.isRevert()) {
-						return labOrder1.getState().name().compareTo(labOrder2.getState().name());
-					} else {
-						return labOrder2.getState().name().compareTo(labOrder1.getState().name());
-					}
-				case 1:
-					if (composite.isRevert()) {
-						return labOrder1.getTime().compareTo(labOrder2.getTime());
-					} else {
-						return labOrder2.getTime().compareTo(labOrder1.getTime());
-					}
-				case 2:
-					String orderId1 = labOrder1.getOrderId().orElse("");
-					String orderId2 = labOrder2.getOrderId().orElse("");
-					
-					if (composite.isRevert()) {
-						try {
-							return Integer.decode(orderId1).compareTo(Integer.decode(orderId2));
-						} catch (NumberFormatException ne) {
-							// ignore just compare the strings ...
+					case 0 :
+						if (composite.isRevert()) {
+							return labOrder1.getState().name().compareTo(labOrder2.getState().name());
+						} else {
+							return labOrder2.getState().name().compareTo(labOrder1.getState().name());
 						}
-						return (orderId1.compareTo(orderId2));
-					} else {
-						try {
-							return Integer.decode(orderId2).compareTo(Integer.decode(orderId1));
-						} catch (NumberFormatException ne) {
-							// ignore just compare the strings ...
+					case 1 :
+						if (composite.isRevert()) {
+							return labOrder1.getTime().compareTo(labOrder2.getTime());
+						} else {
+							return labOrder2.getTime().compareTo(labOrder1.getTime());
 						}
-						return orderId2.compareTo(orderId1);
-					}
-				case 3:
-					if (composite.isRevert()) {
-						return labOrder1.getOrderGroupName().orElse("")
-							.compareTo(labOrder2.getOrderGroupName().orElse(""));
-					} else {
-						return labOrder2.getOrderGroupName().orElse("")
-							.compareTo(labOrder1.getOrderGroupName().orElse(""));
-					}
-				case 4:
-					if (composite.isRevert()) {
-						return labOrder1.getLabItemLabel().orElse("")
-							.compareTo(labOrder2.getLabItemLabel().orElse(""));
-					} else {
-						return labOrder2.getLabItemLabel().orElse("")
-							.compareTo(labOrder1.getLabItemLabel().orElse(""));
-					}
-				default:
-					// sort by time and item prio
-					int timeCompare = labOrder2.getTime().compareTo(labOrder1.getTime());
-					if (timeCompare == 0) {
-						String prio1 = labOrder1.getLabItemPrio().orElse("");
-						String prio2 = labOrder2.getLabItemPrio().orElse("");
-						if (StringUtils.isNumeric(prio1) && StringUtils.isNumeric(prio2)) {
+					case 2 :
+						String orderId1 = labOrder1.getOrderId().orElse("");
+						String orderId2 = labOrder2.getOrderId().orElse("");
+
+						if (composite.isRevert()) {
 							try {
-								return Integer.valueOf(prio1).compareTo(Integer.valueOf(prio2));
-							} catch (NumberFormatException nfe) {
-								// ignore
+								return Integer.decode(orderId1).compareTo(Integer.decode(orderId2));
+							} catch (NumberFormatException ne) {
+								// ignore just compare the strings ...
 							}
+							return (orderId1.compareTo(orderId2));
+						} else {
+							try {
+								return Integer.decode(orderId2).compareTo(Integer.decode(orderId1));
+							} catch (NumberFormatException ne) {
+								// ignore just compare the strings ...
+							}
+							return orderId2.compareTo(orderId1);
 						}
-						return prio1.compareTo(prio2);
-					}
-					return timeCompare;
+					case 3 :
+						if (composite.isRevert()) {
+							return labOrder1.getOrderGroupName().orElse("")
+									.compareTo(labOrder2.getOrderGroupName().orElse(""));
+						} else {
+							return labOrder2.getOrderGroupName().orElse("")
+									.compareTo(labOrder1.getOrderGroupName().orElse(""));
+						}
+					case 4 :
+						if (composite.isRevert()) {
+							return labOrder1.getLabItemLabel().orElse("")
+									.compareTo(labOrder2.getLabItemLabel().orElse(""));
+						} else {
+							return labOrder2.getLabItemLabel().orElse("")
+									.compareTo(labOrder1.getLabItemLabel().orElse(""));
+						}
+					default :
+						// sort by time and item prio
+						int timeCompare = labOrder2.getTime().compareTo(labOrder1.getTime());
+						if (timeCompare == 0) {
+							String prio1 = labOrder1.getLabItemPrio().orElse("");
+							String prio2 = labOrder2.getLabItemPrio().orElse("");
+							if (StringUtils.isNumeric(prio1) && StringUtils.isNumeric(prio2)) {
+								try {
+									return Integer.valueOf(prio1).compareTo(Integer.valueOf(prio2));
+								} catch (NumberFormatException nfe) {
+									// ignore
+								}
+							}
+							return prio1.compareTo(prio2);
+						}
+						return timeCompare;
 				}
 			} else {
 				return 0;
 			}
 		}
 	}
-	
+
 }

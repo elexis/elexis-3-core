@@ -13,20 +13,21 @@ import java.util.stream.Stream;
  */
 public class DatePartFormatter {
 
-    private static final String SPLIT_ON_UPPERCASE_REGEX = "(?=[A-Z])";
+	private static final String SPLIT_ON_UPPERCASE_REGEX = "(?=[A-Z])";
 
-    /**
-     * Return a human readable description of a date field
-     * @param field the field to describe
-     * @return the human readable description
-     */
-    public String describe(final ChronoField field) {
-        switch (field) {
-        default:
-            return Stream.of(field.getDisplayName(getDefault()).split(SPLIT_ON_UPPERCASE_REGEX))
-                    .map(String::toLowerCase)
-                    .collect(joining(" "));
-        }
-    }
+	/**
+	 * Return a human readable description of a date field
+	 * 
+	 * @param field
+	 *            the field to describe
+	 * @return the human readable description
+	 */
+	public String describe(final ChronoField field) {
+		switch (field) {
+			default :
+				return Stream.of(field.getDisplayName(getDefault()).split(SPLIT_ON_UPPERCASE_REGEX))
+						.map(String::toLowerCase).collect(joining(" "));
+		}
+	}
 
 }

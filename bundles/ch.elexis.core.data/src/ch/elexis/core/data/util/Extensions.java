@@ -30,8 +30,8 @@ import ch.elexis.core.jdt.NonNull;
 import ch.rgw.tools.ExHandler;
 
 /**
- * Vereinfachung der Handhabung von Extensions. Verschidene statische Methoden zum Auflisten von
- * Extensionpoint.-clients
+ * Vereinfachung der Handhabung von Extensions. Verschidene statische Methoden
+ * zum Auflisten von Extensionpoint.-clients
  * 
  * 2008: Implementation eines Service-Providers
  * 
@@ -39,28 +39,29 @@ import ch.rgw.tools.ExHandler;
  * 
  */
 public class Extensions {
-	
+
 	/**
-	 * EIne Liste von IConfigurationElements (=komplette Definition) liefern, die an einem
-	 * bestimmten Extensionpoint hängen
+	 * EIne Liste von IConfigurationElements (=komplette Definition) liefern, die an
+	 * einem bestimmten Extensionpoint hängen
 	 * 
 	 * @param ext
 	 *            Name des Extensionpoints
 	 */
-	public static List<IConfigurationElement> getExtensions(String ext){
+	public static List<IConfigurationElement> getExtensions(String ext) {
 		return getExtensions(ext, null);
 	}
-	
+
 	/**
-	 * Eine Liste von IConfigurationElements (=komplette Definition) liefern, die an einem
-	 * bestimmten Extensionpoint hängen, und den entsprechenden Elementnamen haben
+	 * Eine Liste von IConfigurationElements (=komplette Definition) liefern, die an
+	 * einem bestimmten Extensionpoint hängen, und den entsprechenden Elementnamen
+	 * haben
 	 * 
 	 * @param ext
 	 * @param elementName
 	 * @return
 	 * @since 3.3
 	 */
-	public static List<IConfigurationElement> getExtensions(String ext, String elementName){
+	public static List<IConfigurationElement> getExtensions(String ext, String elementName) {
 		List<IConfigurationElement> ret = new LinkedList<IConfigurationElement>();
 		IExtensionRegistry exr = Platform.getExtensionRegistry();
 		IExtensionPoint exp = exr.getExtensionPoint(ext);
@@ -78,30 +79,32 @@ public class Extensions {
 					}
 				}
 			}
-			
+
 		}
 		return ret;
 	}
-	
+
 	/**
-	 * Eine Liste von bereits initialisierten Klassen liefern, die an einem bestimmten parameter
-	 * eines bestimmten Extensionpoints hängen
+	 * Eine Liste von bereits initialisierten Klassen liefern, die an einem
+	 * bestimmten parameter eines bestimmten Extensionpoints hängen
 	 * 
 	 * @param list
 	 *            eine Liste, wie von getExtension geliefert
 	 * @param points
 	 *            Name der Klasse
 	 * @return eine Liste der konstruierten Klassen
-	 * @deprecated Use {@link #getClasses(List<IConfigurationElement>,String,boolean)} instead
+	 * @deprecated Use
+	 *             {@link #getClasses(List<IConfigurationElement>,String,boolean)}
+	 *             instead
 	 */
 	@SuppressWarnings("unchecked") //$NON-NLS-1$
-	public static List getClasses(List<IConfigurationElement> list, String points){
+	public static List getClasses(List<IConfigurationElement> list, String points) {
 		return getClasses(list, points, true);
 	}
-	
+
 	/**
-	 * Eine Liste von bereits initialisierten Klassen liefern, die an einem bestimmten parameter
-	 * eines bestimmten Extensionpoints hängen
+	 * Eine Liste von bereits initialisierten Klassen liefern, die an einem
+	 * bestimmten parameter eines bestimmten Extensionpoints hängen
 	 * 
 	 * @param list
 	 *            eine Liste, wie von getExtension geliefert
@@ -112,8 +115,7 @@ public class Extensions {
 	 * @return eine Liste der konstruierten Klassen
 	 */
 	@SuppressWarnings("unchecked") //$NON-NLS-1$
-	public static List getClasses(List<IConfigurationElement> list, String points,
-		boolean bMandatory){
+	public static List getClasses(List<IConfigurationElement> list, String points, boolean bMandatory) {
 		List ret = new LinkedList();
 		for (IConfigurationElement el : list) {
 			try {
@@ -129,17 +131,17 @@ public class Extensions {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Shortcut für getClasses(getExtensions(extension),points);
 	 */
-	public static List getClasses(String extension, String points){
+	public static List getClasses(String extension, String points) {
 		return getClasses(extension, points, null, null);
 	}
-	
+
 	/**
-	 * Get the class extensions of all elements of an extension point matching the elementName and
-	 * points.
+	 * Get the class extensions of all elements of an extension point matching the
+	 * elementName and points.
 	 * 
 	 * @param extension
 	 * @param elementName
@@ -148,26 +150,28 @@ public class Extensions {
 	 * 
 	 * @since 3.3
 	 */
-	public static List getClasses(String extension, String elementName, String points){
+	public static List getClasses(String extension, String elementName, String points) {
 		return getClasses(extension, elementName, points, null, null);
 	}
-	
+
 	/**
 	 * 
 	 * @param extension
 	 * @param points
-	 * @param idParam id parameter on the extension point to filter against
-	 * @param idValue key matching idParam
+	 * @param idParam
+	 *            id parameter on the extension point to filter against
+	 * @param idValue
+	 *            key matching idParam
 	 * @return instantiated classes of a defined extension point
 	 * @since 3.2
 	 */
-	public static @NonNull List getClasses(String extension, String points, String idParam, String idValue){
+	public static @NonNull List getClasses(String extension, String points, String idParam, String idValue) {
 		return getClasses(extension, null, points, idParam, idValue);
 	}
-	
+
 	/**
-	 * Get the class extensions of all elements of an extension point matching the elementName,
-	 * points and idParam with idValue.
+	 * Get the class extensions of all elements of an extension point matching the
+	 * elementName, points and idParam with idValue.
 	 * 
 	 * @param extension
 	 * @param elementName
@@ -178,18 +182,17 @@ public class Extensions {
 	 * 
 	 * @since 3.3
 	 */
-	public static @NonNull List getClasses(String extension, String elementName, String points,
-		String idParam, String idValue){
+	public static @NonNull List getClasses(String extension, String elementName, String points, String idParam,
+			String idValue) {
 		List<IConfigurationElement> extensions = getExtensions(extension, elementName);
 		if (idParam != null && idValue != null) {
-			List<IConfigurationElement> filteredExtensions =
-				extensions.stream().filter(p -> idValue.equalsIgnoreCase(p.getAttribute(idParam)))
-					.collect(Collectors.toList());
+			List<IConfigurationElement> filteredExtensions = extensions.stream()
+					.filter(p -> idValue.equalsIgnoreCase(p.getAttribute(idParam))).collect(Collectors.toList());
 			return getClasses(filteredExtensions, points, true);
 		}
 		return getClasses(extensions, points, true);
 	}
-	
+
 	/**
 	 * Eine Liste von Werten liefern, die ein bestimmtest Attribut hat
 	 * 
@@ -197,42 +200,42 @@ public class Extensions {
 	 * @param attr
 	 * @return
 	 */
-	public static List<String> getStrings(List<IConfigurationElement> list, String attr){
+	public static List<String> getStrings(List<IConfigurationElement> list, String attr) {
 		List<String> ret = new LinkedList<String>();
 		for (IConfigurationElement el : list) {
 			ret.add(el.getAttribute(attr));
 		}
 		return ret;
 	}
-	
-	public static List<String> getStrings(String ext, String attr){
+
+	public static List<String> getStrings(String ext, String attr) {
 		return getStrings(getExtensions(ext), attr);
 	}
-	
+
 	/**
-	 * We sort of replicate the OSGi Service Registry, but place it on top of the Extension point
-	 * system.
+	 * We sort of replicate the OSGi Service Registry, but place it on top of the
+	 * Extension point system.
 	 * 
-	 * A Plugin can publish a service by accessing the ExtensionPoint ch.elexis.ServiceRegistry and
-	 * defining a service with an arbitrary name. It must offer an Object declared as "actor" that
-	 * performs the service. The Methods to use must be documented. (@see executeService)
+	 * A Plugin can publish a service by accessing the ExtensionPoint
+	 * ch.elexis.ServiceRegistry and defining a service with an arbitrary name. It
+	 * must offer an Object declared as "actor" that performs the service. The
+	 * Methods to use must be documented. (@see executeService)
 	 * 
-	 * A different plugin can implement the same Service "better" by using the same name but
-	 * declaring a higher "value" A Client can retrieve and use Services through
-	 * isServiceAvailable() and findBestService()
+	 * A different plugin can implement the same Service "better" by using the same
+	 * name but declaring a higher "value" A Client can retrieve and use Services
+	 * through isServiceAvailable() and findBestService()
 	 * 
 	 * @param name
 	 *            name of the service to load
 	 * @param variant
 	 *            the variant wanted. Can be null to indicate don't mind
-	 * @return the actor-Object that the "best" Service with this name offers or null if no service
-	 *         with the given name could be loaded.
+	 * @return the actor-Object that the "best" Service with this name offers or
+	 *         null if no service with the given name could be loaded.
 	 */
-	public static Object findBestService(String name, String variant){
+	public static Object findBestService(String name, String variant) {
 		int value = Integer.MIN_VALUE;
 		IConfigurationElement best = null;
-		List<IConfigurationElement> services =
-			getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
+		List<IConfigurationElement> services = getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
 		for (IConfigurationElement ic : services) {
 			String nam = ic.getAttribute("name");
 			if (nam.equalsIgnoreCase(name)) {
@@ -257,18 +260,17 @@ public class Extensions {
 		} else {
 			try {
 				return best.createExecutableExtension("actor");
-				
+
 			} catch (CoreException e) {
 				ExHandler.handle(e);
 				return null;
 			}
 		}
-		
+
 	}
-	
-	public static List<Object> getServices(String name, String variant){
-		List<IConfigurationElement> services =
-			getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
+
+	public static List<Object> getServices(String name, String variant) {
+		List<IConfigurationElement> services = getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
 		List<Object> ret = new ArrayList<Object>();
 		for (IConfigurationElement ic : services) {
 			String nam = ic.getAttribute("name");
@@ -287,16 +289,16 @@ public class Extensions {
 			}
 		}
 		return ret;
-		
+
 	}
-	
+
 	/**
 	 * Shortcut for findBestService(name,null)
 	 */
-	public static Object findBestService(String name){
+	public static Object findBestService(String name) {
 		return findBestService(name, null);
 	}
-	
+
 	/**
 	 * Execute a method of the service actor, that is known by name and signature
 	 * 
@@ -308,34 +310,35 @@ public class Extensions {
 	 *            the parameter types
 	 * @param params
 	 *            the parameters
-	 * @return an Object that ist implementation dependent or null if the method call failed. It is
-	 *         recommended that an actor returns a ch.elexis.Result to allow error handling.
+	 * @return an Object that ist implementation dependent or null if the method
+	 *         call failed. It is recommended that an actor returns a
+	 *         ch.elexis.Result to allow error handling.
 	 */
-	public static Object executeService(Object service, String method, Class[] types,
-		Object[] params){
+	public static Object executeService(Object service, String method, Class[] types, Object[] params) {
 		try {
 			Method m = service.getClass().getMethod(method, types);
 			return m.invoke(service, params);
-			
+
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return null;
 		}
-		
+
 	}
-	
+
 	/**
-	 * Ask whether a service is available. The call is cheap because no Object will be
-	 * instantaniated. Note: If this call returns true, a call to findBestService() might still
-	 * return null, because a Service might have gone unavailable in the meantime.
+	 * Ask whether a service is available. The call is cheap because no Object will
+	 * be instantaniated. Note: If this call returns true, a call to
+	 * findBestService() might still return null, because a Service might have gone
+	 * unavailable in the meantime.
 	 * 
 	 * @param name
 	 *            the name of the service to find.
-	 * @return true if at least one implementation of a service with the given name is registered
+	 * @return true if at least one implementation of a service with the given name
+	 *         is registered
 	 */
-	public static boolean isServiceAvailable(String name){
-		List<IConfigurationElement> services =
-			getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
+	public static boolean isServiceAvailable(String name) {
+		List<IConfigurationElement> services = getExtensions(ExtensionPointConstantsData.SERVICE_REGISTRY);
 		for (IConfigurationElement ic : services) {
 			String nam = ic.getAttribute("name");
 			if (nam.equalsIgnoreCase(name)) {

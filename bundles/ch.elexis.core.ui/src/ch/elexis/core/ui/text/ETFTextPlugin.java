@@ -37,64 +37,64 @@ public class ETFTextPlugin implements ITextPlugin {
 	ICallback handler;
 	boolean bSaveOnFocusLost = false;
 	IKonsExtension ike;
-	
-	public boolean clear(){
+
+	public boolean clear() {
 		etf.setText(StringTool.leer);
 		return true;
 	}
-	
-	public void setSaveOnFocusLost(boolean mode){
+
+	public void setSaveOnFocusLost(boolean mode) {
 		bSaveOnFocusLost = mode;
 	}
-	
-	public Composite createContainer(Composite parent, ICallback h){
+
+	public Composite createContainer(Composite parent, ICallback h) {
 		handler = h;
 		etf = new EnhancedTextField(parent);
 		etf.text.addFocusListener(new FocusAdapter() {
 			@Override
-			public void focusLost(FocusEvent e){
+			public void focusLost(FocusEvent e) {
 				if (bSaveOnFocusLost) {
 					if (handler != null) {
 						handler.save();
 					}
 				}
 			}
-			
+
 		});
 		ike = new ExternalLink();
 		ike.connect(etf);
 		etf.setText(StringTool.leer);
 		return etf;
 	}
-	
-	public boolean createEmptyDocument(){
+
+	public boolean createEmptyDocument() {
 		etf.setText(StringTool.leer);
 		return true;
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 		etf.dispose();
 	}
-	
-	public boolean findOrReplace(String pattern, ReplaceCallback cb){
+
+	public boolean findOrReplace(String pattern, ReplaceCallback cb) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	public PageFormat getFormat(){
+
+	public PageFormat getFormat() {
 		return PageFormat.USER;
 	}
-	
-	public String getMimeType(){
+
+	public String getMimeType() {
 		return "text/xml"; //$NON-NLS-1$
 	}
-	
-	public boolean insertTable(String place, int properties, String[][] contents, int[] columnSizes){
+
+	public boolean insertTable(String place, int properties, String[][] contents, int[] columnSizes) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	public Object insertText(String marke, String text, int adjust){
+
+	public Object insertText(String marke, String text, int adjust) {
 		int pos = 0;
 		if (StringTool.isNothing(marke)) {
 			etf.text.setSelection(0);
@@ -106,8 +106,8 @@ public class ETFTextPlugin implements ITextPlugin {
 		etf.text.insert(text);
 		return new Integer(pos + text.length());
 	}
-	
-	public Object insertText(Object pos, String text, int adjust){
+
+	public Object insertText(Object pos, String text, int adjust) {
 		if (!(pos instanceof Integer)) {
 			return null;
 		}
@@ -116,13 +116,13 @@ public class ETFTextPlugin implements ITextPlugin {
 		etf.text.insert(text);
 		return new Integer(px + text.length());
 	}
-	
-	public Object insertTextAt(int x, int y, int w, int h, String text, int adjust){
+
+	public Object insertTextAt(int x, int y, int w, int h, String text, int adjust) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public boolean loadFromByteArray(byte[] bs, boolean asTemplate){
+
+	public boolean loadFromByteArray(byte[] bs, boolean asTemplate) {
 		try {
 			byte[] exp = CompEx.expand(bs);
 			String cnt = StringTool.leer;
@@ -136,8 +136,8 @@ public class ETFTextPlugin implements ITextPlugin {
 			return false;
 		}
 	}
-	
-	public byte[] storeToByteArray(){
+
+	public byte[] storeToByteArray() {
 		try {
 			String cnt = etf.getContentsAsXML();
 			byte[] exp = cnt.getBytes(CHARSET);
@@ -146,68 +146,68 @@ public class ETFTextPlugin implements ITextPlugin {
 			ExHandler.handle(ex);
 			return null;
 		}
-		
+
 	}
-	
-	public boolean loadFromStream(InputStream is, boolean asTemplate){
+
+	public boolean loadFromStream(InputStream is, boolean asTemplate) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	public boolean print(String toPrinter, String toTray, boolean waitUntilFinished){
+
+	public boolean print(String toPrinter, String toTray, boolean waitUntilFinished) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	public void setFocus(){
+
+	public void setFocus() {
 		etf.setFocus();
 	}
-	
-	public boolean setFont(String name, int style, float size){
+
+	public boolean setFont(String name, int style, float size) {
 		// Font font=new Font(Desk.theDisplay,name,Math.round(size),style);
 		return true;
 	}
-	
-	public boolean setStyle(final int style){
+
+	public boolean setStyle(final int style) {
 		return false;
 	}
-	
-	public void setFormat(PageFormat f){
+
+	public void setFormat(PageFormat f) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void showMenu(boolean b){
+
+	public void showMenu(boolean b) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void showToolbar(boolean b){
+
+	public void showToolbar(boolean b) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
-		throws CoreException{
+			throws CoreException {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public boolean isDirectOutput(){
+	public boolean isDirectOutput() {
 		return false;
 	}
-	
+
 	@Override
-	public void setParameter(Parameter parameter){
+	public void setParameter(Parameter parameter) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void initTemplatePrintSettings(String template){
+	public void initTemplatePrintSettings(String template) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

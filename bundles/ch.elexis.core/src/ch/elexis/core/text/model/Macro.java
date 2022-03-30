@@ -11,8 +11,8 @@
 package ch.elexis.core.text.model;
 
 public class Macro {
-	
-	public static String resolve(String key){
+
+	public static String resolve(String key) {
 		return "";
 	}
 }

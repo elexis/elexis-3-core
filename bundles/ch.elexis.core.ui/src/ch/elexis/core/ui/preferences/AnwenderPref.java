@@ -45,16 +45,16 @@ import ch.elexis.data.Query;
 
 public class AnwenderPref extends PreferencePage implements IWorkbenchPreferencePage {
 	private static final String EXT_INFO = "ExtInfo"; //$NON-NLS-1$
-	
+
 	public static final String ID = "ch.elexis.anwenderprefs"; //$NON-NLS-1$
-	
+
 	private LabeledInputField.AutoForm lfa;
 	private InputData[] def;
-	
+
 	private Hashtable<String, Anwender> hAnwender = new Hashtable<String, Anwender>();
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		if (CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
 			FormToolkit tk = new FormToolkit(UiDesk.getDisplay());
 			Form form = tk.createForm(parent);
@@ -68,15 +68,15 @@ public class AnwenderPref extends PreferencePage implements IWorkbenchPreference
 				hAnwender.put(m.getLabel(), m);
 			}
 			cbAnwender.addSelectionListener(new SelectionAdapter() {
-				
+
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					Combo source = (Combo) e.getSource();
 					String m = (source.getItem(source.getSelectionIndex()));
 					Anwender anw = hAnwender.get(m);
 					lfa.reload(anw);
 				}
-				
+
 			});
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 			// gd.horizontalSpan=2;
@@ -90,22 +90,19 @@ public class AnwenderPref extends PreferencePage implements IWorkbenchPreference
 			return new PrefAccessDenied(parent);
 		}
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 		List<Mandant> ml = Hub.getMandantenList();
 		String[] mands = new String[ml.size()];
 		for (int i = 0; i < mands.length; i++) {
 			mands[i] = ml.get(i).getLabel();
 		}
 		String grp = ConfigServiceHolder.getGlobal(Preferences.ACC_GROUPS, "Admin"); //$NON-NLS-1$
-		def =
-			new InputData[] {
-				new InputData(Messages.AnwenderPref_kuerzel, "Label", Typ.STRING, null), //$NON-NLS-1$
+		def = new InputData[]{new InputData(Messages.AnwenderPref_kuerzel, "Label", Typ.STRING, null), //$NON-NLS-1$
 				new InputData(Messages.AnwenderPref_passwort, EXT_INFO, Typ.STRING, "UsrPwd"), //$NON-NLS-1$
 				new InputData(Messages.AnwenderPref_gruppe, EXT_INFO, "Groups", grp.split(",")), //$NON-NLS-1$ //$NON-NLS-2$
-				new InputData(Messages.AnwenderPref_fuerMandant, Messages.AnwenderPref_12,
-					"Mandant", mands) //$NON-NLS-1$
-			};
+				new InputData(Messages.AnwenderPref_fuerMandant, Messages.AnwenderPref_12, "Mandant", mands) //$NON-NLS-1$
+		};
 	}
-	
+
 }

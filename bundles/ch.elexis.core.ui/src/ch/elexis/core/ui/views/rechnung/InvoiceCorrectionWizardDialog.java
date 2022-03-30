@@ -10,52 +10,52 @@ import ch.elexis.data.dto.InvoiceCorrectionDTO;
 
 public class InvoiceCorrectionWizardDialog extends WizardDialog {
 	private InvoiceCorrectionDTO invoiceCorrectionDTO;
-	
-	public InvoiceCorrectionWizardDialog(Shell shell, InvoiceCorrectionDTO invoiceCorrectionDTO){
+
+	public InvoiceCorrectionWizardDialog(Shell shell, InvoiceCorrectionDTO invoiceCorrectionDTO) {
 		super(shell, new InvoiceCorrectionWizard(invoiceCorrectionDTO));
 		this.invoiceCorrectionDTO = invoiceCorrectionDTO;
 	}
-	
+
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		// TODO Auto-generated method stub
 		super.createButtonsForButtonBar(parent);
 
 		Button finish = getButton(IDialogConstants.FINISH_ID);
 		finish.setText("Fertigstellen");
 		finish.setVisible(true);
-	    setButtonLayoutData(finish);
-		
+		setButtonLayoutData(finish);
+
 		Button back = getButton(IDialogConstants.BACK_ID);
 		back.setVisible(false);
-		
+
 		Button cancel = getButton(IDialogConstants.CANCEL_ID);
 		cancel.setText("Abbrechen");
-		
+
 		Button btnCreateInvoice = getButton(IDialogConstants.NEXT_ID);
 		btnCreateInvoice.setText("Rechnungskorrektur durchführen");
 		setButtonLayoutData(btnCreateInvoice);
-		
+
 		cancel.moveBelow(null);
 		finish.moveAbove(cancel);
 		btnCreateInvoice.moveAbove(finish);
 		back.moveAbove(btnCreateInvoice);
-		
+
 	}
-	
+
 	@Override
-	protected void finishPressed(){
+	protected void finishPressed() {
 		super.finishPressed();
 		super.close();
 	}
-	
+
 	@Override
-	protected void buttonPressed(int buttonId){
+	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
-		
+
 		if (IDialogConstants.NEXT_ID == buttonId) {
 			Button nextBtn = getButton(IDialogConstants.NEXT_ID);
-			
+
 			// the text of the button will be changed
 			if ("Korrigierte Rechnung öffnen".equals(nextBtn.getText())) {
 				if (invoiceCorrectionDTO != null) {
@@ -69,7 +69,7 @@ public class InvoiceCorrectionWizardDialog extends WizardDialog {
 			}
 			getButton(IDialogConstants.CANCEL_ID).setEnabled(false);
 			getButton(IDialogConstants.FINISH_ID).setVisible(true);
-			
+
 		}
 	}
 }

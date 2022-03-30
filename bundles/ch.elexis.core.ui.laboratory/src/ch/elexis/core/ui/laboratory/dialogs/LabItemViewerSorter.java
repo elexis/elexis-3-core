@@ -7,13 +7,13 @@ import ch.elexis.data.LabItem;
 
 public class LabItemViewerSorter extends ViewerSorter {
 	private LabItemLabelProvider labelProvider;
-	
-	public LabItemViewerSorter(LabItemLabelProvider labelProvider){
+
+	public LabItemViewerSorter(LabItemLabelProvider labelProvider) {
 		this.labelProvider = labelProvider;
 	}
-	
+
 	@Override
-	public int compare(Viewer viewer, Object e1, Object e2){
+	public int compare(Viewer viewer, Object e1, Object e2) {
 		LabItem left = (LabItem) e1;
 		LabItem right = (LabItem) e2;
 

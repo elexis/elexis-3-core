@@ -24,57 +24,57 @@ public class ContentProviderAdapter implements IStructuredContentProvider {
 	public static interface UpdateListener extends EventListener {
 		public void updatedContents(IStructuredContentProvider contentProvider);
 	}
-	
+
 	private List<UpdateListener> updateListeners;
-	
+
 	/**
 	 * Add a listener that will be informed if this ContentProvider is activated
 	 * 
 	 * @param listener
 	 */
-	public void addUpdateListener(UpdateListener listener){
+	public void addUpdateListener(UpdateListener listener) {
 		if (updateListeners == null) {
 			updateListeners = new LinkedList<UpdateListener>();
 		}
 		updateListeners.add(listener);
 	}
-	
+
 	/**
-	 * remove a previously added UpdateListener. If no such listener exists or if it was removed
-	 * earlier already, nothing will happen.
+	 * remove a previously added UpdateListener. If no such listener exists or if it
+	 * was removed earlier already, nothing will happen.
 	 * 
 	 * @param listener
 	 */
-	public void removeUpdateListener(UpdateListener listener){
+	public void removeUpdateListener(UpdateListener listener) {
 		if (updateListeners != null) {
 			updateListeners.remove(listener);
 		}
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		if (updateListeners != null) {
 			updateListeners.clear();
 			updateListeners = null;
 		}
 	}
-	
-	public void fireUpdateEvent(){
+
+	public void fireUpdateEvent() {
 		for (UpdateListener l : updateListeners) {
 			l.updatedContents(this);
 		}
 	}
-	
+
 	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public Object[] getElements(Object inputElement){
+	public Object[] getElements(Object inputElement) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }

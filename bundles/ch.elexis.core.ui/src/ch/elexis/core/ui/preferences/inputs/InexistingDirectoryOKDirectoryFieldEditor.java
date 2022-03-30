@@ -22,19 +22,19 @@ import org.eclipse.swt.widgets.Composite;
  * 
  */
 public class InexistingDirectoryOKDirectoryFieldEditor extends DirectoryFieldEditor {
-	public InexistingDirectoryOKDirectoryFieldEditor(String name, String title, Composite parent){
+	public InexistingDirectoryOKDirectoryFieldEditor(String name, String title, Composite parent) {
 		super(name, title, parent);
 		setEmptyStringAllowed(true);
 	}
-	
+
 	@Override
-	public boolean isValid(){
+	public boolean isValid() {
 		return true;
 	}
-	
+
 	@Override
-	protected boolean checkState(){
+	protected boolean checkState() {
 		return true;
 	}
-	
+
 }

@@ -15,16 +15,17 @@ import org.eclipse.core.expressions.PropertyTester;
 import ch.elexis.core.model.IContact;
 
 public class ContactIsDeleted extends PropertyTester {
-	
-	public ContactIsDeleted(){}
-	
+
+	public ContactIsDeleted() {
+	}
+
 	@Override
-	public boolean test(Object receiver, String property, Object[] args, Object expectedValue){
+	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		IContact c = (IContact) receiver;
 		if (c.isDeleted()) {
 			return true;
 		}
 		return false;
 	}
-	
+
 }

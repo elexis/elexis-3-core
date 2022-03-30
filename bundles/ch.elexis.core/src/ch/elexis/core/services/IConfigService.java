@@ -11,10 +11,10 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.Identifiable;
 
 public interface IConfigService {
-	
+
 	/**
-	 * Set a global configuration entry. Overwrites existing values. Performs save operation. Adds a
-	 * trace entry.
+	 * Set a global configuration entry. Overwrites existing values. Performs save
+	 * operation. Adds a trace entry.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -23,9 +23,10 @@ public interface IConfigService {
 	 * @return <code>true</code> if the value was successfully set
 	 */
 	public boolean set(String key, String value);
-	
+
 	/**
-	 * Set a global configuration entry. Overwrites existing values. Performs save operation.
+	 * Set a global configuration entry. Overwrites existing values. Performs save
+	 * operation.
 	 * 
 	 * @param key
 	 * @param value
@@ -34,7 +35,7 @@ public interface IConfigService {
 	 * @return if the value was successfully set
 	 */
 	public boolean set(String key, String value, boolean addTraceEntry);
-	
+
 	/**
 	 * Set a local configuration entry. Overwrites existing values.
 	 * 
@@ -45,9 +46,10 @@ public interface IConfigService {
 	 * @return <code>true</code> if the value was successfully set
 	 */
 	public boolean setLocal(String key, String value);
-	
+
 	/**
-	 * Set a global configuration entry. Overwrites existing values. Performs save operation.
+	 * Set a global configuration entry. Overwrites existing values. Performs save
+	 * operation.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -56,7 +58,7 @@ public interface IConfigService {
 	 * @return <code>true</code> if the value was successfully set
 	 */
 	public boolean set(String key, boolean value);
-	
+
 	/**
 	 * Set a local configuration entry. Overwrites existing values.
 	 * 
@@ -67,7 +69,7 @@ public interface IConfigService {
 	 * @return <code>true</code> if the value was successfully set
 	 */
 	public boolean setLocal(String key, boolean value);
-	
+
 	/**
 	 * Set a local configuration entry. Overwrites existing values.
 	 * 
@@ -78,10 +80,10 @@ public interface IConfigService {
 	 * @return <code>true</code> if the value was successfully set
 	 */
 	public boolean setLocal(String name, int value);
-	
+
 	/**
-	 * Set a global configuration entry. Overwrites existing values. Performs save operation. Adds a
-	 * trace entry.
+	 * Set a global configuration entry. Overwrites existing values. Performs save
+	 * operation. Adds a trace entry.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -90,13 +92,14 @@ public interface IConfigService {
 	 * @return <code>true</code> if the value was successfully set
 	 */
 	public boolean set(String key, int value);
-	
+
 	/**
-	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
-	 * operation.
+	 * Set a contact specific configuration entry. Overwrites existing value.
+	 * Performs save operation.
 	 * 
 	 * @param contact
-	 *            the contact this configuration entry is accounted to, not <code>null</code>
+	 *            the contact this configuration entry is accounted to, not
+	 *            <code>null</code>
 	 * @param key
 	 *            identifying the configuration entry
 	 * @param value
@@ -104,13 +107,14 @@ public interface IConfigService {
 	 * @return <code>true</code> if value was successfully set
 	 */
 	public boolean set(IContact contact, String key, int value);
-	
+
 	/**
-	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
-	 * operation.
+	 * Set a contact specific configuration entry. Overwrites existing value.
+	 * Performs save operation.
 	 * 
 	 * @param contact
-	 *            the contact this configuration entry is accounted to, not <code>null</code>
+	 *            the contact this configuration entry is accounted to, not
+	 *            <code>null</code>
 	 * @param key
 	 *            identifying the configuration entry
 	 * @param value
@@ -118,28 +122,30 @@ public interface IConfigService {
 	 * @return <code>true</code> if value was successfully set
 	 */
 	public boolean set(IContact contact, String key, String value);
-	
+
 	/**
-	 * Set a mandator contact specific configuration entry. Overwrites existing value. Performs save
-	 * operation. The current mandator is resolved via the {@link IContextService}
+	 * Set a mandator contact specific configuration entry. Overwrites existing
+	 * value. Performs save operation. The current mandator is resolved via the
+	 * {@link IContextService}
 	 * 
 	 * @param configMigrationdomainName
 	 * @param name
 	 */
 	public void setActiveMandator(String key, String value);
-	
+
 	/**
-	 * Set a mandator contact specific configuration entry. Overwrites existing value. Performs save
-	 * operation. The current mandator is resolved via the {@link IContextService}
+	 * Set a mandator contact specific configuration entry. Overwrites existing
+	 * value. Performs save operation. The current mandator is resolved via the
+	 * {@link IContextService}
 	 * 
 	 * @param key
 	 * @param value
 	 */
 	public void setActiveMandator(String key, boolean value);
-	
+
 	/**
-	 * Convenience method wrapping {@link #set(IContact, String, String)} fetching the current user
-	 * contact from {@link IContextService}
+	 * Convenience method wrapping {@link #set(IContact, String, String)} fetching
+	 * the current user contact from {@link IContextService}
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -148,10 +154,10 @@ public interface IConfigService {
 	 * @return <code>true</code> if value was successfully set
 	 */
 	public boolean setActiveUserContact(String key, String value);
-	
+
 	/**
-	 * Convenience method wrapping {@link #set(IContact, String, int)} fetching the current user
-	 * contact from {@link IContextService}
+	 * Convenience method wrapping {@link #set(IContact, String, int)} fetching the
+	 * current user contact from {@link IContextService}
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -160,23 +166,24 @@ public interface IConfigService {
 	 * @return <code>true</code> if value was successfully set
 	 */
 	public boolean setActiveUserContact(String key, int value);
-	
+
 	/**
-	 * Convenience method wrapping {@link #set(IContact, String, boolean)} fetching the current user
-	 * contact from {@link IContextService}
+	 * Convenience method wrapping {@link #set(IContact, String, boolean)} fetching
+	 * the current user contact from {@link IContextService}
 	 * 
 	 * @param key
 	 * @param value
 	 * @return
 	 */
 	public boolean setActiveUserContact(String key, boolean value);
-	
+
 	/**
-	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
-	 * operation. Adds a trace entry.
+	 * Set a contact specific configuration entry. Overwrites existing value.
+	 * Performs save operation. Adds a trace entry.
 	 * 
 	 * @param contact
-	 *            the contact this configuration entry is accounted to, not <code>null</code>
+	 *            the contact this configuration entry is accounted to, not
+	 *            <code>null</code>
 	 * @param key
 	 *            identifying the configuration entry
 	 * @param value
@@ -184,10 +191,10 @@ public interface IConfigService {
 	 * @return <code>true</code> if value was successfully set
 	 */
 	public boolean set(IContact contact, String key, boolean value);
-	
+
 	/**
-	 * Set a global configuration entry. Overwrites existing value. Performs save operation. Cares
-	 * for list order. Adds a trace entry.
+	 * Set a global configuration entry. Overwrites existing value. Performs save
+	 * operation. Cares for list order. Adds a trace entry.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -196,13 +203,14 @@ public interface IConfigService {
 	 * @return <code>true</code> if the values were successfully set
 	 */
 	public boolean setFromList(String key, List<String> values);
-	
+
 	/**
-	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
-	 * operation. Cares for list order. Adds a trace entry.
+	 * Set a contact specific configuration entry. Overwrites existing value.
+	 * Performs save operation. Cares for list order. Adds a trace entry.
 	 * 
 	 * @param contact
-	 *            the contact this configuration entry is accounted to, not <code>null</code>
+	 *            the contact this configuration entry is accounted to, not
+	 *            <code>null</code>
 	 * @param key
 	 *            identifying the configuration entry
 	 * @param value
@@ -210,18 +218,18 @@ public interface IConfigService {
 	 * @return <code>true</code> if value was successfully set
 	 */
 	public boolean setFromList(IContact contact, String key, List<String> values);
-	
+
 	/**
-	 * Set all contact specific configuration entries from the provided map. Overwrites existing
-	 * value. Performs save operation.
+	 * Set all contact specific configuration entries from the provided map.
+	 * Overwrites existing value. Performs save operation.
 	 * 
 	 * @param map
 	 */
 	public void setActiveUserContact(Map<Object, Object> map);
-	
+
 	/**
-	 * Get a stored value for a given global configuration entry, or return the value provided as
-	 * default if not found.
+	 * Get a stored value for a given global configuration entry, or return the
+	 * value provided as default if not found.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -229,16 +237,16 @@ public interface IConfigService {
 	 *            to return if configuration entry does not exist
 	 * @return
 	 */
-	public default String get(String key, String defaultValue){
+	public default String get(String key, String defaultValue) {
 		return get(key, defaultValue, true);
 	}
-	
+
 	/**
-	 * Get a stored value for a given global configuration entry, or return the value provided as
-	 * default if not found.
+	 * Get a stored value for a given global configuration entry, or return the
+	 * value provided as default if not found.
 	 * 
-	 * If refreshCache is true the value is always fetched from the database, else the cached value
-	 * is used if present.
+	 * If refreshCache is true the value is always fetched from the database, else
+	 * the cached value is used if present.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -248,10 +256,10 @@ public interface IConfigService {
 	 * @return
 	 */
 	public String get(String key, String defaultValue, boolean refreshCache);
-	
+
 	/**
-	 * Get a stored value for a given local configuration entry, or return the value provided as
-	 * default if not found.
+	 * Get a stored value for a given local configuration entry, or return the value
+	 * provided as default if not found.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -260,7 +268,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	public String getLocal(String key, String defaultValue);
-	
+
 	/**
 	 * Convenience method wrapping {@link #get(String, String)}
 	 * 
@@ -271,7 +279,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	public boolean get(String key, boolean defaultValue);
-	
+
 	/**
 	 * Convenience method wrapping {@link #getLocal(String, String)}
 	 * 
@@ -282,7 +290,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	public boolean getLocal(String key, boolean defaultValue);
-	
+
 	/**
 	 * Convenience method wrapping {@link #getLocal(String, String)}
 	 * 
@@ -293,26 +301,26 @@ public interface IConfigService {
 	 * @return
 	 */
 	public int getLocal(String key, int defaultValue);
-	
+
 	/**
-	 * Get a stored value for the current active {@link IMandator} configuration. The current
-	 * mandator is resolved via the {@link IContextService}
+	 * Get a stored value for the current active {@link IMandator} configuration.
+	 * The current mandator is resolved via the {@link IContextService}
 	 * 
 	 * @param key
 	 * @param defaultValue
 	 *            to return if no active mandator found or entry does not exist
 	 * @return
 	 */
-	public default String getActiveMandator(String key, String defaultValue){
+	public default String getActiveMandator(String key, String defaultValue) {
 		return getActiveMandator(key, defaultValue, true);
 	}
-	
+
 	/**
-	 * Get a stored value for the current active {@link IMandator} configuration. The current
-	 * mandator is resolved via the {@link IContextService}
+	 * Get a stored value for the current active {@link IMandator} configuration.
+	 * The current mandator is resolved via the {@link IContextService}
 	 * 
-	 * If refreshCache is true the value is always fetched from the database, else the cached value
-	 * is used if present.
+	 * If refreshCache is true the value is always fetched from the database, else
+	 * the cached value is used if present.
 	 * 
 	 * @param key
 	 * @param defaultValue
@@ -321,7 +329,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	public String getActiveMandator(String key, String defaultValue, boolean refreshCache);
-	
+
 	/**
 	 * Convenience method wrapping {@link #getActiveMandator(String, String)}
 	 * 
@@ -332,20 +340,20 @@ public interface IConfigService {
 	 * @return
 	 */
 	public boolean getActiveMandator(String key, boolean defaultValue);
-	
+
 	/**
-	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current
-	 * mandator via {@link IContextService}
+	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching
+	 * the current mandator via {@link IContextService}
 	 * 
 	 * @param key
 	 * @param defaultValue
 	 * @return
 	 */
 	public int getActiveMandator(String key, int defaultValue);
-	
+
 	/**
-	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user
-	 * via {@link IContextService}
+	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching
+	 * the current user via {@link IContextService}
 	 * 
 	 * @param key
 	 * @param defaultValue
@@ -354,13 +362,13 @@ public interface IConfigService {
 	public default String getActiveUserContact(String key, String defaultValue) {
 		return getActiveUserContact(key, defaultValue, true);
 	}
-	
+
 	/**
-	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user
-	 * via {@link IContextService}.
+	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching
+	 * the current user via {@link IContextService}.
 	 * 
-	 * If refreshCache is true the value is always fetched from the database, else the cached value
-	 * is used if present.
+	 * If refreshCache is true the value is always fetched from the database, else
+	 * the cached value is used if present.
 	 * 
 	 * @param key
 	 * @param defaultValue
@@ -368,27 +376,27 @@ public interface IConfigService {
 	 * @return
 	 */
 	public String getActiveUserContact(String key, String defaultValue, boolean refreshCache);
-	
+
 	/**
-	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user
-	 * via {@link IContextService}
+	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching
+	 * the current user via {@link IContextService}
 	 * 
 	 * @param key
 	 * @param defaultValue
 	 * @return
 	 */
 	public int getActiveUserContact(String key, int defaultValue);
-	
+
 	/**
-	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user
-	 * via {@link IContextService}
+	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching
+	 * the current user via {@link IContextService}
 	 * 
 	 * @param key
 	 * @param defaultValue
 	 * @return
 	 */
 	public boolean getActiveUserContact(String key, boolean defaultValue);
-	
+
 	/**
 	 * Convenience method wrapping {@link #get(String, String)}
 	 * 
@@ -399,32 +407,34 @@ public interface IConfigService {
 	 * @return
 	 */
 	public int get(String key, int defaultValue);
-	
+
 	/**
-	 * Get a stored value for a given contact specific configuration entry, or return the value
-	 * provided as default if not found.
+	 * Get a stored value for a given contact specific configuration entry, or
+	 * return the value provided as default if not found.
 	 * 
 	 * @param contact
-	 *            the contact this configuration entry is accounted to, not <code>null</code>
+	 *            the contact this configuration entry is accounted to, not
+	 *            <code>null</code>
 	 * @param key
 	 *            identifying the configuration entry
 	 * @param defaultValue
 	 *            to return if configuration entry does not exist
 	 * @return
 	 */
-	public default String get(IContact contact, String key, String defaultValue){
+	public default String get(IContact contact, String key, String defaultValue) {
 		return get(contact, key, defaultValue, true);
 	}
-	
+
 	/**
-	 * Get a stored value for a given contact specific configuration entry, or return the value
-	 * provided as default if not found.
+	 * Get a stored value for a given contact specific configuration entry, or
+	 * return the value provided as default if not found.
 	 * 
-	 * If refreshCache is true the value is always fetched from the database, else the cached value
-	 * is used if present.
+	 * If refreshCache is true the value is always fetched from the database, else
+	 * the cached value is used if present.
 	 * 
 	 * @param contact
-	 *            the contact this configuration entry is accounted to, not <code>null</code>
+	 *            the contact this configuration entry is accounted to, not
+	 *            <code>null</code>
 	 * @param key
 	 *            identifying the configuration entry
 	 * @param defaultValue
@@ -433,7 +443,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	public String get(IContact contact, String key, String defaultValue, boolean refreshCache);
-	
+
 	/**
 	 * Convenience method wrapping {@link #get(IContact, String, String)}
 	 * 
@@ -445,7 +455,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	public boolean get(IContact contact, String key, boolean defaultValue);
-	
+
 	/**
 	 * Convenience method wrapping {@link #get(IContact, String, String)}
 	 * 
@@ -457,10 +467,10 @@ public interface IConfigService {
 	 * @return
 	 */
 	public int get(IContact contact, String key, int defaultValue);
-	
+
 	/**
-	 * Retrieve a value as a list for a global configuration entry. Retains the order it was
-	 * persisted.
+	 * Retrieve a value as a list for a global configuration entry. Retains the
+	 * order it was persisted.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
@@ -469,22 +479,22 @@ public interface IConfigService {
 	 * @return the stored entries, defaultValue if not set
 	 */
 	public List<String> getAsList(String key, List<String> defaultValue);
-	
+
 	/**
-	 * Retrieve a value as a list for a global configuration entry. Retains the order it was
-	 * persisted.
+	 * Retrieve a value as a list for a global configuration entry. Retains the
+	 * order it was persisted.
 	 * 
 	 * @param key
 	 *            identifying the configuration entry
 	 * @return the stored entries, or an empty, immutable list
 	 */
-	public default List<String> getAsList(String key){
+	public default List<String> getAsList(String key) {
 		return getAsList(key, Collections.emptyList());
 	}
-	
+
 	/**
-	 * Retrieve a value as a list for a contact specific configuration entry. Retains the order it
-	 * was persisted.
+	 * Retrieve a value as a list for a contact specific configuration entry.
+	 * Retains the order it was persisted.
 	 * 
 	 * @param contact
 	 * @param key
@@ -492,7 +502,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	public List<String> getAsList(IContact contact, String key, List<String> defaultValue);
-	
+
 	/**
 	 * Get the whole config for a given contact as hierarchy of {@link Map}s.
 	 * 
@@ -500,97 +510,100 @@ public interface IConfigService {
 	 * @return
 	 */
 	public Map<Object, Object> getAsMap(IContact contact);
-	
+
 	/**
-	 * Get the whole config for the active user contact as hierarchy of {@link Map}s.
+	 * Get the whole config for the active user contact as hierarchy of
+	 * {@link Map}s.
 	 * 
 	 * @return
 	 */
 	public Map<Object, Object> getActiveUserContactAsMap();
-	
+
 	/**
-	 * Set all contact specific configuration entries from the provided map. Overwrites existing
-	 * value. Performs save operation.
+	 * Set all contact specific configuration entries from the provided map.
+	 * Overwrites existing value. Performs save operation.
 	 * 
 	 * @param person
 	 * @param map
 	 */
 	public void setFromMap(IContact person, Map<Object, Object> map);
-	
+
 	/**
 	 * Get a list of all possible sub nodes for the provided key.
 	 * 
 	 * @param key
 	 * @return
 	 */
-	default public List<String> getSubNodes(String key){
+	default public List<String> getSubNodes(String key) {
 		return getSubNodes(key, false);
 	}
-	
+
 	/**
 	 * Get a list of all possible sub nodes for the provided key.
 	 * 
-	 * If refreshCache is true the value is always fetched from the database, else the cached value
-	 * is used if present.
+	 * If refreshCache is true the value is always fetched from the database, else
+	 * the cached value is used if present.
 	 * 
 	 * @param key
 	 * @return
 	 */
 	public List<String> getSubNodes(String key, boolean refreshCache);
-	
+
 	/**
-	 * Get a new {@link ILocalLock} instance for the provided object. Currently {@link String} and
-	 * {@link Identifiable} can be locked.
+	 * Get a new {@link ILocalLock} instance for the provided object. Currently
+	 * {@link String} and {@link Identifiable} can be locked.
 	 * 
 	 * @return
 	 */
 	public ILocalLock getLocalLock(Object object);
-	
+
 	/**
-	 * Test if this instance has a lock on the object. Does <b>not</b> query the DB, only a lookup
-	 * in a local {@link HashMap} is performed. If lookup in the DB is needed use
-	 * {@link LocalLock#tryLock()}.
+	 * Test if this instance has a lock on the object. Does <b>not</b> query the DB,
+	 * only a lookup in a local {@link HashMap} is performed. If lookup in the DB is
+	 * needed use {@link LocalLock#tryLock()}.
 	 * 
 	 * @param object
 	 * @return
 	 */
 	public Optional<ILocalLock> getManagedLock(Object object);
-	
+
 	/**
-	 * This is a lock implementation based on entries in the config DB table. <b>This implementation
-	 * is not guaranteed to give only one lock for an object if two instances try to lock at the
-	 * same time.</b> If there is a elexis server based locking implementation available, that
-	 * implementation should be used instead.
+	 * This is a lock implementation based on entries in the config DB table.
+	 * <b>This implementation is not guaranteed to give only one lock for an object
+	 * if two instances try to lock at the same time.</b> If there is a elexis
+	 * server based locking implementation available, that implementation should be
+	 * used instead.
 	 */
 	public interface ILocalLock {
-		
+
 		/**
 		 * Get the message from the DB. Currently username only.
 		 * 
 		 * @return the username or ? if there is no information
 		 */
 		public String getLockMessage();
-		
+
 		/**
-		 * Get the value of {@link System#currentTimeMillis()} when the Lock was created.
+		 * Get the value of {@link System#currentTimeMillis()} when the Lock was
+		 * created.
 		 * 
 		 * @return the value of -1 if there is no information
 		 */
 		public long getLockCurrentMillis();
-		
+
 		/**
-		 * Delete the lock from the DB. <b>Always</b> deletes the lock, even if another instance
-		 * created the lock. Can be used to remove pending locks.
+		 * Delete the lock from the DB. <b>Always</b> deletes the lock, even if another
+		 * instance created the lock. Can be used to remove pending locks.
 		 */
 		public void unlock();
-		
+
 		/**
 		 * Checks if the user has the lock
 		 * 
 		 * @return true if the user has the lock otherwise return false
 		 */
 		public boolean hasLock(String userName);
-		
+
 		/**
 		 * Try to write the lock to the DB if there is not already a lock on the object.
 		 * 

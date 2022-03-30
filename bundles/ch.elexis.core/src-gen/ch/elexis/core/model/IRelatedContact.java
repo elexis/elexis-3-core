@@ -13,19 +13,23 @@ package ch.elexis.core.model;
 import ch.elexis.core.types.RelationshipType;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IRelated Contact</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>IRelated
+ * Contact</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IRelatedContact#getMyContact <em>My Contact</em>}</li>
- *   <li>{@link ch.elexis.core.model.IRelatedContact#getOtherContact <em>Other Contact</em>}</li>
- *   <li>{@link ch.elexis.core.model.IRelatedContact#getRelationshipDescription <em>Relationship Description</em>}</li>
- *   <li>{@link ch.elexis.core.model.IRelatedContact#getMyType <em>My Type</em>}</li>
- *   <li>{@link ch.elexis.core.model.IRelatedContact#getOtherType <em>Other Type</em>}</li>
+ * <li>{@link ch.elexis.core.model.IRelatedContact#getMyContact <em>My
+ * Contact</em>}</li>
+ * <li>{@link ch.elexis.core.model.IRelatedContact#getOtherContact <em>Other
+ * Contact</em>}</li>
+ * <li>{@link ch.elexis.core.model.IRelatedContact#getRelationshipDescription
+ * <em>Relationship Description</em>}</li>
+ * <li>{@link ch.elexis.core.model.IRelatedContact#getMyType <em>My
+ * Type</em>}</li>
+ * <li>{@link ch.elexis.core.model.IRelatedContact#getOtherType <em>Other
+ * Type</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIRelatedContact()
@@ -34,13 +38,14 @@ import ch.elexis.core.types.RelationshipType;
  */
 public interface IRelatedContact extends Identifiable, Deleteable {
 	/**
-	 * Returns the value of the '<em><b>My Contact</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>My Contact</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>My Contact</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>My Contact</em>' reference isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>My Contact</em>' reference.
 	 * @see #setMyContact(IContact)
 	 * @see ch.elexis.core.model.ModelPackage#getIRelatedContact_MyContact()
@@ -50,23 +55,26 @@ public interface IRelatedContact extends Identifiable, Deleteable {
 	IContact getMyContact();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IRelatedContact#getMyContact <em>My Contact</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>My Contact</em>' reference.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IRelatedContact#getMyContact <em>My
+	 * Contact</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>My Contact</em>' reference.
 	 * @see #getMyContact()
 	 * @generated
 	 */
 	void setMyContact(IContact value);
 
 	/**
-	 * Returns the value of the '<em><b>Other Contact</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Other Contact</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Other Contact</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Other Contact</em>' reference isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Other Contact</em>' reference.
 	 * @see #setOtherContact(IContact)
 	 * @see ch.elexis.core.model.ModelPackage#getIRelatedContact_OtherContact()
@@ -76,23 +84,26 @@ public interface IRelatedContact extends Identifiable, Deleteable {
 	IContact getOtherContact();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IRelatedContact#getOtherContact <em>Other Contact</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Other Contact</em>' reference.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IRelatedContact#getOtherContact <em>Other
+	 * Contact</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Other Contact</em>' reference.
 	 * @see #getOtherContact()
 	 * @generated
 	 */
 	void setOtherContact(IContact value);
 
 	/**
-	 * Returns the value of the '<em><b>Relationship Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Relationship Description</b></em>'
+	 * attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Relationship Description</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Relationship Description</em>' attribute isn't
+	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Relationship Description</em>' attribute.
 	 * @see #setRelationshipDescription(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIRelatedContact_RelationshipDescription()
@@ -102,24 +113,29 @@ public interface IRelatedContact extends Identifiable, Deleteable {
 	String getRelationshipDescription();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IRelatedContact#getRelationshipDescription <em>Relationship Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Relationship Description</em>' attribute.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IRelatedContact#getRelationshipDescription
+	 * <em>Relationship Description</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Relationship Description</em>'
+	 *            attribute.
 	 * @see #getRelationshipDescription()
 	 * @generated
 	 */
 	void setRelationshipDescription(String value);
 
 	/**
-	 * Returns the value of the '<em><b>My Type</b></em>' attribute.
-	 * The literals are from the enumeration {@link ch.elexis.core.types.RelationshipType}.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>My Type</b></em>' attribute. The literals
+	 * are from the enumeration {@link ch.elexis.core.types.RelationshipType}. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>My Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>My Type</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>My Type</em>' attribute.
 	 * @see ch.elexis.core.types.RelationshipType
 	 * @see #setMyType(RelationshipType)
@@ -130,10 +146,11 @@ public interface IRelatedContact extends Identifiable, Deleteable {
 	RelationshipType getMyType();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IRelatedContact#getMyType <em>My Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>My Type</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IRelatedContact#getMyType
+	 * <em>My Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>My Type</em>' attribute.
 	 * @see ch.elexis.core.types.RelationshipType
 	 * @see #getMyType()
 	 * @generated
@@ -141,14 +158,15 @@ public interface IRelatedContact extends Identifiable, Deleteable {
 	void setMyType(RelationshipType value);
 
 	/**
-	 * Returns the value of the '<em><b>Other Type</b></em>' attribute.
-	 * The literals are from the enumeration {@link ch.elexis.core.types.RelationshipType}.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Other Type</b></em>' attribute. The literals
+	 * are from the enumeration {@link ch.elexis.core.types.RelationshipType}. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Other Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Other Type</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Other Type</em>' attribute.
 	 * @see ch.elexis.core.types.RelationshipType
 	 * @see #setOtherType(RelationshipType)
@@ -159,10 +177,12 @@ public interface IRelatedContact extends Identifiable, Deleteable {
 	RelationshipType getOtherType();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IRelatedContact#getOtherType <em>Other Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Other Type</em>' attribute.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IRelatedContact#getOtherType <em>Other
+	 * Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Other Type</em>' attribute.
 	 * @see ch.elexis.core.types.RelationshipType
 	 * @see #getOtherType()
 	 * @generated

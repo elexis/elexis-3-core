@@ -9,9 +9,9 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.Patient;
 
 public class FamAnamnesisResolver extends AbstractTextResolver implements ITextResolver {
-	
+
 	@Override
-	public Optional<String> resolve(Object object){
+	public Optional<String> resolve(Object object) {
 		if (object instanceof Patient) {
 			if (ConfigServiceHolder.getGlobal(IMigratorService.FAMANAM_SETTINGS_USE_STRUCTURED, false)) {
 				return getFindingsText(object, FindingsDataAccessor.FINDINGS_PATIENT_FAMANAM);

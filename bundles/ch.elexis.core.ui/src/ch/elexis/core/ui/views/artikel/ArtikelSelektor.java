@@ -54,19 +54,20 @@ import ch.elexis.core.ui.views.provider.StockEntryLabelProvider;
 import ch.elexis.data.PersistentObject;
 
 public class ArtikelSelektor extends ViewPart {
-	public ArtikelSelektor(){}
-	
+	public ArtikelSelektor() {
+	}
+
 	public static final String ID = "ch.elexis.ArtikelSelektor"; //$NON-NLS-1$
 	CTabFolder ctab;
 	TableViewer tv;
-	
+
 	@Override
-	public void createPartControl(final Composite parent){
+	public void createPartControl(final Composite parent) {
 		parent.setLayout(new GridLayout());
 		ctab = new CTabFolder(parent, SWT.NONE);
 		ctab.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		java.util.List<IConfigurationElement> list =
-			Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
+		java.util.List<IConfigurationElement> list = Extensions
+				.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE); // $NON-NLS-1$
 		ctab.addSelectionListener(new TabSelectionListener());
 		for (IConfigurationElement ice : list) {
 			if ("Artikel".equals(ice.getName())) { //$NON-NLS-1$
@@ -74,7 +75,7 @@ public class ArtikelSelektor extends ViewPart {
 				if (description.isPresent()) {
 					CTabItem ci = new CTabItem(ctab, SWT.NONE);
 					ci.setText(description.get().getCodeSystemName());
-					ci.setData(description.get()); //$NON-NLS-1$					
+					ci.setData(description.get()); // $NON-NLS-1$
 				}
 			}
 		}
@@ -89,12 +90,11 @@ public class ArtikelSelektor extends ViewPart {
 		tv.setContentProvider(ArrayContentProvider.getInstance());
 		tv.setLabelProvider(new StockEntryLabelProvider() {
 			@Override
-			public String getColumnText(Object element, int columnIndex){
+			public String getColumnText(Object element, int columnIndex) {
 				IStockEntry se = (IStockEntry) element;
 				if (se.getArticle() != null) {
 					String ret = se.getArticle().getName();
-					Long amount =
-						StockServiceHolder.get().getCumulatedStockForArticle(se.getArticle());
+					Long amount = StockServiceHolder.get().getCumulatedStockForArticle(se.getArticle());
 					if (amount != null) {
 						ret += " (" + Long.toString(amount) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					}
@@ -107,117 +107,116 @@ public class ArtikelSelektor extends ViewPart {
 		StockEntryLoader loader = new StockEntryLoader(tv);
 		loader.schedule();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
+
 	@Override
-	public void dispose(){
-		
+	public void dispose() {
+
 	}
-	
-	//	class LagerLabelProvider extends DefaultLabelProvider implements ITableLabelProvider {
-	//		
-	//		@Override
-	//		public Image getColumnImage(final Object element, final int columnIndex){
-	//			if (element instanceof Artikel) {
-	//				return null;
-	//			} else {
-	//				return Images.IMG_ACHTUNG.getImage();
-	//			}
-	//		}
-	//		
-	//		@Override
-	//		public String getColumnText(final Object element, final int columnIndex){
-	//			if (element instanceof Artikel) {
-	//				Artikel art = (Artikel) element;
-	//				Availability availability = CoreHub.getStockService().getCumulatedAvailabilityForArticle(art);
-	//				String ret = art.getInternalName();
-	//				if (availability!=null) {
-	//					ret += " (" + availability.toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-	//				}
-	//				return ret;
-	//			}
-	//			return super.getColumnText(element, columnIndex);
-	//		}
-	//		
-	//	}
-	
+
+	// class LagerLabelProvider extends DefaultLabelProvider implements
+	// ITableLabelProvider {
+	//
+	// @Override
+	// public Image getColumnImage(final Object element, final int columnIndex){
+	// if (element instanceof Artikel) {
+	// return null;
+	// } else {
+	// return Images.IMG_ACHTUNG.getImage();
+	// }
+	// }
+	//
+	// @Override
+	// public String getColumnText(final Object element, final int columnIndex){
+	// if (element instanceof Artikel) {
+	// Artikel art = (Artikel) element;
+	// Availability availability =
+	// CoreHub.getStockService().getCumulatedAvailabilityForArticle(art);
+	// String ret = art.getInternalName();
+	// if (availability!=null) {
+	// ret += " (" + availability.toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+	// }
+	// return ret;
+	// }
+	// return super.getColumnText(element, columnIndex);
+	// }
+	//
+	// }
+
 	@org.eclipse.e4.core.di.annotations.Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 	private class TabSelectionListener extends SelectionAdapter {
-		
+
 		@Override
-		public void widgetSelected(SelectionEvent e){
+		public void widgetSelected(SelectionEvent e) {
 			CTabItem top = ctab.getSelection();
 			if (top != null) {
 				if (top.getControl() == null) {
 					CommonViewer cv = new CommonViewer();
-					CodeSystemDescription description = (CodeSystemDescription) top.getData(); //$NON-NLS-1$
-					ViewerConfigurer vc =
-						description.getCodeSelectorFactory().createViewerConfigurer(cv);
+					CodeSystemDescription description = (CodeSystemDescription) top.getData(); // $NON-NLS-1$
+					ViewerConfigurer vc = description.getCodeSelectorFactory().createViewerConfigurer(cv);
 					Composite c = new Composite(ctab, SWT.NONE);
 					c.setLayout(new GridLayout());
 					cv.create(vc, c, SWT.V_SCROLL, getViewSite());
 					top.setControl(c);
 					top.setData(cv);
-					
+
 					cv.addDoubleClickListener(new CommonViewer.PoDoubleClickListener() {
-						
+
 						@Override
-						public void doubleClicked(final PersistentObject obj,
-							final CommonViewer cv){
+						public void doubleClicked(final PersistentObject obj, final CommonViewer cv) {
 							EditEigenartikelUi.executeWithParams(obj);
 						}
 					});
 					vc.getContentProvider().startListening();
 				}
 			}
-			
+
 		}
 	}
-	
+
 	private static class StockEntryLoader extends Job {
 		private Viewer viewer;
-		
+
 		private List<ch.elexis.core.model.IStockEntry> loaded;
-		
-		public StockEntryLoader(Viewer viewer){
+
+		public StockEntryLoader(Viewer viewer) {
 			super("Stock loading ...");
 			this.viewer = viewer;
 		}
-		
+
 		@Override
-		protected IStatus run(IProgressMonitor monitor){
+		protected IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask("Stock loading ...", IProgressMonitor.UNKNOWN);
 			loaded = StockServiceHolder.get().getAllStockEntries();
 			loaded.sort(compareArticleLabel());
-			
+
 			if (monitor.isCanceled()) {
 				return Status.CANCEL_STATUS;
 			}
 			monitor.done();
 			Display.getDefault().asyncExec(new Runnable() {
-				
+
 				@Override
-				public void run(){
+				public void run() {
 					viewer.setInput(loaded);
 				}
 			});
 			return Status.OK_STATUS;
 		}
-		
-		private Comparator<IStockEntry> compareArticleLabel(){
-			return Comparator.comparing(
-				o -> o.getArticle() != null ? o.getArticle().getLabel() : null,
-				Comparator.nullsLast(Comparator.naturalOrder()));
+
+		private Comparator<IStockEntry> compareArticleLabel() {
+			return Comparator.comparing(o -> o.getArticle() != null ? o.getArticle().getLabel() : null,
+					Comparator.nullsLast(Comparator.naturalOrder()));
 		}
 
 	}

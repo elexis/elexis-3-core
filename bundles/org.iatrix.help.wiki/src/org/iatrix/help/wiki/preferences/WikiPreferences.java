@@ -22,32 +22,31 @@ import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 
 public class WikiPreferences extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-	
+
 	private ConfigServicePreferenceStore prefs = new ConfigServicePreferenceStore(Scope.GLOBAL);
-	
-	public WikiPreferences(){
+
+	public WikiPreferences() {
 		super(GRID);
 		setPreferenceStore(prefs);
 		prefs.setDefault(Constants.CFG_BASE_URL, Constants.DEFAULT_BASE_URL);
 		prefs.setDefault(Constants.CFG_START_PAGE, Constants.DEFAULT_START_PAGE);
 		prefs.setDefault(Constants.CFG_HANDBOOK, Constants.DEFAULT_HANDBOOK);
 	}
-	
+
 	@Override
-	protected void createFieldEditors(){
+	protected void createFieldEditors() {
 		addField(new StringFieldEditor(Constants.CFG_BASE_URL, "Basis-URL", getFieldEditorParent()));
-		addField(new StringFieldEditor(Constants.CFG_START_PAGE, "Start-Seite",
-			getFieldEditorParent()));
+		addField(new StringFieldEditor(Constants.CFG_START_PAGE, "Start-Seite", getFieldEditorParent()));
 		addField(new StringFieldEditor(Constants.CFG_HANDBOOK, "Handbuch", getFieldEditorParent()));
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public boolean performOk(){
+	public boolean performOk() {
 		return super.performOk();
 	}
 }

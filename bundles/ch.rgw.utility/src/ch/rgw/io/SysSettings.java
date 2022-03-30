@@ -27,42 +27,42 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 
 /**
- * Settings-Implementation, die ein "Systemtypisches" Verfahren zur Speicherung verwendet. Unter
- * Windows ist das die Registry, unter Linux eine .datei in XML-Format. Es wird unterschieden
- * zwischen anwendnerspezifischen Settings (USER_SETTINGS) und systemweiten Settings
- * (SYSTEM_SETTINGS)
+ * Settings-Implementation, die ein "Systemtypisches" Verfahren zur Speicherung
+ * verwendet. Unter Windows ist das die Registry, unter Linux eine .datei in
+ * XML-Format. Es wird unterschieden zwischen anwendnerspezifischen Settings
+ * (USER_SETTINGS) und systemweiten Settings (SYSTEM_SETTINGS)
  */
 
 public class SysSettings extends Settings {
 	private static final long serialVersionUID = -7855039763450972263L;
-	
-	public static final String Version(){
+
+	public static final String Version() {
 		return "1.0.2";
 	}
-	
+
 	public static final int USER_SETTINGS = 0;
 	public static final int SYSTEM_SETTINGS = 1;
 	volatile int typ;
 	volatile Class<?> clazz;
-	
+
 	private static Map<String, SysSettings> instanceMap = new HashMap<>();
-	
+
 	/**
-	 * Get an existing instance for type and class, or create a new {@link SysSettings} that will be
-	 * returned on next call.
+	 * Get an existing instance for type and class, or create a new
+	 * {@link SysSettings} that will be returned on next call.
 	 * 
 	 * @param type
 	 * @param cl
 	 * @return
 	 */
-	public synchronized static SysSettings getOrCreate(int type, Class<?> cl){
+	public synchronized static SysSettings getOrCreate(int type, Class<?> cl) {
 		String key = Integer.toString(type) + "|" + cl.getName();
 		if (!instanceMap.containsKey(key)) {
 			instanceMap.put(key, new SysSettings(type, cl));
 		}
 		return instanceMap.get(key);
 	}
-	
+
 	/**
 	 * Settings neu Anlegen oder einlesen
 	 * 
@@ -71,14 +71,14 @@ public class SysSettings extends Settings {
 	 * @param cl
 	 *            Basisklasse für den Settings-zweig
 	 */
-	public SysSettings(int type, Class<?> cl){
+	public SysSettings(int type, Class<?> cl) {
 		super();
 		typ = type;
 		clazz = cl;
 		undo();
 	}
-	
-	private Preferences getRoot(){
+
+	private Preferences getRoot() {
 		Preferences pr = null;
 		if (typ == USER_SETTINGS) {
 			pr = Preferences.userNodeForPackage(clazz);
@@ -93,7 +93,7 @@ public class SysSettings extends Settings {
 		}
 		return sub;
 	}
-	
+
 	/**
 	 * Diese Settings als XML-Datei exportieren
 	 * 
@@ -101,7 +101,7 @@ public class SysSettings extends Settings {
 	 *            Dateiname
 	 * @throws Exception
 	 */
-	public synchronized void write_xml(String file){
+	public synchronized void write_xml(String file) {
 		String errMsg = "\nSysSettings: Error writing: " + file;
 		try (FileOutputStream os = new FileOutputStream(file)) {
 			getRoot().exportSubtree(os);
@@ -113,7 +113,7 @@ public class SysSettings extends Settings {
 			log.warn(e.getMessage() + errMsg);
 		}
 	}
-	
+
 	/**
 	 * Settings aus XML-Datei importieren
 	 * 
@@ -121,7 +121,7 @@ public class SysSettings extends Settings {
 	 *            Dateiname
 	 * @throws Exception
 	 */
-	public synchronized void read_xml(String file){
+	public synchronized void read_xml(String file) {
 		String errMsg = "\nSysSettings: Error reading: " + file;
 		try (FileInputStream is = new FileInputStream(file)) {
 			Preferences.importPreferences(is);
@@ -133,11 +133,11 @@ public class SysSettings extends Settings {
 			log.warn(e.getMessage() + errMsg);
 		}
 	}
-	
+
 	/**
 	 * @see ch.rgw.IO.Settings#flush()
 	 */
-	protected void flush_absolute(){
+	protected void flush_absolute() {
 		Iterator<?> it = iterator();
 		Preferences pr = getRoot();
 		while (it.hasNext()) {
@@ -152,12 +152,12 @@ public class SysSettings extends Settings {
 			}
 			if (StringTool.isNothing(value)) {
 				sub.remove(key);
-				if(getSettingChangedListener() != null) {
+				if (getSettingChangedListener() != null) {
 					getSettingChangedListener().settingRemoved(key);
 				}
 			} else {
 				sub.put(key, (String) value);
-				if(getSettingChangedListener() != null) {
+				if (getSettingChangedListener() != null) {
 					getSettingChangedListener().settingWritten(key, (String) value);
 				}
 			}
@@ -168,14 +168,14 @@ public class SysSettings extends Settings {
 			ExHandler.handle(ex);
 		}
 	}
-	
-	public void undo(){
+
+	public void undo() {
 		clear();
 		loadTree(getRoot(), "");
-		
+
 	}
-	
-	private void loadTree(Preferences root, String path){
+
+	private void loadTree(Preferences root, String path) {
 		try {
 			String[] subnodes = root.childrenNames();
 			path = path.replaceFirst("^/", "");
@@ -193,6 +193,6 @@ public class SysSettings extends Settings {
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 		}
-		
+
 	}
 }

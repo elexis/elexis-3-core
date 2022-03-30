@@ -12,11 +12,9 @@ package ch.elexis.core.model;
 
 import ch.elexis.core.types.VatInfo;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IBillable</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IBillable</b></em>'. <!-- end-user-doc -->
  *
  *
  * @see ch.elexis.core.model.ModelPackage#getIBillable()
@@ -31,21 +29,21 @@ public interface IBillable extends ICodeElement, Identifiable {
 	 * @model kind="operation" dataType="ch.elexis.core.types.VatInfo"
 	 * @generated not
 	 */
-	default VatInfo getVatInfo(){
+	default VatInfo getVatInfo() {
 		return VatInfo.VAT_DEFAULT;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
 	IBillableOptifier getOptifier();
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */

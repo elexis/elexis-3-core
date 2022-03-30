@@ -26,87 +26,83 @@ public class Eigenleistung extends VerrechenbarAdapter {
 	public static final String CODE = "Code";
 	public static final String EIGENLEISTUNGEN = "EIGENLEISTUNGEN";
 	public static final String XIDDOMAIN = "www.xid.ch/id/customservices";
-	
+
 	static {
 		addMapping(EIGENLEISTUNGEN, CODE, BEZEICHNUNG, EK_PREIS, VK_PREIS, TIME);
-		Xid.localRegisterXIDDomainIfNotExists(XIDDOMAIN, CODESYSTEM_NAME, Xid.ASSIGNMENT_LOCAL
-			| Xid.QUALITY_GUID);
+		Xid.localRegisterXIDDomainIfNotExists(XIDDOMAIN, CODESYSTEM_NAME, Xid.ASSIGNMENT_LOCAL | Xid.QUALITY_GUID);
 	}
-	
-	public String getXidDomain(){
+
+	public String getXidDomain() {
 		return XIDDOMAIN;
 	}
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return EIGENLEISTUNGEN;
 	}
-	
+
 	@Override
-	public String getCode(){
+	public String getCode() {
 		String ret = get(CODE);
 		if (ret == null || ret.isEmpty()) {
 			ret = getId();
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public String getText(){
+	public String getText() {
 		return get(BEZEICHNUNG);
 	}
-	
-	public String[] getDisplayedFields(){
-		return new String[] {
-			CODE, BEZEICHNUNG
-		};
+
+	public String[] getDisplayedFields() {
+		return new String[]{CODE, BEZEICHNUNG};
 	}
-	
+
 	@Override
-	public String getCodeSystemName(){
+	public String getCodeSystemName() {
 		return CODESYSTEM_NAME;
 	}
-	
+
 	@Override
-	public Money getKosten(final TimeTool dat){
+	public Money getKosten(final TimeTool dat) {
 		return new Money(checkZero(get(EK_PREIS)));
 	}
-	
-	public Money getPreis(final TimeTool dat, final IFall fall){
+
+	public Money getPreis(final TimeTool dat, final IFall fall) {
 		return new Money(checkZero(get(VK_PREIS)));
 	}
-	
-	public Eigenleistung(final String code, final String name, final String ek, final String vk){
+
+	public Eigenleistung(final String code, final String name, final String ek, final String vk) {
 		create(null);
-		set(new String[] {
-			CODE, BEZEICHNUNG, EK_PREIS, VK_PREIS
-		}, code, name, ek, vk);
+		set(new String[]{CODE, BEZEICHNUNG, EK_PREIS, VK_PREIS}, code, name, ek, vk);
 	}
-	
-	protected Eigenleistung(){}
-	
-	protected Eigenleistung(final String id){
+
+	protected Eigenleistung() {
+	}
+
+	protected Eigenleistung(final String id) {
 		super(id);
 	}
-	
-	public static Eigenleistung load(final String id){
+
+	public static Eigenleistung load(final String id) {
 		return new Eigenleistung(id);
 	}
-	
+
 	@Override
-	public boolean isDragOK(){
+	public boolean isDragOK() {
 		return true;
 	}
-	
-	public int getTP(final TimeTool date, final IFall fall){
+
+	public int getTP(final TimeTool date, final IFall fall) {
 		return getPreis(date, fall).getCents();
 	}
-	
-	public double getFactor(final TimeTool date, final IFall fall){
+
+	public double getFactor(final TimeTool date, final IFall fall) {
 		if (MultiplikatorList.isEigenleistungUseMulti(fall.getAbrechnungsSystem())) {
 			return getVKMultiplikator(date, fall);
 		}
 		return 1.0;
 	}
-	
+
 }

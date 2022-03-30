@@ -41,96 +41,83 @@ import ch.elexis.data.Artikel;
 
 public class Artikeldetail extends ViewPart implements IActivationListener {
 	public static final String ID = "ch.elexis.ArtikelDetail"; //$NON-NLS-1$
-	
-	static final public InputData[] getFieldDefs(final Shell shell){
-		InputData[] ret = new InputData[] {
-			new InputData(Messages.Artikeldetail_typ, Artikel.FLD_TYP, Typ.STRING, null),
-			new InputData(Messages.Artikeldetail_EAN, Artikel.FLD_EAN, Typ.STRING, null),
-			new InputData(Messages.Artikeldetail_Pharmacode, Artikel.FLD_EXTINFO, Typ.STRING,
-				"Pharmacode"), //$NON-NLS-2$
-			new InputData(Messages.Artikeldetail_Einkaufspreis, Artikel.FLD_EK_PREIS, Typ.CURRENCY,
-				null),
-			new InputData(Messages.Artikeldetail_Verkaufspreis, Artikel.FLD_VK_PREIS, Typ.CURRENCY,
-				null),
-			new InputData(Messages.Artikeldetail_verpackungseinheit, Artikel.FLD_EXTINFO, Typ.INT,
-				"VerpackungsEinheit"), //$NON-NLS-2$
-			new InputData(Messages.Artikeldetail_stueckProAbgabe, Artikel.FLD_EXTINFO, Typ.INT,
-				"Verkaufseinheit")
-		};
+
+	static final public InputData[] getFieldDefs(final Shell shell) {
+		InputData[] ret = new InputData[]{new InputData(Messages.Artikeldetail_typ, Artikel.FLD_TYP, Typ.STRING, null),
+				new InputData(Messages.Artikeldetail_EAN, Artikel.FLD_EAN, Typ.STRING, null),
+				new InputData(Messages.Artikeldetail_Pharmacode, Artikel.FLD_EXTINFO, Typ.STRING, "Pharmacode"), // $NON-NLS-2$
+				new InputData(Messages.Artikeldetail_Einkaufspreis, Artikel.FLD_EK_PREIS, Typ.CURRENCY, null),
+				new InputData(Messages.Artikeldetail_Verkaufspreis, Artikel.FLD_VK_PREIS, Typ.CURRENCY, null),
+				new InputData(Messages.Artikeldetail_verpackungseinheit, Artikel.FLD_EXTINFO, Typ.INT,
+						"VerpackungsEinheit"), // $NON-NLS-2$
+				new InputData(Messages.Artikeldetail_stueckProAbgabe, Artikel.FLD_EXTINFO, Typ.INT, "Verkaufseinheit")};
 		return ret;
 	}
-	
-	static final public InputData[] getModelFieldDefs(final Shell shell){
-		InputData[] ret = new InputData[] {
-			new InputData(Messages.Artikeldetail_typ, "typ", Typ.STRING, null),
-			new InputData(Messages.Artikeldetail_EAN, "gtin", Typ.STRING, null),
-			new InputData(Messages.Artikeldetail_Pharmacode, "extInfo", Typ.STRING,
-				"Pharmacode"), //$NON-NLS-2$
-			new InputData(Messages.Artikeldetail_Einkaufspreis, "purchasePrice", Typ.CURRENCY,
-				null),
-			new InputData(Messages.Artikeldetail_Verkaufspreis, "sellingPrice", Typ.CURRENCY,
-				null),
-			new InputData(Messages.Artikeldetail_verpackungseinheit, "extInfo", Typ.INT,
-				"VerpackungsEinheit"), //$NON-NLS-2$
-			new InputData(Messages.Artikeldetail_stueckProAbgabe, "extInfo", Typ.INT,
-				"Verkaufseinheit")
-		};
+
+	static final public InputData[] getModelFieldDefs(final Shell shell) {
+		InputData[] ret = new InputData[]{new InputData(Messages.Artikeldetail_typ, "typ", Typ.STRING, null),
+				new InputData(Messages.Artikeldetail_EAN, "gtin", Typ.STRING, null),
+				new InputData(Messages.Artikeldetail_Pharmacode, "extInfo", Typ.STRING, "Pharmacode"), // $NON-NLS-2$
+				new InputData(Messages.Artikeldetail_Einkaufspreis, "purchasePrice", Typ.CURRENCY, null),
+				new InputData(Messages.Artikeldetail_Verkaufspreis, "sellingPrice", Typ.CURRENCY, null),
+				new InputData(Messages.Artikeldetail_verpackungseinheit, "extInfo", Typ.INT, "VerpackungsEinheit"), // $NON-NLS-2$
+				new InputData(Messages.Artikeldetail_stueckProAbgabe, "extInfo", Typ.INT, "Verkaufseinheit")};
 		return ret;
 	}
-	
+
 	FormToolkit tk = UiDesk.getToolkit();
 	ScrolledForm form;
 	LabeledInputField.AutoForm tblArtikel;
-	
+
 	private ElexisEventListenerImpl eeli_art = new ElexisUiEventListenerImpl(Artikel.class) {
-		
-		public void runInUi(ElexisEvent ev){
+
+		public void runInUi(ElexisEvent ev) {
 			form.setText(ev.getObject().getLabel());
 			tblArtikel.reload(ev.getObject());
 		}
 	};
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout());
 		form = tk.createScrolledForm(parent);
 		TableWrapLayout twl = new TableWrapLayout();
 		form.getBody().setLayout(twl);
-		
-		tblArtikel =
-			new LabeledInputField.AutoForm(form.getBody(), getFieldDefs(parent.getShell()));
-		
+
+		tblArtikel = new LabeledInputField.AutoForm(form.getBody(), getFieldDefs(parent.getShell()));
+
 		TableWrapData twd = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd.grabHorizontal = true;
 		tblArtikel.setLayoutData(twd);
 		GlobalEventDispatcher.addActivationListener(this, this);
-		
+
 	}
-	
+
 	@Override
-	public void setFocus(){
-		
+	public void setFocus() {
+
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
 	}
-	
-	public void activation(boolean mode){}
-	
-	public void visible(boolean mode){
+
+	public void activation(boolean mode) {
+	}
+
+	public void visible(boolean mode) {
 		if (mode == true) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_art);
 		} else {
 			ElexisEventDispatcher.getInstance().removeListeners(eeli_art);
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

@@ -21,10 +21,10 @@ package ch.elexis.core.ui.exchange.elements;
 
 public class ConnectionElement extends XChangeElement {
 	public static final String XMLNAME = "connection";
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
+
 }

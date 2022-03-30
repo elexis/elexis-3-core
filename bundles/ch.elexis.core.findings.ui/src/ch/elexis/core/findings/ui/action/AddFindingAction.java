@@ -13,30 +13,29 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Konsultation;
 
 public class AddFindingAction extends Action implements IAction {
-	
+
 	private KonsExtension konsExtension;
-	
-	public AddFindingAction(KonsExtension konsExtension){
+
+	public AddFindingAction(KonsExtension konsExtension) {
 		this.konsExtension = konsExtension;
 	}
-	
+
 	@Override
-	public String getText(){
+	public String getText() {
 		return "Befund anlegen";
 	}
-	
+
 	@Override
-	public ImageDescriptor getImageDescriptor(){
+	public ImageDescriptor getImageDescriptor() {
 		return Images.IMG_NEW.getImageDescriptor();
 	}
-	
+
 	@Override
-	public void run(){
-		Object created = FindingsUiUtil
-			.executeCommand("ch.elexis.core.findings.templates.ui.command.finding.create", null);
+	public void run() {
+		Object created = FindingsUiUtil.executeCommand("ch.elexis.core.findings.templates.ui.command.finding.create",
+				null);
 		if (created instanceof IObservation) {
-			Konsultation kons =
-				(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+			Konsultation kons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 			if (kons != null) {
 				IObservation observation = (IObservation) created;
 				if (LocalLockServiceHolder.get().acquireLock(kons).isOk()) {

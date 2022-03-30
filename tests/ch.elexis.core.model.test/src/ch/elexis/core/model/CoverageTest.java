@@ -16,38 +16,38 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.test.AbstractTest;
 
 public class CoverageTest extends AbstractTest {
-	
+
 	@Override
-	public void before(){
+	public void before() {
 		super.before();
 		createPatient();
 		createCoverage();
 	}
-	
+
 	@Override
-	public void after(){
+	public void after() {
 		super.after();
 	}
-	
+
 	@Test
-	public void createFindDeleteCoverage(){
+	public void createFindDeleteCoverage() {
 		assertTrue(patient.getCoverages().contains(coverage));
-		
+
 		assertEquals(patient, coverage.getPatient());
 		assertEquals("testCoverage", coverage.getDescription());
 		assertEquals("testReason", coverage.getReason());
 		assertEquals("KVG", coverage.getBillingSystem().getName());
 		assertNotNull(coverage.getDateFrom());
 		assertNull(coverage.getDateTo());
-		
+
 		IQuery<ICoverage> query = coreModelService.getQuery(ICoverage.class);
 		query.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);
 		assertEquals(coverage, query.executeSingleResult().get());
-		
+
 		coreModelService.delete(coverage);
 		assertFalse(patient.getCoverages().contains(coverage));
 	}
-	
+
 	@Test
 	public void coverageOpenClose() {
 		assertTrue(coverage.isOpen());

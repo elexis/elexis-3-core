@@ -14,7 +14,7 @@ public class LocalDateConverterTest {
 
 	String DATE_STRING = "20150512";
 	LocalDate instant = LocalDate.of(2015, 5, 12);
-	
+
 	@Test
 	public void testConvertToDatabaseColumn() {
 		assertEquals(DATE_STRING, ldc.convertToDatabaseColumn(instant));
@@ -24,7 +24,7 @@ public class LocalDateConverterTest {
 	public void testConvertToEntityAttribute() {
 		LocalDate value = ldc.convertToEntityAttribute(DATE_STRING);
 		MatcherAssert.assertThat(value, LocalDateMatchers.sameDay(instant));
-		
+
 		assertNull(ldc.convertToEntityAttribute("dalkfjasldkfjasdkjf"));
 		assertNull(ldc.convertToEntityAttribute(""));
 	}

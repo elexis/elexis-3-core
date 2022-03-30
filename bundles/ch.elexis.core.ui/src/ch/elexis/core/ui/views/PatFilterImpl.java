@@ -31,14 +31,15 @@ import ch.elexis.data.Sticker;
 import ch.rgw.tools.ExHandler;
 
 /**
- * Default implementation of IPatFilter. Will be called after all other filters returned DONT_HANDLE
+ * Default implementation of IPatFilter. Will be called after all other filters
+ * returned DONT_HANDLE
  * 
  * @author Gerry
  */
 public class PatFilterImpl implements IPatFilter {
-	
+
 	@Override
-	public int accept(Patient p, PersistentObject o){
+	public int accept(Patient p, PersistentObject o) {
 		if (o instanceof Kontakt) {
 			Query<BezugsKontakt> qbe = new Query<BezugsKontakt>(BezugsKontakt.class);
 			qbe.add(BezugsKontakt.MY_ID, Query.EQUALS, p.getId());
@@ -108,16 +109,16 @@ public class PatFilterImpl implements IPatFilter {
 				if (ret instanceof Integer) {
 					return (Integer) ret;
 				}
-				
+
 			} catch (Exception e) {
 				return FILTER_FAULT;
 			}
 		}
 		return DONT_HANDLE;
 	}
-	
+
 	@Override
-	public boolean aboutToStart(PersistentObject filter){
+	public boolean aboutToStart(PersistentObject filter) {
 		if (filter instanceof Script) {
 			try {
 				((Script) filter).init();
@@ -128,11 +129,11 @@ public class PatFilterImpl implements IPatFilter {
 			}
 		}
 		return false;
-		
+
 	}
-	
+
 	@Override
-	public boolean finished(PersistentObject filter){
+	public boolean finished(PersistentObject filter) {
 		if (filter instanceof Script) {
 			try {
 				((Script) filter).finished();
@@ -144,5 +145,5 @@ public class PatFilterImpl implements IPatFilter {
 		}
 		return false;
 	}
-	
+
 }

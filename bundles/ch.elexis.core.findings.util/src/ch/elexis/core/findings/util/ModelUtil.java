@@ -42,55 +42,54 @@ import ch.elexis.core.services.INamedQuery;
 
 @Component
 public class ModelUtil {
-	
+
 	private static IModelService findingsModelService;
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
-	public void setFindingsModelService(IModelService modelService){
+	public void setFindingsModelService(IModelService modelService) {
 		ModelUtil.findingsModelService = modelService;
 	}
-	
-	public static <T> Optional<T> loadFinding(String id, Class<T> clazz){
+
+	public static <T> Optional<T> loadFinding(String id, Class<T> clazz) {
 		if (id != null) {
 			return findingsModelService.load(id, clazz);
 		}
 		return Optional.empty();
 	}
-	
-	public static <T> INamedQuery<T> getFindingsNamedQuery(Class<T> clazz, String...properties) {
+
+	public static <T> INamedQuery<T> getFindingsNamedQuery(Class<T> clazz, String... properties) {
 		return findingsModelService.getNamedQuery(clazz, properties);
 	}
-	
-	public static <T> T createFinding(Class<T> clazz){
+
+	public static <T> T createFinding(Class<T> clazz) {
 		return findingsModelService.create(clazz);
 	}
-	
-	public static void saveFinding(Identifiable identifiable){
+
+	public static void saveFinding(Identifiable identifiable) {
 		findingsModelService.save(identifiable);
 	}
-	
-	public static void deleteFinding(Deleteable deleteable){
+
+	public static void deleteFinding(Deleteable deleteable) {
 		findingsModelService.delete(deleteable);
 	}
-	
+
 	private static FhirContext context = FhirContext.forR4();
-	
+
 	private static IParser getJsonParser() {
 		return context.newJsonParser();
 	}
-	
+
 	public static IBaseResource getAsResource(String jsonResource) {
 		return getJsonParser().parseResource(jsonResource);
 	}
 
-	public static Optional<IBaseResource> loadResource(IFinding finding) throws DataFormatException{
+	public static Optional<IBaseResource> loadResource(IFinding finding) throws DataFormatException {
 		IBaseResource resource = null;
 		String rawContent = finding.getRawContent();
 		if (rawContent != null && !rawContent.isEmpty()) {
 			// always convert to newest json format
 			if (!FindingsFormatUtil.isCurrentFindingsFormat(rawContent)) {
-				Optional<String> convertedContent =
-					FindingsFormatUtil.convertToCurrentFindingsFormat(rawContent);
+				Optional<String> convertedContent = FindingsFormatUtil.convertToCurrentFindingsFormat(rawContent);
 				if (convertedContent.isPresent()) {
 					rawContent = convertedContent.get();
 				}
@@ -99,28 +98,26 @@ public class ModelUtil {
 		}
 		return Optional.ofNullable(resource);
 	}
-	
-	public static void saveResource(IBaseResource resource, IFinding finding)
-		throws DataFormatException{
+
+	public static void saveResource(IBaseResource resource, IFinding finding) throws DataFormatException {
 		if (resource != null) {
 			String resourceJson = getJsonParser().encodeResourceToString(resource);
 			finding.setRawContent(resourceJson);
 		}
 	}
-	
-	public static void setCodingsToConcept(CodeableConcept codeableConcept, List<ICoding> coding){
+
+	public static void setCodingsToConcept(CodeableConcept codeableConcept, List<ICoding> coding) {
 		codeableConcept.getCoding().clear();
 		for (ICoding iCoding : coding) {
 			setCodingToConcept(codeableConcept, iCoding);
 		}
 	}
 
-	public static void setCodingToConcept(CodeableConcept codeableConcept, ICoding iCoding){
-		codeableConcept.addCoding(
-			new Coding(iCoding.getSystem(), iCoding.getCode(), iCoding.getDisplay()));
+	public static void setCodingToConcept(CodeableConcept codeableConcept, ICoding iCoding) {
+		codeableConcept.addCoding(new Coding(iCoding.getSystem(), iCoding.getCode(), iCoding.getDisplay()));
 	}
-	
-	public static List<ICoding> getCodingsFromConcept(CodeableConcept codeableConcept){
+
+	public static List<ICoding> getCodingsFromConcept(CodeableConcept codeableConcept) {
 		ArrayList<ICoding> ret = new ArrayList<>();
 		List<Coding> coding = codeableConcept.getCoding();
 		for (Coding code : coding) {
@@ -128,8 +125,8 @@ public class ModelUtil {
 		}
 		return ret;
 	}
-	
-	public static boolean isCodeInList(String system, String code, List<ICoding> list){
+
+	public static boolean isCodeInList(String system, String code, List<ICoding> list) {
 		if (list != null && !list.isEmpty()) {
 			for (ICoding iCoding : list) {
 				if (iCoding.getSystem().equals(system) && iCoding.getCode().equals(code)) {
@@ -139,8 +136,8 @@ public class ModelUtil {
 		}
 		return false;
 	}
-	
-	public static boolean isSystemInList(String system, List<ICoding> list){
+
+	public static boolean isSystemInList(String system, List<ICoding> list) {
 		if (list != null && !list.isEmpty()) {
 			for (ICoding iCoding : list) {
 				if (iCoding.getSystem().equals(system)) {
@@ -151,8 +148,7 @@ public class ModelUtil {
 		return false;
 	}
 
-	public static Optional<ICoding> getCodeBySystem(List<ICoding> coding,
-		CodingSystem codingSystem){
+	public static Optional<ICoding> getCodeBySystem(List<ICoding> coding, CodingSystem codingSystem) {
 		for (ICoding iCoding : coding) {
 			if (codingSystem.getSystem().equals(iCoding.getSystem())) {
 				return Optional.of(iCoding);
@@ -160,46 +156,44 @@ public class ModelUtil {
 		}
 		return Optional.empty();
 	}
-	
+
 	public static Optional<String> getNarrativeAsString(Narrative narrative) {
 		String text = narrative.getDivAsString();
 		if (text != null) {
-			String divDecodedText = text.replaceAll(
-				"<div>|<div xmlns=\"http://www.w3.org/1999/xhtml\">|</div>|</ div>", "");
-			divDecodedText = divDecodedText.replaceAll("<br/>|<br />", "\n")
-				.replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("&lt;", "<")
-				.replaceAll("'&sect;'", "§");
+			String divDecodedText = text.replaceAll("<div>|<div xmlns=\"http://www.w3.org/1999/xhtml\">|</div>|</ div>",
+					"");
+			divDecodedText = divDecodedText.replaceAll("<br/>|<br />", "\n").replaceAll("&amp;", "&")
+					.replaceAll("&gt;", ">").replaceAll("&lt;", "<").replaceAll("'&sect;'", "§");
 			return Optional.of(divDecodedText);
 		}
 		return Optional.empty();
 	}
-	
-	public static void setNarrativeFromString(Narrative narrative, String text){
+
+	public static void setNarrativeFromString(Narrative narrative, String text) {
 		text = fixXhtmlContent(text);
-		String divEncodedText =
-			text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("§", "'&sect;'")
+		String divEncodedText = text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("§", "'&sect;'")
 				.replaceAll("&", "&amp;").replaceAll("(\r\n|\r|\n)", "<br />");
 		narrative.setDivAsString(divEncodedText);
 		narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
 	}
-	
+
 	/**
 	 * Remove characters which cause problems in xhtml.
 	 * 
 	 * @param content
 	 * @return content without problem characters
 	 */
-	private static String fixXhtmlContent(String content){
+	private static String fixXhtmlContent(String content) {
 		// replace unicode nbsp with space character
 		content = content.replace((char) 0xa0, ' ');
 		return content;
 	}
-	
-	public static boolean isSameCoding(ICoding left, ICoding right){
+
+	public static boolean isSameCoding(ICoding left, ICoding right) {
 		return left.getSystem().equals(right.getSystem()) && left.getCode().equals(right.getCode());
 	}
-	
-	public static void addCodingIfNotPresent(List<ICoding> coding, ICoding iCoding){
+
+	public static void addCodingIfNotPresent(List<ICoding> coding, ICoding iCoding) {
 		// check if this iCoding is already present
 		for (ICoding presentCoding : coding) {
 			if (isSameCoding(presentCoding, iCoding)) {
@@ -208,14 +202,14 @@ public class ModelUtil {
 		}
 		coding.add(iCoding);
 	}
-	
+
 	/**
 	 * Checks if all units the same
 	 * 
 	 * @param iObservations
 	 * @return
 	 */
-	public static String getExactUnitOfComponent(List<ObservationComponent> observationComponents){
+	public static String getExactUnitOfComponent(List<ObservationComponent> observationComponents) {
 		Set<String> units = new HashSet<>();
 		for (ObservationComponent child : observationComponents) {
 			Optional<String> valueUnit = child.getNumericValueUnit();
@@ -227,7 +221,7 @@ public class ModelUtil {
 		}
 		return units.size() == 1 ? units.iterator().next() : null;
 	}
-	
+
 	/**
 	 * Get all the children of the {@link IObservation} reachable via target
 	 * {@link IObservationLink} links.
@@ -237,11 +231,10 @@ public class ModelUtil {
 	 * @param maxDepth
 	 * @return
 	 */
-	public static List<IObservation> getObservationChildren(IObservation iObservation,
-		List<IObservation> list, int maxDepth){
+	public static List<IObservation> getObservationChildren(IObservation iObservation, List<IObservation> list,
+			int maxDepth) {
 		if (maxDepth > 0) {
-			List<IObservation> refChildrens =
-				iObservation.getTargetObseravtions(ObservationLinkType.REF);
+			List<IObservation> refChildrens = iObservation.getTargetObseravtions(ObservationLinkType.REF);
 			list.addAll(refChildrens);
 			for (IObservation child : refChildrens) {
 				getObservationChildren(child, list, --maxDepth);
@@ -249,8 +242,8 @@ public class ModelUtil {
 		}
 		return list;
 	}
-	
-	public static IObservation getRootObservationRecursive(IObservation observation){
+
+	public static IObservation getRootObservationRecursive(IObservation observation) {
 		IObservation rootObservation = observation;
 		List<IObservation> sources = observation.getSourceObservations(ObservationLinkType.REF);
 		if (sources != null && !sources.isEmpty()) {
@@ -260,67 +253,53 @@ public class ModelUtil {
 		}
 		return rootObservation;
 	}
-	
+
 	/**
 	 * Initialize the FHIR content of the {@link IFinding}.
 	 * 
 	 * @param created
 	 * @param type
 	 */
-	public static <T extends IFinding> void initFhir(T created, Class<T> type){
+	public static <T extends IFinding> void initFhir(T created, Class<T> type) {
 		if (type.equals(IEncounter.class)) {
-			org.hl7.fhir.r4.model.Encounter fhirEncounter =
-				new org.hl7.fhir.r4.model.Encounter();
-			fhirEncounter
-				.setId(new IdType(fhirEncounter.getClass().getSimpleName(), created.getId()));
+			org.hl7.fhir.r4.model.Encounter fhirEncounter = new org.hl7.fhir.r4.model.Encounter();
+			fhirEncounter.setId(new IdType(fhirEncounter.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirEncounter, created);
 		} else if (type.equals(IObservation.class)) {
-			org.hl7.fhir.r4.model.Observation fhirObservation =
-				new org.hl7.fhir.r4.model.Observation();
-			fhirObservation
-				.setId(new IdType(fhirObservation.getClass().getSimpleName(), created.getId()));
+			org.hl7.fhir.r4.model.Observation fhirObservation = new org.hl7.fhir.r4.model.Observation();
+			fhirObservation.setId(new IdType(fhirObservation.getClass().getSimpleName(), created.getId()));
 			fhirObservation.setStatus(ObservationStatus.FINAL);
 			ModelUtil.saveResource(fhirObservation, created);
 		} else if (type.equals(ICondition.class)) {
-			org.hl7.fhir.r4.model.Condition fhirCondition =
-				new org.hl7.fhir.r4.model.Condition();
-			fhirCondition
-				.setId(new IdType(fhirCondition.getClass().getSimpleName(), created.getId()));
+			org.hl7.fhir.r4.model.Condition fhirCondition = new org.hl7.fhir.r4.model.Condition();
+			fhirCondition.setId(new IdType(fhirCondition.getClass().getSimpleName(), created.getId()));
 			fhirCondition.setRecordedDate(new Date());
 			ModelUtil.saveResource(fhirCondition, created);
 		} else if (type.equals(IProcedureRequest.class)) {
-			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
-				new org.hl7.fhir.r4.model.ServiceRequest();
-			fhirProcedureRequest.setId(
-				new IdType(fhirProcedureRequest.getClass().getSimpleName(), created.getId()));
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest = new org.hl7.fhir.r4.model.ServiceRequest();
+			fhirProcedureRequest.setId(new IdType(fhirProcedureRequest.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirProcedureRequest, created);
 		} else if (type.equals(IFamilyMemberHistory.class)) {
-			org.hl7.fhir.r4.model.FamilyMemberHistory fhirFamilyMemberHistory =
-				new org.hl7.fhir.r4.model.FamilyMemberHistory();
-			fhirFamilyMemberHistory.setId(
-				new IdType(fhirFamilyMemberHistory.getClass().getSimpleName(), created.getId()));
+			org.hl7.fhir.r4.model.FamilyMemberHistory fhirFamilyMemberHistory = new org.hl7.fhir.r4.model.FamilyMemberHistory();
+			fhirFamilyMemberHistory
+					.setId(new IdType(fhirFamilyMemberHistory.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirFamilyMemberHistory, created);
 		} else if (type.equals(IAllergyIntolerance.class)) {
-			org.hl7.fhir.r4.model.AllergyIntolerance fhirAllergyIntolerance =
-				new org.hl7.fhir.r4.model.AllergyIntolerance();
-			fhirAllergyIntolerance.setId(
-				new IdType(fhirAllergyIntolerance.getClass().getSimpleName(), created.getId()));
+			org.hl7.fhir.r4.model.AllergyIntolerance fhirAllergyIntolerance = new org.hl7.fhir.r4.model.AllergyIntolerance();
+			fhirAllergyIntolerance
+					.setId(new IdType(fhirAllergyIntolerance.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirAllergyIntolerance, created);
 		} else if (type.equals(IClinicalImpression.class)) {
-			org.hl7.fhir.r4.model.ClinicalImpression fhirClinicalImpression =
-				new org.hl7.fhir.r4.model.ClinicalImpression();
-			fhirClinicalImpression.setId(
-				new IdType(fhirClinicalImpression.getClass().getSimpleName(), created.getId()));
+			org.hl7.fhir.r4.model.ClinicalImpression fhirClinicalImpression = new org.hl7.fhir.r4.model.ClinicalImpression();
+			fhirClinicalImpression
+					.setId(new IdType(fhirClinicalImpression.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirClinicalImpression, created);
 		} else if (type.equals(IDocumentReference.class)) {
-			org.hl7.fhir.r4.model.DocumentReference fhirDocumentReference =
-				new org.hl7.fhir.r4.model.DocumentReference();
-			fhirDocumentReference.setId(
-				new IdType(fhirDocumentReference.getClass().getSimpleName(), created.getId()));
+			org.hl7.fhir.r4.model.DocumentReference fhirDocumentReference = new org.hl7.fhir.r4.model.DocumentReference();
+			fhirDocumentReference.setId(new IdType(fhirDocumentReference.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirDocumentReference, created);
 		} else {
-			LoggerFactory.getLogger(ModelUtil.class)
-				.error("Could not initialize unknown type [" + type + "]");
+			LoggerFactory.getLogger(ModelUtil.class).error("Could not initialize unknown type [" + type + "]");
 		}
 	}
 }

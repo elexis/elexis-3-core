@@ -24,12 +24,12 @@ public interface ILockService {
 	@Path("/acquireOrReleaseLocks")
 	@Consumes(MediaType.APPLICATION_XML)
 	public LockResponse acquireOrReleaseLocks(LockRequest request);
-	
+
 	@POST
 	@Path("/isLocked")
 	@Consumes(MediaType.APPLICATION_XML)
 	public boolean isLocked(LockRequest request);
-	
+
 	@GET
 	@Path("/lockInfo")
 	@Consumes(MediaType.APPLICATION_XML)

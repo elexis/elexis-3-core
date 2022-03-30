@@ -41,134 +41,123 @@ import ch.elexis.data.Patient;
 
 public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 	private static Logger logger = LoggerFactory.getLogger(DocumentCrudHandler.class);
-	
+
 	public static final String CMD_NEW_DOCUMENT = "ch.elexis.core.ui.documents.commandCreate";
 	public static final String CMD_UPDATE_DOCUMENT = "ch.elexis.core.ui.documents.commandUpdate";
 	public static final String CMD_DELETE_DOCUMENT = "ch.elexis.core.ui.documents.commandDelete";
-	
+
 	public static final String PARAM_DOC_CATEGORY = "documents.category";
 	public static final String PARAM_FILE_PATH = "documents.file.path";
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+
 		Patient patient = ElexisEventDispatcher.getSelectedPatient();
 		if (patient != null && patient.getId() != null) {
 			Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-			
+
 			switch (event.getCommand().getId()) {
-			case CMD_NEW_DOCUMENT: {
-				String category = null;
-				String path = null;
-				if (event.getParameter(PARAM_FILE_PATH) == null) {
-					FileDialog fd = new FileDialog(shell, SWT.OPEN);
-					path = fd.open();
-				} else {
-					path = event.getParameter(PARAM_FILE_PATH);
-					category = event.getParameter(PARAM_DOC_CATEGORY);
-				}
-				if (path != null) {
-					File file = new File(path);
-					if (validateFile(file)) {
-						IDocument document =
-							DocumentStoreServiceHolder.getService().createDocument(null,
-							patient.getId(), path, category);
-						if (document != null) {
-							return openMetaDataDialog(shell, document, file,
-								ElexisEvent.EVENT_CREATE);
-						}
+				case CMD_NEW_DOCUMENT : {
+					String category = null;
+					String path = null;
+					if (event.getParameter(PARAM_FILE_PATH) == null) {
+						FileDialog fd = new FileDialog(shell, SWT.OPEN);
+						path = fd.open();
+					} else {
+						path = event.getParameter(PARAM_FILE_PATH);
+						category = event.getParameter(PARAM_DOC_CATEGORY);
 					}
-				}
-				break;
-			}
-			
-			case CMD_UPDATE_DOCUMENT: {
-				ISelection selection = HandlerUtil.getCurrentSelection(event);
-				if (selection instanceof StructuredSelection
-					&& !((StructuredSelection) selection).isEmpty()) {
-					List<?> iDocuments = ((StructuredSelection) selection).toList();
-					for (Object documentToEdit : iDocuments) {
-						if (documentToEdit instanceof IDocument) {
-							return openMetaDataDialog(shell, (IDocument) documentToEdit, null,
-								ElexisEvent.EVENT_UPDATE);
-						}
-					}
-				}
-				break;
-			}
-			
-			case CMD_DELETE_DOCUMENT:
-				ISelection selection = HandlerUtil.getCurrentSelection(event);
-				if (selection instanceof StructuredSelection
-					&& !((StructuredSelection) selection).isEmpty()) {
-					List<?> iDocuments = ((StructuredSelection) selection).toList();
-					for (Object documentToEdit : iDocuments) {
-						if (documentToEdit instanceof IDocument) {
-							openDeleteDialog(shell, (IDocument) documentToEdit,
-								ElexisEvent.EVENT_DELETE);
+					if (path != null) {
+						File file = new File(path);
+						if (validateFile(file)) {
+							IDocument document = DocumentStoreServiceHolder.getService().createDocument(null,
+									patient.getId(), path, category);
+							if (document != null) {
+								return openMetaDataDialog(shell, document, file, ElexisEvent.EVENT_CREATE);
+							}
 						}
 					}
 					break;
 				}
+
+				case CMD_UPDATE_DOCUMENT : {
+					ISelection selection = HandlerUtil.getCurrentSelection(event);
+					if (selection instanceof StructuredSelection && !((StructuredSelection) selection).isEmpty()) {
+						List<?> iDocuments = ((StructuredSelection) selection).toList();
+						for (Object documentToEdit : iDocuments) {
+							if (documentToEdit instanceof IDocument) {
+								return openMetaDataDialog(shell, (IDocument) documentToEdit, null,
+										ElexisEvent.EVENT_UPDATE);
+							}
+						}
+					}
+					break;
+				}
+
+				case CMD_DELETE_DOCUMENT :
+					ISelection selection = HandlerUtil.getCurrentSelection(event);
+					if (selection instanceof StructuredSelection && !((StructuredSelection) selection).isEmpty()) {
+						List<?> iDocuments = ((StructuredSelection) selection).toList();
+						for (Object documentToEdit : iDocuments) {
+							if (documentToEdit instanceof IDocument) {
+								openDeleteDialog(shell, (IDocument) documentToEdit, ElexisEvent.EVENT_DELETE);
+							}
+						}
+						break;
+					}
 			}
-		}
-		else {
+		} else {
 			SWTHelper.showInfo("Kein Patient ausgewählt", "Bitte wählen Sie einen Patienten aus!");
 		}
 		return null;
 	}
-	
-	private boolean validateFile(File file){
+
+	private boolean validateFile(File file) {
 		if (!file.canRead()) {
 			SWTHelper.showError(Messages.DocumentView_cantReadCaption,
-				MessageFormat.format(Messages.DocumentView_cantReadText, file));
+					MessageFormat.format(Messages.DocumentView_cantReadText, file));
 			return false;
 		} else if (file.getName().length() > 255) {
-			SWTHelper.showError(Messages.DocumentView_cantReadCaption,
-				Messages.DocumentView_fileNameTooLong);
+			SWTHelper.showError(Messages.DocumentView_cantReadCaption, Messages.DocumentView_fileNameTooLong);
 			return false;
 		}
 		return true;
 	}
-	
-	private void openDeleteDialog(Shell shell, IDocument document, int eventType){
-		if (SWTHelper.askYesNo(Messages.DocumentView_reallyDeleteCaption, MessageFormat
-			.format(Messages.DocumentView_reallyDeleteContents, document.getTitle()))) {
-			
-			Optional<Identifiable> documentPo =
-				DocumentStoreServiceHolder.getService().getPersistenceObject(document);
+
+	private void openDeleteDialog(Shell shell, IDocument document, int eventType) {
+		if (SWTHelper.askYesNo(Messages.DocumentView_reallyDeleteCaption,
+				MessageFormat.format(Messages.DocumentView_reallyDeleteContents, document.getTitle()))) {
+
+			Optional<Identifiable> documentPo = DocumentStoreServiceHolder.getService().getPersistenceObject(document);
 			// we can only lock IPersistentObject based ...
 			if (documentPo.isPresent()) {
 				AcquireLockBlockingUi.aquireAndRun(documentPo.get(), new ILockHandler() {
 					@Override
-					public void lockFailed(){
+					public void lockFailed() {
 						// no change required
 					}
-					
+
 					@Override
-					public void lockAcquired(){
+					public void lockAcquired() {
 						DocumentStoreServiceHolder.getService().removeDocument(document);
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(document,
-							IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
+						ElexisEventDispatcher.getInstance().fire(
+								new ElexisEvent(document, IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
 					}
 				});
 			} else {
 				DocumentStoreServiceHolder.getService().removeDocument(document);
-				ElexisEventDispatcher.getInstance().fire(new ElexisEvent(document, IDocument.class,
-					eventType, ElexisEvent.PRIORITY_NORMAL));
+				ElexisEventDispatcher.getInstance()
+						.fire(new ElexisEvent(document, IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
 			}
 		}
 	}
-	
-	private Optional<IDocument> openMetaDataDialog(Shell shell, IDocument document, File file,
-		int eventType){
+
+	private Optional<IDocument> openMetaDataDialog(Shell shell, IDocument document, File file, int eventType) {
 		if (eventType == ElexisEvent.EVENT_CREATE) {
-			Optional<IDocument> newDocument =
-				openMetaDataDialogNoLocking(shell, document, file, eventType);
-			
+			Optional<IDocument> newDocument = openMetaDataDialogNoLocking(shell, document, file, eventType);
+
 			newDocument.ifPresent(doc -> {
-				Optional<Identifiable> documentPo =
-					DocumentStoreServiceHolder.getService().getPersistenceObject(doc);
+				Optional<Identifiable> documentPo = DocumentStoreServiceHolder.getService().getPersistenceObject(doc);
 				documentPo.ifPresent(po -> {
 					LocalLockServiceHolder.get().acquireLock(po);
 					LocalLockServiceHolder.get().releaseLock(po);
@@ -176,17 +165,16 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 			});
 			return newDocument;
 		} else {
-			Optional<Identifiable> documentPo =
-				DocumentStoreServiceHolder.getService().getPersistenceObject(document);
+			Optional<Identifiable> documentPo = DocumentStoreServiceHolder.getService().getPersistenceObject(document);
 			if (documentPo.isPresent()) {
 				AcquireLockBlockingUi.aquireAndRun(documentPo.get(), new ILockHandler() {
 					@Override
-					public void lockFailed(){
+					public void lockFailed() {
 						// no change required
 					}
-					
+
 					@Override
-					public void lockAcquired(){
+					public void lockAcquired() {
 						openMetaDataDialogNoLocking(shell, document, file, eventType);
 					}
 				});
@@ -196,19 +184,16 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 		}
 		return Optional.empty();
 	}
-	
-	private Optional<IDocument> openMetaDataDialogNoLocking(Shell shell, IDocument document,
-		File file, int eventType){
-		DocumentsMetaDataDialog documentsMetaDataDialog =
-			new DocumentsMetaDataDialog(document, shell);
+
+	private Optional<IDocument> openMetaDataDialogNoLocking(Shell shell, IDocument document, File file, int eventType) {
+		DocumentsMetaDataDialog documentsMetaDataDialog = new DocumentsMetaDataDialog(document, shell);
 		if (documentsMetaDataDialog.open() == Dialog.OK) {
 			try {
 				if (file != null) {
 					try (InputStream fin = new FileInputStream(file)) {
-						IDocument savedDocument =
-							DocumentStoreServiceHolder.getService().saveDocument(document, fin);
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(savedDocument,
-							IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
+						IDocument savedDocument = DocumentStoreServiceHolder.getService().saveDocument(document, fin);
+						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(savedDocument, IDocument.class,
+								eventType, ElexisEvent.PRIORITY_NORMAL));
 						return Optional.of(savedDocument);
 					}
 				} else {
@@ -216,12 +201,10 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 				}
 			} catch (IOException e) {
 				logger.error("file not found", e);
-				SWTHelper.showError(Messages.DocumentView_importErrorCaption,
-					Messages.DocumentView_importErrorText2);
+				SWTHelper.showError(Messages.DocumentView_importErrorCaption, Messages.DocumentView_importErrorText2);
 			} catch (ElexisException e) {
 				logger.error("cannot save", e);
-				SWTHelper.showError(Messages.DocumentView_saveErrorCaption,
-					Messages.DocumentView_saveErrorText);
+				SWTHelper.showError(Messages.DocumentView_saveErrorCaption, Messages.DocumentView_saveErrorText);
 			}
 			// publish changes
 			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, document);

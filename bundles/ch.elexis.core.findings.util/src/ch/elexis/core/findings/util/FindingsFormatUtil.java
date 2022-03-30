@@ -9,13 +9,12 @@ import ch.elexis.core.findings.util.internal.FindingsFormat40;
 
 public class FindingsFormatUtil {
 
-	public static final String CFG_HAPI_FHIR_VERSION =
-		"es.findings.fhir.jpa.service/hapifhirversion";
+	public static final String CFG_HAPI_FHIR_VERSION = "es.findings.fhir.jpa.service/hapifhirversion";
 	public static final String HAPI_FHIR_CURRENT_VERSION = "40";
-	
+
 	private static FindingsFormat40 currentFormat = new FindingsFormat40();
 
-	private static FindingsFormat[] oldFormats = { new FindingsFormat24(), new FindingsFormat20() };
+	private static FindingsFormat[] oldFormats = {new FindingsFormat24(), new FindingsFormat20()};
 
 	public static FindingsFormat getCurrentFormat() {
 		return currentFormat;

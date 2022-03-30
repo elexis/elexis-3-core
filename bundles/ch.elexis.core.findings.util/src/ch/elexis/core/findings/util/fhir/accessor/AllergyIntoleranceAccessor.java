@@ -7,8 +7,8 @@ import org.hl7.fhir.r4.model.Reference;
 import ca.uhn.fhir.model.primitive.IdDt;
 
 public class AllergyIntoleranceAccessor extends AbstractFindingsAccessor {
-	
-	public void setPatientId(DomainResource resource, String patientId){
+
+	public void setPatientId(DomainResource resource, String patientId) {
 		AllergyIntolerance fhAllergyIntolerance = (AllergyIntolerance) resource;
 		fhAllergyIntolerance.setPatient(new Reference(new IdDt("Patient", patientId)));
 	}

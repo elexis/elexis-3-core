@@ -48,7 +48,7 @@ public class MailAccountComposite extends Composite {
 
 	private WritableValue<MailAccount> value;
 	private DataBindingContext context;
-	
+
 	private Label fromAddressLabel;
 	private Text fromAddress;
 	private WritableList<Mandant> mandantInput;
@@ -57,26 +57,25 @@ public class MailAccountComposite extends Composite {
 	private Text txtPassword;
 	private Text txtUsername;
 	private Text txtId;
-	
-	public MailAccountComposite(Composite parent, int style){
+
+	public MailAccountComposite(Composite parent, int style) {
 		super(parent, style);
-		
+
 		createContent();
 	}
-	
-	private void createContent(){
+
+	private void createContent() {
 		value = new WritableValue();
 		context = new DataBindingContext();
-		
+
 		setLayout(new GridLayout(2, false));
-		
+
 		Label lbl = new Label(this, SWT.NONE);
 		lbl.setText("ID");
 		txtId = new Text(this, SWT.BORDER);
 		txtId.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		IObservableValue target = WidgetProperties.text(SWT.Modify).observe(txtId);
-		IObservableValue model =
-			PojoProperties.value("id", MailAccount.class).observeDetail(value);
+		IObservableValue model = PojoProperties.value("id", MailAccount.class).observeDetail(value);
 		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
 		targetToModel.setAfterGetValidator((o1) -> {
 			String s = (String) o1;
@@ -95,7 +94,7 @@ public class MailAccountComposite extends Composite {
 		typeViewer.setContentProvider(ArrayContentProvider.getInstance());
 		typeViewer.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				TYPE type = (TYPE) element;
 				if (type == TYPE.IMAP) {
 					return "Eingehend (" + type.name() + ")";
@@ -114,27 +113,27 @@ public class MailAccountComposite extends Composite {
 		context.bindValue(viewerTarget, model);
 		typeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				TYPE type = (TYPE) typeViewer.getStructuredSelection().getFirstElement();
 				if (type != null) {
 					switch (type) {
-					case IMAP:
-						txtPort.setText("143");
-						break;
-					case IMAPS:
-						txtPort.setText("993");
-						break;
-					case SMTP:
-						txtPort.setText("25");
-						break;
-					default:
-						break;
+						case IMAP :
+							txtPort.setText("143");
+							break;
+						case IMAPS :
+							txtPort.setText("993");
+							break;
+						case SMTP :
+							txtPort.setText("25");
+							break;
+						default :
+							break;
 					}
 				}
 				updateUi();
 			}
 		});
-		
+
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Username");
 		txtUsername = new Text(this, SWT.BORDER);
@@ -142,7 +141,7 @@ public class MailAccountComposite extends Composite {
 		target = WidgetProperties.text(SWT.Modify).observe(txtUsername);
 		model = PojoProperties.value("username", MailAccount.class).observeDetail(value);
 		context.bindValue(target, model);
-		
+
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Password");
 		txtPassword = new Text(this, SWT.BORDER | SWT.PASSWORD);
@@ -150,7 +149,7 @@ public class MailAccountComposite extends Composite {
 		target = WidgetProperties.text(SWT.Modify).observe(txtPassword);
 		model = PojoProperties.value("password", MailAccount.class).observeDetail(value);
 		context.bindValue(target, model);
-		
+
 		fromAddressLabel = new Label(this, SWT.NONE);
 		fromAddressLabel.setText("Von Adresse");
 		fromAddress = new Text(this, SWT.BORDER);
@@ -158,7 +157,7 @@ public class MailAccountComposite extends Composite {
 		target = WidgetProperties.text(SWT.Modify).observe(fromAddress);
 		model = PojoProperties.value("from", MailAccount.class).observeDetail(value);
 		context.bindValue(target, model);
-		
+
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Host");
 		txtHost = new Text(this, SWT.BORDER);
@@ -175,7 +174,7 @@ public class MailAccountComposite extends Composite {
 		});
 		binding = context.bindValue(target, model, targetToModel, null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
-		
+
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Port");
 		txtPort = new Text(this, SWT.BORDER);
@@ -192,78 +191,70 @@ public class MailAccountComposite extends Composite {
 		});
 		binding = context.bindValue(target, model, targetToModel, null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
-		
+
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Start TLS");
 		Button btnStartTls = new Button(this, SWT.CHECK);
 		target = WidgetProperties.buttonSelection().observe(btnStartTls);
 		model = PojoProperties.value("starttls", Boolean.class).observeDetail(value);
 		context.bindValue(target, model);
-		
+
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText("Mandanten");
 		TableViewer mandantViewer = new TableViewer(this, SWT.BORDER);
 		mandantViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		mandantInput = new WritableList<>(new ArrayList<Mandant>(), Mandant.class);
-		ViewerSupport.bind(mandantViewer, mandantInput, PojoProperties.values(new String[] {
-			"label"
-		}));
+		ViewerSupport.bind(mandantViewer, mandantInput, PojoProperties.values(new String[]{"label"}));
 		MenuManager menuManager = new MenuManager();
 		menuManager.add(new Action("hinzufügen") {
 			@Override
-			public void run(){
-				KontaktSelektor selector =
-					new KontaktSelektor(getShell(), Mandant.class, "Mandant auswahl",
+			public void run() {
+				KontaktSelektor selector = new KontaktSelektor(getShell(), Mandant.class, "Mandant auswahl",
 						"Mandanten für das Konto auswählen", Kontakt.DEFAULT_SORT);
 				if (selector.open() == Dialog.OK) {
 					Mandant selected = (Mandant) selector.getSelection();
 					getAccount().addMandant(
-						CoreModelServiceHolder.get().load(selected.getId(), IMandator.class)
-							.orElse(null));
+							CoreModelServiceHolder.get().load(selected.getId(), IMandator.class).orElse(null));
 					updateUi();
 				}
 			}
 		});
 		menuManager.add(new Action("entfernen") {
 			@Override
-			public void run(){
-				IStructuredSelection selection =
-					(IStructuredSelection) mandantViewer.getSelection();
+			public void run() {
+				IStructuredSelection selection = (IStructuredSelection) mandantViewer.getSelection();
 				if (selection != null && !selection.isEmpty()) {
 					Mandant selected = (Mandant) selection.getFirstElement();
-					getAccount().removeMandant(CoreModelServiceHolder.get()
-						.load(selected.getId(), IMandator.class).orElse(null));
+					getAccount().removeMandant(
+							CoreModelServiceHolder.get().load(selected.getId(), IMandator.class).orElse(null));
 					updateUi();
 				}
 			}
-			
+
 			@Override
-			public boolean isEnabled(){
-				IStructuredSelection selection =
-					(IStructuredSelection) mandantViewer.getSelection();
+			public boolean isEnabled() {
+				IStructuredSelection selection = (IStructuredSelection) mandantViewer.getSelection();
 				return selection != null && !selection.isEmpty();
 			}
 		});
 		menuManager.addMenuListener(new IMenuListener() {
 			@Override
-			public void menuAboutToShow(IMenuManager manager){
+			public void menuAboutToShow(IMenuManager manager) {
 				IContributionItem[] items = manager.getItems();
 				for (IContributionItem iContributionItem : items) {
 					iContributionItem.update();
 				}
 			}
 		});
-		mandantViewer.getControl()
-			.setMenu(menuManager.createContextMenu(mandantViewer.getControl()));
+		mandantViewer.getControl().setMenu(menuManager.createContextMenu(mandantViewer.getControl()));
 	}
-	
 
-	public void setAccount(MailAccount mailAccount){
+	public void setAccount(MailAccount mailAccount) {
 		value.setValue(mailAccount);
 		updateUi();
 	}
-	
-	private void updateUi(){
+
+	private void updateUi() {
 		MailAccount mailAccount = getAccount();
 		mandantInput.clear();
 		if (mailAccount != null) {
@@ -297,8 +288,8 @@ public class MailAccountComposite extends Composite {
 		layout();
 		redraw();
 	}
-	
-	public MailAccount getAccount(){
+
+	public MailAccount getAccount() {
 		return value.getValue();
 	}
 }

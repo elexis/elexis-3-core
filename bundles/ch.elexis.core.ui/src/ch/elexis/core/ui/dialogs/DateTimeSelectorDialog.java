@@ -38,35 +38,35 @@ public class DateTimeSelectorDialog extends Dialog {
 	private DateTime dateSelection;
 	private TimeTool ret;
 	private boolean showAsCalendar;
-	
-	public DateTimeSelectorDialog(Shell parent, TimeTool date){
+
+	public DateTimeSelectorDialog(Shell parent, TimeTool date) {
 		super(parent);
 		this.date = date;
 	}
-	
-	public DateTimeSelectorDialog(Shell parent, TimeTool date, boolean showAsCalendar){
+
+	public DateTimeSelectorDialog(Shell parent, TimeTool date, boolean showAsCalendar) {
 		super(parent);
 		this.date = date;
 		this.showAsCalendar = showAsCalendar;
 	}
-	
-	public DateTimeSelectorDialog(Shell parentShell){
+
+	public DateTimeSelectorDialog(Shell parentShell) {
 		this(parentShell, new TimeTool());
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		if (showAsCalendar) {
 			return createCalendarArea(parent);
 		} else {
 			return createDefaultArea(parent);
 		}
 	}
-	
-	private Composite createCalendarArea(Composite parent){
+
+	private Composite createCalendarArea(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout gd = new GridLayout(1, false);
-		gd.marginLeft = 2; // SWT BUG 
+		gd.marginLeft = 2; // SWT BUG
 		composite.setLayout(gd);
 		dateSelection = new DateTime(composite, SWT.CALENDAR);
 		dateSelection.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
@@ -76,19 +76,17 @@ public class DateTimeSelectorDialog extends Dialog {
 		Label label = new Label(dateComposite, SWT.NONE);
 		label.setText("Zeitpunkt");
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-		
+
 		timeSelection = new DateTime(dateComposite, SWT.TIME);
 		timeSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		timeSelection.setTime(date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE),
-			date.get(Calendar.SECOND));
-		dateSelection.setDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH),
-			date.get(Calendar.DAY_OF_MONTH));
-		
-		getShell().setText(Messages.DateTimeSelectorDialog_enterDate); //$NON-NLS-1$
+		timeSelection.setTime(date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE), date.get(Calendar.SECOND));
+		dateSelection.setDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
+
+		getShell().setText(Messages.DateTimeSelectorDialog_enterDate); // $NON-NLS-1$
 		return composite;
 	}
 
-	private Composite createDefaultArea(Composite parent){
+	private Composite createDefaultArea(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		Label label = new Label(composite, SWT.NONE);
@@ -101,36 +99,34 @@ public class DateTimeSelectorDialog extends Dialog {
 		timeSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		dateSelection = new DateTime(dateComposite, SWT.CALENDAR);
 		dateSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		timeSelection.setTime(date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE),
-			date.get(Calendar.SECOND));
-		dateSelection.setDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH),
-			date.get(Calendar.DAY_OF_MONTH));
 
-		getShell().setText(Messages.DateTimeSelectorDialog_enterDate); //$NON-NLS-1$
+		timeSelection.setTime(date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE), date.get(Calendar.SECOND));
+		dateSelection.setDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
+
+		getShell().setText(Messages.DateTimeSelectorDialog_enterDate); // $NON-NLS-1$
 		return composite;
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		ret = new TimeTool();
 		getTime(timeSelection, ret);
 		getDate(dateSelection, ret);
 		super.okPressed();
 	}
-	
-	public TimeTool getSelectedDate(){
+
+	public TimeTool getSelectedDate() {
 
 		return ret;
 	}
-	
-	private void getTime(DateTime widget, TimeTool time){
+
+	private void getTime(DateTime widget, TimeTool time) {
 		time.set(Calendar.HOUR_OF_DAY, widget.getHours());
 		time.set(Calendar.MINUTE, widget.getMinutes());
 		time.set(Calendar.SECOND, widget.getSeconds());
 	}
-	
-	private void getDate(DateTime widget, TimeTool date){
+
+	private void getDate(DateTime widget, TimeTool date) {
 		date.set(Calendar.YEAR, widget.getYear());
 		date.set(Calendar.MONTH, widget.getMonth());
 		date.set(Calendar.DAY_OF_MONTH, widget.getDay());

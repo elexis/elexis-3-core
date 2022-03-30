@@ -17,6 +17,7 @@ import ch.rgw.io.SqlSettings;
 import ch.rgw.tools.TimeTool;
 /**
  * Contains some utility procedure to make PersitentObject more readable$
+ * 
  * @since 3.8
  * @author Niklaus Giger <niklaus.giger@member.fsf.org>
  */
@@ -34,12 +35,15 @@ class PersistentObjectUtil {
 	}
 
 	/**
-	 * When running from scratch or given 3 system properties for name, email and password
-	 * we create a first mandator. This is needed for unit tests (runFromScratch) or
-	 * GUI-tests. In both cases we want to startup Elexis with a clean, almost empty
-	 * database which contains only default settings, eg. user rights$
+	 * When running from scratch or given 3 system properties for name, email and
+	 * password we create a first mandator. This is needed for unit tests
+	 * (runFromScratch) or GUI-tests. In both cases we want to startup Elexis with a
+	 * clean, almost empty database which contains only default settings, eg. user
+	 * rights$
+	 * 
 	 * @since 3.8
-	 * @param fromScratch Whether the database is running from Scratch
+	 * @param fromScratch
+	 *            Whether the database is running from Scratch
 	 * @return mandant or null (meaning, please pop up FirstMandandDialog)
 	 */
 	static Mandant autoCreateFirstMandant(boolean fromScratch) {
@@ -50,8 +54,8 @@ class PersistentObjectUtil {
 				clientEmail = "james@bond.invalid"; //$NON-NLS-1$
 			}
 			m = new Mandant("007", "topsecret", clientEmail); //$NON-NLS-1$ //$NON-NLS-2$
-			m.set(new String[] { Person.NAME, Person.FIRSTNAME, Person.TITLE, Person.SEX, Person.FLD_PHONE1,
-					Person.FLD_FAX, Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE }, "Bond", "James", //$NON-NLS-1$ //$NON-NLS-2$
+			m.set(new String[]{Person.NAME, Person.FIRSTNAME, Person.TITLE, Person.SEX, Person.FLD_PHONE1,
+					Person.FLD_FAX, Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE}, "Bond", "James", //$NON-NLS-1$ //$NON-NLS-2$
 					"Dr. med.", Person.MALE, //$NON-NLS-1$
 					"0061 555 55 55", //$NON-NLS-1$
 					"0061 555 55 56", "10, Baker Street", "9999", "Elexikon"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -67,7 +71,7 @@ class PersistentObjectUtil {
 			if (firstMandantEmail.contains("@") && !firstMandantName.isEmpty() //$NON-NLS-1$
 					&& !firstMandantPassword.isEmpty()) {
 				m = new Mandant(firstMandantName, firstMandantPassword, firstMandantEmail);
-				m.set(Person.NAME, firstMandantName); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				m.set(Person.NAME, firstMandantName); // $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 		}
 		return m;

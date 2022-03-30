@@ -43,48 +43,50 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 public class ViewMenus {
 	IViewSite site;
 	MenuManager contextMenu = null;
-	
+
 	// IAction[] actions;
-	public ViewMenus(IViewSite s){
+	public ViewMenus(IViewSite s) {
 		site = s;
-		
+
 	}
-	
+
 	/**
 	 * Create a menu containing the specified actions.
 	 * 
 	 * @param actions
-	 *            a collection of actions and null-values (that represent separators)
+	 *            a collection of actions and null-values (that represent
+	 *            separators)
 	 */
-	public void createMenu(IAction... actions){
+	public void createMenu(IAction... actions) {
 		List<IContributionItem> contributionItems = convertActionsToContributionItems(actions);
 		createMenu(contributionItems);
 	}
-	
+
 	/**
 	 * 
 	 * @param contributionItems
 	 * @since 3.4
 	 */
-	public void createMenu(final List<IContributionItem> contributionItems){
+	public void createMenu(final List<IContributionItem> contributionItems) {
 		IMenuManager menuMgr = site.getActionBars().getMenuManager();
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
-			public void menuAboutToShow(IMenuManager manager){
+			public void menuAboutToShow(IMenuManager manager) {
 				fillContextMenu(menuMgr, contributionItems);
 			}
 		});
 		menuMgr.add(new Separator()); // for the entry to appear
 	}
-	
+
 	/**
 	 * Create a toolbar containing the specified actions
 	 * 
 	 * @param actions
-	 *            a collection of actions and null-values (that represent separators)
+	 *            a collection of actions and null-values (that represent
+	 *            separators)
 	 */
-	public void createToolbar(IAction... actions){
+	public void createToolbar(IAction... actions) {
 		IToolBarManager tmg = site.getActionBars().getToolBarManager();
 		for (IAction ac : actions) {
 			if (ac == null) {
@@ -94,28 +96,27 @@ public class ViewMenus {
 			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param viewer
 	 * @param contributionItems
 	 * @since 3.4
 	 */
-	public void createViewerContextMenu(StructuredViewer viewer,
-		final List<IContributionItem> contributionItems){
+	public void createViewerContextMenu(StructuredViewer viewer, final List<IContributionItem> contributionItems) {
 		MenuManager menuMgr = new MenuManager();
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager){
+			public void menuAboutToShow(IMenuManager manager) {
 				fillContextMenu(manager, contributionItems);
 			}
 		});
 		Menu menu = menuMgr.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
-		
+
 		site.registerContextMenu(menuMgr, viewer);
 	}
-	
+
 	/**
 	 * Attach a context menu to a org.eclipse.jface.StructuredViewer
 	 * 
@@ -124,11 +125,11 @@ public class ViewMenus {
 	 * @param actions
 	 *            the actions to use
 	 */
-	public void createViewerContextMenu(StructuredViewer viewer, final IAction... actions){
+	public void createViewerContextMenu(StructuredViewer viewer, final IAction... actions) {
 		List<IContributionItem> contributionItems = convertActionsToContributionItems(actions);
 		createViewerContextMenu(viewer, contributionItems);
 	}
-	
+
 	/**
 	 * Creates a menu for the given control containing the given actions
 	 * 
@@ -137,12 +138,12 @@ public class ViewMenus {
 	 * @param actions
 	 *            the actions to be shown in the menu
 	 */
-	public void createControlContextMenu(Control control, final IAction... actions){
+	public void createControlContextMenu(Control control, final IAction... actions) {
 		List<IContributionItem> contributionItems = convertActionsToContributionItems(actions);
 		contextMenu = new MenuManager();
 		contextMenu.setRemoveAllWhenShown(true);
 		contextMenu.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager){
+			public void menuAboutToShow(IMenuManager manager) {
 				for (IAction iAction : actions) {
 					if (iAction instanceof RestrictedAction) {
 						((RestrictedAction) iAction).reflectRight();
@@ -154,25 +155,26 @@ public class ViewMenus {
 		Menu menu = contextMenu.createContextMenu(control);
 		control.setMenu(menu);
 	}
-	
+
 	/**
 	 * Return the context menu for registration with the selectionProvider
 	 * 
 	 * @return MenuManager for the contextMenu
 	 */
-	public MenuManager getContextMenu(){
+	public MenuManager getContextMenu() {
 		return contextMenu;
 	}
-	
+
 	/**
-	 * Creates a menu for the given Control that will be populated by the provided populator This
-	 * can be used to construct dynamic menus that change contents depending of state.
+	 * Creates a menu for the given Control that will be populated by the provided
+	 * populator This can be used to construct dynamic menus that change contents
+	 * depending of state.
 	 */
-	public void createControlContextMenu(Control control, final IMenuPopulator populator){
+	public void createControlContextMenu(Control control, final IMenuPopulator populator) {
 		contextMenu = new MenuManager();
 		contextMenu.setRemoveAllWhenShown(true);
 		contextMenu.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager){
+			public void menuAboutToShow(IMenuManager manager) {
 				for (IAction ac : populator.fillMenu()) {
 					if (ac == null) {
 						contextMenu.add(new Separator());
@@ -188,14 +190,13 @@ public class ViewMenus {
 		Menu menu = contextMenu.createContextMenu(control);
 		control.setMenu(menu);
 	}
-	
-	public static List<IContributionItem> convertActionsToContributionItems(IAction[] actions){
-		return Arrays.asList(actions).stream()
-			.map(s -> (s != null) ? new ActionContributionItem(s) : new Separator())
-			.collect(Collectors.toList());
+
+	public static List<IContributionItem> convertActionsToContributionItems(IAction[] actions) {
+		return Arrays.asList(actions).stream().map(s -> (s != null) ? new ActionContributionItem(s) : new Separator())
+				.collect(Collectors.toList());
 	}
-	
-	private void fillContextMenu(IMenuManager manager, List<IContributionItem> contributionItems){
+
+	private void fillContextMenu(IMenuManager manager, List<IContributionItem> contributionItems) {
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		for (IContributionItem contributionItem : contributionItems) {
 			if (contributionItem == null) {
@@ -211,7 +212,7 @@ public class ViewMenus {
 			manager.add(contributionItem);
 		}
 	}
-	
+
 	public static interface IMenuPopulator {
 		public IAction[] fillMenu();
 	};

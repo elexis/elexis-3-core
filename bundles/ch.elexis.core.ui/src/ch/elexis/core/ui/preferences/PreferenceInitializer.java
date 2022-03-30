@@ -25,17 +25,18 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 
 /**
- * Vorgabewerte setzen, wo nötig. Bitte in den drei Funktionen dieser Klasse alle notwendigen
- * Voreinstellungen eintragen.
+ * Vorgabewerte setzen, wo nötig. Bitte in den drei Funktionen dieser Klasse
+ * alle notwendigen Voreinstellungen eintragen.
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
-	
+
 	/**
-	 * Diese Funktion wird nach dem Erstellen des Display aufgerufen und dient zum Initialiseren
-	 * früh benötigter Einstellungen, die bereits ein Display benötigen
+	 * Diese Funktion wird nach dem Erstellen des Display aufgerufen und dient zum
+	 * Initialiseren früh benötigter Einstellungen, die bereits ein Display
+	 * benötigen
 	 * 
 	 */
-	public void initializeDisplayPreferences(Display display){
+	public void initializeDisplayPreferences(Display display) {
 		UiDesk.getColorRegistry().put(UiDesk.COL_RED, new RGB(255, 0, 0));
 		UiDesk.getColorRegistry().put(UiDesk.COL_GREEN, new RGB(0, 255, 0));
 		UiDesk.getColorRegistry().put(UiDesk.COL_DARKGREEN, new RGB(0, 88, 0));
@@ -49,27 +50,26 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		UiDesk.getColorRegistry().put(UiDesk.COL_LIGHTGREY, new RGB(180, 180, 180));
 		UiDesk.getColorRegistry().put(UiDesk.COL_GREY60, new RGB(153, 153, 153));
 		UiDesk.getColorRegistry().put(UiDesk.COL_GREY20, new RGB(51, 51, 51));
-		
-		FontData[] small = new FontData[] {
-			new FontData("Helvetica", 7, SWT.NORMAL)}; //$NON-NLS-1$
-		ConfigServiceHolder.setUser(
-				Preferences.USR_SMALLFONT + "_default", PreferenceConverter.getStoredRepresentation(small)); //$NON-NLS-1$
+
+		FontData[] small = new FontData[]{new FontData("Helvetica", 7, SWT.NORMAL)}; //$NON-NLS-1$
+		ConfigServiceHolder.setUser(Preferences.USR_SMALLFONT + "_default", //$NON-NLS-1$
+				PreferenceConverter.getStoredRepresentation(small));
 	}
-	
+
 	/**
-	 * Diese Funktion wird nach erstem Erstellen der Datenbank (d.h. nur ein einziges Mal)
-	 * aufgerufen und belegt globale Voreinstellungen. Hier alle im ganzen Netzwerk und für alle
-	 * Benutzer gültigen Voreinstellungen eintragen
+	 * Diese Funktion wird nach erstem Erstellen der Datenbank (d.h. nur ein
+	 * einziges Mal) aufgerufen und belegt globale Voreinstellungen. Hier alle im
+	 * ganzen Netzwerk und für alle Benutzer gültigen Voreinstellungen eintragen
 	 * 
 	 */
-	public void initializeGlobalPreferences(){
+	public void initializeGlobalPreferences() {
 		IPreferenceStore global = new ConfigServicePreferenceStore(Scope.GLOBAL);
 		global.setDefault(Preferences.ABL_TRACE, "none"); //$NON-NLS-1$
 	}
-	
+
 	@Override
-	public void initializeDefaultPreferences(){
+	public void initializeDefaultPreferences() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

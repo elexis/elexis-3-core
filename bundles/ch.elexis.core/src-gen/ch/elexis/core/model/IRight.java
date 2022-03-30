@@ -10,19 +10,18 @@
  */
 package ch.elexis.core.model;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IRight</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IRight</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IRight#getName <em>Name</em>}</li>
- *   <li>{@link ch.elexis.core.model.IRight#getLocalizedName <em>Localized Name</em>}</li>
- *   <li>{@link ch.elexis.core.model.IRight#getParent <em>Parent</em>}</li>
+ * <li>{@link ch.elexis.core.model.IRight#getName <em>Name</em>}</li>
+ * <li>{@link ch.elexis.core.model.IRight#getLocalizedName <em>Localized
+ * Name</em>}</li>
+ * <li>{@link ch.elexis.core.model.IRight#getParent <em>Parent</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIRight()
@@ -31,13 +30,14 @@ package ch.elexis.core.model;
  */
 public interface IRight extends Identifiable, Deleteable, WithAssignableId {
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIRight_Name()
@@ -47,23 +47,25 @@ public interface IRight extends Identifiable, Deleteable, WithAssignableId {
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IRight#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IRight#getName
+	 * <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Localized Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Localized Name</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Localized Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Localized Name</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Localized Name</em>' attribute.
 	 * @see #setLocalizedName(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIRight_LocalizedName()
@@ -73,23 +75,26 @@ public interface IRight extends Identifiable, Deleteable, WithAssignableId {
 	String getLocalizedName();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IRight#getLocalizedName <em>Localized Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Localized Name</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IRight#getLocalizedName
+	 * <em>Localized Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Localized Name</em>' attribute.
 	 * @see #getLocalizedName()
 	 * @generated
 	 */
 	void setLocalizedName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Parent</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Parent</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Parent</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Parent</em>' reference isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Parent</em>' reference.
 	 * @see #setParent(IRight)
 	 * @see ch.elexis.core.model.ModelPackage#getIRight_Parent()
@@ -99,10 +104,11 @@ public interface IRight extends Identifiable, Deleteable, WithAssignableId {
 	IRight getParent();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IRight#getParent <em>Parent</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Parent</em>' reference.
+	 * Sets the value of the '{@link ch.elexis.core.model.IRight#getParent
+	 * <em>Parent</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Parent</em>' reference.
 	 * @see #getParent()
 	 * @generated
 	 */

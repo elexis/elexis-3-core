@@ -28,30 +28,29 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 
 public class EigenartikelUtil {
-	
+
 	/**
-	 * Synchronizes a products description with is "child" packages and adds as package to product
+	 * Synchronizes a products description with is "child" packages and adds as
+	 * package to product
 	 * 
 	 * @param product
 	 * @param eaPackage
-	 *            if <code>null</code> all current children are fetched and updated, if an
-	 *            Eigenartikel is provided it is added as a package
+	 *            if <code>null</code> all current children are fetched and updated,
+	 *            if an Eigenartikel is provided it is added as a package
 	 */
 	@SuppressWarnings("unchecked")
-	public static void copyProductAttributesToArticleSetAsChild(IArticle product,
-		IArticle eaPackage){
-		
+	public static void copyProductAttributesToArticleSetAsChild(IArticle product, IArticle eaPackage) {
+
 		List<IArticle> eaPackages = new ArrayList<IArticle>();
 		if (eaPackage != null) {
 			eaPackages.add(eaPackage);
 		} else {
 			IQuery<IArticle> query = CoreModelServiceHolder.get().getQuery(IArticle.class);
-			query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS,
-				ArticleTyp.EIGENARTIKEL);
+			query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS, ArticleTyp.EIGENARTIKEL);
 			query.and(ModelPackage.Literals.IARTICLE__PRODUCT, COMPARATOR.EQUALS, product);
 			eaPackages.addAll(query.execute());
 		}
-		
+
 		for (IArticle ea : eaPackages) {
 			ea.setProduct(product);
 			ea.setSubTyp(product.getSubTyp());

@@ -18,8 +18,10 @@ import ch.elexis.core.model.Identifiable;
  * 
  * @author thomas
  *
- * @param <F> FHIR class
- * @param <L> Local class, extends AbstractDBObjectIdDeleted
+ * @param <F>
+ *            FHIR class
+ * @param <L>
+ *            Local class, extends AbstractDBObjectIdDeleted
  */
 public interface IFhirTransformer<F, L> {
 
@@ -33,11 +35,13 @@ public interface IFhirTransformer<F, L> {
 	 * referenced resources or considering a {@link SummaryEnum}
 	 * 
 	 * @param localObject
-	 * @param summaryEnum the <a href=
-	 *                    "https://www.hl7.org/fhir/search.html#summary">summary</a>
-	 *                    mode; {@link SummaryEnum#TEXT} and include do not match
-	 * @param includes    the resources to <a href=
-	 *                    "http://hapifhir.io/doc_rest_operations.html#Resource_Includes__include">include</a>
+	 * @param summaryEnum
+	 *            the <a href=
+	 *            "https://www.hl7.org/fhir/search.html#summary">summary</a> mode;
+	 *            {@link SummaryEnum#TEXT} and include do not match
+	 * @param includes
+	 *            the resources to <a href=
+	 *            "http://hapifhir.io/doc_rest_operations.html#Resource_Includes__include">include</a>
 	 * 
 	 * @return
 	 */

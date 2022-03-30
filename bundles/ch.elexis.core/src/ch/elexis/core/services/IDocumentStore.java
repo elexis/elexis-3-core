@@ -18,25 +18,25 @@ import ch.elexis.core.model.ITag;
  *
  */
 public interface IDocumentStore {
-	
+
 	public enum Capability {
-			CATEGORY, KEYWORDS
+		CATEGORY, KEYWORDS
 	}
-	
+
 	/**
 	 * Get the id of the implementation.
 	 * 
 	 * @return
 	 */
 	public String getId();
-	
+
 	/**
 	 * Get the name of the implementation, that can be displayed to the user
 	 * 
 	 * @return
 	 */
 	public String getName();
-	
+
 	/**
 	 * Get documents of a patient. Additional filter parameters are optional.
 	 * 
@@ -47,8 +47,8 @@ public interface IDocumentStore {
 	 * @return
 	 */
 	public List<IDocument> getDocuments(@NonNull String patientId, @Nullable String authorId,
-		@Nullable ICategory category, @Nullable List<ITag> tag);
-	
+			@Nullable ICategory category, @Nullable List<ITag> tag);
+
 	/**
 	 * Load a {@link IDocument} with the id from the store.
 	 * 
@@ -56,7 +56,7 @@ public interface IDocumentStore {
 	 * @return
 	 */
 	public Optional<IDocument> loadDocument(String id);
-	
+
 	/**
 	 * Load the content of the document.
 	 * 
@@ -64,7 +64,7 @@ public interface IDocumentStore {
 	 * @return
 	 */
 	public Optional<InputStream> loadContent(IDocument document);
-	
+
 	/**
 	 * Creates a empty {@link IDocument} for the given patientId
 	 * 
@@ -75,7 +75,7 @@ public interface IDocumentStore {
 	 * @return
 	 */
 	public IDocument createDocument(@NonNull String patientId, String title, String categoryName);
-	
+
 	/**
 	 * Save changes to the meta information of the document. Not the content.
 	 * 
@@ -84,7 +84,7 @@ public interface IDocumentStore {
 	 * @throws ElexisException
 	 */
 	public IDocument saveDocument(IDocument document) throws ElexisException;
-	
+
 	/**
 	 * Save changes to the meta information and the content of the document. If an
 	 * {@link InputStream} is given it will be closed.
@@ -95,47 +95,47 @@ public interface IDocumentStore {
 	 * @throws ElexisException
 	 */
 	public IDocument saveDocument(IDocument document, InputStream content) throws ElexisException;
-	
+
 	/**
 	 * Remove the {@link IDocument} from the store.
 	 * 
 	 * @param document
 	 */
 	public void removeDocument(IDocument document);
-	
+
 	/**
 	 * Get a list of all categories known to the store.
 	 * 
 	 * @return
 	 */
 	public List<ICategory> getCategories();
-	
+
 	/**
 	 * Returns the default category for a store.
 	 * 
 	 * @return
 	 */
 	public ICategory getCategoryDefault();
-	
+
 	/**
-	 * Creates or returns an existing {@link ICategory} with the provided name from the store.
+	 * Creates or returns an existing {@link ICategory} with the provided name from
+	 * the store.
 	 * 
 	 * @param name
 	 * @return
 	 */
 	public ICategory createCategory(String name);
-	
+
 	/**
-	 * Remove the {@link ICategory} from the store. Only empty {@link ICategory} can be removed. If
-	 * there are {@link IDocument} referencing the {@link ICategory} an
-	 * {@link IllegalStateException} is thrown.
+	 * Remove the {@link ICategory} from the store. Only empty {@link ICategory} can
+	 * be removed. If there are {@link IDocument} referencing the {@link ICategory}
+	 * an {@link IllegalStateException} is thrown.
 	 * 
 	 * @param iDocument
 	 * @param newCategory
 	 */
-	public void removeCategory(IDocument iDocument, String newCategory)
-		throws IllegalStateException;
-	
+	public void removeCategory(IDocument iDocument, String newCategory) throws IllegalStateException;
+
 	/**
 	 * Rename the {@link ICategory} from the store.
 	 * 
@@ -143,12 +143,11 @@ public interface IDocumentStore {
 	 * @param newCategory
 	 */
 	public void renameCategory(ICategory category, String newCategory);
-	
-	public default boolean isAllowed(Capability restricted)
-	{
+
+	public default boolean isAllowed(Capability restricted) {
 		return true;
 	}
-	
+
 	/**
 	 * 
 	 * @param iDocument

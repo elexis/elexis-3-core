@@ -6,7 +6,7 @@ import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.IPatient;
 
 public interface IPersistenceHandler {
-	
+
 	/**
 	 * Get {@link ILabOrder} instances matching the orderId.
 	 * 
@@ -14,7 +14,7 @@ public interface IPersistenceHandler {
 	 * @return
 	 */
 	List<ILabOrder> getLabOrdersByOrderId(String orderId);
-	
+
 	/**
 	 * Load an {@link IPatient} instance with matching id.
 	 * 

@@ -29,10 +29,10 @@ public interface ICondition extends IFinding {
 		public String getCode() {
 			return code;
 		}
-		
-		public String getLocalized(){
+
+		public String getLocalized() {
 			try {
-				String localized =  ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
+				String localized = ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
 						.getString(this.getClass().getSimpleName() + "_" + this.name());
 				return localized;
 			} catch (MissingResourceException e) {
@@ -42,12 +42,12 @@ public interface ICondition extends IFinding {
 	}
 
 	public enum ConditionStatus {
-			UNKNOWN, RECURRENCE, ACTIVE, RELAPSE, INACTIVE, REMISSION, RESOLVED;
-		
-		public String getLocalized(){
+		UNKNOWN, RECURRENCE, ACTIVE, RELAPSE, INACTIVE, REMISSION, RESOLVED;
+
+		public String getLocalized() {
 			try {
 				String localized = ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
-					.getString(this.getClass().getSimpleName() + "_" + this.name());
+						.getString(this.getClass().getSimpleName() + "_" + this.name());
 				return localized;
 			} catch (MissingResourceException e) {
 				return this.toString();
@@ -82,77 +82,77 @@ public interface ICondition extends IFinding {
 	 * @param status
 	 */
 	public void setStatus(ConditionStatus status);
-	
+
 	/**
 	 * Get the coding of the {@link ICondition}.
 	 * 
 	 * @return
 	 */
 	public List<ICoding> getCoding();
-	
+
 	/**
 	 * Set the coding of the {@link ICondition}.
 	 * 
 	 * @return
 	 */
 	public void setCoding(List<ICoding> coding);
-	
+
 	/**
 	 * Set date when condition was documented.
 	 * 
 	 * @param date
 	 */
 	public void setDateRecorded(LocalDate date);
-	
+
 	/**
 	 * Get the date the {@link ICondition} was documented.
 	 * 
 	 * @return
 	 */
 	public Optional<LocalDate> getDateRecorded();
-	
+
 	/**
 	 * Set a description when the {@link ICondition} began.
 	 * 
 	 * @param start
 	 */
 	public void setStart(String start);
-	
+
 	/**
 	 * Get a description when the {@link ICondition} began.
 	 * 
 	 * @return
 	 */
 	public Optional<String> getStart();
-	
+
 	/**
 	 * Set a description when the {@link ICondition} abated.
 	 * 
 	 * @param end
 	 */
 	public void setEnd(String end);
-	
+
 	/**
 	 * Get a description of when the {@link ICondition} abated.
 	 * 
 	 * @return
 	 */
 	public Optional<String> getEnd();
-	
+
 	/**
 	 * Add additional information about the {@link ICondition}.
 	 * 
 	 * @param text
 	 */
 	public void addNote(String text);
-	
+
 	/**
 	 * Remove an additional information about the {@link ICondition}.
 	 * 
 	 * @param text
 	 */
 	public void removeNote(String text);
-	
+
 	/**
 	 * Get additional information about the {@link ICondition}.
 	 * 

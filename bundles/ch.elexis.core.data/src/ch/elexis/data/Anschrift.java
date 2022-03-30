@@ -19,12 +19,10 @@ public class Anschrift {
 	private static final String ZIP = "Plz"; //$NON-NLS-1$
 	private static final String STREET = "Strasse"; //$NON-NLS-1$
 	String Strasse, Plz, Ort, Land;
-	String[] fields = {
-		STREET, ZIP, PLACE, COUNTRY
-	};
+	String[] fields = {STREET, ZIP, PLACE, COUNTRY};
 	Kontakt mine;
-	
-	public Anschrift(Kontakt k){
+
+	public Anschrift(Kontakt k) {
 		mine = k;
 		String[] values = new String[fields.length];
 		k.get(fields, values);
@@ -33,9 +31,10 @@ public class Anschrift {
 		Ort = values[2];
 		Land = values[3];
 	}
-	
-	public Anschrift(){}
-	
+
+	public Anschrift() {
+	}
+
 	/**
 	 * Eine Etikette der Anschrift liefern
 	 * 
@@ -44,7 +43,7 @@ public class Anschrift {
 	 * @param multiline
 	 *            Wenn true wird die Etikette mehrzeilig, sonst einzeilig
 	 */
-	public String getEtikette(boolean withName, boolean multiline){
+	public String getEtikette(boolean withName, boolean multiline) {
 		String sep = StringTool.lf;
 		if (multiline == false) {
 			sep = ", "; //$NON-NLS-1$
@@ -68,48 +67,48 @@ public class Anschrift {
 		}
 		return ret.toString();
 	}
-	
-	public String getLabel(){
+
+	public String getLabel() {
 		return getEtikette(true, false);
 	}
-	
-	public String getStrasse(){
+
+	public String getStrasse() {
 		return StringTool.unNull(Strasse);
 	}
-	
-	public String getPlz(){
+
+	public String getPlz() {
 		return StringTool.unNull(Plz);
 	}
-	
-	public String getOrt(){
+
+	public String getOrt() {
 		return StringTool.unNull(Ort);
 	}
-	
-	public String getLand(){
+
+	public String getLand() {
 		return StringTool.unNull(Land);
 	}
-	
-	public void setStrasse(String s){
+
+	public void setStrasse(String s) {
 		Strasse = s;
 	}
-	
-	public void setPlz(String plz){
+
+	public void setPlz(String plz) {
 		if (plz != null) {
 			Plz = plz.length() > 6 ? plz.substring(0, 6) : plz;
 		} else {
 			Plz = StringTool.leer;
 		}
 	}
-	
-	public void setOrt(String ort){
+
+	public void setOrt(String ort) {
 		Ort = ort;
 	}
-	
-	public void setLand(String land){
+
+	public void setLand(String land) {
 		Land = land.length() > 3 ? land.substring(0, 3) : land;
 	}
-	
-	public boolean write(Kontakt k){
+
+	public boolean write(Kontakt k) {
 		return k.set(fields, Strasse, Plz, Ort, Land);
 	}
 }

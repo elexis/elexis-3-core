@@ -20,9 +20,9 @@ import ch.elexis.core.ui.laboratory.dialogs.MergeLabItemDialog;
 
 public class CreateMergeLabItemUi extends AbstractHandler {
 	public static final String COMMANDID = "ch.elexis.labitem.merge"; //$NON-NLS-1$
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			// create and open the dialog
 			Shell parent = HandlerUtil.getActiveShell(event);

@@ -17,27 +17,28 @@ import java.util.List;
 import org.eclipse.emf.common.util.Enumerator;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Appointment State</b></em>',
- * and utility methods for working with them.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration
+ * '<em><b>Appointment State</b></em>', and utility methods for working with
+ * them. <!-- end-user-doc -->
+ * 
  * @see ch.elexis.core.types.TypesPackage#getAppointmentState()
  * @model
  * @generated
  */
 public enum AppointmentState implements Enumerator {
 	/**
-	 * The '<em><b>EMPTY</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The '<em><b>EMPTY</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #EMPTY_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	EMPTY(0, "EMPTY", "EMPTY"), /**
-	 * The '<em><b>DEFAULT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	EMPTY(0, "EMPTY", "EMPTY"),
+	/**
+	 * The '<em><b>DEFAULT</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #DEFAULT_VALUE
 	 * @generated
 	 * @ordered
@@ -45,13 +46,13 @@ public enum AppointmentState implements Enumerator {
 	DEFAULT(1, "DEFAULT", "DEFAULT");
 
 	/**
-	 * The '<em><b>EMPTY</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>EMPTY</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>EMPTY</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>EMPTY</b></em>' literal object isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #EMPTY
 	 * @model
 	 * @generated
@@ -60,13 +61,13 @@ public enum AppointmentState implements Enumerator {
 	public static final int EMPTY_VALUE = 0;
 
 	/**
-	 * The '<em><b>DEFAULT</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>DEFAULT</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>DEFAULT</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>DEFAULT</b></em>' literal object isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #DEFAULT
 	 * @model
 	 * @generated
@@ -75,30 +76,27 @@ public enum AppointmentState implements Enumerator {
 	public static final int DEFAULT_VALUE = 1;
 
 	/**
-	 * An array of all the '<em><b>Appointment State</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * An array of all the '<em><b>Appointment State</b></em>' enumerators. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	private static final AppointmentState[] VALUES_ARRAY =
-		new AppointmentState[] {
-			EMPTY,
-			DEFAULT,
-		};
+	private static final AppointmentState[] VALUES_ARRAY = new AppointmentState[]{EMPTY, DEFAULT,};
 
 	/**
-	 * A public read-only list of all the '<em><b>Appointment State</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * A public read-only list of all the '<em><b>Appointment State</b></em>'
+	 * enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static final List<AppointmentState> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Appointment State</b></em>' literal with the specified literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param literal the literal.
+	 * Returns the '<em><b>Appointment State</b></em>' literal with the specified
+	 * literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param literal
+	 *            the literal.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
@@ -113,10 +111,11 @@ public enum AppointmentState implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Appointment State</b></em>' literal with the specified name.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param name the name.
+	 * Returns the '<em><b>Appointment State</b></em>' literal with the specified
+	 * name. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param name
+	 *            the name.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
@@ -131,46 +130,49 @@ public enum AppointmentState implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Appointment State</b></em>' literal with the specified integer value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the integer value.
+	 * Returns the '<em><b>Appointment State</b></em>' literal with the specified
+	 * integer value. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the integer value.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static AppointmentState get(int value) {
 		switch (value) {
-			case EMPTY_VALUE: return EMPTY;
-			case DEFAULT_VALUE: return DEFAULT;
+			case EMPTY_VALUE :
+				return EMPTY;
+			case DEFAULT_VALUE :
+				return DEFAULT;
 		}
 		return null;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final int value;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final String name;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final String literal;
 
 	/**
-	 * Only this class can construct instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Only this class can construct instances. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private AppointmentState(int value, String name, String literal) {
@@ -180,44 +182,44 @@ public enum AppointmentState implements Enumerator {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public int getValue() {
-	  return value;
+		return value;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String getName() {
-	  return name;
+		return name;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String getLiteral() {
-	  return literal;
+		return literal;
 	}
 
 	/**
-	 * Returns the literal value of the enumerator, which is its string representation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the literal value of the enumerator, which is its string
+	 * representation. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
 		return literal;
 	}
-	
-} //AppointmentState
+
+} // AppointmentState

@@ -40,15 +40,18 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 	private final Color normalColor;
 	private final Color highlightColor;
 	private final Control mine;
-	
+
 	/**
-	 * Register the provided target as {@link DropTarget} for a {@link PersistentObject}
+	 * Register the provided target as {@link DropTarget} for a
+	 * {@link PersistentObject}
+	 * 
 	 * @param target
 	 * @param r
-	 * @param colorizeControl whether the target control should change color during selection
+	 * @param colorizeControl
+	 *            whether the target control should change color during selection
 	 * @since 3.1.0
 	 */
-	public GenericObjectDropTarget(String name, Control target, IReceiver r, boolean colorizeControl){
+	public GenericObjectDropTarget(String name, Control target, IReceiver r, boolean colorizeControl) {
 		if (colorizeControl) {
 			normalColor = target.getBackground();
 			highlightColor = target.getDisplay().getSystemColor(SWT.COLOR_RED);
@@ -56,28 +59,26 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 			normalColor = null;
 			highlightColor = null;
 		}
-		
+
 		this.name = name;
 		mine = target;
 		rc = r;
 		DropTarget dtarget = new DropTarget(target, DND.DROP_COPY);
 		final TextTransfer textTransfer = TextTransfer.getInstance();
-		Transfer[] types = new Transfer[] {
-			textTransfer
-		};
+		Transfer[] types = new Transfer[]{textTransfer};
 		dtarget.setTransfer(types);
 		dtarget.addDropListener(this);
 	}
-	
-	public GenericObjectDropTarget(Control target, IReceiver r){
+
+	public GenericObjectDropTarget(Control target, IReceiver r) {
 		this("", target, r, true);
 	}
-	
-	public GenericObjectDropTarget(String name, Control target, IReceiver r){
+
+	public GenericObjectDropTarget(String name, Control target, IReceiver r) {
 		this(name, target, r, true);
 	}
-	
-	public void dragEnter(DropTargetEvent event){
+
+	public void dragEnter(DropTargetEvent event) {
 		boolean bOk = false;
 		if (rc.accept(getDataObjects(event))) {
 			bOk = true;
@@ -86,11 +87,11 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 			event.detail = DND.DROP_COPY;
 		} else {
 			event.detail = DND.DROP_NONE;
-		}		
+		}
 	}
-	
-	private List<Object> getDataObjects(DropTargetEvent event){
-		if(event != null && event.data != null) {
+
+	private List<Object> getDataObjects(DropTargetEvent event) {
+		if (event != null && event.data != null) {
 			List<Object> ret = new ArrayList<>();
 			String droppedString = (String) event.data;
 			String[] parts = droppedString.split(","); //$NON-NLS-1$
@@ -104,45 +105,45 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 		}
 		return Collections.emptyList();
 	}
-	
-	public void dragLeave(DropTargetEvent event){
+
+	public void dragLeave(DropTargetEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void dragOperationChanged(DropTargetEvent event){
+
+	public void dragOperationChanged(DropTargetEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void dragOver(DropTargetEvent event){
+
+	public void dragOver(DropTargetEvent event) {
 		// TODO Auto-generated method stub
 	}
-	
-	public void dropAccept(DropTargetEvent event){
+
+	public void dropAccept(DropTargetEvent event) {
 		if (!rc.accept(getDataObjects(event))) {
 			event.detail = DND.DROP_NONE;
 		}
 	}
-	
+
 	@Override
-	public void codeSelected(Object obj){
-		if(rc.accept(Collections.singletonList(obj))) {
+	public void codeSelected(Object obj) {
+		if (rc.accept(Collections.singletonList(obj))) {
 			rc.dropped(Collections.singletonList(obj), null);
 		}
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
-	public void registered(boolean bIsRegistered){
+
+	public void registered(boolean bIsRegistered) {
 		if (normalColor != null) {
 			highlight(bIsRegistered);
 		}
 	}
-	
-	private void highlight(boolean bOn){
+
+	private void highlight(boolean bOn) {
 		if (!mine.isDisposed()) {
 			if (bOn) {
 				mine.setBackground(highlightColor);
@@ -151,25 +152,25 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 			}
 		}
 	}
-	
+
 	/**
-	 * Override if mine is a {@link Table} that shows column background. On Win Platform setting
-	 * background of Table disables all column background.
+	 * Override if mine is a {@link Table} that shows column background. On Win
+	 * Platform setting background of Table disables all column background.
 	 * 
 	 * @return
 	 */
-	protected Control getHighLightControl(){
+	protected Control getHighLightControl() {
 		return mine;
 	}
-	
+
 	public interface IReceiver {
 		public void dropped(List<Object> list, DropTargetEvent e);
-		
+
 		public boolean accept(List<Object> list);
 	}
-	
+
 	@Override
-	public void drop(DropTargetEvent event){
+	public void drop(DropTargetEvent event) {
 		rc.dropped(getDataObjects(event), event);
 	}
 }

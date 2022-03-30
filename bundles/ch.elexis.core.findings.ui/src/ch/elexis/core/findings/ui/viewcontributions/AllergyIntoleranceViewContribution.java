@@ -18,54 +18,51 @@ import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.data.Patient;
 
 public class AllergyIntoleranceViewContribution implements IViewContribution {
-	
+
 	AllergyIntoleranceComposite allergyIntoleranceComposite;
-	
+
 	@Override
-	public void setUnlocked(boolean unlocked){
+	public void setUnlocked(boolean unlocked) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public String getLocalizedTitle(){
+	public String getLocalizedTitle() {
 		return "Allergien";
 	}
-	
+
 	@Override
-	public boolean isAvailable(){
-		return ConfigServiceHolder.getGlobal(IMigratorService.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
-			false);
+	public boolean isAvailable() {
+		return ConfigServiceHolder.getGlobal(IMigratorService.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED, false);
 	}
-	
+
 	@Override
-	public Composite initComposite(Composite parent){
+	public Composite initComposite(Composite parent) {
 		allergyIntoleranceComposite = new AllergyIntoleranceComposite(parent, SWT.NONE);
 		return allergyIntoleranceComposite;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setDetailObject(Object detailObject, Object additionalData){
+	public void setDetailObject(Object detailObject, Object additionalData) {
 		List<? extends IFinding> iFindings = null;
 		if (allergyIntoleranceComposite != null) {
 			if (FindingsServiceComponent.getService() != null && detailObject instanceof Patient) {
-				iFindings = FindingsServiceComponent.getService().getPatientsFindings(
-					((Patient) detailObject).getId(), IAllergyIntolerance.class);
+				iFindings = FindingsServiceComponent.getService().getPatientsFindings(((Patient) detailObject).getId(),
+						IAllergyIntolerance.class);
 			}
-			
+
 			if (iFindings != null && iFindings.size() >= 1) {
 				if (iFindings.size() > 1) {
-					MessageDialog.openWarning(allergyIntoleranceComposite.getShell(),
-						"Allergien",
-						"Mehr als eine Allergien Einträge gefunden.\n Nur die letzte Allergie wird angezeigt.");
+					MessageDialog.openWarning(allergyIntoleranceComposite.getShell(), "Allergien",
+							"Mehr als eine Allergien Einträge gefunden.\n Nur die letzte Allergie wird angezeigt.");
 				}
-				allergyIntoleranceComposite
-					.setInput(Optional.of(((List<IAllergyIntolerance>) iFindings).get(0)));
+				allergyIntoleranceComposite.setInput(Optional.of(((List<IAllergyIntolerance>) iFindings).get(0)));
 			} else {
 				allergyIntoleranceComposite.setInput(Optional.empty());
 			}
 		}
-		
+
 	}
 }

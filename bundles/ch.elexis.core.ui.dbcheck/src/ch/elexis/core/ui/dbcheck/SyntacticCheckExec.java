@@ -12,9 +12,9 @@ import ch.elexis.core.ui.dbcheck.syntactic.SyntacticCheckMySQL;
 import ch.elexis.core.ui.dbcheck.syntactic.SyntacticCheckPGSQL;
 
 public class SyntacticCheckExec extends CheckExec {
-	
+
 	public static SyntacticCheck sc = null;
-	
+
 	/**
 	 * Syntactic Check on the current state of the database
 	 * 
@@ -22,13 +22,13 @@ public class SyntacticCheckExec extends CheckExec {
 	 * 
 	 * @return
 	 */
-	public static String doSyntacticCheckOffCore(IProgressMonitor monitor){
-		
+	public static String doSyntacticCheckOffCore(IProgressMonitor monitor) {
+
 		if (sqlDriver.equalsIgnoreCase(MYSQL_DB)) {
 			sc = new SyntacticCheckMySQL();
 			sc.checkCoreTables(j, monitor);
 			return sc.getErrorLog();
-			
+
 		}
 		if (sqlDriver.equalsIgnoreCase(POSTG_DB)) {
 			sc = new SyntacticCheckPGSQL();
@@ -37,14 +37,14 @@ public class SyntacticCheckExec extends CheckExec {
 		}
 		return "Nicht unterstützer Datenbanktyp; Unterstüztung derzeit für MySQL und PostgreSQL";
 	}
-	
-	public static String getOutputLog(){
+
+	public static String getOutputLog() {
 		if (sc != null)
 			return sc.getOutputLog();
 		return "";
 	}
-	
-	public static String getErrorLog(){
+
+	public static String getErrorLog() {
 		if (sc != null)
 			return sc.getErrorLog();
 		return "";

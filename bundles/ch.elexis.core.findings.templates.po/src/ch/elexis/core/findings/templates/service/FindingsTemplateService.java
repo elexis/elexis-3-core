@@ -62,24 +62,23 @@ import ch.elexis.data.Patient;
 
 @Component()
 public class FindingsTemplateService implements IFindingsTemplateService {
-	
+
 	private static final String FINDINGS_TEMPLATE_ID_PREFIX = "Findings_Template_";
-	
+
 	@Reference
 	private IFindingsService findingsService;
-	
+
 	@Reference
 	private ICodingService codingService;
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
-	
+
 	@Override
-	public FindingsTemplates getFindingsTemplates(String templateId){
+	public FindingsTemplates getFindingsTemplates(String templateId) {
 		Assert.isNotNull(templateId);
 		templateId = templateId.replaceAll(" ", "_");
-		Optional<IBlob> blob =
-			coreModelService.load(FINDINGS_TEMPLATE_ID_PREFIX + templateId, IBlob.class);
+		Optional<IBlob> blob = coreModelService.load(FINDINGS_TEMPLATE_ID_PREFIX + templateId, IBlob.class);
 		if (blob.isPresent()) {
 			Optional<FindingsTemplates> loaded = loadFindingsTemplates(blob.get());
 			if (loaded.isPresent()) {
@@ -87,21 +86,21 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 				ECollections.sort(loaded.get().getFindingsTemplates(), (l, r) -> {
 					if (l == null || r == null) {
 						return l != null ? 1 : -1;
-						}
+					}
 					return ObjectUtils.compare(l.getTitle(), r.getTitle());
 				});
 				return loaded.get();
 			}
 		}
-		
+
 		ModelFactory factory = ModelFactory.eINSTANCE;
 		FindingsTemplates findingsTemplates = factory.createFindingsTemplates();
 		findingsTemplates.setId(FINDINGS_TEMPLATE_ID_PREFIX + templateId);
 		findingsTemplates.setTitle("Standard Vorlagen");
 		return findingsTemplates;
 	}
-	
-	private Optional<FindingsTemplates> loadFindingsTemplates(IBlob iBlob){
+
+	private Optional<FindingsTemplates> loadFindingsTemplates(IBlob iBlob) {
 		String stringContent = iBlob.getStringContent();
 		if (stringContent != null && !stringContent.isEmpty()) {
 			try {
@@ -110,20 +109,19 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 				m.put("xmi", new XMIResourceFactoryImpl());
 				// Obtain a new resource set
 				ResourceSet resSet = new ResourceSetImpl();
-				
+
 				// Get the resource
 				Resource resource = resSet.createResource(URI.createURI("findingsTemplate.xml"));
 				resource.load(new URIConverter.ReadableInputStream(stringContent), null);
 				return Optional.ofNullable((FindingsTemplates) resource.getContents().get(0));
 			} catch (IOException e) {
-				LoggerFactory.getLogger(FindingsTemplateService.class)
-					.error("read findings templates error", e);
+				LoggerFactory.getLogger(FindingsTemplateService.class).error("read findings templates error", e);
 			}
 		}
 		return Optional.empty();
 	}
-	
-	private String createXMI(FindingsTemplates findingsTemplates){
+
+	private String createXMI(FindingsTemplates findingsTemplates) {
 		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		Map<String, Object> m = reg.getExtensionToFactoryMap();
 		m.put("xmi", new XMIResourceFactoryImpl());
@@ -131,7 +129,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		Resource resource = resSet.createResource(URI.createURI("findingsTemplate.xml"));
 		resource.getContents().add(findingsTemplates);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		
+
 		try {
 			resource.save(os, Collections.EMPTY_MAP);
 			os.flush();
@@ -143,9 +141,9 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		}
 		return null;
 	}
-	
+
 	@Override
-	public String saveFindingsTemplates(Optional<FindingsTemplates> findingsTemplates){
+	public String saveFindingsTemplates(Optional<FindingsTemplates> findingsTemplates) {
 		if (findingsTemplates.isPresent()) {
 			String xmi = createXMI(findingsTemplates.get());
 			String id = findingsTemplates.get().getId();
@@ -154,9 +152,9 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		}
 		return null;
 	}
-	
-	private void saveXmiToNamedBlob(String xmi, String blobId){
-		if (xmi != null && blobId != null) { 
+
+	private void saveXmiToNamedBlob(String xmi, String blobId) {
+		if (xmi != null && blobId != null) {
 			IBlob blob = coreModelService.load(blobId, IBlob.class).orElse(null);
 			if (blob == null) {
 				blob = coreModelService.create(IBlob.class);
@@ -165,15 +163,13 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 			blob.setStringContent(xmi);
 			coreModelService.save(blob);
 		} else {
-			//cannot save
-			LoggerFactory.getLogger(FindingsTemplateService.class)
-				.warn("cannot save template - xmi string is null");
+			// cannot save
+			LoggerFactory.getLogger(FindingsTemplateService.class).warn("cannot save template - xmi string is null");
 		}
 	}
-	
+
 	@Override
-	public void exportTemplateToFile(FindingsTemplates findingsTemplates, String path)
-		throws IOException{
+	public void exportTemplateToFile(FindingsTemplates findingsTemplates, String path) throws IOException {
 		if (findingsTemplates != null) {
 			File toExport = new File(path);
 			String content = saveFindingsTemplates(Optional.of(findingsTemplates));
@@ -182,30 +178,28 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 			}
 		}
 	}
-	
+
 	@Override
-	public FindingsTemplates importTemplateFromFile(String path) throws IOException{
+	public FindingsTemplates importTemplateFromFile(String path) throws IOException {
 		if (path != null) {
 			File toImport = new File(path);
 			String xmi = FileUtils.readFileToString(toImport);
-			saveXmiToNamedBlob(xmi,
-				FINDINGS_TEMPLATE_ID_PREFIX + "Standard Vorlagen".replaceAll(" ", "_"));
+			saveXmiToNamedBlob(xmi, FINDINGS_TEMPLATE_ID_PREFIX + "Standard Vorlagen".replaceAll(" ", "_"));
 			return getFindingsTemplates("Standard Vorlagen");
 		}
 		return null;
 	}
-	
-	public void addComponent(IFinding iFinding, FindingsTemplate findingsTemplate){
+
+	public void addComponent(IFinding iFinding, FindingsTemplate findingsTemplate) {
 		if (iFinding instanceof IObservation) {
 			IObservation iObservation = (IObservation) iFinding;
-			ch.elexis.core.findings.ObservationComponent component =
-				new ch.elexis.core.findings.ObservationComponent(UUID.randomUUID().toString());
-			
+			ch.elexis.core.findings.ObservationComponent component = new ch.elexis.core.findings.ObservationComponent(
+					UUID.randomUUID().toString());
+
 			component.setCoding(initCodings(component.getCoding(), findingsTemplate));
-			
+
 			if (findingsTemplate.getInputData() instanceof InputDataNumeric) {
-				InputDataNumeric inputDataNumeric =
-					(InputDataNumeric) findingsTemplate.getInputData();
+				InputDataNumeric inputDataNumeric = (InputDataNumeric) findingsTemplate.getInputData();
 				component.setNumericValue(null);
 				component.setNumericValueUnit(inputDataNumeric.getUnit());
 			}
@@ -215,59 +209,57 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 			iObservation.addComponent(component);
 		}
 	}
-	
+
 	@Override
-	public IFinding createFinding(Patient patient, FindingsTemplate findingsTemplate)
-		throws ElexisException{
+	public IFinding createFinding(Patient patient, FindingsTemplate findingsTemplate) throws ElexisException {
 		IFinding iFinding = null;
 		if (patient != null && patient.exists()) {
 			validateCycleDetection(findingsTemplate, 0, 100);
-			
+
 			Type type = findingsTemplate.getType();
-			
+
 			switch (type) {
-			case CONDITION:
-				ICondition iCondition = create(ICondition.class);
-				iCondition.setCategory(ConditionCategory.PROBLEMLISTITEM);
-				iFinding = iCondition;
-				setFindingsAttributes(iFinding, patient, findingsTemplate);
-				break;
-			case EVALUATION:
-				iFinding = create(IClinicalImpression.class);
-				setFindingsAttributes(iFinding, patient, findingsTemplate);
-				break;
-			case OBSERVATION_VITAL:
-				iFinding = createObservation(patient, findingsTemplate);
-				setFindingsAttributes(iFinding, patient, findingsTemplate);
-				break;
-			case PROCEDURE:
-				iFinding = create(IProcedureRequest.class);
-				setFindingsAttributes(iFinding, patient, findingsTemplate);
-				break;
-			default:
-				break;
+				case CONDITION :
+					ICondition iCondition = create(ICondition.class);
+					iCondition.setCategory(ConditionCategory.PROBLEMLISTITEM);
+					iFinding = iCondition;
+					setFindingsAttributes(iFinding, patient, findingsTemplate);
+					break;
+				case EVALUATION :
+					iFinding = create(IClinicalImpression.class);
+					setFindingsAttributes(iFinding, patient, findingsTemplate);
+					break;
+				case OBSERVATION_VITAL :
+					iFinding = createObservation(patient, findingsTemplate);
+					setFindingsAttributes(iFinding, patient, findingsTemplate);
+					break;
+				case PROCEDURE :
+					iFinding = create(IProcedureRequest.class);
+					setFindingsAttributes(iFinding, patient, findingsTemplate);
+					break;
+				default :
+					break;
 			}
 		} else {
 			throw new ElexisException("Kein Patient ausgewählt.");
 		}
 		return iFinding;
 	}
-	
-	private List<ICoding> initCodings(List<ICoding> codes, FindingsTemplate findingsTemplate){
+
+	private List<ICoding> initCodings(List<ICoding> codes, FindingsTemplate findingsTemplate) {
 		String localCode = findingsTemplate.getTitle();
-		Optional<ICoding> iLocalCoding =
-			getOrCreateCode(localCode, CodingSystem.ELEXIS_LOCAL_CODESYSTEM, true);
-		
+		Optional<ICoding> iLocalCoding = getOrCreateCode(localCode, CodingSystem.ELEXIS_LOCAL_CODESYSTEM, true);
+
 		if (iLocalCoding.isPresent()) {
-			
+
 			// add loinc code
 			if (findingsTemplate.getCodeElement() != null) {
 				CodeElement codeElement = findingsTemplate.getCodeElement();
-				Optional<ICoding> loincCode =
-					getOrCreateCode(codeElement.getCode(), CodingSystem.LOINC_CODESYSTEM, false);
+				Optional<ICoding> loincCode = getOrCreateCode(codeElement.getCode(), CodingSystem.LOINC_CODESYSTEM,
+						false);
 				if (loincCode.isPresent()) {
 					codes.add(loincCode.get());
-					
+
 					// map loinc to local coding
 					if (iLocalCoding.get() instanceof ILocalCoding) {
 						ILocalCoding localCoding = (ILocalCoding) iLocalCoding.get();
@@ -281,34 +273,33 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		}
 		return codes;
 	}
-	
-	private Optional<ICoding> getOrCreateCode(String code, CodingSystem codingSystem,
-		boolean createCodeIfNotExists){
+
+	private Optional<ICoding> getOrCreateCode(String code, CodingSystem codingSystem, boolean createCodeIfNotExists) {
 		if (createCodeIfNotExists) {
 			// if code is not present create a new local code
 			codingService.addLocalCoding(new ICoding() {
-				
+
 				@Override
-				public String getSystem(){
+				public String getSystem() {
 					return codingSystem.getSystem();
 				}
-				
+
 				@Override
-				public String getDisplay(){
+				public String getDisplay() {
 					return code;
 				}
-				
+
 				@Override
-				public String getCode(){
+				public String getCode() {
 					return code;
 				}
 			});
 		}
-		
+
 		return codingService.getCode(codingSystem.getSystem(), code);
 	}
-	
-	public Optional<ICoding> findOneCode(List<ICoding> coding, CodingSystem codingSystem){
+
+	public Optional<ICoding> findOneCode(List<ICoding> coding, CodingSystem codingSystem) {
 		for (ICoding iCoding : coding) {
 			if (codingSystem.getSystem().equals(iCoding.getSystem())) {
 				return Optional.of(iCoding);
@@ -316,27 +307,26 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		}
 		return Optional.empty();
 	}
-	
-	private void setFindingsAttributes(IFinding iFinding, Patient patient,
-		FindingsTemplate findingsTemplate){
+
+	private void setFindingsAttributes(IFinding iFinding, Patient patient, FindingsTemplate findingsTemplate) {
 		if (iFinding != null) {
 			iFinding.setPatientId(patient.getId());
 			String text = findingsTemplate.getTitle();
-			
+
 			if (iFinding instanceof IObservation) {
 				IObservation iObservation = (IObservation) iFinding;
 				List<ICoding> codings = iObservation.getCoding();
-				
+
 				iObservation.setCoding(initCodings(codings, findingsTemplate));
 			} else {
 				iFinding.setText(text);
 			}
 		}
 	}
-	
+
 	@Override
 	public void validateCycleDetection(FindingsTemplate findingsTemplate, int depth, int maxDepth)
-		throws ElexisException{
+			throws ElexisException {
 		if (++depth > maxDepth) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("Es trat ein Fehler in der Vorlage auf.\n");
@@ -362,19 +352,18 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 			}
 		}
 	}
-	
-	private IFinding createObservation(Patient patient, FindingsTemplate findingsTemplate)
-		throws ElexisException{
+
+	private IFinding createObservation(Patient patient, FindingsTemplate findingsTemplate) throws ElexisException {
 		IObservation iObservation = create(IObservation.class);
 		iObservation.setEffectiveTime(LocalDateTime.now());
 		switch (findingsTemplate.getType()) {
-		case OBSERVATION_VITAL:
-			iObservation.setCategory(ObservationCategory.VITALSIGNS);
-			break;
-		default:
-			break;
+			case OBSERVATION_VITAL :
+				iObservation.setCategory(ObservationCategory.VITALSIGNS);
+				break;
+			default :
+				break;
 		}
-		
+
 		InputData inputData = findingsTemplate.getInputData();
 		if (inputData instanceof InputDataGroup) {
 			iObservation.setObservationType(ObservationType.REF);
@@ -390,7 +379,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		} else if (inputData instanceof InputDataGroupComponent) {
 			iObservation.setObservationType(ObservationType.COMP);
 			InputDataGroupComponent group = (InputDataGroupComponent) inputData;
-			
+
 			iObservation.addFormat("textSeparator", group.getTextSeparator());
 			for (FindingsTemplate findingsTemplates : group.getFindingsTemplates()) {
 				addComponent(iObservation, findingsTemplates);
@@ -411,71 +400,63 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		} else if (inputData instanceof InputDataDate) {
 			iObservation.setObservationType(ObservationType.DATE);
 		}
-		
+
 		return iObservation;
 	}
-	
-	public <T extends IFinding> T create(Class<T> clazz){
+
+	public <T extends IFinding> T create(Class<T> clazz) {
 		return findingsService.create(clazz);
 	}
-	
-	public List<IFinding> getFindings(Patient patient){
+
+	public List<IFinding> getFindings(Patient patient) {
 		if (patient != null && patient.exists()) {
 			String patientId = patient.getId();
 			List<IFinding> items = getObservations(patientId);
-			/*	TODO currently only observations needed
+			/*
+			 * TODO currently only observations needed
 			 * items.addAll(getConditions(patientId));
-				items.addAll(getClinicalImpressions(patientId));
-				items.addAll(getPrecedureRequest(patientId));
-				*/
+			 * items.addAll(getClinicalImpressions(patientId));
+			 * items.addAll(getPrecedureRequest(patientId));
+			 */
 			return items;
 		}
 		return Collections.emptyList();
 	}
-	
-	private List<IFinding> getObservations(String patientId){
-		return findingsService.getPatientsFindings(patientId, IObservation.class).stream()
-			.filter(item -> {
-				IObservation iObservation = item;
-				ObservationCategory category = iObservation.getCategory();
-				if (category == ObservationCategory.VITALSIGNS
-					|| category == ObservationCategory.SOAP_SUBJECTIVE
+
+	private List<IFinding> getObservations(String patientId) {
+		return findingsService.getPatientsFindings(patientId, IObservation.class).stream().filter(item -> {
+			IObservation iObservation = item;
+			ObservationCategory category = iObservation.getCategory();
+			if (category == ObservationCategory.VITALSIGNS || category == ObservationCategory.SOAP_SUBJECTIVE
 					|| category == ObservationCategory.SOAP_OBJECTIVE) {
-					
-					return !iObservation.isReferenced();
-				}
-				return false;
-			}).collect(Collectors.toList());
+
+				return !iObservation.isReferenced();
+			}
+			return false;
+		}).collect(Collectors.toList());
 	};
-	
-	/* TODO currently not needed
-	private List<IFinding> getConditions(String patientId){
-		return findingsService.getPatientsFindings(patientId, ICondition.class).stream()
-			.filter(item -> {
-				ConditionCategory category = ((ICondition) item).getCategory();
-				if (category == ConditionCategory.PROBLEMLISTITEM) {
-					return true;
-				}
-				return false;
-			}).collect(Collectors.toList());
-	};
-	
-	private List<IFinding> getClinicalImpressions(String patientId){
-		return findingsService.getPatientsFindings(patientId, IClinicalImpression.class).stream()
-			.collect(Collectors.toList());
-	};
-	
-	private List<IFinding> getPrecedureRequest(String patientId){
-		return findingsService.getPatientsFindings(patientId, IProcedureRequest.class).stream()
-			.collect(Collectors.toList());
-	};
-	*/
-	public Type getType(IFinding iFinding){
+
+	/*
+	 * TODO currently not needed private List<IFinding> getConditions(String
+	 * patientId){ return findingsService.getPatientsFindings(patientId,
+	 * ICondition.class).stream() .filter(item -> { ConditionCategory category =
+	 * ((ICondition) item).getCategory(); if (category ==
+	 * ConditionCategory.PROBLEMLISTITEM) { return true; } return false;
+	 * }).collect(Collectors.toList()); };
+	 * 
+	 * private List<IFinding> getClinicalImpressions(String patientId){ return
+	 * findingsService.getPatientsFindings(patientId,
+	 * IClinicalImpression.class).stream() .collect(Collectors.toList()); };
+	 * 
+	 * private List<IFinding> getPrecedureRequest(String patientId){ return
+	 * findingsService.getPatientsFindings(patientId,
+	 * IProcedureRequest.class).stream() .collect(Collectors.toList()); };
+	 */
+	public Type getType(IFinding iFinding) {
 		if (iFinding instanceof IObservation) {
 			if (((IObservation) iFinding).getCategory() == ObservationCategory.SOAP_SUBJECTIVE) {
 				return Type.OBSERVATION_VITAL;
-			} else if (((IObservation) iFinding)
-				.getCategory() == ObservationCategory.SOAP_OBJECTIVE) {
+			} else if (((IObservation) iFinding).getCategory() == ObservationCategory.SOAP_OBJECTIVE) {
 				return Type.OBSERVATION_VITAL;
 			} else if (((IObservation) iFinding).getCategory() == ObservationCategory.VITALSIGNS) {
 				return Type.OBSERVATION_VITAL;
@@ -491,60 +472,60 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		}
 		return null;
 	}
-	
+
 	@Override
-	public String getTypeAsText(Type type){
+	public String getTypeAsText(Type type) {
 		if (type != null) {
 			switch (type) {
-			case CONDITION:
-				return "Problem";
-			case EVALUATION:
-				return "Beurteilung";
-			case OBSERVATION_VITAL:
-				return "Beobachtung Vitalzeichen";
-			case PROCEDURE:
-				return "Prozedere";
-			default:
-				break;
-			
+				case CONDITION :
+					return "Problem";
+				case EVALUATION :
+					return "Beurteilung";
+				case OBSERVATION_VITAL :
+					return "Beobachtung Vitalzeichen";
+				case PROCEDURE :
+					return "Prozedere";
+				default :
+					break;
+
 			}
 		}
 		return "";
 	}
-	
+
 	@Override
-	public String getDataTypeAsText(DataType dataType){
+	public String getDataTypeAsText(DataType dataType) {
 		switch (dataType) {
-		case GROUP:
-			return "Gruppe";
-		case GROUP_COMPONENT:
-			return "Komponent";
-		case NUMERIC:
-			return "Numerisch";
-		case TEXT:
-			return "Text";
-		case BOOLEAN:
-			return "Checkbox";
-		case DATE:
-			return "Datum";
-		default:
-			return "";
-		
+			case GROUP :
+				return "Gruppe";
+			case GROUP_COMPONENT :
+				return "Komponent";
+			case NUMERIC :
+				return "Numerisch";
+			case TEXT :
+				return "Text";
+			case BOOLEAN :
+				return "Checkbox";
+			case DATE :
+				return "Datum";
+			default :
+				return "";
+
 		}
 	}
-	
+
 	@Override
-	public Optional<FindingsTemplate> getFindingsTemplate(ICoding localCode){
+	public Optional<FindingsTemplate> getFindingsTemplate(ICoding localCode) {
 		IQuery<IBlob> query = coreModelService.getQuery(IBlob.class);
 		query.and("id", COMPARATOR.LIKE, FINDINGS_TEMPLATE_ID_PREFIX + "%");
 		List<IBlob> templatesBlobs = query.execute();
 		for (IBlob iBlob : templatesBlobs) {
 			Optional<FindingsTemplates> templates = loadFindingsTemplates(iBlob);
-			if(templates.isPresent()) {
+			if (templates.isPresent()) {
 				for (FindingsTemplate template : templates.get().getFindingsTemplates()) {
 					if (template.getCodeElement() != null) {
 						if (localCode.getSystem().equals(template.getCodeElement().getSystem())
-							&& localCode.getCode().equals(template.getCodeElement().getCode())) {
+								&& localCode.getCode().equals(template.getCodeElement().getCode())) {
 							return Optional.of(template);
 						}
 					}

@@ -9,20 +9,15 @@ import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.ui.views.BrowserView;
 
-
 public class OpenUrlHandler extends AbstractHandler implements IHandler {
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		IWorkbenchPage activePage =
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		BrowserView view =
-				(BrowserView) activePage.findView(BrowserView.ID);
-		
-		view.navigateTo();	
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		BrowserView view = (BrowserView) activePage.findView(BrowserView.ID);
+
+		view.navigateTo();
 		return null;
 	}
-	
 
-	
 }

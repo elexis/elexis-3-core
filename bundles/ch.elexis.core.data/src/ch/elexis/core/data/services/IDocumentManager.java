@@ -26,13 +26,13 @@ import ch.rgw.tools.TimeSpan;
  * 
  */
 public interface IDocumentManager {
-	
+
 	/** List Categories for Documents */
 	public String[] getCategories();
-	
+
 	/** Add a Categorie */
 	public boolean addCategorie(String categorie);
-	
+
 	/**
 	 * Ad a document
 	 * 
@@ -42,9 +42,9 @@ public interface IDocumentManager {
 	 * @throws ElexisException
 	 */
 	public String addDocument(IOpaqueDocument doc) throws ElexisException;
-	
+
 	public String addDocument(IOpaqueDocument doc, boolean automaticBilling) throws ElexisException;
-	
+
 	/**
 	 * remove and delete a document
 	 * 
@@ -53,7 +53,7 @@ public interface IDocumentManager {
 	 * @return true on success
 	 */
 	public boolean removeDocument(String guid);
-	
+
 	/**
 	 * Render a Document to a Stream
 	 * 
@@ -62,11 +62,12 @@ public interface IDocumentManager {
 	 * @return
 	 */
 	public InputStream getDocument(String id);
-	
+
 	/**
-	 * Retrieve documents with matching criteria. If a parameter is null, it will be considered as
-	 * "any". If a String parameter is enclosed in slashes, it will be considered as regex:
-	 * "/m[ae]h/" will match mah and meh, while "m[ae]h" will only match the literal string m[ae]h.
+	 * Retrieve documents with matching criteria. If a parameter is null, it will be
+	 * considered as "any". If a String parameter is enclosed in slashes, it will be
+	 * considered as regex: "/m[ae]h/" will match mah and meh, while "m[ae]h" will
+	 * only match the literal string m[ae]h.
 	 * 
 	 * @param pat
 	 *            The patient the documents belong to
@@ -75,18 +76,18 @@ public interface IDocumentManager {
 	 * @param titleMatch
 	 *            title
 	 * @param keywordMatch
-	 *            keyword to find. Will match if at least one of the documents keywords match the
-	 *            parameter
+	 *            keyword to find. Will match if at least one of the documents
+	 *            keywords match the parameter
 	 * @param dateMatch
 	 *            match only documents woth dates within the given timespan
 	 * @param contentsMatch
-	 *            find a match in the contents of the document. Note: This is not supported by all
-	 *            documentmanagers and it might be very inefficient! If the parameter is not null
-	 *            and the implementation does not support contentMatch, it throws an ElexisException
+	 *            find a match in the contents of the document. Note: This is not
+	 *            supported by all documentmanagers and it might be very
+	 *            inefficient! If the parameter is not null and the implementation
+	 *            does not support contentMatch, it throws an ElexisException
 	 *            EE_NOT_SUPPORTED.
 	 * @return lust of all IDocuments matching the goven criteria
 	 */
-	public List<IOpaqueDocument> listDocuments(Patient pat, String categoryMatch,
-		String titleMatch, String keywordMatch, TimeSpan dateMatch, String contentsMatch)
-		throws ElexisException;
+	public List<IOpaqueDocument> listDocuments(Patient pat, String categoryMatch, String titleMatch,
+			String keywordMatch, TimeSpan dateMatch, String contentsMatch) throws ElexisException;
 }

@@ -10,17 +10,15 @@
  */
 package ch.elexis.core.model;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IUser Config</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>IUser
+ * Config</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IUserConfig#getOwner <em>Owner</em>}</li>
+ * <li>{@link ch.elexis.core.model.IUserConfig#getOwner <em>Owner</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIUserConfig()
@@ -29,26 +27,29 @@ package ch.elexis.core.model;
  */
 public interface IUserConfig extends IConfig {
 	/**
-	 * Returns the value of the '<em><b>Owner</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Owner</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Owner</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Owner</em>' reference isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Owner</em>' reference.
 	 * @see #setOwner(IContact)
 	 * @see ch.elexis.core.model.ModelPackage#getIUserConfig_Owner()
-	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='ownerId'"
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping
+	 *        attributeName='ownerId'"
 	 * @generated
 	 */
 	IContact getOwner();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IUserConfig#getOwner <em>Owner</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Owner</em>' reference.
+	 * Sets the value of the '{@link ch.elexis.core.model.IUserConfig#getOwner
+	 * <em>Owner</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Owner</em>' reference.
 	 * @see #getOwner()
 	 * @generated
 	 */

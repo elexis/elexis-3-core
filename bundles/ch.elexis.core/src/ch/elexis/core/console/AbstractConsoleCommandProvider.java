@@ -24,26 +24,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This abstract class eases implementation of console commands. In order to use it efficiently the
- * implementing class should only have ONE root method (starting with <code>_rootMethodName</code>.
- * Every method starting with <code>__submethod</code> is then treated as a parameter to the root
- * method. And every sub-method to sub-method (separated with a single underscore) is treated same.
+ * This abstract class eases implementation of console commands. In order to use
+ * it efficiently the implementing class should only have ONE root method
+ * (starting with <code>_rootMethodName</code>. Every method starting with
+ * <code>__submethod</code> is then treated as a parameter to the root method.
+ * And every sub-method to sub-method (separated with a single underscore) is
+ * treated same.
  * 
  */
 public abstract class AbstractConsoleCommandProvider implements CommandProvider {
-	
+
 	public final Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	private static Map<String, Method> methods = new HashMap<>();
 	private static LinkedHashMap<String, String> commandsHelp = new LinkedHashMap<>();
 	private String[] arguments;
 	protected CommandInterpreter ci;
-	
+
 	private String[] subArguments;
-	
+
 	private String outcomeMessage;
-	
-	protected void register(Class<?> clazz){
+
+	protected void register(Class<?> clazz) {
 		for (Method method : clazz.getMethods()) {
 			if (method.getName().startsWith("__")) {
 				methods.put(method.getName(), method);
@@ -54,23 +56,23 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			}
 		}
 	}
-	
-	public String getArgument(int i){
+
+	public String getArgument(int i) {
 		if (arguments.length >= i + 1) {
 			return arguments[i];
 		}
 		return null;
 	}
-	
-	public void executeCommand(String root, CommandInterpreter ci){
+
+	public void executeCommand(String root, CommandInterpreter ci) {
 		this.ci = ci;
-		
+
 		arguments = collectArguments(root, ci);
 		if (arguments.length == 0) {
 			ci.println(getHelp(root));
 			return;
 		}
-		
+
 		// match method by longest signature
 		Method method = null;
 		int i;
@@ -81,30 +83,30 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 				break;
 			}
 		}
-		
+
 		if (method == null) {
 			printHelp(arguments);
 			return;
 		}
-		
+
 		subArguments = Arrays.copyOfRange(arguments, i, arguments.length);
-		
+
 		String joinedArguments = String.join(" ", arguments);
 		ci.println("--( " + new Date() + " )---[cmd: " + joinedArguments + "]"
-			+ getRelativeFixedLengthSeparator(joinedArguments, 100, "-"));
-		
+				+ getRelativeFixedLengthSeparator(joinedArguments, 100, "-"));
+
 		try {
 			outcomeMessage = null;
 			Object result = null;
 			if (method.getParameterCount() > 0) {
 				Object[] args = new Object[method.getParameterCount()];
-				
+
 				Class<?>[] parameterTypes = method.getParameterTypes();
 				for (int j = 0; j < parameterTypes.length; j++) {
 					Class<?> clazz = parameterTypes[j];
 					if (clazz.equals(Iterator.class)) {
-						NoThrowExceptionIterator<String> nullContinueIterator =
-							new NoThrowExceptionIterator<>(Arrays.asList(subArguments).iterator());
+						NoThrowExceptionIterator<String> nullContinueIterator = new NoThrowExceptionIterator<>(
+								Arrays.asList(subArguments).iterator());
 						args[j] = nullContinueIterator;
 					} else if (clazz.equals(List.class)) {
 						args[j] = Arrays.asList(subArguments);
@@ -135,19 +137,18 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			}
 		}
 	}
-	
-	private String[] collectArguments(String root, CommandInterpreter ci){
+
+	private String[] collectArguments(String root, CommandInterpreter ci) {
 		String argument;
 		List<String> argumentQ = new ArrayList<>();
 		argumentQ.add(root);
 		while ((argument = ci.nextArgument()) != null) {
 			argumentQ.add(argument);
 		}
-		return argumentQ.toArray(new String[] {});
+		return argumentQ.toArray(new String[]{});
 	}
-	
-	public String getRelativeFixedLengthSeparator(String value, int determinedLength,
-		String separator){
+
+	public String getRelativeFixedLengthSeparator(String value, int determinedLength, String separator) {
 		if (value == null) {
 			return "";
 		}
@@ -156,42 +157,42 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		}
 		return String.join("", Collections.nCopies(determinedLength - value.length(), separator));
 	}
-	
-	public void fail(String message){
+
+	public void fail(String message) {
 		outcomeMessage = "ERR " + message;
 	}
-	
-	public String ok(){
+
+	public String ok() {
 		return "OK";
 	}
-	
-	public void ok(Object object){
+
+	public void ok(Object object) {
 		outcomeMessage = "OK " + object;
 	}
-	
-	public String missingArgument(String string){
+
+	public String missingArgument(String string) {
 		return "Missing argument: " + string;
 	}
-	
+
 	@Override
-	public String getHelp(){
+	public String getHelp() {
 		return getHelp("");
 	}
-	
-	public void printHelp(String... sub){
+
+	public void printHelp(String... sub) {
 		ci.println(getHelp(sub));
 	}
-	
+
 	/** Private helper method for getHelp. Formats the help headers. */
-	private void addHeader(String header, StringBuilder help){
+	private void addHeader(String header, StringBuilder help) {
 		help.append("---"); //$NON-NLS-1$
 		help.append(header);
 		help.append("---"); //$NON-NLS-1$
 		help.append("\n");
 	}
-	
+
 	/** Private helper method for getHelp. Formats the command descriptions. */
-	private void addCommand(String command, String params, String description, StringBuilder help){
+	private void addCommand(String command, String params, String description, StringBuilder help) {
 		help.append("   ");
 		help.append(command);
 		if (params != null) {
@@ -201,8 +202,8 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		help.append(description);
 		help.append("\n");
 	}
-	
-	public String getHelp(String... sub){
+
+	public String getHelp(String... sub) {
 		StringBuilder sb = new StringBuilder();
 		if (sub == null) {
 			return printOverviewHelp();
@@ -210,16 +211,16 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		if (StringUtils.isBlank(sub[0])) {
 			return "";
 		}
-		String[] methodSignatures = methods.keySet().toArray(new String[] {});
-		
+		String[] methodSignatures = methods.keySet().toArray(new String[]{});
+
 		sb.append(StringUtils.join(sub, " "));
 		sb.append(" ");
-		
+
 		Set<String> relevant = new HashSet<>();
 		for (int i = 0; i < methodSignatures.length; i++) {
 			String key = methodSignatures[i];
 			String[] splitMethodNames = key.substring(2).split("_");
-			
+
 			List<String> subList = Arrays.asList(sub);
 			List<String> asList = new ArrayList<>(Arrays.asList(splitMethodNames));
 			int indexOfSubList = Collections.indexOfSubList(asList, subList);
@@ -228,15 +229,15 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 				relevant.add(asList.get(0));
 			}
 		}
-		
+
 		if (relevant.isEmpty()) {
 			return "Sub/Command not found: " + StringUtils.join(sub, " ");
 		}
-		
+
 		// flatten the set (prevents mulitple entries) to a list
 		List<String> helpList = new ArrayList<>(relevant);
 		Collections.sort(helpList, Comparator.naturalOrder());
-		
+
 		sb.append("(" + helpList.stream().reduce((u, t) -> u + " | " + t).orElse("") + ")\n");
 		for (String string : helpList) {
 			String methodKey = "__" + StringUtils.join(sub, "_") + "_" + string;
@@ -251,11 +252,11 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 				sb.append("   " + string + " - [see subcommand]\n");
 			}
 		}
-		
+
 		return sb.toString();
 	}
-	
-	private String buildParamsBNFString(Parameter[] params){
+
+	private String buildParamsBNFString(Parameter[] params) {
 		StringBuilder sb = new StringBuilder();
 		for (Parameter cmdParam : params) {
 			CmdParam annotation = cmdParam.getAnnotation(CmdParam.class);
@@ -270,8 +271,8 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		}
 		return sb.toString();
 	}
-	
-	private String printOverviewHelp(){
+
+	private String printOverviewHelp() {
 		StringBuilder sb = new StringBuilder();
 		addHeader("Elexis Admin Commands", sb);
 		Iterator<Entry<String, String>> i = commandsHelp.entrySet().iterator();
@@ -283,14 +284,14 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * @see #prflp(String, int, boolean)
 	 */
-	public void prflp(String value, int length){
+	public void prflp(String value, int length) {
 		prflp(value, length, false);
 	}
-	
+
 	/**
 	 * print formatted line part
 	 * 
@@ -301,42 +302,42 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 	 * @param endLine
 	 *            if this is the last token of the line
 	 */
-	public void prflp(String value, int length, boolean endLine){
+	public void prflp(String value, int length, boolean endLine) {
 		String abbreviated = StringUtils.abbreviate(value, ".. ", length);
 		ci.print(String.format("%-" + length + "s", abbreviated));
 		if (endLine) {
 			ci.print("\n");
 		}
 	}
-	
+
 	/**
-	 * An {@link Iterator} that does not throw a {@link NoSuchElementException} but simply returns
-	 * <code>null</code>.
+	 * An {@link Iterator} that does not throw a {@link NoSuchElementException} but
+	 * simply returns <code>null</code>.
 	 *
 	 * @param <E>
 	 */
 	private class NoThrowExceptionIterator<E> implements Iterator<E> {
-		
+
 		private final Iterator<E> iterator;
-		
-		public NoThrowExceptionIterator(Iterator<E> iterator){
+
+		public NoThrowExceptionIterator(Iterator<E> iterator) {
 			this.iterator = iterator;
 		}
-		
+
 		@Override
-		public boolean hasNext(){
+		public boolean hasNext() {
 			return iterator.hasNext();
 		}
-		
+
 		@Override
-		public E next(){
+		public E next() {
 			try {
 				return iterator.next();
 			} catch (NoSuchElementException nse) {
 				return null;
 			}
 		}
-		
+
 	}
-	
+
 }

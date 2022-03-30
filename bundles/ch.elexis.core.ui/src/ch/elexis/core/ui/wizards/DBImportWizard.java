@@ -22,70 +22,70 @@ public class DBImportWizard extends Wizard {
 	private String user = null;
 	private String pwd = null;
 	String[] preset = null;
-	
-	DBImportFirstPage first = new DBImportFirstPage(Messages.DBImportWizard_typeOfDB); //$NON-NLS-1$
+
+	DBImportFirstPage first = new DBImportFirstPage(Messages.DBImportWizard_typeOfDB); // $NON-NLS-1$
 	DBImportSecondPage sec = new DBImportSecondPage("Credentials"); //$NON-NLS-1$
-	
-	public DBImportWizard(){
+
+	public DBImportWizard() {
 		super();
-		setWindowTitle(Messages.DBImportWizard_connectDB); //$NON-NLS-1$
+		setWindowTitle(Messages.DBImportWizard_connectDB); // $NON-NLS-1$
 	}
-	
-	public DBImportWizard(String[] preset){
+
+	public DBImportWizard(String[] preset) {
 		this();
 		this.preset = preset;
 	}
-	
+
 	@Override
-	public void addPages(){
+	public void addPages() {
 		addPage(first);
 		addPage(sec);
 	}
-	
+
 	@Override
-	public boolean performFinish(){
+	public boolean performFinish() {
 		int ti = first.dbTypes.getSelectionIndex();
 		server = first.server.getText();
 		db = first.dbName.getText();
 		user = sec.name.getText();
 		pwd = sec.pwd.getText();
 		switch (ti) {
-		case DBImportFirstPage.MYSQL:
-			type = "MySQL"; //$NON-NLS-1$
-			break;
-		case DBImportFirstPage.POSTGRESQL:
-			type = "PostgreSQL"; //$NON-NLS-1$
-			break;
-		case DBImportFirstPage.H2:
-			type = "H2";
-			break;
-		case DBImportFirstPage.ODBC:
-			type = "ODBC"; //$NON-NLS-1$
-			break;
-		default:
-			type = null;
-			return false;
+			case DBImportFirstPage.MYSQL :
+				type = "MySQL"; //$NON-NLS-1$
+				break;
+			case DBImportFirstPage.POSTGRESQL :
+				type = "PostgreSQL"; //$NON-NLS-1$
+				break;
+			case DBImportFirstPage.H2 :
+				type = "H2";
+				break;
+			case DBImportFirstPage.ODBC :
+				type = "ODBC"; //$NON-NLS-1$
+				break;
+			default :
+				type = null;
+				return false;
 		}
 		return true;
 	}
-	
-	public String getType(){
+
+	public String getType() {
 		return type;
 	}
-	
-	public String getServer(){
+
+	public String getServer() {
 		return server;
 	}
-	
-	public String getDb(){
+
+	public String getDb() {
 		return db;
 	}
-	
-	public String getUser(){
+
+	public String getUser() {
 		return user;
 	}
-	
-	public String getPassword(){
+
+	public String getPassword() {
 		return pwd;
 	}
 }

@@ -13,23 +13,23 @@ import ch.elexis.core.services.IModelService;
 import ch.rgw.tools.Result;
 
 public abstract class AbstractOptifier<T extends IBillable> implements IBillableOptifier<T> {
-	
+
 	protected IModelService coreModelService;
 	protected IContextService contextService;
-	
+
 	/**
-	 * Create an {@link AbstractOptifier} instance, and provide an {@link IModelService} for
-	 * accessing the ch.elexis.core model.
+	 * Create an {@link AbstractOptifier} instance, and provide an
+	 * {@link IModelService} for accessing the ch.elexis.core model.
 	 * 
 	 * @param coreModelService
 	 */
-	public AbstractOptifier(IModelService coreModelService, IContextService contextService){
+	public AbstractOptifier(IModelService coreModelService, IContextService contextService) {
 		this.coreModelService = coreModelService;
 		this.contextService = contextService;
 	}
-	
+
 	@Override
-	public Result<IBilled> add(T billable, IEncounter encounter, double amount, boolean save){
+	public Result<IBilled> add(T billable, IEncounter encounter, double amount, boolean save) {
 		boolean added = false;
 		IBilled billed = null;
 		// lookup existing billed, add if found
@@ -48,8 +48,7 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 		}
 		if (!added) {
 			IContact activeUserContact = contextService.getActiveUserContact().get();
-			billed = new IBilledBuilder(coreModelService, billable, encounter, activeUserContact)
-				.build();
+			billed = new IBilledBuilder(coreModelService, billable, encounter, activeUserContact).build();
 			setPrice(billable, billed);
 			billed.setAmount(amount);
 			if (save) {
@@ -58,27 +57,27 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 		}
 		return new Result<IBilled>(billed);
 	}
-	
+
 	@Override
-	public Result<IBilled> remove(IBilled billed, IEncounter encounter){
+	public Result<IBilled> remove(IBilled billed, IEncounter encounter) {
 		encounter.removeBilled(billed);
 		return new Result<IBilled>(billed);
 	}
-	
+
 	/**
-	 * Set the actual price of <b>one</b> billable in the {@link IBilled} instance. The encounter
-	 * reference of the {@link IBilled} should be set.
+	 * Set the actual price of <b>one</b> billable in the {@link IBilled} instance.
+	 * The encounter reference of the {@link IBilled} should be set.
 	 * 
 	 * @param billable
 	 * @param billed
 	 */
 	protected abstract void setPrice(T billable, IBilled billed);
-	
+
 	@Override
-	public void putContext(String key, Object value){
+	public void putContext(String key, Object value) {
 	}
-	
+
 	@Override
-	public void clearContext(){
+	public void clearContext() {
 	}
 }

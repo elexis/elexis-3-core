@@ -21,29 +21,28 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.ui.icons.Images;
 
 public class AddAttachmentAction extends Action implements IAction {
-	
+
 	private AttachmentsComposite composite;
-	
-	public AddAttachmentAction(AttachmentsComposite attachmentsComposite){
+
+	public AddAttachmentAction(AttachmentsComposite attachmentsComposite) {
 		this.composite = attachmentsComposite;
 	}
-	
+
 	@Override
-	public ImageDescriptor getImageDescriptor(){
+	public ImageDescriptor getImageDescriptor() {
 		return Images.IMG_NEW.getImageDescriptor();
 	}
-	
+
 	@Override
-	public void run(){
+	public void run() {
 		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-		Command openSelectionCommand =
-			commandService.getCommand("ch.elexis.core.ui.documents.commandOpenSelection");
-		ParameterizedCommand parametrizedCommmand =
-			ParameterizedCommand.generateCommand(openSelectionCommand, Collections.emptyMap());
-		
+		Command openSelectionCommand = commandService.getCommand("ch.elexis.core.ui.documents.commandOpenSelection");
+		ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(openSelectionCommand,
+				Collections.emptyMap());
+
 		try {
 			Object selection = PlatformUI.getWorkbench().getService(IHandlerService.class)
-				.executeCommand(parametrizedCommmand, null);
+					.executeCommand(parametrizedCommmand, null);
 			if (selection instanceof List) {
 				for (Object selected : (List<?>) selection) {
 					if (selected instanceof IDocument) {
@@ -51,8 +50,7 @@ public class AddAttachmentAction extends Action implements IAction {
 					}
 				}
 			}
-		} catch (ExecutionException | NotDefinedException | NotEnabledException
-				| NotHandledException e) {
+		} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
 			LoggerFactory.getLogger(getClass()).error("Error adding document", e);
 		}
 	}

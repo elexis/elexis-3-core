@@ -13,9 +13,10 @@ import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.data.Patient;
 
 public interface IFindingsTemplateService {
-	
+
 	/**
-	 * Create a {@link IFinding} for a {@link Patient} using the provided {@link FindingsTemplate}.
+	 * Create a {@link IFinding} for a {@link Patient} using the provided
+	 * {@link FindingsTemplate}.
 	 * 
 	 * @param load
 	 * @param template
@@ -23,7 +24,7 @@ public interface IFindingsTemplateService {
 	 * @throws ElexisException
 	 */
 	public IFinding createFinding(Patient load, FindingsTemplate template) throws ElexisException;
-	
+
 	/**
 	 * Get a findings templates model.
 	 * 
@@ -31,7 +32,7 @@ public interface IFindingsTemplateService {
 	 * @return
 	 */
 	public FindingsTemplates getFindingsTemplates(String string);
-	
+
 	/**
 	 * Serializes and saves the model.
 	 * 
@@ -40,10 +41,11 @@ public interface IFindingsTemplateService {
 	 * @return
 	 */
 	public String saveFindingsTemplates(Optional<FindingsTemplates> model);
-	
+
 	/**
-	 * Checks if there is a cycle in the references of the provided {@link FindingsTemplate}. If a
-	 * cycle is detected an {@link ElexisException} is thrown.
+	 * Checks if there is a cycle in the references of the provided
+	 * {@link FindingsTemplate}. If a cycle is detected an {@link ElexisException}
+	 * is thrown.
 	 * 
 	 * @param findingsTemplate
 	 * @param depth
@@ -53,8 +55,8 @@ public interface IFindingsTemplateService {
 	 * @throws ElexisException
 	 */
 	public void validateCycleDetection(FindingsTemplate findingsTemplate, int depth, int maxDepth)
-		throws ElexisException;
-	
+			throws ElexisException;
+
 	/**
 	 * Import a {@link FindingsTemplates} model from a file.
 	 * 
@@ -63,7 +65,7 @@ public interface IFindingsTemplateService {
 	 * @throws IOException
 	 */
 	public FindingsTemplates importTemplateFromFile(String path) throws IOException;
-	
+
 	/**
 	 * Export a {@link FindingsTemplates} model to a file.
 	 * 
@@ -72,7 +74,7 @@ public interface IFindingsTemplateService {
 	 * @throws IOException
 	 */
 	public void exportTemplateToFile(FindingsTemplates model, String path) throws IOException;
-	
+
 	/**
 	 * Get a probably translated human readable text for the {@link DataType}.
 	 * 
@@ -80,7 +82,7 @@ public interface IFindingsTemplateService {
 	 * @return
 	 */
 	public String getDataTypeAsText(DataType element);
-	
+
 	/**
 	 * Get a probably translated human readable text for the {@link Type}.
 	 * 
@@ -88,7 +90,7 @@ public interface IFindingsTemplateService {
 	 * @return
 	 */
 	public String getTypeAsText(Type element);
-	
+
 	/**
 	 * Get a {@link FindingsTemplate} matching the {@link ICoding}.
 	 * 

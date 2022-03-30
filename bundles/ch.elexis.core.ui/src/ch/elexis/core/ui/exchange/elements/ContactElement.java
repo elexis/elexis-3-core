@@ -54,24 +54,24 @@ public class ContactElement extends XChangeElement {
 	public static final String VALUE_MALE = "male"; //$NON-NLS-1$
 	public static final String VALUE_FEMALE = "female"; //$NON-NLS-1$
 	public static final String ATTR_REMARK = "remark"; //$NON-NLS-1$
-	
-	public void add(AddressElement ae){
+
+	public void add(AddressElement ae) {
 		super.add(ae);
 	}
-	
-	public void add(ContactRefElement ce){
+
+	public void add(ContactRefElement ce) {
 		super.add(ce);
 	}
-	
-	public void add(MedicalElement me){
+
+	public void add(MedicalElement me) {
 		super.add(me);
 	}
-	
-	public List<AddressElement> getAddresses(){
+
+	public List<AddressElement> getAddresses() {
 		return (List<AddressElement>) getChildren(ELEM_ADDRESS, AddressElement.class);
 	}
-	
-	public ContactElement asExporter(XChangeExporter parent, Kontakt k){
+
+	public ContactElement asExporter(XChangeExporter parent, Kontakt k) {
 		asExporter(parent);
 		XidElement eXid = new XidElement().asExporter(parent, k);
 		add(eXid);
@@ -80,7 +80,7 @@ public class ContactElement extends XChangeElement {
 			setAttribute(ATTR_TYPE, VALUE_PERSON);
 			setAttribute(ATTR_LASTNAME, p.getName());
 			setAttribute(ATTR_FIRSTNAME, p.getVorname());
-			if (p.getGeschlecht().equals(Person.MALE)) { //$NON-NLS-1$
+			if (p.getGeschlecht().equals(Person.MALE)) { // $NON-NLS-1$
 				setAttribute(ATTR_SEX, VALUE_MALE);
 			} else {
 				setAttribute(ATTR_SEX, VALUE_FEMALE);
@@ -89,7 +89,7 @@ public class ContactElement extends XChangeElement {
 			if (!StringTool.isNothing(gebdat)) {
 				setAttribute(ATTR_BIRTHDATE, new TimeTool(gebdat).toString(TimeTool.DATE_ISO));
 			}
-			
+
 		} else {
 			setAttribute(ATTR_TYPE, VALUE_ORGANIZATION);
 			String name = k.get(Kontakt.FLD_NAME1);
@@ -108,23 +108,21 @@ public class ContactElement extends XChangeElement {
 		parent.getContainer().addMapping(this, k);
 		return this;
 	}
-	
-	public List<ContactRefElement> getAssociations(){
-		List<ContactRefElement> ret =
-			(List<ContactRefElement>) getChildren("connection", ContactRefElement.class); //$NON-NLS-1$
+
+	public List<ContactRefElement> getAssociations() {
+		List<ContactRefElement> ret = (List<ContactRefElement>) getChildren("connection", ContactRefElement.class); //$NON-NLS-1$
 		return ret;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(Messages.ContactElement_Name).append(getAttr(ATTR_LASTNAME))
-			.append(StringTool.lf); //$NON-NLS-1$
-		sb.append(Messages.ContactElement_vorname).append(getAttr(ATTR_FIRSTNAME)); //$NON-NLS-1$
+		sb.append(Messages.ContactElement_Name).append(getAttr(ATTR_LASTNAME)).append(StringTool.lf); // $NON-NLS-1$
+		sb.append(Messages.ContactElement_vorname).append(getAttr(ATTR_FIRSTNAME)); // $NON-NLS-1$
 		String middle = getAttr(ATTR_MIDDLENAME);
 		if (middle.length() > 0) {
 			sb.append(StringTool.space).append(middle);
 		}
-		sb.append(Messages.ContactElement_gebdat); //$NON-NLS-1$
+		sb.append(Messages.ContactElement_gebdat); // $NON-NLS-1$
 		TimeTool geb = new TimeTool(getAttr(ATTR_BIRTHDATE));
 		sb.append(geb.toString(TimeTool.DATE_GER)).append(StringTool.lf);
 		sb.append("PID: ").append(getAttr(ATTR_ID)).append(StringTool.lf + StringTool.lf); //$NON-NLS-1$
@@ -134,13 +132,13 @@ public class ContactElement extends XChangeElement {
 		}
 		return sb.toString();
 	}
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
-	public PersistentObject doImport(PersistentObject context){
+
+	public PersistentObject doImport(PersistentObject context) {
 		XidElement eXid = getXid();
 		Kontakt ret = null;
 		if (eXid != null) {
@@ -153,8 +151,8 @@ public class ContactElement extends XChangeElement {
 						ae = lae.get(0);
 					} else {
 						for (AddressElement adr : lae) {
-							if (adr.getAttr(AddressElement.ATTR_DESCRIPTION).equalsIgnoreCase(
-								AddressElement.VALUE_DEFAULT)) {
+							if (adr.getAttr(AddressElement.ATTR_DESCRIPTION)
+									.equalsIgnoreCase(AddressElement.VALUE_DEFAULT)) {
 								ae = adr;
 								break;
 							}
@@ -163,7 +161,7 @@ public class ContactElement extends XChangeElement {
 							ae = lae.get(0);
 						}
 					}
-					
+
 				}
 				String strasse = null;
 				String plz = null;
@@ -176,16 +174,12 @@ public class ContactElement extends XChangeElement {
 				}
 				if (getAttr(ATTR_TYPE).equalsIgnoreCase(VALUE_PERSON)) {
 					String s = getAttr(ATTR_SEX).equals(VALUE_MALE) ? Person.MALE : Person.FEMALE;
-					ret =
-						KontaktMatcher.findPerson(getAttr(ATTR_LASTNAME), getAttr(ATTR_FIRSTNAME),
-							getAttr(ATTR_BIRTHDATE), s, strasse, plz, ort, natel,
-							KontaktMatcher.CreateMode.CREATE);
-					
+					ret = KontaktMatcher.findPerson(getAttr(ATTR_LASTNAME), getAttr(ATTR_FIRSTNAME),
+							getAttr(ATTR_BIRTHDATE), s, strasse, plz, ort, natel, KontaktMatcher.CreateMode.CREATE);
+
 				} else {
-					ret =
-						KontaktMatcher.findOrganisation(getAttr(ATTR_LASTNAME),
-							getAttr(ATTR_FIRSTNAME), strasse, plz, ort,
-							KontaktMatcher.CreateMode.CREATE);
+					ret = KontaktMatcher.findOrganisation(getAttr(ATTR_LASTNAME), getAttr(ATTR_FIRSTNAME), strasse, plz,
+							ort, KontaktMatcher.CreateMode.CREATE);
 				}
 			} else if (cands.size() == 1) {
 				if (getAttr(ATTR_TYPE).equalsIgnoreCase(VALUE_PERSON)) {
@@ -195,16 +189,15 @@ public class ContactElement extends XChangeElement {
 				}
 			}
 			getStickersMeta(ret);
-			MedicalElement me =
-				(MedicalElement) getChild(MedicalElement.XMLNAME, MedicalElement.class);
+			MedicalElement me = (MedicalElement) getChild(MedicalElement.XMLNAME, MedicalElement.class);
 			me.doImport(ret);
 		}
 		return ret;
 	}
-	
-	protected void getStickersMeta(Kontakt ret){
+
+	protected void getStickersMeta(Kontakt ret) {
 		List<MetaElement> meta = (List<MetaElement>) getChildren(MetaElement.XMLNAME, MetaElement.class);
-		if(meta != null && !meta.isEmpty()) {
+		if (meta != null && !meta.isEmpty()) {
 			for (MetaElement metaElement : meta) {
 				if ("stickers".equals(metaElement.getAttr(MetaElement.ATTR_NAME))) {
 					String stickersString = metaElement.getAttr(MetaElement.ATTR_VALUE);
@@ -213,7 +206,7 @@ public class ContactElement extends XChangeElement {
 						for (String stickerString : stickerStrings) {
 							String[] stickerParts = stickerString.split("::");
 							if (stickerParts != null && stickerParts.length > 1
-								&& StringUtils.isNotBlank(stickerParts[0])) {
+									&& StringUtils.isNotBlank(stickerParts[0])) {
 								Sticker sticker = getOrCreateSticker(stickerParts);
 								if (sticker != null) {
 									ret.addSticker(sticker);
@@ -225,8 +218,8 @@ public class ContactElement extends XChangeElement {
 			}
 		}
 	}
-	
-	private Sticker getOrCreateSticker(String[] stickerParts){
+
+	private Sticker getOrCreateSticker(String[] stickerParts) {
 		Query<Sticker> query = new Query<>(Sticker.class);
 		query.add(Sticker.FLD_NAME, Query.EQUALS, stickerParts[0]);
 		List<Sticker> existing = query.execute();
@@ -246,17 +239,17 @@ public class ContactElement extends XChangeElement {
 			return existing.get(0);
 		}
 	}
-	
-	private void addStickersMeta(List<ISticker> stickers){
+
+	private void addStickersMeta(List<ISticker> stickers) {
 		if (stickers != null && !stickers.isEmpty()) {
 			StringJoiner sj = new StringJoiner("|");
-			stickers.stream().forEach(s -> sj.add(s.getLabel() + "::" + s.getWert() + "::"
-				+ s.getForeground() + "::" + s.getBackground()));
+			stickers.stream().forEach(s -> sj
+					.add(s.getLabel() + "::" + s.getWert() + "::" + s.getForeground() + "::" + s.getBackground()));
 			addMeta("stickers", sj.toString());
 		}
 	}
-	
-	public void addMeta(String name, String value){
+
+	public void addMeta(String name, String value) {
 		MetaElement meta = new MetaElement().asExporter(sender, name, value);
 		add(meta);
 	}

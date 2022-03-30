@@ -17,22 +17,20 @@ import java.util.List;
 import org.eclipse.emf.common.util.Enumerator;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Task State</b></em>',
- * and utility methods for working with them.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration
+ * '<em><b>Task State</b></em>', and utility methods for working with them. <!--
+ * end-user-doc -->
+ * 
  * @see ch.elexis.core.tasks.model.ModelPackage#getTaskState()
  * @model
  * @generated
  */
 public enum TaskState implements Enumerator {
 	/**
-	 * The '<em><b>DRAFT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task object was just created.
+	 * The '<em><b>DRAFT</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc --> <!-- begin-model-doc --> The task object was just created.
 	 * <!-- end-model-doc -->
+	 * 
 	 * @see #DRAFT_VALUE
 	 * @generated
 	 * @ordered
@@ -40,23 +38,22 @@ public enum TaskState implements Enumerator {
 	DRAFT(0, "DRAFT", "DRAFT"),
 
 	/**
-	 * The '<em><b>QUEUED</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task has been queued. Depending on its type (singleton or not) it is added to a specific queue.
-	 * <!-- end-model-doc -->
+	 * The '<em><b>QUEUED</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc --> <!-- begin-model-doc --> The task has been queued. Depending
+	 * on its type (singleton or not) it is added to a specific queue. <!--
+	 * end-model-doc -->
+	 * 
 	 * @see #QUEUED_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	QUEUED(5, "QUEUED", "QUEUED"), /**
-	 * The '<em><b>READY</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Task is ready for execution. This happens prior to instantiating the identified runnable to execute.
-	 * <!-- end-model-doc -->
+	QUEUED(5, "QUEUED", "QUEUED"),
+	/**
+	 * The '<em><b>READY</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc --> <!-- begin-model-doc --> Task is ready for execution. This
+	 * happens prior to instantiating the identified runnable to execute. <!--
+	 * end-model-doc -->
+	 * 
 	 * @see #READY_VALUE
 	 * @generated
 	 * @ordered
@@ -64,12 +61,10 @@ public enum TaskState implements Enumerator {
 	READY(10, "READY", "READY"),
 
 	/**
-	 * The '<em><b>IN PROGRESS</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task is executing the identified runnable.
-	 * <!-- end-model-doc -->
+	 * The '<em><b>IN PROGRESS</b></em>' literal object. <!-- begin-user-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> The task is executing the
+	 * identified runnable. <!-- end-model-doc -->
+	 * 
 	 * @see #IN_PROGRESS_VALUE
 	 * @generated
 	 * @ordered
@@ -77,9 +72,9 @@ public enum TaskState implements Enumerator {
 	IN_PROGRESS(20, "IN_PROGRESS", "IN_PROGRESS"),
 
 	/**
-	 * The '<em><b>CANCELLED</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The '<em><b>CANCELLED</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #CANCELLED_VALUE
 	 * @generated
 	 * @ordered
@@ -87,9 +82,9 @@ public enum TaskState implements Enumerator {
 	CANCELLED(30, "CANCELLED", "CANCELLED"),
 
 	/**
-	 * The '<em><b>ON HOLD</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The '<em><b>ON HOLD</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #ON_HOLD_VALUE
 	 * @generated
 	 * @ordered
@@ -97,45 +92,43 @@ public enum TaskState implements Enumerator {
 	ON_HOLD(40, "ON_HOLD", "ON_HOLD"),
 
 	/**
-	 * The '<em><b>COMPLETED</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task successfully and purposefully executed.
-	 * <!-- end-model-doc -->
+	 * The '<em><b>COMPLETED</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc --> <!-- begin-model-doc --> The task successfully and
+	 * purposefully executed. <!-- end-model-doc -->
+	 * 
 	 * @see #COMPLETED_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	COMPLETED(50, "COMPLETED", "COMPLETED"), /**
-	 * The '<em><b>COMPLETED WARN</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task completed successfully, but not purposeful. That is the outcome did not meet the business expectations.
-	 * <!-- end-model-doc -->
+	COMPLETED(50, "COMPLETED", "COMPLETED"),
+	/**
+	 * The '<em><b>COMPLETED WARN</b></em>' literal object. <!-- begin-user-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> The task completed
+	 * successfully, but not purposeful. That is the outcome did not meet the
+	 * business expectations. <!-- end-model-doc -->
+	 * 
 	 * @see #COMPLETED_WARN_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	COMPLETED_WARN(55, "COMPLETED_WARN", "COMPLETED_WARN"), /**
-	 * The '<em><b>COMPLETED MANUAL</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task completed successfully, but not purposeful. A user intervened to fix the situation, leading to this state.
-	 * <!-- end-model-doc -->
+	COMPLETED_WARN(55, "COMPLETED_WARN", "COMPLETED_WARN"),
+	/**
+	 * The '<em><b>COMPLETED MANUAL</b></em>' literal object. <!-- begin-user-doc
+	 * --> <!-- end-user-doc --> <!-- begin-model-doc --> The task completed
+	 * successfully, but not purposeful. A user intervened to fix the situation,
+	 * leading to this state. <!-- end-model-doc -->
+	 * 
 	 * @see #COMPLETED_MANUAL_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	COMPLETED_MANUAL(58, "COMPLETED_MANUAL", "COMPLETED_MANUAL"), /**
-	 * The '<em><b>FAILED</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task completed successfully, but not purposeful. That is the outcome did not meet the business expectations.
-	 * <!-- end-model-doc -->
+	COMPLETED_MANUAL(58, "COMPLETED_MANUAL", "COMPLETED_MANUAL"),
+	/**
+	 * The '<em><b>FAILED</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc --> <!-- begin-model-doc --> The task completed successfully,
+	 * but not purposeful. That is the outcome did not meet the business
+	 * expectations. <!-- end-model-doc -->
+	 * 
 	 * @see #FAILED_VALUE
 	 * @generated
 	 * @ordered
@@ -143,16 +136,14 @@ public enum TaskState implements Enumerator {
 	FAILED(90, "FAILED", "FAILED");
 
 	/**
-	 * The '<em><b>DRAFT</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>DRAFT</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>DRAFT</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>DRAFT</b></em>' literal object isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task object was just created.
-	 * <!-- end-model-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> The task object was just
+	 * created. <!-- end-model-doc -->
+	 * 
 	 * @see #DRAFT
 	 * @model
 	 * @generated
@@ -161,12 +152,11 @@ public enum TaskState implements Enumerator {
 	public static final int DRAFT_VALUE = 0;
 
 	/**
-	 * The '<em><b>QUEUED</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task has been queued. Depending on its type (singleton or not) it is added to a specific queue.
-	 * <!-- end-model-doc -->
+	 * The '<em><b>QUEUED</b></em>' literal value. <!-- begin-user-doc --> <!--
+	 * end-user-doc --> <!-- begin-model-doc --> The task has been queued. Depending
+	 * on its type (singleton or not) it is added to a specific queue. <!--
+	 * end-model-doc -->
+	 * 
 	 * @see #QUEUED
 	 * @model
 	 * @generated
@@ -175,16 +165,15 @@ public enum TaskState implements Enumerator {
 	public static final int QUEUED_VALUE = 5;
 
 	/**
-	 * The '<em><b>READY</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>READY</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>READY</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>READY</b></em>' literal object isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Task is ready for execution. This happens prior to instantiating the identified runnable to execute.
-	 * <!-- end-model-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> Task is ready for execution.
+	 * This happens prior to instantiating the identified runnable to execute. <!--
+	 * end-model-doc -->
+	 * 
 	 * @see #READY
 	 * @model
 	 * @generated
@@ -193,16 +182,14 @@ public enum TaskState implements Enumerator {
 	public static final int READY_VALUE = 10;
 
 	/**
-	 * The '<em><b>IN PROGRESS</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>IN PROGRESS</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>IN PROGRESS</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task is executing the identified runnable.
-	 * <!-- end-model-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> The task is executing the
+	 * identified runnable. <!-- end-model-doc -->
+	 * 
 	 * @see #IN_PROGRESS
 	 * @model
 	 * @generated
@@ -211,13 +198,13 @@ public enum TaskState implements Enumerator {
 	public static final int IN_PROGRESS_VALUE = 20;
 
 	/**
-	 * The '<em><b>CANCELLED</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>CANCELLED</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>CANCELLED</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #CANCELLED
 	 * @model
 	 * @generated
@@ -226,13 +213,13 @@ public enum TaskState implements Enumerator {
 	public static final int CANCELLED_VALUE = 30;
 
 	/**
-	 * The '<em><b>ON HOLD</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>ON HOLD</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>ON HOLD</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>ON HOLD</b></em>' literal object isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #ON_HOLD
 	 * @model
 	 * @generated
@@ -241,16 +228,14 @@ public enum TaskState implements Enumerator {
 	public static final int ON_HOLD_VALUE = 40;
 
 	/**
-	 * The '<em><b>COMPLETED</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>COMPLETED</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>COMPLETED</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task successfully and purposefully executed.
-	 * <!-- end-model-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> The task successfully and
+	 * purposefully executed. <!-- end-model-doc -->
+	 * 
 	 * @see #COMPLETED
 	 * @model
 	 * @generated
@@ -259,12 +244,11 @@ public enum TaskState implements Enumerator {
 	public static final int COMPLETED_VALUE = 50;
 
 	/**
-	 * The '<em><b>COMPLETED WARN</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task completed successfully, but not purposeful. That is the outcome did not meet the business expectations.
-	 * <!-- end-model-doc -->
+	 * The '<em><b>COMPLETED WARN</b></em>' literal value. <!-- begin-user-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> The task completed
+	 * successfully, but not purposeful. That is the outcome did not meet the
+	 * business expectations. <!-- end-model-doc -->
+	 * 
 	 * @see #COMPLETED_WARN
 	 * @model
 	 * @generated
@@ -273,12 +257,11 @@ public enum TaskState implements Enumerator {
 	public static final int COMPLETED_WARN_VALUE = 55;
 
 	/**
-	 * The '<em><b>COMPLETED MANUAL</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task completed successfully, but not purposeful. A user intervened to fix the situation, leading to this state.
-	 * <!-- end-model-doc -->
+	 * The '<em><b>COMPLETED MANUAL</b></em>' literal value. <!-- begin-user-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> The task completed
+	 * successfully, but not purposeful. A user intervened to fix the situation,
+	 * leading to this state. <!-- end-model-doc -->
+	 * 
 	 * @see #COMPLETED_MANUAL
 	 * @model
 	 * @generated
@@ -287,16 +270,15 @@ public enum TaskState implements Enumerator {
 	public static final int COMPLETED_MANUAL_VALUE = 58;
 
 	/**
-	 * The '<em><b>FAILED</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>FAILED</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>FAILED</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>FAILED</b></em>' literal object isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The task completed successfully, but not purposeful. That is the outcome did not meet the business expectations.
-	 * <!-- end-model-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> The task completed
+	 * successfully, but not purposeful. That is the outcome did not meet the
+	 * business expectations. <!-- end-model-doc -->
+	 * 
 	 * @see #FAILED
 	 * @model
 	 * @generated
@@ -305,38 +287,28 @@ public enum TaskState implements Enumerator {
 	public static final int FAILED_VALUE = 90;
 
 	/**
-	 * An array of all the '<em><b>Task State</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * An array of all the '<em><b>Task State</b></em>' enumerators. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	private static final TaskState[] VALUES_ARRAY =
-		new TaskState[] {
-			DRAFT,
-			QUEUED,
-			READY,
-			IN_PROGRESS,
-			CANCELLED,
-			ON_HOLD,
-			COMPLETED,
-			COMPLETED_WARN,
-			COMPLETED_MANUAL,
-			FAILED,
-		};
+	private static final TaskState[] VALUES_ARRAY = new TaskState[]{DRAFT, QUEUED, READY, IN_PROGRESS, CANCELLED,
+			ON_HOLD, COMPLETED, COMPLETED_WARN, COMPLETED_MANUAL, FAILED,};
 
 	/**
 	 * A public read-only list of all the '<em><b>Task State</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static final List<TaskState> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Task State</b></em>' literal with the specified literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param literal the literal.
+	 * Returns the '<em><b>Task State</b></em>' literal with the specified literal
+	 * value. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param literal
+	 *            the literal.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
@@ -352,9 +324,10 @@ public enum TaskState implements Enumerator {
 
 	/**
 	 * Returns the '<em><b>Task State</b></em>' literal with the specified name.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param name the name.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param name
+	 *            the name.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
@@ -369,54 +342,65 @@ public enum TaskState implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Task State</b></em>' literal with the specified integer value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the integer value.
+	 * Returns the '<em><b>Task State</b></em>' literal with the specified integer
+	 * value. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the integer value.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static TaskState get(int value) {
 		switch (value) {
-			case DRAFT_VALUE: return DRAFT;
-			case QUEUED_VALUE: return QUEUED;
-			case READY_VALUE: return READY;
-			case IN_PROGRESS_VALUE: return IN_PROGRESS;
-			case CANCELLED_VALUE: return CANCELLED;
-			case ON_HOLD_VALUE: return ON_HOLD;
-			case COMPLETED_VALUE: return COMPLETED;
-			case COMPLETED_WARN_VALUE: return COMPLETED_WARN;
-			case COMPLETED_MANUAL_VALUE: return COMPLETED_MANUAL;
-			case FAILED_VALUE: return FAILED;
+			case DRAFT_VALUE :
+				return DRAFT;
+			case QUEUED_VALUE :
+				return QUEUED;
+			case READY_VALUE :
+				return READY;
+			case IN_PROGRESS_VALUE :
+				return IN_PROGRESS;
+			case CANCELLED_VALUE :
+				return CANCELLED;
+			case ON_HOLD_VALUE :
+				return ON_HOLD;
+			case COMPLETED_VALUE :
+				return COMPLETED;
+			case COMPLETED_WARN_VALUE :
+				return COMPLETED_WARN;
+			case COMPLETED_MANUAL_VALUE :
+				return COMPLETED_MANUAL;
+			case FAILED_VALUE :
+				return FAILED;
 		}
 		return null;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final int value;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final String name;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final String literal;
 
 	/**
-	 * Only this class can construct instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Only this class can construct instances. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private TaskState(int value, String name, String literal) {
@@ -426,44 +410,44 @@ public enum TaskState implements Enumerator {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public int getValue() {
-	  return value;
+		return value;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String getName() {
-	  return name;
+		return name;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String getLiteral() {
-	  return literal;
+		return literal;
 	}
 
 	/**
-	 * Returns the literal value of the enumerator, which is its string representation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the literal value of the enumerator, which is its string
+	 * representation. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
 		return literal;
 	}
-	
-} //TaskState
+
+} // TaskState

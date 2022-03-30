@@ -30,105 +30,103 @@ public abstract class PagingComposite extends Composite {
 	private static final int DEFAULT_PAGESTEP = 1;
 	private ToolItem textToolItem;
 	private int elementsCount;
-	
+
 	private GridData gd;
-	
-	public PagingComposite(Composite parent, int style){
+
+	public PagingComposite(Composite parent, int style) {
 		super(parent, SWT.BORDER);
 		createContent();
 	}
-	
-	private void createContent(){
+
+	private void createContent() {
 		setLayout(SWTHelper.createGridLayout(true, 1));
 		gd = new GridData(SWT.FILL, SWT.TOP, true, false);
 		setLayoutData(gd);
-		
+
 		Composite main = new Composite(this, SWT.NONE);
 		main.setLayout(SWTHelper.createGridLayout(true, 1));
 		main.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, false));
-		
+
 		ToolBar toolBar = new ToolBar(main, SWT.RIGHT | SWT.FLAT);
 		ToolItem prevToolItem = new ToolItem(toolBar, SWT.PUSH);
 		prevToolItem.setToolTipText("");
 		prevToolItem.setImage(Images.IMG_PREVIOUS.getImage());
 		prevToolItem.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				mouseClicked(DEFAULT_PAGESTEP * -1);
 			}
 		});
-		
+
 		textToolItem = new ToolItem(toolBar, SWT.PUSH | SWT.CENTER);
 		textToolItem.setToolTipText("");
 		textToolItem.setText("");
-		
+
 		ToolItem nextToolItem = new ToolItem(toolBar, SWT.PUSH);
 		nextToolItem.setToolTipText("");
 		nextToolItem.setImage(Images.IMG_NEXT.getImage());
 		nextToolItem.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				mouseClicked(DEFAULT_PAGESTEP);
 			}
 		});
 		setVisible(false);
 		gd.exclude = true;
 	}
-	
-	public void reset(){
+
+	public void reset() {
 		setup(0, 0, 0);
 	}
-	
-	public void setup(int currentPage, int elementsCount, int fetchSize){
+
+	public void setup(int currentPage, int elementsCount, int fetchSize) {
 		isLazyLoadingBusy = false;
 		this.elementsCount = elementsCount;
 		if (currentPage > 0 && elementsCount > fetchSize) {
 			// activate pagination
 			this.currentPage = currentPage;
 			this.fetchSize = fetchSize;
-			this.maxPage =
-				fetchSize > 0 ? ((int) Math.ceil((double) elementsCount / fetchSize)) : 0;
+			this.maxPage = fetchSize > 0 ? ((int) Math.ceil((double) elementsCount / fetchSize)) : 0;
 		} else {
-			//deactivate pagination
+			// deactivate pagination
 			this.currentPage = 0;
 			this.fetchSize = 0;
 			this.maxPage = 0;
 		}
-		
+
 		UiDesk.getDisplay().asyncExec(new Runnable() {
-			public void run(){
+			public void run() {
 				refresh();
 			}
 		});
 	}
-	
-	private void refresh(){
+
+	private void refresh() {
 		if (!isDisposed()) {
 			setVisible(currentPage > 0);
 			if (textToolItem != null) {
 				textToolItem.setText(currentPage + "/" + maxPage);
 				textToolItem.setToolTipText("Gesamtanzahl: " + elementsCount);
 			}
-			
+
 			gd.exclude = !(currentPage > 0);
 			getParent().layout(true, true);
 		}
 	}
-	
-	public int getCurrentPage(){
+
+	public int getCurrentPage() {
 		return currentPage;
 	}
-	
+
 	/**
 	 * Use this for a callback after Paging
 	 * 
 	 */
 	public abstract void runPaging();
-		
-	
-	private boolean doPaging(int newPage){
+
+	private boolean doPaging(int newPage) {
 		if (!isLazyLoadingBusy) {
 			if (newPage > 0 && newPage <= maxPage) {
 				isLazyLoadingBusy = true;
@@ -138,14 +136,14 @@ public abstract class PagingComposite extends Composite {
 		}
 		return false;
 	}
-	
-	public int getFetchSize(){
+
+	public int getFetchSize() {
 		return fetchSize;
 	}
-	
-	public void mouseClicked(int pageStep){
+
+	public void mouseClicked(int pageStep) {
 		UiDesk.getDisplay().asyncExec(new Runnable() {
-			public void run(){
+			public void run() {
 				if (doPaging(currentPage + pageStep)) {
 					runPaging();
 					refresh();

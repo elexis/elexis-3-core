@@ -19,40 +19,37 @@ import ch.elexis.core.findings.ui.model.AllergyIntoleranceBeanAdapter;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 
 public class AllergyIntoleranceComposite extends Composite {
-	
+
 	private StyledText textOberservation = null;
-	
+
 	protected WritableValue<AbstractBeanAdapter<IAllergyIntolerance>> item = new WritableValue<>();
-	
-	public AllergyIntoleranceComposite(Composite parent, int style){
+
+	public AllergyIntoleranceComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
-		textOberservation =
-			new StyledText(this, SWT.NONE | SWT.WRAP | SWT.MULTI | SWT.V_SCROLL);
-		textOberservation.setAlwaysShowScrollBars(true); //if false horizontal scrollbar blinks on typing
+		textOberservation = new StyledText(this, SWT.NONE | SWT.WRAP | SWT.MULTI | SWT.V_SCROLL);
+		textOberservation.setAlwaysShowScrollBars(true); // if false horizontal scrollbar blinks on typing
 		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd.widthHint = 100;
 		gd.heightHint = 100;
 		textOberservation.setLayoutData(gd);
 		initDataBindings();
 	}
-	
-	public void setInput(Optional<IAllergyIntolerance> input){
+
+	public void setInput(Optional<IAllergyIntolerance> input) {
 		if (textOberservation != null) {
-			item.setValue(new AllergyIntoleranceBeanAdapter(input.isPresent() ? input.get()
-					: FindingsServiceComponent.getService().create(IAllergyIntolerance.class))
-						.autoSave(true));
+			item.setValue(new AllergyIntoleranceBeanAdapter(input.isPresent()
+					? input.get()
+					: FindingsServiceComponent.getService().create(IAllergyIntolerance.class)).autoSave(true));
 		}
 	}
-	
-	protected void initDataBindings(){
+
+	protected void initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
-		IObservableValue target =
-			WidgetProperties.text(SWT.Modify).observeDelayed(1500, textOberservation);
-		IObservableValue model =
-			PojoProperties.value(AllergyIntoleranceBeanAdapter.class, "text", String.class)
+		IObservableValue target = WidgetProperties.text(SWT.Modify).observeDelayed(1500, textOberservation);
+		IObservableValue model = PojoProperties.value(AllergyIntoleranceBeanAdapter.class, "text", String.class)
 				.observeDetail(item);
-		
+
 		bindingContext.bindValue(target, model, null, null);
 	}
 }

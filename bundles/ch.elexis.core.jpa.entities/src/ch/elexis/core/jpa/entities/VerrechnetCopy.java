@@ -22,21 +22,20 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "VERRECHNETCOPY")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "VerrechnetCopy.encounter", query = "SELECT ve FROM VerrechnetCopy ve WHERE ve.deleted = false AND ve.behandlung = :encounter")
-public class VerrechnetCopy extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class VerrechnetCopy extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Column(length = 80)
 	private String klasse;
 
@@ -49,7 +48,7 @@ public class VerrechnetCopy extends AbstractEntityWithId
 	@OneToOne
 	@JoinColumn(name = "rechnungid")
 	private Invoice invoice;
-	
+
 	@OneToOne
 	@JoinColumn(name = "behandlungid")
 	private Behandlung behandlung;
@@ -89,7 +88,7 @@ public class VerrechnetCopy extends AbstractEntityWithId
 		}
 		return ((double) getScale()) / 100.0;
 	}
-	
+
 	@Transient
 	public void setPrimaryScaleFactor(double scale) {
 		int sca = (int) Math.round(scale * 100);
@@ -103,7 +102,7 @@ public class VerrechnetCopy extends AbstractEntityWithId
 		}
 		return ((double) getScale2()) / 100.0;
 	}
-	
+
 	@Transient
 	public void setSecondaryScaleFactor(double scale) {
 		int sca = (int) Math.round(scale * 100);
@@ -120,11 +119,11 @@ public class VerrechnetCopy extends AbstractEntityWithId
 		return getZahl() * (getScale2() / 100f);
 	}
 
-	public byte[] getDetail(){
+	public byte[] getDetail() {
 		return detail;
 	}
 
-	public void setDetail(byte[] detail){
+	public void setDetail(byte[] detail) {
 		this.detail = detail;
 	}
 
@@ -144,14 +143,14 @@ public class VerrechnetCopy extends AbstractEntityWithId
 		this.behandlung = behandlung;
 	}
 
-	public Invoice getInvoice(){
+	public Invoice getInvoice() {
 		return invoice;
 	}
-	
-	public void setInvoice(Invoice invoice){
+
+	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
 	}
-	
+
 	public int getZahl() {
 		return zahl;
 	}
@@ -231,44 +230,44 @@ public class VerrechnetCopy extends AbstractEntityWithId
 	public void setUser(Kontakt user) {
 		this.user = user;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
+
 	@Override
-	public byte[] getExtInfo(){
+	public byte[] getExtInfo() {
 		return detail;
 	}
-	
+
 	@Override
-	public void setExtInfo(byte[] extInfo){
+	public void setExtInfo(byte[] extInfo) {
 		this.detail = extInfo;
 	}
 }

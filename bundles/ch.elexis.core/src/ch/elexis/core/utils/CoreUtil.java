@@ -25,15 +25,15 @@ import ch.rgw.io.Settings;
 import ch.rgw.tools.StringTool;
 
 public class CoreUtil {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(CoreUtil.class);
-	
+
 	public static enum OS {
-			UNSPECIFIED, MAC, LINUX, WINDOWS
+		UNSPECIFIED, MAC, LINUX, WINDOWS
 	};
-	
+
 	private static final OS osType;
-	
+
 	static {
 		String osName = System.getProperty("os.name");
 		if (osName.startsWith("Linux")) {
@@ -46,7 +46,7 @@ public class CoreUtil {
 			osType = OS.UNSPECIFIED;
 		}
 	}
-	
+
 	/**
 	 * The system is started in basic test mode, this mode enforces:<br>
 	 * <ul>
@@ -55,8 +55,8 @@ public class CoreUtil {
 	 * Requires boolean parameter.
 	 */
 	public static final String TEST_MODE = "elexis.test.mode";
-	
-	public static boolean isTestMode(){
+
+	public static boolean isTestMode() {
 		String testMode = System.getProperty(TEST_MODE);
 		if (testMode != null && !testMode.isEmpty()) {
 			if (testMode.equalsIgnoreCase(Boolean.TRUE.toString())) {
@@ -65,7 +65,7 @@ public class CoreUtil {
 		}
 		return false;
 	}
-	
+
 	public static Path getElexisServerHomeDirectory() {
 		String userHomeProp = System.getProperty("user.home");
 		File homedir = new File(new File(userHomeProp), "elexis-server");
@@ -74,9 +74,10 @@ public class CoreUtil {
 		}
 		return Paths.get(homedir.toURI());
 	}
-	
+
 	/**
-	 * Get a {@link DBConnection} form various sources. Sources are checked in following order.<br/>
+	 * Get a {@link DBConnection} form various sources. Sources are checked in
+	 * following order.<br/>
 	 * <li>System Property - RunFromScratch (initializes a fresh h2 database)</li>
 	 * <li>System Property - ch.elexis.dbSpec, etc.</li>
 	 * <li>Provided Settings</li> <br />
@@ -84,9 +85,9 @@ public class CoreUtil {
 	 * @param settings
 	 * @return
 	 */
-	public static Optional<DBConnection> getDBConnection(Settings settings){
+	public static Optional<DBConnection> getDBConnection(Settings settings) {
 		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
-			.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
+				.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
 			DBConnection ret = new DBConnection();
 			ret.connectionString = "jdbc:h2:mem:elexisFromScratch;DB_CLOSE_DELAY=-1";
 			String trace = System.getProperty("elexis.test.dbtrace");
@@ -98,44 +99,38 @@ public class CoreUtil {
 			ret.password = "";
 			return Optional.of(ret);
 		}
-		
+
 		if (System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null) {
 			DBConnection dbConnection = new DBConnection();
-			dbConnection.username =
-				System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME) != null
-						? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME)
-						: "";
-			dbConnection.password =
-				System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD) != null
-						? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD)
-						: "";
-			
+			dbConnection.username = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME) != null
+					? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME)
+					: "";
+			dbConnection.password = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD) != null
+					? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD)
+					: "";
+
 			if (System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR) != null) {
-				String flavorString =
-					System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR);
-				dbConnection.rdbmsType = DBType.valueOfIgnoreCase(flavorString)
-					.orElseThrow(() -> new IllegalStateException(
-						"Unknown ch.elexis.dbFlavor [" + flavorString + "]"));
+				String flavorString = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR);
+				dbConnection.rdbmsType = DBType.valueOfIgnoreCase(flavorString).orElseThrow(
+						() -> new IllegalStateException("Unknown ch.elexis.dbFlavor [" + flavorString + "]"));
 			}
-			dbConnection.connectionString =
-				System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null
-						? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC)
-						: "";
-			if (dbConnection.connectionString.startsWith("jdbc:h2:") &&
-					System.getProperty(ElexisSystemPropertyConstants.CONN_DB_H2_AUTO_SERVER) != null) {
-				logger.info("Adding AUTO_SERVER to "+ dbConnection.connectionString );
-				dbConnection.connectionString  = dbConnection.connectionString  + ";AUTO_SERVER=TRUE";
+			dbConnection.connectionString = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null
+					? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC)
+					: "";
+			if (dbConnection.connectionString.startsWith("jdbc:h2:")
+					&& System.getProperty(ElexisSystemPropertyConstants.CONN_DB_H2_AUTO_SERVER) != null) {
+				logger.info("Adding AUTO_SERVER to " + dbConnection.connectionString);
+				dbConnection.connectionString = dbConnection.connectionString + ";AUTO_SERVER=TRUE";
 
 			}
 
 			return Optional.of(dbConnection);
 		}
-		
+
 		Hashtable<Object, Object> hConn = getConnectionHashtable(settings);
 		if (hConn != null) {
 			DBConnection ret = new DBConnection();
-			if (!StringUtils
-				.isEmpty((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING))) {
+			if (!StringUtils.isEmpty((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING))) {
 				String url = (String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING);
 				url = applyMySqlTimeZoneWorkaround(url);
 				ret.connectionString = url;
@@ -148,10 +143,9 @@ public class CoreUtil {
 			if (!StringUtils.isEmpty((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS))) {
 				ret.password = (String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS);
 			}
-			if (!StringUtils
-				.isEmpty((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER))) {
+			if (!StringUtils.isEmpty((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER))) {
 				Optional<DBType> type = DBType
-					.valueOfDriver((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
+						.valueOfDriver((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
 				type.ifPresent(t -> ret.rdbmsType = t);
 			}
 			if (ret.allValuesSet()) {
@@ -163,21 +157,19 @@ public class CoreUtil {
 						sb.append("\n").append(object).append("->").append(hConn.get(object));
 					}
 				}
-				logger.error(
-					"Could not get a valid DBConnection from connection setting:" + sb.toString());
+				logger.error("Could not get a valid DBConnection from connection setting:" + sb.toString());
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	/**
 	 * @since 3.8 due to mysql jdbc update a timezone problem may exist, see e.g.
-	 *        https://github.com/elexis/elexis-3-core/issues/273 - we fix this by adding this
-	 *        parameter if not yet included
+	 *        https://github.com/elexis/elexis-3-core/issues/273 - we fix this by
+	 *        adding this parameter if not yet included
 	 */
-	private static String applyMySqlTimeZoneWorkaround(String dbConnectString){
-		if (dbConnectString.startsWith("jdbc:mysql:")
-			&& !dbConnectString.contains("serverTimezone")) {
+	private static String applyMySqlTimeZoneWorkaround(String dbConnectString) {
+		if (dbConnectString.startsWith("jdbc:mysql:") && !dbConnectString.contains("serverTimezone")) {
 			if (dbConnectString.contains("?")) {
 				dbConnectString += "&serverTimezone=Europe/Zurich";
 			} else {
@@ -187,14 +179,14 @@ public class CoreUtil {
 		}
 		return dbConnectString;
 	}
-	
+
 	/**
 	 * 
 	 * @return a {@link Hashtable} containing the connection parameters, use
-	 *         {@link Preferences#CFG_FOLDED_CONNECTION} to retrieve the required parameters,
-	 *         castable to {@link String}
+	 *         {@link Preferences#CFG_FOLDED_CONNECTION} to retrieve the required
+	 *         parameters, castable to {@link String}
 	 */
-	public static @NonNull Hashtable<Object, Object> getConnectionHashtable(Settings settings){
+	public static @NonNull Hashtable<Object, Object> getConnectionHashtable(Settings settings) {
 		Hashtable<Object, Object> ret = new Hashtable<>();
 		String cnt = settings.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
@@ -202,50 +194,55 @@ public class CoreUtil {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Recreate a Hashtable from a byte array as created by flatten()
 	 * 
 	 * @param flat
 	 *            the byte array
-	 * @return the original Hashtable or null if no Hashtable could be created from the array
+	 * @return the original Hashtable or null if no Hashtable could be created from
+	 *         the array
 	 */
 	@SuppressWarnings("unchecked")
-	private static Hashtable<Object, Object> fold(final byte[] flat){
+	private static Hashtable<Object, Object> fold(final byte[] flat) {
 		return (Hashtable<Object, Object>) foldObject(flat);
 	}
-	
+
 	/**
 	 * Recreate a Hashtable from a byte array as created by flatten()
 	 * 
 	 * @param flat
 	 *            the byte array
-	 * 			
-	 * @return the original Hashtable or null if no Hashtable could be created from the array
+	 * 
+	 * @return the original Hashtable or null if no Hashtable could be created from
+	 *         the array
 	 */
-	private static Object foldObject(final byte[] flat){
+	private static Object foldObject(final byte[] flat) {
 		return foldObject(flat, null);
 	}
-	
+
 	/**
-	 * Interface for use with {@link PersistentObject#foldObject(byte[], IClassResolver)} to map
-	 * classes on deserialisation using {@link ObjectInputStream}.
+	 * Interface for use with
+	 * {@link PersistentObject#foldObject(byte[], IClassResolver)} to map classes on
+	 * deserialisation using {@link ObjectInputStream}.
 	 *
 	 */
 	private static interface IClassResolver {
 		public Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException;
 	}
-	
+
 	/**
 	 * Recreate a Hashtable from a byte array as created by flatten()
 	 * 
 	 * @param flat
 	 *            the byte array
 	 * @param resolver
-	 *            {@link IClassResolver} implementation used for class resolving / mapping
-	 * @return the original Hashtable or null if no Hashtable could be created from the array
+	 *            {@link IClassResolver} implementation used for class resolving /
+	 *            mapping
+	 * @return the original Hashtable or null if no Hashtable could be created from
+	 *         the array
 	 */
-	private static Object foldObject(final byte[] flat, IClassResolver resolver){
+	private static Object foldObject(final byte[] flat, IClassResolver resolver) {
 		if (flat.length == 0) {
 			return null;
 		}
@@ -255,7 +252,7 @@ public class CoreUtil {
 				try (ObjectInputStream ois = new ObjectInputStream(zis) {
 					@Override
 					protected java.lang.Class<?> resolveClass(java.io.ObjectStreamClass desc)
-						throws IOException, ClassNotFoundException{
+							throws IOException, ClassNotFoundException {
 						if (resolver != null) {
 							Class<?> resolved = resolver.resolveClass(desc);
 							return (resolved != null) ? resolved : super.resolveClass(desc);
@@ -274,19 +271,20 @@ public class CoreUtil {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * return a directory suitable for plugin specific configuration data. If no such dir exists, it
-	 * will be created. If it could not be created, the application will refuse to start.
+	 * return a directory suitable for plugin specific configuration data. If no
+	 * such dir exists, it will be created. If it could not be created, the
+	 * application will refuse to start.
 	 * 
-	 * @return a directory that exists always and is always writable and readable for plugins of the
-	 *         currently running elexis instance. Caution: this directory is not necessarily shared
-	 *         among different OS-Users. In Windows it is normally %USERPROFILE%\elexis, in Linux
-	 *         ~./elexis
+	 * @return a directory that exists always and is always writable and readable
+	 *         for plugins of the currently running elexis instance. Caution: this
+	 *         directory is not necessarily shared among different OS-Users. In
+	 *         Windows it is normally %USERPROFILE%\elexis, in Linux ~./elexis
 	 */
-	public static File getWritableUserDir(){
+	public static File getWritableUserDir() {
 		String userhome = null;
-		
+
 		if (userhome == null) {
 			userhome = System.getProperty("user.home"); //$NON-NLS-1$
 		}
@@ -302,14 +300,15 @@ public class CoreUtil {
 		}
 		return userDir;
 	}
-	
+
 	/**
-	 * Return a directory suitable for temporary files. Most probably this will be a default tempdir
-	 * provided by the os. If none such exists, it will be the user dir.
+	 * Return a directory suitable for temporary files. Most probably this will be a
+	 * default tempdir provided by the os. If none such exists, it will be the user
+	 * dir.
 	 * 
 	 * @return always a valid and writable directory.
 	 */
-	public static File getTempDir(){
+	public static File getTempDir() {
 		File ret = null;
 		String temp = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
 		if (!StringTool.isNothing(temp)) {
@@ -324,24 +323,24 @@ public class CoreUtil {
 		}
 		return getWritableUserDir();
 	}
-	
+
 	/**
-	 * @return the operating system type as integer. See {@link #MAC}, {@link #LINUX},
-	 *         {@link #WINDOWS} or {@link #UNSPECIFIED}
+	 * @return the operating system type as integer. See {@link #MAC},
+	 *         {@link #LINUX}, {@link #WINDOWS} or {@link #UNSPECIFIED}
 	 */
-	public static final OS getOperatingSystemType(){
+	public static final OS getOperatingSystemType() {
 		return osType;
 	}
-	
-	public static final boolean isWindows(){
+
+	public static final boolean isWindows() {
 		return osType == OS.WINDOWS;
 	}
-	
-	public static final boolean isMac(){
+
+	public static final boolean isMac() {
 		return osType == OS.MAC;
 	}
-	
-	public static final boolean isLinux(){
+
+	public static final boolean isLinux() {
 		return osType == OS.LINUX;
 	}
 }

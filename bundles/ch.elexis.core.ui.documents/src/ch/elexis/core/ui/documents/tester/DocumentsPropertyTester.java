@@ -10,11 +10,11 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 public class DocumentsPropertyTester extends PropertyTester {
-	
+
 	@Override
-	public boolean test(Object receiver, String property, Object[] args, Object expectedValue){
+	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if ("isMimeType".equals(property) && args != null && args.length == 1 //$NON-NLS-1$
-			&& args[0] instanceof String) {
+				&& args[0] instanceof String) {
 			if (receiver instanceof TreeSelection) {
 				receiver = ((TreeSelection) receiver).getFirstElement();
 			}
@@ -39,16 +39,16 @@ public class DocumentsPropertyTester extends PropertyTester {
 		}
 		return false;
 	}
-	
-	private boolean testIsMimeType(Object receiver, String mime){
+
+	private boolean testIsMimeType(Object receiver, String mime) {
 		if (receiver instanceof IDocument) {
 			IDocument document = (IDocument) receiver;
 			return document.getMimeType().toLowerCase().endsWith(mime);
 		}
 		return false;
 	}
-	
-	private boolean testIsExternFile(Object receiver){
+
+	private boolean testIsExternFile(Object receiver) {
 		if (receiver instanceof IDocument) {
 			IDocument document = (IDocument) receiver;
 			if ("ch.elexis.data.store.brief".equals(document.getStoreId())) {
@@ -59,8 +59,8 @@ public class DocumentsPropertyTester extends PropertyTester {
 		}
 		return false;
 	}
-	
-	private boolean isOmnivoreStoreInFilesystem(){
+
+	private boolean isOmnivoreStoreInFilesystem() {
 		if (ConfigServiceHolder.getGlobal("ch.elexis.omnivore/store_in_fs_global", false)) {
 			return ConfigServiceHolder.getGlobal("ch.elexis.omnivore/store_in_fs", false);
 		} else {

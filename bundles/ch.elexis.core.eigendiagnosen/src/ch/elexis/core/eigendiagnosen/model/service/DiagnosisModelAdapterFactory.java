@@ -6,24 +6,23 @@ import ch.elexis.core.jpa.model.adapter.MappingEntry;
 import ch.elexis.core.model.IDiagnosisTree;
 
 public class DiagnosisModelAdapterFactory extends AbstractModelAdapterFactory {
-	
+
 	private static DiagnosisModelAdapterFactory INSTANCE;
-	
-	public static synchronized DiagnosisModelAdapterFactory getInstance(){
+
+	public static synchronized DiagnosisModelAdapterFactory getInstance() {
 		if (INSTANCE == null) {
 			INSTANCE = new DiagnosisModelAdapterFactory();
 		}
 		return INSTANCE;
 	}
-	
-	private DiagnosisModelAdapterFactory(){
+
+	private DiagnosisModelAdapterFactory() {
 		super();
 	}
-	
+
 	@Override
-	protected void initializeMappings(){
-		addMapping(new MappingEntry(IDiagnosisTree.class,
-			ch.elexis.core.eigendiagnosen.model.CustomDiagnosis.class,
-			Eigendiagnose.class));
+	protected void initializeMappings() {
+		addMapping(new MappingEntry(IDiagnosisTree.class, ch.elexis.core.eigendiagnosen.model.CustomDiagnosis.class,
+				Eigendiagnose.class));
 	}
 }

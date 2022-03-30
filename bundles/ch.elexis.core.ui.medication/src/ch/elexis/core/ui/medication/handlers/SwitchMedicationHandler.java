@@ -26,23 +26,22 @@ import ch.rgw.tools.StringTool;
 
 public class SwitchMedicationHandler extends AbstractHandler {
 	private static final Logger log = LoggerFactory.getLogger(SwitchMedicationHandler.class);
-	
+
 	private static final String UPCASES_DASH_NR_PATTERN = "[A-Z-0-9]+";
 	private static final String SPACE = "\\s";
 	private static final String NUMBERS = "[0-9]+";
-	
+
 	private static MedicationView medicationView;
 	private LeistungenView leistungenView;
 	private IPrescription originalPresc;
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		ISelection selection =
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object firstElement = strucSelection.getFirstElement();
-			
+
 			if (firstElement instanceof MedicationTableViewerItem) {
 				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
 				IPrescription p = mtvItem.getPrescription();
@@ -55,29 +54,29 @@ public class SwitchMedicationHandler extends AbstractHandler {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Uses first parts of an article name and copies it to the clipboard. <br>
-	 * Usually including everything from the start that is UPPER-CASE (including UPPER-CASE with
-	 * DASH or NUMBER mixtures). In case article name does not fulfill common structure at least the
-	 * first 2 parts (words) are included.
+	 * Usually including everything from the start that is UPPER-CASE (including
+	 * UPPER-CASE with DASH or NUMBER mixtures). In case article name does not
+	 * fulfill common structure at least the first 2 parts (words) are included.
 	 * 
 	 */
-	private void copyShortArticleNameToClipboard(){
+	private void copyShortArticleNameToClipboard() {
 		IArticle article = originalPresc.getArticle();
 		if (article == null)
 			return;
-			
+
 		String fullName = article.getName();
 		String[] nameParts = fullName.split(SPACE);
 		StringBuilder sbFilterName = new StringBuilder();
-		
+
 		for (int i = 0; i < nameParts.length; i++) {
 			String s = nameParts[i];
 			if (i > 0) {
 				sbFilterName.append(" ");
 			}
-			
+
 			// matches upper cases, dash an probably number but not only numbers
 			if (s.matches(UPCASES_DASH_NR_PATTERN) && !s.matches(NUMBERS)) {
 				sbFilterName.append(s);
@@ -90,37 +89,32 @@ public class SwitchMedicationHandler extends AbstractHandler {
 				}
 			}
 		}
-		
+
 		// copy text to clipboard
 		Clipboard cb = new Clipboard(UiDesk.getDisplay());
 		TextTransfer textTransfer = TextTransfer.getInstance();
-		cb.setContents(new String[] {
-			sbFilterName.toString()
-		}, new Transfer[] {
-			textTransfer
-		});
+		cb.setContents(new String[]{sbFilterName.toString()}, new Transfer[]{textTransfer});
 	}
-	
-	private void openLeistungsView(){
-		medicationView = (MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-			.getActivePage().findView(MedicationView.PART_ID);
-		
+
+	private void openLeistungsView() {
+		medicationView = (MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.findView(MedicationView.PART_ID);
+
 		// open the LeistungenView
 		try {
 			if (StringTool.isNothing(LeistungenView.ID)) {
 				log.debug("LeistungenView.ID empty or not found");
 				SWTHelper.alert("Fehler", "LeistungenView.ID");
 			}
-			
+
 			medicationView.getViewSite().getPage().showView(LeistungenView.ID);
-			leistungenView = (LeistungenView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage().showView(LeistungenView.ID);
+			leistungenView = (LeistungenView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.showView(LeistungenView.ID);
 			CodeSelectorHandler csHandler = CodeSelectorHandler.getInstance();
-			csHandler
-				.setCodeSelectorTarget(medicationView.getMedicationComposite().getDropTarget());
+			csHandler.setCodeSelectorTarget(medicationView.getMedicationComposite().getDropTarget());
 			csHandler.getCodeSelectorTarget().registered(false);
 			medicationView.getMedicationComposite().setDropChangePrescription(originalPresc);
-			
+
 			for (CTabItem cti : leistungenView.ctab.getItems()) {
 				if (cti.getText().equalsIgnoreCase("Artikelstamm")) {
 					leistungenView.setSelected(cti);
@@ -129,9 +123,7 @@ public class SwitchMedicationHandler extends AbstractHandler {
 				}
 			}
 		} catch (Exception e) {
-			log.error(
-				"Could not open LeistungenView from the MedicationView in order to switch medication",
-				e);
+			log.error("Could not open LeistungenView from the MedicationView in order to switch medication", e);
 		}
 	}
 }

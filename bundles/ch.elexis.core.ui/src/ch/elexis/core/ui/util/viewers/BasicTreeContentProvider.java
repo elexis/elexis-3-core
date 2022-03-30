@@ -21,61 +21,61 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvi
 import ch.rgw.tools.Tree;
 
 public class BasicTreeContentProvider implements ITreeContentProvider, ICommonViewerContentProvider {
-	
-	public Object[] getChildren(Object parentElement){
+
+	public Object[] getChildren(Object parentElement) {
 		return ((Tree) parentElement).getChildren().toArray();
 	}
-	
-	public Object getParent(Object element){
+
+	public Object getParent(Object element) {
 		return ((Tree) element).getParent();
 	}
-	
-	public boolean hasChildren(Object element){
+
+	public boolean hasChildren(Object element) {
 		return ((Tree) element).hasChildren();
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
-	public Object[] getElements(Object inputElement){
+
+	public Object[] getElements(Object inputElement) {
 		Tree root = (Tree) inputElement;
 		return root.getChildren().toArray();
 	}
-	
-	public void startListening(){
+
+	public void startListening() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void stopListening(){
+
+	public void stopListening() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void changed(HashMap<String, String> values){
+
+	public void changed(HashMap<String, String> values) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void reorder(String field){
+
+	public void reorder(String field) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void selected(){
+
+	public void selected() {
 		// nothing to do
 	}
-	
+
 	@Override
-	public void init(){
+	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

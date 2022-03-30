@@ -38,7 +38,10 @@ import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 
 public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Task>
-		implements Identifiable, ITask, Runnable {
+		implements
+			Identifiable,
+			ITask,
+			Runnable {
 
 	private static final Gson GSON = new Gson();
 
@@ -56,12 +59,12 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	 * @param taskDescriptor
 	 * @param triggerType
 	 * @param progressMonitor
-	 * @param runContext      the context parameters to use, on effectively running
-	 *                        this task, the default values will be initialized as
-	 *                        follows: 1. Use
-	 *                        {@link IIdentifiedRunnable#getDefaultRunContext()}, 2.
-	 *                        overlay with {@link ITaskDescriptor#getRunContext()}
-	 *                        3. overlay with runContext value as provided
+	 * @param runContext
+	 *            the context parameters to use, on effectively running this task,
+	 *            the default values will be initialized as follows: 1. Use
+	 *            {@link IIdentifiedRunnable#getDefaultRunContext()}, 2. overlay
+	 *            with {@link ITaskDescriptor#getRunContext()} 3. overlay with
+	 *            runContext value as provided
 	 */
 	@SuppressWarnings("unchecked")
 	public Task(ITaskDescriptor taskDescriptor, TaskTriggerType triggerType, IProgressMonitor progressMonitor,
@@ -273,7 +276,8 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 
 				setResult(result);
 				getEntity().setFinishedAt(System.currentTimeMillis());
-				TaskState exitState = (result.containsKey(ReturnParameter.MARKER_WARN)) ? TaskState.COMPLETED_WARN
+				TaskState exitState = (result.containsKey(ReturnParameter.MARKER_WARN))
+						? TaskState.COMPLETED_WARN
 						: TaskState.COMPLETED;
 				setState(exitState);
 

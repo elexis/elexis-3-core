@@ -37,33 +37,31 @@ public class LabOrderEditingSupport extends EditingSupport {
 
 	protected TextCellEditor textCellEditor;
 	protected TableViewerFocusCellManager focusCell;
-	
-	public LabOrderEditingSupport(ColumnViewer viewer){
+
+	public LabOrderEditingSupport(ColumnViewer viewer) {
 		super(viewer);
-		
+
 		setUpCellEditor(viewer);
 		addValidator();
 	}
-	
-	protected void addValidator(){
+
+	protected void addValidator() {
 		textCellEditor.setValidator(new ICellEditorValidator() {
 			@Override
-			public String isValid(Object value){
+			public String isValid(Object value) {
 				IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
-				LaborOrderViewerItem viewerItem =
-					(LaborOrderViewerItem) selection.getFirstElement();
+				LaborOrderViewerItem viewerItem = (LaborOrderViewerItem) selection.getFirstElement();
 				if (viewerItem != null && value instanceof String) {
 					if (viewerItem.getLabItemTyp() == LabItemTyp.NUMERIC
-						|| viewerItem.getLabItemTyp() == LabItemTyp.ABSOLUTE) {
+							|| viewerItem.getLabItemTyp() == LabItemTyp.ABSOLUTE) {
 						try {
 							String editedValue = (String) value;
 							if (editedValue.startsWith(SMALLER) || editedValue.startsWith(BIGGER)) {
-								String nrValue =
-									editedValue.replace(SMALLER, "").replace(BIGGER, "");
+								String nrValue = editedValue.replace(SMALLER, "").replace(BIGGER, "");
 								editedValue = nrValue.trim();
 							}
 							Float.parseFloat(editedValue);
-							
+
 						} catch (NumberFormatException e) {
 							return Messages.LaborOrdersComposite_validatorNotNumber;
 						}
@@ -73,66 +71,60 @@ public class LabOrderEditingSupport extends EditingSupport {
 			}
 		});
 	}
-	
-	protected void setUpCellEditor(ColumnViewer viewer){
+
+	protected void setUpCellEditor(ColumnViewer viewer) {
 		// set up validation of the cell editors
 		textCellEditor = new TextCellEditor((Composite) viewer.getControl());
 
 		textCellEditor.addListener(new ICellEditorListener() {
 			@Override
-			public void editorValueChanged(boolean oldValidState, boolean newValidState){
+			public void editorValueChanged(boolean oldValidState, boolean newValidState) {
 				if (newValidState) {
-					textCellEditor.getControl().setBackground(
-						Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+					textCellEditor.getControl().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 				} else {
-					textCellEditor.getControl().setBackground(
-						Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+					textCellEditor.getControl().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 				}
 			}
-			
+
 			@Override
-			public void cancelEditor(){
-				textCellEditor.getControl().setBackground(
-					Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+			public void cancelEditor() {
+				textCellEditor.getControl().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 			}
-			
+
 			@Override
-			public void applyEditorValue(){
-				textCellEditor.getControl().setBackground(
-					Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+			public void applyEditorValue() {
+				textCellEditor.getControl().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 			}
 		});
-		
-		focusCell =
-			new TableViewerFocusCellManager((TableViewer) viewer, new FocusCellHighlighter(viewer) {
-			
+
+		focusCell = new TableViewerFocusCellManager((TableViewer) viewer, new FocusCellHighlighter(viewer) {
+
 		});
-		
-		ColumnViewerEditorActivationStrategy actSupport =
-			new ColumnViewerEditorActivationStrategy(viewer) {
-				@Override
-				protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event){
-					return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
+
+		ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(viewer) {
+			@Override
+			protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
+				return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
 						|| event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
 						|| (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR)
-						|| (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.KEYPAD_CR)
+						|| (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED
+								&& event.keyCode == SWT.KEYPAD_CR)
 						|| event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
-				}
-			};
-		
+			}
+		};
+
 		TableViewerEditor.create((TableViewer) viewer, focusCell, actSupport,
-			ColumnViewerEditor.TABBING_VERTICAL
-				| ColumnViewerEditor.KEYBOARD_ACTIVATION);
+				ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION);
 	}
 
 	@Override
-	protected boolean canEdit(Object element){
+	protected boolean canEdit(Object element) {
 		return (element instanceof LaborOrderViewerItem)
-			&& (((LaborOrderViewerItem) element).getLabItemTyp() != LabItemTyp.FORMULA);
+				&& (((LaborOrderViewerItem) element).getLabItemTyp() != LabItemTyp.FORMULA);
 	}
 
 	@Override
-	protected CellEditor getCellEditor(Object element){
+	protected CellEditor getCellEditor(Object element) {
 		if (element instanceof LaborOrderViewerItem) {
 			LaborOrderViewerItem viewerItem = ((LaborOrderViewerItem) element);
 			if (viewerItem.getLabItemTyp() == LabItemTyp.DOCUMENT) {
@@ -143,9 +135,9 @@ public class LabOrderEditingSupport extends EditingSupport {
 		}
 		return null;
 	}
-	
+
 	@Override
-	protected Object getValue(Object element){
+	protected Object getValue(Object element) {
 		if (element instanceof LaborOrderViewerItem) {
 			LaborOrderViewerItem viewerItem = (LaborOrderViewerItem) element;
 			if (viewerItem.getLabItemTyp() == LabItemTyp.DOCUMENT) {
@@ -164,27 +156,26 @@ public class LabOrderEditingSupport extends EditingSupport {
 		}
 		return ""; //$NON-NLS-1$
 	}
-	
+
 	@Override
-	protected void setValue(final Object element, final Object value){
+	protected void setValue(final Object element, final Object value) {
 		LaborOrderViewerItem viewerItem = getSelectedItem();
 		if (viewerItem instanceof LaborOrderViewerItem && value != null) {
 			LabResult result = (LabResult) viewerItem.getLabResult();
 			if (result == null) {
-				result =
-					createResult(viewerItem, LabOrder.getOrCreateManualLabor());
+				result = createResult(viewerItem, LabOrder.getOrCreateManualLabor());
 			}
 			final LabResult lockResult = result;
 			AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
-				
+
 				@Override
-				public void lockFailed(){
+				public void lockFailed() {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 				@Override
-				public void lockAcquired(){
+				public void lockAcquired() {
 					if (lockResult.getItem().getTyp() == LabItemTyp.TEXT) {
 						lockResult.setResult("Text"); //$NON-NLS-1$
 						lockResult.set(LabResult.COMMENT, value.toString());
@@ -209,15 +200,15 @@ public class LabOrderEditingSupport extends EditingSupport {
 		}
 	}
 
-	private LaborOrderViewerItem getSelectedItem(){
+	private LaborOrderViewerItem getSelectedItem() {
 		ISelection selection = getViewer().getSelection();
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
 			return (LaborOrderViewerItem) ((IStructuredSelection) selection).getFirstElement();
 		}
 		return null;
 	}
-	
-	private LabResult createResult(LaborOrderViewerItem viewerItem, Kontakt origin){
+
+	private LabResult createResult(LaborOrderViewerItem viewerItem, Kontakt origin) {
 		LabResult result = viewerItem.createResult(origin);
 		result.setTransmissionTime(new TimeTool());
 		return result;

@@ -14,9 +14,9 @@ package ch.elexis.core.ui.selectors;
 import org.eclipse.swt.widgets.Composite;
 
 public class DateField extends TextField {
-	
-	public DateField(Composite parent, int displayBits, String displayName){
+
+	public DateField(Composite parent, int displayBits, String displayName) {
 		super(parent, displayBits, displayName);
 	}
-	
+
 }

@@ -21,16 +21,16 @@ import ch.elexis.data.PersistentObject;
 public class Counter {
 	private ArrayList<Float> list = new ArrayList<Float>();
 	private Hashtable<Object, Integer> hash = new Hashtable<Object, Integer>();
-	
-	public void add(float i){
+
+	public void add(float i) {
 		list.add(new Float(i));
 	}
-	
-	public void clear(){
+
+	public void clear() {
 		list.clear();
 	}
-	
-	public float getAverage(int digits){
+
+	public float getAverage(int digits) {
 		float sum = 0;
 		for (Float in : list) {
 			sum += in;
@@ -38,8 +38,8 @@ public class Counter {
 		float multiplyer = (float) Math.pow(10.0, digits);
 		return Math.round(multiplyer * sum / list.size()) / multiplyer;
 	}
-	
-	public float getMedian(){
+
+	public float getMedian() {
 		Collections.sort(list);
 		int size = list.size();
 		int center = size >> 1;
@@ -50,8 +50,8 @@ public class Counter {
 		}
 		return f1;
 	}
-	
-	public void add(Object o){
+
+	public void add(Object o) {
 		System.out.println(((PersistentObject) o).getLabel());
 		Integer c = hash.get(o);
 		int cx = 0;
@@ -62,18 +62,18 @@ public class Counter {
 		}
 		hash.put(o, new Integer(cx));
 	}
-	
-	public ObjCounter[] getTopList(int num){
+
+	public ObjCounter[] getTopList(int num) {
 		ArrayList<ObjCounter> aoc = new ArrayList<ObjCounter>(hash.size());
 		for (Object o : hash.keySet()) {
 			aoc.add(new ObjCounter(o, hash.get(o)));
 		}
 		Collections.sort(aoc, new Comparator<ObjCounter>() {
-			
-			public int compare(ObjCounter arg0, ObjCounter arg1){
+
+			public int compare(ObjCounter arg0, ObjCounter arg1) {
 				return arg1.count - arg0.count;
 			}
-			
+
 		});
 		num = Math.min(num, aoc.size());
 		ObjCounter[] ret = new ObjCounter[num];
@@ -82,8 +82,8 @@ public class Counter {
 		}
 		return ret;
 	}
-	
-	public String getTopListAsString(int num){
+
+	public String getTopListAsString(int num) {
 		ObjCounter[] cnt = getTopList(num);
 		StringBuilder sb = new StringBuilder();
 		for (ObjCounter oc : cnt) {
@@ -93,13 +93,13 @@ public class Counter {
 		}
 		return sb.toString();
 	}
-	
+
 	class ObjCounter {
-		ObjCounter(Object obj, int num){
+		ObjCounter(Object obj, int num) {
 			this.obj = obj;
 			count = num;
 		}
-		
+
 		Object obj;
 		int count;
 	}

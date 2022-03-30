@@ -86,26 +86,26 @@ public class OrderImportDialog extends TitleAreaDialog {
 	private static final String ALLE_MARKIEREN = " Alle markieren ";
 	private static final int DIFF_SPINNER_MIN = 1;
 	private static final int DIFF_SPINNER_DEFAULT = 1;
-	
+
 	/**
 	 * Order to act on
 	 */
 	private List<OrderElement> orderElements;
 	private IOrder order;
-	
+
 	private Spinner diffSpinner;
 	private ElexisText eanText;
-	
+
 	private TableViewer viewer;
-	
+
 	private Color verifiedColor;
 	private Font boldFont;
-	
-	public OrderImportDialog(Shell parentShell, IOrder order){
+
+	public OrderImportDialog(Shell parentShell, IOrder order) {
 		super(parentShell);
 		this.order = order;
 		setShellStyle(getShellStyle() | SWT.SHELL_TRIM);
-		
+
 		orderElements = new ArrayList<OrderElement>();
 		List<IOrderEntry> items = order.getEntries();
 		for (IOrderEntry entry : items) {
@@ -113,135 +113,128 @@ public class OrderImportDialog extends TitleAreaDialog {
 			if (entry.getState() != OrderEntryState.DONE) {
 				IStock stock = entry.getStock();
 				if (stock != null) {
-					IStockEntry stockEntry = StockServiceHolder.get()
-						.findStockEntryForArticleInStock(stock,
+					IStockEntry stockEntry = StockServiceHolder.get().findStockEntryForArticleInStock(stock,
 							StoreToStringServiceHolder.getStoreToString(entry.getArticle()));
 					if (stockEntry != null) {
-						OrderElement orderElement =
-							new OrderElement(entry, stockEntry, entry.getAmount());
+						OrderElement orderElement = new OrderElement(entry, stockEntry, entry.getAmount());
 						orderElements.add(orderElement);
 					}
 				} else {
 					// check if a stock entry was created since the order was created
-					IStockEntry stockEntry =
-						StockServiceHolder.get().findPreferredStockEntryForArticle(
+					IStockEntry stockEntry = StockServiceHolder.get().findPreferredStockEntryForArticle(
 							StoreToStringServiceHolder.getStoreToString(entry.getArticle()),
 							ElexisEventDispatcher.getSelectedMandator().getId());
 					if (stockEntry != null) {
-						OrderElement orderElement =
-							new OrderElement(entry, stockEntry, entry.getAmount());
+						OrderElement orderElement = new OrderElement(entry, stockEntry, entry.getAmount());
 						orderElements.add(orderElement);
 					} else {
-						IStockEntry transienStockEntry =
-							new TransientStockEntry(entry.getArticle());
-						OrderElement orderElement =
-							new OrderElement(entry, transienStockEntry, entry.getAmount());
+						IStockEntry transienStockEntry = new TransientStockEntry(entry.getArticle());
+						OrderElement orderElement = new OrderElement(entry, transienStockEntry, entry.getAmount());
 						orderElements.add(orderElement);
 					}
 				}
 			}
 		}
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite mainArea = new Composite(parent, SWT.NONE);
 		mainArea.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		mainArea.setLayout(new GridLayout());
-		
+
 		Composite scannerArea = new Composite(mainArea, SWT.NONE);
 		scannerArea.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		scannerArea.setLayout(new GridLayout());
-		
+
 		Group scannerGroup = new Group(scannerArea, SWT.NONE);
 		scannerGroup.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		scannerGroup.setLayout(new GridLayout(4, false));
 		scannerGroup.setText("Einlesen mit Barcode-Scanner");
-		
+
 		diffSpinner = new Spinner(scannerGroup, SWT.NONE);
 		diffSpinner.setMinimum(DIFF_SPINNER_MIN);
 		diffSpinner.setSelection(DIFF_SPINNER_DEFAULT);
-		
+
 		Label eanLabel = new Label(scannerGroup, SWT.NONE);
 		eanLabel.setText("EAN:");
 		eanText = new ElexisText(scannerGroup, SWT.NONE);
 		eanText.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		
+
 		eanText.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e){
+			public void keyPressed(KeyEvent e) {
 				if (e.character == SWT.CR) {
 					applyScanner();
 				}
 			}
 		});
-		
+
 		Button button = new Button(scannerGroup, SWT.PUSH);
 		button.setText("Übernehmen");
 		button.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				applyScanner();
 			}
-			
-			public void widgetDefaultSelected(SelectionEvent e){
+
+			public void widgetDefaultSelected(SelectionEvent e) {
 				// do nothing
 			}
 		});
-		
+
 		Composite tableArea = new Composite(mainArea, SWT.NONE);
 		tableArea.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tableArea.setLayout(new GridLayout());
-		
+
 		viewer = new TableViewer(tableArea, SWT.FULL_SELECTION);
 		Table table = viewer.getTable();
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
-		
+
 		verifiedColor = table.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN);
 		boldFont = createBoldFont(table.getFont());
-		
-		final TableViewerFocusCellManager mgr =
-			new TableViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
-		ColumnViewerEditorActivationStrategy actSupport =
-			new ColumnViewerEditorActivationStrategy(viewer) {
-				protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event){
-					return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
+
+		final TableViewerFocusCellManager mgr = new TableViewerFocusCellManager(viewer,
+				new FocusCellOwnerDrawHighlighter(viewer));
+		ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(viewer) {
+			protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
+				return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
 						|| event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
 						|| (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED
-							&& (event.keyCode == SWT.CR || event.character == ' '))
+								&& (event.keyCode == SWT.CR || event.character == ' '))
 						|| event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
-				}
-			};
-		
+			}
+		};
+
 		TableViewerEditor.create(viewer, mgr, actSupport,
-			ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
-				| ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION);
-		
+				ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
+						| ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION);
+
 		createViewerColumns();
-		
+
 		viewer.setContentProvider(new ViewerContentProvider());
 		viewer.setInput(this);
 		viewer.setComparator(new ViewerComparator() {
-			public int compare(Viewer viewer, Object e1, Object e2){
+			public int compare(Viewer viewer, Object e1, Object e2) {
 				IArticle a1 = ((OrderElement) e1).getArticle();
 				IArticle a2 = ((OrderElement) e2).getArticle();
-				
+
 				if (a1 != null && a2 != null) {
 					return a1.getName().compareTo(a2.getName());
 				}
 				return 0;
 			};
 		});
-		
+
 		Composite cButtons = new Composite(mainArea, SWT.NONE);
 		cButtons.setLayout(new GridLayout(2, false));
 		final Button clickAllButton = new Button(cButtons, SWT.PUSH);
 		clickAllButton.setText(ALLE_MARKIEREN);
 		clickAllButton.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				boolean bv = true;
 				if (clickAllButton.getText().equals(ALLE_MARKIEREN)) {
 					bv = true;
@@ -250,55 +243,54 @@ public class OrderImportDialog extends TitleAreaDialog {
 					bv = false;
 					clickAllButton.setText(ALLE_MARKIEREN);
 				}
-				
+
 				for (OrderElement oe : orderElements) {
 					oe.setVerified(bv);
 				}
 				viewer.refresh(true);
 			}
-			
+
 		});
 		Button importButton = new Button(cButtons, SWT.PUSH);
 		GridData gd = new GridData(SWT.RIGHT, SWT.CENTER, false, false);
 		importButton.setLayoutData(gd);
 		importButton.setText("Lagerbestände anpassen");
 		importButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				doImport();
 			}
 		});
 		cButtons.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		return mainArea;
 	}
-	
-	private Font createBoldFont(Font baseFont){
+
+	private Font createBoldFont(Font baseFont) {
 		FontData fd = baseFont.getFontData()[0];
-		Font font =
-			new Font(baseFont.getDevice(), fd.getName(), fd.getHeight(), fd.getStyle() | SWT.BOLD);
+		Font font = new Font(baseFont.getDevice(), fd.getName(), fd.getHeight(), fd.getStyle() | SWT.BOLD);
 		return font;
 	}
-	
-	private void createViewerColumns(){
+
+	private void createViewerColumns() {
 		TableViewerColumn column;
-		
+
 		final CheckboxCellEditor checkboxCellEditor = new CheckboxCellEditor(viewer.getTable());
 		final TextCellEditor textCellEditor = new TextCellEditor(viewer.getTable());
-		
+
 		/* OK (checkbox column) */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("OK");
 		column.getColumn().setWidth(50);
 		column.setLabelProvider(new CheckboxLabelProvider());
 		column.setEditingSupport(new EditingSupport(viewer) {
-			public boolean canEdit(Object element){
+			public boolean canEdit(Object element) {
 				return true;
 			}
-			
-			public CellEditor getCellEditor(Object element){
+
+			public CellEditor getCellEditor(Object element) {
 				return checkboxCellEditor;
 			}
-			
-			public Object getValue(Object element){
+
+			public Object getValue(Object element) {
 				if (element instanceof OrderElement) {
 					OrderElement orderElement = (OrderElement) element;
 					return new Boolean(orderElement.isVerified());
@@ -306,8 +298,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 					return null;
 				}
 			}
-			
-			public void setValue(Object element, Object value){
+
+			public void setValue(Object element, Object value) {
 				if (element instanceof OrderElement) {
 					OrderElement orderElement = (OrderElement) element;
 					if (value instanceof Boolean) {
@@ -318,22 +310,22 @@ public class OrderImportDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		
-		/* Amount delivered*/
+
+		/* Amount delivered */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Geliefert");
 		column.getColumn().setWidth(60);
 		column.setLabelProvider(new AmountLabelProvider());
 		column.setEditingSupport(new EditingSupport(viewer) {
-			public boolean canEdit(Object element){
+			public boolean canEdit(Object element) {
 				return true;
 			}
-			
-			public CellEditor getCellEditor(Object element){
+
+			public CellEditor getCellEditor(Object element) {
 				return textCellEditor;
 			}
-			
-			public Object getValue(Object element){
+
+			public Object getValue(Object element) {
 				if (element instanceof OrderElement) {
 					OrderElement orderElement = (OrderElement) element;
 					return orderElement.getAmountAsString();
@@ -341,8 +333,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 					return null;
 				}
 			}
-			
-			public void setValue(Object element, Object value){
+
+			public void setValue(Object element, Object value) {
 				if (element instanceof OrderElement) {
 					OrderElement orderElement = (OrderElement) element;
 					if (value instanceof String) {
@@ -359,73 +351,72 @@ public class OrderImportDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		
-		/* Amount on stock*/
+
+		/* Amount on stock */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Lager");
 		column.getColumn().setWidth(60);
 		column.setLabelProvider(new StockLabelProvider());
-		
+
 		/* Pharamcode */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Pharmacode");
 		column.getColumn().setWidth(80);
 		column.setLabelProvider(new PharamcodeLabelProvider());
-		
+
 		/* EAN */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("EAN");
 		column.getColumn().setWidth(110);
 		column.setLabelProvider(new EANLabelProvider());
-		
+
 		/* Description */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Beschreibung");
 		column.getColumn().setWidth(300);
 		column.setLabelProvider(new DescriptionLabelProvider());
-		
+
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		if (order != null) {
 			setTitle("Bestellung " + order.getLabel() + " im Lager einbuchen");
 		} else {
 			setTitle("Bestellung im Lager einbuchen");
 		}
-		setMessage("Bitte überprüfen Sie alle bestellten Artikel."
-			+ " Überprüfte Artikel werden grün angezeigt."
-			+ " Bei der Anpassung der Lagerbestände werden nur jene Artikel"
-			+ " berücksichtigt, bei denen unter \"OK\" ein Haken gesetzt ist.");
+		setMessage("Bitte überprüfen Sie alle bestellten Artikel." + " Überprüfte Artikel werden grün angezeigt."
+				+ " Bei der Anpassung der Lagerbestände werden nur jene Artikel"
+				+ " berücksichtigt, bei denen unter \"OK\" ein Haken gesetzt ist.");
 		// setTitleImage(...));
 		getShell().setText("Bestellung im Lager einbuchen");
 	}
-	
+
 	// Replace OK/Cancel buttons by a close button
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		// Create Close button
 		createButton(parent, IDialogConstants.OK_ID, "Schliessen", false);
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		super.okPressed();
 	}
-	
+
 	// update the table according to the input from the scanner
-	private void applyScanner(){
+	private void applyScanner() {
 		int diff = diffSpinner.getSelection();
-		
+
 		String ean = eanText.getText().trim();
 		// remove silly characters from scanner
 		ean = ean.replaceAll(new Character(SWT.CR).toString(), "");
 		ean = ean.replaceAll(new Character(SWT.LF).toString(), "");
 		ean = ean.replaceAll(new Character((char) 0).toString(), "");
-		
+
 		eanText.setText("");
 		diffSpinner.setSelection(DIFF_SPINNER_DEFAULT);
-		
+
 		OrderElement orderElement = findOrderElementByEAN(ean);
 		if (orderElement != null) {
 			int newAmount = orderElement.getAmount() + diff;
@@ -433,33 +424,33 @@ public class OrderImportDialog extends TitleAreaDialog {
 		} else {
 			ScannerEvents.beep();
 			SWTHelper.alert("Artikel nicht bestellt",
-				"Dieser Artikel wurde nicht bestellt. Der Bestand kann nicht automatisch angepasst werden.");
+					"Dieser Artikel wurde nicht bestellt. Der Bestand kann nicht automatisch angepasst werden.");
 		}
 	}
-	
-	private OrderElement findOrderElementByEAN(String ean){
+
+	private OrderElement findOrderElementByEAN(String ean) {
 		if (ean == null) {
 			return null;
 		}
-		
+
 		for (OrderElement orderElement : orderElements) {
 			if (orderElement.getArticle().getGtin().equals(ean)) {
 				return orderElement;
 			}
 		}
-		
+
 		// not found
 		return null;
 	}
-	
-	private void updateOrderElement(OrderElement orderElement, int newAmount){
+
+	private void updateOrderElement(OrderElement orderElement, int newAmount) {
 		orderElement.setAmount(newAmount);
 		orderElement.setVerified(true);
 		viewer.update(orderElement, null);
 	}
-	
+
 	// read in verified order
-	public void doImport(){
+	public void doImport() {
 		try {
 			for (OrderElement orderElement : orderElements) {
 				if (orderElement.isVerified()) {
@@ -468,22 +459,22 @@ public class OrderImportDialog extends TitleAreaDialog {
 						// create a non transient stock entry for the article
 						stockEntry = ((TransientStockEntry) stockEntry).create(orderElement);
 					}
-					LockResponse lockResponse = LocalLockServiceHolder.get()
-						.acquireLockBlocking(stockEntry, 1, new NullProgressMonitor());
+					LockResponse lockResponse = LocalLockServiceHolder.get().acquireLockBlocking(stockEntry, 1,
+							new NullProgressMonitor());
 					if (lockResponse.isOk()) {
 						int diff = orderElement.getAmount();
 						int oldAmount = stockEntry.getCurrentStock();
 						int newAmount = oldAmount + diff;
 						stockEntry.setCurrentStock(newAmount);
-						
+
 						// reset amount
 						orderElement.setAmount(0);
 						orderElement.setVerified(false);
-						
+
 						if (diff > 0) {
-							// always close partial on second import ... TODO add a partial field for counting
-							if (orderElement
-								.getOrderState() == OrderEntryState.PARTIAL_DELIVER) {
+							// always close partial on second import ... TODO add a partial field for
+							// counting
+							if (orderElement.getOrderState() == OrderEntryState.PARTIAL_DELIVER) {
 								orderElement.setOrderState(BestellungEntry.STATE_DONE);
 							} else if (diff >= orderElement.getOrderAmount()) {
 								orderElement.setOrderState(BestellungEntry.STATE_DONE);
@@ -491,105 +482,103 @@ public class OrderImportDialog extends TitleAreaDialog {
 								orderElement.setOrderState(BestellungEntry.STATE_PARTIAL_DELIVER);
 							}
 						}
-						CoreModelServiceHolder.get()
-							.save(Arrays.asList(stockEntry, orderElement.getOrderEntry()));
+						CoreModelServiceHolder.get().save(Arrays.asList(stockEntry, orderElement.getOrderEntry()));
 						LocalLockServiceHolder.get().releaseLock(lockResponse.getLockInfo());
-						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
-							stockEntry);
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, stockEntry);
 					} else {
 						throw new IllegalStateException(
-							"Could not acquire lock for stockEntry [" + stockEntry.getArticle().getLabel() + "]");
+								"Could not acquire lock for stockEntry [" + stockEntry.getArticle().getLabel() + "]");
 					}
 				}
 			}
 		} catch (Exception ex) {
 			SWTHelper.showError("Fehler bei Anpassung der Bestände",
-				"Bestände konnten teilweise nicht korrekt angepasst werden: " + ex.getMessage());
+					"Bestände konnten teilweise nicht korrekt angepasst werden: " + ex.getMessage());
 		}
-		
+
 		viewer.refresh();
 	}
-	
+
 	private class ViewerContentProvider implements IStructuredContentProvider {
-		public Object[] getElements(Object inputElement){
+		public Object[] getElements(Object inputElement) {
 			return orderElements.toArray();
 		}
-		
-		public void dispose(){
+
+		public void dispose() {
 			// do nothing
 		}
-		
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// do nothing
 		}
 	}
-	
+
 	private class BaseLabelProvider extends ColumnLabelProvider {
-		public Color getForeground(Object element){
+		public Color getForeground(Object element) {
 			Color color = null;
-			
+
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
 				if (orderElement.isVerified()) {
 					color = OrderImportDialog.this.verifiedColor;
 				}
 			}
-			
+
 			return color;
 		}
-		
-		public Font getFont(Object element){
+
+		public Font getFont(Object element) {
 			Font font = null;
-			
+
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
 				if (orderElement.isVerified() && orderElement.getAmount() > 0) {
 					font = OrderImportDialog.this.boldFont;
 				}
 			}
-			
+
 			return font;
 		}
 	}
-	
+
 	private class CheckboxLabelProvider extends BaseLabelProvider {
-		public String getText(Object element){
+		public String getText(Object element) {
 			String text = "";
-			
+
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
 				if (orderElement.isVerified()) {
 					text = "X";
 				}
 			}
-			
+
 			return text;
 		}
 	}
-	
+
 	private class AmountLabelProvider extends BaseLabelProvider {
-		public String getText(Object element){
+		public String getText(Object element) {
 			String text = "";
-			
+
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
 				text = orderElement.getAmountAsString();
 			}
-			
+
 			return text;
 		}
 	}
-	
+
 	private class StockLabelProvider extends BaseLabelProvider {
-		public String getText(Object element){
+		public String getText(Object element) {
 			String text = "";
-			
+
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
 				IStockEntry stockEntry = orderElement.getStockEntry();
-				
+
 				if (stockEntry instanceof TransientStockEntry) {
-					if(((TransientStockEntry) stockEntry).isCreated()) {
+					if (((TransientStockEntry) stockEntry).isCreated()) {
 						IStockEntry created = ((TransientStockEntry) stockEntry).getCreated();
 						text = new Integer(created.getCurrentStock()).toString();
 					} else {
@@ -599,245 +588,243 @@ public class OrderImportDialog extends TitleAreaDialog {
 					text = new Integer(stockEntry.getCurrentStock()).toString();
 				}
 			}
-			
+
 			return text;
 		}
 	}
-	
+
 	private class PharamcodeLabelProvider extends BaseLabelProvider {
-		public String getText(Object element){
+		public String getText(Object element) {
 			String text = "";
-			
+
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
 				text = orderElement.getArticle().getCode();
 			}
-			
+
 			return text;
 		}
 	}
-	
+
 	private class EANLabelProvider extends BaseLabelProvider {
-		public String getText(Object element){
+		public String getText(Object element) {
 			String text = "";
-			
+
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
 				text = orderElement.getArticle().getGtin();
 			}
-			
+
 			return text;
 		}
 	}
-	
+
 	private class DescriptionLabelProvider extends BaseLabelProvider {
-		public String getText(Object element){
+		public String getText(Object element) {
 			String text = "";
-			
+
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
 				text = orderElement.getArticle().getName();
 			}
-			
+
 			return text;
 		}
 	}
-	
+
 	private class TransientStockEntry implements IStockEntry {
-		
+
 		private IArticle article;
-		
+
 		private IStockEntry created = null;
-		
-		public TransientStockEntry(IArticle article){
+
+		public TransientStockEntry(IArticle article) {
 			this.article = article;
 		}
-		
-		public IStockEntry create(OrderElement orderElement){
+
+		public IStockEntry create(OrderElement orderElement) {
 			IStock stock = StockServiceHolder.get().getDefaultStock();
 			created = StockServiceHolder.get().storeArticleInStock(stock,
-				StoreToStringServiceHolder.getStoreToString(article));
+					StoreToStringServiceHolder.getStoreToString(article));
 			created.setMinimumStock(0);
 			created.setCurrentStock(0);
 			created.setMaximumStock(0);
 			CoreModelServiceHolder.get().save(created);
 			return created;
 		}
-		
-		public boolean isCreated(){
+
+		public boolean isCreated() {
 			return created != null;
 		}
-		
-		public IStockEntry getCreated(){
+
+		public IStockEntry getCreated() {
 			return created;
 		}
-		
+
 		@Override
-		public IArticle getArticle(){
+		public IArticle getArticle() {
 			return article;
 		}
-		
+
 		@Override
-		public int getMinimumStock(){
+		public int getMinimumStock() {
 			return 0;
 		}
-		
+
 		@Override
-		public void setMinimumStock(int minStock){
+		public void setMinimumStock(int minStock) {
 		}
-		
+
 		@Override
-		public int getCurrentStock(){
+		public int getCurrentStock() {
 			return 0;
 		}
-		
+
 		@Override
-		public void setCurrentStock(int currentStock){
+		public void setCurrentStock(int currentStock) {
 		}
-		
+
 		@Override
-		public int getMaximumStock(){
+		public int getMaximumStock() {
 			return 0;
 		}
-		
+
 		@Override
-		public void setMaximumStock(int maxStock){
+		public void setMaximumStock(int maxStock) {
 		}
-		
+
 		@Override
-		public int getFractionUnits(){
+		public int getFractionUnits() {
 			return 0;
 		}
-		
+
 		@Override
-		public void setFractionUnits(int rest){
+		public void setFractionUnits(int rest) {
 		}
-		
+
 		@Override
-		public IContact getProvider(){
-			String providerId =
-				ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+		public IContact getProvider() {
+			String providerId = ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 			if (providerId != null) {
-				Optional<IContact> defProvider =
-					CoreModelServiceHolder.get().load(providerId, IContact.class);
+				Optional<IContact> defProvider = CoreModelServiceHolder.get().load(providerId, IContact.class);
 				return defProvider.orElse(null);
 			}
 			return null;
 		}
-		
+
 		@Override
-		public void setProvider(IContact provider){
+		public void setProvider(IContact provider) {
 		}
-		
+
 		@Override
-		public IStock getStock(){
+		public IStock getStock() {
 			return StockServiceHolder.get().getDefaultStock();
 		}
-		
+
 		@Override
-		public String getId(){
+		public String getId() {
 			return null;
 		}
-		
+
 		@Override
-		public String getLabel(){
+		public String getLabel() {
 			return article.getLabel();
 		}
-		
+
 		@Override
-		public boolean addXid(String domain, String id, boolean updateIfExists){
+		public boolean addXid(String domain, String id, boolean updateIfExists) {
 			return false;
 		}
-		
+
 		@Override
-		public IXid getXid(String domain){
+		public IXid getXid(String domain) {
 			return null;
 		}
-		
+
 		@Override
-		public boolean isDeleted(){
+		public boolean isDeleted() {
 			return false;
 		}
-		
+
 		@Override
-		public void setDeleted(boolean value){
+		public void setDeleted(boolean value) {
 		}
-		
+
 		@Override
-		public void setStock(IStock value){
+		public void setStock(IStock value) {
 		}
-		
+
 		@Override
-		public void setArticle(IArticle value){
+		public void setArticle(IArticle value) {
 		}
-		
+
 		@Override
-		public Long getLastupdate(){
+		public Long getLastupdate() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 	}
-	
+
 	private class OrderElement {
 		private boolean verified = false;
-		
+
 		private final IOrderEntry orderEntry;
 		private final IStockEntry stockEntry;
 		private int amount;
-		
-		OrderElement(IOrderEntry orderEntry, IStockEntry stockEntry, int amount){
+
+		OrderElement(IOrderEntry orderEntry, IStockEntry stockEntry, int amount) {
 			this.orderEntry = orderEntry;
 			this.stockEntry = stockEntry;
 			this.amount = amount;
 		}
-		
-		int getAmount(){
+
+		int getAmount() {
 			return amount;
 		}
-		
-		int getOrderAmount(){
+
+		int getOrderAmount() {
 			return orderEntry.getAmount();
 		}
-		
-		void setOrderState(int state){
+
+		void setOrderState(int state) {
 			orderEntry.setState(OrderEntryState.ofValue(state));
 		}
-		
-		OrderEntryState getOrderState(){
+
+		OrderEntryState getOrderState() {
 			return orderEntry.getState();
 		}
-		
+
 		/**
 		 * Set new amount. Sets verified to true.
 		 * 
 		 * @param amount
 		 *            the new amount
 		 */
-		void setAmount(int amount){
+		void setAmount(int amount) {
 			this.amount = amount;
 		}
-		
-		public IArticle getArticle(){
+
+		public IArticle getArticle() {
 			return (IArticle) stockEntry.getArticle();
 		}
-		
-		String getAmountAsString(){
+
+		String getAmountAsString() {
 			return new Integer(amount).toString();
 		}
-		
-		public IStockEntry getStockEntry(){
+
+		public IStockEntry getStockEntry() {
 			return stockEntry;
 		}
-		
-		boolean isVerified(){
+
+		boolean isVerified() {
 			return verified;
 		}
-		
-		void setVerified(boolean verified){
+
+		void setVerified(boolean verified) {
 			this.verified = verified;
 		}
-		
-		IOrderEntry getOrderEntry(){
+
+		IOrderEntry getOrderEntry() {
 			return orderEntry;
 		}
 	}

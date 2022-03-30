@@ -17,11 +17,12 @@ public interface ActiveControlListener {
 	 * Contents of field has chsnged.
 	 * 
 	 * @param ac
-	 *            the field that changed or NULL: Any of the observed field(s) have changed
+	 *            the field that changed or NULL: Any of the observed field(s) have
+	 *            changed
 	 */
 	public void contentsChanged(ActiveControl ac);
-	
+
 	public void titleClicked(ActiveControl field);
-	
+
 	public void invalidContents(ActiveControl field);
 }

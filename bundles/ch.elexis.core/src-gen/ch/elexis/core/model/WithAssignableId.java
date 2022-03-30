@@ -10,11 +10,9 @@
  */
 package ch.elexis.core.model;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>With Assignable Id</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>With
+ * Assignable Id</b></em>'. <!-- end-user-doc -->
  *
  *
  * @see ch.elexis.core.model.ModelPackage#getWithAssignableId()
@@ -23,8 +21,8 @@ package ch.elexis.core.model;
  */
 public interface WithAssignableId {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model
 	 * @generated
 	 */

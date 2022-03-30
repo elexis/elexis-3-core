@@ -14,16 +14,17 @@ import org.eclipse.swt.widgets.Display;
 import ch.elexis.core.ui.util.viewers.CommonViewer.Message;
 
 public abstract class LazyCommonViewerContentProvider extends CommonViewerContentProvider
-		implements ILazyContentProvider {
-	
+		implements
+			ILazyContentProvider {
+
 	protected Object[] loadedElements;
-	
-	public LazyCommonViewerContentProvider(CommonViewer commonViewer){
+
+	public LazyCommonViewerContentProvider(CommonViewer commonViewer) {
 		super(commonViewer);
 	}
 
 	@Override
-	public void changed(HashMap<String, String> values){
+	public void changed(HashMap<String, String> values) {
 		if (commonViewer.getConfigurer().getControlFieldProvider().isEmpty()) {
 			commonViewer.notify(CommonViewer.Message.empty);
 		} else {
@@ -33,20 +34,19 @@ public abstract class LazyCommonViewerContentProvider extends CommonViewerConten
 		// trigger loading
 		asyncReload();
 	}
-	
+
 	protected String getJobName() {
 		return "Loading";
 	}
-	
-	protected void asyncReload(){
+
+	protected void asyncReload() {
 		Job job = Job.create(getJobName(), new ICoreRunnable() {
 			@Override
-			public void run(IProgressMonitor monitor) throws CoreException{
+			public void run(IProgressMonitor monitor) throws CoreException {
 				loadedElements = getElements(null);
 				Display.getDefault().asyncExec(() -> {
 					// virtual table ...
-					AbstractTableViewer viewer =
-						(AbstractTableViewer) commonViewer.getViewerWidget();
+					AbstractTableViewer viewer = (AbstractTableViewer) commonViewer.getViewerWidget();
 					if (viewer != null && !viewer.getControl().isDisposed()) {
 						viewer.setItemCount(loadedElements.length);
 					}
@@ -58,9 +58,9 @@ public abstract class LazyCommonViewerContentProvider extends CommonViewerConten
 		job.setPriority(Job.SHORT);
 		job.schedule();
 	}
-	
+
 	@Override
-	public void updateElement(int index){
+	public void updateElement(int index) {
 		if (loadedElements != null && loadedElements.length > 0) {
 			Object[] copy = new Object[loadedElements.length];
 			System.arraycopy(loadedElements, 0, copy, 0, loadedElements.length);

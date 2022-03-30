@@ -25,34 +25,34 @@ import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.data.Anwender;
 
 public class FontPreference extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-	
-	public FontPreference(){
+
+	public FontPreference() {
 		super(Messages.FontPreference_schriftarten, GRID);
 		setPreferenceStore(new ConfigServicePreferenceStore(Scope.USER));
 	}
-	
+
 	@Override
-	protected void createFieldEditors(){
-		addField(new FontFieldEditor(Preferences.USR_DEFAULTFONT,
-			Messages.FontPreference_standardschriftart, "Elexis", getFieldEditorParent())); //$NON-NLS-1$
-		
-		addField(new FontFieldEditor(Preferences.USR_AGENDAFONT,
-			Messages.FontPreference_agendaschriftart, "Agenda", getFieldEditorParent())); //$NON-NLS-1$
-		
+	protected void createFieldEditors() {
+		addField(new FontFieldEditor(Preferences.USR_DEFAULTFONT, Messages.FontPreference_standardschriftart, "Elexis", //$NON-NLS-1$
+				getFieldEditorParent()));
+
+		addField(new FontFieldEditor(Preferences.USR_AGENDAFONT, Messages.FontPreference_agendaschriftart, "Agenda", //$NON-NLS-1$
+				getFieldEditorParent()));
+
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public boolean performOk(){
+	public boolean performOk() {
 		boolean ret = super.performOk();
 		UiDesk.updateFont(Preferences.USR_DEFAULTFONT);
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(CoreHub.getLoggedInContact(), Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+		ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(CoreHub.getLoggedInContact(), Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 		return ret;
 	}
-	
+
 }

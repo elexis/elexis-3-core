@@ -11,16 +11,16 @@ public class RestrictedHandler {
 
 	@Inject
 	private IAccessControlService accessControlService;
-	
+
 	private final ACE acessControlEntity;
 
-	public RestrictedHandler(ACE acessControlEntity){
+	public RestrictedHandler(ACE acessControlEntity) {
 		this.acessControlEntity = acessControlEntity;
 	}
-	
+
 	@CanExecute
-	public boolean canExecute(){
+	public boolean canExecute() {
 		return accessControlService.request(acessControlEntity);
 	}
-	
+
 }

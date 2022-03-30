@@ -44,71 +44,69 @@ import org.eclipse.swt.graphics.Point;
  */
 public class NatTableWrapper implements ISelectionProvider {
 	private NatTable natTable;
-	
+
 	private IRowDataProvider<Object> dataProvider;
 	private SelectionLayer selectionLayer;
-	
+
 	private List<Object> currentSelection = new ArrayList<>();
-	
+
 	private ListenerList doubleClickListeners = new ListenerList();
 	private ListenerList selectionListener = new ListenerList();
-	
-	protected void setSelectionLayer(SelectionLayer selectionLayer){
+
+	protected void setSelectionLayer(SelectionLayer selectionLayer) {
 		this.selectionLayer = selectionLayer;
 	}
-	
-	public SelectionLayer getSelectionLayer(){
+
+	public SelectionLayer getSelectionLayer() {
 		return selectionLayer;
 	}
-	
-	protected void setDataProvider(IRowDataProvider<Object> dataProvider){
+
+	protected void setDataProvider(IRowDataProvider<Object> dataProvider) {
 		this.dataProvider = dataProvider;
 	}
-	
-	public IRowDataProvider<?> getDataProvider(){
+
+	public IRowDataProvider<?> getDataProvider() {
 		return dataProvider;
 	}
-	
-	public boolean isDisposed(){
+
+	public boolean isDisposed() {
 		return natTable == null || natTable.isDisposed();
 	}
-	
-	protected void setNatTable(NatTable natTable){
+
+	protected void setNatTable(NatTable natTable) {
 		this.natTable = natTable;
 	}
-	
-	public void configure(){
+
+	public void configure() {
 		natTable.addLayerListener(new ILayerListener() {
 			@Override
-			public void handleLayerEvent(ILayerEvent event){
+			public void handleLayerEvent(ILayerEvent event) {
 				if (event instanceof CellSelectionEvent) {
 					currentSelection.clear();
 					CellSelectionEvent cellEvent = (CellSelectionEvent) event;
-					int[] selectedIdxs =
-						cellEvent.getSelectionLayer().getFullySelectedRowPositions();
+					int[] selectedIdxs = cellEvent.getSelectionLayer().getFullySelectedRowPositions();
 					for (int selectionIdx : selectedIdxs) {
 						currentSelection.add(dataProvider.getRowObject(selectionIdx));
 					}
 				}
 			}
 		});
-		
+
 		natTable.addConfiguration(new AbstractUiBindingConfiguration() {
 			@Override
-			public void configureUiBindings(UiBindingRegistry uiBindingRegistry){
+			public void configureUiBindings(UiBindingRegistry uiBindingRegistry) {
 				uiBindingRegistry.registerDoubleClickBinding(
-					new MouseEventMatcher(SWT.NONE, GridRegion.BODY, MouseEventMatcher.LEFT_BUTTON),
-					new DblClickMouseAction());
+						new MouseEventMatcher(SWT.NONE, GridRegion.BODY, MouseEventMatcher.LEFT_BUTTON),
+						new DblClickMouseAction());
 			}
-			
+
 			class DblClickMouseAction implements IMouseAction {
 				@Override
-				public void run(NatTable natTable, MouseEvent event){
+				public void run(NatTable natTable, MouseEvent event) {
 					if (currentSelection != null && currentSelection.size() == 1) {
 						Object[] listeners = doubleClickListeners.getListeners();
 						for (Object object : listeners) {
-							((IDoubleClickListener) object).doubleClick(NatTableWrapper.this,
-								getSelection());
+							((IDoubleClickListener) object).doubleClick(NatTableWrapper.this, getSelection());
 						}
 					}
 				}
@@ -116,41 +114,41 @@ public class NatTableWrapper implements ISelectionProvider {
 		});
 		natTable.configure();
 	}
-	
-	public NatTable getNatTable(){
+
+	public NatTable getNatTable() {
 		return natTable;
 	}
-	
-	public void addDoubleClickListener(IDoubleClickListener listener){
+
+	public void addDoubleClickListener(IDoubleClickListener listener) {
 		doubleClickListeners.add(listener);
 	}
-	
-	public void removeDoubleClickListener(IDoubleClickListener listener){
+
+	public void removeDoubleClickListener(IDoubleClickListener listener) {
 		doubleClickListeners.remove(listener);
 	}
-	
+
 	@Override
-	public void addSelectionChangedListener(ISelectionChangedListener listener){
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListener.add(listener);
 	}
-	
+
 	@Override
-	public ISelection getSelection(){
+	public ISelection getSelection() {
 		if (!currentSelection.isEmpty()) {
 			return new StructuredSelection(currentSelection);
 		}
 		return StructuredSelection.EMPTY;
 	}
-	
+
 	@Override
-	public void removeSelectionChangedListener(ISelectionChangedListener listener){
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListener.remove(listener);
 	}
-	
+
 	@Override
-	public void setSelection(ISelection selection){
+	public void setSelection(ISelection selection) {
 		if (selection instanceof StructuredSelection) {
-			if(!selection.isEmpty()) {
+			if (!selection.isEmpty()) {
 				List<?> list = ((StructuredSelection) selection).toList();
 				int[] rowIdx = new int[list.size()];
 				for (int i = 0; i < list.size(); i++) {
@@ -162,12 +160,12 @@ public class NatTableWrapper implements ISelectionProvider {
 			}
 		}
 	}
-	
+
 	public static interface IDoubleClickListener {
 		public void doubleClick(NatTableWrapper source, ISelection selection);
 	}
-	
-	public Point computeSize(int wHint, int hHint){
+
+	public Point computeSize(int wHint, int hHint) {
 		Point ret = natTable.computeSize(wHint, hHint);
 		int calcHeight = calculateHeight();
 		if (calcHeight > ret.y) {
@@ -175,8 +173,8 @@ public class NatTableWrapper implements ISelectionProvider {
 		}
 		return ret;
 	}
-	
-	private int calculateHeight(){
+
+	private int calculateHeight() {
 		return natTable.getPreferredHeight() + 20;
 	}
 }

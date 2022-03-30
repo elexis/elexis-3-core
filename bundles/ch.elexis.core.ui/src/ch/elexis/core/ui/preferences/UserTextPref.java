@@ -32,48 +32,43 @@ import ch.elexis.core.ui.text.EnhancedTextField;
  * Benutzerspezifische Einstellungen
  */
 public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-	
+
 	public static final String ID = "ch.elexis.preferences.UserPreferences"; //$NON-NLS-1$
-	
-	private static final String[] fields = {
-		EnhancedTextField.MACRO_KEY
-	};
-	
-	private static final String[] texte = {
-		Messages.UserTextPref_MacroKey
-	};
-	
+
+	private static final String[] fields = {EnhancedTextField.MACRO_KEY};
+
+	private static final String[] texte = {Messages.UserTextPref_MacroKey};
+
 	private HashMap<String, String> makros = new HashMap<String, String>();
 
-	public UserTextPref(){
+	public UserTextPref() {
 		super(GRID);
 		setPreferenceStore(new ConfigServicePreferenceStore(Scope.USER));
 		setDescription(Messages.UserTextPref_UserPreferences);
 	}
-	
+
 	@Override
-	protected void createFieldEditors(){
+	protected void createFieldEditors() {
 		for (int i = 0; i < fields.length; i++) {
 			addField(new StringFieldEditor(fields[i], texte[i], getFieldEditorParent()));
 		}
 		Set<String> makroNames = makros.keySet();
 		for (String name : makroNames) {
-			addField(new BooleanFieldEditor(EnhancedTextField.MACRO_ENABLED + "/"
-				+ makros.get(name), name, getFieldEditorParent()));
+			addField(new BooleanFieldEditor(EnhancedTextField.MACRO_ENABLED + "/" + makros.get(name), name,
+					getFieldEditorParent()));
 		}
 	}
-	
+
 	@Override
-	public void init(IWorkbench workbench){
+	public void init(IWorkbench workbench) {
 		for (String field : fields) {
 			String value = ConfigServiceHolder.getUser(field, EnhancedTextField.MACRO_KEY_DEFAULT);
 			getPreferenceStore().setValue(field, value);
 		}
-		
+
 		setMakroEnabledDefaults();
 
-		List<IConfigurationElement> makroExtensions =
-			Extensions.getExtensions(ExtensionPointConstantsUi.KONSEXTENSION);
+		List<IConfigurationElement> makroExtensions = Extensions.getExtensions(ExtensionPointConstantsUi.KONSEXTENSION);
 		for (IConfigurationElement iConfigurationElement : makroExtensions) {
 			String name = iConfigurationElement.getAttribute("name");
 			String clazz = iConfigurationElement.getAttribute("KonsMakro");
@@ -82,21 +77,19 @@ public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenc
 			}
 		}
 	}
-	
+
 	/**
 	 * Set default enabled preferences to false for the makro extensions.
 	 * 
 	 * @since 3.1
 	 */
-	public static void setMakroEnabledDefaults(){
-		List<IConfigurationElement> makroExtensions =
-			Extensions.getExtensions(ExtensionPointConstantsUi.KONSEXTENSION);
+	public static void setMakroEnabledDefaults() {
+		List<IConfigurationElement> makroExtensions = Extensions.getExtensions(ExtensionPointConstantsUi.KONSEXTENSION);
 		for (IConfigurationElement iConfigurationElement : makroExtensions) {
 			String name = iConfigurationElement.getAttribute("name");
 			String clazz = iConfigurationElement.getAttribute("KonsMakro");
 			if (clazz != null && !clazz.isEmpty() && !name.equals("enabled")) {
-				boolean enabled =
-					ConfigServiceHolder.getUser(EnhancedTextField.MACRO_ENABLED + "/" + clazz, false);
+				boolean enabled = ConfigServiceHolder.getUser(EnhancedTextField.MACRO_ENABLED + "/" + clazz, false);
 				// set disabled as default ...
 				if (!enabled) {
 					ConfigServiceHolder.setUser(EnhancedTextField.MACRO_ENABLED + "/" + clazz, false);
@@ -109,7 +102,7 @@ public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenc
 	}
 
 	@Override
-	protected void performDefaults(){
+	protected void performDefaults() {
 		this.initialize();
 	}
 }

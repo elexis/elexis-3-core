@@ -32,26 +32,27 @@ import ch.rgw.tools.Result;
 public class XChangeImporter implements IDataReceiver {
 	private final XChangeContainer container = new XChangeContainer();
 	private final Log log = Log.get("xChange Importer");
-	
-	public Result finalizeImport(){
+
+	public Result finalizeImport() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public Result<Object> load(Element input, Object context){
+
+	public Result<Object> load(Element input, Object context) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	/**
 	 * Find the registered Data handler that matches best the given element
 	 * 
 	 * @param el
 	 *            Element o be imported
-	 * @return the best matching handler or null if no handler exists at all for the given data type
+	 * @return the best matching handler or null if no handler exists at all for the
+	 *         given data type
 	 */
 	@SuppressWarnings("unchecked")
-	public IExchangeContributor findImportHandler(XChangeElement el){
+	public IExchangeContributor findImportHandler(XChangeElement el) {
 		int matchedRestrictions = 0;
 		IConfigurationElement cand = null;
 		for (IConfigurationElement ice : container.getXChangeContributors()) {
@@ -79,20 +80,19 @@ public class XChangeImporter implements IDataReceiver {
 								}
 							}
 						} catch (JDOMException e) {
-							ElexisStatus status =
-								new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID,
-									ElexisStatus.CODE_NONE, "Parse error JDOM: " + e.getMessage(),
-									e, ElexisStatus.LOG_WARNINGS);
+							ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID,
+									ElexisStatus.CODE_NONE, "Parse error JDOM: " + e.getMessage(), e,
+									ElexisStatus.LOG_WARNINGS);
 							throw new ExchangeException(status);
 						}
 					}
-					
+
 				} else {
 					if (compareValues(ice, cand) == -1)
 						cand = ice;
 				}
 			}
-			
+
 		}
 		if (cand != null) {
 			try {
@@ -103,8 +103,8 @@ public class XChangeImporter implements IDataReceiver {
 		}
 		return null;
 	}
-	
-	int compareValues(IConfigurationElement ic1, IConfigurationElement ic2){
+
+	int compareValues(IConfigurationElement ic1, IConfigurationElement ic2) {
 		int r1 = 0;
 		int r2 = 0;
 		String v1 = ic1.getAttribute("value");
@@ -120,16 +120,16 @@ public class XChangeImporter implements IDataReceiver {
 		}
 		return r1 > r2 ? -1 : 1;
 	}
-	
-	public void addBinary(String id, byte[] cnt){
+
+	public void addBinary(String id, byte[] cnt) {
 		container.binFiles.put(id, cnt);
 	}
-	
-	public XChangeContainer getContainer(){
+
+	public XChangeContainer getContainer() {
 		return container;
 	}
-	
-	public boolean load(String input){
+
+	public boolean load(String input) {
 		SAXBuilder builder = new SAXBuilder();
 		try {
 			CharArrayReader car = new CharArrayReader(input.toCharArray());
@@ -140,6 +140,6 @@ public class XChangeImporter implements IDataReceiver {
 			container.setValid(false);
 		}
 		return container.isValid();
-		
+
 	}
 }

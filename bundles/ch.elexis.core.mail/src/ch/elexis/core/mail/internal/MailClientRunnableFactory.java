@@ -12,12 +12,12 @@ import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
 
 @Component
 public class MailClientRunnableFactory implements IIdentifiedRunnableFactory {
-	
+
 	@Reference
 	private IMailClient mailClient;
-	
+
 	@Override
-	public List<IIdentifiedRunnable> getProvidedRunnables(){
+	public List<IIdentifiedRunnable> getProvidedRunnables() {
 		return Collections.singletonList(new SendMailRunnable(mailClient));
 	}
 }

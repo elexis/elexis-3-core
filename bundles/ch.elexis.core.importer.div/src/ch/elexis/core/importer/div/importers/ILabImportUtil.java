@@ -22,7 +22,8 @@ import ch.rgw.tools.TimeTool;
 public interface ILabImportUtil {
 
 	/**
-	 * Resolve a {@link ch.elexis.core.model.ILabItem} from the {@link ILaboratory} by its code.
+	 * Resolve a {@link ch.elexis.core.model.ILabItem} from the {@link ILaboratory}
+	 * by its code.
 	 * 
 	 * @param code
 	 * @param labor
@@ -44,8 +45,8 @@ public interface ILabImportUtil {
 	 * @param nextTestGroupSequence
 	 * @return
 	 */
-	public ILabItem createLabItem(String code, String name, ILaboratory origin, String male,
-		String female, String unit, LabItemTyp typ, String group, String priority);
+	public ILabItem createLabItem(String code, String name, ILaboratory origin, String male, String female, String unit,
+			LabItemTyp typ, String group, String priority);
 
 	/**
 	 * Create a new {@link ILabResult} with the provided properties.
@@ -65,13 +66,13 @@ public interface ILabImportUtil {
 	 * @param groupName
 	 * @return
 	 */
-	public ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem,
-		String result, String comment, String refVal, ILaboratory laboratory, String subId,
-		ILabOrder labOrder, String orderId, IMandator mandator, TimeTool observationTime,
-		String groupName);
-	
+	public ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem, String result, String comment,
+			String refVal, ILaboratory laboratory, String subId, ILabOrder labOrder, String orderId, IMandator mandator,
+			TimeTool observationTime, String groupName);
+
 	/**
-	 * Get a {@link ILabItem} with matching properties, and typ {@link LabItemTyp#DOCUMENT}.
+	 * Get a {@link ILabItem} with matching properties, and typ
+	 * {@link LabItemTyp#DOCUMENT}.
 	 * 
 	 * @param liShort
 	 * @param liName
@@ -100,27 +101,28 @@ public interface ILabImportUtil {
 	 * @param observationTime
 	 * @return
 	 */
-	public List<ILabResult> getLabResults(IPatient patient, ILabItem item, TimeTool date,
-		TimeTool analyseTime, TimeTool observationTime);
-	
+	public List<ILabResult> getLabResults(IPatient patient, ILabItem item, TimeTool date, TimeTool analyseTime,
+			TimeTool observationTime);
+
 	String importLabResults(List<TransientLabResult> results, ImportHandler importHandler);
 
-	void createDocumentManagerEntry(String title, String lab, byte[] data, String mimeType, TimeTool date, IPatient pat);
+	void createDocumentManagerEntry(String title, String lab, byte[] data, String mimeType, TimeTool date,
+			IPatient pat);
 
 	void updateLabResult(ILabResult iLabResult, TransientLabResult transientLabResult);
-	
+
 	/**
-	 * Find or set the {@link ILaboratory} this identifier is linked to via an {@link IXid}. If none
-	 * can be found use the {@link IContactResolver} to select the required contact. If a contact is
-	 * returned here, it will be be added the resp. Xid.
+	 * Find or set the {@link ILaboratory} this identifier is linked to via an
+	 * {@link IXid}. If none can be found use the {@link IContactResolver} to select
+	 * the required contact. If a contact is returned here, it will be be added the
+	 * resp. Xid.
 	 * 
 	 * @param identifier
 	 * @param contactResolver
 	 * @return
 	 */
-	public ILaboratory getLinkLabor(String identifier,
-		IContactResolver<ILaboratory> labContactResolver);
-	
+	public ILaboratory getLinkLabor(String identifier, IContactResolver<ILaboratory> labContactResolver);
+
 	/**
 	 * Load a model object of type clazz with the id string.
 	 * 
@@ -129,19 +131,19 @@ public interface ILabImportUtil {
 	 * @return
 	 */
 	public <T> Optional<T> loadCoreModel(String id, Class<T> clazz);
-	
+
 	public ILaboratory getOrCreateLabor(String identifier);
-	
+
 	public Optional<ILabItem> getLabItem(String shortname, String name, LabItemTyp document);
-	
+
 	/**
-	 * Get a {@link IPatient} using the code (patient number) attribute. If there are more than 1
-	 * patients with the same number, the first from the database will be used, and a warning is
-	 * logged.
+	 * Get a {@link IPatient} using the code (patient number) attribute. If there
+	 * are more than 1 patients with the same number, the first from the database
+	 * will be used, and a warning is logged.
 	 * 
 	 * @param code
 	 * @return
 	 */
 	public Optional<IPatient> getPatientByCode(String code);
-	
+
 }

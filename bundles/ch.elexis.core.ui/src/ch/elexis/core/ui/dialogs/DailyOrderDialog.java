@@ -54,39 +54,38 @@ import ch.elexis.core.ui.e4.providers.IdentifiableLabelProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.TimeTool;
 
-
 public class DailyOrderDialog extends TitleAreaDialog {
-	
+
 	private CDateTime dtDate;
 	private TableViewer tableViewer;
 	private IOrder currOrder;
 	private TimeTool selectedDate;
-	
+
 	private List<IMandator> limitationList = new ArrayList<>();
-	
-	public DailyOrderDialog(Shell parentShell, IOrder currOrder){
+
+	public DailyOrderDialog(Shell parentShell, IOrder currOrder) {
 		super(parentShell);
 		this.currOrder = currOrder;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		setTitle(Messages.DailyOrderDialog_Title);
 		setMessage(Messages.DailyOrderDialog_Message);
 	}
-	
+
 	@Override
-	protected boolean isResizable(){
+	protected boolean isResizable() {
 		return true;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite area = new Composite(parent, SWT.NONE);
 		area.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		area.setLayout(new GridLayout(1, false));
-		
+
 		Composite dateComposite = new Composite(area, SWT.NONE);
 		dateComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		dateComposite.setLayout(new GridLayout(2, false));
@@ -94,7 +93,7 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		dtDate.setSelection(new Date());
 		dtDate.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				modifyArticlesUsedOn(selectedDate, false);
 				selectedDate = new TimeTool(dtDate.getSelection());
 				modifyArticlesUsedOn(selectedDate, true);
@@ -102,78 +101,77 @@ public class DailyOrderDialog extends TitleAreaDialog {
 			}
 		});
 		selectedDate = new TimeTool(dtDate.getSelection());
-		
+
 		Button btnFilterMandators = new Button(dateComposite, SWT.CHECK);
 		btnFilterMandators.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnFilterMandators.setText("nur von folgenden Mandanten ...");
 		btnFilterMandators.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				limitationList.clear();
 				btnFilterMandators.setText("nur von folgenden Mandanten ...");
 				if (btnFilterMandators.getSelection()) {
-					ListSelectionDialog lsd = new ListSelectionDialog(
-						Display.getDefault().getActiveShell(),
-						CoreModelServiceHolder.get().getQuery(IMandator.class).execute(),
-						ArrayContentProvider.getInstance(),
-						IdentifiableLabelProvider.getInstance(), Messages.DailyOrderMandant);
+					ListSelectionDialog lsd = new ListSelectionDialog(Display.getDefault().getActiveShell(),
+							CoreModelServiceHolder.get().getQuery(IMandator.class).execute(),
+							ArrayContentProvider.getInstance(), IdentifiableLabelProvider.getInstance(),
+							Messages.DailyOrderMandant);
 					int open = lsd.open();
 					if (open == Dialog.OK) {
 						modifyArticlesUsedOn(selectedDate, false); // clear old list
-						limitationList.addAll(Arrays.asList(lsd.getResult()).stream()
-							.map(m -> (IMandator) m).collect(Collectors.toList()));
-						String label = Messages.DailyOrderMandantOnlyFollowing + limitationList.stream()
-							.map(m -> m.getLabel()).reduce((u, t) -> u + ", " + t).orElse(Messages.DailyOrderMandantNone);
+						limitationList.addAll(Arrays.asList(lsd.getResult()).stream().map(m -> (IMandator) m)
+								.collect(Collectors.toList()));
+						String label = Messages.DailyOrderMandantOnlyFollowing
+								+ limitationList.stream().map(m -> m.getLabel()).reduce((u, t) -> u + ", " + t)
+										.orElse(Messages.DailyOrderMandantNone);
 						btnFilterMandators.setText(label);
 						modifyArticlesUsedOn(selectedDate, true); // populate new list
 						tableViewer.setInput(currOrder.getEntries());
 					} else {
 						btnFilterMandators.setSelection(false);
 					}
-				} 
+				}
 			}
 		});
-		
+
 		Composite tableComposite = new Composite(area, SWT.NONE);
 		tableComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		TableColumnLayout tcLayout = new TableColumnLayout();
 		tableComposite.setLayout(tcLayout);
-		
+
 		tableViewer = new TableViewer(tableComposite, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewer.getTable();
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		
+
 		TableViewerColumn tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcAmount = tvc.getColumn();
 		tcLayout.setColumnData(tcAmount, new ColumnPixelData(70, false, false));
 		tcAmount.setText(Messages.DailyOrderDialog_Amount);
-		
+
 		tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcArticle = tvc.getColumn();
 		tcLayout.setColumnData(tcArticle, new ColumnPixelData(300, true, true));
 		tcArticle.setText(Messages.DailyOrderDialog_Article);
-		
+
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new OrderLabelProvider());
-		
+
 		modifyArticlesUsedOn(selectedDate, true);
 		tableViewer.setInput(currOrder.getEntries());
-		
+
 		return area;
 	}
-	
+
 	/**
 	 * 
 	 * @param priorDate
 	 * @param add
 	 * @since 3.7
 	 */
-	private void modifyArticlesUsedOn(TimeTool priorDate, boolean add){
+	private void modifyArticlesUsedOn(TimeTool priorDate, boolean add) {
 		IQuery<IEncounter> query = CoreModelServiceHolder.get().getQuery(IEncounter.class);
-		query.and(ModelPackage.Literals.IENCOUNTER__DATE, COMPARATOR.EQUALS,
-			priorDate.toLocalDate());
+		query.and(ModelPackage.Literals.IENCOUNTER__DATE, COMPARATOR.EQUALS, priorDate.toLocalDate());
 		if (!limitationList.isEmpty()) {
 			query.startGroup();
 			limitationList.stream().forEach(m -> {
@@ -182,17 +180,15 @@ public class DailyOrderDialog extends TitleAreaDialog {
 			query.andJoinGroups();
 		}
 		List<IEncounter> dayEncounters = query.execute();
-		
+
 		for (IEncounter encounter : dayEncounters) {
 			List<IBilled> encounterBilled = encounter.getBilled();
 			for (IBilled billed : encounterBilled) {
 				IBillable billable = billed.getBillable();
 				if (billable instanceof IArticle) {
 					IArticle art = (IArticle) billable;
-					Optional<IMandator> mandator =
-						ContextServiceHolder.get().getActiveMandator();
-					IStockEntry stockEntry =
-						StockServiceHolder.get().findPreferredStockEntryForArticle(
+					Optional<IMandator> mandator = ContextServiceHolder.get().getActiveMandator();
+					IStockEntry stockEntry = StockServiceHolder.get().findPreferredStockEntryForArticle(
 							StoreToStringServiceHolder.getStoreToString(art),
 							mandator.isPresent() ? mandator.get().getId() : null);
 					int amount = (int) billed.getAmount();
@@ -200,9 +196,8 @@ public class DailyOrderDialog extends TitleAreaDialog {
 						amount *= -1;
 					}
 					if (stockEntry != null) {
-						IOrderEntry orderEntry =
-							currOrder.addEntry(stockEntry.getArticle(), stockEntry.getStock(),
-							stockEntry.getProvider(), amount);
+						IOrderEntry orderEntry = currOrder.addEntry(stockEntry.getArticle(), stockEntry.getStock(),
+								stockEntry.getProvider(), amount);
 						if (orderEntry.getAmount() == 0) {
 							CoreModelServiceHolder.get().remove(orderEntry);
 							CoreModelServiceHolder.get().refresh(currOrder, true);
@@ -222,46 +217,48 @@ public class DailyOrderDialog extends TitleAreaDialog {
 			}
 		}
 	}
-	
+
 	class OrderLabelProvider extends LabelProvider implements ITableLabelProvider {
-		
-		public Image getColumnImage(final Object element, final int columnIndex){
+
+		public Image getColumnImage(final Object element, final int columnIndex) {
 			return null;
 		}
-		
-		public String getColumnText(final Object element, final int columnIndex){
+
+		public String getColumnText(final Object element, final int columnIndex) {
 			IOrderEntry be = (IOrderEntry) element;
 			switch (columnIndex) {
-			case 0:
-				return Integer.toString(be.getAmount());
-			case 1:
-				return be.getArticle().getLabel();
-			default:
-				return "?"; //$NON-NLS-1$
+				case 0 :
+					return Integer.toString(be.getAmount());
+				case 1 :
+					return be.getArticle().getLabel();
+				default :
+					return "?"; //$NON-NLS-1$
 			}
 		}
-		
+
 	}
-	
+
 	class OrderContentProvider implements IStructuredContentProvider {
 		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
-		
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
+
 		@Override
-		public Object[] getElements(Object inputElement){
+		public Object[] getElements(Object inputElement) {
 			return currOrder.getEntries().toArray(new IOrderEntry[0]);
 		}
-		
+
 		@Override
-		public void dispose(){}
+		public void dispose() {
+		}
 	}
-	
-	public IOrder getOrder(){
+
+	public IOrder getOrder() {
 		return currOrder;
 	}
-	
+
 	@Override
-	protected void cancelPressed(){
+	protected void cancelPressed() {
 		modifyArticlesUsedOn(selectedDate, false);
 		super.cancelPressed();
 	}

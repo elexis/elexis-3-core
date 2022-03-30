@@ -18,27 +18,28 @@ import ch.elexis.core.ui.importer.div.importers.DefaultLabImportUiHandler;
 import ch.rgw.io.FileTool;
 
 /**
- * Contains strategies for HL7Files ({@link DefaultHL7ImportStrategy}) and their matching PDFFiles (
- * {@link DefaultPDFImportStrategy})<br>
- * Matching of HL7File to PDF takes place via the filename (need to be identical apart from file
- * suffix).
+ * Contains strategies for HL7Files ({@link DefaultHL7ImportStrategy}) and their
+ * matching PDFFiles ( {@link DefaultPDFImportStrategy})<br>
+ * Matching of HL7File to PDF takes place via the filename (need to be identical
+ * apart from file suffix).
  * 
  * @author lucia
- * 		
+ * 
  */
 public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory {
 	private static final Logger log = LoggerFactory.getLogger(DefaultImportStrategyFactory.class);
-	
+
 	private boolean moveAfterImport;
-	
+
 	private ILabContactResolver labContactResolver;
-	
+
 	private String pdfImportCategory;
-	
+
 	@Override
-	public Map<IVirtualFilesystemHandle, IFileImportStrategy> createImportStrategyMap(IVirtualFilesystemHandle hl7File){
+	public Map<IVirtualFilesystemHandle, IFileImportStrategy> createImportStrategyMap(
+			IVirtualFilesystemHandle hl7File) {
 		Map<IVirtualFilesystemHandle, IFileImportStrategy> ret = super.createImportStrategyMap(hl7File);
-		
+
 		List<IVirtualFilesystemHandle> matchingFiles;
 		try {
 			matchingFiles = getMatchingFiles(hl7File);
@@ -61,30 +62,30 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 				}
 			}
 		}
-			
-		ret.values().forEach(strategy -> strategy.setMoveAfterImport(moveAfterImport)
-			.setLabContactResolver(labContactResolver));
+
+		ret.values().forEach(
+				strategy -> strategy.setMoveAfterImport(moveAfterImport).setLabContactResolver(labContactResolver));
 		return ret;
 	}
-	
+
 	/**
-	 * Specify if imported files should be moved to archiv and error directory inside the import
-	 * directory. Default is false.
+	 * Specify if imported files should be moved to archiv and error directory
+	 * inside the import directory. Default is false.
 	 * 
 	 * @param value
 	 * @return
 	 */
 	@Override
-	public IFileImportStrategyFactory setMoveAfterImport(boolean value){
+	public IFileImportStrategyFactory setMoveAfterImport(boolean value) {
 		this.moveAfterImport = value;
 		return this;
 	}
-	
-	public IFileImportStrategyFactory setPDFImportCategory(String category){
+
+	public IFileImportStrategyFactory setPDFImportCategory(String category) {
 		this.pdfImportCategory = category;
 		return this;
 	}
-	
+
 	/**
 	 * Add the {@link ILabContactResolver} that should be used on import.
 	 * 
@@ -92,7 +93,7 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 	 * @return
 	 */
 	@Override
-	public IFileImportStrategyFactory setLabContactResolver(ILabContactResolver resolver){
+	public IFileImportStrategyFactory setLabContactResolver(ILabContactResolver resolver) {
 		this.labContactResolver = resolver;
 		return this;
 	}

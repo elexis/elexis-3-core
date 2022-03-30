@@ -20,83 +20,82 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "net_medshare_percentile_checklist_question")
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
-public class PercentileChecklistQuestion extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted {
+public class PercentileChecklistQuestion extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "TitleId")
 	private PercentileChecklistTitle title;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "SubTitleId")
 	private PercentileChecklistTitle subtitle;
-	
+
 	@Column(length = 255)
 	private String question;
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 
-	public PercentileChecklistTitle getTitle(){
+	public PercentileChecklistTitle getTitle() {
 		return title;
 	}
-	
-	public void setTitle(PercentileChecklistTitle title){
+
+	public void setTitle(PercentileChecklistTitle title) {
 		this.title = title;
 	}
-	
-	public PercentileChecklistTitle getSubtitle(){
+
+	public PercentileChecklistTitle getSubtitle() {
 		return subtitle;
 	}
-	
-	public void setSubtitle(PercentileChecklistTitle subtitle){
+
+	public void setSubtitle(PercentileChecklistTitle subtitle) {
 		this.subtitle = subtitle;
 	}
-	
-	public String getQuestion(){
+
+	public String getQuestion() {
 		return question;
 	}
-	
-	public void setQuestion(String question){
+
+	public void setQuestion(String question) {
 		this.question = question;
 	}
 }

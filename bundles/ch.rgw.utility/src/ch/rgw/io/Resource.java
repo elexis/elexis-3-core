@@ -20,26 +20,27 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Log;
 
 /**
- * �berschrift: Toolbox Beschreibung: Copyright: Copyright (c) 2002 Organisation: rgw
+ * �berschrift: Toolbox Beschreibung: Copyright: Copyright (c) 2002
+ * Organisation: rgw
  * 
  * @author G. Weirich
  * @version 1.0
  */
 
 public class Resource {
-	
+
 	Class clazz;
 	String resbase;
 	static Log log;
-	
+
 	// String basedir;
-	
-	public Resource(String packagename){
+
+	public Resource(String packagename) {
 		clazz = getClass();
 		resbase = "/" + packagename.replace('.', '/') + "/";
 	}
-	
-	public InputStream getInputStream(String name){
+
+	public InputStream getInputStream(String name) {
 		String resname = resbase + name;
 		InputStream is = clazz.getResourceAsStream(resname);
 		if (is == null) {
@@ -47,8 +48,8 @@ public class Resource {
 		}
 		return is;
 	}
-	
-	public String getText(String name){
+
+	public String getText(String name) {
 		InputStream is = getInputStream(name);
 		StringBuffer sb = new StringBuffer();
 		int c;
@@ -63,8 +64,8 @@ public class Resource {
 		}
 		return sb.toString();
 	}
-	
-	public byte[] getBytes(String name){
+
+	public byte[] getBytes(String name) {
 		InputStream is = getInputStream(name);
 		byte[] buffer = new byte[0];
 		byte[] tmpbuf = new byte[1024];
@@ -83,14 +84,14 @@ public class Resource {
 		}
 		return buffer;
 	}
-	
-	public Image getImage(String name){
+
+	public Image getImage(String name) {
 		byte[] buffer = getBytes(name);
 		Image ret = Toolkit.getDefaultToolkit().createImage(buffer);
 		return ret;
 	}
-	
-	public java.net.URL getBaseDir(String rsc){
+
+	public java.net.URL getBaseDir(String rsc) {
 		String p = "/" + rsc.replace('.', '/'); //$NON-NLS-1$
 		return clazz.getResource(p);
 	}

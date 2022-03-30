@@ -46,76 +46,74 @@ import ch.rgw.tools.Result.SEVERITY;
 
 @Component
 public class BillingService implements IBillingService {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(BillingService.class);
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
-	
+
 	@Reference
 	private IAccessControlService accessControlService;
-	
+
 	@Reference
 	private IStockService stockService;
-	
+
 	@Reference
 	private IContextService contextService;
-	
+
 	private List<IBilledAdjuster> billedAdjusters = new ArrayList<>();
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public void setBilledAdjuster(IBilledAdjuster adjuster){
+	public void setBilledAdjuster(IBilledAdjuster adjuster) {
 		if (!billedAdjusters.contains(adjuster)) {
 			billedAdjusters.add(adjuster);
 		}
 	}
-	
-	public void unsetBilledAdjuster(IBilledAdjuster adjuster){
+
+	public void unsetBilledAdjuster(IBilledAdjuster adjuster) {
 		if (billedAdjusters.contains(adjuster)) {
 			billedAdjusters.remove(adjuster);
 		}
 	}
-	
+
 	private List<IBillableAdjuster> billableAdjusters = new ArrayList<>();
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public void setBillableAdjuster(IBillableAdjuster adjuster){
+	public void setBillableAdjuster(IBillableAdjuster adjuster) {
 		if (!billableAdjusters.contains(adjuster)) {
 			billableAdjusters.add(adjuster);
 		}
 	}
-	
-	public void unsetBillableAdjuster(IBillableAdjuster adjuster){
+
+	public void unsetBillableAdjuster(IBillableAdjuster adjuster) {
 		if (billableAdjusters.contains(adjuster)) {
 			billableAdjusters.remove(adjuster);
 		}
 	}
-	
+
 	@Override
-	public Result<IEncounter> isEditable(IEncounter encounter){
+	public Result<IEncounter> isEditable(IEncounter encounter) {
 		ICoverage coverage = encounter.getCoverage();
 		if (coverage != null) {
 			if (!coverage.isOpen()) {
-				return new Result<>(SEVERITY.WARNING, 0,
-					"Diese Konsultation gehört zu einem abgeschlossenen Fall", encounter, false);
+				return new Result<>(SEVERITY.WARNING, 0, "Diese Konsultation gehört zu einem abgeschlossenen Fall",
+						encounter, false);
 			}
 		}
-		
+
 		IMandator encounterMandator = encounter.getMandator();
-		boolean checkMandant =
-			!accessControlService.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
+		boolean checkMandant = !accessControlService.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
 		boolean mandatorOk = true;
 		boolean invoiceOk = true;
-		IMandator activeMandator =
-			ContextServiceHolder.get().getActiveMandator().orElse(null);
+		IMandator activeMandator = ContextServiceHolder.get().getActiveMandator().orElse(null);
 		boolean mandatorLoggedIn = (activeMandator != null);
-		
+
 		// if m is null, ignore checks (return true)
 		if (encounterMandator != null && activeMandator != null) {
 			if (checkMandant && !(encounterMandator.getId().equals(activeMandator.getId()))) {
 				mandatorOk = false;
 			}
-			
+
 			IInvoice rn = encounter.getInvoice();
 			if (rn == null) {
 				invoiceOk = true;
@@ -128,7 +126,7 @@ public class BillingService implements IBillingService {
 				}
 			}
 		}
-		
+
 		boolean ok = invoiceOk && mandatorOk && mandatorLoggedIn;
 		if (ok) {
 			return new Result<>(encounter);
@@ -146,9 +144,9 @@ public class BillingService implements IBillingService {
 			return new Result<>(SEVERITY.WARNING, 0, msg, encounter, false);
 		}
 	}
-	
+
 	@Override
-	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount){
+	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount) {
 		Result<IEncounter> editable = isEditable(encounter);
 		if (!editable.isOK()) {
 			return translateResult(editable);
@@ -160,26 +158,25 @@ public class BillingService implements IBillingService {
 			billable = iBillableAdjuster.adjust(billable, encounter);
 		}
 		if (billable != null) {
-			Result<IBillable> verificationResult =
-				billable.getVerifier().verifyAdd(billable, encounter, amount);
+			Result<IBillable> verificationResult = billable.getVerifier().verifyAdd(billable, encounter, amount);
 			if (verificationResult.isOK()) {
 				IBillableOptifier optifier = billable.getOptifier();
 				Result<IBilled> optifierResult = optifier.add(billable, encounter, amount);
-				
+
 				if (billable instanceof IArticle) {
-					IStatus status =
-						stockService.performSingleDisposal((IArticle) billable, doubleToInt(amount),
+					IStatus status = stockService.performSingleDisposal((IArticle) billable, doubleToInt(amount),
 							contextService.getActiveMandator().map(m -> m.getId()).orElse(null));
 					if (!status.isOK()) {
 						StatusUtil.logStatus(logger, status, true);
 					}
 				}
-				
+
 				// TODO refactor
 				if (!optifierResult.isOK() && optifierResult.getCode() == 11) {
 					String initialResult = optifierResult.toString();
 					// code 11 is tarmed exclusion due to side see TarmedOptifier#EXKLUSIONSIDE
-					// set a context variable to specify the side see TarmedLeistung#SIDE, TarmedLeistung#SIDE_L, TarmedLeistung#SIDE_R
+					// set a context variable to specify the side see TarmedLeistung#SIDE,
+					// TarmedLeistung#SIDE_L, TarmedLeistung#SIDE_R
 					optifier.putContext("Seite", "r");
 					optifierResult = optifier.add(billable, encounter, amount);
 					if (!optifierResult.isOK() && optifierResult.getCode() == 11) {
@@ -187,148 +184,140 @@ public class BillingService implements IBillingService {
 						optifierResult = optifier.add(billable, encounter, amount);
 					}
 					if (optifierResult.isOK()) {
-						String message = "Achtung: " + initialResult
-							+ "\n Es wurde bei der Position " + billable.getCode()
-							+ " automatisch die Seite gewechselt."
-							+ " Bitte korrigieren Sie die Leistung falls dies nicht korrekt ist.";
+						String message = "Achtung: " + initialResult + "\n Es wurde bei der Position "
+								+ billable.getCode() + " automatisch die Seite gewechselt."
+								+ " Bitte korrigieren Sie die Leistung falls dies nicht korrekt ist.";
 						optifierResult.addMessage(SEVERITY.OK, message);
 					}
 					optifier.clearContext();
 				}
-				
+
 				if (optifierResult.get() != null) {
 					for (IBilledAdjuster iBilledAdjuster : billedAdjusters) {
 						iBilledAdjuster.adjust(optifierResult.get());
 					}
 					if (optifierResult.isOK()) {
 						CodeElementServiceHolder.updateStatistics(billable,
-							ContextServiceHolder.get().getActiveUserContact().orElse(null));
+								ContextServiceHolder.get().getActiveUserContact().orElse(null));
 						CodeElementServiceHolder.updateStatistics(billable, encounter.getPatient());
 					}
 				}
-				
+
 				return optifierResult;
 			} else {
 				return translateResult(verificationResult);
 			}
 		} else {
-			return new Result<IBilled>(Result.SEVERITY.WARNING, 1, "Folgende Leistung '"
-				+ beforeAdjust.getCode()
-				+ "' konnte im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.",
-				null, false);
+			return new Result<IBilled>(Result.SEVERITY.WARNING, 1,
+					"Folgende Leistung '" + beforeAdjust.getCode()
+							+ "' konnte im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.",
+					null, false);
 		}
 	}
-	
+
 	/**
 	 * Get double as int rounded half up.
 	 * 
 	 * @param value
 	 * @return
 	 */
-	private int doubleToInt(double value){
+	private int doubleToInt(double value) {
 		BigDecimal bd = new BigDecimal(value);
 		bd = bd.setScale(0, RoundingMode.HALF_UP);
 		return bd.intValue();
 	}
-	
+
 	@Override
-	public Result<?> removeBilled(IBilled billed, IEncounter encounter){
+	public Result<?> removeBilled(IBilled billed, IEncounter encounter) {
 		Result<IEncounter> editable = isEditable(encounter);
-		if(!editable.isOK()) {
+		if (!editable.isOK()) {
 			return editable;
 		}
-		
+
 		IBillable billable = billed.getBillable();
 		if (billable != null && billable.getOptifier() != null) {
 			billable.getOptifier().remove(billed, encounter);
 		} else {
 			encounter.removeBilled(billed);
 		}
-		
-		if(billable instanceof IArticle) {
-			
+
+		if (billable instanceof IArticle) {
+
 			// TODO stock return via event
 			IArticle article = (IArticle) billable;
-			String mandatorId = contextService.getActiveMandator().map(m->m.getId()).orElse(null);
+			String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
 			stockService.performSingleReturn(article, (int) billed.getAmount(), mandatorId);
-			
+
 			// TODO prescription via event
 			Object prescId = billed.getExtInfo(Constants.FLD_EXT_PRESC_ID);
-			if(prescId instanceof String) {
-				IPrescription prescription = coreModelService.load((String)prescId, IPrescription.class).orElse(null);
-				if(prescription != null && EntryType.SELF_DISPENSED == prescription.getEntryType()) {
+			if (prescId instanceof String) {
+				IPrescription prescription = coreModelService.load((String) prescId, IPrescription.class).orElse(null);
+				if (prescription != null && EntryType.SELF_DISPENSED == prescription.getEntryType()) {
 					coreModelService.remove(prescription);
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, prescription);
 				}
 			}
 		}
-		
+
 		return Result.OK();
 	}
 
-	private Result<IBilled> translateResult(Result<?> vfcResult){
+	private Result<IBilled> translateResult(Result<?> vfcResult) {
 		Result<IBilled> ret = new Result<>(vfcResult.getSeverity(), null);
-		vfcResult.getMessages()
-			.forEach(msg -> ret.addMessage(msg.getSeverity(), msg.getText()));
+		vfcResult.getMessages().forEach(msg -> ret.addMessage(msg.getSeverity(), msg.getText()));
 		return ret;
 	}
-	
+
 	@Override
-	public Optional<IBillingSystemFactor> getBillingSystemFactor(String system, LocalDate date){
-		IQuery<IBillingSystemFactor> query =
-			coreModelService.getQuery(IBillingSystemFactor.class);
+	public Optional<IBillingSystemFactor> getBillingSystemFactor(String system, LocalDate date) {
+		IQuery<IBillingSystemFactor> query = coreModelService.getQuery(IBillingSystemFactor.class);
 		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__SYSTEM, COMPARATOR.EQUALS, system);
-		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__VALID_FROM,
-			COMPARATOR.LESS_OR_EQUAL, date);
-		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__VALID_TO,
-			COMPARATOR.GREATER_OR_EQUAL, date);
+		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__VALID_FROM, COMPARATOR.LESS_OR_EQUAL, date);
+		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__VALID_TO, COMPARATOR.GREATER_OR_EQUAL, date);
 		return query.executeSingleResult();
 	}
-	
+
 	@Override
-	public void setBillingSystemFactor(LocalDate from, LocalDate to, double factor, String system){
+	public void setBillingSystemFactor(LocalDate from, LocalDate to, double factor, String system) {
 		if (to == null) {
 			// 20380118, TimeTool.END_OF_UNIX_EPOCH
 			to = LocalDate.of(2038, 1, 18);
 		}
-		
-		IQuery<IBillingSystemFactor> query =
-				coreModelService.getQuery(IBillingSystemFactor.class);
+
+		IQuery<IBillingSystemFactor> query = coreModelService.getQuery(IBillingSystemFactor.class);
 		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__SYSTEM, COMPARATOR.EQUALS, system);
 		List<IBillingSystemFactor> existingWithSystem = query.execute();
 		for (IBillingSystemFactor iBillingSystemFactor : existingWithSystem) {
-			if (iBillingSystemFactor.getValidTo() == null
-				|| iBillingSystemFactor.getValidTo().isAfter(from)) {
+			if (iBillingSystemFactor.getValidTo() == null || iBillingSystemFactor.getValidTo().isAfter(from)) {
 				iBillingSystemFactor.setValidTo(from);
 				coreModelService.save(iBillingSystemFactor);
 			}
 		}
-		IBillingSystemFactor billingSystemFactor =
-			coreModelService.create(IBillingSystemFactor.class);
+		IBillingSystemFactor billingSystemFactor = coreModelService.create(IBillingSystemFactor.class);
 		billingSystemFactor.setFactor(factor);
 		billingSystemFactor.setSystem(system);
 		billingSystemFactor.setValidFrom(from);
 		billingSystemFactor.setValidTo(to);
 		coreModelService.save(billingSystemFactor);
 	}
-	
+
 	@Override
-	public IStatus changeAmountValidated(IBilled billed, double newAmount){
+	public IStatus changeAmountValidated(IBilled billed, double newAmount) {
 		double oldAmount = billed.getAmount();
 		if (newAmount == oldAmount) {
 			return Status.OK_STATUS;
 		}
-		
+
 		IEncounter encounter = billed.getEncounter();
 		if (newAmount == 0) {
 			removeBilled(billed, encounter);
 			return Status.OK_STATUS;
 		}
-		
+
 		IStatus ret = Status.OK_STATUS;
 		boolean bAllowOverrideStrict = ConfigServiceHolder.get()
-			.getActiveUserContact(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT, false);
-		
+				.getActiveUserContact(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT, false);
+
 		double difference = newAmount - oldAmount;
 		if (difference > 0) {
 			IBillable billable = billed.getBillable();
@@ -337,24 +326,24 @@ public class BillingService implements IBillingService {
 				if (bAllowOverrideStrict) {
 					if (ret.isOK() && !result.isOK()) {
 						String message = result.getMessages().stream().map(m -> m.getText())
-							.collect(Collectors.joining(", "));
+								.collect(Collectors.joining(", "));
 						ret = new Status(Status.WARNING, "ch.elexis.core.services", message);
 					}
 				} else if (!result.isOK()) {
 					String message = result.getMessages().stream().map(m -> m.getText())
-						.collect(Collectors.joining(", "));
+							.collect(Collectors.joining(", "));
 					return new Status(Status.ERROR, "ch.elexis.core.services", message);
 				}
 			}
 		} else if (difference < 0) {
 			changeAmount(billed, newAmount);
 		}
-		
+
 		return ret;
 	}
-	
+
 	@Override
-	public void changeAmount(IBilled billed, double newAmount){
+	public void changeAmount(IBilled billed, double newAmount) {
 		double oldAmount = billed.getAmount();
 		billed.setAmount(newAmount);
 		IBillable billable = billed.getBillable();
@@ -362,7 +351,7 @@ public class BillingService implements IBillingService {
 			IArticle art = (IArticle) billable;
 			String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
 			double difference = newAmount - oldAmount;
-			if(difference > 0) {
+			if (difference > 0) {
 				stockService.performSingleDisposal(art, (int) difference, mandatorId);
 			} else if (difference < 0) {
 				difference *= -1;

@@ -29,36 +29,33 @@ import ch.elexis.core.model.InvoiceState;
 
 @Entity
 @Table(name = "RECHNUNGEN")
-@EntityListeners({
-	InvoiceEntityListener.class, EntityWithIdListener.class
-})
+@EntityListeners({InvoiceEntityListener.class, EntityWithIdListener.class})
 @Cache(expiry = 15000)
 @NamedQuery(name = "Invoice.number", query = "SELECT i FROM Invoice i WHERE i.deleted = false AND i.number = :number")
 @NamedQuery(name = "Invoice.from.to.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "
-	+ "AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
+		+ "AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
 @NamedQuery(name = "Invoice.from.to.mandator.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "
-	+ "AND i.mandator = :mandator AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
-public class Invoice extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+		+ "AND i.mandator = :mandator AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
+public class Invoice extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	public static final String REMARK = "Bemerkung";
 	public static final String ATTACHMENTS = "Attachments";
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Lob
 	protected byte[] extInfo;
-	
+
 	@Column(length = 8, name = "RnNummer")
 	protected String number;
 
@@ -91,16 +88,16 @@ public class Invoice extends AbstractEntityWithId
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.REFRESH)
 	private List<VerrechnetCopy> invoiceBilled;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.REFRESH)
 	private List<Behandlung> encounters;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.REFRESH)
 	private List<Zahlung> payments;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.REFRESH)
 	private List<AccountTransaction> transactions;
-	
+
 	public String getNumber() {
 		return number;
 	}
@@ -174,58 +171,58 @@ public class Invoice extends AbstractEntityWithId
 	}
 
 	@Override
-	public byte[] getExtInfo(){
+	public byte[] getExtInfo() {
 		return extInfo;
 	}
-	
+
 	@Override
-	public void setExtInfo(byte[] extInfo){
+	public void setExtInfo(byte[] extInfo) {
 		this.extInfo = extInfo;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
-	public List<VerrechnetCopy> getInvoiceBilled(){
+
+	public List<VerrechnetCopy> getInvoiceBilled() {
 		return invoiceBilled;
 	}
-	
-	public List<Behandlung> getEncounters(){
+
+	public List<Behandlung> getEncounters() {
 		return encounters;
 	}
-	
-	public List<Zahlung> getPayments(){
+
+	public List<Zahlung> getPayments() {
 		return payments;
 	}
-	
-	public List<AccountTransaction> getTransactions(){
+
+	public List<AccountTransaction> getTransactions() {
 		return transactions;
 	}
 }

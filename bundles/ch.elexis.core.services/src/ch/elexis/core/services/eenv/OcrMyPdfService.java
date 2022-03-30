@@ -20,45 +20,43 @@ import ch.elexis.core.eenv.IOcrMyPdfService;
 
 @Component
 public class OcrMyPdfService implements IOcrMyPdfService {
-	
+
 	@Reference
 	private IElexisEnvironmentService elexisEnvironmentService;
-	
+
 	private IRemoteOcrMyPdfService remoteOcrMyPdfService;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		try {
 			String ocrMyPdfUrl = elexisEnvironmentService.getOcrMyPdfBaseUrl();
-			remoteOcrMyPdfService = ConsumerFactory.createConsumer(ocrMyPdfUrl,
-				new OcrMyPdfClientConfig(), IRemoteOcrMyPdfService.class);
+			remoteOcrMyPdfService = ConsumerFactory.createConsumer(ocrMyPdfUrl, new OcrMyPdfClientConfig(),
+					IRemoteOcrMyPdfService.class);
 		} catch (Exception e) {
 			LoggerFactory.getLogger(getClass()).warn("Error activating service", e);
 		}
 	}
-	
+
 	private final String PARAMS = "-l deu";
-	
+
 	/**
-	 * The OCRMyPdf service we use currently accepts one request only. We can assert this for the
-	 * given Elexis instance by using synchronized.
+	 * The OCRMyPdf service we use currently accepts one request only. We can assert
+	 * this for the given Elexis instance by using synchronized.
 	 * 
 	 * @throws OcrMyPdfException
 	 * 
 	 * @see https://ocrmypdf.readthedocs.io/en/latest/docker.html#using-the-ocrmypdf-web-service-wrapper
 	 */
 	@Override
-	public synchronized byte[] performOcr(byte[] in, String parameters)
-		throws IOException, OcrMyPdfException{
+	public synchronized byte[] performOcr(byte[] in, String parameters) throws IOException, OcrMyPdfException {
 		if (in == null) {
 			throw new IllegalArgumentException("null");
 		}
-		
+
 		String params = (parameters != null) ? parameters : PARAMS;
-		
+
 		try (FormDataMultiPart form = new FormDataMultiPart()) {
-			form.bodyPart(
-				new StreamDataBodyPart("file", new ByteArrayInputStream(in), "filename.pdf"));
+			form.bodyPart(new StreamDataBodyPart("file", new ByteArrayInputStream(in), "filename.pdf"));
 			form.field("params", params);
 			InputStream performOcr = remoteOcrMyPdfService.performOcr(form);
 			return IOUtils.toByteArray(performOcr);
@@ -72,13 +70,11 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 			} else if (re.getStatus() == 400) {
 				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, re.getMessage());
 			} else if (re.getStatus() == 413) {
-				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER,
-					"(HTTP 413) PDF is too large.");
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, "(HTTP 413) PDF is too large.");
 			}
-			throw new IllegalStateException(
-				"invalid state " + re.getStatus() + ": " + re.getMessage(), re);
+			throw new IllegalStateException("invalid state " + re.getStatus() + ": " + re.getMessage(), re);
 		}
-		
+
 	}
-	
+
 }

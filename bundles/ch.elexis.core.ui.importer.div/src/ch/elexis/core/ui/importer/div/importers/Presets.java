@@ -48,44 +48,29 @@ public class Presets {
 	private static Logger log = LoggerFactory.getLogger(Presets.class);
 	public static final String INSURANCE = Messages.Presets_Insurance;
 	public static final String INSURANCE_NUMBER = Messages.Presets_InsuranceNumber;
-	
+
 	static {
-		Xid.localRegisterXIDDomainIfNotExists(KONTAKTID, Messages.Presets_PreviousID,
-			Xid.ASSIGNMENT_LOCAL);
+		Xid.localRegisterXIDDomainIfNotExists(KONTAKTID, Messages.Presets_PreviousID, Xid.ASSIGNMENT_LOCAL);
 	}
 
-	/* 
-	0 	A 	ID
-	1 	B 	IstPerson 	Natürliche Person oder Organisation
-	2 	C 	IstPatient
-	3 	D 	Titel
-	4 	E 	Bezeichnung1
-	5 	F 	Bezeichnung2
-	6 	G 	Zusatz
-	7 	H 	Geburtsdatum
-	8 	I 	Geschlecht 	m oder M → männlich, sonst weiblich
-	9 	J 	E-Mail
-	10 	K 	Website
-	11 	L 	Telefon 1
-	12 	M 	Telefon 2
-	13 	N 	Mobil
-	14 	O 	Strasse
-	15 	P 	Plz
-	16 	Q 	Ort
-	17 	R 	Postadresse
-	18 	S 	EAN 
-	*/
+	/*
+	 * 0 A ID 1 B IstPerson Natürliche Person oder Organisation 2 C IstPatient 3 D
+	 * Titel 4 E Bezeichnung1 5 F Bezeichnung2 6 G Zusatz 7 H Geburtsdatum 8 I
+	 * Geschlecht m oder M → männlich, sonst weiblich 9 J E-Mail 10 K Website 11 L
+	 * Telefon 1 12 M Telefon 2 13 N Mobil 14 O Strasse 15 P Plz 16 Q Ort 17 R
+	 * Postadresse 18 S EAN
+	 */
 	public static final boolean importUniversal(final ExcelWrapper exw, final boolean bKeepID,
-		final IProgressMonitor moni){
-		exw.setFieldTypes(new Class[] {
-			Integer.class, Integer.class, Integer.class, String.class, // ID, IstPerson, IstPatient,
-																		// Titel
-			String.class, String.class, String.class, // Bezeichnung1, Bezeichnung2, Zusatz
-			TimeTool.class, String.class, String.class, // Geburtsdatum, Geschlecht, E-Mail
-			String.class, String.class, String.class, // Website, Telefon 1, Telefon 2
-			String.class, String.class, String.class, // Mobil, Strasse, Plz
-			String.class, String.class, Integer.class
-		// Ort, Postanschrift,
+			final IProgressMonitor moni) {
+		exw.setFieldTypes(new Class[]{Integer.class, Integer.class, Integer.class, String.class, // ID, IstPerson,
+																									// IstPatient,
+																									// Titel
+				String.class, String.class, String.class, // Bezeichnung1, Bezeichnung2, Zusatz
+				TimeTool.class, String.class, String.class, // Geburtsdatum, Geschlecht, E-Mail
+				String.class, String.class, String.class, // Website, Telefon 1, Telefon 2
+				String.class, String.class, String.class, // Mobil, Strasse, Plz
+				String.class, String.class, Integer.class
+				// Ort, Postanschrift,
 		});
 		int first = exw.getFirstRow();
 		int last = exw.getLastRow();
@@ -105,7 +90,7 @@ public class Presets {
 			if (StringTool.isNothing(ID)) {
 				ID = EAN;
 			}
-			
+
 			String typ = StringTool.getSafe(row, 1);
 			String ispat = StringTool.getSafe(row, 2);
 			String titel = StringTool.getSafe(row, 3);
@@ -118,9 +103,7 @@ public class Presets {
 			String natel = StringTool.getSafe(row, 13);
 			Kontakt k = null;
 			if (StringTool.isNothing(typ) || typ.equals("0")) { //$NON-NLS-1$
-				k =
-					KontaktMatcher.findOrganisation(bez1, null, strasse, plz, ort,
-						CreateMode.CREATE);
+				k = KontaktMatcher.findOrganisation(bez1, null, strasse, plz, ort, CreateMode.CREATE);
 				if (k == null) {
 					continue;
 				}
@@ -133,16 +116,13 @@ public class Presets {
 					Patient pat = (Patient) Xid.findObject(KONTAKTID, ID);
 					// avoid duplicate import
 					if (pat == null) {
-						pat =
-							new Patient(bez1, bez2, gebdat,
+						pat = new Patient(bez1, bez2, gebdat,
 								sex.toLowerCase().startsWith("m") ? Person.MALE : Person.FEMALE); //$NON-NLS-1$
 						pat.set("PatientNr", ID); //$NON-NLS-1$
 						pat.addXid(KONTAKTID, ID, false);
 					}
 				}
-				k =
-					KontaktMatcher.findPerson(bez1, bez2, gebdat, sex, strasse, plz, ort, natel,
-						CreateMode.CREATE);
+				k = KontaktMatcher.findPerson(bez1, bez2, gebdat, sex, strasse, plz, ort, natel, CreateMode.CREATE);
 				if (k == null) {
 					continue;
 				}
@@ -150,12 +130,10 @@ public class Presets {
 				k.set("Zusatz", zusatz); //$NON-NLS-1$
 			}
 			moni.subTask(k.getLabel());
-			k.set(
-				new String[] {
-					"E-Mail", "Website", "Telefon1", "Telefon2", "Natel", "Strasse", "Plz", "Ort", "Anschrift"}, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
-				StringTool.getSafe(row, 9), StringTool.getSafe(row, 10),
-				StringTool.getSafe(row, 11), StringTool.getSafe(row, 12), natel, strasse, plz, ort,
-				StringTool.getSafe(row, 17));
+			k.set(new String[]{"E-Mail", "Website", "Telefon1", "Telefon2", "Natel", "Strasse", "Plz", "Ort", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+					"Anschrift"}, //$NON-NLS-1$
+					StringTool.getSafe(row, 9), StringTool.getSafe(row, 10), StringTool.getSafe(row, 11),
+					StringTool.getSafe(row, 12), natel, strasse, plz, ort, StringTool.getSafe(row, 17));
 			if (EAN.matches("[0-9]{13,13}")) { //$NON-NLS-1$
 				k.addXid(XidConstants.DOMAIN_EAN, EAN, true);
 			}
@@ -177,28 +155,26 @@ public class Presets {
 		moni.done();
 		return true;
 	}
-	
-	public static boolean importHertel(final ExcelWrapper exw, final boolean bKeepID,
-		final IProgressMonitor moni){
-		exw.setFieldTypes(new Class[] {
-			Integer.class, String.class, String.class, String.class, // Nr, Name, Vorname, Sex
-			String.class, String.class, String.class, TimeTool.class, // Anrede, Zivilstand, Titel,
-																		// Geburtsdatum
-			String.class, String.class, String.class, String.class, // Arzt, Strasse, Tel Platz 1,
-																	// Tel. Platz 2
-			String.class, String.class, String.class, String.class, // Tel 3, Tel 4, E-Mail, Zusatz
-			String.class, String.class, TimeTool.class, String.class, // Pat-select, Briefanrede,
-																		// Letzter Kontakt, Freies
-																		// Feld 1
-			String.class, String.class, String.class, String.class, // Freies Feld 2, Freies Feld 3,
-																	// Reiter, Ort
-			String.class, String.class, String.class, String.class, // Plz, Land, UnfallNr, KK-Nr
-			String.class, String.class, String.class, String.class, // IV-Nr, Zusatz-Nr, AHV-Nr,
-																	// Covercard-Nr
-			String.class, TimeTool.class, String.class, String.class, // Covercard-Zusatz, Erfasst
-																		// am, Arzt, Unfallvers
-			String.class, String.class
-		// Krankenkasse, IV
+
+	public static boolean importHertel(final ExcelWrapper exw, final boolean bKeepID, final IProgressMonitor moni) {
+		exw.setFieldTypes(new Class[]{Integer.class, String.class, String.class, String.class, // Nr, Name, Vorname, Sex
+				String.class, String.class, String.class, TimeTool.class, // Anrede, Zivilstand, Titel,
+																			// Geburtsdatum
+				String.class, String.class, String.class, String.class, // Arzt, Strasse, Tel Platz 1,
+																		// Tel. Platz 2
+				String.class, String.class, String.class, String.class, // Tel 3, Tel 4, E-Mail, Zusatz
+				String.class, String.class, TimeTool.class, String.class, // Pat-select, Briefanrede,
+																			// Letzter Kontakt, Freies
+																			// Feld 1
+				String.class, String.class, String.class, String.class, // Freies Feld 2, Freies Feld 3,
+																		// Reiter, Ort
+				String.class, String.class, String.class, String.class, // Plz, Land, UnfallNr, KK-Nr
+				String.class, String.class, String.class, String.class, // IV-Nr, Zusatz-Nr, AHV-Nr,
+																		// Covercard-Nr
+				String.class, TimeTool.class, String.class, String.class, // Covercard-Zusatz, Erfasst
+																			// am, Arzt, Unfallvers
+				String.class, String.class
+				// Krankenkasse, IV
 		});
 		int first = exw.getFirstRow();
 		int last = exw.getLastRow();
@@ -206,69 +182,68 @@ public class Presets {
 		for (int i = first + 1; i < last; i++) {
 			// Please keep this list in sync with doc/import.textile !!
 			String[] row = exw.getRow(i).toArray(new String[0]);
-			
+
 			String name = StringTool.getSafe(row, 1);
 			String vorname = StringTool.getSafe(row, 2);
 			String sex = StringTool.getSafe(row, 3);
-			
+
 			String anrede = StringTool.getSafe(row, 4);
 			String zivilstand = StringTool.getSafe(row, 5);
 			String titel = StringTool.getSafe(row, 6);
 			String gebdat = StringTool.getSafe(row, 7);
-			
+
 			String arzt = StringTool.getSafe(row, 8);
 			String strasse = StringTool.getSafe(row, 9);
 			String telp1 = StringTool.getSafe(row, 10);
 			String telp2 = StringTool.getSafe(row, 11);
-			
+
 			String tel3 = StringTool.getSafe(row, 12);
 			String tel4 = StringTool.getSafe(row, 13);
 			String email = StringTool.getSafe(row, 14);
 			String zusatz = StringTool.getSafe(row, 15);
-			
+
 			String patsel = StringTool.getSafe(row, 16);
 			String briefanr = StringTool.getSafe(row, 17);
 			String letzerk = StringTool.getSafe(row, 18);
 			String frei1 = StringTool.getSafe(row, 19);
-			
+
 			String frei2 = StringTool.getSafe(row, 20);
 			String frei3 = StringTool.getSafe(row, 21);
 			String reiter = StringTool.getSafe(row, 22);
 			String ort = StringTool.getSafe(row, 23);
-			
+
 			String plz = StringTool.getSafe(row, 24);
 			String land = StringTool.getSafe(row, 25);
 			String unfallnr = StringTool.getSafe(row, 26);
 			String kknr = StringTool.getSafe(row, 27);
-			
+
 			String ivnr = StringTool.getSafe(row, 28);
 			String zusatznr = StringTool.getSafe(row, 29);
 			String ahvnr = StringTool.getSafe(row, 30);
 			String covercardnr = StringTool.getSafe(row, 31);
-			
+
 			String covercardzus = StringTool.getSafe(row, 32);
 			String erfasstam = StringTool.getSafe(row, 33);
 			String arztn = StringTool.getSafe(row, 34);
 			String unfallvers = StringTool.getSafe(row, 35);
-			
+
 			String kk = StringTool.getSafe(row, 36);
 			String iv = StringTool.getSafe(row, 37);
 			Patient pat = (Patient) Xid.findObject(KONTAKTID, row[0]); // avoid
 			// duplicate
 			// import
 			if (pat == null) {
-				pat =
-					new Patient(name, vorname, gebdat,
+				pat = new Patient(name, vorname, gebdat,
 						sex.toLowerCase().startsWith("m") ? Person.MALE : Person.FEMALE); //$NON-NLS-1$
 				pat.set("PatientNr", row[0]); //$NON-NLS-1$
 				pat.addXid(KONTAKTID, row[0], false);
 			}
 			moni.subTask(pat.getLabel());
-			pat.set(new String[] {
-				"Strasse", "Plz", "Ort", "Land", "Telefon1", "Telefon2", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-				"Natel", "E-Mail", "Titel", "Gruppe", "Zusatz"}, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-				strasse, plz, ort, land.equalsIgnoreCase(Messages.Presets_Switzerland) ? "CH" : "", //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-				telp1, telp2, tel3, email, titel, arztn, zusatz);
+			pat.set(new String[]{"Strasse", "Plz", "Ort", "Land", "Telefon1", "Telefon2", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+					"Natel", "E-Mail", "Titel", "Gruppe", "Zusatz"}, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+					strasse, plz, ort, land.equalsIgnoreCase(Messages.Presets_Switzerland) ? "CH" : "", //$NON-NLS-1$//$NON-NLS-2$
+																										// //$NON-NLS-3$
+					telp1, telp2, tel3, email, titel, arztn, zusatz);
 			if (!StringTool.isNothing(ahvnr)) {
 				pat.addXid(XidConstants.DOMAIN_AHV, ahvnr, true);
 			}
@@ -283,8 +258,7 @@ public class Presets {
 					k = new Organisation(kk, Messages.Presets_KKKuerzel);
 					k.set("Kuerzel", Messages.Presets_KKKuerzel); //$NON-NLS-1$
 				}
-				Fall fall =
-					pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
+				Fall fall = pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
 						Messages.Presets_KVGAbkuerzung);
 				fall.setGarant(pat);
 				fall.setRequiredContact(INSURANCE, k);
@@ -301,8 +275,7 @@ public class Presets {
 					k = new Organisation(unfallvers, Messages.Presets_UVGAbkuerzung);
 					k.set("Kuerzel", Messages.Presets_UVGAbkuerzung); //$NON-NLS-1$
 				}
-				Fall fall =
-					pat.neuerFall(Messages.Presets_Unfall, Messages.Presets_Unfall,
+				Fall fall = pat.neuerFall(Messages.Presets_Unfall, Messages.Presets_Unfall,
 						Messages.Presets_UVGAbkuerzung);
 				fall.setGarant(k);
 				fall.setRequiredContact(INSURANCE, k);
@@ -313,14 +286,11 @@ public class Presets {
 		moni.done();
 		return true;
 	}
-	
-	public static boolean importRussi(final ExcelWrapper exw, final boolean bKeepID,
-		final IProgressMonitor moni){
-		exw.setFieldTypes(new Class[] {
-			Integer.class, String.class, TimeTool.class, String.class, Integer.class, String.class,
-			String.class, String.class, String.class, String.class, String.class, String.class,
-			String.class
-		});
+
+	public static boolean importRussi(final ExcelWrapper exw, final boolean bKeepID, final IProgressMonitor moni) {
+		exw.setFieldTypes(new Class[]{Integer.class, String.class, TimeTool.class, String.class, Integer.class,
+				String.class, String.class, String.class, String.class, String.class, String.class, String.class,
+				String.class});
 		int first = exw.getFirstRow();
 		int last = exw.getLastRow();
 		moni.beginTask("Import Patientendaten Russi", last - first); //$NON-NLS-1$
@@ -336,8 +306,7 @@ public class Presets {
 			String gebdat = new TimeTool(gdraw).toString(TimeTool.DATE_GER);
 			String gender = StringTool.getSafe(row, 9).startsWith("W") ? "w" : "m"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			Patient pat = new Patient(name[0], name.length > 1 ? name[1] : "-", gebdat, gender); //$NON-NLS-1$
-			String patcode =
-				new StringBuilder().append(pat.getLabel()).append(pat.getPatCode()).toString();
+			String patcode = new StringBuilder().append(pat.getLabel()).append(pat.getPatCode()).toString();
 			moni.subTask(patcode);
 			log.info(patcode);
 			pat.addXid(KONTAKTID, row[0], false);
@@ -350,19 +319,15 @@ public class Presets {
 			pat.set("Natel", StringTool.getSafe(row, 7)); //$NON-NLS-1$
 			pat.set("Telefon2", StringTool.getSafe(row, 8)); //$NON-NLS-1$
 			if (!StringTool.isNothing(StringTool.getSafe(row, 10))) {
-				Organisation org =
-					KontaktMatcher.findOrganisation(row[10], null, "", "", "", CreateMode.CREATE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				Fall fall =
-					pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
+				Organisation org = KontaktMatcher.findOrganisation(row[10], null, "", "", "", CreateMode.CREATE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				Fall fall = pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
 						Messages.Presets_KVGAbkuerzung);
 				fall.setRequiredContact(Messages.Presets_Insurance, org);
 				fall.setGarant(pat);
 			}
 			if (!StringTool.isNothing(StringTool.getSafe(row, 11))) {
-				Organisation org =
-					KontaktMatcher.findOrganisation(row[11], null, "", "", "", CreateMode.CREATE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				Fall fall =
-					pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
+				Organisation org = KontaktMatcher.findOrganisation(row[11], null, "", "", "", CreateMode.CREATE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				Fall fall = pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
 						Messages.Presets_UVGAbkuerzung);
 				fall.setRequiredContact(Messages.Presets_Insurance, org);
 				fall.setGarant(org);
@@ -372,5 +337,5 @@ public class Presets {
 		moni.done();
 		return true;
 	}
-	
+
 }

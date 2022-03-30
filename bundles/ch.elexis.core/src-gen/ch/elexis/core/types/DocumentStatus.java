@@ -17,22 +17,20 @@ import java.util.List;
 import org.eclipse.emf.common.util.Enumerator;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Document Status</b></em>',
- * and utility methods for working with them.
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration
+ * '<em><b>Document Status</b></em>', and utility methods for working with them.
  * <!-- end-user-doc -->
+ * 
  * @see ch.elexis.core.types.TypesPackage#getDocumentStatus()
  * @model
  * @generated
  */
 public enum DocumentStatus implements Enumerator {
 	/**
-	 * The '<em><b>NEW</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Newly added, no further actions taken until now.
-	 * <!-- end-model-doc -->
+	 * The '<em><b>NEW</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc --> <!-- begin-model-doc --> Newly added, no further actions
+	 * taken until now. <!-- end-model-doc -->
+	 * 
 	 * @see #NEW_VALUE
 	 * @generated
 	 * @ordered
@@ -40,34 +38,32 @@ public enum DocumentStatus implements Enumerator {
 	NEW(0, "NEW", "NEW"),
 
 	/**
-	 * The '<em><b>PREPROCESSED</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The document was automatically preprocessed, which may or may not happen. For PDF e.g. preprocessing includes performing OCR on scanned pdfs.
-	 * <!-- end-model-doc -->
+	 * The '<em><b>PREPROCESSED</b></em>' literal object. <!-- begin-user-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> The document was automatically
+	 * preprocessed, which may or may not happen. For PDF e.g. preprocessing
+	 * includes performing OCR on scanned pdfs. <!-- end-model-doc -->
+	 * 
 	 * @see #PREPROCESSED_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	PREPROCESSED(1, "PREPROCESSED", "PREPROCESSED"), /**
-	 * The '<em><b>INDEXED</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The document was indexed, that is it is available for extended search (used e.g. by SOLR)
-	 * <!-- end-model-doc -->
+	PREPROCESSED(1, "PREPROCESSED", "PREPROCESSED"),
+	/**
+	 * The '<em><b>INDEXED</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc --> <!-- begin-model-doc --> The document was indexed, that is
+	 * it is available for extended search (used e.g. by SOLR) <!-- end-model-doc
+	 * -->
+	 * 
 	 * @see #INDEXED_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	INDEXED(2, "INDEXED", "INDEXED"), /**
-	 * The '<em><b>SENT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The document was sent to an external contact.
-	 * <!-- end-model-doc -->
+	INDEXED(2, "INDEXED", "INDEXED"),
+	/**
+	 * The '<em><b>SENT</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc --> <!-- begin-model-doc --> The document was sent to an
+	 * external contact. <!-- end-model-doc -->
+	 * 
 	 * @see #SENT_VALUE
 	 * @generated
 	 * @ordered
@@ -75,16 +71,14 @@ public enum DocumentStatus implements Enumerator {
 	SENT(4, "SENT", "SENT");
 
 	/**
-	 * The '<em><b>NEW</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>NEW</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>NEW</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>NEW</b></em>' literal object isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Newly added, no further actions taken until now.
-	 * <!-- end-model-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> Newly added, no further
+	 * actions taken until now. <!-- end-model-doc -->
+	 * 
 	 * @see #NEW
 	 * @model
 	 * @generated
@@ -93,12 +87,11 @@ public enum DocumentStatus implements Enumerator {
 	public static final int NEW_VALUE = 0;
 
 	/**
-	 * The '<em><b>PREPROCESSED</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The document was automatically preprocessed, which may or may not happen. For PDF e.g. preprocessing includes performing OCR on scanned pdfs.
-	 * <!-- end-model-doc -->
+	 * The '<em><b>PREPROCESSED</b></em>' literal value. <!-- begin-user-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> The document was automatically
+	 * preprocessed, which may or may not happen. For PDF e.g. preprocessing
+	 * includes performing OCR on scanned pdfs. <!-- end-model-doc -->
+	 * 
 	 * @see #PREPROCESSED
 	 * @model
 	 * @generated
@@ -107,12 +100,11 @@ public enum DocumentStatus implements Enumerator {
 	public static final int PREPROCESSED_VALUE = 1;
 
 	/**
-	 * The '<em><b>INDEXED</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The document was indexed, that is it is available for extended search (used e.g. by SOLR)
-	 * <!-- end-model-doc -->
+	 * The '<em><b>INDEXED</b></em>' literal value. <!-- begin-user-doc --> <!--
+	 * end-user-doc --> <!-- begin-model-doc --> The document was indexed, that is
+	 * it is available for extended search (used e.g. by SOLR) <!-- end-model-doc
+	 * -->
+	 * 
 	 * @see #INDEXED
 	 * @model
 	 * @generated
@@ -121,16 +113,14 @@ public enum DocumentStatus implements Enumerator {
 	public static final int INDEXED_VALUE = 2;
 
 	/**
-	 * The '<em><b>SENT</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>SENT</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>SENT</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>SENT</b></em>' literal object isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The document was sent to an external contact.
-	 * <!-- end-model-doc -->
+	 * <!-- end-user-doc --> <!-- begin-model-doc --> The document was sent to an
+	 * external contact. <!-- end-model-doc -->
+	 * 
 	 * @see #SENT
 	 * @model
 	 * @generated
@@ -139,32 +129,27 @@ public enum DocumentStatus implements Enumerator {
 	public static final int SENT_VALUE = 4;
 
 	/**
-	 * An array of all the '<em><b>Document Status</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * An array of all the '<em><b>Document Status</b></em>' enumerators. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	private static final DocumentStatus[] VALUES_ARRAY =
-		new DocumentStatus[] {
-			NEW,
-			PREPROCESSED,
-			INDEXED,
-			SENT,
-		};
+	private static final DocumentStatus[] VALUES_ARRAY = new DocumentStatus[]{NEW, PREPROCESSED, INDEXED, SENT,};
 
 	/**
-	 * A public read-only list of all the '<em><b>Document Status</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * A public read-only list of all the '<em><b>Document Status</b></em>'
+	 * enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static final List<DocumentStatus> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Document Status</b></em>' literal with the specified literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param literal the literal.
+	 * Returns the '<em><b>Document Status</b></em>' literal with the specified
+	 * literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param literal
+	 *            the literal.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
@@ -179,10 +164,11 @@ public enum DocumentStatus implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Document Status</b></em>' literal with the specified name.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param name the name.
+	 * Returns the '<em><b>Document Status</b></em>' literal with the specified
+	 * name. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param name
+	 *            the name.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
@@ -197,48 +183,53 @@ public enum DocumentStatus implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Document Status</b></em>' literal with the specified integer value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the integer value.
+	 * Returns the '<em><b>Document Status</b></em>' literal with the specified
+	 * integer value. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the integer value.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static DocumentStatus get(int value) {
 		switch (value) {
-			case NEW_VALUE: return NEW;
-			case PREPROCESSED_VALUE: return PREPROCESSED;
-			case INDEXED_VALUE: return INDEXED;
-			case SENT_VALUE: return SENT;
+			case NEW_VALUE :
+				return NEW;
+			case PREPROCESSED_VALUE :
+				return PREPROCESSED;
+			case INDEXED_VALUE :
+				return INDEXED;
+			case SENT_VALUE :
+				return SENT;
 		}
 		return null;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final int value;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final String name;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final String literal;
 
 	/**
-	 * Only this class can construct instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Only this class can construct instances. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private DocumentStatus(int value, String name, String literal) {
@@ -248,44 +239,44 @@ public enum DocumentStatus implements Enumerator {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public int getValue() {
-	  return value;
+		return value;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String getName() {
-	  return name;
+		return name;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String getLiteral() {
-	  return literal;
+		return literal;
 	}
 
 	/**
-	 * Returns the literal value of the enumerator, which is its string representation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the literal value of the enumerator, which is its string
+	 * representation. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
 		return literal;
 	}
-	
-} //DocumentStatus
+
+} // DocumentStatus

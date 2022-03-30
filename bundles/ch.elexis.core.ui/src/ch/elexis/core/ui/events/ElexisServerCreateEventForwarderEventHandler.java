@@ -11,18 +11,17 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.services.IElexisServerService;
 
 /**
- * Forward create events to the server (currently used by rockethealth to pick these up)
+ * Forward create events to the server (currently used by rockethealth to pick
+ * these up)
  */
-@Component(property = {
-	EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.PERSISTENCE_EVENT_CREATE
-})
+@Component(property = {EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.PERSISTENCE_EVENT_CREATE})
 public class ElexisServerCreateEventForwarderEventHandler implements EventHandler {
-	
+
 	@Reference
 	private IElexisServerService elexisServerService;
-	
+
 	@Override
-	public void handleEvent(Event event){
+	public void handleEvent(Event event) {
 		if (elexisServerService.deliversRemoteEvents()) {
 			ch.elexis.core.common.ElexisEvent mapEvent = mapEvent(event);
 			if (mapEvent != null) {
@@ -30,17 +29,16 @@ public class ElexisServerCreateEventForwarderEventHandler implements EventHandle
 			}
 		}
 	}
-	
-	private ElexisEvent mapEvent(Event event){
+
+	private ElexisEvent mapEvent(Event event) {
 		ch.elexis.core.common.ElexisEvent remoteEvent = new ch.elexis.core.common.ElexisEvent();
 		remoteEvent.setTopic(event.getTopic());
 		String[] propertyNames = event.getPropertyNames();
 		for (String name : propertyNames) {
-			String value =
-				event.getProperty(name) != null ? event.getProperty(name).toString() : null;
+			String value = event.getProperty(name) != null ? event.getProperty(name).toString() : null;
 			remoteEvent.putProperty(name, value);
 		}
 		return remoteEvent;
 	}
-	
+
 }

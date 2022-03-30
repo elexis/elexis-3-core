@@ -20,46 +20,44 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 
 @Component
 public class TaskUtil {
-	
+
 	private static ITaskService taskService;
-	
+
 	@Reference
-	public void setTaskService(ITaskService taskService){
+	public void setTaskService(ITaskService taskService) {
 		TaskUtil.taskService = taskService;
 	}
-	
-	public static Optional<ITaskDescriptor> getTaskDescriptor(String id){
+
+	public static Optional<ITaskDescriptor> getTaskDescriptor(String id) {
 		return taskService.findTaskDescriptorByIdOrReferenceId(id);
 	}
-	
+
 	/**
-	 * Create a new {@link ITaskDescriptor} for sending the message using the account.
+	 * Create a new {@link ITaskDescriptor} for sending the message using the
+	 * account.
 	 * 
 	 * @param accountId
 	 * @param message
 	 * @return
 	 */
-	public static Optional<ITaskDescriptor> createSendMailTaskDescriptor(String accountId,
-		MailMessage message){
-		
-		Optional<IIdentifiedRunnable> sendMailRunnable = taskService.getIdentifiedRunnables()
-			.stream().filter(ir -> ir.getId().equals(SendMailRunnable.RUNNABLE_ID)).findFirst();
-		
+	public static Optional<ITaskDescriptor> createSendMailTaskDescriptor(String accountId, MailMessage message) {
+
+		Optional<IIdentifiedRunnable> sendMailRunnable = taskService.getIdentifiedRunnables().stream()
+				.filter(ir -> ir.getId().equals(SendMailRunnable.RUNNABLE_ID)).findFirst();
+
 		if (sendMailRunnable.isPresent()) {
 			try {
-				ITaskDescriptor descriptor =
-					taskService.createTaskDescriptor(sendMailRunnable.get());
+				ITaskDescriptor descriptor = taskService.createTaskDescriptor(sendMailRunnable.get());
 				descriptor.setActive(true);
 				descriptor.setSystem(true);
 				return Optional.of(configureTaskDescriptor(descriptor, accountId, message));
 			} catch (TaskException e) {
-				LoggerFactory.getLogger(TaskUtil.class).error("Error creating mail task descriptor",
-					e);
+				LoggerFactory.getLogger(TaskUtil.class).error("Error creating mail task descriptor", e);
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	/**
 	 * Configure the {@link ITaskDescriptor} run context with accountId and message.
 	 * 
@@ -68,8 +66,8 @@ public class TaskUtil {
 	 * @param message
 	 * @return
 	 */
-	public static ITaskDescriptor configureTaskDescriptor(ITaskDescriptor descriptor,
-		String accountId, MailMessage message){
+	public static ITaskDescriptor configureTaskDescriptor(ITaskDescriptor descriptor, String accountId,
+			MailMessage message) {
 		try {
 			Map<String, Serializable> runContext = descriptor.getRunContext();
 			runContext.put("accountId", accountId);
@@ -77,17 +75,15 @@ public class TaskUtil {
 			descriptor.setRunContext(runContext);
 			taskService.saveTaskDescriptor(descriptor);
 		} catch (TaskException e) {
-			LoggerFactory.getLogger(TaskUtil.class).error("Error configuring mail task descriptor",
-				e);
+			LoggerFactory.getLogger(TaskUtil.class).error("Error configuring mail task descriptor", e);
 		}
 		return descriptor;
 	}
-	
-	public static ITask executeTaskSync(ITaskDescriptor iTaskDescriptor,
-		IProgressMonitor progressMonitor) throws TaskException{
-		ITask task = taskService.triggerSync(iTaskDescriptor, progressMonitor,
-			TaskTriggerType.MANUAL,
-			Collections.emptyMap());
+
+	public static ITask executeTaskSync(ITaskDescriptor iTaskDescriptor, IProgressMonitor progressMonitor)
+			throws TaskException {
+		ITask task = taskService.triggerSync(iTaskDescriptor, progressMonitor, TaskTriggerType.MANUAL,
+				Collections.emptyMap());
 		return task;
 	}
 }

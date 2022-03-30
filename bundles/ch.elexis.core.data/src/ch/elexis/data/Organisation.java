@@ -18,8 +18,8 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
 /**
- * Eine Organisation ist eine Kontakt, die ein Kollektiv darstellt. Also eine Firma, eine
- * Versicherung, ein Labor etc.
+ * Eine Organisation ist eine Kontakt, die ein Kollektiv darstellt. Also eine
+ * Firma, eine Versicherung, ein Labor etc.
  * 
  * @author gerry
  * 
@@ -31,15 +31,13 @@ public class Organisation extends Kontakt {
 	private static final String FLD_ZUSATZ3 = "Zusatz3"; //$NON-NLS-1$
 	private static final String FLD_CONTACT_PERSON = "Ansprechperson";//$NON-NLS-1$
 	private static final String FLD_TEL_DIRECT = "Tel. direkt";
-	
+
 	public static final String FLD_XML_NAME = "XML Versicherer Name";
 	public static final String FLD_LAW_CODE = "Versicherungsart";
 	public static final String FLD_MEDIPORT_SUPPORT = "Mediport Teilnehmer";
-	
-	public static final String[] DEFAULT_SORT = {
-		FLD_NAME, FLD_ZUSATZ1
-	};
-	
+
+	public static final String[] DEFAULT_SORT = {FLD_NAME, FLD_ZUSATZ1};
+
 	//@formatter:off
 	static {
 		addMapping(
@@ -57,86 +55,83 @@ public class Organisation extends Kontakt {
 		);
 	}
 	//@formatter:on
-	
+
 	@Override
-	public boolean isValid(){
+	public boolean isValid() {
 		return super.isValid();
 	}
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return Kontakt.TABLENAME;
 	}
-	
-	Organisation(){/* leer */}
-	
-	protected Organisation(final String id){
+
+	Organisation() {
+		/* leer */}
+
+	protected Organisation(final String id) {
 		super(id);
 	}
-	
+
 	/** Eine Organisation bei gegebener ID aus der Datenbank einlesen */
-	public static Organisation load(final String id){
+	public static Organisation load(final String id) {
 		return new Organisation(id);
 	}
-	
+
 	/** Eine neue Organisation erstellen */
-	public Organisation(final String Name, final String Zusatz1){
+	public Organisation(final String Name, final String Zusatz1) {
 		create(null);
-		set(new String[] {
-			FLD_NAME, FLD_ZUSATZ1
-		}, new String[] {
-			Name, Zusatz1
-		});
+		set(new String[]{FLD_NAME, FLD_ZUSATZ1}, new String[]{Name, Zusatz1});
 	}
-	
+
 	@Override
-	protected String getConstraint(){
+	protected String getConstraint() {
 		return new StringBuilder(Kontakt.FLD_IS_ORGANIZATION).append(StringTool.equals)
-			.append(JdbcLink.wrap(StringConstants.ONE)).toString();
+				.append(JdbcLink.wrap(StringConstants.ONE)).toString();
 	}
-	
+
 	@Override
-	protected void setConstraint(){
+	protected void setConstraint() {
 		set(Kontakt.FLD_IS_ORGANIZATION, StringConstants.ONE);
 	}
-	
-	public String getXMLName(){
+
+	public String getXMLName() {
 		return get(FLD_XML_NAME);
 	}
-	
-	public String getLawCode(){
+
+	public String getLawCode() {
 		return checkNull(get(FLD_LAW_CODE));
 	}
-	
-	public void setSupportsMediport(boolean mediportSupport){
+
+	public void setSupportsMediport(boolean mediportSupport) {
 		if (mediportSupport) {
 			set(FLD_MEDIPORT_SUPPORT, StringConstants.ONE);
 		} else {
 			set(FLD_MEDIPORT_SUPPORT, StringConstants.ZERO);
 		}
 	}
-	
-	public boolean supportsMediport(){
+
+	public boolean supportsMediport() {
 		int mediportParticipant = checkZero(get(FLD_MEDIPORT_SUPPORT));
 		if (mediportParticipant == 0) {
 			return false;
 		}
 		return true;
 	}
-	
-	public String getInsuranceEAN(){
+
+	public String getInsuranceEAN() {
 		return checkNull(getXid(XidConstants.DOMAIN_EAN));
 	}
-	
-	public void setInsurerEAN(String ean){
+
+	public void setInsurerEAN(String ean) {
 		addXid(XidConstants.DOMAIN_EAN, ean, true);
 	}
-	
-	public String getRecepientEAN(){
+
+	public String getRecepientEAN() {
 		return checkNull(getXid(XidConstants.DOMAIN_RECIPIENT_EAN));
 	}
-	
-	public void setRecepientEAN(String ean){
+
+	public void setRecepientEAN(String ean) {
 		addXid(XidConstants.DOMAIN_RECIPIENT_EAN, ean, true);
 	}
 }

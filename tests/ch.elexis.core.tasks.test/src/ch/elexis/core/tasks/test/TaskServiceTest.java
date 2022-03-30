@@ -44,89 +44,85 @@ import ch.elexis.core.tasks.test.runnable.TestExecutionContextRunnable;
 import ch.elexis.core.types.Gender;
 
 public class TaskServiceTest {
-	
+
 	ITaskService taskService;
 	IIdentifiedRunnable rwcLogContext;
 	IUser owner;
 	ITaskDescriptor taskDescriptor;
 	IProgressMonitor progressMonitor;
 	Map<String, Serializable> runContext = new HashMap<>();
-	
+
 	static Path tempDirectory;
-	
-	public TaskServiceTest(){
+
+	public TaskServiceTest() {
 		taskService = TaskServiceHolder.get();
-		IPerson contact = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "first",
-			"last", LocalDate.now(), Gender.MALE).mandator().buildAndSave();
+		IPerson contact = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "first", "last",
+				LocalDate.now(), Gender.MALE).mandator().buildAndSave();
 		owner = new IUserBuilder(CoreModelServiceHolder.get(), "testUser", contact).buildAndSave();
 	}
-	
+
 	@BeforeClass
-	public static void beforeClass() throws IOException{
+	public static void beforeClass() throws IOException {
 		tempDirectory = Files.createTempDirectory("taskServiceTest");
 		tempDirectory.toFile().deleteOnExit();
 	}
-	
+
 	@Before
-	public void before() throws TaskException{
-		rwcLogContext =
-			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.LOGRESULTCONTEXT);
+	public void before() throws TaskException {
+		rwcLogContext = taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.LOGRESULTCONTEXT);
 		assertTrue(rwcLogContext instanceof LogResultContextIdentifiedRunnable);
 	}
-	
-	private ITaskDescriptor taskDescriptorOf(String id) throws TaskException{
+
+	private ITaskDescriptor taskDescriptorOf(String id) throws TaskException {
 		IIdentifiedRunnable testExecContextRunnable = taskService.instantiateRunnableById(id);
 		if (TestExecutionContextRunnable.ID.equals(id)) {
 			assertTrue(testExecContextRunnable instanceof TestExecutionContextRunnable);
 		}
 		return taskService.createTaskDescriptor(testExecContextRunnable);
 	}
-	
-	private Callable<Boolean> taskDone(ITask task){
+
+	private Callable<Boolean> taskDone(ITask task) {
 		return new Callable<Boolean>() {
 			@Override
-			public Boolean call() throws Exception{
+			public Boolean call() throws Exception {
 				return task.isFinished();
 			}
 		};
 	}
-	
+
 	// Check the context the runnable is executed in
 	@Test
-	public void runnableExecutionContext() throws TaskException{
+	public void runnableExecutionContext() throws TaskException {
 		taskDescriptor = taskDescriptorOf(TestExecutionContextRunnable.ID);
-		
+
 		taskDescriptor.setSingleton(true);
 		taskDescriptor.setOwner(owner);
 		taskService.setActive(taskDescriptor, true);
-		
-		ITask task =
-			taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
+
+		ITask task = taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
 		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
 		assertEquals(TaskState.COMPLETED, task.getState());
 	}
-	
+
 	// Check COMPLETED_WARN manual resolve
 	@Test
-	public void completedWarnWithManualResolution() throws TaskException{
+	public void completedWarnWithManualResolution() throws TaskException {
 		taskDescriptor = taskDescriptorOf(TestExecutionContextRunnable.ID);
-		
+
 		taskDescriptor.setSingleton(true);
 		taskDescriptor.setOwner(owner);
-		taskDescriptor
-			.setRunContext(Collections.singletonMap(ReturnParameter.MARKER_WARN, Boolean.TRUE));
+		taskDescriptor.setRunContext(Collections.singletonMap(ReturnParameter.MARKER_WARN, Boolean.TRUE));
 		taskService.setActive(taskDescriptor, true);
-		ITask task =
-			taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
+		ITask task = taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
 		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
 		assertEquals(TaskState.COMPLETED_WARN, task.getState());
-		
+
 		task.setStateCompletedManual("test");
 		assertEquals(TaskState.COMPLETED_MANUAL, task.getState());
 		String manualMessage = (String) task.getResult().get(TaskState.COMPLETED_MANUAL.name());
 		assertTrue(manualMessage.endsWith(":test"));
 	}
-	
+
 	/**
 	 * Use-Case: manual execution, db check, repair, import
 	 * 
@@ -134,51 +130,49 @@ public class TaskServiceTest {
 	 */
 	@Ignore("TODO fix test case")
 	@Test
-	public void triggerManual_HelloWorld() throws Exception{
+	public void triggerManual_HelloWorld() throws Exception {
 		taskDescriptor = taskService.createTaskDescriptor(rwcLogContext);
 		taskDescriptor.setOwner(owner);
 		taskDescriptor.setReferenceId("manual_helloWorld");
 		taskDescriptor.setRunContextParameter("testKey", "testValue");
 		taskService.setActive(taskDescriptor, true);
-		
+
 		Optional<ITask> findExecutions = taskService.findLatestExecution(taskDescriptor);
 		assertTrue(findExecutions.isPresent());
-		
-		ITask task =
-			taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
-		
+
+		ITask task = taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
+
 		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
 		assertEquals(TaskState.COMPLETED, task.getState());
-		
+
 		findExecutions = taskService.findLatestExecution(taskDescriptor);
 		assertTrue(findExecutions.isPresent());
 		assertEquals(TaskState.COMPLETED, findExecutions.get().getState());
 		assertTrue(findExecutions.get().getResult().containsKey("runnableExecDuration"));
 	}
-	
+
 	@Ignore("TODO fix test case")
 	@Test
-	public void triggerManual_Misthios() throws Exception{
+	public void triggerManual_Misthios() throws Exception {
 		IIdentifiedRunnable rwcMisthios = taskService.instantiateRunnableById("misthios");
 		taskDescriptor = taskService.createTaskDescriptor(rwcMisthios);
 		taskDescriptor.setOwner(owner);
 		taskDescriptor.setReferenceId("manual_helloWorld_misthios");
 		Map<String, Serializable> context = new HashMap<>();
 		context.put("bundle_url",
-			"https://gitlab.medelexis.ch/mdescher/elexis-misthios/raw/master/sample-misthios-bundle/");
+				"https://gitlab.medelexis.ch/mdescher/elexis-misthios/raw/master/sample-misthios-bundle/");
 		taskDescriptor.setRunContext(context);
 		taskService.setActive(taskDescriptor, true);
-		
-		ITask task =
-			taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
-		
+
+		ITask task = taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
+
 		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
 		assertEquals(TaskState.COMPLETED, task.getState());
 	}
-	
+
 	/**
-	 * Use-Case: HL7 Import on incoming HL7 file ATTENTION: On OS X picking up changes in the FS can
-	 * take up to 10 seconds
+	 * Use-Case: HL7 Import on incoming HL7 file ATTENTION: On OS X picking up
+	 * changes in the FS can take up to 10 seconds
 	 * 
 	 * @throws TaskException
 	 * @throws IOException
@@ -187,26 +181,26 @@ public class TaskServiceTest {
 	 */
 	@Test
 	@Ignore
-	public void triggerFSChange() throws TaskException, IOException, InterruptedException{
-		IIdentifiedRunnable rwcDeleteFile =
-			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
+	public void triggerFSChange() throws TaskException, IOException, InterruptedException {
+		IIdentifiedRunnable rwcDeleteFile = taskService
+				.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
 		taskDescriptor = taskService.createTaskDescriptor(rwcDeleteFile);
 		taskDescriptor.setOwner(owner);
 		taskDescriptor.setRunContext(runContext);
 		taskDescriptor.setTriggerType(TaskTriggerType.FILESYSTEM_CHANGE);
 		taskDescriptor.setTriggerParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
-			tempDirectory.toString());
+				tempDirectory.toString());
 		taskService.setActive(taskDescriptor, true);
-		
+
 		Path createFile = Files.createTempFile(tempDirectory, "test", "txt");
 		System.out.println(LocalDateTime.now() + " created " + createFile.toString());
-		
+
 		Callable<Boolean> c = () -> {
 			return !createFile.toFile().exists();
 		};
 		Awaitility.await().atMost(15, TimeUnit.SECONDS).until(c);
 	}
-	
+
 	/**
 	 * Use-Case: In CCM -> check for patient reminders
 	 * 
@@ -214,22 +208,22 @@ public class TaskServiceTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void triggerCron() throws TaskException, IOException{
-		
-		IIdentifiedRunnable rwcDeleteFile =
-			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
+	public void triggerCron() throws TaskException, IOException {
+
+		IIdentifiedRunnable rwcDeleteFile = taskService
+				.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
 		Path createFile = Files.createTempFile(tempDirectory, "test", "txt");
 		createFile.toFile().deleteOnExit();
-		
+
 		taskDescriptor = taskService.createTaskDescriptor(rwcDeleteFile);
 		taskDescriptor.setOwner(owner);
 		taskDescriptor.setTriggerType(TaskTriggerType.CRON);
 		taskDescriptor.setRunContextParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
-			createFile.toString());
+				createFile.toString());
 		// job will run every 5 seconds
 		taskDescriptor.setTriggerParameter("cron", "0/5 * * * * ?");
 		taskService.setActive(taskDescriptor, true);
-		
+
 		Callable<Boolean> c = () -> {
 			return !createFile.toFile().exists();
 		};
@@ -238,7 +232,7 @@ public class TaskServiceTest {
 		Optional<ITask> execution = taskService.findLatestExecution(taskDescriptor);
 		assertEquals(TaskState.COMPLETED, execution.get().getState());
 	}
-	
+
 	/**
 	 * Use-Case: Search for reminders on this patient
 	 * 
@@ -246,17 +240,17 @@ public class TaskServiceTest {
 	 */
 	@Ignore("TODO fix test case")
 	@Test
-	public void triggerSysEvent_PatientChange() throws TaskException{
+	public void triggerSysEvent_PatientChange() throws TaskException {
 		taskDescriptor = taskService.createTaskDescriptor(rwcLogContext);
 		taskDescriptor.setOwner(owner);
 		taskDescriptor.setTriggerType(TaskTriggerType.SYSTEM_EVENT);
 		taskDescriptor.setTriggerParameter("eventClass", "ch.elexis.data.Patient");
 		taskDescriptor.setTriggerParameter("eventType", "EVENT_SELECTED");
 		taskService.setActive(taskDescriptor, true);
-		
+
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/**
 	 * Use-Case: Bill a labresult on an existing encounter when result was created
 	 * 
@@ -266,45 +260,45 @@ public class TaskServiceTest {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void triggerSysEvent_LabItemCreate() throws TaskException, InterruptedException{
+	public void triggerSysEvent_LabItemCreate() throws TaskException, InterruptedException {
 		taskDescriptor = taskService.createTaskDescriptor(rwcLogContext);
 		taskDescriptor.setOwner(owner);
 		taskDescriptor.setTriggerType(TaskTriggerType.SYSTEM_EVENT);
 		taskDescriptor.setTriggerParameter("topic", ElexisEventTopics.PERSISTENCE_EVENT_CREATE);
-		taskDescriptor.setTriggerParameter(ElexisEventTopics.PROPKEY_CLASS,
-			"ch.elexis.data.Patient");
+		taskDescriptor.setTriggerParameter(ElexisEventTopics.PROPKEY_CLASS, "ch.elexis.data.Patient");
 		taskDescriptor.setTriggerParameter("origin", "self");
 		taskService.setActive(taskDescriptor, true);
-		
+
 		assertEquals(false, taskService.findLatestExecution(taskDescriptor).isPresent());
-		
+
 		Thread.sleep(1000);
-		
-		new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Mister", "Rigoletti",
-			LocalDate.now(), Gender.MALE).buildAndSave();
-		
+
+		new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Mister", "Rigoletti", LocalDate.now(),
+				Gender.MALE).buildAndSave();
+
 		Thread.sleep(1500);
-		
+
 		assertEquals(true, taskService.findLatestExecution(taskDescriptor).isPresent());
-		
+
 	}
-	
+
 	/**
-	 * Use-Case: Job Workflow, passive trigger by another task reaching a specific state
+	 * Use-Case: Job Workflow, passive trigger by another task reaching a specific
+	 * state
 	 * 
 	 * @throws TaskException
 	 */
 	@Ignore("TODO fix test case")
 	@Test
-	public void triggerJobState() throws TaskException{
+	public void triggerJobState() throws TaskException {
 		taskDescriptor = taskService.createTaskDescriptor(rwcLogContext);
 		taskDescriptor.setOwner(owner);
 		taskDescriptor.setTriggerType(TaskTriggerType.OTHER_TASK);
 		taskDescriptor.setTriggerParameter("referenceId", "otherTaskReferenceId");
 		taskDescriptor.setTriggerParameter("taskState", "COMPLETED");
 		taskService.setActive(taskDescriptor, true);
-		
+
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

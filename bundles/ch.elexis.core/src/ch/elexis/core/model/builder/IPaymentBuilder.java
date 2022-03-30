@@ -8,11 +8,10 @@ import ch.elexis.core.services.IModelService;
 import ch.rgw.tools.Money;
 
 public class IPaymentBuilder extends AbstractBuilder<IPayment> {
-	
-	public IPaymentBuilder(IModelService modelService, IInvoice invoice, Money amount,
-		String remark){
+
+	public IPaymentBuilder(IModelService modelService, IInvoice invoice, Money amount, String remark) {
 		super(modelService);
-		
+
 		object = modelService.create(IPayment.class);
 		object.setInvoice(invoice);
 		object.setAmount(amount);

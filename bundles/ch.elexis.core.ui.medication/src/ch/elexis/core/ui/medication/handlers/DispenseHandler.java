@@ -20,19 +20,18 @@ import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 
 public class DispenseHandler extends AbstractHandler {
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Optional<IPatient> patient = ContextServiceHolder.get().getActivePatient();
 		if (!patient.isPresent()) {
 			return null;
 		}
-		
+
 		List<IPrescription> prescRecipes = new ArrayList<IPrescription>();
-		
-		ISelection selection =
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (!selection.isEmpty()) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
@@ -44,13 +43,13 @@ public class DispenseHandler extends AbstractHandler {
 			}
 		}
 		for (IPrescription prescription : prescRecipes) {
-			CreatePrescriptionHelper prescriptionHelper =
-				new CreatePrescriptionHelper(null, HandlerUtil.getActiveShell(event));
+			CreatePrescriptionHelper prescriptionHelper = new CreatePrescriptionHelper(null,
+					HandlerUtil.getActiveShell(event));
 			prescriptionHelper.selfDispense(prescription);
 		}
-		ContextServiceHolder.get().getTyped(IEncounter.class).ifPresent(
-			enc -> ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, enc));
+		ContextServiceHolder.get().getTyped(IEncounter.class)
+				.ifPresent(enc -> ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, enc));
 		return null;
 	}
-	
+
 }

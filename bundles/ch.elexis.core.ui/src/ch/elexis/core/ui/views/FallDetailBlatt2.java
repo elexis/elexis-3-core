@@ -95,10 +95,8 @@ import ch.rgw.tools.TimeTool;
  * Display detail data of a Fall
  */
 public class FallDetailBlatt2 extends Composite implements IUnlockable {
-	private static final String SELECT_CONTACT_BODY =
-		Messages.FallDetailBlatt2_PleaseSelectContactFor; //$NON-NLS-1$
-	private static final String SELECT_CONTACT_CAPTION =
-		Messages.FallDetailBlatt2_PleaseSelectCpntactCaption; //$NON-NLS-1$
+	private static final String SELECT_CONTACT_BODY = Messages.FallDetailBlatt2_PleaseSelectContactFor; // $NON-NLS-1$
+	private static final String SELECT_CONTACT_CAPTION = Messages.FallDetailBlatt2_PleaseSelectCpntactCaption; // $NON-NLS-1$
 	private static final String LABEL = Messages.FallDetailBlatt2_29;
 	private static final String RECHNUNGSEMPFAENGER = Messages.FallDetailBlatt2_BillAdressee;
 	private static final String VERSICHERUNGSNUMMER = Messages.FallDetailBlatt2_InsuranceNumber;
@@ -109,17 +107,17 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	private static final String ITEMDELIMITER = "\t"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private final ScrolledForm form;
-	String[] Abrechnungstypen =
-		UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
+	String[] Abrechnungstypen = UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 	private IFall actFall;
 	DayDateCombo ddc;
 
 	String itemsErrorMessage = "parameters not supplied;please control parameters;in preferences"; //$NON-NLS-1$
-	
-	//	public static final String[] Reasons = {
-	//			FallConstants.TYPE_DISEASE, FallConstants.TYPE_ACCIDENT, FallConstants.TYPE_MATERNITY, FallConstants.TYPE_PREVENTION,
-	//			FallConstants.TYPE_BIRTHDEFECT, FallConstants.TYPE_OTHER
-	//	};
+
+	// public static final String[] Reasons = {
+	// FallConstants.TYPE_DISEASE, FallConstants.TYPE_ACCIDENT,
+	// FallConstants.TYPE_MATERNITY, FallConstants.TYPE_PREVENTION,
+	// FallConstants.TYPE_BIRTHDEFECT, FallConstants.TYPE_OTHER
+	// };
 	public static final String[] dgsys = null;
 	Combo cAbrechnung;
 	ComboViewer cReason;
@@ -129,38 +127,38 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	List<Control> lReqs = new ArrayList<Control>();
 	List<Control> keepEditable = new ArrayList<Control>();
 	Button btnCopyForPatient;
-	
+
 	Set<String> ignoreFocusreacts = new HashSet<String>();
 	List<Focusreact> focusreacts = new ArrayList<Focusreact>();
 	boolean lockUpdate = true;
-	
+
 	boolean invoiceCorrection = false;
-	
+
 	@Override
 	public void setUnlocked(boolean unlock) {
 		allowFieldUpdate(unlock);
 	}
-	
+
 	/**
-	 * Defines if the lock should be updated on setting a Fall on the composite. Default value is
-	 * true.
+	 * Defines if the lock should be updated on setting a Fall on the composite.
+	 * Default value is true.
 	 * 
 	 * @param value
 	 */
-	public void setLockUpdate(boolean value){
+	public void setLockUpdate(boolean value) {
 		lockUpdate = value;
 	}
-	
-	public FallDetailBlatt2(final Composite parent){
+
+	public FallDetailBlatt2(final Composite parent) {
 		this(parent, null, false);
 	}
-	
-	public FallDetailBlatt2(final Composite parent, IFall fall, boolean invoiceCorrection){
+
+	public FallDetailBlatt2(final Composite parent, IFall fall, boolean invoiceCorrection) {
 		super(parent, SWT.NONE);
-		
+
 		this.invoiceCorrection = invoiceCorrection;
 		actFall = fall;
-		
+
 		tk = UiDesk.getToolkit();
 		form = tk.createScrolledForm(this);
 		Composite top = form.getBody();
@@ -174,21 +172,21 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		grid.marginWidth = 0;
 		cpAbrechnung.setLayout(grid);
 		cAbrechnung = new Combo(cpAbrechnung, SWT.READ_ONLY);
-		autoFill = tk.createHyperlink(cpAbrechnung, Messages.FallDetailBlatt2_ApplyData, SWT.NONE); //$NON-NLS-1$
+		autoFill = tk.createHyperlink(cpAbrechnung, Messages.FallDetailBlatt2_ApplyData, SWT.NONE); // $NON-NLS-1$
 		autoFill.addHyperlinkListener(new HyperlinkAdapter() {
-			
+
 			@Override
-			public void linkActivated(final HyperlinkEvent e){
+			public void linkActivated(final HyperlinkEvent e) {
 				IFall f = getSelectedFall();
 				if (f == null) {
 					return;
 				}
 				String abr = f.getAbrechnungsSystem();
 				// make sure compatibility methods are called
-				
+
 				String ktNew = f.getInfoString(KOSTENTRAEGER);
-				String ktOld = f.get(Messages.FallDetailBlatt2_GuarantorNoSpecialChars); //$NON-NLS-1$
-				
+				String ktOld = f.get(Messages.FallDetailBlatt2_GuarantorNoSpecialChars); // $NON-NLS-1$
+
 				if (StringTool.isNothing(ktNew)) {
 					Kontakt k = Kontakt.load(ktOld);
 					if (k.isValid()) {
@@ -197,29 +195,27 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 				String vnNew = f.getInfoString(VERSICHERUNGSNUMMER);
 				// String vnOld=f.getVersNummer();
-				String vnOld = f.get(Messages.FallDetailBlatt2_InsNumber); //$NON-NLS-1$
+				String vnOld = f.get(Messages.FallDetailBlatt2_InsNumber); // $NON-NLS-1$
 				if (StringTool.isNothing(vnNew)) {
 					f.setRequiredString(VERSICHERUNGSNUMMER, vnOld);
 				}
-				
+
 				IFall[] faelle = f.getPatient().getFaelle();
 				for (IFall f0 : faelle) {
 					if (f0.getId().equals(f.getId())) {
 						// ignore current Fall
 						continue;
 					}
-					
+
 					if (f0.getAbrechnungsSystem().equals(abr)) {
 						if (f.getInfoString(RECHNUNGSEMPFAENGER).isEmpty()) {
 							f.setInfoString(RECHNUNGSEMPFAENGER, f0.get("GarantID")); //$NON-NLS-1$
 						}
 						if (f.getInfoString(KOSTENTRAEGER).isEmpty()) {
-							f.setInfoString(KOSTENTRAEGER,
-								f0.get(Messages.FallDetailBlatt2_GuarantorNoSpecialChars)); //$NON-NLS-1$
+							f.setInfoString(KOSTENTRAEGER, f0.get(Messages.FallDetailBlatt2_GuarantorNoSpecialChars)); // $NON-NLS-1$
 						}
 						if (f.getInfoString(VERSICHERUNGSNUMMER).isEmpty()) {
-							f.setInfoString(VERSICHERUNGSNUMMER,
-								f0.getInfoString(VERSICHERUNGSNUMMER));
+							f.setInfoString(VERSICHERUNGSNUMMER, f0.getInfoString(VERSICHERUNGSNUMMER));
 						}
 						// TODO break? or looking for the most current Fall?
 						break;
@@ -229,14 +225,13 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		});
 		cAbrechnung.setItems(Abrechnungstypen);
-		
+
 		cAbrechnung.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(final SelectionEvent e){
+			public void widgetSelected(final SelectionEvent e) {
 				int i = cAbrechnung.getSelectionIndex();
 				String abrechungsMethodeStr = cAbrechnung.getItem(i);
-				int separatorPos =
-					UserCasePreferences.getBillingSystemsMenuSeparatorPos(Abrechnungstypen);
+				int separatorPos = UserCasePreferences.getBillingSystemsMenuSeparatorPos(Abrechnungstypen);
 				boolean isDisabled = BillingSystem.isDisabled(abrechungsMethodeStr);
 				IFall fall = getSelectedFall();
 				// get previously selected item/gesetz if we need to reset
@@ -244,33 +239,31 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				if (fall != null)
 					gesetz = fall.getAbrechnungsSystem();
 				if (ch.rgw.tools.StringTool.isNothing(gesetz))
-					gesetz = Messages.FallDetailBlatt2_free; //$NON-NLS-1$
+					gesetz = Messages.FallDetailBlatt2_free; // $NON-NLS-1$
 				if (i == separatorPos) {
 					// this is the separator - cannot select - simply reset to previous selection
 					cAbrechnung.select(cAbrechnung.indexOf(gesetz));
 				} else if (isDisabled) {
 					// selection not allowed - reset previous selection after message
-					SWTHelper.alert(Messages.FallDetailBlatt2_ChangeBillingSystemNotAllowedCaption, //$NON-NLS-1$
-						Messages.FallDetailBlatt2_ChangeBillingSystemNotAllowedBody); //$NON-NLS-1$
+					SWTHelper.alert(Messages.FallDetailBlatt2_ChangeBillingSystemNotAllowedCaption, // $NON-NLS-1$
+							Messages.FallDetailBlatt2_ChangeBillingSystemNotAllowedBody); // $NON-NLS-1$
 					cAbrechnung.select(cAbrechnung.indexOf(gesetz));
 				} else {
 					if (fall != null) {
 						if (fall.getBehandlungen(false).length > 0) {
 							if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY)) {
-								if (SWTHelper.askYesNo(
-									Messages.FallDetailBlatt2_DontChangeBillingSystemCaption, //$NON-NLS-1$
-									Messages.FallDetailBlatt2_DontChangeBillingSystemBody)) { //$NON-NLS-1$
+								if (SWTHelper.askYesNo(Messages.FallDetailBlatt2_DontChangeBillingSystemCaption, // $NON-NLS-1$
+										Messages.FallDetailBlatt2_DontChangeBillingSystemBody)) { // $NON-NLS-1$
 									fall.setAbrechnungsSystem(cAbrechnung.getItem(i));
 									setFall(fall);
 									return;
 								}
 							} else {
-								SWTHelper.alert(
-									Messages.FallDetailBlatt2_CantChangeBillingSystemCaption, //$NON-NLS-1$
-									Messages.FallDetailBlatt2_CantChangeBillingSystemBody); //$NON-NLS-1$
+								SWTHelper.alert(Messages.FallDetailBlatt2_CantChangeBillingSystemCaption, // $NON-NLS-1$
+										Messages.FallDetailBlatt2_CantChangeBillingSystemBody); // $NON-NLS-1$
 							}
 							cAbrechnung.select(cAbrechnung.indexOf(gesetz));
-							
+
 						} else {
 							fall.setAbrechnungsSystem(Abrechnungstypen[i]);
 							setFall(fall);
@@ -279,44 +272,43 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 							// selben Gesetz nehmen
 						}
 					}
-					
+
 				}
-				
+
 				// auto select default insurance reason for billing system
-				BillingSystemServiceHolder.get().getBillingSystem(abrechungsMethodeStr)
-					.ifPresent(bs -> {
-						cReason.setSelection(new StructuredSelection(
-							BillingSystemServiceHolder.get().getDefaultInsuranceReason(bs)));
-					});
+				BillingSystemServiceHolder.get().getBillingSystem(abrechungsMethodeStr).ifPresent(bs -> {
+					cReason.setSelection(
+							new StructuredSelection(BillingSystemServiceHolder.get().getDefaultInsuranceReason(bs)));
+				});
 			}
 		});
-		
+
 		// focus listener needed because view may be created BEFORE a user is active
 		// but for the sorting we need the user prefs for sorting
 		// AND if the prefs have just been modified...
 		cAbrechnung.addFocusListener(new FocusListener() {
 			@Override
-			public void focusGained(FocusEvent e){
+			public void focusGained(FocusEvent e) {
 				// only set items if there ARE changes to avoid unnecessary flickering
 				String[] currItems = cAbrechnung.getItems();
-				String[] newItems =
-					UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
+				String[] newItems = UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 				if (!Arrays.equals(currItems, newItems)) {
 					String savedItem = cAbrechnung.getText();
 					cAbrechnung.setItems(newItems);
 					cAbrechnung.setText(savedItem);
 				}
 			}
-			
+
 			@Override
-			public void focusLost(FocusEvent e){}
+			public void focusLost(FocusEvent e) {
+			}
 		});
-		
+
 		tk.createLabel(top, LABEL);
 		tBezeichnung = tk.createText(top, StringTool.leer);
 		tBezeichnung.addFocusListener(new FocusAdapter() {
 			@Override
-			public void focusLost(final FocusEvent e){
+			public void focusLost(final FocusEvent e) {
 				String newval = ((Text) e.getSource()).getText();
 				IFall fall = getSelectedFall();
 				if (fall != null) {
@@ -327,18 +319,17 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		});
 		tBezeichnung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		tk.createLabel(top, Messages.FallDetailBlatt2_ReasonForInsurance); //$NON-NLS-1$
+		tk.createLabel(top, Messages.FallDetailBlatt2_ReasonForInsurance); // $NON-NLS-1$
 		cReason = new ComboViewer(top, SWT.READ_ONLY);
 		cReason.setContentProvider(ArrayContentProvider.getInstance());
 		cReason.setLabelProvider(new LabelProvider());
-		cReason.setInput(new String[] {
-			FallConstants.TYPE_DISEASE, FallConstants.TYPE_ACCIDENT, FallConstants.TYPE_MATERNITY,
-			FallConstants.TYPE_PREVENTION, FallConstants.TYPE_BIRTHDEFECT, FallConstants.TYPE_OTHER
-		});
+		cReason.setInput(
+				new String[]{FallConstants.TYPE_DISEASE, FallConstants.TYPE_ACCIDENT, FallConstants.TYPE_MATERNITY,
+						FallConstants.TYPE_PREVENTION, FallConstants.TYPE_BIRTHDEFECT, FallConstants.TYPE_OTHER});
 		cReason.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				String selected = (String) event.getStructuredSelection().getFirstElement();
 				if (actFall != null) {
 					actFall.setGrund(selected);
@@ -347,30 +338,30 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		});
 		cReason.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		tk.createLabel(top, Messages.FallDetailBlatt2_StartDate); //$NON-NLS-1$
+		tk.createLabel(top, Messages.FallDetailBlatt2_StartDate); // $NON-NLS-1$
 		dpVon = new CDateTime(top, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
-		if (getSelectedFall() == null ) {
+		if (getSelectedFall() == null) {
 			dpVon.setSelection(new TimeTool().getTime());
 		} else {
 			dpVon.setSelection(new TimeTool(getSelectedFall().getBeginnDatum()).getTime());
 		}
 		dpVon.addSelectionListener(new SelectionAdapter() {
-				
-				@Override
-				public void widgetSelected(SelectionEvent e){
-					IFall fall = getSelectedFall();
-					TimeTool selectedDate = new TimeTool(dpVon.getSelection());
-					fall.setBeginnDatum(selectedDate.dump());
-					fireSelectedFallUpdateEvent();
-				}
-			});
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IFall fall = getSelectedFall();
+				TimeTool selectedDate = new TimeTool(dpVon.getSelection());
+				fall.setBeginnDatum(selectedDate.dump());
+				fireSelectedFallUpdateEvent();
+			}
+		});
 		dpVon.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		tk.createLabel(top, Messages.FallDetailBlatt2_EndDate); //$NON-NLS-1$
+		tk.createLabel(top, Messages.FallDetailBlatt2_EndDate); // $NON-NLS-1$
 		dpBis = new CDateTime(top, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
 		dpBis.setSelection(new Date());
 		dpBis.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				IFall fall = getSelectedFall();
 				if (dpBis.getSelection() != null) {
 					TimeTool selectedDate = new TimeTool(dpBis.getSelection());
@@ -383,12 +374,12 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		});
 		dpBis.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		ddc = new DayDateCombo(top, Messages.FallDetailBlatt2_ProposeForBillingIn,
-			Messages.FallDetailBlatt2_DaysOrAfter, Messages.FallDetailBlatt2_ProposeForBillingNeg,
-			Messages.FallDetailBlatt2_DaysOrAfterNeg);
+				Messages.FallDetailBlatt2_DaysOrAfter, Messages.FallDetailBlatt2_ProposeForBillingNeg,
+				Messages.FallDetailBlatt2_DaysOrAfterNeg);
 		ddc.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		ddc.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				TimeTool nDate = ddc.getDate();
 				IFall fall = getSelectedFall();
 				if (fall != null) {
@@ -397,9 +388,9 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 			}
 		});
-		
+
 		tk.adapt(ddc);
-		
+
 		Composite separatorBar = new Composite(top, SWT.NONE);
 		separatorBar.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		GridLayout gridLayout = new GridLayout(1, false);
@@ -408,27 +399,27 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		Label lbReq = new Label(separatorBar, SWT.NONE);
 		lbReq.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		lbReq.setText(Messages.Leistungscodes_necessaryData);
-		
+
 		btnCopyForPatient = new Button(top, SWT.CHECK);
 		btnCopyForPatient.setText(Messages.FallDetailBlatt2_CopyToPatient);
 		btnCopyForPatient.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				boolean b = btnCopyForPatient.getSelection();
 				getSelectedFall().setCopyForPatient(b);
 				fireSelectedFallUpdateEvent();
 			};
 		});
 		ignoreFocusReact(Fall.FLD_EXT_COPY_FOR_PATIENT);
-		
-		new Label(top, SWT.NONE);	
+
+		new Label(top, SWT.NONE);
 		hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
 		hlGarant.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
-			public void linkActivated(final HyperlinkEvent e){
+			public void linkActivated(final HyperlinkEvent e) {
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
-					Messages.FallDetailBlatt2_SelectGuarantorCaption, //$NON-NLS-1$
-					Messages.FallDetailBlatt2_SelectGuarantorBody, true, Kontakt.DEFAULT_SORT); //$NON-NLS-1$
+						Messages.FallDetailBlatt2_SelectGuarantorCaption, // $NON-NLS-1$
+						Messages.FallDetailBlatt2_SelectGuarantorBody, true, Kontakt.DEFAULT_SORT); // $NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
 					Kontakt sel = (Kontakt) ksl.getSelection();
 					IFall fall = getSelectedFall();
@@ -446,14 +437,14 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		hlCostBearer = tk.createHyperlink(top, KOSTENTRAEGER, SWT.NONE);
 		hlCostBearer.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
-			public void linkActivated(HyperlinkEvent e){
+			public void linkActivated(HyperlinkEvent e) {
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
-					Messages.FallDetailBlatt2_SelectCostBearerCaption,
-					Messages.FallDetailBlatt2_SelectCostBearerBody, true, Kontakt.DEFAULT_SORT);
+						Messages.FallDetailBlatt2_SelectCostBearerCaption,
+						Messages.FallDetailBlatt2_SelectCostBearerBody, true, Kontakt.DEFAULT_SORT);
 				Kontakt selection = null;
 				if (ksl.open() == Dialog.OK) {
 					selection = (Kontakt) ksl.getSelection();
-				} 
+				}
 				IFall fall = getSelectedFall();
 				if (fall != null) {
 					fall.setCostBearer(selection);
@@ -462,43 +453,43 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				updateCopyForPatient(getFall());
 			}
 		});
-		tCostBearer = tk.createText(top,  StringTool.leer);
+		tCostBearer = tk.createText(top, StringTool.leer);
 		tCostBearer.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		
+
 		tk.paintBordersFor(top);
 		setFall(getSelectedFall());
-		
+
 	}
 
-	private void updateCopyForPatient(Fall fall){
-		if (fall != null
-			&& ConfigServiceHolder.get().get(Preferences.COVERAGE_COPY_TO_PATIENT, false)
-			&& ((Fall) fall).getTiersType() == Tiers.PAYANT) {
+	private void updateCopyForPatient(Fall fall) {
+		if (fall != null && ConfigServiceHolder.get().get(Preferences.COVERAGE_COPY_TO_PATIENT, false)
+				&& ((Fall) fall).getTiersType() == Tiers.PAYANT) {
 			getFall().setCopyForPatient(true);
 			fireSelectedFallUpdateEvent();
 			btnCopyForPatient.setSelection(true);
 		}
 	}
-	
+
 	/**
-	 * reload the billing systems menu (user dependent) and ensure that the right item is still
-	 * selected
+	 * reload the billing systems menu (user dependent) and ensure that the right
+	 * item is still selected
 	 */
-	public void reloadBillingSystemsMenu(){
+	public void reloadBillingSystemsMenu() {
 		Abrechnungstypen = UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 		String currItem = cAbrechnung.getText();
 		cAbrechnung.setItems(Abrechnungstypen);
 		cAbrechnung.setText(currItem);
 	}
-	
+
 	class TristateSelection implements SelectionListener {
-		TristateSelection(){}
-		
+		TristateSelection() {
+		}
+
 		/**
 		 * changing state: empty -> checked -> unchecked (cycling through)
 		 */
 		@Override
-		public void widgetSelected(SelectionEvent e){
+		public void widgetSelected(SelectionEvent e) {
 			Button button = ((Button) e.getSource());
 			boolean selection = !button.getSelection();
 			boolean grayed = button.getGrayed();
@@ -515,32 +506,33 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				button.setGrayed(true);
 			}
 		}
-		
+
 		@Override
-		public void widgetDefaultSelected(SelectionEvent e){}
-		
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
 	}
-	
+
 	private class Focusreact implements FocusListener {
-		
+
 		private final String field;
 		private Control control;
-		
-		public Focusreact(final Control control, final String field){
+
+		public Focusreact(final Control control, final String field) {
 			this.field = field;
 			this.control = control;
 		}
-		
+
 		@Override
-		public void focusGained(final FocusEvent e){ /* nichts */
+		public void focusGained(final FocusEvent e) { /* nichts */
 		}
-		
+
 		@Override
-		public void focusLost(final FocusEvent e){
+		public void focusLost(final FocusEvent e) {
 			save();
 		}
-		
-		public void save(){
+
+		public void save() {
 			if (!control.isDisposed() && !ignore()) {
 				String newValue = getValue(control);
 				IFall fall = getSelectedFall();
@@ -557,12 +549,12 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 			}
 		}
-		
-		private boolean ignore(){
+
+		private boolean ignore() {
 			return ignoreFocusreacts.contains(field);
 		}
-		
-		public String getValue(Control control){
+
+		public String getValue(Control control) {
 			String newval = StringTool.leer;
 			if (control instanceof Combo) {
 				String kind = (String) ((Combo) control).getData("kind"); //$NON-NLS-1$
@@ -575,12 +567,10 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			} else if (control instanceof org.eclipse.swt.widgets.List) {
 				int[] selection = ((org.eclipse.swt.widgets.List) control).getSelectionIndices();
 				String delim = StringTool.leer;
-				String kind =
-					(String) ((org.eclipse.swt.widgets.List) control).getData("kind"); //$NON-NLS-1$
-				if (kind.equalsIgnoreCase("S")) { // save as string list, tab delimited   //$NON-NLS-1$
+				String kind = (String) ((org.eclipse.swt.widgets.List) control).getData("kind"); //$NON-NLS-1$
+				if (kind.equalsIgnoreCase("S")) { // save as string list, tab delimited //$NON-NLS-1$
 					for (int ii = 0; ii < selection.length; ii++) {
-						newval = newval + delim
-							+ ((org.eclipse.swt.widgets.List) control).getItem(selection[ii]);
+						newval = newval + delim + ((org.eclipse.swt.widgets.List) control).getItem(selection[ii]);
 						delim = ITEMDELIMITER;
 					}
 				} else { // save as numeric index list, tab delimited
@@ -593,7 +583,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				Button button = ((Button) control);
 				if ((button.getStyle() & SWT.RADIO) != 0) {
 					String kind = (String) button.getData("kind"); //$NON-NLS-1$
-					if (kind.equalsIgnoreCase("S")) { // save as string    //$NON-NLS-1$
+					if (kind.equalsIgnoreCase("S")) { // save as string //$NON-NLS-1$
 						if (button.getSelection())
 							newval = button.getText();
 					} else { // save as numeric (index)
@@ -621,7 +611,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			return newval;
 		}
 	}
-	
+
 	/**
 	 * disposes of required and optional fields on the bottom of the page.<br>
 	 * re-reads the contents for this case for the upper part<br>
@@ -632,7 +622,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	 *            caseID
 	 */
 	@SuppressWarnings("unchecked")
-	public void setFall(final IFall f){
+	public void setFall(final IFall f) {
 		if (actFall != null) {
 			save();
 		}
@@ -643,29 +633,29 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 		lReqs.clear();
 		keepEditable.clear();
-		
+
 		// *** fill billing systems into combo, set current system
 		cAbrechnung.setItems(Abrechnungstypen);
 		if (f == null) {
-			form.setText(Messages.FallDetailBlatt2_NoCaseSelected); //$NON-NLS-1$
+			form.setText(Messages.FallDetailBlatt2_NoCaseSelected); // $NON-NLS-1$
 			tBezeichnung.setText("");
 			tBezeichnung.setMessage(Messages.FallDetailBlatt2_29);
 			cReason.setSelection(new StructuredSelection(FallConstants.TYPE_DISEASE));
 			return;
 		}
-		
+
 		form.setText(f.getLabel());
-		
+
 		// *** set Fallbezeichnung
 		tBezeichnung.setText(f.getBezeichnung());
-		
+
 		// *** set Grund (Krankheit/Unfall/...)
 		String grund = f.getGrund();
 		cReason.setSelection(new StructuredSelection(grund));
-		
+
 		String billingSystem = f.getAbrechnungsSystem();
 		cAbrechnung.setText(billingSystem);
-		
+
 		// *** set startDate/EndDate
 		TimeTool tt = new TimeTool();
 		if (tt.set(f.getBeginnDatum()) == true) {
@@ -678,27 +668,27 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		} else {
 			dpBis.setSelection(null);
 		}
-		
+
 		// *** set copy for patient
 		btnCopyForPatient.setSelection(f.getCopyForPatient());
-		
+
 		// *** set Garant
 		tGarant.setBackground(null);
 		tGarant.setToolTipText(null);
 		Kontakt garant = f.getGarant();
 		String garantLabel = garant.getLabel();
-		if(garant.isDeleted()) {
+		if (garant.isDeleted()) {
 			tGarant.setBackground(UiDesk.getColor(UiDesk.COL_RED));
 			garantLabel = "*** " + garantLabel;
 			tGarant.setToolTipText(Messages.Contact_is_marked_deleted);
 		}
 		tGarant.setText(garantLabel);
-		
+
 		// *** set cost bearer (if enabled for billing system)
 		boolean costBearerDisabled = BillingSystem.isCostBearerDisabled(billingSystem);
 		tCostBearer.setVisible(!costBearerDisabled);
 		hlCostBearer.setVisible(!costBearerDisabled);
-		
+
 		tCostBearer.setBackground(null);
 		tCostBearer.setToolTipText(null);
 		if (!costBearerDisabled) {
@@ -718,7 +708,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		} else {
 			tCostBearer.setText(StringConstants.EMPTY);
 		}
-		
+
 		// *** adding required fields defined in prefs
 		String reqs = BillingSystem.getRequirementsBySystem(billingSystem);
 		if ((reqs != null) && (reqs.length() > 0)) {
@@ -729,17 +719,15 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		// *** adding optional fields defined in prefs
 		String optionals = f.getOptionals();
 		if ((optionals != null) && (optionals.length() > 0)) {
-			setExtendedFields(f, optionals, Messages.FallDetailBlatt2_optionalData, false, false,
-				true); //$NON-NLS-1$
+			setExtendedFields(f, optionals, Messages.FallDetailBlatt2_optionalData, false, false, true); // $NON-NLS-1$
 		}
-		
+
 		// ****** show any other fields from extinfo - ONLY FOR ADMINS, NOT
 		// INTENDED FOR NORMAL USERS !!!
 		// first part fields with definition, second part without definition
-		
+
 		// *** display all unused field having a display specification
-		String[] reqsArray =
-			BillingSystem.getRequirementsBySystem(billingSystem).split(DEFINITIONSDELIMITER);
+		String[] reqsArray = BillingSystem.getRequirementsBySystem(billingSystem).split(DEFINITIONSDELIMITER);
 		for (int reqI = 0; reqI < reqsArray.length; reqI++) {
 			reqsArray[reqI] = reqsArray[reqI].split(ARGUMENTSSDELIMITER)[0];
 		}
@@ -753,7 +741,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		LinkedHashMap<String, String> unusedHash = new LinkedHashMap<String, String>();
 		String strUnused = f.getUnused();
 		if ((strUnused != null) && (!strUnused.isEmpty())) {
-			String[] allUnused = strUnused.split(DEFINITIONSDELIMITER); //$NON-NLS-1$
+			String[] allUnused = strUnused.split(DEFINITIONSDELIMITER); // $NON-NLS-1$
 			Arrays.sort(allUnused, String.CASE_INSENSITIVE_ORDER); // *** sort
 			// alphabetically
 			for (String unusedPart : allUnused) {
@@ -781,11 +769,11 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 			}
 		}
-		
+
 		Map<String, String> httmp = getSelectedFall().getMap(PersistentObject.FLD_EXTINFO);
-		
+
 		HashMap<String, String> ht = new HashMap<String, String>(httmp);
-		
+
 		String[] unusedHashStringArray = {};
 		if (unusedHash.size() > 0) {
 			String unusedHashString = unusedHash.toString();
@@ -801,10 +789,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			String controlName = itemParts[0];
 			String[] controlDefParts = itemParts[1].split(ARGUMENTSSDELIMITER);
 			String controlType = controlDefParts[0];
-			
-			String[] itemList = {
-				StringTool.leer
-			};
+
+			String[] itemList = {StringTool.leer};
 			if (controlType.equalsIgnoreCase("X")) { //$NON-NLS-1$
 				if (controlDefParts.length > 1) {
 					itemList = controlDefParts[1].split(ITEMDELIMITER);
@@ -825,8 +811,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						values = controlDefParts[1];
 					}
 					if (!isAdded) {
-						otherFieldsList_2 = otherFieldsList_2 + delim + controlName
-							+ ARGUMENTSSDELIMITER + controlType + ARGUMENTSSDELIMITER + values;
+						otherFieldsList_2 = otherFieldsList_2 + delim + controlName + ARGUMENTSSDELIMITER + controlType
+								+ ARGUMENTSSDELIMITER + values;
 					}
 					delim = DEFINITIONSDELIMITER;
 					isAdded = true;
@@ -836,11 +822,11 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		// *** only for admins!
 		if (otherFieldsList_2.length() > 0) {
 			if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY_SPECIALS) == true) {
-				setExtendedFields(f, otherFieldsList_2,
-					Messages.FallDetailBlatt2_unusedFieldsWithDefinition, true, true, false); //$NON-NLS-1$
+				setExtendedFields(f, otherFieldsList_2, Messages.FallDetailBlatt2_unusedFieldsWithDefinition, true,
+						true, false); // $NON-NLS-1$
 			}
 		}
-		
+
 		// *** collect all other fields that are not yet shown anywhere else,
 		// display as text
 		String otherFieldsList = otherFieldsList_2;
@@ -865,7 +851,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					String[] flds = fldParts.split(ARGUMENTSSDELIMITER);
 					String fld = flds[0];
 					if ((flds[1].equalsIgnoreCase("X")) && ((flds.length > 2)) //$NON-NLS-1$
-						&& (!flds[2].isEmpty())) {
+							&& (!flds[2].isEmpty())) {
 						String checkBoxes = flds[2];
 						String[] checkBoxArray = checkBoxes.split(ITEMDELIMITER);
 						for (int cb_i = 0; cb_i < checkBoxArray.length; cb_i++) {
@@ -900,8 +886,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					// *** try to find def
 					String theVal = (String) unusedHash.get(subkey);
 					String[] vals = theVal.split(ARGUMENTSSDELIMITER);
-					otherFieldsList =
-						otherFieldsList + delim + subkey + ARGUMENTSSDELIMITER + vals[0];
+					otherFieldsList = otherFieldsList + delim + subkey + ARGUMENTSSDELIMITER + vals[0];
 					if (vals.length > 1) {
 						otherFieldsList = otherFieldsList + ARGUMENTSSDELIMITER + vals[1];
 					}
@@ -912,7 +897,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				delim = DEFINITIONSDELIMITER;
 			}
 		}
-		
+
 		if (otherFieldsList.length() > 0) {
 			// *** want to sort alphabetically here
 			String[] tmpArr = otherFieldsList.split(DEFINITIONSDELIMITER);
@@ -925,59 +910,58 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 			// *** only for admins!
 			if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY_SPECIALS) == true) {
-				setExtendedFields(f, otherFieldsList,
-					Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true, true, false); //$NON-NLS-1$
+				setExtendedFields(f, otherFieldsList, Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true,
+						true, false); // $NON-NLS-1$
 			}
 		}
-		
+
 		if (lockUpdate) {
 			setUnlocked(LocalLockServiceHolder.get().isLockedLocal(actFall));
 		}
 	}
-	
-	private void allowFieldUpdate(boolean lockEnabled){
+
+	private void allowFieldUpdate(boolean lockEnabled) {
 		boolean noExistingInvoicesForThisCoverage = true;
 		boolean costBearerEnabled = true;
 		if (actFall != null) {
 			Query<Rechnung> rQuery = new Query<Rechnung>(Rechnung.class);
 			rQuery.add(Rechnung.CASE_ID, Query.EQUALS, actFall.getId());
 			List<Rechnung> billMatch = rQuery.execute();
-			
+
 			if (billMatch != null && !billMatch.isEmpty()) {
 				noExistingInvoicesForThisCoverage = false;
 			}
 			costBearerEnabled = !BillingSystem.isCostBearerDisabled(actFall.getAbrechnungsSystem());
 		}
-		
+
 		boolean enable = lockEnabled && (noExistingInvoicesForThisCoverage || invoiceCorrection);
-		
+
 		tBezeichnung.setEditable(lockEnabled);
-		
+
 		dpVon.setEnabled(enable);
 		dpBis.setEnabled(lockEnabled); // coverage must be endable - even if invoices exist
-		
+
 		cAbrechnung.setEnabled(enable);
 		cReason.getControl().setEnabled(enable);
 		hlGarant.setEnabled(enable);
-		tGarant.setForeground(
-			enable ? UiDesk.getColor(UiDesk.COL_BLACK) : UiDesk.getColor(UiDesk.COL_GREY60));
+		tGarant.setForeground(enable ? UiDesk.getColor(UiDesk.COL_BLACK) : UiDesk.getColor(UiDesk.COL_GREY60));
 		tGarant.setEditable(enable);
-		
-		tCostBearer.setForeground((enable && costBearerEnabled) ? UiDesk.getColor(UiDesk.COL_BLACK)
-				: UiDesk.getColor(UiDesk.COL_GREY60));
+
+		tCostBearer.setForeground(
+				(enable && costBearerEnabled) ? UiDesk.getColor(UiDesk.COL_BLACK) : UiDesk.getColor(UiDesk.COL_GREY60));
 		tCostBearer.setEditable(enable && costBearerEnabled);
 		if (!tCostBearer.getEditable()) {
 			tCostBearer.setMessage(StringConstants.EMPTY);
 		}
 		hlCostBearer.setEnabled(enable && costBearerEnabled);
-		
+
 		autoFill.setEnabled(enable);
-		
+
 		for (Control req : lReqs) {
 			if (req instanceof Label) {
 				continue;
 			}
-			
+
 			// keep editable in case it's an optional parameter of accident date/no
 			if (keepEditable.contains(req)) {
 				req.setEnabled(lockEnabled);
@@ -995,48 +979,49 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		}
 	}
-	
-	public void save(){
+
+	public void save() {
 		if (actFall != null) {
 			String newValue = tBezeichnung.getText();
-			if (newValue != null && !newValue.isEmpty()
-				&& !newValue.equals(Messages.FallDetailBlatt2_29)) {
+			if (newValue != null && !newValue.isEmpty() && !newValue.equals(Messages.FallDetailBlatt2_29)) {
 				actFall.set(Fall.FLD_BEZEICHNUNG, newValue);
 			}
-			
+
 			// save reacts
 			for (Focusreact react : focusreacts) {
 				react.save();
 			}
 		}
 	}
-	
-	public void fireSelectedFallUpdateEvent(){
+
+	public void fireSelectedFallUpdateEvent() {
 		IFall fall = getSelectedFall();
 		if (fall instanceof PersistentObject) {
 			ElexisEventDispatcher.update((PersistentObject) fall);
 		}
 	}
-	
+
 	/**
-	 * creates the required or optional fields on the bottom of the page and fills them with the
-	 * appropriate values.
+	 * creates the required or optional fields on the bottom of the page and fills
+	 * them with the appropriate values.
 	 * 
 	 * @param f
 	 *            caseID
 	 * @param fieldList
-	 *            this is the fieldList from the prefs for required OR optional fields
+	 *            this is the fieldList from the prefs for required OR optional
+	 *            fields
 	 * @param TitleBarText
-	 *            if not "" and not null then show a bar-separator on top of the fields
+	 *            if not "" and not null then show a bar-separator on top of the
+	 *            fields
 	 * @param deletable
 	 *            is this deletable? - show delete button
 	 *            <p>
-	 *            The fieldList param contains a ;-separated list of fieldName:fieldType[:items]
-	 *            pairs/triplets. the first item is the name for the field used in the database
-	 *            (extInfo-Field) <br>
+	 *            The fieldList param contains a ;-separated list of
+	 *            fieldName:fieldType[:items] pairs/triplets. the first item is the
+	 *            name for the field used in the database (extInfo-Field) <br>
 	 *            the second item is the fieldType <br>
-	 *            the third item is the tab-delimited itemList to be used for combos, lists, radios
-	 *            and checkboxes
+	 *            the third item is the tab-delimited itemList to be used for
+	 *            combos, lists, radios and checkboxes
 	 *            <p>
 	 *            fieldType is one of the following:
 	 *            <ul>
@@ -1047,17 +1032,18 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	 *            <li>CS - Combo saved as string</li>
 	 *            <li>CN - Combo saved as numeric (selected index)</li>
 	 *            <li>LS - List items saved as strings, tab-delimited</li>
-	 *            <li>LN - List items saved as numerics, tab-delimited (selected indexes)</li>
+	 *            <li>LN - List items saved as numerics, tab-delimited (selected
+	 *            indexes)</li>
 	 *            <li>X - CheckBox, always saved as 0 or 1</li>
 	 *            <li>RS - Radios</li>
 	 *            <li>RN - Radios saved as numeric (selected index)</li>
 	 *            </ul>
 	 */
-	private void setExtendedFields(final IFall f, final String fieldList, String TitleBarText,
-		boolean deletable, boolean dangerous, final boolean optional){
+	private void setExtendedFields(final IFall f, final String fieldList, String TitleBarText, boolean deletable,
+			boolean dangerous, final boolean optional) {
 		// *** kind "numeric" or "string" is saved in the dataField of the
 		// control
-		
+
 		// *** show separator bar (title bar) if requested
 		if ((TitleBarText != null) && (!TitleBarText.isEmpty())) {
 			Composite separatorBar = new Composite(form.getBody(), SWT.NONE);
@@ -1081,21 +1067,21 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		for (String req : fieldList.split(DEFINITIONSDELIMITER)) {
 			// clear new ones are created
 			focusreacts.clear();
-			
+
 			final String[] r = req.split(ARGUMENTSSDELIMITER);
 			if (r.length < 2) { // *** needs at least fieldName and fieldType...
 				continue;
 			}
-			
+
 			// *** read the saved value from the db
 			String val = f.getInfoString(r[0]);
-			
+
 			// *** create label or hyperlink for this field
 			Hyperlink hl = null;
-			if (r[1].equals("K")) { //$NON-NLS-1$  // *** Kontakt
+			if (r[1].equals("K")) { //$NON-NLS-1$ // *** Kontakt
 				hl = tk.createHyperlink(form.getBody(), r[0], SWT.NONE);
 				addControl(hl, optional, r[0]);
-				
+
 				if (!val.startsWith("**ERROR")) { //$NON-NLS-1$
 					Kontakt k = Kontakt.load(val);
 					val = k.getLabel();
@@ -1103,20 +1089,20 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			} else {
 				addControl(tk.createLabel(form.getBody(), r[0]), optional, r[0]);
 			}
-			
+
 			// *** create/get parent for data part (right part)
 			Composite subParent = createRightComposite(deletable);
 			// lReqs.add(subParent);
-			
+
 			// *** create String List for combos, lists and checkboxes
 			String[] items = itemsErrorMessage.split(";"); //$NON-NLS-1$
 			if ((r[1].equals("CS")) //$NON-NLS-1$
-				|| (r[1].equals("CN")) //$NON-NLS-1$
-				|| (r[1].equals("LS")) //$NON-NLS-1$
-				|| (r[1].equals("LN")) //$NON-NLS-1$
-				|| (r[1].equals("RS")) //$NON-NLS-1$
-				|| (r[1].equals("RN")) //$NON-NLS-1$
-				|| (r[1].equals("X"))) { //$NON-NLS-1$
+					|| (r[1].equals("CN")) //$NON-NLS-1$
+					|| (r[1].equals("LS")) //$NON-NLS-1$
+					|| (r[1].equals("LN")) //$NON-NLS-1$
+					|| (r[1].equals("RS")) //$NON-NLS-1$
+					|| (r[1].equals("RN")) //$NON-NLS-1$
+					|| (r[1].equals("X"))) { //$NON-NLS-1$
 				if (r.length >= 4) { // *** must have an sql- or
 					// script-statement
 					if (r[2].equalsIgnoreCase("SQL")) { //$NON-NLS-1$
@@ -1130,7 +1116,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						String itemsStr = (String) TextContainer.replaceSQLClause("SQL:" + r[3]); //$NON-NLS-1$
 						itemsStr = itemsStr.replaceAll("\r\n", ITEMDELIMITER); //$NON-NLS-1$
 						itemsStr = (itemsStr.replaceAll("\n", ITEMDELIMITER)).replaceAll("\r", //$NON-NLS-1$//$NON-NLS-2$
-							ITEMDELIMITER);
+								ITEMDELIMITER);
 						items = itemsStr.split(ITEMDELIMITER);
 					}
 				} else if (r.length >= 3) {
@@ -1138,15 +1124,15 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						items = r[2].split(ITEMDELIMITER);
 				}
 			}
-			
+
 			Control dataField = null;
 			Composite stretchComposite = null;
 			// *** create data field
-			if (r[1].equals("T")) { //$NON-NLS-1$  // *** simple Text, single line
+			if (r[1].equals("T")) { //$NON-NLS-1$ // *** simple Text, single line
 				dataField = tk.createText(subParent, val);
 				dataField.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 				addFocusReact(dataField, r[0]);
-			} else if (r[1].equals("D")) { //$NON-NLS-1$  // *** Date
+			} else if (r[1].equals("D")) { //$NON-NLS-1$ // *** Date
 				final DatePickerCombo dp = new DatePickerCombo(subParent, SWT.NONE);
 				TimeTool tt = new TimeTool();
 				if (tt.set(val)) {
@@ -1155,23 +1141,21 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				dp.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
 				dp.addSelectionListener(new SelectionAdapter() {
 					@Override
-					public void widgetSelected(final SelectionEvent e){
+					public void widgetSelected(final SelectionEvent e) {
 						TimeTool tt = new TimeTool(dp.getDate().getTime());
 						f.setInfoString(r[0], tt.toString(TimeTool.DATE_GER));
 					}
 				});
 				dataField = dp;
-			} else if (r[1].equals("K")) { //$NON-NLS-1$  // *** Kontakt
+			} else if (r[1].equals("K")) { //$NON-NLS-1$ // *** Kontakt
 				dataField = tk.createText(subParent, val);
 				if (hl != null) {
 					hl.addHyperlinkListener(new HyperlinkAdapter() {
 						@Override
-						public void linkActivated(final HyperlinkEvent e){
-							KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
-								SELECT_CONTACT_CAPTION,
-								MessageFormat.format(SELECT_CONTACT_BODY, new Object[] {
-									r[0]
-							}), true, Kontakt.DEFAULT_SORT);
+						public void linkActivated(final HyperlinkEvent e) {
+							KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class, SELECT_CONTACT_CAPTION,
+									MessageFormat.format(SELECT_CONTACT_BODY, new Object[]{r[0]}), true,
+									Kontakt.DEFAULT_SORT);
 							if (optional) {
 								ksl.enableEmptyFieldButton();
 							}
@@ -1194,34 +1178,33 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				} else {
 					throw new IllegalStateException("hl is null");
 				}
-				
+
 				((Text) dataField).setEditable(false);
 				dataField.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			} else if (r[1].equals("TM")) { //$NON-NLS-1$  // *** multiline text
+			} else if (r[1].equals("TM")) { //$NON-NLS-1$ // *** multiline text
 				Text multiText = new Text(subParent, SWT.MULTI + SWT.BORDER);
 				multiText.setText(val);
 				multiText.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 				addFocusReact(multiText, r[0]);
 				multiText.addKeyListener(new KeyListener() {
 					@Override
-					public void keyPressed(KeyEvent e){}
-					
+					public void keyPressed(KeyEvent e) {
+					}
+
 					@Override
-					public void keyReleased(KeyEvent e){
+					public void keyReleased(KeyEvent e) {
 						// *** this simply makes the field grow or shrink to the
 						// needed size
 						// and repositions the following controls, too
 						Point sizePt = ((Text) (e.widget)).computeSize(SWT.DEFAULT, SWT.DEFAULT);
-						((Text) (e.widget)).setSize(((Text) (e.widget)).getBounds().width,
-							sizePt.y);
+						((Text) (e.widget)).setSize(((Text) (e.widget)).getBounds().width, sizePt.y);
 						form.getBody().layout(true);
 					}
 				});
 				dataField = multiText;
-			} else if (r[1].equals("CS")) { //$NON-NLS-1$  // *** combo, selected value saved as selected string
+			} else if (r[1].equals("CS")) { //$NON-NLS-1$ // *** combo, selected value saved as selected string
 				stretchComposite = new Composite(subParent, SWT.NONE);
-				stretchComposite
-					.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
+				stretchComposite.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
 				stretchComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 				addControl(stretchComposite, optional, r[0]);
 				GridLayout radioLayout = new GridLayout(1, false);
@@ -1234,10 +1217,10 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				combo.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
 				addFocusReact(combo, r[0]);
 				dataField = combo;
-			} else if (r[1].equals("CN")) { //$NON-NLS-1$  // *** combo, selected value saved as selected index (zero-based)
+			} else if (r[1].equals("CN")) { //$NON-NLS-1$ // *** combo, selected value saved as selected index
+											// (zero-based)
 				stretchComposite = new Composite(subParent, SWT.NONE);
-				stretchComposite
-					.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
+				stretchComposite.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
 				stretchComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 				GridLayout radioLayout = new GridLayout(1, false);
 				radioLayout.marginWidth = 0;
@@ -1247,22 +1230,23 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				if (!val.isEmpty()) {
 					try {
 						combo.setText(items[Integer.parseInt(val)]);
-					} catch (Exception e) {}
+					} catch (Exception e) {
+					}
 				}
 				combo.setData("kind", "N"); //$NON-NLS-1$ //$NON-NLS-2$
 				combo.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
 				addFocusReact(combo, r[0]);
 				dataField = combo;
-			} else if (r[1].equals("LS")) { //$NON-NLS-1$  // *** selection list, selection saved as tab-delimited string-list
+			} else if (r[1].equals("LS")) { //$NON-NLS-1$ // *** selection list, selection saved as tab-delimited
+											// string-list
 				stretchComposite = new Composite(subParent, SWT.NONE);
-				stretchComposite
-					.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
+				stretchComposite.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
 				stretchComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 				GridLayout radioLayout = new GridLayout(items.length, false);
 				radioLayout.marginWidth = 0;
 				stretchComposite.setLayout(radioLayout);
-				org.eclipse.swt.widgets.List list = new org.eclipse.swt.widgets.List(
-					stretchComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+				org.eclipse.swt.widgets.List list = new org.eclipse.swt.widgets.List(stretchComposite,
+						SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 				String[] vals = val.split(ITEMDELIMITER);
 				for (int lIx = 0; lIx < items.length; lIx++) {
 					list.add(items[lIx]);
@@ -1276,16 +1260,16 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				list.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
 				addFocusReact(list, r[0]);
 				dataField = list;
-			} else if (r[1].equals("LN")) { //$NON-NLS-1$  // *** selection list numeric, selection saved as tab-delimited list of selected-item-nums
+			} else if (r[1].equals("LN")) { //$NON-NLS-1$ // *** selection list numeric, selection saved as
+											// tab-delimited list of selected-item-nums
 				stretchComposite = new Composite(subParent, SWT.NONE);
-				stretchComposite
-					.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
+				stretchComposite.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
 				stretchComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 				GridLayout radioLayout = new GridLayout(items.length, false);
 				radioLayout.marginWidth = 0;
 				stretchComposite.setLayout(radioLayout);
-				org.eclipse.swt.widgets.List list = new org.eclipse.swt.widgets.List(
-					stretchComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+				org.eclipse.swt.widgets.List list = new org.eclipse.swt.widgets.List(stretchComposite,
+						SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 				String[] vals = val.split(ITEMDELIMITER);
 				for (int lIx = 0; lIx < items.length; lIx++) {
 					list.add(items[lIx]);
@@ -1299,7 +1283,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				list.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
 				addFocusReact(list, r[0]);
 				dataField = list;
-			} else if (r[1].equals("RS")) { // radio group //$NON-NLS-1$  // *** radio group, selection saved string
+			} else if (r[1].equals("RS")) { // radio group //$NON-NLS-1$ // *** radio group, selection saved string
 				Composite radioComposite = new Composite(subParent, SWT.NONE);
 				radioComposite.setBackground(new Color(radioComposite.getDisplay(), 255, 255, 255));
 				radioComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -1321,7 +1305,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					addFocusReact(radios[rIx], r[0]);
 				}
 				dataField = radioComposite;
-			} else if (r[1].equals("RN")) { // radio group //$NON-NLS-1$  // *** radio group
+			} else if (r[1].equals("RN")) { // radio group //$NON-NLS-1$ // *** radio group
 				Composite radioComposite = new Composite(subParent, SWT.NONE);
 				radioComposite.setBackground(new Color(radioComposite.getDisplay(), 255, 255, 255));
 				radioComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -1343,7 +1327,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					addFocusReact(radios[rIx], r[0]);
 				}
 				dataField = radioComposite;
-			} else if (r[1].equals("X")) { //$NON-NLS-1$  // *** checkBox, always saved as numeric - 0 or 1
+			} else if (r[1].equals("X")) { //$NON-NLS-1$ // *** checkBox, always saved as numeric - 0 or 1
 				// if no items supplied: use fieldName r[0] as fieldName in the
 				// database
 				// if items supplied: use the supplied item names as fieldNames
@@ -1354,8 +1338,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					items = StringTool.leer.split(ITEMDELIMITER);
 				if (items.length > 1) {
 					Composite checkBoxComposite = new Composite(subParent, SWT.NONE);
-					checkBoxComposite
-						.setBackground(new Color(checkBoxComposite.getDisplay(), 255, 255, 255));
+					checkBoxComposite.setBackground(new Color(checkBoxComposite.getDisplay(), 255, 255, 255));
 					checkBoxComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 					GridLayout checkBoxLayout = new GridLayout(items.length, false);
 					checkBoxLayout.marginWidth = 0;
@@ -1364,8 +1347,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					for (int rIx = 0; rIx < items.length; rIx++) {
 						String val2 = f.getInfoString(r[0] + "_" + items[rIx]); //$NON-NLS-1$
 						checks[rIx] = new Button(checkBoxComposite, SWT.CHECK + SWT.NONE);
-						checks[rIx]
-							.setBackground(new Color(checks[rIx].getDisplay(), 255, 255, 255));
+						checks[rIx].setBackground(new Color(checks[rIx].getDisplay(), 255, 255, 255));
 						checks[rIx].setText(items[rIx]);
 						if (val2.isEmpty()) {
 							checks[rIx].setSelection(true);
@@ -1403,41 +1385,41 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 			} else { // *** not supported...
 				dataField = tk.createLabel(subParent,
-					"FallDetailBlatt2().setExtendedFields(): field type not supported: " + r[1]); //$NON-NLS-1$
+						"FallDetailBlatt2().setExtendedFields(): field type not supported: " + r[1]); //$NON-NLS-1$
 			}
-			
+
 			// *** add delete button if deletable
 			addDeleteButton(deletable, subParent, r, f);
-			
+
 			// *** add stretchComposite and dataField to controlList
 			if (stretchComposite != null) {
 				addControl(stretchComposite, optional, r[0]);
 			}
 			addControl(dataField, optional, r[0]);
 		}
-		
+
 		TimeTool bt = f.getBillingDate();
 		ddc.setDates(bt);
 		form.reflow(true);
 		form.redraw();
 	}
-	
+
 	private void ignoreFocusReact(String field) {
 		ignoreFocusreacts.add(field);
 	}
-	
-	private void addFocusReact(Control dataField, String field){
+
+	private void addFocusReact(Control dataField, String field) {
 		Focusreact react = new Focusreact(dataField, field);
 		dataField.addFocusListener(react);
 		focusreacts.add(react);
 	}
-	
+
 	/**
 	 * create the composite on the right side with two columns
 	 * 
 	 * @return
 	 */
-	protected Composite createRightComposite(boolean deletable){
+	protected Composite createRightComposite(boolean deletable) {
 		// *** if deletable, then just use form.getBody()
 		if (deletable) {
 			Composite tmpComp = new Composite(form.getBody(), SWT.NONE);
@@ -1455,68 +1437,70 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			return form.getBody();
 		}
 	}
-	
-	protected void addDeleteButton(boolean deletable, Composite parent, String[] r, final IFall f){
+
+	protected void addDeleteButton(boolean deletable, Composite parent, String[] r, final IFall f) {
 		if (deletable) {
 			Button tmpButton = new Button(parent, SWT.NONE);
-			tmpButton.setText(Messages.FallDetailBlatt2_deleteData); //$NON-NLS-1$
+			tmpButton.setText(Messages.FallDetailBlatt2_deleteData); // $NON-NLS-1$
 			tmpButton.setData("KeyForDataToBeDeleted_Marlovits", r[0]); //$NON-NLS-1$
 			tmpButton.addSelectionListener(new SelectionListener() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					String key = (String) e.widget.getData("KeyForDataToBeDeleted_Marlovits"); //$NON-NLS-1$
 					PersistentObject.clearCache();
 					@SuppressWarnings("unchecked")
 					Map<Object, Object> ht = f.getMap("extinfo"); //$NON-NLS-1$
 					if (SWTHelper.askYesNo(StringTool.leer,
-						Messages.FallDetailBlatt2_DoYouWantToDeleteThisData + key + "/" //$NON-NLS-1$
-							+ ht.get(key) + Messages.FallDetailBlatt2_reallyFromTheCase)) { //$NON-NLS-2$ //$NON-NLS-3$
+							Messages.FallDetailBlatt2_DoYouWantToDeleteThisData + key + "/" //$NON-NLS-1$
+									+ ht.get(key) + Messages.FallDetailBlatt2_reallyFromTheCase)) { // $NON-NLS-2$
+																									// //$NON-NLS-3$
 						ht.remove(key);
 						f.setMap("extinfo", ht); //$NON-NLS-1$
 						setFall(f);
 					}
 				}
-				
+
 				@Override
-				public void widgetDefaultSelected(SelectionEvent e){}
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
 			});
 			lReqs.add(tmpButton);
 			lReqs.add(parent);
 		}
 	}
-	
-	private boolean addControl(Control control, boolean optional, String value){
+
+	private boolean addControl(Control control, boolean optional, String value) {
 		String accidentNo = "Unfallnummer";
 		String accidentDate = "Unfalldatum";
-		
-		if (optional || accidentNo.equalsIgnoreCase(value)
-			|| accidentDate.equalsIgnoreCase(value)) {
+
+		if (optional || accidentNo.equalsIgnoreCase(value) || accidentDate.equalsIgnoreCase(value)) {
 			keepEditable.add(control);
 		}
 		return lReqs.add(control);
 	}
-	
-	private IFall getSelectedFall(){
+
+	private IFall getSelectedFall() {
 		if (!invoiceCorrection && actFall == null) {
 			actFall = (IFall) ElexisEventDispatcher.getSelected(Fall.class);
 		}
 		return actFall;
 	}
-	
-	public Fall getFall(){
+
+	public Fall getFall() {
 		actFall = getSelectedFall();
 		if (actFall instanceof PersistentObject) {
 			return (Fall) actFall;
 		}
 		return null;
 	}
-	
+
 	public class SaveCallback implements ICallback {
 		@Override
-		public void save(){}
-		
+		public void save() {
+		}
+
 		@Override
-		public boolean saveAs(){
+		public boolean saveAs() {
 			return true;
 		}
 	}

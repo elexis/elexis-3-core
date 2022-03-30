@@ -15,36 +15,37 @@ import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.ui.UiDesk;
 
 /**
- * Extends {@link ElexisEventListenerImpl} to realize UI events. The events in this listener are
- * executed synchronous.
+ * Extends {@link ElexisEventListenerImpl} to realize UI events. The events in
+ * this listener are executed synchronous.
  * 
  * @since 3.2.0
  */
 public class ElexisUiSyncEventListenerImpl extends ElexisEventListenerImpl {
-	
-	public ElexisUiSyncEventListenerImpl(Class<?> clazz){
+
+	public ElexisUiSyncEventListenerImpl(Class<?> clazz) {
 		super(clazz);
 	}
-	
-	public ElexisUiSyncEventListenerImpl(Class<?> clazz, int mode){
+
+	public ElexisUiSyncEventListenerImpl(Class<?> clazz, int mode) {
 		super(clazz, mode);
 	}
-	
+
 	@Override
-	public void catchElexisEvent(final ElexisEvent ev){
+	public void catchElexisEvent(final ElexisEvent ev) {
 		if (!isStopped()) {
 			UiDesk.syncExec(new Runnable() {
-				public void run(){
+				public void run() {
 					runInUi(ev);
 				}
 			});
 		}
 	}
-	
+
 	/**
 	 * to override
 	 * 
 	 * @param ev
 	 */
-	public void runInUi(ElexisEvent ev){}
+	public void runInUi(ElexisEvent ev) {
+	}
 }

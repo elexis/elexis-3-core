@@ -8,8 +8,8 @@ public class BriefConstants {
 	public static final String LABOR = "Labor";
 	public static final String BESTELLUNG = "Bestellung";
 	public static final String RECHNUNG = "Rechnung";
-	
+
 	public static final String SYS_TEMPLATE = "SYS";
-	
+
 	public static final String DONT_ASK_FOR_ADDRESS_STICKER = "brief_dontaskforaddressee-*-&";
 }

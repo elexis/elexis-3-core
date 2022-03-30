@@ -44,17 +44,14 @@ public class DateWrapper implements TemporalWrapper<Date> {
 			final int second) {
 		wrapped = ZonedDateTime
 				.of(LocalDateTime.of(year, month, dayOfMonth, hour, minute, second), ZoneId.systemDefault())
-					.toInstant();
+				.toInstant();
 		accuracy = ChronoUnit.SECONDS;
 	}
 
 	public DateWrapper(final int year, final Month month, final int dayOfMonth, final int hour, final int minute,
 			final int second, final int millis) {
-		wrapped = ZonedDateTime
-				.of(
-						LocalDateTime.of(year, month, dayOfMonth, hour, minute, second, millis * 1000000),
-							ZoneId.systemDefault())
-					.toInstant();
+		wrapped = ZonedDateTime.of(LocalDateTime.of(year, month, dayOfMonth, hour, minute, second, millis * 1000000),
+				ZoneId.systemDefault()).toInstant();
 		accuracy = ChronoUnit.MILLIS;
 	}
 

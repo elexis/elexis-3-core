@@ -14,10 +14,10 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class AddressFormatUtil {
-	
+
 	/**
-	 * Get a single line formatted representation of the {@link IPerson}. Including the following
-	 * properties, if set.
+	 * Get a single line formatted representation of the {@link IPerson}. Including
+	 * the following properties, if set.
 	 * <li>Gender / Salutation</li>
 	 * <li>Title</li>
 	 * <li>Firstname</li>
@@ -36,12 +36,12 @@ public class AddressFormatUtil {
 	 * @param person
 	 * @return
 	 */
-	public static String getSingleLine(IPerson person){
+	public static String getSingleLine(IPerson person) {
 		StringBuilder ret = new StringBuilder();
-		
+
 		ret.append(PersonFormatUtil.getSalutation(person));
 		ret.append(StringTool.space);
-		
+
 		// name with title
 		String titel = person.getTitel();
 		if (!StringTool.isNothing(titel)) {
@@ -56,8 +56,7 @@ public class AddressFormatUtil {
 		// date of birth
 		LocalDateTime dateOfBirth = person.getDateOfBirth();
 		if (dateOfBirth != null) {
-			ret.append(
-				"," + StringTool.space + new TimeTool(dateOfBirth).toString(TimeTool.DATE_GER));
+			ret.append("," + StringTool.space + new TimeTool(dateOfBirth).toString(TimeTool.DATE_GER));
 		}
 		// address
 		String thisAddressStreet = person.getStreet();
@@ -93,27 +92,26 @@ public class AddressFormatUtil {
 		}
 		String thisAddressMobile = person.getMobile();
 		if (!StringTool.isNothing(thisAddressMobile)) {
-			ret.append("," + StringTool.space + Messages.KontaktBlatt_MobilePhone + StringTool.space
-				+ thisAddressMobile);
+			ret.append(
+					"," + StringTool.space + Messages.KontaktBlatt_MobilePhone + StringTool.space + thisAddressMobile);
 		}
 		String thisAddressFax = person.getFax();
 		if (!StringTool.isNothing(thisAddressFax)) {
-			ret.append(
-				"," + StringTool.space + Messages.KontaktBlatt_Fax + StringTool.space
-					+ thisAddressFax);
+			ret.append("," + StringTool.space + Messages.KontaktBlatt_Fax + StringTool.space + thisAddressFax);
 		}
 		// email
 		String thisAddressEmail = person.getEmail();
 		if (!StringTool.isNothing(thisAddressEmail)) {
 			ret.append("," + StringTool.space + thisAddressEmail);
 		}
-		
+
 		return ret.toString();
 	}
-	
+
 	/**
-	 * Get the full name of the contact depending on type {@link IPerson} or {@link IOrganization}.
-	 * The following properties are used to determine name and salutation. </br>
+	 * Get the full name of the contact depending on type {@link IPerson} or
+	 * {@link IOrganization}. The following properties are used to determine name
+	 * and salutation. </br>
 	 * </br>
 	 * IPerson:</br>
 	 * <li>Gender / Salutation</li>
@@ -127,11 +125,11 @@ public class AddressFormatUtil {
 	 * @param contact
 	 * @return
 	 */
-	public static String getFullnameWithSalutation(IContact contact){
+	public static String getFullnameWithSalutation(IContact contact) {
 		StringBuilder sb = new StringBuilder();
 		if (contact instanceof IPerson) {
 			IPerson person = (IPerson) contact;
-			
+
 			String salutation;
 			if (person.getGender() == Gender.MALE) {
 				salutation = Messages.Contact_SalutationM;
@@ -140,12 +138,12 @@ public class AddressFormatUtil {
 			}
 			sb.append(salutation);
 			sb.append(StringTool.lf);
-			
+
 			if (StringUtils.isNotBlank(person.getTitel())) {
 				sb.append(person.getTitel()).append(StringTool.space);
 			}
 			sb.append(person.getFirstName()).append(StringTool.space).append(person.getLastName())
-				.append(StringTool.lf);
+					.append(StringTool.lf);
 		} else if (contact instanceof IOrganization) {
 			IOrganization organization = (IOrganization) contact;
 			sb.append(organization.getDescription1()).append(StringTool.space);
@@ -156,44 +154,43 @@ public class AddressFormatUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
-	 * Create the postal address String of the contact using a {@link PostalAddress} object. The
-	 * postal address property of the {@link IContact} is updated if it is empty.
+	 * Create the postal address String of the contact using a {@link PostalAddress}
+	 * object. The postal address property of the {@link IContact} is updated if it
+	 * is empty.
 	 * 
 	 * @param contact
 	 * @return
 	 */
-	public static String createPostalAddress(IContact contact){
+	public static String createPostalAddress(IContact contact) {
 		PostalAddress postalAddress = PostalAddress.of(contact);
-		String ret =
-			getFullnameWithSalutation(contact) + postalAddress.getWrittenAddress(false, true);
+		String ret = getFullnameWithSalutation(contact) + postalAddress.getWrittenAddress(false, true);
 		// create the postal if it does not exist yet
 		if (StringUtils.isEmpty(contact.getPostalAddress())) {
 			contact.setPostalAddress(ret);
 		}
 		return ret;
 	}
-	
+
 	/**
-	 * Get the postal address of the {@link IContact}. If the postal address is currently empty, a
-	 * new address String is generated using
+	 * Get the postal address of the {@link IContact}. If the postal address is
+	 * currently empty, a new address String is generated using
 	 * {@link AddressFormatUtil#createPostalAddress(IContact)}.
 	 * 
 	 * @param contact
 	 * @param multiline
 	 * @return
 	 */
-	public static String getPostalAddress(IContact contact, boolean multiline){
+	public static String getPostalAddress(IContact contact, boolean multiline) {
 		String postalAddress = contact.getPostalAddress();
 		if (StringTool.isNothing(postalAddress)) {
 			postalAddress = createPostalAddress(contact);
 		}
 		postalAddress = postalAddress.replaceAll("[\\r\\n]\\n", StringTool.lf); //$NON-NLS-1$
-		return multiline == true ? postalAddress
-				: postalAddress.replaceAll("\\n", StringTool.space); //$NON-NLS-1$
+		return multiline == true ? postalAddress : postalAddress.replaceAll("\\n", StringTool.space); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Get address, phone, fax and email of the {@link IContact}.
 	 * 
@@ -202,37 +199,36 @@ public class AddressFormatUtil {
 	 * @param includePhone
 	 * @return
 	 */
-	public static String getAddressPhoneFaxEmail(IContact contact, boolean multiline,
-		boolean includePhone){
-		
+	public static String getAddressPhoneFaxEmail(IContact contact, boolean multiline, boolean includePhone) {
+
 		StringBuffer thisAddress = new StringBuffer();
-		
+
 		thisAddress.append(getPostalAddress(contact, true).trim());
 		thisAddress.append(System.lineSeparator());
-		
+
 		if (includePhone) {
 			if (StringUtils.isNotBlank(contact.getPhone1())) {
 				thisAddress.append(contact.getPhone1() + System.lineSeparator());
 			}
-			
+
 			if (StringUtils.isNotBlank(contact.getPhone2())) {
 				thisAddress.append(contact.getPhone2() + System.lineSeparator());
 			}
-			
+
 			if (StringUtils.isNotBlank(contact.getMobile())) {
-				thisAddress.append(Messages.KontaktBlatt_MobilePhone + ":" + StringTool.space
-					+ contact.getMobile() + System.lineSeparator());
+				thisAddress.append(Messages.KontaktBlatt_MobilePhone + ":" + StringTool.space + contact.getMobile()
+						+ System.lineSeparator());
 			}
 		}
-		
+
 		if (StringUtils.isNotBlank(contact.getFax())) {
-			thisAddress.append(Messages.KontaktDetailDialog_labelFax + ":" + StringTool.space
-				+ contact.getFax() + System.lineSeparator());
+			thisAddress.append(Messages.KontaktDetailDialog_labelFax + ":" + StringTool.space + contact.getFax()
+					+ System.lineSeparator());
 		}
 		if (StringUtils.isNotBlank(contact.getEmail())) {
 			thisAddress.append(contact.getEmail() + System.lineSeparator());
 		}
-		
+
 		String an = thisAddress.toString();
 		an = an.replaceAll("[\\r\\n]\\n", StringTool.lf); //$NON-NLS-1$
 		return multiline == true ? an : an.replaceAll("\\n", StringTool.space); //$NON-NLS-1$

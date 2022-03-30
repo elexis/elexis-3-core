@@ -27,36 +27,35 @@ import ch.elexis.core.text.PlaceholderAttribute;
 import ch.elexis.core.ui.util.CoreUiUtil;
 
 public class TextTemplateComposite extends Composite {
-	
+
 	@Inject
 	private ITextReplacementService replacementService;
-	
+
 	private Text replacementProposals;
-	
+
 	private StyledText templateText;
-	
+
 	private ITextTemplate template;
-	
-	public TextTemplateComposite(Composite parent, int style){
+
+	public TextTemplateComposite(Composite parent, int style) {
 		super(parent, style);
 		CoreUiUtil.injectServices(this);
 		createContent();
 	}
-	
-	private void createContent(){
+
+	private void createContent() {
 		setLayout(new GridLayout());
 		replacementProposals = new Text(this, SWT.BORDER);
 		replacementProposals.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		ContentProposalAdapter toAddressProposalAdapter =
-			new ContentProposalAdapter(replacementProposals, new TextContentAdapter(),
-				new ReplacementProposalProvider(), null, null);
+		ContentProposalAdapter toAddressProposalAdapter = new ContentProposalAdapter(replacementProposals,
+				new TextContentAdapter(), new ReplacementProposalProvider(), null, null);
 		toAddressProposalAdapter.addContentProposalListener(new IContentProposalListener() {
 			@Override
-			public void proposalAccepted(IContentProposal proposal){
+			public void proposalAccepted(IContentProposal proposal) {
 				boolean insertSpace = false;
 				if (templateText.getCaretOffset() > 0) {
 					String beforeChar = templateText.getText(templateText.getCaretOffset() - 1,
-						templateText.getCaretOffset() - 1);
+							templateText.getCaretOffset() - 1);
 					insertSpace = !(beforeChar.equals(" ") || beforeChar.equals("\n"));
 				}
 				String insertText = (insertSpace ? " [" : "[") + proposal.getContent() + "]";
@@ -66,18 +65,18 @@ public class TextTemplateComposite extends Composite {
 			}
 		});
 		replacementProposals.setMessage("Platzhalter Suche und Auswahl");
-		
+
 		templateText = new StyledText(this, SWT.MULTI | SWT.BORDER);
 		templateText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
-	
+
 	/**
-	 * Set the {@link ITextTemplate} that will be updated {@link #updateModel()} or updated and
-	 * saved {@link #save()}. saved
+	 * Set the {@link ITextTemplate} that will be updated {@link #updateModel()} or
+	 * updated and saved {@link #save()}. saved
 	 * 
 	 * @param template
 	 */
-	public void setTemplate(ITextTemplate template){
+	public void setTemplate(ITextTemplate template) {
 		this.template = template;
 		if (template != null && template.getTemplate() != null) {
 			templateText.setText(template.getTemplate());
@@ -85,48 +84,46 @@ public class TextTemplateComposite extends Composite {
 		}
 		templateText.setText("");
 	}
-	
+
 	/**
 	 * Update the template text.
 	 * 
 	 */
-	public void updateModel(){
+	public void updateModel() {
 		if (template != null) {
 			template.setTemplate(templateText.getText());
 		}
 	}
-	
+
 	/**
 	 * Update the template text and save the change.
 	 * 
 	 */
-	public void save(){
+	public void save() {
 		if (template != null) {
 			updateModel();
 			CoreModelServiceHolder.get().save(template);
 		}
 	}
-	
+
 	private class ReplacementProposalProvider implements IContentProposalProvider {
-		
+
 		@Override
-		public IContentProposal[] getProposals(String contents, int position){
+		public IContentProposal[] getProposals(String contents, int position) {
 			contents = contents.toLowerCase();
 			List<IContentProposal> proposals = new ArrayList<>();
 			for (ITextPlaceholderResolver resolver : replacementService.getResolvers()) {
 				List<PlaceholderAttribute> attributes = resolver.getSupportedAttributes();
 				for (PlaceholderAttribute attribute : attributes) {
-					String proposalText =
-						attribute.getTypeName() + "." + attribute.getAttributeName();
+					String proposalText = attribute.getTypeName() + "." + attribute.getAttributeName();
 					if (proposalText.toLowerCase().contains(contents)) {
-						proposals
-							.add(new ContentProposal(proposalText));
+						proposals.add(new ContentProposal(proposalText));
 					}
 				}
 			}
 			proposals.sort(new Comparator<IContentProposal>() {
 				@Override
-				public int compare(IContentProposal arg0, IContentProposal arg1){
+				public int compare(IContentProposal arg0, IContentProposal arg1) {
 					return arg0.getLabel().compareTo(arg1.getLabel());
 				}
 			});

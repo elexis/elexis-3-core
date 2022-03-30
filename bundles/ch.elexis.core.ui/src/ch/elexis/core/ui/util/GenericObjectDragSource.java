@@ -28,16 +28,16 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 
 public class GenericObjectDragSource implements DragSourceListener {
-	
+
 	ISelectionRenderer renderer;
 	Control dragSource;
 	Transfer myTransfer = TextTransfer.getInstance();
-	
-	public GenericObjectDragSource(final StructuredViewer viewer){
+
+	public GenericObjectDragSource(final StructuredViewer viewer) {
 		dragSource = viewer.getControl();
 		renderer = new ISelectionRenderer() {
 			@SuppressWarnings("unchecked")
-			public List<Object> getSelection(){
+			public List<Object> getSelection() {
 				if (viewer != null && viewer.getStructuredSelection() != null) {
 					return viewer.getStructuredSelection().toList();
 				}
@@ -46,34 +46,32 @@ public class GenericObjectDragSource implements DragSourceListener {
 		};
 		setup();
 	}
-	
-	public GenericObjectDragSource(StructuredViewer viewer, ISelectionRenderer iSelectionRenderer){
+
+	public GenericObjectDragSource(StructuredViewer viewer, ISelectionRenderer iSelectionRenderer) {
 		dragSource = viewer.getControl();
 		renderer = iSelectionRenderer;
 		setup();
 	}
-	
-	public GenericObjectDragSource(Control control, ISelectionRenderer iSelectionRenderer){
+
+	public GenericObjectDragSource(Control control, ISelectionRenderer iSelectionRenderer) {
 		dragSource = control;
 		renderer = iSelectionRenderer;
 		setup();
 	}
-	
-	private void setup(){
+
+	private void setup() {
 		DragSource mine = new DragSource(dragSource, DND.DROP_COPY);
-		mine.setTransfer(new Transfer[] {
-			myTransfer
-		});
+		mine.setTransfer(new Transfer[]{myTransfer});
 		mine.addDragListener(this);
 	}
-	
-	public void dragFinished(final DragSourceEvent event){
+
+	public void dragFinished(final DragSourceEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void dragSetData(final DragSourceEvent event){
+	public void dragSetData(final DragSourceEvent event) {
 		StringBuilder sb = new StringBuilder();
 		for (Object selected : renderer.getSelection()) {
 			String string = StoreToStringServiceHolder.getStoreToString(selected);
@@ -81,8 +79,8 @@ public class GenericObjectDragSource implements DragSourceListener {
 		}
 		event.data = sb.toString().replace(",$", StringConstants.EMPTY); //$NON-NLS-1$
 	}
-	
-	public void dragStart(final DragSourceEvent event){
+
+	public void dragStart(final DragSourceEvent event) {
 		List<Object> selection = renderer.getSelection();
 		if ((selection == null) || (selection.isEmpty())) {
 			event.doit = false;
@@ -90,17 +88,17 @@ public class GenericObjectDragSource implements DragSourceListener {
 			event.doit = isDrag(selection);
 		}
 	}
-	
+
 	/**
 	 * Override this method to decide if drag if the selection is valid.
 	 * 
 	 * @param selection
 	 * @return
 	 */
-	protected boolean isDrag(List<Object> selection){
+	protected boolean isDrag(List<Object> selection) {
 		return true;
 	}
-	
+
 	public interface ISelectionRenderer {
 		public List<Object> getSelection();
 	}

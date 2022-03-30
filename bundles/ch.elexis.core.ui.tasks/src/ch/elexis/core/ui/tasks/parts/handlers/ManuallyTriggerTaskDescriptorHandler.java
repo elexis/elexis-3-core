@@ -19,34 +19,33 @@ import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 
 public class ManuallyTriggerTaskDescriptorHandler {
-	
+
 	@Execute
-	public void execute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION)
-	ITaskDescriptor taskDescriptor, IContextService contextService, ITaskService taskService){
-		
+	public void execute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) ITaskDescriptor taskDescriptor,
+			IContextService contextService, ITaskService taskService) {
+
 		try {
 			if (canExecute(taskDescriptor, contextService)) {
-				taskService.trigger(taskDescriptor, null, TaskTriggerType.MANUAL,
-					Collections.emptyMap());
+				taskService.trigger(taskDescriptor, null, TaskTriggerType.MANUAL, Collections.emptyMap());
 			}
-			
+
 		} catch (TaskException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	@CanExecute
-	public boolean canExecute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION)
-	ITaskDescriptor taskDescriptor, IContextService contextService){
-		
+	public boolean canExecute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) ITaskDescriptor taskDescriptor,
+			IContextService contextService) {
+
 		IUser user = contextService.getActiveUser().orElse(null);
 		if (user != null) {
 			return (user.isAdministrator() || Objects.equals(taskDescriptor.getOwner(), user));
 		}
-		
+
 		return false;
 	}
-	
+
 }

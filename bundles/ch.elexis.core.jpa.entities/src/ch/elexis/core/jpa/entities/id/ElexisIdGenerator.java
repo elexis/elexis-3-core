@@ -5,8 +5,7 @@ import java.util.UUID;
 public class ElexisIdGenerator {
 
 	/**
-	 * Generate an Elexis conform Database ID. This ID is limited to 25
-	 * characters.
+	 * Generate an Elexis conform Database ID. This ID is limited to 25 characters.
 	 * 
 	 * @return generated ID string
 	 */

@@ -23,326 +23,288 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 
 /**
- * Handles creation of new {@link Predicate} instances using the provided entityClazz. The created
- * instances are added to the {@link PredicateGroupStack}.
+ * Handles creation of new {@link Predicate} instances using the provided
+ * entityClazz. The created instances are added to the
+ * {@link PredicateGroupStack}.
  * 
  * @author thomas
  *
  */
 public class PredicateHandler {
-	
+
 	protected CriteriaBuilder criteriaBuilder;
 	protected Root<? extends EntityWithId> rootQuery;
-	
+
 	protected PredicateGroupStack predicateGroups;
-	
+
 	protected Class<? extends EntityWithId> entityClazz;
-	
-	public PredicateHandler(PredicateGroupStack predicateGroups,
-		Class<? extends EntityWithId> entityClazz, CriteriaBuilder criteriaBuilder,
-		Root<? extends EntityWithId> rootQuery){
+
+	public PredicateHandler(PredicateGroupStack predicateGroups, Class<? extends EntityWithId> entityClazz,
+			CriteriaBuilder criteriaBuilder, Root<? extends EntityWithId> rootQuery) {
 		this.predicateGroups = predicateGroups;
 		this.entityClazz = entityClazz;
 		this.criteriaBuilder = criteriaBuilder;
 		this.rootQuery = rootQuery;
 	}
-	
-	public String getAttributeName(EStructuralFeature feature,
-		Class<? extends EntityWithId> entityClazz){
+
+	public String getAttributeName(EStructuralFeature feature, Class<? extends EntityWithId> entityClazz) {
 		String ret = feature.getName();
-		EAnnotation mappingAnnotation =
-			feature.getEAnnotation(IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING);
+		EAnnotation mappingAnnotation = feature.getEAnnotation(IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING);
 		if (mappingAnnotation != null) {
 			// test class specific first
-			ret = mappingAnnotation.getDetails().get(entityClazz.getSimpleName() + "#"
-				+ IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME);
+			ret = mappingAnnotation.getDetails()
+					.get(entityClazz.getSimpleName() + "#" + IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME);
 			if (ret == null) {
 				// fallback to direct mapping
-				ret = mappingAnnotation.getDetails()
-					.get(IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME);
+				ret = mappingAnnotation.getDetails().get(IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME);
 			}
 		}
 		return ret;
 	}
-	
-	public void exists(Subquery<?> query){
+
+	public void exists(Subquery<?> query) {
 		predicateGroups.getCurrentPredicateGroup().and(criteriaBuilder.exists(query));
 	}
-	
-	public void notExists(Subquery<?> query){
+
+	public void notExists(Subquery<?> query) {
 		predicateGroups.getCurrentPredicateGroup().and(criteriaBuilder.exists(query).not());
 	}
-	
-	public void and(EStructuralFeature feature, COMPARATOR comparator, Object value,
-		boolean ignoreCase){
+
+	public void and(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase) {
 		String entityAttributeName = getAttributeName(feature, entityClazz);
 		@SuppressWarnings("rawtypes")
-		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
+		Optional<SingularAttribute> attribute = resolveAttribute(entityClazz.getName(), entityAttributeName);
 		value = resolveValue(value);
 		if (attribute.isPresent()) {
-			Optional<Predicate> predicate =
-				getPredicate(attribute.get(), comparator, value, ignoreCase);
+			Optional<Predicate> predicate = getPredicate(attribute.get(), comparator, value, ignoreCase);
 			predicate.ifPresent(p -> {
 				predicateGroups.getCurrentPredicateGroup().and(p);
 			});
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException(
-				"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]");
+					"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]");
 		}
 	}
-	
-	public void andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator,
-		EStructuralFeature otherFeature){
+
+	public void andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator, EStructuralFeature otherFeature) {
 		String entityAttributeName = getAttributeName(feature, entityClazz);
 		String entityOtherAttributeName = getAttributeName(otherFeature, entityClazz);
-		andCompare(rootQuery, entityClazz, entityOtherAttributeName, comparator,
-			entityAttributeName);
+		andCompare(rootQuery, entityClazz, entityOtherAttributeName, comparator, entityAttributeName);
 	}
-	
+
 	@SuppressWarnings("rawtypes")
-	public void andCompare(Root<? extends EntityWithId> otherRoot,
-		Class<? extends EntityWithId> otherEntityClazz, String otherEntityAttributeName,
-		COMPARATOR comparator, String entityAttributeName){
-		
-		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
-		Optional<SingularAttribute> otherAttribute =
-			resolveAttribute(otherEntityClazz.getName(), otherEntityAttributeName);
+	public void andCompare(Root<? extends EntityWithId> otherRoot, Class<? extends EntityWithId> otherEntityClazz,
+			String otherEntityAttributeName, COMPARATOR comparator, String entityAttributeName) {
+
+		Optional<SingularAttribute> attribute = resolveAttribute(entityClazz.getName(), entityAttributeName);
+		Optional<SingularAttribute> otherAttribute = resolveAttribute(otherEntityClazz.getName(),
+				otherEntityAttributeName);
 		if (attribute.isPresent() && otherAttribute.isPresent()) {
-			Optional<Predicate> predicate =
-				getPredicate(attribute.get(), comparator, otherAttribute.get(), otherRoot, false);
+			Optional<Predicate> predicate = getPredicate(attribute.get(), comparator, otherAttribute.get(), otherRoot,
+					false);
 			predicate.ifPresent(p -> predicateGroups.getCurrentPredicateGroup().and(p));
 		} else {
 			// feature could not be resolved, mapping?
-			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
-				+ "] of entity [" + entityClazz + "] or [" + otherEntityAttributeName
-				+ "] of entity [" + otherEntityClazz + "]");
+			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName + "] of entity ["
+					+ entityClazz + "] or [" + otherEntityAttributeName + "] of entity [" + otherEntityClazz + "]");
 		}
 	}
-	
-	public void and(String entityAttributeName, COMPARATOR comparator, Object value,
-		boolean ignoreCase){
+
+	public void and(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase) {
 		@SuppressWarnings("rawtypes")
-		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
+		Optional<SingularAttribute> attribute = resolveAttribute(entityClazz.getName(), entityAttributeName);
 		value = resolveValue(value);
 		if (attribute.isPresent()) {
-			Optional<Predicate> predicate =
-				getPredicate(attribute.get(), comparator, value, ignoreCase);
+			Optional<Predicate> predicate = getPredicate(attribute.get(), comparator, value, ignoreCase);
 			predicate.ifPresent(p -> {
 				predicateGroups.getCurrentPredicateGroup().and(p);
 			});
 		} else {
 			// feature could not be resolved, mapping?
-			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
-				+ "] of entity [" + entityClazz + "]");
+			throw new IllegalStateException(
+					"Could not resolve attribute [" + entityAttributeName + "] of entity [" + entityClazz + "]");
 		}
 	}
-	
-	public void or(EStructuralFeature feature, COMPARATOR comparator, Object value,
-		boolean ignoreCase){
+
+	public void or(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase) {
 		String entityAttributeName = getAttributeName(feature, entityClazz);
 		@SuppressWarnings("rawtypes")
-		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
+		Optional<SingularAttribute> attribute = resolveAttribute(entityClazz.getName(), entityAttributeName);
 		value = resolveValue(value);
 		if (attribute.isPresent()) {
-			Optional<Predicate> predicate =
-				getPredicate(attribute.get(), comparator, value, ignoreCase);
+			Optional<Predicate> predicate = getPredicate(attribute.get(), comparator, value, ignoreCase);
 			predicate.ifPresent(p -> {
 				predicateGroups.getCurrentPredicateGroup().or(p);
 			});
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException(
-				"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]");
+					"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]");
 		}
 	}
-	
-	public void or(String entityAttributeName, COMPARATOR comparator, Object value,
-		boolean ignoreCase){
+
+	public void or(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase) {
 		@SuppressWarnings("rawtypes")
-		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
+		Optional<SingularAttribute> attribute = resolveAttribute(entityClazz.getName(), entityAttributeName);
 		value = resolveValue(value);
 		if (attribute.isPresent()) {
-			Optional<Predicate> predicate =
-				getPredicate(attribute.get(), comparator, value, ignoreCase);
+			Optional<Predicate> predicate = getPredicate(attribute.get(), comparator, value, ignoreCase);
 			predicate.ifPresent(p -> predicateGroups.getCurrentPredicateGroup().or(p));
 		} else {
 			// feature could not be resolved, mapping?
-			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
-				+ "] of entity [" + entityClazz + "]");
+			throw new IllegalStateException(
+					"Could not resolve attribute [" + entityAttributeName + "] of entity [" + entityClazz + "]");
 		}
 	}
-	
+
 	@SuppressWarnings("rawtypes")
-	protected Optional<Predicate> getPredicate(SingularAttribute attribute, COMPARATOR comparator,
-		Object value, boolean ignoreCase){
+	protected Optional<Predicate> getPredicate(SingularAttribute attribute, COMPARATOR comparator, Object value,
+			boolean ignoreCase) {
 		return getPredicate(attribute, comparator, value, null, ignoreCase);
 	}
-	
-	@SuppressWarnings({
-		"unchecked", "rawtypes"
-	})
-	protected Optional<Predicate> getPredicate(SingularAttribute attribute, COMPARATOR comparator,
-		Object value, Root<? extends EntityWithId> valueRoot, boolean ignoreCase){
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	protected Optional<Predicate> getPredicate(SingularAttribute attribute, COMPARATOR comparator, Object value,
+			Root<? extends EntityWithId> valueRoot, boolean ignoreCase) {
 		switch (comparator) {
-		case EQUALS:
-			if (value instanceof SingularAttribute) {
-				return Optional.of(criteriaBuilder.equal(rootQuery.get(attribute),
-					valueRoot != null ? valueRoot.get((SingularAttribute) value)
-							: rootQuery.get((SingularAttribute) value)));
-			} else {
-				return Optional.of(criteriaBuilder.equal(rootQuery.get(attribute), value));
-			}
-		case NOT_EQUALS:
-			if (value instanceof SingularAttribute) {
-				return Optional.of(criteriaBuilder.notEqual(rootQuery.get(attribute),
-					valueRoot != null ? valueRoot.get((SingularAttribute) value)
-							: rootQuery.get((SingularAttribute) value)));
-			} else {
-				return Optional.of(criteriaBuilder.notEqual(rootQuery.get(attribute), value));
-			}
-		case LIKE:
-			if (value instanceof String) {
-				if (ignoreCase) {
-					return Optional
-						.of(criteriaBuilder.like(criteriaBuilder.lower(rootQuery.get(attribute)),
-							((String) value).toLowerCase()));
+			case EQUALS :
+				if (value instanceof SingularAttribute) {
+					return Optional.of(criteriaBuilder.equal(rootQuery.get(attribute),
+							valueRoot != null
+									? valueRoot.get((SingularAttribute) value)
+									: rootQuery.get((SingularAttribute) value)));
 				} else {
-					return Optional
-						.of(criteriaBuilder.like(rootQuery.get(attribute), (String) value));
+					return Optional.of(criteriaBuilder.equal(rootQuery.get(attribute), value));
 				}
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		case NOT_LIKE:
-			if (value instanceof String) {
-				if (ignoreCase) {
-					return Optional
-						.of(criteriaBuilder.notLike(criteriaBuilder.lower(rootQuery.get(attribute)),
-							((String) value).toLowerCase()));
+			case NOT_EQUALS :
+				if (value instanceof SingularAttribute) {
+					return Optional.of(criteriaBuilder.notEqual(rootQuery.get(attribute),
+							valueRoot != null
+									? valueRoot.get((SingularAttribute) value)
+									: rootQuery.get((SingularAttribute) value)));
 				} else {
-					return Optional
-						.of(criteriaBuilder.notLike(rootQuery.get(attribute), (String) value));
+					return Optional.of(criteriaBuilder.notEqual(rootQuery.get(attribute), value));
 				}
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		case GREATER:
-			if (value instanceof String) {
-				return Optional
-					.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (String) value));
-			} else if (value instanceof Integer) {
-				return Optional
-					.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (Integer) value));
-			} else if (value instanceof Long) {
-				return Optional
-					.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (Long) value));
-			} else if (value instanceof LocalDateTime) {
-				return Optional.of(
-					criteriaBuilder.greaterThan(rootQuery.get(attribute), (LocalDateTime) value));
-			} else if (value instanceof LocalDate) {
-				return Optional
-					.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (LocalDate) value));
-			} else if (value instanceof SingularAttribute) {
-				return Optional.of(criteriaBuilder.greaterThan(rootQuery.get(attribute),
-					valueRoot != null ? valueRoot.get((SingularAttribute) value)
-							: rootQuery.get((SingularAttribute) value)));
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		case GREATER_OR_EQUAL:
-			if (value instanceof String) {
-				return Optional.of(
-					criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute), (String) value));
-			} else if (value instanceof Integer) {
-				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
-					(Integer) value));
-			} else if (value instanceof Long) {
-				return Optional.of(
-					criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute), (Long) value));
-			} else if (value instanceof LocalDateTime) {
-				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
-					(LocalDateTime) value));
-			} else if (value instanceof LocalDate) {
-				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
-					(LocalDate) value));
-			} else if (value instanceof SingularAttribute) {
-				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
-					valueRoot != null ? valueRoot.get((SingularAttribute) value)
-							: rootQuery.get((SingularAttribute) value)));
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		case LESS:
-			if (value instanceof String) {
-				return Optional
-					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (String) value));
-			} else if (value instanceof Integer) {
-				return Optional
-					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (Integer) value));
-			} else if (value instanceof Long) {
-				return Optional
-					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (Long) value));
-			} else if (value instanceof LocalDateTime) {
-				return Optional
-					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (LocalDateTime) value));
-			} else if (value instanceof LocalDate) {
-				return Optional
-					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (LocalDate) value));
-			} else if (value instanceof SingularAttribute) {
-				return Optional.of(criteriaBuilder.lessThan(rootQuery.get(attribute),
-					valueRoot != null ? valueRoot.get((SingularAttribute) value)
-							: rootQuery.get((SingularAttribute) value)));
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		case LESS_OR_EQUAL:
-			if (value instanceof String) {
-				return Optional.of(
-					criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (String) value));
-			} else if (value instanceof Integer) {
-				return Optional.of(
-					criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (Integer) value));
-			} else if (value instanceof Long) {
-				return Optional
-					.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (Long) value));
-			} else if (value instanceof LocalDateTime) {
-				return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
-					(LocalDateTime) value));
-			} else if (value instanceof LocalDate) {
-				return Optional.of(
-					criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (LocalDate) value));
-			} else if (value instanceof SingularAttribute) {
-				return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
-					valueRoot != null ? valueRoot.get((SingularAttribute) value)
-							: rootQuery.get((SingularAttribute) value)));
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		case IN:
-			if (value instanceof Iterable<?>) {
-				Path expr = rootQuery.get(attribute);
-				Iterable<?> values = (Iterable<?>) value;
-				In<Object> in = criteriaBuilder.in(expr);
-				values.forEach(p -> in.value(p));
-				return Optional.of(in);
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		default:
-			break;
+			case LIKE :
+				if (value instanceof String) {
+					if (ignoreCase) {
+						return Optional.of(criteriaBuilder.like(criteriaBuilder.lower(rootQuery.get(attribute)),
+								((String) value).toLowerCase()));
+					} else {
+						return Optional.of(criteriaBuilder.like(rootQuery.get(attribute), (String) value));
+					}
+				} else {
+					throw new IllegalStateException("[" + value + "] is not a known type");
+				}
+			case NOT_LIKE :
+				if (value instanceof String) {
+					if (ignoreCase) {
+						return Optional.of(criteriaBuilder.notLike(criteriaBuilder.lower(rootQuery.get(attribute)),
+								((String) value).toLowerCase()));
+					} else {
+						return Optional.of(criteriaBuilder.notLike(rootQuery.get(attribute), (String) value));
+					}
+				} else {
+					throw new IllegalStateException("[" + value + "] is not a known type");
+				}
+			case GREATER :
+				if (value instanceof String) {
+					return Optional.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (String) value));
+				} else if (value instanceof Integer) {
+					return Optional.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (Integer) value));
+				} else if (value instanceof Long) {
+					return Optional.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (Long) value));
+				} else if (value instanceof LocalDateTime) {
+					return Optional.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (LocalDateTime) value));
+				} else if (value instanceof LocalDate) {
+					return Optional.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (LocalDate) value));
+				} else if (value instanceof SingularAttribute) {
+					return Optional.of(criteriaBuilder.greaterThan(rootQuery.get(attribute),
+							valueRoot != null
+									? valueRoot.get((SingularAttribute) value)
+									: rootQuery.get((SingularAttribute) value)));
+				} else {
+					throw new IllegalStateException("[" + value + "] is not a known type");
+				}
+			case GREATER_OR_EQUAL :
+				if (value instanceof String) {
+					return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute), (String) value));
+				} else if (value instanceof Integer) {
+					return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute), (Integer) value));
+				} else if (value instanceof Long) {
+					return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute), (Long) value));
+				} else if (value instanceof LocalDateTime) {
+					return Optional
+							.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute), (LocalDateTime) value));
+				} else if (value instanceof LocalDate) {
+					return Optional
+							.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute), (LocalDate) value));
+				} else if (value instanceof SingularAttribute) {
+					return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
+							valueRoot != null
+									? valueRoot.get((SingularAttribute) value)
+									: rootQuery.get((SingularAttribute) value)));
+				} else {
+					throw new IllegalStateException("[" + value + "] is not a known type");
+				}
+			case LESS :
+				if (value instanceof String) {
+					return Optional.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (String) value));
+				} else if (value instanceof Integer) {
+					return Optional.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (Integer) value));
+				} else if (value instanceof Long) {
+					return Optional.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (Long) value));
+				} else if (value instanceof LocalDateTime) {
+					return Optional.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (LocalDateTime) value));
+				} else if (value instanceof LocalDate) {
+					return Optional.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (LocalDate) value));
+				} else if (value instanceof SingularAttribute) {
+					return Optional.of(criteriaBuilder.lessThan(rootQuery.get(attribute),
+							valueRoot != null
+									? valueRoot.get((SingularAttribute) value)
+									: rootQuery.get((SingularAttribute) value)));
+				} else {
+					throw new IllegalStateException("[" + value + "] is not a known type");
+				}
+			case LESS_OR_EQUAL :
+				if (value instanceof String) {
+					return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (String) value));
+				} else if (value instanceof Integer) {
+					return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (Integer) value));
+				} else if (value instanceof Long) {
+					return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (Long) value));
+				} else if (value instanceof LocalDateTime) {
+					return Optional
+							.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (LocalDateTime) value));
+				} else if (value instanceof LocalDate) {
+					return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (LocalDate) value));
+				} else if (value instanceof SingularAttribute) {
+					return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
+							valueRoot != null
+									? valueRoot.get((SingularAttribute) value)
+									: rootQuery.get((SingularAttribute) value)));
+				} else {
+					throw new IllegalStateException("[" + value + "] is not a known type");
+				}
+			case IN :
+				if (value instanceof Iterable<?>) {
+					Path expr = rootQuery.get(attribute);
+					Iterable<?> values = (Iterable<?>) value;
+					In<Object> in = criteriaBuilder.in(expr);
+					values.forEach(p -> in.value(p));
+					return Optional.of(in);
+				} else {
+					throw new IllegalStateException("[" + value + "] is not a known type");
+				}
+			default :
+				break;
 		}
 		return Optional.empty();
 	}
-	
+
 	@SuppressWarnings("rawtypes")
-	public Optional<SingularAttribute> resolveAttribute(String entityClazzName,
-		String featureName){
+	public Optional<SingularAttribute> resolveAttribute(String entityClazzName, String featureName) {
 		try {
 			Class<?> metaClazz = getClass().getClassLoader().loadClass(entityClazzName + "_");
 			Field[] fields = metaClazz.getFields();
@@ -356,12 +318,12 @@ public class PredicateHandler {
 			}
 		} catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException e) {
 			LoggerFactory.getLogger(getClass())
-				.error("Could not find metamodel class for entity [" + entityClazzName + "]");
+					.error("Could not find metamodel class for entity [" + entityClazzName + "]");
 		}
 		return Optional.empty();
 	}
-	
-	protected Object resolveValue(Object value){
+
+	protected Object resolveValue(Object value) {
 		Object ret = value;
 		if (value instanceof AbstractIdModelAdapter) {
 			ret = ((AbstractIdModelAdapter<?>) value).getEntity();

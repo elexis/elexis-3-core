@@ -14,17 +14,19 @@ import ch.elexis.core.types.Gender;
 import ch.rgw.tools.TimeTool;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>IPerson</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IPerson</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- * <li>{@link ch.elexis.core.model.IPerson#getDateOfBirth <em>Date Of Birth</em>}</li>
+ * <li>{@link ch.elexis.core.model.IPerson#getDateOfBirth <em>Date Of
+ * Birth</em>}</li>
  * <li>{@link ch.elexis.core.model.IPerson#getGender <em>Gender</em>}</li>
  * <li>{@link ch.elexis.core.model.IPerson#getTitel <em>Titel</em>}</li>
- * <li>{@link ch.elexis.core.model.IPerson#getTitelSuffix <em>Titel Suffix</em>}</li>
+ * <li>{@link ch.elexis.core.model.IPerson#getTitelSuffix <em>Titel
+ * Suffix</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPerson()
@@ -33,10 +35,11 @@ import ch.rgw.tools.TimeTool;
  */
 public interface IPerson extends IContact {
 	/**
-	 * Returns the value of the '<em><b>Date Of Birth</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Date Of Birth</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Date Of Birth</em>' attribute isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Date Of Birth</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -47,10 +50,11 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	TimeTool getDateOfBirth();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getDateOfBirth <em>Date Of
-	 * Birth</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getDateOfBirth
+	 * <em>Date Of Birth</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Date Of Birth</em>' attribute.
@@ -58,12 +62,13 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	void setDateOfBirth(TimeTool value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Gender</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Gender</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Gender</em>' attribute isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Gender</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -74,10 +79,10 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	Gender getGender();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getGender <em>Gender</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getGender
+	 * <em>Gender</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Gender</em>' attribute.
@@ -85,12 +90,13 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	void setGender(Gender value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Titel</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Titel</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Titel</em>' attribute isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Titel</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -101,10 +107,10 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	String getTitel();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getTitel <em>Titel</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getTitel
+	 * <em>Titel</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Titel</em>' attribute.
@@ -112,12 +118,13 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	void setTitel(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Titel Suffix</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Titel Suffix</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Titel Suffix</em>' attribute isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Titel Suffix</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -128,10 +135,11 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	String getTitelSuffix();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getTitelSuffix <em>Titel
-	 * Suffix</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getTitelSuffix
+	 * <em>Titel Suffix</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Titel Suffix</em>' attribute.
@@ -139,7 +147,7 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	void setTitelSuffix(String value);
-	
+
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -147,7 +155,7 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	String getFirstName();
-	
+
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -155,5 +163,5 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	String getFamilyName();
-	
+
 } // IPerson

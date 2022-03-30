@@ -35,31 +35,27 @@ import ch.elexis.core.ui.views.codesystems.LeistungenView;
  * Aufbau des initalen Layouts der "Patient"-Seite
  */
 public class PatientPerspektive implements IPerspectiveFactory {
-	
-	public void createInitialLayout(final IPageLayout layout){
+
+	public void createInitialLayout(final IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
-		IFolderLayout left =
-			layout.createFolder("Links.folder", IPageLayout.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA);
-		IFolderLayout main =
-			layout.createFolder("Haupt.Folder", IPageLayout.RIGHT, 0.3f, "Links.folder"); //$NON-NLS-1$
-		IFolderLayout leftbottom =
-			layout.createFolder("links.unten", IPageLayout.BOTTOM, 0.7f, "Links.folder");
-		IFolderLayout right =
-			layout.createFolder("Rechts.folder", IPageLayout.RIGHT, 0.7f, "Haupt.Folder");
-		
+		IFolderLayout left = layout.createFolder("Links.folder", IPageLayout.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA);
+		IFolderLayout main = layout.createFolder("Haupt.Folder", IPageLayout.RIGHT, 0.3f, "Links.folder"); //$NON-NLS-1$
+		IFolderLayout leftbottom = layout.createFolder("links.unten", IPageLayout.BOTTOM, 0.7f, "Links.folder");
+		IFolderLayout right = layout.createFolder("Rechts.folder", IPageLayout.RIGHT, 0.7f, "Haupt.Folder");
+
 		main.addView(UiResourceConstants.PatientDetailView2_ID);
 		left.addView(UiResourceConstants.PatientenListeView_ID);
 		leftbottom.addView(FaelleView.ID);
 		left.addView(PatHeuteView.ID);
 		main.addView(KonsDetailView.ID);
-		
+
 		main.addView(UiResourceConstants.LaborView_ID);
 		main.addView(RezepteView.ID);
 		main.addView(AUF2.ID);
-		
+
 		right.addView(KonsListe.ID);
-		
+
 		main.addPlaceholder(FallDetailView.ID);
 		main.addPlaceholder(TextView.ID);
 		main.addPlaceholder(KompendiumView.ID);
@@ -74,18 +70,16 @@ public class PatientPerspektive implements IPerspectiveFactory {
 		layout.addShowViewShortcut(KonsDetailView.ID);
 		layout.addShowViewShortcut(RezepteView.ID);
 		layout.addShowViewShortcut(FallDetailView.ID);
-		
+
 		UiDesk.asyncExec(new Runnable() {
-			public void run(){
-				
-				ElexisFastViewUtil.addToFastView(UiResourceConstants.PatientPerspektive_ID,
-					LeistungenView.ID);
-				ElexisFastViewUtil.addToFastView(UiResourceConstants.PatientPerspektive_ID,
-					DiagnosenView.ID);
-				
+			public void run() {
+
+				ElexisFastViewUtil.addToFastView(UiResourceConstants.PatientPerspektive_ID, LeistungenView.ID);
+				ElexisFastViewUtil.addToFastView(UiResourceConstants.PatientPerspektive_ID, DiagnosenView.ID);
+
 			}
 		});
-		
+
 	}
-	
+
 }

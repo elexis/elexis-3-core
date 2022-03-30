@@ -20,116 +20,111 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IStoreToStringContribution;
 
 @Component(property = IModelService.SERVICEMODELNAME + "=ch.elexis.core.tasks.model")
-public class TaskModelService extends AbstractModelService
-		implements IModelService, IStoreToStringContribution {
-	
+public class TaskModelService extends AbstractModelService implements IModelService, IStoreToStringContribution {
+
 	@Reference
 	private IElexisEntityManager entityManager;
-	
+
 	@Reference
 	private EventAdmin eventAdmin;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		adapterFactory = TaskModelAdapterFactory.getInstance();
 	}
-	
+
 	@Override
-	public <T> IQuery<T> getQuery(Class<T> clazz, boolean refreshCache, boolean includeDeleted){
-		return new TaskModelQuery<>(clazz, refreshCache,
-			(EntityManager) entityManager.getEntityManager(), includeDeleted);
+	public <T> IQuery<T> getQuery(Class<T> clazz, boolean refreshCache, boolean includeDeleted) {
+		return new TaskModelQuery<>(clazz, refreshCache, (EntityManager) entityManager.getEntityManager(),
+				includeDeleted);
 	}
-	
+
 	@Override
-	protected EntityManager getEntityManager(boolean managed){
+	protected EntityManager getEntityManager(boolean managed) {
 		return (EntityManager) entityManager.getEntityManager(managed);
 	}
-	
+
 	@Override
-	protected void closeEntityManager(EntityManager entityManager){
+	protected void closeEntityManager(EntityManager entityManager) {
 		this.entityManager.closeEntityManager(entityManager);
 	}
-	
+
 	@Override
-	protected EventAdmin getEventAdmin(){
+	protected EventAdmin getEventAdmin() {
 		return eventAdmin;
 	}
-	
+
 	@Override
-	protected ElexisEvent getCreateEvent(Identifiable identifiable){
+	protected ElexisEvent getCreateEvent(Identifiable identifiable) {
 		return null;
 	}
 
 	@Override
-	public void clearCache(){
+	public void clearCache() {
 		this.entityManager.clearCache();
 	}
-	
+
 	@Override
-	public Optional<String> storeToString(Identifiable identifiable){
-		for(Class<?> clazz : identifiable.getClass().getInterfaces()) {
+	public Optional<String> storeToString(Identifiable identifiable) {
+		for (Class<?> clazz : identifiable.getClass().getInterfaces()) {
 			if (clazz.getName().startsWith("ch.elexis.core.tasks.model")) {
-				return Optional
-					.of(clazz.getName() + StringConstants.DOUBLECOLON + identifiable.getId());
+				return Optional.of(clazz.getName() + StringConstants.DOUBLECOLON + identifiable.getId());
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<Identifiable> loadFromString(String storeToString){
+	public Optional<Identifiable> loadFromString(String storeToString) {
 		if (storeToString == null) {
 			LoggerFactory.getLogger(getClass()).warn("StoreToString is null");
 			return Optional.empty();
 		}
-		
+
 		if (storeToString.startsWith("ch.elexis.core.tasks.model")) {
 			try {
 				String[] split = splitIntoTypeAndId(storeToString);
-				
+
 				// map string to classname
 				String className = split[0];
 				String id = split[1];
 				@SuppressWarnings("unchecked")
-				Class<Identifiable> clazz =
-					(Class<Identifiable>) TaskModelService.class.getClassLoader()
-					.loadClass(className);
+				Class<Identifiable> clazz = (Class<Identifiable>) TaskModelService.class.getClassLoader()
+						.loadClass(className);
 				if (clazz != null) {
 					return load(id, clazz);
 				}
 			} catch (ClassNotFoundException e) {
-				LoggerFactory.getLogger(getClass())
-					.warn("Could not load class of [" + storeToString + "]");
+				LoggerFactory.getLogger(getClass()).warn("Could not load class of [" + storeToString + "]");
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Class<?> getEntityForType(String type){
+	public Class<?> getEntityForType(String type) {
 		if (type.startsWith("ch.elexis.core.tasks.model")) {
 			try {
 				@SuppressWarnings("unchecked")
 				Class<Identifiable> clazz = (Class<Identifiable>) TaskModelService.class.getClassLoader()
 						.loadClass(type);
-					if (clazz != null) {
-						return adapterFactory.getEntityClass(clazz);
-					}
-				} catch (ClassNotFoundException e) {
-					LoggerFactory.getLogger(getClass())
-						.warn("Could not load class for type [" + type + "]");
+				if (clazz != null) {
+					return adapterFactory.getEntityClass(clazz);
 				}
+			} catch (ClassNotFoundException e) {
+				LoggerFactory.getLogger(getClass()).warn("Could not load class for type [" + type + "]");
 			}
+		}
 		return null;
 	}
-	
+
 	@Override
-	public String getTypeForEntity(Object entityInstance){
+	public String getTypeForEntity(Object entityInstance) {
 		return null;
 	}
-	
+
 	@Override
-	public String getTypeForModel(Class<?> interfaze){
+	public String getTypeForModel(Class<?> interfaze) {
 		return null;
 	}
 }

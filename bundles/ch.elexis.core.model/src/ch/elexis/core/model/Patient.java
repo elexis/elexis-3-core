@@ -15,126 +15,122 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StickerServiceHolder;
 
 public class Patient extends Person implements IPatient {
-	
-	
 
-	public Patient(Kontakt model){
+	public Patient(Kontakt model) {
 		super(model);
 	}
-	
-	
+
 	@Override
 	public String getLabel() {
 		return super.getLabel();
 	}
-	
+
 	@Override
-	public String getDiagnosen(){
+	public String getDiagnosen() {
 		return getEntity().getDiagnosen();
-	}
-	
-	@Override
-	public void setDiagnosen(String value){
-		getEntityMarkDirty().setDiagnosen(value);
-	}
-	
-	@Override
-	public String getRisk(){
-		return getEntity().getRisk();
-	}
-	
-	@Override
-	public void setRisk(String value){
-		getEntityMarkDirty().setRisk(value);
-	}
-	
-	@Override
-	public String getFamilyAnamnese(){
-		return getEntity().getFamilyAnamnese();
-	}
-	
-	@Override
-	public void setFamilyAnamnese(String value){
-		getEntityMarkDirty().setFamilyAnamnese(value);
-	}
-	
-	@Override
-	public String getPersonalAnamnese(){
-		return getEntity().getPersonalAnamnese();
-	}
-	
-	@Override
-	public void setPersonalAnamnese(String value){
-		getEntityMarkDirty().setPersonalAnamnese(value);
-	}
-	
-	@Override
-	public String getAllergies(){
-		return getEntity().getAllergies();
-	}
-	
-	@Override
-	public void setAllergies(String value){
-		getEntityMarkDirty().setAllergies(value);
-	}
-	
-	@Override
-	public String getPatientNr(){
-		return getCode();
-	}
-	
-	@Override
-	public void setPatientNr(String patientNr){
-		setCode(patientNr);
-	}
-	
-	@Override
-	public List<ICoverage> getCoverages(){
-		CoreModelServiceHolder.get().refresh(this);
-		return getEntity().getFaelle().stream().filter(f -> !f.isDeleted())
-			.map(f -> ModelUtil.getAdapter(f, ICoverage.class)).collect(Collectors.toList());
 	}
 
 	@Override
-	public List<IPrescription> getMedication(List<EntryType> filterType){
+	public void setDiagnosen(String value) {
+		getEntityMarkDirty().setDiagnosen(value);
+	}
+
+	@Override
+	public String getRisk() {
+		return getEntity().getRisk();
+	}
+
+	@Override
+	public void setRisk(String value) {
+		getEntityMarkDirty().setRisk(value);
+	}
+
+	@Override
+	public String getFamilyAnamnese() {
+		return getEntity().getFamilyAnamnese();
+	}
+
+	@Override
+	public void setFamilyAnamnese(String value) {
+		getEntityMarkDirty().setFamilyAnamnese(value);
+	}
+
+	@Override
+	public String getPersonalAnamnese() {
+		return getEntity().getPersonalAnamnese();
+	}
+
+	@Override
+	public void setPersonalAnamnese(String value) {
+		getEntityMarkDirty().setPersonalAnamnese(value);
+	}
+
+	@Override
+	public String getAllergies() {
+		return getEntity().getAllergies();
+	}
+
+	@Override
+	public void setAllergies(String value) {
+		getEntityMarkDirty().setAllergies(value);
+	}
+
+	@Override
+	public String getPatientNr() {
+		return getCode();
+	}
+
+	@Override
+	public void setPatientNr(String patientNr) {
+		setCode(patientNr);
+	}
+
+	@Override
+	public List<ICoverage> getCoverages() {
+		CoreModelServiceHolder.get().refresh(this);
+		return getEntity().getFaelle().stream().filter(f -> !f.isDeleted())
+				.map(f -> ModelUtil.getAdapter(f, ICoverage.class)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<IPrescription> getMedication(List<EntryType> filterType) {
 		IQuery<IPrescription> query = CoreModelServiceHolder.get().getQuery(IPrescription.class);
 		query.and(ModelPackage.Literals.IPRESCRIPTION__PATIENT, COMPARATOR.EQUALS, this);
 		query.startGroup();
 		query.or(ModelPackage.Literals.IPRESCRIPTION__DATE_TO, COMPARATOR.EQUALS, null);
-		query.or(ModelPackage.Literals.IPRESCRIPTION__DATE_TO, COMPARATOR.GREATER,
-			LocalDateTime.now());
+		query.or(ModelPackage.Literals.IPRESCRIPTION__DATE_TO, COMPARATOR.GREATER, LocalDateTime.now());
 		query.andJoinGroups();
 		List<IPrescription> iPrescriptions = query.execute();
 		if (filterType != null && !filterType.isEmpty()) {
-			// getEntryType is a special logic with rezeptId and direktvergabe cannot query it from DB directly
-			return iPrescriptions.parallelStream()
-					.filter(p -> filterType.contains(p.getEntryType()))
+			// getEntryType is a special logic with rezeptId and direktvergabe cannot query
+			// it from DB directly
+			return iPrescriptions.parallelStream().filter(p -> filterType.contains(p.getEntryType()))
 					.collect(Collectors.toList());
 		}
 		return iPrescriptions;
 	}
-	
+
 	@Override
-	public IContact getFamilyDoctor(){
+	public IContact getFamilyDoctor() {
 		String doctorId = (String) getExtInfo(PatientConstants.FLD_EXTINFO_STAMMARZT);
 		if (doctorId != null) {
-			return ch.elexis.core.model.service.holder.CoreModelServiceHolder.get().load(doctorId,
-				IContact.class).orElse(null);
+			return ch.elexis.core.model.service.holder.CoreModelServiceHolder.get().load(doctorId, IContact.class)
+					.orElse(null);
 		}
 		return null;
 	}
-	
+
 	@Override
-	public void setFamilyDoctor(IContact value){
+	public void setFamilyDoctor(IContact value) {
 		if (value != null) {
 			setExtInfo(PatientConstants.FLD_EXTINFO_STAMMARZT, value.getId());
 		} else {
 			setExtInfo(PatientConstants.FLD_EXTINFO_STAMMARZT, null);
 		}
 	}
-	
+
 	@Override
-	public void setDeceased(boolean value){
+	public void setDeceased(boolean value) {
 		super.setDeceased(value);
 		String configSticker = ConfigServiceHolder.get().get(Preferences.CFG_DECEASED_STICKER, "");
 		if (configSticker == null || configSticker.isEmpty()) {
@@ -143,8 +139,8 @@ public class Patient extends Person implements IPatient {
 		ISticker sticker = getOrCreateSticker(configSticker, "ffffff", "000000");
 		applyOrRemoveSticker(sticker, value);
 	}
-	
-	private ISticker getOrCreateSticker(String stickername, String foreground, String background){
+
+	private ISticker getOrCreateSticker(String stickername, String foreground, String background) {
 		for (ISticker iSticker : StickerServiceHolder.get().getStickersForClass(IPatient.class)) {
 			if (iSticker.getName().equalsIgnoreCase(stickername)) {
 				return iSticker;
@@ -158,8 +154,8 @@ public class Patient extends Person implements IPatient {
 		StickerServiceHolder.get().setStickerAddableToClass(IPatient.class, ret);
 		return ret;
 	}
-	
-	private void applyOrRemoveSticker(ISticker sticker, boolean apply){
+
+	private void applyOrRemoveSticker(ISticker sticker, boolean apply) {
 		if (apply) {
 			ISticker existing = StickerServiceHolder.get().getSticker(this, sticker);
 			if (existing == null) {

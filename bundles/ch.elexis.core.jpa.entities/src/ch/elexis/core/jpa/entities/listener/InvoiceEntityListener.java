@@ -12,23 +12,23 @@ import ch.elexis.core.jpa.entities.Invoice;
 import ch.elexis.core.jpa.entities.entitymanager.ElexisEntityManagerServiceHolder;
 
 public class InvoiceEntityListener {
-	
+
 	@PrePersist
-	public void prePersist(Invoice invoice){
+	public void prePersist(Invoice invoice) {
 		if (invoice.getNumber() == null) {
 			invoice.setNumber(Integer.toString(findAndIncrementInvoiceNumber()));
 		}
 	}
 
 	/**
-	 * Finds the current invoice number, checks for uniqueness, retrieves it and increments by one
+	 * Finds the current invoice number, checks for uniqueness, retrieves it and
+	 * increments by one
 	 * 
 	 * @return
 	 */
-	private int findAndIncrementInvoiceNumber(){
+	private int findAndIncrementInvoiceNumber() {
 		int ret = 0;
-		EntityManager em = (EntityManager) ElexisEntityManagerServiceHolder.getEntityManager()
-			.getEntityManager(false);
+		EntityManager em = (EntityManager) ElexisEntityManagerServiceHolder.getEntityManager().getEntityManager(false);
 		try {
 			em.getTransaction().begin();
 			Config invoiceNr = em.find(Config.class, "RechnungsNr");
@@ -42,10 +42,9 @@ public class InvoiceEntityListener {
 				em.lock(invoiceNr, LockModeType.PESSIMISTIC_WRITE);
 				ret = Integer.parseInt(invoiceNr.getWert());
 				ret += 1;
-				
+
 				while (true) {
-					TypedQuery<Invoice> query =
-						em.createNamedQuery("Invoice.number", Invoice.class);
+					TypedQuery<Invoice> query = em.createNamedQuery("Invoice.number", Invoice.class);
 					query.setParameter("number", Integer.toString(ret));
 					List<Invoice> results = query.getResultList();
 					if (results.isEmpty()) {

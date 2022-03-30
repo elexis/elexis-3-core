@@ -14,24 +14,24 @@ import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.data.Reminder;
 
 public class ReminderStatusSubMenu extends MenuManager {
-	
+
 	private CommonViewer cv;
-	
-	public ReminderStatusSubMenu(CommonViewer cv){
+
+	public ReminderStatusSubMenu(CommonViewer cv) {
 		super("Status...");
 		this.cv = cv;
-		
+
 		setRemoveAllWhenShown(true);
 		addMenuListener(new ReminderStatusSubMenuListener());
 	}
-	
+
 	private class ReminderStatusSubMenuListener implements IMenuListener {
-		
+
 		@Override
-		public void menuAboutToShow(IMenuManager manager){
+		public void menuAboutToShow(IMenuManager manager) {
 			Object[] selection = cv.getSelection();
 			if (selection != null && selection.length == 1) {
-				if(selection[0] instanceof Reminder) {
+				if (selection[0] instanceof Reminder) {
 					Reminder reminder = (Reminder) selection[0];
 					manager.add(new StatusAction(ProcessStatus.OPEN, reminder));
 					manager.add(new StatusAction(ProcessStatus.IN_PROGRESS, reminder));
@@ -41,23 +41,23 @@ public class ReminderStatusSubMenu extends MenuManager {
 			} else {
 				manager.add(new Action("Multiple selection") {
 					@Override
-					public boolean isEnabled(){
+					public boolean isEnabled() {
 						return false;
 					}
 				});
 			}
 		}
-		
+
 		private class StatusAction extends LockRequestingAction<Reminder> {
-			
+
 			private final ProcessStatus representedStatus;
 			private Reminder reminder;
-			
-			public StatusAction(ProcessStatus representedStatus, Reminder reminder){
+
+			public StatusAction(ProcessStatus representedStatus, Reminder reminder) {
 				super(representedStatus.getLocaleText(), SWT.RADIO);
 				this.representedStatus = representedStatus;
 				this.reminder = reminder;
-				
+
 				ProcessStatus status = reminder.getProcessStatus();
 				if (ProcessStatus.DUE == status || ProcessStatus.OVERDUE == status) {
 					setChecked(representedStatus == ProcessStatus.OPEN);
@@ -65,9 +65,9 @@ public class ReminderStatusSubMenu extends MenuManager {
 					setChecked(representedStatus == status);
 				}
 			}
-			
+
 			@Override
-			public boolean isChecked(){
+			public boolean isChecked() {
 				ProcessStatus status = reminder.getProcessStatus();
 				if (ProcessStatus.DUE == status || ProcessStatus.OVERDUE == status) {
 					return (representedStatus == ProcessStatus.OPEN);
@@ -75,28 +75,28 @@ public class ReminderStatusSubMenu extends MenuManager {
 					return (representedStatus == reminder.getProcessStatus());
 				}
 			}
-			
+
 			@Override
-			public String getText(){
+			public String getText() {
 				String text = super.getText();
 				ProcessStatus status = reminder.getProcessStatus();
 				if ((ProcessStatus.DUE == status || ProcessStatus.OVERDUE == status)
-					&& (ProcessStatus.OPEN == representedStatus)) {
+						&& (ProcessStatus.OPEN == representedStatus)) {
 					return text + " (" + status.getLocaleText() + ")";
 				}
 				return text;
 			}
-			
+
 			@Override
-			public Reminder getTargetedObject(){
+			public Reminder getTargetedObject() {
 				return reminder;
 			}
-			
+
 			@Override
-			public void doRun(Reminder element){
+			public void doRun(Reminder element) {
 				element.setProcessStatus(representedStatus);
 				ElexisEventDispatcher.getInstance()
-					.fire(new ElexisEvent(element, Reminder.class, ElexisEvent.EVENT_UPDATE));
+						.fire(new ElexisEvent(element, Reminder.class, ElexisEvent.EVENT_UPDATE));
 			}
 		}
 	}

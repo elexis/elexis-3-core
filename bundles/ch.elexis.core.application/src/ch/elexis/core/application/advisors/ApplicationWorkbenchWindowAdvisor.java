@@ -27,23 +27,25 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.ScannerEvents;
 
 /**
- * Hier können Funktionen aufgerufen werden, die unmittelbar vor dem öffnen des Hauptfensters
- * erfolgen sollen. Im Wesentlichen werden hier die Menue und Toolbars gesetzt
+ * Hier können Funktionen aufgerufen werden, die unmittelbar vor dem öffnen des
+ * Hauptfensters erfolgen sollen. Im Wesentlichen werden hier die Menue und
+ * Toolbars gesetzt
  */
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
-	
-	public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer){
+
+	public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
 		super(configurer);
 	}
-	
-	public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer){
+
+	public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer) {
 		return new ApplicationActionBarAdvisor(configurer);
 	}
-	
+
 	/**
-	 * Diese Methode wird jeweils unmittelbar vor dem öffnen des Anwendungsfensters ausgeführt.
+	 * Diese Methode wird jeweils unmittelbar vor dem öffnen des Anwendungsfensters
+	 * ausgeführt.
 	 */
-	public void preWindowOpen(){
+	public void preWindowOpen() {
 		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
 		// configurer.setInitialSize(new Point(900, 700));
 		configurer.setShowCoolBar(true);
@@ -52,34 +54,32 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setTitle(Hub.APPLICATION_NAME + " " + Elexis.VERSION);
 		configurer.setShowFastViewBars(true);
 		if (CoreHub.localCfg.get(Preferences.SHOWPERSPECTIVESELECTOR, Boolean.toString(false))
-			.equals(Boolean.toString(true))) {
+				.equals(Boolean.toString(true))) {
 			configurer.setShowPerspectiveBar(true);
 		} else {
 			configurer.setShowPerspectiveBar(false);
 		}
 		// Wir wollen die schicken runden Tabs von Eclipse 3.x
-		PlatformUI.getPreferenceStore().setValue(
-			IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS, false);
+		PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS, false);
 		// Aber die Animationen sind eher nervend, nicht?
-		PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.ENABLE_ANIMATIONS,
-			false);
-		
+		PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.ENABLE_ANIMATIONS, false);
+
 	}
-	
+
 	@Override
-	public void postWindowOpen(){
-		
+	public void postWindowOpen() {
+
 	}
-	
+
 	@Override
-	public boolean preWindowShellClose(){
+	public boolean preWindowShellClose() {
 		return true;
 	}
-	
+
 	@Override
-	public void createWindowContents(Shell shell){
+	public void createWindowContents(Shell shell) {
 		super.createWindowContents(shell);
 		ScannerEvents.addListenerToDisplay(shell.getDisplay());
 	}
-	
+
 }

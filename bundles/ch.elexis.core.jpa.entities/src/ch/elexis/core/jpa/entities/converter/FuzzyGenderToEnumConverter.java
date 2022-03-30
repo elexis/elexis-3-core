@@ -25,34 +25,34 @@ import ch.elexis.core.types.Gender;
 public class FuzzyGenderToEnumConverter implements AttributeConverter<Gender, String> {
 
 	@Override
-	public String convertToDatabaseColumn(Gender objectValue){
+	public String convertToDatabaseColumn(Gender objectValue) {
 		if (objectValue == null)
 			return "x";
 		switch (objectValue) {
-		case MALE:
-			return "m";
-		case FEMALE:
-			return "w";
-		default:
-			return "x";
+			case MALE :
+				return "m";
+			case FEMALE :
+				return "w";
+			default :
+				return "x";
 		}
 	}
-	
+
 	@Override
-	public Gender convertToEntityAttribute(String dataValue){
+	public Gender convertToEntityAttribute(String dataValue) {
 		if (dataValue == null)
 			return Gender.UNKNOWN;
 		switch (dataValue) {
-		case "w":
-		case "W":
-		case "f":
-		case "F":
-			return Gender.FEMALE;
-		case "m":
-		case "M":
-			return Gender.MALE;
-		default:
-			return Gender.UNKNOWN;
+			case "w" :
+			case "W" :
+			case "f" :
+			case "F" :
+				return Gender.FEMALE;
+			case "m" :
+			case "M" :
+				return Gender.MALE;
+			default :
+				return Gender.UNKNOWN;
 		}
 	}
 }

@@ -37,36 +37,33 @@ import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.data.Brief;
 
 public class StartEditLocalDocumentHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		IEclipseContext iEclipseContext =
-			PlatformUI.getWorkbench().getService(IEclipseContext.class);
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		IEclipseContext iEclipseContext = PlatformUI.getWorkbench().getService(IEclipseContext.class);
 		StructuredSelection selection = (StructuredSelection) iEclipseContext
-			.get(event.getCommand().getId().concat(".selection"));
+				.get(event.getCommand().getId().concat(".selection"));
 		iEclipseContext.remove(event.getCommand().getId().concat(".selection"));
 		if (selection != null && !selection.isEmpty()) {
 			List<?> selected = selection.toList();
 			Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			for (Object object : selected) {
-				Optional<ILocalDocumentService> localDocumentService =
-					LocalDocumentServiceHolder.getService();
+				Optional<ILocalDocumentService> localDocumentService = LocalDocumentServiceHolder.getService();
 				if (localDocumentService.isPresent()) {
 					ILocalDocumentService service = localDocumentService.get();
-					if (ElexisServerServiceHolder.get()
-						.getConnectionStatus() == ConnectionStatus.REMOTE) {
+					if (ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.REMOTE) {
 						if (object instanceof IPersistentObject) {
 							IPersistentObject lockObject = (IPersistentObject) object;
 							boolean isHandledByExternalOpen = tryHandleExternalIfApplicable(lockObject);
-							if(!isHandledByExternalOpen) {
+							if (!isHandledByExternalOpen) {
 								AcquireLockUi.aquireAndRun(lockObject, new ILockHandler() {
 									@Override
-									public void lockFailed(){
+									public void lockFailed() {
 										// no action required ...
 									}
-									
+
 									@Override
-									public void lockAcquired(){
+									public void lockAcquired() {
 										startEditLocal(lockObject, service, parentShell);
 									}
 								});
@@ -75,15 +72,15 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 						} else if (object instanceof Identifiable) {
 							Identifiable lockObject = (Identifiable) object;
 							boolean isHandledExternalOpen = tryHandleExternalIfApplicable(lockObject);
-							if(!isHandledExternalOpen) {
+							if (!isHandledExternalOpen) {
 								AcquireLockUi.aquireAndRun(lockObject, new ILockHandler() {
 									@Override
-									public void lockFailed(){
+									public void lockFailed() {
 										// no action required ...
 									}
-									
+
 									@Override
-									public void lockAcquired(){
+									public void lockAcquired() {
 										startEditLocal(lockObject, service, parentShell);
 									}
 								});
@@ -95,18 +92,17 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 						if (!isHandledExternalOpen) {
 							LocalLock lock = new LocalLock(object);
 							if (!lock.tryLock()) {
-								if ((service.contains(object)
-									&& lock.hasLock(CoreHub.getLoggedInContact().getLabel()))
-									|| MessageDialog.openQuestion(parentShell,
-										Messages.StartEditLocalDocumentHandler_warning,
-										Messages.StartEditLocalDocumentHandler_alreadyOpenStart
-											+ lock.getLockMessage()
-											+ Messages.StartEditLocalDocumentHandler_alreadyOpenEnd)) {
+								if ((service.contains(object) && lock.hasLock(CoreHub.getLoggedInContact().getLabel()))
+										|| MessageDialog.openQuestion(parentShell,
+												Messages.StartEditLocalDocumentHandler_warning,
+												Messages.StartEditLocalDocumentHandler_alreadyOpenStart
+														+ lock.getLockMessage()
+														+ Messages.StartEditLocalDocumentHandler_alreadyOpenEnd)) {
 									lock.unlock();
 									if (!lock.tryLock()) {
 										MessageDialog.openError(parentShell,
-											Messages.StartEditLocalDocumentHandler_errortitle,
-											Messages.StartEditLocalDocumentHandler_errormessage);
+												Messages.StartEditLocalDocumentHandler_errortitle,
+												Messages.StartEditLocalDocumentHandler_errormessage);
 										return null;
 									}
 								} else {
@@ -121,52 +117,49 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Opens the document with an external Program if {@link Preferences#P_TEXT_EXTERN_FILE} is
-	 * <code>true</code> and a valid path was set
+	 * Opens the document with an external Program if
+	 * {@link Preferences#P_TEXT_EXTERN_FILE} is <code>true</code> and a valid path
+	 * was set
 	 * 
 	 * @param lockObject
-	 * @return <code>true</code> if was handled by external program, else <code>false</code>
+	 * @return <code>true</code> if was handled by external program, else
+	 *         <code>false</code>
 	 */
-	private boolean tryHandleExternalIfApplicable(Object lockObject){
-		if (ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)
-			&& lockObject != null) {
+	private boolean tryHandleExternalIfApplicable(Object lockObject) {
+		if (ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false) && lockObject != null) {
 			IDocument document = null;
 			if (lockObject instanceof Brief) {
 				document = ((Brief) lockObject).toIDocument();
 			} else if (lockObject instanceof IDocumentLetter) {
 				document = (IDocumentLetter) lockObject;
 			} else {
-				LoggerFactory.getLogger(getClass()).error("Invalid argument [{}]",
-					lockObject.getClass());
+				LoggerFactory.getLogger(getClass()).error("Invalid argument [{}]", lockObject.getClass());
 				return false;
 			}
-			
-			IVirtualFilesystemHandle handle =
-				DocumentLetterUtil.getExternalHandleIfApplicable(document);
+
+			IVirtualFilesystemHandle handle = DocumentLetterUtil.getExternalHandleIfApplicable(document);
 			Optional<File> file = handle.toFile();
 			if (file.isPresent()) {
 				Program.launch(file.get().getAbsolutePath());
 			} else {
-				MessageDialog.openError(UiDesk.getTopShell(),
-					Messages.StartEditLocalDocumentHandler_errortitle,
-					Messages.StartEditLocalDocumentHandler_errormessage);
+				MessageDialog.openError(UiDesk.getTopShell(), Messages.StartEditLocalDocumentHandler_errortitle,
+						Messages.StartEditLocalDocumentHandler_errormessage);
 			}
 			return true;
 		}
 		return false;
 	}
 
-	private void startEditLocal(Object object, ILocalDocumentService service, Shell parentShell){
+	private void startEditLocal(Object object, ILocalDocumentService service, Shell parentShell) {
 		Optional<File> file = Optional.empty();
 		if (object instanceof IDocumentLetter) {
 			file = service.add(object, new IConflictHandler() {
 				@Override
-				public Result getResult(){
-					if (MessageDialog.openQuestion(parentShell,
-						Messages.StartEditLocalDocumentHandler_conflicttitle,
-						Messages.StartEditLocalDocumentHandler_conflictmessage)) {
+				public Result getResult() {
+					if (MessageDialog.openQuestion(parentShell, Messages.StartEditLocalDocumentHandler_conflicttitle,
+							Messages.StartEditLocalDocumentHandler_conflictmessage)) {
 						return Result.KEEP;
 					} else {
 						return Result.OVERWRITE;
@@ -183,7 +176,7 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 			Program.launch(file.get().getAbsolutePath());
 		} else {
 			MessageDialog.openError(parentShell, Messages.StartEditLocalDocumentHandler_errortitle,
-				Messages.StartEditLocalDocumentHandler_errormessage);
+					Messages.StartEditLocalDocumentHandler_errormessage);
 		}
 	}
 }

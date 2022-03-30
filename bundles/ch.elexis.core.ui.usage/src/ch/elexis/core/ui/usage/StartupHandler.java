@@ -26,9 +26,9 @@ import ch.elexis.core.ui.util.PerspectiveUtil;
 
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class StartupHandler implements EventHandler {
-	
+
 	@Override
-	public void handleEvent(Event event){
+	public void handleEvent(Event event) {
 		LoggerFactory.getLogger(getClass()).info("APPLICATION STARTUP COMPLETE");
 		if (ConfigServiceHolder.getGlobal(UsageSettings.CONFIG_USAGE_STATISTICS, false)) {
 			registerNotifications();
@@ -36,93 +36,88 @@ public class StartupHandler implements EventHandler {
 			// add start perspective to statistics
 			MPerspective mPerspective = PerspectiveUtil.getActivePerspective();
 			if (mPerspective != null) {
-				StatisticsManager.INSTANCE.addCallingStatistic(mPerspective.getElementId(),
-					true);
+				StatisticsManager.INSTANCE.addCallingStatistic(mPerspective.getElementId(), true);
 			}
 		}
 		if (ConfigServiceHolder.getGlobal(UsageSettings.CONFIG_USAGE_STATISTICS, false)) {
 			registerEventPerformance();
 		}
 	}
-	
+
 	/**
 	 * Create and register a {@link IPerformanceStatisticHandler}.
 	 * 
 	 */
-	private void registerEventPerformance(){
-		EventPerformanceStatisticHandler eventStatisticHandler =
-			new EventPerformanceStatisticHandler();
+	private void registerEventPerformance() {
+		EventPerformanceStatisticHandler eventStatisticHandler = new EventPerformanceStatisticHandler();
 		ElexisEventDispatcher.getInstance().setPerformanceStatisticHandler(eventStatisticHandler);
 		StatisticsManager.INSTANCE.setEventPerformanceStatisticHandler(eventStatisticHandler);
 	}
-	
+
 	/**
-	 * Register event listeners for various statistics. Including shutdown listener, exporting
-	 * statistics to writable user directory statistics.
+	 * Register event listeners for various statistics. Including shutdown listener,
+	 * exporting statistics to writable user directory statistics.
 	 */
-	private void registerNotifications(){
-		//Command.DEBUG_COMMAND_EXECUTION = true; can be activated if logging for command execution is needed
+	private void registerNotifications() {
+		// Command.DEBUG_COMMAND_EXECUTION = true; can be activated if logging for
+		// command execution is needed
 		IEventBroker b = PlatformUI.getWorkbench().getService(IEventBroker.class);
 		b.subscribe(UIEvents.UILifeCycle.BRINGTOTOP, new EventHandler() {
 			@Override
-			public void handleEvent(Event event){
-				
+			public void handleEvent(Event event) {
+
 				Object part = event.getProperty(UIEvents.EventTags.ELEMENT);
 				if (part instanceof MPart) {
 					MPart mPart = (MPart) part;
-					
+
 					if (mPart.isToBeRendered()) {
-						StatisticsManager.INSTANCE.addCallingStatistic(mPart.getElementId(),
-							false);
+						StatisticsManager.INSTANCE.addCallingStatistic(mPart.getElementId(), false);
 					}
-					
+
 				}
 			}
 		});
-		
+
 		b.subscribe("org/eclipse/e4/ui/model/ui/UIElement/toBeRendered/SET", new EventHandler() {
 			@Override
-			public void handleEvent(Event event){
+			public void handleEvent(Event event) {
 				Object placeholder = event.getProperty(UIEvents.EventTags.ELEMENT);
 				if (placeholder instanceof MPlaceholder) {
 					MPlaceholder mPlaceholder = (MPlaceholder) placeholder;
 					if (!mPlaceholder.isToBeRendered()) {
-						StatisticsManager.INSTANCE
-							.addClosingStatistic(mPlaceholder.getElementId(), false);
+						StatisticsManager.INSTANCE.addClosingStatistic(mPlaceholder.getElementId(), false);
 					}
-					
+
 				}
 			}
 		});
-		
+
 		b.subscribe(UIEvents.UILifeCycle.APP_SHUTDOWN_STARTED, new EventHandler() {
 			@Override
-			public void handleEvent(Event event){
-				
+			public void handleEvent(Event event) {
+
 				try {
 					StatisticsManager.INSTANCE.autoExportStatistics();
 				} catch (IOException e) {
 					LoggerFactory.getLogger(StartupHandler.class)
-						.error("cannot export usage on application exist statistics", e);
+							.error("cannot export usage on application exist statistics", e);
 				}
 			}
 		});
-		
-		b.subscribe("org/eclipse/e4/ui/model/ui/ElementContainer/selectedElement/SET",
-			new EventHandler() {
-				@Override
-				public void handleEvent(Event event){
-					Object stack = event.getProperty(UIEvents.EventTags.ELEMENT);
-					if (stack instanceof MPerspectiveStack) {
-						MPerspectiveStack mpartStack = (MPerspectiveStack) stack;
-						MPerspective selectedPerspective = mpartStack.getSelectedElement();
-						if (selectedPerspective != null) {
-							StatisticsManager.INSTANCE
-								.addCallingStatistic(selectedPerspective.getElementId(), true);
-						}
-						
+
+		b.subscribe("org/eclipse/e4/ui/model/ui/ElementContainer/selectedElement/SET", new EventHandler() {
+			@Override
+			public void handleEvent(Event event) {
+				Object stack = event.getProperty(UIEvents.EventTags.ELEMENT);
+				if (stack instanceof MPerspectiveStack) {
+					MPerspectiveStack mpartStack = (MPerspectiveStack) stack;
+					MPerspective selectedPerspective = mpartStack.getSelectedElement();
+					if (selectedPerspective != null) {
+						StatisticsManager.INSTANCE.addCallingStatistic(selectedPerspective.getElementId(), true);
 					}
+
 				}
-			});
+			}
+		});
 	}
 }

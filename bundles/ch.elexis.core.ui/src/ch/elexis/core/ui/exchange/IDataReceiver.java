@@ -33,13 +33,13 @@ public interface IDataReceiver {
 	 * @return the created object on success or an error message
 	 */
 	public Result<Object> load(Element input, Object context);
-	
+
 	/**
-	 * end of the input operation. can be used for cleanup. The IDataReceiver becomes invalid after
-	 * finalize
+	 * end of the input operation. can be used for cleanup. The IDataReceiver
+	 * becomes invalid after finalize
 	 * 
 	 * @return ok on success.
 	 */
 	public Result finalizeImport();
-	
+
 }

@@ -41,31 +41,31 @@ import ch.rgw.tools.StringTool;
 public class ODDBView extends ViewPart {
 	public static final String ID = "ch.elexis.ODDBView";
 	Browser browser;
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		browser = new Browser(parent, SWT.NONE);
 		browser.addLocationListener(new LocationAdapter() {
-			
+
 			@Override
-			public void changed(LocationEvent arg0){
+			public void changed(LocationEvent arg0) {
 				String text = getText(arg0.location);
 				System.out.println(text);
 			}
-			
+
 		});
 		// browser.setUrl("http://ch.oddb.org");
 		browser.setUrl("https://just-medical.oddb.org/");
-		
+
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public String getText(String loc){
+
+	public String getText(String loc) {
 		try {
 			if (StringTool.isNothing(loc)) {
 				loc = browser.getUrl();
@@ -74,8 +74,7 @@ public class ODDBView extends ViewPart {
 			url.setDoInput(true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(url.getInputStream()));
 			StringBuilder ret = new StringBuilder();
-			String line;
-			;
+			String line;;
 			while ((line = in.readLine()) != null) {
 				ret.append(line);
 			}
@@ -87,10 +86,10 @@ public class ODDBView extends ViewPart {
 			return "";
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

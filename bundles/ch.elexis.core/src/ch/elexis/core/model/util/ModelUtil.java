@@ -5,14 +5,15 @@ import java.util.Optional;
 import ch.rgw.tools.Money;
 
 public class ModelUtil {
-	
+
 	/**
-	 * If string is parse able as {@link Integer}, the value is interpreted as cents.
+	 * If string is parse able as {@link Integer}, the value is interpreted as
+	 * cents.
 	 * 
 	 * @param string
 	 * @return
 	 */
-	public static Optional<Money> getMoneyForCentString(String string){
+	public static Optional<Money> getMoneyForCentString(String string) {
 		try {
 			int cent = Integer.parseInt(string);
 			return Optional.of(new Money(cent));
@@ -21,14 +22,15 @@ public class ModelUtil {
 		}
 		return Optional.empty();
 	}
-	
+
 	/**
-	 * If string is parse able as {@link Double}, a Money representation of it is created.
+	 * If string is parse able as {@link Double}, a Money representation of it is
+	 * created.
 	 * 
 	 * @param string
 	 * @return
 	 */
-	public static Optional<Money> getMoneyForPriceString(String string){
+	public static Optional<Money> getMoneyForPriceString(String string) {
 		try {
 			double amount = Double.parseDouble(string);
 			return Optional.of(new Money(amount));
@@ -37,5 +39,5 @@ public class ModelUtil {
 		}
 		return Optional.empty();
 	}
-	
+
 }

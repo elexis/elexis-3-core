@@ -93,15 +93,14 @@ public class ContactTest extends AbstractTest {
 	}
 
 	@Test
-	public void createWithDefaultAddress(){
-		IOrganization employer =
-			new IContactBuilder.OrganizationBuilder(coreModelService, "MEDEVIT")
+	public void createWithDefaultAddress() {
+		IOrganization employer = new IContactBuilder.OrganizationBuilder(coreModelService, "MEDEVIT")
 				.defaultAddress("street", "zip", "city", Country.NDF).buildAndSave();
-		
+
 		assertNotNull(employer);
 		assertFalse(employer.getAddress().isEmpty());
 	}
-	
+
 	@Test
 	public void createRemoveRelatedContact() {
 		IOrganization employer = new IContactBuilder.OrganizationBuilder(coreModelService, "MEDEVIT").buildAndSave();

@@ -16,7 +16,7 @@ public interface IInstanceService {
 	@Path("/updateStatus")
 	@Consumes(MediaType.APPLICATION_XML)
 	public Response updateStatus(InstanceStatus request);
-	
+
 	@GET
 	@Path("/status")
 	public Response getStatus();

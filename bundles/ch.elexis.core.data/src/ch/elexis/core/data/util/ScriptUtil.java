@@ -26,20 +26,21 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Result;
 
 public class ScriptUtil {
-	
+
 	/**
-	 * Get a data type from a plugin that implements IDataAccess and plugs into the EP DatAccess
+	 * Get a data type from a plugin that implements IDataAccess and plugs into the
+	 * EP DatAccess
 	 * 
 	 * @param connector
-	 *            the string describing the desired data. the connector string follows the general
-	 *            form "plugin:dependent_object:all|date|last:data-name[.Field]:parameters"
+	 *            the string describing the desired data. the connector string
+	 *            follows the general form
+	 *            "plugin:dependent_object:all|date|last:data-name[.Field]:parameters"
 	 * @return the result of the
 	 */
-	public static Object loadDataFromPlugin(final String connector){
+	public static Object loadDataFromPlugin(final String connector) {
 		String[] adr = connector.split(":");
 		if (adr.length < 4) {
-			MessageEvent.fireError("Datenzugriff-Fehler", "Das Datenfeld " + connector
-				+ " wird falsch angesprochen");
+			MessageEvent.fireError("Datenzugriff-Fehler", "Das Datenfeld " + connector + " wird falsch angesprochen");
 			return null;
 		}
 		String plugin = adr[0];
@@ -50,15 +51,15 @@ public class ScriptUtil {
 		if (adr.length == 5) {
 			params = adr[4].split("\\.");
 		}
-		
+
 		PersistentObject ref = null;
 		if (dependendObject.equals("Patient")) {
 			ref = ElexisEventDispatcher.getSelectedPatient();
 		} else if (dependendObject.equals("Konsultation")) {
 			ref = Konsultation.getAktuelleKons();
 		}
-		for (IConfigurationElement ic : Extensions
-			.getExtensions(ExtensionPointConstantsData.DATA_ACCESS, "DataAccess")) {
+		for (IConfigurationElement ic : Extensions.getExtensions(ExtensionPointConstantsData.DATA_ACCESS,
+				"DataAccess")) {
 			String icName = ic.getAttribute("name");
 			if (icName.equals(plugin)) {
 				IDataAccess ida;
@@ -73,7 +74,7 @@ public class ScriptUtil {
 				} catch (CoreException e) {
 					ExHandler.handle(e);
 				}
-				
+
 			}
 		}
 		return null;

@@ -23,140 +23,139 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "net_medshare_percentile_checklist_data")
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
-public class PercentileChecklistData extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted {
+public class PercentileChecklistData extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "PatientId")
 	private Kontakt patient;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "QuestionId")
 	private PercentileChecklistQuestion question;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "FormId")
 	private PercentileChecklistForm form;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "KonsId")
 	private Behandlung behandlung;
-	
+
 	@Column(length = 11)
 	private String sortOrder;
 
 	@Column(length = 8)
 	private LocalDate konsDate;
-	
+
 	@Column(length = 8)
 	private String answer;
-	
+
 	@Lob
 	private String remark;
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
-	public Kontakt getPatient(){
+
+	public Kontakt getPatient() {
 		return patient;
 	}
-	
-	public void setPatient(Kontakt patient){
+
+	public void setPatient(Kontakt patient) {
 		this.patient = patient;
 	}
 
-	public PercentileChecklistQuestion getQuestion(){
+	public PercentileChecklistQuestion getQuestion() {
 		return question;
 	}
-	
-	public void setQuestion(PercentileChecklistQuestion question){
+
+	public void setQuestion(PercentileChecklistQuestion question) {
 		this.question = question;
 	}
-	
-	public PercentileChecklistForm getForm(){
+
+	public PercentileChecklistForm getForm() {
 		return form;
 	}
-	
-	public void setForm(PercentileChecklistForm form){
+
+	public void setForm(PercentileChecklistForm form) {
 		this.form = form;
 	}
-	
-	public Behandlung getBehandlung(){
+
+	public Behandlung getBehandlung() {
 		return behandlung;
 	}
-	
-	public void setBehandlung(Behandlung behandlung){
+
+	public void setBehandlung(Behandlung behandlung) {
 		this.behandlung = behandlung;
 	}
-	
-	public String getSortOrder(){
+
+	public String getSortOrder() {
 		return sortOrder;
 	}
-	
-	public void setSortOrder(String sortOrder){
+
+	public void setSortOrder(String sortOrder) {
 		this.sortOrder = sortOrder;
 	}
-	
-	public LocalDate getKonsDate(){
+
+	public LocalDate getKonsDate() {
 		return konsDate;
 	}
-	
-	public void setKonsDate(LocalDate konsDate){
+
+	public void setKonsDate(LocalDate konsDate) {
 		this.konsDate = konsDate;
 	}
-	
-	public String getAnswer(){
+
+	public String getAnswer() {
 		return answer;
 	}
-	
-	public void setAnswer(String answer){
+
+	public void setAnswer(String answer) {
 		this.answer = answer;
 	}
-	
-	public String getRemark(){
+
+	public String getRemark() {
 		return remark;
 	}
-	
-	public void setRemark(String remark){
+
+	public void setRemark(String remark) {
 		this.remark = remark;
 	}
 }

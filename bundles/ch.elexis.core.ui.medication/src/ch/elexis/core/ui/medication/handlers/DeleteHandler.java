@@ -25,48 +25,48 @@ import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.medication.views.Messages;
 
 public class DeleteHandler extends AbstractHandler {
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchPage activePage = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage();
 		ISelection selection = activePage.getSelection();
-		
-		// remove selection first - otherwise selection will try to select removed item...
+
+		// remove selection first - otherwise selection will try to select removed
+		// item...
 		IWorkbenchPart activePart = activePage.getActivePart();
 		if (activePart != null && activePart instanceof MedicationView) {
 			MedicationView mediView = (MedicationView) activePart;
 			mediView.resetSelection();
 		}
-		
+
 		if (selection != null && !selection.isEmpty()) {
 			if (MessageDialog.openQuestion(HandlerUtil.getActiveShell(event),
-				Messages.FixMediDisplay_DeleteUnrecoverable,
-				Messages.FixMediDisplay_DeleteUnrecoverable)) {
+					Messages.FixMediDisplay_DeleteUnrecoverable, Messages.FixMediDisplay_DeleteUnrecoverable)) {
 				IStructuredSelection strucSelection = (IStructuredSelection) selection;
 				Iterator<MedicationTableViewerItem> selectionList = strucSelection.iterator();
 				while (selectionList.hasNext()) {
-					
-					boolean hasRight = AccessControlServiceHolder.get().request(AccessControlDefaults.DELETE_MEDICATION);
-					if(hasRight) {
-						
+
+					boolean hasRight = AccessControlServiceHolder.get()
+							.request(AccessControlDefaults.DELETE_MEDICATION);
+					if (hasRight) {
+
 						MedicationTableViewerItem item = selectionList.next();
 						IPrescription prescription = item.getPrescription();
 						AcquireLockUi.aquireAndRun(prescription, new ILockHandler() {
-							
+
 							@Override
-							public void lockFailed(){
+							public void lockFailed() {
 								// do nothing
 							}
-							
+
 							@Override
-							public void lockAcquired(){
+							public void lockAcquired() {
 								CoreModelServiceHolder.get().delete(prescription);
-								ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
-									prescription);
+								ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, prescription);
 							}
 						});
-						
+
 					}
 				}
 			}

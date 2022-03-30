@@ -17,10 +17,10 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.Stock;
 
 public class StockSelectorDialog extends ListDialog {
-	
+
 	private IStock onlyOneStock = null;
-	
-	public StockSelectorDialog(Shell parent, boolean includeCommissioningSystems){
+
+	public StockSelectorDialog(Shell parent, boolean includeCommissioningSystems) {
 		super(parent);
 		List<IStock> allStocks = StockServiceHolder.get().getAllStocks(includeCommissioningSystems);
 		if (allStocks.size() == 1) {
@@ -31,23 +31,23 @@ public class StockSelectorDialog extends ListDialog {
 		setLabelProvider(new StockLabelProvider());
 		setTitle("Bitte Lager auswählen");
 	}
-	
+
 	private class StockLabelProvider extends LabelProvider implements IColorProvider {
-		
+
 		@Override
-		public String getText(Object element){
+		public String getText(Object element) {
 			Stock s = (Stock) element;
 			return s.getLabel();
 		}
-		
+
 		@Override
-		public Color getForeground(Object element){
+		public Color getForeground(Object element) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
-		public Color getBackground(Object element){
+		public Color getBackground(Object element) {
 			Stock se = (Stock) element;
 			Mandant owner = se.getOwner();
 			if (owner != null) {
@@ -56,23 +56,21 @@ public class StockSelectorDialog extends ListDialog {
 			return null;
 		}
 	}
-	
+
 	@Override
-	public int open(){
+	public int open() {
 		if (onlyOneStock != null) {
 			return Dialog.OK;
 		}
 		return super.open();
 	}
-	
+
 	@Override
-	public Object[] getResult(){
+	public Object[] getResult() {
 		if (onlyOneStock != null) {
-			return new Object[] {
-				onlyOneStock
-			};
+			return new Object[]{onlyOneStock};
 		}
 		return super.getResult();
 	}
-	
+
 }

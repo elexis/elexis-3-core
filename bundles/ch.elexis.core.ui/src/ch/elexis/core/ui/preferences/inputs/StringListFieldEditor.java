@@ -21,7 +21,7 @@ import ch.rgw.tools.StringTool;
 
 public class StringListFieldEditor extends ListEditor {
 	String title, message;
-	
+
 	/**
 	 * create a new StringList
 	 * 
@@ -35,29 +35,27 @@ public class StringListFieldEditor extends ListEditor {
 	 *            label of the text field
 	 * @param parent
 	 */
-	public StringListFieldEditor(String name, String title, String inputMessage, String input,
-		Composite parent){
+	public StringListFieldEditor(String name, String title, String inputMessage, String input, Composite parent) {
 		super(name, input, parent);
 		this.title = title;
 		message = inputMessage;
 	}
-	
-	protected String createList(String[] items){
+
+	protected String createList(String[] items) {
 		return StringTool.join(items, ","); //$NON-NLS-1$
 	}
-	
+
 	@Override
-	protected String getNewInputObject(){
-		InputDialog id =
-			new InputDialog(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(), title,
-				message, StringTool.leer, null); //$NON-NLS-1$
+	protected String getNewInputObject() {
+		InputDialog id = new InputDialog(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(), title,
+				message, StringTool.leer, null); // $NON-NLS-1$
 		id.open();
 		return id.getValue();
 	}
-	
+
 	@Override
-	protected String[] parseString(String stringList){
+	protected String[] parseString(String stringList) {
 		return stringList.split(","); //$NON-NLS-1$
 	}
-	
+
 }

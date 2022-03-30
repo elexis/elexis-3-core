@@ -15,7 +15,9 @@ public interface TemporalAdapter<T> {
 
 	/**
 	 * Return the value as a {@link Temporal}
-	 * @param source the source value to convert
+	 * 
+	 * @param source
+	 *            the source value to convert
 	 * @return the value of the field
 	 */
 	public Temporal asTemporal(final T source);

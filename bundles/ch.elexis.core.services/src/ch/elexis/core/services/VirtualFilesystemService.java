@@ -12,9 +12,9 @@ import ch.elexis.core.services.internal.VirtualFilesystemHandle;
 
 @Component
 public class VirtualFilesystemService implements IVirtualFilesystemService {
-	
+
 	@Override
-	public IVirtualFilesystemHandle of(String uriString) throws IOException{
+	public IVirtualFilesystemHandle of(String uriString) throws IOException {
 		try {
 			URI uri = IVirtualFilesystemService.stringToURI(uriString);
 			return new VirtualFilesystemHandle(uri);
@@ -22,15 +22,15 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 			throw new IOException("Error handling uri string [" + uriString + "]", e);
 		}
 	}
-	
+
 	@Override
-	public IVirtualFilesystemHandle of(File file) throws IOException{
+	public IVirtualFilesystemHandle of(File file) throws IOException {
 		if (file == null) {
 			return null;
 		}
-		
+
 		URI uri = file.toURI();
 		return new VirtualFilesystemHandle(uri);
 	}
-	
+
 }

@@ -60,32 +60,32 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 
 /**
- * Ein Ein/Ausgabeelement, das aus einem Kästchen mit darin einem Label und darunter einem Control
- * zur Eingabe besteht. Eignet sich besonders zur Verwendung in einem ColumnLayout.
+ * Ein Ein/Ausgabeelement, das aus einem Kästchen mit darin einem Label und
+ * darunter einem Control zur Eingabe besteht. Eignet sich besonders zur
+ * Verwendung in einem ColumnLayout.
  * 
  * @author Gerry
  * 
  */
 public class LabeledInputField extends Composite {
 	final static Logger logger = LoggerFactory.getLogger(LabeledInputField.class);
-	
+
 	/**
 	 * 
-	 * In Elexis 3.8 we removed the DATE ENUM as it was only used in the Kassenbuch, where we
-	 * replaced it with Nebula CDateTime
+	 * In Elexis 3.8 we removed the DATE ENUM as it was only used in the Kassenbuch,
+	 * where we replaced it with Nebula CDateTime
 	 *
 	 */
 	static public enum Typ {
-			TEXT, CHECKBOX, CHECKBOXTRISTATE, LIST, LINK, OBSOLETE_DATE, MONEY, COMBO, EXECLINK,
-			COMBO_VIEWER
+		TEXT, CHECKBOX, CHECKBOXTRISTATE, LIST, LINK, OBSOLETE_DATE, MONEY, COMBO, EXECLINK, COMBO_VIEWER
 	};
-	
+
 	Label lbl;
 	Control ctl;
 	StructuredViewer viewer;
 	FormToolkit tk = UiDesk.getToolkit();
 	Typ inputFieldType;
-	
+
 	/**
 	 * simply creates a LabeledInputField of Type LabeledInputField.Typ.TEXT}
 	 * 
@@ -93,25 +93,27 @@ public class LabeledInputField extends Composite {
 	 * @param label
 	 *            the label to show above the field
 	 */
-	public LabeledInputField(Composite parent, String label){
+	public LabeledInputField(Composite parent, String label) {
 		this(parent, label, Typ.TEXT, Text.LIMIT);
 	}
-	
-	public LabeledInputField(Composite parent, String label, Typ typ){
+
+	public LabeledInputField(Composite parent, String label, Typ typ) {
 		this(parent, label, typ, Text.LIMIT);
 	}
-	
+
 	/**
-	 * Create a {@link LabeledInputField} of {@link Typ#TEXT} with a limited
-	 * amount of input characters
+	 * Create a {@link LabeledInputField} of {@link Typ#TEXT} with a limited amount
+	 * of input characters
+	 * 
 	 * @param parent
 	 * @param label
-	 * @param limit the limit, or Text.LIMIT if not applicable
+	 * @param limit
+	 *            the limit, or Text.LIMIT if not applicable
 	 */
-	public LabeledInputField(Composite parent, String label, int limit){
+	public LabeledInputField(Composite parent, String label, int limit) {
 		this(parent, label, Typ.TEXT, limit);
 	}
-	
+
 	/**
 	 * creates a LabeledInputField of the desired Type.
 	 * 
@@ -121,89 +123,90 @@ public class LabeledInputField extends Composite {
 	 * @param typ
 	 *            the type of field to create. One of LabeledInputField.Typ
 	 */
-	public LabeledInputField(Composite parent, String label, Typ typ, int limit){
+	public LabeledInputField(Composite parent, String label, Typ typ, int limit) {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(1, false));
-		
+
 		this.inputFieldType = typ;
-		
+
 		lbl = new Label(this, SWT.BOLD);
 		switch (typ) {
-		case CHECKBOX:
-		case CHECKBOXTRISTATE:
-			// just a a spacer for nice alignment - label is shown behind the checkbox as usual
-			break;
-		default:
-			lbl.setText(label);
-			break;
+			case CHECKBOX :
+			case CHECKBOXTRISTATE :
+				// just a a spacer for nice alignment - label is shown behind the checkbox as
+				// usual
+				break;
+			default :
+				lbl.setText(label);
+				break;
 		}
-		
+
 		switch (typ) {
-		case LINK:
-			lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE)); //$NON-NLS-1$
-			ctl = tk.createText(this, "", SWT.NONE);
-			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			break;
-		case TEXT:
-		case MONEY:
-			ctl = tk.createText(this, "", SWT.BORDER);
-			((Text) ctl).setTextLimit(limit);
-			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			break;
-		case LIST:
-			ctl = new List(this, SWT.MULTI | SWT.BORDER);
-			ctl.setLayoutData(new GridData(GridData.FILL_BOTH/* |GridData.GRAB_VERTICAL */));
-			break;
-		case OBSOLETE_DATE:
-			logger.error("Please use nebula CDateTime instead!");
-			break;
-		case COMBO:
-			ctl = new Combo(this, SWT.SINGLE | SWT.BORDER);
-			ctl.setLayoutData(new GridData(GridData.FILL_BOTH/* |GridData.GRAB_VERTICAL */));
-			break;
-		case COMBO_VIEWER:
-			viewer = new ComboViewer(this, SWT.SINGLE | SWT.BORDER);
-			ctl = viewer.getControl();
-			ctl.setLayoutData(new GridData(GridData.FILL_BOTH/* |GridData.GRAB_VERTICAL */));
-			break;
-		case CHECKBOX:
-			ctl = tk.createButton(this, label, SWT.CHECK);
-			((Button) ctl).setText(label);
-			ctl.setBackground(this.getBackground());
-			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			break;
-		case CHECKBOXTRISTATE:
-			ctl = new TristateCheckbox(this, SWT.NONE, true);
-			((Button) ctl).setText(label);
-			ctl.setBackground(this.getBackground());
-			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			break;
-		case EXECLINK:
-			lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
-			ctl = tk.createText(this, StringConstants.EMPTY, SWT.BORDER);
-			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			break;
-		default:
-			break;
+			case LINK :
+				lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE)); // $NON-NLS-1$
+				ctl = tk.createText(this, "", SWT.NONE);
+				ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+				break;
+			case TEXT :
+			case MONEY :
+				ctl = tk.createText(this, "", SWT.BORDER);
+				((Text) ctl).setTextLimit(limit);
+				ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+				break;
+			case LIST :
+				ctl = new List(this, SWT.MULTI | SWT.BORDER);
+				ctl.setLayoutData(new GridData(GridData.FILL_BOTH/* |GridData.GRAB_VERTICAL */));
+				break;
+			case OBSOLETE_DATE :
+				logger.error("Please use nebula CDateTime instead!");
+				break;
+			case COMBO :
+				ctl = new Combo(this, SWT.SINGLE | SWT.BORDER);
+				ctl.setLayoutData(new GridData(GridData.FILL_BOTH/* |GridData.GRAB_VERTICAL */));
+				break;
+			case COMBO_VIEWER :
+				viewer = new ComboViewer(this, SWT.SINGLE | SWT.BORDER);
+				ctl = viewer.getControl();
+				ctl.setLayoutData(new GridData(GridData.FILL_BOTH/* |GridData.GRAB_VERTICAL */));
+				break;
+			case CHECKBOX :
+				ctl = tk.createButton(this, label, SWT.CHECK);
+				((Button) ctl).setText(label);
+				ctl.setBackground(this.getBackground());
+				ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+				break;
+			case CHECKBOXTRISTATE :
+				ctl = new TristateCheckbox(this, SWT.NONE, true);
+				((Button) ctl).setText(label);
+				ctl.setBackground(this.getBackground());
+				ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+				break;
+			case EXECLINK :
+				lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
+				ctl = tk.createText(this, StringConstants.EMPTY, SWT.BORDER);
+				ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+				break;
+			default :
+				break;
 		}
 		lbl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 	}
-	
+
 	/**
-	 * Sets the item's text for TEXT, LIST, LINK, DATE, MONEY, COMBO, EXECLINK. For COMBO and LIST
-	 * it sets the new text only if present as a possible selection. For BOOL, BOOLTRISTATE it sets
-	 * the label of the control.
+	 * Sets the item's text for TEXT, LIST, LINK, DATE, MONEY, COMBO, EXECLINK. For
+	 * COMBO and LIST it sets the new text only if present as a possible selection.
+	 * For BOOL, BOOLTRISTATE it sets the label of the control.
 	 * 
 	 * @param text
 	 *            the text to be set
 	 * 
 	 */
-	public void setText(String text){
-		if(viewer != null) {
+	public void setText(String text) {
+		if (viewer != null) {
 			// handled by viewer
 			return;
 		}
-		
+
 		if (ctl instanceof Text) {
 			((Text) ctl).setText(text);
 		} else if (ctl instanceof List) {
@@ -233,14 +236,14 @@ public class LabeledInputField extends Composite {
 			((Button) ctl).setText(text);
 		}
 	}
-	
+
 	/**
-	 * get the String/the selected item/text for TEXT, MONEY, LINK, EXECLINK, LIST, COMBO, DATE. For
-	 * BOOL, BOOLTRISTATE it returns the label of the control.
+	 * get the String/the selected item/text for TEXT, MONEY, LINK, EXECLINK, LIST,
+	 * COMBO, DATE. For BOOL, BOOLTRISTATE it returns the label of the control.
 	 * 
 	 * @return
 	 */
-	public String getText(){
+	public String getText() {
 		if (viewer != null) {
 			StructuredSelection ss = (StructuredSelection) viewer.getSelection();
 			Object firstElement = ss.getFirstElement();
@@ -252,7 +255,7 @@ public class LabeledInputField extends Composite {
 			}
 			return ss.getFirstElement().toString();
 		}
-		
+
 		if (ctl instanceof Text) {
 			// for TEXT, MONEY, LINK, EXECLINK
 			return ((Text) ctl).getText();
@@ -271,110 +274,109 @@ public class LabeledInputField extends Composite {
 		}
 		return "";
 	}
-	
+
 	/**
 	 * sets the label for the LabeledInputField
 	 * 
 	 * @param text
 	 *            the new label
 	 */
-	public void setLabel(String text){
+	public void setLabel(String text) {
 		switch (inputFieldType) {
-		case CHECKBOX:
-			((Button) ctl).setText(text);
-		case CHECKBOXTRISTATE:
-			((TristateCheckbox) ctl).setText(text);
-			break;
-		default:
-			lbl.setText(text);
-			break;
+			case CHECKBOX :
+				((Button) ctl).setText(text);
+			case CHECKBOXTRISTATE :
+				((TristateCheckbox) ctl).setText(text);
+				break;
+			default :
+				lbl.setText(text);
+				break;
 		}
 	}
-	
+
 	/**
 	 * gets the label for the LabeledInputField
 	 * 
 	 * @return the label for this LabeledInputField
 	 */
-	public String getLabel(){
+	public String getLabel() {
 		switch (inputFieldType) {
-		case CHECKBOX:
-			return ((Button) ctl).getText();
-		case CHECKBOXTRISTATE:
-			return ((TristateCheckbox) ctl).getText();
-		default:
-			return lbl.getText();
+			case CHECKBOX :
+				return ((Button) ctl).getText();
+			case CHECKBOXTRISTATE :
+				return ((TristateCheckbox) ctl).getText();
+			default :
+				return lbl.getText();
 		}
 	}
-	
-	public Label getLabelComponent(){
+
+	public Label getLabelComponent() {
 		return lbl;
 	}
-	
-	public Control getControl(){
+
+	public Control getControl() {
 		return ctl;
 	}
-	
+
 	public StructuredViewer getViewer() {
 		return viewer;
 	}
-	
+
 	@Override
-	public void setEnabled(boolean enabled){
+	public void setEnabled(boolean enabled) {
 		if (ctl != null && !ctl.isDisposed()) {
 			ctl.setEnabled(enabled);
 		}
 		super.setEnabled(enabled);
 	}
-	
+
 	public static class Tableau extends Composite {
-		
+
 		protected IModelService modelService;
-		
-		public Tableau(Composite parent, int minColumns, int maxColumns){
+
+		public Tableau(Composite parent, int minColumns, int maxColumns) {
 			super(parent, SWT.BORDER);
 			ColumnLayout cl = new ColumnLayout();
 			cl.maxNumColumns = maxColumns;
 			cl.minNumColumns = minColumns;
 			setLayout(cl);
 		}
-		
-		public Tableau(Composite parent){
+
+		public Tableau(Composite parent) {
 			this(parent, 1, 5);
-			
+
 		}
-		
-		public LabeledInputField addComponent(String l){
+
+		public LabeledInputField addComponent(String l) {
 			return new LabeledInputField(this, l);
 		}
-		
-		public LabeledInputField addComponent(String l, LabeledInputField.Typ typ){
+
+		public LabeledInputField addComponent(String l, LabeledInputField.Typ typ) {
 			return new LabeledInputField(this, l, typ);
 		}
-		
-		public LabeledInputField addComponent(String l, int limit){
+
+		public LabeledInputField addComponent(String l, int limit) {
 			return new LabeledInputField(this, l, limit);
 		}
-		
+
 		/**
 		 * Set a {@link IModelService} that can handle the displayed objects.
 		 * 
 		 * @param modelService
 		 */
-		public void setModelService(IModelService modelService){
+		public void setModelService(IModelService modelService) {
 			this.modelService = modelService;
 		}
 	}
-	
+
 	/**
 	 * class for storing display details for use with LabeledInputField
 	 */
 	public static class InputData {
 		public enum Typ {
-			STRING, INT, CURRENCY, LIST, HYPERLINK, DATE, COMBO, EXECSTRING, CHECKBOX,
-				CHECKBOXTRISTATE, COMBO_VIEWER
+			STRING, INT, CURRENCY, LIST, HYPERLINK, DATE, COMBO, EXECSTRING, CHECKBOX, CHECKBOXTRISTATE, COMBO_VIEWER
 		};
-		
+
 		String sAnzeige, sFeldname, sHashname;
 		Typ tFeldTyp;
 		Object ext;
@@ -383,7 +385,7 @@ public class LabeledInputField extends Composite {
 		private org.eclipse.jface.viewers.IContentProvider contentProvider;
 		private ILabelProvider labelProvider;
 		private IStructuredSelectionResolver selectionResolver;
-		
+
 		/**
 		 * create control of different types.
 		 * 
@@ -394,12 +396,13 @@ public class LabeledInputField extends Composite {
 		 * @param feldtyp
 		 *            field type to use, one of InputData.Typ
 		 * @param hashname
-		 *            the name of the field in the hashfield, set to null if feldname is not a hash
+		 *            the name of the field in the hashfield, set to null if feldname is
+		 *            not a hash
 		 */
-		public InputData(String anzeige, String feldname, Typ feldtyp, String hashname){
+		public InputData(String anzeige, String feldname, Typ feldtyp, String hashname) {
 			this(anzeige, feldname, feldtyp, hashname, Text.LIMIT);
 		}
-		
+
 		/**
 		 * create control of different types.
 		 * 
@@ -410,28 +413,29 @@ public class LabeledInputField extends Composite {
 		 * @param feldtyp
 		 *            field type to use, one of InputData.Typ
 		 * @param hashname
-		 *            the name of the field in the hashfield, set to null if feldname is not a hash
+		 *            the name of the field in the hashfield, set to null if feldname is
+		 *            not a hash
 		 * @param limit
 		 *            the max. allow characters for this field
 		 */
-		public InputData(String anzeige, String feldname, Typ feldtyp, String hashname, int limit){
+		public InputData(String anzeige, String feldname, Typ feldtyp, String hashname, int limit) {
 			sAnzeige = anzeige;
 			sFeldname = feldname;
 			tFeldTyp = feldtyp;
 			sHashname = hashname;
 			sLimit = limit;
 		}
-		
+
 		/**
 		 * create control of type STRING. label and fieldType are the same
 		 * 
 		 * @param all
 		 *            the fieldname, also used for the label
 		 */
-		public InputData(String all){
+		public InputData(String all) {
 			this(all, all, Typ.STRING, null, Text.LIMIT);
 		}
-		
+
 		/**
 		 * create control of type HYPERLINK
 		 * 
@@ -442,17 +446,17 @@ public class LabeledInputField extends Composite {
 		 * @param cp
 		 *            an IContentProvider used to display the contents
 		 */
-		public InputData(String anzeige, String feldname, IContentProvider cp){
+		public InputData(String anzeige, String feldname, IContentProvider cp) {
 			sAnzeige = anzeige;
 			sFeldname = feldname;
 			ext = cp;
 			tFeldTyp = Typ.HYPERLINK;
 			sLimit = Text.LIMIT;
 		}
-		
+
 		public InputData(String anzeige, String feldname, String hashname, Typ typ,
-			org.eclipse.jface.viewers.IContentProvider contentProvider,
-			ILabelProvider labelProvider, IStructuredSelectionResolver selectionResolver, Object input){
+				org.eclipse.jface.viewers.IContentProvider contentProvider, ILabelProvider labelProvider,
+				IStructuredSelectionResolver selectionResolver, Object input) {
 			sAnzeige = anzeige;
 			sFeldname = feldname;
 			sHashname = hashname;
@@ -462,10 +466,10 @@ public class LabeledInputField extends Composite {
 			this.labelProvider = labelProvider;
 			this.selectionResolver = selectionResolver;
 		}
-		
+
 		/**
-		 * Provide an executable link input field; that is, on click on the resp. label (like the
-		 * hyperlink), an executable can be called by a callback on cp
+		 * Provide an executable link input field; that is, on click on the resp. label
+		 * (like the hyperlink), an executable can be called by a callback on cp
 		 * 
 		 * @param anzeige
 		 *            the name of the label (will be clickable, calling cp)
@@ -477,11 +481,11 @@ public class LabeledInputField extends Composite {
 		 *            executable callback
 		 * @author M. Descher
 		 */
-		public InputData(String anzeige, String feldname, IExecLinkProvider cp){
+		public InputData(String anzeige, String feldname, IExecLinkProvider cp) {
 			this(anzeige, feldname, Typ.EXECSTRING, null, Text.LIMIT);
 			ext = cp;
 		}
-		
+
 		/**
 		 * create control of type LIST
 		 * 
@@ -490,15 +494,16 @@ public class LabeledInputField extends Composite {
 		 * @param feldname
 		 *            the database field name
 		 * @param hashname
-		 *            the name of the field in the hashfield, set to null if feldname is not a hash
+		 *            the name of the field in the hashfield, set to null if feldname is
+		 *            not a hash
 		 * @param choices
 		 *            the items to be displayed in the list
 		 */
-		public InputData(String anzeige, String feldname, String hashname, String[] choices){
+		public InputData(String anzeige, String feldname, String hashname, String[] choices) {
 			this(anzeige, feldname, Typ.LIST, hashname, Text.LIMIT);
 			ext = choices;
 		}
-		
+
 		/**
 		 * create control of type COMBO
 		 * 
@@ -507,72 +512,72 @@ public class LabeledInputField extends Composite {
 		 * @param feldname
 		 *            the database field name
 		 * @param hashname
-		 *            the name of the field in the hashfield, set to null if feldname is not a hash
+		 *            the name of the field in the hashfield, set to null if feldname is
+		 *            not a hash
 		 * @param comboItems
 		 *            the items to be displayed in the combo
 		 * @param bDropDown
 		 *            just to select this method - not used actually...
 		 */
-		public InputData(String anzeige, String feldname, String hashname, String[] comboItems,
-			boolean bDropDown){
+		public InputData(String anzeige, String feldname, String hashname, String[] comboItems, boolean bDropDown) {
 			this(anzeige, feldname, Typ.COMBO, hashname, Text.LIMIT);
 			ext = comboItems;
 		}
-		
-		public void setParent(LabeledInputField p){
+
+		public void setParent(LabeledInputField p) {
 			mine = p;
 		}
-		
-		public void setLabel(String lbl){
+
+		public void setLabel(String lbl) {
 			if (mine != null) {
 				mine.setLabel(lbl);
 			}
 		}
-		
-		public String getLabel(){
+
+		public String getLabel() {
 			return mine == null ? "" : mine.getLabel();
 		}
-		
-		public String getText(){
+
+		public String getText() {
 			return mine == null ? "" : mine.getText();
 		}
-		
-		public void setText(String t){
+
+		public void setText(String t) {
 			if (mine != null) {
 				mine.setText(t);
 			}
 		}
-		
-		public LabeledInputField getWidget(){
+
+		public LabeledInputField getWidget() {
 			return mine;
 		}
-		
-		public void setEditable(boolean ed){
+
+		public void setEditable(boolean ed) {
 			mine.lbl.setEnabled(ed);
-			if(tFeldTyp==Typ.EXECSTRING || tFeldTyp==Typ.HYPERLINK) {
+			if (tFeldTyp == Typ.EXECSTRING || tFeldTyp == Typ.HYPERLINK) {
 				mine.lbl.setEnabled(true);
 				((Text) mine.ctl).setEnabled(ed);
 				return;
 			}
-			
-			if(mine.ctl instanceof Text) {
+
+			if (mine.ctl instanceof Text) {
 				((Text) mine.ctl).setEditable(ed);
 			} else {
 				mine.ctl.setEnabled(ed);
 			}
 		}
-		
-		public void setChoices(String... strings){
+
+		public void setChoices(String... strings) {
 			ext = strings;
 		}
 
-		public void setTooltipText(String label){
+		public void setTooltipText(String label) {
 			if (mine != null && mine.ctl != null) {
 				mine.ctl.setToolTipText(label);
 			}
 		}
 	}
-	
+
 	/**
 	 * Create an automatically maintained form out of an array of InpuData[].<br>
 	 * Usage: <code><nowrap><br><ul>
@@ -587,14 +592,14 @@ public class LabeledInputField extends Composite {
 		InputData[] def;
 		Control[] cFields;
 		Object act;
-		DecimalFormat df = new DecimalFormat(Messages.LabeledInputField_7); //$NON-NLS-1$
+		DecimalFormat df = new DecimalFormat(Messages.LabeledInputField_7); // $NON-NLS-1$
 		LabeledInputField ltf;
-		
-		public AutoForm(Composite parent, InputData[] fields){
+
+		public AutoForm(Composite parent, InputData[] fields) {
 			this(parent, fields, 1, 5);
 		}
-		
-		public AutoForm(Composite parent, InputData[] fields, int minColumns, int maxColumns){
+
+		public AutoForm(Composite parent, InputData[] fields, int minColumns, int maxColumns) {
 			super(parent, minColumns, maxColumns);
 			def = fields;
 			cFields = new Control[def.length];
@@ -616,14 +621,14 @@ public class LabeledInputField extends Composite {
 					ltf.lbl.setData(i);
 					ltf.lbl.addMouseListener(new MouseAdapter() {
 						@Override
-						public void mouseDown(MouseEvent e){
+						public void mouseDown(MouseEvent e) {
 							Label l = (Label) e.getSource();
 							int i = (Integer) l.getData();
 							((IExecLinkProvider) def[i].ext).executeString(def[i]);
 							super.mouseDown(e);
 						}
 					});
-				} else if (typ == InputData.Typ.COMBO_VIEWER){
+				} else if (typ == InputData.Typ.COMBO_VIEWER) {
 					ltf = addComponent(def[i].sAnzeige, LabeledInputField.Typ.COMBO_VIEWER);
 					ltf.getViewer().setContentProvider(def[i].contentProvider);
 					ltf.getViewer().setLabelProvider(def[i].labelProvider);
@@ -634,27 +639,28 @@ public class LabeledInputField extends Composite {
 						ltf.lbl.setData(i);
 						ltf.lbl.addMouseListener(new MouseAdapter() {
 							@Override
-							public void mouseDown(MouseEvent e){
+							public void mouseDown(MouseEvent e) {
 								Label l = (Label) e.getSource();
 								int i = (Integer) l.getData();
 								((IContentProvider) def[i].ext).reloadContent(act, def[i]);
 								super.mouseDown(e);
 							}
-							
+
 						});
 						((Text) ltf.ctl).setEditable(false);
 					} else {
 						ltf = addComponent(def[i].sAnzeige, def[i].sLimit);
 					}
-					
+
 				}
 				def[i].setParent(ltf);
 				cFields[i] = ltf.getControl();
 				cFields[i].addFocusListener(new FocusListener() {
-					public void focusGained(FocusEvent e){}
-					
+					public void focusGained(FocusEvent e) {
+					}
+
 					@SuppressWarnings("unchecked")
-					public void focusLost(FocusEvent e){
+					public void focusLost(FocusEvent e) {
 						if (act != null) {
 							Control src = (Control) e.getSource();
 							InputData inp = (InputData) src.getData();
@@ -665,64 +671,64 @@ public class LabeledInputField extends Composite {
 				cFields[i].setData(def[i]);
 			}
 		}
-		
-		public void save(){
+
+		public void save() {
 			for (InputData id : def) {
 				save(id);
 			}
 		}
-		
-		protected void save(InputData inp){
+
+		protected void save(InputData inp) {
 			if (act == null) {
 				return;
 			}
 			String val = StringTool.leer;
 			switch (inp.tFeldTyp) {
-			
-			case STRING:
-			case COMBO:
-			case COMBO_VIEWER:
-			case INT:
-			case EXECSTRING:
-			case DATE:
-				val = inp.getText();
-				break;
-			case CURRENCY:
-				try {
-					Money money = new Money(inp.getText());
-					val = money.getCentsAsString();
-				} catch (ParseException e1) {
-					ExHandler.handle(e1);
-					val = "";
-				}
-				// double betr=Double.parseDouble(inp.getText())*100.0;
-				// val=Long.toString(Math.round(betr));
-				break;
-			case LIST:
-				val = inp.getText();
-				break;
-			case CHECKBOX:
-				val = (((Button) (inp.mine.getControl())).getSelection() == true)
-						? StringConstants.ONE : StringConstants.ZERO;
-				break;
-			case CHECKBOXTRISTATE:
-				val = ((TristateCheckbox) (inp.mine.getControl())).getTristateDbValue();
-				break;
-			case HYPERLINK:
-				// dont try to save a hyperlink ...
-				return;
-			default:
-				break;
+
+				case STRING :
+				case COMBO :
+				case COMBO_VIEWER :
+				case INT :
+				case EXECSTRING :
+				case DATE :
+					val = inp.getText();
+					break;
+				case CURRENCY :
+					try {
+						Money money = new Money(inp.getText());
+						val = money.getCentsAsString();
+					} catch (ParseException e1) {
+						ExHandler.handle(e1);
+						val = "";
+					}
+					// double betr=Double.parseDouble(inp.getText())*100.0;
+					// val=Long.toString(Math.round(betr));
+					break;
+				case LIST :
+					val = inp.getText();
+					break;
+				case CHECKBOX :
+					val = (((Button) (inp.mine.getControl())).getSelection() == true)
+							? StringConstants.ONE
+							: StringConstants.ZERO;
+					break;
+				case CHECKBOXTRISTATE :
+					val = ((TristateCheckbox) (inp.mine.getControl())).getTristateDbValue();
+					break;
+				case HYPERLINK :
+					// dont try to save a hyperlink ...
+					return;
+				default :
+					break;
 			}
 			if (inp.sHashname == null) {
 				try {
 					set(act, inp.sFeldname, val);
 				} catch (PersistenceException pe) {
-					logger.error("Could not persist [" + val + "] for field [" + inp.sAnzeige
-						+ "]\nCause: " + pe.getCause().getMessage(), pe);
-					
-					if (inp.tFeldTyp
-						.equals(ch.elexis.core.ui.util.LabeledInputField.InputData.Typ.STRING)) {
+					logger.error("Could not persist [" + val + "] for field [" + inp.sAnzeige + "]\nCause: "
+							+ pe.getCause().getMessage(), pe);
+
+					if (inp.tFeldTyp.equals(ch.elexis.core.ui.util.LabeledInputField.InputData.Typ.STRING)) {
 						// clear cache to always get the actual the DB value
 						PersistentObject.clearCache();
 						inp.mine.setText((String) get(act, inp.sFeldname));
@@ -746,13 +752,12 @@ public class LabeledInputField extends Composite {
 			if (act instanceof Identifiable && modelService != null) {
 				modelService.save((Identifiable) act);
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, act);
-			}
-			else if (act instanceof PersistentObject) {
+			} else if (act instanceof PersistentObject) {
 				ElexisEventDispatcher.update((PersistentObject) act);
 			}
 		}
-		
-		private void set(Object object, String field, Object value){
+
+		private void set(Object object, String field, Object value) {
 			if (object instanceof PersistentObject) {
 				((PersistentObject) object).set(field, (String) value);
 			} else {
@@ -760,27 +765,26 @@ public class LabeledInputField extends Composite {
 					BeanUtils.setProperty(object, field, value);
 				} catch (IllegalAccessException | InvocationTargetException e) {
 					LoggerFactory.getLogger(getClass())
-						.error("Error setting property [" + field + "] of [" + object + "]", e);
+							.error("Error setting property [" + field + "] of [" + object + "]", e);
 				}
 			}
 		}
-		
-		private Object get(Object object, String field){
+
+		private Object get(Object object, String field) {
 			if (object instanceof PersistentObject) {
 				return ((PersistentObject) object).get(field);
 			} else {
 				try {
 					return BeanUtils.getProperty(object, field);
-				} catch (IllegalAccessException | InvocationTargetException
-						| NoSuchMethodException e) {
+				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 					LoggerFactory.getLogger(getClass())
-						.error("Error getting property [" + field + "] of [" + object + "]", e);
+							.error("Error getting property [" + field + "] of [" + object + "]", e);
 				}
 			}
 			return null;
 		}
-		
-		private Map getMap(Object object, String field){
+
+		private Map getMap(Object object, String field) {
 			if (object instanceof PersistentObject) {
 				return ((PersistentObject) object).getMap(field);
 			} else {
@@ -789,36 +793,34 @@ public class LabeledInputField extends Composite {
 					if (value instanceof Map) {
 						return (Map) value;
 					}
-				} catch (IllegalAccessException | InvocationTargetException
-						| NoSuchMethodException e) {
+				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 					LoggerFactory.getLogger(getClass())
-						.error("Error getting map property [" + field + "] of [" + object + "]", e);
+							.error("Error getting map property [" + field + "] of [" + object + "]", e);
 				}
 			}
 			return null;
 		}
-		
-		private void setMap(Object object, String field, Map value){
+
+		private void setMap(Object object, String field, Map value) {
 			if (object instanceof PersistentObject) {
 				((PersistentObject) object).setMap(field, value);
 			} else {
 				try {
 					PropertyUtils.setProperty(object, field, value);
-				} catch (IllegalAccessException | InvocationTargetException
-						| NoSuchMethodException e) {
+				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 					LoggerFactory.getLogger(getClass())
-						.error("Error setting map property [" + field + "] of [" + object + "]", e);
+							.error("Error setting map property [" + field + "] of [" + object + "]", e);
 				}
 			}
 		}
-		
+
 		/**
 		 * Angezeigte Daten aus DB neu laden
 		 * 
 		 * @param o
 		 *            Das Objekt aus dem Daten geladen werden
 		 */
-		public void reload(PersistentObject o){
+		public void reload(PersistentObject o) {
 			act = o;
 			if (o == null) {
 				for (int i = 0; i < def.length; i++) {
@@ -838,11 +840,11 @@ public class LabeledInputField extends Composite {
 					} else {
 						Map ext = o.getMap(def[i].sFeldname);
 						val = (String) ext.get(def[i].sHashname);
-						
+
 						// needed to make artikelstamm dialog work properly (without **ERROR:...)
 						if (val == null) {
 							val = o.get(def[i].sHashname);
-							
+
 							// in case no value exists for this field keep it empty
 							if (val.startsWith(PersistentObject.MAPPING_ERROR_MARKER)) {
 								val = null;
@@ -851,43 +853,41 @@ public class LabeledInputField extends Composite {
 					}
 				}
 				switch (def[i].tFeldTyp) {
-				case STRING:
-				case INT:
-				case LIST:
-				case COMBO:
-				case EXECSTRING:
-				case DATE:
-					if (StringTool.isNothing(val)) {
-						val = StringTool.leer;
-					}
-					def[i].setText(val);
-					break;
-				case CURRENCY:
-					Money money = new Money(PersistentObject.checkZero(val));
-					def[i].setText(money.getAmountAsString());
-					// double betr=PersistentObject.checkZeroDouble(val);
-					
-					// def[i].setText(Double.toString(betr/100.0));
-					break;
-				case CHECKBOX:
-					val = StringTool.unNull(val);
-					((Button) (def[i].mine.getControl()))
-						.setSelection(val.equalsIgnoreCase(StringConstants.ONE));
-					break;
-				case CHECKBOXTRISTATE:
-					val = StringTool.unNull(val);
-					((TristateCheckbox) (def[i].mine.getControl())).setTristateDbValue(val);
-					break;
-				case COMBO_VIEWER:
-					StructuredSelection selection =
-						def[i].selectionResolver.resolveStructuredSelection(val);
-					((StructuredViewer) (def[i].mine.getViewer())).setSelection(selection);
-					break;
+					case STRING :
+					case INT :
+					case LIST :
+					case COMBO :
+					case EXECSTRING :
+					case DATE :
+						if (StringTool.isNothing(val)) {
+							val = StringTool.leer;
+						}
+						def[i].setText(val);
+						break;
+					case CURRENCY :
+						Money money = new Money(PersistentObject.checkZero(val));
+						def[i].setText(money.getAmountAsString());
+						// double betr=PersistentObject.checkZeroDouble(val);
+
+						// def[i].setText(Double.toString(betr/100.0));
+						break;
+					case CHECKBOX :
+						val = StringTool.unNull(val);
+						((Button) (def[i].mine.getControl())).setSelection(val.equalsIgnoreCase(StringConstants.ONE));
+						break;
+					case CHECKBOXTRISTATE :
+						val = StringTool.unNull(val);
+						((TristateCheckbox) (def[i].mine.getControl())).setTristateDbValue(val);
+						break;
+					case COMBO_VIEWER :
+						StructuredSelection selection = def[i].selectionResolver.resolveStructuredSelection(val);
+						((StructuredViewer) (def[i].mine.getViewer())).setSelection(selection);
+						break;
 				}
 			}
 		}
-		
-		public void reload(Identifiable o){
+
+		public void reload(Identifiable o) {
 			act = o;
 			if (o == null) {
 				for (int i = 0; i < def.length; i++) {
@@ -913,7 +913,7 @@ public class LabeledInputField extends Composite {
 							// needed to make artikelstamm dialog work properly (without **ERROR:...)
 							if (val == null) {
 								val = (String) get(o, def[i].sHashname);
-								
+
 								// in case no value exists for this field keep it empty
 								if (val.startsWith(PersistentObject.MAPPING_ERROR_MARKER)) {
 									val = null;
@@ -923,66 +923,66 @@ public class LabeledInputField extends Composite {
 					}
 				}
 				switch (def[i].tFeldTyp) {
-				case STRING:
-				case INT:
-				case LIST:
-				case COMBO:
-				case EXECSTRING:
-				case DATE:
-					if (StringTool.isNothing(val)) {
-						val = StringTool.leer;
-					}
-					def[i].setText(val);
-					break;
-				case CURRENCY:
-					if (val != null && (val.contains(",") || val.contains("."))) {
-						val = val.replaceAll(",", ".");
-						Money money = new Money(PersistentObject.checkZeroDouble(val));
-						def[i].setText(money.getAmountAsString());
-					} else {
-						Money money = new Money(PersistentObject.checkZero(val));
-						def[i].setText(money.getAmountAsString());
-					}
-					break;
-				case CHECKBOX:
-					val = StringTool.unNull(val);
-					((Button) (def[i].mine.getControl()))
-						.setSelection(val.equalsIgnoreCase(StringConstants.ONE));
-					break;
-				case CHECKBOXTRISTATE:
-					val = StringTool.unNull(val);
-					((TristateCheckbox) (def[i].mine.getControl())).setTristateDbValue(val);
-					break;
-				case COMBO_VIEWER:
-					StructuredSelection selection =
-						def[i].selectionResolver.resolveStructuredSelection(val);
-					((StructuredViewer) (def[i].mine.getViewer())).setSelection(selection);
-					break;
+					case STRING :
+					case INT :
+					case LIST :
+					case COMBO :
+					case EXECSTRING :
+					case DATE :
+						if (StringTool.isNothing(val)) {
+							val = StringTool.leer;
+						}
+						def[i].setText(val);
+						break;
+					case CURRENCY :
+						if (val != null && (val.contains(",") || val.contains("."))) {
+							val = val.replaceAll(",", ".");
+							Money money = new Money(PersistentObject.checkZeroDouble(val));
+							def[i].setText(money.getAmountAsString());
+						} else {
+							Money money = new Money(PersistentObject.checkZero(val));
+							def[i].setText(money.getAmountAsString());
+						}
+						break;
+					case CHECKBOX :
+						val = StringTool.unNull(val);
+						((Button) (def[i].mine.getControl())).setSelection(val.equalsIgnoreCase(StringConstants.ONE));
+						break;
+					case CHECKBOXTRISTATE :
+						val = StringTool.unNull(val);
+						((TristateCheckbox) (def[i].mine.getControl())).setTristateDbValue(val);
+						break;
+					case COMBO_VIEWER :
+						StructuredSelection selection = def[i].selectionResolver.resolveStructuredSelection(val);
+						((StructuredViewer) (def[i].mine.getViewer())).setSelection(selection);
+						break;
 				}
 			}
 		}
-		
+
 		@Override
-		public void setUnlocked(boolean unlocked){
+		public void setUnlocked(boolean unlocked) {
 			for (InputData id : def) {
 				id.setEditable(unlocked);
 			}
 		}
 	}
-	
+
 	public interface IContentProvider {
-		/** fetch the Content from the defining PersistentObject and display it in ltf */
+		/**
+		 * fetch the Content from the defining PersistentObject and display it in ltf
+		 */
 		public void displayContent(Object po, InputData ltf);
-		
+
 		/** Let the user modify the content and load in in po and ltf */
 		public void reloadContent(Object po, InputData ltf);
 	}
-	
+
 	public interface IExecLinkProvider {
 		/** Execute the string within the InputData */
 		public void executeString(InputData ltf);
 	}
-	
+
 	public interface IStructuredSelectionResolver {
 		public StructuredSelection resolveStructuredSelection(String value);
 	}

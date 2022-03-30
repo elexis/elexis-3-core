@@ -13,11 +13,10 @@ import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 
 public class RemoveTaskHandler {
-	
+
 	@Execute
-	public void execute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION)
-	List<ITask> tasks){
+	public void execute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) List<ITask> tasks) {
 		TaskModelServiceHolder.get().remove(tasks);
 	}
-	
+
 }

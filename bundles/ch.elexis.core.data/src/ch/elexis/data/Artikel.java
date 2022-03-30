@@ -24,9 +24,9 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class Artikel extends VerrechenbarAdapter implements IArticle {
-	
+
 	public static final String TABLENAME = "ARTIKEL";
-	
+
 	public static final String FLD_EAN = "EAN";
 	public static final String FLD_CODECLASS = "Codeclass";
 	public static final String FLD_KLASSE = "Klasse";
@@ -43,31 +43,29 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 	public static final String FLD_TYP = "Typ";
 	public static final String FLD_NAME = "Name";
 	public static final String FLD_ATC_CODE = "ATC_code";
-	
+
 	public static final Pattern NAME_VE_PATTERN = Pattern.compile(".+ ([0-9]+) Stk.*");
-	
+
 	static {
-		addMapping(TABLENAME, FLD_NAME, FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP,
-			 FLD_EXTINFO, FLD_EAN, FLD_SUB_ID, EIGENNAME + "=Name_intern", 
-			 FLD_CODECLASS, FLD_KLASSE, FLD_ATC_CODE, FLD_EXTID);
-		Xid.localRegisterXIDDomainIfNotExists(XID_PHARMACODE, FLD_PHARMACODE,
-			Xid.ASSIGNMENT_REGIONAL);
+		addMapping(TABLENAME, FLD_NAME, FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP, FLD_EXTINFO, FLD_EAN, FLD_SUB_ID,
+				EIGENNAME + "=Name_intern", FLD_CODECLASS, FLD_KLASSE, FLD_ATC_CODE, FLD_EXTID);
+		Xid.localRegisterXIDDomainIfNotExists(XID_PHARMACODE, FLD_PHARMACODE, Xid.ASSIGNMENT_REGIONAL);
 	}
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return TABLENAME;
 	}
-	
-	public String getXidDomain(){
+
+	public String getXidDomain() {
 		return XID_PHARMACODE;
 	}
-	
+
 	/**
-	 * This implementation of PersistentObject#load is special in that it tries to load the actual
-	 * appropriate subclass
+	 * This implementation of PersistentObject#load is special in that it tries to
+	 * load the actual appropriate subclass
 	 */
-	public static Artikel load(final String id){
+	public static Artikel load(final String id) {
 		if (id == null) {
 			return null;
 		}
@@ -85,143 +83,137 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Einen neuen Artikel mit vorgegebenen Parametern erstellen
 	 * 
 	 * @param Name
 	 * @param Typ
 	 */
-	public Artikel(final String Name, final String Typ){
+	public Artikel(final String Name, final String Typ) {
 		create(null);
-		set(new String[] {
-			FLD_NAME, FLD_TYP
-		}, new String[] {
-			Name, Typ
-		});
+		set(new String[]{FLD_NAME, FLD_TYP}, new String[]{Name, Typ});
 	}
-	
-	public Artikel(final String Name, final String Typ, final String subid){
+
+	public Artikel(final String Name, final String Typ, final String subid) {
 		create(null);
-		set(new String[] {
-			FLD_NAME, FLD_TYP, FLD_SUB_ID
-		}, Name, Typ, subid);
+		set(new String[]{FLD_NAME, FLD_TYP, FLD_SUB_ID}, Name, Typ, subid);
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		if (!exists()) {
 			return "(" + getName() + ")";
 		}
 		return getInternalName();
 	}
-	
-	public String[] getDisplayedFields(){
-		return new String[] {
-			FLD_TYP, FLD_NAME
-		};
+
+	public String[] getDisplayedFields() {
+		return new String[]{FLD_TYP, FLD_NAME};
 	}
-	
+
 	/**
-	 * Den internen Namen setzen. Dieser ist vom Anwender frei wählbar und erscheint in der
-	 * Artikelauswahl und auf der Rechnung.
+	 * Den internen Namen setzen. Dieser ist vom Anwender frei wählbar und erscheint
+	 * in der Artikelauswahl und auf der Rechnung.
 	 * 
 	 * @param nick
 	 *            Der "Spitzname"
 	 */
-	public void setInternalName(final String nick){
+	public void setInternalName(final String nick) {
 		set(EIGENNAME, nick);
 	}
-	
+
 	/**
 	 * Den internen Namen holen
 	 * 
 	 * @return
 	 */
-	public String getInternalName(){
+	public String getInternalName() {
 		String ret = get(EIGENNAME);
 		if (StringTool.isNothing(ret)) {
 			ret = getName();
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Den offiziellen namen holen
 	 * 
 	 * @return
 	 */
-	public String getName(){
+	public String getName() {
 		return checkNull(get(FLD_NAME));
 	}
-	
+
 	/**
-	 * Den "echten" Namen setzen. Dies ist der offizielle Name des Artikels, wie er beispielsweise
-	 * in Katalogen aufgeführt ist. Dieser sollte normalerweise nicht geändert werden.
+	 * Den "echten" Namen setzen. Dies ist der offizielle Name des Artikels, wie er
+	 * beispielsweise in Katalogen aufgeführt ist. Dieser sollte normalerweise nicht
+	 * geändert werden.
 	 * 
 	 * @param name
 	 *            der neue "echte" Name
 	 */
-	public void setName(final String name){
+	public void setName(final String name) {
 		set(FLD_NAME, name);
 	}
-	
+
 	/**
 	 * Basis-Einkaufspreis in Rappen pro Einheit
 	 * 
 	 * @return
 	 */
-	public Money getEKPreis(){
+	public Money getEKPreis() {
 		try {
 			return new Money(checkZero(get(FLD_EK_PREIS)));
 		} catch (Throwable ex) {
 			log.error("Fehler beim Einlesen von EK für " + getLabel());
 		}
 		return new Money();
-		
+
 	}
-	
+
 	/**
 	 * Basis-Verkaufspreis in Rappen pro Einheit
 	 * 
 	 * @return
 	 */
-	public Money getVKPreis(){
+	public Money getVKPreis() {
 		try {
 			return new Money(checkZero(get(FLD_VK_PREIS)));
 		} catch (Throwable ex) {
 			log.error("Fehler beim Einlesen von VK für " + getLabel());
 		}
 		return new Money();
-		
+
 	}
-	
+
 	/**
 	 * Einkaufspreis setzen. Das sollte normalerweise nur der Importer tun
 	 * 
 	 * @param preis
 	 */
-	public void setEKPreis(final Money preis){
+	public void setEKPreis(final Money preis) {
 		set(FLD_EK_PREIS, preis.getCentsAsString());
 	}
-	
+
 	/**
-	 * Den Verkaufspreis setzen. Das sollte bei gesetztlich festgelegten Artikeln nur der Importer
-	 * tun.
+	 * Den Verkaufspreis setzen. Das sollte bei gesetztlich festgelegten Artikeln
+	 * nur der Importer tun.
 	 * 
 	 * @param preis
 	 */
-	public void setVKPreis(final Money preis){
+	public void setVKPreis(final Money preis) {
 		set(FLD_VK_PREIS, preis.getCentsAsString());
 	}
-	
+
 	/**
-	 * Versuche, die Verpakcungseinheit herauszufinden. Entweder haben wir sie im Artikeldetail
-	 * angegeben, dann ist es trivial, oder vielleicht steht im Namen etwas wie xx Stk.
+	 * Versuche, die Verpakcungseinheit herauszufinden. Entweder haben wir sie im
+	 * Artikeldetail angegeben, dann ist es trivial, oder vielleicht steht im Namen
+	 * etwas wie xx Stk.
 	 * 
 	 * @return einen educated guess oder 0 (unknown)
 	 */
-	public int guessVE(){
+	public int guessVE() {
 		int ret = getVerpackungsEinheit();
 		if (ret == 0) {
 			String name = getName();
@@ -231,103 +223,102 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 				try {
 					return Integer.parseInt(num);
 				} catch (Exception ex) {
-					
+
 				}
 			}
 		}
 		return ret;
 	}
-	
-	public String getEAN(){
+
+	public String getEAN() {
 		return get(FLD_EAN);
 	}
-	
+
 	@Override
-	public String getGTIN(){
+	public String getGTIN() {
 		return getEAN();
 	}
-	
-	public void setEAN(String ean){
+
+	public void setEAN(String ean) {
 		set(FLD_EAN, ean);
 	}
-	
-	public boolean isVaccination(){
+
+	public boolean isVaccination() {
 		String atcCode = getATC_code();
 		if (atcCode != null) {
-			if (atcCode.toUpperCase().startsWith("J07")
-				&& !atcCode.toUpperCase().startsWith("J07AX")) {
+			if (atcCode.toUpperCase().startsWith("J07") && !atcCode.toUpperCase().startsWith("J07AX")) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	public String getATC_code(){
+
+	public String getATC_code() {
 		String ATC_code = get(FLD_ATC_CODE);
 		return ATC_code;
 	}
-	
-	public void setATC_code(String ATC_code){
+
+	public void setATC_code(String ATC_code) {
 		set(FLD_ATC_CODE, ATC_code);
 	}
-	
-	public void setPharmaCode(String pharmacode){
+
+	public void setPharmaCode(String pharmacode) {
 		Map<Object, Object> ext = getMap(FLD_EXTINFO);
 		ext.put(FLD_PHARMACODE, pharmacode);
 		setMap(FLD_EXTINFO, ext);
 	}
-	
-	public String getPharmaCode(){
+
+	public String getPharmaCode() {
 		return checkNull(getExt(FLD_PHARMACODE));
 	}
-	
-	public int getVerpackungsEinheit(){
+
+	public int getVerpackungsEinheit() {
 		return checkZero((String) getExtInfoStoredObjectByKey(VERPACKUNGSEINHEIT));
 	}
-	
+
 	@Override
-	public int getPackageUnit(){
+	public int getPackageUnit() {
 		return getVerpackungsEinheit();
 	}
-	
-	public void setVerpackungsEinheit(int ve){
+
+	public void setVerpackungsEinheit(int ve) {
 		setExt(VERPACKUNGSEINHEIT, Integer.toString(ve));
 	}
-	
-	public int getVerkaufseinheit(){
+
+	public int getVerkaufseinheit() {
 		return checkZero(getExt(VERKAUFSEINHEIT));
 	}
-	
+
 	@Override
-	public int getSellingUnit(){
+	public int getSellingUnit() {
 		return getVerkaufseinheit();
 	}
-	
-	public void setVerkaufseinheit(int number){
+
+	public void setVerkaufseinheit(int number) {
 		setExt(VERKAUFSEINHEIT, Integer.toString(number));
 	}
-	
+
 	/**
 	 * @return the package size, zero if not defined
 	 */
-	public int getPackungsGroesse(){
+	public int getPackungsGroesse() {
 		return checkZero(getExt(VERPACKUNGSEINHEIT));
 	}
-	
-	public void setPackungsGroesse(int packageSize){
+
+	public void setPackungsGroesse(int packageSize) {
 		setExtInfoStoredObjectByKey(VERPACKUNGSEINHEIT, Integer.toString(packageSize));
 	}
-	
-	public String getPackungsGroesseDesc(){
+
+	public String getPackungsGroesseDesc() {
 		return Integer.toString(getPackungsGroesse());
 	}
-	
-	public int getAbgabeEinheit(){
+
+	public int getAbgabeEinheit() {
 		return checkZero(getExt(VERKAUFSEINHEIT));
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void setExt(final String name, final String value){
+	public void setExt(final String name, final String value) {
 		Map h = getMap(FLD_EXTINFO);
 		if (value == null) {
 			h.remove(name);
@@ -336,42 +327,43 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 		}
 		setMap(FLD_EXTINFO, h);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public String getExt(final String name){
+	public String getExt(final String name) {
 		Map h = getMap(FLD_EXTINFO);
 		return checkNull((String) h.get(name));
 	}
-	
-	protected Artikel(final String id){
+
+	protected Artikel(final String id) {
 		super(id);
 	}
-	
-	protected Artikel(){}
-	
+
+	protected Artikel() {
+	}
+
 	/************************ Verrechenbar ************************/
 	@Override
-	public String getCode(){
+	public String getCode() {
 		return getId();
 	}
-	
+
 	@Override
-	public String getText(){
+	public String getText() {
 		return getInternalName();
 	}
-	
+
 	@Override
-	public String getCodeSystemName(){
+	public String getCodeSystemName() {
 		return ARTIKEL;
 	}
-	
+
 	@Override
-	public boolean isProduct(){
+	public boolean isProduct() {
 		return false;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public int getPreis(final TimeTool dat, final IFall fall){
+	public int getPreis(final TimeTool dat, final IFall fall) {
 		double vkt = checkZeroDouble(get(FLD_VK_PREIS));
 		Map ext = getMap(FLD_EXTINFO);
 		double vpe = checkZeroDouble((String) ext.get(VERPACKUNGSEINHEIT));
@@ -382,10 +374,10 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 			return (int) Math.round(vkt);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public Money getKosten(final TimeTool dat){
+	public Money getKosten(final TimeTool dat) {
 		double vkt = checkZeroDouble(get(FLD_EK_PREIS));
 		Map ext = getMap(FLD_EXTINFO);
 		double vpe = checkZeroDouble((String) ext.get(VERPACKUNGSEINHEIT));
@@ -396,36 +388,35 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 			return new Money((int) Math.round(vkt));
 		}
 	}
-	
-	public int getTP(final TimeTool date, final IFall fall){
+
+	public int getTP(final TimeTool date, final IFall fall) {
 		return getPreis(date, fall);
 	}
-	
-	public double getFactor(final TimeTool date, final IFall fall){
+
+	public double getFactor(final TimeTool date, final IFall fall) {
 		return 1.0;
 	}
-	
+
 	@Override
-	protected String[] getExportFields(){
-		return new String[] {
-			FLD_EAN, FLD_SUB_ID, FLD_KLASSE, FLD_NAME, FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP,
-			FLD_CODECLASS, FLD_ATC_CODE, FLD_EXTINFO
-		};
+	protected String[] getExportFields() {
+		return new String[]{FLD_EAN, FLD_SUB_ID, FLD_KLASSE, FLD_NAME, FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP,
+				FLD_CODECLASS, FLD_ATC_CODE, FLD_EXTINFO};
 	}
-	
+
 	@Override
-	protected String getExportUIDValue(){
+	protected String getExportUIDValue() {
 		String pharmacode = getExt(FLD_PHARMACODE);
 		String ean = get(FLD_EAN);
 		return ean + "_" + pharmacode;
 	}
-	
+
 	/**
 	 * Convenience conversion method, loads object via model service
 	 * 
 	 * @return
 	 * @since 3.8
-	 * @throws IllegalStateException if entity could not be loaded
+	 * @throws IllegalStateException
+	 *             if entity could not be loaded
 	 */
 	public ch.elexis.core.model.IArticle toIArticle() {
 		return CoreModelServiceHolder.get().load(getId(), ch.elexis.core.model.IArticle.class)

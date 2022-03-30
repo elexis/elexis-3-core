@@ -18,89 +18,86 @@ import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
 
 public class CodeCreateDialog extends TitleAreaDialog {
-	
+
 	private Text txtDisplay;
 	private Text txtCode;
-	
-	public CodeCreateDialog(Shell parentShell){
+
+	public CodeCreateDialog(Shell parentShell) {
 		super(parentShell);
 	}
-	
+
 	/**
 	 * Create contents of the dialog.
 	 * 
 	 * @param parent
 	 */
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		setMessage("Neuen Code anlegen");
 		setTitle("Codesystem: " + CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
-		
+
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+
 		Label lblCode = new Label(composite, SWT.NONE);
 		lblCode.setText("Code");
-		
+
 		txtCode = new Text(composite, SWT.BORDER);
 		txtCode.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		
+
 		Label lblDisplay = new Label(composite, SWT.NONE);
 		lblDisplay.setText("Display");
-		
+
 		txtDisplay = new Text(composite, SWT.BORDER);
 		txtDisplay.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		
+
 		return composite;
 	}
-	
-	
+
 	/**
 	 * Create contents of the button bar.
 	 * 
 	 * @param parent
 	 */
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
-	
+
 	@Override
-	protected void buttonPressed(int buttonId){
+	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		String code = txtCode.getText();
 		String display = txtDisplay.getText();
-		
+
 		if (StringUtils.isEmpty(code) || StringUtils.isEmpty(display)) {
 			MessageDialog.openError(getShell(), "Error", "Bitte korriegen Sie Ihre Eingaben.");
-		}
-		else {
+		} else {
 			FindingsServiceHolder.codingService.addLocalCoding(new ICoding() {
-				
+
 				@Override
-				public String getSystem(){
+				public String getSystem() {
 					return CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem();
 				}
-				
+
 				@Override
-				public String getDisplay(){
+				public String getDisplay() {
 					return display;
 				}
-				
+
 				@Override
-				public String getCode(){
+				public String getCode() {
 					return code;
 				}
 			});
 			super.okPressed();
 		}
-		
 
 	}
 }

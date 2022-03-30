@@ -40,107 +40,93 @@ public class TimeTool extends GregorianCalendar {
 	 * 
 	 */
 	private static final long serialVersionUID = 0xc3efadd1L;
-	
-	public static String Version(){
+
+	public static String Version() {
 		return "3.2.3";
 	}
-	
+
 	/** formally enumerated days **/
 	public enum DAYS {
-			MONDAY(Calendar.MONDAY, Messages.TimeTool_monday,
-				Messages.TimeTool_mo),
-			TUESDAY(Calendar.TUESDAY, Messages.TimeTool_tuesday,
-				Messages.TimeTool_tu),
-			WEDNESDAY(Calendar.WEDNESDAY, Messages.TimeTool_wednesday,
-				Messages.TimeTool_we),
-			THURSDAY(Calendar.THURSDAY, Messages.TimeTool_thursday,
-				Messages.TimeTool_th),
-			FRIDAY(Calendar.FRIDAY, Messages.TimeTool_friday,
-				Messages.TimeTool_fr),
-			SATURDAY(Calendar.SATURDAY, Messages.TimeTool_saturday,
-				Messages.TimeTool_sa),
-			SUNDAY(Calendar.SUNDAY, Messages.TimeTool_sunday,
-				Messages.TimeTool_su);
-		
+		MONDAY(Calendar.MONDAY, Messages.TimeTool_monday, Messages.TimeTool_mo), TUESDAY(Calendar.TUESDAY,
+				Messages.TimeTool_tuesday, Messages.TimeTool_tu), WEDNESDAY(Calendar.WEDNESDAY,
+						Messages.TimeTool_wednesday, Messages.TimeTool_we), THURSDAY(Calendar.THURSDAY,
+								Messages.TimeTool_thursday,
+								Messages.TimeTool_th), FRIDAY(Calendar.FRIDAY, Messages.TimeTool_friday,
+										Messages.TimeTool_fr), SATURDAY(Calendar.SATURDAY, Messages.TimeTool_saturday,
+												Messages.TimeTool_sa), SUNDAY(Calendar.SUNDAY, Messages.TimeTool_sunday,
+														Messages.TimeTool_su);
+
 		public int numericDayValue;
 		public String fullName;
 		public String abbreviatedName;
-		
-		private DAYS(int numericDayValue, String fullName, String abbreviatedName){
+
+		private DAYS(int numericDayValue, String fullName, String abbreviatedName) {
 			this.numericDayValue = numericDayValue;
 			this.fullName = fullName;
 			this.abbreviatedName = abbreviatedName;
 		}
-		
-		public static DAYS valueOf(int dayValue){
+
+		public static DAYS valueOf(int dayValue) {
 			switch (dayValue) {
-			case Calendar.MONDAY:
-				return MONDAY;
-			case Calendar.TUESDAY:
-				return TUESDAY;
-			case Calendar.WEDNESDAY:
-				return WEDNESDAY;
-			case Calendar.THURSDAY:
-				return THURSDAY;
-			case Calendar.FRIDAY:
-				return FRIDAY;
-			case Calendar.SATURDAY:
-				return SATURDAY;
-			case Calendar.SUNDAY:
-				return SUNDAY;
-			default:
-				return null;
+				case Calendar.MONDAY :
+					return MONDAY;
+				case Calendar.TUESDAY :
+					return TUESDAY;
+				case Calendar.WEDNESDAY :
+					return WEDNESDAY;
+				case Calendar.THURSDAY :
+					return THURSDAY;
+				case Calendar.FRIDAY :
+					return FRIDAY;
+				case Calendar.SATURDAY :
+					return SATURDAY;
+				case Calendar.SUNDAY :
+					return SUNDAY;
+				default :
+					return null;
 			}
 		}
-		
+
 	}
-	
+
 	/** first day that can be set into a TimeTool */
 	public static final String BEGINNING_OF_UNIX_EPOCH = "19700101";
 	/** last date a TimeTool can be set to */
 	public static final String END_OF_UNIX_EPOCH = "20380118";
-	
+
 	/** Month names as full words */
-	public final static String[] Monate = {
-		Messages.TimeTool_january, Messages.TimeTool_february,
-		Messages.TimeTool_march, Messages.TimeTool_april,
-		Messages.TimeTool_may, Messages.TimeTool_june,
-		Messages.TimeTool_july, Messages.TimeTool_august,
-		Messages.TimeTool_september, Messages.TimeTool_october,
-		Messages.TimeTool_november, Messages.TimeTool_december
-	};
-	
+	public final static String[] Monate = {Messages.TimeTool_january, Messages.TimeTool_february,
+			Messages.TimeTool_march, Messages.TimeTool_april, Messages.TimeTool_may, Messages.TimeTool_june,
+			Messages.TimeTool_july, Messages.TimeTool_august, Messages.TimeTool_september, Messages.TimeTool_october,
+			Messages.TimeTool_november, Messages.TimeTool_december};
+
 	/** Month names as three-letter-abbreviations */
-	public final static String[] Mon = {
-		Messages.TimeTool_jan, Messages.TimeTool_feb,
-		Messages.TimeTool_mar, Messages.TimeTool_apr,
-		Messages.TimeTool_may, Messages.TimeTool_jun,
-		Messages.TimeTool_jul, Messages.TimeTool_aug,
-		Messages.TimeTool_sep, Messages.TimeTool_oct,
-		Messages.TimeTool_nov, Messages.TimeTool_dec
-	};
-	public final static String[] month_eng = {
-		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-	};
-	
+	public final static String[] Mon = {Messages.TimeTool_jan, Messages.TimeTool_feb, Messages.TimeTool_mar,
+			Messages.TimeTool_apr, Messages.TimeTool_may, Messages.TimeTool_jun, Messages.TimeTool_jul,
+			Messages.TimeTool_aug, Messages.TimeTool_sep, Messages.TimeTool_oct, Messages.TimeTool_nov,
+			Messages.TimeTool_dec};
+	public final static String[] month_eng = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
+			"Nov", "Dec"};
+
 	/** Weekdays as abbreviations */
-	public final static String[] wdays = {
-		Messages.TimeTool_su, Messages.TimeTool_mo,
-		Messages.TimeTool_tu, Messages.TimeTool_we,
-		Messages.TimeTool_th, Messages.TimeTool_fr,
-		Messages.TimeTool_sa //$NON-NLS-1$
+	public final static String[] wdays = {Messages.TimeTool_su, Messages.TimeTool_mo, Messages.TimeTool_tu,
+			Messages.TimeTool_we, Messages.TimeTool_th, Messages.TimeTool_fr, Messages.TimeTool_sa // $NON-NLS-1$
 	};
 	/** weekdays as full words */
-	public final static String[] Wochentage = {
-		Messages.TimeTool_sunday, Messages.TimeTool_monday,
-		Messages.TimeTool_tuesday, Messages.TimeTool_wednesday,
-		Messages.TimeTool_thursday, Messages.TimeTool_friday,
-		Messages.TimeTool_saturday //$NON-NLS-1$
+	public final static String[] Wochentage = {Messages.TimeTool_sunday, Messages.TimeTool_monday,
+			Messages.TimeTool_tuesday, Messages.TimeTool_wednesday, Messages.TimeTool_thursday,
+			Messages.TimeTool_friday, Messages.TimeTool_saturday // $NON-NLS-1$
 	};
-	
-	/** Constant indicating a full date/time format in german notation (dd.MM.yyyyy hh:mm:ss) */
+
+	/**
+	 * Constant indicating a full date/time format in german notation (dd.MM.yyyyy
+	 * hh:mm:ss)
+	 */
 	public static final int FULL_GER = 0;
-	/** Constant indicating a large date/time format in german notation (dd.MM.yyyyy hh:mm) */
+	/**
+	 * Constant indicating a large date/time format in german notation (dd.MM.yyyyy
+	 * hh:mm)
+	 */
 	public static final int LARGE_GER = 1;
 	/** Constant indicating a full time format (hh:mm:ss) */
 	public static final int TIME_FULL = 2;
@@ -148,16 +134,22 @@ public class TimeTool extends GregorianCalendar {
 	public static final int TIME_SMALL = 3;
 	/** Constant indicating a date in german notation (dd.mm.yyyy) */
 	public static final int DATE_GER = 4;
-	
-	/** Constant indicating a full date/time format in ISO notation (yyyyy-MM-dd hh:mm:ss) */
+
+	/**
+	 * Constant indicating a full date/time format in ISO notation (yyyyy-MM-dd
+	 * hh:mm:ss)
+	 */
 	public static final int FULL_MYSQL = 5;
 	/** Constant indicating a date format in ISO notation (yyyyy-MM-dd) */
 	public static final int DATE_MYSQL = 6;
-	/** Constant indicating a full date/time format in ISO notation (yyyyy-MM-dd hh:mm:ss) */
+	/**
+	 * Constant indicating a full date/time format in ISO notation (yyyyy-MM-dd
+	 * hh:mm:ss)
+	 */
 	public static final int FULL_ISO = FULL_MYSQL;
 	/** Constant indicating a date format in ISO notation (yyyyy-MM-dd) */
 	public static final int DATE_ISO = DATE_MYSQL;
-	
+
 	/** Constant indicating a compact time format (hhmm) */
 	public static final int TIME_COMPACT = 8;
 	/** Constant indicating a compact date format (yyyyMMdd) */
@@ -171,11 +163,14 @@ public class TimeTool extends GregorianCalendar {
 	public static final int TIMESTAMP = 13;
 	/** Constant indicating an XML Datetime format (yyyy-MM-ddThh:mm:ss) */
 	public static final int DATETIME_XML = 14;
-	/** Constant indicating a date in german notation with two only to digits for year (dd.mm.yy) */
+	/**
+	 * Constant indicating a date in german notation with two only to digits for
+	 * year (dd.mm.yy)
+	 */
 	public static final int DATE_GER_SHORT = 15;
 	/** Constant indicating a compact time format (hhmmss) */
 	public static final int TIME_COMPACT_FULL = 16;
-	
+
 	private static final SimpleDateFormat full_ger = new SimpleDateFormat("dd.MM.yyyy, HH:mm:ss");
 	private static final SimpleDateFormat large_ger = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
 	private static final SimpleDateFormat time_full = new SimpleDateFormat("HH:mm:ss");
@@ -184,32 +179,32 @@ public class TimeTool extends GregorianCalendar {
 	private static final SimpleDateFormat date_mysql = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat date_ger = new SimpleDateFormat("dd.MM.yyyy");
 	private static final SimpleDateFormat date_ger_short = new SimpleDateFormat("dd.MM.yy");
-	// private static SimpleDateFormat full_compact=new SimpleDateFormat("ddMMyyyyHHmm");
+	// private static SimpleDateFormat full_compact=new
+	// SimpleDateFormat("ddMMyyyyHHmm");
 	private static SimpleDateFormat time_compact = new SimpleDateFormat("HHmm");
 	private static final SimpleDateFormat time_compact_full = new SimpleDateFormat("HHmmss");
 	private static final SimpleDateFormat date_compact = new SimpleDateFormat("yyyyMMdd");
 	private static final SimpleDateFormat timestamp = new SimpleDateFormat("yyyyMMddHHmmss");
-	private static final SimpleDateFormat datetime_xml =
-		new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-	
+	private static final SimpleDateFormat datetime_xml = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
 	private static SimpleDateFormat pref_full = full_ger;
 	private static SimpleDateFormat pref_small = date_ger;
 	private static boolean wrap = true;
 	private static int defaultResolution = 1000;
 	private long resolution;
-	
+
 	private static final Map<Integer, SimpleDateFormat> INT_SDF_MAP = initIntSdfMapping();
-	
+
 	/**
 	 * return the time as seconds
 	 * 
 	 * @return the seconds
 	 */
-	public static int getTimeInSeconds(){
+	public static int getTimeInSeconds() {
 		return (int) (System.currentTimeMillis() / 1000L);
 	}
-	
-	private static Map<Integer, SimpleDateFormat> initIntSdfMapping(){
+
+	private static Map<Integer, SimpleDateFormat> initIntSdfMapping() {
 		Map<Integer, SimpleDateFormat> map = new HashMap<Integer, SimpleDateFormat>();
 		map.put(DATE_SIMPLE, pref_small);
 		map.put(FULL_GER, full_ger);
@@ -228,7 +223,7 @@ public class TimeTool extends GregorianCalendar {
 		map.put(DATE_GER_SHORT, date_ger_short);
 		return map;
 	}
-	
+
 	/**
 	 * Parse a String for time information and return these in minutes
 	 * 
@@ -236,10 +231,10 @@ public class TimeTool extends GregorianCalendar {
 	 *            a String formatted in one ofthe supported date/time formats
 	 * @return the value of the String expressed as minutes
 	 */
-	public static int getMinutesFromTimeString(final String in){
+	public static int getMinutesFromTimeString(final String in) {
 		return getSecondsFromTimeString(in) / 60;
 	}
-	
+
 	/**
 	 * Parse a String for time information and return these in seconds
 	 * 
@@ -247,27 +242,28 @@ public class TimeTool extends GregorianCalendar {
 	 *            a String formatted in one ofthe supported date/time formats
 	 * @return the value of the String expressed as seconds
 	 */
-	public static int getSecondsFromTimeString(final String in){
+	public static int getSecondsFromTimeString(final String in) {
 		int[] fld = parseTime(in);
 		if (fld == null) {
 			return Integer.MAX_VALUE;
 		}
 		return fld[0] * 3600 + fld[1] * 60 + fld[2];
 	}
-	
+
 	/**
-	 * Verifies whether the provided time-string is valid according to the given format
+	 * Verifies whether the provided time-string is valid according to the given
+	 * format
 	 * 
 	 * @param timestring
 	 * @param timestringformat
 	 * @return
 	 */
-	public static boolean isValidDateTimeString(final String timestring, int timestringformat){
+	public static boolean isValidDateTimeString(final String timestring, int timestringformat) {
 		SimpleDateFormat sdf = INT_SDF_MAP.get(timestringformat);
 		if (sdf == null) {
 			return false;
 		}
-		
+
 		try {
 			synchronized (sdf) {
 				sdf.setLenient(false);
@@ -276,28 +272,28 @@ public class TimeTool extends GregorianCalendar {
 		} catch (ParseException e) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * create a TimeTool set to the current date/time
 	 */
-	public TimeTool(){
+	public TimeTool() {
 		resolution = defaultResolution; // Sekunden-Auflösung
 	}
-	
+
 	/**
 	 * Create a TimeTool set to another TimeTool's date/time
 	 * 
 	 * @param other
 	 *            another TimeTool which will not be affected
 	 */
-	public TimeTool(final TimeTool other){
+	public TimeTool(final TimeTool other) {
 		this.setTimeInMillis(other.getTimeInMillis());
 		resolution = other.resolution;
 	}
-	
+
 	/**
 	 * Create a TimeTool set to the given units
 	 * 
@@ -306,98 +302,102 @@ public class TimeTool extends GregorianCalendar {
 	 * @param res
 	 *            multiplicator for the units in milliseconds
 	 */
-	public TimeTool(final int t, final int res){
+	public TimeTool(final int t, final int res) {
 		if (res != 0) {
 			resolution = res;
 		} else {
 			resolution = defaultResolution;
 		}
-		
+
 		if (t == 0) {
 			this.setTimeInMillis(System.currentTimeMillis());
 		} else {
 			this.setTimeInMillis(t * resolution);
 		}
 	}
-	
+
 	/**
 	 * Create a TimeTool set to a date/time as indicated by a String
 	 * 
 	 * @param pre
-	 *            a date/time String in one of the supported formats. If the String can not be
-	 *            parsed, the TimeTool will be set to the current date/time
+	 *            a date/time String in one of the supported formats. If the String
+	 *            can not be parsed, the TimeTool will be set to the current
+	 *            date/time
 	 */
-	public TimeTool(final String pre){
+	public TimeTool(final String pre) {
 		set(pre);
 		resolution = defaultResolution;
 	}
-	
+
 	/**
 	 * Create a TimeTool set to a date/time as indicated by a String
 	 * 
 	 * @param pre
 	 *            a date/time String in one of the supported formats.
 	 * @param bFailIfInvalid
-	 *            true: Throw an Exception if pre cannot be parsed, false: set to current date/time
+	 *            true: Throw an Exception if pre cannot be parsed, false: set to
+	 *            current date/time
 	 */
-	public TimeTool(final String pre, final boolean bFailIfInvalid) throws TimeFormatException{
+	public TimeTool(final String pre, final boolean bFailIfInvalid) throws TimeFormatException {
 		boolean formalOK = set(pre);
 		resolution = defaultResolution;
 		if (bFailIfInvalid && (!formalOK)) {
 			throw new TimeFormatException("Invalid Time/Date String");
 		}
-		
+
 	}
-	
+
 	/**
 	 * Create a TimeTool set to the specified milliseconds
 	 * 
 	 * @param millis
-	 *            Milliseconds after the epoch (same as System.getCirrentTimeMillis()
+	 *            Milliseconds after the epoch (same as
+	 *            System.getCirrentTimeMillis()
 	 */
-	public TimeTool(final long millis){
+	public TimeTool(final long millis) {
 		this.setTimeInMillis(millis);
 		resolution = defaultResolution;
 	}
-	
+
 	/**
 	 * Create a {@link TimeTool} instance from a {@link java.util.Date} instance
 	 * 
 	 * @param date
 	 */
-	public TimeTool(final Date date){
+	public TimeTool(final Date date) {
 		this.setTimeInMillis(date.getTime());
 		resolution = defaultResolution;
 	}
-	
+
 	/**
 	 * @param localDate
 	 * @since 3.2
 	 */
-	public TimeTool(final LocalDate localDate){
+	public TimeTool(final LocalDate localDate) {
 		Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		this.setTimeInMillis(date.getTime());
 		resolution = defaultResolution;
 	}
-	
+
 	/**
 	 * @param localDate
 	 * @since 3.2
 	 */
-	public TimeTool(final LocalDateTime localDateTime){
+	public TimeTool(final LocalDateTime localDateTime) {
 		ZonedDateTime atZone = localDateTime.atZone(ZoneId.systemDefault());
 		this.setTimeInMillis(atZone.toInstant().toEpochMilli());
 		resolution = defaultResolution;
 	}
-	
+
 	/**
-	 * Parsed einen String im Format "datum zeit" oder "datum, zeit" oder "datum" oder "zeit". Für
-	 * datum sind folgende Formate gültig: yyyy-MM-dd, yy-MM-dd, dd.MM.yyyy, dd.MM.YY, yyyyMMdd für
-	 * zeit sind folgende Formate gültig: hh:mm:ss, hh:mm, hhmm, hmm ausserdem das timestamp-format
-	 * yyyyMMddhhmmss wenn datum gegeben ist, nicht aber Zeit, wird die Zeit auf 00:00:00 gesetzt
-	 * wenn zeit gegeben ist, nicht aber Datum, wird das Datum nicht geändert
+	 * Parsed einen String im Format "datum zeit" oder "datum, zeit" oder "datum"
+	 * oder "zeit". Für datum sind folgende Formate gültig: yyyy-MM-dd, yy-MM-dd,
+	 * dd.MM.yyyy, dd.MM.YY, yyyyMMdd für zeit sind folgende Formate gültig:
+	 * hh:mm:ss, hh:mm, hhmm, hmm ausserdem das timestamp-format yyyyMMddhhmmss wenn
+	 * datum gegeben ist, nicht aber Zeit, wird die Zeit auf 00:00:00 gesetzt wenn
+	 * zeit gegeben ist, nicht aber Datum, wird das Datum nicht geändert
 	 */
-	public boolean set(final String orig){
+	public boolean set(final String orig) {
 		if (orig == null) {
 			return false;
 		}
@@ -426,12 +426,9 @@ public class TimeTool extends GregorianCalendar {
 					if (r == null) // Nein: Ist es ein timestamp?
 					{
 						if (s.length() == 14) {
-							set(Integer.parseInt(s.substring(0, 4)),
-								Integer.parseInt(s.substring(4, 6)) - 1,
-								Integer.parseInt(s.substring(6, 8)),
-								Integer.parseInt(s.substring(8, 10)),
-								Integer.parseInt(s.substring(10, 12)),
-								Integer.parseInt(s.substring(12, 14)));
+							set(Integer.parseInt(s.substring(0, 4)), Integer.parseInt(s.substring(4, 6)) - 1,
+									Integer.parseInt(s.substring(6, 8)), Integer.parseInt(s.substring(8, 10)),
+									Integer.parseInt(s.substring(10, 12)), Integer.parseInt(s.substring(12, 14)));
 							set(MILLISECOND, 0);
 						} else {
 							return false; // Nein, Fehler
@@ -467,7 +464,7 @@ public class TimeTool extends GregorianCalendar {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Set the date, leave the Time untouched
 	 * 
@@ -475,7 +472,7 @@ public class TimeTool extends GregorianCalendar {
 	 *            the new dat
 	 * @return true if dat could be parsed successfully
 	 */
-	public boolean setDate(final String dat){
+	public boolean setDate(final String dat) {
 		try {
 			int[] d = parseDate(dat);
 			if (d == null) {
@@ -490,43 +487,45 @@ public class TimeTool extends GregorianCalendar {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Set the date to the value of another TimeTool. Leave the time untouched
 	 * 
 	 * @param o
 	 *            source that will be untouched
 	 */
-	public void setDate(final TimeTool o){
+	public void setDate(final TimeTool o) {
 		set(YEAR, o.get(YEAR));
 		set(MONTH, o.get(MONTH));
 		set(DAY_OF_MONTH, o.get(DAY_OF_MONTH));
 	}
-	
+
 	/**
 	 * Set the time, leave the date untouched
 	 * 
 	 * @param o
 	 *            a source tTimeTool that will not be changed
 	 */
-	public void setTime(final TimeTool o){
+	public void setTime(final TimeTool o) {
 		set(HOUR_OF_DAY, o.get(HOUR_OF_DAY));
 		set(MINUTE, o.get(MINUTE));
 		set(SECOND, o.get(SECOND));
 		set(MILLISECOND, 0);
 	}
-	
+
 	/*
-	 * ParseDate hat ein Problem: Es kann nicht a priori wissen, ob das Datum als yyyy-mm-dd,
-	 * yy-mm-dd, dd-mm-yy oder dd-mm-yyyy zu verstehen ist. dazu kommen noch dieselben Varianten mit
-	 * . statt - als Trenner. Die Heuristik geht so vor: Wenn eines vierstellig ist, ist das das
-	 * Jahr. Wenn keines vierstellig ist, dann gilt: Wenn eines über 31 ist, ist es das Jahr. Wenn
-	 * keines über 31 ist, dann wird bei Trennzeichen - angenommen, dass zuerst das Jahr steht
-	 * (MySQL-Stil), wenn . das Trennzeichen ist, wird angenommen, dass das Jahr hinten steht. Wenn
-	 * eine so ermittelte zweistellige Jahreszahl grösser ist, als das aktuelle Jahr, werden 100
-	 * Jahre abgezogen. In der internen Repräsentation steht immer der Tag an erster Stelle
+	 * ParseDate hat ein Problem: Es kann nicht a priori wissen, ob das Datum als
+	 * yyyy-mm-dd, yy-mm-dd, dd-mm-yy oder dd-mm-yyyy zu verstehen ist. dazu kommen
+	 * noch dieselben Varianten mit . statt - als Trenner. Die Heuristik geht so
+	 * vor: Wenn eines vierstellig ist, ist das das Jahr. Wenn keines vierstellig
+	 * ist, dann gilt: Wenn eines über 31 ist, ist es das Jahr. Wenn keines über 31
+	 * ist, dann wird bei Trennzeichen - angenommen, dass zuerst das Jahr steht
+	 * (MySQL-Stil), wenn . das Trennzeichen ist, wird angenommen, dass das Jahr
+	 * hinten steht. Wenn eine so ermittelte zweistellige Jahreszahl grösser ist,
+	 * als das aktuelle Jahr, werden 100 Jahre abgezogen. In der internen
+	 * Repräsentation steht immer der Tag an erster Stelle
 	 */
-	public static int[] parseDate(final String tx){
+	public static int[] parseDate(final String tx) {
 		boolean trenner = false;
 		String t = tx.trim();
 		String[] dat = t.split("-");
@@ -583,15 +582,15 @@ public class TimeTool extends GregorianCalendar {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Zerlegt einen Zeitstring in Stunden- Minuten- und Sekundenanteile
 	 * 
 	 * @param tx
 	 * @return int[hr,min,s]
 	 */
-	public static int[] parseTime(final String tx){
-		
+	public static int[] parseTime(final String tx) {
+
 		String t = tx.trim();
 		if (t.endsWith(".0")) {
 			t = t.substring(0, t.length() - 2);
@@ -622,27 +621,27 @@ public class TimeTool extends GregorianCalendar {
 		}
 		return ret;
 	}
-	
+
 	/*
 	 * public void set(Date d) { super.setTime(d); }
 	 */
-	public void set(final GregorianCalendar gcal){
+	public void set(final GregorianCalendar gcal) {
 		this.setTimeInMillis(gcal.getTime().getTime());
 	}
-	
-	public void set(final TimeTool o){
+
+	public void set(final TimeTool o) {
 		this.setTimeInMillis(o.getTimeInMillis());
 		setResolution(o.resolution);
 	}
-	
-	public void setAsUnits(final int d){
+
+	public void setAsUnits(final int d) {
 		this.setTimeInMillis(d * resolution);
 	}
-	
+
 	// Differenz in Sekunden von diesem zu o
 	// (positiv, wenn o > dieses,
 	// negativ, wenn o < dieses)
-	public int secondsTo(final TimeTool o){
+	public int secondsTo(final TimeTool o) {
 		if (o == null) {
 			return 0;
 		}
@@ -651,30 +650,32 @@ public class TimeTool extends GregorianCalendar {
 		long res = ot - mt;
 		return (int) res;
 	}
-	
+
 	/**
-	 * Return the number of daysd between (including) this and (excluding) an other TimeTool
+	 * Return the number of daysd between (including) this and (excluding) an other
+	 * TimeTool
 	 * 
 	 * @param o
 	 *            the other TimeTool
-	 * @return the difference in days, counting positive if o is after this and negative else
+	 * @return the difference in days, counting positive if o is after this and
+	 *         negative else
 	 */
-	public int daysTo(final TimeTool o){
+	public int daysTo(final TimeTool o) {
 		long startToday = getTimeAsLong() - (get(HOUR_OF_DAY) * 3600000L);
 		long startOther = o.getTimeAsLong() - (o.get(HOUR_OF_DAY) * 3600000L);
 		long diff = startOther - startToday - 1;
 		return (int) (diff / 86400000L);
 	}
-	
+
 	/**
 	 * Set the resolution. It is used on all comparison methods of {@link TimeTool}.
 	 * 
 	 * @param res
 	 */
-	public void setResolution(final long res){
+	public void setResolution(final long res) {
 		resolution = res;
 	}
-	
+
 	/**
 	 * Differenz zu einem anderen TimeTool, ausgedrückt in "resolution"-Einheiten
 	 * 
@@ -685,13 +686,13 @@ public class TimeTool extends GregorianCalendar {
 	 *            Standard-resolution dieses TimeTools genommen
 	 * @return die differenz, abgerundet auf "res"
 	 */
-	public long diff(final TimeTool o, final long res){
+	public long diff(final TimeTool o, final long res) {
 		long mine = getTimeInMillis();
 		long other = o.getTimeInMillis();
 		long diff = mine - other;
 		return diff / (res == 0 ? this.resolution : res);
 	}
-	
+
 	/**
 	 * Test if this isBeforeOrEqual o. <br />
 	 * <b>WARNING</b> resolution is used on millis comparison. See
@@ -700,10 +701,10 @@ public class TimeTool extends GregorianCalendar {
 	 * @param o
 	 * @return
 	 */
-	public boolean isBeforeOrEqual(final TimeTool o){
+	public boolean isBeforeOrEqual(final TimeTool o) {
 		return (diff(o, resolution) <= 0) ? true : false;
 	}
-	
+
 	/**
 	 * Test if this isBeforeOrEqual o using the specified resolution.
 	 * 
@@ -711,10 +712,10 @@ public class TimeTool extends GregorianCalendar {
 	 * @param res
 	 * @return
 	 */
-	public boolean isBeforeOrEqual(final TimeTool o, int res){
+	public boolean isBeforeOrEqual(final TimeTool o, int res) {
 		return (diff(o, res) <= 0) ? true : false;
 	}
-	
+
 	/**
 	 * Test if this isBeforeOrEqual o. <br />
 	 * <b>WARNING</b> resolution is used on millis comparison. See
@@ -723,10 +724,10 @@ public class TimeTool extends GregorianCalendar {
 	 * @param o
 	 * @return
 	 */
-	public boolean isBefore(final TimeTool o){
+	public boolean isBefore(final TimeTool o) {
 		return (diff(o, resolution) < 0) ? true : false;
 	}
-	
+
 	/**
 	 * Test if this isBeforeOrEqual o using the specified resolution.
 	 * 
@@ -734,10 +735,10 @@ public class TimeTool extends GregorianCalendar {
 	 * @param res
 	 * @return
 	 */
-	public boolean isBefore(final TimeTool o, int res){
+	public boolean isBefore(final TimeTool o, int res) {
 		return (diff(o, res) < 0) ? true : false;
 	}
-	
+
 	/**
 	 * Test if this isAfterOrEqual o. <br />
 	 * <b>WARNING</b> resolution is used on millis comparison. See
@@ -746,10 +747,10 @@ public class TimeTool extends GregorianCalendar {
 	 * @param o
 	 * @return
 	 */
-	public boolean isAfterOrEqual(final TimeTool o){
+	public boolean isAfterOrEqual(final TimeTool o) {
 		return (diff(o, resolution) >= 0) ? true : false;
 	}
-	
+
 	/**
 	 * Test if this isAfterOrEqual o using the specified resolution.
 	 * 
@@ -757,10 +758,10 @@ public class TimeTool extends GregorianCalendar {
 	 * @param res
 	 * @return
 	 */
-	public boolean isAfterOrEqual(final TimeTool o, int res){
+	public boolean isAfterOrEqual(final TimeTool o, int res) {
 		return (diff(o, res) >= 0) ? true : false;
 	}
-	
+
 	/**
 	 * Test if this isAfter o. <br />
 	 * <b>WARNING</b> resolution is used on millis comparison. See
@@ -769,10 +770,10 @@ public class TimeTool extends GregorianCalendar {
 	 * @param o
 	 * @return
 	 */
-	public boolean isAfter(final TimeTool o){
+	public boolean isAfter(final TimeTool o) {
 		return (diff(o, resolution) > 0) ? true : false;
 	}
-	
+
 	/**
 	 * Test if this isAfter o using the specified resolution.
 	 * 
@@ -780,10 +781,10 @@ public class TimeTool extends GregorianCalendar {
 	 * @param res
 	 * @return
 	 */
-	public boolean isAfter(final TimeTool o, int res){
+	public boolean isAfter(final TimeTool o, int res) {
 		return (diff(o, res) > 0) ? true : false;
 	}
-	
+
 	/**
 	 * Test if this isEqual o. <br />
 	 * <b>WARNING</b> resolution is used on millis comparison. See
@@ -792,10 +793,10 @@ public class TimeTool extends GregorianCalendar {
 	 * @param o
 	 * @return
 	 */
-	public boolean isEqual(final TimeTool o){
+	public boolean isEqual(final TimeTool o) {
 		return (diff(o, resolution) == 0);
 	}
-	
+
 	/**
 	 * Test if this isEqual o using the specified resolution.
 	 * 
@@ -803,10 +804,10 @@ public class TimeTool extends GregorianCalendar {
 	 * @param res
 	 * @return
 	 */
-	public boolean isEqual(final TimeTool o, int res){
+	public boolean isEqual(final TimeTool o, int res) {
 		return (diff(o, res) == 0);
 	}
-	
+
 	/**
 	 * Checks whether two TimeTool values represent the same day (ignoring the time)
 	 * 
@@ -814,52 +815,52 @@ public class TimeTool extends GregorianCalendar {
 	 *            the TimeTool to compare with
 	 * @return true, if both times represent the same day
 	 */
-	public boolean isSameDay(final TimeTool o){
+	public boolean isSameDay(final TimeTool o) {
 		if (o == null) {
 			return false;
 		}
-		
+
 		int year1 = get(TimeTool.YEAR);
 		int month1 = get(TimeTool.MONTH);
 		int day1 = get(TimeTool.DAY_OF_MONTH);
-		
+
 		int year2 = o.get(TimeTool.YEAR);
 		int month2 = o.get(TimeTool.MONTH);
 		int day2 = o.get(TimeTool.DAY_OF_MONTH);
-		
+
 		if ((year1 == year2) && (month1 == month2) && (day1 == day2)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
-	 * Get a String representation of the duration of the date compared to now. Returns an
-	 * internationalized String.<br />
+	 * Get a String representation of the duration of the date compared to now.
+	 * Returns an internationalized String.<br />
 	 * Examples: 2 weeks ago, in 1 week, 1 year ago, in 2 years
 	 * 
 	 * @since 3.2
 	 * 
 	 * @return
 	 */
-	public String getDurationToNowString(){
+	public String getDurationToNowString() {
 		return getDurationToTimeAsString(LocalDateTime.now());
 	}
-	
+
 	/**
-	 * Get a String representation of the duration of the date compared to the given time. Returns
-	 * an internationalized String.<br />
+	 * Get a String representation of the duration of the date compared to the given
+	 * time. Returns an internationalized String.<br />
 	 * Examples: 2 weeks ago, in 1 week, 1 year ago, in 2 years
 	 * 
 	 * @since 3.2
 	 * 
 	 * @return
 	 */
-	public String getDurationToTimeAsString(LocalDateTime localDateTime){
+	public String getDurationToTimeAsString(LocalDateTime localDateTime) {
 		LocalDateTime date = toLocalDateTime();
 		LocalDateTime now = localDateTime;
-		
+
 		int years = (int) now.until(date, ChronoUnit.YEARS);
 		int weeks = (int) now.until(date, ChronoUnit.WEEKS);
 		int months = (int) now.until(date, ChronoUnit.MONTHS);
@@ -889,8 +890,8 @@ public class TimeTool extends GregorianCalendar {
 			return Messages.TimeTool_today;
 		}
 	}
-	
-	protected String getYearsFormat(int years){
+
+	protected String getYearsFormat(int years) {
 		if (years < 0) {
 			if (years < -1) {
 				return Messages.TimeTool_yearsAgoFormat;
@@ -903,8 +904,8 @@ public class TimeTool extends GregorianCalendar {
 			return Messages.TimeTool_yearToFormat;
 		}
 	}
-	
-	protected String getMonthsFormat(int months){
+
+	protected String getMonthsFormat(int months) {
 		if (months < 0) {
 			if (months < -1) {
 				return Messages.TimeTool_monthsAgoFormat;
@@ -917,8 +918,8 @@ public class TimeTool extends GregorianCalendar {
 			return Messages.TimeTool_monthToFormat;
 		}
 	}
-	
-	protected String getWeeksFormat(int weeks){
+
+	protected String getWeeksFormat(int weeks) {
 		if (weeks < 0) {
 			if (weeks < -1) {
 				return Messages.TimeTool_weeksAgoFormat;
@@ -931,8 +932,8 @@ public class TimeTool extends GregorianCalendar {
 			return Messages.TimeTool_weekToFormat;
 		}
 	}
-	
-	protected String getDaysFormat(int days){
+
+	protected String getDaysFormat(int days) {
 		if (days < 0) {
 			if (days < -1) {
 				return Messages.TimeTool_daysAgoFormat;
@@ -945,22 +946,22 @@ public class TimeTool extends GregorianCalendar {
 			return Messages.TimeTool_dayToFormat;
 		}
 	}
-	
-	public int getTimeInUnits(){
+
+	public int getTimeInUnits() {
 		return (int) (getTimeInMillis() / resolution);
 	}
-	
-	public long getTimeAsLong(){
+
+	public long getTimeAsLong() {
 		return getTimeInMillis();
 	}
-	
+
 	/**
 	 * Inhalt kürzen.
 	 * 
 	 * @param w
 	 *            0: Millisekunden weg, 1: Sekunden, 2: Minuten, 3: Stunden
 	 */
-	public void chop(final int w){
+	public void chop(final int w) {
 		set(MILLISECOND, 0);
 		if (w > 0) {
 			set(SECOND, 0);
@@ -972,32 +973,32 @@ public class TimeTool extends GregorianCalendar {
 			set(HOUR_OF_DAY, 0);
 		}
 	}
-	
-	public void addUnits(final int m){
+
+	public void addUnits(final int m) {
 		add(MILLISECOND, m * (int) resolution);
 	}
-	
-	public void addDays(final int d){
+
+	public void addDays(final int d) {
 		add(DAY_OF_YEAR, d);
 	}
-	
-	public void addMinutes(final int m){
+
+	public void addMinutes(final int m) {
 		add(MINUTE, m);
 	}
-	
-	public void addHours(final int h){
+
+	public void addHours(final int h) {
 		add(HOUR_OF_DAY, h);
 	}
-	
-	public void addSeconds(final int s){
+
+	public void addSeconds(final int s) {
 		add(SECOND, s);
 	}
-	
-	public static void setDefaultResolution(final int r){
+
+	public static void setDefaultResolution(final int r) {
 		defaultResolution = r;
 	}
-	
-	public static void setPreferredFormat(final String full, final String small, final String wr){
+
+	public static void setPreferredFormat(final String full, final String small, final String wr) {
 		pref_full = new SimpleDateFormat(full);
 		pref_small = new SimpleDateFormat(small);
 		if (wr.equals("1")) {
@@ -1006,30 +1007,32 @@ public class TimeTool extends GregorianCalendar {
 			wrap = false;
 		}
 	}
-	
+
 	/**
 	 * @since 3.2
 	 */
-	public LocalDate toLocalDate(){
+	public LocalDate toLocalDate() {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(getTimeInMillis());
 		return gc.toZonedDateTime().toLocalDate();
 	}
-	
+
 	/**
 	 * @since 3.2
 	 */
-	public LocalDateTime toLocalDateTime(){
+	public LocalDateTime toLocalDateTime() {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(getTimeInMillis());
 		return gc.toZonedDateTime().toLocalDateTime();
 	}
-	
+
 	/**
 	 * A helper function for the RCPTT GUI-tests
 	 * 
 	 * @since 3.8
-	 * @param days number of days compared to today may be positive (in the future) or negative (in the past)
+	 * @param days
+	 *            number of days compared to today may be positive (in the future)
+	 *            or negative (in the past)
 	 * @return a String in the format dd.MM.yyyy
 	 */
 	public static String daysFromNow(int days) {
@@ -1037,8 +1040,8 @@ public class TimeTool extends GregorianCalendar {
 		newTime.addDays(days);
 		return newTime.toString(TimeTool.DATE_GER);
 	}
-	
-	public String toDBString(final boolean full){
+
+	public String toDBString(final boolean full) {
 		String res;
 		if (full == true) {
 			synchronized (pref_full) {
@@ -1055,37 +1058,37 @@ public class TimeTool extends GregorianCalendar {
 			return res;
 		}
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return Long.toHexString(getTimeInMillis());
 	}
-	
-	public String dump(){
+
+	public String dump() {
 		return toString(FULL);
 	}
-	
-	public String toString(final int f){
+
+	public String toString(final int f) {
 		if (WEEKDAY == f) {
 			return wdays[get(DAY_OF_WEEK) - 1];
 		}
-		
+
 		SimpleDateFormat sdf = INT_SDF_MAP.get(f);
 		if (sdf != null) {
 			synchronized (sdf) {
 				return sdf.format(getTime());
 			}
 		}
-		
+
 		return "00:00";
 	}
-	
+
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return toString().hashCode();
 	}
-	
-	public static int minutesStringToInt(final String in){
+
+	public static int minutesStringToInt(final String in) {
 		String[] hm = in.split("[:\\.]");
 		String h = "0";
 		String m = "0";
@@ -1104,17 +1107,17 @@ public class TimeTool extends GregorianCalendar {
 		}
 		return Integer.parseInt(h) * 60 + Integer.parseInt(m);
 	}
-	
+
 	public static class TimeFormatException extends Exception {
 		private static final long serialVersionUID = -7509724431749474725L;
-		
-		public TimeFormatException(final String msg){
+
+		public TimeFormatException(final String msg) {
 			super(msg);
 		}
 	}
-	
+
 	@Override
-	public int compareTo(Calendar arg0){
+	public int compareTo(Calendar arg0) {
 		long diff = (getTimeInMillis() - arg0.getTimeInMillis());
 		if (diff < 0) {
 			return -1;
@@ -1123,16 +1126,19 @@ public class TimeTool extends GregorianCalendar {
 		}
 		return 0;
 	}
-	
+
 	/**
-	 * Null-safe static compare method, null is always in the max past, thus being lower
+	 * Null-safe static compare method, null is always in the max past, thus being
+	 * lower
 	 * 
-	 * @param dateDue may be <code>null</code>
-	 * @param dateDue2 may be <code>null</code>
+	 * @param dateDue
+	 *            may be <code>null</code>
+	 * @param dateDue2
+	 *            may be <code>null</code>
 	 * @return 0 if equal, -1 if dd is greater, 1 if dd2 is greater
 	 * @since 3.4
 	 */
-	public static int compare(TimeTool dd,  TimeTool dd2){
+	public static int compare(TimeTool dd, TimeTool dd2) {
 		if (dd == null || dd2 == null) {
 			if (dd != null) {
 				return -1;

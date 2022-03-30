@@ -10,21 +10,21 @@
  */
 package ch.elexis.core.model;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IStock</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IStock</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IStock#getCode <em>Code</em>}</li>
- *   <li>{@link ch.elexis.core.model.IStock#getDriverUuid <em>Driver Uuid</em>}</li>
- *   <li>{@link ch.elexis.core.model.IStock#getDriverConfig <em>Driver Config</em>}</li>
- *   <li>{@link ch.elexis.core.model.IStock#getPriority <em>Priority</em>}</li>
- *   <li>{@link ch.elexis.core.model.IStock#getOwner <em>Owner</em>}</li>
+ * <li>{@link ch.elexis.core.model.IStock#getCode <em>Code</em>}</li>
+ * <li>{@link ch.elexis.core.model.IStock#getDriverUuid <em>Driver
+ * Uuid</em>}</li>
+ * <li>{@link ch.elexis.core.model.IStock#getDriverConfig <em>Driver
+ * Config</em>}</li>
+ * <li>{@link ch.elexis.core.model.IStock#getPriority <em>Priority</em>}</li>
+ * <li>{@link ch.elexis.core.model.IStock#getOwner <em>Owner</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIStock()
@@ -33,13 +33,14 @@ package ch.elexis.core.model;
  */
 public interface IStock extends Identifiable, Deleteable {
 	/**
-	 * Returns the value of the '<em><b>Code</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Code</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Code</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Code</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Code</em>' attribute.
 	 * @see #setCode(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIStock_Code()
@@ -49,23 +50,25 @@ public interface IStock extends Identifiable, Deleteable {
 	String getCode();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getCode <em>Code</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Code</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getCode
+	 * <em>Code</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Code</em>' attribute.
 	 * @see #getCode()
 	 * @generated
 	 */
 	void setCode(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Driver Uuid</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Driver Uuid</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Driver Uuid</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Driver Uuid</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Driver Uuid</em>' attribute.
 	 * @see #setDriverUuid(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIStock_DriverUuid()
@@ -75,23 +78,26 @@ public interface IStock extends Identifiable, Deleteable {
 	String getDriverUuid();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getDriverUuid <em>Driver Uuid</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Driver Uuid</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getDriverUuid
+	 * <em>Driver Uuid</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Driver Uuid</em>' attribute.
 	 * @see #getDriverUuid()
 	 * @generated
 	 */
 	void setDriverUuid(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Driver Config</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Driver Config</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Driver Config</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Driver Config</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Driver Config</em>' attribute.
 	 * @see #setDriverConfig(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIStock_DriverConfig()
@@ -101,23 +107,26 @@ public interface IStock extends Identifiable, Deleteable {
 	String getDriverConfig();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getDriverConfig <em>Driver Config</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Driver Config</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getDriverConfig
+	 * <em>Driver Config</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Driver Config</em>' attribute.
 	 * @see #getDriverConfig()
 	 * @generated
 	 */
 	void setDriverConfig(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Priority</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Priority</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Priority</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Priority</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Priority</em>' attribute.
 	 * @see #setPriority(int)
 	 * @see ch.elexis.core.model.ModelPackage#getIStock_Priority()
@@ -127,23 +136,25 @@ public interface IStock extends Identifiable, Deleteable {
 	int getPriority();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getPriority <em>Priority</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Priority</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getPriority
+	 * <em>Priority</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Priority</em>' attribute.
 	 * @see #getPriority()
 	 * @generated
 	 */
 	void setPriority(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Owner</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Owner</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Owner</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Owner</em>' reference isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Owner</em>' reference.
 	 * @see #setOwner(IMandator)
 	 * @see ch.elexis.core.model.ModelPackage#getIStock_Owner()
@@ -153,10 +164,11 @@ public interface IStock extends Identifiable, Deleteable {
 	IMandator getOwner();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getOwner <em>Owner</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Owner</em>' reference.
+	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getOwner
+	 * <em>Owner</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Owner</em>' reference.
 	 * @see #getOwner()
 	 * @generated
 	 */
@@ -168,7 +180,7 @@ public interface IStock extends Identifiable, Deleteable {
 	 * @model kind="operation"
 	 * @generated not
 	 */
-	default boolean isCommissioningSystem(){
+	default boolean isCommissioningSystem() {
 		String driverUuid = getDriverUuid();
 		return (driverUuid != null && driverUuid.length() > 0);
 	}

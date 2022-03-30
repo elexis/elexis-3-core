@@ -50,18 +50,18 @@ public class RnOutputDialog extends TitleAreaDialog {
 	private Button bCopy;
 	private final List<Control> ctls = new ArrayList<Control>();
 	private final StackLayout stack = new StackLayout();
-	
-	public RnOutputDialog(Shell shell, Collection<Rechnung> rnn){
+
+	public RnOutputDialog(Shell shell, Collection<Rechnung> rnn) {
 		super(shell);
 		this.rnn = rnn;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		lo = Extensions.getClasses(ExtensionPointConstantsData.RECHNUNGS_MANAGER, "outputter"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (lo.isEmpty()) {
-			String msg = "Elexis has no textplugin configured for outputting bills!"; //$NON-NLS-1$ 
+			String msg = "Elexis has no textplugin configured for outputting bills!"; //$NON-NLS-1$
 			SWTHelper.alert(msg, msg);
 			return null;
 		}
@@ -71,7 +71,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 		cbLo = new Combo(ret, SWT.SINGLE | SWT.READ_ONLY);
 		cbLo.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		bCopy = new Button(ret, SWT.CHECK);
-		bCopy.setText(Messages.RnOutputDialog_markAsCopy); //$NON-NLS-1$
+		bCopy.setText(Messages.RnOutputDialog_markAsCopy); // $NON-NLS-1$
 		bCopy.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		final Composite bottom = new Composite(ret, SWT.NONE);
 		bottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -82,7 +82,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 		}
 		cbLo.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				int idx = cbLo.getSelectionIndex();
 				if (idx != -1) {
 					stack.topControl = ctls.get(idx);
@@ -90,7 +90,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 					CoreHub.localCfg.set(Preferences.RNN_DEFAULTEXPORTMODE, idx);
 				}
 			}
-			
+
 		});
 		int lastSelected = CoreHub.localCfg.get(Preferences.RNN_DEFAULTEXPORTMODE, 0);
 		if ((lastSelected < 0) || (lastSelected >= cbLo.getItemCount())) {
@@ -102,26 +102,26 @@ public class RnOutputDialog extends TitleAreaDialog {
 		bottom.layout();
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		int num = rnn.size();
 		if (num > 1) {
-			getShell().setText(Messages.RnOutputDialog_outputCaption); //$NON-NLS-1$
-			setTitle(num + Messages.RnOutputDialog_outputTitle); //$NON-NLS-1$
-			setMessage(MessageFormat.format(Messages.RnOutputDialog_outputMessage, num)); //$NON-NLS-1$
-			
+			getShell().setText(Messages.RnOutputDialog_outputCaption); // $NON-NLS-1$
+			setTitle(num + Messages.RnOutputDialog_outputTitle); // $NON-NLS-1$
+			setMessage(MessageFormat.format(Messages.RnOutputDialog_outputMessage, num)); // $NON-NLS-1$
+
 		} else {
-			getShell().setText(Messages.RnOutputDialog_outputBillCaption); //$NON-NLS-1$
-			setTitle(Messages.RnOutputDialog_outputBillTitle); //$NON-NLS-1$
-			setMessage(Messages.RnOutputDialog_outputBillMessage); //$NON-NLS-1$
+			getShell().setText(Messages.RnOutputDialog_outputBillCaption); // $NON-NLS-1$
+			setTitle(Messages.RnOutputDialog_outputBillTitle); // $NON-NLS-1$
+			setMessage(Messages.RnOutputDialog_outputBillMessage); // $NON-NLS-1$
 		}
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		boolean activated = ConfigServiceHolder.getUser(Preferences.USR_SHOWPATCHGREMINDER, false);
 		if (activated) {
 			ConfigServiceHolder.setUser(Preferences.USR_SHOWPATCHGREMINDER, false);
@@ -140,17 +140,15 @@ public class RnOutputDialog extends TitleAreaDialog {
 				}
 			}
 			if (bFlag) {
-				SWTHelper.alert("Stornierte Rechnungen in Liste",
-					"Stornierte Rechnungen werden nicht ausgegeben.");
+				SWTHelper.alert("Stornierte Rechnungen in Liste", "Stornierte Rechnungen werden nicht ausgegeben.");
 			}
-			rnOutputter.doOutput(
-				bCopy.getSelection() ? IRnOutputter.TYPE.COPY : IRnOutputter.TYPE.ORIG, rnn,
-				new Properties());
+			rnOutputter.doOutput(bCopy.getSelection() ? IRnOutputter.TYPE.COPY : IRnOutputter.TYPE.ORIG, rnn,
+					new Properties());
 		}
 		if (activated) {
 			ConfigServiceHolder.setUser(Preferences.USR_SHOWPATCHGREMINDER, true);
 		}
 		super.okPressed();
 	}
-	
+
 }

@@ -14,20 +14,20 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.documents.views.DocumentsView;
 
 public class FlatViewHandler extends AbstractHandler implements IElementUpdater {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-			.findView(DocumentsView.ID);
+				.findView(DocumentsView.ID);
 		if (viewPart instanceof DocumentsView) {
 			((DocumentsView) viewPart)
-				.switchFlatView(!ConfigServiceHolder.getUser(DocumentsView.SETTING_FLAT_VIEW, false));
+					.switchFlatView(!ConfigServiceHolder.getUser(DocumentsView.SETTING_FLAT_VIEW, false));
 		}
 		return null;
 	}
-	
+
 	@Override
-	public void updateElement(UIElement element, Map parameters){
+	public void updateElement(UIElement element, Map parameters) {
 		boolean bFlat = ConfigServiceHolder.getUser(DocumentsView.SETTING_FLAT_VIEW, false);
 		element.setChecked(bFlat);
 	}

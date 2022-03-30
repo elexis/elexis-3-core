@@ -40,7 +40,6 @@ import ch.elexis.core.jpa.entities.listener.KontaktEntityListener;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
 
-
 /**
  * The persistent class for the Elexis KONTAKT database table. Valid from DB
  * Version 3.1.0
@@ -51,32 +50,29 @@ import ch.elexis.core.types.Gender;
 @Table(name = "KONTAKT")
 @Cache(expiry = 15000)
 @XmlRootElement(name = "contact")
-@EntityListeners({
-	KontaktEntityListener.class, EntityWithIdListener.class
-})
+@EntityListeners({KontaktEntityListener.class, EntityWithIdListener.class})
 @NamedQuery(name = "Kontakt.code", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.code = :code")
 @NamedQuery(name = "Kontakt.patient", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.patient = :patient")
 @NamedQuery(name = "Kontakt.person", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.person = :person")
 @NamedQuery(name = "Kontakt.organization", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.organisation = :organization")
 @NamedQuery(name = "Kontakt.mandator", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.mandator = :mandator")
-public class Kontakt extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Kontakt extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Lob
 	protected byte[] extInfo;
-	
+
 	@Lob()
 	@Column(name = "allergien")
 	protected String allergies;
@@ -103,7 +99,7 @@ public class Kontakt extends AbstractEntityWithId
 	@Column(length = 255, name = "bezeichnung3")
 	protected String description3;
 
-	//	@Basic(fetch = FetchType.LAZY)
+	// @Basic(fetch = FetchType.LAZY)
 	@Convert(converter = ElexisDBCompressedStringConverter.class)
 	@Column(columnDefinition = "BLOB")
 	protected String diagnosen;
@@ -129,7 +125,7 @@ public class Kontakt extends AbstractEntityWithId
 
 	@Column(name = "sterbedatum", length = 8)
 	protected LocalDate dod;
-	
+
 	@Convert(converter = FuzzyGenderToEnumConverter.class)
 	@Column(name = "geschlecht")
 	protected Gender gender;
@@ -164,7 +160,7 @@ public class Kontakt extends AbstractEntityWithId
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "istVerstorben")
 	protected boolean deceased;
-	
+
 	@Column(length = 3, name = "land")
 	@Convert(converter = FuzzyCountryToEnumConverter.class)
 	protected Country country;
@@ -218,8 +214,12 @@ public class Kontakt extends AbstractEntityWithId
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "patientKontakt")
 	private List<Fall> faelle = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = {
-		CascadeType.REFRESH, CascadeType.REMOVE // cascade remove, ZusatzAdresse#contact is foreign key
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = {CascadeType.REFRESH, CascadeType.REMOVE // cascade
+																												// remove,
+																												// ZusatzAdresse#contact
+																												// is
+																												// foreign
+																												// key
 	})
 	private List<ZusatzAdresse> addresses;
 
@@ -294,14 +294,14 @@ public class Kontakt extends AbstractEntityWithId
 		this.dob = dob;
 	}
 
-	public LocalDate getDod(){
+	public LocalDate getDod() {
 		return dod;
 	}
-	
-	public void setDod(LocalDate dob){
+
+	public void setDod(LocalDate dob) {
 		this.dod = dob;
 	}
-	
+
 	public String getGruppe() {
 		return gruppe;
 	}
@@ -326,14 +326,14 @@ public class Kontakt extends AbstractEntityWithId
 		this.laboratory = laboratory;
 	}
 
-	public boolean isDeceased(){
+	public boolean isDeceased() {
 		return deceased;
 	}
-	
-	public void setDeceased(boolean deceased){
+
+	public void setDeceased(boolean deceased) {
 		this.deceased = deceased;
 	}
-	
+
 	public String getCity() {
 		return city;
 	}
@@ -398,15 +398,15 @@ public class Kontakt extends AbstractEntityWithId
 		this.faelle = faelle;
 	}
 
-	public List<ZusatzAdresse> getAddresses(){
+	public List<ZusatzAdresse> getAddresses() {
 		return addresses;
 	}
 
-	public List<KontaktAdressJoint> getRelatedContacts(){
+	public List<KontaktAdressJoint> getRelatedContacts() {
 		return relatedContacts;
 	}
-	
-	public List<KontaktAdressJoint> getRelatedByContacts(){
+
+	public List<KontaktAdressJoint> getRelatedByContacts() {
 		return relatedByContacts;
 	}
 
@@ -537,44 +537,44 @@ public class Kontakt extends AbstractEntityWithId
 	public void setPersonalAnamnese(String personalAnamnese) {
 		this.personalAnamnese = personalAnamnese;
 	}
-	
+
 	@Override
-	public byte[] getExtInfo(){
+	public byte[] getExtInfo() {
 		return extInfo;
 	}
-	
+
 	@Override
-	public void setExtInfo(byte[] extInfo){
+	public void setExtInfo(byte[] extInfo) {
 		this.extInfo = extInfo;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

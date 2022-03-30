@@ -15,34 +15,33 @@ import java.beans.PropertyChangeSupport;
 
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
-public abstract class BasePropertyChangeSupport extends EObjectImpl implements
-		IPropertyChangeSupport {
+public abstract class BasePropertyChangeSupport extends EObjectImpl implements IPropertyChangeSupport {
 	private transient PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-	
-	public void addPropertyChangeListener(PropertyChangeListener listener){
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(listener);
 	}
-	
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener){
+
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
 	}
-	
-	public void removePropertyChangeListener(PropertyChangeListener listener){
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
-	
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener){
+
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
 	}
-	
-	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue){
+
+	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
 		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
 		updateCache();
 	}
-	
+
 	/**
-	 * Allows to add a cache to be refreshed each time a property is changed (does not consider the
-	 * property type);
+	 * Allows to add a cache to be refreshed each time a property is changed (does
+	 * not consider the property type);
 	 */
 	protected abstract void updateCache();
 }

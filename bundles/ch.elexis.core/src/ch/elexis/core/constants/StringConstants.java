@@ -13,8 +13,8 @@
 package ch.elexis.core.constants;
 
 /**
- * Utility Class for different constants. To ensure that same things are named identically in
- * different program parts
+ * Utility Class for different constants. To ensure that same things are named
+ * identically in different program parts
  * 
  * @author gerry
  * 
@@ -31,19 +31,19 @@ public class StringConstants {
 	public static final String SEMICOLON = ";";
 	public static final String CRLF = "\r\n";
 	public static final String LF = "\n";
-	
+
 	public static final String VERSION_LITERAL = "VERSION"; //$NON-NLS-1$
-	
+
 	public static final String ONE = "1";
 	public static final String ZERO = "0";
 	public static final String FLOAT_ZERO = "0.0";
 	public static final String DOUBLE_ZERO = "0.00";
 	public static final String MANDATOR = Messages.StringConstants_mandator;
 	public static final String USER = Messages.StringConstants_user;
-	
+
 	public static final String ROLE_NAMING = Messages.StringConstants_role;
 	public static final String ROLES_NAMING = Messages.StringConstants_roles;
-	
+
 	public static final String ROLE_ADMIN = Messages.StringConstants_admin;
 	public static final String ROLE_USERS = Messages.StringConstants_user;
 	public static final String ROLE_ALL = Messages.StringConstants_all;
@@ -51,5 +51,5 @@ public class StringConstants {
 	public static final String SWTBOT_ID = "org.eclipse.swtbot.widget.key";
 	public static final String OPENBRACKET = "(";
 	public static final String CLOSEBRACKET = ")";
-	
+
 }

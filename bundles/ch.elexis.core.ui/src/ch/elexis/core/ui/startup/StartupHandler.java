@@ -35,67 +35,61 @@ import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
  */
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class StartupHandler implements EventHandler {
-	
+
 	private static IEclipseContext applicationContext;
-	
+
 	@Override
-	public void handleEvent(Event event){
+	public void handleEvent(Event event) {
 		LoggerFactory.getLogger(getClass()).info("APPLICATION STARTUP COMPLETE");
 		Object property = event.getProperty("org.eclipse.e4.data");
 		if (property instanceof MApplication) {
 			MApplication application = (MApplication) property;
 			StartupHandler.applicationContext = application.getContext();
 		}
-		
+
 		PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
 			@Override
-			public boolean preShutdown(IWorkbench workbench, boolean forced){
+			public boolean preShutdown(IWorkbench workbench, boolean forced) {
 				if (LocalDocumentServiceHolder.getService() != null
-					&& LocalDocumentServiceHolder.getService().isPresent()
-					&& !LocalDocumentServiceHolder.getService().get().getAll().isEmpty()) {
+						&& LocalDocumentServiceHolder.getService().isPresent()
+						&& !LocalDocumentServiceHolder.getService().get().getAll().isEmpty()) {
 					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
-						.getService(ICommandService.class);
-					Command command =
-						commandService.getCommand("ch.elexis.core.ui.command.openLocalDocuments"); //$NON-NLS-1$
-					
-					ExecutionEvent event =
-						new ExecutionEvent(command, Collections.EMPTY_MAP, this, null);
+							.getService(ICommandService.class);
+					Command command = commandService.getCommand("ch.elexis.core.ui.command.openLocalDocuments"); //$NON-NLS-1$
+
+					ExecutionEvent event = new ExecutionEvent(command, Collections.EMPTY_MAP, this, null);
 					try {
 						command.executeWithChecks(event);
 						return LocalDocumentServiceHolder.getService().get().getAll().isEmpty();
-					} catch (ExecutionException | NotDefinedException | NotEnabledException
-							| NotHandledException e) {
-						MessageDialog.openError(
-							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							Messages.UiStartup_errortitle,
-							Messages.UiStartup_errormessage);
+					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
+						MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+								Messages.UiStartup_errortitle, Messages.UiStartup_errormessage);
 					}
 				}
-				// reset dirty of closed compatibility parts that would open save resources dialog (redmine #20724)
+				// reset dirty of closed compatibility parts that would open save resources
+				// dialog (redmine #20724)
 				if (StartupHandler.applicationContext != null
-					&& StartupHandler.applicationContext.get(EPartService.class) != null) {
-					EPartService partService =
-						StartupHandler.applicationContext.get(EPartService.class);
+						&& StartupHandler.applicationContext.get(EPartService.class) != null) {
+					EPartService partService = StartupHandler.applicationContext.get(EPartService.class);
 					try {
 						Collection<MPart> dirtyParts = partService.getDirtyParts();
 						if (!dirtyParts.isEmpty()) {
 							for (MPart mPart : dirtyParts) {
 								if (mPart.getObject() == null && mPart.getContributionURI()
-									.endsWith("internal.e4.compatibility.CompatibilityView")) {
+										.endsWith("internal.e4.compatibility.CompatibilityView")) {
 									mPart.setDirty(false);
 								}
 							}
 						}
 					} catch (IllegalStateException e) {
-						LoggerFactory.getLogger(getClass()).warn("Exception resetting dirty state",
-							e);
+						LoggerFactory.getLogger(getClass()).warn("Exception resetting dirty state", e);
 					}
 				}
 				return true;
 			}
-			
+
 			@Override
-			public void postShutdown(IWorkbench workbench){
+			public void postShutdown(IWorkbench workbench) {
 				// nothing to do here
 			}
 		});

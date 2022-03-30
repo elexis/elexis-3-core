@@ -25,32 +25,31 @@ import ch.elexis.data.User;
 import ch.rgw.tools.JdbcLink;
 
 public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
-	
-	public RoleBasedAccessControlTest(JdbcLink link){
+
+	public RoleBasedAccessControlTest(JdbcLink link) {
 		super(link);
 	}
-	
+
 	private User user;
-	
+
 	@Before
-	public void before() throws Exception{
+	public void before() throws Exception {
 		ContextServiceHolder.get().getActiveUser().ifPresent(u -> user = User.load(u.getId()));
 		assertNotNull(user);
 	}
-	
+
 	@Test
-	@Ignore(value =  "fix business initialization in nopo")
-	public void testInitialState(){
+	@Ignore(value = "fix business initialization in nopo")
+	public void testInitialState() {
 		User user = User.load(User.USERNAME_ADMINISTRATOR);
 		assertNotNull("User Administrator is null", user);
 		Person assignedContact = user.getAssignedContact();
 		assertNotNull("No contact assoaciated to user administrator", assignedContact);
 		boolean queryRightForUser = CoreHub.acl.request(user, AccessControlDefaults.AC_LOGIN);
 		assertTrue("Administrator is denied login", queryRightForUser);
-		
+
 		List<Right> rights = new Query<Right>(Right.class).execute();
-		System.out.println("Rights set: "
-			+ rights.stream().map(r -> r.getLabel()).collect(Collectors.joining(",")));
+		System.out.println("Rights set: " + rights.stream().map(r -> r.getLabel()).collect(Collectors.joining(",")));
 		assertTrue(rights.size() >= 40);
 		List<Role> roles = new Query<Role>(Role.class).execute();
 		assertEquals(8, roles.size());
@@ -58,10 +57,10 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 		ACE[] assignedUserRights = ur.getAssignedAccessRights();
 		assertEquals(55, assignedUserRights.length);
 	}
-	
+
 	@Test
-	@Ignore(value =  "fix business initialization in nopo")
-	public void testUserAddWithOKRight(){
+	@Ignore(value = "fix business initialization in nopo")
+	public void testUserAddWithOKRight() {
 		Role ur = Role.load(RoleConstants.SYSTEMROLE_LITERAL_USER);
 		assertNotNull(ur);
 		List<Role> assignedRoles = user.getAssignedRoles();
@@ -72,42 +71,39 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 			}
 		}
 		assertTrue(userHasRole);
-		
-		boolean roleHasRight =
-			RoleBasedAccessControl.queryRightForRole(ur, AccessControlDefaults.AC_EXIT);
+
+		boolean roleHasRight = RoleBasedAccessControl.queryRightForRole(ur, AccessControlDefaults.AC_EXIT);
 		assertTrue(roleHasRight);
-		boolean userHasRight =
-			RoleBasedAccessControl.queryRightForUser(user, AccessControlDefaults.AC_EXIT);
+		boolean userHasRight = RoleBasedAccessControl.queryRightForUser(user, AccessControlDefaults.AC_EXIT);
 		assertTrue(userHasRight);
 	}
-	
+
 	@Test
-	public void testUserAddWithNonOKRight(){
-		boolean rightFalse =
-			RoleBasedAccessControl.queryRightForUser(user, AccessControlDefaults.ADMIN_ACE);
+	public void testUserAddWithNonOKRight() {
+		boolean rightFalse = RoleBasedAccessControl.queryRightForUser(user, AccessControlDefaults.ADMIN_ACE);
 		assertFalse(rightFalse);
 	}
-	
+
 	@Test
-	@Ignore(value =  "fix business initialization in nopo")
-	public void testUserAddAndRevokeParentRightInvolvesChildRights(){
+	@Ignore(value = "fix business initialization in nopo")
+	public void testUserAddAndRevokeParentRightInvolvesChildRights() {
 		Role userRole = Role.load(RoleConstants.SYSTEMROLE_LITERAL_USER);
 		userRole.grantAccessRight(RoleBasedAccessControlTestACLContribution.parent);
 		boolean rightTrue = RoleBasedAccessControl.queryRightForUser(user,
-			RoleBasedAccessControlTestACLContribution.child1child1);
+				RoleBasedAccessControlTestACLContribution.child1child1);
 		assertTrue(rightTrue);
 		userRole.revokeAccessRight(RoleBasedAccessControlTestACLContribution.parent);
 		boolean rightFalse = RoleBasedAccessControl.queryRightForUser(user,
-			RoleBasedAccessControlTestACLContribution.child1child1);
+				RoleBasedAccessControlTestACLContribution.child1child1);
 		assertFalse(rightFalse);
 	}
-	
+
 	@Test
-	public void testUserLock(){
+	public void testUserLock() {
 		user.setActive(false);
 		boolean rightFalse = CoreOperationAdvisorHolder.get().performLogin(null);
 		assertFalse(rightFalse);
-		
+
 		// activate user again
 		user.setActive(true);
 	}

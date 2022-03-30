@@ -8,10 +8,10 @@ import ch.elexis.data.Person;
 
 public class KontaktSelektorLabelProvider extends DefaultLabelProvider {
 	@Override
-	public String getText(Object element){
+	public String getText(Object element) {
 		if (element instanceof Kontakt) {
 			Kontakt k = (Kontakt) element;
-			
+
 			String label = k.getLabel();
 			if (k.istPerson()) {
 				label = label + " (" + k.get(Person.BIRTHDATE) + ")";
@@ -26,9 +26,9 @@ public class KontaktSelektorLabelProvider extends DefaultLabelProvider {
 		}
 		return element.toString();
 	}
-	
-	public String getColumnText(Object element, int columnIndex){
+
+	public String getColumnText(Object element, int columnIndex) {
 		return getText(element);
 	}
-	
+
 }

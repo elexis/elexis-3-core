@@ -9,9 +9,9 @@ import ch.elexis.hl7.util.HL7Helper;
 public class LabResultData extends AbstractData {
 	public enum LabResultStatus {
 		UNDEFINED, FINAL, INTERMEDIATE, CHANGE;
-		
-		public static LabResultStatus getStatus(String code){
-			if("F".equals(code)) {
+
+		public static LabResultStatus getStatus(String code) {
+			if ("F".equals(code)) {
 				return FINAL;
 			} else if ("I".equals(code)) {
 				return INTERMEDIATE;
@@ -21,7 +21,7 @@ public class LabResultData extends AbstractData {
 			return UNDEFINED;
 		}
 	};
-	
+
 	private String code;
 	private String unit;
 	private String value;
@@ -34,12 +34,12 @@ public class LabResultData extends AbstractData {
 	private boolean isNumeric = false;
 	private boolean isFormatedText = false;
 	private boolean isPlainText = false;
-	
-	public LabResultData(String code, String name, String unit, String value, String range,
-		Boolean flag, String rawAbnormalFlag, String obrDateTime, String dateStr, String comment, String group,
-		String sequence, String resultStatus, String subId) throws ParseException{
+
+	public LabResultData(String code, String name, String unit, String value, String range, Boolean flag,
+			String rawAbnormalFlag, String obrDateTime, String dateStr, String comment, String group, String sequence,
+			String resultStatus, String subId) throws ParseException {
 		super(name, dateStr, comment, group, sequence);
-		
+
 		this.setCode(code);
 		this.setUnit(unit);
 		this.setValue(value);
@@ -52,48 +52,48 @@ public class LabResultData extends AbstractData {
 			this.obrDateTime = HL7Helper.stringToDate(obrDateTime);
 		}
 	}
-	
-	public LabResultStatus getResultStatus(){
+
+	public LabResultStatus getResultStatus() {
 		return resultStatus;
 	}
 
-	public String getCode(){
+	public String getCode() {
 		return code;
 	}
-	
-	public void setCode(String code){
+
+	public void setCode(String code) {
 		this.code = code;
 	}
-	
-	public String getUnit(){
+
+	public String getUnit() {
 		return unit;
 	}
-	
-	public void setUnit(String unit){
+
+	public void setUnit(String unit) {
 		this.unit = unit;
 	}
-	
-	public String getValue(){
+
+	public String getValue() {
 		return value;
 	}
-	
-	public void setValue(String value){
+
+	public void setValue(String value) {
 		this.value = value;
 	}
-	
-	public String getRange(){
+
+	public String getRange() {
 		return range;
 	}
-	
-	public void setRange(String range){
+
+	public void setRange(String range) {
 		this.range = range;
 	}
-	
-	public Date getOBRDateTime(){
+
+	public Date getOBRDateTime() {
 		return obrDateTime;
 	}
-	
-	public void setOBRDateTime(String obrDateTime) throws ElexisException{
+
+	public void setOBRDateTime(String obrDateTime) throws ElexisException {
 		try {
 			if (obrDateTime != null && obrDateTime.length() > 0) {
 				this.obrDateTime = HL7Helper.stringToDate(obrDateTime);
@@ -102,53 +102,53 @@ public class LabResultData extends AbstractData {
 			throw new ElexisException(e.getMessage(), e);
 		}
 	}
-	
-	public Boolean getFlag(){
+
+	public Boolean getFlag() {
 		return flag;
 	}
-	
-	public void setFlag(Boolean flag){
+
+	public void setFlag(Boolean flag) {
 		this.flag = flag;
 	}
-	
-	public String getRawAbnormalFlag(){
+
+	public String getRawAbnormalFlag() {
 		return rawAbnormalFlag;
 	}
-	
-	public void setRawAbnormalFlag(String rawAbnormalFlag){
+
+	public void setRawAbnormalFlag(String rawAbnormalFlag) {
 		this.rawAbnormalFlag = rawAbnormalFlag;
 	}
-	
-	public boolean isNumeric(){
+
+	public boolean isNumeric() {
 		return isNumeric;
 	}
-	
-	public void setIsNumeric(boolean isNumeric){
+
+	public void setIsNumeric(boolean isNumeric) {
 		this.isNumeric = isNumeric;
 	}
-	
-	public boolean isFormatedText(){
+
+	public boolean isFormatedText() {
 		return isFormatedText;
 	}
-	
-	public void setIsFormatedText(boolean isFormatedText){
+
+	public void setIsFormatedText(boolean isFormatedText) {
 		this.isFormatedText = isFormatedText;
 	}
-	
-	public boolean isPlainText(){
+
+	public boolean isPlainText() {
 		return isPlainText;
 	}
-	
-	public void setIsPlainText(boolean isPlainText){
+
+	public void setIsPlainText(boolean isPlainText) {
 		this.isPlainText = isPlainText;
 	}
-	
-	public String getSubId(){
+
+	public String getSubId() {
 		return subId;
 	}
-	
-	public void setSubId(String subId){
+
+	public void setSubId(String subId) {
 		this.subId = subId;
 	}
-	
+
 }

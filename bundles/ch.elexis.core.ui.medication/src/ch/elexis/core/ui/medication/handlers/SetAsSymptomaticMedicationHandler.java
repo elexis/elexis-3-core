@@ -20,36 +20,34 @@ import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 
 public class SetAsSymptomaticMedicationHandler extends AbstractHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		ISelection selection =
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object firstElement = strucSelection.getFirstElement();
-			
+
 			if (firstElement instanceof MedicationTableViewerItem) {
 				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
 				IPrescription presc = mtvItem.getPrescription();
-				
+
 				if (presc != null && !(presc.getEntryType() == EntryType.SYMPTOMATIC_MEDICATION)) {
 					AcquireLockUi.aquireAndRun(presc, new ILockHandler() {
-						
+
 						@Override
-						public void lockFailed(){
+						public void lockFailed() {
 							// do nothing
 						}
-						
+
 						@Override
-						public void lockAcquired(){
-							IPrescription symptomaticMedi =
-								MedicationServiceHolder.get().createPrescriptionCopy(presc);
+						public void lockAcquired() {
+							IPrescription symptomaticMedi = MedicationServiceHolder.get().createPrescriptionCopy(presc);
 							symptomaticMedi.setEntryType(EntryType.SYMPTOMATIC_MEDICATION);
 							CoreModelServiceHolder.get().save(symptomaticMedi);
-							
-							MedicationServiceHolder.get().stopPrescription(presc,
-								LocalDateTime.now(), "Umgestellt auf Symtomatische Medikation");
+
+							MedicationServiceHolder.get().stopPrescription(presc, LocalDateTime.now(),
+									"Umgestellt auf Symtomatische Medikation");
 							CoreModelServiceHolder.get().save(presc);
 						}
 					});

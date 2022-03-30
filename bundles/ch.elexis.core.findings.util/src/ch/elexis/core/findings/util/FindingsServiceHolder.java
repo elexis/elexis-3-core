@@ -7,15 +7,15 @@ import ch.elexis.core.findings.IFindingsService;
 
 @Component(service = {})
 public class FindingsServiceHolder {
-	
+
 	private static IFindingsService iFindingsService;
-	
+
 	@Reference(unbind = "-")
-	public void setiFindingsService(IFindingsService iFindingsService){
+	public void setiFindingsService(IFindingsService iFindingsService) {
 		FindingsServiceHolder.iFindingsService = iFindingsService;
 	}
-	
-	public static IFindingsService getiFindingsService(){
+
+	public static IFindingsService getiFindingsService() {
 		return iFindingsService;
 	}
 }

@@ -16,17 +16,17 @@ public interface INamedQuery<R> {
 	public List<R> executeWithParameters(Map<String, Object> parameters);
 
 	/**
-	 * Execute the query with the provided parameters and return a {@link IQueryCursor} with the
-	 * resulting objects.
+	 * Execute the query with the provided parameters and return a
+	 * {@link IQueryCursor} with the resulting objects.
 	 * 
 	 * @param parameters
 	 * @return
 	 */
 	public IQueryCursor<R> executeAsCursorWithParameters(Map<String, Object> parameters);
-	
+
 	/**
-	 * Execute the query and return a single result. If more than one result is available, a warning
-	 * is logged, and the first result is returned.
+	 * Execute the query and return a single result. If more than one result is
+	 * available, a warning is logged, and the first result is returned.
 	 * 
 	 * @param parameters
 	 * @return

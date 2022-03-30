@@ -21,60 +21,58 @@ import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.data.Patient;
 
 public class RiskViewContribution implements IViewContribution {
-	
+
 	RiskComposite riskComposite;
-	
+
 	@Override
-	public void setUnlocked(boolean unlocked){
+	public void setUnlocked(boolean unlocked) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public String getLocalizedTitle(){
+	public String getLocalizedTitle() {
 		return "Risiken";
 	}
-	
+
 	@Override
-	public boolean isAvailable(){
+	public boolean isAvailable() {
 		return ConfigServiceHolder.getGlobal(IMigratorService.RISKFACTOR_SETTINGS_USE_STRUCTURED, false);
 	}
-	
+
 	@Override
-	public Composite initComposite(Composite parent){
+	public Composite initComposite(Composite parent) {
 		riskComposite = new RiskComposite(parent, SWT.NONE);
 		return riskComposite;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setDetailObject(Object detailObject, Object additionalData){
+	public void setDetailObject(Object detailObject, Object additionalData) {
 		List<? extends IFinding> observations = null;
 		if (riskComposite != null) {
 			if (FindingsServiceComponent.getService() != null && detailObject instanceof Patient) {
 				observations = FindingsServiceComponent.getService()
-					.getPatientsFindings(((Patient) detailObject).getId(), IObservation.class);
-				observations = observations.stream().filter(finding -> isRisk(finding))
-					.collect(Collectors.toList());
+						.getPatientsFindings(((Patient) detailObject).getId(), IObservation.class);
+				observations = observations.stream().filter(finding -> isRisk(finding)).collect(Collectors.toList());
 			}
-			
+
 			if (observations != null && observations.size() >= 1) {
 				if (observations.size() > 1) {
 					MessageDialog.openWarning(riskComposite.getShell(), "Risiken",
-						"Mehr als eine Risiken Einträge gefunden.\n Nur der letzte Risiken Eintrag wird angezeigt.");
+							"Mehr als eine Risiken Einträge gefunden.\n Nur der letzte Risiken Eintrag wird angezeigt.");
 				}
-				riskComposite
-					.setInput(Optional.of(((List<IObservation>) observations).get(0)));
+				riskComposite.setInput(Optional.of(((List<IObservation>) observations).get(0)));
 			} else {
 				riskComposite.setInput(Optional.empty());
 			}
 		}
-		
+
 	}
-	
-	private boolean isRisk(IFinding iFinding){
+
+	private boolean isRisk(IFinding iFinding) {
 		if (iFinding instanceof IObservation
-			&& ((IObservation) iFinding).getCategory() == ObservationCategory.SOCIALHISTORY) {
+				&& ((IObservation) iFinding).getCategory() == ObservationCategory.SOCIALHISTORY) {
 			for (ICoding code : ((IObservation) iFinding).getCoding()) {
 				if (ObservationCode.ANAM_RISK.isSame(code)) {
 					return true;

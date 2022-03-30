@@ -27,11 +27,16 @@ public class KeycloakUser implements IUser {
 	 * token. It maps to the Elexis user world employing the core model service.
 	 * 
 	 * @param coreModelService
-	 * @param preferredUsername jwt preferred_username
-	 * @param name              jwt name
-	 * @param familyName        jwt family_name
-	 * @param issueTime         jwt iat - time (in seconds since Unix epoch)
-	 * @param expirationTime    jwt exp - time (in seconds since Unix epoch)
+	 * @param preferredUsername
+	 *            jwt preferred_username
+	 * @param name
+	 *            jwt name
+	 * @param familyName
+	 *            jwt family_name
+	 * @param issueTime
+	 *            jwt iat - time (in seconds since Unix epoch)
+	 * @param expirationTime
+	 *            jwt exp - time (in seconds since Unix epoch)
 	 * @param roles
 	 */
 	public KeycloakUser(IModelService coreModelService, String preferredUsername, String name, String familyName,

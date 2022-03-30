@@ -37,8 +37,7 @@ public class ProcedureRequestTest {
 
 		// create many
 		for (int i = 0; i < 1000; i++) {
-			IProcedureRequest procedureRequest =
-				FindingsServiceComponent.getService().create(IProcedureRequest.class);
+			IProcedureRequest procedureRequest = FindingsServiceComponent.getService().create(IProcedureRequest.class);
 			assertNotNull(procedureRequest);
 			// set the properties
 			procedureRequest.setPatientId(AllTests.PATIENT_ID);
@@ -48,8 +47,7 @@ public class ProcedureRequestTest {
 		}
 		// test many
 		List<IProcedureRequest> findings = FindingsServiceComponent.getService()
-			.getPatientsFindings(AllTests.PATIENT_ID,
-				IProcedureRequest.class);
+				.getPatientsFindings(AllTests.PATIENT_ID, IProcedureRequest.class);
 		assertEquals(1000, findings.size());
 		for (IProcedureRequest iFinding : findings) {
 			assertEquals(iFinding.getEncounter().get().getId(), encounter.getId());
@@ -66,8 +64,7 @@ public class ProcedureRequestTest {
 		encounter.setStartTime(LocalDateTime.of(2016, Month.DECEMBER, 29, 9, 56));
 		FindingsServiceComponent.getService().saveFinding(encounter);
 
-		IProcedureRequest procedureRequest =
-			FindingsServiceComponent.getService().create(IProcedureRequest.class);
+		IProcedureRequest procedureRequest = FindingsServiceComponent.getService().create(IProcedureRequest.class);
 		assertNotNull(procedureRequest);
 		// set the properties
 		procedureRequest.setPatientId(AllTests.PATIENT_ID);
@@ -96,8 +93,7 @@ public class ProcedureRequestTest {
 		FindingsServiceComponent.getService().saveFinding(procedureRequest);
 
 		List<IProcedureRequest> procedureRequests = FindingsServiceComponent.getService()
-				.getConsultationsFindings(encounter.getConsultationId(),
-				IProcedureRequest.class);
+				.getConsultationsFindings(encounter.getConsultationId(), IProcedureRequest.class);
 		assertNotNull(procedureRequests);
 		assertFalse(procedureRequests.isEmpty());
 		assertEquals(1, procedureRequests.size());

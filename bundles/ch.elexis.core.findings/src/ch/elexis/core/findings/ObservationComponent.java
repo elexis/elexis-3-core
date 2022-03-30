@@ -11,7 +11,7 @@ import java.util.Optional;
 import ch.elexis.core.findings.IObservation.ObservationType;
 
 public class ObservationComponent {
-	
+
 	private List<ICoding> coding = new ArrayList<>();
 	private BigDecimal numericValue;
 	private String numericValueUnit;
@@ -20,28 +20,28 @@ public class ObservationComponent {
 	private Date dateTimeValue;
 	private final String id;
 	private Map<String, String> extensions = new HashMap<>();
-	
+
 	public static final String EXTENSION_OBSERVATION_TYPE_URL = "www.elexis.info/observation/type";
-	
-	public ObservationComponent(String id){
+
+	public ObservationComponent(String id) {
 		this.id = id;
 	}
-	
-	public String getId(){
+
+	public String getId() {
 		return id;
 	}
-	
-	public List<ICoding> getCoding(){
+
+	public List<ICoding> getCoding() {
 		return coding;
 	}
-	public void setCoding(List<ICoding> coding){
+	public void setCoding(List<ICoding> coding) {
 		this.coding = coding;
 	}
-	
-	public Optional<BigDecimal> getNumericValue(){
+
+	public Optional<BigDecimal> getNumericValue() {
 		return Optional.ofNullable(numericValue);
 	}
-	
+
 	/**
 	 * Set the numeric value of the component. Also updates the type extension.
 	 * 
@@ -49,18 +49,17 @@ public class ObservationComponent {
 	 */
 	public void setNumericValue(BigDecimal numericValue) {
 		this.numericValue = numericValue;
-		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
-			ObservationType.NUMERIC.name());
+		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL, ObservationType.NUMERIC.name());
 	}
-	
-	public Optional<String> getNumericValueUnit(){
+
+	public Optional<String> getNumericValueUnit() {
 		return Optional.ofNullable(numericValueUnit);
 	}
-	
+
 	public void setNumericValueUnit(String numericValueUnit) {
 		this.numericValueUnit = numericValueUnit;
 	}
-	
+
 	/**
 	 * Set the string value of the component. Also updates the type extension.
 	 * 
@@ -68,49 +67,46 @@ public class ObservationComponent {
 	 */
 	public void setStringValue(String stringValue) {
 		this.stringValue = stringValue;
-		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
-			ObservationType.TEXT.name());
+		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL, ObservationType.TEXT.name());
 	}
-	
-	public Optional<String> getStringValue(){
+
+	public Optional<String> getStringValue() {
 		return Optional.ofNullable(stringValue);
 	}
-	
-	public Optional<Boolean> getBooleanValue(){
+
+	public Optional<Boolean> getBooleanValue() {
 		return Optional.ofNullable(booleanValue);
 	}
-	
-	public void setBooleanValue(Boolean booleanValue){
+
+	public void setBooleanValue(Boolean booleanValue) {
 		this.booleanValue = booleanValue;
-		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
-			ObservationType.BOOLEAN.name());
+		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL, ObservationType.BOOLEAN.name());
 	}
-	
-	public Optional<Date> getDateTimeValue(){
+
+	public Optional<Date> getDateTimeValue() {
 		return Optional.ofNullable(dateTimeValue);
 	}
-	
-	public void setDateTimeValue(Date dateTimeValue){
+
+	public void setDateTimeValue(Date dateTimeValue) {
 		this.dateTimeValue = dateTimeValue;
-		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL,
-			ObservationType.DATE.name());
+		getExtensions().put(ObservationComponent.EXTENSION_OBSERVATION_TYPE_URL, ObservationType.DATE.name());
 	}
-	
-	public void setExtensions(Map<String, String> extensions){
+
+	public void setExtensions(Map<String, String> extensions) {
 		this.extensions = extensions;
 	}
-	
-	public Map<String, String> getExtensions(){
+
+	public Map<String, String> getExtensions() {
 		return extensions;
 	}
-	
+
 	/**
 	 * Returns the type of the observation component element
 	 * 
 	 * @param clazz
 	 * @return
 	 */
-	public <T> T getTypeFromExtension(Class<T> clazz){
+	public <T> T getTypeFromExtension(Class<T> clazz) {
 		String type = null;
 		if (clazz.equals(ObservationType.class)) {
 			type = getExtensions().get(EXTENSION_OBSERVATION_TYPE_URL);
@@ -118,7 +114,7 @@ public class ObservationComponent {
 				return clazz.cast(ObservationType.valueOf(type));
 			}
 		}
-		
+
 		return null;
 	}
 }

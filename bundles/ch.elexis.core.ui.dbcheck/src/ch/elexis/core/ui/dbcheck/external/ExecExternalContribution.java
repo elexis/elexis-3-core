@@ -15,17 +15,16 @@ import ch.elexis.core.ui.dbcheck.CheckExec;
 import ch.elexis.data.PersistentObject;
 
 public class ExecExternalContribution implements IRunnableWithProgress {
-	
+
 	ExternalMaintenance em;
 	String output;
-	
-	public ExecExternalContribution(ExternalMaintenance o){
+
+	public ExecExternalContribution(ExternalMaintenance o) {
 		this.em = o;
 	}
-	
+
 	@Override
-	public void run(IProgressMonitor monitor) throws InvocationTargetException,
-		InterruptedException{
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		StringBuilder sb = new StringBuilder();
 		CheckExec.setJDBCLink(PersistentObject.getConnection());
 		try {
@@ -39,8 +38,8 @@ public class ExecExternalContribution implements IRunnableWithProgress {
 		}
 		this.output = sb.toString();
 	}
-	
-	public String getOutput(){
+
+	public String getOutput() {
 		return output;
 	}
 }

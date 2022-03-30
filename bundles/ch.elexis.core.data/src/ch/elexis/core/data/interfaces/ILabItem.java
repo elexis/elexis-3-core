@@ -12,14 +12,13 @@ package ch.elexis.core.data.interfaces;
 
 import ch.elexis.core.types.LabItemTyp;
 
-
 /**
  * Copy of core interface, used while refactoring.
  */
 public interface ILabItem {
 
 	String getId();
-	
+
 	LabItemTyp getTyp();
 
 	void setTyp(LabItemTyp value);
@@ -59,8 +58,8 @@ public interface ILabItem {
 	boolean isVisible();
 
 	void setVisible(boolean value);
-	
+
 	String getLabel();
-	
+
 	boolean isNoReferenceValueItem();
 }

@@ -51,46 +51,45 @@ import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
 import ch.elexis.core.ui.util.CoreUiUtil;
 
 public class StockDetailComposite extends Composite {
-	
+
 	private WritableValue<IArticle> wvArtikel = new WritableValue<>(null, IArticle.class);
-	
+
 	private Logger log = LoggerFactory.getLogger(StockDetailComposite.class);
-	
+
 	private Table table;
-	
+
 	private Map<IStock, IStockEntry> stockEntries = new HashMap<IStock, IStockEntry>();
 	private CheckboxTableViewer checkboxTableViewer;
-	
+
 	/**
 	 * Create the composite.
 	 * 
 	 * @param parent
 	 * @param style
 	 */
-	public StockDetailComposite(Composite parent, int style){
+	public StockDetailComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
-		
+
 		Composite composite = new Composite(this, SWT.NONE);
 		TableColumnLayout tcl_composite = new TableColumnLayout();
 		composite.setLayout(tcl_composite);
-		
-		checkboxTableViewer =
-			CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.FULL_SELECTION);
+
+		checkboxTableViewer = CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.FULL_SELECTION);
 		checkboxTableViewer.setContentProvider(ArrayContentProvider.getInstance());
-		
+
 		table = checkboxTableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		table.setEnabled(false);
-		
+
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(checkboxTableViewer, SWT.NONE);
 		tableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				return null;
 			}
-			
-			public String getText(Object element){
+
+			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				if (stock == null) {
 					return null;
@@ -103,18 +102,17 @@ public class StockDetailComposite extends Composite {
 		tblclmnStock.setAlignment(SWT.CENTER);
 		tcl_composite.setColumnData(tblclmnStock, new ColumnPixelData(100, false, false));
 		tblclmnStock.setText("Verfügbar in Lager");
-		
+
 		TableViewerColumn tvcMin = new TableViewerColumn(checkboxTableViewer, SWT.NONE);
-		StockEntryEditingSupport sees =
-			new StockEntryEditingSupport(checkboxTableViewer, StockEntryEditingSupport.MIN);
+		StockEntryEditingSupport sees = new StockEntryEditingSupport(checkboxTableViewer, StockEntryEditingSupport.MIN);
 		tvcMin.setEditingSupport(sees);
 		tvcMin.setLabelProvider(new ColumnLabelProvider() {
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
-			public String getText(Object element){
+
+			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
@@ -132,17 +130,17 @@ public class StockDetailComposite extends Composite {
 		tblclmnMin.setAlignment(SWT.CENTER);
 		tcl_composite.setColumnData(tblclmnMin, new ColumnPixelData(30, false, true));
 		tblclmnMin.setText("Min");
-		
+
 		TableViewerColumn tvcIst = new TableViewerColumn(checkboxTableViewer, SWT.NONE);
-		StockEntryEditingSupport seesIst =
-			new StockEntryEditingSupport(checkboxTableViewer, StockEntryEditingSupport.CURR);
+		StockEntryEditingSupport seesIst = new StockEntryEditingSupport(checkboxTableViewer,
+				StockEntryEditingSupport.CURR);
 		tvcIst.setEditingSupport(seesIst);
 		tvcIst.setLabelProvider(new ColumnLabelProvider() {
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				return null;
 			}
-			
-			public String getText(Object element){
+
+			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
@@ -159,17 +157,17 @@ public class StockDetailComposite extends Composite {
 		tblclmnNewColumn.setResizable(true);
 		tcl_composite.setColumnData(tblclmnNewColumn, new ColumnPixelData(30, false, true));
 		tblclmnNewColumn.setText("Ist");
-		
+
 		TableViewerColumn tvcMax = new TableViewerColumn(checkboxTableViewer, SWT.NONE);
-		StockEntryEditingSupport seesMax =
-			new StockEntryEditingSupport(checkboxTableViewer, StockEntryEditingSupport.MAX);
+		StockEntryEditingSupport seesMax = new StockEntryEditingSupport(checkboxTableViewer,
+				StockEntryEditingSupport.MAX);
 		tvcMax.setEditingSupport(seesMax);
 		tvcMax.setLabelProvider(new ColumnLabelProvider() {
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				return null;
 			}
-			
-			public String getText(Object element){
+
+			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
@@ -186,17 +184,17 @@ public class StockDetailComposite extends Composite {
 		tblclmnMax.setResizable(true);
 		tcl_composite.setColumnData(tblclmnMax, new ColumnPixelData(30, true, true));
 		tblclmnMax.setText("Max");
-		
+
 		TableViewerColumn tvcFraction = new TableViewerColumn(checkboxTableViewer, SWT.NONE);
-		StockEntryEditingSupport seesFrac =
-			new StockEntryEditingSupport(checkboxTableViewer, StockEntryEditingSupport.FRAC);
+		StockEntryEditingSupport seesFrac = new StockEntryEditingSupport(checkboxTableViewer,
+				StockEntryEditingSupport.FRAC);
 		tvcFraction.setEditingSupport(seesFrac);
 		tvcFraction.setLabelProvider(new ColumnLabelProvider() {
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				return null;
 			}
-			
-			public String getText(Object element){
+
+			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
@@ -213,11 +211,11 @@ public class StockDetailComposite extends Composite {
 		tblclmnFraction.setResizable(true);
 		tcl_composite.setColumnData(tblclmnFraction, new ColumnPixelData(30, false, true));
 		tblclmnFraction.setText("Anbruch");
-		
+
 		TableViewerColumn tvcProvider = new TableViewerColumn(checkboxTableViewer, SWT.NONE);
 		tvcProvider.setEditingSupport(new EditingSupport(checkboxTableViewer) {
 			@Override
-			protected void setValue(Object element, Object value){
+			protected void setValue(Object element, Object value) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
@@ -231,9 +229,9 @@ public class StockDetailComposite extends Composite {
 				CoreModelServiceHolder.get().save(se);
 				getViewer().refresh();
 			}
-			
+
 			@Override
-			protected Object getValue(Object element){
+			protected Object getValue(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
@@ -245,16 +243,15 @@ public class StockDetailComposite extends Composite {
 				}
 				return se.getProvider();
 			}
-			
+
 			@Override
-			protected CellEditor getCellEditor(Object element){
-				return new ContactSelectionDialogCellEditor(
-					((CheckboxTableViewer) getViewer()).getTable(), "Lieferant auswählen",
-					"Bitte selektieren Sie den Lieferant");
+			protected CellEditor getCellEditor(Object element) {
+				return new ContactSelectionDialogCellEditor(((CheckboxTableViewer) getViewer()).getTable(),
+						"Lieferant auswählen", "Bitte selektieren Sie den Lieferant");
 			}
-			
+
 			@Override
-			protected boolean canEdit(Object element){
+			protected boolean canEdit(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
@@ -264,11 +261,11 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 		tvcProvider.setLabelProvider(new ColumnLabelProvider() {
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				return null;
 			}
-			
-			public String getText(Object element){
+
+			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
@@ -288,38 +285,37 @@ public class StockDetailComposite extends Composite {
 		TableColumn tblclmnProvider = tvcProvider.getColumn();
 		tcl_composite.setColumnData(tblclmnProvider, new ColumnPixelData(200, true, true));
 		tblclmnProvider.setText("Lieferant");
-		
+
 		checkboxTableViewer.addCheckStateListener(new ICheckStateListener() {
-			
+
 			@Override
-			public void checkStateChanged(CheckStateChangedEvent event){
+			public void checkStateChanged(CheckStateChangedEvent event) {
 				if (wvArtikel.getValue() instanceof IArticle) {
 					IStock stock = (IStock) event.getElement();
 					IArticle art = (IArticle) wvArtikel.getValue();
-					if (stock != null && art != null
-						&& !stock.isCommissioningSystem()) {
+					if (stock != null && art != null && !stock.isCommissioningSystem()) {
 						if (event.getChecked()) {
 							StockServiceHolder.get().storeArticleInStock(stock,
-								StoreToStringServiceHolder.getStoreToString(art));
+									StoreToStringServiceHolder.getStoreToString(art));
 						} else {
 							StockServiceHolder.get().unstoreArticleFromStock(stock,
-								StoreToStringServiceHolder.getStoreToString(art));
+									StoreToStringServiceHolder.getStoreToString(art));
 						}
 					}
 				}
 				refreshData();
 			}
 		});
-		
+
 		checkboxTableViewer.setCheckStateProvider(new ICheckStateProvider() {
-			
+
 			@Override
-			public boolean isGrayed(Object element){
+			public boolean isGrayed(Object element) {
 				return false;
 			}
-			
+
 			@Override
-			public boolean isChecked(Object element){
+			public boolean isChecked(Object element) {
 				IStock stock = (IStock) element;
 				if (stock == null || wvArtikel.getValue() == null) {
 					return false;
@@ -327,36 +323,35 @@ public class StockDetailComposite extends Composite {
 				return (stockEntries.get(stock) != null);
 			}
 		});
-		
+
 		List<IStock> stocks = StockServiceHolder.get().getAllStocks(true);
 		for (IStock stock : stocks) {
 			stockEntries.put(stock, null);
 		}
-		
+
 		checkboxTableViewer.setInput(stocks);
-		
+
 		TableViewer ret = new TableViewer(table);
-		TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(ret, new FocusCellHighlighter(ret) {});
+		TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(ret,
+				new FocusCellHighlighter(ret) {
+				});
 		ColumnViewerEditorActivationStrategy editorActivationStrategy = new ColumnViewerEditorActivationStrategy(ret) {
-            @Override
-            protected boolean isEditorActivationEvent(
-                ColumnViewerEditorActivationEvent event) {
-                    ViewerCell cell = (ViewerCell) event.getSource();
-                   return cell.getColumnIndex() > 0 && cell.getColumnIndex() < 5;
-            }
+			@Override
+			protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
+				ViewerCell cell = (ViewerCell) event.getSource();
+				return cell.getColumnIndex() > 0 && cell.getColumnIndex() < 5;
+			}
 		};
-		TableViewerEditor.create(ret, focusCellManager, editorActivationStrategy,
-			TableViewerEditor.TABBING_HORIZONTAL);
-		
+		TableViewerEditor.create(ret, focusCellManager, editorActivationStrategy, TableViewerEditor.TABBING_HORIZONTAL);
+
 		CoreUiUtil.injectServices(this);
 	}
-	
+
 	@Optional
 	@Inject
-	public void udpate(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IStockEntry entry){
+	public void udpate(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IStockEntry entry) {
 		if (entry != null) {
-			if (checkboxTableViewer != null && stockEntries != null
-				&& !checkboxTableViewer.getControl().isDisposed()) {
+			if (checkboxTableViewer != null && stockEntries != null && !checkboxTableViewer.getControl().isDisposed()) {
 				for (IStock key : stockEntries.keySet()) {
 					if (stockEntries.get(key) != null && stockEntries.get(key).equals(entry)) {
 						refreshData();
@@ -365,8 +360,8 @@ public class StockDetailComposite extends Composite {
 			}
 		}
 	}
-	
-	private void refreshData(){
+
+	private void refreshData() {
 		boolean enabled = false;
 		String articleString = wvArtikel.getValue() != null
 				? StoreToStringServiceHolder.getStoreToString(wvArtikel.getValue())
@@ -374,68 +369,66 @@ public class StockDetailComposite extends Composite {
 		if (wvArtikel.getValue() instanceof IArticle) {
 			enabled = (!((IArticle) wvArtikel.getValue()).isProduct());
 		}
-		
+
 		table.setEnabled(enabled);
 		stockEntries.replaceAll((k, v) -> null);
 		if (articleString != null) {
 			stockEntries.keySet().forEach(k -> {
-				stockEntries.put(k,
-					StockServiceHolder.get().findStockEntryForArticleInStock(k, articleString));
+				stockEntries.put(k, StockServiceHolder.get().findStockEntryForArticleInStock(k, articleString));
 			});
 		}
 		checkboxTableViewer.refresh(true);
 	}
-	
+
 	@Override
-	protected void checkSubclass(){
+	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-	
-	public void setArticle(IArticle article){
+
+	public void setArticle(IArticle article) {
 		wvArtikel.setValue(article);
 		refreshData();
 	}
-	
+
 	public class StockEntryEditingSupport extends EditingSupport {
-		
+
 		public static final int MIN = 0;
 		public static final int CURR = 1;
 		public static final int MAX = 2;
 		public static final int FRAC = 3;
-		
+
 		private final int editorFor;
 		private final CellEditor editor;
-		
-		public StockEntryEditingSupport(CheckboxTableViewer columnViewer, int editorFor){
+
+		public StockEntryEditingSupport(CheckboxTableViewer columnViewer, int editorFor) {
 			super(columnViewer);
 			this.editorFor = editorFor;
 			this.editor = new TextCellEditor(columnViewer.getTable());
 		}
-		
+
 		@Override
-		protected CellEditor getCellEditor(Object element){
+		protected CellEditor getCellEditor(Object element) {
 			return editor;
 		}
-		
+
 		@Override
-		protected boolean canEdit(Object element){
+		protected boolean canEdit(Object element) {
 			IStock stock = (IStock) element;
-			if (stock == null || wvArtikel.getValue() == null
-				|| (stockEntries.get(stock) == null)) {
+			if (stock == null || wvArtikel.getValue() == null || (stockEntries.get(stock) == null)) {
 				return false;
 			}
-			
+
 			if ((CURR == editorFor || FRAC == editorFor) && stock.isCommissioningSystem()) {
 				// the current stock and fraction count of a stock commissioning system
 				// must not be directly changed
 				return false;
 			}
-			
+
 			return true;
 		}
-		
+
 		@Override
-		protected Object getValue(Object element){
+		protected Object getValue(Object element) {
 			IStock stock = (IStock) element;
 			if (stock == null || wvArtikel.getValue() == null) {
 				return "";
@@ -444,28 +437,28 @@ public class StockDetailComposite extends Composite {
 			if (se == null) {
 				return "";
 			}
-			
+
 			int value = 0;
 			switch (editorFor) {
-			case MIN:
-				value = se.getMinimumStock();
-				break;
-			case CURR:
-				value = se.getCurrentStock();
-				break;
-			case MAX:
-				value = se.getMaximumStock();
-				break;
-			case FRAC:
-				value = se.getFractionUnits();
-				break;
-			default:
+				case MIN :
+					value = se.getMinimumStock();
+					break;
+				case CURR :
+					value = se.getCurrentStock();
+					break;
+				case MAX :
+					value = se.getMaximumStock();
+					break;
+				case FRAC :
+					value = se.getFractionUnits();
+					break;
+				default :
 			}
 			return Integer.toString(value);
 		}
-		
+
 		@Override
-		protected void setValue(Object element, Object value){
+		protected void setValue(Object element, Object value) {
 			IStock stock = (IStock) element;
 			if (stock == null || wvArtikel.getValue() == null) {
 				return;
@@ -474,31 +467,32 @@ public class StockDetailComposite extends Composite {
 			if (stockEntry == null) {
 				return;
 			}
-			
+
 			LockResponse lr = LocalLockServiceHolder.get().acquireLock(stockEntry);
 			if (!lr.isOk()) {
 				return;
 			}
-			
+
 			int val = 0;
 			try {
 				val = Integer.valueOf((String) value);
-			} catch (NumberFormatException nfe) {}
-			
+			} catch (NumberFormatException nfe) {
+			}
+
 			switch (editorFor) {
-			case MIN:
-				stockEntry.setMinimumStock(val);
-				break;
-			case MAX:
-				stockEntry.setMaximumStock(val);
-				break;
-			case CURR:
-				stockEntry.setCurrentStock(val);
-				break;
-			case FRAC:
-				stockEntry.setFractionUnits(val);
-				break;
-			default:
+				case MIN :
+					stockEntry.setMinimumStock(val);
+					break;
+				case MAX :
+					stockEntry.setMaximumStock(val);
+					break;
+				case CURR :
+					stockEntry.setCurrentStock(val);
+					break;
+				case FRAC :
+					stockEntry.setFractionUnits(val);
+					break;
+				default :
 			}
 			CoreModelServiceHolder.get().save(stockEntry);
 			lr = LocalLockServiceHolder.get().releaseLock(stockEntry);
@@ -507,6 +501,6 @@ public class StockDetailComposite extends Composite {
 			}
 			getViewer().refresh();
 		}
-		
+
 	}
 }

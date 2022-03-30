@@ -37,16 +37,16 @@ public class MultiplikatorList {
 	private java.util.List<MultiplikatorInfo> list;
 	private String typ;
 	private String table;
-	
-	public MultiplikatorList(String table, String typ){
+
+	public MultiplikatorList(String table, String typ) {
 		this.typ = typ;
 		this.table = table;
 	}
-	
+
 	/**
 	 * Update multiRes with ResultSet of all existing Multiplikators
 	 */
-	private void fetchResultSet(){
+	private void fetchResultSet() {
 		Stm statement = PersistentObject.getConnection().getStatement();
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT * FROM ").append(table).append(" WHERE TYP=").append(JdbcLink.wrap(typ));
@@ -54,8 +54,8 @@ public class MultiplikatorList {
 		try {
 			list = new ArrayList<MultiplikatorList.MultiplikatorInfo>();
 			while (res.next()) {
-				list.add(new MultiplikatorInfo(res.getString("DATUM_VON"), res
-					.getString("DATUM_BIS"), res.getString("MULTIPLIKATOR")));
+				list.add(new MultiplikatorInfo(res.getString("DATUM_VON"), res.getString("DATUM_BIS"),
+						res.getString("MULTIPLIKATOR")));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -63,7 +63,7 @@ public class MultiplikatorList {
 		} finally {
 			if (statement != null)
 				PersistentObject.getConnection().releaseStatement(statement);
-			
+
 			if (res != null) {
 				try {
 					res.close();
@@ -75,8 +75,8 @@ public class MultiplikatorList {
 			}
 		}
 	}
-	
-	public void insertMultiplikator(TimeTool dateFrom, String value){
+
+	public void insertMultiplikator(TimeTool dateFrom, String value) {
 		TimeTool dateTo = null;
 		Stm statement = PersistentObject.getConnection().getStatement();
 		try {
@@ -96,14 +96,10 @@ public class MultiplikatorList {
 					// update the old to date
 					TimeTool newToDate = new TimeTool(dateFrom);
 					newToDate.addDays(-1);
-					sql.append("UPDATE ")
-						.append(table)
-						.append(
-							" SET DATUM_BIS="
-								+ JdbcLink.wrap(newToDate.toString(TimeTool.DATE_COMPACT))
-								+ " WHERE DATUM_VON="
-								+ JdbcLink.wrap(fromDate.toString(TimeTool.DATE_COMPACT))
-								+ " AND TYP=" + JdbcLink.wrap(typ));
+					sql.append("UPDATE ").append(table)
+							.append(" SET DATUM_BIS=" + JdbcLink.wrap(newToDate.toString(TimeTool.DATE_COMPACT))
+									+ " WHERE DATUM_VON=" + JdbcLink.wrap(fromDate.toString(TimeTool.DATE_COMPACT))
+									+ " AND TYP=" + JdbcLink.wrap(typ));
 					statement.exec(sql.toString());
 					// set to date of new multiplikator to to date of old multiplikator
 					dateTo = new TimeTool(toDate);
@@ -112,12 +108,10 @@ public class MultiplikatorList {
 					// update the value and return
 					TimeTool newToDate = new TimeTool(dateFrom);
 					newToDate.addDays(-1);
-					sql.append("UPDATE ")
-						.append(table)
-						.append(
-							" SET MULTIPLIKATOR=" + JdbcLink.wrap(value) + " WHERE DATUM_VON="
-								+ JdbcLink.wrap(fromDate.toString(TimeTool.DATE_COMPACT))
-								+ " AND TYP=" + JdbcLink.wrap(typ));
+					sql.append("UPDATE ").append(table)
+							.append(" SET MULTIPLIKATOR=" + JdbcLink.wrap(value) + " WHERE DATUM_VON="
+									+ JdbcLink.wrap(fromDate.toString(TimeTool.DATE_COMPACT)) + " AND TYP="
+									+ JdbcLink.wrap(typ));
 					statement.exec(sql.toString());
 					return;
 				}
@@ -138,22 +132,21 @@ public class MultiplikatorList {
 			}
 			// create a new entry
 			StringBuilder sql = new StringBuilder();
-			sql.append("INSERT INTO ")
-				.append(table)
-				.append(
-					" (ID,DATUM_VON,DATUM_BIS,MULTIPLIKATOR,TYP) VALUES ("
-						+ JdbcLink.wrap(StringTool.unique("prso")) +","
-						+ JdbcLink.wrap(dateFrom.toString(TimeTool.DATE_COMPACT)) + ","
-						+ JdbcLink.wrap(dateTo.toString(TimeTool.DATE_COMPACT)) + ","
-						+ JdbcLink.wrap(value) + "," + JdbcLink.wrap(typ) + ");");
+			sql.append("INSERT INTO ").append(table)
+					.append(" (ID,DATUM_VON,DATUM_BIS,MULTIPLIKATOR,TYP) VALUES ("
+							+ JdbcLink.wrap(StringTool.unique("prso")) + ","
+							+ JdbcLink.wrap(dateFrom.toString(TimeTool.DATE_COMPACT)) + ","
+							+ JdbcLink.wrap(dateTo.toString(TimeTool.DATE_COMPACT)) + "," + JdbcLink.wrap(value) + ","
+							+ JdbcLink.wrap(typ) + ");");
 			statement.exec(sql.toString());
 		} finally {
 			PersistentObject.getConnection().releaseStatement(statement);
 		}
 	}
-	
-	public void removeMultiplikator(TimeTool dateFrom, String value){
-		PreparedStatement statement = PersistentObject.getDefaultConnection().getPreparedStatement(getPreparedStatementSql());
+
+	public void removeMultiplikator(TimeTool dateFrom, String value) {
+		PreparedStatement statement = PersistentObject.getDefaultConnection()
+				.getPreparedStatement(getPreparedStatementSql());
 		try {
 			statement.setString(1, value);
 			statement.setString(2, dateFrom.toString(TimeTool.DATE_COMPACT));
@@ -165,12 +158,12 @@ public class MultiplikatorList {
 			PersistentObject.getDefaultConnection().releasePreparedStatement(statement);
 		}
 	}
-	
-	private String getPreparedStatementSql(){
+
+	private String getPreparedStatementSql() {
 		return "DELETE FROM " + table + " WHERE MULTIPLIKATOR=? AND DATUM_VON=? AND TYP=?";
 	}
-	
-	public synchronized double getMultiplikator(TimeTool date){
+
+	public synchronized double getMultiplikator(TimeTool date) {
 		// get Mutliplikator for date
 		fetchResultSet();
 		Iterator<MultiplikatorInfo> iter = list.iterator();
@@ -192,26 +185,25 @@ public class MultiplikatorList {
 		}
 		return 1.0;
 	}
-	
+
 	private static class MultiplikatorInfo {
 		String validFrom;
 		String validTo;
 		String multiplikator;
-		
-		MultiplikatorInfo(String validFrom, String validTo, String multiplikator){
+
+		MultiplikatorInfo(String validFrom, String validTo, String multiplikator) {
 			this.validFrom = validFrom;
 			this.validTo = validTo;
 			this.multiplikator = multiplikator;
 		}
 	}
-	
-	private static String[] getEigenleistungUseMultiSystems(){
-		String systems =
-			ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+
+	private static String[] getEigenleistungUseMultiSystems() {
+		String systems = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
 		return systems.split("\\|\\|");
 	}
-	
-	public static boolean isEigenleistungUseMulti(String system){
+
+	public static boolean isEigenleistungUseMulti(String system) {
 		String[] systems = getEigenleistungUseMultiSystems();
 		for (String string : systems) {
 			if (system.equals(string)) {
@@ -220,18 +212,17 @@ public class MultiplikatorList {
 		}
 		return false;
 	}
-	
-	public static void setEigenleistungUseMulti(String system){
-		String systems =
-			ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+
+	public static void setEigenleistungUseMulti(String system) {
+		String systems = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
 		if (!systems.isEmpty()) {
 			systems = systems.concat("||");
 		}
 		systems = systems.concat(system);
 		ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, systems);
 	}
-	
-	public static void removeEigenleistungUseMulti(String system){
+
+	public static void removeEigenleistungUseMulti(String system) {
 		String[] systems = getEigenleistungUseMultiSystems();
 		StringBuilder sb = new StringBuilder();
 		for (String string : systems) {
@@ -242,7 +233,6 @@ public class MultiplikatorList {
 				sb.append(string);
 			}
 		}
-		ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS,
-			sb.toString());
+		ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, sb.toString());
 	}
 }

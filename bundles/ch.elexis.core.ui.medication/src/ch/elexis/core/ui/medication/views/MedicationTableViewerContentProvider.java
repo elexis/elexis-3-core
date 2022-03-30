@@ -19,32 +19,32 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.ui.icons.Images;
 
 public class MedicationTableViewerContentProvider implements IStructuredContentProvider {
-	
+
 	private List<IPrescription> input;
-	
+
 	private List<MedicationTableViewerItem> currentItems;
-	
+
 	private StructuredViewer viewer;
-	
+
 	private int pageSize;
 	private int currentPageOffset;
-	
-	public MedicationTableViewerContentProvider(StructuredViewer viewer){
+
+	public MedicationTableViewerContentProvider(StructuredViewer viewer) {
 		this.viewer = viewer;
 		this.pageSize = 500;
 		this.currentPageOffset = 0;
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		viewer = null;
 		currentItems = null;
 		input = null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (newInput instanceof List<?>) {
 			currentPageOffset = 0;
 			input = (List<IPrescription>) newInput;
@@ -55,79 +55,79 @@ public class MedicationTableViewerContentProvider implements IStructuredContentP
 			currentItems = Collections.emptyList();
 		}
 	}
-	
-	private void createCurrentItems(){
+
+	private void createCurrentItems() {
 		if (input.size() < pageSize) {
 			currentItems = MedicationTableViewerItem.createFromPrescriptionList(input, viewer);
 		} else {
 			if (currentPageOffset + pageSize < input.size()) {
 				currentItems = MedicationTableViewerItem.createFromPrescriptionList(
-					input.subList(currentPageOffset, currentPageOffset + pageSize), viewer);
+						input.subList(currentPageOffset, currentPageOffset + pageSize), viewer);
 			} else {
-				currentItems = MedicationTableViewerItem.createFromPrescriptionList(
-					input.subList(currentPageOffset, input.size()), viewer);
+				currentItems = MedicationTableViewerItem
+						.createFromPrescriptionList(input.subList(currentPageOffset, input.size()), viewer);
 			}
 		}
 	}
-	
-	public void nextPage(){
+
+	public void nextPage() {
 		if ((currentPageOffset + pageSize) < input.size()) {
 			currentPageOffset += pageSize;
 			createCurrentItems();
 		}
 	}
-	
-	public boolean hasNext(){
+
+	public boolean hasNext() {
 		return input != null && (currentPageOffset + pageSize) < input.size();
 	}
-	
-	public void previousPage(){
+
+	public void previousPage() {
 		if (currentPageOffset >= pageSize) {
 			currentPageOffset -= pageSize;
 			createCurrentItems();
 		}
 	}
-	
-	public boolean hasPrevious(){
+
+	public boolean hasPrevious() {
 		return input != null && currentPageOffset >= pageSize;
 	}
-	
+
 	@Override
-	public Object[] getElements(Object inputElement){
+	public Object[] getElements(Object inputElement) {
 		return currentItems.toArray();
 	}
-	
+
 	public static class MedicationContentProviderComposite extends Composite {
-		
+
 		private Label currentState;
 		private MedicationTableViewerContentProvider contentProvider;
 		private ToolBarManager toolbarmgr;
-		
-		public MedicationContentProviderComposite(Composite parent, int style){
+
+		public MedicationContentProviderComposite(Composite parent, int style) {
 			super(parent, style);
 			setLayout(new RowLayout(SWT.HORIZONTAL));
 			createContent();
 		}
-		
-		private void createContent(){
+
+		private void createContent() {
 			currentState = new Label(this, SWT.NONE);
-			
+
 			toolbarmgr = new ToolBarManager();
 			toolbarmgr.add(new PreviousPage());
 			toolbarmgr.add(new NextPage());
 			toolbarmgr.createControl(this);
 		}
-		
-		public void setContentProvider(MedicationTableViewerContentProvider contentProvider){
+
+		public void setContentProvider(MedicationTableViewerContentProvider contentProvider) {
 			this.contentProvider = contentProvider;
 			refresh();
 		}
-		
-		public void refresh(){
+
+		public void refresh() {
 			if (contentProvider != null && contentProvider.input != null) {
 				currentState.setText(contentProvider.currentPageOffset + " - "
-					+ (contentProvider.currentPageOffset + contentProvider.pageSize) + " / "
-					+ contentProvider.input.size());
+						+ (contentProvider.currentPageOffset + contentProvider.pageSize) + " / "
+						+ contentProvider.input.size());
 			} else {
 				currentState.setText(" / ");
 			}
@@ -136,41 +136,41 @@ public class MedicationTableViewerContentProvider implements IStructuredContentP
 				item.update();
 			}
 		}
-		
+
 		private class NextPage extends Action {
 			@Override
-			public ImageDescriptor getImageDescriptor(){
+			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_NEXT.getImageDescriptor();
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				contentProvider.nextPage();
 				contentProvider.viewer.refresh();
 				refresh();
 			}
-			
+
 			@Override
-			public boolean isEnabled(){
+			public boolean isEnabled() {
 				return contentProvider != null && contentProvider.hasNext();
 			}
 		}
-		
+
 		private class PreviousPage extends Action {
 			@Override
-			public ImageDescriptor getImageDescriptor(){
+			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_PREVIOUS.getImageDescriptor();
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				contentProvider.previousPage();
 				contentProvider.viewer.refresh();
 				refresh();
 			}
-			
+
 			@Override
-			public boolean isEnabled(){
+			public boolean isEnabled() {
 				return contentProvider != null && contentProvider.hasPrevious();
 			}
 		}

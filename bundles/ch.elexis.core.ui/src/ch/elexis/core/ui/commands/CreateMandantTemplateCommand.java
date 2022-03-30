@@ -18,46 +18,42 @@ import ch.elexis.data.Brief;
 import ch.elexis.data.Mandant;
 
 public class CreateMandantTemplateCommand extends AbstractHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Mandant mandant = ElexisEventDispatcher.getSelectedMandator();
 		if (mandant == null) {
 			return null;
 		}
-		
-		ISelection selection =
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object firstElement = strucSelection.getFirstElement();
-			
+
 			// get brief via text template and clone it
 			if (firstElement != null && firstElement instanceof TextTemplate) {
 				TextTemplate textTemplate = (TextTemplate) firstElement;
 				Brief template = textTemplate.getTemplate();
-				
-				Brief specTemplate =
-					new Brief(template.getBetreff(), null, CoreHub.getLoggedInContact(), mandant, null,
+
+				Brief specTemplate = new Brief(template.getBetreff(), null, CoreHub.getLoggedInContact(), mandant, null,
 						Brief.TEMPLATE);
 				specTemplate.save(template.loadBinary(), template.getMimeType());
-				
-				TextTemplate specTextTemplate =
-					new TextTemplate(specTemplate.getBetreff(), "", specTemplate.getMimeType());
+
+				TextTemplate specTextTemplate = new TextTemplate(specTemplate.getBetreff(), "",
+						specTemplate.getMimeType());
 				specTextTemplate.addFormTemplateReference(specTemplate);
-				
-				ElexisEventDispatcher.getInstance().fire(new ElexisEvent(Brief.class, null,
-					ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
+
+				ElexisEventDispatcher.getInstance().fire(
+						new ElexisEvent(Brief.class, null, ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
 			}
 		}
 		return null;
 	}
-	
-	private void refreshTextTemplateView(TextTemplate template){
-		IWorkbenchPage activePage =
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TextTemplateView textTemplateView =
-			(TextTemplateView) activePage.findView(TextTemplateView.ID);
+
+	private void refreshTextTemplateView(TextTemplate template) {
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		TextTemplateView textTemplateView = (TextTemplateView) activePage.findView(TextTemplateView.ID);
 		textTemplateView.update(template);
 	}
 }

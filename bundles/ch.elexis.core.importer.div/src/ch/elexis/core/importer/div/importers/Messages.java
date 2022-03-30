@@ -12,7 +12,7 @@
 package ch.elexis.core.importer.div.importers;
 
 public class Messages {
-	
+
 	public static String ExcelWrapper_ErrorUnknownCellType = ch.elexis.core.l10n.Messages.ExcelWrapper_ErrorUnknownCellType;
 	public static String GenericImporter_ErrorImporting = ch.elexis.core.l10n.Messages.GenericImporter_ErrorImporting;
 	public static String GenericImporter_General = ch.elexis.core.l10n.Messages.GenericImporter_General;

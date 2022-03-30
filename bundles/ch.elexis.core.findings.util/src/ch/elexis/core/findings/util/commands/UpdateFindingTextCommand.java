@@ -8,25 +8,25 @@ import ch.elexis.core.findings.util.FindingsTextUtil;
 import ch.elexis.core.findings.util.ModelUtil;
 
 /**
- * Update the the text of the {@link IFinding}. If the {@link IFinding} is an instance of an
- * {@link IObservation} the text of all linked {@link IObservation}s are also updated.
+ * Update the the text of the {@link IFinding}. If the {@link IFinding} is an
+ * instance of an {@link IObservation} the text of all linked
+ * {@link IObservation}s are also updated.
  * 
  * @author thomas
  *
  */
 public class UpdateFindingTextCommand implements IFindingCommand {
-	
+
 	private IFinding iFinding;
-	
-	public UpdateFindingTextCommand(IFinding finding){
+
+	public UpdateFindingTextCommand(IFinding finding) {
 		this.iFinding = finding;
 	}
-	
+
 	@Override
-	public void execute() throws ElexisException{
+	public void execute() throws ElexisException {
 		// make sure we update the text of the iFinding instance
-		if (iFinding instanceof IObservation
-			&& ((IObservation) iFinding).getObservationType() != ObservationType.REF) {
+		if (iFinding instanceof IObservation && ((IObservation) iFinding).getObservationType() != ObservationType.REF) {
 			FindingsTextUtil.getObservationText(((IObservation) iFinding), true);
 		}
 		IFinding rootFinding = getRootFinding();
@@ -39,8 +39,8 @@ public class UpdateFindingTextCommand implements IFindingCommand {
 			}
 		}
 	}
-	
-	private IFinding getRootFinding(){
+
+	private IFinding getRootFinding() {
 		IFinding rootFinding = null;
 		if (iFinding instanceof IObservation) {
 			rootFinding = ModelUtil.getRootObservationRecursive((IObservation) iFinding);

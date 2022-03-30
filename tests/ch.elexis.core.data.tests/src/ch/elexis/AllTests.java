@@ -10,5 +10,5 @@ import ch.elexis.data.AllDataTests;
 @RunWith(Suite.class)
 @SuiteClasses({Test_ProgrammaticUpdateConsistency.class, AllDataTests.class})
 public class AllTests {
-	
+
 }

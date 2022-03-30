@@ -49,59 +49,59 @@ public class KonsFilterDialog extends TitleAreaDialog {
 	ICoverage[] faelle;
 	Text tBed;
 	Button bCase, bRegex;
-	
-	public KonsFilterDialog(IPatient p, KonsFilter kf){
+
+	public KonsFilterDialog(IPatient p, KonsFilter kf) {
 		super(UiDesk.getTopShell());
 		filter = kf;
 		pat = p;
 	}
-	
+
 	@Deprecated
-	public KonsFilterDialog(Patient p, KonsFilter kf){
+	public KonsFilterDialog(Patient p, KonsFilter kf) {
 		super(UiDesk.getTopShell());
 		filter = kf;
 		pat = CoreModelServiceHolder.get().load(p.getId(), IPatient.class).orElse(null);
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout());
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		new Label(ret, SWT.NONE).setText(Messages.KonsFilterDialog_onlyForCase); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.KonsFilterDialog_onlyForCase); // $NON-NLS-1$
 		cbFaelle = new Combo(ret, SWT.SINGLE);
 		cbFaelle.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		faelle = pat.getCoverages().toArray(new ICoverage[0]);
-		cbFaelle.add(Messages.KonsFilterDialog_dontMind); //$NON-NLS-1$
+		cbFaelle.add(Messages.KonsFilterDialog_dontMind); // $NON-NLS-1$
 		for (ICoverage f : faelle) {
 			cbFaelle.add(f.getLabel());
 		}
 		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL);
-		new Label(ret, SWT.WRAP).setText(Messages.KonsFilterDialog_enterWords + //$NON-NLS-1$
-			Messages.KonsFilterDialog_separateFilters); //$NON-NLS-1$
-		
+		new Label(ret, SWT.WRAP).setText(Messages.KonsFilterDialog_enterWords + // $NON-NLS-1$
+				Messages.KonsFilterDialog_separateFilters); // $NON-NLS-1$
+
 		tBed = SWTHelper.createText(ret, 4, SWT.BORDER);
 		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL);
 		bCase = new Button(ret, SWT.CHECK);
-		bCase.setText(Messages.KonsFilterDialog_respectCase); //$NON-NLS-1$
+		bCase.setText(Messages.KonsFilterDialog_respectCase); // $NON-NLS-1$
 		bRegex = new Button(ret, SWT.CHECK);
-		bRegex.setText(Messages.KonsFilterDialog_regExp); //$NON-NLS-1$
+		bRegex.setText(Messages.KonsFilterDialog_regExp); // $NON-NLS-1$
 		cbFaelle.select(0);
 		bCase.setSelection(true);
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
-		setTitle(Messages.KonsFilterDialog_konsFilter); //$NON-NLS-1$
-		setMessage(Messages.KonsFilterDialog_enterFilterExpressions); //$NON-NLS-1$
-		getShell().setText(Messages.KonsFilterDialog_filter); //$NON-NLS-1$
+		setTitle(Messages.KonsFilterDialog_konsFilter); // $NON-NLS-1$
+		setMessage(Messages.KonsFilterDialog_enterFilterExpressions); // $NON-NLS-1$
+		getShell().setText(Messages.KonsFilterDialog_filter); // $NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		filter = new KonsFilter();
 		if (cbFaelle.getSelectionIndex() > 0) {
 			ICoverage f = faelle[cbFaelle.getSelectionIndex() - 1];
@@ -111,8 +111,7 @@ public class KonsFilterDialog extends TitleAreaDialog {
 		filter.setAsRegEx(bRegex.getSelection());
 		String cc = tBed.getText();
 		if (!StringTool.isNothing(cc)) {
-			StringTool.tokenizer tk =
-				new StringTool.tokenizer(cc, " ", StringTool.tokenizer.DOUBLE_QUOTED_TOKENS); //$NON-NLS-1$
+			StringTool.tokenizer tk = new StringTool.tokenizer(cc, " ", StringTool.tokenizer.DOUBLE_QUOTED_TOKENS); //$NON-NLS-1$
 			try {
 				List<String> tokens = tk.tokenize();
 				int last = 0;
@@ -133,9 +132,9 @@ public class KonsFilterDialog extends TitleAreaDialog {
 		}
 		super.okPressed();
 	}
-	
-	public KonsFilter getResult(){
+
+	public KonsFilter getResult() {
 		return filter;
 	}
-	
+
 }

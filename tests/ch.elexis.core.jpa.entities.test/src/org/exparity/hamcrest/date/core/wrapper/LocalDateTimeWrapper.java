@@ -37,16 +37,17 @@ public class LocalDateTimeWrapper implements TemporalWrapper<LocalDateTime> {
 		accuracy = ChronoUnit.DAYS;
 	}
 
-	public LocalDateTimeWrapper(final int year, final Month month, final int dayOfMonth, final int hour, final int minute, final int second) {
+	public LocalDateTimeWrapper(final int year, final Month month, final int dayOfMonth, final int hour,
+			final int minute, final int second) {
 		wrapped = LocalDateTime.of(year, month, dayOfMonth, hour, minute, second);
 		accuracy = ChronoUnit.SECONDS;
 	}
 
-	public LocalDateTimeWrapper(final int year, final Month month, final int dayOfMonth, final int hour, final int minute, final int second, final int nanos) {
+	public LocalDateTimeWrapper(final int year, final Month month, final int dayOfMonth, final int hour,
+			final int minute, final int second, final int nanos) {
 		wrapped = LocalDateTime.of(year, month, dayOfMonth, hour, minute, second, nanos);
 		accuracy = ChronoUnit.NANOS;
 	}
-
 
 	@Override
 	public long difference(final LocalDateTime other, final ChronoUnit unit) {

@@ -3,10 +3,10 @@ package ch.elexis.core.ui.editors;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 
 public class NumericCellEditorValidator implements ICellEditorValidator {
-	
+
 	@Override
-	public String isValid(Object value){
-		if(value instanceof String) {
+	public String isValid(Object value) {
+		if (value instanceof String) {
 			value = ((String) value).replaceAll(",", ".");
 			try {
 				Float.parseFloat((String) value);

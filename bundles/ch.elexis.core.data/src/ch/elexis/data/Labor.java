@@ -17,40 +17,38 @@ import ch.rgw.tools.JdbcLink;
 
 public class Labor extends Organisation {
 	static {
-		addMapping(Kontakt.TABLENAME, "Name	=Bezeichnung1", "Zusatz1=Bezeichnung2",
-			"Zusatz2=ExtInfo", "Kuerzel=PatientNr", "Ansprechperson=Bezeichnung3",
-			"istOrganisation", "istLabor");
+		addMapping(Kontakt.TABLENAME, "Name	=Bezeichnung1", "Zusatz1=Bezeichnung2", "Zusatz2=ExtInfo",
+				"Kuerzel=PatientNr", "Ansprechperson=Bezeichnung3", "istOrganisation", "istLabor");
 	}
-	
+
 	@Override
-	protected String getConstraint(){
-		return new StringBuilder(Kontakt.FLD_IS_LAB).append(Query.EQUALS)
-			.append(JdbcLink.wrap(StringConstants.ONE)).toString();
+	protected String getConstraint() {
+		return new StringBuilder(Kontakt.FLD_IS_LAB).append(Query.EQUALS).append(JdbcLink.wrap(StringConstants.ONE))
+				.toString();
 	}
-	
+
 	@Override
-	protected void setConstraint(){
-		set(new String[] {
-			Kontakt.FLD_IS_LAB, Kontakt.FLD_IS_ORGANIZATION
-		}, StringConstants.ONE, StringConstants.ONE);
+	protected void setConstraint() {
+		set(new String[]{Kontakt.FLD_IS_LAB, Kontakt.FLD_IS_ORGANIZATION}, StringConstants.ONE, StringConstants.ONE);
 	}
-	
-	public Labor(String Kuerzel, String Name){
+
+	public Labor(String Kuerzel, String Name) {
 		super(Name, "Labor");
 		set("Kuerzel", Kuerzel);
 	}
-	
-	public static Labor load(String id){
+
+	public static Labor load(String id) {
 		Labor ret = new Labor(id);
 		if (ret.exists()) {
 			return ret;
 		}
 		return null;
 	}
-	
-	protected Labor(String id){
+
+	protected Labor(String id) {
 		super(id);
 	}
-	
-	protected Labor(){}
+
+	protected Labor() {
+	}
 }

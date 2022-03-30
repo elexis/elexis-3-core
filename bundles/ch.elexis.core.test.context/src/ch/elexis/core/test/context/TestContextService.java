@@ -16,54 +16,54 @@ import ch.elexis.core.services.IContextService;
 
 @Component
 public class TestContextService implements IContextService {
-	
+
 	private ThreadLocal<IContext> rootContext;
-	
+
 	@Reference
 	private EventAdmin eventAdmin;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		rootContext = new ThreadLocal<IContext>() {
 			@Override
-			protected IContext initialValue(){
+			protected IContext initialValue() {
 				return new TestContext();
 			}
 		};
 		contexts = new ConcurrentHashMap<String, TestContext>();
 	}
-	
+
 	private ConcurrentHashMap<String, TestContext> contexts;
-	
+
 	@Override
-	public IContext getRootContext(){
+	public IContext getRootContext() {
 		return rootContext.get();
 	}
-	
+
 	@Override
-	public Optional<IContext> getNamedContext(String name){
+	public Optional<IContext> getNamedContext(String name) {
 		return Optional.ofNullable(contexts.get(name));
 	}
-	
+
 	@Override
-	public IContext createNamedContext(String name){
+	public IContext createNamedContext(String name) {
 		TestContext context = new TestContext((TestContext) rootContext.get(), name);
 		contexts.put(name, context);
 		return context;
 	}
-	
+
 	@Override
-	public void releaseContext(String name){
+	public void releaseContext(String name) {
 		TestContext context = contexts.get(name);
 		if (context != null) {
 			context.setParent(null);
 			contexts.remove(name);
 		}
-		
+
 	}
-	
+
 	@Override
-	public void postEvent(String topic, Object object){
+	public void postEvent(String topic, Object object) {
 		if (eventAdmin != null) {
 			Map<String, Object> properites = new HashMap<>();
 			properites.put("org.eclipse.e4.data", object);
@@ -73,9 +73,9 @@ public class TestContextService implements IContextService {
 			throw new IllegalStateException("No EventAdmin available");
 		}
 	}
-	
+
 	@Override
-	public void sendEvent(String topic, Object object){
+	public void sendEvent(String topic, Object object) {
 		if (eventAdmin != null) {
 			Map<String, Object> properites = new HashMap<>();
 			properites.put("org.eclipse.e4.data", object);

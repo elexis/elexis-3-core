@@ -110,35 +110,34 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.TimeTool;
 
 /**
- * A class do receive documents by drag&drop. Documents are imported into the database and linked to
- * the selected patient. On double-click they are opened with their associated application.
+ * A class do receive documents by drag&drop. Documents are imported into the
+ * database and linked to the selected patient. On double-click they are opened
+ * with their associated application.
  */
 
 public class DocumentsView extends ViewPart {
-	
+
 	public static final String ID = "ch.elexis.core.ui.documents.views.DocumentsView";
 	public static final String SETTING_FLAT_VIEW = "documentsView/flatView";
-	
+
 	private static Logger logger = LoggerFactory.getLogger(DocumentsView.class);
-	
+
 	private TreeViewer viewer;
-	
+
 	private IStructuredSelection currentDragSelection;
-	
-	private final String[] colLabels = {
-		"", "", Messages.DocumentView_categoryColumn, Messages.DocumentView_titleColumn,
-		Messages.DocumentView_dateCreatedColumn, Messages.DocumentView_keywordsColumn
-	};
+
+	private final String[] colLabels = {"", "", Messages.DocumentView_categoryColumn, Messages.DocumentView_titleColumn,
+			Messages.DocumentView_dateCreatedColumn, Messages.DocumentView_keywordsColumn};
 	private final String colWidth = "20,20,150,250,100,500";
 	private final String sortSettings = "0,1,-1,false";
 	private String searchTitle = "";
-	
+
 	private DocumentsViewerComparator ovComparator;
 	private Action doubleClickAction;
 	private boolean bFlat = false;
-	
+
 	@Inject
-	void activePatient(@Optional IPatient patient){
+	void activePatient(@Optional IPatient patient) {
 		if (viewer != null && !viewer.getControl().isDisposed()) {
 			Display.getDefault().asyncExec(() -> {
 				viewer.setInput(patient);
@@ -146,74 +145,73 @@ public class DocumentsView extends ViewPart {
 			});
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	void udpateDocument(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IDocument document){
+	void udpateDocument(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IDocument document) {
 		if (document != null && viewer != null && !viewer.getControl().isDisposed()) {
 			// reload to refresh entity from database
-			document = DocumentStoreServiceHolder.getService()
-				.loadDocument(document.getId(), document.getStoreId()).get();
+			document = DocumentStoreServiceHolder.getService().loadDocument(document.getId(), document.getStoreId())
+					.get();
 			contentProvider.updateElement(document);
-			//the selection of TreeItem is disposed after updating a document with a dialog
+			// the selection of TreeItem is disposed after updating a document with a dialog
 			viewer.getTree().deselectAll();
 			viewer.refresh();
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	void deleteDocument(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) IDocument document){
+	void deleteDocument(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) IDocument document) {
 		if (viewer != null && !viewer.getControl().isDisposed()) {
 			contentProvider.updateElement(document);
 			viewer.setSelection(new StructuredSelection());
 			viewer.refresh();
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	void createDocument(@UIEventTopic(ElexisEventTopics.EVENT_CREATE) IDocument document){
+	void createDocument(@UIEventTopic(ElexisEventTopics.EVENT_CREATE) IDocument document) {
 		if (viewer != null && !viewer.getControl().isDisposed()) {
 			contentProvider.updateElement(document);
 			viewer.refresh();
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	void reloadDocument(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) IDocument document){
+	void reloadDocument(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) IDocument document) {
 		if (viewer != null && !viewer.getControl().isDisposed()) {
 			viewer.refresh();
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 	@Inject
 	private ECommandService commandService;
-	
+
 	@Inject
 	private EHandlerService handlerService;
-	
+
 	private DocumentsTreeContentProvider contentProvider;
-	
+
 	class ViewFilterProvider extends ViewerFilter {
-		
+
 		@Override
-		public boolean select(Viewer viewer, Object parentElement, Object element){
-			
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+
 			if (searchTitle != null && !searchTitle.isEmpty()) {
 				String searchText = searchTitle.toLowerCase();
-				
+
 				if (element instanceof ICategory) {
 					StructuredViewer sviewer = (StructuredViewer) viewer;
-					ITreeContentProvider provider =
-						(ITreeContentProvider) sviewer.getContentProvider();
+					ITreeContentProvider provider = (ITreeContentProvider) sviewer.getContentProvider();
 					for (Object child : provider.getChildren(element)) {
 						if (select(viewer, element, child))
 							return true;
@@ -228,8 +226,8 @@ public class DocumentsView extends ViewPart {
 					if (iDocument.getTitle().toLowerCase().contains(searchText)) {
 						return true;
 					}
-					if (iDocument.getKeywords() != null && iDocument.getKeywords().toLowerCase()
-						.contains(searchText.toLowerCase())) {
+					if (iDocument.getKeywords() != null
+							&& iDocument.getKeywords().toLowerCase().contains(searchText.toLowerCase())) {
 						return true;
 					}
 				}
@@ -237,34 +235,34 @@ public class DocumentsView extends ViewPart {
 			}
 			return true;
 		}
-		
+
 	}
-	
+
 	/**
 	 * The constructor.
 	 */
-	public DocumentsView(){
-		
+	public DocumentsView() {
+
 	}
-	
+
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(4, false));
-		
+
 		Composite filterComposite = new Composite(parent, SWT.NONE);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		filterComposite.setLayoutData(data);
 		filterComposite.setLayout(new GridLayout(2, false));
-		
+
 		final Text tSearch = new Text(filterComposite, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		tSearch.setLayoutData(data);
 		tSearch.setMessage(Messages.DocumentView_searchLabel);
 		// Add search listener
 		ModifyListener searchListener = new ModifyListener() {
-			public void modifyText(ModifyEvent e){
+			public void modifyText(ModifyEvent e) {
 				searchTitle = tSearch.getText();
 				refresh();
 				if (searchTitle == null || searchTitle.isEmpty()) {
@@ -275,11 +273,10 @@ public class DocumentsView extends ViewPart {
 			}
 		};
 		tSearch.addModifyListener(searchListener);
-		
+
 		createFlatMenu(filterComposite);
 		// Table to display documents
-		viewer =
-			new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.NO_RECREATE);
 		List<TreeViewerColumn> viewerColumns = new ArrayList<>();
 		for (int i = 0; i < colLabels.length; i++) {
@@ -294,28 +291,28 @@ public class DocumentsView extends ViewPart {
 		viewerColumns.get(0).setLabelProvider(new ColumnLabelProvider());
 		viewerColumns.get(1).setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return "";
 			}
-			
+
 			@Override
-			public String getToolTipText(Object element){
+			public String getToolTipText(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
 					if (!doc.getStatus().isEmpty()) {
 						return doc.getStatus().stream().map(s -> s.getName())
-							.reduce((u, t) -> u + StringConstants.COMMA + t).get();
+								.reduce((u, t) -> u + StringConstants.COMMA + t).get();
 					}
 				}
 				return super.getToolTipText(element);
 			}
-			
+
 			@Override
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
-					java.util.Optional<DocumentStatus> sent =
-						doc.getStatus().stream().filter(s -> s == DocumentStatus.SENT).findFirst();
+					java.util.Optional<DocumentStatus> sent = doc.getStatus().stream()
+							.filter(s -> s == DocumentStatus.SENT).findFirst();
 					if (sent.isPresent()) {
 						return Images.IMG_OUTBOX.getImage();
 					}
@@ -326,7 +323,7 @@ public class DocumentsView extends ViewPart {
 		});
 		viewerColumns.get(2).setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
 					return bFlat ? doc.getCategory().getName() : "";
@@ -336,9 +333,9 @@ public class DocumentsView extends ViewPart {
 				}
 				return "";
 			}
-			
+
 			@Override
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				if (element instanceof ICategory) {
 					return Images.IMG_FOLDER.getImage();
 				}
@@ -347,22 +344,21 @@ public class DocumentsView extends ViewPart {
 		});
 		viewerColumns.get(3).setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
 					return doc.getTitle();
 				}
 				return "";
 			};
-			
+
 			@Override
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
-					java.util.Optional<Identifiable> opt =
-						DocumentStoreServiceHolder.getService().getPersistenceObject(doc);
-					if (opt.isPresent()
-						&& LocalDocumentServiceHolder.getService().get().contains(opt.get())) {
+					java.util.Optional<Identifiable> opt = DocumentStoreServiceHolder.getService()
+							.getPersistenceObject(doc);
+					if (opt.isPresent() && LocalDocumentServiceHolder.getService().get().contains(opt.get())) {
 						return Images.IMG_EDIT.getImage();
 					}
 				}
@@ -371,16 +367,16 @@ public class DocumentsView extends ViewPart {
 		});
 		viewerColumns.get(4).setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
 					return new TimeTool(doc.getCreated()).toString(TimeTool.DATE_GER);
 				}
 				return "";
 			}
-			
+
 			@Override
-			public String getToolTipText(Object element){
+			public String getToolTipText(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
 					return new TimeTool(doc.getCreated()).toString(TimeTool.LARGE_GER);
@@ -390,41 +386,41 @@ public class DocumentsView extends ViewPart {
 		});
 		viewerColumns.get(5).setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
-					List<IDocumentReference> documentReferences =
-						FindingsServiceHolder.getiFindingsService().getDocumentFindings(doc.getId(),
-							IDocumentReference.class);
+					List<IDocumentReference> documentReferences = FindingsServiceHolder.getiFindingsService()
+							.getDocumentFindings(doc.getId(), IDocumentReference.class);
 					if (documentReferences.isEmpty()) {
 						return java.util.Optional.ofNullable(doc.getKeywords()).orElse("");
 					} else {
-						return java.util.Optional.ofNullable(Objects
-							.toString(documentReferences.get(0).getKeywords(), doc.getKeywords()))
-							.orElse("");
+						return java.util.Optional
+								.ofNullable(
+										Objects.toString(documentReferences.get(0).getKeywords(), doc.getKeywords()))
+								.orElse("");
 					}
 				}
 				return "";
 			}
-		});		
-		
+		});
+
 		applyUsersColumnWidthSetting();
-		
+
 		viewer.getTree().setHeaderVisible(true);
 		viewer.getTree().setLinesVisible(true);
 		viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
-		
+
 		DocumentsFilterBarComposite filterBarComposite = addFilterBar(parent);
-		
+
 		contentProvider = new DocumentsTreeContentProvider(viewer)
-			.selectFilterCategory(filterBarComposite.getSelection());
+				.selectFilterCategory(filterBarComposite.getSelection());
 		viewer.setContentProvider(contentProvider);
 		viewer.setUseHashlookup(true);
 		viewer.addFilter(new ViewFilterProvider());
-		
+
 		bFlat = ConfigServiceHolder.getUser(SETTING_FLAT_VIEW, false);
 		contentProvider.setFlat(bFlat);
-		
+
 		ovComparator = new DocumentsViewerComparator();
 		viewer.setComparator(ovComparator);
 		TreeColumn[] treeCols = viewer.getTree().getColumns();
@@ -435,26 +431,24 @@ public class DocumentsView extends ViewPart {
 		makeActions();
 		applySortDirection();
 		hookDoubleClickAction();
-		
-		final Transfer[] dropTransferTypes = new Transfer[] {
-			FileTransfer.getInstance()
-		};
-		
+
+		final Transfer[] dropTransferTypes = new Transfer[]{FileTransfer.getInstance()};
+
 		viewer.addDropSupport(DND.DROP_COPY, dropTransferTypes, new DropTargetAdapter() {
-			
+
 			@Override
-			public void dragEnter(DropTargetEvent event){
+			public void dragEnter(DropTargetEvent event) {
 				event.detail = DND.DROP_COPY;
 			}
-			
+
 			@Override
-			public void drop(DropTargetEvent event){
+			public void drop(DropTargetEvent event) {
 				if (dropTransferTypes[0].isSupportedType(event.currentDataType)) {
 					// if flat drop from same view makes no sense
 					if (bFlat && currentDragSelection != null) {
 						return;
 					}
-					
+
 					String[] files = (String[]) event.data;
 					ICategory category = null;
 					if (event.item != null) {
@@ -464,11 +458,11 @@ public class DocumentsView extends ViewPart {
 						} else if (event.item.getData() instanceof ICategory) {
 							category = (ICategory) event.item.getData();
 						}
-						
+
 					}
-					
+
 					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
-						.getService(ICommandService.class);
+							.getService(ICommandService.class);
 					Command cmd = commandService.getCommand(DocumentCrudHandler.CMD_NEW_DOCUMENT);
 					if (files != null) {
 						for (String file : files) {
@@ -477,8 +471,7 @@ public class DocumentsView extends ViewPart {
 								Map<String, String> params = new HashMap<>();
 								params.put(DocumentCrudHandler.PARAM_FILE_PATH, file);
 								if (category != null) {
-									params.put(DocumentCrudHandler.PARAM_DOC_CATEGORY,
-										category.getName());
+									params.put(DocumentCrudHandler.PARAM_DOC_CATEGORY, category.getName());
 								}
 								ExecutionEvent ev = new ExecutionEvent(cmd, params, null, null);
 								created = cmd.executeWithChecks(ev);
@@ -489,38 +482,33 @@ public class DocumentsView extends ViewPart {
 							if (currentDragSelection != null) {
 								// if new document was created, delete source
 								if (created instanceof java.util.Optional
-									&& ((java.util.Optional<?>) created).isPresent()) {
+										&& ((java.util.Optional<?>) created).isPresent()) {
 									// TODO change if drag of list is implemented in drag support
-									IDocument sourceDocument =
-										(IDocument) currentDragSelection.getFirstElement();
-									DocumentStoreServiceHolder.getService()
-										.removeDocument(sourceDocument);
-									ElexisEventDispatcher.getInstance()
-										.fire(new ElexisEvent(sourceDocument, IDocument.class,
-											ElexisEvent.EVENT_DELETE, ElexisEvent.PRIORITY_NORMAL));
+									IDocument sourceDocument = (IDocument) currentDragSelection.getFirstElement();
+									DocumentStoreServiceHolder.getService().removeDocument(sourceDocument);
+									ElexisEventDispatcher.getInstance().fire(new ElexisEvent(sourceDocument,
+											IDocument.class, ElexisEvent.EVENT_DELETE, ElexisEvent.PRIORITY_NORMAL));
 								}
 							}
 						}
 					}
 				}
 			}
-			
+
 		});
-		
-		final Transfer[] dragTransferTypes = new Transfer[] {
-			FileTransfer.getInstance(), TextTransfer.getInstance()
-		};
+
+		final Transfer[] dragTransferTypes = new Transfer[]{FileTransfer.getInstance(), TextTransfer.getInstance()};
 		viewer.addDragSupport(DND.DROP_COPY, dragTransferTypes, new DragSourceAdapter() {
 			private boolean failure;
-			
+
 			@Override
-			public void dragStart(DragSourceEvent event){
+			public void dragStart(DragSourceEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 				event.doit = selection.getFirstElement() instanceof IDocument;
 			}
-			
+
 			@Override
-			public void dragSetData(DragSourceEvent event){
+			public void dragSetData(DragSourceEvent event) {
 				failure = false;
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 				IDocument dh = (IDocument) selection.getFirstElement();
@@ -531,19 +519,17 @@ public class DocumentsView extends ViewPart {
 					if (end != -1) {
 						title = (dh.getTitle()).substring(0, end);
 					}
-					
+
 					try {
-						String absPath = DocumentStoreServiceHolder.getService()
-							.saveContentToTempFile(dh, title, dh.getExtension(), true);
+						String absPath = DocumentStoreServiceHolder.getService().saveContentToTempFile(dh, title,
+								dh.getExtension(), true);
 						if (absPath != null) {
-							event.data = new String[] {
-								absPath
-							};
+							event.data = new String[]{absPath};
 						} else {
 							event.doit = false;
 							failure = true;
 						}
-						
+
 					} catch (ElexisException e) {
 						event.doit = false;
 						failure = true;
@@ -551,37 +537,36 @@ public class DocumentsView extends ViewPart {
 					}
 				}
 			}
-			
+
 			@Override
-			public void dragFinished(DragSourceEvent event){
+			public void dragFinished(DragSourceEvent event) {
 				if (!failure) {
 					super.dragFinished(event);
 				} else {
 					SWTHelper.showError(Messages.DocumentView_exportErrorCaption,
-						Messages.DocumentView_exportErrorEmptyText);
+							Messages.DocumentView_exportErrorEmptyText);
 				}
 				currentDragSelection = null;
 			}
 		});
-		
+
 		MenuManager menuManager = new MenuManager();
 		viewer.getControl().setMenu(menuManager.createContextMenu(viewer.getControl()));
 		getSite().registerContextMenu(menuManager, viewer);
 		getSite().setSelectionProvider(viewer);
-		
+
 		viewer.setInput(ContextServiceHolder.get().getActivePatient().orElse(null));
 	}
 
-	private void createFlatMenu(Composite filterComposite){
+	private void createFlatMenu(Composite filterComposite) {
 		ToolBarManager tMenuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
 		tMenuManager.add(new Action("Neuer Brief", Action.AS_PUSH_BUTTON) {
 			{
 				setImageDescriptor(Images.IMG_DOCUMENT_ADD.getImageDescriptor());
 			}
 			@Override
-			public void run(){
-				ParameterizedCommand cmd =
-					commandService.createCommand("ch.elexis.core.ui.commands.BriefNew", null);
+			public void run() {
+				ParameterizedCommand cmd = commandService.createCommand("ch.elexis.core.ui.commands.BriefNew", null);
 				if (cmd != null) {
 					handlerService.executeHandler(cmd);
 				}
@@ -593,21 +578,18 @@ public class DocumentsView extends ViewPart {
 				setImageDescriptor(Images.IMG_VIEW_WORK_INCAPABLE.getImageDescriptor());
 			}
 			@Override
-			public void run(){
-				ParameterizedCommand cmd =
-					commandService.createCommand("ch.elexis.core.ui.commands.AufNew", null);
+			public void run() {
+				ParameterizedCommand cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufNew", null);
 				if (cmd != null) {
 					Object createdAuf = handlerService.executeHandler(cmd);
 					if (createdAuf instanceof ISickCertificate) {
 						ContextServiceHolder.get().getRootContext().setTyped(createdAuf);
 						// print
-						cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufPrint",
-							null);
+						cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufPrint", null);
 						if (cmd != null) {
 							handlerService.executeHandler(cmd);
 						}
-						ContextServiceHolder.get().getRootContext()
-							.removeTyped(ISickCertificate.class);
+						ContextServiceHolder.get().getRootContext().removeTyped(ISickCertificate.class);
 					}
 				}
 				super.run();
@@ -615,22 +597,21 @@ public class DocumentsView extends ViewPart {
 		});
 		tMenuManager.createControl(filterComposite);
 	}
-	
-	private DocumentsFilterBarComposite addFilterBar(Composite parent){
-		
+
+	private DocumentsFilterBarComposite addFilterBar(Composite parent) {
+
 		List<FilterCategory> filters = new ArrayList<>();
 		filters.add(new FilterCategory(null, "Alle"));
 		filters.add(new FilterCategory(BriefConstants.UNKNOWN, "Briefe"));
 		filters.add(new FilterCategory(BriefConstants.AUZ, "Auf"));
 		filters.add(new FilterCategory(BriefConstants.RP, "Rezepte"));
-		
-		DocumentsFilterBarComposite filterBarComposite =
-			new DocumentsFilterBarComposite(parent, SWT.NONE, filters);
+
+		DocumentsFilterBarComposite filterBarComposite = new DocumentsFilterBarComposite(parent, SWT.NONE, filters);
 		filterBarComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		filterBarComposite.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				if (contentProvider != null) {
 					contentProvider.selectFilterCategory(event.getSelection());
 				}
@@ -638,11 +619,11 @@ public class DocumentsView extends ViewPart {
 		});
 		return filterBarComposite;
 	}
-	
-	private SelectionListener getSelectionAdapter(final TreeColumn column, final int index){
+
+	private SelectionListener getSelectionAdapter(final TreeColumn column, final int index) {
 		SelectionAdapter selectionAdapter = new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				ovComparator.setBFlat(bFlat);
 				ovComparator.setColumn(index);
 				viewer.getTree().setSortDirection(ovComparator.getDirection());
@@ -652,25 +633,26 @@ public class DocumentsView extends ViewPart {
 		};
 		return selectionAdapter;
 	}
-	
-	private void applySortDirection(){
+
+	private void applySortDirection() {
 		String[] usrSortSettings = sortSettings.split(",");
-		
-		/*	if (ConfigServiceHolder.getUser(PreferencePage.SAVE_SORT_DIRECTION, false)) {
-				String sortSet =
-					ConfigServiceHolder.getUser(PreferencePage.USR_SORT_DIRECTION_SETTINGS, sortSettings);
-				usrSortSettings = sortSet.split(",");
-			}*/
-		
+
+		/*
+		 * if (ConfigServiceHolder.getUser(PreferencePage.SAVE_SORT_DIRECTION, false)) {
+		 * String sortSet =
+		 * ConfigServiceHolder.getUser(PreferencePage.USR_SORT_DIRECTION_SETTINGS,
+		 * sortSettings); usrSortSettings = sortSet.split(","); }
+		 */
+
 		int propertyIdx = Integer.parseInt(usrSortSettings[0]);
 		int direction = Integer.parseInt(usrSortSettings[1]);
 		if (propertyIdx != 0) {
 			sortViewer(propertyIdx, direction);
 		}
-		
+
 	}
-	
-	private void sortViewer(int propertyIdx, int direction){
+
+	private void sortViewer(int propertyIdx, int direction) {
 		TreeColumn column = viewer.getTree().getColumn(propertyIdx);
 		ovComparator.setColumn(propertyIdx);
 		ovComparator.setDirection(direction);
@@ -678,36 +660,38 @@ public class DocumentsView extends ViewPart {
 		viewer.getTree().setSortColumn(column);
 		viewer.refresh();
 	}
-	
-	private void applyUsersColumnWidthSetting(){
+
+	private void applyUsersColumnWidthSetting() {
 		TreeColumn[] treeColumns = viewer.getTree().getColumns();
 		String[] userColWidth = colWidth.split(",");
-		/*if (ConfigServiceHolder.getUser(PreferencePage.SAVE_COLUM_WIDTH, false)) {
-			String ucw = ConfigServiceHolder.getUser(PreferencePage.USR_COLUMN_WIDTH_SETTINGS, colWidth);
-			userColWidth = ucw.split(",");
-		}*/
-		
+		/*
+		 * if (ConfigServiceHolder.getUser(PreferencePage.SAVE_COLUM_WIDTH, false)) {
+		 * String ucw =
+		 * ConfigServiceHolder.getUser(PreferencePage.USR_COLUMN_WIDTH_SETTINGS,
+		 * colWidth); userColWidth = ucw.split(","); }
+		 */
+
 		for (int i = 0; i < treeColumns.length; i++) {
 			treeColumns[i].setWidth(Integer.parseInt(userColWidth[i]));
 		}
 	}
-	
+
 	@Override
-	public void dispose(){
-		//saveSortSettings();
+	public void dispose() {
+		// saveSortSettings();
 		super.dispose();
 	}
-	
+
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
-	public void setFocus(){
+	public void setFocus() {
 		if (viewer != null) {
 			viewer.getControl().setFocus();
 		}
 	}
-	
-	public void activation(boolean mode){
+
+	public void activation(boolean mode) {
 		if (mode == false) {
 			TreeColumn[] treeColumns = viewer.getTree().getColumns();
 			StringBuilder sb = new StringBuilder();
@@ -715,64 +699,63 @@ public class DocumentsView extends ViewPart {
 				sb.append(tc.getWidth());
 				sb.append(",");
 			}
-			//	ConfigServiceHolder.setUser(PreferencePage.USR_COLUMN_WIDTH_SETTINGS, sb.toString());
-			
-			//	saveSortSettings();
+			// ConfigServiceHolder.setUser(PreferencePage.USR_COLUMN_WIDTH_SETTINGS,
+			// sb.toString());
+
+			// saveSortSettings();
 		}
 	}
-	
-	/*private void saveSortSettings(){
-		int propertyIdx = ovComparator.getPropertyIndex();
-		int direction = ovComparator.getDirectionDigit();
-		int catDirection = ovComparator.getCategoryDirection();
-		ConfigServiceHolder.setUser(PreferencePage.USR_SORT_DIRECTION_SETTINGS, propertyIdx + "," + direction
-				+ "," + catDirection + "," + bFlat);
-	}*/
-	
-	public void refresh(){
+
+	/*
+	 * private void saveSortSettings(){ int propertyIdx =
+	 * ovComparator.getPropertyIndex(); int direction =
+	 * ovComparator.getDirectionDigit(); int catDirection =
+	 * ovComparator.getCategoryDirection();
+	 * ConfigServiceHolder.setUser(PreferencePage.USR_SORT_DIRECTION_SETTINGS,
+	 * propertyIdx + "," + direction + "," + catDirection + "," + bFlat); }
+	 */
+
+	public void refresh() {
 		viewer.refresh();
 	}
-	
-	private void makeActions(){
+
+	private void makeActions() {
 		doubleClickAction = new Action() {
-			public void run(){
+			public void run() {
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
 				if (obj instanceof IDocument) {
 					IDocument dh = (IDocument) obj;
-					DocumentStoreServiceHolder.getService().getPersistenceObject(dh)
-						.ifPresent(po -> {
-							ICommandService commandService = (ICommandService) PlatformUI
-								.getWorkbench().getService(ICommandService.class);
-							Command command = commandService
-								.getCommand("ch.elexis.core.ui.command.startEditLocalDocument");
-							PlatformUI.getWorkbench().getService(IEclipseContext.class).set(
-								command.getId().concat(".selection"), new StructuredSelection(po));
-							try {
-								command.executeWithChecks(
-									new ExecutionEvent(command, Collections.EMPTY_MAP, null, null));
-							} catch (ExecutionException | NotDefinedException | NotEnabledException
-									| NotHandledException e) {
-								MessageDialog.openError(getSite().getShell(), "Fehler",
+					DocumentStoreServiceHolder.getService().getPersistenceObject(dh).ifPresent(po -> {
+						ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+								.getService(ICommandService.class);
+						Command command = commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument");
+						PlatformUI.getWorkbench().getService(IEclipseContext.class)
+								.set(command.getId().concat(".selection"), new StructuredSelection(po));
+						try {
+							command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, null, null));
+						} catch (ExecutionException | NotDefinedException | NotEnabledException
+								| NotHandledException e) {
+							MessageDialog.openError(getSite().getShell(), "Fehler",
 									"Das Dokument konnte nicht geöffnet werden.");
-								e.printStackTrace();
-							}
-						});
+							e.printStackTrace();
+						}
+					});
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, dh);
 				}
 			}
 		};
 	}
-	
-	private void hookDoubleClickAction(){
+
+	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event){
+			public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
 		});
 	}
-	
-	public void switchFlatView(boolean bFlat){
+
+	public void switchFlatView(boolean bFlat) {
 		this.bFlat = bFlat;
 		if (viewer != null) {
 			ConfigServiceHolder.setUser(SETTING_FLAT_VIEW, bFlat);

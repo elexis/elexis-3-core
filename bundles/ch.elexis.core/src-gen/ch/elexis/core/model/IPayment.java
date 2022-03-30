@@ -14,18 +14,17 @@ import ch.rgw.tools.Money;
 import java.time.LocalDate;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IPayment</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IPayment</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IPayment#getInvoice <em>Invoice</em>}</li>
- *   <li>{@link ch.elexis.core.model.IPayment#getAmount <em>Amount</em>}</li>
- *   <li>{@link ch.elexis.core.model.IPayment#getRemark <em>Remark</em>}</li>
- *   <li>{@link ch.elexis.core.model.IPayment#getDate <em>Date</em>}</li>
+ * <li>{@link ch.elexis.core.model.IPayment#getInvoice <em>Invoice</em>}</li>
+ * <li>{@link ch.elexis.core.model.IPayment#getAmount <em>Amount</em>}</li>
+ * <li>{@link ch.elexis.core.model.IPayment#getRemark <em>Remark</em>}</li>
+ * <li>{@link ch.elexis.core.model.IPayment#getDate <em>Date</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPayment()
@@ -34,13 +33,14 @@ import java.time.LocalDate;
  */
 public interface IPayment extends Identifiable, Deleteable {
 	/**
-	 * Returns the value of the '<em><b>Invoice</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Invoice</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Invoice</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Invoice</em>' reference isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Invoice</em>' reference.
 	 * @see #setInvoice(IInvoice)
 	 * @see ch.elexis.core.model.ModelPackage#getIPayment_Invoice()
@@ -50,23 +50,25 @@ public interface IPayment extends Identifiable, Deleteable {
 	IInvoice getInvoice();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPayment#getInvoice <em>Invoice</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Invoice</em>' reference.
+	 * Sets the value of the '{@link ch.elexis.core.model.IPayment#getInvoice
+	 * <em>Invoice</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Invoice</em>' reference.
 	 * @see #getInvoice()
 	 * @generated
 	 */
 	void setInvoice(IInvoice value);
 
 	/**
-	 * Returns the value of the '<em><b>Amount</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Amount</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Amount</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Amount</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Amount</em>' attribute.
 	 * @see #setAmount(Money)
 	 * @see ch.elexis.core.model.ModelPackage#getIPayment_Amount()
@@ -76,23 +78,25 @@ public interface IPayment extends Identifiable, Deleteable {
 	Money getAmount();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPayment#getAmount <em>Amount</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Amount</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IPayment#getAmount
+	 * <em>Amount</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Amount</em>' attribute.
 	 * @see #getAmount()
 	 * @generated
 	 */
 	void setAmount(Money value);
 
 	/**
-	 * Returns the value of the '<em><b>Remark</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Remark</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Remark</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Remark</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Remark</em>' attribute.
 	 * @see #setRemark(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIPayment_Remark()
@@ -102,23 +106,25 @@ public interface IPayment extends Identifiable, Deleteable {
 	String getRemark();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPayment#getRemark <em>Remark</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Remark</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IPayment#getRemark
+	 * <em>Remark</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Remark</em>' attribute.
 	 * @see #getRemark()
 	 * @generated
 	 */
 	void setRemark(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Date</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Date</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Date</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Date</em>' attribute.
 	 * @see #setDate(LocalDate)
 	 * @see ch.elexis.core.model.ModelPackage#getIPayment_Date()
@@ -128,10 +134,11 @@ public interface IPayment extends Identifiable, Deleteable {
 	LocalDate getDate();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPayment#getDate <em>Date</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Date</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IPayment#getDate
+	 * <em>Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Date</em>' attribute.
 	 * @see #getDate()
 	 * @generated
 	 */

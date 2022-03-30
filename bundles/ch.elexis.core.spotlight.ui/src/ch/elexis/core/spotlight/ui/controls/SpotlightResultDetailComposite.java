@@ -14,11 +14,11 @@ import ch.elexis.core.spotlight.ui.internal.ISpotlightResultEntryDetailComposite
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 public class SpotlightResultDetailComposite extends Composite {
-	
+
 	private ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService;
-	
+
 	private ISpotlightResultEntryDetailComposite activeDetailComposite;
-	
+
 	/**
 	 * Create the composite.
 	 * 
@@ -26,7 +26,7 @@ public class SpotlightResultDetailComposite extends Composite {
 	 * @param style
 	 */
 	public SpotlightResultDetailComposite(Composite parent, int style,
-		ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService){
+			ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService) {
 		super(parent, style);
 		this.resultEntryDetailCompositeService = resultEntryDetailCompositeService;
 		GridLayout gridLayout = new GridLayout(1, false);
@@ -35,21 +35,21 @@ public class SpotlightResultDetailComposite extends Composite {
 		gridLayout.marginTop = 0;
 		setLayout(gridLayout);
 	}
-	
+
 	@Override
-	protected void checkSubclass(){
+	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-	
+
 	@Override
-	public boolean setFocus(){
+	public boolean setFocus() {
 		if (activeDetailComposite != null) {
 			return activeDetailComposite.setFocus();
 		}
 		return false;
 	}
-	
-	protected void setSelection(ISpotlightResultEntry selectedEntry){
+
+	protected void setSelection(ISpotlightResultEntry selectedEntry) {
 		// TODO make category not selectable
 		if (selectedEntry != null) {
 			assertComposite(selectedEntry.getCategory());
@@ -57,23 +57,22 @@ public class SpotlightResultDetailComposite extends Composite {
 		activeDetailComposite.setSpotlightEntry(selectedEntry);
 		this.layout();
 	}
-	
-	private void assertComposite(Category category){
+
+	private void assertComposite(Category category) {
 		if (activeDetailComposite != null) {
 			if (Objects.equals(category, activeDetailComposite.appliedForCategory())) {
 				return;
 			}
 			activeDetailComposite.dispose();
 		}
-		
-		activeDetailComposite =
-			resultEntryDetailCompositeService.instantiate(category, this, SWT.None);
+
+		activeDetailComposite = resultEntryDetailCompositeService.instantiate(category, this, SWT.None);
 		CoreUiUtil.injectServicesWithContext(activeDetailComposite);
 		activeDetailComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
 
-	public boolean handleAltKeyPressed(int keyCode){
+	public boolean handleAltKeyPressed(int keyCode) {
 		return activeDetailComposite.handleAltKeyPressed(keyCode);
 	}
-	
+
 }

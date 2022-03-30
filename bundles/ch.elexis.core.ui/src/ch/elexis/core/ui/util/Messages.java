@@ -10,7 +10,7 @@
 package ch.elexis.core.ui.util;
 
 public class Messages {
-	
+
 	public static String DatabaseCleaner_NoCaseForBill = ch.elexis.core.l10n.Messages.DatabaseCleaner_NoCaseForBill;
 	public static String DatabaseCleaner_NoCaseForKons = ch.elexis.core.l10n.Messages.DatabaseCleaner_NoCaseForKons;
 	public static String DatabaseCleaner_NoMandatorForKons = ch.elexis.core.l10n.Messages.DatabaseCleaner_NoMandatorForKons;

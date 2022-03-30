@@ -74,22 +74,22 @@ import ch.rgw.tools.StringTool;
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	public static final String IMPORTER_GROUP = "elexis.FileImports"; //$NON-NLS-1$
 	public static final String ADDITIONS = "elexis.fileAdditions"; //$NON-NLS-1$
-	
+
 	// Actions - important to allocate these only in makeActions, and then use
 	// them
 	// in the fill methods. This ensures that the actions aren't recreated
 	// when fillActionBars is called with FILL_PROXY.
-	
+
 	private IWorkbenchWindow window;
 	private IAction[] openPerspectiveActions = null;
 	public static MenuManager fileMenu, editMenu, windowMenu, helpMenu;
-	
-	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer){
+
+	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
 	}
-	
+
 	@Override
-	protected void makeActions(final IWorkbenchWindow win){
+	protected void makeActions(final IWorkbenchWindow win) {
 		// Creates the actions and registers them.
 		// Registering is needed to ensure that key bindings work.
 		// The corresponding commands keybindings are defined in the plugin.xml
@@ -105,7 +105,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		 * register(GlobalActions.cutAction); register(GlobalActions.pasteAction);
 		 * register(GlobalActions.loginAction); register(GlobalActions.importAction);
 		 * register(GlobalActions.aboutAction); register(GlobalActions.helpAction);
-		 * register(GlobalActions.prefsAction); register(GlobalActions.connectWizardAction);
+		 * register(GlobalActions.prefsAction);
+		 * register(GlobalActions.connectWizardAction);
 		 */
 		// register(GlobalActions.changeMandantAction);
 		// register(GlobalActions.savePerspectiveAction);
@@ -114,94 +115,84 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		// register(savePerspectiveAsDefaultAction);
 		// register(MainMenuActions.showViewAction);
 		// register(MainMenuActions.showPerspectiveAction);
-		
+
 		// create open perspective actions according to the list of Sidebar
 		if (CoreHub.localCfg.get(Preferences.SHOWTOOLBARITEMS, Boolean.toString(true))
-			.equalsIgnoreCase(Boolean.toString(true))) {
-			List<IConfigurationElement> ex =
-				Extensions.getExtensions(ExtensionPointConstantsUi.SIDEBAR);
+				.equalsIgnoreCase(Boolean.toString(true))) {
+			List<IConfigurationElement> ex = Extensions.getExtensions(ExtensionPointConstantsUi.SIDEBAR);
 			openPerspectiveActions = new IAction[ex.size()];
 			int i = 0;
 			for (IConfigurationElement ice : ex) {
 				String name = ice.getAttribute("name"); //$NON-NLS-1$
 				String id = ice.getAttribute("ID"); //$NON-NLS-1$
 				String icon = ice.getAttribute("icon"); //$NON-NLS-1$
-				IPerspectiveDescriptor perspectiveDescriptor =
-					PlatformUI.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId(id);
+				IPerspectiveDescriptor perspectiveDescriptor = PlatformUI.getWorkbench().getPerspectiveRegistry()
+						.findPerspectiveWithId(id);
 				if (perspectiveDescriptor != null) {
-					openPerspectiveActions[i] =
-						new OpenPerspectiveAction(perspectiveDescriptor, name, icon);
+					openPerspectiveActions[i] = new OpenPerspectiveAction(perspectiveDescriptor, name, icon);
 				}
-				
+
 				i++;
 			}
 		}
-		
+
 	}
-	
+
 	private final IMenuListener reflectRightsListener = new IMenuListener() {
-		
+
 		@Override
-		public void menuAboutToShow(IMenuManager manager){
+		public void menuAboutToShow(IMenuManager manager) {
 			IContributionItem[] items = manager.getItems();
 			for (IContributionItem iContributionItem : items) {
-				if(iContributionItem instanceof ActionContributionItem) {
-					ActionContributionItem aci = (ActionContributionItem) iContributionItem;		
+				if (iContributionItem instanceof ActionContributionItem) {
+					ActionContributionItem aci = (ActionContributionItem) iContributionItem;
 					IAction action = aci.getAction();
-					if(action instanceof RestrictedAction) {
+					if (action instanceof RestrictedAction) {
 						RestrictedAction ra = (RestrictedAction) aci.getAction();
 						ra.reflectRight();
 						continue;
 					}
 					String id = action.getActionDefinitionId();
-					if(id==null) {
+					if (id == null) {
 						continue;
 					}
 					IAccessControlService acl = AccessControlServiceHolder.get();
 					switch (id) {
-					case IWorkbenchCommandConstants.FILE_EXIT:
-						action.setEnabled(acl.request(AccessControlDefaults.AC_EXIT));
-						break;
-					case IWorkbenchCommandConstants.WINDOW_NEW_WINDOW:
-						action.setEnabled(acl.request(AccessControlDefaults.AC_NEWWINDOW));
-						break;
-					case IWorkbenchCommandConstants.HELP_ABOUT:
-						action.setEnabled(acl.request(AccessControlDefaults.AC_ABOUT));
-						break;
-					case IWorkbenchCommandConstants.WINDOW_PREFERENCES:
-						action.setEnabled(acl.request(AccessControlDefaults.AC_PREFS));
-						break;
-					default:
-						break;
+						case IWorkbenchCommandConstants.FILE_EXIT :
+							action.setEnabled(acl.request(AccessControlDefaults.AC_EXIT));
+							break;
+						case IWorkbenchCommandConstants.WINDOW_NEW_WINDOW :
+							action.setEnabled(acl.request(AccessControlDefaults.AC_NEWWINDOW));
+							break;
+						case IWorkbenchCommandConstants.HELP_ABOUT :
+							action.setEnabled(acl.request(AccessControlDefaults.AC_ABOUT));
+							break;
+						case IWorkbenchCommandConstants.WINDOW_PREFERENCES :
+							action.setEnabled(acl.request(AccessControlDefaults.AC_PREFS));
+							break;
+						default :
+							break;
 					}
 				}
 			}
 		}
 	};
-	
+
 	@Override
-	protected void fillMenuBar(IMenuManager menuBar){
-		
-		fileMenu =
-			new MenuManager(Messages.ApplicationActionBarAdvisor_3,
-				IWorkbenchActionConstants.M_FILE);
+	protected void fillMenuBar(IMenuManager menuBar) {
+
+		fileMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_3, IWorkbenchActionConstants.M_FILE);
 		fileMenu.addMenuListener(reflectRightsListener);
-		editMenu =
-			new MenuManager(Messages.ApplicationActionBarAdvisor_4,
-				IWorkbenchActionConstants.M_EDIT);
+		editMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_4, IWorkbenchActionConstants.M_EDIT);
 		editMenu.addMenuListener(reflectRightsListener);
-		windowMenu =
-			new MenuManager(Messages.ApplicationActionBarAdvisor_5,
-				IWorkbenchActionConstants.M_WINDOW);
-		helpMenu =
-			new MenuManager(Messages.ApplicationActionBarAdvisor_6,
-				IWorkbenchActionConstants.M_HELP);
+		windowMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_5, IWorkbenchActionConstants.M_WINDOW);
+		helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_6, IWorkbenchActionConstants.M_HELP);
 		helpMenu.addMenuListener(reflectRightsListener);
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
 		menuBar.add(windowMenu);
 		menuBar.add(helpMenu);
-		
+
 		fileMenu.add(GlobalActions.loginAction);
 		fileMenu.add(GlobalActions.changeMandantAction);
 		fileMenu.add(GlobalActions.connectWizardAction);
@@ -214,117 +205,115 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		fileMenu.add(new GroupMarker(ADDITIONS));
 		fileMenu.add(new Separator());
 		fileMenu.add(GlobalActions.exitAction);
-		
+
 		editMenu.add(GlobalActions.copyAction);
 		editMenu.add(GlobalActions.cutAction);
 		editMenu.add(GlobalActions.pasteAction);
 
-		
-		GlobalActions.perspectiveMenu =
-			new MenuManager(Messages.ApplicationActionBarAdvisor_7, "openPerspective"); //$NON-NLS-1$
+		GlobalActions.perspectiveMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_7, "openPerspective"); //$NON-NLS-1$
 		perspectiveMenu.add(resetPerspectiveAction);
 		perspectiveMenu.add(fixLayoutAction);
 		windowMenu.add(perspectiveMenu);
-		
+
 		GlobalActions.viewMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_9);
 		GlobalActions.viewList = ContributionItemFactory.VIEWS_SHORTLIST.create(window);
 		GlobalActions.viewMenu.add(GlobalActions.viewList);
 		windowMenu.add(GlobalActions.viewMenu);
 		windowMenu.addMenuListener(new IMenuListener() {
-			
+
 			@Override
-			public void menuAboutToShow(IMenuManager manager){
+			public void menuAboutToShow(IMenuManager manager) {
 				IContributionItem[] items = manager.getItems();
 				for (IContributionItem iContributionItem : items) {
-					if( "viewsShortlist".equals(iContributionItem.getId())) {
-						iContributionItem.setVisible(AccessControlServiceHolder.get().request(AccessControlDefaults.AC_SHOWVIEW));
+					if ("viewsShortlist".equals(iContributionItem.getId())) {
+						iContributionItem.setVisible(
+								AccessControlServiceHolder.get().request(AccessControlDefaults.AC_SHOWVIEW));
 					}
 				}
 			}
 		});
-		
+
 		/* helpMenu.add(testAction); */
 		helpMenu.add(GlobalActions.helpAction);
 		helpMenu.add(new Separator("additions"));
 		helpMenu.add(new Separator());
 		helpMenu.add(GlobalActions.aboutAction);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.application.ActionBarAdvisor#fillCoolBar(org.eclipse.jface
+	 * @see
+	 * org.eclipse.ui.application.ActionBarAdvisor#fillCoolBar(org.eclipse.jface
 	 * .action.ICoolBarManager )
 	 */
 	@Override
-	protected void fillCoolBar(ICoolBarManager coolBar){
+	protected void fillCoolBar(ICoolBarManager coolBar) {
 		ToolBarManager tbm = new ToolBarManager();
-		
+
 		tbm.add(GlobalActions.homeAction);
 		tbm.add(GlobalActions.resetPerspectiveAction);
-		
+
 		tbm.add(new Separator());
 		tbm.add(GlobalActions.printEtikette);
 		tbm.add(new Action("", Action.AS_DROP_DOWN_MENU) {
-			
+
 			private IMenuCreator menuCreator;
-			
+
 			@Override
-			public ImageDescriptor getImageDescriptor(){
+			public ImageDescriptor getImageDescriptor() {
 				return GlobalActions.printVersionedEtikette.getImageDescriptor();
 			}
-			
+
 			@Override
-			public String getText(){
+			public String getText() {
 				return GlobalActions.printVersionedEtikette.getText();
 			}
-			
+
 			@Override
-			public String getToolTipText(){
+			public String getToolTipText() {
 				return GlobalActions.printVersionedEtikette.getToolTipText();
 			}
-			
+
 			@Override
-			public IMenuCreator getMenuCreator(){
-				if(menuCreator == null) {
+			public IMenuCreator getMenuCreator() {
+				if (menuCreator == null) {
 					menuCreator = new IMenuCreator() {
-						
+
 						private Menu menu;
-						
+
 						@Override
-						public Menu getMenu(Menu parent){
+						public Menu getMenu(Menu parent) {
 							// TODO Auto-generated method stub
 							return null;
 						}
-						
+
 						@Override
-						public Menu getMenu(Control parent){
+						public Menu getMenu(Control parent) {
 							if (menu == null) {
 								menu = new Menu(parent);
 								final MenuItem menuItem = new MenuItem(this.menu, SWT.PUSH);
-								final Image image =
-									GlobalActions.printVersionedEtikette.getImageDescriptor()
+								final Image image = GlobalActions.printVersionedEtikette.getImageDescriptor()
 										.createImage();
 								menuItem.setImage(image);
-								menuItem.setText(
-									"Mehrfach " + GlobalActions.printVersionedEtikette.getText());
-								
+								menuItem.setText("Mehrfach " + GlobalActions.printVersionedEtikette.getText());
+
 								menuItem.addSelectionListener(new SelectionAdapter() {
 									@Override
-									public void widgetSelected(SelectionEvent e){
-										InputDialog inputDlg = new InputDialog(
-											Display.getDefault().getActiveShell(), menuItem.getText(),
-											"Bitte die Anzahl eingeben", "1", new IInputValidator() {
-											@Override
-											public String isValid(String newText){
-													try {
-														Integer.parseInt(newText);
-													} catch (NumberFormatException e) {
-														return newText + " ist keine gültige Anzahl";
+									public void widgetSelected(SelectionEvent e) {
+										InputDialog inputDlg = new InputDialog(Display.getDefault().getActiveShell(),
+												menuItem.getText(), "Bitte die Anzahl eingeben", "1",
+												new IInputValidator() {
+													@Override
+													public String isValid(String newText) {
+														try {
+															Integer.parseInt(newText);
+														} catch (NumberFormatException e) {
+															return newText + " ist keine gültige Anzahl";
+														}
+														return null;
 													}
-												return null;
-											}
-										}, SWT.BORDER);
+												}, SWT.BORDER);
 										if (inputDlg.open() == Window.OK) {
 											String amountStr = inputDlg.getValue();
 											int amount = Integer.parseInt(amountStr);
@@ -335,31 +324,31 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 										}
 									}
 								});
-								
+
 							}
 							return menu;
 						}
-						
+
 						@Override
-						public void dispose(){
+						public void dispose() {
 							menu.dispose();
 							menu = null;
 						}
-					}; 
+					};
 				}
 				return menuCreator;
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				GlobalActions.printVersionedEtikette.run();
 			}
 		});
 		tbm.add(GlobalActions.printAdresse);
-		
+
 		if (CoreHub.localCfg.get(Preferences.SHOWTOOLBARITEMS, Boolean.toString(true))
-			.equalsIgnoreCase(Boolean.toString(true))) {
-			
+				.equalsIgnoreCase(Boolean.toString(true))) {
+
 			List<IAction> l = new ArrayList<>();
 			for (IAction action : openPerspectiveActions) {
 				if (action != null) {
@@ -368,26 +357,26 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			}
 			Collections.sort(l, new Comparator<IAction>() {
 				@Override
-				public int compare(IAction o1, IAction o2){
+				public int compare(IAction o1, IAction o2) {
 					if (o1.getToolTipText() != null && o2.getToolTipText() != null) {
 						return o1.getToolTipText().compareTo(o2.getToolTipText());
 					}
 					return o1.getToolTipText() != null ? 1 : -1;
 				}
 			});
-			
-			if(!l.isEmpty()) {
+
+			if (!l.isEmpty()) {
 				tbm.add(new Separator());
 			}
-			
+
 			for (IAction action : l) {
 				tbm.add(action);
 			}
 		}
-		
+
 		coolBar.add(tbm);
 	}
-	
+
 	/**
 	 * Action for opening a perspective
 	 * 
@@ -395,32 +384,32 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	 */
 	class OpenPerspectiveAction extends Action {
 		private final IPerspectiveDescriptor perspectiveDescriptor;
-		
+
 		/**
 		 * Create a new action for opening a perspective
 		 * 
 		 * @param perspectiveDescriptor
 		 *            the perspective to be opened
 		 */
-		OpenPerspectiveAction(IPerspectiveDescriptor perspectiveDescriptor, String name, String icon){
+		OpenPerspectiveAction(IPerspectiveDescriptor perspectiveDescriptor, String name, String icon) {
 			super(perspectiveDescriptor.getLabel());
-			
+
 			setId(perspectiveDescriptor.getId());
 			if (!StringTool.isNothing(icon)) {
 				setImageDescriptor(perspectiveDescriptor.getImageDescriptor());
 			} else {
-				
+
 				setImageDescriptor(perspectiveDescriptor.getImageDescriptor());
 			}
-			
-			setToolTipText((StringTool.isNothing(name) ? perspectiveDescriptor.getLabel() : name)
-					+ StringTool.space + Messages.ApplicationActionBarAdvisor_10);
-			
+
+			setToolTipText((StringTool.isNothing(name) ? perspectiveDescriptor.getLabel() : name) + StringTool.space
+					+ Messages.ApplicationActionBarAdvisor_10);
+
 			this.perspectiveDescriptor = perspectiveDescriptor;
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			try {
 				IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				PlatformUI.getWorkbench().showPerspective(perspectiveDescriptor.getId(), win);

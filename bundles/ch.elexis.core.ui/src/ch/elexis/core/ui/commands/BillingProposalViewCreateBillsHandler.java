@@ -45,18 +45,17 @@ import ch.elexis.data.Rechnungssteller;
 import ch.rgw.tools.Result;
 
 public class BillingProposalViewCreateBillsHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		List<Konsultation> toBill = getToBill(event);
 		Map<Integer, List<Konsultation>> sortedByYears = BillingUtil.getSortedByYear(toBill);
 		if (!BillingUtil.canBillYears(new ArrayList<>(sortedByYears.keySet()))) {
 			StringJoiner sj = new StringJoiner(", ");
 			sortedByYears.keySet().forEach(i -> sj.add(Integer.toString(i)));
-			if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
-				"Rechnung Validierung",
-				"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "
-					+ sj.toString() + " erstellen?")) {
+			if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), "Rechnung Validierung",
+					"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "
+							+ sj.toString() + " erstellen?")) {
 				// bill each year separately
 				for (Integer year : sortedByYears.keySet()) {
 					createBill(sortedByYears.get(year));
@@ -67,25 +66,23 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 		}
 		return null;
 	}
-	
-	private void createBill(List<Konsultation> toBill){
-		ProgressMonitorDialog dialog =
-			new ProgressMonitorDialog(Display.getDefault().getActiveShell());
+
+	private void createBill(List<Konsultation> toBill) {
+		ProgressMonitorDialog dialog = new ProgressMonitorDialog(Display.getDefault().getActiveShell());
 		try {
 			dialog.run(true, false, new IRunnableWithProgress() {
-				
+
 				private int successful = 0;
 				private int errorneous = 0;
 				private StringBuilder errorneousInfo = new StringBuilder();
-				
+
 				@Override
-				public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException{
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("Rechnungen erstellen", 3);
 					List<Konsultation> billable = BillingUtil.filterNotBillable(toBill);
 					monitor.worked(1);
-					Map<Rechnungssteller, Map<Fall, List<Konsultation>>> toBillMap =
-						BillingUtil.getGroupedBillable(billable);
+					Map<Rechnungssteller, Map<Fall, List<Konsultation>>> toBillMap = BillingUtil
+							.getGroupedBillable(billable);
 					monitor.worked(1);
 					// create all bills
 					List<Result<IInvoice>> results = BillingUtil.createBills(toBillMap);
@@ -111,28 +108,24 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 					// show information
 					Display.getDefault().syncExec(new Runnable() {
 						@Override
-						public void run(){
-							MessageDialog.openInformation(Display.getDefault().getActiveShell(),
-								"Info",
-								MessageFormat.format(
-									"Es wurden {0} Rechnungen erfolgreich erstellt.\nBei {1} Rechnungen traten Fehler auf.\n{2}",
-									successful, errorneous, errorneousInfo.toString()));
+						public void run() {
+							MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Info",
+									MessageFormat.format(
+											"Es wurden {0} Rechnungen erfolgreich erstellt.\nBei {1} Rechnungen traten Fehler auf.\n{2}",
+											successful, errorneous, errorneousInfo.toString()));
 						}
 					});
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "Fehler",
-				"Fehler beim Ausführen der Rechnungserstelltung. Details siehe Log.");
-			LoggerFactory.getLogger(BillingProposalViewCreateBillsHandler.class)
-				.error("Error creating bills", e);
+					"Fehler beim Ausführen der Rechnungserstelltung. Details siehe Log.");
+			LoggerFactory.getLogger(BillingProposalViewCreateBillsHandler.class).error("Error creating bills", e);
 		}
 	}
-	
 
-	private List<Konsultation> getToBill(ExecutionEvent event){
-		String selectionParameter =
-			event.getParameter("ch.elexis.core.ui.BillingProposalViewCreateBills.selection");
+	private List<Konsultation> getToBill(ExecutionEvent event) {
+		String selectionParameter = event.getParameter("ch.elexis.core.ui.BillingProposalViewCreateBills.selection");
 		if ("selection".equals(selectionParameter)) {
 			ISelection selection = HandlerUtil.getCurrentSelection(event);
 			if (selection != null && !selection.isEmpty()) {
@@ -140,12 +133,11 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 				List<Object> selectionList = ((IStructuredSelection) selection).toList();
 				// map to List<Konsultation> depending on type
 				if (selectionList.get(0) instanceof Konsultation) {
-					return selectionList.stream().map(o -> ((Konsultation) o))
-						.collect(Collectors.toList());
+					return selectionList.stream().map(o -> ((Konsultation) o)).collect(Collectors.toList());
 				} else if (selectionList.get(0) instanceof BillingProposalView.BillingInformation) {
 					return selectionList.stream()
-						.map(o -> ((BillingProposalView.BillingInformation) o).getKonsultation())
-						.collect(Collectors.toList());
+							.map(o -> ((BillingProposalView.BillingInformation) o).getKonsultation())
+							.collect(Collectors.toList());
 				}
 			}
 		} else {
@@ -156,15 +148,15 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 		}
 		return Collections.emptyList();
 	}
-	
-	private BillingProposalView getOpenView(ExecutionEvent event){
+
+	private BillingProposalView getOpenView(ExecutionEvent event) {
 		try {
 			IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 			IWorkbenchPage page = window.getActivePage();
 			return (BillingProposalView) page.showView(BillingProposalView.ID);
 		} catch (PartInitException e) {
 			MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
-				"Konnte Rechnungs-Vorschlag View nicht öffnen");
+					"Konnte Rechnungs-Vorschlag View nicht öffnen");
 		}
 		return null;
 	}

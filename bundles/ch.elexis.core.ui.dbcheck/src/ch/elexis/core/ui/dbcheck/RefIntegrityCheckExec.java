@@ -7,9 +7,9 @@ import ch.elexis.core.ui.dbcheck.refintegrity.RefIntegrityCheckMySQL;
 import ch.elexis.core.ui.dbcheck.refintegrity.RefIntegrityCheckPGSQL;
 
 public class RefIntegrityCheckExec extends CheckExec {
-	
+
 	public static RefIntegrityCheck ric = null;
-	
+
 	/**
 	 * Referential Integrity Check on the current state of the database
 	 * 
@@ -17,8 +17,8 @@ public class RefIntegrityCheckExec extends CheckExec {
 	 * 
 	 * @return
 	 */
-	public static String doReferentialIntegrityCheckOffCore(IProgressMonitor monitor){
-		
+	public static String doReferentialIntegrityCheckOffCore(IProgressMonitor monitor) {
+
 		if (sqlDriver.equalsIgnoreCase(MYSQL_DB)) {
 			ric = new RefIntegrityCheckMySQL();
 			ric.checkReferentialIntegrityStateCoreTables(j, monitor);
@@ -33,14 +33,14 @@ public class RefIntegrityCheckExec extends CheckExec {
 		}
 		return "Nicht unterstützer Datenbanktyp; Unterstüztung derzeit für MySQL und PostgreSQL";
 	}
-	
-	public static String getOutputLog(){
+
+	public static String getOutputLog() {
 		if (ric != null)
 			return ric.getOutputLog();
 		return "";
 	}
-	
-	public static String getErrorLog(){
+
+	public static String getErrorLog() {
 		if (ric != null)
 			return ric.getErrorLog();
 		return "";

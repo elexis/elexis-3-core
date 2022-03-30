@@ -19,32 +19,33 @@ import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 public class VerrechenbarFavorites {
-	
+
 	public static final String USER_CFG_FAVORITES = "verrechenbar/favoriten";
 	private static List<Favorite> favorites;
 	private static Logger log = LoggerFactory.getLogger(VerrechenbarFavorites.class);
-	
-	private static ElexisEventListenerImpl eeli_pat =
-		new ElexisEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
-			
-			public void run(ElexisEvent ev){
-				log.debug("User changed, nulling favorites.");
-				favorites = null;
-			};
+
+	private static ElexisEventListenerImpl eeli_pat = new ElexisEventListenerImpl(Anwender.class,
+			ElexisEvent.EVENT_USER_CHANGED) {
+
+		public void run(ElexisEvent ev) {
+			log.debug("User changed, nulling favorites.");
+			favorites = null;
 		};
-	
+	};
+
 	static {
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
 	}
-	
+
 	/**
 	 * 
-	 * @return the favorite {@link VerrechenbarAdapter} elements of THIS user, in a pre-ordered list
+	 * @return the favorite {@link VerrechenbarAdapter} elements of THIS user, in a
+	 *         pre-ordered list
 	 */
-	public static List<Favorite> getFavorites(){
+	public static List<Favorite> getFavorites() {
 		if (favorites == null) {
 			favorites = new ArrayList<VerrechenbarFavorites.Favorite>();
-			
+
 			String favs = ConfigServiceHolder.getUser(USER_CFG_FAVORITES, "");
 			String[] entries = favs.split(";");
 			for (int i = 0; i < entries.length; i++) {
@@ -55,14 +56,14 @@ public class VerrechenbarFavorites {
 					favorites.add(f);
 				}
 			}
-			
+
 			Collections.sort(favorites);
 		}
-		
+
 		return favorites;
 	}
-	
-	public static void storeFavorites(){
+
+	public static void storeFavorites() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < favorites.size(); i++) {
 			Favorite f = favorites.get(i);
@@ -73,15 +74,16 @@ public class VerrechenbarFavorites {
 		ConfigServiceHolder.setUser(USER_CFG_FAVORITES, sb.toString());
 		ElexisEventDispatcher.reload(Favorite.class);
 	}
-	
+
 	/**
 	 * Add or remove the object to or from the {@link Favorite}s of the user. The
-	 * {@link IStoreToStringService} must be able to create a store to string from the object.
+	 * {@link IStoreToStringService} must be able to create a store to string from
+	 * the object.
 	 * 
 	 * @param billable
 	 * @param val
 	 */
-	public static void setFavorite(Object object, boolean val){
+	public static void setFavorite(Object object, boolean val) {
 		Favorite fav = VerrechenbarFavorites.isFavorite(object);
 		if (val) {
 			if (fav != null)
@@ -93,18 +95,18 @@ public class VerrechenbarFavorites {
 				return;
 			VerrechenbarFavorites.getFavorites().remove(fav);
 		}
-		
+
 		// TODO reload favorites view
 		VerrechenbarFavorites.storeFavorites();
 	}
-	
+
 	/**
 	 * Test if the object is a {@link Favorite} of the user.
 	 * 
 	 * @param billable
 	 * @return
 	 */
-	public static Favorite isFavorite(Object object){
+	public static Favorite isFavorite(Object object) {
 		for (Favorite favorite : getFavorites()) {
 			String comparator = StoreToStringServiceHolder.getStoreToString(object);
 			if (comparator.equalsIgnoreCase(favorite.storeToString)) {
@@ -113,14 +115,14 @@ public class VerrechenbarFavorites {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Find the favorite for a provided macro by current user
 	 * 
 	 * @return
 	 * @since 3.1
 	 */
-	public static @Nullable Favorite findFavoritByMacroForCurrentUser(@Nullable String macro){
+	public static @Nullable Favorite findFavoritByMacroForCurrentUser(@Nullable String macro) {
 		if (macro == null)
 			return null;
 		for (Favorite favorite : getFavorites()) {
@@ -129,68 +131,67 @@ public class VerrechenbarFavorites {
 		}
 		return null;
 	}
-	
+
 	public static class Favorite implements Comparable<Favorite> {
-		
+
 		String storeToString;
 		String macroString;
 		int order;
-		
-		public Favorite(String storeToString, String macroString, int order){
+
+		public Favorite(String storeToString, String macroString, int order) {
 			this.storeToString = storeToString;
 			this.macroString = macroString;
 			this.order = order;
 		}
-		
+
 		@Override
-		public int compareTo(Favorite o){
+		public int compareTo(Favorite o) {
 			return Integer.compare(order, o.order);
 		}
-		
-		public String getStoreToString(){
+
+		public String getStoreToString() {
 			return storeToString;
 		}
-		
-		public void setStoreToString(String storeToString){
+
+		public void setStoreToString(String storeToString) {
 			this.storeToString = storeToString;
 		}
-		
-		public String getMacroString(){
+
+		public String getMacroString() {
 			if (storeToString.startsWith(Leistungsblock.class.getName())) {
 				ICodeElementBlock block = (ICodeElementBlock) getObject().orElse(null);
 				return (block != null) ? block.getMacro() : macroString;
 			}
 			return macroString;
 		}
-		
-		public void setMacroString(String macroString){
+
+		public void setMacroString(String macroString) {
 			if (storeToString.startsWith(Leistungsblock.class.getName())) {
 				ICodeElementBlock block = (ICodeElementBlock) getObject().orElse(null);
 				if (block != null) {
 					block.setMacro(macroString);
 				} else {
-					log.warn("Could not set macroString " + macroString
-						+ " to Leistungsblock  as po is null.");
+					log.warn("Could not set macroString " + macroString + " to Leistungsblock  as po is null.");
 				}
 			}
 			this.macroString = macroString;
 		}
-		
-		public int getOrder(){
+
+		public int getOrder() {
 			return order;
 		}
-		
-		public void setOrder(int order){
+
+		public void setOrder(int order) {
 			this.order = order;
 		}
-		
+
 		/**
 		 * Get the {@link Identifiable} referenced by this {@link Favorite} using an
 		 * {@link IStoreToStringService}.
 		 * 
 		 * @return
 		 */
-		public Optional<Identifiable> getObject(){
+		public Optional<Identifiable> getObject() {
 			return StoreToStringServiceHolder.get().loadFromString(storeToString);
 		}
 	}

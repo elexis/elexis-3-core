@@ -28,8 +28,8 @@ import ch.elexis.core.jdt.NonNull;
 import ch.rgw.tools.ExHandler;
 
 /**
- * Vereinfachung der Handhabung von Extensions. Verschidene statische Methoden zum Auflisten von
- * Extensionpoint.-clients
+ * Vereinfachung der Handhabung von Extensions. Verschidene statische Methoden
+ * zum Auflisten von Extensionpoint.-clients
  * 
  * 2008: Implementation eines Service-Providers
  * 
@@ -37,28 +37,29 @@ import ch.rgw.tools.ExHandler;
  * 
  */
 public class Extensions {
-	
+
 	/**
-	 * EIne Liste von IConfigurationElements (=komplette Definition) liefern, die an einem
-	 * bestimmten Extensionpoint hängen
+	 * EIne Liste von IConfigurationElements (=komplette Definition) liefern, die an
+	 * einem bestimmten Extensionpoint hängen
 	 * 
 	 * @param ext
 	 *            Name des Extensionpoints
 	 */
-	public static List<IConfigurationElement> getExtensions(String ext){
+	public static List<IConfigurationElement> getExtensions(String ext) {
 		return getExtensions(ext, null);
 	}
-	
+
 	/**
-	 * Eine Liste von IConfigurationElements (=komplette Definition) liefern, die an einem
-	 * bestimmten Extensionpoint hängen, und den entsprechenden Elementnamen haben
+	 * Eine Liste von IConfigurationElements (=komplette Definition) liefern, die an
+	 * einem bestimmten Extensionpoint hängen, und den entsprechenden Elementnamen
+	 * haben
 	 * 
 	 * @param ext
 	 * @param elementName
 	 * @return
 	 * @since 3.3
 	 */
-	public static List<IConfigurationElement> getExtensions(String ext, String elementName){
+	public static List<IConfigurationElement> getExtensions(String ext, String elementName) {
 		List<IConfigurationElement> ret = new LinkedList<IConfigurationElement>();
 		IExtensionRegistry exr = Platform.getExtensionRegistry();
 		IExtensionPoint exp = exr.getExtensionPoint(ext);
@@ -76,30 +77,32 @@ public class Extensions {
 					}
 				}
 			}
-			
+
 		}
 		return ret;
 	}
-	
+
 	/**
-	 * Eine Liste von bereits initialisierten Klassen liefern, die an einem bestimmten parameter
-	 * eines bestimmten Extensionpoints hängen
+	 * Eine Liste von bereits initialisierten Klassen liefern, die an einem
+	 * bestimmten parameter eines bestimmten Extensionpoints hängen
 	 * 
 	 * @param list
 	 *            eine Liste, wie von getExtension geliefert
 	 * @param points
 	 *            Name der Klasse
 	 * @return eine Liste der konstruierten Klassen
-	 * @deprecated Use {@link #getClasses(List<IConfigurationElement>,String,boolean)} instead
+	 * @deprecated Use
+	 *             {@link #getClasses(List<IConfigurationElement>,String,boolean)}
+	 *             instead
 	 */
 	@SuppressWarnings("unchecked") //$NON-NLS-1$
-	public static List getClasses(List<IConfigurationElement> list, String points){
+	public static List getClasses(List<IConfigurationElement> list, String points) {
 		return getClasses(list, points, true);
 	}
-	
+
 	/**
-	 * Eine Liste von bereits initialisierten Klassen liefern, die an einem bestimmten parameter
-	 * eines bestimmten Extensionpoints hängen
+	 * Eine Liste von bereits initialisierten Klassen liefern, die an einem
+	 * bestimmten parameter eines bestimmten Extensionpoints hängen
 	 * 
 	 * @param list
 	 *            eine Liste, wie von getExtension geliefert
@@ -110,8 +113,7 @@ public class Extensions {
 	 * @return eine Liste der konstruierten Klassen
 	 */
 	@SuppressWarnings("unchecked") //$NON-NLS-1$
-	public static List getClasses(List<IConfigurationElement> list, String points,
-		boolean bMandatory){
+	public static List getClasses(List<IConfigurationElement> list, String points, boolean bMandatory) {
 		List ret = new LinkedList();
 		for (IConfigurationElement el : list) {
 			try {
@@ -127,17 +129,17 @@ public class Extensions {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Shortcut für getClasses(getExtensions(extension),points);
 	 */
-	public static List getClasses(String extension, String points){
+	public static List getClasses(String extension, String points) {
 		return getClasses(extension, points, null, null);
 	}
-	
+
 	/**
-	 * Get the class extensions of all elements of an extension point matching the elementName and
-	 * points.
+	 * Get the class extensions of all elements of an extension point matching the
+	 * elementName and points.
 	 * 
 	 * @param extension
 	 * @param elementName
@@ -146,10 +148,10 @@ public class Extensions {
 	 * 
 	 * @since 3.3
 	 */
-	public static List getClasses(String extension, String elementName, String points){
+	public static List getClasses(String extension, String elementName, String points) {
 		return getClasses(extension, elementName, points, null, null);
 	}
-	
+
 	/**
 	 * 
 	 * @param extension
@@ -161,14 +163,13 @@ public class Extensions {
 	 * @return instantiated classes of a defined extension point
 	 * @since 3.2
 	 */
-	public static @NonNull List getClasses(String extension, String points, String idParam,
-		String idValue){
+	public static @NonNull List getClasses(String extension, String points, String idParam, String idValue) {
 		return getClasses(extension, null, points, idParam, idValue);
 	}
-	
+
 	/**
-	 * Get the class extensions of all elements of an extension point matching the elementName,
-	 * points and idParam with idValue.
+	 * Get the class extensions of all elements of an extension point matching the
+	 * elementName, points and idParam with idValue.
 	 * 
 	 * @param extension
 	 * @param elementName
@@ -179,18 +180,17 @@ public class Extensions {
 	 * 
 	 * @since 3.3
 	 */
-	public static @NonNull List getClasses(String extension, String elementName, String points,
-		String idParam, String idValue){
+	public static @NonNull List getClasses(String extension, String elementName, String points, String idParam,
+			String idValue) {
 		List<IConfigurationElement> extensions = getExtensions(extension, elementName);
 		if (idParam != null && idValue != null) {
-			List<IConfigurationElement> filteredExtensions =
-				extensions.stream().filter(p -> idValue.equalsIgnoreCase(p.getAttribute(idParam)))
-					.collect(Collectors.toList());
+			List<IConfigurationElement> filteredExtensions = extensions.stream()
+					.filter(p -> idValue.equalsIgnoreCase(p.getAttribute(idParam))).collect(Collectors.toList());
 			return getClasses(filteredExtensions, points, true);
 		}
 		return getClasses(extensions, points, true);
 	}
-	
+
 	/**
 	 * Eine Liste von Werten liefern, die ein bestimmtest Attribut hat
 	 * 
@@ -198,18 +198,18 @@ public class Extensions {
 	 * @param attr
 	 * @return
 	 */
-	public static List<String> getStrings(List<IConfigurationElement> list, String attr){
+	public static List<String> getStrings(List<IConfigurationElement> list, String attr) {
 		List<String> ret = new LinkedList<String>();
 		for (IConfigurationElement el : list) {
 			ret.add(el.getAttribute(attr));
 		}
 		return ret;
 	}
-	
-	public static List<String> getStrings(String ext, String attr){
+
+	public static List<String> getStrings(String ext, String attr) {
 		return getStrings(getExtensions(ext), attr);
 	}
-	
+
 	/**
 	 * Execute a method of the service actor, that is known by name and signature
 	 * 
@@ -221,19 +221,19 @@ public class Extensions {
 	 *            the parameter types
 	 * @param params
 	 *            the parameters
-	 * @return an Object that ist implementation dependent or null if the method call failed. It is
-	 *         recommended that an actor returns a ch.elexis.Result to allow error handling.
+	 * @return an Object that ist implementation dependent or null if the method
+	 *         call failed. It is recommended that an actor returns a
+	 *         ch.elexis.Result to allow error handling.
 	 */
-	public static Object executeService(Object service, String method, Class[] types,
-		Object[] params){
+	public static Object executeService(Object service, String method, Class[] types, Object[] params) {
 		try {
 			Method m = service.getClass().getMethod(method, types);
 			return m.invoke(service, params);
-			
+
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return null;
 		}
-		
+
 	}
 }

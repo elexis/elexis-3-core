@@ -49,30 +49,29 @@ import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 
 public class LocalUserLoginDialog extends TitleAreaDialog {
-	
+
 	private Text usr, pwd;
 	private boolean hasUsers;
 	private IUser user;
-	
+
 	private ILoginContributor elexisEnvironmentLoginContributor;
-	
-	public LocalUserLoginDialog(Shell parentShell,
-		ILoginContributor elexisEnvironmentLoginContributor){
+
+	public LocalUserLoginDialog(Shell parentShell, ILoginContributor elexisEnvironmentLoginContributor) {
 		super(parentShell);
-		
+
 		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
 		List<Anwender> list = qbe.execute();
 		hasUsers = (list.size() > 1);
-		
+
 		this.elexisEnvironmentLoginContributor = elexisEnvironmentLoginContributor;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(2, false));
-		
+
 		Label lu = new Label(ret, SWT.NONE);
 		lu.setText(Messages.LoginDialog_0);
 		usr = new Text(ret, SWT.BORDER);
@@ -84,7 +83,7 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 			usr.setText("Administrator"); //$NON-NLS-1$
 			pwd.setText("admin"); //$NON-NLS-1$
 		}
-		
+
 		if (elexisEnvironmentLoginContributor != null) {
 			Button btnLoginElexisEnv = new Button(ret, SWT.NONE);
 			GridData gd_btnLoginElexisEnv = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
@@ -92,17 +91,16 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 			btnLoginElexisEnv.setText("Elexis-Environment Login");
 			btnLoginElexisEnv.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					setReturnCode(302);
 					close();
 				}
 			});
 		}
-		
+
 		@SuppressWarnings("unchecked")
-		List<ILoginNews> newsModules =
-			Extensions.getClasses(ExtensionPointConstantsUi.LOGIN_NEWS, "class");
-		
+		List<ILoginNews> newsModules = Extensions.getClasses(ExtensionPointConstantsUi.LOGIN_NEWS, "class");
+
 		if (newsModules.size() > 0) {
 			Composite cNews = new Composite(ret, SWT.NONE);
 			cNews.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
@@ -115,18 +113,18 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 					// Note: This is NOT a fatal error. It just means, that the Newsmodule could not
 					// load. Maybe we are offline.
 					ExHandler.handle(ex);
-					
+
 				}
 			}
-			
+
 		}
-		
+
 		return ret;
 	}
-	
+
 	@Override
-	protected void okPressed(){
-		
+	protected void okPressed() {
+
 		// load by local database
 		String username = usr.getText();
 		IUser _user = null;
@@ -144,42 +142,42 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 						return;
 					} else {
 						LoggerFactory.getLogger(getClass()).error("username: {}", username,
-							new LoginException("anwender is not a istAnwender"));
+								new LoginException("anwender is not a istAnwender"));
 					}
 				} else {
 					LoggerFactory.getLogger(getClass()).error("username: {}", username,
-						new LoginException("anwender is invalid or deleted"));
+							new LoginException("anwender is invalid or deleted"));
 				}
-				
+
 			} else {
 				LoggerFactory.getLogger(getClass()).error("username: {}", username,
-					new LoginException("anwender is null"));
+						new LoginException("anwender is null"));
 			}
 		}
-		
+
 		setMessage(Messages.LoginDialog_4, IMessageProvider.ERROR);
-		
+
 	}
-	
+
 	@Override
-	protected void cancelPressed(){
+	protected void cancelPressed() {
 		// GlobalActions.exitAction?
 		ContextServiceHolder.get().setActiveUser(null);
 		CoreHub.actMandant = null;
 		super.cancelPressed();
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		getButton(IDialogConstants.OK_ID).setText(Messages.LoginDialog_login);
 		getButton(IDialogConstants.CANCEL_ID).setText(Messages.LoginDialog_terminate);
 		// getButton(IDialogConstants.OK_ID).setEnabled(false);
-		
+
 	}
-	
-	public IUser getUser(){
+
+	public IUser getUser() {
 		return user;
 	}
-	
+
 }

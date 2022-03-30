@@ -65,10 +65,10 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleClickListener {
-	
+
 	// Name, Vorname, gebdat, strasse, plz, ort, tel, zusatz, fax, email
 	public static final int HINTSIZE = 12;
-	
+
 	public static final int HINT_NAME = 0;
 	public static final int HINT_FIRSTNAME = 1;
 	public static final int HINT_BIRTHDATE = 2;
@@ -81,7 +81,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 	public static final int HINT_MAIL = 9;
 	public static final int HINT_SEX = 10;
 	public static final int HINT_PATIENT = 11;
-	
+
 	// private Class clazz;
 	CommonViewer commonViewer;
 	ViewerConfigurer vc;
@@ -92,44 +92,43 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 	FilterButtonAdapter fba;
 	String[] hints;
 	// int type;
-	
+
 	boolean showBezugsKontakt = false;
 	String extraText = null;
 	private ListViewer bezugsKontaktViewer = null;
 	private boolean isSelecting = false;
 	private final ContactContentProvider contentProvider;
 	private boolean enableEmptyField = false;
-	
+
 	private Class<? extends Identifiable> targetClass;
-	
-	public ContactSelectionDialog(Shell parentShell, Class<? extends Identifiable> which,
-		String title, String message, String... orderFields){
+
+	public ContactSelectionDialog(Shell parentShell, Class<? extends Identifiable> which, String title, String message,
+			String... orderFields) {
 		super(parentShell);
 		targetClass = which;
 		commonViewer = new CommonViewer();
 		fba = new FilterButtonAdapter();
 		this.title = title;
 		this.message = message;
-		
+
 		contentProvider = new ContactContentProvider(commonViewer);
 		contentProvider.setOrderFields(orderFields);
 	}
-	
-	private class ContactContentProvider extends CommonViewerContentProvider
-			implements IStructuredContentProvider {
-		
-		public ContactContentProvider(CommonViewer commonViewer){
+
+	private class ContactContentProvider extends CommonViewerContentProvider implements IStructuredContentProvider {
+
+		public ContactContentProvider(CommonViewer commonViewer) {
 			super(commonViewer);
 		}
-		
+
 		@Override
-		protected IQuery<?> getBaseQuery(){
+		protected IQuery<?> getBaseQuery() {
 			return CoreModelServiceHolder.get().getQuery(targetClass);
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
-		public Object[] getElements(Object inputElement){
+		public Object[] getElements(Object inputElement) {
 			// CommonViewer inputElement can be ignored
 			List<? extends Identifiable> roots = Collections.emptyList();
 			IQuery<?> query = getBaseQuery();
@@ -152,8 +151,8 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 			roots = (List<? extends Identifiable>) query.execute();
 			return roots.toArray();
 		}
-		
-		private boolean hasActiveFilter(Map<String, String> fieldFilterValues){
+
+		private boolean hasActiveFilter(Map<String, String> fieldFilterValues) {
 			if (fieldFilterValues != null && !fieldFilterValues.isEmpty()) {
 				for (String key : fieldFilterValues.keySet()) {
 					String value = fieldFilterValues.get(key);
@@ -165,34 +164,34 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 			return false;
 		}
 	}
-	
-	public ContactSelectionDialog(Shell parentShell, Class<? extends Identifiable> which, String t,
-		String m, boolean showBezugsKontakt, String... orderFields){
+
+	public ContactSelectionDialog(Shell parentShell, Class<? extends Identifiable> which, String t, String m,
+			boolean showBezugsKontakt, String... orderFields) {
 		this(parentShell, which, t, m, orderFields);
 		this.showBezugsKontakt = showBezugsKontakt;
 	}
-	
-	public ContactSelectionDialog(Shell parentShell, Class<? extends Identifiable> which, String t,
-		String m, String extra, String... orderFields){
+
+	public ContactSelectionDialog(Shell parentShell, Class<? extends Identifiable> which, String t, String m,
+			String extra, String... orderFields) {
 		this(parentShell, which, t, m, orderFields);
 		extraText = extra;
 	}
-	
+
 	@Override
-	public boolean close(){
+	public boolean close() {
 		commonViewer.removeDoubleClickListener(this);
 		commonViewer.dispose();
 		return super.close();
 	}
-	
+
 	/**
-	 * Provide a few hints in case the user clicks "Neu erstellen". The hints is an array of up to
-	 * 10 Strings as used in KontaktErfassenDialog
+	 * Provide a few hints in case the user clicks "Neu erstellen". The hints is an
+	 * array of up to 10 Strings as used in KontaktErfassenDialog
 	 * 
 	 * @param hints
 	 *            Name, Vorname, gebdat, strasse, plz, ort, tel, zusatz, fax, email
 	 */
-	public void setHints(String[] h){
+	public void setHints(String[] h) {
 		this.hints = h;
 		for (int i = 0; i < hints.length; i++) {
 			if (hints[i] == null) {
@@ -215,36 +214,30 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 			}
 		}
 	}
-	
-	private String[] getFilterStrings(){
+
+	private String[] getFilterStrings() {
 		String[] ret = new String[0];
 		if (targetClass.equals(IContact.class)) {
-			ret = new String[] {
-				"code=" //$NON-NLS-1$
+			ret = new String[]{"code=" //$NON-NLS-1$
 					+ Messages.KontaktSelector_abbreviation,
-				"description1=" //$NON-NLS-1$
-					+ Messages.KontaktSelector_expression1
-			};
+					"description1=" //$NON-NLS-1$
+							+ Messages.KontaktSelector_expression1};
 		} else if (IPerson.class.isAssignableFrom(targetClass)) {
-			ret = new String[] {
-				"code=" //$NON-NLS-1$
+			ret = new String[]{"code=" //$NON-NLS-1$
 					+ Messages.KontaktSelector_abbreviation,
-				"description1=" //$NON-NLS-1$
-					+ "Nachname",
-				"dob=" //$NON-NLS-1$
-					+ Messages.KontaktSelector_birthDate
-			};
+					"description1=" //$NON-NLS-1$
+							+ "Nachname",
+					"dob=" //$NON-NLS-1$
+							+ Messages.KontaktSelector_birthDate};
 		} else if (IOrganization.class.isAssignableFrom(targetClass)) {
-			ret = new String[] {
-				"code=" //$NON-NLS-1$
+			ret = new String[]{"code=" //$NON-NLS-1$
 					+ Messages.KontaktSelector_abbreviation,
-				"description1=" //$NON-NLS-1$
-					+ Messages.KontaktSelector_expression1
-			};
+					"description1=" //$NON-NLS-1$
+							+ Messages.KontaktSelector_expression1};
 		}
 		return ret;
 	}
-	
+
 	/*
 	 * (Kein Javadoc)
 	 * 
@@ -252,136 +245,134 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 	 * .swt.widgets.Composite)
 	 */
 	@Override
-	protected Control createDialogArea(final Composite parent){
+	protected Control createDialogArea(final Composite parent) {
 		// SashForm ret=new SashForm(parent,SWT.NONE);
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout());
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		
-		//		if (showBezugsKontakt) {
-		//			new Label(ret, SWT.NONE).setText("Bezugskontakte");
-		//			bezugsKontaktViewer = new ListViewer(ret, SWT.SINGLE);
-		//			bezugsKontaktViewer.getControl().setLayoutData(
-		//				SWTHelper.getFillGridData(1, true, 1, false));
-		//			
-		//			bezugsKontaktViewer.setContentProvider(new IStructuredContentProvider() {
-		//				public Object[] getElements(Object inputElement){
-		//					Patient patient = ElexisEventDispatcher.getSelectedPatient();
-		//					if (patient != null) {
-		//						ArrayList<PersistentObject> elements = new ArrayList<PersistentObject>();
-		//						ArrayList<String> addedKontakte = new ArrayList<String>();
-		//						
-		//						// add the patient itself
-		//						elements.add(patient);
-		//						addedKontakte.add(patient.getId());
-		//						
-		//						List<BezugsKontakt> bezugsKontakte = patient.getBezugsKontakte();
-		//						if (bezugsKontakte != null) {
-		//							for (BezugsKontakt bezugsKontakt : bezugsKontakte) {
-		//								elements.add(bezugsKontakt);
-		//								addedKontakte.add(bezugsKontakt.get("otherID"));
-		//							}
-		//						}
-		//						
-		//						// required contacts of biling system
-		//						Fall[] faelle = patient.getFaelle();
-		//						for (Fall fall : faelle) {
-		//							String reqs = fall.getRequirements();
-		//							if (reqs != null) {
-		//								for (String req : reqs.split(";")) {
-		//									final String[] r = req.split(":");
-		//									
-		//									// no valid entry
-		//									if (r.length < 2) {
-		//										continue;
-		//									}
-		//									
-		//									// only consider contacts
-		//									if (r[1].equals("K")) {
-		//										String kontaktID = fall.getInfoString(r[0]);
-		//										if (!kontaktID.startsWith("**ERROR")) {
-		//											Kontakt kontakt = Kontakt.load(kontaktID);
-		//											if (kontakt.isValid()) {
-		//												elements.add(kontakt);
-		//												addedKontakte.add(kontakt.getId());
-		//											}
-		//										}
-		//									}
-		//								}
-		//							}
-		//						}
-		//						
-		//						return elements.toArray();
-		//					}
-		//					
-		//					return new Object[] {};
-		//				}
-		//				
-		//				public void dispose(){
-		//					// nothing to do
-		//				}
-		//				
-		//				public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
-		//					// nothing to do
-		//				}
-		//			});
-		//			bezugsKontaktViewer.setLabelProvider(new KontaktSelektorLabelProvider());
-		//			bezugsKontaktViewer.setInput(this);
-		//			bezugsKontaktViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-		//				public void selectionChanged(SelectionChangedEvent event){
-		//					if (isSelecting) {
-		//						return;
-		//					}
-		//					
-		//					IStructuredSelection sel =
-		//						(IStructuredSelection) commonViewer.getViewerWidget().getSelection();
-		//					if (sel.size() > 0) {
-		//						isSelecting = true;
-		//						commonViewer.getViewerWidget().setSelection(new StructuredSelection(), false);
-		//						isSelecting = false;
-		//					}
-		//				}
-		//			});
-		//		} else {
-			bezugsKontaktViewer = null;
-		//		}
-		
+
+		// if (showBezugsKontakt) {
+		// new Label(ret, SWT.NONE).setText("Bezugskontakte");
+		// bezugsKontaktViewer = new ListViewer(ret, SWT.SINGLE);
+		// bezugsKontaktViewer.getControl().setLayoutData(
+		// SWTHelper.getFillGridData(1, true, 1, false));
+		//
+		// bezugsKontaktViewer.setContentProvider(new IStructuredContentProvider() {
+		// public Object[] getElements(Object inputElement){
+		// Patient patient = ElexisEventDispatcher.getSelectedPatient();
+		// if (patient != null) {
+		// ArrayList<PersistentObject> elements = new ArrayList<PersistentObject>();
+		// ArrayList<String> addedKontakte = new ArrayList<String>();
+		//
+		// // add the patient itself
+		// elements.add(patient);
+		// addedKontakte.add(patient.getId());
+		//
+		// List<BezugsKontakt> bezugsKontakte = patient.getBezugsKontakte();
+		// if (bezugsKontakte != null) {
+		// for (BezugsKontakt bezugsKontakt : bezugsKontakte) {
+		// elements.add(bezugsKontakt);
+		// addedKontakte.add(bezugsKontakt.get("otherID"));
+		// }
+		// }
+		//
+		// // required contacts of biling system
+		// Fall[] faelle = patient.getFaelle();
+		// for (Fall fall : faelle) {
+		// String reqs = fall.getRequirements();
+		// if (reqs != null) {
+		// for (String req : reqs.split(";")) {
+		// final String[] r = req.split(":");
+		//
+		// // no valid entry
+		// if (r.length < 2) {
+		// continue;
+		// }
+		//
+		// // only consider contacts
+		// if (r[1].equals("K")) {
+		// String kontaktID = fall.getInfoString(r[0]);
+		// if (!kontaktID.startsWith("**ERROR")) {
+		// Kontakt kontakt = Kontakt.load(kontaktID);
+		// if (kontakt.isValid()) {
+		// elements.add(kontakt);
+		// addedKontakte.add(kontakt.getId());
+		// }
+		// }
+		// }
+		// }
+		// }
+		// }
+		//
+		// return elements.toArray();
+		// }
+		//
+		// return new Object[] {};
+		// }
+		//
+		// public void dispose(){
+		// // nothing to do
+		// }
+		//
+		// public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+		// // nothing to do
+		// }
+		// });
+		// bezugsKontaktViewer.setLabelProvider(new KontaktSelektorLabelProvider());
+		// bezugsKontaktViewer.setInput(this);
+		// bezugsKontaktViewer.addSelectionChangedListener(new
+		// ISelectionChangedListener() {
+		// public void selectionChanged(SelectionChangedEvent event){
+		// if (isSelecting) {
+		// return;
+		// }
+		//
+		// IStructuredSelection sel =
+		// (IStructuredSelection) commonViewer.getViewerWidget().getSelection();
+		// if (sel.size() > 0) {
+		// isSelecting = true;
+		// commonViewer.getViewerWidget().setSelection(new StructuredSelection(),
+		// false);
+		// isSelecting = false;
+		// }
+		// }
+		// });
+		// } else {
+		bezugsKontaktViewer = null;
+		// }
+
 		if (showBezugsKontakt) {
 			new Label(ret, SWT.NONE).setText("Andere Kontakte");
 		}
 		if (extraText != null) {
 			new Label(ret, SWT.WRAP).setText(extraText);
 		}
-		vc =
-			new ViewerConfigurer(
-				contentProvider, new ContactSelectionLabelProvider(),
-				new DefaultControlFieldProvider(commonViewer,
-					getFilterStrings()),
-					new ViewerConfigurer.ButtonProvider() {
-					
-					public Button createButton(final Composite parent){
+		vc = new ViewerConfigurer(contentProvider, new ContactSelectionLabelProvider(),
+				new DefaultControlFieldProvider(commonViewer, getFilterStrings()),
+				new ViewerConfigurer.ButtonProvider() {
+
+					public Button createButton(final Composite parent) {
 						Button ret = new Button(parent, SWT.PUSH);
 						ret.setText("Neu erstellen...");
 						ret.addSelectionListener(new SelectionAdapter() {
-							
+
 							@Override
-							public void widgetSelected(SelectionEvent e){
+							public void widgetSelected(SelectionEvent e) {
 								if (hints == null) {
 									hints = new String[3];
 									hints[0] = vc.getControlFieldProvider().getValues()[1];
 								}
-								KontaktErfassenDialog ked =
-									new KontaktErfassenDialog(parent.getShell(), hints);
+								KontaktErfassenDialog ked = new KontaktErfassenDialog(parent.getShell(), hints);
 								ked.open();
 								selection = ked.getResult();
 								okPressed();
 							}
-							
+
 						});
 						return ret;
 					}
-					
-					public boolean isAlwaysEnabled(){
+
+					public boolean isAlwaysEnabled() {
 						return false;
 					}
 				}, new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.NONE, commonViewer));
@@ -398,7 +389,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		bPersons.addSelectionListener(fba);
 		bOrgs.addSelectionListener(fba);
 		initContactTypeSelection();
-		
+
 		commonViewer.create(vc, ret, SWT.NONE, "1");
 		GridData gd = SWTHelper.getFillGridData(1, true, 1, true);
 		gd.heightHint = 100;
@@ -407,17 +398,16 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		setMessage(message);
 		vc.getContentProvider().startListening();
 		commonViewer.addDoubleClickListener(this);
-		
+
 		if (showBezugsKontakt) {
 			commonViewer.getViewerWidget().addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event){
+				public void selectionChanged(SelectionChangedEvent event) {
 					if (isSelecting) {
 						return;
 					}
-					
+
 					if (bezugsKontaktViewer != null) {
-						IStructuredSelection sel =
-							(IStructuredSelection) bezugsKontaktViewer.getSelection();
+						IStructuredSelection sel = (IStructuredSelection) bezugsKontaktViewer.getSelection();
 						if (sel.size() > 0) {
 							isSelecting = true;
 							bezugsKontaktViewer.setSelection(new StructuredSelection(), false);
@@ -429,8 +419,8 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		}
 		return ret;
 	}
-	
-	private void initContactTypeSelection(){
+
+	private void initContactTypeSelection() {
 		if (IPerson.class.isAssignableFrom(targetClass)) {
 			bPersons.setSelection(true);
 		} else if (IOrganization.class.isAssignableFrom(targetClass)) {
@@ -438,29 +428,27 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		} else {
 			bAll.setSelection(true);
 		}
-		
+
 	}
-	
-	public Object getSelection(){
+
+	public Object getSelection() {
 		return selection;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		getShell().setText(Messages.KontaktSelector_title);
 	}
-	
+
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		if (enableEmptyField) {
 			parent.setLayout(new GridLayout(3, false));
-			Button btnClear =
-				createButton(parent, IDialogConstants.NO_ID, Messages.KontaktSelector_clearField,
-					false);
+			Button btnClear = createButton(parent, IDialogConstants.NO_ID, Messages.KontaktSelector_clearField, false);
 			btnClear.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					selection = null;
 					vc.getContentProvider().stopListening();
 					close();
@@ -469,44 +457,44 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		} else {
 			parent.setLayout(new GridLayout(2, false));
 		}
-		
+
 		createButton(parent, IDialogConstants.OK_ID, "OK", false);
 		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
 	}
-	
+
 	/*
 	 * (Kein Javadoc)
 	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
 	 */
 	@Override
-	protected void cancelPressed(){
+	protected void cancelPressed() {
 		selection = null;
 		vc.getContentProvider().stopListening();
 		super.cancelPressed();
 	}
-	
-	private Object getBezugsKontaktSelection(){
+
+	private Object getBezugsKontaktSelection() {
 		Object bezugsKontakt = null;
-		
+
 		if (bezugsKontaktViewer != null) {
 			IStructuredSelection sel = (IStructuredSelection) bezugsKontaktViewer.getSelection();
 			if (sel.size() > 0) {
 				bezugsKontakt = sel.getFirstElement();
 			}
 		}
-		
+
 		return bezugsKontakt;
 	}
-	
+
 	/*
 	 * (Kein Javadoc)
 	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	@Override
-	protected void okPressed(){
-		
+	protected void okPressed() {
+
 		Object bKSel = getBezugsKontaktSelection();
 		if (bKSel instanceof Kontakt) {
 			selection = bKSel;
@@ -534,14 +522,14 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		commonViewer.removeDoubleClickListener(this);
 		super.okPressed();
 	}
-	
-	public void doubleClicked(PersistentObject obj, CommonViewer cv){
+
+	public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 		okPressed();
 	}
-	
+
 	class FilterButtonAdapter extends SelectionAdapter {
 		@Override
-		public void widgetSelected(SelectionEvent e){
+		public void widgetSelected(SelectionEvent e) {
 			if (((Button) e.getSource()).getSelection()) {
 				if (bPersons.getSelection()) {
 					targetClass = IPerson.class;
@@ -550,50 +538,45 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 				} else {
 					targetClass = IContact.class;
 				}
-				ControlFieldProvider controlFieldProvider =
-					commonViewer.getConfigurer().getControlFieldProvider();
+				ControlFieldProvider controlFieldProvider = commonViewer.getConfigurer().getControlFieldProvider();
 				if (controlFieldProvider instanceof DefaultControlFieldProvider) {
-					((DefaultControlFieldProvider) controlFieldProvider)
-						.updateFields(getFilterStrings(), true);
+					((DefaultControlFieldProvider) controlFieldProvider).updateFields(getFilterStrings(), true);
 					ContactSelectionDialog.this.getShell().layout(true, true);
 				}
 				commonViewer.notify(CommonViewer.Message.update);
 			}
 		}
 	}
-	
-	public static IContact showInSync(Class<? extends IContact> clazz, String title, String message,
-		String extra){
+
+	public static IContact showInSync(Class<? extends IContact> clazz, String title, String message, String extra) {
 		InSync rn = new InSync(clazz, title, message, extra, null);
 		UiDesk.getDisplay().syncExec(rn);
 		return rn.ret;
-		
+
 	}
-	
-	public static IContact showInSync(Class<? extends IContact> clazz, String title,
-		String message){
+
+	public static IContact showInSync(Class<? extends IContact> clazz, String title, String message) {
 		InSync rn = new InSync(clazz, title, message, null, null);
 		UiDesk.getDisplay().syncExec(rn);
 		return rn.ret;
-		
+
 	}
-	
-	public static IContact showInSync(Class<? extends IContact> clazz, String title, String message,
-		String extra, String[] hints){
+
+	public static IContact showInSync(Class<? extends IContact> clazz, String title, String message, String extra,
+			String[] hints) {
 		InSync rn = new InSync(clazz, title, message, extra, hints);
 		UiDesk.getDisplay().syncExec(rn);
 		return rn.ret;
-		
+
 	}
-	
-	public static IContact showInSync(Class<? extends IContact> clazz, String title, String message,
-		String[] hints){
+
+	public static IContact showInSync(Class<? extends IContact> clazz, String title, String message, String[] hints) {
 		InSync rn = new InSync(clazz, title, message, null, hints);
 		UiDesk.getDisplay().syncExec(rn);
 		return rn.ret;
-		
+
 	}
-	
+
 	private static class InSync implements Runnable {
 		IContact ret;
 		String title, message;
@@ -601,9 +584,9 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		String extra;
 		String[] hints;
 		private String[] orderFields;
-		
-		InSync(Class<? extends IContact> clazz, String title, String message, String extra,
-			String[] hints, String... orderFields){
+
+		InSync(Class<? extends IContact> clazz, String title, String message, String extra, String[] hints,
+				String... orderFields) {
 			this.title = title;
 			this.message = message;
 			this.clazz = clazz;
@@ -611,19 +594,16 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 			this.hints = hints;
 			this.orderFields = orderFields;
 			if (orderFields == null) {
-				this.orderFields = new String[] {
-					ModelPackage.Literals.ICONTACT__DESCRIPTION1.getName(),
-					ModelPackage.Literals.ICONTACT__DESCRIPTION2.getName(),
-					ModelPackage.Literals.ICONTACT__STREET.getName(),
-					ModelPackage.Literals.ICONTACT__CITY.getName()
-				};
+				this.orderFields = new String[]{ModelPackage.Literals.ICONTACT__DESCRIPTION1.getName(),
+						ModelPackage.Literals.ICONTACT__DESCRIPTION2.getName(),
+						ModelPackage.Literals.ICONTACT__STREET.getName(),
+						ModelPackage.Literals.ICONTACT__CITY.getName()};
 			}
 		}
-		
-		public void run(){
+
+		public void run() {
 			Shell shell = UiDesk.getDisplay().getActiveShell();
-			ContactSelectionDialog ksl =
-				new ContactSelectionDialog(shell, clazz, title, message, extra, orderFields);
+			ContactSelectionDialog ksl = new ContactSelectionDialog(shell, clazz, title, message, extra, orderFields);
 			if (hints != null) {
 				ksl.setHints(hints);
 			}
@@ -633,10 +613,10 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 				ret = null;
 			}
 		}
-		
+
 	}
-	
-	public void enableEmptyFieldButton(){
+
+	public void enableEmptyFieldButton() {
 		enableEmptyField = true;
 	}
 }

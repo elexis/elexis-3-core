@@ -117,29 +117,29 @@ public class ChangePasswordDialog extends TitleAreaDialog {
 				StringBuilder errorMessage = new StringBuilder();
 				for (PasswordValidationResult pwvr : validateNewPass) {
 					switch (pwvr) {
-					case DO_NOT_MATCH:
-						errorMessage.append("Passwords do not match.\n");
-						break;
-					case EXCLUDED_PASSWORD:
-						errorMessage.append("Passwords is not allowed.\n");
-						break;
-					case IS_EMPTY:
-						errorMessage.append("Passwords is empty.\n");
-						break;
-					case MISSING_LOWERCASE:
-						errorMessage.append("At least one lowercase character required.\n");
-						break;
-					case MISSING_UPPERCASE:
-						errorMessage.append("At least one uppercase character required.\n");
-						break;
-					case MISSING_NUMBER:
-						errorMessage.append("At least one numeric character required.\n");
-						break;
-					case TOO_SHORT:
-						errorMessage.append("At least 8 characters required.\n");
-						break;
-					default:
-						break;
+						case DO_NOT_MATCH :
+							errorMessage.append("Passwords do not match.\n");
+							break;
+						case EXCLUDED_PASSWORD :
+							errorMessage.append("Passwords is not allowed.\n");
+							break;
+						case IS_EMPTY :
+							errorMessage.append("Passwords is empty.\n");
+							break;
+						case MISSING_LOWERCASE :
+							errorMessage.append("At least one lowercase character required.\n");
+							break;
+						case MISSING_UPPERCASE :
+							errorMessage.append("At least one uppercase character required.\n");
+							break;
+						case MISSING_NUMBER :
+							errorMessage.append("At least one numeric character required.\n");
+							break;
+						case TOO_SHORT :
+							errorMessage.append("At least 8 characters required.\n");
+							break;
+						default :
+							break;
 					}
 				}
 				setErrorMessage(errorMessage.toString());

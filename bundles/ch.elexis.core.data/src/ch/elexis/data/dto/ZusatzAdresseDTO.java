@@ -13,76 +13,76 @@ public class ZusatzAdresseDTO {
 	private String zip = "";
 	private String country = "";
 	private String postalAddress = "";
-	
-	public void setId(String id){
+
+	public void setId(String id) {
 		this.id = id;
 	}
-	
-	public String getId(){
+
+	public String getId() {
 		return id;
 	}
-	
-	public void setStreet1(String street1){
+
+	public void setStreet1(String street1) {
 		this.street1 = street1;
 	}
-	
-	public String getStreet1(){
+
+	public String getStreet1() {
 		return street1;
 	}
-	
-	public String getStreet2(){
+
+	public String getStreet2() {
 		return street2;
 	}
-	
-	public void setStreet2(String street2){
+
+	public void setStreet2(String street2) {
 		this.street2 = street2;
 	}
-	
-	public AddressType getAddressType(){
+
+	public AddressType getAddressType() {
 		return addressType;
 	}
-	
-	public void setAddressType(AddressType addressType){
+
+	public void setAddressType(AddressType addressType) {
 		this.addressType = addressType;
 	}
-	
-	public String getPlace(){
+
+	public String getPlace() {
 		return place;
 	}
-	
-	public void setPlace(String place){
+
+	public void setPlace(String place) {
 		this.place = place;
 	}
-	
-	public String getZip(){
+
+	public String getZip() {
 		return zip;
 	}
-	
-	public void setZip(String zip){
+
+	public void setZip(String zip) {
 		this.zip = zip;
 	}
-	
-	public String getCountry(){
+
+	public String getCountry() {
 		return country;
 	}
-	
-	public void setCountry(String country){
+
+	public void setCountry(String country) {
 		this.country = country;
 	}
-	
-	public void setKontaktId(String kontaktId){
+
+	public void setKontaktId(String kontaktId) {
 		this.kontaktId = kontaktId;
 	}
-	
-	public String getKontaktId(){
+
+	public String getKontaktId() {
 		return kontaktId;
 	}
-	
-	public void setPostalAddress(String postalAddress){
+
+	public void setPostalAddress(String postalAddress) {
 		this.postalAddress = postalAddress;
 	}
-	
-	public String getPostalAddress(){
+
+	public String getPostalAddress() {
 		return postalAddress;
 	}
 }

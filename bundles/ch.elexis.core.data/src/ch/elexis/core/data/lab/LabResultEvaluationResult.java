@@ -3,35 +3,36 @@ package ch.elexis.core.data.lab;
 import ch.elexis.core.types.PathologicDescription;
 
 public class LabResultEvaluationResult {
-	
+
 	/**
-	 * the final state has been determined by the evaluator, no further evaluation required
+	 * the final state has been determined by the evaluator, no further evaluation
+	 * required
 	 */
 	private boolean finallyDetermined;
 	private boolean isPathologic;
 	private PathologicDescription pathologicDescription;
-	
-	public LabResultEvaluationResult(boolean finallyDetermined){
+
+	public LabResultEvaluationResult(boolean finallyDetermined) {
 		this.finallyDetermined = finallyDetermined;
 	}
-	
+
 	public LabResultEvaluationResult(boolean finallyDetermined, boolean isPathologic,
-		PathologicDescription pathologicDescription){
+			PathologicDescription pathologicDescription) {
 		this.finallyDetermined = finallyDetermined;
 		this.isPathologic = isPathologic;
 		this.pathologicDescription = pathologicDescription;
 	}
-	
-	public boolean isFinallyDetermined(){
+
+	public boolean isFinallyDetermined() {
 		return finallyDetermined;
 	}
-	
-	public PathologicDescription getPathologicDescription(){
+
+	public PathologicDescription getPathologicDescription() {
 		return pathologicDescription;
 	}
-	
-	public boolean isPathologic(){
+
+	public boolean isPathologic() {
 		return isPathologic;
 	}
-	
+
 }

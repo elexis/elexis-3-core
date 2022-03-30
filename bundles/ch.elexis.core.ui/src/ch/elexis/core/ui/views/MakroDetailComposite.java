@@ -24,61 +24,61 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.data.dto.MakroDTO;
 
 public class MakroDetailComposite extends Composite {
-	
+
 	private WritableValue<MakroDTO> value;
 	private DataBindingContext bindingContext;
-	
+
 	private Text makroName;
 	private boolean nameDirty;
 	private StyledText makroContent;
 	private boolean contentDirty;
-	
-	public MakroDetailComposite(Composite parent, int style){
+
+	public MakroDetailComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(1, true));
-		
+
 		createContent();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private void createContent(){
+	private void createContent() {
 		value = new WritableValue<>();
 		bindingContext = new DataBindingContext();
-		
+
 		makroName = new Text(this, SWT.BORDER);
 		makroName.setMessage("Makro Name");
 		makroName.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		bindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(makroName),
-			PojoProperties.value("makroName").observeDetail(value));
+				PojoProperties.value("makroName").observeDetail(value));
 		makroName.addModifyListener(new ModifyListener() {
 			@Override
-			public void modifyText(ModifyEvent e){
+			public void modifyText(ModifyEvent e) {
 				nameDirty = true;
 			}
 		});
 		makroName.addFocusListener(new FocusAdapter() {
 			@Override
-			public void focusLost(FocusEvent e){
+			public void focusLost(FocusEvent e) {
 				if (nameDirty) {
 					save(getMakro());
 				}
 				super.focusLost(e);
 			}
 		});
-		
+
 		makroContent = new StyledText(this, SWT.BORDER | SWT.MULTI);
 		makroContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		bindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(makroContent),
-			PojoProperties.value("makroContent").observeDetail(value));
+				PojoProperties.value("makroContent").observeDetail(value));
 		makroContent.addModifyListener(new ModifyListener() {
 			@Override
-			public void modifyText(ModifyEvent e){
+			public void modifyText(ModifyEvent e) {
 				contentDirty = true;
 			}
 		});
 		makroContent.addFocusListener(new FocusAdapter() {
 			@Override
-			public void focusLost(FocusEvent e){
+			public void focusLost(FocusEvent e) {
 				if (contentDirty) {
 					save(getMakro());
 				}
@@ -86,18 +86,18 @@ public class MakroDetailComposite extends Composite {
 			}
 		});
 	}
-	
-	public void setMakro(MakroDTO makro){
+
+	public void setMakro(MakroDTO makro) {
 		value.setValue(makro);
 		nameDirty = false;
 		contentDirty = false;
 	}
-	
-	public MakroDTO getMakro(){
+
+	public MakroDTO getMakro() {
 		return value.getValue();
 	}
-	
-	private void save(MakroDTO makro){
+
+	private void save(MakroDTO makro) {
 		if (nameDirty) {
 			// remove old entry first, and update the param value
 			removeMakro(makro);
@@ -108,40 +108,36 @@ public class MakroDetailComposite extends Composite {
 		nameDirty = false;
 		contentDirty = false;
 	}
-	
+
 	/**
 	 * Utility method to save a makro to the USERCONFIG.
 	 * 
 	 * @param makro
 	 */
-	public static void saveMakro(MakroDTO makro){
-		
-		Optional<IContact> userContact =
-			CoreModelServiceHolder.get().load(makro.getMakroUserId(), IContact.class);
+	public static void saveMakro(MakroDTO makro) {
+
+		Optional<IContact> userContact = CoreModelServiceHolder.get().load(makro.getMakroUserId(), IContact.class);
 		if (userContact.isPresent()) {
-			ConfigServiceHolder.get().set(userContact.get(), makro.getMakroParam(),
-				makro.getMakroContent());
+			ConfigServiceHolder.get().set(userContact.get(), makro.getMakroParam(), makro.getMakroContent());
 		} else {
-			LoggerFactory.getLogger(MakroDetailComposite.class).warn("No user to save makro ["
-				+ makro.getMakroName() + "] userid [" + makro.getMakroUserId() + "]");
+			LoggerFactory.getLogger(MakroDetailComposite.class).warn(
+					"No user to save makro [" + makro.getMakroName() + "] userid [" + makro.getMakroUserId() + "]");
 		}
 	}
-	
+
 	/**
 	 * Utility method to remove a makro from the USERCONFIG.
 	 * 
 	 * @param makro
 	 */
-	public static void removeMakro(MakroDTO makro){
-		
-		Optional<IContact> userContact =
-			CoreModelServiceHolder.get().load(makro.getMakroUserId(), IContact.class);
+	public static void removeMakro(MakroDTO makro) {
+
+		Optional<IContact> userContact = CoreModelServiceHolder.get().load(makro.getMakroUserId(), IContact.class);
 		if (userContact.isPresent()) {
-			ConfigServiceHolder.get().set(userContact.get(), makro.getMakroParam(),
-				null);
+			ConfigServiceHolder.get().set(userContact.get(), makro.getMakroParam(), null);
 		} else {
-			LoggerFactory.getLogger(MakroDetailComposite.class).warn("No user to remove makro ["
-				+ makro.getMakroName() + "] userid [" + makro.getMakroUserId() + "]");
+			LoggerFactory.getLogger(MakroDetailComposite.class).warn(
+					"No user to remove makro [" + makro.getMakroName() + "] userid [" + makro.getMakroUserId() + "]");
 		}
 	}
 }

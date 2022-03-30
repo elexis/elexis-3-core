@@ -24,37 +24,34 @@ import ch.elexis.data.Query;
 public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 	private HashMap<Mandant, Integer> missingMap;
 	private HashMap<Mandant, String> mandantDiagnoseMap;
-	
+
 	@Override
-	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
+	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		missingMap = new HashMap<Mandant, Integer>();
 		mandantDiagnoseMap = new HashMap<Mandant, String>();
 		StringBuilder output = new StringBuilder();
 		pm.beginTask("Fixing consultations with no diagnose", 3);
-		
+
 		pm.subTask("Find all consultations ...");
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		qbe.add(Konsultation.FLD_BILL_ID, StringConstants.EMPTY, null);
 		List<Konsultation> kons = qbe.execute();
 		pm.worked(1);
-		
+
 		pm.subTask("Find consultations without diagnose ...");
 		for (Konsultation k : kons) {
 			Fall fall = k.getFall();
 			if (fall != null && fall.exists() && fall.isOpen() && k.getDiagnosen().size() < 1) {
 				Mandant mandant = k.getMandant();
-				
-				String diagnoseId =
-					CoreHub.getUserSetting(mandant).get(Preferences.USR_DEFDIAGNOSE, "");
+
+				String diagnoseId = CoreHub.getUserSetting(mandant).get(Preferences.USR_DEFDIAGNOSE, "");
 				String diagnoseLabel = null;
-				
+
 				// add the diagnose if default diagnose is defined
 				if (diagnoseId != null && !diagnoseId.isEmpty()) {
-					Optional<Identifiable> diagnose =
-						StoreToStringServiceHolder.get().loadFromString(diagnoseId);
+					Optional<Identifiable> diagnose = StoreToStringServiceHolder.get().loadFromString(diagnoseId);
 					if (diagnose.isPresent()) {
-						IEncounter encounter =
-							NoPoUtil.loadAsIdentifiable(k, IEncounter.class).get();
+						IEncounter encounter = NoPoUtil.loadAsIdentifiable(k, IEncounter.class).get();
 						encounter.addDiagnosis((IDiagnosis) diagnose.get());
 						CoreModelServiceHolder.get().save(encounter);
 						diagnoseLabel = diagnose.get().getLabel();
@@ -62,46 +59,44 @@ public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 						diagnoseLabel = diagnoseId + " existiert nicht";
 					}
 				}
-				
+
 				// add to the map for output in the end
 				int found = 1;
 				if (missingMap.containsKey(mandant)) {
 					found = missingMap.get(mandant) + 1;
 				}
 				missingMap.put(mandant, found);
-				
+
 				if (!mandantDiagnoseMap.containsKey(mandant)) {
 					mandantDiagnoseMap.put(mandant, diagnoseLabel);
 				}
 			}
 		}
 		pm.worked(1);
-		
+
 		pm.subTask("Show results ...");
 		for (Mandant mandant : mandantDiagnoseMap.keySet()) {
 			String diagnose = mandantDiagnoseMap.get(mandant);
 			int result = missingMap.get(mandant);
-			
+
 			// no default diagnose set
 			if (diagnose == null) {
-				output.append(mandant.getVorname() + " " + mandant.getName() + " ("
-					+ mandant.getLabel() + "): " + result
-					+ " Konsultationen ohne Diagnose (keine Standarddiagnose definiert)\n");
+				output.append(mandant.getVorname() + " " + mandant.getName() + " (" + mandant.getLabel() + "): "
+						+ result + " Konsultationen ohne Diagnose (keine Standarddiagnose definiert)\n");
 			} else {
-				output.append(mandant.getVorname() + " " + mandant.getName() + " ("
-					+ mandant.getLabel() + "): " + result
-					+ " Konsultationen mit Standarddiagnose (" + diagnose + ") vervollständigt\n");
+				output.append(mandant.getVorname() + " " + mandant.getName() + " (" + mandant.getLabel() + "): "
+						+ result + " Konsultationen mit Standarddiagnose (" + diagnose + ") vervollständigt\n");
 			}
 		}
 		pm.worked(1);
-		
+
 		pm.done();
 		return output.toString();
 	}
-	
+
 	@Override
-	public String getMaintenanceDescription(){
+	public String getMaintenanceDescription() {
 		return "Standarddiagnose für offene Konsultationen ohne Diagnose eintragen";
 	}
-	
+
 }

@@ -21,50 +21,49 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.ui.icons.Images;
 
 public class ContactTypeDecorator implements ILightweightLabelDecorator {
-	
+
 	@Override
-	public void addListener(ILabelProviderListener listener){
+	public void addListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public boolean isLabelProperty(Object element, String property){
+	public boolean isLabelProperty(Object element, String property) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public void removeListener(ILabelProviderListener listener){
+	public void removeListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void decorate(Object element, IDecoration decoration){
+	public void decorate(Object element, IDecoration decoration) {
 		IContact contact = (IContact) element;
 		if (contact.isDeleted()) {
 			ImageDescriptor deleted = Images.IMG_DELETE.getImageDescriptor();
 			decoration.addOverlay(deleted, IDecoration.TOP_LEFT);
 		}
-		
+
 		if (contact.isMandator()) {
 			ImageDescriptor vip = Images.IMG_VIP_OVERLAY.getImageDescriptor();
 			decoration.addOverlay(vip, IDecoration.BOTTOM_RIGHT);
 		}
 		if (contact.isUser()) {
-			FieldDecoration info =
-				FieldDecorationRegistry.getDefault().getFieldDecoration(
-					FieldDecorationRegistry.DEC_INFORMATION);
+			FieldDecoration info = FieldDecorationRegistry.getDefault()
+					.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION);
 			ImageDescriptor infoD = ImageDescriptor.createFromImage(info.getImage());
 			decoration.addOverlay(infoD, IDecoration.BOTTOM_LEFT);
 		}
 	}
-	
+
 }

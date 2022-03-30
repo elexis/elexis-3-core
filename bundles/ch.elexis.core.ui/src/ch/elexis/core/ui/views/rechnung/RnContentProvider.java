@@ -47,13 +47,17 @@ import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.Tree;
 
 /**
- * Contentprovider used in "RechnungsListeView" to display bills selected by some criteria
+ * Contentprovider used in "RechnungsListeView" to display bills selected by
+ * some criteria
  * 
  * @author gerry
  * 
  */
-class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider,
-		ITreeContentProvider, ControlFieldListener {
+class RnContentProvider
+		implements
+			ViewerConfigurer.ICommonViewerContentProvider,
+			ITreeContentProvider,
+			ControlFieldListener {
 	private static final float PREVAL = 50000f;
 	// private Query<Rechnung> q1;
 	CommonViewer cv;
@@ -65,44 +69,43 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 	RechnungsListeView rlv;
 	String[] constraints;
 	String[] val;
-	
+
 	private final Log log = Log.get("Rechnungenlader"); //$NON-NLS-1$
-	
-	RnContentProvider(final RechnungsListeView l, final CommonViewer cv){
+
+	RnContentProvider(final RechnungsListeView l, final CommonViewer cv) {
 		this.cv = cv;
 		rlv = l;
 	}
-	
-	public void startListening(){
+
+	public void startListening() {
 		cv.getConfigurer().getControlFieldProvider().addChangeListener(this);
 	}
-	
-	public void stopListening(){
+
+	public void stopListening() {
 		cv.getConfigurer().getControlFieldProvider().removeChangeListener(this);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public Object[] getElements(final Object inputElement){
+	public Object[] getElements(final Object inputElement) {
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 		try {
 			progressService.run(true, true, new IRunnableWithProgress() {
-				
+
 				@Override
-				public void run(final IProgressMonitor monitor){
+				public void run(final IProgressMonitor monitor) {
 					reload(monitor);
 					if (monitor.isCanceled()) {
 						monitor.done();
 					}
-					
+
 					rlv.getSite().getShell().getDisplay().syncExec(new Runnable() {
 						@Override
-						public void run(){
-							InvoiceListBottomComposite invoiceListeBottomComposite =
-								rlv.getInvoiceListeBottomComposite();
+						public void run() {
+							InvoiceListBottomComposite invoiceListeBottomComposite = rlv
+									.getInvoiceListeBottomComposite();
 							if (invoiceListeBottomComposite != null) {
-								invoiceListeBottomComposite.update(Integer.toString(iPat),
-									Integer.toString(iRn), mAmount.getAmountAsString(),
-									mOpen.getAmountAsString());
+								invoiceListeBottomComposite.update(Integer.toString(iPat), Integer.toString(iRn),
+										mAmount.getAmountAsString(), mOpen.getAmountAsString());
 							}
 						}
 					});
@@ -111,44 +114,44 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		} catch (Throwable ex) {
 			ExHandler.handle(ex);
 		}
-		
+
 		return result == null ? new Tree[0] : result;
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
-	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput){
+
+	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
+
 	// Vom ControlFieldListener
-	public void changed(HashMap<String, String> values){
+	public void changed(HashMap<String, String> values) {
 		cv.notify(CommonViewer.Message.update);
 	}
-	
-	public void reorder(final String field){
+
+	public void reorder(final String field) {
 		cv.getViewerWidget().setSorter(new ViewerSorter() {
-			
+
 			@Override
-			public int compare(final Viewer viewer, final Object e1, final Object e2){
+			public int compare(final Viewer viewer, final Object e1, final Object e2) {
 				TimeTool t1 = getLatest((Tree) e1);
 				TimeTool t2 = getLatest((Tree) e2);
 				return t1.compareTo(t2);
 			}
-			
+
 		});
 	}
-	
-	public void selected(){
+
+	public void selected() {
 		// nothing to do
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private TimeTool getLatest(final Tree t){
+	private TimeTool getLatest(final Tree t) {
 		if (t.contents instanceof Rechnung) {
 			return new TimeTool(((Rechnung) t.contents).getDatumRn());
 		} else if (t.contents instanceof Fall) {
@@ -167,9 +170,9 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private TimeTool getLatestFromCase(final Tree c){
+	private TimeTool getLatestFromCase(final Tree c) {
 		List<Tree> tRn = (List<Tree>) c.getChildren();
 		TimeTool tL = new TimeTool();
 		for (Tree t : tRn) {
@@ -181,9 +184,9 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		}
 		return tL;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public Object[] getChildren(final Object parentElement){
+	public Object[] getChildren(final Object parentElement) {
 		if (parentElement instanceof Tree) {
 			Tree[] ret = (Tree[]) ((Tree) parentElement).getChildren().toArray(new Tree[0]);
 			Arrays.sort(ret, treeComparator);
@@ -191,16 +194,16 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		}
 		return new Object[0];
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public Object getParent(final Object element){
+	public Object getParent(final Object element) {
 		if (element instanceof Tree) {
 			return ((Tree) element).getParent();
 		}
 		return null;
 	}
-	
-	public boolean hasChildren(final Object element){
+
+	public boolean hasChildren(final Object element) {
 		if (element instanceof Tree) {
 			if (((Tree) element).contents instanceof Rechnung) {
 				return false;
@@ -208,15 +211,15 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		}
 		return true;
 	}
-	
-	public void setConstraints(final String[] constraints){
+
+	public void setConstraints(final String[] constraints) {
 		this.constraints = constraints;
 	}
-	
-	public Query<Rechnung> prepareQuery(){
+
+	public Query<Rechnung> prepareQuery() {
 		cv.getParent().getDisplay().syncExec(new Runnable() {
 			@Override
-			public void run(){
+			public void run() {
 				val = null;
 				val = cv.getConfigurer().getControlFieldProvider().getValues();
 			}
@@ -230,7 +233,7 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		}
 		if (val[2] != null) {
 			q1.add(Rechnung.BILL_NUMBER, Query.EQUALS, val[2]);
-			
+
 		} else if (val[3] != null) {
 			q1.add(Rechnung.BILL_AMOUNT_CENTS, Query.EQUALS, val[3]);
 		} else {
@@ -245,15 +248,11 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 				q1.and();
 			} else if (Integer.parseInt(val[0]) == RnStatus.AUSSTEHEND) {
 				q1.startGroup();
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS,
-					Integer.toString(RnStatus.OFFEN_UND_GEDRUCKT));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.OFFEN_UND_GEDRUCKT));
 				q1.or();
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS,
-					Integer.toString(RnStatus.MAHNUNG_1_GEDRUCKT));
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS,
-					Integer.toString(RnStatus.MAHNUNG_2_GEDRUCKT));
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS,
-					Integer.toString(RnStatus.MAHNUNG_3_GEDRUCKT));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.MAHNUNG_1_GEDRUCKT));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.MAHNUNG_2_GEDRUCKT));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.MAHNUNG_3_GEDRUCKT));
 				q1.endGroup();
 				q1.and();
 			} else if (!val[0].equals(StringConstants.ZERO)) {
@@ -284,8 +283,8 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		}
 		if (val[4] != null) {
 			q1.addPostQueryFilter(new IFilter() {
-				
-				public boolean select(Object toTest){
+
+				public boolean select(Object toTest) {
 					if (toTest instanceof Rechnung) {
 						Rechnung rn = (Rechnung) toTest;
 						Fall fall = rn.getFall();
@@ -300,20 +299,20 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 					}
 					return false;
 				}
-				
+
 			});
 		}
 		return q1;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void reload(final IProgressMonitor monitor){
-		monitor.beginTask(Messages.RnContentProvider_collectInvoices, Math.round(PREVAL)); //$NON-NLS-1$
-		monitor.subTask(Messages.RnContentProvider_prepare); //$NON-NLS-1$
+	public void reload(final IProgressMonitor monitor) {
+		monitor.beginTask(Messages.RnContentProvider_collectInvoices, Math.round(PREVAL)); // $NON-NLS-1$
+		monitor.subTask(Messages.RnContentProvider_prepare); // $NON-NLS-1$
 		Tree<Patient> root = new Tree<Patient>(null, null);
 		Hashtable<String, Tree<Patient>> hPats = new Hashtable<String, Tree<Patient>>(367, 0.75f);
 		Hashtable<String, Tree<Fall>> hFaelle = new Hashtable<String, Tree<Fall>>(719, 0.75f);
-		
+
 		Query<Rechnung> q1 = prepareQuery();
 		if (q1 == null) {
 			return;
@@ -321,13 +320,13 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		q1.orderBy(false, Rechnung.BILL_DATE);
 		List<Rechnung> rechnungen = q1.execute();
 		if (rechnungen == null) {
-			log.log(Messages.RnContentProvider_errorRetriveingBillds, Log.ERRORS); //$NON-NLS-1$
+			log.log(Messages.RnContentProvider_errorRetriveingBillds, Log.ERRORS); // $NON-NLS-1$
 			return;
 		}
 		monitor.worked(100);
-		monitor.subTask(Messages.RnContentProvider_databseRequest); //$NON-NLS-1$
+		monitor.subTask(Messages.RnContentProvider_databseRequest); // $NON-NLS-1$
 		int multiplyer = Math.round(PREVAL / rechnungen.size());
-		monitor.subTask(Messages.RnContentProvider_load); //$NON-NLS-1$
+		monitor.subTask(Messages.RnContentProvider_load); // $NON-NLS-1$
 		iPat = 0;
 		iRn = rechnungen.size();
 		mAmount = new Money();
@@ -338,7 +337,7 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 				monitor.done();
 				return;
 			}
-			
+
 			if ((rn == null) || (!rn.exists())) {
 				log.log("Fehlerhafte Rechnung", Log.ERRORS); //$NON-NLS-1$
 				continue;
@@ -369,21 +368,21 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 			Tree<Rechnung> tRn = new Tree(tFall, rn);
 			monitor.worked(multiplyer);
 		}
-		
+
 		monitor.worked(1);
-		monitor.subTask(Messages.RnContentProvider_prepareSort); //$NON-NLS-1$
+		monitor.subTask(Messages.RnContentProvider_prepareSort); // $NON-NLS-1$
 		result = root.getChildren().toArray(new Tree[0]);
 		monitor.worked(100);
-		//monitor.subTask(Messages.getString("RnContentProvider.sort")); //$NON-NLS-1$
+		// monitor.subTask(Messages.getString("RnContentProvider.sort")); //$NON-NLS-1$
 		// Arrays.sort(result,treeComparator);
 		monitor.done();
-		
+
 	}
-	
+
 	/**
 	 * Bereits bezahlten Betrag holen. Alle Zahlungen ausser Storno werden addiert.
 	 */
-	public Money sumZahlungen(Rechnung rn){
+	public Money sumZahlungen(Rechnung rn) {
 		List<Zahlung> lz = rn.getZahlungen();
 		Money total = new Money();
 		for (Zahlung z : lz) {
@@ -394,20 +393,20 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 		}
 		return total;
 	}
-	
+
 	private static class PatientComparator implements Comparator {
-		public int compare(final Object o1, final Object o2){
+		public int compare(final Object o1, final Object o2) {
 			Patient p1 = (Patient) o1;
 			Patient p2 = (Patient) o2;
 			return p1.getLabel().compareTo(p2.getLabel());
 		}
 	}
-	
+
 	private static class TreeComparator implements Comparator {
 		TimeTool tt0 = new TimeTool();
 		TimeTool tt1 = new TimeTool();
-		
-		public int compare(final Object arg0, final Object arg1){
+
+		public int compare(final Object arg0, final Object arg1) {
 			Tree t0 = (Tree) arg0;
 			Tree t1 = (Tree) arg1;
 			if (t0.contents instanceof Patient) {
@@ -431,14 +430,14 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 			} else {
 				return 0;
 			}
-			
+
 		}
 	}
-	
+
 	@Override
-	public void init(){
+	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

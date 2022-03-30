@@ -38,41 +38,42 @@ import org.eclipse.swt.widgets.Shell;
 import ch.elexis.data.PersistentObject;
 
 /**
- * A {@link Composite} to manage the selection from a list of objects. A {@link Label} shows the
- * current selction and a {@link Button} is used to open a {@link Dialog} to change the selection.
+ * A {@link Composite} to manage the selection from a list of objects. A
+ * {@link Label} shows the current selction and a {@link Button} is used to open
+ * a {@link Dialog} to change the selection.
  * 
  * @author thomas
  *
  */
 public class GenericSelectionComposite extends Composite implements ISelectionProvider {
-	
+
 	private ListenerList selectionListeners = new ListenerList();
-	
+
 	private List<?> input;
 	private IStructuredSelection selection;
-	
+
 	private Label selectLabel;
 	private Button selectButton;
 
-	public GenericSelectionComposite(Composite parent, int style){
+	public GenericSelectionComposite(Composite parent, int style) {
 		super(parent, style);
 		createContent();
 	}
-	
-	private void createContent(){
+
+	private void createContent() {
 		setLayout(new GridLayout(2, false));
-		
+
 		selectLabel = new Label(this, SWT.NONE);
 		selectLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		
+
 		selectButton = new Button(this, SWT.NONE);
 		selectButton.setText("..."); //$NON-NLS-1$
 		selectButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-		
+
 		selectButton.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (input != null && !input.isEmpty()) {
 					GenericSelectionDialog dialog = new GenericSelectionDialog(getShell(), input);
 					if (selection != null) {
@@ -84,11 +85,11 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 					}
 				}
 			}
-			
+
 		});
 	}
-	
-	private void updateLabel(){
+
+	private void updateLabel() {
 		StringBuilder sb = new StringBuilder();
 		if (selection != null && !selection.isEmpty()) {
 			for (Object object : selection.toList()) {
@@ -107,82 +108,81 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 		}
 		getParent().layout();
 	}
-	
-	public void setInput(List<?> input){
+
+	public void setInput(List<?> input) {
 		this.input = input;
 	}
-	
-	private void callSelectionListeners(){
+
+	private void callSelectionListeners() {
 		Object[] listeners = selectionListeners.getListeners();
 		if (listeners != null && listeners.length > 0) {
 			for (Object object : listeners) {
-				((ISelectionChangedListener) object)
-					.selectionChanged(new SelectionChangedEvent(this, selection));
+				((ISelectionChangedListener) object).selectionChanged(new SelectionChangedEvent(this, selection));
 			}
 		}
 	}
-	
+
 	@Override
-	public void addSelectionChangedListener(ISelectionChangedListener listener){
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.add(listener);
 	}
-	
+
 	@Override
-	public void removeSelectionChangedListener(ISelectionChangedListener listener){
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.remove(listener);
 	}
-	
+
 	@Override
-	public ISelection getSelection(){
+	public ISelection getSelection() {
 		if (selection != null) {
 			return selection;
 		}
 		return StructuredSelection.EMPTY;
 	}
-	
+
 	@Override
-	public void setSelection(ISelection selection){
+	public void setSelection(ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) selection;
 			updateLabel();
 		}
 	}
-	
+
 	/**
-	 * Dialog for managing the selection from a list of objects. For each Object a checkbox with
-	 * text is displayed. For {@link PersistentObject} instances the Label property is displayed,
-	 * else toString.
+	 * Dialog for managing the selection from a list of objects. For each Object a
+	 * checkbox with text is displayed. For {@link PersistentObject} instances the
+	 * Label property is displayed, else toString.
 	 * 
 	 * @author thomas
 	 *
 	 */
 	public static class GenericSelectionDialog extends Dialog {
-		
+
 		private List<?> input;
 		private Map<Object, Button> buttonMap = new HashMap<>();
 		private List<Object> selection = new LinkedList<>();
-		
-		public GenericSelectionDialog(Shell parentShell, List<?> input){
+
+		public GenericSelectionDialog(Shell parentShell, List<?> input) {
 			super(parentShell);
 			this.input = input;
 		}
-		
-		public void setSelection(List<Object> selection){
+
+		public void setSelection(List<Object> selection) {
 			this.selection = new LinkedList<>(selection);
 		}
-		
-		public IStructuredSelection getSelection(){
+
+		public IStructuredSelection getSelection() {
 			return new StructuredSelection(selection);
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			Composite ret = (Composite) super.createDialogArea(parent);
 			ScrolledComposite sc = new ScrolledComposite(ret, SWT.H_SCROLL | SWT.V_SCROLL);
-			
+
 			Composite child = new Composite(sc, SWT.NONE);
 			child.setLayout(new GridLayout());
-			
+
 			GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 			data.heightHint = 400;
 			sc.setLayoutData(data);
@@ -195,7 +195,7 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 				button.setText(getLabel(object));
 				button.addSelectionListener(new SelectionAdapter() {
 					@Override
-					public void widgetSelected(SelectionEvent e){
+					public void widgetSelected(SelectionEvent e) {
 						if (button.getSelection()) {
 							selection.add(object);
 						} else {
@@ -208,22 +208,22 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			sc.setMinSize(child.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 			sc.setExpandHorizontal(true);
 			sc.setExpandVertical(true);
-		    sc.setContent(child);
+			sc.setContent(child);
 
 			updateSelectionUi();
-			
+
 			return ret;
 		}
-		
-		private void updateSelectionUi(){
+
+		private void updateSelectionUi() {
 			if (selection != null && !selection.isEmpty() && !buttonMap.isEmpty()) {
 				for (Object object : selection) {
 					buttonMap.get(object).setSelection(true);
 				}
 			}
 		}
-		
-		protected static String getLabel(Object object){
+
+		protected static String getLabel(Object object) {
 			if (object instanceof PersistentObject) {
 				return ((PersistentObject) object).getLabel();
 			} else if (object != null) {

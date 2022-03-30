@@ -8,37 +8,37 @@ import ch.elexis.core.findings.IObservation.ObservationCode;
 import ch.elexis.core.model.IXid;
 
 public class TransientLocalCoding implements ILocalCoding {
-	
+
 	private String system;
 	private String code;
 	private String display;
 	private List<ICoding> mappedCodes;
 	private int prio = 0;
-	
-	public TransientLocalCoding(String system, String code, String display){
+
+	public TransientLocalCoding(String system, String code, String display) {
 		this.system = system;
 		this.code = code;
 		this.display = display;
 	}
-	
-	public TransientLocalCoding(ObservationCode code){
+
+	public TransientLocalCoding(ObservationCode code) {
 		this.system = code.getIdentifierSystem().getSystem();
 		this.code = code.getCode();
 		this.display = "";
 	}
-	
+
 	@Override
-	public String getSystem(){
+	public String getSystem() {
 		return system;
 	}
-	
+
 	@Override
-	public String getCode(){
+	public String getCode() {
 		return code;
 	}
-	
+
 	@Override
-	public String getDisplay(){
+	public String getDisplay() {
 		return display;
 	}
 
@@ -51,59 +51,59 @@ public class TransientLocalCoding implements ILocalCoding {
 	public void setMappedCodes(List<ICoding> mappedCodes) {
 		this.mappedCodes = mappedCodes;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return null;
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		return null;
 	}
-	
+
 	@Override
-	public boolean addXid(String domain, String id, boolean updateIfExists){
+	public boolean addXid(String domain, String id, boolean updateIfExists) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
-	public IXid getXid(String domain){
+	public IXid getXid(String domain) {
 		return null;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return false;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean value){
+	public void setDeleted(boolean value) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
-	public void setCode(String code){
+	public void setCode(String code) {
 		this.code = code;
 	}
-	
+
 	@Override
-	public void setDisplay(String display){
+	public void setDisplay(String display) {
 		this.display = display;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return null;
 	}
-	
+
 	@Override
-	public void setPrio(int prio){
+	public void setPrio(int prio) {
 		this.prio = prio;
 	}
-	
+
 	@Override
-	public int getPrio(){
+	public int getPrio() {
 		return prio;
 	}
 }

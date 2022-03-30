@@ -15,31 +15,31 @@ import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.rgw.tools.TimeTool;
 
 public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Bestellung>
-		implements IdentifiableWithXid, IOrder {
-	
-	public Order(Bestellung entity){
+		implements
+			IdentifiableWithXid,
+			IOrder {
+
+	public Order(Bestellung entity) {
 		super(entity);
 	}
-	
+
 	@Override
-	public List<IOrderEntry> getEntries(){
+	public List<IOrderEntry> getEntries() {
 		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getEntries().parallelStream().filter(b -> !b.isDeleted())
-			.map(b -> ModelUtil.getAdapter(b, IOrderEntry.class, true))
-			.collect(Collectors.toList());
+				.map(b -> ModelUtil.getAdapter(b, IOrderEntry.class, true)).collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public IOrderEntry addEntry(IArticle article, IStock stock, IContact provider, int amount){
+	public IOrderEntry addEntry(IArticle article, IStock stock, IContact provider, int amount) {
 		if (provider == null) {
-			String providerId =
-				ModelUtil.getConfig(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+			String providerId = ModelUtil.getConfig(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 			if (providerId != null) {
 				IContact defProvider = ModelUtil.load(providerId, IContact.class);
 				provider = defProvider;
 			}
 		}
-		
+
 		IOrderEntry orderEntry = findOrderEntry(stock, article);
 		if (orderEntry != null) {
 			orderEntry.setAmount(orderEntry.getAmount() + amount);
@@ -54,22 +54,22 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		}
 		return orderEntry;
 	}
-	
+
 	@Override
-	public IOrderEntry findOrderEntry(IStock stock, IArticle article){
+	public IOrderEntry findOrderEntry(IStock stock, IArticle article) {
 		List<IOrderEntry> entries = getEntries();
 		for (IOrderEntry iOrderEntry : entries) {
 			if (((iOrderEntry.getStock() == null && stock == null)
-				|| (iOrderEntry.getStock() != null && iOrderEntry.getStock().equals(stock)))
-				&& iOrderEntry.getArticle().equals(article)) {
+					|| (iOrderEntry.getStock() != null && iOrderEntry.getStock().equals(stock)))
+					&& iOrderEntry.getArticle().equals(article)) {
 				return iOrderEntry;
 			}
 		}
 		return null;
 	}
-	
+
 	@Override
-	public LocalDateTime getTimestamp(){
+	public LocalDateTime getTimestamp() {
 		String id = getId();
 		if (id != null) {
 			String[] parts = id.split(":");
@@ -85,14 +85,14 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		}
 		return null;
 	}
-	
+
 	@Override
-	public void setTimestamp(LocalDateTime value){
+	public void setTimestamp(LocalDateTime value) {
 		updateId(value, getName());
 	}
-	
+
 	@Override
-	public String getName(){
+	public String getName() {
 		String id = getId();
 		if (id != null && id.contains(":")) {
 			String[] parts = id.split(":");
@@ -102,28 +102,26 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		}
 		return "";
 	}
-	
+
 	@Override
-	public void setName(String value){
+	public void setName(String value) {
 		updateId(getTimestamp(), value);
 	}
-	
-	private static DateTimeFormatter timestampFormatter =
-		DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-	
-	private void updateId(LocalDateTime timestamp, String name){
+
+	private static DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+	private void updateId(LocalDateTime timestamp, String name) {
 		if (timestamp == null) {
 			throw new IllegalStateException("Can not update id without timestamp");
 		}
 		Optional<IContact> activeUser = ModelUtil.getActiveUserContact();
-		String id = (name != null ? name : "") + ":"
-			+ (timestamp != null ? timestamp.format(timestampFormatter) : "") + ":"
-			+ (activeUser.isPresent() ? activeUser.get().getId() : "");
+		String id = (name != null ? name : "") + ":" + (timestamp != null ? timestamp.format(timestampFormatter) : "")
+				+ ":" + (activeUser.isPresent() ? activeUser.get().getId() : "");
 		getEntityMarkDirty().setId(id);
 	}
-	
+
 	@Override
-	public boolean isDone(){
+	public boolean isDone() {
 		for (IOrderEntry iOrderEntry : getEntries()) {
 			if (iOrderEntry.getState() != OrderEntryState.DONE) {
 				return false;
@@ -131,9 +129,9 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		}
 		return true;
 	}
-	
+
 	@Override
-	public boolean isPartialDone(){
+	public boolean isPartialDone() {
 		boolean foundDone = false;
 		boolean foundNotDone = false;
 		for (IOrderEntry iOrderEntry : getEntries()) {
@@ -145,10 +143,10 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		}
 		return foundDone && foundNotDone;
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		return getName() + ": " //$NON-NLS-1$
-			+ DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").format(getTimestamp()); //$NON-NLS-2$
+				+ DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").format(getTimestamp()); // $NON-NLS-2$
 	}
 }

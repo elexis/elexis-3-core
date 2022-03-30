@@ -25,130 +25,130 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.User;
 
 public class TotpDialog extends TitleAreaDialog {
-	
+
 	protected static Logger log = LoggerFactory.getLogger(TotpDialog.class);
-	
+
 	private Image image;
 	private Text text;
 	private Label lblVerificationResult;
 	private StyledText txtTotpCode;
 	private User user;
 	private Label lblImage;
-	
+
 	/**
 	 * Create the dialog.
 	 * 
 	 * @param parentShell
 	 */
-	public TotpDialog(Shell parentShell){
+	public TotpDialog(Shell parentShell) {
 		super(parentShell);
 	}
-	
+
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public TotpDialog(Shell topShell, User user){
+	public TotpDialog(Shell topShell, User user) {
 		this(topShell);
 		this.user = user;
-		
+
 		createOtpQRCodeImage();
 	}
-	
-	private void createOtpQRCodeImage(){
-//		if (image != null) {
-//			image.dispose();
-//		}
-//		
-//		String issuer = "Elexis";
-//		
-//		String selfContactId = ConfigServiceHolder.getGlobal(Preferences.SELFCONTACT_ID, "");
-//		if (!StringUtils.isEmpty(selfContactId)) {
-//			Kontakt selfContact = Kontakt.load(selfContactId);
-//			if (selfContact.isAvailable()) {
-//				try {
-//					issuer =
-//						URLEncoder.encode(selfContact.get(Kontakt.FLD_NAME1), "UTF-8").toString();
-//				} catch (UnsupportedEncodingException e) {
-//					log.error("Error encoding issuer", e);
-//				}
-//			}
-//		}
-//		
-//		String otpAuthString = String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s", "Elexis",
-//			user.getId(), user.getTotp(), issuer);
-//		Hashtable<EncodeHintType, Object> hintMap = new Hashtable<>();
-//		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-//		QRCodeWriter qrCodeWriter = new QRCodeWriter();
-//		try {
-//			BitMatrix bitMatrix =
-//				qrCodeWriter.encode(otpAuthString, BarcodeFormat.QR_CODE, 164, 164, hintMap);
-//			int width = bitMatrix.getWidth();
-//			int height = bitMatrix.getHeight();
-//			
-//			ImageData data =
-//				new ImageData(width, height, 24, new PaletteData(0xFF, 0xFF00, 0xFF0000));
-//			for (int y = 0; y < height; y++) {
-//				for (int x = 0; x < width; x++) {
-//					data.setPixel(x, y, bitMatrix.get(x, y) ? 0x000000 : 0xFFFFFF);
-//				}
-//			}
-//			image = new Image(Display.getDefault(), data);
-//		} catch (WriterException ex) {
-//			LoggerFactory.getLogger(getClass()).error("Error creating QR", ex);
-//			
-//		}
+
+	private void createOtpQRCodeImage() {
+		// if (image != null) {
+		// image.dispose();
+		// }
+		//
+		// String issuer = "Elexis";
+		//
+		// String selfContactId =
+		// ConfigServiceHolder.getGlobal(Preferences.SELFCONTACT_ID, "");
+		// if (!StringUtils.isEmpty(selfContactId)) {
+		// Kontakt selfContact = Kontakt.load(selfContactId);
+		// if (selfContact.isAvailable()) {
+		// try {
+		// issuer =
+		// URLEncoder.encode(selfContact.get(Kontakt.FLD_NAME1), "UTF-8").toString();
+		// } catch (UnsupportedEncodingException e) {
+		// log.error("Error encoding issuer", e);
+		// }
+		// }
+		// }
+		//
+		// String otpAuthString =
+		// String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s", "Elexis",
+		// user.getId(), user.getTotp(), issuer);
+		// Hashtable<EncodeHintType, Object> hintMap = new Hashtable<>();
+		// hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+		// QRCodeWriter qrCodeWriter = new QRCodeWriter();
+		// try {
+		// BitMatrix bitMatrix =
+		// qrCodeWriter.encode(otpAuthString, BarcodeFormat.QR_CODE, 164, 164, hintMap);
+		// int width = bitMatrix.getWidth();
+		// int height = bitMatrix.getHeight();
+		//
+		// ImageData data =
+		// new ImageData(width, height, 24, new PaletteData(0xFF, 0xFF00, 0xFF0000));
+		// for (int y = 0; y < height; y++) {
+		// for (int x = 0; x < width; x++) {
+		// data.setPixel(x, y, bitMatrix.get(x, y) ? 0x000000 : 0xFFFFFF);
+		// }
+		// }
+		// image = new Image(Display.getDefault(), data);
+		// } catch (WriterException ex) {
+		// LoggerFactory.getLogger(getClass()).error("Error creating QR", ex);
+		//
+		// }
 	}
-	
+
 	/**
 	 * Create contents of the dialog.
 	 * 
 	 * @param parent
 	 */
 	@Override
-	protected Control createDialogArea(Composite parent){
-		
+	protected Control createDialogArea(Composite parent) {
+
 		setTitle("Validate one-time password");
-		setMessage(String.format("Scan and verify One-Time Password QR code for user %s",
-			user.getLabel()));
-		
+		setMessage(String.format("Scan and verify One-Time Password QR code for user %s", user.getLabel()));
+
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(2, true));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
+
 		Composite compositeCode = new Composite(container, SWT.NONE);
 		compositeCode.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeCode = new GridLayout(1, false);
 		gl_compositeCode.marginHeight = 0;
 		gl_compositeCode.marginWidth = 0;
 		compositeCode.setLayout(gl_compositeCode);
-		
+
 		lblImage = new Label(compositeCode, SWT.NONE);
 		lblImage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		lblImage.setImage(image);
-		
+
 		txtTotpCode = new StyledText(compositeCode, SWT.NONE);
 		txtTotpCode.setBackground(getShell().getBackground());
 		txtTotpCode.setEditable(false);
 		txtTotpCode.setCaret(null);
 		txtTotpCode.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1));
 		txtTotpCode.setText(user.getTotp());
-		
+
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		composite.setBounds(0, 0, 64, 64);
-		
+
 		Label lblEnterCurrentCode = new Label(composite, SWT.WRAP);
 		lblEnterCurrentCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblEnterCurrentCode.setText(
-			"Scan the QR code with an app like Google Authenticator.\n\nEnter code to verify.");
-		
+		lblEnterCurrentCode.setText("Scan the QR code with an app like Google Authenticator.\n\nEnter code to verify.");
+
 		text = new Text(composite, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		text.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e){
+			public void keyReleased(KeyEvent e) {
 				String otpToken = text.getText();
 				if (otpToken.length() > 5 && StringUtils.isNumeric(otpToken)) {
 					if (user.verifyTotp(otpToken)) {
@@ -161,40 +161,40 @@ public class TotpDialog extends TitleAreaDialog {
 				lblVerificationResult.setForeground(UiDesk.getColor(UiDesk.COL_RED));
 			}
 		});
-		
+
 		lblVerificationResult = new Label(composite, SWT.NONE);
 		lblVerificationResult.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Link lnkResetOtp = new Link(container, SWT.NONE);
 		lnkResetOtp.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		lnkResetOtp.setText("<a>reset</a> (Invalidates existing)");
 		lnkResetOtp.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e){
+			public void mouseDown(MouseEvent e) {
 				user.resetTotp();
 				createOtpQRCodeImage();
 				lblImage.setImage(image);
 				txtTotpCode.setText(user.getTotp());
 			}
 		});
-		
+
 		new Label(container, SWT.NONE);
-		
+
 		return area;
 	}
-	
+
 	/**
 	 * Create contents of the button bar.
 	 * 
 	 * @param parent
 	 */
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		image.dispose();
 		super.okPressed();
 	}

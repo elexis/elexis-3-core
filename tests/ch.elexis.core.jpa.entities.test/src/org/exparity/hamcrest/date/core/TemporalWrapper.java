@@ -14,25 +14,29 @@ import java.time.temporal.ChronoUnit;
 public interface TemporalWrapper<T> {
 
 	/**
-	 * @param other a temporal to test against
+	 * @param other
+	 *            a temporal to test against
 	 * @return <code>true</code> if this temporal is after the other
 	 */
 	public boolean isAfter(final T other);
 
 	/**
-	 * @param other a temporal to test against
+	 * @param other
+	 *            a temporal to test against
 	 * @return <code>true</code> if this temporal is after the other
 	 */
 	public boolean isBefore(final T other);
 
 	/**
-	 * @param other a temporal to test against
+	 * @param other
+	 *            a temporal to test against
 	 * @return <code>true</code> if this temporal is after the other
 	 */
 	public boolean isSame(final T other);
 
 	/**
-	 * @param other a temporal to test against
+	 * @param other
+	 *            a temporal to test against
 	 * @return <code>true</code> if this temporal is after the other
 	 */
 	public boolean isSameDay(final T other);
@@ -43,7 +47,8 @@ public interface TemporalWrapper<T> {
 	public T unwrap();
 
 	/**
-	 * Return the difference in units between this time and the other time in the given units
+	 * Return the difference in units between this time and the other time in the
+	 * given units
 	 */
 	public long difference(final T other, final ChronoUnit unit);
 

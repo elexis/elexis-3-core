@@ -18,26 +18,26 @@ import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 
 public class DBConnectWizardPage extends WizardPage {
-	
+
 	protected TestDBConnectionGroup tdbg;
-	
-	protected DBConnectWizardPage(String pageName){
+
+	protected DBConnectWizardPage(String pageName) {
 		super(pageName);
-		
-		setImageDescriptor(Images.lookupImageDescriptor("db_configure_banner.png",
-			ImageSize._75x66_TitleDialogIconSize));
+
+		setImageDescriptor(
+				Images.lookupImageDescriptor("db_configure_banner.png", ImageSize._75x66_TitleDialogIconSize));
 	}
 
 	@Override
-	public void createControl(Composite parent){
+	public void createControl(Composite parent) {
 		// do nothing
 	}
-	
-	public TestDBConnectionGroup getTdbg(){
+
+	public TestDBConnectionGroup getTdbg() {
 		return tdbg;
 	}
-	
-	protected void updateButtons(){
+
+	protected void updateButtons() {
 		if (getWizard() != null && getWizard().getContainer() instanceof WizardDialog) {
 			((WizardDialog) getWizard().getContainer()).updateButtons();
 		}

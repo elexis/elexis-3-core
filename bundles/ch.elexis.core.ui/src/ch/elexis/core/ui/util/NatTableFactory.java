@@ -40,16 +40,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * Factory class for creating {@link NatTableWrapper} elements on a {@link Composite}.
+ * Factory class for creating {@link NatTableWrapper} elements on a
+ * {@link Composite}.
  * 
  * @author thomas
  *
  */
 public class NatTableFactory {
-	
+
 	/**
-	 * Create a single column {@link NatTableWrapper}. The {@link IRowDataProvider} parameter is not
-	 * optional, the {@link AbstractRegistryConfiguration} is optional.
+	 * Create a single column {@link NatTableWrapper}. The {@link IRowDataProvider}
+	 * parameter is not optional, the {@link AbstractRegistryConfiguration} is
+	 * optional.
 	 * 
 	 * @param parent
 	 * @param dataProvider
@@ -58,26 +60,24 @@ public class NatTableFactory {
 	 */
 	@SuppressWarnings("unchecked")
 	public static NatTableWrapper createSingleColumnTable(Composite parent,
-		IRowDataProvider<? extends Object> dataProvider,
-		AbstractRegistryConfiguration customConfiguration){
-		
+			IRowDataProvider<? extends Object> dataProvider, AbstractRegistryConfiguration customConfiguration) {
+
 		NatTableWrapper natTableWrapper = new NatTableWrapper();
-		
+
 		DataLayer bodyDataLayer = new DataLayer(dataProvider);
 		// disable drawing cells lines
 		SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer) {
 			private CellLayerPainter painter = new CellLayerPainter();
-			
+
 			@Override
-			public ILayerPainter getLayerPainter(){
+			public ILayerPainter getLayerPainter() {
 				return painter;
 			}
 		};
 		ViewportLayer viewportLayer = new ViewportLayer(selectionLayer);
 		viewportLayer.setRegionName(GridRegion.BODY);
-		
-		NatTable natTable =
-			new NatTable(parent, NatTable.DEFAULT_STYLE_OPTIONS | SWT.BORDER, viewportLayer, false);
+
+		NatTable natTable = new NatTable(parent, NatTable.DEFAULT_STYLE_OPTIONS | SWT.BORDER, viewportLayer, false);
 		natTable.setBackground(natTable.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		natTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		natTable.addConfiguration(new DefaultSingleColumnStyleConfiguration());
@@ -87,82 +87,79 @@ public class NatTableFactory {
 		natTableWrapper.setNatTable(natTable);
 		natTableWrapper.setDataProvider((IRowDataProvider<Object>) dataProvider);
 		natTableWrapper.setSelectionLayer(selectionLayer);
-		
+
 		natTableWrapper.configure();
-		// workaround for setting column with to 100% as this is currently broken due to a SWT update of Elexis
+		// workaround for setting column with to 100% as this is currently broken due to
+		// a SWT update of Elexis
 		// TODO revert after NatTable / Target update for Elexis 3.3
 		// bodyDataLayer.setColumnPercentageSizing(true);
 		// bodyDataLayer.setColumnWidthPercentageByPosition(0, 100);
 		natTable.addControlListener(new ResizeColumnListener(bodyDataLayer));
-		
+
 		return natTableWrapper;
 	}
-	
+
 	private static class ResizeColumnListener implements ControlListener {
-		
+
 		private DataLayer bodyDataLayer;
-		
-		public ResizeColumnListener(DataLayer bodyDataLayer){
+
+		public ResizeColumnListener(DataLayer bodyDataLayer) {
 			this.bodyDataLayer = bodyDataLayer;
 		}
-		
+
 		@Override
-		public void controlMoved(ControlEvent e){
+		public void controlMoved(ControlEvent e) {
 			// do nothing
-			
+
 		}
-		
+
 		@Override
-		public void controlResized(ControlEvent e){
-			if(e.widget instanceof NatTable) {
-				
+		public void controlResized(ControlEvent e) {
+			if (e.widget instanceof NatTable) {
+
 				this.bodyDataLayer.setColumnWidthByPosition(0,
-					(((NatTable) e.widget).getBounds().width > 25
-							? ((NatTable) e.widget).getBounds().width - 25
-							: ((NatTable) e.widget).getBounds().width));
+						(((NatTable) e.widget).getBounds().width > 25
+								? ((NatTable) e.widget).getBounds().width - 25
+								: ((NatTable) e.widget).getBounds().width));
 			}
 		}
 	}
-	
-	public static class DefaultSingleColumnStyleConfiguration
-			extends DefaultNatTableStyleConfiguration {
-		
+
+	public static class DefaultSingleColumnStyleConfiguration extends DefaultNatTableStyleConfiguration {
+
 		private Style selectionStyle = new Style();
-		
+
 		@Override
-		public void configureRegistry(IConfigRegistry configRegistry){
+		public void configureRegistry(IConfigRegistry configRegistry) {
 			hAlign = HorizontalAlignmentEnum.LEFT;
 			super.configureRegistry(configRegistry);
-			
+
 			selectionStyle.setAttributeValue(CellStyleAttributes.FOREGROUND_COLOR,
-				Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+					Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 			selectionStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR,
-				Display.getCurrent().getSystemColor(SWT.COLOR_LIST_SELECTION));
+					Display.getCurrent().getSystemColor(SWT.COLOR_LIST_SELECTION));
 			selectionStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR,
-				Display.getCurrent().getSystemColor(SWT.COLOR_LIST_SELECTION));
+					Display.getCurrent().getSystemColor(SWT.COLOR_LIST_SELECTION));
 			selectionStyle.setAttributeValue(CellStyleAttributes.FONT, GUIHelper.DEFAULT_FONT);
-			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, selectionStyle,
-				DisplayMode.SELECT, "selectionAnchor");
-			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, selectionStyle,
-				DisplayMode.SELECT);
-			
-			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER,
-				new NatTableCustomCellPainter() {
-					@Override
-					public void paintCell(ILayerCell cell, GC gc, Rectangle bounds,
-						IConfigRegistry cellConfigRegistry){
-						int preferredHeight = getPreferredHeight(cell, gc, cellConfigRegistry);
-						if (preferredHeight != bounds.height && preferredHeight != bounds.height + 1
+			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT,
+					"selectionAnchor");
+			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT);
+
+			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, new NatTableCustomCellPainter() {
+				@Override
+				public void paintCell(ILayerCell cell, GC gc, Rectangle bounds, IConfigRegistry cellConfigRegistry) {
+					int preferredHeight = getPreferredHeight(cell, gc, cellConfigRegistry);
+					if (preferredHeight != bounds.height && preferredHeight != bounds.height + 1
 							&& preferredHeight != bounds.height - 1) {
-							ILayer layer = cell.getLayer();
-							if (layer != null) {
-								cell.getLayer().doCommand(new RowResizeCommand(layer,
-									cell.getRowPosition(), preferredHeight));
-							}
+						ILayer layer = cell.getLayer();
+						if (layer != null) {
+							cell.getLayer()
+									.doCommand(new RowResizeCommand(layer, cell.getRowPosition(), preferredHeight));
 						}
-						super.paintCell(cell, gc, bounds, cellConfigRegistry);
 					}
-				});
+					super.paintCell(cell, gc, bounds, cellConfigRegistry);
+				}
+			});
 		}
 	}
 }

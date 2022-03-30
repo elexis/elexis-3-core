@@ -8,13 +8,13 @@ import ch.elexis.core.findings.IFindingsService;
 @Component
 public class FindingsServiceComponent {
 	private static IFindingsService findingsService;
-	
+
 	@Reference(unbind = "-")
-	public void setFindingsService(IFindingsService findingsServcie){
+	public void setFindingsService(IFindingsService findingsServcie) {
 		FindingsServiceComponent.findingsService = findingsServcie;
 	}
-	
-	public static IFindingsService getService(){
+
+	public static IFindingsService getService() {
 		return findingsService;
 	}
 }

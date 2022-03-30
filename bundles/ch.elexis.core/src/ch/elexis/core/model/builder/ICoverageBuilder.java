@@ -13,14 +13,14 @@ import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IModelService;
 
 public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
-	
+
 	private IPatient patient;
-	
-	public ICoverageBuilder(IModelService modelService, IPatient patient, String label,
-		String reason, String billingSystem){
+
+	public ICoverageBuilder(IModelService modelService, IPatient patient, String label, String reason,
+			String billingSystem) {
 		super(modelService);
 		this.patient = patient;
-		
+
 		object = modelService.create(ICoverage.class);
 		object.setPatient(patient);
 		object.setDescription(label);
@@ -30,11 +30,11 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 		// not validating whether it exists
 		object.setBillingSystem(new BillingSystem(billingSystem, null));
 	}
-	
-	public ICoverageBuilder(IModelService modelService, ICoverage coverage){
+
+	public ICoverageBuilder(IModelService modelService, ICoverage coverage) {
 		super(modelService);
 		this.patient = coverage.getPatient();
-		
+
 		object = modelService.create(ICoverage.class);
 		object.setPatient(patient);
 		object.setDescription(coverage.getDescription());
@@ -42,10 +42,10 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 		object.setDateFrom(LocalDate.now());
 		object.setBillingSystem(coverage.getBillingSystem());
 	}
-	
+
 	/**
-	 * Build a new {@link ICoverage}, derive coverage label, reason and billingSystem via the
-	 * required services
+	 * Build a new {@link ICoverage}, derive coverage label, reason and
+	 * billingSystem via the required services
 	 * 
 	 * @param modelService
 	 * @param configService
@@ -53,51 +53,49 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 	 * @param patient
 	 */
 	public ICoverageBuilder(IModelService modelService, IConfigService configService,
-		IBillingSystemService billingSystemService, IPatient patient){
+			IBillingSystemService billingSystemService, IPatient patient) {
 		super(modelService);
 		this.patient = patient;
-		
+
 		object = modelService.create(ICoverage.class);
 		object.setPatient(patient);
 		object.setDateFrom(LocalDate.now());
-		
+
 		String label = getDefaultCoverageLabel(configService);
 		object.setDescription(label);
 		String reason = getDefaultCoverageReason(configService);
 		object.setReason(reason);
-		
+
 		String billingSystem = getDefaultCoverageLaw(configService, billingSystemService);
 		// only to transport the name of the IBillingSystem,
 		// not validating whether it exists
 		object.setBillingSystem(new BillingSystem(billingSystem, null));
 	}
-	
+
 	@Override
-	public ICoverage buildAndSave(){
+	public ICoverage buildAndSave() {
 		modelService.save(Arrays.asList(object, patient));
 		return object;
 	}
-	
+
 	/**
 	 * 
 	 * @param configService
 	 * @return the default coverage label as defined by the user
 	 */
-	public static String getDefaultCoverageLabel(IConfigService configService){
-		return configService.getActiveUserContact(Preferences.USR_DEFCASELABEL,
-			Preferences.USR_DEFCASELABEL_DEFAULT);
+	public static String getDefaultCoverageLabel(IConfigService configService) {
+		return configService.getActiveUserContact(Preferences.USR_DEFCASELABEL, Preferences.USR_DEFCASELABEL_DEFAULT);
 	}
-	
+
 	/**
 	 * 
 	 * @param configService
 	 * @return the default coverage reason as defined by the user
 	 */
-	public static String getDefaultCoverageReason(IConfigService configService){
-		return configService.getActiveUserContact(Preferences.USR_DEFCASEREASON,
-			Preferences.USR_DEFCASEREASON_DEFAULT);
+	public static String getDefaultCoverageReason(IConfigService configService) {
+		return configService.getActiveUserContact(Preferences.USR_DEFCASEREASON, Preferences.USR_DEFCASEREASON_DEFAULT);
 	}
-	
+
 	/**
 	 * 
 	 * @param configService
@@ -105,27 +103,27 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 	 * @return the default billing system law
 	 */
 	public static String getDefaultCoverageLaw(IConfigService configService,
-		IBillingSystemService billingSystemService){
+			IBillingSystemService billingSystemService) {
 		return configService.getActiveUserContact(Preferences.USR_DEFLAW,
-			billingSystemService.getDefaultBillingSystem().getLaw().name());
+				billingSystemService.getDefaultBillingSystem().getLaw().name());
 	}
-	
-	public ICoverageBuilder guarantor(IContact guarantor){
+
+	public ICoverageBuilder guarantor(IContact guarantor) {
 		object.setGuarantor(guarantor);
 		return this;
 	}
-	
-	public ICoverageBuilder costBearer(IContact costBearer){
+
+	public ICoverageBuilder costBearer(IContact costBearer) {
 		object.setCostBearer(costBearer);
 		return this;
 	}
-	
-	public ICoverageBuilder billingProposalDate(LocalDate billingProposalDate){
+
+	public ICoverageBuilder billingProposalDate(LocalDate billingProposalDate) {
 		object.setBillingProposalDate(billingProposalDate);
 		return this;
 	}
-	
-	public ICoverageBuilder dateFrom(LocalDate dateFrom){
+
+	public ICoverageBuilder dateFrom(LocalDate dateFrom) {
 		object.setDateFrom(dateFrom);
 		return this;
 	}

@@ -9,7 +9,7 @@ public class ServerDatabaseInitailizer {
 	public void initalize() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
 		Class testDatabaseInitializerClass = getClass().getClassLoader()
-					.loadClass("info.elexis.server.core.connector.elexis.jpa.test.TestDatabaseInitializer");
+				.loadClass("info.elexis.server.core.connector.elexis.jpa.test.TestDatabaseInitializer");
 		Method initializeDbMethod = testDatabaseInitializerClass.getMethod("initializeDb", null);
 		Object testDatabaseInitializer = testDatabaseInitializerClass.newInstance();
 		initializeDbMethod.invoke(testDatabaseInitializer, null);

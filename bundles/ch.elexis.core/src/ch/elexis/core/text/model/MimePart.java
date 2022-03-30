@@ -14,15 +14,15 @@ package ch.elexis.core.text.model;
 public abstract class MimePart {
 	private String mimetype;
 	protected Object data;
-	
-	public MimePart(String type, Object data){
+
+	public MimePart(String type, Object data) {
 		mimetype = type;
 		this.data = data;
 	}
-	
-	public String getMimeType(){
+
+	public String getMimeType() {
 		return mimetype;
 	}
-	
+
 	public abstract byte[] getData();
 }

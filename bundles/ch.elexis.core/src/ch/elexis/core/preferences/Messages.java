@@ -14,7 +14,7 @@
 package ch.elexis.core.preferences;
 
 public class Messages {
-	
+
 	public static String Ablauf_0 = ch.elexis.core.l10n.Messages.Ablauf_0;
 	public static String Ablauf_10 = ch.elexis.core.l10n.Messages.Ablauf_10;
 	public static String Ablauf_12 = ch.elexis.core.l10n.Messages.Ablauf_12;

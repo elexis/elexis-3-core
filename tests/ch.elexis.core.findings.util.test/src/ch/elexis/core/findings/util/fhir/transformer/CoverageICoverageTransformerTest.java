@@ -31,99 +31,98 @@ import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class CoverageICoverageTransformerTest {
-	
+
 	private static IFhirTransformer<Coverage, ICoverage> transformer;
 	private static IPatient patient;
-	
+
 	@BeforeClass
-	public static void beforeClass(){
-		
-		IBillingSystemService billingSystemService =
-			OsgiServiceUtil.getService(IBillingSystemService.class).orElseThrow();
-		billingSystemService.addOrModifyBillingSystem(Messages.Fall_UVG_Name,
-			Messages.Fall_TarmedLeistung, Messages.Fall_TarmedPrinter,
-			Messages.Fall_UVGRequirements, BillingLaw.UVG);
-		billingSystemService.addOrModifyBillingSystem(Messages.Fall_IV_Name,
-			Messages.Fall_TarmedLeistung, Messages.Fall_TarmedPrinter, null, BillingLaw.IV);
-		
-		transformer = (IFhirTransformer<Coverage, ICoverage>) AllTransformerTests
-			.getTransformerRegistry().getTransformerFor(Coverage.class, ICoverage.class);
+	public static void beforeClass() {
+
+		IBillingSystemService billingSystemService = OsgiServiceUtil.getService(IBillingSystemService.class)
+				.orElseThrow();
+		billingSystemService.addOrModifyBillingSystem(Messages.Fall_UVG_Name, Messages.Fall_TarmedLeistung,
+				Messages.Fall_TarmedPrinter, Messages.Fall_UVGRequirements, BillingLaw.UVG);
+		billingSystemService.addOrModifyBillingSystem(Messages.Fall_IV_Name, Messages.Fall_TarmedLeistung,
+				Messages.Fall_TarmedPrinter, null, BillingLaw.IV);
+
+		transformer = (IFhirTransformer<Coverage, ICoverage>) AllTransformerTests.getTransformerRegistry()
+				.getTransformerFor(Coverage.class, ICoverage.class);
 		assertNotNull(transformer);
-		
-		patient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Firstname",
-			"Lastname", LocalDate.of(1979, 5, 22), Gender.MALE).build();
-		
+
+		patient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Firstname", "Lastname",
+				LocalDate.of(1979, 5, 22), Gender.MALE).build();
+
 		TestUtil.setId(patient, "c8c506aa2e1a4626b296d0ef0");
 	}
-	
+
 	@Test
-	public void getFhirObject_KVG() throws IOException{
-		ICoverage coverage_kvg = new ICoverageBuilder(CoreModelServiceHolder.get(), patient,
-			"Label_KVG", "Krankheit", "KVG").build();
+	public void getFhirObject_KVG() throws IOException {
+		ICoverage coverage_kvg = new ICoverageBuilder(CoreModelServiceHolder.get(), patient, "Label_KVG", "Krankheit",
+				"KVG").build();
 		assertNotNull(coverage_kvg);
 		assertEquals(BillingLaw.KVG, coverage_kvg.getBillingSystem().getLaw());
 		coverage_kvg.setInsuranceNumber("756.1234.5678.97");
 		coverage_kvg.setDateFrom(LocalDate.of(2022, 01, 28));
 		TestUtil.setId(coverage_kvg, "2886830bbadb4b09980f3d84b");
-		
+
 		Optional<Coverage> fhirObject = transformer.getFhirObject(coverage_kvg);
 		assertTrue(fhirObject.isPresent());
-		
+
 		String expectedFile = TestUtil.loadFile(getClass(), "/rsc/json/Coverage_KVG.json");
 		Coverage expected = (Coverage) toBaseResource(expectedFile);
-		
+
 		assertFhirResourcesAreEqual(fhirObject.get(), expected);
 	}
-	
+
 	@Test
-	public void getFhirObject_UVG() throws IOException{
-		ICoverage coverage_kvg = new ICoverageBuilder(CoreModelServiceHolder.get(), patient,
-			"Label_UVG", "Unfall", Messages.Fall_UVG_Name).build();
+	public void getFhirObject_UVG() throws IOException {
+		ICoverage coverage_kvg = new ICoverageBuilder(CoreModelServiceHolder.get(), patient, "Label_UVG", "Unfall",
+				Messages.Fall_UVG_Name).build();
 		assertNotNull(coverage_kvg);
 		assertEquals(BillingLaw.UVG, coverage_kvg.getBillingSystem().getLaw());
 		coverage_kvg.setDateFrom(LocalDate.of(2022, 01, 28));
 		coverage_kvg.setExtInfo(FallConstants.UVG_UNFALLNUMMER, "0190222222");
 		coverage_kvg.setExtInfo(FallConstants.UVG_UNFALLDATUM, "27.01.2022");
 		TestUtil.setId(coverage_kvg, "UVG6830bbadb4b09980f3d84b");
-		
+
 		Optional<Coverage> fhirObject = transformer.getFhirObject(coverage_kvg);
 		assertTrue(fhirObject.isPresent());
-		
+
 		String expectedFile = TestUtil.loadFile(getClass(), "/rsc/json/Coverage_UVG.json");
 		Coverage expected = (Coverage) toBaseResource(expectedFile);
-		
+
 		assertFhirResourcesAreEqual(fhirObject.get(), expected);
 	}
-	
+
 	@Test
-	public void getFhirObject_IV() throws IOException{
-		ICoverage coverage_kvg = new ICoverageBuilder(CoreModelServiceHolder.get(), patient,
-			"Label_IV", "Krankheit", Messages.Fall_IV_Name).build();
+	public void getFhirObject_IV() throws IOException {
+		ICoverage coverage_kvg = new ICoverageBuilder(CoreModelServiceHolder.get(), patient, "Label_IV", "Krankheit",
+				Messages.Fall_IV_Name).build();
 		assertNotNull(coverage_kvg);
 		assertEquals(BillingLaw.IV, coverage_kvg.getBillingSystem().getLaw());
 		coverage_kvg.setDateFrom(LocalDate.of(2022, 01, 28));
 		coverage_kvg.setExtInfo(FallConstants.IV_FALLNUMMER, "2222220190");
 		TestUtil.setId(coverage_kvg, "IV6830bbadb4b09980f3d84b");
-		
+
 		Optional<Coverage> fhirObject = transformer.getFhirObject(coverage_kvg);
 		assertTrue(fhirObject.isPresent());
-		
+
 		String expectedFile = TestUtil.loadFile(getClass(), "/rsc/json/Coverage_IV.json");
 		Coverage expected = (Coverage) toBaseResource(expectedFile);
-		
+
 		assertFhirResourcesAreEqual(fhirObject.get(), expected);
 	}
-	
-	public IBaseResource toBaseResource(String actual){
+
+	public IBaseResource toBaseResource(String actual) {
 		IParser jsonParser = FhirContext.forR4().newJsonParser();
 		return jsonParser.parseResource(actual);
 	}
-	
-	public void assertFhirResourcesAreEqual(IBaseResource expected, IBaseResource actual){
+
+	public void assertFhirResourcesAreEqual(IBaseResource expected, IBaseResource actual) {
 		IParser jsonParser = FhirContext.forR4().newJsonParser();
 		String actualAsJson = jsonParser.encodeResourceToString(actual);
 		String expectedAsJson = jsonParser.encodeResourceToString(expected);
 		assertEquals(actualAsJson, expectedAsJson);
 	}
-	
+
 }

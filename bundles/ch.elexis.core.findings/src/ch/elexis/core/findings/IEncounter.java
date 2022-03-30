@@ -16,16 +16,16 @@ import java.util.Optional;
 
 public interface IEncounter extends IFinding {
 	public String getConsultationId();
-	
+
 	public void setConsultationId(String consultationId);
-	
+
 	public String getMandatorId();
-	
+
 	public void setMandatorId(String mandatorId);
-	
+
 	/**
-	 * Get the specific type of the encounter. Since there are many ways to
-	 * classify encounters, there is a list.
+	 * Get the specific type of the encounter. Since there are many ways to classify
+	 * encounters, there is a list.
 	 * 
 	 * @return
 	 */
@@ -40,28 +40,28 @@ public interface IEncounter extends IFinding {
 	public void setType(List<ICoding> coding);
 
 	/**
-	 * Get all {@link ICondition} entries linked to this encounter. The reason the encounter takes
-	 * place.
+	 * Get all {@link ICondition} entries linked to this encounter. The reason the
+	 * encounter takes place.
 	 * 
 	 * @return the entries, or an empty list
 	 */
 	public List<ICondition> getIndication();
-	
+
 	/**
-	 * Set all {@link ICondition} entries linked to this encounter. The reason the encounter takes
-	 * place.
+	 * Set all {@link ICondition} entries linked to this encounter. The reason the
+	 * encounter takes place.
 	 * 
 	 * @param indication
 	 */
 	public void setIndication(List<ICondition> indication);
-	
+
 	/**
 	 * Get the start date and time of the encounter.
 	 * 
 	 * @return
 	 */
 	public Optional<LocalDateTime> getStartTime();
-	
+
 	/**
 	 * Set the start date and time of the encounter.
 	 * 

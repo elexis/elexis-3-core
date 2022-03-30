@@ -11,7 +11,8 @@
 package ch.elexis.core.data.interfaces;
 
 /**
- * A job that executes during stop() of the plugin (that means after the workbench is shut down
+ * A job that executes during stop() of the plugin (that means after the
+ * workbench is shut down
  * 
  * @author gerry
  * 

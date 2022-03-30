@@ -20,7 +20,7 @@ public class MessageCode {
 		 * {@link MessageCodeMessageId}
 		 */
 		public static final String MessageId = "messageId";
-	
+
 		/**
 		 * A parameter that may be used within {@link #MessageId}
 		 */
@@ -35,7 +35,7 @@ public class MessageCode {
 		public static final String Severity_INFO = "info";
 
 		public static final String Severity_WARN = "warn";
-		
+
 		public static final String Severity_ERROR = "error";
 	}
 

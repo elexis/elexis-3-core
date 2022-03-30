@@ -8,4 +8,5 @@ import ch.elexis.core.services.ConfigService;
  * @since 3.0.0
  * 
  */
-public class Desk {}
+public class Desk {
+}

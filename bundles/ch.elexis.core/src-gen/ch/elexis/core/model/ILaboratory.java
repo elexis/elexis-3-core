@@ -10,11 +10,9 @@
  */
 package ch.elexis.core.model;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>ILaboratory</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>ILaboratory</b></em>'. <!-- end-user-doc -->
  *
  *
  * @see ch.elexis.core.model.ModelPackage#getILaboratory()

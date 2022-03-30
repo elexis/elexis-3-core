@@ -13,26 +13,27 @@
 package ch.elexis.core.ui.actions;
 
 /**
- * An ICodeSelectorTarget can receive objects from CodeSelector lists when they are selected.
- * GlobalEvents allows to register exactly one ICodeSelectorTarget at a time. This one receives the
- * selected target.
+ * An ICodeSelectorTarget can receive objects from CodeSelector lists when they
+ * are selected. GlobalEvents allows to register exactly one ICodeSelectorTarget
+ * at a time. This one receives the selected target.
  * 
- * A ICodeSelectorTarget should register itself to GlobalEvents and then activate the appropriate
- * view for code selection. It should unregister itself as soon as possible. Since the code
- * selection itself is an asynchronous process, it's difficult to say which is the right place for
- * this. A good idea would be when the view is hidden and when the view gets the focus.
+ * A ICodeSelectorTarget should register itself to GlobalEvents and then
+ * activate the appropriate view for code selection. It should unregister itself
+ * as soon as possible. Since the code selection itself is an asynchronous
+ * process, it's difficult to say which is the right place for this. A good idea
+ * would be when the view is hidden and when the view gets the focus.
  * 
  * @author Daniel Lutz <danlutz@watz.ch>
  */
 public interface ICodeSelectorTarget {
 	/**
-	 * Return a human readable name of the target, e. g. the name of a View. This name is presented
-	 * to the user.
+	 * Return a human readable name of the target, e. g. the name of a View. This
+	 * name is presented to the user.
 	 * 
 	 * @return the name of the target
 	 */
 	public String getName();
-	
+
 	/**
 	 * Callback to send the selected object to the ICodeSelectorTarget.
 	 * 
@@ -40,10 +41,11 @@ public interface ICodeSelectorTarget {
 	 *            the selected object
 	 */
 	public void codeSelected(Object obj);
-	
+
 	/**
-	 * Callback to tell the ICodeSelectorTarget that it has been registered or unregistered. The
-	 * receiver should highlight the corresponding area accordingly.
+	 * Callback to tell the ICodeSelectorTarget that it has been registered or
+	 * unregistered. The receiver should highlight the corresponding area
+	 * accordingly.
 	 * 
 	 */
 	public void registered(boolean registered);

@@ -8,22 +8,22 @@ import ch.elexis.core.services.IModelService;
 
 @Component
 public class CoreModelServiceHolder {
-	
+
 	private static IModelService modelService;
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	public void setModelService(IModelService modelService){
+	public void setModelService(IModelService modelService) {
 		CoreModelServiceHolder.modelService = modelService;
 	}
-	
-	public static IModelService get(){
+
+	public static IModelService get() {
 		if (modelService == null) {
 			throw new IllegalStateException("No IModelService available");
 		}
 		return modelService;
 	}
-	
-	public static <T> T reloadAs(Identifiable identifiable, Class<T> clazz){
+
+	public static <T> T reloadAs(Identifiable identifiable, Class<T> clazz) {
 		return modelService.load(identifiable.getId(), clazz).get();
 	}
 }

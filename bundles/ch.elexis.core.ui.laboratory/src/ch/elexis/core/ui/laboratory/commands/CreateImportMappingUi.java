@@ -20,9 +20,9 @@ import ch.elexis.core.ui.laboratory.dialogs.ImportLabMapping;
 
 public class CreateImportMappingUi extends AbstractHandler {
 	public static final String COMMANDID = "ch.elexis.labmapping.import"; //$NON-NLS-1$
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			// create and open the dialog
 			Shell parent = HandlerUtil.getActiveShell(event);

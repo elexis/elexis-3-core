@@ -10,17 +10,16 @@
  */
 package ch.elexis.core.model;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IDocument Letter</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IDocument Letter</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IDocumentLetter#getEncounter <em>Encounter</em>}</li>
+ * <li>{@link ch.elexis.core.model.IDocumentLetter#getEncounter
+ * <em>Encounter</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIDocumentLetter()
@@ -30,9 +29,9 @@ package ch.elexis.core.model;
 public interface IDocumentLetter extends IDocument {
 
 	/**
-	 * Returns the value of the '<em><b>Encounter</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the value of the '<em><b>Encounter</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Encounter</em>' reference.
 	 * @see #setEncounter(IEncounter)
 	 * @see ch.elexis.core.model.ModelPackage#getIDocumentLetter_Encounter()
@@ -42,18 +41,20 @@ public interface IDocumentLetter extends IDocument {
 	IEncounter getEncounter();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IDocumentLetter#getEncounter <em>Encounter</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Encounter</em>' reference.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IDocumentLetter#getEncounter
+	 * <em>Encounter</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Encounter</em>' reference.
 	 * @see #getEncounter()
 	 * @generated
 	 */
 	void setEncounter(IEncounter value);
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */

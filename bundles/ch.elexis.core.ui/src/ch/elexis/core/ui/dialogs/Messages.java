@@ -10,7 +10,7 @@
 package ch.elexis.core.ui.dialogs;
 
 public class Messages {
-	
+
 	public static String AddBuchungDialog_CannotInterpretAmount = ch.elexis.core.l10n.Messages.AddBuchungDialog_CannotInterpretAmount;
 	public static String AddBuchungDialog_ErrorInAmount = ch.elexis.core.l10n.Messages.AddBuchungDialog_ErrorInAmount;
 	public static String AddBuchungDialog_amountAs000 = ch.elexis.core.l10n.Messages.AddBuchungDialog_amountAs000;
@@ -196,8 +196,7 @@ public class Messages {
 	public static String KontaktExtDialog_value = ch.elexis.core.l10n.Messages.KontaktExtDialog_value;
 	public static String KontaktSelector_abbreviation = ch.elexis.core.l10n.Messages.KontaktSelector_abbreviation;
 	public static String KontaktSelector_expression1 = ch.elexis.core.l10n.Messages.KontaktSelector_expression1;
-	public static String KontaktSelector_expression2 =
-		ch.elexis.core.l10n.Messages.KontaktSelector_expression2;
+	public static String KontaktSelector_expression2 = ch.elexis.core.l10n.Messages.KontaktSelector_expression2;
 	public static String KontaktSelector_title = ch.elexis.core.l10n.Messages.KontaktSelector_title;
 	public static String KontaktSelector_birthDate = ch.elexis.core.l10n.Messages.KontaktSelector_birthDate;
 	public static String KontaktSelector_clearField = ch.elexis.core.l10n.Messages.KontaktSelector_clearField;
@@ -302,7 +301,5 @@ public class Messages {
 	public static String ReminderDetailDialog_txtDescription_message = ch.elexis.core.l10n.Messages.ReminderDetailDialog_txtDescription_message;
 	public static String DailyOrderMandantOnlyFollowing = ch.elexis.core.l10n.Messages.DailyOrderMandantOnlyFollowing;
 	public static String DailyOrderMandantNone = ch.elexis.core.l10n.Messages.DailyOrderMandantNone;
-	
 
-	
 }

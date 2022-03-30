@@ -25,7 +25,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.Interaction;
 
 public class InteractionLink {
-	
+
 	/**
 	 * 
 	 */
@@ -34,7 +34,7 @@ public class InteractionLink {
 	private String destUrl = "";
 	private static int lastUpTime;
 
-	public InteractionLink(Composite parent, int style){
+	public InteractionLink(Composite parent, int style) {
 		interactionLink = new Link(parent, style);
 		if (ConfigServiceHolder.getUser(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
 			setSuppressed();
@@ -43,15 +43,15 @@ public class InteractionLink {
 			updateAtcs(new ArrayList<IArticle>());
 		}
 	}
-	
+
 	private void setSuppressed() {
 		interactionLink.setText(""); //$NON-NLS-1$
 		interactionLink.setToolTipText(Messages.SuppressInteractionCheckTooltip);
 		interactionLink.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLACK));
 
 	}
-	
-	public String updateAtcs(List<IArticle> gtins){
+
+	public String updateAtcs(List<IArticle> gtins) {
 		interactionLink.setText(""); //$NON-NLS-1$
 		if (ConfigServiceHolder.getUser(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
 			setSuppressed();
@@ -63,7 +63,7 @@ public class InteractionLink {
 		String epha = Messages.VerrDetailDialog_InteractionEpha;
 		String tooltip = ""; //$NON-NLS-1$
 		StringBuilder buildUrl = new StringBuilder(Messages.VerrDetailDialog_InteractionBaseURL);
-		
+
 		ArrayList<String> atcs = new ArrayList<String>();
 		gtins.forEach(art -> {
 			String atc = art.getAtcCode();
@@ -79,7 +79,7 @@ public class InteractionLink {
 		} else {
 			destUrl = "";
 		}
-		
+
 		// Reset tooltip text and color to nothing
 		interactionLink.setText(Messages.VerrDetailDialog_NoInteractionKnown);
 		interactionLink.setBackground(color);
@@ -101,14 +101,14 @@ public class InteractionLink {
 					}
 					String rating = ia.get(Interaction.FLD_SEVERITY);
 					logger.trace("Add: {} {} res {}", rating, severity, //$NON-NLS-1$
-						rating.compareTo(severity));
-					
+							rating.compareTo(severity));
+
 					if (severity.compareTo(rating) < 0) {
 						severity = rating;
 						String info = ia.get(Interaction.FLD_INFO);
 						tooltip = String.format("%s\n%s\n%s\n%s", //$NON-NLS-1$
-							Interaction.Ratings.get(severity), info, destUrl,
-							Messages.VerrDetailDialog_InteractionTooltip);
+								Interaction.Ratings.get(severity), info, destUrl,
+								Messages.VerrDetailDialog_InteractionTooltip);
 					}
 				}
 			}
@@ -116,10 +116,10 @@ public class InteractionLink {
 			interactionLink.addListener(SWT.MouseUp, new Listener() {
 
 				@Override
-				public void handleEvent(Event event){
+				public void handleEvent(Event event) {
 					try {
 						// Suppress action if event already seen
-						if ( event.time == lastUpTime ) {
+						if (event.time == lastUpTime) {
 							logger.info("{} Skipping: {}", event.toString(), destUrl); //$NON-NLS-1$
 							return;
 						}
@@ -129,8 +129,7 @@ public class InteractionLink {
 						// https://matrix.epha.ch/#/7680390530474,7680569620074,7680589810141,7680659580097
 						// or regnr "https://matrix.epha.ch/#/58392,59131,39053,58643"
 						logger.info("{} destURL for external browser is: {}", event.toString(), destUrl); //$NON-NLS-1$
-						PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser()
-							.openURL(new URL(destUrl));
+						PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(destUrl));
 					} catch (PartInitException | MalformedURLException e) {
 						e.printStackTrace();
 					}
@@ -144,8 +143,8 @@ public class InteractionLink {
 		}
 		return destUrl;
 	}
-	
-	public void setLayoutData(GridData gridData){
+
+	public void setLayoutData(GridData gridData) {
 		interactionLink.setLayoutData(gridData);
 	}
 }

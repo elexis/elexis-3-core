@@ -11,79 +11,79 @@ import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.ICondition.ConditionStatus;
 
 public class ConditionBeanAdapter extends AbstractBeanAdapter<ICondition> {
-	
-	public ConditionBeanAdapter(ICondition condition){
+
+	public ConditionBeanAdapter(ICondition condition) {
 		this.finding = condition;
 		if (StringUtils.isBlank(condition.getPatientId())) {
 			init();
 		}
 	}
-	
-	public ConditionCategory getCategory(){
+
+	public ConditionCategory getCategory() {
 		return finding.getCategory();
 	}
-	
-	public void setCategory(ConditionCategory category){
+
+	public void setCategory(ConditionCategory category) {
 		finding.setCategory(category);
 		autoSave();
 	}
-	
-	public ConditionStatus getStatus(){
+
+	public ConditionStatus getStatus() {
 		return finding.getStatus();
 	}
-	
-	public void setStatus(ConditionStatus status){
+
+	public void setStatus(ConditionStatus status) {
 		finding.setStatus(status);
 		autoSave();
 	}
-	
-	public List<ICoding> getCoding(){
+
+	public List<ICoding> getCoding() {
 		return finding.getCoding();
 	}
-	
-	public void setCoding(List<ICoding> coding){
+
+	public void setCoding(List<ICoding> coding) {
 		finding.setCoding(coding);
 		autoSave();
 	}
-	
-	public void setDateRecorded(LocalDate date){
+
+	public void setDateRecorded(LocalDate date) {
 		finding.setDateRecorded(date);
 		autoSave();
 	}
-	
-	public LocalDate getDateRecorded(){
+
+	public LocalDate getDateRecorded() {
 		return finding.getDateRecorded().orElse(null);
 	}
-	
-	public void setStart(String start){
+
+	public void setStart(String start) {
 		finding.setStart(start);
 		autoSave();
 	}
-	
-	public String getStart(){
+
+	public String getStart() {
 		return finding.getStart().orElse("");
 	}
-	
-	public void setEnd(String end){
+
+	public void setEnd(String end) {
 		finding.setEnd(end);
 		autoSave();
 	}
-	
-	public String getEnd(){
+
+	public String getEnd() {
 		return finding.getEnd().orElse("");
 	}
-	
-	public void addNote(String text){
+
+	public void addNote(String text) {
 		finding.addNote(text);
 		autoSave();
 	}
-	
-	public void removeNote(String text){
+
+	public void removeNote(String text) {
 		finding.removeNote(text);
 		autoSave();
 	}
-	
-	public List<String> getNotes(){
+
+	public List<String> getNotes() {
 		return finding.getNotes();
 	}
 }

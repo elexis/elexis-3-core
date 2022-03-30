@@ -20,16 +20,18 @@ public interface ElexisEventListener {
 	 *            the Event
 	 */
 	public void catchElexisEvent(final ElexisEvent ev);
-	
+
 	/**
-	 * Filter the events this listener wants to be informed. Note: This call should complete as fast
-	 * as possible, because it will be called with every event before dispatching
+	 * Filter the events this listener wants to be informed. Note: This call should
+	 * complete as fast as possible, because it will be called with every event
+	 * before dispatching
 	 * 
 	 * @return An ElexisEvent with matching
 	 *         <ul>
 	 *         <li>object: Only events of this object will be sent</li>
 	 *         <li>class: Only events of this class will be sent</li>
-	 *         <li>type: Only eevnts matching to one ore more flags in type will be sent</li>
+	 *         <li>type: Only eevnts matching to one ore more flags in type will be
+	 *         sent</li>
 	 *         </ul>
 	 */
 	public ElexisEvent getElexisEventFilter();

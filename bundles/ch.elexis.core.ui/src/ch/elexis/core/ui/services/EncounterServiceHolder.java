@@ -8,13 +8,13 @@ import ch.elexis.core.services.IEncounterService;
 @Component
 public class EncounterServiceHolder {
 	private static IEncounterService encounterService;
-	
+
 	@Reference
-	public void setModelService(IEncounterService encounterService){
+	public void setModelService(IEncounterService encounterService) {
 		EncounterServiceHolder.encounterService = encounterService;
 	}
-	
-	public static IEncounterService get(){
+
+	public static IEncounterService get() {
 		if (encounterService == null) {
 			throw new IllegalStateException("No IEncounterService available");
 		}

@@ -32,11 +32,10 @@ public class CompositeBoolean extends Composite implements ICompositeSaveable {
 	private Label lbl;
 	private Button fieldButton;
 	private List<Action> toolbarActions = new ArrayList<>();
-	
+
 	private ObservationType observationType;
-	
-	public CompositeBoolean(Composite parent, IFinding iFinding,
-		ObservationComponent backboneComponent){
+
+	public CompositeBoolean(Composite parent, IFinding iFinding, ObservationComponent backboneComponent) {
 		super((Composite) parent, SWT.NONE);
 		this.iFinding = iFinding;
 		this.backboneComponent = backboneComponent;
@@ -45,79 +44,76 @@ public class CompositeBoolean extends Composite implements ICompositeSaveable {
 		gd.marginBottom = 0;
 		gd.marginHeight = 0;
 		gd.verticalSpacing = 0;
-		
+
 		setLayout(gd);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		List<ICoding> codings = null;
 		String title = null;
 		Boolean value = null;
 		if (backboneComponent != null) {
-			
+
 			this.observationType = backboneComponent.getTypeFromExtension(ObservationType.class);
 			// default to false
 			value = backboneComponent.getBooleanValue().orElse(Boolean.FALSE);
-			
+
 			codings = backboneComponent.getCoding();
 		} else if (iFinding instanceof IObservation) {
 			IObservation iObservation = (IObservation) iFinding;
-			
+
 			this.observationType = iObservation.getObservationType();
-			// default to false			
+			// default to false
 			value = iObservation.getBooleanValue().orElse(Boolean.FALSE);
-			
+
 			codings = iObservation.getCoding();
 		}
-		
+
 		if (title == null && codings != null) {
-			Optional<ICoding> coding =
-				ModelUtil.getCodeBySystem(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
+			Optional<ICoding> coding = ModelUtil.getCodeBySystem(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 			title = coding.isPresent() ? coding.get().getDisplay() : "";
 		}
 		if (title == null) {
 			title = iFinding.getText().orElse("");
 		}
-		
+
 		createContents(title, value, backboneComponent != null);
 	}
-	
-	private void createContents(String title, Boolean value,
-		boolean componentChild){
-		
+
+	private void createContents(String title, Boolean value, boolean componentChild) {
+
 		lbl = new Label(this, SWT.NONE);
 		lbl.setText(title);
-		
+
 		GridData minGD = new GridData(SWT.LEFT, SWT.CENTER, false, false);
 		lbl.setLayoutData(minGD);
-		
+
 		if (fieldButton == null) {
 			fieldButton = new Button(this, SWT.CHECK);
 			GridData gdFieldText = new GridData(SWT.LEFT, SWT.CENTER, true, false);
 			fieldButton.setLayoutData(gdFieldText);
 			fieldButton.setSelection(value);
-			
+
 			fieldButton.addTraverseListener(new TraverseListener() {
-				
+
 				@Override
-				public void keyTraversed(TraverseEvent e){
-					if (e.detail == SWT.TRAVERSE_TAB_NEXT
-						|| e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+				public void keyTraversed(TraverseEvent e) {
+					if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
 						e.doit = true;
 					}
 				}
 			});
 		}
 	}
-	
+
 	@Override
-	public IFinding saveContents(LocalDateTime localDateTime){
+	public IFinding saveContents(LocalDateTime localDateTime) {
 		if (iFinding.getId() == null) {
 			iFinding = FindingsServiceComponent.getService().create(iFinding.getClass());
 		}
 		return FindingsUiUtil.saveObservation((IObservation) iFinding, this, localDateTime);
 	}
-	
+
 	@Override
-	public void hideLabel(boolean all){
+	public void hideLabel(boolean all) {
 		if (lbl != null) {
 			fieldButton.setToolTipText(lbl.getText());
 			lbl.setVisible(false);
@@ -125,50 +121,50 @@ public class CompositeBoolean extends Composite implements ICompositeSaveable {
 			((GridData) lbl.getLayoutData()).heightHint = 0;
 		}
 	}
-	
+
 	@Override
-	public void setToolbarActions(List<Action> toolbarActions){
+	public void setToolbarActions(List<Action> toolbarActions) {
 		this.toolbarActions = toolbarActions;
-		
+
 	}
-	
+
 	@Override
-	public List<Action> getToolbarActions(){
+	public List<Action> getToolbarActions() {
 		return toolbarActions;
 	}
-	
+
 	@Override
-	public String getTitle(){
+	public String getTitle() {
 		return lbl != null ? lbl.getText() : "";
 	}
-	
+
 	@Override
-	public IFinding getFinding(){
+	public IFinding getFinding() {
 		return iFinding;
 	}
-	
+
 	@Override
-	public List<ICompositeSaveable> getChildReferences(){
+	public List<ICompositeSaveable> getChildReferences() {
 		return Collections.emptyList();
 	}
-	
+
 	@Override
-	public List<ICompositeSaveable> getChildComponents(){
+	public List<ICompositeSaveable> getChildComponents() {
 		return Collections.emptyList();
 	}
-	
+
 	@Override
-	public String getFieldTextValue(){
+	public String getFieldTextValue() {
 		return fieldButton != null ? Boolean.valueOf(fieldButton.getSelection()).toString() : "";
 	}
-	
+
 	@Override
-	public ObservationComponent getObservationComponent(){
+	public ObservationComponent getObservationComponent() {
 		return backboneComponent;
 	}
-	
+
 	@Override
-	public ObservationType getObservationType(){
+	public ObservationType getObservationType() {
 		return observationType;
 	}
 }

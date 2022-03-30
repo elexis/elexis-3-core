@@ -41,7 +41,7 @@ public class GenericDocument implements IOpaqueDocument {
 	String keywords;
 	String mimetype;
 	String guid = StringTool.unique("FileDocument");
-	
+
 	/**
 	 * Create a new GenericDocument from a File.
 	 * 
@@ -58,8 +58,8 @@ public class GenericDocument implements IOpaqueDocument {
 	 * @param keywords
 	 *            space- or comma- separated list of keywords. May be empty or null
 	 */
-	public GenericDocument(Patient pat, String title, String category, File file, String date,
-		String keywords, String mimetype) throws IOException{
+	public GenericDocument(Patient pat, String title, String category, File file, String date, String keywords,
+			String mimetype) throws IOException {
 		this.title = title;
 		this.category = category;
 		this.date = date;
@@ -73,7 +73,7 @@ public class GenericDocument implements IOpaqueDocument {
 		contents = baos.toByteArray();
 		baos.close();
 	}
-	
+
 	/**
 	 * Create a new GenericDocument from a File.
 	 * 
@@ -90,8 +90,8 @@ public class GenericDocument implements IOpaqueDocument {
 	 * @param keywords
 	 *            space- or comma- separated list of keywords. May be empty or null
 	 */
-	public GenericDocument(Patient pat, String title, String category, byte[] content, String date,
-		String keywords, String mimetype) throws IOException{
+	public GenericDocument(Patient pat, String title, String category, byte[] content, String date, String keywords,
+			String mimetype) throws IOException {
 		this.title = title;
 		this.category = category;
 		this.date = date;
@@ -102,54 +102,54 @@ public class GenericDocument implements IOpaqueDocument {
 		contents = new byte[content.length];
 		System.arraycopy(content, 0, contents, 0, content.length);
 	}
-	
+
 	@Override
-	public String getTitle(){
+	public String getTitle() {
 		return title;
 	}
-	
+
 	@Override
-	public String getMimeType(){
+	public String getMimeType() {
 		return mimetype == null ? "binary/octet-stream" : mimetype;
 	}
-	
+
 	/**
-	 * Return the contents of this document as Stream Note: The caller must ensure that the stream
-	 * is closed after using it.
+	 * Return the contents of this document as Stream Note: The caller must ensure
+	 * that the stream is closed after using it.
 	 */
 	@Override
-	public InputStream getContentsAsStream() throws ElexisException{
+	public InputStream getContentsAsStream() throws ElexisException {
 		ByteArrayInputStream bais = new ByteArrayInputStream(contents);
 		return bais;
 	}
-	
-	public byte[] getContentsAsBytes() throws ElexisException{
+
+	public byte[] getContentsAsBytes() throws ElexisException {
 		return contents;
 	}
-	
+
 	@Override
-	public String getKeywords(){
+	public String getKeywords() {
 		return keywords;
 	}
-	
+
 	@Override
-	public String getCategory(){
+	public String getCategory() {
 		return category;
 	}
-	
+
 	@Override
-	public String getCreationDate(){
+	public String getCreationDate() {
 		return date;
 	}
-	
+
 	@Override
-	public Patient getPatient(){
+	public Patient getPatient() {
 		return pat;
 	}
-	
+
 	@Override
-	public String getGUID(){
+	public String getGUID() {
 		return guid;
 	}
-	
+
 }

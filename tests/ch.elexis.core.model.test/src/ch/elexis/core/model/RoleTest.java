@@ -9,14 +9,14 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.test.AbstractTest;
 
 public class RoleTest extends AbstractTest {
-	
+
 	@Test
-	public void createFindDelete(){
+	public void createFindDelete() {
 		IRole role = coreModelService.create(IRole.class);
 		role.setId("testRole");
 		role.setSystemRole(true);
 		coreModelService.save(role);
-		
+
 		IQuery<IRole> query = coreModelService.getQuery(IRole.class);
 		query.and("id", COMPARATOR.EQUALS, "testRole");
 		assertEquals(role, query.executeSingleResult().get());

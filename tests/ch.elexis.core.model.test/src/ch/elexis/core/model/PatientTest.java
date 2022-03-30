@@ -24,22 +24,22 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class PatientTest extends AbstractTest {
-	
+
 	@Override
 	@Before
-	public void before(){
+	public void before() {
 		super.before();
 		super.createPatient();
 	}
-	
+
 	@Override
 	@After
-	public void after(){
+	public void after() {
 		super.after();
 	}
-	
+
 	@Test
-	public void createDeletePatient(){
+	public void createDeletePatient() {
 		patient.setExtInfo(PatientConstants.FLD_EXTINFO_BIRTHNAME, "Birthname");
 		coreModelService.save(patient);
 		assertTrue(patient.isPatient());
@@ -47,7 +47,7 @@ public class PatientTest extends AbstractTest {
 		assertFalse(patient.isMandator());
 		assertFalse(patient.isOrganization());
 		assertFalse(patient.isLaboratory());
-		
+
 		String id = patient.getId();
 		assertNotNull(id);
 		assertNotNull(patient.getCode());
@@ -55,58 +55,56 @@ public class PatientTest extends AbstractTest {
 		assertNotNull(findById);
 		assertEquals("Birthname", findById.getExtInfo(PatientConstants.FLD_EXTINFO_BIRTHNAME));
 	}
-	
+
 	@Test
-	public void queryByPatientNumber(){
-		IPatient patient1 = new IContactBuilder.PatientBuilder(coreModelService, "testfirst",
-			"testlast", LocalDate.of(2018, 10, 24), Gender.FEMALE).build();
+	public void queryByPatientNumber() {
+		IPatient patient1 = new IContactBuilder.PatientBuilder(coreModelService, "testfirst", "testlast",
+				LocalDate.of(2018, 10, 24), Gender.FEMALE).build();
 		patient1.setPatientNr("123");
 		CoreModelServiceHolder.get().save(patient1);
-		
-		INamedQuery<IPatient> namedQuery =
-			CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
-		Optional<IPatient> loaded = namedQuery.executeWithParametersSingleResult(
-			namedQuery.getParameterMap("code", StringTool.normalizeCase("123")));
+
+		INamedQuery<IPatient> namedQuery = CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
+		Optional<IPatient> loaded = namedQuery
+				.executeWithParametersSingleResult(namedQuery.getParameterMap("code", StringTool.normalizeCase("123")));
 		assertTrue(loaded.isPresent());
 		assertEquals(patient1, loaded.get());
-		
+
 		CoreModelServiceHolder.get().remove(patient1);
 	}
-	
+
 	@Test
-	public void queryByName(){
-		IPatient patient1 = new IContactBuilder.PatientBuilder(coreModelService, "testfirst",
-			"testlast", LocalDate.of(2018, 10, 24), Gender.FEMALE).build();
+	public void queryByName() {
+		IPatient patient1 = new IContactBuilder.PatientBuilder(coreModelService, "testfirst", "testlast",
+				LocalDate.of(2018, 10, 24), Gender.FEMALE).build();
 		patient1.setPatientNr("123");
 		CoreModelServiceHolder.get().save(patient1);
-		
+
 		IQuery<IPatient> query = CoreModelServiceHolder.get().getQuery(IPatient.class);
-		query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE,
-			"testfirst", true);
+		query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE, "testfirst", true);
 		List<IPatient> loaded = query.execute();
 		assertFalse(loaded.isEmpty());
-		
+
 		query = CoreModelServiceHolder.get().getQuery(IPatient.class);
 		query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE, "testlast", true);
 		loaded = query.execute();
 		assertTrue(loaded.isEmpty());
-		
+
 		CoreModelServiceHolder.get().remove(patient1);
 	}
-	
+
 	@Test
-	public void queryByDateOfBirth(){
-		IPatient patient1 = new IContactBuilder.PatientBuilder(coreModelService, "testfirst",
-			"testlast", LocalDate.of(2018, 10, 24), Gender.FEMALE).build();
+	public void queryByDateOfBirth() {
+		IPatient patient1 = new IContactBuilder.PatientBuilder(coreModelService, "testfirst", "testlast",
+				LocalDate.of(2018, 10, 24), Gender.FEMALE).build();
 		patient1.setPatientNr("123");
 		CoreModelServiceHolder.get().save(patient1);
-		
+
 		IQuery<IPatient> query = CoreModelServiceHolder.get().getQuery(IPatient.class);
 		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
-			new TimeTool("24.10.2018").toLocalDate());
+				new TimeTool("24.10.2018").toLocalDate());
 		List<IPatient> loaded = query.execute();
 		assertFalse(loaded.isEmpty());
-		
+
 		CoreModelServiceHolder.get().remove(patient1);
 	}
 }

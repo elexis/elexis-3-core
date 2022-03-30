@@ -9,7 +9,7 @@ public interface ITransferable<T> {
 	 * @return
 	 */
 	public T getDTO();
-	
+
 	/**
 	 * persists the transferable dto object
 	 * 

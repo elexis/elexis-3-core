@@ -41,60 +41,60 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class CoreQueryTest {
 	private IModelService modelService;
-	
+
 	@Before
-	public void before(){
-		modelService = OsgiServiceUtil.getService(IModelService.class,
-			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+	public void before() {
+		modelService = OsgiServiceUtil
+				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 		clearContacts();
 		clearCoverages();
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		clearContacts();
 		clearCoverages();
 		OsgiServiceUtil.ungetService(modelService);
 		modelService = null;
 	}
-	
+
 	@Test
-	public void queryExecute(){
+	public void queryExecute() {
 		IQuery<IContact> query = modelService.getQuery(IContact.class);
 		assertNotNull(query);
 		List<IContact> results = query.execute();
 		assertNotNull(results);
 		assertTrue(results.isEmpty());
 	}
-	
+
 	@Test
 	public void queryExecuteSingleResult() {
 		IContact contact1 = createContact("McCloud", "Connor");
 		IContact contact2 = createContact("McCloud", "Connor");
-		
+
 		IQuery<IContact> query = modelService.getQuery(IContact.class);
 		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.EQUALS, "McCloud");
 		Optional<IContact> singleResult = query.executeSingleResult();
 		assertEquals(contact1, singleResult.get());
-		
+
 		modelService.remove(contact1);
 		modelService.remove(contact2);
 	}
-	
+
 	@Test
-	public void queryDeleted(){
+	public void queryDeleted() {
 		createContact("test1", "test1");
 		IContact contact2 = createContact("test2", "test2");
 		modelService.delete(contact2);
 		createContact("test3", "test3");
-		
+
 		// get query with existing where deleted group
 		IQuery<IContact> query = modelService.getQuery(IContact.class);
 		assertNotNull(query);
 		List<IContact> results = query.execute();
 		assertNotNull(results);
 		assertEquals(2, results.size());
-		
+
 		// get query without existing where deleted group
 		query = modelService.getQuery(IContact.class, true);
 		assertNotNull(query);
@@ -102,14 +102,14 @@ public class CoreQueryTest {
 		assertNotNull(results);
 		assertEquals(3, results.size());
 	}
-	
+
 	@Test
-	public void queryGroups(){
+	public void queryGroups() {
 		createContact("test1", "test1");
 		IContact contact2 = createContact("test2", "test2");
 		modelService.delete(contact2);
 		createContact("test3", "test3");
-		
+
 		// get query with existing where deleted group
 		IQuery<IContact> query = modelService.getQuery(IContact.class);
 		assertNotNull(query);
@@ -123,7 +123,7 @@ public class CoreQueryTest {
 		List<IContact> results = query.execute();
 		assertNotNull(results);
 		assertEquals(2, results.size());
-		
+
 		// get query without existing where deleted group
 		query = modelService.getQuery(IContact.class, true);
 		assertNotNull(query);
@@ -138,30 +138,33 @@ public class CoreQueryTest {
 		assertNotNull(results);
 		assertEquals(3, results.size());
 	}
-	
+
 	@Test
-	public void findAll(){
+	public void findAll() {
 		createContact("test1", "test1");
 		createContact("test2", "test2");
-		
+
 		List<IContact> contacts = modelService.findAll(IContact.class);
 		assertEquals(2, contacts.size());
 	}
-	
+
 	@Test
-	public void findAllById(){
+	public void findAllById() {
 		IContact iContact1 = createContact("test1", "test1");
 		IContact iContact2 = createContact("test2", "test2");
 		IContact iContact3 = createContact("test3", "test3");
 
 		assertEquals(1, modelService.findAllById(Arrays.asList(iContact1.getId()), IContact.class).size());
-		assertEquals(2, modelService.findAllById(Arrays.asList(iContact1.getId(), iContact2.getId()), IContact.class).size());
-		assertEquals(3, modelService.findAllById(Arrays.asList(iContact1.getId(), iContact2.getId(), iContact3.getId()), IContact.class).size());
+		assertEquals(2,
+				modelService.findAllById(Arrays.asList(iContact1.getId(), iContact2.getId()), IContact.class).size());
+		assertEquals(3, modelService
+				.findAllById(Arrays.asList(iContact1.getId(), iContact2.getId(), iContact3.getId()), IContact.class)
+				.size());
 		assertEquals(0, modelService.findAllById(new ArrayList<>(), IContact.class).size());
 	}
-	
+
 	@Test
-	public void queryComplexWithIN(){
+	public void queryComplexWithIN() {
 		IContact iContact1 = createContact("test1", "test1");
 		IContact iContact2 = createContact("test2", "test2");
 		IContact iContact3 = createContact("test3", "test2");
@@ -172,92 +175,88 @@ public class CoreQueryTest {
 		modelService.save(iContact1);
 		modelService.save(iContact2);
 		modelService.save(iContact3);
-		
+
 		// get all contacts with firstname in (test1, test3)
 		IQuery<IContact> query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.IN,
-			Arrays.asList("test1", "test3"));
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.IN, Arrays.asList("test1", "test3"));
 		assertEquals(2, query.execute().size());
-		
+
 		// get all contacts with firstname in (test1, test3) - case sensitive
 		query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.IN,
-			Arrays.asList("Test1", "Test3"));
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.IN, Arrays.asList("Test1", "Test3"));
 		assertEquals(0, query.execute().size());
-		
+
 		// get all contacts with lastname in (test2, xy)
 		query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
-			Arrays.asList("test2", "xy"));
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN, Arrays.asList("test2", "xy"));
 		assertEquals(2, query.execute().size());
-		
+
 		// get all contacts with lastname in (test1, test2, test3)
 		query = modelService.getQuery(IContact.class);
 		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
-			Arrays.asList("test1", "test2", "test3"));
+				Arrays.asList("test1", "test2", "test3"));
 		assertEquals(3, query.execute().size());
-		
-		// get all contacts with lastname in (test1, test2, test3) and firstname = (test2)
+
+		// get all contacts with lastname in (test1, test2, test3) and firstname =
+		// (test2)
 		query = modelService.getQuery(IContact.class);
 		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
-			Arrays.asList("test1", "test2", "test3"));
+				Arrays.asList("test1", "test2", "test3"));
 		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.EQUALS, "test2");
 		List<IContact> results = query.execute();
 		assertEquals(1, results.size());
 		assertEquals(iContact2.getId(), results.get(0).getId());
-		
+
 		// get all contacts with country in (CH, AT)
 		query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN,
-			Arrays.asList(Country.CH, Country.AT));
+		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN, Arrays.asList(Country.CH, Country.AT));
 		assertEquals(2, query.execute().size());
-		
+
 		// get all contact with country in (CH, AT, DE, US) and patient = true
 		query = modelService.getQuery(IContact.class);
 		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN,
-			Arrays.asList(Country.CH, Country.AT, Country.DE, Country.US));
+				Arrays.asList(Country.CH, Country.AT, Country.DE, Country.US));
 		query.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
 		results = query.execute();
 		assertEquals(1, results.size());
 		assertEquals(iContact1.getId(), results.get(0).getId());
-		
+
 		// get all contact with country in (CH, AT, DE, US) or patient = true
 		query = modelService.getQuery(IContact.class);
 		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN,
-			Arrays.asList(Country.CH, Country.AT, Country.DE, Country.US));
+				Arrays.asList(Country.CH, Country.AT, Country.DE, Country.US));
 		query.or(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
 		results = query.execute();
 		assertEquals(3, results.size());
-		
+
 		// get all contact with country in (x,y,z)
 		query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
-			Arrays.asList("x", "y", "z"));
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN, Arrays.asList("x", "y", "z"));
 		assertEquals(0, query.execute().size());
-		
+
 		// get all contact with country in ()
 		query = modelService.getQuery(IContact.class);
 		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN, new ArrayList<>());
-		assertEquals(0, query.execute().size());	
+		assertEquals(0, query.execute().size());
 	}
-	
+
 	@Test
-	public void queryContact(){
+	public void queryContact() {
 		createContact("test1", "test1");
 		createContact("test2", "test2");
-		
+
 		IQuery<IContact> query = modelService.getQuery(IContact.class);
 		assertNotNull(query);
 		List<IContact> results = query.execute();
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
-	
+
 	@Test
-	public void queryContactDescription(){
+	public void queryContactDescription() {
 		createContact("test1", "test1");
 		createContact("test2", "test2");
-		
+
 		IQuery<IContact> query = modelService.getQuery(IContact.class);
 		assertNotNull(query);
 		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.EQUALS, "test1");
@@ -265,36 +264,36 @@ public class CoreQueryTest {
 		assertNotNull(results);
 		assertEquals(1, results.size());
 		assertEquals("test1", results.get(0).getDescription1());
-		
+
 		query = modelService.getQuery(IContact.class);
 		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.EQUALS, (String) null);
 		results = query.execute();
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
-	
+
 	@Test
-	public void queryPatient(){
+	public void queryPatient() {
 		createContact("test1", "test1");
 		createContact("test2", "test2");
 		createPatient("patient1", "patient1", LocalDate.of(1999, 1, 1));
 		createPatient("patient2", "patient2", LocalDate.of(1999, 2, 2));
-		
+
 		IQuery<IPatient> query = modelService.getQuery(IPatient.class);
 		assertNotNull(query);
 		List<IPatient> results = query.execute();
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
-	
+
 	@Test
-	public void queryPatientNameAndDate(){
+	public void queryPatientNameAndDate() {
 		createContact("test1", "test1");
 		createContact("test2", "test2");
 		createPatient("patient1", "patient1", LocalDate.of(1999, 1, 1));
 		createPatient("patient2", "patient2", LocalDate.of(1999, 2, 2));
 		createPatient("patient2", "patient2", LocalDate.of(1999, 12, 12));
-		
+
 		IQuery<IPatient> query = modelService.getQuery(IPatient.class);
 		assertNotNull(query);
 		query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.EQUALS, "patient1");
@@ -302,77 +301,71 @@ public class CoreQueryTest {
 		assertNotNull(results);
 		assertEquals(1, results.size());
 		assertEquals("patient1", results.get(0).getFirstName());
-		
+
 		query = modelService.getQuery(IPatient.class);
 		assertNotNull(query);
-		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
-			LocalDate.of(1999, 1, 1));
+		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, LocalDate.of(1999, 1, 1));
 		results = query.execute();
 		assertNotNull(results);
 		assertEquals(1, results.size());
 		assertEquals(LocalDate.of(1999, 1, 1), results.get(0).getDateOfBirth().toLocalDate());
-		
+
 		query = modelService.getQuery(IPatient.class);
 		assertNotNull(query);
 		query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.EQUALS, "patient2");
-		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
-			LocalDate.of(1999, 2, 2));
+		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, LocalDate.of(1999, 2, 2));
 		results = query.execute();
 		assertNotNull(results);
 		assertEquals(1, results.size());
 		assertEquals("patient2", results.get(0).getFirstName());
 		assertEquals(LocalDate.of(1999, 2, 2), results.get(0).getDateOfBirth().toLocalDate());
-		
+
 		query = modelService.getQuery(IPatient.class);
 		assertNotNull(query);
-		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.GREATER_OR_EQUAL,
-			LocalDate.of(1999, 2, 2));
-		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.LESS,
-			LocalDate.of(1999, 12, 12));
+		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.GREATER_OR_EQUAL, LocalDate.of(1999, 2, 2));
+		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.LESS, LocalDate.of(1999, 12, 12));
 		results = query.execute();
 		assertNotNull(results);
 		assertEquals(1, results.size());
 		assertEquals("patient2", results.get(0).getFirstName());
 		assertEquals(LocalDate.of(1999, 2, 2), results.get(0).getDateOfBirth().toLocalDate());
-		
+
 	}
-	
+
 	@Test
-	public void queryNativeDistinctQuery(){
+	public void queryNativeDistinctQuery() {
 		createContact("test1", "test1");
 		createContact("test2", "test2");
-		
+
 		String nativeQuery = "SELECT DISTINCT BEZEICHNUNG1 FROM KONTAKT";
-		
+
 		List<?> collect = modelService.executeNativeQuery(nativeQuery).collect(Collectors.toList());
-		assertEquals(Arrays.asList(new String[] {
-			"test1", "test2"
-		}), collect);
+		assertEquals(Arrays.asList(new String[]{"test1", "test2"}), collect);
 	}
-	
+
 	@Test
-	public void queryOrderByAndLastupdate() throws InterruptedException{
+	public void queryOrderByAndLastupdate() throws InterruptedException {
 		createContact("test1", "test1");
 		Thread.sleep(50);
 		IContact createContact = createContact("test2", "test2");
 		long currentTimeMillis = createContact.getLastupdate();
 		createContact("test3", "test3");
 		createContact("test4", "test4");
-		
+
 		IQuery<IContact> query = modelService.getQuery(IContact.class);
 		query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION2, ORDER.ASC);
 		List<IContact> ordered = query.execute();
 		assertEquals("test1", ordered.get(0).getDescription1());
 		// test sorting for cursor
 		assertEquals("test1", query.executeAsCursor().next().getDescription1());
-		
+
 		query = modelService.getQuery(IContact.class);
 		query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION2, ORDER.DESC);
 		ordered = query.execute();
 		assertEquals("test4", ordered.get(0).getDescription1());
 		// test sorting for cursor
 		assertEquals("test4", query.executeAsCursor().next().getDescription1());
-		
+
 		query = modelService.getQuery(IContact.class);
 		Map<String, Object> caseContext = new HashMap<>();
 		caseContext.put("when|description2|equals|test3", Integer.valueOf(1));
@@ -383,21 +376,21 @@ public class CoreQueryTest {
 		assertEquals("test3", ordered.get(0).getDescription1());
 		assertEquals("test4", ordered.get(1).getDescription1());
 		assertEquals("test2", ordered.get(2).getDescription1());
-		
+
 		query = modelService.getQuery(IContact.class);
 		query.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, currentTimeMillis);
 		List<IContact> execute = query.execute();
 		assertEquals(3, execute.size());
-	
+
 	}
-	
+
 	@Test
 	public void limitAndOffset() {
 		createContact("test1", "test1");
 		IContact test2 = createContact("test2", "test2");
 		IContact test3 = createContact("test3", "test3");
 		createContact("test4", "test4");
-		
+
 		IQuery<IContact> query = modelService.getQuery(IContact.class);
 		query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION2, ORDER.ASC);
 		query.offset(1);
@@ -406,17 +399,17 @@ public class CoreQueryTest {
 		assertEquals(2, execute.size());
 		assertEquals(test2, execute.get(0));
 		assertEquals(test3, execute.get(1));
-		
+
 	}
-	
+
 	@Test
-	public void subQueryTest(){
+	public void subQueryTest() {
 		IPatient patient1 = createPatient("patient1", "patient1", LocalDate.of(1999, 1, 1));
 		IPatient patient2 = createPatient("patient2", "patient2", LocalDate.of(1999, 2, 2));
 		createPatient("patient3", "patient3", LocalDate.of(1999, 12, 12));
 		ICoverage coverage1 = createCoverage(patient1, "patient1");
 		ICoverage coverage2 = createCoverage(patient2, "patient2");
-		
+
 		IQuery<IPatient> query = modelService.getQuery(IPatient.class);
 		ISubQuery<ICoverage> subQuery = query.createSubQuery(ICoverage.class, modelService);
 		subQuery.andParentCompare("description1", COMPARATOR.EQUALS, "bezeichnung");
@@ -425,32 +418,31 @@ public class CoreQueryTest {
 		assertEquals(2, results.size());
 		assertTrue(results.contains(patient1));
 		assertTrue(results.contains(patient2));
-		
+
 		modelService.remove(coverage2);
 		results = query.execute();
 		assertEquals(1, results.size());
 		assertTrue(results.contains(patient1));
 		assertFalse(results.contains(patient2));
 	}
-	
+
 	@Test
-	public void compareExecuteCursorQuery(){
+	public void compareExecuteCursorQuery() {
 		createContact("test1", "test1");
 		createContact("test2", "test2");
 		createPatient("patient1", "patient1", LocalDate.of(1999, 1, 1));
 		createPatient("patient2", "patient2", LocalDate.of(1999, 2, 2));
 		createPatient("patient2", "patient2", LocalDate.of(1999, 12, 12));
-		
+
 		List<IPatient> executeList = modelService.getQuery(IPatient.class).execute();
 		List<IPatient> cursorList = new ArrayList<>();
-		modelService.getQuery(IPatient.class).executeAsCursor()
-			.forEachRemaining(p -> cursorList.add(p));
+		modelService.getQuery(IPatient.class).executeAsCursor().forEachRemaining(p -> cursorList.add(p));
 		assertTrue(executeList.size() == cursorList.size() && executeList.containsAll(cursorList)
-			&& cursorList.containsAll(executeList));
+				&& cursorList.containsAll(executeList));
 	}
-	
+
 	@Test
-	public void compareExecuteCursorQueryWithLazyBlob(){
+	public void compareExecuteCursorQueryWithLazyBlob() {
 		IBlob blob = modelService.create(IBlob.class);
 		byte[] b = new byte[100];
 		new Random().nextBytes(b);
@@ -458,70 +450,70 @@ public class CoreQueryTest {
 		blob.setDate(LocalDate.now());
 		blob.setContent(b);
 		modelService.save(blob);
-		
+
 		List<IBlob> list = modelService.getQuery(IBlob.class).execute();
 		assertEquals(1, list.size());
 		IBlob iBlob = list.get(0);
 		byte[] content = iBlob.getContent();
 		assertArrayEquals(b, content);
-		
+
 		try (IQueryCursor<IBlob> cursor = modelService.getQuery(IBlob.class).executeAsCursor()) {
 			iBlob = cursor.next();
 			content = iBlob.getContent();
 			assertNull(content);
 		}
-		
-		try (IQueryCursor<IBlob> cursor = modelService.getQuery(IBlob.class).executeAsCursor(
-			Collections.singletonMap(QueryHints.MAINTAIN_CACHE, HintValues.TRUE))) {
+
+		try (IQueryCursor<IBlob> cursor = modelService.getQuery(IBlob.class)
+				.executeAsCursor(Collections.singletonMap(QueryHints.MAINTAIN_CACHE, HintValues.TRUE))) {
 			iBlob = cursor.next();
 			content = iBlob.getContent();
 			assertArrayEquals(b, content);
 			cursor.clear();
 		}
-		
+
 		modelService.remove(blob);
 	}
-	
-	private void clearContacts(){
+
+	private void clearContacts() {
 		IQuery<IContact> query = modelService.getQuery(IContact.class, true);
 		List<IContact> results = query.execute();
 		results.stream().forEach(c -> modelService.remove(c));
 	}
-	
-	private void clearCoverages(){
+
+	private void clearCoverages() {
 		IQuery<ICoverage> query = modelService.getQuery(ICoverage.class, true);
 		List<ICoverage> results = query.execute();
 		results.stream().forEach(c -> modelService.remove(c));
 	}
-	
-	private IContact createContact(String desc1, String desc2){
+
+	private IContact createContact(String desc1, String desc2) {
 		IContact contact = modelService.create(IContact.class);
 		assertNotNull(contact);
 		assertTrue(contact instanceof IContact);
-		
+
 		contact.setDescription1(desc1);
 		contact.setDescription2(desc2);
 		modelService.save(contact);
 		return contact;
 	}
-	
-	private IPatient createPatient(String firstName, String lastName, LocalDate birthDate){
+
+	private IPatient createPatient(String firstName, String lastName, LocalDate birthDate) {
 		IPatient patient = modelService.create(IPatient.class);
 		assertNotNull(patient);
 		assertTrue(patient instanceof IPatient);
-		
+
 		patient.setPatient(true);
 		patient.setLastName(lastName);
 		patient.setFirstName(firstName);
 		patient.setDateOfBirth(birthDate.atStartOfDay());
 		modelService.save(patient);
-		
+
 		return patient;
 	}
-	
-	private ICoverage createCoverage(IPatient patient, String coverageLabel){
-		ICoverage coverage = new ICoverageBuilder(modelService, patient, coverageLabel,
-			"testReason", "testBillingSystem").buildAndSave();
+
+	private ICoverage createCoverage(IPatient patient, String coverageLabel) {
+		ICoverage coverage = new ICoverageBuilder(modelService, patient, coverageLabel, "testReason",
+				"testBillingSystem").buildAndSave();
 		return coverage;
 	}
 }

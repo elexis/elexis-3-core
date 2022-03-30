@@ -22,13 +22,14 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 
 /**
- * Ein Background-Job, der Datensätze aus einer Tabelle liest und in Form eines Arrays zurückliefert
+ * Ein Background-Job, der Datensätze aus einer Tabelle liest und in Form eines
+ * Arrays zurückliefert
  * 
  * @author gerry
  * 
  */
 public class ListLoader<T extends PersistentObject> extends AbstractDataLoaderJob {
-	
+
 	/**
 	 * Der einzige KOnstruktor
 	 * 
@@ -39,17 +40,18 @@ public class ListLoader<T extends PersistentObject> extends AbstractDataLoaderJo
 	 * @param order
 	 *            Felder, nach denen sortiert werden soll
 	 */
-	public ListLoader(String name, Query q, String[] order){
+	public ListLoader(String name, Query q, String[] order) {
 		super(name, q, order);
 	}
-	
+
 	/**
-	 * Ladevorgang synchron ausführen. Üblicherweise sollte das aber nicht execute, sondern über
-	 * JobPool.activate bzw. Hub.jobPool.Queue erfolgen, was den job asynchron ausführt
+	 * Ladevorgang synchron ausführen. Üblicherweise sollte das aber nicht execute,
+	 * sondern über JobPool.activate bzw. Hub.jobPool.Queue erfolgen, was den job
+	 * asynchron ausführt
 	 * 
 	 * @see JobPool
 	 */
-	public IStatus execute(IProgressMonitor monitor){
+	public IStatus execute(IProgressMonitor monitor) {
 		qbe.clear();
 		List list = load();
 		if (list != null) {
@@ -58,9 +60,9 @@ public class ListLoader<T extends PersistentObject> extends AbstractDataLoaderJo
 		}
 		return new Status(Status.ERROR, "ch.elexis", 1, Messages.ListLoader_CouldntLoadData, null); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
-	public int getSize(){
+
+	public int getSize() {
 		return qbe.size();
 	}
-	
+
 }

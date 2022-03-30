@@ -47,24 +47,25 @@ import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 
 /**
- * This class implements the {@link Mandant} selection button bar within the application toolbar
- * (coolbar). The list of colors represents the available colors to distinguish the currently
- * selected mandant.
+ * This class implements the {@link Mandant} selection button bar within the
+ * application toolbar (coolbar). The list of colors represents the available
+ * colors to distinguish the currently selected mandant.
  * 
- * @since 3.1 do enable items according to {@link Anwender#getExecutiveDoctorsWorkingFor()}
+ * @since 3.1 do enable items according to
+ *        {@link Anwender#getExecutiveDoctorsWorkingFor()}
  */
 public class MandantSelectionContributionItem {
-	
+
 	private ToolItem item;
 	private Menu menu;
 	private Mandant[] mandants;
 	private MenuItem[] menuItems;
 	private ToolBar fParent;
-	
+
 	private ElexisEventListener eeli_mandant = new ElexisUiEventListenerImpl(Mandant.class,
-		ElexisEvent.EVENT_MANDATOR_CHANGED) {
-		public void runInUi(ElexisEvent ev){
-			
+			ElexisEvent.EVENT_MANDATOR_CHANGED) {
+		public void runInUi(ElexisEvent ev) {
+
 			Mandant m = (Mandant) ev.getObject();
 			if (m != null && item != null) {
 				item.setText(m.getMandantLabel());
@@ -89,41 +90,40 @@ public class MandantSelectionContributionItem {
 			fParent.getParent().layout();
 		}
 	};
-	
+
 	private ElexisEventListener eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
-		ElexisEvent.EVENT_USER_CHANGED) {
-		public void runInUi(ElexisEvent ev){
+			ElexisEvent.EVENT_USER_CHANGED) {
+		public void runInUi(ElexisEvent ev) {
 			if (item != null) {
 				Anwender anwender = (Anwender) ev.getObject();
 				adaptForAnwender(anwender);
 			}
 		};
 	};
-	
-	private void adaptForAnwender(Anwender anwender){
+
+	private void adaptForAnwender(Anwender anwender) {
 		if (anwender == null) {
 			anwender = CoreHub.getLoggedInContact();
 			if (anwender == null)
 				return;
 		}
-		
-		List<String> exDocStr =
-			anwender.getExecutiveDoctorsWorkingFor().stream().map(a -> a.getId())
+
+		List<String> exDocStr = anwender.getExecutiveDoctorsWorkingFor().stream().map(a -> a.getId())
 				.collect(Collectors.toList());
 		for (int i = 0; i < menuItems.length; i++) {
 			String id = (String) menuItems[i].getData();
 			menuItems[i].setEnabled(exDocStr.contains(id));
 		}
 	}
-	
-	public MandantSelectionContributionItem(){
+
+	public MandantSelectionContributionItem() {
 		ElexisEventDispatcher.getInstance().addListeners(eeli_mandant, eeli_user);
 	}
-	
+
 	@PostConstruct
 	protected Control createControl(Composite parent) {
 		ToolBar toolbar = new ToolBar(parent, SWT.NONE);
-		
+
 		// dispose old items first
 		disposeItems();
 		if (item != null) {
@@ -132,26 +132,26 @@ public class MandantSelectionContributionItem {
 		if (menu != null) {
 			menu.dispose();
 		}
-		
+
 		fParent = toolbar;
 		menu = new Menu(fParent);
-		
+
 		List<Mandant> qre = Hub.getMandantenList();
 		qre.sort(new Comparator<Mandant>() {
 			@Override
-			public int compare(Mandant m1, Mandant m2){
+			public int compare(Mandant m1, Mandant m2) {
 				return m1.getMandantLabel().compareTo(m2.getMandantLabel());
 			}
 		});
-		mandants = qre.toArray(new Mandant[] {});
+		mandants = qre.toArray(new Mandant[]{});
 		if (mandants.length < 2)
 			return null;
-		
+
 		item = new ToolItem(toolbar, SWT.DROP_DOWN);
 		item.setToolTipText("Aktuell ausgewählter Mandant bzw. Mandantenauswahl");
-		
+
 		menuItems = new MenuItem[mandants.length];
-		
+
 		for (int i = 0; i < mandants.length; i++) {
 			final Mandant m = mandants[i];
 			menuItems[i] = new MenuItem(menu, SWT.RADIO);
@@ -160,7 +160,7 @@ public class MandantSelectionContributionItem {
 			menuItems[i].setData(m.getId());
 			menuItems[i].addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					Hub.setMandant(m);
 				}
 			});
@@ -168,24 +168,24 @@ public class MandantSelectionContributionItem {
 				menuItems[i].setSelection(CoreHub.actMandant.equals(m));
 			}
 		}
-		
+
 		item.addListener(SWT.Selection, selectionListener);
-		
+
 		if (CoreHub.actMandant != null && item != null) {
 			item.setText(CoreHub.actMandant.getMandantLabel());
 			fParent.setBackground(UiMandant.getColorForMandator(CoreHub.actMandant));
 		}
-		
+
 		adaptForAnwender(null);
-		
+
 		toolbar.pack();
 		return toolbar;
 	}
-	
+
 	private final Listener selectionListener = new Listener() {
-		
+
 		@Override
-		public void handleEvent(Event event){
+		public void handleEvent(Event event) {
 			if (event.detail == SWT.ARROW || event.type == SWT.Selection) {
 				Rectangle rect = item.getBounds();
 				Point pt = new Point(rect.x, rect.y + rect.height);
@@ -195,8 +195,8 @@ public class MandantSelectionContributionItem {
 			}
 		}
 	};
-	
-	private void disposeItems(){
+
+	private void disposeItems() {
 		if (menuItems != null && menuItems.length > 0) {
 			for (int i = 0; i < menuItems.length; i++) {
 				if (menuItems[i] != null) {
@@ -209,8 +209,8 @@ public class MandantSelectionContributionItem {
 			}
 		}
 	}
-	
-	public static Image getBoxSWTColorImage(Color color){
+
+	public static Image getBoxSWTColorImage(Color color) {
 		Display display = Display.getCurrent();
 		Image image = new Image(display, 16, 16);
 		GC gc = new GC(image);
@@ -220,9 +220,9 @@ public class MandantSelectionContributionItem {
 		gc.dispose();
 		return image;
 	}
-	
+
 	@PreDestroy
-	public void dispose(){
+	public void dispose() {
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_mandant, eeli_user);
 	}
 }

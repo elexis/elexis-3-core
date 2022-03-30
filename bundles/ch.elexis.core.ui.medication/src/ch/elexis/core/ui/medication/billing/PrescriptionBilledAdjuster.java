@@ -29,29 +29,27 @@ import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
 @Component
 public class PrescriptionBilledAdjuster implements IBilledAdjuster {
-	
+
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
-	
+
 	@Override
-	public void adjust(IBilled billed){
+	public void adjust(IBilled billed) {
 		executor.submit(new Runnable() {
 			@Override
-			public void run(){
+			public void run() {
 				IBillable billable = billed.getBillable();
 				if (billable instanceof IArticle) {
 					IArticle article = (IArticle) billable;
 					Optional<IPatient> patientOpt = getPatient(billed);
 					Optional<String> articleStoreToString = StoreToStringServiceHolder.get().storeToString(article);
-					if(patientOpt.isPresent() && articleStoreToString.isPresent()) {
+					if (patientOpt.isPresent() && articleStoreToString.isPresent()) {
 						// lookup existing prescriptions
-						IQuery<IPrescription> query =
-							CoreModelServiceHolder.get().getQuery(IPrescription.class);
-						query.and(ModelPackage.Literals.IPRESCRIPTION__PATIENT, COMPARATOR.EQUALS,
-							patientOpt.get());
+						IQuery<IPrescription> query = CoreModelServiceHolder.get().getQuery(IPrescription.class);
+						query.and(ModelPackage.Literals.IPRESCRIPTION__PATIENT, COMPARATOR.EQUALS, patientOpt.get());
 						query.and("artikel", COMPARATOR.EQUALS, articleStoreToString.get());
 						query.orderBy(ModelPackage.Literals.IPRESCRIPTION__DATE_FROM, ORDER.DESC);
 						List<IPrescription> existingPrescriptions = query.execute();
-						
+
 						// create new dispensation
 						boolean dispensationExists = false;
 						if (!existingPrescriptions.isEmpty()) {
@@ -60,8 +58,7 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 								if (prescription.getEntryType() == EntryType.SELF_DISPENSED) {
 									LocalDateTime prescriptionDate = prescription.getDateFrom();
 									LocalDateTime billedDate = getBilledDateTime(billed);
-									if (prescriptionDate.toLocalDate()
-										.equals(billedDate.toLocalDate())) {
+									if (prescriptionDate.toLocalDate().equals(billedDate.toLocalDate())) {
 										dispensationExists = true;
 										break;
 									}
@@ -70,16 +67,15 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 						}
 						if (!dispensationExists) {
 							createDispensationPrescription(article, patientOpt.get(), billed);
-							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
-								IPrescription.class);
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IPrescription.class);
 						}
 					}
 				}
 			}
 		});
 	}
-	
-	private Optional<IPatient> getPatient(IBilled billed){
+
+	private Optional<IPatient> getPatient(IBilled billed) {
 		IEncounter encounter = billed.getEncounter();
 		if (encounter != null) {
 			ICoverage coverage = encounter.getCoverage();
@@ -89,21 +85,17 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 		}
 		return Optional.empty();
 	}
-	
-	private LocalDateTime getBilledDateTime(IBilled billed){
+
+	private LocalDateTime getBilledDateTime(IBilled billed) {
 		IEncounter encounter = billed.getEncounter();
 		return encounter.getTimeStamp();
 	}
-	
-	private IPrescription createDispensationPrescription(IArticle article, IPatient patient,
-		IBilled billed){
-		IPrescription prescription =
-			new IPrescriptionBuilder(CoreModelServiceHolder.get(), ContextServiceHolder.get(),
+
+	private IPrescription createDispensationPrescription(IArticle article, IPatient patient, IBilled billed) {
+		IPrescription prescription = new IPrescriptionBuilder(CoreModelServiceHolder.get(), ContextServiceHolder.get(),
 				article, patient, "").build();
-		prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
-			billed.getId());
-		billed.setExtInfo(ch.elexis.core.model.verrechnet.Constants.FLD_EXT_PRESC_ID,
-			prescription.getId());
+		prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID, billed.getId());
+		billed.setExtInfo(ch.elexis.core.model.verrechnet.Constants.FLD_EXT_PRESC_ID, prescription.getId());
 		prescription.setEntryType(EntryType.SELF_DISPENSED);
 		prescription.setDateTo(LocalDateTime.now());
 		CoreModelServiceHolder.get().save(prescription);

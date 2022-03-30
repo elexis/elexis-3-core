@@ -18,59 +18,58 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Money;
 
 public class IEncounterServiceTest extends AbstractServiceTest {
-	
+
 	private IEncounter encounter;
-	
-	private IEncounterService encounterService =
-		OsgiServiceUtil.getService(IEncounterService.class).get();
-	
-	private IBillingService billingService =
-		OsgiServiceUtil.getService(IBillingService.class).get();
-	
+
+	private IEncounterService encounterService = OsgiServiceUtil.getService(IEncounterService.class).get();
+
+	private IBillingService billingService = OsgiServiceUtil.getService(IBillingService.class).get();
+
 	@Before
-	public void before(){
+	public void before() {
 		createTestMandantPatientFallBehandlung();
 		encounter = testEncounters.get(0);
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		cleanup();
 	}
-	
+
 	@Test
-	public void multiThreadUpdate() throws InterruptedException{
+	public void multiThreadUpdate() throws InterruptedException {
 
 		ExecutorService executor = Executors.newFixedThreadPool(3);
-		
+
 		for (int i = 0; i < 100; i++) {
 			final int number = i;
 			executor.execute(() -> {
 				ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
 				ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
-				
+
 				ICustomService service = coreModelService.create(ICustomService.class);
 				service.setCode("code" + number);
 				service.setNetPrice(new Money(number));
 				service.setPrice(new Money(number));
 				service.setText("test" + number);
 				coreModelService.save(service);
-				
+
 				billingService.bill(service, encounter, 1.0);
 			});
 			executor.execute(() -> {
-				encounterService.updateVersionedEntry(encounter,
-					"Test consultation\nmulti update " + number, "Administrator");
+				encounterService.updateVersionedEntry(encounter, "Test consultation\nmulti update " + number,
+						"Administrator");
 			});
 		}
 		executor.shutdown();
 		executor.awaitTermination(5, TimeUnit.SECONDS);
 		assertEquals(100, encounter.getBilled().size());
 		assertTrue(encounter.getVersionedEntry().getHeadVersion() > 1);
-		// IEncounterService#updateVersionedEntry is not thread save but better than direct modify without refresh ...
+		// IEncounterService#updateVersionedEntry is not thread save but better than
+		// direct modify without refresh ...
 		// enable if there is some locking to ensure thread safety
 		// assertEquals(99, encounter.getVersionedEntry().getHeadVersion());
-		
+
 		IQuery<ICustomService> query = coreModelService.getQuery(ICustomService.class);
 		for (ICustomService service : query.execute()) {
 			coreModelService.remove(service);

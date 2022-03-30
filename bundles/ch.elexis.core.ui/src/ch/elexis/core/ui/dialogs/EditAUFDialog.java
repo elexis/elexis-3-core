@@ -52,8 +52,8 @@ public class EditAUFDialog extends TitleAreaDialog {
 	private DatePicker dpVon, dpBis;
 	private Text tProzent, tGrund, tZusatz;
 	TimeTool tt = new TimeTool();
-	
-	public EditAUFDialog(Shell shell, ISickCertificate a, ICoverage fall){
+
+	public EditAUFDialog(Shell shell, ISickCertificate a, ICoverage fall) {
 		super(shell);
 		auf = a;
 		if (auf != null && fall == null) {
@@ -63,30 +63,30 @@ public class EditAUFDialog extends TitleAreaDialog {
 		if (this.fall == null) {
 			this.close();
 			Display.getDefault().asyncExec(() -> {
-				MessageDialog.openInformation(Display.getDefault().getActiveShell(),
-					"Neue AUF", "Bitte wählen Sie zuerst einen Fall für diese AUF aus");
+				MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Neue AUF",
+						"Bitte wählen Sie zuerst einen Fall für diese AUF aus");
 			});
 		}
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(2, true));
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_from); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_until); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_from); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_until); // $NON-NLS-1$
 		dpVon = new DatePicker(ret, SWT.NONE);
 		dpBis = new DatePicker(ret, SWT.NONE);
-		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_percent); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_reason); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_percent); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_reason); // $NON-NLS-1$
 		tProzent = new Text(ret, SWT.BORDER);
 		tGrund = new Text(ret, SWT.BORDER);
 		tProzent.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tGrund.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		
+
 		Label lbZusatz = new Label(ret, SWT.NONE);
-		lbZusatz.setText(Messages.EditAUFDialog_additional); //$NON-NLS-1$
+		lbZusatz.setText(Messages.EditAUFDialog_additional); // $NON-NLS-1$
 		lbZusatz.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
 		tZusatz = new Text(ret, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		GridData tZusatzLayout = SWTHelper.getFillGridData(2, true, 1, true);
@@ -106,32 +106,32 @@ public class EditAUFDialog extends TitleAreaDialog {
 		}
 		return ret;
 	}
-	
-	private Date asDate(LocalDate localDate){
+
+	private Date asDate(LocalDate localDate) {
 		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
-	
-	private LocalDate asLocalDate(Date date){
+
+	private LocalDate asLocalDate(Date date) {
 		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		Patient sp = ElexisEventDispatcher.getSelectedPatient();
 		String patLabel = (sp != null) ? sp.getLabel() : "missing patient name"; //$NON-NLS-1$
 		setTitle(Messages.EditAUFDialog_auf + " - " + patLabel);
 		if (auf == null) {
-			setMessage(Messages.EditAUFDialog_enterNewAUF); //$NON-NLS-1$
+			setMessage(Messages.EditAUFDialog_enterNewAUF); // $NON-NLS-1$
 		} else {
-			setMessage(Messages.EditAUFDialog_editAufDetails); //$NON-NLS-1$
+			setMessage(Messages.EditAUFDialog_editAufDetails); // $NON-NLS-1$
 		}
-		getShell().setText(Messages.EditAUFDialog_auf); //$NON-NLS-1$
+		getShell().setText(Messages.EditAUFDialog_auf); // $NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		String zus = tZusatz.getText();
 		if (auf == null) {
 			auf = CoreModelServiceHolder.get().create(ISickCertificate.class);
@@ -149,8 +149,8 @@ public class EditAUFDialog extends TitleAreaDialog {
 		CoreModelServiceHolder.get().save(auf);
 		super.okPressed();
 	}
-	
-	public ISickCertificate getAuf(){
+
+	public ISickCertificate getAuf() {
 		return auf;
 	}
 }

@@ -22,16 +22,16 @@ import ch.rgw.tools.TimeTool;
 
 public class Util {
 	private static Log log = Log.get("Script utility");
-	
-	public static void display(String title, String contents){
+
+	public static void display(String title, String contents) {
 		SWTHelper.showInfo(title, contents);
 	}
-	
-	public static void log(String text){
+
+	public static void log(String text) {
 		log.log(text, Log.WARNINGS);
 	}
-	
-	public static int compareDates(String d1, String d2){
+
+	public static int compareDates(String d1, String d2) {
 		TimeTool tt1 = new TimeTool();
 		TimeTool tt2 = new TimeTool();
 		if (tt1.set(d1) && tt2.set(d2)) {
@@ -39,9 +39,8 @@ public class Util {
 		}
 		return 0;
 	}
-	
-	public static String inputWithURL(String title, String message, String url, Integer width,
-		Integer height){
+
+	public static String inputWithURL(String title, String message, String url, Integer width, Integer height) {
 		BrowserInputDialog dlg = new BrowserInputDialog(UiDesk.getTopShell(), url, title, message);
 		dlg.create();
 		dlg.getShell().setSize(width, height);
@@ -50,27 +49,27 @@ public class Util {
 		}
 		return null;
 	}
-	
-	public static int inputWithChoice(String title, String message, String[] choices){
+
+	public static int inputWithChoice(String title, String message, String[] choices) {
 		ChoiceDialog cd = new ChoiceDialog(UiDesk.getTopShell(), title, message, choices);
 		if (cd.open() == Dialog.OK) {
 			return cd.getResult();
 		}
 		return -1;
 	}
-	
-	public static boolean isNumeric(String input){
+
+	public static boolean isNumeric(String input) {
 		if (input == null) {
 			return false;
 		}
 		return input.matches("[0-9\\.]+");
 	}
-	
-	public static boolean isNumeric(double d){
+
+	public static boolean isNumeric(double d) {
 		return true;
 	}
-	
-	public static boolean isNumeric(int i){
+
+	public static boolean isNumeric(int i) {
 		return true;
 	}
 }

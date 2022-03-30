@@ -41,15 +41,15 @@ import ch.rgw.tools.StringTool;
 public class MoneyInput extends Composite {
 	Text text;
 	List<SelectionListener> listeners = new LinkedList<SelectionListener>();
-	
-	public MoneyInput(final Composite parent){
+
+	public MoneyInput(final Composite parent) {
 		super(parent, SWT.NONE);
 		setLayout(new FillLayout());
 		text = new Text(this, SWT.BORDER);
 		prepare();
 	}
-	
-	public MoneyInput(final Composite parent, final String label){
+
+	public MoneyInput(final Composite parent, final String label) {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout());
 		new Label(this, SWT.NONE).setText(label);
@@ -57,17 +57,17 @@ public class MoneyInput extends Composite {
 		prepare();
 		text.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 	}
-	
-	public MoneyInput(final Composite parent, final String label, final ch.rgw.tools.Money money){
+
+	public MoneyInput(final Composite parent, final String label, final ch.rgw.tools.Money money) {
 		this(parent, label);
 		text.setText(money.getAmountAsString());
 	}
-	
-	private void prepare(){
+
+	private void prepare() {
 		text.addFocusListener(new FocusAdapter() {
-			
+
 			@Override
-			public void focusLost(final FocusEvent e){
+			public void focusLost(final FocusEvent e) {
 				try {
 					String t = text.getText();
 					if (t.length() == 0) {
@@ -82,27 +82,28 @@ public class MoneyInput extends Composite {
 						lis.widgetSelected(new SelectionEvent(ev));
 					}
 				} catch (ParseException px) {
-					SWTHelper.alert(Messages.MoneyInput_InvalidAmountCaption, //$NON-NLS-1$
-						Messages.MoneyInput_InvalidAmountContents); //$NON-NLS-1$
+					SWTHelper.alert(Messages.MoneyInput_InvalidAmountCaption, // $NON-NLS-1$
+							Messages.MoneyInput_InvalidAmountContents); // $NON-NLS-1$
 				}
 			}
 		});
 		/*
-		 * text.addVerifyListener(new VerifyListener(){ public void verifyText(VerifyEvent e) {
-		 * if(e.character==SWT.DEL || e.character==SWT.BS){ e.doit=true; }else{ String
-		 * t=text.getText()+e.character; if(t.length()<2 || t.matches("[0-9]+[\\.,]?[0-9]{0,2}")){
-		 * e.doit=true; }else{ e.doit=false; } } }});
+		 * text.addVerifyListener(new VerifyListener(){ public void
+		 * verifyText(VerifyEvent e) { if(e.character==SWT.DEL || e.character==SWT.BS){
+		 * e.doit=true; }else{ String t=text.getText()+e.character; if(t.length()<2 ||
+		 * t.matches("[0-9]+[\\.,]?[0-9]{0,2}")){ e.doit=true; }else{ e.doit=false; } }
+		 * }});
 		 */
-		
+
 	}
-	
+
 	/**
 	 * Return the entered value as Money.
 	 * 
 	 * @param bNullIfEmpty
 	 *            if nothing was entered return null (Otherwise: return 0.00)
 	 */
-	public ch.rgw.tools.Money getMoney(final boolean bNullIfEmpty){
+	public ch.rgw.tools.Money getMoney(final boolean bNullIfEmpty) {
 		String t = text.getText();
 		if (StringTool.isNothing(t)) {
 			if (bNullIfEmpty) {
@@ -118,30 +119,30 @@ public class MoneyInput extends Composite {
 			return null; // sollte nicht passieren
 		}
 	}
-	
-	public void setMoney(final String m){
+
+	public void setMoney(final String m) {
 		text.setText(m);
 	}
-	
-	public Text getControl(){
+
+	public Text getControl() {
 		return text;
 	}
-	
-	public void addSelectionListener(final SelectionListener lis){
+
+	public void addSelectionListener(final SelectionListener lis) {
 		listeners.add(lis);
 	}
-	
-	public void removeSelectionListener(final SelectionListener lis){
+
+	public void removeSelectionListener(final SelectionListener lis) {
 		listeners.remove(lis);
 	}
-	
+
 	/**
-	 * get the money out of a SWT Text-field This might fail if the text field's contents doesn't
-	 * conform to the current locale's standard currency format
+	 * get the money out of a SWT Text-field This might fail if the text field's
+	 * contents doesn't conform to the current locale's standard currency format
 	 * 
 	 * @return the Money or null
 	 */
-	public static ch.rgw.tools.Money getFromTextField(Text textField){
+	public static ch.rgw.tools.Money getFromTextField(Text textField) {
 		try {
 			return new ch.rgw.tools.Money(textField.getText());
 		} catch (Exception ex) {

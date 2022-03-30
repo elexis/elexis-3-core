@@ -23,25 +23,28 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Findings Templates</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object
+ * '<em><b>Findings Templates</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplatesImpl#getFindingsTemplates <em>Findings Templates</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplatesImpl#getId <em>Id</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplatesImpl#getTitle <em>Title</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplatesImpl#getFindingsTemplates
+ * <em>Findings Templates</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplatesImpl#getId
+ * <em>Id</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplatesImpl#getTitle
+ * <em>Title</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implements FindingsTemplates {
 	/**
-	 * The cached value of the '{@link #getFindingsTemplates() <em>Findings Templates</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getFindingsTemplates() <em>Findings
+	 * Templates</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getFindingsTemplates()
 	 * @generated
 	 * @ordered
@@ -49,18 +52,18 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	protected EList<FindingsTemplate> findingsTemplates;
 
 	/**
-	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
 	 */
 	protected static final String ID_EDEFAULT = null;
 	/**
-	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -68,9 +71,9 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTitle()
 	 * @generated
 	 * @ordered
@@ -78,9 +81,9 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	protected static final String TITLE_EDEFAULT = "";
 
 	/**
-	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTitle()
 	 * @generated
 	 * @ordered
@@ -88,8 +91,8 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	protected String title = TITLE_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected FindingsTemplatesImpl() {
@@ -97,8 +100,8 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -107,21 +110,22 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public EList<FindingsTemplate> getFindingsTemplates() {
 		if (findingsTemplates == null) {
-			findingsTemplates = new EObjectContainmentEList<FindingsTemplate>(FindingsTemplate.class, this, ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES);
+			findingsTemplates = new EObjectContainmentEList<FindingsTemplate>(FindingsTemplate.class, this,
+					ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES);
 		}
 		return findingsTemplates;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -130,8 +134,8 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -143,8 +147,8 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -153,8 +157,8 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -162,79 +166,80 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 		String oldTitle = title;
 		title = newTitle;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATES__TITLE, oldTitle, title));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATES__TITLE, oldTitle,
+					title));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES:
-				return ((InternalEList<?>)getFindingsTemplates()).basicRemove(otherEnd, msgs);
+			case ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES :
+				return ((InternalEList<?>) getFindingsTemplates()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES:
+			case ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES :
 				return getFindingsTemplates();
-			case ModelPackage.FINDINGS_TEMPLATES__ID:
+			case ModelPackage.FINDINGS_TEMPLATES__ID :
 				return getId();
-			case ModelPackage.FINDINGS_TEMPLATES__TITLE:
+			case ModelPackage.FINDINGS_TEMPLATES__TITLE :
 				return getTitle();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES:
+			case ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES :
 				getFindingsTemplates().clear();
-				getFindingsTemplates().addAll((Collection<? extends FindingsTemplate>)newValue);
+				getFindingsTemplates().addAll((Collection<? extends FindingsTemplate>) newValue);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATES__ID:
-				setId((String)newValue);
+			case ModelPackage.FINDINGS_TEMPLATES__ID :
+				setId((String) newValue);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATES__TITLE:
-				setTitle((String)newValue);
+			case ModelPackage.FINDINGS_TEMPLATES__TITLE :
+				setTitle((String) newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES:
+			case ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES :
 				getFindingsTemplates().clear();
 				return;
-			case ModelPackage.FINDINGS_TEMPLATES__ID:
+			case ModelPackage.FINDINGS_TEMPLATES__ID :
 				setId(ID_EDEFAULT);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATES__TITLE:
+			case ModelPackage.FINDINGS_TEMPLATES__TITLE :
 				setTitle(TITLE_EDEFAULT);
 				return;
 		}
@@ -242,31 +247,32 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES:
+			case ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES :
 				return findingsTemplates != null && !findingsTemplates.isEmpty();
-			case ModelPackage.FINDINGS_TEMPLATES__ID:
+			case ModelPackage.FINDINGS_TEMPLATES__ID :
 				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-			case ModelPackage.FINDINGS_TEMPLATES__TITLE:
+			case ModelPackage.FINDINGS_TEMPLATES__TITLE :
 				return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (id: ");
@@ -277,4 +283,4 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 		return result.toString();
 	}
 
-} //FindingsTemplatesImpl
+} // FindingsTemplatesImpl

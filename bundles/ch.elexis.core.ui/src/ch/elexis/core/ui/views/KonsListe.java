@@ -40,7 +40,6 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Konsultation;
 
-
 public class KonsListe extends ViewPart implements IRefreshable {
 	public static final String ID = "ch.elexis.HistoryView"; //$NON-NLS-1$
 	HistoryDisplay liste;
@@ -48,15 +47,13 @@ public class KonsListe extends ViewPart implements IRefreshable {
 	ViewMenus menus;
 	private Action filterAction;
 	private KonsFilter filter;
-	
+
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
-	
+
 	@Optional
 	@Inject
-	void compatitbility(
-		@UIEventTopic(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY + "*") Object object){
-		if (object instanceof IEncounter
-			|| (object instanceof Class && object.equals(IEncounter.class))) {
+	void compatitbility(@UIEventTopic(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY + "*") Object object) {
+		if (object instanceof IEncounter || (object instanceof Class && object.equals(IEncounter.class))) {
 			// refresh from database if modified by po
 			if (object instanceof IEncounter) {
 				IEncounter encounter = (IEncounter) object;
@@ -66,37 +63,37 @@ public class KonsListe extends ViewPart implements IRefreshable {
 			restart(true);
 		}
 	}
-	
+
 	@Inject
-	void activePatient(@Optional IPatient patient){
+	void activePatient(@Optional IPatient patient) {
 		if ((actPatient == null || liste.lKons.isEmpty())
-			|| (patient != null && !actPatient.getId().equals(patient.getId()))) {
+				|| (patient != null && !actPatient.getId().equals(patient.getId()))) {
 			actPatient = patient;
 			restart(true);
 		}
 	}
-	
+
 	@Inject
-	void activeCoverage(@Optional ICoverage iCoverage){
+	void activeCoverage(@Optional ICoverage iCoverage) {
 		restart(false);
 	}
-	
+
 	@Optional
 	@Inject
-	void changedCoverage(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") ICoverage iCoverage){
+	void changedCoverage(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") ICoverage iCoverage) {
 		if (iCoverage != null) {
 			restart(false);
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	void changedEncounter(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IEncounter iEncounter){
+	void changedEncounter(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IEncounter iEncounter) {
 		restart(false);
 	}
-	
+
 	@Override
-	public void createPartControl(final Composite parent){
+	public void createPartControl(final Composite parent) {
 		parent.setLayout(new GridLayout());
 		liste = new HistoryDisplay(parent, getViewSite());
 		liste.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -105,64 +102,64 @@ public class KonsListe extends ViewPart implements IRefreshable {
 		menus.createToolbar(filterAction);
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		getSite().getPage().removePartListener(udpateOnVisible);
 		liste.stop();
 		super.dispose();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		liste.setFocus();
 		refresh();
 	}
-	
+
 	@Override
-	public void refresh(){
+	public void refresh() {
 		activePatient(ContextServiceHolder.get().getActivePatient().orElse(null));
 	}
-	
-	private void restart(Boolean isPatientEvent){
+
+	private void restart(Boolean isPatientEvent) {
 		if (liste != null) {
 			liste.stop();
 			liste.load(actPatient, isPatientEvent == null || isPatientEvent.booleanValue());
 			liste.start(filter);
 		}
 	}
-	
-	private void makeActions(){
-		filterAction = new Action(Messages.KonsListe_FilterListAction, Action.AS_CHECK_BOX) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
-					setToolTipText(Messages.KonsListe_FilterListToolTip); //$NON-NLS-1$
-				}
-				
-				@Override
-				public void run(){
-					if (!isChecked()) {
-						filter = null;
+
+	private void makeActions() {
+		filterAction = new Action(Messages.KonsListe_FilterListAction, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
+				setToolTipText(Messages.KonsListe_FilterListToolTip); // $NON-NLS-1$
+			}
+
+			@Override
+			public void run() {
+				if (!isChecked()) {
+					filter = null;
+				} else {
+					KonsFilterDialog kfd = new KonsFilterDialog(actPatient, filter);
+					if (kfd.open() == Dialog.OK) {
+						filter = kfd.getResult();
 					} else {
-						KonsFilterDialog kfd = new KonsFilterDialog(actPatient, filter);
-						if (kfd.open() == Dialog.OK) {
-							filter = kfd.getResult();
-						} else {
-							kfd = null;
-							setChecked(false);
-						}
+						kfd = null;
+						setChecked(false);
 					}
-				restart(null);
 				}
-			};
+				restart(null);
+			}
+		};
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 	/**
 	 * Not used
 	 * 
@@ -170,11 +167,11 @@ public class KonsListe extends ViewPart implements IRefreshable {
 	 * @param clazz
 	 */
 	@Deprecated
-	public void reloadContents(final Class clazz){
+	public void reloadContents(final Class clazz) {
 		if (clazz.equals(Konsultation.class)) {
 			restart(null);
 		}
-		
+
 	}
-	
+
 }

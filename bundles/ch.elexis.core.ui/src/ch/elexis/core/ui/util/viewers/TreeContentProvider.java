@@ -26,18 +26,18 @@ import ch.elexis.core.ui.util.Messages;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
 
 /**
- * ContentProvider, der einen Tree füllen kann. Datenquelle muss ein TreeLoader sein.
+ * ContentProvider, der einen Tree füllen kann. Datenquelle muss ein TreeLoader
+ * sein.
  * 
  * @author Gerry
  * 
  * @deprecated
  */
-public class TreeContentProvider implements ITreeContentProvider, BackgroundJobListener,
-		ICommonViewerContentProvider {
+public class TreeContentProvider implements ITreeContentProvider, BackgroundJobListener, ICommonViewerContentProvider {
 	BackgroundJob job;
 	CommonViewer viewer;
-	
-	public TreeContentProvider(CommonViewer v, BackgroundJob loader){
+
+	public TreeContentProvider(CommonViewer v, BackgroundJob loader) {
 		job = loader;
 		viewer = v;
 		if (JobPool.getJobPool().getJob(job.getJobname()) == null) {
@@ -45,79 +45,77 @@ public class TreeContentProvider implements ITreeContentProvider, BackgroundJobL
 		}
 		job.addListener(this);
 	}
-	
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
-	public Object[] getChildren(Object element){
+
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
+	public Object[] getChildren(Object element) {
 		if (element instanceof ch.rgw.tools.Tree) {
 			ch.rgw.tools.Tree tr = (ch.rgw.tools.Tree) element;
 			return tr.getChildren().toArray();
 		}
 		return null;
 	}
-	
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
-	public Object getParent(Object element){
+
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
+	public Object getParent(Object element) {
 		if (element instanceof ch.rgw.tools.Tree) {
 			ch.rgw.tools.Tree tr = (ch.rgw.tools.Tree) element;
 			return tr.getParent();
 		}
 		return null;
 	}
-	
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
-	public boolean hasChildren(Object element){
+
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
+	public boolean hasChildren(Object element) {
 		if (element instanceof ch.rgw.tools.Tree) {
 			ch.rgw.tools.Tree tr = (ch.rgw.tools.Tree) element;
 			return tr.hasChildren();
 		}
 		return false;
 	}
-	
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
-	public Object[] getElements(Object inputElement){
+
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
+	public Object[] getElements(Object inputElement) {
 		ch.rgw.tools.Tree result = (ch.rgw.tools.Tree) job.getData();
 		if (result == null) {
 			JobPool.getJobPool().activate(job.getJobname(), Job.SHORT);
-			return new String[] {
-				Messages.TreeContentProvider_loadData
-			}; //$NON-NLS-1$
+			return new String[]{Messages.TreeContentProvider_loadData}; // $NON-NLS-1$
 		} else {
 			if (viewer.getConfigurer().getControlFieldProvider().isEmpty()) {
 				result.setFilter(null);
 			} else {
-				result.setFilter(((DefaultControlFieldProvider) viewer.getConfigurer()
-					.getControlFieldProvider()).createFilter());
+				result.setFilter(((DefaultControlFieldProvider) viewer.getConfigurer().getControlFieldProvider())
+						.createFilter());
 			}
 			Collection c = result.getChildren();
 			return c.toArray();
 		}
-		
+
 	}
-	
-	public void startListening(){
+
+	public void startListening() {
 		viewer.getConfigurer().controlFieldProvider.addChangeListener(this);
 	}
-	
-	public void stopListening(){
+
+	public void stopListening() {
 		viewer.getConfigurer().controlFieldProvider.removeChangeListener(this);
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 		job.removeListener(this);
 	}
-	
-	public void inputChanged(Viewer pViewer, Object oldInput, Object newInput){
+
+	public void inputChanged(Viewer pViewer, Object oldInput, Object newInput) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void jobFinished(BackgroundJob j){
+
+	public void jobFinished(BackgroundJob j) {
 		// int size=((Object[])j.getData()).length;
 		viewer.notify(CommonViewer.Message.update);
-		
+
 	}
-	
-	public void changed(HashMap<String, String> vals){
+
+	public void changed(HashMap<String, String> vals) {
 		if (viewer.getConfigurer().getControlFieldProvider().isEmpty()) {
 			viewer.notify(CommonViewer.Message.empty);
 		} else {
@@ -127,19 +125,19 @@ public class TreeContentProvider implements ITreeContentProvider, BackgroundJobL
 		job.invalidate();
 		viewer.notify(CommonViewer.Message.update);
 	}
-	
-	public void reorder(String field){
+
+	public void reorder(String field) {
 		job.invalidate();
-		
+
 	}
-	
-	public void selected(){
+
+	public void selected() {
 		// nothing to do
 	}
-	
+
 	@Override
-	public void init(){
+	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

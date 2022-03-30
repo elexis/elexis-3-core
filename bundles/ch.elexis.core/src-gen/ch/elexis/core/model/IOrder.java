@@ -14,17 +14,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IOrder</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IOrder</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IOrder#getEntries <em>Entries</em>}</li>
- *   <li>{@link ch.elexis.core.model.IOrder#getTimestamp <em>Timestamp</em>}</li>
- *   <li>{@link ch.elexis.core.model.IOrder#getName <em>Name</em>}</li>
+ * <li>{@link ch.elexis.core.model.IOrder#getEntries <em>Entries</em>}</li>
+ * <li>{@link ch.elexis.core.model.IOrder#getTimestamp <em>Timestamp</em>}</li>
+ * <li>{@link ch.elexis.core.model.IOrder#getName <em>Name</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIOrder()
@@ -33,14 +32,15 @@ import java.util.List;
  */
 public interface IOrder extends Identifiable, Deleteable {
 	/**
-	 * Returns the value of the '<em><b>Entries</b></em>' reference list.
-	 * The list contents are of type {@link ch.elexis.core.model.IOrderEntry}.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Entries</b></em>' reference list. The list
+	 * contents are of type {@link ch.elexis.core.model.IOrderEntry}. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Entries</em>' reference list isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Entries</em>' reference list isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Entries</em>' reference list.
 	 * @see ch.elexis.core.model.ModelPackage#getIOrder_Entries()
 	 * @model
@@ -49,13 +49,14 @@ public interface IOrder extends Identifiable, Deleteable {
 	List<IOrderEntry> getEntries();
 
 	/**
-	 * Returns the value of the '<em><b>Timestamp</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Timestamp</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Timestamp</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Timestamp</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Timestamp</em>' attribute.
 	 * @see #setTimestamp(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getIOrder_Timestamp()
@@ -65,23 +66,25 @@ public interface IOrder extends Identifiable, Deleteable {
 	LocalDateTime getTimestamp();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IOrder#getTimestamp <em>Timestamp</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Timestamp</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IOrder#getTimestamp
+	 * <em>Timestamp</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Timestamp</em>' attribute.
 	 * @see #getTimestamp()
 	 * @generated
 	 */
 	void setTimestamp(LocalDateTime value);
 
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIOrder_Name()
@@ -91,42 +94,43 @@ public interface IOrder extends Identifiable, Deleteable {
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IOrder#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IOrder#getName
+	 * <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
 	void setName(String value);
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model
 	 * @generated
 	 */
 	IOrderEntry addEntry(IArticle article, IStock stock, IContact provider, int amount);
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
 	boolean isDone();
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model
 	 * @generated
 	 */
 	IOrderEntry findOrderEntry(IStock stock, IArticle article);
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */

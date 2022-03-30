@@ -31,11 +31,12 @@ import ch.elexis.core.ui.views.rechnung.RnDetailView;
  */
 public class AbrechnungsPerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.AbrechnungPerspektive"; //$NON-NLS-1$
-	
-	public void createInitialLayout(IPageLayout layout){
+
+	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
-		IFolderLayout fld = layout.createFolder("AbrechnungsFolder", IPageLayout.LEFT, 0.6f, IPageLayout.ID_EDITOR_AREA);
+		IFolderLayout fld = layout.createFolder("AbrechnungsFolder", IPageLayout.LEFT, 0.6f,
+				IPageLayout.ID_EDITOR_AREA);
 		IFolderLayout frd = layout.createFolder("Detailfolder", IPageLayout.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA);
 		fld.addView(PatHeuteView.ID);
 		fld.addView(KonsZumVerrechnenView.ID);
@@ -50,5 +51,5 @@ public class AbrechnungsPerspektive implements IPerspectiveFactory {
 		layout.addShowViewShortcut(KonsDetailView.ID);
 		layout.addShowViewShortcut(RechnungsListeView.ID);
 	}
-	
+
 }

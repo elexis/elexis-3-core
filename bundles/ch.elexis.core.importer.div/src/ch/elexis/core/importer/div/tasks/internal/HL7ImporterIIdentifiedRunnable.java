@@ -55,7 +55,7 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 	 * run parameter: import encapsulated data, default: <code>true</code>
 	 */
 	public static final String RCP_BOOLEAN_IMPORT_ENCAPSULATED_DATA = "importEncapsulatedData";
-	
+
 	/**
 	 * run parameter: move hl7 file after successful import, default:
 	 * <code>true</code>
@@ -100,20 +100,17 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 	public Map<String, Serializable> run(Map<String, Serializable> context, IProgressMonitor progressMonitor,
 			Logger logger) throws TaskException {
 
-		boolean bCreateLaboratoryIfNotExists =
-			SerializableBoolean.valueOf(context, RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS);
-		boolean bMoveFile =
-			SerializableBoolean.valueOf(context, RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT);
-		boolean importEncData =
-			SerializableBoolean.valueOf(context, RCP_BOOLEAN_IMPORT_ENCAPSULATED_DATA);
-		boolean overwriteExistingResults =
-			SerializableBoolean.valueOf(context, RCP_BOOLEAN_OVERWRITE_EXISTING_RESULTS);
+		boolean bCreateLaboratoryIfNotExists = SerializableBoolean.valueOf(context,
+				RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS);
+		boolean bMoveFile = SerializableBoolean.valueOf(context, RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT);
+		boolean importEncData = SerializableBoolean.valueOf(context, RCP_BOOLEAN_IMPORT_ENCAPSULATED_DATA);
+		boolean overwriteExistingResults = SerializableBoolean.valueOf(context, RCP_BOOLEAN_OVERWRITE_EXISTING_RESULTS);
 		String urlString = (String) context.get(RunContextParameter.STRING_URL);
 		String labName = (String) context.get(RCP_STRING_IMPORTER_LABNAME);
 
 		MyImportHandler myImportHandler = new MyImportHandler(logger, overwriteExistingResults);
-		HL7ImporterLabContactResolver labContactResolver = new HL7ImporterLabContactResolver(coreModelService, labimportUtil, logger,
-				bCreateLaboratoryIfNotExists);
+		HL7ImporterLabContactResolver labContactResolver = new HL7ImporterLabContactResolver(coreModelService,
+				labimportUtil, logger, bCreateLaboratoryIfNotExists);
 		IFileImportStrategyFactory importStrategyFactory = new HL7ImportStrategyFactory(logger, myImportHandler)
 				.setMoveAfterImport(bMoveFile).setLabContactResolver(labContactResolver);
 		MultiFileParser multiFileParser = new MultiFileParser(labName);
@@ -123,13 +120,13 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 		IVirtualFilesystemHandle fileHandle;
 		try {
 			fileHandle = vfsService.of(urlString);
-			Result<?> result = multiFileParser.importFromHandle(fileHandle, importStrategyFactory,
-				hl7Parser, new DefaultPersistenceHandler());
+			Result<?> result = multiFileParser.importFromHandle(fileHandle, importStrategyFactory, hl7Parser,
+					new DefaultPersistenceHandler());
 
 			Map<String, Serializable> resultMap = new HashMap<String, Serializable>();
 			@SuppressWarnings("rawtypes")
 			Result.msg fileUrl = result.removeMsgEntry("url", CODE.URL);
-			if(fileUrl != null) {
+			if (fileUrl != null) {
 				resultMap.put(ReturnParameter.STRING_URL, (String) fileUrl.getObject());
 			}
 			if (!result.isOK()) {
@@ -143,21 +140,19 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 	}
 
 	private class MyImportHandler extends ImportHandler {
-		
+
 		private final boolean overwriteExistingResults;
 		private final Logger logger;
-		
-		public MyImportHandler(Logger logger, boolean overwriteExistingResults){
+
+		public MyImportHandler(Logger logger, boolean overwriteExistingResults) {
 			this.logger = logger;
 			this.overwriteExistingResults = overwriteExistingResults;
 		}
-		
+
 		@Override
-		public OverwriteState askOverwrite(IPatient patient, ILabResult oldResult,
-			TransientLabResult newResult){
+		public OverwriteState askOverwrite(IPatient patient, ILabResult oldResult, TransientLabResult newResult) {
 			if (overwriteExistingResults) {
-				logger.warn("Overwriting labResult [{}] old value [{}] new value [{}]", patient,
-					oldResult, newResult);
+				logger.warn("Overwriting labResult [{}] old value [{}] new value [{}]", patient, oldResult, newResult);
 				return OverwriteState.OVERWRITE;
 			}
 			return OverwriteState.IGNORE;

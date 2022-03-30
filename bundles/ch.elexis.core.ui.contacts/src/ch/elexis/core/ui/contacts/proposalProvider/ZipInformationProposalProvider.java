@@ -18,8 +18,8 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
 public class ZipInformationProposalProvider implements IContentProposalProvider {
-	
-	public IContentProposal[] getProposals(String contents, int position){
+
+	public IContentProposal[] getProposals(String contents, int position) {
 		List<ContentProposal> cp = new LinkedList<ContentProposal>();
 		List<String> zips = ContactGeonames.getZip();
 		for (int i = 0; i < zips.size(); i++) {
@@ -29,15 +29,15 @@ public class ZipInformationProposalProvider implements IContentProposalProvider 
 			if (currZip.startsWith(contents))
 				cp.add(new ContentProposal(currZip));
 		}
-		
-		return cp.toArray(new ContentProposal[] {});
+
+		return cp.toArray(new ContentProposal[]{});
 	}
-	
-	public String findCityNameForZip(String content){
+
+	public String findCityNameForZip(String content) {
 		List<String> result = ContactGeonames.getCityByZip(content);
 		if (result.size() >= 1)
 			return result.get(0);
 		return "";
 	}
-	
+
 }

@@ -12,30 +12,28 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public abstract class FindingsFormat {
-	
-	protected HashMap<String, Map<String, JsonStructuralFeature>> resourceFieldsMap =
-		new HashMap<>();
-	
+
+	protected HashMap<String, Map<String, JsonStructuralFeature>> resourceFieldsMap = new HashMap<>();
+
 	protected GsonBuilder gsonBuilder = new GsonBuilder();
-	
-	protected Gson getGson(){
+
+	protected Gson getGson() {
 		return gsonBuilder.create();
 	}
-	
-	protected JsonObject getJsonObject(String content){
+
+	protected JsonObject getJsonObject(String content) {
 		return getGson().fromJson(content, JsonObject.class);
 	}
-	
-	public HashMap<String, Map<String, JsonStructuralFeature>> getResourceFieldsMap(){
+
+	public HashMap<String, Map<String, JsonStructuralFeature>> getResourceFieldsMap() {
 		return resourceFieldsMap;
 	}
-	
+
 	public abstract int isFindingsFormat(String rawContent);
-	
+
 	public abstract Optional<String> convertToCurrentFormat(String rawContent);
-	
-	protected int checkFields(Map<String, JsonStructuralFeature> structuralFeatureMap,
-		JsonObject jsonObject){
+
+	protected int checkFields(Map<String, JsonStructuralFeature> structuralFeatureMap, JsonObject jsonObject) {
 		int matches = 0;
 		for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 			JsonStructuralFeature structuralFeature = structuralFeatureMap.get(entry.getKey());
@@ -45,7 +43,7 @@ public abstract class FindingsFormat {
 		}
 		return matches;
 	}
-	
+
 	protected boolean checkRequiredField(JsonStructuralFeature jsonStructuralFeature, JsonObject jsonObject) {
 		for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 			if (jsonStructuralFeature != null && jsonStructuralFeature.getName().equals(entry.getKey())
@@ -56,8 +54,8 @@ public abstract class FindingsFormat {
 		return false;
 	}
 
-	protected Optional<String> convert(
-		Map<String, JsonStructuralFeatureTransformation> transformMap, JsonObject jsonObject){
+	protected Optional<String> convert(Map<String, JsonStructuralFeatureTransformation> transformMap,
+			JsonObject jsonObject) {
 		JsonObject newObject = new JsonObject();
 
 		Map<String, JsonStructuralFeatureTransformation> addAfterMap = transformMap.entrySet().stream()
@@ -71,7 +69,7 @@ public abstract class FindingsFormat {
 			JsonStructuralFeatureTransformation transformation = transformMap.get(entry.getKey());
 			if (transformation != null) {
 				newObject.add(transformation.transformKey(entry.getKey()),
-					transformation.transformValue(entry.getValue()));
+						transformation.transformValue(entry.getValue()));
 			} else {
 				newObject.add(entry.getKey(), entry.getValue());
 			}

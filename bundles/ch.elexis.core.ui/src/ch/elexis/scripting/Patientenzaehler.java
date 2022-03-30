@@ -34,22 +34,21 @@ import com.tiff.common.ui.datepicker.DatePicker;
 public class Patientenzaehler extends TitleAreaDialog {
 	DatePicker dpVon, dpBis;
 	public int kons, cases, men, women;
-	
-	public String getResult(){
+
+	public String getResult() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Mandant ").append(CoreHub.actMandant.getLabel()).append(":\n").append("Total ")
-			.append(men + women).append(" Patienten; ").append(women).append(" Frauen und ")
-			.append(men).append(" Männer.\n").append("in ").append(kons)
-			.append(" Konsultationen zu ").append(cases).append(" Fällen.");
+		sb.append("Mandant ").append(CoreHub.actMandant.getLabel()).append(":\n").append("Total ").append(men + women)
+				.append(" Patienten; ").append(women).append(" Frauen und ").append(men).append(" Männer.\n")
+				.append("in ").append(kons).append(" Konsultationen zu ").append(cases).append(" Fällen.");
 		return sb.toString();
 	}
-	
-	public Patientenzaehler(){
+
+	public Patientenzaehler() {
 		super(UiDesk.getTopShell());
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = (Composite) super.createDialogArea(parent);
 		Composite inner = new Composite(ret, SWT.NONE);
 		inner.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -60,16 +59,16 @@ public class Patientenzaehler extends TitleAreaDialog {
 		dpBis = new DatePicker(inner, SWT.NONE);
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		setTitle("Patientenzähler");
 		setMessage("Bitte start- und enddatum (inklusive) angeben");
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		TimeTool ttVon = new TimeTool(dpVon.getDate().getTime());
 		TimeTool ttBis = new TimeTool(dpBis.getDate().getTime());
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
@@ -79,7 +78,7 @@ public class Patientenzaehler extends TitleAreaDialog {
 		HashMap<String, Patient> maenner = new HashMap<String, Patient>();
 		HashMap<String, Patient> frauen = new HashMap<String, Patient>();
 		HashMap<String, Fall> faelle = new HashMap<String, Fall>();
-		
+
 		for (Konsultation k : qbe.execute()) {
 			Fall fall = k.getFall();
 			faelle.put(fall.getId(), fall);
@@ -96,5 +95,5 @@ public class Patientenzaehler extends TitleAreaDialog {
 		cases = faelle.size();
 		super.okPressed();
 	}
-	
+
 }

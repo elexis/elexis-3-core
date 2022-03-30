@@ -25,19 +25,19 @@ import ch.elexis.data.VerrechenbarAdapter;
  * @since 3.0.0
  */
 public abstract class UiVerrechenbarAdapter extends VerrechenbarAdapter {
-	
+
 	protected IAction addToBlockAction;
-	
-	protected UiVerrechenbarAdapter(final String id){
+
+	protected UiVerrechenbarAdapter(final String id) {
 		super(id);
 	}
-	
-	protected UiVerrechenbarAdapter(){
+
+	protected UiVerrechenbarAdapter() {
 		makeActions(this);
 	}
-	
+
 	@Override
-	public List<Object> getActions(Object kontext){
+	public List<Object> getActions(Object kontext) {
 		List<Object> actions = new ArrayList<Object>(1);
 		if (addToBlockAction == null) {
 			makeActions(this);
@@ -45,8 +45,8 @@ public abstract class UiVerrechenbarAdapter extends VerrechenbarAdapter {
 		actions.add(addToBlockAction);
 		return actions;
 	}
-	
-	private void makeActions(final ICodeElement el){
+
+	private void makeActions(final ICodeElement el) {
 		addToBlockAction = new AddVerrechenbarToLeistungsblockAction(el.getClass());
 	}
 }

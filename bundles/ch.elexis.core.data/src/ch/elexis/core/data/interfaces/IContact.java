@@ -14,20 +14,24 @@ import ch.elexis.core.data.beans.ContactType;
 import ch.elexis.core.types.Country;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>IContact</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IContact</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- * <li>{@link ch.elexis.core.model.IContact#getContactType <em>Contact Type</em>}</li>
+ * <li>{@link ch.elexis.core.model.IContact#getContactType <em>Contact
+ * Type</em>}</li>
  * <li>{@link ch.elexis.core.model.IContact#isMandator <em>Mandator</em>}</li>
  * <li>{@link ch.elexis.core.model.IContact#isUser <em>User</em>}</li>
  * <li>{@link ch.elexis.core.model.IContact#isPatient <em>Patient</em>}</li>
- * <li>{@link ch.elexis.core.model.IContact#getDescription1 <em>Description1</em>}</li>
- * <li>{@link ch.elexis.core.model.IContact#getDescription2 <em>Description2</em>}</li>
- * <li>{@link ch.elexis.core.model.IContact#getDescription3 <em>Description3</em>}</li>
+ * <li>{@link ch.elexis.core.model.IContact#getDescription1
+ * <em>Description1</em>}</li>
+ * <li>{@link ch.elexis.core.model.IContact#getDescription2
+ * <em>Description2</em>}</li>
+ * <li>{@link ch.elexis.core.model.IContact#getDescription3
+ * <em>Description3</em>}</li>
  * <li>{@link ch.elexis.core.model.IContact#getCode <em>Code</em>}</li>
  * <li>{@link ch.elexis.core.model.IContact#getCountry <em>Country</em>}</li>
  * <li>{@link ch.elexis.core.model.IContact#getZip <em>Zip</em>}</li>
@@ -48,11 +52,12 @@ import ch.elexis.core.types.Country;
  */
 public interface IContact extends IPersistentObject {
 	/**
-	 * Returns the value of the '<em><b>Contact Type</b></em>' attribute. The literals are from the
-	 * enumeration {@link ch.elexis.core.types.ContactType}. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Contact Type</b></em>' attribute. The
+	 * literals are from the enumeration {@link ch.elexis.core.types.ContactType}.
+	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Contact Type</em>' attribute isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Contact Type</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -64,10 +69,11 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	ContactType getContactType();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getContactType <em>Contact
-	 * Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getContactType
+	 * <em>Contact Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Contact Type</em>' attribute.
@@ -76,12 +82,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setContactType(ContactType value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Mandator</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Mandator</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Mandator</em>' attribute isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Mandator</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -92,10 +99,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	boolean isMandator();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#isMandator <em>Mandator</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#isMandator
+	 * <em>Mandator</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Mandator</em>' attribute.
@@ -103,12 +110,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setMandator(boolean value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>User</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>User</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>User</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>User</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -119,10 +127,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	boolean isUser();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#isUser <em>User</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#isUser
+	 * <em>User</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>User</em>' attribute.
@@ -130,12 +138,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setUser(boolean value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Patient</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Patient</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Patient</em>' attribute isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Patient</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -146,10 +155,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	boolean isPatient();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#isPatient <em>Patient</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#isPatient
+	 * <em>Patient</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Patient</em>' attribute.
@@ -157,12 +166,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setPatient(boolean value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Description1</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Description1</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Description1</em>' attribute isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Description1</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -173,10 +183,11 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getDescription1();
-	
+
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getDescription1
-	 * <em>Description1</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <em>Description1</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Description1</em>' attribute.
@@ -184,12 +195,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setDescription1(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Description2</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Description2</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Description2</em>' attribute isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Description2</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -200,10 +212,11 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getDescription2();
-	
+
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getDescription2
-	 * <em>Description2</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <em>Description2</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Description2</em>' attribute.
@@ -211,12 +224,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setDescription2(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Description3</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Description3</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Description3</em>' attribute isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Description3</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -227,10 +241,11 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getDescription3();
-	
+
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getDescription3
-	 * <em>Description3</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <em>Description3</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Description3</em>' attribute.
@@ -238,12 +253,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setDescription3(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Code</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Code</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Code</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Code</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -254,10 +270,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getCode();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getCode <em>Code</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getCode
+	 * <em>Code</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Code</em>' attribute.
@@ -265,12 +281,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setCode(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Country</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Country</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Country</em>' attribute isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Country</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -281,10 +298,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	Country getCountry();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getCountry <em>Country</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getCountry
+	 * <em>Country</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Country</em>' attribute.
@@ -292,12 +309,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setCountry(Country value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Zip</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Zip</b></em>' attribute. <!-- begin-user-doc
+	 * -->
 	 * <p>
-	 * If the meaning of the '<em>Zip</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Zip</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -308,10 +326,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getZip();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getZip <em>Zip</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getZip
+	 * <em>Zip</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Zip</em>' attribute.
@@ -319,12 +337,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setZip(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>City</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>City</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>City</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>City</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -335,10 +354,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getCity();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getCity <em>City</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getCity
+	 * <em>City</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>City</em>' attribute.
@@ -346,12 +365,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setCity(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Street</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Street</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Street</em>' attribute isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Street</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -362,10 +382,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getStreet();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getStreet <em>Street</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getStreet
+	 * <em>Street</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Street</em>' attribute.
@@ -373,12 +393,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setStreet(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Phone1</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Phone1</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Phone1</em>' attribute isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Phone1</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -389,10 +410,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getPhone1();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getPhone1 <em>Phone1</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getPhone1
+	 * <em>Phone1</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Phone1</em>' attribute.
@@ -400,12 +421,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setPhone1(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Phone2</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Phone2</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Phone2</em>' attribute isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Phone2</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -416,10 +438,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getPhone2();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getPhone2 <em>Phone2</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getPhone2
+	 * <em>Phone2</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Phone2</em>' attribute.
@@ -427,12 +449,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setPhone2(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Fax</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Fax</b></em>' attribute. <!-- begin-user-doc
+	 * -->
 	 * <p>
-	 * If the meaning of the '<em>Fax</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Fax</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -443,10 +466,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getFax();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getFax <em>Fax</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getFax
+	 * <em>Fax</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Fax</em>' attribute.
@@ -454,12 +477,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setFax(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Email</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Email</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Email</em>' attribute isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Email</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -470,10 +494,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getEmail();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getEmail <em>Email</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getEmail
+	 * <em>Email</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Email</em>' attribute.
@@ -481,12 +505,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setEmail(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Website</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Website</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Website</em>' attribute isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Website</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -497,10 +522,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getWebsite();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getWebsite <em>Website</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getWebsite
+	 * <em>Website</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Website</em>' attribute.
@@ -508,12 +533,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setWebsite(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Mobile</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Mobile</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Mobile</em>' attribute isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Mobile</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -524,10 +550,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getMobile();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getMobile <em>Mobile</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getMobile
+	 * <em>Mobile</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Mobile</em>' attribute.
@@ -535,12 +561,13 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setMobile(String value);
-	
+
 	/**
-	 * Returns the value of the '<em><b>Comment</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Comment</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Comment</em>' attribute isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Comment</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
@@ -551,10 +578,10 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	String getComment();
-	
+
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getComment <em>Comment</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getComment
+	 * <em>Comment</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Comment</em>' attribute.
@@ -562,5 +589,5 @@ public interface IContact extends IPersistentObject {
 	 * @generated
 	 */
 	void setComment(String value);
-	
+
 } // IContact

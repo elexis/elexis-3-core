@@ -20,19 +20,19 @@ package ch.rgw.tools;
  */
 
 public class VersionInfo implements Comparable<VersionInfo> {
-	
-	public static String Version(){
+
+	public static String Version() {
 		return "1.8.0";
 	}
-	
+
 	String orig;
 	String[] spl;
-	
-	public VersionInfo(){
+
+	public VersionInfo() {
 		this(Version());
 	}
-	
-	public VersionInfo(final String v){
+
+	public VersionInfo(final String v) {
 		if (StringTool.isNothing(v)) {
 			orig = null;
 			spl = null;
@@ -41,8 +41,8 @@ public class VersionInfo implements Comparable<VersionInfo> {
 			spl = orig.split("\\.");
 		}
 	}
-	
-	public String getMaior(){
+
+	public String getMaior() {
 		if ((spl == null) || (spl.length < 1)) {
 			return "0";
 		}
@@ -51,34 +51,34 @@ public class VersionInfo implements Comparable<VersionInfo> {
 		}
 		return spl[0];
 	}
-	
-	public String getMinor(){
+
+	public String getMinor() {
 		if ((spl == null) || (spl.length < 2)) {
 			return "0";
 		}
 		return spl[1];
 	}
-	
-	public String getRevision(){
+
+	public String getRevision() {
 		if ((spl == null) || (spl.length < 3)) {
 			return "0";
 		}
 		return spl[2];
 	}
-	
-	public String getBuildTag(){
+
+	public String getBuildTag() {
 		if ((spl == null) || (spl.length < 4)) {
 			return "";
 		} else {
 			return spl[3];
 		}
 	}
-	
-	public String version(){
+
+	public String version() {
 		return orig;
 	}
-	
-	public boolean matches(VersionInfo pattern){
+
+	public boolean matches(VersionInfo pattern) {
 		for (int i = 0; i < 3; i++) {
 			if (i >= spl.length) {
 				if (i >= pattern.spl.length) {
@@ -95,8 +95,8 @@ public class VersionInfo implements Comparable<VersionInfo> {
 		}
 		return true;
 	}
-	
-	private boolean matchElements(final String a, final String b){
+
+	private boolean matchElements(final String a, final String b) {
 		if (a.equals("*") || b.equals("*")) {
 			return true;
 		}
@@ -105,17 +105,17 @@ public class VersionInfo implements Comparable<VersionInfo> {
 		}
 		return false;
 	}
-	
-	public boolean isNewer(final String other){
+
+	public boolean isNewer(final String other) {
 		VersionInfo vo = new VersionInfo(other);
 		return isNewer(vo);
 	}
-	
-	public boolean isOlder(final String other){
+
+	public boolean isOlder(final String other) {
 		VersionInfo vn = new VersionInfo(other);
 		return isOlder(vn);
 	}
-	
+
 	/**
 	 * Ist diese Version neuer, als die andere?
 	 * 
@@ -123,19 +123,19 @@ public class VersionInfo implements Comparable<VersionInfo> {
 	 *            die andere
 	 * @return true:ja, false: nein
 	 */
-	public boolean isNewer(final VersionInfo vo){
+	public boolean isNewer(final VersionInfo vo) {
 		return (compareTo(vo) > 0);
 	}
-	
-	public boolean isOlder(final VersionInfo vo){
+
+	public boolean isOlder(final VersionInfo vo) {
 		return (compareTo(vo) < 0);
 	}
-	
-	public boolean isNewerMaior(final VersionInfo vo){
+
+	public boolean isNewerMaior(final VersionInfo vo) {
 		return compareElem(this.getMaior(), vo.getMaior()) > 0;
 	}
-	
-	public boolean isNewerMinor(final VersionInfo vo){
+
+	public boolean isNewerMinor(final VersionInfo vo) {
 		if (isNewerMaior(vo)) {
 			return true;
 		}
@@ -144,21 +144,22 @@ public class VersionInfo implements Comparable<VersionInfo> {
 		}
 		return compareElem(this.getMinor(), vo.getMinor()) > 0;
 	}
-	
-	public boolean isNewerRev(final VersionInfo vo){
-		return isNewerMaior(vo) ? true : isNewerMinor(vo) ? true : compareElem(this.getRevision(),
-			vo.getRevision()) > 0;
+
+	public boolean isNewerRev(final VersionInfo vo) {
+		return isNewerMaior(vo)
+				? true
+				: isNewerMinor(vo) ? true : compareElem(this.getRevision(), vo.getRevision()) > 0;
 	}
-	
-	public boolean isNewerBuild(final VersionInfo vo){
+
+	public boolean isNewerBuild(final VersionInfo vo) {
 		return isNewerRev(vo) ? true : compareElem(this.getBuildTag(), vo.getBuildTag()) > 0;
 	}
-	
-	public boolean isEqual(final VersionInfo vo){
+
+	public boolean isEqual(final VersionInfo vo) {
 		return (compareTo(vo) == 0);
 	}
-	
-	public int compareTo(final VersionInfo vo){
+
+	public int compareTo(final VersionInfo vo) {
 		int c = compareElem(this.getMaior(), vo.getMaior());
 		if (c != 0) {
 			return c;
@@ -173,8 +174,8 @@ public class VersionInfo implements Comparable<VersionInfo> {
 		}
 		return compareElem(this.getBuildTag(), vo.getBuildTag());
 	}
-	
-	private int compareElem(final String a, final String b){
+
+	private int compareElem(final String a, final String b) {
 		int al = a.length();
 		int bl = b.length();
 		if (al == bl) {

@@ -13,10 +13,10 @@
 package ch.elexis.core.ui.exchange.elements;
 
 public class AnalysesElement extends XChangeElement {
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return FindingElement.ENCLOSING;
 	}
-	
+
 }

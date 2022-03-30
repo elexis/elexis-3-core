@@ -11,7 +11,7 @@ import ch.elexis.core.model.issue.ProcessStatus;
 public class ReminderProcessStatusConverter implements AttributeConverter<ProcessStatus, String> {
 
 	@Override
-	public String convertToDatabaseColumn(ProcessStatus attribute){
+	public String convertToDatabaseColumn(ProcessStatus attribute) {
 		if (attribute != null) {
 			return Integer.toString(attribute.numericValue());
 		}
@@ -19,7 +19,7 @@ public class ReminderProcessStatusConverter implements AttributeConverter<Proces
 	}
 
 	@Override
-	public ProcessStatus convertToEntityAttribute(String dbData){
+	public ProcessStatus convertToEntityAttribute(String dbData) {
 		if (StringUtils.isEmpty(dbData)) {
 			return ProcessStatus.OPEN;
 		}

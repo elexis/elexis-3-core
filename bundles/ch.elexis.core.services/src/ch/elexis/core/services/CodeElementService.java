@@ -18,27 +18,25 @@ import ch.elexis.core.model.ICodeElement;
 
 @Component
 public class CodeElementService implements ICodeElementService {
-	
+
 	private HashMap<String, ICodeElementServiceContribution> contributions = new HashMap<>();
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
-	public void setCodeElementServiceContribution(ICodeElementServiceContribution contribution){
-		ICodeElementServiceContribution previous =
-			contributions.put(contribution.getSystem().toLowerCase(), contribution);
+	public void setCodeElementServiceContribution(ICodeElementServiceContribution contribution) {
+		ICodeElementServiceContribution previous = contributions.put(contribution.getSystem().toLowerCase(),
+				contribution);
 		if (previous != null) {
-			LoggerFactory.getLogger(getClass())
-				.warn("Possible ICodeElementServiceContribution collision previous [" + previous
-					+ "] new [" + contribution + "]");
+			LoggerFactory.getLogger(getClass()).warn("Possible ICodeElementServiceContribution collision previous ["
+					+ previous + "] new [" + contribution + "]");
 		}
 	}
-	
-	public void unsetCodeElementServiceContribution(ICodeElementServiceContribution store){
+
+	public void unsetCodeElementServiceContribution(ICodeElementServiceContribution store) {
 		contributions.remove(store.getSystem().toLowerCase());
 	}
-	
+
 	@Override
-	public Optional<ICodeElement> loadFromString(String system, String code,
-		Map<Object, Object> context){
+	public Optional<ICodeElement> loadFromString(String system, String code, Map<Object, Object> context) {
 		ICodeElementServiceContribution contribution = contributions.get(system.toLowerCase());
 		if (contribution != null) {
 			if (context == null) {
@@ -47,39 +45,36 @@ public class CodeElementService implements ICodeElementService {
 			return contribution.loadFromCode(code, context);
 		} else {
 			LoggerFactory.getLogger(getClass())
-				.warn("No ICodeElementServiceContribution for system [" + system + "] code [" + code
-					+ "]");
+					.warn("No ICodeElementServiceContribution for system [" + system + "] code [" + code + "]");
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<IArticle> findArticleByGtin(String gtin){
-		for (ICodeElementServiceContribution contribution : getContributionsByTyp(
-			CodeElementTyp.ARTICLE)) {
+	public Optional<IArticle> findArticleByGtin(String gtin) {
+		for (ICodeElementServiceContribution contribution : getContributionsByTyp(CodeElementTyp.ARTICLE)) {
 			Optional<ICodeElement> loadFromCode = contribution.loadFromCode(gtin);
 			if (loadFromCode.isPresent()) {
 				if (loadFromCode.get() instanceof IArticle) {
 					return loadFromCode.map(IArticle.class::cast);
 				} else {
 					LoggerFactory.getLogger(getClass()).warn(
-						"Found article for gtin [{}] but is not castable to IArticle [{}]", gtin,
-						loadFromCode.get().getClass().getName());
+							"Found article for gtin [{}] but is not castable to IArticle [{}]", gtin,
+							loadFromCode.get().getClass().getName());
 				}
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public List<ICodeElementServiceContribution> getContributionsByTyp(CodeElementTyp typ){
+	public List<ICodeElementServiceContribution> getContributionsByTyp(CodeElementTyp typ) {
 		return contributions.values().stream().filter(contribution -> contribution.getTyp() == typ)
-			.collect(Collectors.toList());
+				.collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public Optional<ICodeElementServiceContribution> getContribution(CodeElementTyp typ,
-		String codeSystemName){
+	public Optional<ICodeElementServiceContribution> getContribution(CodeElementTyp typ, String codeSystemName) {
 		return Optional.ofNullable(contributions.get(codeSystemName.toLowerCase()));
 	}
 }

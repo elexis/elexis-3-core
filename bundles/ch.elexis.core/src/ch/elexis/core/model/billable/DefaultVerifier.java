@@ -14,7 +14,7 @@ import ch.rgw.tools.Result;
 public class DefaultVerifier implements IBillableVerifier {
 
 	@Override
-	public Result<IBillable> verifyAdd(IBillable billable, IEncounter encounter, double amount){
+	public Result<IBillable> verifyAdd(IBillable billable, IEncounter encounter, double amount) {
 		return Result.OK();
 	}
 }

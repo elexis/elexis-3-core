@@ -128,7 +128,7 @@ import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
 
 public class VerrechnungsDisplay extends Composite implements IUnlockable {
-	
+
 	private Text billedLabel;
 	private InteractionLink interactionLink;
 	private Table table;
@@ -138,13 +138,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private String defaultRGB;
 	private IWorkbenchPage page;
 	private final GenericObjectDropTarget dropTarget;
-	private IAction applyMedicationAction, chPriceAction, chCountAction,
-			chTextAction, removeAction,
-			removeAllAction;
+	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
 	private TableColumnLayout tableLayout;
-		
-	private static final String INDICATED_MEDICATION =
-		Messages.VerrechnungsDisplay_indicatedMedication;
+
+	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
 	private static final String CHCOUNT = Messages.VerrechnungsDisplay_changeNumber;
@@ -152,40 +149,38 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
 	static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
-	
+
 	@Optional
 	@Inject
-	public void udpateEncounter(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
+	public void udpateEncounter(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter) {
 		if (encounter != null && encounter.equals(actEncounter) && isViewerCreated()) {
 			setEncounter(actEncounter);
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	public void udpateBilled(
-		@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IBilled billed){
+	public void udpateBilled(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IBilled billed) {
 		if (billed != null && isViewerCreated()) {
 			viewer.update(billed, null);
 		}
 	}
 	private ToolBarManager toolBarManager;
 	private TableViewerColumn partDisposalColumn;
-	
-	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style){
+
+	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style) {
 		super(parent, style);
 		final int columns_for_each_drug = 4;
 		setLayout(new GridLayout(columns_for_each_drug, false));
 		this.page = p;
 		defaultRGB = UiDesk.createColor(new RGB(255, 255, 255));
-		
+
 		Label label = new Label(this, SWT.NONE);
-		FontDescriptor boldDescriptor =
-			FontDescriptor.createFrom(label.getFont()).setStyle(SWT.BOLD);
+		FontDescriptor boldDescriptor = FontDescriptor.createFrom(label.getFont()).setStyle(SWT.BOLD);
 		Font boldFont = boldDescriptor.createFont(label.getDisplay());
 		label.setFont(boldFont);
 		label.setText(Messages.VerrechnungsDisplay_billing);
-		
+
 		billedLabel = new Text(this, SWT.WRAP);
 		billedLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		interactionLink = new InteractionLink(this, SWT.NONE);
@@ -194,12 +189,12 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		IAction newAction = new Action() {
 
 			@Override
-			public ImageDescriptor getImageDescriptor(){
+			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_NEW.getImageDescriptor();
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				try {
 					if (StringTool.isNothing(LeistungenView.ID)) {
 						SWTHelper.alert(Messages.VerrechnungsDisplay_error, "LeistungenView.ID"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -207,16 +202,15 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					page.showView(LeistungenView.ID);
 					CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 				} catch (Exception ex) {
-					ElexisStatus status =
-						new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-							Messages.VerrechnungsDisplay_errorStartingCodeWindow + ex.getMessage(),
-							ex, ElexisStatus.LOG_ERRORS);
+					ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+							Messages.VerrechnungsDisplay_errorStartingCodeWindow + ex.getMessage(), ex,
+							ElexisStatus.LOG_ERRORS);
 					StatusManager.getManager().handle(status, StatusManager.SHOW);
 				}
 			}
-			
+
 			@Override
-			public boolean isEnabled(){
+			public boolean isEnabled() {
 				return actEncounter != null && actEncounter.isBillable();
 			}
 		};
@@ -224,52 +218,52 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		toolBarManager.add(newAction);
 
 		toolBarManager.add(new Action("", Action.AS_CHECK_BOX) {
-			
+
 			@Override
-			public ImageDescriptor getImageDescriptor(){
+			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_NOBILLING.getImageDescriptor();
 			}
-			
+
 			@Override
-			public String getText(){
+			public String getText() {
 				return Messages.VerrechnungsDisplay_no_invoice;
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				actEncounter.setBillable(!actEncounter.isBillable());
 				CoreModelServiceHolder.get().save(actEncounter);
 				updateUi();
 			}
-			
+
 			@Override
-			public boolean isChecked(){
+			public boolean isChecked() {
 				if (actEncounter != null) {
 					return !actEncounter.isBillable();
 				}
 				return false;
 			}
-			
+
 			@Override
-			public boolean isEnabled(){
+			public boolean isEnabled() {
 				return actEncounter != null && !isBilled(actEncounter);
 			}
-			
-			private boolean isBilled(IEncounter encounter){
+
+			private boolean isBilled(IEncounter encounter) {
 				if (encounter != null) {
 					return encounter.getInvoice() != null;
 				}
 				return false;
 			}
 		});
-		
+
 		// Populate toolbar contribution manager
 		IMenuService menuService = PlatformUI.getWorkbench().getService(IMenuService.class);
 		menuService.populateContributionManager(toolBarManager, "toolbar:ch.elexis.VerrechnungsDisplay");
-		
+
 		ToolBar toolBar = toolBarManager.createControl(this);
 		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		
+
 		makeActions();
 		tableLayout = new TableColumnLayout();
 		Composite tableComposite = new Composite(this, SWT.NONE);
@@ -277,31 +271,30 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, columns_for_each_drug, 1));
 		tableComposite.setLayout(tableLayout);
 		viewer = new TableViewer(tableComposite,
-			SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
+				SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 		table = viewer.getTable();
 		table.setMenu(createVerrMenu());
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
-		
+
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		createColumns();
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = viewer.getStructuredSelection();
-				if (selection != null && !selection.isEmpty()
-					&& (selection.getFirstElement() instanceof IBilled)) {
-					ContextServiceHolder.get().getRootContext()
-						.setTyped(selection.getFirstElement());
+				if (selection != null && !selection.isEmpty() && (selection.getFirstElement() instanceof IBilled)) {
+					ContextServiceHolder.get().getRootContext().setTyped(selection.getFirstElement());
 				}
 			}
 		});
 		table.addKeyListener(new KeyListener() {
 			@Override
-			public void keyReleased(KeyEvent e){}
-			
+			public void keyReleased(KeyEvent e) {
+			}
+
 			@Override
-			public void keyPressed(KeyEvent e){
+			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.DEL) {
 					if (table.getSelectionIndices().length >= 1 && removeAction != null) {
 						removeAction.run();
@@ -312,7 +305,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		// connect double click on column to actions
 		table.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDoubleClick(MouseEvent e){
+			public void mouseDoubleClick(MouseEvent e) {
 				int clickedIndex = -1;
 				// calculate column of click
 				int width = 0;
@@ -325,7 +318,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					}
 					width += tc.getWidth();
 				}
-				if(clickedIndex != -1) {
+				if (clickedIndex != -1) {
 					if (clickedIndex == 1) {
 						chCountAction.run();
 					} else if (clickedIndex == 4) {
@@ -336,40 +329,30 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				}
 			}
 		});
-		
-		dropTarget =
-			new GenericObjectDropTarget(Messages.VerrechnungsDisplay_doBill, table,
-				new DropReceiver()){
+
+		dropTarget = new GenericObjectDropTarget(Messages.VerrechnungsDisplay_doBill, table, new DropReceiver()) {
 			@Override
-			protected Control getHighLightControl(){
+			protected Control getHighLightControl() {
 				return VerrechnungsDisplay.this;
 			}
 		};
 	}
-	
-	private void createColumns(){
-		String[] titles = {
-				StringTool.leer,
-				Messages.Display_Column_Number,
-				Messages.Display_Column_Code,
-				Messages.Display_Column_Designation,
-				Messages.Display_Column_Price,
-				StringTool.leer
-		};
-		int[] weights = {
-			0, 8, 20, 50, 15, 7
-		};
-		
+
+	private void createColumns() {
+		String[] titles = {StringTool.leer, Messages.Display_Column_Number, Messages.Display_Column_Code,
+				Messages.Display_Column_Designation, Messages.Display_Column_Price, StringTool.leer};
+		int[] weights = {0, 8, 20, 50, 15, 7};
+
 		partDisposalColumn = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
 		partDisposalColumn.setLabelProvider(new ColumnLabelProvider() {
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return "";
 			}
-			
+
 			@Override
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				if (element instanceof IBilled) {
 					IBilled billed = (IBilled) element;
 					if (isPartDisposal(billed)) {
@@ -379,11 +362,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return super.getImage(element);
 			}
 		});
-		
+
 		TableViewerColumn col = createTableViewerColumn(titles[1], weights[1], 1, SWT.LEFT);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof IBilled) {
 					IBilled billed = (IBilled) element;
 					return Double.toString(billed.getAmount());
@@ -391,11 +374,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return "";
 			}
 		});
-		
+
 		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof IBilled) {
 					IBilled billed = (IBilled) element;
 					return getServiceCode(billed);
@@ -403,20 +386,20 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return "";
 			}
 		});
-		
+
 		col = createTableViewerColumn(titles[3], weights[3], 3, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof IBilled) {
 					IBilled billed = (IBilled) element;
 					return billed.getText();
 				}
 				return "";
 			}
-			
+
 			@Override
-			public Color getBackground(final Object element){
+			public Color getBackground(final Object element) {
 				if (element instanceof IBilled) {
 					IBilled billed = (IBilled) element;
 					return getBackgroundColor(billed);
@@ -424,11 +407,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return null;
 			}
 		});
-		
+
 		col = createTableViewerColumn(titles[4], weights[4], 4, SWT.RIGHT);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof IBilled) {
 					IBilled billed = (IBilled) element;
 					Money price = billed.getTotal();
@@ -437,23 +420,22 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return "";
 			}
 		});
-		
+
 		col = createTableViewerColumn(titles[5], weights[5], 5, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return "";
 			}
-			
+
 			@Override
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				return Images.IMG_DELETE.getImage();
 			}
 		});
 	}
-	
-	private TableViewerColumn createTableViewerColumn(String title, int weight, int colNumber,
-		int style){
+
+	private TableViewerColumn createTableViewerColumn(String title, int weight, int colNumber, int style) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, style);
 		final TableColumn column = viewerColumn.getColumn();
 		column.setText(title);
@@ -462,33 +444,33 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		tableLayout.setColumnData(column, new ColumnWeightData(weight));
 		return viewerColumn;
 	}
-	
-	private Color getBackgroundColor(IBilled billed){
+
+	private Color getBackgroundColor(IBilled billed) {
 		IBillable billable = billed.getBillable();
 		if (billable != null) {
 			Color color = UiDesk.getColorFromRGB(defaultRGB);
 			String codeName = billable.getCodeSystemName();
-			
+
 			if (codeName != null) {
-				String rgbColor =
-					ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeName, defaultRGB);
+				String rgbColor = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeName,
+						defaultRGB);
 				color = UiDesk.getColorFromRGB(rgbColor);
 			}
 			return color;
 		}
 		return null;
 	}
-	
-	public void clear(){
+
+	public void clear() {
 		actEncounter = null;
 		setEncounter(actEncounter);
 	}
-	
-	private boolean isViewerCreated(){
+
+	private boolean isViewerCreated() {
 		return viewer != null && viewer.getTable() != null && !viewer.getTable().isDisposed();
 	}
-	
-	private void updateBilledLabel(){
+
+	private void updateBilledLabel() {
 		ArrayList<IArticle> gtins = new ArrayList<IArticle>();
 		if (actEncounter != null) {
 			int sumMinutes = 0;
@@ -503,27 +485,27 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				if (billable instanceof IArticle) {
 					IArticle art = (IArticle) billable;
 					gtins.add(art);
-				}				
+				}
 			}
 			interactionLink.updateAtcs(gtins);
 			billedLabel.setText(String.format("%s %s / %s %s", //$NON-NLS-1$
-					Messages.VerrechnungsDisplay_Amount, sum.getAmountAsString(),
-					Messages.VerrechnungsDisplay_Time, sumMinutes));
+					Messages.VerrechnungsDisplay_Amount, sum.getAmountAsString(), Messages.VerrechnungsDisplay_Time,
+					sumMinutes));
 		} else {
 			billedLabel.setText("");
 		}
 		layout();
 	}
-	
+
 	/**
 	 * Add a {@link PersistentObject} to the encounter.
 	 * 
 	 * @param o
-	 * @deprecated for {@link ch.elexis.core.model.ICodeElement} instances direct use of
-	 *             {@link IBillingService} is recommended
+	 * @deprecated for {@link ch.elexis.core.model.ICodeElement} instances direct
+	 *             use of {@link IBillingService} is recommended
 	 */
 	@Deprecated
-	public void addPersistentObject(PersistentObject o){
+	public void addPersistentObject(PersistentObject o) {
 		if (actEncounter != null) {
 			if (o instanceof Leistungsblock) {
 				Leistungsblock block = (Leistungsblock) o;
@@ -533,8 +515,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						addPersistentObject((PersistentObject) element);
 					}
 				}
-				List<ch.elexis.core.data.interfaces.ICodeElement> diff =
-					block.getDiffToReferences(elements);
+				List<ch.elexis.core.data.interfaces.ICodeElement> diff = block.getDiffToReferences(elements);
 				if (!diff.isEmpty()) {
 					StringBuilder sb = new StringBuilder();
 					diff.forEach(r -> {
@@ -544,8 +525,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						sb.append(r);
 					});
 					MessageDialog.openWarning(getShell(), "Warnung",
-						"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
-							+ sb.toString());
+							"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
+									+ sb.toString());
 				}
 			}
 			if (o instanceof Prescription) {
@@ -554,15 +535,14 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 			if (o instanceof IVerrechenbar) {
 				if (AccessControlServiceHolder.get().request(AccessControlDefaults.LSTG_VERRECHNEN) == false) {
-					SWTHelper.alert(Messages.VerrechnungsDisplay_missingRightsCaption, //$NON-NLS-1$
-						Messages.VerrechnungsDisplay_missingRightsBody); //$NON-NLS-1$
+					SWTHelper.alert(Messages.VerrechnungsDisplay_missingRightsCaption, // $NON-NLS-1$
+							Messages.VerrechnungsDisplay_missingRightsBody); // $NON-NLS-1$
 				} else {
-					Result<IVerrechenbar> result =
-						Konsultation.load(actEncounter.getId()).addLeistung((IVerrechenbar) o);
-					
+					Result<IVerrechenbar> result = Konsultation.load(actEncounter.getId())
+							.addLeistung((IVerrechenbar) o);
+
 					if (!result.isOK()) {
-						SWTHelper.alert(Messages.VerrechnungsDisplay_imvalidBilling,
-							result.toString()); //$NON-NLS-1$
+						SWTHelper.alert(Messages.VerrechnungsDisplay_imvalidBilling, result.toString()); // $NON-NLS-1$
 					}
 				}
 			} else if (o instanceof IDiagnose) {
@@ -573,8 +553,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			setEncounter(actEncounter);
 		}
 	}
-	
-	private void updatePartDisposalColumn(List<IBilled> list){
+
+	private void updatePartDisposalColumn(List<IBilled> list) {
 		boolean hasDisposal = false;
 		for (IBilled billed : list) {
 			if (isPartDisposal(billed)) {
@@ -588,8 +568,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			partDisposalColumn.getColumn().setWidth(0);
 		}
 	}
-	
-	private boolean isPartDisposal(IBilled billed){
+
+	private boolean isPartDisposal(IBilled billed) {
 		IBillable billable = billed.getBillable();
 		if (billable instanceof IArticle) {
 			IArticle a = (IArticle) billable;
@@ -600,10 +580,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		}
 		return false;
 	}
-	
+
 	private final class DropReceiver implements GenericObjectDropTarget.IReceiver {
-		
-		public boolean accept(PersistentObject o){
+
+		public boolean accept(PersistentObject o) {
 			if (ElexisEventDispatcher.getSelectedPatient() != null) {
 				if (o instanceof Artikel) {
 					return !((Artikel) o).isProduct();
@@ -624,8 +604,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 			return false;
 		}
-		
-		private boolean accept(ch.elexis.core.model.ICodeElement codeElement){
+
+		private boolean accept(ch.elexis.core.model.ICodeElement codeElement) {
 			if (codeElement instanceof IArticle) {
 				return !((IArticle) codeElement).isProduct();
 			} else if (codeElement instanceof IService) {
@@ -639,22 +619,21 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 			return false;
 		}
-		
+
 		@Override
-		public void dropped(List<Object> list, DropTargetEvent e){
+		public void dropped(List<Object> list, DropTargetEvent e) {
 			if (actEncounter != null && accept(list)) {
 				for (Object object : list) {
 					// map prescription to article
 					if (object instanceof IPrescription) {
 						object = ((IPrescription) object).getArticle();
 					}
-					
+
 					if (object instanceof PersistentObject) {
 						addPersistentObject((PersistentObject) object);
 					} else if (object instanceof IBillable) {
 						IBillable billable = (IBillable) object;
-						Result<?> billResult =
-								BillingServiceHolder.get().bill(billable, actEncounter, 1.0);
+						Result<?> billResult = BillingServiceHolder.get().bill(billable, actEncounter, 1.0);
 						if (!billResult.isOK()) {
 							ResultDialog.show(billResult);
 						} else {
@@ -667,11 +646,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						StringJoiner notOkResults = new StringJoiner("\n");
 						for (ICodeElement element : elements) {
 							if (element instanceof IBillable) {
-								Result<?> billResult = BillingServiceHolder.get()
-									.bill((IBillable) element, actEncounter, 1.0);
+								Result<?> billResult = BillingServiceHolder.get().bill((IBillable) element,
+										actEncounter, 1.0);
 								if (!billResult.isOK()) {
 									String message = element.getCode() + " - "
-										+ ResultDialog.getResultMessage(billResult);
+											+ ResultDialog.getResultMessage(billResult);
 									if (!notOkResults.toString().contains(message)) {
 										notOkResults.add(message);
 									}
@@ -684,12 +663,12 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						if (!notOkResults.toString().isEmpty()) {
 							Display.getDefault().asyncExec(() -> {
 								MessageDialog.openWarning(getShell(), Messages.ResultDialog_Warning,
-									notOkResults.toString());
+										notOkResults.toString());
 							});
 						}
 						// refresh with sorted billed list
 						CoreModelServiceHolder.get().refresh(actEncounter, true);
-						
+
 						List<ICodeElement> diff = block.getDiffToReferences(elements);
 						if (!diff.isEmpty()) {
 							StringBuilder sb = new StringBuilder();
@@ -700,8 +679,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 								sb.append(r);
 							});
 							MessageDialog.openWarning(getShell(), "Warnung",
-								"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
-									+ sb.toString());
+									"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
+											+ sb.toString());
 						}
 					} else if (object instanceof IDiagnosis) {
 						actEncounter.addDiagnosis((IDiagnosis) object);
@@ -711,9 +690,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, actEncounter);
 			}
 		}
-		
+
 		@Override
-		public boolean accept(List<Object> list){
+		public boolean accept(List<Object> list) {
 			for (Object object : list) {
 				if (object instanceof PersistentObject) {
 					if (!accept((PersistentObject) object)) {
@@ -726,8 +705,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			return true;
 		}
 	}
-	
-	public void setEncounter(IEncounter encounter){
+
+	public void setEncounter(IEncounter encounter) {
 		actEncounter = encounter;
 		if (actEncounter != null) {
 			viewer.setInput(actEncounter.getBilled());
@@ -740,8 +719,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			updateUi();
 		}
 	}
-	
-	private void updateUi(){
+
+	private void updateUi() {
 		if (toolBarManager != null) {
 			for (IContributionItem contribution : toolBarManager.getItems()) {
 				contribution.update();
@@ -750,19 +729,20 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		}
 		viewer.getTable().setEnabled(actEncounter != null && actEncounter.isBillable());
 	}
-	
+
 	/**
-	 * Filter codes of {@link Verrechnet} where ID is used as code. This is relevant for {@link Eigenleistung} and Eigenartikel.
+	 * Filter codes of {@link Verrechnet} where ID is used as code. This is relevant
+	 * for {@link Eigenleistung} and Eigenartikel.
 	 * 
 	 * @param lst
 	 * @return
 	 */
-	private String getServiceCode(IBilled billed){
+	private String getServiceCode(IBilled billed) {
 		String ret = billed.getCode();
 		IBillable billable = billed.getBillable();
 		if (billable != null) {
-			if (billable instanceof ICustomService || (billable instanceof IArticle
-				&& ((IArticle) billable).getTyp() == ArticleTyp.EIGENARTIKEL)) {
+			if (billable instanceof ICustomService
+					|| (billable instanceof IArticle && ((IArticle) billable).getTyp() == ArticleTyp.EIGENARTIKEL)) {
 				if (billable.getId().equals(ret)) {
 					ret = "";
 				}
@@ -770,14 +750,14 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		}
 		return ret;
 	}
-	
-	private Menu createVerrMenu(){
+
+	private Menu createVerrMenu() {
 		contextMenuManager = new MenuManager();
-		
+
 		contextMenuManager.setRemoveAllWhenShown(true);
 		contextMenuManager.addMenuListener(new IMenuListener() {
 			@Override
-			public void menuAboutToShow(IMenuManager manager){
+			public void menuAboutToShow(IMenuManager manager) {
 				IStructuredSelection selection = viewer.getStructuredSelection();
 				if (selection.size() > 1) {
 					manager.add(removeAction);
@@ -785,20 +765,20 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					if (!selection.isEmpty()) {
 						IBilled billed = (IBilled) selection.getFirstElement();
 						IBillable billable = billed.getBillable();
-						
+
 						manager.add(chPriceAction);
 						manager.add(chCountAction);
 						// TODO WTF
-						//						List<IAction> itemActions = (List<IAction>) (List<?>) vbar.getActions(v);
-						//						if ((itemActions != null) && (itemActions.size() > 0)) {
-						//							manager.add(new Separator());
-						//							for (IAction a : itemActions) {
-						//								if (a != null) {
-						//									manager.add(a);
-						//								}
-						//							}
-						//						}
-						
+						// List<IAction> itemActions = (List<IAction>) (List<?>) vbar.getActions(v);
+						// if ((itemActions != null) && (itemActions.size() > 0)) {
+						// manager.add(new Separator());
+						// for (IAction a : itemActions) {
+						// if (a != null) {
+						// manager.add(a);
+						// }
+						// }
+						// }
+
 						manager.add(new Separator());
 						manager.add(chTextAction);
 						manager.add(removeAction);
@@ -810,75 +790,67 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 							// #8796
 							manager.add(new Action(INDICATED_MEDICATION, Action.AS_CHECK_BOX) {
 								@Override
-								public void run(){
-									IStructuredSelection selection =
-										viewer.getStructuredSelection();
+								public void run() {
+									IStructuredSelection selection = viewer.getStructuredSelection();
 									for (Object selected : selection.toList()) {
 										if (selected instanceof IBilled) {
 											IBilled billed = (IBilled) selected;
-											AcquireLockUi.aquireAndRun(billed,
-												new LockDeniedNoActionLockHandler() {
-													
-													@Override
-													public void lockAcquired(){
-														if (isIndicated(billed)) {
-															billed.setExtInfo(Verrechnet.INDICATED,
-																"false");
-														} else {
-															billed.setExtInfo(Verrechnet.INDICATED,
-																"true");
-														}
-														CoreModelServiceHolder.get().save(billed);
+											AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
+
+												@Override
+												public void lockAcquired() {
+													if (isIndicated(billed)) {
+														billed.setExtInfo(Verrechnet.INDICATED, "false");
+													} else {
+														billed.setExtInfo(Verrechnet.INDICATED, "true");
 													}
-												});
+													CoreModelServiceHolder.get().save(billed);
+												}
+											});
 										}
 									}
 								}
-								
-								private boolean isIndicated(IBilled billed){
+
+								private boolean isIndicated(IBilled billed) {
 									String value = (String) billed.getExtInfo(Verrechnet.INDICATED);
 									return "true".equalsIgnoreCase(value);
 								}
-								
+
 								@Override
-								public boolean isChecked(){
+								public boolean isChecked() {
 									return isIndicated(billed);
 								}
 							});
 						}
 					}
 					CoreUiUtil.addCommandContributions(contextMenuManager, selection.toArray(),
-						"popup:ch.elexis.VerrechnungsDisplay");
+							"popup:ch.elexis.VerrechnungsDisplay");
 				}
 			}
 		});
 		return contextMenuManager.createContextMenu(table);
 	}
-	
-	private void makeActions(){
+
+	private void makeActions() {
 		// #3278
 		applyMedicationAction = new Action(APPLY_MEDICATION) {
 			@Override
-			public void run(){
+			public void run() {
 				IStructuredSelection selection = viewer.getStructuredSelection();
 				for (Object selected : selection.toList()) {
 					if (selected instanceof IBilled) {
 						IBilled billed = (IBilled) selected;
 						AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
 							@Override
-							public void lockAcquired(){
+							public void lockAcquired() {
 								billed.setExtInfo(Verrechnet.VATSCALE, Double.toString(0.0));
-								
-								int packageSize =
-									((IArticle) billed.getBillable()).getPackageSize();
-								String proposal =
-									(packageSize > 0) ? "1/" + packageSize : "1";
+
+								int packageSize = ((IArticle) billed.getBillable()).getPackageSize();
+								String proposal = (packageSize > 0) ? "1/" + packageSize : "1";
 								changeQuantityDialog(proposal, billed);
-								Object prescriptionId =
-									billed.getExtInfo(Verrechnet.FLD_EXT_PRESC_ID);
+								Object prescriptionId = billed.getExtInfo(Verrechnet.FLD_EXT_PRESC_ID);
 								if (prescriptionId instanceof String) {
-									Prescription prescription =
-										Prescription.load((String) prescriptionId);
+									Prescription prescription = Prescription.load((String) prescriptionId);
 									if (prescription.getEntryType() == EntryType.SELF_DISPENSED) {
 										prescription.setApplied(true);
 									}
@@ -888,16 +860,16 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					}
 				}
 			}
-			
+
 			@Override
-			public ImageDescriptor getImageDescriptor(){
+			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_SYRINGE.getImageDescriptor();
 			}
 		};
-		
+
 		removeAction = new Action(REMOVE) {
 			@Override
-			public void run(){
+			public void run() {
 				Result<IEncounter> editable = BillingServiceHolder.get().isEditable(actEncounter);
 				if (!editable.isOK()) {
 					ResultDialog.show(editable);
@@ -909,7 +881,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						IBilled billed = (IBilled) selected;
 						AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
 							@Override
-							public void lockAcquired(){
+							public void lockAcquired() {
 								BillingServiceHolder.get().removeBilled(billed, actEncounter);
 							}
 						});
@@ -918,10 +890,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				setEncounter(actEncounter);
 			}
 		};
-		
+
 		removeAllAction = new Action(REMOVEALL) {
 			@Override
-			public void run(){
+			public void run() {
 				Result<IEncounter> editable = BillingServiceHolder.get().isEditable(actEncounter);
 				if (!editable.isOK()) {
 					ResultDialog.show(editable);
@@ -931,7 +903,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				for (IBilled billed : allBilled) {
 					AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
 						@Override
-						public void lockAcquired(){
+						public void lockAcquired() {
 							actEncounter.removeBilled(billed);
 						}
 					});
@@ -939,11 +911,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				setEncounter(actEncounter);
 			}
 		};
-		
+
 		chPriceAction = new Action(CHPRICE) {
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				Result<IEncounter> editable = BillingServiceHolder.get().isEditable(actEncounter);
 				if (!editable.isOK()) {
 					ResultDialog.show(editable);
@@ -955,18 +927,18 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						IBilled billed = (IBilled) selected;
 						if (billed.isNonIntegerAmount()) {
 							MessageDialog.openInformation(UiDesk.getTopShell(), "Info",
-								"Der Preis kann nur geändert werden wenn die Anzahl ganzzahlig ist.");
+									"Der Preis kann nur geändert werden wenn die Anzahl ganzzahlig ist.");
 						} else {
 							AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
-								
+
 								@Override
-								public void lockAcquired(){
+								public void lockAcquired() {
 									Money oldPrice = billed.getPrice();
 									String p = oldPrice.getAmountAsString();
 									InputDialog dlg = new InputDialog(UiDesk.getTopShell(),
-										Messages.VerrechnungsDisplay_changePriceForService, //$NON-NLS-1$
-										Messages.VerrechnungsDisplay_enterNewPrice, p, //$NON-NLS-1$
-										null);
+											Messages.VerrechnungsDisplay_changePriceForService, // $NON-NLS-1$
+											Messages.VerrechnungsDisplay_enterNewPrice, p, // $NON-NLS-1$
+											null);
 									if (dlg.open() == Dialog.OK) {
 										try {
 											String val = dlg.getValue().trim();
@@ -985,9 +957,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 												viewer.update(billed, null);
 											}
 										} catch (ParseException ex) {
-											SWTHelper.showError(
-												Messages.VerrechnungsDisplay_badAmountCaption, //$NON-NLS-1$
-												Messages.VerrechnungsDisplay_badAmountBody); //$NON-NLS-1$
+											SWTHelper.showError(Messages.VerrechnungsDisplay_badAmountCaption, // $NON-NLS-1$
+													Messages.VerrechnungsDisplay_badAmountBody); // $NON-NLS-1$
 										}
 									}
 								}
@@ -998,10 +969,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				updateBilledLabel();
 			}
 		};
-		
+
 		chCountAction = new Action(CHCOUNT) {
 			@Override
-			public void run(){
+			public void run() {
 				Result<IEncounter> editable = BillingServiceHolder.get().isEditable(actEncounter);
 				if (!editable.isOK()) {
 					ResultDialog.show(editable);
@@ -1013,9 +984,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						IBilled billed = (IBilled) selected;
 						String p = Double.toString(billed.getAmount());
 						AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
-							
+
 							@Override
-							public void lockAcquired(){
+							public void lockAcquired() {
 								changeQuantityDialog(p, billed);
 							}
 						});
@@ -1024,10 +995,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				updateBilledLabel();
 			}
 		};
-		
+
 		chTextAction = new Action(CHTEXT) {
 			@Override
-			public void run(){
+			public void run() {
 				Result<IEncounter> editable = BillingServiceHolder.get().isEditable(actEncounter);
 				if (!editable.isOK()) {
 					ResultDialog.show(editable);
@@ -1039,18 +1010,17 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						IBilled billed = (IBilled) selected;
 						AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
 							@Override
-							public void lockAcquired(){
+							public void lockAcquired() {
 								String oldText = billed.getText();
 								InputDialog dlg = new InputDialog(UiDesk.getTopShell(),
-									Messages.VerrechnungsDisplay_changeTextCaption, //$NON-NLS-1$
-									Messages.VerrechnungsDisplay_changeTextBody, //$NON-NLS-1$
-									oldText, null);
+										Messages.VerrechnungsDisplay_changeTextCaption, // $NON-NLS-1$
+										Messages.VerrechnungsDisplay_changeTextBody, // $NON-NLS-1$
+										oldText, null);
 								if (dlg.open() == Dialog.OK) {
 									String input = dlg.getValue();
 									if (input.matches("[0-9\\.,]+")) { //$NON-NLS-1$
-										if (!SWTHelper.askYesNo(
-											Messages.VerrechnungsDisplay_confirmChangeTextCaption, //$NON-NLS-1$
-											Messages.VerrechnungsDisplay_confirmChangeTextBody)) { //$NON-NLS-1$
+										if (!SWTHelper.askYesNo(Messages.VerrechnungsDisplay_confirmChangeTextCaption, // $NON-NLS-1$
+												Messages.VerrechnungsDisplay_confirmChangeTextBody)) { // $NON-NLS-1$
 											return;
 										}
 									}
@@ -1065,11 +1035,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		};
 	}
-	
-	private void changeQuantityDialog(String p, IBilled billed){
-		InputDialog dlg =
-			new InputDialog(UiDesk.getTopShell(), Messages.VerrechnungsDisplay_changeNumberCaption, //$NON-NLS-1$
-				Messages.VerrechnungsDisplay_changeNumberBody, //$NON-NLS-1$
+
+	private void changeQuantityDialog(String p, IBilled billed) {
+		InputDialog dlg = new InputDialog(UiDesk.getTopShell(), Messages.VerrechnungsDisplay_changeNumberCaption, // $NON-NLS-1$
+				Messages.VerrechnungsDisplay_changeNumberBody, // $NON-NLS-1$
 				p, null);
 		if (dlg.open() == Dialog.OK) {
 			try {
@@ -1080,24 +1049,23 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					String text = billable.getText();
 					if (val.indexOf(StringConstants.SLASH) > 0) {
 						String[] frac = val.split(StringConstants.SLASH);
-						changeAnzahl =
-							Double.parseDouble(frac[0]) / Double.parseDouble(frac[1]);
+						changeAnzahl = Double.parseDouble(frac[0]) / Double.parseDouble(frac[1]);
 						text = billed.getText() + " (" + val //$NON-NLS-1$
-							+ Messages.VerrechnungsDisplay_Orininalpackungen;
+								+ Messages.VerrechnungsDisplay_Orininalpackungen;
 					} else if (val.indexOf('.') > 0) {
-						changeAnzahl =  Double.parseDouble(val);
+						changeAnzahl = Double.parseDouble(val);
 					} else {
 						changeAnzahl = Integer.parseInt(dlg.getValue());
 					}
-					
+
 					if (!(changeAnzahl % 1 == 0) && billed.isChangedPrice()) {
 						MessageDialog.openInformation(UiDesk.getTopShell(), "Info",
-							"Wenn der Preis bereits geändert wurde, darf die Anzahl nur ganzzahlig sein.");
+								"Wenn der Preis bereits geändert wurde, darf die Anzahl nur ganzzahlig sein.");
 						return;
 					}
-					
+
 					IStatus status = BillingServiceHolder.get().changeAmountValidated(billed, changeAnzahl);
-					if(!status.isOK()) {
+					if (!status.isOK()) {
 						StatusDialog.show(status);
 					}
 					// refresh with changed amount
@@ -1107,27 +1075,27 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					viewer.update(billed, null);
 				}
 			} catch (NumberFormatException ne) {
-				SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, //$NON-NLS-1$
-					Messages.VerrechnungsDisplay_invalidEntryBody); //$NON-NLS-1$
+				SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, // $NON-NLS-1$
+						Messages.VerrechnungsDisplay_invalidEntryBody); // $NON-NLS-1$
 			}
 		}
 	}
-	
+
 	@Override
 	public void setUnlocked(boolean unlocked) {
 		setEnabled(unlocked);
 		redraw();
 	}
-	
-	public MenuManager getMenuManager(){
+
+	public MenuManager getMenuManager() {
 		return contextMenuManager;
 	}
-	
-	public StructuredViewer getViewer(){
+
+	public StructuredViewer getViewer() {
 		return viewer;
 	}
-	
-	public void adaptMenus(){
+
+	public void adaptMenus() {
 		table.getMenu().setEnabled(AccessControlServiceHolder.get().request(AccessControlDefaults.LSTG_VERRECHNEN));
 	}
 }

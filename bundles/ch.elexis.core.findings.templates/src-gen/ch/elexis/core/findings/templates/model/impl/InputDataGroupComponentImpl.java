@@ -20,25 +20,28 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Input Data Group Component</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Input
+ * Data Group Component</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl#getFindingsTemplates <em>Findings Templates</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl#getDataType <em>Data Type</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl#getTextSeparator <em>Text Separator</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl#getFindingsTemplates
+ * <em>Findings Templates</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl#getDataType
+ * <em>Data Type</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.InputDataGroupComponentImpl#getTextSeparator
+ * <em>Text Separator</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container implements InputDataGroupComponent {
 	/**
-	 * The cached value of the '{@link #getFindingsTemplates() <em>Findings Templates</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getFindingsTemplates() <em>Findings
+	 * Templates</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getFindingsTemplates()
 	 * @generated
 	 * @ordered
@@ -46,9 +49,9 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	protected EList<FindingsTemplate> findingsTemplates;
 
 	/**
-	 * The default value of the '{@link #getDataType() <em>Data Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDataType() <em>Data Type</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getDataType()
 	 * @generated
 	 * @ordered
@@ -56,9 +59,9 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	protected static final DataType DATA_TYPE_EDEFAULT = DataType.GROUP_COMPONENT;
 
 	/**
-	 * The cached value of the '{@link #getDataType() <em>Data Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDataType() <em>Data Type</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getDataType()
 	 * @generated
 	 * @ordered
@@ -66,9 +69,9 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	protected DataType dataType = DATA_TYPE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getTextSeparator() <em>Text Separator</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getTextSeparator() <em>Text
+	 * Separator</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTextSeparator()
 	 * @generated
 	 * @ordered
@@ -76,9 +79,9 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	protected static final String TEXT_SEPARATOR_EDEFAULT = " ";
 
 	/**
-	 * The cached value of the '{@link #getTextSeparator() <em>Text Separator</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTextSeparator() <em>Text Separator</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTextSeparator()
 	 * @generated
 	 * @ordered
@@ -86,8 +89,8 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	protected String textSeparator = TEXT_SEPARATOR_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected InputDataGroupComponentImpl() {
@@ -95,8 +98,8 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -105,21 +108,22 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public EList<FindingsTemplate> getFindingsTemplates() {
 		if (findingsTemplates == null) {
-			findingsTemplates = new EObjectContainmentEList<FindingsTemplate>(FindingsTemplate.class, this, ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES);
+			findingsTemplates = new EObjectContainmentEList<FindingsTemplate>(FindingsTemplate.class, this,
+					ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES);
 		}
 		return findingsTemplates;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -128,8 +132,8 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -138,8 +142,8 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -147,73 +151,74 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 		String oldTextSeparator = textSeparator;
 		textSeparator = newTextSeparator;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR, oldTextSeparator, textSeparator));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelPackage.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR, oldTextSeparator, textSeparator));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
-				return ((InternalEList<?>)getFindingsTemplates()).basicRemove(otherEnd, msgs);
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES :
+				return ((InternalEList<?>) getFindingsTemplates()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES :
 				return getFindingsTemplates();
-			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__DATA_TYPE:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__DATA_TYPE :
 				return getDataType();
-			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR :
 				return getTextSeparator();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES :
 				getFindingsTemplates().clear();
-				getFindingsTemplates().addAll((Collection<? extends FindingsTemplate>)newValue);
+				getFindingsTemplates().addAll((Collection<? extends FindingsTemplate>) newValue);
 				return;
-			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR:
-				setTextSeparator((String)newValue);
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR :
+				setTextSeparator((String) newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES :
 				getFindingsTemplates().clear();
 				return;
-			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR :
 				setTextSeparator(TEXT_SEPARATOR_EDEFAULT);
 				return;
 		}
@@ -221,31 +226,34 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES :
 				return findingsTemplates != null && !findingsTemplates.isEmpty();
-			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__DATA_TYPE:
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__DATA_TYPE :
 				return dataType != DATA_TYPE_EDEFAULT;
-			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR:
-				return TEXT_SEPARATOR_EDEFAULT == null ? textSeparator != null : !TEXT_SEPARATOR_EDEFAULT.equals(textSeparator);
+			case ModelPackage.INPUT_DATA_GROUP_COMPONENT__TEXT_SEPARATOR :
+				return TEXT_SEPARATOR_EDEFAULT == null
+						? textSeparator != null
+						: !TEXT_SEPARATOR_EDEFAULT.equals(textSeparator);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (dataType: ");
@@ -256,4 +264,4 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 		return result.toString();
 	}
 
-} //InputDataGroupComponentImpl
+} // InputDataGroupComponentImpl

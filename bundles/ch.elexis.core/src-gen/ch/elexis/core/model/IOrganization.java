@@ -10,18 +10,18 @@
  */
 package ch.elexis.core.model;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IOrganization</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IOrganization</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IOrganization#getInsuranceXmlName <em>Insurance Xml Name</em>}</li>
- *   <li>{@link ch.elexis.core.model.IOrganization#getInsuranceLawCode <em>Insurance Law Code</em>}</li>
+ * <li>{@link ch.elexis.core.model.IOrganization#getInsuranceXmlName
+ * <em>Insurance Xml Name</em>}</li>
+ * <li>{@link ch.elexis.core.model.IOrganization#getInsuranceLawCode
+ * <em>Insurance Law Code</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIOrganization()
@@ -31,13 +31,14 @@ package ch.elexis.core.model;
 public interface IOrganization extends IContact {
 
 	/**
-	 * Returns the value of the '<em><b>Insurance Xml Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Insurance Xml Name</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Insurance Xml Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Insurance Xml Name</em>' attribute.
 	 * @see #setInsuranceXmlName(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIOrganization_InsuranceXmlName()
@@ -47,23 +48,26 @@ public interface IOrganization extends IContact {
 	String getInsuranceXmlName();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IOrganization#getInsuranceXmlName <em>Insurance Xml Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Insurance Xml Name</em>' attribute.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IOrganization#getInsuranceXmlName <em>Insurance
+	 * Xml Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Insurance Xml Name</em>' attribute.
 	 * @see #getInsuranceXmlName()
 	 * @generated
 	 */
 	void setInsuranceXmlName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Insurance Law Code</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Insurance Law Code</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Insurance Law Code</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Insurance Law Code</em>' attribute.
 	 * @see #setInsuranceLawCode(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIOrganization_InsuranceLawCode()
@@ -73,10 +77,12 @@ public interface IOrganization extends IContact {
 	String getInsuranceLawCode();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IOrganization#getInsuranceLawCode <em>Insurance Law Code</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Insurance Law Code</em>' attribute.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IOrganization#getInsuranceLawCode <em>Insurance
+	 * Law Code</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Insurance Law Code</em>' attribute.
 	 * @see #getInsuranceLawCode()
 	 * @generated
 	 */

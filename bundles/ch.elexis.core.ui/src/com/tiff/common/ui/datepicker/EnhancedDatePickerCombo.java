@@ -20,26 +20,26 @@ import ch.elexis.core.ui.UiDesk;
 import ch.rgw.tools.TimeTool;
 
 public class EnhancedDatePickerCombo extends DatePickerCombo {
-	
+
 	private final ExecuteIfValidInterface vi;
-	
-	public EnhancedDatePickerCombo(Composite parent, int style, ExecuteIfValidInterface vif){
+
+	public EnhancedDatePickerCombo(Composite parent, int style, ExecuteIfValidInterface vif) {
 		super(parent, style);
 		this.vi = vif;
-		
+
 		addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				vi.doIt();
 				super.widgetSelected(e);
 			}
-			
+
 		});
-		
+
 		addModifyListener(new ModifyListener() {
-			
+
 			@Override
-			public void modifyText(ModifyEvent e){
+			public void modifyText(ModifyEvent e) {
 				DatePickerCombo dpc = (DatePickerCombo) e.getSource();
 				String text = dpc.getText();
 				if (TimeTool.isValidDateTimeString(text, TimeTool.DATE_GER)) {
@@ -50,9 +50,9 @@ public class EnhancedDatePickerCombo extends DatePickerCombo {
 				}
 			}
 		});
-		
+
 	}
-	
+
 	public static interface ExecuteIfValidInterface {
 		public void doIt();
 	}

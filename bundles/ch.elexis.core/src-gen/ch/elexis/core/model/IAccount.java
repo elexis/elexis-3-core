@@ -10,18 +10,16 @@
  */
 package ch.elexis.core.model;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IAccount</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IAccount</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IAccount#getName <em>Name</em>}</li>
- *   <li>{@link ch.elexis.core.model.IAccount#getNumeric <em>Numeric</em>}</li>
+ * <li>{@link ch.elexis.core.model.IAccount#getName <em>Name</em>}</li>
+ * <li>{@link ch.elexis.core.model.IAccount#getNumeric <em>Numeric</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIAccount()
@@ -30,13 +28,14 @@ package ch.elexis.core.model;
  */
 public interface IAccount {
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIAccount_Name()
@@ -46,23 +45,25 @@ public interface IAccount {
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAccount#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IAccount#getName
+	 * <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Numeric</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Numeric</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Numeric</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Numeric</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Numeric</em>' attribute.
 	 * @see #setNumeric(int)
 	 * @see ch.elexis.core.model.ModelPackage#getIAccount_Numeric()
@@ -72,10 +73,11 @@ public interface IAccount {
 	int getNumeric();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAccount#getNumeric <em>Numeric</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Numeric</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IAccount#getNumeric
+	 * <em>Numeric</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Numeric</em>' attribute.
 	 * @see #getNumeric()
 	 * @generated
 	 */

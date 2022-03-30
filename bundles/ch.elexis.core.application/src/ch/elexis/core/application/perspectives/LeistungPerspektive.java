@@ -25,15 +25,14 @@ import ch.elexis.core.ui.views.codesystems.LeistungenView;
  */
 public class LeistungPerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.LeistungPerspektive"; //$NON-NLS-1$
-	
-	public void createInitialLayout(IPageLayout layout){
+
+	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
-		layout.addPlaceholder(LeistungenView.ID, IPageLayout.LEFT, 0.3f,
-			IPageLayout.ID_EDITOR_AREA);
+		layout.addPlaceholder(LeistungenView.ID, IPageLayout.LEFT, 0.3f, IPageLayout.ID_EDITOR_AREA);
 		layout.addView(CodeDetailView.ID, IPageLayout.LEFT, 0.8f, IPageLayout.ID_EDITOR_AREA);
 		layout.addShowViewShortcut(CodeDetailView.ID);
-		
+
 	}
-	
+
 }

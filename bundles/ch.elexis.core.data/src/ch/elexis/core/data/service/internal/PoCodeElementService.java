@@ -16,39 +16,36 @@ import ch.elexis.core.data.services.ICodeElementServiceContribution;
 
 /**
  * 
- * @deprecated use implementation of {@link ch.elexis.core.services.ICodeElementService} instead.
+ * @deprecated use implementation of
+ *             {@link ch.elexis.core.services.ICodeElementService} instead.
  *
  */
 @Component
 public class PoCodeElementService implements ICodeElementService {
-	
+
 	private HashMap<String, ICodeElementServiceContribution> contributions = new HashMap<>();
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public void setCodeElementServiceContribution(ICodeElementServiceContribution contribution){
-		ICodeElementServiceContribution previous =
-			contributions.put(contribution.getSystem(), contribution);
+	public void setCodeElementServiceContribution(ICodeElementServiceContribution contribution) {
+		ICodeElementServiceContribution previous = contributions.put(contribution.getSystem(), contribution);
 		if (previous != null) {
-			LoggerFactory.getLogger(getClass())
-				.warn("Possible ICodeElementServiceContribution collision previous [" + previous
-					+ "] new [" + contribution + "]");
+			LoggerFactory.getLogger(getClass()).warn("Possible ICodeElementServiceContribution collision previous ["
+					+ previous + "] new [" + contribution + "]");
 		}
 	}
-	
-	public void unsetCodeElementServiceContribution(ICodeElementServiceContribution store){
+
+	public void unsetCodeElementServiceContribution(ICodeElementServiceContribution store) {
 		contributions.remove(store.getSystem());
 	}
-	
+
 	@Override
-	public Optional<ICodeElement> createFromString(String system, String code,
-		HashMap<Object, Object> context){
+	public Optional<ICodeElement> createFromString(String system, String code, HashMap<Object, Object> context) {
 		ICodeElementServiceContribution contribution = contributions.get(system);
 		if (contribution != null) {
 			return contribution.createFromCode(code, context);
 		} else {
 			LoggerFactory.getLogger(getClass())
-				.warn("No ICodeElementServiceContribution for system [" + system + "] code [" + code
-					+ "]");
+					.warn("No ICodeElementServiceContribution for system [" + system + "] code [" + code + "]");
 		}
 		return Optional.empty();
 	}

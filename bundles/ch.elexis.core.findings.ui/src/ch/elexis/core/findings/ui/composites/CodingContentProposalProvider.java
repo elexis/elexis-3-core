@@ -13,13 +13,13 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 
 public class CodingContentProposalProvider implements IContentProposalProvider {
-	
+
 	private Optional<String> selectedSystem;
-	
+
 	private HashMap<String, ICoding> labelToCoding = new HashMap<>();
-	
+
 	@Override
-	public IContentProposal[] getProposals(String contents, int position){
+	public IContentProposal[] getProposals(String contents, int position) {
 		List<IContentProposal> ret = new ArrayList<IContentProposal>();
 		if (contents != null && !contents.isEmpty()) {
 			labelToCoding.keySet().stream().forEach(label -> {
@@ -31,37 +31,36 @@ public class CodingContentProposalProvider implements IContentProposalProvider {
 		}
 		return ret.toArray(new IContentProposal[ret.size()]);
 	}
-	
-	public String toLabel(ICoding coding){
+
+	public String toLabel(ICoding coding) {
 		return "[" + coding.getCode() + "] " + coding.getDisplay();
 	}
-	
-	public Optional<ICoding> fromLabel(String label){
+
+	public Optional<ICoding> fromLabel(String label) {
 		return Optional.ofNullable(labelToCoding.get(label));
 	}
-	
-	public void setSelectedSystem(Optional<String> selectedSystem){
+
+	public void setSelectedSystem(Optional<String> selectedSystem) {
 		this.selectedSystem = selectedSystem;
 		clearCache();
 		buildCache();
 	}
-	
-	private void clearCache(){
+
+	private void clearCache() {
 		labelToCoding.clear();
 	}
-	
-	private void buildCache(){
+
+	private void buildCache() {
 		if (selectedSystem.isPresent()) {
-			List<ICoding> codes =
-				CodingServiceComponent.getService().getAvailableCodes(selectedSystem.get());
+			List<ICoding> codes = CodingServiceComponent.getService().getAvailableCodes(selectedSystem.get());
 			codes.parallelStream().forEach(iCoding -> {
 				String label = toLabel(iCoding);
 				labelToCoding.put(label, iCoding);
 			});
 		}
 	}
-	
-	public Optional<ICoding> getCodingForProposal(IContentProposal proposal){
+
+	public Optional<ICoding> getCodingForProposal(IContentProposal proposal) {
 		String label = proposal.getContent();
 		if (label != null && !label.isEmpty()) {
 			return fromLabel(label);

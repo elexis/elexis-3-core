@@ -6,24 +6,24 @@ import java.util.List;
 import ch.elexis.core.serial.Connection.ComPortListener;
 
 public class TestComPortListener implements ComPortListener {
-	
+
 	private List<String> chunks;
-	
-	public TestComPortListener(){
+
+	public TestComPortListener() {
 		chunks = new ArrayList<>();
 	}
-	
+
 	@Override
-	public void gotChunk(Connection conn, String chunk){
+	public void gotChunk(Connection conn, String chunk) {
 		chunks.add(chunk);
 	}
-	
-	public List<String> getChunks(){
+
+	public List<String> getChunks() {
 		return chunks;
 	}
-	
+
 	@Override
-	public void closed(){
+	public void closed() {
 		// ignore
 	}
 }

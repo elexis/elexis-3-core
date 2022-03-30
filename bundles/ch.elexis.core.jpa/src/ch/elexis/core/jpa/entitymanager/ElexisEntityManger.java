@@ -32,52 +32,51 @@ import ch.elexis.core.utils.CoreUtil;
 
 @Component(property = "id=default")
 public class ElexisEntityManger implements IElexisEntityManager {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(ElexisEntityManger.class);
-	
+
 	private EntityManagerFactoryBuilder factoryBuilder;
-	
+
 	private EntityManagerFactory factory;
-	
+
 	private DataSource dataSource;
-	
+
 	private final ThreadLocal<EntityManager> threadLocal;
-	
+
 	private final Map<Thread, EntityManager> threadManagerMap;
-	
+
 	private ScheduledExecutorService entityManagerCollector;
-	
+
 	private boolean updateSuccess;
-	
-	public ElexisEntityManger(){
+
+	public ElexisEntityManger() {
 		threadLocal = new ThreadLocal<EntityManager>();
 		threadManagerMap = new ConcurrentHashMap<>();
 		entityManagerCollector = Executors.newSingleThreadScheduledExecutor();
 	}
-	
+
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	private IDatabaseUpdateUi updateProgress;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		updateSuccess = false;
 		// collect EntityManagers of terminated threads
-		entityManagerCollector.scheduleAtFixedRate(new EntityManagerCollector(), 2, 2,
-			TimeUnit.SECONDS);
+		entityManagerCollector.scheduleAtFixedRate(new EntityManagerCollector(), 2, 2, TimeUnit.SECONDS);
 	}
-	
+
 	@Deactivate
-	public void deactivate(){
+	public void deactivate() {
 		entityManagerCollector.shutdown();
 	}
-	
+
 	@Reference(service = DataSource.class, unbind = "unbindDataSource", target = "(id=default)")
-	protected synchronized void bindDataSource(DataSource dataSource){
+	protected synchronized void bindDataSource(DataSource dataSource) {
 		logger.debug("Binding " + dataSource.getClass().getName());
 		this.dataSource = dataSource;
 	}
-	
-	protected synchronized void unbindDataSource(DataSource dataSource){
+
+	protected synchronized void unbindDataSource(DataSource dataSource) {
 		logger.debug("Unbinding " + dataSource.getClass().getName());
 		if (this.factory != null) {
 			this.factory.close();
@@ -85,15 +84,15 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		}
 		this.dataSource = null;
 	}
-	
+
 	@Reference(service = EntityManagerFactoryBuilder.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC, target = "(osgi.unit.name=elexis)")
-	protected synchronized void bind(EntityManagerFactoryBuilder factoryBuilder){
+	protected synchronized void bind(EntityManagerFactoryBuilder factoryBuilder) {
 		logger.debug("Binding " + factoryBuilder.getClass().getName());
 		this.factoryBuilder = factoryBuilder;
 	}
-	
+
 	@Override
-	public synchronized EntityManager getEntityManager(boolean managed){
+	public synchronized EntityManager getEntityManager(boolean managed) {
 		// do lazy initialization on first access
 		if (factory == null) {
 			// try to initialize
@@ -126,7 +125,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 				throw new IllegalStateException("No EntityManagerFactoryBuilder available");
 			}
 		}
-		
+
 		if (factory != null) {
 			if (managed) {
 				EntityManager em = threadLocal.get();
@@ -145,52 +144,51 @@ public class ElexisEntityManger implements IElexisEntityManager {
 			throw new IllegalStateException("No EntityManagerFactory available");
 		}
 	}
-	
-	private void dbUpdate(IDatabaseUpdateUi updateProgress2){
+
+	private void dbUpdate(IDatabaseUpdateUi updateProgress2) {
 		LiquibaseDBUpdater updater = new LiquibaseDBUpdater(dataSource, updateProgress);
 		updateSuccess = updater.update();
 	}
-	
-	private void dbInit(IDatabaseUpdateUi updateProgress2){
+
+	private void dbInit(IDatabaseUpdateUi updateProgress2) {
 		LiquibaseDBInitializer initializer = new LiquibaseDBInitializer(dataSource, updateProgress);
 		initializer.init();
 	}
-	
+
 	@Override
-	public boolean isUpdateSuccess(){
+	public boolean isUpdateSuccess() {
 		return updateSuccess;
 	}
-	
-	private EntityManager createManagedEntityManager(){
+
+	private EntityManager createManagedEntityManager() {
 		logger.debug("Creating new EntityManager for Thread [" + Thread.currentThread() + "]");
 		EntityManager em = factory.createEntityManager();
 		threadLocal.set(em);
 		threadManagerMap.put(Thread.currentThread(), em);
 		return em;
 	}
-	
+
 	@Override
-	public synchronized void closeEntityManager(Object em){
+	public synchronized void closeEntityManager(Object em) {
 		if (threadLocal.get() == em) {
 			threadLocal.set(null);
 			threadManagerMap.remove(Thread.currentThread());
 		}
 		((EntityManager) em).close();
 	}
-	
+
 	@Override
-	public void clearCache(){
+	public void clearCache() {
 		factory.getCache().evictAll();
 	}
-	
+
 	private class EntityManagerCollector implements Runnable {
 		@Override
-		public void run(){
+		public void run() {
 			if (threadManagerMap != null && !threadManagerMap.isEmpty()) {
 				for (Thread thread : threadManagerMap.keySet().toArray(new Thread[0])) {
 					if (!thread.isAlive()) {
-						logger.debug("Closing EntityManager of non active thread ["
-							+ thread.getName() + "]");
+						logger.debug("Closing EntityManager of non active thread [" + thread.getName() + "]");
 						EntityManager em = threadManagerMap.get(thread);
 						if (em != null) {
 							em.close();
@@ -201,15 +199,14 @@ public class ElexisEntityManger implements IElexisEntityManager {
 			}
 		}
 	}
-	
+
 	@Override
-	public boolean executeSQLScript(String changeId, String sqlScript){
+	public boolean executeSQLScript(String changeId, String sqlScript) {
 		if (CoreUtil.isTestMode() || Boolean.valueOf(System.getProperty("forceExecuteSqlScript"))) {
 			LiquibaseDBScriptExecutor executor = new LiquibaseDBScriptExecutor(dataSource);
 			return executor.execute(changeId, sqlScript);
 		}
-		logger.warn("Did not execute script [" + changeId + "] as system not started in mode "
-			+ CoreUtil.TEST_MODE);
+		logger.warn("Did not execute script [" + changeId + "] as system not started in mode " + CoreUtil.TEST_MODE);
 		return false;
 	}
 }

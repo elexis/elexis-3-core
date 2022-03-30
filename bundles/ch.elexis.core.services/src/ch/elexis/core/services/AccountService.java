@@ -15,14 +15,14 @@ import ch.elexis.core.services.internal.Account;
 public class AccountService implements IAccountService {
 	private static final String ACCOUNTS_CONFIG = "ch.elexis.core.data/accounttransaction/accounts"; //$NON-NLS-1$
 	private static final String ACCOUNTS_SEPARATOR = "||"; //$NON-NLS-1$
-	
+
 	public Account UNKNOWN = new Account(-1, "");
 	private HashMap<Integer, IAccount> localCache;
 
 	@Reference
 	private IConfigService configService;
-	
-	private List<IAccount> loadAccounts(){
+
+	private List<IAccount> loadAccounts() {
 		List<IAccount> ret = new ArrayList<>();
 		ret.add(UNKNOWN);
 		String accountsString = configService.get(ACCOUNTS_CONFIG, ""); //$NON-NLS-1$
@@ -37,31 +37,31 @@ public class AccountService implements IAccountService {
 		}
 		return ret;
 	}
-	
+
 	/**
-	 * Get the current map of accounts. The map is reloaded after {@link Account#setAccounts(List)}
-	 * is called.
+	 * Get the current map of accounts. The map is reloaded after
+	 * {@link Account#setAccounts(List)} is called.
 	 * 
 	 * @return
 	 */
 	@Override
-	public HashMap<Integer, IAccount> getAccounts(){
+	public HashMap<Integer, IAccount> getAccounts() {
 		if (localCache == null) {
 			loadCache();
 		}
 		return localCache;
 	}
-	
-	private void loadCache(){
+
+	private void loadCache() {
 		localCache = new HashMap<>();
 		List<IAccount> accounts = loadAccounts();
 		for (IAccount account : accounts) {
 			localCache.put(account.getNumeric(), account);
 		}
 	}
-	
+
 	@Override
-	public void removeAccount(IAccount account){
+	public void removeAccount(IAccount account) {
 		List<IAccount> accounts = loadAccounts();
 		for (Iterator<IAccount> iterator = accounts.iterator(); iterator.hasNext();) {
 			Account existingAccount = (Account) iterator.next();
@@ -71,9 +71,9 @@ public class AccountService implements IAccountService {
 		}
 		setAccounts(accounts);
 	}
-	
+
 	@Override
-	public void addAccount(IAccount newAccount){
+	public void addAccount(IAccount newAccount) {
 		String existingString = configService.get(ACCOUNTS_CONFIG, "");
 		StringBuilder sb = new StringBuilder();
 		sb.append(existingString);
@@ -85,9 +85,9 @@ public class AccountService implements IAccountService {
 		// reset local cache
 		loadCache();
 	}
-	
+
 	@Override
-	public void setAccounts(List<IAccount> accounts){
+	public void setAccounts(List<IAccount> accounts) {
 		StringBuilder sb = new StringBuilder();
 		for (IAccount account : accounts) {
 			if (account.getNumeric() == -1) {
@@ -102,9 +102,9 @@ public class AccountService implements IAccountService {
 		// reset local cache
 		loadCache();
 	}
-	
+
 	@Override
-	public void initDefaults(){
+	public void initDefaults() {
 		HashMap<Integer, IAccount> existingAccounts = getAccounts();
 		if (!existingAccounts.containsKey(new Integer(1000))) {
 			addAccount(new Account(1000, "Kasse"));
@@ -134,10 +134,10 @@ public class AccountService implements IAccountService {
 			addAccount(new Account(9999, "Diverses"));
 		}
 	}
-	
+
 	@Override
-	public IAccount getUnknown(){
+	public IAccount getUnknown() {
 		return UNKNOWN;
 	}
-	
+
 }

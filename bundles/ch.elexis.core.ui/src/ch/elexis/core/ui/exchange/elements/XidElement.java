@@ -35,40 +35,39 @@ public class XidElement extends XChangeElement {
 	public static final String ATTR_IDENTITY_DOMAIN_ID = "domainID";
 	public static final String ATTR_IDENTITY_QUALITY = "quality";
 	public static final String ATTR_ISGUID = "isGUID";
-	
-	public static final String[] IDENTITY_QUALITIES = {
-		"unknownAssignment", "localAssignment", "regionalAssignment", "globalAssignment"
-	};
-	
+
+	public static final String[] IDENTITY_QUALITIES = {"unknownAssignment", "localAssignment", "regionalAssignment",
+			"globalAssignment"};
+
 	public enum XIDMATCH {
-			NONE, POSSIBLE, SURE
+		NONE, POSSIBLE, SURE
 	};
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
-	public static boolean isUUID(IXid xid){
+
+	public static boolean isUUID(IXid xid) {
 		return (xid.getQuality() & 4) != 0;
 	}
-	
-	public static int getPureQuality(IXid xid){
+
+	public static int getPureQuality(IXid xid) {
 		return (xid.getQuality() & 3);
 	}
-	
-	public XidElement asExporter(XChangeExporter home, IVerrechenbar iv){
+
+	public XidElement asExporter(XChangeExporter home, IVerrechenbar iv) {
 		asExporter(home);
 		if (iv instanceof PersistentObject) {
 			PersistentObject po = (PersistentObject) iv;
 			setAttribute(ATTR_ID, XMLTool.idToXMLID(po.getId()));
 			addIdentities(po, iv.getXidDomain(), po.getId(), Xid.ASSIGNMENT_LOCAL, true);
-			
+
 		}
 		return this;
 	}
-	
-	public XidElement asExporter(XChangeExporter home, ILabItem li){
+
+	public XidElement asExporter(XChangeExporter home, ILabItem li) {
 		asExporter(home);
 		setAttribute(ATTR_ID, XMLTool.idToXMLID(li.getId()));
 		StringBuilder domainRoot = new StringBuilder(FindingElement.XIDBASE);
@@ -83,8 +82,8 @@ public class XidElement extends XChangeElement {
 		addIdentities((LabItem) li, domain, li.getName(), Xid.ASSIGNMENT_LOCAL, true);
 		return this;
 	}
-	
-	public XidElement asExporter(XChangeExporter home, Artikel art){
+
+	public XidElement asExporter(XChangeExporter home, Artikel art) {
 		asExporter(home);
 		setAttribute(ATTR_ID, XMLTool.idToXMLID(art.getId()));
 		String ean = art.getEAN();
@@ -97,8 +96,8 @@ public class XidElement extends XChangeElement {
 		}
 		return this;
 	}
-	
-	public XidElement asExporter(XChangeExporter home, Kontakt k){
+
+	public XidElement asExporter(XChangeExporter home, Kontakt k) {
 		asExporter(home);
 		IXid best = k.getXid();
 		String id = XMLTool.idToXMLID(k.getId());
@@ -112,14 +111,13 @@ public class XidElement extends XChangeElement {
 		for (IXid xid : xids) {
 			int val = xid.getQuality();
 			int v1 = val & 3;
-			Identity ident = new Identity().asExporter(home, xid.getDomain(), xid.getDomainId(), v1,
-				isUUID(xid));
+			Identity ident = new Identity().asExporter(home, xid.getDomain(), xid.getDomainId(), v1, isUUID(xid));
 			add(ident);
 		}
 		return this;
 	}
-	
-	public XidElement asExporter(XChangeExporter home, Fall fall){
+
+	public XidElement asExporter(XChangeExporter home, Fall fall) {
 		asExporter(home);
 		IXid best = fall.getXid();
 		String id = XMLTool.idToXMLID(fall.getId());
@@ -133,25 +131,23 @@ public class XidElement extends XChangeElement {
 		for (IXid xid : xids) {
 			int val = xid.getQuality();
 			int v1 = val & 3;
-			Identity ident = new Identity().asExporter(home, xid.getDomain(), xid.getDomainId(), v1,
-				isUUID(xid));
+			Identity ident = new Identity().asExporter(home, xid.getDomain(), xid.getDomainId(), v1, isUUID(xid));
 			add(ident);
 		}
 		return this;
 	}
-	
-	private void addIdentities(PersistentObject po, String domain, String domid, int q,
-		boolean bGuid){
+
+	private void addIdentities(PersistentObject po, String domain, String domid, int q, boolean bGuid) {
 		List<IXid> xids = po.getXids();
-		
+
 		boolean bDomain = false;
 		// XChangeContainer home = getContainer();
 		for (IXid xid : xids) {
 			if (xid.getDomain().equals(domain)) {
 				bDomain = true;
 			}
-			Identity ident = new Identity().asExporter(sender, xid.getDomain(), xid.getDomainId(),
-				getPureQuality(xid), isUUID(xid));
+			Identity ident = new Identity().asExporter(sender, xid.getDomain(), xid.getDomainId(), getPureQuality(xid),
+					isUUID(xid));
 			add(ident);
 		}
 		if (bDomain == false) {
@@ -160,17 +156,17 @@ public class XidElement extends XChangeElement {
 			add(ident);
 		}
 	}
-	
-	public void addIdentity(String domain, String domainID, int quality, boolean isGuid){
+
+	public void addIdentity(String domain, String domainID, int quality, boolean isGuid) {
 		add(new Identity().asExporter(sender, domain, domainID, quality, isGuid));
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Identity> getIdentities(){
+	public List<Identity> getIdentities() {
 		return (List<Identity>) getChildren(ELEMENT_IDENTITY, Identity.class);
 	}
 
-	public void setMainID(String domain){
+	public void setMainID(String domain) {
 		Identity best = null;
 		for (Identity cand : getIdentities()) {
 			if (domain != null) {
@@ -182,7 +178,7 @@ public class XidElement extends XChangeElement {
 				if (best == null) {
 					best = cand;
 				} else {
-					
+
 					if (best.isGuid()) {
 						if (cand.isGuid()) {
 							if (cand.getQuality() > best.getQuality()) {
@@ -198,31 +194,32 @@ public class XidElement extends XChangeElement {
 							}
 						}
 					}
-					
+
 				}
-				
+
 			}
 		}
 		if (best == null || (!best.isGuid())) {
-			best = new Identity().asExporter(sender, XidConstants.DOMAIN_ELEXIS,
-				StringTool.unique("xidID"), Xid.ASSIGNMENT_LOCAL, true);
+			best = new Identity().asExporter(sender, XidConstants.DOMAIN_ELEXIS, StringTool.unique("xidID"),
+					Xid.ASSIGNMENT_LOCAL, true);
 			add(best);
 		}
 		setAttribute(ATTR_ID, XMLTool.idToXMLID(best.getAttr(ATTR_IDENTITY_DOMAIN_ID)));
 	}
-	
+
 	/**
 	 * Compare this XID -Element with the xids of a PersistentObject
 	 * 
 	 * @param po
 	 *            a PersistentObject to match
-	 * @return XIDMATCH.SURE if both xids match in one or more identities of GUID quality or in two
-	 *         or more identities without GUID quality but more than local assignment.<br/>
-	 *         XIDMATCH.POSSIBLE if the xids match in one identity without GUID quality
-	 *         XIDMATCH.NONE otherwise.
+	 * @return XIDMATCH.SURE if both xids match in one or more identities of GUID
+	 *         quality or in two or more identities without GUID quality but more
+	 *         than local assignment.<br/>
+	 *         XIDMATCH.POSSIBLE if the xids match in one identity without GUID
+	 *         quality XIDMATCH.NONE otherwise.
 	 */
 	@SuppressWarnings("unchecked")
-	public XIDMATCH match(PersistentObject po){
+	public XIDMATCH match(PersistentObject po) {
 		if (po.getId().equals(getAttr(ATTR_ID))) {
 			return XIDMATCH.SURE;
 		}
@@ -234,7 +231,7 @@ public class XidElement extends XChangeElement {
 			String domid = xid.getDomainId();
 			for (Identity ident : idents) {
 				if (ident.getAttr(ATTR_IDENTITY_DOMAIN).equals(domain)
-					&& ident.getAttr(ATTR_IDENTITY_DOMAIN_ID).equals(domid)) {
+						&& ident.getAttr(ATTR_IDENTITY_DOMAIN_ID).equals(domid)) {
 					if (XidElement.isUUID(xid)) {
 						return XIDMATCH.SURE;
 					} else {
@@ -246,23 +243,24 @@ public class XidElement extends XChangeElement {
 			}
 		}
 		switch (sure) {
-		case 0:
-			return XIDMATCH.NONE;
-		case 1:
-			return XIDMATCH.POSSIBLE;
-		default:
-			return XIDMATCH.SURE;
+			case 0 :
+				return XIDMATCH.NONE;
+			case 1 :
+				return XIDMATCH.POSSIBLE;
+			default :
+				return XIDMATCH.SURE;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Find the Object(s) possibly matching this Xid-Element
 	 * 
-	 * @return a List with matching objects that might be empty but will not be null.
+	 * @return a List with matching objects that might be empty but will not be
+	 *         null.
 	 */
 	@SuppressWarnings("unchecked")
-	public List<IPersistentObject> findObject(){
+	public List<IPersistentObject> findObject() {
 		List<Identity> idents = (List<Identity>) getChildren(ELEMENT_IDENTITY, Identity.class);
 		List<IPersistentObject> candidates = new LinkedList<IPersistentObject>();
 		boolean lastGuid = false;
@@ -290,22 +288,21 @@ public class XidElement extends XChangeElement {
 				lastGuid = actGuid;
 			}
 		}
-		
+
 		return candidates;
 	}
-	
+
 	public static class Identity extends XChangeElement {
-		
-		public Identity(){
-			
+
+		public Identity() {
+
 		}
-		
-		public String getXMLName(){
+
+		public String getXMLName() {
 			return ELEMENT_IDENTITY;
 		}
-		
-		public Identity asExporter(XChangeExporter home, String domain, String domain_id,
-			int quality, boolean isGuid){
+
+		public Identity asExporter(XChangeExporter home, String domain, String domain_id, int quality, boolean isGuid) {
 			asExporter(home);
 			setAttribute(ATTR_IDENTITY_DOMAIN, domain);
 			setAttribute(ATTR_IDENTITY_DOMAIN_ID, domain_id);
@@ -313,22 +310,22 @@ public class XidElement extends XChangeElement {
 			setAttribute(ATTR_ISGUID, Boolean.toString(isGuid));
 			return this;
 		}
-		
+
 		public String getDomain() {
 			return getAttr(ATTR_IDENTITY_DOMAIN);
 		}
-		
+
 		public String getDomainId() {
 			return getAttr(ATTR_IDENTITY_DOMAIN_ID);
 		}
-		
-		public int getQuality(){
+
+		public int getQuality() {
 			String sq = getAttr(ATTR_IDENTITY_QUALITY);
 			int idx = StringTool.getIndex(IDENTITY_QUALITIES, sq);
 			return idx > 0 ? idx : 0;
 		}
-		
-		public boolean isGuid(){
+
+		public boolean isGuid() {
 			return Boolean.parseBoolean(getAttr(ATTR_ISGUID));
 		}
 	}

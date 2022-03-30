@@ -38,8 +38,8 @@ import ch.rgw.tools.JdbcLink;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "rdbmsType", "hostName", "port", "databaseName", "connectionString", "username", "password",
-		"text" })
+@XmlType(propOrder = {"rdbmsType", "hostName", "port", "databaseName", "connectionString", "username", "password",
+		"text"})
 public class DBConnection implements Serializable {
 
 	private static final long serialVersionUID = -7571011690246990109L;
@@ -62,7 +62,7 @@ public class DBConnection implements Serializable {
 			this.defaultPort = defaultPort;
 		}
 
-		public static Optional<DBType> valueOfIgnoreCase(String value){
+		public static Optional<DBType> valueOfIgnoreCase(String value) {
 			for (DBType dbType : values()) {
 				if (dbType.dbType.equalsIgnoreCase(value)) {
 					return Optional.of(dbType);
@@ -70,7 +70,7 @@ public class DBConnection implements Serializable {
 			}
 			return Optional.empty();
 		}
-		
+
 		public static Optional<DBType> valueOfDriver(String driver) {
 			// compatibility for old mysql driver string
 			if (driver.equals("com.mysql.jdbc.Driver")) {

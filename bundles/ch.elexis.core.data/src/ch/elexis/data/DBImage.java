@@ -31,39 +31,36 @@ public class DBImage extends PersistentObject {
 	public static final String FLD_IMAGE = "Bild";
 	public static final String DBVERSION = "1.0.0";
 	public static final String TABLENAME = "DBIMAGE";
-	
+
 	static {
 		addMapping(TABLENAME, DATE_COMPOUND, FLD_PREFIX, "Titel=Title", FLD_IMAGE);
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		StringBuilder sb = new StringBuilder();
 		synchronized (sb) {
-			sb.append(get(DATE)).append(" - ").append(get(FLD_TITLE))
-				.append(StringConstants.OPENBRACKET).append(get(FLD_PREFIX))
-				.append(StringConstants.CLOSEBRACKET);
+			sb.append(get(DATE)).append(" - ").append(get(FLD_TITLE)).append(StringConstants.OPENBRACKET)
+					.append(get(FLD_PREFIX)).append(StringConstants.CLOSEBRACKET);
 			return sb.toString();
 		}
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return get(FLD_TITLE);
 	}
-	
-	public DBImage(String prefix, final String name){
+
+	public DBImage(String prefix, final String name) {
 		create(null);
-		
+
 		if (StringTool.isNothing(prefix)) {
 			prefix = DEFAULT_PREFIX;
 		}
-		
-		set(new String[] {
-			FLD_PREFIX, FLD_TITLE
-		}, prefix, name);
+
+		set(new String[]{FLD_PREFIX, FLD_TITLE}, prefix, name);
 	}
-	
-	public static DBImage find(String prefix, String name){
+
+	public static DBImage find(String prefix, String name) {
 		Query<DBImage> qbe = new Query<DBImage>(DBImage.class);
 		if (StringTool.isNothing(prefix)) {
 			prefix = DEFAULT_PREFIX;
@@ -76,21 +73,22 @@ public class DBImage extends PersistentObject {
 		}
 		return null;
 	}
-	
-	public static DBImage load(String id){
+
+	public static DBImage load(String id) {
 		DBImage ret = new DBImage(id);
 		return ret;
 	}
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return TABLENAME;
 	}
-	
-	protected DBImage(String id){
+
+	protected DBImage(String id) {
 		super(id);
 	}
-	
-	protected DBImage(){}
-	
+
+	protected DBImage() {
+	}
+
 }

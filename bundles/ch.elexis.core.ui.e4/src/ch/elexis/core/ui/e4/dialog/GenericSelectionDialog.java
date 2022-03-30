@@ -22,60 +22,61 @@ import org.eclipse.swt.widgets.Shell;
 import ch.elexis.core.model.Identifiable;
 
 /**
- * Dialog for managing the selection from a list of objects. For each Object a checkbox with text is
- * displayed. For Identifiable instances the Label property is displayed, else toString.
+ * Dialog for managing the selection from a list of objects. For each Object a
+ * checkbox with text is displayed. For Identifiable instances the Label
+ * property is displayed, else toString.
  */
 public class GenericSelectionDialog extends TitleAreaDialog {
-	
+
 	private List<?> input;
 	private Map<Object, Button> buttonMap = new HashMap<>();
 	private List<Object> selection = new LinkedList<>();
-	
+
 	private String title;
 	private String message;
-	
-	public GenericSelectionDialog(Shell parentShell, List<?> input, String title, String message){
+
+	public GenericSelectionDialog(Shell parentShell, List<?> input, String title, String message) {
 		super(parentShell);
 		this.title = title;
 		this.message = message;
 		this.input = input;
 		setBlockOnOpen(true);
 	}
-	
-	public GenericSelectionDialog(Shell parentShell, List<?> input){
+
+	public GenericSelectionDialog(Shell parentShell, List<?> input) {
 		this(parentShell, input, "Auswahl", null);
 	}
-	
-	public void setSelection(List<Object> selection){
+
+	public void setSelection(List<Object> selection) {
 		this.selection = new LinkedList<>(selection);
 	}
-	
-	public IStructuredSelection getSelection(){
+
+	public IStructuredSelection getSelection() {
 		return new StructuredSelection(selection);
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		setTitle(title);
 		setMessage(message);
-		
+
 		Composite ret = (Composite) super.createDialogArea(parent);
 		ScrolledComposite sc = new ScrolledComposite(ret, SWT.H_SCROLL | SWT.V_SCROLL);
-		
+
 		Composite child = new Composite(sc, SWT.NONE);
 		child.setLayout(new GridLayout());
-		
+
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 		data.heightHint = 400;
 		sc.setLayoutData(data);
-		
+
 		// create the UI
 		for (Object object : input) {
 			Button button = new Button(child, SWT.CHECK);
 			button.setText(getLabel(object));
 			button.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					if (button.getSelection()) {
 						selection.add(object);
 					} else {
@@ -85,27 +86,26 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 			});
 			buttonMap.put(object, button);
 		}
-		
+
 		sc.setMinSize(child.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		sc.setExpandHorizontal(true);
 		sc.setExpandVertical(true);
 		sc.setContent(child);
-		
-		
+
 		updateSelectionUi();
-		
+
 		return ret;
 	}
-	
-	private void updateSelectionUi(){
+
+	private void updateSelectionUi() {
 		if (selection != null && !selection.isEmpty() && !buttonMap.isEmpty()) {
 			for (Object object : selection) {
 				buttonMap.get(object).setSelection(true);
 			}
 		}
 	}
-	
-	public static String getLabel(Object object){
+
+	public static String getLabel(Object object) {
 		if (object instanceof Identifiable) {
 			return ((Identifiable) object).getLabel();
 		} else if (object != null) {
@@ -114,5 +114,5 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 			return "";
 		}
 	}
-	
+
 }

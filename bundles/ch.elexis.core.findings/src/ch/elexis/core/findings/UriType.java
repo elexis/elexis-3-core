@@ -7,18 +7,18 @@ package ch.elexis.core.findings;
  *
  */
 public enum UriType {
-		HTTP("http://"), DB("");
+	HTTP("http://"), DB("");
 	private final String prefix;
-	
-	private UriType(String prefix){
+
+	private UriType(String prefix) {
 		this.prefix = prefix;
 	}
-	
-	public String getPrefix(){
+
+	public String getPrefix() {
 		return prefix;
 	}
-	
-	public static UriType parseType(String uri){
+
+	public static UriType parseType(String uri) {
 		if (uri != null) {
 			if (uri.contains("::")) {
 				return DB;
@@ -28,8 +28,8 @@ public enum UriType {
 		}
 		return null;
 	}
-	
-	public String toString(String extension){
+
+	public String toString(String extension) {
 		return prefix + extension;
 	}
 }

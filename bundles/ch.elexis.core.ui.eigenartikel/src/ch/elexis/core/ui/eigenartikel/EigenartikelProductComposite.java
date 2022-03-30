@@ -44,9 +44,9 @@ import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class EigenartikelProductComposite extends Composite implements IUnlockable {
-	
+
 	private WritableValue<IArticle> productEigenartikel = new WritableValue<>(null, IArticle.class);
-	
+
 	private Text txtProductName;
 	private Text txtAtcCode;
 	private ComboViewer comboViewerProductType;
@@ -54,101 +54,99 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 	private Button btnAddDrugPackage;
 	private ScrolledComposite scrolledComposite;
 	private Composite compositeArticleItems;
-	
+
 	/**
 	 * Create the composite.
 	 * 
 	 * @param parent
 	 * @param style
 	 */
-	public EigenartikelProductComposite(Composite parent, int style){
+	public EigenartikelProductComposite(Composite parent, int style) {
 		super(parent, SWT.BORDER_SOLID);
 		setLayout(new GridLayout(2, false));
-		
+
 		Label lblProductName = new Label(this, SWT.NONE);
 		lblProductName.setAlignment(SWT.RIGHT);
 		lblProductName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblProductName.setText(Messages.EigenartikelDisplay_productName);
-		
+
 		txtProductName = new Text(this, SWT.BORDER);
 		txtProductName.setTextLimit(127);
 		txtProductName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblProductType = new Label(this, SWT.NONE);
 		lblProductType.setAlignment(SWT.RIGHT);
 		lblProductType.setText(Messages.EigenartikelComposite_lblProductType_text);
-		
+
 		comboViewerProductType = new ComboViewer(this, SWT.NONE);
 		Combo comboProductType = comboViewerProductType.getCombo();
-		
+
 		GridData gd_comboProductType = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_comboProductType.widthHint = 300;
 		comboProductType.setLayoutData(gd_comboProductType);
 		comboViewerProductType.setContentProvider(ArrayContentProvider.getInstance());
 		comboViewerProductType.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return ((ArticleSubTyp) element).getLocaleText();
 			}
 		});
 		comboViewerProductType.setInput(ArticleSubTyp.values());
-		
+
 		lblAtcCode = new Label(this, SWT.NONE);
 		lblAtcCode.setAlignment(SWT.RIGHT);
 		lblAtcCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblAtcCode.setText(Messages.EigenartikelDisplay_atcCode);
-		
+
 		Composite compAtcCode = new Composite(this, SWT.NONE);
 		GridLayout gl_compAtcCode = new GridLayout(2, false);
 		gl_compAtcCode.marginWidth = 0;
 		gl_compAtcCode.marginHeight = 0;
 		compAtcCode.setLayout(gl_compAtcCode);
 		compAtcCode.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		
+
 		txtAtcCode = new Text(compAtcCode, SWT.BORDER);
 		GridData gd_txtAtcCode = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_txtAtcCode.widthHint = 300;
 		txtAtcCode.setLayoutData(gd_txtAtcCode);
 		txtAtcCode.setTextLimit(8);
 		new Label(compAtcCode, SWT.NONE);
-		
+
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
-		
+
 		btnAddDrugPackage = new Button(this, SWT.FLAT);
 		btnAddDrugPackage.setText(Messages.EigenartikelComposite_newArticle_text);
 		btnAddDrugPackage.setImage(Images.IMG_NEW.getImage());
 		btnAddDrugPackage.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		
+
 		scrolledComposite = new ScrolledComposite(this, SWT.V_SCROLL | SWT.H_SCROLL);
 		scrolledComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
 		scrolledComposite.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
-		
+
 		compositeArticleItems = new Composite(scrolledComposite, SWT.BORDER_DASH);
-		
+
 		GridLayout gl_compositeArticleItems = new GridLayout(1, false);
 		gl_compositeArticleItems.marginWidth = 0;
 		gl_compositeArticleItems.marginHeight = 0;
 		compositeArticleItems.setLayout(gl_compositeArticleItems);
 		compositeArticleItems.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-		
+
 		scrolledComposite.setContent(compositeArticleItems);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
-		
+
 		comboProductType.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
-				EigenartikelUtil.copyProductAttributesToArticleSetAsChild(getProductArtikel(),
-					null);
-				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
-					getProductArtikel());
+			public void widgetSelected(SelectionEvent e) {
+				EigenartikelUtil.copyProductAttributesToArticleSetAsChild(getProductArtikel(), null);
+				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, getProductArtikel());
 			}
 		});
-		
+
 		btnAddDrugPackage.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				IArticle product = getProductArtikel();
 				if (product != null) {
 					IArticle articleNew = CoreModelServiceHolder.get().create(IArticle.class);
@@ -158,28 +156,26 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 					CoreModelServiceHolder.get().save(articleNew);
 					createEigenartikelComposite(articleNew);
 					scrolledComposite.setVisible(true);
-					scrolledComposite
-						.setMinSize(compositeArticleItems.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+					scrolledComposite.setMinSize(compositeArticleItems.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 					scrolledComposite.layout(true, true);
-					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
-						IArticle.class);
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IArticle.class);
 				}
 			}
 		});
-		
+
 		setUnlocked(false);
-		
+
 		initDataBindings();
 	}
-	
+
 	@Override
-	protected void checkSubclass(){
+	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
-		
+
 	}
-	
+
 	@Override
-	public void setUnlocked(boolean unlocked){
+	public void setUnlocked(boolean unlocked) {
 		txtProductName.setEditable(unlocked);
 		txtAtcCode.setEditable(unlocked);
 		comboViewerProductType.getCombo().setEnabled(unlocked);
@@ -189,14 +185,14 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 			ul.setUnlocked(unlocked);
 		}
 	}
-	
-	public IArticle getProductArtikel(){
+
+	public IArticle getProductArtikel() {
 		return (IArticle) productEigenartikel.getValue();
 	}
-	
-	public void setProductEigenartikel(IArticle productEigenartikel){
+
+	public void setProductEigenartikel(IArticle productEigenartikel) {
 		this.productEigenartikel.setValue(productEigenartikel);
-		
+
 		for (Control c : compositeArticleItems.getChildren()) {
 			c.dispose();
 		}
@@ -215,73 +211,65 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		scrolledComposite.setMinSize(compositeArticleItems.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		scrolledComposite.layout(true, true);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void initDataBindings(){
+	public void initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
-		
+
 		//
-		ISWTObservableValue observeTextTxtProductNameObserveWidget =
-			WidgetProperties.text(SWT.Modify).observeDelayed(300, txtProductName);
+		ISWTObservableValue observeTextTxtProductNameObserveWidget = WidgetProperties.text(SWT.Modify)
+				.observeDelayed(300, txtProductName);
 		IObservableValue<String> productEigenartikelNameObserveDetailValue = PojoProperties
-			.value(IArticle.class, "name", String.class).observeDetail(productEigenartikel);
-		bindingContext.bindValue(observeTextTxtProductNameObserveWidget,
-			productEigenartikelNameObserveDetailValue,
-			new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
+				.value(IArticle.class, "name", String.class).observeDetail(productEigenartikel);
+		bindingContext.bindValue(observeTextTxtProductNameObserveWidget, productEigenartikelNameObserveDetailValue,
+				new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
 		observeTextTxtProductNameObserveWidget.addValueChangeListener(new IValueChangeListener() {
 			@Override
-			public void handleValueChange(ValueChangeEvent event){
+			public void handleValueChange(ValueChangeEvent event) {
 				if (productEigenartikel.getValue() != null) {
-					if (event.diff.getOldValue() != null
-						&& !event.diff.getOldValue().toString().isEmpty()) {
+					if (event.diff.getOldValue() != null && !event.diff.getOldValue().toString().isEmpty()) {
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
-							productEigenartikel.getValue());
+								productEigenartikel.getValue());
 					}
 				}
 			}
 		});
-		
+
 		//
-		IViewerObservableValue observeSingleSelectionComboViewerProductType =
-			ViewerProperties.singleSelection().observe(comboViewerProductType);
-		IObservableValue<IArticle> productEigenartikelTypObserveDetailValue =
-			PojoProperties.value(IArticle.class, "subTyp", ArticleSubTyp.class)
-				.observeDetail(productEigenartikel);
-		bindingContext.bindValue(observeSingleSelectionComboViewerProductType,
-			productEigenartikelTypObserveDetailValue,
-			new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
-		
+		IViewerObservableValue observeSingleSelectionComboViewerProductType = ViewerProperties.singleSelection()
+				.observe(comboViewerProductType);
+		IObservableValue<IArticle> productEigenartikelTypObserveDetailValue = PojoProperties
+				.value(IArticle.class, "subTyp", ArticleSubTyp.class).observeDetail(productEigenartikel);
+		bindingContext.bindValue(observeSingleSelectionComboViewerProductType, productEigenartikelTypObserveDetailValue,
+				new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
+
 		//
-		ISWTObservableValue observeTextTxtAtcCodeObserveWidget =
-			WidgetProperties.text(SWT.Modify).observeDelayed(300, txtAtcCode);
+		ISWTObservableValue observeTextTxtAtcCodeObserveWidget = WidgetProperties.text(SWT.Modify).observeDelayed(300,
+				txtAtcCode);
 		IObservableValue<String> productEigenartikelATC_codeObserveDetailValue = PojoProperties
-			.value(IArticle.class, "atcCode", String.class).observeDetail(productEigenartikel);
-		bindingContext.bindValue(observeTextTxtAtcCodeObserveWidget,
-			productEigenartikelATC_codeObserveDetailValue,
-			new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
+				.value(IArticle.class, "atcCode", String.class).observeDetail(productEigenartikel);
+		bindingContext.bindValue(observeTextTxtAtcCodeObserveWidget, productEigenartikelATC_codeObserveDetailValue,
+				new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
 	}
-	
-	private void createEigenartikelComposite(IArticle articleNew){
-		EigenartikelComposite ec =
-			new EigenartikelComposite(compositeArticleItems, SWT.NONE, articleNew);
+
+	private void createEigenartikelComposite(IArticle articleNew) {
+		EigenartikelComposite ec = new EigenartikelComposite(compositeArticleItems, SWT.NONE, articleNew);
 		ec.setUnlocked(LocalLockServiceHolder.get().isLocked(productEigenartikel.getValue()));
 	}
-	
+
 	private class SavingUpdateProductChilds extends SavingUpdateValueStrategy {
-		
-		public SavingUpdateProductChilds(IModelService modelService,
-			IObservableValue<?> observable){
+
+		public SavingUpdateProductChilds(IModelService modelService, IObservableValue<?> observable) {
 			super(modelService, observable);
 		}
-		
+
 		@Override
-		protected IStatus doSet(IObservableValue observableValue, Object value){
+		protected IStatus doSet(IObservableValue observableValue, Object value) {
 			IStatus status = super.doSet(observableValue, value);
 			EigenartikelUtil.copyProductAttributesToArticleSetAsChild(getProductArtikel(), null);
-			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
-				getProductArtikel());
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, getProductArtikel());
 			return status;
-			
+
 		}
 	}
 }

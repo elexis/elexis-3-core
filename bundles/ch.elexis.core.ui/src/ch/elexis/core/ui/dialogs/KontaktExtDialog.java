@@ -133,7 +133,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 				// and the corresponding tooltip as l10n messages
 				// Eg. for the key TarmedKanton we fetchh the messages
 				// KontaktExtInfo_TarmedKanton and
-				// KontaktExtInfo_TarmedKanton_tooltip 
+				// KontaktExtInfo_TarmedKanton_tooltip
 				String msg_key_label = "KontaktExtInfo_" + key; //$NON-NLS-1$
 				msg_key_label = msg_key_label.replaceAll("[^a-zA-Z0-9_]", "_");
 				String msg_key_tooltip = "KontaktExtInfo_" + key + "_tooltip"; //$NON-NLS-1$ //$NON-NLS-2$

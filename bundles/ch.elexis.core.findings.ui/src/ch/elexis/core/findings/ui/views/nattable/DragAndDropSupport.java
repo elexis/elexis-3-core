@@ -17,40 +17,39 @@ import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.data.PersistentObjectFactory;
 
 public class DragAndDropSupport implements DragSourceListener, DropTargetListener {
-	
+
 	private static final String DATA_SEPARATOR = ",";
-	
+
 	private final NatTableWrapper tableWrapper;
-	
+
 	private List<Object> draggedObjects;
-	
+
 	PersistentObjectFactory factory = new PersistentObjectFactory();
-	
-	public DragAndDropSupport(NatTableWrapper tableWrapper){
+
+	public DragAndDropSupport(NatTableWrapper tableWrapper) {
 		this.tableWrapper = tableWrapper;
 	}
-	
+
 	@Override
-	public void dragStart(DragSourceEvent event){
+	public void dragStart(DragSourceEvent event) {
 		if (this.tableWrapper.getSelectionLayer().getSelectedRowCount() == 0) {
 			event.doit = false;
-		} else if (!this.tableWrapper.getNatTable().getRegionLabelsByXY(event.x, event.y)
-			.hasLabel(GridRegion.BODY)) {
+		} else if (!this.tableWrapper.getNatTable().getRegionLabelsByXY(event.x, event.y).hasLabel(GridRegion.BODY)) {
 			event.doit = false;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void dragSetData(DragSourceEvent event){
+	public void dragSetData(DragSourceEvent event) {
 		// we know that we use the RowSelectionModel with single selection
 		StructuredSelection selection = (StructuredSelection) tableWrapper.getSelection();
-		
+
 		if (!selection.isEmpty()) {
 			this.draggedObjects = new ArrayList<>(selection.toList());
 			StringBuilder builder = new StringBuilder();
 			for (Object object : draggedObjects) {
-				if(builder.length() > 0) {
+				if (builder.length() > 0) {
 					builder.append(DATA_SEPARATOR);
 				}
 				builder.append(getStringForObject(object));
@@ -58,40 +57,41 @@ public class DragAndDropSupport implements DragSourceListener, DropTargetListene
 			event.data = builder.toString();
 		}
 	}
-	
-	private Object getStringForObject(Object object){
+
+	private Object getStringForObject(Object object) {
 		if (object instanceof Identifiable) {
-			return StoreToStringServiceHolder.get().storeToString((Identifiable) object)
-				.orElse(object.toString());
+			return StoreToStringServiceHolder.get().storeToString((Identifiable) object).orElse(object.toString());
 		}
 		return object.toString();
 	}
-	
+
 	@Override
-	public void dragFinished(DragSourceEvent event){
+	public void dragFinished(DragSourceEvent event) {
 		this.draggedObjects = null;
-		
+
 		this.tableWrapper.getNatTable().refresh();
 	}
-	
+
 	@Override
-	public void dragEnter(DropTargetEvent event){
+	public void dragEnter(DropTargetEvent event) {
 		event.detail = DND.DROP_COPY;
 	}
-	
+
 	@Override
-	public void dragLeave(DropTargetEvent event){}
-	
+	public void dragLeave(DropTargetEvent event) {
+	}
+
 	@Override
-	public void dragOperationChanged(DropTargetEvent event){}
-	
+	public void dragOperationChanged(DropTargetEvent event) {
+	}
+
 	@Override
-	public void dragOver(DropTargetEvent event){}
-	
+	public void dragOver(DropTargetEvent event) {
+	}
+
 	@Override
-	public void drop(DropTargetEvent event){
-		String[] data = (event.data != null ? event.data.toString().split("\\" + DATA_SEPARATOR)
-				: new String[] {});
+	public void drop(DropTargetEvent event) {
+		String[] data = (event.data != null ? event.data.toString().split("\\" + DATA_SEPARATOR) : new String[]{});
 		if (data.length > 0) {
 			for (String string : data) {
 				Object object = getObjectForString(data[0]);
@@ -103,25 +103,26 @@ public class DragAndDropSupport implements DragSourceListener, DropTargetListene
 			}
 		}
 	}
-	
-	private Object getObjectForString(String string){
+
+	private Object getObjectForString(String string) {
 		// PersistentObject ?
-		if(string.contains("::")) {
+		if (string.contains("::")) {
 			return factory.createFromString(string);
 		}
 		return null;
 	}
-	
-	private int getColumnPosition(DropTargetEvent event){
+
+	private int getColumnPosition(DropTargetEvent event) {
 		Point pt = event.display.map(null, tableWrapper.getNatTable(), event.x, event.y);
 		int position = this.tableWrapper.getNatTable().getColumnPositionByX(pt.x);
 		return position;
 	}
-	
+
 	@Override
-	public void dropAccept(DropTargetEvent event){}
-	
-	private int getRowPosition(DropTargetEvent event){
+	public void dropAccept(DropTargetEvent event) {
+	}
+
+	private int getRowPosition(DropTargetEvent event) {
 		Point pt = event.display.map(null, tableWrapper.getNatTable(), event.x, event.y);
 		int position = this.tableWrapper.getNatTable().getRowPositionByY(pt.y);
 		return position;

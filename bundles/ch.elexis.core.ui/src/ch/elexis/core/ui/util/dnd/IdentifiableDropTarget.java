@@ -29,32 +29,30 @@ import ch.elexis.core.model.Identifiable;
 public class IdentifiableDropTarget implements DropTargetListener {
 	IReceiver receiver;
 	String name = "";
-	
-	public IdentifiableDropTarget(Control target, IReceiver receiver){
+
+	public IdentifiableDropTarget(Control target, IReceiver receiver) {
 		this.receiver = receiver;
 		DropTarget dtarget = new DropTarget(target, DND.DROP_COPY);
 		final TextTransfer textTransfer = TextTransfer.getInstance();
-		Transfer[] types = new Transfer[] {
-			textTransfer
-		};
+		Transfer[] types = new Transfer[]{textTransfer};
 		dtarget.setTransfer(types);
 		dtarget.addDropListener(this);
 	}
-	
-	public void dragEnter(DropTargetEvent event){
+
+	public void dragEnter(DropTargetEvent event) {
 		if (receiver.accept(getIdentifiables(event))) {
 			event.detail = DND.DROP_COPY;
 		} else {
 			event.detail = DND.DROP_NONE;
-		}		
+		}
 	}
-	
-	public void drop(DropTargetEvent event){
+
+	public void drop(DropTargetEvent event) {
 		receiver.dropped(getIdentifiables(event));
 	}
-	
-	private List<Identifiable> getIdentifiables(DropTargetEvent event){
-		List<Identifiable> ret = new ArrayList<>(); 
+
+	private List<Identifiable> getIdentifiables(DropTargetEvent event) {
+		List<Identifiable> ret = new ArrayList<>();
 		if (event.data instanceof String) {
 			String[] parts = ((String) event.data).split(","); //$NON-NLS-1$
 			for (String part : parts) {
@@ -64,38 +62,38 @@ public class IdentifiableDropTarget implements DropTargetListener {
 		}
 		return ret;
 	}
-	
-	public void dropAccept(DropTargetEvent event){
+
+	public void dropAccept(DropTargetEvent event) {
 		if (!receiver.accept(getIdentifiables(event))) {
 			event.detail = DND.DROP_NONE;
 		}
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
+
 	public interface IReceiver {
 		public void dropped(List<Identifiable> identifiables);
-		
+
 		public boolean accept(List<Identifiable> identifiables);
 	}
-	
+
 	@Override
-	public void dragLeave(DropTargetEvent event){
+	public void dragLeave(DropTargetEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void dragOperationChanged(DropTargetEvent event){
+	public void dragOperationChanged(DropTargetEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void dragOver(DropTargetEvent event){
+	public void dragOver(DropTargetEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

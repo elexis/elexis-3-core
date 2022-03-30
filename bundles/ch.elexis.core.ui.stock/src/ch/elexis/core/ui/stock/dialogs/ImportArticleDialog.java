@@ -65,30 +65,30 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class ImportArticleDialog extends TitleAreaDialog {
-	
+
 	private ComboViewer comboStockType;
 	private Text tFilePath;
 	private StringBuffer reportBuilder = null;
 	private Link reportLink;
-	
-	public ImportArticleDialog(Shell parentShell){
+
+	public ImportArticleDialog(Shell parentShell) {
 		super(parentShell);
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		reportBuilder = null;
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(3, false));
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		new Label(ret, SWT.NONE).setText("Import in Lager");
-		
+
 		comboStockType = new ComboViewer(ret, SWT.BORDER | SWT.READ_ONLY);
 		comboStockType.setContentProvider(ArrayContentProvider.getInstance());
 		comboStockType.setInput(StockServiceHolder.get().getAllStocks(false));
 		comboStockType.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection instanceof StructuredSelection) {
 					if (!selection.isEmpty()) {
@@ -99,7 +99,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		});
 		comboStockType.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof IStock) {
 					IStock stock = (IStock) element;
 					return stock.getLabel();
@@ -108,111 +108,101 @@ public class ImportArticleDialog extends TitleAreaDialog {
 			}
 		});
 		comboStockType.getCombo().setLayoutData(SWTHelper.getFillGridData(2, false, 1, false));
-		
-		comboStockType
-			.setSelection(new StructuredSelection(StockServiceHolder.get().getDefaultStock()));
-		
+
+		comboStockType.setSelection(new StructuredSelection(StockServiceHolder.get().getDefaultStock()));
+
 		new Label(ret, SWT.NONE).setText("Quelldatei auswählen");
-		
+
 		tFilePath = new Text(ret, SWT.BORDER);
 		tFilePath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tFilePath.setText("");
 		Button btnBrowse = new Button(ret, SWT.NONE);
 		btnBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
-				fd.setFilterExtensions(new String[] {
-					"*.xls"
-				});
+				fd.setFilterExtensions(new String[]{"*.xls"});
 				String selected = fd.open();
 				tFilePath.setText(selected);
 			}
 		});
 		btnBrowse.setText("auswählen..");
-		
+
 		reportLink = new Link(ret, SWT.NONE);
 		reportLink.setText("");
 		reportLink.setVisible(false);
 		reportLink.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, true, 3, 1));
 		// Event handling when users click on links.
 		reportLink.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				FileDialog fd = new FileDialog(getShell(), SWT.SAVE);
-				fd.setFilterExtensions(new String[] {
-					"*.csv"
-				});
+				fd.setFilterExtensions(new String[]{"*.csv"});
 				fd.setFileName("report.csv");
 				String path = fd.open();
 				if (path != null) {
 					try {
-						FileUtils.writeStringToFile(new File(path), reportBuilder.toString(),
-							"UTF-8");
+						FileUtils.writeStringToFile(new File(path), reportBuilder.toString(), "UTF-8");
 					} catch (IOException e1) {
 						MessageDialog.openError(getShell(), "Report Error",
-							"Report konnte nicht gespeichert werden.\n\n" + e1.getMessage());
-						LoggerFactory.getLogger(ImportArticleDialog.class)
-							.error("report save error", e1);
+								"Report konnte nicht gespeichert werden.\n\n" + e1.getMessage());
+						LoggerFactory.getLogger(ImportArticleDialog.class).error("report save error", e1);
 					}
 				}
 			}
-			
+
 		});
-		
+
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		setTitle("Artikel Importieren"); //$NON-NLS-1$
 		setMessage("Bitte wählen Sie die Quelle aus, aus dem Sie die Artikel importieren möchten."); //$NON-NLS-1$
 		getShell().setText("Artikel Import"); //$NON-NLS-1$
 		getShell().setImage(Images.IMG_PILL.getImage());
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		reportLink.setVisible(false);
 		reportBuilder = new StringBuffer();
 		doImport();
 		if (reportBuilder.length() > 0) {
-			reportLink.setText(" <a href=\"\">Import Report vom "
-				+ new TimeTool().toString(TimeTool.FULL_GER) + "</a>");
+			reportLink
+					.setText(" <a href=\"\">Import Report vom " + new TimeTool().toString(TimeTool.FULL_GER) + "</a>");
 			reportLink.setVisible(true);
 		}
 	}
-	
-	private void doImport(){
-		
+
+	private void doImport() {
+
 		StringBuffer buf = new StringBuffer();
-		
+
 		// check for store availability
-		
+
 		// check for stock availability
 		StructuredSelection iSelection = (StructuredSelection) comboStockType.getSelection();
 		if (iSelection.isEmpty()) {
 			buf.append("Bitte wählen Sie ein Lager aus.");
 		} else {
 			final IStock stock = (IStock) iSelection.getFirstElement();
-			
+
 			// check src file
 			String path = tFilePath.getText();
 			if (path != null && !path.isEmpty() && path.toLowerCase().endsWith("xls")) {
-				
+
 				try (FileInputStream is = new FileInputStream(tFilePath.getText())) {
 					ExcelWrapper xl = new ExcelWrapper();
 					if (xl.load(is, 0)) {
-						xl.setFieldTypes(new Class[] {
-							Integer.class, String.class, String.class, String.class, String.class,
-							String.class, Integer.class, String.class, String.class, String.class
-						});
+						xl.setFieldTypes(new Class[]{Integer.class, String.class, String.class, String.class,
+								String.class, String.class, Integer.class, String.class, String.class, String.class});
 						MessageDialog dialog = new MessageDialog(getShell(), "Datenimport", null,
-							"Wie sollen die Datenbestände importiert werden ?",
-							MessageDialog.QUESTION, 0, "Datenbestand 'exakt' importieren",
-							"Datenbestand 'aufaddieren'");
+								"Wie sollen die Datenbestände importiert werden ?", MessageDialog.QUESTION, 0,
+								"Datenbestand 'exakt' importieren", "Datenbestand 'aufaddieren'");
 						int ret = dialog.open();
 						if (ret >= 0) {
 							runImport(buf, stock, xl, ret == 0);
@@ -221,39 +211,36 @@ public class ImportArticleDialog extends TitleAreaDialog {
 					}
 				} catch (IOException e) {
 					MessageDialog.openError(getShell(), "Import error",
-						"Import fehlgeschlagen.\nDatei nicht importierbar: " + path);
-					LoggerFactory.getLogger(ImportArticleDialog.class)
-						.error("cannot import file at " + path, e);
+							"Import fehlgeschlagen.\nDatei nicht importierbar: " + path);
+					LoggerFactory.getLogger(ImportArticleDialog.class).error("cannot import file at " + path, e);
 				}
 			} else {
-				buf.append(
-					"Die Quelldatei ist ungültig. Bitte überprüfen Sie diese Datei.\n" + path);
+				buf.append("Die Quelldatei ist ungültig. Bitte überprüfen Sie diese Datei.\n" + path);
 			}
 		}
-		
+
 		if (buf.length() > 0) {
 			MessageDialog.openInformation(getShell(), "Import Ergebnis", buf.toString());
 		} else {
 			MessageDialog.openWarning(getShell(), "Import Ergebnis",
-				"Import nicht möglich.\nÜberprüfen Sie das Log-File.");
+					"Import nicht möglich.\nÜberprüfen Sie das Log-File.");
 		}
 	}
-	
-	private void runImport(StringBuffer buf, final IStock stock, ExcelWrapper xl,
-		boolean overrideStockEntries){
+
+	private void runImport(StringBuffer buf, final IStock stock, ExcelWrapper xl, boolean overrideStockEntries) {
 		ProgressMonitorDialog progress = new ProgressMonitorDialog(getShell());
 		try {
 			progress.run(true, true, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor){
-					
+				public void run(IProgressMonitor monitor) {
+
 					int importCount = 0;
 					int articleNotFoundByGtin = 0;
 					int articleNotFoundInStock = 0;
 					int unexpectedErrors = 0;
 					int lastRow = xl.getLastRow();
-					int firstRow = xl.getFirstRow() + 1; //header offset
+					int firstRow = xl.getFirstRow() + 1; // header offset
 					monitor.beginTask("Artikel in Lager Import", 100);
-					
+
 					for (int i = firstRow; i <= lastRow; i++) {
 						Optional<? extends IArticle> opArticle = Optional.empty();
 						List<String> row = xl.getRow(i);
@@ -268,44 +255,38 @@ public class ImportArticleDialog extends TitleAreaDialog {
 						if (row.size() > 9) {
 							stockMax = row.get(9);
 						}
-						
+
 						// search for article
 						opArticle = findArticleByGtin(gtin);
-						
+
 						if (opArticle.isPresent()) {
 							String articleStoreToString = StoreToStringServiceHolder.get()
-								.storeToString(opArticle.get()).get();
+									.storeToString(opArticle.get()).get();
 							// check if article is present in stock
-							IStockEntry stockEntry =
-								StockServiceHolder.get().findStockEntryForArticleInStock(stock,
-									
+							IStockEntry stockEntry = StockServiceHolder.get().findStockEntryForArticleInStock(stock,
+
 									articleStoreToString);
-							
+
 							String result = "MODIFY";
 							if (stockEntry == null) {
-								stockEntry = StockServiceHolder.get().storeArticleInStock(stock,
-									articleStoreToString);
+								stockEntry = StockServiceHolder.get().storeArticleInStock(stock, articleStoreToString);
 								result = "ADDITION";
 							}
-							
+
 							if (stockEntry instanceof IStockEntry) {
 								if (LocalLockServiceHolder.get().acquireLock(stockEntry).isOk()) {
 									// do import
-									stockEntry.setCurrentStock(
-										overrideStockEntries ? StringTool.parseSafeInt(stockCount)
-												: (StringTool.parseSafeInt(stockCount)
-													+ stockEntry.getCurrentStock()));
+									stockEntry.setCurrentStock(overrideStockEntries
+											? StringTool.parseSafeInt(stockCount)
+											: (StringTool.parseSafeInt(stockCount) + stockEntry.getCurrentStock()));
 									if (stockMin != null) {
-										stockEntry
-											.setMinimumStock(StringTool.parseSafeInt(stockMin));
+										stockEntry.setMinimumStock(StringTool.parseSafeInt(stockMin));
 									}
 									if (stockMax != null) {
-										stockEntry
-											.setMaximumStock(StringTool.parseSafeInt(stockMax));
+										stockEntry.setMaximumStock(StringTool.parseSafeInt(stockMax));
 									}
 									importCount++;
-									addToReport("OK " + result + " '" + stock.getLabel() + "'",
-										articleName, gtin);
+									addToReport("OK " + result + " '" + stock.getLabel() + "'", articleName, gtin);
 									CoreModelServiceHolder.get().save(stockEntry);
 									LocalLockServiceHolder.get().releaseLock(stockEntry);
 								} else {
@@ -313,22 +294,21 @@ public class ImportArticleDialog extends TitleAreaDialog {
 									unexpectedErrors++;
 								}
 							} else {
-								addToReport("Not in Stock '" + stock.getLabel() + "'", articleName,
-									gtin);
+								addToReport("Not in Stock '" + stock.getLabel() + "'", articleName, gtin);
 								articleNotFoundInStock++;
 							}
 						} else {
 							articleNotFoundByGtin++;
 							addToReport("Not found by GTIN", articleName, gtin);
 						}
-						
+
 						monitor.worked(1);
 						if (monitor.isCanceled()) {
 							buf.append("Der Import wurde durch den Benutzer abgebrochen.");
 							break;
 						}
 					}
-					
+
 					buf.append(lastRow);
 					buf.append(" Artikel gelesen.");
 					buf.append("\n");
@@ -345,7 +325,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 						buf.append(stock.getLabel());
 						buf.append("' vorhanden.");
 					}
-					
+
 					if (articleNotFoundByGtin > 0) {
 						buf.append("\n");
 						buf.append(articleNotFoundByGtin);
@@ -357,15 +337,14 @@ public class ImportArticleDialog extends TitleAreaDialog {
 						buf.append(" Artikel konnten nicht verarbeitet werden.");
 					}
 				}
-				
+
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			LoggerFactory.getLogger(ImportArticleDialog.class)
-				.warn("Exception during article to lager import.", e);
+			LoggerFactory.getLogger(ImportArticleDialog.class).warn("Exception during article to lager import.", e);
 		}
 	}
-	
-	private void addToReport(String col1, String col2, String col3){
+
+	private void addToReport(String col1, String col2, String col3) {
 		if (reportBuilder != null) {
 			reportBuilder.append(col1);
 			reportBuilder.append(";");
@@ -375,25 +354,25 @@ public class ImportArticleDialog extends TitleAreaDialog {
 			reportBuilder.append("\n");
 		}
 	}
-	
+
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		super.createButtonsForButtonBar(parent);
-		
+
 		Button okBtn = super.getButton(IDialogConstants.OK_ID);
 		if (okBtn != null) {
 			okBtn.setText("Import");
 		}
-		
+
 		Button closeBtn = super.getButton(IDialogConstants.CANCEL_ID);
 		if (closeBtn != null) {
 			closeBtn.setText("Schließen");
 		}
 	}
-	
-	private Optional<IArticle> findArticleByGtin(String scanCode){
-		List<ICodeElementServiceContribution> articleContributions =
-			CodeElementServiceHolder.get().getContributionsByTyp(CodeElementTyp.ARTICLE);
+
+	private Optional<IArticle> findArticleByGtin(String scanCode) {
+		List<ICodeElementServiceContribution> articleContributions = CodeElementServiceHolder.get()
+				.getContributionsByTyp(CodeElementTyp.ARTICLE);
 		for (ICodeElementServiceContribution contribution : articleContributions) {
 			Optional<ICodeElement> loadFromCode = contribution.loadFromCode(scanCode);
 			if (loadFromCode.isPresent()) {
@@ -401,8 +380,8 @@ public class ImportArticleDialog extends TitleAreaDialog {
 					return loadFromCode.map(IArticle.class::cast);
 				} else {
 					LoggerFactory.getLogger(getClass()).warn(
-						"Found article for gtin [{}] but is not castable to IArticle [{}]",
-						scanCode, loadFromCode.get().getClass().getName());
+							"Found article for gtin [{}] but is not castable to IArticle [{}]", scanCode,
+							loadFromCode.get().getClass().getName());
 				}
 			}
 		}

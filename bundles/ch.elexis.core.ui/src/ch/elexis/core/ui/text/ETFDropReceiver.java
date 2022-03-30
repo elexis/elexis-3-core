@@ -27,23 +27,23 @@ import ch.elexis.data.PersistentObject;
 
 public class ETFDropReceiver implements IReceiver {
 	EnhancedTextField etf;
-	
+
 	Hashtable<Class<?>, IKonsExtension> targets;
-	
-	ETFDropReceiver(final EnhancedTextField et){
+
+	ETFDropReceiver(final EnhancedTextField et) {
 		etf = et;
 		targets = new Hashtable<Class<?>, IKonsExtension>();
 	}
-	
-	public void addReceiver(final Class<?> clazz, final IKonsExtension rec){
+
+	public void addReceiver(final Class<?> clazz, final IKonsExtension rec) {
 		targets.put(clazz, rec);
 	}
-	
-	public void removeReceiver(final Class<?> clazz, final IKonsExtension rec){
+
+	public void removeReceiver(final Class<?> clazz, final IKonsExtension rec) {
 		targets.remove(clazz);
 	}
-	
-	private IKonsExtension getTargetForObject(Object o){
+
+	private IKonsExtension getTargetForObject(Object o) {
 		IKonsExtension ret = targets.get(o.getClass());
 		if (ret == null) {
 			// check the interfaces
@@ -59,9 +59,9 @@ public class ETFDropReceiver implements IReceiver {
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public void dropped(List<Object> list, DropTargetEvent e){
+	public void dropped(List<Object> list, DropTargetEvent e) {
 		if (list != null && !list.isEmpty()) {
 			Point point = UiDesk.getDisplay().getCursorLocation();
 			Point mapped = UiDesk.getDisplay().map(null, etf.text, point);
@@ -72,12 +72,11 @@ public class ETFDropReceiver implements IReceiver {
 			}
 			Object object = list.get(0);
 			IKonsExtension rec = getTargetForObject(object);
-			
+
 			if (rec != null) {
 				rec.insert(object, pos);
 			} else {
-				Konsultation actKons =
-					(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+				Konsultation actKons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 				if (actKons != null) {
 					etf.text.insert(getLabel(object));
 					actKons.updateEintrag(etf.getContentsAsXML(), false);
@@ -85,8 +84,8 @@ public class ETFDropReceiver implements IReceiver {
 			}
 		}
 	}
-	
-	private String getLabel(Object object){
+
+	private String getLabel(Object object) {
 		if (object instanceof PersistentObject) {
 			return ((PersistentObject) object).getLabel();
 		} else if (object instanceof Identifiable) {
@@ -94,9 +93,9 @@ public class ETFDropReceiver implements IReceiver {
 		}
 		return object.toString();
 	}
-	
+
 	@Override
-	public boolean accept(List<Object> list){
+	public boolean accept(List<Object> list) {
 		return true;
 	}
 }

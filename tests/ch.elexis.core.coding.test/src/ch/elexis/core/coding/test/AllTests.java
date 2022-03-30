@@ -7,9 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import ch.elexis.core.coding.ChErpValueSetsTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-	ChErpValueSetsTest.class
-})
+@SuiteClasses({ChErpValueSetsTest.class})
 public class AllTests {
-	
+
 }

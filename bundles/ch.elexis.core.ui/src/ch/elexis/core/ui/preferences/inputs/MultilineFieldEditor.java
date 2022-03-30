@@ -30,14 +30,14 @@ public class MultilineFieldEditor extends StringFieldEditor {
 	int numOfLines;
 	int flags = SWT.BORDER;
 	boolean isStringList;
-	
-	public MultilineFieldEditor(String name, String labelText, Composite parent){
+
+	public MultilineFieldEditor(String name, String labelText, Composite parent) {
 		// super(name, labelText, UNLIMITED, parent);
 		this(name, labelText, 3, 0, false, parent);
 	}
-	
-	public MultilineFieldEditor(String name, String labelText, int numLines, int flags,
-		boolean asStringList, Composite parent){
+
+	public MultilineFieldEditor(String name, String labelText, int numLines, int flags, boolean asStringList,
+			Composite parent) {
 		// super(name, labelText, UNLIMITED, parent);
 		numOfLines = numLines;
 		this.flags = SWT.BORDER | flags;
@@ -53,19 +53,19 @@ public class MultilineFieldEditor extends StringFieldEditor {
 		gd.grabExcessHorizontalSpace = true;
 		textField.setLayoutData(gd);
 	}
-	
+
 	@Override
-	public Text getTextControl(Composite parent){
+	public Text getTextControl(Composite parent) {
 		if (textField == null) {
 			textField = SWTHelper.createText(parent, numOfLines, flags);
 			textField.setFont(parent.getFont());
 			textField.addKeyListener(new KeyAdapter() {
-				public void keyReleased(KeyEvent e){
+				public void keyReleased(KeyEvent e) {
 					valueChanged();
 				}
 			});
 			textField.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent event){
+				public void widgetDisposed(DisposeEvent event) {
 					textField = null;
 				}
 			});
@@ -74,9 +74,9 @@ public class MultilineFieldEditor extends StringFieldEditor {
 		}
 		return textField;
 	}
-	
+
 	@Override
-	protected void doLoad(){
+	protected void doLoad() {
 		if (textField != null) {
 			String value = getPreferenceStore().getString(getPreferenceName());
 			if (isStringList) {
@@ -85,32 +85,32 @@ public class MultilineFieldEditor extends StringFieldEditor {
 			textField.setText(value);
 		}
 	}
-	
+
 	@Override
-	protected void doStore(){
+	protected void doStore() {
 		String value = textField.getText();
 		if (isStringList) {
 			value = value.replaceAll("[\\r\\n]+", ","); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		getPreferenceStore().setValue(getPreferenceName(), value);
 	}
-	
+
 	@Override
-	public String getStringValue(){
+	public String getStringValue() {
 		String ret = super.getStringValue();
 		if (isStringList) {
 			return ret.replaceAll("[\\r\\n]+", ","); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public void setStringValue(String value){
+	public void setStringValue(String value) {
 		if (isStringList) {
 			super.setStringValue(value.replaceAll(",", "\\n")); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			super.setStringValue(value);
 		}
 	}
-	
+
 }

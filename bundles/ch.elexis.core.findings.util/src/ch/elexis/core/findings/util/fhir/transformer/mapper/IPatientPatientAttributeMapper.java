@@ -47,25 +47,25 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 	private IContactHelper contactHelper;
 	private IModelService coreModelService;
 	private IUserService userService;
-	
-	public IPatientPatientAttributeMapper(IModelService coreModelService, IXidService xidService, IUserService userService) {
+
+	public IPatientPatientAttributeMapper(IModelService coreModelService, IXidService xidService,
+			IUserService userService) {
 		this.contactHelper = new IContactHelper(coreModelService, xidService, userService);
 		this.coreModelService = coreModelService;
 	}
 
 	@Override
-	public void elexisToFhir(IPatient source, Patient target, SummaryEnum summaryEnum,
-		Set<Include> includes){
-		
+	public void elexisToFhir(IPatient source, Patient target, SummaryEnum summaryEnum, Set<Include> includes) {
+
 		target.setId(new IdDt("Patient", source.getId()));
 		mapMetaData(source, target);
-		if(SummaryEnum.DATA != summaryEnum) {
+		if (SummaryEnum.DATA != summaryEnum) {
 			mapNarrative(source, target);
 		}
 		if (SummaryEnum.TEXT == summaryEnum || SummaryEnum.COUNT == summaryEnum) {
 			return;
 		}
-		
+
 		mapIdentifiersAndPatientNumber(source, target);
 		target.setName(contactHelper.getHumanNames(source));
 		target.setGender(contactHelper.getGender(source.getGender()));
@@ -229,17 +229,17 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 		AdministrativeGender gender = source.getGender();
 		if (gender != null) {
 			switch (gender) {
-			case FEMALE:
-				target.setGender(Gender.FEMALE);
-				break;
-			case MALE:
-				target.setGender(Gender.MALE);
-				break;
-			case UNKNOWN:
-				target.setGender(Gender.UNKNOWN);
-				break;
-			default:
-				target.setGender(Gender.UNDEFINED);
+				case FEMALE :
+					target.setGender(Gender.FEMALE);
+					break;
+				case MALE :
+					target.setGender(Gender.MALE);
+					break;
+				case UNKNOWN :
+					target.setGender(Gender.UNKNOWN);
+					break;
+				default :
+					target.setGender(Gender.UNDEFINED);
 			}
 		}
 	}

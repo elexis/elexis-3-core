@@ -105,8 +105,9 @@ import ch.elexis.data.Rezept;
 import ch.rgw.tools.ExHandler;
 
 /**
- * Eine View zum Anzeigen von Rezepten. Links wird eine Liste mit allen Rezepten des aktuellen
- * Patienten angezeigt, rechts die Prescriptions des aktuellen Rezepts.
+ * Eine View zum Anzeigen von Rezepten. Links wird eine Liste mit allen Rezepten
+ * des aktuellen Patienten angezeigt, rechts die Prescriptions des aktuellen
+ * Rezepts.
  * 
  * @author Gerry
  */
@@ -122,21 +123,20 @@ public class RezepteView extends ViewPart implements IRefreshable {
 	private ViewMenus menus;
 	private Action printAction;
 	private GenericObjectDropTarget dropTarget;
-	
+
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
-	
+
 	private IPatient actPatient;
 	private RecipeLoader loader;
-	
+
 	@Inject
 	private ICodeElementService codeElementService;
-	
+
 	@Inject
-	void activePatient(@Optional
-	IPatient patient){
+	void activePatient(@Optional IPatient patient) {
 		actPatient = patient;
 		Display.getDefault().asyncExec(() -> {
-			if(CoreUiUtil.isActiveControl(tv.getControl())) {
+			if (CoreUiUtil.isActiveControl(tv.getControl())) {
 				tv.setInput(Collections.emptyList());
 			}
 			ContextServiceHolder.get().getRootContext().removeTyped(IRecipe.class);
@@ -148,28 +148,26 @@ public class RezepteView extends ViewPart implements IRefreshable {
 			refresh();
 		});
 	}
-	
+
 	@Inject
-	void activeRecipe(@Optional
-	IRecipe recipe){
+	void activeRecipe(@Optional IRecipe recipe) {
 		Display.getDefault().asyncExec(() -> {
 			if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
 				refreshRecipe();
 			}
 		});
 	}
-	
+
 	@Optional
 	@Inject
-	void udpateRecipe(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE)
-	IRecipe recipe){
+	void udpateRecipe(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IRecipe recipe) {
 		if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
 			tv.refresh(true);
 		}
 	}
-	
+
 	@Override
-	public void createPartControl(final Composite parent){
+	public void createPartControl(final Composite parent) {
 		setTitleImage(Images.IMG_VIEW_RECIPES.getImage());
 		parent.setLayout(new GridLayout());
 		master = tk.createForm(parent);
@@ -179,23 +177,23 @@ public class RezepteView extends ViewPart implements IRefreshable {
 		tv = new TableViewer(sash, SWT.V_SCROLL | SWT.FULL_SELECTION);
 		tv.setContentProvider(ArrayContentProvider.getInstance());
 		tv.setLabelProvider(new LabelProvider() {
-			
+
 			@Override
-			public String getText(final Object element){
+			public String getText(final Object element) {
 				if (element instanceof IRecipe) {
 					IRecipe rp = (IRecipe) element;
 					return rp.getLabel();
 				}
 				return element.toString();
 			}
-			
+
 			/*
 			 * (non-Javadoc)
 			 * 
 			 * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object )
 			 */
 			@Override
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				if (element instanceof IRecipe) {
 					element = Rezept.load(((IRecipe) element).getId());
 				}
@@ -210,15 +208,15 @@ public class RezepteView extends ViewPart implements IRefreshable {
 				}
 				return null;
 			}
-			
+
 		});
 		tv.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getStructuredSelection().getFirstElement() instanceof IRecipe) {
 					ContextServiceHolder.get().getRootContext()
-						.setTyped(event.getStructuredSelection().getFirstElement());
+							.setTyped(event.getStructuredSelection().getFirstElement());
 				}
 			}
 		});
@@ -232,8 +230,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 		// context menu
 		getSite().setSelectionProvider(lvRpLines);
 		IToolBarManager tm = getViewSite().getActionBars().getToolBarManager();
-		List<IAction> importers =
-			Extensions.getClasses(Extensions.getExtensions(ExtensionPointConstantsUi.REZEPT_HOOK), //$NON-NLS-1$
+		List<IAction> importers = Extensions.getClasses(Extensions.getExtensions(ExtensionPointConstantsUi.REZEPT_HOOK), // $NON-NLS-1$
 				"RpToolbarAction", false); //$NON-NLS-1$
 		for (IAction ac : importers) {
 			tm.add(ac);
@@ -245,75 +242,72 @@ public class RezepteView extends ViewPart implements IRefreshable {
 		tm.add(addLineAction);
 		tm.add(printAction);
 		tv.setInput(getViewSite());
-		
+
 		/* Implementation Drag&Drop */
 		GenericObjectDropTarget.IReceiver dtr = new GenericObjectDropTarget.IReceiver() {
-			
+
 			@Override
-			public void dropped(List<Object> list, DropTargetEvent e){
+			public void dropped(List<Object> list, DropTargetEvent e) {
 				for (Object obj : list) {
-					IRecipe recipe =
-						ContextServiceHolder.get().getTyped(IRecipe.class).orElse(null);
+					IRecipe recipe = ContextServiceHolder.get().getTyped(IRecipe.class).orElse(null);
 					if (recipe == null) {
-						SWTHelper.showError(Messages.RezepteView_NoPrescriptionSelected, //$NON-NLS-1$
-							Messages.RezepteView_PleaseChoosaAPrescription); //$NON-NLS-1$
+						SWTHelper.showError(Messages.RezepteView_NoPrescriptionSelected, // $NON-NLS-1$
+								Messages.RezepteView_PleaseChoosaAPrescription); // $NON-NLS-1$
 						return;
 					}
-					
+
 					if (obj instanceof IArticle) {
 						IArticle art = (IArticle) obj;
 						IPrescription ret = new IPrescriptionBuilder(CoreModelServiceHolder.get(),
-							ContextServiceHolder.get(), art, recipe.getPatient(), "").build();
+								ContextServiceHolder.get(), art, recipe.getPatient(), "").build();
 						ret.setRemark("");
 						ret.setEntryType(EntryType.RECIPE);
 						ret.setRecipe(recipe);
 						CoreModelServiceHolder.get().save(ret);
-						
+
 						refreshRecipe();
 					} else if (obj instanceof IPrescription) {
 						IPrescription pre = (IPrescription) obj;
-						
+
 						IPrescription ret = new IPrescriptionBuilder(CoreModelServiceHolder.get(),
-							ContextServiceHolder.get(), pre.getArticle(), recipe.getPatient(),
-							pre.getDosageInstruction()).build();
+								ContextServiceHolder.get(), pre.getArticle(), recipe.getPatient(),
+								pre.getDosageInstruction()).build();
 						ret.setRemark(pre.getRemark());
 						ret.setEntryType(EntryType.RECIPE);
 						ret.setRecipe(recipe);
 						CoreModelServiceHolder.get().save(ret);
-						
+
 						refreshRecipe();
 					}
 				}
 			}
-			
+
 			@Override
-			public boolean accept(List<Object> list){
+			public boolean accept(List<Object> list) {
 				return true;
 			}
 		};
-		
+
 		// final TextTransfer textTransfer = TextTransfer.getInstance();
 		// Transfer[] types = new Transfer[] {textTransfer};
 		dropTarget = new GenericObjectDropTarget("Rezept", lvRpLines.getControl(), dtr); //$NON-NLS-1$
-		
+
 		lvRpLines.setContentProvider(new RezeptContentProvider());
 		lvRpLines.setLabelProvider(new RezeptLabelProvider());
-		lvRpLines.getControl().setToolTipText(Messages.RezepteView_DragMedicamentsHere); //$NON-NLS-1$
+		lvRpLines.getControl().setToolTipText(Messages.RezepteView_DragMedicamentsHere); // $NON-NLS-1$
 		/* lvRpLines.addDragSupport(DND.DROP_COPY,types, */
 		new GenericObjectDragSource(lvRpLines);
 		lvRpLines.setInput(getViewSite());
 		addLineAction.setEnabled(false);
 		printAction.setEnabled(false);
-		
+
 		tv.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(DoubleClickEvent event){
+			public void doubleClick(DoubleClickEvent event) {
 				try {
 					RezeptBlatt rp = (RezeptBlatt) getViewSite().getPage().showView(RezeptBlatt.ID);
 					if (event.getSelection() instanceof StructuredSelection) {
-						IRecipe recipe =
-							(IRecipe) ((StructuredSelection) event.getSelection())
-								.getFirstElement();
+						IRecipe recipe = (IRecipe) ((StructuredSelection) event.getSelection()).getFirstElement();
 						if (recipe != null) {
 							Rezept rezept = Rezept.load(recipe.getId());
 							IDocumentLetter document = recipe.getDocument();
@@ -335,34 +329,34 @@ public class RezepteView extends ViewPart implements IRefreshable {
 					ExHandler.handle(ex);
 				}
 			}
-			
+
 		});
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		getSite().getPage().removePartListener(udpateOnVisible);
 	}
-	
+
 	@Override
-	public void refresh(){
+	public void refresh() {
 		if (CoreUiUtil.isActiveControl(tv.getControl())) {
-			if(loader != null) {
+			if (loader != null) {
 				loader.cancel();
 			}
 			loader = new RecipeLoader(tv, actPatient);
 			loader.schedule();
 		}
 	}
-	
-	public void refreshRecipe(){
+
+	public void refreshRecipe() {
 		IRecipe recipe = ContextServiceHolder.get().getTyped(IRecipe.class).orElse(null);
 		if (recipe == null) {
 			lvRpLines.refresh(true);
@@ -374,37 +368,35 @@ public class RezepteView extends ViewPart implements IRefreshable {
 			printAction.setEnabled(true);
 		}
 	}
-	
-	private void makeActions(){
-		newRpAction = new Action(Messages.RezepteView_newPrescriptionAction) { //$NON-NLS-1$
+
+	private void makeActions() {
+		newRpAction = new Action(Messages.RezepteView_newPrescriptionAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-				setToolTipText(Messages.RezepteView_newPrescriptonTooltip); //$NON-NLS-1$
+				setToolTipText(Messages.RezepteView_newPrescriptonTooltip); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 				if (patient == null) {
-					MessageBox mb =
-						new MessageBox(getViewSite().getShell(), SWT.ICON_INFORMATION | SWT.OK);
-					mb.setText(Messages.RezepteView_newPrescriptionError); //$NON-NLS-1$
-					mb.setMessage(Messages.RezepteView_noPatientSelected); //$NON-NLS-1$
+					MessageBox mb = new MessageBox(getViewSite().getShell(), SWT.ICON_INFORMATION | SWT.OK);
+					mb.setText(Messages.RezepteView_newPrescriptionError); // $NON-NLS-1$
+					mb.setMessage(Messages.RezepteView_noPatientSelected); // $NON-NLS-1$
 					mb.open();
 					return;
 				}
 				ICoverage coverage = ContextServiceHolder.get().getActiveCoverage().orElse(null);
 				if (coverage == null) {
-					IEncounter k =
-						EncounterServiceHolder.get().getLatestEncounter(patient).orElse(null);
+					IEncounter k = EncounterServiceHolder.get().getLatestEncounter(patient).orElse(null);
 					if (k == null) {
-						SWTHelper.alert(Messages.RezepteView_noCaseSelected, //$NON-NLS-1$
-							Messages.RezepteView_pleaseCreateOrChooseCase); //$NON-NLS-1$							
+						SWTHelper.alert(Messages.RezepteView_noCaseSelected, // $NON-NLS-1$
+								Messages.RezepteView_pleaseCreateOrChooseCase); // $NON-NLS-1$
 						return;
 					}
 				}
 				IRecipe recipe = new IRecipeBuilder(CoreModelServiceHolder.get(), patient,
-					ContextServiceHolder.get().getActiveMandator().orElse(null)).buildAndSave();
+						ContextServiceHolder.get().getActiveMandator().orElse(null)).buildAndSave();
 				refresh();
 				doSelectNewRezept(recipe);
 				doAddLine();
@@ -412,20 +404,18 @@ public class RezepteView extends ViewPart implements IRefreshable {
 		};
 		deleteRpAction = new Action(Messages.RezepteView_deletePrescriptionActiom) {
 			@Override
-			public void run(){
+			public void run() {
 				IRecipe recipe = ContextServiceHolder.get().getTyped(IRecipe.class).orElse(null);
-				if (MessageDialog.openConfirm(getViewSite().getShell(),
-					Messages.RezepteView_deletePrescriptionActiom,
-					MessageFormat.format(Messages.RezepteView_deletePrescriptionConfirm,
-						recipe.getDate()))) {
+				if (MessageDialog.openConfirm(getViewSite().getShell(), Messages.RezepteView_deletePrescriptionActiom,
+						MessageFormat.format(Messages.RezepteView_deletePrescriptionConfirm, recipe.getDate()))) {
 					CoreModelServiceHolder.get().delete(recipe);
 					refresh();
 				}
 			}
 		};
-		removeLineAction = new Action(Messages.RezepteView_deleteLineAction) { //$NON-NLS-1$
+		removeLineAction = new Action(Messages.RezepteView_deleteLineAction) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				IRecipe rp = ContextServiceHolder.get().getTyped(IRecipe.class).orElse(null);
 				IStructuredSelection sel = (IStructuredSelection) lvRpLines.getSelection();
 				IPrescription p = (IPrescription) sel.getFirstElement();
@@ -439,22 +429,20 @@ public class RezepteView extends ViewPart implements IRefreshable {
 				 */
 			}
 		};
-		addLineAction = new Action(Messages.RezepteView_newLineAction) { //$NON-NLS-1$
+		addLineAction = new Action(Messages.RezepteView_newLineAction) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				doAddLine();
 			}
 		};
-		printAction = new Action(Messages.RezepteView_printAction) { //$NON-NLS-1$
+		printAction = new Action(Messages.RezepteView_printAction) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				try {
-					IRecipe recipe =
-						ContextServiceHolder.get().getTyped(IRecipe.class).orElse(null);
+					IRecipe recipe = ContextServiceHolder.get().getTyped(IRecipe.class).orElse(null);
 					if (recipe != null) {
 						Rezept rezept = Rezept.load(recipe.getId());
-						RezeptBlatt rp =
-							(RezeptBlatt) getViewSite().getPage().showView(RezeptBlatt.ID);
+						RezeptBlatt rp = (RezeptBlatt) getViewSite().getPage().showView(RezeptBlatt.ID);
 						IDocumentLetter document = recipe.getDocument();
 						if (document == null) {
 							// not yet created - just create a new Rezept
@@ -464,26 +452,22 @@ public class RezepteView extends ViewPart implements IRefreshable {
 							Brief rpBrief = Brief.load(document.getId());
 							// Brief for Rezept already exists:
 							// ask if it should be recreated or just shown
-							String[] dialogButtonLabels = {
-								Messages.RezepteView_RecreatePrescription,
-								Messages.RezepteView_ShowPrescription,
-								Messages.RezepteView_PrescriptionCancel
-							};
-							MessageDialog msg =
-								new MessageDialog(null, Messages.RezepteView_CreatePrescription, //$NON-NLS-1$
-									null, Messages.RezepteView_ReallyWantToRecreatePrescription, //$NON-NLS-1$
+							String[] dialogButtonLabels = {Messages.RezepteView_RecreatePrescription,
+									Messages.RezepteView_ShowPrescription, Messages.RezepteView_PrescriptionCancel};
+							MessageDialog msg = new MessageDialog(null, Messages.RezepteView_CreatePrescription, // $NON-NLS-1$
+									null, Messages.RezepteView_ReallyWantToRecreatePrescription, // $NON-NLS-1$
 									MessageDialog.WARNING, dialogButtonLabels, 2);
 							int result = msg.open();
 							switch (result) {
-							case 0: // recreate rezept
-								ElexisEventDispatcher.fireSelectionEvent(rezept);
-								rp.createRezept(rezept);
-								break;
-							case 1: // open rezept
-								rp.loadRezeptFromDatabase(rezept, rpBrief);
-								break;
-							case 2: // cancel or closebox - do nothing
-								break;
+								case 0 : // recreate rezept
+									ElexisEventDispatcher.fireSelectionEvent(rezept);
+									rp.createRezept(rezept);
+									break;
+								case 1 : // open rezept
+									rp.loadRezeptFromDatabase(rezept, rpBrief);
+									break;
+								case 2 : // cancel or closebox - do nothing
+									break;
 							}
 						}
 						CoreModelServiceHolder.get().refresh(recipe, true);
@@ -495,14 +479,14 @@ public class RezepteView extends ViewPart implements IRefreshable {
 			}
 		};
 		changeMedicationAction = new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
-			Messages.RezepteView_ChangeLink) { //$NON-NLS-1$
+				Messages.RezepteView_ChangeLink) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-				setToolTipText(Messages.RezepteView_ChangeTooltip); //$NON-NLS-1$
+				setToolTipText(Messages.RezepteView_ChangeTooltip); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void doRun(){
+			public void doRun() {
 				IStructuredSelection sel = (IStructuredSelection) lvRpLines.getSelection();
 				IPrescription pr = (IPrescription) sel.getFirstElement();
 				if (pr != null) {
@@ -516,23 +500,22 @@ public class RezepteView extends ViewPart implements IRefreshable {
 		printAction.setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
 		deleteRpAction.setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 	}
-	
-	private void doSelectNewRezept(IRecipe rezept){
+
+	private void doSelectNewRezept(IRecipe rezept) {
 		tv.getTable().setFocus();
 		tv.setSelection(new StructuredSelection(rezept), true);
 		ContextServiceHolder.get().getRootContext().setTyped(rezept);
 	}
-	
-	private void doAddLine(){
+
+	private void doAddLine() {
 		try {
-			LeistungenView lv1 =
-				(LeistungenView) getViewSite().getPage().showView(LeistungenView.ID);
+			LeistungenView lv1 = (LeistungenView) getViewSite().getPage().showView(LeistungenView.ID);
 			CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 			CTabItem[] tabItems = lv1.ctab.getItems();
-			
-			List<ICodeElementServiceContribution> articleCodeContributions =
-				codeElementService.getContributionsByTyp(CodeElementTyp.ARTICLE);
-			
+
+			List<ICodeElementServiceContribution> articleCodeContributions = codeElementService
+					.getContributionsByTyp(CodeElementTyp.ARTICLE);
+
 			for (CTabItem tab : tabItems) {
 				if (tab.getData() instanceof ICodeElement) {
 					ICodeElement ics = (ICodeElement) tab.getData();
@@ -543,9 +526,8 @@ public class RezepteView extends ViewPart implements IRefreshable {
 					}
 				} else if (tab.getData() instanceof CodeSystemDescription) {
 					CodeSystemDescription desc = (CodeSystemDescription) tab.getData();
-					if (articleCodeContributions.stream()
-						.filter(ac -> ac.getSystem().equals(desc.getCodeSystemName())).findFirst()
-						.isPresent()) {
+					if (articleCodeContributions.stream().filter(ac -> ac.getSystem().equals(desc.getCodeSystemName()))
+							.findFirst().isPresent()) {
 						lv1.ctab.setSelection(tab);
 						lv1.setSelected(tab);
 						break;
@@ -557,11 +539,11 @@ public class RezepteView extends ViewPart implements IRefreshable {
 			ExHandler.handle(ex);
 		}
 	}
-	
+
 	private static class RezeptContentProvider implements IStructuredContentProvider {
-		
+
 		@Override
-		public Object[] getElements(final Object inputElement){
+		public Object[] getElements(final Object inputElement) {
 			IRecipe recipe = ContextServiceHolder.get().getTyped(IRecipe.class).orElse(null);
 			if (recipe == null) {
 				return new Prescription[0];
@@ -569,72 +551,69 @@ public class RezepteView extends ViewPart implements IRefreshable {
 			List<IPrescription> list = recipe.getPrescriptions();
 			return list.toArray();
 		}
-		
+
 		@Override
-		public void dispose(){ /* leer */
+		public void dispose() { /* leer */
 		}
-		
+
 		@Override
-		public void inputChanged(final Viewer viewer, final Object oldInput,
-			final Object newInput){ /* leer */
+		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) { /* leer */
 		}
 	}
-	
+
 	private static class RezeptLabelProvider extends LabelProvider {
-		
+
 		@Override
-		public String getText(final Object element){
+		public String getText(final Object element) {
 			if (element instanceof IPrescription) {
 				IPrescription z = (IPrescription) element;
 				return z.getLabel();
 			}
 			return "?"; //$NON-NLS-1$
 		}
-		
+
 	}
-	
-	public void clearEvent(final Class<? extends PersistentObject> template){
+
+	public void clearEvent(final Class<? extends PersistentObject> template) {
 		lvRpLines.refresh();
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
-	boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 	private static class RecipeLoader extends Job {
 		private Viewer viewer;
 		private IPatient patient;
-		
+
 		private List<ch.elexis.core.model.IRecipe> loaded;
-		
-		public RecipeLoader(Viewer viewer, IPatient patient){
+
+		public RecipeLoader(Viewer viewer, IPatient patient) {
 			super("Recipe loading ...");
 			this.viewer = viewer;
 			this.patient = patient;
 		}
-		
+
 		@Override
-		protected IStatus run(IProgressMonitor monitor){
+		protected IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask("Recipe loading ...", IProgressMonitor.UNKNOWN);
 			if (patient != null) {
-				INamedQuery<IRecipe> query =
-					CoreModelServiceHolder.get().getNamedQuery(IRecipe.class, "patient");
+				INamedQuery<IRecipe> query = CoreModelServiceHolder.get().getNamedQuery(IRecipe.class, "patient");
 				loaded = query.executeWithParameters(query.getParameterMap("patient", patient));
 			} else {
 				loaded = Collections.emptyList();
 			}
-			
+
 			if (monitor.isCanceled()) {
 				return Status.CANCEL_STATUS;
 			}
 			monitor.done();
 			Display.getDefault().asyncExec(new Runnable() {
-				
+
 				@Override
-				public void run(){
+				public void run() {
 					viewer.setInput(loaded);
 				}
 			});

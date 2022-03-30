@@ -13,16 +13,16 @@ package ch.elexis.core.model;
 import java.time.LocalDateTime;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IPeriod</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IPeriod</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IPeriod#getStartTime <em>Start Time</em>}</li>
- *   <li>{@link ch.elexis.core.model.IPeriod#getEndTime <em>End Time</em>}</li>
+ * <li>{@link ch.elexis.core.model.IPeriod#getStartTime <em>Start
+ * Time</em>}</li>
+ * <li>{@link ch.elexis.core.model.IPeriod#getEndTime <em>End Time</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPeriod()
@@ -31,13 +31,14 @@ import java.time.LocalDateTime;
  */
 public interface IPeriod extends Identifiable, Deleteable {
 	/**
-	 * Returns the value of the '<em><b>Start Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Start Time</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Start Time</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Start Time</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Start Time</em>' attribute.
 	 * @see #setStartTime(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getIPeriod_StartTime()
@@ -47,23 +48,26 @@ public interface IPeriod extends Identifiable, Deleteable {
 	LocalDateTime getStartTime();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPeriod#getStartTime <em>Start Time</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Start Time</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IPeriod#getStartTime
+	 * <em>Start Time</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Start Time</em>' attribute.
 	 * @see #getStartTime()
 	 * @generated
 	 */
 	void setStartTime(LocalDateTime value);
 
 	/**
-	 * Returns the value of the '<em><b>End Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>End Time</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>End Time</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>End Time</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>End Time</em>' attribute.
 	 * @see #setEndTime(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getIPeriod_EndTime()
@@ -73,10 +77,11 @@ public interface IPeriod extends Identifiable, Deleteable {
 	LocalDateTime getEndTime();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPeriod#getEndTime <em>End Time</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>End Time</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IPeriod#getEndTime <em>End
+	 * Time</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>End Time</em>' attribute.
 	 * @see #getEndTime()
 	 * @generated
 	 */

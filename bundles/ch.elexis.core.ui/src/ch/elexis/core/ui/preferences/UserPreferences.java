@@ -45,21 +45,20 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 
 public class UserPreferences extends PreferencePage implements IWorkbenchPreferencePage {
-	
+
 	Button bLoad, bSave, bWorkspaceLoad, bWorkspaceSave;
 	// Text tLoad, tSave, tWorkspaceLoad, tWorkspaceSave;
 	Combo cbUserSave, cbWSSave, cbUserLoad, cbWSLoad;
 	String[] userPrefs;
 	String[] WSPrefs;
-	
-	public UserPreferences(){
+
+	public UserPreferences() {
 		noDefaultAndApplyButton();
 	}
-	
+
 	@Override
-	protected Control createContents(Composite parent){
-		final String layoutfile =
-			Platform.getInstanceLocation().getURL().getPath() + File.separator + ".metadata" //$NON-NLS-1$
+	protected Control createContents(Composite parent) {
+		final String layoutfile = Platform.getInstanceLocation().getURL().getPath() + File.separator + ".metadata" //$NON-NLS-1$
 				+ File.separator + ".plugins" //$NON-NLS-1$
 				+ File.separator + "org.eclipse.ui.workbench" //$NON-NLS-1$
 				+ File.separator + "workbench.xml"; //$NON-NLS-1$
@@ -70,7 +69,7 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		Label desc = new Label(ret, SWT.WRAP);
 		desc.setText(Messages.UserPreferences_Explanation1 + Messages.UserPreferences_Explanation2
-			+ Messages.UserPreferences_Explanation3);
+				+ Messages.UserPreferences_Explanation3);
 		desc.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		List<NamedBlob> userBlobs = NamedBlob.findFromPrefix("UserCfg:"); //$NON-NLS-1$
 		userPrefs = new String[userBlobs.size()];
@@ -89,20 +88,19 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 		bLoad.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public void widgetSelected(SelectionEvent arg0){
+			public void widgetSelected(SelectionEvent arg0) {
 				String name = cbUserLoad.getText();
 				if (StringTool.isNothing(name)) {
-					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven,
-						Messages.UserPreferences_PleaseEnterName);
+					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven, Messages.UserPreferences_PleaseEnterName);
 				} else if (NamedBlob.exists(Messages.UserPreferences_14 + name)) {
 					NamedBlob blob = NamedBlob.load("UserCfg:" + name); //$NON-NLS-1$
 					ConfigServiceHolder.setUserFromMap(blob.getHashtable());
 				} else {
 					SWTHelper.showError(Messages.UserPreferences_KonfigNotFound,
-						MessageFormat.format(Messages.UserPreferences_ConfigWasNotFound, name));
+							MessageFormat.format(Messages.UserPreferences_ConfigWasNotFound, name));
 				}
 			}
-			
+
 		});
 		cbUserLoad = new Combo(ret, SWT.READ_ONLY | SWT.SINGLE);
 		cbUserLoad.setItems(userPrefs);
@@ -113,16 +111,15 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 		bSave.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("rawtypes")
 			@Override
-			public void widgetSelected(SelectionEvent arg0){
+			public void widgetSelected(SelectionEvent arg0) {
 				String name = cbUserSave.getText();
 				if (StringTool.isNothing(name)) {
-					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven,
-						Messages.UserPreferences_PleaseEnterName2);
+					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven, Messages.UserPreferences_PleaseEnterName2);
 				} else {
 					NamedBlob blob = NamedBlob.load("UserCfg:" + name); //$NON-NLS-1$
 					blob.put((Hashtable) ConfigServiceHolder.getUserAsMap());
 					SWTHelper.showInfo(Messages.UserPreferences_ConfigSaved,
-						MessageFormat.format(Messages.UserPreferences_ConfigWasSaved, name));
+							MessageFormat.format(Messages.UserPreferences_ConfigWasSaved, name));
 					cbUserSave.setText(""); //$NON-NLS-1$
 				}
 			}
@@ -134,24 +131,23 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 		bWorkspaceLoad.setText(Messages.UserPreferences_LoadDeskSettingsFrom);
 		bWorkspaceLoad.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent arg0){
+			public void widgetSelected(SelectionEvent arg0) {
 				String name = cbWSLoad.getText();
-				
+
 				if (StringTool.isNothing(name)) {
-					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven,
-						Messages.UserPreferences_PleaseEnterName3);
+					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven, Messages.UserPreferences_PleaseEnterName3);
 				} else if (NamedBlob.exists("Workspace:" + name)) { //$NON-NLS-1$
 					NamedBlob blob = NamedBlob.load("Workspace:" + name); //$NON-NLS-1$
 					InMemorySettings ims = new InMemorySettings(blob.getHashtable());
 					final String newloc = ims.get("perspectivelayout", null); //$NON-NLS-1$
 					if (newloc != null) {
 						ShutdownJob job = new ShutdownJob() {
-							
-							public void doit(){
+
+							public void doit() {
 								try {
 									File file = new File(layoutfile);
 									FileTool.copyFile(file, new File(layoutfile + ".bak"), //$NON-NLS-1$
-										FileTool.REPLACE_IF_EXISTS);
+											FileTool.REPLACE_IF_EXISTS);
 									file.delete();
 									FileWriter fout = new FileWriter(file);
 									fout.write(newloc);
@@ -159,19 +155,19 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 								} catch (Exception ex) {
 									ExHandler.handle(ex);
 								}
-								
+
 							}
 						};
 						Hub.addShutdownJob(job);
 						SWTHelper.showInfo(Messages.UserPreferences_ConfigLoaded,
-							Messages.UserPreferences_ConfigActiveNextTime);
+								Messages.UserPreferences_ConfigActiveNextTime);
 					}
 				} else {
 					SWTHelper.showError(Messages.UserPreferences_ConfigNotFound,
-						Messages.UserPreferences_3 + name + Messages.UserPreferences_4);
+							Messages.UserPreferences_3 + name + Messages.UserPreferences_4);
 				}
 			}
-			
+
 		});
 		bWorkspaceLoad.setLayoutData(new GridData(GridData.FILL));
 		cbWSLoad = new Combo(ret, SWT.SINGLE | SWT.READ_ONLY);
@@ -181,12 +177,11 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 		bWorkspaceSave.setText(Messages.UserPreferences_WorkspaceSettingsSaveTo);
 		bWorkspaceSave.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent arg0){
+			public void widgetSelected(SelectionEvent arg0) {
 				String name = cbWSSave.getText();
-				
+
 				if (StringTool.isNothing(name)) {
-					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven,
-						Messages.UserPreferences_PleaseEnterName4);
+					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven, Messages.UserPreferences_PleaseEnterName4);
 				} else {
 					try {
 						File file = new File(layoutfile);
@@ -208,10 +203,10 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 					} catch (Exception ex) {
 						ExHandler.handle(ex);
 					}
-					
+
 				}
 			}
-			
+
 		});
 		bWorkspaceSave.setLayoutData(new GridData(GridData.FILL));
 		cbWSSave = new Combo(ret, SWT.SINGLE);
@@ -219,10 +214,10 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 		cbWSSave.setItems(WSPrefs);
 		return ret;
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

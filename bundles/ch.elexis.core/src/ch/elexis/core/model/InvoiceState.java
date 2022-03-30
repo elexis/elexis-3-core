@@ -36,53 +36,49 @@ public enum InvoiceState implements INumericEnum, ILocalizedEnum {
 	DEPRECIATED(26), // (Abgeschrieben) Storniert und Kons nicht mehr freigegeben
 	REJECTED(27);
 	//@formatter:on
-	
+
 	private int state;
-	
+
 	public static enum REJECTCODE {
-			RG_KONS_NO_BILLABLES_NOR_REVENUE, NO_DIAG, NO_MANDATOR, NO_CASE, NO_DEBITOR,
-			NO_GUARANTOR, VALIDATION_ERROR, REJECTED_BY_PEER, SUM_MISMATCH, INTERNAL_ERROR;
+		RG_KONS_NO_BILLABLES_NOR_REVENUE, NO_DIAG, NO_MANDATOR, NO_CASE, NO_DEBITOR, NO_GUARANTOR, VALIDATION_ERROR, REJECTED_BY_PEER, SUM_MISMATCH, INTERNAL_ERROR;
 	};
-	
-	private InvoiceState(int state){
+
+	private InvoiceState(int state) {
 		this.state = state;
 	}
-	
-	public int getState(){
+
+	public int getState() {
 		return state;
 	}
-	
+
 	@Override
-	public int numericValue(){
+	public int numericValue() {
 		return state;
 	}
-	
+
 	/**
 	 * @return the combined (or) states that represent the owing state
 	 */
-	public static InvoiceState[] owingStates(){
-		return new InvoiceState[] {
-			OPEN_AND_PRINTED, DEMAND_NOTE_1_PRINTED, DEMAND_NOTE_2_PRINTED, DEMAND_NOTE_3_PRINTED
-		};
+	public static InvoiceState[] owingStates() {
+		return new InvoiceState[]{OPEN_AND_PRINTED, DEMAND_NOTE_1_PRINTED, DEMAND_NOTE_2_PRINTED,
+				DEMAND_NOTE_3_PRINTED};
 	}
-	
+
 	/**
 	 * 
 	 * @return the combined (or) states that represent the to print state
 	 */
 	public static InvoiceState[] toPrintStates() {
-		return new InvoiceState[] {
-			OPEN, DEMAND_NOTE_1, DEMAND_NOTE_2, DEMAND_NOTE_3
-		};
+		return new InvoiceState[]{OPEN, DEMAND_NOTE_1, DEMAND_NOTE_2, DEMAND_NOTE_3};
 	}
-	
+
 	/**
-	 * Decide whether this state means an "active" state, i.e. the bill is not paid or closed by any
-	 * means
+	 * Decide whether this state means an "active" state, i.e. the bill is not paid
+	 * or closed by any means
 	 * 
 	 * @return true if there are still payments awaited
 	 */
-	public boolean isActive(){
+	public boolean isActive() {
 		if (state > ONGOING.getState() && state < PARTIAL_LOSS.getState()) {
 			return true;
 		}
@@ -94,8 +90,8 @@ public enum InvoiceState implements INumericEnum, ILocalizedEnum {
 		}
 		return false;
 	}
-	
-	public static InvoiceState fromState(int value){
+
+	public static InvoiceState fromState(int value) {
 		for (InvoiceState is : InvoiceState.values()) {
 			if (value == is.getState()) {
 				return is;
@@ -105,7 +101,7 @@ public enum InvoiceState implements INumericEnum, ILocalizedEnum {
 	}
 
 	@Override
-	public String getLocaleText(){
+	public String getLocaleText() {
 		try {
 			return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
 					.getString(InvoiceState.class.getSimpleName() + "_" + this.name());
@@ -113,6 +109,5 @@ public enum InvoiceState implements INumericEnum, ILocalizedEnum {
 			return this.name();
 		}
 	}
-
 
 }

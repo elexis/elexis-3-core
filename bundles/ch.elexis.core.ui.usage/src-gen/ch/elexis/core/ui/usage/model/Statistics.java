@@ -7,17 +7,18 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Statistics</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>Statistics</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.ui.usage.model.Statistics#getStatistics <em>Statistics</em>}</li>
- *   <li>{@link ch.elexis.core.ui.usage.model.Statistics#getFrom <em>From</em>}</li>
- *   <li>{@link ch.elexis.core.ui.usage.model.Statistics#getTo <em>To</em>}</li>
+ * <li>{@link ch.elexis.core.ui.usage.model.Statistics#getStatistics
+ * <em>Statistics</em>}</li>
+ * <li>{@link ch.elexis.core.ui.usage.model.Statistics#getFrom
+ * <em>From</em>}</li>
+ * <li>{@link ch.elexis.core.ui.usage.model.Statistics#getTo <em>To</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.ui.usage.model.ModelPackage#getStatistics()
@@ -26,14 +27,15 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Statistics extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Statistics</b></em>' containment reference list.
-	 * The list contents are of type {@link ch.elexis.core.ui.usage.model.IStatistic}.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Statistics</b></em>' containment reference
+	 * list. The list contents are of type
+	 * {@link ch.elexis.core.ui.usage.model.IStatistic}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Statistics</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Statistics</em>' reference isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Statistics</em>' containment reference list.
 	 * @see ch.elexis.core.ui.usage.model.ModelPackage#getStatistics_Statistics()
 	 * @model containment="true"
@@ -42,13 +44,14 @@ public interface Statistics extends EObject {
 	EList<IStatistic> getStatistics();
 
 	/**
-	 * Returns the value of the '<em><b>From</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>From</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>From</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>From</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>From</em>' attribute.
 	 * @see #setFrom(Date)
 	 * @see ch.elexis.core.ui.usage.model.ModelPackage#getStatistics_From()
@@ -58,23 +61,26 @@ public interface Statistics extends EObject {
 	Date getFrom();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.ui.usage.model.Statistics#getFrom <em>From</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>From</em>' attribute.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.ui.usage.model.Statistics#getFrom <em>From</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>From</em>' attribute.
 	 * @see #getFrom()
 	 * @generated
 	 */
 	void setFrom(Date value);
 
 	/**
-	 * Returns the value of the '<em><b>To</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>To</b></em>' attribute. <!-- begin-user-doc
+	 * -->
 	 * <p>
-	 * If the meaning of the '<em>To</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>To</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>To</em>' attribute.
 	 * @see #setTo(Date)
 	 * @see ch.elexis.core.ui.usage.model.ModelPackage#getStatistics_To()
@@ -84,10 +90,11 @@ public interface Statistics extends EObject {
 	Date getTo();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.ui.usage.model.Statistics#getTo <em>To</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>To</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.ui.usage.model.Statistics#getTo
+	 * <em>To</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>To</em>' attribute.
 	 * @see #getTo()
 	 * @generated
 	 */

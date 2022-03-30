@@ -21,24 +21,24 @@ public enum EntryType implements INumericEnum {
 	/** Medicine given because of a current problem, but not intended for a longer period **/
 	SYMPTOMATIC_MEDICATION(5);
 	//@formatter:on
-	
+
 	private int numeric;
-	
+
 	private static HashMap<Integer, EntryType> numericMap = new HashMap<>();
-	
-	private EntryType(int numeric){
+
+	private EntryType(int numeric) {
 		this.numeric = numeric;
 	}
-	
+
 	@Override
-	public int numericValue(){
+	public int numericValue() {
 		return numeric;
 	}
-	
-	public static EntryType byNumeric(int numeric){
-		if(numericMap.isEmpty()) {
+
+	public static EntryType byNumeric(int numeric) {
+		if (numericMap.isEmpty()) {
 			EntryType[] entries = values();
-			for (int i = 0; i< entries.length ; i++) {
+			for (int i = 0; i < entries.length; i++) {
 				numericMap.put(entries[i].numericValue(), entries[i]);
 			}
 		}

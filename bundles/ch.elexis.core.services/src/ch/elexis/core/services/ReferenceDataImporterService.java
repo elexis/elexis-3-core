@@ -15,31 +15,27 @@ import ch.elexis.core.interfaces.IReferenceDataImporter;
 
 @Component
 public class ReferenceDataImporterService implements IReferenceDataImporterService {
-	
+
 	private HashMap<String, IReferenceDataImporter> importersMap = new HashMap<>();
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public void setReferenceDataImporter(IReferenceDataImporter referenceDataImporter,
-		Map<String, Object> properties){
-		IReferenceDataImporter previous =
-			importersMap.put((String) properties.get(IReferenceDataImporter.REFERENCEDATAID),
-				referenceDataImporter);
+	public void setReferenceDataImporter(IReferenceDataImporter referenceDataImporter, Map<String, Object> properties) {
+		IReferenceDataImporter previous = importersMap
+				.put((String) properties.get(IReferenceDataImporter.REFERENCEDATAID), referenceDataImporter);
 		if (previous != null) {
-			LoggerFactory.getLogger(getClass())
-				.warn("Possible IReferenceDataImporter collision previous [" + previous
+			LoggerFactory.getLogger(getClass()).warn("Possible IReferenceDataImporter collision previous [" + previous
 					+ "] new [" + referenceDataImporter + "]");
 		}
 	}
-	
+
 	public void unsetReferenceDataImporter(IReferenceDataImporter referenceDataImporter,
-		Map<String, Object> properties){
+			Map<String, Object> properties) {
 		importersMap.remove((String) properties.get(IReferenceDataImporter.REFERENCEDATAID));
-		LoggerFactory.getLogger(getClass())
-			.info("Removed IReferenceDataImporter [" + referenceDataImporter + "]");
+		LoggerFactory.getLogger(getClass()).info("Removed IReferenceDataImporter [" + referenceDataImporter + "]");
 	}
-	
+
 	@Override
-	public Optional<IReferenceDataImporter> getImporter(String referenceDataId){
+	public Optional<IReferenceDataImporter> getImporter(String referenceDataId) {
 		return Optional.ofNullable(importersMap.get(referenceDataId));
 	}
 }

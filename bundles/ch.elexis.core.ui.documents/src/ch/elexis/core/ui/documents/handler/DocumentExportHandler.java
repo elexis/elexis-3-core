@@ -25,15 +25,14 @@ import ch.elexis.core.ui.util.SWTHelper;
 
 public class DocumentExportHandler extends AbstractHandler implements IHandler {
 	private static Logger logger = LoggerFactory.getLogger(DocumentExportHandler.class);
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
-		if (selection instanceof StructuredSelection
-			&& !((StructuredSelection) selection).isEmpty()) {
+		if (selection instanceof StructuredSelection && !((StructuredSelection) selection).isEmpty()) {
 			List<?> iDocuments = ((StructuredSelection) selection).toList();
-			
+
 			for (Object documentToExport : iDocuments) {
 				if (documentToExport instanceof IDocument) {
 					openExportDialog(shell, (IDocument) documentToExport);
@@ -42,27 +41,25 @@ public class DocumentExportHandler extends AbstractHandler implements IHandler {
 		}
 		return null;
 	}
-	
-	private void openExportDialog(Shell shell, IDocument document){
+
+	private void openExportDialog(Shell shell, IDocument document) {
 		FileDialog fd = new FileDialog(shell, SWT.SAVE);
 		fd.setFilterExtensions(createExtensionFilter(document));
 		String fname = fd.open();
 		if (fname != null) {
 			try {
-				if (DocumentStoreServiceHolder.getService().saveContentToFile(document,
-					fname) == null) {
+				if (DocumentStoreServiceHolder.getService().saveContentToFile(document, fname) == null) {
 					SWTHelper.showError(Messages.DocumentView_exportErrorCaption,
-						Messages.DocumentView_exportErrorEmptyText);
+							Messages.DocumentView_exportErrorEmptyText);
 				}
 			} catch (ElexisException e) {
 				logger.error("cannot export file", e);
-				SWTHelper.showError(Messages.DocumentView_exportErrorCaption,
-					Messages.DocumentView_exportErrorText);
+				SWTHelper.showError(Messages.DocumentView_exportErrorCaption, Messages.DocumentView_exportErrorText);
 			}
 		}
 	}
-	
-	private String[] createExtensionFilter(IDocument document){
+
+	private String[] createExtensionFilter(IDocument document) {
 		List<String> filterExtensions = new ArrayList<>();
 		if (document.getExtension() != null && !document.getExtension().isEmpty()) {
 			filterExtensions.add("*." + document.getExtension());

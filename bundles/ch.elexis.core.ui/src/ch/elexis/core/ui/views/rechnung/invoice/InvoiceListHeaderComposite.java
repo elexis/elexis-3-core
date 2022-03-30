@@ -38,49 +38,49 @@ import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Patient;
 
 public class InvoiceListHeaderComposite extends Composite {
-	
+
 	private final static String ALL_PATIENTS_LABEL = Messages.RnControlFieldProvider_allPatients;
 	private final static String ALL_ELEMENTS_LABEL = Messages.RnControlFieldProvider_all;
-	
+
 	private Text txtInvoiceno;
 	private Text txtAmount;
 	private Patient actPatient;
-	
+
 	private Link linkPatient;
 	private ComboViewer comboViewerStatus;
 	private Label lblPatientname;
 	private ComboViewer comboViewerType;
 	private Button btnLimit;
 	private ComboViewer comboViewerBillingSystem;
-	
+
 	private Color defaultBackgroundColor;
 	private Label lblLimitWarn;
-	
+
 	/**
 	 * 
 	 * @param parent
 	 * @param style
 	 * @param invoiceListView
 	 */
-	public InvoiceListHeaderComposite(Composite parent, int style, InvoiceListView invoiceListView){
+	public InvoiceListHeaderComposite(Composite parent, int style, InvoiceListView invoiceListView) {
 		super(parent, style);
-		
+
 		setLayout(new GridLayout(8, false));
 		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		new Label(this, SWT.NONE);
-		
+
 		Label lblStatus = new Label(this, SWT.NONE);
 		lblStatus.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		lblStatus.setText(Messages.InvoiceListView_tblclmnInvoiceState_text);
-		
+
 		HyperlinkAdapter hlPatient = new HyperlinkAdapter() {
 			@Override
-			public void linkActivated(final HyperlinkEvent e){
+			public void linkActivated(final HyperlinkEvent e) {
 				Patient oldPatient = actPatient;
 				KontaktSelektor ksl = new KontaktSelektor(parent.getShell(), Patient.class,
-					Messages.RnControlFieldProvider_selectPatientCaption, //$NON-NLS-1$
-					Messages.RnControlFieldProvider_selectPatientMessage, true); //$NON-NLS-1$
+						Messages.RnControlFieldProvider_selectPatientCaption, // $NON-NLS-1$
+						Messages.RnControlFieldProvider_selectPatientMessage, true); // $NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
 					actPatient = (Patient) ksl.getSelection();
 					if (actPatient != null) {
@@ -95,65 +95,64 @@ public class InvoiceListHeaderComposite extends Composite {
 					lblPatientname.setText(ALL_PATIENTS_LABEL);
 					comboViewerStatus.setSelection(new StructuredSelection(InvoiceState.OPEN));
 				}
-				
+
 				if (actPatient == null && oldPatient == null) {
 					return;
-				} else if (actPatient != null && oldPatient != null
-					&& actPatient.equals(oldPatient)) {
+				} else if (actPatient != null && oldPatient != null && actPatient.equals(oldPatient)) {
 					return;
 				}
 				invoiceListView.refresh();
 			}
 		};
-		
+
 		linkPatient = new Link(this, SWT.NONE);
 		linkPatient.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		linkPatient.setText(Messages.RnControlFieldProvider_patient2);
 		linkPatient.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
 		linkPatient.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(final MouseEvent e){
+			public void mouseDown(final MouseEvent e) {
 				if (hlPatient != null) {
-					hlPatient.linkActivated(new HyperlinkEvent(linkPatient, linkPatient,
-						linkPatient.getText(), e.stateMask));
+					hlPatient.linkActivated(
+							new HyperlinkEvent(linkPatient, linkPatient, linkPatient.getText(), e.stateMask));
 				}
 			}
-			
+
 		});
-		
+
 		Label lblBillingSystem = new Label(this, SWT.NONE);
 		lblBillingSystem.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		lblBillingSystem.setText(Messages.RnControlFieldProvider_PaymentSystem);
-		
+
 		Label lblType = new Label(this, SWT.NONE);
 		lblType.setText(Messages.InvoiceListHeaderComposite_lblType_text);
 		lblType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblInvoiceno = new Label(this, SWT.NONE);
 		lblInvoiceno.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		lblInvoiceno.setText(Messages.InvoiceListView_tblclmnInvoiceNo_text);
-		
+
 		Label lblAmount = new Label(this, SWT.NONE);
 		lblAmount.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		lblAmount.setText(Messages.InvoiceListHeaderComposite_txtRgTotal);
 		lblAmount.setToolTipText(Messages.InvoiceListHeaderComposite_txtAmount_toolTipText);
-		
+
 		lblLimitWarn = new Label(this, SWT.NONE);
 		lblLimitWarn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		lblLimitWarn.setText("");
 		defaultBackgroundColor = lblLimitWarn.getBackground();
-		
+
 		Label btnClear = new Label(this, SWT.FLAT);
 		btnClear.setImage(Images.IMG_CLEAR.getImage());
 		btnClear.setToolTipText(ch.elexis.core.ui.selectors.Messages.SelectorPanel_clearFields);
 		btnClear.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e){
+			public void mouseDown(MouseEvent e) {
 				clearValues();
 				invoiceListView.refresh();
 			}
 		});
-		
+
 		comboViewerStatus = new ComboViewer(this, SWT.SINGLE | SWT.READ_ONLY);
 		Combo comboStatus = comboViewerStatus.getCombo();
 		GridData gd_comboStatus = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
@@ -162,7 +161,7 @@ public class InvoiceListHeaderComposite extends Composite {
 		comboViewerStatus.setContentProvider(ArrayContentProvider.getInstance());
 		comboViewerStatus.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof InvoiceState) {
 					InvoiceState invoiceState = (InvoiceState) element;
 					return invoiceState.getLocaleText();
@@ -195,14 +194,14 @@ public class InvoiceListHeaderComposite extends Composite {
 		values.add(InvoiceState.REJECTED);
 		comboViewerStatus.setInput(values);
 		comboViewerStatus.setSelection(new StructuredSelection(InvoiceState.OPEN));
-		comboViewerStatus.addSelectionChangedListener((event) ->  invoiceListView.refresh());
-		
+		comboViewerStatus.addSelectionChangedListener((event) -> invoiceListView.refresh());
+
 		lblPatientname = new Label(this, SWT.NONE);
 		GridData gd_lblPatientname = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_lblPatientname.minimumWidth = 130;
 		lblPatientname.setLayoutData(gd_lblPatientname);
 		lblPatientname.setText(ALL_PATIENTS_LABEL);
-		
+
 		comboViewerBillingSystem = new ComboViewer(this, SWT.SINGLE | SWT.READ_ONLY);
 		comboViewerBillingSystem.setContentProvider(ArrayContentProvider.getInstance());
 		comboViewerBillingSystem.setLabelProvider(new LabelProvider());
@@ -212,49 +211,48 @@ public class InvoiceListHeaderComposite extends Composite {
 		comboViewerBillingSystem.setInput(billingSystems);
 		comboViewerBillingSystem.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
 		comboViewerBillingSystem.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboViewerBillingSystem.addSelectionChangedListener((event) ->  invoiceListView.refresh());
-		
+		comboViewerBillingSystem.addSelectionChangedListener((event) -> invoiceListView.refresh());
+
 		comboViewerType = new ComboViewer(this, SWT.SINGLE | SWT.READ_ONLY);
 		comboViewerType.setContentProvider(ArrayContentProvider.getInstance());
 		comboViewerType.setLabelProvider(new LabelProvider());
 		comboViewerType.setInput(Arrays.asList(new String[]{ALL_ELEMENTS_LABEL, "TG", "TP"}));
 		comboViewerType.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
-	
+
 		comboViewerType.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboViewerType.addSelectionChangedListener((event) ->  invoiceListView.refresh());
-		
+		comboViewerType.addSelectionChangedListener((event) -> invoiceListView.refresh());
+
 		txtInvoiceno = new Text(this, SWT.BORDER);
 		txtInvoiceno.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtInvoiceno.addListener(SWT.Traverse, new Listener() {
-			
+
 			@Override
-			public void handleEvent(Event event){
+			public void handleEvent(Event event) {
 				if (event.detail == SWT.TRAVERSE_RETURN) {
 					comboViewerStatus.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
 					// execution will be started via comboViewerStatus#sclistener
 				}
 			}
 		});
-		
+
 		txtAmount = new Text(this, SWT.BORDER);
 		txtAmount.setToolTipText(Messages.InvoiceListHeaderComposite_txtAmount_toolTipText);
 		txtAmount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtAmount.addListener(SWT.Traverse, new Listener() {
 			@Override
-			public void handleEvent(Event event){
+			public void handleEvent(Event event) {
 				if (event.detail == SWT.TRAVERSE_RETURN) {
 					invoiceListView.refresh();
 				}
 			}
 		});
-		
+
 		btnLimit = new Button(this, SWT.FLAT | SWT.TOGGLE | SWT.CENTER);
 		btnLimit.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				boolean selection = btnLimit.getSelection();
-				invoiceListView.getInvoiceListContentProvider()
-					.setQueryLimit((selection) ? 1000 : -1);
+				invoiceListView.getInvoiceListContentProvider().setQueryLimit((selection) ? 1000 : -1);
 				invoiceListView.refresh();
 			}
 		});
@@ -262,22 +260,22 @@ public class InvoiceListHeaderComposite extends Composite {
 		btnLimit.setToolTipText(Messages.InvoiceListHeaderComposite_btnLimit_toolTipText);
 		btnLimit.setImage(Images.IMG_COUNTER_STOP.getImage());
 	}
-	
+
 	@Override
-	protected void checkSubclass(){
+	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-	
-	private String[] getBillingSystems(){
+
+	private String[] getBillingSystems() {
 		String[] abrechnungsSysteme = BillingSystem.getAbrechnungsSysteme();
 		if (abrechnungsSysteme != null) {
 			abrechnungsSysteme = ch.elexis.core.ui.preferences.UserCasePreferences
-				.sortBillingSystems(abrechnungsSysteme);
+					.sortBillingSystems(abrechnungsSysteme);
 		}
 		return abrechnungsSysteme;
 	}
-	
-	private void clearValues(){
+
+	private void clearValues() {
 		comboViewerStatus.setSelection(new StructuredSelection(InvoiceState.OPEN));
 		actPatient = null;
 		comboViewerBillingSystem.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
@@ -286,13 +284,13 @@ public class InvoiceListHeaderComposite extends Composite {
 		txtAmount.setText("");
 		lblPatientname.setText(ALL_PATIENTS_LABEL);
 	}
-	
+
 	/**
 	 * 
-	 * @return the int value of the selected {@link InvoiceState} or <code>null</code> if no valid
-	 *         selection
+	 * @return the int value of the selected {@link InvoiceState} or
+	 *         <code>null</code> if no valid selection
 	 */
-	Integer getSelectedInvoiceStateNo(){
+	Integer getSelectedInvoiceStateNo() {
 		StructuredSelection ss = (StructuredSelection) comboViewerStatus.getSelection();
 		if (!ss.isEmpty()) {
 			Object firstElement = ss.getFirstElement();
@@ -302,8 +300,8 @@ public class InvoiceListHeaderComposite extends Composite {
 		}
 		return null;
 	}
-	
-	String getSelectedInvoiceType(){
+
+	String getSelectedInvoiceType() {
 		StructuredSelection ss = (StructuredSelection) comboViewerType.getSelection();
 		if (!ss.isEmpty()) {
 			Object firstElement = ss.getFirstElement();
@@ -313,10 +311,10 @@ public class InvoiceListHeaderComposite extends Composite {
 		}
 		return null;
 	}
-	
+
 	String getSelectedBillingSystem() {
 		StructuredSelection ss = (StructuredSelection) comboViewerBillingSystem.getSelection();
-		if(!ss.isEmpty()) {
+		if (!ss.isEmpty()) {
 			Object firstElement = ss.getFirstElement();
 			if (firstElement != ALL_ELEMENTS_LABEL) {
 				return (String) firstElement;
@@ -324,39 +322,39 @@ public class InvoiceListHeaderComposite extends Composite {
 		}
 		return null;
 	}
-	
-	String getSelectedPatientId(){
+
+	String getSelectedPatientId() {
 		if (actPatient != null) {
 			return actPatient.getId();
 		}
 		return null;
 	}
-	
+
 	public void setSelectedPatientId(Patient patient) {
 		actPatient = patient;
 		lblPatientname.setText(actPatient.getLabel());
 	}
-	
-	String getSelectedInvoiceId(){
+
+	String getSelectedInvoiceId() {
 		return txtInvoiceno.getText();
 	}
-	
-	String getSelectedTotalAmount(){
+
+	String getSelectedTotalAmount() {
 		return txtAmount.getText();
 	}
-	
+
 	/**
-	 * Set a Warning if the number of potential results is higher than the query limit set.
+	 * Set a Warning if the number of potential results is higher than the query
+	 * limit set.
 	 * 
 	 * @param b
 	 */
-	public void setLimitWarning(Integer queryLimit){
+	public void setLimitWarning(Integer queryLimit) {
 		if (queryLimit != null) {
 			float val = queryLimit / 1000f;
 			lblLimitWarn.setText(val + "k");
 			lblLimitWarn.setToolTipText(
-				String.format(Messages.InvoiceListHeaderComposite_queryLimit_toolTipText,
-					queryLimit));
+					String.format(Messages.InvoiceListHeaderComposite_queryLimit_toolTipText, queryLimit));
 			lblLimitWarn.setBackground(UiDesk.getColor(UiDesk.COL_RED));
 		} else {
 			lblLimitWarn.setText("");
@@ -364,5 +362,5 @@ public class InvoiceListHeaderComposite extends Composite {
 			lblLimitWarn.setBackground(defaultBackgroundColor);
 		}
 	}
-	
+
 }

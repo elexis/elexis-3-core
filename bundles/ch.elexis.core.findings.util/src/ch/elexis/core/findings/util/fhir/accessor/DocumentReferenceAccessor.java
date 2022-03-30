@@ -11,10 +11,9 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.util.ModelUtil;
 
 public class DocumentReferenceAccessor extends AbstractFindingsAccessor {
-	
-	public List<ICoding> getPracticeSetting(DomainResource resource){
-		org.hl7.fhir.r4.model.DocumentReference fhirResource =
-			(org.hl7.fhir.r4.model.DocumentReference) resource;
+
+	public List<ICoding> getPracticeSetting(DomainResource resource) {
+		org.hl7.fhir.r4.model.DocumentReference fhirResource = (org.hl7.fhir.r4.model.DocumentReference) resource;
 		DocumentReferenceContextComponent fhirContext = fhirResource.getContext();
 		if (fhirContext != null) {
 			CodeableConcept codeableConcept = fhirContext.getPracticeSetting();
@@ -24,10 +23,9 @@ public class DocumentReferenceAccessor extends AbstractFindingsAccessor {
 		}
 		return Collections.emptyList();
 	}
-	
-	public void setPracticeSetting(DomainResource resource, ICoding coding){
-		org.hl7.fhir.r4.model.DocumentReference fhirResource =
-			(org.hl7.fhir.r4.model.DocumentReference) resource;
+
+	public void setPracticeSetting(DomainResource resource, ICoding coding) {
+		org.hl7.fhir.r4.model.DocumentReference fhirResource = (org.hl7.fhir.r4.model.DocumentReference) resource;
 		DocumentReferenceContextComponent fhirContext = fhirResource.getContext();
 		if (fhirContext != null) {
 			CodeableConcept codeableConcept = new CodeableConcept();
@@ -35,9 +33,8 @@ public class DocumentReferenceAccessor extends AbstractFindingsAccessor {
 			fhirContext.setPracticeSetting(codeableConcept);
 		}
 	}
-	public List<ICoding> getFacilityType(DomainResource resource){
-		org.hl7.fhir.r4.model.DocumentReference fhirResource =
-			(org.hl7.fhir.r4.model.DocumentReference) resource;
+	public List<ICoding> getFacilityType(DomainResource resource) {
+		org.hl7.fhir.r4.model.DocumentReference fhirResource = (org.hl7.fhir.r4.model.DocumentReference) resource;
 		DocumentReferenceContextComponent fhirContext = fhirResource.getContext();
 		if (fhirContext != null) {
 			CodeableConcept codeableConcept = fhirContext.getFacilityType();
@@ -47,10 +44,9 @@ public class DocumentReferenceAccessor extends AbstractFindingsAccessor {
 		}
 		return Collections.emptyList();
 	}
-	
-	public void setFacilityType(DomainResource resource, ICoding coding){
-		org.hl7.fhir.r4.model.DocumentReference fhirResource =
-			(org.hl7.fhir.r4.model.DocumentReference) resource;
+
+	public void setFacilityType(DomainResource resource, ICoding coding) {
+		org.hl7.fhir.r4.model.DocumentReference fhirResource = (org.hl7.fhir.r4.model.DocumentReference) resource;
 		DocumentReferenceContextComponent fhirContext = fhirResource.getContext();
 		if (fhirContext != null) {
 			CodeableConcept codeableConcept = new CodeableConcept();
@@ -58,20 +54,18 @@ public class DocumentReferenceAccessor extends AbstractFindingsAccessor {
 			fhirContext.setFacilityType(codeableConcept);
 		}
 	}
-	
-	public List<ICoding> getDocumentClass(DomainResource resource){
-		org.hl7.fhir.r4.model.DocumentReference fhirResource =
-			(org.hl7.fhir.r4.model.DocumentReference) resource;
+
+	public List<ICoding> getDocumentClass(DomainResource resource) {
+		org.hl7.fhir.r4.model.DocumentReference fhirResource = (org.hl7.fhir.r4.model.DocumentReference) resource;
 		List<CodeableConcept> codeableConcept = fhirResource.getCategory();
 		if (codeableConcept != null && !codeableConcept.isEmpty()) {
 			return ModelUtil.getCodingsFromConcept(codeableConcept.get(0));
 		}
 		return Collections.emptyList();
 	}
-	
-	public void setDocumentClass(DomainResource resource, ICoding coding){
-		org.hl7.fhir.r4.model.DocumentReference fhirResource =
-			(org.hl7.fhir.r4.model.DocumentReference) resource;
+
+	public void setDocumentClass(DomainResource resource, ICoding coding) {
+		org.hl7.fhir.r4.model.DocumentReference fhirResource = (org.hl7.fhir.r4.model.DocumentReference) resource;
 		CodeableConcept codeableConcept = new CodeableConcept();
 		ModelUtil.setCodingToConcept(codeableConcept, coding);
 		fhirResource.setCategory(Collections.singletonList(codeableConcept));

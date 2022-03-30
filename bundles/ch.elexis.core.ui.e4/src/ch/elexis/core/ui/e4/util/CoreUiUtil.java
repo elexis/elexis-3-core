@@ -29,24 +29,24 @@ import ch.elexis.core.services.IContextService;
 
 @Component(service = {})
 public class CoreUiUtil {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(CoreUiUtil.class);
-	
+
 	private static Object lock = new Object();
-	
+
 	private static List<Object> delayedInjection = new ArrayList<>();
-	
+
 	private static IContextService contextService;
-	
+
 	@Reference
-	public void setModelService(IContextService contextService){
+	public void setModelService(IContextService contextService) {
 		CoreUiUtil.contextService = contextService;
 	}
-	
+
 	@Inject
 	@Optional
-	public void subscribeAppStartupComplete(
-		@UIEventTopic(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE) Event event, UISynchronize sync){
+	public void subscribeAppStartupComplete(@UIEventTopic(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE) Event event,
+			UISynchronize sync) {
 		logger.info("APPLICATION STARTUP COMPLETE");
 		synchronized (lock) {
 			Object property = event.getProperty("org.eclipse.e4.data");
@@ -54,9 +54,8 @@ public class CoreUiUtil {
 				MApplication application = (MApplication) property;
 				// A RAP application has one application context per client
 				// the resp. context service implementation considers this
-				contextService.getRootContext().setNamed("applicationContext",
-					application.getContext());
-				
+				contextService.getRootContext().setNamed("applicationContext", application.getContext());
+
 				if (!delayedInjection.isEmpty()) {
 					for (Object object : delayedInjection) {
 						sync.asyncExec(() -> {
@@ -68,16 +67,16 @@ public class CoreUiUtil {
 			}
 		}
 	}
-	
-	private static java.util.Optional<IEclipseContext> getApplicationContext(){
+
+	private static java.util.Optional<IEclipseContext> getApplicationContext() {
 		if (contextService == null) {
 			return java.util.Optional.empty();
 		}
-		return java.util.Optional.ofNullable((IEclipseContext) contextService.getRootContext()
-			.getNamed("applicationContext").orElse(null));
+		return java.util.Optional.ofNullable(
+				(IEclipseContext) contextService.getRootContext().getNamed("applicationContext").orElse(null));
 	}
-	
-	private static void injectServices(Object object){
+
+	private static void injectServices(Object object) {
 		if (getApplicationContext().isPresent()) {
 			try {
 				ContextInjectionFactory.inject(object, getApplicationContext().get());
@@ -86,28 +85,28 @@ public class CoreUiUtil {
 			}
 		}
 	}
-	
-	public static void injectServices(Object object, IEclipseContext context){
+
+	public static void injectServices(Object object, IEclipseContext context) {
 		ContextInjectionFactory.inject(object, context);
 	}
-	
+
 	/**
 	 * Test if the control is not disposed and visible.
 	 * 
 	 * @param control
 	 * @return
 	 */
-	public static boolean isActiveControl(Control control){
+	public static boolean isActiveControl(Control control) {
 		return control != null && !control.isDisposed() && control.isVisible();
 	}
-	
+
 	/**
-	 * Inject services if application context is available, else injection is delayed until context
-	 * is available. For usage with UI classes.
+	 * Inject services if application context is available, else injection is
+	 * delayed until context is available. For usage with UI classes.
 	 * 
 	 * @param fixMediDisplay
 	 */
-	public static void injectServicesWithContext(Object object){
+	public static void injectServicesWithContext(Object object) {
 		synchronized (lock) {
 			if (getApplicationContext().isPresent()) {
 				injectServices(object);
@@ -116,14 +115,14 @@ public class CoreUiUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * Update the part tags to enable or disable closing and moving, depending on
 	 * {@link GlobalActions#fixLayoutAction} check state.
 	 * 
 	 * @param part
 	 */
-	public static void updateFixLayout(MPart part, boolean state){
+	public static void updateFixLayout(MPart part, boolean state) {
 		// make sure there is a change notification produced to update the ui
 		part.setCloseable(state);
 		part.setCloseable(!state);
@@ -135,22 +134,22 @@ public class CoreUiUtil {
 			part.getTags().remove("NoMove");
 		}
 	}
-	
-	
+
 	/**
-	 * Load a {@link Color} for the RGB color string. The color string is expected in hex format.
+	 * Load a {@link Color} for the RGB color string. The color string is expected
+	 * in hex format.
 	 * 
 	 * @param colorString
 	 * @return
 	 */
-	public static Color getColorForString(String colorString){
+	public static Color getColorForString(String colorString) {
 		colorString = StringUtils.leftPad(colorString, 6, '0');
 		if (!JFaceResources.getColorRegistry().hasValueFor(colorString)) {
 			RGB rgb;
 			try {
 				rgb = new RGB(Integer.parseInt(colorString.substring(0, 2), 16),
-					Integer.parseInt(colorString.substring(2, 4), 16),
-					Integer.parseInt(colorString.substring(4, 6), 16));
+						Integer.parseInt(colorString.substring(2, 4), 16),
+						Integer.parseInt(colorString.substring(4, 6), 16));
 			} catch (NumberFormatException nex) {
 				logger.warn("Error parsing color string [" + colorString + "]", nex);
 				rgb = new RGB(100, 100, 100);

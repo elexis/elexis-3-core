@@ -23,31 +23,34 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "ArtikelstammItem.gtin", query = "SELECT ai FROM ArtikelstammItem ai WHERE ai.gtin = :gtin")
 public class ArtikelstammItem extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
-	
+		implements
+			EntityWithId,
+			EntityWithDeleted,
+			EntityWithExtInfo {
+
 	public static final String CODESYSTEM_NAME = "Artikelstamm";
-	
+
 	public static int IS_USER_DEFINED_PKG_SIZE = -999999;
-	
+
 	public static final String EXTINFO_VAL_VAT_OVERRIDEN = "VAT_OVERRIDE";
 	public static final String EXTINFO_VAL_PPUB_OVERRIDE_STORE = "PPUB_OVERRIDE_STORE";
 	public static final String EXTINFO_VAL_PKG_SIZE_OVERRIDE_STORE = "PKG_SIZE_OVERRIDE_STORE";
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Lob
 	protected byte[] extInfo;
-	
+
 	@Column(length = 1)
 	private String type;
 
@@ -68,7 +71,7 @@ public class ArtikelstammItem extends AbstractEntityWithId
 
 	@Column(length = 50)
 	private String ldscr;
-	
+
 	@Column(length = 50)
 	private String adddscr;
 
@@ -99,7 +102,7 @@ public class ArtikelstammItem extends AbstractEntityWithId
 
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	private boolean k70_entry;
-	
+
 	@Column(length = 1)
 	private String ikscat;
 
@@ -193,11 +196,10 @@ public class ArtikelstammItem extends AbstractEntityWithId
 	public void setDscr(String dscr) {
 		if (dscr.length() > 100) {
 			dscr = dscr.substring(0, 100);
-			LoggerFactory.getLogger(getClass()).warn(
-				"Delimiting dscr to 100 chars for [{}] info [{}]", dscr,
-				type + "/" + cummVersion + "/" + gtin);
+			LoggerFactory.getLogger(getClass()).warn("Delimiting dscr to 100 chars for [{}] info [{}]", dscr,
+					type + "/" + cummVersion + "/" + gtin);
 		}
-		
+
 		this.dscr = dscr;
 	}
 
@@ -281,14 +283,14 @@ public class ArtikelstammItem extends AbstractEntityWithId
 		this.sl_entry = sl_entry;
 	}
 
-	public boolean isK70_entry(){
+	public boolean isK70_entry() {
 		return k70_entry;
 	}
-	
-	public void setK70_entry(boolean k70_entry){
+
+	public void setK70_entry(boolean k70_entry) {
 		this.k70_entry = k70_entry;
 	}
-	
+
 	public void setLppv(boolean lppv) {
 		this.lppv = lppv;
 	}
@@ -367,42 +369,42 @@ public class ArtikelstammItem extends AbstractEntityWithId
 	}
 
 	@Override
-	public byte[] getExtInfo(){
+	public byte[] getExtInfo() {
 		return extInfo;
 	}
-	
+
 	@Override
-	public void setExtInfo(byte[] extInfo){
+	public void setExtInfo(byte[] extInfo) {
 		this.extInfo = extInfo;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

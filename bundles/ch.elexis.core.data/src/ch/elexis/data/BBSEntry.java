@@ -32,68 +32,66 @@ import ch.rgw.tools.TimeTool;
  * 
  */
 public class BBSEntry extends PersistentObject {
-	
+
 	static {
-		addMapping("BBS", "reference", "Thema=topic", "datum=S:D:date", "time", "authorID",
-			"text=message");
-		
+		addMapping("BBS", "reference", "Thema=topic", "datum=S:D:date", "time", "authorID", "text=message");
+
 	}
-	
-	public BBSEntry(String topic, Anwender author, BBSEntry ref, String text){
+
+	public BBSEntry(String topic, Anwender author, BBSEntry ref, String text) {
 		create(null);
 		String refid = ref == null ? "NIL" : ref.getId();
 		TimeTool tt = new TimeTool();
-		set(new String[] {
-			"reference", "Thema", "authorID", "datum", "time", "text"
-		}, refid, topic, author.getId(), tt.toString(TimeTool.DATE_GER),
-			tt.toString(TimeTool.TIME_COMPACT), text);
+		set(new String[]{"reference", "Thema", "authorID", "datum", "time", "text"}, refid, topic, author.getId(),
+				tt.toString(TimeTool.DATE_GER), tt.toString(TimeTool.TIME_COMPACT), text);
 	}
-	
-	public Anwender getAuthor(){
+
+	public Anwender getAuthor() {
 		return Anwender.load(get("authorID"));
 	}
-	
-	public BBSEntry getReference(){
+
+	public BBSEntry getReference() {
 		return BBSEntry.load(get("reference"));
 	}
-	
-	public String getTopic(){
+
+	public String getTopic() {
 		return get("Thema");
 	}
-	
-	public String getText(){
+
+	public String getText() {
 		return get("text");
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		StringBuilder ret = new StringBuilder();
-		ret.append(getDate()).append(",").append(getTime()).append(": ").append(get("Thema"))
-			.append(" (").append(getAuthor().getLabel()).append(")");
-		
+		ret.append(getDate()).append(",").append(getTime()).append(": ").append(get("Thema")).append(" (")
+				.append(getAuthor().getLabel()).append(")");
+
 		return ret.toString();
 	}
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return "BBS";
 	}
-	
-	protected BBSEntry(){}
-	
-	protected BBSEntry(String id){
+
+	protected BBSEntry() {
+	}
+
+	protected BBSEntry(String id) {
 		super(id);
 	}
-	
-	public static BBSEntry load(String id){
+
+	public static BBSEntry load(String id) {
 		return new BBSEntry(id);
 	}
-	
-	public String getDate(){
+
+	public String getDate() {
 		return get("datum");
 	}
-	
-	public String getTime(){
+
+	public String getTime() {
 		String t = get("time");
 		if (StringTool.isNothing((t))) {
 			return "00:00";

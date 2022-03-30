@@ -10,80 +10,80 @@ public class HL7LaborItem {
 	private String gruppe;
 	private String prio;
 	private Typ typ;
-	
+
 	public enum Typ {
 		NUMERIC, TEXT, ABSOLUTE, FORMULA, DOCUMENT
 	};
-	
-	public String getId(){
+
+	public String getId() {
 		return id;
 	}
-	
-	public void setId(String id){
+
+	public void setId(String id) {
 		this.id = id;
 	}
-	
-	public String getKuerzel(){
+
+	public String getKuerzel() {
 		return kuerzel;
 	}
-	
-	public void setKuerzel(String kuerzel){
+
+	public void setKuerzel(String kuerzel) {
 		this.kuerzel = kuerzel;
 	}
-	
-	public String getTitel(){
+
+	public String getTitel() {
 		return titel;
 	}
-	
-	public void setTitel(String titel){
+
+	public void setTitel(String titel) {
 		this.titel = titel;
 	}
-	
-	public String getRefMann(){
+
+	public String getRefMann() {
 		return refMann;
 	}
-	
-	public void setRefMann(String refMann){
+
+	public void setRefMann(String refMann) {
 		this.refMann = refMann;
 	}
-	
-	public String getRefFrau(){
+
+	public String getRefFrau() {
 		return refFrau;
 	}
-	
-	public void setRefFrau(String refFrau){
+
+	public void setRefFrau(String refFrau) {
 		this.refFrau = refFrau;
 	}
-	
-	public String getEinheit(){
+
+	public String getEinheit() {
 		return einheit;
 	}
-	
-	public void setEinheit(String einheit){
+
+	public void setEinheit(String einheit) {
 		this.einheit = einheit;
 	}
-	
-	public String getGruppe(){
+
+	public String getGruppe() {
 		return gruppe;
 	}
-	
-	public void setGruppe(String gruppe){
+
+	public void setGruppe(String gruppe) {
 		this.gruppe = gruppe;
 	}
-	
-	public String getPrio(){
+
+	public String getPrio() {
 		return prio;
 	}
-	
-	public void setPrio(String prio){
+
+	public void setPrio(String prio) {
 		this.prio = prio;
 	}
-	
-	public Typ getTyp(){
+
+	public Typ getTyp() {
 		return typ;
 	}
-	
-	public void setTyp(Typ typ){
+
+	public void setTyp(Typ typ) {
 		this.typ = typ;
 	}
 }

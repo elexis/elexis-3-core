@@ -11,12 +11,12 @@ import ch.elexis.core.constants.StringConstants;
 public class BooleanCharacterConverterSafe implements AttributeConverter<Boolean, String> {
 
 	@Override
-	public String convertToDatabaseColumn(Boolean objectValue){
+	public String convertToDatabaseColumn(Boolean objectValue) {
 		return (objectValue != null && objectValue) ? StringConstants.ONE : StringConstants.ZERO;
 	}
-	
+
 	@Override
-	public Boolean convertToEntityAttribute(String dataValue){
+	public Boolean convertToEntityAttribute(String dataValue) {
 		if (StringUtils.isEmpty(dataValue)) {
 			return false;
 		}

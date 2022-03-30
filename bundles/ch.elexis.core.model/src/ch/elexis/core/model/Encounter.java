@@ -23,17 +23,16 @@ import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.time.TimeUtil;
 import ch.rgw.tools.VersionedResource;
 
-public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
-		implements IdentifiableWithXid, IEncounter {
-	
+public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung> implements IdentifiableWithXid, IEncounter {
+
 	private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
-	
-	public Encounter(Behandlung entity){
+
+	public Encounter(Behandlung entity) {
 		super(entity);
 	}
-	
+
 	@Override
-	public LocalDateTime getTimeStamp(){
+	public LocalDateTime getTimeStamp() {
 		String time = getEntity().getTime();
 		if (StringUtils.isNotBlank(time)) {
 			return LocalDateTime.of(getEntity().getDatum(), LocalTime.parse(time, timeFormatter));
@@ -41,101 +40,100 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 			return getDate().atStartOfDay();
 		}
 	}
-	
+
 	@Override
-	public void setTimeStamp(LocalDateTime value){
+	public void setTimeStamp(LocalDateTime value) {
 		Behandlung entity = getEntityMarkDirty();
 		entity.setDatum(value.toLocalDate());
 		entity.setTime(timeFormatter.format(value));
 	}
-	
+
 	@Override
-	public IPatient getPatient(){
+	public IPatient getPatient() {
 		if (getEntity().getFall() != null) {
 			return ModelUtil.getAdapter(getEntity().getFall().getPatient(), IPatient.class);
 		}
 		return null;
 	}
-	
+
 	@Override
-	public ICoverage getCoverage(){
+	public ICoverage getCoverage() {
 		return ModelUtil.getAdapter(getEntity().getFall(), ICoverage.class);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setCoverage(ICoverage value){
+	public void setCoverage(ICoverage value) {
 		if (getCoverage() != null) {
 			addRefresh(getCoverage());
 		}
 		if (value instanceof AbstractIdModelAdapter) {
-			getEntityMarkDirty().setFall(
-				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Fall>) value).getEntity());
+			getEntityMarkDirty()
+					.setFall(((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Fall>) value).getEntity());
 			addRefresh(value);
 		} else if (value == null) {
 			getEntityMarkDirty().setFall(null);
 		}
 	}
-	
+
 	@Override
-	public IMandator getMandator(){
+	public IMandator getMandator() {
 		return ModelUtil.getAdapter(getEntity().getMandant(), IMandator.class);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setMandator(IMandator value){
+	public void setMandator(IMandator value) {
 		if (value != null) {
 			getEntityMarkDirty().setMandant(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
 			getEntityMarkDirty().setMandant(null);
 		}
 	}
-	
+
 	@Override
-	public List<IBilled> getBilled(){
+	public List<IBilled> getBilled() {
 		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getBilled().parallelStream().filter(b -> !b.isDeleted())
-			.map(b -> ModelUtil.getAdapter(b, IBilled.class, true)).collect(Collectors.toList());
+				.map(b -> ModelUtil.getAdapter(b, IBilled.class, true)).collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public void removeBilled(IBilled billed){
+	public void removeBilled(IBilled billed) {
 		CoreModelServiceHolder.get().delete(billed);
 	}
-	
+
 	@Override
-	public LocalDate getDate(){
+	public LocalDate getDate() {
 		return getEntity().getDatum();
 	}
-	
+
 	@Override
-	public void setDate(LocalDate value){
+	public void setDate(LocalDate value) {
 		Behandlung entity = getEntityMarkDirty();
 		entity.setDatum(value);
 		entity.setTime("000000");
 	}
-	
+
 	@Override
-	public VersionedResource getVersionedEntry(){
+	public VersionedResource getVersionedEntry() {
 		return getEntity().getEintrag();
 	}
-	
+
 	@Override
-	public void setVersionedEntry(VersionedResource value){
+	public void setVersionedEntry(VersionedResource value) {
 		getEntityMarkDirty().setEintrag(value);
 	}
-	
+
 	@Override
-	public List<IDiagnosisReference> getDiagnoses(){
+	public List<IDiagnosisReference> getDiagnoses() {
 		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getDiagnoses().parallelStream().filter(d -> !d.isDeleted())
-			.map(d -> ModelUtil.getAdapter(d, IDiagnosisReference.class, true))
-			.collect(Collectors.toList());
+				.map(d -> ModelUtil.getAdapter(d, IDiagnosisReference.class, true)).collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public void addDiagnosis(IDiagnosis diagnosis){
+	public void addDiagnosis(IDiagnosis diagnosis) {
 		IDiagnosisReference diagnosisRef = null;
 		if (diagnosis instanceof IDiagnosisReference) {
 			diagnosisRef = (IDiagnosisReference) diagnosis;
@@ -148,12 +146,12 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 			getEntityMarkDirty().getDiagnoses().add(diag);
 		}
 		CodeElementServiceHolder.updateStatistics(diagnosis,
-			ContextServiceHolder.get().getActiveUserContact().orElse(null));
+				ContextServiceHolder.get().getActiveUserContact().orElse(null));
 		CodeElementServiceHolder.updateStatistics(diagnosis, getPatient());
 	}
-	
+
 	@Override
-	public void removeDiagnosis(IDiagnosis diagnosis){
+	public void removeDiagnosis(IDiagnosis diagnosis) {
 		if (!(diagnosis instanceof IDiagnosisReference)) {
 			LoggerFactory.getLogger(getClass()).warn("Can only remove IDiagnosisReference");
 			return;
@@ -162,39 +160,39 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		Diagnosis diag = ((AbstractIdModelAdapter<Diagnosis>) diagnosis).getEntity();
 		getEntityMarkDirty().getDiagnoses().remove(diag);
 	}
-	
+
 	@Override
-	public IInvoice getInvoice(){
+	public IInvoice getInvoice() {
 		return ModelUtil.getAdapter(getEntity().getInvoice(), IInvoice.class);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setInvoice(IInvoice value){
+	public void setInvoice(IInvoice value) {
 		if (getInvoice() != null) {
 			addRefresh(getInvoice());
 		}
 		if (value != null) {
-			getEntityMarkDirty().setInvoice(
-				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
+			getEntityMarkDirty()
+					.setInvoice(((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
 			addRefresh(value);
 		} else {
 			getEntityMarkDirty().setInvoice(null);
 		}
 	}
-	
+
 	@Override
-	public boolean isBillable(){
+	public boolean isBillable() {
 		return getEntity().getBillable();
 	}
-	
+
 	@Override
-	public void setBillable(boolean value){
+	public void setBillable(boolean value) {
 		getEntityMarkDirty().setBillable(value);
 	}
-	
+
 	@Override
-	public InvoiceState getInvoiceState(){
+	public InvoiceState getInvoiceState() {
 		IInvoice invoice = getInvoice();
 		if (invoice != null) {
 			return invoice.getState();
@@ -211,9 +209,9 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 			return InvoiceState.NOT_FROM_YOU;
 		}
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		StringBuffer ret = new StringBuffer();
 		IMandator m = getMandator();
 		ret.append(TimeUtil.formatSafe(getTimeStamp()));
@@ -221,10 +219,10 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		ret.append((m == null) ? "?" : m.getLabel());
 		return ret.toString();
 	}
-	
-	private String getInvoiceStateText(){
+
+	private String getInvoiceStateText() {
 		String statusText = "";
-		
+
 		IInvoice rechnung = getInvoice();
 		if (rechnung != null) {
 			statusText += "RG " + rechnung.getNumber() + ": ";
@@ -232,9 +230,9 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		statusText += getInvoiceState().getLocaleText();
 		return statusText;
 	}
-	
+
 	@Override
-	public String getHeadVersionInPlaintext(){
+	public String getHeadVersionInPlaintext() {
 		String head = getVersionedEntry().getHead();
 		if (head != null) {
 			if (head.startsWith("<")) {
@@ -247,14 +245,14 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		}
 		return "";
 	}
-	
+
 	/**
 	 * From ch.elexis.core.ui.actions.HistoryLoader
 	 * 
 	 * @param input
 	 * @return
 	 */
-	private String maskHTML(String input){
+	private String maskHTML(String input) {
 		String s = input.replaceAll("<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
 		s = s.replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$
 		s = s.replaceAll("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$

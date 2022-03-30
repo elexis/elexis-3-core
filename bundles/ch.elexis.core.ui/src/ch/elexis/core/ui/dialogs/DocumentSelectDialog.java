@@ -54,18 +54,19 @@ import ch.rgw.tools.StringTool;
 
 /**
  * Select a Document or a template Usage: DocumentSelector dsl=new
- * DocumentSelector(shell,mandant,TYPE_xxx); if(dsl.open()==Dialog.OK){ doSomethingWith(dsl.result);
- * }
+ * DocumentSelector(shell,mandant,TYPE_xxx); if(dsl.open()==Dialog.OK){
+ * doSomethingWith(dsl.result); }
  * 
  * @author gerry
  * 
  */
 public class DocumentSelectDialog extends TitleAreaDialog {
-	private static final String DELETE_DOCUMENT = Messages.DocumentSelectDialog_deleteDocument; //$NON-NLS-1$
-	private static final String DELETE_TEMPLATE = Messages.DocumentSelectDialog_deleteTemplate; //$NON-NLS-1$
-	private static final String OPEN_DOCUMENT = Messages.DocumentSelectDialog_openDocument; //$NON-NLS-1$
+	private static final String DELETE_DOCUMENT = Messages.DocumentSelectDialog_deleteDocument; // $NON-NLS-1$
+	private static final String DELETE_TEMPLATE = Messages.DocumentSelectDialog_deleteTemplate; // $NON-NLS-1$
+	private static final String OPEN_DOCUMENT = Messages.DocumentSelectDialog_openDocument; // $NON-NLS-1$
 	/**
-	 * select an existing document out of the list of all documtents of the given mandator
+	 * select an existing document out of the list of all documtents of the given
+	 * mandator
 	 */
 	public static final int TYPE_LOAD_DOCUMENT = 0;
 	/** create a new document using one of the templates of the given mandator */
@@ -74,9 +75,9 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	public static final int TYPE_LOAD_TEMPLATE = 2;
 	/** open a system template of the given mandator for editing or export */
 	public static final int TYPE_LOAD_SYSTEMPLATE = 4;
-	
+
 	protected static boolean dontAskForAddresseeStickerCreated = false;
-	
+
 	static final int TEMPLATE = TYPE_LOAD_TEMPLATE | TYPE_LOAD_SYSTEMPLATE;
 	Person rel;
 	int type;
@@ -89,64 +90,65 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	private Action editDontAskForAddressee;
 	private Action deleteTemplateAction;
 	private Action deleteTextAction;
-	
+
 	/**
-	 * Create a new DocumentSelector. If the user clicks OK, the selected Brief will be in result.
+	 * Create a new DocumentSelector. If the user clicks OK, the selected Brief will
+	 * be in result.
 	 * 
 	 * @param p
 	 *            the mandator whose templates/letters should be displayed
 	 * @param typ
 	 *            type of the selector to display (see TYPE_ constants)
 	 */
-	public DocumentSelectDialog(Shell shell, Person p, int typ){
+	public DocumentSelectDialog(Shell shell, Person p, int typ) {
 		super(shell);
 		rel = p;
 		type = typ;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
-		
+
 		makeActions();
 		switch (type) {
-		case TYPE_LOAD_DOCUMENT:
-			setTitle(OPEN_DOCUMENT);
-			setMessage(Messages.DocumentSelectDialog_pleaseSelectDocument); //$NON-NLS-1$
-			getShell().setText(OPEN_DOCUMENT);
-			break;
-		case TYPE_CREATE_DOC_WITH_TEMPLATE:
-			setTitle(Messages.DocumentSelectDialog_createLetterWithTemplate); //$NON-NLS-1$
-			setMessage(Messages.DocumentSelectDialog_selectTemplate); //$NON-NLS-1$
-			getShell().setText(Messages.DocumentSelectDialog_schooseTemplateForLetter); //$NON-NLS-1$
-			break;
-		case TYPE_LOAD_TEMPLATE:
-			setTitle(Messages.DocumentSelectDialog_openTemplate); //$NON-NLS-1$
-			setMessage(Messages.DocumentSelectDialog_pleaseSelectTemplateFromList); //$NON-NLS-1$
-			getShell().setText(Messages.DocumentSelectDialog_openTemplate); //$NON-NLS-1$
-			break;
-		case TYPE_LOAD_SYSTEMPLATE:
-			setTitle(Messages.DocumentSelectDialog_loadSysTemplate); //$NON-NLS-1$
-			setMessage(Messages.DocumentSelectDialog_sysTemplateExplanation); //$NON-NLS-1$
-			getShell().setText(Messages.DocumentSelectDialog_loadTemplate); //$NON-NLS-1$
+			case TYPE_LOAD_DOCUMENT :
+				setTitle(OPEN_DOCUMENT);
+				setMessage(Messages.DocumentSelectDialog_pleaseSelectDocument); // $NON-NLS-1$
+				getShell().setText(OPEN_DOCUMENT);
+				break;
+			case TYPE_CREATE_DOC_WITH_TEMPLATE :
+				setTitle(Messages.DocumentSelectDialog_createLetterWithTemplate); // $NON-NLS-1$
+				setMessage(Messages.DocumentSelectDialog_selectTemplate); // $NON-NLS-1$
+				getShell().setText(Messages.DocumentSelectDialog_schooseTemplateForLetter); // $NON-NLS-1$
+				break;
+			case TYPE_LOAD_TEMPLATE :
+				setTitle(Messages.DocumentSelectDialog_openTemplate); // $NON-NLS-1$
+				setMessage(Messages.DocumentSelectDialog_pleaseSelectTemplateFromList); // $NON-NLS-1$
+				getShell().setText(Messages.DocumentSelectDialog_openTemplate); // $NON-NLS-1$
+				break;
+			case TYPE_LOAD_SYSTEMPLATE :
+				setTitle(Messages.DocumentSelectDialog_loadSysTemplate); // $NON-NLS-1$
+				setMessage(Messages.DocumentSelectDialog_sysTemplateExplanation); // $NON-NLS-1$
+				getShell().setText(Messages.DocumentSelectDialog_loadTemplate); // $NON-NLS-1$
 		}
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout());
 		if ((type & TEMPLATE) != 0) {
-			new Label(ret, SWT.NONE).setText(Messages.DocumentSelectDialog_subject); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.DocumentSelectDialog_subject); // $NON-NLS-1$
 			tBetreff = SWTHelper.createText(ret, 1, SWT.NONE);
 			new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL);
 		}
 		tv = new TableViewer(ret, SWT.V_SCROLL);
 		tv.setContentProvider(new IStructuredContentProvider() {
-			
-			public Object[] getElements(Object inputElement){
+
+			public Object[] getElements(Object inputElement) {
 				Query<Brief> qbe = new Query<Brief>(Brief.class);
 				if (type == TYPE_LOAD_DOCUMENT) {
 					qbe.add(Brief.FLD_TYPE, Query.NOT_EQUAL, Brief.TEMPLATE);
@@ -162,7 +164,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 				}
 				qbe.and();
 				qbe.add("deleted", Query.NOT_EQUAL, StringConstants.ONE); //$NON-NLS-1$
-				
+
 				if (type != TYPE_LOAD_DOCUMENT) {
 					qbe.orderBy(false, Brief.FLD_SUBJECT);
 				} else {
@@ -171,22 +173,23 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 				List<Brief> l = qbe.execute();
 				return l.toArray();
 			}
-			
-			public void dispose(){}
-			
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
+
+			public void dispose() {
+			}
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			}
 		});
 		tv.setLabelProvider(new MyLabelProvider());
 		makeActions();
 		menu = new MenuManager();
 		menu.setRemoveAllWhenShown(true);
 		menu.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager){
+			public void menuAboutToShow(IMenuManager manager) {
 				menu.add(editNameAction);
 				if (type == TYPE_LOAD_TEMPLATE) {
 					// only show in load template dialog
-					Brief sel =
-						(Brief) ((IStructuredSelection) tv.getSelection()).getFirstElement();
+					Brief sel = (Brief) ((IStructuredSelection) tv.getSelection()).getFirstElement();
 					if (getDontAskForAddresseeForThisTemplate(sel)) {
 						menu.add(editDontAskForAddressee);
 						editDontAskForAddressee.setChecked(false);
@@ -203,22 +206,23 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		tv.setInput(this);
 		tv.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(DoubleClickEvent event){
+			public void doubleClick(DoubleClickEvent event) {
 				okPressed();
 			}
 		});
 		return ret;
 	}
-	
+
 	/**
-	 * adds showing an image before labels: show Address-icon for docs for which address should be
-	 * selected and do NOT show for docs for which selection dialog should NOT be shown.
+	 * adds showing an image before labels: show Address-icon for docs for which
+	 * address should be selected and do NOT show for docs for which selection
+	 * dialog should NOT be shown.
 	 * 
 	 * @author marlovitsh
 	 * 
 	 */
 	public class MyLabelProvider extends DefaultLabelProvider implements ITableLabelProvider {
-		public Image getColumnImage(Object element, int columnIndex){
+		public Image getColumnImage(Object element, int columnIndex) {
 			PersistentObject po = (PersistentObject) element;
 			if (type == TYPE_LOAD_TEMPLATE) {
 				// only show on load template dialog
@@ -228,9 +232,9 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 			return null;
 		}
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
 		if ((sel != null) && (!sel.isEmpty())) {
 			result = (Brief) sel.getFirstElement();
@@ -243,26 +247,23 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		}
 		super.okPressed();
 	}
-	
-	public Brief getSelectedDocument(){
+
+	public Brief getSelectedDocument() {
 		return result;
 	}
-	
-	public String getBetreff(){
+
+	public String getBetreff() {
 		return betreff;
 	}
-	
-	private void makeActions(){
+
+	private void makeActions() {
 		deleteTemplateAction = new Action(DELETE_TEMPLATE) {
 			@Override
-			public void run(){
+			public void run() {
 				Brief sel = (Brief) ((IStructuredSelection) tv.getSelection()).getFirstElement();
-				if (MessageDialog.openConfirm(
-					getShell(),
-					DELETE_TEMPLATE,
-					MessageFormat.format(Messages.DocumentSelectDialog_reallyDeleteTemplate,
-						sel.getBetreff())) //$NON-NLS-1$
-				== true) {
+				if (MessageDialog.openConfirm(getShell(), DELETE_TEMPLATE,
+						MessageFormat.format(Messages.DocumentSelectDialog_reallyDeleteTemplate, sel.getBetreff())) // $NON-NLS-1$
+						== true) {
 					sel.delete();
 					tv.refresh();
 				}
@@ -270,56 +271,49 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		};
 		deleteTextAction = new Action(DELETE_DOCUMENT) {
 			@Override
-			public void run(){
+			public void run() {
 				Brief sel = (Brief) ((IStructuredSelection) tv.getSelection()).getFirstElement();
-				if (MessageDialog.openConfirm(
-					getShell(),
-					DELETE_DOCUMENT,
-					MessageFormat.format(Messages.DocumentSelectDialog_reallyDeleteDocument,
-						sel.getBetreff())) //$NON-NLS-1$
-				== true) {
+				if (MessageDialog.openConfirm(getShell(), DELETE_DOCUMENT,
+						MessageFormat.format(Messages.DocumentSelectDialog_reallyDeleteDocument, sel.getBetreff())) // $NON-NLS-1$
+						== true) {
 					sel.set("geloescht", StringConstants.ONE); //$NON-NLS-1$
 					tv.refresh();
 				}
 			}
 		};
-		editNameAction = new Action(Messages.DocumentSelectDialog_changeSubjectAction) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					Brief sel =
-						(Brief) ((IStructuredSelection) tv.getSelection()).getFirstElement();
-					InputDialog inp =
-						new InputDialog(getShell(),
-							Messages.DocumentSelectDialog_changeSubjectAction, //$NON-NLS-1$
-							Messages.DocumentSelectDialog_changeSubjectAction, //$NON-NLS-1$
-							sel.getBetreff(), null);
-					int inputResult = inp.open();
-					if (inputResult == InputDialog.OK) {
-						sel.setBetreff(inp.getValue());
-						tv.refresh();
-					}
-				}
-			};
-		editDontAskForAddressee = new Action(Messages.DocumentSelectDialog_askForAddressee) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					Brief sel =
-						(Brief) ((IStructuredSelection) tv.getSelection()).getFirstElement();
-					setDontAskForAddresseeForThisTemplate(sel,
-						!getDontAskForAddresseeForThisTemplate(sel));
+		editNameAction = new Action(Messages.DocumentSelectDialog_changeSubjectAction) { // $NON-NLS-1$
+			@Override
+			public void run() {
+				Brief sel = (Brief) ((IStructuredSelection) tv.getSelection()).getFirstElement();
+				InputDialog inp = new InputDialog(getShell(), Messages.DocumentSelectDialog_changeSubjectAction, // $NON-NLS-1$
+						Messages.DocumentSelectDialog_changeSubjectAction, // $NON-NLS-1$
+						sel.getBetreff(), null);
+				int inputResult = inp.open();
+				if (inputResult == InputDialog.OK) {
+					sel.setBetreff(inp.getValue());
 					tv.refresh();
 				}
-			};
+			}
+		};
+		editDontAskForAddressee = new Action(Messages.DocumentSelectDialog_askForAddressee) { // $NON-NLS-1$
+			@Override
+			public void run() {
+				Brief sel = (Brief) ((IStructuredSelection) tv.getSelection()).getFirstElement();
+				setDontAskForAddresseeForThisTemplate(sel, !getDontAskForAddresseeForThisTemplate(sel));
+				tv.refresh();
+			}
+		};
 	}
-	
+
 	/**
-	 * get the id for template sticker DONTASKFORADDRESSEE_STICKER, return null if not yet created
+	 * get the id for template sticker DONTASKFORADDRESSEE_STICKER, return null if
+	 * not yet created
 	 * 
 	 * @return the sticker or null
 	 * 
 	 * @author marlovitsh
 	 */
-	public static String getDontAskForAddresseeStickerID(){
+	public static String getDontAskForAddresseeStickerID() {
 		Query<Sticker> qry = new Query<Sticker>(Sticker.class);
 		qry.add(Sticker.FLD_NAME, Query.EQUALS, BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER);
 		List<Sticker> stickerList = qry.execute();
@@ -327,15 +321,16 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 			return stickerList.get(0).getId();
 		return StringTool.leer;
 	}
-	
+
 	/**
-	 * get the template sticker DONTASKFORADDRESSEE_STICKER, return null if not yet created
+	 * get the template sticker DONTASKFORADDRESSEE_STICKER, return null if not yet
+	 * created
 	 * 
 	 * @return the sticker or null
 	 * 
 	 * @author marlovitsh
 	 */
-	public static Sticker getDontAskForAddresseeSticker(){
+	public static Sticker getDontAskForAddresseeSticker() {
 		Query<Sticker> qry = new Query<Sticker>(Sticker.class);
 		qry.add(Sticker.FLD_NAME, Query.EQUALS, BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER);
 		List<Sticker> stickerList = qry.execute();
@@ -343,29 +338,29 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 			return stickerList.get(0);
 		return null;
 	}
-	
+
 	/**
-	 * creates the sticker DONTASKFORADDRESSEE_STICKER if not yet existing. Is is primarily marked
-	 * as deleted to prevent the user from seeing it in the interface
+	 * creates the sticker DONTASKFORADDRESSEE_STICKER if not yet existing. Is is
+	 * primarily marked as deleted to prevent the user from seeing it in the
+	 * interface
 	 * 
 	 * @author marlovitsh
 	 */
-	public static void createDontAskForAddresseeSticker(){
+	public static void createDontAskForAddresseeSticker() {
 		// much faster if doing a boolean check for dontAskForAddresseeStickerCreated
 		if (!dontAskForAddresseeStickerCreated) {
 			if (getDontAskForAddresseeSticker() == null) {
-				Sticker newSticker =
-					new Sticker(BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER, null, null);
+				Sticker newSticker = new Sticker(BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER, null, null);
 				newSticker.setClassForSticker(Brief.class);
 				newSticker.setVisible(false);
 			}
 			dontAskForAddresseeStickerCreated = true;
 		}
 	}
-	
+
 	/**
-	 * test if the user should be asked for an addressee when creating a document. The flag is saved
-	 * as a sticker for the template-document.
+	 * test if the user should be asked for an addressee when creating a document.
+	 * The flag is saved as a sticker for the template-document.
 	 * 
 	 * @param templateName
 	 *            the name of the document-template to be tested
@@ -373,7 +368,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 * 
 	 * @author marlovitsh
 	 */
-	public static boolean getDontAskForAddresseeForThisTemplateName(String templateName){
+	public static boolean getDontAskForAddresseeForThisTemplateName(String templateName) {
 		Query<Brief> qry = new Query<Brief>(Brief.class);
 		qry.add(Brief.FLD_SUBJECT, Query.EQUALS, templateName, true);
 		qry.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE, true);
@@ -384,10 +379,10 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		}
 		return false;
 	};
-	
+
 	/**
-	 * test if the user should be asked for an addressee when creating a document. The flag is saved
-	 * as a sticker for the template-document.
+	 * test if the user should be asked for an addressee when creating a document.
+	 * The flag is saved as a sticker for the template-document.
 	 * 
 	 * @param template
 	 *            the document-template to be tested
@@ -395,9 +390,9 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 * 
 	 * @author marlovitsh
 	 */
-	public static boolean getDontAskForAddresseeForThisTemplate(Brief template){
+	public static boolean getDontAskForAddresseeForThisTemplate(Brief template) {
 		createDontAskForAddresseeSticker();
-		
+
 		List<ISticker> stickers = template.getStickers();
 		for (ISticker st : stickers) {
 			if (st.getLabel().equalsIgnoreCase(BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER))
@@ -405,20 +400,20 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		}
 		return false;
 	}
-	
+
 	/**
-	 * test if the user should be asked for an addressee when creating a document. The flag is saved
-	 * as a sticker for the template-document.
+	 * test if the user should be asked for an addressee when creating a document.
+	 * The flag is saved as a sticker for the template-document.
 	 * 
 	 * @param template
 	 *            the document-template to be tested
 	 * @param dontAskForAddressee
-	 *            whether or not to ask for an addressee when creating a new document
+	 *            whether or not to ask for an addressee when creating a new
+	 *            document
 	 * 
 	 * @author marlovitsh
 	 */
-	public static void setDontAskForAddresseeForThisTemplate(Brief template,
-		boolean dontAskForAddressee){
+	public static void setDontAskForAddresseeForThisTemplate(Brief template, boolean dontAskForAddressee) {
 		createDontAskForAddresseeSticker();
 		if (dontAskForAddressee) {
 			// find our sticker by name, set it

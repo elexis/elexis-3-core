@@ -12,31 +12,31 @@ package ch.elexis.core.types;
 
 public enum Gender {
 	MALE("M"), FEMALE("F"), UNKNOWN("U"), UNDEFINED("X");
-	
+
 	private final String value;
-	
-	private Gender(String value){
+
+	private Gender(String value) {
 		this.value = value;
 	}
-	
-	public String value() {
-        return value;
-    }
 
-	public static Gender fromValue(String string){
+	public String value() {
+		return value;
+	}
+
+	public static Gender fromValue(String string) {
 		if (string != null) {
 			switch (string.toUpperCase()) {
-			case "M":
-				return Gender.MALE;
-			case "W":
-			case "F":
-				return Gender.FEMALE;
-			case "X":
-				return Gender.UNDEFINED;
-			default:
-				return Gender.UNKNOWN;
+				case "M" :
+					return Gender.MALE;
+				case "W" :
+				case "F" :
+					return Gender.FEMALE;
+				case "X" :
+					return Gender.UNDEFINED;
+				default :
+					return Gender.UNKNOWN;
 			}
 		}
 		return Gender.UNKNOWN;
-    }
+	}
 }

@@ -28,32 +28,32 @@ public class MultiFileParserTests {
 	private static Path workDir = null;
 	private static HL7Parser hl7Parser = new TestHL7Parser(MY_TESTLAB);
 	private static IPersistenceHandler persistenceHandler = new DefaultPersistenceHandler();
-	
+
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception{
+	public static void setUpBeforeClass() throws Exception {
 		mfParser = new MultiFileParser(MY_TESTLAB);
 		mfParser.setTestMode(true);
 	}
-	
+
 	@Before
-	public void setup() throws Exception{
+	public void setup() throws Exception {
 		workDir = Helpers.copyRscToTempDirectory();
 	}
-	
+
 	@After
-	public void tearDown() throws Exception{
+	public void tearDown() throws Exception {
 		removeAllPatientsAndDependants();
 		if (workDir != null) {
 			Helpers.removeTempDirectory(workDir);
 		}
 	}
-	
+
 	@Test
-	public void testImportFromFile(){
+	public void testImportFromFile() {
 		// requires omnivore
 		File hl7File = new File(workDir.toString(), "Synlab/Labor-Befund.HL7");
-		Result<Object> result = mfParser.importFromFile(hl7File, new DefaultImportStrategyFactory(),
-			hl7Parser, persistenceHandler);
+		Result<Object> result = mfParser.importFromFile(hl7File, new DefaultImportStrategyFactory(), hl7Parser,
+				persistenceHandler);
 		if (result.isOK()) {
 			assertTrue(true); // show import was successful
 			assertEquals(2, result.getMessages().size());
@@ -65,13 +65,13 @@ public class MultiFileParserTests {
 			}
 		}
 	}
-	
+
 	@Test
-	public void testImportFromDirectory(){
+	public void testImportFromDirectory() {
 		File synlabDir = new File(workDir.toString(), "Synlab");
-		
-		Result<Object> result = mfParser.importFromDirectory(synlabDir,
-			new DefaultImportStrategyFactory(), hl7Parser, persistenceHandler);
+
+		Result<Object> result = mfParser.importFromDirectory(synlabDir, new DefaultImportStrategyFactory(), hl7Parser,
+				persistenceHandler);
 		if (result.isOK()) {
 			assertTrue(true); // show import was successful
 			assertEquals(4, result.getMessages().size());
@@ -83,23 +83,22 @@ public class MultiFileParserTests {
 			}
 		}
 	}
-	
+
 	@Test
-	public void testMoveAfterImport(){
+	public void testMoveAfterImport() {
 		File moveAfterImportDir = new File(workDir.toString(), "MoveAfterImport");
-		
+
 		Result<Object> result = mfParser.importFromDirectory(moveAfterImportDir,
-			new DefaultImportStrategyFactory().setMoveAfterImport(true), hl7Parser,
-			persistenceHandler);
+				new DefaultImportStrategyFactory().setMoveAfterImport(true), hl7Parser, persistenceHandler);
 		if (result.isOK()) {
 			assertTrue(true); // show import was successful
 			assertEquals(4, result.getMessages().size());
-			
+
 			assertTrue(new File(moveAfterImportDir, "archive").exists());
 			assertFalse(new File(moveAfterImportDir, "error").exists());
 			// 1 because directory is returned by listFiles
 			assertTrue(moveAfterImportDir.listFiles().length == 1);
-			
+
 			removeAllPatientsAndDependants();
 		} else {
 			String msg = "Import of 'Laborbefund-Musterfrau.HL7' failed";

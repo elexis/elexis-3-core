@@ -13,14 +13,14 @@ import ch.elexis.core.findings.IObservation.ObservationCode;
 import ch.elexis.core.findings.codes.ICodingService;
 
 public class TextUtil {
-	
+
 	/**
 	 * Test if an {@link IObservation} represents a risk factor.
 	 * 
 	 * @param iFinding
 	 * @return
 	 */
-	public static boolean isRiskfactor(IObservation iFinding){
+	public static boolean isRiskfactor(IObservation iFinding) {
 		if (iFinding.getCategory() == ObservationCategory.SOCIALHISTORY) {
 			for (ICoding code : iFinding.getCoding()) {
 				if (ObservationCode.ANAM_RISK.isSame(code)) {
@@ -30,16 +30,16 @@ public class TextUtil {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Test if an {@link IObservation} represents a personal anamnesis.
 	 * 
 	 * @param iFinding
 	 * @return
 	 */
-	public static boolean isPersAnamnese(IObservation iFinding){
+	public static boolean isPersAnamnese(IObservation iFinding) {
 		if (iFinding instanceof IObservation
-			&& ((IObservation) iFinding).getCategory() == ObservationCategory.SOCIALHISTORY) {
+				&& ((IObservation) iFinding).getCategory() == ObservationCategory.SOCIALHISTORY) {
 			for (ICoding code : iFinding.getCoding()) {
 				if (ObservationCode.ANAM_PERSONAL.isSame(code)) {
 					return true;
@@ -48,7 +48,7 @@ public class TextUtil {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Get text representation of an {@link ICondition}.
 	 * 
@@ -56,7 +56,7 @@ public class TextUtil {
 	 * @param codingService
 	 * @return
 	 */
-	public static String getText(ICondition condition, ICodingService codingService){
+	public static String getText(ICondition condition, ICodingService codingService) {
 		StringBuilder sb = new StringBuilder();
 		Optional<String> start = condition.getStart();
 		Optional<String> end = condition.getEnd();
@@ -66,19 +66,19 @@ public class TextUtil {
 			sb.append(end.orElse(""));
 			sb.append(") ");
 		}
-		
+
 		Optional<String> text = condition.getText();
 		boolean multiline = text.isPresent() && text.get().contains("\n");
 		sb.append(text.orElse("")).append(multiline ? "\n" : "");
-		
+
 		List<ICoding> coding = condition.getCoding();
 		for (ICoding iCoding : coding) {
 			sb.append(" [").append(codingService.getShortLabel(iCoding)).append("] ");
 		}
-		
+
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Get text representation of an {@link IObservation}.
 	 * 
@@ -86,7 +86,7 @@ public class TextUtil {
 	 * @param codingService
 	 * @return
 	 */
-	public static String getText(IObservation observation, ICodingService codingService){
+	public static String getText(IObservation observation, ICodingService codingService) {
 		StringBuilder sb = new StringBuilder();
 		if (isPersAnamnese(observation)) {
 			sb.append(observation.getText().orElse(""));
@@ -95,7 +95,6 @@ public class TextUtil {
 		}
 		return sb.toString();
 	}
-	
 
 	/**
 	 * Get text representation of an {@link IAllergyIntolerance}.
@@ -104,12 +103,12 @@ public class TextUtil {
 	 * @param codingService
 	 * @return
 	 */
-	public static Object getText(IAllergyIntolerance allergy, ICodingService codingService){
+	public static Object getText(IAllergyIntolerance allergy, ICodingService codingService) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(allergy.getText().orElse(""));
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Get text representation of an {@link IFamilyMemberHistory}.
 	 * 
@@ -117,7 +116,7 @@ public class TextUtil {
 	 * @param codingService
 	 * @return
 	 */
-	public static Object getText(IFamilyMemberHistory famanam, ICodingService codingService){
+	public static Object getText(IFamilyMemberHistory famanam, ICodingService codingService) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(famanam.getText().orElse(""));
 		return sb.toString();

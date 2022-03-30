@@ -23,8 +23,8 @@ import org.eclipse.ui.IViewSite;
  */
 public interface IDetailDisplay {
 	/**
-	 * Detail {@link Composite} following the master detail pattern. Selection is provided via
-	 * element class or context name.
+	 * Detail {@link Composite} following the master detail pattern. Selection is
+	 * provided via element class or context name.
 	 * 
 	 * @param parent
 	 *            already has a {@link FillLayout}
@@ -32,11 +32,11 @@ public interface IDetailDisplay {
 	 *            {@link IViewSite} the display is part of
 	 */
 	public Composite createDisplay(Composite parent, IViewSite site);
-	
+
 	public Class<?> getElementClass();
-	
+
 	public void display(Object obj);
-	
+
 	public String getTitle();
-	
+
 }

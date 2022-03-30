@@ -6,9 +6,9 @@ import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.interfaces.INumericEnum;
 
 public enum MaritalStatus implements INumericEnum, ILocalizedEnum {
-	UNKNOWN(0, "UNK"), ANNULLED(1, "A"), DIVORCED(2, "D"), INTERLOCUTORY(3, "I"), LEGALLY_SEPARATED(4, "L"),
-	MARRIED(5, "M"), POLYGAMOUS(6, "P"), NEVER_MARRIED(7, "S"), DOMESTIC_PARTNER(8, "T"), UNMARRIED(9, "U"),
-	WIDOWED(10, "W");
+	UNKNOWN(0, "UNK"), ANNULLED(1, "A"), DIVORCED(2, "D"), INTERLOCUTORY(3, "I"), LEGALLY_SEPARATED(4, "L"), MARRIED(5,
+			"M"), POLYGAMOUS(6,
+					"P"), NEVER_MARRIED(7, "S"), DOMESTIC_PARTNER(8, "T"), UNMARRIED(9, "U"), WIDOWED(10, "W");
 
 	private final int numeric;
 	private final String fhirCode;

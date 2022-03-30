@@ -23,20 +23,21 @@ import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.rgw.tools.ExHandler;
 
 /**
- * Ein Sammelbecken für Background-Jobs. Der JobPool steuert den Ablauf der Jobs: Er achtet darauf,
- * dass derselbe Job nicht mehrmals gleichzeitig gestartet wird, und dass nicht zuviele Jobs
- * parallel laufen. Dafür können Jobs in eine Warteschlange eingereiht werden, wo sie nacheinander
- * abgearbeitet werden. Die Priorität der Jobs wird aus org.eclipse.core.runtime.jobs.Job entnommen.
- * Die Werte bedeuten:
+ * Ein Sammelbecken für Background-Jobs. Der JobPool steuert den Ablauf der
+ * Jobs: Er achtet darauf, dass derselbe Job nicht mehrmals gleichzeitig
+ * gestartet wird, und dass nicht zuviele Jobs parallel laufen. Dafür können
+ * Jobs in eine Warteschlange eingereiht werden, wo sie nacheinander
+ * abgearbeitet werden. Die Priorität der Jobs wird aus
+ * org.eclipse.core.runtime.jobs.Job entnommen. Die Werte bedeuten:
  * <ul>
- * <li>Job.INTERACTIVE: Höchste Priorität, nur für kurzlaufende Jobs, die ummittelbare Auswirkung
- * auf die Benutzeroberfläche haben.</li>
- * <li>Job.SHORT: Hohe Priorität, für Jobs die höchstens ein bis zwei Sekunden laufen, und auf die
- * der Anwender wartet</li>
- * <li>Job.LONG: Mittlere Priorität für Jobs, die mehrere Sekunden lang laufen, und die deshalb die
- * Benutzeroberfläche nicht beeinträchtigen sollen</li>
- * <li>Job.DECORATE; Niedrigste Priorität für allgemeine Hintergrundjobs, die nur laufen, wenn sonst
- * nichts zu tun ist</li>
+ * <li>Job.INTERACTIVE: Höchste Priorität, nur für kurzlaufende Jobs, die
+ * ummittelbare Auswirkung auf die Benutzeroberfläche haben.</li>
+ * <li>Job.SHORT: Hohe Priorität, für Jobs die höchstens ein bis zwei Sekunden
+ * laufen, und auf die der Anwender wartet</li>
+ * <li>Job.LONG: Mittlere Priorität für Jobs, die mehrere Sekunden lang laufen,
+ * und die deshalb die Benutzeroberfläche nicht beeinträchtigen sollen</li>
+ * <li>Job.DECORATE; Niedrigste Priorität für allgemeine Hintergrundjobs, die
+ * nur laufen, wenn sonst nichts zu tun ist</li>
  * </ul>
  * 
  * @see BackgroundJob
@@ -53,13 +54,13 @@ public class JobPool implements BackgroundJobListener {
 	private Vector<String> queued = new Vector<String>();
 	private ILock changeLock;
 	private static JobPool thePool;
-	
-	private JobPool(){
+
+	private JobPool() {
 		IJobManager jobman = Job.getJobManager();
 		changeLock = jobman.newLock();
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 		for (BackgroundJob job : pool.values()) {
 			try {
 				if (job.cancel() == false) {
@@ -70,29 +71,30 @@ public class JobPool implements BackgroundJobListener {
 			}
 		}
 	}
-	
+
 	/**
-	 * Den JobPool erzeugen bzw. holen. Es soll nur einen geben, deswegen als Singleton
-	 * implementiert
+	 * Den JobPool erzeugen bzw. holen. Es soll nur einen geben, deswegen als
+	 * Singleton implementiert
 	 */
-	public static JobPool getJobPool(){
+	public static JobPool getJobPool() {
 		if (thePool == null) {
 			thePool = new JobPool();
 		}
 		return thePool;
 	}
-	
+
 	/**
-	 * Einen neuen Job hinzufügen. Ein Job bleibt im Pool bis zum Programmende. Er hat entweder den
-	 * Status running, waiting oder queued. Jobs, die waiting oder queued sind, brauchen keine
-	 * Systemressourcen. addJob lässt den Job zunächst im status waiting
+	 * Einen neuen Job hinzufügen. Ein Job bleibt im Pool bis zum Programmende. Er
+	 * hat entweder den Status running, waiting oder queued. Jobs, die waiting oder
+	 * queued sind, brauchen keine Systemressourcen. addJob lässt den Job zunächst
+	 * im status waiting
 	 * 
 	 * @param job
 	 *            der Job
-	 * @return true wenn erfolgreich, false wenn dieser Job oder ein Job gleichen Namens schon im
-	 *         Pool ist oder bei einem sonstigen Fehler.
+	 * @return true wenn erfolgreich, false wenn dieser Job oder ein Job gleichen
+	 *         Namens schon im Pool ist oder bei einem sonstigen Fehler.
 	 */
-	public boolean addJob(BackgroundJob job){
+	public boolean addJob(BackgroundJob job) {
 		try {
 			changeLock.acquire();
 			if (pool.get(job.getJobname()) != null) {
@@ -100,7 +102,7 @@ public class JobPool implements BackgroundJobListener {
 			}
 			job.addListener(this);
 			pool.put(job.getJobname(), job);
-			
+
 			waiting.add(job.getJobname());
 			return true;
 		} catch (Exception ex) {
@@ -110,7 +112,7 @@ public class JobPool implements BackgroundJobListener {
 			changeLock.release();
 		}
 	}
-	
+
 	/**
 	 * Einen Job anhand seines Namens finden
 	 * 
@@ -118,11 +120,11 @@ public class JobPool implements BackgroundJobListener {
 	 *            Name des Jobs
 	 * @return den Job oder null, wenn nicht vorhanden.
 	 */
-	public BackgroundJob getJob(String name){
+	public BackgroundJob getJob(String name) {
 		BackgroundJob ret = pool.get(name);
 		return ret;
 	}
-	
+
 	/**
 	 * Einen Job starten
 	 * 
@@ -130,10 +132,11 @@ public class JobPool implements BackgroundJobListener {
 	 *            Name des Jobs
 	 * @param priority
 	 *            gewpnschte Priorität (Job.INTERACTIVE bis JOB.DECORATIONS)
-	 * @return true wenn der Job gestartet wurde, d.h. er läuft dann noch bei Rückkehr dieser
-	 *         Funktion. false, wenn der Job schon lief, oder wenn er nicht gefunden wurde.
+	 * @return true wenn der Job gestartet wurde, d.h. er läuft dann noch bei
+	 *         Rückkehr dieser Funktion. false, wenn der Job schon lief, oder wenn
+	 *         er nicht gefunden wurde.
 	 */
-	public boolean activate(String name, int priority){
+	public boolean activate(String name, int priority) {
 		try {
 			changeLock.acquire();
 			if (waiting.remove(name) == true) {
@@ -154,15 +157,15 @@ public class JobPool implements BackgroundJobListener {
 			changeLock.release();
 		}
 	}
-	
+
 	/**
-	 * Einen Job in die Warteschlange setzen. Er wird gestartet, sobald ein eventuell schon
-	 * laufender Job beendet ist.
+	 * Einen Job in die Warteschlange setzen. Er wird gestartet, sobald ein
+	 * eventuell schon laufender Job beendet ist.
 	 * 
 	 * @param name
 	 *            Name des Jobs
 	 */
-	public void queue(String name){
+	public void queue(String name) {
 		try {
 			changeLock.acquire();
 			if (running.isEmpty()) {
@@ -175,14 +178,14 @@ public class JobPool implements BackgroundJobListener {
 		} finally {
 			changeLock.release();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Diese Funktion ist für internen Gebrauch. Organisation der Warteschlange
 	 */
 	@Override
-	public void jobFinished(BackgroundJob j){
+	public void jobFinished(BackgroundJob j) {
 		try {
 			changeLock.acquire();
 			running.remove(j.getJobname());
@@ -197,5 +200,5 @@ public class JobPool implements BackgroundJobListener {
 			changeLock.release();
 		}
 	}
-	
+
 }

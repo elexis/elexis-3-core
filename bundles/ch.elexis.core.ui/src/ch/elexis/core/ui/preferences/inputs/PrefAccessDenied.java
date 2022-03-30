@@ -25,10 +25,10 @@ import ch.elexis.core.ui.util.SWTHelper;
  * 
  */
 public class PrefAccessDenied extends Composite {
-	public PrefAccessDenied(Composite parent){
+	public PrefAccessDenied(Composite parent) {
 		super(parent, SWT.NONE);
 		setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		setLayout(new FillLayout());
-		new Label(this, SWT.WRAP).setText(Messages.PrefAccessDenied_PageLocked); //$NON-NLS-1$
+		new Label(this, SWT.WRAP).setText(Messages.PrefAccessDenied_PageLocked); // $NON-NLS-1$
 	}
 }

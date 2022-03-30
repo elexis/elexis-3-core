@@ -130,21 +130,18 @@ public class GlobalActions {
 	public static final String DELETE_COMMAND = "org.eclipse.ui.edit.delete"; //$NON-NLS-1$
 	public static final String PROPERTIES_COMMAND = "org.eclipse.ui.file.properties"; //$NON-NLS-1$
 	public static final String DEFAULTPERSPECTIVECFG = "/default_perspective"; //$NON-NLS-1$
-	
+
 	public static IWorkbenchAction exitAction, newWindowAction, copyAction, cutAction, pasteAction;
 	public static IAction loginAction, importAction, aboutAction, helpAction, prefsAction;
-	public static IAction connectWizardAction, changeMandantAction, savePerspectiveAction,
-			savePerspectiveAsAction;
-	public static IAction savePerspectiveAsDefaultAction, resetPerspectiveAction, homeAction,
-			fixLayoutAction;
-	public static IAction printEtikette, printBlatt, printAdresse, printVersionedEtikette,
-			showBlatt;
+	public static IAction connectWizardAction, changeMandantAction, savePerspectiveAction, savePerspectiveAsAction;
+	public static IAction savePerspectiveAsDefaultAction, resetPerspectiveAction, homeAction, fixLayoutAction;
+	public static IAction printEtikette, printBlatt, printAdresse, printVersionedEtikette, showBlatt;
 	public static IAction printRoeBlatt;
 	public static IAction openFallaction, closeFallAction, filterAction, makeBillAction, planeRechnungAction;
 	public static RestrictedAction delKonsAction, delFallAction, reopenFallAction;
 	public static LockedAction<Konsultation> moveBehandlungAction, redateAction;
 	public static IAction neuerFallAction;
-	
+
 	public static MenuManager perspectiveMenu, viewMenu;
 	public static IContributionItem viewList;
 	public IWorkbenchWindow mainWindow;
@@ -153,7 +150,8 @@ public class GlobalActions {
 	private static Logger logger;
 	private static ICommandService cmdService;
 	/**
-	 * Open the preferences dialog. This a copy of the same internal eclipse where we just want to have a large dialog action
+	 * Open the preferences dialog. This a copy of the same internal eclipse where
+	 * we just want to have a large dialog action
 	 */
 	private class OpenPreferencesAction extends Action implements ActionFactory.IWorkbenchAction {
 
@@ -203,71 +201,71 @@ public class GlobalActions {
 		public String getActionDefinitionId() {
 			return IWorkbenchCommandConstants.WINDOW_PREFERENCES;
 		}
-		
+
 		@Override
 		public void dispose() {
 			workbenchWindow = null;
 		}
 	};
-	
-	
-	public GlobalActions(final IWorkbenchWindow window){
+
+	public GlobalActions(final IWorkbenchWindow window) {
 		if (Hub.mainActions != null) {
 			return;
 		}
 		logger = LoggerFactory.getLogger(this.getClass());
-		cmdService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(ICommandService.class);
+		cmdService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getService(ICommandService.class);
 		mainWindow = window;
 		help = Hub.plugin.getWorkbench().getHelpSystem();
 		exitAction = ActionFactory.QUIT.create(window);
-		exitAction.setText(Messages.GlobalActions_MenuExit); //$NON-NLS-1$
+		exitAction.setText(Messages.GlobalActions_MenuExit); // $NON-NLS-1$
 		newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
-		newWindowAction.setText(Messages.GlobalActions_NewWindow); //$NON-NLS-1$
+		newWindowAction.setText(Messages.GlobalActions_NewWindow); // $NON-NLS-1$
 		copyAction = ActionFactory.COPY.create(window);
-		copyAction.setText(Messages.GlobalActions_Copy); //$NON-NLS-1$
+		copyAction.setText(Messages.GlobalActions_Copy); // $NON-NLS-1$
 		cutAction = ActionFactory.CUT.create(window);
-		cutAction.setText(Messages.GlobalActions_Cut); //$NON-NLS-1$
+		cutAction.setText(Messages.GlobalActions_Cut); // $NON-NLS-1$
 		pasteAction = ActionFactory.PASTE.create(window);
-		pasteAction.setText(Messages.GlobalActions_Paste); //$NON-NLS-1$
+		pasteAction.setText(Messages.GlobalActions_Paste); // $NON-NLS-1$
 		aboutAction = ActionFactory.ABOUT.create(window);
-		aboutAction.setText(Messages.GlobalActions_MenuAbout); //$NON-NLS-1$
+		aboutAction.setText(Messages.GlobalActions_MenuAbout); // $NON-NLS-1$
 		prefsAction = new OpenPreferencesAction(window);
 		prefsAction.setText(Messages.GlobalActions_Preferences);
-		savePerspectiveAction = new Action(Messages.GlobalActions_SavePerspective) { //$NON-NLS-1$
+		savePerspectiveAction = new Action(Messages.GlobalActions_SavePerspective) { // $NON-NLS-1$
 			{
 				setId("savePerspektive"); //$NON-NLS-1$
-				setToolTipText(Messages.GlobalActions_SavePerspectiveToolTip); //$NON-NLS-1$
-				setImageDescriptor(Images.IMG_DISK.getImageDescriptor()); //$NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_SavePerspectiveToolTip); // $NON-NLS-1$
+				setImageDescriptor(Images.IMG_DISK.getImageDescriptor()); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				IWorkbenchPage page = mainWindow.getActivePage();
 				if (page != null && page.getPerspective() != null) {
 					page.savePerspectiveAs(page.getPerspective());
 				}
 			}
 		};
-		
-		helpAction = new RestrictedAction(AC_HELP, Messages.GlobalActions_ac_handbook) { //$NON-NLS-1$
+
+		helpAction = new RestrictedAction(AC_HELP, Messages.GlobalActions_ac_handbook) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_BOOK.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_ac_openhandbook); //$NON-NLS-1$
-				
+				setToolTipText(Messages.GlobalActions_ac_openhandbook); // $NON-NLS-1$
+
 			}
-			
+
 			@Override
-			public void doRun(){
+			public void doRun() {
 				Desktop desktop = Desktop.getDesktop();
 				String url = ConfigServiceHolder.getGlobal(UiPreferenceConstants.CFG_HANDBOOK,
-					UiPreferenceConstants.DEFAULT_HANDBOOK);
+						UiPreferenceConstants.DEFAULT_HANDBOOK);
 				if (Desktop.isDesktopSupported()) {
 					try {
 						desktop.browse(new java.net.URI(url));
 					} catch (Exception e) {
 						logger.warn("failed to open default browser :" + e);
 						MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_Error,
-							Messages.GlobalActions_PreferencesHandbook_URL);
+								Messages.GlobalActions_PreferencesHandbook_URL);
 						ExHandler.handle(e);
 					}
 				} else {
@@ -276,52 +274,49 @@ public class GlobalActions {
 			}
 		};
 		savePerspectiveAsAction = ActionFactory.SAVE_PERSPECTIVE.create(window);
-		
+
 		// ActionFactory.SAVE_PERSPECTIVE.create(window);
-		resetPerspectiveAction = new Action(Messages.GlobalActions_Home) { //$NON-NLS-1$
-			
+		resetPerspectiveAction = new Action(Messages.GlobalActions_Home) { // $NON-NLS-1$
+
 			@Inject
 			private EPartService partService;
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				CoreUiUtil.injectServicesWithContext(this);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-					.resetPerspective();
-				
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().resetPerspective();
+
 				if (partService != null) {
 					// refresh whole parts to get correct toolbar
 					for (MPart part : partService.getParts()) {
-						if (part.getWidget() instanceof Composite
-							&& ((Composite) part.getWidget()).isVisible()) {
+						if (part.getWidget() instanceof Composite && ((Composite) part.getWidget()).isVisible()) {
 							partService.hidePart(part);
 							partService.showPart(part, PartState.VISIBLE);
 						}
 					}
 				}
 			}
-			
+
 			@Override
-			public ImageDescriptor getImageDescriptor(){
+			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_REFRESH.getImageDescriptor();
 			}
-			
+
 		};
-		
-		homeAction = new Action(Messages.GlobalActions_Home) { //$NON-NLS-1$
+
+		homeAction = new Action(Messages.GlobalActions_Home) { // $NON-NLS-1$
 			{
 				setId("home"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "home"); //$NON-NLS-1$
 				setImageDescriptor(Images.IMG_HOME.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_HomeToolTip); //$NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_HomeToolTip); // $NON-NLS-1$
 				help.setHelp(this, "ch.elexis.globalactions.homeAction"); //$NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				// String
-				String perspektive =
-					CoreHub.localCfg.get(CoreHub.getLoggedInContact() + DEFAULTPERSPECTIVECFG, null);
+				String perspektive = CoreHub.localCfg.get(CoreHub.getLoggedInContact() + DEFAULTPERSPECTIVECFG, null);
 				if (StringTool.isNothing(perspektive)) {
 					perspektive = UiResourceConstants.PatientPerspektive_ID;
 				}
@@ -334,27 +329,27 @@ public class GlobalActions {
 				}
 			}
 		};
-		savePerspectiveAsDefaultAction = new Action(Messages.GlobalActions_saveasstartperspective) { //$NON-NLS-1$
+		savePerspectiveAsDefaultAction = new Action(Messages.GlobalActions_saveasstartperspective) { // $NON-NLS-1$
 			{
 				setId("start"); //$NON-NLS-1$
 				// setActionDefinitionId(Hub.COMMAND_PREFIX+"startPerspective");
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				IPerspectiveDescriptor p = mainWindow.getActivePage().getPerspective();
 				CoreHub.localCfg.set(CoreHub.getLoggedInContact() + DEFAULTPERSPECTIVECFG, p.getId());
 			}
-			
+
 		};
-		loginAction = new RestrictedAction(AC_LOGIN, Messages.GlobalActions_Login) { //$NON-NLS-1$
+		loginAction = new RestrictedAction(AC_LOGIN, Messages.GlobalActions_Login) { // $NON-NLS-1$
 			{
 				setId("login"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "login"); //$NON-NLS-1$
 			}
-			
+
 			@Override
-			public void doRun(){
+			public void doRun() {
 				try {
 					IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					IWorkbenchWindow[] wins = PlatformUI.getWorkbench().getWorkbenchWindows();
@@ -363,9 +358,8 @@ public class GlobalActions {
 							w.close();
 						}
 					}
-					
-					boolean performLogin =
-						CoreOperationAdvisorHolder.get().performLogin(win.getShell());
+
+					boolean performLogin = CoreOperationAdvisorHolder.get().performLogin(win.getShell());
 					if (!performLogin) {
 						exitAction.run();
 					}
@@ -374,47 +368,46 @@ public class GlobalActions {
 				}
 			}
 		};
-		importAction = new RestrictedAction(AC_IMORT, Messages.GlobalActions_Import) { //$NON-NLS-1$
+		importAction = new RestrictedAction(AC_IMORT, Messages.GlobalActions_Import) { // $NON-NLS-1$
 			{
 				setId("import"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "import"); //$NON-NLS-1$
 			}
-			
+
 			@Override
-			public void doRun(){
+			public void doRun() {
 				// cnv.open();
-				Importer imp =
-					new Importer(mainWindow.getShell(), ExtensionPointConstantsUi.FREMDDATENIMPORT);
+				Importer imp = new Importer(mainWindow.getShell(), ExtensionPointConstantsUi.FREMDDATENIMPORT);
 				imp.create();
-				imp.setMessage(Messages.GlobalActions_ImportDlgMessage); //$NON-NLS-1$
-				imp.getShell().setText(Messages.GlobalActions_ImportDlgShelltext); //$NON-NLS-1$
-				imp.setTitle(Messages.GlobalActions_ImportDlgTitle); //$NON-NLS-1$
+				imp.setMessage(Messages.GlobalActions_ImportDlgMessage); // $NON-NLS-1$
+				imp.getShell().setText(Messages.GlobalActions_ImportDlgShelltext); // $NON-NLS-1$
+				imp.setTitle(Messages.GlobalActions_ImportDlgTitle); // $NON-NLS-1$
 				imp.open();
 			}
 		};
-		
-		connectWizardAction = new RestrictedAction(AC_CONNECT, Messages.GlobalActions_Connection) { //$NON-NLS-1$
+
+		connectWizardAction = new RestrictedAction(AC_CONNECT, Messages.GlobalActions_Connection) { // $NON-NLS-1$
 			{
 				setId("connectWizard"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "connectWizard"); //$NON-NLS-1$
 			}
-			
+
 			@Override
-			public void doRun(){
+			public void doRun() {
 				WizardDialog wd = new WizardDialog(mainWindow.getShell(), new DBConnectWizard());
 				wd.open();
 			}
-			
+
 		};
-		
-		changeMandantAction = new RestrictedAction(AC_CHANGEMANDANT, Messages.GlobalActions_Mandator) { //$NON-NLS-1$
+
+		changeMandantAction = new RestrictedAction(AC_CHANGEMANDANT, Messages.GlobalActions_Mandator) { // $NON-NLS-1$
 			{
 				setId("changeMandant"); //$NON-NLS-1$
 				// setActionDefinitionId(Hub.COMMAND_PREFIX+"changeMandant"); //$NON-NLS-1$
 			}
-			
+
 			@Override
-			public void doRun(){
+			public void doRun() {
 				ChangeMandantDialog cmd = new ChangeMandantDialog();
 				if (cmd.open() == org.eclipse.jface.dialogs.Dialog.OK) {
 					Mandant n = cmd.result;
@@ -424,16 +417,16 @@ public class GlobalActions {
 				}
 			}
 		};
-		printKontaktEtikette = new Action(Messages.GlobalActions_PrintContactLabel) { //$NON-NLS-1$
+		printKontaktEtikette = new Action(Messages.GlobalActions_PrintContactLabel) { // $NON-NLS-1$
 			{
-				setToolTipText(Messages.GlobalActions_PrintContactLabelToolTip); //$NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_PrintContactLabelToolTip); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_ADRESSETIKETTE.getImageDescriptor());
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printContactLabel");
-				
+
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
 				} catch (Exception e) {
@@ -442,17 +435,17 @@ public class GlobalActions {
 				}
 			}
 		};
-		
-		printAdresse = new Action(Messages.GlobalActions_PrintAddressLabel) { //$NON-NLS-1$
+
+		printAdresse = new Action(Messages.GlobalActions_PrintAddressLabel) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_ADRESSETIKETTE.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_PrintAddressLabelToolTip); //$NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_PrintAddressLabelToolTip); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printAddressLabel");
-				
+
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
 				} catch (Exception e) {
@@ -461,17 +454,17 @@ public class GlobalActions {
 				}
 			}
 		};
-		
-		printVersionedEtikette = new Action(Messages.GlobalActions_PrintVersionedLabel) { //$NON-NLS-1$
+
+		printVersionedEtikette = new Action(Messages.GlobalActions_PrintVersionedLabel) { // $NON-NLS-1$
 			{
-				setToolTipText(Messages.GlobalActions_PrintVersionedLabelToolTip); //$NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_PrintVersionedLabelToolTip); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_VERSIONEDETIKETTE.getImageDescriptor());
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printVersionedLabel");
-				
+
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
 				} catch (Exception e) {
@@ -480,17 +473,17 @@ public class GlobalActions {
 				}
 			}
 		};
-		
-		printEtikette = new Action(Messages.GlobalActions_PrintLabel) { //$NON-NLS-1$
+
+		printEtikette = new Action(Messages.GlobalActions_PrintLabel) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_PATIENTETIKETTE.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_PrintLabelToolTip); //$NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_PrintLabelToolTip); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printPatientLabel");
-				
+
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
 				} catch (Exception e) {
@@ -499,67 +492,63 @@ public class GlobalActions {
 				}
 			}
 		};
-		
-		printBlatt = new Action(Messages.GlobalActions_PrintEMR) { //$NON-NLS-1$
+
+		printBlatt = new Action(Messages.GlobalActions_PrintEMR) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 				String printer = CoreHub.localCfg.get("Drucker/Einzelblatt/Name", null); //$NON-NLS-1$
 				String tray = CoreHub.localCfg.get("Drucker/Einzelblatt/Schacht", null); //$NON-NLS-1$
-				
-				new TemplateDrucker(TT_KG_COVER_SHEET, printer, tray).doPrint(actPatient); //$NON-NLS-1$
+
+				new TemplateDrucker(TT_KG_COVER_SHEET, printer, tray).doPrint(actPatient); // $NON-NLS-1$
 			}
 		};
-		showBlatt = new Action(Messages.GlobalActions_ShowEMR) { //$NON-NLS-1$
+		showBlatt = new Action(Messages.GlobalActions_ShowEMR) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 				try {
-					TemplatePrintView tpw = (TemplatePrintView) PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getActivePage().showView(TemplatePrintView.ID);
+					TemplatePrintView tpw = (TemplatePrintView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getActivePage().showView(TemplatePrintView.ID);
 					tpw.doShow(actPatient, TT_KG_COVER_SHEET);
 				} catch (PartInitException e) {
-					MessageDialog.openError(
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Fehler",
-						"Konnte View nicht öffnen");
-					LoggerFactory.getLogger(getClass())
-						.error("Error showing " + TemplatePrintView.ID, e);
+					MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Fehler",
+							"Konnte View nicht öffnen");
+					LoggerFactory.getLogger(getClass()).error("Error showing " + TemplatePrintView.ID, e);
 				}
 			}
 		};
-		printRoeBlatt = new Action(Messages.GlobalActions_PrintXRay) { //$NON-NLS-1$
+		printRoeBlatt = new Action(Messages.GlobalActions_PrintXRay) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 				String printer = CoreHub.localCfg.get("Drucker/A4/Name", null); //$NON-NLS-1$
 				String tray = CoreHub.localCfg.get("Drucker/A4/Schacht", null); //$NON-NLS-1$
-				
-				new TemplateDrucker(TT_XRAY, printer, tray).doPrint(actPatient); //$NON-NLS-1$
+
+				new TemplateDrucker(TT_XRAY, printer, tray).doPrint(actPatient); // $NON-NLS-1$
 			}
 		};
-		
-		fixLayoutAction = new Action(Messages.GlobalActions_LockPerspectives, Action.AS_CHECK_BOX) { //$NON-NLS-1$
+
+		fixLayoutAction = new Action(Messages.GlobalActions_LockPerspectives, Action.AS_CHECK_BOX) { // $NON-NLS-1$
 			{
-				setToolTipText(Messages.GlobalActions_LockPerspectivesToolTip); //$NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_LockPerspectivesToolTip); // $NON-NLS-1$
 				boolean state = ConfigServiceHolder.getUser(Preferences.USR_FIX_LAYOUT, false);
 				setChecked(state);
-				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT,
-					state);
+				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, state);
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				// store the current value in the user's configuration
 				boolean state = fixLayoutAction.isChecked();
 				ConfigServiceHolder.setUser(Preferences.USR_FIX_LAYOUT, state);
 				// update a named variable to trigger update of the ui
-				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT,
-					state);
+				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, state);
 			}
 		};
-		makeBillAction = new Action(Messages.GlobalActions_MakeBill) { //$NON-NLS-1$
+		makeBillAction = new Action(Messages.GlobalActions_MakeBill) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				ICoverage actFall = ContextServiceHolder.get().getActiveCoverage().orElse(null);
 				IMandator mnd = ContextServiceHolder.get().getActiveMandator().orElse(null);
 				if (actFall != null && mnd != null) {
@@ -578,28 +567,24 @@ public class GlobalActions {
 					if (!BillingUtil.canBillYears(new ArrayList<>(sortedByYears.keySet()))) {
 						StringJoiner sj = new StringJoiner(", ");
 						sortedByYears.keySet().forEach(i -> sj.add(Integer.toString(i)));
-						if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
-							"Rechnung Validierung",
-							"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "
-								+ sj.toString() + " erstellen?")) {
+						if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), "Rechnung Validierung",
+								"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "
+										+ sj.toString() + " erstellen?")) {
 							// bill each year separately
 							for (Integer year : sortedByYears.keySet()) {
 								Result<IInvoice> res = InvoiceServiceHolder.get().invoice(sortedByYears.get(year));
 								if (!res.isOK()) {
-									ErrorDialog.openError(mainWindow.getShell(),
-										Messages.GlobalActions_Error,
-										Messages.GlobalActions_BillErrorMessage,
-										ResultAdapter.getResultAsStatus(res));
+									ErrorDialog.openError(mainWindow.getShell(), Messages.GlobalActions_Error,
+											Messages.GlobalActions_BillErrorMessage,
+											ResultAdapter.getResultAsStatus(res));
 								}
 							}
 						}
 					} else {
 						Result<IInvoice> res = InvoiceServiceHolder.get().invoice(lBehdl);
 						if (!res.isOK()) {
-							ErrorDialog.openError(mainWindow.getShell(),
-								Messages.GlobalActions_Error,
-								Messages.GlobalActions_BillErrorMessage,
-								ResultAdapter.getResultAsStatus(res));
+							ErrorDialog.openError(mainWindow.getShell(), Messages.GlobalActions_Error,
+									Messages.GlobalActions_BillErrorMessage, ResultAdapter.getResultAsStatus(res));
 						}
 					}
 				}
@@ -607,20 +592,20 @@ public class GlobalActions {
 		};
 		moveBehandlungAction = new LockedAction<Konsultation>(Messages.GlobalActions_AssignCase) {
 			@Override
-			public Konsultation getTargetedObject(){
+			public Konsultation getTargetedObject() {
 				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 			}
-			
+
 			@Override
-			public void doRun(Konsultation element){
+			public void doRun(Konsultation element) {
 				// TODO do we need to lock the fall?
 				SelectFallDialog dlg = new SelectFallDialog(mainWindow.getShell());
 				if (dlg.open() == Dialog.OK) {
 					Fall f = dlg.result;
 					if (f != null) {
 						Result<IEncounter> result = EncounterServiceHolder.get().transferToCoverage(
-							NoPoUtil.loadAsIdentifiable(element, IEncounter.class).get(),
-							NoPoUtil.loadAsIdentifiable(f, ICoverage.class).get(), false);
+								NoPoUtil.loadAsIdentifiable(element, IEncounter.class).get(),
+								NoPoUtil.loadAsIdentifiable(f, ICoverage.class).get(), false);
 						if (!result.isOK()) {
 							SWTHelper.alert("Error", result.toString());
 						}
@@ -630,135 +615,134 @@ public class GlobalActions {
 			}
 		};
 		redateAction = new LockedAction<Konsultation>(Messages.GlobalActions_Redate) {
-			
+
 			@Override
-			public Konsultation getTargetedObject(){
+			public Konsultation getTargetedObject() {
 				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 			}
-			
+
 			@Override
-			public void doRun(Konsultation element){
+			public void doRun(Konsultation element) {
 				DateSelectorDialog dlg = new DateSelectorDialog(mainWindow.getShell());
 				if (dlg.open() == Dialog.OK) {
 					TimeTool date = dlg.getSelectedDate();
 					element.setDatum(date.toString(TimeTool.DATE_GER), false);
-					
+
 					// notify listeners about change
-					ElexisEventDispatcher.getInstance().fire(
-						new ElexisEvent(element, Konsultation.class, ElexisEvent.EVENT_UPDATE));
-					
+					ElexisEventDispatcher.getInstance()
+							.fire(new ElexisEvent(element, Konsultation.class, ElexisEvent.EVENT_UPDATE));
+
 					ElexisEventDispatcher.fireSelectionEvent(element);
 				}
 			}
 		};
 		delFallAction = new LockedRestrictedAction<Fall>(AccessControlDefaults.DELETE_CASE,
-			Messages.GlobalActions_DeleteCase) {
+				Messages.GlobalActions_DeleteCase) {
 			@Override
-			public void doRun(Fall element){
+			public void doRun(Fall element) {
 				if ((element.delete(false) == false)) {
 					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteCaseMessage,
-						Messages.GlobalActions_CouldntDeleteCaseExplanation);
+							Messages.GlobalActions_CouldntDeleteCaseExplanation);
 				}
 				ElexisEventDispatcher.reload(Fall.class);
 			}
-			
+
 			@Override
-			public Fall getTargetedObject(){
+			public Fall getTargetedObject() {
 				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 			}
 		};
 		delKonsAction = new LockedRestrictedAction<Konsultation>(AccessControlDefaults.KONS_DELETE,
-			Messages.GlobalActions_DeleteKons) {
-			
+				Messages.GlobalActions_DeleteKons) {
+
 			@Override
-			public void doRun(Konsultation element){
+			public void doRun(Konsultation element) {
 				if (element.delete(false) == false) {
-					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteKons, //$NON-NLS-1$
-						Messages.GlobalActions_CouldntDeleteKonsExplanation + //$NON-NLS-1$
-					Messages.GlobalActions_97); //$NON-NLS-1$
+					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteKons, // $NON-NLS-1$
+							Messages.GlobalActions_CouldntDeleteKonsExplanation + // $NON-NLS-1$
+									Messages.GlobalActions_97); // $NON-NLS-1$
 				}
 				ElexisEventDispatcher.clearSelection(Konsultation.class);
 				ElexisEventDispatcher.fireSelectionEvent(element.getFall());
 			}
-			
+
 			@Override
-			public Konsultation getTargetedObject(){
+			public Konsultation getTargetedObject() {
 				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 			}
 		};
-		openFallaction = new Action(Messages.GlobalActions_EditCase) { //$NON-NLS-1$
-			
+		openFallaction = new Action(Messages.GlobalActions_EditCase) { // $NON-NLS-1$
+
 			@Override
-			public void run(){
+			public void run() {
 				try {
-					Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.showView(FallDetailView.ID);
+					Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(FallDetailView.ID);
 					// getViewSite().getPage().showView(FallDetailView.ID);
 				} catch (Exception ex) {
 					ExHandler.handle(ex);
 				}
 			}
-			
+
 		};
 		closeFallAction = new LockedAction<Fall>(Messages.GlobalActions_CloseCase) {
-			
+
 			@Override
-			public Fall getTargetedObject(){
+			public Fall getTargetedObject() {
 				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 			}
-			
+
 			@Override
-			public void doRun(Fall fall){
+			public void doRun(Fall fall) {
 				DateSelectorDialog dsd = new DateSelectorDialog(UiDesk.getTopShell(), null,
-					Messages.GlobalActions_CloseCase_SelectCloseDate);
+						Messages.GlobalActions_CloseCase_SelectCloseDate);
 				int retVal = dsd.open();
 				if (Dialog.OK == retVal) {
 					TimeTool endDate = dsd.getSelectedDate();
 					fall.setEndDatum(new TimeTool(endDate.getTime()).toString(TimeTool.DATE_GER));
 					ElexisEventDispatcher.getInstance()
-						.fire(new ElexisEvent(fall, Fall.class, ElexisEvent.EVENT_UPDATE));
+							.fire(new ElexisEvent(fall, Fall.class, ElexisEvent.EVENT_UPDATE));
 				}
 			}
 		};
 		reopenFallAction = new LockedRestrictedAction<Fall>(AccessControlDefaults.CASE_REOPEN,
-			Messages.GlobalActions_ReopenCase) {
+				Messages.GlobalActions_ReopenCase) {
 			@Override
-			public void doRun(Fall element){
+			public void doRun(Fall element) {
 				element.setEndDatum(StringConstants.EMPTY);
 				ElexisEventDispatcher.getInstance()
-				.fire(new ElexisEvent(element, Fall.class, ElexisEvent.EVENT_UPDATE));
+						.fire(new ElexisEvent(element, Fall.class, ElexisEvent.EVENT_UPDATE));
 			}
-			
+
 			@Override
-			public Fall getTargetedObject(){
+			public Fall getTargetedObject() {
 				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 			}
 		};
-		neuerFallAction = new Action(Messages.GlobalActions_NewCase) { //$NON-NLS-1$
+		neuerFallAction = new Action(Messages.GlobalActions_NewCase) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_NewCaseToolTip); //$NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_NewCaseToolTip); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				Patient pat = ElexisEventDispatcher.getSelectedPatient();
 				if (pat != null) {
 					NeuerFallDialog nfd = new NeuerFallDialog(mainWindow.getShell(), null);
 					if (nfd.open() == Dialog.OK) {
-					
+
 					}
 				}
 			}
 		};
-		planeRechnungAction = new Action(Messages.GlobalActions_plaBill) { //$NON-NLS-1$
-			public void run(){
-			
+		planeRechnungAction = new Action(Messages.GlobalActions_plaBill) { // $NON-NLS-1$
+			public void run() {
+
 			}
 		};
 	}
-	
-	protected void printPatient(final Patient patient){
+
+	protected void printPatient(final Patient patient) {
 		PrinterData pd = getPrinterData("Etiketten"); //$NON-NLS-1$
 		if (pd != null) {
 			// 25.01.2010 patch tschaller: page orientation of printer
@@ -768,16 +752,16 @@ public class GlobalActions {
 			String sOrientation = CoreHub.localCfg.get("Drucker/Etiketten/Ausrichtung", null); //$NON-NLS-1$
 			try {
 				iOrientation = Integer.parseInt(sOrientation);
-			} catch (NumberFormatException ex) {}
+			} catch (NumberFormatException ex) {
+			}
 			if (iOrientation != -1)
 				pd.orientation = iOrientation;
 			Printer prn = new Printer(pd);
-			if (prn.startJob(Messages.GlobalActions_PrintLabelJobName) == true) { //$NON-NLS-1$
+			if (prn.startJob(Messages.GlobalActions_PrintLabelJobName) == true) { // $NON-NLS-1$
 				GC gc = new GC(prn);
 				int y = 0;
 				prn.startPage();
-				gc.drawString(Messages.GlobalActions_PatientIDLabelText + patient.getPatCode(), 0,
-					0); //$NON-NLS-1$
+				gc.drawString(Messages.GlobalActions_PatientIDLabelText + patient.getPatCode(), 0, 0); // $NON-NLS-1$
 				FontMetrics fmt = gc.getFontMetrics();
 				y += fmt.getHeight();
 				String pers = patient.getPersonalia();
@@ -786,27 +770,23 @@ public class GlobalActions {
 				gc.drawString(patient.getAnschrift().getEtikette(false, false), 0, y);
 				y += fmt.getHeight();
 				StringBuilder tel = new StringBuilder();
-				tel.append(Messages.GlobalActions_PhoneHomeLabelText)
-					.append(patient.get("Telefon1")) //$NON-NLS-1$ //$NON-NLS-2$
-					.append(Messages.GlobalActions_PhoneWorkLabelText)
-					.append(patient.get("Telefon2")) //$NON-NLS-1$ //$NON-NLS-2$
-					.append(Messages.GlobalActions_PhoneMobileLabelText)
-					.append(patient.get("Natel")); //$NON-NLS-1$ //$NON-NLS-2$
+				tel.append(Messages.GlobalActions_PhoneHomeLabelText).append(patient.get("Telefon1")) //$NON-NLS-1$ //$NON-NLS-2$
+						.append(Messages.GlobalActions_PhoneWorkLabelText).append(patient.get("Telefon2")) //$NON-NLS-1$ //$NON-NLS-2$
+						.append(Messages.GlobalActions_PhoneMobileLabelText).append(patient.get("Natel")); //$NON-NLS-1$ //$NON-NLS-2$
 				gc.drawString(tel.toString(), 0, y);
 				gc.dispose();
 				prn.endPage();
 				prn.endJob();
 				prn.dispose();
 			} else {
-				MessageDialog.openError(mainWindow.getShell(),
-					Messages.GlobalActions_PrinterErrorTitle,
-					Messages.GlobalActions_PrinterErrorMessage); //$NON-NLS-1$ //$NON-NLS-2$
-				
+				MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_PrinterErrorTitle,
+						Messages.GlobalActions_PrinterErrorMessage); // $NON-NLS-1$ //$NON-NLS-2$
+
 			}
 		}
 	}
-	
-	protected void printPatientAuftragsnummer(final Patient patient){
+
+	protected void printPatientAuftragsnummer(final Patient patient) {
 		PrinterData pd = getPrinterData("Etiketten"); //$NON-NLS-1$
 		if (pd != null) {
 			// 25.01.2010 patch tschaller: page orientation of printer
@@ -816,16 +796,17 @@ public class GlobalActions {
 			String sOrientation = CoreHub.localCfg.get("Drucker/Etiketten/Ausrichtung", null); //$NON-NLS-1$
 			try {
 				iOrientation = Integer.parseInt(sOrientation);
-			} catch (NumberFormatException ex) {}
+			} catch (NumberFormatException ex) {
+			}
 			if (iOrientation != -1)
 				pd.orientation = iOrientation;
 			Printer prn = new Printer(pd);
-			if (prn.startJob(Messages.GlobalActions_PrintLabelJobName) == true) { //$NON-NLS-1$
+			if (prn.startJob(Messages.GlobalActions_PrintLabelJobName) == true) { // $NON-NLS-1$
 				GC gc = new GC(prn);
 				int y = 0;
 				prn.startPage();
 				String pid = StringTool.addModulo10(patient.getPatCode()) + "-" //$NON-NLS-1$
-					+ new TimeTool().toString(TimeTool.TIME_COMPACT);
+						+ new TimeTool().toString(TimeTool.TIME_COMPACT);
 				gc.drawString(Messages.GlobalActions_OrderID + ": " + pid, 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 				FontMetrics fmt = gc.getFontMetrics();
 				y += fmt.getHeight();
@@ -835,27 +816,23 @@ public class GlobalActions {
 				gc.drawString(patient.getAnschrift().getEtikette(false, false), 0, y);
 				y += fmt.getHeight();
 				StringBuilder tel = new StringBuilder();
-				tel.append(Messages.GlobalActions_PhoneHomeLabelText)
-					.append(patient.get("Telefon1")) //$NON-NLS-1$ //$NON-NLS-2$
-					.append(Messages.GlobalActions_PhoneWorkLabelText)
-					.append(patient.get("Telefon2")) //$NON-NLS-1$ //$NON-NLS-2$
-					.append(Messages.GlobalActions_PhoneMobileLabelText)
-					.append(patient.get("Natel")); //$NON-NLS-1$ //$NON-NLS-2$
+				tel.append(Messages.GlobalActions_PhoneHomeLabelText).append(patient.get("Telefon1")) //$NON-NLS-1$ //$NON-NLS-2$
+						.append(Messages.GlobalActions_PhoneWorkLabelText).append(patient.get("Telefon2")) //$NON-NLS-1$ //$NON-NLS-2$
+						.append(Messages.GlobalActions_PhoneMobileLabelText).append(patient.get("Natel")); //$NON-NLS-1$ //$NON-NLS-2$
 				gc.drawString(tel.toString(), 0, y);
 				gc.dispose();
 				prn.endPage();
 				prn.endJob();
 				prn.dispose();
 			} else {
-				MessageDialog.openError(mainWindow.getShell(),
-					Messages.GlobalActions_PrinterErrorTitle,
-					Messages.GlobalActions_PrinterErrorMessage); //$NON-NLS-1$ //$NON-NLS-2$
-				
+				MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_PrinterErrorTitle,
+						Messages.GlobalActions_PrinterErrorMessage); // $NON-NLS-1$ //$NON-NLS-2$
+
 			}
 		}
 	}
-	
-	protected void printAdr(final Kontakt k){
+
+	protected void printAdr(final Kontakt k) {
 		// 25.01.2010 patch tschaller: there was always the printer selection
 		// dialog. With printEtikette it wasn't so I copied the hardcoded string
 		// from there
@@ -871,7 +848,8 @@ public class GlobalActions {
 			String sOrientation = CoreHub.localCfg.get("Drucker/Etiketten/Ausrichtung", null); //$NON-NLS-1$
 			try {
 				iOrientation = Integer.parseInt(sOrientation);
-			} catch (NumberFormatException ex) {}
+			} catch (NumberFormatException ex) {
+			}
 			if (iOrientation != -1)
 				pd.orientation = iOrientation;
 			Printer prn = new Printer(pd);
@@ -891,26 +869,25 @@ public class GlobalActions {
 				prn.endJob();
 				prn.dispose();
 			} else {
-				MessageDialog.openError(mainWindow.getShell(),
-					Messages.GlobalActions_PrinterErrorTitle,
-					Messages.GlobalActions_PrinterErrorMessage); //$NON-NLS-1$ //$NON-NLS-2$
-				
+				MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_PrinterErrorTitle,
+						Messages.GlobalActions_PrinterErrorMessage); // $NON-NLS-1$ //$NON-NLS-2$
+
 			}
-			
+
 		}
 	}
-	
+
 	/**
-	 * Return a PrinterData object according to the given type (e. g. "Etiketten") and the user
-	 * settings. Shows a printer selection dialog if required.
+	 * Return a PrinterData object according to the given type (e. g. "Etiketten")
+	 * and the user settings. Shows a printer selection dialog if required.
 	 * 
 	 * @param type
 	 *            the printer type according to the printer settings
 	 * @return a PrinterData object describing the selected printer
 	 */
-	private PrinterData getPrinterData(final String type){
+	private PrinterData getPrinterData(final String type) {
 		String cfgPrefix = "Drucker/" + type + "/"; //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
-		
+
 		PrinterData pd = null;
 		String printer = CoreHub.localCfg.get(cfgPrefix + "Name", null); //$NON-NLS-1$
 		String driver = CoreHub.localCfg.get(cfgPrefix + "Driver", null); //$NON-NLS-1$
@@ -922,30 +899,32 @@ public class GlobalActions {
 		} else {
 			pd = new PrinterData(driver, printer);
 		}
-		
+
 		return pd;
 	}
-	
+
 	/**
-	 * Return true if direct printing on defined printer. If false, the user has to choose the
-	 * printer and print himself
+	 * Return true if direct printing on defined printer. If false, the user has to
+	 * choose the printer and print himself
 	 */
-	private boolean isDirectPrint(){
+	private boolean isDirectPrint() {
 		return !CoreHub.localCfg.get("Drucker/Etiketten/Choose", true);
 	}
-	
+
 	/**
-	 * Creates an ActionHandler for the given IAction and registers it to the Site's HandlerService,
-	 * i. e. binds the action to the command so that key bindings get activated. You need to set the
-	 * action's actionDefinitionId to the command id.
+	 * Creates an ActionHandler for the given IAction and registers it to the Site's
+	 * HandlerService, i. e. binds the action to the command so that key bindings
+	 * get activated. You need to set the action's actionDefinitionId to the command
+	 * id.
 	 * 
 	 * @param action
-	 *            the action to activate. The action's actionDefinitionId must have been set to the
-	 *            command's id (using <code>setActionDefinitionId()</code>)
+	 *            the action to activate. The action's actionDefinitionId must have
+	 *            been set to the command's id (using
+	 *            <code>setActionDefinitionId()</code>)
 	 * @param part
 	 *            the view this action should be registered for
 	 */
-	public static void registerActionHandler(final ViewPart part, final IAction action){
+	public static void registerActionHandler(final ViewPart part, final IAction action) {
 		String commandId = action.getActionDefinitionId();
 		if (!StringTool.isNothing(commandId)) {
 			IHandlerService handlerService = part.getSite().getService(IHandlerService.class);
@@ -953,18 +932,18 @@ public class GlobalActions {
 			handlerService.activateHandler(commandId, handler);
 		}
 	}
-	
+
 	class ChangeMandantDialog extends TitleAreaDialog {
 		List<Mandant> lMandant;
 		org.eclipse.swt.widgets.List lbMandant;
 		Mandant result;
-		
-		ChangeMandantDialog(){
+
+		ChangeMandantDialog() {
 			super(mainWindow.getShell());
 		}
-		
+
 		@Override
-		public Control createDialogArea(final Composite parent){
+		public Control createDialogArea(final Composite parent) {
 			lbMandant = new org.eclipse.swt.widgets.List(parent, SWT.BORDER | SWT.SINGLE);
 			lbMandant.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
@@ -974,22 +953,22 @@ public class GlobalActions {
 			}
 			return lbMandant;
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			int idx = lbMandant.getSelectionIndex();
 			if (idx > -1) {
 				result = lMandant.get(idx);
 			}
 			super.okPressed();
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
-			setTitle(Messages.GlobalActions_ChangeMandator); //$NON-NLS-1$
-			setMessage(Messages.GlobalActions_ChangeMandatorMessage); //$NON-NLS-1$
+			setTitle(Messages.GlobalActions_ChangeMandator); // $NON-NLS-1$
+			setMessage(Messages.GlobalActions_ChangeMandatorMessage); // $NON-NLS-1$
 		}
-		
+
 	};
 }

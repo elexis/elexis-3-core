@@ -22,34 +22,33 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.IValueSetContribution;
 
 public class ChErpValueSetsTest {
-	
+
 	private static IValueSetContribution contribution;
-	
+
 	@BeforeClass
-	public static void beforeClass() throws InvalidSyntaxException{
+	public static void beforeClass() throws InvalidSyntaxException {
 		Bundle bundle = FrameworkUtil.getBundle(ChErpValueSetsTest.class);
 		Collection<ServiceReference<IValueSetContribution>> references = Collections.emptyList();
-			references = bundle.getBundleContext().getServiceReferences(IValueSetContribution.class, null);
+		references = bundle.getBundleContext().getServiceReferences(IValueSetContribution.class, null);
 		for (ServiceReference<IValueSetContribution> serviceReference : references) {
 			Dictionary<String, Object> props = serviceReference.getProperties();
-			if (props.get("component.name")
-				.equals("ch.elexis.core.coding.ChEprValueSetsContribution")) {
+			if (props.get("component.name").equals("ch.elexis.core.coding.ChEprValueSetsContribution")) {
 				contribution = bundle.getBundleContext().getService(serviceReference);
 				break;
 			}
 		}
 		assertNotNull(contribution);
 	}
-	
+
 	@Test
-	public void getIds(){
+	public void getIds() {
 		assertNotNull(contribution.getValueSetIds());
 		assertFalse(contribution.getValueSetIds().isEmpty());
 		assertTrue(contribution.getValueSetIds().contains("2.16.756.5.30.1.127.3.10.1.1.3"));
 	}
-	
+
 	@Test
-	public void getEprAuthorRoleCodes(){
+	public void getEprAuthorRoleCodes() {
 		List<ICoding> codes = contribution.getValueSet("2.16.756.5.30.1.127.3.10.1.1.3");
 		assertNotNull(codes);
 		assertFalse(codes.isEmpty());
@@ -63,9 +62,9 @@ public class ChErpValueSetsTest {
 			assertEquals("Pharmacist", coding.getDisplay());
 		}
 	}
-	
+
 	@Test
-	public void getEprDocumentClassCode(){
+	public void getEprDocumentClassCode() {
 		List<ICoding> codes = contribution.getValueSetByName("EprDocumentClassCode");
 		assertNotNull(codes);
 		assertFalse(codes.isEmpty());
@@ -79,8 +78,8 @@ public class ChErpValueSetsTest {
 			assertEquals("Clinical Care Referrals", coding.getDisplay());
 		}
 	}
-	
-	private ICoding findCoding(List<ICoding> codes, String string){
+
+	private ICoding findCoding(List<ICoding> codes, String string) {
 		for (ICoding iCoding : codes) {
 			if (iCoding.getCode().equals(string)) {
 				return iCoding;

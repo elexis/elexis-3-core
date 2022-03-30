@@ -32,29 +32,29 @@ import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
 
 public class Test_HL7_v271_Imports {
-	
+
 	private static DummyPatientResolver resolver;
-	
+
 	private enum TestType {
-			READ, OBSERVATION
+		READ, OBSERVATION
 	};
-	
+
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception{
-		IPatient dummyPatient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(),
-			"Christoph", "Grissemann", LocalDate.of(1966, 5, 17), Gender.MALE).buildAndSave();
+	public static void setUpBeforeClass() throws Exception {
+		IPatient dummyPatient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Christoph",
+				"Grissemann", LocalDate.of(1966, 5, 17), Gender.MALE).buildAndSave();
 		resolver = new DummyPatientResolver(dummyPatient);
 	}
-	
+
 	@Test
-	public void testGetVersion() throws IOException{
+	public void testGetVersion() throws IOException {
 		File[] files = loadv271Files();
 		assertNotSame(0, files.length);
-		
+
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
 			System.out.println("TESTING Hl7Version of... " + file.getAbsolutePath());
-			
+
 			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
 			assertNotNull(hl7Readers);
 			assertEquals(1, hl7Readers.size());
@@ -62,76 +62,76 @@ public class Test_HL7_v271_Imports {
 			assertEquals("2.6", reader.getVersion());
 		}
 	}
-	
+
 	@Test
-	public void testGetSenderSendingFacilityGiven() throws ElexisException, IOException{
+	public void testGetSenderSendingFacilityGiven() throws ElexisException, IOException {
 		File tstFile1 = loadSpecificv271File("v271test1.hl7");
 		assertNotNull(tstFile1);
-		
+
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(tstFile1);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
 		HL7Reader reader = hl7Readers.get(0);
 		assertEquals("poctGate", reader.getSender());
-		
+
 	}
-	
+
 	@Test
-	public void testGetSenderSendingApplicationGiven() throws ElexisException, IOException{
+	public void testGetSenderSendingApplicationGiven() throws ElexisException, IOException {
 		File tstFile2 = loadSpecificv271File("v271test2.hl7");
 		assertNotNull(tstFile2);
-		
+
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(tstFile2);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
 		HL7Reader reader = hl7Readers.get(0);
 		assertEquals("poctGate", reader.getSender());
 	}
-	
+
 	@Test
-	public void testGetSenderSendingFacilityAndApplicationGiven() throws ElexisException, IOException{
+	public void testGetSenderSendingFacilityAndApplicationGiven() throws ElexisException, IOException {
 		File alerelisFile = loadSpecificv271File("alerelis.hl7");
 		assertNotNull(alerelisFile);
-		
+
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(alerelisFile);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
 		HL7Reader reader = hl7Readers.get(0);
 		assertEquals("poctGate", reader.getSender());
 	}
-	
+
 	@Test
-	public void testGetPatient() throws ElexisException, IOException{
+	public void testGetPatient() throws ElexisException, IOException {
 		File tstFile3 = loadSpecificv271File("v271test3.hl7");
 		assertNotNull(tstFile3);
-		
+
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(tstFile3);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
 		HL7Reader reader = hl7Readers.get(0);
 		reader.readObservation(resolver, false);
-		
+
 		IPatient patient = reader.getPatient();
 		assertEquals("Grissemann", patient.getLastName());
 		assertTrue(patient.getDateOfBirth().atZone(ZoneId.systemDefault())
-			.isEqual(LocalDate.of(1966, 5, 17).atStartOfDay(ZoneId.systemDefault())));
+				.isEqual(LocalDate.of(1966, 5, 17).atStartOfDay(ZoneId.systemDefault())));
 		assertEquals(Gender.MALE, patient.getGender());
 	}
-	
+
 	@Test
-	public void testReadObservation() throws ElexisException, IOException{
+	public void testReadObservation() throws ElexisException, IOException {
 		File[] files = loadv271Files();
 		assertNotSame(0, files.length);
-		
+
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
 			System.out.println("TESTING Hl7Version of... " + file.getAbsolutePath());
-			
+
 			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
 			assertNotNull(hl7Readers);
 			assertEquals(1, hl7Readers.size());
 			HL7Reader reader = hl7Readers.get(0);
-			
+
 			ObservationMessage observationMsg = reader.readObservation(resolver, false);
 			List<IValueType> observations = observationMsg.getObservations();
 			int labResultDataCounter = 0;
@@ -143,7 +143,7 @@ public class Test_HL7_v271_Imports {
 					encDataCounter++;
 				}
 			}
-			
+
 			if (file.getName().startsWith("alerelis")) {
 				assertEquals(27, observations.size());
 				assertEquals(24, labResultDataCounter);
@@ -155,25 +155,25 @@ public class Test_HL7_v271_Imports {
 			}
 		}
 	}
-	
+
 	@Test
-	public void testReadObservationOfAlerelisFile() throws ElexisException, IOException{
+	public void testReadObservationOfAlerelisFile() throws ElexisException, IOException {
 		File alerelisFile = loadSpecificv271File("alerelis.hl7");
 		assertNotNull(alerelisFile);
-		
+
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(alerelisFile);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
 		HL7Reader reader = hl7Readers.get(0);
-		
+
 		ObservationMessage observationMsg = reader.readObservation(resolver, false);
 		Date msgDate = observationMsg.getDateTimeOfMessage();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy-hh:mm:ss");
 		assertEquals("18.11.2015-11:26:21", sdf.format(msgDate));
-		
+
 		List<IValueType> observations = observationMsg.getObservations();
 		assertEquals(27, observations.size());
-		
+
 		assertTrue(observations.get(0) instanceof LabResultData);
 		assertTrue(observations.get(2) instanceof LabResultData);
 		assertTrue(observations.get(3) instanceof LabResultData);
@@ -183,184 +183,182 @@ public class Test_HL7_v271_Imports {
 		assertTrue(observations.get(23) instanceof EncapsulatedData);
 		assertTrue(observations.get(24) instanceof EncapsulatedData);
 		assertTrue(observations.get(25) instanceof LabResultData);
-		
+
 		LabResultData lrWBC = (LabResultData) observations.get(0);
 		assertEquals("WBC", lrWBC.getName());
 		assertEquals("4.43", lrWBC.getValue());
 		assertEquals("10^9/l", lrWBC.getUnit());
 		assertNull(lrWBC.getDate());
 		assertNull(lrWBC.getOBRDateTime());
-		
+
 		LabResultData lrMON = (LabResultData) observations.get(2);
 		assertEquals("MON", lrMON.getName());
 		assertEquals("0.33", lrMON.getValue());
 		assertEquals("10^9/l", lrMON.getUnit());
 		assertNull(lrMON.getDate());
 		assertNull(lrMON.getOBRDateTime());
-		
+
 		LabResultData lrGRA = (LabResultData) observations.get(3);
 		assertEquals("GRA", lrGRA.getName());
 		assertEquals("2.59", lrGRA.getValue());
 		assertEquals("10^9/l", lrGRA.getUnit());
 		assertNull(lrGRA.getDate());
 		assertNull(lrGRA.getOBRDateTime());
-		
+
 		LabResultData lrRBC = (LabResultData) observations.get(7);
 		assertEquals("RBC", lrRBC.getName());
 		assertEquals("4.29", lrRBC.getValue());
 		assertEquals("10^12/l", lrRBC.getUnit());
 		assertNull(lrRBC.getDate());
 		assertNull(lrRBC.getOBRDateTime());
-		
+
 		LabResultData lrRDWc = (LabResultData) observations.get(13);
 		assertEquals("RDWc", lrRDWc.getName());
 		assertEquals("15.8", lrRDWc.getValue());
 		assertEquals("%", lrRDWc.getUnit());
 		assertNull(lrRDWc.getDate());
 		assertNull(lrRDWc.getOBRDateTime());
-		
+
 		EncapsulatedData encData1 = (EncapsulatedData) observations.get(22);
 		assertEquals("image/jpeg", encData1.getName());
 		assertEquals("0023", encData1.getSequence());
 		assertNotNull(encData1.getData());
 		assertNull(encData1.getDate());
 		assertNull(encData1.getComment());
-		
+
 		EncapsulatedData encData2 = (EncapsulatedData) observations.get(23);
 		assertEquals("image/jpeg", encData2.getName());
 		assertEquals("0024", encData2.getSequence());
 		assertNotNull(encData2.getData());
 		assertNull(encData2.getDate());
 		assertNull(encData2.getComment());
-		
+
 		EncapsulatedData encData3 = (EncapsulatedData) observations.get(24);
 		assertEquals("image/jpeg", encData3.getName());
 		assertEquals("0025", encData3.getSequence());
 		assertNotNull(encData3.getData());
 		assertNull(encData3.getDate());
 		assertNull(encData3.getComment());
-		
+
 		LabResultData lrHuman = (LabResultData) observations.get(25);
 		assertEquals("Mode", lrHuman.getName());
 		assertEquals("Human", lrHuman.getValue());
 		assertNull(lrHuman.getDate());
 		assertNull(lrHuman.getUnit());
 		assertNull(lrHuman.getOBRDateTime());
-		
+
 		assertEquals("poctGate", observationMsg.getSendingApplication());
 		assertEquals("poctGate", observationMsg.getSendingFacility());
-		
+
 	}
-	
+
 	@Test
-	public void testReadObservationOfv271test2File() throws ElexisException, IOException{
+	public void testReadObservationOfv271test2File() throws ElexisException, IOException {
 		File tst2File = loadSpecificv271File("v271test2.hl7");
 		assertNotNull(tst2File);
-		
+
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(tst2File);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
 		HL7Reader reader = hl7Readers.get(0);
-		
+
 		ObservationMessage observationMsg = reader.readObservation(resolver, false);
 		Date msgDate = observationMsg.getDateTimeOfMessage();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy-hh:mm:ss");
 		assertEquals("17.11.2015-02:22:32", sdf.format(msgDate));
-		
+
 		List<IValueType> observations = observationMsg.getObservations();
 		assertEquals(9, observations.size());
-		
+
 		for (IValueType iValueType : observations) {
 			assertTrue(iValueType instanceof LabResultData);
 		}
-		
+
 		LabResultData lrNTpro = (LabResultData) observations.get(0);
 		assertEquals("NTpro", lrNTpro.getName());
 		assertEquals("111", lrNTpro.getValue());
 		assertEquals("pg/mL", lrNTpro.getUnit());
 		assertNull(lrNTpro.getDate());
 		assertNull(lrNTpro.getOBRDateTime());
-		
+
 		LabResultData lrOperator = (LabResultData) observations.get(3);
 		assertEquals("Operator", lrOperator.getName());
 		assertEquals("9999999999", lrOperator.getValue());
 		assertNull(lrOperator.getUnit());
 		assertNull(lrOperator.getDate());
 		assertNull(lrOperator.getOBRDateTime());
-		
+
 		LabResultData lrReportType = (LabResultData) observations.get(7);
 		assertEquals("ReportType", lrReportType.getName());
 		assertEquals("Q", lrReportType.getValue());
 		assertNull(lrReportType.getUnit());
 		assertNull(lrReportType.getDate());
 		assertNull(lrReportType.getOBRDateTime());
-		
+
 		assertNull(observationMsg.getSendingApplication());
 		assertEquals("poctGate", observationMsg.getSendingFacility());
 	}
-	
+
 	@Test
-	public void testReadObservationOfv271test6File() throws ElexisException, IOException{
+	public void testReadObservationOfv271test6File() throws ElexisException, IOException {
 		File tst6File = loadSpecificv271File("v271test6.hl7");
 		assertNotNull(tst6File);
-		
+
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(tst6File);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
 		HL7Reader reader = hl7Readers.get(0);
-		
+
 		ObservationMessage observationMsg = reader.readObservation(resolver, false);
 		Date msgDate = observationMsg.getDateTimeOfMessage();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy-hh:mm:ss");
 		assertEquals("17.11.2015-02:22:33", sdf.format(msgDate));
-		
+
 		List<IValueType> observations = observationMsg.getObservations();
 		assertEquals(9, observations.size());
-		
+
 		for (IValueType iValueType : observations) {
 			assertTrue(iValueType instanceof LabResultData);
 		}
-		
+
 		LabResultData lrTNI = (LabResultData) observations.get(0);
 		assertEquals("TNI", lrTNI.getName());
 		assertEquals("< 0.01", lrTNI.getValue());
 		assertEquals("ng/mL", lrTNI.getUnit());
 		assertNull(lrTNI.getDate());
 		assertNull(lrTNI.getOBRDateTime());
-		
+
 		LabResultData lrInstructSpecId = (LabResultData) observations.get(4);
 		assertEquals("Instructor Specimen Id", lrInstructSpecId.getName());
 		assertEquals("00073951^00072", lrInstructSpecId.getValue());
 		assertNull(lrInstructSpecId.getUnit());
 		assertNull(lrInstructSpecId.getDate());
 		assertNull(lrInstructSpecId.getOBRDateTime());
-		
+
 		LabResultData lrDevSerialNr = (LabResultData) observations.get(8);
 		assertEquals("Device Serial Number", lrDevSerialNr.getName());
 		assertEquals("00073951", lrDevSerialNr.getValue());
 		assertNull(lrDevSerialNr.getUnit());
 		assertNull(lrDevSerialNr.getDate());
 		assertNull(lrDevSerialNr.getOBRDateTime());
-		
+
 		assertEquals("poctGate", observationMsg.getSendingApplication());
 		assertNull(observationMsg.getSendingFacility());
 	}
-	
-	private File[] loadv271Files(){
-		File directory =
-			new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"), "rsc/v271");
-			
+
+	private File[] loadv271Files() {
+		File directory = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"), "rsc/v271");
+
 		if (directory.exists() && directory.isDirectory()) {
 			return directory.listFiles();
 		}
-		return new File[] {};
-		
+		return new File[]{};
+
 	}
-	
-	private File loadSpecificv271File(String name){
-		File directory =
-			new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"), "rsc/v271");
-			
+
+	private File loadSpecificv271File(String name) {
+		File directory = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"), "rsc/v271");
+
 		if (directory.exists() && directory.isDirectory()) {
 			for (File f : directory.listFiles()) {
 				if (f.getName().equals(name)) {

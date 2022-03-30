@@ -32,41 +32,42 @@ import org.eclipse.swt.widgets.Label;
 import ch.elexis.core.ui.e4.dialog.GenericSelectionDialog;
 
 /**
- * A {@link Composite} to manage the selection from a list of objects. A {@link Label} shows the
- * current selction and a {@link Button} is used to open a {@link Dialog} to change the selection.
+ * A {@link Composite} to manage the selection from a list of objects. A
+ * {@link Label} shows the current selction and a {@link Button} is used to open
+ * a {@link Dialog} to change the selection.
  * 
  * @author thomas
  *
  */
 public class GenericSelectionComposite extends Composite implements ISelectionProvider {
-	
+
 	private ListenerList selectionListeners = new ListenerList();
-	
+
 	private List<?> input;
 	private IStructuredSelection selection;
-	
+
 	private Label selectLabel;
 	private Button selectButton;
 
-	public GenericSelectionComposite(Composite parent, int style){
+	public GenericSelectionComposite(Composite parent, int style) {
 		super(parent, style);
 		createContent();
 	}
-	
-	private void createContent(){
+
+	private void createContent() {
 		setLayout(new GridLayout(2, false));
-		
+
 		selectLabel = new Label(this, SWT.NONE);
 		selectLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		
+
 		selectButton = new Button(this, SWT.NONE);
 		selectButton.setText("..."); //$NON-NLS-1$
 		selectButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-		
+
 		selectButton.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (input != null && !input.isEmpty()) {
 					GenericSelectionDialog dialog = new GenericSelectionDialog(getShell(), input);
 					if (selection != null) {
@@ -78,11 +79,11 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 					}
 				}
 			}
-			
+
 		});
 	}
-	
-	private void updateLabel(){
+
+	private void updateLabel() {
 		StringBuilder sb = new StringBuilder();
 		if (selection != null && !selection.isEmpty()) {
 			for (Object object : selection.toList()) {
@@ -101,46 +102,44 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 		}
 		getParent().layout();
 	}
-	
-	public void setInput(List<?> input){
+
+	public void setInput(List<?> input) {
 		this.input = input;
 	}
-	
-	private void callSelectionListeners(){
+
+	private void callSelectionListeners() {
 		Object[] listeners = selectionListeners.getListeners();
 		if (listeners != null && listeners.length > 0) {
 			for (Object object : listeners) {
-				((ISelectionChangedListener) object)
-					.selectionChanged(new SelectionChangedEvent(this, selection));
+				((ISelectionChangedListener) object).selectionChanged(new SelectionChangedEvent(this, selection));
 			}
 		}
 	}
-	
+
 	@Override
-	public void addSelectionChangedListener(ISelectionChangedListener listener){
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.add(listener);
 	}
-	
+
 	@Override
-	public void removeSelectionChangedListener(ISelectionChangedListener listener){
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.remove(listener);
 	}
-	
+
 	@Override
-	public ISelection getSelection(){
+	public ISelection getSelection() {
 		if (selection != null) {
 			return selection;
 		}
 		return StructuredSelection.EMPTY;
 	}
-	
+
 	@Override
-	public void setSelection(ISelection selection){
+	public void setSelection(ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) selection;
 			updateLabel();
 		}
 	}
-	
 
 }

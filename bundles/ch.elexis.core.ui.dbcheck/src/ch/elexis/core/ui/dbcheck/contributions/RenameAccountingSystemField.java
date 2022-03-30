@@ -21,40 +21,39 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 	private static final String REQUIRED = "/bedingungen";
 	private static final String OPTIONAL = "/fakultativ";
 	private static final String SEPARATOR = ":";
-	
+
 	private String accountingSystem;
 	private String currFieldName;
 	private String newFieldName;
-	
+
 	int proceedAsBefore = -1;
 	boolean useLegacyValue = true;
-	
+
 	@Override
-	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
+	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		if (openRenameAccountingSysFieldDialog()) {
 			StringBuilder output = new StringBuilder();
-			String beginTask =
-				"Feld '" + currFieldName + "' aus Abrechnungssystem [" + accountingSystem
-					+ "] in '" + newFieldName + "' umbenennen";
+			String beginTask = "Feld '" + currFieldName + "' aus Abrechnungssystem [" + accountingSystem + "] in '"
+					+ newFieldName + "' umbenennen";
 			pm.beginTask(beginTask, 3);
 			output.append(beginTask + "\n\n");
-			
+
 			pm.subTask("Lade Fälle des betroffenen Abrechnungssystem ...");
 			Query<Fall> qbe = new Query<Fall>(Fall.class);
 			qbe.add(FallConstants.FLD_EXTINFO_BILLING, Query.EQUALS, accountingSystem);
 			qbe.addToken(Fall.FLD_DATUM_BIS + " is NULL OR " + Fall.FLD_DATUM_BIS + " = ''");
 			List<Fall> fallList = qbe.execute();
 			pm.worked(1);
-			
+
 			if (fallList.isEmpty()) {
 				output.append("Keine relevanten Fälle gefunden\n");
 			}
-			
+
 			pm.subTask("Feldbezeichnung in einzelnen Fällen wird aktualisiert ...");
 			for (Fall fall : fallList) {
 				String currField = fall.getInfoString(currFieldName);
 				String newField = fall.getInfoString(newFieldName);
-				
+
 				if (!currField.isEmpty()) {
 					// newField isn't occupied yet
 					if (newField.isEmpty()) {
@@ -65,7 +64,7 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 						if (proceedAsBefore == -1 || proceedAsBefore == 1) {
 							openSelectValueAccountingSysFieldDialog(fall, currField, newField);
 						}
-						
+
 						// use value of old field name
 						if (useLegacyValue) {
 							fall.setInfoString(newFieldName, currField);
@@ -77,54 +76,53 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 			}
 			pm.worked(1);
 			output.append("Feldbezeichnungen für " + fallList.size() + " Fälle aktualisiert\n");
-			
-			//update configuration of accounting system
+
+			// update configuration of accounting system
 			pm.subTask("Globale Einstellungen werden aktualisiert... ");
 			String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + accountingSystem;
 			String updatedConfig = updateFieldConfiguration(key, currFieldName, newFieldName);
 			pm.worked(1);
-			
+
 			output.append("Globale Einstellung '" + updatedConfig + "' wurden aktualisiert!\n\n");
 			output.append("Umbenennung abgeschlossen!");
 			pm.done();
-			
+
 			return output.toString();
 		} else {
 			return DESCRIPTION + " abgebrochen";
 		}
 	}
-	
-	private void openSelectValueAccountingSysFieldDialog(Fall fall, String currField,
-		String newField){
+
+	private void openSelectValueAccountingSysFieldDialog(Fall fall, String currField, String newField) {
 		final Display display = Display.getDefault();
 		display.syncExec(new Runnable() {
-			
+
 			@Override
-			public void run(){
-				SelectValueAccountingSysFieldDialog replaceWhichDialog =
-					new SelectValueAccountingSysFieldDialog(UiDesk.getTopShell(), fall.getPatient(),
-						accountingSystem, currFieldName, currField, newFieldName, newField);
-				
+			public void run() {
+				SelectValueAccountingSysFieldDialog replaceWhichDialog = new SelectValueAccountingSysFieldDialog(
+						UiDesk.getTopShell(), fall.getPatient(), accountingSystem, currFieldName, currField,
+						newFieldName, newField);
+
 				replaceWhichDialog.open();
 				proceedAsBefore = replaceWhichDialog.rememberProceedure() ? 0 : 1;
 				useLegacyValue = replaceWhichDialog.useLegacyValue();
 			}
 		});
-		
+
 	}
-	
-	private boolean openRenameAccountingSysFieldDialog(){
+
+	private boolean openRenameAccountingSysFieldDialog() {
 		accountingSystem = "";
 		currFieldName = "";
 		newFieldName = "";
-		
+
 		final Display display = Display.getDefault();
 		display.syncExec(new Runnable() {
-			
+
 			@Override
-			public void run(){
-				RenameAccountingSysFieldDialog rasfDialog =
-					new RenameAccountingSysFieldDialog(display.getActiveShell());
+			public void run() {
+				RenameAccountingSysFieldDialog rasfDialog = new RenameAccountingSysFieldDialog(
+						display.getActiveShell());
 				if (rasfDialog.open() == Dialog.OK) {
 					accountingSystem = rasfDialog.getAccountingSystem();
 					currFieldName = rasfDialog.getPresentFieldName();
@@ -134,10 +132,10 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 		});
 		return !accountingSystem.isEmpty() && !currFieldName.isEmpty() && !newFieldName.isEmpty();
 	}
-	
+
 	/**
-	 * updates the accounting systems configuration. checks for containment in required fields first
-	 * and than in optional fields
+	 * updates the accounting systems configuration. checks for containment in
+	 * required fields first and than in optional fields
 	 * 
 	 * @param key
 	 *            configuration key of accounting system
@@ -148,7 +146,7 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 	 * 
 	 * @return key of the updated config
 	 */
-	private String updateFieldConfiguration(String key, String currName, String newName){
+	private String updateFieldConfiguration(String key, String currName, String newName) {
 		String configKey = key + REQUIRED;
 		String config = ConfigServiceHolder.getGlobal(configKey, null);
 		// use optionals if requireds doesn't contain field
@@ -161,10 +159,10 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 		ConfigServiceHolder.setGlobal(configKey, updatedConfig);
 		return configKey;
 	}
-	
+
 	@Override
-	public String getMaintenanceDescription(){
+	public String getMaintenanceDescription() {
 		return DESCRIPTION;
 	}
-	
+
 }

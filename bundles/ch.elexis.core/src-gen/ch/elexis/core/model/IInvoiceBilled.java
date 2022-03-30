@@ -10,17 +10,16 @@
  */
 package ch.elexis.core.model;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IInvoice Billed</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>IInvoice
+ * Billed</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IInvoiceBilled#getInvoice <em>Invoice</em>}</li>
+ * <li>{@link ch.elexis.core.model.IInvoiceBilled#getInvoice
+ * <em>Invoice</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIInvoiceBilled()
@@ -29,13 +28,14 @@ package ch.elexis.core.model;
  */
 public interface IInvoiceBilled extends IBilled {
 	/**
-	 * Returns the value of the '<em><b>Invoice</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Invoice</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Invoice</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Invoice</em>' reference isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Invoice</em>' reference.
 	 * @see #setInvoice(IInvoice)
 	 * @see ch.elexis.core.model.ModelPackage#getIInvoiceBilled_Invoice()
@@ -45,10 +45,11 @@ public interface IInvoiceBilled extends IBilled {
 	IInvoice getInvoice();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IInvoiceBilled#getInvoice <em>Invoice</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Invoice</em>' reference.
+	 * Sets the value of the '{@link ch.elexis.core.model.IInvoiceBilled#getInvoice
+	 * <em>Invoice</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Invoice</em>' reference.
 	 * @see #getInvoice()
 	 * @generated
 	 */

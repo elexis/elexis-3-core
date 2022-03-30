@@ -23,8 +23,8 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Result;
 
 public class BlockImporter extends XChangeImporter {
-	
-	public BlockImporter(InputStream is){
+
+	public BlockImporter(InputStream is) {
 		SAXBuilder builder = new SAXBuilder();
 		try {
 			Document doc = builder.build(is);
@@ -32,33 +32,30 @@ public class BlockImporter extends XChangeImporter {
 		} catch (Exception e) {
 			ExHandler.handle(e);
 		}
-		
+
 	}
-	
+
 	@Override
-	public Result<?> finalizeImport(){
+	public Result<?> finalizeImport() {
 		if (getContainer().getRoot() != null) {
 			ServiceBlocksElement eBlocks = new ServiceBlocksElement();
-			eBlocks.asImporter(
-				this,
-				getContainer().getRoot().getChild(ServiceBlockElement.ENCLOSING,
-					XChangeContainer.ns));
+			eBlocks.asImporter(this,
+					getContainer().getRoot().getChild(ServiceBlockElement.ENCLOSING, XChangeContainer.ns));
 			if (eBlocks != null) {
-				List<ServiceBlockElement> lBlocks =
-					(List<ServiceBlockElement>) eBlocks.getChildren(ServiceBlockElement.XMLNAME,
-						ServiceBlockElement.class);
+				List<ServiceBlockElement> lBlocks = (List<ServiceBlockElement>) eBlocks
+						.getChildren(ServiceBlockElement.XMLNAME, ServiceBlockElement.class);
 				for (ServiceBlockElement eBlock : lBlocks) {
 					eBlock.doImport();
 				}
-				
+
 			}
-			
+
 		}
 		return new Result<String>("OK"); //$NON-NLS-1$
 	}
-	
+
 	@Override
-	public Result<Object> load(Element input, Object context){
+	public Result<Object> load(Element input, Object context) {
 		// TODO Auto-generated method stub
 		return null;
 	}

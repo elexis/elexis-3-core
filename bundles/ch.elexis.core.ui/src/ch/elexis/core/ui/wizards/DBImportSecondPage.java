@@ -24,20 +24,20 @@ import ch.elexis.core.ui.util.SWTHelper;
 
 public class DBImportSecondPage extends WizardPage {
 	Text name, pwd;
-	
-	public DBImportSecondPage(String pageName){
+
+	public DBImportSecondPage(String pageName) {
 		super("Credentials"); //$NON-NLS-1$
-		setTitle(Messages.DBImportSecondPage_userDetails); //$NON-NLS-1$
-		setMessage(Messages.DBImportSecondPage_enterUsername + //$NON-NLS-1$
-			Messages.DBImportSecondPage_enterPassword); //$NON-NLS-1$
+		setTitle(Messages.DBImportSecondPage_userDetails); // $NON-NLS-1$
+		setMessage(Messages.DBImportSecondPage_enterUsername + // $NON-NLS-1$
+				Messages.DBImportSecondPage_enterPassword); // $NON-NLS-1$
 	}
-	
-	public DBImportSecondPage(String pageName, String title, ImageDescriptor titleImage){
+
+	public DBImportSecondPage(String pageName, String title, ImageDescriptor titleImage) {
 		super(pageName, title, titleImage);
 		// TODO Automatisch erstellter Konstruktoren-Stub
 	}
-	
-	public void createControl(Composite parent){
+
+	public void createControl(Composite parent) {
 		DBImportWizard wiz = (DBImportWizard) getWizard();
 		Composite form = new Composite(parent, SWT.NONE);
 		form.setLayout(new GridLayout(1, false));
@@ -51,5 +51,5 @@ public class DBImportSecondPage extends WizardPage {
 		}
 		setControl(form);
 	}
-	
+
 }

@@ -7,14 +7,14 @@ package ch.elexis.core.services;
  *
  */
 public interface IConflictHandler {
-	
+
 	/**
 	 * Result definition for a conflict.
 	 *
 	 */
 	public enum Result {
-			KEEP, OVERWRITE, ABORT
+		KEEP, OVERWRITE, ABORT
 	}
-	
+
 	public Result getResult();
 }

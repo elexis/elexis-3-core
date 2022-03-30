@@ -22,21 +22,20 @@ import ch.rgw.tools.StringTool;
 @Table(name = "CH_MEDELEXIS_LABORTARIF2009")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Labor2009Tarif.code", query = "SELECT lt FROM Labor2009Tarif lt WHERE lt.deleted = false AND lt.code = :code")
-public class Labor2009Tarif extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted {
+public class Labor2009Tarif extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Column(length = 255)
 	private String chapter;
 
@@ -80,11 +79,11 @@ public class Labor2009Tarif extends AbstractEntityWithId
 		this.code = code;
 	}
 
-	public double getTp(){
+	public double getTp() {
 		return tp;
 	}
 
-	public void setTp(double tp){
+	public void setTp(double tp) {
 		this.tp = tp;
 	}
 
@@ -147,34 +146,34 @@ public class Labor2009Tarif extends AbstractEntityWithId
 	public String getCodeSystemCode() {
 		return "317";
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

@@ -21,13 +21,13 @@ import ch.elexis.core.test.AbstractTest;
 import ch.elexis.core.types.LabItemTyp;
 
 public class LabResultTest extends AbstractTest {
-	
+
 	private IPatient patient2;
 	private ILabItem item1;
-	
+
 	@Override
 	@Before
-	public void before(){
+	public void before() {
 		super.before();
 		super.createPatient();
 		patient2 = coreModelService.create(IPatient.class);
@@ -41,21 +41,21 @@ public class LabResultTest extends AbstractTest {
 		item1.setTyp(LabItemTyp.NUMERIC);
 		coreModelService.save(item1);
 	}
-	
+
 	@Override
 	@After
-	public void after(){
+	public void after() {
 		coreModelService.remove(patient2);
 		coreModelService.remove(item1);
 		super.after();
 	}
-	
+
 	@Test
-	public void create(){
+	public void create() {
 		ILabResult result = coreModelService.create(ILabResult.class);
 		assertNotNull(result);
 		assertTrue(result instanceof ILabResult);
-		
+
 		result.setPatient(patient);
 		result.setItem(item1);
 		result.setReferenceFemale("<25");
@@ -63,7 +63,7 @@ public class LabResultTest extends AbstractTest {
 		result.setResult("22.56");
 		result.setExtInfo("testInfo", "testInfo");
 		coreModelService.save(result);
-		
+
 		Optional<ILabResult> loadedResult = coreModelService.load(result.getId(), ILabResult.class);
 		assertTrue(loadedResult.isPresent());
 		assertFalse(result == loadedResult.get());
@@ -73,12 +73,12 @@ public class LabResultTest extends AbstractTest {
 		assertEquals(result.getReferenceMale(), loadedResult.get().getReferenceMale());
 		assertEquals(result.getResult(), loadedResult.get().getResult());
 		assertEquals(result.getExtInfo("testInfo"), loadedResult.get().getExtInfo("testInfo"));
-		
+
 		coreModelService.remove(result);
 	}
-	
+
 	@Test
-	public void getReference(){
+	public void getReference() {
 		ILabItem item = coreModelService.create(ILabItem.class);
 		item.setCode("testItemRef");
 		item.setName("test item reference name");
@@ -86,14 +86,14 @@ public class LabResultTest extends AbstractTest {
 		coreModelService.save(item);
 		assertEquals("", item.getReferenceMale());
 		assertEquals("", item.getReferenceFemale());
-		
+
 		ILabResult result = coreModelService.create(ILabResult.class);
 		result.setPatient(patient);
 		result.setItem(item);
 		result.setReferenceMale("<0.35");
 		result.setResult("3.26");
 		coreModelService.save(result);
-		
+
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
 		// if item ref is empty ref of result is used
 		assertEquals("<0.35", result.getReferenceMale());
@@ -103,13 +103,13 @@ public class LabResultTest extends AbstractTest {
 		assertEquals("<0.34", result.getReferenceMale());
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
 		assertEquals("<0.35", result.getReferenceMale());
-		
+
 		coreModelService.remove(result);
 		coreModelService.remove(item);
 	}
-	
+
 	@Test
-	public void query(){
+	public void query() {
 		ILabResult result1 = coreModelService.create(ILabResult.class);
 		result1.setPatient(patient);
 		result1.setItem(item1);
@@ -118,7 +118,7 @@ public class LabResultTest extends AbstractTest {
 		result1.setResult("22.56");
 		result1.setObservationTime(LocalDateTime.of(2018, 1, 1, 10, 0));
 		coreModelService.save(result1);
-		
+
 		ILabResult result2 = coreModelService.create(ILabResult.class);
 		result2.setPatient(patient2);
 		result2.setItem(item1);
@@ -127,14 +127,14 @@ public class LabResultTest extends AbstractTest {
 		result2.setResult("35.85");
 		result2.setObservationTime(LocalDateTime.of(2018, 1, 2, 15, 0));
 		coreModelService.save(result2);
-		
+
 		IQuery<ILabResult> query = coreModelService.getQuery(ILabResult.class);
 		query.and(ModelPackage.Literals.ILAB_RESULT__ITEM, COMPARATOR.EQUALS, item1);
 		List<ILabResult> existing = query.execute();
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());
 		assertEquals(2, existing.size());
-		
+
 		query = coreModelService.getQuery(ILabResult.class);
 		query.and(ModelPackage.Literals.ILAB_RESULT__PATIENT, COMPARATOR.EQUALS, patient);
 		existing = query.execute();
@@ -143,11 +143,11 @@ public class LabResultTest extends AbstractTest {
 		assertEquals(1, existing.size());
 		assertFalse(result1 == existing.get(0));
 		assertEquals(result1, existing.get(0));
-		
+
 		query = coreModelService.getQuery(ILabResult.class);
 		query.and(ModelPackage.Literals.ILAB_RESULT__PATIENT, COMPARATOR.EQUALS, patient2);
 		query.and(ModelPackage.Literals.ILAB_RESULT__OBSERVATION_TIME, COMPARATOR.GREATER,
-			LocalDateTime.of(2018, 1, 2, 13, 0));
+				LocalDateTime.of(2018, 1, 2, 13, 0));
 		existing = query.execute();
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());
@@ -155,7 +155,7 @@ public class LabResultTest extends AbstractTest {
 		assertFalse(result2 == existing.get(0));
 		assertEquals(result2, existing.get(0));
 		assertEquals(result2.getObservationTime(), existing.get(0).getObservationTime());
-		
+
 		coreModelService.remove(result1);
 		coreModelService.remove(result2);
 	}

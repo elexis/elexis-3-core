@@ -10,17 +10,17 @@ import javax.ws.rs.core.Response;
 import ch.elexis.core.common.DBConnection;
 
 @Path("/elexis/connector")
-@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface IConnectorService {
 
 	@GET
 	@Path("/connection")
 	public DBConnection getElexisDBConnection();
-	
+
 	@PUT
 	@Path("/connection")
 	public Response setElexisDBConnection(DBConnection dbConnection);
-	
+
 	@GET
 	@Path("/connection/status")
 	public Response getDBInformation();

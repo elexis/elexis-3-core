@@ -40,34 +40,34 @@ import ch.elexis.core.services.internal.Bundle;
 
 @Component
 public class ElexisServerService implements IElexisServerService {
-	
+
 	private Logger log = LoggerFactory.getLogger(getClass());
 	private static final UUID systemUuid = UUID.randomUUID();
 	private static boolean standalone;
-	
+
 	private String restUrl;
 	private Timer timer;
-	
+
 	private IEventService eventService;
 	private IInstanceService instanceService;
 	private ILockService lockService;
-	
+
 	private ConnectionStatus connectionStatus;
-	
+
 	@Reference
 	private IConfigService configService;
 	@Reference
 	private IContextService contextService;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		standalone = false;
 		lockService = new DenyAllLockService();
 		eventService = new NoRemoteEventService();
 		instanceService = new NoRemoteInstanceService();
-		
+
 		initializeProperties();
-		
+
 		if (standalone) {
 			// standalone mode, mock services
 			eventService = new NoRemoteEventService();
@@ -76,33 +76,31 @@ public class ElexisServerService implements IElexisServerService {
 		} else {
 			timer = new Timer();
 			timer.schedule(new RefreshTask(this), 5000, 5000);
-			
+
 			InstanceStatus instanceStatus = createInstanceStatus();
 			updateInstanceStatus(instanceStatus);
 		}
 	}
-	
+
 	@Deactivate
-	public void deactivate(){
+	public void deactivate() {
 		if (timer != null) {
 			timer.cancel();
 		}
 	}
-	
+
 	@Override
-	public UUID getSystemUuid(){
+	public UUID getSystemUuid() {
 		return systemUuid;
 	}
-	
-	private void initializeProperties(){
-		restUrl =
-			System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
+
+	private void initializeProperties() {
+		restUrl = System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
 		if (restUrl != null && restUrl.length() > 0) {
 			try {
 				new URL(restUrl);
 			} catch (MalformedURLException e) {
-				log.error("Invalid elexis-server url [{}], not initializing remote es services.",
-					restUrl);
+				log.error("Invalid elexis-server url [{}], not initializing remote es services.", restUrl);
 				restUrl = null;
 			}
 			connectionStatus = ConnectionStatus.LOCAL;
@@ -113,20 +111,19 @@ public class ElexisServerService implements IElexisServerService {
 			log.debug("No elexis-server url provided, operating in stand-alone mode.");
 		}
 	}
-	
+
 	@Override
-	public boolean isStandalone(){
+	public boolean isStandalone() {
 		return standalone;
 	}
-	
+
 	@Override
-	public InstanceStatus createInstanceStatus(){
+	public InstanceStatus createInstanceStatus() {
 		InstanceStatus instanceStatus = new InstanceStatus();
 		instanceStatus.setState(InstanceStatus.STATE.ACTIVE);
 		instanceStatus.setUuid(getSystemUuid().toString());
 		instanceStatus.setVersion(Elexis.VERSION);
-		instanceStatus.setOperatingSystem(
-			System.getProperty("os.name") + "/" + System.getProperty("os.version") + "/"
+		instanceStatus.setOperatingSystem(System.getProperty("os.name") + "/" + System.getProperty("os.version") + "/"
 				+ System.getProperty("os.arch") + "/J" + System.getProperty("java.version"));
 		String identId = configService.getLocal(Preferences.STATION_IDENT_ID, "");
 		String identTxt = configService.getLocal(Preferences.STATION_IDENT_TEXT, "");
@@ -135,9 +132,9 @@ public class ElexisServerService implements IElexisServerService {
 		instanceStatus.setActiveUser((u != null) ? u.getId() : "NO USER ACTIVE");
 		return instanceStatus;
 	}
-	
+
 	@Override
-	public IStatus postEvent(ElexisEvent elexisEvent){
+	public IStatus postEvent(ElexisEvent elexisEvent) {
 		if (eventService != null) {
 			try {
 				elexisEvent.putProperty("systemuuid", systemUuid.toString());
@@ -149,72 +146,70 @@ public class ElexisServerService implements IElexisServerService {
 		}
 		return new Status(Status.ERROR, Bundle.ID, "No EventService available");
 	}
-	
+
 	@Override
-	public boolean deliversRemoteEvents(){
+	public boolean deliversRemoteEvents() {
 		return !(eventService instanceof NoRemoteEventService);
 	}
-	
+
 	@Override
-	public Response updateInstanceStatus(InstanceStatus request){
+	public Response updateInstanceStatus(InstanceStatus request) {
 		return instanceService.updateStatus(request);
 	}
-	
+
 	@Override
-	public Response getInstanceStatus(){
+	public Response getInstanceStatus() {
 		return instanceService.getStatus();
 	}
-	
+
 	@Override
-	public LockResponse acquireOrReleaseLocks(LockRequest request){
+	public LockResponse acquireOrReleaseLocks(LockRequest request) {
 		return lockService.acquireOrReleaseLocks(request);
 	}
-	
+
 	@Override
-	public boolean isLocked(LockRequest request){
+	public boolean isLocked(LockRequest request) {
 		return lockService.isLocked(request);
 	}
-	
+
 	@Override
-	public LockInfo getLockInfo(String storeToString){
+	public LockInfo getLockInfo(String storeToString) {
 		return lockService.getLockInfo(storeToString);
 	}
-	
+
 	@Override
-	public synchronized boolean validateElexisServerConnection(){
+	public synchronized boolean validateElexisServerConnection() {
 		if (ConnectionStatus.STANDALONE == connectionStatus) {
 			return true;
 		}
-		
+
 		boolean connectionOk = false;
 		try {
 			String testRestUrl = restUrl + "/elexis/lockservice/lockInfo";
 			URL url = new URL(testRestUrl);
-			
+
 			HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
 			urlConn.setConnectTimeout(1000);
 			urlConn.setReadTimeout(1500);
 			urlConn.connect();
-			
+
 			connectionOk = (urlConn.getResponseCode() >= 200 && urlConn.getResponseCode() < 300);
 		} catch (IOException e) {
 			log.warn("Error connecting to elexis-server", e);
 		}
-		
+
 		if (connectionOk && connectionStatus != ConnectionStatus.REMOTE) {
 			// connected to elexis-server, connection is up
 			connectionStatus = ConnectionStatus.REMOTE;
-			eventService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(),
-				IEventService.class);
+			eventService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(), IEventService.class);
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IEventService.class);
-			instanceService = ConsumerFactory.createConsumer(restUrl,
-				new ElexisServerClientConfig(), IInstanceService.class);
+			instanceService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(),
+					IInstanceService.class);
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IInstanceService.class);
-			lockService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(),
-				ILockService.class);
+			lockService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(), ILockService.class);
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, ILockService.class);
 		}
-		
+
 		if (!connectionOk && connectionStatus != ConnectionStatus.LOCAL) {
 			// connected to elexis-server, connection is down
 			connectionStatus = ConnectionStatus.LOCAL;
@@ -226,13 +221,13 @@ public class ElexisServerService implements IElexisServerService {
 			lockService = new DenyAllLockService();
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, ILockService.class);
 		}
-		
+
 		return connectionOk;
 	}
-	
+
 	@Override
-	public ConnectionStatus getConnectionStatus(){
+	public ConnectionStatus getConnectionStatus() {
 		return connectionStatus;
 	}
-	
+
 }

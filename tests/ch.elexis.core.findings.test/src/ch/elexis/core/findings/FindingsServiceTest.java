@@ -7,18 +7,16 @@ import java.util.List;
 import org.junit.Test;
 
 public class FindingsServiceTest {
-	
+
 	@Test
-	public void getFindingsForPatient(){
-		List<IFinding> finding =
-			FindingsServiceComponent.getService().getPatientsFindings("abc", IFinding.class);
+	public void getFindingsForPatient() {
+		List<IFinding> finding = FindingsServiceComponent.getService().getPatientsFindings("abc", IFinding.class);
 		assertNotNull(finding);
 	}
-	
+
 	@Test
-	public void getFindingsForConsultation(){
-		List<IFinding> finding =
-				FindingsServiceComponent.getService().getConsultationsFindings("abc", IFinding.class);
+	public void getFindingsForConsultation() {
+		List<IFinding> finding = FindingsServiceComponent.getService().getConsultationsFindings("abc", IFinding.class);
 		assertNotNull(finding);
 	}
 }

@@ -19,24 +19,23 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Eigendiagnose.code", query = "SELECT ei FROM Eigendiagnose ei WHERE ei.deleted = false AND ei.code = :code")
 @NamedQuery(name = "Eigendiagnose.parent", query = "SELECT ei FROM Eigendiagnose ei WHERE ei.deleted = false AND ei.parent = :parent")
-public class Eigendiagnose extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Eigendiagnose extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Lob
 	protected byte[] extInfo;
-	
+
 	@Column(length = 20, name = "parent")
 	private String parent;
 
@@ -45,80 +44,80 @@ public class Eigendiagnose extends AbstractEntityWithId
 
 	@Column(length = 80, name = "title")
 	private String title;
-	
+
 	@Lob
 	@Column(name = "comment")
 	private String comment;
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
+
 	@Override
-	public byte[] getExtInfo(){
+	public byte[] getExtInfo() {
 		return extInfo;
 	}
-	
+
 	@Override
-	public void setExtInfo(byte[] extInfo){
+	public void setExtInfo(byte[] extInfo) {
 		this.extInfo = extInfo;
 	}
-	
-	public String getParent(){
+
+	public String getParent() {
 		return parent;
 	}
-	
-	public void setParent(String parent){
+
+	public void setParent(String parent) {
 		this.parent = parent;
 	}
-	
-	public String getCode(){
+
+	public String getCode() {
 		return code;
 	}
-	
-	public void setCode(String code){
+
+	public void setCode(String code) {
 		this.code = code;
 	}
-	
-	public String getTitle(){
+
+	public String getTitle() {
 		return title;
 	}
-	
-	public void setTitle(String title){
+
+	public void setTitle(String title) {
 		this.title = title;
 	}
-	
-	public String getComment(){
+
+	public String getComment() {
 		return comment;
 	}
-	
-	public void setComment(String comment){
+
+	public void setComment(String comment) {
 		this.comment = comment;
 	}
 }

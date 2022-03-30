@@ -13,29 +13,29 @@ import ch.elexis.data.Konsultation;
 
 /**
  * 
- * @deprecated use implementation of {@link ch.elexis.core.services.ICodeElementService} instead.
+ * @deprecated use implementation of
+ *             {@link ch.elexis.core.services.ICodeElementService} instead.
  * 
  */
 @Component(service = {})
 public class PoCodeElementServiceHolder {
-	
+
 	private static HashMap<Object, Object> emptyMap = new HashMap<>();
-	
+
 	private static ICodeElementService elementService;
-	
+
 	@Reference(unbind = "-")
-	public void setCodeElementService(ICodeElementService elementService){
+	public void setCodeElementService(ICodeElementService elementService) {
 		PoCodeElementServiceHolder.elementService = elementService;
 	}
-	
-	public static ICodeElementService get(){
+
+	public static ICodeElementService get() {
 		return elementService;
 	}
-	
-	public static HashMap<Object, Object> createContext(){
+
+	public static HashMap<Object, Object> createContext() {
 		HashMap<Object, Object> ret = new HashMap<>();
-		Optional<Konsultation> consultation =
-			ContextServiceHolder.get().getRootContext().getTyped(Konsultation.class);
+		Optional<Konsultation> consultation = ContextServiceHolder.get().getRootContext().getTyped(Konsultation.class);
 		if (consultation.isPresent()) {
 			ret.put(ContextKeys.CONSULTATION, consultation.get());
 		}
@@ -45,8 +45,8 @@ public class PoCodeElementServiceHolder {
 		}
 		return ret;
 	}
-	
-	public static HashMap<Object, Object> emtpyContext(){
+
+	public static HashMap<Object, Object> emtpyContext() {
 		return emptyMap;
 	}
 }

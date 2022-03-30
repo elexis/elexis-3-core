@@ -40,19 +40,19 @@ import ch.rgw.tools.IFilter;
 import ch.rgw.tools.Tree;
 
 /**
- * Funktionalität für einen CommonViewer bereitstellen. Der ViewerConfigurer ist ein Container für
- * eine Anzahl xyProvider für je eine Eigenschaft des Viewers Für alle Provider existiert eine
- * Defaultimplementation, die direkt verwendet werden kann, wenn keine speziellen Funktionen
- * benötigt werden.
+ * Funktionalität für einen CommonViewer bereitstellen. Der ViewerConfigurer ist
+ * ein Container für eine Anzahl xyProvider für je eine Eigenschaft des Viewers
+ * Für alle Provider existiert eine Defaultimplementation, die direkt verwendet
+ * werden kann, wenn keine speziellen Funktionen benötigt werden.
  * 
  * @see CommonViewer
  */
 public class ViewerConfigurer {
-	
+
 	public enum ContentType {
-			PERSISTENTOBJECT, GENERICOBJECT
+		PERSISTENTOBJECT, GENERICOBJECT
 	}
-	
+
 	private ICommonViewerContentProvider contentProvider;
 	private LabelProvider labelProvider;
 	protected ControlFieldProvider controlFieldProvider;
@@ -60,10 +60,10 @@ public class ViewerConfigurer {
 	private WidgetProvider widgetProvider;
 	private IDoubleClickListener doubleClickListener;
 	private ISelectionChangedListener selectionChangedListener;
-	
+
 	protected ISelectionRenderer poSelectionRenderer;
 	protected GenericObjectDragSource.ISelectionRenderer goSelectionRenderer;
-	
+
 	// init default content type
 	private ContentType contentType = ContentType.PERSISTENTOBJECT;
 
@@ -76,16 +76,16 @@ public class ViewerConfigurer {
 	 * @param bp
 	 * @param wp
 	 */
-	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp,
-		ControlFieldProvider cfp, ButtonProvider bp, WidgetProvider wp){
-		
+	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp, ControlFieldProvider cfp,
+			ButtonProvider bp, WidgetProvider wp) {
+
 		contentProvider = cnp;
 		labelProvider = (lp == null) ? new DefaultLabelProvider() : lp;
 		controlFieldProvider = cfp;
 		buttonProvider = bp;
 		widgetProvider = wp;
 	}
-	
+
 	/**
 	 * Vereinfachter Konstruktor. Kein Kontrollfeld und kein Button
 	 * 
@@ -93,81 +93,85 @@ public class ViewerConfigurer {
 	 * @param lp
 	 * @param wp
 	 */
-	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp, WidgetProvider wp){
+	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp, WidgetProvider wp) {
 		this(cnp, lp, null, new DefaultButtonProvider(), wp);
 	}
-	
+
 	/**
 	 * Set the content type for the {@link CommonViewer}. Currently
 	 * {@link ContentType#PERSISTENTOBJECT} is default, but should be changed to
-	 * {@link ContentType#GENERICOBJECT} after removing {@link PersistentObject} is finfished. It
-	 * changes the content handling of the {@link CommonViewer}.
+	 * {@link ContentType#GENERICOBJECT} after removing {@link PersistentObject} is
+	 * finfished. It changes the content handling of the {@link CommonViewer}.
 	 * 
 	 * @param type
 	 * @return
 	 */
-	public ViewerConfigurer setContentType(ContentType type){
+	public ViewerConfigurer setContentType(ContentType type) {
 		this.contentType = type;
 		return this;
 	}
-	
-	public ContentType getContentType(){
+
+	public ContentType getContentType() {
 		return contentType;
 	}
-	
+
 	/**
-	 * Set a {@link IDoubleClickListener} that will be added to the {@link CommonViewer} viewer
-	 * widget on {@link CommonViewer#create(ViewerConfigurer, Composite, int, Object)}.
+	 * Set a {@link IDoubleClickListener} that will be added to the
+	 * {@link CommonViewer} viewer widget on
+	 * {@link CommonViewer#create(ViewerConfigurer, Composite, int, Object)}.
 	 * 
 	 * @param listener
 	 * @return
 	 */
-	public ViewerConfigurer setDoubleClickListener(IDoubleClickListener listener){
+	public ViewerConfigurer setDoubleClickListener(IDoubleClickListener listener) {
 		this.doubleClickListener = listener;
 		return this;
 	}
-	
+
 	/**
-	 * Set a {@link ISelectionChangedListener} that will be added to the {@link CommonViewer} viewer
-	 * instead of the default listener.
+	 * Set a {@link ISelectionChangedListener} that will be added to the
+	 * {@link CommonViewer} viewer instead of the default listener.
 	 * 
 	 * @param listener
 	 * @return
 	 */
-	public ViewerConfigurer setSelectionChangedListener(ISelectionChangedListener listener){
+	public ViewerConfigurer setSelectionChangedListener(ISelectionChangedListener listener) {
 		this.selectionChangedListener = listener;
 		return this;
 	}
-	
+
 	/**
-	 * A ContentProvider vor a CommonViewer. Has Methods to connect to a ControlField
+	 * A ContentProvider vor a CommonViewer. Has Methods to connect to a
+	 * ControlField
 	 * 
 	 * @author gerry
 	 * 
 	 */
-	public interface ICommonViewerContentProvider extends IStructuredContentProvider,
-			ControlFieldListener {
+	public interface ICommonViewerContentProvider extends IStructuredContentProvider, ControlFieldListener {
 		/**
-		 * Called after all elements of the CommonViewer are created but before setting input
+		 * Called after all elements of the CommonViewer are created but before setting
+		 * input
 		 */
 		public void init();
-		
+
 		/**
-		 * Called when the ContentProvider is supposed to start listening fpr the Control fields.
+		 * Called when the ContentProvider is supposed to start listening fpr the
+		 * Control fields.
 		 */
 		public void startListening();
-		
+
 		public void stopListening();
 	}
-	
+
 	public interface IWorker {
 		public IStatus work(IProgressMonitor monitor, HashMap<String, Object> data);
 	}
-	
+
 	/**
-	 * Provider für das Kontrollfeld oberhalb der Liste. Das Kontrollfeld muss einige Elemente
-	 * beinhalten, die dem Anwender das Filtern der in der Liste angezeigten Elemente ermöglichen,
-	 * und es muss interessierten Listeners die änderung der Filterbedingungen mitteilen können.
+	 * Provider für das Kontrollfeld oberhalb der Liste. Das Kontrollfeld muss
+	 * einige Elemente beinhalten, die dem Anwender das Filtern der in der Liste
+	 * angezeigten Elemente ermöglichen, und es muss interessierten Listeners die
+	 * änderung der Filterbedingungen mitteilen können.
 	 * 
 	 * @see DefaultControlFieldProvider
 	 * @author Gerry
@@ -175,115 +179,115 @@ public class ViewerConfigurer {
 	public interface ControlFieldProvider {
 		/** Das Kontrollfeld erstellen */
 		public Composite createControl(final Composite parent);
-		
+
 		/** Einen Listener enifügen */
 		public void addChangeListener(final ControlFieldListener cl);
-		
+
 		/** Einen Listener entfernen */
 		public void removeChangeListener(final ControlFieldListener cl);
-		
+
 		/** Die Werte der Filterbedingungen liefern */
 		public String[] getValues();
-		
+
 		/** Die Eingabefelder löschen */
 		public void clearValues();
-		
+
 		/** Anfrage, ob die Eingabefelder leer sind */
 		public boolean isEmpty();
-		
+
 		/**
 		 * Eine Query so modifizieren, dass sie den Filterbedingungen entspricht
 		 * 
 		 * @see Query
 		 */
 		public void setQuery(Query<? extends PersistentObject> q);
-		
+
 		/**
-		 * Apply the dbfields of the {@link ControlFieldProvider} as {@link COMPARATOR#LIKE} where
-		 * clauses joined by AND to the query.
+		 * Apply the dbfields of the {@link ControlFieldProvider} as
+		 * {@link COMPARATOR#LIKE} where clauses joined by AND to the query.
 		 * 
 		 * @param query
 		 */
 		public void setQuery(IQuery<?> query);
-		
+
 		/** Einen Filter erstellen, der den momentanen Bedingungen entspricht */
 		public IFilter createFilter();
-		
+
 		/** Eine Meldung absenden, dass der Filter geändert wurde */
-		
+
 		public void fireChangedEvent();
-		
+
 		public void fireSortEvent(String text);
-		
+
 		public void setFocus();
 	}
-	
+
 	/** Listener für Änderungen des Kontrollfelds */
 	public interface ControlFieldListener {
 		// public void changed(final String[] fields, final String[] values);
 		public void changed(HashMap<String, String> values);
-		
+
 		public void reorder(final String field);
-		
+
 		/**
 		 * ENTER has been pressed
 		 */
 		public void selected();
 	}
-	
+
 	/** Provider für den unterliegenden JFace-Viewer */
 	public interface WidgetProvider {
 		public StructuredViewer createViewer(Composite parent);
 	}
-	
+
 	/** Provider für den "neu erstellen"- Knopf */
 	public interface ButtonProvider {
 		public Button createButton(Composite parent);
-		
+
 		public boolean isAlwaysEnabled();
 	}
-	
+
 	/** ****************************************************** */
-	public ButtonProvider getButtonProvider(){
+	public ButtonProvider getButtonProvider() {
 		return buttonProvider;
 	}
-	
-	public void setButtonProvider(ButtonProvider buttonProvider){
+
+	public void setButtonProvider(ButtonProvider buttonProvider) {
 		this.buttonProvider = buttonProvider;
 	}
-	
-	public WidgetProvider getWidgetProvider(){
+
+	public WidgetProvider getWidgetProvider() {
 		return widgetProvider;
 	}
-	
-	public void setWidgetProvider(WidgetProvider widgetProvider){
+
+	public void setWidgetProvider(WidgetProvider widgetProvider) {
 		this.widgetProvider = widgetProvider;
 	}
-	
-	public ICommonViewerContentProvider getContentProvider(){
+
+	public ICommonViewerContentProvider getContentProvider() {
 		return contentProvider;
 	}
-	
-	public void setContentProvider(ICommonViewerContentProvider contentProvider){
+
+	public void setContentProvider(ICommonViewerContentProvider contentProvider) {
 		this.contentProvider = contentProvider;
 	}
-	
-	public ControlFieldProvider getControlFieldProvider(){
+
+	public ControlFieldProvider getControlFieldProvider() {
 		return controlFieldProvider;
 	}
-	
-	public void setControlFieldProvider(ControlFieldProvider controlFieldProvider){
+
+	public void setControlFieldProvider(ControlFieldProvider controlFieldProvider) {
 		this.controlFieldProvider = controlFieldProvider;
 	}
-	
-	public LabelProvider getLabelProvider(){
+
+	public LabelProvider getLabelProvider() {
 		return labelProvider;
 	}
-	
-	public void setLabelProvider(LabelProvider labelProvider){
+
+	public void setLabelProvider(LabelProvider labelProvider) {
 		this.labelProvider = labelProvider;
 	}
-	
+
 	/**
 	 * Ein LabelProvider, der Objekte des Typs Tree analysiert
 	 * 
@@ -291,9 +295,9 @@ public class ViewerConfigurer {
 	 * @author Gerry
 	 */
 	public static class TreeLabelProvider extends LabelProvider {
-		
+
 		@Override
-		public String getText(Object element){
+		public String getText(Object element) {
 			if (element instanceof Tree) {
 				@SuppressWarnings("rawtypes")
 				Tree tree = (Tree) element;
@@ -302,14 +306,14 @@ public class ViewerConfigurer {
 				return element.toString();
 			}
 		}
-		
+
 	}
-	
+
 	/**
-	 * Defaultimplementation des Buttonproviders. Liefert einen Button, der ein neues
-	 * PersistentObject anhand der ausgewählten Felder erstellt, und der nur dann aktivierbar ist,
-	 * wenn die Anzeigeliste leer ist. Wenn man den leeren Konstruktor benutzt, wird kein Button
-	 * erzeugt.
+	 * Defaultimplementation des Buttonproviders. Liefert einen Button, der ein
+	 * neues PersistentObject anhand der ausgewählten Felder erstellt, und der nur
+	 * dann aktivierbar ist, wenn die Anzeigeliste leer ist. Wenn man den leeren
+	 * Konstruktor benutzt, wird kein Button erzeugt.
 	 * 
 	 * @author Gerry
 	 * 
@@ -318,17 +322,18 @@ public class ViewerConfigurer {
 		Class clazz;
 		CommonViewer vcf;
 		Dialog dlg;
-		private String text = Messages.ViewerConfigurer_createNew; //$NON-NLS-1$
-		
+		private String text = Messages.ViewerConfigurer_createNew; // $NON-NLS-1$
+
 		/** Keinen Button erzeugen */
-		public DefaultButtonProvider(){}
-		
+		public DefaultButtonProvider() {
+		}
+
 		/** Einen Button erzeugen, der Default-Objekte der Klasse cl erstellt */
-		public DefaultButtonProvider(CommonViewer cv, Class cl){
+		public DefaultButtonProvider(CommonViewer cv, Class cl) {
 			clazz = cl;
 			vcf = cv;
 		}
-		
+
 		/**
 		 * Einen Button erzeugen, der eine individuelle Beschriftung t hat
 		 * 
@@ -337,23 +342,23 @@ public class ViewerConfigurer {
 		 * @param t
 		 *            Text, der auf dem Button stehen soll
 		 */
-		public DefaultButtonProvider(CommonViewer cv, Class cl, String t){
+		public DefaultButtonProvider(CommonViewer cv, Class cl, String t) {
 			clazz = cl;
 			vcf = cv;
 			text = t;
 		}
-		
+
 		/**
 		 * Einen Button erzeugen, der bei Klick einen Dialog öffnet
 		 * 
 		 */
-		public DefaultButtonProvider(CommonViewer cv, String t, Dialog dlg){
+		public DefaultButtonProvider(CommonViewer cv, String t, Dialog dlg) {
 			vcf = cv;
 			text = t;
 			this.dlg = dlg;
 		}
-		
-		public Button createButton(Composite parent){
+
+		public Button createButton(Composite parent) {
 			if (vcf == null) {
 				return null;
 			}
@@ -361,17 +366,18 @@ public class ViewerConfigurer {
 			ret.setText(text);
 			ret.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					if (dlg != null) {
 						dlg.open();
 					} else {
 						/* final PersistentObject po= */
-						CoreHub.poFactory.create(clazz, ((DefaultControlFieldProvider) vcf
-							.getConfigurer().getControlFieldProvider()).getDBFields(), vcf
-							.getConfigurer().getControlFieldProvider().getValues());
+						CoreHub.poFactory
+								.create(clazz,
+										((DefaultControlFieldProvider) vcf.getConfigurer().getControlFieldProvider())
+												.getDBFields(),
+										vcf.getConfigurer().getControlFieldProvider().getValues());
 						if (vcf.getConfigurer().getContentProvider() instanceof LazyContentProvider) {
-							LazyContentProvider lc =
-								(LazyContentProvider) vcf.getConfigurer().getContentProvider();
+							LazyContentProvider lc = (LazyContentProvider) vcf.getConfigurer().getContentProvider();
 							lc.dataloader.invalidate();
 						}
 					}
@@ -382,27 +388,26 @@ public class ViewerConfigurer {
 			});
 			return ret;
 		}
-		
-		public boolean isAlwaysEnabled(){
+
+		public boolean isAlwaysEnabled() {
 			return false;
 		}
-		
+
 	}
-	
-	public IDoubleClickListener getDoubleClickListener(){
+
+	public IDoubleClickListener getDoubleClickListener() {
 		return doubleClickListener;
 	}
-	
-	public ISelectionChangedListener getSelectionChangedListener(){
+
+	public ISelectionChangedListener getSelectionChangedListener() {
 		return selectionChangedListener;
 	}
-	
-	public void addDragSourceSelectionRenderer(ISelectionRenderer iSelectionRenderer){
+
+	public void addDragSourceSelectionRenderer(ISelectionRenderer iSelectionRenderer) {
 		this.poSelectionRenderer = iSelectionRenderer;
 	}
-	
-	public void addDragSourceSelectionRenderer(
-		GenericObjectDragSource.ISelectionRenderer iSelectionRenderer){
+
+	public void addDragSourceSelectionRenderer(GenericObjectDragSource.ISelectionRenderer iSelectionRenderer) {
 		this.goSelectionRenderer = iSelectionRenderer;
 	}
 }

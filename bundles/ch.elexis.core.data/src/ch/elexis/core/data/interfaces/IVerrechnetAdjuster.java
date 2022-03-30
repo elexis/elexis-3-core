@@ -14,7 +14,8 @@ import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
 
 /**
- * Implementations of {@link IVerrechnetAdjuster} can adjust a {@link Verrechnet} as it is created.
+ * Implementations of {@link IVerrechnetAdjuster} can adjust a
+ * {@link Verrechnet} as it is created.
  * 
  * @author thomas
  * 
@@ -27,7 +28,7 @@ public interface IVerrechnetAdjuster {
 	 *            the Verrechnet object to adjust
 	 */
 	public void adjust(Verrechnet verrechnet);
-	
+
 	/**
 	 * Adjust netto price of {@link Verrechnet}.
 	 * 

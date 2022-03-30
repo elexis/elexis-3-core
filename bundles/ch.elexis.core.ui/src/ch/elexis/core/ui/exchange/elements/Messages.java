@@ -19,5 +19,5 @@ public class Messages {
 	public static String MedicalElement_Medcaments = ch.elexis.core.l10n.Messages.MedicalElement_Medcaments;
 	public static String RecordElement_CreatedBy = ch.elexis.core.l10n.Messages.RecordElement_CreatedBy;
 	public static String RecordElement_EntryDate = ch.elexis.core.l10n.Messages.RecordElement_EntryDate;
-	
+
 }

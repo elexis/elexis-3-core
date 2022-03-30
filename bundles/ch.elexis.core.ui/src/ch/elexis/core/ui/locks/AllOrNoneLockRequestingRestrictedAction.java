@@ -11,31 +11,30 @@ import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.data.PersistentObject;
 
-public abstract class AllOrNoneLockRequestingRestrictedAction<T extends PersistentObject>
-		extends RestrictedAction {
-	
+public abstract class AllOrNoneLockRequestingRestrictedAction<T extends PersistentObject> extends RestrictedAction {
+
 	private List<T> objects;
-	
-	public AllOrNoneLockRequestingRestrictedAction(ACE necessaryRight, String text){
+
+	public AllOrNoneLockRequestingRestrictedAction(ACE necessaryRight, String text) {
 		super(necessaryRight, text);
 	}
-	
-	public AllOrNoneLockRequestingRestrictedAction(ACE necessaryRight, String text, int val){
+
+	public AllOrNoneLockRequestingRestrictedAction(ACE necessaryRight, String text, int val) {
 		super(necessaryRight, text, val);
 	}
-	
-	public void doRun(){
+
+	public void doRun() {
 		if (!CoreHub.acl.request(necessaryRight)) {
 			return;
 		}
-		
+
 		objects = getTargetedObjects();
 		if (objects == null || objects.size() == 0) {
 			return;
 		}
-		
+
 		List<LockInfo> acquiredLocks = new ArrayList<>();
-		
+
 		for (T object : objects) {
 			LockResponse lr = LocalLockServiceHolder.get().acquireLock(object);
 			if (lr.isOk()) {
@@ -46,25 +45,24 @@ public abstract class AllOrNoneLockRequestingRestrictedAction<T extends Persiste
 				return;
 			}
 		}
-		
+
 		doRun(objects);
-		
+
 		releaseAllAcquiredLocks(acquiredLocks);
 	};
-	
-	private void releaseAllAcquiredLocks(List<LockInfo> acquiredLocks){
+
+	private void releaseAllAcquiredLocks(List<LockInfo> acquiredLocks) {
 		for (LockInfo lockInfo : acquiredLocks) {
 			LockResponse lockResponse = LocalLockServiceHolder.get().releaseLock(lockInfo);
 			if (!lockResponse.isOk()) {
 				log.warn("Could not release lock for [{}] with lock response [{}]",
-					lockInfo.getElementType() + "::" + lockInfo.getElementId(),
-					lockResponse.getStatus());
+						lockInfo.getElementType() + "::" + lockInfo.getElementId(), lockResponse.getStatus());
 			}
 		}
 	}
-	
+
 	public abstract List<T> getTargetedObjects();
-	
+
 	public abstract void doRun(List<T> lockedElements);
-	
+
 }

@@ -19,15 +19,14 @@ import ch.elexis.core.model.IUser;
 
 @Component
 public class PractitionerRoleUserTransformer implements IFhirTransformer<PractitionerRole, IUser> {
-	
+
 	private MandantHelper mandantHelper = new MandantHelper();
-	
+
 	@Override
-	public Optional<PractitionerRole> getFhirObject(IUser localObject, SummaryEnum summaryEnum,
-		Set<Include> includes){
+	public Optional<PractitionerRole> getFhirObject(IUser localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		PractitionerRole practitionerRole = new PractitionerRole();
 		practitionerRole.setId(new IdDt("PractitionerRole", localObject.getId()));
-		
+
 		Collection<IRole> roles = localObject.getRoles();
 		for (IRole role : roles) {
 			String roleId = role.getId();
@@ -38,34 +37,33 @@ public class PractitionerRoleUserTransformer implements IFhirTransformer<Practit
 		practitionerRole.setActive(localObject.isActive());
 		// add the practitioner
 		if (localObject.getAssignedContact() != null) {
-			practitionerRole
-				.setPractitioner(new Reference(new IdDt(Practitioner.class.getSimpleName(),
-					localObject.getAssignedContact().getId())));
+			practitionerRole.setPractitioner(new Reference(
+					new IdDt(Practitioner.class.getSimpleName(), localObject.getAssignedContact().getId())));
 		}
-		
+
 		return Optional.of(practitionerRole);
 	}
-	
+
 	@Override
-	public Optional<IUser> getLocalObject(PractitionerRole fhirObject){
+	public Optional<IUser> getLocalObject(PractitionerRole fhirObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public Optional<IUser> updateLocalObject(PractitionerRole fhirObject, IUser localObject){
+	public Optional<IUser> updateLocalObject(PractitionerRole fhirObject, IUser localObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public Optional<IUser> createLocalObject(PractitionerRole fhirObject){
+	public Optional<IUser> createLocalObject(PractitionerRole fhirObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz){
+	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz) {
 		return PractitionerRole.class.equals(fhirClazz) && IUser.class.equals(localClazz);
 	}
 }

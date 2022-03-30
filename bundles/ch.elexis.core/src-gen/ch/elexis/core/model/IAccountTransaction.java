@@ -14,21 +14,27 @@ import ch.rgw.tools.Money;
 import java.time.LocalDate;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IAccount Transaction</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>IAccount
+ * Transaction</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IAccountTransaction#getInvoice <em>Invoice</em>}</li>
- *   <li>{@link ch.elexis.core.model.IAccountTransaction#getPayment <em>Payment</em>}</li>
- *   <li>{@link ch.elexis.core.model.IAccountTransaction#getPatient <em>Patient</em>}</li>
- *   <li>{@link ch.elexis.core.model.IAccountTransaction#getAmount <em>Amount</em>}</li>
- *   <li>{@link ch.elexis.core.model.IAccountTransaction#getRemark <em>Remark</em>}</li>
- *   <li>{@link ch.elexis.core.model.IAccountTransaction#getDate <em>Date</em>}</li>
- *   <li>{@link ch.elexis.core.model.IAccountTransaction#getAccount <em>Account</em>}</li>
+ * <li>{@link ch.elexis.core.model.IAccountTransaction#getInvoice
+ * <em>Invoice</em>}</li>
+ * <li>{@link ch.elexis.core.model.IAccountTransaction#getPayment
+ * <em>Payment</em>}</li>
+ * <li>{@link ch.elexis.core.model.IAccountTransaction#getPatient
+ * <em>Patient</em>}</li>
+ * <li>{@link ch.elexis.core.model.IAccountTransaction#getAmount
+ * <em>Amount</em>}</li>
+ * <li>{@link ch.elexis.core.model.IAccountTransaction#getRemark
+ * <em>Remark</em>}</li>
+ * <li>{@link ch.elexis.core.model.IAccountTransaction#getDate
+ * <em>Date</em>}</li>
+ * <li>{@link ch.elexis.core.model.IAccountTransaction#getAccount
+ * <em>Account</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIAccountTransaction()
@@ -37,13 +43,14 @@ import java.time.LocalDate;
  */
 public interface IAccountTransaction extends Identifiable, Deleteable {
 	/**
-	 * Returns the value of the '<em><b>Invoice</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Invoice</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Invoice</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Invoice</em>' reference isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Invoice</em>' reference.
 	 * @see #setInvoice(IInvoice)
 	 * @see ch.elexis.core.model.ModelPackage#getIAccountTransaction_Invoice()
@@ -53,49 +60,56 @@ public interface IAccountTransaction extends Identifiable, Deleteable {
 	IInvoice getInvoice();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAccountTransaction#getInvoice <em>Invoice</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Invoice</em>' reference.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IAccountTransaction#getInvoice
+	 * <em>Invoice</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Invoice</em>' reference.
 	 * @see #getInvoice()
 	 * @generated
 	 */
 	void setInvoice(IInvoice value);
 
 	/**
-	 * Returns the value of the '<em><b>Payment</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Payment</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Payment</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Payment</em>' reference isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Payment</em>' reference.
 	 * @see #setPayment(IPayment)
 	 * @see ch.elexis.core.model.ModelPackage#getIAccountTransaction_Payment()
-	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='zahlung'"
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping
+	 *        attributeName='zahlung'"
 	 * @generated
 	 */
 	IPayment getPayment();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAccountTransaction#getPayment <em>Payment</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Payment</em>' reference.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IAccountTransaction#getPayment
+	 * <em>Payment</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Payment</em>' reference.
 	 * @see #getPayment()
 	 * @generated
 	 */
 	void setPayment(IPayment value);
 
 	/**
-	 * Returns the value of the '<em><b>Patient</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Patient</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Patient</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Patient</em>' reference isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Patient</em>' reference.
 	 * @see #setPatient(IPatient)
 	 * @see ch.elexis.core.model.ModelPackage#getIAccountTransaction_Patient()
@@ -105,23 +119,26 @@ public interface IAccountTransaction extends Identifiable, Deleteable {
 	IPatient getPatient();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAccountTransaction#getPatient <em>Patient</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Patient</em>' reference.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IAccountTransaction#getPatient
+	 * <em>Patient</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Patient</em>' reference.
 	 * @see #getPatient()
 	 * @generated
 	 */
 	void setPatient(IPatient value);
 
 	/**
-	 * Returns the value of the '<em><b>Amount</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Amount</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Amount</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Amount</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Amount</em>' attribute.
 	 * @see #setAmount(Money)
 	 * @see ch.elexis.core.model.ModelPackage#getIAccountTransaction_Amount()
@@ -131,23 +148,26 @@ public interface IAccountTransaction extends Identifiable, Deleteable {
 	Money getAmount();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAccountTransaction#getAmount <em>Amount</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Amount</em>' attribute.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IAccountTransaction#getAmount <em>Amount</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Amount</em>' attribute.
 	 * @see #getAmount()
 	 * @generated
 	 */
 	void setAmount(Money value);
 
 	/**
-	 * Returns the value of the '<em><b>Remark</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Remark</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Remark</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Remark</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Remark</em>' attribute.
 	 * @see #setRemark(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIAccountTransaction_Remark()
@@ -157,23 +177,26 @@ public interface IAccountTransaction extends Identifiable, Deleteable {
 	String getRemark();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAccountTransaction#getRemark <em>Remark</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Remark</em>' attribute.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IAccountTransaction#getRemark <em>Remark</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Remark</em>' attribute.
 	 * @see #getRemark()
 	 * @generated
 	 */
 	void setRemark(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Account</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Account</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Account</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Account</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Account</em>' reference.
 	 * @see #setAccount(IAccount)
 	 * @see ch.elexis.core.model.ModelPackage#getIAccountTransaction_Account()
@@ -183,23 +206,26 @@ public interface IAccountTransaction extends Identifiable, Deleteable {
 	IAccount getAccount();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAccountTransaction#getAccount <em>Account</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Account</em>' reference.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IAccountTransaction#getAccount
+	 * <em>Account</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Account</em>' reference.
 	 * @see #getAccount()
 	 * @generated
 	 */
 	void setAccount(IAccount value);
 
 	/**
-	 * Returns the value of the '<em><b>Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Date</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Date</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Date</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Date</em>' attribute.
 	 * @see #setDate(LocalDate)
 	 * @see ch.elexis.core.model.ModelPackage#getIAccountTransaction_Date()
@@ -209,10 +235,12 @@ public interface IAccountTransaction extends Identifiable, Deleteable {
 	LocalDate getDate();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAccountTransaction#getDate <em>Date</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Date</em>' attribute.
+	 * Sets the value of the
+	 * '{@link ch.elexis.core.model.IAccountTransaction#getDate <em>Date</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Date</em>' attribute.
 	 * @see #getDate()
 	 * @generated
 	 */

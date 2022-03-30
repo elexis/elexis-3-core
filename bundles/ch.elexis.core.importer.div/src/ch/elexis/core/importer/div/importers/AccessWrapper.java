@@ -35,32 +35,32 @@ import ch.rgw.tools.JdbcLink;
 public class AccessWrapper {
 	private Database db;
 	private static String ImportPrefix = "";
-	
+
 	/*
 	 * Open the mdbFile using sensible default
 	 */
 	@SuppressWarnings("static-access")
-	public AccessWrapper(File mdbFile) throws IOException{
+	public AccessWrapper(File mdbFile) throws IOException {
 		db = new DatabaseBuilder().setReadOnly(true).open(mdbFile);
 	}
-	
+
 	/*
 	 * Open the mdbFile with a specified charset
 	 */
 	@SuppressWarnings("static-access")
-	public AccessWrapper(File mdbFile, Charset ch) throws IOException{
+	public AccessWrapper(File mdbFile, Charset ch) throws IOException {
 		db = new DatabaseBuilder().setReadOnly(true).setCharset(ch).open(mdbFile);
 	}
-	
+
 	/*
 	 * Set a prefix for the imported tablesnames
 	 * 
 	 * @param prefix prefix to be used. Default to ""
 	 */
-	public void setPrefixForImportedTableNames(String prefix){
+	public void setPrefixForImportedTableNames(String prefix) {
 		ImportPrefix = prefix;
 	}
-	
+
 	/*
 	 * Copies a table in the MDB into the destination.
 	 * 
@@ -70,15 +70,16 @@ public class AccessWrapper {
 	 * 
 	 * @return number of rows imported
 	 * 
-	 * @see The name in destination may be prefixed using setPrefixForImportedTableNames
+	 * @see The name in destination may be prefixed using
+	 * setPrefixForImportedTableNames
 	 */
-	public int convertTable(String name, JdbcLink dest) throws IOException, SQLException{
+	public int convertTable(String name, JdbcLink dest) throws IOException, SQLException {
 		Table table = db.getTable(name);
 		String insertName = ImportPrefix + name;
 		List<? extends Column> cols = table.getColumns();
 		try {
 			dest.exec("DROP TABLE IF EXISTS " + insertName);//$NON-NLS-1$
-			
+
 		} catch (Exception ex) {
 			// don¨t mind
 		}
@@ -87,18 +88,18 @@ public class AccessWrapper {
 		for (Column c : cols) {
 			sb.append(c.getName()).append(" ");
 			switch (c.getType()) {
-			case MEMO:
-				sb.append("TEXT");//$NON-NLS-1$
-				break;
-			case INT:
-			case LONG:
-				sb.append("INTEGER");//$NON-NLS-1$
-				break;
-			case TEXT:
-				sb.append("VARCHAR(255)");//$NON-NLS-1$
-				break;
-			default:
-				sb.append("VARCHAR(255)");//$NON-NLS-1$
+				case MEMO :
+					sb.append("TEXT");//$NON-NLS-1$
+					break;
+				case INT :
+				case LONG :
+					sb.append("INTEGER");//$NON-NLS-1$
+					break;
+				case TEXT :
+					sb.append("VARCHAR(255)");//$NON-NLS-1$
+					break;
+				default :
+					sb.append("VARCHAR(255)");//$NON-NLS-1$
 			}
 			sb.append(",");//$NON-NLS-1$
 		}
@@ -130,8 +131,8 @@ public class AccessWrapper {
 		}
 		return nrRows;
 	}
-	
-	public Database getDatabase(){
+
+	public Database getDatabase() {
 		return db;
 	}
 }

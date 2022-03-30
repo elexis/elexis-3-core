@@ -24,9 +24,7 @@ import ch.elexis.core.model.LabOrderState;
 
 @Entity
 @Table(name = "laborder")
-@EntityListeners({
-	LabOrderEntityListener.class, EntityWithIdListener.class
-})
+@EntityListeners({LabOrderEntityListener.class, EntityWithIdListener.class})
 @Cache(expiry = 15000)
 @NamedQuery(name = "LabOrder.orderid", query = "SELECT lo FROM LabOrder lo WHERE  lo.deleted = false AND lo.orderid = :orderid")
 @NamedQuery(name = "LabOrder.item.patient.state", query = "SELECT lo FROM LabOrder lo WHERE  lo.deleted = false AND lo.item = :item AND lo.patient = :patient AND lo.state = :state")
@@ -34,16 +32,16 @@ public class LabOrder extends AbstractEntityWithId implements EntityWithId, Enti
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@OneToOne
 	@JoinColumn(name = "userid")
 	private Kontakt user;
@@ -152,41 +150,41 @@ public class LabOrder extends AbstractEntityWithId implements EntityWithId, Enti
 		this.observationTime = observationTime;
 	}
 
-	public LabOrderState getState(){
+	public LabOrderState getState() {
 		return state;
 	}
 
-	public void setState(LabOrderState state){
+	public void setState(LabOrderState state) {
 		this.state = state;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

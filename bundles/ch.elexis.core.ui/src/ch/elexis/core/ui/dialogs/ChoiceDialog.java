@@ -26,17 +26,17 @@ public class ChoiceDialog extends Dialog {
 	String[] choices;
 	Button[] buttons;
 	int result = -1;
-	
-	public ChoiceDialog(Shell shell, String title, String message, String[] choices){
+
+	public ChoiceDialog(Shell shell, String title, String message, String[] choices) {
 		super(shell);
 		this.title = title;
 		this.choices = choices;
 		this.message = message;
 		buttons = new Button[choices.length];
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = (Composite) super.createDialogArea(parent);
 		Label msg = new Label(ret, SWT.NONE);
 		msg.setText(message);
@@ -47,9 +47,9 @@ public class ChoiceDialog extends Dialog {
 		}
 		return ret;
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		for (int i = 0; i < buttons.length; i++) {
 			if (buttons[i].getSelection()) {
 				result = i;
@@ -58,15 +58,15 @@ public class ChoiceDialog extends Dialog {
 		}
 		super.okPressed();
 	}
-	
-	public int getResult(){
+
+	public int getResult() {
 		return result;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		getShell().setText(title);
 	}
-	
+
 }

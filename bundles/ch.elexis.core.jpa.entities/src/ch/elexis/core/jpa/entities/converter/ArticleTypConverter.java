@@ -11,7 +11,7 @@ import ch.elexis.core.types.ArticleTyp;
 public class ArticleTypConverter implements AttributeConverter<ArticleTyp, String> {
 
 	@Override
-	public String convertToDatabaseColumn(ArticleTyp attribute){
+	public String convertToDatabaseColumn(ArticleTyp attribute) {
 		if (attribute != null) {
 			return attribute.getCodeSystemName();
 		}
@@ -19,7 +19,7 @@ public class ArticleTypConverter implements AttributeConverter<ArticleTyp, Strin
 	}
 
 	@Override
-	public ArticleTyp convertToEntityAttribute(String dbData){
+	public ArticleTyp convertToEntityAttribute(String dbData) {
 		if (StringUtils.isEmpty(dbData)) {
 			return ArticleTyp.ARTIKEL;
 		}

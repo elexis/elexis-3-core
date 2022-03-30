@@ -11,7 +11,7 @@ import ch.elexis.core.model.issue.Type;
 public class ReminderTypeConverter implements AttributeConverter<Type, String> {
 
 	@Override
-	public String convertToDatabaseColumn(Type attribute){
+	public String convertToDatabaseColumn(Type attribute) {
 		if (attribute != null) {
 			return Integer.toString(attribute.numericValue());
 		}
@@ -19,7 +19,7 @@ public class ReminderTypeConverter implements AttributeConverter<Type, String> {
 	}
 
 	@Override
-	public Type convertToEntityAttribute(String dbData){
+	public Type convertToEntityAttribute(String dbData) {
 		if (StringUtils.isEmpty(dbData)) {
 			return Type.COMMON;
 		}

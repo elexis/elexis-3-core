@@ -32,14 +32,14 @@ public class LiquibaseDBUpdater {
 	private DataSource dataSource;
 
 	private IDatabaseUpdateUi updateProgress;
-	
-	public LiquibaseDBUpdater(DataSource dataSource, IDatabaseUpdateUi updateProgress){
+
+	public LiquibaseDBUpdater(DataSource dataSource, IDatabaseUpdateUi updateProgress) {
 		this.dataSource = dataSource;
 		this.changelogXmlUrl = "/db/elexisdb_master_update.xml";
 		this.updateProgress = updateProgress;
 	}
-	
-	public boolean update(){
+
+	public boolean update() {
 		ResourceAccessor resourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader());
 
 		Liquibase liquibase = null;
@@ -53,8 +53,8 @@ public class LiquibaseDBUpdater {
 			if (updateProgress != null) {
 				liquibase.setChangeExecListener(new AbstractChangeExecListener() {
 					@Override
-					public void willRun(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog,
-						Database database, RunStatus runStatus){
+					public void willRun(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database,
+							RunStatus runStatus) {
 						updateProgress.setMessage("Update execute: " + changeSet.getDescription());
 					}
 				});
@@ -64,7 +64,8 @@ public class LiquibaseDBUpdater {
 				liquibase.update("");
 			} catch (ValidationFailedException e) {
 				logger.info("Validation failed clear checksums and retry");
-				// removes current checksums from database, on next run checksums will be recomputed
+				// removes current checksums from database, on next run checksums will be
+				// recomputed
 				liquibase.clearCheckSums();
 				liquibase.update("");
 			}

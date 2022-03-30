@@ -9,18 +9,18 @@ import ch.elexis.core.services.IContext;
  * Resolve an attribute on a given supported type.
  */
 public interface ITextPlaceholderResolver {
-	
+
 	/**
 	 * @return the type this resolver acts upon. E.g. Patient
 	 */
 	String getSupportedType();
-	
+
 	/**
 	 * 
 	 * @return the attributes resolvable
 	 */
 	List<PlaceholderAttribute> getSupportedAttributes();
-	
+
 	/**
 	 * replace the given attribute considering the provided context
 	 * 
@@ -29,7 +29,7 @@ public interface ITextPlaceholderResolver {
 	 * @return
 	 */
 	Optional<String> replaceByTypeAndAttribute(IContext context, String attribute);
-	
+
 	/**
 	 * Case-Insensitive load of an enumeration value
 	 * 
@@ -38,7 +38,7 @@ public interface ITextPlaceholderResolver {
 	 * @param search
 	 * @return
 	 */
-	default <T extends Enum<?>> T searchEnum(Class<T> enumeration, String search){
+	default <T extends Enum<?>> T searchEnum(Class<T> enumeration, String search) {
 		for (T each : enumeration.getEnumConstants()) {
 			if (each.name().compareToIgnoreCase(search) == 0) {
 				return each;

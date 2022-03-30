@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.preferences.inputs;
 
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -26,8 +25,8 @@ import ch.rgw.tools.TimeTool;
 public class DateTimeFieldEditor extends FieldEditor {
 
 	/**
-	 * Text limit constant (value <code>-1</code>) indicating unlimited text
-	 * limit and width.
+	 * Text limit constant (value <code>-1</code>) indicating unlimited text limit
+	 * and width.
 	 */
 	public static int UNLIMITED = -1;
 
@@ -52,9 +51,9 @@ public class DateTimeFieldEditor extends FieldEditor {
 	 * The name of the preference displayed in this field editor.
 	 */
 	private String preferenceNameEnabled;
-	
+
 	/**
-	 * Use String in format TimeTool.COMPACT_DATE in prefs 
+	 * Use String in format TimeTool.COMPACT_DATE in prefs
 	 */
 	private boolean useStringInPref;
 
@@ -75,9 +74,10 @@ public class DateTimeFieldEditor extends FieldEditor {
 	 *            the label text of the field editor
 	 * @param parent
 	 *            the parent of the field editor's control
-	 * @param useStringInPref uses string in format TimeTool.COMPACT_DATE in prefs            
+	 * @param useStringInPref
+	 *            uses string in format TimeTool.COMPACT_DATE in prefs
 	 */
-	public DateTimeFieldEditor(String name, String labelText, Composite parent , boolean useStringInPref) {
+	public DateTimeFieldEditor(String name, String labelText, Composite parent, boolean useStringInPref) {
 		this(name, labelText, UNLIMITED, parent, useStringInPref);
 	}
 
@@ -93,15 +93,17 @@ public class DateTimeFieldEditor extends FieldEditor {
 	 *            the label text of the field editor
 	 * @param parent
 	 *            the parent of the field editor's control
-	 * @param useStringInPref uses string in format TimeTool.COMPACT_DATE in prefs            
+	 * @param useStringInPref
+	 *            uses string in format TimeTool.COMPACT_DATE in prefs
 	 */
-	public DateTimeFieldEditor(String name, String nameEnabled, String labelText, Composite parent, boolean useStringInPref) {
+	public DateTimeFieldEditor(String name, String nameEnabled, String labelText, Composite parent,
+			boolean useStringInPref) {
 		this(name, nameEnabled, labelText, UNLIMITED, parent, useStringInPref);
 	}
 
 	/**
-	 * Creates a string field editor. Use the method <code>setTextLimit</code>
-	 * to limit the text.
+	 * Creates a string field editor. Use the method <code>setTextLimit</code> to
+	 * limit the text.
 	 * 
 	 * @param name
 	 *            the name of the preference this field editor works on
@@ -111,13 +113,13 @@ public class DateTimeFieldEditor extends FieldEditor {
 	 *            the width of the text input field in characters, or
 	 *            <code>UNLIMITED</code> for no limit
 	 * @param strategy
-	 *            either <code>VALIDATE_ON_KEY_STROKE</code> to perform on the
-	 *            fly checking (the default), or
-	 *            <code>VALIDATE_ON_FOCUS_LOST</code> to perform validation
-	 *            only after the text has been typed in
+	 *            either <code>VALIDATE_ON_KEY_STROKE</code> to perform on the fly
+	 *            checking (the default), or <code>VALIDATE_ON_FOCUS_LOST</code> to
+	 *            perform validation only after the text has been typed in
 	 * @param parent
 	 *            the parent of the field editor's control
-	 * @param useStringInPref uses string in format TimeTool.COMPACT_DATE in prefs 
+	 * @param useStringInPref
+	 *            uses string in format TimeTool.COMPACT_DATE in prefs
 	 * @since 2.0
 	 */
 	public DateTimeFieldEditor(String name, String labelText, int width, Composite parent, boolean useStringInPref) {
@@ -125,8 +127,8 @@ public class DateTimeFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Creates a string field editor. Use the method <code>setTextLimit</code>
-	 * to limit the text.
+	 * Creates a string field editor. Use the method <code>setTextLimit</code> to
+	 * limit the text.
 	 * 
 	 * @param name
 	 *            the name of the preference this field editor works on
@@ -138,16 +140,17 @@ public class DateTimeFieldEditor extends FieldEditor {
 	 *            the width of the text input field in characters, or
 	 *            <code>UNLIMITED</code> for no limit
 	 * @param strategy
-	 *            either <code>VALIDATE_ON_KEY_STROKE</code> to perform on the
-	 *            fly checking (the default), or
-	 *            <code>VALIDATE_ON_FOCUS_LOST</code> to perform validation
-	 *            only after the text has been typed in
+	 *            either <code>VALIDATE_ON_KEY_STROKE</code> to perform on the fly
+	 *            checking (the default), or <code>VALIDATE_ON_FOCUS_LOST</code> to
+	 *            perform validation only after the text has been typed in
 	 * @param parent
 	 *            the parent of the field editor's control
-	 * @param useStringInPref uses string in format TimeTool.COMPACT_DATE in prefs 
+	 * @param useStringInPref
+	 *            uses string in format TimeTool.COMPACT_DATE in prefs
 	 * @since 2.0
 	 */
-	public DateTimeFieldEditor(String name, String nameEnabled, String labelText, int width, Composite parent, boolean useStringInPref) {
+	public DateTimeFieldEditor(String name, String nameEnabled, String labelText, int width, Composite parent,
+			boolean useStringInPref) {
 		init(name, labelText);
 		this.preferenceNameEnabled = nameEnabled;
 		this.widthInChars = width;
@@ -189,9 +192,9 @@ public class DateTimeFieldEditor extends FieldEditor {
 	/**
 	 * Fills this field editor's basic controls into the given parent.
 	 * <p>
-	 * The string field implementation of this <code>FieldEditor</code>
-	 * framework method contributes the text field. Subclasses may override but
-	 * must call <code>super.doFillIntoGrid</code>.
+	 * The string field implementation of this <code>FieldEditor</code> framework
+	 * method contributes the text field. Subclasses may override but must call
+	 * <code>super.doFillIntoGrid</code>.
 	 * </p>
 	 */
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
@@ -250,7 +253,7 @@ public class DateTimeFieldEditor extends FieldEditor {
 			valueChanged();
 		}
 	}
-	
+
 	private Date getDateByPrefName(String prefName) {
 		if (useStringInPref) {
 			String val = getPreferenceStore().getString(prefName);
@@ -260,10 +263,11 @@ public class DateTimeFieldEditor extends FieldEditor {
 			return new Date(getPreferenceStore().getLong(prefName));
 		}
 	}
-	
-	private long getLongByPrefName(String prefName, boolean isDefault){
+
+	private long getLongByPrefName(String prefName, boolean isDefault) {
 		if (useStringInPref) {
-			String val = isDefault ? getPreferenceStore().getDefaultString(prefName)
+			String val = isDefault
+					? getPreferenceStore().getDefaultString(prefName)
 					: getPreferenceStore().getString(prefName);
 			TimeTool t = new TimeTool(val);
 			return t.getTimeAsLong();
@@ -271,10 +275,11 @@ public class DateTimeFieldEditor extends FieldEditor {
 			return getPreferenceStore().getLong(prefName);
 		}
 	}
-	
-	private void doStore(long value){
+
+	private void doStore(long value) {
 		if (useStringInPref) {
-			getPreferenceStore().setValue(getPreferenceName(), new TimeTool(getValue()).toString(TimeTool.DATE_COMPACT));
+			getPreferenceStore().setValue(getPreferenceName(),
+					new TimeTool(getValue()).toString(TimeTool.DATE_COMPACT));
 		} else {
 			getPreferenceStore().setValue(getPreferenceName(), getValue());
 		}
@@ -342,8 +347,8 @@ public class DateTimeFieldEditor extends FieldEditor {
 	/**
 	 * Returns this field editor's text control.
 	 * 
-	 * @return the text control, or <code>null</code> if no text field is
-	 *         created yet
+	 * @return the text control, or <code>null</code> if no text field is created
+	 *         yet
 	 */
 	protected DateTime getDateTimeControl() {
 		return this.dateTimeField;
@@ -434,12 +439,12 @@ public class DateTimeFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Informs this field editor's listener, if it has one, about a change to
-	 * the value (<code>VALUE</code> property) provided that the old and new
-	 * values are different.
+	 * Informs this field editor's listener, if it has one, about a change to the
+	 * value (<code>VALUE</code> property) provided that the old and new values are
+	 * different.
 	 * <p>
-	 * This hook is <em>not</em> called when the text is initialized (or reset
-	 * to the default value) from the preference store.
+	 * This hook is <em>not</em> called when the text is initialized (or reset to
+	 * the default value) from the preference store.
 	 * </p>
 	 */
 	protected void valueChanged() {

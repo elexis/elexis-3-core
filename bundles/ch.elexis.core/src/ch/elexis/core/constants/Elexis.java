@@ -29,7 +29,7 @@ public final class Elexis {
 			}
 		} catch (IOException e) {
 			LoggerFactory.getLogger(Elexis.class).info(url_name + " not found", e);
-		};
+		} ;
 		return version;
 	}
 }

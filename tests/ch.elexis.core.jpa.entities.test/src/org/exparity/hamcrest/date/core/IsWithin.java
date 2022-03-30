@@ -18,7 +18,8 @@ public class IsWithin<T> extends TypeSafeDiagnosingMatcher<T> {
 	private final TemporalWrapper<T> expected;
 	private final TemporalFormatter<T> describer;
 
-	public IsWithin(final long period, final ChronoUnit unit, final TemporalWrapper<T> expected, final TemporalFormatter<T> describer) {
+	public IsWithin(final long period, final ChronoUnit unit, final TemporalWrapper<T> expected,
+			final TemporalFormatter<T> describer) {
 		this.period = period;
 		this.unit = unit;
 		this.expected = expected;
@@ -29,12 +30,8 @@ public class IsWithin<T> extends TypeSafeDiagnosingMatcher<T> {
 	protected boolean matchesSafely(final T actual, final Description mismatchDesc) {
 		long actualDuration = this.expected.difference(actual, this.unit);
 		if (actualDuration > this.period) {
-			mismatchDesc.appendText("the date is " + this.describer.describe(actual)
-					+ " and "
-					+ actualDuration
-					+ " "
-					+ describeUnit()
-					+ " different");
+			mismatchDesc.appendText("the date is " + this.describer.describe(actual) + " and " + actualDuration + " "
+					+ describeUnit() + " different");
 			return false;
 		} else {
 			return true;
@@ -43,7 +40,8 @@ public class IsWithin<T> extends TypeSafeDiagnosingMatcher<T> {
 
 	@Override
 	public void describeTo(final Description description) {
-		description.appendText("the date is within " + this.period + " " + describeUnit() + " of " + this.describer.describe(this.expected.unwrap()));
+		description.appendText("the date is within " + this.period + " " + describeUnit() + " of "
+				+ this.describer.describe(this.expected.unwrap()));
 	}
 
 	private String describeUnit() {

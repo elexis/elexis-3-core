@@ -21,21 +21,22 @@ public class UserSettings {
 	 * save the state of an expandable composite
 	 * 
 	 * @param field
-	 *            name of the composite (any unique string, preferably derived from view name)
+	 *            name of the composite (any unique string, preferably derived from
+	 *            view name)
 	 * @param state
 	 *            the state to save
 	 * @since 3.0.0 extracted from UserSettings2
 	 */
-	public static void saveExpandedState(final String field, final boolean state){
+	public static void saveExpandedState(final String field, final boolean state) {
 		if (state) {
 			ConfigServiceHolder.setUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
-				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN);
+					USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN);
 		} else {
 			ConfigServiceHolder.setUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
-				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
+					USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
 		}
 	}
-	
+
 	/**
 	 * Set the state of an expandable Composite to the previously saved state.
 	 * 
@@ -45,17 +46,15 @@ public class UserSettings {
 	 *            the unique name
 	 * @since 3.0.0 extracted from UserSettings2
 	 */
-	public static void setExpandedState(final ExpandableComposite ec, final String field){
-		String mode =
-			ConfigServiceHolder.getUser(USERSETTINGS2_EXPANDABLE_COMPOSITES,
+	public static void setExpandedState(final ExpandableComposite ec, final String field) {
+		String mode = ConfigServiceHolder.getUser(USERSETTINGS2_EXPANDABLE_COMPOSITES,
 				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_REMEMBER_STATE);
 		if (mode.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN)) {
 			ec.setExpanded(true);
 		} else if (mode.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED)) {
 			ec.setExpanded(false);
 		} else {
-			String state =
-				ConfigServiceHolder.getUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
+			String state = ConfigServiceHolder.getUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
 					USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
 			if (state.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED)) {
 				ec.setExpanded(false);

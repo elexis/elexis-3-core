@@ -15,11 +15,11 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
  */
 @Path("")
 interface IRemoteOcrMyPdfService {
-	
+
 	@POST
 	@Path("execute")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces("application/pdf")
 	public InputStream performOcr(final FormDataMultiPart multiPart);
-	
+
 }

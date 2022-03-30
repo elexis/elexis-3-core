@@ -19,20 +19,20 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import ch.elexis.core.model.WithExtInfo;
 
 public class ExtInfoPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
-	
+
 	private WithExtInfo po;
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		noDefaultAndApplyButton();
 		init();
 		Composite comp = new Composite(parent, SWT.None);
 		comp.setLayout(new GridLayout(2, false));
-		
+
 		Label header = new Label(comp, SWT.None);
 		header.setText("Definierte Felder in ExtInfo:");
 		header.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, true, false, 2, 1));
-		
+
 		Map<Object, Object> extinfo = po.getMap();
 		if (extinfo == null || extinfo.size() == 0) {
 			Label lab = new Label(comp, SWT.None);
@@ -40,27 +40,27 @@ public class ExtInfoPropertyPage extends PropertyPage implements IWorkbenchPrope
 			lab.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 			return comp;
 		}
-		
+
 		Set<Entry<Object, Object>> eis = extinfo.entrySet();
-		
+
 		for (Iterator<Entry<Object, Object>> iterator = eis.iterator(); iterator.hasNext();) {
 			Entry e = (Entry) iterator.next();
 			Label lab = new Label(comp, SWT.None);
 			lab.setText(e.getKey().toString());
 			lab.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			
+
 			Text txt = new Text(comp, SWT.None);
 			txt.setText(e.getValue().toString());
 			txt.setEditable(false);
 			txt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		}
-		
+
 		return comp;
 	}
-	
-	private void init(){
+
+	private void init() {
 		IAdaptable adapt = getElement();
 		po = (WithExtInfo) adapt.getAdapter(WithExtInfo.class);
 	}
-	
+
 }

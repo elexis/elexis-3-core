@@ -8,34 +8,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class ElexisEvent {
-	
+
 	private String topic;
 	private Map<String, String> properties;
-	
-	public ElexisEvent(){
+
+	public ElexisEvent() {
 		properties = new HashMap<String, String>();
 	}
-	
-	public String getTopic(){
+
+	public String getTopic() {
 		return topic;
 	}
-	
-	public void setTopic(String topic){
+
+	public void setTopic(String topic) {
 		this.topic = topic;
 	}
-	
-	public Map<String, String> getProperties(){
+
+	public Map<String, String> getProperties() {
 		return properties;
 	}
-	
-	public void setProperties(Map<String, String> properties){
+
+	public void setProperties(Map<String, String> properties) {
 		this.properties = properties;
 	}
-	
+
 	public void putProperty(String key, String value) {
 		properties.put(key, value);
 	}
-	
+
 	/**
 	 * Create an ElexisEvent
 	 * 
@@ -49,12 +49,12 @@ public class ElexisEvent {
 	 * @see ElexisEventTopics
 	 */
 	@Transient
-	public static ElexisEvent of(String topic, String objectId, String objectClass){
+	public static ElexisEvent of(String topic, String objectId, String objectClass) {
 		ElexisEvent ee = new ElexisEvent();
 		ee.setTopic(topic);
 		ee.getProperties().put(ElexisEventTopics.PROPKEY_ID, objectId);
 		ee.getProperties().put(ElexisEventTopics.PROPKEY_CLASS, objectClass);
 		return ee;
 	}
-	
+
 }

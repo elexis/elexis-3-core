@@ -29,11 +29,12 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.osgi.framework.Bundle;
 
 /**
- * Utility class for managing OS resources associated with SWT/JFace controls such as colors, fonts, images,
- * etc.
+ * Utility class for managing OS resources associated with SWT/JFace controls
+ * such as colors, fonts, images, etc.
  *
- * !!! IMPORTANT !!! Application code must explicitly invoke the <code>dispose()</code> method to release the
- * operating system resources managed by cached objects when those objects and OS resources are no longer
+ * !!! IMPORTANT !!! Application code must explicitly invoke the
+ * <code>dispose()</code> method to release the operating system resources
+ * managed by cached objects when those objects and OS resources are no longer
  * needed (e.g. on application shutdown)
  *
  * This class may be freely distributed as part of any application or plugin.
@@ -50,8 +51,8 @@ public class ResourceManager extends SWTResourceManager {
 	////////////////////////////////////////////////////////////////////////////
 	private static Map<ImageDescriptor, Image> m_descriptorImageMap = new HashMap<ImageDescriptor, Image>();
 	/**
-	 * Returns an {@link ImageDescriptor} stored in the file at the specified path relative to the specified
-	 * class.
+	 * Returns an {@link ImageDescriptor} stored in the file at the specified path
+	 * relative to the specified class.
 	 *
 	 * @param clazz
 	 *            the {@link Class} relative to which to find the image descriptor.
@@ -216,7 +217,8 @@ public class ResourceManager extends SWTResourceManager {
 		URL getEntry(String symbolicName, String path);
 	}
 	/**
-	 * Instance of {@link PluginResourceProvider}, used by WindowBuilder at design time.
+	 * Instance of {@link PluginResourceProvider}, used by WindowBuilder at design
+	 * time.
 	 */
 	private static PluginResourceProvider m_designTimePluginResourceProvider = null;
 	/**
@@ -314,13 +316,15 @@ public class ResourceManager extends SWTResourceManager {
 		return null;
 	}
 	/**
-	 * Returns an {@link ImageDescriptor} based on a {@link Bundle} and resource entry path.
+	 * Returns an {@link ImageDescriptor} based on a {@link Bundle} and resource
+	 * entry path.
 	 *
 	 * @param symbolicName
 	 *            the symbolic name of the {@link Bundle}.
 	 * @param path
 	 *            the path of the resource entry.
-	 * @return the {@link ImageDescriptor} based on a {@link Bundle} and resource entry path.
+	 * @return the {@link ImageDescriptor} based on a {@link Bundle} and resource
+	 *         entry path.
 	 */
 	public static ImageDescriptor getPluginImageDescriptor(String symbolicName, String path) {
 		try {
@@ -404,8 +408,9 @@ public class ResourceManager extends SWTResourceManager {
 	//
 	////////////////////////////////////////////////////////////////////////////
 	/**
-	 * Dispose of cached objects and their underlying OS resources. This should only be called when the cached
-	 * objects are no longer needed (e.g. on application shutdown).
+	 * Dispose of cached objects and their underlying OS resources. This should only
+	 * be called when the cached objects are no longer needed (e.g. on application
+	 * shutdown).
 	 */
 	public static void dispose() {
 		disposeColors();

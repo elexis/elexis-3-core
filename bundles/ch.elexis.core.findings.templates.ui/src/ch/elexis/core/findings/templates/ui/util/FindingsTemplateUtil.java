@@ -20,8 +20,8 @@ import ch.elexis.core.findings.templates.model.InputDataText;
 import ch.elexis.core.ui.icons.Images;
 
 public class FindingsTemplateUtil {
-	
-	public static Image getImage(Object object){
+
+	public static Image getImage(Object object) {
 		if (object instanceof FindingsTemplate) {
 			FindingsTemplate findingsTemplate = (FindingsTemplate) object;
 			if (findingsTemplate.getInputData() instanceof InputDataGroup) {
@@ -42,18 +42,18 @@ public class FindingsTemplateUtil {
 		}
 		return null;
 	}
-	
-	public static void executeCommand(String commandId){
+
+	public static void executeCommand(String commandId) {
 		try {
-			ICommandService commandService =
-				(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-			
+			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+					.getService(ICommandService.class);
+
 			Command cmd = commandService.getCommand(commandId);
 			ExecutionEvent ee = new ExecutionEvent(cmd, new HashMap<String, Object>(), null, null);
 			cmd.executeWithChecks(ee);
 		} catch (Exception e) {
-			LoggerFactory.getLogger(FindingsTemplateUtil.class)
-				.error("cannot execute command with id: " + commandId, e);
+			LoggerFactory.getLogger(FindingsTemplateUtil.class).error("cannot execute command with id: " + commandId,
+					e);
 		}
 	}
 }

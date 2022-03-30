@@ -49,38 +49,38 @@ import ch.elexis.data.Anwender;
 
 @Component
 public class CoreOperationAdvisor implements ICoreOperationAdvisor {
-	
+
 	@Reference(target = "(id=login.envvars)")
 	private ILoginContributor loginEnv;
-	
+
 	@Reference(target = "(id=login.dialog)")
 	private ILoginContributor loginDialog;
-	
+
 	public String initialPerspectiveString;
 	private Logger log = LoggerFactory.getLogger(CoreOperationAdvisor.class);
-	
+
 	@Override
-	public void requestDatabaseConnectionConfiguration(){
+	public void requestDatabaseConnectionConfiguration() {
 		WizardDialog wd = new WizardDialog(UiDesk.getTopShell(), new DBConnectWizard());
 		wd.create();
 		SWTHelper.center(wd.getShell());
 		wd.open();
 		CoreHub.localCfg.flush();
 	}
-	
+
 	@Override
-	public void requestInitialMandatorConfiguration(){
+	public void requestInitialMandatorConfiguration() {
 		Display d = Display.getDefault();
 		new ErsterMandantDialog(d.getActiveShell()).open();
 	}
-	
+
 	@Override
-	public void adaptForUser(){
+	public void adaptForUser() {
 		if (CoreHub.getLoggedInContact() != null) {
 			initialPerspectiveString = CoreHub.localCfg
-				.get(CoreHub.getLoggedInContact() + GlobalActions.DEFAULTPERSPECTIVECFG, null);
-			boolean fixLayoutChecked =
-				ConfigServiceHolder.getUser(Preferences.USR_FIX_LAYOUT, Preferences.USR_FIX_LAYOUT_DEFAULT);
+					.get(CoreHub.getLoggedInContact() + GlobalActions.DEFAULTPERSPECTIVECFG, null);
+			boolean fixLayoutChecked = ConfigServiceHolder.getUser(Preferences.USR_FIX_LAYOUT,
+					Preferences.USR_FIX_LAYOUT_DEFAULT);
 			if (GlobalActions.fixLayoutAction != null) {
 				GlobalActions.fixLayoutAction.setChecked(fixLayoutChecked);
 			}
@@ -90,15 +90,16 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 			}
 		}
 	}
-	
+
 	@Override
-	public String getInitialPerspective(){
-		return (initialPerspectiveString == null) ? UiResourceConstants.PatientPerspektive_ID
+	public String getInitialPerspective() {
+		return (initialPerspectiveString == null)
+				? UiResourceConstants.PatientPerspektive_ID
 				: initialPerspectiveString;
 	}
-	
+
 	@Override
-	public void openInformation(String title, String message){
+	public void openInformation(String title, String message) {
 		if (isDisplayAvailable() && !CoreUtil.isTestMode()) {
 			InfoDialogRunnable runnable = new InfoDialogRunnable(title, message);
 			Display.getDefault().syncExec(runnable);
@@ -106,9 +107,9 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		}
 		log.error("Could not show info [" + title + "] [" + message + "]");
 	}
-	
+
 	@Override
-	public boolean openQuestion(String title, String message){
+	public boolean openQuestion(String title, String message) {
 		if (isDisplayAvailable() && !CoreUtil.isTestMode()) {
 			QuestionDialogRunnable runnable = new QuestionDialogRunnable(title, message);
 			Display.getDefault().syncExec(runnable);
@@ -117,115 +118,112 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		log.error("Could not ask question [" + title + "] [" + message + "]");
 		return false;
 	}
-	
+
 	private class QuestionDialogRunnable implements Runnable {
 		private String title;
 		private String message;
 		private boolean result;
-		
-		public QuestionDialogRunnable(String title, String message){
+
+		public QuestionDialogRunnable(String title, String message) {
 			this.title = title;
 			this.message = message;
 		}
-		
+
 		@Override
-		public void run(){
-			result =
-				MessageDialog.openQuestion(Display.getDefault().getActiveShell(), title, message);
+		public void run() {
+			result = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), title, message);
 		}
-		
-		public boolean getResult(){
+
+		public boolean getResult() {
 			return result;
 		}
 	}
-	
+
 	private class InfoDialogRunnable implements Runnable {
 		private String title;
 		private String message;
-		
-		public InfoDialogRunnable(String title, String message){
+
+		public InfoDialogRunnable(String title, String message) {
 			this.title = title;
 			this.message = message;
 		}
-		
+
 		@Override
-		public void run(){
-			
+		public void run() {
+
 			MessageDialog.openInformation(Display.getDefault().getActiveShell(), title, message);
 		}
 	}
-	
+
 	@Override
-	public boolean performLogin(Object shell){
-		
+	public boolean performLogin(Object shell) {
+
 		CoreHub.reconfigureServices();
 		CoreHub.logoffAnwender();
-		
-		// try login env first then show dialog 
+
+		// try login env first then show dialog
 		IUser user = null;
 		try {
 			user = loginEnv.performLogin(shell);
 		} catch (LoginException le) {
-			log.warn("Unable to login with loginService [{}]: {} - skipping",
-				loginEnv.getClass().getName(), le.getMessage(), le);
+			log.warn("Unable to login with loginService [{}]: {} - skipping", loginEnv.getClass().getName(),
+					le.getMessage(), le);
 		}
 		if (user == null) {
 			try {
 				user = loginDialog.performLogin(shell);
 			} catch (LoginException le) {
-				log.warn("Unable to login with loginService [{}]: {} - skipping",
-					loginDialog.getClass().getName(), le.getMessage(), le);
+				log.warn("Unable to login with loginService [{}]: {} - skipping", loginDialog.getClass().getName(),
+						le.getMessage(), le);
 			}
 		}
-		
+
 		if (user != null && user.isActive()) {
 			// set user in system
 			ContextServiceHolder.get().setActiveUser(user);
-			ElexisEventDispatcher.getInstance().fire(new ElexisEvent(CoreHub.getLoggedInContact(),
-				Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-			
+			ElexisEventDispatcher.getInstance().fire(
+					new ElexisEvent(CoreHub.getLoggedInContact(), Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.getLoggedInContact().setInitialMandator();
 			CoreHub.userCfg = CoreHub.getUserSetting(CoreHub.getLoggedInContact());
 			CoreHub.heart.resume(true);
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
-	public boolean performDatabaseUpdate(String[] array, String pluginId){
+	public boolean performDatabaseUpdate(String[] array, String pluginId) {
 		return new SqlWithUiRunner(array, pluginId).runSql();
 	}
-	
+
 	@Override
-	public void showProgress(IRunnableWithProgress irwp, String taskName){
+	public void showProgress(IRunnableWithProgress irwp, String taskName) {
 		try {
 			if (isDisplayAvailable()) {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
-					public void run(){
-						ProgressMonitorDialog pmd =
-							new ProgressMonitorDialog(Display.getDefault().getActiveShell()) {
-								@Override
-								protected void configureShell(Shell shell){
-									super.configureShell(shell);
-									if (taskName != null) {
-										shell.setText(taskName);
-									}
+					public void run() {
+						ProgressMonitorDialog pmd = new ProgressMonitorDialog(Display.getDefault().getActiveShell()) {
+							@Override
+							protected void configureShell(Shell shell) {
+								super.configureShell(shell);
+								if (taskName != null) {
+									shell.setText(taskName);
 								}
-							};
-						org.eclipse.jface.operation.IRunnableWithProgress irpwAdapter =
-							new org.eclipse.jface.operation.IRunnableWithProgress() {
-								
-								@Override
-								public void run(IProgressMonitor monitor)
-									throws InvocationTargetException, InterruptedException{
-									irwp.run(monitor);
-								}
-							};
+							}
+						};
+						org.eclipse.jface.operation.IRunnableWithProgress irpwAdapter = new org.eclipse.jface.operation.IRunnableWithProgress() {
+
+							@Override
+							public void run(IProgressMonitor monitor)
+									throws InvocationTargetException, InterruptedException {
+								irwp.run(monitor);
+							}
+						};
 						try {
 							pmd.run(true, true, irpwAdapter);
 						} catch (InvocationTargetException | InterruptedException e) {
@@ -240,8 +238,8 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 			log.error("Execution error", e);
 		}
 	}
-	
-	protected boolean isDisplayAvailable(){
+
+	protected boolean isDisplayAvailable() {
 		try {
 			Class.forName("org.eclipse.swt.widgets.Display");
 		} catch (ClassNotFoundException e) {

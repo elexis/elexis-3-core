@@ -5,7 +5,8 @@ import org.eclipse.jface.action.Action;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 
 /**
- * Action will be active if lock LockService#isLocked on the targeted Object is true.
+ * Action will be active if lock LockService#isLocked on the targeted Object is
+ * true.
  * 
  * @author thomas
  *
@@ -21,16 +22,16 @@ public abstract class LockedAction<T> extends Action {
 	}
 
 	@Override
-	public boolean isEnabled(){
+	public boolean isEnabled() {
 		object = getTargetedObject();
-		
+
 		if (object == null) {
 			return false;
 		}
-		
+
 		return LocalLockServiceHolder.get().isLockedLocal(object);
 	}
-	
+
 	@Override
 	public void run() {
 		if (LocalLockServiceHolder.get().isLockedLocal(object)) {

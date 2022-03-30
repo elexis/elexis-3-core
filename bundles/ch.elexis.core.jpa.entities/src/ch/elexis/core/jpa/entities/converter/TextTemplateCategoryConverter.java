@@ -8,11 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.types.TextTemplateCategory;
 
 @Converter
-public class TextTemplateCategoryConverter
-		implements AttributeConverter<TextTemplateCategory, String> {
+public class TextTemplateCategoryConverter implements AttributeConverter<TextTemplateCategory, String> {
 
 	@Override
-	public String convertToDatabaseColumn(TextTemplateCategory attribute){
+	public String convertToDatabaseColumn(TextTemplateCategory attribute) {
 		if (attribute != null) {
 			return attribute.getLiteral();
 		}
@@ -20,7 +19,7 @@ public class TextTemplateCategoryConverter
 	}
 
 	@Override
-	public TextTemplateCategory convertToEntityAttribute(String dbData){
+	public TextTemplateCategory convertToEntityAttribute(String dbData) {
 		if (StringUtils.isEmpty(dbData)) {
 			return null;
 		}

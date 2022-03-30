@@ -8,13 +8,13 @@ import ch.elexis.core.services.IAppointmentService;
 @Component
 public class AppointmentServiceHolder {
 	private static IAppointmentService appoinemtnService;
-	
+
 	@Reference
-	public void setAppointmentService(IAppointmentService appoinemtnService){
+	public void setAppointmentService(IAppointmentService appoinemtnService) {
 		AppointmentServiceHolder.appoinemtnService = appoinemtnService;
 	}
-	
-	public static IAppointmentService get(){
+
+	public static IAppointmentService get() {
 		return appoinemtnService;
 	}
 }

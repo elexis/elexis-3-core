@@ -20,69 +20,68 @@ import ch.elexis.core.text.PlaceholderAttribute;
 
 @Component
 public class RechnungsstellerTextPlaceholderResolver implements ITextPlaceholderResolver {
-	
+
 	@Override
-	public String getSupportedType(){
+	public String getSupportedType() {
 		return "Rechnungssteller";
 	}
-	
+
 	@Override
-	public List<PlaceholderAttribute> getSupportedAttributes(){
+	public List<PlaceholderAttribute> getSupportedAttributes() {
 		return Arrays.asList(RechnungsstellerAttribute.values()).stream()
-			.map(m -> new PlaceholderAttribute(getSupportedType(), m.name(), m.getLocaleText()))
-			.collect(Collectors.toList());
+				.map(m -> new PlaceholderAttribute(getSupportedType(), m.name(), m.getLocaleText()))
+				.collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute){
+	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute) {
 		IMandator mandantor = context.getTyped(IMandator.class).orElse(null);
 		if (mandantor != null) {
 			return Optional.ofNullable(replace(mandantor.getBiller(), attribute.toLowerCase()));
 		}
 		return Optional.empty();
 	}
-	
-	private String replace(IContact iContact, String lcAttribute){
-		
-		RechnungsstellerAttribute mandantAttribut =
-			searchEnum(RechnungsstellerAttribute.class, lcAttribute);
+
+	private String replace(IContact iContact, String lcAttribute) {
+
+		RechnungsstellerAttribute mandantAttribut = searchEnum(RechnungsstellerAttribute.class, lcAttribute);
 		switch (mandantAttribut) {
-		case Anrede:
-			if (iContact.isPerson()) {
-				return PersonFormatUtil.getSalutation(
-					CoreModelServiceHolder.get().load(iContact.getId(), IPerson.class).get());
-			} else {
-				return "";
-			}
-		case Name:
-			if (iContact.isPerson()) {
-				return iContact.getDescription2() + " " + iContact.getDescription1();
-			} else {
-				return iContact.getDescription1();
-			}
-		case Anschrift:
-			return AddressFormatUtil.getPostalAddress(iContact, true);
-		case Anschriftzeile:
-			return AddressFormatUtil.getPostalAddress(iContact, false);
-		default:
-			return null;
+			case Anrede :
+				if (iContact.isPerson()) {
+					return PersonFormatUtil
+							.getSalutation(CoreModelServiceHolder.get().load(iContact.getId(), IPerson.class).get());
+				} else {
+					return "";
+				}
+			case Name :
+				if (iContact.isPerson()) {
+					return iContact.getDescription2() + " " + iContact.getDescription1();
+				} else {
+					return iContact.getDescription1();
+				}
+			case Anschrift :
+				return AddressFormatUtil.getPostalAddress(iContact, true);
+			case Anschriftzeile :
+				return AddressFormatUtil.getPostalAddress(iContact, false);
+			default :
+				return null;
 		}
 	}
-	
+
 	private enum RechnungsstellerAttribute implements ILocalizedEnum {
-			Name("Name des Rechnungssteller"), Anrede("Anrede des Rechnungssteller"),
-			Anschrift("Mehrzeilige Anschrift"), Anschriftzeile("Einzeilige Anschrift");
-		
+		Name("Name des Rechnungssteller"), Anrede("Anrede des Rechnungssteller"), Anschrift(
+				"Mehrzeilige Anschrift"), Anschriftzeile("Einzeilige Anschrift");
+
 		final String description;
-		
-		private RechnungsstellerAttribute(String description){
+
+		private RechnungsstellerAttribute(String description) {
 			this.description = description;
 		}
-		
+
 		@Override
-		public String getLocaleText(){
+		public String getLocaleText() {
 			return description;
 		}
 	}
-	
+
 }

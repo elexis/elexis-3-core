@@ -16,27 +16,31 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Findings Template</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object
+ * '<em><b>Findings Template</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getType <em>Type</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getTitle <em>Title</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getInputData <em>Input Data</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getCodeElement <em>Code Element</em>}</li>
- *   <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getColor <em>Color</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getType
+ * <em>Type</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getTitle
+ * <em>Title</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getInputData
+ * <em>Input Data</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getCodeElement
+ * <em>Code Element</em>}</li>
+ * <li>{@link ch.elexis.core.findings.templates.model.impl.FindingsTemplateImpl#getColor
+ * <em>Color</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implements FindingsTemplate {
 	/**
-	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getType() <em>Type</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getType()
 	 * @generated
 	 * @ordered
@@ -44,9 +48,9 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected static final Type TYPE_EDEFAULT = Type.OBSERVATION_VITAL;
 
 	/**
-	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getType()
 	 * @generated
 	 * @ordered
@@ -54,9 +58,9 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected Type type = TYPE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTitle()
 	 * @generated
 	 * @ordered
@@ -64,9 +68,9 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected static final String TITLE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTitle()
 	 * @generated
 	 * @ordered
@@ -74,9 +78,9 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected String title = TITLE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getInputData() <em>Input Data</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getInputData() <em>Input Data</em>}'
+	 * containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getInputData()
 	 * @generated
 	 * @ordered
@@ -84,9 +88,9 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected InputData inputData;
 
 	/**
-	 * The cached value of the '{@link #getCodeElement() <em>Code Element</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getCodeElement() <em>Code Element</em>}'
+	 * containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getCodeElement()
 	 * @generated
 	 * @ordered
@@ -94,9 +98,9 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected CodeElement codeElement;
 
 	/**
-	 * The default value of the '{@link #getColor() <em>Color</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getColor() <em>Color</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getColor()
 	 * @generated
 	 * @ordered
@@ -104,9 +108,9 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected static final String COLOR_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getColor() <em>Color</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getColor() <em>Color</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getColor()
 	 * @generated
 	 * @ordered
@@ -114,8 +118,8 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected String color = COLOR_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected FindingsTemplateImpl() {
@@ -123,8 +127,8 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -133,8 +137,8 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -143,8 +147,8 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -156,8 +160,8 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -166,8 +170,8 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -175,12 +179,13 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 		String oldTitle = title;
 		title = newTitle;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__TITLE, oldTitle, title));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__TITLE, oldTitle,
+					title));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -189,23 +194,27 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetInputData(InputData newInputData, NotificationChain msgs) {
 		InputData oldInputData = inputData;
 		inputData = newInputData;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA, oldInputData, newInputData);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA, oldInputData, newInputData);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
 		}
 		return msgs;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -213,19 +222,22 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 		if (newInputData != inputData) {
 			NotificationChain msgs = null;
 			if (inputData != null)
-				msgs = ((InternalEObject)inputData).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA, null, msgs);
+				msgs = ((InternalEObject) inputData).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA, null, msgs);
 			if (newInputData != null)
-				msgs = ((InternalEObject)newInputData).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA, null, msgs);
+				msgs = ((InternalEObject) newInputData).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA, null, msgs);
 			msgs = basicSetInputData(newInputData, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA, newInputData, newInputData));
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA,
+					newInputData, newInputData));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -234,23 +246,27 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetCodeElement(CodeElement newCodeElement, NotificationChain msgs) {
 		CodeElement oldCodeElement = codeElement;
 		codeElement = newCodeElement;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, oldCodeElement, newCodeElement);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, oldCodeElement, newCodeElement);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
 		}
 		return msgs;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -258,19 +274,22 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 		if (newCodeElement != codeElement) {
 			NotificationChain msgs = null;
 			if (codeElement != null)
-				msgs = ((InternalEObject)codeElement).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, null, msgs);
+				msgs = ((InternalEObject) codeElement).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, null, msgs);
 			if (newCodeElement != null)
-				msgs = ((InternalEObject)newCodeElement).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, null, msgs);
+				msgs = ((InternalEObject) newCodeElement).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, null, msgs);
 			msgs = basicSetCodeElement(newCodeElement, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT, newCodeElement, newCodeElement));
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT,
+					newCodeElement, newCodeElement));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -279,8 +298,8 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -288,96 +307,97 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 		String oldColor = color;
 		color = newColor;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__COLOR, oldColor, color));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.FINDINGS_TEMPLATE__COLOR, oldColor,
+					color));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
+			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA :
 				return basicSetInputData(null, msgs);
-			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
+			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT :
 				return basicSetCodeElement(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ModelPackage.FINDINGS_TEMPLATE__TYPE:
+			case ModelPackage.FINDINGS_TEMPLATE__TYPE :
 				return getType();
-			case ModelPackage.FINDINGS_TEMPLATE__TITLE:
+			case ModelPackage.FINDINGS_TEMPLATE__TITLE :
 				return getTitle();
-			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
+			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA :
 				return getInputData();
-			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
+			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT :
 				return getCodeElement();
-			case ModelPackage.FINDINGS_TEMPLATE__COLOR:
+			case ModelPackage.FINDINGS_TEMPLATE__COLOR :
 				return getColor();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ModelPackage.FINDINGS_TEMPLATE__TYPE:
-				setType((Type)newValue);
+			case ModelPackage.FINDINGS_TEMPLATE__TYPE :
+				setType((Type) newValue);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATE__TITLE:
-				setTitle((String)newValue);
+			case ModelPackage.FINDINGS_TEMPLATE__TITLE :
+				setTitle((String) newValue);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
-				setInputData((InputData)newValue);
+			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA :
+				setInputData((InputData) newValue);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
-				setCodeElement((CodeElement)newValue);
+			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT :
+				setCodeElement((CodeElement) newValue);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATE__COLOR:
-				setColor((String)newValue);
+			case ModelPackage.FINDINGS_TEMPLATE__COLOR :
+				setColor((String) newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ModelPackage.FINDINGS_TEMPLATE__TYPE:
+			case ModelPackage.FINDINGS_TEMPLATE__TYPE :
 				setType(TYPE_EDEFAULT);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATE__TITLE:
+			case ModelPackage.FINDINGS_TEMPLATE__TITLE :
 				setTitle(TITLE_EDEFAULT);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
-				setInputData((InputData)null);
+			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA :
+				setInputData((InputData) null);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
-				setCodeElement((CodeElement)null);
+			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT :
+				setCodeElement((CodeElement) null);
 				return;
-			case ModelPackage.FINDINGS_TEMPLATE__COLOR:
+			case ModelPackage.FINDINGS_TEMPLATE__COLOR :
 				setColor(COLOR_EDEFAULT);
 				return;
 		}
@@ -385,35 +405,36 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ModelPackage.FINDINGS_TEMPLATE__TYPE:
+			case ModelPackage.FINDINGS_TEMPLATE__TYPE :
 				return type != TYPE_EDEFAULT;
-			case ModelPackage.FINDINGS_TEMPLATE__TITLE:
+			case ModelPackage.FINDINGS_TEMPLATE__TITLE :
 				return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
-			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA:
+			case ModelPackage.FINDINGS_TEMPLATE__INPUT_DATA :
 				return inputData != null;
-			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT:
+			case ModelPackage.FINDINGS_TEMPLATE__CODE_ELEMENT :
 				return codeElement != null;
-			case ModelPackage.FINDINGS_TEMPLATE__COLOR:
+			case ModelPackage.FINDINGS_TEMPLATE__COLOR :
 				return COLOR_EDEFAULT == null ? color != null : !COLOR_EDEFAULT.equals(color);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (type: ");
@@ -426,4 +447,4 @@ public class FindingsTemplateImpl extends MinimalEObjectImpl.Container implement
 		return result.toString();
 	}
 
-} //FindingsTemplateImpl
+} // FindingsTemplateImpl

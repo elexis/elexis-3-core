@@ -3,34 +3,34 @@ package ch.elexis.core.services.internal.dto;
 import ch.elexis.core.model.ICategory;
 
 public class CategoryDocumentDTO implements ICategory {
-	
+
 	private String name;
-	
-	public CategoryDocumentDTO(String name){
+
+	public CategoryDocumentDTO(String name) {
 		super();
 		this.name = name;
 	}
-	
+
 	@Override
-	public String getName(){
+	public String getName() {
 		return name;
 	}
-	
+
 	@Override
-	public void setName(String value){
+	public void setName(String value) {
 		this.name = value;
 	}
-	
+
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
-	
+
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

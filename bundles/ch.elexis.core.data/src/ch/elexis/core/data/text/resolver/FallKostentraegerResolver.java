@@ -10,7 +10,8 @@ import ch.elexis.data.Kontakt;
 public class FallKostentraegerResolver implements ITextResolver {
 
 	/**
-	 * @see FallDataAccessor#getObject(String, ch.elexis.data.PersistentObject, String, String[])
+	 * @see FallDataAccessor#getObject(String, ch.elexis.data.PersistentObject,
+	 *      String, String[])
 	 */
 	@Override
 	public Optional<String> resolve(Object object) {

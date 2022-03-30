@@ -16,22 +16,20 @@ import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class InitPersistenceUnit {
-	
+
 	@Test
-	public void getEntityManger(){
-		Optional<IElexisEntityManager> elexisEntityManager =
-			OsgiServiceUtil.getService(IElexisEntityManager.class);
+	public void getEntityManger() {
+		Optional<IElexisEntityManager> elexisEntityManager = OsgiServiceUtil.getService(IElexisEntityManager.class);
 		assertTrue(elexisEntityManager.isPresent());
 		EntityManager em = (EntityManager) elexisEntityManager.get().getEntityManager(false);
 		assertNotNull(em);
 		elexisEntityManager.get().closeEntityManager(em);
 		OsgiServiceUtil.ungetService(elexisEntityManager.get());
 	}
-	
+
 	@Test
-	public void createKontakt(){
-		Optional<IElexisEntityManager> elexisEntityManager =
-			OsgiServiceUtil.getService(IElexisEntityManager.class);
+	public void createKontakt() {
+		Optional<IElexisEntityManager> elexisEntityManager = OsgiServiceUtil.getService(IElexisEntityManager.class);
 		EntityManager em = (EntityManager) elexisEntityManager.get().getEntityManager(false);
 		em.getTransaction().begin();
 		assertNotNull(em);

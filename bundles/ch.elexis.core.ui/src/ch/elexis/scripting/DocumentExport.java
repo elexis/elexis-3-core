@@ -35,32 +35,26 @@ import ch.rgw.io.FileTool;
 public class DocumentExport {
 	Sticker sticker = null;
 	PatFilterImpl pf = new PatFilterImpl();
-	
-	public String doExport(String destination, String stickerName){
+
+	public String doExport(String destination, String stickerName) {
 		if (stickerName != null) {
-			List<Sticker> ls =
-				new Query<Sticker>(Sticker.class, Sticker.FLD_NAME, stickerName).execute();
+			List<Sticker> ls = new Query<Sticker>(Sticker.class, Sticker.FLD_NAME, stickerName).execute();
 			if (ls != null && ls.size() > 0) {
 				sticker = ls.get(0);
 			} else {
 				return "Sticker " + stickerName + " nicht gefunden.";
 			}
 		}
-		IDocumentManager mgr =
-			(IDocumentManager) Extensions.findBestService(
-				GlobalServiceDescriptors.DOCUMENT_MANAGEMENT, null);
+		IDocumentManager mgr = (IDocumentManager) Extensions
+				.findBestService(GlobalServiceDescriptors.DOCUMENT_MANAGEMENT, null);
 		if (mgr == null) {
 			return "Keine Dokumente gefunden";
 		}
 		try {
 			if (destination == null) {
 				FileDialog fd = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
-				fd.setFilterExtensions(new String[] {
-					"*.csv"
-				});
-				fd.setFilterNames(new String[] {
-					"Comma Separated Values (CVS)"
-				});
+				fd.setFilterExtensions(new String[]{"*.csv"});
+				fd.setFilterNames(new String[]{"Comma Separated Values (CVS)"});
 				fd.setOverwrite(true);
 				destination = fd.open();
 			}
@@ -69,11 +63,9 @@ public class DocumentExport {
 				File parent = csv.getParentFile();
 				File dir = new File(parent, FileTool.getNakedFilename(destination));
 				dir.mkdirs();
-				
+
 				CSVWriter writer = new CSVWriter(new FileWriter(csv));
-				String[] header = new String[] {
-					"Patient", "Name", "Kategorie", "Datum", "Stichwörter", "Pfad"
-				};
+				String[] header = new String[]{"Patient", "Name", "Kategorie", "Datum", "Stichwörter", "Pfad"};
 				List<IOpaqueDocument> dox = mgr.listDocuments(null, null, null, null, null, null);
 				writer.writeNext(header);
 				for (IOpaqueDocument doc : dox) {
@@ -84,7 +76,7 @@ public class DocumentExport {
 								continue;
 							}
 						}
-						
+
 						String subdirname = pat.get(Patient.FLD_PATID);
 						if (subdirname != null) {
 							File subdir = new File(dir, subdirname);
@@ -96,9 +88,7 @@ public class DocumentExport {
 							line[3] = doc.getCreationDate();
 							line[4] = doc.getKeywords();
 							String docfilename = doc.getGUID() + "." + doc.getMimeType();
-							line[5] =
-								dir.getName() + File.separator + subdir.getName() + File.separator
-									+ docfilename;
+							line[5] = dir.getName() + File.separator + subdir.getName() + File.separator + docfilename;
 							byte[] bin = doc.getContentsAsBytes();
 							if (bin != null) {
 								File f = new File(subdir, docfilename);
@@ -108,20 +98,19 @@ public class DocumentExport {
 								writer.writeNext(line);
 							}
 						}
-						
+
 					}
 				}
 				return "Export ok";
 			} else {
 				return "Abgebrochen.";
-				
+
 			}
 		} catch (Exception e) {
-			ElexisStatus status =
-				new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 					"Fehler beim Export: " + e.getMessage(), e);
 			throw new ScriptingException(status);
 		}
-		
+
 	}
 }

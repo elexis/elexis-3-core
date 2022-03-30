@@ -55,77 +55,80 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Tree;
 
 /**
- * Basis des Viewer-Systems. Ein Viewer zeigt eine Liste von Objekten einer bestimmten
- * PersistentObject -Unterklasse an und ermöglicht das Filtern der Anzeige sowie das Erstellen neuer
- * Objekte dieser Klasse. Der CommonViewer stellt nur die Oberfläche bereit (oben ein Feld zum
- * Filtern, in der Mitte die Liste und unten ein Button zum Erstellen eines neuen Objekts). Die
- * Funktionalität muss von einem ViewerConfigurer bereitgestellt werden. Dieser ist wiederum nur ein
- * Container zur Breitstellung verschiedener Provider. NB: CommonViewer ist eigentlich ein
- * Antipattern (nämlich ein Golden Hammer). Er verkürzt Entwicklungszeit, aber auf Kosten der
- * Flexibilität und der optimalen Anpassung Wann immer Zeit und Ressourcen genügen, sollte einer
- * individuellen Lösung der Vorzug gegeben werden.
+ * Basis des Viewer-Systems. Ein Viewer zeigt eine Liste von Objekten einer
+ * bestimmten PersistentObject -Unterklasse an und ermöglicht das Filtern der
+ * Anzeige sowie das Erstellen neuer Objekte dieser Klasse. Der CommonViewer
+ * stellt nur die Oberfläche bereit (oben ein Feld zum Filtern, in der Mitte die
+ * Liste und unten ein Button zum Erstellen eines neuen Objekts). Die
+ * Funktionalität muss von einem ViewerConfigurer bereitgestellt werden. Dieser
+ * ist wiederum nur ein Container zur Breitstellung verschiedener Provider. NB:
+ * CommonViewer ist eigentlich ein Antipattern (nämlich ein Golden Hammer). Er
+ * verkürzt Entwicklungszeit, aber auf Kosten der Flexibilität und der optimalen
+ * Anpassung Wann immer Zeit und Ressourcen genügen, sollte einer individuellen
+ * Lösung der Vorzug gegeben werden.
  * 
  * @see ViewerConfigurer
  * @author Gerry
  */
 public class CommonViewer implements ISelectionChangedListener, IDoubleClickListener {
-	
-	private static final boolean OS_IS_WIN =
-		System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
-	
+
+	private static final boolean OS_IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
+
 	protected ViewerConfigurer viewerConfigurer;
 	protected StructuredViewer viewer;
 	protected Button bNew;
 	private IAction createObjectAction;
 	private Composite parent;
 	private ISelectionChangedListener selChangeListener;
-	
+
 	private String namedSelection;
-	
+
 	/**
 	 * 
 	 * @since 3.7 updateSingle to refresh a single object
 	 */
 	public enum Message {
-			update, empty, notempty, update_keeplabels, updateSingle
+		update, empty, notempty, update_keeplabels, updateSingle
 	}
-	
+
 	private HashSet<PoDoubleClickListener> dlListeners;
 	private MenuManager mgr;
 	private Composite composite;
 	private String viewName = null;
-	
+
 	private boolean scrolledToBottom;
 	private boolean showDisableLimit;
 	private Button disableLimitBtn;
-	
-	public Composite getParent(){
+
+	public Composite getParent() {
 		return parent;
 	}
-	
-	public CommonViewer(){
+
+	public CommonViewer() {
 		viewName = "unknown";
 	}
-	
+
 	/**
-	 * Set the name that is used to update the selection in the current root {@link IContext}.
+	 * Set the name that is used to update the selection in the current root
+	 * {@link IContext}.
 	 * 
 	 * @param name
 	 */
-	public void setNamedSelection(String name){
+	public void setNamedSelection(String name) {
 		this.namedSelection = name;
 	}
-	
+
 	/**
-	 * Sets the view name. Mainly used for GUI-Jubula tests. The view name is used to uniquely
-	 * identify the toolbar items by setting the TEST_COMP_NAME accordingly
+	 * Sets the view name. Mainly used for GUI-Jubula tests. The view name is used
+	 * to uniquely identify the toolbar items by setting the TEST_COMP_NAME
+	 * accordingly
 	 *
 	 * @param s
 	 */
 	public void setViewName(String s) {
 		viewName = s;
 	}
-	
+
 	/**
 	 * Gets the view name. Mainly used for GUI-Jubula tests.
 	 *
@@ -133,19 +136,20 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	public String getViewName() {
 		return viewName;
 	}
-	
-	public void setObjectCreateAction(IViewSite site, IAction action){
+
+	public void setObjectCreateAction(IViewSite site, IAction action) {
 		site.getActionBars().getToolBarManager().add(action);
 		action.setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 		createObjectAction = action;
 	}
-	
+
 	/**
 	 * Den Viewer erstellen
 	 * 
 	 * @param viewerConfigurer
-	 *            ViewerConfigurer, der die Funktionalität bereitstellt. Alle Felder des Configurers
-	 *            müssen vor Aufruf von create() gültig gesetzt sein.
+	 *            ViewerConfigurer, der die Funktionalität bereitstellt. Alle Felder
+	 *            des Configurers müssen vor Aufruf von create() gültig gesetzt
+	 *            sein.
 	 * @param parent
 	 *            Parent.Komponente
 	 * @param style
@@ -153,19 +157,17 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	 * @param input
 	 *            Input Objekt für den Viewer
 	 */
-	public void create(ViewerConfigurer viewerConfigurer, Composite parent, int style,
-		Object input){
+	public void create(ViewerConfigurer viewerConfigurer, Composite parent, int style, Object input) {
 		this.viewerConfigurer = viewerConfigurer;
 		this.parent = parent;
 		Composite ret = new Composite(parent, style);
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		ret.setLayout(layout);
-		
+
 		if (parent.getLayout() instanceof GridLayout) {
-			GridData gd =
-				new GridData(GridData.GRAB_VERTICAL | GridData.FILL_VERTICAL
-					| GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
+			GridData gd = new GridData(GridData.GRAB_VERTICAL | GridData.FILL_VERTICAL | GridData.GRAB_HORIZONTAL
+					| GridData.FILL_HORIZONTAL);
 			ret.setLayoutData(gd);
 		}
 		ControlFieldProvider cfp = viewerConfigurer.getControlFieldProvider();
@@ -176,9 +178,8 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 			ctlf.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		}
 		viewer = viewerConfigurer.getWidgetProvider().createViewer(ret);
-		GridData gdView =
-			new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL
-				| GridData.GRAB_VERTICAL | GridData.FILL_VERTICAL);
+		GridData gdView = new GridData(
+				GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_VERTICAL);
 		gdView.verticalAlignment = SWT.FILL;
 		viewer.setUseHashlookup(true);
 		viewer.getControl().setLayoutData(gdView);
@@ -194,12 +195,12 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 			ScrollBar verticalBar = table.getVerticalBar();
 			verticalBar.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					if (showDisableLimit && table.getItemCount() > 25) {
 						scrolledToBottom = verticalBar.getSelection() + verticalBar.getThumb() == verticalBar
 								.getMaximum();
 						if (scrolledToBottom) {
-							showDisableLimitButton(); //scrolled to end
+							showDisableLimitButton(); // scrolled to end
 						} else {
 							hideDisableLimitButton();
 						}
@@ -213,7 +214,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		bNew = viewerConfigurer.getButtonProvider().createButton(ret);
 		if (bNew != null) {
 			if (viewName != null) {
-				bNew.setData("TEST_COMP_NAME",  "cv_bNew_"+ viewName + "_btn"); // for Jubula
+				bNew.setData("TEST_COMP_NAME", "cv_bNew_" + viewName + "_btn"); // for Jubula
 			}
 			GridData gdNew = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 			bNew.setLayoutData(gdNew);
@@ -227,18 +228,17 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		 * ctl.doubleClicked(getSelection()); }});
 		 */
 		/*
-		 * viewer.addDragSupport(DND.DROP_COPY,new Transfer[] {TextTransfer.getInstance()},
+		 * viewer.addDragSupport(DND.DROP_COPY,new Transfer[]
+		 * {TextTransfer.getInstance()},
 		 */
 		if (viewerConfigurer.getContentType() == ContentType.PERSISTENTOBJECT) {
 			if (viewerConfigurer.poSelectionRenderer != null) {
-				new PersistentObjectDragSource(viewer.getControl(),
-					viewerConfigurer.poSelectionRenderer);
+				new PersistentObjectDragSource(viewer.getControl(), viewerConfigurer.poSelectionRenderer);
 			} else {
 				new PersistentObjectDragSource(viewer.getControl(), new ISelectionRenderer() {
-					public List<PersistentObject> getSelection(){
+					public List<PersistentObject> getSelection() {
 						Object[] sel = CommonViewer.this.getSelection();
-						ArrayList<PersistentObject> ret =
-							new ArrayList<PersistentObject>(sel.length);
+						ArrayList<PersistentObject> ret = new ArrayList<PersistentObject>(sel.length);
 						for (Object o : sel) {
 							if (o instanceof PersistentObject) {
 								ret.add((PersistentObject) o);
@@ -268,32 +268,32 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		viewer.getControl().pack();
 		composite = ret;
 	}
-	
-	public Composite getComposite(){
+
+	public Composite getComposite() {
 		return composite;
 	}
-	
+
 	/**
 	 * Die aktuelle Auswahl des Viewers liefern
 	 * 
 	 * @return null oder ein Array mit den selektierten Objekten-
 	 */
-	public Object[] getSelection(){
+	public Object[] getSelection() {
 		IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 		if (sel != null) {
 			return sel.toArray();
 		}
 		return null;
-		
+
 	}
-	
+
 	/**
 	 * Das selektierte Element des Viewers einstellen
 	 * 
 	 * @param o
 	 *            Das Element
 	 */
-	public void setSelection(Object o, boolean fireEvents){
+	public void setSelection(Object o, boolean fireEvents) {
 		if (fireEvents == false) {
 			viewer.removeSelectionChangedListener(this);
 			viewer.setSelection(new StructuredSelection(o), true);
@@ -301,43 +301,44 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		} else {
 			viewer.setSelection(new StructuredSelection(o), true);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Den darunterliegenden JFace-Viewer liefern
 	 */
-	public StructuredViewer getViewerWidget(){
+	public StructuredViewer getViewerWidget() {
 		return viewer;
 	}
-	
+
 	/**
-	 * @return the {@link #getViewerWidget()} current selections first element or <code>null</code>
+	 * @return the {@link #getViewerWidget()} current selections first element or
+	 *         <code>null</code>
 	 * @since 3.2.0
 	 */
 	public Object getViewerWidgetFirstSelection() {
-		StructuredSelection  selection = (StructuredSelection) viewer.getSelection();
-		if(selection==null || selection.size()==0) {
+		StructuredSelection selection = (StructuredSelection) viewer.getSelection();
+		if (selection == null || selection.size() == 0) {
 			return null;
 		}
 		return selection.getFirstElement();
 	}
-	
-	public ViewerConfigurer getConfigurer(){
+
+	public ViewerConfigurer getConfigurer() {
 		return viewerConfigurer;
 	}
-	
+
 	/**
 	 * den Viewer über eine Änderung benachrichtigen
 	 * 
 	 * @param m
-	 *            eine Message: update: der Viewer muss neu eingelesen werden empty: Die Auswahl ist
-	 *            leer. notempty: Die Auswahl ist nicht (mehr) leer.
+	 *            eine Message: update: der Viewer muss neu eingelesen werden empty:
+	 *            Die Auswahl ist leer. notempty: Die Auswahl ist nicht (mehr) leer.
 	 */
-	public void notify(final Message m){
+	public void notify(final Message m) {
 		notify(m, null);
 	}
-	
+
 	/**
 	 * 
 	 * @param m
@@ -346,53 +347,53 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	 * @since 3.7
 	 * @see CommonViewer#notify(Message)
 	 */
-	public void notify(final Message m, Object object){
+	public void notify(final Message m, Object object) {
 		if (viewer == null || viewer.getControl() == null || viewer.getControl().isDisposed()) {
 			return;
 		}
 		UiDesk.getDisplay().asyncExec(new Runnable() {
-			public void run(){
+			public void run() {
 				switch (m) {
-				case update:
-					if (!viewer.getControl().isDisposed()) {
-						viewer.refresh(true);
-					}
-					break;
-				case updateSingle:
-					if (!viewer.getControl().isDisposed() && object != null) {
-						viewer.refresh(object, true);
-					}
-					break;
-				case update_keeplabels:
-					if (!viewer.getControl().isDisposed()) {
-						viewer.refresh(false);
-					}
-					break;
-				case empty:
-					if (bNew != null) {
-						if (viewerConfigurer.getButtonProvider().isAlwaysEnabled() == false) {
-							bNew.setEnabled(false);
+					case update :
+						if (!viewer.getControl().isDisposed()) {
+							viewer.refresh(true);
 						}
-					}
-					if (createObjectAction != null) {
-						createObjectAction.setEnabled(false);
-					}
-					break;
-				case notempty:
-					if (bNew != null) {
-						bNew.setEnabled(true);
-					}
-					if (createObjectAction != null) {
-						createObjectAction.setEnabled(true);
-					}
-					break;
+						break;
+					case updateSingle :
+						if (!viewer.getControl().isDisposed() && object != null) {
+							viewer.refresh(object, true);
+						}
+						break;
+					case update_keeplabels :
+						if (!viewer.getControl().isDisposed()) {
+							viewer.refresh(false);
+						}
+						break;
+					case empty :
+						if (bNew != null) {
+							if (viewerConfigurer.getButtonProvider().isAlwaysEnabled() == false) {
+								bNew.setEnabled(false);
+							}
+						}
+						if (createObjectAction != null) {
+							createObjectAction.setEnabled(false);
+						}
+						break;
+					case notempty :
+						if (bNew != null) {
+							bNew.setEnabled(true);
+						}
+						if (createObjectAction != null) {
+							createObjectAction.setEnabled(true);
+						}
+						break;
 				}
 			}
 		});
-		
+
 	}
-	
-	public void selectionChanged(SelectionChangedEvent event){
+
+	public void selectionChanged(SelectionChangedEvent event) {
 		Object[] sel = getSelection();
 		if (sel != null && sel.length != 0) {
 			if (sel[0] instanceof Tree<?>) {
@@ -402,8 +403,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				ElexisEventDispatcher.fireSelectionEvent((PersistentObject) sel[0]);
 			} else {
 				if (StringUtils.isNotBlank(namedSelection)) {
-					ContextServiceHolder.get().getRootContext().setNamed(namedSelection,
-						sel[0]);
+					ContextServiceHolder.get().getRootContext().setNamed(namedSelection, sel[0]);
 				} else {
 					ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
 				}
@@ -412,33 +412,34 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		if (selChangeListener != null)
 			selChangeListener.selectionChanged(event);
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 		if (viewerConfigurer.getDoubleClickListener() != null)
 			viewer.removeDoubleClickListener(viewerConfigurer.getDoubleClickListener());
 		viewer.removeSelectionChangedListener(this);
 	}
-	
-	public void addDoubleClickListener(PoDoubleClickListener dl){
+
+	public void addDoubleClickListener(PoDoubleClickListener dl) {
 		if (dlListeners == null) {
 			dlListeners = new HashSet<PoDoubleClickListener>();
 			getViewerWidget().addDoubleClickListener(this);
 		}
 		dlListeners.add(dl);
 	}
-	
+
 	/**
 	 * Register an additional selection changed listener to get informed
 	 * 
 	 * @param selChangeListener
-	 *            the {@link ISelectionChangedListener} or <code>null</code> to unset
+	 *            the {@link ISelectionChangedListener} or <code>null</code> to
+	 *            unset
 	 * @since 3.1
 	 */
-	public void setSelectionChangedListener(@Nullable ISelectionChangedListener selChangeListener){
+	public void setSelectionChangedListener(@Nullable ISelectionChangedListener selChangeListener) {
 		this.selChangeListener = selChangeListener;
 	}
-	
-	public void removeDoubleClickListener(PoDoubleClickListener dl){
+
+	public void removeDoubleClickListener(PoDoubleClickListener dl) {
 		if (dlListeners == null) {
 			return;
 		}
@@ -448,37 +449,37 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 			dlListeners = null;
 		}
 	}
-	
+
 	/**
-	 * Kontextmenu an den unterliegenden Viewer binden. Falls dieser zum Zeitpunkt des Aufrufs
-	 * dieser Methode noch nicht existiert, wird das Einbinden verzögert.
+	 * Kontextmenu an den unterliegenden Viewer binden. Falls dieser zum Zeitpunkt
+	 * des Aufrufs dieser Methode noch nicht existiert, wird das Einbinden
+	 * verzögert.
 	 * 
 	 * @param mgr
 	 *            ein fertig konfigurierter jface-MenuManager
 	 */
-	public void setContextMenu(MenuManager mgr){
+	public void setContextMenu(MenuManager mgr) {
 		this.mgr = mgr;
 		if (viewer != null) {
 			viewer.getControl().setMenu(mgr.createContextMenu(viewer.getControl()));
 		}
 	}
-	
-	public Button getButton(){
+
+	public Button getButton() {
 		return bNew;
 	}
-	
+
 	public interface PoDoubleClickListener {
 		public void doubleClicked(PersistentObject obj, CommonViewer cv);
 	}
-	
-	public void doubleClick(DoubleClickEvent event){
+
+	public void doubleClick(DoubleClickEvent event) {
 		if (dlListeners != null) {
 			Iterator<PoDoubleClickListener> it = dlListeners.iterator();
 			while (it.hasNext()) {
 				PoDoubleClickListener dl = it.next();
 				if (viewerConfigurer.poSelectionRenderer != null) {
-					List<PersistentObject> selected =
-						viewerConfigurer.poSelectionRenderer.getSelection();
+					List<PersistentObject> selected = viewerConfigurer.poSelectionRenderer.getSelection();
 					if (!selected.isEmpty()) {
 						dl.doubleClicked(selected.get(0), this);
 					}
@@ -496,21 +497,21 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				}
 			}
 		}
-		
+
 	}
-	
-	public MenuManager getMgr(){
+
+	public MenuManager getMgr() {
 		return mgr;
 	}
-	
-	public boolean isDisposed(){
+
+	public boolean isDisposed() {
 		return viewer == null || viewer.getControl().isDisposed();
 	}
-	
-	public void setLimitReached(boolean value, int limit){
+
+	public void setLimitReached(boolean value, int limit) {
 		showDisableLimit = value;
 		Display.getDefault().asyncExec(() -> {
-			if(value) {
+			if (value) {
 				addLimitButton(limit);
 				if (scrolledToBottom || isNoScroll()) {
 					showDisableLimitButton();
@@ -520,28 +521,27 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 			}
 		});
 	}
-	
-	private boolean isNoScroll(){
+
+	private boolean isNoScroll() {
 		if (viewer.getControl() instanceof Table) {
 			// test if table elements do not reach bottom
 			Table table = (Table) viewer.getControl();
 			ScrollBar verticalBar = table.getVerticalBar();
-			if(verticalBar != null) {
+			if (verticalBar != null) {
 				return verticalBar.getSelection() + verticalBar.getThumb() == verticalBar.getMaximum();
 			}
 		}
 		return false;
 	}
-	
-	private void addLimitButton(int limit){
+
+	private void addLimitButton(int limit) {
 		if (disableLimitBtn == null) {
 			disableLimitBtn = new Button(composite, SWT.FLAT);
 			disableLimitBtn.setText("Mehr als " + limit + " laden ...");
 			disableLimitBtn.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
-					((CommonViewerContentProvider) viewer.getContentProvider())
-						.setIgnoreLimit(true);
+				public void widgetSelected(SelectionEvent e) {
+					((CommonViewerContentProvider) viewer.getContentProvider()).setIgnoreLimit(true);
 					CommonViewer.this.notify(CommonViewer.Message.update);
 					showDisableLimit = false;
 					hideDisableLimitButton();
@@ -550,8 +550,8 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 			disableLimitBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		}
 	}
-	
-	private void showDisableLimitButton(){
+
+	private void showDisableLimitButton() {
 		if (disableLimitBtn != null) {
 			((GridData) disableLimitBtn.getLayoutData()).exclude = false;
 			disableLimitBtn.setVisible(true);
@@ -559,8 +559,8 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		composite.layout();
 		viewer.getControl().getParent().layout();
 	}
-	
-	private void hideDisableLimitButton(){
+
+	private void hideDisableLimitButton() {
 		if (disableLimitBtn != null) {
 			((GridData) disableLimitBtn.getLayoutData()).exclude = true;
 			disableLimitBtn.setVisible(false);

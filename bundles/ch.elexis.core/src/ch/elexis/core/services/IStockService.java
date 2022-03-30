@@ -13,31 +13,31 @@ public interface IStockService {
 	public enum Availability {
 		IN_STOCK, CRITICAL_STOCK, OUT_OF_STOCK
 	}
-	
+
 	/**
-	 * Store an article in stock. This operation is idempotent. Each article may exist only once per
-	 * stock.
+	 * Store an article in stock. This operation is idempotent. Each article may
+	 * exist only once per stock.
 	 * 
 	 * @param stock
 	 *            the stock to store the article in
 	 * @param article
-	 * @return an stock entry with {@link IStockEntry#getCurrentStock()} increased by one if
-	 *         existing, or total 1 if not yet on stock, <code>null</code> if article could not be
-	 *         found or other error
+	 * @return an stock entry with {@link IStockEntry#getCurrentStock()} increased
+	 *         by one if existing, or total 1 if not yet on stock, <code>null</code>
+	 *         if article could not be found or other error
 	 */
 	public IStockEntry storeArticleInStock(IStock stock, IArticle article);
-	
+
 	/**
-	 * Store an article in stock. This operation is idempotent. Each article may exist only once per
-	 * stock.
+	 * Store an article in stock. This operation is idempotent. Each article may
+	 * exist only once per stock.
 	 * 
 	 * @param stock
 	 *            the stock to store the article in
 	 * @param article
 	 *            the store to string of the article
-	 * @return an stock entry with {@link IStockEntry#getCurrentStock()} increased by one if
-	 *         existing, or total 1 if not yet on stock, <code>null</code> if article could not be
-	 *         found or other error
+	 * @return an stock entry with {@link IStockEntry#getCurrentStock()} increased
+	 *         by one if existing, or total 1 if not yet on stock, <code>null</code>
+	 *         if article could not be found or other error
 	 */
 	public IStockEntry storeArticleInStock(IStock stock, String article);
 
@@ -52,8 +52,8 @@ public interface IStockService {
 	public void unstoreArticleFromStock(IStock stock, String article);
 
 	/**
-	 * The accumulated (over all stocks) summed stock amount of an article. If
-	 * there is no stock for this article, returns <code>null</code>
+	 * The accumulated (over all stocks) summed stock amount of an article. If there
+	 * is no stock for this article, returns <code>null</code>
 	 * 
 	 * @param article
 	 * @return <code>null</code> if not stocked, else the accumulated and summed
@@ -66,8 +66,8 @@ public interface IStockService {
 	 * 
 	 * @param article
 	 * @return determined by the highest stock availability, returns
-	 *         {@link Availability} or <code>null</code> if not on stock. E.g.
-	 *         as long as one stock has sufficient items, returns
+	 *         {@link Availability} or <code>null</code> if not on stock. E.g. as
+	 *         long as one stock has sufficient items, returns
 	 *         {@link Availability#IN_STOCK}
 	 */
 	public Availability getCumulatedAvailabilityForArticle(IArticle article);
@@ -95,18 +95,16 @@ public interface IStockService {
 	public List<IStockEntry> findAllStockEntriesForArticle(String article);
 
 	/**
-	 * Find the preferred stock entry for an article. That is, if there is a
-	 * single stock entry for an article, return it. If there exist multiple,
-	 * return the one located in the stock with the highest global priority. If
-	 * a mandator is provided, and he owns a private stock, it will always be
-	 * preffered.
+	 * Find the preferred stock entry for an article. That is, if there is a single
+	 * stock entry for an article, return it. If there exist multiple, return the
+	 * one located in the stock with the highest global priority. If a mandator is
+	 * provided, and he owns a private stock, it will always be preffered.
 	 * 
 	 * @param article
 	 *            the store to string of the article
 	 * @param mandatorId
 	 *            may be <code>null</code> to not consider the mandator
-	 * @return <code>null</code> if no stock entry found, else the respective
-	 *         entry
+	 * @return <code>null</code> if no stock entry found, else the respective entry
 	 */
 	public IStockEntry findPreferredStockEntryForArticle(String article, String mandatorId);
 
@@ -118,11 +116,11 @@ public interface IStockService {
 	 *            to look for
 	 * @param article
 	 *            store to string of article to look for
-	 * @return <code>null</code> if article is not stocked in this {@link IStock}, else the
-	 *         respective {@link IStockEntry}
+	 * @return <code>null</code> if article is not stocked in this {@link IStock},
+	 *         else the respective {@link IStockEntry}
 	 */
 	public IStockEntry findStockEntryForArticleInStock(IStock stock, String article);
-	
+
 	/**
 	 * 
 	 * Find the stock entry (if existing) for an article in the given stock.
@@ -131,15 +129,14 @@ public interface IStockService {
 	 *            to look for
 	 * @param article
 	 *            to look for in stock
-	 * @return <code>null</code> if article is not stocked in this {@link IStock}, else the
-	 *         respective {@link IStockEntry}
+	 * @return <code>null</code> if article is not stocked in this {@link IStock},
+	 *         else the respective {@link IStockEntry}
 	 */
 	public IStockEntry findStockEntryForArticleInStock(IStock stock, IArticle article);
 
 	/**
-	 * Perform a single disposal of an article. The article will be withdrawn
-	 * from the Stock with the highest priority owning this article (if
-	 * multiple).
+	 * Perform a single disposal of an article. The article will be withdrawn from
+	 * the Stock with the highest priority owning this article (if multiple).
 	 * 
 	 * @param article
 	 * @param mandatorId
@@ -148,10 +145,10 @@ public interface IStockService {
 	 * @return
 	 */
 	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId);
-	
+
 	/**
-	 * Perform a single disposal of an article. Use this method if only the store to string of the
-	 * article is available.
+	 * Perform a single disposal of an article. Use this method if only the store to
+	 * string of the article is available.
 	 * 
 	 * @param articleStoreToString
 	 * @param count
@@ -161,8 +158,9 @@ public interface IStockService {
 	public IStatus performSingleDisposal(String articleStoreToString, int count, String mandatorId);
 
 	/**
-	 * Perform a single return of an article. The article will be returned to stock, where selection
-	 * of the stock entry follows {@link #findPreferredStockEntryForArticle(String, String)}
+	 * Perform a single return of an article. The article will be returned to stock,
+	 * where selection of the stock entry follows
+	 * {@link #findPreferredStockEntryForArticle(String, String)}
 	 * 
 	 * @param article
 	 * @param count
@@ -172,8 +170,8 @@ public interface IStockService {
 	public IStatus performSingleReturn(IArticle article, int count, String mandatorId);
 
 	/**
-	 * Perform a single return of an article. Use this method if only the store to string of the
-	 * article is available.
+	 * Perform a single return of an article. Use this method if only the store to
+	 * string of the article is available.
 	 * 
 	 * @param articleStoreToString
 	 * @param count
@@ -181,7 +179,7 @@ public interface IStockService {
 	 * @return
 	 */
 	public IStatus performSingleReturn(String articleStoreToString, int count, String mandatorId);
-	
+
 	/**
 	 * Determine the availability "level".
 	 * 
@@ -193,9 +191,8 @@ public interface IStockService {
 	 *            checks if the current stock is below
 	 * @return
 	 */
-	public default Availability determineAvailability(int current, int min,
-		boolean triggerOnIsBelow){
-		
+	public default Availability determineAvailability(int current, int min, boolean triggerOnIsBelow) {
+
 		if (current <= 0) {
 			return Availability.OUT_OF_STOCK;
 		}
@@ -206,7 +203,7 @@ public interface IStockService {
 
 		return Availability.CRITICAL_STOCK;
 	}
-	
+
 	/**
 	 * Determine the availability "level".
 	 * 
@@ -216,18 +213,17 @@ public interface IStockService {
 	 *            the minimum amount of packages to be on stock
 	 * @return
 	 */
-	public default Availability determineAvailability(int current, int min){
+	public default Availability determineAvailability(int current, int min) {
 		return determineAvailability(current, min, false);
 	}
-	
-	public default Availability determineAvailability(IStockEntry stockEntry){
-		return determineAvailability(stockEntry.getCurrentStock(), stockEntry.getMinimumStock(),
-			true);
+
+	public default Availability determineAvailability(IStockEntry stockEntry) {
+		return determineAvailability(stockEntry.getCurrentStock(), stockEntry.getMinimumStock(), true);
 	}
-	
+
 	public List<IStock> getAllStocks(boolean includeCommissioningSystems);
-	
+
 	public List<IStockEntry> getAllStockEntries();
-	
+
 	public IStock getDefaultStock();
 }

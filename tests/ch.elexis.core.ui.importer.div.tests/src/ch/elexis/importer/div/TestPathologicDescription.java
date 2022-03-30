@@ -34,36 +34,36 @@ import ch.elexis.data.Query;
 import ch.rgw.tools.Result;
 
 public class TestPathologicDescription {
-	
+
 	private static Path workDir = null;
-	
+
 	private static HL7Parser hlp;
-	
+
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception{
+	public static void setUpBeforeClass() throws Exception {
 		hlp = new TestHL7Parser("HL7_Test");
 	}
-	
+
 	@Before
-	public void setup() throws Exception{
+	public void setup() throws Exception {
 		workDir = Helpers.copyRscToTempDirectory();
 	}
-	
+
 	@After
-	public void teardown() throws Exception{
+	public void teardown() throws Exception {
 		removeAllPatientsAndDependants();
 		if (workDir != null) {
 			Helpers.removeTempDirectory(workDir);
 		}
 	}
-	
+
 	@Test
-	public void testAnalyticaHL7UseLocalRef() throws IOException{
+	public void testAnalyticaHL7UseLocalRef() throws IOException {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		// set the use local config to true
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
-		
+
 		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
@@ -114,16 +114,15 @@ public class TestPathologicDescription {
 		assertTrue(foundpatho2);
 		assertTrue(foundpatho3);
 	}
-	
+
 	@Test
-	public void testAnalyticaHL7NotNumeric() throws IOException{
+	public void testAnalyticaHL7NotNumeric() throws IOException {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		// set the use local config to true
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
-		
-		parseOneHL7file(new File(workDir.toString(), "Analytica/0216370074_6417526401671.hl7"),
-			false, true);
+
+		parseOneHL7file(new File(workDir.toString(), "Analytica/0216370074_6417526401671.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
 		List<LabResult> qrr = qr.execute();
@@ -153,18 +152,17 @@ public class TestPathologicDescription {
 		}
 		assertTrue(foundpatho1);
 	}
-	
+
 	@Test
-	public void testAnalyticaHL7UseRef() throws IOException{
+	public void testAnalyticaHL7UseRef() throws IOException {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		// set the use local config to false
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
 		// test if parser will read correct value
-		assertFalse(ConfigServiceHolder.get().get(
-			ContextServiceHolder.get().getActiveUserContact().get(),
-			Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true));
-		
+		assertFalse(ConfigServiceHolder.get().get(ContextServiceHolder.get().getActiveUserContact().get(),
+				Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true));
+
 		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
@@ -217,15 +215,14 @@ public class TestPathologicDescription {
 		assertTrue(foundpatho2);
 		assertTrue(foundpatho3);
 	}
-	
+
 	@Test
-	public void testAnalyticaStringResults_10786() throws IOException{
+	public void testAnalyticaStringResults_10786() throws IOException {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		
-		parseOneHL7file(new File(workDir.toString(), "Analytica/0116294364_6412642631625.hl7"),
-			false, true);
-		
+
+		parseOneHL7file(new File(workDir.toString(), "Analytica/0116294364_6412642631625.hl7"), false, true);
+
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
 		assertEquals(8, qrr.size());
@@ -233,9 +230,9 @@ public class TestPathologicDescription {
 			assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
 			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
 			if (labResult.getItem().getLabel().contains("Borrelien (IgM)")) {
-				// OBX|500505|FT|BORRM^Borrelien (IgM)^^^BORRELIEN IGM||positiv||  negativ||||C||||||
-				assertEquals(Description.PATHO_IMPORT_NO_INFO,
-					pathologicDescription.getDescription());
+				// OBX|500505|FT|BORRM^Borrelien (IgM)^^^BORRELIEN IGM||positiv||
+				// negativ||||C||||||
+				assertEquals(Description.PATHO_IMPORT_NO_INFO, pathologicDescription.getDescription());
 				assertEquals("", pathologicDescription.getReference());
 				assertEquals("positiv", labResult.getResult());
 				// it is pathologic, but we don't know - we can't interpret
@@ -243,8 +240,7 @@ public class TestPathologicDescription {
 				assertTrue(labResult.isPathologicFlagIndetermined(pathologicDescription));
 				assertEquals("", labResult.getItem().getUnit());
 			} else if (labResult.getItem().getLabel().equalsIgnoreCase("TestStupidValues")) {
-				assertEquals(Description.PATHO_IMPORT_NO_INFO,
-					pathologicDescription.getDescription());
+				assertEquals(Description.PATHO_IMPORT_NO_INFO, pathologicDescription.getDescription());
 				assertEquals("hund", pathologicDescription.getReference());
 				assertEquals("katze", labResult.getResult());
 				assertEquals(0, labResult.getFlags());
@@ -254,20 +250,20 @@ public class TestPathologicDescription {
 				assertEquals("foo", labResult.getResult());
 				assertEquals(1, labResult.getFlags());
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	@Test
-	public void testOpenMedicalMissingImportPathFlag_10962() throws IOException{
+	public void testOpenMedicalMissingImportPathFlag_10962() throws IOException {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		
+
 		parseOneHL7file(new File(workDir.toString(),
-			"OpenMedical/176471863520180219143653675__20180217123041_L18070354_20180217_TESTPERSON_19500101_1234_18635.hl7"),
-			false, true);
-		
+				"OpenMedical/176471863520180219143653675__20180217123041_L18070354_20180217_TESTPERSON_19500101_1234_18635.hl7"),
+				false, true);
+
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
 		assertEquals(120, qrr.size());
@@ -275,66 +271,65 @@ public class TestPathologicDescription {
 			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
 			String itemCode = labResult.getItem().getKuerzel();
 			switch (itemCode) {
-			case "VCAG":
-				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
-				assertEquals("A", pathologicDescription.getReference());
-				assertEquals(1, labResult.getFlags());
-				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
-				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
-				break;
-			case "EBNAG":
-				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
-				assertEquals("A", pathologicDescription.getReference());
-				assertEquals(1, labResult.getFlags());
-				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
-				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
-				break;
-			case "BBIG":
-				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
-				assertEquals("HH", pathologicDescription.getReference());
-				assertEquals(1, labResult.getFlags());
-				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
-				break;
-			case "PHEN":
-				assertEquals(Description.PATHO_REF_ITEM, pathologicDescription.getDescription());
-				assertEquals("12.0 - 80.0", pathologicDescription.getReference());
-				assertEquals(0, labResult.getFlags());
-				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
-				break;
-			case "HSVM":
-				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
-				assertEquals("A", pathologicDescription.getReference());
-				assertEquals(1, labResult.getFlags());
-				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
-				break;
-			case "ZIKG":
-				assertEquals(Description.PATHO_IMPORT_NO_INFO,
-					pathologicDescription.getDescription());
-				assertEquals("", pathologicDescription.getReference());
-				assertEquals(0, labResult.getFlags());
-				assertTrue(labResult.isPathologicFlagIndetermined(null));
-				break;
-			default:
-				break;
+				case "VCAG" :
+					assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+					assertEquals("A", pathologicDescription.getReference());
+					assertEquals(1, labResult.getFlags());
+					assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
+					assertFalse(labResult.isPathologicFlagIndetermined(null));
+					assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
+					break;
+				case "EBNAG" :
+					assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+					assertEquals("A", pathologicDescription.getReference());
+					assertEquals(1, labResult.getFlags());
+					assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
+					assertFalse(labResult.isPathologicFlagIndetermined(null));
+					assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
+					break;
+				case "BBIG" :
+					assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+					assertEquals("HH", pathologicDescription.getReference());
+					assertEquals(1, labResult.getFlags());
+					assertFalse(labResult.isPathologicFlagIndetermined(null));
+					assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+					break;
+				case "PHEN" :
+					assertEquals(Description.PATHO_REF_ITEM, pathologicDescription.getDescription());
+					assertEquals("12.0 - 80.0", pathologicDescription.getReference());
+					assertEquals(0, labResult.getFlags());
+					assertFalse(labResult.isPathologicFlagIndetermined(null));
+					assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+					break;
+				case "HSVM" :
+					assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+					assertEquals("A", pathologicDescription.getReference());
+					assertEquals(1, labResult.getFlags());
+					assertFalse(labResult.isPathologicFlagIndetermined(null));
+					assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
+					break;
+				case "ZIKG" :
+					assertEquals(Description.PATHO_IMPORT_NO_INFO, pathologicDescription.getDescription());
+					assertEquals("", pathologicDescription.getReference());
+					assertEquals(0, labResult.getFlags());
+					assertTrue(labResult.isPathologicFlagIndetermined(null));
+					break;
+				default :
+					break;
 			}
 		}
 	}
-	
+
 	@Test
-	public void testLabCubeNumberMissingImportPathFlag_11057() throws IOException{
+	public void testLabCubeNumberMissingImportPathFlag_11057() throws IOException {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		// set the use local config to false
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
-		
-		parseOneHL7file(new File(workDir.toString(),
-			"LabCube/5083_LabCube_DriChem7000_20180314131140_288107.hl7"), false, true);
-		
+
+		parseOneHL7file(new File(workDir.toString(), "LabCube/5083_LabCube_DriChem7000_20180314131140_288107.hl7"),
+				false, true);
+
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
 		assertEquals(8, qrr.size());
@@ -342,56 +337,56 @@ public class TestPathologicDescription {
 			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
 			String itemCode = labResult.getItem().getKuerzel();
 			switch (itemCode) {
-			case "HDLC-P":
-				assertEquals(Description.PATHO_REF, pathologicDescription.getDescription());
-				assertEquals("0.93-1.78", pathologicDescription.getReference());
-				assertEquals(0, labResult.getFlags());
-				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
-				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				assertEquals("1.69", labResult.getResult());
-				break;
-			case "TCHO-P":
-				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
-				assertEquals("HH", pathologicDescription.getReference());
-				assertEquals(1, labResult.getFlags());
-				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
-				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				assertEquals("6.19", labResult.getResult());
-				assertEquals("3.88-5.66", labResult.getItem().getReferenceFemale());
-				break;
-			case "GPT-P":
-				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
-				assertEquals("LL", pathologicDescription.getReference());
-				assertEquals(1, labResult.getFlags());
-				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
-				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				assertEquals("<10", labResult.getResult());
-				assertEquals("4-44", labResult.getItem().getReferenceFemale());
-				break;
-			case "CRE-P":
-				assertEquals(Description.PATHO_REF, pathologicDescription.getDescription());
-				assertEquals(0, labResult.getFlags());
-				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
-				assertEquals("47", labResult.getResult());
-				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				break;
-			default:
-				break;
+				case "HDLC-P" :
+					assertEquals(Description.PATHO_REF, pathologicDescription.getDescription());
+					assertEquals("0.93-1.78", pathologicDescription.getReference());
+					assertEquals(0, labResult.getFlags());
+					assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+					assertFalse(labResult.isPathologicFlagIndetermined(null));
+					assertEquals("1.69", labResult.getResult());
+					break;
+				case "TCHO-P" :
+					assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+					assertEquals("HH", pathologicDescription.getReference());
+					assertEquals(1, labResult.getFlags());
+					assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+					assertFalse(labResult.isPathologicFlagIndetermined(null));
+					assertEquals("6.19", labResult.getResult());
+					assertEquals("3.88-5.66", labResult.getItem().getReferenceFemale());
+					break;
+				case "GPT-P" :
+					assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+					assertEquals("LL", pathologicDescription.getReference());
+					assertEquals(1, labResult.getFlags());
+					assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+					assertFalse(labResult.isPathologicFlagIndetermined(null));
+					assertEquals("<10", labResult.getResult());
+					assertEquals("4-44", labResult.getItem().getReferenceFemale());
+					break;
+				case "CRE-P" :
+					assertEquals(Description.PATHO_REF, pathologicDescription.getDescription());
+					assertEquals(0, labResult.getFlags());
+					assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+					assertEquals("47", labResult.getResult());
+					assertFalse(labResult.isPathologicFlagIndetermined(null));
+					break;
+				default :
+					break;
 			}
 		}
 	}
-	
-	private void parseOneHL7file(File f, boolean deleteAll, boolean alsoFailing) throws IOException{
+
+	private void parseOneHL7file(File f, boolean deleteAll, boolean alsoFailing) throws IOException {
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
 			if (f.getName().equalsIgnoreCase("01TEST5005.hl7")
-				|| f.getName().equalsIgnoreCase("1_Kunde_20090612083757162_10009977_.HL7")) {
+					|| f.getName().equalsIgnoreCase("1_Kunde_20090612083757162_10009977_.HL7")) {
 				if (!alsoFailing) {
 					// System.out.println("Skipping " + name);
 					return;
 				}
 			}
-			// System.out.println("parseOneHL7file " + name + "  " + f.length() + " bytes ");
+			// System.out.println("parseOneHL7file " + name + " " + f.length() + " bytes ");
 			Result<?> rs = hlp.importFile(f, f.getParentFile(), true);
 			if (!rs.isOK()) {
 				String info = "Datei " + name + " fehlgeschlagen";
@@ -413,8 +408,8 @@ public class TestPathologicDescription {
 			System.out.println("Skipping Datei " + name);
 		}
 	}
-	
-	static private void removeAllLaboWerte(){
+
+	static private void removeAllLaboWerte() {
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
 		for (int j = 0; j < qrr.size(); j++) {
@@ -443,6 +438,5 @@ public class TestPathologicDescription {
 		qLi = qrli.execute();
 		assertEquals(0, qLi.size());
 	}
-	
 
 }

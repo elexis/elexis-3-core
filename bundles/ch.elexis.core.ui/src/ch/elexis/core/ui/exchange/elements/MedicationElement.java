@@ -36,12 +36,12 @@ public class MedicationElement extends XChangeElement {
 	public static final String ATTRIB_TYPE = "type";
 	public static final String ELEMENT_XID = "xid";
 	public static final String ELEMENT_META = "meta";
-	
-	public String getXMLName(){
+
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
-	public MedicationElement asExporter(XChangeExporter parent, Prescription pr){
+
+	public MedicationElement asExporter(XChangeExporter parent, Prescription pr) {
 		asExporter(parent);
 		Artikel art = pr.getArtikel();
 		String begin = pr.getBeginDate();
@@ -60,49 +60,48 @@ public class MedicationElement extends XChangeElement {
 		parent.getContainer().addChoice(this, pr.getLabel(), pr);
 		return this;
 	}
-	
-	public String getFirstDate(){
+
+	public String getFirstDate() {
 		String begin = getAttr(ATTRIB_BEGINDATE);
 		return new TimeTool(begin).toString(TimeTool.DATE_GER);
 	}
-	
-	public String getLastDate(){
+
+	public String getLastDate() {
 		String last = getAttr(ATTRIB_ENDDATE);
-		if(StringUtils.isBlank(last)) {
+		if (StringUtils.isBlank(last)) {
 			return null;
 		}
 		return new TimeTool(last).toString(TimeTool.DATE_GER);
 	}
-	
-	public String getText(){
+
+	public String getText() {
 		return getAttr(ATTRIB_SUBSTANCE);
 	}
-	
-	public String getDosage(){
+
+	public String getDosage() {
 		return getAttr(ATTRIB_FREQUENCY);
 	}
-	
-	public String getSubstance(){
+
+	public String getSubstance() {
 		return getAttr(ATTRIB_SUBSTANCE);
 	}
-	
+
 	public String getRemark() {
 		return getAttr(ATTRIB_REMARK);
 	}
-	
+
 	public String getProduct() {
 		return getAttr(ATTRIB_PRODUCT);
 	}
-	
+
 	/**
 	 * @return the GTIN if found or <code>null</code>
 	 */
-	public String getGtin(){
-		return getXid().getIdentities().stream()
-			.filter(i -> "www.xid.ch/id/ean".equalsIgnoreCase(i.getDomain())).findFirst()
-			.map(Identity::getDomainId).orElse(null);
+	public String getGtin() {
+		return getXid().getIdentities().stream().filter(i -> "www.xid.ch/id/ean".equalsIgnoreCase(i.getDomain()))
+				.findFirst().map(Identity::getDomainId).orElse(null);
 	}
-	
+
 	public String getPharmacode() {
 		return getXid().getIdentities().stream()
 				.filter(i -> "www.xid.ch/id/pharmacode/ch".equalsIgnoreCase(i.getDomain())).findFirst()

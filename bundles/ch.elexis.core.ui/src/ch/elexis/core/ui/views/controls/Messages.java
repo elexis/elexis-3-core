@@ -15,11 +15,11 @@ public class Messages {
 	public static String ArticleDefaultSignatureComposite_reserve = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_reserve;
 	public static String ArticleDefaultSignatureComposite_sympomatic = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_sympomatic;
 	public static String ArticleDefaultSignatureComposite_date_none = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_date_none;
-	
+
 	public static String KontaktSelectionComposite_message = ch.elexis.core.l10n.Messages.KontaktSelectionComposite_message;
 	public static String KontaktSelectionComposite_title = ch.elexis.core.l10n.Messages.KontaktSelectionComposite_title;
 	public static String LaborSelectionComposite_message = ch.elexis.core.l10n.Messages.LaborSelectionComposite_message;
 	public static String LaborSelectionComposite_title = ch.elexis.core.l10n.Messages.LaborSelectionComposite_title;
-	
+
 	public static String StockDetailComposite_availableInStock = ch.elexis.core.l10n.Messages.StockDetailComposite_availableInStock;
 }

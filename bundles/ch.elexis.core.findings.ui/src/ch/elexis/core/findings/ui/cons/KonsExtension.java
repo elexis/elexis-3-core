@@ -36,32 +36,30 @@ import ch.elexis.core.ui.util.IKonsExtension;
 
 public class KonsExtension implements IKonsExtension {
 	IRichTextDisplay mine;
-	
+
 	public static final String EXTENSION_ID = "ch.elexis.core.findings.ui.cons";
 	private static final String FINDINGS_TITLE = "Befund: ";
-	
+
 	@Override
-	public String connect(IRichTextDisplay tf){
+	public String connect(IRichTextDisplay tf) {
 		mine = tf;
 		mine.addDropReceiver(IObservation.class, this);
 		return EXTENSION_ID;
 	}
-	
-	public IRichTextDisplay getRichTextDisplay(){
+
+	public IRichTextDisplay getRichTextDisplay() {
 		return mine;
 	}
-	
+
 	@Override
-	public boolean doLayout(StyleRange styleRange, String provider, String id){
+	public boolean doLayout(StyleRange styleRange, String provider, String id) {
 		styleRange.background = UiDesk.getColor(UiDesk.COL_LIGHTGREY);
-		Optional<IObservation> observation =
-			FindingsServiceComponent.getService().findById(id, IObservation.class);
+		Optional<IObservation> observation = FindingsServiceComponent.getService().findById(id, IObservation.class);
 		if (observation.isPresent()) {
 			Optional<ICoding> localCode = ModelUtil.getCodeBySystem(observation.get().getCoding(),
-				CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
+					CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 			if (localCode.isPresent()) {
-				Optional<FindingsTemplate> template =
-					FindingsTemplateServiceComponent.getService()
+				Optional<FindingsTemplate> template = FindingsTemplateServiceComponent.getService()
 						.getFindingsTemplate(localCode.get());
 				if (template.isPresent()) {
 					if (StringUtils.isNotBlank(template.get().getColor())) {
@@ -75,44 +73,40 @@ public class KonsExtension implements IKonsExtension {
 		}
 		return true;
 	}
-	
+
 	@Override
-	public boolean doXRef(String refProvider, String refID){
-		Optional<IObservation> observation =
-			FindingsServiceComponent.getService().findById(refID, IObservation.class);
+	public boolean doXRef(String refProvider, String refID) {
+		Optional<IObservation> observation = FindingsServiceComponent.getService().findById(refID, IObservation.class);
 		observation.ifPresent(obs -> {
 			// open edit dialog
 			FindingsUiUtil.executeCommand(FindingEditHandler.COMMAND_ID, obs);
 		});
 		return true;
 	}
-	
+
 	@Override
-	public String updateXRef(String provider, String id){
-		Optional<IObservation> observation =
-			FindingsServiceComponent.getService().findById(id, IObservation.class);
+	public String updateXRef(String provider, String id) {
+		Optional<IObservation> observation = FindingsServiceComponent.getService().findById(id, IObservation.class);
 		if (observation.isPresent()) {
 			return getXRefText(observation.get());
 		}
 		return null;
 	}
-	
-	public void updateXRef(XRef xref){
+
+	public void updateXRef(XRef xref) {
 		if (mine instanceof EnhancedTextField) {
 			((EnhancedTextField) mine).updateXRef(xref);
 		}
 	}
-	
+
 	@Override
-	public void insert(Object o, int pos){
+	public void insert(Object o, int pos) {
 		if (o instanceof IObservation) {
 			final IObservation observation = (IObservation) o;
-			final Optional<IEncounter> encounterOpt =
-				ContextServiceHolder.get().getTyped(IEncounter.class);
-			
+			final Optional<IEncounter> encounterOpt = ContextServiceHolder.get().getTyped(IEncounter.class);
+
 			encounterOpt.ifPresent(encounter -> {
-				mine.insertXRef(pos, getXRefText(observation), EXTENSION_ID,
-					((Identifiable) observation).getId());
+				mine.insertXRef(pos, getXRefText(observation), EXTENSION_ID, ((Identifiable) observation).getId());
 				Samdas samdas = new Samdas(mine.getContentsAsXML());
 				EncounterServiceHolder.get().updateVersionedEntry(encounter, samdas);
 				CoreModelServiceHolder.get().save(encounter);
@@ -120,23 +114,23 @@ public class KonsExtension implements IKonsExtension {
 			});
 		}
 	}
-	
-	public String getXRefText(IFinding finding){
+
+	public String getXRefText(IFinding finding) {
 		return FINDINGS_TITLE + finding.getText().orElse("?");
 	}
-	
+
 	@Override
-	public IAction[] getActions(){
-		IAction[] ret = new IAction[] {
-			new AddFindingAction(this)
-		};
+	public IAction[] getActions() {
+		IAction[] ret = new IAction[]{new AddFindingAction(this)};
 		return ret;
 	}
-	
+
 	@Override
-	public void removeXRef(String refProvider, String refID){}
-	
+	public void removeXRef(String refProvider, String refID) {
+	}
+
 	@Override
-	public void setInitializationData(IConfigurationElement config, String propertyName,
-		Object data) throws CoreException{}
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+			throws CoreException {
+	}
 }

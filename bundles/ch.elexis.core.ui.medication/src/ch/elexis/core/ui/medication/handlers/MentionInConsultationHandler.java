@@ -25,9 +25,8 @@ import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 public class MentionInConsultationHandler extends AbstractHandler {
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		ISelection selection =
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null && !selection.isEmpty()) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			List<IPrescription> prescriptions = new ArrayList<IPrescription>();
@@ -40,8 +39,7 @@ public class MentionInConsultationHandler extends AbstractHandler {
 			}
 			if (!prescriptions.isEmpty()) {
 				IPatient patient = prescriptions.get(0).getPatient();
-				Optional<IEncounter> encounter =
-					EncounterServiceHolder.get().getLatestEncounter(patient);
+				Optional<IEncounter> encounter = EncounterServiceHolder.get().getLatestEncounter(patient);
 				encounter.ifPresent(enc -> {
 					StringBuilder sb = new StringBuilder();
 					for (IPrescription presc : prescriptions) {
@@ -50,10 +48,10 @@ public class MentionInConsultationHandler extends AbstractHandler {
 							articleLabel = presc.getArticle().getLabel();
 						}
 						sb.append("\n");
-						sb.append("Medikation: " + articleLabel + ", "
-							+ presc.getDosageInstruction() + " " + getType(presc.getEntryType()));
+						sb.append("Medikation: " + articleLabel + ", " + presc.getDosageInstruction() + " "
+								+ getType(presc.getEntryType()));
 					}
-					
+
 					Samdas samdas = new Samdas(enc.getVersionedEntry().getHead());
 					Record rec = samdas.getRecord();
 					String recText = rec.getText();
@@ -64,22 +62,22 @@ public class MentionInConsultationHandler extends AbstractHandler {
 				});
 			}
 		}
-		
+
 		return null;
 	}
-	
-	private String getType(EntryType entryType){
+
+	private String getType(EntryType entryType) {
 		switch (entryType) {
-		case FIXED_MEDICATION:
-			return "(Fixmedikation)";
-		case RESERVE_MEDICATION:
-			return "(Reservemedikation)";
-		case SELF_DISPENSED:
-			return "(Dispensiert)";
-		case RECIPE:
-			return "(Rezeptiert)";
-		default:
-			return "";
+			case FIXED_MEDICATION :
+				return "(Fixmedikation)";
+			case RESERVE_MEDICATION :
+				return "(Reservemedikation)";
+			case SELF_DISPENSED :
+				return "(Dispensiert)";
+			case RECIPE :
+				return "(Rezeptiert)";
+			default :
+				return "";
 		}
 	}
 }

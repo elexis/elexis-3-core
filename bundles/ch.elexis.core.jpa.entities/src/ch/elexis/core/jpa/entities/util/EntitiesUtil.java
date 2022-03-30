@@ -14,7 +14,7 @@ public class EntitiesUtil {
 	 *            name of the field
 	 * @return the value of the field as integer or 0 if it was null or not numeric.
 	 */
-	public static int checkZero(final String in){
+	public static int checkZero(final String in) {
 		if (StringUtils.isEmpty(in)) {
 			return 0;
 		}

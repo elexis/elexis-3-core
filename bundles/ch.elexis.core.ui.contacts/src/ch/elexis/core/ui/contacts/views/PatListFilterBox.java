@@ -46,43 +46,44 @@ import ch.elexis.data.Sticker;
 import ch.rgw.tools.IFilter;
 
 /**
- * This will be displayed on top of the PatientListeView. It allows to drop Objects (Artikel,
- * IVerrechnet, IDiagnose etc.) as filter conditions. The PatListFilterBox will also be added as an
- * IFilter to the StructuredViewer that displays the patients thus allowing to filter the list
- * according to the conditions.
+ * This will be displayed on top of the PatientListeView. It allows to drop
+ * Objects (Artikel, IVerrechnet, IDiagnose etc.) as filter conditions. The
+ * PatListFilterBox will also be added as an IFilter to the StructuredViewer
+ * that displays the patients thus allowing to filter the list according to the
+ * conditions.
  * 
- * The Objects that can act as filter conditions must e declared as IPatFilter. Later, we'll define
- * an extension point for Plugins to connect their classes.
+ * The Objects that can act as filter conditions must e declared as IPatFilter.
+ * Later, we'll define an extension point for Plugins to connect their classes.
  * 
  * @author Gerry
  * 
  */
 public class PatListFilterBox extends ListDisplay<PersistentObject> implements IFilter {
 	PersistentObjectDropTarget dropTarget;
-	private static final String ETIKETTE = Messages.PatListFilterBox_Sticker; //$NON-NLS-1$
-	private static final String FELD = Messages.PatListFilterBox_Field; //$NON-NLS-1$
-	private static final String LEEREN = Messages.PatListFilterBox_DoEmpty; //$NON-NLS-1$
+	private static final String ETIKETTE = Messages.PatListFilterBox_Sticker; // $NON-NLS-1$
+	private static final String FELD = Messages.PatListFilterBox_Field; // $NON-NLS-1$
+	private static final String LEEREN = Messages.PatListFilterBox_DoEmpty; // $NON-NLS-1$
 	private static final String NB_PREFIX = "PLF_FLD:"; //$NON-NLS-1$
 	private ArrayList<IPatFilter> filters = new ArrayList<IPatFilter>();
 	private IPatFilter defaultFilter = new PatFilterImpl();
 	private boolean parseError = false;
 	private IAction removeFilterAction;
-	
-	PatListFilterBox(Composite parent){
+
+	PatListFilterBox(Composite parent) {
 		super(parent, SWT.NONE, null);
 		setDLDListener(new LDListener() {
-			
-			public String getLabel(Object o){
+
+			public String getLabel(Object o) {
 				if (o instanceof NamedBlob) {
-					return Messages.PatListFilterBox_Field2 + ((NamedBlob) o).getString(); //$NON-NLS-1$
+					return Messages.PatListFilterBox_Field2 + ((NamedBlob) o).getString(); // $NON-NLS-1$
 				} else if (o instanceof PersistentObject) {
 					return o.getClass().getSimpleName() + ":" + ((PersistentObject) o).getLabel(); //$NON-NLS-1$
 				} else {
 					return o.toString();
 				}
 			}
-			
-			public void hyperlinkActivated(String l){
+
+			public void hyperlinkActivated(String l) {
 				if (l.equals(LEEREN)) {
 					clear();
 				} else if (l.equals(ETIKETTE)) {
@@ -96,15 +97,15 @@ public class PatListFilterBox extends ListDisplay<PersistentObject> implements I
 		setMenu(removeFilterAction);
 		addHyperlinks(FELD, ETIKETTE, LEEREN);
 		dropTarget = new PersistentObjectDropTarget("Statfilter", this, new DropReceiver()); //$NON-NLS-1$
-		
+
 	}
-	
+
 	private class DropReceiver implements PersistentObjectDropTarget.IReceiver {
-		public void dropped(final PersistentObject o, final DropTargetEvent ev){
+		public void dropped(final PersistentObject o, final DropTargetEvent ev) {
 			PatListFilterBox.this.add(o);
 		}
-		
-		public boolean accept(final PersistentObject o){
+
+		public boolean accept(final PersistentObject o) {
 			if (o instanceof Script) {
 				if (CoreHub.acl.request(AccessControlDefaults.SCRIPT_EXECUTE) == false) {
 					return false;
@@ -113,12 +114,12 @@ public class PatListFilterBox extends ListDisplay<PersistentObject> implements I
 			return true;
 		}
 	}
-	
-	public void reset(){
+
+	public void reset() {
 		parseError = false;
 	}
-	
-	public boolean aboutToStart(){
+
+	public boolean aboutToStart() {
 		for (PersistentObject cond : getAll()) {
 			if (cond instanceof Script) {
 				if (!defaultFilter.aboutToStart(cond)) {
@@ -128,8 +129,8 @@ public class PatListFilterBox extends ListDisplay<PersistentObject> implements I
 		}
 		return true;
 	}
-	
-	public boolean finished(){
+
+	public boolean finished() {
 		for (PersistentObject cond : getAll()) {
 			if (cond instanceof Script) {
 				if (!defaultFilter.finished(cond)) {
@@ -139,20 +140,20 @@ public class PatListFilterBox extends ListDisplay<PersistentObject> implements I
 		}
 		return true;
 	}
-	
+
 	/**
-	 * We select the Patient with an AND operation running over all filter conditions If no filter
-	 * was registered for a type, we use our defaultFilter
+	 * We select the Patient with an AND operation running over all filter
+	 * conditions If no filter was registered for a type, we use our defaultFilter
 	 * 
 	 * @throws Exception
 	 */
-	public boolean select(Object toTest){
+	public boolean select(Object toTest) {
 		if (parseError) {
 			return false;
 		}
 		if (toTest instanceof Patient) {
 			Patient p = (Patient) toTest;
-			
+
 			for (final PersistentObject cond : getAll()) {
 				boolean handled = false;
 				for (IPatFilter filter : filters) {
@@ -165,7 +166,7 @@ public class PatListFilterBox extends ListDisplay<PersistentObject> implements I
 					} else if (result == IPatFilter.FILTER_FAULT) {
 						parseError = true;
 					}
-					
+
 				}
 				if (!handled) {
 					int result = defaultFilter.accept(p, cond);
@@ -174,45 +175,45 @@ public class PatListFilterBox extends ListDisplay<PersistentObject> implements I
 					}
 					if (result == IPatFilter.FILTER_FAULT) {
 						UiDesk.asyncExec(new Runnable() {
-							public void run(){
+							public void run() {
 								remove(cond);
 							}
 						});
 						parseError = true;
 					}
 				}
-				
+
 			}
 			return true; // Only if all conditions accept or don't handle
 		}
 		return false;
 	}
-	
-	public void addPatFilter(IPatFilter filter){
+
+	public void addPatFilter(IPatFilter filter) {
 		filters.add(filter);
 	}
-	
-	public void removeFilter(IPatFilter filter){
+
+	public void removeFilter(IPatFilter filter) {
 		filters.remove(filter);
 	}
-	
+
 	class EtikettenAuswahl extends Dialog {
 		List lEtiketten;
 		Sticker[] etiketten;
 		Sticker[] result;
-		
-		public EtikettenAuswahl(){
+
+		public EtikettenAuswahl() {
 			super(PatListFilterBox.this.getShell());
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
-			getShell().setText(Messages.PatListFilterBox_ChooseSticker); //$NON-NLS-1$
+			getShell().setText(Messages.PatListFilterBox_ChooseSticker); // $NON-NLS-1$
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			Composite ret = (Composite) super.createDialogArea(parent);
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			lEtiketten = new List(ret, SWT.MULTI);
@@ -225,9 +226,9 @@ public class PatListFilterBox extends ListDisplay<PersistentObject> implements I
 			lEtiketten.setItems(etexts);
 			return ret;
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			int[] indices = lEtiketten.getSelectionIndices();
 			result = new Sticker[indices.length];
 			for (int i = 0; i < indices.length; i++) {
@@ -236,44 +237,43 @@ public class PatListFilterBox extends ListDisplay<PersistentObject> implements I
 			super.okPressed();
 		}
 	}
-	
+
 	class FeldauswahlDlg extends Dialog {
 		Text tFeld, tValue;
 		Combo cbOp;
 		public NamedBlob value;
-		
-		public FeldauswahlDlg(){
+
+		public FeldauswahlDlg() {
 			super(PatListFilterBox.this.getShell());
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
-			getShell().setText(Messages.PatListFilterBox_SetFilter); //$NON-NLS-1$
+			getShell().setText(Messages.PatListFilterBox_SetFilter); // $NON-NLS-1$
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			Composite ret = (Composite) super.createDialogArea(parent);
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			ret.setLayout(new GridLayout(3, false));
-			new Label(ret, SWT.NONE).setText(Messages.PatListFilterBox_Field3); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.PatListFilterBox_Field3); // $NON-NLS-1$
 			new Label(ret, SWT.NONE).setText(" "); //$NON-NLS-1$
-			new Label(ret, SWT.NONE).setText(Messages.PatListFilterBox_VValue); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.PatListFilterBox_VValue); // $NON-NLS-1$
 			tFeld = new Text(ret, SWT.BORDER);
 			tFeld.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			cbOp = new Combo(ret, SWT.SINGLE | SWT.READ_ONLY);
-			cbOp.setItems(new String[] {
-				"=", "LIKE", "Regexp" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			cbOp.setItems(new String[]{"=", "LIKE", "Regexp" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			});
 			cbOp.select(0);
 			tValue = new Text(ret, SWT.BORDER);
 			tValue.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			return ret;
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			String fld = tFeld.getText();
 			if (fld.length() > 0) {
 				value = NamedBlob.load(NB_PREFIX + fld);
@@ -283,19 +283,19 @@ public class PatListFilterBox extends ListDisplay<PersistentObject> implements I
 			super.okPressed();
 		}
 	}
-	
-	private void makeActions(){
-		removeFilterAction = new Action(Messages.PatListFilterBox_removeAction) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-					setToolTipText(Messages.PatListFilterBox_removeToolTip); //$NON-NLS-1$
-				}
-				
-				@Override
-				public void run(){
-					PersistentObject sel = getSelection();
-					remove(sel);
-				}
-			};
+
+	private void makeActions() {
+		removeFilterAction = new Action(Messages.PatListFilterBox_removeAction) { // $NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
+				setToolTipText(Messages.PatListFilterBox_removeToolTip); // $NON-NLS-1$
+			}
+
+			@Override
+			public void run() {
+				PersistentObject sel = getSelection();
+				remove(sel);
+			}
+		};
 	}
 }

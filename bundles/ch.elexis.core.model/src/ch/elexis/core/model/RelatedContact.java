@@ -10,7 +10,9 @@ import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.types.RelationshipType;
 
 public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJoint>
-		implements IdentifiableWithXid, IRelatedContact {
+		implements
+			IdentifiableWithXid,
+			IRelatedContact {
 
 	public RelatedContact(KontaktAdressJoint entity) {
 		super(entity);
@@ -31,8 +33,7 @@ public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJo
 		}
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
-				getEntityMarkDirty()
-					.setMyKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+				getEntityMarkDirty().setMyKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
 				addRefresh(value);
 			}
 		} else {
@@ -55,8 +56,7 @@ public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJo
 		}
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
-				getEntityMarkDirty()
-					.setOtherKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+				getEntityMarkDirty().setOtherKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
 				addRefresh(value);
 			}
 		} else {

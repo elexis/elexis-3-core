@@ -26,7 +26,7 @@ import org.osgi.framework.Bundle;
  *
  */
 public class PlatformHelper {
-	public static String getBasePath(String pluginID){
+	public static String getBasePath(String pluginID) {
 		try {
 			URL url = Platform.getBundle(pluginID).getEntry("/");
 			url = FileLocator.toFileURL(url);

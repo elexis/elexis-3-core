@@ -27,20 +27,17 @@ import ch.rgw.tools.Result.SEVERITY;
 import ch.rgw.tools.Result.msg;
 
 public class BillActiveEncounterHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		Konsultation selectedEncounter =
-			(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		Konsultation selectedEncounter = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 		if (selectedEncounter != null) {
 			Result<Konsultation> result = BillingUtil.getBillableResult(selectedEncounter);
 			if (result.isOK()) {
-				List<Result<IInvoice>> results =
-					BillingUtil.createBills(getBillMap(selectedEncounter));
+				List<Result<IInvoice>> results = BillingUtil.createBills(getBillMap(selectedEncounter));
 				if (!results.isEmpty() && results.get(0).isOK()) {
 					Rechnung invoice = Rechnung.load(results.get(0).get().getId());
-					new RnOutputDialog(UiDesk.getTopShell(), Collections.singletonList(invoice))
-						.open();
+					new RnOutputDialog(UiDesk.getTopShell(), Collections.singletonList(invoice)).open();
 				} else {
 					for (Result<IInvoice> invoiceResult : results) {
 						if (!invoiceResult.isOK()) {
@@ -54,9 +51,9 @@ public class BillActiveEncounterHandler extends AbstractHandler implements IHand
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
-	private void showResult(Result<?> result, Shell shell){
+	private void showResult(Result<?> result, Shell shell) {
 		StringBuilder sb = new StringBuilder();
 		for (msg message : result.getMessages()) {
 			if (message.getSeverity() != SEVERITY.OK) {
@@ -67,15 +64,14 @@ public class BillActiveEncounterHandler extends AbstractHandler implements IHand
 			}
 		}
 		MessageDialog.openInformation(shell, "Nicht verrechenbar",
-			"Die Konsultation kann nicht verrechnet werden.\n\n" + sb.toString());
+				"Die Konsultation kann nicht verrechnet werden.\n\n" + sb.toString());
 	}
-	
-	private Map<Rechnungssteller, Map<Fall, List<Konsultation>>> getBillMap(
-		Konsultation encounter){
+
+	private Map<Rechnungssteller, Map<Fall, List<Konsultation>>> getBillMap(Konsultation encounter) {
 		Map<Rechnungssteller, Map<Fall, List<Konsultation>>> ret = new HashMap<>();
 		ret.put(encounter.getMandant().getRechnungssteller(),
-			Collections.singletonMap(encounter.getFall(), Collections.singletonList(encounter)));
+				Collections.singletonMap(encounter.getFall(), Collections.singletonList(encounter)));
 		return ret;
 	}
-	
+
 }

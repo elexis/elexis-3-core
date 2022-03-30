@@ -14,8 +14,8 @@ package ch.elexis.core.ui.exchange;
 
 public class XChangeException extends Exception {
 	private static final long serialVersionUID = 8397377034488088292L;
-	
-	public XChangeException(String errmsg){
+
+	public XChangeException(String errmsg) {
 		super(errmsg);
 	}
 }

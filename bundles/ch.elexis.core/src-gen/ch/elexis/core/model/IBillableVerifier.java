@@ -13,9 +13,8 @@ package ch.elexis.core.model;
 import ch.rgw.tools.Result;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IBillable Verifier</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IBillable Verifier</b></em>'. <!-- end-user-doc -->
  *
  *
  * @see ch.elexis.core.model.ModelPackage#getIBillableVerifier()
@@ -24,8 +23,8 @@ import ch.rgw.tools.Result;
  */
 public interface IBillableVerifier {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBillable&gt;"
 	 * @generated
 	 */

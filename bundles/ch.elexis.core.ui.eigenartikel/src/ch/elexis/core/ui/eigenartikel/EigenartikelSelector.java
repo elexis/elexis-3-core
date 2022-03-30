@@ -59,84 +59,78 @@ import ch.elexis.data.PersistentObject;
 public class EigenartikelSelector extends CodeSelectorFactory {
 
 	private CommonViewer commonViewer;
-	
+
 	private ToggleVerrechenbarFavoriteAction tvfa = new ToggleVerrechenbarFavoriteAction();
 	private ISelectionChangedListener selChangeListener = new ISelectionChangedListener() {
 		@Override
-		public void selectionChanged(SelectionChangedEvent event){
+		public void selectionChanged(SelectionChangedEvent event) {
 			TreeViewer tv = (TreeViewer) event.getSource();
 			StructuredSelection ss = (StructuredSelection) tv.getSelection();
 			tvfa.updateSelection(ss.isEmpty() ? null : ss.getFirstElement());
-			
+
 			if (!ss.isEmpty()) {
 				IArticle ea = (IArticle) ss.getFirstElement();
-				ContextServiceHolder.get().getRootContext()
-					.setNamed("ch.elexis.core.ui.eigenartikel.selection", ea);
+				ContextServiceHolder.get().getRootContext().setNamed("ch.elexis.core.ui.eigenartikel.selection", ea);
 			} else {
-				ContextServiceHolder.get().getRootContext()
-					.setNamed("ch.elexis.core.ui.eigenartikel.selection", null);
+				ContextServiceHolder.get().getRootContext().setNamed("ch.elexis.core.ui.eigenartikel.selection", null);
 			}
 		}
 	};
-	
+
 	@Override
-	public ViewerConfigurer createViewerConfigurer(CommonViewer commonViewer){
+	public ViewerConfigurer createViewerConfigurer(CommonViewer commonViewer) {
 		this.commonViewer = commonViewer;
-		
+
 		MenuManager menu = new MenuManager();
 		menu.add(tvfa);
 		menu.add(rearrangePackagesAction);
-		
+
 		commonViewer.setNamedSelection("ch.elexis.core.ui.eigenartikel.selection");
 		commonViewer.setContextMenu(menu);
 		commonViewer.setSelectionChangedListener(selChangeListener);
-		
+
 		EigenartikelTreeContentProvider eal = new EigenartikelTreeContentProvider(commonViewer);
-		
+
 		ShowEigenartikelProductsAction seaoa = new ShowEigenartikelProductsAction(eal, this);
-		rearrangePackagesAction.setEnabled(ConfigServiceHolder.getUser(ShowEigenartikelProductsAction.FILTER_CFG, false));
-		
-		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
-			new FieldDescriptor<IArticle>(EigenartikelTreeContentProvider.FILTER_KEY)
-		};
-		
+		rearrangePackagesAction
+				.setEnabled(ConfigServiceHolder.getUser(ShowEigenartikelProductsAction.FILTER_CFG, false));
+
+		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[]{
+				new FieldDescriptor<IArticle>(EigenartikelTreeContentProvider.FILTER_KEY)};
+
 		SelectorPanelProvider slp = new SelectorPanelProvider(lbName, true);
 		slp.addActions(seaoa);
-		
+
 		DefaultButtonProvider dbp = new ViewerConfigurer.DefaultButtonProvider();
-		SimpleWidgetProvider swp =
-			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null);
-		
+		SimpleWidgetProvider swp = new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null);
+
 		EigenartikelTreeLabelProvider alp = new EigenartikelTreeLabelProvider();
-		
-		return new ViewerConfigurer(eal, alp, slp, dbp, swp)
-			.setContentType(ContentType.GENERICOBJECT);
+
+		return new ViewerConfigurer(eal, alp, slp, dbp, swp).setContentType(ContentType.GENERICOBJECT);
 	}
-	
+
 	@Override
-	public Class<?> getElementClass(){
+	public Class<?> getElementClass() {
 		return IArticle.class;
 	}
-	
+
 	@Override
-	public String getCodeSystemName(){
+	public String getCodeSystemName() {
 		return Constants.TYPE_NAME;
 	}
-	
+
 	@Override
-	protected PoDoubleClickListener getPoDoubleClickListener(){
+	protected PoDoubleClickListener getPoDoubleClickListener() {
 		return new PoDoubleClickListener() {
-			public void doubleClicked(PersistentObject obj, CommonViewer cv){
-				ICodeSelectorTarget target =
-					CodeSelectorHandler.getInstance().getCodeSelectorTarget();
+			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
+				ICodeSelectorTarget target = CodeSelectorHandler.getInstance().getCodeSelectorTarget();
 				if (target != null) {
 					if (obj instanceof IArticle) {
 						IArticle article = (IArticle) obj;
 						// translate to first package if product selected
 						if (article.isProduct()) {
 							@SuppressWarnings("unchecked")
-							List<IArticle> packages =
-								(List<IArticle>) (List<?>) article.getPackages();
+							List<IArticle> packages = (List<IArticle>) (List<?>) article.getPackages();
 							if (!packages.isEmpty()) {
 								article = packages.get(0);
 							}
@@ -147,103 +141,96 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 			}
 		};
 	}
-	
+
 	@Inject
 	@Optional
-	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz){
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
 		if (IArticle.class.equals(clazz)) {
 			if (commonViewer != null && !commonViewer.isDisposed()) {
 				commonViewer.getViewerWidget().refresh();
 			}
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IArticle object){
+	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IArticle object) {
 		if (commonViewer != null && object != null) {
 			commonViewer.getViewerWidget().update(object, null);
 		}
 	}
-	
-	private RestrictedAction rearrangePackagesAction =
-		new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY) {
-			
-			boolean initialized = false;
-			
-			{
-				setText("Umgruppierung aktivieren");
+
+	private RestrictedAction rearrangePackagesAction = new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY) {
+
+		boolean initialized = false;
+
+		{
+			setText("Umgruppierung aktivieren");
+		}
+
+		@Override
+		public void doRun() {
+			if (initialized) {
+				return;
 			}
-			
-			@Override
-			public void doRun(){
-				if (initialized) {
-					return;
-				}
-				
-				commonViewer.getViewerWidget().addDropSupport(DND.DROP_MOVE | DND.DROP_COPY,
-					new Transfer[] {
-					TextTransfer.getInstance()
-				}, new ViewerDropAdapter(commonViewer.getViewerWidget()) {
-					
-					@Override
-					public void dragEnter(final DropTargetEvent event){
-						event.detail = DND.DROP_COPY;
-					}
-					
-					@Override
-					public void drop(final DropTargetEvent event){
-						IArticle target = (IArticle) determineTarget(event);
-						String drp = (String) event.data;
-						String[] dl = drp.split(","); //$NON-NLS-1$
-						for (String obj : dl) {
-							PersistentObject dropped = CoreHub.poFactory.createFromString(obj);
-							if (dropped instanceof IArticle) {
-								IArticle ea = (IArticle) dropped;
-								if (ea.isProduct()) {
-									continue;
-								}
-								LockResponse lr = LocalLockServiceHolder.get().acquireLock(target);
-								if (lr.isOk()) {
-									EigenartikelUtil
-										.copyProductAttributesToArticleSetAsChild(target,
-										ea);
-									LocalLockServiceHolder.get().releaseLock(target);
-									ContextServiceHolder.get().postEvent(
-										ElexisEventTopics.EVENT_RELOAD, IArticle.class);
-								} else {
-									LockResponseHelper.showInfo(lr, target, log);
+
+			commonViewer.getViewerWidget().addDropSupport(DND.DROP_MOVE | DND.DROP_COPY,
+					new Transfer[]{TextTransfer.getInstance()}, new ViewerDropAdapter(commonViewer.getViewerWidget()) {
+
+						@Override
+						public void dragEnter(final DropTargetEvent event) {
+							event.detail = DND.DROP_COPY;
+						}
+
+						@Override
+						public void drop(final DropTargetEvent event) {
+							IArticle target = (IArticle) determineTarget(event);
+							String drp = (String) event.data;
+							String[] dl = drp.split(","); //$NON-NLS-1$
+							for (String obj : dl) {
+								PersistentObject dropped = CoreHub.poFactory.createFromString(obj);
+								if (dropped instanceof IArticle) {
+									IArticle ea = (IArticle) dropped;
+									if (ea.isProduct()) {
+										continue;
+									}
+									LockResponse lr = LocalLockServiceHolder.get().acquireLock(target);
+									if (lr.isOk()) {
+										EigenartikelUtil.copyProductAttributesToArticleSetAsChild(target, ea);
+										LocalLockServiceHolder.get().releaseLock(target);
+										ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
+												IArticle.class);
+									} else {
+										LockResponseHelper.showInfo(lr, target, log);
+									}
 								}
 							}
 						}
-					}
-					
-					@Override
-					public boolean performDrop(Object data){
-						return true;
-					}
-					
-					@Override
-					public boolean validateDrop(Object target, int operation,
-						TransferData transferType){
-						IArticle ea = (IArticle) getSelectedObject();
-						IArticle eaTarget = (IArticle) target;
-						return (eaTarget != null && eaTarget.isProduct() && ea != null
-							&& !ea.isProduct());
-					}
-				});
-				initialized = true;
-				setEnabled(!initialized);
-			}
-		};
 
-	public void allowArticleRearrangement(boolean checked){
+						@Override
+						public boolean performDrop(Object data) {
+							return true;
+						}
+
+						@Override
+						public boolean validateDrop(Object target, int operation, TransferData transferType) {
+							IArticle ea = (IArticle) getSelectedObject();
+							IArticle eaTarget = (IArticle) target;
+							return (eaTarget != null && eaTarget.isProduct() && ea != null && !ea.isProduct());
+						}
+					});
+			initialized = true;
+			setEnabled(!initialized);
+		}
+	};
+
+	public void allowArticleRearrangement(boolean checked) {
 		rearrangePackagesAction.setEnabled(checked);
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

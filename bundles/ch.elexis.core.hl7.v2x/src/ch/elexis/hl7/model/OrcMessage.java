@@ -11,24 +11,24 @@ import java.util.Set;
  */
 public class OrcMessage {
 	private Set<String> names = new HashSet<>();
-	
+
 	/**
 	 * Adds a new name attribute
 	 * 
 	 * @param name
 	 */
-	public void addName(String name){
+	public void addName(String name) {
 		if (name != null) {
 			names.add(name);
 		}
 	}
-	
+
 	/**
 	 * Returns all added names
 	 * 
 	 * @return
 	 */
-	public Set<String> getNames(){
+	public Set<String> getNames() {
 		return names;
 	}
 }

@@ -7,8 +7,9 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 
 /**
- * The lock is acquired before calling doRun. If the lock can not be acquired doRun is not called,
- * and a message is displayed. Action will always be active.
+ * The lock is acquired before calling doRun. If the lock can not be acquired
+ * doRun is not called, and a message is displayed. Action will always be
+ * active.
  * 
  * @author thomas
  *
@@ -22,29 +23,30 @@ public abstract class LockRequestingAction<T> extends Action {
 		this(text, SWT.NONE);
 	}
 
-	public LockRequestingAction(String text, int style){
+	public LockRequestingAction(String text, int style) {
 		super(text, style);
 		setEnabled(true);
 	}
 
-	public void run(){
+	public void run() {
 		object = getTargetedObject();
 		if (object == null) {
 			return;
 		}
-		
+
 		LockResponse lr = LocalLockServiceHolder.get().acquireLock(object);
-		if(lr.isOk()) {
+		if (lr.isOk()) {
 			doRun(object);
 			LocalLockServiceHolder.get().releaseLock(object);
 		} else {
 			LockResponseHelper.showInfo(lr, object, null);
 		}
 	};
-	
+
 	/**
 	 * 
-	 * @return the object the lock is requested for, or <code>null</code> to return without action
+	 * @return the object the lock is requested for, or <code>null</code> to return
+	 *         without action
 	 */
 	public abstract T getTargetedObject();
 

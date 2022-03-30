@@ -22,9 +22,9 @@ import ch.rgw.tools.StringTool;
 
 @Component
 public class CoverageService implements ICoverageService {
-	
+
 	@Override
-	public boolean isValid(ICoverage coverage){
+	public boolean isValid(ICoverage coverage) {
 		if (coverage.getPatient() == null) {
 			return false;
 		}
@@ -56,69 +56,66 @@ public class CoverageService implements ICoverageService {
 						}
 					}
 					if (r[1].equals("K")) { //$NON-NLS-1$
-						Optional<IContact> contact =
-							CoreModelServiceHolder.get().load(localReq, IContact.class);
+						Optional<IContact> contact = CoreModelServiceHolder.get().load(localReq, IContact.class);
 						if (!contact.isPresent()) {
 							return false;
 						}
 					}
 				} else {
-					LoggerFactory.getLogger(getClass()).warn("Invalid requirements [" + reqs
-						+ "] on billing system [" + coverage.getBillingSystem() + "]");
+					LoggerFactory.getLogger(getClass()).warn("Invalid requirements [" + reqs + "] on billing system ["
+							+ coverage.getBillingSystem() + "]");
 				}
 			}
 		}
 		// check whether the outputter could output a bill
-		// TODO check if this should be enabled, BillingSystem#getDefaultPrintSystem never returned null
-		//		if (BillingSystemServiceHolder.get()
-		//			.getDefaultPrintSystem(coverage.getBillingSystem()) == null) {
-		//			return false;
-		//		}
-		//		IRnOutputter outputter = getOutputter();
-		//		if (outputter == null) {
-		//			return false;
-		//		} else {
-		//			if (!outputter.canBill(this)) {
-		//				return false;
-		//			}
-		//		}
+		// TODO check if this should be enabled, BillingSystem#getDefaultPrintSystem
+		// never returned null
+		// if (BillingSystemServiceHolder.get()
+		// .getDefaultPrintSystem(coverage.getBillingSystem()) == null) {
+		// return false;
+		// }
+		// IRnOutputter outputter = getOutputter();
+		// if (outputter == null) {
+		// return false;
+		// } else {
+		// if (!outputter.canBill(this)) {
+		// return false;
+		// }
+		// }
 		return true;
 	}
-	
+
 	@Override
-	public String getRequiredString(ICoverage coverage, String name){
+	public String getRequiredString(ICoverage coverage, String name) {
 		String value = (String) coverage.getExtInfo(name);
 		if (StringUtils.isBlank(value)) {
-			value = BillingSystemServiceHolder.get()
-				.getBillingSystemConstant(coverage.getBillingSystem(), name);
+			value = BillingSystemServiceHolder.get().getBillingSystemConstant(coverage.getBillingSystem(), name);
 		}
 		return value;
 	}
-	
+
 	@Override
-	public void setRequiredString(ICoverage coverage, String name, String value){
-		String requirements =
-			BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem());
+	public void setRequiredString(ICoverage coverage, String name, String value) {
+		String requirements = BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem());
 		String[] req = requirements.split(";"); //$NON-NLS-1$
 		int idx = StringTool.getIndex(req, name + ":T"); //$NON-NLS-1$
 		if (idx != -1) {
 			coverage.setExtInfo(name, value);
 		}
 	}
-	
+
 	@Override
-	public IContact getRequiredContact(ICoverage coverage, String name){
+	public IContact getRequiredContact(ICoverage coverage, String name) {
 		String id = (String) coverage.getExtInfo(name);
 		if (StringUtils.isBlank(id)) {
 			return null;
 		}
 		return CoreModelServiceHolder.get().load(id, IContact.class).orElse(null);
 	}
-	
+
 	@Override
-	public void setRequiredContact(ICoverage coverage, String name, IContact value){
-		String requirements =
-			BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem());
+	public void setRequiredContact(ICoverage coverage, String name, IContact value) {
+		String requirements = BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem());
 		if (!StringTool.isNothing(requirements)) {
 			String[] req = requirements.split(";"); //$NON-NLS-1$
 			int idx = StringTool.getIndex(req, name + ":K"); //$NON-NLS-1$
@@ -129,9 +126,9 @@ public class CoverageService implements ICoverageService {
 			}
 		}
 	}
-	
+
 	@Override
-	public Tiers getTiersType(ICoverage coverage){
+	public Tiers getTiersType(ICoverage coverage) {
 		IContact costBearer = coverage.getCostBearer();
 		IContact guarantor = coverage.getGuarantor();
 		if (costBearer != null && costBearer.isOrganization()) {
@@ -141,57 +138,55 @@ public class CoverageService implements ICoverageService {
 		}
 		return Tiers.GARANT;
 	}
-	
+
 	/**
-	 * Test if on billing with the provided {@link ICoverage} a copy for the patient should be
-	 * generated.
+	 * Test if on billing with the provided {@link ICoverage} a copy for the patient
+	 * should be generated.
 	 * 
 	 */
-	public boolean getCopyForPatient(ICoverage coverage){
-		return StringConstants.ONE
-			.equals(coverage.getExtInfo(FallConstants.FLD_EXT_COPY_FOR_PATIENT));
+	public boolean getCopyForPatient(ICoverage coverage) {
+		return StringConstants.ONE.equals(coverage.getExtInfo(FallConstants.FLD_EXT_COPY_FOR_PATIENT));
 	}
-	
+
 	/**
-	 * Set if on billing with the provided {@link ICoverage} a copy for the patient should be
-	 * generated.
+	 * Set if on billing with the provided {@link ICoverage} a copy for the patient
+	 * should be generated.
 	 */
 	@Override
-	public void setCopyForPatient(ICoverage coverage, boolean copy){
-		coverage.setExtInfo(FallConstants.FLD_EXT_COPY_FOR_PATIENT,
-			copy ? StringConstants.ONE : StringConstants.ZERO);
+	public void setCopyForPatient(ICoverage coverage, boolean copy) {
+		coverage.setExtInfo(FallConstants.FLD_EXT_COPY_FOR_PATIENT, copy ? StringConstants.ONE : StringConstants.ZERO);
 	}
-	
+
 	/**
 	 * Get the default label for a new {@link ICoverage}. Performs a lookup for
 	 * {@link Preferences#USR_DEFCASELABEL} configuration.
 	 * 
 	 * @return
 	 */
-	public String getDefaultCoverageLabel(){
+	public String getDefaultCoverageLabel() {
 		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
 		if (userContact.isPresent()) {
 			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFCASELABEL,
-				Preferences.USR_DEFCASELABEL_DEFAULT);
+					Preferences.USR_DEFCASELABEL_DEFAULT);
 		}
 		return Preferences.USR_DEFCASELABEL_DEFAULT;
 	}
-	
+
 	/**
 	 * Get the default reason for a new {@link ICoverage}. Performs a lookup for
 	 * {@link Preferences#USR_DEFCASEREASON} configuration.
 	 * 
 	 * @return
 	 */
-	public String getDefaultCoverageReason(){
+	public String getDefaultCoverageReason() {
 		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
 		if (userContact.isPresent()) {
 			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFCASEREASON,
-				Preferences.USR_DEFCASEREASON_DEFAULT);
+					Preferences.USR_DEFCASEREASON_DEFAULT);
 		}
 		return Preferences.USR_DEFCASEREASON_DEFAULT;
 	}
-	
+
 	/**
 	 * Get the default law for a new {@link ICoverage}. Performs a lookup for
 	 * {@link Preferences#USR_DEFLAW} configuration.
@@ -200,41 +195,38 @@ public class CoverageService implements ICoverageService {
 	 * 
 	 * @return
 	 */
-	public String getDefaultCoverageLaw(){
+	public String getDefaultCoverageLaw() {
 		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
 		if (userContact.isPresent()) {
-			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFLAW,
-				"defaultBillingSystem");
+			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFLAW, "defaultBillingSystem");
 		}
 		return "defaultBillingSystem";
-		//		return ConfigServiceHolder.getUser(Preferences.USR_DEFLAW,
-		//			BillingSystem.getAbrechnungsSysteme()[0]);
+		// return ConfigServiceHolder.getUser(Preferences.USR_DEFLAW,
+		// BillingSystem.getAbrechnungsSysteme()[0]);
 	}
-	
+
 	@Override
-	public ICoverage createCopy(ICoverage coverage){
-		ICoverage ret = new ICoverageBuilder(CoreModelServiceHolder.get(), coverage)
-			.guarantor(coverage.getGuarantor()).costBearer(coverage.getCostBearer())
-			.billingProposalDate(coverage.getBillingProposalDate()).dateFrom(coverage.getDateFrom())
-			.build();
-		
-		copyExtInfoFields(loadFieldKeys(BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem())), coverage, ret);
-		copyExtInfoFields(
-			loadFieldKeys(
-				BillingSystemServiceHolder.get().getOptionals(coverage.getBillingSystem())),
-			coverage, ret);
-		
+	public ICoverage createCopy(ICoverage coverage) {
+		ICoverage ret = new ICoverageBuilder(CoreModelServiceHolder.get(), coverage).guarantor(coverage.getGuarantor())
+				.costBearer(coverage.getCostBearer()).billingProposalDate(coverage.getBillingProposalDate())
+				.dateFrom(coverage.getDateFrom()).build();
+
+		copyExtInfoFields(loadFieldKeys(BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem())),
+				coverage, ret);
+		copyExtInfoFields(loadFieldKeys(BillingSystemServiceHolder.get().getOptionals(coverage.getBillingSystem())),
+				coverage, ret);
+
 		CoreModelServiceHolder.get().save(ret);
 		return ret;
 	}
-	
-	private void copyExtInfoFields(List<String> fieldKeys, ICoverage from, ICoverage to){
+
+	private void copyExtInfoFields(List<String> fieldKeys, ICoverage from, ICoverage to) {
 		for (String fieldKey : fieldKeys) {
 			to.setExtInfo(fieldKey, from.getExtInfo(fieldKey));
 		}
 	}
-	
-	private List<String> loadFieldKeys(String fieldString){
+
+	private List<String> loadFieldKeys(String fieldString) {
 		List<String> keys = new ArrayList<String>();
 		if (StringUtils.isNotBlank(fieldString)) {
 			String[] fields = fieldString.split(";");

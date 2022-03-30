@@ -13,17 +13,17 @@ package ch.elexis.core.data.interfaces;
 import ch.rgw.tools.TimeTool;
 
 public interface IPeriod {
-	
+
 	TimeTool getStartTime();
-	
+
 	void setStartTime(TimeTool value);
-	
+
 	TimeTool getEndTime();
-	
+
 	void setEndTime(TimeTool value);
-	
+
 	String getLabel();
-	
+
 	String getId();
-	
+
 } // IPeriod

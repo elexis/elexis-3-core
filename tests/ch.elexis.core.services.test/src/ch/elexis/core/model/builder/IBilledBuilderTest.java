@@ -11,31 +11,29 @@ import ch.elexis.core.test.AbstractTest;
 import ch.rgw.tools.Money;
 
 public class IBilledBuilderTest extends AbstractTest {
-	
+
 	@Override
 	@Before
-	public void before(){
+	public void before() {
 		super.before();
 		super.createEncounter();
 		super.createLocalArticle();
 	}
-	
+
 	@Override
 	@After
-	public void after(){
+	public void after() {
 		super.after();
 	}
-	
+
 	@Test
-	public void build(){
-		IBilled billed =
-			new IBilledBuilder(coreModelService, localArticle, encounter, mandator).buildAndSave();
-		
+	public void build() {
+		IBilled billed = new IBilledBuilder(coreModelService, localArticle, encounter, mandator).buildAndSave();
+
 		assertEquals(encounter, billed.getEncounter());
 		assertEquals("test article", billed.getText());
 		assertEquals("123456789", billed.getCode());
-		assertEquals("class ch.elexis.core.model.TypedArticle",
-			billed.getBillable().getClass().toString());
+		assertEquals("class ch.elexis.core.model.TypedArticle", billed.getBillable().getClass().toString());
 		assertEquals(1d, billed.getAmount(), 0.01);
 		assertEquals(new Money(0), billed.getTotal()); // done via IBillingService
 		assertEquals(new Money(0), billed.getPrice()); // done via IBillingService
@@ -49,8 +47,8 @@ public class IBilledBuilderTest extends AbstractTest {
 		assertEquals(100, billed.getSecondaryScale());
 		assertEquals(1d, billed.getSecondaryScaleFactor(), 0.01);
 		assertEquals(mandator.getId(), billed.getBiller().getId());
-		
+
 		coreModelService.remove(billed);
 	}
-	
+
 }

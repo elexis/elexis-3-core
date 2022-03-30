@@ -11,48 +11,48 @@ import ch.elexis.core.model.Identifiable;
 
 public class AcquireLockUi {
 	private static Logger logger = LoggerFactory.getLogger(AcquireLockUi.class);
-	
-	public static void aquireAndRun(IPersistentObject lockPo, ILockHandler lockhandler){
+
+	public static void aquireAndRun(IPersistentObject lockPo, ILockHandler lockhandler) {
 		Display display = Display.getDefault();
 		LockResponse result = LocalLockServiceHolder.get().acquireLock(lockPo);
 		if (result.isOk()) {
-			
+
 			display.syncExec(new Runnable() {
 				@Override
-				public void run(){
+				public void run() {
 					lockhandler.lockAcquired();
 				}
 			});
 			LocalLockServiceHolder.get().releaseLock(lockPo);
 		} else {
-			
+
 			display.syncExec(new Runnable() {
 				@Override
-				public void run(){
+				public void run() {
 					lockhandler.lockFailed();
 					LockResponseHelper.showInfo(result, lockPo, logger);
 				}
 			});
 		}
 	}
-	
-	public static void aquireAndRun(Identifiable identifiable, ILockHandler lockhandler){
+
+	public static void aquireAndRun(Identifiable identifiable, ILockHandler lockhandler) {
 		Display display = Display.getDefault();
 		LockResponse result = LocalLockServiceHolder.get().acquireLock(identifiable);
 		if (result.isOk()) {
-			
+
 			display.syncExec(new Runnable() {
 				@Override
-				public void run(){
+				public void run() {
 					lockhandler.lockAcquired();
 				}
 			});
 			LocalLockServiceHolder.get().releaseLock(identifiable);
 		} else {
-			
+
 			display.syncExec(new Runnable() {
 				@Override
-				public void run(){
+				public void run() {
 					lockhandler.lockFailed();
 					LockResponseHelper.showInfo(result, identifiable, logger);
 				}

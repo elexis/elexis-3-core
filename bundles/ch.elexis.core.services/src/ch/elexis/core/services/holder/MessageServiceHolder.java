@@ -8,13 +8,13 @@ import ch.elexis.core.services.IMessageService;
 @Component
 public class MessageServiceHolder {
 	private static IMessageService messageService;
-	
+
 	@Reference
-	public void setAppointmentService(IMessageService messageService){
+	public void setAppointmentService(IMessageService messageService) {
 		MessageServiceHolder.messageService = messageService;
 	}
-	
-	public static IMessageService get(){
+
+	public static IMessageService get() {
 		return messageService;
 	}
 }

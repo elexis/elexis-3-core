@@ -74,100 +74,97 @@ import ch.rgw.tools.TimeTool;
  */
 
 public class AccountView extends ViewPart implements IActivationListener {
-	
+
 	public static final String ID = "ch.elexis.views.rechnung.AccountView"; //$NON-NLS-1$
-	
-	private static final String ACCOUNT_EXCESS_JOB_NAME = Messages.AccountView_calculateBalance; //$NON-NLS-1$
+
+	private static final String ACCOUNT_EXCESS_JOB_NAME = Messages.AccountView_calculateBalance; // $NON-NLS-1$
 	private BackgroundJob accountExcessJob;
-	
+
 	private FormToolkit tk;
 	private Form form;
 	private Label balanceLabel;
 	private Label excessLabel;
 	private TableViewer accountViewer;
-	
+
 	private Patient actPatient;
-	
+
 	private Action addPaymentAction, removePaymentAction;
 	private int sortColumn;
 	private boolean sortReverse;
-	
+
 	// column indices
 	private static final int DATE = 0;
 	private static final int AMOUNT = 1;
 	private static final int BILL = 2;
 	private static final int REMARKS = 3;
 	private static final int ACCOUNT = 4;
-	
-	private static final String[] COLUMN_TEXT = {
-		Messages.AccountView_date, // DATE
-		Messages.AccountView_amount, // AMOUNT
-		Messages.AccountView_bill, // BILL
-		Messages.AccountView_remarks, // REMARKS
-		Messages.AccountView_account, // ACCOUNT
+
+	private static final String[] COLUMN_TEXT = {Messages.AccountView_date, // DATE
+			Messages.AccountView_amount, // AMOUNT
+			Messages.AccountView_bill, // BILL
+			Messages.AccountView_remarks, // REMARKS
+			Messages.AccountView_account, // ACCOUNT
 	};
-	
-	private static final int[] COLUMN_WIDTH = {
-		80, // DATE
-		80, // AMOUNT
-		80, // BILL
-		160, // REMARKS
-		80 // ACCOUNT
+
+	private static final int[] COLUMN_WIDTH = {80, // DATE
+			80, // AMOUNT
+			80, // BILL
+			160, // REMARKS
+			80 // ACCOUNT
 	};
 	private ElexisEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-		
-		public void runInUi(ElexisEvent ev){
+
+		public void runInUi(ElexisEvent ev) {
 			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
 				Patient selectedPatient = (Patient) ev.getObject();
 				setPatient(selectedPatient);
 			} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
 				setPatient(null);
 			}
-			
+
 		}
 	};
-	
-	private ElexisEventListenerImpl eeli_at =
-		new ElexisUiEventListenerImpl(AccountTransaction.class) {
-			
-			public void runInUi(ElexisEvent ev){
-				removePaymentAction.setEnabled(ev.getType() == ElexisEvent.EVENT_SELECTED);
-			}
-		};
-	
-	public void createPartControl(Composite parent){
+
+	private ElexisEventListenerImpl eeli_at = new ElexisUiEventListenerImpl(AccountTransaction.class) {
+
+		public void runInUi(ElexisEvent ev) {
+			removePaymentAction.setEnabled(ev.getType() == ElexisEvent.EVENT_SELECTED);
+		}
+	};
+
+	public void createPartControl(Composite parent) {
 		initializeJobs();
-		
+
 		parent.setLayout(new FillLayout());
 		tk = UiDesk.getToolkit();
 		form = tk.createForm(parent);
 		form.getBody().setLayout(new GridLayout(1, false));
-		
+
 		// account infos
 		Composite accountArea = tk.createComposite(form.getBody());
 		accountArea.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		accountArea.setLayout(new GridLayout(3, false));
-		tk.createLabel(accountArea, Messages.AccountView_account); //$NON-NLS-1$
-		tk.createLabel(accountArea, Messages.AccountView_accountAmount); //$NON-NLS-1$
+		tk.createLabel(accountArea, Messages.AccountView_account); // $NON-NLS-1$
+		tk.createLabel(accountArea, Messages.AccountView_accountAmount); // $NON-NLS-1$
 		balanceLabel = tk.createLabel(accountArea, ""); //$NON-NLS-1$
 		balanceLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(accountArea, ""); // dummy //$NON-NLS-1$
-		tk.createLabel(accountArea, Messages.AccountView_goodFromBills); //$NON-NLS-1$
+		tk.createLabel(accountArea, Messages.AccountView_goodFromBills); // $NON-NLS-1$
 		excessLabel = tk.createLabel(accountArea, ""); //$NON-NLS-1$
 		excessLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		
+
 		// account entries
 		accountViewer = new TableViewer(form.getBody(), SWT.SINGLE | SWT.FULL_SELECTION);
 		Table table = accountViewer.getTable();
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tk.adapt(table);
-		
+
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		
+
 		SelectionAdapter sortListener = new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				TableColumn col = (TableColumn) e.getSource();
 				Integer colNo = (Integer) col.getData();
 				if (colNo == sortColumn) {
@@ -181,7 +178,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 				accountViewer.refresh();
 			}
 		};
-		
+
 		// columns
 		TableColumn[] tc = new TableColumn[COLUMN_TEXT.length];
 		for (int i = 0; i < COLUMN_TEXT.length; i++) {
@@ -191,99 +188,94 @@ public class AccountView extends ViewPart implements IActivationListener {
 			tc[i].setData(new Integer(i));
 			tc[i].addSelectionListener(sortListener);
 		}
-		
+
 		accountViewer.setContentProvider(new IStructuredContentProvider() {
-			public Object[] getElements(Object inputElement){
+			public Object[] getElements(Object inputElement) {
 				if (actPatient == null) {
-					return new Object[] {
-						Messages.AccountView_NoPatientSelected
-					};
+					return new Object[]{Messages.AccountView_NoPatientSelected};
 				}
-				Query<AccountTransaction> qa =
-					new Query<AccountTransaction>(AccountTransaction.class);
+				Query<AccountTransaction> qa = new Query<AccountTransaction>(AccountTransaction.class);
 				qa.add(AccountTransaction.FLD_PATIENT_ID, Query.EQUALS, actPatient.getId());
-				qa.orderBy(true, new String[] {
-					AccountTransaction.FLD_DATE
-				});
+				qa.orderBy(true, new String[]{AccountTransaction.FLD_DATE});
 				return qa.execute().toArray();
-				
+
 			}
-			
-			public void dispose(){
+
+			public void dispose() {
 				// nothing to do
 			}
-			
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				// nothing to do
 			}
 		});
 		accountViewer.setLabelProvider(new ITableLabelProvider() {
-			public void addListener(ILabelProviderListener listener){
+			public void addListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
-			
-			public void removeListener(ILabelProviderListener listener){
+
+			public void removeListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
-			
-			public void dispose(){
+
+			public void dispose() {
 				// nothing to do
 			}
-			
-			public String getColumnText(Object element, int columnIndex){
+
+			public String getColumnText(Object element, int columnIndex) {
 				if (!(element instanceof AccountTransaction)) {
 					return "";
 				}
-				
+
 				AccountTransaction entry = (AccountTransaction) element;
 				String text = "";
-				
+
 				Account account = null;
 				switch (columnIndex) {
-				case DATE:
-					text = entry.get("Datum");
-					break;
-				case AMOUNT:
-					text = entry.getAmount().getAmountAsString();
-					break;
-				case BILL:
-					Rechnung rechnung = entry.getRechnung();
-					if (rechnung != null && rechnung.exists()) {
-						text = rechnung.getNr();
-					} else {
-						text = ""; //$NON-NLS-1$
-					}
-					break;
-				case REMARKS:
-					text = entry.getRemark();
-					break;
-				case ACCOUNT:
-					account = entry.getAccount();
-					if (account != null && account != Account.UNKNOWN) {
-						text = account.getName();
-					}
-					break;
+					case DATE :
+						text = entry.get("Datum");
+						break;
+					case AMOUNT :
+						text = entry.getAmount().getAmountAsString();
+						break;
+					case BILL :
+						Rechnung rechnung = entry.getRechnung();
+						if (rechnung != null && rechnung.exists()) {
+							text = rechnung.getNr();
+						} else {
+							text = ""; //$NON-NLS-1$
+						}
+						break;
+					case REMARKS :
+						text = entry.getRemark();
+						break;
+					case ACCOUNT :
+						account = entry.getAccount();
+						if (account != null && account != Account.UNKNOWN) {
+							text = account.getName();
+						}
+						break;
 				}
-				
+
 				return text;
 			}
-			
-			public Image getColumnImage(Object element, int columnIndex){
+
+			public Image getColumnImage(Object element, int columnIndex) {
 				return null;
 			}
-			
-			public boolean isLabelProperty(Object element, String property){
+
+			public boolean isLabelProperty(Object element, String property) {
 				return false;
 			}
 		});
-		
+
 		accountViewer.setSorter(new AccountTransactionSorter());
 		// viewer.setSorter(new NameSorter());
 		accountViewer.setInput(getViewSite());
-		
 
 		/*
-		 * makeActions(); hookContextMenu(); hookDoubleClickAction(); contributeToActionBars();
+		 * makeActions(); hookContextMenu(); hookDoubleClickAction();
+		 * contributeToActionBars();
 		 */
 		makeActions();
 		ViewMenus menu = new ViewMenus(getViewSite());
@@ -292,80 +284,78 @@ public class AccountView extends ViewPart implements IActivationListener {
 											 */);
 		removePaymentAction.setEnabled(false);
 		GlobalEventDispatcher.addActivationListener(this, this);
-		accountViewer.addSelectionChangedListener(GlobalEventDispatcher.getInstance()
-			.getDefaultListener());
-		
+		accountViewer.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
+
 		if (sortColumn == DATE) {
 			sortReverse = true;
 		}
-		
+
 	}
-	
-	private void initializeJobs(){
+
+	private void initializeJobs() {
 		accountExcessJob = new AccountExcessJob(ACCOUNT_EXCESS_JOB_NAME);
 		accountExcessJob.addListener(new BackgroundJobListener() {
-			public void jobFinished(BackgroundJob j){
+			public void jobFinished(BackgroundJob j) {
 				setKontoText();
 			}
 		});
 		accountExcessJob.schedule();
 	}
-	
-	private void finishJobs(){
+
+	private void finishJobs() {
 		accountExcessJob.cancel();
 	}
-	
+
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
-	public void setFocus(){
+	public void setFocus() {
 		accountViewer.getControl().setFocus();
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		finishJobs();
 		GlobalEventDispatcher.removeActivationListener(this, this);
-		accountViewer.removeSelectionChangedListener(GlobalEventDispatcher.getInstance()
-			.getDefaultListener());
+		accountViewer.removeSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
 		super.dispose();
 	}
-	
-	private void setPatient(Patient patient){
+
+	private void setPatient(Patient patient) {
 		actPatient = patient;
-		
+
 		// start calculating account excess
 		accountExcessJob.invalidate();
 		accountExcessJob.schedule();
-		
+
 		String title = ""; //$NON-NLS-1$
 		if (actPatient != null) {
 			title = actPatient.getLabel();
 		} else {
-			title = Messages.AccountView_NoPatientSelected; //$NON-NLS-1$
+			title = Messages.AccountView_NoPatientSelected; // $NON-NLS-1$
 		}
 		form.setText(title);
-		
+
 		setKontoText();
 		accountViewer.refresh();
-		
+
 		form.layout();
 	}
-	
+
 	// maybe called from foreign thread
-	private void setKontoText(){
+	private void setKontoText() {
 		// check wheter the labels are valid, since we may be called
 		// from a different thread
 		if (balanceLabel.isDisposed() || excessLabel.isDisposed()) {
 			return;
 		}
-		
+
 		String balanceText = ""; //$NON-NLS-1$
 		String excessText = "..."; //$NON-NLS-1$
-		
+
 		if (actPatient != null) {
 			balanceText = actPatient.getKontostand().getAmountAsString();
-			
+
 			if (accountExcessJob.isValid()) {
 				Object jobData = accountExcessJob.getData();
 				if (jobData instanceof Money) {
@@ -374,24 +364,24 @@ public class AccountView extends ViewPart implements IActivationListener {
 				}
 			}
 		}
-		
+
 		balanceLabel.setText(balanceText);
 		excessLabel.setText(excessText);
 	}
-	
+
 	/*
 	 * SelectionListener methods
 	 */
-	
+
 	/*
 	 * ActivationListener
 	 */
-	
-	public void activation(boolean mode){
+
+	public void activation(boolean mode) {
 		// nothing to do
 	}
-	
-	public void visible(boolean mode){
+
+	public void visible(boolean mode) {
 		if (mode == true) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_at, eeli_pat);
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
@@ -401,117 +391,114 @@ public class AccountView extends ViewPart implements IActivationListener {
 			setPatient(null);
 		}
 	};
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 	/*
 	 * class AccountEntry { TimeTool date; Money amount; String remarks;
 	 * 
-	 * AccountEntry(TimeTool date, Money amount, String remarks) { this.date = date; this.amount =
-	 * amount; this.remarks = remarks;
+	 * AccountEntry(TimeTool date, Money amount, String remarks) { this.date = date;
+	 * this.amount = amount; this.remarks = remarks;
 	 * 
 	 * if (remarks == null) { remarks = ""; } } }
 	 */
-	
-	private void makeActions(){
-		addPaymentAction = new Action(Messages.AccountView_addBookingCaption) { //$NON-NLS-1$
-				{
-					setToolTipText(Messages.AccountView_addBookingBody); //$NON-NLS-1$
-					setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
+
+	private void makeActions() {
+		addPaymentAction = new Action(Messages.AccountView_addBookingCaption) { // $NON-NLS-1$
+			{
+				setToolTipText(Messages.AccountView_addBookingBody); // $NON-NLS-1$
+				setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
+			}
+
+			@Override
+			public void run() {
+				if (new AddBuchungDialog(getViewSite().getShell(), actPatient).open() == Dialog.OK) {
+					setPatient(actPatient);
 				}
-				
-				@Override
-				public void run(){
-					if (new AddBuchungDialog(getViewSite().getShell(), actPatient).open() == Dialog.OK) {
+			}
+		};
+		removePaymentAction = new Action(Messages.AccountView_deleteBookingAction) { // $NON-NLS-1$
+			{
+				setToolTipText(Messages.AccountView_deleteBookingTooltip); // $NON-NLS-1$
+				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
+			}
+
+			@Override
+			public void run() {
+				AccountTransaction at = (AccountTransaction) ElexisEventDispatcher
+						.getSelected(AccountTransaction.class);
+				if (at != null) {
+					if (SWTHelper.askYesNo(Messages.AccountView_deleteBookingConfirmCaption, // $NON-NLS-1$
+							Messages.AccountView_deleteBookingConfirmBody)) { // $NON-NLS-1$
+						at.delete();
 						setPatient(actPatient);
 					}
 				}
-			};
-		removePaymentAction = new Action(Messages.AccountView_deleteBookingAction) { //$NON-NLS-1$
-				{
-					setToolTipText(Messages.AccountView_deleteBookingTooltip); //$NON-NLS-1$
-					setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-				}
-				
-				@Override
-				public void run(){
-					AccountTransaction at =
-						(AccountTransaction) ElexisEventDispatcher
-							.getSelected(AccountTransaction.class);
-					if (at != null) {
-						if (SWTHelper.askYesNo(Messages.AccountView_deleteBookingConfirmCaption, //$NON-NLS-1$
-							Messages.AccountView_deleteBookingConfirmBody)) { //$NON-NLS-1$
-							at.delete();
-							setPatient(actPatient);
-						}
-					}
-				}
-				
-			};
+			}
+
+		};
 	}
-	
+
 	class AccountExcessJob extends BackgroundJob {
-		public AccountExcessJob(String name){
+		public AccountExcessJob(String name) {
 			super(name);
 		}
-		
-		public IStatus execute(IProgressMonitor monitor){
+
+		public IStatus execute(IProgressMonitor monitor) {
 			if (AccountView.this.actPatient != null) {
 				result = actPatient.getAccountExcess();
 			} else {
 				result = null;
 			}
-			
+
 			// return new Status(IStatus.OK, Hub.PLUGIN_ID, IStatus.OK,
 			// "Daten geladen", null);
 			return Status.OK_STATUS;
 		}
-		
-		public int getSize(){
+
+		public int getSize() {
 			return 1;
 		}
 	}
-	
+
 	class AccountTransactionSorter extends ViewerSorter {
 		@Override
-		public int compare(Viewer viewer, Object e1, Object e2){
-			
+		public int compare(Viewer viewer, Object e1, Object e2) {
+
 			if ((e1 instanceof AccountTransaction) && (e2 instanceof AccountTransaction)) {
 				AccountTransaction accountTransaction1 = (AccountTransaction) e1;
 				AccountTransaction accountTransaction2 = (AccountTransaction) e2;
 				int retVal = 0;
 				switch (sortColumn) {
-				case DATE:
-					retVal = ObjectUtils.compare(new TimeTool(accountTransaction1.getDate()),
-						new TimeTool(accountTransaction2.getDate()));
-					break;
-				case AMOUNT:
-					retVal = ObjectUtils.compare(accountTransaction1.getAmount(),
-						accountTransaction2.getAmount());
-					break;
-				case BILL:
-					Rechnung rechnung1 = accountTransaction1.getRechnung();
-					Rechnung rechnung2 = accountTransaction2.getRechnung();
-					if (rechnung1 == null)
-						retVal = -1;
-					else if (rechnung2 == null)
-						retVal = 1;
-					else
-						retVal = ObjectUtils.compare(NumberUtils.toInt(rechnung1.getNr()),
-							NumberUtils.toInt(rechnung2.getNr()));
-					break;
-				case REMARKS:
-					retVal = ObjectUtils.compare(accountTransaction1.getRemark(),
-						accountTransaction2.getRemark());
-					break;
-				case ACCOUNT:
-					retVal = ObjectUtils.compare(accountTransaction1.getAccount().getName(),
-						accountTransaction2.getAccount().getName());
-					break;
+					case DATE :
+						retVal = ObjectUtils.compare(new TimeTool(accountTransaction1.getDate()),
+								new TimeTool(accountTransaction2.getDate()));
+						break;
+					case AMOUNT :
+						retVal = ObjectUtils.compare(accountTransaction1.getAmount(), accountTransaction2.getAmount());
+						break;
+					case BILL :
+						Rechnung rechnung1 = accountTransaction1.getRechnung();
+						Rechnung rechnung2 = accountTransaction2.getRechnung();
+						if (rechnung1 == null)
+							retVal = -1;
+						else if (rechnung2 == null)
+							retVal = 1;
+						else
+							retVal = ObjectUtils.compare(NumberUtils.toInt(rechnung1.getNr()),
+									NumberUtils.toInt(rechnung2.getNr()));
+						break;
+					case REMARKS :
+						retVal = ObjectUtils.compare(accountTransaction1.getRemark(), accountTransaction2.getRemark());
+						break;
+					case ACCOUNT :
+						retVal = ObjectUtils.compare(accountTransaction1.getAccount().getName(),
+								accountTransaction2.getAccount().getName());
+						break;
 				}
 				return sortReverse ? retVal * -1 : retVal;
 			}

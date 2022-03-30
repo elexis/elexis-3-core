@@ -29,40 +29,39 @@ import ch.elexis.data.Kontakt;
 
 public class KontaktFieldEditor extends FieldEditor {
 	private Label contactLabel;
-	private String defaultText = Messages.KontaktFieldEditor_PleaseSelect; //$NON-NLS-1$
+	private String defaultText = Messages.KontaktFieldEditor_PleaseSelect; // $NON-NLS-1$
 	private Kontakt selected;
 	private ConfigServicePreferenceStore store;
-	
-	protected KontaktFieldEditor(){
+
+	protected KontaktFieldEditor() {
 		// no defaults
 	}
-	
-	public KontaktFieldEditor(ConfigServicePreferenceStore store, String name, String labelText,
-		Composite parent){
+
+	public KontaktFieldEditor(ConfigServicePreferenceStore store, String name, String labelText, Composite parent) {
 		super(name, labelText, parent);
 		this.store = store;
 	}
-	
+
 	@Override
-	protected void adjustForNumColumns(int numColumns){
+	protected void adjustForNumColumns(int numColumns) {
 		((GridData) contactLabel.getLayoutData()).horizontalSpan = numColumns - 1;
-		
+
 	}
-	
+
 	@Override
-	protected void doFillIntoGrid(Composite parent, int numColumns){
+	protected void doFillIntoGrid(Composite parent, int numColumns) {
 		Control control = getLabelControl(parent);
 		GridData gd = new GridData();
 		gd.horizontalSpan = numColumns - 1;
 		control.setLayoutData(gd);
-		
+
 		Label cLabel = getChangeControl(parent);
 		cLabel.setLayoutData(new GridData());
-		
+
 	}
-	
+
 	@Override
-	protected void doLoad(){
+	protected void doLoad() {
 		if (contactLabel == null) {
 			return;
 		}
@@ -74,40 +73,39 @@ public class KontaktFieldEditor extends FieldEditor {
 			selected = null;
 		}
 	}
-	
+
 	@Override
-	protected void doLoadDefault(){
+	protected void doLoadDefault() {
 		contactLabel.setText(defaultText);
 		selected = null;
 	}
-	
+
 	@Override
-	protected void doStore(){
+	protected void doStore() {
 		if (selected == null) {
 			store.setValue(getPreferenceName(), null);
 		} else {
 			store.setValue(getPreferenceName(), selected.getId());
 		}
-		
+
 	}
-	
+
 	@Override
-	public int getNumberOfControls(){
+	public int getNumberOfControls() {
 		return 2;
 	}
-	
-	protected Label getChangeControl(final Composite parent){
+
+	protected Label getChangeControl(final Composite parent) {
 		if (contactLabel == null) {
 			contactLabel = new Label(parent, SWT.NONE);
 			contactLabel.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
 			contactLabel.addMouseListener(new MouseAdapter() {
-				
+
 				@Override
-				public void mouseUp(MouseEvent e){
-					KontaktSelektor ksl =
-						new KontaktSelektor(parent.getShell(), Kontakt.class,
-							Messages.KontaktFieldEditor_SelectContact, //$NON-NLS-1$
-							Messages.KontaktFieldEditor_PleaseSelectContact, Kontakt.DEFAULT_SORT); //$NON-NLS-1$
+				public void mouseUp(MouseEvent e) {
+					KontaktSelektor ksl = new KontaktSelektor(parent.getShell(), Kontakt.class,
+							Messages.KontaktFieldEditor_SelectContact, // $NON-NLS-1$
+							Messages.KontaktFieldEditor_PleaseSelectContact, Kontakt.DEFAULT_SORT); // $NON-NLS-1$
 					if (ksl.open() == Dialog.OK) {
 						selected = (Kontakt) ksl.getSelection();
 						contactLabel.setText(selected.getLabel());
@@ -116,20 +114,20 @@ public class KontaktFieldEditor extends FieldEditor {
 						selected = null;
 					}
 				}
-				
+
 			});
-			
+
 		} else {
 			checkParent(contactLabel, parent);
 		}
 		return contactLabel;
 	}
-	
-	public Kontakt getValue(){
+
+	public Kontakt getValue() {
 		return selected;
 	}
-	
-	public void set(Kontakt sel){
+
+	public void set(Kontakt sel) {
 		if (sel.isValid()) {
 			selected = sel;
 			contactLabel.setText(selected.getLabel());
@@ -137,6 +135,6 @@ public class KontaktFieldEditor extends FieldEditor {
 			sel = null;
 			contactLabel.setText(defaultText);
 		}
-		
+
 	}
 }

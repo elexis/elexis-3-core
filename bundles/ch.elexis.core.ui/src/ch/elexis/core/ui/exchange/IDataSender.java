@@ -16,9 +16,9 @@ import ch.elexis.core.ui.exchange.elements.XChangeElement;
 import ch.elexis.data.PersistentObject;
 
 /**
- * A generic mediator between Elexis Objects and XML-Files. Any number of Objects can be sent to the
- * IDataSender, finishing with a call to finalizeExport. The ultimate destination depends on the
- * implementation
+ * A generic mediator between Elexis Objects and XML-Files. Any number of
+ * Objects can be sent to the IDataSender, finishing with a call to
+ * finalizeExport. The ultimate destination depends on the implementation
  * 
  * @author Gerry
  * 
@@ -34,15 +34,15 @@ public interface IDataSender {
 	 *             if an error occurred
 	 */
 	public XChangeElement store(Object output) throws XChangeException;
-	
+
 	/**
-	 * Send the stored objects to this IDataSender's ultimate destinaion (e.g. file, URL). The
-	 * IDataTransfer is invalid after finalizing.
+	 * Send the stored objects to this IDataSender's ultimate destinaion (e.g. file,
+	 * URL). The IDataTransfer is invalid after finalizing.
 	 * 
 	 * @throws XChangeException
 	 */
 	public void finalizeExport() throws XChangeException;
-	
+
 	/**
 	 * Ask if this IDataSender can handle a certain type
 	 * 

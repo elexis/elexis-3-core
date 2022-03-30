@@ -21,60 +21,59 @@ import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.data.Patient;
 
 public class PersonalAnamnesisViewContribution implements IViewContribution {
-	
+
 	PersonalAnamnesisComposite anamnesisComposite;
-	
+
 	@Override
-	public void setUnlocked(boolean unlocked){
+	public void setUnlocked(boolean unlocked) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public String getLocalizedTitle(){
+	public String getLocalizedTitle() {
 		return "Persönliche Anamnese";
 	}
-	
+
 	@Override
-	public boolean isAvailable(){
+	public boolean isAvailable() {
 		return ConfigServiceHolder.getGlobal(IMigratorService.PERSANAM_SETTINGS_USE_STRUCTURED, false);
 	}
-	
+
 	@Override
-	public Composite initComposite(Composite parent){
+	public Composite initComposite(Composite parent) {
 		anamnesisComposite = new PersonalAnamnesisComposite(parent, SWT.NONE);
 		return anamnesisComposite;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setDetailObject(Object detailObject, Object additionalData){
+	public void setDetailObject(Object detailObject, Object additionalData) {
 		List<? extends IFinding> observations = null;
 		if (anamnesisComposite != null) {
 			if (FindingsServiceComponent.getService() != null && detailObject instanceof Patient) {
 				observations = FindingsServiceComponent.getService()
-					.getPatientsFindings(((Patient) detailObject).getId(), IObservation.class);
+						.getPatientsFindings(((Patient) detailObject).getId(), IObservation.class);
 				observations = observations.stream().filter(finding -> isPersonalAnamnesis(finding))
-					.collect(Collectors.toList());
+						.collect(Collectors.toList());
 			}
-			
+
 			if (observations != null && observations.size() >= 1) {
 				if (observations.size() > 1) {
 					MessageDialog.openWarning(anamnesisComposite.getShell(), "Persönliche Anamnese",
-						"Mehr als eine persönliche Anamnese gefunden.\n Nur die letzte persönliche Anamnese wird angezeigt.");
+							"Mehr als eine persönliche Anamnese gefunden.\n Nur die letzte persönliche Anamnese wird angezeigt.");
 				}
-				anamnesisComposite
-					.setInput(Optional.of(((List<IObservation>) observations).get(0)));
+				anamnesisComposite.setInput(Optional.of(((List<IObservation>) observations).get(0)));
 			} else {
 				anamnesisComposite.setInput(Optional.empty());
 			}
 		}
-		
+
 	}
-	
-	private boolean isPersonalAnamnesis(IFinding iFinding){
+
+	private boolean isPersonalAnamnesis(IFinding iFinding) {
 		if (iFinding instanceof IObservation
-			&& ((IObservation) iFinding).getCategory() == ObservationCategory.SOCIALHISTORY) {
+				&& ((IObservation) iFinding).getCategory() == ObservationCategory.SOCIALHISTORY) {
 			for (ICoding code : ((IObservation) iFinding).getCoding()) {
 				if (ObservationCode.ANAM_PERSONAL.isSame(code)) {
 					return true;

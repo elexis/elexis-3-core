@@ -14,25 +14,22 @@ import ch.elexis.core.ui.views.codesystems.LeistungenView;
 
 public class AddMedicationHandler extends AbstractHandler {
 	private static MedicationView medicationView;
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		medicationView =
-			(MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		medicationView = (MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 				.findView(MedicationView.PART_ID);
-		
+
 		// open the LeistungenView
 		try {
 			medicationView.getViewSite().getPage().showView(LeistungenView.ID);
-			LeistungenView leistungenView = (LeistungenView) PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getActivePage().showView(LeistungenView.ID);
+			LeistungenView leistungenView = (LeistungenView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().showView(LeistungenView.ID);
 			CodeSelectorHandler csHandler = CodeSelectorHandler.getInstance();
-			csHandler
-				.setCodeSelectorTarget(medicationView.getMedicationComposite().getDropTarget());
+			csHandler.setCodeSelectorTarget(medicationView.getMedicationComposite().getDropTarget());
 			csHandler.getCodeSelectorTarget().registered(false);
 			medicationView.getMedicationComposite().setDropChangePrescription(null);
-			
+
 			for (CTabItem cti : leistungenView.ctab.getItems()) {
 				if (cti.getText().equalsIgnoreCase("Artikelstamm")) {
 					leistungenView.setSelected(cti);
@@ -40,14 +37,14 @@ public class AddMedicationHandler extends AbstractHandler {
 					leistungenView.ctab.setSelection(cti);
 				}
 			}
-			
+
 		} catch (Exception e) {
 			getLogger().error("Error showing LeistungenView", e);
 		}
 		return null;
 	}
-	
-	private Logger getLogger(){
+
+	private Logger getLogger() {
 		return LoggerFactory.getLogger(AddMedicationHandler.class);
 	}
 }

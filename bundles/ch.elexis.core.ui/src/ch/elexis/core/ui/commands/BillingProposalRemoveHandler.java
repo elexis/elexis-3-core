@@ -28,10 +28,10 @@ import ch.elexis.core.ui.views.rechnung.BillingProposalView;
 import ch.elexis.core.ui.views.rechnung.BillingProposalView.BillingInformation;
 
 public class BillingProposalRemoveHandler extends AbstractHandler implements IHandler {
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection != null && !selection.isEmpty()) {
 			List<Object> selectionList = ((IStructuredSelection) selection).toList();
@@ -45,15 +45,15 @@ public class BillingProposalRemoveHandler extends AbstractHandler implements IHa
 		}
 		return null;
 	}
-	
-	private BillingProposalView getOpenView(ExecutionEvent event){
+
+	private BillingProposalView getOpenView(ExecutionEvent event) {
 		try {
 			IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 			IWorkbenchPage page = window.getActivePage();
 			return (BillingProposalView) page.showView(BillingProposalView.ID);
 		} catch (PartInitException e) {
 			MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
-				"Konnte Rechnungs-Vorschlag View nicht öffnen");
+					"Konnte Rechnungs-Vorschlag View nicht öffnen");
 		}
 		return null;
 	}

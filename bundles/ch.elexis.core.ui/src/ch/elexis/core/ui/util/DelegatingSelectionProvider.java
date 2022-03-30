@@ -9,66 +9,64 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 public class DelegatingSelectionProvider implements ISelectionProvider {
 	private final ListenerList selectionListeners = new ListenerList();
-	
+
 	private final ListenerList postSelectionListeners = new ListenerList();
-	
+
 	private ISelectionProvider delegate;
-	
+
 	private ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
-		public void selectionChanged(SelectionChangedEvent event){
+		public void selectionChanged(SelectionChangedEvent event) {
 			if (event.getSelectionProvider() == delegate) {
 				fireSelectionChanged(event.getSelection());
 			}
 		}
 	};
-	
+
 	private ISelectionChangedListener postSelectionListener = new ISelectionChangedListener() {
-		public void selectionChanged(SelectionChangedEvent event){
+		public void selectionChanged(SelectionChangedEvent event) {
 			if (event.getSelectionProvider() == delegate) {
 				firePostSelectionChanged(event.getSelection());
 			}
 		}
 	};
-	
+
 	/**
-	 * Sets a new selection provider to delegate to. Selection listeners registered with the
-	 * previous delegate are removed before.
+	 * Sets a new selection provider to delegate to. Selection listeners registered
+	 * with the previous delegate are removed before.
 	 * 
 	 * @param newDelegate
 	 *            new selection provider
 	 */
-	public void setSelectionProviderDelegate(ISelectionProvider newDelegate){
+	public void setSelectionProviderDelegate(ISelectionProvider newDelegate) {
 		if (delegate == newDelegate) {
 			return;
 		}
 		if (delegate != null) {
 			delegate.removeSelectionChangedListener(selectionListener);
 			if (delegate instanceof IPostSelectionProvider) {
-				((IPostSelectionProvider) delegate)
-					.removePostSelectionChangedListener(postSelectionListener);
+				((IPostSelectionProvider) delegate).removePostSelectionChangedListener(postSelectionListener);
 			}
 		}
 		delegate = newDelegate;
 		if (newDelegate != null) {
 			newDelegate.addSelectionChangedListener(selectionListener);
 			if (newDelegate instanceof IPostSelectionProvider) {
-				((IPostSelectionProvider) newDelegate)
-					.addPostSelectionChangedListener(postSelectionListener);
+				((IPostSelectionProvider) newDelegate).addPostSelectionChangedListener(postSelectionListener);
 			}
 			fireSelectionChanged(newDelegate.getSelection());
 			firePostSelectionChanged(newDelegate.getSelection());
 		}
 	}
-	
-	protected void fireSelectionChanged(ISelection selection){
+
+	protected void fireSelectionChanged(ISelection selection) {
 		fireSelectionChanged(selectionListeners, selection);
 	}
-	
-	protected void firePostSelectionChanged(ISelection selection){
+
+	protected void firePostSelectionChanged(ISelection selection) {
 		fireSelectionChanged(postSelectionListeners, selection);
 	}
-	
-	private void fireSelectionChanged(ListenerList list, ISelection selection){
+
+	private void fireSelectionChanged(ListenerList list, ISelection selection) {
 		SelectionChangedEvent event = new SelectionChangedEvent(delegate, selection);
 		Object[] listeners = list.getListeners();
 		for (int i = 0; i < listeners.length; i++) {
@@ -76,30 +74,30 @@ public class DelegatingSelectionProvider implements ISelectionProvider {
 			listener.selectionChanged(event);
 		}
 	}
-	
+
 	// IPostSelectionProvider Implementation
-	
-	public void addSelectionChangedListener(ISelectionChangedListener listener){
+
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.add(listener);
 	}
-	
-	public void removeSelectionChangedListener(ISelectionChangedListener listener){
+
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.remove(listener);
 	}
-	
-	public void addPostSelectionChangedListener(ISelectionChangedListener listener){
+
+	public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
 		postSelectionListeners.add(listener);
 	}
-	
-	public void removePostSelectionChangedListener(ISelectionChangedListener listener){
+
+	public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
 		postSelectionListeners.remove(listener);
 	}
-	
-	public ISelection getSelection(){
+
+	public ISelection getSelection() {
 		return delegate == null ? null : delegate.getSelection();
 	}
-	
-	public void setSelection(ISelection selection){
+
+	public void setSelection(ISelection selection) {
 		if (delegate != null) {
 			delegate.setSelection(selection);
 		}

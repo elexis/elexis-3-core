@@ -16,16 +16,17 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.RoleConstants;
 
 /**
- * @since 3.1 replaced the original AccessControl, which is kept in AccessControlImpl
+ * @since 3.1 replaced the original AccessControl, which is kept in
+ *        AccessControlImpl
  * @since 3.8 removed AccessControlImpl
  */
 public abstract class AbstractAccessControl {
-	
+
 	public static final String USER_GROUP = RoleConstants.SYSTEMROLE_LITERAL_USER;
 	public static final String ADMIN_GROUP = RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR;
-	
+
 	public abstract boolean request(ACE ace);
-	
+
 	/**
 	 * Request a right for a given {@link Role}
 	 * 
@@ -34,17 +35,17 @@ public abstract class AbstractAccessControl {
 	 * @return <code>true</code> if allowed
 	 */
 	public abstract boolean request(@NonNull IRole r, ACE ace);
-	
+
 	/**
-	 * Request a right for a given {@link User}. The rights allowed for this user is the joint
-	 * rights for each {@link Role} this user is allocated to.
+	 * Request a right for a given {@link User}. The rights allowed for this user is
+	 * the joint rights for each {@link Role} this user is allocated to.
 	 * 
 	 * @param u
 	 * @param ace
 	 * @return <code>true</code> if allowed
 	 */
 	public abstract boolean request(IUser u, ACE ace);
-	
+
 	/**
 	 * Grant a specific right to a {@link Role}
 	 * 
@@ -52,7 +53,7 @@ public abstract class AbstractAccessControl {
 	 * @param ace
 	 */
 	public abstract void grant(IRole r, ACE ace);
-	
+
 	/**
 	 * Revoke a specific right from a {@link Role}
 	 * 
@@ -60,10 +61,11 @@ public abstract class AbstractAccessControl {
 	 * @param ace
 	 */
 	public abstract void revoke(IRole r, ACE ace);
-	
+
 	/**
 	 * @deprecated 3.1 for compatibility only
 	 */
-	public void flush(){}
-	
+	public void flush() {
+	}
+
 }

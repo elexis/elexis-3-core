@@ -36,16 +36,16 @@ public class LabItem extends AbstractEntityWithId implements EntityWithId, Entit
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Column(name = "kuerzel", length = 80)
 	private String code;
 
@@ -92,13 +92,13 @@ public class LabItem extends AbstractEntityWithId implements EntityWithId, Entit
 
 	@Column(length = 255)
 	private String formula;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "labItem")
 	private List<LabMapping> mappings;
 
 	/**
-	 * @return the variable name of this LabItem as used in LabItems of type
-	 *         formula for cross-reference
+	 * @return the variable name of this LabItem as used in LabItems of type formula
+	 *         for cross-reference
 	 */
 	@Transient
 	public String getVariableName() {
@@ -153,11 +153,11 @@ public class LabItem extends AbstractEntityWithId implements EntityWithId, Entit
 		this.unit = unit;
 	}
 
-	public LabItemTyp getTyp(){
+	public LabItemTyp getTyp() {
 		return typ;
 	}
 
-	public void setTyp(LabItemTyp type){
+	public void setTyp(LabItemTyp type) {
 		this.typ = type;
 	}
 
@@ -232,38 +232,38 @@ public class LabItem extends AbstractEntityWithId implements EntityWithId, Entit
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
-	public List<LabMapping> getMappings(){
+
+	public List<LabMapping> getMappings() {
 		return mappings;
 	}
 }

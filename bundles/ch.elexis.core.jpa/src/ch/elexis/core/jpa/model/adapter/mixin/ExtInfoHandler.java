@@ -9,15 +9,15 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.util.JpaModelUtil;
 
 public class ExtInfoHandler {
-	
+
 	private AbstractIdModelAdapter<? extends EntityWithExtInfo> withExtInfo;
 	private Map<Object, Object> extInfo;
-	
-	public ExtInfoHandler(AbstractIdModelAdapter<? extends EntityWithExtInfo> withExtInfo){
+
+	public ExtInfoHandler(AbstractIdModelAdapter<? extends EntityWithExtInfo> withExtInfo) {
 		this.withExtInfo = withExtInfo;
 	}
-	
-	private void doLoadExtInfo(){
+
+	private void doLoadExtInfo() {
 		if (extInfo == null) {
 			byte[] bytes = withExtInfo.getEntity().getExtInfo();
 			if (bytes != null) {
@@ -27,16 +27,16 @@ public class ExtInfoHandler {
 			}
 		}
 	}
-	
-	public Object getExtInfo(Object key){
+
+	public Object getExtInfo(Object key) {
 		doLoadExtInfo();
-		
+
 		return extInfo.get(key);
 	}
-	
-	public void setExtInfo(Object key, Object value){
+
+	public void setExtInfo(Object key, Object value) {
 		doLoadExtInfo();
-		
+
 		if (value == null) {
 			extInfo.remove(key);
 		} else {
@@ -44,18 +44,18 @@ public class ExtInfoHandler {
 		}
 		withExtInfo.getEntityMarkDirty().setExtInfo(JpaModelUtil.extInfoToBytes(extInfo));
 	}
-	
-	public void resetExtInfo(){
+
+	public void resetExtInfo() {
 		extInfo = null;
 	}
-	
+
 	/**
-	 * @return modifications to this map are not persisted. Use {@link #setExtInfo(Object, Object)}
-	 *         to handle persistent sets
+	 * @return modifications to this map are not persisted. Use
+	 *         {@link #setExtInfo(Object, Object)} to handle persistent sets
 	 */
-	public Map<Object, Object> getMap(){
+	public Map<Object, Object> getMap() {
 		doLoadExtInfo();
-		
+
 		return new HashMap<>(extInfo);
 	}
 }

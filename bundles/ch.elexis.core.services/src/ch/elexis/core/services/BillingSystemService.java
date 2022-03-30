@@ -26,44 +26,43 @@ import ch.elexis.core.model.ch.BillingLaw;
 
 @Component
 public class BillingSystemService implements IBillingSystemService {
-	
+
 	@Reference
 	public IConfigService configService;
-	
+
 	private LoadingCache<String, BillingSystem> cache;
-	
+
 	private static final String CFG_KEY_BILLINGLAW = "defaultBillingLaw";
-	
-	public BillingSystemService(){
-		cache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS)
-			.build(new BillingSystemLoader());
+
+	public BillingSystemService() {
+		cache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).build(new BillingSystemLoader());
 	}
-	
+
 	@Override
-	public String getOptionals(IBillingSystem system){
+	public String getOptionals(IBillingSystem system) {
 		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-			+ system.getName() + "/fakultativ", null); //$NON-NLS-1$
+				+ system.getName() + "/fakultativ", null); //$NON-NLS-1$
 		return value;
 	}
-	
+
 	@Override
-	public String getRequirements(IBillingSystem system){
+	public String getRequirements(IBillingSystem system) {
 		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-			+ system.getName() + "/bedingungen", null);
+				+ system.getName() + "/bedingungen", null);
 		return value;
 	}
-	
+
 	@Override
-	public String getDefaultPrintSystem(IBillingSystem system){
+	public String getDefaultPrintSystem(IBillingSystem system) {
 		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-			+ system.getName() + "/standardausgabe", null);
+				+ system.getName() + "/standardausgabe", null);
 		return value;
 	}
-	
+
 	@Override
-	public String getDefaultInsuranceReason(IBillingSystem system){
+	public String getDefaultInsuranceReason(IBillingSystem system) {
 		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-			+ system.getName() + "/standardgrund", null);
+				+ system.getName() + "/standardgrund", null);
 		if (value == null) {
 			if (system.getLaw() == BillingLaw.UVG) {
 				value = FallConstants.TYPE_ACCIDENT;
@@ -73,20 +72,20 @@ public class BillingSystemService implements IBillingSystemService {
 		}
 		return value;
 	}
-	
+
 	@Override
-	public List<String> getBillingSystemConstants(IBillingSystem billingSystem){
+	public List<String> getBillingSystemConstants(IBillingSystem billingSystem) {
 		String bc = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-			+ billingSystem + "/constants", null); //$NON-NLS-1$
+				+ billingSystem + "/constants", null); //$NON-NLS-1$
 		if (bc == null) {
 			return Collections.emptyList();
 		} else {
 			return Arrays.asList(bc.split("#")); //$NON-NLS-1$
 		}
 	}
-	
+
 	@Override
-	public String getBillingSystemConstant(IBillingSystem billingSystem, String name){
+	public String getBillingSystemConstant(IBillingSystem billingSystem, String name) {
 		List<String> constants = getBillingSystemConstants(billingSystem);
 		for (String bc : constants) {
 			String[] val = bc.split("="); //$NON-NLS-1$
@@ -96,19 +95,19 @@ public class BillingSystemService implements IBillingSystemService {
 		}
 		return ""; //$NON-NLS-1$
 	}
-	
+
 	@Override
-	public IBillingSystem getDefaultBillingSystem(){
+	public IBillingSystem getDefaultBillingSystem() {
 		Optional<IBillingSystem> billingSystem = getBillingSystem("KVG");
 		if (billingSystem.isPresent()) {
 			return billingSystem.get();
 		}
 		return addOrModifyBillingSystem(Messages.Fall_KVG_Name, Messages.Fall_TarmedLeistung,
-			Messages.Fall_TarmedPrinter, Messages.Fall_KVGRequirements, BillingLaw.KVG);
+				Messages.Fall_TarmedPrinter, Messages.Fall_KVGRequirements, BillingLaw.KVG);
 	}
-	
+
 	@Override
-	public Optional<IBillingSystem> getBillingSystem(String name){
+	public Optional<IBillingSystem> getBillingSystem(String name) {
 		try {
 			if (name != null) {
 				BillingSystem ret = cache.get(name);
@@ -117,15 +116,14 @@ public class BillingSystemService implements IBillingSystemService {
 				}
 			}
 		} catch (ExecutionException e) {
-			LoggerFactory.getLogger(getClass()).warn("Error getting billing system [" + name + "]",
-				e);
+			LoggerFactory.getLogger(getClass()).warn("Error getting billing system [" + name + "]", e);
 		}
 
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public BillingLaw getBillingLaw(String law){
+	public BillingLaw getBillingLaw(String law) {
 		if (StringUtils.isNotBlank(law)) {
 			// compatibility with changed BillingLaw enum (ticket #15019)
 			if ("MVG".equals(law)) {
@@ -140,15 +138,15 @@ public class BillingSystemService implements IBillingSystemService {
 		}
 		return null;
 	}
-	
+
 	private class BillingSystemLoader extends CacheLoader<String, BillingSystem> {
-		
+
 		@Override
-		public BillingSystem load(String key) throws Exception{
+		public BillingSystem load(String key) throws Exception {
 			String billingSystemName = getConfigurationValue(key, "name", null);
 			if (billingSystemName != null) {
 				String configuredLaw = getConfigurationValue(key, CFG_KEY_BILLINGLAW, null);
-				
+
 				if (configuredLaw != null) {
 					BillingLaw law = getBillingLaw(configuredLaw);
 					if (law != null) {
@@ -158,50 +156,48 @@ public class BillingSystemService implements IBillingSystemService {
 					}
 				} else {
 					LoggerFactory.getLogger(getClass())
-						.warn("Could not determine law for billing system [" + key + "]");
+							.warn("Could not determine law for billing system [" + key + "]");
 				}
 			}
 			return BillingSystem.UNKNOWN;
 		}
 	}
-	
+
 	@Override
-	public List<IBillingSystem> getBillingSystems(){
+	public List<IBillingSystem> getBillingSystems() {
 		List<String> subNodes = configService.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 		if (!subNodes.isEmpty()) {
-			return subNodes.stream().map(node -> getBillingSystem(node).orElse(null))
-				.filter(bs -> bs != null).collect(Collectors.toList());
+			return subNodes.stream().map(node -> getBillingSystem(node).orElse(null)).filter(bs -> bs != null)
+					.collect(Collectors.toList());
 		}
 		LoggerFactory.getLogger(getClass()).warn("No billing systems configured");
 		return Collections.emptyList();
 	}
-	
+
 	@Override
-	public IBillingSystem addOrModifyBillingSystem(String name, String serviceCode,
-		String defaultPrinter, String requirements, BillingLaw law){
-		
+	public IBillingSystem addOrModifyBillingSystem(String name, String serviceCode, String defaultPrinter,
+			String requirements, BillingLaw law) {
+
 		setConfigurationValue(name, "name", name);
 		setConfigurationValue(name, "leistungscodes", serviceCode);
 		setConfigurationValue(name, "standardausgabe", defaultPrinter);
 		setConfigurationValue(name, "bedingungen", requirements);
 		setConfigurationValue(name, CFG_KEY_BILLINGLAW, law.name());
-		
+
 		cache.invalidateAll();
-		
+
 		return new BillingSystem(name, law);
 	}
-	
-	private String getConfigurationValue(String billingSystemName, String attributeName,
-		String defaultIfNotDefined){
+
+	private String getConfigurationValue(String billingSystemName, String attributeName, String defaultIfNotDefined) {
 		String ret = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-			+ billingSystemName + "/" + attributeName, defaultIfNotDefined); //$NON-NLS-1$
+				+ billingSystemName + "/" + attributeName, defaultIfNotDefined); //$NON-NLS-1$
 		return ret;
 	}
-	
-	private void setConfigurationValue(String billingSystemName, String attributeName,
-		String attributeValue){
+
+	private void setConfigurationValue(String billingSystemName, String attributeName, String attributeValue) {
 		String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystemName; //$NON-NLS-1$
 		configService.set(key + "/" + attributeName, attributeValue);
 	}
-	
+
 }

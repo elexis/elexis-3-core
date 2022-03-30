@@ -19,17 +19,16 @@ import ch.elexis.data.LabItem;
 import ch.elexis.data.PersistentObject;
 
 public class EditLabItemUi extends AbstractHandler {
-	
+
 	public static final String COMMANDID = "ch.elexis.labitem.edit"; //$NON-NLS-1$
 	public static final String PARAMETERID = "ch.elexis.labitem.edit.selected"; //$NON-NLS-1$
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			// get the parameter
 			String param = event.getParameter(PARAMETERID);
-			PersistentObject labitem =
-				(PersistentObject) event.getCommand().getParameterType(PARAMETERID)
+			PersistentObject labitem = (PersistentObject) event.getCommand().getParameterType(PARAMETERID)
 					.getValueConverter().convertToObject(param);
 			// create and open the dialog with the parameter
 			Shell parent = HandlerUtil.getActiveShell(event);
@@ -40,8 +39,8 @@ public class EditLabItemUi extends AbstractHandler {
 		}
 		return null;
 	}
-	
-	public static void executeWithParams(PersistentObject parameter){
+
+	public static void executeWithParams(PersistentObject parameter) {
 		try {
 			// get the command
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -53,13 +52,12 @@ public class EditLabItemUi extends AbstractHandler {
 			// build the parameterized command
 			ParameterizedCommand pc = ParameterizedCommand.generateCommand(cmd, param);
 			// execute the command
-			IHandlerService handlerService =
-				(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getService(IHandlerService.class);
 			handlerService.executeCommand(pc, null);
 		} catch (Exception ex) {
 			throw new RuntimeException(COMMANDID, ex);
 		}
 	}
-	
+
 }

@@ -15,11 +15,11 @@ import org.eclipse.swt.widgets.Composite;
 
 public class FileSelectorField extends Composite {
 	String result;
-	
-	public FileSelectorField(String title, Composite parent, int flags){
+
+	public FileSelectorField(String title, Composite parent, int flags) {
 		super(parent, flags);
 		setLayout(new GridLayout(3, false));
-		
+
 	}
-	
+
 }

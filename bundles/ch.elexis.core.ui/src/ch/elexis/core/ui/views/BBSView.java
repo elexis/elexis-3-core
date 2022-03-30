@@ -51,9 +51,10 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Tree;
 
 /**
- * Bulletin Board System - ein Schwarzes Brett. Im Prinzip Erweiterung des Reminder-Konzepts zu
- * Threads ähnlich newsreader und Webforen. Farben können mit &lt;span
- * color="rot"&gt;...&lt;/span&gt; kontrolliert werden (bzw. "grün" und "blau")
+ * Bulletin Board System - ein Schwarzes Brett. Im Prinzip Erweiterung des
+ * Reminder-Konzepts zu Threads ähnlich newsreader und Webforen. Farben können
+ * mit &lt;span color="rot"&gt;...&lt;/span&gt; kontrolliert werden (bzw. "grün"
+ * und "blau")
  * 
  * @author gerry
  */
@@ -69,48 +70,42 @@ public class BBSView extends ViewPart implements ISelectionChangedListener {
 	private Label origin;
 	private FormText msg;
 	private Text input;
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		SashForm sash = new SashForm(parent, SWT.NONE);
 		qbe = new Query<BBSEntry>(BBSEntry.class);
-		loader = new LazyTreeLoader<BBSEntry>("BBS", qbe, "reference", new String[] { //$NON-NLS-1$ //$NON-NLS-2$
+		loader = new LazyTreeLoader<BBSEntry>("BBS", qbe, "reference", new String[]{ //$NON-NLS-1$ //$NON-NLS-2$
 				"datum", "time", "Thema" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			});
+		});
 		headlines = new CommonViewer();
-		vc =
-			new ViewerConfigurer(new TreeContentProvider(headlines, loader),
-				new ViewerConfigurer.TreeLabelProvider(), new DefaultControlFieldProvider(
-					headlines, new String[] {
-						"Thema" //$NON-NLS-1$
-					}), new NewThread(), new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TREE,
-					SWT.NONE, null));
+		vc = new ViewerConfigurer(new TreeContentProvider(headlines, loader), new ViewerConfigurer.TreeLabelProvider(),
+				new DefaultControlFieldProvider(headlines, new String[]{"Thema" //$NON-NLS-1$
+				}), new NewThread(), new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null));
 		headlines.create(vc, sash, SWT.NONE, getViewSite());
-		
+
 		tk = UiDesk.getToolkit();
 		form = tk.createScrolledForm(sash);
 		form.getBody().setLayout(new GridLayout(1, false));
-		form.setText(Messages.BBSView_PleaseEnterSubject); //$NON-NLS-1$
+		form.setText(Messages.BBSView_PleaseEnterSubject); // $NON-NLS-1$
 		origin = tk.createLabel(form.getBody(), ""); //$NON-NLS-1$
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		origin.setLayoutData(gd);
 		msg = tk.createFormText(form.getBody(), false);
-		gd =
-			new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL
-				| GridData.FILL_VERTICAL);
+		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL | GridData.FILL_VERTICAL);
 		msg.setLayoutData(gd);
-		msg.setColor(Messages.BBSView_rot, UiDesk.getColor(UiDesk.COL_RED)); //$NON-NLS-1$
-		msg.setColor(Messages.BBSView_gruen, UiDesk.getColor(UiDesk.COL_GREEN)); //$NON-NLS-1$
-		msg.setColor(Messages.BBSView_blau, UiDesk.getColor(UiDesk.COL_BLUE)); //$NON-NLS-1$
+		msg.setColor(Messages.BBSView_rot, UiDesk.getColor(UiDesk.COL_RED)); // $NON-NLS-1$
+		msg.setColor(Messages.BBSView_gruen, UiDesk.getColor(UiDesk.COL_GREEN)); // $NON-NLS-1$
+		msg.setColor(Messages.BBSView_blau, UiDesk.getColor(UiDesk.COL_BLUE)); // $NON-NLS-1$
 		input = tk.createText(form.getBody(), "", SWT.WRAP | SWT.MULTI | SWT.BORDER); //$NON-NLS-1$
 		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		input.setLayoutData(gd);
-		Button send = tk.createButton(form.getBody(), Messages.BBSView_DoSend, SWT.PUSH); //$NON-NLS-1$
+		Button send = tk.createButton(form.getBody(), Messages.BBSView_DoSend, SWT.PUSH); // $NON-NLS-1$
 		send.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public void widgetSelected(SelectionEvent e){
-				
+			public void widgetSelected(SelectionEvent e) {
+
 				Object[] sel = headlines.getSelection();
 				if (sel == null || sel.length == 0) {
 					return;
@@ -120,93 +115,91 @@ public class BBSView extends ViewPart implements ISelectionChangedListener {
 				BBSEntry ne = new BBSEntry(en.getTopic(), CoreHub.getLoggedInContact(), en, input.getText());
 				Tree child = item.add(ne);
 				((TreeViewer) headlines.getViewerWidget()).add(sel[0], child);
-				((TreeViewer) headlines.getViewerWidget()).setSelection(new StructuredSelection(
-					child), true);
+				((TreeViewer) headlines.getViewerWidget()).setSelection(new StructuredSelection(child), true);
 			}
-			
+
 		});
 		headlines.getViewerWidget().addSelectionChangedListener(this);
 		((TreeContentProvider) headlines.getConfigurer().getContentProvider()).startListening();
 		setDisplay();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	/*
 	 * (Kein Javadoc)
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
 	 */
 	@Override
-	public void dispose(){
+	public void dispose() {
 		((TreeContentProvider) headlines.getConfigurer().getContentProvider()).stopListening();
 		super.dispose();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void setDisplay(){
+	public void setDisplay() {
 		Object[] sel = headlines.getSelection();
 		if (sel == null || sel.length == 0) {
-			form.setText(Messages.BBSView_14); //$NON-NLS-1$
+			form.setText(Messages.BBSView_14); // $NON-NLS-1$
 			return;
 		}
 		BBSEntry en = ((Tree<BBSEntry>) sel[0]).contents;
 		form.setText(en.getTopic());
 		StringBuilder sb = new StringBuilder();
-		sb.append(en.getAuthor().getLabel()).append(Messages.BBSView_15).append(en.getDate())
-			.append( //$NON-NLS-1$
-				Messages.BBSView_16).append(en.getTime()).append(Messages.BBSView_17); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append(en.getAuthor().getLabel()).append(Messages.BBSView_15).append(en.getDate()).append( // $NON-NLS-1$
+				Messages.BBSView_16).append(en.getTime()).append(Messages.BBSView_17); // $NON-NLS-1$ //$NON-NLS-2$
 		origin.setText(sb.toString());
 		try {
-			msg.setText(Messages.BBSView_18 + en.getText() + Messages.BBSView_19, true, true); //$NON-NLS-1$ //$NON-NLS-2$
+			msg.setText(Messages.BBSView_18 + en.getText() + Messages.BBSView_19, true, true); // $NON-NLS-1$
+																								// //$NON-NLS-2$
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
-			
+
 		}
-		input.setText(Messages.BBSView_20); //$NON-NLS-1$
+		input.setText(Messages.BBSView_20); // $NON-NLS-1$
 	}
-	
+
 	class NewThread implements ViewerConfigurer.ButtonProvider {
-		
+
 		@Override
-		public Button createButton(Composite parent){
+		public Button createButton(Composite parent) {
 			Button ret = new Button(parent, SWT.PUSH);
-			ret.setText(Messages.BBSView_21); //$NON-NLS-1$
+			ret.setText(Messages.BBSView_21); // $NON-NLS-1$
 			ret.addSelectionListener(new SelectionAdapter() {
-				
+
 				@Override
-				public void widgetSelected(SelectionEvent e){
-					new BBSEntry(
-						headlines.getConfigurer().getControlFieldProvider().getValues()[0],
-						CoreHub.getLoggedInContact(), null, Messages.BBSView_22); //$NON-NLS-1$
+				public void widgetSelected(SelectionEvent e) {
+					new BBSEntry(headlines.getConfigurer().getControlFieldProvider().getValues()[0],
+							CoreHub.getLoggedInContact(), null, Messages.BBSView_22); // $NON-NLS-1$
 					loader.invalidate();
 					headlines.notify(CommonViewer.Message.update);
 					setDisplay();
 				}
-				
+
 			});
 			return ret;
 		}
-		
+
 		@Override
-		public boolean isAlwaysEnabled(){
+		public boolean isAlwaysEnabled() {
 			return false;
 		}
-		
+
 	}
-	
+
 	@Override
-	public void selectionChanged(SelectionChangedEvent event){
+	public void selectionChanged(SelectionChangedEvent event) {
 		setDisplay();
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

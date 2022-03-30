@@ -26,18 +26,18 @@ import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 
 public class QuartzExecutor {
-	
+
 	private Logger logger;
-	
+
 	private SchedulerFactory sf;
 	private Scheduler sched;
-	
+
 	private final SimpleDateFormat FULL_ISO;
-	
-	public QuartzExecutor(){
+
+	public QuartzExecutor() {
 		logger = LoggerFactory.getLogger(getClass());
 		FULL_ISO = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
+
 		sf = new StdSchedulerFactory();
 		try {
 			sched = sf.getScheduler();
@@ -46,41 +46,40 @@ public class QuartzExecutor {
 			throw new IllegalStateException(e.getMessage());
 		}
 	}
-	
-	public void incur(ITaskService taskService, ITaskDescriptor taskDescriptor)
-		throws TaskException{
-		
+
+	public void incur(ITaskService taskService, ITaskDescriptor taskDescriptor) throws TaskException {
+
 		// test if the runnable can be instantiated
 		taskService.instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId());
-		
+
 		String cron = taskDescriptor.getTriggerParameters().get("cron");
 		CronScheduleBuilder cronSchedule = CronScheduleBuilder.cronSchedule(cron);
-		
+
 		JobKey jobKey = new JobKey(taskDescriptor.getId());
 		JobDataMap jobDataMap = new JobDataMap(taskDescriptor.getRunContext());
 		jobDataMap.put("taskDescriptor", taskDescriptor);
 		jobDataMap.put("taskService", taskService);
-		
+
 		JobDetail jobDetail = JobBuilder.newJob(TriggerTaskJob.class).withIdentity(jobKey).build();
-		Trigger trigger = TriggerBuilder.newTrigger().withIdentity(taskDescriptor.getId())
-			.withSchedule(cronSchedule).usingJobData(jobDataMap).build();
-		
+		Trigger trigger = TriggerBuilder.newTrigger().withIdentity(taskDescriptor.getId()).withSchedule(cronSchedule)
+				.usingJobData(jobDataMap).build();
+
 		try {
 			sched.scheduleJob(jobDetail, trigger);
 		} catch (SchedulerException e) {
 			logger.warn("#incur - " + taskDescriptor.getId(), e);
 		}
-		
+
 	}
-	
-	public void release(ITaskDescriptor taskDescriptor) throws TaskException{
-		
+
+	public void release(ITaskDescriptor taskDescriptor) throws TaskException {
+
 		JobKey jobKey = new JobKey(taskDescriptor.getId());
 		try {
 			if (sched.isShutdown()) {
 				return;
 			}
-			
+
 			boolean exists = sched.checkExists(jobKey);
 			if (exists) {
 				sched.deleteJob(jobKey);
@@ -91,19 +90,19 @@ public class QuartzExecutor {
 			throw new TaskException(TaskException.TRIGGER_REGISTER_ERROR, e);
 		}
 	}
-	
-	public void shutdown() throws SchedulerException{
+
+	public void shutdown() throws SchedulerException {
 		if (sched != null) {
 			sched.shutdown();
 		}
-		
+
 	}
-	
-	public void start() throws SchedulerException{
+
+	public void start() throws SchedulerException {
 		sched.start();
 	}
-	
-	public Set<String[]> getIncurred(){
+
+	public Set<String[]> getIncurred() {
 		Set<String[]> incurred = new HashSet<String[]>();
 		try {
 			Set<JobKey> jobKeys = sched.getJobKeys(GroupMatcher.anyGroup());
@@ -112,9 +111,7 @@ public class QuartzExecutor {
 				if (sched.checkExists(jobKey)) {
 					Trigger trigger = sched.getTrigger(TriggerKey.triggerKey(taskDescriptorId));
 					Date nextFireTime = trigger.getNextFireTime();
-					incurred.add(new String[] {
-						taskDescriptorId, FULL_ISO.format(nextFireTime)
-					});
+					incurred.add(new String[]{taskDescriptorId, FULL_ISO.format(nextFireTime)});
 				}
 			}
 		} catch (SchedulerException e) {
@@ -122,5 +119,5 @@ public class QuartzExecutor {
 		}
 		return incurred;
 	}
-	
+
 }

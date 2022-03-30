@@ -67,71 +67,70 @@ import ch.rgw.tools.Money;
 
 public class InvoiceListView extends ViewPart implements IRefreshablePart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceListView"; //$NON-NLS-1$
-	
+
 	private Settings rnStellerSettings;
 	private TableViewer tableViewerInvoiceList;
 	private InvoiceListHeaderComposite invoiceListHeaderComposite;
 	private InvoiceListBottomComposite invoiceListBottomComposite;
 	private InvoiceListContentProvider invoiceListContentProvider;
-	
+
 	/**
 	 * @param rnStellerSettings
 	 * @wbp.parser.constructor
 	 * @wbp.eval.method.parameter rnStellerSettings new ch.rgw.io.InMemorySettings()
 	 */
-	InvoiceListView(Settings rnStellerSettings){
+	InvoiceListView(Settings rnStellerSettings) {
 		this.rnStellerSettings = rnStellerSettings;
 	}
-	
-	public InvoiceListView(){
+
+	public InvoiceListView() {
 		Mandant currMandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
 		rnStellerSettings = CoreHub.getUserSetting(currMandant.getRechnungssteller());
 	}
-	
+
 	private Action reloadViewAction = new Action(Messages.RnActions_reloadAction) {
 		{
 			setToolTipText(Messages.RnActions_reloadTooltip);
 			setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			refresh();
 		}
 	};
-	
+
 	@Override
-	public void refresh(Map<Object, Object> filterParameters){
+	public void refresh(Map<Object, Object> filterParameters) {
 		if (invoiceListContentProvider != null) {
 			if (filterParameters.containsKey(ch.elexis.core.model.IPatient.class)) {
-				ch.elexis.core.model.IPatient patient =
-					(ch.elexis.core.model.IPatient) filterParameters
+				ch.elexis.core.model.IPatient patient = (ch.elexis.core.model.IPatient) filterParameters
 						.get(ch.elexis.core.model.IPatient.class);
 				invoiceListHeaderComposite.setSelectedPatientId(Patient.load(patient.getId()));
 			}
 			// reset comparator, do not comparing lazy loaded fields
 			if (tableViewerInvoiceList != null && !tableViewerInvoiceList.getTable().isDisposed()
-				&& tableViewerInvoiceList.getComparator() != null) {
+					&& tableViewerInvoiceList.getComparator() != null) {
 				tableViewerInvoiceList.setComparator(null);
 				setSortOrder(tableViewerInvoiceList.getTable().getColumn(3), SWT.UP);
 			}
 			invoiceListContentProvider.reload();
 		}
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
-		
+
 		invoiceListHeaderComposite = new InvoiceListHeaderComposite(parent, SWT.NONE, this);
-		
+
 		Composite compositeInvoiceList = new Composite(parent, SWT.NONE);
 		compositeInvoiceList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		TableColumnLayout tcl_compositeInvoiceList = new TableColumnLayout();
 		compositeInvoiceList.setLayout(tcl_compositeInvoiceList);
-		
+
 		tableViewerInvoiceList = new TableViewer(compositeInvoiceList,
-			SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.VIRTUAL);
+				SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.VIRTUAL);
 		tableViewerInvoiceList.addSelectionChangedListener(selection -> {
 			StructuredSelection ss = (StructuredSelection) selection.getSelection();
 			if (!ss.isEmpty()) {
@@ -148,25 +147,24 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		Table tableInvoiceList = tableViewerInvoiceList.getTable();
 		tableInvoiceList.setHeaderVisible(true);
 		tableInvoiceList.setLinesVisible(false);
-		
+
 		tableViewerInvoiceList.getControl().addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e){
+			public void keyReleased(KeyEvent e) {
 				if (e.keyCode == SWT.F5) {
 					refresh();
 				}
 			}
 		});
-		
+
 		TableViewerColumn tvcInvoiceNo = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnInvoiceNo = tvcInvoiceNo.getColumn();
 		tblclmnInvoiceNo.setData(VIEW_FLD_INVOICENO);
-		tcl_compositeInvoiceList.setColumnData(tblclmnInvoiceNo,
-			new ColumnPixelData(50, true, true));
+		tcl_compositeInvoiceList.setColumnData(tblclmnInvoiceNo, new ColumnPixelData(50, true, true));
 		tblclmnInvoiceNo.setText(Messages.InvoiceListView_tblclmnInvoiceNo_text);
 		tvcInvoiceNo.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof InvoiceEntry) {
 					return ((InvoiceEntry) element).getInvoiceNumber();
 				}
@@ -174,32 +172,28 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			}
 		});
 		tblclmnInvoiceNo.addSelectionListener(sortAdapter);
-		
+
 		TableViewerColumn tvcInvoiceState = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnInvoiceState = tvcInvoiceState.getColumn();
-		tcl_compositeInvoiceList.setColumnData(tblclmnInvoiceState,
-			new ColumnPixelData(90, true, true));
+		tcl_compositeInvoiceList.setColumnData(tblclmnInvoiceState, new ColumnPixelData(90, true, true));
 		tblclmnInvoiceState.setText(Messages.InvoiceListView_tblclmnInvoiceState_text);
 		tvcInvoiceState.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof InvoiceEntry) {
 					return ((InvoiceEntry) element).getInvoiceState().getLocaleText();
 				}
 				return super.getText(element);
 			}
 		});
-		
-		TableViewerColumn tvcInvoiceStateDateSince =
-			new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
+
+		TableViewerColumn tvcInvoiceStateDateSince = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnInvoiceStateDateSince = tvcInvoiceStateDateSince.getColumn();
-		tcl_compositeInvoiceList.setColumnData(tblclmnInvoiceStateDateSince,
-			new ColumnPixelData(50, true, true));
-		tblclmnInvoiceStateDateSince
-			.setText(Messages.InvoiceListView_tblclmnInvoiceStateDateSince_text);
+		tcl_compositeInvoiceList.setColumnData(tblclmnInvoiceStateDateSince, new ColumnPixelData(50, true, true));
+		tblclmnInvoiceStateDateSince.setText(Messages.InvoiceListView_tblclmnInvoiceStateDateSince_text);
 		tvcInvoiceStateDateSince.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof InvoiceEntry) {
 					return ((InvoiceEntry) element).getInvoiceStateSinceDays() + "d";
 				}
@@ -208,7 +202,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		});
 		tblclmnInvoiceStateDateSince.setData(InvoiceListSqlQuery.VIEW_FLD_INVOICESTATEDATE);
 		tblclmnInvoiceStateDateSince.addSelectionListener(sortAdapter);
-		
+
 		TableViewerColumn tvcPatient = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnPatient = tvcPatient.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnPatient, new ColumnWeightData(10, 100, true));
@@ -216,7 +210,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		tblclmnPatient.setData(Kontakt.FLD_NAME1);
 		tvcPatient.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof InvoiceEntry) {
 					return ((InvoiceEntry) element).getPatientName();
 				}
@@ -224,15 +218,14 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			}
 		});
 		tblclmnPatient.addSelectionListener(sortAdapter);
-		
-		TableViewerColumn tvcBillingSystem =
-			new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
+
+		TableViewerColumn tvcBillingSystem = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnLaw = tvcBillingSystem.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnLaw, new ColumnPixelData(50, true, true));
 		tblclmnLaw.setText(Messages.InvoiceListView_tblclmnLaw_text);
 		tvcBillingSystem.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof InvoiceEntry) {
 					return ((InvoiceEntry) element).getBillingSystem();
 				}
@@ -240,14 +233,14 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			}
 		});
 		tblclmnLaw.addSelectionListener(sortViewerAdapter);
-		
+
 		TableViewerColumn tvcPayerType = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnType = tvcPayerType.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnType, new ColumnPixelData(50, true, true));
 		tblclmnType.setText(Messages.InvoiceListView_tblclmnType_text);
 		tvcPayerType.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof InvoiceEntry) {
 					return ((InvoiceEntry) element).getPayerType();
 				}
@@ -255,28 +248,26 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			}
 		});
 		tblclmnType.addSelectionListener(sortViewerAdapter);
-		
+
 		TableViewerColumn tvcReceiver = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnReceiver = tvcReceiver.getColumn();
-		tcl_compositeInvoiceList.setColumnData(tblclmnReceiver,
-			new ColumnPixelData(150, true, true));
+		tcl_compositeInvoiceList.setColumnData(tblclmnReceiver, new ColumnPixelData(150, true, true));
 		tblclmnReceiver.setText(Messages.InvoiceListView_tblclmnReceiver_text);
 		tvcReceiver.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof InvoiceEntry) {
 					String receiverLabel = ((InvoiceEntry) element).getReceiverLabel();
 					if (((InvoiceEntry) element).isResolved()) {
-						return (receiverLabel != null) ? receiverLabel
-								: Messages.ContactNotAvailable;
+						return (receiverLabel != null) ? receiverLabel : Messages.ContactNotAvailable;
 					}
 					return null;
 				}
 				return super.getText(element);
 			}
-			
+
 			@Override
-			public Color getBackground(Object element){
+			public Color getBackground(Object element) {
 				if (element instanceof InvoiceEntry) {
 					String receiverLabel = ((InvoiceEntry) element).getReceiverLabel();
 					if (((InvoiceEntry) element).isResolved()) {
@@ -288,17 +279,15 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			}
 		});
 		tblclmnReceiver.addSelectionListener(sortViewerAdapter);
-		
-		TableViewerColumn tvcTreatmentPeriod =
-			new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
+
+		TableViewerColumn tvcTreatmentPeriod = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnTreatmentperiod = tvcTreatmentPeriod.getColumn();
-		tcl_compositeInvoiceList.setColumnData(tblclmnTreatmentperiod,
-			new ColumnPixelData(100, true, true));
+		tcl_compositeInvoiceList.setColumnData(tblclmnTreatmentperiod, new ColumnPixelData(100, true, true));
 		tblclmnTreatmentperiod.setText(Messages.InvoiceListView_tblclmnTreatmentperiod_text);
 		tblclmnTreatmentperiod.setData(Rechnung.BILL_DATE_FROM);
 		tvcTreatmentPeriod.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof InvoiceEntry) {
 					return ((InvoiceEntry) element).getTreatmentPeriod();
 				}
@@ -306,16 +295,15 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			}
 		});
 		tblclmnTreatmentperiod.addSelectionListener(sortAdapter);
-		
+
 		TableViewerColumn tvcOpenAmount = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnOpenAmount = tvcOpenAmount.getColumn();
-		tcl_compositeInvoiceList.setColumnData(tblclmnOpenAmount,
-			new ColumnPixelData(60, true, true));
+		tcl_compositeInvoiceList.setColumnData(tblclmnOpenAmount, new ColumnPixelData(60, true, true));
 		tblclmnOpenAmount.setText(Messages.InvoiceListView_tblclmnOpenAmount_text);
 		tblclmnOpenAmount.setData(VIEW_FLD_OPENAMOUNT);
 		tvcOpenAmount.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof InvoiceEntry) {
 					int openAmount = ((InvoiceEntry) element).getOpenAmount();
 					return new Money(openAmount).getAmountAsString();
@@ -324,16 +312,15 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			}
 		});
 		tblclmnOpenAmount.addSelectionListener(sortAdapter);
-		
+
 		TableViewerColumn tvcTotalAmount = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnTotalAmount = tvcTotalAmount.getColumn();
 		tblclmnTotalAmount.setData(VIEW_FLD_INVOICETOTAL);
-		tcl_compositeInvoiceList.setColumnData(tblclmnTotalAmount,
-			new ColumnPixelData(60, true, true));
+		tcl_compositeInvoiceList.setColumnData(tblclmnTotalAmount, new ColumnPixelData(60, true, true));
 		tblclmnTotalAmount.setText(Messages.InvoiceListView_tblclmnTotalAmount_text);
 		tvcTotalAmount.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof InvoiceEntry) {
 					int totalAmountInCents = ((InvoiceEntry) element).getTotalAmount();
 					return new Money(totalAmountInCents).getAmountAsString();
@@ -342,14 +329,13 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			}
 		});
 		tblclmnTotalAmount.addSelectionListener(sortAdapter);
-		
-		invoiceListBottomComposite =
-			new InvoiceListBottomComposite(parent, SWT.NONE, rnStellerSettings);
-		
-		invoiceListContentProvider = new InvoiceListContentProvider(tableViewerInvoiceList,
-			invoiceListHeaderComposite, invoiceListBottomComposite);
+
+		invoiceListBottomComposite = new InvoiceListBottomComposite(parent, SWT.NONE, rnStellerSettings);
+
+		invoiceListContentProvider = new InvoiceListContentProvider(tableViewerInvoiceList, invoiceListHeaderComposite,
+				invoiceListBottomComposite);
 		tableViewerInvoiceList.setContentProvider(invoiceListContentProvider);
-		
+
 		InvoiceActions invoiceActions = new InvoiceActions(tableViewerInvoiceList, getViewSite());
 		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();
 		tbm.add(reloadViewAction);
@@ -358,11 +344,11 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		tbm.add(invoiceListContentProvider.rnFilterAction);
 		tbm.add(new Separator());
 		tbm.add(invoiceActions.rnExportAction);
-		
+
 		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
 		viewMenuManager.add(invoiceActions.printListeAction);
 		viewMenuManager.add(invoiceActions.addAccountExcessAction);
-		
+
 		MenuManager menuManager = new MenuManager();
 		menuManager.add(invoiceActions.rnExportAction);
 		menuManager.add(invoiceActions.addPaymentAction);
@@ -374,32 +360,32 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		menuManager.add(new Separator());
 		menuManager.add(invoiceActions.deleteAction);
 		menuManager.add(invoiceActions.reactivateAction);
-		
+
 		menuManager.addMenuListener((mats) -> {
 			@SuppressWarnings("unchecked")
-			List<InvoiceEntry> selectedElements =
-				((StructuredSelection) tableViewerInvoiceList.getSelection()).toList();
-			
+			List<InvoiceEntry> selectedElements = ((StructuredSelection) tableViewerInvoiceList.getSelection())
+					.toList();
+
 			boolean allDefective = selectedElements.stream()
-				.allMatch(f -> InvoiceState.DEFECTIVE == f.getInvoiceState());
-			
+					.allMatch(f -> InvoiceState.DEFECTIVE == f.getInvoiceState());
+
 			invoiceActions.deleteAction.setEnabled(allDefective);
 			invoiceActions.reactivateAction.setEnabled(allDefective);
 		});
-		
+
 		Menu contextMenu = menuManager.createContextMenu(tableViewerInvoiceList.getTable());
 		tableInvoiceList.setMenu(contextMenu);
 		getSite().registerContextMenu(menuManager, tableViewerInvoiceList);
 		getSite().setSelectionProvider(tableViewerInvoiceList);
-		
+
 		setSortOrder(tblclmnPatient, SWT.UP);
-		
+
 		refresh();
 	}
-	
+
 	private SelectionAdapter sortAdapter = new SelectionAdapter() {
 		@Override
-		public void widgetSelected(SelectionEvent e){
+		public void widgetSelected(SelectionEvent e) {
 			TableColumn sortColumn = tableViewerInvoiceList.getTable().getSortColumn();
 			TableColumn selectedColumn = (TableColumn) e.widget;
 			int sortDirection = tableViewerInvoiceList.getTable().getSortDirection();
@@ -412,12 +398,12 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			tableViewerInvoiceList.setComparator(null);
 			setSortOrder(selectedColumn, sortDirection);
 		}
-		
+
 	};
-	
+
 	private SelectionAdapter sortViewerAdapter = new SelectionAdapter() {
 		@Override
-		public void widgetSelected(SelectionEvent e){
+		public void widgetSelected(SelectionEvent e) {
 			TableColumn sortColumn = tableViewerInvoiceList.getTable().getSortColumn();
 			TableColumn selectedColumn = (TableColumn) e.widget;
 			int sortDirection = tableViewerInvoiceList.getTable().getSortDirection();
@@ -432,10 +418,10 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			tableViewerInvoiceList.refresh();
 		}
 	};
-	
+
 	private ViewerComparator sortViewerComparator = new ViewerComparator() {
 		@Override
-		public int compare(Viewer viewer, Object e1, Object e2){
+		public int compare(Viewer viewer, Object e1, Object e2) {
 			TableColumn sortColumn = ((TableViewer) viewer).getTable().getSortColumn();
 			int sortDirection = ((TableViewer) viewer).getTable().getSortDirection();
 			if (tableViewerInvoiceList.getTable().indexOf(sortColumn) == 6) {
@@ -465,8 +451,8 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			}
 			return super.compare(viewer, e1, e2);
 		}
-		
-		private void resolve(InvoiceEntry entry){
+
+		private void resolve(InvoiceEntry entry) {
 			while (!entry.isResolved()) {
 				try {
 					Thread.sleep(1);
@@ -476,21 +462,20 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			}
 		}
 	};
-	
-	private void setSortOrder(TableColumn selectedColumn, int sortDirection){
+
+	private void setSortOrder(TableColumn selectedColumn, int sortDirection) {
 		tableViewerInvoiceList.getTable().setSortColumn(selectedColumn);
 		tableViewerInvoiceList.getTable().setSortDirection(sortDirection);
-		invoiceListContentProvider.setSortOrderAndDirection(selectedColumn.getData(),
-			sortDirection);
+		invoiceListContentProvider.setSortOrderAndDirection(selectedColumn.getData(), sortDirection);
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		tableViewerInvoiceList.getTable().setFocus();
 	}
-	
-	public InvoiceListContentProvider getInvoiceListContentProvider(){
+
+	public InvoiceListContentProvider getInvoiceListContentProvider() {
 		return invoiceListContentProvider;
 	}
-	
+
 }

@@ -10,11 +10,11 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.types.LabItemTyp;
 
 public class ILabItemBuilder extends AbstractBuilder<ILabItem> {
-	
+
 	private List<ILabMapping> mappingList;
-	
-	public ILabItemBuilder(IModelService modelService, String code, String name, String refMale,
-		String refFemale, String unit, LabItemTyp type, String group, int seq){
+
+	public ILabItemBuilder(IModelService modelService, String code, String name, String refMale, String refFemale,
+			String unit, LabItemTyp type, String group, int seq) {
 		super(modelService);
 		object = modelService.create(ILabItem.class);
 		object.setCode(code);
@@ -27,9 +27,9 @@ public class ILabItemBuilder extends AbstractBuilder<ILabItem> {
 		object.setPriority(Integer.toString(seq));
 		object.setVisible(true);
 	}
-	
-	public ILabItemBuilder origin(IContact origin, String itemName, boolean charge){
-		if(mappingList == null) {
+
+	public ILabItemBuilder origin(IContact origin, String itemName, boolean charge) {
+		if (mappingList == null) {
 			mappingList = new ArrayList<>();
 		}
 		ILabMapping mapping = modelService.create(ILabMapping.class);
@@ -40,19 +40,19 @@ public class ILabItemBuilder extends AbstractBuilder<ILabItem> {
 		mappingList.add(mapping);
 		return this;
 	}
-	
+
 	@Override
-	public ILabItem buildAndSave(){
+	public ILabItem buildAndSave() {
 		modelService.save(object);
 		if (mappingList != null) {
 			modelService.save(mappingList);
 		}
 		return object;
 	}
-	
+
 	@Override
-	public ILabItem build(){
-		if(mappingList != null) {
+	public ILabItem build() {
+		if (mappingList != null) {
 			throw new IllegalStateException("Will loose mapping on lazy save operation");
 		}
 		return super.build();

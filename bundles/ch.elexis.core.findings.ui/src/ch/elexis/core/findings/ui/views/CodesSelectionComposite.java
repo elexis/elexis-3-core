@@ -26,50 +26,49 @@ import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.ui.UiDesk;
 
 public class CodesSelectionComposite extends Composite implements ISelectionProvider {
-	
+
 	private List<CodeSelectionAction> currentSelection;
-	
+
 	private ListenerList<ISelectionChangedListener> selectionChangedListeners;
-	
+
 	private ToolBarManager manager;
-	
+
 	private List<ICoding> visibleCodings;
-	
-	public CodesSelectionComposite(Composite parent, int style){
+
+	public CodesSelectionComposite(Composite parent, int style) {
 		super(parent, style);
 		currentSelection = new ArrayList<>();
 		selectionChangedListeners = new ListenerList<>();
-		
+
 		createContent();
 	}
-	
-	private void createContent(){
+
+	private void createContent() {
 		setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 		setLayout(new FillLayout());
-		
+
 		manager = new ToolBarManager(SWT.WRAP);
 		manager.createControl(this);
 		refresh();
 	}
-	
-	public void refresh(){
+
+	public void refresh() {
 		updateVisibleCodings();
 		updateSelectedCodings();
 	}
-	
-	private void updateVisibleCodings(){
+
+	private void updateVisibleCodings() {
 		visibleCodings = FindingsUiUtil.loadVisibleCodings();
 		if (visibleCodings.isEmpty()) {
 			visibleCodings = FindingsUiUtil.getAvailableCodings();
 		}
 		visibleCodings.sort(new Comparator<ICoding>() {
 			@Override
-			public int compare(ICoding arg0, ICoding arg1){
+			public int compare(ICoding arg0, ICoding arg1) {
 				if (arg0 instanceof ILocalCoding && arg1 instanceof ILocalCoding) {
 					ILocalCoding left = (ILocalCoding) arg0;
 					ILocalCoding right = (ILocalCoding) arg1;
-					return Integer.valueOf(left.getPrio())
-						.compareTo(Integer.valueOf(right.getPrio()));
+					return Integer.valueOf(left.getPrio()).compareTo(Integer.valueOf(right.getPrio()));
 				}
 				return 0;
 			}
@@ -82,8 +81,8 @@ public class CodesSelectionComposite extends Composite implements ISelectionProv
 		manager.update(true);
 		this.getParent().layout(true);
 	}
-	
-	private void updateSelectedCodings(){
+
+	private void updateSelectedCodings() {
 		currentSelection.clear();
 		List<ICoding> selectedCodings = FindingsUiUtil.loadSelectedCodings();
 		if (selectedCodings != null) {
@@ -106,49 +105,49 @@ public class CodesSelectionComposite extends Composite implements ISelectionProv
 			manager.update(true);
 		}
 	}
-	
-	public void addSelectionChangedListener(ISelectionChangedListener listener){
+
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionChangedListeners.add(listener);
 	}
-	
-	public void removeSelectionChangedListener(ISelectionChangedListener listener){
+
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionChangedListeners.remove(listener);
 	}
-	
+
 	@Override
-	public ISelection getSelection(){
-		return new StructuredSelection(currentSelection.stream().map(action -> action.getiCoding())
-			.collect(Collectors.toList()));
+	public ISelection getSelection() {
+		return new StructuredSelection(
+				currentSelection.stream().map(action -> action.getiCoding()).collect(Collectors.toList()));
 	}
-	
+
 	@Override
-	public void setSelection(ISelection selection){
+	public void setSelection(ISelection selection) {
 		// ignore until needed
 	}
-	
-	private void fireSelectionChanged(){
+
+	private void fireSelectionChanged() {
 		ISelection selection = getSelection();
 		for (ISelectionChangedListener listener : selectionChangedListeners) {
 			SelectionChangedEvent event = new SelectionChangedEvent(this, selection);
 			listener.selectionChanged(event);
 		}
 	}
-	
+
 	private class CodeSelectionAction extends Action {
-		
+
 		private ICoding iCoding;
-		
-		public CodeSelectionAction(ICoding iCoding){
+
+		public CodeSelectionAction(ICoding iCoding) {
 			super(iCoding.getDisplay(), Action.AS_CHECK_BOX);
 			this.iCoding = iCoding;
 		}
-		
-		public ICoding getiCoding(){
+
+		public ICoding getiCoding() {
 			return iCoding;
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			if (currentSelection.contains(this)) {
 				currentSelection.remove(this);
 			} else {
@@ -157,18 +156,18 @@ public class CodesSelectionComposite extends Composite implements ISelectionProv
 			fireSelectionChanged();
 			manager.update(true);
 			FindingsUiUtil.saveSelectedCodings(
-				currentSelection.stream().map(a -> a.getiCoding()).collect(Collectors.toList()));
+					currentSelection.stream().map(a -> a.getiCoding()).collect(Collectors.toList()));
 		}
 	}
-	
+
 	private class AllSelectionAction extends Action {
-		
-		public AllSelectionAction(){
+
+		public AllSelectionAction() {
 			super("Alle", Action.AS_PUSH_BUTTON);
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			int currentSelectionSize = currentSelection.size();
 			currentSelection.clear();
 			IContributionItem[] items = manager.getItems();
@@ -197,9 +196,9 @@ public class CodesSelectionComposite extends Composite implements ISelectionProv
 			}
 			fireSelectionChanged();
 			manager.update(true);
-			
+
 			FindingsUiUtil.saveSelectedCodings(
-				currentSelection.stream().map(a -> a.getiCoding()).collect(Collectors.toList()));
+					currentSelection.stream().map(a -> a.getiCoding()).collect(Collectors.toList()));
 		}
 	}
 }

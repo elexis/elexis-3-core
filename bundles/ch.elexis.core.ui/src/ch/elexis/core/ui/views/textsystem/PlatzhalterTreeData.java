@@ -17,21 +17,21 @@ import ch.elexis.core.data.util.SortedList;
 
 public class PlatzhalterTreeData {
 	private PlatzhalterTreeData parent;
-	final private SortedList<PlatzhalterTreeData> childrenList =
-		new SortedList<PlatzhalterTreeData>(new TreeComparator());
-	
+	final private SortedList<PlatzhalterTreeData> childrenList = new SortedList<PlatzhalterTreeData>(
+			new TreeComparator());
+
 	final private String name;
 	final private String key;
 	final private String description;
-	
+
 	class TreeComparator implements Comparator<PlatzhalterTreeData> {
-		public int compare(PlatzhalterTreeData o1, PlatzhalterTreeData o2){
+		public int compare(PlatzhalterTreeData o1, PlatzhalterTreeData o2) {
 			return o1.getName().compareTo(o2.getName());
 		}
 	};
-	
-	public PlatzhalterTreeData(final PlatzhalterTreeData _parent, final String _name,
-		final String _key, final String _description){
+
+	public PlatzhalterTreeData(final PlatzhalterTreeData _parent, final String _name, final String _key,
+			final String _description) {
 		super();
 		if (parent != null) {
 			if (_name.startsWith(parent.getName())) {
@@ -39,7 +39,7 @@ public class PlatzhalterTreeData {
 			} else {
 				this.name = _name;
 			}
-			
+
 		} else {
 			this.name = _name;
 		}
@@ -47,12 +47,12 @@ public class PlatzhalterTreeData {
 		this.description = _description;
 		setParent(_parent);
 	}
-	
-	public PlatzhalterTreeData(final String _name, final String _key, final String _description){
+
+	public PlatzhalterTreeData(final String _name, final String _key, final String _description) {
 		this(null, _name, _key, _description);
 	}
-	
-	public PlatzhalterTreeData getChild(final String name){
+
+	public PlatzhalterTreeData getChild(final String name) {
 		for (PlatzhalterTreeData ptd : childrenList) {
 			if (name.equals(ptd.getName())) {
 				return ptd;
@@ -60,43 +60,43 @@ public class PlatzhalterTreeData {
 		}
 		return null;
 	}
-	
-	public void addChild(final PlatzhalterTreeData child){
+
+	public void addChild(final PlatzhalterTreeData child) {
 		if (!childrenList.contains(child)) {
 			childrenList.add(child);
 		}
 	}
-	
-	public void addChildren(final List<PlatzhalterTreeData> children){
+
+	public void addChildren(final List<PlatzhalterTreeData> children) {
 		for (PlatzhalterTreeData ptd : children) {
 			addChild(ptd);
 		}
 	}
-	
-	private void setParent(final PlatzhalterTreeData _parent){
+
+	private void setParent(final PlatzhalterTreeData _parent) {
 		if (_parent != null) {
 			this.parent = _parent;
 			this.parent.addChild(this);
 		}
 	}
-	
-	public SortedList<PlatzhalterTreeData> getChildren(){
+
+	public SortedList<PlatzhalterTreeData> getChildren() {
 		return childrenList;
 	}
-	
-	public PlatzhalterTreeData getParent(){
+
+	public PlatzhalterTreeData getParent() {
 		return this.parent;
 	}
-	
-	public String getDescription(){
+
+	public String getDescription() {
 		return this.description;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return this.name;
 	}
-	
-	public String getKey(){
+
+	public String getKey() {
 		return this.key;
 	}
 }

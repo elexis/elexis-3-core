@@ -28,20 +28,19 @@ public class InsuranceElement extends XChangeElement {
 	public static final String ATTR_DIAGNOSIS = "publicDiagnosis";
 	public static final String ATTR_DATEFROM = "dateFrom";
 	public static final String ATTR_DATEUNTIL = "dateUntil";
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
-	public InsuranceElement asExporter(XChangeExporter p, Konsultation k){
+
+	public InsuranceElement asExporter(XChangeExporter p, Konsultation k) {
 		asExporter(p);
 		Fall fall = k.getFall();
 		Kontakt garant = fall.getGarant();
 		setAttribute(ATTR_DATEFROM, new TimeTool(fall.getBeginnDatum()).toString(TimeTool.DATE_ISO));
 		if (!fall.isOpen()) {
-			setAttribute(ATTR_DATEUNTIL,
-				new TimeTool(fall.getEndDatum()).toString(TimeTool.DATE_ISO));
+			setAttribute(ATTR_DATEUNTIL, new TimeTool(fall.getEndDatum()).toString(TimeTool.DATE_ISO));
 		}
 		setAttribute(ATTR_REASON, translateReason(fall.getGrund()));
 		ContactElement eGarant = p.addContact(garant);
@@ -50,14 +49,12 @@ public class InsuranceElement extends XChangeElement {
 		add(eContract);
 		return this;
 	}
-	
-	public InsuranceElement asExporter(XChangeExporter parent, Fall fall){
+
+	public InsuranceElement asExporter(XChangeExporter parent, Fall fall) {
 		Kontakt garant = fall.getGarant();
-		setAttribute(ATTR_DATEFROM,
-			new TimeTool(fall.getBeginnDatum()).toString(TimeTool.DATE_ISO));
+		setAttribute(ATTR_DATEFROM, new TimeTool(fall.getBeginnDatum()).toString(TimeTool.DATE_ISO));
 		if (!fall.isOpen()) {
-			setAttribute(ATTR_DATEUNTIL,
-				new TimeTool(fall.getEndDatum()).toString(TimeTool.DATE_ISO));
+			setAttribute(ATTR_DATEUNTIL, new TimeTool(fall.getEndDatum()).toString(TimeTool.DATE_ISO));
 		}
 		setAttribute(ATTR_REASON, translateReason(fall.getGrund()));
 		ContactElement eGarant = parent.addContact(garant);
@@ -66,8 +63,8 @@ public class InsuranceElement extends XChangeElement {
 		add(eContract);
 		return this;
 	}
-	
-	public String getReason(){
+
+	public String getReason() {
 		String value = getAttr(ATTR_REASON);
 		if ("accident".equals(value)) {
 			return FallConstants.TYPE_ACCIDENT;
@@ -82,8 +79,8 @@ public class InsuranceElement extends XChangeElement {
 		}
 		return FallConstants.TYPE_OTHER;
 	}
-	
-	public String translateReason(String grund){
+
+	public String translateReason(String grund) {
 		if (grund.equals(FallConstants.TYPE_ACCIDENT)) {
 			return "accident";
 		} else if (grund.equals(FallConstants.TYPE_BIRTHDEFECT)) {
@@ -98,18 +95,18 @@ public class InsuranceElement extends XChangeElement {
 			return "other";
 		}
 	}
-	
+
 	public static class ContractElement extends XChangeElement {
 		public static final String XMLNAME = "contract";
 		public static final String ATTR_COUNTRY = "country";
 		public static final String ATTR_NAME = "name";
 		public static final String ATTR_CASEID = "caseID";
-		
-		public String getXMLName(){
+
+		public String getXMLName() {
 			return XMLNAME;
 		}
-		
-		public ContractElement asExporter(XChangeExporter p, Fall fall){
+
+		public ContractElement asExporter(XChangeExporter p, Fall fall) {
 			asExporter(p);
 			setAttribute(ATTR_COUNTRY, "CH");
 			setAttribute(ATTR_NAME, fall.getAbrechnungsSystem());
@@ -123,8 +120,8 @@ public class InsuranceElement extends XChangeElement {
 			return this;
 		}
 	}
-	
-	public ContractElement getContract(){
+
+	public ContractElement getContract() {
 		return (ContractElement) getChild(ContractElement.XMLNAME, ContractElement.class);
 	}
 }

@@ -37,7 +37,7 @@ public class LockInfo {
 	public LockInfo(String storeToString, String userId, String systemUuid) {
 		this(storeToString, userId, systemUuid, "", "");
 	}
-	
+
 	public LockInfo(String storeToString, String userId, String systemUuid, String stationId, String stationLabel) {
 		String[] split = storeToString.split(StringConstants.DOUBLECOLON);
 		if (split.length == 2) {
@@ -78,16 +78,16 @@ public class LockInfo {
 	public Date getCreationDate() {
 		return creationDate;
 	}
-	
+
 	public String getSystemUuid() {
 		return systemUuid;
 	}
-	
-	public String getStationId(){
+
+	public String getStationId() {
 		return stationId;
 	}
-	
-	public String getStationLabel(){
+
+	public String getStationLabel() {
 		return stationLabel;
 	}
 
@@ -101,7 +101,7 @@ public class LockInfo {
 	}
 
 	public String getElementStoreToString() {
-		return elementType+StringConstants.DOUBLECOLON+elementId;
+		return elementType + StringConstants.DOUBLECOLON + elementId;
 	}
 
 	public void refresh() {

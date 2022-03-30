@@ -12,29 +12,36 @@ import java.util.Calendar;
 @Deprecated
 public enum Months {
 
-	JAN(Calendar.JANUARY, Month.JANUARY, "January"),
-	JANUARY(Calendar.JANUARY, Month.JANUARY, "January"),
-	FEB(Calendar.FEBRUARY, Month.FEBRUARY, "February"),
-	FEBRUARY(Calendar.FEBRUARY, Month.FEBRUARY, "February"),
-	MAR(Calendar.MARCH, Month.MARCH, "March"),
-	MARCH(Calendar.MARCH, Month.MARCH, "March"),
-	APR(Calendar.APRIL, Month.APRIL, "April"),
-	APRIL(Calendar.APRIL, Month.APRIL, "April"),
-	MAY(Calendar.MAY, Month.MAY, "May"),
-	JUN(Calendar.JUNE, Month.JUNE, "June"),
-	JUNE(Calendar.JUNE, Month.JUNE, "June"),
-	JUL(Calendar.JULY, Month.JULY, "July"),
-	JULY(Calendar.JULY, Month.JULY, "July"),
-	AUG(Calendar.AUGUST, Month.AUGUST, "August"),
-	AUGUST(Calendar.AUGUST, Month.AUGUST, "August"),
-	SEP(Calendar.SEPTEMBER, Month.SEPTEMBER, "September"),
-	SEPTEMBER(Calendar.SEPTEMBER, Month.SEPTEMBER, "September"),
-	OCT(Calendar.OCTOBER, Month.OCTOBER, "October"),
-	OCTOBER(Calendar.OCTOBER, Month.OCTOBER, "October"),
-	NOV(Calendar.NOVEMBER, Month.NOVEMBER, "November"),
-	NOVEMBER(Calendar.NOVEMBER, Month.NOVEMBER, "November"),
-	DEC(Calendar.DECEMBER, Month.DECEMBER, "December"),
-	DECEMBER(Calendar.DECEMBER, Month.DECEMBER, "December");
+	JAN(Calendar.JANUARY, Month.JANUARY, "January"), JANUARY(Calendar.JANUARY, Month.JANUARY, "January"), FEB(
+			Calendar.FEBRUARY, Month.FEBRUARY,
+			"February"), FEBRUARY(Calendar.FEBRUARY, Month.FEBRUARY, "February"), MAR(Calendar.MARCH, Month.MARCH,
+					"March"), MARCH(Calendar.MARCH, Month.MARCH, "March"), APR(Calendar.APRIL, Month.APRIL,
+							"April"), APRIL(Calendar.APRIL, Month.APRIL, "April"), MAY(Calendar.MAY, Month.MAY,
+									"May"), JUN(Calendar.JUNE, Month.JUNE, "June"), JUNE(Calendar.JUNE, Month.JUNE,
+											"June"), JUL(Calendar.JULY, Month.JULY, "July"), JULY(Calendar.JULY,
+													Month.JULY,
+													"July"), AUG(Calendar.AUGUST, Month.AUGUST, "August"), AUGUST(
+															Calendar.AUGUST, Month.AUGUST,
+															"August"), SEP(Calendar.SEPTEMBER, Month.SEPTEMBER,
+																	"September"), SEPTEMBER(Calendar.SEPTEMBER,
+																			Month.SEPTEMBER,
+																			"September"), OCT(Calendar.OCTOBER,
+																					Month.OCTOBER, "October"), OCTOBER(
+																							Calendar.OCTOBER,
+																							Month.OCTOBER,
+																							"October"), NOV(
+																									Calendar.NOVEMBER,
+																									Month.NOVEMBER,
+																									"November"), NOVEMBER(
+																											Calendar.NOVEMBER,
+																											Month.NOVEMBER,
+																											"November"), DEC(
+																													Calendar.DECEMBER,
+																													Month.DECEMBER,
+																													"December"), DECEMBER(
+																															Calendar.DECEMBER,
+																															Month.DECEMBER,
+																															"December");
 
 	/**
 	 * Factory method to create a Months instance from a java calendar month value
@@ -65,7 +72,7 @@ public enum Months {
 	public String describe() {
 		return description;
 	}
-	
+
 	public Month month() {
 		return month;
 	}

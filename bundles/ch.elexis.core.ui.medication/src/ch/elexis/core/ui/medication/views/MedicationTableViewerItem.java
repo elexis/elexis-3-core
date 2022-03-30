@@ -24,17 +24,17 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 
 /**
- * Maps an element of type {@link IPrescription} for presentation within the MedicationTableViewer.
- * Used for performance reasons.
+ * Maps an element of type {@link IPrescription} for presentation within the
+ * MedicationTableViewer. Used for performance reasons.
  */
 public class MedicationTableViewerItem {
-	
+
 	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
 	private static ExecutorService executorService = Executors.newFixedThreadPool(8);
-	
+
 	private StructuredViewer viewer;
-	
+
 	// loaded first run
 	private IPrescription prescription;
 	private IArticle article;
@@ -45,20 +45,20 @@ public class MedicationTableViewerItem {
 	private String disposalComment;
 	private int sortOrder;
 	private IContact prescriptor;
-	
+
 	// lazy computed
 	private String artikelLabel;
 	private Identifiable lastDisposed;
 	private String prescriptorLabel;
 	private String stopReason;
 	private Image image;
-	
+
 	private Date endTime;
-	
+
 	private boolean resolved = false;
 	private boolean resolving = false;
-	
-	private MedicationTableViewerItem(IPrescription prescription, StructuredViewer viewer){
+
+	private MedicationTableViewerItem(IPrescription prescription, StructuredViewer viewer) {
 		this.viewer = viewer;
 		this.prescription = prescription;
 		article = prescription.getArticle();
@@ -66,54 +66,54 @@ public class MedicationTableViewerItem {
 		remark = prescription.getRemark();
 		sortOrder = prescription.getSortOrder();
 		prescriptor = prescription.getPrescriptor();
-		
+
 		dateFrom = prescription.getDateFrom();
 		dateUntil = prescription.getDateTo();
-		
+
 		if (dateUntil != null) {
 			endTime = Date.from(dateUntil.atZone(ZoneId.systemDefault()).toInstant());
 		} else {
 			endTime = new Date();
 		}
 	}
-	
-	public static List<MedicationTableViewerItem> createFromPrescriptionList(
-		List<IPrescription> prescriptionList, StructuredViewer viewer){
+
+	public static List<MedicationTableViewerItem> createFromPrescriptionList(List<IPrescription> prescriptionList,
+			StructuredViewer viewer) {
 		List<MedicationTableViewerItem> collect = prescriptionList.stream()
-			.map(p -> new MedicationTableViewerItem(p, viewer)).collect(Collectors.toList());
+				.map(p -> new MedicationTableViewerItem(p, viewer)).collect(Collectors.toList());
 		return collect;
 	}
-	
+
 	// loaded with first run
-	public String getId(){
+	public String getId() {
 		return prescription.getId();
 	}
-	
-	public String getBeginDate(){
+
+	public String getBeginDate() {
 		return dateFrom != null ? dateFormatter.format(dateFrom) : "";
 	}
-	
-	public String getEndDate(){
+
+	public String getEndDate() {
 		return dateUntil != null ? dateFormatter.format(dateUntil) : "";
 	}
-	
-	public Date getEndTime(){
+
+	public Date getEndTime() {
 		return endTime;
 	}
-	
-	public void setEndTime(Date time){
+
+	public void setEndTime(Date time) {
 		endTime = time;
 	}
-	
-	public String getDosis(){
+
+	public String getDosis() {
 		return dosis != null ? dosis : "";
 	}
-	
-	public IPrescription getPrescription(){
+
+	public IPrescription getPrescription() {
 		return prescription;
 	}
-	
-	public String getStopReason(){
+
+	public String getStopReason() {
 		if (stopReason == null) {
 			if (!resolved && !resolving) {
 				resolving = true;
@@ -122,12 +122,12 @@ public class MedicationTableViewerItem {
 		}
 		return stopReason != null ? stopReason : "...";
 	}
-	
-	public String getRemark(){
+
+	public String getRemark() {
 		return remark;
 	}
-	
-	public String getDisposalComment(){
+
+	public String getDisposalComment() {
 		if (disposalComment == null) {
 			if (!resolved && !resolving) {
 				resolving = true;
@@ -136,19 +136,19 @@ public class MedicationTableViewerItem {
 		}
 		return disposalComment != null ? disposalComment : "...";
 	}
-	
+
 	/**
-	 * An active medication is not a recipe and not a dispensation and is not stopped.
+	 * An active medication is not a recipe and not a dispensation and is not
+	 * stopped.
 	 * 
 	 * @return
 	 */
-	public boolean isActiveMedication(){
+	public boolean isActiveMedication() {
 		EntryType entryType = prescription.getEntryType();
-		return entryType != EntryType.RECIPE && entryType != EntryType.SELF_DISPENSED
-			&& !isStopped();
+		return entryType != EntryType.RECIPE && entryType != EntryType.SELF_DISPENSED && !isStopped();
 	}
-	
-	public Identifiable getLastDisposed(){
+
+	public Identifiable getLastDisposed() {
 		if (lastDisposed == null) {
 			if (!resolved && !resolving) {
 				resolving = true;
@@ -157,19 +157,19 @@ public class MedicationTableViewerItem {
 		}
 		return lastDisposed;
 	}
-	
-	public String getAtc(){
+
+	public String getAtc() {
 		if (article != null) {
 			return article.getAtcCode();
 		}
 		return "?";
 	}
-	
-	public EntryType getEntryType(){
+
+	public EntryType getEntryType() {
 		return prescription.getEntryType();
 	}
-	
-	public String getArtikelLabel(){
+
+	public String getArtikelLabel() {
 		if (artikelLabel == null) {
 			if (!resolved && !resolving) {
 				resolving = true;
@@ -178,22 +178,22 @@ public class MedicationTableViewerItem {
 		}
 		return artikelLabel != null ? artikelLabel : "...";
 	}
-	
-	public void setOrder(int i){
+
+	public void setOrder(int i) {
 		sortOrder = i;
 		prescription.setSortOrder(i);
 		CoreModelServiceHolder.get().save(prescription);
 	}
-	
-	public int getOrder(){
+
+	public int getOrder() {
 		return sortOrder;
 	}
-	
-	public boolean isStopped(){
+
+	public boolean isStopped() {
 		return dateUntil != null;
 	}
-	
-	public String getPrescriptorLabel(){
+
+	public String getPrescriptorLabel() {
 		if (prescriptorLabel == null) {
 			if (!resolved && !resolving) {
 				resolving = true;
@@ -202,8 +202,8 @@ public class MedicationTableViewerItem {
 		}
 		return prescriptorLabel != null ? prescriptorLabel : "...";
 	}
-	
-	public Image getImage(){
+
+	public Image getImage() {
 		if (image == null) {
 			if (!resolved && !resolving) {
 				resolving = true;
@@ -212,27 +212,27 @@ public class MedicationTableViewerItem {
 		}
 		return image != null ? image : Images.IMG_EMPTY_TRANSPARENT.getImage();
 	}
-	
+
 	/**
 	 * Resolve the properties, blocks until resolved.
 	 */
-	public void resolve(){
+	public void resolve() {
 		if (!resolved) {
 			new ResolveLazyFieldsRunnable(null, this).run();
 		}
 	}
-	
+
 	private static class ResolveLazyFieldsRunnable implements Runnable {
 		private MedicationTableViewerItem item;
 		private StructuredViewer viewer;
-		
-		public ResolveLazyFieldsRunnable(StructuredViewer viewer, MedicationTableViewerItem item){
+
+		public ResolveLazyFieldsRunnable(StructuredViewer viewer, MedicationTableViewerItem item) {
 			this.item = item;
 			this.viewer = viewer;
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			resolveImage();
 			resolveArticleLabel();
 			resolveLastDisposed();
@@ -243,14 +243,14 @@ public class MedicationTableViewerItem {
 			item.resolving = false;
 			updateViewer();
 		}
-		
-		private void updateViewer(){
+
+		private void updateViewer() {
 			if (viewer != null) {
 				Control control = viewer.getControl();
 				if (control != null && !control.isDisposed()) {
 					viewer.getControl().getDisplay().asyncExec(new Runnable() {
 						@Override
-						public void run(){
+						public void run() {
 							if (!control.isDisposed() && control.isVisible()) {
 								viewer.update(item, null);
 							}
@@ -259,44 +259,44 @@ public class MedicationTableViewerItem {
 				}
 			}
 		}
-		
-		private void resolveArticleLabel(){
+
+		private void resolveArticleLabel() {
 			if (item.article != null) {
 				item.artikelLabel = item.article.getLabel();
 			} else {
 				item.artikelLabel = "?";
 			}
 		}
-		
-		private void resolveImage(){
+
+		private void resolveImage() {
 			EntryType et = item.prescription.getEntryType();
 			switch (et) {
-			case FIXED_MEDICATION:
-				item.image = Images.IMG_FIX_MEDI.getImage();
-				break;
-			case RESERVE_MEDICATION:
-				item.image = Images.IMG_RESERVE_MEDI.getImage();
-				break;
-			case SYMPTOMATIC_MEDICATION:
-				item.image = Images.IMG_SYMPTOM_MEDI.getImage();
-				break;
-			case SELF_DISPENSED:
-				if (item.prescription.isApplied()) {
-					item.image = Images.IMG_SYRINGE.getImage();
+				case FIXED_MEDICATION :
+					item.image = Images.IMG_FIX_MEDI.getImage();
 					break;
-				}
-				item.image = Images.IMG_VIEW_CONSULTATION_DETAIL.getImage();
-				break;
-			case RECIPE:
-				item.image = Images.IMG_VIEW_RECIPES.getImage();
-				break;
-			default:
-				item.image = Images.IMG_EMPTY_TRANSPARENT.getImage();
-				break;
+				case RESERVE_MEDICATION :
+					item.image = Images.IMG_RESERVE_MEDI.getImage();
+					break;
+				case SYMPTOMATIC_MEDICATION :
+					item.image = Images.IMG_SYMPTOM_MEDI.getImage();
+					break;
+				case SELF_DISPENSED :
+					if (item.prescription.isApplied()) {
+						item.image = Images.IMG_SYRINGE.getImage();
+						break;
+					}
+					item.image = Images.IMG_VIEW_CONSULTATION_DETAIL.getImage();
+					break;
+				case RECIPE :
+					item.image = Images.IMG_VIEW_RECIPES.getImage();
+					break;
+				default :
+					item.image = Images.IMG_EMPTY_TRANSPARENT.getImage();
+					break;
 			}
 		}
-		
-		private void resolveLastDisposed(){
+
+		private void resolveLastDisposed() {
 			IRecipe recipe = item.prescription.getRecipe();
 			IBilled billed = item.prescription.getBilled();
 			if (recipe != null) {
@@ -305,8 +305,8 @@ public class MedicationTableViewerItem {
 				item.lastDisposed = billed;
 			}
 		}
-		
-		private void resolveStopReason(){
+
+		private void resolveStopReason() {
 			String reason = item.prescription.getStopReason();
 			if (reason != null) {
 				item.stopReason = reason;
@@ -314,15 +314,15 @@ public class MedicationTableViewerItem {
 				item.stopReason = "";
 			}
 		}
-		
-		private void resolvePrescriptorLabel(){
+
+		private void resolvePrescriptorLabel() {
 			item.prescriptorLabel = "";
 			if (item.prescriptor != null) {
 				item.prescriptorLabel = item.prescriptor.getLabel();
 			}
 		}
-		
-		private void resolveDisposalComment(){
+
+		private void resolveDisposalComment() {
 			String comment = item.prescription.getDisposalComment();
 			if (comment != null) {
 				item.disposalComment = comment;
@@ -331,12 +331,12 @@ public class MedicationTableViewerItem {
 			}
 		}
 	}
-	
-	public IRecipe getRecipe(){
+
+	public IRecipe getRecipe() {
 		return prescription.getRecipe();
 	}
-	
-	public IBilled getBilled(){
+
+	public IBilled getBilled() {
 		return prescription.getBilled();
 	}
 }

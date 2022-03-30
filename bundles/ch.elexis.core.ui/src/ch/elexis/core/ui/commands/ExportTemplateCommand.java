@@ -24,27 +24,23 @@ import ch.rgw.io.FileTool;
 
 public class ExportTemplateCommand extends AbstractHandler {
 	private static Logger logger = LoggerFactory.getLogger(ExportTemplateCommand.class);
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// get selection
-		ISelection selection =
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null) {
 			Object firstElement = ((IStructuredSelection) selection).getFirstElement();
-			
+
 			if (firstElement != null && firstElement instanceof TextTemplate) {
 				TextTemplate textTemplate = (TextTemplate) firstElement;
 				if (textTemplate.getTemplate() != null) {
 					try {
 						FileDialog fdl = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
-						fdl.setFilterExtensions(new String[] {
-							MimeTypeUtil.getExtensions(textTemplate.getMimeType()), "*.*"
-						});
-						fdl.setFilterNames(new String[] {
-							textTemplate.getMimeTypePrintname(), "All files"
-						});
-						
+						fdl.setFilterExtensions(
+								new String[]{MimeTypeUtil.getExtensions(textTemplate.getMimeType()), "*.*"});
+						fdl.setFilterNames(new String[]{textTemplate.getMimeTypePrintname(), "All files"});
+
 						String filename = fdl.open();
 						if (filename != null) {
 							File file = new File(filename);

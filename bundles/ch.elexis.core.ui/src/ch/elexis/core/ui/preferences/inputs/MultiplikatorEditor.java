@@ -39,71 +39,68 @@ public class MultiplikatorEditor extends Composite {
 	List list;
 	final Stm stm = PersistentObject.getConnection().getStatement();
 	String typeName;
-	
-	public MultiplikatorEditor(final Composite prnt, final String clazz){
+
+	public MultiplikatorEditor(final Composite prnt, final String clazz) {
 		super(prnt, SWT.NONE);
 		setLayout(new GridLayout());
 		setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		list = new List(this, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE);
 		list.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		Button bNew = new Button(this, SWT.PUSH);
-		bNew.setText(Messages.MultiplikatorEditor_add); //$NON-NLS-1$
+		bNew.setText(Messages.MultiplikatorEditor_add); // $NON-NLS-1$
 		bNew.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(final SelectionEvent e){
+			public void widgetSelected(final SelectionEvent e) {
 				AddMultiplikatorDialog amd = new AddMultiplikatorDialog(getShell());
 				if (amd.open() == Dialog.OK) {
 					TimeTool t = amd.getBegindate();
 					String mul = amd.getMult();
-					
+
 					MultiplikatorList multis = new MultiplikatorList("VK_PREISE", typeName);
 					multis.insertMultiplikator(t, mul);
-					list.add(String.format("%s %s: %s", //$NON-NLS-1$ 
-							Messages.MultiplikatorEditor_from, t.toString(TimeTool.DATE_GER),
-									mul));
+					list.add(String.format("%s %s: %s", //$NON-NLS-1$
+							Messages.MultiplikatorEditor_from, t.toString(TimeTool.DATE_GER), mul));
 				}
 			}
 		});
 		reload(clazz);
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		PersistentObject.getConnection().releaseStatement(stm);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void reload(final String typeName){
+	public void reload(final String typeName) {
 		this.typeName = typeName;
 		ArrayList<String[]> daten = new ArrayList<String[]>();
-		try (ResultSet res =
-			stm.query("SELECT * FROM VK_PREISE WHERE TYP=" + JdbcLink.wrap(typeName))) {
+		try (ResultSet res = stm.query("SELECT * FROM VK_PREISE WHERE TYP=" + JdbcLink.wrap(typeName))) {
 			while ((res != null) && (res.next() == true)) {
 				String[] row = new String[2];
 				row[0] = res.getString("DATUM_VON"); //$NON-NLS-1$
 				row[1] = res.getString("MULTIPLIKATOR"); //$NON-NLS-1$
 				daten.add(row);
 			}
-			
+
 			Collections.sort(daten, new Comparator() {
-				
-				public int compare(final Object o1, final Object o2){
+
+				public int compare(final Object o1, final Object o2) {
 					String[] s1 = (String[]) o1;
 					String[] s2 = (String[]) o2;
 					return s1[0].compareTo(s2[0]);
 				}
-				
+
 			});
-			
+
 			TimeTool dis = new TimeTool();
 			list.removeAll();
 			for (String[] s : daten) {
 				dis.set(s[0]);
-				list.add(String.format("%s %s: %s", //$NON-NLS-1$ 
-						Messages.MultiplikatorEditor_from, dis.toString(TimeTool.DATE_GER),
-							 s[1]));
+				list.add(String.format("%s %s: %s", //$NON-NLS-1$
+						Messages.MultiplikatorEditor_from, dis.toString(TimeTool.DATE_GER), s[1]));
 			}
-			
+
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 		}

@@ -14,9 +14,9 @@ package ch.elexis.core.data.interfaces;
  * Copy of core interface, used while refactoring.
  */
 public interface ILabOrder {
-	
+
 	String getId();
-	
+
 	ILabResult getLabResult();
 
 	void setLabResult(ILabResult value);

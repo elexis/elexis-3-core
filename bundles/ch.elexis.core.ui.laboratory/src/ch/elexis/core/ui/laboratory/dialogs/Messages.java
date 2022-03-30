@@ -10,7 +10,7 @@
 package ch.elexis.core.ui.laboratory.dialogs;
 
 public class Messages {
-	
+
 	public static String ImportLabMapping_errorNotFound = ch.elexis.core.l10n.Messages.ImportLabMapping_errorNotFound;
 	public static String ImportLabMapping_errorProblems = ch.elexis.core.l10n.Messages.ImportLabMapping_errorProblems;
 	public static String ImportLabMapping_message = ch.elexis.core.l10n.Messages.ImportLabMapping_message;
@@ -18,7 +18,7 @@ public class Messages {
 	public static String ImportLabMapping_shellTitle = ch.elexis.core.l10n.Messages.ImportLabMapping_shellTitle;
 	public static String ImportLabMapping_title = ch.elexis.core.l10n.Messages.ImportLabMapping_title;
 	public static String ImportLabMapping_titleProblemDialog = ch.elexis.core.l10n.Messages.ImportLabMapping_titleProblemDialog;
-	
+
 	public static String EditLabResultDialog_errorNoResult = ch.elexis.core.l10n.Messages.EditLabResultDialog_errorNoResult;
 	public static String EditLabResultDialog_errorRefFemaleNotNumber = ch.elexis.core.l10n.Messages.EditLabResultDialog_errorRefFemaleNotNumber;
 	public static String EditLabResultDialog_errorRefMaleNotNumber = ch.elexis.core.l10n.Messages.EditLabResultDialog_errorRefMaleNotNumber;
@@ -38,7 +38,7 @@ public class Messages {
 	public static String EditLabResultDialog_message = ch.elexis.core.l10n.Messages.EditLabResultDialog_message;
 	public static String EditLabResultDialog_shellTitle = ch.elexis.core.l10n.Messages.EditLabResultDialog_shellTitle;
 	public static String EditLabResultDialog_title = ch.elexis.core.l10n.Messages.EditLabResultDialog_title;
-	
+
 	public static String LaborVerordnungDialog_alreadyOrdered = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_alreadyOrdered;
 	public static String LaborVerordnungDialog_errorOrderNumber = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_errorOrderNumber;
 	public static String LaborVerordnungDialog_labelOrderNumber = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_labelOrderNumber;
@@ -47,7 +47,7 @@ public class Messages {
 	public static String LaborVerordnungDialog_shellTitle = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_shellTitle;
 	public static String LaborVerordnungDialog_title = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_title;
 	public static String LaborVerordnungDialog_printOrders = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_printOrders;
-	
+
 	public static String MergeLabItemDialog_errorNoFromLabItemSelected = ch.elexis.core.l10n.Messages.MergeLabItemDialog_errorNoFromLabItemSelected;
 	public static String MergeLabItemDialog_errorNoToLabItemSelected = ch.elexis.core.l10n.Messages.MergeLabItemDialog_errorNoToLabItemSelected;
 	public static String MergeLabItemDialog_errorSameSelected = ch.elexis.core.l10n.Messages.MergeLabItemDialog_errorSameSelected;
@@ -58,7 +58,7 @@ public class Messages {
 	public static String MergeLabItemDialog_toolTipResultsCount = ch.elexis.core.l10n.Messages.MergeLabItemDialog_toolTipResultsCount;
 	public static String MergeLabItemDialog_pleaseMergeParam = ch.elexis.core.l10n.Messages.MergeLabItemDialog_pleaseMergeParam;
 	public static String MergeLabItemDialog_title = ch.elexis.core.l10n.Messages.MergeLabItemDialog_title;
-	
+
 	public static String EditLabItem_shellTitle = ch.elexis.core.l10n.Messages.EditLabItem_shellTitle;
 	public static String EditLabItem_labelExportTag = ch.elexis.core.l10n.Messages.EditLabItem_labelExportTag;
 	public static String EditLabItem_message = ch.elexis.core.l10n.Messages.EditLabItem_message;

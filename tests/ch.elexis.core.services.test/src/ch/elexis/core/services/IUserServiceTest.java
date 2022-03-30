@@ -21,54 +21,52 @@ import ch.elexis.core.test.TestEntities;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IUserServiceTest extends AbstractServiceTest {
-	
+
 	private IUserService service = OsgiServiceUtil.getService(IUserService.class).get();
-	
+
 	private IUser user;
-	
+
 	@Before
-	public void before(){
+	public void before() {
 		createTestMandantPatientFallBehandlung();
 		user = coreModelService.load(TestEntities.USER_USER_ID, IUser.class).orElse(null);
 		user.getAssignedContact().setExtInfo("StdMandant", testMandators.get(0).getId());
 		user.getAssignedContact().setExtInfo("Mandant", testMandators.get(0).getLabel());
 		coreModelService.save(user.getAssignedContact());
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		cleanup();
 	}
-	
+
 	@Test
-	public void userLoadChangeVerifyPassword(){
+	public void userLoadChangeVerifyPassword() {
 		assertNotNull(user.getHashedPassword());
 		assertNotNull(user.getSalt());
 		Collection<IRole> roles = user.getRoles();
 		assertNotNull(roles);
 		assertEquals(RoleConstants.SYSTEMROLE_LITERAL_USER, roles.iterator().next().getId());
-		
+
 		assertFalse(service.verifyPassword(user, "invalid".toCharArray()));
 		service.setPasswordForUser(user, "password");
 		assertTrue(service.verifyPassword(user, "password".toCharArray()));
-		
-		Optional<IRole> userRole =
-			coreModelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class);
+
+		Optional<IRole> userRole = coreModelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class);
 		assertTrue(user.getRoles().contains(userRole.get()));
 	}
-	
+
 	@Test
-	public void getExecutiveDoctorsWorkingFor(){
-		Set<IMandator> executiveDoctorsWorkingFor =
-			service.getExecutiveDoctorsWorkingFor(user.getAssignedContact());
+	public void getExecutiveDoctorsWorkingFor() {
+		Set<IMandator> executiveDoctorsWorkingFor = service.getExecutiveDoctorsWorkingFor(user.getAssignedContact());
 		assertEquals(testMandators.get(0), executiveDoctorsWorkingFor.iterator().next());
 	}
-	
+
 	@Test
-	public void getDefaultExecutiveDoctorWorkingFor(){
-		Optional<IMandator> defaultExecutiveDoctorWorkingFor =
-			service.getDefaultExecutiveDoctorWorkingFor(user.getAssignedContact());
+	public void getDefaultExecutiveDoctorWorkingFor() {
+		Optional<IMandator> defaultExecutiveDoctorWorkingFor = service
+				.getDefaultExecutiveDoctorWorkingFor(user.getAssignedContact());
 		assertEquals(testMandators.get(0), defaultExecutiveDoctorWorkingFor.get());
 	}
-	
+
 }

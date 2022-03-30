@@ -13,7 +13,7 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.Result;
 
 public interface ILabService {
-	
+
 	/**
 	 * Evaluate a {@link ILabResult} of {@link LabItemTyp#FORMULA}
 	 * 
@@ -21,7 +21,7 @@ public interface ILabService {
 	 * @return contains the result, and a flag if it could be correctly calculated
 	 */
 	public Result<String> evaluate(ILabResult labResult);
-	
+
 	/**
 	 *
 	 * @param contact
@@ -29,7 +29,7 @@ public interface ILabService {
 	 * @return
 	 */
 	public Optional<ILabMapping> getLabMappingByContactAndItem(IContact contact, ILabItem item);
-	
+
 	/**
 	 * Return all lab results considering the parameters
 	 * 
@@ -39,14 +39,15 @@ public interface ILabService {
 	 * @return
 	 */
 	public List<ILabResult> getLabResultsForPatientWithItemType(IPatient patient, LabItemTyp type,
-		boolean includeDeleted);
-	
+			boolean includeDeleted);
+
 	/**
-	 * Return all {@link ILabOrder} that are equal to the provided {@link LabOrder#getOrderid()} and
-	 * {@link LabOrder#getPatient()}
+	 * Return all {@link ILabOrder} that are equal to the provided
+	 * {@link LabOrder#getOrderid()} and {@link LabOrder#getPatient()}
 	 * 
 	 * @param labOrder
-	 * @param nonEmptyResultsOnly return only {@link ILabResult} with a non empty result
+	 * @param nonEmptyResultsOnly
+	 *            return only {@link ILabResult} with a non empty result
 	 * @return
 	 * @since 3.8
 	 */

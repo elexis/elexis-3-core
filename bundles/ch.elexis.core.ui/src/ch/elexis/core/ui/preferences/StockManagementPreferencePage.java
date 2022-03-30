@@ -58,67 +58,66 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
 import ch.elexis.data.Stock;
 
-public class StockManagementPreferencePage extends PreferencePage
-		implements IWorkbenchPreferencePage {
+public class StockManagementPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	private DataBindingContext m_bindingContext;
-	
+
 	private Table tableStocks;
 	private Text txtCode;
 	private Text txtDescription;
 	private Text txtLocation;
 	private Text txtPrio;
-	
+
 	private Label lblOwnerText;
 	private Label lblResponsibleText;
-	
+
 	private Button btnChkStoreInvalidNumbers;
 	private Button btnIgnoreOrderedArticlesOnNextOrder;
-	
+
 	private WritableValue<Stock> stockDetail = new WritableValue<Stock>(null, Stock.class);
 	private TableViewer tableViewer;
 	private Text txtMachineConfig;
 	private Label lblMachineuuid;
-	
+
 	private Label lblDefaultArticleProvider;
 	private Button btnMachineOutlayPartialPackages;
-	
+
 	private Button btnStoreBelow;
 	private Button btnStoreAtMin;
-	
+
 	/**
 	 * Create the preference page.
 	 */
-	public StockManagementPreferencePage(){
+	public StockManagementPreferencePage() {
 		setTitle(Messages.LagerverwaltungPrefs_storageManagement);
 	}
-	
+
 	/**
 	 * Create contents of the preference page.
 	 * 
 	 * @param parent
 	 */
 	@Override
-	public Control createContents(Composite parent){
+	public Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
-		
+
 		Group group = new Group(container, SWT.NONE);
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		group.setText(Messages.StockManagementPreferencePage_group_text);
-		
+
 		Composite composite = new Composite(group, SWT.NONE);
 		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_composite.heightHint = 150;
 		composite.setLayoutData(gd_composite);
 		TableColumnLayout tcl_composite = new TableColumnLayout();
 		composite.setLayout(tcl_composite);
-		
+
 		tableViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewer.setComparator(new ViewerComparator() {
 			@Override
-			public int compare(Viewer viewer, Object e1, Object e2){
+			public int compare(Viewer viewer, Object e1, Object e2) {
 				Stock s1 = (Stock) e1;
 				int s1I = (s1.getPriority() != null) ? s1.getPriority() : Integer.MAX_VALUE;
 				Stock s2 = (Stock) e2;
@@ -137,31 +136,31 @@ public class StockManagementPreferencePage extends PreferencePage
 		tableStocks = tableViewer.getTable();
 		tableStocks.setHeaderVisible(true);
 		tableStocks.setLinesVisible(true);
-		
+
 		Menu menu = new Menu(tableStocks);
 		tableStocks.setMenu(menu);
-		
+
 		MenuItem mntmAddStock = new MenuItem(menu, SWT.NONE);
 		mntmAddStock.setText(Messages.StockManagementPreferencePage_mntmNewItem_text);
 		mntmAddStock.setImage(Images.IMG_NEW.getImage());
 		mntmAddStock.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				Stock stock = new Stock("", Integer.MAX_VALUE);
 				tableViewer.add(stock);
 				tableViewer.setSelection(new StructuredSelection(stock));
 			}
 		});
-		
+
 		MenuItem mntmRemoveStock = new MenuItem(menu, SWT.NONE);
 		mntmRemoveStock.setText(Messages.StockManagementPreferencePage_mntmNewItem_text_1);
 		mntmRemoveStock.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				Stock stock = (Stock) stockDetail.getValue();
 				if (stock != null) {
 					boolean ret = MessageDialog.openQuestion(UiDesk.getTopShell(), "Lager löschen",
-						"Das Löschen dieses Lagers löscht alle darauf verzeichneten Lagerbestände. Sind Sie sicher?");
+							"Das Löschen dieses Lagers löscht alle darauf verzeichneten Lagerbestände. Sind Sie sicher?");
 					if (ret) {
 						stock.removeFromDatabase();
 						tableViewer.remove(stock);
@@ -169,60 +168,60 @@ public class StockManagementPreferencePage extends PreferencePage
 				}
 			}
 		});
-		
+
 		TableViewerColumn tvcPriority = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmPriority = tvcPriority.getColumn();
 		tcl_composite.setColumnData(tblclmPriority, new ColumnPixelData(30, true, true));
 		tblclmPriority.setText(Messages.StockManagementPreferencePage_tblclmnNewColumn_text);
 		tvcPriority.setLabelProvider(new CellLabelProvider() {
-			
+
 			@Override
-			public void update(ViewerCell cell){
+			public void update(ViewerCell cell) {
 				Stock s = (Stock) cell.getElement();
 				if (s == null)
 					return;
 				cell.setText(Integer.toString(s.getPriority()));
 			}
 		});
-		
+
 		TableViewerColumn tvcCode = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnCode = tvcCode.getColumn();
 		tcl_composite.setColumnData(tblclmnCode, new ColumnPixelData(40));
 		tblclmnCode.setText(Messages.StockManagementPreferencePage_tblclmnNewColumn_text_1);
 		tvcCode.setLabelProvider(new CellLabelProvider() {
-			
+
 			@Override
-			public void update(ViewerCell cell){
+			public void update(ViewerCell cell) {
 				Stock s = (Stock) cell.getElement();
 				if (s == null)
 					return;
 				cell.setText(s.getCode());
 			}
 		});
-		
+
 		TableViewerColumn tvcDescription = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnDescription = tvcDescription.getColumn();
 		tcl_composite.setColumnData(tblclmnDescription, new ColumnWeightData(50));
 		tblclmnDescription.setText(Messages.StockManagementPreferencePage_tblclmnNewColumn_text_3);
 		tvcDescription.setLabelProvider(new CellLabelProvider() {
-			
+
 			@Override
-			public void update(ViewerCell cell){
+			public void update(ViewerCell cell) {
 				Stock s = (Stock) cell.getElement();
 				if (s == null)
 					return;
 				cell.setText(s.getDescription());
 			}
 		});
-		
+
 		TableViewerColumn tvcOwner = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnOwner = tvcOwner.getColumn();
 		tcl_composite.setColumnData(tblclmnOwner, new ColumnWeightData(40));
 		tblclmnOwner.setText(Messages.StockManagementPreferencePage_tblclmnNewColumn_text_2);
 		tvcOwner.setLabelProvider(new CellLabelProvider() {
-			
+
 			@Override
-			public void update(ViewerCell cell){
+			public void update(ViewerCell cell) {
 				Stock s = (Stock) cell.getElement();
 				if (s != null) {
 					Mandant owner = s.getOwner();
@@ -232,55 +231,55 @@ public class StockManagementPreferencePage extends PreferencePage
 				}
 			}
 		});
-		
+
 		Composite compositeDetail = new Composite(group, SWT.NONE);
 		compositeDetail.setLayout(new GridLayout(4, false));
 		compositeDetail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-		
+
 		Label lblPrio = new Label(compositeDetail, SWT.NONE);
 		lblPrio.setText(Messages.StockManagementPreferencePage_lblPrio_text);
-		
+
 		txtPrio = new Text(compositeDetail, SWT.BORDER);
 		GridData gd_txtPrio = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_txtPrio.widthHint = 150;
 		txtPrio.setLayoutData(gd_txtPrio);
-		
+
 		Label lblCode = new Label(compositeDetail, SWT.NONE);
 		lblCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblCode.setToolTipText(Messages.StockManagementPreferencePage_lblCode_toolTipText);
 		lblCode.setText(Messages.StockManagementPreferencePage_lblCode_text);
-		
+
 		txtCode = new Text(compositeDetail, SWT.BORDER);
 		GridData gd_txtCode = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_txtCode.widthHint = 100;
 		txtCode.setLayoutData(gd_txtCode);
 		txtCode.setTextLimit(3);
-		
+
 		Label lblDescription = new Label(compositeDetail, SWT.NONE);
 		lblDescription.setText(Messages.StockManagementPreferencePage_lblDescription_text);
-		
+
 		txtDescription = new Text(compositeDetail, SWT.BORDER);
 		txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblLocation = new Label(compositeDetail, SWT.NONE);
 		lblLocation.setToolTipText(Messages.StockManagementPreferencePage_lblLocation_toolTipText);
 		lblLocation.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblLocation.setText(Messages.StockManagementPreferencePage_lblLocation_text);
-		
+
 		txtLocation = new Text(compositeDetail, SWT.BORDER);
 		txtLocation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Link lblOwner = new Link(compositeDetail, SWT.NONE);
 		lblOwner.setToolTipText(Messages.StockManagementPreferencePage_lblOwner_toolTipText);
 		lblOwner.setText(Messages.StockManagementPreferencePage_lblOwner_text);
 		lblOwner.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				Stock s = (Stock) stockDetail.getValue();
 				if (s == null)
 					return;
-				KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Mandant.class,
-					"Mandant auswählen", "Bitte selektieren Sie den Eigentümer", new String[] {});
+				KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Mandant.class, "Mandant auswählen",
+						"Bitte selektieren Sie den Eigentümer", new String[]{});
 				int ret = ks.open();
 				if (ret == Window.OK) {
 					Mandant p = (Mandant) ks.getSelection();
@@ -294,23 +293,22 @@ public class StockManagementPreferencePage extends PreferencePage
 				tableViewer.update(s, null);
 			}
 		});
-		
+
 		lblOwnerText = new Label(compositeDetail, SWT.NONE);
 		lblOwnerText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		
+
 		Link lblResponsible = new Link(compositeDetail, SWT.NONE);
-		lblResponsible
-			.setToolTipText(Messages.StockManagementPreferencePage_lblResponsible_toolTipText);
+		lblResponsible.setToolTipText(Messages.StockManagementPreferencePage_lblResponsible_toolTipText);
 		lblResponsible.setText(Messages.StockManagementPreferencePage_lblResonsible_text);
 		lblResponsible.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				Stock s = (Stock) stockDetail.getValue();
 				if (s == null)
 					return;
 				KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Kontakt.class,
-					"Lagerverantwortlichen auswählen",
-					"Bitte selektieren Sie den Lagerverantwortlichen", new String[] {});
+						"Lagerverantwortlichen auswählen", "Bitte selektieren Sie den Lagerverantwortlichen",
+						new String[]{});
 				int ret = ks.open();
 				if (ret == Window.OK) {
 					Kontakt p = (Kontakt) ks.getSelection();
@@ -323,32 +321,31 @@ public class StockManagementPreferencePage extends PreferencePage
 				}
 			}
 		});
-		
+
 		lblResponsibleText = new Label(compositeDetail, SWT.NONE);
 		lblResponsibleText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		
+
 		Label lblNewLabel = new Label(compositeDetail, SWT.SEPARATOR | SWT.HORIZONTAL);
 		lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 1));
 		lblNewLabel.setText(Messages.StockManagementPreferencePage_lblNewLabel_text);
-		
+
 		Link lblMachine = new Link(compositeDetail, SWT.NONE);
 		lblMachine.setToolTipText(Messages.StockManagementPreferencePage_lblMachine_toolTipText);
 		lblMachine.setText(Messages.StockManagementPreferencePage_lblMachine_text);
 		lblMachine.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				Stock s = (Stock) stockDetail.getValue();
 				if (s == null) {
 					return;
 				}
-				List<UUID> allDrivers =
-					StockCommissioningServiceHolder.get().listAllAvailableDrivers();
+				List<UUID> allDrivers = StockCommissioningServiceHolder.get().listAllAvailableDrivers();
 				if (allDrivers.size() == 0) {
 					MessageDialog.openInformation(UiDesk.getTopShell(), "No drivers found",
-						"There are no stock commissioning system drivers available.");
+							"There are no stock commissioning system drivers available.");
 					return;
 				}
-				
+
 				ListDialog ld = new ListDialog(UiDesk.getTopShell());
 				ld.setTitle("Driver selection");
 				ld.setMessage("Please select a commissioning system driver");
@@ -356,9 +353,8 @@ public class StockManagementPreferencePage extends PreferencePage
 				ld.setAddCancelButton(true);
 				ld.setLabelProvider(new LabelProvider() {
 					@Override
-					public String getText(Object element){
-						return StockCommissioningServiceHolder.get()
-							.getInfoStringForDriver((UUID) element, true);
+					public String getText(Object element) {
+						return StockCommissioningServiceHolder.get().getInfoStringForDriver((UUID) element, true);
 					}
 				});
 				ld.setInput(allDrivers);
@@ -376,44 +372,41 @@ public class StockManagementPreferencePage extends PreferencePage
 				}
 				if (ics != null) {
 					s.setDriverUuid(ics.toString());
-					lblMachineuuid.setText(StockCommissioningServiceHolder.get()
-						.getInfoStringForDriver(ics, false));
+					lblMachineuuid.setText(StockCommissioningServiceHolder.get().getInfoStringForDriver(ics, false));
 				} else {
 					s.setDriverUuid(null);
 					lblMachineuuid.setText(StringConstants.EMPTY);
 				}
 			}
 		});
-		
+
 		lblMachineuuid = new Label(compositeDetail, SWT.NONE);
 		lblMachineuuid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		
+
 		Label lblMachineConfig = new Label(compositeDetail, SWT.NONE);
 		lblMachineConfig.setText(Messages.StockManagementPreferencePage_lblMachineConfig_text);
 		txtMachineConfig = new Text(compositeDetail, SWT.BORDER);
 		txtMachineConfig.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		
+
 		btnMachineOutlayPartialPackages = new Button(compositeDetail, SWT.CHECK);
+		btnMachineOutlayPartialPackages.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
 		btnMachineOutlayPartialPackages
-			.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
-		btnMachineOutlayPartialPackages
-			.setText(Messages.StockManagementPreferencePage_btnMachineOutlayPartialPackages_text);
-		boolean outlayPartialPackages =
-			ConfigServiceHolder.getGlobal(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+				.setText(Messages.StockManagementPreferencePage_btnMachineOutlayPartialPackages_text);
+		boolean outlayPartialPackages = ConfigServiceHolder.getGlobal(
+				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
 				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
 		btnMachineOutlayPartialPackages.setSelection(outlayPartialPackages);
-		
+
 		btnIgnoreOrderedArticlesOnNextOrder = new Button(container, SWT.CHECK);
-		btnIgnoreOrderedArticlesOnNextOrder
-			.setText(Messages.LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder);
+		btnIgnoreOrderedArticlesOnNextOrder.setText(Messages.LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder);
 		btnIgnoreOrderedArticlesOnNextOrder.setSelection(getPreferenceStore()
-			.getBoolean(Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER));
-		
+				.getBoolean(Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER));
+
 		btnChkStoreInvalidNumbers = new Button(container, SWT.CHECK);
 		btnChkStoreInvalidNumbers.setText(Messages.LagerverwaltungPrefs_checkForInvalid);
-		btnChkStoreInvalidNumbers.setSelection(
-			getPreferenceStore().getBoolean(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES));
-		
+		btnChkStoreInvalidNumbers
+				.setSelection(getPreferenceStore().getBoolean(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES));
+
 		Group group1 = new Group(container, SWT.SHADOW_IN);
 		group1.setText(Messages.LagerverwaltungPrefs_orderCriteria);
 		group1.setLayout(new RowLayout(SWT.VERTICAL));
@@ -421,51 +414,46 @@ public class StockManagementPreferencePage extends PreferencePage
 		btnStoreBelow.setText(Messages.LagerverwaltungPrefs_orderWhenBelowMi);
 		btnStoreAtMin = new Button(group1, SWT.RADIO);
 		btnStoreAtMin.setText(Messages.LagerverwaltungPrefs_orderWhenAtMin);
-		
+
 		int valInventoryOrderTrigger = ConfigServiceHolder.getGlobal(Preferences.INVENTORY_ORDER_TRIGGER,
-			Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
-		boolean isInventoryOrderEqualValue =
-			Preferences.INVENTORY_ORDER_TRIGGER_EQUAL == valInventoryOrderTrigger;
+				Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
+		boolean isInventoryOrderEqualValue = Preferences.INVENTORY_ORDER_TRIGGER_EQUAL == valInventoryOrderTrigger;
 		btnStoreAtMin.setSelection(isInventoryOrderEqualValue);
 		btnStoreBelow.setSelection(!isInventoryOrderEqualValue);
-		
+
 		Composite compDefaultProvider = new Composite(container, SWT.NONE);
 		compDefaultProvider.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		GridLayout gl_compDefaultProvider = new GridLayout(3, false);
 		gl_compDefaultProvider.marginWidth = 0;
 		gl_compDefaultProvider.marginHeight = 0;
 		compDefaultProvider.setLayout(gl_compDefaultProvider);
-		
+
 		Link linkDefaultArticleProvider = new Link(compDefaultProvider, SWT.NONE);
-		linkDefaultArticleProvider.setToolTipText(
-			Messages.StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText);
 		linkDefaultArticleProvider
-			.setText(Messages.StockManagementPreferencePage_linkDefaultArticleProvider_text);
+				.setToolTipText(Messages.StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText);
+		linkDefaultArticleProvider.setText(Messages.StockManagementPreferencePage_linkDefaultArticleProvider_text);
 		linkDefaultArticleProvider.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Kontakt.class,
-					"Standard-Lieferant auswählen",
-					"Bitte selektieren Sie den Standard-Lieferanten", new String[] {});
+						"Standard-Lieferant auswählen", "Bitte selektieren Sie den Standard-Lieferanten",
+						new String[]{});
 				int ret = ks.open();
 				if (ret == Window.OK) {
 					Kontakt p = (Kontakt) ks.getSelection();
 					if (p != null) {
-						ConfigServiceHolder.setGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER,
-							p.getId());
+						ConfigServiceHolder.setGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, p.getId());
 						lblDefaultArticleProvider.setText(p.getLabel());
 					}
 				} else {
-					ConfigServiceHolder.setGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER,
-						null);
+					ConfigServiceHolder.setGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 					lblDefaultArticleProvider.setText("");
 				}
 			}
 		});
-		
+
 		lblDefaultArticleProvider = new Label(compDefaultProvider, SWT.NONE);
-		lblDefaultArticleProvider
-			.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblDefaultArticleProvider.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		String id = ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 		lblDefaultArticleProvider.setText("");
 		new Label(compDefaultProvider, SWT.NONE);
@@ -475,10 +463,10 @@ public class StockManagementPreferencePage extends PreferencePage
 				lblDefaultArticleProvider.setText(load.getLabel());
 			}
 		}
-		
+
 		tableViewer.setInput(new Query<Stock>(Stock.class).execute());
 		m_bindingContext = initDataBindings();
-		
+
 		stockDetail.addChangeListener(e -> {
 			Stock stock = (Stock) stockDetail.getValue();
 			if (stock != null) {
@@ -497,7 +485,7 @@ public class StockManagementPreferencePage extends PreferencePage
 				String machineUuid = stock.getDriverUuid();
 				if (machineUuid != null && !machineUuid.isEmpty()) {
 					String info = StockCommissioningServiceHolder.get()
-						.getInfoStringForDriver(UUID.fromString(machineUuid), false);
+							.getInfoStringForDriver(UUID.fromString(machineUuid), false);
 					lblMachineuuid.setText(info);
 				} else {
 					lblMachineuuid.setText("");
@@ -507,84 +495,79 @@ public class StockManagementPreferencePage extends PreferencePage
 				lblResponsibleText.setText("");
 			}
 		});
-		
+
 		return container;
 	}
-	
+
 	/**
 	 * Initialize the preference page.
 	 */
-	public void init(IWorkbench workbench){
+	public void init(IWorkbench workbench) {
 		setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 		getPreferenceStore().setDefault(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES,
-			Preferences.INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT);
-		getPreferenceStore().setDefault(
-			Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
-			Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT);
+				Preferences.INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT);
+		getPreferenceStore().setDefault(Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
+				Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT);
 	}
-	
+
 	@Override
-	protected void performApply(){
+	protected void performApply() {
 		tableViewer.setInput(new Query<Stock>(Stock.class).execute());
-		
+
 		setErrorMessage(null);
-		
+
 		super.performApply();
 	}
-	
+
 	@Override
-	public boolean performOk(){
+	public boolean performOk() {
 		getPreferenceStore().setValue(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES,
-			btnChkStoreInvalidNumbers.getSelection());
-		getPreferenceStore().setValue(
-			Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
-			btnIgnoreOrderedArticlesOnNextOrder.getSelection());
+				btnChkStoreInvalidNumbers.getSelection());
+		getPreferenceStore().setValue(Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
+				btnIgnoreOrderedArticlesOnNextOrder.getSelection());
 		getPreferenceStore().setValue(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
-			btnMachineOutlayPartialPackages.getSelection());
+				btnMachineOutlayPartialPackages.getSelection());
 		getPreferenceStore().setValue(Preferences.INVENTORY_ORDER_TRIGGER,
-			btnStoreBelow.getSelection() ? Preferences.INVENTORY_ORDER_TRIGGER_BELOW
-					: Preferences.INVENTORY_ORDER_TRIGGER_EQUAL);
-		
+				btnStoreBelow.getSelection()
+						? Preferences.INVENTORY_ORDER_TRIGGER_BELOW
+						: Preferences.INVENTORY_ORDER_TRIGGER_EQUAL);
+
 		return super.performOk();
 	}
-	
-	protected DataBindingContext initDataBindings(){
+
+	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		IObservableValue observeTextTxtCodeObserveWidget =
-			WidgetProperties.text(SWT.Modify).observe(txtCode);
-		IObservableValue stockDetailCodeObserveDetailValue =
-			PojoProperties.value(Stock.class, "code", String.class).observeDetail(stockDetail);
-		bindingContext.bindValue(observeTextTxtCodeObserveWidget, stockDetailCodeObserveDetailValue,
-			null, null);
+		IObservableValue observeTextTxtCodeObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtCode);
+		IObservableValue stockDetailCodeObserveDetailValue = PojoProperties.value(Stock.class, "code", String.class)
+				.observeDetail(stockDetail);
+		bindingContext.bindValue(observeTextTxtCodeObserveWidget, stockDetailCodeObserveDetailValue, null, null);
 		//
-		IObservableValue observeTextTxtDescriptionObserveWidget =
-			WidgetProperties.text(SWT.Modify).observe(txtDescription);
+		IObservableValue observeTextTxtDescriptionObserveWidget = WidgetProperties.text(SWT.Modify)
+				.observe(txtDescription);
 		IObservableValue stockDetailDescriptionObserveDetailValue = PojoProperties
-			.value(Stock.class, "description", String.class).observeDetail(stockDetail);
-		bindingContext.bindValue(observeTextTxtDescriptionObserveWidget,
-			stockDetailDescriptionObserveDetailValue, null, null);
+				.value(Stock.class, "description", String.class).observeDetail(stockDetail);
+		bindingContext.bindValue(observeTextTxtDescriptionObserveWidget, stockDetailDescriptionObserveDetailValue, null,
+				null);
 		//
-		IObservableValue observeTextTxtLocationObserveWidget =
-			WidgetProperties.text(SWT.Modify).observe(txtLocation);
-		IObservableValue stockDetailLocationObserveDetailValue =
-			PojoProperties.value(Stock.class, "location", String.class).observeDetail(stockDetail);
-		bindingContext.bindValue(observeTextTxtLocationObserveWidget,
-			stockDetailLocationObserveDetailValue, null, null);
+		IObservableValue observeTextTxtLocationObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtLocation);
+		IObservableValue stockDetailLocationObserveDetailValue = PojoProperties
+				.value(Stock.class, "location", String.class).observeDetail(stockDetail);
+		bindingContext.bindValue(observeTextTxtLocationObserveWidget, stockDetailLocationObserveDetailValue, null,
+				null);
 		//
-		IObservableValue observeTextTxtPrioObserveWidget =
-			WidgetProperties.text(SWT.Modify).observe(txtPrio);
-		IObservableValue stockDetailGlobalPreferenceObserveDetailValue =
-			PojoProperties.value(Stock.class, "priority", Integer.class).observeDetail(stockDetail);
-		bindingContext.bindValue(observeTextTxtPrioObserveWidget,
-			stockDetailGlobalPreferenceObserveDetailValue, null, null);
+		IObservableValue observeTextTxtPrioObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtPrio);
+		IObservableValue stockDetailGlobalPreferenceObserveDetailValue = PojoProperties
+				.value(Stock.class, "priority", Integer.class).observeDetail(stockDetail);
+		bindingContext.bindValue(observeTextTxtPrioObserveWidget, stockDetailGlobalPreferenceObserveDetailValue, null,
+				null);
 		//
-		IObservableValue observeTextTxtMachineConfigObserveWidget =
-			WidgetProperties.text(SWT.Modify).observe(txtMachineConfig);
+		IObservableValue observeTextTxtMachineConfigObserveWidget = WidgetProperties.text(SWT.Modify)
+				.observe(txtMachineConfig);
 		IObservableValue stockDetailMachineConfigObserveDetailValue = PojoProperties
-			.value(Stock.class, "driverConfig", String.class).observeDetail(stockDetail);
-		bindingContext.bindValue(observeTextTxtMachineConfigObserveWidget,
-			stockDetailMachineConfigObserveDetailValue, null, null);
+				.value(Stock.class, "driverConfig", String.class).observeDetail(stockDetail);
+		bindingContext.bindValue(observeTextTxtMachineConfigObserveWidget, stockDetailMachineConfigObserveDetailValue,
+				null, null);
 		//
 		return bindingContext;
 	}

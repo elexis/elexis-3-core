@@ -7,7 +7,7 @@ import java.util.Map;
 import ch.elexis.core.model.IUser;
 
 public class TransientMessage {
-	
+
 	private final String sender;
 	private final String receiver;
 	private boolean senderAcceptsAnswer;
@@ -19,82 +19,82 @@ public class TransientMessage {
 	 * Allow this message to leave the internal system, e.g. SMS or mail message
 	 */
 	private boolean alllowExternal = false;
-	
-	public TransientMessage(String sender, String receiver){
+
+	public TransientMessage(String sender, String receiver) {
 		this.sender = sender;
 		this.receiver = receiver;
 		senderAcceptsAnswer = true;
 		createDateTime = LocalDateTime.now();
 		priority = 0;
 	}
-	
-	public String getSender(){
+
+	public String getSender() {
 		return sender;
 	}
-	
-	public String getReceiver(){
+
+	public String getReceiver() {
 		return receiver;
 	}
-	
-	public boolean isSenderAcceptsAnswer(){
+
+	public boolean isSenderAcceptsAnswer() {
 		return senderAcceptsAnswer;
 	}
-	
-	public void setSenderAcceptsAnswer(boolean value){
+
+	public void setSenderAcceptsAnswer(boolean value) {
 		senderAcceptsAnswer = value;
 	}
-	
-	public LocalDateTime getCreateDateTime(){
+
+	public LocalDateTime getCreateDateTime() {
 		return createDateTime;
 	}
-	
-	public void setCreateDateTime(LocalDateTime value){
+
+	public void setCreateDateTime(LocalDateTime value) {
 		throw new UnsupportedOperationException();
 	}
-	
-	public String getMessageText(){
+
+	public String getMessageText() {
 		return messageText;
 	}
-	
-	public void setMessageText(String value){
+
+	public void setMessageText(String value) {
 		messageText = value;
 	}
-	
-	public Map<String, String> getMessageCodes(){
+
+	public Map<String, String> getMessageCodes() {
 		return messageCodes;
 	}
-	
-	public void setMessageCodes(Map<String, String> value){
+
+	public void setMessageCodes(Map<String, String> value) {
 		messageCodes = value;
 	}
-	
-	public int getMessagePriority(){
+
+	public int getMessagePriority() {
 		return priority;
 	}
-	
-	public void setMessagePriority(int value){
+
+	public void setMessagePriority(int value) {
 		priority = value;
 	}
-	
-	public void setSender(IUser user){
+
+	public void setSender(IUser user) {
 		throw new UnsupportedOperationException();
 	}
-	
-	public void addMessageCode(String key, String value){
+
+	public void addMessageCode(String key, String value) {
 		messageCodes.put(key, value);
 	}
-	
-	public boolean isAlllowExternal(){
+
+	public boolean isAlllowExternal() {
 		return alllowExternal;
 	}
-	
-	public void setAlllowExternal(boolean alllowExternal){
+
+	public void setAlllowExternal(boolean alllowExternal) {
 		this.alllowExternal = alllowExternal;
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return String.format("%s [%s -> %s] %s", createDateTime, sender, receiver, messageText);
 	}
-	
+
 }

@@ -27,9 +27,10 @@ public interface IOptifier {
 	 * Eine Konsultation optifizieren
 	 */
 	public Result<Object> optify(Konsultation kons);
-	
+
 	/**
-	 * Eine Leistung einer Konsultation hinzufügen; die anderen Leistungen der Kons ggf. anpassen
+	 * Eine Leistung einer Konsultation hinzufügen; die anderen Leistungen der Kons
+	 * ggf. anpassen
 	 * 
 	 * @param code
 	 *            der hinzuzufügende code
@@ -38,7 +39,7 @@ public interface IOptifier {
 	 * @return Result mit der möglicherweise veränderten Liste
 	 */
 	public ch.rgw.tools.Result<IVerrechenbar> add(IVerrechenbar code, Konsultation kons);
-	
+
 	/**
 	 * Eine Leistung aus einer Konsultation entfernen; die Liste ggf. anpassen
 	 * 
@@ -49,30 +50,30 @@ public interface IOptifier {
 	 * @return Result mit der möglicherweise veränderten Liste
 	 */
 	public Result<Verrechnet> remove(Verrechnet code, Konsultation kons);
-	
+
 	/**
 	 * @return the {@link Verrechnet} that may have been created during
 	 *         {@link IOptifier#add(IVerrechenbar, Konsultation)}
 	 * @since 3.1.0
 	 */
 	public @Nullable Verrechnet getCreatedVerrechnet();
-	
+
 	/**
-	 * Add an object to the context of the {@link IOptifier} implementation. If a object for the
-	 * provided key already exists, the value is replaced.
+	 * Add an object to the context of the {@link IOptifier} implementation. If a
+	 * object for the provided key already exists, the value is replaced.
 	 * 
 	 * @param key
 	 * @param value
 	 */
-	default void putContext(String key, Object value){
+	default void putContext(String key, Object value) {
 		// default do nothing implement in subclass
 	}
-	
+
 	/**
-	 * Add an implementation specific context object. If a object for the provided key already
-	 * exists, the value is replaced.
+	 * Add an implementation specific context object. If a object for the provided
+	 * key already exists, the value is replaced.
 	 */
-	default void clearContext(){
+	default void clearContext() {
 		// default do nothing implement in subclass
 	}
 }

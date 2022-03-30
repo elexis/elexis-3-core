@@ -11,34 +11,34 @@ import ch.elexis.core.model.RoleConstants;
 import ch.rgw.tools.JdbcLink;
 
 public class Test_User extends AbstractPersistentObjectTest {
-	
-	public Test_User(JdbcLink link){
+
+	public Test_User(JdbcLink link) {
 		super(link);
 	}
-	
+
 	private static Anwender anwender;
-	
+
 	@BeforeClass
-	public static void beforeClass(){
+	public static void beforeClass() {
 		anwender = new Anwender("Ann", "Wender", "15.10.1933", "w");
 	}
-	
+
 	@Ignore
-	public void testCaseSensitiveIdLoad(){
-		//#5514
+	public void testCaseSensitiveIdLoad() {
+		// #5514
 		Anwender anw = new Anwender("Username", "Uservorname", "16.1.1973", "w");
 		new User(anw, "user", "pass");
-		
+
 		assertFalse(User.load("USER").exists());
 		assertFalse(User.load("User").exists());
 		assertTrue(User.load("user").exists());
 	}
-	
+
 	@Test
-	public void testCreateAndDeleteUser(){
+	public void testCreateAndDeleteUser() {
 		// make sure no such user exists (error on mysql for unknown reason)
 		executeStatement("DELETE FROM USER_ WHERE id='anw'");
-		
+
 		new User(anwender, "anw", "password");
 		User user = User.load("anw");
 		assertTrue(user.exists());
@@ -46,10 +46,10 @@ public class Test_User extends AbstractPersistentObjectTest {
 		assertTrue(user.getAssignedRoles().contains(userRole));
 		assertTrue(user.isActive());
 		assertTrue(user.verifyPassword("password".toCharArray()));
-		
+
 		assertTrue(user.delete());
 		assertFalse(user.exists());
 		assertFalse(User.verifyUsernameNotTaken("anw"));
 	}
-	
+
 }

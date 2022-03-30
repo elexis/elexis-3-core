@@ -12,24 +12,24 @@ import ch.elexis.core.findings.ICoding;
  *
  */
 public interface ICodingContribution {
-	
+
 	/**
 	 * Get the defining URL of the code system.
 	 * 
 	 * @return
 	 */
 	public String getCodeSystem();
-	
+
 	/**
 	 * Return all codes contained in the code system.
 	 * 
 	 * @return
 	 */
 	public List<ICoding> getCodes();
-	
+
 	/**
-	 * Return a matching {@link ICoding} instance for the requested code, or empty if there is no
-	 * such code.
+	 * Return a matching {@link ICoding} instance for the requested code, or empty
+	 * if there is no such code.
 	 * 
 	 * @param code
 	 * @return

@@ -7,55 +7,55 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 
 public class UserConfig extends AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Userconfig>
-		implements IdentifiableWithXid, IUserConfig {
-	
-	public UserConfig(ch.elexis.core.jpa.entities.Userconfig entity){
+		implements
+			IdentifiableWithXid,
+			IUserConfig {
+
+	public UserConfig(ch.elexis.core.jpa.entities.Userconfig entity) {
 		super(entity);
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return getEntity().getId();
 	}
-	
+
 	@Override
-	public String getLabel(){
-		return getEntity().getOwnerId() + " " + getEntity().getParam() + " -> "
-			+ getEntity().getValue();
+	public String getLabel() {
+		return getEntity().getOwnerId() + " " + getEntity().getParam() + " -> " + getEntity().getValue();
 	}
-	
+
 	@Override
-	public String getKey(){
+	public String getKey() {
 		return getEntity().getParam();
 	}
-	
+
 	@Override
-	public void setKey(String value){
+	public void setKey(String value) {
 		getEntityMarkDirty().setParam(value);
 	}
-	
+
 	@Override
-	public String getValue(){
+	public String getValue() {
 		return getEntity().getValue();
 	}
-	
+
 	@Override
-	public void setValue(String value){
+	public void setValue(String value) {
 		getEntityMarkDirty().setValue(value);
 	}
-	
+
 	@Override
-	public IContact getOwner(){
+	public IContact getOwner() {
 		if (getEntity().getOwnerId() != null) {
-			Optional<IContact> owner =
-				CoreModelServiceHolder.get().load(getEntity().getOwnerId(), IContact.class);
+			Optional<IContact> owner = CoreModelServiceHolder.get().load(getEntity().getOwnerId(), IContact.class);
 			return (IContact) owner.orElse(null);
 		}
 		return null;
 	}
-	
+
 	@Override
-	public void setOwner(IContact value){
+	public void setOwner(IContact value) {
 		if (value instanceof AbstractIdDeleteModelAdapter) {
 			getEntityMarkDirty().setOwnerId(value.getId());
 		} else if (value == null) {

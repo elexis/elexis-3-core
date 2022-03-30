@@ -47,43 +47,46 @@ import ch.rgw.tools.IFilter;
 import ch.rgw.tools.StringTool;
 
 /**
- * Controlfieldprovider for RechnungsListeView. Creates a Composite that contains the controls to
- * select the criteria for the bills to be displayed
+ * Controlfieldprovider for RechnungsListeView. Creates a Composite that
+ * contains the controls to select the criteria for the bills to be displayed
  * 
  * @author gerry
  * 
  */
 class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	// final String[]
-	// stats={"Alle","Bezahlt","Offen","Offen&Gedruckt","1. Mahnung","2. Mahnung","3. Mahnung","In Betreibung","Teilverlust","Totalverlust"};
-	final static String[] stats = {
-		Messages.RnControlFieldProvider_all, Messages.RnControlFieldProvider_open,
-		Messages.RnControlFieldProvider_openAndPrinted, Messages.RnControlFieldProvider_partlyPaid,
-		Messages.RnControlFieldProvider_paid, Messages.RnControlFieldProvider_overpaid, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-		Messages.RnControlFieldProvider_reminder, Messages.RnControlFieldProvider_reminderPrinted,
-		Messages.RnControlFieldProvider_reminder2, Messages.RnControlFieldProvider_reminder2Printed,
-		Messages.RnControlFieldProvider_reminder3, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-		Messages.RnControlFieldProvider_reminder3Printed,
-		Messages.RnControlFieldProvider_enforcement, Messages.RnControlFieldProvider_partlyLost,
-		Messages.RnControlFieldProvider_totallyLost, Messages.RnControlFieldProvider_storno, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-		Messages.RnControlFieldProvider_erroneous, Messages.RnControlFieldProvider_toPrint,
-		Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind,
-		Messages.RnControlFieldProvider_writtenOff, Messages.RnControlFieldProvider_rejected
-	};
-	
-	final static int[] statInts = {
-		RnStatus.UNBEKANNT, RnStatus.OFFEN, RnStatus.OFFEN_UND_GEDRUCKT, RnStatus.TEILZAHLUNG,
-		RnStatus.BEZAHLT, RnStatus.ZUVIEL_BEZAHLT, RnStatus.MAHNUNG_1, RnStatus.MAHNUNG_1_GEDRUCKT,
-		RnStatus.MAHNUNG_2, RnStatus.MAHNUNG_2_GEDRUCKT, RnStatus.MAHNUNG_3,
-		RnStatus.MAHNUNG_3_GEDRUCKT, RnStatus.IN_BETREIBUNG, RnStatus.TEILVERLUST,
-		RnStatus.TOTALVERLUST, RnStatus.STORNIERT, RnStatus.FEHLERHAFT, RnStatus.ZU_DRUCKEN,
-		RnStatus.AUSSTEHEND, RnStatus.MAHNSTOPP, RnStatus.ABGESCHRIEBEN, RnStatus.ZURUECKGEWIESEN
-	};
-	
+	// stats={"Alle","Bezahlt","Offen","Offen&Gedruckt","1. Mahnung","2.
+	// Mahnung","3. Mahnung","In Betreibung","Teilverlust","Totalverlust"};
+	final static String[] stats = {Messages.RnControlFieldProvider_all, Messages.RnControlFieldProvider_open,
+			Messages.RnControlFieldProvider_openAndPrinted, Messages.RnControlFieldProvider_partlyPaid,
+			Messages.RnControlFieldProvider_paid, Messages.RnControlFieldProvider_overpaid, // $NON-NLS-1$ //$NON-NLS-2$
+																							// //$NON-NLS-3$
+																							// //$NON-NLS-4$
+																							// //$NON-NLS-5$
+																							// //$NON-NLS-6$
+			Messages.RnControlFieldProvider_reminder, Messages.RnControlFieldProvider_reminderPrinted,
+			Messages.RnControlFieldProvider_reminder2, Messages.RnControlFieldProvider_reminder2Printed,
+			Messages.RnControlFieldProvider_reminder3, // $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+														// //$NON-NLS-5$
+			Messages.RnControlFieldProvider_reminder3Printed, Messages.RnControlFieldProvider_enforcement,
+			Messages.RnControlFieldProvider_partlyLost, Messages.RnControlFieldProvider_totallyLost,
+			Messages.RnControlFieldProvider_storno, // $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+													// //$NON-NLS-5$
+			Messages.RnControlFieldProvider_erroneous, Messages.RnControlFieldProvider_toPrint,
+			Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind,
+			Messages.RnControlFieldProvider_writtenOff, Messages.RnControlFieldProvider_rejected};
+
+	final static int[] statInts = {RnStatus.UNBEKANNT, RnStatus.OFFEN, RnStatus.OFFEN_UND_GEDRUCKT,
+			RnStatus.TEILZAHLUNG, RnStatus.BEZAHLT, RnStatus.ZUVIEL_BEZAHLT, RnStatus.MAHNUNG_1,
+			RnStatus.MAHNUNG_1_GEDRUCKT, RnStatus.MAHNUNG_2, RnStatus.MAHNUNG_2_GEDRUCKT, RnStatus.MAHNUNG_3,
+			RnStatus.MAHNUNG_3_GEDRUCKT, RnStatus.IN_BETREIBUNG, RnStatus.TEILVERLUST, RnStatus.TOTALVERLUST,
+			RnStatus.STORNIERT, RnStatus.FEHLERHAFT, RnStatus.ZU_DRUCKEN, RnStatus.AUSSTEHEND, RnStatus.MAHNSTOPP,
+			RnStatus.ABGESCHRIEBEN, RnStatus.ZURUECKGEWIESEN};
+
 	final static int STAT_DEFAULT_INDEX = 1;
-	private final static String ALLE = Messages.RnControlFieldProvider_allPatients; //$NON-NLS-1$
-	private final static String ALL = Messages.RnControlFieldProvider_all; //$NON-NLS-1$
-	
+	private final static String ALLE = Messages.RnControlFieldProvider_allPatients; // $NON-NLS-1$
+	private final static String ALL = Messages.RnControlFieldProvider_all; // $NON-NLS-1$
+
 	Combo cbStat;
 	Combo cbZType;
 	/* DatePickerCombo dpVon, dpBis; */
@@ -94,21 +97,21 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	private Label /* hDateFrom, hDateUntil, */ lPatient;
 	Text tNr, tBetrag;
 	String oldSelectedBillingSystem = ""; //$NON-NLS-1$
-	
+
 	Patient actPatient;
-	
-	public Composite createControl(final Composite parent){
+
+	public Composite createControl(final Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		listeners = new ArrayList<ControlFieldListener>();
 		ret.setLayout(new GridLayout(5, true));
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		hlPatient = new HyperlinkAdapter() {
 			@Override
-			public void linkActivated(final HyperlinkEvent e){
+			public void linkActivated(final HyperlinkEvent e) {
 				Patient oldPatient = actPatient;
 				KontaktSelektor ksl = new KontaktSelektor(parent.getShell(), Patient.class,
-					Messages.RnControlFieldProvider_selectPatientCaption, //$NON-NLS-1$
-					Messages.RnControlFieldProvider_selectPatientMessage, true); //$NON-NLS-1$
+						Messages.RnControlFieldProvider_selectPatientCaption, // $NON-NLS-1$
+						Messages.RnControlFieldProvider_selectPatientMessage, true); // $NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
 					actPatient = (Patient) ksl.getSelection();
 					if (actPatient != null) {
@@ -123,23 +126,21 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 					lPatient.setText(ALLE);
 					cbStat.setText(stats[1]);
 				}
-				
+
 				if (actPatient == null && oldPatient == null) {
 					return;
-				} else if (actPatient != null && oldPatient != null
-					&& actPatient.equals(oldPatient)) {
+				} else if (actPatient != null && oldPatient != null && actPatient.equals(oldPatient)) {
 					return;
 				}
 				fireChangedEvent();
 			}
 		};
-		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_state); //$NON-NLS-1$
-		Label lbl =
-			SWTHelper.createHyperlink(ret, Messages.RnControlFieldProvider_patient2, hlPatient); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_state); // $NON-NLS-1$
+		Label lbl = SWTHelper.createHyperlink(ret, Messages.RnControlFieldProvider_patient2, hlPatient); // $NON-NLS-1$
 		lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
-		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_PaymentSystem); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_invoideNr); //$NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_amount); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_PaymentSystem); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_invoideNr); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_amount); // $NON-NLS-1$
 		// / ^ labels / values
 		cbStat = new Combo(ret, SWT.READ_ONLY);
 		cbStat.setVisibleItemCount(stats.length);
@@ -151,18 +152,18 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		cbZType = new Combo(ret, SWT.SINGLE | SWT.READ_ONLY);
 		// sort items according to prefs
 		cbZType.setItems(ch.elexis.core.ui.preferences.UserCasePreferences
-			.sortBillingSystems(BillingSystem.getAbrechnungsSysteme()));
+				.sortBillingSystems(BillingSystem.getAbrechnungsSysteme()));
 		cbZType.add(ALL);
 		// focus listener needed because view may be created BEFORE a user is active
 		// but for the sorting we need the user prefs for sorting
 		// AND if the prefs have just been modified...
 		cbZType.addFocusListener(new FocusListener() {
 			@Override
-			public void focusGained(FocusEvent e){
+			public void focusGained(FocusEvent e) {
 				// only set items if there ARE changes to avoid unnecessary flickering
 				String[] currItems = cbZType.getItems();
 				String[] newItems = ch.elexis.core.ui.preferences.UserCasePreferences
-					.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
+						.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 				if (!Arrays.equals(currItems, newItems)) {
 					String savedItem = cbZType.getText();
 					cbZType.setItems(newItems);
@@ -170,73 +171,75 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 					cbZType.add(ALL);
 				}
 				oldSelectedBillingSystem = cbZType.getText();
-				
+
 			}
-			
+
 			@Override
-			public void focusLost(FocusEvent e){}
+			public void focusLost(FocusEvent e) {
+			}
 		});
-		
+
 		// added to prevent selection of separator
 		cbZType.addSelectionListener(new SelectionListener() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				int separatorPos = ch.elexis.core.ui.preferences.UserCasePreferences
-					.getBillingSystemsMenuSeparatorPos(BillingSystem.getAbrechnungsSysteme());
+						.getBillingSystemsMenuSeparatorPos(BillingSystem.getAbrechnungsSysteme());
 				if (cbZType.getSelectionIndex() == separatorPos)
 					cbZType.select(cbZType.indexOf(oldSelectedBillingSystem));
 				else
 					oldSelectedBillingSystem = cbZType.getText();
 			}
-			
+
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e){}
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
 		});
-		
+
 		/*
 		 * GridData gdlp=new GridData(); gdlp.widthHint=150; gdlp.minimumWidth=150;
 		 */
 		tNr = new Text(ret, SWT.BORDER);
 		tNr.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e){
+			public void widgetDefaultSelected(SelectionEvent e) {
 				if (tNr.getText().length() == 0) {
 					cbStat.select(STAT_DEFAULT_INDEX);
 				}
 				fireChangedEvent();
 			}
-			
+
 		});
 		tBetrag = new Text(ret, SWT.BORDER);
 		tBetrag.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e){
+			public void widgetDefaultSelected(SelectionEvent e) {
 				if (tNr.getText().length() == 0) {
 					cbStat.select(STAT_DEFAULT_INDEX);
 				}
 				fireChangedEvent();
 			}
-			
+
 		});
 		GridData sgd = new GridData();
 		sgd.minimumWidth = 100;
 		sgd.widthHint = 100;
 		return ret;
 	}
-	
-	public void addChangeListener(final ControlFieldListener cl){
+
+	public void addChangeListener(final ControlFieldListener cl) {
 		listeners.add(cl);
 	}
-	
-	public void removeChangeListener(final ControlFieldListener cl){
+
+	public void removeChangeListener(final ControlFieldListener cl) {
 		listeners.remove(cl);
 	}
-	
-	public boolean getDateModeIsStatus(){
+
+	public boolean getDateModeIsStatus() {
 		return bDateAsStatus;
 	}
-	
-	public String[] getValues(){
+
+	public String[] getValues() {
 		String[] ret = new String[5];
 		int selIdx = cbStat.getSelectionIndex();
 		if (selIdx != -1) {
@@ -273,65 +276,65 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		}
 		return ret;
 	}
-	
-	public void clearValues(){
+
+	public void clearValues() {
 		cbStat.select(0);
 		tNr.setText(""); //$NON-NLS-1$
 		actPatient = null;
 		lPatient.setText(ALLE);
 	}
-	
-	public boolean isEmpty(){
+
+	public boolean isEmpty() {
 		return false;
 	}
-	
+
 	@Override
-	public void setQuery(final Query q){
-		
+	public void setQuery(final Query q) {
+
 	}
-	
+
 	@Override
-	public void setQuery(IQuery<?> query){
+	public void setQuery(IQuery<?> query) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public IFilter createFilter(){
+
+	public IFilter createFilter() {
 		return new IFilter() {
-			
-			public boolean select(final Object element){
+
+			public boolean select(final Object element) {
 				return true;
 			}
 		};
 	}
-	
-	public void fireChangedEvent(){
+
+	public void fireChangedEvent() {
 		UiDesk.getDisplay().syncExec(new Runnable() {
-			public void run(){
+			public void run() {
 				HashMap<String, String> hm = new HashMap<String, String>();
-				hm.put(Messages.RnControlFieldProvider_state, StringConstants.ZERO); //$NON-NLS-1$
+				hm.put(Messages.RnControlFieldProvider_state, StringConstants.ZERO); // $NON-NLS-1$
 				for (ControlFieldListener lis : listeners) {
 					lis.changed(hm);
-					
+
 				}
 			}
 		});
 	}
-	
-	public void fireSortEvent(final String text){
+
+	public void fireSortEvent(final String text) {
 		for (ControlFieldListener lis : listeners) {
 			lis.reorder(text);
-			
+
 		}
 	}
-	
-	public void setFocus(){
-		
+
+	public void setFocus() {
+
 	}
-	
+
 	private static class CtlSelectionListener extends SelectionAdapter {
 		@Override
-		public void widgetSelected(final SelectionEvent e){
+		public void widgetSelected(final SelectionEvent e) {
 			// fireChangedEvent(); do nothing. Only refresh by click on the refresh button
 		}
 	}

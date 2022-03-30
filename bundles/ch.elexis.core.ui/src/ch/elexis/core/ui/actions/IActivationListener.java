@@ -24,7 +24,7 @@ public interface IActivationListener {
 	 * @param mode
 	 */
 	public void activation(boolean mode);
-	
+
 	/**
 	 * @see IPartListener2#partVisible(org.eclipse.ui.IWorkbenchPartReference)
 	 * @param mode

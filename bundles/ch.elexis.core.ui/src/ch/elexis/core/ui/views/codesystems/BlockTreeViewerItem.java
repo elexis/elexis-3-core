@@ -13,47 +13,47 @@ import ch.elexis.data.VerrechenbarFavorites;
 import ch.elexis.data.VerrechenbarFavorites.Favorite;
 
 public class BlockTreeViewerItem {
-	
-	public static BlockTreeViewerItem of(ICodeElementBlock block){
+
+	public static BlockTreeViewerItem of(ICodeElementBlock block) {
 		BlockTreeViewerItem ret = new BlockTreeViewerItem(block);
 		return ret;
 	}
-	
+
 	private ICodeElementBlock block;
 	private List<BlockElementViewerItem> currentChildren;
-	
-	public BlockTreeViewerItem(ICodeElementBlock block){
+
+	public BlockTreeViewerItem(ICodeElementBlock block) {
 		this.block = block;
 	}
-	
-	public String getText(){
+
+	public String getText() {
 		return block.getLabel();
 	}
-	
-	public ICodeElementBlock getBlock(){
+
+	public ICodeElementBlock getBlock() {
 		return block;
 	}
-	
-	public List<BlockElementViewerItem> getChildren(){
+
+	public List<BlockElementViewerItem> getChildren() {
 		currentChildren = BlockElementViewerItem.of(block, false);
 		return currentChildren;
 	}
-	
-	public boolean hasChildren(){
-		// load children lazy in getChildren, loading Leistungsblock elements for current context is complex
+
+	public boolean hasChildren() {
+		// load children lazy in getChildren, loading Leistungsblock elements for
+		// current context is complex
 		if (currentChildren != null) {
 			return !currentChildren.isEmpty();
 		}
 		return true;
 	}
-	
+
 	public static class ColorizedLabelProvider extends LabelProvider implements IColorProvider {
-		
-		private BlockElementViewerItem.ColorizedLabelProvider elementLabelProvider =
-			new BlockElementViewerItem.ColorizedLabelProvider();
-		
+
+		private BlockElementViewerItem.ColorizedLabelProvider elementLabelProvider = new BlockElementViewerItem.ColorizedLabelProvider();
+
 		@Override
-		public String getText(final Object element){
+		public String getText(final Object element) {
 			if (element instanceof BlockElementViewerItem) {
 				BlockElementViewerItem item = (BlockElementViewerItem) element;
 				return elementLabelProvider.getText(item);
@@ -63,9 +63,9 @@ public class BlockTreeViewerItem {
 			}
 			return super.getText(element);
 		}
-		
+
 		@Override
-		public Image getImage(Object element){
+		public Image getImage(Object element) {
 			if (element instanceof BlockTreeViewerItem) {
 				BlockTreeViewerItem item = (BlockTreeViewerItem) element;
 				Favorite fav = VerrechenbarFavorites.isFavorite(item.getBlock());
@@ -74,14 +74,14 @@ public class BlockTreeViewerItem {
 			}
 			return null;
 		}
-		
+
 		@Override
-		public Color getForeground(Object element){
+		public Color getForeground(Object element) {
 			return null;
 		}
-		
+
 		@Override
-		public Color getBackground(Object element){
+		public Color getBackground(Object element) {
 			if (element instanceof BlockElementViewerItem) {
 				BlockElementViewerItem item = (BlockElementViewerItem) element;
 				return elementLabelProvider.getBackground(item);

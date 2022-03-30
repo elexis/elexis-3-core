@@ -13,127 +13,126 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.util.internal.ModelUtil;
 
 public class SickCertificate extends AbstractIdDeleteModelAdapter<AUF>
-		implements IdentifiableWithXid, ISickCertificate {
-	
-	public SickCertificate(AUF entity){
+		implements
+			IdentifiableWithXid,
+			ISickCertificate {
+
+	public SickCertificate(AUF entity) {
 		super(entity);
 	}
-	
+
 	@Override
-	public IPatient getPatient(){
+	public IPatient getPatient() {
 		return ModelUtil.getAdapter(getEntity().getPatient(), IPatient.class);
 	}
-	
+
 	@Override
-	public void setPatient(IPatient value){
+	public void setPatient(IPatient value) {
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntityMarkDirty()
-				.setPatient((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty().setPatient((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
 			getEntityMarkDirty().setPatient(null);
 		}
 	}
-	
+
 	@Override
-	public ICoverage getCoverage(){
+	public ICoverage getCoverage() {
 		return ModelUtil.getAdapter(getEntity().getFall(), ICoverage.class);
 	}
-	
+
 	@Override
-	public void setCoverage(ICoverage value){
+	public void setCoverage(ICoverage value) {
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntityMarkDirty()
-				.setFall((Fall) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty().setFall((Fall) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
 			getEntityMarkDirty().setFall(null);
 		}
 	}
-	
+
 	@Override
-	public IDocumentLetter getLetter(){
+	public IDocumentLetter getLetter() {
 		return ModelUtil.getAdapter(getEntity().getBrief(), IDocumentLetter.class);
 	}
-	
+
 	@Override
-	public void setLetter(IDocumentLetter value){
+	public void setLetter(IDocumentLetter value) {
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntityMarkDirty()
-				.setBrief((Brief) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty().setBrief((Brief) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
 			getEntityMarkDirty().setBrief(null);
 		}
 	}
-	
+
 	@Override
-	public int getPercent(){
+	public int getPercent() {
 		return getEntity().getProzent();
 	}
-	
+
 	@Override
-	public void setPercent(int value){
+	public void setPercent(int value) {
 		getEntityMarkDirty().setProzent(value);
 	}
-	
+
 	@Override
-	public LocalDate getDate(){
+	public LocalDate getDate() {
 		return getEntity().getDate();
 	}
-	
+
 	@Override
-	public void setDate(LocalDate value){
+	public void setDate(LocalDate value) {
 		getEntityMarkDirty().setDate(value);
 	}
-	
+
 	@Override
-	public LocalDate getStart(){
+	public LocalDate getStart() {
 		return getEntity().getDateFrom();
 	}
-	
+
 	@Override
-	public void setStart(LocalDate value){
+	public void setStart(LocalDate value) {
 		getEntityMarkDirty().setDateFrom(value);
 	}
-	
+
 	@Override
-	public LocalDate getEnd(){
+	public LocalDate getEnd() {
 		return getEntity().getDateUntil();
 	}
-	
+
 	@Override
-	public void setEnd(LocalDate value){
+	public void setEnd(LocalDate value) {
 		getEntityMarkDirty().setDateUntil(value);
 	}
-	
+
 	@Override
-	public String getReason(){
+	public String getReason() {
 		return StringUtils.defaultString(getEntity().getReason());
 	}
-	
+
 	@Override
-	public void setReason(String value){
+	public void setReason(String value) {
 		getEntityMarkDirty().setReason(value);
 	}
-	
+
 	@Override
-	public String getNote(){
+	public String getNote() {
 		return StringUtils.defaultString(getEntity().getNote());
 	}
-	
+
 	@Override
-	public void setNote(String value){
+	public void setNote(String value) {
 		getEntityMarkDirty().setNote(value);
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-		
+
 		StringBuilder sb = new StringBuilder();
 		if (getDate() != null) {
 			sb.append("[").append(dateFormat.format(getDate())).append("]: ");
 		}
-		sb.append(dateFormat.format(getStart())).append("-").append(dateFormat.format(getEnd()))
-			.append(": ").append(getPercent()).append("% (").append(getReason()).append(")");
+		sb.append(dateFormat.format(getStart())).append("-").append(dateFormat.format(getEnd())).append(": ")
+				.append(getPercent()).append("% (").append(getReason()).append(")");
 		return sb.toString();
 	}
 }

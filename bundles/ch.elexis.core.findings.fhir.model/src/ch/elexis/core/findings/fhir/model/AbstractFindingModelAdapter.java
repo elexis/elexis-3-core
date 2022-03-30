@@ -17,23 +17,24 @@ import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 
-public abstract class AbstractFindingModelAdapter<T extends EntityWithId>
-		extends AbstractIdDeleteModelAdapter<T> implements IFinding {
-	
-	public AbstractFindingModelAdapter(T entity){
+public abstract class AbstractFindingModelAdapter<T extends EntityWithId> extends AbstractIdDeleteModelAdapter<T>
+		implements
+			IFinding {
+
+	public AbstractFindingModelAdapter(T entity) {
 		super(entity);
 	}
-	
-	protected void saveResource(IBaseResource resource){
+
+	protected void saveResource(IBaseResource resource) {
 		ModelUtil.saveResource(resource, this);
 	}
-	
-	protected Optional<IBaseResource> loadResource(){
+
+	protected Optional<IBaseResource> loadResource() {
 		return ModelUtil.loadResource(this);
 	}
-	
+
 	@Override
-	public Optional<String> getText(){
+	public Optional<String> getText() {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent() && resource.get() instanceof DomainResource) {
 			Narrative narrative = ((DomainResource) resource.get()).getText();
@@ -43,9 +44,9 @@ public abstract class AbstractFindingModelAdapter<T extends EntityWithId>
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public void setText(String text){
+	public void setText(String text) {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent() && resource.get() instanceof DomainResource) {
 			DomainResource domainResource = (DomainResource) resource.get();
@@ -58,9 +59,9 @@ public abstract class AbstractFindingModelAdapter<T extends EntityWithId>
 			saveResource(domainResource);
 		}
 	}
-	
+
 	@Override
-	public void addStringExtension(String theUrl, String theValue){
+	public void addStringExtension(String theUrl, String theValue) {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent() && resource.get() instanceof DomainResource) {
 			DomainResource domainResource = (DomainResource) resource.get();
@@ -70,16 +71,15 @@ public abstract class AbstractFindingModelAdapter<T extends EntityWithId>
 			saveResource(domainResource);
 		}
 	}
-	
+
 	@Override
-	public Map<String, String> getStringExtensions(){
+	public Map<String, String> getStringExtensions() {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent() && resource.get() instanceof DomainResource) {
 			List<Extension> extensions = ((DomainResource) resource.get()).getExtension();
-			return extensions.stream()
-				.filter(extension -> extension.getValue() instanceof StringType)
-				.collect(Collectors.toMap(extension -> extension.getUrl(),
-					extension -> ((StringType) extension.getValue()).getValueAsString()));
+			return extensions.stream().filter(extension -> extension.getValue() instanceof StringType)
+					.collect(Collectors.toMap(extension -> extension.getUrl(),
+							extension -> ((StringType) extension.getValue()).getValueAsString()));
 		}
 		return Collections.emptyMap();
 	}

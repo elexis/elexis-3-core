@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class SerializableBoolean {
-	
+
 	/**
 	 * Interpret a deserialized {@link Serializable} boolean value
 	 * 
@@ -12,12 +12,12 @@ public class SerializableBoolean {
 	 * @param key
 	 * @return
 	 * @throws IllegalArgumentException
-	 *             if String not <code>true</code> or <code>false</code>, or any type other than
-	 *             {@link Boolean} or {@link String}
+	 *             if String not <code>true</code> or <code>false</code>, or any
+	 *             type other than {@link Boolean} or {@link String}
 	 */
-	public static boolean valueOf(Map<String, Serializable> runContext, String key){
+	public static boolean valueOf(Map<String, Serializable> runContext, String key) {
 		Serializable value = runContext.get(key);
-		
+
 		if (value instanceof Boolean) {
 			return (boolean) value;
 		} else if (value instanceof String) {
@@ -34,5 +34,5 @@ public class SerializableBoolean {
 			throw new IllegalArgumentException("Value is null");
 		}
 	}
-	
+
 }
