@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -55,7 +54,6 @@ public class PatListeContentProvider extends CommonViewerContentProvider
 	String[] orderLabels;
 	String[] orderFields;
 	String firstOrder;
-	PatListFilterBox pfilter;
 	ViewPart site;
 	
 	public PatListeContentProvider(CommonViewer cv, String[] fieldsToOrder, ViewPart s){
@@ -81,18 +79,6 @@ public class PatListeContentProvider extends CommonViewerContentProvider
 		firstOrder = orderFields[0];
 	}
 	
-	public void setFilter(PatListFilterBox f){
-		//		qbe.addPostQueryFilter(f);
-		pfilter = f;
-		bValid = false;
-	}
-	
-	public void removeFilter(PatListFilterBox f){
-		//		qbe.removePostQueryFilter(f);
-		pfilter = null;
-		bValid = false;
-	}
-	
 	@Override
 	protected IQuery<?> getBaseQuery(){
 		IQuery<IPatient> ret = CoreModelServiceHolder.get().getQuery(IPatient.class);
@@ -112,6 +98,7 @@ public class PatListeContentProvider extends CommonViewerContentProvider
 		patientQuery.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
 		
 		commonViewer.getConfigurer().getControlFieldProvider().setQuery(patientQuery);
+		getQueryFilters().forEach(filter -> filter.apply(patientQuery));
 		String[] actualOrder;
 		int idx = StringTool.getIndex(orderFields, firstOrder);
 		if ((idx == -1) || (idx == 0)) {
@@ -136,9 +123,6 @@ public class PatListeContentProvider extends CommonViewerContentProvider
 		if (!ignoreLimit) {
 			commonViewer.setLimitReached(lPats.size() == QUERY_LIMIT, QUERY_LIMIT);
 		}
-		if (pfilter != null) {
-			lPats = lPats.stream().filter(pat -> applyFilter(pat)).collect(Collectors.toList());
-		}
 		pats = lPats.toArray(new Object[lPats.size()]);
 		UiDesk.getDisplay().syncExec(new Runnable() {
 			
@@ -147,29 +131,16 @@ public class PatListeContentProvider extends CommonViewerContentProvider
 				TableViewer tv = (TableViewer) commonViewer.getViewerWidget();
 				tv.setItemCount(pats.length);
 				bValid = true;
-				if (pfilter != null) {
-					pfilter.finished();
-				}
 				tv.refresh();
 				bUpdating = false;
 			}
 		});
 	}
 	
-	private boolean applyFilter(Object object) {
-		return pfilter.select(object);
-	}
-	
 	@Override
 	public Object[] getElements(Object inputElement){
 		if (bValid || bUpdating) {
 			return pats;
-		}
-		if (pfilter != null) {
-			pats = new String[] {
-				Messages.PatListeContentProvider_LoadingData
-			};
-			((TableViewer) commonViewer.getViewerWidget()).setItemCount(1);
 		}
 		
 		if (!CoreHub.acl.request(AccessControlDefaults.PATIENT_DISPLAY)) {
@@ -181,11 +152,6 @@ public class PatListeContentProvider extends CommonViewerContentProvider
 			protected IStatus run(IProgressMonitor monitor){
 				monitor.beginTask(Messages.PatListeContentProvider_LoadPatients,
 					IProgressMonitor.UNKNOWN);
-				if (pfilter != null) {
-					if (pfilter.aboutToStart() == false) {
-						return Status.CANCEL_STATUS;
-					}
-				}
 				// perform actual loading
 				syncRefresh();
 				monitor.done();
@@ -293,5 +259,4 @@ public class PatListeContentProvider extends CommonViewerContentProvider
 		// TODO Auto-generated method stub
 		
 	}
-	
 }

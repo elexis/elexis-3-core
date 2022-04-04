@@ -20,6 +20,7 @@ import java.util.StringJoiner;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -43,6 +44,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.eclipse.ui.part.ViewPart;
 
@@ -67,6 +69,7 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.UiResourceConstants;
+import ch.elexis.core.ui.contacts.command.StickerFilterCommand;
 import ch.elexis.core.ui.contacts.dialogs.PatientErfassenDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.CoreUiUtil;
@@ -172,9 +175,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		collectUserFields();
 		plcp = new PatListeContentProvider(cv, currentUserFields, this);
 		makeActions();
-		//		plfb = new PatListFilterBox(parent);
-		//		plfb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		//		((GridData) plfb.getLayoutData()).heightHint = 0;
 
 		dcfp = new DefaultControlFieldProvider(cv, currentUserFields) {
 			@Override
@@ -222,6 +222,14 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		getSite().registerContextMenu(menus.getContextMenu(), viewer);
 		getSite().setSelectionProvider(viewer);
 
+		// start with filter disabled
+		ICommandService service =
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		Command command = service.getCommand(StickerFilterCommand.CMD_ID);
+		if (command != null) {
+			command.getState(StickerFilterCommand.STATE_ID).setValue(false);
+		}
+		
 		// // ****DoubleClick Version Marlovits -> öffnet bei DoubleClick die
 		// Patienten-Detail-Ansicht
 		// cv.addDoubleClickListener(new DoubleClickListener() {
@@ -345,30 +353,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	}
 
 	private void makeActions() {
-
-		//		filterAction = new Action(Messages.PatientenListeView_FilteList, Action.AS_CHECK_BOX) { // $NON-NLS-1$
-		//			{
-		//				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
-		//				setToolTipText(Messages.PatientenListeView_FilterList); // $NON-NLS-1$
-		//			}
-		//
-		//			@Override
-		//			public void run() {
-		//				GridData gd = (GridData) plfb.getLayoutData();
-		//				if (filterAction.isChecked()) {
-		//					gd.heightHint = 80;
-		//					plfb.reset();
-		//					plcp.setFilter(plfb);
-		//
-		//				} else {
-		//					gd.heightHint = 0;
-		//					plcp.removeFilter(plfb);
-		//				}
-		//				parent.layout(true);
-		//
-		//			}
-		//
-		//		};
 
 		newPatAction = new RestrictedAction(AccessControlDefaults.PATIENT_INSERT,
 				Messages.PatientenListeView_NewPatientAction) {
@@ -586,5 +570,4 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			dcfp.getParent().layout(true);
 		}
 	}
-
 }
