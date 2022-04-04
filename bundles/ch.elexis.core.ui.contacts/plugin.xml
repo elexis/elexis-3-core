@@ -236,6 +236,16 @@
                tooltip="E-Mail an Patienten">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.PatListView">
+         <command
+               commandId="at.medevit.elexis.contacts.core.command.StickerFilter"
+               icon="icon://IMG_FILTER"
+               label="Filter nach Sticker"
+               style="toggle">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -262,6 +272,15 @@
             defaultHandler="ch.elexis.core.ui.contacts.command.SendMailCommand"
             id="at.medevit.elexis.contacts.core.command.SendMail"
             name="send mail">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.contacts.command.StickerFilterCommand"
+            id="at.medevit.elexis.contacts.core.command.StickerFilter"
+            name="sticker filter">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:false"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>            
       </command>
    </extension>
    <extension
