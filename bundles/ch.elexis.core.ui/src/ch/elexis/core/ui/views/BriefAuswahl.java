@@ -116,7 +116,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 	private ViewMenus menus;
 	private ArrayList<sPage> pages = new ArrayList<sPage>();
 	CTabFolder ctab;
-
+	
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 	
 	@Inject
@@ -293,8 +293,8 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			setLayout(new GridLayout());
 			cv = new CommonViewer();
 			DefaultControlFieldProvider controlFieldProvider = new DefaultControlFieldProvider(cv, new String[] {
-				"subject=Titel" //$NON-NLS-1$
-			});
+					"subject=Titel" //$NON-NLS-1$
+				});
 			CommonViewerContentProvider contentProvider =
 				new ch.elexis.core.ui.util.viewers.CommonViewerContentProvider(cv) {
 					
@@ -382,6 +382,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 0));
 			col.setLabelProvider(new ColumnLabelProvider() {
 				private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+				
 				@Override
 				public String getText(Object element){
 					IDocumentLetter b = (IDocumentLetter) element;
@@ -460,9 +461,13 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					IDocumentLetter b1 = (IDocumentLetter) e1;
 					IDocumentLetter b2 = (IDocumentLetter) e2;
 					int rc = 0;
+					
 					switch (propertyIndex) {
 					case 0:
 						rc = b1.getCreated().compareTo(b2.getCreated());
+						if (rc == 0) {
+							rc = b2.getLastupdate().compareTo(b1.getLastupdate());
+						}
 						break;
 					case 1:
 						rc = b1.getTitle().compareTo(b2.getTitle());
