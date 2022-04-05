@@ -78,23 +78,24 @@ public class TransientLabResult {
 	 */
 	public boolean isSameResult(ILabResult labResult){
 		if (refMale != null) {
-			if (!labResult.getReferenceMale().equals(refMale)) {
+			if (!refMale.equals(labResult.getReferenceMale())) {
 				return false;
 			}
 		}
 		if (refFemale != null) {
-			if (!labResult.getReferenceFemale().equals(refFemale)) {
+			if (!refFemale.equals(labResult.getReferenceFemale())) {
 				return false;
 			}
 		}
 		if (unit != null) {
-			if (!labResult.getUnit().equals(unit)) {
+			if (!unit.equals(labResult.getUnit())) {
 				return false;
 			}
 		}
-		String matchResult = labResult.getResult();
-		if (!matchResult.equals(result)) {
-			return false;
+		if (result != null) {
+			if (!result.equals(labResult.getResult())) {
+				return false;
+			}
 		}
 		
 		return true;
