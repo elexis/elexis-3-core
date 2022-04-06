@@ -48,6 +48,8 @@ public class MailMessage implements Serializable {
 		mailMessage.setTo((String) map.get("to"));
 		mailMessage.setCc((String) map.get("cc"));
 		mailMessage.setText((String) map.get("text"));
+		mailMessage.setDocuments((String) map.get("documentsString"));
+		mailMessage.setAttachments((String) map.get("attachmentsString"));
 		return mailMessage;
 	}
 	
