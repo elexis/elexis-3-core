@@ -392,6 +392,10 @@ public class Connection implements SerialPortDataListener {
 		return name;
 	}
 	
+	public ComPortListener getListener(){
+		return listener;
+	}
+	
 	public String getMyPort(){
 		return myPort;
 	}
