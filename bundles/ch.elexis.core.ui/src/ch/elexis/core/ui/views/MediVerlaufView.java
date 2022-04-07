@@ -17,7 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -37,10 +42,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -194,7 +201,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 					public void run(final IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException{
 						Patient sp = ElexisEventDispatcher.getSelectedPatient();
-						if ( sp == null) {
+						if (sp == null) {
 							return;
 						}
 						
@@ -212,16 +219,16 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 								TimeTool[] tts = terms.keySet().toArray(new TimeTool[0]);
 								for (int i = 0; i < tts.length - 1; i++) {
 									if (i < tts.length - 1) {
-										mListe.add(new MediAbgabe(tts[i]
-											.toString(TimeTool.DATE_GER), tts[i + 1]
-											.toString(TimeTool.DATE_GER), p));
+										mListe
+											.add(new MediAbgabe(tts[i].toString(TimeTool.DATE_GER),
+												tts[i + 1].toString(TimeTool.DATE_GER), p));
 									} else {
-										mListe.add(new MediAbgabe(tts[i]
-											.toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
+										mListe.add(new MediAbgabe(
+											tts[i].toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
 									}
 								}
-								mListe.add(new MediAbgabe(tts[tts.length - 1]
-									.toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
+								mListe.add(new MediAbgabe(
+									tts[tts.length - 1].toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
 							}
 						} catch (Exception ex) {
 							ExHandler.handle(ex);
@@ -331,5 +338,12 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 			return ((MediAbgabe) e1).compareTo((MediAbgabe) e2);
 		}
 		
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

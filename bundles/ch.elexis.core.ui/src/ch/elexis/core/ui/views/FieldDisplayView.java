@@ -11,6 +11,11 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
@@ -33,6 +38,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -43,6 +49,7 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -57,8 +64,8 @@ import ch.rgw.tools.StringTool;
  * @author gerry
  * 
  */
-public class FieldDisplayView extends ViewPart implements IActivationListener, ElexisEventListener,
-		HeartListener {
+public class FieldDisplayView extends ViewPart
+		implements IActivationListener, ElexisEventListener, HeartListener {
 	public static final String ID = "ch.elexis.dbfielddisplay"; //$NON-NLS-1$
 	private IAction newViewAction, editDataAction;
 	Text text;
@@ -73,6 +80,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 	@Override
 	public void createPartControl(Composite parent){
 		parent.setLayout(new GridLayout());
+		
 		form = tk.createScrolledForm(parent);
 		form.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		form.getBody().setLayout(new GridLayout());
@@ -178,8 +186,8 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 		}
 	}
 	
-	final private ElexisEvent template = new ElexisEvent(null, myClass, ElexisEvent.EVENT_SELECTED
-		| ElexisEvent.EVENT_DESELECTED);
+	final private ElexisEvent template =
+		new ElexisEvent(null, myClass, ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED);
 	
 	@Override
 	public ElexisEvent getElexisEventFilter(){
@@ -248,41 +256,40 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 	
 	private void makeActions(){
 		newViewAction = new Action(Messages.FieldDisplayView_NewWindow) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
-					setToolTipText(Messages.FieldDisplayView_NewWindowToolTip); //$NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
+				setToolTipText(Messages.FieldDisplayView_NewWindowToolTip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				try {
+					String fieldtype = new SelectDataDialog().run();
+					FieldDisplayView n = (FieldDisplayView) getViewSite().getPage().showView(ID,
+						StringTool.unique("DataDisplay"), //$NON-NLS-1$
+						IWorkbenchPage.VIEW_VISIBLE);
+					n.setField(fieldtype, false);
+					heartbeat();
+				} catch (PartInitException e) {
+					ExHandler.handle(e);
 				}
-				
-				@Override
-				public void run(){
-					try {
-						String fieldtype = new SelectDataDialog().run();
-						FieldDisplayView n =
-							(FieldDisplayView) getViewSite().getPage().showView(ID,
-								StringTool.unique("DataDisplay"), //$NON-NLS-1$
-								IWorkbenchPage.VIEW_VISIBLE);
-						n.setField(fieldtype, false);
-						heartbeat();
-					} catch (PartInitException e) {
-						ExHandler.handle(e);
-					}
-				}
-			};
+			}
+		};
 		editDataAction = new Action(Messages.FieldDisplayView_DataTypeAction) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-					setToolTipText(Messages.FieldDisplayView_DataTypeToolTip); //$NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
+				setToolTipText(Messages.FieldDisplayView_DataTypeToolTip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				SelectDataDialog sdd = new SelectDataDialog();
+				if (sdd.open() == Dialog.OK) {
+					setField(sdd.result, sdd.bEditable);
+					heartbeat();
 				}
-				
-				@Override
-				public void run(){
-					SelectDataDialog sdd = new SelectDataDialog();
-					if (sdd.open() == Dialog.OK) {
-						setField(sdd.result, sdd.bEditable);
-						heartbeat();
-					}
-				}
-			};
+			}
+		};
 	}
 	
 	class SelectDataDialog extends TitleAreaDialog {
@@ -344,4 +351,10 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 		
 	}
 	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
+	}
 }

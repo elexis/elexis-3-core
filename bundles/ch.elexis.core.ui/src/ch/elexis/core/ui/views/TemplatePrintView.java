@@ -12,7 +12,12 @@
 
 package ch.elexis.core.ui.views;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -20,6 +25,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.Brief;
@@ -61,9 +68,8 @@ public class TemplatePrintView extends ViewPart {
 			}
 			
 		}));
-		Brief actBrief =
-			text.createFromTemplateName(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN,
-				adressat, title);
+		Brief actBrief = text.createFromTemplateName(Konsultation.getAktuelleKons(), template,
+			Brief.UNKNOWN, adressat, title);
 		ret.setData(KEY_BRIEF, actBrief);
 		ret.setData(KEY_TEXT, text);
 		ret.setText(title);
@@ -162,5 +168,12 @@ public class TemplatePrintView extends ViewPart {
 		}
 		monitor.worked(1);
 		return true;
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

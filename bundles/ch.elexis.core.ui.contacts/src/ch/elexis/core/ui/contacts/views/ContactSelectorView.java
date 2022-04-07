@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlEngine;
 import org.apache.commons.jexl2.JexlException;
@@ -22,6 +25,8 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -55,6 +60,7 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -65,6 +71,7 @@ import ch.elexis.core.ui.contacts.views.filter.KontaktAnzeigeTextFieldViewerFilt
 import ch.elexis.core.ui.contacts.views.filter.KontaktAnzeigeTypViewerFilter;
 import ch.elexis.core.ui.contacts.views.provider.ContactSelectorObservableMapLabelProvider;
 import ch.elexis.core.ui.contacts.views.provider.TableDecoratingLabelProvider;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Patient;
 
 /**
@@ -195,7 +202,8 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 	}
 	
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter){
+	public Object getAdapter(@SuppressWarnings("rawtypes")
+	Class adapter){
 		if (adapter == IPropertySheetPage.class)
 			return new TabbedPropertySheetPage(this);
 		return super.getAdapter(adapter);
@@ -301,5 +309,12 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 				}
 			}
 		}
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

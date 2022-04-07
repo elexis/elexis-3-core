@@ -128,8 +128,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 	TreeViewer tvSel;
 	LazyTreeListener ltl;
 	ViewMenus menu;
-	private IAction billAction, printAction, clearAction, wizardAction, refreshAction,
-			detailAction;
+	private IAction billAction, printAction, clearAction, wizardAction, refreshAction, detailAction;
 	private IAction removeAction;
 	private IAction expandSelAction;
 	private IAction expandSelAllAction;
@@ -152,31 +151,30 @@ public class KonsZumVerrechnenView extends ViewPart {
 	
 	@Override
 	public void createPartControl(final Composite parent){
-		vc =
-			new ViewerConfigurer(new BasicTreeContentProvider(),
-				new ViewerConfigurer.TreeLabelProvider() {
-					// extend the TreeLabelProvider by getImage()
-					
-					@SuppressWarnings("unchecked")
-					@Override
-					public Image getImage(final Object element){
-						if (element instanceof Tree) {
-							Tree tree = (Tree) element;
-							PersistentObject po = (PersistentObject) tree.contents;
-							if (po instanceof Fall) {
-								if (po.isValid()) {
-									return Images.IMG_OK.getImage();
-								} else {
-									return Images.IMG_FEHLER.getImage();
-								}
+		vc = new ViewerConfigurer(new BasicTreeContentProvider(),
+			new ViewerConfigurer.TreeLabelProvider() {
+				// extend the TreeLabelProvider by getImage()
+				
+				@SuppressWarnings("unchecked")
+				@Override
+				public Image getImage(final Object element){
+					if (element instanceof Tree) {
+						Tree tree = (Tree) element;
+						PersistentObject po = (PersistentObject) tree.contents;
+						if (po instanceof Fall) {
+							if (po.isValid()) {
+								return Images.IMG_OK.getImage();
+							} else {
+								return Images.IMG_FEHLER.getImage();
 							}
 						}
-						return null;
 					}
-				}, null, // new DefaultControlFieldProvider(cv, new
-				// String[]{"Datum","Name","Vorname","Geb. Dat"}),
-				new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
-					SimpleWidgetProvider.TYPE_TREE, SWT.MULTI | SWT.V_SCROLL, cv));
+					return null;
+				}
+			}, null, // new DefaultControlFieldProvider(cv, new
+			// String[]{"Datum","Name","Vorname","Geb. Dat"}),
+			new ViewerConfigurer.DefaultButtonProvider(),
+			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TREE, SWT.MULTI | SWT.V_SCROLL, cv));
 		SashForm sash = new SashForm(parent, SWT.NULL);
 		left = tk.createForm(sash);
 		Composite cLeft = left.getBody();
@@ -339,10 +337,10 @@ public class KonsZumVerrechnenView extends ViewPart {
 							public void run(final IProgressMonitor monitor){
 								monitor.beginTask(Messages.KonsZumVerrechnenView_findCons, 100); //$NON-NLS-1$
 								monitor.subTask(Messages.KonsZumVerrechnenView_databaseRequest); //$NON-NLS-1$
-								String sql =
-									"SELECT distinct PATIENTID FROM FAELLE " + //$NON-NLS-1$
+								String sql = "SELECT distinct PATIENTID FROM FAELLE " + //$NON-NLS-1$
 								"JOIN BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID WHERE BEHANDLUNGEN.deleted='0' AND BEHANDLUNGEN.billable='1' AND BEHANDLUNGEN.RECHNUNGSID is null "; //$NON-NLS-1$
-								if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
+								if (CoreHub.acl
+									.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
 									sql += "AND BEHANDLUNGEN.MANDANTID=" //$NON-NLS-1$
 										+ CoreHub.actMandant.getWrappedId();
 								}
@@ -374,8 +372,8 @@ public class KonsZumVerrechnenView extends ViewPart {
 				try {
 					if (cont instanceof Patient) {
 						sql =
-							"SELECT distinct FAELLE.ID FROM FAELLE join BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID " + //$NON-NLS-1$
-								"WHERE BEHANDLUNGEN.RECHNUNGSID is null AND BEHANDLUNGEN.DELETED='0' AND BEHANDLUNGEN.billable='1' AND FAELLE.PATIENTID="
+							"SELECT distinct FAELLE.ID FROM FAELLE join BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID " //$NON-NLS-1$
+								+ "WHERE BEHANDLUNGEN.RECHNUNGSID is null AND BEHANDLUNGEN.DELETED='0' AND BEHANDLUNGEN.billable='1' AND FAELLE.PATIENTID="
 								+ cont.getWrappedId(); //$NON-NLS-1$
 						if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
 							sql +=
@@ -520,183 +518,182 @@ public class KonsZumVerrechnenView extends ViewPart {
 	
 	private void makeActions(){
 		billAction = new Action(Messages.KonsZumVerrechnenView_createInvoices) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_BILL.getImageDescriptor()); //$NON-NLS-1$
-					setToolTipText(Messages.KonsZumVerrechnenView_createInvoices); //$NON-NLS-1$
-				}
-				
-				@Override
-				public void run(){
-					if (((StructuredSelection) tvSel.getSelection()).size() > 0) {
-						if (!SWTHelper.askYesNo(
-							Messages.KonsZumVerrechnenView_RealleCreateBillsCaption, //$NON-NLS-1$
-							Messages.KonsZumVerrechnenView_ReallyCreateBillsBody)) { //$NON-NLS-1$
-							return;
-						}
+			{
+				setImageDescriptor(Images.IMG_BILL.getImageDescriptor()); //$NON-NLS-1$
+				setToolTipText(Messages.KonsZumVerrechnenView_createInvoices); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				if (((StructuredSelection) tvSel.getSelection()).size() > 0) {
+					if (!SWTHelper.askYesNo(Messages.KonsZumVerrechnenView_RealleCreateBillsCaption, //$NON-NLS-1$
+						Messages.KonsZumVerrechnenView_ReallyCreateBillsBody)) { //$NON-NLS-1$
+						return;
 					}
-					ErstelleRnnCommand.ExecuteWithParams(getViewSite(), tSelection);
-					tvSel.refresh();
 				}
-			};
+				ErstelleRnnCommand.ExecuteWithParams(getViewSite(), tSelection);
+				tvSel.refresh();
+			}
+		};
 		clearAction = new Action(Messages.KonsZumVerrechnenView_clearSelection) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_REMOVEITEM.getImageDescriptor()); //$NON-NLS-1$
-					setToolTipText(Messages.KonsZumVerrechnenView_deleteList); //$NON-NLS-1$
-					
-				}
+			{
+				setImageDescriptor(Images.IMG_REMOVEITEM.getImageDescriptor()); //$NON-NLS-1$
+				setToolTipText(Messages.KonsZumVerrechnenView_deleteList); //$NON-NLS-1$
 				
-				@Override
-				public void run(){
-					tSelection.clear();
-					tvSel.refresh();
-				}
-			};
+			}
+			
+			@Override
+			public void run(){
+				tSelection.clear();
+				tvSel.refresh();
+			}
+		};
 		refreshAction = new Action(Messages.KonsZumVerrechnenView_reloadAction) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
-					setToolTipText(Messages.KonsZumVerrechnenView_reloadToolTip); //$NON-NLS-1$
-				}
-				
-				@Override
-				public void run(){
-					tAll.clear();
-					cv.notify(CommonViewer.Message.update);
-					tvSel.refresh(true);
-				}
-			};
+			{
+				setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
+				setToolTipText(Messages.KonsZumVerrechnenView_reloadToolTip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				tAll.clear();
+				cv.notify(CommonViewer.Message.update);
+				tvSel.refresh(true);
+			}
+		};
 		wizardAction = new Action(Messages.KonsZumVerrechnenView_autoAction) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_WIZARD.getImageDescriptor());
-					setToolTipText(Messages.KonsZumVerrechnenView_autoToolTip); //$NON-NLS-1$
-				}
-				
-				@Override
-				public void run(){
-					KonsZumVerrechnenWizardDialog kzvd =
-						new KonsZumVerrechnenWizardDialog(getViewSite().getShell());
-					if (kzvd.open() == Dialog.OK) {
-						IProgressService progressService =
-							PlatformUI.getWorkbench().getProgressService();
-						try {
-							progressService.runInUI(progressService,
-								new Rechnungslauf(self, kzvd.bMarked, kzvd.ttFirstBefore,
-									kzvd.ttLastBefore, kzvd.mAmount, kzvd.bQuartal, kzvd.bSkip,
-									kzvd.ttFrom, kzvd.ttTo, kzvd.accountSys), null);
-						} catch (Throwable ex) {
-							ExHandler.handle(ex);
-						}
-						tvSel.refresh();
-						cv.notify(CommonViewer.Message.update);
+			{
+				setImageDescriptor(Images.IMG_WIZARD.getImageDescriptor());
+				setToolTipText(Messages.KonsZumVerrechnenView_autoToolTip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				KonsZumVerrechnenWizardDialog kzvd =
+					new KonsZumVerrechnenWizardDialog(getViewSite().getShell());
+				if (kzvd.open() == Dialog.OK) {
+					IProgressService progressService =
+						PlatformUI.getWorkbench().getProgressService();
+					try {
+						progressService.runInUI(progressService,
+							new Rechnungslauf(self, kzvd.bMarked, kzvd.ttFirstBefore,
+								kzvd.ttLastBefore, kzvd.mAmount, kzvd.bQuartal, kzvd.bSkip,
+								kzvd.ttFrom, kzvd.ttTo, kzvd.accountSys),
+							null);
+					} catch (Throwable ex) {
+						ExHandler.handle(ex);
 					}
+					tvSel.refresh();
+					cv.notify(CommonViewer.Message.update);
 				}
-			};
+			}
+		};
 		printAction = new Action(Messages.KonsZumVerrechnenView_printSelection) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
-					setToolTipText(Messages.KonsZumVerrechnenView_printToolTip); //$NON-NLS-1$
-				}
+			{
+				setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
+				setToolTipText(Messages.KonsZumVerrechnenView_printToolTip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				new SelectionPrintDialog(getViewSite().getShell()).open();
 				
-				@Override
-				public void run(){
-					new SelectionPrintDialog(getViewSite().getShell()).open();
-					
-				}
-			};
+			}
+		};
 		removeAction = new Action(Messages.KonsZumVerrechnenView_removeFromSelection) { //$NON-NLS-1$
-				@SuppressWarnings("unchecked")
-				@Override
-				public void run(){
-					IStructuredSelection sel = (IStructuredSelection) tvSel.getSelection();
-					if (!sel.isEmpty()) {
-						for (Object o : sel.toList()) {
-							if (o instanceof Tree) {
-								Tree t = (Tree) o;
-								if (t.contents instanceof Patient) {
-									selectPatient((Patient) t.contents, tSelection, tAll);
-								} else if (t.contents instanceof Fall) {
-									selectFall((Fall) t.contents, tSelection, tAll);
-								} else if (t.contents instanceof Konsultation) {
-									selectBehandlung((Konsultation) t.contents, tSelection, tAll);
-								}
+			@SuppressWarnings("unchecked")
+			@Override
+			public void run(){
+				IStructuredSelection sel = (IStructuredSelection) tvSel.getSelection();
+				if (!sel.isEmpty()) {
+					for (Object o : sel.toList()) {
+						if (o instanceof Tree) {
+							Tree t = (Tree) o;
+							if (t.contents instanceof Patient) {
+								selectPatient((Patient) t.contents, tSelection, tAll);
+							} else if (t.contents instanceof Fall) {
+								selectFall((Fall) t.contents, tSelection, tAll);
+							} else if (t.contents instanceof Konsultation) {
+								selectBehandlung((Konsultation) t.contents, tSelection, tAll);
 							}
 						}
-						tvSel.refresh();
-						cv.notify(CommonViewer.Message.update);
 					}
+					tvSel.refresh();
+					cv.notify(CommonViewer.Message.update);
 				}
-			};
+			}
+		};
 		
 		// expand action for tvSel
 		expandSelAction = new Action(Messages.KonsZumVerrechnenView_expand) { //$NON-NLS-1$
-				@SuppressWarnings("unchecked")
-				@Override
-				public void run(){
-					IStructuredSelection sel = (IStructuredSelection) tvSel.getSelection();
-					if (!sel.isEmpty()) {
-						for (Object o : sel.toList()) {
-							if (o instanceof Tree) {
-								Tree t = (Tree) o;
-								tvSel.expandToLevel(t, TreeViewer.ALL_LEVELS);
-							}
+			@SuppressWarnings("unchecked")
+			@Override
+			public void run(){
+				IStructuredSelection sel = (IStructuredSelection) tvSel.getSelection();
+				if (!sel.isEmpty()) {
+					for (Object o : sel.toList()) {
+						if (o instanceof Tree) {
+							Tree t = (Tree) o;
+							tvSel.expandToLevel(t, TreeViewer.ALL_LEVELS);
 						}
 					}
 				}
-			};
+			}
+		};
 		// expandAll action for tvSel
 		expandSelAllAction = new Action(Messages.KonsZumVerrechnenView_expandAll) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					tvSel.expandAll();
-				}
-			};
+			@Override
+			public void run(){
+				tvSel.expandAll();
+			}
+		};
 		
 		selectByDateAction = new Action(Messages.KonsZumVerrechnenView_selectByDateAction) { //$NON-NLS-1$
-				TimeTool fromDate;
-				TimeTool toDate;
-				
-				{
-					setImageDescriptor(Images.IMG_WIZARD.getImageDescriptor());
-					setToolTipText(Messages.KonsZumVerrechnenView_selectByDateActionToolTip); //$NON-NLS-1$
-				}
-				
-				@Override
-				public void run(){
-					// select date
-					SelectDateDialog dialog = new SelectDateDialog(getViewSite().getShell());
-					if (dialog.open() == TitleAreaDialog.OK) {
-						fromDate = dialog.getFromDate();
-						toDate = dialog.getToDate();
-						
-						IProgressService progressService =
-							PlatformUI.getWorkbench().getProgressService();
-						try {
-							progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
-								new IRunnableWithProgress() {
-									public void run(final IProgressMonitor monitor){
-										doSelectByDate(monitor, fromDate, toDate);
-									}
-								}, null);
-						} catch (Throwable ex) {
-							ExHandler.handle(ex);
-						}
-						tvSel.refresh();
-						cv.notify(CommonViewer.Message.update);
+			TimeTool fromDate;
+			TimeTool toDate;
+			
+			{
+				setImageDescriptor(Images.IMG_WIZARD.getImageDescriptor());
+				setToolTipText(Messages.KonsZumVerrechnenView_selectByDateActionToolTip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				// select date
+				SelectDateDialog dialog = new SelectDateDialog(getViewSite().getShell());
+				if (dialog.open() == TitleAreaDialog.OK) {
+					fromDate = dialog.getFromDate();
+					toDate = dialog.getToDate();
+					
+					IProgressService progressService =
+						PlatformUI.getWorkbench().getProgressService();
+					try {
+						progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
+							new IRunnableWithProgress() {
+								public void run(final IProgressMonitor monitor){
+									doSelectByDate(monitor, fromDate, toDate);
+								}
+							}, null);
+					} catch (Throwable ex) {
+						ExHandler.handle(ex);
 					}
+					tvSel.refresh();
+					cv.notify(CommonViewer.Message.update);
 				}
-				
-			};
-		detailAction =
-			new RestrictedAction(AccessControlDefaults.LSTG_VERRECHNEN,
-				Messages.KonsZumVerrechnenView_billingDetails) { //$NON-NLS-1$
-				@SuppressWarnings("unchecked")
-				@Override
-				public void doRun(){
-					Object[] sel = cv.getSelection();
-					if ((sel != null) && (sel.length > 0)) {
-						new VerrDetailDialog(getViewSite().getShell(), (Tree) sel[0]).open();
-					}
+			}
+			
+		};
+		detailAction = new RestrictedAction(AccessControlDefaults.LSTG_VERRECHNEN,
+			Messages.KonsZumVerrechnenView_billingDetails) { //$NON-NLS-1$
+			@SuppressWarnings("unchecked")
+			@Override
+			public void doRun(){
+				Object[] sel = cv.getSelection();
+				if ((sel != null) && (sel.length > 0)) {
+					new VerrDetailDialog(getViewSite().getShell(), (Tree) sel[0]).open();
 				}
-			};
+			}
+		};
 	}
 	
 	/**
@@ -739,7 +736,8 @@ public class KonsZumVerrechnenView extends ViewPart {
 	
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
@@ -862,8 +860,8 @@ public class KonsZumVerrechnenView extends ViewPart {
 			}
 			text.getPlugin().setFont("Helvetica", SWT.NORMAL, 9); //$NON-NLS-1$
 			text.getPlugin().insertTable("[Liste]", 0, table, new int[] { //$NON-NLS-1$
-					90, 10
-				});
+				90, 10
+			});
 			return ret;
 		}
 		
@@ -916,9 +914,8 @@ public class KonsZumVerrechnenView extends ViewPart {
 					try {
 						command.getState(RegistryToggleState.STATE_ID).setValue(Boolean.FALSE);
 						// execute the command
-						IHandlerService handlerService =
-							(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-								.getService(IHandlerService.class);
+						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow().getService(IHandlerService.class);
 						
 						handlerService.executeCommand(KonsZumVerrechnenLinkCommand.CMD_ID, null);
 					} catch (Exception ex) {

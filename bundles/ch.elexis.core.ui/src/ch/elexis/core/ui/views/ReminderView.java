@@ -21,7 +21,12 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -75,6 +80,7 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.dialogs.ReminderDetailDialog;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
@@ -118,8 +124,9 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false);
 	private boolean showOnlyDueReminders =
 		ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN, false);
-	private boolean showAllReminders = (ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
-		&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
+	private boolean showAllReminders =
+		(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
+			&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
 	private boolean showSelfCreatedReminders =
 		ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false);
 	
@@ -349,8 +356,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		showOnlyOwnDueReminderToggleAction.setChecked(bChecked);
 		showSelfCreatedReminderAction
 			.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false));
-		toggleAutoSelectPatientAction
-			.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false));
+		toggleAutoSelectPatientAction.setChecked(
+			ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false));
 		
 		// get state from user's configuration
 		showOthersRemindersAction
@@ -409,7 +416,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					Reminder reminder = (Reminder) sel[0];
 					erd = new ReminderDetailDialog(getViewSite().getShell(), reminder.getDateDue());
 				} else {
-					 erd = new ReminderDetailDialog(getViewSite().getShell());
+					erd = new ReminderDetailDialog(getViewSite().getShell());
 				}
 				int retVal = erd.open();
 				if (retVal == Dialog.OK) {
@@ -497,7 +504,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				@Override
 				public void run(){
 					showOnlyDueReminders = showOnlyOwnDueReminderToggleAction.isChecked();
-					ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN, showOnlyDueReminders);
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN,
+						showOnlyDueReminders);
 					cv.notify(CommonViewer.Message.update_keeplabels);
 				}
 			};
@@ -510,7 +518,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				@Override
 				public void run(){
 					showSelfCreatedReminders = showSelfCreatedReminderAction.isChecked();
-					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN, showSelfCreatedReminders);
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN,
+						showSelfCreatedReminders);
 					cv.notify(CommonViewer.Message.update_keeplabels);
 				}
 			};
@@ -671,18 +680,15 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		}
 		
 		public void updateUserConfiguration(){
-			colorInProgress = UiDesk
-				.getColorFromRGB(ConfigServiceHolder.getUser(
-					Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.IN_PROGRESS.name(), //$NON-NLS-1$
-					"FFFFFF")); //;
+			colorInProgress = UiDesk.getColorFromRGB(ConfigServiceHolder.getUser(
+				Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.IN_PROGRESS.name(), //$NON-NLS-1$
+				"FFFFFF")); //;
 			colorDue = UiDesk.getColorFromRGB(ConfigServiceHolder.getUser(
 				Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.DUE.name(), "FFFFFF")); //$NON-NLS-1$;
-			colorOverdue =
-				UiDesk.getColorFromRGB(ConfigServiceHolder.getUser(
-					Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.OVERDUE.name(), "FF0000")); //$NON-NLS-1$
-			colorOpen =
-				UiDesk.getColorFromRGB(ConfigServiceHolder.getUser(
-					Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.OPEN.name(), "00FF00")); //$NON-NLS-1$
+			colorOverdue = UiDesk.getColorFromRGB(ConfigServiceHolder.getUser(
+				Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.OVERDUE.name(), "FF0000")); //$NON-NLS-1$
+			colorOpen = UiDesk.getColorFromRGB(ConfigServiceHolder.getUser(
+				Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.OPEN.name(), "00FF00")); //$NON-NLS-1$
 		}
 		
 		@Override
@@ -769,7 +775,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					Reminder.FLD_KONTAKT_ID, Reminder.FLD_VISIBILITY);
 				if (!vals[2].equals(patientId)) {
 					Visibility vis = Visibility.byNumericSafe(vals[3]);
-					if (vis != Visibility.ALWAYS && vis != Visibility.POPUP_ON_LOGIN ) {
+					if (vis != Visibility.ALWAYS && vis != Visibility.POPUP_ON_LOGIN) {
 						// other (non-selected patient) and not marked always visible
 						return false;
 					}
@@ -843,17 +849,19 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			if (showAllReminders
 				&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS)) {
 				qbe.clear();
-				if(filterDueDateDays != -1) {
+				if (filterDueDateDays != -1) {
 					applyDueDateFilter(qbe);
 				}
 				reminders.addAll(qbe.execute());
 			} else {
-				reminders.addAll(Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
-					showOnlyDueReminders, filterDueDateDays, null, false));
+				reminders
+					.addAll(Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
+						showOnlyDueReminders, filterDueDateDays, null, false));
 				
 				if (showSelfCreatedReminders) {
 					qbe.clear();
-					qbe.add(Reminder.FLD_CREATOR, Query.EQUALS, CoreHub.getLoggedInContact().getId());
+					qbe.add(Reminder.FLD_CREATOR, Query.EQUALS,
+						CoreHub.getLoggedInContact().getId());
 					if (filterDueDateDays != -1) {
 						applyDueDateFilter(qbe);
 					}
@@ -914,5 +922,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		public void setComparator(Comparator<Reminder> comparator){
 			this.comparator = comparator;
 		}
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }
