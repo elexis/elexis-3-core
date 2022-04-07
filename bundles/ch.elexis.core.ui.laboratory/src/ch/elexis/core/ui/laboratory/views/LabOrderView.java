@@ -39,10 +39,11 @@ public class LabOrderView extends ViewPart implements ICallback {
 	private String[] headers;
 	
 	public LabOrderView(){
-		headers = new String[] {
-			Messages.LabOrderView_Order, Messages.LabOrderView_RefValue,
-			Messages.LabOrderView_DateTime, Messages.LabOrderView_Value
-		};
+		headers =
+			new String[] {
+				Messages.LabOrderView_Order, Messages.LabOrderView_RefValue,
+				Messages.LabOrderView_DateTime, Messages.LabOrderView_Value
+			};
 	}
 	
 	@Override
@@ -52,8 +53,9 @@ public class LabOrderView extends ViewPart implements ICallback {
 	}
 	
 	public boolean createLabOrderPrint(Patient pat, List<LabOrder> labOrders){
-		Brief br = text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_LABORDERS,
-			Brief.LABOR, pat, null);
+		Brief br =
+			text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_LABORDERS, Brief.LABOR,
+				pat, null);
 		// leave if template couldn't be created
 		if (br == null) {
 			return false;

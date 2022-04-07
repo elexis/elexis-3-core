@@ -201,7 +201,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 					public void run(final IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException{
 						Patient sp = ElexisEventDispatcher.getSelectedPatient();
-						if (sp == null) {
+						if ( sp == null) {
 							return;
 						}
 						
@@ -219,16 +219,16 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 								TimeTool[] tts = terms.keySet().toArray(new TimeTool[0]);
 								for (int i = 0; i < tts.length - 1; i++) {
 									if (i < tts.length - 1) {
-										mListe
-											.add(new MediAbgabe(tts[i].toString(TimeTool.DATE_GER),
-												tts[i + 1].toString(TimeTool.DATE_GER), p));
+										mListe.add(new MediAbgabe(tts[i]
+											.toString(TimeTool.DATE_GER), tts[i + 1]
+											.toString(TimeTool.DATE_GER), p));
 									} else {
-										mListe.add(new MediAbgabe(
-											tts[i].toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
+										mListe.add(new MediAbgabe(tts[i]
+											.toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
 									}
 								}
-								mListe.add(new MediAbgabe(
-									tts[tts.length - 1].toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
+								mListe.add(new MediAbgabe(tts[tts.length - 1]
+									.toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
 							}
 						} catch (Exception ex) {
 							ExHandler.handle(ex);

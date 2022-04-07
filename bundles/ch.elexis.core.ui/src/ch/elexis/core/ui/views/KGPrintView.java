@@ -67,8 +67,9 @@ public class KGPrintView extends ViewPart {
 			}
 			
 		}));
-		Brief actBrief = text.createFromTemplateName(Konsultation.getAktuelleKons(), template,
-			Brief.UNKNOWN, adressat, Messages.KGPrintView_EMR); //$NON-NLS-1$
+		Brief actBrief =
+			text.createFromTemplateName(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN,
+				adressat, Messages.KGPrintView_EMR); //$NON-NLS-1$
 		ret.setData("brief", actBrief); //$NON-NLS-1$
 		ret.setData("text", text); //$NON-NLS-1$
 		ret.setText(title);
@@ -101,8 +102,9 @@ public class KGPrintView extends ViewPart {
 		String betreff = brief.getBetreff();
 		brief.delete();
 		if (template != null) {
-			Brief actBrief = text.createFromTemplateName(Konsultation.getAktuelleKons(), template,
-				Brief.UNKNOWN, adressat, betreff);
+			Brief actBrief =
+				text.createFromTemplateName(Konsultation.getAktuelleKons(), template,
+					Brief.UNKNOWN, adressat, betreff);
 			item.setData("brief", actBrief); //$NON-NLS-1$
 		}
 	}
@@ -139,12 +141,12 @@ public class KGPrintView extends ViewPart {
 		
 		text.getPlugin().setFont("Serif", SWT.NORMAL, 9); //$NON-NLS-1$
 		text.replace("\\[Elexis\\]", new ReplaceCallback() { //$NON-NLS-1$
-			@Override
-			public String replace(String in){
-				return "ELEXIS"; //$NON-NLS-1$
-			}
-			
-		});
+				@Override
+				public String replace(String in){
+					return "ELEXIS"; //$NON-NLS-1$
+				}
+				
+			});
 		
 		printer = CoreHub.localCfg.get("Drucker/A4/Name", null); //$NON-NLS-1$
 		tray = CoreHub.localCfg.get("Drucker/A4/Schacht", null); //$NON-NLS-1$

@@ -202,8 +202,7 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 	}
 	
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter){
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter){
 		if (adapter == IPropertySheetPage.class)
 			return new TabbedPropertySheetPage(this);
 		return super.getAdapter(adapter);

@@ -165,8 +165,8 @@ public class ScriptView extends ViewPart {
 							fw.write(script.getString());
 							fw.close();
 						} catch (IOException ex) {
-							SWTHelper.showError("IO Error",
-								"Could not write file " + filename + " : " + ex.getMessage());
+							SWTHelper.showError("IO Error", "Could not write file " + filename
+								+ " : " + ex.getMessage());
 						}
 					}
 				}
@@ -197,108 +197,114 @@ public class ScriptView extends ViewPart {
 				}
 				
 			};
-		newScriptAction = new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
-			Messages.ScriptView_newScriptAction) { //$NON-NLS-1$
-			{
-				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-				setToolTipText(Messages.ScriptView_newScriptTooltip); //$NON-NLS-1$
-			}
-			
-			@Override
-			public void doRun(){
-				InputDialog inp =
-					new InputDialog(getSite().getShell(), Messages.ScriptView_enterNameCaption, //$NON-NLS-1$
-						Messages.ScriptView_enterNameBody, null, //$NON-NLS-1$
-						null);
-				if (inp.open() == Dialog.OK) {
-					try {
-						Script.create(inp.getValue(), "");
-					} catch (ElexisException e) {
-						ExHandler.handle(e);
-						SWTHelper.showError("Fehler bei Scripterstellung", e.getMessage());
-					}
-					tv.refresh();
+		newScriptAction =
+			new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
+				Messages.ScriptView_newScriptAction) { //$NON-NLS-1$
+				{
+					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
+					setToolTipText(Messages.ScriptView_newScriptTooltip); //$NON-NLS-1$
 				}
-			}
-			
-		};
-		editScriptAction = new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
-			Messages.ScriptView_editScriptAction) { //$NON-NLS-1$
-			{
-				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-				setToolTipText(Messages.ScriptView_editScriptTooltip); //$NON-NLS-1$
-			}
-			
-			@Override
-			public void doRun(){
-				IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
-				if (sel != null && sel.size() != 0) {
-					Script script = (Script) sel.getFirstElement();
-					ScriptEditor sce = new ScriptEditor(getSite().getShell(), script.getString(),
-						script.getLabel());
-					if (sce.open() == Dialog.OK) {
-						script.putString(sce.getScript());
+				
+				@Override
+				public void doRun(){
+					InputDialog inp =
+						new InputDialog(getSite().getShell(), Messages.ScriptView_enterNameCaption, //$NON-NLS-1$
+							Messages.ScriptView_enterNameBody, null, //$NON-NLS-1$
+							null);
+					if (inp.open() == Dialog.OK) {
+						try {
+							Script.create(inp.getValue(), "");
+						} catch (ElexisException e) {
+							ExHandler.handle(e);
+							SWTHelper.showError("Fehler bei Scripterstellung", e.getMessage());
+						}
+						tv.refresh();
 					}
 				}
 				
-			}
-		};
-		removeScriptAction = new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
-			Messages.ScriptView_deleteScriptAction) { //$NON-NLS-1$
-			{
-				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-				setToolTipText(Messages.ScriptView_deleteScriptTooltip); //$NON-NLS-1$
-			}
-			
-			@Override
-			public void doRun(){
-				IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
-				if (sel != null && sel.size() != 0) {
-					Script script = (Script) sel.getFirstElement();
-					script.delete();
-					tv.refresh();
+			};
+		editScriptAction =
+			new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
+				Messages.ScriptView_editScriptAction) { //$NON-NLS-1$
+				{
+					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
+					setToolTipText(Messages.ScriptView_editScriptTooltip); //$NON-NLS-1$
 				}
-			}
-		};
-		execScriptAction = new RestrictedAction(AccessControlDefaults.SCRIPT_EXECUTE,
-			Messages.ScriptView_executeScriptAction) { //$NON-NLS-1$
-			{
-				setImageDescriptor(Images.IMG_GOFURTHER.getImageDescriptor());
-				setToolTipText(Messages.ScriptView_executeScriptTooltip); //$NON-NLS-1$
-			}
-			
-			@Override
-			public void doRun(){
-				IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
-				if (sel != null && sel.size() != 0) {
-					Script script = (Script) sel.getFirstElement();
-					try {
-						String contents = script.getString();
-						ArrayList<String> vars = new ArrayList<String>();
-						Pattern var = Pattern.compile("\\$[0-9a-z]+", Pattern.CASE_INSENSITIVE);
-						Matcher m = var.matcher(contents);
-						while (m.find()) {
-							String varname = m.group();
-							if (!vars.contains(varname)) {
-								vars.add(varname);
-							}
+				
+				@Override
+				public void doRun(){
+					IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
+					if (sel != null && sel.size() != 0) {
+						Script script = (Script) sel.getFirstElement();
+						ScriptEditor sce =
+							new ScriptEditor(getSite().getShell(), script.getString(),
+								script.getLabel());
+						if (sce.open() == Dialog.OK) {
+							script.putString(sce.getScript());
 						}
-						String varString = null;
-						if (vars.size() > 0) {
-							SetVarsDlg dlg = new SetVarsDlg(getViewSite().getShell(), vars);
-							if (dlg.open() == Dialog.OK) {
-								varString = dlg.getResult();
-							}
-						}
-						Object ret = script.execute(varString);
-						SWTHelper.showInfo(Messages.ScriptView_ScriptOutput, ret.toString()); //$NON-NLS-1$
-					} catch (Exception ex) {
-						ExHandler.handle(ex);
-						SWTHelper.showError("Fehler beim Ausführen des Scripts", ex.getMessage());
+					}
+					
+				}
+			};
+		removeScriptAction =
+			new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
+				Messages.ScriptView_deleteScriptAction) { //$NON-NLS-1$
+				{
+					setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
+					setToolTipText(Messages.ScriptView_deleteScriptTooltip); //$NON-NLS-1$
+				}
+				
+				@Override
+				public void doRun(){
+					IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
+					if (sel != null && sel.size() != 0) {
+						Script script = (Script) sel.getFirstElement();
+						script.delete();
+						tv.refresh();
 					}
 				}
-			}
-		};
+			};
+		execScriptAction =
+			new RestrictedAction(AccessControlDefaults.SCRIPT_EXECUTE,
+				Messages.ScriptView_executeScriptAction) { //$NON-NLS-1$
+				{
+					setImageDescriptor(Images.IMG_GOFURTHER.getImageDescriptor());
+					setToolTipText(Messages.ScriptView_executeScriptTooltip); //$NON-NLS-1$
+				}
+				
+				@Override
+				public void doRun(){
+					IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
+					if (sel != null && sel.size() != 0) {
+						Script script = (Script) sel.getFirstElement();
+						try {
+							String contents = script.getString();
+							ArrayList<String> vars = new ArrayList<String>();
+							Pattern var = Pattern.compile("\\$[0-9a-z]+", Pattern.CASE_INSENSITIVE);
+							Matcher m = var.matcher(contents);
+							while (m.find()) {
+								String varname = m.group();
+								if (!vars.contains(varname)) {
+									vars.add(varname);
+								}
+							}
+							String varString = null;
+							if (vars.size() > 0) {
+								SetVarsDlg dlg = new SetVarsDlg(getViewSite().getShell(), vars);
+								if (dlg.open() == Dialog.OK) {
+									varString = dlg.getResult();
+								}
+							}
+							Object ret = script.execute(varString);
+							SWTHelper.showInfo(Messages.ScriptView_ScriptOutput, ret.toString()); //$NON-NLS-1$
+						} catch (Exception ex) {
+							ExHandler.handle(ex);
+							SWTHelper.showError("Fehler beim Ausführen des Scripts",
+								ex.getMessage());
+						}
+					}
+				}
+			};
 	}
 	
 	class SetVarsDlg extends TitleAreaDialog {

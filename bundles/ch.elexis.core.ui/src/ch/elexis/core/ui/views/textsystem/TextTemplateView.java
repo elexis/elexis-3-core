@@ -56,11 +56,11 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.LoadTemplateCommand;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
-import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextTemplateRequirement;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.core.ui.views.textsystem.provider.TextTemplateFilter;
@@ -164,8 +164,8 @@ public class TextTemplateView extends ViewPart {
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblSearch.setText("Suchen: ");
 		txtSearch = new Text(composite, SWT.BORDER | SWT.SEARCH);
-		txtSearch
-			.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
+		txtSearch.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
+			| GridData.HORIZONTAL_ALIGN_FILL));
 		txtSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent ke){
 				searchFilter.setSearchTerm(txtSearch.getText());
@@ -217,10 +217,11 @@ public class TextTemplateView extends ViewPart {
 	}
 	
 	private void createTextPluginMissingForm(Composite parent){
-		String expl = Messages.TextTemplateVeiw_NoTxtPluginDescription
-			+ Messages.TextTemplateVeiw_NoTxtPluginReason1
-			+ Messages.TextTemplateVeiw_NoTxtPluginReason2
-			+ Messages.TextTemplateVeiw_NoTxtPluginReason3;
+		String expl =
+			Messages.TextTemplateVeiw_NoTxtPluginDescription
+				+ Messages.TextTemplateVeiw_NoTxtPluginReason1
+				+ Messages.TextTemplateVeiw_NoTxtPluginReason2
+				+ Messages.TextTemplateVeiw_NoTxtPluginReason3;
 		
 		Form form = UiDesk.getToolkit().createForm(parent);
 		form.setText(Messages.TextTemplateVeiw_NoTxtPluginTitel);
@@ -237,10 +238,11 @@ public class TextTemplateView extends ViewPart {
 	 * @param viewer
 	 */
 	private void createColumns(final Composite parent){
-		String[] titles = {
-			"", "Name der Vorlage", "Typ", "Mandant", "Adressabfrage", "Drucker/Schacht",
-			"Beschreibung"
-		};
+		String[] titles =
+			{
+				"", "Name der Vorlage", "Typ", "Mandant", "Adressabfrage", "Drucker/Schacht",
+				"Beschreibung"
+			};
 		int[] bounds = {
 			30, 200, 170, 80, 90, 300, 600
 		};
@@ -419,8 +421,8 @@ public class TextTemplateView extends ViewPart {
 	private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber){
 		final TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		final TableColumn column = viewerColumn.getColumn();
-		tableLayout.setColumnData(column,
-			new ColumnWeightData(bound, ColumnWeightData.MINIMUM_WIDTH, true));
+		tableLayout.setColumnData(column, new ColumnWeightData(bound,
+			ColumnWeightData.MINIMUM_WIDTH, true));
 		column.setText(title);
 		column.setResizable(true);
 		column.setMoveable(false);

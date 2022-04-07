@@ -170,7 +170,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				if (actualInvoice != null) {
 					releaseAndRefreshLock(actualInvoice,
 						ToggleCurrentInvoiceLockHandler.COMMAND_ID);
-					if (LocalLockServiceHolder.get().isLocked(actualInvoice.getFall())) {
+					if(LocalLockServiceHolder.get().isLocked(actualInvoice.getFall())) {
 						LocalLockServiceHolder.get().releaseLock(actualInvoice.getFall());
 					}
 				}
@@ -415,9 +415,8 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			gd2.heightHint = 50;
 			txtMulti.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 			txtMulti.setLayoutData(gd2);
-			txtMulti.setText(
-				invoiceCorrectionDTO.getBemerkung() != null ? invoiceCorrectionDTO.getBemerkung()
-						: "");
+			txtMulti.setText(invoiceCorrectionDTO.getBemerkung() != null
+					? invoiceCorrectionDTO.getBemerkung() : "");
 			
 			if (invoiceCorrectionDTO.getNewInvoiceNumber() != null) {
 				if (!invoiceCorrectionDTO.getNewInvoiceNumber().isEmpty()) {
@@ -467,8 +466,9 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			ElexisEventDispatcher.fireSelectionEvent(r);
 		} else {
 			MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Fehler",
-				"Die Rechnung mit der Nummer: " + invoiceNr
-					+ " konnte nicht geöffnet werden.\nBitte versuchen Sie diesn manuell zu öffnen.");
+				"Die Rechnung mit der Nummer: "
+					+ invoiceNr
+				+ " konnte nicht geöffnet werden.\nBitte versuchen Sie diesn manuell zu öffnen.");
 		}
 	}
 	
@@ -722,11 +722,11 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					@Override
 					public void run(){
 						
-						FallSelectionDialog fallSelectionDialog = new FallSelectionDialog(
-							getShell(),
-							"Bitte wählen Sie einen Fall aus, auf das die u.a. Konsultation transferiert werden soll.\n"
-								+ "Konsultation: " + konsultationDTO.getDate(),
-							invoiceCorrectionDTO.getFallDTO());
+						FallSelectionDialog fallSelectionDialog =
+							new FallSelectionDialog(getShell(),
+								"Bitte wählen Sie einen Fall aus, auf das die u.a. Konsultation transferiert werden soll.\n"
+									+ "Konsultation: " + konsultationDTO.getDate(),
+								invoiceCorrectionDTO.getFallDTO());
 						if (fallSelectionDialog.open() == MessageDialog.OK) {
 							if (fallSelectionDialog.getSelectedFall().isPresent()) {
 								if (invoiceCorrectionDTO.getKonsultationDTOs()
@@ -944,11 +944,11 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				public void run(){
 					LeistungDTO leistungDTO = getSelection();
 					if (leistungDTO != null) {
-						FallSelectionDialog fallSelectionDialog = new FallSelectionDialog(
-							getShell(),
-							"Bitte wählen Sie einen Fall aus, auf das die u.a. Leistung transferiert werden soll.\n"
-								+ leistungDTO.getText(),
-							invoiceCorrectionDTO.getFallDTO());
+						FallSelectionDialog fallSelectionDialog =
+							new FallSelectionDialog(getShell(),
+								"Bitte wählen Sie einen Fall aus, auf das die u.a. Leistung transferiert werden soll.\n"
+									+ leistungDTO.getText(),
+								invoiceCorrectionDTO.getFallDTO());
 						if (fallSelectionDialog.open() == MessageDialog.OK) {
 							if (fallSelectionDialog.getSelectedFall().isPresent()) {
 								konsultationDTO.getLeistungDTOs().remove(leistungDTO);
@@ -1072,8 +1072,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					return leistungDTO.getText();
 				case 3:
 					return leistungDTO.getPrice() != null
-							? leistungDTO.getPrice().getAmountAsString()
-							: "0";
+							? leistungDTO.getPrice().getAmountAsString() : "0";
 				default:
 					return "";
 				}

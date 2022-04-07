@@ -308,7 +308,8 @@ public class BillingProposalView extends ViewPart {
 	public static class ProposalLetter {
 		private List<BillingInformation> proposal;
 		
-		public ProposalLetter(){}
+		public ProposalLetter(){
+		}
 		
 		public void setProposal(List<BillingInformation> proposal){
 			this.proposal = proposal;
@@ -373,7 +374,8 @@ public class BillingProposalView extends ViewPart {
 		@XmlElement
 		private boolean checkResult;
 		
-		public BillingInformation(){}
+		public BillingInformation(){
+		}
 		
 		public BillingInformation(StructuredViewer viewer, Fall fall, Konsultation konsultation){
 			this.viewer = viewer;

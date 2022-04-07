@@ -68,8 +68,9 @@ public class TemplatePrintView extends ViewPart {
 			}
 			
 		}));
-		Brief actBrief = text.createFromTemplateName(Konsultation.getAktuelleKons(), template,
-			Brief.UNKNOWN, adressat, title);
+		Brief actBrief =
+			text.createFromTemplateName(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN,
+				adressat, title);
 		ret.setData(KEY_BRIEF, actBrief);
 		ret.setData(KEY_TEXT, text);
 		ret.setText(title);

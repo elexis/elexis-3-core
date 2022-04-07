@@ -141,7 +141,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		heartbeat();
 		CoreHub.heart.addListener(this, ConfigServiceHolder
 			.getUser(Preferences.LABSETTINGS_CFG_LABNEW_HEARTRATE, Heartbeat.FREQUENCY_HIGH));
-		
+			
 		tv.setInput(this);
 	}
 	
@@ -157,8 +157,8 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		
 	}
 	
-	static class LabNotSeenLabelProvider extends LabelProvider
-			implements ITableLabelProvider, IColorProvider {
+	static class LabNotSeenLabelProvider extends LabelProvider implements ITableLabelProvider,
+			IColorProvider {
 		
 		public Image getColumnImage(final Object element, final int columnIndex){
 			// TODO Auto-generated method stub
@@ -270,9 +270,10 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 				
 				@Override
 				public void doRun(){
-					boolean openConfirm = MessageDialog.openConfirm(getViewSite().getShell(),
-						Messages.LabNotSeenView_reallyMarkCaption, //$NON-NLS-1$
-						Messages.LabNotSeenView_markAllToolTip);
+					boolean openConfirm =
+						MessageDialog.openConfirm(getViewSite().getShell(),
+							Messages.LabNotSeenView_reallyMarkCaption, //$NON-NLS-1$
+							Messages.LabNotSeenView_markAllToolTip);
 					if (openConfirm) //$NON-NLS-1$
 					{
 						tv.setAllChecked(true);
@@ -283,24 +284,25 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 				}
 				
 			};
-		markPersonAction = new RestrictedAction(AccessControlDefaults.LAB_SEEN,
-			Messages.LabNotSeenView_markAllofPatient) { //$NON-NLS-1$
-			{
-				setToolTipText(Messages.LabNotSeenView_markAllOfPatientToolTip); //$NON-NLS-1$
-				setImageDescriptor(Images.IMG_PERSON_OK.getImageDescriptor());
-			}
-			
-			@Override
-			public void doRun(){
-				Patient act = ElexisEventDispatcher.getSelectedPatient();
-				for (LabResult lr : unseen) {
-					if (lr.getPatient().equals(act)) {
-						lr.removeFromUnseen();
-						tv.setChecked(lr, true);
+		markPersonAction =
+			new RestrictedAction(AccessControlDefaults.LAB_SEEN,
+				Messages.LabNotSeenView_markAllofPatient) { //$NON-NLS-1$
+				{
+					setToolTipText(Messages.LabNotSeenView_markAllOfPatientToolTip); //$NON-NLS-1$
+					setImageDescriptor(Images.IMG_PERSON_OK.getImageDescriptor());
+				}
+				
+				@Override
+				public void doRun(){
+					Patient act = ElexisEventDispatcher.getSelectedPatient();
+					for (LabResult lr : unseen) {
+						if (lr.getPatient().equals(act)) {
+							lr.removeFromUnseen();
+							tv.setChecked(lr, true);
+						}
 					}
 				}
-			}
-		};
+			};
 	}
 	
 	@Optional

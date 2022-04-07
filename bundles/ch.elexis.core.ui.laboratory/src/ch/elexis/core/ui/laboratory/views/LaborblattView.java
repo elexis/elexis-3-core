@@ -59,15 +59,16 @@ public class LaborblattView extends ViewPart implements ICallback {
 		
 	}
 	
-	public boolean createLaborblatt(final Patient pat, final String[] header,
-		final TreeItem[] rows){
+	public boolean createLaborblatt(final Patient pat, final String[] header, final TreeItem[] rows){
 		return createLaborblatt(pat, header, rows, null);
 	}
 	
-	public boolean createLaborblatt(final Patient pat, final String[] header, final TreeItem[] rows,
-		int[] skipColumnsIndex){
-		Brief br = text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER, Brief.LABOR,
-			pat, null);
+	public boolean createLaborblatt(final Patient pat, final String[] header,
+		final TreeItem[] rows, int[] skipColumnsIndex){
+		Brief br =
+			text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER,
+				Brief.LABOR,
+				pat, null);
 		if (br == null) {
 			return false;
 		}
@@ -122,10 +123,11 @@ public class LaborblattView extends ViewPart implements ICallback {
 		return false;
 	}
 	
-	public boolean createLaborblatt(final Patient pat, final String[] header,
-		final TableItem[] rows){
-		Brief br = text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER, Brief.LABOR,
-			pat, null);
+	public boolean createLaborblatt(final Patient pat, final String[] header, final TableItem[] rows){
+		Brief br =
+			text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER,
+				Brief.LABOR,
+				pat, null);
 		if (br == null) {
 			return false;
 		}
@@ -168,8 +170,9 @@ public class LaborblattView extends ViewPart implements ICallback {
 	
 	@SuppressWarnings("unchecked")
 	public boolean createLaborblatt(Patient pat, Document doc){
-		/* Brief br= */text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER, Brief.LABOR,
-			pat, null);
+		/* Brief br= */text.createFromTemplateName(text.getAktuelleKons(),
+			TT_LABPAPER,
+			Brief.LABOR, pat, null);
 		
 		ArrayList<String[]> rows = new ArrayList<String[]>();
 		Element root = doc.getRootElement();
@@ -187,8 +190,7 @@ public class LaborblattView extends ViewPart implements ICallback {
 		List groups = root.getChildren("Gruppe"); //$NON-NLS-1$
 		for (Element el : (List<Element>) groups) {
 			rows.add(new String[] {
-				el.getAttribute("Name").getValue() //$NON-NLS-1$
-			});
+				el.getAttribute("Name").getValue()}); //$NON-NLS-1$
 			List<Element> params = el.getChildren("Parameter"); //$NON-NLS-1$
 			for (Element param : params) {
 				Element ref = param.getChild("Referenz"); //$NON-NLS-1$
@@ -196,9 +198,8 @@ public class LaborblattView extends ViewPart implements ICallback {
 				StringBuilder sb = new StringBuilder();
 				sb.append(param.getAttributeValue("Name")).append(" (").append( //$NON-NLS-1$ //$NON-NLS-2$
 					ref.getAttributeValue("min")).append("-").append( //$NON-NLS-1$ //$NON-NLS-2$
-						ref.getAttributeValue("max")) //$NON-NLS-1$
-					.append(") ").append( //$NON-NLS-1$
-						param.getAttributeValue("Einheit")); //$NON-NLS-1$
+					ref.getAttributeValue("max")).append(") ").append( //$NON-NLS-1$ //$NON-NLS-2$
+					param.getAttributeValue("Einheit")); //$NON-NLS-1$
 				row[0] = sb.toString();
 				List<Element> results = param.getChildren("Resultat"); //$NON-NLS-1$
 				int i = 1;

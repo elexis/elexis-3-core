@@ -64,8 +64,8 @@ import ch.rgw.tools.StringTool;
  * @author gerry
  * 
  */
-public class FieldDisplayView extends ViewPart
-		implements IActivationListener, ElexisEventListener, HeartListener {
+public class FieldDisplayView extends ViewPart implements IActivationListener, ElexisEventListener,
+		HeartListener {
 	public static final String ID = "ch.elexis.dbfielddisplay"; //$NON-NLS-1$
 	private IAction newViewAction, editDataAction;
 	Text text;
@@ -80,7 +80,6 @@ public class FieldDisplayView extends ViewPart
 	@Override
 	public void createPartControl(Composite parent){
 		parent.setLayout(new GridLayout());
-		
 		form = tk.createScrolledForm(parent);
 		form.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		form.getBody().setLayout(new GridLayout());
@@ -186,8 +185,8 @@ public class FieldDisplayView extends ViewPart
 		}
 	}
 	
-	final private ElexisEvent template =
-		new ElexisEvent(null, myClass, ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED);
+	final private ElexisEvent template = new ElexisEvent(null, myClass, ElexisEvent.EVENT_SELECTED
+		| ElexisEvent.EVENT_DESELECTED);
 	
 	@Override
 	public ElexisEvent getElexisEventFilter(){
@@ -256,40 +255,41 @@ public class FieldDisplayView extends ViewPart
 	
 	private void makeActions(){
 		newViewAction = new Action(Messages.FieldDisplayView_NewWindow) { //$NON-NLS-1$
-			{
-				setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
-				setToolTipText(Messages.FieldDisplayView_NewWindowToolTip); //$NON-NLS-1$
-			}
-			
-			@Override
-			public void run(){
-				try {
-					String fieldtype = new SelectDataDialog().run();
-					FieldDisplayView n = (FieldDisplayView) getViewSite().getPage().showView(ID,
-						StringTool.unique("DataDisplay"), //$NON-NLS-1$
-						IWorkbenchPage.VIEW_VISIBLE);
-					n.setField(fieldtype, false);
-					heartbeat();
-				} catch (PartInitException e) {
-					ExHandler.handle(e);
+				{
+					setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
+					setToolTipText(Messages.FieldDisplayView_NewWindowToolTip); //$NON-NLS-1$
 				}
-			}
-		};
+				
+				@Override
+				public void run(){
+					try {
+						String fieldtype = new SelectDataDialog().run();
+						FieldDisplayView n =
+							(FieldDisplayView) getViewSite().getPage().showView(ID,
+								StringTool.unique("DataDisplay"), //$NON-NLS-1$
+								IWorkbenchPage.VIEW_VISIBLE);
+						n.setField(fieldtype, false);
+						heartbeat();
+					} catch (PartInitException e) {
+						ExHandler.handle(e);
+					}
+				}
+			};
 		editDataAction = new Action(Messages.FieldDisplayView_DataTypeAction) { //$NON-NLS-1$
-			{
-				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-				setToolTipText(Messages.FieldDisplayView_DataTypeToolTip); //$NON-NLS-1$
-			}
-			
-			@Override
-			public void run(){
-				SelectDataDialog sdd = new SelectDataDialog();
-				if (sdd.open() == Dialog.OK) {
-					setField(sdd.result, sdd.bEditable);
-					heartbeat();
+				{
+					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
+					setToolTipText(Messages.FieldDisplayView_DataTypeToolTip); //$NON-NLS-1$
 				}
-			}
-		};
+				
+				@Override
+				public void run(){
+					SelectDataDialog sdd = new SelectDataDialog();
+					if (sdd.open() == Dialog.OK) {
+						setField(sdd.result, sdd.bEditable);
+						heartbeat();
+					}
+				}
+			};
 	}
 	
 	class SelectDataDialog extends TitleAreaDialog {
@@ -357,4 +357,5 @@ public class FieldDisplayView extends ViewPart
 	boolean currentState){
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
+	
 }

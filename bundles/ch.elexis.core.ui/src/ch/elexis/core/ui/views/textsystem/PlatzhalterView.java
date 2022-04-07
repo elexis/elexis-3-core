@@ -227,8 +227,8 @@ public class PlatzhalterView extends ViewPart {
 						if (TextView.ID.equals(viewRef.getId())) {
 							TextView txtView = (TextView) viewRef.getPart(false);
 							if (txtView != null) {
-								txtView.getTextContainer().getPlugin().insertText((Object) null,
-									key, SWT.LEFT);
+								txtView.getTextContainer().getPlugin()
+									.insertText((Object) null, key, SWT.LEFT);
 							}
 						}
 					}
@@ -277,19 +277,21 @@ public class PlatzhalterView extends ViewPart {
 			boolean found = false;
 			String name = iConfigurationElement.getAttribute("name");
 			String type = iConfigurationElement.getAttribute("type");
-			String typeName = type.substring(type.lastIndexOf('.') + 1);
+			String typeName=type.substring(type.lastIndexOf('.') + 1);
 			if (name != null && type != null) {
-				PlatzhalterTreeData treeData = root.getChild(typeName);
+				PlatzhalterTreeData treeData =
+					root.getChild(typeName);
 				if (treeData != null) {
 					PlatzhalterTreeData childData = treeData.getChild(name);
-					if (childData != null) {
+					if(childData != null) {
 						found = true;
 					}
 				}
 			}
-			if (!found) {
-				PlatzhalterTreeData treeData = root.getChild(typeName);
-				if (treeData == null) {
+			if(!found) {
+				PlatzhalterTreeData treeData =
+						root.getChild(typeName);
+				if(treeData == null) {
 					treeData = new PlatzhalterTreeData(typeName, "", "");
 				}
 				treeData
@@ -305,8 +307,8 @@ public class PlatzhalterView extends ViewPart {
 				new PlatzhalterTreeData(dataAccess.getName(), "", dataAccess.getDescription()); //$NON-NLS-1$
 			if (dataAccess.getList() != null) {
 				for (Element element : dataAccess.getList()) {
-					treeData.addChild(new PlatzhalterTreeData(element.getName(),
-						element.getPlaceholder(), element.getName()));
+					treeData.addChild(new PlatzhalterTreeData(element.getName(), element
+						.getPlaceholder(), element.getName()));
 				}
 			}
 			root.addChild(treeData);
