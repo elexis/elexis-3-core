@@ -10,12 +10,20 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.views;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.PropertySheet;
+
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 public class ContactPropertiesView extends PropertySheet {
 	
@@ -73,5 +81,12 @@ public class ContactPropertiesView extends PropertySheet {
 		public void setSelection(ISelection selection){
 			current = selection;
 		}
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

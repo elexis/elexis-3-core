@@ -19,17 +19,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.services.IConflictHandler;
 import ch.elexis.core.services.ILocalDocumentService;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.text.ITextPlugin;
@@ -151,5 +157,12 @@ public class BestellBlatt extends ViewPart implements ICallback {
 	public boolean saveAs(){
 		// TODO Automatisch erstellter Methoden-Stub
 		return false;
+	}
+	
+	@org.eclipse.e4.core.di.annotations.Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

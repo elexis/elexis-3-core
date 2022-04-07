@@ -6,10 +6,12 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -30,12 +32,14 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.ModelPackage;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 import ch.elexis.core.ui.tasks.parts.controls.GeneralConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.controls.RunnableAndContextConfigurationComposite;
@@ -212,5 +216,12 @@ public class TaskConfigurationPart implements IRefreshablePart {
 	void createTaskDescriptor(@UIEventTopic(ElexisEventTopics.EVENT_CREATE)
 	ITaskDescriptor taskDescriptor){
 		refresh();
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

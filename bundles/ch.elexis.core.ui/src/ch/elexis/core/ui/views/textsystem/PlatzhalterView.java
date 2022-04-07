@@ -12,7 +12,12 @@ package ch.elexis.core.ui.views.textsystem;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -46,11 +51,13 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IDataAccess;
 import ch.elexis.core.data.interfaces.IDataAccess.Element;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.SortedList;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.views.TextView;
 
 public class PlatzhalterView extends ViewPart {
@@ -313,6 +320,13 @@ public class PlatzhalterView extends ViewPart {
 	@Override
 	public void setFocus(){
 		viewer.getTree().setFocus();
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
+	boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
 }
