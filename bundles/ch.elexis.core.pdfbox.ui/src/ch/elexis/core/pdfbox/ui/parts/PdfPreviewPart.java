@@ -16,6 +16,7 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.l10n.Messages;
@@ -72,7 +73,7 @@ public class PdfPreviewPart {
 				try {
 					pdfPreviewPartLoadHandler.unloadDocument();
 				} catch (IOException e) {
-					e.printStackTrace();
+					LoggerFactory.getLogger(getClass()).warn("Error unloading document", e);
 				}
 			}
 			pdfPreviewPartLoadHandler.close();

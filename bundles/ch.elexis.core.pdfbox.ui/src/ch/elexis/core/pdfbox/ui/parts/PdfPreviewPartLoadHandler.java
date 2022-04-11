@@ -93,6 +93,7 @@ public class PdfPreviewPartLoadHandler {
 				if (pdDocument == null) {
 					if (pdfInputStream != null) {
 						pdDocument = PDDocument.load(pdfInputStream);
+						pdfInputStream.close();
 						numberOfPages = pdDocument.getNumberOfPages();
 						images = new Image[numberOfPages];
 					} else if (pdfInputStream == null && pdDocument == null) {
