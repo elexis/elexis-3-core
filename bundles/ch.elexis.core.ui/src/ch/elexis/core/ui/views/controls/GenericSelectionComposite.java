@@ -10,23 +10,35 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.controls;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.AbstractTableViewer;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -34,6 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.data.PersistentObject;
 
@@ -46,7 +59,8 @@ import ch.elexis.data.PersistentObject;
  */
 public class GenericSelectionComposite extends Composite implements ISelectionProvider {
 	
-	private ListenerList selectionListeners = new ListenerList();
+	private ListenerList<ISelectionChangedListener> selectionListeners =
+		new ListenerList<ISelectionChangedListener>();
 	
 	private List<?> input;
 	private IStructuredSelection selection;
@@ -74,7 +88,8 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				if (input != null && !input.isEmpty()) {
-					GenericSelectionDialog dialog = new GenericSelectionDialog(getShell(), input);
+					GenericSelectionDialog dialog = new GenericSelectionDialog(getShell(), input,
+						"Auswahl", null, null, SWT.MULTI);
 					if (selection != null) {
 						dialog.setSelection(selection.toList());
 					}
@@ -156,15 +171,27 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 	 * @author thomas
 	 *
 	 */
-	public static class GenericSelectionDialog extends Dialog {
+	public static class GenericSelectionDialog extends TitleAreaDialog {
 		
 		private List<?> input;
-		private Map<Object, Button> buttonMap = new HashMap<>();
 		private List<Object> selection = new LinkedList<>();
 		
-		public GenericSelectionDialog(Shell parentShell, List<?> input){
+		private String title;
+		private String message;
+		private Image image;
+		private int style;
+		
+		private AbstractTableViewer structuredViewer;
+		private SearchDataDialog filter;
+		
+		public GenericSelectionDialog(Shell parentShell, List<?> input, String title,
+			String message, Image image, int style){
 			super(parentShell);
+			this.title = title;
+			this.message = message;
 			this.input = input;
+			this.image = image;
+			this.style = style;
 		}
 		
 		public void setSelection(List<Object> selection){
@@ -177,49 +204,89 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 		
 		@Override
 		protected Control createDialogArea(Composite parent){
+			setTitle(title);
+			setMessage(message);
+			setTitleImage(image);
+			
 			Composite ret = (Composite) super.createDialogArea(parent);
-			ScrolledComposite sc = new ScrolledComposite(ret, SWT.H_SCROLL | SWT.V_SCROLL);
 			
-			Composite child = new Composite(sc, SWT.NONE);
-			child.setLayout(new GridLayout());
+			Text text = new Text(ret, SWT.BORDER);
+			GridData textGridData = new GridData();
+			textGridData.grabExcessVerticalSpace = false;
+			textGridData.grabExcessHorizontalSpace = true;
+			textGridData.horizontalAlignment = GridData.FILL;
+			textGridData.verticalAlignment = GridData.BEGINNING;
+			text.setLayoutData(textGridData);
 			
-			GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-			data.heightHint = 400;
-			sc.setLayoutData(data);
-
-			Label title = new Label(child, SWT.NONE);
-			title.setText("Auswahl:");
-			// create the UI
-			for (Object object : input) {
-				Button button = new Button(child, SWT.CHECK);
-				button.setText(getLabel(object));
-				button.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e){
-						if (button.getSelection()) {
-							selection.add(object);
-						} else {
-							selection.remove(object);
-						}
+			Collections.sort(input, new Comparator<Object>() {
+				@Override
+				public int compare(Object o1, Object o2){
+					if (o1 instanceof PersistentObject) {
+						return ((PersistentObject) o1).getLabel()
+							.compareToIgnoreCase(((PersistentObject) o2).getLabel());
 					}
-				});
-				buttonMap.put(object, button);
+					return 0;
+				}
+			});
+			
+			if (style == SWT.SINGLE) {
+				structuredViewer = new TableViewer(ret, SWT.NONE);
+			} else {
+				structuredViewer = CheckboxTableViewer.newCheckList(ret, SWT.NONE);
 			}
-			sc.setMinSize(child.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-			sc.setExpandHorizontal(true);
-			sc.setExpandVertical(true);
-		    sc.setContent(child);
-
-			updateSelectionUi();
+			
+			GridData viewerGridData = new GridData(GridData.FILL_BOTH);
+			viewerGridData.heightHint = 250;
+			viewerGridData.widthHint = 300;
+			((TableViewer) structuredViewer).getTable().setLayoutData(viewerGridData);
+			structuredViewer.setContentProvider(ArrayContentProvider.getInstance());
+			
+			structuredViewer.setLabelProvider(new LabelProvider() {
+				public String getText(Object elements){
+					if (elements instanceof PersistentObject) {
+						return ((PersistentObject) elements).getLabel();
+					} else if (elements != null) {
+						return elements.toString();
+					}
+					return null;
+				}
+			});
+			structuredViewer.setInput(input.toArray());
+			
+			text.addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent keyEvent){
+					filter.setSearchText(text.getText());
+					structuredViewer.refresh();
+					isLastElement(structuredViewer);
+				}
+			});
+			
+			filter = new SearchDataDialog();
+			structuredViewer.addFilter(filter);
 			
 			return ret;
 		}
 		
-		private void updateSelectionUi(){
-			if (selection != null && !selection.isEmpty() && !buttonMap.isEmpty()) {
-				for (Object object : selection) {
-					buttonMap.get(object).setSelection(true);
-				}
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void okPressed(){
+			if (style == SWT.SINGLE) {
+				IStructuredSelection selection = structuredViewer.getStructuredSelection();
+				this.selection = (selection.toList());
+			} else {
+				this.selection =
+					Arrays.asList(((CheckboxTableViewer) structuredViewer).getCheckedElements());
+			}
+			super.okPressed();
+		}
+		
+		private void isLastElement(StructuredViewer structuredViewer){
+			if (((TableViewer) structuredViewer).getTable().getItems().length == 1) {
+				((TableViewer) structuredViewer).getTable().getItem(0).setChecked(true);
+				((TableViewer) structuredViewer).getTable().setSelection(0);
+			} else {
+				((CheckboxTableViewer) structuredViewer).setAllChecked(false);
+				structuredViewer.setSelection(null);
 			}
 		}
 		
@@ -231,6 +298,34 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			} else {
 				return "";
 			}
+		}
+	}
+	
+	public static class SearchDataDialog extends ViewerFilter {
+		
+		private String searchString;
+		
+		public void setSearchText(String search){
+			this.searchString = ".*" + search + ".*";
+		}
+		
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element){
+			if (searchString == null || searchString.length() == 0) {
+				return true;
+			}
+			
+			if (element instanceof PersistentObject) {
+				PersistentObject pObject = (PersistentObject) element;
+				if (pObject.getLabel().toLowerCase().matches(searchString.toLowerCase())) {
+					return true;
+				}
+			} else if (element != null) {
+				if (element.toString().toLowerCase().matches(searchString.toLowerCase())) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }
