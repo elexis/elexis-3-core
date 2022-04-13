@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Schedule;
@@ -56,9 +55,8 @@ public class ScheduleStringTransformer implements IFhirTransformer<Schedule, Str
 		for (Area area : areas) {
 			Schedule schedule = new Schedule();
 			
-			String areaId = DigestUtils.md5Hex(area.getName());
 			// id might not be rest compatible, if we use the plain area name
-			schedule.setId(new IdDt(Schedule.class.getSimpleName(), areaId));
+			schedule.setId(new IdDt(Schedule.class.getSimpleName(), area.getId()));
 			
 			schedule.setActive(true);
 			
@@ -79,7 +77,7 @@ public class ScheduleStringTransformer implements IFhirTransformer<Schedule, Str
 			schedule.getText().setStatus(org.hl7.fhir.r4.model.Narrative.NarrativeStatus.GENERATED);
 			schedule.getText().setDivAsString(area.getName());
 			
-			schedules.put(areaId, schedule);
+			schedules.put(area.getId(), schedule);
 		}
 		
 		return schedules;

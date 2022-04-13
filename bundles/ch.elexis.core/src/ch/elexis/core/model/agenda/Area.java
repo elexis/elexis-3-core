@@ -1,7 +1,14 @@
 package ch.elexis.core.model.agenda;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import javax.xml.bind.DatatypeConverter;
+
 public class Area {
 	
+	private String id;
 	private final String name;
 	private final AreaType type;
 	private final String contactId;
@@ -30,6 +37,18 @@ public class Area {
 	
 	public String getContactId(){
 		return contactId;
+	}
+	
+	public String getId(){
+		if (id == null) {
+			try {
+				id = DatatypeConverter.printHexBinary(
+					MessageDigest.getInstance("MD5").digest(name.getBytes("UTF-8")));
+			} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+				throw new IllegalStateException("", e);
+			}
+		}
+		return id;
 	}
 	
 }
