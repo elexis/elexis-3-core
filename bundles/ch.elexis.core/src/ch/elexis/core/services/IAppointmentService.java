@@ -82,6 +82,14 @@ public interface IAppointmentService {
 	public List<Area> getAreas();
 	
 	/**
+	 * 
+	 * @param schedule
+	 * @return the area for the given name/id or <code>null</code>
+	 * @since 3.9
+	 */
+	public Area getAreaByNameOrId(String nameOrId);
+
+	/**
 	 * Define the {@link AreaType} of an area
 	 * 
 	 * @param area

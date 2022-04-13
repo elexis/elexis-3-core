@@ -17,7 +17,6 @@ import org.osgi.service.component.annotations.Component;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
-import ch.elexis.core.findings.util.TerminUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IAppointmentHelper;
 import ch.elexis.core.model.IAppointment;
@@ -49,7 +48,7 @@ public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointmen
 		slot.setId(new IdDt(Slot.class.getSimpleName(), localObject.getId()));
 		
 		slot.setSchedule(new Reference(new IdType(Schedule.class.getSimpleName(),
-			new TerminUtil(appointmentService).getIdForBereich(localObject.getSchedule()))));
+			appointmentService.getAreaByNameOrId(localObject.getSchedule()).getId())));
 		
 		slot.setStatus(appointmentHelper.getSlotStatus(localObject));
 		

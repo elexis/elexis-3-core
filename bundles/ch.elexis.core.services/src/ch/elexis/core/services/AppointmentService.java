@@ -257,6 +257,24 @@ public class AppointmentService implements IAppointmentService {
 		return ret;
 	}
 	
+	private long lastUpdate = 0;
+	private Map<String, Area> areaIdOrNametoAreaMap;
+	
+	@Override
+	public Area getAreaByNameOrId(String nameOrId){
+		if (System.currentTimeMillis() > lastUpdate + 1000 * 60) {
+			synchronized (areaIdOrNametoAreaMap) {
+				areaIdOrNametoAreaMap = new HashMap<String, Area>();
+				getAreas().stream().forEach(area -> {
+					areaIdOrNametoAreaMap.put(area.getId(), area);
+					areaIdOrNametoAreaMap.put(area.getName(), area);
+				});
+				lastUpdate = System.currentTimeMillis();
+			}
+		}
+		return areaIdOrNametoAreaMap.get(nameOrId);
+	}
+	
 	@Override
 	public void setAreaType(String area, AreaType areaType, String value){
 		String key = Preferences.AG_BEREICH_PREFIX + area + Preferences.AG_BEREICH_TYPE_POSTFIX;
