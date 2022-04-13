@@ -1,8 +1,6 @@
 package ch.elexis.core.findings.codes;
 
 public enum CodingSystem {
-		ELEXIS_AGENDA_AREA_ID("www.elexis.info/system/agenda/area/id"),
-		ELEXIS_AGENDA_AREA_TYPE("www.elexis.info/system/agenda/area/type"),
 		ELEXIS_TARMED_CODESYSTEM("www.elexis.info/billing/tarmed"),
 		ELEXIS_LOCAL_CODESYSTEM("www.elexis.info/coding/local"),
 		ELEXIS_COVERAGE_TYPE("www.elexis.info/coverage/type"),
