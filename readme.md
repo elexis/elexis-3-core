@@ -1,5 +1,9 @@
 # Elexis 3 Core Repository
 
+IMPORTANT Please employ the Eclipse_builtin.xml as Eclipse default formatter
+prior to development and pull requests. It only deviation to the Eclipse 21-12
+builtin formatter is the use of tabs instead of spaces to indent.
+
 [Build status of master branch](https://gitlab.medelexis.ch/elexis/elexis-3-core/badges/master/pipeline.svg)
 
 ## Install latest build
