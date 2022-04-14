@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.Appointment.AppointmentParticipantComponent;
 import org.hl7.fhir.r4.model.Appointment.AppointmentStatus;
@@ -31,7 +30,6 @@ import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 @Component
 public class AppointmentTerminTransformer implements IFhirTransformer<Appointment, IAppointment> {
@@ -39,6 +37,10 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 	@org.osgi.service.component.annotations.Reference(target = "(" + IFhirTransformer.TRANSFORMERID
 		+ "=Patient.IPatient)")
 	private IFhirTransformer<Patient, IPatient> patientTransformer;
+	
+	@org.osgi.service.component.annotations.Reference(target = "(" + IFhirTransformer.TRANSFORMERID
+		+ "=Slot.IAppointment)")
+	private IFhirTransformer<Slot, IAppointment> slotTransformer;
 	
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 		+ "=ch.elexis.core.model)")
@@ -107,17 +109,11 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 		
 		Reference slotReference =
 			new Reference(new IdType(Slot.class.getSimpleName(), localObject.getId()));
-		appointment.setSlot(Collections.singletonList(slotReference));
 		if (includes.contains(new Include("Appointment.slot"))) {
-			Optional<IFhirTransformer> slotTransformer =
-				OsgiServiceUtil.getService(IFhirTransformer.class,
-					"(" + IFhirTransformer.TRANSFORMERID + "=Slot.IAppointment)");
-			if (slotTransformer.isPresent()) {
-				appointment.getSlot().get(0).setResource(
-					(IBaseResource) slotTransformer.get().getFhirObject(localObject).get());
-			}
-			
+			Slot _slot = slotTransformer.getFhirObject(localObject).orElse(null);
+			slotReference.setResource(_slot);
 		}
+		appointment.setSlot(Collections.singletonList(slotReference));
 		
 		List<AppointmentParticipantComponent> participant = appointment.getParticipant();
 		

@@ -23,7 +23,7 @@ import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IModelService;
 
-@Component
+@Component(property = IFhirTransformer.TRANSFORMERID + "=Slot.IAppointment")
 public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointment> {
 	
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME

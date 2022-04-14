@@ -63,6 +63,9 @@ public class IAppointmentHelper extends AbstractHelper {
 		target.getExtension().add(statusExtension);
 	}
 	
+	// TODO Extension contains both a value and nested extensions
+	// maybe change?
+	
 	public void mapApplyAppointmentType(Appointment target, IAppointment source,
 		IConfigService configService){
 		
