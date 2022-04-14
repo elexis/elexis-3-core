@@ -941,6 +941,15 @@ public class BillingUtil {
 		private boolean stornoBill() {
 			List<Konsultation> konsultations = billCallback.storno(rechnung);
 			if (konsultations != null) {
+				// make sure all entities are refreshed
+				konsultations.forEach(k -> {
+					NoPoUtil.loadAsIdentifiable(k, IEncounter.class).ifPresent(e -> {
+						CoreModelServiceHolder.get().refresh(e, true);
+						e.getBilled().forEach(b -> {
+							CoreModelServiceHolder.get().refresh(b, true);
+						});
+					});
+				});
 				releasedKonsultations.addAll(konsultations);
 			} else {
 				success = false;
