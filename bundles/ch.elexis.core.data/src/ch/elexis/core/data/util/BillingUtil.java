@@ -643,6 +643,7 @@ public class BillingUtil {
 					log.debug("invoice correction: price changed to [{}] for leistung id [{}]",
 							leistungDTO.getPrice().getAmountAsString(), leistungDTO.getId());
 				}
+				CoreModelServiceHolder.get().save(verrechnet);
 			} else {
 				log.warn("invoice correction: leistung id [{}] no verrechnet exists cannot change price",
 						leistungDTO.getId());
@@ -658,6 +659,7 @@ public class BillingUtil {
 				log.debug("invoice correction: changed count from leistung id [{}]", leistungDTO.getId());
 				if (ret.isOK()) {
 					verrechnet.setSecondaryScale((int) (leistungDTO.getScale2() * 100));
+					CoreModelServiceHolder.get().save(verrechnet);
 				} else {
 					addToOutput(output, ret.getMessage());
 					success = false;
@@ -755,6 +757,7 @@ public class BillingUtil {
 										itemLeistung.getId());
 								if (ret.isOK()) {
 									verrechnet.setSecondaryScale((int) (itemLeistung.getScale2() * 100));
+									CoreModelServiceHolder.get().save(verrechnet);
 								} else {
 									verrechnet = null;
 									log.warn("invoice correction: cannot change count for leistung with id [{}]",
