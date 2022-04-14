@@ -17,7 +17,7 @@ import ch.elexis.core.model.ICodeElement;
 public interface ICodeElementService {
 	
 	public enum CodeElementTyp {
-			SERVICE, DIAGNOSE, ARTICLE
+			SERVICE, DIAGNOSE, ARTICLE, CONFIG
 	}
 	
 	public enum ContextKeys {
@@ -102,7 +102,7 @@ public interface ICodeElementService {
 	 * @return
 	 */
 	public Optional<IArticle> findArticleByGtin(String gtin);
-
+	
 	/**
 	 * Get all available {@link ICodeElementServiceContribution}s available.
 	 * 

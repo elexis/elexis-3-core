@@ -15,12 +15,18 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IAppointment;
@@ -68,6 +74,8 @@ public class AppointmentService implements IAppointmentService {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService iModelService;
 	
+	private LoadingCache<String, Map<String, Area>> cache;
+	
 	@Override
 	public IAppointment clone(IAppointment appointment){
 		return new IAppointmentBuilder(iModelService, appointment.getSchedule(),
@@ -80,6 +88,23 @@ public class AppointmentService implements IAppointmentService {
 	public void activate(){
 		// @TODO server support ?
 		states = getStates();
+		cache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES)
+				.build(new AreaLoader());
+	}
+	
+	private class AreaLoader extends CacheLoader<String, Map<String, Area>> {
+		@Override
+		public Map<String, Area> load(String key) throws Exception{
+			if("key".equals(key)) {
+				Map<String, Area> _map = new HashMap<>();
+				getAreas().stream().forEach(area -> {
+					_map.put(area.getId(), area);
+					_map.put(area.getName(), area);
+				});
+				return _map;
+			}
+			return null;
+		}
 	}
 	
 	private List<IAppointment> getLinkedAppoinments(IAppointment orig){
@@ -257,22 +282,15 @@ public class AppointmentService implements IAppointmentService {
 		return ret;
 	}
 	
-	private long lastUpdate = 0;
-	private Map<String, Area> areaIdOrNametoAreaMap;
-	
 	@Override
 	public Area getAreaByNameOrId(String nameOrId){
-		if (System.currentTimeMillis() > lastUpdate + 1000 * 60) {
-			synchronized (areaIdOrNametoAreaMap) {
-				areaIdOrNametoAreaMap = new HashMap<String, Area>();
-				getAreas().stream().forEach(area -> {
-					areaIdOrNametoAreaMap.put(area.getId(), area);
-					areaIdOrNametoAreaMap.put(area.getName(), area);
-				});
-				lastUpdate = System.currentTimeMillis();
-			}
+		try {
+			return cache.get("key").get(nameOrId);
+		} catch (ExecutionException e) {
+			LoggerFactory.getLogger(getClass()).warn("Error getting area by name or id [" + nameOrId + "]",
+				e);
 		}
-		return areaIdOrNametoAreaMap.get(nameOrId);
+		return null;
 	}
 	
 	@Override

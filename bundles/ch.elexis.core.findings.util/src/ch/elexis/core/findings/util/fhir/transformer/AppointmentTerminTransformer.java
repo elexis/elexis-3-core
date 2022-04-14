@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.Appointment.AppointmentParticipantComponent;
+import org.hl7.fhir.r4.model.Appointment.AppointmentStatus;
 import org.hl7.fhir.r4.model.Appointment.ParticipantRequired;
 import org.hl7.fhir.r4.model.Appointment.ParticipationStatus;
 import org.hl7.fhir.r4.model.IdType;
@@ -26,7 +28,10 @@ import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IAppointmentService;
+import ch.elexis.core.services.IConfigService;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 @Component
 public class AppointmentTerminTransformer implements IFhirTransformer<Appointment, IAppointment> {
@@ -41,6 +46,12 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 	
 	@org.osgi.service.component.annotations.Reference
 	private IAppointmentService appointmentService;
+	
+	@org.osgi.service.component.annotations.Reference
+	private IContextService contextService;
+	
+	@org.osgi.service.component.annotations.Reference
+	private IConfigService configService;
 	
 	private IAppointmentHelper appointmentHelper;
 	
@@ -66,8 +77,8 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 	@Override
 	public Optional<IAppointment> createLocalObject(Appointment fhirObject){
 		
-		String area = appointmentHelper.mapSchedule(coreModelService, appointmentService, fhirObject);
-		System.out.println(area);
+		//		String area = appointmentHelper.mapSchedule(coreModelService, appointmentService, fhirObject);
+		//		System.out.println(area);
 		// TODO to determine bereich may require Slot first?
 		throw new UnsupportedOperationException();
 	}
@@ -84,7 +95,11 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 		
 		appointmentHelper.setText(appointment, localObject.getLabel());
 		
-		appointmentHelper.mapApplyAppointmentStatus(appointment, localObject);
+		// Currently formal status is always booked, "real" elexis status and type
+		// are transported via extension
+		appointment.setStatus(AppointmentStatus.BOOKED);
+		appointmentHelper.mapApplyAppointmentStatus(appointment, localObject, configService);
+		appointmentHelper.mapApplyAppointmentType(appointment, localObject, configService);
 		
 		appointment.setDescription(appointmentHelper.getDescription(localObject));
 		
@@ -94,8 +109,14 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 			new Reference(new IdType(Slot.class.getSimpleName(), localObject.getId()));
 		appointment.setSlot(Collections.singletonList(slotReference));
 		if (includes.contains(new Include("Appointment.slot"))) {
-			// TODO load slot and set
-			//			slotReference.setResource(appointment);
+			Optional<IFhirTransformer> slotTransformer =
+				OsgiServiceUtil.getService(IFhirTransformer.class,
+					"(" + IFhirTransformer.TRANSFORMERID + "=Slot.IAppointment)");
+			if (slotTransformer.isPresent()) {
+				appointment.getSlot().get(0).setResource(
+					(IBaseResource) slotTransformer.get().getFhirObject(localObject).get());
+			}
+			
 		}
 		
 		List<AppointmentParticipantComponent> participant = appointment.getParticipant();
@@ -119,12 +140,12 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 				new Reference(new IdDt(Patient.class.getSimpleName(), localPatient.getId())));
 			patient.setRequired(ParticipantRequired.REQUIRED);
 			patient.setStatus(ParticipationStatus.ACCEPTED);
-			participant.add(patient);
 			
 			if (includes.contains(new Include("Appointment.patient"))) {
-				patient.getActor()
-					.setResource(patientTransformer.getFhirObject(localPatient).get());
+				Patient _patient = patientTransformer.getFhirObject(localPatient).get();
+				patient.getActor().setResource(_patient);
 			}
+			participant.add(patient);
 		} else {
 			// TODO there is another string inside - where to put it? is it relevant?
 			String subjectOrPatient = localObject.getSubjectOrPatient();
@@ -137,10 +158,9 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 	public Optional<IAppointment> updateLocalObject(Appointment fhirObject,
 		IAppointment localObject){
 		
-		
 		// determine bereich either via participant or ?
 		
-		appointmentHelper.mapApplyAppointmentStatus(localObject, fhirObject);
+		//		appointmentHelper.mapApplyAppointmentStatus(localObject, fhirObject);
 		// TODO more
 		
 		coreModelService.save(localObject);

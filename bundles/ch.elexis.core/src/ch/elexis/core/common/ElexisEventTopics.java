@@ -17,6 +17,10 @@ public class ElexisEventTopics {
 	 */
 	public static final String BASE_MODEL = BASE + "model/";
 	/**
+	 * Events generated in the configuration context
+	 */
+	public static final String BASE_CONFIG = BASE + "config/";
+	/**
 	 * Events generated in the elexis JPA persistence context
 	 */
 	public static final String BASE_JPA = BASE + "jpa/";
@@ -57,12 +61,16 @@ public class ElexisEventTopics {
 	public static final String PERSISTENCE_EVENT_ENTITYCHANGED = BASE_JPA + "entity/changed";
 
 	/**
-	 * Basic event topics
+	 * Basic model event topics
 	 */
 	public static final String EVENT_CREATE = BASE_MODEL + "create";
 	public static final String EVENT_DELETE = BASE_MODEL + "delete";
 	public static final String EVENT_UPDATE = BASE_MODEL + "update";
 	public static final String EVENT_RELOAD = BASE_MODEL + "reload";
+	/**
+	 * Generic reload configuration event
+	 */
+	public static final String EVENT_CONFIG_RELOAD = BASE_CONFIG + "reload";
 	/**
 	 * Notify the user
 	 */

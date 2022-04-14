@@ -1,8 +1,5 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -36,51 +33,20 @@ public class ScheduleStringTransformer implements IFhirTransformer<Schedule, Str
 	@Override
 	public Optional<Schedule> getFhirObject(String localObject, SummaryEnum summaryEnum,
 		Set<Include> includes){
-		Schedule schedule = getSchedules().get(localObject);
+		
+		Area areaByNameOrId = appointmentService.getAreaByNameOrId(localObject);
+		Schedule schedule = transformToFhir(areaByNameOrId);
+		
 		return Optional.ofNullable(schedule);
 	}
 	
 	@Override
 	public Optional<String> getLocalObject(Schedule fhirObject){
-		if (getSchedules().containsKey(fhirObject.getId())) {
-			return Optional.of(getSchedules().get(fhirObject.getId()).getId());
+		Area areaByNameOrId = appointmentService.getAreaByNameOrId(fhirObject.getId());
+		if (areaByNameOrId != null) {
+			return Optional.of(areaByNameOrId.getName());
 		}
 		return Optional.empty();
-	}
-	
-	private Map<String, Schedule> getSchedules(){
-		Map<String, Schedule> schedules = new HashMap<>();
-		
-		List<Area> areas = appointmentService.getAreas();
-		for (Area area : areas) {
-			Schedule schedule = new Schedule();
-			
-			// id might not be rest compatible, if we use the plain area name
-			schedule.setId(new IdDt(Schedule.class.getSimpleName(), area.getId()));
-			
-			schedule.setActive(true);
-			
-			AreaType type = area.getType();
-			if (Objects.equals(AreaType.CONTACT, type)) {
-				Optional<IContact> assignedContact =
-					appointmentService.resolveAreaAssignedContact(area.getName());
-				if (assignedContact.isPresent()) {
-					Reference actor = new Reference(new IdDt(Practitioner.class.getSimpleName(),
-						assignedContact.get().getId()));
-					schedule.getActor().add(actor);
-				} else {
-					LoggerFactory.getLogger(getClass()).warn("Could not resolve contact [{}]",
-						area.getContactId());
-				}
-			}
-			
-			schedule.getText().setStatus(org.hl7.fhir.r4.model.Narrative.NarrativeStatus.GENERATED);
-			schedule.getText().setDivAsString(area.getName());
-			
-			schedules.put(area.getId(), schedule);
-		}
-		
-		return schedules;
 	}
 	
 	@Override
@@ -96,6 +62,34 @@ public class ScheduleStringTransformer implements IFhirTransformer<Schedule, Str
 	@Override
 	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz){
 		return Schedule.class.equals(fhirClazz) && String.class.equals(localClazz);
+	}
+
+	private Schedule transformToFhir(Area area){
+		Schedule schedule = new Schedule();
+		
+		// id might not be rest compatible, if we use the plain area name
+		schedule.setId(new IdDt(Schedule.class.getSimpleName(), area.getId()));
+		
+		schedule.setActive(true);
+		
+		AreaType type = area.getType();
+		if (Objects.equals(AreaType.CONTACT, type)) {
+			Optional<IContact> assignedContact =
+				appointmentService.resolveAreaAssignedContact(area.getName());
+			if (assignedContact.isPresent()) {
+				Reference actor = new Reference(new IdDt(Practitioner.class.getSimpleName(),
+					assignedContact.get().getId()));
+				schedule.getActor().add(actor);
+			} else {
+				LoggerFactory.getLogger(getClass()).warn("Could not resolve contact [{}]",
+					area.getContactId());
+			}
+		}
+		
+		schedule.getText().setStatus(org.hl7.fhir.r4.model.Narrative.NarrativeStatus.GENERATED);
+		schedule.getText().setDivAsString(area.getName());
+		
+		return schedule;
 	}
 	
 }
