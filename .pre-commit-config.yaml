@@ -12,8 +12,11 @@ repos:
     - id: mixed-line-ending
       files: '.*java'
       args: ['--fix=lf']
-    - id: file-contents-sorter
-      files: 'plugin.*properties|messages.*properties' # but not build.properties
+# Using file-contents-sorter for the properties managed by the RBE
+# (Resource Bundle Editor) is  a bad ide as the RBE always inserts an empty
+# line between to ids
+#    - id: file-contents-sorter
+#      files: 'plugin.*properties|messages.*properties' # but not build.properties
   - repo: local
     hooks:
     - id: enforce-eclipse-format
