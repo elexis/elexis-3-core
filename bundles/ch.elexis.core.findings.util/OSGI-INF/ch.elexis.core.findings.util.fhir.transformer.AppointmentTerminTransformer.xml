@@ -7,7 +7,5 @@
    <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
-   <reference cardinality="1..1" field="patientTransformer" interface="ch.elexis.core.findings.util.fhir.IFhirTransformer" name="patientTransformer" target="(transformer.id=Patient.IPatient)"/>
-   <reference cardinality="1..1" field="slotTransformer" interface="ch.elexis.core.findings.util.fhir.IFhirTransformer" name="slotTransformer" target="(transformer.id=Slot.IAppointment)"/>
    <implementation class="ch.elexis.core.findings.util.fhir.transformer.AppointmentTerminTransformer"/>
 </scr:component>

@@ -1,24 +1,16 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
-import org.hl7.fhir.r4.model.IdType;
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.Schedule;
 import org.hl7.fhir.r4.model.Slot;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 import ca.uhn.fhir.model.api.Include;
-import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.helper.IAppointmentHelper;
+import ch.elexis.core.findings.util.fhir.transformer.mapper.IAppointmentSlotAttributeMapper;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IModelService;
@@ -33,41 +25,18 @@ public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointmen
 	@org.osgi.service.component.annotations.Reference
 	private IAppointmentService appointmentService;
 	
-	private IAppointmentHelper appointmentHelper;
+	private IAppointmentSlotAttributeMapper attributeMapper;
 	
 	@Activate
 	private void activate(){
-		appointmentHelper = new IAppointmentHelper();
+		attributeMapper = new IAppointmentSlotAttributeMapper(appointmentService);
 	}
 	
 	@Override
 	public Optional<Slot> getFhirObject(IAppointment localObject, SummaryEnum summaryEnum,
 		Set<Include> includes){
 		Slot slot = new Slot();
-		
-		slot.setId(new IdDt(Slot.class.getSimpleName(), localObject.getId()));
-		
-		slot.setSchedule(new Reference(new IdType(Schedule.class.getSimpleName(),
-			appointmentService.getAreaByNameOrId(localObject.getSchedule()).getId())));
-		
-		slot.setStatus(appointmentHelper.getSlotStatus(localObject));
-		
-		LocalDateTime start = localObject.getStartTime();
-		if (start != null) {
-			Date start_ = Date.from(ZonedDateTime.of(start, ZoneId.systemDefault()).toInstant());
-			slot.setStart(start_);
-		} else {
-			// TODO is required - what now?
-		}
-		
-		LocalDateTime end = localObject.getEndTime();
-		if (end != null) {
-			Date end_ = Date.from(ZonedDateTime.of(end, ZoneId.systemDefault()).toInstant());
-			slot.setEnd(end_);
-		} else {
-			// TODO is required - what now?
-		}
-		
+		attributeMapper.elexisToFhir(localObject, slot, summaryEnum, includes);
 		return Optional.of(slot);
 	}
 	
@@ -87,7 +56,10 @@ public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointmen
 	
 	@Override
 	public Optional<IAppointment> createLocalObject(Slot fhirObject){
-		return Optional.empty();
+		IAppointment create = modelService.create(IAppointment.class);
+		attributeMapper.fhirToElexis(fhirObject, create);
+		modelService.save(create);
+		return Optional.of(create);
 	}
 	
 	@Override

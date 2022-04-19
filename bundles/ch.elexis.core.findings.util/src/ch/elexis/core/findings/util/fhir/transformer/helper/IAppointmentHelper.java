@@ -7,28 +7,12 @@ import java.util.Date;
 
 import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.Extension;
-import org.hl7.fhir.r4.model.Slot.SlotStatus;
 import org.hl7.fhir.r4.model.StringType;
 
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IConfigService;
 
 public class IAppointmentHelper extends AbstractHelper {
-	
-	public SlotStatus getSlotStatus(IAppointment localObject){
-		String type = localObject.getType();
-		
-		// TODO we need a dynamic mapping in the core, like it
-		// is already present for RH, for example:
-		switch (type) {
-		case "frei":
-			return SlotStatus.FREE;
-		case "gesperrt":
-			return SlotStatus.BUSYUNAVAILABLE;
-		default:
-			return SlotStatus.BUSY;
-		}
-	}
 	
 	public String getDescription(IAppointment localObject){
 		String grund = localObject.getReason();
@@ -39,74 +23,93 @@ public class IAppointmentHelper extends AbstractHelper {
 	}
 	
 	/**
-	 * Map and apply the source status to the target status
+	 * ELEXIS -> FHIR: Map and apply the source state and type to the target status
 	 * 
 	 * @param target
 	 * @param source
 	 */
-	public void mapApplyAppointmentStatus(Appointment target, IAppointment source,
+	public void mapApplyAppointmentStatusType(Appointment target, IAppointment source,
 		IConfigService configService){
 		
-		String state = source.getState();
+		Extension extension = new Extension();
+		extension.setUrl("http://elexis.info/codeelement/config/appointment/");
 		
-		Extension statusExtension = new Extension();
-		statusExtension.setUrl("http://elexis.info/codeelement/config/appointment-status");
-		statusExtension.setValue(new StringType(state));
+		String state = source.getState();
+		Extension statusExtension = new Extension("state", new StringType(state));
+		extension.addExtension(statusExtension);
 		
 		// see ch.elexis.agenda.preferences.PreferenceConstants
 		String color = configService.getActiveUserContact("agenda/farben/status/" + state, null);
 		if (color != null) {
-			Extension ucc = new Extension("user-configured-color", new StringType("#" + color));
-			statusExtension.addExtension(ucc);
+			Extension ucc =
+				new Extension("status-user-configured-color", new StringType("#" + color));
+			extension.addExtension(ucc);
 		}
-	
-		target.getExtension().add(statusExtension);
-	}
-	
-	// TODO Extension contains both a value and nested extensions
-	// maybe change?
-	
-	public void mapApplyAppointmentType(Appointment target, IAppointment source,
-		IConfigService configService){
 		
 		String type = source.getType();
-		
-		Extension typeExtension = new Extension();
-		typeExtension.setUrl("http://elexis.info/codeelement/config/appointment-type");
-		typeExtension.setValue(new StringType(type));
+		Extension typeExtension = new Extension("type", new StringType(type));
+		extension.addExtension(typeExtension);
 		
 		// see ch.elexis.agenda.preferences.PreferenceConstants
-		String color = configService.getActiveUserContact("agenda/farben/typ/" + type, null);
+		color = configService.getActiveUserContact("agenda/farben/typ/" + type, null);
 		if (color != null) {
-			Extension ucc = new Extension("user-configured-color", new StringType("#" + color));
-			typeExtension.addExtension(ucc);
+			Extension ucc =
+				new Extension("type-user-configured-color", new StringType("#" + color));
+			extension.addExtension(ucc);
 		}
 		
-		target.getExtension().add(typeExtension);
+		target.getExtension().add(extension);
 	}
 	
 	/**
-	 * Map and apply start, end and duration
+	 * FHIR -> ELEXIS: Map and apply the source status and type to the target status
 	 * 
-	 * @param appointment
-	 * @param localObject
+	 * @param target
+	 * @param source
 	 */
-	public void mapApplyStartEndMinutes(Appointment appointment, IAppointment localObject){
-		LocalDateTime start = localObject.getStartTime();
+	public void mapApplyAppointmentStatusType(IAppointment target, Appointment source){
+		// FIXME all that is not set, is to be removed, otherwise how to depict deletes??
+		Extension extensionByUrl =
+			source.getExtensionByUrl("http://elexis.info/codeelement/config/appointment/");
+		if (extensionByUrl != null) {
+			Extension statusExtension = extensionByUrl.getExtensionByUrl("state");
+			if (statusExtension != null) {
+				String status = statusExtension.getValue().toString();
+				// TODO check if valid?
+				target.setState(status);
+			}
+			
+			Extension typeExtension = extensionByUrl.getExtensionByUrl("type");
+			if (typeExtension != null) {
+				String type = typeExtension.getValue().toString();
+				// TODO check if valid
+				target.setType(type);
+			}
+		}
+	}
+	
+	/**
+	 * ELEXIS -> FHIR: Map and apply start, end and duration
+	 * 
+	 * @param target
+	 * @param source
+	 */
+	public void mapApplyStartEndMinutes(Appointment target, IAppointment source){
+		LocalDateTime start = source.getStartTime();
 		if (start != null) {
 			Date start_ = Date.from(ZonedDateTime.of(start, ZoneId.systemDefault()).toInstant());
-			appointment.setStart(start_);
+			target.setStart(start_);
 		}
 		
-		LocalDateTime end = localObject.getEndTime();
+		LocalDateTime end = source.getEndTime();
 		if (end != null) {
 			Date end_ = Date.from(ZonedDateTime.of(end, ZoneId.systemDefault()).toInstant());
-			appointment.setEnd(end_);
+			target.setEnd(end_);
 		}
 		
-		Integer durationMinutes = localObject.getDurationMinutes();
+		Integer durationMinutes = source.getDurationMinutes();
 		if (durationMinutes != null) {
-			appointment.setMinutesDuration(durationMinutes);
+			target.setMinutesDuration(durationMinutes);
 		}
 	}
 	
