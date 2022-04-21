@@ -119,6 +119,7 @@ public class Desk implements IApplication {
 				String msg = String.format("Connection string differ po [%s] nopo [%s]", poConnectString, noPoConnectString);
 				log.error(msg);
 				System.err.println(msg);
+				return IApplication.EXIT_OK;
 			}
 		}
 		// check for initialization parameters
