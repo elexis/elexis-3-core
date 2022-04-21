@@ -1,3 +1,17 @@
-# chromium configuration
-instructions.configure=org.eclipse.equinox.p2.touchpoint.eclipse.addJvmArg(jvmArg:-Dchromium.args=--disable-web-security);
-instructions.unconfigure=org.eclipse.equinox.p2.touchpoint.eclipse.removeJvmArg(jvmArg:-Dchromium.args=--disable-web-security);
+#create a requirement on the IU fragment we are creating
+requires.2.namespace=org.eclipse.equinox.p2.iu
+requires.2.name=configure.ch.elexis.core.ui.feature.macosx.x86_64
+requires.2.range=[1.0.0,1.0.0]
+requires.2.greedy=true
+requires.2.filter=(&(osgi.os=macosx)(osgi.arch=x86_64))
+
+#create the IU fragment for macosx-x86_64
+units.0.id=configure.ch.elexis.core.ui.feature.macosx.x86_64
+units.0.version=1.0.0
+units.0.filter=(&(osgi.os=macosx)(osgi.arch=x86_64))
+units.0.provides.1.namespace=org.eclipse.equinox.p2.iu
+units.0.provides.1.name=configure.ch.elexis.core.ui.feature.macosx.x86_64
+units.0.provides.1.version=1.0.0
+units.0.instructions.configure=addJvmArg(jvmArg:-Dchromium.external_message_pump=true);
+units.0.instructions.unconfigure=removeJvmArg(jvmArg:-Dchromium.external_message_pump=true);
+units.0.instructions.configure.import=org.eclipse.equinox.p2.touchpoint.eclipse.addJvmArg,org.eclipse.equinox.p2.touchpoint.eclipse.removeJvmArg
