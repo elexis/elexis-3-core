@@ -56,12 +56,13 @@ public class IAppointmentAppointmentAttributeMapper
 		appointment.getMeta().setLastUpdated(
 			appointmentHelper.getLastUpdateAsDate(localObject.getLastupdate()).orElse(null));
 		
-		appointmentHelper.setText(appointment, localObject.getLabel());
+		// narrative
+		appointmentHelper.setNarrative(appointment, localObject.getLabel());
 		
 		// Currently formal status is always booked, "real" elexis status and type
 		// are transported via extension
 		appointment.setStatus(AppointmentStatus.BOOKED);
-		appointmentHelper.mapApplyAppointmentStatusType(appointment, localObject, configService);
+		appointmentHelper.mapApplyAppointmentStateAndType(appointment, localObject, configService);
 		
 		appointment.setDescription(appointmentHelper.getDescription(localObject));
 		
@@ -71,8 +72,9 @@ public class IAppointmentAppointmentAttributeMapper
 			new Reference(new IdType(Slot.class.getSimpleName(), localObject.getId()));
 		if (includes.contains(new Include("Appointment.slot"))) {
 			@SuppressWarnings("rawtypes")
-			Optional<IFhirTransformer> _slotTransformer = OsgiServiceUtil.getService(
-				IFhirTransformer.class, IFhirTransformer.TRANSFORMERID + "=Slot.IAppointment)");
+			Optional<IFhirTransformer> _slotTransformer =
+				OsgiServiceUtil.getService(IFhirTransformer.class,
+					"(" + IFhirTransformer.TRANSFORMERID + "=Slot.IAppointment)");
 			if (_slotTransformer.isPresent()) {
 				@SuppressWarnings("unchecked")
 				Slot _slot = (Slot) _slotTransformer.get().getFhirObject(localObject).orElse(null);
@@ -108,8 +110,9 @@ public class IAppointmentAppointmentAttributeMapper
 			
 			if (includes.contains(new Include("Appointment.patient"))) {
 				@SuppressWarnings("rawtypes")
-				Optional<IFhirTransformer> _patientTransformer = OsgiServiceUtil.getService(
-					IFhirTransformer.class, IFhirTransformer.TRANSFORMERID + "=Patient.IPatient)");
+				Optional<IFhirTransformer> _patientTransformer =
+					OsgiServiceUtil.getService(IFhirTransformer.class,
+						"(" + IFhirTransformer.TRANSFORMERID + "=Patient.IPatient)");
 				if (_patientTransformer.isPresent()) {
 					@SuppressWarnings("unchecked")
 					Patient _patient =
@@ -126,14 +129,29 @@ public class IAppointmentAppointmentAttributeMapper
 			String subjectOrPatient = localObject.getSubjectOrPatient();
 		}
 		
+		// TODO status history??
+		
 	}
 	
 	@Override
 	public void fhirToElexis(Appointment source, IAppointment target){
 		
-		appointmentHelper.mapApplyAppointmentStatusType(target, source);
+		appointmentHelper.mapApplyAppointmentStateAndType(target, source);
 		
+		target.setReason(source.getDescription());
 		
+		target.setSubjectOrPatient(null);
+		
+		List<AppointmentParticipantComponent> participant = source.getParticipant();
+		for (AppointmentParticipantComponent appointmentParticipantComponent : participant) {
+			Reference actorTarget = appointmentParticipantComponent.getActor();
+			IdType idType = new IdType(actorTarget.getReference());
+			if (Patient.class.getSimpleName().equals(idType.getResourceType())) {
+				target.setSubjectOrPatient(idType.getIdPart());
+			}
+		}
+		
+		// TODO what else in subject or patient if no patient set?
 	}
 	
 }

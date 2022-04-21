@@ -49,7 +49,7 @@ public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, 
 		coverage.addIdentifier(getElexisObjectIdentifier(localObject));
 		
 		// Bezeichnung
-		coverageHelper.setText(coverage, coverageHelper.getFallText(localObject));
+		coverageHelper.setNarrative(coverage, coverageHelper.getFallText(localObject));
 		
 		CodeableConcept type = new CodeableConcept();
 		

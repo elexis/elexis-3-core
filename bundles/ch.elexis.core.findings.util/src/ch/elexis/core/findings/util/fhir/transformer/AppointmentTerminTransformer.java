@@ -14,7 +14,6 @@ import ch.elexis.core.findings.util.fhir.transformer.mapper.IAppointmentAppointm
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IConfigService;
-import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 
 @Component
@@ -26,9 +25,6 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 	
 	@org.osgi.service.component.annotations.Reference
 	private IAppointmentService appointmentService;
-	
-	@org.osgi.service.component.annotations.Reference
-	private IContextService contextService;
 	
 	@org.osgi.service.component.annotations.Reference
 	private IConfigService configService;
@@ -57,14 +53,9 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 	
 	@Override
 	public Optional<IAppointment> createLocalObject(Appointment fhirObject){
-		
-		//		fhirObject.getExtensionByUrl("")
-		
-		//				String area = appointmentHelper.mapSchedule(coreModelService, appointmentService, fhirObject);
-		//		System.out.println(area);
-		// TODO to determine bereich may require Slot first?
+		// requires an assigned area/schedule, which is accessible via Slot only
 		throw new UnsupportedOperationException(
-			"Create Slot first, then perform update operation returned Slot Id");
+			"Create Slot first, then perform update operation using Slot id.");
 	}
 	
 	@Override

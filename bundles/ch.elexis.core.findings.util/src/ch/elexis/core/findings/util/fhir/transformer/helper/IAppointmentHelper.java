@@ -28,7 +28,7 @@ public class IAppointmentHelper extends AbstractHelper {
 	 * @param target
 	 * @param source
 	 */
-	public void mapApplyAppointmentStatusType(Appointment target, IAppointment source,
+	public void mapApplyAppointmentStateAndType(Appointment target, IAppointment source,
 		IConfigService configService){
 		
 		Extension extension = new Extension();
@@ -67,7 +67,7 @@ public class IAppointmentHelper extends AbstractHelper {
 	 * @param target
 	 * @param source
 	 */
-	public void mapApplyAppointmentStatusType(IAppointment target, Appointment source){
+	public void mapApplyAppointmentStateAndType(IAppointment target, Appointment source){
 		// FIXME all that is not set, is to be removed, otherwise how to depict deletes??
 		Extension extensionByUrl =
 			source.getExtensionByUrl("http://elexis.info/codeelement/config/appointment/");
@@ -86,6 +86,7 @@ public class IAppointmentHelper extends AbstractHelper {
 				target.setType(type);
 			}
 		}
+		// FIXME what if none set?
 	}
 	
 	/**

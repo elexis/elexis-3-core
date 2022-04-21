@@ -85,7 +85,7 @@ private static Logger logger = LoggerFactory.getLogger(AbstractHelper.class);
 		LocalLockServiceHolder.get().releaseLock(lockInfo);
 	}
 	
-	public void setText(DomainResource domainResource, String text){
+	public void setNarrative(DomainResource domainResource, String text){
 		Narrative narrative = domainResource.getText();
 		if (narrative == null) {
 			narrative = new Narrative();
