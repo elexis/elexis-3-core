@@ -2,16 +2,26 @@ package ch.elexis.core.ui.medication.views;
 
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.Identifiable;
@@ -55,6 +65,25 @@ public class MedicationHistoryTableComposite extends Composite {
 					ContextServiceHolder.get().getRootContext().removeTyped(IPrescription.class);
 				}
 			}
+		});
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event){
+				StructuredSelection ss = (StructuredSelection) event.getSelection();
+				if (ss != null && !ss.isEmpty()) {
+					try {
+						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow().getService(IHandlerService.class);
+						handlerService.executeCommand(
+							"ch.elexis.core.ui.medication.OpenArticelDetailDialog", null);
+					} catch (ExecutionException | NotDefinedException | NotEnabledException
+							| NotHandledException e) {
+						MessageDialog.openError(getShell(), "Fehler",
+							"Eigenschaften konnten nicht geöffnet werden.");
+					}
+				}
+			}
+			
 		});
 		
 		MedicationViewerHelper.createTypeColumn(viewer, layout, 0);
