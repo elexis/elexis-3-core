@@ -407,7 +407,7 @@ public class KonsDetailView extends ViewPart
 			}
 			
 		});
-		hlMandant.setBackground(p.getBackground());
+//		hlMandant.setBackground(p.getBackground());
 		
 		comboViewerFall = new ComboViewer(form.getBody(), SWT.SINGLE);
 		comboViewerFall.setContentProvider(ArrayContentProvider.getInstance());
@@ -598,7 +598,7 @@ public class KonsDetailView extends ViewPart
 			StringBuilder sb = new StringBuilder();
 			if (mandator == null) {
 				sb.append(Messages.KonsDetailView_NotYours); // $NON-NLS-1$
-				hlMandant.setBackground(hlMandant.getParent().getBackground());
+//				hlMandant.setBackground(hlMandant.getParent().getBackground());
 			} else {
 				IContact biller = mandator.getBiller();
 				if (biller.getId().equals(mandator.getId())) {
@@ -607,8 +607,8 @@ public class KonsDetailView extends ViewPart
 					sb.append("(").append(mandator.getLabel()).append("/").append( //$NON-NLS-1$ //$NON-NLS-2$
 						biller.getLabel()).append(")"); //$NON-NLS-1$
 				}
-				hlMandant
-					.setBackground(UiMandant.getColorForMandator(Mandant.load(mandator.getId())));
+//				hlMandant
+//					.setBackground(UiMandant.getColorForMandator(Mandant.load(mandator.getId())));
 			}
 			hlMandant.setText(sb.toString());
 			
@@ -624,24 +624,24 @@ public class KonsDetailView extends ViewPart
 			if (BillingServiceHolder.get().isEditable(encounter).isOK()) {
 				text.setEnabled(true);
 				text.setToolTipText("");
-				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
-				lBeh.setBackground(defaultBackground);
+//				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
+//				lBeh.setBackground(defaultBackground);
 			} else {
 				text.setToolTipText("Konsultation geschlossen oder nicht von Ihnen");
-				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_GREY60));
-				lBeh.setBackground(UiDesk.getColor(UiDesk.COL_GREY20));
+//				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_GREY60));
+//				lBeh.setBackground(UiDesk.getColor(UiDesk.COL_GREY20));
 			}
 			if (encounter.getDate().isEqual(LocalDate.now())) {
-				text.setTextBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+//				text.setTextBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 			} else {
-				text.setTextBackground(UiDesk.getColorFromRGB("FAFAFA"));
+//				text.setTextBackground(UiDesk.getColorFromRGB("FAFAFA"));
 			}
 		} else {
 			form.setText(NO_CONS_SELECTED);
 			lBeh.setText("-"); //$NON-NLS-1$
 			hlMandant.setText("--"); //$NON-NLS-1$
 			hlMandant.setEnabled(false);
-			hlMandant.setBackground(hlMandant.getParent().getBackground());
+//			hlMandant.setBackground(hlMandant.getParent().getBackground());
 			diagnosesDisplay.clear();
 			billedDisplay.clear();
 			text.setText(""); //$NON-NLS-1$

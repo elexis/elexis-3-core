@@ -202,7 +202,6 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		TransparentTextModificationLockHandler atmlh =
 			new TransparentTextModificationLockHandler(this);
 		text.addVerifyKeyListener(atmlh);
-		setBackground(UiDesk.getColor(UiDesk.COL_BLUE));
 		dropper = new ETFDropReceiver(this);
 		menuMgr = new MenuManager();
 		menuMgr.setRemoveAllWhenShown(true);
@@ -879,16 +878,16 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		if(unlocked) {
 			text.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 		} else {
-			text.setForeground(UiDesk.getColor(UiDesk.COL_DARKGREY));
+//			text.setForeground(UiDesk.getColor(UiDesk.COL_DARKGREY));
 		}
 	}
 	
-	public void setTextBackground(Color color){
-		if (text != null && !text.isDisposed()) {
-			text.setBackground(color);
-		}
-	}
-	
+//	public void setTextBackground(Color color){
+//		if (text != null && !text.isDisposed()) {
+//			text.setBackground(color);
+//		}
+//	}
+//	
 	protected boolean isUnlocked(){
 		return unlocked;
 	}
