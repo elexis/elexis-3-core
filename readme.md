@@ -83,9 +83,12 @@ Window..Preferences:
 -   General..Workspace
     -   Select UTF-8 as "Textfile encoding"
     -   Select UNIX as "New text file line delimiter"
+-   Java..Code Style..Formatter
+    - Click on "Import.." and select the Eclipse_builtin.xml from the root directory of the elexis-3-core checkout
+-   Java..Code Style..Formatter and select as active profile "Eclipse [built-in]
 -   Java..Editor..Save Action
     -   Select: Perform the selected actions on save
-    -   Do NOT select: Format source code
+    -   Select: Format source code and Format edited lines
     -   Select: Organize imports
     -   Do NOT select: Additional actions
 -   Maven..Errors/Warning
@@ -102,7 +105,10 @@ our developers still use VT-80 terminals.
 To ensure a consistent look, we use the [this pre-commit framework](https://pre-commit.com/).
 For details have look at the [.pre-commit-config.yaml](https:.pre-commit-config.yaml)
 
-To use it, install the pre-commit framework, either via your distribution or via `pip install pre-commit`. Under Debian run `apt install pre-commit`. The call once `pre-commit install` to activate the pre-commit trigger for git.
+To use it, install the pre-commit framework, either via your distribution or via `pip install pre-commit`.
+Under Debian run `apt install pre-commit`. The call once `pre-commit install` to activate the pre-commit
+trigger for git. This is not mandatory, as for pull requests this is action runs automatically.
+
 
 The different parts can be run on the command line, eg. 
 
@@ -121,17 +127,14 @@ Sorting bundles/ch.elexis.core/src/ch/elexis/core/model/ch/messages_it.propertie
 ```
 
 At the moment we use the following hooks:
+* enforce-eclipse-format
+  As the enforce-eclipse-format **takes a long time** (over 60 seconds on my machine) it is only called **manually** and as a **github action on pull-requests**. To run it call: `pre-commit run --hook-stage manual enforce-eclipse-format`
 * check-xml
 * check-yaml
 * file-contents-sorter
 * trailing-whitespace
 * mixed-line-ending
 * end-of-file-fixer
-* enforce-eclipse-format
-
-As the enforce-eclipse-format **takes a long time** (over 60 seconds on my machine) it is only called **manually** and as a **github action on pull-requests**. To run it call:
-
-`pre-commit run --hook-stage manual enforce-eclipse-format`
 
 ### Submitting patches
 
