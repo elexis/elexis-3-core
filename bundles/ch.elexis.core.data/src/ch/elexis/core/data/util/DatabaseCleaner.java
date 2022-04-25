@@ -87,7 +87,7 @@ public class DatabaseCleaner {
 					Fall f = k.getFall();
 					Patient pat = f.getPatient();
 					note(Messages.DatabaseCleaner_concerning + pat.getLabel() + ", " + f.getLabel() + ", " //$NON-NLS-1$ //$NON-NLS-2$
-							+ k.getLabel()); //$NON-NLS-3$
+							+ k.getLabel()); // $NON-NLS-3$
 				}
 				if (purge) {
 					PersistentObject.getConnection()

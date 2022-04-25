@@ -121,7 +121,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 				return doImport(monitor);
 			} catch (Exception e) {
 				return new Status(Status.ERROR, Hub.PLUGIN_ID, Messages.ImporterPage_importError + " " + e.getMessage(), //$NON-NLS-1$
-						e); //$NON-NLS-2$
+						e); // $NON-NLS-2$
 			}
 		}
 	}
