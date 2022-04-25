@@ -11,7 +11,7 @@
 
 	<properties>
 		<elexis.target>2021-09-java11</elexis.target>
-
+    <formatterConfigFile>${env.PWD}/Eclipse_builtin.xml</formatterConfigFile>
 		<tycho.version>2.7.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
@@ -99,7 +99,21 @@
 	</profiles>
 	<build>
 		<plugins>
-			<plugin>
+        <plugin>
+            <groupId>net.revelc.code.formatter</groupId>
+            <artifactId>formatter-maven-plugin</artifactId>
+            <version>2.18.0</version>
+            <configuration>
+                <directories>
+                    <directory>${project.build.sourceDirectory}</directory>
+                    <directory>${project.basedir}/src</directory>
+                </directories>
+                <configFile>${formatterConfigFile}</configFile>
+                <lineEnding>KEEP</lineEnding>
+                <encoding>UTF-8</encoding>
+            </configuration>
+        </plugin>
+        <plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho.version}</version>
@@ -258,7 +272,12 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<plugin>
+					<groupId>net.revelc.code.formatter</groupId>
+					<artifactId>formatter-maven-plugin</artifactId>
+					<version>2.18.0</version>
+				</plugin>
+					<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>

@@ -1,0 +1,17 @@
+name: pre_commit
+on:
+  pull_request:
+  push:
+    branches-ignore: [ '3.6', '3.7', '3.8', '3.9']
+
+jobs:
+  build:
+    name: Enforce-Eclipse-Format
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+    - uses: actions/setup-python@v2
+    - uses: pre-commit/action@v2.0.3
+    - run: pre-commit run --all-files
+    - run: pre-commit run --hook-stage manual --all-files
