@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -39,11 +39,11 @@ import ch.elexis.core.ui.dialogs.AssignStickerDialog;
 import ch.elexis.core.ui.util.CoreUiUtil;
 
 public class StickerComposite extends Composite {
-	
+
 	private FormToolkit toolkit;
 	private IPatient actPatient;
-	
-	public StickerComposite(Composite parent, int style, FormToolkit toolkit){
+
+	public StickerComposite(Composite parent, int style, FormToolkit toolkit) {
 		super(parent, style);
 		setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP, 1, 1));
 		ColumnLayout cwl = new ColumnLayout();
@@ -58,8 +58,8 @@ public class StickerComposite extends Composite {
 		this.toolkit = toolkit;
 		this.setVisible(false);
 	}
-	
-	public static StickerComposite createWrappedStickerComposite(Composite parent, FormToolkit tk){
+
+	public static StickerComposite createWrappedStickerComposite(Composite parent, FormToolkit tk) {
 		Composite wrapper = new Composite(parent, SWT.NONE);
 		TableWrapLayout wlayout = new TableWrapLayout();
 		wlayout.bottomMargin = 0;
@@ -71,7 +71,7 @@ public class StickerComposite extends Composite {
 		stickerComposite.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 		return stickerComposite;
 	}
-	
+
 	public void setPatient(IPatient p) {
 		this.actPatient = p;
 		for (Control cc : getChildren()) {
@@ -93,15 +93,15 @@ public class StickerComposite extends Composite {
 					Menu menu = new Menu(stickerForm);
 					stickerForm.setMenu(menu);
 					stickerForm.setLayoutData(new ColumnLayoutData());
-					
+
 					MenuItem miAdd = createMenuItemAdd(menu);
 					final MenuItem miRemove = new MenuItem(menu, SWT.NONE);
 					miRemove.setData("sticker", et);
 					miRemove.setText("Sticker entfernen");
 					miRemove.addSelectionListener(new SelectionAdapter() {
-						
+
 						@Override
-						public void widgetSelected(SelectionEvent e){
+						public void widgetSelected(SelectionEvent e) {
 							MenuItem mi = (MenuItem) e.getSource();
 							ISticker et = (ISticker) mi.getData("sticker");
 							StickerServiceHolder.get().removeSticker(et, actPatient);
@@ -109,25 +109,23 @@ public class StickerComposite extends Composite {
 							setPatient(actPatient);
 							getParent().getParent().layout(true);
 						}
-						
+
 					});
 					menu.addMenuListener(new MenuAdapter() {
-						
+
 						@Override
-						public void menuShown(MenuEvent e){
-							miRemove.setEnabled(
-								CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
-							miAdd.setEnabled(
-								CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
+						public void menuShown(MenuEvent e) {
+							miRemove.setEnabled(CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
+							miAdd.setEnabled(CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
 						}
 					});
-					
+
 				}
 			}
 		} else {
 			this.setVisible(true);
 			Menu menu = new Menu(this);
-		    setMenu(menu);
+			setMenu(menu);
 			createMenuItemAdd(menu);
 		}
 		layout();
@@ -137,22 +135,20 @@ public class StickerComposite extends Composite {
 		final MenuItem miAdd = new MenuItem(menu, SWT.NONE);
 		miAdd.setText("Sticker hinzufügen");
 		miAdd.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
-				
-				AssignStickerDialog assignStickerDialog =
-						new AssignStickerDialog(getShell(), actPatient);
+			public void widgetSelected(SelectionEvent e) {
+
+				AssignStickerDialog assignStickerDialog = new AssignStickerDialog(getShell(), actPatient);
 				if (assignStickerDialog.open() == MessageDialog.OK) {
 					// refresh
 					setPatient(actPatient);
 					getParent().getParent().layout(true);
 				}
 			}
-			
+
 		});
-		miAdd.setEnabled(
-			CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
+		miAdd.setEnabled(CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
 		return miAdd;
 	}
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.dialogs;
@@ -54,9 +54,8 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 	private final java.util.List<LabResult> labResultList;
 	private TimeTool date = null;
 	private IDocumentManager docManager;
-	
-	public DisplayLabDokumenteDialog(Shell parentShell, String _title,
-		java.util.List<LabResult> _labResultList){
+
+	public DisplayLabDokumenteDialog(Shell parentShell, String _title, java.util.List<LabResult> _labResultList) {
 		super(parentShell);
 		title = _title;
 		labResultList = _labResultList;
@@ -65,11 +64,11 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 		}
 		initDocumentManager();
 	}
-	
+
 	/**
 	 * Initialisiert document manager (omnivore) falls vorhanden
 	 */
-	private void initDocumentManager(){
+	private void initDocumentManager() {
 		TimeTool today = new TimeTool();
 		today.setTime(new Date());
 		Object os = Extensions.findBestService(GlobalServiceDescriptors.DOCUMENT_MANAGEMENT);
@@ -77,34 +76,34 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 			this.docManager = (IDocumentManager) os;
 		}
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite composite = new Composite(parent, SWT.BORDER);
 		composite.setLayout(new GridLayout(1, true));
 		composite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		
+
 		final List list = new List(composite, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(list);
 		for (LabResult lr : this.labResultList) {
 			list.add(lr.getResult());
 		}
-		
+
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (docManager != null && list.getSelectionCount() > 0) {
 					openDocument(list.getSelection()[0]);
 				}
 			}
 		});
-		
+
 		SWTHelper.center(UiDesk.getTopShell(), getShell());
 		return composite;
 	}
-	
+
 	@Override
-	public int open(){
+	public int open() {
 		if (this.labResultList != null && this.labResultList.size() == 1) {
 			openDocument(this.labResultList.get(0).getResult());
 			return OK;
@@ -112,42 +111,39 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 			return super.open();
 		}
 	}
-	
+
 	/**
 	 * Opens a document in a system viewer
-	 * 
+	 *
 	 * @param document
 	 */
-	private void openDocument(String docName){
+	private void openDocument(String docName) {
 		Patient patient = ElexisEventDispatcher.getSelectedPatient();
 		try {
 			if (this.docManager != null) {
-				java.util.List<IOpaqueDocument> documentList =
-					this.docManager.listDocuments(patient, null, docName, null, new TimeSpan(
-						this.date, this.date), null);
+				java.util.List<IOpaqueDocument> documentList = this.docManager.listDocuments(patient, null, docName,
+						null, new TimeSpan(this.date, this.date), null);
 				if (documentList == null || documentList.size() == 0) {
-					throw new IOException(MessageFormat.format("Dokument {0} nicht vorhanden!",
-						docName));
+					throw new IOException(MessageFormat.format("Dokument {0} nicht vorhanden!", docName));
 				}
 				int counter = 0;
 				for (IOpaqueDocument document : documentList) {
-					String fileExtension = null; 
+					String fileExtension = null;
 					try {
 						MimeType docMimeType = new MimeType(document.getMimeType());
 						fileExtension = MimeTool.getExtension(docMimeType.toString());
-					}
-					catch(MimeTypeParseException mpe) {
+					} catch (MimeTypeParseException mpe) {
 						fileExtension = FileTool.getExtension(document.getMimeType());
-						
-						if(fileExtension == null) {
+
+						if (fileExtension == null) {
 							fileExtension = FileTool.getExtension(docName);
 						}
 					}
-					
-					if(fileExtension == null) {
+
+					if (fileExtension == null) {
 						fileExtension = "";
 					}
-					
+
 					File temp = File.createTempFile("lab" + counter, "doc." + fileExtension); //$NON-NLS-1$ //$NON-NLS-2$
 					temp.deleteOnExit();
 					byte[] b = document.getContentsAsBytes();
@@ -157,7 +153,7 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 					FileOutputStream fos = new FileOutputStream(temp);
 					fos.write(b);
 					fos.close();
-					
+
 					Program proggie = Program.findProgram(FileTool.getExtension(fileExtension));
 					if (proggie != null) {
 						proggie.execute(temp.getAbsolutePath());
@@ -173,15 +169,15 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 			SWTHelper.showError("Fehler beim Öffnen des Dokumentes", ex.getMessage());
 		}
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		getShell().setText(this.title);
 		Patient sp = ElexisEventDispatcher.getSelectedPatient();
-		setTitle((sp!=null) ? sp.getLabel() : "missing patient name"); //$NON-NLS-1$
+		setTitle((sp != null) ? sp.getLabel() : "missing patient name"); //$NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 		SWTHelper.center(getShell());
 	}
-	
+
 }

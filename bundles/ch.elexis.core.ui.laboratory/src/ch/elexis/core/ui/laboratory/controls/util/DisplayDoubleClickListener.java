@@ -19,16 +19,16 @@ import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 
 public class DisplayDoubleClickListener implements IDoubleClickListener {
-	
+
 	private static Font dialogFont = null;
 	private LaborResultsComposite composite;
-	
-	public DisplayDoubleClickListener(LaborResultsComposite composite){
+
+	public DisplayDoubleClickListener(LaborResultsComposite composite) {
 		this.composite = composite;
 	}
 
 	@Override
-	public void doubleClick(DoubleClickEvent event){
+	public void doubleClick(DoubleClickEvent event) {
 		List<LabResult> results = composite.getSelectedResults();
 		if (results != null) {
 			for (LabResult labResult : results) {
@@ -36,14 +36,12 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 			}
 		}
 	}
-	
-	private void openDisplayDialog(LabResult labResult){
+
+	private void openDisplayDialog(LabResult labResult) {
 		ILabItem labItem = labResult.getItem();
 		if (labItem.getTyp().equals(LabItemTyp.TEXT) || (labResult.getComment().length() > 0)) {
-			DisplayTextDialog dlg =
-				new DisplayTextDialog(composite.getShell(),
-					Messages.LaborResultsComposite_textResultTitle, labItem.getName(),
-					labResult.getComment());
+			DisplayTextDialog dlg = new DisplayTextDialog(composite.getShell(),
+					Messages.LaborResultsComposite_textResultTitle, labItem.getName(), labResult.getComment());
 			// HL7 Befunde enthalten oft mit Leerzeichen formatierte Bemerkungen,
 			// die nur mit nicht-proportionalen Fonts dargestellt werden k��nnen
 			// Wir versuchen also, die Anzeige mit Courier New, ohne zu wissen ob die
@@ -68,9 +66,8 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 		} else if (labItem.getTyp().equals(LabItemTyp.DOCUMENT)) {
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			if (patient != null) {
-				new DisplayLabDokumenteDialog(composite.getShell(),
-					Messages.LaborResultsComposite_Documents, Collections.singletonList(labResult))
-					.open();//$NON-NLS-1$
+				new DisplayLabDokumenteDialog(composite.getShell(), Messages.LaborResultsComposite_Documents,
+						Collections.singletonList(labResult)).open();// $NON-NLS-1$
 			}
 		}
 	}

@@ -20,10 +20,9 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.StockEntry;
 
-public class StockEntryLabelProvider extends LabelProvider
-		implements ITableLabelProvider, ITableColorProvider {
-	
-	public Image getColumnImage(Object element, int columnIndex){
+public class StockEntryLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
+
+	public Image getColumnImage(Object element, int columnIndex) {
 		if (element instanceof IStockEntry && columnIndex == 0) {
 			IStockEntry se = (IStockEntry) element;
 			IOrderEntry order = OrderServiceHolder.get().findOpenOrderEntryForStockEntry(se);
@@ -33,8 +32,8 @@ public class StockEntryLabelProvider extends LabelProvider
 		}
 		return null;
 	}
-	
-	public String getColumnText(Object element, int columnIndex){
+
+	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof IStockEntry) {
 			IStockEntry se = (IStockEntry) element;
 			IArticle article = se.getArticle();
@@ -54,8 +53,7 @@ public class StockEntryLabelProvider extends LabelProvider
 			case 3:
 				return (article != null) ? article.getLabel() : "";
 			case 4:
-				return (article != null && article.getSellingPrice() != null)
-						? article.getSellingPrice().toString()
+				return (article != null && article.getSellingPrice() != null) ? article.getSellingPrice().toString()
 						: "";
 			case 5:
 				return Integer.toString(se.getMinimumStock());
@@ -64,8 +62,7 @@ public class StockEntryLabelProvider extends LabelProvider
 			case 7:
 				return Integer.toString(se.getMaximumStock());
 			case 8:
-				return (se.getProvider() != null) ? se.getProvider().getLabel()
-						: StringConstants.EMPTY;
+				return (se.getProvider() != null) ? se.getProvider().getLabel() : StringConstants.EMPTY;
 			default:
 				return StringConstants.EMPTY;
 			}
@@ -76,14 +73,15 @@ public class StockEntryLabelProvider extends LabelProvider
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Lagerartikel are shown in blue, articles that should be ordered are shown in red
+	 * Lagerartikel are shown in blue, articles that should be ordered are shown in
+	 * red
 	 */
-	public Color getForeground(Object element, int columnIndex){
+	public Color getForeground(Object element, int columnIndex) {
 		if (element instanceof IStockEntry) {
 			IStockEntry se = (IStockEntry) element;
-			
+
 			Availability availability = StockServiceHolder.get().determineAvailability(se);
 			if (availability != null) {
 				switch (availability) {
@@ -97,8 +95,8 @@ public class StockEntryLabelProvider extends LabelProvider
 		}
 		return null;
 	}
-	
-	public Color getBackground(Object element, int columnIndex){
+
+	public Color getBackground(Object element, int columnIndex) {
 		if (element instanceof StockEntry) {
 			StockEntry se = (StockEntry) element;
 			Mandant owner = se.getStock().getOwner();
@@ -108,33 +106,33 @@ public class StockEntryLabelProvider extends LabelProvider
 		}
 		return null;
 	}
-	
+
 	public static class ColumnStockEntryLabelProvider extends ColumnLabelProvider {
 		private int index;
 		private StockEntryLabelProvider labelProvider;
-		
-		public ColumnStockEntryLabelProvider(int index, StockEntryLabelProvider labelProvider){
+
+		public ColumnStockEntryLabelProvider(int index, StockEntryLabelProvider labelProvider) {
 			this.labelProvider = labelProvider;
 			this.index = index;
 		}
-		
+
 		@Override
-		public String getText(Object element){
+		public String getText(Object element) {
 			return labelProvider.getColumnText(element, index);
 		}
-		
+
 		@Override
-		public Image getImage(Object element){
+		public Image getImage(Object element) {
 			return labelProvider.getColumnImage(element, index);
 		}
-		
+
 		@Override
-		public Color getForeground(Object element){
+		public Color getForeground(Object element) {
 			return labelProvider.getForeground(element, index);
 		}
-		
+
 		@Override
-		public Color getBackground(Object element){
+		public Color getBackground(Object element) {
 			return labelProvider.getBackground(element, index);
 		}
 	}

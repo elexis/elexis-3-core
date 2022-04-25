@@ -9,31 +9,31 @@ import ch.elexis.core.model.util.internal.ModelUtil;
 
 public class Role extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Role>
 		implements IdentifiableWithXid, IRole {
-	
-	public Role(ch.elexis.core.jpa.entities.Role entity){
+
+	public Role(ch.elexis.core.jpa.entities.Role entity) {
 		super(entity);
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		getEntityMarkDirty().setId(id);
 	}
-	
+
 	@Override
-	public boolean isSystemRole(){
+	public boolean isSystemRole() {
 		return getEntity().isSystemRole();
 	}
-	
+
 	@Override
-	public void setSystemRole(boolean value){
+	public void setSystemRole(boolean value) {
 		getEntityMarkDirty().setSystemRole(value);
 	}
 
 	@Override
-	public List<IRight> getAssignedRights(){
+	public List<IRight> getAssignedRights() {
 		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getRights().parallelStream().filter(f -> !f.isDeleted())
-			.map(f -> ModelUtil.getAdapter(f, IRight.class, true)).collect(Collectors.toList());
+				.map(f -> ModelUtil.getAdapter(f, IRight.class, true)).collect(Collectors.toList());
 	}
-	
+
 }

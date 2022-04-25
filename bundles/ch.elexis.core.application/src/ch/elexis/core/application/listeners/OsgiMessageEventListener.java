@@ -13,19 +13,16 @@ import ch.elexis.core.ui.UiDesk;
 
 @Component(property = EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE_NOTIFICATION + "*")
 public class OsgiMessageEventListener implements EventHandler {
-	
+
 	@Override
-	public void handleEvent(Event event){
-		final String topic =
-			event.getTopic().substring(ElexisEventTopics.BASE_NOTIFICATION.length());
-		final String title =
-			(String) event.getProperty(ElexisEventTopics.NOTIFICATION_PROPKEY_TITLE);
-		final String message =
-			(String) event.getProperty(ElexisEventTopics.NOTIFICATION_PROPKEY_MESSAGE);
-		
+	public void handleEvent(Event event) {
+		final String topic = event.getTopic().substring(ElexisEventTopics.BASE_NOTIFICATION.length());
+		final String title = (String) event.getProperty(ElexisEventTopics.NOTIFICATION_PROPKEY_TITLE);
+		final String message = (String) event.getProperty(ElexisEventTopics.NOTIFICATION_PROPKEY_MESSAGE);
+
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
-			public void run(){
+			public void run() {
 				switch (topic) {
 				case "error":
 					MessageDialog.openError(UiDesk.getTopShell(), title, message);
@@ -37,13 +34,13 @@ public class OsgiMessageEventListener implements EventHandler {
 					MessageDialog.openInformation(UiDesk.getTopShell(), title, message);
 					break;
 				default:
-					LoggerFactory.getLogger(getClass()).error(
-						"invalid topic [" + topic + "] for message: " + title + "/" + message);
+					LoggerFactory.getLogger(getClass())
+							.error("invalid topic [" + topic + "] for message: " + title + "/" + message);
 					break;
 				}
 			}
 		});
-		
+
 	}
-	
+
 }

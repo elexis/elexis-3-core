@@ -50,31 +50,32 @@ import ch.elexis.hl7.model.OrcMessage;
 import ch.rgw.tools.TimeTool;
 
 /**
- * Utility class that provides basic functionality a Lab importer implementation needs. Lab
- * importers should use this class!
- * 
+ * Utility class that provides basic functionality a Lab importer implementation
+ * needs. Lab importers should use this class!
+ *
  * @author thomashu
- * 
+ *
  */
 @Component
 public class LabImportUtil implements ILabImportUtil {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(LabImportUtil.class);
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
-	
+
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL, target = "(storeid=ch.elexis.data.store.omnivore)")
 	private IDocumentStore documentStore;
-	
+
 	/**
-	 * Searches for a Labor matching the identifier as part of the Kuerzel or Name attribute. If no
-	 * matching Labor is found, a new Labor is created with identifier as Kuerzel.
-	 * 
+	 * Searches for a Labor matching the identifier as part of the Kuerzel or Name
+	 * attribute. If no matching Labor is found, a new Labor is created with
+	 * identifier as Kuerzel.
+	 *
 	 * @param identifier
 	 * @return
 	 */
-	public ILaboratory getOrCreateLabor(String identifier){
+	public ILaboratory getOrCreateLabor(String identifier) {
 		if (identifier == null || identifier.isEmpty()) {
 			throw new IllegalArgumentException("Labor identifier [" + identifier + "] invalid.");
 		}
@@ -82,71 +83,64 @@ public class LabImportUtil implements ILabImportUtil {
 		IQuery<ILaboratory> query = modelService.getQuery(ILaboratory.class);
 		query.startGroup();
 		query.or(ModelPackage.Literals.ICONTACT__CODE, COMPARATOR.LIKE, "%" + identifier + "%");
-		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE,
-			"%" + identifier + "%");
+		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "%" + identifier + "%");
 		List<ILaboratory> results = query.execute();
 		if (results.isEmpty()) {
 			ret = modelService.create(ILaboratory.class);
 			ret.setCode(identifier);
 			ret.setDescription1("Labor " + identifier);
 			modelService.save(ret);
-			logger.warn(
-				"Found no Labor for identifier [" + identifier + "]. Created new Labor contact.");
+			logger.warn("Found no Labor for identifier [" + identifier + "]. Created new Labor contact.");
 		} else {
 			ret = results.get(0);
 			if (results.size() > 1) {
 				logger.warn("Found more than one Labor for identifier [" + identifier
-					+ "]. This can cause problems when importing results.");
+						+ "]. This can cause problems when importing results.");
 			}
 		}
 		return ret;
 	}
-	
-	public ILaboratory getLinkLabor(String identifier,
-		IContactResolver<ILaboratory> contactResolver){
+
+	public ILaboratory getLinkLabor(String identifier, IContactResolver<ILaboratory> contactResolver) {
 		if (identifier == null || identifier.isEmpty()) {
 			throw new IllegalArgumentException("Labor identifier [" + identifier + "] invalid.");
 		}
 		ILaboratory ret = null;
 		// check if there is a connection to an XID
 		IQuery<IXid> query = modelService.getQuery(IXid.class);
-		query.and(ModelPackage.Literals.IXID__DOMAIN, COMPARATOR.EQUALS,
-			XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY);
+		query.and(ModelPackage.Literals.IXID__DOMAIN, COMPARATOR.EQUALS, XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY);
 		query.and(ModelPackage.Literals.IXID__DOMAIN_ID, COMPARATOR.EQUALS, identifier);
 		List<IXid> xids = query.execute();
 		if (!xids.isEmpty()) {
 			if (xids.size() > 1) {
-				LoggerFactory.getLogger(getClass())
-					.error(xids.size() + " Laboratories found with xid ["
-						+ XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY + "] [" + identifier
-						+ "] using first");
+				LoggerFactory.getLogger(getClass()).error(xids.size() + " Laboratories found with xid ["
+						+ XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY + "] [" + identifier + "] using first");
 			}
 			return xids.get(0).getObject(ILaboratory.class);
 		} else if (contactResolver != null) {
-			ret = contactResolver
-				.getContact(Messages.LabImporterUtil_SelectLab + " [" + identifier + "]");
+			ret = contactResolver.getContact(Messages.LabImporterUtil_SelectLab + " [" + identifier + "]");
 			if (ret != null) {
 				ret.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, identifier, true);
 			}
 		}
 		return ret;
 	}
-	
+
 	/**
-	 * Searches for a LabItem with an existing LabMapping for the identifier and the labor. If there
-	 * is no LabMapping, for backwards compatibility the LaborId and Kürzel attributes of all
-	 * LabItems will be used to find a match.
-	 * 
+	 * Searches for a LabItem with an existing LabMapping for the identifier and the
+	 * labor. If there is no LabMapping, for backwards compatibility the LaborId and
+	 * Kürzel attributes of all LabItems will be used to find a match.
+	 *
 	 * @param identifier
 	 * @param labor
 	 * @return
 	 */
-	public ILabItem getLabItem(String identifier, ILaboratory labor){
+	public ILabItem getLabItem(String identifier, ILaboratory labor) {
 		ILabMapping mapping = getLabMapping(labor, identifier).orElse(null);
 		if (mapping != null) {
 			return mapping.getItem();
 		}
-		
+
 		ILabItem ret = null;
 		IQuery<ILabItem> query = modelService.getQuery(ILabItem.class);
 		query.and(ModelPackage.Literals.ILAB_ITEM__CODE, COMPARATOR.EQUALS, identifier);
@@ -154,46 +148,46 @@ public class LabImportUtil implements ILabImportUtil {
 		if (!list.isEmpty()) {
 			ret = list.get(0);
 			if (list.size() > 1) {
-				logger.warn(
-					"Found more than one LabItem for identifier [" + identifier + "] and Labor ["
-						+ labor + "]. This can cause problems when importing results.");
+				logger.warn("Found more than one LabItem for identifier [" + identifier + "] and Labor [" + labor
+						+ "]. This can cause problems when importing results.");
 			}
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Get a {@link ILabMapping} matching the {@link ILaboratory} and the itemName.
-	 * 
+	 *
 	 * @param laboratory
 	 * @param itemName
 	 * @return
 	 */
-	public Optional<ILabMapping> getLabMapping(ILaboratory labor, String itemName){
+	public Optional<ILabMapping> getLabMapping(ILaboratory labor, String itemName) {
 		List<ILabMapping> mappings = getLabMappings(labor, itemName);
 		if (!mappings.isEmpty()) {
 			if (mappings.size() > 1) {
-				throw new IllegalArgumentException(String.format(
-					"Found more then 1 mapping for origin id [%s] - [%s]", labor, itemName)); //$NON-NLS-1$
+				throw new IllegalArgumentException(
+						String.format("Found more then 1 mapping for origin id [%s] - [%s]", labor, itemName)); //$NON-NLS-1$
 			}
 			return Optional.of(mappings.get(0));
 		}
 		return Optional.empty();
 	}
-	
+
 	/**
-	 * Search for a LabResult with matching patient, item and timestamps. The timestamp attributes
-	 * can be null if not relevant for the search, but at least one timestamp has to be specified.
-	 * 
+	 * Search for a LabResult with matching patient, item and timestamps. The
+	 * timestamp attributes can be null if not relevant for the search, but at least
+	 * one timestamp has to be specified.
+	 *
 	 * @param patient
 	 * @param timestamp
 	 * @param item
 	 * @return
 	 */
 	@Override
-	public List<ILabResult> getLabResults(IPatient patient, ILabItem item, TimeTool date,
-		TimeTool analyseTime, TimeTool observationTime){
-		
+	public List<ILabResult> getLabResults(IPatient patient, ILabItem item, TimeTool date, TimeTool analyseTime,
+			TimeTool observationTime) {
+
 		if (date == null && analyseTime == null && observationTime == null) {
 			throw new IllegalArgumentException("No timestamp specified.");
 		}
@@ -202,24 +196,24 @@ public class LabImportUtil implements ILabImportUtil {
 		query.and(ModelPackage.Literals.ILAB_RESULT__PATIENT, COMPARATOR.EQUALS, patient);
 		query.and(ModelPackage.Literals.ILAB_RESULT__ITEM, COMPARATOR.EQUALS, item);
 		if (date != null) {
-			query.and(ModelPackage.Literals.ILAB_RESULT__DATE, COMPARATOR.EQUALS,
-				date.toLocalDate());
+			query.and(ModelPackage.Literals.ILAB_RESULT__DATE, COMPARATOR.EQUALS, date.toLocalDate());
 		}
 		if (analyseTime != null) {
 			query.and(ModelPackage.Literals.ILAB_RESULT__ANALYSE_TIME, COMPARATOR.EQUALS,
-				analyseTime.toLocalDateTime());
+					analyseTime.toLocalDateTime());
 		}
 		if (observationTime != null) {
 			query.and(ModelPackage.Literals.ILAB_RESULT__OBSERVATION_TIME, COMPARATOR.EQUALS,
-				observationTime.toLocalDateTime());
+					observationTime.toLocalDateTime());
 		}
 		return query.execute();
 	}
-	
+
 	/**
-	 * Import a list of TransientLabResults. Create LabOrder objects for new results.
+	 * Import a list of TransientLabResults. Create LabOrder objects for new
+	 * results.
 	 */
-	public String importLabResults(List<TransientLabResult> results, ImportHandler importHandler){
+	public String importLabResults(List<TransientLabResult> results, ImportHandler importHandler) {
 		boolean overWriteAll = false;
 		IMandator mandator = findMandatorForLabResults(results);
 		boolean newResult = false;
@@ -251,10 +245,10 @@ public class LabImportUtil implements ILabImportUtil {
 						logger.info("Result " + labResult.toString() + " already exists.");
 						continue;
 					}
-					
-					ImportHandler.OverwriteState retVal = importHandler.askOverwrite(
-						transientLabResult.getPatient(), labResult, transientLabResult);
-					
+
+					ImportHandler.OverwriteState retVal = importHandler.askOverwrite(transientLabResult.getPatient(),
+							labResult, transientLabResult);
+
 					if (retVal == ImportHandler.OverwriteState.OVERWRITE) {
 						LocalLockServiceHolder.get().acquireLock(labResult);
 						transientLabResult.overwriteExisting(labResult);
@@ -267,13 +261,13 @@ public class LabImportUtil implements ILabImportUtil {
 						LocalLockServiceHolder.get().releaseLock(labResult);
 						continue;
 					} else {
-						logger.info("Will not overwrite labResult [" + labResult.getId()
-							+ "] due to user decision.");
+						logger.info("Will not overwrite labResult [" + labResult.getId() + "] due to user decision.");
 					}
 				}
 			}
 		}
-		// if no result was created, no laborder was created, lookup existing orderid with 1st result
+		// if no result was created, no laborder was created, lookup existing orderid
+		// with 1st result
 		if (!newResult && !results.isEmpty()) {
 			List<ILabResult> existing = getExistingResults(results.get(0));
 			for (ILabResult iLabResult : existing) {
@@ -284,17 +278,17 @@ public class LabImportUtil implements ILabImportUtil {
 			}
 		}
 		modelService.postEvent(ElexisEventTopics.EVENT_RELOAD, ILabResult.class);
-		
+
 		return orderId;
 	}
-	
+
 	/**
 	 * Tries to find the {@link Mandant} Id for given {@link TransientLabResult}
-	 * 
+	 *
 	 * @param results
 	 * @return
 	 */
-	private IMandator findMandatorForLabResults(List<TransientLabResult> results){
+	private IMandator findMandatorForLabResults(List<TransientLabResult> results) {
 		if (results != null && !results.isEmpty()) {
 			TransientLabResult transientLabResult = results.get(0);
 			OrcMessage orcMessage = transientLabResult.getOrcMessage();
@@ -306,41 +300,34 @@ public class LabImportUtil implements ILabImportUtil {
 					if (size > 1) {
 						IQuery<IMandator> query = modelService.getQuery(IMandator.class);
 						query.startGroup();
-						query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE,
-							splitNames[0], true);
-						query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE,
-							splitNames[1], true);
+						query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, splitNames[0], true);
+						query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, splitNames[1], true);
 						query.startGroup();
-						query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE,
-							splitNames[1], true);
-						query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE,
-							splitNames[0], true);
+						query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, splitNames[1], true);
+						query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, splitNames[0], true);
 						query.orJoinGroups();
 						List<IMandator> result = query.execute();
 						if (result.size() == 1) {
-							logger.debug("labimport - mandantor [" + result.get(0)
-								+ "] found with orc name db match");
+							logger.debug("labimport - mandantor [" + result.get(0) + "] found with orc name db match");
 							return result.get(0);
 						}
 					}
 				}
 				logger.warn("labimport - " + orcMessage.getNames().toString()
-					+ " not found or not unique in db - try to find mandantor via last konsultation");
+						+ " not found or not unique in db - try to find mandantor via last konsultation");
 			}
-			
+
 			// case 2 try to find mandant via last consultation for patient
 			IPatient iPatient = transientLabResult.getPatient();
 			if (iPatient != null) {
-				Optional<IPatient> patient =
-					CoreModelServiceHolder.get().load(iPatient.getId(), IPatient.class);
+				Optional<IPatient> patient = CoreModelServiceHolder.get().load(iPatient.getId(), IPatient.class);
 				if (patient.isPresent()) {
-					Optional<IEncounter> konsultation =
-						EncounterServiceHolder.get().getLatestEncounter(patient.get());
+					Optional<IEncounter> konsultation = EncounterServiceHolder.get().getLatestEncounter(patient.get());
 					if (konsultation.isPresent()) {
 						IMandator mandant = konsultation.get().getMandator();
 						if (mandant != null && mandant.getId() != null) {
-							logger.debug("labimport - mandantor found [" + mandant.getId()
-								+ "] with last konsultation");
+							logger.debug(
+									"labimport - mandantor found [" + mandant.getId() + "] with last konsultation");
 							return modelService.load(mandant.getId(), IMandator.class).get();
 						}
 					}
@@ -351,38 +338,35 @@ public class LabImportUtil implements ILabImportUtil {
 		// case 3 use the current mandant
 		Optional<IMandator> mandant = ContextServiceHolder.get().getActiveMandator();
 		if (mandant.isPresent()) {
-			logger.debug(
-				"labimport - use the active selected mandantor [" + mandant.get().getId() + "]");
+			logger.debug("labimport - use the active selected mandantor [" + mandant.get().getId() + "]");
 			return modelService.load(mandant.get().getId(), IMandator.class).get();
 		}
-		throw new RuntimeException("No mandantor found!"); //should not happen!
+		throw new RuntimeException("No mandantor found!"); // should not happen!
 	}
-	
+
 	/**
-	 * Match for existing result with same item and date. Matching dates are checked for validity
-	 * (not same as transmission date).
-	 * 
+	 * Match for existing result with same item and date. Matching dates are checked
+	 * for validity (not same as transmission date).
+	 *
 	 * @param transientLabResult
 	 * @return
 	 */
-	private List<ILabResult> getExistingResults(TransientLabResult transientLabResult){
+	private List<ILabResult> getExistingResults(TransientLabResult transientLabResult) {
 		List<ILabResult> ret = Collections.emptyList();
-		
+
 		// don't overwrite documents
 		if (!transientLabResult.getLabItem().getTyp().equals(LabItemTyp.DOCUMENT)) {
 			if (transientLabResult.isObservationTime()) {
-				ret =
-					getLabResults(transientLabResult.getPatient(), transientLabResult.getLabItem(),
-						null, null, transientLabResult.getObservationTime());
+				ret = getLabResults(transientLabResult.getPatient(), transientLabResult.getLabItem(), null, null,
+						transientLabResult.getObservationTime());
 			} else if (transientLabResult.isAnalyseTime()) {
-				ret =
-					getLabResults(transientLabResult.getPatient(), transientLabResult.getLabItem(),
-						null, transientLabResult.getAnalyseTime(), null);
+				ret = getLabResults(transientLabResult.getPatient(), transientLabResult.getLabItem(), null,
+						transientLabResult.getAnalyseTime(), null);
 			} else {
-				ret = getLabResults(transientLabResult.getPatient(),
-					transientLabResult.getLabItem(), transientLabResult.getDate(), null, null);
+				ret = getLabResults(transientLabResult.getPatient(), transientLabResult.getLabItem(),
+						transientLabResult.getDate(), null, null);
 			}
-			
+
 			// filter by subid
 			if (transientLabResult.getSubId() != null) {
 				Iterator<ILabResult> it = ret.iterator();
@@ -397,10 +381,10 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public ILabItem createLabItem(String code, String name, ILaboratory origin, String male,
-		String female, String unit, LabItemTyp typ, String group, String priority){
+	public ILabItem createLabItem(String code, String name, ILaboratory origin, String male, String female, String unit,
+			LabItemTyp typ, String group, String priority) {
 		ILabItem ret = modelService.create(ILabItem.class);
 		ret.setCode(code);
 		ret.setName(name);
@@ -411,7 +395,7 @@ public class LabImportUtil implements ILabImportUtil {
 		ret.setGroup(group);
 		ret.setPriority(priority);
 		modelService.save(ret);
-		
+
 		Optional<ILabMapping> existingMapping = getLabMapping(origin, code);
 		if (!existingMapping.isPresent()) {
 			ILabMapping mapping = modelService.create(ILabMapping.class);
@@ -422,36 +406,34 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 		return ret;
 	}
-	
-	private List<ILabMapping> getLabMappings(ILaboratory labor, String itemname){
-		INamedQuery<ILabMapping> query =
-			modelService.getNamedQuery(ILabMapping.class, "origin", "itemname");
+
+	private List<ILabMapping> getLabMappings(ILaboratory labor, String itemname) {
+		INamedQuery<ILabMapping> query = modelService.getNamedQuery(ILabMapping.class, "origin", "itemname");
 		HashMap<String, Object> parameters = new HashMap<>();
 		parameters.put("origin", labor);
 		parameters.put("itemname", itemname);
 		return query.executeWithParameters(parameters);
 	}
-	
-	private List<ILabItem> getLabItems(String code, String name, LabItemTyp typ){
-		INamedQuery<ILabItem> query =
-			modelService.getNamedQuery(ILabItem.class, "code", "name", "typ");
+
+	private List<ILabItem> getLabItems(String code, String name, LabItemTyp typ) {
+		INamedQuery<ILabItem> query = modelService.getNamedQuery(ILabItem.class, "code", "name", "typ");
 		HashMap<String, Object> parameters = new HashMap<>();
 		parameters.put("code", code);
 		parameters.put("name", name);
 		parameters.put("typ", typ);
 		return query.executeWithParameters(parameters);
 	}
-	
-	private List<ILabItem> getLabItems(String code, String name){
+
+	private List<ILabItem> getLabItems(String code, String name) {
 		INamedQuery<ILabItem> query = modelService.getNamedQuery(ILabItem.class, "code", "name");
 		HashMap<String, Object> parameters = new HashMap<>();
 		parameters.put("code", code);
 		parameters.put("name", name);
 		return query.executeWithParameters(parameters);
 	}
-	
+
 	@Override
-	public Optional<ILabItem> getDocumentLabItem(String shortname, String name, ILaboratory labor){
+	public Optional<ILabItem> getDocumentLabItem(String shortname, String name, ILaboratory labor) {
 		// lookup using mapping first
 		List<ILabMapping> mappings = getLabMappings(labor, shortname);
 		if (!mappings.isEmpty()) {
@@ -468,8 +450,8 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 		return Optional.empty();
 	}
-	
-	public Optional<ILabItem> getLabItem(String shortname, String name, ILaboratory labor){
+
+	public Optional<ILabItem> getLabItem(String shortname, String name, ILaboratory labor) {
 		// lookup using mapping first
 		List<ILabMapping> mappings = getLabMappings(labor, shortname);
 		if (!mappings.isEmpty()) {
@@ -486,19 +468,19 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<ILabItem> getLabItem(String shortname, String name, LabItemTyp typ){
+	public Optional<ILabItem> getLabItem(String shortname, String name, LabItemTyp typ) {
 		List<ILabItem> existing = getLabItems(shortname, name, typ);
 		if (!existing.isEmpty()) {
 			return Optional.of(existing.get(0));
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public void createDocumentManagerEntry(String title, String lab, byte[] data, String mimeType,
-		TimeTool date, IPatient pat){
+	public void createDocumentManagerEntry(String title, String lab, byte[] data, String mimeType, TimeTool date,
+			IPatient pat) {
 		if (documentStore != null) {
 			IDocument document = documentStore.createDocument(pat.getId(), title, lab);
 			document.setCreated(date.getTime());
@@ -512,17 +494,15 @@ public class LabImportUtil implements ILabImportUtil {
 			logger.warn("No IDocumentStore available, document [" + title + "] not created");
 		}
 	}
-	
+
 	@Override
-	public ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem,
-		String result, String comment, String refVal, ILaboratory laboratory, String subId,
-		ILabOrder labOrder, String orderId, IMandator mandator, TimeTool observationTime,
-		String groupName){
-		
-		logger.info("Creating result with patient [" + patient.getId() + "] labitem [" + labItem
-			+ "] origin [" + laboratory + "] observationTime [" + observationTime + "] labOrder ["
-			+ labOrder + "]");
-		
+	public ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem, String result, String comment,
+			String refVal, ILaboratory laboratory, String subId, ILabOrder labOrder, String orderId, IMandator mandator,
+			TimeTool observationTime, String groupName) {
+
+		logger.info("Creating result with patient [" + patient.getId() + "] labitem [" + labItem + "] origin ["
+				+ laboratory + "] observationTime [" + observationTime + "] labOrder [" + labOrder + "]");
+
 		ILabResult labResult = modelService.create(ILabResult.class);
 		labResult.setPatient(patient);
 		labResult.setDate(date.toLocalDate());
@@ -535,13 +515,12 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 		labResult.setResult(result);
 		labResult.setComment(comment);
-		
+
 		// create new ILabOrder or set result in existing
 		if (labOrder == null) {
 			if (observationTime == null) {
-				logger.warn(
-					"Could not resolve observation time and time for ILabResult [{}], defaulting to now.",
-					labResult.getId());
+				logger.warn("Could not resolve observation time and time for ILabResult [{}], defaulting to now.",
+						labResult.getId());
 				observationTime = new TimeTool();
 			}
 			ILabOrder order = modelService.create(ILabOrder.class);
@@ -560,78 +539,73 @@ public class LabImportUtil implements ILabImportUtil {
 		} else {
 			labOrder.setResult(labResult);
 		}
-		
+
 		if (subId != null) {
 			labResult.setExtInfo(LabResultConstants.EXTINFO_HL7_SUBID, subId);
 		}
-		
+
 		modelService.save(labResult);
 		return labResult;
 	}
-	
-	public ILabResult createLabResult(TransientLabResult transientLabResult, String orderId,
-		IMandator mandantor){
+
+	public ILabResult createLabResult(TransientLabResult transientLabResult, String orderId, IMandator mandantor) {
 		ILabResult labResult = null;
-		
-		List<ILabOrder> existing = getLabOrders(transientLabResult.getPatient(),
-			transientLabResult.getLabItem(), LabOrderState.ORDERED);
+
+		List<ILabOrder> existing = getLabOrders(transientLabResult.getPatient(), transientLabResult.getLabItem(),
+				LabOrderState.ORDERED);
 		ILabOrder labOrder = null;
 		if (existing == null || existing.isEmpty()) {
-			
+
 			TimeTool time = transientLabResult.getObservationTime();
 			if (time == null) {
 				time = transientLabResult.getDate();
 			}
-			
+
 			labResult = transientLabResult.persist(null, orderId, mandantor, time, "Import");
 			labOrder = (ILabOrder) labResult.getLabOrder();
-			
+
 		} else {
-			// TODO for multiple entries we could check on which one the observationtime matches
+			// TODO for multiple entries we could check on which one the observationtime
+			// matches
 			labOrder = existing.get(0);
 			labResult = transientLabResult.persist(labOrder, null, null, null, null);
 		}
-		
+
 		labOrder.setState(LabOrderState.DONE_IMPORT);
 		modelService.save(labOrder);
-		
+
 		return labResult;
 	}
-	
-	private List<ILabOrder> getLabOrders(IPatient patient, ILabItem labItem, LabOrderState state){
-		INamedQuery<ILabOrder> query =
-			modelService.getNamedQuery(ILabOrder.class, "item", "patient", "state");
+
+	private List<ILabOrder> getLabOrders(IPatient patient, ILabItem labItem, LabOrderState state) {
+		INamedQuery<ILabOrder> query = modelService.getNamedQuery(ILabOrder.class, "item", "patient", "state");
 		HashMap<String, Object> parameters = new HashMap<>();
 		parameters.put("item", labItem);
 		parameters.put("patient", patient);
 		parameters.put("state", state);
 		return query.executeWithParameters(parameters);
 	}
-	
+
 	@Override
-	public void updateLabResult(ILabResult iLabResult, TransientLabResult transientLabResult){
+	public void updateLabResult(ILabResult iLabResult, TransientLabResult transientLabResult) {
 		if (iLabResult != null) {
-			iLabResult.setExtInfo(LabResultConstants.EXTINFO_HL7_SUBID,
-				transientLabResult.getSubId());
+			iLabResult.setExtInfo(LabResultConstants.EXTINFO_HL7_SUBID, transientLabResult.getSubId());
 		}
 	}
-	
+
 	@Override
-	public <T> Optional<T> loadCoreModel(String id, Class<T> clazz){
+	public <T> Optional<T> loadCoreModel(String id, Class<T> clazz) {
 		return modelService.load(id, clazz);
 	}
-	
+
 	@Override
-	public Optional<IPatient> getPatientByCode(String code){
+	public Optional<IPatient> getPatientByCode(String code) {
 		if (code != null) {
-			INamedQuery<IPatient> namedQuery =
-				CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
-			List<IPatient> found = namedQuery.executeWithParameters(
-				namedQuery.getParameterMap("code", code));
+			INamedQuery<IPatient> namedQuery = CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
+			List<IPatient> found = namedQuery.executeWithParameters(namedQuery.getParameterMap("code", code));
 			if (!found.isEmpty()) {
 				if (found.size() > 1) {
-					logger.warn("Found " + found.size() + " patients with code [" + code
-						+ "] using first");
+					logger.warn("Found " + found.size() + " patients with code [" + code + "] using first");
 				}
 				return Optional.of(found.get(0));
 			}

@@ -39,7 +39,7 @@ public class ChangePasswordDialog extends TitleAreaDialog {
 
 	/**
 	 * Create the dialog.
-	 * 
+	 *
 	 * @param parentShell
 	 */
 	public ChangePasswordDialog(Shell parentShell, User user) {
@@ -50,7 +50,7 @@ public class ChangePasswordDialog extends TitleAreaDialog {
 
 	/**
 	 * Create contents of the dialog.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
@@ -155,7 +155,7 @@ public class ChangePasswordDialog extends TitleAreaDialog {
 
 	/**
 	 * Create contents of the button bar.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -25,49 +25,50 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.contacts.controls.FaelleComposite;
 
 public class FaelleTab extends AbstractPropertySection implements IFilter {
-	
+
 	private FaelleComposite fc;
 	private SubActionBars subActionBars;
-	
-	public FaelleTab(){}
-	
+
+	public FaelleTab() {
+	}
+
 	@Override
-	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage){
+	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);
 		fc = new FaelleComposite(parent, SWT.None, aTabbedPropertySheetPage);
 		aTabbedPropertySheetPage.getWidgetFactory().adapt(fc);
 		aTabbedPropertySheetPage.getWidgetFactory().paintBordersFor(fc);
 		subActionBars = new SubActionBars(aTabbedPropertySheetPage.getSite().getActionBars());
-		
+
 		// COMPAT
 		subActionBars.getToolBarManager().add(GlobalActions.neuerFallAction);
 	}
-	
+
 	@Override
-	public void setInput(IWorkbenchPart part, ISelection selection){
+	public void setInput(IWorkbenchPart part, ISelection selection) {
 		super.setInput(part, selection);
 		Object input = ((IStructuredSelection) selection).getFirstElement();
 		fc.setContact((IContact) input);
 	}
-	
+
 	@Override
-	public void aboutToBeShown(){
+	public void aboutToBeShown() {
 		super.aboutToBeShown();
 		subActionBars.activate();
 		subActionBars.updateActionBars();
 	}
-	
+
 	@Override
-	public void aboutToBeHidden(){
+	public void aboutToBeHidden() {
 		super.aboutToBeHidden();
 		subActionBars.deactivate();
 		subActionBars.updateActionBars();
 	}
-	
+
 	@Override
-	public boolean select(Object toTest){
+	public boolean select(Object toTest) {
 		IContact c = (IContact) toTest;
 		return c.isPerson();
 	}
-	
+
 }

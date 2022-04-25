@@ -17,30 +17,30 @@ import ch.elexis.core.text.PlaceholderAttribute;
 
 @Component
 public class PatientTextPlaceholderResolver implements ITextPlaceholderResolver {
-	
+
 	@Override
-	public String getSupportedType(){
+	public String getSupportedType() {
 		return "Patient";
 	}
-	
+
 	@Override
-	public List<PlaceholderAttribute> getSupportedAttributes(){
+	public List<PlaceholderAttribute> getSupportedAttributes() {
 		return Arrays.asList(PatientAttribute.values()).stream()
-			.map(m -> new PlaceholderAttribute(getSupportedType(), m.name(), m.getLocaleText()))
-			.collect(Collectors.toList());
+				.map(m -> new PlaceholderAttribute(getSupportedType(), m.name(), m.getLocaleText()))
+				.collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute){
+	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute) {
 		IPatient patient = context.getTyped(IPatient.class).orElse(null);
 		if (patient != null) {
 			return Optional.ofNullable(replace(patient, attribute.toLowerCase()));
 		}
 		return Optional.empty();
 	}
-	
-	private String replace(IPatient patient, String lcAttribute){
-		
+
+	private String replace(IPatient patient, String lcAttribute) {
+
 		PatientAttribute patientAttribut = searchEnum(PatientAttribute.class, lcAttribute);
 		switch (patientAttribut) {
 		case Anrede:
@@ -57,22 +57,21 @@ public class PatientTextPlaceholderResolver implements ITextPlaceholderResolver 
 			return null;
 		}
 	}
-	
+
 	private enum PatientAttribute implements ILocalizedEnum {
-			Name("Nachname des Patienten"), Vorname("Vorname des Patienten"),
-			Anrede("Anrede des Patienten"), Anschrift("Mehrzeilige Anschrift"),
-			Anschriftzeile("Einzeilige Anschrift");
-		
+		Name("Nachname des Patienten"), Vorname("Vorname des Patienten"), Anrede("Anrede des Patienten"),
+		Anschrift("Mehrzeilige Anschrift"), Anschriftzeile("Einzeilige Anschrift");
+
 		final String description;
-		
-		private PatientAttribute(String description){
+
+		private PatientAttribute(String description) {
 			this.description = description;
 		}
-		
+
 		@Override
-		public String getLocaleText(){
+		public String getLocaleText() {
 			return description;
 		}
 	}
-	
+
 }

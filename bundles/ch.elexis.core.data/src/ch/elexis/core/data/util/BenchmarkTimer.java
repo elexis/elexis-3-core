@@ -4,39 +4,39 @@ package ch.elexis.core.data.util;
  * This class can be used for simple benchmarks.
  */
 public class BenchmarkTimer {
-	
+
 	private long startTime = 0;
 	private long endTime = 0;
-	
-	public void start(){
+
+	public void start() {
 		this.startTime = System.currentTimeMillis();
 	}
-	
-	public void end(){
+
+	public void end() {
 		this.endTime = System.currentTimeMillis();
 	}
-	
-	public long getStartTime(){
+
+	public long getStartTime() {
 		return this.startTime;
 	}
-	
-	public long getEndTime(){
+
+	public long getEndTime() {
 		return this.endTime;
 	}
-	
-	public long getTotalTime(){
+
+	public long getTotalTime() {
 		return this.endTime - this.startTime;
 	}
-	
-	public String geTotalTimeHumanReadableString(){
+
+	public String geTotalTimeHumanReadableString() {
 		return convertMS(getTotalTime());
 	}
-	
-	private String convertMS(long ms){
+
+	private String convertMS(long ms) {
 		int seconds = (int) ((ms / 1000) % 60);
 		int minutes = (int) (((ms / 1000) / 60) % 60);
 		int hours = (int) ((((ms / 1000) / 60) / 60) % 24);
-		
+
 		String sec, min, hrs;
 		if (seconds < 10)
 			sec = "0" + seconds;
@@ -50,11 +50,11 @@ public class BenchmarkTimer {
 			hrs = "0" + hours;
 		else
 			hrs = "" + hours;
-		
+
 		if (hours == 0)
 			return min + " min, " + sec + " sec";
 		else
 			return hrs + " hrs, " + min + "min, " + sec + " sec";
 	}
-	
+
 }

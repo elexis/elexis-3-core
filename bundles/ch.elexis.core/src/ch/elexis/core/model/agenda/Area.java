@@ -7,48 +7,46 @@ import java.security.NoSuchAlgorithmException;
 import javax.xml.bind.DatatypeConverter;
 
 public class Area {
-	
+
 	private String id;
 	private final String name;
 	private final AreaType type;
 	private final String contactId;
-	
+
 	/**
-	 * 
-	 * @param name
-	 *            the name of the area
+	 *
+	 * @param name      the name of the area
 	 * @param type
-	 * @param contactId
-	 *            <code>null</code> if {@link AreaType#GENERIC}, else the contact id
+	 * @param contactId <code>null</code> if {@link AreaType#GENERIC}, else the
+	 *                  contact id
 	 */
-	public Area(String name, AreaType type, String contactId){
+	public Area(String name, AreaType type, String contactId) {
 		this.name = name;
 		this.type = type;
 		this.contactId = contactId;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
-	public AreaType getType(){
+
+	public AreaType getType() {
 		return type;
 	}
-	
-	public String getContactId(){
+
+	public String getContactId() {
 		return contactId;
 	}
-	
-	public String getId(){
+
+	public String getId() {
 		if (id == null) {
 			try {
-				id = DatatypeConverter.printHexBinary(
-					MessageDigest.getInstance("MD5").digest(name.getBytes("UTF-8")));
+				id = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(name.getBytes("UTF-8")));
 			} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 				throw new IllegalStateException("", e);
 			}
 		}
 		return id;
 	}
-	
+
 }

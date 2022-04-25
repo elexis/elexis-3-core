@@ -11,9 +11,9 @@ public abstract class AbstractData implements IValueType {
 	private String comment;
 	private String group;
 	private String sequence;
-	
+
 	public AbstractData(String name, String dateStr, String comment, String group, String sequence)
-		throws ParseException{
+			throws ParseException {
 		super();
 		this.name = name;
 		this.comment = comment;
@@ -23,28 +23,28 @@ public abstract class AbstractData implements IValueType {
 		this.group = group;
 		this.sequence = sequence;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
-	public Date getDate(){
+
+	public Date getDate() {
 		return date;
 	}
-	
-	public void setDate(Date date){
+
+	public void setDate(Date date) {
 		this.date = date;
 	}
-	
-	public String getComment(){
+
+	public String getComment() {
 		return comment;
 	}
-	
-	public String getGroup(){
+
+	public String getGroup() {
 		return group;
 	}
-	
-	public String getSequence(){
+
+	public String getSequence() {
 		return sequence;
 	}
 }

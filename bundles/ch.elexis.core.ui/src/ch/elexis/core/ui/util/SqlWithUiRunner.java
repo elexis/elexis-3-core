@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -33,16 +33,16 @@ import ch.rgw.tools.JdbcLinkException;
 
 public class SqlWithUiRunner {
 	static Log log = Log.get("SqlWithUiRunner");
-	
+
 	enum SqlStatus {
 		NONE, EXECUTE, SUCCESS, FAIL
 	};
-	
+
 	private List<String> sqlStrings;
 	private List<UpdateDbSql> sql;
 	private String pluginId;
-	
-	public SqlWithUiRunner(String[] sql, String pluginId){
+
+	public SqlWithUiRunner(String[] sql, String pluginId) {
 		sqlStrings = new ArrayList<String>();
 		for (int i = 0; i < sql.length; i++) {
 			String sqlString = sql[i];
@@ -54,8 +54,8 @@ public class SqlWithUiRunner {
 		}
 		this.pluginId = pluginId;
 	}
-	
-	public boolean runSql(){
+
+	public boolean runSql() {
 		sql = new ArrayList<UpdateDbSql>();
 		// create UpdateDbSql objects from input list
 		for (String sqlString : sqlStrings) {
@@ -65,7 +65,7 @@ public class SqlWithUiRunner {
 		if (isDisplayAvailable()) {
 			Display.getDefault().syncExec(new Runnable() {
 				@Override
-				public void run(){
+				public void run() {
 					Shell parent = null;
 					boolean isDummyShell = false;
 					try {
@@ -85,7 +85,7 @@ public class SqlWithUiRunner {
 					try {
 						dialog.run(true, false, new IRunnableWithProgress() {
 							@Override
-							public void run(IProgressMonitor monitor){
+							public void run(IProgressMonitor monitor) {
 								monitor.beginTask("Running DB Script", sql.size());
 								for (UpdateDbSql update : sql) {
 									monitor.subTask(update.getSql());
@@ -120,19 +120,19 @@ public class SqlWithUiRunner {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Class holding information about one sql and its execution
-	 * 
+	 *
 	 * @author thomas
 	 */
 	protected class UpdateDbSql implements Runnable {
 		private String sql;
 		private SqlStatus status;
-		
+
 		private boolean optional;
-		
-		protected UpdateDbSql(String sql){
+
+		protected UpdateDbSql(String sql) {
 			if (sql.startsWith("OPTIONAL:")) {
 				optional = true;
 				sql = sql.substring("OPTIONAL:".length());
@@ -142,9 +142,9 @@ public class SqlWithUiRunner {
 			this.sql = sql;
 			status = SqlStatus.NONE;
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			JdbcLink link = null;
 			Stm statement = null;
 			try {
@@ -152,26 +152,22 @@ public class SqlWithUiRunner {
 				statement = link.getStatement();
 				setStatus(SqlStatus.EXECUTE);
 				// do not use execScript method here as it will catch the exceptions
-				ByteArrayInputStream scriptStream =
-					new ByteArrayInputStream(this.sql.getBytes("UTF-8"));
+				ByteArrayInputStream scriptStream = new ByteArrayInputStream(this.sql.getBytes("UTF-8"));
 				String sqlString;
 				while ((sqlString = JdbcLink.readStatement(scriptStream)) != null) {
 					try {
 						statement.exec(link.translateFlavor(sqlString));
 					} catch (JdbcLinkException e) {
 						if (optional) {
-							log.log(e, "Warning " + e.getMessage() + " during db update",
-								Log.WARNINGS);
+							log.log(e, "Warning " + e.getMessage() + " during db update", Log.WARNINGS);
 						} else {
 							setStatus(SqlStatus.FAIL);
 							log.log(e, "Error " + e.getMessage() + " during db update", Log.ERRORS);
 							try {
-								StatusManager.getManager()
-									.handle(new ElexisStatus(ElexisStatus.ERROR, pluginId,
-										ElexisStatus.CODE_NONE,
-										"Error " + e.getMessage() + " during db update", e));
+								StatusManager.getManager().handle(new ElexisStatus(ElexisStatus.ERROR, pluginId,
+										ElexisStatus.CODE_NONE, "Error " + e.getMessage() + " during db update", e));
 							} catch (AssertionFailedException appnotinit) {
-								
+
 							}
 						}
 					}
@@ -179,9 +175,8 @@ public class SqlWithUiRunner {
 			} catch (UnsupportedEncodingException e) {
 				setStatus(SqlStatus.FAIL);
 				try {
-					StatusManager.getManager().handle(
-						new ElexisStatus(ElexisStatus.ERROR, pluginId, ElexisStatus.CODE_NONE,
-							"Error " + e.getMessage() + " during db update", e));
+					StatusManager.getManager().handle(new ElexisStatus(ElexisStatus.ERROR, pluginId,
+							ElexisStatus.CODE_NONE, "Error " + e.getMessage() + " during db update", e));
 				} catch (AssertionFailedException appnotinit) {
 					log.log(e, "Error " + e.getMessage() + " during db update", Log.ERRORS);
 				}
@@ -193,21 +188,21 @@ public class SqlWithUiRunner {
 			if (getStatus() == SqlStatus.EXECUTE)
 				setStatus(SqlStatus.SUCCESS);
 		}
-		
-		public void setStatus(SqlStatus status){
+
+		public void setStatus(SqlStatus status) {
 			this.status = status;
 		}
-		
-		public SqlStatus getStatus(){
+
+		public SqlStatus getStatus() {
 			return status;
 		}
-		
-		public String getSql(){
+
+		public String getSql() {
 			return sql;
 		}
 	}
-	
-	protected boolean isDisplayAvailable(){
+
+	protected boolean isDisplayAvailable() {
 		try {
 			Class.forName("org.eclipse.swt.widgets.Display");
 		} catch (ClassNotFoundException e) {

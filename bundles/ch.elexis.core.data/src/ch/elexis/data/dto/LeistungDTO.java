@@ -21,19 +21,18 @@ public class LeistungDTO {
 	private IBillable iVerrechenbar;
 	private long lastUpdate;
 	private IBilled verrechnet;
-	
+
 	private int tp = 0;
 	private double tpw = 1.0;
 	private double scale1 = 1.0;
 	private double scale2 = 1.0;
-	
-	public LeistungDTO(Verrechnet verrechnet) throws ElexisException{
-		
+
+	public LeistungDTO(Verrechnet verrechnet) throws ElexisException {
+
 		if (!verrechnet.exists()) {
 			throw new ElexisException(
-				"Verrechnete Leistung wird ignoriert - Keine Leistung vorhanden [ID: "
-					+ verrechnet.getId() + "].",
-				new Exception());
+					"Verrechnete Leistung wird ignoriert - Keine Leistung vorhanden [ID: " + verrechnet.getId() + "].",
+					new Exception());
 		}
 		try {
 			if (verrechnet.getLastUpdate() < 0) {
@@ -41,9 +40,9 @@ public class LeistungDTO {
 			}
 		} catch (Exception e) {
 			throw new ElexisException(
-				"Die verrechnete Leistung wird ignoriert - Datum der letzten Aktualisierung ist fehlerhaft [ID: "
-					+ verrechnet.getId() + "].",
-				e);
+					"Die verrechnete Leistung wird ignoriert - Datum der letzten Aktualisierung ist fehlerhaft [ID: "
+							+ verrechnet.getId() + "].",
+					e);
 		}
 		this.verrechnet = NoPoUtil.loadAsIdentifiable(verrechnet, IBilled.class).get();
 		this.lastUpdate = verrechnet.getLastUpdate();
@@ -55,8 +54,8 @@ public class LeistungDTO {
 		this.count = verrechnet.getZahl();
 		this.iVerrechenbar = this.verrechnet.getBillable();
 	}
-	
-	public LeistungDTO(IBillable iVerrechenbar, IFall fall){
+
+	public LeistungDTO(IBillable iVerrechenbar, IFall fall) {
 		this.lastUpdate = System.currentTimeMillis();
 		this.id = iVerrechenbar.getId();
 		this.code = iVerrechenbar.getCode();
@@ -68,12 +67,12 @@ public class LeistungDTO {
 		this.count = 1;
 		this.iVerrechenbar = iVerrechenbar;
 	}
-	
-	public void calcPrice(KonsultationDTO konsultationDTO, FallDTO fallDTO){
+
+	public void calcPrice(KonsultationDTO konsultationDTO, FallDTO fallDTO) {
 		if (verrechnet == null) {
 			@SuppressWarnings("unchecked")
-			Result<IBilled> result = iVerrechenbar.getOptifier().add(iVerrechenbar,
-				konsultationDTO.getTransientCopy(), 1.0, false);
+			Result<IBilled> result = iVerrechenbar.getOptifier().add(iVerrechenbar, konsultationDTO.getTransientCopy(),
+					1.0, false);
 			if (result.isOK()) {
 				tp = result.get().getPoints();
 				tpw = result.get().getFactor();
@@ -86,84 +85,83 @@ public class LeistungDTO {
 			scale2 = verrechnet.getSecondaryScaleFactor();
 		}
 	}
-	
-	private double getFactor(){
+
+	private double getFactor() {
 		if (iVerrechenbar != null) {
-			Optional<IBillingSystemFactor> billingFactor =
-				BillingServiceHolder.get().getBillingSystemFactor(iVerrechenbar.getCodeSystemName(),
-					verrechnet.getEncounter().getDate());
+			Optional<IBillingSystemFactor> billingFactor = BillingServiceHolder.get()
+					.getBillingSystemFactor(iVerrechenbar.getCodeSystemName(), verrechnet.getEncounter().getDate());
 			if (billingFactor.isPresent()) {
 				return billingFactor.get().getFactor();
 			}
 		}
 		return 1.0;
 	}
-	
-	public void setTp(int tp){
+
+	public void setTp(int tp) {
 		this.tp = tp;
 	}
-	
-	public void setScale2(double scale2){
+
+	public void setScale2(double scale2) {
 		this.scale2 = scale2;
 	}
-	
-	public double getScale2(){
+
+	public double getScale2() {
 		return scale2;
 	}
-	
-	public IBilled getVerrechnet(){
+
+	public IBilled getVerrechnet() {
 		return verrechnet;
 	}
-	
-	public void setCode(String code){
+
+	public void setCode(String code) {
 		this.code = code;
 	}
-	
-	public String getCode(){
+
+	public String getCode() {
 		return code;
 	}
-	
-	public String getText(){
+
+	public String getText() {
 		return text;
 	}
-	
-	public void setVerrechnet(IBilled verrechnet){
+
+	public void setVerrechnet(IBilled verrechnet) {
 		this.verrechnet = verrechnet;
 	}
-	
-	public String getId(){
+
+	public String getId() {
 		return id;
 	}
-	
-	public Money getPrice(){
+
+	public Money getPrice() {
 		return new Money((int) (Math.round(tp * tpw) * scale1 * scale2 * count));
 	}
-	
-	public void setCount(int count){
+
+	public void setCount(int count) {
 		this.count = count;
 	}
-	
-	public int getCount(){
+
+	public int getCount() {
 		return count;
 	}
-	
-	public void setiVerrechenbar(IBillable iVerrechenbar){
+
+	public void setiVerrechenbar(IBillable iVerrechenbar) {
 		this.iVerrechenbar = iVerrechenbar;
 	}
-	
-	public IBillable getIVerrechenbar(){
+
+	public IBillable getIVerrechenbar() {
 		return iVerrechenbar;
 	}
-	
-	public long getLastUpdate(){
+
+	public long getLastUpdate() {
 		return lastUpdate;
 	}
-	
-	public int getTp(){
+
+	public int getTp() {
 		return tp;
 	}
-	
-	public double getTpw(){
+
+	public double getTpw() {
 		return tpw;
 	}
 }

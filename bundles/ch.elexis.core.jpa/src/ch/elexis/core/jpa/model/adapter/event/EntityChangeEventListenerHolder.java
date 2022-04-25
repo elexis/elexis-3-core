@@ -5,15 +5,15 @@ import org.osgi.service.component.annotations.Reference;
 
 @Component
 public class EntityChangeEventListenerHolder {
-	
+
 	private static EntityChangeEventListener entityChangeListener;
-	
+
 	@Reference
-	public void setEntityChangeEventListener(EntityChangeEventListener entityChangeListener){
+	public void setEntityChangeEventListener(EntityChangeEventListener entityChangeListener) {
 		EntityChangeEventListenerHolder.entityChangeListener = entityChangeListener;
 	}
-	
-	public static EntityChangeEventListener get(){
+
+	public static EntityChangeEventListener get() {
 		if (entityChangeListener == null) {
 			throw new IllegalStateException("No EntityChangeEventListener available");
 		}

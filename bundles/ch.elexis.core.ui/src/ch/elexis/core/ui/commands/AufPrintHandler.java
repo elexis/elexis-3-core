@@ -18,22 +18,21 @@ import ch.rgw.tools.ExHandler;
 
 public class AufPrintHandler extends AbstractHandler implements IHandler {
 	public static final String CMD_ID = "ch.elexis.core.ui.commands.AufPrint";
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
-			IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage().showView(AUFZeugnis.ID);
+			IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.showView(AUFZeugnis.ID);
 			if (viewPart instanceof AUFZeugnis) {
-				ISickCertificate selectedCertificate =
-					ContextServiceHolder.get().getTyped(ISickCertificate.class).orElse(null);
+				ISickCertificate selectedCertificate = ContextServiceHolder.get().getTyped(ISickCertificate.class)
+						.orElse(null);
 				if (selectedCertificate != null) {
-					ElexisEventDispatcher
-						.fireSelectionEvent(NoPoUtil.loadAsPersistentObject(selectedCertificate));
+					ElexisEventDispatcher.fireSelectionEvent(NoPoUtil.loadAsPersistentObject(selectedCertificate));
 					((AUFZeugnis) viewPart).createAUZ();
 				} else {
-					MessageDialog.openInformation(Display.getDefault().getActiveShell(),
-						"AUF drucken", "Es ist keine AUF selektiert.");
+					MessageDialog.openInformation(Display.getDefault().getActiveShell(), "AUF drucken",
+							"Es ist keine AUF selektiert.");
 				}
 			}
 		} catch (Exception ex) {
@@ -41,5 +40,5 @@ public class AufPrintHandler extends AbstractHandler implements IHandler {
 		}
 		return null;
 	}
-	
+
 }

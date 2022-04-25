@@ -52,7 +52,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 
 	/**
-	 * 
+	 *
 	 * @param taskDescriptor
 	 * @param triggerType
 	 * @param progressMonitor

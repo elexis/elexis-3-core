@@ -33,55 +33,55 @@ import ch.elexis.data.Role;
 
 /**
  * AcessControlElement
- * 
- * An item constituting a named right. AccessControlElements are collected hierarchically in ACL's
- * (AccessControlLists). An ACE has a parent, an internal name and a (probably localized) external
- * name that will be shown to the user. <br>
+ *
+ * An item constituting a named right. AccessControlElements are collected
+ * hierarchically in ACL's (AccessControlLists). An ACE has a parent, an
+ * internal name and a (probably localized) external name that will be shown to
+ * the user. <br>
  * <br>
  * ACEs are loaded within {@link AbstractAccessControl#load()}
- * 
+ *
  * @since 2.0
  * @author gerry
- * 		
+ *
  */
 public class ACE implements Serializable {
 	private static final long serialVersionUID = 34320020090119L;
-	
-	public static final String ACE_ROOT_LITERAL = "root";//$NON-NLS-1$	
+
+	public static final String ACE_ROOT_LITERAL = "root";//$NON-NLS-1$
 	public static final ACE ACE_ROOT = new ACE(null, ACE_ROOT_LITERAL, Messages.ACE_root);
 	public static final ACE ACE_IMPLICIT = new ACE(ACE.ACE_ROOT, "implicit", Messages.ACE_implicit); //$NON-NLS-1$
-	
+
 	private static Map<String, ACE> allDefinedACEs;
-	
+
 	private static Logger log = LoggerFactory.getLogger(ACE.class);
-	
+
 	private final String name;
 	private String localizedName;
 	private final ACE parent;
 	private List<ACE> children = new ArrayList<ACE>();
-	
+
 	/**
 	 * initialize all defined ACEs, only performed once
-	 * 
+	 *
 	 * @return
 	 */
-	private static void initAllDefinedACEs(){
+	private static void initAllDefinedACEs() {
 		if (allDefinedACEs != null)
 			return;
-			
-		List<ACE> temp = getACLContributionExtensions().stream()
-			.flatMap(acl -> Arrays.asList(acl.getACL()).stream()).collect(Collectors.toList());
+
+		List<ACE> temp = getACLContributionExtensions().stream().flatMap(acl -> Arrays.asList(acl.getACL()).stream())
+				.collect(Collectors.toList());
 		allDefinedACEs = temp.stream().collect(Collectors.toMap(a -> a.getCanonicalName(), a -> a));
 	}
-	
+
 	/**
 	 * initialize the default ACE values
-	 * 
-	 * @param reset
-	 *            resets all configured rights before installing the defaults
+	 *
+	 * @param reset resets all configured rights before installing the defaults
 	 * @since 3.1
 	 */
-	public static void initializeACEDefaults(boolean reset){
+	public static void initializeACEDefaults(boolean reset) {
 		if (reset) {
 			Query<Role> arq = new Query<Role>(Role.class);
 			List<Role> allRoles = arq.execute();
@@ -99,91 +99,91 @@ public class ACE implements Serializable {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private static List<IACLContributor> getACLContributionExtensions(){
+	private static List<IACLContributor> getACLContributionExtensions() {
 		return Extensions.getClasses(ExtensionPointConstantsData.ACL_CONTRIBUTION,
-			ExtensionPointConstantsData.ACL_CONTRIBUTION_PT_CONTRIBUTOR);
+				ExtensionPointConstantsData.ACL_CONTRIBUTION_PT_CONTRIBUTOR);
 	}
-	
+
 	/**
 	 * Create a new ACE. This is the recommended constructor for most cases.
-	 * 
-	 * @param parent
-	 *            the parent ACE. If this is a top-level ACE, use {@link #ACE_ROOT} as parent.
-	 * @param name
-	 *            the internal, immutable name of this ACE. Should be unique. Therefore, it is
-	 *            recommended to prefix the name with the plugin ID
-	 * @param localizedName
-	 *            the name that will be presented to the user. This should be a translatable String
+	 *
+	 * @param parent        the parent ACE. If this is a top-level ACE, use
+	 *                      {@link #ACE_ROOT} as parent.
+	 * @param name          the internal, immutable name of this ACE. Should be
+	 *                      unique. Therefore, it is recommended to prefix the name
+	 *                      with the plugin ID
+	 * @param localizedName the name that will be presented to the user. This should
+	 *                      be a translatable String
 	 */
-	public ACE(ACE parent, String name, String localizedName){
+	public ACE(ACE parent, String name, String localizedName) {
 		this.parent = parent;
 		this.name = name;
 		this.localizedName = localizedName;
 		if (parent != null)
 			parent.addChild(this);
 	}
-	
-	private void addChild(ACE ace){
+
+	private void addChild(ACE ace) {
 		children.add(ace);
 	}
-	
+
 	/**
-	 * create a new ACE without localized name. The localized name will be the same as the internal
-	 * name. So this constructor should <b>not</b> be used for ACE's that will be shown to the user.
-	 * 
-	 * @param parent
-	 *            the parent ACE. If this is a top-evel ACE, use ACE_ROOT as parent.
-	 * @param name
-	 *            the internal, immutable name of this ACE. Should be unique. Therefore, it is
-	 *            recommended to prefix the name with the plugin ID.
+	 * create a new ACE without localized name. The localized name will be the same
+	 * as the internal name. So this constructor should <b>not</b> be used for ACE's
+	 * that will be shown to the user.
+	 *
+	 * @param parent the parent ACE. If this is a top-evel ACE, use ACE_ROOT as
+	 *               parent.
+	 * @param name   the internal, immutable name of this ACE. Should be unique.
+	 *               Therefore, it is recommended to prefix the name with the plugin
+	 *               ID.
 	 */
-	public ACE(ACE parent, String name){
+	public ACE(ACE parent, String name) {
 		this(parent, name, name);
 	}
-	
+
 	/**
 	 * @return the non-translatable name of this ACE
 	 */
-	public String getName(){
+	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * @return the localized Name of this ACE
 	 */
-	public String getLocalizedName(){
+	public String getLocalizedName() {
 		return localizedName;
 	}
-	
+
 	/**
 	 * @return the parent ACE
 	 */
-	public ACE getParent(){
+	public ACE getParent() {
 		return parent;
 	}
-	
+
 	/**
-	 * @param deep
-	 *            recurse to bottom, or <code>false</code> deliver direct children
+	 * @param deep recurse to bottom, or <code>false</code> deliver direct children
 	 * @return a list of all children to this, in unspecific order, including self
 	 * @since 3.1
 	 */
-	public List<ACE> getChildren(boolean deep){
+	public List<ACE> getChildren(boolean deep) {
 		if (deep) {
 			return getChildrenRecursive();
 		} else {
 			return new ArrayList<ACE>(children);
 		}
 	}
-	
+
 	/**
 	 * recursively fetch all children, adding self
-	 * 
+	 *
 	 * @return
 	 */
-	private List<ACE> getChildrenRecursive(){
+	private List<ACE> getChildrenRecursive() {
 		List<ACE> ret = new ArrayList<ACE>();
 		ret.add(this);
 		for (ACE ace : children) {
@@ -191,22 +191,21 @@ public class ACE implements Serializable {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Change the localized name of this ACE
-	 * 
-	 * @param lName
-	 *            a new name to use as localized name
+	 *
+	 * @param lName a new name to use as localized name
 	 */
-	public void setLocalizedName(String lName){
+	public void setLocalizedName(String lName) {
 		localizedName = lName;
 	}
-	
+
 	/**
-	 * get the full pathname of an ACE. This Method is internal to the ACL system and should not be
-	 * used externally
+	 * get the full pathname of an ACE. This Method is internal to the ACL system
+	 * and should not be used externally
 	 */
-	String getCanonicalName(){
+	String getCanonicalName() {
 		StringBuilder sp = new StringBuilder();
 		sp.append(getName());
 		ACE parent = getParent();
@@ -216,13 +215,13 @@ public class ACE implements Serializable {
 		}
 		return sp.toString();
 	}
-	
+
 	/**
-	 * @return a unique hex string for the ACE that is derived by its canonical name and name, if
-	 *         {@link #ACE_ROOT} returns <code>root</code>
+	 * @return a unique hex string for the ACE that is derived by its canonical name
+	 *         and name, if {@link #ACE_ROOT} returns <code>root</code>
 	 * @since 3.1
 	 */
-	public String getUniqueHashFromACE(){
+	public String getUniqueHashFromACE() {
 		if (ACE_ROOT.equals(this))
 			return ACE_ROOT_LITERAL;
 		int valCan = Math.abs(getCanonicalName().hashCode());
@@ -230,29 +229,29 @@ public class ACE implements Serializable {
 		BigInteger valI = new BigInteger(valCan + "" + valNam);
 		return valI.toString(16);
 	}
-	
+
 	/**
 	 * @return all defined ACE elements
 	 * @since 3.1
 	 */
-	public static @NonNull List<ACE> getAllDefinedACElements(){
+	public static @NonNull List<ACE> getAllDefinedACElements() {
 		initAllDefinedACEs();
 		return new ArrayList<ACE>(allDefinedACEs.values());
 	}
-	
+
 	/**
 	 * @return the root elements of all ACElements
 	 * @since 3.1
 	 */
-	public static @NonNull ACE[] getAllDefinedRootACElements(){
-		return ACE.getAllDefinedACElements().stream()
-			.filter(p -> ACE.ACE_ROOT.equals(p.getParent())).toArray(size -> new ACE[size]);
+	public static @NonNull ACE[] getAllDefinedRootACElements() {
+		return ACE.getAllDefinedACElements().stream().filter(p -> ACE.ACE_ROOT.equals(p.getParent()))
+				.toArray(size -> new ACE[size]);
 	}
-	
+
 	/**
 	 * @return this element and its entire parent chain
 	 */
-	public List<ACE> getParentChainIncludingSelf(){
+	public List<ACE> getParentChainIncludingSelf() {
 		List<ACE> aces = new ArrayList<ACE>();
 		aces.add(this);
 		if (this.equals(ACE_ROOT))
@@ -262,20 +261,20 @@ public class ACE implements Serializable {
 			aces.add(parent);
 			parent = parent.getParent();
 		}
-		
+
 		return aces;
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return getUniqueHashFromACE() + " " + getName() + " " + getCanonicalName();
 	}
-	
+
 	/**
 	 * @param uniqueHash
 	 * @return
 	 */
-	public static @Nullable ACE getACEByCanonicalName(String canonicalName){
+	public static @Nullable ACE getACEByCanonicalName(String canonicalName) {
 		initAllDefinedACEs();
 		return allDefinedACEs.get(canonicalName);
 	}

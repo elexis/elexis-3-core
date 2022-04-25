@@ -24,42 +24,42 @@ import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.views.IRefreshable;
 
 public class MedicationView extends ViewPart implements IRefreshable {
-	public MedicationView(){}
-	
+	public MedicationView() {
+	}
+
 	private MedicationComposite tpc;
-	
+
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this) {
-		public void partActivated(org.eclipse.ui.IWorkbenchPartReference partRef){
+		public void partActivated(org.eclipse.ui.IWorkbenchPartReference partRef) {
 			super.partActivated(partRef);
 			if (tpc != null && !tpc.isDisposed()) {
 				tpc.showMedicationDetailComposite(null);
 			}
 		};
 	};
-	
+
 	public static final String PART_ID = "ch.elexis.core.ui.medication.views.MedicationView"; //$NON-NLS-1$
-	
+
 	@Inject
-	void activePatient(@Optional IPatient patient){
+	void activePatient(@Optional IPatient patient) {
 		Display.getDefault().asyncExec(() -> {
 			if (CoreUiUtil.isActiveControl(tpc)) {
 				updateUi(patient, false);
 			}
 		});
 	}
-	
+
 	@Optional
 	@Inject
-	void udpatePatient(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient){
+	void udpatePatient(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient) {
 		if (CoreUiUtil.isActiveControl(tpc)) {
 			updateUi(patient, false);
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	void updatePrescription(
-		@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPrescription prescription){
+	void updatePrescription(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPrescription prescription) {
 		if (CoreUiUtil.isActiveControl(tpc)) {
 			if (prescription != null) {
 				if (!getMedicationComposite().isShowingHistory()) {
@@ -69,23 +69,20 @@ public class MedicationView extends ViewPart implements IRefreshable {
 					}
 				}
 				// only update with info of selected patient
-				if (prescription.getPatient()
-					.equals(ContextServiceHolder.get().getActivePatient().orElse(null))) {
+				if (prescription.getPatient().equals(ContextServiceHolder.get().getActivePatient().orElse(null))) {
 					updateUi(prescription.getPatient(), true);
 				}
 			}
 		}
 	}
-	
+
 	@Inject
-	void createPrescription(
-		@Optional @UIEventTopic(ElexisEventTopics.EVENT_CREATE) IPrescription prescription){
+	void createPrescription(@Optional @UIEventTopic(ElexisEventTopics.EVENT_CREATE) IPrescription prescription) {
 		updatePrescription(prescription);
 	}
-	
+
 	@Inject
-	void reloadPrescription(
-		@Optional @UIEventTopic(ElexisEventTopics.EVENT_CREATE) Class<?> clazz){
+	void reloadPrescription(@Optional @UIEventTopic(ElexisEventTopics.EVENT_CREATE) Class<?> clazz) {
 		if (clazz == IPrescription.class) {
 			if (CoreUiUtil.isActiveControl(tpc)) {
 				ContextServiceHolder.get().getActivePatient().ifPresent(patient -> {
@@ -94,64 +91,63 @@ public class MedicationView extends ViewPart implements IRefreshable {
 			}
 		}
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		tpc = new MedicationComposite(parent, SWT.NONE, getSite());
 		getSite().setSelectionProvider(tpc);
 		int sorter = ConfigServiceHolder.getUser(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, 1);
 		tpc.setViewerSortOrder(ViewerSortOrder.getSortOrderPerValue(sorter));
-		
-		ViewerSortOrder.getSortOrderPerValue(sorter).setAtcSort(
-			ConfigServiceHolder
-				.getUser(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ATC, false));
+
+		ViewerSortOrder.getSortOrderPerValue(sorter)
+				.setAtcSort(ConfigServiceHolder.getUser(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ATC, false));
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		getSite().getPage().removePartListener(udpateOnVisible);
 		super.dispose();
 	}
-	
-	public void setMedicationTableViewerComparator(ViewerSortOrder order){
+
+	public void setMedicationTableViewerComparator(ViewerSortOrder order) {
 		tpc.setViewerSortOrder(order);
 		ConfigServiceHolder.setUser(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, order.val);
 	}
-	
-	public ViewerSortOrder getMedicationTableViewerComparator(){
+
+	public ViewerSortOrder getMedicationTableViewerComparator() {
 		return tpc.getViewerSortOrder();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		tpc.setFocus();
 		refresh();
 	}
-	
-	private void updateUi(IPatient patient, boolean forceUpdate){
+
+	private void updateUi(IPatient patient, boolean forceUpdate) {
 		tpc.updateUi(patient, forceUpdate);
 	}
-	
-	public void refresh(){
+
+	public void refresh() {
 		if (CoreUiUtil.isActiveControl(tpc)) {
 			Display.getDefault().asyncExec(() -> {
 				updateUi(ContextServiceHolder.get().getActivePatient().orElse(null), false);
 			});
 		}
 	}
-	
-	public void resetSelection(){
+
+	public void resetSelection() {
 		tpc.resetSelectedMedication();
 	}
-	
-	public MedicationComposite getMedicationComposite(){
+
+	public MedicationComposite getMedicationComposite() {
 		return tpc;
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

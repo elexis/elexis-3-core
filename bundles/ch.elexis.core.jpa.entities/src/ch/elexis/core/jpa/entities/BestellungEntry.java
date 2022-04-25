@@ -22,126 +22,125 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "BestellungEntry.bestellung", query = "SELECT be FROM BestellungEntry be WHERE be.deleted = false AND be.bestellung = :bestellung")
-public class BestellungEntry extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted {
-	
+public class BestellungEntry extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
+
 	@ManyToOne()
 	@JoinColumn(name = "BESTELLUNG")
 	private Bestellung bestellung;
-	
+
 	@Column(length = 25, name = "STOCK")
 	private String stockid;
-	
+
 	@Column(length = 25, name = "ARTICLE_TYPE")
 	private String articleType;
-	
+
 	@Column(length = 25, name = "ARTICLE_ID")
 	private String articleId;
-	
+
 	@Column
 	private int count;
-	
+
 	@Column
 	private int state;
-	
+
 	@Column(length = 25, name = "PROVIDER")
 	private String providerId;
-	
-	public Bestellung getBestellung(){
+
+	public Bestellung getBestellung() {
 		return bestellung;
 	}
-	
-	public void setBestellung(Bestellung bestellung){
+
+	public void setBestellung(Bestellung bestellung) {
 		this.bestellung = bestellung;
 	}
-	
-	public String getStockid(){
+
+	public String getStockid() {
 		return stockid;
 	}
-	
-	public void setStockid(String stockid){
+
+	public void setStockid(String stockid) {
 		this.stockid = stockid;
 	}
-	
-	public String getArticleType(){
+
+	public String getArticleType() {
 		return articleType;
 	}
-	
-	public void setArticleType(String articleType){
+
+	public void setArticleType(String articleType) {
 		this.articleType = articleType;
 	}
-	
-	public String getArticleId(){
+
+	public String getArticleId() {
 		return articleId;
 	}
-	
-	public void setArticleId(String articleId){
+
+	public void setArticleId(String articleId) {
 		this.articleId = articleId;
 	}
-	
-	public int getCount(){
+
+	public int getCount() {
 		return count;
 	}
-	
-	public void setCount(int count){
+
+	public void setCount(int count) {
 		this.count = count;
 	}
-	
-	public int getState(){
+
+	public int getState() {
 		return state;
 	}
-	
-	public void setState(int state){
+
+	public void setState(int state) {
 		this.state = state;
 	}
-	
-	public String getProviderId(){
+
+	public String getProviderId() {
 		return providerId;
 	}
-	
-	public void setProviderId(String providerId){
+
+	public void setProviderId(String providerId) {
 		this.providerId = providerId;
 	}
 }

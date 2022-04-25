@@ -34,87 +34,81 @@ import ch.elexis.data.Query;
 
 @RunWith(Parameterized.class)
 public class Test_HL7Import_MPFRule {
-	
+
 	private HL7Parser hlp = new TestHL7Parser("HL7_Test");
 	private static Path workDir = null;
-	
+
 	private Boolean isMFPRuleActive;
-	
-	public Test_HL7Import_MPFRule(boolean isMFPRuleActive){
+
+	public Test_HL7Import_MPFRule(boolean isMFPRuleActive) {
 		this.isMFPRuleActive = isMFPRuleActive;
-		
+
 		if (isMFPRuleActive) {
 			ConfigServiceHolder.setGlobalAsList(
-				Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
-				Collections.singletonList(AllTests.testLab.getId()));
+					Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
+					Collections.singletonList(AllTests.testLab.getId()));
 		} else {
 			ConfigServiceHolder.setGlobalAsList(
-				Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
-				Collections.emptyList());
+					Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
+					Collections.emptyList());
 		}
 	}
-	
+
 	@Parameterized.Parameters(name = "{0}")
-	public static Collection<Boolean> primeNumbers(){
-		return Arrays.asList(new Boolean[] {
-			true, false
-		});
+	public static Collection<Boolean> primeNumbers() {
+		return Arrays.asList(new Boolean[] { true, false });
 	}
-	
+
 	@Before
-	public void setup() throws Exception{
+	public void setup() throws Exception {
 		workDir = Helpers.copyRscToTempDirectory();
 	}
-	
+
 	@After
-	public void teardown() throws Exception{
+	public void teardown() throws Exception {
 		removeAllPatientsAndDependants();
 		if (workDir != null) {
 			Helpers.removeTempDirectory(workDir);
 		}
 	}
-	
+
 	@Test
-	public void test_ImportOnExistingLabItemRefValue_11114() throws IOException{
+	public void test_ImportOnExistingLabItemRefValue_11114() throws IOException {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		
+
 		// set the use local config to false
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
-		
-		LabItem liKrus = new LabItem("KRUS", "Kreatinin im Urin", AllTests.testLab, "> 60", "> 60",
-			"mmol/l", LabItemTyp.NUMERIC, "Urin", "42");
-		
+
+		LabItem liKrus = new LabItem("KRUS", "Kreatinin im Urin", AllTests.testLab, "> 60", "> 60", "mmol/l",
+				LabItemTyp.NUMERIC, "Urin", "42");
+
 		parseOneHL7file(hlp, new File(workDir.toString(), "Analytica/Albumin.hl7"), false, true);
-		
+
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
 		assertEquals(4, qrr.size());
 		for (LabResult labResult : qrr) {
-			
+
 			assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
-			assertEquals(labResult.getOrigin().getLabel(), AllTests.testLab.getId(),
-				labResult.getOrigin().getId());
-			
+			assertEquals(labResult.getOrigin().getLabel(), AllTests.testLab.getId(), labResult.getOrigin().getId());
+
 			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
 			String itemCode = labResult.getItem().getKuerzel();
 			switch (itemCode) {
 			case "KRUS":
 				assertEquals(liKrus.getId(), labResult.getItem().getId());
-				assertEquals(
-					(isMFPRuleActive) ? Description.PATHO_IMPORT : Description.PATHO_REF_ITEM,
-					pathologicDescription.getDescription());
+				assertEquals((isMFPRuleActive) ? Description.PATHO_IMPORT : Description.PATHO_REF_ITEM,
+						pathologicDescription.getDescription());
 				Locale locale = Locale.getDefault();
 				if (locale.getLanguage().equals("de")) {
-					assertEquals((isMFPRuleActive) ? "Lt. MPF Regel" : "> 60",
-						pathologicDescription.getReference());
+					assertEquals((isMFPRuleActive) ? "Lt. MPF Regel" : "> 60", pathologicDescription.getReference());
 				} else if (locale.getLanguage().equals("en")) {
 					// This is the case when running under CI via gitlab/travis
-					assertEquals((isMFPRuleActive) ? "acc. MPF rule" : "> 60",
-						pathologicDescription.getReference());
+					assertEquals((isMFPRuleActive) ? "acc. MPF rule" : "> 60", pathologicDescription.getReference());
 				} else {
-					System.out.println(String.format("Skipping test for language %s produced %s",
-						locale.getLanguage(), pathologicDescription.getReference()));
+					System.out.println(String.format("Skipping test for language %s produced %s", locale.getLanguage(),
+							pathologicDescription.getReference()));
 				}
 				assertEquals((isMFPRuleActive) ? 0 : 1, labResult.getFlags());
 				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
@@ -123,10 +117,10 @@ public class Test_HL7Import_MPFRule {
 				break;
 			case "MIKA":
 				assertEquals((isMFPRuleActive) ? Description.PATHO_IMPORT : Description.PATHO_NOREF,
-					pathologicDescription.getDescription());
+						pathologicDescription.getDescription());
 				assertEquals(0, labResult.getFlags());
 				assertEquals((isMFPRuleActive) ? Boolean.FALSE : Boolean.TRUE,
-					labResult.isPathologicFlagIndetermined(null));
+						labResult.isPathologicFlagIndetermined(null));
 				assertEquals("404", labResult.getResult());
 				break;
 			case "MIKAQ":
@@ -141,9 +135,8 @@ public class Test_HL7Import_MPFRule {
 				assertEquals("2.07", labResult.getResult());
 				assertEquals("mU/l", labResult.getUnit());
 				assertEquals("0.55 - 4.78", labResult.getRefFemale());
-				assertEquals(
-					(isMFPRuleActive) ? Description.PATHO_IMPORT : Description.PATHO_REF_ITEM,
-					pathologicDescription.getDescription());
+				assertEquals((isMFPRuleActive) ? Description.PATHO_IMPORT : Description.PATHO_REF_ITEM,
+						pathologicDescription.getDescription());
 				assertEquals(0, labResult.getFlags());
 				break;
 			default:
@@ -151,23 +144,22 @@ public class Test_HL7Import_MPFRule {
 			}
 		}
 	}
-	
+
 	@Test
-	public void test_ImportConsiderCorrectNPathologicFlag_11231() throws IOException{
-		
+	public void test_ImportConsiderCorrectNPathologicFlag_11231() throws IOException {
+
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		
-		parseOneHL7file(hlp,
-			new File(workDir.toString(), "XLabResults/09168648_20150327102125_13382.hl7"), false,
-			true);
-		
+
+		parseOneHL7file(hlp, new File(workDir.toString(), "XLabResults/09168648_20150327102125_13382.hl7"), false,
+				true);
+
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
 		assertEquals(26, qrr.size());
 		for (LabResult labResult : qrr) {
 			assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
-			
+
 			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
 			String itemCode = labResult.getItem().getKuerzel();
 			switch (itemCode) {
@@ -187,7 +179,7 @@ public class Test_HL7Import_MPFRule {
 				break;
 			}
 		}
-		
+
 	}
-	
+
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views;
@@ -49,23 +49,23 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	public final static String ID = "ch.elexis.RezeptBlatt"; //$NON-NLS-1$
 	TextContainer text;
 	Brief actBrief;
-	
+
 	private boolean addressSelection;
-	
-	public RezeptBlatt(){
+
+	public RezeptBlatt() {
 		addressSelection = false;
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		if (actBrief != null) {
 			LocalLockServiceHolder.get().releaseLock(actBrief);
 		}
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
 	}
-	
-	private void updateTextLock(){
+
+	private void updateTextLock() {
 		if (actBrief != null) {
 			// test lock and set read only before opening the Brief
 			LockResponse result = LocalLockServiceHolder.get().acquireLock(actBrief);
@@ -77,14 +77,13 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			}
 		}
 	}
-	
+
 	/**
 	 * load a Rezept from the database
-	 * 
-	 * @param brief
-	 *            the Brief for the Rezept to be shown
+	 *
+	 * @param brief the Brief for the Rezept to be shown
 	 */
-	public void loadRezeptFromDatabase(Rezept rp, Brief brief){
+	public void loadRezeptFromDatabase(Rezept rp, Brief brief) {
 		if (actBrief != null) {
 			LocalLockServiceHolder.get().releaseLock(actBrief);
 		}
@@ -94,42 +93,39 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		rp.setBrief(actBrief);
 		EditLocalDocumentUtil.startEditLocalDocument(this, brief);
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		text = new TextContainer(getViewSite());
 		text.getPlugin().createContainer(parent, this);
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
+
 	/**
 	 * Create a recipe document, with a list of prescriptions from Rezept parameter.
-	 * 
+	 *
 	 * @param rp
 	 * @param template
 	 * @param replace
 	 * @return
 	 */
-	public boolean createList(Rezept rp, String template, String replace){
+	public boolean createList(Rezept rp, String template, String replace) {
 		if (actBrief != null) {
 			LocalLockServiceHolder.get().releaseLock(actBrief);
 		}
-		Kontakt adressat =
-			addressSelection ? null : (Kontakt) ElexisEventDispatcher.getSelected(Patient.class);
+		Kontakt adressat = addressSelection ? null : (Kontakt) ElexisEventDispatcher.getSelected(Patient.class);
 		actBrief = text.createFromTemplateName(text.getAktuelleKons(), template, Brief.RP, adressat,
-			template + " " + rp.getDate());
+				template + " " + rp.getDate());
 		updateTextLock();
 		List<Prescription> lines = rp.getLines();
 		String[][] fields = new String[lines.size()][];
-		int[] wt = new int[] {
-			10, 70, 20
-		};
+		int[] wt = new int[] { 10, 70, 20 };
 		if (replace.equals(Messages.RezeptBlatt_4)) {
 			fields = createRezeptListFields(lines);
 		}
@@ -139,9 +135,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		} else {
 			replace = Messages.RezeptBlatt_4_Extended;
 			fields = createExtendedTakingListFields(lines);
-			wt = new int[] {
-				5, 45, 10, 10, 15, 15
-			};
+			wt = new int[] { 5, 45, 10, 10, 15, 15 };
 			if (insertTable(replace, fields, wt, Brief.RP)) {
 				// save and open
 			}
@@ -150,8 +144,8 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 		return true;
 	}
-	
-	private boolean insertTable(String replace, String[][] fields, int[] wt, String typ){
+
+	private boolean insertTable(String replace, String[][] fields, int[] wt, String typ) {
 		if (text.getPlugin().insertTable(replace, 0, fields, wt)) {
 			if (text.getPlugin().isDirectOutput()) {
 				text.getPlugin().print(null, null, true);
@@ -161,30 +155,27 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Create a document with a list of prescriptions, not a recipe.
-	 * 
+	 *
 	 * @param prescriptions
 	 * @param template
 	 * @param replace
 	 * @return
 	 */
-	public boolean createList(Prescription[] prescriptions, String template, String replace){
+	public boolean createList(Prescription[] prescriptions, String template, String replace) {
 		if (actBrief != null) {
 			LocalLockServiceHolder.get().releaseLock(actBrief);
 		}
 		TimeTool now = new TimeTool();
 		actBrief = text.createFromTemplateName(text.getAktuelleKons(), template, Brief.UNKNOWN,
-			(Patient) ElexisEventDispatcher
-				.getSelected(Patient.class),
-			template + " " + now.toString(TimeTool.DATE_GER));
+				(Patient) ElexisEventDispatcher.getSelected(Patient.class),
+				template + " " + now.toString(TimeTool.DATE_GER));
 		updateTextLock();
 		List<Prescription> lines = Arrays.asList(prescriptions);
 		String[][] fields = new String[lines.size()][];
-		int[] wt = new int[] {
-			10, 70, 20
-		};
+		int[] wt = new int[] { 10, 70, 20 };
 		if (replace.equals(Messages.RezeptBlatt_4)) {
 			fields = createRezeptListFields(lines);
 		} else if (replace.equals(Messages.RezeptBlatt_6)) {
@@ -196,18 +187,14 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			if (replace.equals(Messages.RezeptBlatt_4)) {
 				replace = Messages.RezeptBlatt_4_Extended;
 				fields = createExtendedTakingListFields(lines);
-				wt = new int[] {
-					5, 45, 10, 10, 15, 15
-				};
+				wt = new int[] { 5, 45, 10, 10, 15, 15 };
 				if (insertTable(replace, fields, wt, Brief.RP)) {
 					// save and open
 				}
 			} else if (replace.equals(Messages.RezeptBlatt_6)) {
 				replace = Messages.RezeptBlatt_6_Extended;
 				fields = createExtendedTakingListFields(lines);
-				wt = new int[] {
-					5, 45, 10, 10, 15, 15
-				};
+				wt = new int[] { 5, 45, 10, 10, 15, 15 };
 				if (insertTable(replace, fields, wt, Brief.UNKNOWN)) {
 					// save and open
 				}
@@ -217,14 +204,14 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 		return true;
 	}
-	
-	public String[][] createRezeptListFields(List<Prescription> lines){
+
+	public String[][] createRezeptListFields(List<Prescription> lines) {
 		String[][] fields = new String[lines.size()][];
-		
+
 		for (int i = 0; i < fields.length; i++) {
 			Prescription p = lines.get(i);
 			fields[i] = new String[3];
-			fields[i][0] = p.get(Messages.RezeptBlatt_number); //$NON-NLS-1$
+			fields[i][0] = p.get(Messages.RezeptBlatt_number); // $NON-NLS-1$
 			String bem = p.getBemerkung();
 			if (StringTool.isNothing(bem)) {
 				fields[i][1] = p.getSimpleLabel();
@@ -232,18 +219,18 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 				fields[i][1] = p.getSimpleLabel() + "\t\r" + bem; //$NON-NLS-1$
 			}
 			fields[i][2] = p.getDosis();
-			
+
 		}
 		return fields;
 	}
-	
-	public String[][] createTakingListFields(List<Prescription> lines){
+
+	public String[][] createTakingListFields(List<Prescription> lines) {
 		String[][] fields = new String[lines.size()][];
-		
+
 		for (int i = 0; i < fields.length; i++) {
 			Prescription p = lines.get(i);
 			fields[i] = new String[3];
-			fields[i][0] = p.get(Messages.RezeptBlatt_number); //$NON-NLS-1$
+			fields[i][0] = p.get(Messages.RezeptBlatt_number); // $NON-NLS-1$
 			String bem = p.getBemerkung();
 			String patInfo = p.getDisposalComment();
 			if (StringTool.isNothing(bem)) {
@@ -259,10 +246,10 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		}
 		return fields;
 	}
-	
-	public String[][] createExtendedTakingListFields(List<Prescription> lines){
+
+	public String[][] createExtendedTakingListFields(List<Prescription> lines) {
 		String[][] fields = new String[lines.size() + 1][];
-		
+
 		fields[0] = new String[6];
 		fields[0][0] = "";
 		fields[0][1] = "Medikament";
@@ -270,12 +257,12 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		fields[0][3] = "Von bis und mit";
 		fields[0][4] = "Anwendungsinstruktion";
 		fields[0][5] = "Anwendungsgrund";
-		
+
 		for (int i = 1; i < fields.length; i++) {
 			Prescription p = lines.get(i - 1);
 			fields[i] = new String[6];
 			if (p.getEntryType() != null && p.getEntryType() != EntryType.RECIPE
-				&& p.getEntryType() != EntryType.UNKNOWN) {
+					&& p.getEntryType() != EntryType.UNKNOWN) {
 				fields[i][0] = p.getEntryType().name().substring(0, 1);
 			} else {
 				fields[i][0] = "";
@@ -288,66 +275,66 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		}
 		return fields;
 	}
-	
-	public boolean createRezept(Rezept rp){
+
+	public boolean createRezept(Rezept rp) {
 		boolean ret = createList(rp, TT_PRESCRIPTION, Messages.RezeptBlatt_4);
-		if (ret) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (ret) { // $NON-NLS-1$ //$NON-NLS-2$
 			new OutputLog(rp, this);
 			return true;
 		}
 		return false;
 	}
-	
-	public boolean createEinnahmeliste(Patient pat, Prescription[] pres){
+
+	public boolean createEinnahmeliste(Patient pat, Prescription[] pres) {
 		return createList(pres, TT_INTAKE_LIST, Messages.RezeptBlatt_6);
 	}
-	
+
 	@Override
-	public void save(){
+	public void save() {
 		if (actBrief != null) {
 			actBrief.save(text.getPlugin().storeToByteArray(), text.getPlugin().getMimeType());
 		}
 	}
-	
+
 	@Override
-	public boolean saveAs(){
+	public boolean saveAs() {
 		// TODO Automatisch erstellter Methoden-Stub
 		return false;
 	}
-	
+
 	@Override
-	public void activation(boolean mode){
+	public void activation(boolean mode) {
 		if (mode == false) {
 			save();
 		}
-		
+
 	}
-	
+
 	@Override
-	public void visible(boolean mode){
-		
+	public void visible(boolean mode) {
+
 	}
-	
+
 	@Override
-	public String getOutputterDescription(){
+	public String getOutputterDescription() {
 		return "Druckerausgabe erstellt";
 	}
-	
+
 	@Override
-	public String getOutputterID(){
+	public String getOutputterID() {
 		return "ch.elexis.RezeptBlatt";
 	}
-	
+
 	@Override
-	public Image getSymbol(){
+	public Image getSymbol() {
 		return Images.IMG_PRINTER.getImage();
 	}
-	
-	public boolean isAddressSelection(){
+
+	public boolean isAddressSelection() {
 		return addressSelection;
 	}
-	
-	public void setAddressSelection(boolean value){
+
+	public void setAddressSelection(boolean value) {
 		this.addressSelection = value;
 	}
 }

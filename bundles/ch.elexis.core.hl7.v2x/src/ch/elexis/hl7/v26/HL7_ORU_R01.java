@@ -58,82 +58,75 @@ import ch.elexis.hl7.model.StringData;
 import ch.elexis.hl7.model.TextData;
 
 public class HL7_ORU_R01 extends HL7Writer {
-	
+
 	// constants for OBR-47
 	public static final String CODINGSYSTEM_DORNER_GROUP_CODE = "99DGC"; //$NON-NLS-1$
 	public static final String CODINGSYSTEM_DORNER_GROUP_POSITION = "99DGP"; //$NON-NLS-1$
-	
+
 	final String uniqueMessageControlID;
 	final String uniqueProcessingID;
 	final HL7Mandant mandant;
-	
-	public HL7_ORU_R01(){
+
+	public HL7_ORU_R01() {
 		super();
 		this.uniqueMessageControlID = null;
 		this.uniqueProcessingID = null;
 		this.mandant = null;
 	}
-	
+
 	public HL7_ORU_R01(final String sendingApplication1, final String sendingApplication3,
-		final String receivingApplication1, final String receivingApplication3,
-		final String receivingFacility, final String uniqueMessageControlID,
-		final String uniqueProcessingID, HL7Mandant mandant){
-		super(sendingApplication1, sendingApplication3, receivingApplication1,
-			receivingApplication3, receivingFacility);
+			final String receivingApplication1, final String receivingApplication3, final String receivingFacility,
+			final String uniqueMessageControlID, final String uniqueProcessingID, HL7Mandant mandant) {
+		super(sendingApplication1, sendingApplication3, receivingApplication1, receivingApplication3,
+				receivingFacility);
 		this.uniqueMessageControlID = uniqueMessageControlID;
 		this.uniqueProcessingID = uniqueProcessingID;
 		this.mandant = mandant;
 	}
-	
+
 	/**
 	 * Reads an ORU_R01 HL7 file
-	 * 
-	 * @param text
-	 *            ISO-8559-1 String
+	 *
+	 * @param text ISO-8559-1 String
 	 * @return
 	 * @throws HL7Exception
 	 */
-	public ORU_R01 read(String text) throws HL7Exception{
+	public ORU_R01 read(String text) throws HL7Exception {
 		Parser p = new PipeParser();
 		p.setValidationContext(new ElexisValidation());
 		Message hl7Msg = p.parse(text);
 		if (hl7Msg instanceof ORU_R01) {
 			return (ORU_R01) hl7Msg;
 		} else {
-			addError(MessageFormat.format(
-				Messages.HL7_ORU_R01_Error_WrongMsgType, hl7Msg.getName())); //$NON-NLS-1$
+			addError(MessageFormat.format(Messages.HL7_ORU_R01_Error_WrongMsgType, hl7Msg.getName())); // $NON-NLS-1$
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Reads an observation ORU_R01 HL7 file
-	 * 
-	 * @param text
-	 *            ISO-8559-1 String
+	 *
+	 * @param text ISO-8559-1 String
 	 * @return
 	 * @throws IOException
 	 * @throws EncodingNotSupportedException
 	 * @throws HL7Exception
 	 * @throws ParseException
 	 */
-	public ObservationMessage readObservation(final String text) throws IOException,
-		EncodingNotSupportedException, HL7Exception, ParseException{
+	public ObservationMessage readObservation(final String text)
+			throws IOException, EncodingNotSupportedException, HL7Exception, ParseException {
 		clearMessages();
 		ObservationMessage observation = null;
-		
+
 		ORU_R01 oru = read(text);
 		if (oru != null) {
-			String msh3_sendingApplication =
-				oru.getMSH().getMsh3_SendingApplication().getHd1_NamespaceID().getValue();
-			String msh4_sendingFacility =
-				oru.getMSH().getMsh4_SendingFacility().getHd1_NamespaceID().getValue();
+			String msh3_sendingApplication = oru.getMSH().getMsh3_SendingApplication().getHd1_NamespaceID().getValue();
+			String msh4_sendingFacility = oru.getMSH().getMsh4_SendingFacility().getHd1_NamespaceID().getValue();
 			String msh7_dateTimeOfMessage = oru.getMSH().getMsh7_DateTimeOfMessage().getValue();
-			
+
 			PID pid = oru.getPATIENT_RESULT().getPATIENT().getPID();
 			String pid2_patientId = pid.getPid2_PatientID().getCx1_IDNumber().getValue();
-			String pid4_alternatePatientId =
-				pid.getPid4_AlternatePatientIDPID(0).getCx1_IDNumber().getValue();
+			String pid4_alternatePatientId = pid.getPid4_AlternatePatientIDPID(0).getCx1_IDNumber().getValue();
 			String tmp1 = "";
 			String tmp2 = "";
 			if (pid.getPid5_PatientName(0).getName() != null)
@@ -141,21 +134,20 @@ public class HL7_ORU_R01 extends HL7Writer {
 			if (pid.getPid5_PatientName(0).getFamilyName() != null)
 				tmp2 = pid.getPid5_PatientName(0).getGivenName().getValue();
 			String pid5_patientName = tmp1 + " " + tmp2;
-			String nteAfterPid_patientNotesAndComments = readPatientNotesAndComments(oru.getPATIENT_RESULT().getPATIENT());
-			String orc2_placerOrderNumber =
-				oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC().getOrc2_PlacerOrderNumber()
-					.getEi1_EntityIdentifier().getValue();
-			observation =
-				new ObservationMessage(msh3_sendingApplication, msh4_sendingFacility,
-					msh7_dateTimeOfMessage, pid2_patientId, pid5_patientName, nteAfterPid_patientNotesAndComments,
-					pid4_alternatePatientId, orc2_placerOrderNumber);
-			
+			String nteAfterPid_patientNotesAndComments = readPatientNotesAndComments(
+					oru.getPATIENT_RESULT().getPATIENT());
+			String orc2_placerOrderNumber = oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC()
+					.getOrc2_PlacerOrderNumber().getEi1_EntityIdentifier().getValue();
+			observation = new ObservationMessage(msh3_sendingApplication, msh4_sendingFacility, msh7_dateTimeOfMessage,
+					pid2_patientId, pid5_patientName, nteAfterPid_patientNotesAndComments, pid4_alternatePatientId,
+					orc2_placerOrderNumber);
+
 			int obscount = oru.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
 			for (int j = 0; j < obscount; j++) {
 				String appendedTX = ""; //$NON-NLS-1$
 				OBR obr = oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBR();
 				String obrDateOfObservation = obr.getObr7_ObservationDateTime().getValue();
-				
+
 				// Order Comments
 				String orderCommentNTE = null;
 				for (int n = 0; n < oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getNTEReps(); n++) {
@@ -171,19 +163,16 @@ public class HL7_ORU_R01 extends HL7Writer {
 					}
 				}
 				if (orderCommentNTE != null) {
-					observation.add(new TextData(HL7Constants.COMMENT_NAME, orderCommentNTE,
-						obrDateOfObservation, HL7Constants.COMMENT_GROUP, null));
+					observation.add(new TextData(HL7Constants.COMMENT_NAME, orderCommentNTE, obrDateOfObservation,
+							HL7Constants.COMMENT_GROUP, null));
 				}
-				
-				for (int i = 0; i < oru.getPATIENT_RESULT().getORDER_OBSERVATION(j)
-					.getOBSERVATIONReps(); i++) {
+
+				for (int i = 0; i < oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBSERVATIONReps(); i++) {
 					// Notes and Comments (NTE)
 					String commentNTE = null;
-					for (int n = 0; n < oru.getPATIENT_RESULT().getORDER_OBSERVATION(j)
-						.getOBSERVATION(i).getNTEReps(); n++) {
-						NTE nte =
-							oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBSERVATION(i)
-								.getNTE(n);
+					for (int n = 0; n < oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBSERVATION(i)
+							.getNTEReps(); n++) {
+						NTE nte = oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBSERVATION(i).getNTE(n);
 						AbstractPrimitive comment = nte.getNte3_Comment(0);
 						if (comment != null) {
 							if (commentNTE != null) {
@@ -194,7 +183,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 							commentNTE += comment.getValue();
 						}
 					}
-					
+
 					// Observation
 					// Gruppe/Sortierung
 					String group = null;
@@ -217,30 +206,26 @@ public class HL7_ORU_R01 extends HL7Writer {
 							}
 						}
 					}
-					
+
 					// Resultate
-					OBX obx =
-						oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBSERVATION(i).getOBX();
+					OBX obx = oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBSERVATION(i).getOBX();
 					String valueType = obx.getObx2_ValueType().getValue();
 					if (HL7Constants.OBX_VALUE_TYPE_ED.equals(valueType)) {
-						String observationId =
-							obx.getObx3_ObservationIdentifier().getCwe1_Identifier().getValue();
+						String observationId = obx.getObx3_ObservationIdentifier().getCwe1_Identifier().getValue();
 						if (!"DOCUMENT".equals(observationId)) { //$NON-NLS-1$
-							addWarning(MessageFormat.format(
-								Messages.HL7_ORU_R01_Error_WrongObsIdentifier,
-								observationId));
+							addWarning(
+									MessageFormat.format(Messages.HL7_ORU_R01_Error_WrongObsIdentifier, observationId));
 						}
 						ED ed = (ED) obx.getObx5_ObservationValue(0).getData();
 						String filename = ed.getEd3_DataSubtype().getValue();
 						String encoding = ed.getEd4_Encoding().getValue();
 						String data = ed.getEd5_Data().getValue();
-						String dateOfObservation =
-							obx.getObx14_DateTimeOfTheObservation().getValue();
-						observation.add(new EncapsulatedData(filename, encoding, data,
-							dateOfObservation, commentNTE, group, sequence));
+						String dateOfObservation = obx.getObx14_DateTimeOfTheObservation().getValue();
+						observation.add(new EncapsulatedData(filename, encoding, data, dateOfObservation, commentNTE,
+								group, sequence));
 					} else if (HL7Constants.OBX_VALUE_TYPE_ST.equals(valueType)) {
 						String name = obx.getObx4_ObservationSubID().getValue();
-						
+
 						String valueST = ""; //$NON-NLS-1$
 						Object value = obx.getObx5_ObservationValue(0).getData();
 						if (value instanceof ST) {
@@ -248,10 +233,9 @@ public class HL7_ORU_R01 extends HL7Writer {
 						}
 						String unit = obx.getObx6_Units().getCwe1_Identifier().getValue();
 						String range = obx.getObx7_ReferencesRange().getValue();
-						String dateOfObservation =
-							obx.getObx14_DateTimeOfTheObservation().getValue();
-						observation.add(new StringData(name, unit, valueST, range,
-							dateOfObservation, commentNTE, group, sequence));
+						String dateOfObservation = obx.getObx14_DateTimeOfTheObservation().getValue();
+						observation.add(new StringData(name, unit, valueST, range, dateOfObservation, commentNTE, group,
+								sequence));
 					} else if (HL7Constants.OBX_VALUE_TYPE_TX.equals(valueType)) {
 						String valueTX = ""; //$NON-NLS-1$
 						Object value = obx.getObx5_ObservationValue(0).getData();
@@ -268,10 +252,10 @@ public class HL7_ORU_R01 extends HL7Writer {
 						appendedTX += parseTextValue(valueFT) + "\n"; //$NON-NLS-1$
 					} else {
 						addError(MessageFormat.format("Value type {0} is not implemented!", //$NON-NLS-1$
-							valueType));
+								valueType));
 					}
 				}
-				
+
 				if (appendedTX.length() > 0) {
 					// Find name in CWE: <Identifier>^<Text>. <br>
 					// <Text> if exists else use <Identifier>
@@ -283,28 +267,27 @@ public class HL7_ORU_R01 extends HL7Writer {
 					if (name == null || name.trim().length() == 0) {
 						name = cweIdentifier.getCwe1_Identifier().getValue();
 					}
-					observation
-						.add(new TextData(name, appendedTX, obrDateOfObservation, null, null));
+					observation.add(new TextData(name, appendedTX, obrDateOfObservation, null, null));
 				}
 			}
 		}
-		
+
 		return observation;
 	}
-	
-	public String parseTextValue(String value){
+
+	public String parseTextValue(String value) {
 		String text = value;
 		text = text.replaceAll("\\\\.br\\\\", "\n");
 		text = text.replaceAll("\\\\.BR\\\\", "\n");
-		
+
 		// only return parsed value if it contains reasonable input
 		if (text != null && !text.isEmpty()) {
 			return text;
 		}
 		return value;
 	}
-	
-	private String readPatientNotesAndComments(ORU_R01_PATIENT patient){
+
+	private String readPatientNotesAndComments(ORU_R01_PATIENT patient) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < patient.getNTEReps(); i++) {
 			FT comment = patient.getNTE(i).getComment(0);
@@ -315,57 +298,56 @@ public class HL7_ORU_R01 extends HL7Writer {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Creates an ORU_R01 message
-	 * 
+	 *
 	 * @param patient
 	 * @param labItem
 	 * @param labwert
-	 * 
+	 *
 	 * @return
 	 */
-	public String createText(final HL7Patient patient, final HL7LaborItem labItem,
-		final HL7LaborWert labwert) throws DataTypeException, HL7Exception{
-		
+	public String createText(final HL7Patient patient, final HL7LaborItem labItem, final HL7LaborWert labwert)
+			throws DataTypeException, HL7Exception {
+
 		ORU_R01 oru = new ORU_R01();
 		// Message
 		fillMSH(oru.getMSH(), "ORU", "R01", mandant, this.uniqueMessageControlID, //$NON-NLS-1$ //$NON-NLS-2$
-			this.uniqueProcessingID, patient); //$NON-NLS-1$ //$NON-NLS-2$
-		
+				this.uniqueProcessingID, patient); // $NON-NLS-1$ //$NON-NLS-2$
+
 		// Patient
 		PID pid = oru.getPATIENT_RESULT().getPATIENT().getPID();
 		fillPID(pid, patient);
-		
+
 		ORU_R01_ORDER_OBSERVATION orderObservation = oru.getPATIENT_RESULT().getORDER_OBSERVATION();
 		fillORC(orderObservation.getORC(), "RE", null); //$NON-NLS-1$
-		
+
 		addResultInternal(oru, patient, labItem, labwert, 0);
-		
+
 		// Now, let's encode the message and look at the output
 		Parser parser = new PipeParser();
 		return parser.encode(oru);
 	}
-	
+
 	/**
 	 * Adds a ORU_R01 observation result
-	 * 
+	 *
 	 * @param oru
 	 * @param patient
 	 * @param labItem
 	 * @param labwert
 	 * @return
 	 */
-	public String addResult(final ORU_R01 oru, final HL7Patient patient,
-		final HL7LaborItem labItem, final HL7LaborWert labwert) throws DataTypeException,
-		HL7Exception{
+	public String addResult(final ORU_R01 oru, final HL7Patient patient, final HL7LaborItem labItem,
+			final HL7LaborWert labwert) throws DataTypeException, HL7Exception {
 		int reps = oru.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
 		return addResultInternal(oru, patient, labItem, labwert, reps);
 	}
-	
+
 	/**
 	 * Adds a ORU_R01 observation result
-	 * 
+	 *
 	 * @param oru
 	 * @param patient
 	 * @param labItem
@@ -373,14 +355,12 @@ public class HL7_ORU_R01 extends HL7Writer {
 	 * @param initial
 	 * @return
 	 */
-	private String addResultInternal(final ORU_R01 oru, final HL7Patient patient,
-		final HL7LaborItem labItem, final HL7LaborWert labwert, int orderObservationIndex)
-		throws DataTypeException, HL7Exception{
-		
+	private String addResultInternal(final ORU_R01 oru, final HL7Patient patient, final HL7LaborItem labItem,
+			final HL7LaborWert labwert, int orderObservationIndex) throws DataTypeException, HL7Exception {
+
 		// Observation
-		ORU_R01_ORDER_OBSERVATION orderObservation =
-			(ORU_R01_ORDER_OBSERVATION) oru.getPATIENT_RESULT().getORDER_OBSERVATION(
-				orderObservationIndex);
+		ORU_R01_ORDER_OBSERVATION orderObservation = (ORU_R01_ORDER_OBSERVATION) oru.getPATIENT_RESULT()
+				.getORDER_OBSERVATION(orderObservationIndex);
 		fillOBR(orderObservation.getOBR(), orderObservationIndex, labItem);
 		fillOBX(orderObservation.getOBSERVATION().getOBX(), patient, labItem, labwert);
 		if (labwert.getKommentar() != null && labwert.getKommentar().length() > 0) {
@@ -390,44 +370,46 @@ public class HL7_ORU_R01 extends HL7Writer {
 		Parser parser = new PipeParser();
 		return parser.encode(oru);
 	}
-	
+
 	@Override
-	public String getVersion(){
+	public String getVersion() {
 		return "2.6"; //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Adds labor data to CWE segment
-	 * 
+	 *
 	 * @param cwe
 	 * @param labItem
 	 */
 	private void fillCWE(final CWE cwe, final HL7LaborItem laborItem, final HL7LaborWert laborWert)
-		throws DataTypeException{
-		// OBX-3: Observation Identifier <LabResult.ID>^<LabItems.KUERZEL>^^^^^^^<LabItems.TITEL>
+			throws DataTypeException {
+		// OBX-3: Observation Identifier
+		// <LabResult.ID>^<LabItems.KUERZEL>^^^^^^^<LabItems.TITEL>
 		cwe.getCwe1_Identifier().setValue(laborWert.getId());
 		cwe.getCwe2_Text().setValue(laborItem.getKuerzel());
 		cwe.getCwe9_OriginalText().setValue(laborItem.getTitel());
 	}
-	
+
 	/**
 	 * Fills OBR segment
-	 * 
+	 *
 	 * @param obr
 	 * @param labItem
 	 * @throws DataTypeException
 	 * @throws HL7Exception
 	 */
 	private void fillOBR(final OBR obr, final int index, final HL7LaborItem labItem)
-		throws DataTypeException, HL7Exception{
+			throws DataTypeException, HL7Exception {
 		obr.getObr1_SetIDOBR().setValue(new Integer(index + 1).toString());
-		
-		// OBR-4: Observation Identifier <LabResult.ID>^<LabItems.KUERZEL>^^^^^^^<LabItems.TITEL>
+
+		// OBR-4: Observation Identifier
+		// <LabResult.ID>^<LabItems.KUERZEL>^^^^^^^<LabItems.TITEL>
 		CWE cwe4 = obr.getObr4_UniversalServiceIdentifier();
 		cwe4.getCwe1_Identifier().setValue(labItem.getId());
 		cwe4.getCwe2_Text().setValue(labItem.getKuerzel());
 		cwe4.getCwe9_OriginalText().setValue(labItem.getTitel());
-		
+
 		// OBR-47: <ID der Gruppe>^<Gruppe>^99DGC~<Position>^^99DGP
 		CWE egc = obr.getFillerSupplementalServiceInformation(0);
 		egc.getCwe2_Text().setValue(labItem.getGruppe());
@@ -436,52 +418,53 @@ public class HL7_ORU_R01 extends HL7Writer {
 		egp.getCwe1_Identifier().setValue(labItem.getPrio());
 		egp.getCwe3_NameOfCodingSystem().setValue("99EGP");
 	}
-	
+
 	/**
 	 * Fills OBX segment
-	 * 
+	 *
 	 * @param obx
 	 * @param labItem
 	 * @throws DataTypeException
 	 * @throws HL7Exception
 	 */
-	private void fillOBX_TX(final OBX obx, final int index, final String text)
-		throws DataTypeException, HL7Exception{
+	private void fillOBX_TX(final OBX obx, final int index, final String text) throws DataTypeException, HL7Exception {
 		// OBX|35|TX||| Augmentin S
-		obx.getObx1_SetIDOBX().setValue(new Integer(index + 1).toString()); //$NON-NLS-1$
+		obx.getObx1_SetIDOBX().setValue(new Integer(index + 1).toString()); // $NON-NLS-1$
 		obx.getObx2_ValueType().setValue(HL7Constants.OBX_VALUE_TYPE_TX);
 		TX textType = new TX(null);
 		textType.setValue(text);
 		obx.getObx5_ObservationValue(0).setData(textType);
 	}
-	
+
 	/**
 	 * Zahl:
 	 * <ul>
-	 * <li>Wenn <LabResult.RESULTAT> kleiner als Ref Mann?, bzw. Ref Frau?, dann "L"</li>
-	 * <li>Wenn <LabResult.RESULTAT> grösser als Ref Mann?, bzw. Ref Frau?, dann "H"</li>
-	 * <li>Wenn <LabResult.RESULTAT> innerhalb Ref Mann?, bzw. Ref Frau?, dann "N"</li>
+	 * <li>Wenn <LabResult.RESULTAT> kleiner als Ref Mann?, bzw. Ref Frau?, dann
+	 * "L"</li>
+	 * <li>Wenn <LabResult.RESULTAT> grösser als Ref Mann?, bzw. Ref Frau?, dann
+	 * "H"</li>
+	 * <li>Wenn <LabResult.RESULTAT> innerhalb Ref Mann?, bzw. Ref Frau?, dann
+	 * "N"</li>
 	 * <li>Wenn Text == <LabResult.RESULTAT> dann "N" sonst "A"</li>
 	 * </ul>
 	 * Wenn kein Referenzbereich, dann keine Angabe im Abnormal-Flag
-	 * 
+	 *
 	 * @param value
 	 * @return Abnormal Flags "L"=Low, "H"=High, "N"=Normal, "A"=Abnormal
 	 */
-	private String getAbnormalFlag(HL7Patient patient, final HL7LaborItem labItem,
-		final HL7LaborWert laborWert){
+	private String getAbnormalFlag(HL7Patient patient, final HL7LaborItem labItem, final HL7LaborWert laborWert) {
 		String resultat = laborWert.getResultat();
-		
+
 		String refValue = labItem.getRefFrau();
 		if (patient.isMale()) {
 			refValue = labItem.getRefMann();
 		}
-		
+
 		if (refValue == null)
 			return "";
 		if (refValue == "")
 			return "";
-		
+
 		if (resultat != null) {
 			Double doubleObj = null;
 			try {
@@ -543,19 +526,19 @@ public class HL7_ORU_R01 extends HL7Writer {
 		}
 		return "A"; //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Fills OBX segment
-	 * 
+	 *
 	 * @param obx
 	 * @param labItem
 	 * @throws DataTypeException
 	 * @throws HL7Exception
 	 */
 	private void fillOBX(final OBX obx, final HL7Patient patient, final HL7LaborItem laborItem,
-		final HL7LaborWert laborWert) throws DataTypeException, HL7Exception{
+			final HL7LaborWert laborWert) throws DataTypeException, HL7Exception {
 		obx.getObx1_SetIDOBX().setValue("1"); //$NON-NLS-1$
-		
+
 		Type type = null;
 		if (laborItem.getTyp().equals(Typ.NUMERIC)) {
 			obx.getObx2_ValueType().setValue(HL7Constants.OBX_VALUE_TYPE_NM);
@@ -623,8 +606,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 				ED encapsulatedType = new ED(null);
 				encapsulatedType.getEd2_TypeOfData().setValue("application"); //$NON-NLS-1$
 				encapsulatedType.getEd4_Encoding().setValue("BASE64"); //$NON-NLS-1$
-				String base64Value =
-					new String(Base64.encodeBase64(laborWert.getResultat().getBytes()));
+				String base64Value = new String(Base64.encodeBase64(laborWert.getResultat().getBytes()));
 				encapsulatedType.getEd5_Data().setValue(base64Value);
 				type = encapsulatedType;
 			} else {
@@ -635,15 +617,16 @@ public class HL7_ORU_R01 extends HL7Writer {
 				type = textType;
 			}
 		}
-		
+
 		fillCWE(obx.getObx3_ObservationIdentifier(), laborItem, laborWert);
 		// OBX-5: Observation Value <LabResult.RESULTAT>, bwz bei Dokument:
 		// ^application^^BASE64^<LabResult.RESULTAT(Base64-codiert)>
 		obx.getObx5_ObservationValue(0).setData(type);
-		
+
 		// OBX-6: Units <LabItems.EINHEIT>
 		obx.getObx6_Units().getCwe1_Identifier().setValue(laborItem.getEinheit());
-		// OBX-7: References Range <LabItems.REFMANN>, bzw <LabItems.REFFRAU> je nach Geschlecht
+		// OBX-7: References Range <LabItems.REFMANN>, bzw <LabItems.REFFRAU> je nach
+		// Geschlecht
 		String refRange = "";
 		if (patient.isMale()) {
 			refRange = laborItem.getRefMann();
@@ -660,17 +643,16 @@ public class HL7_ORU_R01 extends HL7Writer {
 		// OBX-14: Date/Time of Observation <LabResult.DATUM>
 		obx.getObx14_DateTimeOfTheObservation().setValue(laborWert.getZeitpunkt());
 	}
-	
+
 	/**
 	 * Fills NTE segment
-	 * 
+	 *
 	 * @param nte
 	 * @param labItem
 	 * @throws DataTypeException
 	 * @throws HL7Exception
 	 */
-	private void fillNTE(final NTE nte, final HL7LaborWert laborWert) throws DataTypeException,
-		HL7Exception{
+	private void fillNTE(final NTE nte, final HL7LaborWert laborWert) throws DataTypeException, HL7Exception {
 		nte.getNte1_SetIDNTE().setValue("1"); //$NON-NLS-1$
 		nte.getNte3_Comment(0).setValue(laborWert.getKommentar().replace("\n", ";"));
 	}

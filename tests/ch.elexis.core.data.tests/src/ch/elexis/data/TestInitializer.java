@@ -12,17 +12,17 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 
 public class TestInitializer {
-	
+
 	public static final String FLAVOR_H2_MEM = "h2";
 	public static final String FLAVOR_MYSQL = "mysql";
 	public static final String FLAVOR_POSTGRES = "postgresql";
-	
+
 	/**
-	 * 
+	 *
 	 * @param dbflavor
 	 * @return
 	 */
-	public static JdbcLink initTestDBConnection(String dbflavor){
+	public static JdbcLink initTestDBConnection(String dbflavor) {
 		JdbcLink link = null;
 		if (dbflavor == FLAVOR_H2_MEM) {
 			link = new JdbcLink("org.h2.Driver", "jdbc:h2:~/elexisTest/elexisTest;AUTO_SERVER=TRUE", "h2");
@@ -31,7 +31,7 @@ public class TestInitializer {
 		} else if (dbflavor == FLAVOR_POSTGRES) {
 			link = JdbcLink.createPostgreSQLLink("localhost", "unittests");
 		}
-		
+
 		if (link == null) {
 			return link;
 		}
@@ -39,8 +39,8 @@ public class TestInitializer {
 			// PostgreSQL fails downcasing a username, even when all users are in lower case
 			String userName = dbflavor == FLAVOR_POSTGRES ? "elexistest" : "elexisTest";
 			String password = "elexisTest";
-			if(dbflavor == FLAVOR_H2_MEM) {
-				userName ="sa";
+			if (dbflavor == FLAVOR_H2_MEM) {
+				userName = "sa";
 				password = "";
 			}
 			boolean connectionOk = link.connect(userName, password);
@@ -53,9 +53,8 @@ public class TestInitializer {
 		}
 		return link;
 	}
-	
-	protected static void executeDBScript(DBConnection connection, String filename)
-		throws IOException{
+
+	protected static void executeDBScript(DBConnection connection, String filename) throws IOException {
 		Stm stm = null;
 		try (InputStream is = PersistentObject.class.getResourceAsStream(filename)) {
 			stm = connection.getStatement();
@@ -68,15 +67,15 @@ public class TestInitializer {
 			connection.releaseStatement(stm);
 		}
 	}
-	
-	public static JdbcLink initDemoDbConnection(){
+
+	public static JdbcLink initDemoDbConnection() {
 		String demoDBLocation = System.getProperty(ElexisSystemPropertyConstants.DEMO_DB_LOCATION);
 		if (demoDBLocation == null) {
 			demoDBLocation = CoreHub.getWritableUserDir() + File.separator + "demoDB";
 		}
-		
+
 		File demo = new File(demoDBLocation);
-		
+
 		// --
 		// returns if either, demo db, direct connection or run from scratch
 		// --

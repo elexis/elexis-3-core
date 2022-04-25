@@ -12,14 +12,14 @@ public interface IQueryCursor<T> extends Iterator<T>, Closeable {
 
 	@Override
 	public T next();
-	
+
 	public int size();
-	
+
 	public void clear();
-	
-	public static <T> IQueryCursor<T> empty(){
+
+	public static <T> IQueryCursor<T> empty() {
 		return new EmptyCursor<>();
 	}
-	
+
 	public void close();
 }

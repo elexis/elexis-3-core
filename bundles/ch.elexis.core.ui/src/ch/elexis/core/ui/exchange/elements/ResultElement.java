@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.exchange.elements;
@@ -30,13 +30,13 @@ public class ResultElement extends XChangeElement {
 	public static final String ELEMENT_IMAGE = "image";
 	public static final String ELEMENT_TEXTRESULT = "textResult";
 	public static final String ELEMENT_DOCRESULT = "documentRef";
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
-	public static ResultElement addResult(MedicalElement me, LabResult lr){
+
+	public static ResultElement addResult(MedicalElement me, LabResult lr) {
 		List<FindingElement> findings = me.getAnalyses();
 		for (FindingElement fe : findings) {
 			if (fe.getXid().getID().equals(XMLTool.idToXMLID(lr.getItem().getId()))) {
@@ -51,8 +51,8 @@ public class ResultElement extends XChangeElement {
 		me.addAnalyse(re);
 		return re;
 	}
-	
-	private ResultElement asExporter(XChangeExporter home, LabResult lr){
+
+	private ResultElement asExporter(XChangeExporter home, LabResult lr) {
 		asExporter(home);
 		setAttribute("id", XMLTool.idToXMLID(lr.getId()));
 		setAttribute(ATTR_DATE, new TimeTool(lr.getDate()).toString(TimeTool.DATETIME_XML));
@@ -64,8 +64,8 @@ public class ResultElement extends XChangeElement {
 		home.getContainer().addChoice(this, lr.getLabel(), lr);
 		return this;
 	}
-	
-	public void setText(String text){
-		
+
+	public void setText(String text) {
+
 	}
 }

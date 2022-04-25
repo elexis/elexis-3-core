@@ -21,42 +21,42 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @NamedQuery(name = "StickerObjectLink.etikette", query = "SELECT st FROM StickerObjectLink st WHERE st.etikette = :etikette")
 @NamedQuery(name = "StickerObjectLink.obj.etikette", query = "SELECT st FROM StickerObjectLink st WHERE st.obj = :obj AND st.etikette = :etikette")
 public class StickerObjectLink implements EntityWithId {
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@Column(length = 25, nullable = false)
 	private String obj;
-	
+
 	@Id
 	@Column(length = 25, nullable = false)
 	private String etikette;
-	
+
 	@Column(length = 256, nullable = true)
 	private String data;
-	
-	public String getObj(){
+
+	public String getObj() {
 		return obj;
 	}
-	
-	public void setObj(String obj){
+
+	public void setObj(String obj) {
 		this.obj = obj;
 	}
-	
-	public String getEtikette(){
+
+	public String getEtikette() {
 		return etikette;
 	}
-	
-	public void setEtikette(String stickerId){
+
+	public void setEtikette(String stickerId) {
 		this.etikette = stickerId;
 	}
-	
-	public String getData(){
+
+	public String getData() {
 		return data;
 	}
-	
-	public void setData(String data){
+
+	public void setData(String data) {
 		this.data = data;
 	}
 
@@ -90,25 +90,25 @@ public class StickerObjectLink implements EntityWithId {
 			return false;
 		return true;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return getObj() + "_" + getEtikette();
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		setObj(id);
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
+
 }

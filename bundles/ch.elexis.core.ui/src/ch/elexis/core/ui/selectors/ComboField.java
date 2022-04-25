@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.selectors;
 
@@ -21,8 +21,8 @@ import ch.elexis.core.ui.UiDesk;
 
 public class ComboField extends ActiveControl {
 	Combo combo;
-	
-	public ComboField(Composite parent, int displayBits, String displayName, String... values){
+
+	public ComboField(Composite parent, int displayBits, String displayName, String... values) {
 		super(parent, displayBits, displayName);
 		int swtflag = SWT.READ_ONLY | SWT.SINGLE;
 		if (isReadonly()) {
@@ -31,29 +31,29 @@ public class ComboField extends ActiveControl {
 		combo = new Combo(parent, swtflag);
 		combo.setItems(values);
 		combo.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				textContents = combo.getText();
 			}
-			
+
 		});
 		setControl(combo);
 	}
-	
+
 	@Override
-	public boolean isValid(){
+	public boolean isValid() {
 		int idx = combo.getSelectionIndex();
 		return idx != -1;
 	}
-	
+
 	@Override
-	public void push(){
+	public void push() {
 		UiDesk.syncExec(new Runnable() {
-			public void run(){
+			public void run() {
 				combo.setText(textContents);
 			}
 		});
 	}
-	
+
 }

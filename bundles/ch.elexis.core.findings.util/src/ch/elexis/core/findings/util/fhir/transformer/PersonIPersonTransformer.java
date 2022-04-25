@@ -24,34 +24,33 @@ import ch.elexis.core.services.IXidService;
 
 @Component
 public class PersonIPersonTransformer implements IFhirTransformer<Person, IPerson> {
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
-	
+
 	@Reference
 	private IXidService xidService;
-	
+
 	@Reference
 	private IUserService userService;
-	
+
 	private IContactHelper contactHelper;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		contactHelper = new IContactHelper(modelService, xidService, userService);
 	}
-	
+
 	@Override
-	public Optional<Person> getFhirObject(IPerson localObject, SummaryEnum summaryEnum,
-		Set<Include> includes){
+	public Optional<Person> getFhirObject(IPerson localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Person person = new Person();
-		
+
 		person.setId(new IdDt("Person", localObject.getId()));
-		
+
 		List<Identifier> identifiers = contactHelper.getIdentifiers(localObject);
 		identifiers.add(getElexisObjectIdentifier(localObject));
 		person.setIdentifier(identifiers);
-		
+
 		person.setName(contactHelper.getHumanNames(localObject));
 		List<Address> addresses = contactHelper.getAddresses(localObject);
 		for (Address address : addresses) {
@@ -61,31 +60,31 @@ public class PersonIPersonTransformer implements IFhirTransformer<Person, IPerso
 		for (ContactPoint contactPoint : contactPoints) {
 			person.addTelecom(contactPoint);
 		}
-		
+
 		return Optional.of(person);
 	}
-	
+
 	@Override
-	public Optional<IPerson> getLocalObject(Person fhirObject){
+	public Optional<IPerson> getLocalObject(Person fhirObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public Optional<IPerson> updateLocalObject(Person fhirObject, IPerson localObject){
+	public Optional<IPerson> updateLocalObject(Person fhirObject, IPerson localObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public Optional<IPerson> createLocalObject(Person fhirObject){
+	public Optional<IPerson> createLocalObject(Person fhirObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz){
+	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz) {
 		return Person.class.equals(fhirClazz) && IPerson.class.equals(localClazz);
 	}
-	
+
 }

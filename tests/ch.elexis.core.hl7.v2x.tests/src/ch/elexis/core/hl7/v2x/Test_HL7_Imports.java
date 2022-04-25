@@ -25,21 +25,21 @@ import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
 
 public class Test_HL7_Imports {
-	
+
 	private static DummyPatientResolver resolver;
-	
+
 	private enum TestType {
 		READ, OBSERVATION
 	};
-	
+
 	@BeforeClass
-	public static void beforeClass(){
-		IPatient dummyPatient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(),
-			"test", "test", LocalDate.of(2001, 1, 1), Gender.FEMALE).buildAndSave();
+	public static void beforeClass() {
+		IPatient dummyPatient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "test", "test",
+				LocalDate.of(2001, 1, 1), Gender.FEMALE).buildAndSave();
 		resolver = new DummyPatientResolver(dummyPatient);
 	}
-	
-	private void testGetReaderOneHL7file(File f) throws IOException{
+
+	private void testGetReaderOneHL7file(File f) throws IOException {
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
 			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(f);
@@ -47,13 +47,13 @@ public class Test_HL7_Imports {
 			assertFalse(hl7Readers.isEmpty());
 			assertNotNull(hl7Readers.get(0).getVersion());
 			assertFalse(hl7Readers.get(0).getVersion().isEmpty());
-			System.out.println("Selected Reader ["+hl7Readers.get(0).getClass().getName()+"]");
+			System.out.println("Selected Reader [" + hl7Readers.get(0).getClass().getName() + "]");
 		} else {
 			System.out.println("Skipping Datei " + name);
 		}
 	}
-	
-	private void testGetObservationsOneHL7file(File f) throws ElexisException, IOException{
+
+	private void testGetObservationsOneHL7file(File f) throws ElexisException, IOException {
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
 			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(f);
@@ -68,15 +68,13 @@ public class Test_HL7_Imports {
 				}
 			}
 			assertNotNull(hl7Readers.get(0).getPatient());
-			assertEquals(resolver.getPatient().getFirstName(),
-				hl7Readers.get(0).getPatient()
-				.getFirstName());
+			assertEquals(resolver.getPatient().getFirstName(), hl7Readers.get(0).getPatient().getFirstName());
 		} else {
 			System.out.println("Skipping Datei " + name);
 		}
 	}
-	
-	private void getReadersAllHL7files(File directory, TestType type) throws ElexisException, IOException{
+
+	private void getReadersAllHL7files(File directory, TestType type) throws ElexisException, IOException {
 		File[] files = directory.listFiles();
 		int nrFiles = 0;
 		for (int i = 0; i < files.length; i++) {
@@ -95,30 +93,32 @@ public class Test_HL7_Imports {
 		}
 		System.out.println("testHL7files: " + nrFiles + " files in " + directory.toString());
 	}
-	
+
 	/**
-	 * Test method for {@link ch.elexis.importers.HL7#HL7(java.lang.String, java.lang.String)}.
-	 * 
+	 * Test method for
+	 * {@link ch.elexis.importers.HL7#HL7(java.lang.String, java.lang.String)}.
+	 *
 	 * @throws ElexisException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@Test
-	public void testGetObservationsHL7files() throws ElexisException, IOException{
+	public void testGetObservationsHL7files() throws ElexisException, IOException {
 		System.out.println("testHL7files in elexis-import_test/rsc: This will take some time");
-		getReadersAllHL7files(new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
-			"rsc"), TestType.OBSERVATION);
+		getReadersAllHL7files(new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"), "rsc"),
+				TestType.OBSERVATION);
 	}
-	
+
 	/**
-	 * Test method for {@link ch.elexis.importers.HL7#HL7(java.lang.String, java.lang.String)}.
-	 * 
+	 * Test method for
+	 * {@link ch.elexis.importers.HL7#HL7(java.lang.String, java.lang.String)}.
+	 *
 	 * @throws ElexisException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@Test
-	public void testGetReaderHL7files() throws ElexisException, IOException{
+	public void testGetReaderHL7files() throws ElexisException, IOException {
 		System.out.println("testHL7files in elexis-import_test/rsc: This will take some time");
-		getReadersAllHL7files(new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
-			"rsc"), TestType.READ);
+		getReadersAllHL7files(new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"), "rsc"),
+				TestType.READ);
 	}
 }

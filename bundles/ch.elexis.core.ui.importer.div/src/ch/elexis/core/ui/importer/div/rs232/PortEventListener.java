@@ -7,14 +7,14 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.rs232;
 
 import gnu.io.SerialPortEventListener;
 
 public interface PortEventListener extends SerialPortEventListener {
-	
+
 	public static final String XON = "\013"; //$NON-NLS-1$
 	public final static String XOFF = "\015"; //$NON-NLS-1$
 	public final static String STX = "\002"; //$NON-NLS-1$

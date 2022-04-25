@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.views.artikel;
 
@@ -36,8 +36,8 @@ public class ArtikelContextMenu {
 	ArtikelMenuListener menuListener = new ArtikelMenuListener();
 	MenuManager menu;
 	ArrayList<IAction> actions = new ArrayList<IAction>();
-	
-	public ArtikelContextMenu(final Artikel template, final CommonViewer cv){
+
+	public ArtikelContextMenu(final Artikel template, final CommonViewer cv) {
 		this.cv = cv;
 		makeActions(template);
 		actions.add(deleteAction);
@@ -47,42 +47,38 @@ public class ArtikelContextMenu {
 		menu.addMenuListener(menuListener);
 		cv.setContextMenu(menu);
 	}
-	
-	public void addAction(final IAction ac){
+
+	public void addAction(final IAction ac) {
 		actions.add(ac);
 	}
-	
-	public void removeAction(final IAction ac){
+
+	public void removeAction(final IAction ac) {
 		actions.remove(ac);
 	}
-	
-	public ArtikelContextMenu(final Artikel template, final CommonViewer cv,
-		final ArtikelDetailDisplay add){
+
+	public ArtikelContextMenu(final Artikel template, final CommonViewer cv, final ArtikelDetailDisplay add) {
 		this(template, cv);
 		this.add = add;
 	}
-	
-	private void makeActions(final Artikel art){
+
+	private void makeActions(final Artikel art) {
 		deleteAction = new Action(Messages.ArtikelContextMenu_deleteAction) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-				setToolTipText(art.getClass().getName()
-					+ Messages.ArtikelContextMenu_deleteActionToolTip);
+				setToolTipText(art.getClass().getName() + Messages.ArtikelContextMenu_deleteActionToolTip);
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				Artikel act = (Artikel) ElexisEventDispatcher.getSelected(art.getClass());
-				if (MessageDialog.openConfirm(
-					cv.getViewerWidget().getControl().getShell(),
-					Messages.ArtikelContextMenu_deleteActionConfirmCaption,
-					MessageFormat.format(Messages.ArtikelContextMenu_deleteConfirmBody,
-						act.getName()))) {
+				if (MessageDialog.openConfirm(cv.getViewerWidget().getControl().getShell(),
+						Messages.ArtikelContextMenu_deleteActionConfirmCaption,
+						MessageFormat.format(Messages.ArtikelContextMenu_deleteConfirmBody, act.getName()))) {
 					act.delete();
 					cv.getConfigurer().getControlFieldProvider().fireChangedEvent();
 					cv.notify(CommonViewer.Message.update);
 				}
-				
+
 			}
 		};
 		createAction = new Action(Messages.ArtikelContextMenu_newAction) {
@@ -90,12 +86,11 @@ public class ArtikelContextMenu {
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				setToolTipText(Messages.ArtikelContextMenu_newActionTooltip);
 			}
-			
+
 			@Override
-			public void run(){
-				InputDialog inp =
-					new InputDialog(cv.getViewerWidget().getControl().getShell(), art.getClass()
-						.getName() + Messages.ArtikelContextMenu_create,
+			public void run() {
+				InputDialog inp = new InputDialog(cv.getViewerWidget().getControl().getShell(),
+						art.getClass().getName() + Messages.ArtikelContextMenu_create,
 						Messages.ArtikelContextMenu_pleaseEnterNameForArticle, "", null); //$NON-NLS-1$
 				if (inp.open() == InputDialog.OK) {
 					String name = inp.getValue();
@@ -106,7 +101,7 @@ public class ArtikelContextMenu {
 						add.show(n);
 					}
 				}
-				
+
 			}
 		};
 		editAction = new Action(Messages.ArtikelContextMenu_propertiesAction) {
@@ -114,9 +109,9 @@ public class ArtikelContextMenu {
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 				setToolTipText(Messages.ArtikelContextMenu_propertiesTooltip);
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				Artikel n = (Artikel) ElexisEventDispatcher.getSelected(art.getClass());
 				if (add == null) {
 					EditEigenartikelUi.executeWithParams(n);
@@ -126,13 +121,13 @@ public class ArtikelContextMenu {
 			}
 		};
 	}
-	
+
 	public interface ArtikelDetailDisplay {
 		public boolean show(Artikel art);
 	}
-	
+
 	class ArtikelMenuListener implements IMenuListener {
-		public void menuAboutToShow(final IMenuManager manager){
+		public void menuAboutToShow(final IMenuManager manager) {
 			menu.removeAll();
 			for (IAction ac : actions) {
 				if (ac == null) {

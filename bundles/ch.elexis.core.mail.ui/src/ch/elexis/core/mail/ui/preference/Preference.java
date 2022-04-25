@@ -31,20 +31,20 @@ import ch.elexis.core.mail.ui.client.MailClientComponent;
 public class Preference extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private Composite parentComposite;
-	
+
 	private MailAccountComposite accountComposite;
 	private ComboViewer accountsViewer;
 	private Button testButton;
-	
+
 	@Override
-	public void init(IWorkbench workbench){
+	public void init(IWorkbench workbench) {
 	}
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		parentComposite = new Composite(parent, SWT.NONE);
 		parentComposite.setLayout(new GridLayout(2, false));
-		
+
 		accountsViewer = new ComboViewer(parentComposite);
 		accountsViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		accountsViewer.setContentProvider(new ArrayContentProvider());
@@ -52,7 +52,7 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 		updateAccountsCombo();
 		accountsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				int index = accountsViewer.getCombo().getSelectionIndex();
 				if (index == 0) {
 					accountComposite.setAccount(new MailAccount());
@@ -62,15 +62,15 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 					String accountId = (String) selection.getFirstElement();
 					if (accountId != null) {
 						if (MailClientComponent.isVirtLocal(accountId)) {
-							Optional<MailAccount> selectedAccount =
-								MailClientComponent.getMailClient().getAccount(accountId);
+							Optional<MailAccount> selectedAccount = MailClientComponent.getMailClient()
+									.getAccount(accountId);
 							if (selectedAccount.isPresent()) {
 								accountComposite.setAccount(selectedAccount.get());
 								testButton.setEnabled(true);
 							}
 						} else {
-							Optional<MailAccount> selectedAccount =
-								MailClientComponent.getMailClient().getAccount(accountId);
+							Optional<MailAccount> selectedAccount = MailClientComponent.getMailClient()
+									.getAccount(accountId);
 							if (selectedAccount.isPresent()) {
 								accountComposite.setAccount(selectedAccount.get());
 								testButton.setEnabled(true);
@@ -80,21 +80,19 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 				}
 			}
 		});
-		
+
 		ToolBar accountsTool = new ToolBar(parentComposite, SWT.NONE);
-		
+
 		accountComposite = new MailAccountComposite(parentComposite, SWT.NONE);
 		accountComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		
+
 		testButton = new Button(parentComposite, SWT.PUSH);
 		testButton.setText("Test");
 		testButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
-				if (MailClientComponent.getMailClient() != null
-					&& accountComposite.getAccount() != null) {
-					if (MailClientComponent.getMailClient()
-						.testAccount(accountComposite.getAccount())) {
+			public void widgetSelected(SelectionEvent e) {
+				if (MailClientComponent.getMailClient() != null && accountComposite.getAccount() != null) {
+					if (MailClientComponent.getMailClient().testAccount(accountComposite.getAccount())) {
 						MessageDialog.openInformation(getShell(), "Test", "Test erfolgreich.");
 					} else {
 						String message = MailClientComponent.getLastErrorMessage();
@@ -103,7 +101,7 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 				}
 			}
 		});
-		
+
 		ToolBarManager accountsToolMgr = new ToolBarManager(accountsTool);
 		accountsToolMgr.add(new CopyVirtLocalAccountAction(accountComposite, this));
 		accountsToolMgr.add(new SaveAccountAction(accountComposite, this));
@@ -112,9 +110,9 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 
 		return parentComposite;
 	}
-	
+
 	@Override
-	public boolean performOk(){
+	public boolean performOk() {
 		MailAccount account = accountComposite.getAccount();
 		if (account != null) {
 			if (MailClientComponent.isVirtLocal(account)) {
@@ -125,8 +123,8 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 		}
 		return super.performOk();
 	}
-	
-	protected void updateAccountsCombo(){
+
+	protected void updateAccountsCombo() {
 		if (MailClientComponent.getMailClient() != null) {
 			accountsViewer.getControl().setEnabled(true);
 			List<String> accountsInput = MailClientComponent.getMailClient().getAccountsLocal();

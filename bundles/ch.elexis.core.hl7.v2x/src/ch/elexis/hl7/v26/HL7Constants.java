@@ -1,7 +1,7 @@
 package ch.elexis.hl7.v26;
 
 public interface HL7Constants {
-	
+
 	/**
 	 * OBX VALUE TYPES <br>
 	 * AD Address <br>
@@ -31,54 +31,54 @@ public interface HL7Constants {
 	 * XPN Extended Person Number <br>
 	 * XTN Extended Telecommunications Number <br>
 	 */
-	
+
 	/**
 	 * Encapsulated Data
 	 */
 	public static String OBX_VALUE_TYPE_ED = "ED"; //$NON-NLS-1$
-	
+
 	/**
 	 * String Data
 	 */
 	public static String OBX_VALUE_TYPE_ST = "ST"; //$NON-NLS-1$
-	
+
 	/**
 	 * Text Data
 	 */
 	public static String OBX_VALUE_TYPE_TX = "TX"; //$NON-NLS-1$
-	
+
 	/**
 	 * Coded Entry
 	 */
 	public static String OBX_VALUE_TYPE_CWE = "CWE"; //$NON-NLS-1$
-	
+
 	/**
 	 * Numeric Data
 	 */
 	public static String OBX_VALUE_TYPE_NM = "NM"; //$NON-NLS-1$
-	
+
 	/**
 	 * Formatted Text
 	 */
 	public static String OBX_VALUE_TYPE_FT = "FT"; //$NON-NLS-1$
-	
+
 	/**
 	 * Structured Numeric
 	 */
 	public static String OBX_VALUE_TYPE_SN = "SN";
-	
+
 	/**
 	 * Code Element
 	 */
 	public static String OBX_VALUE_TYPE_CE = "CE";
-	
+
 	/**
 	 * Comment Definitions
 	 */
 	public static String COMMENT_NAME = "Kommentar";
 	public static String COMMENT_GROUP = "00 Kommentar";
 	public static String COMMENT_CODE = "kommentar";
-	
+
 	/**
 	 * OBX OBSERVATION STATUS <br>
 	 * C Record coming over is a correction and thus replaces a final result <br>
@@ -89,11 +89,12 @@ public interface HL7Constants {
 	 * R Results entered -- not verified <br>
 	 * S Partial results <br>
 	 * X Results cannot be obtained for this observation <br>
-	 * U Results status change to Final. without retransmitting results already sent as
-	 * ‘preliminary.’ E.g., radiology changes status from preliminary to final <br>
+	 * U Results status change to Final. without retransmitting results already sent
+	 * as ‘preliminary.’ E.g., radiology changes status from preliminary to final
+	 * <br>
 	 * W Post original as wrong, e.g., transmitted for wrong patient <br>
 	 */
-	
+
 	/**
 	 * OBX ABNORMAL FLAGS <br>
 	 * L Below low normal <br>
@@ -104,14 +105,15 @@ public interface HL7Constants {
 	 * > Above absolute high-off instrument scale <br>
 	 * N Normal (applies to non-numeric results) <br>
 	 * A Abnormal (applies to non-numeric results) <br>
-	 * AA Very abnormal (applies to non-numeric units, analogous to panic limits for numeric units) <br>
+	 * AA Very abnormal (applies to non-numeric units, analogous to panic limits for
+	 * numeric units) <br>
 	 * null No range defined, or normal ranges don't apply <br>
 	 * U Significant change up <br>
 	 * D Significant change down <br>
 	 * B Better--use when direction not relevant <br>
 	 * W Worse--use when direction not relevant <br>
 	 */
-	
+
 	/**
 	 * OBX OBSERVATION STATUS <br>
 	 * C Record coming over is a correction and thus replaces a final result <br>
@@ -122,9 +124,10 @@ public interface HL7Constants {
 	 * R Results entered -- not verified <br>
 	 * S Partial results <br>
 	 * X Results cannot be obtained for this observation <br>
-	 * U Results status change to Final. without retransmitting results already sent as
-	 * ‘preliminary.’ E.g., radiology changes status from preliminary to final <br>
+	 * U Results status change to Final. without retransmitting results already sent
+	 * as ‘preliminary.’ E.g., radiology changes status from preliminary to final
+	 * <br>
 	 * W Post original as wrong, e.g., transmitted for wrong patient <br>
 	 */
-	
+
 }

@@ -37,37 +37,33 @@ import ch.elexis.core.ui.views.rechnung.BillingProposalView;
 import ch.elexis.core.ui.views.rechnung.BillingProposalView.ProposalLetter;
 
 public class PrintBillingProposalHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		BillingProposalView view = getOpenView(event);
 		if (view != null) {
-			ProgressMonitorDialog progress =
-				new ProgressMonitorDialog(HandlerUtil.getActiveShell(event));
+			ProgressMonitorDialog progress = new ProgressMonitorDialog(HandlerUtil.getActiveShell(event));
 			try {
 				progress.run(true, false, new IRunnableWithProgress() {
-					
+
 					@Override
-					public void run(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException{
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						monitor.beginTask("PDF erzeugen", IProgressMonitor.UNKNOWN);
 						ProposalLetter letter = view.getToPrint();
-						BundleContext bundleContext =
-							FrameworkUtil.getBundle(getClass()).getBundleContext();
-						ServiceReference<IFormattedOutputFactory> serviceRef =
-							bundleContext.getServiceReference(IFormattedOutputFactory.class);
+						BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
+						ServiceReference<IFormattedOutputFactory> serviceRef = bundleContext
+								.getServiceReference(IFormattedOutputFactory.class);
 						if (serviceRef != null) {
 							IFormattedOutputFactory service = bundleContext.getService(serviceRef);
-							IFormattedOutput outputter = service
-								.getFormattedOutputImplementation(ObjectType.JAXB, OutputType.PDF);
+							IFormattedOutput outputter = service.getFormattedOutputImplementation(ObjectType.JAXB,
+									OutputType.PDF);
 							ByteArrayOutputStream pdf = new ByteArrayOutputStream();
 							Map<String, String> parameters = new HashMap<>();
 							parameters.put("current-date",
-								LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-							
-							outputter.transform(letter,
-								getClass().getResourceAsStream("/rsc/xslt/proposal2fo.xslt"), pdf,
-								parameters);
+									LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+
+							outputter.transform(letter, getClass().getResourceAsStream("/rsc/xslt/proposal2fo.xslt"),
+									pdf, parameters);
 							bundleContext.ungetService(serviceRef);
 							// save and open the file ...
 							File file = null;
@@ -78,8 +74,8 @@ public class PrintBillingProposalHandler extends AbstractHandler implements IHan
 								fout.write(pdf.toByteArray());
 							} catch (IOException e) {
 								Display.getDefault().syncExec(() -> {
-									MessageDialog.openError(HandlerUtil.getActiveShell(event),
-										"Fehler", "Fehler beim PDF anlegen.\n" + e.getMessage());
+									MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
+											"Fehler beim PDF anlegen.\n" + e.getMessage());
 								});
 								LoggerFactory.getLogger(getClass()).error("Error creating PDF", e);
 							} finally {
@@ -100,31 +96,31 @@ public class PrintBillingProposalHandler extends AbstractHandler implements IHan
 				});
 			} catch (InvocationTargetException | InterruptedException e) {
 				MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
-					"Fehler beim PDF erzeugen.\n" + e.getMessage());
+						"Fehler beim PDF erzeugen.\n" + e.getMessage());
 				LoggerFactory.getLogger(getClass()).error("Error creating PDF", e);
 			}
 		}
 		return null;
 	}
-	
-	private BillingProposalView getOpenView(ExecutionEvent event){
+
+	private BillingProposalView getOpenView(ExecutionEvent event) {
 		try {
 			IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 			IWorkbenchPage page = window.getActivePage();
 			return (BillingProposalView) page.showView(BillingProposalView.ID);
 		} catch (PartInitException e) {
 			MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
-				"Konnte Rechnungs-Vorschlag View nicht öffnen");
+					"Konnte Rechnungs-Vorschlag View nicht öffnen");
 		}
 		return null;
 	}
-	
+
 	@Override
-	public boolean isEnabled(){
+	public boolean isEnabled() {
 		return isFopServiceAvailable();
 	}
-	
-	private boolean isFopServiceAvailable(){
+
+	private boolean isFopServiceAvailable() {
 		BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
 		return bundleContext.getServiceReference(IFormattedOutputFactory.class) != null;
 	}

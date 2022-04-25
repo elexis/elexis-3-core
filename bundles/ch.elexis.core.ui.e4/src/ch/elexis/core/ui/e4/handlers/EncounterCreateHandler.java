@@ -23,29 +23,28 @@ import ch.elexis.core.ui.e4.dialog.UserDialog;
 
 /**
  * e4 port of GlobalActions.neueKonsAction
- * 
+ *
  * @since 3.8
  */
 public class EncounterCreateHandler extends RestrictedHandler {
-	
-	public EncounterCreateHandler(){
+
+	public EncounterCreateHandler() {
 		super(AccessControlDefaults.KONS_CREATE);
 	}
-	
+
 	@Execute
 	public void execute(IContextService contextService, IConfigService configService,
-		IEncounterService encounterService, IBillingSystemService billingSystemService) {
-		
+			IEncounterService encounterService, IBillingSystemService billingSystemService) {
+
 		// determine coverage
 		ICoverage coverage = contextService.getActiveCoverage().orElse(null);
 		if (coverage == null) {
 			IPatient patient = contextService.getActivePatient().orElse(null);
 			if (patient == null) {
-				UserDialog.error(Messages.GlobalActions_CantCreateKons,
-					Messages.GlobalActions_DoSelectCase);
+				UserDialog.error(Messages.GlobalActions_CantCreateKons, Messages.GlobalActions_DoSelectCase);
 				return;
 			}
-			
+
 			IEncounter latestEncounter = encounterService.getLatestEncounter(patient).orElse(null);
 			if (latestEncounter != null) {
 				coverage = latestEncounter.getCoverage();
@@ -54,55 +53,53 @@ public class EncounterCreateHandler extends RestrictedHandler {
 				if (!coverages.isEmpty()) {
 					coverage = coverages.get(0);
 				} else {
-					coverage = new ICoverageBuilder(CoreModelServiceHolder.get(), configService,
-						billingSystemService, patient).buildAndSave();
+					coverage = new ICoverageBuilder(CoreModelServiceHolder.get(), configService, billingSystemService,
+							patient).buildAndSave();
 				}
 			}
-			
+
 		} else {
 			// fall does not belong to actPatient?
-			//			if (!actFall.getPatient().equals(actPatient)) {
-			//				if (actPatient != null) {
-			//					Konsultation lk = actPatient.getLetzteKons(false);
-			//					if (lk != null) {
-			//						actFall = lk.getFall();
-			//					}
-			//				} else {
-			//					MessageEvent.fireError(Messages.GlobalActions_CantCreateKons,
-			//						Messages.GlobalActions_DoSelectCase);
-			//					return;
-			//				}
-			//			}
+			// if (!actFall.getPatient().equals(actPatient)) {
+			// if (actPatient != null) {
+			// Konsultation lk = actPatient.getLetzteKons(false);
+			// if (lk != null) {
+			// actFall = lk.getFall();
+			// }
+			// } else {
+			// MessageEvent.fireError(Messages.GlobalActions_CantCreateKons,
+			// Messages.GlobalActions_DoSelectCase);
+			// return;
+			// }
+			// }
 		}
-		
+
 		// validate coverage
 		if (!coverage.isOpen()) {
-			UserDialog.error(Messages.GlobalActions_casclosed,
-				Messages.GlobalActions_caseclosedexplanation);
+			UserDialog.error(Messages.GlobalActions_casclosed, Messages.GlobalActions_caseclosedexplanation);
 			return;
 		}
-		
+
 		// does there already exist an encounter for today on the given coverage?
 		List<IEncounter> encounters = coverage.getEncounters();
 		for (IEncounter iEncounter : encounters) {
 			if (LocalDate.now().equals(iEncounter.getDate())) {
 				if (UserDialog.question(Messages.GlobalActions_SecondForToday,
-					Messages.GlobalActions_SecondForTodayQuestion) == false) {
+						Messages.GlobalActions_SecondForTodayQuestion) == false) {
 					return;
 				}
 			}
 		}
-		
+
 		IMandator mandator = contextService.getActiveMandator().orElse(null);
 		if (mandator == null) {
 			UserDialog.error("No mandator selected", "Encounter creation requires a mandator");
 			return;
 		}
-		
-		IEncounter enounter =
-			new IEncounterBuilder(CoreModelServiceHolder.get(), coverage, mandator).buildAndSave();
+
+		IEncounter enounter = new IEncounterBuilder(CoreModelServiceHolder.get(), coverage, mandator).buildAndSave();
 		encounterService.addDefaultDiagnosis(enounter);
 		contextService.getRootContext().setTyped(enounter);
 	}
-	
+
 }

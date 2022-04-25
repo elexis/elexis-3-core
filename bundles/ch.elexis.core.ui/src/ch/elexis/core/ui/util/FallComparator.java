@@ -9,10 +9,9 @@ import ch.elexis.core.model.ICoverage;
 
 /**
  * Comparator used to sort {@link ICoverage} objects for ui representation.
- * 
+ *
  */
-public class FallComparator implements Comparator<Object>
-{
+public class FallComparator implements Comparator<Object> {
 	@Override
 	public int compare(Object o1, Object o2) {
 		int comp = 0;

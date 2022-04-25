@@ -11,28 +11,26 @@ import ch.elexis.core.services.IModelService;
 
 @Component
 @RunWith(Suite.class)
-@SuiteClasses({
-	CoverageICoverageTransformerTest.class
-})
+@SuiteClasses({ CoverageICoverageTransformerTest.class })
 public class AllTransformerTests {
-	
+
 	private static IFhirTransformerRegistry transformerRegistry;
-	
+
 	private static IModelService coreModelService;
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private void setCoreModelService(IModelService coreModelService){
+	private void setCoreModelService(IModelService coreModelService) {
 		AllTransformerTests.coreModelService = coreModelService;
 	}
-	
+
 	@Reference
-	public void setIFhirTransformerRegistry(IFhirTransformerRegistry transformerRegistry){
+	public void setIFhirTransformerRegistry(IFhirTransformerRegistry transformerRegistry) {
 		AllTransformerTests.transformerRegistry = transformerRegistry;
 	}
-	
+
 //	@BeforeClass
 //	public static void beforeClass() throws InterruptedException{
-//		
+//
 //		for (int i = 0; i < 10; i++) {
 //			if (coreModelService == null) {
 //				System.out.println("Waiting for services");
@@ -45,13 +43,13 @@ public class AllTransformerTests {
 //			fail();
 //		}
 //	}
-	
-	public static IFhirTransformerRegistry getTransformerRegistry(){
+
+	public static IFhirTransformerRegistry getTransformerRegistry() {
 		return transformerRegistry;
 	}
-	
-	public static IModelService getCoreModelService(){
+
+	public static IModelService getCoreModelService() {
 		return coreModelService;
 	}
-	
+
 }

@@ -6,12 +6,10 @@ import org.eclipse.swt.widgets.Menu;
 
 import ch.elexis.core.ui.compatibility.ElexisFastViewUtil;
 
-
-
 @SuppressWarnings("restriction")
 public class ElexisStackRenderer extends StackRenderer {
 	@Override
-	protected void populateTabMenu(final Menu menu, MPart part){
+	protected void populateTabMenu(final Menu menu, MPart part) {
 		super.populateTabMenu(menu, part);
 		ElexisFastViewUtil.createFastViewMenuItem(menu, part);
 	}

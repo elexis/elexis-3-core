@@ -13,103 +13,104 @@ import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockResponse;
 
 public interface IElexisServerService {
-	
+
 	public enum ConnectionStatus {
-			/** Not connected to an ES */
-			STANDALONE,
-			/** Connected to an ES, and connection is live */
-			REMOTE,
-			/** Connected to an ES, but connection */
-			LOCAL
+		/** Not connected to an ES */
+		STANDALONE,
+		/** Connected to an ES, and connection is live */
+		REMOTE,
+		/** Connected to an ES, but connection */
+		LOCAL
 	}
-	
+
 	/**
 	 * A unique id for this instance of Elexis. Changes on every restart.
-	 * 
+	 *
 	 * @return
 	 */
 	public UUID getSystemUuid();
-	
+
 	/**
-	 * Whether this station operates in standalone mode, that is - it is not connected to an
-	 * elexis-server.
-	 * 
+	 * Whether this station operates in standalone mode, that is - it is not
+	 * connected to an elexis-server.
+	 *
 	 * @return
 	 */
 	public boolean isStandalone();
-	
+
 	/**
 	 * EventService: Post an event to the server
-	 * 
+	 *
 	 * @param elexisEvent
 	 * @return
 	 */
 	public IStatus postEvent(ElexisEvent elexisEvent);
-	
+
 	/**
 	 * EventService: Are remote events delivered
-	 * 
+	 *
 	 * @return if this service currently delivers events to the server
 	 */
 	public boolean deliversRemoteEvents();
-	
+
 	/**
 	 * Create a fresh, populated {@link InstanceStatus} object
-	 * 
+	 *
 	 * @return
 	 */
 	public InstanceStatus createInstanceStatus();
-	
+
 	/**
 	 * InstanceService: Update the status of this elexis instance to the server
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
 	public Response updateInstanceStatus(InstanceStatus request);
-	
+
 	/**
 	 * InstanceService: Get the status of this instance from the server
-	 * 
+	 *
 	 * @return
 	 */
 	public Response getInstanceStatus();
-	
+
 	/**
 	 * LockService:
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
 	public LockResponse acquireOrReleaseLocks(LockRequest request);
-	
+
 	/**
 	 * LockService:
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
 	public boolean isLocked(LockRequest request);
-	
+
 	/**
 	 * LockService:
-	 * 
+	 *
 	 * @param storeToString
 	 * @return
 	 */
 	public LockInfo getLockInfo(String storeToString);
-	
+
 	/**
-	 * Validate the connection to the server (applicable in non-standalone mode only). If the
-	 * connection to the server fails, switches to Local Mode
-	 * 
-	 * 
-	 * @return <code>true</code> if the connection to ES is live, else <code>false</code>
+	 * Validate the connection to the server (applicable in non-standalone mode
+	 * only). If the connection to the server fails, switches to Local Mode
+	 *
+	 *
+	 * @return <code>true</code> if the connection to ES is live, else
+	 *         <code>false</code>
 	 */
 	public boolean validateElexisServerConnection();
-	
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ConnectionStatus getConnectionStatus();

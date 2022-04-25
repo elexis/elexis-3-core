@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views.artikel;
@@ -24,18 +24,18 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Artikel;
 
 public class ArtikelLabelProvider extends DefaultLabelProvider implements ITableColorProvider {
-	
+
 	@Override
-	public Image getColumnImage(Object element, int columnIndex){
+	public Image getColumnImage(Object element, int columnIndex) {
 		if (element instanceof Artikel) {
 			return null;
 		} else {
 			return Images.IMG_ACHTUNG.getImage();
 		}
 	}
-	
+
 	@Override
-	public String getColumnText(Object element, int columnIndex){
+	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof Artikel) {
 			Artikel art = (Artikel) element;
 			String ret = art.getInternalName();
@@ -47,15 +47,15 @@ public class ArtikelLabelProvider extends DefaultLabelProvider implements ITable
 		}
 		return super.getColumnText(element, columnIndex);
 	}
-	
+
 	/**
-	 * Lagerartikel are shown in blue, articles that should be ordered are shown in red
+	 * Lagerartikel are shown in blue, articles that should be ordered are shown in
+	 * red
 	 */
-	public Color getForeground(Object element, int columnIndex){
+	public Color getForeground(Object element, int columnIndex) {
 		if (element instanceof Artikel) {
 			Artikel art = (Artikel) element;
-			Availability availability =
-				StockServiceHolder.get().getCumulatedAvailabilityForArticle(art.toIArticle());
+			Availability availability = StockServiceHolder.get().getCumulatedAvailabilityForArticle(art.toIArticle());
 			if (availability != null) {
 				switch (availability) {
 				case CRITICAL_STOCK:
@@ -66,11 +66,11 @@ public class ArtikelLabelProvider extends DefaultLabelProvider implements ITable
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
-	public Color getBackground(Object element, int columnIndex){
+
+	public Color getBackground(Object element, int columnIndex) {
 		return null;
 	}
 }

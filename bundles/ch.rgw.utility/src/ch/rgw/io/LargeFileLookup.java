@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.rgw.io;
@@ -20,27 +20,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Lookup Strings in an arbitrarly large sorted file This is a quite trivial implemetation with
- * binary sort in the file.
- * 
+ * Lookup Strings in an arbitrarly large sorted file This is a quite trivial
+ * implemetation with binary sort in the file.
+ *
  * @author Gerry Weirich
- * 
+ *
  */
 public class LargeFileLookup {
 	RandomAccessFile raf;
 	long len;
-	
-	public LargeFileLookup(File file) throws FileNotFoundException{
+
+	public LargeFileLookup(File file) throws FileNotFoundException {
 		len = file.length();
 		raf = new RandomAccessFile(file, "r");
 	}
-	
-	public List<String> binarySearch(String search) throws IOException{
+
+	public List<String> binarySearch(String search) throws IOException {
 		String string = search.toLowerCase();
 		List<String> result = new ArrayList<String>();
 		long low = 0;
 		long high = len;
-		
+
 		long p = -1;
 		while (low < high) {
 			long mid = (low + high) / 2;
@@ -60,7 +60,7 @@ public class LargeFileLookup {
 			else
 				high = mid;
 		}
-		
+
 		p = low;
 		while (p >= 0) {
 			raf.seek(p);
@@ -68,18 +68,18 @@ public class LargeFileLookup {
 				break;
 			p--;
 		}
-		
+
 		if (p < 0)
 			raf.seek(0);
-		
+
 		while (true) {
 			String line = raf.readLine();
 			if (line == null || !line.toLowerCase().startsWith(string))
 				break;
 			result.add(line);
 		}
-		
+
 		return result;
 	}
-	
+
 }

@@ -16,38 +16,37 @@ import ch.elexis.core.ui.proposals.IdentifiableContentProposal;
 
 public class AutoCompleteTextUtil {
 	private static final String PROPOSAL_RET_OBJ = "PROPOSAL_RET_OBJ";
-	
-	public static <T> void addAutoCompleteSupport(Text text, IContentProposalProvider cpProvider,
-		T defaultObject){
+
+	public static <T> void addAutoCompleteSupport(Text text, IContentProposalProvider cpProvider, T defaultObject) {
 		setValue(text, defaultObject);
-		
-		ContentProposalAdapter cpAdapter =
-			new ContentProposalAdapter(text, new TextContentAdapter(), cpProvider, null, null);
+
+		ContentProposalAdapter cpAdapter = new ContentProposalAdapter(text, new TextContentAdapter(), cpProvider, null,
+				null);
 		cpAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		cpAdapter.addContentProposalListener(new IContentProposalListener() {
-			
+
 			@Override
-			public void proposalAccepted(IContentProposal proposal){
+			public void proposalAccepted(IContentProposal proposal) {
 				text.setText(proposal.getLabel());
 				text.setData(PROPOSAL_RET_OBJ, getProposalObject(proposal));
 				text.setSelection(text.getText().length());
 			}
 		});
 		text.addModifyListener(new ModifyListener() {
-			
+
 			@Override
-			public void modifyText(ModifyEvent e){
+			public void modifyText(ModifyEvent e) {
 				// resets the contents after manual change
 				text.setData(PROPOSAL_RET_OBJ, null);
 			}
 		});
 	}
-	
-	public static Object getData(Text text){
+
+	public static Object getData(Text text) {
 		return text.getData(PROPOSAL_RET_OBJ);
 	}
-	
-	public static <T> void setValue(Text text, T defaultObject){
+
+	public static <T> void setValue(Text text, T defaultObject) {
 		if (defaultObject instanceof ICoding) {
 			text.setText(((ICoding) defaultObject).getDisplay());
 		} else if (defaultObject instanceof Identifiable) {
@@ -57,8 +56,8 @@ public class AutoCompleteTextUtil {
 		}
 		text.setData(PROPOSAL_RET_OBJ, defaultObject);
 	}
-	
-	private static Object getProposalObject(IContentProposal proposal){
+
+	private static Object getProposalObject(IContentProposal proposal) {
 		if (proposal instanceof CodingContentProposal) {
 			return ((CodingContentProposal) proposal).getCoding();
 		} else if (proposal instanceof IdentifiableContentProposal<?>) {

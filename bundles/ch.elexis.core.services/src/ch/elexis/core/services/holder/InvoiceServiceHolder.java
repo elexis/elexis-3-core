@@ -8,13 +8,13 @@ import ch.elexis.core.services.IInvoiceService;
 @Component
 public class InvoiceServiceHolder {
 	private static IInvoiceService invoiceService;
-	
+
 	@Reference
-	public void setInvoiceService(IInvoiceService invoiceService){
+	public void setInvoiceService(IInvoiceService invoiceService) {
 		InvoiceServiceHolder.invoiceService = invoiceService;
 	}
-	
-	public static IInvoiceService get(){
+
+	public static IInvoiceService get() {
 		return invoiceService;
 	}
 }

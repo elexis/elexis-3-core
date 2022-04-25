@@ -18,66 +18,64 @@ import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 
 /**
- * This class handles transparent locking request and release on modification of the consultation
- * text. After the initial modification, the lock will be held for 1 minute, and if by the end the
- * text is still locked, release the lock
+ * This class handles transparent locking request and release on modification of
+ * the consultation text. After the initial modification, the lock will be held
+ * for 1 minute, and if by the end the text is still locked, release the lock
  */
 class TransparentTextModificationLockHandler implements VerifyKeyListener {
-	
+
 	private static final long LOCK_WINDOW_SECS = 60;
-	
+
 	private Logger logger;
 	private ScheduledExecutorService executor;
 	private EnhancedTextField enhancedTextField;
-	
-	public TransparentTextModificationLockHandler(EnhancedTextField enhancedTextField){
+
+	public TransparentTextModificationLockHandler(EnhancedTextField enhancedTextField) {
 		this.enhancedTextField = enhancedTextField;
 		executor = Executors.newSingleThreadScheduledExecutor();
 		logger = LoggerFactory.getLogger(getClass());
 	}
-	
+
 	@Override
-	public void verifyKey(VerifyEvent event){
-		if (SWT.ARROW_LEFT == event.keyCode || SWT.ARROW_RIGHT == event.keyCode
-			|| SWT.ARROW_UP == event.keyCode || SWT.ARROW_DOWN == event.keyCode) {
+	public void verifyKey(VerifyEvent event) {
+		if (SWT.ARROW_LEFT == event.keyCode || SWT.ARROW_RIGHT == event.keyCode || SWT.ARROW_UP == event.keyCode
+				|| SWT.ARROW_DOWN == event.keyCode) {
 			event.doit = true;
 			return;
 		}
-		
+
 		final IEncounter encounter = enhancedTextField.getEncounter();
-		if (!enhancedTextField.isUnlocked() && encounter != null
-			&& !LocalLockServiceHolder.get().isLocked(encounter)) {
+		if (!enhancedTextField.isUnlocked() && encounter != null && !LocalLockServiceHolder.get().isLocked(encounter)) {
 			BusyIndicator.showWhile(enhancedTextField.getDisplay(), () -> {
-				
-				final LockResponse lockResponse = LocalLockServiceHolder.get()
-					.acquireLockBlocking(encounter, 1, new NullProgressMonitor());
+
+				final LockResponse lockResponse = LocalLockServiceHolder.get().acquireLockBlocking(encounter, 1,
+						new NullProgressMonitor());
 				if (!lockResponse.isOk()) {
 					event.doit = false;
 					// TODO reload kons! -> needs resp events
 					LockResponseHelper.showInfo(lockResponse, encounter, logger);
 					return;
 				}
-				
+
 				// unlock the text field, so we can directly execute the modification
 				enhancedTextField.setEditable(true);
-				
+
 				executor.schedule(() -> {
 					// maybe it was already released
 					if (LocalLockServiceHolder.get().isLocked(encounter)) {
-						LockResponse releaseLock =
-							LocalLockServiceHolder.get().releaseLock(lockResponse.getLockInfo());
+						LockResponse releaseLock = LocalLockServiceHolder.get().releaseLock(lockResponse.getLockInfo());
 						if (!releaseLock.isOk()) {
-							
+
 							LockResponseHelper.showInfo(releaseLock, encounter, logger);
 						}
 					}
 				}, LOCK_WINDOW_SECS, TimeUnit.SECONDS);
-					
+
 			});
-			
+
 		}
-		
+
 		event.doit = true;
 	}
-	
+
 }

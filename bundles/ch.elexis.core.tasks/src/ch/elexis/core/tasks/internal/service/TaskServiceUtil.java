@@ -12,30 +12,31 @@ import ch.elexis.core.tasks.model.ModelPackage;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 
 public class TaskServiceUtil {
-	
+
 	/**
-	 * Load the (active) task descriptors for a given runnable we are responsible for (that is, assigned as
-	 * runner). Task descriptors with {@link TaskTriggerType#MANUAL} are not considered.
-	 * 
+	 * Load the (active) task descriptors for a given runnable we are responsible
+	 * for (that is, assigned as runner). Task descriptors with
+	 * {@link TaskTriggerType#MANUAL} are not considered.
+	 *
 	 * @param identifiedRunnable
 	 * @param taskModelService
 	 * @param contextService
 	 * @return
 	 */
 	List<ITaskDescriptor> loadForIdentifiedRunnable(IIdentifiedRunnable identifiedRunnable,
-		IModelService taskModelService, IContextService contextService){
+			IModelService taskModelService, IContextService contextService) {
 		IQuery<ITaskDescriptor> query = taskModelService.getQuery(ITaskDescriptor.class);
 		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__ACTIVE, COMPARATOR.EQUALS, true);
 		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__IDENTIFIED_RUNNABLE_ID, COMPARATOR.EQUALS,
-			identifiedRunnable.getId());
+				identifiedRunnable.getId());
 		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__TRIGGER_TYPE, COMPARATOR.NOT_EQUALS,
-			TaskTriggerType.MANUAL.ordinal());
+				TaskTriggerType.MANUAL.ordinal());
 		query.startGroup();
 		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__RUNNER, COMPARATOR.EQUALS,
-			contextService.getStationIdentifier());
+				contextService.getStationIdentifier());
 		query.or(ModelPackage.Literals.ITASK_DESCRIPTOR__RUNNER, COMPARATOR.EQUALS, null);
 		query.andJoinGroups();
 		return query.execute();
 	}
-	
+
 }

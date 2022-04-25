@@ -9,11 +9,11 @@ import ch.elexis.core.spotlight.ISpotlightResult;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
 
 public class SpolightResultListContentProvider implements IStructuredContentProvider {
-	
+
 	@Override
-	public Object[] getElements(Object inputElement){
+	public Object[] getElements(Object inputElement) {
 		ISpotlightResult result = (ISpotlightResult) inputElement;
-		
+
 		Set<Object> results = new LinkedHashSet<>();
 		Set<Category> hasResultsIn = result.hasResultsIn();
 		// Patients always first in list
@@ -28,5 +28,5 @@ public class SpolightResultListContentProvider implements IStructuredContentProv
 		}
 		return results.toArray();
 	}
-	
+
 }

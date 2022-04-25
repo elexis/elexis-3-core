@@ -11,34 +11,34 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContext;
 
 public class Context implements IContext {
-	
+
 	private ConcurrentHashMap<String, Object> context;
-	
+
 	private Context parent;
-	
+
 	private IEclipseContext eclipseContext;
-	
-	public Context(){
+
+	public Context() {
 		this(null, "root");
 	}
-	
-	public Context(Context parent, String name){
+
+	public Context(Context parent, String name) {
 		context = new ConcurrentHashMap<>();
 		this.parent = parent;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Optional<T> getTyped(Class<T> clazz){
+	public <T> Optional<T> getTyped(Class<T> clazz) {
 		Optional<T> ret = Optional.ofNullable((T) context.get(clazz.getName()));
 		if (!ret.isPresent() && parent != null) {
 			ret = parent.getTyped(clazz);
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public void setTyped(Object object){
+	public void setTyped(Object object) {
 		if (object != null) {
 			if (object instanceof IUser) {
 				// also set active user contact
@@ -66,27 +66,28 @@ public class Context implements IContext {
 			throw new IllegalArgumentException("object must not be null, use #removeTyped");
 		}
 	}
-	
-	private Optional<Class<?>> getModelInterface(Object object){
+
+	private Optional<Class<?>> getModelInterface(Object object) {
 		Class<?>[] interfaces = object.getClass().getInterfaces();
 		for (Class<?> interfaze : interfaces) {
-			if (interfaze.getName().startsWith("ch.elexis.core.model") && !interfaze.getName().contains("Identifiable")) {
+			if (interfaze.getName().startsWith("ch.elexis.core.model")
+					&& !interfaze.getName().contains("Identifiable")) {
 				return Optional.of(interfaze);
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public void removeTyped(Class<?> clazz){
+	public void removeTyped(Class<?> clazz) {
 		context.remove(clazz.getName());
 		if (eclipseContext != null) {
 			eclipseContext.remove(clazz.getName());
 		}
 	}
-	
+
 	@Override
-	public Optional<?> getNamed(String name){
+	public Optional<?> getNamed(String name) {
 		Optional<?> ret = Optional.ofNullable(context.get(name));
 		if (!ret.isPresent() && parent != null) {
 			ret = parent.getNamed(name);
@@ -96,9 +97,9 @@ public class Context implements IContext {
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public void setNamed(String name, Object object){
+	public void setNamed(String name, Object object) {
 		if (object == null) {
 			context.remove(name);
 		} else if (object.equals(context.get(name))) {
@@ -111,12 +112,12 @@ public class Context implements IContext {
 			eclipseContext.set(name, object);
 		}
 	}
-	
-	public void setParent(Context parent){
+
+	public void setParent(Context parent) {
 		this.parent = parent;
 	}
-	
-	public void setEclipseContext(IEclipseContext applicationContext){
+
+	public void setEclipseContext(IEclipseContext applicationContext) {
 		this.eclipseContext = applicationContext;
 		// update with not present context
 		context.forEach((k, v) -> {
@@ -125,9 +126,9 @@ public class Context implements IContext {
 			}
 		});
 	}
-	
+
 	@Override
-	public String getStationIdentifier(){
+	public String getStationIdentifier() {
 		return getNamed(STATION_IDENTIFIER).get().toString();
 	}
 }

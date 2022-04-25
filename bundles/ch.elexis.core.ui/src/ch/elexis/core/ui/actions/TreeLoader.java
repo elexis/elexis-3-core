@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.actions;
@@ -24,10 +24,11 @@ import ch.rgw.tools.IFilter;
 import ch.rgw.tools.Tree;
 
 /**
- * Ein BackgroundJob, der Datensätze aus einer Tabelle einliest, und als Tree zurückliefert
- * 
+ * Ein BackgroundJob, der Datensätze aus einer Tabelle einliest, und als Tree
+ * zurückliefert
+ *
  * @author gerry
- * 
+ *
  * @see ch.rgw.tools.Tree
  */
 @Deprecated
@@ -37,62 +38,57 @@ public class TreeLoader<T> extends AbstractDataLoaderJob {
 	private IProgressMonitor monitor;
 	// private boolean loadAll;
 	private IFilter filter;
-	
+
 	/**
 	 * Der einzige Konstruktor
-	 * 
-	 * @param Jobname
-	 *            Name für den Background-Job
-	 * @param q
-	 *            Query, die die Datensätze liefert
-	 * @param parent
-	 *            Name des Felds, das auf das �bergeordnete Element verweist
-	 * @param orderBy
-	 *            Felder, nach denen sortiert werden soll
+	 *
+	 * @param Jobname Name für den Background-Job
+	 * @param q       Query, die die Datensätze liefert
+	 * @param parent  Name des Felds, das auf das �bergeordnete Element verweist
+	 * @param orderBy Felder, nach denen sortiert werden soll
 	 * @see ch.elexis.core.datatypes.Query
 	 */
-	public <U> TreeLoader(String Jobname, Query q, String parent, String[] orderBy){
+	public <U> TreeLoader(String Jobname, Query q, String parent, String[] orderBy) {
 		super(Jobname, q, orderBy);
 		parentColumn = parent;
 		filter = null;
 	}
-	
+
 	/**
 	 * Einen Filter auf den Tree setzen
-	 * 
-	 * @param f
-	 *            ein Filter
+	 *
+	 * @param f ein Filter
 	 */
-	public void setFilter(IFilter f){
+	public void setFilter(IFilter f) {
 		filter = f;
 		if (isValid() == true) {
 			((Tree) result).setFilter(f);
 		}
 	}
-	
+
 	/**
-	 * Diesen Job synchron ausführen. Normalerweise sollte ein Dataloader aber asynchron viea
-	 * Hub.jobPool.activate oder Hub.jobPool.Queue ausgeführt werden. execute() eignet sich nur,
-	 * wenn man gleich auf das Ergebnis warten will.
-	 * 
+	 * Diesen Job synchron ausführen. Normalerweise sollte ein Dataloader aber
+	 * asynchron viea Hub.jobPool.activate oder Hub.jobPool.Queue ausgeführt werden.
+	 * execute() eignet sich nur, wenn man gleich auf das Ergebnis warten will.
+	 *
 	 * @see JobPool
 	 * @see AbstractDataLoaderJob
 	 */
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
-	public IStatus execute(IProgressMonitor moni){
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
+	public IStatus execute(IProgressMonitor moni) {
 		monitor = moni;
 		// worked=0;
 		if (monitor != null) {
 			monitor.subTask(getJobname());
 		}
-		
+
 		result = new Tree<T>(null, null, filter);
 		loadChildren((Tree<T>) result, "NIL"); //$NON-NLS-1$
 		return Status.OK_STATUS;
 	}
-	
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
-	private void loadChildren(Tree<T> branch, String parent){
+
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
+	private void loadChildren(Tree<T> branch, String parent) {
 		qbe.clear();
 		qbe.add(parentColumn, "=", parent); //$NON-NLS-1$
 		List<T> list = load();
@@ -104,9 +100,9 @@ public class TreeLoader<T> extends AbstractDataLoaderJob {
 			loadChildren(ch, ((PersistentObject) t).getId());
 		}
 	}
-	
-	public int getSize(){
+
+	public int getSize() {
 		return qbe.size();
 	}
-	
+
 }

@@ -29,7 +29,7 @@ public class InternalDatabaseMessageTransporter implements IMessageTransporter {
 		idbMessage.setCreateDateTime(message.getCreateDateTime());
 		idbMessage.setSenderAcceptsAnswer(message.isSenderAcceptsAnswer());
 
-		try  {
+		try {
 			CoreModelServiceHolder.get().save(idbMessage);
 			return ObjectStatus.OK_STATUS(idbMessage.getId(), null);
 		} catch (IllegalStateException e) {

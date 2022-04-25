@@ -37,57 +37,54 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 
 public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
-	
+
 	private Patient patient;
 	private ComboViewer fallCombo;
 	private ComboViewer openKonsCombo;
-	
+
 	private Konsultation konsultation;
 	private String title;
-	
-	public SelectOrCreateOpenKonsDialog(Patient patient){
+
+	public SelectOrCreateOpenKonsDialog(Patient patient) {
 		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		this.patient = patient;
 	}
-	
-	public SelectOrCreateOpenKonsDialog(Patient patient, String title){
+
+	public SelectOrCreateOpenKonsDialog(Patient patient, String title) {
 		this(patient);
 		this.title = title;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		getShell().setText("Konsultation auswählen"); //$NON-NLS-1$
-		setTitle(title); //$NON-NLS-1$
-		setMessage(String
-			.format(
-				"Erstellen bzw. wählen Sie eine Konsultation für den Patienten %s aus\n", patient.getLabel())); //$NON-NLS-1$
+		setTitle(title); // $NON-NLS-1$
+		setMessage(String.format("Erstellen bzw. wählen Sie eine Konsultation für den Patienten %s aus\n", //$NON-NLS-1$
+				patient.getLabel()));
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
-		
+
 		Composite areaComposite = new Composite(composite, SWT.NONE);
-		areaComposite
-			.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
-		
+		areaComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
+
 		areaComposite.setLayout(new FormLayout());
-		
+
 		Label lbl = new Label(areaComposite, SWT.NONE);
 		lbl.setText("Konsultation erstellen");
-		
+
 		ToolBarManager tbManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
-		tbManager.add(new RestrictedAction(AccessControlDefaults.KONS_CREATE,
-			Messages.GlobalActions_NewKons) {
+		tbManager.add(new RestrictedAction(AccessControlDefaults.KONS_CREATE, Messages.GlobalActions_NewKons) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_NewKonsToolTip); //$NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_NewKonsToolTip); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void doRun(){
+			public void doRun() {
 				Konsultation kons = null;
 				Fall fall = null;
 				StructuredSelection selection = (StructuredSelection) fallCombo.getSelection();
@@ -95,16 +92,16 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 					List<Fall> openFall = getOpenFall();
 					if (openFall.isEmpty()) {
 						fall = patient.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
-							Fall.getDefaultCaseLaw());
+								Fall.getDefaultCaseLaw());
 					}
 				} else {
 					fall = (Fall) selection.getFirstElement();
 				}
-				
+
 				if (fall != null) {
 					kons = fall.neueKonsultation();
 				}
-				
+
 				if (kons != null && kons.exists()) {
 					LocalLockServiceHolder.get().acquireLock(kons);
 					LocalLockServiceHolder.get().releaseLock(kons);
@@ -112,36 +109,35 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 			}
 		});
 		ToolBar toolbar = tbManager.createControl(areaComposite);
-		
+
 		FormData fd = new FormData();
 		fd.top = new FormAttachment(0, 5);
 		fd.left = new FormAttachment(0, 5);
 		lbl.setLayoutData(fd);
-		
+
 		fd = new FormData();
 		fd.top = new FormAttachment(0, 5);
 		fd.left = new FormAttachment(30, 5);
 		toolbar.setLayoutData(fd);
-		
+
 		fallCombo = new ComboViewer(areaComposite);
-		
+
 		fallCombo.setContentProvider(new ArrayContentProvider());
-		
+
 		fallCombo.setInput(getOpenFall());
 		fallCombo.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return ((Fall) element).getLabel();
 			}
 		});
 		fallCombo.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				StructuredSelection selection = (StructuredSelection) fallCombo.getSelection();
 				if (!selection.isEmpty()) {
-					ElexisEventDispatcher.fireSelectionEvent((PersistentObject) selection
-						.getFirstElement());
+					ElexisEventDispatcher.fireSelectionEvent((PersistentObject) selection.getFirstElement());
 				}
 			}
 		});
@@ -149,45 +145,45 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		if (selectedFall != null) {
 			fallCombo.setSelection(new StructuredSelection(selectedFall));
 		}
-		
+
 		fd = new FormData();
 		fd.top = new FormAttachment(0, 5);
 		fd.left = new FormAttachment(toolbar, 5);
 		fallCombo.getControl().setLayoutData(fd);
-		
+
 		lbl = new Label(areaComposite, SWT.NONE);
 		lbl.setText("Konsultation auswählen");
-		
+
 		openKonsCombo = new ComboViewer(areaComposite);
-		
+
 		openKonsCombo.setContentProvider(new ArrayContentProvider());
-		
+
 		openKonsCombo.setInput(getOpenKons());
 		openKonsCombo.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return ((Konsultation) element).getLabel();
 			}
 		});
-		
-		ElexisEventDispatcher.getInstance().addListeners(
-			new UpdateKonsComboListener(openKonsCombo, Konsultation.class, 0xff));
-		
+
+		ElexisEventDispatcher.getInstance()
+				.addListeners(new UpdateKonsComboListener(openKonsCombo, Konsultation.class, 0xff));
+
 		fd = new FormData();
 		fd.top = new FormAttachment(toolbar, 5);
 		fd.left = new FormAttachment(0, 5);
 		lbl.setLayoutData(fd);
-		
+
 		fd = new FormData();
 		fd.top = new FormAttachment(toolbar, 5);
 		fd.left = new FormAttachment(30, 5);
 		fd.right = new FormAttachment(100, -5);
 		openKonsCombo.getControl().setLayoutData(fd);
-		
+
 		return areaComposite;
 	}
-	
-	private List<Fall> getOpenFall(){
+
+	private List<Fall> getOpenFall() {
 		ArrayList<Fall> ret = new ArrayList<Fall>();
 		Fall[] faelle = patient.getFaelle();
 		for (Fall f : faelle) {
@@ -197,8 +193,8 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		}
 		return ret;
 	}
-	
-	protected List<Konsultation> getOpenKons(){
+
+	protected List<Konsultation> getOpenKons() {
 		ArrayList<Konsultation> ret = new ArrayList<Konsultation>();
 		Fall[] faelle = patient.getFaelle();
 		for (Fall f : faelle) {
@@ -213,9 +209,9 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public void okPressed(){
+	public void okPressed() {
 		Object obj = ((IStructuredSelection) openKonsCombo.getSelection()).getFirstElement();
 		if (obj instanceof Konsultation) {
 			konsultation = (Konsultation) obj;
@@ -225,22 +221,22 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 			setErrorMessage("Keine Konsultation ausgewählt.");
 		return;
 	}
-	
-	public Konsultation getKonsultation(){
+
+	public Konsultation getKonsultation() {
 		return konsultation;
 	}
-	
+
 	private class UpdateKonsComboListener extends ElexisUiEventListenerImpl {
-		
+
 		ComboViewer viewer;
-		
-		UpdateKonsComboListener(ComboViewer viewer, final Class<?> clazz, int mode){
+
+		UpdateKonsComboListener(ComboViewer viewer, final Class<?> clazz, int mode) {
 			super(clazz, mode);
 			this.viewer = viewer;
 		}
-		
+
 		@Override
-		public void runInUi(ElexisEvent ev){
+		public void runInUi(ElexisEvent ev) {
 			if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
 				viewer.setInput(getOpenKons());
 				viewer.refresh();

@@ -8,9 +8,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.PARAMETER)
 public @interface CmdParam {
-	
+
 	String description();
-	
+
 	boolean required() default true;
-	
+
 }

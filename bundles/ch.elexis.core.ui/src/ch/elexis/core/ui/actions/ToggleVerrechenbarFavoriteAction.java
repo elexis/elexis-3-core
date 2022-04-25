@@ -9,13 +9,13 @@ import ch.elexis.data.VerrechenbarFavorites;
 import ch.elexis.data.VerrechenbarFavorites.Favorite;
 
 public class ToggleVerrechenbarFavoriteAction extends Action {
-	
+
 	private IBillable currentBillable;
-	
+
 	private ICodeElementBlock currentBlock;
-	
+
 	@Override
-	public void run(){
+	public void run() {
 		if (currentBillable != null) {
 			Favorite favorite = VerrechenbarFavorites.isFavorite(currentBillable);
 			VerrechenbarFavorites.setFavorite(currentBillable, favorite == null);
@@ -24,8 +24,8 @@ public class ToggleVerrechenbarFavoriteAction extends Action {
 			VerrechenbarFavorites.setFavorite(currentBlock, favorite == null);
 		}
 	}
-	
-	public void updateSelection(Object object){
+
+	public void updateSelection(Object object) {
 		if (object instanceof IBillable) {
 			setEnabled(true);
 			currentBillable = (IBillable) object;

@@ -12,11 +12,11 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 
 public class SetFallCopyForPatientWithTel extends ExternalMaintenance {
-	
+
 	@Override
-	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
+	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		Query<Fall> query = new Query<Fall>(Fall.class);
 		List<Fall> allFaelle = query.execute();
 		sb.append(allFaelle.size() + " Fälle insgesamt.\n");
@@ -26,7 +26,7 @@ public class SetFallCopyForPatientWithTel extends ExternalMaintenance {
 		for (Fall fall : allFaelle) {
 			Patient patient = fall.getPatient();
 			if (patient != null && StringUtils.isNotBlank(patient.getMailAddress())
-				&& StringUtils.isNotBlank(patient.getNatel())) {
+					&& StringUtils.isNotBlank(patient.getNatel())) {
 				if (fall.isOpen() && fall.getTiersType() == Tiers.PAYANT) {
 					if (setValue != fall.getCopyForPatient()) {
 						changedFaelle++;
@@ -36,14 +36,13 @@ public class SetFallCopyForPatientWithTel extends ExternalMaintenance {
 			}
 			pm.worked(1);
 		}
-		sb.append("Kopie an Patienten (E-Mail & Mobil vorhanden), in " + changedFaelle
-			+ " TP Fällen angepasst.");
+		sb.append("Kopie an Patienten (E-Mail & Mobil vorhanden), in " + changedFaelle + " TP Fällen angepasst.");
 		return sb.toString();
 	}
-	
+
 	@Override
-	public String getMaintenanceDescription(){
+	public String getMaintenanceDescription() {
 		return "Kopie an Patienten für TP Fälle (E-Mail & Mobil vorhanden)";
 	}
-	
+
 }

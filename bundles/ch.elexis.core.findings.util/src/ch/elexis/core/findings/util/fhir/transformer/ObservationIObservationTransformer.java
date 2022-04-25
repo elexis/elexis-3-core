@@ -19,47 +19,44 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
 
 @Component
-public class ObservationIObservationTransformer
-		implements IFhirTransformer<Observation, IObservation> {
-	
+public class ObservationIObservationTransformer implements IFhirTransformer<Observation, IObservation> {
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
-	
+
 	@Reference
 	private IFindingsService findingsService;
-	
+
 	private FindingsContentHelper contentHelper = new FindingsContentHelper();
-	
+
 	@Override
 	public Optional<Observation> getFhirObject(IObservation localObject, SummaryEnum summaryEnum,
-		Set<Include> includes){
+			Set<Include> includes) {
 		Optional<IBaseResource> resource = contentHelper.getResource(localObject);
 		if (resource.isPresent()) {
 			return Optional.of((Observation) resource.get());
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<IObservation> getLocalObject(Observation fhirObject){
+	public Optional<IObservation> getLocalObject(Observation fhirObject) {
 		if (fhirObject != null && fhirObject.getId() != null) {
-			Optional<IObservation> existing =
-				findingsService.findById(fhirObject.getId(), IObservation.class);
+			Optional<IObservation> existing = findingsService.findById(fhirObject.getId(), IObservation.class);
 			if (existing.isPresent()) {
 				return Optional.of(existing.get());
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<IObservation> updateLocalObject(Observation fhirObject,
-		IObservation localObject){
+	public Optional<IObservation> updateLocalObject(Observation fhirObject, IObservation localObject) {
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<IObservation> createLocalObject(Observation fhirObject){
+	public Optional<IObservation> createLocalObject(Observation fhirObject) {
 		IObservation iObservation = findingsService.create(IObservation.class);
 		contentHelper.setResource(fhirObject, iObservation);
 		if (fhirObject.getSubject() != null && fhirObject.getSubject().hasReference()) {
@@ -79,10 +76,10 @@ public class ObservationIObservationTransformer
 		findingsService.saveFinding(iObservation);
 		return Optional.of(iObservation);
 	}
-	
+
 	@Override
-	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz){
+	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz) {
 		return Observation.class.equals(fhirClazz) && IObservation.class.equals(localClazz);
 	}
-	
+
 }

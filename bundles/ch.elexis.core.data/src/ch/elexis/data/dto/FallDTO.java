@@ -18,7 +18,7 @@ import ch.rgw.tools.TimeTool;
 
 public class FallDTO implements IFall {
 	private final IFall iFall; // source
-	
+
 	private String abrechnungsSystem;
 	private String grund;
 	private String beginnDatum;
@@ -28,12 +28,12 @@ public class FallDTO implements IFall {
 	private Map extInfo = new HashMap<>();
 	private boolean copyForPatient;
 	private String bezeichnung;
-	
+
 	private List<IFallChanged> fallChanges = new ArrayList<>();
-	
+
 	private boolean changed;
-	
-	public FallDTO(IFall fall){
+
+	public FallDTO(IFall fall) {
 		changed = false;
 		iFall = fall;
 		fallChanges.clear();
@@ -47,234 +47,232 @@ public class FallDTO implements IFall {
 		extInfo = iFall.getMap(PersistentObject.FLD_EXTINFO);
 		bezeichnung = iFall.getBezeichnung();
 	}
-	
+
 	/// editable fields
 	@Override
-	public void setAbrechnungsSystem(String abrechnungsSystem){
+	public void setAbrechnungsSystem(String abrechnungsSystem) {
 		if (!StringUtils.equals(this.abrechnungsSystem, abrechnungsSystem)) {
 			this.abrechnungsSystem = abrechnungsSystem;
 			informChanged(true);
 		}
 	}
-	
+
 	@Override
-	public String getAbrechnungsSystem(){
+	public String getAbrechnungsSystem() {
 		return abrechnungsSystem;
 	}
-	
+
 	@Override
-	public String getGrund(){
+	public String getGrund() {
 		return grund;
 	}
-	
+
 	@Override
-	public void setGrund(String grund){
+	public void setGrund(String grund) {
 		if (!StringUtils.equals(this.grund, grund)) {
 			informChanged(false);
 		}
 		this.grund = grund;
 	}
-	
+
 	@Override
-	public String getBeginnDatum(){
+	public String getBeginnDatum() {
 		return beginnDatum;
 	}
-	
+
 	@Override
-	public void setBeginnDatum(String beginnDatum){
+	public void setBeginnDatum(String beginnDatum) {
 		if (!StringUtils.equals(this.beginnDatum, beginnDatum)) {
 			informChanged(false);
 		}
 		this.beginnDatum = beginnDatum;
 	}
-	
+
 	@Override
-	public String getEndDatum(){
+	public String getEndDatum() {
 		return endDatum;
 	}
-	
+
 	@Override
-	public void setEndDatum(String endDatum){
+	public void setEndDatum(String endDatum) {
 		if (!StringUtils.equals(this.endDatum, endDatum)) {
 			informChanged(false);
 		}
 		this.endDatum = endDatum;
 	}
-	
+
 	@Override
-	public TimeTool getBillingDate(){
+	public TimeTool getBillingDate() {
 		return billingDate;
 	}
-	
+
 	@Override
-	public void setBillingDate(TimeTool billingDate){
+	public void setBillingDate(TimeTool billingDate) {
 		this.billingDate = billingDate;
 		informChanged(false);
 	}
-	
+
 	@Override
-	public void setGarant(Kontakt garant){
+	public void setGarant(Kontakt garant) {
 		this.garant = garant;
 		informChanged(false);
 	}
-	
+
 	@Override
-	public Kontakt getGarant(){
+	public Kontakt getGarant() {
 		return garant;
 	}
-	
+
 	@Override
-	public void setMap(String string, Map<Object, Object> ht){
+	public void setMap(String string, Map<Object, Object> ht) {
 		if (PersistentObject.FLD_EXTINFO.equals(string)) {
 			extInfo = ht;
 			informChanged(false);
 		}
 	}
-	
+
 	@Override
-	public Map getMap(String fldExtinfo){
+	public Map getMap(String fldExtinfo) {
 		return extInfo;
 	}
-	
+
 	@Override
-	public String getInfoString(String key){
+	public String getInfoString(String key) {
 		Object value = extInfo.get(key);
 		if (value instanceof String) {
 			return (String) value;
 		}
 		return "";
 	}
-	
+
 	@Override
-	public void setInfoString(String key, String value){
+	public void setInfoString(String key, String value) {
 		extInfo.put(key, value);
 		informChanged(false);
 	}
-	
+
 	@Override
-	public void setCopyForPatient(boolean copyForPatient){
+	public void setCopyForPatient(boolean copyForPatient) {
 		this.copyForPatient = copyForPatient;
 		informChanged(false);
 	}
-	
+
 	@Override
-	public void setBezeichnung(String bezeichnung){
+	public void setBezeichnung(String bezeichnung) {
 		if (!StringUtils.equals(this.bezeichnung, bezeichnung)) {
 			informChanged(false);
 		}
 		this.bezeichnung = bezeichnung;
 	}
-	
+
 	@Override
-	public String getBezeichnung(){
+	public String getBezeichnung() {
 		return bezeichnung;
 	}
-	
+
 	@Override
-	public boolean getCopyForPatient(){
+	public boolean getCopyForPatient() {
 		return copyForPatient;
 	}
 
-	/// readonly fields	
+	/// readonly fields
 	@Override
-	public String getId(){
+	public String getId() {
 		return iFall.getId();
 	}
-	
+
 	@Override
-	public IXid getXid(){
+	public IXid getXid() {
 		return iFall.getXid();
 	}
-	
+
 	@Override
-	public List<IXid> getXids(){
+	public List<IXid> getXids() {
 		return iFall.getXids();
 	}
-	
+
 	@Override
-	public long getLastUpdate(){
+	public long getLastUpdate() {
 		return iFall.getLastUpdate();
 	}
-	
+
 	@Override
-	public boolean isValid(){
+	public boolean isValid() {
 		return iFall.isValid();
 	}
-	
+
 	@Override
-	public int state(){
+	public int state() {
 		return iFall.state();
 	}
-	
+
 	@Override
-	public boolean exists(){
+	public boolean exists() {
 		return iFall.exists();
 	}
-	
+
 	@Override
-	public boolean isAvailable(){
+	public boolean isAvailable() {
 		return iFall.isAvailable();
 	}
-	
+
 	@Override
-	public String getXid(String domain){
+	public String getXid(String domain) {
 		return iFall.getXid(domain);
 	}
-	
+
 	@Override
-	public boolean get(String[] fields, String[] values){
+	public boolean get(String[] fields, String[] values) {
 		return iFall.get(fields, values);
 	}
-	
+
 	@Override
-	public String get(String field){
+	public String get(String field) {
 		return iFall.get(field);
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		return iFall.getLabel();
 	}
 
 	@Override
-	public Patient getPatient(){
+	public Patient getPatient() {
 		return iFall.getPatient();
 	}
-	
 
 	@Override
-	public Konsultation[] getBehandlungen(boolean b){
+	public Konsultation[] getBehandlungen(boolean b) {
 		return iFall.getBehandlungen(b);
 	}
-	
+
 	@Override
-	public String getOptionals(){
+	public String getOptionals() {
 		return iFall.getOptionals();
 	}
-	
+
 	@Override
-	public String getUnused(){
+	public String getUnused() {
 		return iFall.getUnused();
 	}
-	
+
 	@Override
-	public void setCostBearer(Kontakt costBearer){
+	public void setCostBearer(Kontakt costBearer) {
 		iFall.setCostBearer(costBearer);
 	}
 
 	@Override
-	public Kontakt getCostBearer(){
+	public Kontakt getCostBearer() {
 		return iFall.getCostBearer();
 	}
-	
-	
+
 	@Override
-	public String storeToString(){
+	public String storeToString() {
 		return iFall.storeToString();
 	}
-	
+
 	@Override
-	public boolean set(String field, String value){
+	public boolean set(String field, String value) {
 		// the view fallDetailBlatt sets this field with the set method
 		if (StringUtils.equals(field, Fall.FLD_BEZEICHNUNG)) {
 			setBezeichnung(value);
@@ -282,47 +280,46 @@ public class FallDTO implements IFall {
 		informChanged(false);
 		return false;
 	}
-	
+
 	@Override
-	public void setRequiredContact(String kostentraeger, Kontakt k){
+	public void setRequiredContact(String kostentraeger, Kontakt k) {
 		informChanged(false);
 	}
-	
+
 	@Override
-	public void setRequiredString(String versicherungsnummer, String vnOld){
+	public void setRequiredString(String versicherungsnummer, String vnOld) {
 		informChanged(false);
-		
+
 	}
-	
+
 	@Override
-	public boolean addXid(String domain, String domain_id, boolean updateIfExists){
+	public boolean addXid(String domain, String domain_id, boolean updateIfExists) {
 		informChanged(false);
 		return false;
 	}
-	
-	public boolean isChanged(){
+
+	public boolean isChanged() {
 		return changed;
 	}
-	
-	public void register(IFallChanged fallChanged){
+
+	public void register(IFallChanged fallChanged) {
 		fallChanges.add(fallChanged);
 	}
-	
-	private void informChanged(boolean triggersRecalc){
+
+	private void informChanged(boolean triggersRecalc) {
 		for (IFallChanged iFallChanged : fallChanges) {
 			iFallChanged.changed(this, triggersRecalc);
-			
+
 		}
 		changed = true;
 	}
-	
+
 	public interface IFallChanged {
 		public void changed(FallDTO fallDTO, boolean triggersRecalc);
 	}
 
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return iFall.isDeleted();
 	}
 }
-

@@ -33,24 +33,23 @@ import ch.elexis.core.types.PathologicDescription.Description;
 @Cache(expiry = 15000)
 @NamedQuery(name = "LabResult.patient.item", query = "SELECT lr FROM LabResult lr WHERE lr.deleted = false AND lr.patient = :patient AND lr.item = :item")
 @NamedQuery(name = "LabResult.patient.itemtype.includesDeleted", query = "SELECT lr FROM LabResult lr WHERE lr.patient = :patient AND lr.item.typ = :itemtype")
-public class LabResult extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class LabResult extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Lob
 	protected byte[] extInfo;
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PatientID")
 	private Kontakt patient;
@@ -70,7 +69,7 @@ public class LabResult extends AbstractEntityWithId
 
 	@Convert(converter = IntegerStringConverter.class)
 	private int flags;
-	
+
 	@Lob
 	@Column(name = "Kommentar")
 	private String comment;
@@ -165,7 +164,7 @@ public class LabResult extends AbstractEntityWithId
 	public Kontakt getOrigin() {
 		return origin;
 	}
-	
+
 	public void setOrigin(Kontakt origin) {
 		this.origin = origin;
 	}
@@ -178,14 +177,14 @@ public class LabResult extends AbstractEntityWithId
 		this.result = result;
 	}
 
-	public LocalDate getDate(){
+	public LocalDate getDate() {
 		return this.date;
 	}
-	
+
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	
+
 	public LocalDateTime getAnalysetime() {
 		return analysetime;
 	}
@@ -227,42 +226,42 @@ public class LabResult extends AbstractEntityWithId
 	}
 
 	@Override
-	public byte[] getExtInfo(){
+	public byte[] getExtInfo() {
 		return extInfo;
 	}
-	
+
 	@Override
-	public void setExtInfo(byte[] extInfo){
+	public void setExtInfo(byte[] extInfo) {
 		this.extInfo = extInfo;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

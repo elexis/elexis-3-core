@@ -8,17 +8,17 @@ import ch.elexis.core.documents.DocumentStore;
 @Component(service = {})
 public class DocumentStoreServiceHolder {
 	private static DocumentStore localDocumentStore;
-	
+
 	@Reference
-	public void bind(DocumentStore service){
+	public void bind(DocumentStore service) {
 		DocumentStoreServiceHolder.localDocumentStore = service;
 	}
-	
-	public void unbind(DocumentStore service){
+
+	public void unbind(DocumentStore service) {
 		DocumentStoreServiceHolder.localDocumentStore = null;
 	}
-	
-	public static DocumentStore getService(){
+
+	public static DocumentStore getService() {
 		return localDocumentStore;
 	}
 }

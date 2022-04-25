@@ -7,14 +7,14 @@ import ch.elexis.core.tasks.model.ITaskService;
 
 @Component(immediate = true)
 public class TaskServiceHolder {
-	
+
 	private static ITaskService taskService;
-	
+
 	@Reference
-	public void setModelService(ITaskService taskService){
+	public void setModelService(ITaskService taskService) {
 		TaskServiceHolder.taskService = taskService;
 	}
-	
+
 	public static ITaskService get() {
 		if (taskService == null) {
 			throw new IllegalStateException("No ITaskService available");

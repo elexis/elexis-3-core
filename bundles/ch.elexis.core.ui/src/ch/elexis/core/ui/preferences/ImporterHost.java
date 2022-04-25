@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.preferences;
@@ -22,24 +22,25 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.l10n.Messages;
+
 public class ImporterHost extends PreferencePage implements IWorkbenchPreferencePage {
-	
-	public ImporterHost(){
+
+	public ImporterHost() {
 		noDefaultAndApplyButton();
 	}
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		Composite ret = new Composite(parent, SWT.READ_ONLY);
 		ret.setLayout(new FillLayout());
 		Label text = new Label(ret, SWT.WRAP);
 		text.setText(Messages.ImporterHost_Explanation);
 		return ret;
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
+
 }

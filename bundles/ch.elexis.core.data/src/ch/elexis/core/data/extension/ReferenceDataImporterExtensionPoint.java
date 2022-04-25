@@ -15,60 +15,58 @@ import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
 
 /**
- * This class offers a centralized contact point for reference data imports. It forwards the update
- * to the appropriate importer. This update forwarding effects all importers included as
- * ExtensionPoint {@code ch.elexis.core.data.referenceDataImporter} and extending the
+ * This class offers a centralized contact point for reference data imports. It
+ * forwards the update to the appropriate importer. This update forwarding
+ * effects all importers included as ExtensionPoint
+ * {@code ch.elexis.core.data.referenceDataImporter} and extending the
  * {@link AbstractReferenceDataImporter} class
+ *
  * @deprecated NOPO
  */
 @Deprecated
 public class ReferenceDataImporterExtensionPoint {
-	private static Logger log = LoggerFactory.getLogger(ReferenceDataImporterExtensionPoint.class
-		.getName());
-	
+	private static Logger log = LoggerFactory.getLogger(ReferenceDataImporterExtensionPoint.class.getName());
+
 	private static final String CLASS_PROPERTY = "class";
 	private static final String ATTRIBUTE_REFDATA_ID = "referenceDataId";
 	private static HashMap<String, AbstractReferenceDataImporter> importers;
-	
+
 	/**
-	 * 
-	 * @param refDataId
-	 *            the id of the requested reference data type
+	 *
+	 * @param refDataId the id of the requested reference data type
 	 * @return the {@link AbstractReferenceDataImporter} if found, else null
 	 */
-	public static @Nullable
-	AbstractReferenceDataImporter getReferenceDataImporterByReferenceDataId(@NonNull
-	String refDataId){
+	public static @Nullable AbstractReferenceDataImporter getReferenceDataImporterByReferenceDataId(
+			@NonNull String refDataId) {
 		if (importers == null) {
 			initialize();
 		}
 		return importers.get(refDataId);
 	}
-	
+
 	/**
-	 * loads all ExtensionPoints of type {@code ExtensionPointConstantsData.REFERENCE_DATA_IMPORTER}
-	 * and adds them to a list of available importers
+	 * loads all ExtensionPoints of type
+	 * {@code ExtensionPointConstantsData.REFERENCE_DATA_IMPORTER} and adds them to
+	 * a list of available importers
 	 */
-	private static void initialize(){
+	private static void initialize() {
 		try {
 			importers = new HashMap<String, AbstractReferenceDataImporter>();
-			
+
 			// load reference-data-extensionpoint
-			IExtensionPoint refDataExtensionPoint =
-				RegistryFactory.getRegistry().getExtensionPoint(
-					ExtensionPointConstantsData.REFERENCE_DATA_IMPORTER);
-			IConfigurationElement[] extensionPoints =
-				refDataExtensionPoint.getConfigurationElements();
-			
+			IExtensionPoint refDataExtensionPoint = RegistryFactory.getRegistry()
+					.getExtensionPoint(ExtensionPointConstantsData.REFERENCE_DATA_IMPORTER);
+			IConfigurationElement[] extensionPoints = refDataExtensionPoint.getConfigurationElements();
+
 			// add all found extensionPoints to the importer list
 			for (IConfigurationElement ePoint : extensionPoints) {
 				Object o = ePoint.createExecutableExtension(CLASS_PROPERTY);
 				String refDataId = ePoint.getAttribute(ATTRIBUTE_REFDATA_ID);
-				
+
 				if (o instanceof AbstractReferenceDataImporter) {
 					AbstractReferenceDataImporter importer = (AbstractReferenceDataImporter) o;
 					importers.put(refDataId, importer);
-					
+
 					log.debug("Added ReferenceDataImporter for... " + refDataId);
 				}
 			}

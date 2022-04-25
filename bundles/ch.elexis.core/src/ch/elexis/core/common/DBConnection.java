@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -62,7 +62,7 @@ public class DBConnection implements Serializable {
 			this.defaultPort = defaultPort;
 		}
 
-		public static Optional<DBType> valueOfIgnoreCase(String value){
+		public static Optional<DBType> valueOfIgnoreCase(String value) {
 			for (DBType dbType : values()) {
 				if (dbType.dbType.equalsIgnoreCase(value)) {
 					return Optional.of(dbType);
@@ -70,7 +70,7 @@ public class DBConnection implements Serializable {
 			}
 			return Optional.empty();
 		}
-		
+
 		public static Optional<DBType> valueOfDriver(String driver) {
 			// compatibility for old mysql driver string
 			if (driver.equals("com.mysql.jdbc.Driver")) {
@@ -103,7 +103,7 @@ public class DBConnection implements Serializable {
 
 	/**
 	 * are all required values for the DBConnection set?
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean allValuesSet() {
@@ -125,7 +125,7 @@ public class DBConnection implements Serializable {
 
 	/**
 	 * Marshall this object into a storable xml
-	 * 
+	 *
 	 * @param os
 	 * @throws JAXBException
 	 */
@@ -138,7 +138,7 @@ public class DBConnection implements Serializable {
 
 	/**
 	 * Unmarshall a DBConnection object created by {@link #marshall()}
-	 * 
+	 *
 	 * @param is
 	 * @return
 	 * @throws JAXBException

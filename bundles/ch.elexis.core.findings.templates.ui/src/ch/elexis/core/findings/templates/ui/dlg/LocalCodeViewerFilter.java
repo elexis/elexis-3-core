@@ -7,18 +7,18 @@ import org.eclipse.jface.viewers.ViewerFilter;
 public class LocalCodeViewerFilter extends ViewerFilter {
 	protected String searchString;
 	protected ILabelProvider labelProvider;
-	
-	public LocalCodeViewerFilter(ILabelProvider labelProvider){
+
+	public LocalCodeViewerFilter(ILabelProvider labelProvider) {
 		this.labelProvider = labelProvider;
 	}
-	
-	public void setSearchText(String s){
+
+	public void setSearchText(String s) {
 		// Search must be a substring of the existing value
 		this.searchString = ".*" + s + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element){
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (searchString == null || searchString.length() == 0) {
 			return true;
 		}

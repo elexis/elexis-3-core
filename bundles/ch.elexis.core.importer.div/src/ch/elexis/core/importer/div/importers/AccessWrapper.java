@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 package ch.elexis.core.importer.div.importers;
 
@@ -28,57 +28,58 @@ import ch.rgw.tools.JdbcLink;
 
 /**
  * Simple conversions from mdb databases
- * 
+ *
  * @author Gerry Weirich
  *
  */
 public class AccessWrapper {
 	private Database db;
 	private static String ImportPrefix = "";
-	
+
 	/*
 	 * Open the mdbFile using sensible default
 	 */
 	@SuppressWarnings("static-access")
-	public AccessWrapper(File mdbFile) throws IOException{
+	public AccessWrapper(File mdbFile) throws IOException {
 		db = new DatabaseBuilder().setReadOnly(true).open(mdbFile);
 	}
-	
+
 	/*
 	 * Open the mdbFile with a specified charset
 	 */
 	@SuppressWarnings("static-access")
-	public AccessWrapper(File mdbFile, Charset ch) throws IOException{
+	public AccessWrapper(File mdbFile, Charset ch) throws IOException {
 		db = new DatabaseBuilder().setReadOnly(true).setCharset(ch).open(mdbFile);
 	}
-	
+
 	/*
 	 * Set a prefix for the imported tablesnames
-	 * 
+	 *
 	 * @param prefix prefix to be used. Default to ""
 	 */
-	public void setPrefixForImportedTableNames(String prefix){
+	public void setPrefixForImportedTableNames(String prefix) {
 		ImportPrefix = prefix;
 	}
-	
+
 	/*
 	 * Copies a table in the MDB into the destination.
-	 * 
+	 *
 	 * @param name of the table in the MDB file
-	 * 
+	 *
 	 * @param dest JdbcLink. Where you want to create the imported table
-	 * 
+	 *
 	 * @return number of rows imported
-	 * 
-	 * @see The name in destination may be prefixed using setPrefixForImportedTableNames
+	 *
+	 * @see The name in destination may be prefixed using
+	 * setPrefixForImportedTableNames
 	 */
-	public int convertTable(String name, JdbcLink dest) throws IOException, SQLException{
+	public int convertTable(String name, JdbcLink dest) throws IOException, SQLException {
 		Table table = db.getTable(name);
 		String insertName = ImportPrefix + name;
 		List<? extends Column> cols = table.getColumns();
 		try {
 			dest.exec("DROP TABLE IF EXISTS " + insertName);//$NON-NLS-1$
-			
+
 		} catch (Exception ex) {
 			// don¨t mind
 		}
@@ -130,8 +131,8 @@ public class AccessWrapper {
 		}
 		return nrRows;
 	}
-	
-	public Database getDatabase(){
+
+	public Database getDatabase() {
 		return db;
 	}
 }

@@ -63,7 +63,7 @@ public class StickerTest extends AbstractTest {
 //			sticker = StickerService.save(sticker);
 //			assertEquals(0, sticker.getStickerClassLinks().size());
 //			assertEquals(1, sticker.getStickerObjectLinks().size());
-//			
+//
 //			StickerService.remove(sticker);
 //		}
 	}

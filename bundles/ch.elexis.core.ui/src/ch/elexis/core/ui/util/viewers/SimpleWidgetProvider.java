@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.util.viewers;
@@ -22,28 +22,29 @@ import org.eclipse.swt.widgets.Composite;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.WidgetProvider;
 
 /**
- * Einfacher Widgetprovider. Gibt ein simples Widget des im Konstruktor genannten Types zurück
- * 
+ * Einfacher Widgetprovider. Gibt ein simples Widget des im Konstruktor
+ * genannten Types zurück
+ *
  * @author gerry
- * 
+ *
  */
 
 public class SimpleWidgetProvider implements WidgetProvider {
 	int type, style;
-	
+
 	CommonViewer cv;
 	public static final int TYPE_TREE = 0;
 	public static final int TYPE_LIST = 1;
 	public static final int TYPE_TABLE = 2;
 	public static final int TYPE_LAZYLIST = 3;
-	
-	public SimpleWidgetProvider(int type, int style, CommonViewer parent){
+
+	public SimpleWidgetProvider(int type, int style, CommonViewer parent) {
 		this.type = type;
 		this.style = style;
 		cv = parent;
 	}
-	
-	public StructuredViewer createViewer(Composite parent){
+
+	public StructuredViewer createViewer(Composite parent) {
 		switch (type) {
 		case TYPE_TREE:
 			return new TreeViewer(parent, style);
@@ -53,11 +54,11 @@ public class SimpleWidgetProvider implements WidgetProvider {
 			return new TableViewer(parent, style);
 		case TYPE_LAZYLIST:
 			TableViewer ret = new TableViewer(parent, style | SWT.VIRTUAL);
-			
+
 			// ret.getTable().setItemCount(0);
 			return ret;
 		}
 		return null;
 	}
-	
+
 }

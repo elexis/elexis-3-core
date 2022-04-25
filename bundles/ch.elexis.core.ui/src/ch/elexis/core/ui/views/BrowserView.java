@@ -10,26 +10,26 @@ import org.eclipse.ui.part.ViewPart;
 import com.equo.chromium.swt.Browser;
 
 public class BrowserView extends ViewPart {
-	 
+
 	public static final String ID = "ch.elexis.core.ui.chromium.views.BrowserView";
-	
+
 	private Browser browser;
 
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		browser = new Browser(parent, SWT.NONE);
 		browser.setUrl("http://www.google.com");
 	}
 
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 	}
 
-	public void navigateTo(){
-		InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(),
-	        "", "Adresse eingeben", browser.getUrl(), null);
-	    if (dlg.open() == Window.OK) {
-	      browser.setUrl(dlg.getValue());
-	    }
+	public void navigateTo() {
+		InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "", "Adresse eingeben",
+				browser.getUrl(), null);
+		if (dlg.open() == Window.OK) {
+			browser.setUrl(dlg.getValue());
+		}
 	}
 }

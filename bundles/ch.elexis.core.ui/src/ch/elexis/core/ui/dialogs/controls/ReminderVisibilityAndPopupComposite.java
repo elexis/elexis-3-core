@@ -23,53 +23,53 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.Messages;
 
 public class ReminderVisibilityAndPopupComposite extends Composite {
-	
+
 	private StackLayout stackLayout = new StackLayout();
 	private Composite noPatientSelectedComposite;
 	private Composite patientSelectedComposite;
 	private Button popupOnLogin;
 	private Button showOnlyOnSelectedPatient;
 	private Combo comboPopup;
-	
+
 	private ComboViewer cvPopup;
-	
+
 	/**
 	 * Create the composite.
-	 * 
+	 *
 	 * @param parent
 	 * @param style
 	 */
-	public ReminderVisibilityAndPopupComposite(Composite parent, int style){
+	public ReminderVisibilityAndPopupComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(stackLayout);
-		
+
 		noPatientSelectedComposite = new Composite(this, SWT.NONE);
 		GridLayout gl_noPatientSelectedComposite = new GridLayout(2, false);
 		gl_noPatientSelectedComposite.marginWidth = 0;
 		gl_noPatientSelectedComposite.marginHeight = 0;
 		noPatientSelectedComposite.setLayout(gl_noPatientSelectedComposite);
-		
+
 		Label popupIconLabel = new Label(noPatientSelectedComposite, SWT.NONE);
 		popupIconLabel.setImage(Images.IMG_BELL_EXCLAMATION.getImage());
-		
+
 		popupOnLogin = new Button(noPatientSelectedComposite, SWT.CHECK);
 		popupOnLogin.setText(Visibility.POPUP_ON_LOGIN.getLocaleText());
-		
+
 		patientSelectedComposite = new Composite(this, SWT.NONE);
 		GridLayout gl_patientSelectedComposite = new GridLayout(4, false);
 		gl_patientSelectedComposite.marginWidth = 0;
 		gl_patientSelectedComposite.marginHeight = 0;
 		patientSelectedComposite.setLayout(gl_patientSelectedComposite);
-		
+
 		Label visibilityLabel = new Label(patientSelectedComposite, SWT.NONE);
 		visibilityLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		visibilityLabel.setImage(Images.IMG_EYE_WO_SHADOW.getImage());
-		
+
 		showOnlyOnSelectedPatient = new Button(patientSelectedComposite, SWT.CHECK);
 		showOnlyOnSelectedPatient.setText(Visibility.ON_PATIENT_SELECTION.getLocaleText());
 		showOnlyOnSelectedPatient.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				boolean selection = showOnlyOnSelectedPatient.getSelection();
 				if (!selection) {
 					cvPopup.setSelection(StructuredSelection.EMPTY);
@@ -77,13 +77,12 @@ public class ReminderVisibilityAndPopupComposite extends Composite {
 				comboPopup.setEnabled(selection);
 			}
 		});
-		showOnlyOnSelectedPatient
-			.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		
+		showOnlyOnSelectedPatient.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+
 		Label visibilityIconLabel = new Label(patientSelectedComposite, SWT.NONE);
 		visibilityIconLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		visibilityIconLabel.setImage(Images.IMG_BELL_EXCLAMATION.getImage());
-		
+
 		cvPopup = new ComboViewer(patientSelectedComposite, SWT.NONE);
 		comboPopup = cvPopup.getCombo();
 		comboPopup.setEnabled(false);
@@ -91,7 +90,7 @@ public class ReminderVisibilityAndPopupComposite extends Composite {
 		cvPopup.setContentProvider(ArrayContentProvider.getInstance());
 		cvPopup.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof Visibility) {
 					return ((Visibility) element).getLocaleText();
 				}
@@ -105,17 +104,16 @@ public class ReminderVisibilityAndPopupComposite extends Composite {
 				showOnlyOnSelectedPatient.setSelection(true);
 			}
 		});
-		cvPopup.setInput(new Object[] {
-			StringConstants.EMPTY, Visibility.POPUP_ON_PATIENT_SELECTION, Visibility.POPUP_ON_LOGIN
-		});
+		cvPopup.setInput(new Object[] { StringConstants.EMPTY, Visibility.POPUP_ON_PATIENT_SELECTION,
+				Visibility.POPUP_ON_LOGIN });
 	}
-	
+
 	@Override
-	protected void checkSubclass(){
+	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-	
-	public void selectVisibleControl(boolean withPatientRelation){
+
+	public void selectVisibleControl(boolean withPatientRelation) {
 		if (withPatientRelation) {
 			stackLayout.topControl = patientSelectedComposite;
 		} else {
@@ -123,8 +121,8 @@ public class ReminderVisibilityAndPopupComposite extends Composite {
 		}
 		layout();
 	}
-	
-	public Visibility getConfiguredVisibility(){
+
+	public Visibility getConfiguredVisibility() {
 		if (patientSelectedComposite.equals(stackLayout.topControl)) {
 			if (showOnlyOnSelectedPatient.getSelection()) {
 				Object firstElement = cvPopup.getStructuredSelection().getFirstElement();
@@ -144,35 +142,35 @@ public class ReminderVisibilityAndPopupComposite extends Composite {
 			}
 		}
 	}
-	
-	public void setConfiguredVisibility(Visibility visibility, boolean withPatientRelation){
+
+	public void setConfiguredVisibility(Visibility visibility, boolean withPatientRelation) {
 		selectVisibleControl(withPatientRelation);
-		
+
 		if (noPatientSelectedComposite.equals(stackLayout.topControl)) {
 			popupOnLogin.setSelection(Visibility.POPUP_ON_LOGIN == visibility);
 		} else {
 			if (visibility == null) {
 				visibility = Visibility.ALWAYS;
-				boolean defaultPatientRelated = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED,
-						false);
+				boolean defaultPatientRelated = ConfigServiceHolder
+						.getUser(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, false);
 				if (withPatientRelation && defaultPatientRelated) {
 					visibility = Visibility.ON_PATIENT_SELECTION;
 				}
 			}
 			showOnlyOnSelectedPatient.setSelection(Visibility.ON_PATIENT_SELECTION == visibility);
 			showOnlyOnSelectedPatient.setToolTipText(Messages.ReminderView_defaultPatientRelatedTooltip);
-			showOnlyOnSelectedPatient.setToolTipText("Der Vorgabewert kann unter Einstellungen..Anwender..Pendenzen geändert werden");
+			showOnlyOnSelectedPatient
+					.setToolTipText("Der Vorgabewert kann unter Einstellungen..Anwender..Pendenzen geändert werden");
 			comboPopup.setEnabled(true);
-			if (Visibility.POPUP_ON_LOGIN == visibility
-				|| Visibility.POPUP_ON_PATIENT_SELECTION == visibility) {
+			if (Visibility.POPUP_ON_LOGIN == visibility || Visibility.POPUP_ON_PATIENT_SELECTION == visibility) {
 				cvPopup.setSelection(new StructuredSelection(visibility));
 			} else {
 				cvPopup.setSelection(new StructuredSelection(StringConstants.EMPTY));
-				
+
 			}
 			// showOnlyOnSelectedPatient.setSelection(!(Visibility.ALWAYS == visibility));
 		}
-		
+
 	}
-	
+
 }

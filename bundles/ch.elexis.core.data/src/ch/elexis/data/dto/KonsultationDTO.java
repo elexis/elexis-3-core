@@ -21,10 +21,10 @@ public class KonsultationDTO {
 	private String date;
 	private String srcDate;
 	private Mandant mandant;
-	
+
 	private List<ElexisException> errors = new ArrayList<>();
-	
-	public KonsultationDTO(Konsultation konsultation){
+
+	public KonsultationDTO(Konsultation konsultation) {
 		this.errors.clear();
 		this.id = konsultation.getId();
 		this.date = konsultation.getDatum();
@@ -37,65 +37,63 @@ public class KonsultationDTO {
 				errors.add(e);
 			}
 		}
-		
-		for (IDiagnosisReference iDiagnose : NoPoUtil
-			.loadAsIdentifiable(konsultation, IEncounter.class).get()
-			.getDiagnoses()) {
+
+		for (IDiagnosisReference iDiagnose : NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get()
+				.getDiagnoses()) {
 			diagnosesDTOs.add(new DiagnosesDTO(iDiagnose));
 		}
 	}
-	
-	public IEncounter getTransientCopy(){
+
+	public IEncounter getTransientCopy() {
 		IEncounter copy = CoreModelServiceHolder.get().create(IEncounter.class);
 		copy.setDate(new TimeTool(date).toLocalDate());
 		copy.setMandator(NoPoUtil.loadAsIdentifiable(mandant, IMandator.class).get());
-		copy.setCoverage(
-			CoreModelServiceHolder.get().load(id, IEncounter.class).get().getCoverage());
-		
+		copy.setCoverage(CoreModelServiceHolder.get().load(id, IEncounter.class).get().getCoverage());
+
 		return copy;
 	}
-	
-	public List<ElexisException> getErrors(){
+
+	public List<ElexisException> getErrors() {
 		return errors;
 	}
-	
-	public void setLeistungDTOs(List<LeistungDTO> leistungDTOs){
+
+	public void setLeistungDTOs(List<LeistungDTO> leistungDTOs) {
 		this.leistungDTOs = leistungDTOs;
 	}
-	
-	public List<LeistungDTO> getLeistungDTOs(){
+
+	public List<LeistungDTO> getLeistungDTOs() {
 		return leistungDTOs;
 	}
-	
-	public void setDiagnosesDTOs(List<DiagnosesDTO> diagnosesDTOs){
+
+	public void setDiagnosesDTOs(List<DiagnosesDTO> diagnosesDTOs) {
 		this.diagnosesDTOs = diagnosesDTOs;
 	}
-	
-	public List<DiagnosesDTO> getDiagnosesDTOs(){
+
+	public List<DiagnosesDTO> getDiagnosesDTOs() {
 		return diagnosesDTOs;
 	}
-	
-	public void setDate(String date){
+
+	public void setDate(String date) {
 		this.date = date;
 	}
-	
-	public String getDate(){
+
+	public String getDate() {
 		return date;
 	}
-	
-	public String getSrcDate(){
+
+	public String getSrcDate() {
 		return srcDate;
 	}
-	
-	public String getId(){
+
+	public String getId() {
 		return id;
 	}
-	
-	public void setMandant(Mandant mandant){
+
+	public void setMandant(Mandant mandant) {
 		this.mandant = mandant;
 	}
-	
-	public Mandant getMandant(){
+
+	public Mandant getMandant() {
 		return mandant;
 	}
 }

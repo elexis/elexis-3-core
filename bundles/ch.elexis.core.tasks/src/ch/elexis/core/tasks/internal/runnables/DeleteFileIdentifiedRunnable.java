@@ -16,20 +16,20 @@ import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
 
 public class DeleteFileIdentifiedRunnable implements IIdentifiedRunnable {
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return IdentifiedRunnableIdConstants.DELETEFILE;
 	}
-	
+
 	@Override
-	public Map<String, Serializable> run(Map<String, Serializable> context,
-		IProgressMonitor progressMonitor, Logger logger) throws TaskException{
-		
+	public Map<String, Serializable> run(Map<String, Serializable> context, IProgressMonitor progressMonitor,
+			Logger logger) throws TaskException {
+
 		String eventFilePath = (String) context.get(RunContextParameter.STRING_URL);
-		
+
 		// TODO switch to VirtualFilesystemService
-		
+
 		Path path = Paths.get(eventFilePath);
 		try {
 			Files.delete(path);
@@ -37,19 +37,18 @@ public class DeleteFileIdentifiedRunnable implements IIdentifiedRunnable {
 		} catch (IOException e) {
 			throw new TaskException(TaskException.EXECUTION_ERROR, "Error deleting file [{}]", e);
 		}
-		
+
 		return null;
 	}
-	
+
 	@Override
-	public String getLocalizedDescription(){
+	public String getLocalizedDescription() {
 		return "Delete a single file";
 	}
-	
+
 	@Override
-	public Map<String, Serializable> getDefaultRunContext(){
-		return Collections.singletonMap(RunContextParameter.STRING_URL,
-			RunContextParameter.VALUE_MISSING_REQUIRED);
+	public Map<String, Serializable> getDefaultRunContext() {
+		return Collections.singletonMap(RunContextParameter.STRING_URL, RunContextParameter.VALUE_MISSING_REQUIRED);
 	}
-	
+
 }

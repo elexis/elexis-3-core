@@ -9,7 +9,7 @@
  *    G. Weirich - initial implementation
  *    N. Giger   - porting to slf4j and qos.logback
  *
- *    
+ *
  *******************************************************************************/
 package ch.rgw.tools;
 
@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Log {
-	
+
 	/** Experimentell */
 	public static final int NOTHING = 0;
 	/** Fatale Fehler, Programmabbruch */
@@ -38,8 +38,8 @@ public class Log {
 	public static final int SYNCMARK = -1;
 	private static Logger l;
 	private static boolean printedConf;
-	
-	private static void internalLogging(Level level, String msg){
+
+	private static void internalLogging(Level level, String msg) {
 		if (level == Level.SEVERE)
 			l.error(msg);
 		else if (level == Level.WARNING)
@@ -51,21 +51,21 @@ public class Log {
 		else
 			l.debug(msg);
 	}
-	
-	public static Log get(String name){
+
+	public static Log get(String name) {
 		l = LoggerFactory.getLogger(name);
 		return new Log();
 	}
-	
-	public void log(String message, int level){
+
+	public void log(String message, int level) {
 		internalLogging(translate(level), message);
 	}
-	
-	public void log(Level level, String message){
+
+	public void log(Level level, String message) {
 		internalLogging(level, message);
 	}
-	
-	private Level translate(int logLevel){
+
+	private Level translate(int logLevel) {
 		switch (logLevel) {
 		case NOTHING:
 			return Level.FINEST;
@@ -87,5 +87,5 @@ public class Log {
 			return Level.ALL;
 		}
 	}
-	
+
 }

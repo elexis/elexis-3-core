@@ -21,10 +21,10 @@ public class LaborResultEditDetailAction extends Action {
 	private List<LabResult> results;
 	private List<LaborOrderViewerItem> orders;
 	private StructuredViewer viewer;
-	
+
 	@SuppressWarnings("unchecked")
-	public LaborResultEditDetailAction(List<?> list, StructuredViewer viewer){
-		super(Messages.LaborResultEditDetailAction_title); //$NON-NLS-1$
+	public LaborResultEditDetailAction(List<?> list, StructuredViewer viewer) {
+		super(Messages.LaborResultEditDetailAction_title); // $NON-NLS-1$
 		Object firstObject = list.get(0);
 		if (firstObject instanceof LabResult) {
 			this.results = (List<LabResult>) list;
@@ -32,26 +32,26 @@ public class LaborResultEditDetailAction extends Action {
 			this.orders = (List<LaborOrderViewerItem>) list;
 		} else {
 			throw new IllegalArgumentException("Unknown list type of class " //$NON-NLS-1$
-				+ firstObject.getClass());
+					+ firstObject.getClass());
 		}
 		this.viewer = viewer;
 	}
-	
+
 	@Override
-	public void run(){
+	public void run() {
 		if (results != null) {
 			for (LabResult result : results) {
 				final LabResult lockingResult = result;
 				AcquireLockBlockingUi.aquireAndRun(lockingResult, new ILockHandler() {
 					@Override
-					public void lockFailed(){
+					public void lockFailed() {
 						// do nothing
 					}
-					
+
 					@Override
-					public void lockAcquired(){
-						EditLabResultDialog dialog =
-							new EditLabResultDialog(viewer.getControl().getShell(), lockingResult);
+					public void lockAcquired() {
+						EditLabResultDialog dialog = new EditLabResultDialog(viewer.getControl().getShell(),
+								lockingResult);
 						if (dialog.open() == Window.OK) {
 							ElexisEventDispatcher.reload(LabResult.class);
 						}
@@ -69,14 +69,14 @@ public class LaborResultEditDetailAction extends Action {
 				final LaborOrderViewerItem lockingOrder = orderViewerItem;
 				AcquireLockBlockingUi.aquireAndRun(lockingResult, new ILockHandler() {
 					@Override
-					public void lockFailed(){
+					public void lockFailed() {
 						// do nothing
 					}
-					
+
 					@Override
-					public void lockAcquired(){
-						EditLabResultDialog dialog =
-							new EditLabResultDialog(viewer.getControl().getShell(), lockingResult);
+					public void lockAcquired() {
+						EditLabResultDialog dialog = new EditLabResultDialog(viewer.getControl().getShell(),
+								lockingResult);
 						if (dialog.open() == Window.OK) {
 							lockingOrder.setState(State.DONE);
 							ElexisEventDispatcher.reload(LabResult.class);
@@ -86,14 +86,14 @@ public class LaborResultEditDetailAction extends Action {
 			}
 		}
 	}
-	
+
 	@Override
-	public boolean isEnabled(){
+	public boolean isEnabled() {
 		if (results != null) {
 			for (LabResult result : results) {
 				if (result.getItem() != null) {
 					if (result.getItem().getTyp() == LabItemTyp.DOCUMENT
-						|| result.getItem().getTyp() == LabItemTyp.FORMULA) {
+							|| result.getItem().getTyp() == LabItemTyp.FORMULA) {
 						return false;
 					}
 				}

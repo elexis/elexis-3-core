@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views;
@@ -43,39 +43,39 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 	public static final String ID = "ch.elexis.AUFView"; //$NON-NLS-1$
 	TextContainer text;
 	Brief actBrief;
-	
-	public AUFZeugnis(){}
-	
+
+	public AUFZeugnis() {
+	}
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		if (actBrief != null) {
 			LocalLockServiceHolder.get().releaseLock(actBrief);
 		}
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		setTitleImage(Images.IMG_PRINTER.getImage());
 		text = new TextContainer(getViewSite());
 		text.getPlugin().createContainer(parent, this);
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		text.setFocus();
 	}
-	
-	public void createAUZ(){
+
+	public void createAUZ() {
 		Kontakt adressat = null;
 		if (DocumentSelectDialog.getDontAskForAddresseeForThisTemplateName(TT_AUF_CERT)) {
 			// trick: just supply a dummy address for creating the doc
 			adressat = Kontakt.load("-1"); //$NON-NLS-1$
 		}
-		actBrief =
-			text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_AUF_CERT, Brief.AUZ, //$NON-NLS-1$
+		actBrief = text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_AUF_CERT, Brief.AUZ, // $NON-NLS-1$
 				adressat, null);
 		updateTextLock();
 		// text.getPlugin().setFormat(PageFormat.A5);
@@ -86,8 +86,8 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 			EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 		}
 	}
-	
-	private void updateTextLock(){
+
+	private void updateTextLock() {
 		// test lock and set read only before opening the Brief
 		LockResponse result = LocalLockServiceHolder.get().acquireLock(actBrief);
 		if (result.isOk()) {
@@ -97,38 +97,38 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 			text.getPlugin().setParameter(Parameter.READ_ONLY);
 		}
 	}
-	
-	public TextContainer getTextContainer(){
+
+	public TextContainer getTextContainer() {
 		return text;
 	}
-	
+
 	@Override
-	public void save(){
+	public void save() {
 		if (actBrief != null) {
 			actBrief.save(text.getPlugin().storeToByteArray(), text.getPlugin().getMimeType());
 		}
 	}
-	
+
 	@Override
-	public boolean saveAs(){
+	public boolean saveAs() {
 		return true;
 	}
-	
+
 	@Override
-	public void activation(boolean mode){
+	public void activation(boolean mode) {
 		if (mode == false) {
 			save();
 		}
 	}
-	
+
 	@Override
-	public void visible(boolean mode){}
-	
+	public void visible(boolean mode) {
+	}
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
-	boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 }

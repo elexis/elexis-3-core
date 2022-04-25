@@ -31,56 +31,54 @@ import ch.elexis.data.PersistentObject;
  * @deprecated use {@link GenericObjectDropSource} instead
  */
 public class PersistentObjectDragSource implements DragSourceListener {
-	
+
 	ISelectionRenderer renderer;
 	Control dragSource;
 	List<PersistentObject> selection;
 	protected static PersistentObject draggedObject;
-	
+
 	Transfer myTransfer = TextTransfer.getInstance();
-	
-	public PersistentObjectDragSource(final StructuredViewer v){
+
+	public PersistentObjectDragSource(final StructuredViewer v) {
 		dragSource = v.getControl();
 		renderer = new ISelectionRenderer() {
-			
-			public List<PersistentObject> getSelection(){
+
+			public List<PersistentObject> getSelection() {
 				IStructuredSelection sel = (IStructuredSelection) v.getSelection();
 				return sel.toList();
 			}
-			
+
 		};
 		setup();
 	}
-	
-	public PersistentObjectDragSource(final Control source, final ISelectionRenderer renderer){
+
+	public PersistentObjectDragSource(final Control source, final ISelectionRenderer renderer) {
 		this.renderer = renderer;
 		dragSource = source;
 		setup();
 	}
-	
-	private void setup(){
+
+	private void setup() {
 		DragSource mine = new DragSource(dragSource, DND.DROP_COPY);
-		mine.setTransfer(new Transfer[] {
-			myTransfer
-		});
+		mine.setTransfer(new Transfer[] { myTransfer });
 		mine.addDragListener(this);
 	}
-	
-	public void dragFinished(final DragSourceEvent event){
+
+	public void dragFinished(final DragSourceEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void dragSetData(final DragSourceEvent event){
+
+	public void dragSetData(final DragSourceEvent event) {
 		StringBuilder sb = new StringBuilder();
 		for (PersistentObject s : selection) {
 			sb.append(s.storeToString()).append(StringConstants.COMMA);
 		}
-		
+
 		event.data = sb.toString().replace(",$", StringConstants.EMPTY); //$NON-NLS-1$
 	}
-	
-	public void dragStart(final DragSourceEvent event){
+
+	public void dragStart(final DragSourceEvent event) {
 		selection = renderer.getSelection();
 		if ((selection == null) || (selection.isEmpty())) {
 			event.doit = false;
@@ -91,21 +89,22 @@ public class PersistentObjectDragSource implements DragSourceListener {
 			PersistentObjectDragSource.draggedObject = selection.get(0);
 		}
 	}
-	
+
 	/**
-	 * Externally set the dragged object; this is required to support external drag source
-	 * compatibility with {@link PersistentObjectDropTarget}
+	 * Externally set the dragged object; this is required to support external drag
+	 * source compatibility with {@link PersistentObjectDropTarget}
+	 *
 	 * @param iPersistentObject
 	 * @since 3.1
 	 */
 	public static void setDraggedObject(PersistentObject persistentObject) {
 		draggedObject = persistentObject;
 	}
-	
-	public static PersistentObject getDraggedObject(){
+
+	public static PersistentObject getDraggedObject() {
 		return draggedObject;
 	}
-	
+
 	public interface ISelectionRenderer {
 		public List<PersistentObject> getSelection();
 	}

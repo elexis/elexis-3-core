@@ -8,7 +8,7 @@
  * Contributors:
  *    G. Weirich - initial implementation
  *    M. Descher - adapted layout
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.laboratory.preferences;
@@ -71,35 +71,30 @@ import ch.elexis.data.LabResult;
 import ch.elexis.data.Query;
 
 public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePage {
-	
+
 	// DynamicListDisplay params;
 	// Composite definition;
 	// FormToolkit tk;
 	private TableViewer tableViewer;
 	private Table table;
 	int sortC = 1;
-	private String[] headers = {
-		Messages.LaborPrefs_name, Messages.LaborPrefs_short,
-		"LOINC", //$NON-NLS-1$
-		Messages.LaborPrefs_type, Messages.LaborPrefs_unit, Messages.LaborPrefs_refM,
-		Messages.LaborPrefs_refF, Messages.LaborPrefs_sortmode
-	};
-	private int[] colwidth = {
-		16, 6, 6, 6, 6, 16, 16, 16
-	};
-	
+	private String[] headers = { Messages.LaborPrefs_name, Messages.LaborPrefs_short, "LOINC", //$NON-NLS-1$
+			Messages.LaborPrefs_type, Messages.LaborPrefs_unit, Messages.LaborPrefs_refM, Messages.LaborPrefs_refF,
+			Messages.LaborPrefs_sortmode };
+	private int[] colwidth = { 16, 6, 6, 6, 6, 16, 16, 16 };
+
 	private LabItemViewerFilter viewerFilter;
-	
-	public LaborPrefs(){
+
+	public LaborPrefs() {
 		super(Messages.LaborPrefs_labTitle);
 	}
-	
-	protected Control createContents(Composite parent){
+
+	protected Control createContents(Composite parent) {
 		noDefaultAndApplyButton();
-		
+
 		LabListLabelProvider labListLabelProvider = new LabListLabelProvider();
 		viewerFilter = new LabItemViewerFilter(labListLabelProvider);
-		
+
 		Text filterTxt = new Text(parent, SWT.SEARCH | SWT.ICON_CANCEL | SWT.ICON_SEARCH);
 		filterTxt.setMessage("filter");
 		filterTxt.addModifyListener(e -> {
@@ -112,7 +107,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			}
 		});
 		filterTxt.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
-		
+
 		Composite tableComposite = new Composite(parent, SWT.NONE);
 		tableComposite.setLayoutData(new GridData());
 		TableColumnLayout tableColumnLayout = new TableColumnLayout();
@@ -122,7 +117,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		table = tableViewer.getTable();
 		tableViewer.setLabelProvider(labListLabelProvider);
 		tableViewer.addFilter(viewerFilter);
-		
+
 		for (int i = 0; i < headers.length; i++) {
 			TableColumn tc = new TableColumn(table, SWT.LEFT);
 			tc.setText(headers[i]);
@@ -130,31 +125,33 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			tc.setData(i);
 			tc.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					sortC = (Integer) ((TableColumn) e.getSource()).getData();
 					tableViewer.refresh(true);
 				}
-				
+
 			});
 		}
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tableViewer.setContentProvider(new IStructuredContentProvider() {
-			
-			public Object[] getElements(Object inputElement){
+
+			public Object[] getElements(Object inputElement) {
 				return LabItem.getLabItems().toArray();
 			}
-			
-			public void dispose(){}
-			
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
-			
+
+			public void dispose() {
+			}
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			}
+
 		});
-	
+
 		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
-			
-			public void doubleClick(DoubleClickEvent event){
+
+			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection sel = tableViewer.getStructuredSelection();
 				Object o = sel.getFirstElement();
 				if (o instanceof LabItem) {
@@ -163,11 +160,11 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 					tableViewer.refresh(li);
 				}
 			}
-			
+
 		});
 		tableViewer.setComparator(new ViewerComparator() {
 			@Override
-			public int compare(Viewer viewer, Object e1, Object e2){
+			public int compare(Viewer viewer, Object e1, Object e2) {
 				LabItem li1 = (LabItem) e1;
 				LabItem li2 = (LabItem) e2;
 				String s1 = "", s2 = ""; //$NON-NLS-1$ //$NON-NLS-2$
@@ -193,7 +190,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 					try {
 						Integer no1 = Integer.parseInt(li1.getPrio());
 						Integer no2 = Integer.parseInt(li2.getPrio());
-						
+
 						return no1.compareTo(no2);
 					} catch (NumberFormatException nfe) {
 						return li1.getPrio().compareToIgnoreCase(li2.getPrio());
@@ -202,35 +199,31 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				return res;
 			}
 		});
-		
+
 		int operations = DND.DROP_COPY;
-		Transfer[] transferTypes = new Transfer[] {
-			TextTransfer.getInstance()
-		};
+		Transfer[] transferTypes = new Transfer[] { TextTransfer.getInstance() };
 		tableViewer.addDragSupport(operations, transferTypes, new DragSourceAdapter() {
-			
+
 			@Override
-			public void dragSetData(DragSourceEvent event){
+			public void dragSetData(DragSourceEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
 				LabItem labItem = (LabItem) selection.getFirstElement();
 				if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
-					event.data =
-						labItem.getKuerzel() + "," + labItem.getName() + "," + labItem.getId();
+					event.data = labItem.getKuerzel() + "," + labItem.getName() + "," + labItem.getId();
 				}
 			}
 		});
-		
+
 		tableViewer.setInput(this);
 		return tableComposite;
 	}
-	
+
 	static class LabListLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {
-		
-		public String getColumnText(Object element, int columnIndex){
+
+		public String getColumnText(Object element, int columnIndex) {
 			LabItem li = (LabItem) element;
-			
-			String[] values =
-				li.get(true, LabItem.TITLE, LabItem.SHORTNAME, LabItem.LOINCCODE, LabItem.UNIT,
+
+			String[] values = li.get(true, LabItem.TITLE, LabItem.SHORTNAME, LabItem.LOINCCODE, LabItem.UNIT,
 					LabItem.REF_MALE, LabItem.REF_FEMALE_OR_TEXT, LabItem.GROUP, LabItem.PRIO);
 			String name = values[0];
 			String kuerzel = values[1];
@@ -239,7 +232,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			String refM = values[4];
 			String refF = values[5].split("##")[0];
 			String groupPrio = values[6] + " - " + values[7];
-			
+
 			switch (columnIndex) {
 			case 0:
 				return name;
@@ -266,20 +259,20 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			case 6:
 				return refF;
 			case 7:
-				return groupPrio; //$NON-NLS-1$
+				return groupPrio; // $NON-NLS-1$
 			default:
 				return "?col?"; //$NON-NLS-1$
 			}
 		}
-		
+
 		@Override
-		public Image getColumnImage(Object element, int columnIndex){
+		public Image getColumnImage(Object element, int columnIndex) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
-		public Color getBackground(Object element){
+		public Color getBackground(Object element) {
 			LabItem li = (LabItem) element;
 			if (li.isVisible()) {
 				return Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
@@ -288,21 +281,20 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			}
 		}
 	};
-	
+
 	@Override
-	protected void contributeButtons(Composite parent){
+	protected void contributeButtons(Composite parent) {
 		((GridLayout) parent.getLayout()).numColumns++;
 		Button bMappingFrom2_1_7 = new Button(parent, SWT.PUSH);
 		bMappingFrom2_1_7.setText(Messages.LaborPrefs_mappingFrom2_1_7);
 		bMappingFrom2_1_7.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				try {
 					// execute the command
-					IHandlerService handlerService =
-						(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.getService(IHandlerService.class);
-					
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow().getService(IHandlerService.class);
+
 					handlerService.executeCommand(CreateMappingFrom2_1_7.COMMANDID, null);
 				} catch (Exception ex) {
 					throw new RuntimeException(CreateMappingFrom2_1_7.COMMANDID, ex);
@@ -310,20 +302,19 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				tableViewer.refresh();
 			}
 		});
-		
+
 		if (CoreHub.acl.request(AccessControlDefaults.LABITEM_MERGE) == true) {
 			((GridLayout) parent.getLayout()).numColumns++;
 			Button bImportMapping = new Button(parent, SWT.PUSH);
 			bImportMapping.setText(Messages.LaborPrefs_mergeLabItems);
 			bImportMapping.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					try {
 						// execute the command
-						IHandlerService handlerService =
-							(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-								.getService(IHandlerService.class);
-						
+						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+								.getActiveWorkbenchWindow().getService(IHandlerService.class);
+
 						handlerService.executeCommand(CreateMergeLabItemUi.COMMANDID, null);
 					} catch (Exception ex) {
 						throw new RuntimeException(CreateMergeLabItemUi.COMMANDID, ex);
@@ -332,19 +323,18 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				}
 			});
 		}
-		
+
 		((GridLayout) parent.getLayout()).numColumns++;
 		Button bImportMapping = new Button(parent, SWT.PUSH);
 		bImportMapping.setText(Messages.LaborPrefs_importLabMapping);
 		bImportMapping.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				try {
 					// execute the command
-					IHandlerService handlerService =
-						(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.getService(IHandlerService.class);
-					
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow().getService(IHandlerService.class);
+
 					handlerService.executeCommand(CreateImportMappingUi.COMMANDID, null);
 				} catch (Exception ex) {
 					throw new RuntimeException(CreateImportMappingUi.COMMANDID, ex);
@@ -357,13 +347,12 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		bNewItem.setText(Messages.LaborPrefs_labValue);
 		bNewItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				try {
 					// execute the command
-					IHandlerService handlerService =
-						(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.getService(IHandlerService.class);
-					
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow().getService(IHandlerService.class);
+
 					handlerService.executeCommand(CreateLabItemUi.COMMANDID, null);
 				} catch (Exception ex) {
 					throw new RuntimeException(CreateLabItemUi.COMMANDID, ex);
@@ -375,21 +364,20 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		Button bDelItem = new Button(parent, SWT.PUSH);
 		bDelItem.setText(Messages.LaborPrefs_deleteItem);
 		bDelItem.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection sel = (IStructuredSelection) tableViewer.getSelection();
 				Object o = sel.getFirstElement();
 				if (o instanceof LabItem) {
 					LabItem li = (LabItem) o;
 					if (MessageDialog.openQuestion(getShell(), Messages.LaborPrefs_deleteItem,
-						MessageFormat.format(Messages.LaborPrefs_deleteReallyItem,
-							li.getLabel()))) {
+							MessageFormat.format(Messages.LaborPrefs_deleteReallyItem, li.getLabel()))) {
 						if (deleteResults(li)) {
 							deleteMappings(li);
 							li.delete();
 							tableViewer.remove(li);
 						} else {
 							MessageDialog.openWarning(getShell(), Messages.LaborPrefs_deleteItem,
-								Messages.LaborPrefs_deleteFail);
+									Messages.LaborPrefs_deleteFail);
 						}
 					}
 				}
@@ -399,9 +387,9 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		Button bDelAllItems = new Button(parent, SWT.PUSH);
 		bDelAllItems.setText(Messages.LaborPrefs_deleteAllItems);
 		bDelAllItems.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (SWTHelper.askYesNo(Messages.LaborPrefs_deleteReallyAllItems,
-					Messages.LaborPrefs_deleteAllExplain)) {
+						Messages.LaborPrefs_deleteAllExplain)) {
 					Query<LabItem> qbli = new Query<LabItem>(LabItem.class);
 					List<LabItem> items = qbli.execute();
 					boolean success = true;
@@ -415,7 +403,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 					}
 					if (!success) {
 						MessageDialog.openWarning(getShell(), Messages.LaborPrefs_deleteAllItems,
-							Messages.LaborPrefs_deleteFail);
+								Messages.LaborPrefs_deleteFail);
 					}
 					tableViewer.refresh();
 				}
@@ -425,8 +413,8 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			bDelAllItems.setEnabled(false);
 		}
 	}
-	
-	private boolean deleteResults(LabItem li){
+
+	private boolean deleteResults(LabItem li) {
 		boolean ret = true;
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
 		qbe.add(LabResult.ITEM_ID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -441,8 +429,8 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		}
 		return ret;
 	}
-	
-	private void deleteMappings(LabItem li){
+
+	private void deleteMappings(LabItem li) {
 		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
 		qbe.add(LabMapping.FLD_LABITEMID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 		List<LabMapping> list = qbe.execute();
@@ -450,13 +438,13 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			po.delete();
 		}
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 		// Nothing to initialize
 	}
-	
+
 	@Override
-	public Point computeSize(){
+	public Point computeSize() {
 		// TODO Auto-generated method stub
 		return new Point(350, 350);
 	}

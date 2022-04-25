@@ -55,11 +55,11 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 	private LabeledInputField.AutoForm lfa;
 	private InputData[] def;
 	private Label lColor;
-	
+
 	private Hashtable<String, Mandant> hMandanten = new Hashtable<String, Mandant>();
-	
+
 	@Override
-	protected Control createContents(final Composite parent){
+	protected Control createContents(final Composite parent) {
 		if (CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
 			FormToolkit tk = UiDesk.getToolkit();
 			Form form = tk.createForm(parent);
@@ -73,17 +73,17 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 				hMandanten.put(m.getLabel(), m);
 			}
 			mandanten.addSelectionListener(new SelectionAdapter() {
-				
+
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					Combo source = (Combo) e.getSource();
 					String m = (source.getItem(source.getSelectionIndex()));
 					Mandant man = hMandanten.get(m);
-					lColor.setBackground(UiDesk.getColorFromRGB(ConfigServiceHolder.getGlobal(
-						Preferences.USR_MANDATOR_COLORS_PREFIX + m, UiDesk.COL_GREY60)));
+					lColor.setBackground(UiDesk.getColorFromRGB(ConfigServiceHolder
+							.getGlobal(Preferences.USR_MANDATOR_COLORS_PREFIX + m, UiDesk.COL_GREY60)));
 					lfa.reload(man);
 				}
-				
+
 			});
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 			// gd.horizontalSpan=2;
@@ -96,15 +96,15 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 			lColor.setText("Color for mandator");
 			lColor.addMouseListener(new MouseAdapter() {
 				@Override
-				public void mouseDoubleClick(MouseEvent e){
+				public void mouseDoubleClick(MouseEvent e) {
 					ColorDialog cd = new ColorDialog(getShell());
 					Label l = (Label) e.getSource();
 					RGB selected = cd.open();
 					String symbolic = UiDesk.createColor(selected);
 					l.setBackground(UiDesk.getColorFromRGB(symbolic));
 					ConfigServiceHolder.setGlobal(
-						Preferences.USR_MANDATOR_COLORS_PREFIX
-							+ mandanten.getItem(mandanten.getSelectionIndex()), symbolic);
+							Preferences.USR_MANDATOR_COLORS_PREFIX + mandanten.getItem(mandanten.getSelectionIndex()),
+							symbolic);
 				}
 			});
 			tk.paintBordersFor(body);
@@ -113,46 +113,37 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 			return new PrefAccessDenied(parent);
 		}
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 		String grp = ConfigServiceHolder.getGlobal(Preferences.ACC_GROUPS, Messages.Mandanten_0);
-		
-		def =
-			new InputData[] {
-				new InputData(Messages.Mandanten_kuerzel, "Label", Typ.STRING, null), //$NON-NLS-1$
-				new InputData(Messages.Mandanten_password, PersistentObject.FLD_EXTINFO,
-					Typ.STRING, "UsrPwd"), //$NON-NLS-1$
+
+		def = new InputData[] { new InputData(Messages.Mandanten_kuerzel, "Label", Typ.STRING, null), //$NON-NLS-1$
+				new InputData(Messages.Mandanten_password, PersistentObject.FLD_EXTINFO, Typ.STRING, "UsrPwd"), //$NON-NLS-1$
 				// -> KSK, NIF und EAN gehören zu Tarmed.
 				// new InputData("KSK-Nr","ExtInfo",Typ.STRING,"KSK"),
 				// new InputData("NIF","ExtInfo",Typ.STRING,"NIF"),
 				// new InputData("EANr","ExtInfo",Typ.STRING,"EAN"),
-				new InputData(Messages.Mandanten_groups, PersistentObject.FLD_EXTINFO,
-					"Groups", grp.split(",")), //$NON-NLS-1$ //$NON-NLS-2$ 
-				new InputData(Messages.Mandanten_biller, PersistentObject.FLD_EXTINFO,
-					new IContentProvider() {
-						
-						public void displayContent(Object po, InputData ltf){
-							Mandant m = (Mandant) po;
-							Kontakt r = m.getRechnungssteller();
-							ltf.setText(r.getLabel());
+				new InputData(Messages.Mandanten_groups, PersistentObject.FLD_EXTINFO, "Groups", grp.split(",")), //$NON-NLS-1$ //$NON-NLS-2$
+				new InputData(Messages.Mandanten_biller, PersistentObject.FLD_EXTINFO, new IContentProvider() {
+
+					public void displayContent(Object po, InputData ltf) {
+						Mandant m = (Mandant) po;
+						Kontakt r = m.getRechnungssteller();
+						ltf.setText(r.getLabel());
+					}
+
+					public void reloadContent(Object po, InputData ltf) {
+						Kontakt rsi = (Kontakt) po;
+						KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
+								Messages.Mandanten_selectBiller, Messages.Mandanten_pleaseSelectBiller,
+								new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2 });
+						if (ksl.open() == Dialog.OK) {
+							rsi = (Kontakt) ksl.getSelection();
 						}
-						
-						public void reloadContent(Object po, InputData ltf){
-							Kontakt rsi = (Kontakt) po;
-							KontaktSelektor ksl =
-								new KontaktSelektor(getShell(), Kontakt.class,
-									Messages.Mandanten_selectBiller,
-									Messages.Mandanten_pleaseSelectBiller, new String[] {
-										Kontakt.FLD_NAME1, Kontakt.FLD_NAME2
-									});
-							if (ksl.open() == Dialog.OK) {
-								rsi = (Kontakt) ksl.getSelection();
-							}
-							((Mandant) po).setRechnungssteller(rsi);
-							ltf.setText(rsi.getLabel());
-						}
-					})
-			};
+						((Mandant) po).setRechnungssteller(rsi);
+						ltf.setText(rsi.getLabel());
+					}
+				}) };
 	}
-	
+
 }

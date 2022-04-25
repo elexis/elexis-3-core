@@ -23,14 +23,14 @@ import ch.elexis.core.ui.views.artikel.ArtikelView;
  */
 public class ArtikelPerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.ArtikelPerspektive"; //$NON-NLS-1$
-	
-	public void createInitialLayout(IPageLayout layout){
+
+	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
-		
+
 		IFolderLayout ifr = layout.createFolder("folder", IPageLayout.LEFT, 0.5f, IPageLayout.ID_EDITOR_AREA);
 		ifr.addView(ArtikelView.ID);
 		ifr.addView(KompendiumView.ID);
 	}
-	
+
 }

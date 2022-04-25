@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.actions;
@@ -28,34 +28,35 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 
 /**
- * A PersistentObjectLoader for flat tables. This is also an ILazyContentProvider for Structured
- * Viewers and a ContentProvider for @see CommonViewer
- * 
+ * A PersistentObjectLoader for flat tables. This is also an
+ * ILazyContentProvider for Structured Viewers and a ContentProvider for @see
+ * CommonViewer
+ *
  * @author Gerry
- * 
+ *
  */
 public class FlatDataLoader extends PersistentObjectLoader implements ILazyContentProvider {
-	//private static final String LOADMESSAGE = "Lade Daten..."; //$NON-NLS-1$
+	// private static final String LOADMESSAGE = "Lade Daten..."; //$NON-NLS-1$
 	private List<? extends PersistentObject> raw = null;
 	private List<? extends PersistentObject> filtered = null;
-	
-	public FlatDataLoader(CommonViewer cv, Query<? extends PersistentObject> qbe){
+
+	public FlatDataLoader(CommonViewer cv, Query<? extends PersistentObject> qbe) {
 		super(cv, qbe);
 	}
-	
+
 	/**
 	 * Constructor without CommonViewer. Do not in Connection with CommonViewers
-	 * 
+	 *
 	 * @param qbe
 	 */
-	public FlatDataLoader(Query<? extends PersistentObject> qbe){
+	public FlatDataLoader(Query<? extends PersistentObject> qbe) {
 		super(null, qbe);
 	}
-	
+
 	/**
 	 * From @see DelayableJob.IWorker
 	 */
-	public IStatus work(IProgressMonitor monitor, HashMap<String, Object> params){
+	public IStatus work(IProgressMonitor monitor, HashMap<String, Object> params) {
 		if (isSuspended()) {
 			return Status.CANCEL_STATUS;
 		}
@@ -77,7 +78,7 @@ public class FlatDataLoader extends PersistentObjectLoader implements ILazyConte
 			return Status.CANCEL_STATUS;
 		}
 		UiDesk.asyncExec(new Runnable() {
-			public void run(){
+			public void run() {
 				// Avoid access to disposed table
 				if (tv != null && !tv.getTable().isDisposed()) {
 					tv.setItemCount(0);
@@ -86,27 +87,28 @@ public class FlatDataLoader extends PersistentObjectLoader implements ILazyConte
 				}
 			}
 		});
-		
+
 		return Status.OK_STATUS;
 	}
-	
-	public void setResult(List<PersistentObject> res){
+
+	public void setResult(List<PersistentObject> res) {
 		raw = res;
 	}
-	
+
 	/**
-	 * prepare the query so it returns the appropriate Objects on execute(). The default
-	 * implemetation lets the ControlFieldProvider set the query. Subclasses may override
+	 * prepare the query so it returns the appropriate Objects on execute(). The
+	 * default implemetation lets the ControlFieldProvider set the query. Subclasses
+	 * may override
 	 */
-	protected void setQuery(){
+	protected void setQuery() {
 		qbe.clear();
 		ControlFieldProvider cfp = cv.getConfigurer().getControlFieldProvider();
 		if (cfp != null) {
 			cfp.setQuery(qbe);
 		}
 	}
-	
-	public void updateElement(int index){
+
+	public void updateElement(int index) {
 		if (filtered != null) {
 			if (index >= 0 && index < filtered.size()) {
 				Object o = filtered.get(index);
@@ -117,5 +119,5 @@ public class FlatDataLoader extends PersistentObjectLoader implements ILazyConte
 			}
 		}
 	}
-	
+
 }

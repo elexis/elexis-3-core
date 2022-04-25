@@ -10,14 +10,11 @@ public enum ProcessStatus implements INumericEnum, ILocalizedEnum {
 	/**
 	 * @deprecated please derive via reminder due date
 	 */
-	DUE(1), 
+	DUE(1),
 	/**
 	 * @deprecated please derive via reminder due date
 	 */
-	OVERDUE(2), 
-	CLOSED(3), 
-	ON_HOLD(4), 
-	IN_PROGRESS(5);
+	OVERDUE(2), CLOSED(3), ON_HOLD(4), IN_PROGRESS(5);
 
 	private final int numeric;
 

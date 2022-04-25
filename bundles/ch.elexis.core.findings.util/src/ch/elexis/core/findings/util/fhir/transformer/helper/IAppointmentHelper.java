@@ -13,64 +13,61 @@ import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IConfigService;
 
 public class IAppointmentHelper extends AbstractHelper {
-	
-	public String getDescription(IAppointment localObject){
+
+	public String getDescription(IAppointment localObject) {
 		String grund = localObject.getReason();
 		if (grund == null || grund.length() < 1) {
 			return localObject.getType();
 		}
 		return grund;
 	}
-	
+
 	/**
 	 * ELEXIS -> FHIR: Map and apply the source state and type to the target status
-	 * 
+	 *
 	 * @param target
 	 * @param source
 	 */
-	public void mapApplyAppointmentStateAndType(Appointment target, IAppointment source,
-		IConfigService configService){
-		
+	public void mapApplyAppointmentStateAndType(Appointment target, IAppointment source, IConfigService configService) {
+
 		Extension extension = new Extension();
 		extension.setUrl("http://elexis.info/codeelement/config/appointment/");
-		
+
 		String state = source.getState();
 		Extension statusExtension = new Extension("state", new StringType(state));
 		extension.addExtension(statusExtension);
-		
+
 		// see ch.elexis.agenda.preferences.PreferenceConstants
 		String color = configService.getActiveUserContact("agenda/farben/status/" + state, null);
 		if (color != null) {
-			Extension ucc =
-				new Extension("status-user-configured-color", new StringType("#" + color));
+			Extension ucc = new Extension("status-user-configured-color", new StringType("#" + color));
 			extension.addExtension(ucc);
 		}
-		
+
 		String type = source.getType();
 		Extension typeExtension = new Extension("type", new StringType(type));
 		extension.addExtension(typeExtension);
-		
+
 		// see ch.elexis.agenda.preferences.PreferenceConstants
 		color = configService.getActiveUserContact("agenda/farben/typ/" + type, null);
 		if (color != null) {
-			Extension ucc =
-				new Extension("type-user-configured-color", new StringType("#" + color));
+			Extension ucc = new Extension("type-user-configured-color", new StringType("#" + color));
 			extension.addExtension(ucc);
 		}
-		
+
 		target.getExtension().add(extension);
 	}
-	
+
 	/**
 	 * FHIR -> ELEXIS: Map and apply the source status and type to the target status
-	 * 
+	 *
 	 * @param target
 	 * @param source
 	 */
-	public void mapApplyAppointmentStateAndType(IAppointment target, Appointment source){
-		// FIXME all that is not set, is to be removed, otherwise how to depict deletes??
-		Extension extensionByUrl =
-			source.getExtensionByUrl("http://elexis.info/codeelement/config/appointment/");
+	public void mapApplyAppointmentStateAndType(IAppointment target, Appointment source) {
+		// FIXME all that is not set, is to be removed, otherwise how to depict
+		// deletes??
+		Extension extensionByUrl = source.getExtensionByUrl("http://elexis.info/codeelement/config/appointment/");
 		if (extensionByUrl != null) {
 			Extension statusExtension = extensionByUrl.getExtensionByUrl("state");
 			if (statusExtension != null) {
@@ -78,7 +75,7 @@ public class IAppointmentHelper extends AbstractHelper {
 				// TODO check if valid?
 				target.setState(status);
 			}
-			
+
 			Extension typeExtension = extensionByUrl.getExtensionByUrl("type");
 			if (typeExtension != null) {
 				String type = typeExtension.getValue().toString();
@@ -88,71 +85,75 @@ public class IAppointmentHelper extends AbstractHelper {
 		}
 		// FIXME what if none set?
 	}
-	
+
 	/**
 	 * ELEXIS -> FHIR: Map and apply start, end and duration
-	 * 
+	 *
 	 * @param target
 	 * @param source
 	 */
-	public void mapApplyStartEndMinutes(Appointment target, IAppointment source){
+	public void mapApplyStartEndMinutes(Appointment target, IAppointment source) {
 		LocalDateTime start = source.getStartTime();
 		if (start != null) {
 			Date start_ = Date.from(ZonedDateTime.of(start, ZoneId.systemDefault()).toInstant());
 			target.setStart(start_);
 		}
-		
+
 		LocalDateTime end = source.getEndTime();
 		if (end != null) {
 			Date end_ = Date.from(ZonedDateTime.of(end, ZoneId.systemDefault()).toInstant());
 			target.setEnd(end_);
 		}
-		
+
 		Integer durationMinutes = source.getDurationMinutes();
 		if (durationMinutes != null) {
 			target.setMinutesDuration(durationMinutes);
 		}
 	}
-	
-	//	/**
-	//	 * Determine the {@link IAppointment#getSchedule()}. Currently only maps to a practitioners
-	//	 * schedule
-	//	 * 
-	//	 * @param coreModelService
-	//	 * @param appointmentService
-	//	 * 
-	//	 * @param fhirObject
-	//	 * @return the schedule name if it could be determined, else <code>null</code>
-	//	 * @deprecated
-	//	 */
-	//	public String mapSchedule(IModelService coreModelService,
-	//		IAppointmentService appointmentService, Appointment fhirObject){
-	//		
-	//		// resolve by participant.actor.practitioner
-	//		Optional<AppointmentParticipantComponent> actorPractitioner = fhirObject.getParticipant()
-	//			.stream().filter(e -> e.getActor() != null).filter(e -> StringUtils
-	//				.startsWith(e.getActor().getReference(), Practitioner.class.getSimpleName()))
-	//			.findFirst();
-	//		if (actorPractitioner.isPresent()) {
-	//			String practitionerId =
-	//				actorPractitioner.get().getActor().getReferenceElement().getIdPart();
-	//			Optional<IContact> practitioner = coreModelService.load(practitionerId, IContact.class);
-	//			if (practitioner.isEmpty()) {
-	//				throw new IFhirTransformerException("WARNING", "Unresolvable practitioner", 0);
-	//			}
-	//			String contactArea =
-	//				appointmentService.resolveAreaByAssignedContact(practitioner.get());
-	//			if (contactArea != null) {
-	//				return contactArea;
-	//			} else {
-	//				throw new IFhirTransformerException("WARNING",
-	//					"No schedule assigned to practitioner", 0);
-	//			}
-	//		}
-	//		
-	//		// resolve via ?? SLOT ??
-	//		
-	//		return null;
-	//	}
-	
+
+	// /**
+	// * Determine the {@link IAppointment#getSchedule()}. Currently only maps to a
+	// practitioners
+	// * schedule
+	// *
+	// * @param coreModelService
+	// * @param appointmentService
+	// *
+	// * @param fhirObject
+	// * @return the schedule name if it could be determined, else <code>null</code>
+	// * @deprecated
+	// */
+	// public String mapSchedule(IModelService coreModelService,
+	// IAppointmentService appointmentService, Appointment fhirObject){
+	//
+	// // resolve by participant.actor.practitioner
+	// Optional<AppointmentParticipantComponent> actorPractitioner =
+	// fhirObject.getParticipant()
+	// .stream().filter(e -> e.getActor() != null).filter(e -> StringUtils
+	// .startsWith(e.getActor().getReference(), Practitioner.class.getSimpleName()))
+	// .findFirst();
+	// if (actorPractitioner.isPresent()) {
+	// String practitionerId =
+	// actorPractitioner.get().getActor().getReferenceElement().getIdPart();
+	// Optional<IContact> practitioner = coreModelService.load(practitionerId,
+	// IContact.class);
+	// if (practitioner.isEmpty()) {
+	// throw new IFhirTransformerException("WARNING", "Unresolvable practitioner",
+	// 0);
+	// }
+	// String contactArea =
+	// appointmentService.resolveAreaByAssignedContact(practitioner.get());
+	// if (contactArea != null) {
+	// return contactArea;
+	// } else {
+	// throw new IFhirTransformerException("WARNING",
+	// "No schedule assigned to practitioner", 0);
+	// }
+	// }
+	//
+	// // resolve via ?? SLOT ??
+	//
+	// return null;
+	// }
+
 }

@@ -1,7 +1,7 @@
 package ch.elexis.core.ui.eigenartikel;
 
 public class Messages {
-	
+
 	public static String EigenartikelDisplay_articleName = ch.elexis.core.l10n.Messages.EigenartikelDisplay_articleName;
 	public static String EigenartikelDisplay_actualOnStockPacks = ch.elexis.core.l10n.Messages.EigenartikelDisplay_actualOnStockPacks;
 	public static String EigenartikelDisplay_actualOnStockPieces = ch.elexis.core.l10n.Messages.EigenartikelDisplay_actualOnStockPieces;
@@ -38,5 +38,5 @@ public class Messages {
 	public static String EigenartikelComposite_stockGroup_text = ch.elexis.core.l10n.Messages.EigenartikelComposite_stockGroup_text;
 	public static String EigenartikelComposite_newArticle_text = ch.elexis.core.l10n.Messages.EigenartikelComposite_newArticle_text;
 	public static String EigenartikelComposite_deleteArticle_text = ch.elexis.core.l10n.Messages.EigenartikelComposite_deleteArticle_text;
-	
+
 }

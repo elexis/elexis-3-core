@@ -33,40 +33,36 @@ import ch.elexis.data.Brief;
 import ch.elexis.data.Patient;
 
 public class SendBriefAsMailHandler extends AbstractHandler implements IHandler {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(SendBriefAsMailHandler.class);
-	
+
 	private File attachmentsFolder;
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		Optional<IDocumentLetter> selectedDocument =
-			ContextServiceHolder.get().getTyped(IDocumentLetter.class);
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		Optional<IDocumentLetter> selectedDocument = ContextServiceHolder.get().getTyped(IDocumentLetter.class);
 		if (selectedDocument.isPresent()) {
 			List<?> iDocuments = Collections.singletonList(selectedDocument.get());
-			
+
 			if (!iDocuments.isEmpty()) {
-				ICommandService commandService = (ICommandService) HandlerUtil
-					.getActiveWorkbenchWindow(event).getService(ICommandService.class);
+				ICommandService commandService = (ICommandService) HandlerUtil.getActiveWorkbenchWindow(event)
+						.getService(ICommandService.class);
 				try {
 					@SuppressWarnings("unchecked")
-					String documentsString =
-						AttachmentsUtil.getDocumentsString((List<IDocument>) (List<?>) iDocuments);
-					Command sendMailCommand =
-						commandService.getCommand("ch.elexis.core.mail.ui.sendMail");
-					
+					String documentsString = AttachmentsUtil.getDocumentsString((List<IDocument>) (List<?>) iDocuments);
+					Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail");
+
 					HashMap<String, String> params = new HashMap<String, String>();
 					params.put("ch.elexis.core.mail.ui.sendMail.documents", documentsString);
 					Patient patient = ElexisEventDispatcher.getSelectedPatient();
 					if (patient != null) {
-						params.put("ch.elexis.core.mail.ui.sendMail.subject",
-							"Patient: " + patient.getLabel());
+						params.put("ch.elexis.core.mail.ui.sendMail.subject", "Patient: " + patient.getLabel());
 					}
-					
-					ParameterizedCommand parametrizedCommmand =
-						ParameterizedCommand.generateCommand(sendMailCommand, params);
-					PlatformUI.getWorkbench().getService(IHandlerService.class)
-						.executeCommand(parametrizedCommmand, null);
+
+					ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(sendMailCommand,
+							params);
+					PlatformUI.getWorkbench().getService(IHandlerService.class).executeCommand(parametrizedCommmand,
+							null);
 				} catch (Exception ex) {
 					throw new RuntimeException("ch.elexis.core.mail.ui.sendMail not found", ex);
 				}
@@ -74,8 +70,8 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 		}
 		return null;
 	}
-	
-	private Optional<File> getTempFile(Brief brief){
+
+	private Optional<File> getTempFile(Brief brief) {
 		File tmpDir = CoreHub.getTempDir();
 		attachmentsFolder = new File(tmpDir, "_att" + System.currentTimeMillis() + "_");
 		attachmentsFolder.mkdir();
@@ -87,7 +83,7 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 			}
 		} catch (IOException e) {
 			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Fehler",
-				"Brief konnte nicht exportiert werden.");
+					"Brief konnte nicht exportiert werden.");
 			logger.error("Could not export Brief.", e);
 		}
 		if (tmpFile != null && tmpFile.exists()) {
@@ -95,8 +91,8 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 		}
 		return Optional.empty();
 	}
-	
-	private void removeTempAttachments(List<File> attachments){
+
+	private void removeTempAttachments(List<File> attachments) {
 		for (File file : attachments) {
 			file.delete();
 		}
@@ -104,8 +100,8 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 			attachmentsFolder.delete();
 		}
 	}
-	
-	private String getAttachmentsString(List<File> attachments){
+
+	private String getAttachmentsString(List<File> attachments) {
 		StringBuilder sb = new StringBuilder();
 		for (File file : attachments) {
 			if (sb.length() > 0) {

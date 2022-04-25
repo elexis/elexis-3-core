@@ -29,76 +29,74 @@ import ch.elexis.core.services.IModelService;
 
 @Component
 public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, ICoverage> {
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
-	
+
 	private ICoverageHelper coverageHelper;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		coverageHelper = new ICoverageHelper();
 	}
-	
+
 	@Override
-	public Optional<Coverage> getFhirObject(ICoverage localObject, SummaryEnum summaryEnum,
-		Set<Include> includes){
+	public Optional<Coverage> getFhirObject(ICoverage localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Coverage coverage = new Coverage();
-		
+
 		coverage.setId(new IdDt("Coverage", localObject.getId()));
 		coverage.addIdentifier(getElexisObjectIdentifier(localObject));
-		
+
 		// Bezeichnung
 		coverageHelper.setNarrative(coverage, coverageHelper.getFallText(localObject));
-		
+
 		CodeableConcept type = new CodeableConcept();
-		
+
 		// Abrechnungsmethode
 		coverageHelper.getType(localObject).ifPresent(coding -> {
 			type.addCoding(coding);
 		});
-		
+
 		// Versicherungsgrund
 		coverageHelper.getReason(localObject).ifPresent(coding -> {
 			type.addCoding(coding);
 		});
-		
+
 		// Unfalldatum
 		coverageHelper.getAccidentDate(localObject).ifPresent(coding -> {
 			type.addCoding(coding);
 		});
-		
+
 		coverage.setType(type);
-		
+
 		// Versicherungsnummer (KVG)
 		coverageHelper.getInsuranceNumber(localObject).ifPresent(identifier -> {
 			coverage.addIdentifier(identifier);
 		});
-		
+
 		// Startdatum, Enddatum
 		coverage.setPeriod(coverageHelper.getPeriod(localObject));
-		
+
 		// Rechnunsempfaenger
 		coverage.setPolicyHolder(coverageHelper.getPolicyHolderReference(localObject));
-		
+
 		// Kostenträger
-		coverage
-			.setPayor(Collections.singletonList(coverageHelper.getPayor(localObject)));
-		
+		coverage.setPayor(Collections.singletonList(coverageHelper.getPayor(localObject)));
+
 		// Patient
 		coverage.setBeneficiary(coverageHelper.getBeneficiaryReference(localObject));
-		
+
 		// FallNummer (IVG), UnfallNummer (UVG)
 		coverage.setDependent(coverageHelper.getDependent(localObject));
-		
+
 		// active
 		coverage.setStatus(localObject.isOpen() ? CoverageStatus.ACTIVE : CoverageStatus.CANCELLED);
-		
+
 		return Optional.of(coverage);
 	}
-	
+
 	@Override
-	public Optional<ICoverage> getLocalObject(Coverage fhirObject){
+	public Optional<ICoverage> getLocalObject(Coverage fhirObject) {
 		if (fhirObject != null && fhirObject.getId() != null) {
 			Optional<ICoverage> existing = modelService.load(fhirObject.getId(), ICoverage.class);
 			if (existing.isPresent()) {
@@ -107,24 +105,24 @@ public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, 
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<ICoverage> updateLocalObject(Coverage fhirObject, ICoverage localObject){
+	public Optional<ICoverage> updateLocalObject(Coverage fhirObject, ICoverage localObject) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
-	public Optional<ICoverage> createLocalObject(Coverage fhirObject){
+	public Optional<ICoverage> createLocalObject(Coverage fhirObject) {
 		if (fhirObject.hasBeneficiary()) {
-			Optional<IPatient> patient = modelService.load(
-				fhirObject.getBeneficiary().getReferenceElement().getIdPart(), IPatient.class);
-			if(patient.isEmpty()) {
+			Optional<IPatient> patient = modelService
+					.load(fhirObject.getBeneficiary().getReferenceElement().getIdPart(), IPatient.class);
+			if (patient.isEmpty()) {
 				throw new IFhirTransformerException("WARNING", "Invalid patient", 412);
 			}
 			Optional<String> type = coverageHelper.getType(fhirObject);
 			if (patient.isPresent() && type.isPresent()) {
-				ICoverage created = new ICoverageBuilder(modelService, patient.get(),
-					"online created", FallConstants.TYPE_DISEASE, type.get()).buildAndSave();
+				ICoverage created = new ICoverageBuilder(modelService, patient.get(), "online created",
+						FallConstants.TYPE_DISEASE, type.get()).buildAndSave();
 				String dependent = fhirObject.getDependent();
 				if (dependent != null) {
 					coverageHelper.setDependent(created, dependent);
@@ -139,16 +137,16 @@ public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, 
 				AbstractHelper.acquireAndReleaseLock(created);
 				return Optional.of(created);
 			} else {
-				LoggerFactory.getLogger(CoverageICoverageTransformer.class).warn(
-					"Could not create fall for patinet [" + patient + "] type [" + type + "]");
+				LoggerFactory.getLogger(CoverageICoverageTransformer.class)
+						.warn("Could not create fall for patinet [" + patient + "] type [" + type + "]");
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz){
+	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz) {
 		return Coverage.class.equals(fhirClazz) && ICoverage.class.equals(localClazz);
 	}
-	
+
 }

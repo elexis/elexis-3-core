@@ -24,93 +24,93 @@ import ch.elexis.core.types.TextTemplateCategory;
 @Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 public class TextTemplate extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Column(length = 80)
 	@Convert(converter = TextTemplateCategoryConverter.class)
 	protected TextTemplateCategory category;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "mandatorId")
 	protected Kontakt mandator;
-	
+
 	@Column(length = 255)
 	protected String name;
-	
+
 	@Column
 	@Lob
 	protected String template;
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
-	public TextTemplateCategory getCategory(){
+
+	public TextTemplateCategory getCategory() {
 		return category;
 	}
-	
-	public void setCategory(TextTemplateCategory value){
+
+	public void setCategory(TextTemplateCategory value) {
 		this.category = value;
 	}
-	
-	public Kontakt getMandator(){
+
+	public Kontakt getMandator() {
 		return mandator;
 	}
-	
-	public void setMandator(Kontakt mandator){
+
+	public void setMandator(Kontakt mandator) {
 		this.mandator = mandator;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
-	public void setName(String name){
+
+	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public String getTemplate(){
+
+	public String getTemplate() {
 		return template;
 	}
-	
-	public void setTemplate(String template){
+
+	public void setTemplate(String template) {
 		this.template = template;
 	}
 }

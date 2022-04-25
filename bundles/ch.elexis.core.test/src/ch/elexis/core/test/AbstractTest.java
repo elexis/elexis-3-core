@@ -33,10 +33,10 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Money;
 
 public abstract class AbstractTest {
-	
+
 	protected IModelService coreModelService;
 	protected IContextService contextService;
-	
+
 	protected IUser user;
 	protected IPerson person;
 	protected IMandator mandator;
@@ -44,23 +44,23 @@ public abstract class AbstractTest {
 	protected ICoverage coverage;
 	protected IEncounter encounter;
 	protected IArticle localArticle;
-	
+
 	@Before
-	public void before(){
-		coreModelService = OsgiServiceUtil.getService(IModelService.class,
-			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+	public void before() {
+		coreModelService = OsgiServiceUtil
+				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 		contextService = OsgiServiceUtil.getService(IContextService.class).get();
 	}
-	
+
 	/**
 	 * Removes all model instance fields.
-	 * 
+	 *
 	 */
 	@After
-	public void after(){
-		
+	public void after() {
+
 		contextService.setActiveUser(null);
-		
+
 		if (encounter != null) {
 			coreModelService.remove(encounter);
 		}
@@ -91,23 +91,23 @@ public abstract class AbstractTest {
 		OsgiServiceUtil.ungetService(coreModelService);
 		coreModelService = null;
 	}
-	
+
 	/**
 	 * includes {@link #createPerson()}
 	 */
-	public void createUserSetActiveInContext(){
+	public void createUserSetActiveInContext() {
 		if (person == null) {
 			createPerson();
 		}
 		user = new IUserBuilder(coreModelService, "b_a_barracus", person).buildAndSave();
-		
+
 		contextService.setActiveUser(user);
 	}
-	
-	public IPerson createPerson(){
+
+	public IPerson createPerson() {
 		LocalDate dob = LocalDate.of(1979, 7, 26);
-		person = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson", "TestPerson",
-			dob, Gender.FEMALE).buildAndSave();
+		person = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson", "TestPerson", dob, Gender.FEMALE)
+				.buildAndSave();
 		assertTrue(person.isPerson());
 		assertFalse(person.isPatient());
 		assertFalse(person.isOrganization());
@@ -115,52 +115,52 @@ public abstract class AbstractTest {
 		assertFalse(person.isMandator());
 		return person;
 	}
-	
-	public void createMandator(){
-		mandator = new IContactBuilder.MandatorBuilder(coreModelService, "TestMandator",
-			"TestMandator").buildAndSave();
+
+	public void createMandator() {
+		mandator = new IContactBuilder.MandatorBuilder(coreModelService, "TestMandator", "TestMandator").buildAndSave();
 		assertFalse(mandator.isPerson());
 		assertFalse(mandator.isPatient());
 		assertFalse(mandator.isOrganization());
 		assertFalse(mandator.isLaboratory());
 		assertTrue(mandator.isMandator());
 	}
-	
-	public void createPatient(){
+
+	public void createPatient() {
 		LocalDate dob = LocalDate.of(2016, 9, 1);
-		patient = new IContactBuilder.PatientBuilder(coreModelService, "TestPatient",
-			"TestPatient", dob, Gender.MALE).buildAndSave();
+		patient = new IContactBuilder.PatientBuilder(coreModelService, "TestPatient", "TestPatient", dob, Gender.MALE)
+				.buildAndSave();
 		assertTrue(patient.isPerson());
 		assertTrue(patient.isPatient());
 		assertFalse(patient.isOrganization());
 		assertFalse(patient.isLaboratory());
 		assertFalse(patient.isMandator());
 	}
-	
+
 	public static final String KVG_NAME = Messages.Fall_KVG_Name;
 	public static final String UVG_NAME = Messages.Fall_UVG_Name;
 	public static final String MV_NAME = Messages.Fall_MV_Name;
 	public static final String IV_NAME = Messages.Fall_IV_Name;
-	private static final String KVG_REQUIREMENTS = Messages.Fall_KVGRequirements; //$NON-NLS-1$
-	public static final String UVG_REQUIREMENTS = Messages.Fall_UVGRequirements; //$NON-NLS-1$
-	public static final String CONST_TARMED_DRUCKER = Messages.Fall_TarmedPrinter; //$NON-NLS-1$
-	public static final String CONST_TARMED_LEISTUNG = Messages.Fall_TarmedLeistung; //$NON-NLS-1$
+	private static final String KVG_REQUIREMENTS = Messages.Fall_KVGRequirements; // $NON-NLS-1$
+	public static final String UVG_REQUIREMENTS = Messages.Fall_UVGRequirements; // $NON-NLS-1$
+	public static final String CONST_TARMED_DRUCKER = Messages.Fall_TarmedPrinter; // $NON-NLS-1$
+	public static final String CONST_TARMED_LEISTUNG = Messages.Fall_TarmedLeistung; // $NON-NLS-1$
 	public static final String VVG_NAME = Messages.Fall_VVG_Name;
-	public static final String PRIVATE_NAME = Messages.Fall_Private_Name; //$NON-NLS-1$	
-	
-	public void createCoverage(){
+	public static final String PRIVATE_NAME = Messages.Fall_Private_Name; // $NON-NLS-1$
+
+	public void createCoverage() {
 		IBillingSystemService billingSystemService = OsgiServiceUtil.getService(IBillingSystemService.class).get();
-		billingSystemService.addOrModifyBillingSystem(KVG_NAME, CONST_TARMED_LEISTUNG, CONST_TARMED_DRUCKER, KVG_REQUIREMENTS, BillingLaw.KVG);
-		billingSystemService.addOrModifyBillingSystem(UVG_NAME, CONST_TARMED_LEISTUNG, CONST_TARMED_DRUCKER, UVG_REQUIREMENTS, BillingLaw.UVG);
-		
+		billingSystemService.addOrModifyBillingSystem(KVG_NAME, CONST_TARMED_LEISTUNG, CONST_TARMED_DRUCKER,
+				KVG_REQUIREMENTS, BillingLaw.KVG);
+		billingSystemService.addOrModifyBillingSystem(UVG_NAME, CONST_TARMED_LEISTUNG, CONST_TARMED_DRUCKER,
+				UVG_REQUIREMENTS, BillingLaw.UVG);
+
 		if (patient == null) {
 			createPatient();
 		}
-		coverage = new ICoverageBuilder(coreModelService, patient, "testCoverage", "testReason",
-			"KVG").buildAndSave();
+		coverage = new ICoverageBuilder(coreModelService, patient, "testCoverage", "testReason", "KVG").buildAndSave();
 	}
-	
-	public void createEncounter(){
+
+	public void createEncounter() {
 		if (coverage == null) {
 			createCoverage();
 		}
@@ -169,10 +169,10 @@ public abstract class AbstractTest {
 		}
 		encounter = new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
 	}
-	
-	public void createLocalArticle(){
-		localArticle = new IArticleBuilder(coreModelService, "test article", "123456789",
-			ArticleTyp.EIGENARTIKEL).build();
+
+	public void createLocalArticle() {
+		localArticle = new IArticleBuilder(coreModelService, "test article", "123456789", ArticleTyp.EIGENARTIKEL)
+				.build();
 		localArticle.setGtin("0000001111111");
 		localArticle.setPackageSize(12);
 		localArticle.setSellingSize(12);

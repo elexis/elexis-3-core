@@ -17,21 +17,21 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.test.AbstractTest;
 
 public class LaboratoryTest extends AbstractTest {
-	
+
 	@Override
 	@Before
-	public void before(){
+	public void before() {
 		super.before();
 	}
-	
+
 	@Override
 	@After
-	public void after(){
+	public void after() {
 		super.after();
 	}
-	
+
 	@Test
-	public void create(){
+	public void create() {
 		ILaboratory laboratory = coreModelService.create(ILaboratory.class);
 		assertNotNull(laboratory);
 		assertTrue(laboratory instanceof ILaboratory);
@@ -39,20 +39,19 @@ public class LaboratoryTest extends AbstractTest {
 		laboratory.setCode("TestLab");
 		laboratory.setDescription1("Laboratory Test");
 		coreModelService.save(laboratory);
-		
-		Optional<ILaboratory> loadedLaboratory =
-			coreModelService.load(laboratory.getId(), ILaboratory.class);
+
+		Optional<ILaboratory> loadedLaboratory = coreModelService.load(laboratory.getId(), ILaboratory.class);
 		assertTrue(loadedLaboratory.isPresent());
 		assertFalse(laboratory == loadedLaboratory.get());
 		assertEquals(laboratory, loadedLaboratory.get());
 		assertEquals(laboratory.getCode(), loadedLaboratory.get().getCode());
 		assertEquals(laboratory.getDescription1(), loadedLaboratory.get().getDescription1());
-		
+
 		coreModelService.remove(laboratory);
 	}
-	
+
 	@Test
-	public void query(){
+	public void query() {
 		ILaboratory laboratory1 = coreModelService.create(ILaboratory.class);
 		laboratory1.setCode("TestLab1");
 		laboratory1.setDescription1("Laboratory Test 1");
@@ -61,7 +60,7 @@ public class LaboratoryTest extends AbstractTest {
 		laboratory2.setCode("TestLab2");
 		laboratory2.setDescription1("Laboratory Test 2");
 		coreModelService.save(laboratory2);
-		
+
 		IQuery<ILaboratory> query = coreModelService.getQuery(ILaboratory.class);
 		query.startGroup();
 		query.or(ModelPackage.Literals.ICONTACT__CODE, COMPARATOR.LIKE, "%TestLab%");
@@ -70,7 +69,7 @@ public class LaboratoryTest extends AbstractTest {
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());
 		assertEquals(2, existing.size());
-		
+
 		query = coreModelService.getQuery(ILaboratory.class);
 		query.startGroup();
 		query.or(ModelPackage.Literals.ICONTACT__CODE, COMPARATOR.LIKE, "%Lab1%");
@@ -81,7 +80,7 @@ public class LaboratoryTest extends AbstractTest {
 		assertEquals(1, existing.size());
 		assertEquals(laboratory1.getCode(), existing.get(0).getCode());
 		assertEquals(laboratory1.getDescription1(), existing.get(0).getDescription1());
-		
+
 		coreModelService.remove(laboratory1);
 		coreModelService.remove(laboratory2);
 	}

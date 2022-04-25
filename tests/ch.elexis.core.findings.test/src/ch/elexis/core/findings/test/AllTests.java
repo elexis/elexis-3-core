@@ -22,15 +22,13 @@ import ch.elexis.core.findings.ProcedureRequestTest;
 import ch.elexis.core.findings.codings.CodingServiceTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-	FindingsServiceTest.class, CreateFindingsTest.class, EncounterTest.class, ConditionTest.class,
-	CodingServiceTest.class, ProcedureRequestTest.class, ObservationTest.class,
-	FamilyMemberHistoryTest.class, AllergyIntoleranceTest.class, DocumentReferenceTest.class
-})
+@SuiteClasses({ FindingsServiceTest.class, CreateFindingsTest.class, EncounterTest.class, ConditionTest.class,
+		CodingServiceTest.class, ProcedureRequestTest.class, ObservationTest.class, FamilyMemberHistoryTest.class,
+		AllergyIntoleranceTest.class, DocumentReferenceTest.class })
 public class AllTests {
 	public static final String PATIENT_ID = "defaultPatient";
 	public static final String CONSULTATION_ID = "defaultConsultation";
-	
+
 	public static void deleteAllFindings() {
 		List<IFinding> allFindings = FindingsServiceComponent.getService().getPatientsFindings(PATIENT_ID,
 				IFinding.class);

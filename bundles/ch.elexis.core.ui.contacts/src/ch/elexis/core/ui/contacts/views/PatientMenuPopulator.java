@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.contacts.views;
 
@@ -82,31 +82,29 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 			}
 
 		};
-		delPatAction =
-			new LockRequestingRestrictedAction<IPatient>(AccessControlDefaults.KONTAKT_DELETE,
+		delPatAction = new LockRequestingRestrictedAction<IPatient>(AccessControlDefaults.KONTAKT_DELETE,
 				Messages.PatientMenuPopulator_DeletePatientAction) {
-				
-				@Override
-				public void doRun(IPatient p){
-					if (MessageDialog.openConfirm(mine.getViewSite().getShell(),
+
+			@Override
+			public void doRun(IPatient p) {
+				if (MessageDialog.openConfirm(mine.getViewSite().getShell(),
 						Messages.PatientMenuPopulator_DeletePatientConfirm, p.getLabel()) == true) {
-						List<ICoverage> coverages = p.getCoverages();
-						if (coverages.isEmpty()) {
-							CoreModelServiceHolder.get().delete(p);
-							mine.reload();
-						} else {
-							SWTHelper.alert(
-								Messages.PatientMenuPopulator_DeletePatientRejectCaption,
+					List<ICoverage> coverages = p.getCoverages();
+					if (coverages.isEmpty()) {
+						CoreModelServiceHolder.get().delete(p);
+						mine.reload();
+					} else {
+						SWTHelper.alert(Messages.PatientMenuPopulator_DeletePatientRejectCaption,
 								Messages.PatientMenuPopulator_DeletePatientRejectBody);
-						}
 					}
 				}
-				
-				@Override
-				public IPatient getTargetedObject(){
-					return mine.getSelectedPatient();
-				}
-			};
+			}
+
+			@Override
+			public IPatient getTargetedObject() {
+				return mine.getSelectedPatient();
+			}
+		};
 		exportKGAction = new Action(Messages.PatientMenuPopulator_ExportEMRAction, Action.AS_DROP_DOWN_MENU) { // $NON-NLS-1$
 			Menu menu = null;
 

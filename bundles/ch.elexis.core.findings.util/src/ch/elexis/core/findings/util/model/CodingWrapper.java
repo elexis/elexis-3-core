@@ -6,23 +6,23 @@ import ch.elexis.core.findings.ICoding;
 
 public class CodingWrapper implements ICoding {
 	private Coding coding;
-	
-	public CodingWrapper(Coding coding){
+
+	public CodingWrapper(Coding coding) {
 		this.coding = coding;
 	}
-	
+
 	@Override
-	public String getSystem(){
+	public String getSystem() {
 		return coding.getSystem();
 	}
-	
+
 	@Override
-	public String getCode(){
+	public String getCode() {
 		return coding.getCode();
 	}
-	
+
 	@Override
-	public String getDisplay(){
+	public String getDisplay() {
 		return coding.getDisplay();
 	}
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
@@ -17,26 +17,24 @@ import org.eclipse.ui.IViewSite;
 
 /**
  * Detailansicht eines PersistentObject
- * 
+ *
  * @author Gerry
- * 
+ *
  */
 public interface IDetailDisplay {
 	/**
-	 * Detail {@link Composite} following the master detail pattern. Selection is provided via
-	 * element class or context name.
-	 * 
-	 * @param parent
-	 *            already has a {@link FillLayout}
-	 * @param site
-	 *            {@link IViewSite} the display is part of
+	 * Detail {@link Composite} following the master detail pattern. Selection is
+	 * provided via element class or context name.
+	 *
+	 * @param parent already has a {@link FillLayout}
+	 * @param site   {@link IViewSite} the display is part of
 	 */
 	public Composite createDisplay(Composite parent, IViewSite site);
-	
+
 	public Class<?> getElementClass();
-	
+
 	public void display(Object obj);
-	
+
 	public String getTitle();
-	
+
 }

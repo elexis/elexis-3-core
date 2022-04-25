@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -44,164 +44,150 @@ import java.util.List;
 
 /**
  * A very simple CSV writer released under a commercial-friendly license.
- * 
+ *
  * @author Glen Smith
- * 
+ *
  */
 public class CSVWriter {
-	
+
 	private Writer rawWriter;
-	
+
 	private PrintWriter pw;
-	
+
 	private char separator;
-	
+
 	private char quotechar;
-	
+
 	private String lineEnd;
-	
+
 	/** The character used for escaping quotes. */
 	public static final char ESCAPE_CHARACTER = '"';
-	
+
 	/** The default separator to use if none is supplied to the constructor. */
 	public static final char DEFAULT_SEPARATOR = ',';
-	
+
 	/**
 	 * The default quote character to use if none is supplied to the constructor.
 	 */
 	public static final char DEFAULT_QUOTE_CHARACTER = '"';
-	
+
 	/** The quote constant to use when you wish to suppress all quoting. */
 	public static final char NO_QUOTE_CHARACTER = '\u0000';
-	
+
 	/** Default line terminator uses platform encoding. */
 	public static final String DEFAULT_LINE_END = "\n";
-	
-	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat(
-		"dd-MMM-yyyy HH:mm:ss");
-	
+
+	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+
 	private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy");
-	
+
 	/**
 	 * Constructs CSVWriter using a comma for the separator.
-	 * 
-	 * @param writer
-	 *            the writer to an underlying CSV source.
+	 *
+	 * @param writer the writer to an underlying CSV source.
 	 */
-	public CSVWriter(Writer writer){
+	public CSVWriter(Writer writer) {
 		this(writer, DEFAULT_SEPARATOR);
 	}
-	
+
 	/**
 	 * Constructs CSVWriter with supplied separator.
-	 * 
-	 * @param writer
-	 *            the writer to an underlying CSV source.
-	 * @param separator
-	 *            the delimiter to use for separating entries.
+	 *
+	 * @param writer    the writer to an underlying CSV source.
+	 * @param separator the delimiter to use for separating entries.
 	 */
-	public CSVWriter(Writer writer, char separator){
+	public CSVWriter(Writer writer, char separator) {
 		this(writer, separator, DEFAULT_QUOTE_CHARACTER);
 	}
-	
+
 	/**
 	 * Constructs CSVWriter with supplied separator and quote char.
-	 * 
-	 * @param writer
-	 *            the writer to an underlying CSV source.
-	 * @param separator
-	 *            the delimiter to use for separating entries
-	 * @param quotechar
-	 *            the character to use for quoted elements
+	 *
+	 * @param writer    the writer to an underlying CSV source.
+	 * @param separator the delimiter to use for separating entries
+	 * @param quotechar the character to use for quoted elements
 	 */
-	public CSVWriter(Writer writer, char separator, char quotechar){
+	public CSVWriter(Writer writer, char separator, char quotechar) {
 		this(writer, separator, quotechar, "\n");
 	}
-	
+
 	/**
 	 * Constructs CSVWriter with supplied separator and quote char.
-	 * 
-	 * @param writer
-	 *            the writer to an underlying CSV source.
-	 * @param separator
-	 *            the delimiter to use for separating entries
-	 * @param quotechar
-	 *            the character to use for quoted elements
-	 * @param lineEnd
-	 *            the line feed terminator to use
+	 *
+	 * @param writer    the writer to an underlying CSV source.
+	 * @param separator the delimiter to use for separating entries
+	 * @param quotechar the character to use for quoted elements
+	 * @param lineEnd   the line feed terminator to use
 	 */
-	public CSVWriter(Writer writer, char separator, char quotechar, String lineEnd){
+	public CSVWriter(Writer writer, char separator, char quotechar, String lineEnd) {
 		this.rawWriter = writer;
 		this.pw = new PrintWriter(writer);
 		this.separator = separator;
 		this.quotechar = quotechar;
 		this.lineEnd = lineEnd;
 	}
-	
+
 	/**
 	 * Writes the entire list to a CSV file. The list is assumed to be a String[]
-	 * 
-	 * @param allLines
-	 *            a List of String[], with each String[] representing a line of the file.
+	 *
+	 * @param allLines a List of String[], with each String[] representing a line of
+	 *                 the file.
 	 */
-	public void writeAll(List allLines){
-		
+	public void writeAll(List allLines) {
+
 		for (Iterator iter = allLines.iterator(); iter.hasNext();) {
 			String[] nextLine = (String[]) iter.next();
 			writeNext(nextLine);
 		}
-		
+
 	}
-	
-	protected void writeColumnNames(ResultSetMetaData metadata) throws SQLException{
-		
+
+	protected void writeColumnNames(ResultSetMetaData metadata) throws SQLException {
+
 		int columnCount = metadata.getColumnCount();
-		
+
 		String[] nextLine = new String[columnCount];
 		for (int i = 0; i < columnCount; i++) {
 			nextLine[i] = metadata.getColumnName(i + 1);
 		}
 		writeNext(nextLine);
 	}
-	
+
 	/**
 	 * Writes the entire ResultSet to a CSV file.
-	 * 
+	 *
 	 * The caller is responsible for closing the ResultSet.
-	 * 
-	 * @param rs
-	 *            the recordset to write
-	 * @param includeColumnNames
-	 *            true if you want column names in the output, false otherwise
-	 * 
+	 *
+	 * @param rs                 the recordset to write
+	 * @param includeColumnNames true if you want column names in the output, false
+	 *                           otherwise
+	 *
 	 */
-	public void writeAll(java.sql.ResultSet rs, boolean includeColumnNames) throws SQLException,
-		IOException{
-		
+	public void writeAll(java.sql.ResultSet rs, boolean includeColumnNames) throws SQLException, IOException {
+
 		ResultSetMetaData metadata = rs.getMetaData();
-		
+
 		if (includeColumnNames) {
 			writeColumnNames(metadata);
 		}
-		
+
 		int columnCount = metadata.getColumnCount();
-		
+
 		while (rs.next()) {
 			String[] nextLine = new String[columnCount];
-			
+
 			for (int i = 0; i < columnCount; i++) {
 				nextLine[i] = getColumnValue(rs, metadata.getColumnType(i + 1), i + 1);
 			}
-			
+
 			writeNext(nextLine);
 		}
 	}
-	
-	private static String getColumnValue(ResultSet rs, int colType, int colIndex)
-		throws SQLException, IOException{
-		
+
+	private static String getColumnValue(ResultSet rs, int colType, int colIndex) throws SQLException, IOException {
+
 		String value = "";
-		
+
 		switch (colType) {
 		case Types.BIT:
 			Object bit = rs.getObject(colIndex);
@@ -273,16 +259,16 @@ public class CSVWriter {
 		default:
 			value = "";
 		}
-		
+
 		if (value == null) {
 			value = "";
 		}
-		
+
 		return value;
-		
+
 	}
-	
-	private static String read(Clob c) throws SQLException, IOException{
+
+	private static String read(Clob c) throws SQLException, IOException {
 		StringBuffer sb = new StringBuffer((int) c.length());
 		Reader r = c.getCharacterStream();
 		char[] cbuf = new char[2048];
@@ -294,21 +280,21 @@ public class CSVWriter {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Writes the next line to the file.
-	 * 
-	 * @param nextLine
-	 *            a string array with each comma-separated element as a separate entry.
+	 *
+	 * @param nextLine a string array with each comma-separated element as a
+	 *                 separate entry.
 	 */
-	public void writeNext(String[] nextLine){
+	public void writeNext(String[] nextLine) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < nextLine.length; i++) {
-			
+
 			if (i != 0) {
 				sb.append(separator);
 			}
-			
+
 			String nextElement = nextLine[i];
 			if (nextElement == null)
 				continue;
@@ -327,23 +313,22 @@ public class CSVWriter {
 			if (quotechar != NO_QUOTE_CHARACTER)
 				sb.append(quotechar);
 		}
-		
+
 		sb.append(lineEnd);
 		pw.write(sb.toString());
-		
+
 	}
-	
+
 	/**
 	 * Close the underlying stream writer flushing any buffered content.
-	 * 
-	 * @throws IOException
-	 *             if bad things happen
-	 * 
+	 *
+	 * @throws IOException if bad things happen
+	 *
 	 */
-	public void close() throws IOException{
+	public void close() throws IOException {
 		pw.flush();
 		pw.close();
 		rawWriter.close();
 	}
-	
+
 }

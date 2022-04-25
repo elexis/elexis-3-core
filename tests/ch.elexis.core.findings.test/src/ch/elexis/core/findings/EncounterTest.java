@@ -16,15 +16,15 @@ import org.junit.Test;
 import ch.elexis.core.findings.test.AllTests;
 
 public class EncounterTest {
-	
+
 	@Before
-	public void beforeTest(){
+	public void beforeTest() {
 		AllTests.deleteAllFindings();
 		List<IFinding> findings = FindingsServiceComponent.getService().getPatientsFindings(AllTests.PATIENT_ID,
 				IFinding.class);
 		assertTrue(findings.isEmpty());
 	}
-	
+
 	@Test
 	public void manyEncounters() {
 		// create many
@@ -40,8 +40,7 @@ public class EncounterTest {
 			FindingsServiceComponent.getService().saveFinding(encounter);
 		}
 		// test many
-		List<IEncounter> findings = FindingsServiceComponent.getService()
-			.getPatientsFindings(AllTests.PATIENT_ID,
+		List<IEncounter> findings = FindingsServiceComponent.getService().getPatientsFindings(AllTests.PATIENT_ID,
 				IEncounter.class);
 		assertEquals(1000, findings.size());
 		for (IEncounter iFinding : findings) {
@@ -52,7 +51,7 @@ public class EncounterTest {
 	}
 
 	@Test
-	public void getProperties(){
+	public void getProperties() {
 		IEncounter encounter = FindingsServiceComponent.getService().create(IEncounter.class);
 		assertNotNull(encounter);
 		encounter.setConsultationId(AllTests.CONSULTATION_ID);
@@ -60,15 +59,14 @@ public class EncounterTest {
 		LocalDateTime effectiveTime = LocalDateTime.of(2016, Month.SEPTEMBER, 12, 9, 33);
 		encounter.setStartTime(effectiveTime);
 		FindingsServiceComponent.getService().saveFinding(encounter);
-		
+
 		List<IEncounter> encounters = FindingsServiceComponent.getService()
 				.getConsultationsFindings(AllTests.CONSULTATION_ID, IEncounter.class);
 		assertNotNull(encounters);
 		assertFalse(encounters.isEmpty());
 		assertEquals(1, encounters.size());
 		IEncounter readEncounter = (IEncounter) encounters.get(0);
-		assertEquals(AllTests.CONSULTATION_ID,
-			readEncounter.getConsultationId());
+		assertEquals(AllTests.CONSULTATION_ID, readEncounter.getConsultationId());
 		assertTrue(readEncounter.getStartTime().isPresent());
 		assertEquals(effectiveTime, readEncounter.getStartTime().get());
 	}

@@ -7,6 +7,6 @@ import ch.elexis.data.Patient;
 
 public interface IExternLaborOrder {
 	public void order(Patient patient, List<LabOrder> orders);
-	
+
 	public String getLabel();
 }

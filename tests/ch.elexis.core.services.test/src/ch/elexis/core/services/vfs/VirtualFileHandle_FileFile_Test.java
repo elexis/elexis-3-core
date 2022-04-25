@@ -42,12 +42,12 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 		createPopulateTestFile();
 		testHandle = service.of(testFile);
 	}
-	
+
 	@AfterClass
 	public static void afterClass() throws IOException {
 		FileUtils.deleteDirectory(testDirectory);
 	}
-	
+
 	private static void createPopulateTestFile() throws IOException {
 		Files.write(testFile.toPath(), "meaninglessTestText".getBytes(), StandardOpenOption.CREATE);
 	}
@@ -76,7 +76,8 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 	public void testGetParent() throws IOException {
 		IVirtualFilesystemHandle parent = testHandle.getParent();
 		assertEquals(testDirectory, parent.toFile().get());
-		assertTrue(testHandle.getAbsolutePath()+" ["+parent.getName()+"]", parent.getName().startsWith("virtualFilesystemTest_filefile"));
+		assertTrue(testHandle.getAbsolutePath() + " [" + parent.getName() + "]",
+				parent.getName().startsWith("virtualFilesystemTest_filefile"));
 	}
 
 	@Test(expected = IOException.class)
@@ -166,11 +167,11 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 	}
 
 	@Test
-	public void testOpenInputStream() throws IOException{
+	public void testOpenInputStream() throws IOException {
 		try (InputStream is = testHandle.openInputStream()) {
 			String string = IOUtils.toString(is, Charset.defaultCharset());
 			System.out.println(string);
 		}
 	}
-	
+
 }

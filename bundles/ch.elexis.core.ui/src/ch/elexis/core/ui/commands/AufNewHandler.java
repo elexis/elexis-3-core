@@ -20,20 +20,18 @@ import ch.elexis.core.ui.views.Messages;
 
 public class AufNewHandler extends AbstractHandler implements IHandler {
 	public static final String CMD_ID = "ch.elexis.core.ui.commands.AufNew";
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Optional<IPatient> pat = ContextServiceHolder.get().getActivePatient();
 		if (!pat.isPresent()) {
-			SWTHelper.showError(Messages.AUF2_NoPatientSelected, //$NON-NLS-1$
-				Messages.AUF2_PleaseDoSelectPatient); //$NON-NLS-1$
+			SWTHelper.showError(Messages.AUF2_NoPatientSelected, // $NON-NLS-1$
+					Messages.AUF2_PleaseDoSelectPatient); // $NON-NLS-1$
 			return null;
 		}
-		ICoverage fall =
-			ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class).orElse(null);
+		ICoverage fall = ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class).orElse(null);
 		if (fall == null) {
-			Optional<IEncounter> kons =
-				ContextServiceHolder.get().getRootContext().getTyped(IEncounter.class);
+			Optional<IEncounter> kons = ContextServiceHolder.get().getRootContext().getTyped(IEncounter.class);
 			if (kons.isPresent()) {
 				fall = kons.get().getCoverage();
 				if (!fall.getPatient().equals(pat.get())) {
@@ -46,15 +44,15 @@ public class AufNewHandler extends AbstractHandler implements IHandler {
 			}
 		}
 		if (fall == null) {
-			SWTHelper.showError(Messages.AUF2_noCaseSelected, Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.AUF2_noCaseSelected, Messages.AUF2_selectCase); // $NON-NLS-1$ //$NON-NLS-2$
 			return null;
 		}
-		EditAUFDialog dlg = new EditAUFDialog(
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), null, fall);
+		EditAUFDialog dlg = new EditAUFDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), null,
+				fall);
 		if (dlg.open() == Dialog.OK) {
 			return dlg.getAuf();
 		}
 		return null;
 	}
-	
+
 }

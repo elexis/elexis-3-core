@@ -15,26 +15,26 @@ import ch.elexis.core.findings.ui.composites.CodingComposite;
 
 public class CodingEditDialog extends TitleAreaDialog {
 	private CodingComposite codingComposite;
-	
+
 	private Optional<ICoding> coding = Optional.empty();
-	
-	public CodingEditDialog(Shell parentShell){
+
+	public CodingEditDialog(Shell parentShell) {
 		super(parentShell);
 	}
-	
-	public CodingEditDialog(ICoding coding, Shell parentShell){
+
+	public CodingEditDialog(ICoding coding, Shell parentShell) {
 		super(parentShell);
 		this.coding = Optional.of(coding);
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		setTitle("Kodierung " + (coding.isPresent() ? "editieren" : "anlegen") + ".");
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(new GridData(GridData.FILL_BOTH));
 		ret.setLayout(new FillLayout());
@@ -42,14 +42,14 @@ public class CodingEditDialog extends TitleAreaDialog {
 		coding.ifPresent(c -> codingComposite.setCoding(c));
 		return ret;
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		coding = codingComposite.getCoding();
 		super.okPressed();
 	}
-	
-	public Optional<ICoding> getCoding(){
+
+	public Optional<ICoding> getCoding() {
 		return coding;
 	}
 }

@@ -4,10 +4,10 @@ import java.util.List;
 
 public class ConceptList {
 	public List<Concept> concept;
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return "ConceptList [concept=" + concept + "]";
 	}
-	
+
 }

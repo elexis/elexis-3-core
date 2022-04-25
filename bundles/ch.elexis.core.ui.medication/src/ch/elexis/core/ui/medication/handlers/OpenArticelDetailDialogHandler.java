@@ -13,14 +13,12 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.dialogs.ArtikelDetailDialog;
 
 public class OpenArticelDetailDialogHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		Optional<IPrescription> prescription =
-			ContextServiceHolder.get().getTyped(IPrescription.class);
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		Optional<IPrescription> prescription = ContextServiceHolder.get().getTyped(IPrescription.class);
 		prescription.ifPresent(p -> {
-			ArtikelDetailDialog dd = new ArtikelDetailDialog(Display.getDefault().getActiveShell(),
-				p.getArticle());
+			ArtikelDetailDialog dd = new ArtikelDetailDialog(Display.getDefault().getActiveShell(), p.getArticle());
 			dd.open();
 		});
 		return null;

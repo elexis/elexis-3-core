@@ -8,17 +8,17 @@ import ch.elexis.core.services.IDocumentStore;
 @Component
 public class DocumentStoreComponent {
 	private static IDocumentStore documentStore;
-	
+
 	@Reference(target = "(storeid=ch.elexis.data.store.brief)")
-	public void setIDocumentStore(IDocumentStore documentStore){
+	public void setIDocumentStore(IDocumentStore documentStore) {
 		DocumentStoreComponent.documentStore = documentStore;
 	}
-	
-	public void unsetIDocumentStore(IDocumentStore documentStore){
+
+	public void unsetIDocumentStore(IDocumentStore documentStore) {
 		DocumentStoreComponent.documentStore = null;
 	}
-	
-	public static IDocumentStore getService(){
+
+	public static IDocumentStore getService() {
 		if (documentStore == null) {
 			throw new IllegalStateException("No IDocumentStore set");
 		}

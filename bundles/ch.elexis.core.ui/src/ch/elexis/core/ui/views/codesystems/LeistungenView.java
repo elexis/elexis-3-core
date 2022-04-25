@@ -8,7 +8,7 @@
  * Contributors:
  *    G. Weirich - initial implementation
  *    M. Descher - extracted Eigenartikel to ch.elexis.eigenartikel
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views.codesystems;
@@ -47,106 +47,103 @@ import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory.cPage;
 
 public class LeistungenView extends ViewPart implements IActivationListener {
-	
-	private static final String CAPTION_ERROR = Messages.LeistungenView_error; //$NON-NLS-1$
+
+	private static final String CAPTION_ERROR = Messages.LeistungenView_error; // $NON-NLS-1$
 	public final static String ID = "ch.elexis.LeistungenView"; //$NON-NLS-1$
 	public CTabFolder ctab;
 	CTabItem selected;
 	private String defaultRGB;
-	
+
 	private DelegatingSelectionProvider delegatingSelectionProvider;
-	
-	public LeistungenView(){
+
+	public LeistungenView() {
 		defaultRGB = UiDesk.createColor(new RGB(255, 255, 255));
 	}
-	
+
 	@Override
-	public void createPartControl(final Composite parent){
+	public void createPartControl(final Composite parent) {
 		delegatingSelectionProvider = new DelegatingSelectionProvider();
-		
+
 		parent.setLayout(new GridLayout());
 		ctab = new CTabFolder(parent, SWT.BOTTOM);
 		ctab.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ctab.setSimple(false);
 		ctab.setMRUVisible(true);
 		ctab.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				selected = ctab.getSelection();
-				
+
 				if (selected instanceof FavoritenCTabItem)
 					return;
-				
+
 				if (selected != null) {
 					CodeSystemDescription description = (CodeSystemDescription) selected.getData();
 					cPage page = (cPage) selected.getControl();
 					if (page == null) {
-						//SWTHelper.alert(CAPTION_ERROR, "cPage=null"); //$NON-NLS-1$
-						page =
-							new cPage(ctab, description);
+						// SWTHelper.alert(CAPTION_ERROR, "cPage=null"); //$NON-NLS-1$
+						page = new cPage(ctab, description);
 						selected.setControl(page);
 						// parent.redraw();
 					}
 					page.cv.getConfigurer().getControlFieldProvider().clearValues();
 					if (description.getCodeSelectorFactory() != null
-						&& description.getCodeSelectorFactory().hasContextMenu()) {
-						description.getCodeSelectorFactory().activateContextMenu(getSite(),
-							delegatingSelectionProvider, ID);
+							&& description.getCodeSelectorFactory().hasContextMenu()) {
+						description.getCodeSelectorFactory().activateContextMenu(getSite(), delegatingSelectionProvider,
+								ID);
 					}
 				}
 				((cPage) selected.getControl()).refresh();
 				setFocus();
 			}
-			
+
 		});
-		
+
 		// menu to select & define color
 		Menu tabFolderMenu = new Menu(ctab);
 		MenuItem miColor = new MenuItem(tabFolderMenu, SWT.POP_UP);
 		miColor.setText(Messages.LeistungenView_defineColor);
 		miColor.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				CTabItem item = ctab.getSelection();
 				ColorDialog cd = new ColorDialog(UiDesk.getTopShell());
 				RGB selected = cd.open();
 				if (selected != null) {
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_COLOR + item.getText(),
-						UiDesk.createColor(selected));
+							UiDesk.createColor(selected));
 					setCTabItemColor(ctab.getSelection().getText());
 				}
 			}
 		});
 		ctab.setMenu(tabFolderMenu);
-		
-		CodeSelectorFactory.makeTabs(ctab, getViewSite(),
-			ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
+
+		CodeSelectorFactory.makeTabs(ctab, getViewSite(), ExtensionPointConstantsUi.VERRECHNUNGSCODE); // $NON-NLS-1$
 		GlobalEventDispatcher.addActivationListener(this, this);
 		getSite().setSelectionProvider(delegatingSelectionProvider);
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		if (selected == null) {
 			if (ctab.getItems().length > 0) {
 				selected = ctab.getSelection();
 			}
 		}
-		if(selected instanceof FavoritenCTabItem) {
-			((FavoritenCTabItem)selected).update();
+		if (selected instanceof FavoritenCTabItem) {
+			((FavoritenCTabItem) selected).update();
 			return;
 		}
 		if (selected != null) {
 			cPage page = (cPage) selected.getControl();
 			if (page == null) {
-				page =
-					new cPage(ctab, (CodeSystemDescription) selected.getData());
+				page = new cPage(ctab, (CodeSystemDescription) selected.getData());
 				selected.setControl(page);
 				// parent.redraw();
 			}
@@ -154,18 +151,15 @@ public class LeistungenView extends ViewPart implements IActivationListener {
 		}
 		setCTabItemColor(selected.getText());
 	}
-	
-	private void setCTabItemColor(String id){
+
+	private void setCTabItemColor(String id) {
 		String rgbColor = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_COLOR + id, defaultRGB);
 		Color color = UiDesk.getColorFromRGB(rgbColor);
-		ctab.setSelectionBackground(new Color[] {
-			UiDesk.getDisplay().getSystemColor(SWT.COLOR_WHITE), color
-		}, new int[] {
-			100
-		}, true);
+		ctab.setSelectionBackground(new Color[] { UiDesk.getDisplay().getSystemColor(SWT.COLOR_WHITE), color },
+				new int[] { 100 }, true);
 	}
-	
-	void swapTabs(int iLeft, int iRight){
+
+	void swapTabs(int iLeft, int iRight) {
 		CTabItem ctLeft = ctab.getItem(iLeft);
 		CTabItem ctRight = ctab.getItem(iRight);
 		String t = ctLeft.getText();
@@ -175,9 +169,10 @@ public class LeistungenView extends ViewPart implements IActivationListener {
 		ctRight.setText(t);
 		ctRight.setControl(c);
 	}
-	
-	public void activation(boolean mode){
-		if(selected instanceof FavoritenCTabItem) return;
+
+	public void activation(boolean mode) {
+		if (selected instanceof FavoritenCTabItem)
+			return;
 		if (mode == false) {
 			if (selected != null) {
 				cPage page = (cPage) selected.getControl();
@@ -195,28 +190,29 @@ public class LeistungenView extends ViewPart implements IActivationListener {
 				cPage page = (cPage) selected.getControl();
 				page.refresh();
 			}
-			
+
 		}
-		
+
 	}
-	
-	private void initCTabItemControl(CTabItem tabItem){
+
+	private void initCTabItemControl(CTabItem tabItem) {
 		CodeSystemDescription systemDescription = (CodeSystemDescription) tabItem.getData();
 		if (systemDescription != null) {
 			cPage page = new cPage(tabItem, systemDescription);
 			selected.setControl(page);
 		}
 	}
-	
-	public void visible(boolean mode){}
-	
+
+	public void visible(boolean mode) {
+	}
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
-	public void setSelected(CTabItem ctab){
+
+	public void setSelected(CTabItem ctab) {
 		selected = ctab;
 	}
 }

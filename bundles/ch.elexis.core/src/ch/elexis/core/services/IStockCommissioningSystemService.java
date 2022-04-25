@@ -11,58 +11,54 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.stock.ICommissioningSystemDriver;
 
 public interface IStockCommissioningSystemService {
-	
+
 	/**
 	 * List the UUIDs of all commissioning system drivers available to the system
-	 * 
+	 *
 	 * @return
 	 */
 	public List<UUID> listAllAvailableDrivers();
-	
+
 	/**
 	 * Get info about a commisioning system driver identified by its UUID
-	 * 
+	 *
 	 * @param driverUuid
-	 * @param extended show extended information
+	 * @param extended   show extended information
 	 * @return
 	 * @see #listAllAvailableDrivers()
 	 */
 	public String getInfoStringForDriver(UUID driverUuid, boolean extended);
-	
+
 	public IStatus initializeStockCommissioningSystem(IStock stock);
-	
+
 	public IStatus shutdownStockCommissioningSytem(IStock stock);
-	
+
 	public IStatus initializeInstancesUsingDriver(UUID driver);
-	
+
 	public IStatus shutdownInstancesUsingDriver(UUID driver);
-	
+
 	public ICommissioningSystemDriver getDriverInstanceForStock(IStock stock);
-	
+
 	/**
-	 * Outlays the article by effectively ordering the respective the device to issue it.
-	 * 
+	 * Outlays the article by effectively ordering the respective the device to
+	 * issue it.
+	 *
 	 * @param stockEntry
 	 * @param quantity
-	 * @param data
-	 *            pass optional values
+	 * @param data       pass optional values
 	 * @return
 	 */
-	public IStatus performArticleOutlay(IStockEntry stockEntry, int quantity,
-		Map<String, Object> data);
-	
+	public IStatus performArticleOutlay(IStockEntry stockEntry, int quantity, Map<String, Object> data);
+
 	/**
-	 * Synchronize the given {@link IStock} with the state of the commissioning system.
-	 * 
-	 * @param stock
-	 *            the stock to perform the synchronization on
-	 * @param articleId
-	 *            if <code>null</code> synchronize all articles, else only those with ids contained
-	 *            in the list
-	 * @param data
-	 *            pass optional values
+	 * Synchronize the given {@link IStock} with the state of the commissioning
+	 * system.
+	 *
+	 * @param stock     the stock to perform the synchronization on
+	 * @param articleId if <code>null</code> synchronize all articles, else only
+	 *                  those with ids contained in the list
+	 * @param data      pass optional values
 	 * @return
 	 */
-	public IStatus synchronizeInventory(IStock stock, List<String> articleIds,
-		Map<String, Object> data);
+	public IStatus synchronizeInventory(IStock stock, List<String> articleIds, Map<String, Object> data);
 }

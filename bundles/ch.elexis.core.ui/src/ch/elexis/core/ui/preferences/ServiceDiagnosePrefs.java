@@ -52,24 +52,24 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 	private ComboViewer cmbViewer;
 	private TableViewer viewer, viewerAvailable;
 	private List<String> input, aInput;
-	
+
 	enum ViewType {
 		Leistungen, Diagnose, Codes
 	}
-	
-	public ServiceDiagnosePrefs(){
+
+	public ServiceDiagnosePrefs() {
 		super("Leistungen u. Diagnosen");
 	}
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(3, true));
-		
+
 		Label lblView = new Label(ret, SWT.NONE);
 		lblView.setText(Messages.ServiceDiagnosis_View);
 		lblView.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		
+
 		cmbViewer = new ComboViewer(ret, SWT.READ_ONLY);
 		Combo combo = cmbViewer.getCombo();
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -78,31 +78,29 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 		cmbViewer.setInput(ViewType.values());
 		cmbViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				ViewType view = (ViewType) selection.getFirstElement();
 				loadInput(view);
 			}
 		});
-		
+
 		int operations = DND.DROP_MOVE | DND.DROP_TARGET_MOVE;
-		Transfer[] transferTypes = new Transfer[] {
-			TextTransfer.getInstance()
-		};
-		
+		Transfer[] transferTypes = new Transfer[] { TextTransfer.getInstance() };
+
 		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);
-		
+
 		Label lblDisplayed = new Label(ret, SWT.NONE);
 		lblDisplayed.setText(Messages.ServiceDiagnosis_Displayed);
 		new Label(ret, SWT.NONE);
 		Label lblAvailable = new Label(ret, SWT.NONE);
 		lblAvailable.setText(Messages.ServiceDiagnosis_Available);
-		
+
 		Label label = new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		
+
 		viewer = new TableViewer(ret, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		Table table = viewer.getTable();
 		table.setHeaderVisible(false);
@@ -118,22 +116,22 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 		viewer.setInput(input);
 		viewer.addDragSupport(operations, transferTypes, new DragListener(viewer, true));
 		viewer.addDropSupport(operations, transferTypes, new DropListener(viewer, true));
-		
+
 		Composite btnComposite = new Composite(ret, SWT.NONE);
 		btnComposite.setLayout(new GridLayout(1, false));
 		btnComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, false));
-		
+
 		Button btnUp = new Button(btnComposite, SWT.PUSH);
 		btnUp.setImage(Images.IMG_ARROWUP.getImage());
 		btnUp.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 		btnUp.setToolTipText(Messages.ServiceDiagnosis_UpTooltip);
 		btnUp.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 				String value = (String) selection.getFirstElement();
 				int idx = input.indexOf(value);
-				
+
 				if (idx > 0) {
 					input.remove(value);
 					input.add(idx - 1, value);
@@ -141,18 +139,18 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 				}
 			}
 		});
-		
+
 		Button btnDown = new Button(btnComposite, SWT.PUSH);
 		btnDown.setImage(Images.IMG_ARROWDOWN.getImage());
 		btnDown.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 		btnDown.setToolTipText(Messages.ServiceDiagnosis_DownTooltip);
 		btnDown.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 				String value = (String) selection.getFirstElement();
 				int idx = input.indexOf(value);
-				
+
 				if (idx != -1 && idx < input.size() - 1) {
 					input.remove(value);
 					input.add(idx + 1, value);
@@ -160,7 +158,7 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 				}
 			}
 		});
-		
+
 		viewerAvailable = new TableViewer(ret, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		table = viewerAvailable.getTable();
 		table.setHeaderVisible(false);
@@ -174,17 +172,15 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 		createColumn(ret, viewerAvailable);
 		viewerAvailable.setContentProvider(new ArrayContentProvider());
 		viewerAvailable.setInput(aInput);
-		
-		viewerAvailable.addDragSupport(operations, transferTypes, new DragListener(viewerAvailable,
-			false));
-		viewerAvailable.addDropSupport(operations, transferTypes, new DropListener(viewerAvailable,
-			false));
-		
+
+		viewerAvailable.addDragSupport(operations, transferTypes, new DragListener(viewerAvailable, false));
+		viewerAvailable.addDropSupport(operations, transferTypes, new DropListener(viewerAvailable, false));
+
 		cmbViewer.setSelection(new StructuredSelection(ViewType.Leistungen));
 		return ret;
 	}
-	
-	private void createColumn(final Composite parent, final TableViewer viewer){
+
+	private void createColumn(final Composite parent, final TableViewer viewer) {
 		TableViewerColumn tvCol = new TableViewerColumn(viewer, SWT.NONE);
 		tvCol.setLabelProvider(new ColumnLabelProvider());
 		TableColumn column = tvCol.getColumn();
@@ -193,64 +189,60 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 		column.setResizable(false);
 		column.setMoveable(false);
 	}
-	
-	private void loadInput(ViewType view){
-		String[] settings = new String[]{};
+
+	private void loadInput(ViewType view) {
+		String[] settings = new String[] {};
 		input = new ArrayList<String>();
 		aInput = new ArrayList<String>();
-		
+
 		switch (view) {
 		case Leistungen:
 			aInput.addAll(findPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE, null));
 			aInput.add(FAVORITES);
-			
-			settings =
-				ConfigServiceHolder
-					.getUser(Preferences.USR_SERVICES_DIAGNOSES_SRV, getListAsString(aInput))
+
+			settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_SRV, getListAsString(aInput))
 					.split(",");
 			break;
 		case Diagnose:
 			aInput.addAll(findPagesFor(ExtensionPointConstantsUi.DIAGNOSECODE, null));
-			settings =
-				ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_DIAGNOSE,
-					getListAsString(aInput)).split(",");
+			settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_DIAGNOSE, getListAsString(aInput))
+					.split(",");
 			break;
 		case Codes:
 			aInput.addAll(findPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE, "Artikel"));
 			aInput.addAll(findPagesFor(ExtensionPointConstantsUi.DIAGNOSECODE, "Artikel"));
 			aInput.addAll(findPagesFor(ExtensionPointConstantsUi.GENERICCODE, "Artikel"));
 			aInput.add(FAVORITES);
-			settings =
-				ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_CODES,
-					getListAsString(aInput)).split(",");
+			settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_CODES, getListAsString(aInput))
+					.split(",");
 			break;
 		default:
 			break;
 		}
-		
+
 		for (String s : settings) {
 			input.add(s);
 			aInput.remove(s);
 		}
-		
+
 		viewer.setInput(input);
 		viewerAvailable.setInput(aInput);
 	}
-	
-	private String getListAsString(List<String> list){
+
+	private String getListAsString(List<String> list) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		for (int i = 0; i < list.size(); i++) {
 			sb.append(list.get(i));
-			
+
 			if (i != (list.size() - 1)) {
 				sb.append(",");
 			}
 		}
 		return sb.toString();
 	}
-	
-	private List<String> findPagesFor(String point, String ignore){
+
+	private List<String> findPagesFor(String point, String ignore) {
 		List<String> pageNames = new ArrayList<String>();
 		List<IConfigurationElement> list = Extensions.getExtensions(point);
 		for (IConfigurationElement ce : list) {
@@ -258,32 +250,31 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 				if (ignore != null && ignore.equals(ce.getName())) {
 					continue;
 				}
-				IDetailDisplay d =
-					(IDetailDisplay) ce.createExecutableExtension("CodeDetailDisplay"); //$NON-NLS-1$
-				
+				IDetailDisplay d = (IDetailDisplay) ce.createExecutableExtension("CodeDetailDisplay"); //$NON-NLS-1$
+
 				pageNames.add(d.getTitle().trim());
 			} catch (Exception ex) {
 				new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					"Fehler beim Laden von " + ce.getName(), ex, ElexisStatus.LOG_WARNINGS);
+						"Fehler beim Laden von " + ce.getName(), ex, ElexisStatus.LOG_WARNINGS);
 			}
 		}
 		return pageNames;
 	}
-	
+
 	@Override
-	public void init(IWorkbench workbench){
+	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	protected void performApply(){
+	protected void performApply() {
 		IStructuredSelection selection = (IStructuredSelection) cmbViewer.getSelection();
 		ViewType type = (ViewType) selection.getFirstElement();
-		
+
 		if (type != null) {
 			String listString = getListAsString(input);
-			
+
 			switch (type) {
 			case Leistungen:
 				ConfigServiceHolder.setUser(Preferences.USR_SERVICES_DIAGNOSES_SRV, listString);
@@ -300,60 +291,61 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 		}
 		super.performApply();
 	}
-	
+
 	class DropListener extends ViewerDropAdapter {
 		private final TableViewer viewer;
 		private boolean isUserSet;
-		
-		protected DropListener(Viewer viewer, boolean isUserSet){
+
+		protected DropListener(Viewer viewer, boolean isUserSet) {
 			super(viewer);
 			this.viewer = (TableViewer) viewer;
 			this.isUserSet = isUserSet;
 		}
-		
+
 		@Override
-		public boolean performDrop(Object data){
+		public boolean performDrop(Object data) {
 			if (isUserSet) {
 				input.add(data.toString());
 			} else {
 				aInput.add(data.toString());
 			}
 			viewer.refresh();
-			
+
 			return true;
 		}
-		
+
 		@Override
-		public boolean validateDrop(Object target, int operation, TransferData transferType){
+		public boolean validateDrop(Object target, int operation, TransferData transferType) {
 			return true;
 		}
 	}
-	
+
 	class DragListener implements DragSourceListener {
 		private final TableViewer viewer;
 		private boolean isUserSet;
 		private String movedValue;
-		
-		public DragListener(Viewer viewer, boolean isUserSet){
+
+		public DragListener(Viewer viewer, boolean isUserSet) {
 			this.viewer = (TableViewer) viewer;
 			this.isUserSet = isUserSet;
 		}
-		
+
 		@Override
-		public void dragSetData(DragSourceEvent event){
+		public void dragSetData(DragSourceEvent event) {
 			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 			String value = (String) selection.getFirstElement();
-			
+
 			if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
 				event.data = value;
 				movedValue = value;
 			}
 		}
-		
-		public void dragStart(DragSourceEvent event){}
-		
+
+		public void dragStart(DragSourceEvent event) {
+		}
+
 		@Override
-		public void dragFinished(DragSourceEvent event){
+		public void dragFinished(DragSourceEvent event) {
 			if (isUserSet) {
 				input.remove(movedValue);
 			} else {
@@ -361,6 +353,6 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 			}
 			viewer.refresh();
 		}
-		
+
 	}
 }

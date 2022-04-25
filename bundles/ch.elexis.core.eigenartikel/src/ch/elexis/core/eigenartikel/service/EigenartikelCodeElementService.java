@@ -19,54 +19,51 @@ import ch.elexis.core.types.ArticleTyp;
 
 @Component
 public class EigenartikelCodeElementService implements ICodeElementServiceContribution {
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
-	
+
 	@Override
-	public String getSystem(){
+	public String getSystem() {
 		return Constants.TYPE_NAME;
 	}
-	
+
 	@Override
-	public Optional<ICodeElement> loadFromCode(String code, Map<Object, Object> context){
+	public Optional<ICodeElement> loadFromCode(String code, Map<Object, Object> context) {
 		INamedQuery<IArticle> query = coreModelService.getNamedQuery(IArticle.class, "typ", "code");
-		
-		List<IArticle> found = query.executeWithParameters(
-			query.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "code", code));
+
+		List<IArticle> found = query
+				.executeWithParameters(query.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "code", code));
 		if (!found.isEmpty()) {
 			if (found.size() > 1) {
 				LoggerFactory.getLogger(getClass()).warn("Found more than one "
-					+ ArticleTyp.EIGENARTIKEL.getCodeSystemName() + " with code [" + code
-					+ "] using first");
+						+ ArticleTyp.EIGENARTIKEL.getCodeSystemName() + " with code [" + code + "] using first");
 			}
 			return Optional.of(found.get(0));
 		} else {
 			query = coreModelService.getNamedQuery(IArticle.class, "typ", "id");
-			found = query.executeWithParameters(
-				query.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "id", code));
+			found = query.executeWithParameters(query.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "id", code));
 			if (!found.isEmpty()) {
 				if (found.size() > 1) {
-					LoggerFactory.getLogger(getClass())
-						.warn("Found more than one " + ArticleTyp.EIGENARTIKEL.getCodeSystemName()
-							+ " with id [" + code + "] using first");
+					LoggerFactory.getLogger(getClass()).warn("Found more than one "
+							+ ArticleTyp.EIGENARTIKEL.getCodeSystemName() + " with id [" + code + "] using first");
 				}
 				return Optional.of(found.get(0));
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public CodeElementTyp getTyp(){
+	public CodeElementTyp getTyp() {
 		return CodeElementTyp.ARTICLE;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ICodeElement> getElements(Map<Object, Object> context){
+	public List<ICodeElement> getElements(Map<Object, Object> context) {
 		INamedQuery<IArticle> query = coreModelService.getNamedQuery(IArticle.class, "typ");
-		return (List<ICodeElement>) (List<?>) query.executeWithParameters(
-			query.getParameterMap("typ", ArticleTyp.EIGENARTIKEL));
+		return (List<ICodeElement>) (List<?>) query
+				.executeWithParameters(query.getParameterMap("typ", ArticleTyp.EIGENARTIKEL));
 	}
 }

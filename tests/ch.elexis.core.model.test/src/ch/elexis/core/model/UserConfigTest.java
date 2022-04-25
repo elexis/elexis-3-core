@@ -18,15 +18,15 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class UserConfigTest {
 	private IModelService modelService;
-	
+
 	private IContact contact1;
 	private IContact contact2;
-	
+
 	@Before
-	public void before(){
-		modelService = OsgiServiceUtil.getService(IModelService.class,
-			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
-		
+	public void before() {
+		modelService = OsgiServiceUtil
+				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+
 		contact1 = modelService.create(IContact.class);
 		contact1.setDescription1("test contact 1");
 		modelService.save(contact1);
@@ -34,27 +34,27 @@ public class UserConfigTest {
 		contact2.setDescription1("test contact 2");
 		modelService.save(contact2);
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		modelService.remove(contact1);
 		modelService.remove(contact2);
-		
+
 		OsgiServiceUtil.ungetService(modelService);
 		modelService = null;
 	}
-	
+
 	@Test
-	public void create(){
+	public void create() {
 		IUserConfig config = modelService.create(IUserConfig.class);
 		assertNotNull(config);
 		assertTrue(config instanceof IUserConfig);
-		
+
 		config.setOwner(contact1);
 		config.setKey("test key1");
 		config.setValue("test value 1");
 		modelService.save(config);
-		
+
 		// modelService.load is string only, hence not applicable to Userconfig
 //		Optional<IUserConfig> loadedConfig = modelService.load(config.getId(), IUserConfig.class);
 //		assertTrue(loadedConfig.isPresent());
@@ -62,24 +62,24 @@ public class UserConfigTest {
 //		assertEquals(config, loadedConfig.get());
 //		assertEquals(config.getValue(), loadedConfig.get().getValue());
 //		assertEquals(contact1, loadedConfig.get().getOwner());
-		
+
 		modelService.remove(config);
 	}
-	
+
 	@Test
-	public void query(){
+	public void query() {
 		IUserConfig config1 = modelService.create(IUserConfig.class);
 		config1.setOwner(contact1);
 		config1.setKey("test key 1");
 		config1.setValue("test value 1");
 		modelService.save(config1);
-		
+
 		IUserConfig config2 = modelService.create(IUserConfig.class);
 		config2.setOwner(contact2);
 		config2.setKey("test key 2");
 		config2.setValue("test value 2");
 		modelService.save(config2);
-		
+
 		IQuery<IUserConfig> query = modelService.getQuery(IUserConfig.class);
 		query.and(ModelPackage.Literals.IUSER_CONFIG__OWNER, COMPARATOR.EQUALS, contact2.getId());
 		List<IUserConfig> existing = query.execute();
@@ -89,7 +89,7 @@ public class UserConfigTest {
 		assertFalse(config2 == existing.get(0));
 		assertEquals(config2, existing.get(0));
 		assertEquals(config2.getValue(), existing.get(0).getValue());
-		
+
 		modelService.remove(config1);
 		modelService.remove(config2);
 	}

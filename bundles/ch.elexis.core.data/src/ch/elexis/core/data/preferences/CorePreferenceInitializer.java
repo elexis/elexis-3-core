@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -27,16 +27,16 @@ import ch.elexis.data.DBConnection;
 import ch.rgw.tools.StringTool;
 
 public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
-	
+
 	@Override
-	public void initializeDefaultPreferences(){
-		
+	public void initializeDefaultPreferences() {
+
 		// Datenbank
 		CoreHub.localCfg.set(Preferences.DB_NAME + SETTINGS_PREFERENCE_STORE_DEFAULT, "h2");
 		String base = getDefaultDBPath();
-		
+
 		CoreHub.localCfg.set(Preferences.DB_CONNECT + SETTINGS_PREFERENCE_STORE_DEFAULT,
-			"jdbc:h2:" + base + "/db;MODE=MySQL"); //$NON-NLS-1$ //$NON-NLS-2$
+				"jdbc:h2:" + base + "/db;MODE=MySQL"); //$NON-NLS-1$ //$NON-NLS-2$
 		CoreHub.localCfg.set(Preferences.DB_USERNAME + SETTINGS_PREFERENCE_STORE_DEFAULT, "sa"); //$NON-NLS-1$
 		CoreHub.localCfg.set(Preferences.DB_PWD + SETTINGS_PREFERENCE_STORE_DEFAULT, ""); //$NON-NLS-1$
 		CoreHub.localCfg.set(Preferences.DB_TYP + SETTINGS_PREFERENCE_STORE_DEFAULT, "mysql"); //$NON-NLS-1$
@@ -45,33 +45,31 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		if (!userhome.exists()) {
 			userhome.mkdirs();
 		}
-		
+
 		CoreHub.localCfg.set(Preferences.ABL_LOGALERT + SETTINGS_PREFERENCE_STORE_DEFAULT, 1);
 		CoreHub.localCfg.set(Preferences.ABL_LOGLEVEL + SETTINGS_PREFERENCE_STORE_DEFAULT, 2);
 		CoreHub.localCfg.set(Preferences.ABL_TRACE + SETTINGS_PREFERENCE_STORE_DEFAULT, "none"); //$NON-NLS-1$
-		CoreHub.localCfg.set(Preferences.ABL_BASEPATH + SETTINGS_PREFERENCE_STORE_DEFAULT,
-			userhome.getAbsolutePath());
+		CoreHub.localCfg.set(Preferences.ABL_BASEPATH + SETTINGS_PREFERENCE_STORE_DEFAULT, userhome.getAbsolutePath());
 		CoreHub.localCfg.set(Preferences.ABL_CACHELIFETIME + SETTINGS_PREFERENCE_STORE_DEFAULT,
-			DBConnection.CACHE_DEFAULT_LIFETIME);
+				DBConnection.CACHE_DEFAULT_LIFETIME);
 		CoreHub.localCfg.set(Preferences.ABL_HEARTRATE + SETTINGS_PREFERENCE_STORE_DEFAULT, 30);
-		CoreHub.localCfg.set(Preferences.ABL_BASEPATH + SETTINGS_PREFERENCE_STORE_DEFAULT,
-			userhome.getAbsolutePath());
-		
+		CoreHub.localCfg.set(Preferences.ABL_BASEPATH + SETTINGS_PREFERENCE_STORE_DEFAULT, userhome.getAbsolutePath());
+
 		String string = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, "null");
 		if ("null".equals(string)) {
 			CoreHub.localCfg.set(Preferences.STATION_IDENT_ID,
-				Long.toString(Timestamp.valueOf(LocalDateTime.now()).toInstant().toEpochMilli()));
+					Long.toString(Timestamp.valueOf(LocalDateTime.now()).toInstant().toEpochMilli()));
 		}
-		
+
 		// Texterstellung
 		if (System.getProperty("os.name").toLowerCase().startsWith("win")) { //$NON-NLS-1$ //$NON-NLS-2$
 			if (CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null) == null
-				|| CoreHub.localCfg.get(Preferences.P_TEXTMODUL, "").equals(StringTool.leer)) {
+					|| CoreHub.localCfg.get(Preferences.P_TEXTMODUL, "").equals(StringTool.leer)) {
 				CoreHub.localCfg.set(Preferences.P_TEXTMODUL, "NOA-Text"); //$NON-NLS-1$
 			}
 		} else {
 			if (CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null) == null
-				|| CoreHub.localCfg.get(Preferences.P_TEXTMODUL, "").equals(StringTool.leer)) {
+					|| CoreHub.localCfg.get(Preferences.P_TEXTMODUL, "").equals(StringTool.leer)) {
 				CoreHub.localCfg.set(Preferences.P_TEXTMODUL, "OpenOffice Wrapper");
 			}
 		}
@@ -84,39 +82,38 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 			defaultbase = CoreHub.localCfg.get(Preferences.P_OOBASEDIR, "."); //$NON-NLS-1$
 		}
 		System.setProperty("openoffice.path.name", defaultbase); //$NON-NLS-1$
-		CoreHub.localCfg.set(Preferences.P_OOBASEDIR + SETTINGS_PREFERENCE_STORE_DEFAULT,
-			defaultbase);
+		CoreHub.localCfg.set(Preferences.P_OOBASEDIR + SETTINGS_PREFERENCE_STORE_DEFAULT, defaultbase);
 		CoreHub.localCfg.set(Preferences.P_OOBASEDIR, defaultbase);
-		
+
 		// Dokument
 		StringBuilder sb = new StringBuilder();
 		sb.append("Alle,").append(Brief.UNKNOWN).append(",").append(Brief.AUZ).append(",") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			.append(Brief.RP).append(",").append(Brief.LABOR); //$NON-NLS-1$
-		
-		CoreHub.localCfg.set(Preferences.DOC_CATEGORY + SETTINGS_PREFERENCE_STORE_DEFAULT,
-			sb.toString());
+				.append(Brief.RP).append(",").append(Brief.LABOR); //$NON-NLS-1$
+
+		CoreHub.localCfg.set(Preferences.DOC_CATEGORY + SETTINGS_PREFERENCE_STORE_DEFAULT, sb.toString());
 		CoreHub.localCfg.flush();
 	}
-	
+
 	/**
-	 * Diese Funktion wird nach erstem Erstellen der Datenbank (d.h. nur ein einziges Mal)
-	 * aufgerufen und belegt globale Voreinstellungen. Hier alle im ganzen Netzwerk und für alle
-	 * Benutzer gültigen Voreinstellungen eintragen
-	 * 
+	 * Diese Funktion wird nach erstem Erstellen der Datenbank (d.h. nur ein
+	 * einziges Mal) aufgerufen und belegt globale Voreinstellungen. Hier alle im
+	 * ganzen Netzwerk und für alle Benutzer gültigen Voreinstellungen eintragen
+	 *
 	 */
-	public void initializeGlobalPreferences(){
+	public void initializeGlobalPreferences() {
 		ConfigServiceHolder.setGlobal(Preferences.ABL_TRACE + SETTINGS_PREFERENCE_STORE_DEFAULT, "none");
 	}
-	
+
 	/**
-	 * Diese Funktion wird ebenfalls nur beim ersten Mal nach dem Erstellen der Datenbank aufgerufen
-	 * und erledigt die Vorkonfiguration der Zugriffsrechte Hier alle Zugriffsrechte voreinstellen
+	 * Diese Funktion wird ebenfalls nur beim ersten Mal nach dem Erstellen der
+	 * Datenbank aufgerufen und erledigt die Vorkonfiguration der Zugriffsrechte
+	 * Hier alle Zugriffsrechte voreinstellen
 	 */
-	public void initializeGrants(){
+	public void initializeGrants() {
 		ACE.initializeACEDefaults(false);
 	}
-	
-	public static String getDefaultDBPath(){
+
+	public static String getDefaultDBPath() {
 		String base;
 		File f = new File(CoreHub.getBasePath() + "/rsc/demodata"); //$NON-NLS-1$
 		if (f.exists() && f.canWrite()) {
@@ -137,5 +134,5 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		}
 		return base;
 	}
-	
+
 }

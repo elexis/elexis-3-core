@@ -4,18 +4,19 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.slf4j.LoggerFactory;
 
 /**
- * Safely convert a string to an int value. null or empty values are handled as value 0.
- * 
+ * Safely convert a string to an int value. null or empty values are handled as
+ * value 0.
+ *
  * @since 3.8
  */
 public class ZeroDefaultIntegerStringConverter extends Converter<String, Integer> {
-	
-	public ZeroDefaultIntegerStringConverter(){
+
+	public ZeroDefaultIntegerStringConverter() {
 		super(String.class, Integer.class);
 	}
-	
+
 	@Override
-	public Integer convert(String fromObject){
+	public Integer convert(String fromObject) {
 		if (fromObject != null && fromObject.length() > 0) {
 			try {
 				int value = Integer.valueOf(fromObject);
@@ -26,5 +27,5 @@ public class ZeroDefaultIntegerStringConverter extends Converter<String, Integer
 		}
 		return 0;
 	}
-	
+
 }

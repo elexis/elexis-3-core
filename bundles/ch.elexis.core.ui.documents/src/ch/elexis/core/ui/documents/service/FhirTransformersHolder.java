@@ -12,24 +12,22 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 
-
 @Component
 public class FhirTransformersHolder {
-	private static List<IFhirTransformer<?, ?>> transformers =
-		new ArrayList<IFhirTransformer<?, ?>>();
-	
+	private static List<IFhirTransformer<?, ?>> transformers = new ArrayList<IFhirTransformer<?, ?>>();
+
 	private static HashMap<String, IFhirTransformer<?, ?>> cache = new HashMap<>();
-	
+
 	@Reference(cardinality = ReferenceCardinality.AT_LEAST_ONE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public synchronized void bindFhirTransformer(IFhirTransformer<?, ?> transformer){
+	public synchronized void bindFhirTransformer(IFhirTransformer<?, ?> transformer) {
 		transformers.add(transformer);
 	}
-	
-	public void unbindFhirTransformer(IFhirTransformer<?, ?> transformer){
+
+	public void unbindFhirTransformer(IFhirTransformer<?, ?> transformer) {
 		transformers.remove(transformer);
 	}
-	
-	public static IFhirTransformer<?, ?> getTransformerFor(Class<?> fhirClazz, Class<?> localClazz){
+
+	public static IFhirTransformer<?, ?> getTransformerFor(Class<?> fhirClazz, Class<?> localClazz) {
 		String lookupString = fhirClazz.getName() + "-" + localClazz.getName();
 		IFhirTransformer<?, ?> ret = cache.get(lookupString);
 		if (ret == null) {

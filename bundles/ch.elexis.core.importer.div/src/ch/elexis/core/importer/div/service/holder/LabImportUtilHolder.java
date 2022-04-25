@@ -9,13 +9,13 @@ import ch.elexis.core.importer.div.importers.ILabImportUtil;
 @Component
 public class LabImportUtilHolder {
 	private static ILabImportUtil labImportUtil;
-	
+
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)
-	public void setModelService(ILabImportUtil labImportUtil){
+	public void setModelService(ILabImportUtil labImportUtil) {
 		LabImportUtilHolder.labImportUtil = labImportUtil;
 	}
-	
-	public static ILabImportUtil get(){
+
+	public static ILabImportUtil get() {
 		if (labImportUtil == null) {
 			throw new IllegalStateException("No ILabImportUtil available");
 		}

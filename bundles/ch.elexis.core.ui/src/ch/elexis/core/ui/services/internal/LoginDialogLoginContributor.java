@@ -13,21 +13,21 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 @Component(property = "id=login.dialog")
 public class LoginDialogLoginContributor implements ILoginContributor {
-	
+
 	@Override
-	public int getPriority(){
+	public int getPriority() {
 		return 0;
 	}
-	
+
 	@Override
-	public IUser performLogin(Object shell) throws LoginException{
-		
+	public IUser performLogin(Object shell) throws LoginException {
+
 		ILoginContributor elexisEnvironmentLoginContributor = OsgiServiceUtil
-			.getService(ILoginContributor.class, "(id=login.elexisenvironment)").orElse(null);
-		
+				.getService(ILoginContributor.class, "(id=login.elexisenvironment)").orElse(null);
+
 		if (shell instanceof Shell) {
-			LocalUserLoginDialog loginDialog =
-				new LocalUserLoginDialog(new Shell((Shell) shell), elexisEnvironmentLoginContributor);
+			LocalUserLoginDialog loginDialog = new LocalUserLoginDialog(new Shell((Shell) shell),
+					elexisEnvironmentLoginContributor);
 			loginDialog.create();
 			loginDialog.getShell().setText(Messages.LoginDialog_loginHeader);
 			loginDialog.setTitle(Messages.LoginDialog_notLoggedIn);
@@ -39,8 +39,8 @@ public class LoginDialogLoginContributor implements ILoginContributor {
 				return elexisEnvironmentLoginContributor.performLogin(shell);
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 }

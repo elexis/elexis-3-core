@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -12,10 +12,10 @@ package ch.elexis.core.data.services;
 
 /**
  * Descriptors of some standardized services.
- * 
+ *
  * @see ch.elexis.util.Extensions#findBestService(String)
  * @author Gerry Weirich
- * 
+ *
  */
 public class GlobalServiceDescriptors {
 	/** Scan Documents */

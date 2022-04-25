@@ -11,21 +11,21 @@ public class SavingUpdateValueStrategy<S, D> extends UpdateValueStrategy<S, D> {
 	private boolean autoSave;
 	private IModelService modelService;
 	private IObservableValue<?> observable;
-	
-	public SavingUpdateValueStrategy(IModelService modelService, IObservableValue<?> observable){
+
+	public SavingUpdateValueStrategy(IModelService modelService, IObservableValue<?> observable) {
 		this.modelService = modelService;
 		this.observable = observable;
 		this.autoSave = true;
 	}
-	
-	public SavingUpdateValueStrategy setAutoSave(boolean value){
+
+	public SavingUpdateValueStrategy setAutoSave(boolean value) {
 		autoSave = value;
 		return this;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
-	protected IStatus doSet(IObservableValue observableValue, Object value){
+	protected IStatus doSet(IObservableValue observableValue, Object value) {
 		IStatus ret = super.doSet(observableValue, (D) value);
 		if (autoSave) {
 			if (observable.getValue() instanceof Identifiable) {

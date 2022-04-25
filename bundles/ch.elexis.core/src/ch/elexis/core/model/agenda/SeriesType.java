@@ -2,18 +2,18 @@ package ch.elexis.core.model.agenda;
 
 public enum SeriesType {
 	DAILY('D'), WEEKLY('W'), MONTHLY('M'), YEARLY('Y');
-	
+
 	private char seriesTypeCharacter;
-	
-	private SeriesType(char seriesTypeCharacter){
+
+	private SeriesType(char seriesTypeCharacter) {
 		this.seriesTypeCharacter = seriesTypeCharacter;
 	}
-	
-	public char getSeriesTypeCharacter(){
+
+	public char getSeriesTypeCharacter() {
 		return seriesTypeCharacter;
 	}
-	
-	public static SeriesType getForCharacter(char c){
+
+	public static SeriesType getForCharacter(char c) {
 		switch (c) {
 		case 'D':
 			return SeriesType.DAILY;

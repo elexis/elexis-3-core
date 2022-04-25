@@ -8,13 +8,13 @@ import ch.elexis.core.services.IAccountService;
 @Component
 public class AccountServiceHolder {
 	private static IAccountService accountService;
-	
+
 	@Reference
-	public void setAccountService(IAccountService accountService){
+	public void setAccountService(IAccountService accountService) {
 		AccountServiceHolder.accountService = accountService;
 	}
-	
-	public static IAccountService get(){
+
+	public static IAccountService get() {
 		return accountService;
 	}
 }

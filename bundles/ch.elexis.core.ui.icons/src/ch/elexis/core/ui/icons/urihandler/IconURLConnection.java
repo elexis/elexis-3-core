@@ -12,16 +12,16 @@ import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 
 public class IconURLConnection extends URLConnection {
-	
+
 	private static Logger log = LoggerFactory.getLogger(IconURLConnection.class);
-	
+
 	private String iconName;
-	
+
 	private String iconPath;
-	
+
 	private int zoom;
-	
-	protected IconURLConnection(URL url){
+
+	protected IconURLConnection(URL url) {
 		super(url);
 		iconName = url.getAuthority();
 		zoom = 100;
@@ -30,8 +30,8 @@ public class IconURLConnection extends URLConnection {
 			zoom = getZoom();
 		}
 	}
-	
-	private int getZoom(){
+
+	private int getZoom() {
 		if (iconPath.toLowerCase().endsWith("@2x.png")) {
 			return 200;
 		} else if (iconPath.toLowerCase().endsWith("@1.5x.png")) {
@@ -39,9 +39,9 @@ public class IconURLConnection extends URLConnection {
 		}
 		return 100;
 	}
-	
+
 	@Override
-	public InputStream getInputStream() throws IOException{
+	public InputStream getInputStream() throws IOException {
 		try {
 			Images selectedIcon = Images.valueOf(iconName);
 			if (zoom == 100) {
@@ -54,7 +54,8 @@ public class IconURLConnection extends URLConnection {
 			return Images.IMG_CLEAR.getImageAsInputStream(ImageSize._16x16_DefaultIconSize);
 		}
 	}
-	
+
 	@Override
-	public void connect() throws IOException{}
+	public void connect() throws IOException {
+	}
 }

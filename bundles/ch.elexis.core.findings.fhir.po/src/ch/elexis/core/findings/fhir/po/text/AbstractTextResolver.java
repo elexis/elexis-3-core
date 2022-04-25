@@ -9,21 +9,20 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 
 public abstract class AbstractTextResolver implements ITextResolver {
-	
+
 	private static FindingsDataAccessor ACCESSOR;
-	
-	public static synchronized IDataAccess getAccessor(){
+
+	public static synchronized IDataAccess getAccessor() {
 		if (ACCESSOR == null) {
 			ACCESSOR = new FindingsDataAccessor();
 		}
 		return ACCESSOR;
 	}
-	
-	protected Optional<String> getFindingsText(Object object, String dataAccessDescriptor){
+
+	protected Optional<String> getFindingsText(Object object, String dataAccessDescriptor) {
 		Result<Object> result = null;
 		if (object instanceof PersistentObject) {
-			result = getAccessor().getObject(dataAccessDescriptor, (PersistentObject) object, null,
-				null);
+			result = getAccessor().getObject(dataAccessDescriptor, (PersistentObject) object, null, null);
 		} else {
 			result = getAccessor().getObject(dataAccessDescriptor, null, null, null);
 		}

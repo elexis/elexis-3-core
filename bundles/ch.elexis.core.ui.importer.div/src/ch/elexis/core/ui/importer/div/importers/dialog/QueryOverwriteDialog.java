@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.importers.dialog;
 
@@ -23,67 +23,64 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class QueryOverwriteDialog extends Dialog {
-	
+
 	private String _title;
 	private String _message;
-	
+
 	/**
 	 * Create the dialog.
-	 * 
+	 *
 	 * @param parentShell
 	 */
-	public QueryOverwriteDialog(Shell parentShell, final String title, final String message){
+	public QueryOverwriteDialog(Shell parentShell, final String title, final String message) {
 		super(parentShell);
 		_title = title;
 		_message = message;
 	}
-	
+
 	/**
 	 * Create contents of the dialog.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		container.setLayout(new GridLayout(1, false));
-		
+
 		Label lblMessage = new Label(container, SWT.NONE);
 		lblMessage.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
 		lblMessage.setText(_message);
-		
+
 		return container;
 	}
-	
+
 	@Override
-	protected void configureShell(Shell newShell){
+	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(_title);
 	}
-	
+
 	/**
 	 * Create contents of the button bar.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
-		Button buttonNo =
-			createButton(parent, IDialogConstants.NO_ID, IDialogConstants.OK_LABEL, true);
+	protected void createButtonsForButtonBar(Composite parent) {
+		Button buttonNo = createButton(parent, IDialogConstants.NO_ID, IDialogConstants.OK_LABEL, true);
 		buttonNo.setText(Messages.QueryOverwriteDialog_NO);
-		Button buttonYesToAll =
-			createButton(parent, IDialogConstants.YES_TO_ALL_ID, IDialogConstants.CANCEL_LABEL,
+		Button buttonYesToAll = createButton(parent, IDialogConstants.YES_TO_ALL_ID, IDialogConstants.CANCEL_LABEL,
 				false);
 		buttonYesToAll.setText(Messages.QueryOverwriteDialog_YESTOALL);
-		Button buttonYes =
-			createButton(parent, IDialogConstants.YES_ID, IDialogConstants.CANCEL_LABEL, false);
+		Button buttonYes = createButton(parent, IDialogConstants.YES_ID, IDialogConstants.CANCEL_LABEL, false);
 		buttonYes.setText(Messages.QueryOverwriteDialog_YES);
 	}
-	
+
 	@Override
-	protected void buttonPressed(int buttonId){
+	protected void buttonPressed(int buttonId) {
 		setReturnCode(buttonId);
 		close();
 	}
-	
+
 }

@@ -12,22 +12,22 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class MultiLineTextCellEditor extends DialogCellEditor {
-	
+
 	public class MultiLineTextDialog extends StatusDialog {
 		private Text text;
 		private String initialValue;
 		private String value;
-		
-		protected MultiLineTextDialog(Shell parentShell){
+
+		protected MultiLineTextDialog(Shell parentShell) {
 			super(parentShell);
 		}
-		
-		public String getText(){
+
+		public String getText() {
 			return value;
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			Composite composite = new Composite(parent, SWT.NONE);
 			GridData data = new GridData(GridData.FILL, GridData.FILL, true, true);
 			data.minimumWidth = 500;
@@ -38,35 +38,35 @@ public class MultiLineTextCellEditor extends DialogCellEditor {
 			text.setText(initialValue);
 			return composite;
 		}
-		
-		public int open(String value){
+
+		public int open(String value) {
 			initialValue = value;
 			return super.open();
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			value = text.getText();
 			super.okPressed();
 		}
 	}
-	
-	public MultiLineTextCellEditor(Composite parent){
+
+	public MultiLineTextCellEditor(Composite parent) {
 		super(parent);
 	}
-	
+
 	@Override
-	protected Object openDialogBox(Control cellEditorWindow){
+	protected Object openDialogBox(Control cellEditorWindow) {
 		MultiLineTextDialog dialog = new MultiLineTextDialog(cellEditorWindow.getShell());
 		dialog.setTitle(Messages.MultiLineTextCellEditor_title);
-		
+
 		int result = -1;
 		if (getValue() != null) {
 			result = dialog.open(getValue().toString());
 		} else {
 			result = dialog.open(""); //$NON-NLS-1$
 		}
-		
+
 		if (result == Dialog.OK) {
 			return dialog.getText();
 		} else {

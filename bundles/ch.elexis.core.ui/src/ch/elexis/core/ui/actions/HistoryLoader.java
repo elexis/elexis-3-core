@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.actions;
@@ -33,12 +33,12 @@ import ch.rgw.tools.VersionedResource;
 
 /**
  * Texte früherer Konsultationen asynchron nachladen.
- * 
+ *
  * @author Gerry
- * 
+ *
  */
 public class HistoryLoader extends BackgroundJob {
-	
+
 	private StringBuilder sb;
 	private List<IEncounter> lKons;
 	private KonsFilter filter;
@@ -46,26 +46,25 @@ public class HistoryLoader extends BackgroundJob {
 	private final int currentPage;
 	private final int pageSize;
 	boolean multiline = false;
-	
-	public void setFilter(final KonsFilter kf){
+
+	public void setFilter(final KonsFilter kf) {
 		filter = kf;
 	}
-	
+
 	/*
 	 * multine == true: show Konsultation text with newlines
 	 */
-	public HistoryLoader(final StringBuilder sb, final List<IEncounter> lKons){
+	public HistoryLoader(final StringBuilder sb, final List<IEncounter> lKons) {
 		this(sb, lKons, false);
 	}
-	
-	public HistoryLoader(final StringBuilder sb, final List<IEncounter> lKons,
-		final boolean multiline){
+
+	public HistoryLoader(final StringBuilder sb, final List<IEncounter> lKons, final boolean multiline) {
 		this(sb, lKons, multiline, 0, 0);
 	}
-	
-	public HistoryLoader(final StringBuilder sb, final List<IEncounter> paramlKons,
-		final boolean multiline, final int currentPage, final int pageSize){
-		super(Messages.HistoryLoader_LoadKonsMessage); //$NON-NLS-1$
+
+	public HistoryLoader(final StringBuilder sb, final List<IEncounter> paramlKons, final boolean multiline,
+			final int currentPage, final int pageSize) {
+		super(Messages.HistoryLoader_LoadKonsMessage); // $NON-NLS-1$
 		this.sb = sb;
 		this.lKons = new ArrayList<IEncounter>(paramlKons);
 		this.multiline = multiline;
@@ -74,22 +73,22 @@ public class HistoryLoader extends BackgroundJob {
 		this.currentPage = currentPage;
 		this.pageSize = pageSize;
 	}
-	
+
 	@Override
-	public synchronized IStatus execute(final IProgressMonitor monitor){
-		monitor.beginTask(Messages.HistoryLoader_LoadKonsMessage, lKons.size() + 100); //$NON-NLS-1$
-		monitor.subTask(Messages.HistoryLoader_Sorting); //$NON-NLS-1$
+	public synchronized IStatus execute(final IProgressMonitor monitor) {
+		monitor.beginTask(Messages.HistoryLoader_LoadKonsMessage, lKons.size() + 100); // $NON-NLS-1$
+		monitor.subTask(Messages.HistoryLoader_Sorting); // $NON-NLS-1$
 		if (lKons.isEmpty()) {
 			return Status.OK_STATUS;
 		}
-		
+
 		Collections.sort(lKons, new Comparator<IEncounter>() {
 			@Override
-			public int compare(final IEncounter o1, final IEncounter o2){
+			public int compare(final IEncounter o1, final IEncounter o2) {
 				if ((o1 == null) || (o2 == null)) {
 					return 0;
 				}
-				
+
 				int sort = o2.getDate().compareTo(o1.getDate());
 				if (sort != 0) {
 					return sort;
@@ -97,12 +96,12 @@ public class HistoryLoader extends BackgroundJob {
 				return Long.compare(o2.getLastupdate(), o1.getLastupdate());
 			}
 		});
-		
+
 		if (currentPage > 0 && pageSize > 0) {
 			// lazy loading via pagination
 			int fromIdx = (currentPage - 1) * pageSize;
 			int toIdx = currentPage * pageSize;
-			
+
 			// upper limit corrections
 			if (toIdx > lKons.size()) {
 				toIdx = lKons.size();
@@ -112,17 +111,16 @@ public class HistoryLoader extends BackgroundJob {
 			if (fromIdx < 0) {
 				fromIdx = 0;
 			}
-			lKons =
-				new ArrayList<IEncounter>(fromIdx < toIdx ? lKons.subList(fromIdx, toIdx) : lKons);
+			lKons = new ArrayList<IEncounter>(fromIdx < toIdx ? lKons.subList(fromIdx, toIdx) : lKons);
 		} else {
 			lKons = new ArrayList<IEncounter>(lKons);
 		}
 		monitor.worked(50);
-		
+
 		ICoverage selectedFall = ContextServiceHolder.get().getActiveCoverage().orElse(null);
 		Iterator<IEncounter> it = lKons.iterator();
 		sb.append("<form>"); //$NON-NLS-1$
-		//@TODO convert to jpa
+		// @TODO convert to jpa
 		globalFilter = ObjectFilterRegistry.getInstance().getFilterFor(Konsultation.class);
 		while (!monitor.isCanceled()) {
 			if (!it.hasNext()) {
@@ -159,7 +157,7 @@ public class HistoryLoader extends BackgroundJob {
 						// replace remaining "manual" line separators
 						s = s.replaceAll("\n", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					
+
 				} else {
 					s = ""; //$NON-NLS-1$
 				}
@@ -167,43 +165,42 @@ public class HistoryLoader extends BackgroundJob {
 				// make kons text grey if kons Fall is not the selected Fall
 				if (selectedFall != null && !selectedFall.equals(k.getCoverage())) {
 					sb.append("<p><a href=\"") //$NON-NLS-1$
-						.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
-						.append(label).append("</a><br/>") //$NON-NLS-1$
-						.append("<span color=\"gruen\">") //$NON-NLS-1$
-						.append(maskHTML(k.getCoverage().getLabel()))
-						.append("</span><br/><span color=\"gruen\">") //$NON-NLS-1$
-						.append(s).append("</span></p>"); //$NON-NLS-1$
+							.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
+							.append(label).append("</a><br/>") //$NON-NLS-1$
+							.append("<span color=\"gruen\">") //$NON-NLS-1$
+							.append(maskHTML(k.getCoverage().getLabel())).append("</span><br/><span color=\"gruen\">") //$NON-NLS-1$
+							.append(s).append("</span></p>"); //$NON-NLS-1$
 				} else {
 					sb.append("<p><a href=\"") //$NON-NLS-1$
-						.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
-						.append(label).append("</a><br/>") //$NON-NLS-1$
-						.append("<span color=\"gruen\">") //$NON-NLS-1$
-						.append(maskHTML(k.getCoverage().getLabel())).append("</span><br/>") //$NON-NLS-1$
-						.append(s).append("</p>"); //$NON-NLS-1$
+							.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
+							.append(label).append("</a><br/>") //$NON-NLS-1$
+							.append("<span color=\"gruen\">") //$NON-NLS-1$
+							.append(maskHTML(k.getCoverage().getLabel())).append("</span><br/>") //$NON-NLS-1$
+							.append(s).append("</p>"); //$NON-NLS-1$
 				}
 			}
 			monitor.worked(1);
-			
+
 		}
 		sb.setLength(0);
 		monitor.done();
 		return Status.CANCEL_STATUS;
 	}
-	
-	private String maskHTML(String input){
+
+	private String maskHTML(String input) {
 		String s = input.replaceAll("<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
 		s = s.replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$
 		s = s.replaceAll("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
 		return s;
 	}
-	
+
 	@Override
-	public int getSize(){
+	public int getSize() {
 		return lKons.size();
 	}
-	
-	public List<IEncounter> getlKons(){
+
+	public List<IEncounter> getlKons() {
 		return lKons;
 	}
-	
+
 }

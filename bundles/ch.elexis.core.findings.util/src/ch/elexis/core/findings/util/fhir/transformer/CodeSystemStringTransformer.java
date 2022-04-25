@@ -20,15 +20,14 @@ import ch.elexis.core.findings.util.fhir.transformer.helper.CodeSystemUtil;
 
 @Component
 public class CodeSystemStringTransformer implements IFhirTransformer<CodeSystem, String> {
-	
+
 	@Reference
 	private ICodingService codingService;
-	
+
 	private HashMap<String, CodeSystem> idMap = new HashMap<>();
-	
+
 	@Override
-	public Optional<CodeSystem> getFhirObject(String localObject, SummaryEnum summaryEnum,
-		Set<Include> includes){
+	public Optional<CodeSystem> getFhirObject(String localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		CodeSystem ret = null;
 		Optional<String> idString = CodeSystemUtil.getIdForString(localObject);
 		Optional<String> systemString = CodeSystemUtil.getSystemForId(idString.get());
@@ -42,7 +41,7 @@ public class CodeSystemStringTransformer implements IFhirTransformer<CodeSystem,
 						system.setId(idString.get());
 						system.setUrl(systemString.get());
 						List<ConceptDefinitionComponent> concepts = codes.stream()
-							.map(iCoding -> codingToConcept(iCoding)).collect(Collectors.toList());
+								.map(iCoding -> codingToConcept(iCoding)).collect(Collectors.toList());
 						system.setConcept(concepts);
 						idMap.put(idString.get(), system);
 						ret = system;
@@ -52,33 +51,32 @@ public class CodeSystemStringTransformer implements IFhirTransformer<CodeSystem,
 		}
 		return Optional.ofNullable(ret);
 	}
-	
-	private ConceptDefinitionComponent codingToConcept(ICoding iCoding){
-		return new ConceptDefinitionComponent().setCode(iCoding.getCode())
-			.setDisplay(iCoding.getDisplay());
+
+	private ConceptDefinitionComponent codingToConcept(ICoding iCoding) {
+		return new ConceptDefinitionComponent().setCode(iCoding.getCode()).setDisplay(iCoding.getDisplay());
 	}
-	
+
 	@Override
-	public Optional<String> getLocalObject(CodeSystem fhirObject){
+	public Optional<String> getLocalObject(CodeSystem fhirObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public Optional<String> updateLocalObject(CodeSystem fhirObject, String localObject){
+	public Optional<String> updateLocalObject(CodeSystem fhirObject, String localObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public Optional<String> createLocalObject(CodeSystem fhirObject){
+	public Optional<String> createLocalObject(CodeSystem fhirObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz){
+	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz) {
 		return CodeSystem.class.equals(fhirClazz) && String.class.equals(localClazz);
 	}
-	
+
 }

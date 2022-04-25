@@ -9,20 +9,20 @@ import ch.elexis.core.server.ILockService;
  * Used in standalone mode
  */
 public class AcceptAllLockService implements ILockService {
-	
+
 	@Override
-	public LockResponse acquireOrReleaseLocks(LockRequest request){
+	public LockResponse acquireOrReleaseLocks(LockRequest request) {
 		return LockResponse.OK(request.getLockInfo());
 	}
-	
+
 	@Override
-	public boolean isLocked(LockRequest request){
+	public boolean isLocked(LockRequest request) {
 		return true;
 	}
-	
+
 	@Override
-	public LockInfo getLockInfo(String storeToString){
+	public LockInfo getLockInfo(String storeToString) {
 		return null;
 	}
-	
+
 }

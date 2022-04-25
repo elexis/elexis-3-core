@@ -19,74 +19,72 @@ public class TextTemplateImportConflictDialog extends TitleAreaDialog {
 	private String name;
 	private Button btnReplace, btnChangeName, btnSkip;
 	private Text txtNewName;
-	
+
 	private String newFilename;
 	private boolean replaceTemplate, changeTemplateName, skipTemplate;
-	
-	public TextTemplateImportConflictDialog(Shell parentShell, String name){
+
+	public TextTemplateImportConflictDialog(Shell parentShell, String name) {
 		super(parentShell);
 		this.name = name;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite area = new Composite(parent, SWT.NONE);
 		area.setLayout(new GridLayout(1, false));
 		area.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		setMessage("Eine Vorlage mit dem Namen '" + name
-			+ "' besteht bereits. Wie soll vorgegangen werden?");
+		setMessage("Eine Vorlage mit dem Namen '" + name + "' besteht bereits. Wie soll vorgegangen werden?");
 		setTitle("Vorlage existiert bereits");
-		
+
 		btnReplace = new Button(area, SWT.RADIO);
 		btnReplace.setText("Ersetzen (Bestehende Vorlage wird überschrieben)");
 		btnReplace.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				clearAndDisableTextField();
 			}
 		});
-		
+
 		btnChangeName = new Button(area, SWT.RADIO);
 		btnChangeName.setText("Name der Vorlage ändern zu");
 		btnChangeName.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				txtNewName.setEnabled(true);
 			}
 		});
-		
+
 		txtNewName = new Text(area, SWT.BORDER);
 		txtNewName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtNewName.setEnabled(false);
-		
+
 		btnSkip = new Button(area, SWT.RADIO);
 		btnSkip.setText("Vorlage nicht importieren");
 		btnSkip.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				clearAndDisableTextField();
 			}
 		});
-		
+
 		return area;
 	}
-	
+
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, "OK", true);
 	}
-	
-	private void clearAndDisableTextField(){
+
+	private void clearAndDisableTextField() {
 		txtNewName.setText("");
 		txtNewName.setEnabled(false);
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		if (btnChangeName.getSelection()) {
 			if (txtNewName.getText().isEmpty()) {
-				SWTHelper.alert("Fehlende Bezeichnung",
-					"Neuer Name der Vorlage muss definiert werden!");
+				SWTHelper.alert("Fehlende Bezeichnung", "Neuer Name der Vorlage muss definiert werden!");
 				return;
 			}
 			this.newFilename = txtNewName.getText();
@@ -94,28 +92,28 @@ public class TextTemplateImportConflictDialog extends TitleAreaDialog {
 		replaceTemplate = btnReplace.getSelection();
 		changeTemplateName = btnChangeName.getSelection();
 		skipTemplate = btnSkip.getSelection();
-		
+
 		super.okPressed();
 	}
-	
+
 	@Override
-	protected boolean canHandleShellCloseEvent(){
+	protected boolean canHandleShellCloseEvent() {
 		return false;
 	}
-	
-	public boolean doReplaceTemplate(){
+
+	public boolean doReplaceTemplate() {
 		return replaceTemplate;
 	}
-	
-	public boolean doChangeTemplateName(){
+
+	public boolean doChangeTemplateName() {
 		return changeTemplateName;
 	}
-	
-	public boolean doSkipTemplate(){
+
+	public boolean doSkipTemplate() {
 		return skipTemplate;
 	}
-	
-	public String getNewName(){
+
+	public String getNewName() {
 		return newFilename;
 	}
 }

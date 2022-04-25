@@ -3,14 +3,14 @@
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  * IBM - Initial API and implementation
  **********************************************************************/
 package ch.elexis.core.ui.text;
 
 public class Messages {
-	
+
 	public static String EnhancedTextField_5 = ch.elexis.core.l10n.Messages.EnhancedTextField_5;
 	public static String EnhancedTextField_RemoveXref = ch.elexis.core.l10n.Messages.EnhancedTextField_RemoveXref;
 	public static String EnhancedTextField_ThisChargeIsInvalid = ch.elexis.core.l10n.Messages.EnhancedTextField_ThisChargeIsInvalid;
@@ -58,4 +58,4 @@ public class Messages {
 	public static String TextContainer_TemplateTitleEmptyBody = ch.elexis.core.l10n.Messages.TextContainer_TemplateTitleEmptyBody;
 	public static String TextContainer_TemplateTitleEmptyCaption = ch.elexis.core.l10n.Messages.TextContainer_TemplateTitleEmptyCaption;
 	public static String TextContainer_UnrecognizedFieldType = ch.elexis.core.l10n.Messages.TextContainer_UnrecognizedFieldType;
-	}
+}

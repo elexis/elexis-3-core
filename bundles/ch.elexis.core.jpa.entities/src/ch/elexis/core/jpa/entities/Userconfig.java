@@ -18,9 +18,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "userconfig")
 @EntityListeners(EntityWithIdListener.class)
-@OptimisticLocking(type = OptimisticLockingType.SELECTED_COLUMNS, selectedColumns = {
-	@Column(name = "LASTUPDATE")
-})
+@OptimisticLocking(type = OptimisticLockingType.SELECTED_COLUMNS, selectedColumns = { @Column(name = "LASTUPDATE") })
 @IdClass(UserconfigId.class)
 @Cache(expiry = 15000)
 @NamedQuery(name = "Userconfig.ownerid.param", query = "SELECT uc FROM Userconfig uc WHERE uc.ownerId = :ownerid AND uc.param = :param")
@@ -28,15 +26,15 @@ public class Userconfig extends AbstractEntityWithId implements EntityWithId {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@Column(name = "UserID")
 	private String ownerId;
-	
+
 	@Id
 	@Column(unique = true, nullable = false, length = 80)
 	private String param;
-	
+
 	@Lob
 	private String value;
 
@@ -63,24 +61,24 @@ public class Userconfig extends AbstractEntityWithId implements EntityWithId {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return getOwnerId() + "_" + getParam();
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		setParam(id);
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

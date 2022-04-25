@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -17,28 +17,28 @@ import java.util.LinkedList;
 
 public class SortedList<T> extends LinkedList<T> {
 	private Comparator<T> cmp;
-	
-	public SortedList(Comparator<T> comp){
+
+	public SortedList(Comparator<T> comp) {
 		cmp = comp;
 	}
-	
-	public SortedList(Collection<T> source, Comparator<T> comp){
+
+	public SortedList(Collection<T> source, Comparator<T> comp) {
 		super(source);
 		cmp = comp;
 		sort();
 	}
-	
-	public void sort(){
+
+	public void sort() {
 		Collections.sort(this, cmp);
 	}
-	
+
 	@Override
-	public boolean add(T elem){
+	public boolean add(T elem) {
 		if (super.add(elem)) {
 			sort();
 			return true;
 		}
 		return false;
 	}
-	
+
 }

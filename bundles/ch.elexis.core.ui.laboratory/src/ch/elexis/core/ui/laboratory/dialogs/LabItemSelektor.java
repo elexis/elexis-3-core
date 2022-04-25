@@ -23,23 +23,22 @@ import ch.elexis.core.ui.laboratory.preferences.Messages;
 import ch.elexis.data.LabItem;
 
 public class LabItemSelektor extends TitleAreaDialog {
-	
+
 	private LabItemTreeSelectionComposite treeSelectionComposite;
 	private ILabelProvider labelProvider;
-	
+
 	private List<LabItem> selection;
-	
-	public LabItemSelektor(Shell parentShell){
+
+	public LabItemSelektor(Shell parentShell) {
 		super(parentShell);
 		selection = Collections.emptyList();
-		
+
 		labelProvider = new LabelProvider() {
-			private ILabelProvider itemLabelProvider =
-				new LabItemLabelProvider(Arrays.asList(ItemLabelFields.KUERZEL,
+			private ILabelProvider itemLabelProvider = new LabItemLabelProvider(Arrays.asList(ItemLabelFields.KUERZEL,
 					ItemLabelFields.NAME, ItemLabelFields.REFERENCES, ItemLabelFields.UNIT), false);
-					
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof Group) {
 					return ((Group) element).toString();
 				} else if (element instanceof GroupItem) {
@@ -49,30 +48,29 @@ public class LabItemSelektor extends TitleAreaDialog {
 			}
 		};
 	}
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		Control contents = super.createContents(parent);
-		
+
 		setMessage(Messages.LabGroupPrefs_pleaseSelectLabItems);
 		setTitle(Messages.LabGroupPrefs_selectLabItems);
-		
+
 		return contents;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
 		composite.setLayout(new GridLayout(1, false));
-		
-		treeSelectionComposite =
-			new LabItemTreeSelectionComposite(composite, labelProvider, false, SWT.NONE);
+
+		treeSelectionComposite = new LabItemTreeSelectionComposite(composite, labelProvider, false, SWT.NONE);
 		treeSelectionComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
+
 		return composite;
 	}
-	
-	protected void okPressed(){
+
+	protected void okPressed() {
 		List<GroupItem> groupItems = treeSelectionComposite.getSelectedItems();
 		selection = new ArrayList<LabItem>();
 		for (GroupItem groupItem : groupItems) {
@@ -80,8 +78,8 @@ public class LabItemSelektor extends TitleAreaDialog {
 		}
 		super.okPressed();
 	}
-	
-	public List<LabItem> getSelection(){
+
+	public List<LabItem> getSelection() {
 		return selection;
 	}
 }

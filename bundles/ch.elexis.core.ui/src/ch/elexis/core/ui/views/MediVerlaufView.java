@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views;
@@ -58,25 +58,22 @@ import ch.rgw.tools.TimeTool;
 
 /**
  * A view to display all medikaments administered or prescribed.
- * 
+ *
  * @author Gerry
- * 
+ *
  */
 public class MediVerlaufView extends ViewPart implements IActivationListener {
 	TableViewer tv;
 	ArrayList<MediAbgabe> mListe = new ArrayList<MediAbgabe>();
-	private static final String[] columns = {
-		Messages.MediVerlaufView_dateFrom, Messages.MediVerlaufView_dateUntil,
-		Messages.MediVerlaufView_medicament, Messages.MediVerlaufView_dosage
-	}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-	private static final int[] colwidth = {
-		90, 90, 300, 200
-	};
-	
+	private static final String[] columns = { Messages.MediVerlaufView_dateFrom, Messages.MediVerlaufView_dateUntil,
+			Messages.MediVerlaufView_medicament, Messages.MediVerlaufView_dosage }; // $NON-NLS-1$ //$NON-NLS-2$
+																					// //$NON-NLS-3$ //$NON-NLS-4$
+	private static final int[] colwidth = { 90, 90, 300, 200 };
+
 	private ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-		
+
 		@Override
-		public void runInUi(ElexisEvent ev){
+		public void runInUi(ElexisEvent ev) {
 			reload();
 		}
 	};
@@ -84,13 +81,13 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 	private static boolean revert = false;
 	public static final String TOOPEN = " ... ";
 	MediSorter sorter = new MediSorter();
-	
-	public MediVerlaufView(){
+
+	public MediVerlaufView() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
-	public void createPartControl(final Composite parent){
+	public void createPartControl(final Composite parent) {
 		parent.setLayout(new FillLayout());
 		tv = new TableViewer(parent, SWT.NONE);
 		Table table = tv.getTable();
@@ -100,9 +97,9 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 			tc.setWidth(colwidth[i]);
 			tc.setData(i);
 			tc.addSelectionListener(new SelectionAdapter() {
-				
+
 				@Override
-				public void widgetSelected(final SelectionEvent e){
+				public void widgetSelected(final SelectionEvent e) {
 					int i = (Integer) ((TableColumn) e.getSource()).getData();
 					if (sortCol == i) {
 						revert = !revert;
@@ -112,7 +109,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 					sortCol = i;
 					reload();
 				}
-				
+
 			});
 		}
 		table.setHeaderVisible(true);
@@ -124,49 +121,49 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 		tv.setSorter(sorter);
 		tv.setInput(getViewSite());
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		GlobalEventDispatcher.removeActivationListener(this, getViewSite().getPart());
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	class MediVerlaufContentProvider implements IStructuredContentProvider {
-		
+
 		@Override
-		public Object[] getElements(final Object inputElement){
+		public Object[] getElements(final Object inputElement) {
 			return mListe.toArray();
 		}
-		
+
 		@Override
-		public void dispose(){
+		public void dispose() {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 		@Override
-		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput){
+		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
-	
+
 	static class MediVerlaufLabelProvider extends LabelProvider implements ITableLabelProvider {
-		
+
 		@Override
-		public Image getColumnImage(final Object element, final int columnIndex){
+		public Image getColumnImage(final Object element, final int columnIndex) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
-		public String getColumnText(final Object element, final int columnIndex){
+		public String getColumnText(final Object element, final int columnIndex) {
 			if (element instanceof MediAbgabe) {
 				MediAbgabe ma = (MediAbgabe) element;
 				switch (columnIndex) {
@@ -184,88 +181,82 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 			}
 			return "?"; //$NON-NLS-1$
 		}
-		
+
 	}
-	
-	public void clearEvent(final Class<? extends PersistentObject> template){
+
+	public void clearEvent(final Class<? extends PersistentObject> template) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void reload(){
+
+	public void reload() {
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 		try {
-			progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
-				new IRunnableWithProgress() {
-					@Override
-					public void run(final IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException{
-						Patient sp = ElexisEventDispatcher.getSelectedPatient();
-						if ( sp == null) {
-							return;
-						}
-						
-						monitor.beginTask(Messages.MediVerlaufView_reading,
-							IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-						monitor.subTask(Messages.MediVerlaufView_findPrescriptions); //$NON-NLS-1$
-						Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
-						qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, sp.getId());
-						List<Prescription> list = qbe.execute();
-						mListe.clear();
-						monitor.subTask(Messages.MediVerlaufView_findMedicaments); //$NON-NLS-1$
-						try {
-							for (Prescription p : list) {
-								Map<TimeTool, String> terms = p.getTerms();
-								TimeTool[] tts = terms.keySet().toArray(new TimeTool[0]);
-								for (int i = 0; i < tts.length - 1; i++) {
-									if (i < tts.length - 1) {
-										mListe.add(new MediAbgabe(tts[i]
-											.toString(TimeTool.DATE_GER), tts[i + 1]
-											.toString(TimeTool.DATE_GER), p));
-									} else {
-										mListe.add(new MediAbgabe(tts[i]
-											.toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
-									}
-								}
-								mListe.add(new MediAbgabe(tts[tts.length - 1]
-									.toString(TimeTool.DATE_GER), TOOPEN, p)); //$NON-NLS-1$
-							}
-						} catch (Exception ex) {
-							ExHandler.handle(ex);
-						}
-						tv.refresh();
-						monitor.done();
+			progressService.runInUI(PlatformUI.getWorkbench().getProgressService(), new IRunnableWithProgress() {
+				@Override
+				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					Patient sp = ElexisEventDispatcher.getSelectedPatient();
+					if (sp == null) {
+						return;
 					}
-				}, null);
+
+					monitor.beginTask(Messages.MediVerlaufView_reading, IProgressMonitor.UNKNOWN); // $NON-NLS-1$
+					monitor.subTask(Messages.MediVerlaufView_findPrescriptions); // $NON-NLS-1$
+					Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+					qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, sp.getId());
+					List<Prescription> list = qbe.execute();
+					mListe.clear();
+					monitor.subTask(Messages.MediVerlaufView_findMedicaments); // $NON-NLS-1$
+					try {
+						for (Prescription p : list) {
+							Map<TimeTool, String> terms = p.getTerms();
+							TimeTool[] tts = terms.keySet().toArray(new TimeTool[0]);
+							for (int i = 0; i < tts.length - 1; i++) {
+								if (i < tts.length - 1) {
+									mListe.add(new MediAbgabe(tts[i].toString(TimeTool.DATE_GER),
+											tts[i + 1].toString(TimeTool.DATE_GER), p));
+								} else {
+									mListe.add(new MediAbgabe(tts[i].toString(TimeTool.DATE_GER), TOOPEN, p)); // $NON-NLS-1$
+								}
+							}
+							mListe.add(new MediAbgabe(tts[tts.length - 1].toString(TimeTool.DATE_GER), TOOPEN, p)); // $NON-NLS-1$
+						}
+					} catch (Exception ex) {
+						ExHandler.handle(ex);
+					}
+					tv.refresh();
+					monitor.done();
+				}
+			}, null);
 		} catch (Throwable ex) {
 			ExHandler.handle(ex);
 		}
 	}
-	
-	public void selectionEvent(final PersistentObject obj){
+
+	public void selectionEvent(final PersistentObject obj) {
 		if (obj instanceof Patient) {
 			reload();
 		}
-		
+
 	}
-	
+
 	private static class MediAbgabe implements Comparable<MediAbgabe> {
 		String von, bis;
 		String medi;
 		String dosis;
-		
+
 		private static TimeTool compare = new TimeTool();
 		private static TimeTool compareTo = new TimeTool();
-		
-		MediAbgabe(final String v, final String b, final Prescription p){
+
+		MediAbgabe(final String v, final String b, final Prescription p) {
 			von = v;
 			bis = b;
 			medi = p.getSimpleLabel();
 			dosis = p.getDosis();
 		}
-		
+
 		@Override
-		public int compareTo(final MediAbgabe o){
+		public int compareTo(final MediAbgabe o) {
 			int ret = 0;
 			switch (sortCol) {
 			case 0:
@@ -304,46 +295,45 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 			}
 			return ret;
 		}
-		
+
 		@Override
-		public boolean equals(Object obj){
+		public boolean equals(Object obj) {
 			if (obj instanceof MediAbgabe) {
 				return compareTo((MediAbgabe) obj) == 0;
 			}
 			return false;
 		}
 	}
-	
+
 	@Override
-	public void activation(final boolean mode){
+	public void activation(final boolean mode) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void visible(final boolean mode){
+	public void visible(final boolean mode) {
 		if (mode) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
 			reload();
 		} else {
 			ElexisEventDispatcher.getInstance().removeListeners(eeli_pat);
 		}
-		
+
 	}
-	
+
 	private static class MediSorter extends ViewerSorter {
-		
+
 		@Override
-		public int compare(final Viewer viewer, final Object e1, final Object e2){
+		public int compare(final Viewer viewer, final Object e1, final Object e2) {
 			return ((MediAbgabe) e1).compareTo((MediAbgabe) e2);
 		}
-		
+
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
-	boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

@@ -36,11 +36,10 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 	private Label lblUnit;
 	private Label lbl;
 	private List<Action> toolbarActions = new ArrayList<>();
-	
+
 	private ObservationType observationType;
-	
-	public CompositeTextUnit(Composite parent, IFinding iFinding,
-		ObservationComponent backboneComponent){
+
+	public CompositeTextUnit(Composite parent, IFinding iFinding, ObservationComponent backboneComponent) {
 		super((Composite) parent, SWT.NONE);
 		this.iFinding = iFinding;
 		this.backboneComponent = backboneComponent;
@@ -49,7 +48,7 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 		gd.marginBottom = 0;
 		gd.marginHeight = 0;
 		gd.verticalSpacing = 0;
-		
+
 		setLayout(gd);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		String unit = null;
@@ -57,70 +56,69 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 		List<ICoding> codings = null;
 		String title = null;
 		String textValue = null;
-		
+
 		if (backboneComponent != null) {
-			
+
 			this.observationType = backboneComponent.getTypeFromExtension(ObservationType.class);
-			
+
 			if (ObservationType.TEXT.equals(observationType)) {
 				textValue = backboneComponent.getStringValue().orElse("");
 			} else if (ObservationType.NUMERIC.equals(observationType)) {
 				unit = backboneComponent.getNumericValueUnit().orElse("");
 				numeric = backboneComponent.getNumericValue().isPresent()
-						? backboneComponent.getNumericValue().get().toPlainString() : "";
+						? backboneComponent.getNumericValue().get().toPlainString()
+						: "";
 			}
 			codings = backboneComponent.getCoding();
 		} else if (iFinding instanceof IObservation) {
 			IObservation iObservation = (IObservation) iFinding;
-			
+
 			this.observationType = iObservation.getObservationType();
-			
+
 			if (ObservationType.TEXT.equals(iObservation.getObservationType())) {
 				textValue = iObservation.getStringValue().orElse("");
 			} else if (ObservationType.NUMERIC.equals(iObservation.getObservationType())) {
 				unit = iObservation.getNumericValueUnit().orElse("");
 				numeric = iObservation.getNumericValue().isPresent()
-						? iObservation.getNumericValue().get().toPlainString() : "";
+						? iObservation.getNumericValue().get().toPlainString()
+						: "";
 			}
 			codings = iObservation.getCoding();
 		}
-		
+
 		if (title == null && codings != null) {
-			Optional<ICoding> coding =
-				ModelUtil.getCodeBySystem(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
+			Optional<ICoding> coding = ModelUtil.getCodeBySystem(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 			title = coding.isPresent() ? coding.get().getDisplay() : "";
 		}
 		if (title == null) {
 			title = iFinding.getText().orElse("");
 		}
-		
+
 		createContents(title, textValue, unit, numeric, backboneComponent != null);
 	}
-	
-	private void createContents(String title, String textValue, String unit, String numeric,
-		boolean componentChild){
+
+	private void createContents(String title, String textValue, String unit, String numeric, boolean componentChild) {
 		Composite c = new Composite(this, SWT.NONE);
 		c.setLayout(SWTHelper.createGridLayout(true, 2));
 		c.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
-		
+
 		lbl = new Label(c, SWT.NONE);
 		lbl.setText(title);
-		
+
 		GridData minGD = new GridData(SWT.LEFT, SWT.BOTTOM, true, false, 1, 1);
 		lbl.setLayoutData(minGD);
-		
+
 		if (numeric != null && unit != null) {
 			if (!componentChild && iFinding instanceof IObservation) {
-				toolbarActions.addAll(
-					FindingsUiUtil.createToolbarSubComponents(c, (IObservation) iFinding, 1));
+				toolbarActions.addAll(FindingsUiUtil.createToolbarSubComponents(c, (IObservation) iFinding, 1));
 			}
 			fieldText = new Text(this, SWT.BORDER);
 			fieldText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 			fieldText.setText(numeric);
-			
+
 			fieldText.addVerifyListener(new VerifyListener() {
 				@Override
-				public void verifyText(VerifyEvent e){
+				public void verifyText(VerifyEvent e) {
 					// checks if a numeric text is inserted
 					String txt = e.text;
 					if (!txt.isEmpty()) {
@@ -134,7 +132,7 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 							e.doit = false;
 						}
 					}
-					
+
 				}
 			});
 			lblUnit = new Label(this, SWT.NONE);
@@ -144,43 +142,42 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 			lblUnit.setAlignment(SWT.CENTER);
 			lblUnit.setText(unit);
 		}
-		
+
 		if (fieldText == null) {
 			fieldText = new Text(this, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 			GridData gdFieldText = new GridData(SWT.FILL, SWT.TOP, true, false);
 			gdFieldText.heightHint = 40;
 			fieldText.setLayoutData(gdFieldText);
 			fieldText.setText(textValue != null ? textValue : "");
-			
+
 			Label lblTmp = new Label(this, SWT.NONE);
 			lblTmp.setText("");
 			GridData gdUnit = new GridData(SWT.FILL, SWT.TOP, false, false);
 			gdUnit.widthHint = 40;
 			lblTmp.setLayoutData(gdUnit);
-			
+
 			fieldText.addTraverseListener(new TraverseListener() {
-				
+
 				@Override
-				public void keyTraversed(TraverseEvent e){
-					if (e.detail == SWT.TRAVERSE_TAB_NEXT
-						|| e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+				public void keyTraversed(TraverseEvent e) {
+					if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
 						e.doit = true;
 					}
 				}
 			});
 		}
 	}
-	
+
 	@Override
-	public IFinding saveContents(LocalDateTime localDateTime){
+	public IFinding saveContents(LocalDateTime localDateTime) {
 		if (iFinding.getId() == null) {
 			iFinding = FindingsServiceComponent.getService().create(iFinding.getClass());
 		}
 		return FindingsUiUtil.saveObservation((IObservation) iFinding, this, localDateTime);
 	}
-	
+
 	@Override
-	public void hideLabel(boolean all){
+	public void hideLabel(boolean all) {
 		if (lblUnit != null && all) {
 			lblUnit.setVisible(false);
 			GridData minGD = new GridData(SWT.FILL, SWT.TOP, false, false);
@@ -196,50 +193,50 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 			((GridData) lbl.getLayoutData()).heightHint = 0;
 		}
 	}
-	
+
 	@Override
-	public void setToolbarActions(List<Action> toolbarActions){
+	public void setToolbarActions(List<Action> toolbarActions) {
 		this.toolbarActions = toolbarActions;
-		
+
 	}
-	
+
 	@Override
-	public List<Action> getToolbarActions(){
+	public List<Action> getToolbarActions() {
 		return toolbarActions;
 	}
-	
+
 	@Override
-	public String getTitle(){
+	public String getTitle() {
 		return lbl != null ? lbl.getText() : "";
 	}
-	
+
 	@Override
-	public IFinding getFinding(){
+	public IFinding getFinding() {
 		return iFinding;
 	}
-	
+
 	@Override
-	public List<ICompositeSaveable> getChildReferences(){
+	public List<ICompositeSaveable> getChildReferences() {
 		return Collections.emptyList();
 	}
-	
+
 	@Override
-	public List<ICompositeSaveable> getChildComponents(){
+	public List<ICompositeSaveable> getChildComponents() {
 		return Collections.emptyList();
 	}
-	
+
 	@Override
-	public String getFieldTextValue(){
+	public String getFieldTextValue() {
 		return fieldText != null ? fieldText.getText() : "";
 	}
-	
+
 	@Override
-	public ObservationComponent getObservationComponent(){
+	public ObservationComponent getObservationComponent() {
 		return backboneComponent;
 	}
-	
+
 	@Override
-	public ObservationType getObservationType(){
+	public ObservationType getObservationType() {
 		// TODO Auto-generated method stub
 		return observationType;
 	}

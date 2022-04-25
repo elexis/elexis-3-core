@@ -43,44 +43,44 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailComposite
 		implements ISpotlightResultEntryDetailComposite {
-	
+
 	private static final String PATIENT_LABEL_FONT = "patient-label-font";
-	
+
 	@Inject
 	private IStickerService stickerService;
 	@Inject
 	private IEncounterService encounterService;
-	
+
 	private IModelService coreModelService;
 	private PatientDetailCompositeUtil util;
-	
+
 	private Label lblPatientlabel;
 	private Composite stickerComposite;
 	private StyledText styledText;
-	
+
 	private IPatient selectedPatient;
 	private IAppointment selectedNextAppointment;
 	private IAppointment selectedPreviousAppointment;
-	
+
 	/**
 	 * Create the composite.
-	 * 
+	 *
 	 * @param parent
 	 * @param style
 	 */
-	public PatientDetailComposite(Composite parent, int style){
+	public PatientDetailComposite(Composite parent, int style) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, true);
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginTop = 0;
 		setLayout(gridLayout);
-		
+
 		util = new PatientDetailCompositeUtil();
 		coreModelService = CoreModelServiceHolder.get();
-		
+
 		lblPatientlabel = new Label(this, SWT.NONE);
-		
+
 		Font patientLabelFont;
 		if (JFaceResources.getFontRegistry().hasValueFor(PATIENT_LABEL_FONT)) {
 			patientLabelFont = JFaceResources.getFontRegistry().get(PATIENT_LABEL_FONT);
@@ -94,7 +94,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		lblPatientlabel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		lblPatientlabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 		lblPatientlabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		
+
 		// Patient Stickers
 		stickerComposite = new Composite(this, SWT.NONE);
 		FillLayout fl_stickerComposite = new FillLayout(SWT.HORIZONTAL);
@@ -103,15 +103,13 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		GridData gd_stickerComposite = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_stickerComposite.heightHint = 16;
 		stickerComposite.setLayoutData(gd_stickerComposite);
-		
+
 		styledText = new StyledText(this, SWT.WRAP);
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		styledText.setEditable(false);
 		// TODO setEnabled?
 		styledText.setBackground(getBackground());
-		styledText.setTabStops(new int[] {
-			100, 350
-		});
+		styledText.setTabStops(new int[] { 100, 350 });
 		styledText.setLineSpacingProvider(lineIndex -> 3);
 		styledText.addListener(SWT.MouseDown, event -> {
 			int offset = styledText.getOffsetAtPoint(new Point(event.x, event.y));
@@ -127,24 +125,24 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 				}
 			}
 		});
-		
+
 		setSpotlightEntry(null);
-		
+
 	}
-	
+
 	@Override
-	public boolean setFocus(){
+	public boolean setFocus() {
 		return styledText.setFocus();
 	}
-	
+
 	@Override
-	protected void checkSubclass(){
+	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-	
+
 	@Override
-	public void setSpotlightEntry(ISpotlightResultEntry resultEntry){
-		
+	public void setSpotlightEntry(ISpotlightResultEntry resultEntry) {
+
 		selectedPatient = null;
 		selectedNextAppointment = null;
 		selectedPreviousAppointment = null;
@@ -156,95 +154,91 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			lblPatientlabel.setText("Lade Datensatz ...");
 			getDisplay().asyncExec(new Runnable() {
 				@Override
-				public void run(){
+				public void run() {
 					if (resultEntry != null) {
 						Optional<Object> object = resultEntry.getObject();
 						if (!object.isPresent()) {
 							String patientId = resultEntry.getLoaderString();
-							selectedPatient =
-								coreModelService.load(patientId, IPatient.class).orElse(null);
+							selectedPatient = coreModelService.load(patientId, IPatient.class).orElse(null);
 						} else {
 							selectedPatient = (IPatient) object.get();
 						}
 					}
-					
+
 					clearPopulatePatientLabelComposite(selectedPatient);
 					clearPopulateStickerComposite(selectedPatient);
 					updateStyledText(selectedPatient);
-					
+
 					layout(true);
 				}
 			});
 		}
 	}
-	
+
 	//@formatter:off
-	private final String TEMPLATE = "Stammarzt\t{0}\r\n" 
-			+ "Versicherung\t{1}\r\n" 
+	private final String TEMPLATE = "Stammarzt\t{0}\r\n"
+			+ "Versicherung\t{1}\r\n"
 			+ "Konto\t{2}\t<m0>ALT+B</m>\r\n\r\n"
 			+ "<lt>Nächster Termin</l>\t{3}\t<m0>ALT+T</m>\r\n"
 			+ "<l0>Letzter Termin</l>\t{4}\r\n"
 			+ "<ll>Letztes Labor</l>\t{5}\t<m0>ALT+L</m>\r\n\r\n"
-			+ "<lk>Letzte Kons</l>\t{6}\t<m0>ALT+K</m>\r\n" 
+			+ "<lk>Letzte Kons</l>\t{6}\t<m0>ALT+K</m>\r\n"
 			+ "{7}\r\n\r\n"
 			+ "<lf>Fixmedikation</l>\t\t<m0>ALT+F</m>\r\n"
 			+ "{8}";
 	//@formatter:on
-	
-	private void updateStyledText(IPatient patient){
-		
+
+	private void updateStyledText(IPatient patient) {
+
 		styledText.setStyleRange(null);
-		
+
 		Object[] values = new Object[9];
 		Arrays.fill(values, "-");
-		
+
 		values[0] = util.getFormattedFamilyDoctor(patient);
 		values[1] = util.getFormattedInsurance(coreModelService, patient);
 		values[2] = util.getFormattedPatientBalance(coreModelService, patient);
-		
+
 		selectedNextAppointment = util.getNextAppointment(coreModelService, patient);
 		values[3] = util.getAppointmentLabel(selectedNextAppointment);
-		
+
 		selectedPreviousAppointment = util.getPreviousAppointment(coreModelService, patient);
 		values[4] = util.getAppointmentLabel(selectedPreviousAppointment);
-		
+
 		values[5] = util.getFormattedLatestLaboratoryDate(coreModelService, patient);
-		
+
 		if (patient != null) {
 			IEncounter _latestEncounter = encounterService.getLatestEncounter(patient).orElse(null);
 			if (_latestEncounter != null) {
 				values[6] = util.formatDate(_latestEncounter.getDate());
-				String encounterText =
-					_latestEncounter.getHeadVersionInPlaintext().trim().replaceAll("\n", " ");
+				String encounterText = _latestEncounter.getHeadVersionInPlaintext().trim().replaceAll("\n", " ");
 				String[] encounterValue = new String[4];
 				final int stepWidth = 65; // TODO calculate by dimension?
 				encounterValue[0] = StringUtils.substring(encounterText, 0, stepWidth);
 				encounterValue[1] = StringUtils.substring(encounterText, stepWidth, stepWidth * 2);
-				encounterValue[2] =
-					StringUtils.substring(encounterText, stepWidth * 2, stepWidth * 3);
-				encounterValue[3] =
-					StringUtils.substring(encounterText, stepWidth * 3, stepWidth * 4);
+				encounterValue[2] = StringUtils.substring(encounterText, stepWidth * 2, stepWidth * 3);
+				encounterValue[3] = StringUtils.substring(encounterText, stepWidth * 3, stepWidth * 4);
 				values[7] = StringUtils.join(encounterValue, "\n");
 			}
 		}
-		
+
 		values[8] = util.getFormattedFixedMedication(coreModelService, patient);
-		
+
 		String text = MessageFormat.format(TEMPLATE, values);
 		StyleRange[] styleRanges = generateStyleRanges(text);
 		String replaceAll = text.replaceAll("<(.+?)>", "");
-		
+
 		styledText.setText(replaceAll);
 		styledText.setStyleRanges(styleRanges);
 	}
-	
+
 	private final Pattern TAG_PATTERN = Pattern.compile("<([a-z])([0a-z])>(.+?)</[a-z]>");
-	
-	private StyleRange[] generateStyleRanges(String text){
+
+	private StyleRange[] generateStyleRanges(String text) {
 		List<StyleRange> ranges = new ArrayList<StyleRange>();
-		
+
 		int matchedFormatChars = 0;
-		
+
 		Matcher matcher = TAG_PATTERN.matcher(text);
 		while (matcher.find()) {
 			StyleRange sr = new StyleRange();
@@ -267,11 +261,11 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			matchedFormatChars += 8; // the no of surrounding chars removed
 			ranges.add(sr);
 		}
-		
+
 		return ranges.toArray(new StyleRange[] {});
 	}
-	
-	private void clearPopulateStickerComposite(IPatient patient){
+
+	private void clearPopulateStickerComposite(IPatient patient) {
 		util.clearComposite(stickerComposite);
 		if (patient != null) {
 			List<ISticker> stickers = stickerService.getStickers(patient);
@@ -284,25 +278,24 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		}
 		stickerComposite.layout();
 	}
-	
-	private void clearPopulatePatientLabelComposite(IPatient patient){
+
+	private void clearPopulatePatientLabelComposite(IPatient patient) {
 		if (patient == null) {
 			lblPatientlabel.setText("");
 		} else {
-			lblPatientlabel
-				.setText(patient.getLabel() + " (" + patient.getAgeInYears() + " Jahre)");
+			lblPatientlabel.setText(patient.getLabel() + " (" + patient.getAgeInYears() + " Jahre)");
 		}
 	}
-	
+
 	@Override
-	public Category appliedForCategory(){
+	public Category appliedForCategory() {
 		return Category.PATIENT;
 	}
-	
+
 	@Override
-	public boolean handleAltKeyPressed(int keyCode){
+	public boolean handleAltKeyPressed(int keyCode) {
 		Object selectedElement = null;
-		
+
 		if (selectedPatient != null) {
 			switch (keyCode) {
 			case 'b':
@@ -311,39 +304,35 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 				break;
 			case 't':
 			case 'T':
-				String id =
-					(selectedNextAppointment != null) ? selectedNextAppointment.getId() : null;
+				String id = (selectedNextAppointment != null) ? selectedNextAppointment.getId() : null;
 				if (id != null) {
 					selectedElement = SpotlightUiUtil.ACTION_SHOW_APPOINTMENT + id;
 				}
 				break;
 			case 'k':
 			case 'K':
-				selectedElement =
-					SpotlightUiUtil.ACTION_SHOW_LATEST_ENCOUNTER + selectedPatient.getId();
+				selectedElement = SpotlightUiUtil.ACTION_SHOW_LATEST_ENCOUNTER + selectedPatient.getId();
 				break;
 			case 'l':
 			case 'L':
-				selectedElement =
-					SpotlightUiUtil.ACTION_SHOW_LATEST_LABORATORY + selectedPatient.getId();
+				selectedElement = SpotlightUiUtil.ACTION_SHOW_LATEST_LABORATORY + selectedPatient.getId();
 				break;
 			case 'f':
 			case 'F':
-				selectedElement =
-					SpotlightUiUtil.ACTION_SHOW_FIXED_MEDICATION + selectedPatient.getId();
+				selectedElement = SpotlightUiUtil.ACTION_SHOW_FIXED_MEDICATION + selectedPatient.getId();
 				break;
 			default:
 				break;
 			}
 		}
-		
+
 		if (selectedElement != null) {
 			SpotlightShell shell = (SpotlightShell) getShell();
 			shell.setSelectedElement(selectedElement);
 			return shell.handleSelectedElement();
 		}
-		
+
 		return false;
 	}
-	
+
 }

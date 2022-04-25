@@ -50,68 +50,68 @@ import ch.elexis.data.Brief;
 import ch.elexis.data.Person;
 
 /**
- * Dialog showing all currently managed local documents of the {@link ILocalDocumentService}. Local
- * editing can be ended or cancelled.
- * 
+ * Dialog showing all currently managed local documents of the
+ * {@link ILocalDocumentService}. Local editing can be ended or cancelled.
+ *
  * @author thomas
  *
  */
 public class LocalDocumentsDialog extends TitleAreaDialog {
-	
+
 	private ILocalDocumentService service;
 	private TableViewer tableViewer;
-	
-	public LocalDocumentsDialog(Shell parentShell, ILocalDocumentService service){
+
+	public LocalDocumentsDialog(Shell parentShell, ILocalDocumentService service) {
 		super(parentShell);
 		this.service = service;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		setTitle(Messages.LocalDocumentsDialog_dialogtitle);
 		setMessage(Messages.LocalDocumentsDialog_dialogmessage);
 	}
-	
+
 	@Override
-	protected boolean isResizable(){
+	protected boolean isResizable() {
 		return true;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite area = new Composite(parent, SWT.NONE);
 		area.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		area.setLayout(new GridLayout(1, false));
-		
+
 		Composite tableComposite = new Composite(area, SWT.NONE);
 		tableComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		TableColumnLayout tcLayout = new TableColumnLayout();
 		tableComposite.setLayout(tcLayout);
-		
+
 		tableViewer = new TableViewer(tableComposite, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		TableViewerColumn tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcPatient = tvc.getColumn();
 		tcLayout.setColumnData(tcPatient, new ColumnPixelData(150, false, false));
 		tcPatient.setText(Messages.LocalDocumentsDialog_patient);
 		tvc.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return getReflectivePatientText(element);
 			}
 		});
-		
+
 		tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcDocument = tvc.getColumn();
 		tcLayout.setColumnData(tcDocument, new ColumnPixelData(250, true, true));
 		tcDocument.setText(Messages.LocalDocumentsDialog_document);
 		tvc.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof IPersistentObject) {
 					return ((IPersistentObject) element).getLabel();
 				} else if (element instanceof Identifiable) {
@@ -121,7 +121,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		
+
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		// Create a menu manager and create context menu
 		MenuManager menuManager = new MenuManager();
@@ -129,21 +129,21 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		menuManager.add(new AbortLocalEditAction());
 		Menu menu = menuManager.createContextMenu(tableViewer.getTable());
 		tableViewer.getTable().setMenu(menu);
-		
+
 		tableViewer.setInput(service.getAll());
 		return area;
 	}
-	
+
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		((GridLayout) parent.getLayout()).numColumns++;
 		Button abortAllBtn = new Button(parent, SWT.PUSH);
 		abortAllBtn.setText(Messages.LocalDocumentsDialog_abortall);
 		abortAllBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (MessageDialog.openQuestion(getShell(), Messages.LocalDocumentsDialog_aborttitle,
-					Messages.LocalDocumentsDialog_abortquestion)) {
+						Messages.LocalDocumentsDialog_abortquestion)) {
 					abortLocalEdit(new StructuredSelection(service.getAll()));
 					okPressed();
 				}
@@ -154,9 +154,9 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		endAllBtn.setText(Messages.LocalDocumentsDialog_endall);
 		endAllBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (MessageDialog.openQuestion(getShell(), Messages.LocalDocumentsDialog_endttile,
-					Messages.LocalDocumentsDialog_endquestion)) {
+						Messages.LocalDocumentsDialog_endquestion)) {
 					endLocalEdit(new StructuredSelection(service.getAll()));
 					okPressed();
 				}
@@ -164,8 +164,8 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		});
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 	}
-	
-	private String getReflectivePatientText(Object element){
+
+	private String getReflectivePatientText(Object element) {
 		Method getPatientMethod = getGetPatientMethod(element.getClass(), Person.class);
 		if (getPatientMethod != null) {
 			try {
@@ -173,8 +173,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 				if (patient != null) {
 					return patient.getLabel(true);
 				}
-			} catch (IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e) {
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				// ignore ? will be returned
 			}
 		}
@@ -185,100 +184,93 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 				if (patient != null) {
 					return patient.getLabel();
 				}
-			} catch (IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e) {
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				// ignore ? will be returned
 			}
 		}
 		return "?"; //$NON-NLS-1$
 	}
-	
-	private Method getGetPatientMethod(Class<? extends Object> clazz, Class<? extends Object> type){
+
+	private Method getGetPatientMethod(Class<? extends Object> clazz, Class<? extends Object> type) {
 		Method[] methods = clazz.getMethods();
 		for (Method method : methods) {
 			if (method.getName().equalsIgnoreCase("getpatient") //$NON-NLS-1$
-				&& type.isAssignableFrom(method.getReturnType())
-				&& method.getParameterTypes().length == 0) {
+					&& type.isAssignableFrom(method.getReturnType()) && method.getParameterTypes().length == 0) {
 				return method;
 			}
 		}
 		return null;
 	}
-	
-	private void endLocalEdit(StructuredSelection selection){
-		ICommandService commandService =
-			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+
+	private void endLocalEdit(StructuredSelection selection) {
+		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = commandService.getCommand("ch.elexis.core.ui.command.endLocalDocument"); //$NON-NLS-1$
-		
-		PlatformUI.getWorkbench().getService(IEclipseContext.class)
-			.set(command.getId().concat(".selection"), selection);
-		try {
-			command
-				.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
-			tableViewer.setInput(service.getAll());
-		} catch (ExecutionException | NotDefinedException | NotEnabledException
-				| NotHandledException e) {
-			MessageDialog.openError(getShell(), Messages.LocalDocumentsDialog_errortitle,
-				Messages.LocalDocumentsDialog_errorendmessage);
-		}
-	}
-	
-	private void abortLocalEdit(StructuredSelection selection){
-		ICommandService commandService =
-			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-		Command command = commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument"); //$NON-NLS-1$
-		
-		PlatformUI.getWorkbench().getService(IEclipseContext.class)
-			.set(command.getId().concat(".selection"), selection);
+
+		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(command.getId().concat(".selection"),
+				selection);
 		try {
 			command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			tableViewer.setInput(service.getAll());
-		} catch (ExecutionException | NotDefinedException | NotEnabledException
-				| NotHandledException e) {
+		} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
 			MessageDialog.openError(getShell(), Messages.LocalDocumentsDialog_errortitle,
-				Messages.LocalDocumentsDialog_errorabortmessage);
+					Messages.LocalDocumentsDialog_errorendmessage);
 		}
 	}
-	
+
+	private void abortLocalEdit(StructuredSelection selection) {
+		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		Command command = commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument"); //$NON-NLS-1$
+
+		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(command.getId().concat(".selection"),
+				selection);
+		try {
+			command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
+			tableViewer.setInput(service.getAll());
+		} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
+			MessageDialog.openError(getShell(), Messages.LocalDocumentsDialog_errortitle,
+					Messages.LocalDocumentsDialog_errorabortmessage);
+		}
+	}
+
 	@Override
-	public boolean close(){
+	public boolean close() {
 		ElexisEventDispatcher.reload(Brief.class);
 		return super.close();
 	}
-	
+
 	private class EndLocalEditAction extends Action {
 		@Override
-		public ImageDescriptor getImageDescriptor(){
+		public ImageDescriptor getImageDescriptor() {
 			return Images.IMG_EDIT_DONE.getImageDescriptor();
 		}
-		
+
 		@Override
-		public String getText(){
+		public String getText() {
 			return Messages.LocalDocumentsDialog_actionendtext;
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			StructuredSelection selection = (StructuredSelection) tableViewer.getSelection();
 			if (selection != null) {
 				endLocalEdit(selection);
 			}
 		}
 	}
-	
+
 	private class AbortLocalEditAction extends Action {
 		@Override
-		public ImageDescriptor getImageDescriptor(){
+		public ImageDescriptor getImageDescriptor() {
 			return Images.IMG_EDIT_ABORT.getImageDescriptor();
 		}
-		
+
 		@Override
-		public String getText(){
+		public String getText() {
 			return Messages.LocalDocumentsDialog_actionaborttext;
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			StructuredSelection selection = (StructuredSelection) tableViewer.getSelection();
 			if (selection != null) {
 				abortLocalEdit(selection);

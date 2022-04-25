@@ -15,9 +15,9 @@ import ch.rgw.compress.CompEx;
 import ch.rgw.tools.JdbcLink.Stm;
 
 public class FixBestellungen217 extends ExternalMaintenance {
-	
+
 	@Override
-	public String executeMaintenance(final IProgressMonitor pm, String DBVersion){
+	public String executeMaintenance(final IProgressMonitor pm, String DBVersion) {
 		StringBuilder output = new StringBuilder();
 		pm.beginTask("Bitte warten, Bestellungen werden reparieren ...", IProgressMonitor.UNKNOWN);
 		// get all bestellungen form HEAP2 Table
@@ -26,14 +26,14 @@ public class FixBestellungen217 extends ExternalMaintenance {
 		int oldCnt = 0;
 		int updateCnt = 0;
 		int invalidArt = 0;
-		
+
 		try {
 			stm = PersistentObject.getConnection().getStatement();
 			resultSet = stm.query("SELECT * FROM HEAP2");
-			
+
 			while (resultSet.next()) {
 				pm.worked(1);
-				
+
 				String ID = resultSet.getString(NamedBlob2.FLD_ID);
 				// test if ID looks like Bestellung ID
 				String[] entry = ID.split(":");
@@ -52,7 +52,7 @@ public class FixBestellungen217 extends ExternalMaintenance {
 									invalidArt++;
 									continue;
 								}
-								
+
 								existingBestellung.set("Liste", content);
 								updateCnt++;
 							} else {
@@ -71,24 +71,25 @@ public class FixBestellungen217 extends ExternalMaintenance {
 			if (resultSet != null) {
 				try {
 					resultSet.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 			}
 			if (stm != null)
 				PersistentObject.getConnection().releaseStatement(stm);
 		}
-		
+
 		output.append(oldCnt + " alte Bestellungen gefunden.\n");
 		output.append(invalidArt + " alte Bestellungen mit nicht mehr existenten Artikeln.\n");
 		output.append(updateCnt + " neue Bestellungen repariert.\n");
-		
+
 		pm.done();
-		
+
 		return output.toString();
 	}
-	
-	private boolean testLoad(String items){
+
+	private boolean testLoad(String items) {
 		String[] it = items.split(";"); //$NON-NLS-1$
-		
+
 		for (String i : it) {
 			String[] fld = i.split(","); //$NON-NLS-1$
 			if (fld.length == 2) {
@@ -97,13 +98,13 @@ public class FixBestellungen217 extends ExternalMaintenance {
 					return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
-	public String getMaintenanceDescription(){
+	public String getMaintenanceDescription() {
 		return "Bestellungen ohne Inhalt nach upgrade auf 2.1.7 reparieren";
 	}
-	
+
 }

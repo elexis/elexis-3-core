@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    D. Lutz - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package org.iatrix.help.wiki;

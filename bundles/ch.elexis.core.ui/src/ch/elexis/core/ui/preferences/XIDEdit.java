@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
@@ -37,9 +37,9 @@ import ch.elexis.data.Xid.XIDDomain;
 
 public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage {
 	Table table;
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		table = new Table(parent, SWT.FULL_SELECTION);
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		TableColumn tc0 = new TableColumn(table, SWT.NONE);
@@ -66,12 +66,12 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 				sb.append("O"); //$NON-NLS-1$
 			}
 			it.setText(2, sb.toString());
-			
+
 		}
 		table.addMouseListener(new MouseAdapter() {
-			
+
 			@Override
-			public void mouseDoubleClick(MouseEvent e){
+			public void mouseDoubleClick(MouseEvent e) {
 				TableItem[] sel = table.getSelection();
 				if (sel != null && sel.length > 0) {
 					new XidEditDialog(getShell(), sel[0].getText(1)).open();
@@ -90,33 +90,33 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 					table.redraw();
 				}
 			}
-			
+
 		});
 		return table;
 	}
-	
-	public void init(IWorkbench workbench){
-		
+
+	public void init(IWorkbench workbench) {
+
 	}
-	
+
 	static class XidEditDialog extends Dialog {
 		Text tShort;
 		Button bPerson, bOrg;
 		XIDDomain mine;
-		
-		public XidEditDialog(Shell shell, String myDomain){
+
+		public XidEditDialog(Shell shell, String myDomain) {
 			super(shell);
 			mine = Xid.getDomain(myDomain);
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
 			getShell().setText(Messages.XIDEdit_XidOpetions);
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			Composite ret = (Composite) super.createDialogArea(parent);
 			ret.setLayout(new RowLayout(SWT.VERTICAL));
 			new Label(ret, SWT.NONE).setText(mine.getDomainName());
@@ -136,9 +136,9 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 			}
 			return ret;
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			if (bPerson.getSelection()) {
 				mine.addDisplayOption(Person.class);
 			}
@@ -148,7 +148,7 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 			mine.setSimpleName(tShort.getText());
 			super.okPressed();
 		}
-		
+
 	}
-	
+
 }

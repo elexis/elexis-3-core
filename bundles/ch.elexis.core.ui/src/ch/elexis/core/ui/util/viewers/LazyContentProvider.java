@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.util.viewers;
@@ -31,42 +31,44 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvi
 import ch.elexis.data.Query;
 
 /**
- * Ein Content-Provider, der benötigte Daten aus einem BackgroundJob bezieht und einem TableViewer
- * nur gerade die jeweils benötigten Datne liefern kann. Registriert sich beim Dataloader selbst als
- * listener und startet diesen auch, wenn Daten benötigt werden.
- * 
+ * Ein Content-Provider, der benötigte Daten aus einem BackgroundJob bezieht und
+ * einem TableViewer nur gerade die jeweils benötigten Datne liefern kann.
+ * Registriert sich beim Dataloader selbst als listener und startet diesen auch,
+ * wenn Daten benötigt werden.
+ *
  * @author Gerry
  * @deprecated
  */
-public class LazyContentProvider implements ICommonViewerContentProvider, ILazyContentProvider,
-		BackgroundJobListener, AbstractDataLoaderJob.FilterProvider {
+public class LazyContentProvider implements ICommonViewerContentProvider, ILazyContentProvider, BackgroundJobListener,
+		AbstractDataLoaderJob.FilterProvider {
 	AbstractDataLoaderJob dataloader;
 	CommonViewer tableviewer;
 	ACE required;
-	
-	public LazyContentProvider(CommonViewer viewer, AbstractDataLoaderJob job, ACE rights){
+
+	public LazyContentProvider(CommonViewer viewer, AbstractDataLoaderJob job, ACE rights) {
 		dataloader = job;
 		job.addListener(this);
 		job.addFilterProvider(this);
 		tableviewer = viewer;
 		required = rights;
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 		dataloader.removeListener(this);
 		dataloader.removeFilterProvider(this);
 	}
-	
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
-	
-	public void updateElement(int index){
+
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	}
+
+	public void updateElement(int index) {
 		if (CoreHub.acl.request(required) == false) {
 			((TableViewer) tableviewer.getViewerWidget()).replace(" --- ", index); //$NON-NLS-1$
 			return;
 		}
 		if (dataloader.isValid()) {
 			Object[] res = (Object[]) dataloader.getData();
-			Object nval = Messages.LazyContentProvider_noData; //$NON-NLS-1$
+			Object nval = Messages.LazyContentProvider_noData; // $NON-NLS-1$
 			if (index < res.length) {
 				nval = res[index];
 			}
@@ -75,32 +77,32 @@ public class LazyContentProvider implements ICommonViewerContentProvider, ILazyC
 			JobPool pool = JobPool.getJobPool();
 			if (pool.getJob(dataloader.getJobname()) == null) {
 				pool.addJob(dataloader);
-				
+
 			}
 			pool.activate(dataloader.getJobname(), Job.SHORT);
 		}
-		
+
 	}
-	
-	public void jobFinished(BackgroundJob j){
+
+	public void jobFinished(BackgroundJob j) {
 		int size = 0;
 		if ((j != null) && (j.getData() != null)) {
 			size = ((Object[]) j.getData()).length;
 		}
 		((TableViewer) tableviewer.getViewerWidget()).getTable().setItemCount(size == 0 ? 1 : size);
 		tableviewer.notify(CommonViewer.Message.update);
-		
+
 	}
-	
-	public void startListening(){
+
+	public void startListening() {
 		tableviewer.getConfigurer().controlFieldProvider.addChangeListener(this);
 	}
-	
-	public void stopListening(){
+
+	public void stopListening() {
 		tableviewer.getConfigurer().controlFieldProvider.removeChangeListener(this);
 	}
-	
-	public void applyFilter(){
+
+	public void applyFilter() {
 		Query qbe = dataloader.getQuery();
 		if (qbe != null) {
 			ViewerConfigurer vc = tableviewer.getConfigurer();
@@ -110,8 +112,8 @@ public class LazyContentProvider implements ICommonViewerContentProvider, ILazyC
 			}
 		}
 	}
-	
-	public void changed(HashMap<String, String> vals){
+
+	public void changed(HashMap<String, String> vals) {
 		dataloader.invalidate();
 		if (tableviewer.getConfigurer().getControlFieldProvider().isEmpty()) {
 			tableviewer.notify(CommonViewer.Message.empty);
@@ -120,25 +122,25 @@ public class LazyContentProvider implements ICommonViewerContentProvider, ILazyC
 		}
 		JobPool.getJobPool().activate(dataloader.getJobname(), Job.SHORT);
 	}
-	
-	public void reorder(String field){
+
+	public void reorder(String field) {
 		dataloader.setOrder(field);
 		changed(null);
-		
+
 	}
-	
-	public void selected(){
+
+	public void selected() {
 		// nothing to do
 	}
-	
-	public Object[] getElements(Object inputElement){
+
+	public Object[] getElements(Object inputElement) {
 		return (Object[]) dataloader.getData();
 	}
-	
+
 	@Override
-	public void init(){
+	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

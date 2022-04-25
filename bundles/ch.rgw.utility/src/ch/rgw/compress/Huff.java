@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.rgw.compress;
@@ -27,41 +27,43 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.IntTool;
 
 /**
- * Simple implementation of the Huffman compression algorithm. Consists solely of static functions.<br>
+ * Simple implementation of the Huffman compression algorithm. Consists solely
+ * of static functions.<br>
  * To compress data:
  * <ol>
- * <li>Load, create or use a frequency table for the data to compress: (Tree.constructTable(),
- * Tree.loadTable(), Tree.useTable())</li>
- * <li>Create a Huffman tree and obtain its root Node: new Tree().build(table);</li>
+ * <li>Load, create or use a frequency table for the data to compress:
+ * (Tree.constructTable(), Tree.loadTable(), Tree.useTable())</li>
+ * <li>Create a Huffman tree and obtain its root Node: new
+ * Tree().build(table);</li>
  * <li>compress the data: encode()</li>
  * <li>expand the data: decode()</li>
  * <p>
- * This implementation uses an extension to the straightforward algorithm to deal with the situation
- * of a character being written, which was not in the table, and with end-of-file conditions. In
- * such cases, an escape character (0x07) will be written and specially interpreted
+ * This implementation uses an extension to the straightforward algorithm to
+ * deal with the situation of a character being written, which was not in the
+ * table, and with end-of-file conditions. In such cases, an escape character
+ * (0x07) will be written and specially interpreted
  * </p>
- * 
+ *
  * @author Gerry
  */
 public class Huff {
-	public static String Version(){
+	public static String Version() {
 		return "0.6.4";
 	}
-	
+
 	public static final byte escape = 7;
 	public static final int eof = 255;
-	
+
 	/**
 	 * Huffman encode the source array
-	 * 
-	 * @param tree
-	 *            a Hufmann tree as created by new Tree() or null
-	 * @param source
-	 *            the source to compress. If tree is null, the Tree will be computed from the source
-	 *            first and its frequency table is included in the output.
+	 *
+	 * @param tree   a Hufmann tree as created by new Tree() or null
+	 * @param source the source to compress. If tree is null, the Tree will be
+	 *               computed from the source first and its frequency table is
+	 *               included in the output.
 	 * @return The huffman compressed source
 	 */
-	public static byte[] encode(HuffmanTree tree, byte[] source){
+	public static byte[] encode(HuffmanTree tree, byte[] source) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		BitOutputStream bos = new BitOutputStream(baos);
 		baos.write(source.length & 0xff);
@@ -87,18 +89,17 @@ public class Huff {
 		}
 		return baos.toByteArray();
 	}
-	
+
 	/**
 	 * Huffman decode the source array
-	 * 
-	 * @param tree
-	 *            a Huffman tree as created by new Tree() or null
-	 * @param source
-	 *            A huffman compressed array as returned by encode(). If tree is null, the frequency
-	 *            count is expected to be included to the source.
+	 *
+	 * @param tree   a Huffman tree as created by new Tree() or null
+	 * @param source A huffman compressed array as returned by encode(). If tree is
+	 *               null, the frequency count is expected to be included to the
+	 *               source.
 	 * @return the decoded data or null on error.
 	 */
-	public static byte[] decode(HuffmanTree tree, byte[] source){
+	public static byte[] decode(HuffmanTree tree, byte[] source) {
 		ByteArrayInputStream bais = new ByteArrayInputStream(source);
 		int size = bais.read() | (bais.read() << 8) | (bais.read() << 16) | (bais.read() << 24);
 		BitInputStream bis = new BitInputStream(bais);
@@ -119,35 +120,33 @@ public class Huff {
 		}
 		return out;
 	}
-	
+
 	/** Huffman encode a String */
-	public static byte[] encodeString(HuffmanTree tree, String i){
+	public static byte[] encodeString(HuffmanTree tree, String i) {
 		byte[] b = i.getBytes();
 		return encode(tree, b);
 	}
-	
+
 	/** Decode a previously with encodeString compressed String */
-	public static String decodeString(HuffmanTree tree, byte[] in){
+	public static String decodeString(HuffmanTree tree, byte[] in) {
 		byte[] out = decode(tree, in);
 		String res = new String(out);
 		return res;
 	}
-	
+
 	/**
-	 * Writes a Huffman encoded byte. If the byte is not found in the Huffman tree, an escape
-	 * sequence is generated (leading to an increase of the total size of the compressed file)
-	 * 
-	 * @param act
-	 *            the root node of the Huffman tree
-	 * @param out
-	 *            the BitOutputStream to write the byte
-	 * @param c
-	 *            the byte to write
-	 * @return true if the byte was written normally, false if an escape sequence was written
-	 * @throws IOException
-	 *             on write errors
+	 * Writes a Huffman encoded byte. If the byte is not found in the Huffman tree,
+	 * an escape sequence is generated (leading to an increase of the total size of
+	 * the compressed file)
+	 *
+	 * @param act the root node of the Huffman tree
+	 * @param out the BitOutputStream to write the byte
+	 * @param c   the byte to write
+	 * @return true if the byte was written normally, false if an escape sequence
+	 *         was written
+	 * @throws IOException on write errors
 	 */
-	static boolean writeByte(Node act, BitOutputStream out, int c) throws IOException{
+	static boolean writeByte(Node act, BitOutputStream out, int c) throws IOException {
 		if (Arrays.binarySearch(act.ch, (byte) c) < 0) // The byte was not found
 		{
 			writeBits(act, out, escape); // write escape
@@ -162,13 +161,13 @@ public class Huff {
 			return writeBits(act, out, c);
 		}
 	}
-	
-	public static void writeEOF(Node act, BitOutputStream out) throws IOException{
+
+	public static void writeEOF(Node act, BitOutputStream out) throws IOException {
 		writeBits(act, out, escape);
 		out.write(eof);
 	}
-	
-	private static boolean writeBits(Node act, BitOutputStream out, int c) throws IOException{
+
+	private static boolean writeBits(Node act, BitOutputStream out, int c) throws IOException {
 		while (true) // travel through all nodes starting with act
 		{
 			if (act.ch.length == 1) // found if this node is the char
@@ -195,19 +194,17 @@ public class Huff {
 		}
 		throw new IOException("Bad Huffman code"); // Character not contained in the tree
 	}
-	
+
 	/**
-	 * Read a huffman encoded byte: read as many bits as necessary out of the InputStream an return
-	 * the resulting byte. manages escape codes.
-	 * 
-	 * @param act
-	 *            The root node of the Huffman tree
-	 * @param in
-	 *            The BitInputStream to reas from
+	 * Read a huffman encoded byte: read as many bits as necessary out of the
+	 * InputStream an return the resulting byte. manages escape codes.
+	 *
+	 * @param act The root node of the Huffman tree
+	 * @param in  The BitInputStream to reas from
 	 * @return a single byte
 	 * @throws IOException
 	 */
-	static int readByte(Node act, BitInputStream in) throws IOException{
+	static int readByte(Node act, BitInputStream in) throws IOException {
 		while (true) {
 			if (act == null) {
 				throw new IOException("Bad Huffman code");
@@ -230,17 +227,18 @@ public class Huff {
 			}
 		}
 	}
-	
+
 	/**
-	 * The main function can be used to accomplish a few tasks regarding persistent storage of
-	 * Huffman tables.:
+	 * The main function can be used to accomplish a few tasks regarding persistent
+	 * storage of Huffman tables.:
 	 * <ul>
-	 * <li>java -classpath . ch.rgw.tools.Compress.Huff list: shows all stored tables in the system
-	 * Preferences</li>
-	 * <li>java -classpath . ch.rgw.tools.Compress.Huff create <name> <file>: computes a frequency
-	 * table of the <file> and stores ist as <name> in the preferences.</li>
-	 * <li>java -classpath . ch.rgw.tools.Compress.Huff export <name> <file>: exports the table
-	 * <name> from the preferences into two files:
+	 * <li>java -classpath . ch.rgw.tools.Compress.Huff list: shows all stored
+	 * tables in the system Preferences</li>
+	 * <li>java -classpath . ch.rgw.tools.Compress.Huff create <name> <file>:
+	 * computes a frequency table of the <file> and stores ist as <name> in the
+	 * preferences.</li>
+	 * <li>java -classpath . ch.rgw.tools.Compress.Huff export <name> <file>:
+	 * exports the table <name> from the preferences into two files:
 	 * <ul>
 	 * <li><file>.bin: A binary representation (sequence of bytes)</li>
 	 * <li><file>.asc: A textual representation (comma separated list)</li>
@@ -248,7 +246,7 @@ public class Huff {
 	 * </li>
 	 * </ul>
 	 */
-	public static void main(String[] argv){
+	public static void main(String[] argv) {
 		try {
 			if (argv[0].equals("create")) {
 				FileInputStream in = new FileInputStream(argv[2]);
@@ -261,7 +259,7 @@ public class Huff {
 					System.out.println(tables[i]);
 				}
 			}
-			
+
 			else if (argv[0].equals("export")) {
 				Preferences pr = Preferences.userNodeForPackage(Huff.class);
 				Preferences node = pr.node("StandardTables");
@@ -282,13 +280,13 @@ public class Huff {
 					}
 				}
 			} else {
-				System.out.println("Usage: Huff create <name> <file>\n"
-					+ "or Huff export <name> <file>n" + "or Huff list");
+				System.out.println(
+						"Usage: Huff create <name> <file>\n" + "or Huff export <name> <file>n" + "or Huff list");
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 }

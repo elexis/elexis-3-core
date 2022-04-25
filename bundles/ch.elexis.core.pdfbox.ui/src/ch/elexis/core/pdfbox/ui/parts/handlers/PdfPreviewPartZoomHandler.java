@@ -12,17 +12,17 @@ import ch.elexis.core.pdfbox.ui.parts.PdfPreviewPart;
 import ch.elexis.core.services.IConfigService;
 
 public class PdfPreviewPartZoomHandler {
-	
+
 	@Inject
 	private IConfigService configService;
-	
+
 	@Execute
-	public void execute(MPart pdfPreviewPart, MDirectToolItem toolItem){
-		
+	public void execute(MPart pdfPreviewPart, MDirectToolItem toolItem) {
+
 		String zoomLevel = configService.getActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
-			Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
+				Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
 		Float _zoomLevel = new Float(zoomLevel);
-		
+
 		String zoomDirection = toolItem.getTags().get(0);
 		if ("ZoomIn".equals(zoomDirection)) {
 			if (_zoomLevel < 4) {
@@ -33,13 +33,12 @@ public class PdfPreviewPartZoomHandler {
 				_zoomLevel -= 0.2f;
 			}
 		}
-		
-		configService.setActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
-			_zoomLevel.toString());
-		
+
+		configService.setActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL, _zoomLevel.toString());
+
 		PdfPreviewPart _pdfPreviewPart = (PdfPreviewPart) pdfPreviewPart.getObject();
 		_pdfPreviewPart.changeScalingFactor(_zoomLevel);
-		
+
 	}
-	
+
 }

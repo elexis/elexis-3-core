@@ -31,24 +31,23 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @XmlRootElement(name = "user")
 @Cache(expiry = 15000)
 @NamedQuery(name = "User.kontakt", query = "SELECT u FROM User u WHERE u.deleted = false AND u.kontakt = :kontakt")
-public class User extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class User extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Lob
 	protected byte[] extInfo;
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "KONTAKT_ID")
 	protected Kontakt kontakt;
@@ -70,10 +69,10 @@ public class User extends AbstractEntityWithId
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "allow_external")
 	protected boolean allowExternal;
-	
+
 	@Lob()
 	protected String keystore;
-	
+
 	@Column(length = 16)
 	protected String totp;
 
@@ -120,11 +119,11 @@ public class User extends AbstractEntityWithId
 	public void setAdministrator(boolean administrator) {
 		this.administrator = administrator;
 	}
-	
+
 	public boolean isAllowExternal() {
 		return allowExternal;
 	}
-	
+
 	public void setAllowExternal(boolean allowExternal) {
 		this.allowExternal = allowExternal;
 	}
@@ -136,11 +135,11 @@ public class User extends AbstractEntityWithId
 	public void setKeystore(String keystore) {
 		this.keystore = keystore;
 	}
-	
+
 	public String getTotp() {
 		return totp;
 	}
-	
+
 	public void setTotp(String totp) {
 		this.totp = totp;
 	}
@@ -154,42 +153,42 @@ public class User extends AbstractEntityWithId
 	}
 
 	@Override
-	public byte[] getExtInfo(){
+	public byte[] getExtInfo() {
 		return extInfo;
 	}
-	
+
 	@Override
-	public void setExtInfo(byte[] extInfo){
+	public void setExtInfo(byte[] extInfo) {
 		this.extInfo = extInfo;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

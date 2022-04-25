@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 package ch.elexis.data;
 
@@ -26,10 +26,11 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.TimeTool;
 
 /**
- * An OutputLog instance carries the information when and where to a PersistentObject has been sent.
- * 
+ * An OutputLog instance carries the information when and where to a
+ * PersistentObject has been sent.
+ *
  * @author gerry
- * 
+ *
  */
 public class OutputLog extends PersistentObject {
 	public static final String FLD_OBJECT_TYPE = "ObjectType";
@@ -37,43 +38,39 @@ public class OutputLog extends PersistentObject {
 	public static final String FLD_OUTPUTTER = "Outputter";
 	static final String TABLENAME = "OUTPUT_LOG";
 	static final HashMap<String, IOutputter> outputter_cache = new HashMap<String, IOutputter>();
-	
+
 	static {
-		addMapping(TABLENAME, FLD_OBJECT_ID, FLD_OBJECT_TYPE, FLD_OUTPUTTER, DATE_COMPOUND,
-			FLD_EXTINFO);
+		addMapping(TABLENAME, FLD_OBJECT_ID, FLD_OBJECT_TYPE, FLD_OUTPUTTER, DATE_COMPOUND, FLD_EXTINFO);
 	}
-	
-	public OutputLog(PersistentObject po, IOutputter io){
+
+	public OutputLog(PersistentObject po, IOutputter io) {
 		create(null);
-		set(new String[] {
-			FLD_OBJECT_ID, FLD_OBJECT_TYPE, FLD_DATE, FLD_OUTPUTTER
-		}, po.getId(), po.getClass().getName(), new TimeTool().toString(TimeTool.DATE_GER),
-			io.getOutputterID());
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_UPDATE));
+		set(new String[] { FLD_OBJECT_ID, FLD_OBJECT_TYPE, FLD_DATE, FLD_OUTPUTTER }, po.getId(),
+				po.getClass().getName(), new TimeTool().toString(TimeTool.DATE_GER), io.getOutputterID());
+		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_UPDATE));
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		return get(FLD_DATE) + ":" + get(FLD_OUTPUTTER);
 	}
-	
-	public String getOutputterID(){
+
+	public String getOutputterID() {
 		return checkNull(get(FLD_OUTPUTTER));
 	}
-	
-	public static List<OutputLog> getOutputs(PersistentObject po){
+
+	public static List<OutputLog> getOutputs(PersistentObject po) {
 		Query<OutputLog> qbe = new Query<OutputLog>(OutputLog.class);
 		qbe.add(FLD_OBJECT_ID, Query.EQUALS, po.getId());
 		qbe.orderBy(true, FLD_LASTUPDATE);
 		return qbe.execute();
 	}
-	
-	public static IOutputter getOutputter(String outputterID){
+
+	public static IOutputter getOutputter(String outputterID) {
 		IOutputter ret = outputter_cache.get(outputterID);
 		if (ret == null) {
-			List<IConfigurationElement> eps =
-				Extensions.getExtensions(ExtensionPointConstantsData.OUTPUT_LOG_DESCRIPTOR);
+			List<IConfigurationElement> eps = Extensions
+					.getExtensions(ExtensionPointConstantsData.OUTPUT_LOG_DESCRIPTOR);
 			for (IConfigurationElement ep : eps) {
 				String id = ep.getAttribute("id");
 				if (id != null && id.equals(outputterID)) {
@@ -89,19 +86,20 @@ public class OutputLog extends PersistentObject {
 		}
 		return ret;
 	}
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return TABLENAME;
 	}
-	
-	public static OutputLog load(String id){
+
+	public static OutputLog load(String id) {
 		return new OutputLog(id);
 	}
-	
-	protected OutputLog(String id){
+
+	protected OutputLog(String id) {
 		super(id);
 	}
-	
-	OutputLog(){}
+
+	OutputLog() {
+	}
 }

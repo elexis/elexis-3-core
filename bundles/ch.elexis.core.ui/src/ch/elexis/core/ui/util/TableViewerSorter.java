@@ -14,42 +14,43 @@ import org.eclipse.swt.widgets.TableColumn;
 import ch.elexis.core.jdt.NonNull;
 
 /**
- * Sorter for every row of a table viewer; requires a content provider that implements the
- * {@link IColumnContentProvider} interface. Strings are compared case insensitive.
- * 
+ * Sorter for every row of a table viewer; requires a content provider that
+ * implements the {@link IColumnContentProvider} interface. Strings are compared
+ * case insensitive.
+ *
  * @see https://dzone.com/articles/javaswt-click-table-column
  * @since 3.7
  */
 public class TableViewerSorter {
 	private final TableViewer tableViewer;
-	
-	public TableViewerSorter(TableViewer tableViewer){
+
+	public TableViewerSorter(TableViewer tableViewer) {
 		this.tableViewer = tableViewer;
 		addColumnSelectionListeners(tableViewer);
 		tableViewer.setComparator(new ViewerComparator() {
-			public int compare(Viewer viewer, Object e1, Object e2){
+			public int compare(Viewer viewer, Object e1, Object e2) {
 				return compareElements(e1, e2);
 			}
 		});
 	}
-	
-	private void addColumnSelectionListeners(TableViewer tableViewer){
+
+	private void addColumnSelectionListeners(TableViewer tableViewer) {
 		TableColumn[] columns = tableViewer.getTable().getColumns();
 		for (int i = 0; i < columns.length; i++) {
 			addColumnSelectionListener(columns[i]);
 		}
 	}
-	
-	private void addColumnSelectionListener(TableColumn column){
+
+	private void addColumnSelectionListener(TableColumn column) {
 		column.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				tableColumnClicked((TableColumn) e.widget);
 			}
 		});
-		
+
 	}
-	
-	private void tableColumnClicked(TableColumn column){
+
+	private void tableColumnClicked(TableColumn column) {
 		Table table = column.getParent();
 		if (column.equals(table.getSortColumn())) {
 			table.setSortDirection(table.getSortDirection() == SWT.UP ? SWT.DOWN : SWT.UP);
@@ -57,20 +58,17 @@ public class TableViewerSorter {
 			table.setSortColumn(column);
 			table.setSortDirection(SWT.UP);
 		}
-		
+
 		tableViewer.refresh();
-		
+
 	}
-	
-	@SuppressWarnings({
-		"rawtypes", "unchecked"
-	})
-	private int compareElements(Object e1, Object e2){
-		IColumnContentProvider columnValueProvider =
-			(IColumnContentProvider) tableViewer.getContentProvider();
-		
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private int compareElements(Object e1, Object e2) {
+		IColumnContentProvider columnValueProvider = (IColumnContentProvider) tableViewer.getContentProvider();
+
 		Table table = tableViewer.getTable();
-		
+
 		int index = Arrays.asList(table.getColumns()).indexOf(table.getSortColumn());
 		int result = 0;
 		if (index != -1) {
@@ -84,13 +82,13 @@ public class TableViewerSorter {
 				result = c1.compareTo(c2);
 			}
 		}
-		
+
 		return table.getSortDirection() == SWT.UP ? result : -result;
 	}
-	
+
 	public interface IColumnContentProvider {
 		@NonNull
 		Comparable<?> getValue(Object element, int columnIndex);
 	}
-	
+
 }

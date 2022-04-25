@@ -26,30 +26,30 @@ import ch.elexis.core.ui.util.NatTableFactory;
 import ch.elexis.core.ui.util.NatTableWrapper;
 
 public class CodingListComposite extends Composite {
-	
+
 	private NatTableWrapper natTableWrapper;
 	private ToolBarManager toolbarManager;
-	
+
 	private CodingSelectionComposite selectionComposite;
-	
+
 	private EventList<ICoding> dataList = new BasicEventList<>();
 	private CodingAdapter adapter;
-	
+
 	public static interface CodingAdapter {
 		public List<ICoding> getCoding();
-		
+
 		public void setCoding(List<ICoding> coding);
 	}
-	
-	public CodingListComposite(Composite parent, int style){
+
+	public CodingListComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
-		
+
 		selectionComposite = new CodingSelectionComposite(this, SWT.NONE);
 		selectionComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		selectionComposite.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection instanceof StructuredSelection && !selection.isEmpty()) {
 					ICoding iCoding = (ICoding) ((StructuredSelection) selection).getFirstElement();
@@ -61,57 +61,57 @@ public class CodingListComposite extends Composite {
 				}
 			}
 		});
-		//		selectionComposite.setCodeSystem(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
-		
+		// selectionComposite.setCodeSystem(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
+
 		toolbarManager = new ToolBarManager();
 		toolbarManager.add(new RemoveCodingAction());
 		ToolBar toolbar = toolbarManager.createControl(this);
 		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
 		toolbar.setBackground(parent.getBackground());
-		
+
 		natTableWrapper = NatTableFactory.createSingleColumnTable(this,
-			new GlazedListsDataProvider<ICoding>(dataList, new IColumnAccessor<ICoding>() {
+				new GlazedListsDataProvider<ICoding>(dataList, new IColumnAccessor<ICoding>() {
 
-				@Override
-				public int getColumnCount(){
-					return 1;
-				}
+					@Override
+					public int getColumnCount() {
+						return 1;
+					}
 
-				@Override
-				public Object getDataValue(ICoding coding, int arg1){
-					StringBuilder text = new StringBuilder();
-					String display = coding.getDisplay();
-					if (display == null || display.isEmpty()) {
-						List<ICoding> codes = CodingServiceComponent.getService()
-							.getAvailableCodes(coding.getSystem());
-						if (codes != null && !codes.isEmpty()) {
-							ICoding code = searchForCode(coding.getCode(), codes);
-							if (code != null) {
-								display = code.getDisplay();
-							} else {
-								display = "?";
+					@Override
+					public Object getDataValue(ICoding coding, int arg1) {
+						StringBuilder text = new StringBuilder();
+						String display = coding.getDisplay();
+						if (display == null || display.isEmpty()) {
+							List<ICoding> codes = CodingServiceComponent.getService()
+									.getAvailableCodes(coding.getSystem());
+							if (codes != null && !codes.isEmpty()) {
+								ICoding code = searchForCode(coding.getCode(), codes);
+								if (code != null) {
+									display = code.getDisplay();
+								} else {
+									display = "?";
+								}
 							}
 						}
-					}
-					text.append("<strong>");
-					text.append("[").append(coding.getCode()).append("]");
-					text.append("</strong>");
-					text.append(" ").append(display);
-					
-					return text.toString();
-				}
+						text.append("<strong>");
+						text.append("[").append(coding.getCode()).append("]");
+						text.append("</strong>");
+						text.append(" ").append(display);
 
-				@Override
-				public void setDataValue(ICoding coding, int arg1, Object arg2){
-					// setting data values is not enabled here.
-				}
-			}), null);
+						return text.toString();
+					}
+
+					@Override
+					public void setDataValue(ICoding coding, int arg1, Object arg2) {
+						// setting data values is not enabled here.
+					}
+				}), null);
 		GridData tableGd = new GridData(GridData.FILL_BOTH);
 		tableGd.horizontalSpan = 2;
 		natTableWrapper.getNatTable().setLayoutData(tableGd);
 	}
-	
-	private ICoding searchForCode(String code, List<ICoding> codes){
+
+	private ICoding searchForCode(String code, List<ICoding> codes) {
 		for (ICoding iCoding : codes) {
 			if (iCoding.getCode().equals(code)) {
 				return iCoding;
@@ -119,21 +119,21 @@ public class CodingListComposite extends Composite {
 		}
 		return null;
 	}
-	
+
 	private class RemoveCodingAction extends Action {
-		
+
 		@Override
-		public ImageDescriptor getImageDescriptor(){
+		public ImageDescriptor getImageDescriptor() {
 			return Images.IMG_DELETE.getImageDescriptor();
 		}
-		
+
 		@Override
-		public String getText(){
+		public String getText() {
 			return "entfernen";
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			ISelection selection = natTableWrapper.getSelection();
 			if (selection instanceof StructuredSelection && !selection.isEmpty()) {
 				@SuppressWarnings("unchecked")
@@ -148,8 +148,8 @@ public class CodingListComposite extends Composite {
 			}
 		}
 	}
-	
-	public void setInput(CodingAdapter adapter){
+
+	public void setInput(CodingAdapter adapter) {
 		this.adapter = adapter;
 		dataList.clear();
 		dataList.addAll(adapter.getCoding());

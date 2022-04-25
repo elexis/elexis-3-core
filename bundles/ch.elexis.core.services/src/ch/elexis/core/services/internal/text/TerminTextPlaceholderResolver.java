@@ -18,31 +18,31 @@ import ch.rgw.tools.TimeTool;
 
 @Component
 public class TerminTextPlaceholderResolver implements ITextPlaceholderResolver {
-	
+
 	@Override
-	public String getSupportedType(){
+	public String getSupportedType() {
 		return "Termin";
 	}
-	
+
 	@Override
-	public List<PlaceholderAttribute> getSupportedAttributes(){
+	public List<PlaceholderAttribute> getSupportedAttributes() {
 		return Arrays.asList(TerminAttribute.values()).stream()
-			.map(m -> new PlaceholderAttribute(getSupportedType(), m.name(), m.getLocaleText()))
-			.collect(Collectors.toList());
+				.map(m -> new PlaceholderAttribute(getSupportedType(), m.name(), m.getLocaleText()))
+				.collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute){
+	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute) {
 		IAppointment appointment = context.getTyped(IAppointment.class).orElse(null);
 		if (appointment != null) {
 			return Optional.ofNullable(replace(appointment, attribute.toLowerCase()));
 		}
 		return Optional.empty();
 	}
-	
-	private String replace(IAppointment appointment, String lcAttribute){
+
+	private String replace(IAppointment appointment, String lcAttribute) {
 		LocalDateTime value;
-		
+
 		TerminAttribute attribute = searchEnum(TerminAttribute.class, lcAttribute);
 		switch (attribute) {
 		case Tag:
@@ -58,21 +58,21 @@ public class TerminTextPlaceholderResolver implements ITextPlaceholderResolver {
 			return null;
 		}
 	}
-	
+
 	private enum TerminAttribute implements ILocalizedEnum {
-			Tag("Tag des Termins im Format dd.MM.yyyy"), Bereich("Zugehöriger Bereich"),
-			Zeit("Startzeitpunkt im Format hh:mm");
-		
+		Tag("Tag des Termins im Format dd.MM.yyyy"), Bereich("Zugehöriger Bereich"),
+		Zeit("Startzeitpunkt im Format hh:mm");
+
 		final String description;
-		
-		private TerminAttribute(String description){
+
+		private TerminAttribute(String description) {
 			this.description = description;
 		}
-		
+
 		@Override
-		public String getLocaleText(){
+		public String getLocaleText() {
 			return description;
 		}
 	}
-	
+
 }

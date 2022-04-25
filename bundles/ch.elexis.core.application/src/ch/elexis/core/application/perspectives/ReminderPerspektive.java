@@ -18,11 +18,11 @@ import ch.elexis.core.ui.views.ReminderView;
 
 public class ReminderPerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.ReminderPerspektive"; //$NON-NLS-1$
-	
-	public void createInitialLayout(IPageLayout layout){
+
+	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
 		layout.addView(ReminderView.ID, IPageLayout.LEFT, 0.8f, IPageLayout.ID_EDITOR_AREA);
 	}
-	
+
 }

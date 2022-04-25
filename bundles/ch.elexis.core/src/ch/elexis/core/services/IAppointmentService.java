@@ -17,7 +17,7 @@ public interface IAppointmentService {
 
 	/**
 	 * Create a transient clone of the provided {@link IAppointment}.
-	 * 
+	 *
 	 * @param appointment
 	 * @return
 	 */
@@ -28,7 +28,7 @@ public interface IAppointmentService {
 	 * {@link IAppointment} has recurrence information with the whole parameter
 	 * either the whole series is deleted or just the appointment keeping the series
 	 * in tact.
-	 * 
+	 *
 	 * @param appointment
 	 * @param whole
 	 * @return
@@ -38,7 +38,7 @@ public interface IAppointmentService {
 	/**
 	 * Updates the boundaries and check whether the only entries are appointments if
 	 * yes also check whether some boundaries are missing
-	 * 
+	 *
 	 * @param schedule
 	 * @param date
 	 */
@@ -46,7 +46,7 @@ public interface IAppointmentService {
 
 	/**
 	 * Get the configured type string for the specified {@link AppointmentType}.
-	 * 
+	 *
 	 * @param type
 	 * @return
 	 */
@@ -54,7 +54,7 @@ public interface IAppointmentService {
 
 	/**
 	 * Get the configured state string for the specified {@link AppointmentState}.
-	 * 
+	 *
 	 * @param type
 	 * @return
 	 */
@@ -62,27 +62,27 @@ public interface IAppointmentService {
 
 	/**
 	 * Add the type string to the list of configured types.
-	 * 
+	 *
 	 * @param periodType
 	 */
 	public void addType(String type);
 
 	/**
 	 * Add the state string to the list of configured states.
-	 * 
+	 *
 	 * @param periodType
 	 */
 	public void addState(String state);
 
 	/**
 	 * Get all defined areas.
-	 * 
+	 *
 	 * @return
 	 */
 	public List<Area> getAreas();
-	
+
 	/**
-	 * 
+	 *
 	 * @param schedule
 	 * @return the area for the given name/id or <code>null</code>
 	 * @since 3.9
@@ -91,27 +91,25 @@ public interface IAppointmentService {
 
 	/**
 	 * Define the {@link AreaType} of an area
-	 * 
-	 * @param area
-	 *            the id of the area
-	 * @param areaType
-	 *            the type to define
-	 * @param value
-	 *            to set, for {@link AreaType#CONTACT} the {@link IContact#getId()}
+	 *
+	 * @param area     the id of the area
+	 * @param areaType the type to define
+	 * @param value    to set, for {@link AreaType#CONTACT} the
+	 *                 {@link IContact#getId()}
 	 * @since 3.10
 	 */
 	public void setAreaType(String area, AreaType areaType, String value);
 
 	/**
 	 * Get all configured type strings
-	 * 
+	 *
 	 * @return
 	 */
 	public List<String> getTypes();
 
 	/**
 	 * Get all configured state strings
-	 * 
+	 *
 	 * @return
 	 */
 	public List<String> getStates();
@@ -120,7 +118,7 @@ public interface IAppointmentService {
 	 * Get the {@link IAppointmentSeries} representation of the
 	 * {@link IAppointment}. Returns empty if {@link IAppointment#isRecurring()} is
 	 * not true.
-	 * 
+	 *
 	 * @param termin
 	 * @return
 	 */
@@ -128,7 +126,7 @@ public interface IAppointmentService {
 
 	/**
 	 * Create a new {@link IAppointmentSeries} without persisting.
-	 * 
+	 *
 	 * @return
 	 */
 	public IAppointmentSeries createAppointmentSeries();
@@ -136,7 +134,7 @@ public interface IAppointmentService {
 	/**
 	 * Persist the {@link IAppointmentSeries}, resulting in a list of
 	 * {@link IAppointment} instances.
-	 * 
+	 *
 	 * @return
 	 */
 	public List<IAppointment> saveAppointmentSeries(IAppointmentSeries appointmentSeries);
@@ -144,7 +142,7 @@ public interface IAppointmentService {
 	/**
 	 * If the {@link IAppointmentSeries} is persistent, all {@link IAppointment}
 	 * instances of the series are deleted.
-	 * 
+	 *
 	 * @param appointment
 	 */
 	public void deleteAppointmentSeries(IAppointmentSeries appointmentSeries);
@@ -152,7 +150,7 @@ public interface IAppointmentService {
 	/**
 	 * Get a map with the configured preferred durations with appointment type as
 	 * key.
-	 * 
+	 *
 	 * @param areaName
 	 * @return
 	 */
@@ -162,19 +160,21 @@ public interface IAppointmentService {
 	 * Resolves the contact this area is allocated to. That is: If the the given
 	 * area is a contact allocated area, the respective allocated contact is
 	 * returned.
-	 * 
+	 *
 	 * @param localObject
 	 * @return
 	 * @see AreaType
 	 * @since 3.9
 	 */
 	Optional<IContact> resolveAreaAssignedContact(String areaName);
-	
+
 	/**
-	 * Resolves the areadId allocated to a specific contact. Reverse operation to {@link #resolveAreaAssignedContact(String)}
-	 * 
+	 * Resolves the areadId allocated to a specific contact. Reverse operation to
+	 * {@link #resolveAreaAssignedContact(String)}
+	 *
 	 * @param contact
-	 * @return the areaId allocated to this contact, <code>null</code> if not available
+	 * @return the areaId allocated to this contact, <code>null</code> if not
+	 *         available
 	 * @since 3.10
 	 */
 	String resolveAreaByAssignedContact(IContact contact);

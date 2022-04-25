@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.util;
 
@@ -22,13 +22,15 @@ import ch.elexis.core.ui.UiDesk;
 import ch.rgw.tools.TimeTool;
 
 /**
- * Standardisiertes Log. Ein Programm kann das Log mit Log.get(präfix) anfordern und fortan Ausgaben
- * ins Log mittels Log(Text,level) machen. Ob eine bestimmte Ausgabe ins Log gelangt, hängt vom
- * LogLevel und dem Text-Level ab. Wenn der Level einer Meldung gleich oder niedriger ist, als der
- * aktuell eingestellte LogLevel, wird die Ausgabe gemacht, andernfalls wird sie verworfen.
- * Ausserdem kann festgelegt werden, ab welchem level eine Nachricht zu einer direkten
- * Benachrichtigung des Anwenders mittels MessageBox führt (setAlert und setAlertLevel
- * 
+ * Standardisiertes Log. Ein Programm kann das Log mit Log.get(präfix) anfordern
+ * und fortan Ausgaben ins Log mittels Log(Text,level) machen. Ob eine bestimmte
+ * Ausgabe ins Log gelangt, hängt vom LogLevel und dem Text-Level ab. Wenn der
+ * Level einer Meldung gleich oder niedriger ist, als der aktuell eingestellte
+ * LogLevel, wird die Ausgabe gemacht, andernfalls wird sie verworfen. Ausserdem
+ * kann festgelegt werden, ab welchem level eine Nachricht zu einer direkten
+ * Benachrichtigung des Anwenders mittels MessageBox führt (setAlert und
+ * setAlertLevel
+ *
  * @author G. Weirich
  */
 
@@ -51,65 +53,61 @@ public class Log {
 	public static final int TRACE = 6;
 	/** Immer auszugebende Meldungen, automatisch mit einem Timestamp versehen */
 	public static final int SYNCMARK = -1;
-	
-	private static String[] Levels = {
-		"OK", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG", "TRACE"
-	};
-	
+
+	private static String[] Levels = { "OK", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG", "TRACE" };
+
 	private static Logger out = null;
-	
+
 	String prefix;
 	private static int LogLevel;
 	private static int alertLevel;
 	private static String lastError;
 	private static Shell doAlert;
-	
+
 	static {
 		LogLevel = 2;
 		doAlert = null;
 		alertLevel = Log.FATALS;
 	}
-	
+
 	/**
-	 * AlertLevel einstellen. wenn der Level einer Nachricht unter diesem Level liegt, wird eine
-	 * Alertbox zur Nazeige der Nachricht geöffnet (Anstatt nur zu loggen). Dies geht nur, wenn mit
-	 * setAlert auch eine parent-Shell gesetzt worden ist.
+	 * AlertLevel einstellen. wenn der Level einer Nachricht unter diesem Level
+	 * liegt, wird eine Alertbox zur Nazeige der Nachricht geöffnet (Anstatt nur zu
+	 * loggen). Dies geht nur, wenn mit setAlert auch eine parent-Shell gesetzt
+	 * worden ist.
 	 */
-	static public void setAlertLevel(int l){
+	static public void setAlertLevel(int l) {
 		alertLevel = l;
 	}
-	
+
 	/**
 	 * Alert inetellen oder löschen. Wenn cmp nicht null ist, wird bei jeder
 	 * Fehlermeldung>Log.Errors eine Alertbox mit der Fehlermeldung ausgegeben.
-	 * 
-	 * @param cmp
-	 *            die Paent-Komponente für die Alertbox
+	 *
+	 * @param cmp die Paent-Komponente für die Alertbox
 	 */
-	static public void setAlert(Shell cmp){
+	static public void setAlert(Shell cmp) {
 		doAlert = cmp;
 	}
-	
+
 	/**
 	 * Das Log anfordern. Es gibt pro Programm nur ein Log.
-	 * 
-	 * @param prefix
-	 *            Ein String, der allen Log-Ausgaben dieser Instanz vorangestellt wird
+	 *
+	 * @param prefix Ein String, der allen Log-Ausgaben dieser Instanz vorangestellt
+	 *               wird
 	 * @return eine Log-Instanz
 	 */
-	static public Log get(String prefix){
+	static public Log get(String prefix) {
 		return new Log(prefix);
 	}
-	
+
 	/**
 	 * Eine Log-Nachricht ausgeben.
-	 * 
-	 * @param message
-	 *            die Nachricht
-	 * @param level
-	 *            der level
+	 *
+	 * @param message die Nachricht
+	 * @param level   der level
 	 */
-	public void log(String message, int level){
+	public void log(String message, int level) {
 		if (out == null)
 			out = LoggerFactory.getLogger(Log.class);
 		synchronized (out) {
@@ -145,37 +143,32 @@ public class Log {
 						if (doAlert == null) {
 							doAlert = UiDesk.getTopShell();
 						}
-						lastError =
-							new StringBuilder().append(" |").append(type).append("| - ")
-								.append(prefix).append(": ").append(message).toString();
+						lastError = new StringBuilder().append(" |").append(type).append("| - ").append(prefix)
+								.append(": ").append(message).toString();
 						if (doAlert != null) {
 							UiDesk.asyncExec(new Runnable() {
-								public void run(){
-									MessageBox msg =
-										new MessageBox(doAlert, SWT.ICON_ERROR | SWT.OK);
+								public void run() {
+									MessageBox msg = new MessageBox(doAlert, SWT.ICON_ERROR | SWT.OK);
 									msg.setMessage(lastError);
 									msg.open();
 								}
 							});
-							
+
 						}
 					}
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Eine Exception als Log-Nachricht ausgeben.
-	 * 
-	 * @param t
-	 *            die Exception
-	 * @param message
-	 *            die Nachricht
-	 * @param level
-	 *            der level
+	 *
+	 * @param t       die Exception
+	 * @param message die Nachricht
+	 * @param level   der level
 	 */
-	public void log(final Throwable t, String message, final int level){
+	public void log(final Throwable t, String message, final int level) {
 		if (message == null || message.length() == 0) {
 			message = t.getMessage();
 			if (message == null || message.length() == 0) {
@@ -185,50 +178,48 @@ public class Log {
 		log(message, level);
 		t.printStackTrace();
 	}
-	
+
 	/**
 	 * Eine Exception als Log-Nachricht ausgeben.
-	 * 
-	 * @param t
-	 *            die Exception
-	 * @param level
-	 *            der level
+	 *
+	 * @param t     die Exception
+	 * @param level der level
 	 */
-	public void log(final Throwable t){
+	public void log(final Throwable t) {
 		log(t, null, Log.ERRORS);
 	}
-	
-	public static void trace(String msg){
+
+	public static void trace(String msg) {
 		StringBuffer mark = new StringBuffer(100);
 		mark.append("--TRACE: "); //$NON-NLS-1$
 		mark.append(new TimeTool().toString(TimeTool.FULL_GER));
 		mark.append(": ").append(msg); //$NON-NLS-1$
 		out.trace(mark.toString());
 	}
-	
-	public boolean isDebug(){
+
+	public boolean isDebug() {
 		return DEBUGMSG <= LogLevel;
 	}
-	
-	public boolean isInfo(){
+
+	public boolean isInfo() {
 		return INFOS <= LogLevel;
 	}
-	
-	public boolean isWarn(){
+
+	public boolean isWarn() {
 		return WARNINGS <= LogLevel;
 	}
-	
-	public boolean isError(){
+
+	public boolean isError() {
 		return ERRORS <= LogLevel;
 	}
-	
-	private Log(){
+
+	private Log() {
 		if (out == null)
 			out = LoggerFactory.getLogger(Log.class);
 	}
-	
-	private Log(String p){
+
+	private Log(String p) {
 		prefix = p;
 	}
-	
+
 }

@@ -11,7 +11,7 @@ import ch.elexis.core.types.LabItemTyp;
 public class LabItemTypConverter implements AttributeConverter<LabItemTyp, String> {
 
 	@Override
-	public String convertToDatabaseColumn(LabItemTyp attribute){
+	public String convertToDatabaseColumn(LabItemTyp attribute) {
 		if (attribute != null) {
 			return Integer.toString(attribute.getType());
 		}
@@ -19,7 +19,7 @@ public class LabItemTypConverter implements AttributeConverter<LabItemTyp, Strin
 	}
 
 	@Override
-	public LabItemTyp convertToEntityAttribute(String dbData){
+	public LabItemTyp convertToEntityAttribute(String dbData) {
 		if (StringUtils.isEmpty(dbData)) {
 			return LabItemTyp.TEXT;
 		}

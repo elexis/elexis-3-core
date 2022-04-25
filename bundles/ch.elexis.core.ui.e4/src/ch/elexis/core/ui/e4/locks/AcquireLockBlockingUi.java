@@ -17,20 +17,19 @@ import ch.elexis.core.services.holder.LocalLockServiceHolder;
 
 public class AcquireLockBlockingUi {
 	private static Logger logger = LoggerFactory.getLogger(AcquireLockBlockingUi.class);
-	
-	public static void aquireAndRun(Identifiable identifiable, ILockHandler handler){
+
+	public static void aquireAndRun(Identifiable identifiable, ILockHandler handler) {
 		if (ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE) {
 			handler.lockAcquired();
 			return;
 		}
-		
+
 		Display display = Display.getDefault();
 		display.syncExec(new Runnable() {
-			
+
 			@Override
-			public void run(){
-				ProgressMonitorDialog progress =
-					new ProgressMonitorDialog(display.getActiveShell());
+			public void run() {
+				ProgressMonitorDialog progress = new ProgressMonitorDialog(display.getActiveShell());
 				try {
 					progress.run(true, true, new AcquireLockRunnable(identifiable, handler));
 				} catch (InvocationTargetException | InterruptedException e) {
@@ -39,29 +38,27 @@ public class AcquireLockBlockingUi {
 			}
 		});
 	}
-	
+
 	private static class AcquireLockRunnable implements IRunnableWithProgress {
 		private Identifiable lockIdentifiable;
-		
+
 		private ILockHandler lockhander;
 		private LockResponse result;
-		
-		public AcquireLockRunnable(Identifiable lockIdentifiable, ILockHandler lockhander){
+
+		public AcquireLockRunnable(Identifiable lockIdentifiable, ILockHandler lockhander) {
 			this.lockIdentifiable = lockIdentifiable;
 			this.lockhander = lockhander;
 		}
-		
+
 		@Override
-		public void run(IProgressMonitor monitor)
-			throws InvocationTargetException, InterruptedException{
-				result =
-					LocalLockServiceHolder.get().acquireLockBlocking(lockIdentifiable, 30, monitor);
+		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+			result = LocalLockServiceHolder.get().acquireLockBlocking(lockIdentifiable, 30, monitor);
 			if (result != null) {
 				Display display = Display.getDefault();
 				if (result.isOk()) {
 					display.syncExec(new Runnable() {
 						@Override
-						public void run(){
+						public void run() {
 							lockhander.lockAcquired();
 						}
 					});
@@ -71,7 +68,7 @@ public class AcquireLockBlockingUi {
 				} else {
 					display.syncExec(new Runnable() {
 						@Override
-						public void run(){
+						public void run() {
 							lockhander.lockFailed();
 							LockResponseHelper.showInfo(result, lockIdentifiable, logger);
 						}

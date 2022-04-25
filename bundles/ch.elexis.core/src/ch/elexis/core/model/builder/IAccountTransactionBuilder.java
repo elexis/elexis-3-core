@@ -10,11 +10,11 @@ import ch.elexis.core.services.IModelService;
 import ch.rgw.tools.Money;
 
 public class IAccountTransactionBuilder extends AbstractBuilder<IAccountTransaction> {
-	
-	public IAccountTransactionBuilder(IModelService modelService, IInvoice invoice,
-		IPatient patient, Money amount, LocalDate date, String remark){
+
+	public IAccountTransactionBuilder(IModelService modelService, IInvoice invoice, IPatient patient, Money amount,
+			LocalDate date, String remark) {
 		super(modelService);
-		
+
 		object = modelService.create(IAccountTransaction.class);
 		object.setInvoice(invoice);
 		object.setPatient(patient);
@@ -22,10 +22,10 @@ public class IAccountTransactionBuilder extends AbstractBuilder<IAccountTransact
 		object.setDate(date);
 		object.setRemark(remark);
 	}
-	
-	public IAccountTransactionBuilder(IModelService modelService, IPayment payment){
+
+	public IAccountTransactionBuilder(IModelService modelService, IPayment payment) {
 		super(modelService);
-		
+
 		object = modelService.create(IAccountTransaction.class);
 		object.setInvoice(payment.getInvoice());
 		object.setPatient(payment.getInvoice().getCoverage().getPatient());
@@ -34,5 +34,5 @@ public class IAccountTransactionBuilder extends AbstractBuilder<IAccountTransact
 		object.setRemark(payment.getRemark());
 		object.setPayment(payment);
 	}
-	
+
 }

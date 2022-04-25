@@ -25,59 +25,58 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.l10n.Messages;
 
 public class PdfPreviewPartLoadHandler {
-	
+
 	private static ExecutorService loader = Executors.newSingleThreadExecutor();
-	
+
 	private final ScrolledComposite scrolledComposite;
 	private final Composite previewComposite;
-	
+
 	private float scalingFactor;
-	
+
 	private Label headLabel;
 	private int numberOfPages;
-	
+
 	private Image[] images;
-	
+
 	private PDDocument pdDocument;
-	
-	public PdfPreviewPartLoadHandler(InputStream pdfInputStream, Float scalingFactor,
-		Composite previewComposite, ScrolledComposite scrolledComposite){
-		
+
+	public PdfPreviewPartLoadHandler(InputStream pdfInputStream, Float scalingFactor, Composite previewComposite,
+			ScrolledComposite scrolledComposite) {
+
 		this.previewComposite = previewComposite;
 		this.scrolledComposite = scrolledComposite;
 		this.scalingFactor = scalingFactor != null ? scalingFactor : 1f;
-		
+
 		loader.submit(new LoaderRunnable(pdfInputStream));
 	}
-	
-	protected void unloadDocument() throws IOException{
+
+	protected void unloadDocument() throws IOException {
 		if (pdDocument != null) {
 			pdDocument.close();
 			pdDocument = null;
 		}
 	}
-	
+
 	private class LoaderRunnable implements Runnable {
-		
+
 		private InputStream pdfInputStream;
-		
-		public LoaderRunnable(InputStream pdfInputStream){
+
+		public LoaderRunnable(InputStream pdfInputStream) {
 			this.pdfInputStream = pdfInputStream;
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			try {
-				
+
 				// cleanup existing controls, show user feedback
 				previewComposite.getDisplay().syncExec(() -> {
 					headLabel = new Label(previewComposite, SWT.None);
 					headLabel.setText(Messages.PdfPreview_NoPDFSelected);
 					previewComposite.layout(true, true);
 					scrolledComposite.layout(true, true);
-					scrolledComposite
-						.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-					
+					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
 					Control[] children = previewComposite.getChildren();
 					for (Control control : children) {
 						if (headLabel.equals(control)) {
@@ -86,9 +85,9 @@ public class PdfPreviewPartLoadHandler {
 						control.dispose();
 					}
 					previewComposite.layout(true, true);
-					
+
 				});
-				
+
 				// load pdf document if not already loaded
 				if (pdDocument == null) {
 					if (pdfInputStream != null) {
@@ -100,7 +99,7 @@ public class PdfPreviewPartLoadHandler {
 						return;
 					}
 				}
-				
+
 				// render pages and display
 				PDFRenderer renderer = new PDFRenderer(pdDocument);
 				for (int i = 0; i < numberOfPages; i++) {
@@ -108,7 +107,7 @@ public class PdfPreviewPartLoadHandler {
 					BufferedImage bufferedImage = renderer.renderImage(i, scalingFactor);
 					ImageData imageData = convertToSWT(bufferedImage);
 					images[j] = new Image(previewComposite.getDisplay(), imageData);
-					
+
 					previewComposite.getDisplay().asyncExec(() -> {
 						if (j == 0) {
 							// reuse initialLabel
@@ -120,14 +119,13 @@ public class PdfPreviewPartLoadHandler {
 							label.setImage(images[j]);
 							label.addDisposeListener(dl -> images[j].dispose());
 						}
-						
+
 						previewComposite.layout(true, true);
 						scrolledComposite.layout(true, true);
-						scrolledComposite
-							.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+						scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 					});
 				}
-				
+
 			} catch (IOException e) {
 				previewComposite.getDisplay().asyncExec(() -> {
 					if (headLabel != null) {
@@ -137,21 +135,20 @@ public class PdfPreviewPartLoadHandler {
 					headLabel.setText(e.getMessage());
 					previewComposite.layout(true, true);
 					scrolledComposite.layout(true, true);
-					scrolledComposite
-						.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 				});
-				
+
 			}
 		}
 	}
-	
-	//Zoom
-	public void changeScalingFactor(Float scalingFactor){
+
+	// Zoom
+	public void changeScalingFactor(Float scalingFactor) {
 		this.scalingFactor = scalingFactor;
 		loader.submit(new LoaderRunnable(null));
 	}
-	
-	public void close(){
+
+	public void close() {
 		if (pdDocument != null) {
 			try {
 				pdDocument.close();
@@ -160,31 +157,30 @@ public class PdfPreviewPartLoadHandler {
 			}
 		}
 	}
-	
+
 	@Override
-	protected void finalize() throws Throwable{
+	protected void finalize() throws Throwable {
 		close();
 	}
-	
+
 	/**
 	 * Convert AWT BufferedImage to SWT ImageData
-	 * 
+	 *
 	 * @param bufferedImage
 	 * @return
 	 * @see https://git.eclipse.org/c/platform/eclipse.platform.swt.git/tree/examples/org.eclipse.swt.snippets/src/org/eclipse/swt/snippets/Snippet156.java
 	 */
-	private ImageData convertToSWT(BufferedImage bufferedImage){
+	private ImageData convertToSWT(BufferedImage bufferedImage) {
 		if (bufferedImage.getColorModel() instanceof DirectColorModel) {
 			DirectColorModel colorModel = (DirectColorModel) bufferedImage.getColorModel();
-			PaletteData palette = new PaletteData(colorModel.getRedMask(),
-				colorModel.getGreenMask(), colorModel.getBlueMask());
+			PaletteData palette = new PaletteData(colorModel.getRedMask(), colorModel.getGreenMask(),
+					colorModel.getBlueMask());
 			ImageData data = new ImageData(bufferedImage.getWidth(), bufferedImage.getHeight(),
-				colorModel.getPixelSize(), palette);
+					colorModel.getPixelSize(), palette);
 			for (int y = 0; y < data.height; y++) {
 				for (int x = 0; x < data.width; x++) {
 					int rgb = bufferedImage.getRGB(x, y);
-					int pixel = palette
-						.getPixel(new RGB((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF));
+					int pixel = palette.getPixel(new RGB((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF));
 					data.setPixel(x, y, pixel);
 					if (colorModel.hasAlpha()) {
 						data.setAlpha(x, y, (rgb >> 24) & 0xFF);
@@ -207,7 +203,7 @@ public class PdfPreviewPartLoadHandler {
 			}
 			PaletteData palette = new PaletteData(rgbs);
 			ImageData data = new ImageData(bufferedImage.getWidth(), bufferedImage.getHeight(),
-				colorModel.getPixelSize(), palette);
+					colorModel.getPixelSize(), palette);
 			data.transparentPixel = colorModel.getTransparentPixel();
 			WritableRaster raster = bufferedImage.getRaster();
 			int[] pixelArray = new int[1];
@@ -221,5 +217,5 @@ public class PdfPreviewPartLoadHandler {
 		}
 		return null;
 	}
-	
+
 }

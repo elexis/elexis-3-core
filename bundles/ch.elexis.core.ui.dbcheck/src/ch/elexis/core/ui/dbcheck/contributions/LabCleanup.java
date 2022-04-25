@@ -14,17 +14,17 @@ import ch.elexis.data.Query;
 import ch.rgw.tools.TimeTool;
 
 public class LabCleanup extends ExternalMaintenance {
-	
+
 	@Override
-	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
+	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		Query<Patient> qp = new Query<Patient>(Patient.class);
 		List<Patient> results = qp.execute();
 		int deletedCount = 0;
 		int allCount = 0;
 		// search for duplicate LabResult, get grouped already groups by date
 		for (Patient patient : results) {
-			HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> allGrouped =
-				LabResult.getGrouped(patient);
+			HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> allGrouped = LabResult
+					.getGrouped(patient);
 			Set<String> groups = allGrouped.keySet();
 			for (String group : groups) {
 				HashMap<String, HashMap<String, List<LabResult>>> groupAll = allGrouped.get(group);
@@ -40,13 +40,13 @@ public class LabCleanup extends ExternalMaintenance {
 					}
 				}
 			}
-			// cache Map in SoftCache is a memory leak on heavy use ... so resetCache 
+			// cache Map in SoftCache is a memory leak on heavy use ... so resetCache
 			PersistentObject.resetCache();
 		}
 		return deletedCount + " Werte wurden entfernt.\n " + allCount + " Werte insgesamt.";
 	}
-	
-	private int filterResults(List<LabResult> dayAll){
+
+	private int filterResults(List<LabResult> dayAll) {
 		int deleted = 0;
 		LabResult previous = null;
 		for (LabResult labResult : dayAll) {
@@ -67,15 +67,15 @@ public class LabCleanup extends ExternalMaintenance {
 		}
 		return deleted;
 	}
-	
+
 	/**
 	 * Make sure we got the same result, false positives could be really bad.
-	 * 
+	 *
 	 * @param left
 	 * @param right
 	 * @return
 	 */
-	private boolean sameResult(LabResult left, LabResult right){
+	private boolean sameResult(LabResult left, LabResult right) {
 		if (!left.getResult().equals(right.getResult())) {
 			return false;
 		}
@@ -88,11 +88,10 @@ public class LabCleanup extends ExternalMaintenance {
 		if (!left.getRefMale().equals(right.getRefMale())) {
 			return false;
 		}
-		
+
 		TimeTool leftObsTime = left.getObservationTime();
 		TimeTool rightObsTime = right.getObservationTime();
-		if ((leftObsTime == null && rightObsTime != null)
-			|| (leftObsTime != null && rightObsTime == null)) {
+		if ((leftObsTime == null && rightObsTime != null) || (leftObsTime != null && rightObsTime == null)) {
 			return false;
 		}
 		if (leftObsTime != null && rightObsTime != null) {
@@ -103,7 +102,7 @@ public class LabCleanup extends ExternalMaintenance {
 		TimeTool leftAnalyseTime = left.getAnalyseTime();
 		TimeTool rightAnalyseTime = right.getAnalyseTime();
 		if ((leftAnalyseTime == null && rightAnalyseTime != null)
-			|| (leftAnalyseTime != null && rightAnalyseTime == null)) {
+				|| (leftAnalyseTime != null && rightAnalyseTime == null)) {
 			return false;
 		}
 		if (leftAnalyseTime != null && rightAnalyseTime != null) {
@@ -113,9 +112,9 @@ public class LabCleanup extends ExternalMaintenance {
 		}
 		return true;
 	}
-	
+
 	@Override
-	public String getMaintenanceDescription(){
+	public String getMaintenanceDescription() {
 		return "Mehrfache und leere Laborwerte entfernen.";
 	}
 }

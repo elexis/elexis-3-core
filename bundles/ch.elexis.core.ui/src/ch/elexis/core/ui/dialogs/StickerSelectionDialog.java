@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.dialogs;
@@ -44,29 +44,28 @@ import ch.elexis.core.ui.util.SWTHelper;
 public class StickerSelectionDialog extends TitleAreaDialog {
 	private TableViewer viewer;
 	private StickerViewerComparator comparator;
-	
+
 	private List<ISticker> allStickers;
 	private List<ISticker> selectedStickers;
-	
+
 	private String message;
-	
+
 	private IStickerService stickerService = StickerServiceHolder.get();
 
-	
-	public StickerSelectionDialog(Shell shell, String message, Class<?> clazz){
+	public StickerSelectionDialog(Shell shell, String message, Class<?> clazz) {
 		super(shell);
 		this.message = message;
 		allStickers = stickerService.getStickersForClass(clazz);
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout());
 		Label lbl = new Label(ret, SWT.WRAP);
-		lbl.setText(Messages.AssignStickerDialog_PleaseConfirm); //$NON-NLS-1$
-		
+		lbl.setText(Messages.AssignStickerDialog_PleaseConfirm); // $NON-NLS-1$
+
 		viewer = new TableViewer(ret, SWT.CHECK | SWT.FULL_SELECTION);
 		viewer.getTable().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		viewer.getTable().setHeaderVisible(true);
@@ -75,11 +74,11 @@ public class StickerSelectionDialog extends TitleAreaDialog {
 		createColumns();
 		comparator = new StickerViewerComparator();
 		viewer.setComparator(comparator);
-		
+
 		return ret;
 	}
-	
-	private void createColumns(){
+
+	private void createColumns() {
 		// first column - label
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(Messages.AssignStickerDialog_StickerName);
@@ -87,24 +86,24 @@ public class StickerSelectionDialog extends TitleAreaDialog {
 		col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 0));
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				ISticker s = (ISticker) element;
 				return s.getLabel();
 			}
-			
+
 			@Override
-			public Color getBackground(Object element){
+			public Color getBackground(Object element) {
 				ISticker s = (ISticker) element;
 				return CoreUiUtil.getColorForString(s.getBackground());
 			}
-			
+
 			@Override
-			public Color getForeground(Object element){
+			public Color getForeground(Object element) {
 				ISticker s = (ISticker) element;
 				return CoreUiUtil.getColorForString(s.getForeground());
 			}
 		});
-		
+
 		// second column - value
 		col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(Messages.AssignStickerDialog_StickerWert);
@@ -112,29 +111,29 @@ public class StickerSelectionDialog extends TitleAreaDialog {
 		col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 1));
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				ISticker s = (ISticker) element;
 				return s.getImportance() + "";
 			}
-			
+
 			@Override
-			public Color getBackground(Object element){
+			public Color getBackground(Object element) {
 				ISticker s = (ISticker) element;
 				return CoreUiUtil.getColorForString(s.getBackground());
 			}
-			
+
 			@Override
-			public Color getForeground(Object element){
+			public Color getForeground(Object element) {
 				ISticker s = (ISticker) element;
 				return CoreUiUtil.getColorForString(s.getForeground());
 			}
 		});
 	}
-	
-	private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index){
+
+	private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index) {
 		SelectionAdapter selectionAdapter = new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				comparator.setColumn(index);
 				viewer.getTable().setSortDirection(comparator.getDirection());
 				viewer.getTable().setSortColumn(column);
@@ -143,9 +142,9 @@ public class StickerSelectionDialog extends TitleAreaDialog {
 		};
 		return selectionAdapter;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		setTitle("Sticker"); //$NON-NLS-1$
 		if (message != null) {
@@ -153,35 +152,35 @@ public class StickerSelectionDialog extends TitleAreaDialog {
 		}
 		getShell().setText("Elexis Sticker"); //$NON-NLS-1$
 	}
-	
+
 	public List<ISticker> getSelection() {
 		return selectedStickers;
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		selectedStickers = Stream.of(viewer.getTable().getItems()).filter(it -> it.getChecked())
-			.map(it -> (ISticker) it.getData()).collect(Collectors.toList());
+				.map(it -> (ISticker) it.getData()).collect(Collectors.toList());
 		super.okPressed();
 	}
-	
+
 	class StickerViewerComparator extends ViewerComparator {
 		private int propertyIndex;
 		private boolean direction = true;
 		private ISticker s1;
 		private ISticker s2;
-		
-		public StickerViewerComparator(){
+
+		public StickerViewerComparator() {
 			this.propertyIndex = 0;
 		}
-		
+
 		@Override
-		public int compare(Viewer viewer, Object e1, Object e2){
+		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof ISticker && e2 instanceof ISticker) {
 				s1 = (ISticker) e1;
 				s2 = (ISticker) e2;
 				int rc = 0;
-				
+
 				switch (propertyIndex) {
 				case 0:
 					String label1 = StringUtils.defaultString(s1.getLabel()).toLowerCase();
@@ -196,7 +195,7 @@ public class StickerSelectionDialog extends TitleAreaDialog {
 				default:
 					break;
 				}
-				
+
 				// If descending order, flip the direction
 				if (direction) {
 					rc = -rc;
@@ -205,17 +204,17 @@ public class StickerSelectionDialog extends TitleAreaDialog {
 			}
 			return 0;
 		}
-		
+
 		/**
 		 * for sort direction
-		 * 
+		 *
 		 * @return SWT.DOWN or SWT.UP
 		 */
-		public int getDirection(){
+		public int getDirection() {
 			return direction ? SWT.DOWN : SWT.UP;
 		}
-		
-		public void setColumn(int column){
+
+		public void setColumn(int column) {
 			if (column == this.propertyIndex) {
 				// Same column as last sort; toggle the direction
 				direction = !direction;
@@ -225,7 +224,7 @@ public class StickerSelectionDialog extends TitleAreaDialog {
 				direction = true;
 			}
 		}
-		
+
 	}
-	
+
 }

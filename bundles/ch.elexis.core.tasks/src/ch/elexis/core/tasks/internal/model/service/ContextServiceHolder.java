@@ -9,19 +9,19 @@ import ch.elexis.core.services.IContextService;
 
 @Component
 public class ContextServiceHolder {
-	
+
 	private static IContextService contextService;
-	
+
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policyOption = ReferencePolicyOption.GREEDY)
-	public void setContextService(IContextService contextService){
+	public void setContextService(IContextService contextService) {
 		ContextServiceHolder.contextService = contextService;
 	}
-	
-	public static IContextService get(){
+
+	public static IContextService get() {
 		return contextService;
 	}
-	
-	public static boolean isPresent(){
+
+	public static boolean isPresent() {
 		return contextService != null;
 	}
 }

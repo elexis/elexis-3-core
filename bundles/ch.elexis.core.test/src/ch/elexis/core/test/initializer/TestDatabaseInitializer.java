@@ -46,78 +46,78 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.VersionedResource;
 
 public class TestDatabaseInitializer {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(TestDatabaseInitializer.class);
-	
+
 	private static boolean isDbInitialized = false;
-	
+
 	private static IUser user;
-	
+
 	private static boolean isPatientInitialized = false;
 	private static IPatient patient;
-	
+
 	private static boolean isOrganizationInitialized = false;
 	private static IOrganization organization;
-	
+
 	private static boolean isMandantInitialized = false;
 	private static IMandator mandant;
-	
+
 	private ILaboratory laboratory;
 	private ILaboratory laboratory2;
-	
+
 	private static boolean isArticleInitialized;
 	private static IArticle article;
-	
+
 	private static boolean isFallInitialized = false;
 	private static ICoverage fall;
-	
+
 	private static boolean isBehandlungInitialized = false;
 	private static IEncounter behandlung;
-	
+
 	private static boolean isILabResultInitialized = false;
 	private static List<ILabResult> labResults = new ArrayList<>();
 	private static ILabItem labItem;
-	
+
 	private static boolean isPrescriptionInitialized = false;
 	private static IPrescription prescription;
-	
+
 	private static boolean isArtikelstammTableInitialized = false;
-	
+
 	private static boolean isLaborItemsOrdersResultsInitialized = false;
-	
+
 	private static boolean isLaborTarif2009Initialized = false;
 	private static boolean isTarmedInitialized = false;
 	private static boolean isPhysioLeistungInitialized = false;
-	
+
 	private static boolean isAgendaInitialized = false;
 	private static boolean isRemindersInitialized = false;
 	private static boolean isLeistungsblockInitialized = false;
-	
+
 	private IModelService modelService;
 	private IElexisEntityManager entityManager;
 	private IConfigService configService;
-	
-	public TestDatabaseInitializer(IModelService modelService, IElexisEntityManager entityManager){
+
+	public TestDatabaseInitializer(IModelService modelService, IElexisEntityManager entityManager) {
 		this.modelService = modelService;
 		this.entityManager = entityManager;
 	}
-	
-	public synchronized void initializeDb() throws IOException, SQLException{
+
+	public synchronized void initializeDb() throws IOException, SQLException {
 		initializeDb(configService);
 	}
-	
-	public void setConfigService(IConfigService configService){
+
+	public void setConfigService(IConfigService configService) {
 		this.configService = configService;
 	}
-	
+
 	/**
-	 * 
-	 * @param configService
-	 *            if not <code>null</code> - initializes the system configuration
+	 *
+	 * @param configService if not <code>null</code> - initializes the system
+	 *                      configuration
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void initializeDb(IConfigService configService) throws IOException, SQLException{
+	public void initializeDb(IConfigService configService) throws IOException, SQLException {
 		if (!isDbInitialized) {
 			entityManager.getEntityManager(); // lazy initialize the database
 			// initialize
@@ -134,94 +134,87 @@ public class TestDatabaseInitializer {
 			logger.error("No connection available!");
 		}
 	}
-	
-	public synchronized void initializeArtikelstammTable() throws IOException{
+
+	public synchronized void initializeArtikelstammTable() throws IOException {
 		if (!isArtikelstammTableInitialized) {
-			isArtikelstammTableInitialized =
-				executeScript("test_initArtikelstammItem", "/rsc/dbScripts/ArtikelstammItem.sql");
+			isArtikelstammTableInitialized = executeScript("test_initArtikelstammItem",
+					"/rsc/dbScripts/ArtikelstammItem.sql");
 		}
 	}
-	
-	private boolean executeScript(String liquibase_id, String scriptLocation) throws IOException{
-		boolean result = entityManager.executeSQLScript(liquibase_id,
-			TestUtil.loadFile(getClass(), scriptLocation));
+
+	private boolean executeScript(String liquibase_id, String scriptLocation) throws IOException {
+		boolean result = entityManager.executeSQLScript(liquibase_id, TestUtil.loadFile(getClass(), scriptLocation));
 		if (!result) {
 			throw new IOException("Error executing script in [" + scriptLocation + "]");
 		}
 		return true;
 	}
-	
-	public synchronized void initializeAgendaTable() throws IOException, SQLException{
+
+	public synchronized void initializeAgendaTable() throws IOException, SQLException {
 		initializeDb();
 		if (!isAgendaInitialized) {
 			isAgendaInitialized = executeScript("test_initAgenda", "/rsc/dbScripts/Agenda.sql");
 		}
 	}
-	
-	public synchronized void initializeLaborTarif2009Tables() throws IOException, SQLException{
+
+	public synchronized void initializeLaborTarif2009Tables() throws IOException, SQLException {
 		initializeDb();
 		if (!isLaborTarif2009Initialized) {
-			isLaborTarif2009Initialized =
-				executeScript("test_initLaborTarif2009", "/rsc/dbScripts/LaborTarif2009.sql");
+			isLaborTarif2009Initialized = executeScript("test_initLaborTarif2009", "/rsc/dbScripts/LaborTarif2009.sql");
 		}
 	}
-	
-	public synchronized void initializeTarmedTables() throws IOException, SQLException{
+
+	public synchronized void initializeTarmedTables() throws IOException, SQLException {
 		initializeDb();
 		if (!isTarmedInitialized) {
 			isTarmedInitialized = executeScript("test_initTarmed", "/rsc/dbScripts/Tarmed.sql");
-			isTarmedInitialized =
-				executeScript("test_initTarmedKumulation", "/rsc/dbScripts/TarmedKumulation.sql");
-			isTarmedInitialized =
-				executeScript("test_initTarmedExtension", "/rsc/dbScripts/TarmedExtension.sql");
-			isTarmedInitialized =
-				executeScript("test_initTarmedGroup", "/rsc/dbScripts/TarmedGroup.sql");
-			isTarmedInitialized = executeScript("test_initTarmedDefinitionen",
-				"/rsc/dbScripts/TarmedDefinitionen.sql");
+			isTarmedInitialized = executeScript("test_initTarmedKumulation", "/rsc/dbScripts/TarmedKumulation.sql");
+			isTarmedInitialized = executeScript("test_initTarmedExtension", "/rsc/dbScripts/TarmedExtension.sql");
+			isTarmedInitialized = executeScript("test_initTarmedGroup", "/rsc/dbScripts/TarmedGroup.sql");
+			isTarmedInitialized = executeScript("test_initTarmedDefinitionen", "/rsc/dbScripts/TarmedDefinitionen.sql");
 		}
 	}
-	
-	public synchronized void initializeArzttarifePhysioLeistungTables()
-		throws IOException, SQLException{
+
+	public synchronized void initializeArzttarifePhysioLeistungTables() throws IOException, SQLException {
 		initializeDb();
 		if (!isPhysioLeistungInitialized) {
-			isPhysioLeistungInitialized =
-				executeScript("test_initArzttarifePhysio", "/rsc/dbScripts/ArzttarifePhysio.sql");
+			isPhysioLeistungInitialized = executeScript("test_initArzttarifePhysio",
+					"/rsc/dbScripts/ArzttarifePhysio.sql");
 		}
 	}
-	
-	public synchronized void initializeLeistungsblockTables() throws IOException, SQLException{
+
+	public synchronized void initializeLeistungsblockTables() throws IOException, SQLException {
 		initializeDb();
 		if (!isLeistungsblockInitialized) {
-			isLeistungsblockInitialized =
-				executeScript("test_initLeistungsblock", "/rsc/dbScripts/Leistungsblock.sql");
+			isLeistungsblockInitialized = executeScript("test_initLeistungsblock", "/rsc/dbScripts/Leistungsblock.sql");
 		}
 	}
-	
+
 	/**
-	 * Initializes an intrinsic consistent set of ILabItems, ILabResults and LabOrders
-	 * 
+	 * Initializes an intrinsic consistent set of ILabItems, ILabResults and
+	 * LabOrders
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public synchronized void initializeLaborItemsOrdersResults() throws IOException, SQLException{
+	public synchronized void initializeLaborItemsOrdersResults() throws IOException, SQLException {
 		initializeDb();
 		if (!isLaborItemsOrdersResultsInitialized) {
 			isLaborItemsOrdersResultsInitialized = executeScript("test_LaborItemsWerteResults",
-				"/rsc/dbScripts/LaborItemsWerteResults.sql");
+					"/rsc/dbScripts/LaborItemsWerteResults.sql");
 		}
 	}
-	
-	public synchronized void initializeReminders() throws IOException, SQLException{
+
+	public synchronized void initializeReminders() throws IOException, SQLException {
 		initializeDb();
 		if (!isRemindersInitialized) {
 			isRemindersInitialized = executeScript("test_Reminder", "/rsc/dbScripts/Reminder.sql");
 		}
 	}
-	
+
 	/**
 	 * Initialize a test Patient.
-	 * 
+	 *
 	 * <li>Firstname: Test</li>
 	 * <li>Lastname: Patient</li>
 	 * <li>DateofBirth: 1.1.1990</li>
@@ -233,19 +226,19 @@ public class TestDatabaseInitializer {
 	 * <li>Street: Street 1</li>
 	 * <li>Xid AHV: 756...</li>
 	 * <li>Diagnosen: Test Diagnose 1\nTest Diagnose 2</li>
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
-	 * 
+	 *
 	 */
-	public synchronized void initializePatient() throws IOException, SQLException{
+	public synchronized void initializePatient() throws IOException, SQLException {
 		if (!isDbInitialized) {
 			initializeDb();
 		}
-		
+
 		if (!isPatientInitialized) {
-			patient = new IContactBuilder.PatientBuilder(modelService, "Test", "Patient",
-				LocalDate.of(1990, 1, 1), Gender.FEMALE).build();
+			patient = new IContactBuilder.PatientBuilder(modelService, "Test", "Patient", LocalDate.of(1990, 1, 1),
+					Gender.FEMALE).build();
 			patient.setPhone1("+01555123");
 			patient.setMobile("+01444123");
 			patient.setCity("City");
@@ -253,31 +246,31 @@ public class TestDatabaseInitializer {
 			patient.setStreet("Street 1");
 			patient.setDiagnosen("Test Diagnose 1\nTest Diagnose 2");
 			modelService.save(patient);
-			
+
 			addAHVNumber(patient, 1);
 			isPatientInitialized = true;
 		}
 	}
-	
+
 	/**
 	 * Get the initialized Patient
-	 * 
+	 *
 	 * @return
 	 */
-	public IPatient getPatient(){
+	public IPatient getPatient() {
 		return patient;
 	}
-	
-	private void addAHVNumber(IPatient kontakt, int index){
+
+	private void addAHVNumber(IPatient kontakt, int index) {
 		String country = "756";
 		String number = String.format("%09d", index);
 		StringBuilder ahvBuilder = new StringBuilder(country + number);
 		ahvBuilder.append(getAHVCheckNumber(ahvBuilder.toString()));
-		
+
 		kontakt.addXid(XidConstants.DOMAIN_AHV, ahvBuilder.toString(), true);
 	}
-	
-	private String getAHVCheckNumber(String string){
+
+	private String getAHVCheckNumber(String string) {
 		int sum = 0;
 		for (int i = 0; i < string.length(); i++) {
 			// reverse order
@@ -291,10 +284,10 @@ public class TestDatabaseInitializer {
 		}
 		return Integer.toString(sum % 10);
 	}
-	
+
 	/**
 	 * Initialize a test Organization.
-	 * 
+	 *
 	 * <li>Description1: Test Organization</li>
 	 * <li>Lastname: Test</li>
 	 * <li>Phone1: +01555345</li>
@@ -302,38 +295,37 @@ public class TestDatabaseInitializer {
 	 * <li>City: City</li>
 	 * <li>Zip: 123</li>
 	 * <li>Street: Street 10</li>
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
-	 * 
+	 *
 	 */
-	public synchronized void initializeOrganization() throws IOException, SQLException{
+	public synchronized void initializeOrganization() throws IOException, SQLException {
 		if (!isDbInitialized) {
 			initializeDb();
 		}
-		
+
 		if (!isOrganizationInitialized) {
-			organization =
-				new IContactBuilder.OrganizationBuilder(modelService, "Test Organization").build();
+			organization = new IContactBuilder.OrganizationBuilder(modelService, "Test Organization").build();
 			organization.setPhone1("+01555345");
 			organization.setMobile("+01444345");
-			
+
 			organization.setCity("City");
 			organization.setZip("123");
 			organization.setStreet("Street 10");
-			
+
 			modelService.save(organization);
 			isOrganizationInitialized = true;
 		}
 	}
-	
-	public static IOrganization getOrganization(){
+
+	public static IOrganization getOrganization() {
 		return organization;
 	}
-	
+
 	/**
 	 * Initialize a test Mandant.
-	 * 
+	 *
 	 * <li>Firstname: Test</li>
 	 * <li>Lastname: Mandant</li>
 	 * <li>DateofBirth: 1.1.1970</li>
@@ -345,69 +337,70 @@ public class TestDatabaseInitializer {
 	 * <li>Street: Street 100</li>
 	 * <li>EAN: 2000000000002</li>
 	 * <li>KSK: C000002</li>
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
-	 * 
+	 *
 	 */
-	public synchronized void initializeMandant() throws IOException, SQLException{
+	public synchronized void initializeMandant() throws IOException, SQLException {
 		if (!isDbInitialized) {
 			initializeDb();
 		}
-		
+
 		if (!isMandantInitialized) {
-			IPerson mandantPerson = new IContactBuilder.PersonBuilder(modelService, "Test",
-				"Mandant", LocalDate.of(1970, 1, 1), Gender.MALE).mandator().buildAndSave();
+			IPerson mandantPerson = new IContactBuilder.PersonBuilder(modelService, "Test", "Mandant",
+					LocalDate.of(1970, 1, 1), Gender.MALE).mandator().buildAndSave();
 			mandant = modelService.load(mandantPerson.getId(), IMandator.class).get();
 			mandant.setPhone1("+01555234");
 			mandant.setMobile("+01444234");
-			
+
 			mandant.setCity("City");
 			mandant.setZip("123");
 			mandant.setStreet("Street 100");
 			mandant.setUser(true);
 			modelService.save(mandant);
-			
+
 			user = new IUserBuilder(modelService, "tst", mandantPerson).buildAndSave();
 			Optional<IRole> doctorRole = modelService.load("doctor", IRole.class);
 			if (doctorRole.isPresent()) {
 				user.addRole(doctorRole.get());
 			}
 			modelService.save(user);
-			
+
 			mandant.addXid(XidConstants.DOMAIN_EAN, "2000000000002", true);
 			mandant.addXid("www.xid.ch/id/ksk", "C000002", true);
 			isMandantInitialized = true;
 		}
 	}
-	
-	public static IMandator getMandant(){
+
+	public static IMandator getMandant() {
 		return mandant;
 	}
-	
-	public static IUser getUser(){
+
+	public static IUser getUser() {
 		return user;
 	}
-	
+
 	/**
 	 * Initialize an test Prescription.
-	 * 
-	 * <li>Article: see {@link TestDatabaseInitializer#initializeArtikelstamm()}</li>
+	 *
+	 * <li>Article: see
+	 * {@link TestDatabaseInitializer#initializeArtikelstamm()}</li>
 	 * <li>Patient: see {@link TestDatabaseInitializer#initializePatient()}</li>
 	 * <li>Dosage: 1-1-1-1</li>
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
-	 * 
+	 *
 	 */
-	public synchronized void initializePrescription() throws IOException, SQLException{
+	public synchronized void initializePrescription() throws IOException, SQLException {
 		if (!isDbInitialized) {
 			initializeDb();
 		}
 		if (!isPatientInitialized) {
 			initializePatient();
 		}
-		
+
 		if (!isArticleInitialized) {
 			article = modelService.create(IArticle.class);
 			article.setName("test article");
@@ -418,21 +411,19 @@ public class TestDatabaseInitializer {
 			article.setSellingSize(12);
 			modelService.save(article);
 			isArticleInitialized = true;
-			
+
 		}
-		
+
 		if (!isPrescriptionInitialized) {
-			prescription =
-				new IPrescriptionBuilder(modelService, null, article, patient, "1-1-1-1")
-					.buildAndSave();
-			
+			prescription = new IPrescriptionBuilder(modelService, null, article, patient, "1-1-1-1").buildAndSave();
+
 			isPrescriptionInitialized = true;
 		}
 	}
-	
+
 	/**
 	 * Initialize a test Fall.
-	 * 
+	 *
 	 * <li>Patient: {@link TestDatabaseInitializer#getPatient()}</li>
 	 * <li>Label: "Test Fall"</li>
 	 * <li>Reason: "reason"</li>
@@ -440,11 +431,11 @@ public class TestDatabaseInitializer {
 	 * <li>KostentrKontakt: {@link TestDatabaseInitializer#getOrganization()}</li>
 	 * <li>VersNummer: 1234-5678</li>
 	 * <li>DatumVon: 1.9.2016</li>
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public synchronized void initializeFall() throws IOException, SQLException{
+	public synchronized void initializeFall() throws IOException, SQLException {
 		if (!isPatientInitialized) {
 			initializePatient();
 		}
@@ -452,8 +443,7 @@ public class TestDatabaseInitializer {
 			initializeOrganization();
 		}
 		if (!isFallInitialized) {
-			fall = new ICoverageBuilder(modelService, patient, "Test Fall", "reason", "method")
-				.build();
+			fall = new ICoverageBuilder(modelService, patient, "Test Fall", "reason", "method").build();
 			fall.setCostBearer(organization);
 			fall.setInsuranceNumber("1234-5678");
 			fall.setDateFrom(LocalDate.of(2016, Month.SEPTEMBER, 1));
@@ -462,22 +452,22 @@ public class TestDatabaseInitializer {
 			isFallInitialized = true;
 		}
 	}
-	
-	public static ICoverage getFall(){
+
+	public static ICoverage getFall() {
 		return fall;
 	}
-	
+
 	/**
 	 * Initialize a test Behandlung.
-	 * 
+	 *
 	 * <li>Patient: {@link TestDatabaseInitializer#getPatient()}</li>
 	 * <li>ServiceProvider: {@link TestDatabaseInitializer#getMandant()}</li>
 	 * <li>Datum: 21.9.2016</li>
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public void initializeBehandlung() throws IOException, SQLException{
+	public void initializeBehandlung() throws IOException, SQLException {
 		if (!isMandantInitialized) {
 			initializeMandant();
 		}
@@ -485,8 +475,7 @@ public class TestDatabaseInitializer {
 			initializeFall();
 		}
 		if (!isBehandlungInitialized) {
-			behandlung =
-				new IEncounterBuilder(modelService, getFall(), getMandant()).buildAndSave();
+			behandlung = new IEncounterBuilder(modelService, getFall(), getMandant()).buildAndSave();
 			behandlung.setDate(LocalDate.of(2016, Month.SEPTEMBER, 21));
 			VersionedResource vr = VersionedResource.load(null);
 			vr.update("Test consultation\nWith some test text.", "Administrator");
@@ -496,19 +485,19 @@ public class TestDatabaseInitializer {
 			isBehandlungInitialized = true;
 		}
 	}
-	
-	public static IEncounter getBehandlung(){
+
+	public static IEncounter getBehandlung() {
 		return behandlung;
 	}
-	
+
 	/**
 	 * Initialize a test ILabResults.
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
-	 * 
+	 *
 	 */
-	public synchronized void initializeLabResult() throws IOException, SQLException{
+	public synchronized void initializeLabResult() throws IOException, SQLException {
 		if (!isPatientInitialized) {
 			initializePatient();
 		}
@@ -516,32 +505,29 @@ public class TestDatabaseInitializer {
 			laboratory = new IContactBuilder.LaboratoryBuilder(modelService, "Labor Test").build();
 			laboratory.setDescription2("Test");
 			modelService.save(laboratory);
-			
-			laboratory2 =
-				new IContactBuilder.LaboratoryBuilder(modelService, "Labor Test2").build();
+
+			laboratory2 = new IContactBuilder.LaboratoryBuilder(modelService, "Labor Test2").build();
 			laboratory2.setDescription2("Test2");
 			assertTrue(laboratory2.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, "ZURANA", true));
 			modelService.save(laboratory2);
-			
-			labItem = new ILabItemBuilder(modelService, "TEST NUMERIC",
-				"Test Laboratory", ">1", "3-3.5", "unit", LabItemTyp.NUMERIC, "group", 1)
-					.origin(laboratory, "TEST NUMERIC", true).buildAndSave();
+
+			labItem = new ILabItemBuilder(modelService, "TEST NUMERIC", "Test Laboratory", ">1", "3-3.5", "unit",
+					LabItemTyp.NUMERIC, "group", 1).origin(laboratory, "TEST NUMERIC", true).buildAndSave();
 			labItem.setExport("vitolabkey:1,2");
 			modelService.save(labItem);
-			
+
 			ILabMapping mapping = modelService.create(ILabMapping.class);
 			mapping.setOrigin(laboratory2);
 			mapping.setItemName("TEST_NUMERIC_EXT");
 			modelService.save(mapping);
 			modelService.save(labItem);
-			
-			ILabItem textILabItem = new ILabItemBuilder(modelService, "TEST TEXT",
-				"Test Laboratory", null, null, "unit", LabItemTyp.TEXT, "group", 2)
-					.origin(laboratory, "Test Laboratory", true).buildAndSave();
+
+			ILabItem textILabItem = new ILabItemBuilder(modelService, "TEST TEXT", "Test Laboratory", null, null,
+					"unit", LabItemTyp.TEXT, "group", 2).origin(laboratory, "Test Laboratory", true).buildAndSave();
 			modelService.save(labItem);
-			
+
 			ILabResult labResult = new ILabResultBuilder(modelService, labItem, patient).build();
-			
+
 			labResult.setObservationTime(LocalDateTime.of(2016, Month.DECEMBER, 14, 17, 44, 25));
 			labResult.setUnit("u");
 			labResult.setReferenceMale("<1");
@@ -551,7 +537,7 @@ public class TestDatabaseInitializer {
 			labResult.setComment("no comment");
 			modelService.save(labResult);
 			labResults.add(labResult);
-			
+
 			labResult = new ILabResultBuilder(modelService, labItem, patient).build();
 			labResult.setObservationTime(LocalDateTime.of(2016, Month.DECEMBER, 15, 10, 10, 30));
 			labResult.setOrigin(laboratory);
@@ -559,7 +545,7 @@ public class TestDatabaseInitializer {
 			labResult.setComment("no comment");
 			modelService.save(labResult);
 			labResults.add(labResult);
-			
+
 			labResult = new ILabResultBuilder(modelService, labItem, patient).build();
 			labResult.setObservationTime(LocalDateTime.of(2017, Month.FEBRUARY, 28, 12, 59, 23));
 			labResult.setOrigin(laboratory);
@@ -567,7 +553,7 @@ public class TestDatabaseInitializer {
 			labResult.setUnit("Bloodpressure");
 			modelService.save(labResult);
 			labResults.add(labResult);
-			
+
 			labResult = new ILabResultBuilder(modelService, textILabItem, patient).build();
 			labResult.setObservationTime(LocalDateTime.of(2017, Month.FEBRUARY, 28, 10, 02, 23));
 			labResult.setOrigin(laboratory);
@@ -575,31 +561,29 @@ public class TestDatabaseInitializer {
 			labResult.setComment("The Text Result ...");
 			modelService.save(labResult);
 			labResults.add(labResult);
-			
+
 			isILabResultInitialized = true;
 		}
 	}
-	
-	public ILabItem getILabItem(){
+
+	public ILabItem getILabItem() {
 		return labItem;
 	}
-	
-	public ILaboratory getLaboratory(){
+
+	public ILaboratory getLaboratory() {
 		return laboratory;
 	}
-	
-	public ILaboratory getLaboratory2(){
+
+	public ILaboratory getLaboratory2() {
 		return laboratory2;
 	}
-	
-	public static List<ILabResult> getLabResults(){
+
+	public static List<ILabResult> getLabResults() {
 		return labResults;
 	}
-	
-	public IArticle getArticle(){
+
+	public IArticle getArticle() {
 		return article;
 	}
 
-
-	
 }

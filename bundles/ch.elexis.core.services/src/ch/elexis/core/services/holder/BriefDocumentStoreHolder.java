@@ -7,15 +7,15 @@ import ch.elexis.core.services.IDocumentStore;
 
 @Component
 public class BriefDocumentStoreHolder {
-	
+
 	private static IDocumentStore briefDocumentStore;
-	
+
 	@Reference(target = "(storeid=ch.elexis.data.store.brief)")
-	public void setBriefDocumentStore(IDocumentStore briefDocumentStore){
+	public void setBriefDocumentStore(IDocumentStore briefDocumentStore) {
 		BriefDocumentStoreHolder.briefDocumentStore = briefDocumentStore;
 	}
-	
-	public static IDocumentStore get(){
+
+	public static IDocumentStore get() {
 		return briefDocumentStore;
 	}
 }

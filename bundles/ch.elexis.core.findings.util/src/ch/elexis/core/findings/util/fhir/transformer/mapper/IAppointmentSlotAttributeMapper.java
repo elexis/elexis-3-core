@@ -20,27 +20,25 @@ import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.time.TimeUtil;
 
-public class IAppointmentSlotAttributeMapper
-		implements IdentifiableDomainResourceAttributeMapper<IAppointment, Slot> {
-	
+public class IAppointmentSlotAttributeMapper implements IdentifiableDomainResourceAttributeMapper<IAppointment, Slot> {
+
 	private IAppointmentService appointmentService;
-	
-	public IAppointmentSlotAttributeMapper(IAppointmentService appointmentService){
+
+	public IAppointmentSlotAttributeMapper(IAppointmentService appointmentService) {
 		this.appointmentService = appointmentService;
 	}
-	
+
 	@Override
-	public void elexisToFhir(IAppointment elexis, Slot fhir, SummaryEnum summaryEnum,
-		Set<Include> includes){
-		
+	public void elexisToFhir(IAppointment elexis, Slot fhir, SummaryEnum summaryEnum, Set<Include> includes) {
+
 		fhir.setId(new IdDt(Slot.class.getSimpleName(), elexis.getId()));
-		
+
 		fhir.setSchedule(new Reference(new IdType(Schedule.class.getSimpleName(),
-			appointmentService.getAreaByNameOrId(elexis.getSchedule()).getId())));
-		
-		// TODO 
+				appointmentService.getAreaByNameOrId(elexis.getSchedule()).getId())));
+
+		// TODO
 		fhir.setStatus(SlotStatus.BUSY);
-		
+
 		LocalDateTime start = elexis.getStartTime();
 		if (start != null) {
 			Date start_ = Date.from(ZonedDateTime.of(start, ZoneId.systemDefault()).toInstant());
@@ -48,7 +46,7 @@ public class IAppointmentSlotAttributeMapper
 		} else {
 			// TODO is required - what now?
 		}
-		
+
 		LocalDateTime end = elexis.getEndTime();
 		if (end != null) {
 			Date end_ = Date.from(ZonedDateTime.of(end, ZoneId.systemDefault()).toInstant());
@@ -56,21 +54,21 @@ public class IAppointmentSlotAttributeMapper
 		} else {
 			// TODO is required - what now?
 		}
-		
+
 	}
-	
+
 	@Override
-	public void fhirToElexis(Slot fhir, IAppointment elexis){
-	
+	public void fhirToElexis(Slot fhir, IAppointment elexis) {
+
 		String idPart = fhir.getSchedule().getReferenceElement().getIdPart();
 		Area areaByNameOrId = appointmentService.getAreaByNameOrId(idPart);
 		elexis.setSchedule(areaByNameOrId.getName());
-		
+
 		Date start = fhir.getStart();
 		elexis.setStartTime(TimeUtil.toLocalDateTime(start));
-		
+
 		Date end = fhir.getEnd();
 		elexis.setEndTime(TimeUtil.toLocalDateTime(end));
 	}
-	
+
 }

@@ -30,12 +30,12 @@ public class JaxWsTest {
 	@Test
 	public void jaxwsFunctionality() throws MalformedURLException {
 
-//		
+//
 //		// Publishes the SOAP Web Service
 //		// If NPE here -> missing javax.xml.ws.spi.Provider#DEFAULT_JAXWSPROVIDER
 //		// -> by setting System property, adding fragment jakarta.xml.ws-api-ws-fragment and updating classloader
 //		// we bind this together
-//		
+//
 
 		// Override default setting in <code>info.elexis.target.jaxws.core</code> which
 		// is wrong

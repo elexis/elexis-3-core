@@ -18,24 +18,24 @@ import ch.elexis.core.test.AbstractTest;
 import ch.elexis.core.types.LabItemTyp;
 
 public class LabOrderTest extends AbstractTest {
-	
+
 	private IPatient patient2;
-	
+
 	private ILabItem item1;
-	
+
 	private ILabResult result1;
 	private ILabResult result2;
-	
+
 	@Override
 	@Before
-	public void before(){
+	public void before() {
 		super.before();
 		super.createPatient();
-		
+
 		patient2 = coreModelService.create(IPatient.class);
 		patient2.setDescription1("test patient 2");
 		coreModelService.save(patient2);
-		
+
 		item1 = coreModelService.create(ILabItem.class);
 		item1.setCode("testItem");
 		item1.setName("test item name");
@@ -52,19 +52,19 @@ public class LabOrderTest extends AbstractTest {
 		result2.setPatient(patient2);
 		result2.setResult("result 2");
 	}
-	
+
 	@Override
 	@After
-	public void after(){
+	public void after() {
 		coreModelService.remove(result1);
 		coreModelService.remove(result2);
 		coreModelService.remove(item1);
 		coreModelService.remove(patient2);
 		super.after();
 	}
-	
+
 	@Test
-	public void create(){
+	public void create() {
 		ILabOrder order = coreModelService.create(ILabOrder.class);
 		assertNotNull(order);
 		assertTrue(order instanceof ILabOrder);
@@ -73,7 +73,7 @@ public class LabOrderTest extends AbstractTest {
 		order.setState(LabOrderState.ORDERED);
 		coreModelService.save(order);
 		assertNotNull(order.getOrderId());
-		
+
 		Optional<ILabOrder> loadedOrder = coreModelService.load(order.getId(), ILabOrder.class);
 		assertTrue(loadedOrder.isPresent());
 		assertFalse(order == loadedOrder.get());
@@ -81,38 +81,37 @@ public class LabOrderTest extends AbstractTest {
 		assertEquals(order.getItem(), loadedOrder.get().getItem());
 		assertEquals(order.getPatient(), loadedOrder.get().getPatient());
 		assertEquals(order.getState(), loadedOrder.get().getState());
-		
+
 		ILabOrder order1 = coreModelService.create(ILabOrder.class);
 		order.setItem(item1);
 		order.setPatient(patient);
 		coreModelService.save(order1);
-		assertEquals(1,
-			Integer.parseInt(order1.getOrderId()) - Integer.parseInt(order.getOrderId()));
-		
+		assertEquals(1, Integer.parseInt(order1.getOrderId()) - Integer.parseInt(order.getOrderId()));
+
 		coreModelService.remove(order);
 	}
-	
+
 	@Test
-	public void query(){
+	public void query() {
 		ILabOrder order1 = coreModelService.create(ILabOrder.class);
 		order1.setItem(item1);
 		order1.setPatient(patient);
 		order1.setResult(result1);
 		coreModelService.save(order1);
-		
+
 		ILabOrder order2 = coreModelService.create(ILabOrder.class);
 		order2.setItem(item1);
 		order2.setPatient(patient2);
 		order2.setResult(result2);
 		coreModelService.save(order2);
-		
+
 		IQuery<ILabOrder> query = coreModelService.getQuery(ILabOrder.class);
 		query.and(ModelPackage.Literals.ILAB_ORDER__ITEM, COMPARATOR.EQUALS, item1);
 		List<ILabOrder> existing = query.execute();
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());
 		assertEquals(2, existing.size());
-		
+
 		query = coreModelService.getQuery(ILabOrder.class);
 		query.and(ModelPackage.Literals.ILAB_ORDER__PATIENT, COMPARATOR.EQUALS, patient2);
 		existing = query.execute();
@@ -122,10 +121,10 @@ public class LabOrderTest extends AbstractTest {
 		assertFalse(order2 == existing.get(0));
 		assertEquals(order2, existing.get(0));
 		assertEquals(order2.getPatient(), existing.get(0).getPatient());
-		
+
 		// test query via result
 		assertEquals(order1, result1.getLabOrder());
-		
+
 		coreModelService.remove(order1);
 		coreModelService.remove(order2);
 	}

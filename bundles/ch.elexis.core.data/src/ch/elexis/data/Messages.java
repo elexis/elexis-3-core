@@ -10,9 +10,8 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+public final class Messages {
 
-public final class Messages{
-	
 	public static String BezugsKontakt_ContactDoesntExist = ch.elexis.core.l10n.Messages.BezugsKontakt_ContactDoesntExist;
 	public static String Contact_SalutationF = ch.elexis.core.l10n.Messages.Contact_SalutationF;
 	public static String Contact_SalutationM = ch.elexis.core.l10n.Messages.Contact_SalutationM;
@@ -46,10 +45,10 @@ public final class Messages{
 	public static String GlobalActions_caseclosedexplanation = ch.elexis.core.l10n.Messages.GlobalActions_caseclosedexplanation;
 	public static String GlobalActions_SecondForToday = ch.elexis.core.l10n.Messages.GlobalActions_SecondForToday;
 	public static String GlobalActions_SecondForTodayQuestion = ch.elexis.core.l10n.Messages.GlobalActions_SecondForTodayQuestion;
-	
+
 	public static String GlobalMessage_noNumericValue = ch.elexis.core.l10n.Messages.GlobalMessage_noNumericValue;
 	public static String GlobalMessage_valueNotSet = ch.elexis.core.l10n.Messages.GlobalMessage_valueNotSet;
-	
+
 	public static String LabItem_defaultGroup = ch.elexis.core.l10n.Messages.LabItem_defaultGroup;
 	public static String LabItem_longOwnLab = ch.elexis.core.l10n.Messages.LabItem_longOwnLab;
 	public static String LabItem_shortOwnLab = ch.elexis.core.l10n.Messages.LabItem_shortOwnLab;
@@ -61,9 +60,9 @@ public final class Messages{
 	public static String LabOrder_stateImported = ch.elexis.core.l10n.Messages.LabOrder_stateImported;
 	public static String LabOrder_stateOrdered = ch.elexis.core.l10n.Messages.LabOrder_stateOrdered;
 	public static String LabOrder_contactOwnLabName = ch.elexis.core.l10n.Messages.LabOrder_contactOwnLabName;
-	
+
 	public static String Rechnung_Mahngebuehr2 = ch.elexis.core.l10n.Messages.Rechnung_Mahngebuehr2;
 	public static String Rechnung_Mahngebuehr1 = ch.elexis.core.l10n.Messages.Rechnung_Mahngebuehr1;
 	public static String Rechnung_Mahngebuehr3 = ch.elexis.core.l10n.Messages.Rechnung_Mahngebuehr3;
-	
+
 }

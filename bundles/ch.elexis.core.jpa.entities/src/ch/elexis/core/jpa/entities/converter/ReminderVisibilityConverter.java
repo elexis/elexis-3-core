@@ -11,7 +11,7 @@ import ch.elexis.core.model.issue.Visibility;
 public class ReminderVisibilityConverter implements AttributeConverter<Visibility, String> {
 
 	@Override
-	public String convertToDatabaseColumn(Visibility attribute){
+	public String convertToDatabaseColumn(Visibility attribute) {
 		if (attribute != null) {
 			return Integer.toString(attribute.numericValue());
 		}
@@ -19,7 +19,7 @@ public class ReminderVisibilityConverter implements AttributeConverter<Visibilit
 	}
 
 	@Override
-	public Visibility convertToEntityAttribute(String dbData){
+	public Visibility convertToEntityAttribute(String dbData) {
 		if (StringUtils.isEmpty(dbData)) {
 			return Visibility.ALWAYS;
 		}

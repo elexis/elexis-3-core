@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.views.codesystems;
 
@@ -23,26 +23,25 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.StringTool;
 
 public class BlockImporter extends ImporterPage {
-	
+
 	@Override
-	public Composite createPage(Composite parent){
+	public Composite createPage(Composite parent) {
 		FileBasedImporter fbi = new FileBasedImporter(parent, this);
 		fbi.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		return fbi;
 	}
-	
+
 	@Override
-	public IStatus doImport(IProgressMonitor monitor) throws Exception{
-		
+	public IStatus doImport(IProgressMonitor monitor) throws Exception {
+
 		String filename = results[0];
 		if (StringTool.isNothing(filename)) {
 			return new Status(Status.ERROR, "ch.elexis", "No file given"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		
+
 		try {
 			FileInputStream fips = new FileInputStream(filename);
-			ch.elexis.core.ui.exchange.BlockImporter blc =
-				new ch.elexis.core.ui.exchange.BlockImporter(fips);
+			ch.elexis.core.ui.exchange.BlockImporter blc = new ch.elexis.core.ui.exchange.BlockImporter(fips);
 			if (blc.finalizeImport().isOK()) {
 				return Status.OK_STATUS;
 			} else {
@@ -51,17 +50,17 @@ public class BlockImporter extends ImporterPage {
 		} catch (Exception ex) {
 			return new Status(Status.ERROR, "ch.elexis", "file not found: " + ex.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		
+
 	}
-	
+
 	@Override
-	public String getDescription(){
-		return Messages.BlockImporter_importBlocks; //$NON-NLS-1$
+	public String getDescription() {
+		return Messages.BlockImporter_importBlocks; // $NON-NLS-1$
 	}
-	
+
 	@Override
-	public String getTitle(){
-		return Messages.BlockImporter_Blocks; //$NON-NLS-1$
+	public String getTitle() {
+		return Messages.BlockImporter_Blocks; // $NON-NLS-1$
 	}
-	
+
 }

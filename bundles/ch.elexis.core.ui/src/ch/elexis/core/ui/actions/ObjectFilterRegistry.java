@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich and D. Lutz - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.actions;
@@ -20,22 +20,22 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.data.PersistentObject;
 
 public class ObjectFilterRegistry {
-	
+
 	private static ObjectFilterRegistry theInstance;
-	private final Hashtable<Class<? extends PersistentObject>, IObjectFilterProvider> hash =
-		new Hashtable<Class<? extends PersistentObject>, IObjectFilterProvider>();
-	
-	private ObjectFilterRegistry(){}
-	
-	public static ObjectFilterRegistry getInstance(){
+	private final Hashtable<Class<? extends PersistentObject>, IObjectFilterProvider> hash = new Hashtable<Class<? extends PersistentObject>, IObjectFilterProvider>();
+
+	private ObjectFilterRegistry() {
+	}
+
+	public static ObjectFilterRegistry getInstance() {
 		if (theInstance == null) {
 			theInstance = new ObjectFilterRegistry();
 		}
 		return theInstance;
 	}
-	
+
 	public synchronized void registerObjectFilter(final Class<? extends PersistentObject> clazz,
-		final IObjectFilterProvider provider){
+			final IObjectFilterProvider provider) {
 		IObjectFilterProvider old = hash.get(clazz);
 		if (old != null) {
 			old.deactivate();
@@ -44,32 +44,32 @@ public class ObjectFilterRegistry {
 		provider.activate();
 		ElexisEventDispatcher.reload(clazz);
 	}
-	
+
 	public void unregisterObjectFilter(final Class<? extends PersistentObject> clazz,
-		final IObjectFilterProvider provider){
+			final IObjectFilterProvider provider) {
 		hash.remove(clazz);
 		provider.deactivate();
 		ElexisEventDispatcher.reload(clazz);
 	}
-	
-	public IFilter getFilterFor(final Class<? extends PersistentObject> clazz){
+
+	public IFilter getFilterFor(final Class<? extends PersistentObject> clazz) {
 		IObjectFilterProvider prov = hash.get(clazz);
 		if (prov != null) {
 			return prov.getFilter();
 		}
 		return null;
 	}
-	
+
 	public interface IObjectFilterProvider {
 		public void activate();
-		
+
 		public void deactivate();
-		
+
 		public String getId();
-		
+
 		public void changed();
-		
+
 		public IFilter getFilter();
 	}
-	
+
 }

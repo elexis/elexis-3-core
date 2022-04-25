@@ -18,36 +18,32 @@ import ch.elexis.core.ui.perspective.service.IPerspectiveExportService;
 
 @Component
 public class PerspektiveExportHandler extends AbstractHandler {
-	
+
 	static IPerspectiveExportService perspectiveExportService;
-	
+
 	@Reference(unbind = "-")
-	public void bind(IPerspectiveExportService service){
+	public void bind(IPerspectiveExportService service) {
 		perspectiveExportService = service;
 	}
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		FileDialog dialog = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
-		dialog.setFilterNames(new String[] {
-			"XMI"
-		});
-		dialog.setFilterExtensions(new String[] {
-			"*.xmi"
-		});
-		
+		dialog.setFilterNames(new String[] { "XMI" });
+		dialog.setFilterExtensions(new String[] { "*.xmi" });
+
 		dialog.setFilterPath(CoreHub.getWritableUserDir().getAbsolutePath());
 		dialog.setFileName("perspective_export.xmi");
-		
+
 		String path = dialog.open();
 		if (path != null) {
 			try {
 				perspectiveExportService.exportPerspective(path, null, null);
 				MessageDialog.openInformation(UiDesk.getDisplay().getActiveShell(), "Export",
-					"Die aktuelle Perspektive wurde erfolgreich exportiert.");
+						"Die aktuelle Perspektive wurde erfolgreich exportiert.");
 			} catch (IOException e) {
 				MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Export",
-					"Die aktuelle Perspektive kann nicht exportiert werden.");
+						"Die aktuelle Perspektive kann nicht exportiert werden.");
 				LoggerFactory.getLogger(PerspektiveExportHandler.class).error("export error", e);
 			}
 		}

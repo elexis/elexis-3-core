@@ -13,28 +13,27 @@ import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandl
 import ch.rgw.io.FileTool;
 
 public abstract class BasicFileImportStrategyFactory implements IFileImportStrategyFactory {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(BasicFileImportStrategyFactory.class);
-	
+
 	@Override
 	public Map<IVirtualFilesystemHandle, IFileImportStrategy> createImportStrategyMap(
-		IVirtualFilesystemHandle fileHandle){
+			IVirtualFilesystemHandle fileHandle) {
 		Map<IVirtualFilesystemHandle, IFileImportStrategy> ret = new HashMap<>();
 		if (!validateHL7File(fileHandle)) {
-			throw new IllegalStateException(
-				"File [" + fileHandle + "] is not a processable HL7 File");
+			throw new IllegalStateException("File [" + fileHandle + "] is not a processable HL7 File");
 		}
 		ret.put(fileHandle, new DefaultHL7ImportStrategy());
-		
+
 		return ret;
 	}
-	
-	protected List<IVirtualFilesystemHandle> getMatchingFiles(IVirtualFilesystemHandle hl7File) throws IOException{
+
+	protected List<IVirtualFilesystemHandle> getMatchingFiles(IVirtualFilesystemHandle hl7File) throws IOException {
 		List<IVirtualFilesystemHandle> matchingFiles = new ArrayList<>();
-		
+
 		String origin = hl7File.getName();
 		String seekName = FileTool.getNakedFilename(origin);
-		
+
 		IVirtualFilesystemHandle directory = hl7File.getParent();
 		for (IVirtualFilesystemHandle f : directory.listHandles()) {
 			String name = f.getName();
@@ -42,21 +41,20 @@ public abstract class BasicFileImportStrategyFactory implements IFileImportStrat
 				matchingFiles.add(f);
 			}
 		}
-		log.debug("Found " + matchingFiles.size() + " matching files for HL7File ["
-			+ hl7File.getName() + "]");
+		log.debug("Found " + matchingFiles.size() + " matching files for HL7File [" + hl7File.getName() + "]");
 		return matchingFiles;
 	}
-	
-	protected boolean validateHL7File(IVirtualFilesystemHandle hl7File){
+
+	protected boolean validateHL7File(IVirtualFilesystemHandle hl7File) {
 		if (hl7File == null) {
 			return false;
 		}
-		
+
 		try {
 			return (hl7File.exists() && hl7File.getExtension().equalsIgnoreCase("hl7"));
 		} catch (IOException e) {
 			return false;
 		}
 	}
-	
+
 }

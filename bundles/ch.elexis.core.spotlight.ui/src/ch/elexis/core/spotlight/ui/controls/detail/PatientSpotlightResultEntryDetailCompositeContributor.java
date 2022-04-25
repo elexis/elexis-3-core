@@ -10,15 +10,15 @@ import ch.elexis.core.spotlight.ui.ISpotlightResultEntryDetailCompositeContribut
 @Component(immediate = true)
 public class PatientSpotlightResultEntryDetailCompositeContributor
 		implements ISpotlightResultEntryDetailCompositeContributor {
-	
+
 	@Override
-	public ISpotlightResultEntryDetailComposite createDetailComposite(Composite parent, int style){
+	public ISpotlightResultEntryDetailComposite createDetailComposite(Composite parent, int style) {
 		return new PatientDetailComposite(parent, style);
 	}
-	
+
 	@Override
-	public Category appliedForCategory(){
+	public Category appliedForCategory() {
 		return Category.PATIENT;
 	}
-	
+
 }

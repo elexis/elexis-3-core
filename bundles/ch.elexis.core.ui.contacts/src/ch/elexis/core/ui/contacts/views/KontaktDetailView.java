@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.contacts.views;
@@ -30,27 +30,27 @@ import ch.elexis.core.ui.util.ViewMenus;
 public class KontaktDetailView extends ViewPart {
 	public static final String ID = "ch.elexis.KontaktDetailView"; //$NON-NLS-1$
 	KontaktBlatt kb;
-	
-	public KontaktDetailView(){
-		
+
+	public KontaktDetailView() {
+
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout());
 		kb = new KontaktBlatt(parent, SWT.NONE, getViewSite());
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createToolbar(GlobalActions.printKontaktEtikette);
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		kb.setFocus();
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

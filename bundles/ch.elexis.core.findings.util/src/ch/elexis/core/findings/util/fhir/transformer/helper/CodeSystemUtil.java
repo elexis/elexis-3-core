@@ -17,7 +17,7 @@ import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementServiceContribution;
 
 public class CodeSystemUtil {
-	
+
 	@SuppressWarnings("serial")
 	private static HashMap<String, String> systemIdMap = new HashMap<String, String>() {
 		{
@@ -25,19 +25,19 @@ public class CodeSystemUtil {
 			put(CodingSystem.ELEXIS_DIAGNOSE_TESSINERCODE.getSystem(), "tessinercode");
 		}
 	};
-	
-	private static boolean isSystemString(String string){
+
+	private static boolean isSystemString(String string) {
 		return string.startsWith("http://") || string.startsWith("www.elexis.info/");
 	}
-	
-	public static Optional<String> getIdForString(String string){
+
+	public static Optional<String> getIdForString(String string) {
 		if (isSystemString(string)) {
 			return Optional.ofNullable(systemIdMap.get(string));
 		}
 		return Optional.of(string);
 	}
-	
-	public static Optional<String> getSystemForId(String idString){
+
+	public static Optional<String> getSystemForId(String idString) {
 		Set<String> keys = systemIdMap.keySet();
 		for (String key : keys) {
 			if (systemIdMap.get(key).equals(idString)) {
@@ -46,79 +46,77 @@ public class CodeSystemUtil {
 		}
 		return Optional.empty();
 	}
-	
-	public static Coding getGtinCoding(String gtin){
+
+	public static Coding getGtinCoding(String gtin) {
 		if (StringUtils.isNumeric(gtin)) {
 			return new Coding(MedicamentCoding.GTIN.getUrl(), gtin, null);
 		}
 		return null;
 	}
-	
-	//	public static Coding getElexisCodeSystemCoding(String codeSystemCode, String codeSystemName,
-	//		String codeSystemCodeValue, String displayName){
-	//		if (StringUtils.isNotBlank(codeSystemName) && StringUtils.isNotBlank(codeSystemCodeValue)) {
-	//			Coding coding = new Coding("www.elexis.info/codesystem", codeSystemName, displayName);
-	//			coding.setId(codeSystemCodeValue);
-	//			return coding;
-	//		}
-	//		return null;
-	//	}
-	
-	//	public static Optional<Coding> findCodeElementEntry(CodeableConcept codeableConcept,
-	//		String system){
-	//		return codeableConcept.getCoding().stream()
-	//			.filter(c -> StringUtils.startsWith(system, c.getSystem())).findFirst();
-	//	}
-	
+
+	// public static Coding getElexisCodeSystemCoding(String codeSystemCode, String
+	// codeSystemName,
+	// String codeSystemCodeValue, String displayName){
+	// if (StringUtils.isNotBlank(codeSystemName) &&
+	// StringUtils.isNotBlank(codeSystemCodeValue)) {
+	// Coding coding = new Coding("www.elexis.info/codesystem", codeSystemName,
+	// displayName);
+	// coding.setId(codeSystemCodeValue);
+	// return coding;
+	// }
+	// return null;
+	// }
+
+	// public static Optional<Coding> findCodeElementEntry(CodeableConcept
+	// codeableConcept,
+	// String system){
+	// return codeableConcept.getCoding().stream()
+	// .filter(c -> StringUtils.startsWith(system, c.getSystem())).findFirst();
+	// }
+
 	/**
 	 * Return a Coding that is resolvable via the {@link ICodeElementService}
-	 * 
+	 *
 	 * @param codeElementService
 	 * @param codeElement
 	 * @return
 	 */
-	public static Coding getCodeElementCoding(ICodeElementService codeElementService,
-		ICodeElement codeElement){
-		
-		Optional<ICodeElementServiceContribution> contribution =
-			codeElementService.getContribution(null, codeElement.getCodeSystemName());
+	public static Coding getCodeElementCoding(ICodeElementService codeElementService, ICodeElement codeElement) {
+
+		Optional<ICodeElementServiceContribution> contribution = codeElementService.getContribution(null,
+				codeElement.getCodeSystemName());
 		String typName = contribution.get().getTyp().name().toLowerCase();
-		
+
 		String theSystem = CodeSystem.CODEELEMENT.getUrl() + "/" + typName + "/"
-			+ codeElement.getCodeSystemName().toLowerCase();
+				+ codeElement.getCodeSystemName().toLowerCase();
 		Coding coding = new Coding(theSystem, "", codeElement.getText());
 		coding.setCode(codeElement.getCode());
 		return coding;
 	}
-	
-	
 
-	
-	
 	/**
 	 * Loads an {@link ICodeElement} if the resp. entry is available within the
 	 * {@link CodeableConcept}
-	 * 
-	 * @param codeElementService
-	 *            required to load the entry
+	 *
+	 * @param codeElementService required to load the entry
 	 * @param codeableConcept
 	 * @return
 	 */
-	public static Optional<ICodeElement> loadCodeElementEntryInCodeableConcept(
-		ICodeElementService codeElementService, CodeableConcept codeableConcept){
-		
+	public static Optional<ICodeElement> loadCodeElementEntryInCodeableConcept(ICodeElementService codeElementService,
+			CodeableConcept codeableConcept) {
+
 		List<Coding> codings = codeableConcept.getCoding();
 		for (Coding coding : codings) {
 			if (StringUtils.startsWith(coding.getSystem(), CodeSystem.CODEELEMENT.getUrl())) {
 				String codeElementTypAndcodeSystemName = StringUtils.substring(coding.getSystem(),
-					CodeSystem.CODEELEMENT.getUrl().length() + 1);
+						CodeSystem.CODEELEMENT.getUrl().length() + 1);
 				String[] codes = codeElementTypAndcodeSystemName.split("/");
 				return codeElementService.loadFromString(codes[1], coding.getCode(), null);
-				
+
 			}
 		}
-		
+
 		return Optional.empty();
 	}
-	
+
 }

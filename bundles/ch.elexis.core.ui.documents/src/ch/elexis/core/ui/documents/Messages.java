@@ -38,5 +38,5 @@ public class Messages {
 	public static String DocumentMetaDataDialog_deleteCategoryText = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_deleteCategoryText;
 	public static String DocumentMetaDataDialog_deleteCategoryError = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_deleteCategoryError;
 	public static String DocumentMetaDataDialog_deleteCategoryErrorText = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_deleteCategoryErrorText;
-	
+
 }

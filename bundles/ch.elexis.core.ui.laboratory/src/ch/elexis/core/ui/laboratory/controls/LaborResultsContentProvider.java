@@ -15,15 +15,15 @@ import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
 
 class LaborResultsContentProvider implements ITreeContentProvider {
-	
+
 	private HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> grouped;
 	private ArrayList<String> groups = new ArrayList<String>();
-	
+
 	private HashMap<String, LaborItemResults> itemResults = new HashMap<String, LaborItemResults>();
-	
+
 	private HashSet<String> dates = new HashSet<String>();
-	
-	public List<TimeTool> getDates(){
+
+	public List<TimeTool> getDates() {
 		ArrayList<TimeTool> ret = new ArrayList<TimeTool>();
 		for (String date : dates) {
 			ret.add(new TimeTool(date));
@@ -31,23 +31,23 @@ class LaborResultsContentProvider implements ITreeContentProvider {
 		Collections.sort(ret);
 		return ret;
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (newInput instanceof HashMap<?, ?>) {
 			grouped = (HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>>) newInput;
 			updateItemResults();
 		}
 	}
-	
-	private void updateItemResults(){
+
+	private void updateItemResults() {
 		groups.clear();
 		itemResults.clear();
 		dates.clear();
@@ -64,14 +64,14 @@ class LaborResultsContentProvider implements ITreeContentProvider {
 		groups.addAll(grouped.keySet());
 		Collections.sort(groups);
 	}
-	
+
 	@Override
-	public Object[] getElements(Object inputElement){
+	public Object[] getElements(Object inputElement) {
 		return groups.toArray();
 	}
-	
+
 	@Override
-	public Object[] getChildren(Object parentElement){
+	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof String) {
 			HashMap<String, HashMap<String, List<LabResult>>> itemMap = grouped.get(parentElement);
 			ArrayList<LaborItemResults> ret = new ArrayList<LaborItemResults>();
@@ -85,14 +85,14 @@ class LaborResultsContentProvider implements ITreeContentProvider {
 		}
 		return null;
 	}
-	
+
 	@Override
-	public Object getParent(Object element){
+	public Object getParent(Object element) {
 		return null;
 	}
-	
+
 	@Override
-	public boolean hasChildren(Object element){
+	public boolean hasChildren(Object element) {
 		if (element instanceof String) {
 			return grouped.get(element) != null && !grouped.get(element).isEmpty();
 		}

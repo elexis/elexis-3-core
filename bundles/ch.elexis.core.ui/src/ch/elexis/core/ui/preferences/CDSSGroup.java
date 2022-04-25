@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.preferences;
@@ -22,26 +22,26 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class CDSSGroup extends PreferencePage implements IWorkbenchPreferencePage {
-	
-	public CDSSGroup(){
+
+	public CDSSGroup() {
 		noDefaultAndApplyButton();
 	}
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new FillLayout());
 		StyledText text = new StyledText(ret, SWT.READ_ONLY);
 		text.setWordWrap(true);
-		text.setText(Messages.CDSSGroup_ExplanationCDSSLine1
-			+ Messages.CDSSGroup_ExplanationCDSSLine2 + Messages.CDSSGroup_ExplanationCDSSLine3);
+		text.setText(Messages.CDSSGroup_ExplanationCDSSLine1 + Messages.CDSSGroup_ExplanationCDSSLine2
+				+ Messages.CDSSGroup_ExplanationCDSSLine3);
 		return ret;
 	}
-	
+
 	@Override
-	public void init(IWorkbench workbench){
+	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

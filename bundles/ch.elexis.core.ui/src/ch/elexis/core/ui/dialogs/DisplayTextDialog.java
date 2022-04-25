@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.dialogs;
@@ -36,24 +36,24 @@ public class DisplayTextDialog extends TitleAreaDialog {
 	String t, m, cnt;
 	Boolean hS = true;
 	Font f = null;
-	
-	public DisplayTextDialog(Shell parentShell, String title, String message, String content){
+
+	public DisplayTextDialog(Shell parentShell, String title, String message, String content) {
 		super(parentShell);
 		t = title;
 		m = message;
 		cnt = content;
 	}
-	
-	public void setWhitespaceNormalized(Boolean hideSpaces){
+
+	public void setWhitespaceNormalized(Boolean hideSpaces) {
 		hS = hideSpaces;
 	}
-	
-	public void setFont(Font font){
+
+	public void setFont(Font font) {
 		f = font;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		ScrolledForm form = UiDesk.getToolkit().createScrolledForm(parent);
 		form.getBody().setLayout(new ColumnLayout());
 		form.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -65,7 +65,7 @@ public class DisplayTextDialog extends TitleAreaDialog {
 			if (cnt.length() > 300) {
 				getShell().setSize(800, 600);
 			}
-			
+
 		} else {
 			cnt = cnt.replaceAll("<", "&lt;");
 			cnt = cnt.replaceAll(">", "&gt;");
@@ -74,7 +74,7 @@ public class DisplayTextDialog extends TitleAreaDialog {
 			cnt = cnt.replaceAll("\\\\\\.br\\\\", "<br/>");
 			cnt = cnt.replaceAll("\\\\\\.BR\\\\", "<br/>");
 			cnt = cnt.replaceAll("\\n\\n", "\\n");
-			
+
 			ret = UiDesk.getToolkit().createFormText(form.getBody(), false);
 			((FormText) ret).setWhitespaceNormalized(hS);
 			if (f != null)
@@ -91,13 +91,13 @@ public class DisplayTextDialog extends TitleAreaDialog {
 		SWTHelper.center(UiDesk.getTopShell(), getShell());
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		getShell().setText(t);
 		Patient sp = ElexisEventDispatcher.getSelectedPatient();
-		setTitle((sp!=null) ? sp.getLabel() : "missing patient name"); //$NON-NLS-1$
+		setTitle((sp != null) ? sp.getLabel() : "missing patient name"); //$NON-NLS-1$
 		setMessage(m);
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 		Rectangle screen = UiDesk.getDisplay().getBounds();
@@ -106,5 +106,5 @@ public class DisplayTextDialog extends TitleAreaDialog {
 		getShell().setBounds(0, 0, w, h);
 		SWTHelper.center(getShell());
 	}
-	
+
 }

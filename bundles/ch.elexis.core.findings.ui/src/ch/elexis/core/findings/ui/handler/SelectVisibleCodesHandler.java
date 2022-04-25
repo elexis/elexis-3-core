@@ -15,18 +15,18 @@ import ch.elexis.core.findings.ui.dialogs.VisibleCodingsSelectionDialog;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 
 public class SelectVisibleCodesHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Shell shell = HandlerUtil.getActiveShellChecked(event);
-		
-		VisibleCodingsSelectionDialog dialog =
-			new VisibleCodingsSelectionDialog(shell, FindingsUiUtil.getAvailableCodings());
+
+		VisibleCodingsSelectionDialog dialog = new VisibleCodingsSelectionDialog(shell,
+				FindingsUiUtil.getAvailableCodings());
 		dialog.setSelected(FindingsUiUtil.loadVisibleCodings());
 		if (dialog.open() == Window.OK) {
 			FindingsUiUtil.saveVisibleCodings(dialog.getSelected());
-			ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null, ICoding.class,
-				ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
+			ElexisEventDispatcher.getInstance()
+					.fire(new ElexisEvent(null, ICoding.class, ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
 		}
 		return null;
 	}

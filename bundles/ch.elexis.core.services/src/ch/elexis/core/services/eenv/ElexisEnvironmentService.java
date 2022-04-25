@@ -4,26 +4,26 @@ import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 public class ElexisEnvironmentService implements IElexisEnvironmentService {
-	
+
 	private String elexisEnvironmentHost;
-	
-	public ElexisEnvironmentService(String elexisEnvironmentHost){
+
+	public ElexisEnvironmentService(String elexisEnvironmentHost) {
 		this.elexisEnvironmentHost = elexisEnvironmentHost;
 	}
-	
+
 	@Override
-	public String getVersion(){
+	public String getVersion() {
 		return "unused_unimplemented";
 	}
-	
+
 	@Override
-	public String getProperty(String key){
+	public String getProperty(String key) {
 		return ConfigServiceHolder.get().get(key, null);
 	}
-	
+
 	@Override
-	public String getHostname(){
+	public String getHostname() {
 		return elexisEnvironmentHost;
 	}
-	
+
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.importers;
 
@@ -22,32 +22,32 @@ import ch.elexis.core.ui.util.SWTHelper;
 
 public class KontaktImporterDialog extends TitleAreaDialog {
 	KontaktImporterBlatt kib;
-	
-	public KontaktImporterDialog(final Shell shell){
+
+	public KontaktImporterDialog(final Shell shell) {
 		super(shell);
 	}
-	
+
 	@Override
-	protected Control createDialogArea(final Composite parent){
+	protected Control createDialogArea(final Composite parent) {
 		kib = new KontaktImporterBlatt(parent);
 		kib.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		return kib;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		setTitle(Messages.KontaktImporterDialog_ImportingContact);
 		setMessage(Messages.KontaktImporterDialog_PleaseEnterFileTypeAndFile);
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 		getShell().setText(Messages.KontaktImporterDialog_ImporterCaption);
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		/*
 		 * if(kib.doImport()){ super.okPressed(); }
 		 */
 	}
-	
+
 }

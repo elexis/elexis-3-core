@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.exchange.elements;
@@ -17,15 +17,15 @@ import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Kontakt;
 
 public class ContactRefElement extends XChangeElement {
-	
+
 	public static final String CONTACTREF_DESCRIPTION = "description";
 	public static final String CONTACTREF_REFID = "refID";
-	
-	public String getXMLName(){
+
+	public String getXMLName() {
 		return "contactref";
 	}
-	
-	public ContactRefElement asExporter(XChangeExporter parent, BezugsKontakt bk){
+
+	public ContactRefElement asExporter(XChangeExporter parent, BezugsKontakt bk) {
 		asExporter(parent);
 		Kontakt bezug = bk.getBezugsKontakt();
 		String beziehung = bk.getBezug();
@@ -35,20 +35,20 @@ public class ContactRefElement extends XChangeElement {
 		parent.getContainer().addChoice(this, bk.getLabel(), bk);
 		return this;
 	}
-	
-	public void setDescription(String type){
+
+	public void setDescription(String type) {
 		setAttribute(CONTACTREF_DESCRIPTION, type);
 	}
-	
-	public String getDescription(){
+
+	public String getDescription() {
 		return getAttr(CONTACTREF_DESCRIPTION);
 	}
-	
-	public void setId(String id){
+
+	public void setId(String id) {
 		setAttribute(CONTACTREF_REFID, id);
 	}
-	
-	public String getContactRefId(){
+
+	public String getContactRefId() {
 		return getAttr(CONTACTREF_REFID);
 	}
 }

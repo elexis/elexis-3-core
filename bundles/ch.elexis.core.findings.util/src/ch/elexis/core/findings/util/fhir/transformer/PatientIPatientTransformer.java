@@ -25,10 +25,10 @@ public class PatientIPatientTransformer implements IFhirTransformer<Patient, IPa
 
 	@Reference
 	private IXidService xidService;
-	
+
 	@Reference
 	private IUserService userService;
-	
+
 	private IPatientPatientAttributeMapper attributeMapper;
 
 	@Activate
@@ -37,7 +37,7 @@ public class PatientIPatientTransformer implements IFhirTransformer<Patient, IPa
 	}
 
 	@Override
-	public Optional<Patient> getFhirObject(IPatient localObject, SummaryEnum summaryEnum,Set<Include> includes) {
+	public Optional<Patient> getFhirObject(IPatient localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Patient patient = new Patient();
 		attributeMapper.elexisToFhir(localObject, patient, summaryEnum, includes);
 		return Optional.of(patient);

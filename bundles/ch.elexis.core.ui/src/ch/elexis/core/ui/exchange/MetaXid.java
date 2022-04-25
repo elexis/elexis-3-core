@@ -24,56 +24,53 @@ import ch.elexis.data.Xid;
 import ch.rgw.tools.TimeTool;
 
 /**
- * A MetaXid is a format for Xid that allows comparing and merging of Xids from different sources
- * 
+ * A MetaXid is a format for Xid that allows comparing and merging of Xids from
+ * different sources
+ *
  * @author gerry
- * 
+ *
  */
 public class MetaXid {
 	String id;
 	List<Identity> identities = new ArrayList<Identity>();
-	
+
 	/*
 	 * Construct a MetaXid from an XML Element
 	 */
-	public MetaXid(Element xidElement){
+	public MetaXid(Element xidElement) {
 		id = xidElement.getAttributeValue("id");
 		List<Element> ids = xidElement.getChildren();
 		for (Element identity : ids) {
 			if (identity.getName().equalsIgnoreCase("identity")) {
-				Identity i =
-					new Identity(identity.getAttributeValue("domain"),
-						identity.getAttributeValue("domainID"),
+				Identity i = new Identity(identity.getAttributeValue("domain"), identity.getAttributeValue("domainID"),
 						mapQuality(identity.getAttributeValue("quality")),
-						Boolean.parseBoolean(identity.getAttributeValue("isGUID")),
-						identity.getAttributeValue("date"));
+						Boolean.parseBoolean(identity.getAttributeValue("isGUID")), identity.getAttributeValue("date"));
 				identities.add(i);
 			}
 		}
 	}
-	
+
 	/**
 	 * Construct a MetaXid from a Elexis-Xid
-	 * 
+	 *
 	 * @param xidObject
 	 */
-	public MetaXid(Xid xidObject){
+	public MetaXid(Xid xidObject) {
 		this(xidObject.getObject());
 	}
-	
+
 	/**
 	 * Construct a MetaXid from an Elexis-PersistentObject
-	 * 
+	 *
 	 * @param obj
 	 */
-	public MetaXid(IPersistentObject obj){
+	public MetaXid(IPersistentObject obj) {
 		List<IXid> xids = obj.getXids();
 		String bestID = obj.getId();
 		int bestQuality = Xid.ASSIGNMENT_LOCAL;
 		boolean bestIsGuid = true;
 		for (IXid xid : xids) {
-			Identity i =
-				new Identity(xid.getDomain(), xid.getDomainId(), xid.getQuality(), xid.isGUID(),
+			Identity i = new Identity(xid.getDomain(), xid.getDomainId(), xid.getQuality(), xid.isGUID(),
 					new TimeTool(((Xid) xid).getLastUpdate()).toString(TimeTool.DATE_ISO));
 			identities.add(i);
 			if (i.quality > bestQuality) {
@@ -82,23 +79,22 @@ public class MetaXid {
 					bestQuality = i.quality;
 				}
 			}
-			
+
 		}
 		id = bestID;
 	}
-	
+
 	/**
 	 * check whether this MetaXid might denote the same object
-	 * 
-	 * @param other
-	 *            the other MetaXid to compare
-	 * @return 0 - no indication for a match, 1 - some weak probability, 2 - probably a match, 3 -
-	 *         surely matching
+	 *
+	 * @param other the other MetaXid to compare
+	 * @return 0 - no indication for a match, 1 - some weak probability, 2 -
+	 *         probably a match, 3 - surely matching
 	 * @author gerry
-	 * 
+	 *
 	 */
-	
-	public int match(MetaXid other){
+
+	public int match(MetaXid other) {
 		int ret = 0;
 		for (Identity i : other.identities) {
 			if (isMatching(i)) {
@@ -117,8 +113,8 @@ public class MetaXid {
 		}
 		return ret;
 	}
-	
-	public Element toElement(Namespace ns){
+
+	public Element toElement(Namespace ns) {
 		Element ret = new Element(XidElement.XMLNAME, ns);
 		ret.setAttribute(XidElement.ATTR_ID, id);
 		for (Identity i : identities) {
@@ -132,8 +128,8 @@ public class MetaXid {
 		}
 		return ret;
 	}
-	
-	public boolean merge(MetaXid other){
+
+	public boolean merge(MetaXid other) {
 		for (Identity i : other.identities) {
 			Identity dom = findDomain(i.domain);
 			if (dom == null) {
@@ -153,18 +149,18 @@ public class MetaXid {
 		}
 		return true;
 	}
-	
-	private Identity findDomain(String domain){
+
+	private Identity findDomain(String domain) {
 		for (Identity i : identities) {
 			if (i.domain.equalsIgnoreCase(domain)) {
 				return i;
-				
+
 			}
 		}
 		return null;
 	}
-	
-	private boolean isMatching(Identity i1){
+
+	private boolean isMatching(Identity i1) {
 		for (Identity i : identities) {
 			if (i.domain.equalsIgnoreCase(i1.domain)) {
 				if (i.domainID.equalsIgnoreCase(i1.domainID)) {
@@ -174,8 +170,8 @@ public class MetaXid {
 		}
 		return false;
 	}
-	
-	private int mapQuality(String q){
+
+	private int mapQuality(String q) {
 		if (q.equalsIgnoreCase("local")) {
 			return Xid.ASSIGNMENT_LOCAL;
 		} else if (q.equalsIgnoreCase("regional")) {
@@ -185,8 +181,8 @@ public class MetaXid {
 		}
 		return -1;
 	}
-	
-	private String mapQuality(int q){
+
+	private String mapQuality(int q) {
 		switch (q) {
 		case Xid.ASSIGNMENT_GLOBAL:
 			return "global";
@@ -198,16 +194,16 @@ public class MetaXid {
 			return "undefined";
 		}
 	}
-	
+
 	private class Identity {
-		Identity(String d, String i, int q, boolean guid, String date){
+		Identity(String d, String i, int q, boolean guid, String date) {
 			domain = d;
 			domainID = i;
 			quality = q;
 			isGUID = guid;
 			tt = new TimeTool(date);
 		}
-		
+
 		TimeTool tt;
 		String domain;
 		String domainID;

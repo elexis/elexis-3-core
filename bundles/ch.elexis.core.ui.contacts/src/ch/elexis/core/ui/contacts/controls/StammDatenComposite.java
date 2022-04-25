@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -67,14 +67,14 @@ import ch.elexis.core.ui.icons.Images;
 
 // TODO Use icons from elexis?
 public class StammDatenComposite extends AbstractComposite {
-	
+
 	private static Logger log = LoggerFactory.getLogger(StammDatenComposite.class);
-	
+
 	private IContact contact;
-	
+
 	private Label lblHeadline;
 	private Label lblContactType;
-	
+
 	private Text txtTitleFront;
 	private GridData gd_txtTitleFront;
 	private Text txtFirstName;
@@ -98,20 +98,20 @@ public class StammDatenComposite extends AbstractComposite {
 	private ComboViewer comboViewerCountry;
 	private DateTime dateTimeDob;
 	private GridData gd_dateTimeDob;
-	
+
 	private Composite compositeHeader;
 	private ComboViewer comboViewerSex;
-	
+
 	private TabbedPropertySheetWidgetFactory tpsf = null;
-	
+
 	public static final String PERSON_LABEL = "Vollständiger Name, Geschlecht, Geburtsdatum";
 	public static final String ORGANIZATION_LABEL = "Bezeichnung, Zusatz";
 	private Label lblCode;
-	
+
 	private ILabelDecorator decorator;
 	private TableDecoratingLabelProvider tdlp;
-	
-	public StammDatenComposite(Composite parent, int style, TabbedPropertySheetPage tpsp){
+
+	public StammDatenComposite(Composite parent, int style, TabbedPropertySheetPage tpsp) {
 		this(parent, style);
 		tpsf = tpsp.getWidgetFactory();
 		if (tpsf != null) {
@@ -131,61 +131,59 @@ public class StammDatenComposite extends AbstractComposite {
 			tpsf.adapt(txtNotes, true, true);
 		}
 	}
-	
-	public StammDatenComposite(Composite parent, int style){
+
+	public StammDatenComposite(Composite parent, int style) {
 		super(parent, style);
 		decorator = PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator();
-		tdlp = new TableDecoratingLabelProvider(
-			new ContactSelectorObservableMapLabelProvider(new ObservableMap[] {}), decorator);
-		
+		tdlp = new TableDecoratingLabelProvider(new ContactSelectorObservableMapLabelProvider(new ObservableMap[] {}),
+				decorator);
+
 		setLayout(new GridLayout(6, false));
-		
+
 		{ // HEADER
 			compositeHeader = new Composite(this, SWT.NONE);
 			compositeHeader.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 6, 1));
 			compositeHeader.setLayout(new GridLayout(3, false));
-			
+
 			lblContactType = new Label(compositeHeader, SWT.NONE);
-			
+
 			lblHeadline = new Label(compositeHeader, SWT.NONE);
 			lblHeadline.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			
+
 			lblCode = new Label(compositeHeader, SWT.NONE);
 			GridData gd_lblCode = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 			gd_lblCode.widthHint = 40;
 			lblCode.setLayoutData(gd_lblCode);
 		}
-		
+
 		{ // TYPE_PERSON - Title prefix
 			txtTitleFront = new Text(this, SWT.BORDER);
 			gd_txtTitleFront = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 			gd_txtTitleFront.widthHint = 60;
 			txtTitleFront.setLayoutData(gd_txtTitleFront);
 			txtTitleFront.setMessage("Titel");
-			ContentProposalAdapter cpaTitleFront = new ContentProposalAdapter(txtTitleFront,
-				new TextContentAdapter(),
-				new TitleProposalProvider(TitleProposalProvider.TITLE_POSITION_PREFIX), null, null);
+			ContentProposalAdapter cpaTitleFront = new ContentProposalAdapter(txtTitleFront, new TextContentAdapter(),
+					new TitleProposalProvider(TitleProposalProvider.TITLE_POSITION_PREFIX), null, null);
 			cpaTitleFront.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		}
-		
+
 		txtFirstName = new Text(this, SWT.BORDER);
 		txtFirstName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		txtFamilyName = new Text(this, SWT.BORDER);
 		txtFamilyName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		{ // TYPE_PERSON - Title back
 			txtTitleBack = new Text(this, SWT.BORDER);
 			gd_txtTitleBack = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 			gd_txtTitleBack.widthHint = 60;
 			txtTitleBack.setLayoutData(gd_txtTitleBack);
 			txtTitleBack.setMessage("Titel");
-			ContentProposalAdapter cpaTitleBack = new ContentProposalAdapter(txtTitleBack,
-				new TextContentAdapter(),
-				new TitleProposalProvider(TitleProposalProvider.TITLE_POSITION_SUFFIX), null, null);
+			ContentProposalAdapter cpaTitleBack = new ContentProposalAdapter(txtTitleBack, new TextContentAdapter(),
+					new TitleProposalProvider(TitleProposalProvider.TITLE_POSITION_SUFFIX), null, null);
 			cpaTitleBack.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		}
-		
+
 		{ // TYPE_PERSON - Sex
 			comboViewerSex = new ComboViewer(this, SWT.NONE);
 			gd_comboSex = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
@@ -193,7 +191,7 @@ public class StammDatenComposite extends AbstractComposite {
 			comboViewerSex.setContentProvider(ArrayContentProvider.getInstance());
 			comboViewerSex.setLabelProvider(new LabelProvider() {
 				@Override
-				public String getText(Object element){
+				public String getText(Object element) {
 					switch ((ContactGender) element) {
 					case FEMALE:
 						return "W";
@@ -213,7 +211,7 @@ public class StammDatenComposite extends AbstractComposite {
 			gd_dateTimeDob = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 			dateTimeDob.setLayoutData(gd_dateTimeDob);
 		}
-		
+
 		Group grpAddress = new Group(this, SWT.NONE);
 		grpAddress.setLayout(new GridLayout(3, false));
 		grpAddress.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
@@ -228,19 +226,17 @@ public class StammDatenComposite extends AbstractComposite {
 			comboViewerCountry.setInput(Country.values());
 			comboViewerCountry.addSelectionChangedListener(new ISelectionChangedListener() {
 				@Override
-				public void selectionChanged(SelectionChangedEvent event){
-					Country selCountry =
-						(Country) ((StructuredSelection) event.getSelection()).getFirstElement();
+				public void selectionChanged(SelectionChangedEvent event) {
+					Country selCountry = (Country) ((StructuredSelection) event.getSelection()).getFirstElement();
 					if (selCountry == Country.NDF) {
-						comboViewerCountry.getCombo()
-							.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+						comboViewerCountry.getCombo().setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 						ContactGeonames.setCountry(null);
 					} else {
 						comboViewerCountry.getCombo()
-							.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+								.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 						ContactGeonames.setCountry(selCountry);
 					}
-					
+
 				}
 			});
 		}
@@ -248,13 +244,13 @@ public class StammDatenComposite extends AbstractComposite {
 			txtCity = new Text(grpAddress, SWT.BORDER);
 			txtCity.setMessage("Ortschaft");
 			txtCity.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			
-			ContentProposalAdapter cpaCity =
-				new ContentProposalAdapter(txtCity, new TextContentAdapter(), cityIP, null, null);
+
+			ContentProposalAdapter cpaCity = new ContentProposalAdapter(txtCity, new TextContentAdapter(), cityIP, null,
+					null);
 			cpaCity.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 			cpaCity.addContentProposalListener(new IContentProposalListener() {
 				@Override
-				public void proposalAccepted(IContentProposal proposal){
+				public void proposalAccepted(IContentProposal proposal) {
 					txtZIP.setText(cityIP.findZipForCityName(proposal.getContent()));
 				}
 			});
@@ -265,45 +261,45 @@ public class StammDatenComposite extends AbstractComposite {
 			txtZIP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 			txtZIP.addModifyListener(new ModifyListener() {
 				@Override
-				public void modifyText(ModifyEvent e){
+				public void modifyText(ModifyEvent e) {
 					String currZip = ((Text) e.widget).getText();
 					if (currZip == null || currZip.length() < 4)
 						return;
 					streetIP.setZip(currZip);
 				}
 			});
-			
-			ContentProposalAdapter cpaZip =
-				new ContentProposalAdapter(txtZIP, new TextContentAdapter(), zipIP, null, null);
+
+			ContentProposalAdapter cpaZip = new ContentProposalAdapter(txtZIP, new TextContentAdapter(), zipIP, null,
+					null);
 			cpaZip.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 			cpaZip.addContentProposalListener(new IContentProposalListener() {
 				@Override
-				public void proposalAccepted(IContentProposal proposal){
+				public void proposalAccepted(IContentProposal proposal) {
 					txtCity.setText(zipIP.findCityNameForZip(proposal.getContent()));
 				}
 			});
 		}
-		
+
 		Label lblImageCountry = new Label(grpAddress, SWT.NONE);
 		GridData gd_lblImageCountry = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_lblImageCountry.widthHint = 55;
 		lblImageCountry.setLayoutData(gd_lblImageCountry);
-		
+
 		{
 			txtStreet = new Text(grpAddress, SWT.BORDER);
 			txtStreet.setMessage("Strasse, Hausnummer");
 			txtStreet.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-			
-			ContentProposalAdapter cpaStreet = new ContentProposalAdapter(txtStreet,
-				new TextContentAdapter(), streetIP, null, null);
+
+			ContentProposalAdapter cpaStreet = new ContentProposalAdapter(txtStreet, new TextContentAdapter(), streetIP,
+					null, null);
 			cpaStreet.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		}
-		
+
 		Group grpKontaktdaten = new Group(this, SWT.NONE);
 		grpKontaktdaten.setText("Kontaktdaten");
 		grpKontaktdaten.setLayout(new GridLayout(4, false));
 		grpKontaktdaten.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
-		
+
 		Label lblImgPhone = new Label(grpKontaktdaten, SWT.NONE);
 		lblImgPhone.setImage(Images.IMG_TELEPHONE.getImage());
 		lblImgPhone.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -311,7 +307,7 @@ public class StammDatenComposite extends AbstractComposite {
 		txtTelefon.setMessage("Telefon-Nummer");
 		txtTelefon.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtTelefon.addFocusListener(preDialFocuListener);
-		
+
 		Label lblImgePhone2 = new Label(grpKontaktdaten, SWT.NONE);
 		lblImgePhone2.setImage(Images.IMG_TELEPHONE.getImage());
 		lblImgePhone2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -319,7 +315,7 @@ public class StammDatenComposite extends AbstractComposite {
 		txtTelefon2.setMessage("Telefon-Nummer");
 		txtTelefon2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtTelefon2.addFocusListener(preDialFocuListener);
-		
+
 		Label lblImgMobilePhone = new Label(grpKontaktdaten, SWT.NONE);
 		lblImgMobilePhone.setImage(Images.IMG_MOBILEPHONE.getImage());
 		lblImgMobilePhone.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -327,7 +323,7 @@ public class StammDatenComposite extends AbstractComposite {
 		txtMobil.setMessage("Handy-Nummer");
 		txtMobil.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtMobil.addFocusListener(preDialFocuListener);
-		
+
 		Label lblImgFax = new Label(grpKontaktdaten, SWT.NONE);
 		lblImgFax.setImage(Images.IMG_FAX.getImage());
 		lblImgFax.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -335,13 +331,13 @@ public class StammDatenComposite extends AbstractComposite {
 		txtFax.setMessage("Fax-Nummer");
 		txtFax.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtFax.addFocusListener(preDialFocuListener);
-		
+
 		btnEmail = new Button(grpKontaktdaten, SWT.FLAT);
 		btnEmail.setImage(Images.IMG_MAIL.getImage());
 		btnEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnEmail.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				try {
 					URI uriMailTo = new URI("mailto", txtEmail.getText(), null);
 					Desktop.getDesktop().mail(uriMailTo);
@@ -350,17 +346,17 @@ public class StammDatenComposite extends AbstractComposite {
 				}
 			}
 		});
-		
+
 		txtEmail = new Text(grpKontaktdaten, SWT.BORDER);
 		txtEmail.setMessage("E-Mail Adresse");
 		txtEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		btnWebsite = new Button(grpKontaktdaten, SWT.FLAT);
 		btnWebsite.setImage(Images.IMG_WEB.getImage());
 		btnWebsite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnWebsite.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				try {
 					URI uriURL = new URI(txtWebsite.getText());
 					if (!uriURL.isAbsolute()) {
@@ -372,11 +368,11 @@ public class StammDatenComposite extends AbstractComposite {
 				}
 			}
 		});
-		
+
 		txtWebsite = new Text(grpKontaktdaten, SWT.BORDER);
 		txtWebsite.setMessage("Webseite");
 		txtWebsite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		{ // Notes
 			Group grpNotes = new Group(this, SWT.NONE);
 			grpNotes.setLayout(new GridLayout(1, false));
@@ -387,15 +383,15 @@ public class StammDatenComposite extends AbstractComposite {
 			gd_txtNotes.heightHint = (int) (5 * txtNotes.getFont().getFontData()[0].height);
 			txtNotes.setLayoutData(gd_txtNotes);
 		}
-		
+
 		initDataBindings();
 	}
-	
+
 	@Override
-	public void setContact(IContact k){
+	public void setContact(IContact k) {
 		this.contact = k;
 		contactObservable.setValue(contact);
-		
+
 		if (contact.isPerson()) {
 			lblContactType.setImage(tdlp.getColumnImage(contact, 0));
 			comboViewerSex.getCombo().setVisible(true);
@@ -415,7 +411,7 @@ public class StammDatenComposite extends AbstractComposite {
 				lblCode.setText("");
 			}
 		}
-		
+
 		if (contact.isOrganization()) {
 			lblContactType.setImage(tdlp.getColumnImage(contact, 0));
 			comboViewerSex.getCombo().setVisible(false);
@@ -431,66 +427,66 @@ public class StammDatenComposite extends AbstractComposite {
 			lblHeadline.setText(ORGANIZATION_LABEL);
 			lblCode.setText("");
 		}
-		
+
 		layout();
 	}
-	
-	protected void initDataBindings(){
+
+	protected void initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 
 		Text[] control = {
-			// TODO txtTitleFront, txtTitleBack
-			txtFirstName, txtFamilyName, txtZIP, txtCity, txtStreet, txtTelefon, txtTelefon2,
-			txtFax, txtEmail, txtWebsite, txtMobil, txtNotes
-		};
-		String[] property = {
-			"description2", "description1", "zip", "city", "street", "phone1", "phone2", "fax",
-			"email", "website", "mobile", "comment"
-		};
-		
+				// TODO txtTitleFront, txtTitleBack
+				txtFirstName, txtFamilyName, txtZIP, txtCity, txtStreet, txtTelefon, txtTelefon2, txtFax, txtEmail,
+				txtWebsite, txtMobil, txtNotes };
+		String[] property = { "description2", "description1", "zip", "city", "street", "phone1", "phone2", "fax",
+				"email", "website", "mobile", "comment" };
+
 		for (int i = 0; i < control.length; i++) {
 			bindValue(control[i], property[i], bindingContext);
 		}
-		
+
 		// DateTime
 		// TODO
-		//		IObservableValue dateTimeObserveWidget = SWTObservables.observeSelection(dateTimeDob);
-		//		IObservableValue dateTimeObserveValue =
-		//			BeansObservables.observeDetailValue(contactObservable, "dateOfBirth",
-		//				org.joda.time.DateTime.class);
-		//		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-		//		targetToModel.setConverter(new DateDateTimeConverter());
-		//		UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
-		//		modelToTarget.setConverter(new DateTimeDateConverter());
-		//		bindingContext.bindValue(dateTimeObserveWidget, dateTimeObserveValue, targetToModel,
-		//			modelToTarget);
-		
-		//		IObservableValue sexObserver = ViewersObservables.observeSingleSelection(comboViewerSex);
-		//		bindingContext.bindValue(sexObserver,
-		//			BeansObservables.observeDetailValue(contactObservable, "gender", ContactGender.class),
-		//			null, null);
-		
-		IObservableValue countryObserver =
-			ViewersObservables.observeSingleSelection(comboViewerCountry);
+		// IObservableValue dateTimeObserveWidget =
+		// SWTObservables.observeSelection(dateTimeDob);
+		// IObservableValue dateTimeObserveValue =
+		// BeansObservables.observeDetailValue(contactObservable, "dateOfBirth",
+		// org.joda.time.DateTime.class);
+		// UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+		// targetToModel.setConverter(new DateDateTimeConverter());
+		// UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
+		// modelToTarget.setConverter(new DateTimeDateConverter());
+		// bindingContext.bindValue(dateTimeObserveWidget, dateTimeObserveValue,
+		// targetToModel,
+		// modelToTarget);
+
+		// IObservableValue sexObserver =
+		// ViewersObservables.observeSingleSelection(comboViewerSex);
+		// bindingContext.bindValue(sexObserver,
+		// BeansObservables.observeDetailValue(contactObservable, "gender",
+		// ContactGender.class),
+		// null, null);
+
+		IObservableValue countryObserver = ViewersObservables.observeSingleSelection(comboViewerCountry);
 		bindingContext.bindValue(countryObserver,
-			PojoObservables.observeDetailValue(contactObservable, "country", Country.class), null,
-			null);
+				PojoObservables.observeDetailValue(contactObservable, "country", Country.class), null, null);
 	}
-	
+
 	/**
-	 * This {@link FocusListener} sets and unsets the dial prefix of a country for phones.
+	 * This {@link FocusListener} sets and unsets the dial prefix of a country for
+	 * phones.
 	 */
 	FocusListener preDialFocuListener = new FocusListener() {
-		
+
 		@Override
-		public void focusLost(FocusEvent e){
+		public void focusLost(FocusEvent e) {
 			Text text = ((Text) e.widget);
 			if (text.getText().equalsIgnoreCase(ContactGeonames.getDialPrefix()))
 				text.setText("");
 		}
-		
+
 		@Override
-		public void focusGained(FocusEvent e){
+		public void focusGained(FocusEvent e) {
 			Text text = ((Text) e.widget);
 			if (text.getText().length() == 0)
 				text.setText(ContactGeonames.getDialPrefix());
@@ -498,5 +494,5 @@ public class StammDatenComposite extends AbstractComposite {
 	};
 	private Button btnWebsite;
 	private Button btnEmail;
-	
+
 }

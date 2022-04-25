@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.rgw.compress;
@@ -23,31 +23,32 @@ import ch.rgw.io.BitOutputStream;
 import ch.rgw.tools.ExHandler;
 
 /**
- * GLZ is a simple implementation of a variation of the lempel-ziv algorithm. It compresses much
- * less than zip, but is fast enough to be implemented in pure Java. (I did program it in assembler
- * originally in the early 90's though; this alorithm programmed in assembler and running on a 80386
- * of those days was even slower than running on a computer of today in this java programm, which is
- * essentially a transscript of the original Assembler source)
- * 
+ * GLZ is a simple implementation of a variation of the lempel-ziv algorithm. It
+ * compresses much less than zip, but is fast enough to be implemented in pure
+ * Java. (I did program it in assembler originally in the early 90's though;
+ * this alorithm programmed in assembler and running on a 80386 of those days
+ * was even slower than running on a computer of today in this java programm,
+ * which is essentially a transscript of the original Assembler source)
+ *
  * @author Gerry
  */
 public class GLZ {
-	public static String Version(){
+	public static String Version() {
 		return "1.0.0";
 	}
-	
+
 	private static final int LZBUFFSIZE = 0x8cf2;
 	private static final short ofb = 4;
 	private int[] buff1, buff2, buff3;
 	int LZCode, MaxCode, bitcount;
-	
-	public GLZ(){
+
+	public GLZ() {
 		buff1 = new int[LZBUFFSIZE];
 		buff2 = new int[LZBUFFSIZE];
 		buff3 = new int[LZBUFFSIZE / 2];
 	}
-	
-	public int compress(InputStream in, OutputStream o) throws IOException{
+
+	public int compress(InputStream in, OutputStream o) throws IOException {
 		BitOutputStream bos = new BitOutputStream(o);
 		int size = 0;
 		fillbuffer();
@@ -55,7 +56,7 @@ public class GLZ {
 		if (Prev == -1) {
 			Prev = 0x100;
 		}
-		
+
 		while (in.available() > 0) {
 			int Act = in.read();
 			size++;
@@ -66,7 +67,7 @@ public class GLZ {
 			} else {
 				cnt1 = 1;
 			}
-			
+
 			hash = findHash(hash, Prev, Act, cnt1); // find code or empty place in hashtable
 			if (buff1[hash] != -1) // code found
 			{
@@ -97,8 +98,8 @@ public class GLZ {
 		bos.flush(); // write rest
 		return size + 1;
 	}
-	
-	private int findHash(int hash, int Prev, int Act, int cnt1){
+
+	private int findHash(int hash, int Prev, int Act, int cnt1) {
 		while (buff1[hash] != -1) {
 			if ((buff2[hash] == Prev) && (buff3[hash] == (byte) Act)) {
 				break; // found
@@ -109,21 +110,21 @@ public class GLZ {
 		}
 		return hash;
 	}
-	
-	private void fillbuffer(){
+
+	private void fillbuffer() {
 		for (int i = 0; i < buff1.length; i++) {
 			buff1[i] = -1;
-			
+
 		}
 		LZCode = 0x103;
 		bitcount = 9;
 		MaxCode = 0x1ff;
 	}
-	
-	public void expand(InputStream i, OutputStream o) throws IOException{
+
+	public void expand(InputStream i, OutputStream o) throws IOException {
 		int Prev, Prev1, Act, dx;
 		BitInputStream bis = new BitInputStream(i);
-		
+
 		newdic: while (true) {
 			LZCode = 0x103;
 			bitcount = 9;
@@ -135,7 +136,7 @@ public class GLZ {
 			}
 			Act = Prev = Prev1;
 			o.write(Act);
-			
+
 			while (Prev1 != 0x100) {
 				dx = Prev1 = (short) bis.pullBits(bitcount);
 				switch (Prev1) {
@@ -155,25 +156,25 @@ public class GLZ {
 						buff1[si++] = buff3[dx];
 						dx = buff2[dx];
 					}
-					
+
 					buff1[si] = Act = dx;
-					
+
 					do {
 						o.write(buff1[si--]);
 					} while (si >= ofb);
-					
+
 					buff2[LZCode] = Prev;
 					buff3[LZCode++] = (byte) Act;
 					Prev = Prev1;
-					
+
 				} // case
 			} // while;
 			break; // EOF (0x100) received
 		} // while(true)
 		o.flush();
 	}
-	
-	public byte[] encodeString(String input){
+
+	public byte[] encodeString(String input) {
 		byte[] b = input.getBytes();
 		ByteArrayInputStream in = new ByteArrayInputStream(b);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -184,10 +185,10 @@ public class GLZ {
 			ExHandler.handle(ex);
 			return null;
 		}
-		
+
 	}
-	
-	public String decodeString(byte[] i){
+
+	public String decodeString(byte[] i) {
 		ByteArrayInputStream in = new ByteArrayInputStream(i);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {

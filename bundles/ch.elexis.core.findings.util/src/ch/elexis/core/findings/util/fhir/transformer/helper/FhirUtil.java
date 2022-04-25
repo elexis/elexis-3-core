@@ -10,14 +10,14 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 
 public class FhirUtil {
-	
-	public static Reference getReference(Identifiable identifiable){
+
+	public static Reference getReference(Identifiable identifiable) {
 		if (identifiable == null) {
 			return null;
 		}
-		
+
 		String resourceType = null;
-		
+
 		if (identifiable instanceof IPatient) {
 			resourceType = "Patient";
 		} else if (identifiable instanceof IEncounter) {
@@ -25,19 +25,19 @@ public class FhirUtil {
 		} else if (identifiable instanceof IBilled) {
 			resourceType = "ChargeItem";
 		}
-		
+
 		if (resourceType != null) {
 			return new Reference(new IdDt(resourceType, identifiable.getId()));
 		}
-		
+
 		throw new IllegalArgumentException(identifiable.getClass().getCanonicalName());
 	}
-	
-	public static Money toFhir(ch.rgw.tools.Money total){
+
+	public static Money toFhir(ch.rgw.tools.Money total) {
 		Money money = new Money();
 		money.setValue(total.doubleValue());
 		money.setCurrency("CHF");
 		return money;
 	}
-	
+
 }

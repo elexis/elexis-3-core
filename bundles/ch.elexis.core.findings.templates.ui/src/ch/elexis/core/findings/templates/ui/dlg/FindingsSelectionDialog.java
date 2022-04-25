@@ -48,10 +48,9 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 	private boolean multiSelection;
 	private FindingsTemplate current;
 	private boolean dndReordering;
-	
-	public FindingsSelectionDialog(Shell parentShell, FindingsTemplates model,
-		List<FindingsTemplate> selections, boolean multiSelection, FindingsTemplate current,
-		boolean dndReordering){
+
+	public FindingsSelectionDialog(Shell parentShell, FindingsTemplates model, List<FindingsTemplate> selections,
+			boolean multiSelection, FindingsTemplate current, boolean dndReordering) {
 		super(parentShell);
 		setShellStyle(SWT.RESIZE);
 		this.model = model;
@@ -60,14 +59,14 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		this.multiSelection = multiSelection;
 		this.dndReordering = dndReordering;
 	}
-	
+
 	/**
 	 * Create contents of the dialog.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		StringBuilder message = new StringBuilder();
 		if (multiSelection) {
 			message.append("Wählen Sie Vorlagen aus");
@@ -79,88 +78,82 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		}
 		setMessage(message.toString());
 		setTitle("Befund Vorlage");
-		
+
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+
 		EList<FindingsTemplate> eTemplates = ECollections.newBasicEList();
-		
+
 		viewer = new TableViewer(composite,
-			SWT.FULL_SELECTION | SWT.BORDER | (multiSelection ? SWT.MULTI : SWT.SINGLE));
+				SWT.FULL_SELECTION | SWT.BORDER | (multiSelection ? SWT.MULTI : SWT.SINGLE));
 		viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		viewer.setContentProvider(new ArrayContentProvider());
 		viewer.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof FindingsTemplate) {
 					return ((FindingsTemplate) element).getTitle();
 				}
 				return "";
 			}
-			
+
 			@Override
-			public Image getImage(Object object){
+			public Image getImage(Object object) {
 				Image img = FindingsTemplateUtil.getImage(object);
 				return img != null ? img : super.getImage(object);
 			}
 		});
-		
+
 		viewer.setComparer(new IElementComparer() {
-			
+
 			@Override
-			public int hashCode(Object element){
+			public int hashCode(Object element) {
 				return element.hashCode();
 			}
-			
+
 			@Override
-			public boolean equals(Object a, Object b){
+			public boolean equals(Object a, Object b) {
 				if (a.equals(b)) {
 					return true;
-				}
-				else if (a instanceof FindingsTemplate && b instanceof FindingsTemplate) {
+				} else if (a instanceof FindingsTemplate && b instanceof FindingsTemplate) {
 					FindingsTemplate findingsTemplate1 = (FindingsTemplate) a;
 					FindingsTemplate findingsTemplate2 = (FindingsTemplate) b;
-					return StringUtils.equals(findingsTemplate1.getTitle(),
-						findingsTemplate2.getTitle());
+					return StringUtils.equals(findingsTemplate1.getTitle(), findingsTemplate2.getTitle());
 				}
 				return false;
 			}
 		});
 		if (dndReordering) {
-			final Transfer[] dragTransferTypes = new Transfer[] {
-				TextTransfer.getInstance()
-			};
+			final Transfer[] dragTransferTypes = new Transfer[] { TextTransfer.getInstance() };
 			viewer.addDragSupport(DND.DROP_MOVE, dragTransferTypes, new DragSourceAdapter() {
 				@Override
-				public void dragSetData(DragSourceEvent event){
+				public void dragSetData(DragSourceEvent event) {
 					IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 					if (selection != null && !selection.isEmpty()) {
 						Object item = selection.getFirstElement();
 						if (item instanceof FindingsTemplate) {
-							FindingsTemplate findingsTemplate =
-								(FindingsTemplate) selection.getFirstElement();
+							FindingsTemplate findingsTemplate = (FindingsTemplate) selection.getFirstElement();
 							event.data = findingsTemplate.getTitle();
 						}
 					}
 				}
 			});
 			viewer.addDropSupport(DND.DROP_MOVE, dragTransferTypes, new DropTargetAdapter() {
-				
+
 				@Override
-				public void dragEnter(DropTargetEvent event){
+				public void dragEnter(DropTargetEvent event) {
 					event.detail = DND.DROP_MOVE;
 				}
-				
+
 				@Override
-				public void drop(DropTargetEvent event){
+				public void drop(DropTargetEvent event) {
 					IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 					TableItem tableItem = (TableItem) event.item;
 					if (tableItem != null) {
 						int idx = viewer.getTable().indexOf(tableItem);
 						if (selection != null && !selection.isEmpty()) {
-							FindingsTemplate findingsTemplate =
-								(FindingsTemplate) selection.getFirstElement();
+							FindingsTemplate findingsTemplate = (FindingsTemplate) selection.getFirstElement();
 							if (findingsTemplate != null) {
 								if (eTemplates.remove(findingsTemplate)) {
 									eTemplates.add(idx, findingsTemplate);
@@ -172,50 +165,47 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 				}
 			});
 		}
-		
-		
+
 		List<FindingsTemplate> templatesTemp = null;
 		if (current != null) {
 			if (current.getInputData() instanceof InputDataGroupComponent) {
 				// remove component selections
 				templatesTemp = model.getFindingsTemplates().stream()
-					.filter(item -> !(item.getInputData() instanceof InputDataGroup
-						|| item.getInputData() instanceof InputDataGroupComponent))
-					.collect(Collectors.toList());
-				
-				for (FindingsTemplate findingsTemplate : ((InputDataGroupComponent) current
-					.getInputData()).getFindingsTemplates()) {
+						.filter(item -> !(item.getInputData() instanceof InputDataGroup
+								|| item.getInputData() instanceof InputDataGroupComponent))
+						.collect(Collectors.toList());
+
+				for (FindingsTemplate findingsTemplate : ((InputDataGroupComponent) current.getInputData())
+						.getFindingsTemplates()) {
 					if (!templatesTemp.contains(findingsTemplate)) {
 						templatesTemp.add(findingsTemplate);
 					}
 				}
 			} else {
 				// remove self selection
-				templatesTemp = model.getFindingsTemplates().stream()
-					.filter(item -> !item.equals(current)).collect(Collectors.toList());
+				templatesTemp = model.getFindingsTemplates().stream().filter(item -> !item.equals(current))
+						.collect(Collectors.toList());
 			}
 		} else {
 			templatesTemp = model.getFindingsTemplates();
 		}
-		
+
 		if (templatesTemp != null) {
-			
+
 			eTemplates.addAll(templatesTemp);
 			// sort
 			ECollections.sort(eTemplates, (l, r) -> {
 				if (l == null || r == null) {
 					return l != null ? 1 : -1;
 				}
-				int titleCompare =
-					ObjectUtils.compare(l.getTitle().toLowerCase(), r.getTitle().toLowerCase());
-				if (l.getInputData() instanceof InputDataGroup
-					|| r.getInputData() instanceof InputDataGroup) {
+				int titleCompare = ObjectUtils.compare(l.getTitle().toLowerCase(), r.getTitle().toLowerCase());
+				if (l.getInputData() instanceof InputDataGroup || r.getInputData() instanceof InputDataGroup) {
 					if (l.getInputData().getClass() != r.getInputData().getClass()) {
 						return l.getInputData() instanceof InputDataGroup ? -1 : 1;
 					}
 				}
 				if (l.getInputData() instanceof InputDataGroupComponent
-					|| r.getInputData() instanceof InputDataGroupComponent) {
+						|| r.getInputData() instanceof InputDataGroupComponent) {
 					if (l.getInputData().getClass() != r.getInputData().getClass()) {
 						return l.getInputData() instanceof InputDataGroupComponent ? -1 : 1;
 					}
@@ -225,11 +215,10 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 		}
 		viewer.setInput(eTemplates);
 		viewer.setSelection(new StructuredSelection(selections));
-		
-		
+
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(DoubleClickEvent event){
+			public void doubleClick(DoubleClickEvent event) {
 				StructuredSelection selection = (StructuredSelection) viewer.getSelection();
 				if (!selection.isEmpty()) {
 					Object selectedObj = selection.getFirstElement();
@@ -241,30 +230,29 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		
+
 		return composite;
 
-
 	}
-	
+
 	/**
 	 * Create contents of the button bar.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
-	
+
 	@Override
-	protected void buttonPressed(int buttonId){
+	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		selections = new ArrayList<>();
 		StructuredSelection structuredSelection = (StructuredSelection) viewer.getSelection();
 		for (Object o : structuredSelection.toArray()) {
@@ -272,18 +260,18 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 				selections.add((FindingsTemplate) o);
 			}
 		}
-		
+
 		super.okPressed();
 	}
-	
-	public List<FindingsTemplate> getSelection(){
+
+	public List<FindingsTemplate> getSelection() {
 		if (selections == null) {
 			selections = Collections.emptyList();
 		}
 		return selections;
 	}
-	
-	public FindingsTemplate getSingleSelection(){
+
+	public FindingsTemplate getSingleSelection() {
 		List<FindingsTemplate> findingsTemplates = getSelection();
 		if (findingsTemplates.size() > 0) {
 			return findingsTemplates.get(0);

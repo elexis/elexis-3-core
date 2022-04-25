@@ -13,15 +13,15 @@ import ch.elexis.core.findings.util.fhir.MedicamentCoding;
 import ch.elexis.core.model.IArticle;
 
 public class IMedicationHelper {
-	
-	public Coding getGtinCoding(String gtin){
+
+	public Coding getGtinCoding(String gtin) {
 		if (StringUtils.isNumeric(gtin)) {
 			return new Coding(MedicamentCoding.GTIN.getOid(), gtin, null);
 		}
 		return null;
 	}
-	
-	public List<Coding> getAtcCodings(String atcCodes){
+
+	public List<Coding> getAtcCodings(String atcCodes) {
 		if (atcCodes != null && !atcCodes.isEmpty()) {
 			List<Coding> ret = new ArrayList<>();
 			String[] codes = atcCodes.split(";");
@@ -33,21 +33,19 @@ public class IMedicationHelper {
 		}
 		return Collections.emptyList();
 	}
-	
-	public Coding getNameCoding(String name){
+
+	public Coding getNameCoding(String name) {
 		if (StringUtils.isNotBlank(name)) {
 			return new Coding(MedicamentCoding.NAME.getUrl(), name, null);
 		}
 		return null;
 	}
-	
-	public Coding getTypeCoding(IArticle localObject){
-		return new Coding(MedicamentCoding.TYPE.getUrl(), localObject.getTyp().getCodeSystemName(),
-			null);
+
+	public Coding getTypeCoding(IArticle localObject) {
+		return new Coding(MedicamentCoding.TYPE.getUrl(), localObject.getTyp().getCodeSystemName(), null);
 	}
-	
-	public Ratio determineAmount(
-		IArticle localObject){
+
+	public Ratio determineAmount(IArticle localObject) {
 		SimpleQuantity quantity = new SimpleQuantity();
 		quantity.setUnit(localObject.getPackageUnit());
 		try {
@@ -60,7 +58,7 @@ public class IMedicationHelper {
 		r.setDenominator(quantity);
 		r.setNumerator(quantity);
 		return r;
-		
+
 	}
-	
+
 }

@@ -26,19 +26,19 @@ import ch.elexis.core.services.IQuery.ORDER;
 import ch.rgw.tools.Money;
 
 public class PatientDetailCompositeUtil {
-	
+
 	private DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("EE, dd.MM.yy HH:MM");
 	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-	
-	String getAppointmentLabel(IAppointment appointment){
+
+	String getAppointmentLabel(IAppointment appointment) {
 		if (appointment == null) {
 			return "-";
 		}
-		return dayFormatter.format(appointment.getStartTime()) + " - " + appointment.getReason()
-			+ " bei " + appointment.getSchedule();
+		return dayFormatter.format(appointment.getStartTime()) + " - " + appointment.getReason() + " bei "
+				+ appointment.getSchedule();
 	}
-	
-	void clearComposite(Composite composite, Control... exclude){
+
+	void clearComposite(Composite composite, Control... exclude) {
 		Control[] children = composite.getChildren();
 		for (Control control : children) {
 			if (exclude == null) {
@@ -58,17 +58,16 @@ public class PatientDetailCompositeUtil {
 		}
 		composite.layout();
 	}
-	
-	public String formatDate(LocalDate date){
+
+	public String formatDate(LocalDate date) {
 		return dateFormatter.format(date);
 	}
-	
-	String getFormattedFamilyDoctor(IPatient patient){
+
+	String getFormattedFamilyDoctor(IPatient patient) {
 		if (patient != null) {
 			IContact familyDoctor = patient.getFamilyDoctor();
 			if (familyDoctor != null) {
-				String label =
-					familyDoctor.getDescription1() + ", " + familyDoctor.getDescription2();
+				String label = familyDoctor.getDescription1() + ", " + familyDoctor.getDescription2();
 				if (StringUtils.isNotEmpty(familyDoctor.getCode())) {
 					label += " (" + familyDoctor.getCode() + ")";
 				}
@@ -77,8 +76,8 @@ public class PatientDetailCompositeUtil {
 		}
 		return "-";
 	}
-	
-	String getFormattedInsurance(IModelService coreModelService, IPatient patient){
+
+	String getFormattedInsurance(IModelService coreModelService, IPatient patient) {
 		if (patient != null) {
 			IQuery<ICoverage> firstKvgQuery = coreModelService.getQuery(ICoverage.class);
 			firstKvgQuery.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);
@@ -93,13 +92,13 @@ public class PatientDetailCompositeUtil {
 		}
 		return "-";
 	}
-	
-	String getFormattedPatientBalance(IModelService coreModelService, IPatient patient){
+
+	String getFormattedPatientBalance(IModelService coreModelService, IPatient patient) {
 		if (patient != null) {
-			INamedQuery<Number> namedQuery = coreModelService.getNamedQuery(Number.class,
-				IAccountTransaction.class, true, "balance.patient");
-			List<Number> balanceResult =
-				namedQuery.executeWithParameters(namedQuery.getParameterMap("patient", patient));
+			INamedQuery<Number> namedQuery = coreModelService.getNamedQuery(Number.class, IAccountTransaction.class,
+					true, "balance.patient");
+			List<Number> balanceResult = namedQuery
+					.executeWithParameters(namedQuery.getParameterMap("patient", patient));
 			if (!balanceResult.isEmpty()) {
 				int _balance = balanceResult.get(0).intValue();
 				return "CHF " + new Money(_balance);
@@ -107,25 +106,22 @@ public class PatientDetailCompositeUtil {
 		}
 		return "-";
 	}
-	
-	String getFormattedFixedMedication(IModelService coreModelService, IPatient patient){
+
+	String getFormattedFixedMedication(IModelService coreModelService, IPatient patient) {
 		if (patient != null) {
-			List<IPrescription> fixedMedication =
-				patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
+			List<IPrescription> fixedMedication = patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
 			if (!fixedMedication.isEmpty()) {
-				return fixedMedication.stream().map(m -> m.getLabel())
-					.reduce((u, t) -> u + "\r\n" + t).get();
+				return fixedMedication.stream().map(m -> m.getLabel()).reduce((u, t) -> u + "\r\n" + t).get();
 			}
 		}
 		return "-";
 	}
-	
-	IAppointment getNextAppointment(IModelService coreModelService, IPatient patient){
+
+	IAppointment getNextAppointment(IModelService coreModelService, IPatient patient) {
 		if (patient != null) {
-			IQuery<IAppointment> futureAppointmentsQuery =
-				coreModelService.getQuery(IAppointment.class);
-			futureAppointmentsQuery.and(ModelPackage.Literals.IAPPOINTMENT__SUBJECT_OR_PATIENT,
-				COMPARATOR.EQUALS, patient.getId());
+			IQuery<IAppointment> futureAppointmentsQuery = coreModelService.getQuery(IAppointment.class);
+			futureAppointmentsQuery.and(ModelPackage.Literals.IAPPOINTMENT__SUBJECT_OR_PATIENT, COMPARATOR.EQUALS,
+					patient.getId());
 			futureAppointmentsQuery.and("tag", COMPARATOR.GREATER, LocalDate.now());
 			futureAppointmentsQuery.orderBy("tag", ORDER.ASC);
 			futureAppointmentsQuery.limit(1);
@@ -133,13 +129,12 @@ public class PatientDetailCompositeUtil {
 		}
 		return null;
 	}
-	
-	IAppointment getPreviousAppointment(IModelService coreModelService, IPatient patient){
+
+	IAppointment getPreviousAppointment(IModelService coreModelService, IPatient patient) {
 		if (patient != null) {
-			IQuery<IAppointment> lastAppointmentQuery =
-				coreModelService.getQuery(IAppointment.class);
-			lastAppointmentQuery.and(ModelPackage.Literals.IAPPOINTMENT__SUBJECT_OR_PATIENT,
-				COMPARATOR.EQUALS, patient.getId());
+			IQuery<IAppointment> lastAppointmentQuery = coreModelService.getQuery(IAppointment.class);
+			lastAppointmentQuery.and(ModelPackage.Literals.IAPPOINTMENT__SUBJECT_OR_PATIENT, COMPARATOR.EQUALS,
+					patient.getId());
 			lastAppointmentQuery.and("tag", COMPARATOR.LESS_OR_EQUAL, LocalDate.now());
 			lastAppointmentQuery.orderBy("tag", ORDER.DESC);
 			lastAppointmentQuery.limit(1);
@@ -147,12 +142,11 @@ public class PatientDetailCompositeUtil {
 		}
 		return null;
 	}
-	
-	String getFormattedLatestLaboratoryDate(IModelService coreModelService, IPatient patient){
+
+	String getFormattedLatestLaboratoryDate(IModelService coreModelService, IPatient patient) {
 		if (patient != null) {
 			IQuery<ILabResult> labResultQuery = coreModelService.getQuery(ILabResult.class);
-			labResultQuery.and(ModelPackage.Literals.ILAB_RESULT__PATIENT, COMPARATOR.EQUALS,
-				patient);
+			labResultQuery.and(ModelPackage.Literals.ILAB_RESULT__PATIENT, COMPARATOR.EQUALS, patient);
 			labResultQuery.orderBy(ModelPackage.Literals.ILAB_RESULT__DATE, ORDER.DESC);
 			labResultQuery.limit(1);
 			ILabResult latestResult = labResultQuery.executeSingleResult().orElse(null);
@@ -162,5 +156,5 @@ public class PatientDetailCompositeUtil {
 		}
 		return "-";
 	}
-	
+
 }

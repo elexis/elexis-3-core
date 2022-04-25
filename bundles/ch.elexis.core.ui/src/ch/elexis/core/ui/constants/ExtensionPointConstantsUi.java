@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -12,12 +12,12 @@ package ch.elexis.core.ui.constants;
 
 /**
  * @since 3.0.0
- * @since 3.2.0 added VERRECHNUNGSCODE_CSF, VERRECHNUNGSCODE_ELF, VERRECHNUNGSCODE_CDD,
- *        VERRECHNUNGSCODE_IMPC
+ * @since 3.2.0 added VERRECHNUNGSCODE_CSF, VERRECHNUNGSCODE_ELF,
+ *        VERRECHNUNGSCODE_CDD, VERRECHNUNGSCODE_IMPC
  */
 public class ExtensionPointConstantsUi {
 	public static final String VERRECHNUNGSCODE = "ch.elexis.core.ui.Verrechnungscode";
-	public static final String VERRECHNUNGSCODE_CSF = "CodeSelectorFactory";	
+	public static final String VERRECHNUNGSCODE_CSF = "CodeSelectorFactory";
 	public static final String VERRECHNUNGSCODE_ELF = "ElementFactory";
 	public static final String VERRECHNUNGSCODE_CDD = "CodeDetailDisplay";
 	public static final String VERRECHNUNGSCODE_IMPC = "ImporterClass";

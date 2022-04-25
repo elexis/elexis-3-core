@@ -8,20 +8,20 @@ import java.net.URL;
 import org.eclipse.core.runtime.FileLocator;
 
 public class ResourceManager {
-	
+
 	private static ResourceManager instance;
-	
-	private ResourceManager(){
-		
+
+	private ResourceManager() {
+
 	}
-	
-	public static ResourceManager getInstance(){
+
+	public static ResourceManager getInstance() {
 		if (instance == null)
 			return new ResourceManager();
 		return instance;
 	}
-	
-	public URI getResourceURIByName(String name){
+
+	public URI getResourceURIByName(String name) {
 		try {
 			// try to load the resource directly
 			URL url = getClass().getResource(name);
@@ -41,8 +41,8 @@ public class ResourceManager {
 			return null;
 		}
 	}
-	
-	public String getResourceLocationByName(String name){
+
+	public String getResourceLocationByName(String name) {
 		URI resourceURI = getResourceURIByName(name);
 		if (resourceURI == null)
 			return null;

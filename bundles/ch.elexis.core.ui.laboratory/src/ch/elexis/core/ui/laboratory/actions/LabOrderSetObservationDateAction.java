@@ -11,28 +11,26 @@ import ch.elexis.core.ui.laboratory.controls.LaborOrderViewerItem;
 import ch.rgw.tools.TimeTool;
 
 public class LabOrderSetObservationDateAction extends Action {
-	
+
 	private List<LaborOrderViewerItem> orders;
 	private StructuredViewer viewer;
-	
-	public LabOrderSetObservationDateAction(List<LaborOrderViewerItem> list,
-		StructuredViewer viewer){
+
+	public LabOrderSetObservationDateAction(List<LaborOrderViewerItem> list, StructuredViewer viewer) {
 		super("Beobachtungszeitpunkt für Auftrag ändern (inkl. Resultate)"); //$NON-NLS-1$
 		this.orders = list;
 		this.viewer = viewer;
 	}
-	
+
 	@Override
-	public void run(){
+	public void run() {
 		TimeTool date = null;
 		if (orders.size() == 1) {
 			date = orders.get(0).getObservationTime();
 		} else {
 			date = new TimeTool();
 		}
-		
-		DateTimeSelectorDialog dsd =
-			new DateTimeSelectorDialog(viewer.getControl().getShell(), date);
+
+		DateTimeSelectorDialog dsd = new DateTimeSelectorDialog(viewer.getControl().getShell(), date);
 		if (dsd.open() == Dialog.OK) {
 			date = dsd.getSelectedDate();
 			for (LaborOrderViewerItem labOrderViewerItem : orders) {

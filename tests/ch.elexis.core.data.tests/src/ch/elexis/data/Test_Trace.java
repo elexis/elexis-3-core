@@ -11,16 +11,16 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 
 public class Test_Trace extends AbstractPersistentObjectTest {
-	
-	public Test_Trace(JdbcLink link){
+
+	public Test_Trace(JdbcLink link) {
 		super(link);
 	}
-	
+
 	@Test
-	public void testAddTraceEntry() throws SQLException, InterruptedException{
+	public void testAddTraceEntry() throws SQLException, InterruptedException {
 		Trace.addTraceEntry("testUser", "testWorkstation", "testAction");
 		// trace is written async
-		
+
 		for (int i = 0; i < 10; i++) {
 			Stm statement = link.getStatement();
 			ResultSet rs = statement.query("SELECT * FROM " + Trace.TABLENAME);
@@ -36,5 +36,5 @@ public class Test_Trace extends AbstractPersistentObjectTest {
 		}
 		fail();
 	}
-	
+
 }

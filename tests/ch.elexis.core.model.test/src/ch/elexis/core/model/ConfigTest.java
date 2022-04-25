@@ -19,29 +19,29 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.test.AbstractTest;
 
-public class ConfigTest  extends AbstractTest {
+public class ConfigTest extends AbstractTest {
 
 	@Test
-	public void create(){
+	public void create() {
 		IConfig config = coreModelService.create(IConfig.class);
 		assertNotNull(config);
 		assertTrue(config instanceof IConfig);
-		
+
 		config.setKey("test key1");
 		config.setValue("test value 1");
 		coreModelService.save(config);
-		
+
 		Optional<IConfig> loadedConfig = coreModelService.load(config.getId(), IConfig.class);
 		assertTrue(loadedConfig.isPresent());
 		assertFalse(config == loadedConfig.get());
 		assertEquals(config, loadedConfig.get());
 		assertEquals(config.getValue(), loadedConfig.get().getValue());
-		
+
 		coreModelService.remove(config);
 	}
-	
+
 	@Test
-	public void query(){
+	public void query() {
 		IConfig config1 = coreModelService.create(IConfig.class);
 		config1.setKey("test key 1");
 		config1.setValue("test value 1");
@@ -50,7 +50,7 @@ public class ConfigTest  extends AbstractTest {
 		config2.setKey("test key 2");
 		config2.setValue("test value 2");
 		coreModelService.save(config2);
-		
+
 		IQuery<IConfig> query = coreModelService.getQuery(IConfig.class);
 		query.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, "test key 2");
 		List<IConfig> existing = query.execute();
@@ -59,18 +59,18 @@ public class ConfigTest  extends AbstractTest {
 		assertFalse(config2 == existing.get(0));
 		assertEquals(config2, existing.get(0));
 		assertEquals(config2.getValue(), existing.get(0).getValue());
-		
+
 		// key id also the id, try load
 		Optional<IConfig> loaded = coreModelService.load("test key 2", IConfig.class);
 		assertTrue(loaded.isPresent());
 		assertEquals(config2, loaded.get());
-		
+
 		coreModelService.remove(config1);
 		coreModelService.remove(config2);
 	}
-	
+
 	@Test
-	public void optimisticLock() throws InterruptedException{
+	public void optimisticLock() throws InterruptedException {
 		IConfig config1 = coreModelService.create(IConfig.class);
 		config1.setKey("test key 1");
 		config1.setValue("test value 1");
@@ -78,10 +78,10 @@ public class ConfigTest  extends AbstractTest {
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		executor.execute(new Runnable() {
 			@Override
-			public void run(){
-				int affected = coreModelService
-					.executeNativeUpdate("UPDATE config SET wert = 'test key', lastupdate = "
-						+ 1 + " WHERE param = 'test key 1'", false);
+			public void run() {
+				int affected = coreModelService.executeNativeUpdate(
+						"UPDATE config SET wert = 'test key', lastupdate = " + 1 + " WHERE param = 'test key 1'",
+						false);
 				assertEquals(1, affected);
 			}
 		});

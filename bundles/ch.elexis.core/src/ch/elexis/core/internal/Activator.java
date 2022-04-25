@@ -8,17 +8,17 @@ import org.osgi.framework.BundleContext;
 import ch.elexis.core.logging.Slf4jLogListener;
 
 public class Activator implements BundleActivator {
-	
+
 	private ILogListener logListener = new Slf4jLogListener();
-	
+
 	@Override
-	public void start(BundleContext context) throws Exception{
+	public void start(BundleContext context) throws Exception {
 		Platform.addLogListener(logListener);
 	}
-	
+
 	@Override
-	public void stop(BundleContext context) throws Exception{
+	public void stop(BundleContext context) throws Exception {
 		Platform.removeLogListener(logListener);
 	}
-	
+
 }

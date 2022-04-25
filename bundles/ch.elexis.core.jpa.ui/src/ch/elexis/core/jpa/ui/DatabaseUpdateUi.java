@@ -20,13 +20,13 @@ import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
 
 @Component
 public class DatabaseUpdateUi implements IDatabaseUpdateUi {
-	
+
 	private Shell shell;
 	private Label messageLabel;
 	private ProgressIndicator progressIndicator;
 	private boolean isExecuting;
-	
-	private void createAndOpenShell(Display display){
+
+	private void createAndOpenShell(Display display) {
 		if (display.getActiveShell() != null) {
 			shell = new Shell(display.getActiveShell(), SWT.TOOL | SWT.APPLICATION_MODAL);
 		} else {
@@ -34,26 +34,26 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 		}
 		shell.setText("Database Update");
 		shell.setLayout(new FillLayout());
-		
+
 		Composite contentComposite = new Composite(shell, SWT.NONE);
 		contentComposite.setLayout(new GridLayout());
-		
+
 		messageLabel = new Label(contentComposite, SWT.CENTER | SWT.WRAP);
 		messageLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		// progress indicator
 		progressIndicator = new ProgressIndicator(contentComposite);
 		progressIndicator.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
-		
+
 		shell.pack();
 		shell.open();
 		Rectangle displayBounds = display.getBounds();
 		shell.setSize(500, 50);
 		shell.setLocation(((displayBounds.width / 2) - (shell.getBounds().width / 2)),
-			(displayBounds.height / 2) + (shell.getBounds().height / 2) + 150);
+				(displayBounds.height / 2) + (shell.getBounds().height / 2) + 150);
 		runEventLoop();
 	}
-	
-	public void closeProgress(){
+
+	public void closeProgress() {
 		Display display = Display.getDefault();
 		display.syncExec(() -> {
 			if (shell != null) {
@@ -62,8 +62,8 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 			}
 		});
 	}
-	
-	public void openProgress(String message){
+
+	public void openProgress(String message) {
 		Display display = Display.getDefault();
 		display.syncExec(() -> {
 			if (shell == null) {
@@ -74,8 +74,8 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 			shell.pack();
 		});
 	}
-	
-	public void execute(Runnable updateRunnable){
+
+	public void execute(Runnable updateRunnable) {
 		try {
 			isExecuting = true;
 			ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -87,11 +87,11 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 		} catch (Exception e) {
 			LoggerFactory.getLogger(getClass());
 		}
-		
+
 	}
-	
+
 	@Override
-	public void executeWithProgress(String message, Runnable updateRunnable){
+	public void executeWithProgress(String message, Runnable updateRunnable) {
 		openProgress(message);
 		execute(updateRunnable);
 		while (isExecuting()) {
@@ -99,29 +99,30 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 		}
 		closeProgress();
 	}
-	
-	public boolean isExecuting(){
+
+	public boolean isExecuting() {
 		return isExecuting;
 	}
-	
-	public void runEventLoop(){
+
+	public void runEventLoop() {
 		Display display = Display.getDefault();
-		while (display.readAndDispatch()) {}
+		while (display.readAndDispatch()) {
+		}
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
 			// ignore
 		}
 	}
-	
+
 	@Override
-	public void setMessage(String message){
+	public void setMessage(String message) {
 		Display.getDefault().syncExec(() -> {
 			if (shell != null && !shell.isDisposed()) {
 				shell.setSize(500, 100);
 				Rectangle displayBounds = shell.getDisplay().getBounds();
 				shell.setLocation(((displayBounds.width / 2) - (shell.getBounds().width / 2)),
-					(displayBounds.height / 2) + (shell.getBounds().height / 2) + 150);
+						(displayBounds.height / 2) + (shell.getBounds().height / 2) + 150);
 				this.messageLabel.setText(message);
 				this.messageLabel.getParent().layout();
 			}

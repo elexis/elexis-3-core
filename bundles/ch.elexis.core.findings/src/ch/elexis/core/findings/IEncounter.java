@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -16,17 +16,17 @@ import java.util.Optional;
 
 public interface IEncounter extends IFinding {
 	public String getConsultationId();
-	
+
 	public void setConsultationId(String consultationId);
-	
+
 	public String getMandatorId();
-	
+
 	public void setMandatorId(String mandatorId);
-	
+
 	/**
-	 * Get the specific type of the encounter. Since there are many ways to
-	 * classify encounters, there is a list.
-	 * 
+	 * Get the specific type of the encounter. Since there are many ways to classify
+	 * encounters, there is a list.
+	 *
 	 * @return
 	 */
 	public List<ICoding> getType();
@@ -34,51 +34,51 @@ public interface IEncounter extends IFinding {
 	/**
 	 * Set the specific type of the encounter. Since there are many ways to classify
 	 * encounters, there is a list.
-	 * 
+	 *
 	 * @return
 	 */
 	public void setType(List<ICoding> coding);
 
 	/**
-	 * Get all {@link ICondition} entries linked to this encounter. The reason the encounter takes
-	 * place.
-	 * 
+	 * Get all {@link ICondition} entries linked to this encounter. The reason the
+	 * encounter takes place.
+	 *
 	 * @return the entries, or an empty list
 	 */
 	public List<ICondition> getIndication();
-	
+
 	/**
-	 * Set all {@link ICondition} entries linked to this encounter. The reason the encounter takes
-	 * place.
-	 * 
+	 * Set all {@link ICondition} entries linked to this encounter. The reason the
+	 * encounter takes place.
+	 *
 	 * @param indication
 	 */
 	public void setIndication(List<ICondition> indication);
-	
+
 	/**
 	 * Get the start date and time of the encounter.
-	 * 
+	 *
 	 * @return
 	 */
 	public Optional<LocalDateTime> getStartTime();
-	
+
 	/**
 	 * Set the start date and time of the encounter.
-	 * 
+	 *
 	 * @param time
 	 */
 	public void setStartTime(LocalDateTime time);
 
 	/**
 	 * Get the end date and time of the encounter.
-	 * 
+	 *
 	 * @return
 	 */
 	public Optional<LocalDateTime> getEndTime();
 
 	/**
 	 * Set the end date and time of the encounter.
-	 * 
+	 *
 	 * @param time
 	 */
 	public void setEndTime(LocalDateTime time);

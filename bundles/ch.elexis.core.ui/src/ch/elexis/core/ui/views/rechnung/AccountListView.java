@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Daniel Lutz - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views.rechnung;
@@ -57,59 +57,57 @@ import ch.rgw.tools.TimeTool;
 
 /**
  * This view shows the current patient's account
- * 
+ *
  * TODO reloading the list is not yet possible
  */
 
 public class AccountListView extends ViewPart implements IActivationListener {
-	
+
 	public static final String ID = "ch.elexis.views.rechnung.AccountListView"; //$NON-NLS-1$
-	
+
 	private FormToolkit tk;
 	private Form form;
 	private TableViewer accountListViewer;
-	
+
 	// column indices
 	private static final int NAME = 0;
 	private static final int FIRSTNAME = 1;
 	private static final int BIRTHDATE = 2;
 	private static final int SALDO = 3;
-	
-	private static final String[] COLUMN_TEXT = {
-		Messages.AccountListView_name, // NAME //$NON-NLS-1$
-		Messages.AccountListView_firstname, // FIRSTNAME //$NON-NLS-1$
-		Messages.AccountListView_bithdate, // BIRTHDATE //$NON-NLS-1$
-		Messages.AccountListView_balance, // SALDO //$NON-NLS-1$
+
+	private static final String[] COLUMN_TEXT = { Messages.AccountListView_name, // NAME //$NON-NLS-1$
+			Messages.AccountListView_firstname, // FIRSTNAME //$NON-NLS-1$
+			Messages.AccountListView_bithdate, // BIRTHDATE //$NON-NLS-1$
+			Messages.AccountListView_balance, // SALDO //$NON-NLS-1$
 	};
-	
-	private static final int[] COLUMN_WIDTH = {
-		150, // NAME
-		150, // FIRSTNAME
-		100, // BIRTHDATE
-		100, // SALDO
+
+	private static final int[] COLUMN_WIDTH = { 150, // NAME
+			150, // FIRSTNAME
+			100, // BIRTHDATE
+			100, // SALDO
 	};
-	
+
 	private DataLoader loader;
-	
+
 	private AccountListEntryComparator comparator;
-	
-	public void createPartControl(Composite parent){
+
+	public void createPartControl(Composite parent) {
 		loader = new DataLoader();
-		
+
 		parent.setLayout(new FillLayout());
 		tk = UiDesk.getToolkit();
 		form = tk.createForm(parent);
 		form.getBody().setLayout(new GridLayout(1, false));
-		
+
 		// account list
-		tk.createLabel(form.getBody(), Messages.AccountListView_accountList); //$NON-NLS-1$
+		tk.createLabel(form.getBody(), Messages.AccountListView_accountList); // $NON-NLS-1$
 		accountListViewer = new TableViewer(form.getBody(), SWT.SINGLE | SWT.FULL_SELECTION);
 		Table table = accountListViewer.getTable();
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		
+
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		
+
 		TableColumn[] tc = new TableColumn[COLUMN_TEXT.length];
 		for (int i = 0; i < COLUMN_TEXT.length; i++) {
 			tc[i] = new TableColumn(table, SWT.NONE);
@@ -118,15 +116,15 @@ public class AccountListView extends ViewPart implements IActivationListener {
 			final int columnIndex = i;
 			tc[i].addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					comparator.setColumn(columnIndex);
 					accountListViewer.refresh();
 				}
 			});
 		}
-		
+
 		accountListViewer.setContentProvider(new IStructuredContentProvider() {
-			public Object[] getElements(Object inputElement){
+			public Object[] getElements(Object inputElement) {
 				if (loader.isValid()) {
 					Object result = loader.getData();
 					if (result instanceof Object[]) {
@@ -137,41 +135,39 @@ public class AccountListView extends ViewPart implements IActivationListener {
 					}
 				} else {
 					loader.schedule();
-					return new Object[] {
-						Messages.AccountListView_loadingData
-					}; //$NON-NLS-1$
+					return new Object[] { Messages.AccountListView_loadingData }; // $NON-NLS-1$
 				}
 			}
-			
-			public void dispose(){
+
+			public void dispose() {
 				// nothing to do
 			}
-			
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				// nothing to do
 			}
 		});
 		accountListViewer.setLabelProvider(new ITableLabelProvider() {
-			public void addListener(ILabelProviderListener listener){
+			public void addListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
-			
-			public void removeListener(ILabelProviderListener listener){
+
+			public void removeListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
-			
-			public void dispose(){
+
+			public void dispose() {
 				// nothing to do
 			}
-			
-			public String getColumnText(Object element, int columnIndex){
+
+			public String getColumnText(Object element, int columnIndex) {
 				if (!(element instanceof AccountListEntry)) {
 					return ""; //$NON-NLS-1$
 				}
-				
+
 				AccountListEntry entry = (AccountListEntry) element;
 				String text = ""; //$NON-NLS-1$
-				
+
 				switch (columnIndex) {
 				case NAME:
 					text = entry.name;
@@ -186,73 +182,73 @@ public class AccountListView extends ViewPart implements IActivationListener {
 					text = entry.saldo.toString();
 					break;
 				}
-				
+
 				return text;
 			}
-			
-			public Image getColumnImage(Object element, int columnIndex){
+
+			public Image getColumnImage(Object element, int columnIndex) {
 				return null;
 			}
-			
-			public boolean isLabelProperty(Object element, String property){
+
+			public boolean isLabelProperty(Object element, String property) {
 				return false;
 			}
 		});
-		
+
 		// viewer.setSorter(new NameSorter());
 		accountListViewer.setInput(getViewSite());
 		comparator = new AccountListEntryComparator();
 		accountListViewer.setComparator(comparator);
 		/*
-		 * makeActions(); hookContextMenu(); hookDoubleClickAction(); contributeToActionBars();
+		 * makeActions(); hookContextMenu(); hookDoubleClickAction();
+		 * contributeToActionBars();
 		 */
-		
+
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
-	
+
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
-	public void setFocus(){
+	public void setFocus() {
 		accountListViewer.getControl().setFocus();
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
 	}
-	
+
 	/*
 	 * ActivationListener
 	 */
-	
-	public void activation(boolean mode){
+
+	public void activation(boolean mode) {
 		// nothing to do
 	}
-	
-	public void visible(boolean mode){
-		
+
+	public void visible(boolean mode) {
+
 	};
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
-	boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 	class DataLoader extends BackgroundJob implements BackgroundJobListener {
 		Integer size = null;
-		
-		DataLoader(){
+
+		DataLoader() {
 			super("AccountListView"); //$NON-NLS-1$
 			addListener(this);
 		}
-		
-		public IStatus execute(IProgressMonitor monitor){
+
+		public IStatus execute(IProgressMonitor monitor) {
 			List<AccountListEntry> entries = new ArrayList<AccountListEntry>();
-			
+
 			Query<Patient> query = new Query<Patient>(Patient.class);
 			query.orderBy(false, Patient.FLD_NAME, Patient.FLD_FIRSTNAME);
 			List<Patient> patients = query.execute();
@@ -263,69 +259,66 @@ public class AccountListView extends ViewPart implements IActivationListener {
 					AccountListEntry entry = new AccountListEntry(patient);
 					entries.add(entry);
 				}
-				
+
 				result = entries.toArray();
 			}
 			return Status.OK_STATUS;
 		}
-		
-		public int getSize(){
+
+		public int getSize() {
 			// dummy size
 			return 1;
 		}
-		
-		public void jobFinished(BackgroundJob j){
+
+		public void jobFinished(BackgroundJob j) {
 			accountListViewer.refresh();
 		}
 	}
-	
+
 	class AccountListEntry {
 		Patient patient;
 		String name;
 		String vorname;
 		String geburtsdatum;
 		Money saldo;
-		
-		AccountListEntry(Patient patient){
+
+		AccountListEntry(Patient patient) {
 			this.patient = patient;
-			
+
 			String[] values = new String[3];
-			patient.get(new String[] {
-				Patient.FLD_NAME, Patient.FLD_FIRSTNAME, Patient.BIRTHDATE
-			}, values);
+			patient.get(new String[] { Patient.FLD_NAME, Patient.FLD_FIRSTNAME, Patient.BIRTHDATE }, values);
 			this.name = values[0];
 			this.vorname = values[1];
 			this.geburtsdatum = values[2];
 			this.saldo = patient.getKontostand();
 		}
 	}
-	
+
 	private class AccountListEntryComparator extends ViewerComparator {
-		
+
 		private int propertyIndex;
-		
+
 		private int direction = 1;
-		
-		public void setColumn(int column){
+
+		public void setColumn(int column) {
 			if (column == propertyIndex) {
 				direction *= -1;
 			}
 			this.propertyIndex = column;
 		}
-		
+
 		@Override
-		public int compare(Viewer viewer, Object e1, Object e2){
+		public int compare(Viewer viewer, Object e1, Object e2) {
 			AccountListEntry a1 = (AccountListEntry) e1;
 			AccountListEntry a2 = (AccountListEntry) e2;
-			
+
 			switch (propertyIndex) {
 			case NAME:
 				return a1.name.compareTo(a2.name) * direction;
 			case FIRSTNAME:
 				return a1.vorname.compareTo(a2.vorname) * direction;
 			case BIRTHDATE:
-				return new TimeTool(a1.geburtsdatum).compareTo(new TimeTool(a2.geburtsdatum))
-					* direction;
+				return new TimeTool(a1.geburtsdatum).compareTo(new TimeTool(a2.geburtsdatum)) * direction;
 			case SALDO:
 				return a1.saldo.compareTo(a2.saldo) * direction;
 			}

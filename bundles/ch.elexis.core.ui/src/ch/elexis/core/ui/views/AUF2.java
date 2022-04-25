@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views;
@@ -62,74 +62,74 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 
 /**
  * Arbeitsunfähigkeitszeugnisse erstellen und verwalten.
- * 
+ *
  * @author gerry
- * 
+ *
  */
 public class AUF2 extends ViewPart implements IRefreshable {
 	public static final String ID = "ch.elexis.auf"; //$NON-NLS-1$
 	TableViewer tv;
 	private Action newAUF, delAUF, modAUF, printAUF;
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
-	
-	//	private ElexisEventListener eli_auf = new ElexisUiEventListenerImpl(AUF.class) {
-	//		
-	//		@Override
-	//		public void runInUi(ElexisEvent ev){
-	//			boolean bSelect = (ev.getType() == ElexisEvent.EVENT_SELECTED);
-	//			modAUF.setEnabled(bSelect);
-	//			delAUF.setEnabled(bSelect);
-	//			
-	//			if (bSelect && tv != null) {
-	//				// refresh & select only if not already selected
-	//				if (ev.getObject() instanceof AUF && !Objects.equals(tv.getStructuredSelection(),
-	//					new StructuredSelection(ev.getObject()))) {
-	//					tv.refresh(false);
-	//					tv.setSelection(new StructuredSelection(ev.getObject()));
-	//				}
-	//			}
-	//		}
-	//	};
-	
+
+	// private ElexisEventListener eli_auf = new
+	// ElexisUiEventListenerImpl(AUF.class) {
+	//
+	// @Override
+	// public void runInUi(ElexisEvent ev){
+	// boolean bSelect = (ev.getType() == ElexisEvent.EVENT_SELECTED);
+	// modAUF.setEnabled(bSelect);
+	// delAUF.setEnabled(bSelect);
+	//
+	// if (bSelect && tv != null) {
+	// // refresh & select only if not already selected
+	// if (ev.getObject() instanceof AUF &&
+	// !Objects.equals(tv.getStructuredSelection(),
+	// new StructuredSelection(ev.getObject()))) {
+	// tv.refresh(false);
+	// tv.setSelection(new StructuredSelection(ev.getObject()));
+	// }
+	// }
+	// }
+	// };
+
 	@Inject
-	void activeCertificate(@Optional
-	ISickCertificate certificate){
+	void activeCertificate(@Optional ISickCertificate certificate) {
 		Display.getDefault().asyncExec(() -> {
 			boolean bSelect = certificate != null;
 			modAUF.setEnabled(bSelect);
 			delAUF.setEnabled(bSelect);
-			
+
 			if (bSelect && tv != null) {
 				// refresh & select only if not already selected
-				if (!Objects.equals(tv.getStructuredSelection(),
-					new StructuredSelection(certificate))) {
+				if (!Objects.equals(tv.getStructuredSelection(), new StructuredSelection(certificate))) {
 					tv.refresh(false);
 					tv.setSelection(new StructuredSelection(certificate));
 				}
 			}
 		});
 	}
-	
-	//	private ElexisEventListener eli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-	//		
-	//		@Override
-	//		public void runInUi(ElexisEvent ev){
-	//			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-	//				tv.refresh();
-	//				ElexisEventDispatcher.clearSelection(AUF.class);
-	//				newAUF.setEnabled(true);
-	//			} else {
-	//				newAUF.setEnabled(false);
-	//				modAUF.setEnabled(false);
-	//				delAUF.setEnabled(false);
-	//				
-	//			}
-	//		}
-	//	};
-	
+
+	// private ElexisEventListener eli_pat = new
+	// ElexisUiEventListenerImpl(Patient.class) {
+	//
+	// @Override
+	// public void runInUi(ElexisEvent ev){
+	// if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
+	// tv.refresh();
+	// ElexisEventDispatcher.clearSelection(AUF.class);
+	// newAUF.setEnabled(true);
+	// } else {
+	// newAUF.setEnabled(false);
+	// modAUF.setEnabled(false);
+	// delAUF.setEnabled(false);
+	//
+	// }
+	// }
+	// };
+
 	@Inject
-	void activePatient(@Optional
-	IPatient patient){
+	void activePatient(@Optional IPatient patient) {
 		Display.getDefault().asyncExec(() -> {
 			if (patient != null) {
 				tv.refresh();
@@ -139,19 +139,19 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				newAUF.setEnabled(false);
 				modAUF.setEnabled(false);
 				delAUF.setEnabled(false);
-				
+
 			}
 		});
 	}
-	
-	public AUF2(){
+
+	public AUF2() {
 		setTitleImage(Images.IMG_VIEW_WORK_INCAPABLE.getImage());
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		// setTitleImage(Desk.getImage(ICON));
-		setPartName(Messages.AUF2_certificate); //$NON-NLS-1$
+		setPartName(Messages.AUF2_certificate); // $NON-NLS-1$
 		tv = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		tv.setLabelProvider(new DefaultLabelProvider());
 		tv.setContentProvider(new AUFContentProvider());
@@ -161,31 +161,29 @@ public class AUF2 extends ViewPart implements IRefreshable {
 		menus.createToolbar(newAUF, delAUF, printAUF);
 		tv.setUseHashlookup(true);
 		tv.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getStructuredSelection().getFirstElement() instanceof ISickCertificate) {
 					ContextServiceHolder.get().getRootContext()
-						.setTyped(event.getStructuredSelection().getFirstElement());
+							.setTyped(event.getStructuredSelection().getFirstElement());
 				}
 			}
 		});
 		tv.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(DoubleClickEvent event){
+			public void doubleClick(DoubleClickEvent event) {
 				modAUF.run();
 			}
 		});
 		tv.setInput(getViewSite());
-		
-		final Transfer[] dragTransferTypes = new Transfer[] {
-			TextTransfer.getInstance()
-		};
-		
+
+		final Transfer[] dragTransferTypes = new Transfer[] { TextTransfer.getInstance() };
+
 		tv.addDragSupport(DND.DROP_COPY, dragTransferTypes, new DragSourceAdapter() {
-			
+
 			@Override
-			public void dragSetData(DragSourceEvent event){
+			public void dragSetData(DragSourceEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) tv.getSelection();
 				StringBuilder sb = new StringBuilder();
 				if (selection != null && !selection.isEmpty()) {
@@ -195,32 +193,32 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				event.data = sb.toString().replace(",$", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
-		
+
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		getSite().getPage().removePartListener(udpateOnVisible);
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	private void makeActions(){
-		newAUF = new Action(Messages.AUF2_new) { //$NON-NLS-1$
+
+	private void makeActions() {
+		newAUF = new Action(Messages.AUF2_new) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-				setToolTipText(Messages.AUF2_createNewCert); //$NON-NLS-1$
+				setToolTipText(Messages.AUF2_createNewCert); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
-				IHandlerService handlerService =
-					(IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+			public void run() {
+				IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+						.getService(IHandlerService.class);
 				try {
 					Object createdAuf = handlerService.executeCommand(AufNewHandler.CMD_ID, null);
 					if (createdAuf instanceof ISickCertificate) {
@@ -232,32 +230,32 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				}
 			}
 		};
-		delAUF = new Action(Messages.AUF2_delete) { //$NON-NLS-1$
+		delAUF = new Action(Messages.AUF2_delete) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-				setToolTipText(Messages.AUF2_deleteCertificate); //$NON-NLS-1$
+				setToolTipText(Messages.AUF2_deleteCertificate); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				ISickCertificate sel = getSelectedCertificate();
 				if (sel != null) {
-					if (MessageDialog.openConfirm(getViewSite().getShell(),
-						Messages.AUF2_deleteReally, Messages.AUF2_doyoywantdeletereally)) { //$NON-NLS-1$ //$NON-NLS-2$
+					if (MessageDialog.openConfirm(getViewSite().getShell(), Messages.AUF2_deleteReally,
+							Messages.AUF2_doyoywantdeletereally)) { // $NON-NLS-1$ //$NON-NLS-2$
 						CoreModelServiceHolder.get().delete(sel);
 						tv.refresh(false);
 					}
 				}
 			}
 		};
-		modAUF = new Action(Messages.AUF2_edit) { //$NON-NLS-1$
+		modAUF = new Action(Messages.AUF2_edit) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-				setToolTipText(Messages.AUF2_editCertificate); //$NON-NLS-1$
+				setToolTipText(Messages.AUF2_editCertificate); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				ISickCertificate sel = getSelectedCertificate();
 				if (sel != null) {
 					new EditAUFDialog(getViewSite().getShell(), sel, sel.getCoverage()).open();
@@ -265,16 +263,16 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				}
 			}
 		};
-		printAUF = new Action(Messages.AUF2_print) { //$NON-NLS-1$
+		printAUF = new Action(Messages.AUF2_print) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
-				setToolTipText(Messages.AUF2_createPrint); //$NON-NLS-1$
+				setToolTipText(Messages.AUF2_createPrint); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
-				IHandlerService handlerService =
-					(IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+			public void run() {
+				IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+						.getService(IHandlerService.class);
 				try {
 					handlerService.executeCommand(AufPrintHandler.CMD_ID, null);
 				} catch (Exception e) {
@@ -283,51 +281,51 @@ public class AUF2 extends ViewPart implements IRefreshable {
 			}
 		};
 	}
-	
-	private ISickCertificate getSelectedCertificate(){
+
+	private ISickCertificate getSelectedCertificate() {
 		IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
 		if ((sel == null) || (sel.isEmpty())) {
 			return null;
 		}
 		return (ISickCertificate) sel.getFirstElement();
 	}
-	
+
 	class AUFContentProvider implements IStructuredContentProvider {
-		
+
 		@Override
-		public Object[] getElements(Object inputElement){
+		public Object[] getElements(Object inputElement) {
 			// Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 			java.util.Optional<IPatient> patient = ContextServiceHolder.get().getActivePatient();
-			
+
 			if (patient.isPresent()) {
-				INamedQuery<ISickCertificate> query =
-					CoreModelServiceHolder.get().getNamedQuery(ISickCertificate.class, "patient");
-				List<ISickCertificate> list =
-					query.executeWithParameters(query.getParameterMap("patient", patient.get()));
+				INamedQuery<ISickCertificate> query = CoreModelServiceHolder.get().getNamedQuery(ISickCertificate.class,
+						"patient");
+				List<ISickCertificate> list = query
+						.executeWithParameters(query.getParameterMap("patient", patient.get()));
 				return list.toArray();
 			}
 			return new Object[0];
 		}
-		
+
 		@Override
-		public void dispose(){ /* leer */
+		public void dispose() { /* leer */
 		}
-		
+
 		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			/* leer */
 		}
-		
+
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 	@Override
-	public void refresh(){
+	public void refresh() {
 		if (CoreUiUtil.isActiveControl(tv.getControl())) {
 			tv.refresh();
 		}

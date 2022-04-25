@@ -10,13 +10,12 @@ import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
 public class ImporterPatientResolver extends AbstractHL7PatientResolver {
-	
+
 	private TimeTool convertTool = new TimeTool();
-	
+
 	@Override
-	public IPatient resolvePatient(String firstname, String lastname, String birthDate,
-		String sender){
-		
+	public IPatient resolvePatient(String firstname, String lastname, String birthDate, String sender) {
+
 		// resolve with full data
 		Patient pat = KontaktMatcher.findPatient(lastname, firstname, birthDate, "", "", "", "", "", CreateMode.FAIL);
 		// try to resolve with only the beginning of the name
@@ -37,12 +36,10 @@ public class ImporterPatientResolver extends AbstractHL7PatientResolver {
 			convertTool.set(birthDate);
 			String birthStr = convertTool.toString(TimeTool.DATE_GER);
 			if (sender != null) {
-				pat = (Patient) KontaktSelektor.showInSync(Patient.class,
-					Messages.HL7_SelectPatient, Messages.HL7_WhoIs + lastname + " " + firstname
-						+ " ," + birthStr + "?\n" + Messages.HL7_Lab + " " + sender);
+				pat = (Patient) KontaktSelektor.showInSync(Patient.class, Messages.HL7_SelectPatient, Messages.HL7_WhoIs
+						+ lastname + " " + firstname + " ," + birthStr + "?\n" + Messages.HL7_Lab + " " + sender);
 			} else {
-				pat =
-					(Patient) KontaktSelektor.showInSync(Patient.class, Messages.HL7_SelectPatient,
+				pat = (Patient) KontaktSelektor.showInSync(Patient.class, Messages.HL7_SelectPatient,
 						Messages.HL7_WhoIs + lastname + " " + firstname + " ," + birthStr + "?");
 			}
 		}
@@ -51,5 +48,5 @@ public class ImporterPatientResolver extends AbstractHL7PatientResolver {
 		}
 		return null;
 	}
-	
+
 }

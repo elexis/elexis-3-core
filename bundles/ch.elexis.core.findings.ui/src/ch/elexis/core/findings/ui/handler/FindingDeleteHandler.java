@@ -19,40 +19,36 @@ import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 
 public class FindingDeleteHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
-		if (selection instanceof StructuredSelection
-			&& !((StructuredSelection) selection).isEmpty()) {
+		if (selection instanceof StructuredSelection && !((StructuredSelection) selection).isEmpty()) {
 			Object item = ((StructuredSelection) selection).getFirstElement();
 			if (item instanceof IFinding) {
 				IFinding iFinding = (IFinding) item;
-				
-				AcquireLockBlockingUi.aquireAndRun(iFinding,
-					new ILockHandler() {
-						@Override
-						public void lockFailed(){
-					
+
+				AcquireLockBlockingUi.aquireAndRun(iFinding, new ILockHandler() {
+					@Override
+					public void lockFailed() {
+
+					}
+
+					@Override
+					public void lockAcquired() {
+
+						try {
+							FindingsUiUtil.deleteFinding(iFinding);
+						} catch (ElexisException e) {
+							MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Fehler", e.getMessage());
 						}
-						
-						@Override
-						public void lockAcquired(){
-							
-							try {
-								FindingsUiUtil.deleteFinding(iFinding);
-							} catch (ElexisException e) {
-								MessageDialog.openError(UiDesk.getDisplay().getActiveShell(),
-									"Fehler", e.getMessage());
-							}
-							
-							ElexisEventDispatcher.getInstance()
-								.fire(new ElexisEvent(iFinding, IFinding.class,
-									ElexisEvent.EVENT_DELETE));
-						}
-					});
+
+						ElexisEventDispatcher.getInstance()
+								.fire(new ElexisEvent(iFinding, IFinding.class, ElexisEvent.EVENT_DELETE));
+					}
+				});
 			}
-			
+
 		}
 		return null;
 	}

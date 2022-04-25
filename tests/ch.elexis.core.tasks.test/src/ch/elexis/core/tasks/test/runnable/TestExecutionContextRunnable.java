@@ -19,43 +19,43 @@ import ch.elexis.core.services.IContextService;
  * Returns the runContext as result
  */
 public class TestExecutionContextRunnable implements IIdentifiedRunnable {
-	
+
 	public static final String ID = "testExecutionContextRunnable";
-	
+
 	private IContextService contextService;
-	
-	public TestExecutionContextRunnable(IContextService contextService){
+
+	public TestExecutionContextRunnable(IContextService contextService) {
 		this.contextService = contextService;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return ID;
 	}
-	
+
 	@Override
-	public String getLocalizedDescription(){
+	public String getLocalizedDescription() {
 		return "test execution context";
 	}
-	
+
 	@Override
-	public Map<String, Serializable> getDefaultRunContext(){
+	public Map<String, Serializable> getDefaultRunContext() {
 		return Collections.emptyMap();
 	}
-	
+
 	@Override
-	public Map<String, Serializable> run(Map<String, Serializable> runContext,
-		IProgressMonitor progressMonitor, Logger logger) throws TaskException{
-		
+	public Map<String, Serializable> run(Map<String, Serializable> runContext, IProgressMonitor progressMonitor,
+			Logger logger) throws TaskException {
+
 		IUser user = contextService.getActiveUser()
-			.orElseThrow(() -> new TaskException(TaskException.EXECUTION_ERROR, "No active user"));
+				.orElseThrow(() -> new TaskException(TaskException.EXECUTION_ERROR, "No active user"));
 		assertEquals("testUser", user.getId());
-		
-		IMandator mandator = contextService.getActiveMandator().orElseThrow(
-			() -> new TaskException(TaskException.EXECUTION_ERROR, "No active mandator"));
+
+		IMandator mandator = contextService.getActiveMandator()
+				.orElseThrow(() -> new TaskException(TaskException.EXECUTION_ERROR, "No active mandator"));
 		assertEquals(user.getAssignedContact().getId(), mandator.getId());
-		
+
 		return runContext;
 	}
-	
+
 }

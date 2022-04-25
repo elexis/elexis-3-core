@@ -7,11 +7,10 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.utils;
-
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
@@ -22,14 +21,14 @@ import ch.rgw.tools.TimeTool;
 
 /**
  * Class to match personal data to contacts
- * 
+ *
  * @author gerry
  */
 
-public class KontaktMatcher {	
+public class KontaktMatcher {
 	/**
 	 * Given an array of Kontakt, find the one that matches the given address best
-	 * 
+	 *
 	 * @param kk
 	 * @param strasse
 	 * @param plz
@@ -37,20 +36,20 @@ public class KontaktMatcher {
 	 * @param natel
 	 * @return
 	 */
-	public static IContact matchAddress(final IContact[] kk, final String strasse, final String plz,
-		final String ort, final String natel){
-		
+	public static IContact matchAddress(final IContact[] kk, final String strasse, final String plz, final String ort,
+			final String natel) {
+
 		int[] score = new int[kk.length];
-		
+
 		for (int i = 0; i < kk.length; i++) {
-			
+
 			// If we have the same mobile number, that's a strong hint
 			if (!StringTool.isNothing(natel)) {
-				if (normalizePhone(kk[i].getMobile()).equals(normalizePhone(natel))) { //$NON-NLS-1$
+				if (normalizePhone(kk[i].getMobile()).equals(normalizePhone(natel))) { // $NON-NLS-1$
 					score[i] += 5;
 				}
 			}
-			
+
 			// If we have the same street address, that's also a good hint
 			if (!StringTool.isNothing(strasse)) {
 				if (isSameStreet(kk[i].getStreet(), strasse)) {
@@ -59,7 +58,7 @@ public class KontaktMatcher {
 					score[i] -= 2;
 				}
 			}
-			
+
 			// If we have the same zip or the same olace, that's a quite weak hint.
 			if (!StringTool.isNothing(plz)) {
 				if (plz.equals(kk[i].getZip())) {
@@ -75,7 +74,7 @@ public class KontaktMatcher {
 					score[i] -= 1;
 				}
 			}
-			
+
 		}
 		IContact found = kk[0];
 		int scored = score[0];
@@ -87,15 +86,14 @@ public class KontaktMatcher {
 		}
 		return found;
 	}
-	
+
 	/**
 	 * try to figure out which part of a string is the zip and which is the place
-	 * 
-	 * @param str
-	 *            a string containing possibly zip and possibly place
+	 *
+	 * @param str a string containing possibly zip and possibly place
 	 * @return always a two element array, [0] is zip or "", [1] is place or ""
 	 */
-	public static String[] normalizeAddress(String str){
+	public static String[] normalizeAddress(String str) {
 		String[] ret = str.split("\\s+", 2); //$NON-NLS-1$
 		if (ret.length < 2) {
 			String[] rx = new String[2];
@@ -105,23 +103,23 @@ public class KontaktMatcher {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Remove all non-numbers out of phone strings
-	 * 
+	 *
 	 * @param nr
 	 * @return
 	 */
-	public static String normalizePhone(final String nr){
+	public static String normalizePhone(final String nr) {
 		return nr.replaceAll("[\\s-:\\.]", StringTool.leer); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Try to figure out if two street strings denote the same street address
-	 * 
+	 *
 	 * @return true if the streets seem to be equal
 	 */
-	public static boolean isSameStreet(final String s1, final String s2){
+	public static boolean isSameStreet(final String s1, final String s2) {
 		String[] ns1 = normalizeStrasse(s1);
 		String[] ns2 = normalizeStrasse(s2);
 		if (!(ns1[0].matches(ns2[0]))) {
@@ -132,8 +130,8 @@ public class KontaktMatcher {
 		}
 		return true;
 	}
-	
-	static String[] normalizeStrasse(final String strasse){
+
+	static String[] normalizeStrasse(final String strasse) {
 		String[] m1 = StringTool.normalizeCase(strasse).split("\\s"); //$NON-NLS-1$
 		int m1l = m1.length;
 		StringBuilder m2 = new StringBuilder();
@@ -150,21 +148,19 @@ public class KontaktMatcher {
 				}
 			}
 		}
-		return new String[] {
-			m2.toString(), nr
-		};
-		
+		return new String[] { m2.toString(), nr };
+
 	}
-	
+
 	/**
-	 * Decide whether a person is identical to given personal data. Normalize all names: Umlaute
-	 * will be converted, accents will be eliminatet and double names will be reduced to their first
-	 * part.
-	 * 
-	 * @return true if the given person seems to be the same than the given personalia
+	 * Decide whether a person is identical to given personal data. Normalize all
+	 * names: Umlaute will be converted, accents will be eliminatet and double names
+	 * will be reduced to their first part.
+	 *
+	 * @return true if the given person seems to be the same than the given
+	 *         personalia
 	 */
-	public static boolean isSame(final IPerson a, final String nameB, final String firstnameB,
-		final String gebDatB){
+	public static boolean isSame(final IPerson a, final String nameB, final String firstnameB, final String gebDatB) {
 		try {
 			String name1 = StringTool.unambiguify(simpleName(a.getLastName()));
 			String name2 = StringTool.unambiguify(simpleName(nameB));
@@ -172,8 +168,7 @@ public class KontaktMatcher {
 				String vorname1 = StringTool.unambiguify(simpleName(a.getFirstName()));
 				String vorname2 = StringTool.unambiguify(simpleName(firstnameB));
 				if (vorname1.equals(vorname2)) {
-					if (StringTool.isNothing(a.getDateOfBirth())
-						|| StringTool.isNothing(gebDatB)) {
+					if (StringTool.isNothing(a.getDateOfBirth()) || StringTool.isNothing(gebDatB)) {
 						return true;
 					}
 					TimeTool gd1 = new TimeTool(a.getDateOfBirth());
@@ -183,15 +178,15 @@ public class KontaktMatcher {
 					}
 				}
 			}
-			
+
 		} catch (Throwable t) {
 			ExHandler.handle(t);
-			
+
 		}
 		return false;
 	}
-	
-	public static boolean isSame(IPatient a, String nameB, String firstnameB, String gebDatB){
+
+	public static boolean isSame(IPatient a, String nameB, String firstnameB, String gebDatB) {
 		try {
 			String name1 = StringTool.unambiguify(simpleName(a.getDescription1()));
 			String name2 = StringTool.unambiguify(simpleName(nameB));
@@ -209,17 +204,17 @@ public class KontaktMatcher {
 					}
 				}
 			}
-			
+
 		} catch (Throwable t) {
 			ExHandler.handle(t);
-			
+
 		}
 		return false;
 	}
-	
-	static String simpleName(final String name){
+
+	static String simpleName(final String name) {
 		String[] ret = name.split("\\s*[- ]\\s*"); //$NON-NLS-1$
 		return ret[0];
 	}
-		
+
 }

@@ -5,9 +5,8 @@ import ch.elexis.core.services.IContextService;
 
 public class ElexisEventTopics {
 
-	
 	public static final String ECLIPSE_E4_DATA = "org.eclipse.e4.data";
-	
+
 	/**
 	 * Events generated in the overall elexis context
 	 */
@@ -32,7 +31,7 @@ public class ElexisEventTopics {
 	 * Events to notify the user
 	 */
 	public static final String BASE_NOTIFICATION = BASE + "notification/";
-	
+
 	public static final String PROPKEY_ID = "id";
 	public static final String PROPKEY_CLASS = "class";
 	public static final String PROPKEY_USER = "user";
@@ -45,16 +44,14 @@ public class ElexisEventTopics {
 	public static final String PERSISTENCE_EVENT_CREATE = BASE_PO + "create";
 
 	/**
-	 * Compatibility events posted by the {@link IContextService} on matching events from the
-	 * ElexisEventDispatcher. Allows JPA code to refresh entities on PO changes.
+	 * Compatibility events posted by the {@link IContextService} on matching events
+	 * from the ElexisEventDispatcher. Allows JPA code to refresh entities on PO
+	 * changes.
 	 */
 	public static final String PERSISTENCE_EVENT_COMPATIBILITY = BASE_PO + "compatibility/";
-	public static final String PERSISTENCE_EVENT_COMPATIBILITY_CREATE =
-		PERSISTENCE_EVENT_COMPATIBILITY + "create";
-	public static final String PERSISTENCE_EVENT_COMPATIBILITY_DELETE =
-		PERSISTENCE_EVENT_COMPATIBILITY + "delete";
-	public static final String PERSISTENCE_EVENT_COMPATIBILITY_RELOAD =
-		PERSISTENCE_EVENT_COMPATIBILITY + "reload";
+	public static final String PERSISTENCE_EVENT_COMPATIBILITY_CREATE = PERSISTENCE_EVENT_COMPATIBILITY + "create";
+	public static final String PERSISTENCE_EVENT_COMPATIBILITY_DELETE = PERSISTENCE_EVENT_COMPATIBILITY + "delete";
+	public static final String PERSISTENCE_EVENT_COMPATIBILITY_RELOAD = PERSISTENCE_EVENT_COMPATIBILITY + "reload";
 	/**
 	 * A JPA Entity was changed / saved
 	 */
@@ -81,12 +78,13 @@ public class ElexisEventTopics {
 	public static final String NOTIFICATION_PROPKEY_MESSAGE = "message";
 
 	/**
-	 * User was changed (e.g. via login or re-login), delivers {@link IUser} or <code>null</code> on
-	 * logout. (Re-Login events: <code>null</code> and the new user). Please consider direct e4 injection
-	 * see https://redmine.medelexis.ch/issues/19669
+	 * User was changed (e.g. via login or re-login), delivers {@link IUser} or
+	 * <code>null</code> on logout. (Re-Login events: <code>null</code> and the new
+	 * user). Please consider direct e4 injection see
+	 * https://redmine.medelexis.ch/issues/19669
 	 */
 	public static final String EVENT_USER_CHANGED = BASE + "user/changed";
-	
+
 	/**
 	 * Topics concerning locking object events
 	 */

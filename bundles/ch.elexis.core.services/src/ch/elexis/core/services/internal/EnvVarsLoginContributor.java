@@ -14,31 +14,30 @@ import ch.elexis.core.services.ILoginContributor;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 /**
- * Allow bypassing the login dialog, eg. for automated GUI-tests. Example: when having a demoDB you
- * may login directly by passing
- * <code>-vmargs -Dch.elexis.username=test -Dch.elexis.password=test</code> as command line
- * parameters to Elexis.
- * 
+ * Allow bypassing the login dialog, eg. for automated GUI-tests. Example: when
+ * having a demoDB you may login directly by passing
+ * <code>-vmargs -Dch.elexis.username=test -Dch.elexis.password=test</code> as
+ * command line parameters to Elexis.
+ *
  * This service performs authentication only against the local database.
- * 
+ *
  * @since 3.8 extracted from CoreOperationAdvisor
  */
 @Component(property = "id=login.envvars")
 public class EnvVarsLoginContributor implements ILoginContributor {
-	
+
 	@Override
-	public int getPriority(){
+	public int getPriority() {
 		return 1000;
 	}
-	
+
 	@Override
-	public IUser performLogin(Object shell) throws LoginException{
+	public IUser performLogin(Object shell) throws LoginException {
 		String username = System.getProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME);
 		String password = System.getProperty(ElexisSystemPropertyConstants.LOGIN_PASSWORD);
-		
+
 		if (StringUtils.isNotEmpty(username)) {
-			LoggerFactory.getLogger(getClass())
-				.warn("Bypassing LoginDialog with username " + username);
+			LoggerFactory.getLogger(getClass()).warn("Bypassing LoginDialog with username " + username);
 			Optional<IUser> dbUser = CoreModelServiceHolder.get().load(username, IUser.class);
 			if (dbUser.isPresent()) {
 				IUser user = dbUser.get().login(username, password.toCharArray());
@@ -49,8 +48,8 @@ public class EnvVarsLoginContributor implements ILoginContributor {
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 }

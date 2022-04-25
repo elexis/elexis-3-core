@@ -1,14 +1,14 @@
 package ch.elexis.core.ui.perspective.service;
 
 public interface IStateCallback {
-	
+
 	public enum State {
-			OVERRIDE;
+		OVERRIDE;
 	}
-	
+
 	/**
 	 * Defines the state handling
-	 * 
+	 *
 	 * @param state
 	 * @return
 	 */

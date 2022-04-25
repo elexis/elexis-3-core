@@ -14,59 +14,61 @@ import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
 public class Connection implements SerialPortDataListener {
-	
+
 	public static final int STX = 0x02;
 	public static final int ETX = 0x03;
-	
+
 	private static Logger logger = LoggerFactory.getLogger(Connection.class);
-	
+
 	public interface ComPortListener {
 		/**
-		 * Called with chunk as {@link String} with default charset. Overwrite if {@link String}
-		 * access to data is enough.
-		 * 
+		 * Called with chunk as {@link String} with default charset. Overwrite if
+		 * {@link String} access to data is enough.
+		 *
 		 * @param conn
 		 * @param chunk
 		 */
-		public default void gotChunk(Connection conn, String chunk){};
-		
+		public default void gotChunk(Connection conn, String chunk) {
+		};
+
 		/**
-		 * Called with chunk as byte array. Overwrite if binary access to data is needed or charset
-		 * control is needed.
-		 * 
+		 * Called with chunk as byte array. Overwrite if binary access to data is needed
+		 * or charset control is needed.
+		 *
 		 * @param conn
 		 * @param data
 		 */
-		public default void gotData(Connection conn, byte[] data){}
-		
+		public default void gotData(Connection conn, byte[] data) {
+		}
+
 		/**
-		 * Called after {@link Connection#close()} or {@link Connection#close(int)} is executed.
+		 * Called after {@link Connection#close()} or {@link Connection#close(int)} is
+		 * executed.
 		 */
 		public void closed();
 	}
-	
+
 	private ComPortListener listener;
 	private String myPort;
 	private String[] mySettings;
 	private String name;
-	
+
 	private SerialPort serialPort;
-	
+
 	private byte[] startOfChunk;
 	private List<byte[]> endOfChunk;
 	private ByteArrayOutputStream buffer;
 	private boolean excludeDelimiters = false;
-	
-	public Connection(final String portName, final String port, final String settings,
-		final ComPortListener l){
+
+	public Connection(final String portName, final String port, final String settings, final ComPortListener l) {
 		listener = l;
 		myPort = port;
 		mySettings = settings.split(","); //$NON-NLS-1$
 		name = portName;
 		logger.info("SerialPort config: [" + portName + "][" + port + "][" + settings + "]");
 	}
-	
-	public boolean connect(){
+
+	public boolean connect() {
 		try {
 			openConnection();
 			return serialPort != null && serialPort.isOpen();
@@ -74,18 +76,18 @@ public class Connection implements SerialPortDataListener {
 			logger.error("Exception on connect", ex);
 			return false;
 		}
-		
+
 	}
-	
+
 	/**
-	 * Data is collected in buffer until one of the provided end of chunk bytes are received.
-	 * {@link ComPortListener#gotChunk(Connection, String)} is only called with data including end
-	 * of chunk.
-	 * 
+	 * Data is collected in buffer until one of the provided end of chunk bytes are
+	 * received. {@link ComPortListener#gotChunk(Connection, String)} is only called
+	 * with data including end of chunk.
+	 *
 	 * @param endOfChunk
 	 * @return
 	 */
-	public Connection withEndOfChunk(byte[]... endOfChunk){
+	public Connection withEndOfChunk(byte[]... endOfChunk) {
 		if (endOfChunk != null) {
 			this.endOfChunk = Arrays.asList(endOfChunk);
 		} else {
@@ -93,25 +95,26 @@ public class Connection implements SerialPortDataListener {
 		}
 		return this;
 	}
-	
+
 	/**
-	 * Data is collected in buffer until end of chunk bytes (see {@link #withEndOfChunk(byte[])})
-	 * are received. {@link ComPortListener#gotChunk(Connection, String)} is called with data
+	 * Data is collected in buffer until end of chunk bytes (see
+	 * {@link #withEndOfChunk(byte[])}) are received.
+	 * {@link ComPortListener#gotChunk(Connection, String)} is called with data
 	 * starting from start of chunk, including end of chunk.
-	 * 
+	 *
 	 * @param endOfChunk
 	 * @return
 	 */
-	public Connection withStartOfChunk(byte[] startOfChunk){
+	public Connection withStartOfChunk(byte[] startOfChunk) {
 		this.startOfChunk = startOfChunk;
 		return this;
 	}
-	
+
 	/**
 	 * Attempts to open a serial connection and streams using the settings.
-	 * 
+	 *
 	 */
-	public void openConnection(){
+	public void openConnection() {
 		// lookup a SerialPort matching myPort
 		serialPort = SerialPort.getCommPort(myPort);
 		if (serialPort != null) {
@@ -123,18 +126,16 @@ public class Connection implements SerialPortDataListener {
 			logger.warn("No serial port [" + myPort + "] found.");
 		}
 	}
-	
+
 	/**
 	 * Sets the connection parameters to the settings.
 	 */
 	public void setConnectionParameters() {
-		serialPort.setComPortParameters(Integer.parseInt(mySettings[0]),
-			Integer.parseInt(mySettings[1]), Integer.parseInt(mySettings[3]),
-			getParity(mySettings[2]));
-		
+		serialPort.setComPortParameters(Integer.parseInt(mySettings[0]), Integer.parseInt(mySettings[1]),
+				Integer.parseInt(mySettings[3]), getParity(mySettings[2]));
+
 		int flowControl = -1;
-		if (mySettings.length >= 5 && mySettings[4] != null && mySettings.length >= 6
-			&& mySettings[5] != null) {
+		if (mySettings.length >= 5 && mySettings[4] != null && mySettings.length >= 6 && mySettings[5] != null) {
 			flowControl = getFlowControl(mySettings[4]);
 		}
 		if (mySettings.length >= 6 && mySettings[5] != null) {
@@ -144,10 +145,10 @@ public class Connection implements SerialPortDataListener {
 			serialPort.setFlowControl(flowControl);
 		}
 	}
-	
+
 	/**
-	 * Get the flow control value for the provided {@link String}. Values matching an rxtx config
-	 * value are translated to jserial config values.<br/>
+	 * Get the flow control value for the provided {@link String}. Values matching
+	 * an rxtx config value are translated to jserial config values.<br/>
 	 * <br/>
 	 * RXTX flow control constants:<br/>
 	 * <li>FLOWCONTROL_NONE = 0</li>
@@ -164,11 +165,11 @@ public class Connection implements SerialPortDataListener {
 	 * <li>FLOW_CONTROL_DTR_ENABLED = 4096</li>
 	 * <li>FLOW_CONTROL_XONXOFF_IN_ENABLED = 65536</li>
 	 * <li>FLOW_CONTROL_XONXOFF_OUT_ENABLED = 1048576</li>
-	 * 
+	 *
 	 * @param string
 	 * @return
 	 */
-	private int getFlowControl(String string){
+	private int getFlowControl(String string) {
 		try {
 			int value = Integer.parseInt(string);
 			if (value == 2) {
@@ -184,8 +185,8 @@ public class Connection implements SerialPortDataListener {
 		}
 		return -1;
 	}
-	
-	private int getParity(String parity){
+
+	private int getParity(String parity) {
 		if (parity.equalsIgnoreCase("Even")) { //$NON-NLS-1$
 			return SerialPort.EVEN_PARITY;
 		}
@@ -194,9 +195,9 @@ public class Connection implements SerialPortDataListener {
 		}
 		return SerialPort.NO_PARITY;
 	}
-	
+
 	@Override
-	public void serialEvent(final SerialPortEvent e){
+	public void serialEvent(final SerialPortEvent e) {
 		if (e.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
 			byte[] newData = new byte[serialPort.bytesAvailable()];
 			int numRead = serialPort.readBytes(newData, newData.length);
@@ -206,15 +207,15 @@ public class Connection implements SerialPortDataListener {
 			setData(newData);
 		}
 	}
-	
+
 	/**
-	 * If {@link Connection#endOfChunk} is set the data is buffered, else the data is passed to the
-	 * {@link ComPortListener}. This method is also used as entry point to test the data buffer
-	 * handling.
-	 * 
+	 * If {@link Connection#endOfChunk} is set the data is buffered, else the data
+	 * is passed to the {@link ComPortListener}. This method is also used as entry
+	 * point to test the data buffer handling.
+	 *
 	 * @param newData
 	 */
-	protected void setData(byte[] newData){
+	protected void setData(byte[] newData) {
 		if (endOfChunk != null) {
 			try {
 				if (buffer == null) {
@@ -229,11 +230,9 @@ public class Connection implements SerialPortDataListener {
 							fireData(getChunk(bytes, bs, endIndex));
 							// start new buffer
 							buffer = new ByteArrayOutputStream();
-							// if any remaining bytes add to new buffer 
+							// if any remaining bytes add to new buffer
 							if (bytes.length > endIndex + bs.length) {
-								buffer.write(
-									Arrays.copyOfRange(bytes, endIndex + bs.length,
-									bytes.length));
+								buffer.write(Arrays.copyOfRange(bytes, endIndex + bs.length, bytes.length));
 							}
 						}
 					}
@@ -245,22 +244,22 @@ public class Connection implements SerialPortDataListener {
 			fireData(newData);
 		}
 	}
-	
-	protected void fireData(byte[] data){
+
+	protected void fireData(byte[] data) {
 		if (data != null && data.length > 0) {
 			listener.gotData(this, data);
 			fireChunk(new String(data));
 		}
 	}
-	
-	protected void fireChunk(String chunk){
-		if(StringUtils.isNotBlank(chunk)) {
+
+	protected void fireChunk(String chunk) {
+		if (StringUtils.isNotBlank(chunk)) {
 			logger.info("Serial chunk [" + chunk + "]");
-			listener.gotChunk(this, chunk);			
+			listener.gotChunk(this, chunk);
 		}
 	}
-	
-	private boolean hasChunk(ByteArrayOutputStream buffer){
+
+	private boolean hasChunk(ByteArrayOutputStream buffer) {
 		for (byte[] bs : endOfChunk) {
 			if (indexOf(buffer.toByteArray(), bs) != -1) {
 				return true;
@@ -268,16 +267,15 @@ public class Connection implements SerialPortDataListener {
 		}
 		return false;
 	}
-	
-	private byte[] getChunk(byte[] buffer, byte[] matchingEndOfChunk, int endIndex){
+
+	private byte[] getChunk(byte[] buffer, byte[] matchingEndOfChunk, int endIndex) {
 		if (startOfChunk != null) {
 			int startIndex = indexOf(buffer, startOfChunk);
 			if (startIndex == -1) {
 				startIndex = 0;
 			}
 			if (excludeDelimiters) {
-				byte[] chunkBytes =
-					Arrays.copyOfRange(buffer, startIndex + startOfChunk.length, endIndex);
+				byte[] chunkBytes = Arrays.copyOfRange(buffer, startIndex + startOfChunk.length, endIndex);
 				int startOffset = getStartOffset(chunkBytes);
 				return Arrays.copyOfRange(chunkBytes, startOffset, chunkBytes.length);
 			} else {
@@ -291,8 +289,8 @@ public class Connection implements SerialPortDataListener {
 			}
 		}
 	}
-	
-	private int getStartOffset(byte[] buffer){
+
+	private int getStartOffset(byte[] buffer) {
 		int ret = 0;
 		int offset = indexOf(buffer, startOfChunk);
 		while (offset != -1) {
@@ -302,12 +300,12 @@ public class Connection implements SerialPortDataListener {
 		}
 		return ret;
 	}
-	
-	private int indexOf(byte[] array, byte[] target){
+
+	private int indexOf(byte[] array, byte[] target) {
 		if (target.length == 0) {
 			return 0;
 		}
-		
+
 		outer: for (int i = 0; i < array.length - target.length + 1; i++) {
 			for (int j = 0; j < target.length; j++) {
 				if (array[i + j] != target[j]) {
@@ -318,41 +316,41 @@ public class Connection implements SerialPortDataListener {
 		}
 		return -1;
 	}
-	
-	public void close(){
+
+	public void close() {
 		close(1000);
 	}
-	
-	public void close(int sleepTime){
+
+	public void close(int sleepTime) {
 		// avoid rxtx-deadlock when called from an EventListener
 		new Thread(new Runnable() {
-			
-			public void run(){
+
+			public void run() {
 				try {
 					Thread.sleep(sleepTime);
 					serialPort.closePort();
 				} catch (Exception ex) {
-					
+
 				}
 			}
 		}).start();
 		listener.closed();
 	}
-	
+
 	/**
 	 * Reports the open status of the port.
-	 * 
+	 *
 	 * @return true if port is open, false if port is closed.
 	 */
-	public boolean isOpen(){
+	public boolean isOpen() {
 		return serialPort != null && serialPort.isOpen();
 	}
-	
-	public boolean send(byte[] bytes){
+
+	public boolean send(byte[] bytes) {
 		return serialPort.writeBytes(bytes, bytes.length) == bytes.length;
 	}
-	
-	public boolean send(final String data){
+
+	public boolean send(final String data) {
 		try {
 			return send(data.getBytes());
 		} catch (Exception ex) {
@@ -360,11 +358,11 @@ public class Connection implements SerialPortDataListener {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Send a one second break signal.
 	 */
-	public void sendBreak(){
+	public void sendBreak() {
 		if (serialPort != null) {
 			serialPort.setBreak();
 			try {
@@ -375,8 +373,8 @@ public class Connection implements SerialPortDataListener {
 			serialPort.clearBreak();
 		}
 	}
-	
-	public static String[] getComPorts(){
+
+	public static String[] getComPorts() {
 		ArrayList<String> p = new ArrayList<String>();
 		try {
 			for (SerialPort serialPort : SerialPort.getCommPorts()) {
@@ -387,32 +385,34 @@ public class Connection implements SerialPortDataListener {
 		}
 		return p.toArray(new String[p.size()]);
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
-	public ComPortListener getListener(){
+
+	public ComPortListener getListener() {
 		return listener;
 	}
-	
-	public String getMyPort(){
+
+	public String getMyPort() {
 		return myPort;
 	}
-	
+
 	@Override
-	public int getListeningEvents(){
+	public int getListeningEvents() {
 		return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
 	}
-	
+
 	/**
-	 * If set to true the configured delimiters (see {@link Connection#withEndOfChunk(byte[])} and
-	 * {@link Connection#withStartOfChunk(byte[])}) the delimiters are not included in the chunk.
-	 * 
+	 * If set to true the configured delimiters (see
+	 * {@link Connection#withEndOfChunk(byte[])} and
+	 * {@link Connection#withStartOfChunk(byte[])}) the delimiters are not included
+	 * in the chunk.
+	 *
 	 * @param excludeDelimiters
 	 * @return
 	 */
-	public Connection excludeDelimiters(boolean excludeDelimiters){
+	public Connection excludeDelimiters(boolean excludeDelimiters) {
 		this.excludeDelimiters = excludeDelimiters;
 		return this;
 	}

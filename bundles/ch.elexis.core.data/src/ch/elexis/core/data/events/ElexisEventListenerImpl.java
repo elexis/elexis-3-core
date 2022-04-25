@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.data.events;
@@ -19,26 +19,26 @@ import ch.elexis.data.PersistentObject;
  * An implementation of the most common uses of ElexisSventListeners. Subclasses
  * must override one of catchElexisEvent (non ui thread) or runInUi (the event
  * is forwarded in an async UI thread)
- * 
+ *
  * @author gerry
- * 
+ *
  */
 public class ElexisEventListenerImpl implements ElexisEventListener {
 	private final ElexisEvent template;
 	private boolean bStopped = false;
-	
+
 	protected IPerformanceStatisticHandler performanceStatisticHandler;
 
 	/**
-	 * Method to set a {@link IPerformanceStatisticHandler} implementation. Setting null, will
-	 * disable calling the statistic handler.
-	 * 
+	 * Method to set a {@link IPerformanceStatisticHandler} implementation. Setting
+	 * null, will disable calling the statistic handler.
+	 *
 	 * @param handler
 	 */
-	public void setPerformanceStatisticHandler(IPerformanceStatisticHandler handler){
+	public void setPerformanceStatisticHandler(IPerformanceStatisticHandler handler) {
 		this.performanceStatisticHandler = handler;
 	}
-	
+
 	public ElexisEventListenerImpl(final Class<?> clazz) {
 		template = new ElexisEvent(null, clazz, ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED
 				| ElexisEvent.EVENT_LOCK_AQUIRED | ElexisEvent.EVENT_LOCK_RELEASED);
@@ -65,8 +65,8 @@ public class ElexisEventListenerImpl implements ElexisEventListener {
 	}
 
 	/**
-	 * This catches the Event from the EventDispatcher, which is in a Non-UI
-	 * Thread by definition
+	 * This catches the Event from the EventDispatcher, which is in a Non-UI Thread
+	 * by definition
 	 */
 	public void catchElexisEvent(final ElexisEvent ev) {
 		if (performanceStatisticHandler != null) {
@@ -82,7 +82,7 @@ public class ElexisEventListenerImpl implements ElexisEventListener {
 
 	/**
 	 * This runs the event in an UI Thread
-	 * 
+	 *
 	 * @param ev
 	 */
 	public void run(ElexisEvent ev) {

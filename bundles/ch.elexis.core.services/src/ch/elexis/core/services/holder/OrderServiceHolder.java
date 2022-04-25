@@ -7,15 +7,15 @@ import ch.elexis.core.services.IOrderService;
 
 @Component
 public class OrderServiceHolder {
-	
+
 	private static IOrderService orderService;
-	
+
 	@Reference
-	public void setOrderService(IOrderService orderService){
+	public void setOrderService(IOrderService orderService) {
 		OrderServiceHolder.orderService = orderService;
 	}
-	
-	public static IOrderService get(){
+
+	public static IOrderService get() {
 		if (orderService == null) {
 			throw new IllegalStateException("No IOrderService available");
 		}

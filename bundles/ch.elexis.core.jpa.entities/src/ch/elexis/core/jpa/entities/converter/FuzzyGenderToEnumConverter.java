@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -25,7 +25,7 @@ import ch.elexis.core.types.Gender;
 public class FuzzyGenderToEnumConverter implements AttributeConverter<Gender, String> {
 
 	@Override
-	public String convertToDatabaseColumn(Gender objectValue){
+	public String convertToDatabaseColumn(Gender objectValue) {
 		if (objectValue == null)
 			return "x";
 		switch (objectValue) {
@@ -37,9 +37,9 @@ public class FuzzyGenderToEnumConverter implements AttributeConverter<Gender, St
 			return "x";
 		}
 	}
-	
+
 	@Override
-	public Gender convertToEntityAttribute(String dataValue){
+	public Gender convertToEntityAttribute(String dataValue) {
 		if (dataValue == null)
 			return Gender.UNKNOWN;
 		switch (dataValue) {

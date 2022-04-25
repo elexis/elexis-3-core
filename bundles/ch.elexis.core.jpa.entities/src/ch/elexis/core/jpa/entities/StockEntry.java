@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -24,25 +23,24 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
 @NamedQueries({
-	@NamedQuery(name = "StockEntry.articleId.articleType", query = "SELECT se FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
-	@NamedQuery(name = "StockEntry_SumCurrentStock.articleId.articleType", query = "SELECT SUM(se.currentStock) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
-	@NamedQuery(name = "StockEntry_AvailableCurrentStock.articleId.articleType", query = "SELECT MAX(CASE WHEN se.currentStock <= 0 THEN 0 WHEN (ABS(se.minimumStock)-se.currentStock) >=0 THEN 1 ELSE 2 END) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
-	@NamedQuery(name = "StockEntry_AvailableCurrentBelowStock.articleId.articleType", query = "SELECT MAX(CASE WHEN se.currentStock <= 0 THEN 0 WHEN (ABS(se.minimumStock)-se.currentStock) >0 THEN 1 ELSE 2 END) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false")
-})
+		@NamedQuery(name = "StockEntry.articleId.articleType", query = "SELECT se FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
+		@NamedQuery(name = "StockEntry_SumCurrentStock.articleId.articleType", query = "SELECT SUM(se.currentStock) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
+		@NamedQuery(name = "StockEntry_AvailableCurrentStock.articleId.articleType", query = "SELECT MAX(CASE WHEN se.currentStock <= 0 THEN 0 WHEN (ABS(se.minimumStock)-se.currentStock) >=0 THEN 1 ELSE 2 END) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
+		@NamedQuery(name = "StockEntry_AvailableCurrentBelowStock.articleId.articleType", query = "SELECT MAX(CASE WHEN se.currentStock <= 0 THEN 0 WHEN (ABS(se.minimumStock)-se.currentStock) >0 THEN 1 ELSE 2 END) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false") })
 public class StockEntry extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	/**
 	 * Stock this entry is shelved in
 	 */
@@ -57,8 +55,8 @@ public class StockEntry extends AbstractEntityWithId implements EntityWithId, En
 	String articleId;
 
 	/**
-	 * The minimum number of items packages on stock. If lower than
-	 * {@link #curr} we consider the stockage of this item to be critical.
+	 * The minimum number of items packages on stock. If lower than {@link #curr} we
+	 * consider the stockage of this item to be critical.
 	 */
 	@Column(name = "min")
 	int minimumStock;
@@ -78,8 +76,8 @@ public class StockEntry extends AbstractEntityWithId implements EntityWithId, En
 
 	/**
 	 * If there is an open package, this represents the number of fraction units
-	 * available by this open package. The package itself is not part of current
-	 * any more.
+	 * available by this open package. The package itself is not part of current any
+	 * more.
 	 */
 	@Column
 	int fractionUnits;
@@ -90,11 +88,12 @@ public class StockEntry extends AbstractEntityWithId implements EntityWithId, En
 	@OneToOne
 	@JoinColumn(name = "PROVIDER", insertable = false)
 	Kontakt provider;
-	
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return super.toString()+ " articleId=["+getArticleId() + "]  min=["+getMinimumStock()+"] current=["+getCurrentStock()+"]";
+		return super.toString() + " articleId=[" + getArticleId() + "]  min=[" + getMinimumStock() + "] current=["
+				+ getCurrentStock() + "]";
 	}
 
 	public Stock getStock() {
@@ -160,34 +159,34 @@ public class StockEntry extends AbstractEntityWithId implements EntityWithId, En
 	public void setFractionUnits(int fractionUnits) {
 		this.fractionUnits = fractionUnits;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

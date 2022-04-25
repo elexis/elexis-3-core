@@ -31,16 +31,16 @@ public class BriefVorlage extends AbstractEntityWithId implements EntityWithId, 
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Column(length = 255, name = "betreff")
 	protected String subject;
 
@@ -80,37 +80,37 @@ public class BriefVorlage extends AbstractEntityWithId implements EntityWithId, 
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean geloescht = false;
-	
+
 	@Column(name = "DOCUMENT_STATUS")
 	protected int status;
 
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
 
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
 
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
 
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
 
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
 
@@ -150,11 +150,11 @@ public class BriefVorlage extends AbstractEntityWithId implements EntityWithId, 
 		return recipient;
 	}
 
-	public String getTemplateTyp(){
+	public String getTemplateTyp() {
 		return templateTyp;
 	}
 
-	public void setTemplateTyp(String templateTyp){
+	public void setTemplateTyp(String templateTyp) {
 		this.templateTyp = templateTyp;
 	}
 
@@ -209,16 +209,16 @@ public class BriefVorlage extends AbstractEntityWithId implements EntityWithId, 
 	public void setNote(String note) {
 		this.note = note;
 	}
-	
-	public int getStatus(){
+
+	public int getStatus() {
 		return status;
 	}
-	
-	public void setStatus(int status){
+
+	public void setStatus(int status) {
 		this.status = status;
 	}
-	
-	public Heap getOrCreateContent(){
+
+	public Heap getOrCreateContent() {
 		if (content == null) {
 			content = new Heap();
 			content.setId(getId());

@@ -3,13 +3,13 @@
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  * IBM - Initial API and implementation
  **********************************************************************/
 package ch.elexis.core.ui.preferences.inputs;
 
-public class Messages  {
+public class Messages {
 	public static String DecoratedStringChooser_howToChange = ch.elexis.core.l10n.Messages.DecoratedStringChooser_howToChange;
 	public static String KontaktFieldEditor_PleaseSelect = ch.elexis.core.l10n.Messages.KontaktFieldEditor_PleaseSelect;
 	public static String KontaktFieldEditor_PleaseSelectContact = ch.elexis.core.l10n.Messages.KontaktFieldEditor_PleaseSelectContact;
@@ -20,5 +20,5 @@ public class Messages  {
 	public static String MultiplikatorEditor_add = ch.elexis.core.l10n.Messages.MultiplikatorEditor_add;
 	public static String MultiplikatorEditor_from = ch.elexis.core.l10n.Messages.MultiplikatorEditor_from;
 	public static String PrefAccessDenied_PageLocked = ch.elexis.core.l10n.Messages.PrefAccessDenied_PageLocked;
-	
+
 }

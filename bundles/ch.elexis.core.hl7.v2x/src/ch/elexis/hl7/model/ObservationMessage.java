@@ -8,13 +8,13 @@ import java.util.Vector;
 import ch.elexis.hl7.util.HL7Helper;
 
 public class ObservationMessage {
-	
+
 	// MSH
 	String sendingApplication; // MSH-3
 	String sendingFacility; // MSH-4
 	Date dateTimeOfMessage = null; // MSH-7
 	String messageControlID = ""; // MSH-10
-	
+
 	// PID
 	String patientId; // PID-3
 	String alternatePatientId; // PID-4
@@ -24,21 +24,22 @@ public class ObservationMessage {
 	String patientBirthdate = ""; // PID-7
 	String patientSex = ""; // PID-8
 	// optional NTE following PID
-	// see http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7+v2.5&segment=OBX
+	// see
+	// http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7+v2.5&segment=OBX
 	String patientNotesAndComments = "";
-	
+
 	// ORC
 	String orderNumber; // ORC-2
 	String orderNumberPlacer = ""; // ORC-2
 	String orderNumberFiller = ""; // ORC-3
 	Date dateTimeOfTransaction = null; // ORC-9
-	
+
 	// OBX
 	List<IValueType> observations = new Vector<IValueType>();
-	
-	public ObservationMessage(String _sendingApplication, String _sendingFacility,
-		String _dateTimeOfMessage, String _patientId, String _patientName, String _patientNotesAndComments,
-		String _alternatePatientId, String _orderNumber) throws ParseException{
+
+	public ObservationMessage(String _sendingApplication, String _sendingFacility, String _dateTimeOfMessage,
+			String _patientId, String _patientName, String _patientNotesAndComments, String _alternatePatientId,
+			String _orderNumber) throws ParseException {
 		super();
 		this.sendingApplication = _sendingApplication;
 		this.sendingFacility = _sendingFacility;
@@ -49,12 +50,11 @@ public class ObservationMessage {
 		this.orderNumber = _orderNumber;
 		this.dateTimeOfMessage = HL7Helper.stringToDate(_dateTimeOfMessage);
 	}
-	
-	public ObservationMessage(String _sendingApplication, String _sendingFacility,
-		String _dateTimeOfMessage, String _messageControlID, String _dateTimeOfTransaction,
-		String _patientId, String _patientLastName, String _patientFirstName,
-		String _patientNotesAndComments, String _patientBirthDate, String _patientSex,
-		String _alternatePatientId, String _orderNumberPlacer, String _orderNumberFiller) throws ParseException{
+
+	public ObservationMessage(String _sendingApplication, String _sendingFacility, String _dateTimeOfMessage,
+			String _messageControlID, String _dateTimeOfTransaction, String _patientId, String _patientLastName,
+			String _patientFirstName, String _patientNotesAndComments, String _patientBirthDate, String _patientSex,
+			String _alternatePatientId, String _orderNumberPlacer, String _orderNumberFiller) throws ParseException {
 		super();
 		this.sendingApplication = _sendingApplication;
 		this.sendingFacility = _sendingFacility;
@@ -72,79 +72,79 @@ public class ObservationMessage {
 		this.orderNumberFiller = _orderNumberFiller;
 		this.dateTimeOfTransaction = HL7Helper.stringToDate(_dateTimeOfTransaction);
 	}
-	
-	public void add(IValueType type){
+
+	public void add(IValueType type) {
 		this.observations.add(type);
 	}
-	
-	public String getSendingApplication(){
+
+	public String getSendingApplication() {
 		return sendingApplication;
 	}
-	
-	public String getSendingFacility(){
+
+	public String getSendingFacility() {
 		return sendingFacility;
 	}
-	
-	public Date getDateTimeOfMessage(){
+
+	public Date getDateTimeOfMessage() {
 		return dateTimeOfMessage;
 	}
-	
-	public String getMessageControlID(){
+
+	public String getMessageControlID() {
 		return messageControlID;
 	}
-	
-	public String getPatientId(){
+
+	public String getPatientId() {
 		if (this.patientId == null || this.patientId.trim().length() == 0) {
 			return this.alternatePatientId;
 		}
 		return patientId;
 	}
-	
-	public String getAlternatePatientId(){
+
+	public String getAlternatePatientId() {
 		return alternatePatientId;
 	}
-	
-	public String getPatientName(){
+
+	public String getPatientName() {
 		return patientName;
 	}
-	
-	public String getPatientLastName(){
+
+	public String getPatientLastName() {
 		return patientLastName;
 	}
-	
-	public String getPatientFirstName(){
+
+	public String getPatientFirstName() {
 		return patientFirstName;
 	}
-	
-	public String getPatientBirthdate(){
+
+	public String getPatientBirthdate() {
 		return patientBirthdate;
 	}
-	
-	public String getPatientSex(){
+
+	public String getPatientSex() {
 		return patientSex;
 	}
-	
+
 	public String getPatientNotesAndComments() {
 		return patientNotesAndComments;
 	}
-	
-	public String getOrderNumber(){
+
+	public String getOrderNumber() {
 		return orderNumber;
 	}
-	
-	public String getOrderNumberPlacer(){
+
+	public String getOrderNumberPlacer() {
 		return orderNumberPlacer;
 	}
-	
-	public String getOrderNumberFiller(){
+
+	public String getOrderNumberFiller() {
 		return orderNumberFiller;
 	}
-	
-	public Date getDateTimeOfTransaction(){
+
+	public Date getDateTimeOfTransaction() {
 		return dateTimeOfTransaction;
 	}
-	
-	public List<IValueType> getObservations(){
+
+	public List<IValueType> getObservations() {
 		return observations;
 	}
 }

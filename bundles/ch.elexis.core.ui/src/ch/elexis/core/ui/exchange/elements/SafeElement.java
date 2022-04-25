@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.exchange.elements;
@@ -19,27 +19,24 @@ import ch.rgw.tools.StringTool;
 
 @SuppressWarnings("serial")
 public class SafeElement extends Element {
-	public SafeElement(String name, Namespace ns){
+	public SafeElement(String name, Namespace ns) {
 		super(name, ns);
 	}
-	
-	public SafeElement(String name){
+
+	public SafeElement(String name) {
 		super(name);
 	}
-	
+
 	/**
-	 * This sets an attribute in a safe manner: If the value is null, some useful action is taken
-	 * instead og throwing an exception
-	 * 
-	 * @param name
-	 *            name of the attribute
-	 * @param value
-	 *            value of the attribute
-	 * @param defaultValue
-	 *            default to use if value resolves to null. If defaultValue is null, the attirbute
-	 *            will not be set at all.
+	 * This sets an attribute in a safe manner: If the value is null, some useful
+	 * action is taken instead og throwing an exception
+	 *
+	 * @param name         name of the attribute
+	 * @param value        value of the attribute
+	 * @param defaultValue default to use if value resolves to null. If defaultValue
+	 *                     is null, the attirbute will not be set at all.
 	 */
-	public void setAttributeEx(String name, String value, String defaultValue){
+	public void setAttributeEx(String name, String value, String defaultValue) {
 		if (StringTool.isNothing(name)) {
 			return;
 		}

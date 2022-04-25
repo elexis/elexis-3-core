@@ -39,39 +39,39 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 	private ComboViewer cvPrinters, cvTrays;
 	private List<PrintService> printServices;
 	private List<MediaTray> mediaTrays;
-	
+
 	private String selPrinter, selTray;
-	
-	public TextTemplatePrintSettingsDialog(Shell parentShell, String printer, String tray){
+
+	public TextTemplatePrintSettingsDialog(Shell parentShell, String printer, String tray) {
 		super(parentShell);
 		printServices = Arrays.asList(PrintServiceLookup.lookupPrintServices(null, null));
 		mediaTrays = new ArrayList<MediaTray>();
-		
+
 		this.selPrinter = printer;
 		this.selTray = tray;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		setTitle("Textvorlagen Druckeinstellungen");
 		setMessage("Bitte Drucker und Druckschacht für diese Vorlage definieren");
 		setTitleImage(Images.IMG_PRINTER_BIG.getImage());
-		
+
 		Composite area = new Composite(parent, SWT.NONE);
 		area.setLayout(new GridLayout(3, false));
 		area.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		
+
 		Label lblPrinter = new Label(area, SWT.NONE);
 		lblPrinter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPrinter.setText("Drucker");
-		
+
 		cvPrinters = new ComboViewer(area, SWT.READ_ONLY);
 		Combo comboPrinters = cvPrinters.getCombo();
 		comboPrinters.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		cvPrinters.setContentProvider(ArrayContentProvider.getInstance());
 		cvPrinters.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof PrintService) {
 					PrintService ps = (PrintService) element;
 					return ps.getName();
@@ -82,7 +82,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 		cvPrinters.setInput(printServices);
 		cvPrinters.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection != null && !selection.isEmpty()) {
 					PrintService printService = (PrintService) selection.getFirstElement();
@@ -92,18 +92,18 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		
+
 		Label lblTray = new Label(area, SWT.NONE);
 		lblTray.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblTray.setText("Schacht");
-		
+
 		cvTrays = new ComboViewer(area, SWT.READ_ONLY);
 		Combo comboTrays = cvTrays.getCombo();
 		comboTrays.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		cvTrays.setContentProvider(ArrayContentProvider.getInstance());
 		cvTrays.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof MediaTray) {
 					MediaTray mt = (MediaTray) element;
 					return mt.toString();
@@ -112,16 +112,16 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 			}
 		});
 		cvTrays.setInput(mediaTrays);
-		
+
 		Button addTrayButton = new Button(area, SWT.PUSH);
 		addTrayButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		addTrayButton.setImage(Images.IMG_ADDITEM.getImage());
 		addTrayButton.setToolTipText("Zusätzlicher Schacht");
 		addTrayButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				InputDialog dlg = new InputDialog(getParentShell(), "Zusätzlicher Schacht",
-					"Bitten den Namen des zusätzlichen Schacht konfigurieren.", "", null, SWT.NONE);
+						"Bitten den Namen des zusätzlichen Schacht konfigurieren.", "", null, SWT.NONE);
 				if (dlg.open() == Window.OK) {
 					if (dlg.getValue() != null && !dlg.getValue().isEmpty()) {
 						addCustomMediaTray(dlg.getValue());
@@ -129,12 +129,12 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		
+
 		initSelection();
 		return area;
 	}
-	
-	private void initSelection(){
+
+	private void initSelection() {
 		if (selPrinter == null) {
 			PrintService defaultPrintService = PrintServiceLookup.lookupDefaultPrintService();
 			if (defaultPrintService != null && printServices.contains(defaultPrintService)) {
@@ -147,7 +147,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 				}
 			}
 		}
-		
+
 		if (!mediaTrays.isEmpty()) {
 			if (selTray == null) {
 				cvTrays.setSelection(new StructuredSelection(mediaTrays.get(0)));
@@ -166,20 +166,19 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 			}
 		}
 	}
-	
-	private void addCustomMediaTray(String name){
+
+	private void addCustomMediaTray(String name) {
 		CustomMediaTray customTray = new CustomMediaTray(name);
 		mediaTrays.add(customTray);
 		cvTrays.setInput(mediaTrays);
 		cvTrays.refresh();
 		cvTrays.setSelection(new StructuredSelection(customTray));
 	}
-	
-	private List<MediaTray> loadAvailableTrays(PrintService printService){
+
+	private List<MediaTray> loadAvailableTrays(PrintService printService) {
 		mediaTrays = new ArrayList<MediaTray>();
-		Object attributes =
-			printService.getSupportedAttributeValues(Media.class,
-				DocFlavor.SERVICE_FORMATTED.PRINTABLE, null);
+		Object attributes = printService.getSupportedAttributeValues(Media.class, DocFlavor.SERVICE_FORMATTED.PRINTABLE,
+				null);
 		if (attributes != null && attributes.getClass().isArray()) {
 			for (Media media : (Media[]) attributes) {
 				if (media instanceof MediaTray) {
@@ -189,14 +188,14 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 		}
 		return mediaTrays;
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		IStructuredSelection selPrintService = (IStructuredSelection) cvPrinters.getSelection();
 		if (selPrintService != null && !selPrintService.isEmpty()) {
 			selPrinter = ((PrintService) selPrintService.getFirstElement()).getName();
 		}
-		
+
 		IStructuredSelection selMediaTray = (IStructuredSelection) cvTrays.getSelection();
 		if (selMediaTray != null) {
 			if (selMediaTray.isEmpty()) {
@@ -207,26 +206,26 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 		}
 		super.okPressed();
 	}
-	
-	public String getPrinter(){
+
+	public String getPrinter() {
 		return selPrinter;
 	}
-	
-	public String getMediaTray(){
+
+	public String getMediaTray() {
 		return selTray;
 	}
-	
+
 	private class CustomMediaTray extends MediaTray {
-		
+
 		private String name;
-		
-		protected CustomMediaTray(String name){
+
+		protected CustomMediaTray(String name) {
 			super(-1);
 			this.name = name;
 		}
-		
+
 		@Override
-		public String toString(){
+		public String toString() {
 			return name;
 		}
 	}

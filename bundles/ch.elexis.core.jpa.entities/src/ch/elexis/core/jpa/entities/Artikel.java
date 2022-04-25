@@ -30,26 +30,25 @@ import ch.elexis.core.types.ArticleTyp;
 @NamedQuery(name = "Artikel.typ.id", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.id = :id AND ar.typ = :typ")
 @NamedQuery(name = "Artikel.typ", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.typ = :typ")
 @NamedQuery(name = "Artikel.gtin", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.ean = :gtin")
-public class Artikel extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Artikel extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	public static final String CODESYSTEM_NAME = "Artikel";
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Lob
 	protected byte[] extInfo;
-	
+
 	@Column(length = 15)
 	private String ean;
 
@@ -85,7 +84,7 @@ public class Artikel extends AbstractEntityWithId
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "extId")
 	private Artikel product;
-	
+
 	@Column(length = 8)
 	private String lastImport;
 
@@ -167,11 +166,11 @@ public class Artikel extends AbstractEntityWithId
 		this.vkPreis = vkPreis;
 	}
 
-	public ArticleTyp getTyp(){
+	public ArticleTyp getTyp() {
 		return typ;
 	}
 
-	public void setTyp(ArticleTyp typ){
+	public void setTyp(ArticleTyp typ) {
 		this.typ = typ;
 	}
 
@@ -183,11 +182,11 @@ public class Artikel extends AbstractEntityWithId
 		this.codeclass = codeclass;
 	}
 
-	public Artikel getProduct(){
+	public Artikel getProduct() {
 		return product;
 	}
 
-	public void setProduct(Artikel product){
+	public void setProduct(Artikel product) {
 		this.product = product;
 	}
 
@@ -222,44 +221,44 @@ public class Artikel extends AbstractEntityWithId
 	public void setAtcCode(String atcCode) {
 		this.atcCode = atcCode;
 	}
-	
+
 	@Override
-	public byte[] getExtInfo(){
+	public byte[] getExtInfo() {
 		return extInfo;
 	}
-	
+
 	@Override
-	public void setExtInfo(byte[] extInfo){
+	public void setExtInfo(byte[] extInfo) {
 		this.extInfo = extInfo;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

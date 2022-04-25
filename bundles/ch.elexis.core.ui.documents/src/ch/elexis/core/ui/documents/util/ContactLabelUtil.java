@@ -5,8 +5,8 @@ import java.util.Arrays;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 
 public class ContactLabelUtil {
-	
-	public static String[] getContactHints(String lbl){
+
+	public static String[] getContactHints(String lbl) {
 		String[] hints = new String[KontaktSelektor.HINTSIZE];
 		Arrays.fill(hints, "");
 		String[] splits = lbl.split(",");
@@ -36,7 +36,7 @@ public class ContactLabelUtil {
 				hints[KontaktSelektor.HINT_PLACE] = plzWithCity[1].trim();
 			}
 		}
-		
+
 		return hints;
 	}
 }

@@ -20,21 +20,20 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "elexisbefunde")
 @EntityListeners(EntityWithIdListener.class)
-public class Elexisbefunde extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted {
+public class Elexisbefunde extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@OneToOne
 	@JoinColumn(name = "PatientID")
 	private Kontakt patient;
@@ -55,58 +54,58 @@ public class Elexisbefunde extends AbstractEntityWithId
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public Kontakt getPatient(){
+
+	public Kontakt getPatient() {
 		return patient;
 	}
-	
-	public void setPatient(Kontakt patient){
+
+	public void setPatient(Kontakt patient) {
 		this.patient = patient;
 	}
-	
-	public LocalDate getDatum(){
+
+	public LocalDate getDatum() {
 		return datum;
 	}
-	
-	public void setDatum(LocalDate datum){
+
+	public void setDatum(LocalDate datum) {
 		this.datum = datum;
 	}
-	
-	public byte[] getBefunde(){
+
+	public byte[] getBefunde() {
 		return befunde;
 	}
-	
-	public void setBefunde(byte[] befunde){
+
+	public void setBefunde(byte[] befunde) {
 		this.befunde = befunde;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

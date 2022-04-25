@@ -7,12 +7,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 public class RunContextCheckButtonWithDefaultValue extends Button {
-	
+
 	public RunContextCheckButtonWithDefaultValue(Composite compAssisted,
-		AbstractTaskDescriptorConfigurationComposite atdcc, String key, Boolean defaultValue,
-		Boolean configuredValue){
+			AbstractTaskDescriptorConfigurationComposite atdcc, String key, Boolean defaultValue,
+			Boolean configuredValue) {
 		super(compAssisted, SWT.CHECK);
-		
+
 		if (configuredValue != null) {
 			setSelection(configuredValue);
 		} else {
@@ -20,25 +20,25 @@ public class RunContextCheckButtonWithDefaultValue extends Button {
 				setSelection(defaultValue);
 			}
 		}
-		
+
 		addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (defaultValue != null && getSelection() == defaultValue) {
 					// remove key from map as default equals config
 					atdcc.taskDescriptor.setRunContextParameter(key, null);
 				} else {
-					atdcc.taskDescriptor.setRunContextParameter(key,
-						Boolean.valueOf(getSelection()));
+					atdcc.taskDescriptor.setRunContextParameter(key, Boolean.valueOf(getSelection()));
 				}
 				atdcc.saveTaskDescriptor();
 			}
-			
+
 		});
 	}
-	
+
 	@Override
-	protected void checkSubclass(){}
-	
+	protected void checkSubclass() {
+	}
+
 }

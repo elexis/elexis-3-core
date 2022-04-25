@@ -36,18 +36,19 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.types.ArticleTyp;
 
 /**
- * Map type names from new {@link AbstractDBObjectIdDeleted} subclasses to PersistentObject legacy
- * type names. Use by {@link IModelService#loadFromString(String)} and
+ * Map type names from new {@link AbstractDBObjectIdDeleted} subclasses to
+ * PersistentObject legacy type names. Use by
+ * {@link IModelService#loadFromString(String)} and
  * {@link IModelService#storeToString(ch.elexis.core.model.Identifiable)}.
- * 
+ *
  * @author thomas
  *
  */
 public class ElexisTypeMap {
-	
+
 	private static final HashMap<String, Class<? extends EntityWithId>> stsToClassMap;
 	private static final HashMap<Class<? extends EntityWithId>, String> classToStsMap;
-	
+
 	public static final String TYPE_ARTIKEL = "ch.elexis.data.Artikel";
 	public static final String TYPE_ARTIKELSTAMM = "ch.artikelstamm.elexis.common.ArtikelstammItem";
 	public static final String TYPE_BRIEF = "ch.elexis.data.Brief";
@@ -84,11 +85,11 @@ public class ElexisTypeMap {
 	public static final String TYPE_BESTELLUNGENTRY = "ch.elexis.data.BestellungEntry";
 	public static final String TYPE_AUF = "ch.elexis.data.AUF";
 	public static final String TYPE_STICKER = "ch.elexis.data.Sticker";
-	
+
 	static {
 		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
 		classToStsMap = new HashMap<Class<? extends EntityWithId>, String>();
-		
+
 		// bi-directional mappable
 		stsToClassMap.put(TYPE_ARTIKELSTAMM, ArtikelstammItem.class);
 		classToStsMap.put(ArtikelstammItem.class, TYPE_ARTIKELSTAMM);
@@ -136,7 +137,7 @@ public class ElexisTypeMap {
 		classToStsMap.put(AUF.class, TYPE_AUF);
 		stsToClassMap.put(TYPE_STICKER, Sticker.class);
 		classToStsMap.put(Sticker.class, TYPE_STICKER);
-		
+
 		// uni-directional mappable
 		stsToClassMap.put(TYPE_ARTIKEL, Artikel.class);
 		stsToClassMap.put(TYPE_MEDIKAMENT, Artikel.class);
@@ -151,13 +152,13 @@ public class ElexisTypeMap {
 		stsToClassMap.put(TYPE_LABORATORY, Kontakt.class);
 		stsToClassMap.put(TYPE_MANDANT, Kontakt.class);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param obj
 	 * @return <code>null</code> if not resolvable, else the resp. Entity Type
 	 */
-	public static String getKeyForObject(EntityWithId obj){
+	public static String getKeyForObject(EntityWithId obj) {
 		if (obj instanceof Kontakt) {
 			// TODO we can not deterministically map person to patient, anwender, mandant as
 			// we do not know what was initially intended
@@ -194,27 +195,28 @@ public class ElexisTypeMap {
 				return TYPE_ARTIKEL;
 			}
 		}
-		
+
 		if (obj != null) {
 			return classToStsMap.get(obj.getClass());
 		}
-		
+
 		return null;
 	}
-	
-	public static Class<? extends EntityWithId> get(String value){
+
+	public static Class<? extends EntityWithId> get(String value) {
 		return stsToClassMap.get(value);
 	}
-	
+
 	/**
-	 * If multiple model objects map to the same db entity we have to discriminate on how to
-	 * instantiate this object. E.g. both patient and laboratory are stored as {@link Kontakt}, but
-	 * are represented as {@link IPatient} and {@link ILaboratory} respectively.
-	 * 
+	 * If multiple model objects map to the same db entity we have to discriminate
+	 * on how to instantiate this object. E.g. both patient and laboratory are
+	 * stored as {@link Kontakt}, but are represented as {@link IPatient} and
+	 * {@link ILaboratory} respectively.
+	 *
 	 * @param value
 	 * @return
 	 */
-	public static Class<? extends Identifiable> getInterfaceClass(String value){
+	public static Class<? extends Identifiable> getInterfaceClass(String value) {
 		if (TYPE_LABORATORY.equals(value)) {
 			return ILaboratory.class;
 		} else if (TYPE_PATIENT.equals(value)) {

@@ -30,36 +30,30 @@ import ch.rgw.tools.ExHandler;
 
 public class ImportSelectedTemplateCommand extends AbstractHandler {
 	private static Logger logger = LoggerFactory.getLogger(ImportSelectedTemplateCommand.class);
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		IWorkbenchPage activePage =
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TextTemplateView textTemplateView =
-			(TextTemplateView) activePage.findView(TextTemplateView.ID);
-		
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		TextTemplateView textTemplateView = (TextTemplateView) activePage.findView(TextTemplateView.ID);
+
 		TextTemplate textTemplate = getSelectedTextTemplate(event);
 		if (textTemplate == null) {
 			logger.warn("No TextTemplate selected - skipping template import");
 			return null;
 		}
-		
+
 		ITextPlugin plugin = textTemplateView.getActiveTextPlugin();
 		if (plugin == null) {
 			logger.warn("No TextPlugin found - skipping text template import");
 			return null;
 		}
-		
+
 		try {
 			String mimeType = plugin.getMimeType();
 			FileDialog fdl = new FileDialog(UiDesk.getTopShell());
-			fdl.setFilterExtensions(new String[] {
-				MimeTypeUtil.getExtensions(mimeType)
-			});
-			fdl.setFilterNames(new String[] {
-				MimeTypeUtil.getPrettyPrintName(mimeType)
-			});
-			
+			fdl.setFilterExtensions(new String[] { MimeTypeUtil.getExtensions(mimeType) });
+			fdl.setFilterNames(new String[] { MimeTypeUtil.getPrettyPrintName(mimeType) });
+
 			String filename = fdl.open();
 			if (filename != null) {
 				File file = new File(filename);
@@ -68,25 +62,22 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 					byte[] contentToStore = new byte[(int) file.length()];
 					fis.read(contentToStore);
 					fis.close();
-					
-					List<Brief> existing = TextTemplate.findExistingTemplates(
-						textTemplate.isSystemTemplate(),
-						textTemplate.getName(), (String) null,
-						textTemplate.getMandant() != null ? textTemplate.getMandant().getId() : "");
-					if(!existing.isEmpty()) {
-						if (MessageDialog.openQuestion(HandlerUtil.getActiveShell(event),
-							"Vorlagen existieren",
-							String.format(
-								"Sollen die (%d) existierenden %s Vorlagen überschrieben werden?",
-								existing.size(), textTemplate.getName()))) {
+
+					List<Brief> existing = TextTemplate.findExistingTemplates(textTemplate.isSystemTemplate(),
+							textTemplate.getName(), (String) null,
+							textTemplate.getMandant() != null ? textTemplate.getMandant().getId() : "");
+					if (!existing.isEmpty()) {
+						if (MessageDialog.openQuestion(HandlerUtil.getActiveShell(event), "Vorlagen existieren",
+								String.format("Sollen die (%d) existierenden %s Vorlagen überschrieben werden?",
+										existing.size(), textTemplate.getName()))) {
 							for (Brief brief : existing) {
 								brief.delete();
 							}
 						}
 					}
-					
+
 					Brief bTemplate = new Brief(textTemplate.getName(), null, CoreHub.getLoggedInContact(),
-						textTemplate.getMandant(), null, Brief.TEMPLATE);
+							textTemplate.getMandant(), null, Brief.TEMPLATE);
 					if (textTemplate.isSystemTemplate()) {
 						bTemplate.set(Brief.FLD_KONSULTATION_ID, Brief.SYS_TEMPLATE);
 						textTemplate.addSystemTemplateReference(bTemplate);
@@ -100,14 +91,13 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 		} catch (Throwable ex) {
 			ExHandler.handle(ex);
 		}
-		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(Brief.class, null,
-			ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
+		ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(Brief.class, null, ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
 		return null;
 	}
-	
-	private TextTemplate getSelectedTextTemplate(ExecutionEvent event){
-		ISelection selection =
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+
+	private TextTemplate getSelectedTextTemplate(ExecutionEvent event) {
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object firstElement = strucSelection.getFirstElement();

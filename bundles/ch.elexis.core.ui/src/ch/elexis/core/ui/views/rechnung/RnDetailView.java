@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
@@ -27,25 +27,24 @@ import ch.elexis.core.ui.util.SWTHelper;
 public class RnDetailView extends ViewPart {
 	public final static String ID = "ch.elexis.RechnungsDetailView"; //$NON-NLS-1$
 	RechnungsBlatt blatt;
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout());
 		blatt = new RechnungsBlatt(parent, getViewSite());
 		blatt.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		
+
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		blatt.setFocus();
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
-	boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 }

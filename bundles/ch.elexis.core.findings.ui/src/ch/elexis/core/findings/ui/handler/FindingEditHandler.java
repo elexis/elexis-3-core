@@ -22,68 +22,64 @@ import ch.elexis.core.ui.locks.ILockHandler;
 
 public class FindingEditHandler extends AbstractHandler implements IHandler {
 	public static final String COMMAND_ID = "ch.elexis.core.findings.ui.commandEdit";
-	
+
 	private Boolean ret;
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ret = Boolean.FALSE;
 		ISelection selection = getSelection(event);
-		if (selection instanceof StructuredSelection
-			&& !((StructuredSelection) selection).isEmpty()) {
+		if (selection instanceof StructuredSelection && !((StructuredSelection) selection).isEmpty()) {
 			Object item = ((StructuredSelection) selection).getFirstElement();
 			if (item instanceof IFinding) {
-				
+
 				IFinding iFinding = (IFinding) item;
-				AcquireLockBlockingUi.aquireAndRun(iFinding,
-					new ILockHandler() {
-						@Override
-						public void lockFailed(){
-							// do nothing
-						}
-						
-						@Override
-						public void lockAcquired(){
-							FindingsEditDialog findingsEditDialog = new FindingsEditDialog(
+				AcquireLockBlockingUi.aquireAndRun(iFinding, new ILockHandler() {
+					@Override
+					public void lockFailed() {
+						// do nothing
+					}
+
+					@Override
+					public void lockAcquired() {
+						FindingsEditDialog findingsEditDialog = new FindingsEditDialog(
 								Display.getDefault().getActiveShell(), iFinding);
-							int dialogRet = findingsEditDialog.open();
-							
-							findingsEditDialog.releaseAllLocks();
-							if (dialogRet == MessageDialog.OK) {
-								//								if (iFinding instanceof IObservation) {
-								//									// do recursive save for observation children
-								//									IObservation observation = (IObservation) iFinding;
-								//									if (observation.getObservationType() == ObservationType.REF) {
-								//										List<IObservation> obsChildren = new ArrayList<>();
-								//										ModelUtil.getObservationChildren(observation, obsChildren,
-								//											100);
-								//										for (IObservation iObservation : obsChildren) {
-								//											FindingsServiceComponent.getService()
-								//												.saveFinding(iObservation);
-								//										}
-								//									}
-								//								}
-								FindingsServiceComponent.getService().saveFinding(iFinding);
-								ElexisEventDispatcher.getInstance()
-									.fire(new ElexisEvent(iFinding,
-										IFinding.class, ElexisEvent.EVENT_RELOAD));
-								ret = Boolean.TRUE;
-							}
+						int dialogRet = findingsEditDialog.open();
+
+						findingsEditDialog.releaseAllLocks();
+						if (dialogRet == MessageDialog.OK) {
+							// if (iFinding instanceof IObservation) {
+							// // do recursive save for observation children
+							// IObservation observation = (IObservation) iFinding;
+							// if (observation.getObservationType() == ObservationType.REF) {
+							// List<IObservation> obsChildren = new ArrayList<>();
+							// ModelUtil.getObservationChildren(observation, obsChildren,
+							// 100);
+							// for (IObservation iObservation : obsChildren) {
+							// FindingsServiceComponent.getService()
+							// .saveFinding(iObservation);
+							// }
+							// }
+							// }
+							FindingsServiceComponent.getService().saveFinding(iFinding);
+							ElexisEventDispatcher.getInstance()
+									.fire(new ElexisEvent(iFinding, IFinding.class, ElexisEvent.EVENT_RELOAD));
+							ret = Boolean.TRUE;
 						}
-					});
+					}
+				});
 			}
 		}
 		return ret;
 	}
-	
-	private ISelection getSelection(ExecutionEvent executionEvent){
+
+	private ISelection getSelection(ExecutionEvent executionEvent) {
 		ISelection selection = null;
 		if (executionEvent.getTrigger() != null) {
 			// try e3 style if the event is called from plugin.xml and not called manually
 			selection = HandlerUtil.getCurrentSelection(executionEvent);
 		} else {
-			IEclipseContext iEclipseContext =
-				PlatformUI.getWorkbench().getService(IEclipseContext.class);
+			IEclipseContext iEclipseContext = PlatformUI.getWorkbench().getService(IEclipseContext.class);
 			selection = (StructuredSelection) iEclipseContext.get(COMMAND_ID.concat(".selection"));
 			iEclipseContext.remove(COMMAND_ID.concat(".selection"));
 		}

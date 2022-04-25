@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.data;
 
@@ -25,26 +25,24 @@ public class Zahlung extends PersistentObject {
 	public static final String REMARK = "Bemerkung";
 	public static final String BILL_ID = "RechnungsID";
 	static final String TABLENAME = "ZAHLUNGEN";
-	
+
 	static {
 		addMapping(TABLENAME, BILL_ID, "Betragx100=Betrag", "Datum=S:D:Datum", REMARK);
 	}
-	
-	public Zahlung(Rechnung rn, Money Betrag, String text, TimeTool date){
+
+	public Zahlung(Rechnung rn, Money Betrag, String text, TimeTool date) {
 		create(null);
 		if (date == null) {
 			date = new TimeTool();
 		}
 		String Datum = date.toString(TimeTool.DATE_GER);
-		set(new String[] {
-			BILL_ID, AMMOUNT_CENTS, DATE, REMARK
-		}, rn.getId(), Betrag.getCentsAsString(), Datum, text);
+		set(new String[] { BILL_ID, AMMOUNT_CENTS, DATE, REMARK }, rn.getId(), Betrag.getCentsAsString(), Datum, text);
 		new AccountTransaction(this);
 		rn.addTrace(Rechnung.PAYMENT, Betrag.getAmountAsString());
 	}
-	
+
 	@Override
-	public boolean delete(){
+	public boolean delete() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("DELETE FROM KONTO WHERE ID=").append(getWrappedId());
 		getConnection().exec(sb.toString());
@@ -54,51 +52,52 @@ public class Zahlung extends PersistentObject {
 		}
 		return super.delete();
 	}
-	
-	public String getBemerkung(){
+
+	public String getBemerkung() {
 		return get(REMARK);
 	}
-	
-	public Rechnung getRechnung(){
+
+	public Rechnung getRechnung() {
 		return Rechnung.load(get(BILL_ID));
 	}
-	
-	public Money getBetrag(){
+
+	public Money getBetrag() {
 		return new Money(checkZero(get(AMMOUNT_CENTS)));
 	}
-	
-	public String getDatum(){
+
+	public String getDatum() {
 		return get(DATE);
 	}
-	
-	public static Zahlung load(String id){
+
+	public static Zahlung load(String id) {
 		return new Zahlung(id);
 	}
-	
-	protected Zahlung(){/* leer */}
-	
-	protected Zahlung(String id){
+
+	protected Zahlung() {
+		/* leer */}
+
+	protected Zahlung(String id) {
 		super(id);
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getDatum()).append(": ").append(getBetrag().getAmountAsString());
 		return sb.toString();
 	}
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return TABLENAME;
 	}
-	
-	public AccountTransaction getTransaction(){
+
+	public AccountTransaction getTransaction() {
 		Query<AccountTransaction> query = new Query<>(AccountTransaction.class);
 		query.add(AccountTransaction.FLD_PAYMENT_ID, Query.EQUALS, getId());
 		List<AccountTransaction> transactions = query.execute();
-		if(!transactions.isEmpty()) {
-			if(transactions.size() > 1) {
+		if (!transactions.isEmpty()) {
+			if (transactions.size() > 1) {
 				Logger logger = LoggerFactory.getLogger(Zahlung.class);
 				logger.warn("More than 1 transaction for payment. [" + storeToString() + "]");
 			}
@@ -106,5 +105,5 @@ public class Zahlung extends PersistentObject {
 		}
 		return null;
 	}
-	
+
 }

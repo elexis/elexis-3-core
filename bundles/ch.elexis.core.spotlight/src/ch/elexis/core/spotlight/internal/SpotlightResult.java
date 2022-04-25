@@ -9,28 +9,26 @@ import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
 
 public class SpotlightResult implements ISpotlightResult {
-	
+
 	private Set<ISpotlightResultEntry> patientEntries;
 	private Set<ISpotlightResultEntry> encounterEntries;
 	private Set<ISpotlightResultEntry> documentEntries;
 	private Set<ISpotlightResultEntry> letterEntries;
-	
+
 	private Set<Category> usedCategories;
-	
-	public SpotlightResult(){
+
+	public SpotlightResult() {
 		patientEntries = Collections.synchronizedSet(new HashSet<>());
 		encounterEntries = Collections.synchronizedSet(new HashSet<>());
 		documentEntries = Collections.synchronizedSet(new HashSet<>());
 		letterEntries = Collections.synchronizedSet(new HashSet<>());
 		usedCategories = new HashSet<ISpotlightResultEntry.Category>(4);
 	}
-	
+
 	@Override
-	public void addEntry(Category category, String label, String storeToString,
-		Object loadedObject){
-		ISpotlightResultEntry entry =
-			new SpotlightResultEntry(category, label, storeToString, loadedObject);
-		
+	public void addEntry(Category category, String label, String storeToString, Object loadedObject) {
+		ISpotlightResultEntry entry = new SpotlightResultEntry(category, label, storeToString, loadedObject);
+
 		switch (category) {
 		case PATIENT:
 			patientEntries.add(entry);
@@ -47,19 +45,19 @@ public class SpotlightResult implements ISpotlightResult {
 		default:
 			break;
 		}
-		
+
 	}
-	
+
 	@Override
-	public void clear(){
+	public void clear() {
 		patientEntries.clear();
 		encounterEntries.clear();
 		documentEntries.clear();
 		letterEntries.clear();
 	}
-	
+
 	@Override
-	public Set<Category> hasResultsIn(){
+	public Set<Category> hasResultsIn() {
 		usedCategories.clear();
 		if (!patientEntries.isEmpty()) {
 			usedCategories.add(Category.PATIENT);
@@ -75,9 +73,9 @@ public class SpotlightResult implements ISpotlightResult {
 		}
 		return usedCategories;
 	}
-	
+
 	@Override
-	public Set<ISpotlightResultEntry> getResultPerCategory(Category category){
+	public Set<ISpotlightResultEntry> getResultPerCategory(Category category) {
 		switch (category) {
 		case PATIENT:
 			return patientEntries;
@@ -92,5 +90,5 @@ public class SpotlightResult implements ISpotlightResult {
 		}
 		return Collections.emptySet();
 	}
-	
+
 }

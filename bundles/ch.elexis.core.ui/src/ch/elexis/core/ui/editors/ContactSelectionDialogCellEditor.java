@@ -10,18 +10,18 @@ import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
 import ch.elexis.data.Kontakt;
 
 public class ContactSelectionDialogCellEditor extends DialogCellEditor {
-	
+
 	private String title;
 	private String message;
-	
-	public ContactSelectionDialogCellEditor(Composite composite, String title, String message){
+
+	public ContactSelectionDialogCellEditor(Composite composite, String title, String message) {
 		super(composite);
 		this.title = title;
 		this.message = message;
 	}
-	
+
 	@Override
-	protected void updateContents(Object value){
+	protected void updateContents(Object value) {
 		if (value instanceof Kontakt) {
 			Kontakt contact = (Kontakt) value;
 			if (contact != null) {
@@ -37,11 +37,11 @@ public class ContactSelectionDialogCellEditor extends DialogCellEditor {
 		}
 		super.updateContents(null);
 	}
-	
+
 	@Override
-	protected Object openDialogBox(Control cellEditorWindow){
-		ContactSelectionDialog dialog = new ContactSelectionDialog(cellEditorWindow.getShell(),
-			IContact.class, title, message);
+	protected Object openDialogBox(Control cellEditorWindow) {
+		ContactSelectionDialog dialog = new ContactSelectionDialog(cellEditorWindow.getShell(), IContact.class, title,
+				message);
 		if (getValue() instanceof IContact) {
 			// TODO pre select
 		}

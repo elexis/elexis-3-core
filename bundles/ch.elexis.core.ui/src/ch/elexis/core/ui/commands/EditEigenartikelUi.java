@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -28,17 +28,16 @@ import ch.elexis.core.ui.dialogs.ArtikelDetailDialog;
 import ch.elexis.data.PersistentObject;
 
 public class EditEigenartikelUi extends AbstractHandler {
-	
+
 	public static final String COMMANDID = "ch.elexis.eigenartikel.edit"; //$NON-NLS-1$
 	public static final String PARAMETERID = "ch.elexis.eigenartikel.edit.selected"; //$NON-NLS-1$
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			// get the parameter
 			String param = event.getParameter(PARAMETERID);
-			PersistentObject artikel =
-				(PersistentObject) event.getCommand().getParameterType(PARAMETERID)
+			PersistentObject artikel = (PersistentObject) event.getCommand().getParameterType(PARAMETERID)
 					.getValueConverter().convertToObject(param);
 			// create and open the dialog with the parameter
 			Shell parent = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
@@ -49,8 +48,8 @@ public class EditEigenartikelUi extends AbstractHandler {
 		}
 		return null;
 	}
-	
-	public static void executeWithParams(PersistentObject parameter){
+
+	public static void executeWithParams(PersistentObject parameter) {
 		try {
 			// get the command
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -62,8 +61,7 @@ public class EditEigenartikelUi extends AbstractHandler {
 			// build the parameterized command
 			ParameterizedCommand pc = ParameterizedCommand.generateCommand(cmd, param);
 			// execute the command
-			IHandlerService handlerService =
-				(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getService(IHandlerService.class);
 			handlerService.executeCommand(pc, null);
 		} catch (Exception ex) {

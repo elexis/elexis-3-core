@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -25,20 +25,18 @@ public interface IPatFilter {
 	public static final int DONT_HANDLE = 0;
 	/** We encountered an error while trying to filter */
 	public static final int FILTER_FAULT = -2;
-	
+
 	/**
 	 * Will the Patient be accepted for the Filter depending on the Object?
-	 * 
-	 * @param p
-	 *            The Patient to consider
-	 * @param o
-	 *            The Object to check
+	 *
+	 * @param p The Patient to consider
+	 * @param o The Object to check
 	 * @return one of REJECT, ACCEPT, DONT_HANDLE
 	 * @throws Exception
 	 */
 	public int accept(Patient p, PersistentObject o);
-	
+
 	public boolean aboutToStart(PersistentObject o);
-	
+
 	public boolean finished(PersistentObject o);
 }

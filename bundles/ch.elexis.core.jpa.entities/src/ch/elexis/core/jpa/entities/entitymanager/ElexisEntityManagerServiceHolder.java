@@ -7,15 +7,15 @@ import ch.elexis.core.services.IElexisEntityManager;
 
 @Component
 public class ElexisEntityManagerServiceHolder {
-	
+
 	private static IElexisEntityManager entityManager;
-	
+
 	@Reference
-	public synchronized void ElexisEntityManager(IElexisEntityManager entityManager){
+	public synchronized void ElexisEntityManager(IElexisEntityManager entityManager) {
 		ElexisEntityManagerServiceHolder.entityManager = entityManager;
 	}
-	
-	public static IElexisEntityManager getEntityManager(){
+
+	public static IElexisEntityManager getEntityManager() {
 		if (entityManager == null) {
 			throw new IllegalStateException("No EntityManager available");
 		}

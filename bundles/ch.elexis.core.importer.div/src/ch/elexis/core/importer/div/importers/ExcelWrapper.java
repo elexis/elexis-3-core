@@ -27,30 +27,29 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import ch.rgw.tools.TimeTool;
 
 /**
- * A Class that wraps a Microsoft(tm) Excel(tm) Spreadsheet using Apache's HSSF (Horrible Spread
- * Sheet Format) as used in Excel 97 thru 2002. This class simplifies POI in that it gives only read
- * access and only for string data. Refernces to cells containing non-string-values will try to
- * return an appropriate conversion to String.
- * 
+ * A Class that wraps a Microsoft(tm) Excel(tm) Spreadsheet using Apache's HSSF
+ * (Horrible Spread Sheet Format) as used in Excel 97 thru 2002. This class
+ * simplifies POI in that it gives only read access and only for string data.
+ * Refernces to cells containing non-string-values will try to return an
+ * appropriate conversion to String.
+ *
  * @author Gerry
- * 
+ *
  */
 public class ExcelWrapper {
 	private Class<?>[] types;
 	private Sheet sheet;
-	
+
 	/**
 	 * Load a specific page of the given Excel Spreadsheet
-	 * 
-	 * @param file
-	 *            filename of the Excel file
-	 * @param page
-	 *            page to use
+	 *
+	 * @param file filename of the Excel file
+	 * @param page page to use
 	 * @return true on success
 	 * @deprecated use load(InputStream) instead
 	 */
 	@Deprecated
-	public boolean load(final String file, final int page){
+	public boolean load(final String file, final int page) {
 		try {
 			Workbook wb = WorkbookFactory.create(new FileInputStream(file));
 			sheet = wb.getSheetAt(page);
@@ -59,17 +58,15 @@ public class ExcelWrapper {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Load a specific page of the given Excel Spreadsheet
-	 * 
-	 * @param bytes
-	 *            Excel content as byte array
-	 * @param page
-	 *            page to use
+	 *
+	 * @param bytes Excel content as byte array
+	 * @param page  page to use
 	 * @return true on success
 	 */
-	public boolean load(final InputStream inputStream, final int page){
+	public boolean load(final InputStream inputStream, final int page) {
 		try {
 			Workbook wb = WorkbookFactory.create(inputStream);
 			sheet = wb.getSheetAt(page);
@@ -78,26 +75,25 @@ public class ExcelWrapper {
 			return false;
 		}
 	}
-	
+
 	/**
-	 * Set the type for each field of the calc sheet. This is a hint to the parser how to convert a
-	 * value. ie an Excel Number field might be interpreted as String, Integer or float value
-	 * 
-	 * @param types
-	 *            Java Classes denoting the field types
+	 * Set the type for each field of the calc sheet. This is a hint to the parser
+	 * how to convert a value. ie an Excel Number field might be interpreted as
+	 * String, Integer or float value
+	 *
+	 * @param types Java Classes denoting the field types
 	 */
-	public void setFieldTypes(final Class<?>[] types){
+	public void setFieldTypes(final Class<?>[] types) {
 		this.types = types;
 	}
-	
+
 	/**
 	 * Return a row of data from the sheet.
-	 * 
-	 * @param rowNr
-	 *            zero based index of the desired row
+	 *
+	 * @param rowNr zero based index of the desired row
 	 * @return a List of Strings with the row values or null if no such row exists.
 	 */
-	public List<String> getRow(final int rowNr){
+	public List<String> getRow(final int rowNr) {
 		Row row = sheet.getRow(rowNr);
 		if (row == null) {
 			return null;
@@ -138,7 +134,7 @@ public class ExcelWrapper {
 							break;
 						} else if (types[i].equals(String.class)) {
 							double cv = cell.getNumericCellValue();
-							if( cv == (long) cv) {
+							if (cv == (long) cv) {
 								ret.add(String.format("%d", (long) cv));
 							} else {
 								ret.add(String.format("%s", cv));
@@ -160,7 +156,7 @@ public class ExcelWrapper {
 				default:
 					ret.add(Messages.ExcelWrapper_ErrorUnknownCellType);
 				}
-				
+
 			} else {
 				// empty cell
 				ret.add(""); //$NON-NLS-1$
@@ -168,36 +164,34 @@ public class ExcelWrapper {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * return the index of the first row containing data
-	 * 
+	 *
 	 * @return
 	 */
-	public int getFirstRow(){
+	public int getFirstRow() {
 		return sheet.getFirstRowNum();
 	}
-	
+
 	/**
 	 * return the index of the last row containing data
-	 * 
+	 *
 	 * @return
 	 */
-	public int getLastRow(){
+	public int getLastRow() {
 		return sheet.getLastRowNum();
 	}
-	
+
 	/**
-	 * Get a Value safely (t.i: Don't thrwow an exeption if the index is tu large but return an
-	 * empty string instead.
-	 * 
-	 * @param row
-	 *            a List of Strings
-	 * @param col
-	 *            index to retrieve
+	 * Get a Value safely (t.i: Don't thrwow an exeption if the index is tu large
+	 * but return an empty string instead.
+	 *
+	 * @param row a List of Strings
+	 * @param col index to retrieve
 	 * @return
 	 */
-	public static String getSafe(List<String> row, int col){
+	public static String getSafe(List<String> row, int col) {
 		if (row.size() > col) {
 			return row.get(col);
 		}

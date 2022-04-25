@@ -35,42 +35,41 @@ import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.commands.UpdateFindingTextCommand;
 
 public class FindingsEditDialog extends TitleAreaDialog {
-	
+
 	private final IFinding iFinding;
 	private ICompositeSaveable iCompositeSaveable;
-	
+
 	private List<IFinding> lockedFindings = new ArrayList<>();
-	
-	public FindingsEditDialog(Shell parentShell, IFinding iFinding){
+
+	public FindingsEditDialog(Shell parentShell, IFinding iFinding) {
 		super(parentShell);
 		this.iFinding = iFinding;
 		lockedFindings.clear();
 	}
-	
+
 	/**
 	 * Create contents of the dialog.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		String title = FindingsUiUtil.getTypeAsText(iFinding);
 		setTitle("Befund");
 		setMessage(title);
 		int depth = 0;
 		iCompositeSaveable = new CompositeGroup(parent, iFinding, false, false, 10, 10, depth++);
 		try {
-			iCompositeSaveable.getChildReferences()
-				.add(createDynamicContent(iFinding, iCompositeSaveable, depth));
+			iCompositeSaveable.getChildReferences().add(createDynamicContent(iFinding, iCompositeSaveable, depth));
 		} catch (ElexisException e) {
 			MessageDialog.openError(getShell(), "Fehler", e.getMessage());
 			cancelPressed();
 		}
 		return (Control) iCompositeSaveable;
 	}
-	
-	private ICompositeSaveable createDynamicContent(IFinding iFinding, ICompositeSaveable current,
-		int depth) throws ElexisException{
+
+	private ICompositeSaveable createDynamicContent(IFinding iFinding, ICompositeSaveable current, int depth)
+			throws ElexisException {
 		if (!LocalLockServiceHolder.get().acquireLock(iFinding).isOk()) {
 			throw new ElexisException("Die Editierung ist nicht möglich, kein Lock erhalten.");
 		}
@@ -79,29 +78,26 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			IObservation item = (IObservation) iFinding;
 			List<IObservation> refChildrens = item.getTargetObseravtions(ObservationLinkType.REF);
 			StringBuilder sb = new StringBuilder();
-			refChildrens.stream().forEach(o -> sb.append(o.getCoding().get(0).getDisplay())
-				.append((o).isDeleted()).append(","));
+			refChildrens.stream()
+					.forEach(o -> sb.append(o.getCoding().get(0).getDisplay()).append((o).isDeleted()).append(","));
 			List<ObservationComponent> compChildrens = item.getComponents();
 			if (refChildrens.isEmpty() && compChildrens.isEmpty()) {
 				current = createComposite((Composite) current, item, null);
 			} else {
 				if (!refChildrens.isEmpty()) {
-					current =
-						new CompositeGroup((Composite) current, item, true, false, 0, 10, depth);
+					current = new CompositeGroup((Composite) current, item, true, false, 0, 10, depth);
 					for (IObservation child : refChildrens) {
-						ICompositeSaveable childComposite =
-							createDynamicContent(child, current, ++depth);
+						ICompositeSaveable childComposite = createDynamicContent(child, current, ++depth);
 						current.getChildReferences().add(childComposite);
 					}
 				}
 				if (!compChildrens.isEmpty()) {
 					// show as component
-					current =
-						new CompositeGroup((Composite) current, item, false, false, 0, 5, depth);
-					
+					current = new CompositeGroup((Composite) current, item, false, false, 0, 5, depth);
+
 					Group group = new Group((Composite) current, SWT.NONE);
 					group.setText("");
-					
+
 					GridLayout gd = new GridLayout(2, false);
 					gd.marginHeight = 0;
 					gd.marginBottom = 10;
@@ -116,18 +112,15 @@ public class FindingsEditDialog extends TitleAreaDialog {
 					gd2.verticalSpacing = 0;
 					gd2.marginTop = 0;
 					groupComposite.setLayout(gd2);
-					groupComposite
-						.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+					groupComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 					Label lblTitle = new Label(groupComposite, SWT.NONE);
 					lblTitle.setText(current.getTitle());
 					lblTitle.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1));
-					current.setToolbarActions(
-						FindingsUiUtil.createToolbarSubComponents(groupComposite, item, 1));
-					
-					boolean allUnitsSame =
-						ModelUtil.getExactUnitOfComponent(compChildrens) != null;
+					current.setToolbarActions(FindingsUiUtil.createToolbarSubComponents(groupComposite, item, 1));
+
+					boolean allUnitsSame = ModelUtil.getExactUnitOfComponent(compChildrens) != null;
 					int i = 0;
-					
+
 					for (ObservationComponent child : compChildrens) {
 						i++;
 						ICompositeSaveable childComposite = createComposite(group, iFinding, child);
@@ -137,21 +130,20 @@ public class FindingsEditDialog extends TitleAreaDialog {
 								childComposite.hideLabel(i < compChildrens.size());
 							}
 						}
-						
+
 					}
-					
+
 				}
 			}
 		} else {
 			current = createComposite((Composite) current, iFinding, null);
 		}
-		
+
 		return current;
 	}
-	
-	
+
 	private ICompositeSaveable createComposite(Composite parent, IFinding iFinding,
-		ObservationComponent backboneComponent){
+			ObservationComponent backboneComponent) {
 		if (iFinding instanceof IObservation) {
 			ObservationType type = ((IObservation) iFinding).getObservationType();
 			switch (type) {
@@ -165,31 +157,30 @@ public class FindingsEditDialog extends TitleAreaDialog {
 				return new CompositeDate(parent, iFinding, backboneComponent);
 			default:
 				throw new IllegalStateException(
-					"No composite for observation type [" + type + "] of ["
-						+ iFinding + "]");
+						"No composite for observation type [" + type + "] of [" + iFinding + "]");
 			}
 		}
 		throw new IllegalStateException("No composite for finding [" + iFinding + "]");
 	}
-	
+
 	/**
 	 * Create contents of the button bar.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
-	
+
 	@Override
-	protected void buttonPressed(int buttonId){
+	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		if (iCompositeSaveable != null) {
 			LocalDateTime localDateTime = LocalDateTime.now();
 			List<Action> actions = iCompositeSaveable.getToolbarActions();
@@ -207,20 +198,19 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			try {
 				new UpdateFindingTextCommand(iFinding).execute();
 			} catch (ElexisException e) {
-				MessageDialog.openError(getShell(), "Fehler",
-					"Fehler bei der Generierung des Texts der Beobachtung.");
+				MessageDialog.openError(getShell(), "Fehler", "Fehler bei der Generierung des Texts der Beobachtung.");
 			}
 		}
 		super.okPressed();
 	}
-	
-	public void releaseAllLocks(){
+
+	public void releaseAllLocks() {
 		for (IFinding iFinding : lockedFindings) {
 			LocalLockServiceHolder.get().releaseLock(iFinding);
 		}
 	}
-	
-	public List<IFinding> getLockedFindings(){
+
+	public List<IFinding> getLockedFindings() {
 		return lockedFindings;
 	}
 }

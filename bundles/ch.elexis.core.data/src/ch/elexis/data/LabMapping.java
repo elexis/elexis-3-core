@@ -15,43 +15,43 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.VersionInfo;
 
 public class LabMapping extends PersistentObject {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(LabMapping.class);
-	
+
 	public static final String TABLENAME = "at_medevit_elexis_labmap"; //$NON-NLS-1$
 	public static final String VERSION = "1.0.0"; //$NON-NLS-1$
-	
+
 	public static final String VERSIONID = "VERSION"; //$NON-NLS-1$
-	
+
 	public static final String FLD_ORIGINID = "originid"; //$NON-NLS-1$
 	public static final String FLD_ITEMNAME = "itemname"; //$NON-NLS-1$
 	public static final String FLD_LABITEMID = "labitemid"; //$NON-NLS-1$
 	public static final String FLD_CHARGE = "charge"; //$NON-NLS-1$
-	
+
 	private static StringBuilder notImported = new StringBuilder();
-	
+
 	private static int importerLabItemsCreated = 0;
-	
+
 	// @formatter:off
-	static final String create = 
+	static final String create =
 			"CREATE TABLE " + TABLENAME + " (" + //$NON-NLS-1$ //$NON-NLS-2$
 			"ID VARCHAR(25) primary key, " + //$NON-NLS-1$
 			"lastupdate BIGINT," + //$NON-NLS-1$
 			"deleted CHAR(1) default '0'," + //$NON-NLS-1$
-			
+
 			"itemname VARCHAR(255)," + //$NON-NLS-1$
 			"originid VARCHAR(128)," + //$NON-NLS-1$
 			"labitemid VARCHAR(128)," + //$NON-NLS-1$
 			"charge CHAR(1)" + //$NON-NLS-1$
 			");" + //$NON-NLS-1$
-			"CREATE INDEX loincmap1 ON " + TABLENAME + " (" + FLD_ORIGINID + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$			
+			"CREATE INDEX loincmap1 ON " + TABLENAME + " (" + FLD_ORIGINID + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			"CREATE INDEX loincmap2 ON " + TABLENAME + " (" + FLD_ITEMNAME + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			"INSERT INTO " + TABLENAME + " (ID," + FLD_LABITEMID + ") VALUES (" + JdbcLink.wrap(VERSIONID) + "," + JdbcLink.wrap(VERSION) + ");"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	// @formatter:on
-	
+
 	static {
 		addMapping(TABLENAME, FLD_ITEMNAME, FLD_ORIGINID, FLD_LABITEMID, FLD_CHARGE);
-		
+
 		if (!tableExists(TABLENAME)) {
 			createOrModifyTable(create);
 		} else {
@@ -64,41 +64,39 @@ public class LabMapping extends PersistentObject {
 			}
 		}
 	}
-	
-	public LabMapping(){
+
+	public LabMapping() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public LabMapping(String id){
+
+	public LabMapping(String id) {
 		super(id);
 	}
-	
-	public static LabMapping load(final String id){
+
+	public static LabMapping load(final String id) {
 		return new LabMapping(id);
 	}
-	
-	public LabMapping(String contactId, String itemName, String labItemId, boolean charge){
+
+	public LabMapping(String contactId, String itemName, String labItemId, boolean charge) {
 		LabMapping existing = getByContactAndItemName(contactId, itemName);
 		if (existing != null) {
 			throw new IllegalArgumentException(
-				String
-					.format(
-						"Mapping for origin id [%s] - [%s] already exists can not create multiple instances.", //$NON-NLS-1$
-						contactId, itemName));
+					String.format("Mapping for origin id [%s] - [%s] already exists can not create multiple instances.", //$NON-NLS-1$
+							contactId, itemName));
 		}
-		
+
 		create(null);
 		set(FLD_ORIGINID, contactId);
 		set(FLD_ITEMNAME, itemName);
 		set(FLD_LABITEMID, labItemId);
 		setCharge(charge);
 	}
-	
-	public void setCharge(boolean charge){
+
+	public void setCharge(boolean charge) {
 		set(FLD_CHARGE, charge ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
-	public boolean isCharge(){
+
+	public boolean isCharge() {
 		String chargeStr = checkNull(get(FLD_CHARGE));
 		if (chargeStr.isEmpty()) {
 			return false;
@@ -106,8 +104,8 @@ public class LabMapping extends PersistentObject {
 			return chargeStr.equals("1"); //$NON-NLS-1$
 		}
 	}
-	
-	public LabItem getLabItem(){
+
+	public LabItem getLabItem() {
 		String labItemId = checkNull(get(FLD_LABITEMID));
 		if (labItemId.isEmpty()) {
 			return null;
@@ -121,8 +119,8 @@ public class LabMapping extends PersistentObject {
 			}
 		}
 	}
-	
-	public Kontakt getOrigin(){
+
+	public Kontakt getOrigin() {
 		String originId = checkNull(get(FLD_ORIGINID));
 		if (originId.isEmpty()) {
 			return null;
@@ -136,38 +134,38 @@ public class LabMapping extends PersistentObject {
 			}
 		}
 	}
-	
-	public String getItemName(){
+
+	public String getItemName() {
 		return checkNull(get(FLD_ITEMNAME));
 	}
-	
-	public void setItemName(String itemName){
+
+	public void setItemName(String itemName) {
 		set(FLD_ITEMNAME, itemName);
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		LabItem item = LabItem.load(get(FLD_LABITEMID));
 		if (item.exists()) {
 			return String.format("%s - %s -> %s", get(FLD_ORIGINID), get(FLD_ITEMNAME), //$NON-NLS-1$
-				item.getLabel());
+					item.getLabel());
 		} else {
 			return String.format("%s - %s -> item [%s] does not exist.", get(FLD_ORIGINID), //$NON-NLS-1$
-				get(FLD_ITEMNAME), get(FLD_LABITEMID));
+					get(FLD_ITEMNAME), get(FLD_LABITEMID));
 		}
 	}
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return TABLENAME;
 	}
-	
+
 	/**
 	 * Test if the mapping is valid. Checking {@link LabItem}, item name and origin.
-	 * 
+	 *
 	 * @return
 	 */
-	public boolean isMappingValid(){
+	public boolean isMappingValid() {
 		LabItem item = getLabItem();
 		if (item == null || !item.exists()) {
 			return false;
@@ -182,8 +180,8 @@ public class LabMapping extends PersistentObject {
 		}
 		return true;
 	}
-	
-	public static LabMapping getByContactAndItemName(String contactId, String itemName){
+
+	public static LabMapping getByContactAndItemName(String contactId, String itemName) {
 		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
 		qbe.add("ID", Query.NOT_EQUAL, VERSIONID); //$NON-NLS-1$
 		qbe.add(FLD_ORIGINID, Query.EQUALS, contactId);
@@ -193,14 +191,14 @@ public class LabMapping extends PersistentObject {
 			return null;
 		} else {
 			if (res.size() > 1) {
-				throw new IllegalArgumentException(String.format(
-					"Found more then 1 mapping for origin id [%s] - [%s]", contactId, itemName)); //$NON-NLS-1$
+				throw new IllegalArgumentException(
+						String.format("Found more then 1 mapping for origin id [%s] - [%s]", contactId, itemName)); //$NON-NLS-1$
 			}
 			return res.get(0);
 		}
 	}
-	
-	public static LabMapping getByContactAndItemId(String contactId, String itemId){
+
+	public static LabMapping getByContactAndItemId(String contactId, String itemId) {
 		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
 		qbe.add("ID", Query.NOT_EQUAL, VERSIONID); //$NON-NLS-1$
 		qbe.add(FLD_ORIGINID, Query.EQUALS, contactId);
@@ -210,47 +208,45 @@ public class LabMapping extends PersistentObject {
 			return null;
 		} else {
 			if (res.size() > 1) {
-				logger.warn(String.format("Found [%s] mappings for origin id [%s] and item id [%s]",
-					res.size(), contactId, itemId));
-				logger.info(
-					String.format("Using mapping with item name [%s]", res.get(0).getItemName()));
+				logger.warn(String.format("Found [%s] mappings for origin id [%s] and item id [%s]", res.size(),
+						contactId, itemId));
+				logger.info(String.format("Using mapping with item name [%s]", res.get(0).getItemName()));
 			}
 			return res.get(0);
 		}
 	}
-	
-	public static List<LabMapping> getByLabItemId(String labItemId){
+
+	public static List<LabMapping> getByLabItemId(String labItemId) {
 		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
 		qbe.add("ID", Query.NOT_EQUAL, VERSIONID); //$NON-NLS-1$
 		qbe.add(FLD_LABITEMID, Query.EQUALS, labItemId);
 		return qbe.execute();
 	}
-	
+
 	/**
 	 * Create or update the mapping table. The CSV format is as follows <br\>
-	 * 
+	 *
 	 * <pre>
 	 * CONTACT_NAME;CONTACT_ITEMNAME;LOINCCODE;LABITEM_NAME;LABITEM_SHORTNAME;LABITEM_REFM;
 	 * LABITEM_REFF;LABITEM_UNIT;LABITEM_TYP;LABITEM_GROUP;LABITEM_BILLINGCODE
 	 * </pre>
-	 * 
+	 *
 	 * Possible values for LABITEM_TYP -> numeric,absolute,text <br\>
-	 * 
+	 *
 	 * @param csv
 	 * @throws IOException
 	 */
-	public static void importMappingFromCsv(InputStream csv) throws IOException{
+	public static void importMappingFromCsv(InputStream csv) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(csv));
-		
+
 		notImported.setLength(0);
 		importerLabItemsCreated = 0;
-		
+
 		String line;
 		while ((line = reader.readLine()) != null) {
 			String[] parts = line.split(";", -1); //$NON-NLS-1$
 			if (parts.length < 10) {
-				String reason =
-					String.format(Messages.LabMapping_reasonLineNotValid, line, parts.length);
+				String reason = String.format(Messages.LabMapping_reasonLineNotValid, line, parts.length);
 				logger.warn(reason);
 				notImported.append(line);
 				notImported.append(" -> "); //$NON-NLS-1$
@@ -261,7 +257,7 @@ public class LabMapping extends PersistentObject {
 				// skip description line
 				continue;
 			}
-			
+
 			Labor labor = null;
 			List<Labor> origins = lookupLabor(parts[0]);
 			if (origins.isEmpty()) {
@@ -278,7 +274,7 @@ public class LabMapping extends PersistentObject {
 			} else {
 				labor = origins.get(0);
 			}
-			
+
 			String laborItemName = parts[1];
 			String labItemLoinc = parts[2];
 			String labItemName = parts[3];
@@ -292,9 +288,9 @@ public class LabMapping extends PersistentObject {
 			if (parts.length > 10) {
 				labItemBillingCode = parts[10];
 			}
-			
-			if (laborItemName == null || laborItemName.isEmpty() || labItemName == null
-				|| labItemName.isEmpty() || labItemShort == null || labItemShort.isEmpty()) {
+
+			if (laborItemName == null || laborItemName.isEmpty() || labItemName == null || labItemName.isEmpty()
+					|| labItemShort == null || labItemShort.isEmpty()) {
 				String reason = Messages.LabMapping_reasonDefinitionNotValid;
 				logger.warn(reason);
 				notImported.append(line);
@@ -303,23 +299,17 @@ public class LabMapping extends PersistentObject {
 				notImported.append("\n"); //$NON-NLS-1$
 				continue;
 			}
-			
+
 			LabItem labItem = null;
-			List<LabItem> items =
-				lookupLabItem(labItemLoinc, labor.getId(), labItemShort, labItemRefM, labItemRefF,
+			List<LabItem> items = lookupLabItem(labItemLoinc, labor.getId(), labItemShort, labItemRefM, labItemRefF,
 					labItemUnit);
 			if (items.isEmpty()) {
-				logger.warn(String.format(
-					"Could not find labor item with loinc [%s] and shortname [%s]", labItemLoinc, //$NON-NLS-1$
-					labItemShort));
-				labItem =
-					createLabItem(labor.getId(), labItemName, labItemShort, labItemRefM,
-						labItemRefF, labItemUnit, labItemTyp, labItemGroup, labItemLoinc,
-						labItemBillingCode);
+				logger.warn(String.format("Could not find labor item with loinc [%s] and shortname [%s]", labItemLoinc, //$NON-NLS-1$
+						labItemShort));
+				labItem = createLabItem(labor.getId(), labItemName, labItemShort, labItemRefM, labItemRefF, labItemUnit,
+						labItemTyp, labItemGroup, labItemLoinc, labItemBillingCode);
 			} else if (origins.size() > 1) {
-				String reason =
-					String.format(Messages.LabMapping_reasonMoreLabItems, labItemLoinc,
-						labItemShort);
+				String reason = String.format(Messages.LabMapping_reasonMoreLabItems, labItemLoinc, labItemShort);
 				logger.warn(reason);
 				notImported.append(line);
 				notImported.append(" -> "); //$NON-NLS-1$
@@ -329,35 +319,32 @@ public class LabMapping extends PersistentObject {
 			} else {
 				labItem = items.get(0);
 			}
-			
+
 			LabMapping existing = LabMapping.getByContactAndItemName(labor.getId(), laborItemName);
 			if (existing != null) {
 				logger.info(String.format("Merging mapping [%s] - [%s] -> [%s] - [%s]", //$NON-NLS-1$
-					labor.getKuerzel(), laborItemName, labItemLoinc, labItemShort));
+						labor.getKuerzel(), laborItemName, labItemLoinc, labItemShort));
 				mergeMapping(labor, laborItemName, labItem);
 			} else {
 				logger.info(String.format("Creating mapping [%s] - [%s] -> [%s] - [%s]", //$NON-NLS-1$
-					labor.getKuerzel(), laborItemName, labItemLoinc, labItemShort));
+						labor.getKuerzel(), laborItemName, labItemLoinc, labItemShort));
 				createMapping(labor, parts[1], labItem);
 			}
 		}
-		
+
 		if (notImported.length() > 0) {
 			throw new IOException(notImported.toString());
 		}
 	}
-	
-	private static LabItem createLabItem(String laborId, String labItemName, String labItemShort,
-		String labItemRefM, String labItemRefF, String labItemUnit, String labItemTyp,
-		String labItemGroup, String labItemLoinc, String labItemBillingCode){
-		logger.warn(String.format(
-			"Creating new labor item with name [%s] and shortname [%s] loinc [%s]", labItemName, //$NON-NLS-1$
-			labItemShort, labItemLoinc));
-		LabItem item =
-			new LabItem(labItemShort, labItemName, Labor.load(laborId), labItemRefM, labItemRefF,
-				labItemUnit, getLabItemTyp(labItemTyp), labItemGroup,
-				Integer.toString(importerLabItemsCreated++));
-		
+
+	private static LabItem createLabItem(String laborId, String labItemName, String labItemShort, String labItemRefM,
+			String labItemRefF, String labItemUnit, String labItemTyp, String labItemGroup, String labItemLoinc,
+			String labItemBillingCode) {
+		logger.warn(String.format("Creating new labor item with name [%s] and shortname [%s] loinc [%s]", labItemName, //$NON-NLS-1$
+				labItemShort, labItemLoinc));
+		LabItem item = new LabItem(labItemShort, labItemName, Labor.load(laborId), labItemRefM, labItemRefF,
+				labItemUnit, getLabItemTyp(labItemTyp), labItemGroup, Integer.toString(importerLabItemsCreated++));
+
 		if (labItemLoinc != null && !labItemLoinc.isEmpty()) {
 			item.setLoincCode(labItemLoinc);
 		}
@@ -366,8 +353,8 @@ public class LabMapping extends PersistentObject {
 		}
 		return item;
 	}
-	
-	private static LabItemTyp getLabItemTyp(String labItemTyp){
+
+	private static LabItemTyp getLabItemTyp(String labItemTyp) {
 		if (labItemTyp.equalsIgnoreCase("numeric")) { //$NON-NLS-1$
 			return LabItemTyp.NUMERIC;
 		} else if (labItemTyp.equalsIgnoreCase("absolute")) { //$NON-NLS-1$
@@ -377,21 +364,21 @@ public class LabMapping extends PersistentObject {
 		}
 		return LabItemTyp.NUMERIC;
 	}
-	
-	private static Labor createLabor(String labName){
+
+	private static Labor createLabor(String labName) {
 		logger.warn("Creating new labor with name [" + labName + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 		return new Labor(labName, "Labor " + labName); //$NON-NLS-1$
 	}
-	
-	private static List<Labor> lookupLabor(String labName){
+
+	private static List<Labor> lookupLabor(String labName) {
 		Query<Labor> qbe = new Query<Labor>(Labor.class);
 		qbe.add(Kontakt.FLD_NAME1, Query.LIKE, "%" + labName + "%"); //$NON-NLS-1$ //$NON-NLS-2$
 		List<Labor> list = qbe.execute();
 		return list;
 	}
-	
-	private static List<LabItem> lookupLabItem(String loinc, String laborId, String shortDesc,
-		String refM, String refW, String unit){
+
+	private static List<LabItem> lookupLabItem(String loinc, String laborId, String shortDesc, String refM, String refW,
+			String unit) {
 		// lookup using loinc first ...
 		List<LabItem> labItems = null;
 		if (loinc != null && !loinc.isEmpty()) {
@@ -404,9 +391,9 @@ public class LabMapping extends PersistentObject {
 		}
 		return lookupLabItem(laborId, shortDesc, refM, refW, unit);
 	}
-	
-	private static List<LabItem> lookupLabItem(String laborId, String shortDesc, String refM,
-		String refW, String unit){
+
+	private static List<LabItem> lookupLabItem(String laborId, String shortDesc, String refM, String refW,
+			String unit) {
 		// dont use laborId of LabItem ... it is in the mappings now
 		List<LabItem> items = LabItem.getLabItems(null, shortDesc, refM, refW, unit);
 		if (!items.isEmpty()) {
@@ -423,12 +410,12 @@ public class LabMapping extends PersistentObject {
 		}
 		return items;
 	}
-	
-	private static void createMapping(Kontakt origin, String itemName, LabItem item){
+
+	private static void createMapping(Kontakt origin, String itemName, LabItem item) {
 		new LabMapping(origin.getId(), itemName, item.getId(), false);
 	}
-	
-	private static void mergeMapping(Kontakt origin, String itemName, LabItem item){
+
+	private static void mergeMapping(Kontakt origin, String itemName, LabItem item) {
 		LabMapping mapping = getByContactAndItemName(origin.getId(), itemName);
 		mapping.set(LabMapping.FLD_LABITEMID, item.getId());
 	}

@@ -15,26 +15,26 @@ import ch.elexis.core.services.IVirtualFilesystemService;
 
 @Component
 public class HL7ImporterIdentifiedRunnableFactory implements IIdentifiedRunnableFactory {
-	
+
 	private IModelService coreModelService;
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private void setModelService(IModelService modelService){
+	private void setModelService(IModelService modelService) {
 		coreModelService = modelService;
 	}
-	
+
 	@Reference
 	private ILabImportUtil labimportUtil;
-	
+
 	@Reference
 	private IVirtualFilesystemService vfsService;
 
 	@Override
-	public List<IIdentifiedRunnable> getProvidedRunnables(){
+	public List<IIdentifiedRunnable> getProvidedRunnables() {
 		List<IIdentifiedRunnable> ret = new ArrayList<>();
 		ret.add(new HL7ImporterIIdentifiedRunnable(coreModelService, labimportUtil, vfsService));
 		ret.add(new BillLabResultOnCreationIdentifiedRunnable(coreModelService, null));
 		return ret;
 	}
-	
+
 }

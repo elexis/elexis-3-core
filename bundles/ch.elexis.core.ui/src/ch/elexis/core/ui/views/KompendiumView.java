@@ -34,36 +34,36 @@ import ch.elexis.core.ui.util.CoreUiUtil;
 public class KompendiumView extends ViewPart {
 	public static final String ID = "ch.elexis.Kompendium"; //$NON-NLS-1$
 	static Browser browser;
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		browser = new Browser(parent, SWT.NONE);
 		browser.addLocationListener(new LocationAdapter() {
-			
+
 			@Override
-			public void changed(LocationEvent arg0){
+			public void changed(LocationEvent arg0) {
 				String text = browser.getText();
 				// System.out.println(text);
 			}
-			
+
 		});
 		browser.setUrl("http://www.compendium.ch/search/de"); //$NON-NLS-1$
-		
+
 	}
-	
-	public static String getText(){
+
+	public static String getText() {
 		return browser.getText();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

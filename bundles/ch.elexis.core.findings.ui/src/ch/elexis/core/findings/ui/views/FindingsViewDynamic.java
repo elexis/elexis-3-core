@@ -59,54 +59,51 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
 
 public class FindingsViewDynamic extends ViewPart implements IActivationListener {
-	
+
 	private CodesSelectionComposite codeSelectionComposite;
-	
+
 	private NatTable natTable;
 	private DynamicDataProvider dataProvider;
 	private IDataProvider headerDataProvider;
 	private IDataProvider rowDataProvider;
-	
-	private final ElexisUiEventListenerImpl eeli_find =
-		new ElexisUiEventListenerImpl(IFinding.class,
+
+	private final ElexisUiEventListenerImpl eeli_find = new ElexisUiEventListenerImpl(IFinding.class,
 			ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_DELETE) {
-			
-			@Override
-			public void runInUi(ElexisEvent ev){
-				refresh();
-			}
-		};
-	
-	private final ElexisUiEventListenerImpl eeli_code =
-		new ElexisUiEventListenerImpl(ICoding.class,
-			ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_DELETE) {
-			
-			@Override
-			public void runInUi(ElexisEvent ev){
-				codeRefresh();
-			}
-		};
-	
-	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-		public void runInUi(ElexisEvent ev){
+
+		@Override
+		public void runInUi(ElexisEvent ev) {
 			refresh();
 		}
 	};
-	
+
+	private final ElexisUiEventListenerImpl eeli_code = new ElexisUiEventListenerImpl(ICoding.class,
+			ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_DELETE) {
+
+		@Override
+		public void runInUi(ElexisEvent ev) {
+			codeRefresh();
+		}
+	};
+
+	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
+		public void runInUi(ElexisEvent ev) {
+			refresh();
+		}
+	};
+
 	private NatTableWrapper wrapper;
-	
-	public FindingsViewDynamic(){
+
+	public FindingsViewDynamic() {
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(SWTHelper.createGridLayout(true, 1));
-		
+
 		codeSelectionComposite = new CodesSelectionComposite(main, SWT.NONE);
-		codeSelectionComposite
-			.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-		
+		codeSelectionComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+
 		// NatTable setup
 		dataProvider = new DynamicDataProvider();
 		if (ConfigServiceHolder.getGlobal(FindingsSettings.ROWSAREDATES, false)) {
@@ -118,96 +115,87 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 			headerDataProvider = new DynamicDateHeaderDataProvider(dataProvider);
 			rowDataProvider = new DynamicCodingRowDataProvider(dataProvider);
 		}
-		
+
 		// wrap the data provider with a label data provider
-		DataLayer bodyDataLayer =
-			new DataLayer(new LabelDataProvider(dataProvider, new ObservationLabelProvider()));
+		DataLayer bodyDataLayer = new DataLayer(new LabelDataProvider(dataProvider, new ObservationLabelProvider()));
 		bodyDataLayer.setColumnPercentageSizing(true);
 		// disable drawing cells lines
 		SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer) {
 			private CellLayerPainter painter = new CellLayerPainter();
-			
+
 			@Override
-			public ILayerPainter getLayerPainter(){
+			public ILayerPainter getLayerPainter() {
 				return painter;
 			}
 		};
 		ViewportLayer viewportLayer = new ViewportLayer(selectionLayer);
-		
+
 		// build the column header layer stack
 		DataLayer columnHeaderDataLayer = new DataLayer(headerDataProvider);
-		ILayer columnHeaderLayer =
-			new ColumnHeaderLayer(columnHeaderDataLayer, viewportLayer, selectionLayer);
-		
+		ILayer columnHeaderLayer = new ColumnHeaderLayer(columnHeaderDataLayer, viewportLayer, selectionLayer);
+
 		// build the row header layer
 		DataLayer rowHeaderDataLayer = new DataLayer(rowDataProvider, 150, 20);
-		ILayer rowHeaderLayer =
-			new RowHeaderLayer(rowHeaderDataLayer, viewportLayer, selectionLayer);
-		
+		ILayer rowHeaderLayer = new RowHeaderLayer(rowHeaderDataLayer, viewportLayer, selectionLayer);
+
 		// build the corner layer
-		IDataProvider cornerDataProvider =
-			new DefaultCornerDataProvider(headerDataProvider, rowDataProvider);
+		IDataProvider cornerDataProvider = new DefaultCornerDataProvider(headerDataProvider, rowDataProvider);
 		DataLayer cornerDataLayer = new DataLayer(cornerDataProvider);
 		ILayer cornerLayer = new CornerLayer(cornerDataLayer, rowHeaderLayer, columnHeaderLayer);
-		
+
 		// build the grid layer
-		GridLayer gridLayer =
-			new GridLayer(viewportLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer);
-		
-		natTable =
-			new NatTable(main, NatTable.DEFAULT_STYLE_OPTIONS | SWT.BORDER, gridLayer, false);
+		GridLayer gridLayer = new GridLayer(viewportLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer);
+
+		natTable = new NatTable(main, NatTable.DEFAULT_STYLE_OPTIONS | SWT.BORDER, gridLayer, false);
 		natTable.setBackground(natTable.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		natTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		natTable.addConfiguration(new DefaultNatTableStyleConfiguration());
-		
+
 		wrapper = new NatTableWrapper(natTable, dataProvider, selectionLayer);
 		wrapper.addContextMenu("ch.elexis.core.findings.ui.views.FindingsView", getSite());
 		getSite().setSelectionProvider(wrapper);
 		wrapper.configure();
-		
+
 		natTable.setTheme(new ModernNatTableThemeConfiguration());
-		
+
 		codeSelectionComposite.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				StructuredSelection selection = (StructuredSelection) event.getSelection();
 				updateCodingsSelection(selection);
 			}
 		});
 		updateCodingsSelection((StructuredSelection) codeSelectionComposite.getSelection());
-		
+
 		wrapper.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(NatTableWrapper source, ISelection selection){
+			public void doubleClick(NatTableWrapper source, ISelection selection) {
 				StructuredSelection structuredSelection = (StructuredSelection) selection;
 				if (!structuredSelection.isEmpty()) {
 					for (Object o : structuredSelection.toList()) {
 						if (o instanceof IFinding) {
-							FindingsUiUtil.executeCommand("ch.elexis.core.findings.ui.commandEdit",
-								(IFinding) o);
+							FindingsUiUtil.executeCommand("ch.elexis.core.findings.ui.commandEdit", (IFinding) o);
 						}
 					}
 				}
 			}
 		});
-		
+
 		// add DnD support
 		DragAndDropSupport dndSupport = new DragAndDropSupport(wrapper);
-		Transfer[] transfer = {
-			TextTransfer.getInstance()
-		};
+		Transfer[] transfer = { TextTransfer.getInstance() };
 		natTable.addDragSupport(DND.DROP_COPY, transfer, dndSupport);
-		
+
 		atachTooltip();
-		
+
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_find, eeli_code);
 		GlobalEventDispatcher.addActivationListener(this, this);
-		
+
 		refresh();
 	}
-	
-	public void setRowsAreDates(boolean value){
+
+	public void setRowsAreDates(boolean value) {
 		if (dataProvider.isRowsAreDates() != value) {
 			dataProvider.setRowsAreDates(value);
 			if (value) {
@@ -219,29 +207,28 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 			}
 		}
 	}
-	
-	private void atachTooltip(){
+
+	private void atachTooltip() {
 		DefaultToolTip toolTip = new FindingsNatTableTooltip(natTable, dataProvider);
 		toolTip.setPopupDelay(250);
 		toolTip.activate();
 		toolTip.setShift(new Point(10, 10));
 	}
-	
-	private void updateCodingsSelection(StructuredSelection selection){
+
+	private void updateCodingsSelection(StructuredSelection selection) {
 		@SuppressWarnings("unchecked")
 		List<ICoding> shownCodings = (List<ICoding>) selection.toList();
 		// convert groups to contents
 		shownCodings = expandGroups(shownCodings);
-		
+
 		shownCodings.sort(new Comparator<ICoding>() {
-			
+
 			@Override
-			public int compare(ICoding arg0, ICoding arg1){
+			public int compare(ICoding arg0, ICoding arg1) {
 				if (arg0 instanceof ILocalCoding && arg1 instanceof ILocalCoding) {
 					ILocalCoding left = (ILocalCoding) arg0;
 					ILocalCoding right = (ILocalCoding) arg1;
-					return Integer.valueOf(left.getPrio())
-						.compareTo(Integer.valueOf(right.getPrio()));
+					return Integer.valueOf(left.getPrio()).compareTo(Integer.valueOf(right.getPrio()));
 				}
 				return 0;
 			}
@@ -249,8 +236,8 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 		dataProvider.setShownCodings(shownCodings);
 		natTable.refresh(true);
 	}
-	
-	private List<ICoding> expandGroups(List<ICoding> codings){
+
+	private List<ICoding> expandGroups(List<ICoding> codings) {
 		List<ICoding> ret = new ArrayList<>();
 		for (ICoding iCoding : codings) {
 			if (FindingsUiUtil.isCodingForGroup(iCoding)) {
@@ -266,39 +253,39 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 		}
 		return ret;
 	}
-	
-	public void refresh(){
+
+	public void refresh() {
 		dataProvider.reload(ElexisEventDispatcher.getSelectedPatient());
 		natTable.refresh();
 	}
-	
-	public void codeRefresh(){
+
+	public void codeRefresh() {
 		codeSelectionComposite.refresh();
 		updateCodingsSelection((StructuredSelection) codeSelectionComposite.getSelection());
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_find, eeli_code);
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
 	}
 
 	@Override
-	public void activation(boolean mode){
+	public void activation(boolean mode) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void visible(boolean mode){
+	public void visible(boolean mode) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

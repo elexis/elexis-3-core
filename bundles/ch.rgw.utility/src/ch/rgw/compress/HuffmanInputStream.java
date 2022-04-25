@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.rgw.compress;
@@ -19,24 +19,24 @@ import ch.rgw.io.BitInputStream;
 import ch.rgw.tools.IntTool;
 
 /**
- * A Stream that decompresses an earlier created HuffmanOutputStream Tree and dynamic feature are
- * read from the Stream header.
- * 
+ * A Stream that decompresses an earlier created HuffmanOutputStream Tree and
+ * dynamic feature are read from the Stream header.
+ *
  * @author Gerry
  */
 public class HuffmanInputStream extends InputStream {
-	public static String Version(){
+	public static String Version() {
 		return "0.5.4";
 	}
-	
+
 	InputStream in;
 	BitInputStream bis;
 	HuffmanTree tree = new HuffmanTree();
 	int dyn;
 	int[] tbl;
 	int counter;
-	
-	public HuffmanInputStream(InputStream in) throws IOException{
+
+	public HuffmanInputStream(InputStream in) throws IOException {
 		this.in = in;
 		byte[] sig = new byte[HuffmanOutputStream.signature.length];
 		in.read(sig);
@@ -53,11 +53,11 @@ public class HuffmanInputStream extends InputStream {
 			counter = 0;
 		}
 	}
-	
+
 	/*
 	 * Read a bit sequence long enough to make up a byte an return that byte
 	 */
-	public int read() throws IOException{
+	public int read() throws IOException {
 		int ret = Huff.readByte(tree.getRootNode(), bis);
 		if ((ret != -1) && (dyn > 0)) {
 			tbl[ret]++;
@@ -67,11 +67,11 @@ public class HuffmanInputStream extends InputStream {
 				counter = 0;
 			}
 		}
-		
+
 		return ret;
 	}
-	
-	public int available() throws IOException{
+
+	public int available() throws IOException {
 		return bis.available();
 	}
 }

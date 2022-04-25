@@ -17,23 +17,22 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "leistungsblock")
 @EntityListeners(EntityWithIdListener.class)
-public class Leistungsblock extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted {
+public class Leistungsblock extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	public static final String CODESYSTEM_NAME = "Block";
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@OneToOne
 	@JoinColumn(name = "MandantId")
 	private Kontakt mandator;
@@ -83,41 +82,41 @@ public class Leistungsblock extends AbstractEntityWithId
 		return getName();
 	}
 
-	public String getServices(){
+	public String getServices() {
 		return services;
 	}
-	
-	public void setServices(String services){
+
+	public void setServices(String services) {
 		this.services = services;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

@@ -12,35 +12,34 @@ package ch.elexis.core.services;
 
 /**
  * Factory for producing new {@link IFormattedOutput} implementations.
- * 
+ *
  * @author thomas
  *
  */
 public interface IFormattedOutputFactory {
 	/**
 	 * Supported input Object types for the transformation.
-	 * 
+	 *
 	 */
 	public enum ObjectType {
-			JAXB, DOM, XMLSTREAM
+		JAXB, DOM, XMLSTREAM
 	}
-	
+
 	/**
 	 * Supported output formats for the transformation.
-	 * 
+	 *
 	 */
 	public enum OutputType {
-			PDF, PS, PNG, PCL
+		PDF, PS, PNG, PCL
 	}
-	
+
 	/**
-	 * Returns a {@link IFormattedOutput} implementation depending on the {@link ObjectType} and
-	 * {@link OutputType} parameters
-	 * 
+	 * Returns a {@link IFormattedOutput} implementation depending on the
+	 * {@link ObjectType} and {@link OutputType} parameters
+	 *
 	 * @param objectType
 	 * @param outputType
 	 * @return implementation
 	 */
-	public IFormattedOutput getFormattedOutputImplementation(ObjectType objectType,
-		OutputType outputType);
+	public IFormattedOutput getFormattedOutputImplementation(ObjectType objectType, OutputType outputType);
 }

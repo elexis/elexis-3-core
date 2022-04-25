@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -18,28 +18,25 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
 public class TitleProposalProvider implements IContentProposalProvider {
-	
+
 	public static final int TITLE_POSITION_PREFIX = 1;
 	public static final int TITLE_POSITION_SUFFIX = 2;
-	
-	public static final String[] titlePrefix = {
-		"Dr.", "Dr. med.", "Prof.", "Dipl.-Ing.", "Dipl.-Ing. (FH)", "Mag.", "Mag. (FH)", "Ing."
-	};
-	public static final String[] titleSuffix = {
-		"MBA", "MSc", "B.Sc.", "B.A.", "LLC", "FESC"
-	};
+
+	public static final String[] titlePrefix = { "Dr.", "Dr. med.", "Prof.", "Dipl.-Ing.", "Dipl.-Ing. (FH)", "Mag.",
+			"Mag. (FH)", "Ing." };
+	public static final String[] titleSuffix = { "MBA", "MSc", "B.Sc.", "B.A.", "LLC", "FESC" };
 	public static List<IContentProposal> titleProposalPrefix;
 	public static List<IContentProposal> titleProposalSuffix;
-	
+
 	int titlePosition;
-	
-	public TitleProposalProvider(int titlePosition){
+
+	public TitleProposalProvider(int titlePosition) {
 		this.titlePosition = titlePosition;
 		initContentProposals();
 	}
-	
+
 	@Override
-	public IContentProposal[] getProposals(String contents, int position){
+	public IContentProposal[] getProposals(String contents, int position) {
 		switch (titlePosition) {
 		case TITLE_POSITION_PREFIX:
 			return titleProposalPrefix.toArray(new ContentProposal[] {});
@@ -49,8 +46,8 @@ public class TitleProposalProvider implements IContentProposalProvider {
 			return null;
 		}
 	}
-	
-	private void initContentProposals(){
+
+	private void initContentProposals() {
 		titleProposalPrefix = new LinkedList<IContentProposal>();
 		for (int i = 0; i < titlePrefix.length; i++) {
 			titleProposalPrefix.add(new ContentProposal(titlePrefix[i]));
@@ -60,5 +57,5 @@ public class TitleProposalProvider implements IContentProposalProvider {
 			titleProposalSuffix.add(new ContentProposal(titleSuffix[i]));
 		}
 	}
-	
+
 }

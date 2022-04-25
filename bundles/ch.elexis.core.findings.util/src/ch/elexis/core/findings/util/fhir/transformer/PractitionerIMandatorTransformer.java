@@ -25,73 +25,72 @@ import ch.elexis.core.services.IXidService;
 
 @Component
 public class PractitionerIMandatorTransformer implements IFhirTransformer<Practitioner, IMandator> {
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
-	
+
 	@Reference
 	private IXidService xidService;
-	
+
 	@Reference
 	private IUserService userService;
-	
+
 	private IContactHelper contactHelper;
-	
+
 	@Activate
-	private void activate(){
+	private void activate() {
 		contactHelper = new IContactHelper(modelService, xidService, userService);
 	}
-	
+
 	@Override
-	public Optional<Practitioner> getFhirObject(IMandator localObject,SummaryEnum summaryEnum, Set<Include> includes){
+	public Optional<Practitioner> getFhirObject(IMandator localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Practitioner practitioner = new Practitioner();
-		
+
 		practitioner.setId(new IdDt("Practitioner", localObject.getId(), Long.toString(localObject.getLastupdate())));
-		
+
 		List<Identifier> identifiers = contactHelper.getIdentifiers(localObject);
 		identifiers.add(getElexisObjectIdentifier(localObject));
 		practitioner.setIdentifier(identifiers);
-		
+
 		if (localObject.isPerson()) {
 			IPerson mandatorPerson = modelService.load(localObject.getId(), IPerson.class).get();
 			practitioner.setName(contactHelper.getHumanNames(mandatorPerson));
 			practitioner.setGender(contactHelper.getGender(mandatorPerson.getGender()));
 			practitioner.setBirthDate(contactHelper.getBirthDate(mandatorPerson));
-			
+
 			INamedQuery<IUser> query = modelService.getNamedQuery(IUser.class, "kontakt");
-			List<IUser> usersLocal =
-				query.executeWithParameters(query.getParameterMap("kontakt", mandatorPerson));
+			List<IUser> usersLocal = query.executeWithParameters(query.getParameterMap("kontakt", mandatorPerson));
 			if (!usersLocal.isEmpty()) {
 				practitioner.setActive(usersLocal.get(0).isActive());
 			}
 		}
-		
+
 		practitioner.setAddress(contactHelper.getAddresses(localObject));
 		practitioner.setTelecom(contactHelper.getContactPoints(localObject));
-		
+
 		return Optional.of(practitioner);
 	}
-	
+
 	@Override
-	public Optional<IMandator> getLocalObject(Practitioner fhirObject){
+	public Optional<IMandator> getLocalObject(Practitioner fhirObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public Optional<IMandator> updateLocalObject(Practitioner fhirObject, IMandator localObject){
+	public Optional<IMandator> updateLocalObject(Practitioner fhirObject, IMandator localObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public Optional<IMandator> createLocalObject(Practitioner fhirObject){
+	public Optional<IMandator> createLocalObject(Practitioner fhirObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz){
+	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz) {
 		return Practitioner.class.equals(fhirClazz) && IMandator.class.equals(localClazz);
 	}
 }

@@ -30,89 +30,80 @@ import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
 @Component
 public class StockService implements IStockService {
-	
+
 	private static Logger log = LoggerFactory.getLogger(StockService.class);
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
-	
+
 	@Reference
 	private IConfigService configService;
-	
+
 	@Reference
 	private IStoreToStringService storeToStringService;
-	
+
 	@Override
-	public Long getCumulatedStockForArticle(IArticle article){
-		INamedQuery<Long> query = CoreModelServiceHolder.get().getNamedQueryByName(Long.class,
-			IStockEntry.class, "StockEntry_SumCurrentStock.articleId.articleType");
+	public Long getCumulatedStockForArticle(IArticle article) {
+		INamedQuery<Long> query = CoreModelServiceHolder.get().getNamedQueryByName(Long.class, IStockEntry.class,
+				"StockEntry_SumCurrentStock.articleId.articleType");
 		Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(article);
 		if (storeToString.isPresent()) {
 			String[] parts = storeToString.get().split(IStoreToStringContribution.DOUBLECOLON);
-			List<Long> results =
-				query.executeWithParameters(
-					query.getParameterMap(
-					"articleId", parts[1], "articleType", parts[0]));
+			List<Long> results = query
+					.executeWithParameters(query.getParameterMap("articleId", parts[1], "articleType", parts[0]));
 			if (!results.isEmpty()) {
 				return results.get(0);
 			}
 		}
 		return null;
 	}
-	
-	public void performSingleDisposal(IArticle article, int count){
-		Optional<IMandator> mandator =
-			ContextServiceHolder.get().getActiveMandator();
-		performSingleDisposal(article, count,
-			(mandator.isPresent()) ? mandator.get().getId() : null);
+
+	public void performSingleDisposal(IArticle article, int count) {
+		Optional<IMandator> mandator = ContextServiceHolder.get().getActiveMandator();
+		performSingleDisposal(article, count, (mandator.isPresent()) ? mandator.get().getId() : null);
 	}
-	
+
 	@Override
-	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId){
+	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId) {
 		if (count < 0) {
 			throw new IllegalArgumentException();
 		}
 		if (article == null) {
 			return new Status(Status.ERROR, "ch.elexis.core.services", "Article is null");
 		}
-		
-		IStockEntry se = findPreferredStockEntryForArticle(
-			StoreToStringServiceHolder.getStoreToString(article), mandatorId);
+
+		IStockEntry se = findPreferredStockEntryForArticle(StoreToStringServiceHolder.getStoreToString(article),
+				mandatorId);
 		if (se == null) {
-			return new Status(Status.WARNING, "ch.elexis.core.services",
-				"No stock entry for article found");
+			return new Status(Status.WARNING, "ch.elexis.core.services", "No stock entry for article found");
 		}
-		
+
 		if (se.getStock().isCommissioningSystem()) {
 
-			boolean suspendOutlay =
-				configService.getLocal(Preferences.INVENTORY_MACHINE_SUSPEND_OUTLAY,
+			boolean suspendOutlay = configService.getLocal(Preferences.INVENTORY_MACHINE_SUSPEND_OUTLAY,
 					Preferences.INVENTORY_MACHINE_SUSPEND_OUTLAY_DEFAULT);
-			if(suspendOutlay) {
+			if (suspendOutlay) {
 				return Status.OK_STATUS;
 			}
-			
+
 			int sellingUnit = article.getSellingSize();
-			boolean isPartialUnitOutput =
-				(sellingUnit > 0 && sellingUnit < article.getPackageSize());
+			boolean isPartialUnitOutput = (sellingUnit > 0 && sellingUnit < article.getPackageSize());
 			if (isPartialUnitOutput) {
-				boolean performPartialOutlay =
-					configService.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+				boolean performPartialOutlay = configService.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
 						Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
-					if (!performPartialOutlay) {
-						return Status.OK_STATUS;
-					}
+				if (!performPartialOutlay) {
+					return Status.OK_STATUS;
+				}
 			}
 			return StockCommissioningServiceHolder.get().performArticleOutlay(se, count, null);
-			
+
 		} else {
-			LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(se, 1,
-				new NullProgressMonitor());
+			LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(se, 1, new NullProgressMonitor());
 			if (lr.isOk()) {
 				int fractionUnits = se.getFractionUnits();
 				int ve = article.getSellingSize();
 				int vk = article.getPackageSize();
-				
+
 				if (vk == 0) {
 					if (ve != 0) {
 						vk = ve;
@@ -127,7 +118,7 @@ public class StockService implements IStockService {
 				int cs = se.getCurrentStock();
 				if (vk == ve) {
 					se.setCurrentStock(cs - count);
-					
+
 				} else {
 					int rest = fractionUnits - num;
 					while (rest < 0) {
@@ -141,39 +132,36 @@ public class StockService implements IStockService {
 				return Status.OK_STATUS;
 			}
 		}
-		
+
 		return new Status(Status.WARNING, "ch.elexis.core.services", "Could not acquire lock");
 	}
-	
+
 	@Override
-	public IStatus performSingleReturn(IArticle article, int count, String mandatorId){
+	public IStatus performSingleReturn(IArticle article, int count, String mandatorId) {
 		if (count < 0) {
 			throw new IllegalArgumentException();
 		}
 		if (article == null) {
 			return new Status(Status.ERROR, "ch.elexis.core.services", "Article is null");
 		}
-		
-		IStockEntry se =
-			findPreferredStockEntryForArticle(StoreToStringServiceHolder.getStoreToString(article),
+
+		IStockEntry se = findPreferredStockEntryForArticle(StoreToStringServiceHolder.getStoreToString(article),
 				mandatorId);
 		if (se == null) {
-			return new Status(Status.WARNING, "ch.elexis.core.services",
-				"No stock entry for article found");
+			return new Status(Status.WARNING, "ch.elexis.core.services", "No stock entry for article found");
 		}
-		
+
 		if (se.getStock().isCommissioningSystem()) {
 			// updates must happen via manual inputs in the machine
 			return Status.OK_STATUS;
 		}
-		
-		LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(se, 1,
-			new NullProgressMonitor());
+
+		LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(se, 1, new NullProgressMonitor());
 		if (lr.isOk()) {
 			int fractionUnits = se.getFractionUnits();
 			int ve = article.getSellingSize();
 			int vk = article.getPackageSize();
-			
+
 			if (vk == 0) {
 				if (ve != 0) {
 					vk = ve;
@@ -202,29 +190,28 @@ public class StockService implements IStockService {
 		}
 		return new Status(Status.WARNING, "ch.elexis.core.services", "Could not acquire lock");
 	}
-	
-	private boolean isTriggerStockAvailabilityOnBelow(){
-		int trigger =
-			configService.get(ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
+
+	private boolean isTriggerStockAvailabilityOnBelow() {
+		int trigger = configService.get(ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
 				ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
 		return trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
 	}
-	
+
 	@Override
-	public Availability getCumulatedAvailabilityForArticle(IArticle article){
+	public Availability getCumulatedAvailabilityForArticle(IArticle article) {
 		INamedQuery<Integer> query = null;
 		if (isTriggerStockAvailabilityOnBelow()) {
-			query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class,
-				IStockEntry.class, "StockEntry_AvailableCurrentBelowStock.articleId.articleType");
+			query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class, IStockEntry.class,
+					"StockEntry_AvailableCurrentBelowStock.articleId.articleType");
 		} else {
-			query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class,
-				IStockEntry.class, "StockEntry_AvailableCurrentStock.articleId.articleType");
+			query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class, IStockEntry.class,
+					"StockEntry_AvailableCurrentStock.articleId.articleType");
 		}
 		Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(article);
 		if (storeToString.isPresent()) {
 			String[] parts = storeToString.get().split(IStoreToStringContribution.DOUBLECOLON);
-			List<Integer> results = query.executeWithParameters(
-				query.getParameterMap("articleId", parts[1], "articleType", parts[0]));
+			List<Integer> results = query
+					.executeWithParameters(query.getParameterMap("articleId", parts[1], "articleType", parts[0]));
 			if (!results.isEmpty()) {
 				Integer value = results.get(0);
 				if (value > 1) {
@@ -237,13 +224,13 @@ public class StockService implements IStockService {
 		}
 		return null;
 	}
-	
-	public List<IStockEntry> getAllStockEntries(){
+
+	public List<IStockEntry> getAllStockEntries() {
 		return CoreModelServiceHolder.get().getQuery(IStockEntry.class).execute();
 	}
-	
+
 	@Override
-	public IStockEntry findPreferredStockEntryForArticle(String storeToString, String mandatorId){
+	public IStockEntry findPreferredStockEntryForArticle(String storeToString, String mandatorId) {
 		List<? extends IStockEntry> entries = findAllStockEntriesForArticle(storeToString);
 		int val = Integer.MAX_VALUE;
 		IStockEntry ret = null;
@@ -263,8 +250,8 @@ public class StockService implements IStockService {
 		}
 		return ret;
 	}
-	
-	private IArticle loadArticle(String article){
+
+	private IArticle loadArticle(String article) {
 		if (article == null) {
 			log.warn("performSingleReturn for null article", new Throwable("Diagnosis"));
 			return null;
@@ -275,22 +262,22 @@ public class StockService implements IStockService {
 		}
 		return null;
 	}
-	
-	public List<IStock> getAllStocks(boolean includeCommissioningSystems){
+
+	public List<IStock> getAllStocks(boolean includeCommissioningSystems) {
 		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class);
-		if(!includeCommissioningSystems) {
+		if (!includeCommissioningSystems) {
 			query.and("driverConfig", COMPARATOR.EQUALS, null);
 		}
 		query.orderBy("PRIORITY", ORDER.ASC);
 		return query.execute();
 	}
-	
+
 	@Override
-	public IStock getDefaultStock(){
+	public IStock getDefaultStock() {
 		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class, true, false);
 		query.and(ModelPackage.Literals.ISTOCK__CODE, COMPARATOR.EQUALS, "STD");
 		List<IStock> existing = query.execute();
-		if(!existing.isEmpty()) {
+		if (!existing.isEmpty()) {
 			return existing.get(0);
 		} else {
 			IStock stock = CoreModelServiceHolder.get().create(IStock.class);
@@ -299,27 +286,25 @@ public class StockService implements IStockService {
 			return stock;
 		}
 	}
-	
-	public Availability getArticleAvailabilityForStock(IStock stock, String article){
+
+	public Availability getArticleAvailabilityForStock(IStock stock, String article) {
 		IStockEntry se = findStockEntryForArticleInStock(stock, article);
-		return determineAvailability(se.getCurrentStock(), se.getMinimumStock(),
-			isTriggerStockAvailabilityOnBelow());
+		return determineAvailability(se.getCurrentStock(), se.getMinimumStock(), isTriggerStockAvailabilityOnBelow());
 	}
-	
+
 	@Override
-	public IStockEntry findStockEntryForArticleInStock(IStock stock, IArticle article){
+	public IStockEntry findStockEntryForArticleInStock(IStock stock, IArticle article) {
 		String articleSts = storeToStringService.storeToString(article).orElse(null);
 		return findStockEntryForArticleInStock(stock, articleSts);
 	}
-	
+
 	@Override
-	public IStockEntry findStockEntryForArticleInStock(IStock iStock, String storeToString){
+	public IStockEntry findStockEntryForArticleInStock(IStock iStock, String storeToString) {
 		String[] vals = storeToString.split(StringConstants.DOUBLECOLON);
-		INamedQuery<IStockEntry> query = CoreModelServiceHolder.get()
-			.getNamedQuery(IStockEntry.class,
-			"articleId", "articleType");
-		List<IStockEntry> entries = query.executeWithParameters(
-			query.getParameterMap("articleId", vals[1], "articleType", vals[0]));
+		INamedQuery<IStockEntry> query = CoreModelServiceHolder.get().getNamedQuery(IStockEntry.class, "articleId",
+				"articleType");
+		List<IStockEntry> entries = query
+				.executeWithParameters(query.getParameterMap("articleId", vals[1], "articleType", vals[0]));
 		if (entries != null && !entries.isEmpty()) {
 			for (IStockEntry iStockEntry : entries) {
 				if (iStockEntry.getStock().equals(iStock)) {
@@ -329,15 +314,15 @@ public class StockService implements IStockService {
 		}
 		return null;
 	}
-	
+
 	@Override
-	public IStockEntry storeArticleInStock(IStock stock, IArticle article){
+	public IStockEntry storeArticleInStock(IStock stock, IArticle article) {
 		String articleSts = storeToStringService.storeToString(article).orElse(null);
 		return storeArticleInStock(stock, articleSts);
 	}
-	
+
 	@Override
-	public IStockEntry storeArticleInStock(IStock stock, String article){
+	public IStockEntry storeArticleInStock(IStock stock, String article) {
 		IStockEntry stockEntry = findStockEntryForArticleInStock(stock, article);
 		if (stockEntry != null) {
 			stockEntry.setCurrentStock(stockEntry.getCurrentStock() + 1);
@@ -350,20 +335,20 @@ public class StockService implements IStockService {
 			stockEntry.setStock(stock);
 			stockEntry.setCurrentStock(1);
 			stockEntry.setArticle(loadArticle);
-			
+
 		}
 		CoreModelServiceHolder.get().save((Identifiable) stockEntry);
 		LocalLockServiceHolder.get().acquireLock(stockEntry);
 		LocalLockServiceHolder.get().releaseLock(stockEntry);
 		return stockEntry;
 	}
-	
+
 	@Override
-	public void unstoreArticleFromStock(IStock stock, String article){
+	public void unstoreArticleFromStock(IStock stock, String article) {
 		IStockEntry stockEntry = findStockEntryForArticleInStock(stock, article);
 		if (stockEntry != null) {
-			LockResponse lr = LocalLockServiceHolder.get()
-				.acquireLockBlocking(stockEntry, 1, new NullProgressMonitor());
+			LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(stockEntry, 1,
+					new NullProgressMonitor());
 			if (lr.isOk()) {
 				CoreModelServiceHolder.get().delete(stockEntry);
 				LocalLockServiceHolder.get().releaseLock((stockEntry));
@@ -372,42 +357,37 @@ public class StockService implements IStockService {
 			}
 		}
 	}
-	
+
 	@Override
-	public List<IStockEntry> findAllStockEntriesForArticle(String storeToString){
+	public List<IStockEntry> findAllStockEntriesForArticle(String storeToString) {
 		String[] vals = storeToString.split(StringConstants.DOUBLECOLON);
-		INamedQuery<IStockEntry> query = CoreModelServiceHolder.get()
-			.getNamedQuery(IStockEntry.class, "articleId", "articleType");
-		return query.executeWithParameters(
-			query.getParameterMap("articleId", vals[1], "articleType", vals[0]));
+		INamedQuery<IStockEntry> query = CoreModelServiceHolder.get().getNamedQuery(IStockEntry.class, "articleId",
+				"articleType");
+		return query.executeWithParameters(query.getParameterMap("articleId", vals[1], "articleType", vals[0]));
 	}
-	
+
 	@Override
-	public List<IStockEntry> findAllStockEntriesForStock(IStock stock){
+	public List<IStockEntry> findAllStockEntriesForStock(IStock stock) {
 		IQuery<IStockEntry> query = CoreModelServiceHolder.get().getQuery(IStockEntry.class);
 		query.and("stock", COMPARATOR.EQUALS, stock);
 		return query.execute();
 	}
-	
+
 	@Override
-	public IStatus performSingleDisposal(String articleStoreToString, int count, String mandatorId){
-		Optional<Identifiable> article =
-			StoreToStringServiceHolder.get().loadFromString(articleStoreToString);
+	public IStatus performSingleDisposal(String articleStoreToString, int count, String mandatorId) {
+		Optional<Identifiable> article = StoreToStringServiceHolder.get().loadFromString(articleStoreToString);
 		if (article.isPresent()) {
 			return performSingleDisposal((IArticle) article.get(), count, mandatorId);
 		}
-		return new Status(Status.WARNING, "ch.elexis.core.services",
-			"No article found [" + articleStoreToString + "]");
+		return new Status(Status.WARNING, "ch.elexis.core.services", "No article found [" + articleStoreToString + "]");
 	}
-	
+
 	@Override
-	public IStatus performSingleReturn(String articleStoreToString, int count, String mandatorId){
-		Optional<Identifiable> article =
-			StoreToStringServiceHolder.get().loadFromString(articleStoreToString);
+	public IStatus performSingleReturn(String articleStoreToString, int count, String mandatorId) {
+		Optional<Identifiable> article = StoreToStringServiceHolder.get().loadFromString(articleStoreToString);
 		if (article.isPresent()) {
 			return performSingleReturn((IArticle) article.get(), count, mandatorId);
 		}
-		return new Status(Status.WARNING, "ch.elexis.core.services",
-			"No article found [" + articleStoreToString + "]");
+		return new Status(Status.WARNING, "ch.elexis.core.services", "No article found [" + articleStoreToString + "]");
 	}
 }

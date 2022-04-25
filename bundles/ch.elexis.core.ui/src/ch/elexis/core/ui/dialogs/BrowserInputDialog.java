@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -28,16 +28,16 @@ public class BrowserInputDialog extends Dialog {
 	String text;
 	Text input;
 	String result;
-	
-	public BrowserInputDialog(Shell shell, String url, String title, String text){
+
+	public BrowserInputDialog(Shell shell, String url, String title, String text) {
 		super(shell);
 		this.url = url;
 		this.title = title;
 		this.text = text;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = (Composite) super.createDialogArea(parent);
 		Browser browser = new Browser(ret, SWT.NONE);
 		browser.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -48,21 +48,21 @@ public class BrowserInputDialog extends Dialog {
 		input.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		return ret;
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		result = input.getText();
 		super.okPressed();
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		getShell().setText(title);
 	}
-	
-	public String getValue(){
+
+	public String getValue() {
 		return result;
 	}
-	
+
 }

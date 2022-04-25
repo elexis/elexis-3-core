@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -32,13 +32,13 @@ public class AddMultiplikatorDialog extends TitleAreaDialog {
 	Text multi;
 	TimeTool begindate;
 	String mult;
-	
-	public AddMultiplikatorDialog(final Shell shell){
+
+	public AddMultiplikatorDialog(final Shell shell) {
 		super(shell);
 	}
-	
+
 	@Override
-	protected Control createDialogArea(final Composite parent){
+	protected Control createDialogArea(final Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(2, false));
 		Label l1 = new Label(ret, SWT.NONE);
@@ -55,39 +55,37 @@ public class AddMultiplikatorDialog extends TitleAreaDialog {
 		multi.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
-		setTitle(Messages.MultiplikatorEditor_BeginDate); //$NON-NLS-1$
-		setMessage(Messages.MultiplikatorEditor_PleaseEnterBeginDate); //$NON-NLS-1$
-		getShell().setText(Messages.MultiplikatorEditor_NewMultipilcator); //$NON-NLS-1$
+		setTitle(Messages.MultiplikatorEditor_BeginDate); // $NON-NLS-1$
+		setMessage(Messages.MultiplikatorEditor_PleaseEnterBeginDate); // $NON-NLS-1$
+		getShell().setText(Messages.MultiplikatorEditor_NewMultipilcator); // $NON-NLS-1$
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		begindate = new TimeTool(dpc.getSelection());
 		mult = multi.getText();
 		try {
-			if (mult.isEmpty() ||  Float.parseFloat(mult) <= 0.0) {
-				SWTHelper.showError(Messages.MultiplikatorEditor_ErrorTitle,
-						Messages.MultiplikatorEditor_ErrorMessage);
+			if (mult.isEmpty() || Float.parseFloat(mult) <= 0.0) {
+				SWTHelper.showError(Messages.MultiplikatorEditor_ErrorTitle, Messages.MultiplikatorEditor_ErrorMessage);
 				super.cancelPressed();
 			} else {
 				super.okPressed();
 			}
-		}  catch (Exception ex) {
-			SWTHelper.showError(Messages.MultiplikatorEditor_ErrorTitle,
-					Messages.MultiplikatorEditor_ErrorMessage);
+		} catch (Exception ex) {
+			SWTHelper.showError(Messages.MultiplikatorEditor_ErrorTitle, Messages.MultiplikatorEditor_ErrorMessage);
 			super.cancelPressed();
 		}
 	}
-	
-	public TimeTool getBegindate(){
+
+	public TimeTool getBegindate() {
 		return begindate;
 	}
-	
-	public String getMult(){
+
+	public String getMult() {
 		return mult;
 	}
 }

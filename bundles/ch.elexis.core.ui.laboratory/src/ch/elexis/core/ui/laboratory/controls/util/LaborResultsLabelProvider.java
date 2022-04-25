@@ -20,21 +20,19 @@ import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
 public class LaborResultsLabelProvider extends ColumnLabelProvider {
-	
+
 	private TreeViewerColumn column;
-	
-	public LaborResultsLabelProvider(TreeViewerColumn column){
+
+	public LaborResultsLabelProvider(TreeViewerColumn column) {
 		this.column = column;
 	}
-	
+
 	@Override
-	public String getText(Object element){
+	public String getText(Object element) {
 		if (element instanceof LaborItemResults) {
-			TimeTool date =
-				(TimeTool) column.getColumn().getData(LaborResultsComposite.COLUMN_DATE_KEY);
+			TimeTool date = (TimeTool) column.getColumn().getData(LaborResultsComposite.COLUMN_DATE_KEY);
 			if (date != null) {
-				List<LabResult> results =
-					((LaborItemResults) element).getResult(date.toString(TimeTool.DATE_COMPACT));
+				List<LabResult> results = ((LaborItemResults) element).getResult(date.toString(TimeTool.DATE_COMPACT));
 				if (results != null) {
 					StringBuilder sb = new StringBuilder();
 					for (LabResult labResult : results) {
@@ -51,8 +49,8 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 		}
 		return ""; //$NON-NLS-1$
 	}
-	
-	private String getResultString(LabResult labResult){
+
+	private String getResultString(LabResult labResult) {
 		if (labResult.getItem().getTyp() == LabItemTyp.DOCUMENT) {
 			return Messages.LaborResultsComposite_Open;
 		} else if (labResult.getItem().getTyp() == LabItemTyp.TEXT) {
@@ -72,8 +70,8 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 			}
 		}
 	}
-	
-	private String getPathologicString(LabResult labResult){
+
+	private String getPathologicString(LabResult labResult) {
 		PathologicDescription pathologicDescription = labResult.getPathologicDescription();
 		StringBuilder sb = new StringBuilder();
 		if (labResult.isFlag(LabResultConstants.PATHOLOGIC)) {
@@ -85,14 +83,13 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 				sb.append("nicht pathologisch");
 			}
 		}
-		if (pathologicDescription != null
-			&& !(pathologicDescription.getDescription() == Description.UNKNOWN)) {
+		if (pathologicDescription != null && !(pathologicDescription.getDescription() == Description.UNKNOWN)) {
 			sb.append(" - ").append(pathologicDescription.getLabel());
 		}
 		return sb.toString();
 	}
-	
-	private String getNonEmptyResultString(LabResult labResult){
+
+	private String getNonEmptyResultString(LabResult labResult) {
 		String result = labResult.getResult();
 		if (result != null && result.isEmpty()) {
 			result = "?"; //$NON-NLS-1$
@@ -107,8 +104,8 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 		}
 		return result;
 	}
-	
-	private String getUnitAndReferenceString(LabResult labResult){
+
+	private String getUnitAndReferenceString(LabResult labResult) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[").append(labResult.getUnit()).append("]");
 		if (labResult.getPatient().getGeschlecht().equals(Patient.MALE)) {
@@ -118,8 +115,8 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 		}
 		return sb.toString();
 	}
-	
-	private String getCommentString(LabResult labResult){
+
+	private String getCommentString(LabResult labResult) {
 		StringBuilder sb = new StringBuilder();
 		String comment = labResult.getComment();
 		if (!comment.isEmpty()) {
@@ -127,15 +124,13 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 		}
 		return sb.toString();
 	}
-	
+
 	@Override
-	public String getToolTipText(Object element){
+	public String getToolTipText(Object element) {
 		if (element instanceof LaborItemResults) {
-			TimeTool date =
-				(TimeTool) column.getColumn().getData(LaborResultsComposite.COLUMN_DATE_KEY);
+			TimeTool date = (TimeTool) column.getColumn().getData(LaborResultsComposite.COLUMN_DATE_KEY);
 			if (date != null) {
-				List<LabResult> results =
-					((LaborItemResults) element).getResult(date.toString(TimeTool.DATE_COMPACT));
+				List<LabResult> results = ((LaborItemResults) element).getResult(date.toString(TimeTool.DATE_COMPACT));
 				if (results != null) {
 					StringBuilder sb = new StringBuilder();
 					for (LabResult labResult : results) {
@@ -166,15 +161,13 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 		}
 		return null;
 	}
-	
+
 	@Override
-	public Color getForeground(Object element){
+	public Color getForeground(Object element) {
 		if (element instanceof LaborItemResults) {
-			TimeTool date =
-				(TimeTool) column.getColumn().getData(LaborResultsComposite.COLUMN_DATE_KEY);
+			TimeTool date = (TimeTool) column.getColumn().getData(LaborResultsComposite.COLUMN_DATE_KEY);
 			if (date != null) {
-				List<LabResult> results =
-					((LaborItemResults) element).getResult(date.toString(TimeTool.DATE_COMPACT));
+				List<LabResult> results = ((LaborItemResults) element).getResult(date.toString(TimeTool.DATE_COMPACT));
 				if (results != null) {
 					boolean pathologic = false;
 					for (LabResult labResult : results) {
@@ -191,15 +184,13 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 		}
 		return Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
 	}
-	
+
 	@Override
-	public Color getBackground(Object element){
+	public Color getBackground(Object element) {
 		if (element instanceof LaborItemResults) {
-			TimeTool date =
-				(TimeTool) column.getColumn().getData(LaborResultsComposite.COLUMN_DATE_KEY);
+			TimeTool date = (TimeTool) column.getColumn().getData(LaborResultsComposite.COLUMN_DATE_KEY);
 			if (date != null) {
-				List<LabResult> results =
-					((LaborItemResults) element).getResult(date.toString(TimeTool.DATE_COMPACT));
+				List<LabResult> results = ((LaborItemResults) element).getResult(date.toString(TimeTool.DATE_COMPACT));
 				if (results != null) {
 					boolean pathologic = false;
 					boolean indetermined = false;

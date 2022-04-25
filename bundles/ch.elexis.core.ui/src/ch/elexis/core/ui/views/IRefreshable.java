@@ -2,7 +2,7 @@ package ch.elexis.core.ui.views;
 
 /**
  * Interface for UI elements that can be refreshed.
- * 
+ *
  * @author thomas
  *
  */

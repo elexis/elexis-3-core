@@ -7,15 +7,16 @@ public class Kontakt {
 		private static final long serialVersionUID = 10455663346456L;
 		public String v;
 		public int c;
-		
-		public statL(){}
-		
-		public statL(String vv){
+
+		public statL() {
+		}
+
+		public statL(String vv) {
 			v = vv;
 			c = 1;
 		}
-		
-		public int compareTo(statL ot){
+
+		public int compareTo(statL ot) {
 			return ot.c - c;
 		}
 	}

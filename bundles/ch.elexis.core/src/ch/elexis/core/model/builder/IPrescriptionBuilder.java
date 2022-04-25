@@ -10,12 +10,11 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 
 public class IPrescriptionBuilder extends AbstractBuilder<IPrescription> {
-	
-	public IPrescriptionBuilder(IModelService modelService, IContextService context,
-		IArticle article, IPatient patient,
-		String dosageInstruction){
+
+	public IPrescriptionBuilder(IModelService modelService, IContextService context, IArticle article, IPatient patient,
+			String dosageInstruction) {
 		super(modelService);
-		
+
 		object = modelService.create(IPrescription.class);
 		object.setDateFrom(LocalDateTime.now());
 		object.setPatient(patient);
@@ -26,15 +25,15 @@ public class IPrescriptionBuilder extends AbstractBuilder<IPrescription> {
 			object.setPrescriptor(context.getActiveUserContact().orElse(null));
 		}
 	}
-	
-	public IPrescriptionBuilder entryType(EntryType entryType){
+
+	public IPrescriptionBuilder entryType(EntryType entryType) {
 		object.setEntryType(entryType);
 		return this;
 	}
-	
-	public IPrescriptionBuilder remark(String remark){
+
+	public IPrescriptionBuilder remark(String remark) {
 		object.setRemark(remark);
 		return this;
 	}
-	
+
 }

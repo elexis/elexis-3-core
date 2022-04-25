@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -26,27 +26,27 @@ import ch.elexis.core.ui.icons.Images;
 
 public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabelProvider
 		implements ITableLabelProvider {
-	
-	public ContactSelectorObservableMapLabelProvider(IObservableMap[] observeMaps){
+
+	public ContactSelectorObservableMapLabelProvider(IObservableMap[] observeMaps) {
 		super(observeMaps);
 	}
-	
+
 	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 	private StringBuilder sb;
-	
+
 	@Override
-	public Image getColumnImage(Object element, int columnIndex){
+	public Image getColumnImage(Object element, int columnIndex) {
 		IContact k = (IContact) element;
-		
+
 		if (k.isOrganization()) {
 			return Images.IMG_ORGANISATION.getImage();
 		}
-		
+
 		if (k.isPerson()) {
 			if (!k.isPatient()) {
 				return Images.IMG_PERSON_GREY.getImage();
 			}
-			
+
 			IPerson p = CoreModelServiceHolder.get().load(k.getId(), IPerson.class).get();
 			if (p.getGender() == null)
 				Images.IMG_EMPTY_TRANSPARENT.getImage();
@@ -59,14 +59,14 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 				return Images.IMG_QUESTION_MARK.getImage();
 			}
 		}
-		
+
 		return Images.IMG_EMPTY_TRANSPARENT.getImage();
 	}
-	
+
 	@Override
-	public String getColumnText(Object element, int columnIndex){
+	public String getColumnText(Object element, int columnIndex) {
 		IContact contact = (IContact) element;
-		
+
 		if (contact.isOrganization()) {
 			sb = new StringBuilder();
 			if (contact.getDescription1() != null) {
@@ -76,10 +76,9 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 				sb.append(contact.getDescription2());
 			return sb.toString();
 		}
-		
+
 		if (contact.isPerson()) {
-			IPerson person =
-				CoreModelServiceHolder.get().load(contact.getId(), IPerson.class).get();
+			IPerson person = CoreModelServiceHolder.get().load(contact.getId(), IPerson.class).get();
 			sb = new StringBuilder();
 			if (person.getTitel() != null)
 				sb.append(person.getTitel() + " ");
@@ -92,11 +91,11 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 				sb.append(", " + person.getDateOfBirth().format(DateTimeFormatter.BASIC_ISO_DATE));
 			return sb.toString();
 		}
-		
+
 		return contact.getDescription1();
 	}
-	
-	private String geschlechtToLabel(Gender geschlecht){
+
+	private String geschlechtToLabel(Gender geschlecht) {
 		if (geschlecht == null)
 			return "?";
 		switch (geschlecht) {

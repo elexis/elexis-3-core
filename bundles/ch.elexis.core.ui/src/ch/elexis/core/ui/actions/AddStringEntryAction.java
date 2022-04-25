@@ -12,37 +12,36 @@ import ch.elexis.core.ui.icons.Images;
 
 /**
  * Add a string entry to a structured viewer
- * 
+ *
  * @since 3.6
  */
 public class AddStringEntryAction extends Action {
-	
+
 	private StructuredViewer structuredViewer;
 	private Collection<String> targetCollection;
-	
-	public AddStringEntryAction(StructuredViewer structuredViewer,
-		Collection<String> targetCollection){
+
+	public AddStringEntryAction(StructuredViewer structuredViewer, Collection<String> targetCollection) {
 		this.structuredViewer = structuredViewer;
 		this.targetCollection = targetCollection;
-		
+
 		setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
 		setText(ch.elexis.core.l10n.Messages.LabGroupPrefs_add);
 	}
-	
-	public AddStringEntryAction(StructuredViewer structuredViewer){
+
+	public AddStringEntryAction(StructuredViewer structuredViewer) {
 		this(structuredViewer, null);
 	}
-	
+
 	@Override
-	public void run(){
+	public void run() {
 		InputDialog inputDialog = new InputDialog(UiDesk.getTopShell(), "Hinzufügen",
-			"Bitte geben Sie die Bezeichnung an", null, null);
+				"Bitte geben Sie die Bezeichnung an", null, null);
 		int retVal = inputDialog.open();
 		if (retVal != Dialog.OK) {
 			return;
 		}
 		String value = inputDialog.getValue();
-		
+
 		if (targetCollection != null) {
 			targetCollection.add(value);
 			structuredViewer.setInput(targetCollection);

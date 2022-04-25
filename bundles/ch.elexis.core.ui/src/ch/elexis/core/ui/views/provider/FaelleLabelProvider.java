@@ -12,9 +12,9 @@ import ch.elexis.core.ui.views.FaelleView;
  * @since 3.0.0 extracted from {@link FaelleView}
  */
 public class FaelleLabelProvider extends DefaultLabelProvider {
-	
+
 	@Override
-	public Image getColumnImage(final Object element, final int columnIndex){
+	public Image getColumnImage(final Object element, final int columnIndex) {
 		if (element instanceof ICoverage) {
 			ICoverage fall = (ICoverage) element;
 			if (CoverageServiceHolder.get().isValid(fall)) {
@@ -25,5 +25,5 @@ public class FaelleLabelProvider extends DefaultLabelProvider {
 		}
 		return super.getColumnImage(element, columnIndex);
 	}
-	
+
 }

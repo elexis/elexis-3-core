@@ -18,19 +18,21 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 
 /**
- * Ticket #13: Repariert Einträge für Artikel deren Pharmacode kürzer als 7 Stellen ist
- * 
+ * Ticket #13: Repariert Einträge für Artikel deren Pharmacode kürzer als 7
+ * Stellen ist
+ *
  * @author Marco Descher
- * 
+ *
  */
 public class FixPharmacodeLessSeven extends ExternalMaintenance {
-	
+
 	public static final String PHARMACODE_EXTINFO_ID = "Pharmacode";
-	
-	public FixPharmacodeLessSeven(){}
-	
+
+	public FixPharmacodeLessSeven() {
+	}
+
 	@Override
-	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
+	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		StringBuilder output = new StringBuilder();
 		pm.beginTask("Überprüfe Pharmacode Länge", 2);
 		pm.subTask("Lese Artikel ein...");
@@ -42,20 +44,19 @@ public class FixPharmacodeLessSeven extends ExternalMaintenance {
 		pm.subTask("Korrigiere Einträge...");
 		for (Iterator<Artikel> iterator = qre.iterator(); iterator.hasNext();) {
 			Artikel artikel = (Artikel) iterator.next();
-			
+
 			String subId = artikel.get(Artikel.FLD_SUB_ID);
 			Map<Object, Object> articleExtInfo = artikel.getMap(Artikel.FLD_EXTINFO);
 			String subIdExtInfo = (String) articleExtInfo.get(PHARMACODE_EXTINFO_ID);
-			
+
 			int subIdLength = subId.length();
 			if (subIdLength >= 7 && subIdExtInfo == null) {
 				continue;
-			} else if (subIdLength >= 7 && subIdExtInfo!=null && subIdExtInfo.length() >= 7) {
+			} else if (subIdLength >= 7 && subIdExtInfo != null && subIdExtInfo.length() >= 7) {
 				continue;
 			} else if (subIdLength == 0) {
 				artikel.set(Artikel.FLD_SUB_ID, "0000000");
-				output.append("Korrigiere " + artikel.getName()
-					+ " von keine subId vorhanden auf 0000000\n");
+				output.append("Korrigiere " + artikel.getName() + " von keine subId vorhanden auf 0000000\n");
 				articleExtInfo.put(PHARMACODE_EXTINFO_ID, "0000000");
 				artikel.setMap(Artikel.FLD_EXTINFO, articleExtInfo);
 			} else {
@@ -69,8 +70,7 @@ public class FixPharmacodeLessSeven extends ExternalMaintenance {
 						missingZeros--;
 					}
 					sb.append(subId);
-					output.append("Korrigiere " + artikel.getName() + " von " + subId + " auf "
-						+ sb.toString() + "\n");
+					output.append("Korrigiere " + artikel.getName() + " von " + subId + " auf " + sb.toString() + "\n");
 					artikel.set(Artikel.FLD_SUB_ID, sb.toString());
 					articleExtInfo.put(PHARMACODE_EXTINFO_ID, sb.toString());
 					artikel.setMap(Artikel.FLD_EXTINFO, articleExtInfo);
@@ -80,19 +80,19 @@ public class FixPharmacodeLessSeven extends ExternalMaintenance {
 					continue;
 				}
 			}
-			
+
 		}
 		output.append(qre.size() + " Artikel überprüft.\n");
-		
+
 		pm.worked(1);
 		pm.done();
-		
+
 		return output.toString();
 	}
-	
+
 	@Override
-	public String getMaintenanceDescription(){
+	public String getMaintenanceDescription() {
 		return "Artikel (auch gelöschte) mit Pharmacode <7 Zeichen reparieren";
 	}
-	
+
 }

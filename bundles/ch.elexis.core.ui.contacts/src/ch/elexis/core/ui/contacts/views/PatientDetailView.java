@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -108,7 +108,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	private ListDisplay<ZusatzAdresse> additionalAddresses;
 	private IObservableValue patientObservable = new WritableValue(null, Patient.class);
 	private boolean bLocked = true;
-	
+
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		public void runInUi(ElexisEvent ev) {
 			Patient pat = (Patient) ev.getObject();
@@ -131,19 +131,18 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		}
 	};
 
-	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
+	private void releaseAndRefreshLock(IPersistentObject object, String commandId) {
 		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
 			LocalLockServiceHolder.get().releaseLock(object);
 		}
-		ICommandService commandService =
-			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		commandService.refreshElements(commandId, null);
 	}
-	
+
 	private FixMediDisplay dmd;
 
 	private DataBindingContext bindingContext;
-	
+
 	public PatientDetailView() {
 		toolkit.setBorderStyle(SWT.NULL); // Deactivate borders for the widgets
 		makeActions();
@@ -171,8 +170,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		scrldfrm.setText(StringTool.unNull(p.getName()) + StringConstants.SPACE + StringTool.unNull(p.getVorname())
 				+ " (" + p.getPatCode() + ")");
 		compClientCustomText.updateClientCustomArea();
-		stickerComposite
-			.setPatient(CoreModelServiceHolder.get().load(p.getId(), IPatient.class).orElse(null));
+		stickerComposite.setPatient(CoreModelServiceHolder.get().load(p.getId(), IPatient.class).orElse(null));
 		inpZusatzAdresse.clear();
 		for (BezugsKontakt za : p.getBezugsKontakte()) {
 			inpZusatzAdresse.add(za);
@@ -189,7 +187,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 
 	/**
 	 * Create contents of the view part.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
@@ -218,13 +216,12 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		// bezugs kontakte
 		{
 			ExpandableComposite ecZA = WidgetFactory.createExpandableComposite(toolkit, scrldfrm,
-				Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
+					Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
 			ecZA.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + ecZA.getText(), false));
 			ecZA.addExpansionListener(new SectionExpansionHandler());
 			inpZusatzAdresse = new ListDisplay<BezugsKontakt>(ecZA, SWT.NONE, new ListDisplay.LDListener() {
 				/*
-				 * public boolean dropped(final PersistentObject dropped) {
-				 * return false; }
+				 * public boolean dropped(final PersistentObject dropped) { return false; }
 				 */
 
 				public void hyperlinkActivated(final String l) {
@@ -241,17 +238,14 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 																						// //$NON-NLS-2$
 					if (ksl.open() == Dialog.OK) {
 						Kontakt k = (Kontakt) ksl.getSelection();
-							if (k != null) {
-							BezugsKontaktAuswahl bza =
-									new BezugsKontaktAuswahl(sp.getLabel(true),
-										k.istPerson() ? Person.load(k.getId()).getLabel(true)
-												: k.getLabel(true));
-								if (bza.open() == Dialog.OK && sp != null) {
-									BezugsKontakt bk =
-										sp.addBezugsKontakt(k, bza.getBezugKonkaktRelation());
-									inpZusatzAdresse.add(bk);
-									scrldfrm.reflow(true);
-								}
+						if (k != null) {
+							BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(sp.getLabel(true),
+									k.istPerson() ? Person.load(k.getId()).getLabel(true) : k.getLabel(true));
+							if (bza.open() == Dialog.OK && sp != null) {
+								BezugsKontakt bk = sp.addBezugsKontakt(k, bza.getBezugKonkaktRelation());
+								inpZusatzAdresse.add(bk);
+								scrldfrm.reflow(true);
+							}
 						}
 					}
 				}
@@ -302,48 +296,45 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 
 			ecZA.setClient(inpZusatzAdresse);
 		}
-		
+
 		// zusatz adressen
 		{
-			ExpandableComposite compAdditionalAddresses =
-				WidgetFactory.createExpandableComposite(toolkit, scrldfrm,
+			ExpandableComposite compAdditionalAddresses = WidgetFactory.createExpandableComposite(toolkit, scrldfrm,
 					Messages.Patientenblatt2_additionalAdresses);
 			compAdditionalAddresses.addExpansionListener(new SectionExpansionHandler());
-			
+
 			additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
-				new ListDisplay.LDListener() {
-					public void hyperlinkActivated(final String l){
-						Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
-						if (actPatient != null) {
-							ZusatzAdresseEingabeDialog aed =
-								new ZusatzAdresseEingabeDialog(
-									PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-									actPatient);
-							if (aed.open() == Dialog.OK) {
-								additionalAddresses.add(aed.getZusatzAdresse());
-								scrldfrm.reflow(true);
+					new ListDisplay.LDListener() {
+						public void hyperlinkActivated(final String l) {
+							Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
+							if (actPatient != null) {
+								ZusatzAdresseEingabeDialog aed = new ZusatzAdresseEingabeDialog(
+										PlatformUI.getWorkbench().getDisplay().getActiveShell(), actPatient);
+								if (aed.open() == Dialog.OK) {
+									additionalAddresses.add(aed.getZusatzAdresse());
+									scrldfrm.reflow(true);
+								}
 							}
 						}
-					}
-					
-					public String getLabel(Object o){
-						ZusatzAdresse address = (ZusatzAdresse) o;
-						if (address != null) {
-							return address.getLabel();
+
+						public String getLabel(Object o) {
+							ZusatzAdresse address = (ZusatzAdresse) o;
+							if (address != null) {
+								return address.getLabel();
+							}
+							return "?"; //$NON-NLS-1$
 						}
-						return "?"; //$NON-NLS-1$
-					}
-				});
-			
+					});
+
 			// Hyperlink "Hinzu..." über der Adressliste hinzufügen
 			additionalAddresses.addHyperlinks(Messages.Patientenblatt2_add); // $NON-NLS-1$
-			
+
 			// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
-			
+
 			// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
 			makeAdditionalAddressActions();
 			additionalAddresses.setMenu(removeAdditionalAddressAction, showAdditionalAddressAction);
-			
+
 			compAdditionalAddresses.setClient(additionalAddresses);
 		}
 
@@ -461,7 +452,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 				GlobalActions.printRoeBlatt);
 
 		initDataBindings();
-		
+
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 
@@ -487,10 +478,10 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	 * This {@link Listener} automatically grows and shrinks a {@link Text}
 	 * according to the number of lines contained. It handles {@link SWT#Modify}
 	 * events only.
-	 * 
+	 *
 	 * @see http://stackoverflow.com/questions/8287853/text-widget-with-self-
 	 *      adjusting-height-based-on-interactively-entered-text
-	 * 
+	 *
 	 */
 	private final class MultiLineAutoGrowListener implements Listener {
 		protected int lines = 0;
@@ -526,10 +517,10 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		}
 	}
 
-	private void refreshUi(){
+	private void refreshUi() {
 		bindingContext.updateTargets();
 	}
-	
+
 	protected void initDataBindings() {
 		bindingContext = new DataBindingContext();
 
@@ -562,30 +553,27 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 				Messages.Patientenblatt2_showAddress) {
 			@Override
 			public void doRun() {
-				Kontakt a = Kontakt.load(
-					((BezugsKontakt) inpZusatzAdresse.getSelection()).get(BezugsKontakt.OTHER_ID));
+				Kontakt a = Kontakt.load(((BezugsKontakt) inpZusatzAdresse.getSelection()).get(BezugsKontakt.OTHER_ID));
 				KontaktDetailDialog kdd = new KontaktDetailDialog(scrldfrm.getShell(), a, bLocked);
 				if (kdd.open() == Dialog.OK) {
 					setPatient(ElexisEventDispatcher.getSelectedPatient());
 				}
 			}
 		};
-		
+
 		showBKAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
-			Messages.Patientenblatt2_showBezugKontaktRelation) {
+				Messages.Patientenblatt2_showBezugKontaktRelation) {
 			@Override
-			public void doRun(){
+			public void doRun() {
 				Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 				if (actPatient != null && actPatient.exists()) {
 					BezugsKontakt bezugsKontakt = (BezugsKontakt) inpZusatzAdresse.getSelection();
 					if (bezugsKontakt != null) {
 						Kontakt k = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
-						BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(
-							actPatient.getLabel(true), k.istPerson()
-									? Person.load(k.getId()).getLabel(true) : k.getLabel(true),
-							bezugsKontakt, bLocked);
-						if (bezugsKontakt != null && bza.open() == Dialog.OK
-							&& bza.getBezugKonkaktRelation() != null) {
+						BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(actPatient.getLabel(true),
+								k.istPerson() ? Person.load(k.getId()).getLabel(true) : k.getLabel(true), bezugsKontakt,
+								bLocked);
+						if (bezugsKontakt != null && bza.open() == Dialog.OK && bza.getBezugKonkaktRelation() != null) {
 							bezugsKontakt.updateRelation(bza.getBezugKonkaktRelation());
 							setPatient(actPatient);
 						}
@@ -594,26 +582,25 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			}
 		};
 	}
-	
-	private void makeAdditionalAddressActions(){
+
+	private void makeAdditionalAddressActions() {
 		removeAdditionalAddressAction = new Action(Messages.Patientenblatt2_removeAddress) {
 			@Override
-			public void run(){
-					ZusatzAdresse a = (ZusatzAdresse) additionalAddresses.getSelection();
-					a.delete();
+			public void run() {
+				ZusatzAdresse a = (ZusatzAdresse) additionalAddresses.getSelection();
+				a.delete();
 				setPatient(ElexisEventDispatcher.getSelectedPatient());
-				
+
 			}
 		};
-		
+
 		showAdditionalAddressAction = new Action(Messages.Patientenblatt2_showAddress) {
 			@Override
-			public void run(){
+			public void run() {
 				Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 				ZusatzAdresse zusatzAdresse = (ZusatzAdresse) additionalAddresses.getSelection();
-				ZusatzAdresseEingabeDialog aed =
-					new ZusatzAdresseEingabeDialog(scrldfrm.getShell(), actPatient, zusatzAdresse,
-						bLocked);
+				ZusatzAdresseEingabeDialog aed = new ZusatzAdresseEingabeDialog(scrldfrm.getShell(), actPatient,
+						zusatzAdresse, bLocked);
 				if (aed.open() == Dialog.OK) {
 					setPatient(actPatient);
 				}
@@ -622,23 +609,22 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	}
 
 	@Override
-	public void activation(boolean mode){
+	public void activation(boolean mode) {
 		if (mode) {
 			refreshUi();
 		}
 	}
-	
+
 	@Override
-	public void visible(boolean mode){
+	public void visible(boolean mode) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
-	boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 }

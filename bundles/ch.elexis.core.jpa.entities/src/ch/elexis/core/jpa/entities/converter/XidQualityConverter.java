@@ -11,7 +11,7 @@ import ch.elexis.core.model.XidQuality;
 public class XidQualityConverter implements AttributeConverter<XidQuality, String> {
 
 	@Override
-	public String convertToDatabaseColumn(XidQuality attribute){
+	public String convertToDatabaseColumn(XidQuality attribute) {
 		if (attribute != null) {
 			return Integer.toString(attribute.getValue());
 		}
@@ -19,7 +19,7 @@ public class XidQualityConverter implements AttributeConverter<XidQuality, Strin
 	}
 
 	@Override
-	public XidQuality convertToEntityAttribute(String dbData){
+	public XidQuality convertToEntityAttribute(String dbData) {
 		if (StringUtils.isEmpty(dbData)) {
 			return XidQuality.ASSIGNMENT_LOCAL;
 		}

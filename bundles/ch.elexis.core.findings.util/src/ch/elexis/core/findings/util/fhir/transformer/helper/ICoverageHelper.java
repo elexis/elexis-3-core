@@ -22,8 +22,8 @@ import ch.elexis.core.model.ch.BillingLaw;
 import ch.rgw.tools.TimeTool;
 
 public class ICoverageHelper extends AbstractHelper {
-	
-	public String getDependent(ICoverage coverage){
+
+	public String getDependent(ICoverage coverage) {
 		BillingLaw law = coverage.getBillingSystem().getLaw();
 		if (BillingLaw.UVG == law) {
 			return (String) coverage.getExtInfo(FallConstants.UVG_UNFALLNUMMER);
@@ -33,8 +33,8 @@ public class ICoverageHelper extends AbstractHelper {
 		}
 		return null;
 	}
-	
-	public void setDependent(ICoverage coverage, String bin){
+
+	public void setDependent(ICoverage coverage, String bin) {
 		String billingSystem = coverage.getBillingSystem().getName();
 		if (billingSystem != null && !billingSystem.isEmpty()) {
 			if (billingSystem.equals("UVG")) {
@@ -44,16 +44,16 @@ public class ICoverageHelper extends AbstractHelper {
 			}
 		}
 	}
-	
-	public Reference getBeneficiaryReference(ICoverage fall){
+
+	public Reference getBeneficiaryReference(ICoverage fall) {
 		IPatient patient = fall.getPatient();
 		if (patient != null) {
 			return new Reference(new IdDt("Patient", patient.getId()));
 		}
 		return null;
 	}
-	
-	public Reference getPolicyHolderReference(ICoverage coverage){
+
+	public Reference getPolicyHolderReference(ICoverage coverage) {
 		IContact costBearer = coverage.getGuarantor();
 		if (costBearer != null) {
 			String contactType = costBearer.isOrganization() ? "Organization" : "Patient";
@@ -61,8 +61,8 @@ public class ICoverageHelper extends AbstractHelper {
 		}
 		return null;
 	}
-	
-	public Reference getPayor(ICoverage fall){
+
+	public Reference getPayor(ICoverage fall) {
 		IContact kostenTr = fall.getCostBearer();
 		if (kostenTr != null) {
 			// TODO Person instances are never directly referenced as actors
@@ -71,8 +71,8 @@ public class ICoverageHelper extends AbstractHelper {
 		}
 		return null;
 	}
-	
-	public Period getPeriod(ICoverage coverage){
+
+	public Period getPeriod(ICoverage coverage) {
 		Period period = new Period();
 		LocalDate startDate = coverage.getDateFrom();
 		if (startDate != null) {
@@ -84,21 +84,21 @@ public class ICoverageHelper extends AbstractHelper {
 		}
 		return period;
 	}
-	
-	public void setPeriod(ICoverage coverage, Period period){
+
+	public void setPeriod(ICoverage coverage, Period period) {
 		if (period.getStart() != null) {
 			coverage.setDateFrom(getLocalDateTime(period.getStart()).toLocalDate());
 		}
 	}
-	
-	public String getFallText(ICoverage coverage){
+
+	public String getFallText(ICoverage coverage) {
 		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy"); //$NON-NLS-1$
 		String grund = coverage.getReason();
 		String bezeichnung = coverage.getDescription();
 		LocalDate dateFrom = coverage.getDateFrom();
 		LocalDate dateTo = coverage.getDateTo();
 		String billingSystem = coverage.getBillingSystem().getName();
-		
+
 		if (dateFrom == null) {
 			dateFrom = LocalDate.of(1970, 1, 1);
 		}
@@ -117,8 +117,8 @@ public class ICoverageHelper extends AbstractHelper {
 		ret.append(dateFrom.format(dateFormat)).append("-").append(ed).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 		return ret.toString();
 	}
-	
-	public Optional<Coding> getType(ICoverage coverage){
+
+	public Optional<Coding> getType(ICoverage coverage) {
 		String billingSystem = coverage.getBillingSystem().getName();
 		if (billingSystem != null) {
 			Coding coding = new Coding();
@@ -128,8 +128,8 @@ public class ICoverageHelper extends AbstractHelper {
 		}
 		return Optional.empty();
 	}
-	
-	public Optional<String> getType(Coverage fhirObject){
+
+	public Optional<String> getType(Coverage fhirObject) {
 		CodeableConcept fhirType = fhirObject.getType();
 		for (Coding coding : fhirType.getCoding()) {
 			if (coding.getSystem().equals(CodingSystem.ELEXIS_COVERAGE_TYPE.getSystem())) {
@@ -138,8 +138,8 @@ public class ICoverageHelper extends AbstractHelper {
 		}
 		return Optional.empty();
 	}
-	
-	public Optional<Coding> getReason(ICoverage coverage){
+
+	public Optional<Coding> getReason(ICoverage coverage) {
 		String reason = coverage.getReason();
 		if (reason != null) {
 			Coding coding = new Coding();
@@ -149,8 +149,8 @@ public class ICoverageHelper extends AbstractHelper {
 		}
 		return Optional.empty();
 	}
-	
-	public Optional<Identifier> getInsuranceNumber(ICoverage coverage){
+
+	public Optional<Identifier> getInsuranceNumber(ICoverage coverage) {
 		String insuranceNumber = coverage.getInsuranceNumber();
 		if (insuranceNumber != null) {
 			Identifier identifier = new Identifier();
@@ -158,11 +158,11 @@ public class ICoverageHelper extends AbstractHelper {
 			identifier.setValue(insuranceNumber);
 			return Optional.of(identifier);
 		}
-		
+
 		return Optional.empty();
 	}
-	
-	public Optional<Coding> getAccidentDate(ICoverage localObject){
+
+	public Optional<Coding> getAccidentDate(ICoverage localObject) {
 		if (Objects.equals(BillingLaw.UVG, localObject.getBillingSystem().getLaw())) {
 			String accidentDate = (String) localObject.getExtInfo(FallConstants.UVG_UNFALLDATUM);
 			if (accidentDate != null) {

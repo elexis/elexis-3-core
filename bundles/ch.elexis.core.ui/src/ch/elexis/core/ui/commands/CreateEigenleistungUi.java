@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -31,25 +31,23 @@ import ch.elexis.data.PersistentObject;
 
 public class CreateEigenleistungUi extends AbstractHandler {
 	public static final String COMMANDID = "ch.elexis.eigenleistung.create"; //$NON-NLS-1$
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			// create and open the dialog
 			Shell parent = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
 			EigenLeistungDialog dialog = new EigenLeistungDialog(parent, null);
 			// open dialog and add created IVerrechenbar to the selected Leistungsblock
 			if (dialog.open() == Dialog.OK) {
-				Optional<ICodeElementBlock> block =
-					ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
+				Optional<ICodeElementBlock> block = ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
 				if (block.isPresent()) {
 					IVerrechenbar created = dialog.getResult();
 					Optional<Identifiable> createdIdentifiable = StoreToStringServiceHolder.get()
-						.loadFromString(((PersistentObject) created).storeToString());
+							.loadFromString(((PersistentObject) created).storeToString());
 					createdIdentifiable.ifPresent(ci -> {
 						block.get().addElement((ICodeElement) ci);
-						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
-							block.get());
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, block.get());
 					});
 				}
 			}

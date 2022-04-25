@@ -7,15 +7,15 @@ import ch.elexis.core.services.IUserService;
 
 @Component
 public class UserServiceHolder {
-	
+
 	private static IUserService userService;
-	
+
 	@Reference
-	public void setInvoiceService(IUserService userService){
+	public void setInvoiceService(IUserService userService) {
 		UserServiceHolder.userService = userService;
 	}
-	
-	public static IUserService get(){
+
+	public static IUserService get() {
 		return userService;
 	}
 }

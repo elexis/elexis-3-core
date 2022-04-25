@@ -55,40 +55,39 @@ import ch.elexis.core.services.IConfigService;
 
 @Component
 public class MailClient implements IMailClient {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(MailClient.class);
-	
+
 	private static final String CONFIG_ACCOUNTS = "ch.elexis.core.mail/accounts";
 	private static final String CONFIG_ACCOUNT = "ch.elexis.core.mail/account";
-	
+
 	private static final String ACCOUNTS_SEPARATOR = ",";
-	
+
 	@Reference
 	private IConfigService configService;
-	
+
 	private ErrorTyp lastError;
-	
+
 	@Activate
-	private void activate(){
+	private void activate() {
 		MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
 		mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
 		mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
 		mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
 		mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
-		mc.addMailcap(
-			"message/rfc822;; x-java-content- handler=com.sun.mail.handlers.message_rfc822");
+		mc.addMailcap("message/rfc822;; x-java-content- handler=com.sun.mail.handlers.message_rfc822");
 		CommandMap.setDefaultCommandMap(mc);
 	}
-	
+
 	@Override
-	public Optional<ErrorTyp> getLastError(){
+	public Optional<ErrorTyp> getLastError() {
 		ErrorTyp ret = lastError;
 		lastError = null;
 		return Optional.ofNullable(ret);
 	}
-	
+
 	@Override
-	public Optional<MailAccount> getAccount(String id){
+	public Optional<MailAccount> getAccount(String id) {
 		MailAccount ret = null;
 		String accountString = configService.getLocal(CONFIG_ACCOUNT + "/" + id, null);
 		if (accountString == null) {
@@ -99,9 +98,9 @@ public class MailClient implements IMailClient {
 		}
 		return Optional.ofNullable(ret);
 	}
-	
+
 	@Override
-	public List<String> getAccounts(){
+	public List<String> getAccounts() {
 		List<String> ret = new ArrayList<String>();
 		String accountIds = configService.get(CONFIG_ACCOUNTS, null);
 		if (accountIds != null) {
@@ -110,9 +109,9 @@ public class MailClient implements IMailClient {
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public List<String> getAccountsLocal(){
+	public List<String> getAccountsLocal() {
 		List<String> ret = new ArrayList<String>();
 		String accountIds = configService.getLocal(CONFIG_ACCOUNTS, null);
 		if (accountIds != null) {
@@ -121,28 +120,26 @@ public class MailClient implements IMailClient {
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public void saveAccount(MailAccount account){
+	public void saveAccount(MailAccount account) {
 		if (account != null && account.getId() != null) {
 			addAccountId(account.getId());
-			configService.set(CONFIG_ACCOUNT + "/" + account.getId(),
-				account.toString());
+			configService.set(CONFIG_ACCOUNT + "/" + account.getId(), account.toString());
 		}
 	}
-	
+
 	@Override
-	public void saveAccountLocal(MailAccount account){
+	public void saveAccountLocal(MailAccount account) {
 		if (account != null && account.getId() != null) {
 			addAccountIdLocal(account.getId());
 			configService.setLocal(CONFIG_ACCOUNT + "/" + account.getId(), account.toString());
 		}
 	}
-	
-	private void addAccountIdLocal(String id){
+
+	private void addAccountIdLocal(String id) {
 		if (id.contains(ACCOUNTS_SEPARATOR)) {
-			throw new IllegalStateException(
-				"Id can not contain separator [" + ACCOUNTS_SEPARATOR + "]");
+			throw new IllegalStateException("Id can not contain separator [" + ACCOUNTS_SEPARATOR + "]");
 		}
 		String accountIds = configService.getLocal(CONFIG_ACCOUNTS, null);
 		if (accountIds == null) {
@@ -158,11 +155,10 @@ public class MailClient implements IMailClient {
 			configService.setLocal(CONFIG_ACCOUNTS, accountIds + ACCOUNTS_SEPARATOR + id);
 		}
 	}
-	
-	private void addAccountId(String id){
+
+	private void addAccountId(String id) {
 		if (id.contains(ACCOUNTS_SEPARATOR)) {
-			throw new IllegalStateException(
-				"Id can not contain separator [" + ACCOUNTS_SEPARATOR + "]");
+			throw new IllegalStateException("Id can not contain separator [" + ACCOUNTS_SEPARATOR + "]");
 		}
 		String accountIds = configService.get(CONFIG_ACCOUNTS, null);
 		if (accountIds == null) {
@@ -178,24 +174,24 @@ public class MailClient implements IMailClient {
 			configService.set(CONFIG_ACCOUNTS, accountIds + ACCOUNTS_SEPARATOR + id);
 		}
 	}
-	
+
 	@Override
-	public void removeAccount(MailAccount account){
+	public void removeAccount(MailAccount account) {
 		if (account != null && account.getId() != null) {
 			removeAccountId(account.getId());
 			configService.set(CONFIG_ACCOUNT + "/" + account.getId(), null);
 		}
 	}
-	
+
 	@Override
-	public void removeAccountLocal(MailAccount account){
+	public void removeAccountLocal(MailAccount account) {
 		if (account != null && account.getId() != null) {
 			removeAccountIdLocal(account.getId());
 			configService.setLocal(CONFIG_ACCOUNT + "/" + account.getId(), null);
 		}
 	}
-	
-	private void removeAccountIdLocal(String id){
+
+	private void removeAccountIdLocal(String id) {
 		String accountIds = configService.getLocal(CONFIG_ACCOUNTS, null);
 		if (accountIds != null) {
 			StringBuilder sb = new StringBuilder();
@@ -216,8 +212,8 @@ public class MailClient implements IMailClient {
 			}
 		}
 	}
-	
-	private void removeAccountId(String id){
+
+	private void removeAccountId(String id) {
 		String accountIds = configService.get(CONFIG_ACCOUNTS, null);
 		if (accountIds != null) {
 			StringBuilder sb = new StringBuilder();
@@ -238,48 +234,42 @@ public class MailClient implements IMailClient {
 			}
 		}
 	}
-	
+
 	@Override
-	public boolean testAccount(MailAccount account){
+	public boolean testAccount(MailAccount account) {
 		MailClientProperties properties = new MailClientProperties(account);
-		
+
 		try {
 			if (account.getType() == TYPE.SMTP) {
-				Session session =
-					Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
-						@Override
-						protected PasswordAuthentication getPasswordAuthentication(){
-							return new PasswordAuthentication(account.getUsername(),
-								account.getPassword());
-						}
-					});
+				Session session = Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
+					@Override
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(account.getUsername(), account.getPassword());
+					}
+				});
 				Transport transport = session.getTransport();
 				transport.connect();
 				transport.close();
 			} else if (account.getType() == TYPE.IMAP) {
-				Session session =
-					Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
-						@Override
-						protected PasswordAuthentication getPasswordAuthentication(){
-							return new PasswordAuthentication(account.getUsername(),
-								account.getPassword());
-						}
-					});
+				Session session = Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
+					@Override
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(account.getUsername(), account.getPassword());
+					}
+				});
 				Store store = session.getStore("imap");
-				
+
 				store.connect();
 				store.close();
 			} else if (account.getType() == TYPE.IMAPS) {
-				Session session =
-					Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
-						@Override
-						protected PasswordAuthentication getPasswordAuthentication(){
-							return new PasswordAuthentication(account.getUsername(),
-								account.getPassword());
-						}
-					});
+				Session session = Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
+					@Override
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(account.getUsername(), account.getPassword());
+					}
+				});
 				Store store = session.getStore("imaps");
-				
+
 				store.connect();
 				store.close();
 			} else {
@@ -295,34 +285,32 @@ public class MailClient implements IMailClient {
 		}
 		return true;
 	}
-	
+
 	@Override
-	public boolean sendMail(MailAccount account, MailMessage message){
+	public boolean sendMail(MailAccount account, MailMessage message) {
 		MailClientProperties properties = new MailClientProperties(account);
-		
+
 		try {
 			if (account.getType() == TYPE.SMTP) {
-				Session session =
-					Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
-						@Override
-						protected PasswordAuthentication getPasswordAuthentication(){
-							return new PasswordAuthentication(account.getUsername(),
-								account.getPassword());
-						}
-					});
-				
+				Session session = Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
+					@Override
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(account.getUsername(), account.getPassword());
+					}
+				});
+
 				MimeMessage mimeMessage = new MimeMessage(session);
 				mimeMessage.addHeader("X-ElexisMail", "ch.elexis.core.mail");
-				// mail.user attribute of the properties 
+				// mail.user attribute of the properties
 				mimeMessage.setFrom(account.getFromAddress());
 				mimeMessage.setSubject(message.getSubject());
-				
+
 				Multipart multipart = new MimeMultipart();
-				// create the message part 
+				// create the message part
 				MimeBodyPart messageBodyPart = new MimeBodyPart();
 				messageBodyPart.setText(message.getHtmlText(), "UTF-8", "html");
 				multipart.addBodyPart(messageBodyPart);
-				
+
 				if (message.hasImage()) {
 					File image = message.getImage();
 					if (image != null) {
@@ -333,7 +321,7 @@ public class MailClient implements IMailClient {
 						multipart.addBodyPart(messageBodyPart);
 					}
 				}
-				
+
 				if (message.hasAttachments()) {
 					List<File> attachments = message.getAttachments();
 					for (File file : attachments) {
@@ -346,7 +334,7 @@ public class MailClient implements IMailClient {
 				}
 				// Put parts in message
 				mimeMessage.setContent(multipart);
-				
+
 				Transport transport = session.getTransport();
 				transport.connect();
 				// add recipients
@@ -355,9 +343,8 @@ public class MailClient implements IMailClient {
 				addressesList.addAll(Arrays.asList(message.getToAddress()));
 				mimeMessage.setRecipients(RecipientType.CC, message.getCcAddress());
 				addressesList.addAll(Arrays.asList(message.getCcAddress()));
-				
-				transport.sendMessage(mimeMessage,
-					addressesList.toArray(new InternetAddress[addressesList.size()]));
+
+				transport.sendMessage(mimeMessage, addressesList.toArray(new InternetAddress[addressesList.size()]));
 				transport.close();
 			} else {
 				logger.warn("Invalid account type for sending [" + account.getType() + "].");
@@ -371,30 +358,30 @@ public class MailClient implements IMailClient {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public List<IMAPMailMessage> getMessages(MailAccount account, String sourceFolder, boolean flag,
-		boolean onlyFetchUnflagged) throws MessagingException{
+			boolean onlyFetchUnflagged) throws MessagingException {
 		if (account.getType() == TYPE.SMTP) {
 			logger.warn("Invalid account type for receiving [" + account.getType() + "].");
 			lastError = ErrorTyp.CONFIGTYP;
 			return Collections.emptyList();
 		}
-		
+
 		if (sourceFolder == null) {
 			sourceFolder = "INBOX";
 		}
-		
+
 		IMAPStore imapStore = null;
 		try {
 			imapStore = (IMAPStore) getSession(account).getStore();
 			imapStore.connect();
 			List<IMAPMailMessage> listMessages = new ArrayList<IMAPMailMessage>();
 			Folder folder = imapStore.getFolder(sourceFolder);
-			
+
 			int openMode = (flag) ? Folder.READ_WRITE : Folder.READ_ONLY;
 			folder.open(openMode);
-			
+
 			Message[] messages = folder.getMessages();
 			for (Message _message : messages) {
 				if (onlyFetchUnflagged && _message.getFlags().contains(Flag.FLAGGED)) {
@@ -414,103 +401,101 @@ public class MailClient implements IMailClient {
 			}
 		}
 	}
-	
-	private Session getSession(MailAccount account){
+
+	private Session getSession(MailAccount account) {
 		MailClientProperties properties = new MailClientProperties(account);
 		return Session.getInstance(properties.getProperties(), new javax.mail.Authenticator() {
 			@Override
-			protected PasswordAuthentication getPasswordAuthentication(){
+			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(account.getUsername(), account.getPassword());
 			}
 		});
 	}
-	
+
 	@Override
-	public void moveMessage(MailAccount account, IMAPMailMessage message, @Nullable
-	String sourceFolder, String targetFolder, boolean removeFlag) throws MessagingException{
-		
+	public void moveMessage(MailAccount account, IMAPMailMessage message, @Nullable String sourceFolder,
+			String targetFolder, boolean removeFlag) throws MessagingException {
+
 		if (sourceFolder == null) {
 			sourceFolder = "INBOX";
 		}
-		
+
 		if (targetFolder == null) {
 			throw new MessagingException("targetFolder must not be null");
 		}
-		
+
 		IMAPStore imapStore = null;
 		try {
 			imapStore = (IMAPStore) getSession(account).getStore();
 			imapStore.connect();
-			
+
 			IMAPFolder _sourceFolder = (IMAPFolder) imapStore.getFolder(sourceFolder);
 			IMAPFolder _targetFolder = (IMAPFolder) imapStore.getFolder(targetFolder);
-			
+
 			// find message in sourcefolder
 			MimeMessage referrer = (MimeMessage) message.toIMAPMessage();
 			SearchTerm searchTerm = new MySearchTerm(referrer.getSubject(), referrer.getSize());
-			
+
 			_sourceFolder.open(Folder.READ_WRITE);
 			Message[] matches = _sourceFolder.search(searchTerm);
-			
+
 			if (matches != null && matches.length == 1) {
 				// found the message, lets move it
-				
+
 				_targetFolder.open(Folder.READ_WRITE);
-				
-				Message[] _message = new Message[] {
-					matches[0]
-				};
-				
+
+				Message[] _message = new Message[] { matches[0] };
+
 				if (removeFlag) {
 					_message[0].setFlag(Flag.FLAGGED, false);
 				}
-				
+
 				_sourceFolder.setFlags(_message, new Flags(Flags.Flag.SEEN), true);
 				// TODO support direct move operation,
 				// requires newer javax.mail https://github.com/javaee/javamail/releases
 				// and imapStore.hasCapability("MOVE")
 				_sourceFolder.copyMessages(_message, _targetFolder);
 				_sourceFolder.setFlags(_message, new Flags(Flags.Flag.DELETED), true);
-				
+
 				_sourceFolder.close(true);
 				_targetFolder.close(false);
-				
+
 			} else {
 				throw new MessagingException("Could not find message in sourcefolder");
 			}
-			
+
 		} finally {
 			if (imapStore != null && imapStore.isConnected()) {
 				imapStore.close();
 			}
 		}
 	}
-	
-	private void handleException(MessagingException e){
+
+	private void handleException(MessagingException e) {
 		if (e instanceof AuthenticationFailedException) {
 			lastError = ErrorTyp.AUTHENTICATION;
 		} else if (e.getNextException() instanceof UnknownHostException
-			|| e.getNextException() instanceof ConnectException) {
+				|| e.getNextException() instanceof ConnectException) {
 			lastError = ErrorTyp.CONNECTION;
 		} else if (e instanceof AddressException) {
 			lastError = ErrorTyp.ADDRESS;
 		}
 	}
-	
+
 	private class MySearchTerm extends SearchTerm {
-		
+
 		private static final long serialVersionUID = -5686587458681566618L;
-		
+
 		private final String subject;
 		private final int size;
-		
-		public MySearchTerm(String subject, int size){
+
+		public MySearchTerm(String subject, int size) {
 			this.subject = subject;
 			this.size = size;
 		}
-		
+
 		@Override
-		public boolean match(Message msg){
+		public boolean match(Message msg) {
 			try {
 				return (Objects.equals(msg.getSubject(), subject) && msg.getSize() == size);
 			} catch (MessagingException e) {
@@ -518,6 +503,6 @@ public class MailClient implements IMailClient {
 				return false;
 			}
 		}
-		
+
 	}
 }

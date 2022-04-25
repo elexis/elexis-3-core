@@ -15,84 +15,84 @@ import ch.elexis.core.services.ILocalLockService;
 
 @Component
 public class TestLocalLockService implements ILocalLockService {
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		Logger logger = LoggerFactory.getLogger(getClass());
 		logger.error("Initializing test lock service");
 	}
-	
+
 	@Override
-	public LockResponse acquireOrReleaseLocks(LockRequest request){
+	public LockResponse acquireOrReleaseLocks(LockRequest request) {
 		return LockResponse.OK;
 	}
-	
+
 	@Override
-	public boolean isLocked(LockRequest request){
+	public boolean isLocked(LockRequest request) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public LockInfo getLockInfo(String storeToString){
+	public LockInfo getLockInfo(String storeToString) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public LockResponse acquireLock(Object object){
+	public LockResponse acquireLock(Object object) {
 		return LockResponse.OK;
 	}
-	
+
 	@Override
-	public LockResponse releaseLock(Object object){
+	public LockResponse releaseLock(Object object) {
 		return LockResponse.OK;
 	}
-	
+
 	@Override
-	public LockResponse releaseLock(LockInfo lockInfo){
+	public LockResponse releaseLock(LockInfo lockInfo) {
 		return LockResponse.OK;
 	}
-	
+
 	@Override
-	public boolean isLocked(Object object){
+	public boolean isLocked(Object object) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public boolean isLockedLocal(Object po){
+	public boolean isLockedLocal(Object po) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public LockResponse releaseAllLocks(){
+	public LockResponse releaseAllLocks() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public List<LockInfo> getCopyOfAllHeldLocks(){
+	public List<LockInfo> getCopyOfAllHeldLocks() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public String getSystemUuid(){
+	public String getSystemUuid() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public LockResponse acquireLockBlocking(Object po, int msTimeout, IProgressMonitor monitor){
+	public LockResponse acquireLockBlocking(Object po, int msTimeout, IProgressMonitor monitor) {
 		return LockResponse.OK;
 	}
-	
+
 	@Override
-	public void shutdown(){
+	public void shutdown() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

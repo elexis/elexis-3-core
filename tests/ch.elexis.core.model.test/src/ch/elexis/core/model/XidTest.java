@@ -25,8 +25,8 @@ public class XidTest {
 
 	@Before
 	public void before() {
-		modelService = OsgiServiceUtil.getService(IModelService.class,
-			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+		modelService = OsgiServiceUtil
+				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 
 		contact1 = modelService.create(IContact.class);
 		contact1.setDescription1("test contact 1");

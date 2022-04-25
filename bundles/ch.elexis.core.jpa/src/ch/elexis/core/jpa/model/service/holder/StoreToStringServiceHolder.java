@@ -10,26 +10,26 @@ import ch.elexis.core.services.IStoreToStringService;
 
 @Component
 public class StoreToStringServiceHolder {
-	
+
 	private static IStoreToStringService storeToStringService;
-	
+
 	@Reference
-	public void setStoreToStringService(IStoreToStringService storeToStringService){
+	public void setStoreToStringService(IStoreToStringService storeToStringService) {
 		StoreToStringServiceHolder.storeToStringService = storeToStringService;
 	}
-	
-	public static IStoreToStringService get(){
+
+	public static IStoreToStringService get() {
 		if (storeToStringService == null) {
 			throw new IllegalStateException("No IStoreToStringService available");
 		}
 		return storeToStringService;
 	}
-	
-	public static boolean isPresent(){
+
+	public static boolean isPresent() {
 		return storeToStringService != null;
 	}
-	
-	public static Optional<String> getStoreToString(Identifiable identifiable){
+
+	public static Optional<String> getStoreToString(Identifiable identifiable) {
 		return isPresent() ? storeToStringService.storeToString(identifiable) : Optional.empty();
 	}
 }

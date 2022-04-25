@@ -9,35 +9,34 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.rgw.tools.TimeTool;
 
 public enum ViewerSortOrder {
-		MANUAL("manuell", 0, new ManualViewerComparator()),
-		DEFAULT("standard", 1, new DefaultViewerComparator());
-		
+	MANUAL("manuell", 0, new ManualViewerComparator()), DEFAULT("standard", 1, new DefaultViewerComparator());
+
 	final String label;
 	final int val;
 	final ViewerComparator vc;
-	
+
 	private static final int DESCENDING = 1;
 	private static int direction = DESCENDING;
 	private static int propertyIdx = 0;
 	private static boolean atcSort = false;
 	private static TimeTool time1 = new TimeTool();
 	private static TimeTool time2 = new TimeTool();
-	
-	private ViewerSortOrder(String label, int val, ViewerComparator vc){
+
+	private ViewerSortOrder(String label, int val, ViewerComparator vc) {
 		this.label = label;
 		this.val = val;
 		this.vc = vc;
 	}
-	
-	public int getDirection(){
+
+	public int getDirection() {
 		return direction == 1 ? SWT.DOWN : SWT.UP;
 	}
-	
-	public void setAtcSort(boolean value){
+
+	public void setAtcSort(boolean value) {
 		atcSort = value;
 	}
-	
-	public void setColumn(int column){
+
+	public void setColumn(int column) {
 		if (column == propertyIdx) {
 			// Same column as last sort; toggle the direction
 			direction = 1 - direction;
@@ -47,28 +46,29 @@ public enum ViewerSortOrder {
 			direction = DESCENDING;
 		}
 	}
-	
+
 	/**
-	 * sort the medication order by manual ordering as stored in {@link IPrescription#FLD_SORT_ORDER}
+	 * sort the medication order by manual ordering as stored in
+	 * {@link IPrescription#FLD_SORT_ORDER}
 	 */
 	public static class ManualViewerComparator extends ViewerComparator {
 		@Override
-		public int compare(Viewer viewer, Object e1, Object e2){
+		public int compare(Viewer viewer, Object e1, Object e2) {
 			MedicationTableViewerItem p1 = (MedicationTableViewerItem) e1;
 			MedicationTableViewerItem p2 = (MedicationTableViewerItem) e2;
-			
+
 			return Integer.compare(p1.getOrder(), p2.getOrder());
 		}
 	}
-	
+
 	/**
-	 * sort the medication table viewer first by group (fixed medication or pro re nata medication),
-	 * and then by natural article name
+	 * sort the medication table viewer first by group (fixed medication or pro re
+	 * nata medication), and then by natural article name
 	 */
 	public static class DefaultViewerComparator extends ViewerComparator {
-		
+
 		@Override
-		public int compare(Viewer viewer, Object e1, Object e2){
+		public int compare(Viewer viewer, Object e1, Object e2) {
 			MedicationTableViewerItem p1 = (MedicationTableViewerItem) e1;
 			MedicationTableViewerItem p2 = (MedicationTableViewerItem) e2;
 			// ignore colums and sort by atc
@@ -125,7 +125,7 @@ public enum ViewerSortOrder {
 			case 5:
 				boolean stop1IsValid = isStopped(p1.getEndDate());
 				boolean stop2IsValid = isStopped(p2.getEndDate());
-				
+
 				if (stop1IsValid && stop2IsValid) {
 					time1.set(p1.getEndDate());
 					time2.set(p2.getEndDate());
@@ -143,22 +143,22 @@ public enum ViewerSortOrder {
 				String stopReason1 = p1.getStopReason();
 				if (stopReason1 == null)
 					stopReason1 = "";
-				
+
 				String stopReason2 = p2.getStopReason();
 				if (stopReason2 == null)
 					stopReason2 = "";
-				
+
 				rc = stopReason1.compareTo(stopReason2);
 				break;
 			case 7:
 				String prescriptor1 = p1.getPrescriptorLabel();
 				if (prescriptor1 == null)
 					prescriptor1 = "";
-				
+
 				String prescriptor2 = p2.getPrescriptorLabel();
 				if (prescriptor2 == null)
 					prescriptor2 = "";
-				
+
 				rc = prescriptor1.compareTo(prescriptor2);
 				break;
 			default:
@@ -170,22 +170,22 @@ public enum ViewerSortOrder {
 			}
 			return rc;
 		}
-		
-		private boolean isStopped(String endDate){
+
+		private boolean isStopped(String endDate) {
 			if (endDate != null && endDate.length() > 4) {
 				return true;
 			}
 			return false;
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param i
-	 * @return the respective {@link ViewerSortOrder} for i, or {@link ViewerSortOrder#DEFAULT} if
-	 *         invalid or not found
+	 * @return the respective {@link ViewerSortOrder} for i, or
+	 *         {@link ViewerSortOrder#DEFAULT} if invalid or not found
 	 */
-	public static ViewerSortOrder getSortOrderPerValue(int i){
+	public static ViewerSortOrder getSortOrderPerValue(int i) {
 		for (ViewerSortOrder cvso : ViewerSortOrder.values()) {
 			if (cvso.val == i)
 				return cvso;

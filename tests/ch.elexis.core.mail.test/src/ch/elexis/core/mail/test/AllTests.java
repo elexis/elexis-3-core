@@ -9,11 +9,9 @@ import ch.elexis.core.mail.internal.MailClientImapTest;
 import ch.elexis.core.mail.internal.MailClientTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
-	MailAccountTest.class, MailClientTest.class, MailTextTemplateTest.class,
-	MailClientImapTest.class
+@Suite.SuiteClasses({ MailAccountTest.class, MailClientTest.class, MailTextTemplateTest.class, MailClientImapTest.class
 
 })
 public class AllTests {
-	
+
 }

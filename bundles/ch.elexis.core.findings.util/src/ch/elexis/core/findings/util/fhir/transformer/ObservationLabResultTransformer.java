@@ -20,64 +20,62 @@ import ch.elexis.core.model.ILabResult;
 
 @Component
 public class ObservationLabResultTransformer implements IFhirTransformer<Observation, ILabResult> {
-	
+
 	private ILabResultHelper labResultHelper;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		labResultHelper = new ILabResultHelper();
 	}
-	
+
 	@Override
-	public Optional<Observation> getFhirObject(ILabResult localObject, SummaryEnum summaryEnum,
-		Set<Include> includes){
+	public Optional<Observation> getFhirObject(ILabResult localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Observation observation = new Observation();
-		
+
 		observation.setId(new IdDt("Observation", localObject.getId()));
 		observation.addIdentifier(getElexisObjectIdentifier(localObject));
-		
+
 		CodeableConcept observationCode = new CodeableConcept();
-		observationCode.setCoding(Collections.singletonList(new Coding(
-			ObservationCategory.LABORATORY.getSystem(), ObservationCategory.LABORATORY.toCode(),
-			ObservationCategory.LABORATORY.getDisplay())));
+		observationCode.setCoding(Collections.singletonList(new Coding(ObservationCategory.LABORATORY.getSystem(),
+				ObservationCategory.LABORATORY.toCode(), ObservationCategory.LABORATORY.getDisplay())));
 		observation.addCategory(observationCode);
-		
+
 		observation.setSubject(labResultHelper.getReference("Patient", localObject.getPatient()));
-		
+
 		observation.setEffective(labResultHelper.getEffectiveDateTime(localObject));
-		
+
 		observation.setValue(labResultHelper.getResult(localObject));
-		
+
 		observation.setReferenceRange(labResultHelper.getReferenceComponents(localObject));
-		
+
 		observation.setCode(labResultHelper.getCodeableConcept(localObject));
-		
+
 		observation.setNote(labResultHelper.getNote(localObject));
-		
+
 		return Optional.of(observation);
 	}
-	
+
 	@Override
-	public Optional<ILabResult> getLocalObject(Observation fhirObject){
+	public Optional<ILabResult> getLocalObject(Observation fhirObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public Optional<ILabResult> updateLocalObject(Observation fhirObject, ILabResult localObject){
+	public Optional<ILabResult> updateLocalObject(Observation fhirObject, ILabResult localObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public Optional<ILabResult> createLocalObject(Observation fhirObject){
+	public Optional<ILabResult> createLocalObject(Observation fhirObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz){
+	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz) {
 		return Observation.class.equals(fhirClazz) && ILabResult.class.equals(localClazz);
 	}
-	
+
 }

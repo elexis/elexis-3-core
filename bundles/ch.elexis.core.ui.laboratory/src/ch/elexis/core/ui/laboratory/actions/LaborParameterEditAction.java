@@ -12,23 +12,23 @@ import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
 
 public class LaborParameterEditAction extends RestrictedAction {
-	
+
 	private List<LabResult> currentSelection;
 	private StructuredViewer viewer;
-	
-	public LaborParameterEditAction(List<LabResult> currentSelection, StructuredViewer viewer){
+
+	public LaborParameterEditAction(List<LabResult> currentSelection, StructuredViewer viewer) {
 		super(AccessControlDefaults.LABPARAM_EDIT, Messages.AccessControlDefaults_EditLaboratoryParameter);
 		this.currentSelection = currentSelection;
 		this.viewer = viewer;
 	}
-	
+
 	@Override
-	public void doRun(){
+	public void doRun() {
 		if (currentSelection != null && currentSelection.size() == 1) {
 			LabItem labItem = (LabItem) currentSelection.get(0).getItem();
 			EditLabItemUi.executeWithParams(labItem);
 		}
-		
+
 	}
-	
+
 }

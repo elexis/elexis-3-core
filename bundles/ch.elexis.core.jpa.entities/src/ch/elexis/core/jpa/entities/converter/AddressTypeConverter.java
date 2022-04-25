@@ -11,7 +11,7 @@ import ch.elexis.core.types.AddressType;
 public class AddressTypeConverter implements AttributeConverter<AddressType, String> {
 
 	@Override
-	public String convertToDatabaseColumn(AddressType attribute){
+	public String convertToDatabaseColumn(AddressType attribute) {
 		if (attribute != null) {
 			return Integer.toString(attribute.getValue());
 		}
@@ -19,7 +19,7 @@ public class AddressTypeConverter implements AttributeConverter<AddressType, Str
 	}
 
 	@Override
-	public AddressType convertToEntityAttribute(String dbData){
+	public AddressType convertToEntityAttribute(String dbData) {
 		if (StringUtils.isEmpty(dbData)) {
 			return AddressType.PLACE_OF_RESIDENCE;
 		}

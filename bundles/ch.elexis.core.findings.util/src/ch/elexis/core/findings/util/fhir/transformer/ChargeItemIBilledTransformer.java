@@ -37,34 +37,32 @@ import ch.rgw.tools.Result;
 
 @Component
 public class ChargeItemIBilledTransformer implements IFhirTransformer<ChargeItem, IBilled> {
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
-	
+
 	@Reference
 	private IBillingService billingService;
-	
+
 	@Reference
 	private ICodeElementService codeElementService;
-	
+
 	@Reference
 	private IContextService contextService;
-	
+
 	@Override
-	public Optional<ChargeItem> getFhirObject(IBilled localObject, SummaryEnum summaryEnum,
-		Set<Include> includes){
-		
+	public Optional<ChargeItem> getFhirObject(IBilled localObject, SummaryEnum summaryEnum, Set<Include> includes) {
+
 		ChargeItem chargeItem = new ChargeItem();
-		chargeItem.setId(new IdDt("ChargeItem", localObject.getId(),
-			Long.toString(localObject.getLastupdate())));
-		
+		chargeItem.setId(new IdDt("ChargeItem", localObject.getId(), Long.toString(localObject.getLastupdate())));
+
 		chargeItem.setStatus(ChargeItemStatus.BILLED);
-		
+
 		chargeItem.setContext(FhirUtil.getReference(localObject.getEncounter()));
-		
+
 		CodeableConcept code = new CodeableConcept();
 		chargeItem.setCode(code);
-		
+
 		IBillable billable = localObject.getBillable();
 		if (billable instanceof IArticle) {
 			IArticle article = ((IArticle) billable);
@@ -72,74 +70,72 @@ public class ChargeItemIBilledTransformer implements IFhirTransformer<ChargeItem
 			if (StringUtils.isNotBlank(gtin)) {
 				code.addCoding(CodeSystemUtil.getGtinCoding(gtin));
 			}
-			//			chargeItem.setProduct(code);
+			// chargeItem.setProduct(code);
 		}
-		
+
 		code.addCoding(CodeSystemUtil.getCodeElementCoding(codeElementService, billable));
-		
+
 		chargeItem.setQuantity(new Quantity(localObject.getAmount()));
-		
+
 		return Optional.of(chargeItem);
 	}
-	
+
 	@Override
-	public Optional<IBilled> getLocalObject(ChargeItem fhirObject){
+	public Optional<IBilled> getLocalObject(ChargeItem fhirObject) {
 		String id = fhirObject.getIdElement().getIdPart();
 		if (id != null && !id.isEmpty()) {
 			return coreModelService.load(id, IBilled.class);
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<IBilled> updateLocalObject(ChargeItem fhirObject, IBilled localObject){
-		
+	public Optional<IBilled> updateLocalObject(ChargeItem fhirObject, IBilled localObject) {
+
 		assertMandator(fhirObject, localObject.getEncounter().getMandator());
-		
+
 		Quantity quantity = fhirObject.getQuantity();
-		IStatus status =
-			billingService.changeAmountValidated(localObject, quantity.getValue().doubleValue());
+		IStatus status = billingService.changeAmountValidated(localObject, quantity.getValue().doubleValue());
 		if (!status.isOK()) {
-			throw new IFhirTransformerException(StatusUtil.getSeverityString(status.getSeverity()),
-				status.getMessage(), status.getCode());
+			throw new IFhirTransformerException(StatusUtil.getSeverityString(status.getSeverity()), status.getMessage(),
+					status.getCode());
 		}
-		
+
 		// TODO what is updatable?
 		// TODO lock
-		
+
 		return Optional.of(localObject);
 	}
-	
+
 	@Override
-	public Optional<IBilled> createLocalObject(ChargeItem fhirObject){
-		
+	public Optional<IBilled> createLocalObject(ChargeItem fhirObject) {
+
 		IEncounter encounter = assertEncounter(fhirObject);
 		assertMandator(fhirObject, encounter.getMandator());
 		IBillable billable = assertBillable(fhirObject);
-		
+
 		// TODO locking?
 		Result<IBilled> result = billingService.bill(billable, encounter,
-			fhirObject.getQuantity().getValue().doubleValue());
+				fhirObject.getQuantity().getValue().doubleValue());
 		if (!result.isOK()) {
-			throw new IFhirTransformerException(result.getSeverity().name(),
-				result.getCombinedMessages(), result.getCode());
+			throw new IFhirTransformerException(result.getSeverity().name(), result.getCombinedMessages(),
+					result.getCode());
 		}
-		
+
 		return Optional.of(result.get());
 	}
-	
-	private void assertMandator(ChargeItem fhirObject, IMandator encounterMandator){
+
+	private void assertMandator(ChargeItem fhirObject, IMandator encounterMandator) {
 		List<ChargeItemPerformerComponent> performers = fhirObject.getPerformer();
 		if (performers.isEmpty()) {
 			if (encounterMandator != null) {
 				contextService.setActiveMandator(encounterMandator);
 				return;
 			} else {
-				throw new IFhirTransformerException("WARNING",
-					"No performer set or available via encounter", 0);
+				throw new IFhirTransformerException("WARNING", "No performer set or available via encounter", 0);
 			}
 		}
-		
+
 		String mandatorId = performers.get(0).getActor().getReferenceElement().getIdPart();
 		IMandator mandator = coreModelService.load(mandatorId, IMandator.class).orElse(null);
 		if (mandator == null) {
@@ -147,39 +143,39 @@ public class ChargeItemIBilledTransformer implements IFhirTransformer<ChargeItem
 		}
 		contextService.setActiveMandator(mandator);
 	}
-	
-	private IBillable assertBillable(ChargeItem fhirObject){
-		Optional<ICodeElement> iCodeElement = CodeSystemUtil
-			.loadCodeElementEntryInCodeableConcept(codeElementService, fhirObject.getCode());
+
+	private IBillable assertBillable(ChargeItem fhirObject) {
+		Optional<ICodeElement> iCodeElement = CodeSystemUtil.loadCodeElementEntryInCodeableConcept(codeElementService,
+				fhirObject.getCode());
 		if (iCodeElement.isEmpty()) {
 			throw new IFhirTransformerException("WARNING", "No codeElement found", 412);
 		}
-		
+
 		ICodeElement _iCodeElement = iCodeElement.get();
 		if (!(_iCodeElement instanceof IBillable)) {
 			throw new IFhirTransformerException("WARNING", "Non-billable codeElement found", 412);
 		}
 		return (IBillable) _iCodeElement;
 	}
-	
-	private IEncounter assertEncounter(ChargeItem fhirObject){
+
+	private IEncounter assertEncounter(ChargeItem fhirObject) {
 		IIdType referenceElement = fhirObject.getContext().getReferenceElement();
 		String encounterId = referenceElement.getIdPart();
 		if (StringUtils.isBlank(encounterId)) {
 			// currently context is encounter only
 			throw new IFhirTransformerException("WARNING", "Missing encounter parameter", 412);
 		}
-		
+
 		IEncounter encounter = coreModelService.load(encounterId, IEncounter.class).orElse(null);
 		if (encounter == null) {
 			throw new IFhirTransformerException("WARNING", "Invalid encounter", 412);
 		}
 		return encounter;
 	}
-	
+
 	@Override
-	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz){
+	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz) {
 		return ChargeItem.class.equals(fhirClazz) && IBilled.class.equals(localClazz);
 	}
-	
+
 }

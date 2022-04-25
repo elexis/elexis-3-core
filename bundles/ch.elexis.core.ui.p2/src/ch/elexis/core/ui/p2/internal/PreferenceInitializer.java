@@ -4,7 +4,7 @@
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
  *  http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -22,17 +22,16 @@ import ch.elexis.core.ui.p2.Activator;
  * @since 3.6
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences
-	 * ()
+	 *
+	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
+	 * initializeDefaultPreferences ()
 	 */
 	@Override
-	public void initializeDefaultPreferences(){
-		Preferences node = DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID); //$NON-NLS-1$
+	public void initializeDefaultPreferences() {
+		Preferences node = DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID); // $NON-NLS-1$
 		// default values
 		node.putBoolean(PreferenceConstants.REPOSITORIES_VISIBLE, true);
 		node.putBoolean(PreferenceConstants.SHOW_LATEST_VERSION_ONLY, true);
@@ -40,8 +39,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		node.putBoolean(PreferenceConstants.INSTALLED_SHOW_ALL_BUNDLES, false);
 		node.putBoolean(PreferenceConstants.AVAILABLE_GROUP_BY_CATEGORY, true);
 		node.putBoolean(PreferenceConstants.SHOW_DRILLDOWN_REQUIREMENTS, false);
-		node.putInt(PreferenceConstants.RESTART_POLICY,
-			Policy.RESTART_POLICY_PROMPT_RESTART_OR_APPLY);
+		node.putInt(PreferenceConstants.RESTART_POLICY, Policy.RESTART_POLICY_PROMPT_RESTART_OR_APPLY);
 		node.putInt(PreferenceConstants.UPDATE_WIZARD_STYLE, Policy.UPDATE_STYLE_MULTIPLE_IUS);
 		node.putBoolean(PreferenceConstants.FILTER_ON_ENV, true);
 		node.putInt(PreferenceConstants.UPDATE_DETAILS_HEIGHT, SWT.DEFAULT);

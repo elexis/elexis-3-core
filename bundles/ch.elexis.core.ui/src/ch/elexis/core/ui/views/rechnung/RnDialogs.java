@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views.rechnung;
@@ -79,53 +79,53 @@ import ch.rgw.tools.TimeTool;
 public class RnDialogs {
 	public static final int ERR_STORNO = 1;
 	private static final String RECHNUNG_IST_STORNIERT = "Rechnung ist storniert";
-	
+
 	public static class GebuehrHinzuDialog extends TitleAreaDialog {
 		Rechnung rn;
 		DatePickerCombo dp;
 		Text amount;
 		Text bemerkung;
-		
-		public GebuehrHinzuDialog(Shell shell, Rechnung r) throws ElexisException{
+
+		public GebuehrHinzuDialog(Shell shell, Rechnung r) throws ElexisException {
 			super(shell);
 			if (r.getStatus() == RnStatus.STORNIERT) {
 				throw new ElexisException(getClass(), RECHNUNG_IST_STORNIERT, ERR_STORNO);
 			}
 			rn = r;
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			Composite ret = new Composite(parent, SWT.NONE);
 			ret.setLayout(new GridLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); // $NON-NLS-1$
 			dp = new DatePickerCombo(ret, SWT.NONE);
 			dp.setDate(new Date());
-			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); // $NON-NLS-1$
 			// nf=NumberFormat.getCurrencyInstance();
 			amount = new Text(ret, SWT.BORDER);
 			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); // $NON-NLS-1$
 			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setFocus();
 			return ret;
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
-			setTitle(Messages.RnDialogs_invoice + rn.getNr()); //$NON-NLS-1$
-			getShell().setText(Messages.RnDialogs_addExpense); //$NON-NLS-1$
-			setMessage(Messages.RnDialogs_enterAmount); //$NON-NLS-1$
+			setTitle(Messages.RnDialogs_invoice + rn.getNr()); // $NON-NLS-1$
+			getShell().setText(Messages.RnDialogs_addExpense); // $NON-NLS-1$
+			setMessage(Messages.RnDialogs_enterAmount); // $NON-NLS-1$
 			setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 		}
-		
+
 		@Override
-		protected void okPressed(){
-			
+		protected void okPressed() {
+
 			// Number num=df.parse(amount.getText());
 			Money ret = MoneyInput.getFromTextField(amount);
 			if (ret != null) {
@@ -133,28 +133,27 @@ public class RnDialogs {
 				rn.addZahlung(ret, bemerkung.getText(), new TimeTool(dp.getDate().getTime()));
 				super.okPressed();
 			} else {
-				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid,
-					Messages.RnDialogs_invalidFormat, //$NON-NLS-1$ //$NON-NLS-2$
-					new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, // $NON-NLS-1$
+																														// //$NON-NLS-2$
+						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			
+
 		}
 	}
-	
+
 	public static class MultiGebuehrHinzuDialog extends TitleAreaDialog {
 		private List<Rechnung> rechnungen;
 		private List<String> rnNumbers;
-		
+
 		private DatePickerCombo dp;
 		private Text amount;
 		private Text bemerkung;
 		private TableViewer tableViewer;
-		
-		public MultiGebuehrHinzuDialog(Shell shell, List<Rechnung> rechnungen)
-			throws ElexisException{
+
+		public MultiGebuehrHinzuDialog(Shell shell, List<Rechnung> rechnungen) throws ElexisException {
 			super(shell);
 			this.rechnungen = rechnungen;
-			
+
 			rnNumbers = new ArrayList<String>();
 			for (Rechnung rn : rechnungen) {
 				if (rn.getStatus() == RnStatus.STORNIERT) {
@@ -163,26 +162,26 @@ public class RnDialogs {
 				rnNumbers.add(rn.getNr());
 			}
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			Composite ret = new Composite(parent, SWT.NONE);
 			ret.setLayout(new GridLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			
-			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); //$NON-NLS-1$
+
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); // $NON-NLS-1$
 			dp = new DatePickerCombo(ret, SWT.NONE);
 			dp.setDate(new Date());
-			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); // $NON-NLS-1$
 			// nf=NumberFormat.getCurrencyInstance();
 			amount = new Text(ret, SWT.BORDER);
 			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); // $NON-NLS-1$
 			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setFocus();
-			
+
 			tableViewer = new TableViewer(ret, SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
 			GridData gd_Table = new GridData();
 			gd_Table.grabExcessHorizontalSpace = true;
@@ -197,24 +196,24 @@ public class RnDialogs {
 			colRnNumber.getColumn().setWidth(200);
 			colRnNumber.getColumn().setText(Messages.RnDialogs_invoiceNumber);
 			colRnNumber.setLabelProvider(new ColumnLabelProvider());
-			
+
 			tableViewer.setInput(rnNumbers);
-			
+
 			return ret;
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
-			setTitle(Messages.RnDialogs_addExpenseMulti); //$NON-NLS-1$
-			getShell().setText(Messages.RnDialogs_addExpense); //$NON-NLS-1$
-			setMessage(Messages.RnDialogs_enterAmount); //$NON-NLS-1$
+			setTitle(Messages.RnDialogs_addExpenseMulti); // $NON-NLS-1$
+			getShell().setText(Messages.RnDialogs_addExpense); // $NON-NLS-1$
+			setMessage(Messages.RnDialogs_enterAmount); // $NON-NLS-1$
 			setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 		}
-		
+
 		@Override
-		protected void okPressed(){
-			
+		protected void okPressed() {
+
 			// Number num=df.parse(amount.getText());
 			Money ret = MoneyInput.getFromTextField(amount);
 			if (ret != null) {
@@ -225,28 +224,28 @@ public class RnDialogs {
 				}
 				super.okPressed();
 			} else {
-				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid,
-					Messages.RnDialogs_invalidFormat, //$NON-NLS-1$ //$NON-NLS-2$
-					new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, // $NON-NLS-1$
+																														// //$NON-NLS-2$
+						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			
+
 		}
 	}
-	
+
 	public static class BuchungHinzuDialog extends TitleAreaDialog {
-		
+
 		Rechnung rn;
 		DatePickerCombo dp;
 		Text amount, bemerkung;
-		
+
 		ComboViewer viewer;
-		
-		public BuchungHinzuDialog(Shell shell, Rechnung r) throws ElexisException{
+
+		public BuchungHinzuDialog(Shell shell, Rechnung r) throws ElexisException {
 			this(shell, r, false);
 		}
-		
+
 		/**
-		 * 
+		 *
 		 * @param shell
 		 * @param invoice
 		 * @param allowCancelledInvoices
@@ -254,7 +253,7 @@ public class RnDialogs {
 		 * @since 3.6
 		 */
 		public BuchungHinzuDialog(Shell shell, Rechnung invoice, boolean allowCancelledInvoices)
-			throws ElexisException{
+				throws ElexisException {
 			super(shell);
 			if (invoice.getStatus() == InvoiceState.CANCELLED.numericValue()) {
 				if (!allowCancelledInvoices) {
@@ -263,21 +262,21 @@ public class RnDialogs {
 			}
 			rn = invoice;
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			Composite ret = new Composite(parent, SWT.NONE);
 			ret.setLayout(new GridLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); // $NON-NLS-1$
 			dp = new DatePickerCombo(ret, SWT.NONE);
 			dp.setDate(new Date());
-			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); // $NON-NLS-1$
 			// nf=NumberFormat.getCurrencyInstance();
 			amount = new Text(ret, SWT.BORDER);
 			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); // $NON-NLS-1$
 			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setText(rn.getOffenerBetrag().getAmountAsString());
@@ -287,7 +286,7 @@ public class RnDialogs {
 			viewer.setContentProvider(ArrayContentProvider.getInstance());
 			viewer.setLabelProvider(new LabelProvider() {
 				@Override
-				public String getText(Object element){
+				public String getText(Object element) {
 					if (element instanceof Account) {
 						return ((Account) element).getNumeric() + " - " + ((Account) element).getName();
 					}
@@ -298,27 +297,26 @@ public class RnDialogs {
 			accounts.addAll(Account.getAccounts().values());
 			accounts.sort(new Comparator<Account>() {
 				@Override
-				public int compare(Account left, Account right){
-					return Integer.valueOf(left.getNumeric())
-						.compareTo(Integer.valueOf(right.getNumeric()));
+				public int compare(Account left, Account right) {
+					return Integer.valueOf(left.getNumeric()).compareTo(Integer.valueOf(right.getNumeric()));
 				}
 			});
 			viewer.setInput(accounts);
 			viewer.getCombo().setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			return ret;
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
-			setTitle(Messages.RnDialogs_invoice + rn.getNr()); //$NON-NLS-1$
-			getShell().setText(Messages.RnDialogs_addTransaction); //$NON-NLS-1$
-			setMessage(Messages.RnDialogs_enterAmount); //$NON-NLS-1$
+			setTitle(Messages.RnDialogs_invoice + rn.getNr()); // $NON-NLS-1$
+			getShell().setText(Messages.RnDialogs_addTransaction); // $NON-NLS-1$
+			setMessage(Messages.RnDialogs_enterAmount); // $NON-NLS-1$
 			setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			// Number num=df.parse(amount.getText());
 			Money ret = MoneyInput.getFromTextField(amount);
 			if (ret != null) {
@@ -342,28 +340,28 @@ public class RnDialogs {
 				}
 				super.okPressed();
 			} else {
-				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid,
-					Messages.RnDialogs_invalidFormat, //$NON-NLS-1$ //$NON-NLS-2$
-					new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, // $NON-NLS-1$
+																														// //$NON-NLS-2$
+						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	public static class StatusAendernDialog extends TitleAreaDialog {
 		Rechnung rn;
 		Combo cbStates;
-		
+
 		// RnStatus[] states=RnStatus.Text;
-		
-		public StatusAendernDialog(Shell shell, Rechnung r){
+
+		public StatusAendernDialog(Shell shell, Rechnung r) {
 			super(shell);
 			rn = r;
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			Composite ret = new Composite(parent, SWT.NONE);
 			ret.setLayout(new GridLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -372,60 +370,60 @@ public class RnDialogs {
 			cbStates.setVisibleItemCount(RnStatus.getStatusTexts().length);
 			cbStates.select(rn.getStatus());
 			cbStates.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.WRAP).setText(Messages.RnDialogs_warningDontChangeManually); //$NON-NLS-1$
+			new Label(ret, SWT.WRAP).setText(Messages.RnDialogs_warningDontChangeManually); // $NON-NLS-1$
 			return ret;
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
-			getShell().setText(Messages.RnDialogs_invoiceNumber + rn.getNr()); //$NON-NLS-1$
-			setTitle(Messages.RnDialogs_modifyInvoiceState); //$NON-NLS-1$
-			
-			setMessage(rn.getFall().getPatient().getLabel() + Messages.RnDialogs_pleaseNewState); //$NON-NLS-1$
+			getShell().setText(Messages.RnDialogs_invoiceNumber + rn.getNr()); // $NON-NLS-1$
+			setTitle(Messages.RnDialogs_modifyInvoiceState); // $NON-NLS-1$
+
+			setMessage(rn.getFall().getPatient().getLabel() + Messages.RnDialogs_pleaseNewState); // $NON-NLS-1$
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			int idx = cbStates.getSelectionIndex();
 			if (idx != -1) {
 				rn.setStatus(idx);
 			}
 			super.okPressed();
 		}
-		
+
 	}
-	
+
 	public static class MultiStatusAendernDialog extends TitleAreaDialog {
 		private List<Rechnung> rechnungen;
 		private List<String> rnNumbers;
 		private Combo cbStates;
 		private TableViewer tableViewer;
-		
-		public MultiStatusAendernDialog(Shell shell, List<Rechnung> rechnungen){
+
+		public MultiStatusAendernDialog(Shell shell, List<Rechnung> rechnungen) {
 			super(shell);
 			this.rechnungen = rechnungen;
-			
+
 			rnNumbers = new ArrayList<String>();
 			for (Rechnung rn : rechnungen) {
 				rnNumbers.add(rn.getNr());
 			}
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			Composite ret = new Composite(parent, SWT.NONE);
 			ret.setLayout(new GridLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			Label lblSelectState = new Label(ret, SWT.NONE);
 			lblSelectState.setText(Messages.RnDialogs_pleaseNewStateForMulti);
-			
+
 			cbStates = new Combo(ret, SWT.READ_ONLY);
 			cbStates.setItems(RnStatus.getStatusTexts());
 			cbStates.setVisibleItemCount(RnStatus.getStatusTexts().length);
 			cbStates.select(rechnungen.get(0).getStatus());
 			cbStates.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			
+
 			tableViewer = new TableViewer(ret, SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
 			GridData gd_Table = new GridData();
 			gd_Table.grabExcessHorizontalSpace = true;
@@ -435,28 +433,28 @@ public class RnDialogs {
 			tableViewer.getTable().setLayoutData(gd_Table);
 			tableViewer.getTable().setHeaderVisible(true);
 			tableViewer.getTable().setLinesVisible(false);
-			
+
 			tableViewer.setContentProvider(new ArrayContentProvider());
 			TableViewerColumn colRnNumber = new TableViewerColumn(tableViewer, SWT.NONE);
 			colRnNumber.getColumn().setWidth(200);
 			colRnNumber.getColumn().setText(Messages.RnDialogs_invoiceNumber);
 			colRnNumber.setLabelProvider(new ColumnLabelProvider());
-			
+
 			tableViewer.setInput(rnNumbers);
-			
+
 			return ret;
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
-			getShell().setText(Messages.RnDialogs_modifyInvoiceState); //$NON-NLS-1$
-			setTitle(Messages.RnDialogs_modifyInvoiceStateMulti); //$NON-NLS-1$
+			getShell().setText(Messages.RnDialogs_modifyInvoiceState); // $NON-NLS-1$
+			setTitle(Messages.RnDialogs_modifyInvoiceStateMulti); // $NON-NLS-1$
 			setMessage(Messages.RnDialogs_warningDontChangeManually);
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			int idx = cbStates.getSelectionIndex();
 			if (idx != -1) {
 				for (Rechnung rn : rechnungen) {
@@ -466,7 +464,7 @@ public class RnDialogs {
 			super.okPressed();
 		}
 	}
-	
+
 	public static class StornoDialog extends TitleAreaDialog {
 		Rechnung rn;
 		Button bReactivate;
@@ -476,24 +474,23 @@ public class RnDialogs {
 		private boolean alwaysReactive = false;
 		private List<Konsultation> konsultations;
 		private boolean reopen = false;
-		
-		public StornoDialog(Shell shell, Rechnung r){
+
+		public StornoDialog(Shell shell, Rechnung r) {
 			super(shell);
 			rn = r;
 			this.alwaysReactive = false;
 		}
-		
-		public StornoDialog(Shell shell, Rechnung r, boolean alwaysReactive){
+
+		public StornoDialog(Shell shell, Rechnung r, boolean alwaysReactive) {
 			super(shell);
 			rn = r;
 			this.alwaysReactive = alwaysReactive;
 		}
-		
+
 		@SuppressWarnings("unchecked")
-		private List<IRnOutputter> getOutputters(){
+		private List<IRnOutputter> getOutputters() {
 			List<IRnOutputter> outputters = new ArrayList<>();
-			List<IRnOutputter> los =
-				Extensions.getClasses(ExtensionPointConstantsData.RECHNUNGS_MANAGER, "outputter"); //$NON-NLS-1$ //$NON-NLS-2$
+			List<IRnOutputter> los = Extensions.getClasses(ExtensionPointConstantsData.RECHNUNGS_MANAGER, "outputter"); //$NON-NLS-1$ //$NON-NLS-2$
 			for (IRnOutputter rno : los) {
 				if (rno.canStorno(null) && hasTrace(rno.getDescription())) {
 					outputters.add(rno);
@@ -501,13 +498,13 @@ public class RnDialogs {
 			}
 			return outputters;
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			lo = Extensions.getClasses(ExtensionPointConstantsData.RECHNUNGS_MANAGER, "outputter"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (lo.isEmpty()) {
-				String msg = "Elexis has no textplugin configured for outputting bills!"; //$NON-NLS-1$ 
+				String msg = "Elexis has no textplugin configured for outputting bills!"; //$NON-NLS-1$
 				SWTHelper.alert(msg, msg);
 				return null;
 			}
@@ -515,7 +512,7 @@ public class RnDialogs {
 			ret.setLayout(new GridLayout());
 			Label lbLocal = new Label(ret, SWT.NONE);
 			lbLocal.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			lbLocal.setText(Messages.RnDialogs_stornoOnlyLocal); //$NON-NLS-1$
+			lbLocal.setText(Messages.RnDialogs_stornoOnlyLocal); // $NON-NLS-1$
 			for (IRnOutputter rno : lo) {
 				if (rno.canStorno(null) && hasTrace(rno.getDescription())) {
 					Button cbStorno = new Button(ret, SWT.CHECK);
@@ -527,20 +524,19 @@ public class RnDialogs {
 				}
 			}
 			if (exporters.size() > 0) {
-				lbLocal.setText(Messages.RnDialogs_stornoPropagate); //$NON-NLS-1$
+				lbLocal.setText(Messages.RnDialogs_stornoPropagate); // $NON-NLS-1$
 			}
-			new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(
-				1, false, 1, false));
-			
+			new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
+
 			bReactivate = new Button(ret, SWT.CHECK);
-			bReactivate.setText(Messages.RnDialogs_reactivateConsultations); //$NON-NLS-1$
+			bReactivate.setText(Messages.RnDialogs_reactivateConsultations); // $NON-NLS-1$
 			bReactivate.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			bReactivate.setSelection(true);
-			
+
 			if (alwaysReactive) {
 				bReactivate.setVisible(false);
 			}
-			
+
 			/*
 			 * bYes=new Button(ret,SWT.RADIO); bNo=new Button(ret,SWT.RADIO);
 			 * bYes.setText(Messages.getString("RnDialogs.yes")); //$NON-NLS-1$
@@ -549,8 +545,8 @@ public class RnDialogs {
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			return ret;
 		}
-		
-		private boolean hasTrace(String msg){
+
+		private boolean hasTrace(String msg) {
 			List<String> msgs = rn.getTrace(Rechnung.OUTPUT);
 			for (String m : msgs) {
 				if (m.indexOf(msg) > -1) {
@@ -559,20 +555,21 @@ public class RnDialogs {
 			}
 			return false;
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
-			getShell().setText(Messages.RnDialogs_invoice + rn.getNr()); //$NON-NLS-1$
-			setTitle(Messages.RnDialogs_reallyCancel); //$NON-NLS-1$
-			//setMessage(Messages.getString("RnDialogs.reactivateConsultations")); //$NON-NLS-1$
+			getShell().setText(Messages.RnDialogs_invoice + rn.getNr()); // $NON-NLS-1$
+			setTitle(Messages.RnDialogs_reallyCancel); // $NON-NLS-1$
+			// setMessage(Messages.getString("RnDialogs.reactivateConsultations"));
+			// //$NON-NLS-1$
 		}
-		
-		public boolean getReopen(){
+
+		public boolean getReopen() {
 			return reopen;
 		}
-		
-		public List<IRnOutputter> getExporters(){
+
+		public List<IRnOutputter> getExporters() {
 			if (selectedRnOutputters == null) {
 				selectedRnOutputters = new ArrayList<>();
 				for (Button exporter : exporters) {
@@ -583,43 +580,40 @@ public class RnDialogs {
 			}
 			return selectedRnOutputters;
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			reopen = bReactivate.getSelection() || alwaysReactive;
 			konsultations = rn.stornoBill(reopen);
 			for (IRnOutputter iro : getExporters()) {
-				iro.doOutput(IRnOutputter.TYPE.STORNO, Arrays.asList(new Rechnung[] {
-					rn
-				}), new Properties());
+				iro.doOutput(IRnOutputter.TYPE.STORNO, Arrays.asList(new Rechnung[] { rn }), new Properties());
 			}
 			super.okPressed();
 		}
-		
-		public List<Konsultation> getKonsultations(){
+
+		public List<Konsultation> getKonsultations() {
 			return konsultations;
 		}
-		
+
 		@Override
 		public int open() {
 			if (rn != null) {
 				if (Rechnung.isStorno(rn) || Rechnung.hasStornoBeforeDate(rn, new TimeTool())) {
-					SWTHelper.alert(Messages.RnActions_stornoAction,
-						Messages.RnActions_stornoActionNotPossibleText);
+					SWTHelper.alert(Messages.RnActions_stornoAction, Messages.RnActions_stornoActionNotPossibleText);
 					return TitleAreaDialog.CANCEL;
 				}
 			}
 			return super.open();
 		}
-		
+
 		/**
-		 * Opens a dialog and closes it with OK if no rnoutputters are registered. Otherwise the
-		 * dialog will stay opened.
-		 * 
+		 * Opens a dialog and closes it with OK if no rnoutputters are registered.
+		 * Otherwise the dialog will stay opened.
+		 *
 		 * @param closeWithOKIfNoExporterExists
 		 * @return
 		 */
-		public int openDialog(){
+		public int openDialog() {
 			List<IRnOutputter> rnOutputters = getOutputters();
 			if (rnOutputters != null && rnOutputters.isEmpty()) {
 				super.setBlockOnOpen(false);
@@ -630,34 +624,36 @@ public class RnDialogs {
 			return super.open();
 		}
 	}
-	
+
 	public static class RnListeExportDialog extends TitleAreaDialog {
 		ArrayList<Rechnung> rnn;
 		String RnListExportDirname = CoreHub.localCfg.get("rechnung/RnListExportDirname", null);
 		Text tDirName;
 		// RnStatus[] states=RnStatus.Text;
 		private Logger log = LoggerFactory.getLogger(RnActions.class);
-		private String RnListExportFileName =
-				new SimpleDateFormat("'RnListExport-'yyyyMMddHHmmss'.csv'").format(new Date());
-		
-		public RnListeExportDialog(Shell shell, List<Rechnung> rechnungen){
+		private String RnListExportFileName = new SimpleDateFormat("'RnListExport-'yyyyMMddHHmmss'.csv'")
+				.format(new Date());
+
+		public RnListeExportDialog(Shell shell, List<Rechnung> rechnungen) {
 			super(shell);
-			
+
 			rnn = new ArrayList<Rechnung>();
 			for (Rechnung rn : rechnungen) {
 				rnn.add(rn);
 			}
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			Composite ret = new Composite(parent, SWT.NONE);
 			ret.setLayout(new FillLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			
-			//201512211432js: Siehe auch Rechnungsdrucker.java public class RechnungsDrucker.createSettingsControl()
-			//TODO: Auf Konstante umstellen, dann braucht's allerdings den Austausch weiterer Module bei Installation!!!
-			
+
+			// 201512211432js: Siehe auch Rechnungsdrucker.java public class
+			// RechnungsDrucker.createSettingsControl()
+			// TODO: Auf Konstante umstellen, dann braucht's allerdings den Austausch
+			// weiterer Module bei Installation!!!
+
 			Group cSaveCopy = new Group(ret, SWT.NONE);
 			cSaveCopy.setText(String.format(Messages.RnActions_exportSaveHelp, RnListExportFileName));
 			cSaveCopy.setLayout(new GridLayout(2, false));
@@ -666,14 +662,14 @@ public class RnDialogs {
 			bSelectFile.setLayoutData(SWTHelper.getFillGridData(2, false, 1, false));
 			bSelectFile.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					DirectoryDialog ddlg = new DirectoryDialog(parent.getShell());
 					RnListExportDirname = ddlg.open();
 					if (RnListExportDirname == null) {
 						SWTHelper.alert(Messages.RnActions_exportListDirNameMissingCaption,
-							Messages.RnActions_exportListDirNameMissingText);
+								Messages.RnActions_exportListDirNameMissingText);
 					} else {
-						//ToDo: Umstellen auf externe Konstante!
+						// ToDo: Umstellen auf externe Konstante!
 						CoreHub.localCfg.set("rechnung/RnListExportDirname", RnListExportDirname);
 						tDirName.setText(RnListExportDirname);
 					}
@@ -684,25 +680,24 @@ public class RnDialogs {
 			tDirName.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 			return ret;
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
 			getShell().setText(Messages.RnActions_billsList);
 			setTitle(Messages.RnActions_exportListCaption);
 			setMessage(Messages.RnActions_exportListMessage);
 			getShell().setSize(900, 700);
-			SWTHelper.center(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-				getShell());
+			SWTHelper.center(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), getShell());
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			super.okPressed();
 			CSVWriteTable();
 		}
-		
-		public void CSVWriteTable(){
+
+		public void CSVWriteTable() {
 			String pathToSave = RnListExportDirname + "/" + RnListExportFileName;
 			CSVWriter csv = null;
 			int nrLines = 0;
@@ -710,7 +705,7 @@ public class RnDialogs {
 				csv = new CSVWriter(new FileWriter(pathToSave));
 				// @formatter:off
 					String[] header = new String[] {
-						"Aktion?", // line 0 
+						"Aktion?", // line 0
 						"Re.Nr", // line 1
 						"Re.DatumRn", // line 2
 						"Re.DatumVon", // line 3
@@ -741,8 +736,8 @@ public class RnDialogs {
 						"Pat.BillSummary.Open" // line 28
 					};
 					// @formatter:on
-				log.debug("csv export started for {} with {} fields for {} invoices", pathToSave,
-					header.length, rnn.size());
+				log.debug("csv export started for {} with {} fields for {} invoices", pathToSave, header.length,
+						rnn.size());
 				csv.writeNext(header);
 				nrLines++;
 				int i;
@@ -751,7 +746,7 @@ public class RnDialogs {
 					Fall fall = rn.getFall();
 					Patient p = fall.getPatient();
 					String[] line = new String[header.length];
-					line[0] = ""; //201512210402js: Leere Spalte zum Eintragen der gewünschten Aktion.
+					line[0] = ""; // 201512210402js: Leere Spalte zum Eintragen der gewünschten Aktion.
 					line[1] = rn.getNr();
 					line[2] = rn.getDatumRn();
 					line[3] = rn.getDatumVon();
@@ -777,44 +772,47 @@ public class RnDialogs {
 					List<String> statuschgs = rn.getTrace(Rechnung.STATUS_CHANGED);
 					String a = statuschgs.toString();
 					if (a != null && a.length() > 1) {
-						//Die Uhrzeiten rauswerfen:
+						// Die Uhrzeiten rauswerfen:
 						a = a.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-						//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+						// ", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine
+						// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
 						a = a.replaceAll(", ", "\n");
-						//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
+						// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 						line[12] = a.substring(1, a.length() - 1);
 					}
 					if (rn.getStatus() == RnStatus.FEHLERHAFT) {
 						List<String> rejects = rn.getTrace(Rechnung.REJECTED);
 						String rnStatus = rejects.toString();
 						if (rnStatus != null && rnStatus.length() > 1) {
-							//Die Uhrzeiten rauswerfen:
-							rnStatus =
-								rnStatus.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-							//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+							// Die Uhrzeiten rauswerfen:
+							rnStatus = rnStatus.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
+							// ", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine
+							// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
 							rnStatus = rnStatus.replaceAll(", ", "\n");
-							//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
+							// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 							line[13] = rnStatus.substring(1, rnStatus.length() - 1);
 						}
 					}
 					List<String> outputs = rn.getTrace(Rechnung.OUTPUT);
 					String rnOutput = outputs.toString();
 					if (rnOutput != null && rnOutput.length() > 1) {
-						//Die Uhrzeiten rauswerfen:
+						// Die Uhrzeiten rauswerfen:
 						rnOutput = rnOutput.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-						//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+						// ", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine
+						// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
 						rnOutput = rnOutput.replaceAll(", ", "\n");
-						//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
+						// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 						line[14] = rnOutput.substring(1, rnOutput.length() - 1);
 					}
 					List<String> payments = rn.getTrace(Rechnung.PAYMENT);
 					String rnPayment = payments.toString();
 					if (rnPayment != null && rnPayment.length() > 1) {
-						//Die Uhrzeiten rauswerfen:
+						// Die Uhrzeiten rauswerfen:
 						rnPayment = rnPayment.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-						//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+						// ", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine
+						// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
 						rnPayment = rnPayment.replaceAll(", ", "\n");
-						//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
+						// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 						line[15] = rnPayment.substring(1, rnPayment.length() - 1);
 					}
 					// Jetzt alles zum betroffenen Fall:
@@ -827,8 +825,10 @@ public class RnDialogs {
 					line[21] = p.getVorname();
 					line[22] = p.getGeburtsdatum();
 					// TODO: allenfalls wieder: auf n.a. oder so setzen...
-					// TODO: Ich möcht aber wissen, ob p (dürfte eigentlich nie der Fall sein) oder nk schuld sind, wenn nichts rauskommt.
-					// TODO: Na ja, eigentlich würd ich noch lieber wissen, WARUM da manchmal nichts rauskommt, obwohl eine kons sicher vhd ist.
+					// TODO: Ich möcht aber wissen, ob p (dürfte eigentlich nie der Fall sein) oder
+					// nk schuld sind, wenn nichts rauskommt.
+					// TODO: Na ja, eigentlich würd ich noch lieber wissen, WARUM da manchmal nichts
+					// rauskommt, obwohl eine kons sicher vhd ist.
 					String lkDatum = "p==null";
 					if (p != null) {
 						Konsultation lk = p.getLetzteKons(false);
@@ -839,15 +839,18 @@ public class RnDialogs {
 						}
 					}
 					line[23] = lkDatum;
-					line[24] = p.getBalance(); //returns: String
-					line[25] = p.getAccountExcess().toString(); //returns: Money
-					//201512210146js: Das Folgende ist aus BillSummary - dort wird dafür keine Funktion bereitgestellt,
-					// TODO: Prüfen, ob das eine Redundanz DORT und HIER ist vs. obenn erwähnter getKontostand(), getAccountExcess() etc.
+					line[24] = p.getBalance(); // returns: String
+					line[25] = p.getAccountExcess().toString(); // returns: Money
+					// 201512210146js: Das Folgende ist aus BillSummary - dort wird dafür keine
+					// Funktion bereitgestellt,
+					// TODO: Prüfen, ob das eine Redundanz DORT und HIER ist vs. obenn erwähnter
+					// getKontostand(), getAccountExcess() etc.
 					// maybe called from foreign thread
 					String totalText = ""; //$NON-NLS-1$
 					String paidText = ""; //$NON-NLS-1$
 					String openText = ""; //$NON-NLS-1$
-					// Davon, dass p != null ist, darf man eigentlich ausgehen, da ja Rechnungen zu p gehören etc.
+					// Davon, dass p != null ist, darf man eigentlich ausgehen, da ja Rechnungen zu
+					// p gehören etc.
 					if (p != null) {
 						Money total = new Money(0);
 						Money paid = new Money(0);

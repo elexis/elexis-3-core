@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Daniel Lutz - initial implementation based on RnPrintView
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views;
@@ -36,66 +36,67 @@ import ch.elexis.data.Patient;
 
 public class TemplatePrintView extends ViewPart {
 	private static final String KEY_TEXT = "text"; //$NON-NLS-1$
-	
+
 	private static final String KEY_BRIEF = "brief"; //$NON-NLS-1$
-	
+
 	public static final String ID = "ch.elexis.views.TemplatePrintView"; //$NON-NLS-1$
-	
+
 	CTabFolder ctab;
 	private int existing;
-	
+
 	private TextContainer text;
-	
-	public TemplatePrintView(){}
-	
+
+	public TemplatePrintView() {
+	}
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		ctab = new CTabFolder(parent, SWT.BOTTOM);
 		ctab.setLayout(new FillLayout());
-		
+
 	}
-	
-	CTabItem addItem(final String template, final String title, final Kontakt adressat){
+
+	CTabItem addItem(final String template, final String title, final Kontakt adressat) {
 		CTabItem ret = new CTabItem(ctab, SWT.NONE);
 		text = new TextContainer(getViewSite());
 		ret.setControl(text.getPlugin().createContainer(ctab, new ICallback() {
 			@Override
-			public void save(){}
-			
+			public void save() {
+			}
+
 			@Override
-			public boolean saveAs(){
+			public boolean saveAs() {
 				return false;
 			}
-			
+
 		}));
-		Brief actBrief =
-			text.createFromTemplateName(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN,
-				adressat, title);
+		Brief actBrief = text.createFromTemplateName(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN, adressat,
+				title);
 		ret.setData(KEY_BRIEF, actBrief);
 		ret.setData(KEY_TEXT, text);
 		ret.setText(title);
 		return ret;
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		clearItems();
 		super.dispose();
 	}
-	
-	public void clearItems(){
+
+	public void clearItems() {
 		for (int i = 0; i < ctab.getItems().length; i++) {
 			useItem(i, null, null);
 		}
 	}
-	
-	public void useItem(int idx, String template, Kontakt adressat){
+
+	public void useItem(int idx, String template, Kontakt adressat) {
 		CTabItem item = ctab.getItem(idx);
 		if (!item.isDisposed()) {
 			Brief brief = (Brief) item.getData(KEY_BRIEF);
@@ -104,22 +105,22 @@ public class TemplatePrintView extends ViewPart {
 			String betreff = brief.getBetreff();
 			brief.delete();
 			if (template != null) {
-				Brief actBrief = text.createFromTemplateName(Konsultation.getAktuelleKons(),
-					template, Brief.UNKNOWN, adressat, betreff);
+				Brief actBrief = text.createFromTemplateName(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN,
+						adressat, betreff);
 				item.setData(KEY_BRIEF, actBrief);
 			}
 		}
 	}
-	
+
 	/**
 	 * Show the generated template in the view
-	 * 
+	 *
 	 * @param pat
 	 * @param templateName
 	 */
-	public void doShow(Patient pat, String templateName){
+	public void doShow(Patient pat, String templateName) {
 		existing = ctab.getItems().length;
-		
+
 		if (--existing < 0) {
 			addItem(templateName, templateName, pat);
 		} else {
@@ -127,42 +128,37 @@ public class TemplatePrintView extends ViewPart {
 			useItem(0, templateName, pat);
 		}
 	}
-	
+
 	/**
 	 * Drukt Dokument anhand einer Vorlage
-	 * 
-	 * @param pat
-	 *            der Patient
-	 * @param templateName
-	 *            Name der Vorlage
-	 * @param printer
-	 *            Printer
-	 * @param tray
-	 *            Tray
+	 *
+	 * @param pat          der Patient
+	 * @param templateName Name der Vorlage
+	 * @param printer      Printer
+	 * @param tray         Tray
 	 * @param monitor
 	 * @return
 	 */
-	
-	public boolean doPrint(Patient pat, String templateName, String printer, String tray,
-		IProgressMonitor monitor){
+
+	public boolean doPrint(Patient pat, String templateName, String printer, String tray, IProgressMonitor monitor) {
 		monitor.subTask(pat.getLabel());
-		
+
 		// TODO ?
 		// GlobalEvents.getInstance().fireSelectionEvent(rn,getViewSite());
-		
+
 		existing = ctab.getItems().length;
 		CTabItem ct;
 		TextContainer text;
-		
+
 		if (--existing < 0) {
 			ct = addItem(templateName, templateName, pat);
 		} else {
 			ct = ctab.getItem(0);
 			useItem(0, templateName, pat);
 		}
-		
+
 		text = (TextContainer) ct.getData(KEY_TEXT);
-		
+
 		text.getPlugin().setFont("Serif", SWT.NORMAL, 9); //$NON-NLS-1$
 		if (text.getPlugin().print(printer, tray, false) == false) {
 			return false;
@@ -170,11 +166,10 @@ public class TemplatePrintView extends ViewPart {
 		monitor.worked(1);
 		return true;
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
-	boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

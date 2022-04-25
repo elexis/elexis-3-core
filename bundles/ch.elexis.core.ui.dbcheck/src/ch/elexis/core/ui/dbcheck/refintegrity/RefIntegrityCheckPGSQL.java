@@ -16,24 +16,24 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 
 public class RefIntegrityCheckPGSQL extends RefIntegrityCheck {
-	
-	public RefIntegrityCheckPGSQL(){
+
+	public RefIntegrityCheckPGSQL() {
 		oklog = new StringBuilder();
 		errlog = new StringBuilder();
 	}
-	
+
 	@Override
-	public String checkReferentialIntegrityStateCoreTables(JdbcLink j, IProgressMonitor monitor){
+	public String checkReferentialIntegrityStateCoreTables(JdbcLink j, IProgressMonitor monitor) {
 		String version = CheckExec.getDBVersion();
 		String[] tables = DBModel.getTableModel(version);
-		
+
 		try {
 			// Iterate Tables
 			for (int i = 0; i < tables.length; i++) {
 				String status = "Überprüfe Tabelle " + tables[i];
 				monitor.subTask(status);
 				oklog.append(status + ":\n");
-				
+
 				TableDescriptor tableDetail = DBModel.getTableDescription(tables[i]);
 				String[] refIntErrors = tableDetail.getReferentialIntegrityCheck(version);
 				if (!(refIntErrors == null) && refIntErrors.length > 0) {
@@ -43,19 +43,17 @@ public class RefIntegrityCheckPGSQL extends RefIntegrityCheck {
 						Stm stm = j.getStatement();
 						ResultSet rs = stm.query(query);
 						while (rs.next()) {
-							errlog.append(tables[i] + ": " + rs.getString(1) + " " + description
-								+ "\n");
+							errlog.append(tables[i] + ": " + rs.getString(1) + " " + description + "\n");
 						}
 					}
 				}
 			}
-			
+
 		} catch (SQLException e) {
-			Status status =
-				new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getLocalizedMessage(), e);
+			Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getLocalizedMessage(), e);
 			StatusManager.getManager().handle(status, StatusManager.SHOW);
 		}
 		return oklog.toString();
 	}
-	
+
 }

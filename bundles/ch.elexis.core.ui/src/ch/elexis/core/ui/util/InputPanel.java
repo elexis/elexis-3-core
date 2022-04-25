@@ -8,7 +8,7 @@
  * Contributors:
  *    G. Weirich - initial implementation
  *    D. Lutz	 - DBBased Importer
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.util;
@@ -29,8 +29,8 @@ public class InputPanel extends Composite implements IUnlockable {
 	Composite top;
 	InputData[] fields;
 	AutoForm af;
-	
-	public InputPanel(Composite parent, int minColumns, int maxColumns, InputData[] fields){
+
+	public InputPanel(Composite parent, int minColumns, int maxColumns, InputData[] fields) {
 		super(parent, SWT.NONE);
 		this.fields = fields;
 		min = minColumns;
@@ -47,18 +47,18 @@ public class InputPanel extends Composite implements IUnlockable {
 		af = new LabeledInputField.AutoForm(this, fields, min, max);
 		af.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 	}
-	
-	public AutoForm getAutoForm(){
+
+	public AutoForm getAutoForm() {
 		return af;
 	}
-	
+
 	@Override
-	public void setUnlocked(boolean unlock){
+	public void setUnlocked(boolean unlock) {
 		for (InputData id : fields) {
 			id.setEditable(unlock);
 		}
 	}
-	
+
 	public void save() {
 		for (InputData inputData : fields) {
 			af.save(inputData);

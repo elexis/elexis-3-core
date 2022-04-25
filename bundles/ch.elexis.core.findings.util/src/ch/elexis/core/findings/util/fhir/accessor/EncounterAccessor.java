@@ -21,20 +21,18 @@ import ch.elexis.core.findings.IdentifierSystem;
 import ch.elexis.core.findings.util.ModelUtil;
 
 public class EncounterAccessor extends AbstractFindingsAccessor {
-	
-	public Optional<LocalDateTime> getStartTime(DomainResource resource){
-		org.hl7.fhir.r4.model.Encounter fhirEncounter =
-			(org.hl7.fhir.r4.model.Encounter) resource;
+
+	public Optional<LocalDateTime> getStartTime(DomainResource resource) {
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
 		Period period = fhirEncounter.getPeriod();
 		if (period != null && period.getStart() != null) {
 			return Optional.of(getLocalDateTime(period.getStart()));
 		}
 		return Optional.empty();
 	}
-	
-	public void setStartTime(DomainResource resource, LocalDateTime time){
-		org.hl7.fhir.r4.model.Encounter fhirEncounter =
-			(org.hl7.fhir.r4.model.Encounter) resource;
+
+	public void setStartTime(DomainResource resource, LocalDateTime time) {
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
 		Period period = fhirEncounter.getPeriod();
 		if (period == null) {
 			period = new Period();
@@ -42,20 +40,18 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 		period.setStart(getDate(time));
 		fhirEncounter.setPeriod(period);
 	}
-	
-	public Optional<LocalDateTime> getEndTime(DomainResource resource){
-		org.hl7.fhir.r4.model.Encounter fhirEncounter =
-			(org.hl7.fhir.r4.model.Encounter) resource;
+
+	public Optional<LocalDateTime> getEndTime(DomainResource resource) {
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
 		Period period = fhirEncounter.getPeriod();
 		if (period != null && period.getEnd() != null) {
 			return Optional.of(getLocalDateTime(period.getEnd()));
 		}
 		return Optional.empty();
 	}
-	
-	public void setEndTime(DomainResource resource, LocalDateTime time){
-		org.hl7.fhir.r4.model.Encounter fhirEncounter =
-			(org.hl7.fhir.r4.model.Encounter) resource;
+
+	public void setEndTime(DomainResource resource, LocalDateTime time) {
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
 		Period period = fhirEncounter.getPeriod();
 		if (period == null) {
 			period = new Period();
@@ -63,36 +59,32 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 		period.setEnd(getDate(time));
 		fhirEncounter.setPeriod(period);
 	}
-	
-	public List<ICondition> getIndication(DomainResource resource){
+
+	public List<ICondition> getIndication(DomainResource resource) {
 		List<ICondition> indication = new ArrayList<>();
-		org.hl7.fhir.r4.model.Encounter fhirEncounter =
-			(org.hl7.fhir.r4.model.Encounter) resource;
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
 		List<DiagnosisComponent> theIndication = fhirEncounter.getDiagnosis();
 		for (DiagnosisComponent component : theIndication) {
 			Reference reference = component.getCondition();
 			if (reference.getReference() != null) {
 				String idString = reference.getReferenceElement().getIdPart();
-				ModelUtil.loadFinding(idString, ICondition.class)
-					.ifPresent(condition -> indication.add(condition));
+				ModelUtil.loadFinding(idString, ICondition.class).ifPresent(condition -> indication.add(condition));
 			}
 		}
 		return indication;
 	}
-	
-	public void setIndication(DomainResource resource, List<ICondition> indication){
-		org.hl7.fhir.r4.model.Encounter fhirEncounter =
-			(org.hl7.fhir.r4.model.Encounter) resource;
+
+	public void setIndication(DomainResource resource, List<ICondition> indication) {
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
 		List<DiagnosisComponent> theIndication = new ArrayList<>();
 		for (ICondition iCondition : indication) {
 			theIndication.add(new DiagnosisComponent(new Reference(new IdDt("Condition", iCondition.getId()))));
 		}
 		fhirEncounter.setDiagnosis(theIndication);
 	}
-	
-	public List<ICoding> getType(DomainResource resource){
-		org.hl7.fhir.r4.model.Encounter fhirEncounter =
-			(org.hl7.fhir.r4.model.Encounter) resource;
+
+	public List<ICoding> getType(DomainResource resource) {
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
 		List<CodeableConcept> codeableConcepts = fhirEncounter.getType();
 		if (codeableConcepts != null) {
 			ArrayList<ICoding> ret = new ArrayList<>();
@@ -103,10 +95,9 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 		}
 		return Collections.emptyList();
 	}
-	
-	public void setType(DomainResource resource, List<ICoding> coding){
-		org.hl7.fhir.r4.model.Encounter fhirEncounter =
-			(org.hl7.fhir.r4.model.Encounter) resource;
+
+	public void setType(DomainResource resource, List<ICoding> coding) {
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
 		List<CodeableConcept> codeableConcepts = fhirEncounter.getType();
 		if (!codeableConcepts.isEmpty()) {
 			codeableConcepts.clear();

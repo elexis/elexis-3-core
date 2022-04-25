@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    M. Descher - orders are now persisted into own table 
+ *    M. Descher - orders are now persisted into own table
  *    MEDEVIT - major refactoring to fit multi stock changes
  *******************************************************************************/
 
@@ -27,71 +27,68 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.TimeTool;
 
 public class Bestellung extends PersistentObject implements IOrder {
-	
+
 	public static final String TABLENAME = "BESTELLUNGEN";
-	
+
 	public static final String FLD_DATE = "DATUM";
 	public static final String FLD_JOINT_BESTELLUNGEN_ENTRIES = "BESTELLUNGEN_ENTRIES";
-	
+
 	public enum ListenTyp {
-			PHARMACODE, NAME, VOLL
+		PHARMACODE, NAME, VOLL
 	};
-	
+
 	static {
-		addMapping(TABLENAME,
-			FLD_JOINT_BESTELLUNGEN_ENTRIES + "=LIST:BESTELLUNG:" + BestellungEntry.TABLENAME);
+		addMapping(TABLENAME, FLD_JOINT_BESTELLUNGEN_ENTRIES + "=LIST:BESTELLUNG:" + BestellungEntry.TABLENAME);
 	}
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return TABLENAME;
 	}
-	
-	public static Bestellung load(String id){
+
+	public static Bestellung load(String id) {
 		return new Bestellung(id);
 	}
-	
-	protected Bestellung(){}
-	
-	protected Bestellung(String id){
+
+	protected Bestellung() {
+	}
+
+	protected Bestellung(String id) {
 		super(id);
 	}
-	
-	public Bestellung(String name, Anwender an){
+
+	public Bestellung(String name, Anwender an) {
 		TimeTool t = new TimeTool();
-		create(name + StringConstants.COLON + t.toString(TimeTool.TIMESTAMP) + StringConstants.COLON
-			+ an.getId());
+		create(name + StringConstants.COLON + t.toString(TimeTool.TIMESTAMP) + StringConstants.COLON + an.getId());
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		String[] i = getId().split(StringConstants.COLON);
 		TimeTool t = new TimeTool(i[1]);
 		return i[0] + ": " + t.toString(TimeTool.FULL_GER); //$NON-NLS-1$
 	}
-	
+
 	@Override
-	public IOrderEntry addEntry(Object article, IStock stock, Object provider, int num){
+	public IOrderEntry addEntry(Object article, IStock stock, Object provider, int num) {
 		return addBestellungEntry(((Artikel) article), ((Stock) stock), ((Kontakt) provider), num);
 	}
-	
+
 	/**
 	 * Adds an order entry to this
-	 * 
+	 *
 	 * @param article
 	 * @param stock
 	 * @param provider
 	 * @param num
 	 * @return
-	 * @since 3.7 num supports negative values, if the resulting sum reaches <= 0 the entry is
-	 *        deleted
+	 * @since 3.7 num supports negative values, if the resulting sum reaches <= 0
+	 *        the entry is deleted
 	 */
-	public BestellungEntry addBestellungEntry(Artikel article, Stock stock, Kontakt provider,
-		int num){
-		
+	public BestellungEntry addBestellungEntry(Artikel article, Stock stock, Kontakt provider, int num) {
+
 		if (provider == null) {
-			String providerId =
-				ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+			String providerId = ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 			if (providerId != null) {
 				Kontakt defProvider = Kontakt.load(providerId);
 				if (defProvider.exists()) {
@@ -99,7 +96,7 @@ public class Bestellung extends PersistentObject implements IOrder {
 				}
 			}
 		}
-		
+
 		BestellungEntry i = findBestellungEntry(stock, article);
 		if (i != null) {
 			int count = i.getCount();
@@ -115,8 +112,8 @@ public class Bestellung extends PersistentObject implements IOrder {
 		}
 		return i;
 	}
-	
-	public @Nullable BestellungEntry findBestellungEntry(@Nullable Stock stock, Artikel article){
+
+	public @Nullable BestellungEntry findBestellungEntry(@Nullable Stock stock, Artikel article) {
 		Query<BestellungEntry> qbe = new Query<BestellungEntry>(BestellungEntry.class);
 		qbe.add(BestellungEntry.FLD_BESTELLUNG, Query.EQUALS, getId());
 		qbe.add(BestellungEntry.FLD_ARTICLE_ID, Query.EQUALS, article.getId());
@@ -124,20 +121,20 @@ public class Bestellung extends PersistentObject implements IOrder {
 		if (stock != null) {
 			qbe.add(BestellungEntry.FLD_STOCK, Query.EQUALS, stock.getId());
 		}
-		
+
 		List<BestellungEntry> result = qbe.execute();
 		if (result.size() > 0) {
 			return result.get(0);
 		}
 		return null;
 	}
-	
+
 	public static class BestellungDateComparator implements Comparator<Bestellung> {
 		private TimeTool t1 = new TimeTool();
 		private TimeTool t2 = new TimeTool();
-		
+
 		@Override
-		public int compare(Bestellung b1, Bestellung b2){
+		public int compare(Bestellung b1, Bestellung b2) {
 			setTimeTool((Bestellung) b1, t1);
 			setTimeTool((Bestellung) b2, t2);
 			if (t1.after(t2))
@@ -146,8 +143,8 @@ public class Bestellung extends PersistentObject implements IOrder {
 				return 1;
 			return 0;
 		}
-		
-		private void setTimeTool(Bestellung bestellung, TimeTool timeTool){
+
+		private void setTimeTool(Bestellung bestellung, TimeTool timeTool) {
 			try {
 				String[] i = bestellung.getId().split(StringConstants.COLON);
 				timeTool.set(i[1]);
@@ -155,26 +152,26 @@ public class Bestellung extends PersistentObject implements IOrder {
 				timeTool.set("1.1.1970");
 			}
 		}
-		
+
 	}
-	
-	public List<BestellungEntry> getEntries(){
+
+	public List<BestellungEntry> getEntries() {
 		List<BestellungEntry> execute = new Query<BestellungEntry>(BestellungEntry.class,
-			BestellungEntry.FLD_BESTELLUNG, getId()).execute();
+				BestellungEntry.FLD_BESTELLUNG, getId()).execute();
 		return execute;
 	}
-	
-	public static void markAsOrdered(List<BestellungEntry> list){
+
+	public static void markAsOrdered(List<BestellungEntry> list) {
 		for (BestellungEntry item : list) {
 			item.setState(BestellungEntry.STATE_ORDERED);
 		}
 	}
-	
-	public void removeEntry(BestellungEntry entry){
+
+	public void removeEntry(BestellungEntry entry) {
 		entry.removeFromDatabase();
 	}
-	
-	public boolean isDone(){
+
+	public boolean isDone() {
 		List<BestellungEntry> entries = getEntries();
 		for (BestellungEntry bestellungEntry : entries) {
 			if (bestellungEntry.getState() != BestellungEntry.STATE_DONE) {
@@ -183,8 +180,8 @@ public class Bestellung extends PersistentObject implements IOrder {
 		}
 		return true;
 	}
-	
-	public TimeTool getTime(){
+
+	public TimeTool getTime() {
 		TimeTool ret = new TimeTool();
 		try {
 			String[] i = getId().split(":"); //$NON-NLS-1$
@@ -194,18 +191,16 @@ public class Bestellung extends PersistentObject implements IOrder {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Convenience conversion method, loads object via model service
-	 * 
+	 *
 	 * @return
 	 * @since 3.8
-	 * @throws IllegalStateException
-	 *             if entity could not be loaded
+	 * @throws IllegalStateException if entity could not be loaded
 	 */
-	public ch.elexis.core.model.IOrder toIOrder(){
+	public ch.elexis.core.model.IOrder toIOrder() {
 		return CoreModelServiceHolder.get().load(getId(), ch.elexis.core.model.IOrder.class)
-			.orElseThrow(
-				() -> new IllegalStateException("Could not convert order [" + getId() + "]"));
+				.orElseThrow(() -> new IllegalStateException("Could not convert order [" + getId() + "]"));
 	}
 }

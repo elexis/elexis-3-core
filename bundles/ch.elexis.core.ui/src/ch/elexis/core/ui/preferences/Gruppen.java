@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
@@ -23,24 +23,24 @@ import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
 import ch.elexis.core.ui.preferences.inputs.StringListFieldEditor;
 
 public class Gruppen extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-	
-	public Gruppen(){
+
+	public Gruppen() {
 //		super(GRID);
 //		setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 //		setDescription(Messages.Gruppen_GruppenUndRechte);
 		setDescription("Bitte konfigurieren Sie die Daten in den entsprechenden Unterpunkten");
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 //		String groups = ConfigServiceHolder.getGlobal(Preferences.ACC_GROUPS, null);
 //		if (groups == null) {
 //			ConfigServiceHolder.setGlobal(Preferences.ACC_GROUPS, StringConstants.ROLES_DEFAULT);
 //		}
-		
+
 	}
-	
+
 	@Override
-	protected void createFieldEditors(){
+	protected void createFieldEditors() {
 //		if (CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
 //			addField(new StringListFieldEditor(Preferences.ACC_GROUPS,
 //				StringConstants.ROLES_NAMING, Messages.Gruppen_BitteGebenSieNameEin,
@@ -48,7 +48,7 @@ public class Gruppen extends FieldEditorPreferencePage implements IWorkbenchPref
 //		} else {
 //			new PrefAccessDenied(getFieldEditorParent());
 //		}
-		
+
 	}
-	
+
 }

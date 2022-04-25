@@ -11,9 +11,8 @@ import ch.elexis.core.services.vfs.VirtualFileHandle_SmbDirectory_Test;
 import ch.elexis.core.services.vfs.VirtualFilesystemServiceTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-	VirtualFilesystemServiceTest.class, VirtualFileHandle_FileFile_Test.class,
-	VirtualFileHandle_FileDirectory_Test.class, VirtualFileHandle_SmbDirectory_Test.class,
-	VirtualFileHandle_Combined_Test.class
-})
-public class IVirtualFilesystemServiceTest {}
+@SuiteClasses({ VirtualFilesystemServiceTest.class, VirtualFileHandle_FileFile_Test.class,
+		VirtualFileHandle_FileDirectory_Test.class, VirtualFileHandle_SmbDirectory_Test.class,
+		VirtualFileHandle_Combined_Test.class })
+public class IVirtualFilesystemServiceTest {
+}

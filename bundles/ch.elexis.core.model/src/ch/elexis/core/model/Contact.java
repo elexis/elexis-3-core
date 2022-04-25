@@ -21,7 +21,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	public Contact(Kontakt entity) {
 		super(entity);
 	}
-	
+
 	@Override
 	public boolean isMandator() {
 		return getEntity().isMandator();
@@ -83,15 +83,15 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	}
 
 	@Override
-	public boolean isDeceased(){
+	public boolean isDeceased() {
 		return getEntity().isDeceased();
 	}
-	
+
 	@Override
-	public void setDeceased(boolean value){
+	public void setDeceased(boolean value) {
 		getEntityMarkDirty().setDeceased(value);
 	}
-	
+
 	@Override
 	public String getDescription1() {
 		return getEntity().getDescription1();
@@ -275,10 +275,10 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	}
 
 	@Override
-	public Map<Object, Object> getMap(){
+	public Map<Object, Object> getMap() {
 		return extInfoHandler.getMap();
 	}
-	
+
 	@Override
 	public List<IAddress> getAddress() {
 		CoreModelServiceHolder.get().refresh(this);
@@ -329,8 +329,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	@Override
 	public List<IRelatedContact> getRelatedContacts() {
 		CoreModelServiceHolder.get().refresh(this);
-		ArrayList<KontaktAdressJoint> relatedContacts =
-			new ArrayList<>(getEntity().getRelatedContacts());
+		ArrayList<KontaktAdressJoint> relatedContacts = new ArrayList<>(getEntity().getRelatedContacts());
 		return relatedContacts.parallelStream().filter(f -> !f.isDeleted())
 				.map(f -> ModelUtil.getAdapter(f, IRelatedContact.class, true)).collect(Collectors.toList());
 	}

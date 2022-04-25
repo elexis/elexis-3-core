@@ -57,45 +57,45 @@ import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 import ch.elexis.core.ui.tasks.parts.handlers.TaskPartSystemFilterHandler;
 
 public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
-	
+
 	@Inject
 	private ESelectionService selectionService;
-	
+
 	@Inject
 	private EModelService modelService;
-	
+
 	@Inject
 	private MApplication application;
-	
+
 	@Inject
 	private EPartService partService;
-	
+
 	private Composite tableViewerComposite;
 	private Table tableResults;
 	private TableViewer tableViewerResults;
 	private SetModel inputModel;
 	private DeferredContentProvider contentProvider;
-	
+
 	// TODO only Admin should see all, else only current user
-	
+
 	@PostConstruct
-	public void createControls(Composite parent, EMenuService menuService){
+	public void createControls(Composite parent, EMenuService menuService) {
 		parent.setLayout(new GridLayout(1, false));
-		
+
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.marginWidth = 0;
 		gl_composite.marginHeight = 0;
 		composite.setLayout(gl_composite);
-		
+
 		tableViewerComposite = new Composite(parent, SWT.NONE);
 		tableViewerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		TableColumnLayout tcLayout = new TableColumnLayout();
 		tableViewerComposite.setLayout(tcLayout);
-		
+
 		tableViewerResults = new TableViewer(tableViewerComposite,
-			SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL | SWT.MULTI);
+				SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL | SWT.MULTI);
 		tableResults = tableViewerResults.getTable();
 		tableResults.setHeaderVisible(true);
 		tableResults.setLinesVisible(true);
@@ -103,11 +103,11 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 		tableViewerResults.setContentProvider(contentProvider);
 		tableViewerResults.setUseHashlookup(true);
 		tableViewerResults.addDoubleClickListener(this);
-		
+
 		TableViewerColumn tvcTaskDescriptor = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcTaskDescriptor.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				ITask task = (ITask) element;
 				String referenceId = task.getTaskDescriptor().getReferenceId();
 				if (referenceId != null) {
@@ -121,7 +121,7 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 		tblclmnTaskDescriptor.setText("Task");
 		tblclmnTaskDescriptor.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				tableResults.setSortColumn(tblclmnTaskDescriptor);
 				if (tableResults.getSortDirection() == SWT.DOWN) {
 					contentProvider.setSortOrder(ITaskComparators.ofTaskDescriptorId());
@@ -132,11 +132,11 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 				}
 			}
 		});
-		
+
 		TableViewerColumn tvcTrigger = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcTrigger.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				ITask task = (ITask) element;
 				switch (task.getTriggerEvent()) {
 				case MANUAL:
@@ -152,20 +152,20 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 				}
 				return super.getImage(element);
 			}
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return null;
 			}
 		});
 		TableColumn tblclmnTrigger = tvcTrigger.getColumn();
 		tblclmnTrigger.setAlignment(SWT.CENTER);
 		tcLayout.setColumnData(tblclmnTrigger, new ColumnPixelData(22, true, false));
-		
+
 		TableViewerColumn tvcStartTime = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcStartTime.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				ITask task = (ITask) element;
 				return TimeUtil.formatSafe(task.getRunAt());
 			}
@@ -175,7 +175,7 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 		tblclmnStartTime.setText("Startzeit");
 		tblclmnStartTime.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				tableResults.setSortColumn(tblclmnStartTime);
 				if (tableResults.getSortDirection() == SWT.DOWN) {
 					contentProvider.setSortOrder(ITaskComparators.ofRunAt());
@@ -188,11 +188,11 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 		});
 		tableResults.setSortColumn(tblclmnStartTime);
 		tableResults.setSortDirection(SWT.DOWN);
-		
+
 		TableViewerColumn tvcFinishTime = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcFinishTime.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				ITask task = (ITask) element;
 				return TimeUtil.formatSafe(task.getFinishedAt());
 			}
@@ -202,7 +202,7 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 		tblclmnFinishTime.setText("Endzeit");
 		tblclmnFinishTime.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				tableResults.setSortColumn(tblclmnFinishTime);
 				if (tableResults.getSortDirection() == SWT.DOWN) {
 					contentProvider.setSortOrder(ITaskComparators.ofFinishedAt());
@@ -213,18 +213,18 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 				}
 			}
 		});
-		
+
 		TableViewerColumn tvcState = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcState.setLabelProvider(TaskResultLabelProvider.getInstance());
 		TableColumn tblclmnState = tvcState.getColumn();
 		tcLayout.setColumnData(tblclmnState, new ColumnPixelData(22, true, false));
 		tblclmnState.setText("");
-		
+
 		// OWNER
 		TableViewerColumn tvcOwner = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcOwner.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				ITask task = (ITask) element;
 				IUser owner = task.getTaskDescriptor().getOwner();
 				return (owner != null) ? owner.getId() : "NO-OWNER";
@@ -235,7 +235,7 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 		tblclmnOwner.setText("User");
 		tblclmnOwner.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				tableResults.setSortColumn(tblclmnOwner);
 				if (tableResults.getSortDirection() == SWT.DOWN) {
 					contentProvider.setSortOrder(ITaskComparators.ofOwner());
@@ -246,12 +246,12 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 				}
 			}
 		});
-		
+
 		// RUNNER
 		TableViewerColumn tvcRunner = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcRunner.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				ITask task = (ITask) element;
 				return task.getRunner();
 			}
@@ -261,7 +261,7 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 		tblclmnRunner.setText("Runner");
 		tblclmnRunner.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				tableResults.setSortColumn(tblclmnRunner);
 				if (tableResults.getSortDirection() == SWT.DOWN) {
 					contentProvider.setSortOrder(ITaskComparators.ofRunner());
@@ -272,71 +272,63 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 				}
 			}
 		});
-		
+
 		tableViewerResults.addSelectionChangedListener(event -> {
 			IStructuredSelection selection = tableViewerResults.getStructuredSelection();
 			selectionService.setSelection(selection.toList());
 		});
-		
-		menuService.registerContextMenu(tableResults,
-			"ch.elexis.core.ui.tasks.popupmenu.tableresults");
-		
+
+		menuService.registerContextMenu(tableResults, "ch.elexis.core.ui.tasks.popupmenu.tableresults");
+
 		inputModel = new SetModel();
 		tableViewerResults.setInput(inputModel);
-		
+
 		refresh();
 	}
-	
-	public DeferredContentProvider getContentProvider(){
+
+	public DeferredContentProvider getContentProvider() {
 		return contentProvider;
 	}
-	
+
 	@Override
-	public void refresh(Map<Object, Object> filterParameters){
+	public void refresh(Map<Object, Object> filterParameters) {
 		// TODO only show all if Administrator or owner (-> TaskDescriptor)
 		Job job = Job.create("Update table", (ICoreRunnable) monitor -> {
 			IQuery<ITask> taskQuery = TaskModelServiceHolder.get().getQuery(ITask.class);
 			taskQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
-			boolean showSystemTasks =
-				filterParameters.get(TaskPartSystemFilterHandler.SHOW_SYSTEM_TASKS) != null
-						? (boolean) filterParameters
-							.get(TaskPartSystemFilterHandler.SHOW_SYSTEM_TASKS)
-						: false;
+			boolean showSystemTasks = filterParameters.get(TaskPartSystemFilterHandler.SHOW_SYSTEM_TASKS) != null
+					? (boolean) filterParameters.get(TaskPartSystemFilterHandler.SHOW_SYSTEM_TASKS)
+					: false;
 			if (!showSystemTasks) {
-				taskQuery.and(ch.elexis.core.tasks.model.ModelPackage.Literals.ITASK__SYSTEM,
-					COMPARATOR.EQUALS, false);
+				taskQuery.and(ch.elexis.core.tasks.model.ModelPackage.Literals.ITASK__SYSTEM, COMPARATOR.EQUALS, false);
 			}
 			List<ITask> results = taskQuery.execute();
 			inputModel.set(results.toArray());
 		});
 		job.schedule();
 	}
-	
+
 	@Focus
-	public void setFocus(){
+	public void setFocus() {
 		tableResults.setFocus();
 	}
-	
+
 	@Optional
 	@Inject
-	void deleteTask(@UIEventTopic(ElexisEventTopics.EVENT_DELETE)
-	ITask iTask){
-		inputModel.removeAll(new ITask[] {
-			iTask
-		});
+	void deleteTask(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) ITask iTask) {
+		inputModel.removeAll(new ITask[] { iTask });
 		tableResults.deselectAll();
 		refresh();
 	}
-	
+
 	@Override
-	public void doubleClick(DoubleClickEvent event){
+	public void doubleClick(DoubleClickEvent event) {
 		ITask selectedTask = (ITask) ((StructuredSelection) event.getSelection()).getFirstElement();
-		MPart taskDetailPart =
-			partService.createPart("ch.elexis.core.ui.tasks.partdescriptor.taskdetail");
+		MPart taskDetailPart = partService.createPart("ch.elexis.core.ui.tasks.partdescriptor.taskdetail");
 		taskDetailPart.getTransientData().put("task", selectedTask);
-		
-		MPartStack detailPartStack = (MPartStack) modelService
-			.find("ch.elexis.core.ui.tasks.partstack.details", application);
+
+		MPartStack detailPartStack = (MPartStack) modelService.find("ch.elexis.core.ui.tasks.partstack.details",
+				application);
 		if (detailPartStack != null && detailPartStack.isVisible()) {
 			detailPartStack.getChildren().add(taskDetailPart);
 			partService.activate(taskDetailPart);
@@ -344,11 +336,10 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 			partService.showPart(taskDetailPart, PartState.CREATE);
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT)
-	boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

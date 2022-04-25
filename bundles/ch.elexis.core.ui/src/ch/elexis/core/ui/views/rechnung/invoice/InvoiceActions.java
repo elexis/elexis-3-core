@@ -44,62 +44,60 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
 public class InvoiceActions {
-	
-	public Action addPaymentAction, rnExportAction, increaseLevelAction, addExpenseAction,
-			stornoAction, addAccountExcessAction, printListeAction, mahnWizardAction,
-			exportListAction, changeStatusAction, deleteAction, reactivateAction;
-	
+
+	public Action addPaymentAction, rnExportAction, increaseLevelAction, addExpenseAction, stornoAction,
+			addAccountExcessAction, printListeAction, mahnWizardAction, exportListAction, changeStatusAction,
+			deleteAction, reactivateAction;
+
 	private final StructuredViewer viewer;
 	private final IViewSite iViewSite;
-	
-	public InvoiceActions(StructuredViewer structuredViewer, IViewSite iViewSite){
+
+	public InvoiceActions(StructuredViewer structuredViewer, IViewSite iViewSite) {
 		this.viewer = structuredViewer;
 		this.iViewSite = iViewSite;
-		
+
 		rnExportAction = new Action(Messages.RechnungsListeView_printAction) {
 			{
-				setToolTipText(Messages.RechnungsListeView_printToolTip); //$NON-NLS-1$
+				setToolTipText(Messages.RechnungsListeView_printToolTip); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_GOFURTHER.getImageDescriptor());
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				List<Rechnung> invoiceSelections = getInvoiceSelections(viewer);
 				new RnOutputDialog(UiDesk.getTopShell(), invoiceSelections).open();
 			}
 		};
-		
-		addPaymentAction = new Action(Messages.RnActions_addBookingAction) { //$NON-NLS-1$
+
+		addPaymentAction = new Action(Messages.RnActions_addBookingAction) { // $NON-NLS-1$
 			{
-				setToolTipText(Messages.RnActions_addBookingTooltip); //$NON-NLS-1$
+				setToolTipText(Messages.RnActions_addBookingTooltip); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				List<Rechnung> list = getInvoiceSelections(viewer);
 				if (list.size() > 0) {
 					Rechnung actRn = list.get(0);
 					try {
-						if (new RnDialogs.BuchungHinzuDialog(UiDesk.getTopShell(), actRn)
-							.open() == Dialog.OK) {
+						if (new RnDialogs.BuchungHinzuDialog(UiDesk.getTopShell(), actRn).open() == Dialog.OK) {
 							ElexisEventDispatcher.update(actRn);
 						}
 					} catch (ElexisException e) {
-						SWTHelper.showError("Zahlung hinzufügen ist nicht möglich",
-							e.getLocalizedMessage());
+						SWTHelper.showError("Zahlung hinzufügen ist nicht möglich", e.getLocalizedMessage());
 					}
 				}
 			}
 		};
-		
-		increaseLevelAction = new Action(Messages.RnActions_increaseReminderLevelAction) { //$NON-NLS-1$
+
+		increaseLevelAction = new Action(Messages.RnActions_increaseReminderLevelAction) { // $NON-NLS-1$
 			{
-				setToolTipText(Messages.RnActions_increadeReminderLevelTooltip); //$NON-NLS-1$
+				setToolTipText(Messages.RnActions_increadeReminderLevelTooltip); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				List<Rechnung> list = getInvoiceSelections(viewer);
 				if (list.size() > 0) {
 					for (Rechnung actRn : list) {
@@ -115,46 +113,43 @@ public class InvoiceActions {
 							break;
 						default:
 							SWTHelper.showInfo(Messages.RnActions_changeStateErrorCaption,
-								Messages.RnActions_changeStateErrorMessage);
+									Messages.RnActions_changeStateErrorMessage);
 						}
 					}
 				}
-				
+
 			}
 		};
-		
+
 		addExpenseAction = new Action(Messages.RnActions_addFineAction) {
 			{
 				setImageDescriptor(Images.IMG_REMOVEITEM.getImageDescriptor());
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				List<Rechnung> list = getInvoiceSelections(viewer);
 				if (!list.isEmpty()) {
 					try {
 						if (list.size() == 1) {
 							Rechnung actRn = list.get(0);
-							if (new RnDialogs.GebuehrHinzuDialog(UiDesk.getTopShell(), actRn)
-								.open() == Dialog.OK) {
+							if (new RnDialogs.GebuehrHinzuDialog(UiDesk.getTopShell(), actRn).open() == Dialog.OK) {
 								ElexisEventDispatcher.update(actRn);
 							}
 						} else {
-							if (new RnDialogs.MultiGebuehrHinzuDialog(UiDesk.getTopShell(), list)
-								.open() == Dialog.OK) {
+							if (new RnDialogs.MultiGebuehrHinzuDialog(UiDesk.getTopShell(), list).open() == Dialog.OK) {
 								for (Rechnung rn : list) {
 									ElexisEventDispatcher.update(rn);
 								}
 							}
 						}
 					} catch (ElexisException e) {
-						SWTHelper.showError("Zahlung hinzufügen ist nicht möglich",
-							e.getLocalizedMessage());
+						SWTHelper.showError("Zahlung hinzufügen ist nicht möglich", e.getLocalizedMessage());
 					}
 				}
 			}
 		};
-		
+
 		stornoAction = new MultiLockRequestingAction<List<Rechnung>>(Messages.RnActions_stornoAction) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
@@ -164,9 +159,9 @@ public class InvoiceActions {
 			private int dialogResult = -1;
 			private boolean dialogReopen = false;
 			private List<IRnOutputter> dialogExporters;
-			
+
 			@Override
-			public List<? extends PersistentObject> getTargetedObjects(){
+			public List<? extends PersistentObject> getTargetedObjects() {
 				// reset dialog result for new selection
 				dialogResult = -1;
 				dialogReopen = false;
@@ -174,7 +169,7 @@ public class InvoiceActions {
 			}
 
 			@Override
-			public void doRun(PersistentObject po){
+			public void doRun(PersistentObject po) {
 				Rechnung actRn = (Rechnung) po;
 				// only show dialog for new selection
 				if (dialogResult == -1) {
@@ -183,37 +178,35 @@ public class InvoiceActions {
 					dialogReopen = stornoDialog.getReopen();
 					dialogExporters = stornoDialog.getExporters();
 				} else if (dialogResult == Dialog.OK) {
-					if (Rechnung.isStorno(actRn)
-						|| Rechnung.hasStornoBeforeDate(actRn, new TimeTool())) {
+					if (Rechnung.isStorno(actRn) || Rechnung.hasStornoBeforeDate(actRn, new TimeTool())) {
 						SWTHelper.alert(Messages.RnActions_stornoAction,
-							Messages.RnActions_stornoActionNotPossibleText);
+								Messages.RnActions_stornoActionNotPossibleText);
 					} else {
 						NoPoUtil.loadAsIdentifiable(actRn, IInvoice.class).ifPresent(invoice -> {
 							InvoiceServiceHolder.get().cancel(invoice, dialogReopen);
 							for (IRnOutputter iro : dialogExporters) {
-								iro.doOutput(IRnOutputter.TYPE.STORNO, Arrays.asList(new Rechnung[] {
-									actRn
-								}), new Properties());
+								iro.doOutput(IRnOutputter.TYPE.STORNO, Arrays.asList(new Rechnung[] { actRn }),
+										new Properties());
 							}
 						});
 					}
 				}
 				ElexisEventDispatcher.update(actRn);
 			}
-			
+
 		};
-		
+
 		addAccountExcessAction = new Action(Messages.RnActions_addAccountGood) {
 			{
 				setToolTipText(Messages.RnActions_addAccountGoodTooltip);
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				List<Rechnung> list = getInvoiceSelections(viewer);
 				if (list.size() > 0) {
 					Rechnung actRn = list.get(0);
-					
+
 					// Allfaelliges Guthaben des Patienten der Rechnung als
 					// Anzahlung hinzufuegen
 					Fall fall = actRn.getFall();
@@ -228,50 +221,49 @@ public class InvoiceActions {
 						} else {
 							amount = new Money(prepayment);
 						}
-						
-						if (SWTHelper.askYesNo(Messages.RnActions_transferMoneyCaption, //$NON-NLS-1$
-							"Das Konto von Patient \"" + patient.getLabel()
-								+ "\" weist ein positives Kontoguthaben auf. Wollen Sie den Betrag von "
-								+ amount.toString() + " dieser Rechnung \"" + actRn.getNr() + ": "
-								+ fall.getLabel() + "\" zuweisen?")) {
-							
+
+						if (SWTHelper.askYesNo(Messages.RnActions_transferMoneyCaption, // $NON-NLS-1$
+								"Das Konto von Patient \"" + patient.getLabel()
+										+ "\" weist ein positives Kontoguthaben auf. Wollen Sie den Betrag von "
+										+ amount.toString() + " dieser Rechnung \"" + actRn.getNr() + ": "
+										+ fall.getLabel() + "\" zuweisen?")) {
+
 							// remove amount from account and transfer it to the
 							// bill
 							Money accountAmount = new Money(amount);
 							accountAmount.negate();
 							new AccountTransaction(patient, null, accountAmount, null,
-								"Anzahlung von Kontoguthaben auf Rechnung " + actRn.getNr());
+									"Anzahlung von Kontoguthaben auf Rechnung " + actRn.getNr());
 							actRn.addZahlung(amount, "Anzahlung von Kontoguthaben", null);
 						}
 					}
 				}
 			}
 		};
-		
-		printListeAction = new Action(Messages.RnActions_printListAction) { //$NON-NLS-1$
+
+		printListeAction = new Action(Messages.RnActions_printListAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
-				setToolTipText(Messages.RnActions_printListTooltip); //$NON-NLS-1$
+				setToolTipText(Messages.RnActions_printListTooltip); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				List<Rechnung> invoiceSelections = getInvoiceSelections(viewer);
 				new RnListeDruckDialog(UiDesk.getTopShell(), invoiceSelections).open();
 			}
 		};
-		
-		mahnWizardAction = new Action(Messages.RnActions_remindersAction) { //$NON-NLS-1$
+
+		mahnWizardAction = new Action(Messages.RnActions_remindersAction) { // $NON-NLS-1$
 			{
-				setToolTipText(Messages.RnActions_remindersTooltip); //$NON-NLS-1$
+				setToolTipText(Messages.RnActions_remindersTooltip); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_WIZARD.getImageDescriptor());
 			}
-			
+
 			@Override
-			public void run(){
-				if (!MessageDialog.openConfirm(UiDesk.getTopShell(),
-					Messages.RnActions_reminderConfirmCaption,
-					Messages.RnActions_reminderConfirmMessage)) {
+			public void run() {
+				if (!MessageDialog.openConfirm(UiDesk.getTopShell(), Messages.RnActions_reminderConfirmCaption,
+						Messages.RnActions_reminderConfirmMessage)) {
 					return;
 				}
 				Handler.execute(iViewSite, MahnlaufCommand.ID, null);
@@ -282,38 +274,36 @@ public class InvoiceActions {
 				setToolTipText(Messages.RnActions_exportListTooltip);
 				setImageDescriptor(Images.IMG_EXPORT.getImageDescriptor());
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				List<Rechnung> invoiceSelections = getInvoiceSelections(viewer);
 				new RnDialogs.RnListeExportDialog(UiDesk.getTopShell(), invoiceSelections).open();
 			}
 		};
-		
+
 		changeStatusAction = new AllOrNoneLockRequestingRestrictedAction<Rechnung>(
-			AccessControlDefaults.ADMIN_CHANGE_BILLSTATUS_MANUALLY,
-			Messages.RnActions_changeStateAction) {
+				AccessControlDefaults.ADMIN_CHANGE_BILLSTATUS_MANUALLY, Messages.RnActions_changeStateAction) {
 			{
 				setToolTipText(Messages.RnActions_changeStateTooltip);
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 			}
-			
+
 			@Override
-			public List<Rechnung> getTargetedObjects(){
+			public List<Rechnung> getTargetedObjects() {
 				return getInvoiceSelections(viewer);
 			}
-			
+
 			@Override
-			public void doRun(List<Rechnung> list){
+			public void doRun(List<Rechnung> list) {
 				if (list.size() == 1) {
 					Rechnung actRn = list.get(0);
-					if (new RnDialogs.StatusAendernDialog(viewer.getControl().getShell(), actRn)
-						.open() == Dialog.OK) {
+					if (new RnDialogs.StatusAendernDialog(viewer.getControl().getShell(), actRn).open() == Dialog.OK) {
 						ElexisEventDispatcher.update(actRn);
 					}
 				} else {
 					if (new RnDialogs.MultiStatusAendernDialog(viewer.getControl().getShell(), list)
-						.open() == Dialog.OK) {
+							.open() == Dialog.OK) {
 						for (Rechnung rn : list) {
 							ElexisEventDispatcher.update(rn);
 						}
@@ -321,41 +311,39 @@ public class InvoiceActions {
 				}
 			}
 		};
-		
-		deleteAction =
-			new AllOrNoneLockRequestingAction<Rechnung>(Messages.RnActions_deleteBillAction) {
-				
-				@Override
-				public List<Rechnung> getTargetedObjects(){
-					return getInvoiceSelections(viewer);
+
+		deleteAction = new AllOrNoneLockRequestingAction<Rechnung>(Messages.RnActions_deleteBillAction) {
+
+			@Override
+			public List<Rechnung> getTargetedObjects() {
+				return getInvoiceSelections(viewer);
+			}
+
+			@Override
+			public void doRun(List<Rechnung> lockedElements) {
+				for (Rechnung rn : lockedElements) {
+					rn.stornoBill(true);
 				}
-				
-				@Override
-				public void doRun(List<Rechnung> lockedElements){
-					for (Rechnung rn : lockedElements) {
-						rn.stornoBill(true);
-					}
+			}
+		};
+
+		reactivateAction = new AllOrNoneLockRequestingAction<Rechnung>(Messages.RnActions_reactivateBillAction) {
+
+			@Override
+			public List<Rechnung> getTargetedObjects() {
+				return getInvoiceSelections(viewer);
+			}
+
+			@Override
+			public void doRun(List<Rechnung> lockedElements) {
+				for (Rechnung rn : lockedElements) {
+					rn.setStatus(RnStatus.OFFEN);
 				}
-			};
-		
-		reactivateAction =
-			new AllOrNoneLockRequestingAction<Rechnung>(Messages.RnActions_reactivateBillAction) {
-				
-				@Override
-				public List<Rechnung> getTargetedObjects(){
-					return getInvoiceSelections(viewer);
-				}
-				
-				@Override
-				public void doRun(List<Rechnung> lockedElements){
-					for (Rechnung rn : lockedElements) {
-						rn.setStatus(RnStatus.OFFEN);
-					}
-				}
-			};
+			}
+		};
 	}
-	
-	private List<Rechnung> getInvoiceSelections(StructuredViewer viewer){
+
+	private List<Rechnung> getInvoiceSelections(StructuredViewer viewer) {
 		IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 		List<Rechnung> ret = new ArrayList<>();
 		if (sel != null) {
@@ -371,7 +359,7 @@ public class InvoiceActions {
 			return ret;
 		}
 		return Collections.emptyList();
-		
+
 	}
-	
+
 }

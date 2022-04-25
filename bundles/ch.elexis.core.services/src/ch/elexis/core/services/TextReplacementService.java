@@ -14,29 +14,29 @@ import ch.elexis.core.text.ITextPlaceholderResolver;
 
 @Component
 public class TextReplacementService implements ITextReplacementService {
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE)
 	private List<ITextPlaceholderResolver> placeholderResolvers;
-	
+
 	private static final String DONT_SHOW_REPLACEMENT_ERRORS = "*";
 	public static final String MATCH_TEMPLATE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
-		+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+\\]";
-	
+			+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+\\]";
+
 	private Pattern matchTemplate;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		matchTemplate = Pattern.compile(MATCH_TEMPLATE);
 	}
-	
-	private String replacePlaceholder(IContext context, String placeholder){
+
+	private String replacePlaceholder(IContext context, String placeholder) {
 		String substring = placeholder.substring(1, placeholder.length() - 1);
 		String[] split = substring.split("\\.");
 		if (split.length > 1) {
 			for (ITextPlaceholderResolver resolver : placeholderResolvers) {
 				if (resolver.getSupportedType().equalsIgnoreCase(split[0])) {
 					Optional<String> result = resolver.replaceByTypeAndAttribute(context,
-						substring.substring(split[0].length() + 1));
+							substring.substring(split[0].length() + 1));
 					if (result.isPresent()) {
 						return result.get();
 					}
@@ -45,20 +45,19 @@ public class TextReplacementService implements ITextReplacementService {
 		}
 		return "?";
 	}
-	
+
 	@Override
-	public List<ITextPlaceholderResolver> getResolvers(){
+	public List<ITextPlaceholderResolver> getResolvers() {
 		return placeholderResolvers;
 	}
-	
+
 	@Override
-	public String performReplacement(IContext context, String template, String newLinePattern){
+	public String performReplacement(IContext context, String template, String newLinePattern) {
 		Matcher matcher = matchTemplate.matcher(template);
 		StringBuffer sb = new StringBuffer();
 		while (matcher.find()) {
 			String found = matcher.group();
-			matcher.appendReplacement(sb,
-				Matcher.quoteReplacement((String) replacePlaceholder(context, found)));
+			matcher.appendReplacement(sb, Matcher.quoteReplacement((String) replacePlaceholder(context, found)));
 		}
 		matcher.appendTail(sb);
 		return sb.toString().replaceAll("(\r\n|\n\r|\r|\n)", newLinePattern);

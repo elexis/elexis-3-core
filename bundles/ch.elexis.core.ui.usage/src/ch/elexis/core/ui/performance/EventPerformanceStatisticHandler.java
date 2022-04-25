@@ -14,24 +14,23 @@ import ch.elexis.core.ui.usage.model.IStatistic;
 import ch.elexis.core.ui.usage.model.ModelFactory;
 
 public class EventPerformanceStatisticHandler implements IPerformanceStatisticHandler {
-	
+
 	private Map<String, EventStatistic> statistics;
-	
-	public EventPerformanceStatisticHandler(){
+
+	public EventPerformanceStatisticHandler() {
 		statistics = new HashMap<>();
 	}
-	
+
 	@Override
-	public void startCatchEvent(ElexisEvent ee, ElexisEventListener listener){
+	public void startCatchEvent(ElexisEvent ee, ElexisEventListener listener) {
 		EventStatistic stat = getOrCreateStatistics(ee, listener);
 		stat.setLastStart(System.currentTimeMillis());
 		int count = stat.getValue();
 		stat.setValue(++count);
 	}
-	
-	
+
 	@Override
-	public void endCatchEvent(ElexisEvent ee, ElexisEventListener listener){
+	public void endCatchEvent(ElexisEvent ee, ElexisEventListener listener) {
 		EventStatistic stat = getStatistics(ee, listener);
 		if (stat != null) {
 			long durationMs = System.currentTimeMillis() - stat.getLastStart();
@@ -44,17 +43,16 @@ public class EventPerformanceStatisticHandler implements IPerformanceStatisticHa
 			long lastAverage = stat.getAvgDuration();
 			stat.setAvgDuration(lastAverage + ((durationMs - lastAverage) / stat.getValue()));
 		} else {
-			LoggerFactory.getLogger(getClass())
-				.warn("No start stat found for " + getEventKey(ee, listener));
+			LoggerFactory.getLogger(getClass()).warn("No start stat found for " + getEventKey(ee, listener));
 		}
 	}
-	
-	private EventStatistic getStatistics(ElexisEvent ee, ElexisEventListener listener){
+
+	private EventStatistic getStatistics(ElexisEvent ee, ElexisEventListener listener) {
 		String key = getEventKey(ee, listener);
 		return statistics.get(key);
 	}
-	
-	private EventStatistic getOrCreateStatistics(ElexisEvent ee, ElexisEventListener listener){
+
+	private EventStatistic getOrCreateStatistics(ElexisEvent ee, ElexisEventListener listener) {
 		String key = getEventKey(ee, listener);
 		EventStatistic ret = statistics.get(key);
 		if (ret == null) {
@@ -65,18 +63,17 @@ public class EventPerformanceStatisticHandler implements IPerformanceStatisticHa
 		}
 		return ret;
 	}
-	
-	private String getEventKey(ElexisEvent ee, ElexisEventListener listener){
+
+	private String getEventKey(ElexisEvent ee, ElexisEventListener listener) {
 		return (ee.getObjectClass() != null ? ee.getObjectClass().getName() : "noObjectClass") + "["
-			+ getEventType(ee.getType()) + ", "
-			+ getPriority(ee.getPriority()) + "] -> " + listener.getClass();
+				+ getEventType(ee.getType()) + ", " + getPriority(ee.getPriority()) + "] -> " + listener.getClass();
 	}
-	
-	public Collection<? extends IStatistic> getStatistics(){
+
+	public Collection<? extends IStatistic> getStatistics() {
 		return statistics.values();
 	}
-	
-	private String getEventType(int eventType){
+
+	private String getEventType(int eventType) {
 		switch (eventType) {
 		case 0x0001:
 			return "EVENT_CREATE";
@@ -110,8 +107,8 @@ public class EventPerformanceStatisticHandler implements IPerformanceStatisticHa
 			return "EVENT_UNKNOWN";
 		}
 	}
-	
-	private String getPriority(int priority){
+
+	private String getPriority(int priority) {
 		switch (priority) {
 		case 1:
 			return "PRIORITY_SYNC";

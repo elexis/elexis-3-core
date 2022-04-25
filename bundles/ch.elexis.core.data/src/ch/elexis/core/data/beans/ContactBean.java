@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -27,38 +27,37 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 import ch.rgw.tools.TimeTool;
 
-public class ContactBean extends BeanPersistentObject<Kontakt>
-		implements IContact, IPerson, IPatient {
-	
+public class ContactBean extends BeanPersistentObject<Kontakt> implements IContact, IPerson, IPatient {
+
 	private ContactCache cache;
-	
-	public ContactBean(Kontakt kontakt){
+
+	public ContactBean(Kontakt kontakt) {
 		super(kontakt);
 		cache = new ContactCache();
 	}
-	
+
 	public Patient getAsPatientEntity() {
 		return (Patient) entity;
 	}
-	
+
 	public Labor getAsLaboratoryEntity() {
 		return (Labor) entity;
 	}
-	
+
 	@Override
-	protected void updateCache(){
+	protected void updateCache() {
 		cache = new ContactCache();
 	}
-	
-	public ContactType getContactType(){
+
+	public ContactType getContactType() {
 		if (cache.isOrganization)
 			return ContactType.ORGANIZATION;
 		if (cache.isPatient || cache.isPerson)
 			return ContactType.PERSON;
 		return ContactType.UNKNOWN;
 	}
-	
-	public void setContactType(ContactType type){
+
+	public void setContactType(ContactType type) {
 		ContactType old = getContactType();
 		switch (type) {
 		case PERSON:
@@ -78,227 +77,223 @@ public class ContactBean extends BeanPersistentObject<Kontakt>
 		}
 		firePropertyChange("contactType", old, type);
 	}
-	
+
 	@Override
-	public String getDescription1(){
+	public String getDescription1() {
 		return cache.description1;
 	}
-	
+
 	@Override
-	public void setDescription1(String description){
+	public void setDescription1(String description) {
 		String old = getDescription1();
 		entity.set(Kontakt.FLD_NAME1, description);
 		firePropertyChange("description1", old, description);
 	}
-	
+
 	@Override
-	public String getDescription2(){
+	public String getDescription2() {
 		return cache.description2;
 	}
-	
+
 	@Override
-	public void setDescription2(String description){
+	public void setDescription2(String description) {
 		String old = getDescription2();
 		entity.set(Kontakt.FLD_NAME2, description);
 		firePropertyChange("description2", old, description);
 	}
-	
+
 	@Override
-	public String getDescription3(){
+	public String getDescription3() {
 		return cache.description3;
 	}
-	
+
 	@Override
-	public void setDescription3(String description){
+	public void setDescription3(String description) {
 		String old = getDescription3();
 		entity.set(Kontakt.FLD_NAME3, description);
 		firePropertyChange("description3", old, description);
 	}
-	
+
 	@Override
-	public String getZip(){
+	public String getZip() {
 		return entity.get(Kontakt.FLD_ZIP);
 	}
-	
+
 	@Override
-	public void setZip(String zip){
+	public void setZip(String zip) {
 		String old = getZip();
 		entity.set(Kontakt.FLD_ZIP, zip);
 		firePropertyChange("zip", old, zip);
 	}
-	
+
 	@Override
-	public String getCity(){
+	public String getCity() {
 		return entity.get(Kontakt.FLD_PLACE);
 	}
-	
+
 	@Override
-	public void setCity(String city){
+	public void setCity(String city) {
 		String old = getCity();
 		entity.set(Kontakt.FLD_PLACE, city);
 		firePropertyChange("city", old, city);
 	}
-	
+
 	@Override
-	public String getStreet(){
+	public String getStreet() {
 		return entity.get(Kontakt.FLD_STREET);
 	}
-	
+
 	@Override
-	public void setStreet(String street){
+	public void setStreet(String street) {
 		String old = getStreet();
 		entity.set(Kontakt.FLD_STREET, street);
 		firePropertyChange("street", old, street);
 	}
-	
+
 	@Override
-	public String getPhone1(){
+	public String getPhone1() {
 		return entity.get(Kontakt.FLD_PHONE1);
 	}
-	
+
 	@Override
-	public void setPhone1(String phone){
+	public void setPhone1(String phone) {
 		String old = getPhone1();
 		entity.set(Kontakt.FLD_PHONE1, phone);
 		firePropertyChange("phone1", old, phone);
 	}
-	
+
 	@Override
-	public String getPhone2(){
+	public String getPhone2() {
 		return entity.get(Kontakt.FLD_PHONE2);
 	}
-	
+
 	@Override
-	public void setPhone2(String phone){
+	public void setPhone2(String phone) {
 		String old = getPhone2();
 		entity.set(Kontakt.FLD_PHONE2, phone);
 		firePropertyChange("phone2", old, phone);
 	}
-	
+
 	@Override
-	public String getFax(){
+	public String getFax() {
 		return entity.get(Kontakt.FLD_FAX);
 	}
-	
+
 	@Override
-	public void setFax(String fax){
+	public void setFax(String fax) {
 		String old = getFax();
 		entity.set(Kontakt.FLD_FAX, fax);
 		firePropertyChange("fax", old, fax);
 	}
-	
+
 	@Override
-	public String getEmail(){
+	public String getEmail() {
 		return entity.get(Kontakt.FLD_E_MAIL);
 	}
-	
+
 	@Override
-	public void setEmail(String email){
+	public void setEmail(String email) {
 		String old = getEmail();
 		entity.set(Kontakt.FLD_E_MAIL, email);
 		firePropertyChange("email", old, email);
 	}
-	
+
 	@Override
-	public String getWebsite(){
+	public String getWebsite() {
 		return entity.get(Kontakt.FLD_WEBSITE);
 	}
-	
+
 	@Override
-	public void setWebsite(String website){
+	public void setWebsite(String website) {
 		String old = getWebsite();
 		entity.set(Kontakt.FLD_WEBSITE, website);
 		firePropertyChange("website", old, website);
 	}
-	
+
 	@Override
-	public String getMobile(){
+	public String getMobile() {
 		return entity.get(Kontakt.FLD_MOBILEPHONE);
 	}
-	
+
 	@Override
-	public void setMobile(String mobile){
+	public void setMobile(String mobile) {
 		String old = getMobile();
 		entity.set(Kontakt.FLD_MOBILEPHONE, mobile);
 		firePropertyChange("mobile", old, mobile);
 	}
-	
+
 	@Override
-	public String getComment(){
+	public String getComment() {
 		return entity.getBemerkung();
 	}
-	
+
 	@Override
-	public void setComment(String comment){
+	public void setComment(String comment) {
 		String old = getComment();
 		entity.setBemerkung(comment);
 		firePropertyChange("comment", old, comment);
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return entity.getId();
 	}
-	
+
 	@Override
-	public String getLabel(){
-		return getDescription1() + " " + getDescription2() + ", " + getStreet() + ", " + getZip()
-			+ " " + getCity();
+	public String getLabel() {
+		return getDescription1() + " " + getDescription2() + ", " + getStreet() + ", " + getZip() + " " + getCity();
 	}
-	
+
 	@Override
-	public boolean isMandator(){
+	public boolean isMandator() {
 		return cache.isMandator;
 	}
-	
+
 	@Override
-	public void setMandator(boolean value){
+	public void setMandator(boolean value) {
 		boolean old = isMandator();
-		entity.set(Kontakt.FLD_IS_MANDATOR, (value == true) ? StringConstants.ONE
-				: StringConstants.ZERO);
+		entity.set(Kontakt.FLD_IS_MANDATOR, (value == true) ? StringConstants.ONE : StringConstants.ZERO);
 		firePropertyChange("mandator", old, value);
 	}
-	
+
 	@Override
-	public boolean isUser(){
+	public boolean isUser() {
 		return cache.isUser;
 	}
-	
+
 	@Override
-	public void setUser(boolean value){
+	public void setUser(boolean value) {
 		boolean old = isUser();
-		entity.set(Kontakt.FLD_IS_USER, (value == true) ? StringConstants.ONE
-				: StringConstants.ZERO);
+		entity.set(Kontakt.FLD_IS_USER, (value == true) ? StringConstants.ONE : StringConstants.ZERO);
 		firePropertyChange("user", old, value);
 	}
-	
+
 	@Override
-	public boolean isPatient(){
+	public boolean isPatient() {
 		return cache.isPatient;
 	}
-	
+
 	@Override
-	public void setPatient(boolean value){
+	public void setPatient(boolean value) {
 		boolean old = isPatient();
-		entity.set(Kontakt.FLD_IS_PATIENT, (value == true) ? StringConstants.ONE
-				: StringConstants.ZERO);
+		entity.set(Kontakt.FLD_IS_PATIENT, (value == true) ? StringConstants.ONE : StringConstants.ZERO);
 		firePropertyChange("patient", old, value);
 	}
-	
+
 	@Override
-	public String getCode(){
+	public String getCode() {
 		return cache.code;
 	}
-	
+
 	@Override
-	public void setCode(String value){
+	public void setCode(String value) {
 		String old = getCode();
 		entity.set(Patient.FLD_PATID, value);
 		firePropertyChange("code", old, value);
 	}
-	
+
 	@Override
-	public Country getCountry(){
+	public Country getCountry() {
 		String countryVal = entity.get(Kontakt.FLD_COUNTRY);
 		Country ret;
 		try {
@@ -308,45 +303,45 @@ public class ContactBean extends BeanPersistentObject<Kontakt>
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public void setCountry(Country value){
+	public void setCountry(Country value) {
 		Country old = getCountry();
 		entity.set(Kontakt.FLD_COUNTRY, value.value());
 		firePropertyChange("country", old, value);
 	}
-	
-	public boolean isDeleted(){
+
+	public boolean isDeleted() {
 		return cache.isDeleted;
 	}
-	
-	public void setDeleted(boolean value){
+
+	public void setDeleted(boolean value) {
 		boolean old = isDeleted();
 		entity.delete();
 		firePropertyChange("deleted", old, value);
 	}
-	
+
 	// Person
-	
+
 	@Override
-	public TimeTool getDateOfBirth(){
+	public TimeTool getDateOfBirth() {
 		return cache.dateOfBirth;
 	}
-	
+
 	@Override
-	public void setDateOfBirth(TimeTool value){
+	public void setDateOfBirth(TimeTool value) {
 		TimeTool old = getDateOfBirth();
 		entity.set(Person.BIRTHDATE, value.toString(TimeTool.DATE_COMPACT));
 		firePropertyChange("dateOfBirth", old, value);
 	}
-	
+
 	@Override
-	public Gender getGender(){
+	public Gender getGender() {
 		return cache.sex;
 	}
-	
+
 	@Override
-	public void setGender(Gender value){
+	public void setGender(Gender value) {
 		Gender old = getGender();
 		String vs;
 		switch (value) {
@@ -365,134 +360,133 @@ public class ContactBean extends BeanPersistentObject<Kontakt>
 		entity.set(Person.SEX, vs);
 		firePropertyChange("gender", old, value);
 	}
-	
+
 	@Override
-	public String getTitel(){
+	public String getTitel() {
 		return cache.titel;
 	}
-	
+
 	@Override
-	public void setTitel(String value){
+	public void setTitel(String value) {
 		String old = getTitel();
 		entity.set(Person.TITLE, value);
 		firePropertyChange("titel", old, value);
 	}
-	
+
 	@Override
-	public String getTitelSuffix(){
+	public String getTitelSuffix() {
 		return cache.titelSuffix;
 	}
-	
+
 	@Override
-	public void setTitelSuffix(String value){
+	public void setTitelSuffix(String value) {
 		String old = getTitel();
 		entity.set(Person.FLD_TITLE_SUFFIX, value);
 		firePropertyChange("titelSuffix", old, value);
 	}
-	
+
 	// Patient -----------------------
-	
+
 	@Override
-	public String getDiagnosen(){
+	public String getDiagnosen() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public void setDiagnosen(String value){
+	public void setDiagnosen(String value) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public String getRisk(){
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public void setRisk(String value){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public String getFamilyAnamnese(){
+	public String getRisk() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public void setFamilyAnamnese(String value){
+	public void setRisk(String value) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public String getPersonalAnamnese(){
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public void setPersonalAnamnese(String value){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public String getAllergies(){
+	public String getFamilyAnamnese() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public void setAllergies(String value){
+	public void setFamilyAnamnese(String value) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public String getPatientLabel(){
+	public String getPersonalAnamnese() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public String getPatientNr(){
+	public void setPersonalAnamnese(String value) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getAllergies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setAllergies(String value) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getPatientLabel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getPatientNr() {
 		return getCode();
 	}
-	
+
 	@Override
-	public void setPatientNr(String value){
+	public void setPatientNr(String value) {
 		setCode(value);
 	}
-	
+
 	/**
-	 * This class caches contact properties to speed up the current {@link PersistentObject}
-	 * dependent implementation, where every access is executed synchronous to the DB.
+	 * This class caches contact properties to speed up the current
+	 * {@link PersistentObject} dependent implementation, where every access is
+	 * executed synchronous to the DB.
 	 */
 	private class ContactCache {
 		boolean isDeleted, isPerson, isOrganization, isMandator, isUser, isPatient;
 		String code, description1, description2, description3, titel, titelSuffix;
 		TimeTool dateOfBirth;
 		Gender sex;
-		
-		public ContactCache(){
+
+		public ContactCache() {
 			// make sure Patient field mapping is initialized
 			if (PersistentObject.map(Patient.TABLENAME, Patient.FLD_PATID)
-				.startsWith(PersistentObject.MAPPING_ERROR_MARKER)) {
+					.startsWith(PersistentObject.MAPPING_ERROR_MARKER)) {
 				Patient.load("0");
 			}
-			
+
 			String[] labels = new String[14];
-			entity.get(new String[] {
-				Kontakt.FLD_DELETED, Kontakt.FLD_IS_PERSON, Kontakt.FLD_IS_ORGANIZATION,
-				Kontakt.FLD_IS_MANDATOR, Kontakt.FLD_IS_USER, Kontakt.FLD_IS_PATIENT,
-				Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3, Person.BIRTHDATE,
-				Person.SEX, Patient.FLD_PATID, Person.TITLE, Person.FLD_TITLE_SUFFIX
-			}, labels);
-			
+			entity.get(new String[] { Kontakt.FLD_DELETED, Kontakt.FLD_IS_PERSON, Kontakt.FLD_IS_ORGANIZATION,
+					Kontakt.FLD_IS_MANDATOR, Kontakt.FLD_IS_USER, Kontakt.FLD_IS_PATIENT, Kontakt.FLD_NAME1,
+					Kontakt.FLD_NAME2, Kontakt.FLD_NAME3, Person.BIRTHDATE, Person.SEX, Patient.FLD_PATID, Person.TITLE,
+					Person.FLD_TITLE_SUFFIX }, labels);
+
 			isDeleted = labels[0].equals(StringConstants.ONE);
 			isPerson = labels[1].equals(StringConstants.ONE);
 			isOrganization = labels[2].equals(StringConstants.ONE);
@@ -508,8 +502,8 @@ public class ContactBean extends BeanPersistentObject<Kontakt>
 			titel = labels[12];
 			titelSuffix = labels[13];
 		}
-		
-		private Gender switchSex(String labels){
+
+		private Gender switchSex(String labels) {
 			if (labels == null || labels.length() < 1)
 				return Gender.UNKNOWN;
 			switch (labels.toLowerCase().charAt(0)) {
@@ -526,91 +520,91 @@ public class ContactBean extends BeanPersistentObject<Kontakt>
 			}
 		}
 	}
-	
+
 	@Override
-	public String getFirstName(){
+	public String getFirstName() {
 		return cache.description2;
 	}
-	
+
 	@Override
-	public String getFamilyName(){
+	public String getFamilyName() {
 		return cache.description1;
 	}
-	
+
 	@Override
-	public IXid getXid(){
+	public IXid getXid() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public List<IXid> getXids(){
+	public List<IXid> getXids() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public long getLastUpdate(){
+	public long getLastUpdate() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 	@Override
-	public boolean isValid(){
+	public boolean isValid() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public String storeToString(){
+	public String storeToString() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public int state(){
+	public int state() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 	@Override
-	public boolean exists(){
+	public boolean exists() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public boolean isAvailable(){
+	public boolean isAvailable() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public String getXid(String domain){
+	public String getXid(String domain) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public boolean addXid(String domain, String domain_id, boolean updateIfExists){
+	public boolean addXid(String domain, String domain_id, boolean updateIfExists) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public boolean get(String[] fields, String[] values){
+	public boolean get(String[] fields, String[] values) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public String get(String field){
+	public String get(String field) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public boolean set(String field, String value){
+	public boolean set(String field, String value) {
 		// TODO Auto-generated method stub
 		return false;
 	}

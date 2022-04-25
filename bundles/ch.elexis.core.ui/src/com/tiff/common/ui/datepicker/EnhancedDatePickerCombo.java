@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -20,26 +20,26 @@ import ch.elexis.core.ui.UiDesk;
 import ch.rgw.tools.TimeTool;
 
 public class EnhancedDatePickerCombo extends DatePickerCombo {
-	
+
 	private final ExecuteIfValidInterface vi;
-	
-	public EnhancedDatePickerCombo(Composite parent, int style, ExecuteIfValidInterface vif){
+
+	public EnhancedDatePickerCombo(Composite parent, int style, ExecuteIfValidInterface vif) {
 		super(parent, style);
 		this.vi = vif;
-		
+
 		addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				vi.doIt();
 				super.widgetSelected(e);
 			}
-			
+
 		});
-		
+
 		addModifyListener(new ModifyListener() {
-			
+
 			@Override
-			public void modifyText(ModifyEvent e){
+			public void modifyText(ModifyEvent e) {
 				DatePickerCombo dpc = (DatePickerCombo) e.getSource();
 				String text = dpc.getText();
 				if (TimeTool.isValidDateTimeString(text, TimeTool.DATE_GER)) {
@@ -50,9 +50,9 @@ public class EnhancedDatePickerCombo extends DatePickerCombo {
 				}
 			}
 		});
-		
+
 	}
-	
+
 	public static interface ExecuteIfValidInterface {
 		public void doIt();
 	}

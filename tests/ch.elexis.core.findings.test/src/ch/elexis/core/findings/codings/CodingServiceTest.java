@@ -16,54 +16,51 @@ import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.findings.codes.ILocalCodingContribution;
 
 public class CodingServiceTest {
-	
+
 	@After
-	public void afterTest(){
+	public void afterTest() {
 		ICodingService codingService = CodingServiceComponent.getService();
 		assertNotNull(codingService);
-		List<ICoding> readCodes =
-			codingService.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
+		List<ICoding> readCodes = codingService.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
 		for (ICoding iCoding : readCodes) {
 			codingService.removeLocalCoding(iCoding);
 		}
 	}
-	
+
 	@Test
-	public void getAvailableCodeSystems(){
+	public void getAvailableCodeSystems() {
 		ICodingService codingService = CodingServiceComponent.getService();
 		assertNotNull(codingService);
 		List<String> systems = codingService.getAvailableCodeSystems();
 		assertNotNull(systems);
 		assertFalse(systems.isEmpty());
 	}
-	
+
 	@Test
-	public void addLocalCoding(){
+	public void addLocalCoding() {
 		ICodingService codingService = CodingServiceComponent.getService();
 		assertNotNull(codingService);
-		List<ICoding> readCodes =
-			codingService.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
+		List<ICoding> readCodes = codingService.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
 		assertNotNull(readCodes);
 		assertTrue(readCodes.isEmpty());
-		
+
 		codingService.addLocalCoding(new ICoding() {
 			@Override
-			public String getSystem(){
+			public String getSystem() {
 				return CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem();
 			}
-			
+
 			@Override
-			public String getDisplay(){
+			public String getDisplay() {
 				return "display text";
 			}
-			
+
 			@Override
-			public String getCode(){
+			public String getCode() {
 				return "code1";
 			}
 		});
-		readCodes =
-			codingService.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
+		readCodes = codingService.getAvailableCodes(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem());
 		assertNotNull(readCodes);
 		assertFalse(readCodes.isEmpty());
 		assertEquals("code1", readCodes.get(0).getCode());

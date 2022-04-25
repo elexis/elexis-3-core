@@ -32,48 +32,46 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IAppointmentAppointmentAttributeMapper
 		implements IdentifiableDomainResourceAttributeMapper<IAppointment, Appointment> {
-	
+
 	private IAppointmentHelper appointmentHelper;
 	private IAppointmentService appointmentService;
 	private IConfigService configService;
 	private IModelService coreModelService;
-	
+
 	public IAppointmentAppointmentAttributeMapper(IAppointmentService appointmentService,
-		IModelService coreModelService, IConfigService configService){
+			IModelService coreModelService, IConfigService configService) {
 		this.appointmentService = appointmentService;
 		this.coreModelService = coreModelService;
 		this.configService = configService;
 		appointmentHelper = new IAppointmentHelper();
 	}
-	
+
 	@Override
-	public void elexisToFhir(IAppointment localObject, Appointment appointment,
-		SummaryEnum summaryEnum, Set<Include> includes){
-		
+	public void elexisToFhir(IAppointment localObject, Appointment appointment, SummaryEnum summaryEnum,
+			Set<Include> includes) {
+
 		appointment.setId(new IdDt(Appointment.class.getSimpleName(), localObject.getId()));
-		
+
 		appointment.getMeta().setVersionId(localObject.getLastupdate().toString());
-		appointment.getMeta().setLastUpdated(
-			appointmentHelper.getLastUpdateAsDate(localObject.getLastupdate()).orElse(null));
-		
+		appointment.getMeta()
+				.setLastUpdated(appointmentHelper.getLastUpdateAsDate(localObject.getLastupdate()).orElse(null));
+
 		// narrative
 		appointmentHelper.setNarrative(appointment, localObject.getLabel());
-		
+
 		// Currently formal status is always booked, "real" elexis status and type
 		// are transported via extension
 		appointment.setStatus(AppointmentStatus.BOOKED);
 		appointmentHelper.mapApplyAppointmentStateAndType(appointment, localObject, configService);
-		
+
 		appointment.setDescription(appointmentHelper.getDescription(localObject));
-		
+
 		appointmentHelper.mapApplyStartEndMinutes(appointment, localObject);
-		
-		Reference slotReference =
-			new Reference(new IdType(Slot.class.getSimpleName(), localObject.getId()));
+
+		Reference slotReference = new Reference(new IdType(Slot.class.getSimpleName(), localObject.getId()));
 		if (includes.contains(new Include("Appointment.slot"))) {
 			@SuppressWarnings("rawtypes")
-			Optional<IFhirTransformer> _slotTransformer =
-				OsgiServiceUtil.getService(IFhirTransformer.class,
+			Optional<IFhirTransformer> _slotTransformer = OsgiServiceUtil.getService(IFhirTransformer.class,
 					"(" + IFhirTransformer.TRANSFORMERID + "=Slot.IAppointment)");
 			if (_slotTransformer.isPresent()) {
 				@SuppressWarnings("unchecked")
@@ -82,45 +80,39 @@ public class IAppointmentAppointmentAttributeMapper
 			} else {
 				LoggerFactory.getLogger(getClass()).error("Could not get slotTransformer service");
 			}
-			
+
 		}
 		appointment.setSlot(Collections.singletonList(slotReference));
-		
+
 		List<AppointmentParticipantComponent> participant = appointment.getParticipant();
-		
-		Optional<IContact> assignedContact =
-			appointmentService.resolveAreaAssignedContact(localObject.getSchedule());
+
+		Optional<IContact> assignedContact = appointmentService.resolveAreaAssignedContact(localObject.getSchedule());
 		if (assignedContact.isPresent() && assignedContact.get().isMandator()) {
 			AppointmentParticipantComponent hcp = new AppointmentParticipantComponent();
-			hcp.setActor(new Reference(
-				new IdDt(Practitioner.class.getSimpleName(), assignedContact.get().getId())));
+			hcp.setActor(new Reference(new IdDt(Practitioner.class.getSimpleName(), assignedContact.get().getId())));
 			hcp.setRequired(ParticipantRequired.REQUIRED);
 			hcp.setStatus(ParticipationStatus.ACCEPTED);
 			participant.add(hcp);
 		}
-		
+
 		IContact contact = localObject.getContact();
 		if (contact != null && contact.isPatient()) {
 			IPatient localPatient = coreModelService.load(contact.getId(), IPatient.class).get();
 			AppointmentParticipantComponent patient = new AppointmentParticipantComponent();
-			patient.setActor(
-				new Reference(new IdDt(Patient.class.getSimpleName(), localPatient.getId())));
+			patient.setActor(new Reference(new IdDt(Patient.class.getSimpleName(), localPatient.getId())));
 			patient.setRequired(ParticipantRequired.REQUIRED);
 			patient.setStatus(ParticipationStatus.ACCEPTED);
-			
+
 			if (includes.contains(new Include("Appointment.patient"))) {
 				@SuppressWarnings("rawtypes")
-				Optional<IFhirTransformer> _patientTransformer =
-					OsgiServiceUtil.getService(IFhirTransformer.class,
+				Optional<IFhirTransformer> _patientTransformer = OsgiServiceUtil.getService(IFhirTransformer.class,
 						"(" + IFhirTransformer.TRANSFORMERID + "=Patient.IPatient)");
 				if (_patientTransformer.isPresent()) {
 					@SuppressWarnings("unchecked")
-					Patient _patient =
-						(Patient) _patientTransformer.get().getFhirObject(localPatient).get();
+					Patient _patient = (Patient) _patientTransformer.get().getFhirObject(localPatient).get();
 					patient.getActor().setResource(_patient);
 				} else {
-					LoggerFactory.getLogger(getClass())
-						.error("Could not get patientTransformer service");
+					LoggerFactory.getLogger(getClass()).error("Could not get patientTransformer service");
 				}
 			}
 			participant.add(patient);
@@ -128,20 +120,20 @@ public class IAppointmentAppointmentAttributeMapper
 			// TODO there is another string inside - where to put it? is it relevant?
 			String subjectOrPatient = localObject.getSubjectOrPatient();
 		}
-		
+
 		// TODO status history??
-		
+
 	}
-	
+
 	@Override
-	public void fhirToElexis(Appointment source, IAppointment target){
-		
+	public void fhirToElexis(Appointment source, IAppointment target) {
+
 		appointmentHelper.mapApplyAppointmentStateAndType(target, source);
-		
+
 		target.setReason(source.getDescription());
-		
+
 		target.setSubjectOrPatient(null);
-		
+
 		List<AppointmentParticipantComponent> participant = source.getParticipant();
 		for (AppointmentParticipantComponent appointmentParticipantComponent : participant) {
 			Reference actorTarget = appointmentParticipantComponent.getActor();
@@ -150,8 +142,8 @@ public class IAppointmentAppointmentAttributeMapper
 				target.setSubjectOrPatient(idType.getIdPart());
 			}
 		}
-		
+
 		// TODO what else in subject or patient if no patient set?
 	}
-	
+
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.text;
 
@@ -44,26 +44,26 @@ import ch.rgw.tools.ExHandler;
 
 public class XrefExtension implements IKonsExtension {
 	IRichTextDisplay tx;
-	
-	public String connect(IRichTextDisplay tf){
+
+	public String connect(IRichTextDisplay tf) {
 		tx = tf;
 		return XRefExtensionConstants.providerID;
 	}
-	
-	public boolean doLayout(StyleRange n, String provider, String id){
-		
+
+	public boolean doLayout(StyleRange n, String provider, String id) {
+
 		n.background = UiDesk.getColor(UiDesk.COL_LIGHTBLUE);
 		n.foreground = UiDesk.getColor(UiDesk.COL_GREY20);
 		return true;
 	}
-	
-	public boolean doXRef(String refProvider, String refID){
+
+	public boolean doXRef(String refProvider, String refID) {
 		try {
 			if (CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
 				startLocalEdit(Brief.load(refID));
 			} else {
-				TextView tv = (TextView) Hub.plugin.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().showView(TextView.ID);
+				TextView tv = (TextView) Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+						.showView(TextView.ID);
 				tv.openDocument(Brief.load(refID));
 			}
 			return true;
@@ -72,46 +72,42 @@ public class XrefExtension implements IKonsExtension {
 		}
 		return false;
 	}
-	
-	private void startLocalEdit(Brief brief){
+
+	private void startLocalEdit(Brief brief) {
 		if (brief != null) {
-			ICommandService commandService =
-				(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-			Command command =
-				commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
-			
-			PlatformUI.getWorkbench().getService(IEclipseContext.class)
-				.set(command.getId().concat(".selection"), new StructuredSelection(brief));
+			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+					.getService(ICommandService.class);
+			Command command = commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
+
+			PlatformUI.getWorkbench().getService(IEclipseContext.class).set(command.getId().concat(".selection"),
+					new StructuredSelection(brief));
 			try {
-				command.executeWithChecks(
-					new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
-			} catch (ExecutionException | NotDefinedException | NotEnabledException
-					| NotHandledException e) {
-				MessageDialog.openError(Display.getDefault().getActiveShell(),
-					Messages.BriefAuswahl_errorttile,
-					Messages.BriefAuswahl_erroreditmessage);
+				command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
+			} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
+				MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.BriefAuswahl_errorttile,
+						Messages.BriefAuswahl_erroreditmessage);
 			}
 		}
 	}
-	
-	public IAction[] getActions(){
+
+	public IAction[] getActions() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public void removeXRef(String refProvider, String refID){
+
+	public void removeXRef(String refProvider, String refID) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void setInitializationData(IConfigurationElement config, String propertyName,
-		Object data) throws CoreException{
+
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+			throws CoreException {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void insert(Object o, int pos){
-		
+
+	public void insert(Object o, int pos) {
+
 	}
-	
+
 }
