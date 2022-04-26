@@ -103,6 +103,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.SetFallCopyForPatientWithTel">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixPrescriptionOldArticle">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>
