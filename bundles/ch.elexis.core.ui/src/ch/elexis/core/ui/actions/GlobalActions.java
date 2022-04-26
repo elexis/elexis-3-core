@@ -74,6 +74,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -360,7 +361,12 @@ public class GlobalActions {
 						}
 					}
 
+					// make sure env login is not used
+					String loginUserName = System.getProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME);
+					System.clearProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME);
 					boolean performLogin = CoreOperationAdvisorHolder.get().performLogin(win.getShell());
+					// reset after login
+					System.setProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME, loginUserName);
 					if (!performLogin) {
 						exitAction.run();
 					}
