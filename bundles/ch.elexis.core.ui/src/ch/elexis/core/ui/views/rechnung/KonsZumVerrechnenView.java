@@ -172,7 +172,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 				return null;
 			}
 		}, null, // new DefaultControlFieldProvider(cv, new
-				// String[]{"Datum","Name","Vorname","Geb. Dat"}),
+					// String[]{"Datum","Name","Vorname","Geb. Dat"}),
 				new ViewerConfigurer.DefaultButtonProvider(),
 				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TREE, SWT.MULTI | SWT.V_SCROLL, cv));
 		SashForm sash = new SashForm(parent, SWT.NULL);

@@ -112,7 +112,7 @@
                     <directory>${project.basedir}/src</directory>
                 </directories>
                 <configFile>${formatterConfigFile}</configFile>
-                <lineEnding>KEEP</lineEnding>
+                <lineEnding>LF</lineEnding>
                 <encoding>UTF-8</encoding>
             </configuration>
         </plugin>
