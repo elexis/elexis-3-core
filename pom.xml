@@ -104,6 +104,9 @@
             <artifactId>formatter-maven-plugin</artifactId>
             <version>2.18.0</version>
             <configuration>
+                <goals>
+                  <goal>format</goal>
+                </goals>
                 <directories>
                     <directory>${project.build.sourceDirectory}</directory>
                     <directory>${project.basedir}/src</directory>
@@ -272,7 +275,7 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<plugin>
+			  <plugin>
 					<groupId>net.revelc.code.formatter</groupId>
 					<artifactId>formatter-maven-plugin</artifactId>
 					<version>2.18.0</version>
