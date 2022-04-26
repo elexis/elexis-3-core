@@ -128,7 +128,7 @@ Sorting bundles/ch.elexis.core/src/ch/elexis/core/model/ch/messages_it.propertie
 
 At the moment we use the following hooks:
 * enforce-eclipse-format
-  As the enforce-eclipse-format **takes a long time** (over 60 seconds on my machine) it is only called **manually** and as a **github action on pull-requests**. To run it call: `pre-commit run --hook-stage manual enforce-eclipse-format`
+  As the enforce-eclipse-format **takes a long time** (over 60 seconds on my machine) it is only called **manually** and as a **github action on pull-requests**. To run it call: `pre-commit run --hook-stage manual enforce-eclipse-format --show-diff-on-failure --all-files`
 * check-xml
 * check-yaml
 * file-contents-sorter
