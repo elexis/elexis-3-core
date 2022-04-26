@@ -2,7 +2,7 @@ name: pre_commit
 on:
   pull_request:
   push:
-    branches-ignore: [ '3.6', '3.7', '3.8', '3.9']
+    branches-ignore: [ '3.6', '3.7', '3.8' ]
 
 jobs:
   build:
