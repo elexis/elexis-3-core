@@ -11,24 +11,23 @@ import ch.elexis.core.jpa.entities.LabOrder;
 import ch.elexis.core.jpa.entities.entitymanager.ElexisEntityManagerServiceHolder;
 
 public class LabOrderEntityListener {
-	
+
 	@PrePersist
-	public void prePersist(LabOrder labOrder){
+	public void prePersist(LabOrder labOrder) {
 		if (labOrder.getOrderid() == null) {
 			labOrder.setOrderid(Integer.toString(findAndIncrementLabOrderId()));
 		}
 	}
 
 	/**
-	 * Finds the current lab order number, checks for uniqueness, retrieves it and increments by one
-	 * 
+	 * Finds the current lab order number, checks for uniqueness, retrieves it and
+	 * increments by one
+	 *
 	 * @return
 	 */
-	private int findAndIncrementLabOrderId(){
+	private int findAndIncrementLabOrderId() {
 		int ret = 0;
-		EntityManager em =
-			(EntityManager) ElexisEntityManagerServiceHolder.getEntityManager()
-				.getEntityManager(false);
+		EntityManager em = (EntityManager) ElexisEntityManagerServiceHolder.getEntityManager().getEntityManager(false);
 		try {
 			em.getTransaction().begin();
 			LabOrder version = em.find(LabOrder.class, "VERSION");
@@ -43,10 +42,9 @@ public class LabOrderEntityListener {
 				em.lock(version, LockModeType.PESSIMISTIC_WRITE);
 				ret = Integer.parseInt(version.getOrderid());
 				ret += 1;
-				
+
 				while (true) {
-					TypedQuery<LabOrder> query =
-						em.createNamedQuery("LabOrder.orderid", LabOrder.class);
+					TypedQuery<LabOrder> query = em.createNamedQuery("LabOrder.orderid", LabOrder.class);
 					query.setParameter("orderid", Integer.toString(ret));
 					List<LabOrder> results = query.getResultList();
 					if (results.isEmpty()) {

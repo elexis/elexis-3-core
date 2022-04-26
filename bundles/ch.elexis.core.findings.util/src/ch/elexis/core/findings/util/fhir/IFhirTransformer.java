@@ -15,7 +15,7 @@ import ch.elexis.core.model.Identifiable;
  * Service definition for transforming FHIR objects to local Objects. Provides
  * REST CRUD (create, read, update, delete) operations on the local objects
  * using the FHIR objects.
- * 
+ *
  * @author thomas
  *
  * @param <F> FHIR class
@@ -31,14 +31,14 @@ public interface IFhirTransformer<F, L> {
 	/**
 	 * Create a new FHIR object representing the localObject, optionally including
 	 * referenced resources or considering a {@link SummaryEnum}
-	 * 
+	 *
 	 * @param localObject
 	 * @param summaryEnum the <a href=
 	 *                    "https://www.hl7.org/fhir/search.html#summary">summary</a>
 	 *                    mode; {@link SummaryEnum#TEXT} and include do not match
 	 * @param includes    the resources to <a href=
 	 *                    "http://hapifhir.io/doc_rest_operations.html#Resource_Includes__include">include</a>
-	 * 
+	 *
 	 * @return
 	 */
 	public Optional<F> getFhirObject(L localObject, SummaryEnum summaryEnum, Set<Include> includes);
@@ -49,7 +49,7 @@ public interface IFhirTransformer<F, L> {
 
 	/**
 	 * Search for the local Object matching the FHIR object.
-	 * 
+	 *
 	 * @param fhirObject
 	 * @return
 	 */
@@ -57,7 +57,7 @@ public interface IFhirTransformer<F, L> {
 
 	/**
 	 * Update the local Object with the content of the FHIR object.
-	 * 
+	 *
 	 * @param fhirObject
 	 * @param localObject
 	 * @return the updated local Object, possibly not same as localObject parameter,
@@ -67,7 +67,7 @@ public interface IFhirTransformer<F, L> {
 
 	/**
 	 * Create a new local Object matching the FHIR object.
-	 * 
+	 *
 	 * @param fhirObject
 	 * @return
 	 */
@@ -75,7 +75,7 @@ public interface IFhirTransformer<F, L> {
 
 	/**
 	 * Test if the implementation has matching FHIR and local class types.
-	 * 
+	 *
 	 * @param fhirClazz
 	 * @param localClazz
 	 * @return

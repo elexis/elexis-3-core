@@ -18,43 +18,42 @@ import javax.xml.transform.URIResolver;
 
 /**
  * Interface definition for transformation implementations.
- * 
+ *
  * @author thomas
- * 
+ *
  */
 public interface IFormattedOutput {
-	
+
 	/**
-	 * Method for transforming the input object into an OutputStream using the org.apache.fop
-	 * library. Different transformation implementations are available via the
-	 * {@link IFormattedOutputFactory}.
-	 * 
+	 * Method for transforming the input object into an OutputStream using the
+	 * org.apache.fop library. Different transformation implementations are
+	 * available via the {@link IFormattedOutputFactory}.
+	 *
 	 * @param input
 	 * @param xslt
 	 * @param output
-	 * 
+	 *
 	 * @throws FormattedOutputException
 	 */
 	public void transform(Object input, InputStream xslt, OutputStream output);
-	
+
 	/**
-	 * Method for transforming the input object into an OutputStream using the org.apache.fop
-	 * library. Different transformation implementations are available via the
-	 * {@link IFormattedOutputFactory}.
-	 * 
+	 * Method for transforming the input object into an OutputStream using the
+	 * org.apache.fop library. Different transformation implementations are
+	 * available via the {@link IFormattedOutputFactory}.
+	 *
 	 * @param input
 	 * @param xslt
 	 * @param output
-	 * @param transformerParameters
-	 *            key/value parameters for the transformer
-	 * 
+	 * @param transformerParameters key/value parameters for the transformer
+	 *
 	 * @throws FormattedOutputException
 	 */
 	public default void transform(Object input, InputStream xslt, OutputStream output,
-		Map<String, String> transformerParameters){
+			Map<String, String> transformerParameters) {
 		transform(input, xslt, output, transformerParameters, null);
 	}
-	
+
 	public void transform(Object input, InputStream xslt, OutputStream output,
-		Map<String, String> transformerParameters, URIResolver resolver);
+			Map<String, String> transformerParameters, URIResolver resolver);
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.util;
 
@@ -31,12 +31,13 @@ import ch.rgw.tools.TimeTool;
 import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 /**
- * A Composite with a spinner indicating a number of days and a DatePicker indicating the resulting
- * date from a base date and the spinner setting. Manipulating the spinner will modify the
- * DatePicker and vice versa. SelectionListeners will be informed on each change.
- * 
+ * A Composite with a spinner indicating a number of days and a DatePicker
+ * indicating the resulting date from a base date and the spinner setting.
+ * Manipulating the spinner will modify the DatePicker and vice versa.
+ * SelectionListeners will be informed on each change.
+ *
  * @author Gerry
- * 
+ *
  */
 public class DayDateCombo extends Composite {
 	private Spinner spinner;
@@ -48,42 +49,36 @@ public class DayDateCombo extends Composite {
 	private Label frontLabel;
 	private Label middleLabel;
 	private final String text1, text2, text1Neg, text2Neg;
-	
+
 	/**
 	 * Create the Composite
-	 * 
-	 * @param parent
-	 *            parent composite
-	 * @param text1
-	 *            the text to display in front of the spinner
-	 * @param text2
-	 *            the text to display between spinner and DatePicker
+	 *
+	 * @param parent parent composite
+	 * @param text1  the text to display in front of the spinner
+	 * @param text2  the text to display between spinner and DatePicker
 	 */
-	public DayDateCombo(Composite parent, String text1, String text2){
+	public DayDateCombo(Composite parent, String text1, String text2) {
 		this(parent, text1, text2, null, null);
 	}
-	
+
 	/**
 	 * @param parent
-	 * @param text1
-	 *            the text to display in front of the spinner
-	 * @param text2
-	 *            the text to display between spinner and DatePicker
-	 * @param text1Neg
-	 *            the text to display in front of the spinner if date is before today
-	 * @param text2Neg
-	 *            the text to display between spinner and DatePicker if date is before today
+	 * @param text1    the text to display in front of the spinner
+	 * @param text2    the text to display between spinner and DatePicker
+	 * @param text1Neg the text to display in front of the spinner if date is before
+	 *                 today
+	 * @param text2Neg the text to display between spinner and DatePicker if date is
+	 *                 before today
 	 * @since 3.1
 	 */
-	public DayDateCombo(Composite parent, String text1, String text2, String text1Neg,
-		String text2Neg){
+	public DayDateCombo(Composite parent, String text1, String text2, String text1Neg, String text2Neg) {
 		super(parent, SWT.NONE);
-		
+
 		this.text1 = text1;
 		this.text2 = text2;
 		this.text1Neg = text1Neg;
 		this.text2Neg = text2Neg;
-		
+
 		ttNow = new TimeTool();
 		ttNow.chop(3);
 		setLayout(new RowLayout(SWT.HORIZONTAL));
@@ -95,25 +90,23 @@ public class DayDateCombo extends Composite {
 		dp = new DatePickerCombo(this, SWT.NONE);
 		setListeners();
 	}
-	
-	public void spinDaysBack(){
+
+	public void spinDaysBack() {
 		spinBack = true;
 	}
-	
-	public void setEnabled(boolean bEnable){
+
+	public void setEnabled(boolean bEnable) {
 		dp.setEnabled(bEnable);
 		spinner.setEnabled(bEnable);
 	}
-	
+
 	/**
 	 * Set the dates of the composite.
-	 * 
-	 * @param baseDate
-	 *            the date of the DatePicker
-	 * @param endDate
-	 *            the date to calculate with the spinner
+	 *
+	 * @param baseDate the date of the DatePicker
+	 * @param endDate  the date to calculate with the spinner
 	 */
-	public void setDates(TimeTool baseDate){
+	public void setDates(TimeTool baseDate) {
 		removeListeners();
 		if (baseDate == null) {
 			ttBase = new TimeTool();
@@ -121,19 +114,20 @@ public class DayDateCombo extends Composite {
 			ttBase = new TimeTool(baseDate);
 		}
 		ttBase.chop(3);
-		
+
 		dp.setDate(ttBase.getTime());
 		int days = ttBase.daysTo(ttNow);
 		updateLabels(days);
 		spinner.setValues(Math.abs(days), 0, 999, 0, 1, 10);
 		setListeners();
 	}
-	
+
 	/**
 	 * Updates the labels for negative or positive values
+	 *
 	 * @param days
 	 */
-	private void updateLabels(int days){
+	private void updateLabels(int days) {
 		if (text1Neg != null && text2Neg != null) {
 			if (days < 0) {
 				frontLabel.setText(text1);
@@ -144,16 +138,14 @@ public class DayDateCombo extends Composite {
 			}
 		}
 	}
-	
+
 	/**
 	 * Set the dates of the composite
-	 * 
-	 * @param days
-	 *            number of days before the basedate
-	 * @param baseDate
-	 *            the date to calculate from or null=today
+	 *
+	 * @param days     number of days before the basedate
+	 * @param baseDate the date to calculate from or null=today
 	 */
-	public void setDays(int days){
+	public void setDays(int days) {
 		removeListeners();
 		ttBase = new TimeTool(ttNow);
 		ttBase.addDays(days);
@@ -163,14 +155,14 @@ public class DayDateCombo extends Composite {
 		spinner.setValues(Math.abs(days), 0, 999, 0, 1, 10);
 		setListeners();
 	}
-	
+
 	/**
 	 * Get the actual setting of the DatePicker.
-	 * 
-	 * @return a TimeTool with the DatePicker's date or null if the date is not set or the spinner
-	 *         is 0
+	 *
+	 * @return a TimeTool with the DatePicker's date or null if the date is not set
+	 *         or the spinner is 0
 	 */
-	public TimeTool getDate(){
+	public TimeTool getDate() {
 		int v = spinner.getSelection();
 		if (v == 0) {
 			return null;
@@ -180,46 +172,46 @@ public class DayDateCombo extends Composite {
 		}
 		return new TimeTool(dp.getDate().getTime());
 	}
-	
-	public void addSelectionListener(SelectionListener listener){
+
+	public void addSelectionListener(SelectionListener listener) {
 		checkWidget();
-		
+
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		
+
 		TypedListener typedListener = new TypedListener(listener);
 		addListener(SWT.Selection, typedListener);
 		addListener(SWT.DefaultSelection, typedListener);
-		
+
 	}
-	
-	public void removeSelectionListener(SelectionListener listener){
+
+	public void removeSelectionListener(SelectionListener listener) {
 		checkWidget();
-		
+
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		
+
 		removeListener(SWT.Selection, listener);
 		removeListener(SWT.DefaultSelection, listener);
 	}
-	
-	private void setListeners(){
+
+	private void setListeners() {
 		spinner.addModifyListener(spl);
 		dp.addSelectionListener(dl);
 		dp.addModifyListener(dl);
 	}
-	
-	private void removeListeners(){
+
+	private void removeListeners() {
 		spinner.removeModifyListener(spl);
 		dp.removeSelectionListener(dl);
 		dp.removeModifyListener(dl);
 	}
-	
+
 	class SpinnerListener implements ModifyListener {
-		
-		public void modifyText(ModifyEvent me){
+
+		public void modifyText(ModifyEvent me) {
 			removeListeners();
 			int d = spinner.getSelection();
 			if (ttBase.isBefore(ttNow) || spinBack) {
@@ -233,13 +225,13 @@ public class DayDateCombo extends Composite {
 			notifyListeners(SWT.Selection, e);
 			setListeners();
 		}
-		
+
 	}
-	
+
 	class DateListener extends SelectionAdapter implements ModifyListener {
-		
+
 		@Override
-		public void widgetSelected(SelectionEvent se){
+		public void widgetSelected(SelectionEvent se) {
 			removeListeners();
 			TimeTool nt = new TimeTool(dp.getDate().getTime());
 			int days = ttNow.daysTo(nt);
@@ -249,14 +241,14 @@ public class DayDateCombo extends Composite {
 			notifyListeners(SWT.Selection, e);
 			setListeners();
 		}
-		
-		public void modifyText(ModifyEvent me){
+
+		public void modifyText(ModifyEvent me) {
 			// String t = dp.getText();
 			Event e = new Event();
 			e.time = me.time;
 			notifyListeners(SWT.Selection, e);
 		}
-		
+
 	}
-	
+
 }

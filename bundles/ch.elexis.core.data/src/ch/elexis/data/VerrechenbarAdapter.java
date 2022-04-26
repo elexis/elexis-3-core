@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.data;
@@ -26,41 +26,40 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public abstract class VerrechenbarAdapter extends PersistentObject implements IVerrechenbar {
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		return getText();
 	}
-	
+
 	@Override
 	protected abstract String getTableName();
-	
-	public String getCode(){
+
+	public String getCode() {
 		return null;
 	}
-	
-	public String getCodeSystemName(){
+
+	public String getCodeSystemName() {
 		return null;
 	}
-	
-	public String getText(){
+
+	public String getText() {
 		return null;
 	}
-	
-	public IOptifier getOptifier(){
+
+	public IOptifier getOptifier() {
 		return optifier;
 	}
-	
-	public Comparator<IVerrechenbar> getComparator(){
+
+	public Comparator<IVerrechenbar> getComparator() {
 		return comparator;
 	}
-	
-	public IFilter getFilter(final Mandant m){
+
+	public IFilter getFilter(final Mandant m) {
 		return ifilter;
 	}
-	
-	public void setVKMultiplikator(final TimeTool von, TimeTool bis, final double factor,
-		final String typ){
+
+	public void setVKMultiplikator(final TimeTool von, TimeTool bis, final double factor, final String typ) {
 		StringBuilder sql = new StringBuilder();
 		String eoue = new TimeTool(TimeTool.END_OF_UNIX_EPOCH).toString(TimeTool.DATE_COMPACT);
 		if (bis == null) {
@@ -68,55 +67,54 @@ public abstract class VerrechenbarAdapter extends PersistentObject implements IV
 		}
 		String from = von.toString(TimeTool.DATE_COMPACT);
 		Stm stm = getConnection().getStatement();
-		sql.append("UPDATE VK_PREISE SET DATUM_BIS=").append(JdbcLink.wrap(from))
-			.append(" WHERE (DATUM_BIS=").append(JdbcLink.wrap(eoue))
-			.append(" OR DATUM_BIS='99991231') AND TYP=").append(JdbcLink.wrap(typ));
+		sql.append("UPDATE VK_PREISE SET DATUM_BIS=").append(JdbcLink.wrap(from)).append(" WHERE (DATUM_BIS=")
+				.append(JdbcLink.wrap(eoue)).append(" OR DATUM_BIS='99991231') AND TYP=").append(JdbcLink.wrap(typ));
 		stm.exec(sql.toString());
 		sql.setLength(0);
 		sql.append("INSERT INTO VK_PREISE (ID,DATUM_VON,DATUM_BIS,MULTIPLIKATOR,TYP) VALUES (")
-			.append(JdbcLink.wrap(StringTool.unique("rtsu"))).append(",")
-			.append(JdbcLink.wrap(von.toString(TimeTool.DATE_COMPACT))).append(",")
-			.append(JdbcLink.wrap(bis.toString(TimeTool.DATE_COMPACT))).append(",")
-			.append(JdbcLink.wrap(Double.toString(factor))).append(",").append(JdbcLink.wrap(typ))
-			.append(");");
+				.append(JdbcLink.wrap(StringTool.unique("rtsu"))).append(",")
+				.append(JdbcLink.wrap(von.toString(TimeTool.DATE_COMPACT))).append(",")
+				.append(JdbcLink.wrap(bis.toString(TimeTool.DATE_COMPACT))).append(",")
+				.append(JdbcLink.wrap(Double.toString(factor))).append(",").append(JdbcLink.wrap(typ)).append(");");
 		stm.exec(sql.toString());
 		getConnection().releaseStatement(stm);
 	}
-	
-	public double getVKMultiplikator(final TimeTool date, final String typ){
+
+	public double getVKMultiplikator(final TimeTool date, final String typ) {
 		return getMultiplikator(date, "VK_PREISE", typ);
 	}
-	
-	public double getVKMultiplikator(final TimeTool date, final IFall fall){
+
+	public double getVKMultiplikator(final TimeTool date, final IFall fall) {
 		return getMultiplikator(date, "VK_PREISE", fall.getAbrechnungsSystem());
 	}
-	
-	public double getEKMultiplikator(final TimeTool date, final IFall fall){
+
+	public double getEKMultiplikator(final TimeTool date, final IFall fall) {
 		return getMultiplikator(date, "EK_PREISE", fall.getAbrechnungsSystem());
 	}
-	
-	private double getMultiplikator(final TimeTool date, final String table, final String typ){
+
+	private double getMultiplikator(final TimeTool date, final String table, final String typ) {
 		MultiplikatorList multis = new MultiplikatorList(table, typ);
 		return multis.getMultiplikator(date);
 	}
-	
-	public Money getKosten(final TimeTool dat){
+
+	public Money getKosten(final TimeTool dat) {
 		return new Money(0);
 	}
-	
-	public int getMinutes(){
+
+	public int getMinutes() {
 		return 0;
 	}
-	
-	protected VerrechenbarAdapter(final String id){
+
+	protected VerrechenbarAdapter(final String id) {
 		super(id);
 	}
-	
-	protected VerrechenbarAdapter(){}
-	
+
+	protected VerrechenbarAdapter() {
+	}
+
 	@Override
-	public VatInfo getVatInfo(){
+	public VatInfo getVatInfo() {
 		return VatInfo.VAT_DEFAULT;
 	}
-	
+
 }

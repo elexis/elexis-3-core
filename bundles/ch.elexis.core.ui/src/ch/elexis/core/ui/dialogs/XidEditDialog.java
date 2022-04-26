@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
@@ -20,27 +20,27 @@ import ch.elexis.data.Kontakt;
 
 /**
  * Dialog to enter / edit XID's
- * 
+ *
  * @author gerry
- * 
+ *
  */
 public class XidEditDialog extends TitleAreaDialog {
-	
-	public XidEditDialog(Shell parentShell, Kontakt k){
+
+	public XidEditDialog(Shell parentShell, Kontakt k) {
 		super(parentShell);
-		
+
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		// TODO Auto-generated method stub
 		return super.createDialogArea(parent);
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		// TODO Auto-generated method stub
 		super.create();
 	}
-	
+
 }

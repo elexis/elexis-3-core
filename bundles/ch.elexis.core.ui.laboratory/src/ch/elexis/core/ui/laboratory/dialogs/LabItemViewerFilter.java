@@ -8,22 +8,22 @@ import org.eclipse.jface.viewers.ViewerFilter;
 public class LabItemViewerFilter extends ViewerFilter {
 	protected String searchString;
 	protected ILabelProvider labelProvider;
-	
-	public LabItemViewerFilter(ILabelProvider labelProvider){
+
+	public LabItemViewerFilter(ILabelProvider labelProvider) {
 		this.labelProvider = labelProvider;
 	}
-	
-	public void setSearchText(String s){
+
+	public void setSearchText(String s) {
 		// Search must be a substring of the existing value
 		this.searchString = ".*" + escapeRegexCharacters(s) + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
-	private String escapeRegexCharacters(String string){
+
+	private String escapeRegexCharacters(String string) {
 		return RegExUtils.replacePattern(string, "([~!@#$%^&*()_+{}\\[\\]:;,.<>/?-])", "\\\\$1");
 	}
-	
+
 	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element){
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (searchString == null || searchString.length() == 0) {
 			return true;
 		}

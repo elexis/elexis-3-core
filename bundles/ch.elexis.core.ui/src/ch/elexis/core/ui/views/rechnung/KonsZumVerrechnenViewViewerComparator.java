@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -21,10 +21,10 @@ import ch.rgw.tools.Tree;
 
 public class KonsZumVerrechnenViewViewerComparator extends ViewerComparator {
 	@Override
-	public int compare(Viewer viewer, Object e1, Object e2){
+	public int compare(Viewer viewer, Object e1, Object e2) {
 		Tree lt1 = (Tree) e1;
 		Tree lt2 = (Tree) e2;
-		
+
 		if (lt1.contents instanceof Patient && lt2.contents instanceof Patient) {
 			Patient p1 = (Patient) lt1.contents;
 			Patient p2 = (Patient) lt2.contents;

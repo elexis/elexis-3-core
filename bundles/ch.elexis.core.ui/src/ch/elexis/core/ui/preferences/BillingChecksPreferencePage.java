@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -26,51 +26,50 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.BillingUtil.IBillableCheck;
 
-public class BillingChecksPreferencePage extends PreferencePage
-		implements IWorkbenchPreferencePage {
-	
+public class BillingChecksPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+
 	@Override
-	public void init(IWorkbench workbench){
+	public void init(IWorkbench workbench) {
 		setTitle("Rechnungsprüfung");
 		setDescription(
-			"Hier können die Prüfungen beim Rechnungs-Vorschlag aktiviert, bzw. deaktiviert, werden. Achtung: bei der Rechnungserstellung wird unabhängig davon geprüft.");
+				"Hier können die Prüfungen beim Rechnungs-Vorschlag aktiviert, bzw. deaktiviert, werden. Achtung: bei der Rechnungserstellung wird unabhängig davon geprüft.");
 	}
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout());
-		
+
 		IBillableCheck[] checks = BillingUtil.billableChecks;
 		for (IBillableCheck iBillableCheck : checks) {
 			BillableCheckComposite composite = new BillableCheckComposite(ret, SWT.NONE);
 			composite.setCheck(iBillableCheck);
 		}
-		
+
 		return ret;
 	}
-	
+
 	private class BillableCheckComposite extends Composite {
-		
+
 		private IBillableCheck check;
-		
+
 		private Button enabled;
 		private Label description;
-		
-		public BillableCheckComposite(Composite parent, int style){
+
+		public BillableCheckComposite(Composite parent, int style) {
 			super(parent, style);
 			setLayout(new RowLayout());
-			
+
 			enabled = new Button(this, SWT.CHECK);
 			description = new Label(this, SWT.NONE);
 		}
-		
-		public void setCheck(IBillableCheck iBillableCheck){
+
+		public void setCheck(IBillableCheck iBillableCheck) {
 			this.check = iBillableCheck;
 			enabled.setSelection(BillingUtil.isCheckEnabled(check));
 			enabled.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					BillingUtil.setCheckEnabled(check, enabled.getSelection());
 				}
 			});

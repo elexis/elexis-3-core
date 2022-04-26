@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.laboratory.views;
@@ -53,11 +53,11 @@ import ch.elexis.data.Patient;
 import ch.rgw.tools.Log;
 
 /**
- * This view displays all LabResults that are not marked as seen by the doctor. One can mark them
- * individually or globally as seen from this view.
- * 
+ * This view displays all LabResults that are not marked as seen by the doctor.
+ * One can mark them individually or globally as seen from this view.
+ *
  * @author gerry
- * 
+ *
  */
 public class LabNotSeenView extends ViewPart implements HeartListener {
 	public final static String ID = "ch.elexis.LabNotSeenView"; //$NON-NLS-1$
@@ -66,21 +66,17 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 	private long lastUpdate = 0;
 	private Log log = Log.get(this.getClass().getName());
 	private boolean inUpdate = false;
-	
-	private static final String[] columnHeaders = {
-		Messages.LabNotSeenView_patient, Messages.LabNotSeenView_parameter,
-		Messages.LabNotSeenView_normRange, Messages.LabNotSeenView_date,
-		Messages.LabNotSeenView_value
-	};
-	private static final int[] colWidths = new int[] {
-		250, 100, 60, 70, 50
-	};
+
+	private static final String[] columnHeaders = { Messages.LabNotSeenView_patient, Messages.LabNotSeenView_parameter,
+			Messages.LabNotSeenView_normRange, Messages.LabNotSeenView_date, Messages.LabNotSeenView_value };
+	private static final int[] colWidths = new int[] { 250, 100, 60, 70, 50 };
 	private IAction markAllAction, markPersonAction;
-	
-	public LabNotSeenView(){}
-	
+
+	public LabNotSeenView() {
+	}
+
 	@Override
-	public void createPartControl(final Composite parent){
+	public void createPartControl(final Composite parent) {
 		parent.setLayout(new FillLayout());
 		Table table = new Table(parent, SWT.CHECK | SWT.V_SCROLL);
 		for (int i = 0; i < columnHeaders.length; i++) {
@@ -95,8 +91,8 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		tv.setLabelProvider(new LabNotSeenLabelProvider());
 		tv.setUseHashlookup(true);
 		tv.addSelectionChangedListener(new ISelectionChangedListener() {
-			
-			public void selectionChanged(final SelectionChangedEvent event){
+
+			public void selectionChanged(final SelectionChangedEvent event) {
 				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 				if (!sel.isEmpty()) {
 					if (sel.getFirstElement() instanceof LabResult) {
@@ -104,13 +100,13 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 						ElexisEventDispatcher.fireSelectionEvent(lr.getPatient());
 					}
 				}
-				
+
 			}
 		});
 		tv.addCheckStateListener(new ICheckStateListener() {
 			boolean bDaempfung;
-			
-			public void checkStateChanged(final CheckStateChangedEvent event){
+
+			public void checkStateChanged(final CheckStateChangedEvent event) {
 				if (bDaempfung == false) {
 					bDaempfung = true;
 					LabResult lr = (LabResult) event.getElement();
@@ -127,39 +123,38 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 					bDaempfung = false;
 				}
 			}
-			
+
 		});
 		makeActions();
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createToolbar(markPersonAction, markAllAction);
 		heartbeat();
-		CoreHub.heart.addListener(this, ConfigServiceHolder
-			.getUser(Preferences.LABSETTINGS_CFG_LABNEW_HEARTRATE, Heartbeat.FREQUENCY_HIGH));
-			
+		CoreHub.heart.addListener(this,
+				ConfigServiceHolder.getUser(Preferences.LABSETTINGS_CFG_LABNEW_HEARTRATE, Heartbeat.FREQUENCY_HIGH));
+
 		tv.setInput(this);
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		CoreHub.heart.removeListener(this);
 		super.dispose();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	static class LabNotSeenLabelProvider extends LabelProvider implements ITableLabelProvider,
-			IColorProvider {
-		
-		public Image getColumnImage(final Object element, final int columnIndex){
+
+	static class LabNotSeenLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider {
+
+		public Image getColumnImage(final Object element, final int columnIndex) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
-		public String getColumnText(final Object element, final int columnIndex){
+
+		public String getColumnText(final Object element, final int columnIndex) {
 			if (element instanceof String) {
 				return columnIndex == 0 ? (String) element : ""; //$NON-NLS-1$
 			}
@@ -183,48 +178,46 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 			}
 			return "?"; //$NON-NLS-1$
 		}
-		
-		public Color getBackground(final Object element){
+
+		public Color getBackground(final Object element) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
-		public Color getForeground(final Object element){
+
+		public Color getForeground(final Object element) {
 			if (element instanceof String) {
 				return UiDesk.getColor(UiDesk.COL_GREY);
 			}
 			LabResult lr = (LabResult) element;
-			
+
 			if (lr.isFlag(LabResultConstants.PATHOLOGIC)) {
 				return UiDesk.getColor(UiDesk.COL_RED);
 			} else {
 				return UiDesk.getColor(UiDesk.COL_BLACK);
 			}
 		}
-		
+
 	}
-	
+
 	class LabNotSeenContentProvider implements IStructuredContentProvider {
-		
-		public Object[] getElements(final Object inputElement){
+
+		public Object[] getElements(final Object inputElement) {
 			if (unseen == null) {
-				return new Object[] {
-					Messages.LabNotSeenView_loading
-				};
+				return new Object[] { Messages.LabNotSeenView_loading };
 			}
 			return unseen;
 		}
-		
-		public void dispose(){ /* don't mind */
+
+		public void dispose() { /* don't mind */
 		}
-		
-		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput){
+
+		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 			// don't mind
 		}
-		
+
 	}
-	
-	public void heartbeat(){
+
+	public void heartbeat() {
 		long last = LabResult.getLastUpdateUnseen();
 		if (lastUpdate != 0) {
 			if (lastUpdate >= last) {
@@ -236,8 +229,8 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		log.log(Level.FINE, "Heartbeat used"); //$NON-NLS-1$
 		unseen = LabResult.getUnseen().toArray(new LabResult[0]);
 		UiDesk.getDisplay().syncExec(new Runnable() {
-			
-			public void run(){
+
+			public void run() {
 				if (!inUpdate) {
 					inUpdate = true;
 					if (tv != null) {
@@ -251,52 +244,49 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 				}
 			}
 		});
-		
+
 	}
-	
-	private void makeActions(){
-		markAllAction =
-			new RestrictedAction(AccessControlDefaults.LAB_SEEN, Messages.LabNotSeenView_markAll) { //$NON-NLS-1$
+
+	private void makeActions() {
+		markAllAction = new RestrictedAction(AccessControlDefaults.LAB_SEEN, Messages.LabNotSeenView_markAll) { // $NON-NLS-1$
+			{
+				setToolTipText(Messages.LabNotSeenView_markAllToolTip); // $NON-NLS-1$
+				setImageDescriptor(Images.IMG_TICK.getImageDescriptor());
+			}
+
+			@Override
+			public void doRun() {
+				boolean openConfirm = MessageDialog.openConfirm(getViewSite().getShell(),
+						Messages.LabNotSeenView_reallyMarkCaption, // $NON-NLS-1$
+						Messages.LabNotSeenView_markAllToolTip);
+				if (openConfirm) // $NON-NLS-1$
 				{
-					setToolTipText(Messages.LabNotSeenView_markAllToolTip); //$NON-NLS-1$
-					setImageDescriptor(Images.IMG_TICK.getImageDescriptor());
-				}
-				
-				@Override
-				public void doRun(){
-					boolean openConfirm =
-						MessageDialog.openConfirm(getViewSite().getShell(),
-							Messages.LabNotSeenView_reallyMarkCaption, //$NON-NLS-1$
-							Messages.LabNotSeenView_markAllToolTip);
-					if (openConfirm) //$NON-NLS-1$
-					{
-						tv.setAllChecked(true);
-						for (LabResult lr : LabResult.getUnseen()) {
-							lr.removeFromUnseen();
-						}
+					tv.setAllChecked(true);
+					for (LabResult lr : LabResult.getUnseen()) {
+						lr.removeFromUnseen();
 					}
 				}
-				
-			};
-		markPersonAction =
-			new RestrictedAction(AccessControlDefaults.LAB_SEEN,
-				Messages.LabNotSeenView_markAllofPatient) { //$NON-NLS-1$
-				{
-					setToolTipText(Messages.LabNotSeenView_markAllOfPatientToolTip); //$NON-NLS-1$
-					setImageDescriptor(Images.IMG_PERSON_OK.getImageDescriptor());
-				}
-				
-				@Override
-				public void doRun(){
-					Patient act = ElexisEventDispatcher.getSelectedPatient();
-					for (LabResult lr : unseen) {
-						if (lr.getPatient().equals(act)) {
-							lr.removeFromUnseen();
-							tv.setChecked(lr, true);
-						}
+			}
+
+		};
+		markPersonAction = new RestrictedAction(AccessControlDefaults.LAB_SEEN,
+				Messages.LabNotSeenView_markAllofPatient) { // $NON-NLS-1$
+			{
+				setToolTipText(Messages.LabNotSeenView_markAllOfPatientToolTip); // $NON-NLS-1$
+				setImageDescriptor(Images.IMG_PERSON_OK.getImageDescriptor());
+			}
+
+			@Override
+			public void doRun() {
+				Patient act = ElexisEventDispatcher.getSelectedPatient();
+				for (LabResult lr : unseen) {
+					if (lr.getPatient().equals(act)) {
+						lr.removeFromUnseen();
+						tv.setChecked(lr, true);
 					}
 				}
-			};
+			}
+		};
 	}
-	
+
 }

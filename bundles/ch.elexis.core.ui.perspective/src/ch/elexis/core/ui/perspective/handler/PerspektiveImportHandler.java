@@ -33,91 +33,83 @@ import ch.elexis.core.ui.perspective.service.IPerspectiveImportService;
 
 @Component
 public class PerspektiveImportHandler extends AbstractHandler {
-	
+
 	static IPerspectiveImportService perspectiveImportService;
-	
+
 	@Reference(unbind = "-")
-	public void bind(IPerspectiveImportService service){
+	public void bind(IPerspectiveImportService service) {
 		perspectiveImportService = service;
 	}
-	
-	private static <T> T getService(final Class<T> clazz){
+
+	private static <T> T getService(final Class<T> clazz) {
 		return PlatformUI.getWorkbench().getService(clazz);
 	}
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			EModelService modelService = getService(EModelService.class);
 			FileDialog dialog = new FileDialog(UiDesk.getTopShell(), SWT.OPEN);
-			dialog.setFilterNames(new String[] {
-				"XMI", "XML (Legacy)"
-			});
-			dialog.setFilterExtensions(new String[] {
-				"*.xmi", "*.xml"
-			});
-			
+			dialog.setFilterNames(new String[] { "XMI", "XML (Legacy)" });
+			dialog.setFilterExtensions(new String[] { "*.xmi", "*.xml" });
+
 			dialog.setFilterPath(CoreHub.getWritableUserDir().getAbsolutePath()); // Windows path
-			
+
 			String path = dialog.open();
 			if (path != null) {
 				IPerspectiveDescriptor createdPd = null;
 				if (path.toLowerCase().endsWith("xml")) {
 					// legacy
-					
+
 					MPerspective mPerspective = modelService.createModelElement(MPerspective.class);
-					// the workbench window must be on top - otherwise the exception 'Application does not have an active window' occurs
+					// the workbench window must be on top - otherwise the exception 'Application
+					// does not have an active window' occurs
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().open();
-					List<String> fastViewIds =
-						perspectiveImportService.createPerspectiveFromLegacy(path, mPerspective);
+					List<String> fastViewIds = perspectiveImportService.createPerspectiveFromLegacy(path, mPerspective);
 					createdPd = savePerspectiveToRegistryLegacy(mPerspective);
 					perspectiveImportService.openPerspective(createdPd);
 					switchToPerspectiveLegacy(mPerspective, fastViewIds);
-					IWorkbenchPage wp = (IWorkbenchPage) PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getActivePage();
+					IWorkbenchPage wp = (IWorkbenchPage) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getActivePage();
 					wp.savePerspectiveAs(createdPd);
-					
+
 				} else {
 					createdPd = perspectiveImportService.importPerspective(path, null, true);
-					
+
 				}
-				
+
 				if (createdPd != null) {
 					MessageDialog.openInformation(UiDesk.getDisplay().getActiveShell(), "Import",
-						"Die Perspektive '" + createdPd.getLabel()
-							+ "' wurde erfolgreich importiert.");
+							"Die Perspektive '" + createdPd.getLabel() + "' wurde erfolgreich importiert.");
 				}
 			}
 		} catch (Exception e) {
 			MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Import",
-				"Diese Perspektive kann nicht importiert werden.");
+					"Diese Perspektive kann nicht importiert werden.");
 			LoggerFactory.getLogger(PerspektiveExportHandler.class).error("import error", e);
 		}
-		
+
 		return null;
 	}
-	
+
 	@SuppressWarnings("restriction")
-	private IPerspectiveDescriptor savePerspectiveToRegistryLegacy(MPerspective perspective){
-		IPerspectiveRegistry perspectiveRegistry =
-			(PerspectiveRegistry) PlatformUI.getWorkbench().getPerspectiveRegistry();
-		IPerspectiveDescriptor pd =
-			perspectiveRegistry.findPerspectiveWithId(perspective.getElementId());
+	private IPerspectiveDescriptor savePerspectiveToRegistryLegacy(MPerspective perspective) {
+		IPerspectiveRegistry perspectiveRegistry = (PerspectiveRegistry) PlatformUI.getWorkbench()
+				.getPerspectiveRegistry();
+		IPerspectiveDescriptor pd = perspectiveRegistry.findPerspectiveWithId(perspective.getElementId());
 		if (pd == null) {
 			((PerspectiveRegistry) perspectiveRegistry).addPerspective(perspective);
 			pd = perspectiveRegistry.findPerspectiveWithId(perspective.getElementId());
 		} else {
 			LoggerFactory.getLogger(PerspektiveImportHandler.class)
-				.error("perspective descriptor already exists for perspective id: "
-				+ perspective.getElementId());
+					.error("perspective descriptor already exists for perspective id: " + perspective.getElementId());
 		}
-		
+
 		return pd;
 	}
-	
-	private void switchToPerspectiveLegacy(MPerspective loadedPerspective,
-		List<String> preLoadedFastViewIds){
-		
+
+	private void switchToPerspectiveLegacy(MPerspective loadedPerspective, List<String> preLoadedFastViewIds) {
+
 		EModelService modelService = getService(EModelService.class);
 		EPartService partService = getService(EPartService.class);
 		MApplication mApplication = getService(MApplication.class);
@@ -131,7 +123,7 @@ public class PerspektiveImportHandler extends AbstractHandler {
 		MPerspective activePerspective = modelService.getActivePerspective(mWindow);
 		MElementContainer<MUIElement> perspectiveParent = activePerspective.getParent();
 		List<String> fastViewIds = preLoadedFastViewIds;
-		
+
 		// add the loaded perspective and switch to it
 		String id = loadedPerspective.getElementId();
 		Iterator<MUIElement> it = perspectiveParent.getChildren().iterator();
@@ -142,15 +134,16 @@ public class PerspektiveImportHandler extends AbstractHandler {
 			}
 		}
 		perspectiveParent.getChildren().add(loadedPerspective);
-		
+
 		// add fast view
 		for (String fastViewId : fastViewIds) {
 			ElexisFastViewUtil.addToFastView(loadedPerspective.getElementId(), fastViewId);
 		}
-		// the workbench window must be on top - otherwise the exception 'Application does not have an active window' occurs
+		// the workbench window must be on top - otherwise the exception 'Application
+		// does not have an active window' occurs
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().open();
-		
+
 		partService.switchPerspective(loadedPerspective);
 	}
-	
+
 }

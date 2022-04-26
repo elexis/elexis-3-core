@@ -9,9 +9,8 @@ import com.google.gson.JsonObject;
 import ch.elexis.core.findings.util.internal.JsonStructuralFeature.Type;
 
 public class FindingsFormat40 extends FindingsFormat {
-	
-	
-	public FindingsFormat40(){
+
+	public FindingsFormat40() {
 		HashMap<String, JsonStructuralFeature> conditionFields = new HashMap<>();
 		conditionFields.put("resourceType", new JsonStructuralFeature("resourceType", Type.PRIMITIVE));
 		conditionFields.put("id", new JsonStructuralFeature("id", Type.PRIMITIVE));
@@ -39,14 +38,14 @@ public class FindingsFormat40 extends FindingsFormat {
 		procedureRequestFields.put("encounter", new JsonStructuralFeature("context", Type.OBJECT));
 		resourceFieldsMap.put("ServiceRequest", procedureRequestFields);
 	}
-	
+
 	public int isFindingsFormat(String rawContent) {
 		JsonObject jsonObject = getJsonObject(rawContent);
 		JsonElement resourceType = jsonObject.get("resourceType");
-		
+
 		return checkFindingsFormatProperties(resourceType, jsonObject);
 	}
-	
+
 	private int checkFindingsFormatProperties(JsonElement resourceType, JsonObject jsonObject) {
 		switch (resourceType.getAsString()) {
 		case "Condition":
@@ -66,7 +65,7 @@ public class FindingsFormat40 extends FindingsFormat {
 	}
 
 	@Override
-	public Optional<String> convertToCurrentFormat(String rawContent){
+	public Optional<String> convertToCurrentFormat(String rawContent) {
 		return Optional.empty();
 	}
 }

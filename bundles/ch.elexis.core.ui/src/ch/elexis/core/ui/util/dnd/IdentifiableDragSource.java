@@ -32,53 +32,50 @@ import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.Identifiable;
 
 /**
- * Basic {@link DragSourceListener} implementation for {@link StructuredViewer} of
- * {@link Identifiable} objects.
- * 
+ * Basic {@link DragSourceListener} implementation for {@link StructuredViewer}
+ * of {@link Identifiable} objects.
+ *
  * @author thomas
  *
  */
 public class IdentifiableDragSource implements DragSourceListener {
-	
+
 	private StructuredViewer viewer;
 	private List<Identifiable> selection;
 	protected static Identifiable draggedObject;
-	
+
 	Transfer myTransfer = TextTransfer.getInstance();
-	
-	public IdentifiableDragSource(final StructuredViewer viewer){
+
+	public IdentifiableDragSource(final StructuredViewer viewer) {
 		this.viewer = viewer;
 		setup();
 	}
-	
-	private void setup(){
+
+	private void setup() {
 		DragSource mine = new DragSource(viewer.getControl(), DND.DROP_COPY);
-		mine.setTransfer(new Transfer[] {
-			myTransfer
-		});
+		mine.setTransfer(new Transfer[] { myTransfer });
 		mine.addDragListener(this);
 	}
-	
+
 	@Override
-	public void dragFinished(final DragSourceEvent event){
+	public void dragFinished(final DragSourceEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void dragSetData(final DragSourceEvent event){
+	public void dragSetData(final DragSourceEvent event) {
 		StringJoiner sj = new StringJoiner(",");
 		for (Identifiable identifiable : selection) {
-			Optional<String> storeToString =
-				StoreToStringServiceHolder.get().storeToString(identifiable);
+			Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(identifiable);
 			storeToString.ifPresent(s -> sj.add(s));
 		}
-		
+
 		event.data = sj.toString().replace(",$", StringConstants.EMPTY); //$NON-NLS-1$
 	}
-	
+
 	@Override
-	public void dragStart(final DragSourceEvent event){
+	public void dragStart(final DragSourceEvent event) {
 		selection = new ArrayList<>();
 		if (viewer != null) {
 			ISelection viewerSelection = viewer.getSelection();
@@ -90,7 +87,7 @@ public class IdentifiableDragSource implements DragSourceListener {
 				}
 			}
 		}
-		
+
 		if ((selection == null) || (selection.isEmpty())) {
 			event.doit = false;
 		}

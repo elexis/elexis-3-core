@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -30,7 +30,7 @@ import ch.elexis.core.model.XidQuality;
 /**
  * The persistent class for the Elexis XID database table. Valid from DB Version
  * >1.8.11
- * 
+ *
  * @author M. Descher, MEDEVIT, Austria
  */
 @Entity
@@ -45,16 +45,16 @@ public class Xid extends AbstractEntityWithId implements EntityWithId, EntityWit
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Column(length = 255)
 	protected String domain;
 
@@ -63,7 +63,7 @@ public class Xid extends AbstractEntityWithId implements EntityWithId, EntityWit
 
 	@Column(length = 25)
 	protected String object;
-	
+
 	@Column(length = 1)
 	@Convert(converter = XidQualityConverter.class)
 	protected XidQuality quality;
@@ -115,32 +115,32 @@ public class Xid extends AbstractEntityWithId implements EntityWithId, EntityWit
 	}
 
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

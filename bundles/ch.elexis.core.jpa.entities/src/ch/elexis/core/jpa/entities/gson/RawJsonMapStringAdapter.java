@@ -11,16 +11,16 @@ import com.google.gson.stream.JsonWriter;
  * Raw serialization of a json map serialized as string
  */
 public class RawJsonMapStringAdapter extends TypeAdapter<String> {
-	
+
 	@Override
-	public void write(JsonWriter out, String value) throws IOException{
+	public void write(JsonWriter out, String value) throws IOException {
 		if (value != null) {
 			out.jsonValue(value);
 		}
 	}
-	
+
 	@Override
-	public String read(JsonReader in) throws IOException{
+	public String read(JsonReader in) throws IOException {
 		JsonObject jsonObject = new JsonObject();
 		in.beginObject();
 		while (in.hasNext()) {
@@ -31,5 +31,5 @@ public class RawJsonMapStringAdapter extends TypeAdapter<String> {
 		in.endObject();
 		return jsonObject.toString();
 	}
-	
+
 }

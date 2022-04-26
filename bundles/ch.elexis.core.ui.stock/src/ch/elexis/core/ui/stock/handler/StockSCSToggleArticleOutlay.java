@@ -17,26 +17,23 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 
-public class StockSCSToggleArticleOutlay extends AbstractHandler
-		implements IHandler, IElementUpdater {
-	
+public class StockSCSToggleArticleOutlay extends AbstractHandler implements IHandler, IElementUpdater {
+
 	@Override
-	public Object execute(ExecutionEvent executionEvent) throws ExecutionException{
-		
+	public Object execute(ExecutionEvent executionEvent) throws ExecutionException {
+
 		Command command = executionEvent.getCommand();
 		HandlerUtil.toggleCommandState(command);
-		
-		ICommandService commandService =
-			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+
+		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		commandService.refreshElements(executionEvent.getCommand().getId(), null);
-		
+
 		return null;
 	}
-	
+
 	@Override
-	public void updateElement(UIElement element, @SuppressWarnings("rawtypes") Map parameters){
-		boolean isSuspended =
-			ConfigServiceHolder.get().getLocal(Preferences.INVENTORY_MACHINE_SUSPEND_OUTLAY,
+	public void updateElement(UIElement element, @SuppressWarnings("rawtypes") Map parameters) {
+		boolean isSuspended = ConfigServiceHolder.get().getLocal(Preferences.INVENTORY_MACHINE_SUSPEND_OUTLAY,
 				Preferences.INVENTORY_MACHINE_SUSPEND_OUTLAY_DEFAULT);
 		if (isSuspended) {
 			element.setChecked(false);
@@ -46,5 +43,5 @@ public class StockSCSToggleArticleOutlay extends AbstractHandler
 			element.setIcon(Images.IMG_DRAWER_ARROW.getImageDescriptor());
 		}
 	}
-	
+
 }

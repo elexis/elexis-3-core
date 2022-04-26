@@ -12,38 +12,37 @@ import ch.rgw.tools.Result;
 
 /**
  * Import Strategy for a file
- * 
+ *
  * @author lucia
- * 		
+ *
  */
 public interface IFileImportStrategy {
-	
+
 	/**
 	 * executes the import for this file
-	 * 
+	 *
 	 * @param fileHandle
-	 * @param context
-	 *            containing any needed information to perform the import. See
-	 *            {@link IMultiFileParser} constants.
+	 * @param context    containing any needed information to perform the import.
+	 *                   See {@link IMultiFileParser} constants.
 	 * @return {@link Result} indicating whether import succeeded or not
 	 */
 	public Result<Object> execute(IVirtualFilesystemHandle fileHandle, Map<String, Object> context, HL7Parser hl7Parser,
-		IPersistenceHandler persistenceHandler) throws IOException;
-	
+			IPersistenceHandler persistenceHandler) throws IOException;
+
 	/**
-	 * Specify if imported files should be moved to archive and error directory inside the import
-	 * directory. Default is false.
-	 * 
+	 * Specify if imported files should be moved to archive and error directory
+	 * inside the import directory. Default is false.
+	 *
 	 * @param value
 	 * @return
 	 */
 	public IFileImportStrategy setMoveAfterImport(boolean value);
-	
+
 	public void setTestMode(boolean testing);
-	
+
 	/**
 	 * Add the {@link ILabContactResolver} that should be used on import.
-	 * 
+	 *
 	 * @param resolver
 	 * @return
 	 */

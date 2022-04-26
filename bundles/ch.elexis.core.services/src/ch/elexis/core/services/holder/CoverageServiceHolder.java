@@ -8,13 +8,13 @@ import ch.elexis.core.services.ICoverageService;
 @Component
 public class CoverageServiceHolder {
 	private static ICoverageService coverageService;
-	
+
 	@Reference
-	public void setCoverageService(ICoverageService coverageService){
+	public void setCoverageService(ICoverageService coverageService) {
 		CoverageServiceHolder.coverageService = coverageService;
 	}
-	
-	public static ICoverageService get(){
+
+	public static ICoverageService get() {
 		return coverageService;
 	}
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.exchange.elements;
@@ -18,17 +18,17 @@ public class MetaElement extends XChangeElement {
 	public static final String XMLNAME = "meta";
 	public static final String ATTR_NAME = "name";
 	public static final String ATTR_VALUE = "value";
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
-	public MetaElement asExporter(XChangeExporter home, String name, String value){
+
+	public MetaElement asExporter(XChangeExporter home, String name, String value) {
 		asExporter(home);
 		setAttribute(ATTR_NAME, name);
 		setAttribute(ATTR_VALUE, value);
 		return this;
 	}
-	
+
 }

@@ -16,24 +16,24 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 
 public class SemanticCheckPGSQL extends SemanticCheck {
-	
-	public SemanticCheckPGSQL(){
+
+	public SemanticCheckPGSQL() {
 		oklog = new StringBuilder();
 		errlog = new StringBuilder();
 	}
-	
+
 	@Override
-	public String checkSemanticStateCoreTables(JdbcLink j, IProgressMonitor monitor){
+	public String checkSemanticStateCoreTables(JdbcLink j, IProgressMonitor monitor) {
 		String version = CheckExec.getDBVersion();
 		String[] tables = DBModel.getTableModel(version);
-		
+
 		try {
 			// Iterate Tables
 			for (int i = 0; i < tables.length; i++) {
 				String status = "Überprüfe Tabelle " + tables[i];
 				monitor.subTask(status);
 				oklog.append(status + ":\n");
-				
+
 				TableDescriptor tableDetail = DBModel.getTableDescription(tables[i]);
 				String[] invalidStates = tableDetail.getInvalidStates(version);
 				if (!(invalidStates == null) && invalidStates.length > 0) {
@@ -42,16 +42,15 @@ public class SemanticCheckPGSQL extends SemanticCheck {
 						Stm stm = j.getStatement();
 						ResultSet rs = stm.query("SELECT * FROM " + tables[i] + " WHERE " + query);
 						while (rs.next()) {
-							errlog.append(tables[i] + ": Semantischer Fehler bei Query <<" + query
-								+ ">> auf ID " + rs.getString(1) + "\n");
+							errlog.append(tables[i] + ": Semantischer Fehler bei Query <<" + query + ">> auf ID "
+									+ rs.getString(1) + "\n");
 						}
 					}
 				}
 			}
-			
+
 		} catch (SQLException e) {
-			Status status =
-				new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getLocalizedMessage(), e);
+			Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getLocalizedMessage(), e);
 			StatusManager.getManager().handle(status, StatusManager.SHOW);
 		}
 		return oklog.toString();

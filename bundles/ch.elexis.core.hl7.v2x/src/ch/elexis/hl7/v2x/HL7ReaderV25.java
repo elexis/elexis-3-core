@@ -53,13 +53,13 @@ import ch.rgw.tools.StringTool;
 
 public class HL7ReaderV25 extends HL7Reader {
 	static Logger logger = LoggerFactory.getLogger(HL7ReaderV25.class);
-	
-	public HL7ReaderV25(Message message){
+
+	public HL7ReaderV25(Message message) {
 		super(message);
 	}
-	
+
 	@Override
-	public String getSender() throws ElexisException{
+	public String getSender() throws ElexisException {
 		String sender;
 		try {
 			MSH msh = (MSH) message.get("MSH");
@@ -72,34 +72,32 @@ public class HL7ReaderV25 extends HL7Reader {
 		}
 		return sender;
 	}
-	
+
 	@Override
-	public ObservationMessage readObservation(HL7PatientResolver patientResolver,
-		boolean createIfNotFound) throws ElexisException{
+	public ObservationMessage readObservation(HL7PatientResolver patientResolver, boolean createIfNotFound)
+			throws ElexisException {
 		observation = null;
 		// http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7+v2.3&triggerEvent=ORU_R01
 		ORU_R01 oru_r01 = (ORU_R01) message;
 		try {
 			this.patientResolver = patientResolver;
 			setPatient(oru_r01, createIfNotFound);
-			
+
 			int oderObservationGroupCount = oru_r01.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
 			for (int idx = 0; idx < oderObservationGroupCount; idx++) {
-				ORU_R01_ORDER_OBSERVATION orderObservationGroup =
-					oru_r01.getPATIENT_RESULT().getORDER_OBSERVATION(idx);
+				ORU_R01_ORDER_OBSERVATION orderObservationGroup = oru_r01.getPATIENT_RESULT().getORDER_OBSERVATION(idx);
 				OBR obr = orderObservationGroup.getOBR();
-				String obrObservationDateTime =
-					obr.getObr7_ObservationDateTime().getTs1_Time().getValue();
-				
+				String obrObservationDateTime = obr.getObr7_ObservationDateTime().getTs1_Time().getValue();
+
 				setOrderComment(oru_r01, idx, obrObservationDateTime);
-				
+
 				int observationGroupCount = orderObservationGroup.getOBSERVATIONReps();
 				for (int i = 0; i < observationGroupCount; i++) {
 					ORU_R01_OBSERVATION observationGroup = orderObservationGroup.getOBSERVATION(i);
-					
+
 					// get notes and comments
 					String commentNTE = getComments(orderObservationGroup, i);
-					
+
 					// group and sequence
 					String group = "";
 					String sequence = "";
@@ -109,16 +107,15 @@ public class HL7ReaderV25 extends HL7Reader {
 							String code = "";
 							if (ce.getCe3_NameOfCodingSystem() != null)
 								code = ce.getCe3_NameOfCodingSystem().getValue();
-							
+
 							group = getGroup(code, ce);
 							sequence = getSequence(code, ce);
-							
+
 						}
 					}
-					
+
 					// result
-					readOBXResults(observationGroup, obr, commentNTE, group, sequence,
-						obrObservationDateTime);
+					readOBXResults(observationGroup, obr, commentNTE, group, sequence, obrObservationDateTime);
 				}
 			}
 		} catch (HL7Exception | ParseException e) {
@@ -126,8 +123,8 @@ public class HL7ReaderV25 extends HL7Reader {
 		}
 		return observation;
 	}
-	
-	private String getGroup(String code, CE ce){
+
+	private String getGroup(String code, CE ce) {
 		if (HL7_ORU_R01.CODINGSYSTEM_DORNER_GROUP_CODE.equalsIgnoreCase(code)) {
 			if (ce.getCe2_Text() != null) {
 				return ce.getCe2_Text().getValue();
@@ -135,8 +132,8 @@ public class HL7ReaderV25 extends HL7Reader {
 		}
 		return "";
 	}
-	
-	private String getSequence(String code, CE ce){
+
+	private String getSequence(String code, CE ce) {
 		if (HL7_ORU_R01.CODINGSYSTEM_DORNER_GROUP_POSITION.equalsIgnoreCase(code)) {
 			if (ce.getCe1_Identifier() != null) {
 				return ce.getCe1_Identifier().getValue();
@@ -144,29 +141,24 @@ public class HL7ReaderV25 extends HL7Reader {
 		}
 		return "";
 	}
-	
-	private void setPatient(ORU_R01 oru, final boolean createIfNotFound)
-		throws ParseException, HL7Exception{
+
+	private void setPatient(ORU_R01 oru, final boolean createIfNotFound) throws ParseException, HL7Exception {
 		List<? extends IPatient> list = new ArrayList<IPatient>();
 		String lastName = ""; //$NON-NLS-1$
 		String firstName = ""; //$NON-NLS-1$
 		String birthDate = ""; //$NON-NLS-1$
 		String sex = Gender.FEMALE.value();
 		pat = null;
-		
+
 		if (pat == null) {
-			String sendingApplication =
-				oru.getMSH().getMsh3_SendingApplication().getHd1_NamespaceID().getValue();
-			String sendingFacility =
-				oru.getMSH().getMsh4_SendingFacility().getHd1_NamespaceID().getValue();
-			String dateTimeOfMessage =
-				oru.getMSH().getMsh7_DateTimeOfMessage().getTs1_Time().getValue();
-			
+			String sendingApplication = oru.getMSH().getMsh3_SendingApplication().getHd1_NamespaceID().getValue();
+			String sendingFacility = oru.getMSH().getMsh4_SendingFacility().getHd1_NamespaceID().getValue();
+			String dateTimeOfMessage = oru.getMSH().getMsh7_DateTimeOfMessage().getTs1_Time().getValue();
+
 			PID pid = oru.getPATIENT_RESULT().getPATIENT().getPID();
-			
+
 			String patid = pid.getPatientID().getIDNumber().getValue();
-			String patid_alternative =
-				pid.getPid4_AlternatePatientIDPID(0).getCx1_IDNumber().getValue();
+			String patid_alternative = pid.getPid4_AlternatePatientIDPID(0).getCx1_IDNumber().getValue();
 			if (StringTool.isNothing(patid)) {
 				patid = pid.getPatientID().getCx1_IDNumber().getValue();
 				if (StringTool.isNothing(patid)) {
@@ -182,53 +174,50 @@ public class HL7ReaderV25 extends HL7Reader {
 					}
 				}
 			}
-			
+
 			if (patid != null) {
 				list = patientResolver.getPatientById(patid);
 			}
-			
+
 			// String[] pidflds = patid.split("[\\^ ]+"); //$NON-NLS-1$
 			// String pid = "";
 			// if (pidflds.length > 0)
 			// pid = pidflds[pidflds.length - 1];
-			
+
 			// place order number
-			String orderNumber = oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC()
-				.getOrc2_PlacerOrderNumber().getEi1_EntityIdentifier().getValue();
-			
+			String orderNumber = oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC().getOrc2_PlacerOrderNumber()
+					.getEi1_EntityIdentifier().getValue();
+
 			if (pid.getPid5_PatientName(0).getFamilyName().getFn1_Surname().getValue() != null)
 				lastName = pid.getPid5_PatientName(0).getFamilyName().getFn1_Surname().getValue();
 			if (pid.getPid5_PatientName(0).getGivenName().getValue() != null)
 				firstName = pid.getPid5_PatientName(0).getGivenName().getValue();
 			String patientName = firstName + " " + lastName;
-			String patientNotesAndComments =
-				readPatientNotesAndComments(oru.getPATIENT_RESULT().getPATIENT());
-			
-			observation =
-				new ObservationMessage(sendingApplication, sendingFacility, dateTimeOfMessage,
-					patid, patientName, patientNotesAndComments, patid_alternative, orderNumber);
-			
+			String patientNotesAndComments = readPatientNotesAndComments(oru.getPATIENT_RESULT().getPATIENT());
+
+			observation = new ObservationMessage(sendingApplication, sendingFacility, dateTimeOfMessage, patid,
+					patientName, patientNotesAndComments, patid_alternative, orderNumber);
+
 			birthDate = pid.getDateTimeOfBirth().getTs1_Time().getValue();
 			sex = pid.getAdministrativeSex().getValue();
-			
+
 			if ((patid == null) || (list.size() != 1)) {
 				// We did not find the patient using the PatID, so we try the
 				// name and birthdate
-				list =
-					patientResolver.findPatientByNameAndBirthdate(lastName, firstName, birthDate);
-				
+				list = patientResolver.findPatientByNameAndBirthdate(lastName, firstName, birthDate);
+
 				if ((list != null) && (list.size() == 1)) {
 					pat = list.get(0);
 				} else {
 					if (createIfNotFound) {
 						String phone = StringConstants.EMPTY;
-						
+
 						XAD adr = pid.getPatientAddress(0);
 						phone = pid.getPhoneNumberHome(0).getTelephoneNumber().getValue();
-						
+
 						pat = patientResolver.createPatient(lastName, firstName, birthDate, sex);
 						pat.setPatientNr(patid);
-						
+
 						if (adr != null) {
 							if (adr.getStreetAddress() != null) {
 								pat.setStreet(adr.getStreetAddress().getComponent(0).toString());
@@ -244,7 +233,7 @@ public class HL7ReaderV25 extends HL7Reader {
 								pat.setCountry(cc);
 							}
 						}
-						
+
 						pat.setPhone1(phone);
 					} else {
 						resolvePatient(firstName, lastName, birthDate);
@@ -260,16 +249,16 @@ public class HL7ReaderV25 extends HL7Reader {
 			}
 		}
 	}
-	
-	private void setOrderComment(ORU_R01 oru, int idx, String obsDate) throws ParseException{
+
+	private void setOrderComment(ORU_R01 oru, int idx, String obsDate) throws ParseException {
 		String orderCommentNTE = getComments(oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx), -1);
 		if (orderCommentNTE != null) {
 			observation.add(new TextData(HL7Constants.COMMENT_NAME, orderCommentNTE, obsDate,
-				HL7Constants.COMMENT_GROUP, null));
+					HL7Constants.COMMENT_GROUP, null));
 		}
 	}
-	
-	private String readPatientNotesAndComments(ORU_R01_PATIENT patient){
+
+	private String readPatientNotesAndComments(ORU_R01_PATIENT patient) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < patient.getNTEReps(); i++) {
 			FT comment = patient.getNTE(i).getComment(0);
@@ -280,14 +269,14 @@ public class HL7ReaderV25 extends HL7Reader {
 		}
 		return sb.toString();
 	}
-	
-	private String getComments(ORU_R01_ORDER_OBSERVATION oobs, int i){
+
+	private String getComments(ORU_R01_ORDER_OBSERVATION oobs, int i) {
 		String commentNTE = null;
 		int size = oobs.getNTEReps();
 		if (i > -1) {
 			size = oobs.getOBSERVATION(i).getNTEReps();
 		}
-		
+
 		for (int n = 0; n < size; n++) {
 			NTE nte = oobs.getNTE(n);
 			if (i > -1) {
@@ -307,9 +296,9 @@ public class HL7ReaderV25 extends HL7Reader {
 		}
 		return commentNTE;
 	}
-	
-	private void readOBXResults(ORU_R01_OBSERVATION observationGroup, OBR obr, String commentNTE,
-		String group, String sequence, String defaultDateTime) throws ParseException{
+
+	private void readOBXResults(ORU_R01_OBSERVATION observationGroup, OBR obr, String commentNTE, String group,
+			String sequence, String defaultDateTime) throws ParseException {
 		OBX obx = observationGroup.getOBX();
 		String valueType = obx.getObx2_ValueType().getValue();
 		String name = "";
@@ -320,30 +309,28 @@ public class HL7ReaderV25 extends HL7Reader {
 		String status = "";
 		Boolean flag;
 		String rawAbnormalFlags;
-		
+
 		if (valueType != null && valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
-			String observationId =
-				obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
-			
+			String observationId = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
+
 			if (!"DOCUMENT".equals(observationId)) {
-				logger.warn(MessageFormat.format(Messages.HL7_ORU_R01_Error_WrongObsIdentifier,
-					observationId));
+				logger.warn(MessageFormat.format(Messages.HL7_ORU_R01_Error_WrongObsIdentifier, observationId));
 			}
-			
+
 			ED ed = (ED) obx.getObx5_ObservationValue(0).getData();
 			String filename = ed.getEd3_DataSubtype().getValue();
 			String encoding = ed.getEd4_Encoding().getValue();
 			String data = ed.getEd5_Data().getValue();
 			sequence = obx.getSetIDOBX().getValue();
 			observationTime = obx.getObx14_DateTimeOfTheObservation().getTs1_Time().getValue();
-			
-			observation.add(new EncapsulatedData(filename, encoding, data, observationTime,
-				commentNTE, group, sequence));
+
+			observation
+					.add(new EncapsulatedData(filename, encoding, data, observationTime, commentNTE, group, sequence));
 		} else if (valueType != null && isTextOrNumeric(valueType)) {
 			name = determineName(obx, obr);
 			String value = "";
 			Object tmp = obx.getObx5_ObservationValue(0).getData();
-			
+
 			if (tmp instanceof ST) {
 				value = ((ST) tmp).getValue();
 			} else if (tmp instanceof TX) {
@@ -360,7 +347,7 @@ public class HL7ReaderV25 extends HL7Reader {
 			} else if (tmp instanceof CE) {
 				value = ((CE) tmp).getCe2_Text().getValue();
 			}
-			
+
 			itemCode = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
 			unit = obx.getObx6_Units().getCe1_Identifier().getValue();
 			range = obx.getObx7_ReferencesRange().getValue();
@@ -368,43 +355,41 @@ public class HL7ReaderV25 extends HL7Reader {
 			flag = isPathologic(rawAbnormalFlags);
 			observationTime = obx.getObx14_DateTimeOfTheObservation().getTs1_Time().getValue();
 			status = obx.getObx11_ObservationResultStatus().getValue();
-			
-			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag,
-				rawAbnormalFlags, defaultDateTime, observationTime, commentNTE, group, sequence,
-				status, extractName(obx.getObx4_ObservationSubID()));
-			
-			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)
-				|| valueType.equals(HL7Constants.OBX_VALUE_TYPE_SN)) {
+
+			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag, rawAbnormalFlags,
+					defaultDateTime, observationTime, commentNTE, group, sequence, status,
+					extractName(obx.getObx4_ObservationSubID()));
+
+			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM) || valueType.equals(HL7Constants.OBX_VALUE_TYPE_SN)) {
 				lrd.setIsNumeric(true);
 			} else if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_TX)) {
 				lrd.setIsPlainText(true);
 			} else if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_FT)) {
 				lrd.setIsFormatedText(true);
 			}
-			
+
 			observation.add(lrd);
 		} else {
 			logger.error(MessageFormat.format("Value type {0} is not implemented!", valueType));
 		}
 	}
-	
-	private String determineName(OBX obx, OBR obr){
+
+	private String determineName(OBX obx, OBR obr) {
 		String prefix = "";
 		ST ce2_Text = obr.getUniversalServiceIdentifier().getCe2_Text();
 		if (ce2_Text != null && StringUtils.isNotBlank(ce2_Text.toString())) {
 			prefix = ce2_Text.toString() + " - ";
 		}
-		
+
 		List<String> possibleNames = new ArrayList<>();
 		possibleNames.add(prefix + obx.getObx4_ObservationSubID().getValue());
 		possibleNames.add(prefix + obx.getObx3_ObservationIdentifier().getCe2_Text().getValue());
-		possibleNames
-			.add(prefix + obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue());
+		possibleNames.add(prefix + obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue());
 		return HL7Helper.determineName(possibleNames);
 	}
-	
+
 	@Override
-	public OrcMessage getOrcMessage(){
+	public OrcMessage getOrcMessage() {
 		try {
 			ORU_R01 oru = (ORU_R01) message;
 			if (oru != null) {
@@ -421,8 +406,8 @@ public class HL7ReaderV25 extends HL7Reader {
 		}
 		return null;
 	}
-	
-	private OrcMessage extractOrc(ORC orc) throws HL7Exception{
+
+	private OrcMessage extractOrc(ORC orc) throws HL7Exception {
 		if (orc != null) {
 			OrcMessage orcMessage = new OrcMessage();
 			XCN[] ops = orc.getOrderingProvider();

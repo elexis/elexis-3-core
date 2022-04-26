@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -44,52 +44,51 @@ import org.eclipse.ui.IWorkbenchPartSite;
 /**
  * Class for managing a {@link NatTable} with a {@link IRowDataProvider} and a
  * {@link SelectionLayer}.
- * 
+ *
  * @author thomas
  *
  */
 public class NatTableWrapper implements ISelectionProvider {
 	private NatTable natTable;
-	
+
 	private IDataProvider dataProvider;
 	private SelectionLayer selectionLayer;
-	
+
 	private List<Object> currentSelection = new ArrayList<>();
-	
+
 	private ListenerList<IDoubleClickListener> doubleClickListeners = new ListenerList<>();
 	private ListenerList<ISelectionChangedListener> selectionListener = new ListenerList<>();
-	
-	public NatTableWrapper(NatTable natTable, IDataProvider dataProvider,
-		SelectionLayer selectionLayer){
+
+	public NatTableWrapper(NatTable natTable, IDataProvider dataProvider, SelectionLayer selectionLayer) {
 		this.natTable = natTable;
 		this.dataProvider = dataProvider;
 		this.selectionLayer = selectionLayer;
 	}
-	
-	public SelectionLayer getSelectionLayer(){
+
+	public SelectionLayer getSelectionLayer() {
 		return selectionLayer;
 	}
-	
-	public IDataProvider getDataProvider(){
+
+	public IDataProvider getDataProvider() {
 		return dataProvider;
 	}
-	
-	public boolean isDisposed(){
+
+	public boolean isDisposed() {
 		return natTable == null || natTable.isDisposed();
 	}
-	
-	public void configure(){
+
+	public void configure() {
 		natTable.addLayerListener(new ILayerListener() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public void handleLayerEvent(ILayerEvent event){
+			public void handleLayerEvent(ILayerEvent event) {
 				if (event instanceof CellSelectionEvent) {
 					currentSelection.clear();
 					CellSelectionEvent cellEvent = (CellSelectionEvent) event;
 					Collection<ILayerCell> cells = cellEvent.getSelectionLayer().getSelectedCells();
 					for (ILayerCell iLayerCell : cells) {
 						Object selectedObj = dataProvider.getDataValue(iLayerCell.getColumnIndex(),
-							iLayerCell.getRowIndex());
+								iLayerCell.getRowIndex());
 						if (selectedObj instanceof List) {
 							currentSelection.addAll((List) selectedObj);
 						}
@@ -97,30 +96,28 @@ public class NatTableWrapper implements ISelectionProvider {
 					// call listeners
 					Object[] listeners = selectionListener.getListeners();
 					for (Object object : listeners) {
-						((ISelectionChangedListener) object)
-							.selectionChanged(new SelectionChangedEvent(NatTableWrapper.this,
-								new StructuredSelection(currentSelection)));
+						((ISelectionChangedListener) object).selectionChanged(new SelectionChangedEvent(
+								NatTableWrapper.this, new StructuredSelection(currentSelection)));
 					}
 				}
 			}
 		});
-		
+
 		natTable.addConfiguration(new AbstractUiBindingConfiguration() {
 			@Override
-			public void configureUiBindings(UiBindingRegistry uiBindingRegistry){
+			public void configureUiBindings(UiBindingRegistry uiBindingRegistry) {
 				uiBindingRegistry.registerDoubleClickBinding(
-					new MouseEventMatcher(SWT.NONE, GridRegion.BODY, MouseEventMatcher.LEFT_BUTTON),
-					new DblClickMouseAction());
+						new MouseEventMatcher(SWT.NONE, GridRegion.BODY, MouseEventMatcher.LEFT_BUTTON),
+						new DblClickMouseAction());
 			}
-			
+
 			class DblClickMouseAction implements IMouseAction {
 				@Override
-				public void run(NatTable natTable, MouseEvent event){
+				public void run(NatTable natTable, MouseEvent event) {
 					if (currentSelection != null) {
 						Object[] listeners = doubleClickListeners.getListeners();
 						for (Object object : listeners) {
-							((IDoubleClickListener) object).doubleClick(NatTableWrapper.this,
-								getSelection());
+							((IDoubleClickListener) object).doubleClick(NatTableWrapper.this, getSelection());
 						}
 					}
 				}
@@ -128,59 +125,59 @@ public class NatTableWrapper implements ISelectionProvider {
 		});
 		natTable.configure();
 	}
-	
-	public NatTable getNatTable(){
+
+	public NatTable getNatTable() {
 		return natTable;
 	}
-	
-	public void addDoubleClickListener(IDoubleClickListener listener){
+
+	public void addDoubleClickListener(IDoubleClickListener listener) {
 		doubleClickListeners.add(listener);
 	}
-	
-	public void removeDoubleClickListener(IDoubleClickListener listener){
+
+	public void removeDoubleClickListener(IDoubleClickListener listener) {
 		doubleClickListeners.remove(listener);
 	}
-	
+
 	@Override
-	public void addSelectionChangedListener(ISelectionChangedListener listener){
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListener.add(listener);
 	}
-	
+
 	@Override
-	public ISelection getSelection(){
+	public ISelection getSelection() {
 		if (!currentSelection.isEmpty()) {
 			return new StructuredSelection(currentSelection);
 		}
 		return StructuredSelection.EMPTY;
 	}
-	
+
 	@Override
-	public void removeSelectionChangedListener(ISelectionChangedListener listener){
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListener.remove(listener);
 	}
-	
+
 	@Override
-	public void setSelection(ISelection selection){
-		// currently not supported 
+	public void setSelection(ISelection selection) {
+		// currently not supported
 	}
-	
+
 	public static interface IDoubleClickListener {
 		public void doubleClick(NatTableWrapper source, ISelection selection);
 	}
-	
-	public void addContextMenu(String string, IWorkbenchPartSite iWorkbenchPartSite){
-		
+
+	public void addContextMenu(String string, IWorkbenchPartSite iWorkbenchPartSite) {
+
 		MenuManager mgr = new MenuManager();
 		Menu popupmenu = new PopupMenuBuilder(natTable, mgr).build();
 		iWorkbenchPartSite.registerContextMenu(string, mgr, null);
-		
+
 		natTable.addConfiguration(new AbstractUiBindingConfiguration() {
-			
+
 			@Override
-			public void configureUiBindings(UiBindingRegistry uiBindingRegistry){
+			public void configureUiBindings(UiBindingRegistry uiBindingRegistry) {
 				uiBindingRegistry.registerMouseDownBinding(
-					new MouseEventMatcher(SWT.NONE, null, MouseEventMatcher.RIGHT_BUTTON),
-					new PopupMenuAction(popupmenu));
+						new MouseEventMatcher(SWT.NONE, null, MouseEventMatcher.RIGHT_BUTTON),
+						new PopupMenuAction(popupmenu));
 			}
 		});
 	}

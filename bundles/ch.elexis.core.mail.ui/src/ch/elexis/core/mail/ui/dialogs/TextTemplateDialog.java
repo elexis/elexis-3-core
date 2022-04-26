@@ -27,27 +27,27 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class TextTemplateDialog extends Dialog {
-	
+
 	private IMandator mandator;
-	
+
 	private String name;
-	
+
 	private List<Object> list;
-	
-	public TextTemplateDialog(Shell parentShell){
+
+	public TextTemplateDialog(Shell parentShell) {
 		super(parentShell);
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
-		
+
 		Text nameTxt = new Text(container, SWT.BORDER);
 		nameTxt.setMessage("Vorlagenname");
 		nameTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		nameTxt.addModifyListener(new ModifyListener() {
 			@Override
-			public void modifyText(ModifyEvent e){
+			public void modifyText(ModifyEvent e) {
 				name = nameTxt.getText();
 			}
 		});
@@ -56,7 +56,7 @@ public class TextTemplateDialog extends Dialog {
 		comboViewer.setContentProvider(ArrayContentProvider.getInstance());
 		comboViewer.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof IMandator) {
 					return ((IMandator) element).getLabel();
 				}
@@ -70,18 +70,16 @@ public class TextTemplateDialog extends Dialog {
 		content.addAll(query.execute());
 		if (ContextServiceHolder.get().getActiveUser().isPresent()) {
 			if (!ContextServiceHolder.get().getActiveUser().get().isAdministrator()) {
-				content = content.stream().filter(o -> isAllOrCurrentMandator(o))
-					.collect(Collectors.toList());
+				content = content.stream().filter(o -> isAllOrCurrentMandator(o)).collect(Collectors.toList());
 			}
 		}
 		comboViewer.setInput(content);
 		comboViewer.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		comboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
-				if (event.getStructuredSelection() != null
-					&& !event.getStructuredSelection().isEmpty()) {
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (event.getStructuredSelection() != null && !event.getStructuredSelection().isEmpty()) {
 					if (event.getStructuredSelection().getFirstElement() instanceof IMandator) {
 						mandator = (IMandator) event.getStructuredSelection().getFirstElement();
 					} else {
@@ -92,8 +90,8 @@ public class TextTemplateDialog extends Dialog {
 		});
 		return container;
 	}
-	
-	private boolean isAllOrCurrentMandator(Object o){
+
+	private boolean isAllOrCurrentMandator(Object o) {
 		if (o instanceof IMandator) {
 			if (ContextServiceHolder.get().getActiveMandator().isPresent()) {
 				return ContextServiceHolder.get().getActiveMandator().get().equals(o);
@@ -101,12 +99,12 @@ public class TextTemplateDialog extends Dialog {
 		}
 		return true;
 	}
-	
-	public IMandator getMandator(){
+
+	public IMandator getMandator() {
 		return mandator;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
 }

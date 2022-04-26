@@ -6,23 +6,20 @@ import org.hl7.fhir.r4.model.codesystems.PractitionerRole;
 
 import ch.elexis.core.findings.codes.CodingSystem;
 
-
 public class MandantHelper extends AbstractHelper {
-	
-	public CodeableConcept getPractitionerRoleCode(String roleId){
+
+	public CodeableConcept getPractitionerRoleCode(String roleId) {
 		CodeableConcept code = new CodeableConcept();
 		if ("assistant".equals(roleId)) {
-			code.addCoding(new Coding(PractitionerRole.NURSE.getSystem(),
-				PractitionerRole.NURSE.toCode(), PractitionerRole.NURSE.toCode()));
+			code.addCoding(new Coding(PractitionerRole.NURSE.getSystem(), PractitionerRole.NURSE.toCode(),
+					PractitionerRole.NURSE.toCode()));
 		} else if ("doctor".equals(roleId)) {
-			code.addCoding(new Coding(PractitionerRole.DOCTOR.getSystem(),
-				PractitionerRole.DOCTOR.toCode(), PractitionerRole.DOCTOR.toCode()));
+			code.addCoding(new Coding(PractitionerRole.DOCTOR.getSystem(), PractitionerRole.DOCTOR.toCode(),
+					PractitionerRole.DOCTOR.toCode()));
 		} else if ("executive_doctor".equals(roleId)) {
-			code.addCoding(new Coding(CodingSystem.ELEXIS_PRACTITIONER_ROLE.getSystem(), "mandant",
-				"mandant"));
+			code.addCoding(new Coding(CodingSystem.ELEXIS_PRACTITIONER_ROLE.getSystem(), "mandant", "mandant"));
 		} else {
-			code.addCoding(
-				new Coding(CodingSystem.ELEXIS_PRACTITIONER_ROLE.getSystem(), roleId, roleId));
+			code.addCoding(new Coding(CodingSystem.ELEXIS_PRACTITIONER_ROLE.getSystem(), roleId, roleId));
 		}
 		return code;
 	}

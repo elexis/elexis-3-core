@@ -31,8 +31,7 @@ public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJo
 		}
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
-				getEntityMarkDirty()
-					.setMyKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+				getEntityMarkDirty().setMyKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
 				addRefresh(value);
 			}
 		} else {
@@ -55,8 +54,7 @@ public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJo
 		}
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
-				getEntityMarkDirty()
-					.setOtherKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+				getEntityMarkDirty().setOtherKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
 				addRefresh(value);
 			}
 		} else {

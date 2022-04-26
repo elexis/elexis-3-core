@@ -3,14 +3,14 @@
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  * IBM - Initial API and implementation
  **********************************************************************/
 package ch.elexis.core.ui.views;
 
 public class Messages {
-	
+
 	public static String AUF2_NoPatientSelected = ch.elexis.core.l10n.Messages.AUF2_NoPatientSelected;
 	public static String AUF2_PleaseDoSelectPatient = ch.elexis.core.l10n.Messages.AUF2_PleaseDoSelectPatient;
 	public static String AUF2_certificate = ch.elexis.core.l10n.Messages.AUF2_certificate;
@@ -286,7 +286,7 @@ public class Messages {
 	public static String KontaktBlatt_LawCode = ch.elexis.core.l10n.Messages.KontaktBlatt_LawCode;
 	public static String KontaktBlatt_Group = ch.elexis.core.l10n.Messages.KontaktBlatt_Group;
 	public static String KontaktBlatt_Allergies = ch.elexis.core.l10n.Messages.KontaktBlatt_Allergies;
-	
+
 	public static String KontakteView_create = ch.elexis.core.l10n.Messages.KontakteView_create;
 	public static String KontakteView_delete = ch.elexis.core.l10n.Messages.KontakteView_delete;
 	public static String KontakteView_duplicate = ch.elexis.core.l10n.Messages.KontakteView_duplicate;
@@ -467,10 +467,8 @@ public class Messages {
 	public static String ReminderView_sortByDueDateDescending = ch.elexis.core.l10n.Messages.ReminderView_sortByDueDateDescending;
 	public static String RezeptBlatt_4 = ch.elexis.core.l10n.Messages.RezeptBlatt_4;
 	public static String RezeptBlatt_6 = ch.elexis.core.l10n.Messages.RezeptBlatt_6;
-	public static String RezeptBlatt_4_Extended =
-		ch.elexis.core.l10n.Messages.RezeptBlatt_4_Extended;
-	public static String RezeptBlatt_6_Extended =
-		ch.elexis.core.l10n.Messages.RezeptBlatt_6_Extended;
+	public static String RezeptBlatt_4_Extended = ch.elexis.core.l10n.Messages.RezeptBlatt_4_Extended;
+	public static String RezeptBlatt_6_Extended = ch.elexis.core.l10n.Messages.RezeptBlatt_6_Extended;
 	public static String RezeptBlatt_TemplateNameList = ch.elexis.core.l10n.Messages.RezeptBlatt_TemplateNameList;
 	public static String RezeptBlatt_TemplateNamePrescription = ch.elexis.core.l10n.Messages.RezeptBlatt_TemplateNamePrescription;
 	public static String RezeptBlatt_number = ch.elexis.core.l10n.Messages.RezeptBlatt_number;
@@ -582,8 +580,6 @@ public class Messages {
 	public static String BriefAuswahlNotAllowedToRunStresstess = ch.elexis.core.l10n.Messages.BriefAuswahlNotAllowedToRunStresstess;
 	public static String ReminderView_txtSearch_message = ch.elexis.core.l10n.Messages.ReminderView_txtSearch_message;
 	public static String BestellView_Title = ch.elexis.core.l10n.Messages.BestellView_Title;
-	public static String BestellView_WizardAskNewOrder =
-		ch.elexis.core.l10n.Messages.BestellView_WizardAskNewOrder;
-	public static String BestellView_OrderIsClosed =
-		ch.elexis.core.l10n.Messages.BestellView_OrderIsClosed;
+	public static String BestellView_WizardAskNewOrder = ch.elexis.core.l10n.Messages.BestellView_WizardAskNewOrder;
+	public static String BestellView_OrderIsClosed = ch.elexis.core.l10n.Messages.BestellView_OrderIsClosed;
 }

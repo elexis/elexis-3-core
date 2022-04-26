@@ -23,91 +23,91 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Zahlung.invoice", query = "SELECT za FROM Zahlung za WHERE za.deleted = false AND za.invoice = :invoice")
 public class Zahlung extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "rechnungsid")
 	private Invoice invoice;
-	
+
 	@Column(length = 8, name = "betrag")
 	protected String amount;
-	
+
 	@Column(name = "datum", length = 8)
 	protected LocalDate date;
-	
+
 	@Column(name = "bemerkung", length = 80)
 	private String remark;
-	
-	public Invoice getInvoice(){
+
+	public Invoice getInvoice() {
 		return invoice;
 	}
-	
-	public void setInvoice(Invoice invoice){
+
+	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
 	}
-	
-	public String getAmount(){
+
+	public String getAmount() {
 		return amount;
 	}
-	
-	public void setAmount(String amount){
+
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
-	
-	public LocalDate getDate(){
+
+	public LocalDate getDate() {
 		return date;
 	}
-	
-	public void setDate(LocalDate date){
+
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	
-	public String getRemark(){
+
+	public String getRemark() {
 		return remark;
 	}
-	
-	public void setRemark(String remark){
+
+	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

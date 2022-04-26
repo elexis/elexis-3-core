@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -20,15 +20,15 @@ import ch.rgw.tools.Tree;
 
 public class TreeToStringConverter extends AbstractParameterValueConverter {
 	static final HashMap<String, Tree<?>> map = new HashMap<String, Tree<?>>();
-	
+
 	@Override
-	public Object convertToObject(String parameterValue) throws ParameterValueConversionException{
+	public Object convertToObject(String parameterValue) throws ParameterValueConversionException {
 		Tree<?> ret = map.get(parameterValue);
 		return ret;
 	}
-	
+
 	@Override
-	public String convertToString(Object parameterValue) throws ParameterValueConversionException{
+	public String convertToString(Object parameterValue) throws ParameterValueConversionException {
 		if (parameterValue instanceof Tree) {
 			String ret = StringTool.unique(getClass().getName());
 			map.put(ret, (Tree<?>) parameterValue);
@@ -36,5 +36,5 @@ public class TreeToStringConverter extends AbstractParameterValueConverter {
 		}
 		throw new ParameterValueConversionException("Parameter was not instance of Tree");
 	}
-	
+
 }

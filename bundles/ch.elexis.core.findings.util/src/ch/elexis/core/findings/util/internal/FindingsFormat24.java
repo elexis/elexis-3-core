@@ -13,9 +13,8 @@ import com.google.gson.JsonPrimitive;
 import ch.elexis.core.findings.util.internal.JsonStructuralFeature.Type;
 
 public class FindingsFormat24 extends FindingsFormat {
-	
-	
-	public FindingsFormat24(){
+
+	public FindingsFormat24() {
 		HashMap<String, JsonStructuralFeature> conditionFields = new HashMap<>();
 		conditionFields.put("resourceType", new JsonStructuralFeature("resourceType", Type.PRIMITIVE));
 		conditionFields.put("id", new JsonStructuralFeature("id", Type.PRIMITIVE));
@@ -23,8 +22,7 @@ public class FindingsFormat24 extends FindingsFormat {
 		conditionFields.put("category", new JsonStructuralFeature("category", Type.ARRAY));
 		conditionFields.put("code", new JsonStructuralFeature("code", Type.OBJECT));
 		conditionFields.put("subject", new JsonStructuralFeature("subject", Type.OBJECT));
-		conditionFields.put("assertedDate",
-			new JsonStructuralFeature("assertedDate", Type.PRIMITIVE));
+		conditionFields.put("assertedDate", new JsonStructuralFeature("assertedDate", Type.PRIMITIVE));
 		resourceFieldsMap.put("Condition", conditionFields);
 
 		HashMap<String, JsonStructuralFeature> encounterFields = new HashMap<>();
@@ -42,14 +40,14 @@ public class FindingsFormat24 extends FindingsFormat {
 		procedureRequestFields.put("context", new JsonStructuralFeature("context", Type.OBJECT));
 		resourceFieldsMap.put("ProcedureRequest", procedureRequestFields);
 	}
-	
+
 	public int isFindingsFormat(String rawContent) {
 		JsonObject jsonObject = getJsonObject(rawContent);
 		JsonElement resourceType = jsonObject.get("resourceType");
-		
+
 		return checkFindingsFormatProperties(resourceType, jsonObject);
 	}
-	
+
 	private int checkFindingsFormatProperties(JsonElement resourceType, JsonObject jsonObject) {
 		switch (resourceType.getAsString()) {
 		case "Condition":
@@ -61,26 +59,25 @@ public class FindingsFormat24 extends FindingsFormat {
 		}
 		return 0;
 	}
-	
+
 	@Override
-	public Optional<String> convertToCurrentFormat(String rawContent){
+	public Optional<String> convertToCurrentFormat(String rawContent) {
 		JsonObject jsonObject = getJsonObject(rawContent);
 		JsonElement resourceType = jsonObject.get("resourceType");
-		
+
 		return convertToCurrentFormat(resourceType, jsonObject);
 	}
 
-	private Optional<String> convertToCurrentFormat(JsonElement resourceType,
-				JsonObject jsonObject){
+	private Optional<String> convertToCurrentFormat(JsonElement resourceType, JsonObject jsonObject) {
 		HashMap<String, JsonStructuralFeatureTransformation> conditionTransformations = new HashMap<>();
 		conditionTransformations.put("assertedDate", new JsonStructuralFeatureTransformation() {
 			@Override
-			public JsonElement transformValue(JsonElement element){
+			public JsonElement transformValue(JsonElement element) {
 				return element;
 			}
-			
+
 			@Override
-			public String transformKey(String key){
+			public String transformKey(String key) {
 				return "recordedDate";
 			}
 		});
@@ -98,9 +95,10 @@ public class FindingsFormat24 extends FindingsFormat {
 				JsonPrimitive value = (JsonPrimitive) element;
 				if (StringUtils.isNotBlank(value.getAsString())) {
 					JsonObject newCoding = new JsonObject();
-					newCoding.add("system", new JsonPrimitive("http://terminology.hl7.org/CodeSystem/condition-clinical"));
+					newCoding.add("system",
+							new JsonPrimitive("http://terminology.hl7.org/CodeSystem/condition-clinical"));
 					newCoding.add("code", new JsonPrimitive(value.getAsString()));
-					coding.add(newCoding);					
+					coding.add(newCoding);
 				}
 
 				JsonObject ret = new JsonObject();
@@ -108,7 +106,7 @@ public class FindingsFormat24 extends FindingsFormat {
 				return ret;
 			}
 		});
-		
+
 		HashMap<String, JsonStructuralFeatureTransformation> encounterTransformations = new HashMap<>();
 		encounterTransformations.put("!addAfter!identifier", new JsonStructuralFeatureTransformation() {
 			@Override
@@ -155,7 +153,7 @@ public class FindingsFormat24 extends FindingsFormat {
 		case "ProcedureRequest":
 			return convert(procedureRequestTransformations, jsonObject);
 		}
-		
+
 		return Optional.empty();
 	}
 }

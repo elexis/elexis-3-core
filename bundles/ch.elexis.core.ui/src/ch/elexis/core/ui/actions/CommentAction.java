@@ -12,35 +12,34 @@ import ch.elexis.core.ui.icons.Images;
 public class CommentAction extends Action {
 	private String comment;
 	private final Shell shell;
-	
-	public CommentAction(Shell shell, String comment){
+
+	public CommentAction(Shell shell, String comment) {
 		super("", Action.AS_PUSH_BUTTON);
 		Assert.isNotNull(shell);
 		this.shell = shell;
 		this.comment = comment;
 		init();
-		
+
 	}
-	
-	public String getComment(){
+
+	public String getComment() {
 		return comment;
 	}
-	
-	public void init(){
+
+	public void init() {
 		if (comment != null && !comment.isEmpty()) {
 			setToolTipText(comment);
 			setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());
 		} else {
 			setToolTipText("Kommentar erfassen");
 			setImageDescriptor(Images.IMG_COMMENT_ADD.getImageDescriptor());
-			
+
 		}
 	}
-	
+
 	@Override
-	public void run(){
-		InputDialog inputDialog =
-			new InputDialog(shell, "Kommentar Erfassen", "Bitte geben Sie einen Kommentar ein",
+	public void run() {
+		InputDialog inputDialog = new InputDialog(shell, "Kommentar Erfassen", "Bitte geben Sie einen Kommentar ein",
 				comment, null, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		if (inputDialog.open() == MessageDialog.OK) {
 			comment = inputDialog.getValue();

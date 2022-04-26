@@ -10,23 +10,23 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
 
 public class ILabResultBuilder extends AbstractBuilder<ILabResult> {
-	
+
 	private ILabOrder labOrder;
-	
-	public ILabResultBuilder(IModelService modelService, ILabItem labItem, IPatient patient){
+
+	public ILabResultBuilder(IModelService modelService, ILabItem labItem, IPatient patient) {
 		super(modelService);
 		object = modelService.create(ILabResult.class);
 		object.setItem(labItem);
 		object.setPatient(patient);
 		object.setDate(LocalDate.now());
 	}
-	
-	public ILabResultBuilder result(String result){
+
+	public ILabResultBuilder result(String result) {
 		object.setResult(result);
 		return this;
 	}
-	
-	public ILabResultBuilder buildLabOrder(String orderId){
+
+	public ILabResultBuilder buildLabOrder(String orderId) {
 		labOrder = modelService.create(ILabOrder.class);
 		labOrder.setResult(object);
 		labOrder.setItem(object.getItem());
@@ -34,14 +34,14 @@ public class ILabResultBuilder extends AbstractBuilder<ILabResult> {
 		labOrder.setTimeStamp(LocalDateTime.now());
 		return this;
 	}
-	
+
 	@Override
-	public ILabResult buildAndSave(){
+	public ILabResult buildAndSave() {
 		if (labOrder != null) {
 			modelService.save(labOrder);
 		}
 		modelService.save(object);
 		return object;
 	}
-	
+
 }

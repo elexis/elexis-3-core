@@ -36,11 +36,11 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class CategorySelectionEditComposite extends Composite {
-	
+
 	private ComboViewer cbCategories;
-	
+
 	private IDocument document;
-	
+
 	/**
 	 * @param parent
 	 * @param style
@@ -49,17 +49,16 @@ public class CategorySelectionEditComposite extends Composite {
 	 * @since 3.8
 	 * @wbp.parser.constructor
 	 */
-	public CategorySelectionEditComposite(Composite parent, int style, String storeId,
-		boolean categoryCrudAllowed){
+	public CategorySelectionEditComposite(Composite parent, int style, String storeId, boolean categoryCrudAllowed) {
 		this(parent, style, new TransientOmnivoreDocument(storeId), categoryCrudAllowed);
 	}
-	
+
 	public CategorySelectionEditComposite(Composite parent, int style, IDocument document,
-		boolean categoryCrudAllowed){
+			boolean categoryCrudAllowed) {
 		super(parent, style);
-		
+
 		this.document = document;
-		
+
 		setFocus();
 		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.marginHeight = 0;
@@ -69,7 +68,7 @@ public class CategorySelectionEditComposite extends Composite {
 		cbCategories.setContentProvider(ArrayContentProvider.getInstance());
 		cbCategories.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof ICategory) {
 					ICategory iCategory = (ICategory) element;
 					return iCategory.getName();
@@ -77,18 +76,16 @@ public class CategorySelectionEditComposite extends Composite {
 				return super.getText(element);
 			}
 		});
-		List<ICategory> categories =
-			DocumentStoreServiceHolder.getService().getCategories(document);
+		List<ICategory> categories = DocumentStoreServiceHolder.getService().getCategories(document);
 		cbCategories.setInput(categories);
-		
+
 		Button bNewCat = new Button(this, SWT.PUSH);
 		bNewCat.setVisible(categoryCrudAllowed);
 		bNewCat.setImage(Images.IMG_NEW.getImage());
 		bNewCat.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
-				InputDialog id =
-					new InputDialog(getShell(), Messages.DocumentMetaDataDialog_newCategory,
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog id = new InputDialog(getShell(), Messages.DocumentMetaDataDialog_newCategory,
 						Messages.DocumentMetaDataDialog_newCategory, null, null);
 				if (id.open() == Dialog.OK) {
 					addAndSelectCategory(id.getValue());
@@ -101,61 +98,58 @@ public class CategorySelectionEditComposite extends Composite {
 		bEditCat.setToolTipText(Messages.DocumentMetaDataDialog_renameCategory);
 		bEditCat.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				ISelection old = cbCategories.getSelection();
 				Object selection = ((StructuredSelection) old).getFirstElement();
 				if (selection instanceof ICategory) {
 					InputDialog id = new InputDialog(getShell(),
-						MessageFormat.format(Messages.DocumentMetaDataDialog_renameCategoryConfirm,
-							((ICategory) selection).getName()),
-						Messages.DocumentMetaDataDialog_renameCategoryText,
-						((ICategory) selection).getName(), null);
+							MessageFormat.format(Messages.DocumentMetaDataDialog_renameCategoryConfirm,
+									((ICategory) selection).getName()),
+							Messages.DocumentMetaDataDialog_renameCategoryText, ((ICategory) selection).getName(),
+							null);
 					if (id.open() == Dialog.OK) {
-						DocumentStoreServiceHolder.getService().renameCategory(document,
-							id.getValue());
+						DocumentStoreServiceHolder.getService().renameCategory(document, id.getValue());
 						((ICategory) selection).setName(id.getValue());
 						cbCategories.refresh();
 					}
 				}
-				
+
 			}
 		});
-		
+
 		Button bDeleteCat = new Button(this, SWT.PUSH);
 		bDeleteCat.setVisible(categoryCrudAllowed);
 		bDeleteCat.setImage(Images.IMG_DELETE.getImage());
 		bDeleteCat.setToolTipText(Messages.DocumentMetaDataDialog_deleteCategory);
 		bDeleteCat.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent ev){
+			public void widgetSelected(SelectionEvent ev) {
 				ISelection old = cbCategories.getSelection();
 				Object selection = ((StructuredSelection) old).getFirstElement();
 				InputDialog id = new InputDialog(getShell(),
-					MessageFormat.format(Messages.DocumentMetaDataDialog_deleteCategoryConfirm,
-						((ICategory) selection).getName()),
-					Messages.DocumentMetaDataDialog_deleteCategoryText, "", null);
+						MessageFormat.format(Messages.DocumentMetaDataDialog_deleteCategoryConfirm,
+								((ICategory) selection).getName()),
+						Messages.DocumentMetaDataDialog_deleteCategoryText, "", null);
 				if (id.open() == Dialog.OK) {
 					try {
 						document.setCategory((ICategory) selection);
-						document.setCategory(DocumentStoreServiceHolder.getService()
-							.removeCategory(document, id.getValue()));
+						document.setCategory(
+								DocumentStoreServiceHolder.getService().removeCategory(document, id.getValue()));
 						if (findComboElementByName(document.getCategory().getName()) == null) {
 							cbCategories.add(document.getCategory());
 						}
 						cbCategories.remove(selection);
-						cbCategories.setSelection(new StructuredSelection(document.getCategory()),
-							true);
+						cbCategories.setSelection(new StructuredSelection(document.getCategory()), true);
 					} catch (ElexisException e) {
 						LoggerFactory.getLogger(getClass()).warn("existing document references", e);
 						SWTHelper.showError(Messages.DocumentMetaDataDialog_deleteCategoryError,
-							Messages.DocumentMetaDataDialog_deleteCategoryErrorText);
+								Messages.DocumentMetaDataDialog_deleteCategoryErrorText);
 					}
 				}
 			}
 		});
-		
-		Object cbSelection =
-			document.getCategory() != null ? document.getCategory() : cbCategories.getElementAt(0);
+
+		Object cbSelection = document.getCategory() != null ? document.getCategory() : cbCategories.getElementAt(0);
 		if (cbSelection != null) {
 			if (!categories.contains(cbSelection)) {
 				cbSelection = DocumentStoreServiceHolder.getService().getDefaultCategory(document);
@@ -163,19 +157,17 @@ public class CategorySelectionEditComposite extends Composite {
 			cbCategories.setSelection(new StructuredSelection(cbSelection), true);
 		}
 	}
-	
-	public void setCategoryByName(String category){
+
+	public void setCategoryByName(String category) {
 		ICategory _category = findComboElementByName(category);
-		if(_category == null) {
+		if (_category == null) {
 			addAndSelectCategory(category);
 		} else {
 			cbCategories.setSelection(new StructuredSelection(_category), true);
 		}
 	}
-	
-	
-	
-	private ICategory findComboElementByName(String name){
+
+	private ICategory findComboElementByName(String name) {
 		List<?> items = (List<?>) cbCategories.getInput();
 		if (items != null) {
 			for (Object o : items) {
@@ -188,195 +180,207 @@ public class CategorySelectionEditComposite extends Composite {
 		}
 		return null;
 	}
-	
+
 	private void addAndSelectCategory(String categoryName) {
-		document.setCategory(DocumentStoreServiceHolder.getService()
-			.createCategory(document, categoryName));
+		document.setCategory(DocumentStoreServiceHolder.getService().createCategory(document, categoryName));
 		if (!((List<?>) cbCategories.getInput()).contains(document.getCategory())) {
 			cbCategories.add(document.getCategory());
 		}
-		cbCategories.setSelection(new StructuredSelection(document.getCategory()),
-			true);
+		cbCategories.setSelection(new StructuredSelection(document.getCategory()), true);
 	}
-	
+
 	@Override
-	protected void checkSubclass(){
+	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-	
+
 	public void addSelectionChangeListener(ISelectionChangedListener listener) {
 		cbCategories.addSelectionChangedListener(listener);
 	}
-	
-	public @Nullable ICategory getSelection(){
+
+	public @Nullable ICategory getSelection() {
 		StructuredSelection comboSelection = (StructuredSelection) cbCategories.getSelection();
 		if (comboSelection != null) {
 			return (ICategory) comboSelection.getFirstElement();
 		}
 		return null;
 	}
-	
+
 	/**
-	 * This allows to manage categories in a store without effectively providing a document
+	 * This allows to manage categories in a store without effectively providing a
+	 * document
 	 */
 	private static class TransientOmnivoreDocument implements IDocument {
-		
+
 		private ICategory category;
 		private String storeId;
-		
-		public TransientOmnivoreDocument(String storeId){
+
+		public TransientOmnivoreDocument(String storeId) {
 			this.storeId = storeId;
 		}
-		
-		@Override
-		public String getId(){
-			return null;
-		}
-		
-		@Override
-		public String getLabel(){
-			return null;
-		}
-		
-		@Override
-		public boolean addXid(String domain, String id, boolean updateIfExists){
-			return false;
-		}
-		
-		@Override
-		public IXid getXid(String domain){
-			return null;
-		}
-		
-		@Override
-		public Long getLastupdate(){
-			return null;
-		}
-		
-		@Override
-		public boolean isDeleted(){
-			return false;
-		}
-		
-		@Override
-		public void setDeleted(boolean value){}
-		
-		@Override
-		public String getTitle(){
-			return null;
-		}
-		
-		@Override
-		public void setTitle(String value){}
-		
-		@Override
-		public String getDescription(){
-			return null;
-		}
-		
-		@Override
-		public void setDescription(String value){}
-		
-		@Override
-		public List<DocumentStatus> getStatus(){
-			return null;
-		}
-		
-		@Override
-		public void setStatus(DocumentStatus status, boolean active){}
-		
-		@Override
-		public Date getCreated(){
-			return null;
-		}
-		
-		@Override
-		public void setCreated(Date value){}
-		
-		@Override
-		public Date getLastchanged(){
-			return null;
-		}
-		
-		@Override
-		public void setLastchanged(Date value){}
-		
-		@Override
-		public String getMimeType(){
-			return null;
-		}
-		
-		@Override
-		public void setMimeType(String value){}
-		
-		@Override
-		public ICategory getCategory(){
-			return category;
-		}
-		
-		@Override
-		public void setCategory(ICategory value){
-			this.category = value;
-		}
-		
-		@Override
-		public List<IHistory> getHistory(){
-			return null;
-		}
-		
-		@Override
-		public String getStoreId(){
-			return storeId;
-		}
-		
-		@Override
-		public void setStoreId(String value){}
-		
-		@Override
-		public String getExtension(){
-			return null;
-		}
-		
-		@Override
-		public void setExtension(String value){}
-		
-		@Override
-		public String getKeywords(){
-			return null;
-		}
-		
-		@Override
-		public void setKeywords(String value){}
-		
-		@Override
-		public IPatient getPatient(){
-			return null;
-		}
-		
-		@Override
-		public void setPatient(IPatient value){}
-		
-		@Override
-		public IContact getAuthor(){
-			return null;
-		}
-		
-		@Override
-		public void setAuthor(IContact value){}
-		
-		@Override
-		public InputStream getContent(){
-			return null;
-		}
-		
-		@Override
-		public void setContent(InputStream content){}
 
 		@Override
-		public long getContentLength(){
+		public String getId() {
+			return null;
+		}
+
+		@Override
+		public String getLabel() {
+			return null;
+		}
+
+		@Override
+		public boolean addXid(String domain, String id, boolean updateIfExists) {
+			return false;
+		}
+
+		@Override
+		public IXid getXid(String domain) {
+			return null;
+		}
+
+		@Override
+		public Long getLastupdate() {
+			return null;
+		}
+
+		@Override
+		public boolean isDeleted() {
+			return false;
+		}
+
+		@Override
+		public void setDeleted(boolean value) {
+		}
+
+		@Override
+		public String getTitle() {
+			return null;
+		}
+
+		@Override
+		public void setTitle(String value) {
+		}
+
+		@Override
+		public String getDescription() {
+			return null;
+		}
+
+		@Override
+		public void setDescription(String value) {
+		}
+
+		@Override
+		public List<DocumentStatus> getStatus() {
+			return null;
+		}
+
+		@Override
+		public void setStatus(DocumentStatus status, boolean active) {
+		}
+
+		@Override
+		public Date getCreated() {
+			return null;
+		}
+
+		@Override
+		public void setCreated(Date value) {
+		}
+
+		@Override
+		public Date getLastchanged() {
+			return null;
+		}
+
+		@Override
+		public void setLastchanged(Date value) {
+		}
+
+		@Override
+		public String getMimeType() {
+			return null;
+		}
+
+		@Override
+		public void setMimeType(String value) {
+		}
+
+		@Override
+		public ICategory getCategory() {
+			return category;
+		}
+
+		@Override
+		public void setCategory(ICategory value) {
+			this.category = value;
+		}
+
+		@Override
+		public List<IHistory> getHistory() {
+			return null;
+		}
+
+		@Override
+		public String getStoreId() {
+			return storeId;
+		}
+
+		@Override
+		public void setStoreId(String value) {
+		}
+
+		@Override
+		public String getExtension() {
+			return null;
+		}
+
+		@Override
+		public void setExtension(String value) {
+		}
+
+		@Override
+		public String getKeywords() {
+			return null;
+		}
+
+		@Override
+		public void setKeywords(String value) {
+		}
+
+		@Override
+		public IPatient getPatient() {
+			return null;
+		}
+
+		@Override
+		public void setPatient(IPatient value) {
+		}
+
+		@Override
+		public IContact getAuthor() {
+			return null;
+		}
+
+		@Override
+		public void setAuthor(IContact value) {
+		}
+
+		@Override
+		public InputStream getContent() {
+			return null;
+		}
+
+		@Override
+		public void setContent(InputStream content) {
+		}
+
+		@Override
+		public long getContentLength() {
 			return 0;
 		}
-		
+
 	}
-	
+
 }

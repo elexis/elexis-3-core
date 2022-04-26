@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.rgw.tools;
@@ -18,67 +18,62 @@ import java.util.Iterator;
 
 /**
  * Zeitspanne, bestehnd aus zwei {@link TimeTool timeTools}
- * 
+ *
  * @author G. Weirich
  */
 
 public class TimeSpan implements Comparable<TimeSpan> {
-	public static String Version(){
+	public static String Version() {
 		return "1.6.3";
 	}
-	
+
 	public TimeTool from;
 	public TimeTool until;
-	
+
 	/**
 	 * timeSpan, die den Zeitraum von v bis b repräsentiert
-	 * 
-	 * @param v
-	 *            Startzeit
-	 * @param b
-	 *            Endzeit
+	 *
+	 * @param v Startzeit
+	 * @param b Endzeit
 	 */
-	public TimeSpan(TimeTool v, TimeTool b){
+	public TimeSpan(TimeTool v, TimeTool b) {
 		from = v;
 		until = b;
 	}
-	
+
 	/**
 	 * timeSpan, die den Zeitraum v bis v+d repräsentiert
-	 * 
-	 * @param v
-	 *            Startzeit
-	 * @param d
-	 *            Dauer in Standardeinheiten von v
+	 *
+	 * @param v Startzeit
+	 * @param d Dauer in Standardeinheiten von v
 	 */
-	public TimeSpan(TimeTool v, int d){
+	public TimeSpan(TimeTool v, int d) {
 		from = v;
 		until = new TimeTool(v);
 		until.addUnits(d);
 	}
-	
-	public TimeSpan(){
+
+	public TimeSpan() {
 		from = new TimeTool();
 		until = new TimeTool();
 	}
-	
-	public TimeSpan(TimeSpan o){
+
+	public TimeSpan(TimeSpan o) {
 		from = new TimeTool(o.from);
 		until = new TimeTool(o.until);
 	}
-	
+
 	/**
 	 * timeSpan, deren Anfangs- und Endzeit in Stringform angegeben wird
-	 * 
-	 * @param ti
-	 *            String der Form hh:mm[:ss]-hh:mm[:ss] oder einen String wie von toString()
-	 *            geliefert.
+	 *
+	 * @param ti String der Form hh:mm[:ss]-hh:mm[:ss] oder einen String wie von
+	 *           toString() geliefert.
 	 */
-	public TimeSpan(String ti){
+	public TimeSpan(String ti) {
 		set(ti);
 	}
-	
-	public boolean contains(TimeTool t){
+
+	public boolean contains(TimeTool t) {
 		if (t.isBefore(from)) {
 			return false;
 		}
@@ -87,13 +82,13 @@ public class TimeSpan implements Comparable<TimeSpan> {
 		}
 		return true;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object arg0){
+	public boolean equals(Object arg0) {
 		if (arg0 instanceof TimeSpan) {
 			TimeSpan o = (TimeSpan) arg0;
 			if ((from.isEqual(o.from)) && (until.isEqual(o.until)))
@@ -101,13 +96,13 @@ public class TimeSpan implements Comparable<TimeSpan> {
 		}
 		return false;
 	}
-	
+
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return (until.getTimeInSeconds() - from.getTimeInSeconds());
 	}
-	
-	public int compareTo(TimeSpan other){
+
+	public int compareTo(TimeSpan other) {
 		if (equals(other) == true)
 			return 0;
 		if (from.isEqual(other.from)) {
@@ -118,35 +113,32 @@ public class TimeSpan implements Comparable<TimeSpan> {
 		}
 		if (from.isBefore(other.from))
 			return -1;
-		
+
 		return 1;
 	}
-	
+
 	/**
 	 * Dauer dieser timeSpan in Sekunden
-	 * 
+	 *
 	 * @return
 	 */
-	public int getSeconds(){
+	public int getSeconds() {
 		return from.secondsTo(until);
 	}
-	
+
 	/**
 	 * Feststellen, um wieviel diese timeSpan und eine andere überlappen
-	 * 
-	 * @param other
-	 *            die andere timeSpan
-	 * @return eine neue timeSpan, die den überlappungszeitraum enthält oder null, wenn keine
-	 *         überlappung vorliegt
+	 *
+	 * @param other die andere timeSpan
+	 * @return eine neue timeSpan, die den überlappungszeitraum enthält oder null,
+	 *         wenn keine überlappung vorliegt
 	 */
-	public TimeSpan overlap(TimeSpan other){
+	public TimeSpan overlap(TimeSpan other) {
 		/*
-		 * Es sind 6 Fälle möglich: a) other ganz vor this b)
-		 * other überlappt this.from c) other liegt ganz
-		 * innerhalb this d) other überlappt this.until e) other
-		 * liegt ganz nach this f) other überlappt this ganz
-		 * ende oder Anfang auf selber Minute wird nicht als
-		 * überlappung gerechnet. TimeSpan der Dauer null
+		 * Es sind 6 Fälle möglich: a) other ganz vor this b) other überlappt this.from
+		 * c) other liegt ganz innerhalb this d) other überlappt this.until e) other
+		 * liegt ganz nach this f) other überlappt this ganz ende oder Anfang auf selber
+		 * Minute wird nicht als überlappung gerechnet. TimeSpan der Dauer null
 		 * überlappt niemals
 		 */
 		if ((getSeconds() == 0) || (other.getSeconds() == 0)) {
@@ -179,7 +171,7 @@ public class TimeSpan implements Comparable<TimeSpan> {
 			}
 		}
 	}
-	
+
 	public static final int IS_BEFORE_OTHER = 1;
 	public static final int IS_AFTER_OTHER = 2;
 	public static final int IS_INSIDE_OTHER = 3;
@@ -187,13 +179,14 @@ public class TimeSpan implements Comparable<TimeSpan> {
 	public static final int IS_AT_END_OF_OTHER = 5;
 	public static final int IS_OVER_OTHER = 6;
 	public static final int IS_ZERO_LENGTH = 7;
-	
+
 	// public static final int IS_OUTSIDE_OTHER=6;
-	
+
 	/**
 	 * Feststellen, wie dise timeSpan in Bezug auf eine andere liegt
-	 * 
-	 * @return <ul>
+	 *
+	 * @return
+	 *         <ul>
 	 *         <li>IS_BEFORE-OTHER: Liegt ganz vor der anderen</li>
 	 *         <li>IS_AFTER_OTHER: Liegt ganz nach der anderen</li>
 	 *         <li>IS_INSIDE_OTHER: Liegt ganz innerhalb der anderen</li>
@@ -203,7 +196,7 @@ public class TimeSpan implements Comparable<TimeSpan> {
 	 *         <li>IS_ZERO_LENGTH: Länge null sekunden</li>
 	 *         </ul>
 	 */
-	public int positionTo(TimeSpan other){
+	public int positionTo(TimeSpan other) {
 		// Sonderfälle: Anfangszeit des einen = Endzeit des anderen
 		// gilt nicht als überlappung
 		// Und Zeiträume der Dauer null überlappen niemals
@@ -229,17 +222,17 @@ public class TimeSpan implements Comparable<TimeSpan> {
 			}
 		}
 	}
-	
+
 	/**
 	 * timeSpan auf einen als String angegebenen Zeitraum setzen
-	 * 
-	 * @param ti
-	 *            ein String, der zwei mit - verbundene Zeiten wie bei {@link TimeTool#set}
-	 *            spezifiziert enthält. z.B. 10:00-11:30, oder einen String im Kompaktformat wie
-	 *            10001130, oder einen String wie von toString() geliefert
+	 *
+	 * @param ti ein String, der zwei mit - verbundene Zeiten wie bei
+	 *           {@link TimeTool#set} spezifiziert enthält. z.B. 10:00-11:30, oder
+	 *           einen String im Kompaktformat wie 10001130, oder einen String wie
+	 *           von toString() geliefert
 	 * @return true bei Erfolg.
 	 */
-	public boolean set(String ti){
+	public boolean set(String ti) {
 		String[] vb = ti.split("-");
 		if (vb.length == 2) {
 			from = new TimeTool(vb[0]);
@@ -263,21 +256,21 @@ public class TimeSpan implements Comparable<TimeSpan> {
 		}
 		return false;
 	}
-	
-	public String dump(){
+
+	public String dump() {
 		StringBuilder s = new StringBuilder(10);
 		s.append(from.dump()).append(" - ").append(until.dump());
 		return s.toString();
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		StringBuffer s = new StringBuffer(10);
 		s.append(from.toString());
 		s.append(until.toString());
 		return s.toString();
 	}
-	
-	public static String toString(Iterator<TimeTool> it){
+
+	public static String toString(Iterator<TimeTool> it) {
 		StringBuffer ret = new StringBuffer(200);
 		while (it.hasNext()) {
 			TimeTool tt = it.next();
@@ -285,9 +278,9 @@ public class TimeSpan implements Comparable<TimeSpan> {
 		}
 		return ret.toString();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public static int create(Collection c, String s){
+	public static int create(Collection c, String s) {
 		int k = 0;
 		for (int i = 0; i < s.length(); k++, i += 16) {
 			TimeTool tt = new TimeTool(s.substring(i, i + 16));
@@ -295,12 +288,12 @@ public class TimeSpan implements Comparable<TimeSpan> {
 		}
 		return k;
 	}
-	
+
 	public static class TSComparator implements Comparator<TimeSpan> {
-		
-		public int compare(TimeSpan ts1, TimeSpan ts2){
+
+		public int compare(TimeSpan ts1, TimeSpan ts2) {
 			return ts1.compareTo(ts2);
 		}
-		
+
 	}
 }

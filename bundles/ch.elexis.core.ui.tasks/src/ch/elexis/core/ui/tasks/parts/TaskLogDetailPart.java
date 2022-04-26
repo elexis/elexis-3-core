@@ -19,23 +19,23 @@ import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.tasks.ITaskResultDetailContributions;
 
 public class TaskLogDetailPart {
-	
+
 	@Inject
 	ITaskResultDetailContributions taskResultDetailDialogContributions;
-	
+
 	@Inject
 	ECommandService commandService;
-	
+
 	@Inject
 	EHandlerService handlerService;
-	
+
 	@PostConstruct
-	public void postConstruct(Composite parent, MPart part){
+	public void postConstruct(Composite parent, MPart part) {
 		parent.setLayout(new GridLayout(1, false));
-		
+
 		ITask task = (ITask) part.getTransientData().get("task");
 		part.setIconURI(TaskResultLabelProvider.getInstance().getIconURI(task));
-		
+
 		String runAt;
 		LocalDateTime _runAt = task.getRunAt();
 		if (_runAt != null) {
@@ -43,15 +43,15 @@ public class TaskLogDetailPart {
 		} else {
 			runAt = "queued";
 		}
-		
+
 		String partLabel = task.getTaskDescriptor().getReferenceId() + " - " + runAt;
 		part.setLabel(partLabel);
-		
+
 		Map<String, Object> e4Services = new HashMap<String, Object>();
 		e4Services.put(ECommandService.class.getName(), commandService);
 		e4Services.put(EHandlerService.class.getName(), handlerService);
-		
+
 		taskResultDetailDialogContributions.createDetailCompositeForTask(parent, task, e4Services);
 	}
-	
+
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.data.util;
@@ -20,13 +20,13 @@ import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
 /**
- * 
- * 
+ *
+ *
  * @deprecated moved to ch.elexis.core.utils
  *
  */
 public class PlatformHelper {
-	public static String getBasePath(String pluginID){
+	public static String getBasePath(String pluginID) {
 		try {
 			URL url = Platform.getBundle(pluginID).getEntry("/");
 			url = FileLocator.toFileURL(url);

@@ -18,23 +18,22 @@ import ch.elexis.data.PersistentObject;
 
 public class LabItemLabelProvider extends ColumnLabelProvider implements ILabelProvider {
 	public enum ItemLabelFields {
-			REFERENCES, KUERZEL, NAME, GROUP, UNIT
+		REFERENCES, KUERZEL, NAME, GROUP, UNIT
 	}
-	
+
 	private HashMap<LabItem, String> cache = new HashMap<LabItem, String>();
-	
-	private static List<ItemLabelFields> defaultFields =
-		Arrays.asList(ItemLabelFields.KUERZEL, ItemLabelFields.NAME, ItemLabelFields.GROUP,
-			ItemLabelFields.UNIT, ItemLabelFields.REFERENCES);
-	
+
+	private static List<ItemLabelFields> defaultFields = Arrays.asList(ItemLabelFields.KUERZEL, ItemLabelFields.NAME,
+			ItemLabelFields.GROUP, ItemLabelFields.UNIT, ItemLabelFields.REFERENCES);
+
 	private List<ItemLabelFields> fields;
 	private boolean createToolTip = false;
-	
-	public LabItemLabelProvider(boolean createToolTip){
+
+	public LabItemLabelProvider(boolean createToolTip) {
 		this(null, createToolTip);
 	}
-	
-	public LabItemLabelProvider(List<ItemLabelFields> fields, boolean createToolTip){
+
+	public LabItemLabelProvider(List<ItemLabelFields> fields, boolean createToolTip) {
 		if (fields == null) {
 			this.fields = defaultFields;
 		} else {
@@ -42,24 +41,22 @@ public class LabItemLabelProvider extends ColumnLabelProvider implements ILabelP
 		}
 		this.createToolTip = createToolTip;
 	}
-	
+
 	private StringBuilder sb = new StringBuilder();
-	
+
 	@Override
-	public String getText(Object element){
+	public String getText(Object element) {
 		String ret = cache.get(element);
 		if (ret == null) {
 			sb.setLength(0);
 			if (element instanceof LabItem) {
-				((LabItem) element).get(true, LabItem.SHORTNAME, LabItem.TITLE, LabItem.GROUP,
-					LabItem.UNIT);
-					
+				((LabItem) element).get(true, LabItem.SHORTNAME, LabItem.TITLE, LabItem.GROUP, LabItem.UNIT);
+
 				for (ItemLabelFields itemLabelField : fields) {
 					if (sb.length() == 0) {
 						sb.append(getItemLabelField(itemLabelField, (LabItem) element));
 					} else {
-						sb.append(", ")
-							.append(getItemLabelField(itemLabelField, (LabItem) element));
+						sb.append(", ").append(getItemLabelField(itemLabelField, (LabItem) element));
 					}
 				}
 			}
@@ -68,12 +65,11 @@ public class LabItemLabelProvider extends ColumnLabelProvider implements ILabelP
 		}
 		return ret;
 	}
-	
-	private String getItemLabelField(ItemLabelFields itemLabelField, LabItem element){
+
+	private String getItemLabelField(ItemLabelFields itemLabelField, LabItem element) {
 		String ret = "";
-		String[] values = ((LabItem) element).get(true, LabItem.SHORTNAME, LabItem.TITLE,
-			LabItem.GROUP, LabItem.UNIT);
-			
+		String[] values = ((LabItem) element).get(true, LabItem.SHORTNAME, LabItem.TITLE, LabItem.GROUP, LabItem.UNIT);
+
 		switch (itemLabelField) {
 		case KUERZEL:
 			return values[0];
@@ -92,20 +88,20 @@ public class LabItemLabelProvider extends ColumnLabelProvider implements ILabelP
 		}
 		return ret;
 	}
-	
-	private String shortenString(String string){
+
+	private String shortenString(String string) {
 		if (string.length() > 15) {
 			return string.substring(0, 14) + "..."; //$NON-NLS-1$
 		}
 		return string;
 	}
-	
+
 	@Override
-	public String getToolTipText(Object element){
+	public String getToolTipText(Object element) {
 		if (createToolTip && element instanceof LabItem) {
 			int results = 0;
 			PreparedStatement ps = PersistentObject.getConnection().getPreparedStatement(
-				"SELECT COUNT(*) AS results FROM LABORWERTE WHERE " + LabResult.ITEM_ID + "=?"); //$NON-NLS-1$ //$NON-NLS-2$
+					"SELECT COUNT(*) AS results FROM LABORWERTE WHERE " + LabResult.ITEM_ID + "=?"); //$NON-NLS-1$ //$NON-NLS-2$
 			try {
 				ps.setString(1, ((LabItem) element).getId());
 				if (ps.execute()) {
@@ -116,11 +112,8 @@ public class LabItemLabelProvider extends ColumnLabelProvider implements ILabelP
 					resultSet.close();
 				}
 			} catch (SQLException e) {
-				StatusManager.getManager().handle(
-					new ElexisStatus(ElexisStatus.WARNING,
-						"ch.elexis", //$NON-NLS-1$
-						ElexisStatus.CODE_NOFEEDBACK,
-						"Could not determine count of LabResult.", e)); //$NON-NLS-1$
+				StatusManager.getManager().handle(new ElexisStatus(ElexisStatus.WARNING, "ch.elexis", //$NON-NLS-1$
+						ElexisStatus.CODE_NOFEEDBACK, "Could not determine count of LabResult.", e)); //$NON-NLS-1$
 			} finally {
 				PersistentObject.getConnection().releasePreparedStatement(ps);
 			}

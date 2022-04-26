@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -32,23 +32,22 @@ import ch.elexis.data.Sticker;
 import ch.rgw.tools.IFilter;
 
 public class ConsultationExport {
-	
-	public String doExport(String dir, String stickerName){
+
+	public String doExport(String dir, String stickerName) {
 		try {
 			Query<Patient> qbe = new Query<Patient>(Patient.class);
 			if (stickerName != null) {
-				List<Sticker> ls =
-					new Query<Sticker>(Sticker.class, Sticker.FLD_NAME, stickerName).execute();
+				List<Sticker> ls = new Query<Sticker>(Sticker.class, Sticker.FLD_NAME, stickerName).execute();
 				if (ls != null && ls.size() > 0) {
 					final Sticker sticker = ls.get(0);
-					
+
 					final PatFilterImpl pf = new PatFilterImpl();
 					IFilter flt = new IFilter() {
 						@Override
-						public boolean select(Object element){
+						public boolean select(Object element) {
 							return pf.accept((Patient) element, sticker) == IPatFilter.ACCEPT;
 						}
-						
+
 					};
 					qbe.addPostQueryFilter(flt);
 				} else {
@@ -77,8 +76,7 @@ public class ConsultationExport {
 					Kontakt costBearer = fall.getCostBearer();
 					if (costBearer != null) {
 						f.setAttribute("Kostentraeger", costBearer.getLabel());
-						f.setAttribute("Versicherungsnummer",
-							fall.getRequiredString("Versicherungsnummer"));
+						f.setAttribute("Versicherungsnummer", fall.getRequiredString("Versicherungsnummer"));
 					}
 					for (Konsultation kons : fall.getBehandlungen(false)) {
 						Element kel = new Element("Konsultation");

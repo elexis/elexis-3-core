@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
@@ -47,30 +47,30 @@ import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 
 public class ImageChooser extends AbstractElementListSelectionDialog {
-	
+
 	private Object[] fElements;
 	private Hyperlink hl;
 	private Text tTitle;
-	private static String NOFILESELECTED = Messages.ImageChooser_PleaseChooseFile; //$NON-NLS-1$
+	private static String NOFILESELECTED = Messages.ImageChooser_PleaseChooseFile; // $NON-NLS-1$
 	private Button bDB, bFile;
 	private UiDBImage result;
-	
-	public UiDBImage getSelection(){
+
+	public UiDBImage getSelection() {
 		return result;
 	}
-	
-	public ImageChooser(Shell shell){
+
+	public ImageChooser(Shell shell) {
 		super(shell, new LabelProvider() {
 			@Override
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				if (element instanceof UiDBImage) {
 					return ((UiDBImage) element).getImage();
 				}
 				return null;
 			}
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof DBImage) {
 					return ((DBImage) element).getName();
 				}
@@ -78,21 +78,20 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 			}
 		});
 	}
-	
+
 	/**
 	 * Sets the elements of the list.
-	 * 
-	 * @param elements
-	 *            the elements of the list.
+	 *
+	 * @param elements the elements of the list.
 	 */
-	public void setElements(Object[] elements){
+	public void setElements(Object[] elements) {
 		fElements = elements;
 	}
-	
+
 	/*
 	 * @see SelectionStatusDialog#computeResult()
 	 */
-	protected void computeResult(){
+	protected void computeResult() {
 		if (bDB.getSelection()) {
 			setResult(Arrays.asList(getSelectedElements()));
 			Object[] sel = getResult();
@@ -103,18 +102,18 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 			}
 		}
 	}
-	
-	private Menu createMenu(Control parent){
+
+	private Menu createMenu(Control parent) {
 		Menu ret = new Menu(parent);
 		MenuItem item = new MenuItem(ret, SWT.NONE);
-		item.setText(Messages.ImageChooser_delete); //$NON-NLS-1$
+		item.setText(Messages.ImageChooser_delete); // $NON-NLS-1$
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				Object[] oo = getSelectedElements();
 				if (oo != null && oo.length > 0) {
-					if (SWTHelper.askYesNo(Messages.ImageChooser_reallyDeleteHeading, //$NON-NLS-1$
-						Messages.ImageChooser_reallyDeleteText)) { //$NON-NLS-1$
+					if (SWTHelper.askYesNo(Messages.ImageChooser_reallyDeleteHeading, // $NON-NLS-1$
+							Messages.ImageChooser_reallyDeleteText)) { // $NON-NLS-1$
 						for (Object o : oo) {
 							((DBImage) o).delete();
 						}
@@ -124,75 +123,73 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 		});
 		return ret;
 	}
-	
+
 	/*
 	 * @see Dialog#createDialogArea(Composite)
 	 */
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = (Composite) super.createDialogArea(parent);
 		bDB = new Button(ret, SWT.RADIO);
-		bDB.setText(Messages.ImageChooser_chooseImagefromDB); //$NON-NLS-1$
+		bDB.setText(Messages.ImageChooser_chooseImagefromDB); // $NON-NLS-1$
 		createMessageArea(ret);
 		createFilterText(ret);
 		FilteredList list = createFilteredList(ret);
 		list.setMenu(createMenu(list));
 		list.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				bFile.setSelection(false);
 				bDB.setSelection(true);
 			}
-			
+
 		});
-		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(1,
-			true, 1, false));
+		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		bFile = new Button(ret, SWT.RADIO);
-		bFile.setText(Messages.ImageChooser_importImage); //$NON-NLS-1$
+		bFile.setText(Messages.ImageChooser_importImage); // $NON-NLS-1$
 		Composite cBottom = new Composite(ret, SWT.BORDER);
 		cBottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		
+
 		cBottom.setLayout(new GridLayout(2, false));
-		new Label(cBottom, SWT.NONE).setText(Messages.ImageChooser_imageFile); //$NON-NLS-1$
-		new Label(cBottom, SWT.NONE).setText(Messages.ImageChooser_imageTitle); //$NON-NLS-1$
+		new Label(cBottom, SWT.NONE).setText(Messages.ImageChooser_imageFile); // $NON-NLS-1$
+		new Label(cBottom, SWT.NONE).setText(Messages.ImageChooser_imageTitle); // $NON-NLS-1$
 		hl = new Hyperlink(cBottom, SWT.NONE);
 		tTitle = new Text(cBottom, SWT.BORDER);
 		hl.addHyperlinkListener(new HyperlinkAdapter() {
-			
+
 			@Override
-			public void linkActivated(HyperlinkEvent e){
+			public void linkActivated(HyperlinkEvent e) {
 				bFile.setSelection(true);
 				bDB.setSelection(false);
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
-				fd.setFilterExtensions(new String[] {
-					"*.png", "*.gif", //$NON-NLS-1$ //$NON-NLS-2$
-					"*.jpg", "*.*"}); //$NON-NLS-1$ //$NON-NLS-2$
-				fd.setFilterNames(new String[] {
-					"Portable Network Graphics", //$NON-NLS-1$
-					"Grafics Interchange Format", "JPEG", Messages.ImageChooser_allFilesDesc}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				fd.setFilterExtensions(new String[] { "*.png", "*.gif", //$NON-NLS-1$ //$NON-NLS-2$
+						"*.jpg", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
+				fd.setFilterNames(new String[] { "Portable Network Graphics", //$NON-NLS-1$
+						"Grafics Interchange Format", "JPEG", Messages.ImageChooser_allFilesDesc }); //$NON-NLS-1$ //$NON-NLS-2$
+																										// //$NON-NLS-3$
 				String filename = fd.open();
 				if (filename != null) {
 					hl.setText(filename);
 					getOkButton().setEnabled(true);
 				}
 			}
-			
+
 		});
 		hl.setText(NOFILESELECTED);
 		hl.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
 		hl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tTitle.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tTitle.addKeyListener(new KeyAdapter() {
-			
+
 			@Override
-			public void keyPressed(KeyEvent e){
+			public void keyPressed(KeyEvent e) {
 				bFile.setSelection(true);
 				bDB.setSelection(false);
 			}
-			
+
 		});
 		bDB.setSelection(true);
-		
+
 		Query<DBImage> qbe = new Query<DBImage>(DBImage.class);
 		List<DBImage> imgs = qbe.execute();
 		if (imgs != null) {
@@ -204,16 +201,16 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 		setSelection(getInitialElementSelections().toArray());
 		return ret;
 	}
-	
+
 	@Override
-	public void okPressed(){
+	public void okPressed() {
 		if (bFile.getSelection()) {
 			String fname = hl.getText();
 			if (!fname.equals(NOFILESELECTED)) {
 				try {
 					File file = new File(fname);
 					result = new UiDBImage("ch.elexis.images", tTitle.getText() + ":" //$NON-NLS-1$
-						+ file.getName(), new FileInputStream(file));
+							+ file.getName(), new FileInputStream(file));
 				} catch (Exception ex) {
 					ExHandler.handle(ex);
 				}
@@ -221,13 +218,13 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 		}
 		super.okPressed();
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
-		getShell().setText(Messages.ImageChooser_choseFileFromDBHeading); //$NON-NLS-1$
-		setMessage(Messages.ImageChooser_choseFileFromDBText); //$NON-NLS-1$
-		setTitle(Messages.ImageChooser_imageSelection); //$NON-NLS-1$
+		getShell().setText(Messages.ImageChooser_choseFileFromDBHeading); // $NON-NLS-1$
+		setMessage(Messages.ImageChooser_choseFileFromDBText); // $NON-NLS-1$
+		setTitle(Messages.ImageChooser_imageSelection); // $NON-NLS-1$
 	}
-	
+
 }

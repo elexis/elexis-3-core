@@ -15,28 +15,28 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
 
 @Component
 public class FhirTransformerRegistry implements IFhirTransformerRegistry {
-	
+
 	private List<IFhirTransformer<?, ?>> transformers;
-	
+
 	private HashMap<String, IFhirTransformer<?, ?>> cache = new HashMap<>();
-	
+
 	@Reference(cardinality = ReferenceCardinality.AT_LEAST_ONE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public synchronized void bindFhirTransformer(IFhirTransformer<?, ?> transformer){
+	public synchronized void bindFhirTransformer(IFhirTransformer<?, ?> transformer) {
 		if (transformers == null) {
 			transformers = new ArrayList<IFhirTransformer<?, ?>>();
 		}
 		transformers.add(transformer);
 	}
-	
-	public void unbindFhirTransformer(IFhirTransformer<?, ?> transformer){
+
+	public void unbindFhirTransformer(IFhirTransformer<?, ?> transformer) {
 		if (transformers == null) {
 			transformers = new ArrayList<IFhirTransformer<?, ?>>();
 		}
 		transformers.remove(transformer);
 	}
-	
+
 	@Override
-	public IFhirTransformer<?, ?> getTransformerFor(Class<?> fhirClazz, Class<?> localClazz){
+	public IFhirTransformer<?, ?> getTransformerFor(Class<?> fhirClazz, Class<?> localClazz) {
 		String lookupString = fhirClazz.getName() + "-" + localClazz.getName();
 		IFhirTransformer<?, ?> ret = cache.get(lookupString);
 		if (ret == null) {

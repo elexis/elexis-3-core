@@ -17,25 +17,25 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.test.AbstractTest;
 
 public class AppointmentTest extends AbstractTest {
-	
+
 	@Override
 	@Before
-	public void before(){
+	public void before() {
 		super.before();
 		super.createPatient();
 	}
-	
+
 	@Override
 	@After
-	public void after(){
+	public void after() {
 		super.after();
 	}
-	
+
 	@Test
-	public void createFindDelete(){
+	public void createFindDelete() {
 		LocalDateTime begin = LocalDateTime.of(2018, 9, 24, 13, 23);
 		LocalDateTime end = begin.plus(Duration.ofMinutes(15));
-		
+
 		IAppointment appointment = coreModelService.create(IAppointment.class);
 		appointment.setReason("reason");
 		appointment.setStartTime(begin);
@@ -48,11 +48,11 @@ public class AppointmentTest extends AbstractTest {
 		appointment.setCaseType(2);
 		appointment.setInsuranceType(3);
 		coreModelService.save(appointment);
-		
+
 		IQuery<IAppointment> query = coreModelService.getQuery(IAppointment.class);
 		query.and(ModelPackage.Literals.IAPPOINTMENT__REASON, COMPARATOR.EQUALS, "reason");
 		IAppointment stored = query.executeSingleResult().get();
-		
+
 		assertEquals(begin, stored.getStartTime());
 		assertEquals(end, stored.getEndTime());
 		assertEquals(patient.getLabel(), stored.getSubjectOrPatient());
@@ -65,12 +65,12 @@ public class AppointmentTest extends AbstractTest {
 		assertEquals(3, stored.getInsuranceType());
 		coreModelService.remove(appointment);
 	}
-	
+
 	@Test
-	public void createQueryDelete(){
+	public void createQueryDelete() {
 		LocalDateTime begin = LocalDateTime.of(2018, 9, 24, 13, 23);
 		LocalDateTime end = begin.plus(Duration.ofMinutes(15));
-		
+
 		IAppointment appointment = coreModelService.create(IAppointment.class);
 		appointment.setReason("reason");
 		appointment.setStartTime(begin);
@@ -80,38 +80,38 @@ public class AppointmentTest extends AbstractTest {
 		appointment.setSchedule("Notfall");
 		appointment.setSubjectOrPatient(patient.getId());
 		coreModelService.save(appointment);
-		
+
 		IQuery<IAppointment> query = coreModelService.getQuery(IAppointment.class);
 		query.and("tag", COMPARATOR.GREATER_OR_EQUAL, begin.toLocalDate());
 		assertNotNull(query.executeSingleResult().orElse(null));
-		
+
 		query = coreModelService.getQuery(IAppointment.class);
 		query.and("tag", COMPARATOR.GREATER_OR_EQUAL, begin.plusDays(1).toLocalDate());
 		assertNull(query.executeSingleResult().orElse(null));
-		
+
 		coreModelService.remove(appointment);
 	}
-	
+
 	@Test
 	public void setStateIncludesStateHistory() {
 		LocalDateTime begin = LocalDateTime.of(2018, 9, 24, 13, 23);
 		LocalDateTime end = begin.plus(Duration.ofMinutes(15));
-		
+
 		IAppointment appointment = coreModelService.create(IAppointment.class);
 		appointment.setReason("reason");
 		appointment.setStartTime(begin);
 		appointment.setEndTime(end);
 		appointment.setState("started");
 		coreModelService.save(appointment);
-		
+
 		assertTrue(appointment.getStateHistory().contains("started"));
-		
+
 		appointment.setState("modified");
 		coreModelService.save(appointment);
-		
+
 		assertTrue(appointment.getStateHistory().contains("started"));
 		assertTrue(appointment.getStateHistory().contains("modified"));
-			
+
 		coreModelService.remove(appointment);
 	}
 }

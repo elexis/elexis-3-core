@@ -19,39 +19,38 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 
 public class ShowInvoiceListHandler {
-	
+
 	@Execute
-	public void execute(@Optional @Named("filterOnCurrentPatient")
-	String filterPatient, EPartService partService, IContextService contextService){
-		
+	public void execute(@Optional @Named("filterOnCurrentPatient") String filterPatient, EPartService partService,
+			IContextService contextService) {
+
 		boolean _filterPatient = (filterPatient != null) ? Boolean.valueOf(filterPatient) : false;
-		
-		MPart invoiceListPart = partService
-			.showPart("ch.elexis.core.ui.views.rechnung.InvoiceListView", PartState.VISIBLE);
+
+		MPart invoiceListPart = partService.showPart("ch.elexis.core.ui.views.rechnung.InvoiceListView",
+				PartState.VISIBLE);
 		if (_filterPatient) {
 			java.util.Optional<IPatient> activePatient = contextService.getActivePatient();
-			
+
 			IRefreshablePart refreshablePart = null;
 			// is org.eclipse.ui.internal.e4.compatibility.CompatibilityView
-			// we need to fetch the underlying IViewPart (e3) and directly cast it to IRefreshablePart
+			// we need to fetch the underlying IViewPart (e3) and directly cast it to
+			// IRefreshablePart
 			Object compatibilityViewPart = invoiceListPart.getObject();
 			try {
-				Method method =
-					compatibilityViewPart.getClass().getMethod("getPart", (Class<?>[]) null);
+				Method method = compatibilityViewPart.getClass().getMethod("getPart", (Class<?>[]) null);
 				Object invoiceListViewPart = method.invoke(compatibilityViewPart, (Object[]) null);
 				refreshablePart = (IRefreshablePart) invoiceListViewPart;
-			} catch (NoSuchMethodException | SecurityException | IllegalAccessException
-					| IllegalArgumentException | InvocationTargetException e) {
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
 				LoggerFactory.getLogger(getClass()).error("Error getting e3 view", e);
 			}
-			
+
 			if (activePatient.isPresent() && refreshablePart != null) {
-				refreshablePart
-					.refresh(Collections.singletonMap(IPatient.class, activePatient.get()));
+				refreshablePart.refresh(Collections.singletonMap(IPatient.class, activePatient.get()));
 			}
 		}
 		partService.showPart(invoiceListPart, PartState.ACTIVATE);
-		
+
 	}
-	
+
 }

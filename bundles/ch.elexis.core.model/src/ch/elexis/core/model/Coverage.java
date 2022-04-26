@@ -15,36 +15,35 @@ import ch.elexis.core.model.service.holder.IBillingSystemServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.time.TimeUtil;
 
-public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
-		implements IdentifiableWithXid, ICoverage {
-	
-	public Coverage(Fall entity){
+public class Coverage extends AbstractIdDeleteModelAdapter<Fall> implements IdentifiableWithXid, ICoverage {
+
+	public Coverage(Fall entity) {
 		super(entity);
 	}
-	
+
 	@Override
-	public Object getExtInfo(Object key){
+	public Object getExtInfo(Object key) {
 		return extInfoHandler.getExtInfo(key);
 	}
-	
+
 	@Override
-	public void setExtInfo(Object key, Object value){
+	public void setExtInfo(Object key, Object value) {
 		extInfoHandler.setExtInfo(key, value);
 	}
-	
+
 	@Override
-	public Map<Object, Object> getMap(){
+	public Map<Object, Object> getMap() {
 		return extInfoHandler.getMap();
 	}
-	
+
 	@Override
-	public IPatient getPatient(){
+	public IPatient getPatient() {
 		return ModelUtil.getAdapter(getEntity().getPatient(), IPatient.class);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setPatient(IPatient value){
+	public void setPatient(IPatient value) {
 		if (getPatient() != null) {
 			addRefresh(getPatient());
 		}
@@ -55,80 +54,79 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 			getEntityMarkDirty().setPatient(null);
 		}
 	}
-	
+
 	@Override
-	public String getDescription(){
+	public String getDescription() {
 		return getEntity().getBezeichnung();
 	}
-	
+
 	@Override
-	public void setDescription(String value){
+	public void setDescription(String value) {
 		getEntityMarkDirty().setBezeichnung(value);
 	}
-	
+
 	@Override
-	public String getReason(){
+	public String getReason() {
 		return getEntity().getGrund();
 	}
-	
+
 	@Override
-	public void setReason(String value){
+	public void setReason(String value) {
 		getEntityMarkDirty().setGrund(value);
 	}
-	
+
 	@Override
-	public LocalDate getDateFrom(){
+	public LocalDate getDateFrom() {
 		return getEntity().getDatumVon();
 	}
-	
+
 	@Override
-	public void setDateFrom(LocalDate value){
+	public void setDateFrom(LocalDate value) {
 		getEntityMarkDirty().setDatumVon(value);
 	}
-	
+
 	@Override
-	public LocalDate getDateTo(){
+	public LocalDate getDateTo() {
 		return getEntity().getDatumBis();
 	}
-	
+
 	@Override
-	public void setDateTo(LocalDate value){
+	public void setDateTo(LocalDate value) {
 		getEntityMarkDirty().setDatumBis(value);
 	}
-	
+
 	@Override
-	public IBillingSystem getBillingSystem(){
-		IBillingSystem billingSystem = IBillingSystemServiceHolder.get()
-			.getBillingSystem(getEntity().getGesetz()).orElse(null);
+	public IBillingSystem getBillingSystem() {
+		IBillingSystem billingSystem = IBillingSystemServiceHolder.get().getBillingSystem(getEntity().getGesetz())
+				.orElse(null);
 		if (billingSystem == null) {
 			billingSystem = IBillingSystemServiceHolder.get().getDefaultBillingSystem();
 		}
 		return billingSystem;
 	}
-	
+
 	@Override
-	public void setBillingSystem(IBillingSystem value){
+	public void setBillingSystem(IBillingSystem value) {
 		getEntityMarkDirty().setGesetz(value.getName());
 	}
-	
+
 	@Override
-	public IContact getCostBearer(){
+	public IContact getCostBearer() {
 		return ModelUtil.getAdapter(getEntity().getKostentrKontakt(), IContact.class);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setCostBearer(IContact value){
+	public void setCostBearer(IContact value) {
 		if (value != null) {
-			getEntityMarkDirty()
-				.setKostentrKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntityMarkDirty().setKostentrKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
 			getEntityMarkDirty().setKostentrKontakt(null);
 		}
 	}
-	
+
 	@Override
-	public IContact getGuarantor(){
+	public IContact getGuarantor() {
 		if (getEntity().getGarantKontakt() == null || getEntity().getGarantKontakt().isDeleted()) {
 			return getPatient();
 		}
@@ -138,42 +136,41 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 		}
 		return ret;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setGuarantor(IContact value){
+	public void setGuarantor(IContact value) {
 		if (value != null) {
-			getEntityMarkDirty()
-				.setGarantKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntityMarkDirty().setGarantKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
 			getEntityMarkDirty().setGarantKontakt(null);
 		}
 	}
-	
+
 	@Override
-	public String getInsuranceNumber(){
+	public String getInsuranceNumber() {
 		return getEntity().getVersNummer();
 	}
-	
+
 	@Override
-	public void setInsuranceNumber(String value){
+	public void setInsuranceNumber(String value) {
 		getEntityMarkDirty().setVersNummer(value);
 	}
-	
+
 	@Override
-	public List<IEncounter> getEncounters(){
+	public List<IEncounter> getEncounters() {
 		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getConsultations().parallelStream().filter(f -> !f.isDeleted())
-			.map(f -> ModelUtil.getAdapter(f, IEncounter.class, true)).collect(Collectors.toList());
+				.map(f -> ModelUtil.getAdapter(f, IEncounter.class, true)).collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public boolean isOpen(){
+	public boolean isOpen() {
 		return getDateTo() == null;
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		StringBuilder ret = new StringBuilder();
 		if (!isOpen()) {
 			ret.append(Messages.Fall_CLOSED);
@@ -183,21 +180,21 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 		ret.append(getDescription()).append("("); //$NON-NLS-1$
 		LocalDate dateTo = getDateTo();
 		ret.append(TimeUtil.formatSafe(getDateFrom())).append("-") //$NON-NLS-1$
-			.append(dateTo == null ? Messages.Fall_Open : TimeUtil.formatSafe(dateTo)).append(")"); //$NON-NLS-1$
+				.append(dateTo == null ? Messages.Fall_Open : TimeUtil.formatSafe(dateTo)).append(")"); //$NON-NLS-1$
 		return ret.toString();
 	}
-	
+
 	@Override
-	public LocalDate getBillingProposalDate(){
+	public LocalDate getBillingProposalDate() {
 		String proposalDateString = getEntity().getBetriebsNummer();
 		if (proposalDateString != null && !proposalDateString.isEmpty()) {
 			return ModelUtil.toLocalDate(proposalDateString);
 		}
 		return null;
 	}
-	
+
 	@Override
-	public void setBillingProposalDate(LocalDate value){
+	public void setBillingProposalDate(LocalDate value) {
 		if (value != null) {
 			getEntityMarkDirty().setBetriebsNummer(ModelUtil.toString(value));
 		} else {

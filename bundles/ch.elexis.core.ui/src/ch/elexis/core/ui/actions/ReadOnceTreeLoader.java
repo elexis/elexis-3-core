@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -34,47 +34,45 @@ import ch.elexis.data.Query;
 
 /**
  * A TreeLoader designed to read only once (for immutable data)
- * 
+ *
  * @author gerry
- * 
+ *
  */
 public class ReadOnceTreeLoader extends PersistentObjectLoader implements ITreeContentProvider {
-	
+
 	protected String parentColumn;
 	protected String orderBy;
-	private HashMap<PersistentObject, HashMap<PersistentObject, ?>> allNodes =
-		new HashMap<PersistentObject, HashMap<PersistentObject, ?>>();
+	private HashMap<PersistentObject, HashMap<PersistentObject, ?>> allNodes = new HashMap<PersistentObject, HashMap<PersistentObject, ?>>();
 	private PersistentObject[] root;
-	
+
 	TreeViewer tv;
 	int size = 0;
 	SelectorPanelProvider slp;
 	ViewerFilter filter;
 	Object[] expanded = null;
-	
-	public ReadOnceTreeLoader(CommonViewer cv, Query<? extends PersistentObject> qbe,
-		String parentField, String orderBy){
+
+	public ReadOnceTreeLoader(CommonViewer cv, Query<? extends PersistentObject> qbe, String parentField,
+			String orderBy) {
 		super(cv, qbe);
 		parentColumn = parentField;
 		this.orderBy = orderBy;
 		setQuery("NIL");
 		root = qbe.execute().toArray(new PersistentObject[0]);
 	}
-	
+
 	@Override
-	public IStatus work(IProgressMonitor monitor, HashMap<String, Object> params){
+	public IStatus work(IProgressMonitor monitor, HashMap<String, Object> params) {
 		UiDesk.asyncExec(new Runnable() {
-			
+
 			@Override
-			public void run(){
-				ProgressMonitorDialog dialog =
-					new ProgressMonitorDialog(cv.getViewerWidget().getControl().getShell());
+			public void run() {
+				ProgressMonitorDialog dialog = new ProgressMonitorDialog(cv.getViewerWidget().getControl().getShell());
 				try {
 					dialog.run(false, false, new IRunnableWithProgress() {
-						
+
 						@Override
-						public void run(IProgressMonitor monitor) throws InvocationTargetException,
-							InterruptedException{
+						public void run(IProgressMonitor monitor)
+								throws InvocationTargetException, InterruptedException {
 							monitor.beginTask("Durchsuche Tarmed....", -1);
 							tv.refresh(false);
 							if (slp.isEmpty()) {
@@ -98,29 +96,27 @@ public class ReadOnceTreeLoader extends PersistentObjectLoader implements ITreeC
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
 		return Status.OK_STATUS;
 	}
-	
+
 	@Override
-	public Object[] getElements(Object inputElement){
+	public Object[] getElements(Object inputElement) {
 		return root;
 	}
-	
+
 	@Override
-	public Object getParent(Object element){
+	public Object getParent(Object element) {
 		return null;
 	}
-	
-	@SuppressWarnings({
-		"rawtypes", "unchecked"
-	})
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public Object[] getChildren(Object parent){
+	public Object[] getChildren(Object parent) {
 		PersistentObject par = (PersistentObject) parent;
-		
+
 		HashMap children = allNodes.get(par);
 		if (children == null) {
 			children = new HashMap<PersistentObject, HashMap>();
@@ -133,15 +129,15 @@ public class ReadOnceTreeLoader extends PersistentObjectLoader implements ITreeC
 		}
 		return children.keySet().toArray();
 	}
-	
-	protected void setQuery(String parent){
+
+	protected void setQuery(String parent) {
 		qbe.clear();
 		qbe.add(parentColumn, Query.EQUALS, parent);
 		applyQueryFilters();
 	}
-	
+
 	@Override
-	public void init(){
+	public void init() {
 		if (slp == null) {
 			slp = (SelectorPanelProvider) cv.getConfigurer().getControlFieldProvider();
 		}
@@ -151,40 +147,38 @@ public class ReadOnceTreeLoader extends PersistentObjectLoader implements ITreeC
 		tv = (TreeViewer) cv.getViewerWidget();
 		if (orderBy != null) {
 			tv.setSorter(new ViewerSorter() {
-				
+
 				@Override
-				public int compare(Viewer viewer, Object e1, Object e2){
+				public int compare(Viewer viewer, Object e1, Object e2) {
 					String c1 = ((PersistentObject) e1).get(orderBy);
 					String c2 = ((PersistentObject) e2).get(orderBy);
 					return c1.compareTo(c2);
 				}
-				
+
 			});
 		}
-		tv.setFilters(new ViewerFilter[] {
-			filter
-		});
-		
+		tv.setFilters(new ViewerFilter[] { filter });
+
 	}
-	
+
 	@Override
-	public boolean hasChildren(Object element){
+	public boolean hasChildren(Object element) {
 		HashMap children = allNodes.get(element);
 		if (children == null) {
 			return getChildren(element).length > 0;
 		}
 		return children.size() > 0;
 	}
-	
+
 	class TreeFilter extends ViewerFilter {
 		SelectorPanel panel;
-		
-		TreeFilter(SelectorPanel sp){
+
+		TreeFilter(SelectorPanel sp) {
 			panel = sp;
 		}
-		
+
 		@Override
-		public boolean select(Viewer viewer, Object parentElement, Object element){
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			PersistentObject po = (PersistentObject) element;
 			HashMap<String, String> vals = panel.getValues();
 			if (po.isMatching(vals, PersistentObject.MATCH_AUTO, true)) {
@@ -196,10 +190,10 @@ public class ReadOnceTreeLoader extends PersistentObjectLoader implements ITreeC
 					}
 				}
 				return false;
-				
+
 			}
 		}
-		
+
 	}
-	
+
 }

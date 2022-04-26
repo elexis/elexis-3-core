@@ -26,43 +26,43 @@ import ch.elexis.core.tasks.model.ITask;
 import ch.rgw.tools.Result;
 
 public class HL7ImporterTaskResultDetailComposite {
-	
+
 	private ECommandService commandService;
 	private EHandlerService handlerService;
 	private IVirtualFilesystemService vfsService;
-	
+
 	private Button btnManualImport;
 	private Button btnArchive;
 	private Label lblStatus;
 	private String fileUrl;
-	
-	public HL7ImporterTaskResultDetailComposite(Composite parent, ITask task,
-		Map<String, Object> e4Services, IVirtualFilesystemService vfsService){
-		
+
+	public HL7ImporterTaskResultDetailComposite(Composite parent, ITask task, Map<String, Object> e4Services,
+			IVirtualFilesystemService vfsService) {
+
 		this.vfsService = vfsService;
 		commandService = (ECommandService) e4Services.get(ECommandService.class.getName());
 		handlerService = (EHandlerService) e4Services.get(EHandlerService.class.getName());
-		
+
 		fileUrl = task.getResultEntryTyped(ReturnParameter.STRING_URL, String.class);
-		
+
 		Composite container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
+
 		lblStatus = new Label(container, SWT.WRAP);
 		GridData gd_lblStatus = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
 		gd_lblStatus.heightHint = 60;
 		lblStatus.setLayoutData(gd_lblStatus);
-		
+
 		btnManualImport = new Button(container, SWT.NONE);
 		btnManualImport.setText("Datei manuell importieren");
 		btnManualImport.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				Map<String, Serializable> params = Collections
-					.singletonMap("ch.elexis.laborimport.hl7.allg.importFile.fileUrl", fileUrl);
-				ParameterizedCommand command = commandService
-					.createCommand("ch.elexis.laborimport.hl7.allg.importFile", params);
+						.singletonMap("ch.elexis.laborimport.hl7.allg.importFile.fileUrl", fileUrl);
+				ParameterizedCommand command = commandService.createCommand("ch.elexis.laborimport.hl7.allg.importFile",
+						params);
 				@SuppressWarnings("rawtypes")
 				Result result = (Result) handlerService.executeHandler(command);
 				String message;
@@ -72,25 +72,24 @@ public class HL7ImporterTaskResultDetailComposite {
 					message = (String) result.getMessages().get(0);
 					task.setStateCompletedManual("manual import");
 				}
-				
-				MessageBox dialog =
-					new MessageBox(parent.getShell(), result.isOK() ? SWT.OK : SWT.ERROR);
+
+				MessageBox dialog = new MessageBox(parent.getShell(), result.isOK() ? SWT.OK : SWT.ERROR);
 				dialog.setText("Info");
 				dialog.setMessage(message);
 				dialog.open();
 				setTask(task);
 			}
 		});
-		
+
 		btnArchive = new Button(container, SWT.NONE);
 		btnArchive.setText("Datei archivieren");
 		btnArchive.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				Map<String, Serializable> params = Collections
-					.singletonMap("ch.elexis.laborimport.hl7.allg.archiveFile.fileUrl", fileUrl);
+						.singletonMap("ch.elexis.laborimport.hl7.allg.archiveFile.fileUrl", fileUrl);
 				ParameterizedCommand command = commandService
-					.createCommand("ch.elexis.laborimport.hl7.allg.archiveFile", params);
+						.createCommand("ch.elexis.laborimport.hl7.allg.archiveFile", params);
 				@SuppressWarnings("rawtypes")
 				Result result = (Result) handlerService.executeHandler(command);
 				String message;
@@ -100,20 +99,19 @@ public class HL7ImporterTaskResultDetailComposite {
 					message = (String) result.getMessages().get(0);
 					task.setStateCompletedManual("manual archive");
 				}
-				
-				MessageBox dialog =
-					new MessageBox(parent.getShell(), result.isOK() ? SWT.OK : SWT.ERROR);
+
+				MessageBox dialog = new MessageBox(parent.getShell(), result.isOK() ? SWT.OK : SWT.ERROR);
 				dialog.setText("Info");
 				dialog.setMessage(message);
 				dialog.open();
 				setTask(task);
 			}
 		});
-		
+
 		setTask(task);
 	}
-	
-	private void setTask(ITask task){
+
+	private void setTask(ITask task) {
 		fileUrl = task.getResultEntryTyped(ReturnParameter.STRING_URL, String.class);
 		IVirtualFilesystemHandle importFileHandle = null;
 		String fileName;
@@ -124,20 +122,19 @@ public class HL7ImporterTaskResultDetailComposite {
 			fileName = e.getMessage();
 			LoggerFactory.getLogger(getClass()).warn("Error parsing url", e);
 		}
-		
+
 		StringBuilder text = new StringBuilder();
 		if (task.isSucceeded()) {
 			text.append("Die Datei [" + fileName + "] wurde erfolgreich importiert.");
 		} else {
 			text.append("Die Datei [" + fileName + "] konnte nicht automatisch importiert werden.");
 			text.append("\n\n");
-			text.append("Grund: "
-				+ task.getResultEntryTyped(ReturnParameter.RESULT_DATA, String.class) + "\n");
+			text.append("Grund: " + task.getResultEntryTyped(ReturnParameter.RESULT_DATA, String.class) + "\n");
 		}
 		lblStatus.setText(text.toString());
-		
+
 		btnManualImport.setEnabled(!task.isSucceeded() && (importFileHandle != null));
 		btnArchive.setEnabled(!task.isSucceeded() && (importFileHandle != null));
 	}
-	
+
 }

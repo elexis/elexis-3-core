@@ -13,20 +13,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(immediate = true, service = URLStreamHandlerService.class, property = {
-	URLConstants.URL_HANDLER_PROTOCOL + ":String=icon"
-})
+		URLConstants.URL_HANDLER_PROTOCOL + ":String=icon" })
 public class IconURLStreamHandlerService extends AbstractURLStreamHandlerService {
-	
+
 	private Logger log = LoggerFactory.getLogger(IconURLStreamHandlerService.class);
-	
+
 	@Activate
 	public void activate() {
 		log.debug("Icon URL handler registered.");
 	}
-	
+
 	@Override
-	public URLConnection openConnection(URL u) throws IOException{
+	public URLConnection openConnection(URL u) throws IOException {
 		return new IconURLConnection(u);
 	}
-	
+
 }

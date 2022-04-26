@@ -10,24 +10,25 @@ import ch.elexis.core.services.IStoreToStringContribution;
 
 public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.StockEntry>
 		implements IdentifiableWithXid, IStockEntry {
-	
-	public StockEntry(ch.elexis.core.jpa.entities.StockEntry entity){
+
+	public StockEntry(ch.elexis.core.jpa.entities.StockEntry entity) {
 		super(entity);
 	}
-	
+
 	@Override
-	public IArticle getArticle(){
-		Optional<Identifiable> loaded = ModelUtil.getFromStoreToString(getEntity().getArticleType() + IStoreToStringContribution.DOUBLECOLON + getEntity().getArticleId());
+	public IArticle getArticle() {
+		Optional<Identifiable> loaded = ModelUtil.getFromStoreToString(
+				getEntity().getArticleType() + IStoreToStringContribution.DOUBLECOLON + getEntity().getArticleId());
 		if (loaded.isPresent() && loaded.get() instanceof IArticle) {
 			return (IArticle) loaded.get();
 		}
 		return null;
 	}
-	
+
 	@Override
-	public void setArticle(IArticle article){
-		String storeToString = ModelUtil.getStoreToString(article).orElseThrow(
-			() -> new IllegalStateException("Could not get store to string for [" + article + "]"));
+	public void setArticle(IArticle article) {
+		String storeToString = ModelUtil.getStoreToString(article)
+				.orElseThrow(() -> new IllegalStateException("Could not get store to string for [" + article + "]"));
 		String[] split = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
 		if (split != null && split.length == 2) {
 			getEntityMarkDirty().setArticleType(split[0]);
@@ -36,86 +37,84 @@ public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 			throw new IllegalStateException("Could not set article [" + storeToString + "]");
 		}
 	}
-	
+
 	@Override
-	public int getMinimumStock(){
+	public int getMinimumStock() {
 		return getEntity().getMinimumStock();
 	}
-	
+
 	@Override
-	public void setMinimumStock(int minStock){
+	public void setMinimumStock(int minStock) {
 		getEntityMarkDirty().setMinimumStock(minStock);
 	}
-	
+
 	@Override
-	public int getCurrentStock(){
+	public int getCurrentStock() {
 		return getEntity().getCurrentStock();
 	}
-	
+
 	@Override
-	public void setCurrentStock(int currentStock){
+	public void setCurrentStock(int currentStock) {
 		getEntityMarkDirty().setCurrentStock(currentStock);
 	}
-	
+
 	@Override
-	public int getMaximumStock(){
+	public int getMaximumStock() {
 		return getEntity().getMaximumStock();
 	}
-	
+
 	@Override
-	public void setMaximumStock(int maxStock){
+	public void setMaximumStock(int maxStock) {
 		getEntityMarkDirty().setMaximumStock(maxStock);
 	}
-	
+
 	@Override
-	public int getFractionUnits(){
+	public int getFractionUnits() {
 		return getEntity().getFractionUnits();
 	}
-	
+
 	@Override
-	public void setFractionUnits(int fractionUnits){
+	public void setFractionUnits(int fractionUnits) {
 		getEntityMarkDirty().setFractionUnits(fractionUnits);
 	}
-	
+
 	@Override
-	public IContact getProvider(){
+	public IContact getProvider() {
 		if (getEntity().getProvider() != null) {
 			return ModelUtil.getAdapter(getEntity().getProvider(), IContact.class);
 		}
 		return null;
 	}
-	
+
 	@Override
-	public void setProvider(IContact provider){
+	public void setProvider(IContact provider) {
 		if (provider instanceof AbstractIdDeleteModelAdapter) {
-			getEntityMarkDirty()
-				.setProvider((Kontakt) ((AbstractIdDeleteModelAdapter<?>) provider).getEntity());
+			getEntityMarkDirty().setProvider((Kontakt) ((AbstractIdDeleteModelAdapter<?>) provider).getEntity());
 		} else if (provider == null) {
 			getEntityMarkDirty().setProvider(null);
 		}
 	}
-	
+
 	@Override
-	public IStock getStock(){
+	public IStock getStock() {
 		if (getEntity().getStock() != null) {
 			return ModelUtil.getAdapter(getEntity().getStock(), IStock.class);
 		}
 		return null;
 	}
-	
+
 	@Override
-	public void setStock(IStock stock){
+	public void setStock(IStock stock) {
 		if (stock instanceof AbstractIdModelAdapter) {
 			getEntityMarkDirty()
-				.setStock((ch.elexis.core.jpa.entities.Stock) ((AbstractIdModelAdapter<?>) stock)
-					.getEntity());
+					.setStock((ch.elexis.core.jpa.entities.Stock) ((AbstractIdModelAdapter<?>) stock).getEntity());
 		} else if (stock == null) {
 			getEntityMarkDirty().setStock(null);
 		}
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		IArticle article = getArticle();
 		if (article != null) {
 			return article.getName();

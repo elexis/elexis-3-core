@@ -22,15 +22,15 @@ import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 
 public class ILabResultHelper extends AbstractHelper {
-	
-	public Type getEffectiveDateTime(ILabResult localObject){
+
+	public Type getEffectiveDateTime(ILabResult localObject) {
 		return new DateTimeType(getDate(localObject.getObservationTime()));
 	}
-	
-	public Type getResult(ILabResult localObject){
+
+	public Type getResult(ILabResult localObject) {
 		if (localObject.getItem().getTyp() == LabItemTyp.NUMERIC) {
 			String result = localObject.getResult();
-			
+
 			Optional<Double> numericResult = getNumericValue(result);
 			if (numericResult.isPresent()) {
 				Quantity qty = new Quantity();
@@ -39,8 +39,7 @@ public class ILabResultHelper extends AbstractHelper {
 				getComparator(result).ifPresent(comp -> qty.setComparator(comp));
 				return qty;
 			} else {
-				return new StringType(
-					result + " " + (localObject.getUnit() != null ? localObject.getUnit() : ""));
+				return new StringType(result + " " + (localObject.getUnit() != null ? localObject.getUnit() : ""));
 			}
 		} else {
 			if (localObject.getItem().getTyp() == LabItemTyp.TEXT) {
@@ -54,19 +53,18 @@ public class ILabResultHelper extends AbstractHelper {
 		}
 		return new StringType("");
 	}
-	
-	public boolean isLongText(ILabResult localObject){
+
+	public boolean isLongText(ILabResult localObject) {
 		String resultValue = localObject.getResult().trim().replaceAll("[()]", "");
 		String resultComment = localObject.getComment();
 		if (resultValue != null && localObject.getItem().getTyp() == LabItemTyp.TEXT
-			&& resultValue.equalsIgnoreCase("text") && resultComment != null
-			&& !resultComment.isEmpty()) {
+				&& resultValue.equalsIgnoreCase("text") && resultComment != null && !resultComment.isEmpty()) {
 			return true;
 		}
 		return false;
 	}
-	
-	private static Optional<QuantityComparator> getComparator(String result){
+
+	private static Optional<QuantityComparator> getComparator(String result) {
 		if (result.startsWith("<=")) {
 			return Optional.of(QuantityComparator.LESS_OR_EQUAL);
 		} else if (result.startsWith("<")) {
@@ -78,8 +76,8 @@ public class ILabResultHelper extends AbstractHelper {
 		}
 		return Optional.empty();
 	}
-	
-	private static Optional<Double> getNumericValue(String result){
+
+	private static Optional<Double> getNumericValue(String result) {
 		Double ret = null;
 		result = result.replaceAll("[\\*!,<>=]", "").replaceAll(" ", "");
 		try {
@@ -89,8 +87,8 @@ public class ILabResultHelper extends AbstractHelper {
 		}
 		return Optional.ofNullable(ret);
 	}
-	
-	public List<ObservationReferenceRangeComponent> getReferenceComponents(ILabResult localObject){
+
+	public List<ObservationReferenceRangeComponent> getReferenceComponents(ILabResult localObject) {
 		String localRef = null;
 		if (localObject.getPatient().getGender() == Gender.FEMALE) {
 			localRef = localObject.getReferenceFemale();
@@ -117,8 +115,8 @@ public class ILabResultHelper extends AbstractHelper {
 		}
 		return Collections.emptyList();
 	}
-	
-	private Optional<Quantity> getReferenceLow(String localRef){
+
+	private Optional<Quantity> getReferenceLow(String localRef) {
 		String[] range = localRef.split("\\s*-\\s*"); //$NON-NLS-1$
 		if (range.length == 2) {
 			try {
@@ -130,8 +128,8 @@ public class ILabResultHelper extends AbstractHelper {
 		}
 		return Optional.empty();
 	}
-	
-	private Optional<Quantity> getReferenceHigh(String localRef){
+
+	private Optional<Quantity> getReferenceHigh(String localRef) {
 		String[] range = localRef.split("\\s*-\\s*"); //$NON-NLS-1$
 		if (range.length == 2) {
 			try {
@@ -143,18 +141,17 @@ public class ILabResultHelper extends AbstractHelper {
 		}
 		return Optional.empty();
 	}
-	
-	public CodeableConcept getCodeableConcept(ILabResult localObject){
+
+	public CodeableConcept getCodeableConcept(ILabResult localObject) {
 		CodeableConcept ret = new CodeableConcept();
 		ILabItem item = localObject.getItem();
-		ret.addCoding(new Coding(CodingSystem.ELEXIS_LOCAL_LABORATORY.getSystem(), item.getCode(),
-			item.getName()));
+		ret.addCoding(new Coding(CodingSystem.ELEXIS_LOCAL_LABORATORY.getSystem(), item.getCode(), item.getName()));
 		ret.addCoding(new Coding(CodingSystem.ELEXIS_LOCAL_LABORATORY_GROUP.getSystem(),
-			item.getGroup() + "/" + item.getPriority(), item.getGroup()));
+				item.getGroup() + "/" + item.getPriority(), item.getGroup()));
 		return ret;
 	}
 
-	public List<Annotation> getNote(ILabResult localObject){
+	public List<Annotation> getNote(ILabResult localObject) {
 		if (!isLongText(localObject)) {
 			Annotation annotation = new Annotation();
 			annotation.setText(localObject.getComment());

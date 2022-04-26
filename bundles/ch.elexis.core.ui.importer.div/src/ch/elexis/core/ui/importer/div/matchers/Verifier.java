@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.matchers;
 
@@ -30,21 +30,20 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Kontakt;
 
 public class Verifier {
-	
-	public static Kontakt verify(Kontakt k, String t, String m){
+
+	public static Kontakt verify(Kontakt k, String t, String m) {
 		if (SWTHelper.askYesNo(t, m)) {
 			return k;
 		}
-		KontaktSelektor ksl =
-			new KontaktSelektor(Hub.getActiveShell(), k.getClass(), t,
+		KontaktSelektor ksl = new KontaktSelektor(Hub.getActiveShell(), k.getClass(), t,
 				Messages.Verifier_PleaseSelectCorrectContact, Kontakt.DEFAULT_SORT);
 		if (ksl.open() == Dialog.OK) {
 			return (Kontakt) ksl.getSelection();
 		}
 		return null;
 	}
-	
-	public static Kontakt resolveAmbiguity(List<Kontakt> list, String t, String m){
+
+	public static Kontakt resolveAmbiguity(List<Kontakt> list, String t, String m) {
 		Resolver resolver = new Resolver(Hub.getActiveShell(), list);
 		resolver.setTitle(t);
 		resolver.setMessage(m);
@@ -54,19 +53,19 @@ public class Verifier {
 			return null;
 		}
 	}
-	
+
 	static class Resolver extends TitleAreaDialog {
 		List<Kontakt> list;
 		Kontakt result;
 		Table table;
-		
-		public Resolver(Shell shell, List<Kontakt> kont){
+
+		public Resolver(Shell shell, List<Kontakt> kont) {
 			super(shell);
 			list = kont;
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			parent.setLayout(new FillLayout());
 			table = new Table(parent, SWT.NONE);
 			TableColumn c1 = new TableColumn(table, SWT.NONE);
@@ -82,14 +81,14 @@ public class Verifier {
 			}
 			return table;
 		}
-		
+
 		@Override
-		public void create(){
+		public void create() {
 			super.create();
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			int ix = table.getSelectionIndex();
 			if (ix != -1) {
 				result = list.get(ix);
@@ -98,6 +97,6 @@ public class Verifier {
 			}
 			super.okPressed();
 		}
-		
+
 	}
 }

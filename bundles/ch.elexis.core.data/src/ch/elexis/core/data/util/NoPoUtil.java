@@ -18,49 +18,49 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectFactory;
 
 /**
- * Utility class for compatibility between the Elexis persistence implementations
- * {@link PersistentObject} and JPA based {@link Identifiable}.
- * 
+ * Utility class for compatibility between the Elexis persistence
+ * implementations {@link PersistentObject} and JPA based {@link Identifiable}.
+ *
  * @author thomas
  *
  */
 public class NoPoUtil {
-	
+
 	private static PersistentObjectFactory poFactory = new PersistentObjectFactory();
-	
+
 	/**
-	 * Load {@link PersistentObject} implementation for the provided {@link Identifiable} using the
-	 * {@link PersistentObjectFactory} and the {@link IStoreToStringService}.
-	 * 
+	 * Load {@link PersistentObject} implementation for the provided
+	 * {@link Identifiable} using the {@link PersistentObjectFactory} and the
+	 * {@link IStoreToStringService}.
+	 *
 	 * @param identifiable
 	 * @return
 	 */
-	public static PersistentObject loadAsPersistentObject(Identifiable identifiable){
+	public static PersistentObject loadAsPersistentObject(Identifiable identifiable) {
 		if (identifiable != null) {
-			Optional<String> storeToString =
-				StoreToStringServiceHolder.get().storeToString(identifiable);
+			Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(identifiable);
 			if (storeToString.isPresent()) {
 				PersistentObject ret = poFactory.createFromString(storeToString.get());
 				if (ret != null) {
 					return ret;
 				}
 			}
-			throw new IllegalStateException("Could not load [" + identifiable + "] ["
-				+ storeToString.orElse("?") + "] as PersistentObject");
+			throw new IllegalStateException(
+					"Could not load [" + identifiable + "] [" + storeToString.orElse("?") + "] as PersistentObject");
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Load {@link PersistentObject} implementations for the provided {@link Identifiable}s using
-	 * the {@link PersistentObjectFactory} and the {@link IStoreToStringService}.
-	 * 
+	 * Load {@link PersistentObject} implementations for the provided
+	 * {@link Identifiable}s using the {@link PersistentObjectFactory} and the
+	 * {@link IStoreToStringService}.
+	 *
 	 * @param identifiable
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> loadAsPersistentObject(List<Identifiable> identifiables,
-		Class<T> type){
+	public static <T> List<T> loadAsPersistentObject(List<Identifiable> identifiables, Class<T> type) {
 		if (identifiables != null && !identifiables.isEmpty()) {
 			List<T> ret = new ArrayList<>();
 			for (Identifiable identifiable : identifiables) {
@@ -70,16 +70,17 @@ public class NoPoUtil {
 		}
 		return Collections.emptyList();
 	}
-	
+
 	/**
-	 * Load {@link PersistentObject} implementations for the provided {@link Identifiable}s using
-	 * the {@link PersistentObjectFactory} and the {@link IStoreToStringService}.
-	 * 
+	 * Load {@link PersistentObject} implementations for the provided
+	 * {@link Identifiable}s using the {@link PersistentObjectFactory} and the
+	 * {@link IStoreToStringService}.
+	 *
 	 * @param identifiable
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T[] loadAsPersistentObject(Identifiable[] identifiables, Class<T> type){
+	public static <T> T[] loadAsPersistentObject(Identifiable[] identifiables, Class<T> type) {
 		if (identifiables != null && identifiables.length > 0) {
 			T[] ret = (T[]) Array.newInstance(type, identifiables.length);
 			for (int i = 0; i < identifiables.length; i++) {
@@ -89,50 +90,49 @@ public class NoPoUtil {
 		}
 		return (T[]) Array.newInstance(type, 0);
 	}
-	
+
 	/**
-	 * Load {@link Identifiable} implementations for the provided {@link PersistentObject}s using
-	 * the core {@link IModelService} and fallback to {@link IStoreToStringService}.
-	 * 
+	 * Load {@link Identifiable} implementations for the provided
+	 * {@link PersistentObject}s using the core {@link IModelService} and fallback
+	 * to {@link IStoreToStringService}.
+	 *
 	 * @param <T>
 	 * @param persistentObjects
 	 * @param type
 	 * @return
 	 */
-	public static <T> List<T> loadAsIdentifiable(List<? extends PersistentObject> persistentObjects,
-		Class<T> type){
+	public static <T> List<T> loadAsIdentifiable(List<? extends PersistentObject> persistentObjects, Class<T> type) {
 		if (persistentObjects != null && !persistentObjects.isEmpty()) {
 			List<T> ret = new ArrayList<>();
 			for (PersistentObject persistentObject : persistentObjects) {
-				loadAsIdentifiable(persistentObject, type)
-					.ifPresent(identifiable -> {
-						ret.add(identifiable);
-					});
+				loadAsIdentifiable(persistentObject, type).ifPresent(identifiable -> {
+					ret.add(identifiable);
+				});
 			}
 			return ret;
 		}
 		return Collections.emptyList();
 	}
-	
+
 	/**
-	 * Load {@link Identifiable} implementation for the provided {@link PersistentObject} using the
-	 * core {@link IModelService} and fallback to {@link IStoreToStringService}.
-	 * 
+	 * Load {@link Identifiable} implementation for the provided
+	 * {@link PersistentObject} using the core {@link IModelService} and fallback to
+	 * {@link IStoreToStringService}.
+	 *
 	 * @param <T>
 	 * @param persistentObject
 	 * @param type
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Optional<T> loadAsIdentifiable(PersistentObject persistentObject,
-		Class<T> type){
+	public static <T> Optional<T> loadAsIdentifiable(PersistentObject persistentObject, Class<T> type) {
 		if (persistentObject != null) {
 			Optional<T> loaded = CoreModelServiceHolder.get().load(persistentObject.getId(), type);
 			if (loaded.isPresent()) {
 				return loaded;
 			} else {
 				loaded = (Optional<T>) StoreToStringServiceHolder.get()
-					.loadFromString(persistentObject.storeToString());
+						.loadFromString(persistentObject.storeToString());
 				if (loaded.isPresent()) {
 					return loaded;
 				}
@@ -140,15 +140,15 @@ public class NoPoUtil {
 		}
 		return Optional.empty();
 	}
-	
+
 	/**
 	 * Get a database search String for a Elexis date database value. <br />
 	 * Used for S:D: mapped values in Query#add, copied and slightly adapted.
-	 * 
+	 *
 	 * @param value
 	 * @return
 	 */
-	public static String getElexisDateSearchString(String value){
+	public static String getElexisDateSearchString(String value) {
 		StringBuilder sb = null;
 		String ret = value.replaceAll("%", "");
 		final String filler = "%%%%%%%%";

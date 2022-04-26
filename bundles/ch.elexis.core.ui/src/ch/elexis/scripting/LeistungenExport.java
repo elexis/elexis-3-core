@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -43,10 +43,10 @@ public class LeistungenExport {
 		Double costPhysio;
 		Double costOther;
 	}
-	
+
 	private HashMap<String, patums> patienten = new HashMap<String, LeistungenExport.patums>();
-	
-	public String doExport(String from, String until, String toDir){
+
+	public String doExport(String from, String until, String toDir) {
 		TimeTool ttFrom = new TimeTool();
 		TimeTool ttUntil = new TimeTool();
 		if (!ttFrom.set(from)) {
@@ -76,12 +76,9 @@ public class LeistungenExport {
 			int Migel = 17;
 			int kantonal = 18;
 			int andere = 19;
-			String[] cols =
-				new String[] {
-					"UUID", "PatientID", "FallID", "KonsID", "Datum", "Mandant", "CodesystemName",
-					"CodesystemCode", "Code", "Text", "Kostentraeger", "TarmedAL", "TarmedTL",
-					"Physio", "Labor", "Medikament", "Medical", "MiGEL", "Kantonal", "Andere"
-				};
+			String[] cols = new String[] { "UUID", "PatientID", "FallID", "KonsID", "Datum", "Mandant",
+					"CodesystemName", "CodesystemCode", "Code", "Text", "Kostentraeger", "TarmedAL", "TarmedTL",
+					"Physio", "Labor", "Medikament", "Medical", "MiGEL", "Kantonal", "Andere" };
 			File dir = new File(toDir);
 			if (!dir.exists() || (!dir.isDirectory())) {
 				return dir + " nicht gefunden oder ist kein Verzeichnis.";
@@ -114,8 +111,7 @@ public class LeistungenExport {
 							patienten.put(pat.getId(), pu);
 						}
 						pu.anzahlKons += 1;
-						IEncounter encounter =
-							NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
+						IEncounter encounter = NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
 						Mandant m = k.getMandant();
 						if (m != null) {
 							for (IBilled v : encounter.getBilled()) {
@@ -155,7 +151,7 @@ public class LeistungenExport {
 							}
 						}
 					}
-					
+
 				} // fall!=null
 				out.close();
 			}

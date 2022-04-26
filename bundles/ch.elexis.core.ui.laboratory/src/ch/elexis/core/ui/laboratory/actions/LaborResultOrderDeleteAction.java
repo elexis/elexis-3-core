@@ -18,48 +18,44 @@ import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 
 public class LaborResultOrderDeleteAction extends Action implements IAction {
-	
+
 	private List<?> selectedOrdersOrResults;
 	private final Shell shell;
 	private final StructuredViewer viewer;
-	
-	public LaborResultOrderDeleteAction(List<?> list, StructuredViewer viewer){
+
+	public LaborResultOrderDeleteAction(List<?> list, StructuredViewer viewer) {
 		super(ch.elexis.core.l10n.Messages.LabResultOrOrderDeleteAction_title);
 		this.selectedOrdersOrResults = list;
 		this.viewer = viewer;
 		this.shell = viewer.getControl().getShell();
 	}
-	
-	public LaborResultOrderDeleteAction(List<?> list, Shell shell){
+
+	public LaborResultOrderDeleteAction(List<?> list, Shell shell) {
 		super(ch.elexis.core.l10n.Messages.LabResultOrOrderDeleteAction_title);
 		this.selectedOrdersOrResults = list;
 		this.viewer = null;
 		this.shell = shell;
 	}
-	
+
 	@Override
-	public void run(){
-		
+	public void run() {
+
 		String[] dialogButtonLabels;
 		if (selectedOrdersOrResults.size() > 1) {
-			dialogButtonLabels = new String[] {
-				IDialogConstants.YES_LABEL, IDialogConstants.YES_TO_ALL_LABEL,
-				IDialogConstants.NO_LABEL, IDialogConstants.NO_TO_ALL_LABEL
-			};
+			dialogButtonLabels = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.YES_TO_ALL_LABEL,
+					IDialogConstants.NO_LABEL, IDialogConstants.NO_TO_ALL_LABEL };
 		} else {
-			dialogButtonLabels = new String[] {
-				IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL
-			};
+			dialogButtonLabels = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL };
 		}
-		
+
 		Boolean persistedDelete = null;
-		
+
 		for (Object object : selectedOrdersOrResults) {
-			
+
 			LabResult result;
 			LabOrder order;
 			Boolean delete = null;
-			
+
 			if (object instanceof LabOrder) {
 				order = (LabOrder) object;
 				result = (LabResult) order.getLabResult();
@@ -72,14 +68,12 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 				order = ((LaborOrderViewerItem) object).getLabOrder();
 			} else {
 				throw new IllegalArgumentException("Unknown list entry type of class " //$NON-NLS-1$
-					+ object.getClass());
+						+ object.getClass());
 			}
-			
+
 			if (persistedDelete == null) {
-				final MessageDialog dialog =
-					new MessageDialog(shell, "Resultat/Verordnung entfernen", null,
-						"Soll das Resultat [" + result
-							+ "] sowie die zugeh. Verordnung wirklich entfernt werden?",
+				final MessageDialog dialog = new MessageDialog(shell, "Resultat/Verordnung entfernen", null,
+						"Soll das Resultat [" + result + "] sowie die zugeh. Verordnung wirklich entfernt werden?",
 						MessageDialog.CONFIRM, dialogButtonLabels, dialogButtonLabels.length);
 				int open = dialog.open();
 				if (dialogButtonLabels.length == 2) {
@@ -96,17 +90,16 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 					}
 				}
 			}
-			
-			if (Objects.equals(Boolean.TRUE, delete)
-				|| Objects.equals(Boolean.TRUE, persistedDelete)) {
+
+			if (Objects.equals(Boolean.TRUE, delete) || Objects.equals(Boolean.TRUE, persistedDelete)) {
 				AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
 					@Override
-					public void lockFailed(){
+					public void lockFailed() {
 						// do nothing
 					}
-					
+
 					@Override
-					public void lockAcquired(){
+					public void lockAcquired() {
 						if (result != null) {
 							result.delete();
 						}
@@ -116,17 +109,17 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 						if (viewer != null) {
 							viewer.refresh();
 						}
-						
+
 					}
 				});
 				ElexisEventDispatcher.reload(LabResult.class);
 			}
 		}
 	}
-	
+
 	@Override
-	public boolean isEnabled(){
+	public boolean isEnabled() {
 		return selectedOrdersOrResults != null && !selectedOrdersOrResults.isEmpty();
 	}
-	
+
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.util;
@@ -27,28 +27,28 @@ import ch.rgw.tools.TimeTool;
 
 public class DateInput extends Composite {
 	DatePickerCombo dpc;
-	
-	public DateInput(final Composite parent){
+
+	public DateInput(final Composite parent) {
 		super(parent, SWT.NONE);
 		setLayout(new FillLayout());
 		dpc = new DatePickerCombo(this, SWT.BORDER);
 	}
-	
-	public DateInput(final Composite parent, final String label){
+
+	public DateInput(final Composite parent, final String label) {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout());
 		new Label(this, SWT.NONE).setText(label);
 		dpc = new DatePickerCombo(this, SWT.BORDER);
 		dpc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 	}
-	
-	public DateInput(final Composite parent, final String label, final String date){
+
+	public DateInput(final Composite parent, final String label, final String date) {
 		this(parent, label);
 		TimeTool tt = new TimeTool(date);
 		dpc.setDate(tt.getTime());
 	}
-	
-	public TimeTool getDate(){
+
+	public TimeTool getDate() {
 		String t = dpc.getText();
 		if (t.length() == 0) {
 			Date d = dpc.getDate();
@@ -63,12 +63,12 @@ public class DateInput extends Composite {
 			return new TimeTool(t);
 		}
 	}
-	
-	public void setDate(TimeTool date){
+
+	public void setDate(TimeTool date) {
 		dpc.setDate(date.getTime());
 	}
-	
-	public void addSelectionListener(SelectionListener listener){
+
+	public void addSelectionListener(SelectionListener listener) {
 		dpc.addSelectionListener(listener);
 	}
 }

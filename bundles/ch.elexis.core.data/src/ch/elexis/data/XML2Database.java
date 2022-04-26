@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -41,45 +41,44 @@ import ch.rgw.tools.Log;
  * <EAN>7680573770024</EAN> <br>
  * ... other field values <br>
  * </ARTIKEL> <br>
- * 
+ *
  */
 public class XML2Database {
 	// TODO -> to delete?
 	protected static Log log = Log.get(XML2Database.class.getName());
-	
+
 	private final static String HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 	private final static String LIST_TAG = "DATALIST";
 	private final static String UID_TAG = "UID";
 	private final static String UID_VERSION_ATTRIBUTE = "version";
 	private final static String CLASS_ATTRIBUTE = "javaclass";
 	private final static String TEXT_TAG = "#text"; // Tags to ignore
-	
+
 	@SuppressWarnings("unchecked")
-	private HashMap<Class, HashMap<String, List<String>>> cache =
-		new HashMap<Class, HashMap<String, List<String>>>();
-	
+	private HashMap<Class, HashMap<String, List<String>>> cache = new HashMap<Class, HashMap<String, List<String>>>();
+
 	private static class DataField {
 		final String name;
 		final String value;
-		
-		public DataField(String name, String value){
+
+		public DataField(String name, String value) {
 			super();
 			this.name = name;
 			this.value = value;
 		}
 	}
-	
+
 	private static class XMLObject {
 		private PersistentObject object = null;
 		private StringBuffer buffer = new StringBuffer();
 		private final Stack<String> stack = new Stack<String>();
 		private boolean elementOpened = false;
-		
-		private XMLObject(final PersistentObject object){
+
+		private XMLObject(final PersistentObject object) {
 			this.object = object;
 		}
-		
-		private void openElement(final String name){
+
+		private void openElement(final String name) {
 			if (elementOpened) {
 				writeCloseSign(true);
 			}
@@ -88,22 +87,22 @@ public class XML2Database {
 			elementOpened = true;
 			stack.push(name);
 		}
-		
-		private void writeCloseSign(boolean newLine){
+
+		private void writeCloseSign(boolean newLine) {
 			buffer.append(">");
 			if (newLine) {
 				buffer.append("\n");
 			}
 			elementOpened = false;
 		}
-		
-		private void addTab(){
+
+		private void addTab() {
 			for (int i = 0; i < stack.size(); i++) {
 				buffer.append("\t");
 			}
 		}
-		
-		private void closeElement(){
+
+		private void closeElement() {
 			if (elementOpened) {
 				writeCloseSign(true);
 				stack.pop();
@@ -114,41 +113,41 @@ public class XML2Database {
 				}
 			}
 		}
-		
-		private void addAttribute(final String attribute, final String value){
+
+		private void addAttribute(final String attribute, final String value) {
 			if (elementOpened) {
 				buffer.append(" " + attribute + "=\"" + value + "\"");
 			} else {
 				throw new IllegalAddException("");
 			}
 		}
-		
-		private void addValue(final String value){
+
+		private void addValue(final String value) {
 			if (elementOpened) {
 				writeCloseSign(false);
 			}
 			buffer.append(value);
 		}
-		
+
 		/**
 		 * Exports an array
-		 * 
+		 *
 		 * @return
 		 */
-		private String exportData(){
+		private String exportData() {
 			String[] fieldList = object.getExportFields();
 			String[] resultList = new String[fieldList.length];
 			object.get(fieldList, resultList);
-			
+
 			openElement(object.getTableName());
 			addAttribute(CLASS_ATTRIBUTE, object.getClass().getName());
-			
+
 			// Primary key
 			openElement(UID_TAG);
 			addAttribute(UID_VERSION_ATTRIBUTE, object.getExportUIDVersion());
 			addValue(object.getExportUIDValue());
 			closeElement();
-			
+
 			// Fields
 			for (int i = 0; i < fieldList.length; i++) {
 				String name = fieldList[i];
@@ -157,24 +156,24 @@ public class XML2Database {
 				addValue(value);
 				closeElement();
 			}
-			
+
 			closeElement();
-			
+
 			return buffer.toString();
 		}
 	}
-	
+
 	/********************************************************************************
 	 * PRIVATE METHODS
 	 */
-	
+
 	@SuppressWarnings("unchecked")
-	private List<String> getValues(Class javaClass, String uidValue){
+	private List<String> getValues(Class javaClass, String uidValue) {
 		HashMap<String, List<String>> map = cache.get(javaClass);
 		if (map == null) {
 			map = new HashMap<String, List<String>>();
 			cache.put(javaClass, map);
-			
+
 			Query<PersistentObject> query = new Query<PersistentObject>(javaClass);
 			List<PersistentObject> poList = query.execute();
 			for (PersistentObject po : poList) {
@@ -189,23 +188,22 @@ public class XML2Database {
 		}
 		return map.get(uidValue);
 	}
-	
+
 	/**
 	 * Import
-	 * 
+	 *
 	 * @param tableNode
 	 * @param overwrite
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	private void importData(final Node tableNode, final boolean overwrite){
+	private void importData(final Node tableNode, final boolean overwrite) {
 		try {
-			String className =
-				tableNode.getAttributes().getNamedItem(CLASS_ATTRIBUTE).getNodeValue();
+			String className = tableNode.getAttributes().getNamedItem(CLASS_ATTRIBUTE).getNodeValue();
 			Class javaClass = Class.forName(className);
 			String uidValue = null;
 			String uidVersion = "";
-			
+
 			// Read fields
 			List<DataField> fieldList = new Vector<DataField>();
 			NodeList nodeList = tableNode.getChildNodes();
@@ -217,43 +215,39 @@ public class XML2Database {
 						if (fieldNode.getAttributes().getNamedItem(UID_VERSION_ATTRIBUTE) == null) {
 							throw new IllegalArgumentException("No UID export version found!");
 						}
-						uidVersion =
-							fieldNode.getAttributes().getNamedItem(UID_VERSION_ATTRIBUTE)
-								.getNodeValue();
+						uidVersion = fieldNode.getAttributes().getNamedItem(UID_VERSION_ATTRIBUTE).getNodeValue();
 					} else {
-						fieldList.add(new DataField(fieldNode.getNodeName(), fieldNode
-							.getTextContent()));
+						fieldList.add(new DataField(fieldNode.getNodeName(), fieldNode.getTextContent()));
 					}
 				}
 			}
-			
+
 			// Create PersistentObject
 			String[] fields = new String[fieldList.size()];
 			String[] results = new String[fieldList.size()];
-			
+
 			for (int i = 0; i < fieldList.size(); i++) {
 				fields[i] = fieldList.get(i).name;
 				results[i] = fieldList.get(i).value;
 			}
-			
+
 			// Check uidField
 			Constructor<PersistentObject> constructor = javaClass.getDeclaredConstructor();
 			PersistentObject po = constructor.newInstance();
 			if (!uidVersion.equals(po.getExportUIDVersion())) {
 				throw new IllegalArgumentException("UID export versions are different!");
 			}
-			
+
 			// Read values
 			List<String> list = getValues(javaClass, uidValue);
-			
+
 			if (list == null || list.size() == 0) {
 				// Create new
 				po.create(null);
 				po.set(fields, results);
 			} else if (overwrite) {
 				for (String idValue : list) {
-					Constructor<PersistentObject> tmpConstr =
-						javaClass.getDeclaredConstructor(String.class);
+					Constructor<PersistentObject> tmpConstr = javaClass.getDeclaredConstructor(String.class);
 					PersistentObject tmpPo = tmpConstr.newInstance(idValue);
 					System.out.println("Name: " + tmpPo.get("Name"));
 					tmpPo.set(fields, results);
@@ -263,24 +257,24 @@ public class XML2Database {
 			log.log(e.getMessage(), Log.ERRORS);
 		}
 	}
-	
+
 	/**
 	 * Parsing XML Document with SAX
 	 */
-	private Document readXmlDocument(InputSource is, String docDescription) throws SAXException,
-		ParserConfigurationException, java.io.IOException{
+	private Document readXmlDocument(InputSource is, String docDescription)
+			throws SAXException, ParserConfigurationException, java.io.IOException {
 		if (is == null) {
 			return null;
 		}
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		return builder.parse(is);
 	}
-	
+
 	/**
 	 * Imports data into database. <br>
 	 * XML could be a list of data objects or only one data object
 	 */
-	private void importXML(final String xml, final boolean overwrite){
+	private void importXML(final String xml, final boolean overwrite) {
 		try {
 			Document document = readXmlDocument(new InputSource(new StringReader(xml)), "Import");
 			NodeList rootNodeList = document.getChildNodes();
@@ -290,8 +284,7 @@ public class XML2Database {
 					NodeList nodeList = rootNode.getChildNodes();
 					for (int i = 0; i < nodeList.getLength(); i++) {
 						Node tableNode = nodeList.item(i);
-						if (!TEXT_TAG.equals(tableNode.getNodeName())
-							&& tableNode.getAttributes() != null) {
+						if (!TEXT_TAG.equals(tableNode.getNodeName()) && tableNode.getAttributes() != null) {
 							importData(tableNode, overwrite);
 						}
 					}
@@ -310,36 +303,36 @@ public class XML2Database {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/********************************************************************************
 	 * PUBLIC METHODS
 	 */
-	
+
 	/**
 	 * Imports data into database. <br>
 	 * XML could be a list of data objects or only one data object
 	 */
-	public static void importData(final String data, final boolean overwrite){
+	public static void importData(final String data, final boolean overwrite) {
 		new XML2Database().importXML(data, overwrite);
 	}
-	
+
 	/**
 	 * Exports a persistent object
-	 * 
+	 *
 	 * @return
 	 */
-	public static String exportData(final PersistentObject object){
+	public static String exportData(final PersistentObject object) {
 		StringBuffer buffer = new StringBuffer(HEADER);
 		buffer.append(new XMLObject(object).exportData());
 		return buffer.toString();
 	}
-	
+
 	/**
 	 * Exports an array
-	 * 
+	 *
 	 * @return
 	 */
-	public static String exportData(final List<? extends PersistentObject> dataList){
+	public static String exportData(final List<? extends PersistentObject> dataList) {
 		StringBuffer buffer = new StringBuffer(HEADER);
 		buffer.append("<" + LIST_TAG + ">\n");
 		for (PersistentObject object : dataList) {

@@ -17,46 +17,46 @@ public class LocalCoding extends AbstractEntityWithId implements EntityWithId, E
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
+
 	@Column(length = 25)
 	private String code;
 
@@ -68,7 +68,7 @@ public class LocalCoding extends AbstractEntityWithId implements EntityWithId, E
 
 	@Column
 	private int prio;
-	
+
 	public String getCode() {
 		return code;
 	}
@@ -92,12 +92,12 @@ public class LocalCoding extends AbstractEntityWithId implements EntityWithId, E
 	public void setMapped(String mapped) {
 		this.mapped = mapped;
 	}
-	
-	public int getPrio(){
+
+	public int getPrio() {
 		return prio;
 	}
-	
-	public void setPrio(int prio){
+
+	public void setPrio(int prio) {
 		this.prio = prio;
 	}
 }

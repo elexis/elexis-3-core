@@ -13,41 +13,40 @@ import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 
-public class FindingsTemplateSettings extends FieldEditorPreferencePage
-		implements IWorkbenchPreferencePage {
-	
+public class FindingsTemplateSettings extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+
 	private FindingsComposite findingsComposite;
-	
-	public FindingsTemplateSettings(){
+
+	public FindingsTemplateSettings() {
 		super(GRID);
 		setPreferenceStore(new ConfigServicePreferenceStore(Scope.USER));
 	}
-	
+
 	@Override
-	public void init(IWorkbench workbench){
+	public void init(IWorkbench workbench) {
 	}
-	
+
 	@Override
-	protected void adjustGridLayout(){
+	protected void adjustGridLayout() {
 		/** ignore adjusting **/
 	}
-	
+
 	@Override
-	protected void createFieldEditors(){
-		FindingsTemplates model =
-			FindingsServiceHolder.findingsTemplateService.getFindingsTemplates("Standard Vorlagen");
+	protected void createFieldEditors() {
+		FindingsTemplates model = FindingsServiceHolder.findingsTemplateService
+				.getFindingsTemplates("Standard Vorlagen");
 		findingsComposite = new FindingsComposite(getFieldEditorParent(), model);
-		FindingsDetailComposite findingsDetailComposite =
-			new FindingsDetailComposite(getFieldEditorParent(), model, false);
+		FindingsDetailComposite findingsDetailComposite = new FindingsDetailComposite(getFieldEditorParent(), model,
+				false);
 		findingsComposite.setFindingsDetailComposite(findingsDetailComposite);
-		
+
 		findingsComposite.createContents();
 		findingsDetailComposite.createContents();
 		findingsComposite.selectFirstTreeElement();
 	}
-	
+
 	@Override
-	public boolean performOk(){
+	public boolean performOk() {
 		Optional<FindingsTemplates> model = findingsComposite.getModel();
 		FindingsServiceHolder.findingsTemplateService.saveFindingsTemplates(model);
 		if (model.isPresent()) {
@@ -55,5 +54,5 @@ public class FindingsTemplateSettings extends FieldEditorPreferencePage
 		}
 		return true;
 	}
-	
+
 }

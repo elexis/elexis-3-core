@@ -11,11 +11,10 @@ import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 
 public class DeleteTaskDescriptorHandler {
-	
+
 	@Execute
-	public void execute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION)
-	ITaskDescriptor taskDescriptor){
+	public void execute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) ITaskDescriptor taskDescriptor) {
 		TaskModelServiceHolder.get().delete(taskDescriptor);
 	}
-	
+
 }

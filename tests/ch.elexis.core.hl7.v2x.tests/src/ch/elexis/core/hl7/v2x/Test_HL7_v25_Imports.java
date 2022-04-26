@@ -28,32 +28,32 @@ import ch.elexis.hl7.model.ObservationMessage;
 import ch.elexis.hl7.v2x.HL7ReaderV25;
 
 public class Test_HL7_v25_Imports {
-	
+
 	private static DummyPatientResolver resolver;
-	
+
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception{
-		IPatient dummyPatient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(),
-			"Rick", "Pickle", LocalDate.of(1969, 6, 19), Gender.MALE).buildAndSave();
+	public static void setUpBeforeClass() throws Exception {
+		IPatient dummyPatient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Rick", "Pickle",
+				LocalDate.of(1969, 6, 19), Gender.MALE).buildAndSave();
 		resolver = new DummyPatientResolver(dummyPatient);
 	}
-	
+
 	@Test
-	public void testORU_R01_10655() throws IOException, ElexisException{
+	public void testORU_R01_10655() throws IOException, ElexisException {
 		File importFile = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
-			"rsc/v25/0218040634_6467538389964.hl7");
-		
+				"rsc/v25/0218040634_6467538389964.hl7");
+
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(importFile);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
 		HL7Reader reader = hl7Readers.get(0);
 		assertEquals(HL7ReaderV25.class, reader.getClass());
-		
+
 		ObservationMessage observationMsg = reader.readObservation(resolver, false);
 		List<IValueType> observations = observationMsg.getObservations();
 		System.out.println("Observations [" + observations.size() + "]");
 		assertEquals(5, observations.size());
-		
+
 		LabResultData lrd = (LabResultData) observations.get(1);
 		assertEquals("VAGINA-ABSTRICH - Grampräparat", lrd.getName());
 		assertEquals("GRAM", lrd.getCode());
@@ -65,7 +65,7 @@ public class Test_HL7_v25_Imports {
 		assertNull(lrd.getUnit());
 		assertEquals("", lrd.getGroup());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
-		
+
 		lrd = (LabResultData) observations.get(2);
 		assertEquals("VAGINA-ABSTRICH - Kultur aerob", lrd.getName());
 		assertEquals("KULA", lrd.getCode());
@@ -75,7 +75,7 @@ public class Test_HL7_v25_Imports {
 		assertNull(lrd.getRange());
 		assertNull(lrd.getUnit());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
-		
+
 		lrd = (LabResultData) observations.get(4);
 		assertEquals("VAGINA-ABSTRICH - Chlamydia trachomatis PCR", lrd.getName());
 		assertEquals("CHLATP", lrd.getCode());
@@ -86,23 +86,23 @@ public class Test_HL7_v25_Imports {
 		assertNull(lrd.getUnit());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
 	}
-	
+
 	@Test
-	public void testORU_R01_10655_2() throws IOException, ElexisException{
+	public void testORU_R01_10655_2() throws IOException, ElexisException {
 		File importFile = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
-			"rsc/v25/0218040388_6467233598199.hl7");
-		
+				"rsc/v25/0218040388_6467233598199.hl7");
+
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(importFile);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
 		HL7Reader reader = hl7Readers.get(0);
 		assertEquals(HL7ReaderV25.class, reader.getClass());
-		
+
 		ObservationMessage observationMsg = reader.readObservation(resolver, false);
 		List<IValueType> observations = observationMsg.getObservations();
 		System.out.println("Observations [" + observations.size() + "]");
 		assertEquals(2, observations.size());
-		
+
 		LabResultData lrd = (LabResultData) observations.get(1);
 		assertEquals("STUHL - Helicobacter pylori  (Ag-Nachweis)", lrd.getName());
 		assertEquals("HELP", lrd.getCode());
@@ -113,21 +113,21 @@ public class Test_HL7_v25_Imports {
 		assertNull(lrd.getUnit());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
 	}
-	
+
 	@Test
-	public void testLabItemName_11507() throws IOException, ElexisException{
+	public void testLabItemName_11507() throws IOException, ElexisException {
 		File importFile = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
-			"rsc/Analytica/HBA1.hl7");
+				"rsc/Analytica/HBA1.hl7");
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(importFile);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
 		HL7Reader reader = hl7Readers.get(0);
 		assertEquals(HL7ReaderV25.class, reader.getClass());
-		
+
 		ObservationMessage observationMsg = reader.readObservation(resolver, false);
 		List<IValueType> observations = observationMsg.getObservations();
 		assertEquals(1, observations.size());
-		
+
 		LabResultData lrd = (LabResultData) observations.get(0);
 		assertEquals("HbA1c", lrd.getName());
 		assertEquals("HBA1", lrd.getCode());
@@ -138,21 +138,21 @@ public class Test_HL7_v25_Imports {
 		assertEquals("%", lrd.getUnit());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
 	}
-	
+
 	@Test
-	public void testLabItemName_11507_2() throws IOException, ElexisException{
+	public void testLabItemName_11507_2() throws IOException, ElexisException {
 		File importFile = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
-			"rsc/Analytica/Ferritin.hl7");
+				"rsc/Analytica/Ferritin.hl7");
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(importFile);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
 		HL7Reader reader = hl7Readers.get(0);
 		assertEquals(HL7ReaderV25.class, reader.getClass());
-		
+
 		ObservationMessage observationMsg = reader.readObservation(resolver, false);
 		List<IValueType> observations = observationMsg.getObservations();
 		assertEquals(3, observations.size());
-		
+
 		boolean found = false;
 		for (IValueType iValueType : observations) {
 			LabResultData lrd = (LabResultData) iValueType;
@@ -168,6 +168,6 @@ public class Test_HL7_v25_Imports {
 			}
 		}
 		assertTrue(found);
-		
+
 	}
 }

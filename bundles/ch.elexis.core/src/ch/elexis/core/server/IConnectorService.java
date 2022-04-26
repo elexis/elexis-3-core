@@ -16,11 +16,11 @@ public interface IConnectorService {
 	@GET
 	@Path("/connection")
 	public DBConnection getElexisDBConnection();
-	
+
 	@PUT
 	@Path("/connection")
 	public Response setElexisDBConnection(DBConnection dbConnection);
-	
+
 	@GET
 	@Path("/connection/status")
 	public Response getDBInformation();

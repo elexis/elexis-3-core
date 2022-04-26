@@ -22,28 +22,28 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 
 @Component(property = EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE + "*")
 public class SysEventWatcher implements EventHandler {
-	
+
 	private static Map<String, Set<ITaskDescriptor>> incurred;
-	
+
 	@Reference
 	private ITaskService taskService;
-	
+
 	static {
 		incurred = new HashMap<>();
 	}
-	
-	public void incur(ITaskDescriptor taskDescriptor) throws TaskException{
+
+	public void incur(ITaskDescriptor taskDescriptor) throws TaskException {
 		String topic = fetchTopic(taskDescriptor);
 		String clazz = fetchClass(taskDescriptor);
 		if (!StringUtils.startsWith(topic, ElexisEventTopics.BASE)) {
 			throw new TaskException(TaskException.TRIGGER_REGISTER_ERROR,
-				"Invalid topic, must start with [" + ElexisEventTopics.BASE + "]");
+					"Invalid topic, must start with [" + ElexisEventTopics.BASE + "]");
 		}
 		registerInMap(topic, clazz, taskDescriptor);
-		
+
 	}
-	
-	private void registerInMap(String topic, String clazz, ITaskDescriptor taskDescriptor){
+
+	private void registerInMap(String topic, String clazz, ITaskDescriptor taskDescriptor) {
 		synchronized (incurred) {
 			Set<ITaskDescriptor> topicTds = incurred.get(topic + "_" + clazz);
 			if (topicTds == null) {
@@ -53,8 +53,8 @@ public class SysEventWatcher implements EventHandler {
 			incurred.put(topic + "_" + clazz, topicTds);
 		}
 	}
-	
-	public void release(ITaskDescriptor taskDescriptor){
+
+	public void release(ITaskDescriptor taskDescriptor) {
 		String topic = fetchTopic(taskDescriptor);
 		String clazz = fetchTopic(taskDescriptor);
 		synchronized (incurred) {
@@ -65,39 +65,38 @@ public class SysEventWatcher implements EventHandler {
 			incurred.put(topic + "_" + clazz, topicTds);
 		}
 	}
-	
-	private String fetchTopic(ITaskDescriptor taskDescriptor){
+
+	private String fetchTopic(ITaskDescriptor taskDescriptor) {
 		Map<String, String> triggerParameters = taskDescriptor.getTriggerParameters();
 		return triggerParameters.get("topic");
 	}
-	
-	private String fetchClass(ITaskDescriptor taskDescriptor){
+
+	private String fetchClass(ITaskDescriptor taskDescriptor) {
 		Map<String, String> triggerParameters = taskDescriptor.getTriggerParameters();
 		return triggerParameters.get(ElexisEventTopics.PROPKEY_CLASS);
 	}
-	
+
 	@Override
-	public void handleEvent(Event event){
+	public void handleEvent(Event event) {
 		String topic = event.getTopic();
 		String clazz = (String) event.getProperty(ElexisEventTopics.PROPKEY_CLASS);
 		// TODO event origin, is this task descriptor handling all or only self?
-		
+
 		Set<ITaskDescriptor> set = incurred.get(topic + "_" + clazz);
 		if (set != null) {
 			for (ITaskDescriptor taskDescriptor : set) {
 				try {
 					Map<String, String> runContext = new HashMap<>();
 					runContext.put(RunContextParameter.IDENTIFIABLE_ID,
-						(String) event.getProperty(ElexisEventTopics.PROPKEY_ID));
-					
-					taskService.trigger(taskDescriptor, null, TaskTriggerType.SYSTEM_EVENT,
-						runContext);
+							(String) event.getProperty(ElexisEventTopics.PROPKEY_ID));
+
+					taskService.trigger(taskDescriptor, null, TaskTriggerType.SYSTEM_EVENT, runContext);
 				} catch (TaskException e) {
 					LoggerFactory.getLogger(getClass().getName() + "_" + taskDescriptor.getId())
-						.warn("Error triggering taskDescriptor", e);
+							.warn("Error triggering taskDescriptor", e);
 				}
 			}
 		}
 	}
-	
+
 }

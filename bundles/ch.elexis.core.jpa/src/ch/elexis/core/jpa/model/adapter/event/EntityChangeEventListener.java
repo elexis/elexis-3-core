@@ -15,38 +15,36 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 
-@Component(service = {
-	EventHandler.class, EntityChangeEventListener.class
-}, property = EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.PERSISTENCE_EVENT_ENTITYCHANGED)
+@Component(service = { EventHandler.class, EntityChangeEventListener.class }, property = EventConstants.EVENT_TOPIC
+		+ "=" + ElexisEventTopics.PERSISTENCE_EVENT_ENTITYCHANGED)
 public class EntityChangeEventListener implements EventHandler {
-	
+
 	private WeakHashMap<EntityWithId, List<WeakReference<AbstractIdModelAdapter<?>>>> listenerMap;
-	
-	public EntityChangeEventListener(){
-		listenerMap =
-			new WeakHashMap<EntityWithId, List<WeakReference<AbstractIdModelAdapter<?>>>>();
+
+	public EntityChangeEventListener() {
+		listenerMap = new WeakHashMap<EntityWithId, List<WeakReference<AbstractIdModelAdapter<?>>>>();
 	}
-	
+
 	private int addCount;
-	
-	public void add(AbstractIdModelAdapter<?> adapter){
+
+	public void add(AbstractIdModelAdapter<?> adapter) {
 		synchronized (listenerMap) {
 			EntityWithId entity = adapter.getEntity();
 			List<WeakReference<AbstractIdModelAdapter<?>>> listeners = getListenersFor(entity);
-			
+
 			listeners.add(new WeakReference<AbstractIdModelAdapter<?>>(adapter));
 			listenerMap.put(entity, listeners);
-			
+
 			if (addCount++ > 25000) {
 				if (listenerMap.size() > 25000) {
-					cleanup();					
+					cleanup();
 				}
 				addCount = 0;
 			}
 		}
 	}
-	
-	private void cleanup(){
+
+	private void cleanup() {
 		Iterator<EntityWithId> entitiesIter = listenerMap.keySet().iterator();
 		while (entitiesIter.hasNext()) {
 			EntityWithId entity = entitiesIter.next();
@@ -66,21 +64,21 @@ public class EntityChangeEventListener implements EventHandler {
 			}
 		}
 	}
-	
-	private List<WeakReference<AbstractIdModelAdapter<?>>> getListenersFor(EntityWithId entity){
+
+	private List<WeakReference<AbstractIdModelAdapter<?>>> getListenersFor(EntityWithId entity) {
 		List<WeakReference<AbstractIdModelAdapter<?>>> listeners = listenerMap.get(entity);
 		if (listeners == null) {
 			listeners = new ArrayList<WeakReference<AbstractIdModelAdapter<?>>>();
 		}
 		return listeners;
 	}
-	
+
 	@Override
-	public void handleEvent(Event event){
+	public void handleEvent(Event event) {
 		EntityWithId entity = (EntityWithId) event.getProperty(EntityWithId.class.getName());
 		synchronized (listenerMap) {
 			List<WeakReference<AbstractIdModelAdapter<?>>> listeners = getListenersFor(entity);
-			
+
 			Iterator<WeakReference<AbstractIdModelAdapter<?>>> iter = listeners.iterator();
 			while (iter.hasNext()) {
 				WeakReference<AbstractIdModelAdapter<?>> reference = iter.next();

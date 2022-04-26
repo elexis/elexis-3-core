@@ -39,20 +39,20 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	private boolean billable = true;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "FallID")
 	private Fall fall;
@@ -70,11 +70,11 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 
 	@Column(length = 6, name = "Zeit")
 	private String time;
-	
+
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "behdl_dg_joint", joinColumns = @JoinColumn(name = "BehandlungsID"), inverseJoinColumns = @JoinColumn(name = "DiagnoseID"))
 	private List<Diagnosis> diagnoses;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "behandlung", cascade = CascadeType.REFRESH)
 	@OrderBy("klasse ASC, leistungenCode ASC")
 	private List<Verrechnet> billed;
@@ -118,14 +118,14 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 		this.datum = datum;
 	}
 
-	public List<Diagnosis> getDiagnoses(){
+	public List<Diagnosis> getDiagnoses() {
 		if (diagnoses == null) {
 			diagnoses = new ArrayList<>();
 		}
 		return diagnoses;
 	}
-	
-	public List<Verrechnet> getBilled(){
+
+	public List<Verrechnet> getBilled() {
 		if (billed == null) {
 			billed = new ArrayList<>();
 		}
@@ -144,49 +144,49 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	}
 
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
-	public boolean getBillable(){
+
+	public boolean getBillable() {
 		return billable;
 	}
-	
-	public void setBillable(boolean value){
+
+	public void setBillable(boolean value) {
 		this.billable = value;
 	}
 
-	public String getTime(){
+	public String getTime() {
 		return time;
 	}
-	
-	public void setTime(String time){
+
+	public void setTime(String time) {
 		this.time = time;
 	}
-	
+
 }

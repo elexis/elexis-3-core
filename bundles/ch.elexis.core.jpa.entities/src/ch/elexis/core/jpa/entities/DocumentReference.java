@@ -14,7 +14,6 @@ import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
-
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE")
 @EntityListeners(EntityWithIdListener.class)
@@ -24,52 +23,52 @@ public class DocumentReference extends AbstractEntityWithId implements EntityWit
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Column(length = 80)
 	private String authorId;
-	
+
 	@Column(length = 512)
 	private String keywords;
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
+
 	@Column(length = 80)
 	private String patientid;
 
@@ -78,7 +77,7 @@ public class DocumentReference extends AbstractEntityWithId implements EntityWit
 
 	@Column(length = 80)
 	private String documentid;
-	
+
 	@Lob
 	private String content;
 
@@ -90,19 +89,19 @@ public class DocumentReference extends AbstractEntityWithId implements EntityWit
 		this.patientid = patientId;
 	}
 
-	public String getDocumentStoreId(){
+	public String getDocumentStoreId() {
 		return documentstoreid;
 	}
 
-	public void setDocumentStoreId(String documentstoreid){
+	public void setDocumentStoreId(String documentstoreid) {
 		this.documentstoreid = documentstoreid;
 	}
 
-	public String getDocumentId(){
+	public String getDocumentId() {
 		return documentid;
 	}
 
-	public void setDocumentId(String documentid){
+	public void setDocumentId(String documentid) {
 		this.documentid = documentid;
 	}
 
@@ -113,20 +112,20 @@ public class DocumentReference extends AbstractEntityWithId implements EntityWit
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	public void setAuthorId(String authorId){
+
+	public void setAuthorId(String authorId) {
 		this.authorId = authorId;
 	}
-	
-	public String getAuthorId(){
+
+	public String getAuthorId() {
 		return authorId;
 	}
-	
-	public void setKeywords(String keywords){
+
+	public void setKeywords(String keywords) {
 		this.keywords = keywords;
 	}
-	
-	public String getKeywords(){
+
+	public String getKeywords() {
 		return keywords;
 	}
 }

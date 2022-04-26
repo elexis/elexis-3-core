@@ -16,24 +16,24 @@ import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.data.Patient;
 
 public class DynamicDataProvider implements IDataProvider {
-	
+
 	private List<IFinding> currentFindings;
-	
+
 	private List<ICoding> shownCodings;
 	private List<LocalDate> shownDates;
 	private HashMap<LocalDate, List<IFinding>[]> shownFindings;
-	
+
 	private boolean rowsAreDates;
-	
-	public DynamicDataProvider(){
+
+	public DynamicDataProvider() {
 		currentFindings = new ArrayList<>();
 		shownFindings = new HashMap<>();
 		shownDates = new ArrayList<>();
 		shownCodings = new ArrayList<>();
 	}
-	
+
 	@Override
-	public Object getDataValue(int columnIndex, int rowIndex){
+	public Object getDataValue(int columnIndex, int rowIndex) {
 		if (rowsAreDates) {
 			if (columnIndex >= 0 && rowIndex >= 0 && rowIndex < shownDates.size()) {
 				List<IFinding>[] findings = shownFindings.get(shownDates.get(rowIndex));
@@ -55,31 +55,31 @@ public class DynamicDataProvider implements IDataProvider {
 		}
 		return null;
 	}
-	
+
 	@Override
-	public int getRowCount(){
+	public int getRowCount() {
 		if (rowsAreDates) {
 			return shownDates.size();
 		} else {
 			return shownCodings.size();
 		}
 	}
-	
+
 	@Override
-	public void setDataValue(int columnIndex, int rowIndex, Object newValue){
+	public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
 		// ignore, no edit here ...
 	}
-	
+
 	@Override
-	public int getColumnCount(){
+	public int getColumnCount() {
 		if (rowsAreDates) {
 			return shownCodings.size();
 		} else {
 			return shownFindings.size();
 		}
 	}
-	
-	public void reload(Patient selectedPatient){
+
+	public void reload(Patient selectedPatient) {
 		if (selectedPatient == null) {
 			currentFindings.clear();
 		} else {
@@ -87,43 +87,42 @@ public class DynamicDataProvider implements IDataProvider {
 		}
 		updateShownFindings();
 	}
-	
-	public List<IFinding> getFindings(Patient patient){
+
+	public List<IFinding> getFindings(Patient patient) {
 		List<IFinding> ret = new ArrayList<>();
 		if (patient != null && patient.exists()) {
 			String patientId = patient.getId();
 			ret.addAll(getObservations(patientId));
-			/*	TODO currently only observations needed
+			/*
+			 * TODO currently only observations needed
 			 * items.addAll(getConditions(patientId));
-				items.addAll(getClinicalImpressions(patientId));
-				items.addAll(getPrecedureRequest(patientId));
-				*/
+			 * items.addAll(getClinicalImpressions(patientId));
+			 * items.addAll(getPrecedureRequest(patientId));
+			 */
 		}
 		return ret;
 	}
-	
-	private List<IObservation> getObservations(String patientId){
-		return FindingsServiceComponent.getService().getPatientsFindings(patientId,
-			IObservation.class);
+
+	private List<IObservation> getObservations(String patientId) {
+		return FindingsServiceComponent.getService().getPatientsFindings(patientId, IObservation.class);
 	}
-	
-	public void setShownCodings(List<ICoding> showCodings){
+
+	public void setShownCodings(List<ICoding> showCodings) {
 		this.shownCodings = showCodings;
 		updateShownFindings();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private void updateShownFindings(){
+	private void updateShownFindings() {
 		shownFindings.clear();
 		shownDates.clear();
-		
+
 		for (IFinding iFinding : currentFindings) {
 			if (iFinding instanceof IObservation) {
 				IObservation iObservation = (IObservation) iFinding;
 				int index = getCodingIndex(iObservation);
 				if (index != -1) {
-					LocalDate date =
-						iObservation.getEffectiveTime().orElse(LocalDateTime.MIN).toLocalDate();
+					LocalDate date = iObservation.getEffectiveTime().orElse(LocalDateTime.MIN).toLocalDate();
 					List<IFinding>[] findings = shownFindings.get(date);
 					if (findings == null) {
 						findings = (List<IFinding>[]) new List[shownCodings.size()];
@@ -140,8 +139,8 @@ public class DynamicDataProvider implements IDataProvider {
 		Collections.sort(shownDates);
 		Collections.reverse(shownDates);
 	}
-	
-	private int getCodingIndex(IObservation iObservation){
+
+	private int getCodingIndex(IObservation iObservation) {
 		for (ICoding iCoding : iObservation.getCoding()) {
 			for (int i = 0; i < shownCodings.size(); i++) {
 				if (shownCodings.get(i).getCode().equals(iCoding.getCode())) {
@@ -151,20 +150,20 @@ public class DynamicDataProvider implements IDataProvider {
 		}
 		return -1;
 	}
-	
-	public List<LocalDate> getShownDates(){
+
+	public List<LocalDate> getShownDates() {
 		return shownDates;
 	}
-	
-	public List<ICoding> getShownCodings(){
+
+	public List<ICoding> getShownCodings() {
 		return shownCodings;
 	}
-	
-	public void setRowsAreDates(boolean value){
+
+	public void setRowsAreDates(boolean value) {
 		this.rowsAreDates = value;
 	}
-	
-	public boolean isRowsAreDates(){
+
+	public boolean isRowsAreDates() {
 		return this.rowsAreDates;
 	}
 }

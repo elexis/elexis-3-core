@@ -67,7 +67,7 @@ import ch.rgw.tools.ExHandler;
 
 public class TextTemplateView extends ViewPart {
 	public static final String ID = "ch.elexis.views.textsystem.TextTemplateView"; //$NON-NLS-1$
-	
+
 	private ITextPlugin plugin = null;
 	private TableColumnLayout tableLayout;
 	private Table table;
@@ -77,102 +77,98 @@ public class TextTemplateView extends ViewPart {
 	private TextTemplateViewerComparator comparator;
 	private List<TextTemplate> templates;
 	private List<TextTemplate> requiredTemplates;
-	
-	private ElexisUiEventListenerImpl reloadListener =
-		new ElexisUiEventListenerImpl(Brief.class, ElexisEvent.EVENT_RELOAD) {
-			@Override
-			public void runInUi(ElexisEvent ev){
-				refresh();
-			}
-		};
-	
-	public TextTemplateView(){
+
+	private ElexisUiEventListenerImpl reloadListener = new ElexisUiEventListenerImpl(Brief.class,
+			ElexisEvent.EVENT_RELOAD) {
+		@Override
+		public void runInUi(ElexisEvent ev) {
+			refresh();
+		}
+	};
+
+	public TextTemplateView() {
 		initActiveTextPlugin();
 		loadRequiredAndExistingTemplates();
-		
+
 		ElexisEventDispatcher.getInstance().addListeners(reloadListener);
 	}
-	
-	private void loadRequiredAndExistingTemplates(){
+
+	private void loadRequiredAndExistingTemplates() {
 		requiredTemplates = new ArrayList<TextTemplate>();
 		if (plugin == null) {
 			return;
 		}
-		
+
 		// load required text templates
-		List<ITextTemplateRequirement> requirements =
-			Extensions.getClasses(ExtensionPointConstantsUi.TEXT_TEMPLATE_REQUIREMENT, "element");
+		List<ITextTemplateRequirement> requirements = Extensions
+				.getClasses(ExtensionPointConstantsUi.TEXT_TEMPLATE_REQUIREMENT, "element");
 		for (ITextTemplateRequirement txtTemplateReq : requirements) {
 			String[] names = txtTemplateReq.getNamesOfRequiredTextTemplate();
 			String[] descriptions = txtTemplateReq.getDescriptionsOfRequiredTextTemplate();
-			
+
 			for (int i = 0; i < names.length; i++) {
-				TextTemplate tt =
-					new TextTemplate(names[i], descriptions[i], plugin.getMimeType(), true);
+				TextTemplate tt = new TextTemplate(names[i], descriptions[i], plugin.getMimeType(), true);
 				requiredTemplates.add(tt);
 			}
 		}
 		refresh();
 	}
-	
+
 	/**
-	 * adds a reference to a texttemplate required from the system or creates a form template entry
-	 * 
-	 * @param txtTemplates
-	 *            required templates
-	 * @param template
-	 *            template from the database to evaluate
-	 * @return a {@link TextTemplate} if a formTemplate was added or null if a {@link Brief}
-	 *         template was added as reference for a requirement
+	 * adds a reference to a texttemplate required from the system or creates a form
+	 * template entry
+	 *
+	 * @param txtTemplates required templates
+	 * @param template     template from the database to evaluate
+	 * @return a {@link TextTemplate} if a formTemplate was added or null if a
+	 *         {@link Brief} template was added as reference for a requirement
 	 */
-	private TextTemplate createTextTemplateReference(Brief template){
+	private TextTemplate createTextTemplateReference(Brief template) {
 		for (TextTemplate sysTemplate : requiredTemplates) {
 			String mandId = template.getAdressat().getId();
 			if (sysTemplate.getName().equals(template.getBetreff())
-				&& sysTemplate.getMimeType().equals(template.getMimeType())
-				&& (mandId == null || mandId.isEmpty())) {
+					&& sysTemplate.getMimeType().equals(template.getMimeType())
+					&& (mandId == null || mandId.isEmpty())) {
 				// matching system template exists - add reference to model
 				sysTemplate.addSystemTemplateReference(template);
 				return sysTemplate;
 			}
 		}
-		
+
 		// create TextTemplate model for the form template
-		TextTemplate formTemplate =
-			new TextTemplate(template.getBetreff(), "", template.getMimeType());
+		TextTemplate formTemplate = new TextTemplate(template.getBetreff(), "", template.getMimeType());
 		formTemplate.addFormTemplateReference(template);
 		return formTemplate;
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
-		
+
 		// only display warning if no textplugin is installed
 		if (plugin == null) {
 			createTextPluginMissingForm(composite);
 			return;
 		}
-		
+
 		Label lblSearch = new Label(composite, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblSearch.setText("Suchen: ");
 		txtSearch = new Text(composite, SWT.BORDER | SWT.SEARCH);
-		txtSearch.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
-			| GridData.HORIZONTAL_ALIGN_FILL));
+		txtSearch.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
 		txtSearch.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent ke){
+			public void keyReleased(KeyEvent ke) {
 				searchFilter.setSearchTerm(txtSearch.getText());
 				tableViewer.refresh();
 			}
 		});
-		
+
 		Composite tableArea = new Composite(composite, SWT.NONE);
 		tableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		tableLayout = new TableColumnLayout();
 		tableArea.setLayout(tableLayout);
-		
+
 		tableViewer = new TableViewer(tableArea, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL);
 		ColumnViewerToolTipSupport.enableFor(tableViewer, ToolTip.NO_RECREATE);
 		createColumns(composite);
@@ -182,7 +178,7 @@ public class TextTemplateView extends ViewPart {
 		table.setLinesVisible(true);
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewer.setInput(templates);
-		
+
 		// add tableViewer filter
 		searchFilter = new TextTemplateFilter();
 		tableViewer.addFilter(searchFilter);
@@ -192,9 +188,8 @@ public class TextTemplateView extends ViewPart {
 		// add double click listener
 		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(DoubleClickEvent event){
-				IHandlerService handlerService =
-					(IHandlerService) getSite().getService(IHandlerService.class);
+			public void doubleClick(DoubleClickEvent event) {
+				IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
 				try {
 					handlerService.executeCommand(LoadTemplateCommand.ID, null);
 				} catch (Exception e) {
@@ -202,7 +197,7 @@ public class TextTemplateView extends ViewPart {
 				}
 			}
 		});
-		
+
 		// Create a menu manager, context and register it
 		MenuManager menuManager = new MenuManager();
 		Menu popupMenu = menuManager.createContextMenu(tableViewer.getTable());
@@ -210,14 +205,11 @@ public class TextTemplateView extends ViewPart {
 		getSite().registerContextMenu(menuManager, tableViewer);
 		getSite().setSelectionProvider(tableViewer);
 	}
-	
-	private void createTextPluginMissingForm(Composite parent){
-		String expl =
-			Messages.TextTemplateVeiw_NoTxtPluginDescription
-				+ Messages.TextTemplateVeiw_NoTxtPluginReason1
-				+ Messages.TextTemplateVeiw_NoTxtPluginReason2
-				+ Messages.TextTemplateVeiw_NoTxtPluginReason3;
-		
+
+	private void createTextPluginMissingForm(Composite parent) {
+		String expl = Messages.TextTemplateVeiw_NoTxtPluginDescription + Messages.TextTemplateVeiw_NoTxtPluginReason1
+				+ Messages.TextTemplateVeiw_NoTxtPluginReason2 + Messages.TextTemplateVeiw_NoTxtPluginReason3;
+
 		Form form = UiDesk.getToolkit().createForm(parent);
 		form.setText(Messages.TextTemplateVeiw_NoTxtPluginTitel);
 		form.setLayoutData(SWTHelper.fillGrid(parent, 1));
@@ -225,28 +217,23 @@ public class TextTemplateView extends ViewPart {
 		FormText ft = UiDesk.getToolkit().createFormText(form.getBody(), false);
 		ft.setText(expl, true, false);
 	}
-	
+
 	/**
 	 * create table columns
-	 * 
+	 *
 	 * @param parent
 	 * @param viewer
 	 */
-	private void createColumns(final Composite parent){
-		String[] titles =
-			{
-				"", "Name der Vorlage", "Typ", "Mandant", "Adressabfrage", "Drucker/Schacht",
-				"Beschreibung"
-			};
-		int[] bounds = {
-			30, 200, 170, 80, 90, 300, 600
-		};
-		
+	private void createColumns(final Composite parent) {
+		String[] titles = { "", "Name der Vorlage", "Typ", "Mandant", "Adressabfrage", "Drucker/Schacht",
+				"Beschreibung" };
+		int[] bounds = { 30, 200, 170, 80, 90, 300, 600 };
+
 		// template exists or missing
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				if (element instanceof TextTemplate) {
 					TextTemplate template = (TextTemplate) element;
 					if (!template.exists()) {
@@ -257,14 +244,14 @@ public class TextTemplateView extends ViewPart {
 				}
 				return null;
 			}
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return null;
 			}
-			
+
 			@Override
-			public String getToolTipText(Object element){
+			public String getToolTipText(Object element) {
 				if (element instanceof TextTemplate) {
 					TextTemplate template = (TextTemplate) element;
 					if (!template.exists()) {
@@ -280,67 +267,67 @@ public class TextTemplateView extends ViewPart {
 				return null;
 			}
 		});
-		
+
 		// template name
 		col = createTableViewerColumn(titles[1], bounds[1], 1);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof TextTemplate) {
 					TextTemplate template = (TextTemplate) element;
 					return template.getName();
 				}
 				return super.getText(element);
 			}
-			
+
 			@Override
-			public Color getForeground(Object element){
+			public Color getForeground(Object element) {
 				return getForegroundColor(element);
 			}
 		});
-		
+
 		// mime type
 		col = createTableViewerColumn(titles[2], bounds[2], 2);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof TextTemplate) {
 					TextTemplate template = (TextTemplate) element;
 					return template.getMimeTypePrintname();
 				}
 				return super.getText(element);
 			}
-			
+
 			@Override
-			public Color getForeground(Object element){
+			public Color getForeground(Object element) {
 				return getForegroundColor(element);
 			}
 		});
-		
+
 		// mandant
 		col = createTableViewerColumn(titles[3], bounds[3], 3);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof TextTemplate) {
 					TextTemplate template = (TextTemplate) element;
 					return template.getMandantLabel();
 				}
 				return super.getText(element);
 			}
-			
+
 			@Override
-			public Color getForeground(Object element){
+			public Color getForeground(Object element) {
 				return getForegroundColor(element);
 			}
 		});
 		col.setEditingSupport(new MandantEditingSupport(tableViewer));
-		
+
 		// address required
 		col = createTableViewerColumn(titles[4], bounds[4], 4);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public Image getImage(Object element){
+			public Image getImage(Object element) {
 				if (element instanceof TextTemplate) {
 					TextTemplate template = (TextTemplate) element;
 					if (template.askForAddress()) {
@@ -349,19 +336,19 @@ public class TextTemplateView extends ViewPart {
 				}
 				return Images.IMG_CHECKBOX_UNCHECKED.getImage();
 			}
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return null;
 			}
 		});
 		col.setEditingSupport(new AddressRequiredEditingSupport(tableViewer));
-		
+
 		// printer
 		col = createTableViewerColumn(titles[5], bounds[5], 5);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof TextTemplate) {
 					TextTemplate template = (TextTemplate) element;
 					String label = "";
@@ -377,33 +364,33 @@ public class TextTemplateView extends ViewPart {
 				}
 				return super.getText(element);
 			}
-			
+
 			@Override
-			public Color getForeground(Object element){
+			public Color getForeground(Object element) {
 				return getForegroundColor(element);
 			}
 		});
-		
+
 		// description
 		col = createTableViewerColumn(titles[6], bounds[6], 6);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof TextTemplate) {
 					TextTemplate template = (TextTemplate) element;
 					return template.getDescription();
 				}
 				return super.getText(element);
 			}
-			
+
 			@Override
-			public Color getForeground(Object element){
+			public Color getForeground(Object element) {
 				return getForegroundColor(element);
 			}
 		});
 	}
-	
-	private Color getForegroundColor(Object element){
+
+	private Color getForegroundColor(Object element) {
 		if (element instanceof TextTemplate) {
 			TextTemplate template = (TextTemplate) element;
 			if (!template.exists()) {
@@ -412,23 +399,22 @@ public class TextTemplateView extends ViewPart {
 		}
 		return null;
 	}
-	
-	private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber){
+
+	private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		final TableColumn column = viewerColumn.getColumn();
-		tableLayout.setColumnData(column, new ColumnWeightData(bound,
-			ColumnWeightData.MINIMUM_WIDTH, true));
+		tableLayout.setColumnData(column, new ColumnWeightData(bound, ColumnWeightData.MINIMUM_WIDTH, true));
 		column.setText(title);
 		column.setResizable(true);
 		column.setMoveable(false);
 		column.addSelectionListener(getSelectionAdapter(column, colNumber));
 		return viewerColumn;
 	}
-	
-	private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index){
+
+	private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index) {
 		SelectionAdapter selectionAdapter = new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				comparator.setColumn(index);
 				int dir = comparator.getDirection();
 				tableViewer.getTable().setSortDirection(dir);
@@ -438,51 +424,51 @@ public class TextTemplateView extends ViewPart {
 		};
 		return selectionAdapter;
 	}
-	
+
 	class MandantEditingSupport extends EditingSupport {
 		private TableViewer tableViewer;
 		private List<Mandant> mandants;
-		
-		public MandantEditingSupport(TableViewer tableViewer){
+
+		public MandantEditingSupport(TableViewer tableViewer) {
 			super(tableViewer);
 			this.tableViewer = tableViewer;
 			this.mandants = new ArrayList<Mandant>();
 		}
-		
+
 		@Override
-		protected CellEditor getCellEditor(Object element){
+		protected CellEditor getCellEditor(Object element) {
 			Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
 			mandants = qbe.execute();
-			
+
 			String[] mandantArray = new String[mandants.size() + 1];
 			mandantArray[0] = TextTemplate.DEFAULT_MANDANT;
 			for (int i = 0; i < mandants.size(); i++) {
 				mandantArray[i + 1] = mandants.get(i).getLabel();
 			}
-			
+
 			return new ComboBoxCellEditor(tableViewer.getTable(), mandantArray, SWT.READ_ONLY);
 		}
-		
+
 		@Override
-		protected boolean canEdit(Object element){
+		protected boolean canEdit(Object element) {
 			TextTemplate template = (TextTemplate) element;
 			return !template.isSystemTemplate();
 		}
-		
+
 		@Override
-		protected Object getValue(Object element){
+		protected Object getValue(Object element) {
 			TextTemplate template = (TextTemplate) element;
 			Mandant mandant = template.getMandant();
 			int index = mandants.indexOf(mandant);
 			return index + 1;
 		}
-		
+
 		@Override
-		protected void setValue(Object element, Object value){
+		protected void setValue(Object element, Object value) {
 			TextTemplate template = (TextTemplate) element;
 			int index = ((Integer) value) - 1;
-			
-			//all
+
+			// all
 			if (index == -1) {
 				template.setMandant("");
 			} else {
@@ -494,85 +480,85 @@ public class TextTemplateView extends ViewPart {
 			tableViewer.update(element, null);
 		}
 	}
-	
+
 	class AddressRequiredEditingSupport extends EditingSupport {
 		private TableViewer tableViewer;
-		
-		public AddressRequiredEditingSupport(TableViewer tableViewer){
+
+		public AddressRequiredEditingSupport(TableViewer tableViewer) {
 			super(tableViewer);
 			this.tableViewer = tableViewer;
 		}
-		
+
 		@Override
-		protected CellEditor getCellEditor(Object element){
-			//Native Checkboxes not available: https://bugs.eclipse.org/bugs/show_bug.cgi?id=260061
+		protected CellEditor getCellEditor(Object element) {
+			// Native Checkboxes not available:
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=260061
 			return new CheckboxCellEditor(tableViewer.getTable(), SWT.CHECK | SWT.READ_ONLY);
 		}
-		
+
 		@Override
-		protected boolean canEdit(Object element){
+		protected boolean canEdit(Object element) {
 			return true;
 		}
-		
+
 		@Override
-		protected Object getValue(Object element){
+		protected Object getValue(Object element) {
 			TextTemplate template = (TextTemplate) element;
 			return template.askForAddress();
 		}
-		
+
 		@Override
-		protected void setValue(Object element, Object value){
+		protected void setValue(Object element, Object value) {
 			TextTemplate template = (TextTemplate) element;
 			template.setAskForAddress((Boolean) value);
 			tableViewer.update(element, null);
 		}
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		ElexisEventDispatcher.getInstance().removeListeners(reloadListener);
 	}
-	
-	private void initActiveTextPlugin(){
+
+	private void initActiveTextPlugin() {
 		if (plugin == null) {
 			String ExtensionToUse = CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null);
 			IExtensionRegistry exr = Platform.getExtensionRegistry();
-			IExtensionPoint exp =
-				exr.getExtensionPoint(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
+			IExtensionPoint exp = exr.getExtensionPoint(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
 			if (exp != null) {
 				IExtension[] extensions = exp.getExtensions();
 				for (IExtension ex : extensions) {
 					IConfigurationElement[] elems = ex.getConfigurationElements();
 					for (IConfigurationElement el : elems) {
 						if ((ExtensionToUse == null) || el.getAttribute("name").equals( //$NON-NLS-1$
-							ExtensionToUse)) {
+								ExtensionToUse)) {
 							try {
 								plugin = (ITextPlugin) el.createExecutableExtension("Klasse"); //$NON-NLS-1$
 							} catch (Exception e) {
 								ExHandler.handle(e);
 							}
 						}
-						
+
 					}
 				}
 			}
 		}
 	}
-	
-	public ITextPlugin getActiveTextPlugin(){
+
+	public ITextPlugin getActiveTextPlugin() {
 		return plugin;
 	}
-	
-	public List<TextTemplate> getRequiredTextTemplates(){
+
+	public List<TextTemplate> getRequiredTextTemplates() {
 		return requiredTemplates;
 	}
-	
-	public void update(TextTemplate textTemplate){
+
+	public void update(TextTemplate textTemplate) {
 		int index = templates.indexOf(textTemplate);
 		if (index == -1) {
 			templates.add(textTemplate);
@@ -581,18 +567,18 @@ public class TextTemplateView extends ViewPart {
 		}
 		tableViewer.refresh();
 	}
-	
-	private void refresh(){
+
+	private void refresh() {
 		// load existing templates from database
 		Query<Brief> qbe = new Query<Brief>(Brief.class);
 		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
 		List<Brief> list = qbe.execute();
-		
+
 		List<TextTemplate> txtTemplates = new ArrayList<TextTemplate>();
 		for (Brief template : list) {
 			txtTemplates.add(createTextTemplateReference(template));
 		}
-		
+
 		for (TextTemplate reqTemplate : requiredTemplates) {
 			if (!txtTemplates.contains(reqTemplate)) {
 				txtTemplates.add(reqTemplate);

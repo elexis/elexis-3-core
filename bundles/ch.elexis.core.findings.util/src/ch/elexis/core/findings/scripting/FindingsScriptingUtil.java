@@ -22,20 +22,21 @@ import ch.elexis.core.findings.util.ScriptingServiceHolder;
 import ch.elexis.core.services.IScriptingService;
 
 public class FindingsScriptingUtil {
-	
-	public static boolean hasScript(IObservation iObservation){
+
+	public static boolean hasScript(IObservation iObservation) {
 		return iObservation.getScript().isPresent();
 	}
-	
+
 	/**
-	 * Evaluate the script provided by the {@link IObservation} unsing a {@link IScriptingService}.
-	 * The result is set via one to the set[x]Value methods of the {@link IObservation}.
-	 * 
+	 * Evaluate the script provided by the {@link IObservation} unsing a
+	 * {@link IScriptingService}. The result is set via one to the set[x]Value
+	 * methods of the {@link IObservation}.
+	 *
 	 * @param iObservation
 	 */
-	public static void evaluate(IObservation iObservation){
+	public static void evaluate(IObservation iObservation) {
 		Optional<String> script = iObservation.getScript();
-		
+
 		if (ScriptingServiceHolder.getService() != null && script.isPresent()) {
 			String preparedScript = prepareScript(script.get(), iObservation);
 			try {
@@ -46,62 +47,57 @@ public class FindingsScriptingUtil {
 					} else if (iObservation.getObservationType() == ObservationType.NUMERIC) {
 						if (NumberUtils.isNumber((String) result)) {
 							BigDecimal newValue = new BigDecimal((String) result);
-							iObservation.setNumericValue(
-								applyDecimal(newValue, iObservation.getDecimalPlace()),
-								iObservation.getNumericValueUnit().orElse(""));
+							iObservation.setNumericValue(applyDecimal(newValue, iObservation.getDecimalPlace()),
+									iObservation.getNumericValueUnit().orElse(""));
 						} else {
 							LoggerFactory.getLogger(FindingsScriptingUtil.class)
-								.debug("Could not set not numeric result [" + result + "]");
+									.debug("Could not set not numeric result [" + result + "]");
 						}
 					}
 				} else if (result instanceof Double && !((Double) result).isNaN()) {
 					if (iObservation.getObservationType() == ObservationType.NUMERIC) {
 						BigDecimal newValue = new BigDecimal((Double) result);
-						iObservation.setNumericValue(
-							applyDecimal(newValue, iObservation.getDecimalPlace()),
-							iObservation.getNumericValueUnit().orElse(""));
+						iObservation.setNumericValue(applyDecimal(newValue, iObservation.getDecimalPlace()),
+								iObservation.getNumericValueUnit().orElse(""));
 					} else if (iObservation.getObservationType() == ObservationType.TEXT) {
-						iObservation
-							.setStringValue(new BigDecimal((Double) result).toPlainString());
+						iObservation.setStringValue(new BigDecimal((Double) result).toPlainString());
 					}
 				} else if (result instanceof Integer) {
 					if (iObservation.getObservationType() == ObservationType.NUMERIC) {
 						BigDecimal newValue = new BigDecimal((Integer) result);
-						iObservation.setNumericValue(
-							applyDecimal(newValue, iObservation.getDecimalPlace()),
-							iObservation.getNumericValueUnit().orElse(""));
+						iObservation.setNumericValue(applyDecimal(newValue, iObservation.getDecimalPlace()),
+								iObservation.getNumericValueUnit().orElse(""));
 					} else if (iObservation.getObservationType() == ObservationType.TEXT) {
-						iObservation
-							.setStringValue(new BigDecimal((Integer) result).toPlainString());
+						iObservation.setStringValue(new BigDecimal((Integer) result).toPlainString());
 					}
 				} else {
 					LoggerFactory.getLogger(FindingsScriptingUtil.class)
-						.debug("Error cant handle script result [" + result + "]");
+							.debug("Error cant handle script result [" + result + "]");
 				}
 			} catch (ElexisException e) {
 				LoggerFactory.getLogger(FindingsScriptingUtil.class)
-					.debug("Error executing script [" + script.get() + "] " + e.getMessage());
+						.debug("Error executing script [" + script.get() + "] " + e.getMessage());
 			}
 		}
 	}
-	
-	private static BigDecimal applyDecimal(BigDecimal newValue, int decimalPlace){
+
+	private static BigDecimal applyDecimal(BigDecimal newValue, int decimalPlace) {
 		if (decimalPlace != -1) {
 			return newValue.setScale(decimalPlace, RoundingMode.HALF_UP);
 		}
 		return newValue;
 	}
-	
-	private static String prepareScript(String script, IObservation iObservation){
+
+	private static String prepareScript(String script, IObservation iObservation) {
 		StringBuffer preparedScript = new StringBuffer();
-		
+
 		Pattern pattern = Pattern.compile("\\[.*?\\]");
 		Matcher matcher = pattern.matcher(script);
-		
+
 		// search for replacements we can satisfy with other finding values
 		while (matcher.find()) {
 			String var = matcher.group().replaceAll("[\\[\\]]", "");
-			
+
 			String value = getVarValue(var, iObservation);
 			if (value != null && !value.isEmpty()) {
 				matcher.appendReplacement(preparedScript, value);
@@ -112,8 +108,8 @@ public class FindingsScriptingUtil {
 		matcher.appendTail(preparedScript);
 		return preparedScript.toString();
 	}
-	
-	private static String getVarValue(String var, IObservation iObservation){
+
+	private static String getVarValue(String var, IObservation iObservation) {
 		// first get to the top observation
 		List<IObservation> parents = iObservation.getSourceObservations(ObservationLinkType.REF);
 		for (IObservation parentObservation : parents) {
@@ -146,8 +142,8 @@ public class FindingsScriptingUtil {
 				for (ObservationComponent observationComponent : components) {
 					code = getLocalCode(observationComponent);
 					if (code.isPresent() && var.equals(code.get())) {
-						if (observationComponent.getTypeFromExtension(
-							ObservationType.class) == ObservationType.NUMERIC) {
+						if (observationComponent
+								.getTypeFromExtension(ObservationType.class) == ObservationType.NUMERIC) {
 							String numericValue = getNumericValue(childObservation);
 							if (numericValue != null) {
 								return numericValue;
@@ -159,31 +155,31 @@ public class FindingsScriptingUtil {
 		}
 		return null;
 	}
-	
-	private static String getStringValue(IObservation childObservation){
+
+	private static String getStringValue(IObservation childObservation) {
 		return childObservation.getStringValue().orElse(null);
 	}
-	
-	private static String getNumericValue(IObservation childObservation){
+
+	private static String getNumericValue(IObservation childObservation) {
 		Optional<BigDecimal> numericValue = childObservation.getNumericValue();
 		if (numericValue.isPresent()) {
 			return numericValue.get().toPlainString() + "d";
 		}
 		return null;
 	}
-	
-	private static Optional<String> getLocalCode(IObservation iObservation){
+
+	private static Optional<String> getLocalCode(IObservation iObservation) {
 		Optional<ICoding> coding = ModelUtil.getCodeBySystem(iObservation.getCoding(),
-			CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
+				CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 		if (coding.isPresent()) {
 			return Optional.of(coding.get().getCode());
 		}
 		return Optional.empty();
 	}
-	
-	private static Optional<String> getLocalCode(ObservationComponent component){
-		Optional<ICoding> coding =
-			ModelUtil.getCodeBySystem(component.getCoding(), CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
+
+	private static Optional<String> getLocalCode(ObservationComponent component) {
+		Optional<ICoding> coding = ModelUtil.getCodeBySystem(component.getCoding(),
+				CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 		if (coding.isPresent()) {
 			return Optional.of(coding.get().getCode());
 		}

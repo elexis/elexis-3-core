@@ -9,28 +9,26 @@ import ch.elexis.core.types.LabItemTyp;
 
 public class LabResultConstants {
 	public static final int PATHOLOGIC = 1 << 0;
-	
+
 	public static final String SMALLER = "<";
 	public static final String BIGGER = ">";
-	
+
 	public static final String EXTINFO_HL7_SUBID = "Hl7SubId";
-	
+
 	public static Pattern refValuesPattern = Pattern.compile("\\((.*?)\\)"); //$NON-NLS-1$
-	
-	public static String[] VALID_ABS_VALUES = new String[] {
-		"positiv", "negativ", "pos.", "neg.", "pos", "neg", ">0", "<0"
-	};
-	
+
+	public static String[] VALID_ABS_VALUES = new String[] { "positiv", "negativ", "pos.", "neg.", "pos", "neg", ">0",
+			"<0" };
+
 	/**
 	 * Determine whether the provided LabItem and its result are pathologic
-	 * 
+	 *
 	 * @param item
 	 * @param result
 	 * @param referenceValues
 	 * @return
 	 */
-	public static boolean isPathologic(final ILabItem item, final String result,
-		final String referenceValues){
+	public static boolean isPathologic(final ILabItem item, final String result, final String referenceValues) {
 		if (item.getTyp().equals(LabItemTyp.ABSOLUTE)) {
 			if (result.toLowerCase().startsWith("pos")) { //$NON-NLS-1$
 				return true;
@@ -47,30 +45,30 @@ public class LabResultConstants {
 		}
 		return false;
 	}
-	
-	public static List<String> parseRefString(String ref){
+
+	public static List<String> parseRefString(String ref) {
 		List<String> result = new ArrayList<String>();
-		
+
 		Matcher m = refValuesPattern.matcher(ref);
-		
+
 		while (m.find()) {
 			result.add(m.group(1).trim());
 		}
-		
+
 		// add the whole string if nothing found
 		if (result.isEmpty()) {
 			result.add(ref.trim());
 		}
-		
+
 		return result;
 	}
-	
-	public static boolean testRef(String ref, String result){
+
+	public static boolean testRef(String ref, String result) {
 		try {
 			if (ref.trim().startsWith(SMALLER) || ref.trim().startsWith(BIGGER)) {
 				String resultSign = null;
 				double refVal = Double.parseDouble(ref.substring(1).trim());
-				
+
 				if (result.trim().startsWith(SMALLER) || result.trim().startsWith(BIGGER)) {
 					resultSign = result.substring(0, 1).trim();
 					result = result.substring(1).trim();

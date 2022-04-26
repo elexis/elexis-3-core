@@ -19,16 +19,16 @@ public interface IdentifiableDomainResourceAttributeMapper<T extends Identifiabl
 		meta.setLastUpdated(new Date(source.getLastupdate()));
 		target.setMeta(meta);
 	}
-	
+
 	default void mapNarrative(Identifiable source, DomainResource target) {
 		Narrative narrative = new Narrative();
 		narrative.setStatus(NarrativeStatus.GENERATED);
 		narrative.setDivAsString(source.getLabel());
 		target.setText(narrative);
 	}
-	
+
 	abstract void elexisToFhir(T source, U target, SummaryEnum summaryEnum, Set<Include> includes);
-	
+
 	abstract void fhirToElexis(U source, T target);
-	
+
 }

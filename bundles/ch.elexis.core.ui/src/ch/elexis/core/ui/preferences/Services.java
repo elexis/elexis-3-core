@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    St. Schenk - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.preferences;
@@ -22,25 +22,25 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class Services extends PreferencePage implements IWorkbenchPreferencePage {
-	
-	public Services(){
+
+	public Services() {
 		noDefaultAndApplyButton();
 	}
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new FillLayout());
 		StyledText text = new StyledText(ret, SWT.NONE);
 		text.setWordWrap(true);
 		text.setText(Messages.Services_ExplanationLine1 + Messages.Services_ExplanationLine2
-			+ Messages.Services_ExplanationLine3);
+				+ Messages.Services_ExplanationLine3);
 		return ret;
 	}
-	
-	public void init(IWorkbench workbench){
+
+	public void init(IWorkbench workbench) {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
+
 }

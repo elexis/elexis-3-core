@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -20,9 +20,9 @@ import ch.elexis.core.ui.laboratory.dialogs.EditLabItem;
 
 public class CreateLabItemUi extends AbstractHandler {
 	public static final String COMMANDID = "ch.elexis.labitem.create"; //$NON-NLS-1$
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			// create and open the dialog
 			Shell parent = HandlerUtil.getActiveShell(event);

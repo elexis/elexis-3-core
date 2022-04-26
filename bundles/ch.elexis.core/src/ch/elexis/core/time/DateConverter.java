@@ -51,9 +51,8 @@ public class DateConverter {
 	}
 
 	/**
-	 * 
-	 * @param date
-	 *            if <code>null</code> assumes now
+	 *
+	 * @param date if <code>null</code> assumes now
 	 * @return
 	 */
 	public XMLGregorianCalendar convertToXMLGregorianCalendar(Date date) {
@@ -80,7 +79,7 @@ public class DateConverter {
 	public LocalDate convertToLocalDate(Date date) {
 		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
-	
+
 	public LocalDate convertToLocalDate(BigInteger timestamp) {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(timestamp.longValue());
@@ -108,7 +107,7 @@ public class DateConverter {
 
 	/**
 	 * Fail-Save conversion, reverting to now in case of an error.
-	 * 
+	 *
 	 * @param localDate
 	 * @param log
 	 * @return

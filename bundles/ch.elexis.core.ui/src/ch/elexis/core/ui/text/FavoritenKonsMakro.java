@@ -17,9 +17,9 @@ import ch.elexis.data.VerrechenbarFavorites.Favorite;
 import ch.rgw.tools.Result;
 
 public class FavoritenKonsMakro implements IKonsMakro {
-	
+
 	@Override
-	public String executeMakro(String macro){
+	public String executeMakro(String macro) {
 		Optional<IEncounter> actEncounter = ContextServiceHolder.get().getTyped(IEncounter.class);
 		if (actEncounter.isPresent()) {
 			Favorite fav = VerrechenbarFavorites.findFavoritByMacroForCurrentUser(macro);
@@ -31,8 +31,8 @@ public class FavoritenKonsMakro implements IKonsMakro {
 						blockMacro.addBlock(actEncounter.get(), (ICodeElementBlock) favObj.get());
 						return StringConstants.EMPTY;
 					} else if (favObj.get() instanceof IBillable) {
-						Result<IBilled> res = BillingServiceHolder.get()
-							.bill((IBillable) favObj.get(), actEncounter.get(), 1.0);
+						Result<IBilled> res = BillingServiceHolder.get().bill((IBillable) favObj.get(),
+								actEncounter.get(), 1.0);
 						if (!res.isOK()) {
 							MessageEvent.fireError("Error", res.toString());
 						} else {
@@ -44,5 +44,5 @@ public class FavoritenKonsMakro implements IKonsMakro {
 		}
 		return null;
 	}
-	
+
 }

@@ -10,14 +10,14 @@ import ch.elexis.core.ui.dbcheck.cleaning.CleaningCheckPGSQL;
 public class CleaningCheckExec extends CheckExec {
 	/**
 	 * Execute cleaning scripts
-	 * 
+	 *
 	 * @return
 	 */
-	public static String doCleaning(){
-		
+	public static String doCleaning() {
+
 		if (sqlDriver.equalsIgnoreCase(MYSQL_DB)) {
 			return "";
-			
+
 		}
 		if (sqlDriver.equalsIgnoreCase(POSTG_DB)) {
 			CleaningCheck sc = new CleaningCheckPGSQL();

@@ -11,23 +11,23 @@ import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.ui.tasks.parts.TaskLogPart;
 
 public class TaskResultPartTableFilterHandler {
-	
+
 	private IFilter showFailuresOnlyFilter;
-	
+
 	@Execute
-	public void execute(MPart part, MDirectToolItem item){
+	public void execute(MPart part, MDirectToolItem item) {
 		TaskLogPart taskResultPart = (TaskLogPart) part.getObject();
-		
+
 		if (item.isSelected()) {
 			if (showFailuresOnlyFilter == null) {
 				showFailuresOnlyFilter = (object) -> !((ITask) object).isSucceeded();
 			}
-			
+
 			taskResultPart.getContentProvider().setFilter(showFailuresOnlyFilter);
 		} else {
 			taskResultPart.getContentProvider().setFilter(AcceptAllFilter.getInstance());
 		}
-		
+
 	}
-	
+
 }

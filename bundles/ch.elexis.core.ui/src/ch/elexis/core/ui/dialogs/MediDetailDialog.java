@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.dialogs;
@@ -52,99 +52,96 @@ public class MediDetailDialog extends TitleAreaDialog {
 	private Text txtIntakeOrder, txtDisposalComment;
 	private Artikel article;
 	private Button btnReserveMedication;
-	
+
 	private String executedFrom;
-	
+
 	private boolean createPrescriptionHistoryEntry;
-	
+
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public MediDetailDialog(Shell shell, IPrescription prescription){
+	public MediDetailDialog(Shell shell, IPrescription prescription) {
 		this(shell, prescription, false);
 	}
-	
+
 	/**
 	 * Creates optional also a history entry for a prescription if it changed
-	 * 
+	 *
 	 * @param shell
 	 * @param pr
 	 * @param createPrescriptionHistoryEntry
 	 */
-	public MediDetailDialog(Shell shell, IPrescription pr,
-		boolean createPrescriptionHistoryEntry){
+	public MediDetailDialog(Shell shell, IPrescription pr, boolean createPrescriptionHistoryEntry) {
 		super(shell);
 		this.prescription = pr;
 		this.createPrescriptionHistoryEntry = createPrescriptionHistoryEntry;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(3, false));
-		
+
 		stackCompositeDosage = new Composite(ret, SWT.NONE);
 		stackCompositeDosage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		stackLayoutDosage = new StackLayout();
 		stackCompositeDosage.setLayout(stackLayoutDosage);
-		
+
 		compositeDayTimeDosage = new Composite(stackCompositeDosage, SWT.NONE);
-		compositeDayTimeDosage
-			.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+		compositeDayTimeDosage.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		GridLayout gl_compositeDayTimeDosage = new GridLayout(7, false);
 		gl_compositeDayTimeDosage.marginWidth = 0;
 		gl_compositeDayTimeDosage.marginHeight = 0;
 		gl_compositeDayTimeDosage.verticalSpacing = 1;
 		gl_compositeDayTimeDosage.horizontalSpacing = 0;
 		compositeDayTimeDosage.setLayout(gl_compositeDayTimeDosage);
-		
+
 		compositeFreeTextDosage = new Composite(stackCompositeDosage, SWT.NONE);
-		compositeFreeTextDosage
-			.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		compositeFreeTextDosage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		GridLayout gl_compositeFreeTextDosage = new GridLayout(1, false);
 		gl_compositeFreeTextDosage.marginWidth = 0;
 		gl_compositeFreeTextDosage.marginHeight = 0;
 		gl_compositeFreeTextDosage.verticalSpacing = 1;
 		gl_compositeFreeTextDosage.horizontalSpacing = 0;
 		compositeFreeTextDosage.setLayout(gl_compositeFreeTextDosage);
-		
+
 		GridData gdSignature = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gdSignature.widthHint = 40;
-		
+
 		// morning
 		txtMorning = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtMorning.setTextLimit(6);
 		txtMorning.setMessage(Messages.MediDetailDialog_morning);
 		txtMorning.setLayoutData(gdSignature);
 		new Label(compositeDayTimeDosage, SWT.NONE).setText("-");
-		
+
 		// noon
 		txtNoon = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtNoon.setTextLimit(6);
 		txtNoon.setMessage(Messages.MediDetailDialog_lunch);
 		txtNoon.setLayoutData(gdSignature);
 		new Label(compositeDayTimeDosage, SWT.NONE).setText("-");
-		
+
 		// evening
 		txtEvening = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtEvening.setTextLimit(6);
 		txtEvening.setMessage(Messages.MediDetailDialog_evening);
 		txtEvening.setLayoutData(gdSignature);
 		new Label(compositeDayTimeDosage, SWT.NONE).setText("-");
-		
+
 		// night
 		txtNight = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtNight.setTextLimit(6);
 		txtNight.setMessage(Messages.MediDetailDialog_night);
 		txtNight.setLayoutData(gdSignature);
-		
+
 		Button btnDoseSwitch = new Button(ret, SWT.PUSH);
 		btnDoseSwitch.setImage(Images.IMG_SYNC.getImage());
 		btnDoseSwitch.setToolTipText(Messages.MediDetailDialog_tooltipDosageType);
 		btnDoseSwitch.addSelectionListener(new SelectionAdapter() {
-			
-			public void widgetSelected(SelectionEvent e){
+
+			public void widgetSelected(SelectionEvent e) {
 				if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
 					stackLayoutDosage.topControl = compositeFreeTextDosage;
 				} else {
@@ -153,53 +150,52 @@ public class MediDetailDialog extends TitleAreaDialog {
 				stackCompositeDosage.layout();
 			};
 		});
-		
+
 		txtFreeText = new Text(compositeFreeTextDosage, SWT.BORDER);
 		txtFreeText.setMessage(Messages.MediDetailDialog_freetext);
 		GridData gd_txtFreeText = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_txtFreeText.widthHint = 210;
 		txtFreeText.setLayoutData(gd_txtFreeText);
 		txtFreeText.setTextLimit(255);
-		
+
 		btnReserveMedication = new Button(ret, SWT.CHECK);
 		btnReserveMedication.setText(Messages.MediDetailDialog_btnReserveMedication);
 		btnReserveMedication.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		
+
 		txtIntakeOrder = new Text(ret, SWT.BORDER);
 		txtIntakeOrder.setMessage(Messages.MediDetailDialog_intakeOrder);
 		txtIntakeOrder.setTextLimit(254);
 		txtIntakeOrder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		
+
 		txtDisposalComment = new Text(ret, SWT.BORDER);
 		txtDisposalComment.setMessage(Messages.MediDetailDialog_disposalComment);
 		txtDisposalComment.setTextLimit(254);
 		txtDisposalComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		
+
 		stackLayoutDosage.topControl = compositeDayTimeDosage;
-		
+
 		if (prescription != null) {
 			initTextFields(prescription.getDosageInstruction(), prescription.getRemark(),
-				prescription.getDisposalComment());
-			btnReserveMedication
-				.setSelection(prescription.getEntryType() == EntryType.RESERVE_MEDICATION);
+					prescription.getDisposalComment());
+			btnReserveMedication.setSelection(prescription.getEntryType() == EntryType.RESERVE_MEDICATION);
 		}
 		stackCompositeDosage.layout();
-		
+
 		// show or hide components dependent on caller
 		if ("FixMediDisplay".equals(executedFrom)) {
 			btnReserveMedication.setVisible(false);
 		}
-		
+
 		return ret;
 	}
-	
-	private void initTextFields(String dose, String intakeOrder, String disposalComment){
-		
+
+	private void initTextFields(String dose, String intakeOrder, String disposalComment) {
+
 		String[] dosage = Prescription.getSignatureAsStringArray(dose);
 		if (isFreeText(dosage)) {
 			txtFreeText.setText(dosage[0]);
 			stackLayoutDosage.topControl = compositeFreeTextDosage;
-			
+
 		} else {
 			txtMorning.setText(dosage[0]);
 			txtNoon.setText(dosage[1]);
@@ -207,51 +203,50 @@ public class MediDetailDialog extends TitleAreaDialog {
 			txtNight.setText(dosage[3]);
 			stackLayoutDosage.topControl = compositeDayTimeDosage;
 		}
-		
+
 		txtIntakeOrder.setText(intakeOrder == null ? "" : intakeOrder);
 		txtDisposalComment.setText(disposalComment == null ? "" : disposalComment);
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
-		if(prescription!=null) {
+		if (prescription != null) {
 			setTitle(prescription.getArticle().getLabel());
-		} else if (article!=null) {
+		} else if (article != null) {
 			setTitle(article.getLabel());
 		}
-		
 
 		setMessage(Messages.MediDetailDialog_pleaseEnterPrescription);
 		getShell().setText(Messages.MediDetailDialog_articleDetail);
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		dosis = getDosage();
 		intakeOrder = txtIntakeOrder.getText();
 		disposalComment = txtDisposalComment.getText();
-		
+
 		if (prescription != null) {
 			AcquireLockBlockingUi.aquireAndRun(prescription, new ILockHandler() {
 				@Override
-				public void lockAcquired(){
+				public void lockAcquired() {
 					if (createPrescriptionHistoryEntry) {
-						// creates a history entry for a prescription, stops the old one with current date
+						// creates a history entry for a prescription, stops the old one with current
+						// date
 						IPrescription oldPrescription = prescription;
-						IPrescription newPrescription =
-							MedicationServiceHolder.get().createPrescriptionCopy(oldPrescription);
+						IPrescription newPrescription = MedicationServiceHolder.get()
+								.createPrescriptionCopy(oldPrescription);
 						newPrescription.setDosageInstruction(dosis);
 						newPrescription.setRemark(intakeOrder);
 						newPrescription.setDisposalComment(disposalComment);
 						CoreModelServiceHolder.get().save(newPrescription);
-						MedicationServiceHolder.get().stopPrescription(oldPrescription,
-							LocalDateTime.now(),
-							"Geändert durch " + CoreHub.getLoggedInContact().getLabel());
+						MedicationServiceHolder.get().stopPrescription(oldPrescription, LocalDateTime.now(),
+								"Geändert durch " + CoreHub.getLoggedInContact().getLabel());
 						CoreModelServiceHolder.get().save(oldPrescription);
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(newPrescription,
-							Prescription.class, ElexisEvent.EVENT_UPDATE));
-						
+						ElexisEventDispatcher.getInstance()
+								.fire(new ElexisEvent(newPrescription, Prescription.class, ElexisEvent.EVENT_UPDATE));
+
 					} else {
 						// no history entry for example recipe
 						prescription.setDosageInstruction(dosis);
@@ -262,34 +257,34 @@ public class MediDetailDialog extends TitleAreaDialog {
 						}
 					}
 				}
-				
+
 				@Override
-				public void lockFailed(){
+				public void lockFailed() {
 					// do nothing
-					
+
 				}
 			});
 		}
-		
+
 		super.okPressed();
 	}
-	
-	public String getDosis(){
+
+	public String getDosis() {
 		return dosis;
 	}
-	
-	public String getIntakeOrder(){
+
+	public String getIntakeOrder() {
 		return intakeOrder;
 	}
-	
-	private String getDosage(){
+
+	private String getDosage() {
 		if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
 			String[] values = new String[4];
 			values[0] = txtMorning.getText().isEmpty() ? "0" : txtMorning.getText();
 			values[1] = txtNoon.getText().isEmpty() ? "0" : txtNoon.getText();
 			values[2] = txtEvening.getText().isEmpty() ? "0" : txtEvening.getText();
 			values[3] = txtNight.getText().isEmpty() ? "0" : txtNight.getText();
-			
+
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < values.length; i++) {
 				String string = values[i];
@@ -301,18 +296,17 @@ public class MediDetailDialog extends TitleAreaDialog {
 				}
 			}
 			return sb.toString();
-		}
-		else {
+		} else {
 			return txtFreeText.getText();
 		}
 	}
-	
+
 	/**
 	 * @deprecated use Prescription.getSignatureAsStringArray
 	 * @param dosage
 	 * @return
 	 */
-	public String[] getDosageArray(String dosage){
+	public String[] getDosageArray(String dosage) {
 		String[] retVal = new String[4];
 		Arrays.fill(retVal, "");
 		if (dosage != null) {
@@ -329,17 +323,17 @@ public class MediDetailDialog extends TitleAreaDialog {
 		}
 		return retVal;
 	}
-	
-	public boolean isFreeText(String[] signatureArray){
-		return !signatureArray[0].isEmpty() && signatureArray[1].isEmpty()
-			&& signatureArray[2].isEmpty() && signatureArray[3].isEmpty();
+
+	public boolean isFreeText(String[] signatureArray) {
+		return !signatureArray[0].isEmpty() && signatureArray[1].isEmpty() && signatureArray[2].isEmpty()
+				&& signatureArray[3].isEmpty();
 	}
-	
-	public void setExecutedFrom(String executedFrom){
+
+	public void setExecutedFrom(String executedFrom) {
 		this.executedFrom = executedFrom;
 	}
-	
-	public String getExecutedFrom(){
+
+	public String getExecutedFrom() {
 		return executedFrom;
 	}
 }

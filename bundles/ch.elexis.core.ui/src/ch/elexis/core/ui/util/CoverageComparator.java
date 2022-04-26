@@ -7,8 +7,7 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import ch.elexis.core.model.ICoverage;
 
-public class CoverageComparator implements Comparator<Object>
-{
+public class CoverageComparator implements Comparator<Object> {
 	@Override
 	public int compare(Object o1, Object o2) {
 		int comp = 0;
@@ -19,14 +18,12 @@ public class CoverageComparator implements Comparator<Object>
 			boolean is1Closed = !coverage1.isOpen();
 			boolean is2Closed = !coverage2.isOpen();
 			comp = ObjectUtils.compare(is1Closed, is2Closed);
-			
+
 			if (comp == 0) {
-				String systemName1 =
-					coverage1.getBillingSystem() != null ? coverage1.getBillingSystem().getName()
-							: null;
-				String systemName2 =
-					coverage2.getBillingSystem() != null ? coverage2.getBillingSystem().getName()
-							: null;
+				String systemName1 = coverage1.getBillingSystem() != null ? coverage1.getBillingSystem().getName()
+						: null;
+				String systemName2 = coverage2.getBillingSystem() != null ? coverage2.getBillingSystem().getName()
+						: null;
 				comp = ObjectUtils.compare(systemName1, systemName2);
 				if (comp == 0) {
 					// compare beginn date
@@ -35,8 +32,7 @@ public class CoverageComparator implements Comparator<Object>
 					if (t1 != null && t2 != null) {
 						comp = t1.isEqual(t2) ? 0 : (t1.isBefore(t2) ? 1 : -1);
 						if (comp == 0) {
-							comp = ObjectUtils.compare(coverage1.getDescription(),
-								coverage2.getDescription());
+							comp = ObjectUtils.compare(coverage1.getDescription(), coverage2.getDescription());
 							if (comp == 0) {
 								comp = ObjectUtils.compare(coverage1.getId(), coverage2.getId());
 							}

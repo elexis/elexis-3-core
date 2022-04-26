@@ -8,14 +8,14 @@ import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 
 public abstract class AbstractTaskDescriptorConfigurationComposite extends Composite {
-	
+
 	protected ITaskDescriptor taskDescriptor;
-	
-	public AbstractTaskDescriptorConfigurationComposite(Composite parent, int style){
+
+	public AbstractTaskDescriptorConfigurationComposite(Composite parent, int style) {
 		super(parent, style);
 	}
-	
-	protected boolean saveTaskDescriptor(){
+
+	protected boolean saveTaskDescriptor() {
 		// TODO update resp entry in list
 		if (taskDescriptor != null) {
 			TaskModelServiceHolder.get().save(taskDescriptor);
@@ -24,9 +24,9 @@ public abstract class AbstractTaskDescriptorConfigurationComposite extends Compo
 		}
 		return false;
 	}
-	
-	public void setSelection(ITaskDescriptor taskDescriptor){
+
+	public void setSelection(ITaskDescriptor taskDescriptor) {
 		this.taskDescriptor = taskDescriptor;
 	}
-	
+
 }

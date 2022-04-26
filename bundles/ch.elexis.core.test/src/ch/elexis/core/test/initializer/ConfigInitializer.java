@@ -40,8 +40,7 @@ public class ConfigInitializer {
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/name", IV_NAME);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/leistungscodes", CONST_TARMED_LEISTUNG);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/standardausgabe", CONST_TARMED_DRUCKER);
-		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/bedingungen",
-				"Kostenträger:K;Fallnummer:T");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/bedingungen", "Kostenträger:K;Fallnummer:T");
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/gesetz", "IVG");
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/defaultBillingLaw", "IVG");
 
@@ -53,10 +52,8 @@ public class ConfigInitializer {
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/defaultBillingLaw", "MVG");
 
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/name", PRIVATE_NAME);
-		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/leistungscodes",
-				CONST_TARMED_LEISTUNG);
-		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/standardausgabe",
-				CONST_TARMED_DRUCKER);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/leistungscodes", CONST_TARMED_LEISTUNG);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/standardausgabe", CONST_TARMED_DRUCKER);
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/gesetz", "VVG");
 
 		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/name", VVG_NAME);

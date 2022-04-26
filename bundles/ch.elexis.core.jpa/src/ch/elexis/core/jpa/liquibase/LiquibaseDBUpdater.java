@@ -26,12 +26,12 @@ public class LiquibaseDBUpdater {
 
 	private DataSource dataSource;
 
-	public LiquibaseDBUpdater(DataSource dataSource){
+	public LiquibaseDBUpdater(DataSource dataSource) {
 		this.dataSource = dataSource;
 		this.changelogXmlUrl = "/db/elexisdb_master_update.xml";
 	}
-	
-	public boolean update(){
+
+	public boolean update() {
 		ResourceAccessor resourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader());
 
 		Liquibase liquibase = null;
@@ -42,13 +42,14 @@ public class LiquibaseDBUpdater {
 			Database targetDb = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(database);
 
 			liquibase = new Liquibase(changelogXmlUrl, resourceAccessor, targetDb);
-			
+
 			logger.info("Updating database [" + connection + "] with liquibase");
 			try {
 				liquibase.update("");
 			} catch (ValidationFailedException e) {
 				logger.info("Validation failed clear checksums and retry");
-				// removes current checksums from database, on next run checksums will be recomputed
+				// removes current checksums from database, on next run checksums will be
+				// recomputed
 				liquibase.clearCheckSums();
 				liquibase.update("");
 			}

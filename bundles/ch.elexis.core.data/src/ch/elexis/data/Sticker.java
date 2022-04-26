@@ -24,15 +24,15 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 
 /**
- * Eine Markierung für im Prinzip beliebige Objekte. Ein Objekt, das eine Etikette hat, kann diese
- * Etikette zur Darstellung verwenden
- * 
+ * Eine Markierung für im Prinzip beliebige Objekte. Ein Objekt, das eine
+ * Etikette hat, kann diese Etikette zur Darstellung verwenden
+ *
  * @since 3.0.0 - division between core and Ui, see UiSticker class
  */
 public class Sticker extends PersistentObject implements ISticker {
 
 	public static final String TABLENAME = "ETIKETTEN";
-	
+
 	public static final String FLD_NAME = "Name";
 	public static final String FLD_LINKTABLE = "ETIKETTEN_OBJECT_LINK";
 	public static final String FLD_CLASSLINK = "ETIKETTEN_OBJCLASS_LINK";
@@ -40,19 +40,18 @@ public class Sticker extends PersistentObject implements ISticker {
 	public static final String FLD_FOREGROUND = "vg";
 	public static final String FLD_IMAGE_ID = "BildID";
 	public static final String FLD_VALUE = "wert";
-	
+
 	private static final String RGB_BLACK = "000000";
 	private static final String RGB_WHITE = "FFFFFF";
-	
+
 	static final HashMap<Class<?>, List<Sticker>> cache = new HashMap<Class<?>, List<Sticker>>();
-	
+
 	static {
-		addMapping(TABLENAME, DATE_COMPOUND, FLD_IMAGE_ID + "=Image",
-			FLD_FOREGROUND + "=foreground", FLD_BACKGROUND + "=background", FLD_NAME,
-			FLD_VALUE + "=importance");
+		addMapping(TABLENAME, DATE_COMPOUND, FLD_IMAGE_ID + "=Image", FLD_FOREGROUND + "=foreground",
+				FLD_BACKGROUND + "=background", FLD_NAME, FLD_VALUE + "=importance");
 	}
-	
-	public Sticker(String name, String fg, String bg){
+
+	public Sticker(String name, String fg, String bg) {
 		create(null);
 		if (fg == null) {
 			fg = RGB_BLACK;
@@ -60,47 +59,44 @@ public class Sticker extends PersistentObject implements ISticker {
 		if (bg == null) {
 			bg = RGB_WHITE;
 		}
-		set(new String[] {
-			FLD_NAME, FLD_FOREGROUND, FLD_BACKGROUND
-		}, new String[] {
-			name, fg, bg
-		});
+		set(new String[] { FLD_NAME, FLD_FOREGROUND, FLD_BACKGROUND }, new String[] { name, fg, bg });
 	}
-	
-	public static Sticker load(String id){
+
+	public static Sticker load(String id) {
 		Sticker ret = new Sticker(id);
 		return ret;
 	}
-	
-	protected Sticker(String id){
+
+	protected Sticker(String id) {
 		super(id);
 	}
-	
-	protected Sticker(){}
-	
+
+	protected Sticker() {
+	}
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		return get(FLD_NAME);
 	}
-	
-	public int getWert(){
+
+	public int getWert() {
 		return checkZero(get(FLD_VALUE));
 	}
-	
-	public void setWert(int w){
+
+	public void setWert(int w) {
 		set(FLD_VALUE, Integer.toString(w));
 	}
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return TABLENAME;
 	}
-	
+
 	@Override
-	public boolean delete(){
+	public boolean delete() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("DELETE FROM ").append(Sticker.FLD_LINKTABLE).append(" WHERE ")
-			.append("etikette = '").append(getId()).append("'");
+		sb.append("DELETE FROM ").append(Sticker.FLD_LINKTABLE).append(" WHERE ").append("etikette = '").append(getId())
+				.append("'");
 		Stm stm = getDBConnection().getStatement();
 		try {
 			stm.exec(sb.toString());
@@ -109,11 +105,11 @@ public class Sticker extends PersistentObject implements ISticker {
 		}
 		return super.delete();
 	}
-	
-	public void setClassForSticker(Class<?> clazz){
+
+	public void setClassForSticker(Class<?> clazz) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("INSERT INTO " + FLD_CLASSLINK + " (objclass,sticker) VALUES (")
-			.append(JdbcLink.wrap(clazz.getName())).append(",").append(getWrappedId()).append(");");
+				.append(JdbcLink.wrap(clazz.getName())).append(",").append(getWrappedId()).append(");");
 		Stm stm = getDBConnection().getStatement();
 		try {
 			stm.exec(sb.toString());
@@ -121,11 +117,11 @@ public class Sticker extends PersistentObject implements ISticker {
 			getDBConnection().releaseStatement(stm);
 		}
 	}
-	
-	public void removeClassForSticker(Class<?> clazz){
+
+	public void removeClassForSticker(Class<?> clazz) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("DELETE FROM " + FLD_CLASSLINK + " WHERE objclass=")
-			.append(JdbcLink.wrap(clazz.getName())).append(" AND sticker=").append(getWrappedId());
+		sb.append("DELETE FROM " + FLD_CLASSLINK + " WHERE objclass=").append(JdbcLink.wrap(clazz.getName()))
+				.append(" AND sticker=").append(getWrappedId());
 		Stm stm = getDBConnection().getStatement();
 		try {
 			stm.exec(sb.toString());
@@ -133,11 +129,11 @@ public class Sticker extends PersistentObject implements ISticker {
 			getDBConnection().releaseStatement(stm);
 		}
 	}
-	
-	private static String queryClassStickerString =
-		"SELECT objclass FROM " + Sticker.FLD_CLASSLINK + " WHERE sticker=?";
-		
-	public List<String> getClassesForSticker(){
+
+	private static String queryClassStickerString = "SELECT objclass FROM " + Sticker.FLD_CLASSLINK
+			+ " WHERE sticker=?";
+
+	public List<String> getClassesForSticker() {
 		ArrayList<String> ret = new ArrayList<String>();
 		PreparedStatement queryClasses = null;
 		try {
@@ -154,19 +150,19 @@ public class Sticker extends PersistentObject implements ISticker {
 			getDBConnection().releasePreparedStatement(queryClasses);
 		}
 		return ret;
-		
+
 	}
-	
-	private static String queryStickerClassString =
-		"SELECT sticker FROM " + Sticker.FLD_CLASSLINK + " WHERE objclass=?";
-		
+
+	private static String queryStickerClassString = "SELECT sticker FROM " + Sticker.FLD_CLASSLINK
+			+ " WHERE objclass=?";
+
 	/**
 	 * Find all Stickers applicable for a given class
-	 * 
+	 *
 	 * @param clazz
 	 * @return
 	 */
-	public static List<Sticker> getStickersForClass(Class<?> clazz){
+	public static List<Sticker> getStickersForClass(Class<?> clazz) {
 		List<Sticker> ret = cache.get(clazz);
 		if (ret != null) {
 			return ret;
@@ -193,44 +189,44 @@ public class Sticker extends PersistentObject implements ISticker {
 		cache.put(clazz, new ArrayList<Sticker>(uniqueRet));
 		return new ArrayList<Sticker>(uniqueRet);
 	}
-	
-	public int compareTo(ISticker o){
+
+	public int compareTo(ISticker o) {
 		if (o != null) {
 			return o.getWert() - getWert();
 		}
 		return 1;
 	}
-	
-	public void setBackground(String bg){
+
+	public void setBackground(String bg) {
 		set(FLD_BACKGROUND, bg);
 	}
-	
-	public void setForeground(String fg){
+
+	public void setForeground(String fg) {
 		set(FLD_FOREGROUND, fg);
 	}
-	
+
 	@Override
-	public String getBackground(){
+	public String getBackground() {
 		return get(FLD_BACKGROUND);
 	}
-	
+
 	@Override
-	public String getForeground(){
+	public String getForeground() {
 		return get(FLD_FOREGROUND);
 	}
-	
+
 	@Override
-	public boolean isVisible(){
+	public boolean isVisible() {
 		if (getWert() >= 0)
 			return true;
 		else
 			return false;
 	}
-	
+
 	@Override
-	public void setVisible(boolean value){
+	public void setVisible(boolean value) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

@@ -14,25 +14,25 @@ import ch.elexis.core.text.PlaceholderAttribute;
 
 @Component
 public class ImageTextPlaceholderResolver implements ITextPlaceholderResolver {
-	
+
 	@Override
-	public String getSupportedType(){
+	public String getSupportedType() {
 		return "Image";
 	}
-	
+
 	@Override
-	public List<PlaceholderAttribute> getSupportedAttributes(){
+	public List<PlaceholderAttribute> getSupportedAttributes() {
 		return Arrays.asList(ImageAttribute.values()).stream()
-			.map(m -> new PlaceholderAttribute(getSupportedType(), m.name(), m.getLocaleText()))
-			.collect(Collectors.toList());
+				.map(m -> new PlaceholderAttribute(getSupportedType(), m.name(), m.getLocaleText()))
+				.collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute){
+	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute) {
 		return Optional.ofNullable(replace(attribute.toLowerCase()));
 	}
-	
-	private String replace(String lcAttribute){
+
+	private String replace(String lcAttribute) {
 		ImageAttribute imageAttribut = searchEnum(ImageAttribute.class, lcAttribute);
 		if (imageAttribut != null) {
 			switch (imageAttribut) {
@@ -44,18 +44,18 @@ public class ImageTextPlaceholderResolver implements ITextPlaceholderResolver {
 		}
 		return null;
 	}
-	
+
 	private enum ImageAttribute implements ILocalizedEnum {
-			MailPraxisLogo("Ein Praxis Logo für e-mails");
-		
+		MailPraxisLogo("Ein Praxis Logo für e-mails");
+
 		final String description;
-	
-		private ImageAttribute(String description){
+
+		private ImageAttribute(String description) {
 			this.description = description;
 		}
-		
+
 		@Override
-		public String getLocaleText(){
+		public String getLocaleText() {
 			return description;
 		}
 	}

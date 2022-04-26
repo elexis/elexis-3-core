@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.data;
@@ -59,7 +59,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	public static final String RESULT = "Resultat"; //$NON-NLS-1$
 	public static final String ITEM_ID = "ItemID"; //$NON-NLS-1$
 	public static final String PATIENT_ID = "PatientID"; //$NON-NLS-1$
-	
+
 	public static final String EXTINFO = "ExtInfo"; //$NON-NLS-1$
 	public static final String UNIT = "unit"; //$NON-NLS-1$
 	public static final String ANALYSETIME = "analysetime"; //$NON-NLS-1$
@@ -69,98 +69,91 @@ public class LabResult extends PersistentObject implements ILabResult {
 	public static final String REFFEMALE = "reffemale"; //$NON-NLS-1$
 	public static final String ORIGIN_ID = "OriginID"; //$NON-NLS-1$
 	public static final String PATHODESC = "pathodesc"; //$NON-NLS-1$
-	
+
 	public static final String EXTINFO_HL7_SUBID = "Hl7SubId";
-	
+
 	private static final String TABLENAME = "LABORWERTE"; //$NON-NLS-1$
 	private final String SMALLER = "<";
 	private final String BIGGER = ">";
 	private PathologicDescription pathologicDescription;
-	
+
 	private static Pattern refValuesPattern = Pattern.compile("\\((.*?)\\)"); //$NON-NLS-1$
-	private static String[] VALID_ABS_VALUES = new String[] {
-		"positiv", "negativ", "pos.", "neg.", "pos", "neg", ">0", "<0"
-	};
-	
+	private static String[] VALID_ABS_VALUES = new String[] { "positiv", "negativ", "pos.", "neg.", "pos", "neg", ">0",
+			"<0" };
+
 	private static final String QUERY_GROUP_ORDER;
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return TABLENAME;
 	}
-	
+
 	static {
-		addMapping(TABLENAME, PATIENT_ID, DATE_COMPOUND, ITEM_ID, RESULT, COMMENT, FLAGS,
-			"Quelle=Origin", TIME, UNIT, ANALYSETIME, OBSERVATIONTIME, TRANSMISSIONTIME, REFMALE, //$NON-NLS-1$
-			REFFEMALE, ORIGIN_ID, PATHODESC);
-		
+		addMapping(TABLENAME, PATIENT_ID, DATE_COMPOUND, ITEM_ID, RESULT, COMMENT, FLAGS, "Quelle=Origin", TIME, UNIT, //$NON-NLS-1$
+				ANALYSETIME, OBSERVATIONTIME, TRANSMISSIONTIME, REFMALE, REFFEMALE, ORIGIN_ID, PATHODESC);
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT LW.ID, LW." + OBSERVATIONTIME + ", LW." + DATE + ", LW." + TIME + ", ");
-		sb.append("LW." + PATHODESC + ", LW." + ITEM_ID + ", LW." + FLAGS + ", LW." + RESULT
-			+ ", LW." + UNIT + ", LW." + REFMALE + ", LW." + REFFEMALE + ", ");
-		sb.append(
-			"LI." + LabItem.GROUP + ", LI." + LabItem.SHORTNAME + ", LI." + LabItem.UNIT + ", LI."
-				+ LabItem.TITLE + ", LI." + LabItem.REF_MALE + ", LI." + LabItem.REF_FEMALE_OR_TEXT
-				+ ", LI." + LabItem.DIGITS + ", LI." + LabItem.PRIO + " ");
+		sb.append("LW." + PATHODESC + ", LW." + ITEM_ID + ", LW." + FLAGS + ", LW." + RESULT + ", LW." + UNIT + ", LW."
+				+ REFMALE + ", LW." + REFFEMALE + ", ");
+		sb.append("LI." + LabItem.GROUP + ", LI." + LabItem.SHORTNAME + ", LI." + LabItem.UNIT + ", LI." + LabItem.TITLE
+				+ ", LI." + LabItem.REF_MALE + ", LI." + LabItem.REF_FEMALE_OR_TEXT + ", LI." + LabItem.DIGITS + ", LI."
+				+ LabItem.PRIO + " ");
 		sb.append("FROM " + TABLENAME + " AS LW LEFT JOIN ");
 		sb.append(LabItem.LABITEMS + " AS LI ON LW." + ITEM_ID + "=LI.ID ");
 		sb.append("WHERE LW." + PATIENT_ID + " = ? AND LW.DELETED = '0'");
 		QUERY_GROUP_ORDER = sb.toString();
 	}
-	
-	protected LabResult(){}
 
-	protected LabResult(final String id){
+	protected LabResult() {
+	}
+
+	protected LabResult(final String id) {
 		super(id);
 	}
-	
+
 	/**
-	 * create a new LabResult. If the type is numeric, we'll check whether it's pathologic
+	 * create a new LabResult. If the type is numeric, we'll check whether it's
+	 * pathologic
 	 */
 	public LabResult(final Patient p, final TimeTool date, final LabItem item, final String result,
-		final String comment){
+			final String comment) {
 		this(p, date, item, result, comment, null, null);
 	}
-	
+
 	/**
 	 * Create a new LabResult and set the origin
 	 */
 	public LabResult(final Patient p, final TimeTool date, final LabItem item, final String result,
-		final String comment, final Kontakt origin){
+			final String comment, final Kontakt origin) {
 		this(p, date, item, result, comment, null, origin);
 	}
-	
+
 	/**
 	 * @since 3.2
 	 * @since 3.5 via
 	 *        {@link #LabResult(String, Gender, TimeTool, ILabItem, String, String, String, Kontakt)}
 	 */
-	public LabResult(IPatient p, TimeTool date, ILabItem item, String result, String comment,
-		IContact origin){
-		this(p.getId(), p.getGender(), date, item, result, comment, null,
-			(origin != null) ? origin.getId() : null);
+	public LabResult(IPatient p, TimeTool date, ILabItem item, String result, String comment, IContact origin) {
+		this(p.getId(), p.getGender(), date, item, result, comment, null, (origin != null) ? origin.getId() : null);
 	}
-	
+
 	/**
 	 * @since 3.5 via
 	 *        {@link #LabResult(String, Gender, TimeTool, ILabItem, String, String, String, Kontakt)}
 	 */
 	public LabResult(final Patient p, final TimeTool date, final ILabItem item, final String result,
-		final String comment, @Nullable String refVal, @Nullable
-		final Kontakt origin){
-		this(p.getId(), p.getGender(), date, item, result, comment, refVal,
-			(origin != null) ? origin.getId() : null);
+			final String comment, @Nullable String refVal, @Nullable final Kontakt origin) {
+		this(p.getId(), p.getGender(), date, item, result, comment, refVal, (origin != null) ? origin.getId() : null);
 	}
-	
-	public LabResult(final String patientId, final Gender gender, final TimeTool date,
-		final ILabItem item, final String result, final String comment, @Nullable String refVal,
-		@Nullable
-		final String originId){
+
+	public LabResult(final String patientId, final Gender gender, final TimeTool date, final ILabItem item,
+			final String result, final String comment, @Nullable String refVal, @Nullable final String originId) {
 		this(patientId, gender, date, item, result, comment, refVal, originId, true);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param patientId
 	 * @param gender
 	 * @param date
@@ -169,27 +162,21 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @param comment
 	 * @param refVal
 	 * @param origin
-	 * @param sendEvent
-	 *            send create event
-	 * @since 3.5 refactored, send {@link ElexisEvent#EVENT_CREATE} after full initialization of the
-	 *        object
+	 * @param sendEvent send create event
+	 * @since 3.5 refactored, send {@link ElexisEvent#EVENT_CREATE} after full
+	 *        initialization of the object
 	 */
-	public LabResult(final String patientId, final Gender gender, final TimeTool date,
-		final ILabItem item, final String result, final String comment, @Nullable String refVal,
-		@Nullable
-		final String originId, boolean sendEvent){
-			
+	public LabResult(final String patientId, final Gender gender, final TimeTool date, final ILabItem item,
+			final String result, final String comment, @Nullable String refVal, @Nullable final String originId,
+			boolean sendEvent) {
+
 		create(null, null, null, false);
 		String _date = (date == null) ? new TimeTool().toString(TimeTool.DATE_COMPACT)
 				: date.toString(TimeTool.DATE_COMPACT);
-		String[] fields = {
-			PATIENT_ID, DATE, ITEM_ID, RESULT, COMMENT, ORIGIN_ID
-		};
-		String[] vals = new String[] {
-			patientId, _date, item.getId(), result, comment, originId
-		};
+		String[] fields = { PATIENT_ID, DATE, ITEM_ID, RESULT, COMMENT, ORIGIN_ID };
+		String[] vals = new String[] { patientId, _date, item.getId(), result, comment, originId };
 		set(fields, vals);
-		
+
 		// do we have an initial reference value?
 		if (refVal != null) {
 			if (Gender.MALE == gender) {
@@ -198,23 +185,23 @@ public class LabResult extends PersistentObject implements ILabResult {
 				setRefFemale(refVal);
 			}
 		}
-		
+
 		int flags = isPathologic(gender, item, result) ? PATHOLOGIC : 0;
 		set(FLAGS, Integer.toString(flags));
-		
+
 		addToUnseen();
-		
+
 		if (sendEvent) {
 			sendElexisEvent(ElexisEvent.EVENT_CREATE);
 		}
-		
+
 	}
-	
+
 	/**
-	 * Create a LabResult and assert that an according LabOrder exists and is linked with this
-	 * result. This ensures, that the combination of both is properly initialized before the
-	 * LabResult create event is sent.
-	 * 
+	 * Create a LabResult and assert that an according LabOrder exists and is linked
+	 * with this result. This ensures, that the combination of both is properly
+	 * initialized before the LabResult create event is sent.
+	 *
 	 * @param labor
 	 * @param comment
 	 * @param result
@@ -227,42 +214,42 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @return
 	 * @since 3.5
 	 */
-	public static LabResult createLabResultAndAssertLabOrder(Patient pat, TimeTool date,
-		LabItem item, String result, String comment, @Nullable Labor origin, String refVal,
-		ILabOrder labOrder, String orderId, String mandantId, TimeTool time, String groupName){
-		
-		LabResult labResult = new LabResult(pat.getId(), pat.getGender(), date, item, result,
-			comment, refVal, (origin != null) ? origin.getId() : null, false);
-		
+	public static LabResult createLabResultAndAssertLabOrder(Patient pat, TimeTool date, LabItem item, String result,
+			String comment, @Nullable Labor origin, String refVal, ILabOrder labOrder, String orderId, String mandantId,
+			TimeTool time, String groupName) {
+
+		LabResult labResult = new LabResult(pat.getId(), pat.getGender(), date, item, result, comment, refVal,
+				(origin != null) ? origin.getId() : null, false);
+
 		if (labOrder == null) {
 			if (time == null) {
 				LoggerFactory.getLogger(LabResult.class).warn(
-					"Could not resolve observation time and time for ILabResult [{}], defaulting to now.",
-					labResult.getId());
+						"Could not resolve observation time and time for ILabResult [{}], defaulting to now.",
+						labResult.getId());
 				time = new TimeTool();
 			}
-			new LabOrder(CoreHub.getLoggedInContact().getId(), mandantId, pat.getId(), item, labResult.getId(),
-				orderId, groupName, time);
+			new LabOrder(CoreHub.getLoggedInContact().getId(), mandantId, pat.getId(), item, labResult.getId(), orderId,
+					groupName, time);
 		} else {
 			((LabOrder) labOrder).setLabResultIdAsString(labResult.getId());
 		}
-		
+
 		labResult.sendElexisEvent(ElexisEvent.EVENT_CREATE);
-		
+
 		return labResult;
 	}
-	
+
 	@Override
-	public int getCacheTime(){
+	public int getCacheTime() {
 		return 60;
 	}
-	
+
 	/**
 	 * Return the LabOrder linked to this LabResult
-	 * 
+	 *
 	 * @since 3.5
 	 */
-	public @Nullable LabOrder getLabOrder(){
+	public @Nullable LabOrder getLabOrder() {
 		Query<LabOrder> qre = new Query<LabOrder>(LabOrder.class, LabOrder.FLD_RESULT, getId());
 		List<LabOrder> execute = qre.execute();
 		if (execute.size() > 0) {
@@ -273,10 +260,9 @@ public class LabResult extends PersistentObject implements ILabResult {
 		}
 		return null;
 	}
-	
-	private boolean isPathologic(final Gender g, final ILabItem item, final String result,
-		boolean updateDescription){
-		
+
+	private boolean isPathologic(final Gender g, final ILabItem item, final String result, boolean updateDescription) {
+
 		LabResultEvaluationResult er = new LabResultEvaluator().evaluate(this);
 		if (er.isFinallyDetermined()) {
 			if (updateDescription && er.getPathologicDescription() != null) {
@@ -284,7 +270,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 			}
 			return er.isPathologic();
 		}
-		
+
 		String nr;
 		boolean usedItemRef = false;
 		if (g == Gender.MALE) {
@@ -299,11 +285,9 @@ public class LabResult extends PersistentObject implements ILabResult {
 		if (result != null && !refStrings.isEmpty() && !refStrings.get(0).isEmpty()) {
 			if (updateDescription) {
 				if (usedItemRef) {
-					setPathologicDescription(
-						new PathologicDescription(Description.PATHO_REF_ITEM, refStrings.get(0)));
+					setPathologicDescription(new PathologicDescription(Description.PATHO_REF_ITEM, refStrings.get(0)));
 				} else {
-					setPathologicDescription(
-						new PathologicDescription(Description.PATHO_REF, refStrings.get(0)));
+					setPathologicDescription(new PathologicDescription(Description.PATHO_REF, refStrings.get(0)));
 				}
 			}
 			Boolean testResult = testRef(refStrings.get(0), result);
@@ -311,47 +295,47 @@ public class LabResult extends PersistentObject implements ILabResult {
 				return testResult;
 			} else {
 				if (updateDescription) {
-					setPathologicDescription(
-						new PathologicDescription(Description.PATHO_NOREF, refStrings.get(0)));
+					setPathologicDescription(new PathologicDescription(Description.PATHO_NOREF, refStrings.get(0)));
 				}
 				return false;
 			}
 		}
-		
+
 		if (updateDescription) {
 			setPathologicDescription(new PathologicDescription(Description.PATHO_NOREF));
 		}
 		return false;
 	}
-	
-	private boolean isPathologic(final Gender g, final ILabItem item, final String result){
+
+	private boolean isPathologic(final Gender g, final ILabItem item, final String result) {
 		return isPathologic(g, item, result, true);
 	}
-	
-	public boolean isLongText(){
-		if (getItem().getTyp() == LabItemTyp.TEXT && getResult().equalsIgnoreCase("text")
-			&& !getComment().isEmpty()) {
+
+	public boolean isLongText() {
+		if (getItem().getTyp() == LabItemTyp.TEXT && getResult().equalsIgnoreCase("text") && !getComment().isEmpty()) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
-	 * Test result against the provided reference value to determine wheter it is pathologic
-	 * 
+	 * Test result against the provided reference value to determine wheter it is
+	 * pathologic
+	 *
 	 * @param ref
 	 * @param result
-	 * @return <code>true</code> if pathologic, <code>false</code> if not, <code>null</code> if we
-	 *         don't know
-	 * @since 3.4 if we can't test a value, as there are no rules, return <code>null</code>
+	 * @return <code>true</code> if pathologic, <code>false</code> if not,
+	 *         <code>null</code> if we don't know
+	 * @since 3.4 if we can't test a value, as there are no rules, return
+	 *        <code>null</code>
 	 */
-	private Boolean testRef(String ref, String result){
+	private Boolean testRef(String ref, String result) {
 		try {
 			if (ref.trim().startsWith(SMALLER) || ref.trim().startsWith(BIGGER)) {
 				String resultSign = null;
 				double refVal = Double.parseDouble(ref.substring(1).trim());
-				
+
 				if (result.trim().startsWith(SMALLER) || result.trim().startsWith(BIGGER)) {
 					resultSign = result.substring(0, 1).trim();
 					result = result.substring(1).trim();
@@ -377,84 +361,82 @@ public class LabResult extends PersistentObject implements ILabResult {
 		// we can't test as we don't have a testing rule
 		return null;
 	}
-	
-	private static List<String> parseRefString(String ref){
+
+	private static List<String> parseRefString(String ref) {
 		List<String> result = new ArrayList<String>();
-		
+
 		Matcher m = refValuesPattern.matcher(ref);
-		
+
 		while (m.find()) {
 			result.add(m.group(1).trim());
 		}
-		
+
 		// add the whole string if nothing found
 		if (result.isEmpty()) {
 			result.add(ref.trim());
 		}
-		
+
 		return result;
 	}
-	
-	public static LabResult load(final String id){
+
+	public static LabResult load(final String id) {
 		return new LabResult(id);
 	}
-	
-	public Patient getPatient(){
+
+	public Patient getPatient() {
 		return Patient.load(get(PATIENT_ID));
 	}
-	
+
 	/**
 	 * @deprecated use analysetime, observationtime and transmissiontime
 	 */
 	@Deprecated
-	public String getDate(){
+	public String getDate() {
 		return get(DATE);
 	}
-	
+
 	@Override
-	public void setDate(String value){
+	public void setDate(String value) {
 		set(DATE, value);
 	}
-	
+
 	/**
 	 * @deprecated use analysetime, observationtime and transmissiontime
 	 */
 	@Deprecated
-	public TimeTool getDateTime(){
+	public TimeTool getDateTime() {
 		String[] vals = get(false, TIME, DATE);
 		return translateDateTime(vals[0], vals[1]);
 	}
-	
+
 	/**
 	 * @since 3.1
 	 */
-	private static TimeTool translateDateTime(String time, String date){
+	private static TimeTool translateDateTime(String time, String date) {
 		if ((time == null) || ("".equals(time))) //$NON-NLS-1$
 			time = "000000"; //$NON-NLS-1$
 		while (time.length() < 6) {
 			time += StringConstants.ZERO;
 		}
-		return new TimeTool(date + StringConstants.SPACE + time.substring(0, 2)
-			+ StringConstants.COLON + time.substring(2, 4) + StringConstants.COLON
-			+ time.substring(4, 6));
+		return new TimeTool(date + StringConstants.SPACE + time.substring(0, 2) + StringConstants.COLON
+				+ time.substring(2, 4) + StringConstants.COLON + time.substring(4, 6));
 	}
-	
-	public ILabItem getItem(){
+
+	public ILabItem getItem() {
 		return LabItem.load(get(ITEM_ID));
 	}
-	
+
 	@Override
-	public void setItem(ILabItem value){
+	public void setItem(ILabItem value) {
 		set(ITEM_ID, value.getId());
 	}
-	
-	public String getResult(){
+
+	public String getResult() {
 		String result = checkNull(get(RESULT));
 		if (getItem().getTyp() == LabItemTyp.FORMULA) {
 			String value = null;
 			// get the LabOrder for this LabResult
-			List<LabOrder> orders =
-				LabOrder.getLabOrders((String) null, (String) null, getItem(), this, null, null,
+			List<LabOrder> orders = LabOrder.getLabOrders((String) null, (String) null, getItem(), this, null, null,
 					null);
 			if (orders != null && !orders.isEmpty()) {
 				value = evaluteWithOrderContext(orders.get(0));
@@ -473,49 +455,45 @@ public class LabResult extends PersistentObject implements ILabResult {
 		}
 		return result;
 	}
-	
-	private String evaluteWithOrderContext(LabOrder order){
+
+	private String evaluteWithOrderContext(LabOrder order) {
 		String ret = null;
 		try {
-			ret = ((LabItem)getItem()).evaluate(getPatient(), order.getLabResults());
+			ret = ((LabItem) getItem()).evaluate(getPatient(), order.getLabResults());
 		} catch (ElexisException e) {
 			ret = "?formel?"; //$NON-NLS-1$
 		}
 		return ret;
 	}
-	
-	private String evaluateWithDateContext(TimeTool time){
+
+	private String evaluateWithDateContext(TimeTool time) {
 		String ret = null;
 		try {
-			ret = ((LabItem)getItem()).evaluate(getPatient(), time);
+			ret = ((LabItem) getItem()).evaluate(getPatient(), time);
 		} catch (ElexisException e) {
 			ret = "?formel?"; //$NON-NLS-1$
 		}
 		return ret;
 	}
-	
-	public void setResult(final String res){
+
+	public void setResult(final String res) {
 		int flags = isPathologic(getPatient().getGender(), getItem(), res) ? PATHOLOGIC : 0;
-		set(new String[] {
-			RESULT, FLAGS
-		}, new String[] {
-			checkNull(res), Integer.toString(flags)
-		});
+		set(new String[] { RESULT, FLAGS }, new String[] { checkNull(res), Integer.toString(flags) });
 	}
-	
-	public String getComment(){
+
+	public String getComment() {
 		return checkNull(get(COMMENT));
 	}
-	
+
 	public void setComment(String comment) {
 		set(COMMENT, comment);
 	}
-	
-	public boolean isFlag(final int flag){
+
+	public boolean isFlag(final int flag) {
 		return (getFlags() & flag) != 0;
 	}
-	
-	public void setFlag(final int flag, final boolean set){
+
+	public void setFlag(final int flag, final boolean set) {
 		int flags = getFlags();
 		if (set) {
 			flags |= flag;
@@ -524,59 +502,59 @@ public class LabResult extends PersistentObject implements ILabResult {
 		}
 		setInt(FLAGS, flags);
 	}
-	
+
 	/**
 	 * if 1 is pathologic<br>
-	 * if 0 non-pathologic or indetermined (see {@link #getPathologicDescription()}<br>
+	 * if 0 non-pathologic or indetermined (see
+	 * {@link #getPathologicDescription()}<br>
 	 * <code>flags</code> is indetermined for the following states:<br>
 	 * {@link Description#PATHO_NOREF}, {@link Description#UNKNOWN} and
 	 * {@link Description#PATHO_IMPORT_NO_INFO}
 	 */
-	public int getFlags(){
+	public int getFlags() {
 		return checkZero(get(FLAGS));
 	}
-	
+
 	/**
-	 * Do we really know about the state of the pathologic flag, or is it set to non-pathologic
-	 * because we simply don't now or can't determine?
-	 * 
-	 * @param pathologicDescription
-	 *            if <code>null</code> will fetch via db call
+	 * Do we really know about the state of the pathologic flag, or is it set to
+	 * non-pathologic because we simply don't now or can't determine?
+	 *
+	 * @param pathologicDescription if <code>null</code> will fetch via db call
 	 * @return <code>true</code> if don't know, or can't determine
 	 * @since 3.4
 	 */
-	public boolean isPathologicFlagIndetermined(PathologicDescription pathologicDescription){
+	public boolean isPathologicFlagIndetermined(PathologicDescription pathologicDescription) {
 		if (pathologicDescription == null) {
 			pathologicDescription = getPathologicDescription();
 		}
 		Description desc = pathologicDescription.getDescription();
 		return (Description.PATHO_NOREF == desc || Description.UNKNOWN == desc
-			|| Description.PATHO_IMPORT_NO_INFO == desc);
+				|| Description.PATHO_IMPORT_NO_INFO == desc);
 	}
-	
+
 	@Override
-	public void setFlags(int value){
+	public void setFlags(int value) {
 		set(FLAGS, Integer.toString(value));
 	}
 
-	public String getUnit(){
+	public String getUnit() {
 		String ret = checkNull(get(UNIT));
 		if (ret.isEmpty()) {
 			ret = getItem().getUnit();
 		}
 		return ret;
 	}
-	
-	public void setUnit(String unit){
+
+	public void setUnit(String unit) {
 		set(UNIT, unit);
 	}
-	
+
 	/**
 	 * Time the analyse was performed
-	 * 
+	 *
 	 * @param time
 	 */
-	public TimeTool getAnalyseTime(){
+	public TimeTool getAnalyseTime() {
 		String timestr = checkNull(get(ANALYSETIME));
 		if (timestr.isEmpty()) {
 			return null;
@@ -584,22 +562,22 @@ public class LabResult extends PersistentObject implements ILabResult {
 			return new TimeTool(timestr);
 		}
 	}
-	
+
 	/**
 	 * Time the analyse was performed
-	 * 
+	 *
 	 * @param time
 	 */
-	public void setAnalyseTime(TimeTool time){
+	public void setAnalyseTime(TimeTool time) {
 		set(ANALYSETIME, time.toString(TimeTool.TIMESTAMP));
 	}
-	
+
 	/**
 	 * Time the specimen / sample was taken
-	 * 
+	 *
 	 * @param time
 	 */
-	public TimeTool getObservationTime(){
+	public TimeTool getObservationTime() {
 		String timestr = checkNull(get(OBSERVATIONTIME));
 		if (timestr.isEmpty()) {
 			return null;
@@ -607,24 +585,24 @@ public class LabResult extends PersistentObject implements ILabResult {
 			return new TimeTool(timestr);
 		}
 	}
-	
+
 	/**
 	 * Time the specimen / sample was taken
-	 * 
+	 *
 	 * @param time
 	 */
-	public void setObservationTime(TimeTool time){
+	public void setObservationTime(TimeTool time) {
 		if (time != null) {
 			set(OBSERVATIONTIME, time.toString(TimeTool.TIMESTAMP));
 		}
 	}
-	
+
 	/**
 	 * Time the result was transmitted to Elexis.
-	 * 
+	 *
 	 * @param time
 	 */
-	public TimeTool getTransmissionTime(){
+	public TimeTool getTransmissionTime() {
 		String timestr = checkNull(get(TRANSMISSIONTIME));
 		if (timestr.isEmpty()) {
 			return null;
@@ -632,48 +610,46 @@ public class LabResult extends PersistentObject implements ILabResult {
 			return new TimeTool(timestr);
 		}
 	}
-	
+
 	/**
 	 * Time the result was transmitted to Elexis.
-	 * 
+	 *
 	 * @param time
 	 */
-	public void setTransmissionTime(TimeTool time){
+	public void setTransmissionTime(TimeTool time) {
 		set(TRANSMISSIONTIME, time.toString(TimeTool.TIMESTAMP));
 	}
-	
-	public String getRefMale(){
+
+	public String getRefMale() {
 		return resolvePreferedRefValue(getItem().getReferenceMale(), REFMALE);
 	}
-	
-	public void setRefMale(String value){
+
+	public void setRefMale(String value) {
 		set(REFMALE, value);
 		setFlag(PATHOLOGIC, isPathologic(getPatient().getGender(), getItem(), getResult()));
 	}
-	
-	public String getRefFemale(){
+
+	public String getRefFemale() {
 		return resolvePreferedRefValue(getItem().getReferenceFemale(), REFFEMALE);
 	}
-	
-	public void setRefFemale(String value){
+
+	public void setRefFemale(String value) {
 		set(REFFEMALE, value);
 		setFlag(PATHOLOGIC, isPathologic(getPatient().getGender(), getItem(), getResult()));
 	}
-	
+
 	/**
-	 * get reference value based on user settings (either from local system (LabItem) or device sent
-	 * (LabResult))
-	 * 
-	 * @param localRef
-	 *            {@link LabItem} reference
-	 * @param refField
-	 *            male or female field of {@link LabResult}
-	 * @return Preferred refValue. Per default reference of {@link LabItem} is returned
+	 * get reference value based on user settings (either from local system
+	 * (LabItem) or device sent (LabResult))
+	 *
+	 * @param localRef {@link LabItem} reference
+	 * @param refField male or female field of {@link LabResult}
+	 * @return Preferred refValue. Per default reference of {@link LabItem} is
+	 *         returned
 	 */
-	private String resolvePreferedRefValue(String localRef, String refField){
-		boolean useLocalRefs =
-			ConfigServiceHolder.getUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
-		
+	private String resolvePreferedRefValue(String localRef, String refField) {
+		boolean useLocalRefs = ConfigServiceHolder.getUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+
 		if (useLocalRefs && localRef != null && !localRef.isEmpty()) {
 			return localRef;
 		} else {
@@ -685,24 +661,23 @@ public class LabResult extends PersistentObject implements ILabResult {
 			return ref;
 		}
 	}
-	
+
 	/**
 	 * Test if we use the reference value from the result or the item on
 	 * {@link LabResult#resolvePreferedRefValue(String, String)}.
-	 * 
+	 *
 	 * @param refField
 	 * @return
 	 */
-	private boolean isUsingItemRef(String refField){
-		boolean useLocalRefs =
-			ConfigServiceHolder.getUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+	private boolean isUsingItemRef(String refField) {
+		boolean useLocalRefs = ConfigServiceHolder.getUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
 		String localRef;
 		if (REFMALE.equals(refField)) {
 			localRef = getItem().getReferenceMale();
 		} else {
 			localRef = getItem().getReferenceFemale();
 		}
-		
+
 		if (useLocalRefs && localRef != null && !localRef.isEmpty()) {
 			return true;
 		} else {
@@ -713,17 +688,15 @@ public class LabResult extends PersistentObject implements ILabResult {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Set arbitrary additional information
-	 * 
-	 * @param key
-	 *            name of the information
-	 * @param value
-	 *            value of the information
+	 *
+	 * @param key   name of the information
+	 * @param value value of the information
 	 */
 	@SuppressWarnings("unchecked")
-	public void setDetail(final String key, final String value){
+	public void setDetail(final String key, final String value) {
 		Map<Object, Object> ext = getMap(EXTINFO);
 		if (value == null) {
 			ext.remove(key);
@@ -731,31 +704,31 @@ public class LabResult extends PersistentObject implements ILabResult {
 			ext.put(key, value);
 		}
 		setMap(EXTINFO, ext);
-		
+
 	}
-	
+
 	/**
 	 * retrieve additional information
-	 * 
-	 * @param key
-	 *            name of the requested information
-	 * @return value if the information or null if no information with that name was found
+	 *
+	 * @param key name of the requested information
+	 * @return value if the information or null if no information with that name was
+	 *         found
 	 */
 	@SuppressWarnings("unchecked")
-	public String getDetail(final String key){
+	public String getDetail(final String key) {
 		Map<Object, Object> ext = getMap(EXTINFO);
 		return (String) ext.get(key);
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getItem().getLabel()).append(", ").append(getDate()).append(": ") //$NON-NLS-1$ //$NON-NLS-2$
-			.append(getResult());
+				.append(getResult());
 		return sb.toString();
 		// return getResult();
 	}
-	
+
 	/**
 	 * @deprecated date is used use observationtime
 	 * @since 3.7
@@ -764,7 +737,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @param item
 	 * @return
 	 */
-	public static LabResult getForDate(final Patient pat, final TimeTool date, final LabItem item){
+	public static LabResult getForDate(final Patient pat, final TimeTool date, final LabItem item) {
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
 		qbe.add(ITEM_ID, Query.EQUALS, item.getId());
 		qbe.add(PATIENT_ID, Query.EQUALS, pat.getId());
@@ -775,36 +748,36 @@ public class LabResult extends PersistentObject implements ILabResult {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets a {@link LabResult} for observationTime timespan.
+	 *
 	 * @param pat
 	 * @param fromObservationTime
 	 * @param toObservationTime
 	 * @param item
 	 * @return
 	 */
-	public static LabResult getForObservationTime(final Patient pat, final TimeTool fromObservationTime,  final TimeTool toObservationTime, final LabItem item){
+	public static LabResult getForObservationTime(final Patient pat, final TimeTool fromObservationTime,
+			final TimeTool toObservationTime, final LabItem item) {
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
 		qbe.add(ITEM_ID, Query.EQUALS, item.getId());
 		qbe.add(PATIENT_ID, Query.EQUALS, pat.getId());
-		
+
 		if (fromObservationTime != null) {
 			fromObservationTime.set(TimeTool.HOUR_OF_DAY, 0);
 			fromObservationTime.set(TimeTool.MINUTE, 0);
 			fromObservationTime.set(TimeTool.SECOND, 0);
 			fromObservationTime.set(TimeTool.MILLISECOND, 0);
-			qbe.add(OBSERVATIONTIME, Query.GREATER_OR_EQUAL,
-				fromObservationTime.toString(TimeTool.TIMESTAMP));
+			qbe.add(OBSERVATIONTIME, Query.GREATER_OR_EQUAL, fromObservationTime.toString(TimeTool.TIMESTAMP));
 		}
-		
+
 		if (toObservationTime != null) {
 			toObservationTime.set(TimeTool.HOUR_OF_DAY, 23);
 			toObservationTime.set(TimeTool.MINUTE, 59);
 			toObservationTime.set(TimeTool.SECOND, 59);
 			toObservationTime.set(TimeTool.MILLISECOND, 999);
-			qbe.add(OBSERVATIONTIME, Query.LESS_OR_EQUAL,
-				toObservationTime.toString(TimeTool.TIMESTAMP));
+			qbe.add(OBSERVATIONTIME, Query.LESS_OR_EQUAL, toObservationTime.toString(TimeTool.TIMESTAMP));
 		}
 		qbe.orderBy(true, OBSERVATIONTIME);
 		List<LabResult> res = qbe.execute();
@@ -813,21 +786,19 @@ public class LabResult extends PersistentObject implements ILabResult {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * add a LabResult to the list of unseen LabResults. We do not keep LabResults older than
-	 * KEEP_UNSEEN_LAB_RESULTS days in this list.
+	 * add a LabResult to the list of unseen LabResults. We do not keep LabResults
+	 * older than KEEP_UNSEEN_LAB_RESULTS days in this list.
 	 */
-	public void addToUnseen(){
+	public void addToUnseen() {
 		List<LabResult> o = getUnseen();
 		LinkedList<String> n = new LinkedList<String>();
 		n.add(getId());
 		TimeTool limit = new TimeTool();
 		try { // We need to catch wrong formatted numbers in KEEP_UNSEEN
-			limit.addHours(-24
-				* Integer.parseInt(ConfigServiceHolder.getGlobal(
-					Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
-					Preferences.DAYS_TO_KEEP_UNSEEN_LAB_RESULTS)));
+			limit.addHours(-24 * Integer.parseInt(ConfigServiceHolder.getGlobal(
+					Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS, Preferences.DAYS_TO_KEEP_UNSEEN_LAB_RESULTS)));
 		} catch (NumberFormatException nex) {
 			ExHandler.handle(nex);
 			limit.addHours(-24 * 7);
@@ -835,7 +806,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 		// log.log(limit.dump(),Log.INFOS);
 		TimeTool tr = new TimeTool();
 		for (LabResult lr : o) {
-			//	log.info(lr.getDate());
+			// log.info(lr.getDate());
 			if (tr.set(lr.getDate())) {
 				if (tr.isAfter(limit)) {
 					n.add(lr.getId());
@@ -847,24 +818,24 @@ public class LabResult extends PersistentObject implements ILabResult {
 		unseen.putString(results);
 		// unseen.set("lastupdate", new TimeTool().toString(TimeTool.TIMESTAMP));
 	}
-	
+
 	/**
 	 * Remove a lab result from the list of unseen results.
 	 */
-	public void removeFromUnseen(){
+	public void removeFromUnseen() {
 		NamedBlob unseen = NamedBlob.load(LABRESULT_UNSEEN);
 		String results = unseen.getString();
 		results = results.replaceAll(getId(), StringTool.leer);
 		unseen.putString(results.replaceAll(",,", ",")); //$NON-NLS-1$ //$NON-NLS-2$
 		// unseen.set("lastupdate", new TimeTool().toString(TimeTool.TIMESTAMP));
 	}
-	
+
 	/**
 	 * Return a List of unseen LabResults
-	 * 
+	 *
 	 * @return
 	 */
-	public static List<LabResult> getUnseen(){
+	public static List<LabResult> getUnseen() {
 		LinkedList<LabResult> ret = new LinkedList<LabResult>();
 		NamedBlob unseen = NamedBlob.load(LABRESULT_UNSEEN);
 		String results = unseen.getString();
@@ -878,69 +849,69 @@ public class LabResult extends PersistentObject implements ILabResult {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * return the time when the last change to the list of unseen results was made
-	 * 
+	 *
 	 * @return a timestamp (as in System.CurrentTimeMillis())
 	 */
-	public static long getLastUpdateUnseen(){
+	public static long getLastUpdateUnseen() {
 		NamedBlob unseen = NamedBlob.load(LABRESULT_UNSEEN);
 		long lastup = unseen.getLastUpdate();
 		return lastup;
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return getLabel();
 	}
-	
+
 	@Override
-	public IContact getOriginContact(){
+	public IContact getOriginContact() {
 		Kontakt origin = getOrigin();
-		if(origin==null) {
+		if (origin == null) {
 			return null;
 		}
 		return new ContactBean(origin);
 	}
-	
+
 	@Override
-	public void setOriginContact(IContact value){
+	public void setOriginContact(IContact value) {
 		Kontakt load = Kontakt.load(value.getId());
 		setOrigin(load);
 	}
 
-	public void setOrigin(Kontakt origin){
+	public void setOrigin(Kontakt origin) {
 		if (origin != null && origin.exists()) {
 			set(ORIGIN_ID, origin.getId());
 		} else {
 			set(ORIGIN_ID, ""); //$NON-NLS-1$
 		}
 	}
-	
-	public Kontakt getOrigin(){
+
+	public Kontakt getOrigin() {
 		String id = get(ORIGIN_ID);
 		if (id != null && !id.isEmpty()) {
 			return Kontakt.load(id);
 		}
 		return null;
 	}
-	
+
 	@Override
-	public PathologicDescription getPathologicDescription(){
+	public PathologicDescription getPathologicDescription() {
 		if (pathologicDescription == null) {
 			pathologicDescription = PathologicDescription.of(get(PATHODESC));
 		}
 		return pathologicDescription;
 	}
-	
+
 	@Override
-	public void setPathologicDescription(PathologicDescription description){
+	public void setPathologicDescription(PathologicDescription description) {
 		this.pathologicDescription = description;
 		set(PATHODESC, description.toString());
 	}
-	
-	public static boolean isValidNumericRefValue(String value){
+
+	public static boolean isValidNumericRefValue(String value) {
 		List<String> refs = parseRefString(value);
 		for (String string : refs) {
 			try {
@@ -961,8 +932,8 @@ public class LabResult extends PersistentObject implements ILabResult {
 		}
 		return true;
 	}
-	
-	public static boolean isValidAbsoluteRefValue(String value){
+
+	public static boolean isValidAbsoluteRefValue(String value) {
 		for (String string : VALID_ABS_VALUES) {
 			if (value.trim().equals(string)) {
 				return true;
@@ -970,29 +941,26 @@ public class LabResult extends PersistentObject implements ILabResult {
 		}
 		return false;
 	}
-	
+
 	/**
-	 * LabResults grouped in HashMaps. 1st grouped by group, 2nd grouped by item, 3rd grouped by
-	 * date containing a list of results.
-	 * 
+	 * LabResults grouped in HashMaps. 1st grouped by group, 2nd grouped by item,
+	 * 3rd grouped by date containing a list of results.
+	 *
 	 * @param pat
 	 * @return
 	 */
-	public static HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> getGrouped(
-		Patient pat){
-		HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> ret =
-			new HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>>();
+	public static HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> getGrouped(Patient pat) {
+		HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> ret = new HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>>();
 		if (pat == null) {
 			return ret;
 		}
-		
-		PreparedStatement ps =
-			PersistentObject.getConnection().getPreparedStatement(QUERY_GROUP_ORDER);
+
+		PreparedStatement ps = PersistentObject.getConnection().getPreparedStatement(QUERY_GROUP_ORDER);
 		try {
 			ps.setString(1, pat.getId());
 			log.debug(ps.toString());
 			ResultSet resi = ps.executeQuery();
-			
+
 			while ((resi != null) && (resi.next() == true)) {
 				// result values
 				String val_id = resi.getString(1); // ID
@@ -1006,7 +974,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 				String val_unit = resi.getString(9); // einheit
 				String val_refmale = resi.getString(10); // ref male
 				String val_reffemale = resi.getString(11); // ref female
-				
+
 				// item values
 				String val_itemgroup = getNotNull(resi, 12); // grupppe
 				String val_itemshortname = getNotNull(resi, 13); // kurzel
@@ -1016,26 +984,26 @@ public class LabResult extends PersistentObject implements ILabResult {
 				String val_itemreffemale = getNotNull(resi, 17); // ref female
 				String val_itemdigits = getNotNull(resi, 18); // digits
 				String val_itemprio = getNotNull(resi, 19); // prio
-				
+
 				HashMap<String, HashMap<String, List<LabResult>>> groupMap = ret.get(val_itemgroup);
 				if (groupMap == null) {
 					groupMap = new HashMap<String, HashMap<String, List<LabResult>>>();
 					ret.put(val_itemgroup, groupMap);
 				}
-				
+
 				HashMap<String, List<LabResult>> itemMap = groupMap.get(val_itemshortname);
 				if (itemMap == null) {
 					itemMap = new HashMap<String, List<LabResult>>();
 					groupMap.put(val_itemshortname, itemMap);
 				}
-				
+
 				TimeTool time = null;
 				if (val_ot != null) {
 					time = new TimeTool(val_ot);
 				} else {
 					time = translateDateTime(val_time, val_date);
 				}
-				
+
 				String date = time.toString(TimeTool.DATE_COMPACT);
 				List<LabResult> resultList = itemMap.get(date);
 				if (resultList == null) {
@@ -1052,7 +1020,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 				labResult.putInCache(UNIT, val_unit);
 				labResult.putInCache(REFMALE, val_refmale);
 				labResult.putInCache(REFFEMALE, val_reffemale);
-				
+
 				// cache item properties
 				LabItem item = new LabItem(val_itemid);
 				item.putInCache(LabItem.SHORTNAME, val_itemshortname);
@@ -1071,19 +1039,19 @@ public class LabResult extends PersistentObject implements ILabResult {
 		} finally {
 			PersistentObject.getConnection().releasePreparedStatement(ps);
 		}
-		
+
 		return ret;
 	}
-	
-	private static String getNotNull(ResultSet set, int index) throws SQLException{
+
+	private static String getNotNull(ResultSet set, int index) throws SQLException {
 		String ret = set.getString(index);
 		if (ret == null) {
 			ret = "";
 		}
 		return ret;
 	}
-	
-	public static void changeObservationTime(Patient patient, TimeTool from, TimeTool to){
+
+	public static void changeObservationTime(Patient patient, TimeTool from, TimeTool to) {
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
 		qbe.add(PATIENT_ID, Query.EQUALS, patient.getId());
 		List<LabResult> res = qbe.execute();

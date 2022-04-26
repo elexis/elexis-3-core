@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -25,35 +25,35 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.data.Patient;
 
 public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
-	
+
 	String _token;
 	private Label lblTokenlabel;
 	private Text txtTokenText;
-	
+
 	/**
 	 * Create the dialog.
-	 * 
+	 *
 	 * @param parentShell
 	 */
-	private ClientCustomTextTokenEditDialog(Shell parentShell){
+	private ClientCustomTextTokenEditDialog(Shell parentShell) {
 		super(parentShell);
 	}
-	
+
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ClientCustomTextTokenEditDialog(Shell parentShell, String token){
+	public ClientCustomTextTokenEditDialog(Shell parentShell, String token) {
 		super(parentShell);
 		_token = token;
 	}
-	
+
 	/**
 	 * Create contents of the dialog.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		setTitle("Edit value ...");
 		String name = _token.split("\\.")[1];
 		setMessage("Edit " + name + " value");
@@ -61,14 +61,14 @@ public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
+
 		lblTokenlabel = new Label(container, SWT.NONE);
 		lblTokenlabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblTokenlabel.setText(_token.split("\\.")[1]);
-		
+
 		txtTokenText = new Text(container, SWT.BORDER);
 		txtTokenText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		
+
 		String[] arr = _token.split("\\.");
 		if (arr == null || arr.length < 2) {
 			txtTokenText.setText("ERR");
@@ -77,7 +77,7 @@ public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 
 		if (arr[0].equalsIgnoreCase("Patient")) {
 			Patient pat = ElexisEventDispatcher.getSelectedPatient();
-			
+
 			if (arr[1] == null || pat == null) {
 				txtTokenText.setText("");
 				return area;
@@ -85,26 +85,26 @@ public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 
 			String result = pat.get(arr[1]);
 			txtTokenText.setText((result != null) ? result : "");
-		} 
-		
+		}
+
 		return area;
 	}
-	
+
 	/**
 	 * Create contents of the button bar.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		Patient pat = ElexisEventDispatcher.getSelectedPatient();
-		if(pat!=null) {
+		if (pat != null) {
 			pat.set(_token.split("\\.")[1], txtTokenText.getText());
 		}
 		super.okPressed();

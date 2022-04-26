@@ -13,28 +13,28 @@ import ch.elexis.core.mail.MailAccount;
 public class MailClientComponent {
 
 	private static String virtLocalId = " [virt_local]";
-	
+
 	private static IMailClient mailClient;
-	
+
 	@Reference
-	public void setMailClient(IMailClient mailClient){
+	public void setMailClient(IMailClient mailClient) {
 		MailClientComponent.mailClient = mailClient;
 	}
-	
-	public void unsetMailClient(IMailClient mailClient){
+
+	public void unsetMailClient(IMailClient mailClient) {
 		MailClientComponent.mailClient = null;
 	}
-	
-	public static IMailClient getMailClient(){
+
+	public static IMailClient getMailClient() {
 		return mailClient;
 	}
-	
-	public static String getLastErrorMessage(){
+
+	public static String getLastErrorMessage() {
 		String message = "";
 		if (mailClient != null) {
 			Optional<ErrorTyp> error = mailClient.getLastError();
-			if(error.isPresent()) {
-				switch(error.get()) {
+			if (error.isPresent()) {
+				switch (error.get()) {
 				case AUTHENTICATION:
 					message = "Fehler bei der Authorisation. Bitte Anmeldedaten überprüfen.";
 					break;
@@ -52,17 +52,17 @@ public class MailClientComponent {
 		}
 		return message;
 	}
-	
-	public static boolean isVirtLocal(String accountId){
+
+	public static boolean isVirtLocal(String accountId) {
 		return accountId.endsWith(virtLocalId);
 	}
-	
-	public static boolean isVirtLocal(MailAccount account){
+
+	public static boolean isVirtLocal(MailAccount account) {
 		return isVirtLocal(account.getId());
 	}
-	
-	public static String getVirtLocalId(MailAccount account){
+
+	public static String getVirtLocalId(MailAccount account) {
 		return account.getId() + virtLocalId;
 	}
-	
+
 }

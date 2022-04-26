@@ -27,53 +27,52 @@ import ch.elexis.core.types.Gender;
 import ch.rgw.tools.TimeTool;
 
 public abstract class AbstractServiceTest {
-	
+
 	static IModelService coreModelService = AllServiceTests.getModelService();
-	
+
 	public List<IMandator> testMandators = new ArrayList<IMandator>();
 	public List<IPatient> testPatients = new ArrayList<IPatient>();
 	public List<ICoverage> testCoverages = new ArrayList<ICoverage>();
 	public List<IEncounter> testEncounters = new ArrayList<IEncounter>();
-	
-	public void createTestMandantPatientFallBehandlung(){
+
+	public void createTestMandantPatientFallBehandlung() {
 		TimeTool timeTool = new TimeTool();
-		IPerson _mandator =
-			new IContactBuilder.PersonBuilder(coreModelService, "mandator1 " + timeTool.toString(),
-				"Anton" + timeTool.toString(), timeTool.toLocalDate(), Gender.MALE).mandator()
-					.buildAndSave();
+		IPerson _mandator = new IContactBuilder.PersonBuilder(coreModelService, "mandator1 " + timeTool.toString(),
+				"Anton" + timeTool.toString(), timeTool.toLocalDate(), Gender.MALE).mandator().buildAndSave();
 		IMandator mandator = coreModelService.load(_mandator.getId(), IMandator.class).get();
 		testMandators.add(mandator);
-		
-		IPatient patient = new IContactBuilder.PatientBuilder(coreModelService, "Armer",
-			"Anton" + timeTool.toString(), timeTool.toLocalDate(), Gender.MALE).buildAndSave();
+
+		IPatient patient = new IContactBuilder.PatientBuilder(coreModelService, "Armer", "Anton" + timeTool.toString(),
+				timeTool.toLocalDate(), Gender.MALE).buildAndSave();
 		testPatients.add(patient);
-		
-		ICoverage testCoverage =
-			new ICoverageBuilder(coreModelService, patient, "Fallbezeichnung", "Fallgrund", "KVG")
+
+		ICoverage testCoverage = new ICoverageBuilder(coreModelService, patient, "Fallbezeichnung", "Fallgrund", "KVG")
 				.buildAndSave();
 		testCoverage.setExtInfo("Versicherungsnummer", "12340815"); // KVG requirement for billing
 		coreModelService.save(testCoverage);
 		testCoverages.add(testCoverage);
-		
-		IEncounter behandlung =
-			new IEncounterBuilder(coreModelService, testCoverage, mandator).buildAndSave();
+
+		IEncounter behandlung = new IEncounterBuilder(coreModelService, testCoverage, mandator).buildAndSave();
 		testEncounters.add(behandlung);
 	}
-	
+
 	/**
-	 * remove the test setting generated via {@link #createTestMandantPatientFallBehandlung()}, and
-	 * clean the {@link IContext} from its elements if they were set
+	 * remove the test setting generated via
+	 * {@link #createTestMandantPatientFallBehandlung()}, and clean the
+	 * {@link IContext} from its elements if they were set
 	 */
-	public void cleanup(){
+	public void cleanup() {
 		for (IEncounter cons : testEncounters) {
-			//			List<Verrechnet> verrechnet = VerrechnetService.getAllVerrechnetForBehandlung(cons);
-			//			for (Verrechnet verrechnet2 : verrechnet) {
-			//				System.out.print("Deleting verrechnet " + verrechnet2.getLabel() + " on behandlung "
-			//					+ cons.getLabel());
-			//				VerrechnetService.remove(verrechnet2);
-			//				System.out.println(" [OK]");
-			//			}
-			
+			// List<Verrechnet> verrechnet =
+			// VerrechnetService.getAllVerrechnetForBehandlung(cons);
+			// for (Verrechnet verrechnet2 : verrechnet) {
+			// System.out.print("Deleting verrechnet " + verrechnet2.getLabel() + " on
+			// behandlung "
+			// + cons.getLabel());
+			// VerrechnetService.remove(verrechnet2);
+			// System.out.println(" [OK]");
+			// }
+
 			coreModelService.remove(cons);
 		}
 		testEncounters.clear();
@@ -94,45 +93,46 @@ public abstract class AbstractServiceTest {
 		}
 		testMandators.clear();
 	}
-	
+
 	/**
-	 * Accept all HTTPS certificates (used for servers running a self-signed certificate)
-	 * 
+	 * Accept all HTTPS certificates (used for servers running a self-signed
+	 * certificate)
+	 *
 	 * @throws NoSuchAlgorithmException
 	 * @throws KeyManagementException
 	 */
-	public static void acceptAllCerts() throws NoSuchAlgorithmException, KeyManagementException{
+	public static void acceptAllCerts() throws NoSuchAlgorithmException, KeyManagementException {
 		// Create a trust manager that does not validate certificate chains
-		TrustManager[] trustAllCerts = new TrustManager[] {
-			new X509TrustManager() {
-				@Override
-				public java.security.cert.X509Certificate[] getAcceptedIssuers(){
-					return null;
-				}
-				
-				@Override
-				public void checkClientTrusted(X509Certificate[] certs, String authType){}
-				
-				@Override
-				public void checkServerTrusted(X509Certificate[] certs, String authType){}
+		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+			@Override
+			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+				return null;
 			}
-		};
-		
+
+			@Override
+			public void checkClientTrusted(X509Certificate[] certs, String authType) {
+			}
+
+			@Override
+			public void checkServerTrusted(X509Certificate[] certs, String authType) {
+			}
+		} };
+
 		// Install the all-trusting trust manager
 		SSLContext sc = SSLContext.getInstance("SSL");
 		sc.init(null, trustAllCerts, new java.security.SecureRandom());
 		HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		
+
 		// Create all-trusting host name verifier
 		HostnameVerifier allHostsValid = new HostnameVerifier() {
 			@Override
-			public boolean verify(String hostname, SSLSession session){
+			public boolean verify(String hostname, SSLSession session) {
 				return true;
 			}
 		};
-		
+
 		// Install the all-trusting host verifier
 		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-		
+
 	}
 }

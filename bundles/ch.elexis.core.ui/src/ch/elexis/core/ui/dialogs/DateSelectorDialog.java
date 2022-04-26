@@ -28,26 +28,26 @@ public class DateSelectorDialog extends Dialog {
 	CDateTime dp;
 	TimeTool preSelectedDate;
 	String shellTitle;
-	
-	public DateSelectorDialog(Shell parent, TimeTool selectedDate, String shellTitle){
+
+	public DateSelectorDialog(Shell parent, TimeTool selectedDate, String shellTitle) {
 		super(parent);
 		this.preSelectedDate = (selectedDate == null) ? new TimeTool() : selectedDate;
 		this.shellTitle = (shellTitle == null) ? Messages.DateSelectorDialog_enterDate : shellTitle;
 	}
-	
-	public DateSelectorDialog(Shell parent, TimeTool selectedDate){
+
+	public DateSelectorDialog(Shell parent, TimeTool selectedDate) {
 		this(parent, selectedDate, null);
 	}
-	
+
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public DateSelectorDialog(Shell parentShell){
+	public DateSelectorDialog(Shell parentShell) {
 		this(parentShell, new TimeTool());
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.None);
 		ret.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		ret.setLayout(new GridLayout(1, false));
@@ -59,9 +59,9 @@ public class DateSelectorDialog extends Dialog {
 		getShell().setText(shellTitle);
 		return ret;
 	}
-	
-	public TimeTool getSelectedDate(){
+
+	public TimeTool getSelectedDate() {
 		return new TimeTool(dp.getSelection());
 	}
-	
+
 }

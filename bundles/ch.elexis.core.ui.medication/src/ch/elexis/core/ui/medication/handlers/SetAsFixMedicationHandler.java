@@ -20,42 +20,40 @@ import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 
 public class SetAsFixMedicationHandler extends AbstractHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		ISelection selection =
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object firstElement = strucSelection.getFirstElement();
-			
+
 			if (firstElement instanceof MedicationTableViewerItem) {
 				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
 				IPrescription presc = mtvItem.getPrescription();
-				
+
 				if (presc != null && !(presc.getEntryType() == EntryType.FIXED_MEDICATION)) {
 					AcquireLockUi.aquireAndRun(presc, new ILockHandler() {
-						
+
 						@Override
-						public void lockFailed(){
+						public void lockFailed() {
 							// do nothing
 						}
-						
+
 						@Override
-						public void lockAcquired(){
-							IPrescription fixMedi =
-								MedicationServiceHolder.get().createPrescriptionCopy(presc);
+						public void lockAcquired() {
+							IPrescription fixMedi = MedicationServiceHolder.get().createPrescriptionCopy(presc);
 							fixMedi.setEntryType(EntryType.FIXED_MEDICATION);
 							CoreModelServiceHolder.get().save(fixMedi);
-							
-							MedicationServiceHolder.get().stopPrescription(presc,
-								LocalDateTime.now(), "Umgestellt auf Fix Medikation");
+
+							MedicationServiceHolder.get().stopPrescription(presc, LocalDateTime.now(),
+									"Umgestellt auf Fix Medikation");
 							CoreModelServiceHolder.get().save(presc);
 						}
 					});
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, presc);
 				}
-				
+
 			}
 		}
 		return null;

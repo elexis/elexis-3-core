@@ -17,14 +17,13 @@ import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 
 public class AbortLocalDocumentHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		
-		IEclipseContext iEclipseContext =
-			PlatformUI.getWorkbench().getService(IEclipseContext.class);
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+
+		IEclipseContext iEclipseContext = PlatformUI.getWorkbench().getService(IEclipseContext.class);
 		StructuredSelection selection = (StructuredSelection) iEclipseContext
-			.get(event.getCommand().getId().concat(".selection"));
+				.get(event.getCommand().getId().concat(".selection"));
 		iEclipseContext.remove(event.getCommand().getId().concat(".selection"));
 		if (selection != null && !selection.isEmpty()) {
 			List<?> selected = selection.toList();
@@ -34,12 +33,11 @@ public class AbortLocalDocumentHandler extends AbstractHandler implements IHandl
 					if (service.contains(object)) {
 						Optional<LocalLock> lock = LocalLock.getManagedLock(object);
 						lock.ifPresent(localDocumentLock -> localDocumentLock.unlock());
-						
+
 						service.remove(object);
 					} else {
-						MessageDialog.openInformation(parentShell,
-							Messages.AbortLocalDocumentHandler_infotitle,
-							Messages.AbortLocalDocumentHandler_infomessage);
+						MessageDialog.openInformation(parentShell, Messages.AbortLocalDocumentHandler_infotitle,
+								Messages.AbortLocalDocumentHandler_infomessage);
 					}
 				});
 			}

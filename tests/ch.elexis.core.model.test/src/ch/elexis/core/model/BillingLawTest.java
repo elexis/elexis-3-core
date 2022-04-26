@@ -9,10 +9,9 @@ import org.junit.Test;
 import ch.elexis.core.model.ch.BillingLaw;
 
 public class BillingLawTest {
-	
 
 	@Test
-	public void testBillingNames(){
+	public void testBillingNames() {
 		assertEquals("KVG", BillingLaw.KVG.name());
 		assertEquals("VVG", BillingLaw.VVG.name());
 		assertEquals("privat", BillingLaw.privat.name());
@@ -22,7 +21,7 @@ public class BillingLawTest {
 	}
 
 	@Test
-	public void testLocalizedBillingNames(){
+	public void testLocalizedBillingNames() {
 		if (Locale.getDefault().toString().equals("de_CH")) {
 			System.out.println("Billing law Locale german tests");
 			assertTrue(BillingLaw.IV.getLocaleText().startsWith("IVG:"));
@@ -44,5 +43,5 @@ public class BillingLawTest {
 			assertTrue(BillingLaw.NONE.getLocaleText().startsWith("Aucun"));
 		}
 	}
-	
+
 }

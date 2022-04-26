@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -46,9 +46,9 @@ import ch.elexis.scripting.ScriptEditor;
 import ch.rgw.tools.StringTool;
 
 public class EditLabItem extends TitleAreaDialog {
-	
+
 	private LaborMappingComposite mapping;
-	
+
 	Text iKuerzel, iTitel, iRef, iRfF, iUnit, iPrio, iComma;
 	Combo cGroup, cExportTag;
 	Button alph, numeric, abs, formula, document, visible;
@@ -58,16 +58,16 @@ public class EditLabItem extends TitleAreaDialog {
 	LabItem actLabItem;
 	ArrayList<String> groups;
 	ArrayList<String> exportTags;
-	
+
 	private Text loincCode;
 	private Button loincCodeSelection;
 	Label originLaboratory;
 	Button originLaboratorySelection;
 	Button noRefValues;
-	
-	public EditLabItem(Shell parentShell, LabItem act){
+
+	public EditLabItem(Shell parentShell, LabItem act) {
 		super(parentShell);
-		
+
 		groups = new ArrayList<String>();
 		exportTags = new ArrayList<String>();
 		actLabItem = act;
@@ -75,33 +75,33 @@ public class EditLabItem extends TitleAreaDialog {
 			actLabor = (actLabItem != null) ? actLabItem.getLabor() : null;
 		}
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		getShell().setText(Messages.EditLabItem_shellTitle);
 		setTitle(Messages.EditLabItem_title);
 		setMessage(Messages.EditLabItem_message);
-		
+
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(4, false));
-		
+
 		mapping = new LaborMappingComposite(ret, SWT.NONE);
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 4, 1);
 		layoutData.heightHint = 150;
 		mapping.setLayoutData(layoutData);
 		mapping.setLabItem(actLabItem);
-		
+
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelShortLabel);
 		iKuerzel = new Text(ret, SWT.BORDER);
 		iKuerzel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iKuerzel.setTextLimit(80);
-		
+
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelTitle);
 		iTitel = new Text(ret, SWT.BORDER);
 		iTitel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iTitel.setTextLimit(80);
-		
+
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelType);
 		Group grp = new Group(ret, SWT.NONE);
 		grp.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -115,30 +115,29 @@ public class EditLabItem extends TitleAreaDialog {
 		formula = new Button(grp, SWT.RADIO);
 		formula.setText(Messages.EditLabItem_labelTypFormula);
 		formula.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (formula.getSelection()) {
-					
-					ScriptEditor se = new ScriptEditor(getShell(), formel,
-						Messages.EditLabItem_titleScriptEditor);
+
+					ScriptEditor se = new ScriptEditor(getShell(), formel, Messages.EditLabItem_titleScriptEditor);
 					if (se.open() == Dialog.OK) {
 						formel = se.getScript();
 					}
 				}
 			}
-			
+
 		});
 		document = new Button(grp, SWT.RADIO);
 		document.setText(Messages.EditLabItem_labelTypDocument);
 		document.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				documentSelectionChanged();
 			}
 		});
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelRefMale);
-		
+
 		iRef = new Text(ret, SWT.BORDER);
 		iRef.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iRef.setTextLimit(80);
@@ -153,7 +152,7 @@ public class EditLabItem extends TitleAreaDialog {
 		noRefValues.setText(ch.elexis.core.l10n.Messages.LabResultEvaluator_LabItemNoRefValue);
 		noRefValues.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				iRef.setEnabled(!noRefValues.getSelection());
 				iRfF.setEnabled(!noRefValues.getSelection());
 			}
@@ -163,13 +162,12 @@ public class EditLabItem extends TitleAreaDialog {
 		iUnit.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 		iUnit.setTextLimit(25);
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelGroup);
-		
+
 		List<LabItem> labItems = LabItem.getLabItems();
 		groups.clear();
 		exportTags.clear();
 		for (LabItem li : (List<LabItem>) labItems) {
-			if (li.getExport() != null && li.getExport().length() > 0
-				&& !exportTags.contains(li.getExport())) {
+			if (li.getExport() != null && li.getExport().length() > 0 && !exportTags.contains(li.getExport())) {
 				exportTags.add(li.getExport());
 			}
 			if (!groups.contains(li.getGroup())) {
@@ -178,7 +176,7 @@ public class EditLabItem extends TitleAreaDialog {
 		}
 		Collections.sort(groups);
 		Collections.sort(exportTags);
-		
+
 		cGroup = new Combo(ret, SWT.SINGLE | SWT.DROP_DOWN);
 		cGroup.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		cGroup.setToolTipText(Messages.EditLabItem_tooltipGroup);
@@ -188,7 +186,7 @@ public class EditLabItem extends TitleAreaDialog {
 		iPrio.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iPrio.setToolTipText(Messages.EditLabItem_labelGroupPosition);
 		iPrio.setTextLimit(3);
-		
+
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_OriginLaboratoryLabel);
 		originLaboratory = new Label(ret, SWT.None);
 		originLaboratory.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -197,10 +195,10 @@ public class EditLabItem extends TitleAreaDialog {
 		originLaboratorySelection.setText("..."); //$NON-NLS-1$
 		originLaboratorySelection.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Labor.class,
-					Messages.EditLabItem_OriginLaboratorySelectorCaption,
-					Messages.EditLabItem_OriginLaboratorySelectorBody, false);
+						Messages.EditLabItem_OriginLaboratorySelectorCaption,
+						Messages.EditLabItem_OriginLaboratorySelectorBody, false);
 				if (ksl.open() == Dialog.OK) {
 					actLabor = (Labor) ksl.getSelection();
 					originLaboratory.setText(actLabor.getLabel());
@@ -210,7 +208,7 @@ public class EditLabItem extends TitleAreaDialog {
 				}
 			}
 		});
-		
+
 		WidgetFactory.createLabel(ret, "LOINC"); //$NON-NLS-1$
 		loincCode = new Text(ret, SWT.BORDER);
 		loincCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -220,9 +218,8 @@ public class EditLabItem extends TitleAreaDialog {
 		loincCodeSelection.setText("..."); //$NON-NLS-1$
 		loincCodeSelection.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
-				SelectionDialog dialog =
-					CodeSelectorFactory.getSelectionDialog("LOINC", getShell(), null); //$NON-NLS-1$
+			public void widgetSelected(SelectionEvent e) {
+				SelectionDialog dialog = CodeSelectorFactory.getSelectionDialog("LOINC", getShell(), null); //$NON-NLS-1$
 				if (dialog.open() == SelectionDialog.OK) {
 					if (dialog.getResult() != null && dialog.getResult().length > 0) {
 						ICodeElement code = (ICodeElement) dialog.getResult()[0];
@@ -231,7 +228,7 @@ public class EditLabItem extends TitleAreaDialog {
 				}
 			}
 		});
-		
+
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelDecimalPlace);
 		iComma = new Text(ret, SWT.BORDER);
 		iComma.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -239,13 +236,13 @@ public class EditLabItem extends TitleAreaDialog {
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelVisible);
 		visible = new Button(ret, SWT.CHECK);
 		visible.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelExportTag);
 		cExportTag = new Combo(ret, SWT.SINGLE | SWT.DROP_DOWN);
 		cExportTag.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		cExportTag.setToolTipText(Messages.EditLabItem_labelHintExportTag);
 		cExportTag.setItems(exportTags.toArray(new String[0]));
-		
+
 		if (actLabItem != null) {
 			iKuerzel.setText(actLabItem.getKuerzel());
 			iTitel.setText(actLabItem.getName());
@@ -274,17 +271,17 @@ public class EditLabItem extends TitleAreaDialog {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Event method is called when document radio button is selected or deselected
 	 */
-	private void documentSelectionChanged(){
+	private void documentSelectionChanged() {
 		iRef.setEnabled(!document.getSelection());
 		iRfF.setEnabled(!document.getSelection());
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		LabItemTyp typ;
 		// String refmin="",refmax;
 		// refmax=iRef.getText();
@@ -292,7 +289,7 @@ public class EditLabItem extends TitleAreaDialog {
 			setErrorMessage(Messages.EditLabItem_errorNoTitle);
 			return;
 		}
-		
+
 		if (numeric.getSelection() == true) {
 			typ = LabItemTyp.NUMERIC;
 		} else if (abs.getSelection() == true) {
@@ -304,17 +301,17 @@ public class EditLabItem extends TitleAreaDialog {
 		} else {
 			typ = LabItemTyp.TEXT;
 		}
-		
+
 		String refValMale = iRef.getText();
 		String refValFemale = iRfF.getText();
 		if (noRefValues.getSelection()) {
 			refValMale = LabItem.REFVAL_INCONCLUSIVE;
 			refValFemale = LabItem.REFVAL_INCONCLUSIVE;
 		}
-		
+
 		if (actLabItem == null) {
-			actLabItem = new LabItem(iKuerzel.getText(), iTitel.getText(), (Kontakt) null,
-				refValMale, refValFemale, iUnit.getText(), typ, cGroup.getText(), iPrio.getText());
+			actLabItem = new LabItem(iKuerzel.getText(), iTitel.getText(), (Kontakt) null, refValMale, refValFemale,
+					iUnit.getText(), typ, cGroup.getText(), iPrio.getText());
 			mapping.persistTransientLabMappings(actLabItem);
 		} else {
 			String t = "0"; //$NON-NLS-1$
@@ -327,49 +324,48 @@ public class EditLabItem extends TitleAreaDialog {
 			} else if (typ == LabItemTyp.DOCUMENT) {
 				t = "4"; //$NON-NLS-1$
 			}
-			actLabItem.set(new String[] {
-				LabItem.SHORTNAME, LabItem.TITLE, LabItem.LAB_ID, LabItem.REF_MALE,
-				LabItem.REF_FEMALE_OR_TEXT, LabItem.UNIT, LabItem.TYPE, LabItem.GROUP, LabItem.PRIO,
-				LabItem.EXPORT
-			}, iKuerzel.getText(), iTitel.getText(), (actLabor != null) ? actLabor.getId() : null,
-				refValMale, refValFemale, iUnit.getText(), t, cGroup.getText(), iPrio.getText(),
-				cExportTag.getText());
+			actLabItem.set(
+					new String[] { LabItem.SHORTNAME, LabItem.TITLE, LabItem.LAB_ID, LabItem.REF_MALE,
+							LabItem.REF_FEMALE_OR_TEXT, LabItem.UNIT, LabItem.TYPE, LabItem.GROUP, LabItem.PRIO,
+							LabItem.EXPORT },
+					iKuerzel.getText(), iTitel.getText(), (actLabor != null) ? actLabor.getId() : null, refValMale,
+					refValFemale, iUnit.getText(), t, cGroup.getText(), iPrio.getText(), cExportTag.getText());
 		}
 		actLabItem.setLoincCode(loincCode.getText());
-		
+
 		if (!iComma.getText().isEmpty()) {
 			actLabItem.setDigits(Integer.parseInt(iComma.getText()));
 		} else {
 			actLabItem.setDigits(0);
 		}
 		actLabItem.setVisible(visible.getSelection());
-		
+
 		if (!StringTool.isNothing(formel)) {
 			actLabItem.setFormula(formel);
 		}
 		super.okPressed();
 	}
-	
-	public void setShortDescText(String string){
+
+	public void setShortDescText(String string) {
 		iKuerzel.setText(string);
 	}
-	
-	public void setTitelText(String string){
+
+	public void setTitelText(String string) {
 		if (string != null)
 			iTitel.setText(string);
 	}
-	
-	public void setRefMText(String string){
+
+	public void setRefMText(String string) {
 		if (string != null)
 			iRef.setText(string);
 	}
-	
-	public void setRefFText(String string){
+
+	public void setRefFText(String string) {
 		if (string != null)
 			iRfF.setText(string);
 	}
-	
-	public void setUnitText(String string){
+
+	public void setUnitText(String string) {
 		if (string != null)
 			iUnit.setText(string);
 	}

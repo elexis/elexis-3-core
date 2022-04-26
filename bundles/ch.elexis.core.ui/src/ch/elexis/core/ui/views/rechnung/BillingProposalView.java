@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -63,28 +63,28 @@ import ch.rgw.tools.TimeTool;
 
 public class BillingProposalView extends ViewPart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.BillingProposalView"; //$NON-NLS-1$
-	
+
 	private TableViewer viewer;
 	private BillingProposalViewerComparator comparator;
-	
+
 	private Color lightRed = UiDesk.getColorFromRGB("ff8d8d");
 	private Color lightGreen = UiDesk.getColorFromRGB("a6ffaa");
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
-		
+
 		viewer.getTable().setHeaderVisible(true);
 		viewer.setContentProvider(new BillingInformationContentProvider(viewer));
 		comparator = new BillingProposalViewerComparator();
 		viewer.setComparator(comparator);
-		
+
 		TableViewerColumn patNameColumn = new TableViewerColumn(viewer, SWT.NONE);
 		patNameColumn.getColumn().setWidth(175);
 		patNameColumn.getColumn().setText("Patient");
 		patNameColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof BillingInformation) {
 					return ((BillingInformation) element).getPatientName();
 				} else {
@@ -93,13 +93,13 @@ public class BillingProposalView extends ViewPart {
 			}
 		});
 		patNameColumn.getColumn().addSelectionListener(getSelectionAdapter(0));
-		
+
 		TableViewerColumn patNrColumn = new TableViewerColumn(viewer, SWT.NONE);
 		patNrColumn.getColumn().setWidth(50);
 		patNrColumn.getColumn().setText("PatNr");
 		patNrColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof BillingInformation) {
 					return Integer.toString(((BillingInformation) element).getPatientNr());
 				} else {
@@ -108,29 +108,28 @@ public class BillingProposalView extends ViewPart {
 			}
 		});
 		patNrColumn.getColumn().addSelectionListener(getSelectionAdapter(1));
-		
+
 		TableViewerColumn dateColumn = new TableViewerColumn(viewer, SWT.NONE);
 		dateColumn.getColumn().setWidth(75);
 		dateColumn.getColumn().setText("Datum");
 		dateColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof BillingInformation) {
-					return ((BillingInformation) element).getDate()
-						.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+					return ((BillingInformation) element).getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 				} else {
 					return super.getText(element);
 				}
 			}
 		});
 		dateColumn.getColumn().addSelectionListener(getSelectionAdapter(2));
-		
+
 		TableViewerColumn accountingSystemColumn = new TableViewerColumn(viewer, SWT.NONE);
 		accountingSystemColumn.getColumn().setWidth(75);
 		accountingSystemColumn.getColumn().setText("Fall");
 		accountingSystemColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof BillingInformation) {
 					return ((BillingInformation) element).getAccountingSystem();
 				} else {
@@ -138,13 +137,13 @@ public class BillingProposalView extends ViewPart {
 				}
 			}
 		});
-		
+
 		TableViewerColumn insurerColumn = new TableViewerColumn(viewer, SWT.NONE);
 		insurerColumn.getColumn().setWidth(175);
 		insurerColumn.getColumn().setText("Versicherer");
 		insurerColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof BillingInformation) {
 					return ((BillingInformation) element).getInsurer();
 				} else {
@@ -152,13 +151,13 @@ public class BillingProposalView extends ViewPart {
 				}
 			}
 		});
-		
+
 		TableViewerColumn totalColumn = new TableViewerColumn(viewer, SWT.NONE);
 		totalColumn.getColumn().setWidth(75);
 		totalColumn.getColumn().setText("Total");
 		totalColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof BillingInformation) {
 					return ((BillingInformation) element).getTotal();
 				} else {
@@ -166,22 +165,22 @@ public class BillingProposalView extends ViewPart {
 				}
 			}
 		});
-		
+
 		TableViewerColumn checkResultColumn = new TableViewerColumn(viewer, SWT.NONE);
 		checkResultColumn.getColumn().setWidth(200);
 		checkResultColumn.getColumn().setText("Prüfergebnis");
 		checkResultColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof BillingInformation) {
 					return ((BillingInformation) element).getCheckResultMessage();
 				} else {
 					return super.getText(element);
 				}
 			}
-			
+
 			@Override
-			public Color getBackground(Object element){
+			public Color getBackground(Object element) {
 				if (element instanceof BillingInformation) {
 					return ((BillingInformation) element).isOk() ? lightGreen : lightRed;
 				} else {
@@ -189,47 +188,46 @@ public class BillingProposalView extends ViewPart {
 				}
 			}
 		});
-		
+
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection != null && !selection.isEmpty()) {
 					if (selection.getFirstElement() instanceof BillingInformation) {
-						Konsultation kons =
-							((BillingInformation) selection.getFirstElement()).getKonsultation();
+						Konsultation kons = ((BillingInformation) selection.getFirstElement()).getKonsultation();
 						// patient change has to be done before changing kons
 						Patient pat = kons.getFall().getPatient();
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(pat,
-							pat.getClass(), ElexisEvent.EVENT_SELECTED, ElexisEvent.PRIORITY_SYNC));
-						
+						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(pat, pat.getClass(),
+								ElexisEvent.EVENT_SELECTED, ElexisEvent.PRIORITY_SYNC));
+
 						ElexisEventDispatcher.fireSelectionEvent(kons);
 					}
 				}
 			}
 		});
-		
+
 		viewer.getControl().addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e){
+			public void keyReleased(KeyEvent e) {
 				if (e.keyCode == SWT.F5) {
 					refresh();
 				}
 			}
 		});
-		
+
 		MenuManager menuManager = new MenuManager();
 		Menu menu = menuManager.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(menuManager, viewer);
 		getSite().setSelectionProvider(viewer);
 	}
-	
-	private SelectionAdapter getSelectionAdapter(int index){
+
+	private SelectionAdapter getSelectionAdapter(int index) {
 		SelectionAdapter selectionAdapter = new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				comparator.setColumn(index);
 				int dir = comparator.getDirection();
 				viewer.getTable().setSortDirection(dir);
@@ -238,57 +236,56 @@ public class BillingProposalView extends ViewPart {
 		};
 		return selectionAdapter;
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
-	
+
 	/**
 	 * Set a {@link List} of {@link Konsultation} as the input for the viewer.
-	 * 
+	 *
 	 * @param proposal
 	 */
-	public void setInput(List<Konsultation> proposal){
+	public void setInput(List<Konsultation> proposal) {
 		viewer.setInput(proposal);
 	}
-	
+
 	/**
 	 * Refresh the current content of the viewer.
 	 */
-	public void refresh(){
+	public void refresh() {
 		((BillingInformationContentProvider) viewer.getContentProvider()).refresh();
 		viewer.refresh();
 	}
-	
+
 	/**
-	 * Get a {@link List} of all {@link Konsultation} instances of the viewer, erroneous and valid.
+	 * Get a {@link List} of all {@link Konsultation} instances of the viewer,
+	 * erroneous and valid.
 	 */
-	public List<Konsultation> getToBill(){
-		List<BillingInformation> content =
-			((BillingInformationContentProvider) viewer.getContentProvider()).getCurrentContent();
+	public List<Konsultation> getToBill() {
+		List<BillingInformation> content = ((BillingInformationContentProvider) viewer.getContentProvider())
+				.getCurrentContent();
 		if (content != null && !content.isEmpty()) {
-			return content.parallelStream().map(bi -> bi.getKonsultation())
-				.collect(Collectors.toList());
+			return content.parallelStream().map(bi -> bi.getKonsultation()).collect(Collectors.toList());
 		}
 		return Collections.emptyList();
 	}
-	
-	public void removeToBill(List<BillingInformation> list){
+
+	public void removeToBill(List<BillingInformation> list) {
 		((BillingInformationContentProvider) viewer.getContentProvider()).removeContent(list);
 		viewer.refresh();
 	}
-	
-	public ProposalLetter getToPrint(){
-		BillingInformationContentProvider contentProvider =
-			((BillingInformationContentProvider) viewer.getContentProvider());
+
+	public ProposalLetter getToPrint() {
+		BillingInformationContentProvider contentProvider = ((BillingInformationContentProvider) viewer
+				.getContentProvider());
 		contentProvider.resolveAll();
-		
+
 		List<BillingInformation> content = contentProvider.getCurrentContent();
-		BillingProposalViewerComparator comparator =
-			(BillingProposalViewerComparator) viewer.getComparator();
+		BillingProposalViewerComparator comparator = (BillingProposalViewerComparator) viewer.getComparator();
 		content.sort(comparator);
-		
+
 		ProposalLetter ret = new ProposalLetter();
 		if (content != null && !content.isEmpty()) {
 			ret.setProposal(content);
@@ -297,42 +294,42 @@ public class BillingProposalView extends ViewPart {
 		}
 		return ret;
 	}
-	
+
 	@XmlRootElement
 	public static class ProposalLetter {
 		private List<BillingInformation> proposal;
-		
-		public ProposalLetter(){
+
+		public ProposalLetter() {
 		}
-		
-		public void setProposal(List<BillingInformation> proposal){
+
+		public void setProposal(List<BillingInformation> proposal) {
 			this.proposal = proposal;
 		}
-		
-		public List<BillingInformation> getProposal(){
+
+		public List<BillingInformation> getProposal() {
 			return proposal;
 		}
 	}
-	
+
 	public static class LocalDateAdapter extends XmlAdapter<String, LocalDate> {
-		
+
 		private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-		
+
 		@Override
-		public String marshal(LocalDate date) throws Exception{
+		public String marshal(LocalDate date) throws Exception {
 			return formatter.format(date);
 		}
-		
+
 		@Override
-		public LocalDate unmarshal(String string) throws Exception{
+		public LocalDate unmarshal(String string) throws Exception {
 			return LocalDate.parse(string, formatter);
 		}
-		
+
 	}
-	
+
 	/**
 	 * View specific model class, including multi threaded property loading.
-	 * 
+	 *
 	 * @author thomas
 	 *
 	 */
@@ -367,32 +364,32 @@ public class BillingProposalView extends ViewPart {
 		private String checkResultMessage;
 		@XmlElement
 		private boolean checkResult;
-		
-		public BillingInformation(){
+
+		public BillingInformation() {
 		}
-		
-		public BillingInformation(StructuredViewer viewer, Fall fall, Konsultation konsultation){
+
+		public BillingInformation(StructuredViewer viewer, Fall fall, Konsultation konsultation) {
 			this.viewer = viewer;
 			this.fall = fall;
 			this.konsultation = konsultation;
-			
+
 			resolved = false;
 			resolving = false;
 			date = new TimeTool(konsultation.getDatum()).toLocalDate();
 		}
-		
-		public String getPatientName(){
+
+		public String getPatientName() {
 			if (patientName == null && fall != null) {
 				patientName = fall.getPatient().getPersonalia();
 			}
 			return patientName;
 		}
-		
-		public Konsultation getKonsultation(){
+
+		public Konsultation getKonsultation() {
 			return konsultation;
 		}
-		
-		public Integer getPatientNr(){
+
+		public Integer getPatientNr() {
 			if (patientNr == -1) {
 				try {
 					patientNr = Integer.parseInt(fall.getPatient().getPatCode());
@@ -402,20 +399,20 @@ public class BillingProposalView extends ViewPart {
 			}
 			return patientNr;
 		}
-		
-		public LocalDate getDate(){
+
+		public LocalDate getDate() {
 			return date;
 		}
-		
-		public synchronized boolean isResolved(){
+
+		public synchronized boolean isResolved() {
 			if (!resolved && !resolving) {
 				resolving = true;
 				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
 			}
 			return resolved;
 		}
-		
-		public void resolve(){
+
+		public void resolve() {
 			executorService.execute(new ResolveLazyFieldsRunnable(null, this));
 			while (!isResolved()) {
 				try {
@@ -425,62 +422,62 @@ public class BillingProposalView extends ViewPart {
 				}
 			}
 		}
-		
-		public synchronized void refresh(){
+
+		public synchronized void refresh() {
 			resolved = false;
 		}
-		
-		public String getCheckResultMessage(){
+
+		public String getCheckResultMessage() {
 			if (!isResolved()) {
 				return "...";
 			} else {
 				return checkResultMessage;
 			}
 		}
-		
-		public Boolean isOk(){
+
+		public Boolean isOk() {
 			if (!isResolved()) {
 				return false;
 			} else {
 				return checkResult;
 			}
 		}
-		
-		public String getTotal(){
+
+		public String getTotal() {
 			if (!isResolved()) {
 				return "...";
 			} else {
 				return amountTotal;
 			}
 		}
-		
-		public String getAccountingSystem(){
+
+		public String getAccountingSystem() {
 			if (!isResolved()) {
 				return "...";
 			} else {
 				return accountingSystem;
 			}
 		}
-		
-		public String getInsurer(){
+
+		public String getInsurer() {
 			if (!isResolved()) {
 				return "...";
 			} else {
 				return insurerName;
 			}
 		}
-		
+
 		private static class ResolveLazyFieldsRunnable implements Runnable {
 			private BillingInformation item;
 			private StructuredViewer viewer;
-			
-			public ResolveLazyFieldsRunnable(StructuredViewer viewer, BillingInformation item){
+
+			public ResolveLazyFieldsRunnable(StructuredViewer viewer, BillingInformation item) {
 				this.item = item;
 				this.viewer = viewer;
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				resolveInsurer();
 				resolveAccountingSystem();
 				resolveTotal();
@@ -491,8 +488,8 @@ public class BillingProposalView extends ViewPart {
 					updateViewer();
 				}
 			}
-			
-			private void resolveCheckResult(){
+
+			private void resolveCheckResult() {
 				Result<Konsultation> result = BillingUtil.getBillableResult(item.konsultation);
 				if (result.isOK()) {
 					item.checkResultMessage = "Ok";
@@ -512,13 +509,13 @@ public class BillingProposalView extends ViewPart {
 					item.checkResult = false;
 				}
 			}
-			
-			private void resolveTotal(){
+
+			private void resolveTotal() {
 				Money total = BillingUtil.getTotal(item.konsultation);
 				item.amountTotal = total.getAmountAsString();
 			}
-			
-			private void resolveInsurer(){
+
+			private void resolveInsurer() {
 				Kontakt costBearer = item.fall.getCostBearer();
 				if (costBearer != null) {
 					item.insurerName = costBearer.getLabel(true);
@@ -526,17 +523,17 @@ public class BillingProposalView extends ViewPart {
 					item.insurerName = "";
 				}
 			}
-			
-			private void resolveAccountingSystem(){
+
+			private void resolveAccountingSystem() {
 				item.accountingSystem = item.fall.getAbrechnungsSystem();
 			}
-			
-			private void updateViewer(){
+
+			private void updateViewer() {
 				Control control = viewer.getControl();
 				if (control != null && !control.isDisposed()) {
 					control.getDisplay().asyncExec(new Runnable() {
 						@Override
-						public void run(){
+						public void run() {
 							if (!control.isDisposed() && control.isVisible()) {
 								viewer.refresh(item, true);
 							}
@@ -546,28 +543,28 @@ public class BillingProposalView extends ViewPart {
 			}
 		}
 	}
-	
+
 	/**
-	 * View specific {@link IStructuredContentProvider} implementation for mapping a list of
-	 * {@link Konsultation} to a list of {@link BillingInformation}.
-	 * 
+	 * View specific {@link IStructuredContentProvider} implementation for mapping a
+	 * list of {@link Konsultation} to a list of {@link BillingInformation}.
+	 *
 	 * @author thomas
 	 *
 	 */
 	private class BillingInformationContentProvider implements IStructuredContentProvider {
-		
+
 		private StructuredViewer viewer;
 		private List<BillingInformation> currentContent;
-		
-		public BillingInformationContentProvider(StructuredViewer viewer){
+
+		public BillingInformationContentProvider(StructuredViewer viewer) {
 			this.viewer = viewer;
 		}
-		
-		public void removeContent(List<BillingInformation> list){
+
+		public void removeContent(List<BillingInformation> list) {
 			currentContent.removeAll(list);
 		}
-		
-		public void resolveAll(){
+
+		public void resolveAll() {
 			currentContent.parallelStream().forEach(bi -> {
 				// touch patient number
 				bi.getPatientNr();
@@ -576,73 +573,70 @@ public class BillingProposalView extends ViewPart {
 				}
 			});
 		}
-		
+
 		/**
 		 * Refresh the current list of {@link BillingInformation}
 		 */
-		public void refresh(){
+		public void refresh() {
 			if (currentContent != null) {
 				currentContent = currentContent.parallelStream()
-					.filter(bi -> bi.getKonsultation().getRechnung() == null)
-					.collect(Collectors.toList());
+						.filter(bi -> bi.getKonsultation().getRechnung() == null).collect(Collectors.toList());
 				currentContent.parallelStream().forEach(bi -> bi.refresh());
 			}
 		}
-		
+
 		@Override
-		public Object[] getElements(Object inputElement){
+		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof List<?>) {
 				return currentContent.toArray();
 			}
 			return Collections.emptyList().toArray();
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			if (newInput instanceof List<?>) {
 				currentContent = ((List<Konsultation>) newInput).parallelStream()
-					.map(k -> new BillingInformation(this.viewer, k.getFall(), k))
-					.collect(Collectors.toList());
+						.map(k -> new BillingInformation(this.viewer, k.getFall(), k)).collect(Collectors.toList());
 			}
 		}
-		
-		public List<BillingInformation> getCurrentContent(){
+
+		public List<BillingInformation> getCurrentContent() {
 			if (currentContent != null) {
 				return currentContent;
 			}
 			return Collections.emptyList();
 		}
-		
+
 		@Override
-		public void dispose(){
+		public void dispose() {
 			viewer = null;
 			currentContent = null;
 		}
 	}
-	
+
 	/**
 	 * View specific {@link ViewerComparator} implementation.
-	 * 
+	 *
 	 * @author thomas
 	 *
 	 */
-	private class BillingProposalViewerComparator extends ViewerComparator
-			implements Comparator<BillingInformation> {
+	private class BillingProposalViewerComparator extends ViewerComparator implements Comparator<BillingInformation> {
 		private int propertyIndex;
 		private static final int DESCENDING = 1;
 		private int direction = DESCENDING;
-		
-		public BillingProposalViewerComparator(){
+
+		public BillingProposalViewerComparator() {
 			this.propertyIndex = 0;
 			direction = DESCENDING;
 		}
-		
-		public int getDirection(){
+
+		public int getDirection() {
 			return direction == 1 ? SWT.DOWN : SWT.UP;
 		}
-		
-		public void setColumn(int column){
+
+		public void setColumn(int column) {
 			if (column == this.propertyIndex) {
 				// Same column as last sort; toggle the direction
 				direction = 1 - direction;
@@ -652,16 +646,16 @@ public class BillingProposalView extends ViewPart {
 				direction = DESCENDING;
 			}
 		}
-		
+
 		@Override
-		public int compare(Viewer viewer, Object e1, Object e2){
+		public int compare(Viewer viewer, Object e1, Object e2) {
 			BillingInformation left = (BillingInformation) e1;
 			BillingInformation right = (BillingInformation) e2;
 			return compare(left, right);
 		}
-		
+
 		@Override
-		public int compare(BillingInformation left, BillingInformation right){
+		public int compare(BillingInformation left, BillingInformation right) {
 			int rc = 0;
 			switch (propertyIndex) {
 			case 0:

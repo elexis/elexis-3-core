@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views.rechnung;
@@ -31,72 +31,69 @@ import ch.rgw.tools.Result;
 
 /**
  * This outputter takes the output target from the case's billing syste,
- * 
+ *
  * @author Gerry
- * 
+ *
  */
 public class DefaultOutputter implements IRnOutputter {
 	private ArrayList<IRnOutputter> configured = new ArrayList<IRnOutputter>();
-	
-	public boolean canBill(Fall fall){
+
+	public boolean canBill(Fall fall) {
 		if (fall.getOutputter().getDescription().equals(getDescription())) {
 			return false;
 		}
 		return fall.getOutputter().canBill(fall);
 	}
-	
-	public boolean canStorno(Rechnung rn){
+
+	public boolean canStorno(Rechnung rn) {
 		if (rn == null) {
 			return false;
 		}
 		return rn.getFall().getOutputter().canStorno(rn);
 	}
-	
-	public Object createSettingsControl(Object parent){
+
+	public Object createSettingsControl(Object parent) {
 		Composite parComposite = (Composite) parent;
 		Label lbl = new Label(parComposite, SWT.WRAP);
-		lbl.setText(Messages.DefaultOutputter_useIdividualPlugins); //$NON-NLS-1$
+		lbl.setText(Messages.DefaultOutputter_useIdividualPlugins); // $NON-NLS-1$
 		return lbl;
 	}
-	
-	public Result<Rechnung> doOutput(TYPE type, Collection<Rechnung> rnn, final Properties props){
+
+	public Result<Rechnung> doOutput(TYPE type, Collection<Rechnung> rnn, final Properties props) {
 		Result<Rechnung> res = new Result<Rechnung>(null);
 		props.setProperty(IRnOutputter.PROP_OUTPUT_METHOD, "asDefault"); //$NON-NLS-1$
 		for (Rechnung rn : rnn) {
 			Fall fall = rn.getFall();
 			final IRnOutputter iro = fall.getOutputter();
 			if (!configured.contains(iro)) {
-				SWTHelper.SimpleDialog dlg =
-					new SWTHelper.SimpleDialog(new SWTHelper.IControlProvider() {
-						public Control getControl(Composite parent){
-							parent.getShell().setText(iro.getDescription());
-							return (Control) iro.createSettingsControl(parent);
-							
-						}
-						
-						public void beforeClosing(){
-							iro.saveComposite();
-						}
-					});
+				SWTHelper.SimpleDialog dlg = new SWTHelper.SimpleDialog(new SWTHelper.IControlProvider() {
+					public Control getControl(Composite parent) {
+						parent.getShell().setText(iro.getDescription());
+						return (Control) iro.createSettingsControl(parent);
+
+					}
+
+					public void beforeClosing() {
+						iro.saveComposite();
+					}
+				});
 				if (dlg.open() == Dialog.OK) {
 					configured.add(iro);
 				} else {
 					continue;
 				}
 			}
-			
-			res.add(iro.doOutput(type, Arrays.asList(new Rechnung[] {
-				rn
-			}), props));
+
+			res.add(iro.doOutput(type, Arrays.asList(new Rechnung[] { rn }), props));
 		}
 		return null;
 	}
-	
-	public String getDescription(){
-		return Messages.DefaultOutputter_defaultOutputForCase; //$NON-NLS-1$
+
+	public String getDescription() {
+		return Messages.DefaultOutputter_defaultOutputForCase; // $NON-NLS-1$
 	}
-	
-	public void saveComposite(){
+
+	public void saveComposite() {
 		// Nothing
 	}
 }

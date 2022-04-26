@@ -16,16 +16,17 @@ import ch.elexis.core.ui.tasks.ITaskResultDetailContributor;
 
 @Component
 public class TaskResultDetailDialogContributions implements ITaskResultDetailContributions {
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
 	private volatile List<ITaskResultDetailContributor> taskResultDetailDialogContributors;
-	
+
 	@Override
-	public void createDetailCompositeForTask(Composite parent, ITask task, Map<String, Object> e4Services){
+	public void createDetailCompositeForTask(Composite parent, ITask task, Map<String, Object> e4Services) {
 		String identifiedRunnableId = task.getTaskDescriptor().getIdentifiedRunnableId();
-		
-		// detail contributions are only shown for TaskState#COMPLETED and TaskState#COMPLETED_WARN
-		if(task.isFinished() && !task.isFailed()) {
+
+		// detail contributions are only shown for TaskState#COMPLETED and
+		// TaskState#COMPLETED_WARN
+		if (task.isFinished() && !task.isFailed()) {
 
 			for (ITaskResultDetailContributor contribution : taskResultDetailDialogContributors) {
 				if (identifiedRunnableId.equals(contribution.getIdentifiedRunnableId())) {
@@ -33,10 +34,10 @@ public class TaskResultDetailDialogContributions implements ITaskResultDetailCon
 					return;
 				}
 			}
-			
+
 		}
-		
+
 		new GenericTaskResultDetailComposite(parent, task);
 	}
-	
+
 }

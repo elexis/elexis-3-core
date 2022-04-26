@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -21,33 +21,29 @@ public class DayMessage extends PersistentObject {
 	static {
 		addMapping("AGNDAYS", "message", "infos");
 	}
-	
-	public DayMessage(TimeTool date, String message, String infos){
+
+	public DayMessage(TimeTool date, String message, String infos) {
 		create(date.toString(TimeTool.DATE_COMPACT));
 		setMessages(message, infos);
 	}
-	
-	public void setMessages(String message, String info){
-		set(new String[] {
-			"message", "infos"
-		}, new String[] {
-			message, info
-		});
+
+	public void setMessages(String message, String info) {
+		set(new String[] { "message", "infos" }, new String[] { message, info });
 	}
-	
-	public String getMessage(){
+
+	public String getMessage() {
 		return get("message");
 	}
-	
-	public String getInfos(){
+
+	public String getInfos() {
 		return get("infos");
 	}
-	
-	public String getLabel(){
+
+	public String getLabel() {
 		return get("Date") + " " + getMessage();
 	}
-	
-	public static DayMessage load(String day){
+
+	public static DayMessage load(String day) {
 		DayMessage ret = new DayMessage(day);
 		if (ret.state() == DELETED) {
 			ret.undelete();
@@ -57,16 +53,17 @@ public class DayMessage extends PersistentObject {
 		}
 		return ret;
 	}
-	
+
 	@Override
-	protected String getTableName(){
+	protected String getTableName() {
 		return "AGNDAYS";
 	}
-	
-	DayMessage(){/* leer */}
-	
-	DayMessage(String id){
+
+	DayMessage() {
+		/* leer */}
+
+	DayMessage(String id) {
 		super(id);
 	}
-	
+
 }

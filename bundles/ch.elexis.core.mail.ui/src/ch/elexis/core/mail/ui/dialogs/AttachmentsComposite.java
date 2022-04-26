@@ -30,26 +30,24 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.ui.icons.Images;
 
 public class AttachmentsComposite extends Composite {
-	
+
 	private String attachments;
 	private String documents;
 	private Command createRocheLaborCommand;
 	private String postfix;
-	
+
 	private Composite attachmentsParent;
-	
-	public AttachmentsComposite(Composite parent, int style){
+
+	public AttachmentsComposite(Composite parent, int style) {
 		super(parent, style);
 		this.setData("org.eclipse.e4.ui.css.CssClassName", "CustomComposite");
-		ICommandService commandService =
-			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-		createRocheLaborCommand =
-			commandService.getCommand("at.medevit.elexis.roche.labor.CreatePdfSelection");
-		
+		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		createRocheLaborCommand = commandService.getCommand("at.medevit.elexis.roche.labor.CreatePdfSelection");
+
 		createContent();
 	}
-	
-	private void createContent(){
+
+	private void createContent() {
 		setLayout(new GridLayout(3, false));
 		Label lbl = new Label(this, SWT.NONE);
 		lbl.setText("Anhang");
@@ -57,7 +55,7 @@ public class AttachmentsComposite extends Composite {
 		attachmentsParent = new Composite(this, SWT.NONE);
 		attachmentsParent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		attachmentsParent.setLayout(new GridLayout(2, false));
-		
+
 		ToolBarManager mgr = new ToolBarManager();
 		mgr.add(new AddAttachmentAction(this));
 		if (createRocheLaborCommand != null && createRocheLaborCommand.isEnabled()) {
@@ -66,8 +64,8 @@ public class AttachmentsComposite extends Composite {
 		ToolBar toolbar = mgr.createControl(this);
 		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
 	}
-	
-	public String getAttachmentNames(String attachmentAsString){
+
+	public String getAttachmentNames(String attachmentAsString) {
 		StringBuilder build = new StringBuilder();
 		if (attachmentAsString != null) {
 			String[] attachments = attachmentAsString.split(",\n");
@@ -80,18 +78,18 @@ public class AttachmentsComposite extends Composite {
 		}
 		return build.toString();
 	}
-	
+
 	/**
 	 * String containing references to files.
-	 * 
+	 *
 	 * @param attachments
 	 */
-	public void setAttachments(String attachments){
+	public void setAttachments(String attachments) {
 		this.attachments = attachments;
 		updateAttachments();
 	}
-	
-	private void updateAttachments(){
+
+	private void updateAttachments() {
 		attachmentsParent.setRedraw(false);
 		// clear all labels and rebuild
 		for (Control control : attachmentsParent.getChildren()) {
@@ -106,7 +104,7 @@ public class AttachmentsComposite extends Composite {
 				label.setToolTipText("Mit Doppelklick öffnen (keine Änderungen)");
 				label.addMouseListener(new MouseAdapter() {
 					@Override
-					public void mouseDoubleClick(MouseEvent e){
+					public void mouseDoubleClick(MouseEvent e) {
 						File file = new File((String) label.getData());
 						file.setReadOnly();
 						Program.launch((String) label.getData());
@@ -118,11 +116,10 @@ public class AttachmentsComposite extends Composite {
 				remove.setData(string);
 				remove.addMouseListener(new MouseAdapter() {
 					@Override
-					public void mouseUp(MouseEvent e){
+					public void mouseUp(MouseEvent e) {
 						List<String> removeParts = Arrays.asList(getAttachments().split(":::"));
-						String removedString =
-							removeParts.stream().filter(part -> !part.equals(remove.getData()))
-							.collect(Collectors.joining(":::"));
+						String removedString = removeParts.stream().filter(part -> !part.equals(remove.getData()))
+								.collect(Collectors.joining(":::"));
 						setAttachments(removedString);
 					}
 				});
@@ -135,8 +132,7 @@ public class AttachmentsComposite extends Composite {
 				Label label = new Label(attachmentsParent, SWT.NONE);
 				String tmpFile = AttachmentsUtil.toAttachment(string);
 				if (!tmpFile.endsWith(".pdf")) {
-					MessageDialog.openWarning(getShell(), "Warnung",
-						"Dokument " + FilenameUtils.getName(tmpFile)
+					MessageDialog.openWarning(getShell(), "Warnung", "Dokument " + FilenameUtils.getName(tmpFile)
 							+ " konnte nicht konvertiert werden, bzw. ist kein pdf.\nBitte prüfen ob ein editierbares Dokument versendet werden soll.");
 				}
 				label.setText(FilenameUtils.getName(tmpFile));
@@ -144,7 +140,7 @@ public class AttachmentsComposite extends Composite {
 				label.setToolTipText("Mit Doppelklick öffnen (keine Änderungen)");
 				label.addMouseListener(new MouseAdapter() {
 					@Override
-					public void mouseDoubleClick(MouseEvent e){
+					public void mouseDoubleClick(MouseEvent e) {
 						File file = new File(tmpFile);
 						file.setReadOnly();
 						Program.launch(tmpFile);
@@ -155,10 +151,9 @@ public class AttachmentsComposite extends Composite {
 				remove.setImage(Images.IMG_DELETE.getImage());
 				remove.setData(string);
 				remove.addMouseListener(new MouseAdapter() {
-					public void mouseUp(MouseEvent e){
+					public void mouseUp(MouseEvent e) {
 						List<String> removeParts = Arrays.asList(getDocuments().split(":::"));
-						String removedString =
-							removeParts.stream().filter(part -> !part.equals(remove.getData()))
+						String removedString = removeParts.stream().filter(part -> !part.equals(remove.getData()))
 								.collect(Collectors.joining(":::"));
 						setDocuments(removedString);
 					};
@@ -169,43 +164,41 @@ public class AttachmentsComposite extends Composite {
 		attachmentsParent.setRedraw(true);
 		getParent().layout(true, true);
 	}
-	
-	public void addDocument(IDocument document){
+
+	public void addDocument(IDocument document) {
 		if (document != null) {
 			if (StringUtils.isBlank(documents)) {
-				documents =
-					AttachmentsUtil.getDocumentsString(Collections.singletonList(document));
+				documents = AttachmentsUtil.getDocumentsString(Collections.singletonList(document));
 			} else {
-				documents +=
-					":::" + AttachmentsUtil.getDocumentsString(Collections.singletonList(document));
+				documents += ":::" + AttachmentsUtil.getDocumentsString(Collections.singletonList(document));
 			}
 		}
 		updateAttachments();
 	}
-	
+
 	/**
 	 * String containing references to {@link IDocument}s.
-	 * 
+	 *
 	 * @param documents
 	 */
-	public void setDocuments(String documents){
+	public void setDocuments(String documents) {
 		this.documents = documents;
 		updateAttachments();
 	}
-	
-	public String getAttachments(){
+
+	public String getAttachments() {
 		return attachments;
 	}
-	
-	public String getDocuments(){
+
+	public String getDocuments() {
 		return documents;
 	}
-	
-	public void setPostfix(String text){
+
+	public void setPostfix(String text) {
 		this.postfix = text;
 	}
-	
-	public String getPostfix(){
+
+	public String getPostfix() {
 		return postfix;
 	}
 }

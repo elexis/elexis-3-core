@@ -8,13 +8,13 @@ import ch.elexis.core.findings.migration.IMigratorService;
 @Component
 public class MigratorServiceComponent {
 	private static IMigratorService migratorService;
-	
+
 	@Reference(unbind = "-")
-	public void setFindingMigratorService(IMigratorService migratorService){
+	public void setFindingMigratorService(IMigratorService migratorService) {
 		MigratorServiceComponent.migratorService = migratorService;
 	}
-	
-	public static IMigratorService getService(){
+
+	public static IMigratorService getService() {
 		return migratorService;
 	}
 }

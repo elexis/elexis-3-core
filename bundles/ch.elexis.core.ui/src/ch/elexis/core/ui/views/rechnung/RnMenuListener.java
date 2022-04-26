@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views.rechnung;
@@ -28,16 +28,16 @@ import ch.elexis.data.RnStatus;
 import ch.rgw.tools.Tree;
 
 public class RnMenuListener implements IMenuListener {
-	
+
 	RechnungsListeView view;
 	private int generalStatus;
-	
-	RnMenuListener(RechnungsListeView view){
+
+	RnMenuListener(RechnungsListeView view) {
 		this.view = view;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void menuAboutToShow(IMenuManager manager){
+	public void menuAboutToShow(IMenuManager manager) {
 		Object[] o = view.cv.getSelection();
 		if (o != null && o.length > 0) {
 			if (o.length == 1) {
@@ -68,14 +68,14 @@ public class RnMenuListener implements IMenuListener {
 				List<Rechnung> rechnungen = new ArrayList<Rechnung>();
 				generalStatus = -1;
 				boolean compatibleStatus = true;
-				
+
 				for (Object obj : o) {
 					Tree treeElement = (Tree) obj;
-					
+
 					if (treeElement.contents instanceof Rechnung) {
 						Rechnung rn = (Rechnung) treeElement.contents;
 						compatibleStatus = isCompatible(rn.getStatus());
-						
+
 					} else if (treeElement.contents instanceof Fall) {
 						Collection<Tree> fallRechnungen = treeElement.getChildren();
 						for (Tree tRn : fallRechnungen) {
@@ -93,8 +93,9 @@ public class RnMenuListener implements IMenuListener {
 						}
 					}
 				}
-				
-				// only show menu if status did match otherwise this could lead to irregularities of invoices   
+
+				// only show menu if status did match otherwise this could lead to
+				// irregularities of invoices
 				if (compatibleStatus) {
 					if (generalStatus == RnStatus.FEHLERHAFT) {
 						manager.add(view.actions.delRnAction);
@@ -111,19 +112,19 @@ public class RnMenuListener implements IMenuListener {
 			}
 		}
 	}
-	
+
 	/**
 	 * check if status is the same than previous
-	 * 
+	 *
 	 * @param status
 	 * @return
 	 */
-	private boolean isCompatible(int status){
+	private boolean isCompatible(int status) {
 		// use for all non fehlerhaft or storno status 0
 		if (status != RnStatus.FEHLERHAFT && status != RnStatus.STORNIERT) {
 			status = 0;
 		}
-		
+
 		if (generalStatus == -1 || generalStatus == status) {
 			generalStatus = status;
 			return true;
@@ -131,8 +132,8 @@ public class RnMenuListener implements IMenuListener {
 			return false;
 		}
 	}
-	
-	private void enableStornoDependentFields(boolean enable){
+
+	private void enableStornoDependentFields(boolean enable) {
 		view.actions.rnExportAction.setEnabled(enable);
 		view.actions.addPaymentAction.setEnabled(enable);
 		view.actions.addExpenseAction.setEnabled(enable);

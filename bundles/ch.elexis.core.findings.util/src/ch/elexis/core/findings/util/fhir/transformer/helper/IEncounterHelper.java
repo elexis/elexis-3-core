@@ -21,25 +21,24 @@ import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IModelService;
 
 public class IEncounterHelper extends AbstractHelper {
-	
+
 	private IModelService coreModelService;
 	private IModelService findingsModelService;
-	
-	public IEncounterHelper(IModelService coreModelService, IModelService findingsModelService){
+
+	public IEncounterHelper(IModelService coreModelService, IModelService findingsModelService) {
 		this.coreModelService = coreModelService;
 		this.findingsModelService = findingsModelService;
 	}
-	
-	public Optional<ch.elexis.core.model.IEncounter> createIEncounter(IEncounter iEncounter){
+
+	public Optional<ch.elexis.core.model.IEncounter> createIEncounter(IEncounter iEncounter) {
 		Optional<ch.elexis.core.model.IEncounter> ret = getIEncounter(iEncounter);
 		if (!ret.isPresent()) {
 			Optional<IPatient> patient = getPatient(iEncounter);
 			Optional<IMandator> serviceProvider = getPerformer(iEncounter);
 			if (patient.isPresent() && serviceProvider.isPresent()) {
 				ICoverage fall = getOrCreateDefaultFall(patient.get());
-				ch.elexis.core.model.IEncounter encounter =
-					new IEncounterBuilder(coreModelService, fall, serviceProvider.get())
-						.buildAndSave();
+				ch.elexis.core.model.IEncounter encounter = new IEncounterBuilder(coreModelService, fall,
+						serviceProvider.get()).buildAndSave();
 				Optional<LocalDateTime> startTime = iEncounter.getStartTime();
 				if (startTime.isPresent()) {
 					encounter.setDate(startTime.get().toLocalDate());
@@ -52,8 +51,8 @@ public class IEncounterHelper extends AbstractHelper {
 		}
 		return ret;
 	}
-	
-	private ICoverage getOrCreateDefaultFall(IPatient patient){
+
+	private ICoverage getOrCreateDefaultFall(IPatient patient) {
 		List<ICoverage> coverages = patient.getCoverages();
 		ICoverage defaultCoverage = lookUpDefaultFall(coverages);
 		if (defaultCoverage == null) {
@@ -62,15 +61,15 @@ public class IEncounterHelper extends AbstractHelper {
 		}
 		return defaultCoverage;
 	}
-	
-	private ICoverage createDefaultFall(IPatient patient){
-		ICoverage ret = new ICoverageBuilder(coreModelService, patient, "online",
-			FallConstants.TYPE_DISEASE, "KVG").buildAndSave();
+
+	private ICoverage createDefaultFall(IPatient patient) {
+		ICoverage ret = new ICoverageBuilder(coreModelService, patient, "online", FallConstants.TYPE_DISEASE, "KVG")
+				.buildAndSave();
 		closeFall(ret);
 		return ret;
 	}
-	
-	private void closeFall(ICoverage fall){
+
+	private void closeFall(ICoverage fall) {
 		LockResponse lockResponse = AbstractHelper.acquireLock(fall);
 		if (lockResponse.isOk()) {
 			fall.setDateTo(fall.getDateFrom());
@@ -78,8 +77,8 @@ public class IEncounterHelper extends AbstractHelper {
 			AbstractHelper.releaseLock(lockResponse.getLockInfo());
 		}
 	}
-	
-	private ICoverage lookUpDefaultFall(List<ICoverage> faelle){
+
+	private ICoverage lookUpDefaultFall(List<ICoverage> faelle) {
 		ICoverage ret = null;
 		if (faelle != null) {
 			for (ICoverage fall : faelle) {
@@ -87,8 +86,7 @@ public class IEncounterHelper extends AbstractHelper {
 					// is the only, or the newest online fall
 					if (ret == null) {
 						ret = fall;
-					} else if (ret != null
-						&& (fall.getLastupdate().compareTo(ret.getLastupdate()) == 1)) {
+					} else if (ret != null && (fall.getLastupdate().compareTo(ret.getLastupdate()) == 1)) {
 						ret = fall;
 					}
 				}
@@ -102,38 +100,37 @@ public class IEncounterHelper extends AbstractHelper {
 		}
 		return ret;
 	}
-	
-	private Optional<ch.elexis.core.model.IEncounter> getIEncounter(IEncounter iEncounter){
+
+	private Optional<ch.elexis.core.model.IEncounter> getIEncounter(IEncounter iEncounter) {
 		String IEncountersId = iEncounter.getConsultationId();
 		if (IEncountersId != null && !IEncountersId.isEmpty()) {
 			return coreModelService.load(IEncountersId, ch.elexis.core.model.IEncounter.class);
 		}
 		return Optional.empty();
 	}
-	
-	public Optional<IMandator> getPerformer(IEncounter iEncounter){
+
+	public Optional<IMandator> getPerformer(IEncounter iEncounter) {
 		return coreModelService.load(iEncounter.getMandatorId(), IMandator.class);
 	}
-	
-	public Optional<IPatient> getPatient(IEncounter iEncounter){
+
+	public Optional<IPatient> getPatient(IEncounter iEncounter) {
 		return coreModelService.load(iEncounter.getPatientId(), IPatient.class);
 	}
-	
-	public Optional<String> getMandatorId(Encounter fhirObject){
+
+	public Optional<String> getMandatorId(Encounter fhirObject) {
 		List<EncounterParticipantComponent> participants = fhirObject.getParticipant();
 		for (EncounterParticipantComponent encounterParticipantComponent : participants) {
 			if (encounterParticipantComponent.hasIndividual()) {
 				Reference reference = encounterParticipantComponent.getIndividual();
-				if (reference.getReferenceElement().getResourceType()
-					.equals(Practitioner.class.getSimpleName())) {
+				if (reference.getReferenceElement().getResourceType().equals(Practitioner.class.getSimpleName())) {
 					return Optional.of(reference.getReferenceElement().getIdPart());
 				}
 			}
 		}
 		return Optional.empty();
 	}
-	
-	public Optional<String> getPatientId(Encounter fhirObject){
+
+	public Optional<String> getPatientId(Encounter fhirObject) {
 		if (fhirObject.getSubject() != null && fhirObject.getSubject().hasReference()) {
 			return Optional.of(fhirObject.getSubject().getReferenceElement().getIdPart());
 		}

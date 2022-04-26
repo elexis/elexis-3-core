@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.exchange.elements;
@@ -24,28 +24,28 @@ public class FindingElement extends XChangeElement {
 	public static final String ATTR_TYPE = "type";
 	public static final String ATTR_UNITS = "unit";
 	public static final String ATTR_GROUP = "group";
-	
+
 	public static final String ELEMENT_XID = "xid";
 	public static final String XIDBASE = "www.xid.ch/labitems/";
-	
+
 	public static final String TYPE_NUMERIC = "numeric";
 	public static final String TYPE_TEXT = "text";
 	public static final String TYPE_IMAGE = "image";
 	public static final String TYPE_ABSOLUTE = "absolute";
-	
-	public String getXMLName(){
+
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
-	FindingElement asExporter(XChangeExporter home, LabItem li){
+
+	FindingElement asExporter(XChangeExporter home, LabItem li) {
 		asExporter(home);
-		
+
 		setAttribute(ATTR_NAME, li.getKuerzel());
 		if (li.getTyp().equals(LabItemTyp.NUMERIC)) {
 			setAttribute(ATTR_TYPE, TYPE_NUMERIC);
 			setAttribute(ATTR_NORMRANGE, li.getRefM()); // TODO anpassen
 			setAttribute(ATTR_UNITS, li.getEinheit());
-			
+
 		} else if (li.getTyp().equals(LabItemTyp.ABSOLUTE)) {
 			setAttribute(ATTR_TYPE, TYPE_ABSOLUTE);
 		} else if (li.getTyp().equals(LabItemTyp.TEXT)) {
@@ -56,5 +56,5 @@ public class FindingElement extends XChangeElement {
 		add(eXid);
 		return this;
 	}
-	
+
 }

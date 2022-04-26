@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 
 public class TestUtil {
 
-	public static String loadFile(Class<?> classLoader, String resourceName) throws IOException{
+	public static String loadFile(Class<?> classLoader, String resourceName) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		String line;
 		InputStream inputStream = classLoader.getResourceAsStream(resourceName);
@@ -21,6 +21,5 @@ public class TestUtil {
 		}
 		return sb.toString();
 	}
-	
-}
 
+}

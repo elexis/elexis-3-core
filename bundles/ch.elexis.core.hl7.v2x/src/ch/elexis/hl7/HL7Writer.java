@@ -16,24 +16,23 @@ import ch.elexis.hl7.util.HL7Helper;
 public abstract class HL7Writer {
 	List<String> errorList = new Vector<String>();
 	List<String> warnList = new Vector<String>();
-	
+
 	protected String sendingApplication1 = ""; //$NON-NLS-1$
 	protected String sendingApplication3 = ""; //$NON-NLS-1$
 	protected String receivingApplication1 = ""; //$NON-NLS-1$
 	protected String receivingApplication3 = ""; //$NON-NLS-1$
 	protected String receivingFacility = ""; //$NON-NLS-1$
-	
+
 	static {
 		System.setProperty(WithdrawnDatatypeRule.PROP_DISABLE_RULE, "true");
 	}
-	
-	public HL7Writer(){
+
+	public HL7Writer() {
 		super();
 	}
-	
+
 	public HL7Writer(final String sendingApplication1, final String sendingApplication3,
-		final String receivingApplication1, final String receivingApplication3,
-		final String receivingFacility){
+			final String receivingApplication1, final String receivingApplication3, final String receivingFacility) {
 		this();
 		this.sendingApplication1 = sendingApplication1;
 		this.sendingApplication3 = sendingApplication3;
@@ -41,76 +40,77 @@ public abstract class HL7Writer {
 		this.receivingApplication3 = receivingApplication3;
 		this.receivingFacility = receivingFacility;
 	}
-	
+
 	/**
 	 * Returns version of HL7
-	 * 
+	 *
 	 * @return
 	 */
 	public abstract String getVersion();
-	
+
 	/**
 	 * Clears all errors and warnings
 	 */
-	public void clearMessages(){
+	public void clearMessages() {
 		errorList = new Vector<String>();
 		warnList = new Vector<String>();
 	}
-	
+
 	/**
 	 * Returns error list
-	 * 
+	 *
 	 * @return
 	 */
-	public List<String> getErrorList(){
+	public List<String> getErrorList() {
 		return errorList;
 	}
-	
+
 	/**
 	 * Returns warning list
-	 * 
+	 *
 	 * @return
 	 */
-	public List<String> getWarningList(){
+	public List<String> getWarningList() {
 		return warnList;
 	}
-	
+
 	/**
 	 * Adds parsing error
-	 * 
+	 *
 	 * @param error
 	 */
-	protected void addError(String error){
+	protected void addError(String error) {
 		errorList.add(error);
 	}
-	
+
 	/**
 	 * Adds a warning message
-	 * 
+	 *
 	 * @param error
 	 */
-	protected void addWarning(String warn){
+	protected void addWarning(String warn) {
 		errorList.add(warn);
 	}
-	
+
 	/**
 	 * Fills MSH segment
-	 * 
+	 *
 	 * @param msh
 	 * @param patient
 	 */
-	protected void fillMSH(final ca.uhn.hl7v2.model.v26.segment.MSH msh, final String messageId,
-		final String event, final HL7Mandant mandant, final String uniqueMessageControlID,
-		final String uniqueProcessingID, final HL7Patient patient) throws DataTypeException{
+	protected void fillMSH(final ca.uhn.hl7v2.model.v26.segment.MSH msh, final String messageId, final String event,
+			final HL7Mandant mandant, final String uniqueMessageControlID, final String uniqueProcessingID,
+			final HL7Patient patient) throws DataTypeException {
 		msh.getMsh1_FieldSeparator().setValue("|"); //$NON-NLS-1$
 		msh.getMsh2_EncodingCharacters().setValue("^~\\&"); //$NON-NLS-1$
-		// Name der sendenden Anwendung. Dessen Eindeutigkeit im Kommunikations-Netzwerk liegt
-		// in der Verantwortung des jeweiligen Systemadministrators. Nimm diesen Text: CHELEXIS
-		msh.getMsh3_SendingApplication().getHd1_NamespaceID().setValue(this.sendingApplication1); //$NON-NLS-1$
+		// Name der sendenden Anwendung. Dessen Eindeutigkeit im Kommunikations-Netzwerk
+		// liegt
+		// in der Verantwortung des jeweiligen Systemadministrators. Nimm diesen Text:
+		// CHELEXIS
+		msh.getMsh3_SendingApplication().getHd1_NamespaceID().setValue(this.sendingApplication1); // $NON-NLS-1$
 		if (this.sendingApplication3 != null) {
 			msh.getMsh3_SendingApplication().getHd2_UniversalID().setValue(""); //$NON-NLS-1$
-			msh.getMsh3_SendingApplication().getHd3_UniversalIDType()
-				.setValue(this.sendingApplication3); //$NON-NLS-1$
+			msh.getMsh3_SendingApplication().getHd3_UniversalIDType().setValue(this.sendingApplication3); // $NON-NLS-1$
 		}
 		// Name der sendenden Institution. Optional (Beschreibung gemäss HL7 Standard).
 		// Gemäss HD Type Definition von HL7 folgendermassen:
@@ -120,14 +120,13 @@ public abstract class HL7Writer {
 		msh.getMsh4_SendingFacility().getHd3_UniversalIDType().setValue("L"); //$NON-NLS-1$
 		// Name der empfangenden Anwendung. Eindeutigkeit dito MSH.3
 		// MSH-5: IMED
-		msh.getMsh5_ReceivingApplication().getHd1_NamespaceID()
-			.setValue(this.receivingApplication1);
+		msh.getMsh5_ReceivingApplication().getHd1_NamespaceID().setValue(this.receivingApplication1);
 		if (this.receivingApplication3 != null) {
 			msh.getMsh5_ReceivingApplication().getHd2_UniversalID().setValue(""); //$NON-NLS-1$
-			msh.getMsh5_ReceivingApplication().getHd3_UniversalIDType()
-				.setValue(this.receivingApplication3); //$NON-NLS-1$
+			msh.getMsh5_ReceivingApplication().getHd3_UniversalIDType().setValue(this.receivingApplication3); // $NON-NLS-1$
 		}
-		// Name der empfangenden Institution . Optional (Beschreibung gemäss HL7 Standard).
+		// Name der empfangenden Institution . Optional (Beschreibung gemäss HL7
+		// Standard).
 		// Vergleiche auch MSH.5
 		// MSH-6: PRAXIS
 		msh.getMsh6_ReceivingFacility().getHd1_NamespaceID().setValue(this.receivingFacility);
@@ -145,25 +144,26 @@ public abstract class HL7Writer {
 		}
 		msh.getMsh12_VersionID().getVid1_VersionID().setValue(getVersion());
 	}
-	
+
 	/**
 	 * Fills MSH segment
-	 * 
+	 *
 	 * @param msh
 	 * @param patient
 	 */
-	protected void fillMSH(final ca.uhn.hl7v2.model.v231.segment.MSH msh, final String messageId,
-		final String event, final HL7Mandant mandant, final String uniqueMessageControlID,
-		final String encoding, final HL7Patient patient) throws DataTypeException{
+	protected void fillMSH(final ca.uhn.hl7v2.model.v231.segment.MSH msh, final String messageId, final String event,
+			final HL7Mandant mandant, final String uniqueMessageControlID, final String encoding,
+			final HL7Patient patient) throws DataTypeException {
 		msh.getMsh1_FieldSeparator().setValue("|"); //$NON-NLS-1$
 		msh.getMsh2_EncodingCharacters().setValue("^~\\&"); //$NON-NLS-1$
-		// Name der sendenden Anwendung. Dessen Eindeutigkeit im Kommunikations-Netzwerk liegt
-		// in der Verantwortung des jeweiligen Systemadministrators. Nimm diesen Text: CHELEXIS
-		msh.getMsh3_SendingApplication().getHd1_NamespaceID().setValue(this.sendingApplication1); //$NON-NLS-1$
+		// Name der sendenden Anwendung. Dessen Eindeutigkeit im Kommunikations-Netzwerk
+		// liegt
+		// in der Verantwortung des jeweiligen Systemadministrators. Nimm diesen Text:
+		// CHELEXIS
+		msh.getMsh3_SendingApplication().getHd1_NamespaceID().setValue(this.sendingApplication1); // $NON-NLS-1$
 		if (this.sendingApplication3 != null) {
 			msh.getMsh3_SendingApplication().getHd2_UniversalID().setValue(""); //$NON-NLS-1$
-			msh.getMsh3_SendingApplication().getHd3_UniversalIDType()
-				.setValue(this.sendingApplication3); //$NON-NLS-1$
+			msh.getMsh3_SendingApplication().getHd3_UniversalIDType().setValue(this.sendingApplication3); // $NON-NLS-1$
 		}
 		// Name der sendenden Institution. Optional (Beschreibung gemäss HL7 Standard).
 		// Gemäss HD Type Definition von HL7 folgendermassen:
@@ -173,19 +173,17 @@ public abstract class HL7Writer {
 		msh.getMsh4_SendingFacility().getHd3_UniversalIDType().setValue("L"); //$NON-NLS-1$
 		// Name der empfangenden Anwendung. Eindeutigkeit dito MSH.3
 		// MSH-5: IMED
-		msh.getMsh5_ReceivingApplication().getHd1_NamespaceID()
-			.setValue(this.receivingApplication1);
+		msh.getMsh5_ReceivingApplication().getHd1_NamespaceID().setValue(this.receivingApplication1);
 		if (this.receivingApplication3 != null) {
 			msh.getMsh5_ReceivingApplication().getHd2_UniversalID().setValue(""); //$NON-NLS-1$
-			msh.getMsh5_ReceivingApplication().getHd3_UniversalIDType()
-				.setValue(this.receivingApplication3); //$NON-NLS-1$
+			msh.getMsh5_ReceivingApplication().getHd3_UniversalIDType().setValue(this.receivingApplication3); // $NON-NLS-1$
 		}
-		// Name der empfangenden Institution . Optional (Beschreibung gemäss HL7 Standard).
+		// Name der empfangenden Institution . Optional (Beschreibung gemäss HL7
+		// Standard).
 		// Vergleiche auch MSH.5
 		// MSH-6: PRAXIS
 		msh.getMsh6_ReceivingFacility().getHd1_NamespaceID().setValue(this.receivingFacility);
-		msh.getMsh7_DateTimeOfMessage().getTs1_TimeOfAnEvent()
-			.setValue(HL7Helper.dateToString(new Date()));
+		msh.getMsh7_DateTimeOfMessage().getTs1_TimeOfAnEvent().setValue(HL7Helper.dateToString(new Date()));
 		msh.getMsh8_Security().setValue(""); //$NON-NLS-1$
 		msh.getMsh9_MessageType().getMessageType().setValue(messageId);
 		msh.getMsh9_MessageType().getTriggerEvent().setValue(event);
@@ -198,18 +196,17 @@ public abstract class HL7Writer {
 		msh.getMsh12_VersionID().getVid1_VersionID().setValue(getVersion());
 		msh.getMsh18_CharacterSet(0).setValue(encoding);
 	}
-	
+
 	/**
 	 * Fills PID segment
-	 * 
+	 *
 	 * @param pid
 	 * @param patient
 	 * @throws DataTypeException
 	 * @throws HL7Exception
 	 */
 	protected void fillPID(final ca.uhn.hl7v2.model.v26.segment.PID pid, final HL7Patient patient)
-		throws DataTypeException,
-		HL7Exception{
+			throws DataTypeException, HL7Exception {
 		String sex = ""; //$NON-NLS-1$
 		if (patient.isMale() != null) {
 			sex = "M"; //$NON-NLS-1$
@@ -224,7 +221,7 @@ public abstract class HL7Writer {
 		addKontaktToXPN(pid.getPid5_PatientName(0), patient);
 		pid.getPid16_MaritalStatus().getCwe1_Identifier().setValue(""); //$NON-NLS-1$
 		pid.getPid7_DateTimeOfBirth().setValue(HL7Helper.dateToString(patient.getBirthdate()));
-		
+
 		pid.getPid8_AdministrativeSex().setValue(sex);
 		pid.getPid9_PatientAlias(0).getXpn1_FamilyName().getFn1_Surname().setValue(""); //$NON-NLS-1$
 		pid.getPid10_Race(0).getCwe1_Identifier().setValue(""); //$NON-NLS-1$
@@ -233,17 +230,17 @@ public abstract class HL7Writer {
 		addPhone1ToXTN(pid.getPid13_PhoneNumberHome(0), patient);
 		addPhone2ToXTN(pid.getPid14_PhoneNumberBusiness(0), patient);
 	}
-	
+
 	/**
 	 * Fills PID segment
-	 * 
+	 *
 	 * @param pid
 	 * @param patient
 	 * @throws DataTypeException
 	 * @throws HL7Exception
 	 */
 	protected void fillPID(final ca.uhn.hl7v2.model.v231.segment.PID pid, final HL7Patient patient)
-		throws DataTypeException, HL7Exception{
+			throws DataTypeException, HL7Exception {
 		String sex = ""; //$NON-NLS-1$
 		if (patient.isMale() != null) {
 			sex = "M"; //$NON-NLS-1$
@@ -257,9 +254,8 @@ public abstract class HL7Writer {
 		pid.getPid4_AlternatePatientIDPID(0).getID().setValue(patient.getPatCode());
 		addKontaktToXPN(pid.getPid5_PatientName(0), patient);
 		pid.getPid16_MaritalStatus().getCe1_Identifier().setValue(""); //$NON-NLS-1$
-		pid.getPid7_DateTimeOfBirth().getTs1_TimeOfAnEvent()
-			.setValue(HL7Helper.dateToString(patient.getBirthdate()));
-		
+		pid.getPid7_DateTimeOfBirth().getTs1_TimeOfAnEvent().setValue(HL7Helper.dateToString(patient.getBirthdate()));
+
 		pid.getPid8_Sex().setValue(sex);
 		pid.getPid9_PatientAlias(0).getXpn1_FamilyLastName().getFn1_FamilyName().setValue(""); //$NON-NLS-1$
 		pid.getPid10_Race(0).getCe1_Identifier().setValue(""); //$NON-NLS-1$
@@ -267,35 +263,31 @@ public abstract class HL7Writer {
 		pid.getPid12_CountyCode().setValue(""); //$NON-NLS-1$
 		addPhone1ToXTN(pid.getPid13_PhoneNumberHome(0), patient);
 	}
-	
+
 	/**
 	 * Fills ORC segment
-	 * 
+	 *
 	 * @param orc
-	 * @param orderControl
-	 *            (ORC-1)
-	 * @param orderNumber
-	 *            (ORC-2)
+	 * @param orderControl (ORC-1)
+	 * @param orderNumber  (ORC-2)
 	 * @throws DataTypeException
 	 */
-	protected void fillORC(final ORC orc, final String orderControl, final Long orderNumber)
-		throws DataTypeException{
+	protected void fillORC(final ORC orc, final String orderControl, final Long orderNumber) throws DataTypeException {
 		orc.getOrc1_OrderControl().setValue(orderControl);
 		if (orderNumber != null) {
-			orc.getOrc2_PlacerOrderNumber().getEi1_EntityIdentifier()
-				.setValue(orderNumber.toString());
+			orc.getOrc2_PlacerOrderNumber().getEi1_EntityIdentifier().setValue(orderNumber.toString());
 		}
 	}
-	
+
 	/**
 	 * Adds patient data to XPN segment
-	 * 
+	 *
 	 * @param xpn
 	 * @param patient
 	 * @throws DataTypeException
 	 */
-	protected void addKontaktToXPN(ca.uhn.hl7v2.model.v26.datatype.XPN xpn,
-		final HL7Kontakt kontakt) throws DataTypeException{
+	protected void addKontaktToXPN(ca.uhn.hl7v2.model.v26.datatype.XPN xpn, final HL7Kontakt kontakt)
+			throws DataTypeException {
 		String name = ""; //$NON-NLS-1$
 		String vorname = ""; //$NON-NLS-1$
 		String title = ""; //$NON-NLS-1$
@@ -314,16 +306,16 @@ public abstract class HL7Writer {
 		xpn.getXpn8_NameRepresentationCode().setValue(""); //$NON-NLS-1$
 		xpn.getXpn9_NameContext().getCwe1_Identifier().setValue(""); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Adds patient data to XPN segment
-	 * 
+	 *
 	 * @param xpn
 	 * @param patient
 	 * @throws DataTypeException
 	 */
-	protected void addKontaktToXPN(ca.uhn.hl7v2.model.v231.datatype.XPN xpn,
-		final HL7Kontakt kontakt) throws DataTypeException{
+	protected void addKontaktToXPN(ca.uhn.hl7v2.model.v231.datatype.XPN xpn, final HL7Kontakt kontakt)
+			throws DataTypeException {
 		String name = ""; //$NON-NLS-1$
 		String vorname = ""; //$NON-NLS-1$
 		String title = ""; //$NON-NLS-1$
@@ -340,16 +332,16 @@ public abstract class HL7Writer {
 		xpn.getXpn7_NameTypeCode().setValue(""); //$NON-NLS-1$
 		xpn.getXpn8_NameRepresentationCode().setValue(""); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Adds address of kontakt to XAD segment
-	 * 
+	 *
 	 * @param xad
 	 * @param kontakt
 	 * @throws DataTypeException
 	 */
-	protected void addAddressToXAD(ca.uhn.hl7v2.model.v26.datatype.XAD xad,
-		final HL7Kontakt kontakt) throws DataTypeException{
+	protected void addAddressToXAD(ca.uhn.hl7v2.model.v26.datatype.XAD xad, final HL7Kontakt kontakt)
+			throws DataTypeException {
 		String street = ""; //$NON-NLS-1$
 		String other = ""; //$NON-NLS-1$
 		String city = ""; //$NON-NLS-1$
@@ -369,16 +361,16 @@ public abstract class HL7Writer {
 		xad.getXad5_ZipOrPostalCode().setValue(zip);
 		xad.getXad6_Country().setValue(country);
 	}
-	
+
 	/**
 	 * Adds address of kontakt to XAD segment
-	 * 
+	 *
 	 * @param xad
 	 * @param kontakt
 	 * @throws DataTypeException
 	 */
-	protected void addAddressToXAD(ca.uhn.hl7v2.model.v231.datatype.XAD xad,
-		final HL7Kontakt kontakt) throws DataTypeException{
+	protected void addAddressToXAD(ca.uhn.hl7v2.model.v231.datatype.XAD xad, final HL7Kontakt kontakt)
+			throws DataTypeException {
 		String street = ""; //$NON-NLS-1$
 		String other = ""; //$NON-NLS-1$
 		String city = ""; //$NON-NLS-1$
@@ -398,16 +390,16 @@ public abstract class HL7Writer {
 		xad.getXad5_ZipOrPostalCode().setValue(zip);
 		xad.getXad6_Country().setValue(country);
 	}
-	
+
 	/**
 	 * Adds contact informations to XTN segment
-	 * 
+	 *
 	 * @param xtn
 	 * @param kontakt
 	 * @throws DataTypeException
 	 */
 	protected void addPhone1ToXTN(ca.uhn.hl7v2.model.v26.datatype.XTN xtn, final HL7Kontakt kontakt)
-		throws DataTypeException{
+			throws DataTypeException {
 		String phone1 = ""; //$NON-NLS-1$
 		String email = ""; //$NON-NLS-1$
 		String fax = ""; //$NON-NLS-1$
@@ -433,16 +425,16 @@ public abstract class HL7Writer {
 		xtn.getXtn10_ExtensionPrefix().setValue(""); //$NON-NLS-1$
 		xtn.getXtn11_SpeedDialCode().setValue(fax);
 	}
-	
+
 	/**
 	 * Adds contact informations to XTN segment
-	 * 
+	 *
 	 * @param xtn
 	 * @param kontakt
 	 * @throws DataTypeException
 	 */
-	protected void addPhone1ToXTN(ca.uhn.hl7v2.model.v231.datatype.XTN xtn,
-		final HL7Kontakt kontakt) throws DataTypeException{
+	protected void addPhone1ToXTN(ca.uhn.hl7v2.model.v231.datatype.XTN xtn, final HL7Kontakt kontakt)
+			throws DataTypeException {
 		String phone1 = ""; //$NON-NLS-1$
 		String email = ""; //$NON-NLS-1$
 		String fax = ""; //$NON-NLS-1$
@@ -465,16 +457,16 @@ public abstract class HL7Writer {
 		xtn.getXtn8_Extension().setValue(""); //$NON-NLS-1$
 		xtn.getXtn9_AnyText().setValue(""); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Adds contact informations to XTN segment
-	 * 
+	 *
 	 * @param xtn
 	 * @param kontakt
 	 * @throws DataTypeException
 	 */
 	protected void addPhone2ToXTN(ca.uhn.hl7v2.model.v26.datatype.XTN xtn, final HL7Kontakt kontakt)
-		throws DataTypeException{
+			throws DataTypeException {
 		String phone2 = ""; //$NON-NLS-1$
 		if (kontakt != null) {
 			phone2 = kontakt.getPhone2();

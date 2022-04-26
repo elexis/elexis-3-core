@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.wizards;
 
@@ -41,33 +41,33 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
 public class DBConnectFirstPage extends WizardPage {
-	
+
 	Combo dbTypes;
 	Text server, dbName;
 	String defaultUser, defaultPassword;
 	JdbcLink j = null;
-	
-	static final String[] supportedDB = new String[] {
-		"mySQl", "PostgreSQL", "H2" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+
+	static final String[] supportedDB = new String[] { "mySQl", "PostgreSQL", "H2" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	};
-	
-	public DBConnectFirstPage(String pageName){
+
+	public DBConnectFirstPage(String pageName) {
 		super(Messages.DBConnectFirstPage_Connection, Messages.DBConnectFirstPage_typeOfDB,
-			Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		setMessage(Messages.DBConnectFirstPage_selectType); //$NON-NLS-1$
-		setDescription(Messages.DBConnectFirstPage_theDescripotion); //$NON-NLS-1$
-		
+				Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); // $NON-NLS-1$ //$NON-NLS-2$
+																							// //$NON-NLS-3$
+		setMessage(Messages.DBConnectFirstPage_selectType); // $NON-NLS-1$
+		setDescription(Messages.DBConnectFirstPage_theDescripotion); // $NON-NLS-1$
+
 	}
-	
-	public DBConnectFirstPage(String pageName, String title, ImageDescriptor titleImage){
+
+	public DBConnectFirstPage(String pageName, String title, ImageDescriptor titleImage) {
 		super(pageName, title, titleImage);
 		// TODO Automatisch erstellter Konstruktoren-Stub
 	}
-	
-	public void createControl(Composite parent){
+
+	public void createControl(Composite parent) {
 		FormToolkit tk = UiDesk.getToolkit();
 		Form form = tk.createForm(parent);
-		form.setText(Messages.DBConnectFirstPage_connectioNDetails); //$NON-NLS-1$
+		form.setText(Messages.DBConnectFirstPage_connectioNDetails); // $NON-NLS-1$
 		Composite body = form.getBody();
 		body.setLayout(new TableWrapLayout());
 		FormText alt = tk.createFormText(body, false);
@@ -82,13 +82,9 @@ public class DBConnectFirstPage extends WizardPage {
 		if (cnt != null) {
 			hConn = PersistentObject.fold(StringTool.dePrintable(cnt));
 			if (hConn != null) {
-				driver =
-					PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
-				connectString =
-					PersistentObject.checkNull(hConn
-						.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
-				user =
-					PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
+				driver = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
+				connectString = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
+				user = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
 				typ = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_TYPE));
 			}
 		}
@@ -98,7 +94,8 @@ public class DBConnectFirstPage extends WizardPage {
 		String dbFlavor = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR);
 		String dbSpec = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC);
 		if (dbUser != null && dbPw != null && dbFlavor != null && dbSpec != null) {
-			old.append("<br/><li><b>Aktuelle Verbindung wurde via Übergabeparameter ans Programm gesetzt!</b></li><br/>"); //$NON-NLS-1$
+			old.append(
+					"<br/><li><b>Aktuelle Verbindung wurde via Übergabeparameter ans Programm gesetzt!</b></li><br/>"); //$NON-NLS-1$
 		}
 		if (ch.rgw.tools.StringTool.isNothing(connectString)) {
 			old.append("<br/>"); //$NON-NLS-1$
@@ -110,10 +107,9 @@ public class DBConnectFirstPage extends WizardPage {
 			old.append("<li><b>Verbinde</b>   ").append(connectString).append("</li>"); //$NON-NLS-1$ //$NON-NLS-2$
 			old.append("<li><b>Username</b>   ").append(user).append("</li>"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		if (PersistentObject.getConnection() != null
-			&& PersistentObject.getConnection().getConnectString() != null) {
+		if (PersistentObject.getConnection() != null && PersistentObject.getConnection().getConnectString() != null) {
 			old.append("<li><b>Effektiv</b> verwendet wird:").append( //$NON-NLS-1$
-				PersistentObject.getConnection().getConnectString()).append("</li>"); //$NON-NLS-1$
+					PersistentObject.getConnection().getConnectString()).append("</li>"); //$NON-NLS-1$
 		}
 		old.append("</form>"); //$NON-NLS-1$
 		alt.setText(old.toString(), true, false);
@@ -122,12 +118,12 @@ public class DBConnectFirstPage extends WizardPage {
 		TableWrapData twd = new TableWrapData();
 		twd.heightHint = 5;
 		sep.setLayoutData(twd);
-		tk.createLabel(body, Messages.DBConnectFirstPage_enterType); //$NON-NLS-1$
+		tk.createLabel(body, Messages.DBConnectFirstPage_enterType); // $NON-NLS-1$
 		dbTypes = new Combo(body, SWT.BORDER | SWT.SIMPLE);
 		dbTypes.setItems(supportedDB);
 		dbTypes.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				int it = dbTypes.getSelectionIndex();
 				switch (it) {
 				case 0:
@@ -149,20 +145,20 @@ public class DBConnectFirstPage extends WizardPage {
 				DBConnectSecondPage sec = (DBConnectSecondPage) getNextPage();
 				sec.name.setText(defaultUser);
 				sec.pwd.setText(defaultPassword);
-				
+
 			}
-			
+
 		});
 		tk.adapt(dbTypes, true, true);
-		tk.createLabel(body, Messages.DBConnectFirstPage_serevrAddress); //$NON-NLS-1$
+		tk.createLabel(body, Messages.DBConnectFirstPage_serevrAddress); // $NON-NLS-1$
 		server = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twr = new TableWrapData(TableWrapData.FILL_GRAB);
 		server.setLayoutData(twr);
-		tk.createLabel(body, Messages.DBConnectFirstPage_databaseName); //$NON-NLS-1$
+		tk.createLabel(body, Messages.DBConnectFirstPage_databaseName); // $NON-NLS-1$
 		dbName = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twr2 = new TableWrapData(TableWrapData.FILL_GRAB);
 		dbName.setLayoutData(twr2);
 		setControl(form);
 	}
-	
+
 }

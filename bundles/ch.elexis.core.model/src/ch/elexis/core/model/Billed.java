@@ -18,33 +18,32 @@ import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.IStoreToStringContribution;
 import ch.rgw.tools.Money;
 
-public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
-		implements IdentifiableWithXid, IBilled {
-	
+public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements IdentifiableWithXid, IBilled {
+
 	private IBillable billable;
-	
-	public Billed(Verrechnet entity){
+
+	public Billed(Verrechnet entity) {
 		super(entity);
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		return getText();
 	}
-	
+
 	@Override
-	public IBillable getBillable(){
+	public IBillable getBillable() {
 		if (billable == null) {
 			Optional<String> storeToString = getBillableStoreToString();
 			if (storeToString.isPresent()) {
-				billable = (IBillable) StoreToStringServiceHolder.get()
-					.loadFromString(storeToString.get()).orElse(null);
+				billable = (IBillable) StoreToStringServiceHolder.get().loadFromString(storeToString.get())
+						.orElse(null);
 			}
 		}
 		return billable;
 	}
-	
-	private Optional<String> getBillableStoreToString(){
+
+	private Optional<String> getBillableStoreToString() {
 		String billableClass = getEntity().getKlasse();
 		String billableId = getEntity().getLeistungenCode();
 		if (StringUtils.isNotBlank(billableClass) && StringUtils.isNotBlank(billableId)) {
@@ -52,11 +51,11 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public void setBillable(IBillable value){
-		String storeToString = StoreToStringServiceHolder.get().storeToString(value).orElseThrow(
-			() -> new IllegalStateException("Could not get store to string for [" + value + "]"));
+	public void setBillable(IBillable value) {
+		String storeToString = StoreToStringServiceHolder.get().storeToString(value)
+				.orElseThrow(() -> new IllegalStateException("Could not get store to string for [" + value + "]"));
 		String[] split = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
 		if (split.length > 1) {
 			getEntityMarkDirty().setKlasse(split[0]);
@@ -64,40 +63,39 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 			billable = value;
 		}
 	}
-	
+
 	@Override
-	public IEncounter getEncounter(){
+	public IEncounter getEncounter() {
 		if (getEntity().getBehandlung() != null) {
 			return ModelUtil.getAdapter(getEntity().getBehandlung(), IEncounter.class);
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setEncounter(IEncounter value){
+	public void setEncounter(IEncounter value) {
 		if (value instanceof AbstractIdModelAdapter) {
 			// refresh existing
 			if (getEncounter() != null) {
 				addRefresh(getEncounter());
 			}
-			Behandlung valueEntity =
-				((AbstractIdModelAdapter<Behandlung>) value).getEntity();
+			Behandlung valueEntity = ((AbstractIdModelAdapter<Behandlung>) value).getEntity();
 			getEntityMarkDirty().setBehandlung(valueEntity);
 			addRefresh(value);
 		}
 	}
-	
+
 	@Override
-	public double getAmount(){
+	public double getAmount() {
 		if (getSecondaryScale() == 100) {
 			return getEntity().getZahl();
 		}
 		return getSecondaryScale() / 100d;
 	}
-	
+
 	@Override
-	public void setAmount(double value){
+	public void setAmount(double value) {
 		if (value % 1 == 0) {
 			// integer
 			getEntityMarkDirty().setZahl((int) value);
@@ -109,19 +107,18 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 				int scale2 = (int) Math.round(value * 100);
 				setSecondaryScale(scale2);
 			} else {
-				throw new IllegalStateException(
-					"Can not set non integer amount if price was changed");
+				throw new IllegalStateException("Can not set non integer amount if price was changed");
 			}
 		}
 	}
-	
+
 	@Override
-	public Money getPrice(){
+	public Money getPrice() {
 		return new Money(getPoints()).multiply(getFactor());
 	}
-	
+
 	@Override
-	public void setPrice(Money value){
+	public void setPrice(Money value) {
 		if (isNonIntegerAmount()) {
 			throw new IllegalStateException("Can not set price if non integer amount was set");
 		} else {
@@ -130,52 +127,51 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 			setSecondaryScale(100);
 		}
 	}
-	
+
 	@Override
-	public Money getScaledPrice(){
+	public Money getScaledPrice() {
 		// do not include secondary as it is either 1 or the amount
-		int cents =
-			Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()));
+		int cents = Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()));
 		return new Money(cents);
 	}
-	
+
 	@Override
-	public Money getNetPrice(){
+	public Money getNetPrice() {
 		return new Money(getEntity().getEk_kosten());
 	}
-	
+
 	@Override
-	public void setNetPrice(Money value){
+	public void setNetPrice(Money value) {
 		if (value != null) {
 			getEntityMarkDirty().setEk_kosten(value.getCents());
 		} else {
 			getEntityMarkDirty().setEk_kosten(0);
 		}
 	}
-	
+
 	@Override
-	public String getText(){
+	public String getText() {
 		return getEntity().getLeistungenText();
 	}
-	
+
 	@Override
-	public void setText(String value){
+	public void setText(String value) {
 		getEntityMarkDirty().setLeistungenText(value);
-		
+
 	}
-	
+
 	@Override
-	public int getPoints(){
+	public int getPoints() {
 		return getEntity().getVk_tp();
 	}
-	
+
 	@Override
-	public void setPoints(int value){
+	public void setPoints(int value) {
 		getEntityMarkDirty().setVk_tp(value);
 	}
-	
+
 	@Override
-	public double getFactor(){
+	public double getFactor() {
 		String scaleString = getEntity().getVk_scale();
 		if (scaleString != null && !scaleString.isEmpty()) {
 			try {
@@ -186,65 +182,67 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 		}
 		return 1.0;
 	}
-	
+
 	@Override
-	public void setFactor(double value){
+	public void setFactor(double value) {
 		getEntityMarkDirty().setVk_scale(Double.toString(value));
 	}
-	
+
 	@Override
-	public int getPrimaryScale(){
+	public int getPrimaryScale() {
 		return getEntity().getScale();
 	}
-	
+
 	@Override
-	public void setPrimaryScale(int value){
+	public void setPrimaryScale(int value) {
 		getEntityMarkDirty().setScale(value);
 	}
-	
+
 	@Override
-	public int getSecondaryScale(){
+	public int getSecondaryScale() {
 		return getEntity().getScale2();
 	}
-	
+
 	@Override
-	public void setSecondaryScale(int value){
+	public void setSecondaryScale(int value) {
 		getEntityMarkDirty().setScale2(value);
 	}
-	
+
 	@Override
-	public Object getExtInfo(Object key){
+	public Object getExtInfo(Object key) {
 		return extInfoHandler.getExtInfo(key);
 	}
-	
+
 	@Override
-	public void setExtInfo(Object key, Object value){
+	public void setExtInfo(Object key, Object value) {
 		extInfoHandler.setExtInfo(key, value);
 	}
-	
+
 	@Override
-	public Map<Object, Object> getMap(){
+	public Map<Object, Object> getMap() {
 		return extInfoHandler.getMap();
 	}
-	
+
 	@Override
-	public String getCode(){
+	public String getCode() {
 		IBillable billable = getBillable();
 		return billable != null ? billable.getCode() : getBillableStoreToString().orElse("?");
 	}
-	
+
 	@Override
-	public Money getTotal(){
-		// do not use getAmount here, as the changed amount is included via secondary scale#
+	public Money getTotal() {
+		// do not use getAmount here, as the changed amount is included via secondary
+		// scale#
 		// get sales for the verrechnet including all scales and quantity
-		// replaced with toIntExact and round: new DecimalFormat("#").parse(new DecimalFormat("#").format(value)).doubleValue()
+		// replaced with toIntExact and round: new DecimalFormat("#").parse(new
+		// DecimalFormat("#").format(value)).doubleValue()
 		int cents = Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()
-			* getSecondaryScaleFactor() * getEntity().getZahl()));
+				* getSecondaryScaleFactor() * getEntity().getZahl()));
 		return new Money(cents);
 	}
-	
+
 	@Override
-	public boolean isChangedPrice(){
+	public boolean isChangedPrice() {
 		Object changedPrice = getExtInfo(Constants.FLD_EXT_CHANGEDPRICE);
 		if (changedPrice instanceof String) {
 			return ((String) changedPrice).equalsIgnoreCase("true");
@@ -253,51 +251,51 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 		}
 		return false;
 	}
-	
+
 	@Override
-	public boolean isNonIntegerAmount(){
+	public boolean isNonIntegerAmount() {
 		if (isChangedPrice()) {
 			return false;
 		} else {
 			return getSecondaryScale() != 100;
 		}
 	}
-	
+
 	@Override
-	public double getPrimaryScaleFactor(){
+	public double getPrimaryScaleFactor() {
 		if (getPrimaryScale() == 0) {
 			return 1.0;
 		}
 		return ((double) getPrimaryScale()) / 100.0;
 	}
-	
+
 	@Override
-	public double getSecondaryScaleFactor(){
+	public double getSecondaryScaleFactor() {
 		if (getSecondaryScale() == 0) {
 			return 1.0;
 		}
 		return ((double) getSecondaryScale()) / 100.0;
 	}
-	
+
 	@Override
-	public IContact getBiller(){
+	public IContact getBiller() {
 		return ModelUtil.getAdapter(getEntity().getUser(), IContact.class);
 	}
-	
+
 	@Override
-	public void setBiller(IContact value){
+	public void setBiller(IContact value) {
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntityMarkDirty()
-				.setUser((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty().setUser((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
 			getEntityMarkDirty().setUser(null);
 		}
 	}
-	
+
 	@Override
-	public void copy(IBilled to){
+	public void copy(IBilled to) {
 		if (to instanceof AbstractIdDeleteModelAdapter) {
-			// IInvoiceBilled do not support set operations, so copy properties of the entities
+			// IInvoiceBilled do not support set operations, so copy properties of the
+			// entities
 			EntityWithId toEntity = ((AbstractIdDeleteModelAdapter<?>) to).getEntity();
 			if (toEntity instanceof VerrechnetCopy) {
 				VerrechnetCopy verrechnetCopy = (VerrechnetCopy) toEntity;
@@ -311,7 +309,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 				verrechnetCopy.setVk_preis(getEntity().getVk_preis());
 				verrechnetCopy.setScale(getEntity().getScale());
 				verrechnetCopy.setScale2(getEntity().getScale2());
-				
+
 				verrechnetCopy.setBehandlung(getEntity().getBehandlung());
 				verrechnetCopy.setExtInfo(getEntity().getExtInfo());
 				verrechnetCopy.setUser(getEntity().getUser());
@@ -327,16 +325,16 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 				verrechnet.setVk_preis(getEntity().getVk_preis());
 				verrechnet.setScale(getEntity().getScale());
 				verrechnet.setScale2(getEntity().getScale2());
-				
+
 				verrechnet.setBehandlung(getEntity().getBehandlung());
 				verrechnet.setExtInfo(getEntity().getExtInfo());
 				verrechnet.setUser(getEntity().getUser());
 			}
 		}
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return super.toString() + " " + getLabel();
 	}
 }

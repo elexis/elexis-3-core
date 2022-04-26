@@ -8,7 +8,7 @@
  * Contributors:
  *    G. Weirich - initial implementation
  *    M. Descher - honor flow control
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.importer.div.rs232;
@@ -36,9 +36,9 @@ import gnu.io.UnsupportedCommOperationException;
 
 public class Connection implements PortEventListener {
 	private static final String simulate = null; // "c:/abx.txt";
-	
+
 	private static Logger log = LoggerFactory.getLogger(Connection.class);
-	
+
 	private CommPortIdentifier portId;
 	private SerialPort sPort;
 	private boolean bOpen;
@@ -61,26 +61,25 @@ public class Connection implements PortEventListener {
 	private final StringBuilder sbFrame = new StringBuilder();
 	private final StringBuilder sbLine = new StringBuilder();
 	private Thread watchdogThread;
-	
+
 	public interface ComPortListener {
 		public void gotChunk(Connection conn, String chunk);
-		
+
 		public void gotBreak(Connection conn);
-		
+
 		public void timeout();
 	}
-	
-	public Connection(final String portName, final String port, final String settings,
-		final ComPortListener l){
+
+	public Connection(final String portName, final String port, final String settings, final ComPortListener l) {
 		listener = l;
 		myPort = port;
 		mySettings = settings.split(","); //$NON-NLS-1$
 		name = portName;
 	}
-	
-	public boolean connect(){
+
+	public boolean connect() {
 		SerialParameters sp = new SerialParameters();
-		
+
 		sp.setPortName(myPort);
 		sp.setBaudRate(mySettings[0]);
 		sp.setDatabits(mySettings[1]);
@@ -96,18 +95,16 @@ public class Connection implements PortEventListener {
 			if (simulate != null) {
 				final Connection mine = this;
 				new Thread(new Runnable() {
-					
-					public void run(){
+
+					public void run() {
 						try {
 							Thread.sleep(1000);
-							final String in =
-								FileTool.readTextFile(new File(simulate))
-									.replaceAll("\\r\\n", "\r"); //$NON-NLS-1$ //$NON-NLS-2$
+							final String in = FileTool.readTextFile(new File(simulate)).replaceAll("\\r\\n", "\r"); //$NON-NLS-1$ //$NON-NLS-2$
 							listener.gotChunk(mine, in);
 						} catch (Exception ex) {
-							
+
 						}
-						
+
 					}
 				}).start();
 			} else {
@@ -120,37 +117,38 @@ public class Connection implements PortEventListener {
 			ex.printStackTrace();
 			return false;
 		}
-		
+
 	}
-	
+
 	/**
-	 * Attempts to open a serial connection and streams using the parameters in the SerialParameters
-	 * object. If it is unsuccesfull at any step it returns the port to a closed state, throws a
-	 * <code>SerialConnectionException</code>, and returns.
-	 * 
-	 * Gives a timeout of 30 seconds on the portOpen to allow other applications to reliquish the
-	 * port if have it open and no longer need it.
+	 * Attempts to open a serial connection and streams using the parameters in the
+	 * SerialParameters object. If it is unsuccesfull at any step it returns the
+	 * port to a closed state, throws a <code>SerialConnectionException</code>, and
+	 * returns.
+	 *
+	 * Gives a timeout of 30 seconds on the portOpen to allow other applications to
+	 * reliquish the port if have it open and no longer need it.
 	 */
-	public void openConnection(final SerialParameters parameters) throws SerialConnectionException{
-		
+	public void openConnection(final SerialParameters parameters) throws SerialConnectionException {
+
 		// Obtain a CommPortIdentifier object for the port you want to open.
 		try {
 			portId = CommPortIdentifier.getPortIdentifier(parameters.getPortName());
 		} catch (NoSuchPortException e) {
 			throw new SerialConnectionException(e.getMessage());
 		}
-		
+
 		// Open the port represented by the CommPortIdentifier object. Give
 		// the open call a relatively long timeout of 30 seconds to allow
 		// a different application to reliquish the port if the user
 		// wants to.
 		try {
-			
+
 			sPort = (SerialPort) portId.open(name, 30000);
 		} catch (PortInUseException e) {
 			throw new SerialConnectionException(e.getMessage(), e);
 		}
-		
+
 		// Set the parameters of the connection. If they won't set, close the
 		// port before throwing an exception.
 		try {
@@ -159,7 +157,7 @@ public class Connection implements PortEventListener {
 			sPort.close();
 			throw e;
 		}
-		
+
 		// Open the input and output streams for the connection. If they won't
 		// open, close the port before throwing an exception.
 		try {
@@ -169,7 +167,7 @@ public class Connection implements PortEventListener {
 			sPort.close();
 			throw new SerialConnectionException("Error opening i/o streams"); //$NON-NLS-1$
 		}
-		
+
 		// Add this object as an event listener for the serial port.
 		try {
 			sPort.addEventListener(this);
@@ -177,39 +175,40 @@ public class Connection implements PortEventListener {
 			sPort.close();
 			throw new SerialConnectionException("too many listeners added"); //$NON-NLS-1$
 		}
-		
+
 		// Set notifyOnDataAvailable to true to allow event driven input.
 		sPort.notifyOnDataAvailable(true);
-		
+
 		// Set notifyOnBreakInterrup to allow event driven break handling.
 		sPort.notifyOnBreakInterrupt(true);
-		
+
 		// Set receive timeout to allow breaking out of polling loop during
 		// input handling.
 		try {
 			sPort.enableReceiveTimeout(30);
-		} catch (UnsupportedCommOperationException e) {}
+		} catch (UnsupportedCommOperationException e) {
+		}
 		bOpen = true;
 	}
-	
+
 	/**
-	 * Sets the connection parameters to the setting in the parameters object. If set fails return
-	 * the parameters object to origional settings and throw exception.
+	 * Sets the connection parameters to the setting in the parameters object. If
+	 * set fails return the parameters object to origional settings and throw
+	 * exception.
 	 */
-	public void setConnectionParameters(final SerialParameters parameters)
-		throws SerialConnectionException{
-		
+	public void setConnectionParameters(final SerialParameters parameters) throws SerialConnectionException {
+
 		// Save state of parameters before trying a set.
 		int oldBaudRate = sPort.getBaudRate();
 		int oldDatabits = sPort.getDataBits();
 		int oldStopbits = sPort.getStopBits();
 		int oldParity = sPort.getParity();
-		
+
 		// Set connection parameters, if set fails return parameters object
 		// to original state.
 		try {
-			sPort.setSerialPortParams(parameters.getBaudRate(), parameters.getDatabits(),
-				parameters.getStopbits(), parameters.getParity());
+			sPort.setSerialPortParams(parameters.getBaudRate(), parameters.getDatabits(), parameters.getStopbits(),
+					parameters.getParity());
 		} catch (UnsupportedCommOperationException e) {
 			parameters.setBaudRate(oldBaudRate);
 			parameters.setDatabits(oldDatabits);
@@ -217,30 +216,27 @@ public class Connection implements PortEventListener {
 			parameters.setParity(oldParity);
 			throw new SerialConnectionException("Unsupported parameter"); //$NON-NLS-1$
 		}
-		
+
 		// Set flow control.
 		try {
-			sPort
-				.setFlowControlMode(parameters.getFlowControlIn() | parameters.getFlowControlOut());
+			sPort.setFlowControlMode(parameters.getFlowControlIn() | parameters.getFlowControlOut());
 		} catch (UnsupportedCommOperationException e) {
 			throw new SerialConnectionException("Unsupported flow control"); //$NON-NLS-1$
 		}
 	}
-	
+
 	/**
-	 * Wait for a frame of the device to be sent. Ignores all input until a start byte is found.
-	 * collects all bytes from that point until an end byte was received or the timeout happened.
-	 * 
-	 * @param start
-	 *            character defining the start of a frame
-	 * @param end
-	 *            character singalling end of frame
-	 * @param following
-	 *            number of bytes after end to wait for (e.g. checksum)
-	 * @param timeout
-	 *            number of seconds to wait for a frame to complete before givng up
+	 * Wait for a frame of the device to be sent. Ignores all input until a start
+	 * byte is found. collects all bytes from that point until an end byte was
+	 * received or the timeout happened.
+	 *
+	 * @param start     character defining the start of a frame
+	 * @param end       character singalling end of frame
+	 * @param following number of bytes after end to wait for (e.g. checksum)
+	 * @param timeout   number of seconds to wait for a frame to complete before
+	 *                  givng up
 	 */
-	public void awaitFrame(final int start, final int end, final int following, final int timeout){
+	public void awaitFrame(final int start, final int end, final int following, final int timeout) {
 		state = AWAIT_START;
 		frameStart = start;
 		frameEnd = end;
@@ -251,17 +247,15 @@ public class Connection implements PortEventListener {
 		checksumBytes = overhang;
 		watchdogThread.start();
 	}
-	
+
 	/**
-	 * Read a line of input from the serial port. A line is defined as a series of bytes delimited
-	 * by the given delimiter (e.g. \n).
-	 * 
-	 * @param delimiter
-	 *            The delimiter to recognize the end of line
-	 * @param timeout
-	 *            number of seconds to wait at most before giving up
+	 * Read a line of input from the serial port. A line is defined as a series of
+	 * bytes delimited by the given delimiter (e.g. \n).
+	 *
+	 * @param delimiter The delimiter to recognize the end of line
+	 * @param timeout   number of seconds to wait at most before giving up
 	 */
-	public void readLine(byte delimiter, int timeout){
+	public void readLine(byte delimiter, int timeout) {
 		lineSeparator = delimiter;
 		// sbLine.setLength(0);
 		state = AWAIT_LINE;
@@ -270,15 +264,16 @@ public class Connection implements PortEventListener {
 		timeToWait = timeout;
 		watchdogThread.start();
 	}
-	
+
 	/**
-	 * Handles SerialPortEvents. The two types of SerialPortEvents that this program is registered
-	 * to listen for are DATA_AVAILABLE and BI. During DATA_AVAILABLE the port buffer is read until
-	 * it is drained, when no more data is availble and 30ms has passed the method returns. When a
-	 * BI event occurs the words BREAK RECEIVED are written to the messageAreaIn.
+	 * Handles SerialPortEvents. The two types of SerialPortEvents that this program
+	 * is registered to listen for are DATA_AVAILABLE and BI. During DATA_AVAILABLE
+	 * the port buffer is read until it is drained, when no more data is availble
+	 * and 30ms has passed the method returns. When a BI event occurs the words
+	 * BREAK RECEIVED are written to the messageAreaIn.
 	 */
-	
-	public void serialEvent(final SerialPortEvent e){
+
+	public void serialEvent(final SerialPortEvent e) {
 		int newData;
 		if (e.getEventType() == SerialPortEvent.BI) {
 			state = PASS_THRU;
@@ -296,8 +291,7 @@ public class Connection implements PortEventListener {
 					} catch (IOException ioe) {
 						// Patch for RDP forwarded serial connections
 						// see https://redmine.medelexis.ch/issues/3311
-						log.debug("Catching " + ioe.getMessage()
-						+ " | See https://redmine.medelexis.ch/issues/3311");
+						log.debug("Catching " + ioe.getMessage() + " | See https://redmine.medelexis.ch/issues/3311");
 					}
 					listener.gotChunk(this, sbFrame.toString());
 					break;
@@ -347,59 +341,59 @@ public class Connection implements PortEventListener {
 						}
 					}
 				}
-				
+
 			} catch (Exception ex) {
 				ExHandler.handle(ex);
 			}
 		}
-		
+
 	}
-	
-	public void close(){
+
+	public void close() {
 		close(5000);
 	}
-	
-	public void close(int sleepTime){
+
+	public void close(int sleepTime) {
 		if ((watchdogThread != null) && watchdogThread.isAlive()) {
 			watchdogThread.interrupt();
 		}
 		// avoid rxtx-deadlock when called from an EventListener
 		new Thread(new Runnable() {
-			
-			public void run(){
+
+			public void run() {
 				try {
 					Thread.sleep(sleepTime);
 					sPort.close();
 					bOpen = false;
-					
+
 				} catch (Exception ex) {
-					
+
 				}
 			}
 		}).start();
 	}
-	
+
 	/**
 	 * Reports the open status of the port.
-	 * 
+	 *
 	 * @return true if port is open, false if port is closed.
 	 */
-	public boolean isOpen(){
+	public boolean isOpen() {
 		return bOpen;
 	}
-	
+
 	/**
 	 * Send a one second break signal.
 	 */
-	public void sendBreak(){
+	public void sendBreak() {
 		if (sPort != null) {
 			sPort.sendBreak(1000);
 		} else {
 			ExHandler.handle(new Throwable("sPort is null"));
 		}
 	}
-	
-	public boolean send(final String data){
+
+	public boolean send(final String data) {
 		try {
 			os.write(data.getBytes());
 			return true;
@@ -408,26 +402,27 @@ public class Connection implements PortEventListener {
 			return false;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public static String[] getComPorts(){
+	public static String[] getComPorts() {
 		ArrayList<String> p = new ArrayList<String>();
 		try {
 			Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
-			
+
 			while (ports.hasMoreElements()) {
 				CommPortIdentifier port = ports.nextElement();
 				p.add(port.getName());
 			}
 		} catch (LinkageError error) {
-			SWTHelper.showError("COM Port Initialization Error", error.getMessage()+"\nPlease see log file and/or https://wiki.elexis.info/SerialConfiguration.");
+			SWTHelper.showError("COM Port Initialization Error",
+					error.getMessage() + "\nPlease see log file and/or https://wiki.elexis.info/SerialConfiguration.");
 			log.error("COM Port Initialization", error);
 		}
 		return p.toArray(new String[0]);
 	}
-	
+
 	class Watchdog implements Runnable {
-		public void run(){
+		public void run() {
 			while (System.currentTimeMillis() < endTime) {
 				try {
 					Thread.sleep(1000);
@@ -437,14 +432,14 @@ public class Connection implements PortEventListener {
 			}
 			listener.timeout();
 		}
-		
+
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
-	public String getMyPort(){
+
+	public String getMyPort() {
 		return myPort;
 	}
 }

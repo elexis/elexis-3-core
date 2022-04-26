@@ -13,8 +13,9 @@ import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
 
 public class IContactBuilder {
-	
-	private IContactBuilder() {};
+
+	private IContactBuilder() {
+	};
 
 	public static class PersonBuilder extends AbstractBuilder<IPerson> {
 		public PersonBuilder(IModelService modelService, String firstName, String lastName, LocalDate dateOfBirth,
@@ -34,14 +35,14 @@ public class IContactBuilder {
 	}
 
 	public static class MandatorBuilder extends AbstractBuilder<IMandator> {
-		public MandatorBuilder(IModelService modelService, String firstName, String lastName){
+		public MandatorBuilder(IModelService modelService, String firstName, String lastName) {
 			super(modelService);
 			object = modelService.create(IMandator.class);
 			object.setDescription1(lastName);
 			object.setDescription2(firstName);
 		}
 	}
-	
+
 	public static class PatientBuilder extends AbstractBuilder<IPatient> {
 		public PatientBuilder(IModelService modelService, String firstName, String lastName, LocalDate dateOfBirth,
 				Gender sex) {
@@ -64,6 +65,7 @@ public class IContactBuilder {
 		/**
 		 * Populates the default address. Setting both the values on the object itself,
 		 * and on IContact#addAddress
+		 *
 		 * @param street
 		 * @param zip
 		 * @param city

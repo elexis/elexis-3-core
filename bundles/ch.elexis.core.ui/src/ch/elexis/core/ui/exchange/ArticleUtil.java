@@ -9,7 +9,7 @@ import ch.elexis.core.model.IArticle;
 import ch.rgw.tools.StringTool;
 
 public class ArticleUtil {
-	public static String getEan(IArticle article){
+	public static String getEan(IArticle article) {
 		String ret = article.getGtin();
 		if (StringUtils.isBlank(ret)) {
 			Object value = article.getExtInfo("EAN");
@@ -19,14 +19,14 @@ public class ArticleUtil {
 		}
 		return ret;
 	}
-	
-	public static String getPharmaCode(IArticle article){
+
+	public static String getPharmaCode(IArticle article) {
 		String ret = "";
 		try {
 			Method method = article.getClass().getMethod("getPHAR");
 			ret = (String) method.invoke(article);
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException e) {
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
 			// ignore no pharmacode available ...
 		}
 		if (StringUtils.isBlank(ret)) {

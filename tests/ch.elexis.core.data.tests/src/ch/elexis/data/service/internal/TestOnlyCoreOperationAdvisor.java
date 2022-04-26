@@ -25,57 +25,56 @@ import ch.elexis.data.Anwender;
 
 @Component
 public class TestOnlyCoreOperationAdvisor implements ICoreOperationAdvisor {
-	
+
 	@Reference(cardinality = ReferenceCardinality.AT_LEAST_ONE)
 	private List<ILoginContributor> loginServices;
-	
+
 	private Logger logger;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		logger = LoggerFactory.getLogger(getClass());
 	}
-	
+
 	@Override
-	public void requestDatabaseConnectionConfiguration(){
+	public void requestDatabaseConnectionConfiguration() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void requestInitialMandatorConfiguration(){
+	public void requestInitialMandatorConfiguration() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void adaptForUser(){
+	public void adaptForUser() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public boolean openQuestion(String title, String message){
-		System.out
-			.println(getClass().getName() + "#openQuestion - answer=false title=[" + title + "]");
+	public boolean openQuestion(String title, String message) {
+		System.out.println(getClass().getName() + "#openQuestion - answer=false title=[" + title + "]");
 		logger.warn("openQuestion - answer=false [{} - {}]", title, message);
 		return false;
 	}
-	
+
 	@Override
-	public void openInformation(String title, String message){
+	public void openInformation(String title, String message) {
 		System.out.println(getClass().getName() + "#openInformation - title=[" + title + "]");
 		logger.info("openInformation [{} - {}]", title, message);
 	}
-	
+
 	@Override
-	public boolean performLogin(Object shell){
-		
+	public boolean performLogin(Object shell) {
+
 		System.out.println("ATTENTION - login handled by " + getClass().getName());
-		
+
 		CoreHub.reconfigureServices();
 		CoreHub.logoffAnwender();
-		
+
 		IUser user;
 		try {
 			user = loginServices.get(0).performLogin(null);
@@ -83,40 +82,40 @@ public class TestOnlyCoreOperationAdvisor implements ICoreOperationAdvisor {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		if (user != null && user.isActive()) {
 			// set user in system
 			ContextServiceHolder.get().setActiveUser(user);
-			ElexisEventDispatcher.getInstance().fire(new ElexisEvent(CoreHub.getLoggedInContact(),
-				Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-			
+			ElexisEventDispatcher.getInstance().fire(
+					new ElexisEvent(CoreHub.getLoggedInContact(), Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.getLoggedInContact().setInitialMandator();
 			CoreHub.userCfg = CoreHub.getUserSetting(CoreHub.getLoggedInContact());
 			CoreHub.heart.resume(true);
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
-	public String getInitialPerspective(){
+	public String getInitialPerspective() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public boolean performDatabaseUpdate(String[] array, String pluginId){
+	public boolean performDatabaseUpdate(String[] array, String pluginId) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public void showProgress(IRunnableWithProgress irwp, String taskName){
+	public void showProgress(IRunnableWithProgress irwp, String taskName) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

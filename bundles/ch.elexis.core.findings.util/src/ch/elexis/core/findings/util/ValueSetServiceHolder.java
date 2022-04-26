@@ -7,15 +7,15 @@ import ch.elexis.core.findings.codes.IValueSetService;
 
 @Component(service = {})
 public class ValueSetServiceHolder {
-	
+
 	private static IValueSetService iValueSetService;
-	
+
 	@Reference(unbind = "-")
-	public void setIValueSetService(IValueSetService iValueSetService){
+	public void setIValueSetService(IValueSetService iValueSetService) {
 		ValueSetServiceHolder.iValueSetService = iValueSetService;
 	}
-	
-	public static IValueSetService getIValueSetService(){
+
+	public static IValueSetService getIValueSetService() {
 		return iValueSetService;
 	}
 }

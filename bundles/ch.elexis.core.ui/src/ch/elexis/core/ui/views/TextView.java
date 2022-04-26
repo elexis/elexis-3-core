@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views;
@@ -67,45 +67,44 @@ public class TextView extends ViewPart implements IActivationListener {
 	Composite textContainer = null;
 	private Brief actBrief;
 	private Logger log = LoggerFactory.getLogger("TextView");//$NON-NLS-1$
-	private IAction briefLadenAction, loadTemplateAction, loadSysTemplateAction,
-			saveTemplateAction, showMenuAction, showToolbarAction, importAction, newDocAction,
-			exportAction;
+	private IAction briefLadenAction, loadTemplateAction, loadSysTemplateAction, saveTemplateAction, showMenuAction,
+			showToolbarAction, importAction, newDocAction, exportAction;
 	private ViewMenus menus;
-	
-	public TextView(){}
-	
+
+	public TextView() {
+	}
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		txt = new TextContainer(getViewSite());
 		textContainer = txt.getPlugin().createContainer(parent, new SaveHandler());
 		if (textContainer == null) {
-			SWTHelper.showError(Messages.TextView_couldNotCreateTextView,
-				Messages.TextView_couldNotLoadTextPlugin); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.TextView_couldNotCreateTextView, Messages.TextView_couldNotLoadTextPlugin); // $NON-NLS-1$
+																														// //$NON-NLS-2$
 		} else {
 			makeActions();
 			menus = new ViewMenus(getViewSite());
 			// menus.createToolbar(briefNeuAction);
-			menus.createMenu(newDocAction, briefLadenAction, loadTemplateAction,
-				loadSysTemplateAction, saveTemplateAction, null, showMenuAction, showToolbarAction,
-				null, importAction, exportAction);
+			menus.createMenu(newDocAction, briefLadenAction, loadTemplateAction, loadSysTemplateAction,
+					saveTemplateAction, null, showMenuAction, showToolbarAction, null, importAction, exportAction);
 			GlobalEventDispatcher.addActivationListener(this, this);
 			setName();
 		}
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		if (textContainer != null) {
 			textContainer.setFocus();
 		}
 	}
-	
-	public TextContainer getTextContainer(){
+
+	public TextContainer getTextContainer() {
 		return txt;
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		if (actBrief != null) {
 			LocalLockServiceHolder.get().releaseLock(actBrief);
 		}
@@ -113,8 +112,8 @@ public class TextView extends ViewPart implements IActivationListener {
 		actBrief = null;
 		super.dispose();
 	}
-	
-	public boolean openDocument(Brief doc){
+
+	public boolean openDocument(Brief doc) {
 		if (actBrief != null) {
 			LocalLockServiceHolder.get().releaseLock(actBrief);
 			actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin().getMimeType());
@@ -148,11 +147,13 @@ public class TextView extends ViewPart implements IActivationListener {
 				}
 				try {
 					File tmp = File.createTempFile("elexis", "brief." + ext); //$NON-NLS-1$ //$NON-NLS-2$
-					log.debug("TextView.openDocument createTempFile: " + tmp.getAbsolutePath() + " mime " + doc.getMimeType()); //$NON-NLS-1$ //$NON-NLS-2$
+					log.debug("TextView.openDocument createTempFile: " + tmp.getAbsolutePath() + " mime " //$NON-NLS-1$ //$NON-NLS-2$
+							+ doc.getMimeType());
 					tmp.deleteOnExit();
 					byte[] buffer = doc.loadBinary();
 					if (buffer == null) {
-						log.warn("TextView.openDocument createTempFile [{}] -> loadBinary returned null array", doc.getId());
+						log.warn("TextView.openDocument createTempFile [{}] -> loadBinary returned null array",
+								doc.getId());
 						return false;
 					}
 					try (ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
@@ -169,33 +170,30 @@ public class TextView extends ViewPart implements IActivationListener {
 				}
 				return false;
 			} else {
-				log.warn("TextView.openDocument: Preferences do not allow alternative method of documents created with legacy text-plugins"); //$NON-NLS-1$
+				log.warn(
+						"TextView.openDocument: Preferences do not allow alternative method of documents created with legacy text-plugins"); //$NON-NLS-1$
 				// Do not show a message box, as this happens often when you load a document
 				// with an invalid content. Eg. with demoDB and Rezept of Absolut Erfunden
 				return false;
 			}
 		}
 	}
-	
+
 	/**
 	 * Ein Document von Vorlage erstellen.
-	 * 
-	 * @param template
-	 *            die Vorlage
-	 * @param subject
-	 *            Titel, kann null sein
+	 *
+	 * @param template die Vorlage
+	 * @param subject  Titel, kann null sein
 	 * @return true bei erfolg
 	 */
-	public boolean createDocument(Brief template, String subject){
+	public boolean createDocument(Brief template, String subject) {
 		log.debug("TextView.createDocument [{}]: {}", (template != null) ? template.getLabel() : "null", subject); //$NON-NLS-1$
 		if (template == null) {
-			SWTHelper.showError(Messages.TextView_noTemplateSelected,
-				Messages.TextView_pleaseSelectTemplate); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate); // $NON-NLS-1$
+																												// //$NON-NLS-2$
 			return false;
 		}
-		actBrief =
-			txt.createFromTemplate(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN, null,
-				subject);
+		actBrief = txt.createFromTemplate(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN, null, subject);
 		setName();
 		if (actBrief == null) {
 			log.debug("TextView.createDocument: createFromTemplate -> null");
@@ -203,29 +201,24 @@ public class TextView extends ViewPart implements IActivationListener {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Ein Document von Vorlage erstellen. Adressat kann hier angegeben werden
-	 * 
-	 * @param template
-	 *            die Vorlage
-	 * @param subject
-	 *            Titel, kann null sein
-	 * @param adressat
-	 *            der Adressat, der im Dokument angezeigt werden soll
+	 *
+	 * @param template die Vorlage
+	 * @param subject  Titel, kann null sein
+	 * @param adressat der Adressat, der im Dokument angezeigt werden soll
 	 * @return true bei erfolg
 	 */
-	public boolean createDocument(Brief template, String subject, Kontakt adressat){
+	public boolean createDocument(Brief template, String subject, Kontakt adressat) {
 		log.debug("TextView.createDocument [{}]: {} Kontakt", (template != null) ? template.getLabel() : "null", //$NON-NLS-1$
 				subject);
 		if (template == null) {
-			SWTHelper.showError(Messages.TextView_noTemplateSelected,
-				Messages.TextView_pleaseSelectTemplate); //$NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate); // $NON-NLS-1$
+																												// //$NON-NLS-2$
 			return false;
 		}
-		actBrief =
-			txt.createFromTemplate(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN,
-				adressat, subject);
+		actBrief = txt.createFromTemplate(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN, adressat, subject);
 		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 		setName();
 		if (actBrief == null) {
@@ -234,234 +227,221 @@ public class TextView extends ViewPart implements IActivationListener {
 		}
 		return true;
 	}
-	
-	private void makeActions(){
-		briefLadenAction = new Action(Messages.TextView_openLetter) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-					DocumentSelectDialog bs =
-						new DocumentSelectDialog(getViewSite().getShell(), actPatient,
-							DocumentSelectDialog.TYPE_LOAD_DOCUMENT);
-					if (bs.open() == Dialog.OK) {
-						openDocument(bs.getSelectedDocument());
-					}
+
+	private void makeActions() {
+		briefLadenAction = new Action(Messages.TextView_openLetter) { // $NON-NLS-1$
+			@Override
+			public void run() {
+				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
+				DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(), actPatient,
+						DocumentSelectDialog.TYPE_LOAD_DOCUMENT);
+				if (bs.open() == Dialog.OK) {
+					openDocument(bs.getSelectedDocument());
 				}
-				
-			};
-		
-		loadSysTemplateAction = new Action(Messages.TextView_openSysTemplate) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					DocumentSelectDialog bs =
-						new DocumentSelectDialog(getViewSite().getShell(), CoreHub.actMandant,
-							DocumentSelectDialog.TYPE_LOAD_SYSTEMPLATE);
-					if (bs.open() == Dialog.OK) {
-						openDocument(bs.getSelectedDocument());
-					}
+			}
+
+		};
+
+		loadSysTemplateAction = new Action(Messages.TextView_openSysTemplate) { // $NON-NLS-1$
+			@Override
+			public void run() {
+				DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(), CoreHub.actMandant,
+						DocumentSelectDialog.TYPE_LOAD_SYSTEMPLATE);
+				if (bs.open() == Dialog.OK) {
+					openDocument(bs.getSelectedDocument());
 				}
-			};
-		loadTemplateAction = new Action(Messages.TextView_openTemplate) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					DocumentSelectDialog bs =
-						new DocumentSelectDialog(getViewSite().getShell(), CoreHub.actMandant,
-							DocumentSelectDialog.TYPE_LOAD_TEMPLATE);
-					if (bs.open() == Dialog.OK) {
-						openDocument(bs.getSelectedDocument());
-					}
+			}
+		};
+		loadTemplateAction = new Action(Messages.TextView_openTemplate) { // $NON-NLS-1$
+			@Override
+			public void run() {
+				DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(), CoreHub.actMandant,
+						DocumentSelectDialog.TYPE_LOAD_TEMPLATE);
+				if (bs.open() == Dialog.OK) {
+					openDocument(bs.getSelectedDocument());
 				}
-			};
-		saveTemplateAction = new Action(Messages.TextView_saveAsTemplate) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					if (actBrief != null) {
-						txt.saveTemplate(actBrief.get(Messages.TextView_Subject)); //$NON-NLS-1$
+			}
+		};
+		saveTemplateAction = new Action(Messages.TextView_saveAsTemplate) { // $NON-NLS-1$
+			@Override
+			public void run() {
+				if (actBrief != null) {
+					txt.saveTemplate(actBrief.get(Messages.TextView_Subject)); // $NON-NLS-1$
+				} else {
+					txt.saveTemplate(null);
+				}
+			}
+		};
+
+		showMenuAction = new Action(Messages.TextView_showMenu, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+			@Override
+			public void run() {
+				txt.getPlugin().showMenu(isChecked());
+			}
+		};
+
+		showToolbarAction = new Action(Messages.TextView_Toolbar, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+			@Override
+			public void run() {
+				txt.getPlugin().showToolbar(isChecked());
+			}
+		};
+		importAction = new Action(Messages.TextView_importText) { // $NON-NLS-1$
+			@Override
+			public void run() {
+				try {
+					FileDialog fdl = new FileDialog(getViewSite().getShell());
+					String filename = fdl.open();
+					if (filename != null) {
+						File file = new File(filename);
+						if (file.exists()) {
+							actBrief = null;
+							setPartName(filename);
+							FileInputStream fis = new FileInputStream(file);
+							txt.getPlugin().loadFromStream(fis, false);
+						}
+
+					}
+
+				} catch (Throwable ex) {
+					ExHandler.handle(ex);
+				}
+			}
+		};
+
+		exportAction = new Action(Messages.TextView_exportText) { // $NON-NLS-1$
+			@Override
+			public void run() {
+				try {
+					if (actBrief == null) {
+						SWTHelper.alert("Fehler", //$NON-NLS-1$
+								"Es ist kein Dokument zum exportieren geladen"); //$NON-NLS-1$
 					} else {
-						txt.saveTemplate(null);
-					}
-				}
-			};
-		
-		showMenuAction = new Action(Messages.TextView_showMenu, Action.AS_CHECK_BOX) { //$NON-NLS-1$			
-				@Override
-				public void run(){
-					txt.getPlugin().showMenu(isChecked());
-				}
-			};
-		
-		showToolbarAction = new Action(Messages.TextView_Toolbar, Action.AS_CHECK_BOX) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					txt.getPlugin().showToolbar(isChecked());
-				}
-			};
-		importAction = new Action(Messages.TextView_importText) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					try {
-						FileDialog fdl = new FileDialog(getViewSite().getShell());
+						FileDialog fdl = new FileDialog(getViewSite().getShell(), SWT.SAVE);
+						fdl.setFilterExtensions(new String[] { "*.odt", "*.xml", "*.*" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						});
+						fdl.setFilterNames(new String[] { "OpenOffice.org Text", "XML File", "All files" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						});
 						String filename = fdl.open();
 						if (filename != null) {
+							if (FileTool.getExtension(filename).equals("")) { //$NON-NLS-1$
+								filename += ".odt"; //$NON-NLS-1$
+							}
 							File file = new File(filename);
-							if (file.exists()) {
-								actBrief = null;
-								setPartName(filename);
-								FileInputStream fis = new FileInputStream(file);
-								txt.getPlugin().loadFromStream(fis, false);
-							}
-							
+							byte[] contents = actBrief.loadBinary();
+							ByteArrayInputStream bais = new ByteArrayInputStream(contents);
+							FileOutputStream fos = new FileOutputStream(file);
+							FileTool.copyStreams(bais, fos);
+							fos.close();
+							bais.close();
+
 						}
-						
-					} catch (Throwable ex) {
-						ExHandler.handle(ex);
 					}
+
+				} catch (Throwable ex) {
+					ExHandler.handle(ex);
 				}
-			};
-		
-		exportAction = new Action(Messages.TextView_exportText) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					try {
-						if (actBrief == null) {
-							SWTHelper.alert("Fehler", //$NON-NLS-1$
-								"Es ist kein Dokument zum exportieren geladen"); //$NON-NLS-1$
+			}
+		};
+		newDocAction = new Action(Messages.TextView_newDocument) { // $NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
+			}
+
+			@Override
+			public void run() {
+				Patient pat = ElexisEventDispatcher.getSelectedPatient();
+				if (pat != null) {
+					Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+					if (selectedFall == null) {
+						SelectFallDialog sfd = new SelectFallDialog(UiDesk.getTopShell());
+						sfd.open();
+						if (sfd.result != null) {
+							ElexisEventDispatcher.fireSelectionEvent(sfd.result);
 						} else {
-							FileDialog fdl = new FileDialog(getViewSite().getShell(), SWT.SAVE);
-							fdl.setFilterExtensions(new String[] {
-								"*.odt", "*.xml", "*.*" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-							});
-							fdl.setFilterNames(new String[] {
-								"OpenOffice.org Text", "XML File", "All files" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-							});
-							String filename = fdl.open();
-							if (filename != null) {
-								if (FileTool.getExtension(filename).equals("")) { //$NON-NLS-1$
-									filename += ".odt"; //$NON-NLS-1$
-								}
-								File file = new File(filename);
-								byte[] contents = actBrief.loadBinary();
-								ByteArrayInputStream bais = new ByteArrayInputStream(contents);
-								FileOutputStream fos = new FileOutputStream(file);
-								FileTool.copyStreams(bais, fos);
-								fos.close();
-								bais.close();
-								
-							}
+							MessageDialog.openInformation(UiDesk.getTopShell(), Messages.TextView_NoCaseSelected, // $NON-NLS-1$
+									Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); // $NON-NLS-1$
+							return;
 						}
-						
-					} catch (Throwable ex) {
-						ExHandler.handle(ex);
 					}
-				}
-			};
-		newDocAction = new Action(Messages.TextView_newDocument) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-				}
-				
-				@Override
-				public void run(){
-					Patient pat = ElexisEventDispatcher.getSelectedPatient();
-					if (pat != null) {
-						Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-						if (selectedFall == null) {
-							SelectFallDialog sfd = new SelectFallDialog(UiDesk.getTopShell());
-							sfd.open();
-							if (sfd.result != null) {
-								ElexisEventDispatcher.fireSelectionEvent(sfd.result);
-							} else {
-								MessageDialog.openInformation(UiDesk.getTopShell(),
-									Messages.TextView_NoCaseSelected, //$NON-NLS-1$
-									Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); //$NON-NLS-1$
-								return;
-							}
+					Konsultation selectedKonsultation = (Konsultation) ElexisEventDispatcher
+							.getSelected(Konsultation.class);
+					if (selectedKonsultation == null) {
+						Konsultation k = pat.getLetzteKons(false);
+						if (k == null) {
+							k = ((Fall) ElexisEventDispatcher.getSelected(Fall.class)).neueKonsultation();
+							k.setMandant(CoreHub.actMandant);
 						}
-						Konsultation selectedKonsultation =
-							(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-						if (selectedKonsultation == null) {
-							Konsultation k = pat.getLetzteKons(false);
-							if (k == null) {
-								k =
-									((Fall) ElexisEventDispatcher.getSelected(Fall.class))
-										.neueKonsultation();
-								k.setMandant(CoreHub.actMandant);
-							}
-							ElexisEventDispatcher.fireSelectionEvent(k);
-						}
-						actBrief = null;
-						setName();
-						txt.getPlugin().createEmptyDocument();
-					} else {
-						MessageDialog.openInformation(UiDesk.getTopShell(),
-							Messages.BriefAuswahlNoPatientSelected, //$NON-NLS-1$
-							Messages.BriefAuswahlNoPatientSelected); //$NON-NLS-1$
+						ElexisEventDispatcher.fireSelectionEvent(k);
 					}
+					actBrief = null;
+					setName();
+					txt.getPlugin().createEmptyDocument();
+				} else {
+					MessageDialog.openInformation(UiDesk.getTopShell(), Messages.BriefAuswahlNoPatientSelected, // $NON-NLS-1$
+							Messages.BriefAuswahlNoPatientSelected); // $NON-NLS-1$
 				}
-				
-			};
+			}
+
+		};
 		briefLadenAction.setImageDescriptor(Images.IMG_MAIL.getImageDescriptor());
 		briefLadenAction.setToolTipText("Brief zum Bearbeiten öffnen"); //$NON-NLS-1$
 		// briefNeuAction.setImageDescriptor(Hub.getImageDescriptor("rsc/schreiben.gif"));
 		// briefNeuAction.setToolTipText("Einen neuen Brief erstellen");
-		showMenuAction.setToolTipText(Messages.TextView_showMenuBar); //$NON-NLS-1$
+		showMenuAction.setToolTipText(Messages.TextView_showMenuBar); // $NON-NLS-1$
 		showMenuAction.setImageDescriptor(Images.IMG_MENUBAR.getImageDescriptor());
 		showMenuAction.setChecked(true);
 		showToolbarAction.setImageDescriptor(Images.IMG_TOOLBAR.getImageDescriptor());
-		showToolbarAction.setToolTipText(Messages.TextView_showToolbar); //$NON-NLS-1$
+		showToolbarAction.setToolTipText(Messages.TextView_showToolbar); // $NON-NLS-1$
 		showToolbarAction.setChecked(true);
 	}
-	
+
 	class SaveHandler implements ITextPlugin.ICallback {
-		
+
 		@Override
-		public void save(){
+		public void save() {
 			log.debug("TextView.save"); //$NON-NLS-1$
 			if (actBrief != null) {
 				actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin().getMimeType());
 			}
 		}
-		
+
 		@Override
-		public boolean saveAs(){
+		public boolean saveAs() {
 			log.debug("TextView.saveAs"); //$NON-NLS-1$
-			InputDialog il =
-				new InputDialog(getViewSite().getShell(), Messages.TextView_saveText,
+			InputDialog il = new InputDialog(getViewSite().getShell(), Messages.TextView_saveText,
 					Messages.TextView_enterTitle, "", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if (il.open() == Dialog.OK) {
 				actBrief.setBetreff(il.getValue());
-				return actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin()
-					.getMimeType());
+				return actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin().getMimeType());
 			}
 			return false;
 		}
-		
+
 	}
-	
+
 	@Override
-	public void activation(boolean mode){
+	public void activation(boolean mode) {
 		if (mode == false) {
 			if (actBrief != null) {
 				actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin().getMimeType());
 			}
 			// txt.getPlugin().clear();
 		} else {
-			loadSysTemplateAction.setEnabled(CoreHub.acl
-				.request(AccessControlDefaults.DOCUMENT_SYSTEMPLATE));
-			saveTemplateAction.setEnabled(CoreHub.acl
-				.request(AccessControlDefaults.DOCUMENT_TEMPLATE));
+			loadSysTemplateAction.setEnabled(CoreHub.acl.request(AccessControlDefaults.DOCUMENT_SYSTEMPLATE));
+			saveTemplateAction.setEnabled(CoreHub.acl.request(AccessControlDefaults.DOCUMENT_TEMPLATE));
 		}
 	}
-	
+
 	@Override
-	public void visible(boolean mode){
-		
+	public void visible(boolean mode) {
+
 	}
-	
-	public void setName(){
+
+	public void setName() {
 		String n = ""; //$NON-NLS-1$
 		if (actBrief == null) {
-			setPartName(Messages.TextView_noLetterSelected); //$NON-NLS-1$
+			setPartName(Messages.TextView_noLetterSelected); // $NON-NLS-1$
 		} else {
 			Person pat = actBrief.getPatient();
 			if (pat != null) {
@@ -470,7 +450,7 @@ public class TextView extends ViewPart implements IActivationListener {
 			n += actBrief.getBetreff();
 			setPartName(n);
 		}
-		log.debug("TextView.setName: " + getPartName()); //$NON-NLS-1$		
+		log.debug("TextView.setName: " + getPartName()); //$NON-NLS-1$
 	}
-	
+
 }

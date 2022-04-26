@@ -64,7 +64,7 @@ public class Image extends AbstractIdDeleteModelAdapter<DbImage> implements Iden
 	public MimeType getMimeType() {
 		int val = findTitleMimetypeSeparator();
 		if (val != -1) {
-			return MimeType.valueOf(getTitle().substring(val+1));
+			return MimeType.valueOf(getTitle().substring(val + 1));
 		}
 		return null;
 	}

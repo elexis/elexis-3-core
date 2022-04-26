@@ -11,6 +11,6 @@
 
 package ch.elexis.core.eigendiagnosen;
 
-public class Messages{
+public class Messages {
 	public static String Eigendiagnosen_CodeSystemName = ch.elexis.core.l10n.Messages.Eigendiagnosen_CodeSystemName;
 }

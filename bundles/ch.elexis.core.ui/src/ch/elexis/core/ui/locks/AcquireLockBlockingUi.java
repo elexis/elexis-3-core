@@ -18,20 +18,19 @@ import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 
 public class AcquireLockBlockingUi {
 	private static Logger logger = LoggerFactory.getLogger(AcquireLockBlockingUi.class);
-	
-	public static void aquireAndRun(IPersistentObject lockPo, ILockHandler handler){
+
+	public static void aquireAndRun(IPersistentObject lockPo, ILockHandler handler) {
 		if (ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE) {
 			handler.lockAcquired();
 			return;
 		}
-		
+
 		Display display = Display.getDefault();
 		display.syncExec(new Runnable() {
-			
+
 			@Override
-			public void run(){
-				ProgressMonitorDialog progress =
-					new ProgressMonitorDialog(display.getActiveShell());
+			public void run() {
+				ProgressMonitorDialog progress = new ProgressMonitorDialog(display.getActiveShell());
 				try {
 					progress.run(true, true, new AcquireLockRunnable(lockPo, handler));
 				} catch (InvocationTargetException | InterruptedException e) {
@@ -40,15 +39,14 @@ public class AcquireLockBlockingUi {
 			}
 		});
 	}
-	
-	public static void aquireAndRun(Identifiable identifiable, ILockHandler handler){
+
+	public static void aquireAndRun(Identifiable identifiable, ILockHandler handler) {
 		Display display = Display.getDefault();
 		display.syncExec(new Runnable() {
-			
+
 			@Override
-			public void run(){
-				ProgressMonitorDialog progress =
-					new ProgressMonitorDialog(display.getActiveShell());
+			public void run() {
+				ProgressMonitorDialog progress = new ProgressMonitorDialog(display.getActiveShell());
 				try {
 					progress.run(true, true, new AcquireLockRunnable(identifiable, handler));
 				} catch (InvocationTargetException | InterruptedException e) {
@@ -57,40 +55,38 @@ public class AcquireLockBlockingUi {
 			}
 		});
 	}
-	
+
 	private static class AcquireLockRunnable implements IRunnableWithProgress {
 		private IPersistentObject lockPo;
 		private Identifiable lockIdentifiable;
-		
+
 		private ILockHandler lockhander;
 		private LockResponse result;
-		
-		public AcquireLockRunnable(IPersistentObject lockPo, ILockHandler lockhander){
+
+		public AcquireLockRunnable(IPersistentObject lockPo, ILockHandler lockhander) {
 			this.lockPo = lockPo;
 			this.lockhander = lockhander;
 		}
-		
-		public AcquireLockRunnable(Identifiable lockIdentifiable, ILockHandler lockhander){
+
+		public AcquireLockRunnable(Identifiable lockIdentifiable, ILockHandler lockhander) {
 			this.lockIdentifiable = lockIdentifiable;
 			this.lockhander = lockhander;
 		}
-		
+
 		@Override
-		public void run(IProgressMonitor monitor)
-			throws InvocationTargetException, InterruptedException{
+		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
 			if (lockPo != null) {
 				result = LocalLockServiceHolder.get().acquireLockBlocking(lockPo, 30, monitor);
 			} else if (lockIdentifiable != null) {
-				result = LocalLockServiceHolder.get().acquireLockBlocking(lockIdentifiable, 30,
-					monitor);
+				result = LocalLockServiceHolder.get().acquireLockBlocking(lockIdentifiable, 30, monitor);
 			}
 			if (result != null) {
 				Display display = Display.getDefault();
 				if (result.isOk()) {
 					display.syncExec(new Runnable() {
 						@Override
-						public void run(){
+						public void run() {
 							lockhander.lockAcquired();
 						}
 					});
@@ -100,7 +96,7 @@ public class AcquireLockBlockingUi {
 				} else {
 					display.syncExec(new Runnable() {
 						@Override
-						public void run(){
+						public void run() {
 							lockhander.lockFailed();
 							LockResponseHelper.showInfo(result, lockPo, logger);
 						}

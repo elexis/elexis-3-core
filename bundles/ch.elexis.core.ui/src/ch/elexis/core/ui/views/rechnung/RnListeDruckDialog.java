@@ -28,8 +28,8 @@ import ch.rgw.tools.Tree;
 public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 	ArrayList<Rechnung> rnn = new ArrayList<Rechnung>();
 	private TextContainer text;
-	
-	public RnListeDruckDialog(final Shell shell, final Object[] tree){
+
+	public RnListeDruckDialog(final Shell shell, final Object[] tree) {
 		super(shell);
 		for (Object o : tree) {
 			if (o instanceof Tree) {
@@ -47,7 +47,8 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 							Rechnung rn = (Rechnung) tRn.contents;
 							rnn.add(rn);
 							// Rechnungen sollten nicht doppelt im Verarbeitungsergebnis auftreten,
-							// nur weil aufgeklappt und dann bis zu 3x etwas vom gleichen Patienten/Fall/Rechnung markiert war.
+							// nur weil aufgeklappt und dann bis zu 3x etwas vom gleichen
+							// Patienten/Fall/Rechnung markiert war.
 							// deshalb prüfen, ob die rechnung schon drin ist, bevor sie hinzugefügt wird.
 							if (!rnn.contains(rn)) {
 								rnn.add(rn);
@@ -58,15 +59,15 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 			}
 		}
 	}
-	
-	public RnListeDruckDialog(final Shell shell, List<Rechnung> invoiceSelections){
+
+	public RnListeDruckDialog(final Shell shell, List<Rechnung> invoiceSelections) {
 		super(shell);
 		rnn.addAll(invoiceSelections);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Control createDialogArea(final Composite parent){
+	protected Control createDialogArea(final Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		text = new TextContainer(getShell());
 		ret.setLayout(new FillLayout());
@@ -75,11 +76,10 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 		text.getPlugin().showMenu(false);
 		text.getPlugin().showToolbar(false);
 		text.createFromTemplateName(null, TT_LIST, Brief.UNKNOWN, CoreHub.getLoggedInContact(),
-			Messages.RnActions_bills); //$NON-NLS-1$ //$NON-NLS-2$
+				Messages.RnActions_bills); // $NON-NLS-1$ //$NON-NLS-2$
 		text.getPlugin().insertText("[Titel]", //$NON-NLS-1$
-			Messages.RnActions_billsListPrintetAt + new TimeTool().toString(TimeTool.DATE_GER)
-				+ "\n", //$NON-NLS-1$ //$NON-NLS-2$
-			SWT.CENTER);
+				Messages.RnActions_billsListPrintetAt + new TimeTool().toString(TimeTool.DATE_GER) + "\n", //$NON-NLS-1$ //$NON-NLS-2$
+				SWT.CENTER);
 		String[][] table = new String[rnn.size() + 1][];
 		Money sum = new Money();
 		int i;
@@ -98,39 +98,37 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 		}
 		table[i] = new String[3];
 		table[i][0] = ""; //$NON-NLS-1$
-		table[i][1] = Messages.RnActions_sum; //$NON-NLS-1$
+		table[i][1] = Messages.RnActions_sum; // $NON-NLS-1$
 		table[i][2] = sum.getAmountAsString();
 		text.getPlugin().setFont("Helvetica", SWT.NORMAL, 9); //$NON-NLS-1$
 		text.getPlugin().insertTable("[Liste]", 0, table, new int[] { //$NON-NLS-1$
-			10, 80, 10
-		});
+				10, 80, 10 });
 		text.getPlugin().showMenu(true);
 		text.getPlugin().showToolbar(true);
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
-		getShell().setText(Messages.RnActions_billsList); //$NON-NLS-1$
-		setTitle(Messages.RnActions_printListCaption); //$NON-NLS-1$
-		setMessage(Messages.RnActions_printListMessage); //$NON-NLS-1$
+		getShell().setText(Messages.RnActions_billsList); // $NON-NLS-1$
+		setTitle(Messages.RnActions_printListCaption); // $NON-NLS-1$
+		setMessage(Messages.RnActions_printListMessage); // $NON-NLS-1$
 		getShell().setSize(900, 700);
-		SWTHelper.center(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
-			getShell());
+		SWTHelper.center(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(), getShell());
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		super.okPressed();
 	}
-	
-	public void save(){
+
+	public void save() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public boolean saveAs(){
+
+	public boolean saveAs() {
 		// TODO Auto-generated method stub
 		return false;
 	}

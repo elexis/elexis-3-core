@@ -15,15 +15,15 @@ public class InvoiceHistoryEntryDTO {
 	Boolean success;
 	Object additional;
 	boolean ignored;
-	
+
 	/**
-	 * 
+	 *
 	 * @param base
 	 * @param ref
 	 * @param operationType
 	 * @param item
 	 */
-	public InvoiceHistoryEntryDTO(OperationType operationType, Object base, Object item){
+	public InvoiceHistoryEntryDTO(OperationType operationType, Object base, Object item) {
 		super();
 		this.timestamp = new Date();
 		this.base = base;
@@ -31,81 +31,78 @@ public class InvoiceHistoryEntryDTO {
 		this.operationType = operationType;
 		this.success = null;
 	}
-	
-	public InvoiceHistoryEntryDTO(OperationType operationType, Object base, Object item,
-		Object additional){
+
+	public InvoiceHistoryEntryDTO(OperationType operationType, Object base, Object item, Object additional) {
 		this(operationType, base, item);
 		this.additional = additional;
 	}
-	
-	public void setSuccess(Boolean success){
+
+	public void setSuccess(Boolean success) {
 		this.success = success;
 	}
-	
-	public void setIgnored(boolean ignored){
+
+	public void setIgnored(boolean ignored) {
 		this.ignored = ignored;
 	}
-	
-	public boolean isIgnored(){
+
+	public boolean isIgnored() {
 		return ignored;
 	}
-	
-	public Boolean isSuccess(){
+
+	public Boolean isSuccess() {
 		return success;
 	}
-	
-	public Object getItem(){
+
+	public Object getItem() {
 		return item;
 	}
 
-	public OperationType getOperationType(){
+	public OperationType getOperationType() {
 		return operationType;
 	}
-	
-	public Date getTimestamp(){
+
+	public Date getTimestamp() {
 		return timestamp;
 	}
-	
-	public Object getBase(){
+
+	public Object getBase() {
 		return base;
 	}
-	
-	public Object getAdditional(){
+
+	public Object getAdditional() {
 		return additional;
 	}
 
 	/**
-	 * The default operation type has the multiAllowed flat with value false, that mean it can only
-	 * be executed once.
-	 * 
+	 * The default operation type has the multiAllowed flat with value false, that
+	 * mean it can only be executed once.
+	 *
 	 * @author med1
 	 *
 	 */
 	public enum OperationType {
-			LEISTUNG_ADD(true), LEISTUNG_REMOVE(true), LEISTUNG_CHANGE_COUNT, LEISTUNG_CHANGE_PRICE,
-			LEISTUNG_TRANSFER_TO_FALL_KONS(true), DIAGNOSE_ADD(true), DIAGNOSE_REMOVE(true),
-			KONSULTATION_CHANGE_DATE, KONSULTATION_CHANGE_MANDANT, FALL_COPY, FALL_CHANGE,
-			FALL_KONSULTATION_TRANSER, RECHNUNG_STORNO,
-			RECHNUNG_NEW, KONSULTATION_TRANSFER_TO_FALL;
-		
+		LEISTUNG_ADD(true), LEISTUNG_REMOVE(true), LEISTUNG_CHANGE_COUNT, LEISTUNG_CHANGE_PRICE,
+		LEISTUNG_TRANSFER_TO_FALL_KONS(true), DIAGNOSE_ADD(true), DIAGNOSE_REMOVE(true), KONSULTATION_CHANGE_DATE,
+		KONSULTATION_CHANGE_MANDANT, FALL_COPY, FALL_CHANGE, FALL_KONSULTATION_TRANSER, RECHNUNG_STORNO, RECHNUNG_NEW,
+		KONSULTATION_TRANSFER_TO_FALL;
+
 		final boolean multiAllowed;
-		
-		private OperationType(){
+
+		private OperationType() {
 			this.multiAllowed = false;
 		}
-		
-		private OperationType(boolean multiAllowed){
+
+		private OperationType(boolean multiAllowed) {
 			this.multiAllowed = multiAllowed;
 		}
-		
-		public boolean isMultiAllowed(){
+
+		public boolean isMultiAllowed() {
 			return multiAllowed;
 		}
 	}
-	
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((additional == null) ? 0 : additional.hashCode());
@@ -114,9 +111,9 @@ public class InvoiceHistoryEntryDTO {
 		result = prime * result + ((operationType == null) ? 0 : operationType.hashCode());
 		return result;
 	}
-	
+
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -143,10 +140,10 @@ public class InvoiceHistoryEntryDTO {
 			return false;
 		return true;
 	}
-	
-	public String getText(){
+
+	public String getText() {
 		StringBuilder builder = new StringBuilder();
-		
+
 		if (base instanceof KonsultationDTO) {
 			builder.append(new TimeTool(timestamp).toString(TimeTool.TIME_FULL));
 			builder.append(": ");
@@ -157,7 +154,7 @@ public class InvoiceHistoryEntryDTO {
 			builder.append("Fall - ");
 			builder.append(((FallDTO) base).getLabel());
 		}
-		
+
 		switch (operationType) {
 		case RECHNUNG_STORNO:
 			builder.append("Rechnung ");
@@ -241,11 +238,10 @@ public class InvoiceHistoryEntryDTO {
 		}
 		return builder.toString();
 	}
-	
-	private String getListToString(List<LeistungDTO> leistungDTOs){
+
+	private String getListToString(List<LeistungDTO> leistungDTOs) {
 		if (leistungDTOs != null) {
-			return leistungDTOs.stream().map(item -> item.getText())
-				.collect(Collectors.joining(", "));
+			return leistungDTOs.stream().map(item -> item.getText()).collect(Collectors.joining(", "));
 		}
 		return "";
 	}

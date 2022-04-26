@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views.codesystems;
@@ -38,25 +38,25 @@ public class DiagnosenView extends ViewPart implements IActivationListener {
 	public final static String ID = "ch.elexis.DiagnosenView"; //$NON-NLS-1$
 	CTabFolder ctab;
 	CTabItem selected;
-	
-	public DiagnosenView(){}
-	
+
+	public DiagnosenView() {
+	}
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout());
 		ctab = new CTabFolder(parent, SWT.BOTTOM);
 		ctab.setSimple(false);
 		ctab.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				selected = ctab.getSelection();
 				if (selected != null) {
 					cPage page = (cPage) selected.getControl();
 					if (page == null) {
-						
-						page =
-							new cPage(ctab, (CodeSystemDescription) selected.getData());
+
+						page = new cPage(ctab, (CodeSystemDescription) selected.getData());
 						selected.setControl(page);
 						// parent.redraw();
 					}
@@ -65,21 +65,21 @@ public class DiagnosenView extends ViewPart implements IActivationListener {
 				((cPage) selected.getControl()).refresh();
 				setFocus();
 			}
-			
+
 		});
-		
+
 		CodeSelectorFactory.makeTabs(ctab, getViewSite(), ExtensionPointConstantsUi.DIAGNOSECODE);
-		
+
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		if (selected == null) {
 			if (ctab.getItems().length > 0) {
 				selected = ctab.getSelection();
@@ -88,23 +88,22 @@ public class DiagnosenView extends ViewPart implements IActivationListener {
 		if (selected != null) {
 			cPage page = (cPage) selected.getControl();
 			if (page == null) {
-				//SWTHelper.alert(CAPTION_ERROR, "cPage=null"); //$NON-NLS-1$
-				page =
-					new cPage(ctab, (CodeSystemDescription) selected.getData());
+				// SWTHelper.alert(CAPTION_ERROR, "cPage=null"); //$NON-NLS-1$
+				page = new cPage(ctab, (CodeSystemDescription) selected.getData());
 				selected.setControl(page);
 				// parent.redraw();
 			}
 			page.cv.getConfigurer().getControlFieldProvider().setFocus();
 		}
 	}
-	
-	public void activation(boolean mode){
+
+	public void activation(boolean mode) {
 		if (mode == false) {
 			if (selected != null) {
 				cPage page = (cPage) selected.getControl();
 				page.cv.getConfigurer().getControlFieldProvider().clearValues();
 			}
-			
+
 			// remove any ICodeSelectiorTarget, since it's no more needed
 			CodeSelectorHandler.getInstance().removeCodeSelectorTarget();
 		} else {
@@ -112,16 +111,17 @@ public class DiagnosenView extends ViewPart implements IActivationListener {
 				cPage page = (cPage) selected.getControl();
 				page.refresh();
 			}
-			
+
 		}
-		
+
 	}
-	
-	public void visible(boolean mode){}
-	
+
+	public void visible(boolean mode) {
+	}
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

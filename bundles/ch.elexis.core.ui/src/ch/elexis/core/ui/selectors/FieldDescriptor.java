@@ -7,18 +7,18 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.selectors;
 
 import org.eclipse.swt.widgets.Listener;
 
 public class FieldDescriptor<T> {
-	
+
 	public enum Typ {
 		STRING, INT, CURRENCY, LIST, HYPERLINK, DATE, COMBO, BOOLEAN
 	};
-	
+
 	String sAnzeige, sFeldname, sHashname;
 	Typ tFeldTyp;
 	Object ext;
@@ -26,109 +26,105 @@ public class FieldDescriptor<T> {
 	int eventType;
 	boolean ignoreCase = true;
 	boolean valueToLower = false;
-	
-	public boolean isIgnoreCase(){
+
+	public boolean isIgnoreCase() {
 		return ignoreCase;
 	}
-	
-	public FieldDescriptor<T> ignoreCase(boolean value){
+
+	public FieldDescriptor<T> ignoreCase(boolean value) {
 		this.ignoreCase = value;
 		return this;
 	}
-	
-	public boolean isValueToLower(){
+
+	public boolean isValueToLower() {
 		return valueToLower;
 	}
-	
-	public FieldDescriptor<T> valueToLower(boolean value){
+
+	public FieldDescriptor<T> valueToLower(boolean value) {
 		this.valueToLower = value;
 		return this;
 	}
-	
+
 	/** Retrieve the visible label of the field */
-	public String getLabel(){
+	public String getLabel() {
 		return sAnzeige;
 	}
-	
+
 	/** return the name of the database field backing this field */
-	public String getFieldname(){
+	public String getFieldname() {
 		return sFeldname;
 	}
-	
+
 	/** return the name of this field in the Object's ExitInfo properties */
-	public String getHashname(){
+	public String getHashname() {
 		return sHashname;
 	}
-	
+
 	/** get the type of this field */
-	public Typ getFieldType(){
+	public Typ getFieldType() {
 		return tFeldTyp;
 	}
-	
+
 	/** Return any object associated with this field */
-	public Object getExtension(){
+	public Object getExtension() {
 		return ext;
 	}
-	
-	public Listener getAssignedListener(){
+
+	public Listener getAssignedListener() {
 		return listener;
 	}
-	
-	public int getAssignedListenerEventType(){
+
+	public int getAssignedListenerEventType() {
 		return eventType;
 	}
-	
-	public FieldDescriptor(String anzeige, String feldname, Typ feldtyp, String hashname){
+
+	public FieldDescriptor(String anzeige, String feldname, Typ feldtyp, String hashname) {
 		sAnzeige = anzeige;
 		sFeldname = feldname;
 		tFeldTyp = feldtyp;
 		sHashname = hashname;
-		
+
 	}
-	
-	public FieldDescriptor(String all){
+
+	public FieldDescriptor(String all) {
 		sAnzeige = all;
 		sFeldname = all;
 		tFeldTyp = Typ.STRING;
 		sHashname = null;
 	}
-	
-	public FieldDescriptor(String anzeige, String feldname, IObjectLink<T> cp){
+
+	public FieldDescriptor(String anzeige, String feldname, IObjectLink<T> cp) {
 		sAnzeige = anzeige;
 		sFeldname = feldname;
 		ext = cp;
 		tFeldTyp = Typ.HYPERLINK;
 	}
-	
-	public FieldDescriptor(String anzeige, String feldname, String hashname, String[] choices){
+
+	public FieldDescriptor(String anzeige, String feldname, String hashname, String[] choices) {
 		sAnzeige = anzeige;
 		sFeldname = feldname;
 		sHashname = hashname;
 		tFeldTyp = Typ.LIST;
 		ext = choices;
 	}
-	
-	public FieldDescriptor(String anzeige, String feldname, String hashname, String[] comboItems,
-		boolean bDropDown){
+
+	public FieldDescriptor(String anzeige, String feldname, String hashname, String[] comboItems, boolean bDropDown) {
 		sAnzeige = anzeige;
 		sFeldname = feldname;
 		sHashname = hashname;
 		tFeldTyp = Typ.COMBO;
 		ext = comboItems;
 	}
-	
+
 	/**
 	 * it is possible to assign ONE listener to the field
-	 * 
-	 * @param eventType
-	 *            (i.e. KeyDown,...)
-	 * @param listener
-	 *            (listener which implements the desired behavior)
+	 *
+	 * @param eventType (i.e. KeyDown,...)
+	 * @param listener  (listener which implements the desired behavior)
 	 */
-	public void setAssignedListener(int eventType, Listener listener){
+	public void setAssignedListener(int eventType, Listener listener) {
 		if (listener == null) {
-			throw new IllegalArgumentException("Could not assign 'Null' listener to field: "
-				+ sAnzeige);
+			throw new IllegalArgumentException("Could not assign 'Null' listener to field: " + sAnzeige);
 		}
 		this.eventType = eventType;
 		this.listener = listener;

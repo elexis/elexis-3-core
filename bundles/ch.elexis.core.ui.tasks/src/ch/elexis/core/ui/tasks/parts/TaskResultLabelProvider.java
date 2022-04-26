@@ -7,36 +7,37 @@ import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.ui.icons.Images;
 
 public class TaskResultLabelProvider extends ColumnLabelProvider {
-	
+
 	private static TaskResultLabelProvider instance;
-	
-	private TaskResultLabelProvider(){}
-	
-	public static TaskResultLabelProvider getInstance(){
+
+	private TaskResultLabelProvider() {
+	}
+
+	public static TaskResultLabelProvider getInstance() {
 		if (instance == null) {
 			instance = new TaskResultLabelProvider();
 		}
 		return instance;
 	}
-	
-	public String getIconURI(Object element){
+
+	public String getIconURI(Object element) {
 		if (element == null) {
 			return null;
 		}
 		Images icon = getImages(element);
 		return (icon != null) ? icon.getIconURI() : null;
 	}
-	
+
 	@Override
-	public Image getImage(Object element){
+	public Image getImage(Object element) {
 		if (element == null) {
 			return null;
 		}
 		Images icon = getImages(element);
 		return (icon != null) ? icon.getImage() : null;
 	}
-	
-	private Images getImages(Object element){
+
+	private Images getImages(Object element) {
 		ITask task = (ITask) element;
 		switch (task.getState()) {
 		case IN_PROGRESS:
@@ -58,19 +59,19 @@ public class TaskResultLabelProvider extends ColumnLabelProvider {
 		}
 		return null;
 	}
-	
+
 	@Override
-	public String getText(Object element){
+	public String getText(Object element) {
 		return null;
 	}
-	
+
 	@Override
-	public String getToolTipText(Object element){
+	public String getToolTipText(Object element) {
 		if (element == null) {
 			return null;
 		}
 		ITask task = (ITask) element;
 		return task.getState().name();
 	}
-	
+
 }

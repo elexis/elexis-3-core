@@ -30,23 +30,23 @@ import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.OwnerTaskNotification;
 
 public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigurationComposite {
-	
+
 	private Text txtReferenceId;
 	private Text txtOwnerId;
 	private Text txtRunner;
 	private ComboViewer cvNotificationType;
 	private Button btnSingleton;
 	private Button btnActive;
-	
-	public GeneralConfigurationComposite(Composite parent, int style){
+
+	public GeneralConfigurationComposite(Composite parent, int style) {
 		super(parent, style);
-		
+
 		setLayout(new GridLayout(2, false));
-		
+
 		Label lblReferenceid = new Label(this, SWT.NONE);
 		lblReferenceid.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblReferenceid.setText("referenceId");
-		
+
 		txtReferenceId = new Text(this, SWT.BORDER);
 		txtReferenceId.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtReferenceId.addModifyListener(event -> {
@@ -57,10 +57,10 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 				// TODO catch exception if reference id is not unique
 			}
 		});
-		
+
 		Label lblOwner = new Label(this, SWT.NONE);
 		lblOwner.setText("owner");
-		
+
 		Composite compOwner = new Composite(this, SWT.NONE);
 		GridLayout gl_compOwner = new GridLayout(2, false);
 		gl_compOwner.verticalSpacing = 0;
@@ -68,31 +68,31 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 		gl_compOwner.marginHeight = 0;
 		compOwner.setLayout(gl_compOwner);
 		compOwner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		txtOwnerId = new Text(compOwner, SWT.BORDER);
 		txtOwnerId.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtOwnerId.setBounds(0, 0, 64, 19);
-		
+
 		Link linkOwner = new Link(compOwner, SWT.NONE);
 		linkOwner.setText("<a>...</a>");
 		linkOwner.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e){
+			public void mouseDown(MouseEvent e) {
 				openUserSelectionDialog();
 			}
-			
+
 		});
-		
+
 		Label lblNotification = new Label(this, SWT.NONE);
 		lblNotification.setText("notification");
-		
+
 		cvNotificationType = new ComboViewer(this, SWT.NONE);
 		Combo combo = cvNotificationType.getCombo();
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		cvNotificationType.setContentProvider(ArrayContentProvider.getInstance());
 		cvNotificationType.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element == null) {
 					return "";
 				}
@@ -112,72 +112,67 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 		});
 		cvNotificationType.setInput(OwnerTaskNotification.values());
 		cvNotificationType.addSelectionChangedListener(sel -> {
-			OwnerTaskNotification otn =
-				(OwnerTaskNotification) sel.getStructuredSelection().getFirstElement();
-			if(taskDescriptor != null) {
+			OwnerTaskNotification otn = (OwnerTaskNotification) sel.getStructuredSelection().getFirstElement();
+			if (taskDescriptor != null) {
 				taskDescriptor.setOwnerNotification(otn);
 				saveTaskDescriptor();
 			}
 		});
-		
+
 		Label lblRunner = new Label(this, SWT.NONE);
 		lblRunner.setText("runner");
-		
+
 		txtRunner = new Text(this, SWT.BORDER);
 		txtRunner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		txtRunner.setToolTipText(
-			"The station to run on (e.g. ELEXIS-SERVER), leave empty for all stations");
+		txtRunner.setToolTipText("The station to run on (e.g. ELEXIS-SERVER), leave empty for all stations");
 		txtRunner.addModifyListener(ev -> {
 			String runner = ((Text) ev.widget).getText();
-			if(taskDescriptor != null) {
+			if (taskDescriptor != null) {
 				taskDescriptor.setRunner(runner);
 				saveTaskDescriptor();
 			}
 
 		});
-		
+
 		new Label(this, SWT.NONE);
 		btnSingleton = new Button(this, SWT.CHECK);
 		btnSingleton.setText("singleton");
 		btnSingleton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				boolean selection = ((Button) e.widget).getSelection();
-				if(taskDescriptor != null) {
+				if (taskDescriptor != null) {
 					taskDescriptor.setSingleton(selection);
 					saveTaskDescriptor();
 				}
 			}
 		});
-		
+
 		new Label(this, SWT.NONE);
 		btnActive = new Button(this, SWT.CHECK);
 		btnActive.setText("active");
 		btnActive.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				boolean selection = ((Button) e.widget).getSelection();
-				if(taskDescriptor != null) {
+				if (taskDescriptor != null) {
 					taskDescriptor.setActive(selection);
 					saveTaskDescriptor();
 				}
 			}
 		});
 	}
-	
+
 	@Override
-	public void setSelection(ITaskDescriptor taskDescriptor){
+	public void setSelection(ITaskDescriptor taskDescriptor) {
 		super.setSelection(taskDescriptor);
-		
+
 		if (taskDescriptor != null) {
-			txtReferenceId.setText(
-				taskDescriptor.getReferenceId() != null ? taskDescriptor.getReferenceId() : "");
-			String ownerId =
-				taskDescriptor.getOwner() != null ? taskDescriptor.getOwner().getId() : "";
+			txtReferenceId.setText(taskDescriptor.getReferenceId() != null ? taskDescriptor.getReferenceId() : "");
+			String ownerId = taskDescriptor.getOwner() != null ? taskDescriptor.getOwner().getId() : "";
 			txtOwnerId.setText(ownerId);
 			txtRunner.setText(taskDescriptor.getRunner());
-			cvNotificationType
-				.setSelection(new StructuredSelection(taskDescriptor.getOwnerNotification()));
+			cvNotificationType.setSelection(new StructuredSelection(taskDescriptor.getOwnerNotification()));
 			btnActive.setSelection(taskDescriptor.isActive());
 			btnSingleton.setSelection(taskDescriptor.isSingleton());
 		} else {
@@ -188,10 +183,10 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 			btnSingleton.setSelection(false);
 			btnActive.setSelection(false);
 		}
-		
+
 	}
-	
-	private void openUserSelectionDialog(){
+
+	private void openUserSelectionDialog() {
 		ListDialog listDialog = new ListDialog(getShell());
 		listDialog.setContentProvider(ArrayContentProvider.getInstance());
 		List<IUser> users = CoreModelServiceHolder.get().getQuery(IUser.class).execute();
@@ -199,7 +194,7 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 		listDialog.setInput(users);
 		listDialog.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				IUser runnable = (IUser) element;
 				return runnable.getId();
 			}
@@ -215,5 +210,5 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 			}
 		}
 	}
-	
+
 }

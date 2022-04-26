@@ -22,29 +22,26 @@ import ch.elexis.core.model.Identifiable;
 
 @Component
 public class StoreToStringService implements IStoreToStringService {
-	
+
 	private List<IStoreToStringContribution> contributions = new ArrayList<>();
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public synchronized void setCodeElementServiceContribution(
-		IStoreToStringContribution contribution){
+	public synchronized void setCodeElementServiceContribution(IStoreToStringContribution contribution) {
 		contributions.add(contribution);
 	}
-	
-	public synchronized void unsetCodeElementServiceContribution(
-		IStoreToStringContribution contribution){
+
+	public synchronized void unsetCodeElementServiceContribution(IStoreToStringContribution contribution) {
 		contributions.remove(contribution);
 	}
-	
+
 	private Map<Class<?>, IStoreToStringContribution> classToContributionMap = new HashMap<>();
-	
-	private Cache<String, Identifiable> loadFromStringCache =
-		CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).maximumSize(100).build();
-	
+
+	private Cache<String, Identifiable> loadFromStringCache = CacheBuilder.newBuilder()
+			.expireAfterAccess(15, TimeUnit.SECONDS).maximumSize(100).build();
+
 	@Override
-	public Optional<String> storeToString(Identifiable identifiable){
-		IStoreToStringContribution contribution =
-			classToContributionMap.get(identifiable.getClass());
+	public Optional<String> storeToString(Identifiable identifiable) {
+		IStoreToStringContribution contribution = classToContributionMap.get(identifiable.getClass());
 		if (contribution != null) {
 			return contribution.storeToString(identifiable);
 		}
@@ -57,17 +54,16 @@ public class StoreToStringService implements IStoreToStringService {
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<Identifiable> loadFromString(String storeToString){
+	public Optional<Identifiable> loadFromString(String storeToString) {
 		if (storeToString != null) {
 			Identifiable cached = loadFromStringCache.getIfPresent(storeToString);
 			if (cached != null) {
 				return Optional.of(cached);
 			}
 			for (IStoreToStringContribution iStoreToStringContribution : contributions) {
-				Optional<Identifiable> identifiable =
-					iStoreToStringContribution.loadFromString(storeToString);
+				Optional<Identifiable> identifiable = iStoreToStringContribution.loadFromString(storeToString);
 				if (identifiable.isPresent()) {
 					loadFromStringCache.put(storeToString, identifiable.get());
 					return identifiable;
@@ -76,14 +72,13 @@ public class StoreToStringService implements IStoreToStringService {
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public List<Identifiable> loadFromStringWithIdPart(String partialStoreToString){
+	public List<Identifiable> loadFromStringWithIdPart(String partialStoreToString) {
 		List<Identifiable> ret = new ArrayList<>();
 		if (partialStoreToString != null) {
 			for (IStoreToStringContribution iStoreToStringContribution : contributions) {
-				List<Identifiable> loaded =
-					iStoreToStringContribution.loadFromStringWithIdPart(partialStoreToString);
+				List<Identifiable> loaded = iStoreToStringContribution.loadFromStringWithIdPart(partialStoreToString);
 				if (!loaded.isEmpty()) {
 					ret.addAll(loaded);
 				}
@@ -91,9 +86,9 @@ public class StoreToStringService implements IStoreToStringService {
 		}
 		return ret.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public Class<?> getEntityForType(String type){
+	public Class<?> getEntityForType(String type) {
 		if (type != null) {
 			for (IStoreToStringContribution iStoreToStringContribution : contributions) {
 				Class<?> loaded = iStoreToStringContribution.getEntityForType(type);
@@ -104,9 +99,9 @@ public class StoreToStringService implements IStoreToStringService {
 		}
 		return null;
 	}
-	
+
 	@Override
-	public String getTypeForEntity(Object entityInstance){
+	public String getTypeForEntity(Object entityInstance) {
 		if (entityInstance != null) {
 			for (IStoreToStringContribution iStoreToStringContribution : contributions) {
 				String loaded = iStoreToStringContribution.getTypeForEntity(entityInstance);
@@ -117,9 +112,9 @@ public class StoreToStringService implements IStoreToStringService {
 		}
 		return null;
 	}
-	
+
 	@Override
-	public String getTypeForModel(Class<?> interfaze){
+	public String getTypeForModel(Class<?> interfaze) {
 		if (interfaze != null) {
 			for (IStoreToStringContribution iStoreToStringContribution : contributions) {
 				String loaded = iStoreToStringContribution.getTypeForModel(interfaze);

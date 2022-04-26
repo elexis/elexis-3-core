@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.contacts.views;
@@ -35,25 +35,25 @@ import ch.elexis.data.Patient;
 public class PatientDetailView2 extends ViewPart implements IActivationListener {
 	public static final String ID = "ch.elexis.PatDetail_v2"; //$NON-NLS-1$
 	Patientenblatt2 pb;
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		setTitleImage(Images.IMG_VIEW_PATIENT_DETAIL.getImage());
-		
-		setPartName(Messages.PatientDetailView2_patientDetailViewName); //$NON-NLS-1$
+
+		setPartName(Messages.PatientDetailView2_patientDetailViewName); // $NON-NLS-1$
 		parent.setLayout(new FillLayout());
 		pb = new Patientenblatt2(parent, getViewSite());
-		
+
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
-	
-	public void refresh(){
+
+	public void refresh() {
 		pb.setPatient((Patient) ElexisEventDispatcher.getSelected(Patient.class));
 		pb.refresh();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		if (pb != null && !pb.isDisposed()) {
 			Patient selectedPatient = ElexisEventDispatcher.getSelectedPatient();
 			if (selectedPatient != null && !selectedPatient.equals(pb.actPatient)) {
@@ -62,23 +62,23 @@ public class PatientDetailView2 extends ViewPart implements IActivationListener 
 			}
 		}
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		if (pb != null) {
 			pb.dispose();
 		}
 		super.dispose();
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
+
 	@Override
-	public void activation(boolean mode){
+	public void activation(boolean mode) {
 		if (!mode) {
 			// save does not happen via locking in standalone mode
 			if (ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE) {
@@ -88,8 +88,8 @@ public class PatientDetailView2 extends ViewPart implements IActivationListener 
 			pb.refreshUi();
 		}
 	}
-	
+
 	@Override
-	public void visible(boolean mode){
+	public void visible(boolean mode) {
 	}
 }

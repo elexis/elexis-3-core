@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -25,22 +25,23 @@ import ch.elexis.core.data.interfaces.IContact;
 import ch.elexis.core.ui.contacts.views.filter.KontaktAnzeigeTypViewerFilter;
 
 public class KontaktRollenSwitcher extends ContributionItem {
-	
+
 	private IContact k;
-	
-	public KontaktRollenSwitcher(){}
-	
-	public KontaktRollenSwitcher(String id){
+
+	public KontaktRollenSwitcher() {
+	}
+
+	public KontaktRollenSwitcher(String id) {
 		super(id);
 	}
-	
+
 	@Override
-	public void fill(Menu menu, int index){
+	public void fill(Menu menu, int index) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		ISelection selection = window.getActivePage().getSelection();
 		IStructuredSelection strucSelection = (IStructuredSelection) selection;
 		k = (IContact) strucSelection.getFirstElement();
-		
+
 		if (k != null) {
 			MenuItem itemMandant;
 			MenuItem itemAnwender;
@@ -54,11 +55,11 @@ public class KontaktRollenSwitcher extends ContributionItem {
 					itemAnwender.setSelection(true);
 				itemAnwender.addSelectionListener(new SelectionAdapter() {
 					@Override
-					public void widgetSelected(SelectionEvent e){
+					public void widgetSelected(SelectionEvent e) {
 						if (!k.isUser()) {
 							// TODO Create a new Anwender, set username, pw
 							// call preference page to set access rights
-							
+
 						} else {
 							// Delete the Anwender, delete username and pw
 						}
@@ -66,34 +67,34 @@ public class KontaktRollenSwitcher extends ContributionItem {
 						KontaktAnzeigeTypViewerFilter.refreshViewer();
 					}
 				});
-				
+
 				itemMandant = new MenuItem(menu, SWT.CHECK, index);
 				itemMandant.setText("Mandant");
 				if (k.isMandator())
 					itemMandant.setSelection(true);
 				itemMandant.addSelectionListener(new SelectionAdapter() {
 					@Override
-					public void widgetSelected(SelectionEvent e){
+					public void widgetSelected(SelectionEvent e) {
 						if (k.isMandator()) {
 							// TODO: User about to remove mandant role, warn him
 						}
-						
+
 						k.setMandator(!k.isMandator());
 						KontaktAnzeigeTypViewerFilter.refreshViewer();
 					}
 				});
-				
+
 				itemPatient = new MenuItem(menu, SWT.CHECK, index);
 				itemPatient.setText("Patient");
 				if (k.isPatient())
 					itemPatient.setSelection(true);
 				itemPatient.addSelectionListener(new SelectionAdapter() {
 					@Override
-					public void widgetSelected(SelectionEvent e){
+					public void widgetSelected(SelectionEvent e) {
 						if (k.isPatient()) {
 							// TODO User is about to delete patient role, warn him!
 						}
-						
+
 						k.setPatient(!k.isPatient());
 						KontaktAnzeigeTypViewerFilter.refreshViewer();
 					}
@@ -106,7 +107,7 @@ public class KontaktRollenSwitcher extends ContributionItem {
 					itemMandant.setSelection(true);
 				itemMandant.addSelectionListener(new SelectionAdapter() {
 					@Override
-					public void widgetSelected(SelectionEvent e){
+					public void widgetSelected(SelectionEvent e) {
 						k.setMandator(!k.isMandator());
 						KontaktAnzeigeTypViewerFilter.refreshViewer();
 					}
@@ -118,13 +119,13 @@ public class KontaktRollenSwitcher extends ContributionItem {
 				item.setEnabled(false);
 				break;
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	@Override
-	public boolean isDynamic(){
+	public boolean isDynamic() {
 		return true;
 	}
 }

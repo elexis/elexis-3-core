@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -16,16 +16,16 @@ import ch.elexis.core.model.Identifiable;
 
 public interface IObservationLink extends Identifiable {
 	public enum ObservationLinkType {
-			REF
+		REF
 	}
-	
+
 	public Optional<IObservation> getSource();
-	
+
 	public Optional<IObservation> getTarget();
-	
+
 	public void setTarget(IObservation observation);
-	
+
 	public void setSource(IObservation observation);
-	
+
 	public void setType(ObservationLinkType type);
 }

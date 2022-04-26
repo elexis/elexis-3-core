@@ -14,164 +14,161 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IXid;
 
 public class CsvUser implements IUser {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(IUser.class);
-	
+
 	private String username;
 	private String password;
 	private IContact userContact;
 	private List<IRole> roles = new ArrayList<>();
 
 	private String[] csvRows;
-	
-	public CsvUser(String[] csvRows){
+
+	public CsvUser(String[] csvRows) {
 		this.csvRows = csvRows;
 	}
-	
+
 	@Override
-	public String getUsername(){
+	public String getUsername() {
 		return username;
 	}
-	
+
 	@Override
-	public void setUsername(String username){
+	public void setUsername(String username) {
 		// not relevant
 	}
-	
+
 	@Override
-	public String getHashedPassword(){
+	public String getHashedPassword() {
 		return password;
 	}
-	
+
 	@Override
-	public void setHashedPassword(String password){
+	public void setHashedPassword(String password) {
 		// not relevant
 	}
-	
+
 	@Override
-	public IContact getAssignedContact(){
+	public IContact getAssignedContact() {
 		return userContact;
 	}
-	
+
 	@Override
-	public void setAssignedContact(IContact contact){
+	public void setAssignedContact(IContact contact) {
 		// not relevant
 	}
-	
+
 	@Override
-	public List<IRole> getRoles(){
+	public List<IRole> getRoles() {
 		return roles;
 	}
-	
+
 	@Override
-	public IRole addRole(IRole role){
+	public IRole addRole(IRole role) {
 		// not relevant
 		return null;
 	}
-	
+
 	@Override
-	public void removeRole(IRole role){
+	public void removeRole(IRole role) {
 		// not relevant
 	}
-	
+
 	@Override
-	public String getSalt(){
+	public String getSalt() {
 		// not relevant
 		return null;
 	}
-	
+
 	@Override
-	public void setSalt(String salt){
+	public void setSalt(String salt) {
 		// not needed
 	}
-	
+
 	@Override
-	public boolean isActive(){
+	public boolean isActive() {
 		// not relevant
 		return true;
 	}
-	
+
 	@Override
-	public void setActive(boolean active){
+	public void setActive(boolean active) {
 		// not relevant
 	}
-	
+
 	@Override
-	public boolean isAllowExternal(){
+	public boolean isAllowExternal() {
 		// not relevant
 		return true;
 	}
-	
+
 	@Override
-	public void setAllowExternal(boolean allowExternal){
+	public void setAllowExternal(boolean allowExternal) {
 		// not relevant
-		
+
 	}
-	
+
 	@Override
-	public boolean isAdministrator(){
+	public boolean isAdministrator() {
 		// not relevant
 		return false;
 	}
-	
+
 	@Override
-	public void setAdministrator(boolean value){
+	public void setAdministrator(boolean value) {
 		// not relevant
 	}
-	
+
 	@Override
-	public String getLabel(){
+	public String getLabel() {
 		return getId();
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		// not relevant
 		return false;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean value){
+	public void setDeleted(boolean value) {
 		// not relevant
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return username;
 	}
-	
+
 	@Override
-	public boolean addXid(String domain, String id, boolean updateIfExists){
+	public boolean addXid(String domain, String id, boolean updateIfExists) {
 		// not relevant
 		return true;
 	}
-	
+
 	@Override
-	public IXid getXid(String domain){
+	public IXid getXid(String domain) {
 		// not relevant
 		return null;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		// not relevant
 		return null;
 	}
-	
+
 	@Override
-	public IUser login(String inUsername, char[] inPassword){
+	public IUser login(String inUsername, char[] inPassword) {
 		if (csvRows != null) {
 			for (String row : csvRows) {
 				String splits[] = row.split(":");
 				if (splits.length > 3) {
-					if (splits[0].equals(inUsername)
-						&& Arrays.equals(splits[1].toCharArray(), inPassword)) {
-						IContact contact = CoreModelServiceHolder.get()
-							.load(splits[2], IContact.class).orElse(null);
+					if (splits[0].equals(inUsername) && Arrays.equals(splits[1].toCharArray(), inPassword)) {
+						IContact contact = CoreModelServiceHolder.get().load(splits[2], IContact.class).orElse(null);
 						if (contact != null) {
 							for (String roleName : splits[3].split(",")) {
-								CoreModelServiceHolder.get().load(roleName, IRole.class)
-									.ifPresent(this.roles::add);
+								CoreModelServiceHolder.get().load(roleName, IRole.class).ifPresent(this.roles::add);
 							}
 							this.username = splits[0];
 							this.password = splits[1];
@@ -188,9 +185,9 @@ public class CsvUser implements IUser {
 		}
 		return null;
 	}
-	
+
 	@Override
-	public boolean isInternal(){
+	public boolean isInternal() {
 		return false;
 	}
 }

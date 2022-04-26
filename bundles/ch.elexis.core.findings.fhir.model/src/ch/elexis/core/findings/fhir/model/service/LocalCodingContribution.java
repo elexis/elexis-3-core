@@ -18,25 +18,25 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 
 @Component
 public class LocalCodingContribution implements ICodingContribution, ILocalCodingContribution {
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
 	private IModelService findingsModelService;
-	
+
 	@Override
-	public String getCodeSystem(){
+	public String getCodeSystem() {
 		return CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem();
 	}
-	
+
 	@Override
-	public List<ICoding> getCodes(){
+	public List<ICoding> getCodes() {
 		IQuery<ILocalCoding> query = findingsModelService.getQuery(ILocalCoding.class);
 		query.and("id", COMPARATOR.NOT_EQUALS, "VERSION");
 		return new ArrayList<ICoding>(query.execute());
 	}
-	
+
 	@Override
-	public void addCoding(ICoding coding){
-		if(coding.getSystem().equals(getCodeSystem())) {
+	public void addCoding(ICoding coding) {
+		if (coding.getSystem().equals(getCodeSystem())) {
 			Optional<ICoding> exists = getCodingByCode(coding.getCode());
 			if (!exists.isPresent()) {
 				ILocalCoding localCoding = findingsModelService.create(ILocalCoding.class);
@@ -46,8 +46,8 @@ public class LocalCodingContribution implements ICodingContribution, ILocalCodin
 			}
 		}
 	}
-	
-	private Optional<ICoding> getCodingByCode(String code){
+
+	private Optional<ICoding> getCodingByCode(String code) {
 		IQuery<ILocalCoding> query = findingsModelService.getQuery(ILocalCoding.class);
 		query.and("id", COMPARATOR.NOT_EQUALS, "VERSION");
 		if (code != null && code.isEmpty()) {
@@ -55,8 +55,7 @@ public class LocalCodingContribution implements ICodingContribution, ILocalCodin
 			query.or("code", COMPARATOR.EQUALS, code);
 			query.or("code", COMPARATOR.EQUALS, null);
 			query.andJoinGroups();
-		}
-		else {
+		} else {
 			query.and("code", COMPARATOR.EQUALS, code);
 		}
 		List<ILocalCoding> existing = query.execute();
@@ -65,17 +64,17 @@ public class LocalCodingContribution implements ICodingContribution, ILocalCodin
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public void removeCoding(ICoding coding){
+	public void removeCoding(ICoding coding) {
 		if (coding.getSystem().equals(getCodeSystem())) {
 			Optional<ICoding> exists = getCodingByCode(coding.getCode());
 			exists.ifPresent(existing -> findingsModelService.delete((ILocalCoding) existing));
 		}
 	}
-	
+
 	@Override
-	public Optional<ICoding> getCode(String code){
+	public Optional<ICoding> getCode(String code) {
 		return getCodingByCode(code);
 	}
 }

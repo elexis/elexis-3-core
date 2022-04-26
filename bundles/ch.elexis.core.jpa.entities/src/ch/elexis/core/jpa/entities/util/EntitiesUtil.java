@@ -9,12 +9,11 @@ public class EntitiesUtil {
 
 	/**
 	 * return a numeric field making sure the call will not fail on illegal values
-	 * 
-	 * @param in
-	 *            name of the field
+	 *
+	 * @param in name of the field
 	 * @return the value of the field as integer or 0 if it was null or not numeric.
 	 */
-	public static int checkZero(final String in){
+	public static int checkZero(final String in) {
 		if (StringUtils.isEmpty(in)) {
 			return 0;
 		}
@@ -28,9 +27,8 @@ public class EntitiesUtil {
 
 	/**
 	 * return a numeric field making sure the call will not fail on illegal values
-	 * 
-	 * @param in
-	 *            name of the field
+	 *
+	 * @param in name of the field
 	 * @return the value of the field as double or 0.0 if it was null or not a
 	 *         Double.
 	 */

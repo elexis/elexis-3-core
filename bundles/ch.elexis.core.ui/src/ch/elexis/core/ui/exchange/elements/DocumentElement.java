@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.exchange.elements;
@@ -37,29 +37,29 @@ public class DocumentElement extends XChangeElement {
 	public static final String ATTR_PLACEMENT = "placement";
 	public static final String ATTR_DATE = "date";
 	public static final String ATTR_RECORDREF = "recordref";
-	
+
 	public static final String ATTR_DOCUMENT_TYPE = "doctype";
 	public static final String VAL_DOCUMENT_TYPE_LETTER = "letter";
 	public static final String VAL_DOCUMENT_TYPE_OMNIVORE = "omnivore";
-	
+
 	public static final String ELEMENT_XID = "xid";
 	public static final String ELEMENT_HINT = "hint";
 	public static final String ELEMENT_CONTENTS = "contents";
-	
+
 	public static final String PLACEMENT_INLINE = "inline";
 	public static final String PLACEMENT_INFILE = "infile";
 	public static final String PLACEMENT_URL = "url";
-	
-	public String getXMLName(){
+
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
-	public DocumentElement asExporter(XChangeExporter parent, Brief b, String documentType){
+
+	public DocumentElement asExporter(XChangeExporter parent, Brief b, String documentType) {
 		asExporter(parent, b.getMimeType(), b.getId(), b.loadBinary(), documentType, b.getBetreff(), b.getDatum());
-		
+
 		setDestination(b.getAdressat());
 		setOriginator(Kontakt.load(b.get("AbsenderID")));
-		
+
 		String idex = b.get("BehandlungsID");
 		if (idex != null) {
 			setAttribute(ATTR_RECORDREF, XMLTool.idToXMLID(idex));
@@ -68,29 +68,27 @@ public class DocumentElement extends XChangeElement {
 		parent.getContainer().addChoice(this, b.getLabel(), b);
 		return this;
 	}
-	
-	public DocumentElement asExporter(XChangeExporter parent, IDocument iDocument,
-		String documentType){
+
+	public DocumentElement asExporter(XChangeExporter parent, IDocument iDocument, String documentType) {
 		byte[] content = null;
 		try (InputStream is = iDocument.getContent()) {
 			content = IOUtils.toByteArray(is);
 		} catch (IOException e) {
-			LoggerFactory.getLogger(getClass())
-				.warn(iDocument.getId() + " Error serializing to byte array", e);
+			LoggerFactory.getLogger(getClass()).warn(iDocument.getId() + " Error serializing to byte array", e);
 		}
-		
+
 		TimeTool created = new TimeTool(iDocument.getCreated());
-		asExporter(parent, iDocument.getMimeType(), iDocument.getId(), content, documentType,
-			iDocument.getTitle(), created.toString(TimeTool.DATE_GER));
+		asExporter(parent, iDocument.getMimeType(), iDocument.getId(), content, documentType, iDocument.getTitle(),
+				created.toString(TimeTool.DATE_GER));
 		if (iDocument.getAuthor() != null) {
 			setAttribute(ATTR_ORIGIN, iDocument.getAuthor().getId());
 		}
 		parent.getContainer().addChoice(this, iDocument.getLabel(), iDocument);
 		return this;
 	}
-	
-	private DocumentElement asExporter(XChangeExporter parent, String mimetype, String id,
-		byte[] binary, String documentType, String title, String date){
+
+	private DocumentElement asExporter(XChangeExporter parent, String mimetype, String id, byte[] binary,
+			String documentType, String title, String date) {
 		asExporter(parent);
 		setAttribute(ATTR_MIMETYPE, mimetype);
 		setDefaultXid(id);
@@ -99,37 +97,36 @@ public class DocumentElement extends XChangeElement {
 		setAttribute(ATTR_DOCUMENT_TYPE, documentType);
 		setTitle(title);
 		setDate(date);
-		
+
 		return this;
 	}
 
-	public void setTitle(String title){
+	public void setTitle(String title) {
 		setAttribute(ATTR_TITLE, title);
 	}
-	
-	public void setOriginator(Kontakt k){
+
+	public void setOriginator(Kontakt k) {
 		if (k != null && k.isValid()) {
 			ContactElement ce = sender.addContact(k);
 			setAttribute(ATTR_ORIGIN, ce.getID());
 		}
 	}
-	
-	public void setDestination(Kontakt k){
+
+	public void setDestination(Kontakt k) {
 		if (k != null && k.isValid()) {
 			ContactElement ce = sender.addContact(k);
 			setAttribute(ATTR_DESTINATION, ce.getID());
 		}
 	}
-	
-	public void addMeta(String name, String value){
+
+	public void addMeta(String name, String value) {
 		MetaElement meta = new MetaElement().asExporter(sender, name, value);
 		add(meta);
 	}
-	
-	public MetaElement getMeta(String name){
+
+	public MetaElement getMeta(String name) {
 		@SuppressWarnings("unchecked")
-		List<MetaElement> meta =
-			(List<MetaElement>) getChildren(MetaElement.XMLNAME, MetaElement.class);
+		List<MetaElement> meta = (List<MetaElement>) getChildren(MetaElement.XMLNAME, MetaElement.class);
 		if (meta != null && !meta.isEmpty()) {
 			for (MetaElement metaElement : meta) {
 				if (name.equals(metaElement.getAttr(MetaElement.ATTR_NAME))) {
@@ -139,23 +136,23 @@ public class DocumentElement extends XChangeElement {
 		}
 		return null;
 	}
-	
-	public void setDate(String date){
+
+	public void setDate(String date) {
 		TimeTool tt = new TimeTool(date);
 		setAttribute(ATTR_DATE, tt.toString(TimeTool.DATE_ISO));
 	}
-	
-	public void setHint(String hint){
+
+	public void setHint(String hint) {
 		Element eHint = new Element(ELEMENT_HINT, getContainer().getNamespace());
 		eHint.setText(hint);
 		getElement().addContent(eHint);
 	}
-	
-	public void setSubject(String subject){
+
+	public void setSubject(String subject) {
 		setAttribute(ATTR_SUBJECT, subject);
 	}
-	
-	public void setMimetype(String desc){
+
+	public void setMimetype(String desc) {
 		setAttribute(ATTR_MIMETYPE, desc);
 	}
 }

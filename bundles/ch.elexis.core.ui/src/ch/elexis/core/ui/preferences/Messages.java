@@ -3,14 +3,14 @@
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  * IBM - Initial API and implementation
  **********************************************************************/
 package ch.elexis.core.ui.preferences;
 
 public class Messages {
-	
+
 	public static String Ablauf_0 = ch.elexis.core.l10n.Messages.Ablauf_0;
 	public static String Ablauf_3 = ch.elexis.core.l10n.Messages.Ablauf_3;
 	public static String Ablauf_24 = ch.elexis.core.l10n.Messages.Ablauf_24;
@@ -49,8 +49,7 @@ public class Messages {
 	public static String DokumentKategorie_dokumentKategorien = ch.elexis.core.l10n.Messages.DokumentKategorie_dokumentKategorien;
 	public static String FontPreference_schriftarten = ch.elexis.core.l10n.Messages.FontPreference_schriftarten;
 	public static String FontPreference_standardschriftart = ch.elexis.core.l10n.Messages.FontPreference_standardschriftart;
-	public static String FontPreference_agendaschriftart =
-		ch.elexis.core.l10n.Messages.FontPreference_agendaschriftart;
+	public static String FontPreference_agendaschriftart = ch.elexis.core.l10n.Messages.FontPreference_agendaschriftart;
 	public static String Gruppen_BitteGebenSieNameEin = ch.elexis.core.l10n.Messages.Gruppen_BitteGebenSieNameEin;
 	public static String Gruppen_Gruppen = ch.elexis.core.l10n.Messages.Gruppen_Gruppen;
 	public static String Gruppen_GruppenUndRechte = ch.elexis.core.l10n.Messages.Gruppen_GruppenUndRechte;
@@ -379,5 +378,5 @@ public class Messages {
 	public static String StockManagementPreferencePage_linkDefaultArticleProvider_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_linkDefaultArticleProvider_text;
 	public static String StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText;
 	public static String StockManagementPreferencePage_lblNewLabel_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblNewLabel_text;
-	public static String StockManagementPreferencePage_lblMachine_text  = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblMachine_text;
+	public static String StockManagementPreferencePage_lblMachine_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblMachine_text;
 }

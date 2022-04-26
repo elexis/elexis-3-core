@@ -9,25 +9,23 @@ import org.eclipse.jface.viewers.Viewer;
 import ch.elexis.core.tasks.model.ITask;
 
 public class LazyTaskResultContentProvider implements ILazyContentProvider {
-	
+
 	private List<ITask> currentList;
 	private TableViewer tableViewerResults;
-	
-	public LazyTaskResultContentProvider(TableViewer tableViewerResults){
+
+	public LazyTaskResultContentProvider(TableViewer tableViewerResults) {
 		this.tableViewerResults = tableViewerResults;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.currentList = (List<ITask>) newInput;
 	}
-	
+
 	@Override
-	public void updateElement(int index){
+	public void updateElement(int index) {
 		tableViewerResults.replace(currentList.get(index), index);
 	}
-	
-	
-	
+
 }

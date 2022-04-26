@@ -17,35 +17,35 @@ import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
 
 public class LaborOrderViewerItem {
-	
+
 	private static ExecutorService executorService = Executors.newCachedThreadPool();
-	
+
 	private StructuredViewer viewer;
 	private LabOrder order;
-	
+
 	private String labItemLabel;
 	private String labResultString;
-	
+
 	private String itemPrio;
-	
+
 	public volatile boolean resolved;
-	
+
 	public volatile boolean resolving;
-	
-	public LaborOrderViewerItem(StructuredViewer viewer, LabOrder order){
+
+	public LaborOrderViewerItem(StructuredViewer viewer, LabOrder order) {
 		this.viewer = viewer;
 		this.order = order;
 	}
-	
-	public LabResult getLabResult(){
+
+	public LabResult getLabResult() {
 		return (LabResult) order.getLabResult();
 	}
-	
+
 	public LabOrder getLabOrder() {
 		return order;
 	}
-	
-	public Optional<String> getLabResultString(){
+
+	public Optional<String> getLabResultString() {
 		if (hasLabResult()) {
 			if (labResultString == null) {
 				if (!resolved && !resolving) {
@@ -57,25 +57,25 @@ public class LaborOrderViewerItem {
 		}
 		return Optional.empty();
 	}
-	
-	public void refreshResultString(){
+
+	public void refreshResultString() {
 		labResultString = null;
 		resolved = false;
 		viewer.refresh(this);
 	}
-	
-	private boolean hasLabResult(){
+
+	private boolean hasLabResult() {
 		return getLabResult() != null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void deleteOrder(){
+	public void deleteOrder() {
 		order.delete();
 		((List<LaborOrderViewerItem>) viewer.getInput()).remove(this);
 		viewer.refresh();
 	}
-	
-	public Optional<String> getLabItemPrio(){
+
+	public Optional<String> getLabItemPrio() {
 		if (hasLabItem()) {
 			if (itemPrio == null) {
 				itemPrio = order.getLabItem().getPrio();
@@ -84,58 +84,58 @@ public class LaborOrderViewerItem {
 		}
 		return Optional.empty();
 	}
-	
-	public TimeTool getObservationTime(){
+
+	public TimeTool getObservationTime() {
 		return order.getObservationTime();
 	}
-	
-	public void setObservationTimeWithResults(TimeTool date){
+
+	public void setObservationTimeWithResults(TimeTool date) {
 		order.setObservationTimeWithResults(date);
 		viewer.refresh(this);
 	}
-	
-	public LabResult createResult(){
+
+	public LabResult createResult() {
 		LabResult ret = order.createResult();
 		viewer.refresh(this);
 		return ret;
 	}
-	
-	public LabResult createResult(Kontakt origin){
+
+	public LabResult createResult(Kontakt origin) {
 		LabResult ret = order.createResult(origin);
 		viewer.refresh(this);
 		return ret;
 	}
-	
-	public void setState(State state){
+
+	public void setState(State state) {
 		order.setState(state);
 		viewer.refresh(this);
 	}
-	
-	public boolean hasLabItem(){
+
+	public boolean hasLabItem() {
 		return order.getLabItem() != null;
 	}
-	
-	public LabItemTyp getLabItemTyp(){
+
+	public LabItemTyp getLabItemTyp() {
 		return order.getLabItem().getTyp();
 	}
-	
-	public State getState(){
+
+	public State getState() {
 		return order.getState();
 	}
-	
-	public TimeTool getTime(){
+
+	public TimeTool getTime() {
 		return order.getTime();
 	}
-	
-	public Optional<String> getOrderId(){
+
+	public Optional<String> getOrderId() {
 		return Optional.ofNullable(order.get(LabOrder.FLD_ORDERID));
 	}
-	
-	public Optional<String> getOrderGroupName(){
+
+	public Optional<String> getOrderGroupName() {
 		return Optional.ofNullable(order.get(LabOrder.FLD_GROUPNAME));
 	}
-	
-	public Optional<String> getLabItemLabel(){
+
+	public Optional<String> getLabItemLabel() {
 		if (hasLabItem()) {
 			if (labItemLabel == null) {
 				if (!resolved && !resolving) {
@@ -147,40 +147,40 @@ public class LaborOrderViewerItem {
 		}
 		return Optional.empty();
 	}
-	
+
 	private static class ResolveLazyFieldsRunnable implements Runnable {
 		private LaborOrderViewerItem item;
 		private StructuredViewer viewer;
-		
-		public ResolveLazyFieldsRunnable(StructuredViewer viewer, LaborOrderViewerItem item){
+
+		public ResolveLazyFieldsRunnable(StructuredViewer viewer, LaborOrderViewerItem item) {
 			this.item = item;
 			this.viewer = viewer;
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			resolveLabItemLabel();
 			resolveLabResultString();
 			item.resolved = true;
 			item.resolving = false;
 			updateViewer();
 		}
-		
-		private void resolveLabItemLabel(){
+
+		private void resolveLabItemLabel() {
 			LabItem labItem = item.order.getLabItem();
 			if (labItem != null) {
 				item.labItemLabel = labItem.getLabel();
 			}
 		}
-		
-		private void resolveLabResultString(){
+
+		private void resolveLabResultString() {
 			LabResult labResult = (LabResult) item.order.getLabResult();
 			if (labResult != null) {
 				item.labResultString = getNonEmptyResultString(labResult);
 			}
 		}
-		
-		private String getNonEmptyResultString(LabResult labResult){
+
+		private String getNonEmptyResultString(LabResult labResult) {
 			String result = labResult.getResult();
 			if (result != null && result.isEmpty()) {
 				return "?"; //$NON-NLS-1$
@@ -195,13 +195,13 @@ public class LaborOrderViewerItem {
 			}
 			return result;
 		}
-		
-		private void updateViewer(){
+
+		private void updateViewer() {
 			Control control = viewer.getControl();
 			if (control != null && !control.isDisposed()) {
 				viewer.getControl().getDisplay().asyncExec(new Runnable() {
 					@Override
-					public void run(){
+					public void run() {
 						if (control.isVisible()) {
 							viewer.refresh(item, true);
 						}

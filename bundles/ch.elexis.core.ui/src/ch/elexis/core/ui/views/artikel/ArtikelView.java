@@ -66,51 +66,50 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 	private IAction importAction /* ,deleteAction */;
 	private ViewMenus viewmenus;
 	private Hashtable<String, ImporterPage> importers;
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout());
 		ctab = new CTabFolder(parent, SWT.NONE);
 		importers = new Hashtable<String, ImporterPage>();
-		
+
 		new FavoritenCTabItem(ctab, SWT.None);
 		addPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE);
-		
+
 		if (ctab.getItemCount() > 0) {
 			ctab.setSelection(0);
 		}
 		ctab.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				CTabItem selected = ctab.getSelection();
-				
+
 				if (selected instanceof FavoritenCTabItem)
 					return;
-				
+
 				if (selected != null) {
 					String t = selected.getText();
-					
+
 					MasterDetailsPage page = (MasterDetailsPage) selected.getControl();
 					if (page == null) {
 						try {
 							IDetailDisplay det = (IDetailDisplay) selected.getData(KEY_DETAIL);
-							IConfigurationElement ce =
-								(IConfigurationElement) selected.getData(KEY_CE);
-							CodeSelectorFactory codeSelectorFactory =
-								(CodeSelectorFactory) ce
+							IConfigurationElement ce = (IConfigurationElement) selected.getData(KEY_CE);
+							CodeSelectorFactory codeSelectorFactory = (CodeSelectorFactory) ce
 									.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
-							if(codeSelectorFactory != null) {
+							if (codeSelectorFactory != null) {
 								CoreUiUtil.injectServices(codeSelectorFactory);
 							}
 							String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 							ImporterPage ip = null;
 							if (a != null) {
-								ip = (ImporterPage) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
+								ip = (ImporterPage) ce
+										.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 								if (ip != null) {
 									importers.put(det.getTitle(), ip);
 								}
 							}
-							
+
 							page = new MasterDetailsPage(ctab, codeSelectorFactory, det);
 							selected.setControl(page);
 							selected.setData(det);
@@ -124,19 +123,19 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 					vc.getControlFieldProvider().setFocus();
 				}
 			}
-			
+
 		});
 		makeActions();
 		viewmenus = new ViewMenus(getViewSite());
 		viewmenus.createMenu(importAction /* ,deleteAction */);
 		GlobalEventDispatcher.addActivationListener(this, this);
-		
+
 	}
-	
-	private void makeActions(){
+
+	private void makeActions() {
 		importAction = new Action(Messages.ArtikelView_importAction) {
 			@Override
-			public void run(){
+			public void run() {
 				CTabItem it = ctab.getSelection();
 				if (it != null) {
 					ImporterPage top = importers.get(it.getText());
@@ -151,34 +150,34 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 						}
 					}
 				}
-				
+
 			}
-			
+
 		};
 	}
-	
+
 	private class ImportDialog extends TitleAreaDialog {
 		ImporterPage importer;
-		
-		public ImportDialog(Shell parentShell, ImporterPage i){
+
+		public ImportDialog(Shell parentShell, ImporterPage i) {
 			super(parentShell);
 			importer = i;
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			return importer.createPage(parent);
 		}
-		
+
 		@Override
-		protected void okPressed(){
+		protected void okPressed() {
 			importer.collect();
 			super.okPressed();
 		}
-		
+
 	}
-	
-	private void addPagesFor(String point){
+
+	private void addPagesFor(String point) {
 		List<IConfigurationElement> list = Extensions.getExtensions(point);
 		IDetailDisplay detailDisplay = null;
 		CodeSelectorFactory codeSelector = null;
@@ -191,28 +190,26 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 				// The first page initializes the screen
 				if (!headerDone) {
 					detailDisplay = (IDetailDisplay) ce
-						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
+							.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 					String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 					ImporterPage ip = null;
 					if (a != null) {
-						ip = (ImporterPage) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
+						ip = (ImporterPage) ce
+								.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 						if (ip != null) {
 							importers.put(detailDisplay.getTitle(), ip);
 						}
 					}
-					codeSelector =
-						(CodeSelectorFactory) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
-					MasterDetailsPage page =
-						new MasterDetailsPage(ctab, codeSelector, detailDisplay);
+					codeSelector = (CodeSelectorFactory) ce
+							.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+					MasterDetailsPage page = new MasterDetailsPage(ctab, codeSelector, detailDisplay);
 					CTabItem ct = new CTabItem(ctab, SWT.None);
 					ct.setText(detailDisplay.getTitle());
 					ct.setControl(page);
 					ct.setData(detailDisplay);
-					page.sash.setWeights(new int[] {
-						30, 70
-					});
+					page.sash.setWeights(new int[] { 30, 70 });
 					headerDone = true;
-					
+
 					if (codeSelector != null) {
 						CoreUiUtil.injectServicesWithContext(codeSelector);
 					}
@@ -222,7 +219,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 					continue;
 				}
 				detailDisplay = (IDetailDisplay) ce
-					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 				CTabItem ct = new CTabItem(ctab, SWT.NONE);
 				ct.setText(detailDisplay.getTitle());
 				ct.setData(KEY_CE, ce);
@@ -235,43 +232,43 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 				MessageBox mb = new MessageBox(getViewSite().getShell(), SWT.ICON_ERROR | SWT.OK);
 				mb.setText(Messages.ArtikelView_errorCaption);
 				mb.setMessage(Messages.ArtikelView_errorText + ce.getName() + ":\n" //$NON-NLS-1$
-					+ ex.getLocalizedMessage());
+						+ ex.getLocalizedMessage());
 				mb.open();
 			}
-			
+
 		}
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		if (ctab.getItemCount() > 0) {
 			ctab.setFocus();
 		}
 	}
-	
+
 	/*
-	 * public void selectionEvent(PersistentObject obj){ CTabItem top = ctab.getSelection(); if (top
-	 * != null) { IDetailDisplay ids = (IDetailDisplay) top.getData(); Class cl =
-	 * ids.getElementClass(); String o1 = obj.getClass().getName(); String o2 = cl.getName(); if
-	 * (o1.equals(o2)) { ids.display(obj); } }
-	 * 
+	 * public void selectionEvent(PersistentObject obj){ CTabItem top =
+	 * ctab.getSelection(); if (top != null) { IDetailDisplay ids = (IDetailDisplay)
+	 * top.getData(); Class cl = ids.getElementClass(); String o1 =
+	 * obj.getClass().getName(); String o2 = cl.getName(); if (o1.equals(o2)) {
+	 * ids.display(obj); } }
+	 *
 	 * }
 	 */
-	
+
 	class MasterDetailsPage extends Composite {
 		SashForm sash;
 		CommonViewer cv;
 		IDetailDisplay detailDisplay;
-		
+
 		ElexisEventListenerImpl eeli_div;
-		
-		MasterDetailsPage(Composite parent, CodeSelectorFactory master, IDetailDisplay detail){
+
+		MasterDetailsPage(Composite parent, CodeSelectorFactory master, IDetailDisplay detail) {
 			super(parent, SWT.NONE);
 			if (PersistentObject.class.isAssignableFrom(detail.getElementClass())) {
-				eeli_div = new ElexisUiEventListenerImpl(detail.getElementClass(),
-					ElexisEvent.EVENT_SELECTED) {
+				eeli_div = new ElexisUiEventListenerImpl(detail.getElementClass(), ElexisEvent.EVENT_SELECTED) {
 					@Override
-					public void runInUi(ElexisEvent ev){
+					public void runInUi(ElexisEvent ev) {
 						detailDisplay.display(ev.getObject());
 					}
 				};
@@ -287,17 +284,17 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 			cv.getConfigurer().getContentProvider().startListening();
 			detailDisplay = detail;
 		}
-		
-		public void dispose(){
+
+		public void dispose() {
 			if (eeli_div != null) {
 				ElexisEventDispatcher.getInstance().removeListeners(eeli_div);
 			}
 		}
-		
+
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		if ((ctab != null) && (!ctab.isDisposed())) {
 			for (CTabItem ct : ctab.getItems()) {
@@ -310,13 +307,14 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 				page.dispose();
 			}
 		}
-		
+
 	}
-	
+
 	/** Vom ActivationListener */
-	public void activation(boolean mode){
+	public void activation(boolean mode) {
 		CTabItem selected = ctab.getSelection();
-		if(selected instanceof FavoritenCTabItem) return;
+		if (selected instanceof FavoritenCTabItem)
+			return;
 		if (selected != null) {
 			MasterDetailsPage page = (MasterDetailsPage) selected.getControl();
 			ViewerConfigurer vc = page.cv.getConfigurer();
@@ -327,14 +325,14 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 			}
 		}
 	}
-	
-	public void visible(boolean mode){
-		System.out.println(this.getClass().getName()+" visible "+mode);
+
+	public void visible(boolean mode) {
+		System.out.println(this.getClass().getName() + " visible " + mode);
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

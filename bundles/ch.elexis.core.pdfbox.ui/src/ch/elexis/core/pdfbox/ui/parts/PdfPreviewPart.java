@@ -23,47 +23,46 @@ import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.ui.e4.events.ElexisUiEventTopics;
 
 public class PdfPreviewPart {
-	
+
 	@Inject
 	private IConfigService configService;
-	
+
 	private Composite previewComposite;
 	private ScrolledComposite scrolledComposite;
 	private PdfPreviewPartLoadHandler pdfPreviewPartLoadHandler;
-	
+
 	@PostConstruct
-	public void postConstruct(Composite parent) throws IOException{
+	public void postConstruct(Composite parent) throws IOException {
 		scrolledComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		previewComposite = new Composite(scrolledComposite, SWT.NONE);
 		scrolledComposite.setContent(previewComposite);
-		
+
 		previewComposite.setLayout(new GridLayout(1, false));
-		
+
 		Label label = new Label(previewComposite, SWT.None);
 		label.setText(Messages.PdfPreview_NoPDFSelected);
-		
+
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
-	
+
 	@Inject
 	@Optional
-	void activePatient(IPatient patient) throws IOException{
+	void activePatient(IPatient patient) throws IOException {
 		if (pdfPreviewPartLoadHandler != null) {
 			pdfPreviewPartLoadHandler.unloadDocument();
 			updatePreview((InputStream) null);
 		}
 	}
-	
+
 	@Inject
 	@Optional
-	void updatePreview(
-		@UIEventTopic(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF) IDocument pdfIDocument){
+	void updatePreview(@UIEventTopic(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF) IDocument pdfIDocument) {
 		updatePreview(pdfIDocument != null ? pdfIDocument.getContent() : null);
 	}
-	
-	private void updatePreview(InputStream pdfInputStream){
+
+	private void updatePreview(InputStream pdfInputStream) {
 		if (pdfPreviewPartLoadHandler != null) {
 			if (pdfInputStream == null) {
 				try {
@@ -74,17 +73,17 @@ public class PdfPreviewPart {
 			}
 			pdfPreviewPartLoadHandler.close();
 		}
-		
+
 		String zoomLevel = configService.getActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
-			Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
-		
-		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfInputStream,
-			Float.valueOf(zoomLevel), previewComposite, scrolledComposite);
-		
+				Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
+
+		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfInputStream, Float.valueOf(zoomLevel),
+				previewComposite, scrolledComposite);
+
 	}
-	
-	public void changeScalingFactor(Float _zoomLevel){
+
+	public void changeScalingFactor(Float _zoomLevel) {
 		pdfPreviewPartLoadHandler.changeScalingFactor(_zoomLevel);
 	}
-	
+
 }

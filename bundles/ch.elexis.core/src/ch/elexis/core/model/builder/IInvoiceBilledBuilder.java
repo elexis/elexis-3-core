@@ -6,10 +6,10 @@ import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.services.IModelService;
 
 public class IInvoiceBilledBuilder extends AbstractBuilder<IInvoiceBilled> {
-	
-	public IInvoiceBilledBuilder(IModelService modelService, IInvoice invoice, IBilled billed){
+
+	public IInvoiceBilledBuilder(IModelService modelService, IInvoice invoice, IBilled billed) {
 		super(modelService);
-		
+
 		object = modelService.create(IInvoiceBilled.class);
 		billed.copy(object);
 		object.setInvoice(invoice);

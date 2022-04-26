@@ -24,83 +24,83 @@ import ch.elexis.core.ui.util.NatTableFactory;
 import ch.elexis.core.ui.util.NatTableWrapper;
 
 public class NoteListComposite extends Composite {
-	
+
 	private NatTableWrapper natTableWrapper;
 	private ToolBarManager toolbarManager;
-	
+
 	private Label title;
-	
+
 	private EventList<String> dataList = new BasicEventList<>();
 	private NotesAdapter adapter;
-	
+
 	public static interface NotesAdapter {
 		public List<String> getNotes();
-		
+
 		public void addNote(String note);
-		
+
 		public void removeNote(String note);
 	}
-	
-	public NoteListComposite(Composite parent, int style){
+
+	public NoteListComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
-		
+
 		title = new Label(this, SWT.NONE);
 		title.setText("Notizen:");
 		title.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 		title.setVisible(false);
-		
+
 		toolbarManager = new ToolBarManager();
 		toolbarManager.add(new AddNoteAction());
 		toolbarManager.add(new RemoveNoteAction());
 		ToolBar toolbar = toolbarManager.createControl(this);
 		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
 		toolbar.setBackground(parent.getBackground());
-		
+
 		natTableWrapper = NatTableFactory.createSingleColumnTable(this,
-			new GlazedListsDataProvider<String>(dataList, new IColumnAccessor<String>() {
+				new GlazedListsDataProvider<String>(dataList, new IColumnAccessor<String>() {
 
-				@Override
-				public int getColumnCount(){
-					return 1;
-				}
+					@Override
+					public int getColumnCount() {
+						return 1;
+					}
 
-				@Override
-				public Object getDataValue(String note, int columnIndex){
-					return note;
-				}
+					@Override
+					public Object getDataValue(String note, int columnIndex) {
+						return note;
+					}
 
-				@Override
-				public void setDataValue(String note, int arg1, Object arg2){
-					// setting data values is not enabled here.
-				}
-			}), null);
+					@Override
+					public void setDataValue(String note, int arg1, Object arg2) {
+						// setting data values is not enabled here.
+					}
+				}), null);
 		GridData tableGd = new GridData(GridData.FILL_BOTH);
 		tableGd.horizontalSpan = 2;
 		natTableWrapper.getNatTable().setLayoutData(tableGd);
 	}
-	
-	public void setInput(NotesAdapter adapter){
+
+	public void setInput(NotesAdapter adapter) {
 		this.adapter = adapter;
 		dataList.clear();
 		dataList.addAll(adapter.getNotes());
 		natTableWrapper.getNatTable().refresh();
 	}
-	
+
 	private class AddNoteAction extends Action {
-		
+
 		@Override
-		public ImageDescriptor getImageDescriptor(){
+		public ImageDescriptor getImageDescriptor() {
 			return Images.IMG_NEW.getImageDescriptor();
 		}
-		
+
 		@Override
-		public String getText(){
+		public String getText() {
 			return "hinzufügen";
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			InputDialog input = new InputDialog(getShell(), "Notiz", "Notiz erfassen", "", null);
 			if (input.open() == InputDialog.OK) {
 				if (input.getValue() != null && !input.getValue().isEmpty()) {
@@ -111,21 +111,21 @@ public class NoteListComposite extends Composite {
 			}
 		}
 	}
-	
+
 	private class RemoveNoteAction extends Action {
-		
+
 		@Override
-		public ImageDescriptor getImageDescriptor(){
+		public ImageDescriptor getImageDescriptor() {
 			return Images.IMG_DELETE.getImageDescriptor();
 		}
-		
+
 		@Override
-		public String getText(){
+		public String getText() {
 			return "entfernen";
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			ISelection selection = natTableWrapper.getSelection();
 			if (selection instanceof StructuredSelection && !selection.isEmpty()) {
 				@SuppressWarnings("unchecked")
@@ -138,8 +138,8 @@ public class NoteListComposite extends Composite {
 			}
 		}
 	}
-	
-	public void showTitle(boolean value){
+
+	public void showTitle(boolean value) {
 		title.setVisible(value);
 		layout();
 	}

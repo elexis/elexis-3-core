@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.dialogs;
@@ -38,28 +38,26 @@ import ch.elexis.data.Artikel;
 
 public class ArtikelDetailDialog extends TitleAreaDialog {
 	protected IArticle article;
-	
-	public ArtikelDetailDialog(Shell shell, IPersistentObject o){
+
+	public ArtikelDetailDialog(Shell shell, IPersistentObject o) {
 		super(shell);
-		Optional<Identifiable> identifiable =
-			StoreToStringServiceHolder.get().loadFromString(o.storeToString());
+		Optional<Identifiable> identifiable = StoreToStringServiceHolder.get().loadFromString(o.storeToString());
 		if (identifiable.isPresent() && identifiable.get() instanceof IArticle) {
 			article = (IArticle) identifiable.get();
 		} else {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "Fehler",
-				"Der Artikel [" + o.getLabel() + "] konnte nicht geladen werden.");
-			throw new IllegalStateException(
-				"Could not load identifiable for article [" + o.getLabel() + "]");
+					"Der Artikel [" + o.getLabel() + "] konnte nicht geladen werden.");
+			throw new IllegalStateException("Could not load identifiable for article [" + o.getLabel() + "]");
 		}
 	}
-	
-	public ArtikelDetailDialog(Shell shell, IArticle article){
+
+	public ArtikelDetailDialog(Shell shell, IArticle article) {
 		super(shell);
 		this.article = article;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		ScrolledComposite ret = new ScrolledComposite(parent, SWT.V_SCROLL);
 		Composite cnt = new Composite(ret, SWT.NONE);
 		ret.setContent(cnt);
@@ -69,37 +67,35 @@ public class ArtikelDetailDialog extends TitleAreaDialog {
 		cnt.setLayout(new FillLayout());
 		AutoForm tblArtikel = null;
 		if (article instanceof Identifiable) {
-			tblArtikel = new LabeledInputField.AutoForm(cnt,
-				Artikeldetail.getModelFieldDefs(parent.getShell()));
+			tblArtikel = new LabeledInputField.AutoForm(cnt, Artikeldetail.getModelFieldDefs(parent.getShell()));
 		} else {
-			tblArtikel =
-				new LabeledInputField.AutoForm(cnt, Artikeldetail.getFieldDefs(parent.getShell()));
+			tblArtikel = new LabeledInputField.AutoForm(cnt, Artikeldetail.getFieldDefs(parent.getShell()));
 		}
 		tblArtikel.reload(article);
 		ret.setMinSize(cnt.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		return ret;
 	}
-	
+
 	@Override
-	protected Point getInitialSize(){
+	protected Point getInitialSize() {
 		Point orig = super.getInitialSize();
 		orig.y += orig.y >> 2;
 		return orig;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		super.create();
-		getShell().setText(Messages.ArtikelDetailDialog_articleDetail); //$NON-NLS-1$
+		getShell().setText(Messages.ArtikelDetailDialog_articleDetail); // $NON-NLS-1$
 		setTitle(article.getLabel());
-		setMessage(Messages.ArtikelDetailDialog_enterArticleDetails); //$NON-NLS-1$
+		setMessage(Messages.ArtikelDetailDialog_enterArticleDetails); // $NON-NLS-1$
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		ElexisEventDispatcher.reload(Artikel.class);
 		super.okPressed();
 	}
-	
+
 }

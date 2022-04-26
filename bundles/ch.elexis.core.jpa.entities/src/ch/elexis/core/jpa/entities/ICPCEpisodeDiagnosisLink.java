@@ -17,17 +17,16 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "CH_ELEXIS_ICPC_EPISODES_DIAGNOSES_LINK")
 @EntityListeners(EntityWithIdListener.class)
-public class ICPCEpisodeDiagnosisLink extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted {
+public class ICPCEpisodeDiagnosisLink extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
@@ -35,53 +34,53 @@ public class ICPCEpisodeDiagnosisLink extends AbstractEntityWithId
 	@ManyToOne()
 	@JoinColumn(name = "Episode")
 	private ICPCEpisode episode;
-	
+
 	@Column(length = 80, name = "Diagnosis")
 	private String diagnosis;
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
-	public ICPCEpisode getEpisode(){
+
+	public ICPCEpisode getEpisode() {
 		return episode;
 	}
-	
-	public void setEpisode(ICPCEpisode episode){
+
+	public void setEpisode(ICPCEpisode episode) {
 		this.episode = episode;
 	}
-	
-	public String getDiagnosis(){
+
+	public String getDiagnosis() {
 		return diagnosis;
 	}
-	
-	public void setDiagnosis(String diagnosis){
+
+	public void setDiagnosis(String diagnosis) {
 		this.diagnosis = diagnosis;
 	}
 }

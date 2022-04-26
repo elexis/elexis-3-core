@@ -49,34 +49,33 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.TextTemplateComposite;
 
 public class TextTemplates extends PreferencePage implements IWorkbenchPreferencePage {
-	
+
 	private Composite parentComposite;
 	private ComboViewer templatesViewer;
-	
+
 	private TextTemplateComposite templateComposite;
 	private Button defaultBtn;
-	
+
 	@Override
-	public void init(IWorkbench workbench){
-		
+	public void init(IWorkbench workbench) {
+
 	}
-	
+
 	@Override
-	protected Control createContents(Composite parent){
+	protected Control createContents(Composite parent) {
 		parentComposite = new Composite(parent, SWT.NONE);
 		parentComposite.setLayout(new GridLayout(2, false));
-		
+
 		templatesViewer = new ComboViewer(parentComposite);
 		templatesViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		templatesViewer.setContentProvider(new ArrayContentProvider());
 		templatesViewer.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof ITextTemplate) {
-					return ((ITextTemplate) element).getName()
-						+ (((ITextTemplate) element).getMandator() != null
-								? " (" + ((ITextTemplate) element).getMandator().getLabel() + ")"
-								: "");
+					return ((ITextTemplate) element).getName() + (((ITextTemplate) element).getMandator() != null
+							? " (" + ((ITextTemplate) element).getMandator().getLabel() + ")"
+							: "");
 				}
 				return super.getText(element);
 			}
@@ -84,15 +83,15 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 		updateTemplatesCombo();
 		templatesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getStructuredSelection() != null
-					&& event.getStructuredSelection().getFirstElement() instanceof ITextTemplate) {
+						&& event.getStructuredSelection().getFirstElement() instanceof ITextTemplate) {
 					templateComposite.save();
 					ITextTemplate selectedTemplate = (ITextTemplate) event.getStructuredSelection().getFirstElement();
 					templateComposite.setTemplate(selectedTemplate);
-					String defaultTemplateId = ConfigServiceHolder.get().get(PreferenceConstants.PREF_DEFAULT_TEMPLATE, null);
-					if (defaultTemplateId != null
-						&& selectedTemplate.getId().equals(defaultTemplateId)) {
+					String defaultTemplateId = ConfigServiceHolder.get().get(PreferenceConstants.PREF_DEFAULT_TEMPLATE,
+							null);
+					if (defaultTemplateId != null && selectedTemplate.getId().equals(defaultTemplateId)) {
 						defaultBtn.setSelection(true);
 					} else {
 						defaultBtn.setSelection(false);
@@ -103,21 +102,21 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 				}
 			}
 		});
-		
+
 		ToolBar accountsTool = new ToolBar(parentComposite, SWT.NONE);
-		
+
 		ToolBarManager accountsToolMgr = new ToolBarManager(accountsTool);
 		accountsToolMgr.add(new AddTextTemplateAction());
 		accountsToolMgr.add(new RemoveTextTemplateAction());
 		accountsToolMgr.update(true);
-		
+
 		templateComposite = new TextTemplateComposite(parentComposite, SWT.NONE);
 		templateComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		
+
 		Composite buttonComposite = new Composite(parentComposite, SWT.NONE);
 		buttonComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		buttonComposite.setLayout(new RowLayout());
-		
+
 		Button logoBtn = new Button(buttonComposite, SWT.PUSH);
 		if (loadImage("elexismailpraxislogo").isPresent()) {
 			logoBtn.setText("Praxis Logo überschreiben");
@@ -126,102 +125,97 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 		}
 		logoBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(getShell());
 				String filename = dialog.open();
 				if (filename != null) {
 					File file = new File(filename);
 					if (file.exists()) {
-						IImage image = loadImage("elexismailpraxislogo")
-							.orElse(createImage());
+						IImage image = loadImage("elexismailpraxislogo").orElse(createImage());
 						try (FileInputStream in = new FileInputStream(file);
 								ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 							IOUtils.copy(in, out);
 							out.flush();
 							image.setImage(out.toByteArray());
-							image.setTitle("elexismailpraxislogo."
-								+ FilenameUtils.getExtension(file.getName()));
+							image.setTitle("elexismailpraxislogo." + FilenameUtils.getExtension(file.getName()));
 							CoreModelServiceHolder.get().save(image);
 							logoBtn.setText("Praxis Logo überschreiben");
 						} catch (IOException e1) {
 							MessageDialog.openError(getShell(), "Fehler",
-								"Die Datei konnte nicht als Praxis Logo importiert werden.");
-							LoggerFactory.getLogger(getClass()).error("Error importing praxislogo",
-								e);
+									"Die Datei konnte nicht als Praxis Logo importiert werden.");
+							LoggerFactory.getLogger(getClass()).error("Error importing praxislogo", e);
 						}
 					}
 				}
 			}
-			
+
 		});
 
 		defaultBtn = new Button(buttonComposite, SWT.CHECK);
 		defaultBtn.setText("Als Standard Vorlage verwenden");
 		defaultBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection selectedTemplate = templatesViewer.getStructuredSelection();
-				if (selectedTemplate != null
-					&& selectedTemplate.getFirstElement() instanceof ITextTemplate)
+				if (selectedTemplate != null && selectedTemplate.getFirstElement() instanceof ITextTemplate)
 					ConfigServiceHolder.get().set(PreferenceConstants.PREF_DEFAULT_TEMPLATE,
-						((ITextTemplate) selectedTemplate.getFirstElement()).getId());
+							((ITextTemplate) selectedTemplate.getFirstElement()).getId());
 			}
 		});
-		
+
 		return parentComposite;
 	}
-	
-	private IImage createImage(){
+
+	private IImage createImage() {
 		IImage image = CoreModelServiceHolder.get().create(IImage.class);
 		image.setPrefix("ch.elexis.core.mail");
 		return image;
 	}
-	
-	private Optional<IImage> loadImage(String imageName){
+
+	private Optional<IImage> loadImage(String imageName) {
 		IQuery<IImage> query = CoreModelServiceHolder.get().getQuery(IImage.class);
 		query.and("prefix", COMPARATOR.EQUALS, "ch.elexis.core.mail");
 		query.and("title", COMPARATOR.LIKE, imageName + "%");
 		return query.executeSingleResult();
 	}
-	
+
 	@Override
-	public boolean performOk(){
+	public boolean performOk() {
 		templateComposite.save();
 		return super.performOk();
 	}
-	
-	private void updateTemplatesCombo(){
+
+	private void updateTemplatesCombo() {
 		templatesViewer.setInput(MailTextTemplate.load());
 		templatesViewer.refresh();
 	}
-	
+
 	private class AddTextTemplateAction extends Action {
 		@Override
-		public ImageDescriptor getImageDescriptor(){
+		public ImageDescriptor getImageDescriptor() {
 			return Images.IMG_NEW.getImageDescriptor();
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			TextTemplateDialog dialog = new TextTemplateDialog(getShell());
 			if (dialog.open() == Window.OK) {
-				ITextTemplate template = new MailTextTemplate.Builder()
-					.mandator(dialog.getMandator()).name(dialog.getName())
-					.buildAndSave();
+				ITextTemplate template = new MailTextTemplate.Builder().mandator(dialog.getMandator())
+						.name(dialog.getName()).buildAndSave();
 				updateTemplatesCombo();
 				templatesViewer.setSelection(new StructuredSelection(template));
 			}
 		}
 	}
-	
+
 	private class RemoveTextTemplateAction extends Action {
 		@Override
-		public ImageDescriptor getImageDescriptor(){
+		public ImageDescriptor getImageDescriptor() {
 			return Images.IMG_DELETE.getImageDescriptor();
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			IStructuredSelection selection = templatesViewer.getStructuredSelection();
 			if (selection != null && selection.getFirstElement() instanceof ITextTemplate) {
 				templatesViewer.setSelection(new StructuredSelection());

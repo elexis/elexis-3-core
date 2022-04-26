@@ -11,7 +11,7 @@ import ch.elexis.core.model.LabOrderState;
 public class LabOrderStateConverter implements AttributeConverter<LabOrderState, String> {
 
 	@Override
-	public String convertToDatabaseColumn(LabOrderState attribute){
+	public String convertToDatabaseColumn(LabOrderState attribute) {
 		if (attribute != null) {
 			return Integer.toString(attribute.getValue());
 		}
@@ -19,7 +19,7 @@ public class LabOrderStateConverter implements AttributeConverter<LabOrderState,
 	}
 
 	@Override
-	public LabOrderState convertToEntityAttribute(String dbData){
+	public LabOrderState convertToEntityAttribute(String dbData) {
 		if (StringUtils.isEmpty(dbData)) {
 			return LabOrderState.ORDERED;
 		}

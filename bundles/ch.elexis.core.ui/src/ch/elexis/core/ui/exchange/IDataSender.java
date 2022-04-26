@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.exchange;
@@ -16,38 +16,35 @@ import ch.elexis.core.ui.exchange.elements.XChangeElement;
 import ch.elexis.data.PersistentObject;
 
 /**
- * A generic mediator between Elexis Objects and XML-Files. Any number of Objects can be sent to the
- * IDataSender, finishing with a call to finalizeExport. The ultimate destination depends on the
- * implementation
- * 
+ * A generic mediator between Elexis Objects and XML-Files. Any number of
+ * Objects can be sent to the IDataSender, finishing with a call to
+ * finalizeExport. The ultimate destination depends on the implementation
+ *
  * @author Gerry
- * 
+ *
  */
 public interface IDataSender {
 	/**
 	 * Prepare an object for export
-	 * 
-	 * @param output
-	 *            an object this IDataSender can handle
+	 *
+	 * @param output an object this IDataSender can handle
 	 * @return the XML element created
-	 * @throws XChangeException
-	 *             if an error occurred
+	 * @throws XChangeException if an error occurred
 	 */
 	public XChangeElement store(Object output) throws XChangeException;
-	
+
 	/**
-	 * Send the stored objects to this IDataSender's ultimate destinaion (e.g. file, URL). The
-	 * IDataTransfer is invalid after finalizing.
-	 * 
+	 * Send the stored objects to this IDataSender's ultimate destinaion (e.g. file,
+	 * URL). The IDataTransfer is invalid after finalizing.
+	 *
 	 * @throws XChangeException
 	 */
 	public void finalizeExport() throws XChangeException;
-	
+
 	/**
 	 * Ask if this IDataSender can handle a certain type
-	 * 
-	 * @param clazz
-	 *            the class in question
+	 *
+	 * @param clazz the class in question
 	 * @return true if it can handle objects of that class.
 	 */
 	public boolean canHandle(Class<? extends PersistentObject> clazz);

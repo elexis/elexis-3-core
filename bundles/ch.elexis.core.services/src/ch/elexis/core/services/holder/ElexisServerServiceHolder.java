@@ -7,15 +7,15 @@ import ch.elexis.core.services.IElexisServerService;
 
 @Component
 public class ElexisServerServiceHolder {
-	
+
 	private static IElexisServerService elexisServerService;
-	
+
 	@Reference
-	public void setElexisServerService(IElexisServerService elexisServerService){
+	public void setElexisServerService(IElexisServerService elexisServerService) {
 		ElexisServerServiceHolder.elexisServerService = elexisServerService;
 	}
-	
-	public static IElexisServerService get(){
+
+	public static IElexisServerService get() {
 		return elexisServerService;
 	}
 }

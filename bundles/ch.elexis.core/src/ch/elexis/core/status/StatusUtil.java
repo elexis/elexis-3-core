@@ -79,7 +79,7 @@ public class StatusUtil {
 
 	/**
 	 * Create a Status.ERROR telling the user to search the logfile for explanation.
-	 * 
+	 *
 	 * @param pluginId
 	 * @return
 	 */
@@ -90,7 +90,7 @@ public class StatusUtil {
 	/**
 	 * Log a status to the corresponding log-level; does nothing if
 	 * {@link Status#isOK()}
-	 * 
+	 *
 	 * @param prependMessage              an optional message to prepend the status
 	 *                                    message
 	 * @param log
@@ -155,7 +155,7 @@ public class StatusUtil {
 
 	/**
 	 * convenience method, includes exception if available
-	 * 
+	 *
 	 * @param log
 	 * @param status
 	 * @see #logStatus(String, Logger, IStatus, boolean, boolean)
@@ -166,7 +166,7 @@ public class StatusUtil {
 
 	/**
 	 * convenience method, includes exception if available
-	 * 
+	 *
 	 * @param prependMessage
 	 * @param log
 	 * @param status
@@ -178,7 +178,7 @@ public class StatusUtil {
 
 	/**
 	 * convenience method, includes exception if available
-	 * 
+	 *
 	 * @param log
 	 * @param status
 	 * @param includeExceptionIfAvailable

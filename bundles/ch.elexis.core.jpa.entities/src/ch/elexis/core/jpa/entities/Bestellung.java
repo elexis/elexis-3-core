@@ -26,64 +26,64 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 public class Bestellung extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
+
 	@Column(length = 8, name = "DATUM")
 	private LocalDate date;
-	
-	public LocalDate getDate(){
+
+	public LocalDate getDate() {
 		return date;
 	}
-	
-	public void setDate(LocalDate date){
+
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bestellung", cascade = CascadeType.REFRESH)
 	private List<BestellungEntry> entries;
-	
-	public List<BestellungEntry> getEntries(){
+
+	public List<BestellungEntry> getEntries() {
 		if (entries == null) {
 			entries = new ArrayList<>();
 		}

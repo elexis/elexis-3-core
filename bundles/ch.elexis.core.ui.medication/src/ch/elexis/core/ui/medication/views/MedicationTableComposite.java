@@ -30,39 +30,38 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 
 public class MedicationTableComposite extends Composite {
-	
+
 	private static Logger log = LoggerFactory.getLogger(MedicationTableComposite.class);
 	private TableViewer viewer;
 	private TableColumnLayout layout;
-	
+
 	private MedicationComposite medicationComposite;
 	private List<IPrescription> pendingInput;
-	
-	public MedicationTableComposite(Composite parent, int style){
+
+	public MedicationTableComposite(Composite parent, int style) {
 		super(parent, style);
-		
+
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		layout = new TableColumnLayout();
 		setLayout(layout);
-		
+
 		viewer = new TableViewer(this, SWT.FULL_SELECTION | SWT.MULTI);
 		viewer.getTable().setHeaderVisible(true);
 		ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.NO_RECREATE);
-		
+
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent e){
-				IStructuredSelection is =
-					(IStructuredSelection) viewer.getSelection();
+			public void selectionChanged(SelectionChangedEvent e) {
+				IStructuredSelection is = (IStructuredSelection) viewer.getSelection();
 				MedicationTableViewerItem presc = (MedicationTableViewerItem) is.getFirstElement();
-				
+
 				// set last disposition information
 				Identifiable identifiable = (presc != null) ? presc.getLastDisposed() : null;
 				medicationComposite.setLastDisposal(identifiable);
-				
+
 				// set writable databinding value
 				medicationComposite.setSelectedMedication(presc);
-				if(presc != null) {
+				if (presc != null) {
 					IPrescription selectedObj = presc.getPrescription();
 					ContextServiceHolder.get().getRootContext().setTyped(selectedObj);
 				} else {
@@ -72,52 +71,49 @@ public class MedicationTableComposite extends Composite {
 		});
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(DoubleClickEvent event){
+			public void doubleClick(DoubleClickEvent event) {
 				StructuredSelection ss = (StructuredSelection) event.getSelection();
 				if (ss != null && !ss.isEmpty()) {
 					try {
-					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getService(IHandlerService.class);
-						handlerService.executeCommand(
-							"ch.elexis.core.ui.medication.OpenArticelDetailDialog", null);
-					} catch (ExecutionException | NotDefinedException | NotEnabledException
-							| NotHandledException e) {
-						MessageDialog.openError(getShell(), "Fehler",
-							"Eigenschaften konnten nicht geöffnet werden.");
+						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+								.getActiveWorkbenchWindow().getService(IHandlerService.class);
+						handlerService.executeCommand("ch.elexis.core.ui.medication.OpenArticelDetailDialog", null);
+					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
+						MessageDialog.openError(getShell(), "Fehler", "Eigenschaften konnten nicht geöffnet werden.");
 						log.error("cannot open article detail dialog", e);
 					}
 				}
 			}
-			
+
 		});
-		
+
 		MedicationViewerHelper.createTypeColumn(viewer, layout, 0);
 		MedicationViewerHelper.createArticleColumn(viewer, layout, 1);
 		MedicationViewerHelper.createDosageColumn(viewer, layout, 2);
 		MedicationViewerHelper.createBeginColumn(viewer, layout, 3);
 		MedicationViewerHelper.createIntakeCommentColumn(viewer, layout, 4);
 		MedicationViewerHelper.createMandantColumn(viewer, layout, 7);
-		
+
 		viewer.setContentProvider(new MedicationTableViewerContentProvider(viewer));
 	}
-	
-	public void setMedicationComposite(MedicationComposite medicationComposite){
+
+	public void setMedicationComposite(MedicationComposite medicationComposite) {
 		this.medicationComposite = medicationComposite;
 	}
-	
-	public TableViewer getTableViewer(){
+
+	public TableViewer getTableViewer() {
 		return viewer;
 	}
-	
-	public void setInput(List<IPrescription> medicationInput){
+
+	public void setInput(List<IPrescription> medicationInput) {
 		if (isVisible()) {
 			viewer.setInput(medicationInput);
 		} else {
 			pendingInput = medicationInput;
 		}
 	}
-	
-	public void setPendingInput(){
+
+	public void setPendingInput() {
 		if (pendingInput != null) {
 			viewer.setInput(pendingInput);
 			pendingInput = null;

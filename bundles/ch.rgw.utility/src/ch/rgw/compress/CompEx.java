@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  *******************************************************************************/
@@ -36,15 +36,15 @@ import ch.rgw.tools.StringTool;
  */
 public class CompEx {
 	public static final Logger log = LoggerFactory.getLogger(CompEx.class);
-	
+
 	public static final int NONE = 0;
 	public static final int GLZ = 1 << 29;
 	public static final int RLL = 2 << 29;
 	public static final int HUFF = 3 << 29;
 	public static final int BZIP2 = 4 << 29;
 	public static final int ZIP = 5 << 29;
-	
-	public static final byte[] Compress(String in, int mode){
+
+	public static final byte[] Compress(String in, int mode) {
 		if (StringTool.isNothing(in)) {
 			return null;
 		}
@@ -55,16 +55,16 @@ public class CompEx {
 			return null;
 		}
 	}
-	
-	public static final byte[] Compress(byte[] in, int mode){
+
+	public static final byte[] Compress(byte[] in, int mode) {
 		if (in == null) {
 			return null;
 		}
 		ByteArrayInputStream bais = new ByteArrayInputStream(in);
 		return Compress(bais, mode);
 	}
-	
-	public static final byte[] Compress(InputStream in, int mode){
+
+	public static final byte[] Compress(InputStream in, int mode) {
 		try {
 			switch (mode) {
 			case GLZ:
@@ -73,15 +73,15 @@ public class CompEx {
 				return CompressBZ2(in);
 			case ZIP:
 				return CompressZIP(in);
-				// case HUFF: return CompressHuff(in);
+			// case HUFF: return CompressHuff(in);
 			}
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 		}
 		return null;
 	}
-	
-	public static byte[] CompressGLZ(InputStream in) throws IOException{
+
+	public static byte[] CompressGLZ(InputStream in) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buf = new byte[4];
 		// BinConverter.intToByteArray(0,buf,0);
@@ -93,10 +93,10 @@ public class CompEx {
 		total |= GLZ;
 		BinConverter.intToByteArray((int) total, ret, 0);
 		return ret;
-		
+
 	}
-	
-	public static byte[] CompressBZ2(InputStream in) throws Exception{
+
+	public static byte[] CompressBZ2(InputStream in) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buf = new byte[8192];
 		baos.write(buf, 0, 4); // Länge des Originalstroms
@@ -116,8 +116,8 @@ public class CompEx {
 		BinConverter.intToByteArray(total, ret, 0);
 		return ret;
 	}
-	
-	public static byte[] CompressZIP(InputStream in) throws Exception{
+
+	public static byte[] CompressZIP(InputStream in) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buf = new byte[8192];
 		baos.write(buf, 0, 4); // Länge des Originalstroms
@@ -138,16 +138,16 @@ public class CompEx {
 		BinConverter.intToByteArray((int) total, ret, 0);
 		return ret;
 	}
-	
-	public static byte[] expand(byte[] in){
+
+	public static byte[] expand(byte[] in) {
 		if (in == null) {
 			return null;
 		}
 		ByteArrayInputStream bais = new ByteArrayInputStream(in);
 		return expand(bais);
 	}
-	
-	public static byte[] expand(InputStream in){
+
+	public static byte[] expand(InputStream in) {
 		ByteArrayOutputStream baos;
 		byte[] siz = new byte[4];
 		try {
@@ -166,7 +166,7 @@ public class CompEx {
 				return empty.getBytes();
 			}
 			byte[] ret = new byte[(int) size];
-			
+
 			switch ((int) typ) {
 			case BZIP2:
 				CBZip2InputStream bzi = new CBZip2InputStream(in);
@@ -175,7 +175,7 @@ public class CompEx {
 				while ((l = bzi.read(ret, off, ret.length - off)) > 0) {
 					off += l;
 				}
-				
+
 				bzi.close();
 				in.close();
 				return ret;
@@ -201,7 +201,7 @@ public class CompEx {
 				while ((l = zi.read(ret, off, ret.length - off)) > 0) {
 					off += l;
 				}
-				
+
 				zi.close();
 				return ret;
 			default:
@@ -211,7 +211,7 @@ public class CompEx {
 			ExHandler.handle(ex);
 			return null;
 		}
-		
+
 	}
-	
+
 }

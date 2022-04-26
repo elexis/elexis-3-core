@@ -23,71 +23,69 @@ import ch.elexis.core.ui.util.IKonsExtension;
 
 public class KonsExtension implements IKonsExtension {
 	IRichTextDisplay mine;
-	
+
 	public static final String EXTENSION_ID = "ch.elexis.core.mail.ui.cons";
-	
+
 	@Override
-	public String connect(IRichTextDisplay tf){
+	public String connect(IRichTextDisplay tf) {
 		mine = tf;
 		return EXTENSION_ID;
 	}
-	
+
 	@Override
-	public boolean doLayout(StyleRange styleRange, String provider, String id){
+	public boolean doLayout(StyleRange styleRange, String provider, String id) {
 		styleRange.background = CoreUiUtil.getColorForString("a6ffaa");
 		return true;
 	}
-	
+
 	@Override
-	public boolean doXRef(String refProvider, String refID){
-		Optional<ITaskDescriptor> taskDescriptor =
-			TaskServiceHolder.get().findTaskDescriptorByIdOrReferenceId(refID);
+	public boolean doXRef(String refProvider, String refID) {
+		Optional<ITaskDescriptor> taskDescriptor = TaskServiceHolder.get().findTaskDescriptorByIdOrReferenceId(refID);
 		taskDescriptor.ifPresent(descriptor -> {
 			// open mail dialog
 			// now try to call the send mail task command
 			try {
-				ICommandService commandService =
-					(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-				Command sendMailTaskCommand =
-					commandService.getCommand("ch.elexis.core.mail.ui.sendMailTask");
-				
+				ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+						.getService(ICommandService.class);
+				Command sendMailTaskCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMailTask");
+
 				HashMap<String, String> params = new HashMap<String, String>();
 				params.put("ch.elexis.core.mail.ui.sendMailTaskDescriptorId", refID);
-				ParameterizedCommand parametrizedCommmand =
-					ParameterizedCommand.generateCommand(sendMailTaskCommand, params);
-				PlatformUI.getWorkbench()
-					.getService(IHandlerService.class).executeCommand(parametrizedCommmand, null);
+				ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(sendMailTaskCommand,
+						params);
+				PlatformUI.getWorkbench().getService(IHandlerService.class).executeCommand(parametrizedCommmand, null);
 			} catch (Exception ex) {
-				LoggerFactory.getLogger(getClass()).warn("Send mail Task command not available",
-					ex);
+				LoggerFactory.getLogger(getClass()).warn("Send mail Task command not available", ex);
 			}
 		});
 		return true;
 	}
-	
+
 	@Override
-	public String updateXRef(String provider, String refID){
+	public String updateXRef(String provider, String refID) {
 		Optional<ITaskDescriptor> taskDescriptor = TaskServiceHolder.get().findTaskDescriptorByIdOrReferenceId(refID);
 		if (taskDescriptor.isPresent()) {
 			return EncounterUtil.getTaskDescriptorText(taskDescriptor.get());
 		}
 		return null;
 	}
-	
+
 	@Override
-	public void insert(Object o, int pos){
+	public void insert(Object o, int pos) {
 		// no d&d ...
 	}
-	
+
 	@Override
-	public IAction[] getActions(){
+	public IAction[] getActions() {
 		return null;
 	}
-	
+
 	@Override
-	public void removeXRef(String refProvider, String refID){}
-	
+	public void removeXRef(String refProvider, String refID) {
+	}
+
 	@Override
-	public void setInitializationData(IConfigurationElement config, String propertyName,
-		Object data) throws CoreException{}
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+			throws CoreException {
+	}
 }

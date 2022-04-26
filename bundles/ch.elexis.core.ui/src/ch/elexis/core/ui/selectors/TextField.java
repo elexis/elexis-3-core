@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.selectors;
 
@@ -21,8 +21,8 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.ui.UiDesk;
 
 public class TextField extends ActiveControl {
-	
-	public TextField(Composite parent, int displayBits, String displayName){
+
+	public TextField(Composite parent, int displayBits, String displayName) {
 		super(parent, displayBits, displayName);
 		int swtoption = SWT.BORDER;
 		if (isReadonly()) {
@@ -30,32 +30,31 @@ public class TextField extends ActiveControl {
 		}
 		setControl(new Text(this, swtoption));
 		getTextControl().addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e){
+			public void modifyText(ModifyEvent e) {
 				textContents = getTextControl().getText();
 				fireChangedEvent();
 			}
 		});
 	}
-	
-	public TextField(Composite parent, int displayBits, String displayName, int listenerType,
-		Listener listener){
+
+	public TextField(Composite parent, int displayBits, String displayName, int listenerType, Listener listener) {
 		this(parent, displayBits, displayName);
 		if (listener != null) {
 			getTextControl().addListener(listenerType, listener);
 		}
 	}
-	
-	public Text getTextControl(){
+
+	public Text getTextControl() {
 		return (Text) ctl;
 	}
-	
+
 	@Override
-	public void push(){
+	public void push() {
 		UiDesk.syncExec(new Runnable() {
-			public void run(){
+			public void run() {
 				getTextControl().setText(textContents);
 			}
 		});
 	}
-	
+
 }

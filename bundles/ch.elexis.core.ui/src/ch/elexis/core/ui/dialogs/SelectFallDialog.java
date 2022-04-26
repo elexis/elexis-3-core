@@ -35,64 +35,63 @@ public class SelectFallDialog extends TitleAreaDialog {
 	Fall[] faelle;
 	public Fall result;
 	List list;
-	private UpdateFallListListener updateFallListener =
-		new UpdateFallListListener(Fall.class, 0xff);
-		
-	public SelectFallDialog(Shell shell){
+	private UpdateFallListListener updateFallListener = new UpdateFallListListener(Fall.class, 0xff);
+
+	public SelectFallDialog(Shell shell) {
 		super(shell);
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.None);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		GridLayout gl_ret = new GridLayout(1, false);
 		gl_ret.marginWidth = 0;
 		gl_ret.marginHeight = 0;
 		ret.setLayout(gl_ret);
-		
+
 		list = new List(ret, SWT.BORDER);
 		list.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		
+
 		reloadFaelleList();
-		
+
 		ToolBarManager tbManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
 		tbManager.add(GlobalActions.neuerFallAction);
 		tbManager.createControl(ret);
-		
+
 		ElexisEventDispatcher.getInstance().addListeners(updateFallListener);
-		
+
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
-		setTitle(Messages.SelectFallDialog_selectFall); //$NON-NLS-1$
-		setMessage(Messages.SelectFallDialog_pleaseSelectCase); //$NON-NLS-1$
-		getShell().setText(Messages.SelectFallDialog_Cases); //$NON-NLS-1$
+		setTitle(Messages.SelectFallDialog_selectFall); // $NON-NLS-1$
+		setMessage(Messages.SelectFallDialog_pleaseSelectCase); // $NON-NLS-1$
+		getShell().setText(Messages.SelectFallDialog_Cases); // $NON-NLS-1$
 	}
-	
+
 	@Override
-	public void okPressed(){
+	public void okPressed() {
 		int sel = list.getSelectionIndex();
 		if (sel == -1) {
 			result = null;
 		} else {
 			result = faelle[sel];
 		}
-		
+
 		ElexisEventDispatcher.getInstance().removeListeners(updateFallListener);
 		super.okPressed();
 	}
-	
+
 	@Override
-	protected void cancelPressed(){
+	protected void cancelPressed() {
 		ElexisEventDispatcher.getInstance().removeListeners(updateFallListener);
 		super.cancelPressed();
 	}
-	
-	private void reloadFaelleList(){
+
+	private void reloadFaelleList() {
 		list.removeAll();
 		Patient sp = ElexisEventDispatcher.getSelectedPatient();
 		faelle = (sp != null) ? sp.getFaelle() : new Fall[] {};
@@ -100,17 +99,17 @@ public class SelectFallDialog extends TitleAreaDialog {
 			list.add(f.getLabel());
 		}
 	}
-	
+
 	private class UpdateFallListListener extends ElexisUiEventListenerImpl {
-		
-		UpdateFallListListener(final Class<?> clazz, int mode){
+
+		UpdateFallListListener(final Class<?> clazz, int mode) {
 			super(clazz, mode);
 		}
-		
+
 		@Override
-		public void runInUi(ElexisEvent ev){
+		public void runInUi(ElexisEvent ev) {
 			reloadFaelleList();
 		}
 	}
-	
+
 }

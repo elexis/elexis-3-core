@@ -13,35 +13,30 @@ import ch.elexis.core.services.INamedQuery;
 @Component
 public class ModelUtil {
 	private static IModelService diagnosisModelService;
-	
-	@Reference(target = "(" + IModelService.SERVICEMODELNAME
-		+ "=ch.elexis.core.eigendiagnosen.model)")
-	public void setModelService(IModelService modelService){
+
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.eigendiagnosen.model)")
+	public void setModelService(IModelService modelService) {
 		ModelUtil.diagnosisModelService = modelService;
 	}
-	
-	public static <T> Optional<T> loadDiagnosis(String id, Class<T> clazz){
+
+	public static <T> Optional<T> loadDiagnosis(String id, Class<T> clazz) {
 		if (id != null) {
 			return diagnosisModelService.load(id, clazz);
 		}
 		return Optional.empty();
 	}
-	
-	public static Optional<IDiagnosisTree> loadDiagnosisWithCode(String code){
-		INamedQuery<IDiagnosisTree> query =
-				diagnosisModelService.getNamedQuery(IDiagnosisTree.class, "code");
-		List<IDiagnosisTree> found =
-			query.executeWithParameters(query.getParameterMap("code", code));
+
+	public static Optional<IDiagnosisTree> loadDiagnosisWithCode(String code) {
+		INamedQuery<IDiagnosisTree> query = diagnosisModelService.getNamedQuery(IDiagnosisTree.class, "code");
+		List<IDiagnosisTree> found = query.executeWithParameters(query.getParameterMap("code", code));
 		if (!found.isEmpty()) {
 			return Optional.of(found.get(0));
 		}
 		return Optional.empty();
 	}
-	
-	public static List<IDiagnosisTree> loadDiagnosisWithParent(String parentCode){
-		INamedQuery<IDiagnosisTree> query =
-			diagnosisModelService.getNamedQuery(IDiagnosisTree.class, "parent");
-		return query
-			.executeWithParameters(query.getParameterMap("parent", parentCode));
+
+	public static List<IDiagnosisTree> loadDiagnosisWithParent(String parentCode) {
+		INamedQuery<IDiagnosisTree> query = diagnosisModelService.getNamedQuery(IDiagnosisTree.class, "parent");
+		return query.executeWithParameters(query.getParameterMap("parent", parentCode));
 	}
 }

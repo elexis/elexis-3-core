@@ -9,9 +9,9 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Query;
 
 public class PopulateAnschriftColumnInKontaktTable extends ExternalMaintenance {
-	
+
 	@Override
-	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
+	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		List<Kontakt> contacts = new Query<Kontakt>(Kontakt.class).execute();
 		pm.beginTask("Setze Standard-Werte bei leeren Anschriften-Spalten in Kontakte-Tabelle", contacts.size());
 		for (Kontakt contact : contacts) {
@@ -22,10 +22,10 @@ public class PopulateAnschriftColumnInKontaktTable extends ExternalMaintenance {
 
 		return "ok";
 	}
-	
+
 	@Override
-	public String getMaintenanceDescription(){
+	public String getMaintenanceDescription() {
 		return "Standard-Werte bei leeren Anschriften-Spalten in Kontakte-Tabelle setzen";
 	}
-	
+
 }

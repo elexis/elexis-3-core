@@ -14,24 +14,21 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 
 public class OpenCompendiumHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// get actual fix medication of the patient
-		Optional<IPrescription> medication =
-			ContextServiceHolder.get().getTyped(IPrescription.class);
+		Optional<IPrescription> medication = ContextServiceHolder.get().getTyped(IPrescription.class);
 		if (medication.isPresent()) {
 			IArticle article = medication.get().getArticle();
 			String gtin = article.getGtin();
 			if (StringUtils.isNotBlank(gtin)) {
-				String url =
-					"http://www.compendium.ch/prod/gtin/" + article.getGtin(); //$NON-NLS-1$
+				String url = "http://www.compendium.ch/prod/gtin/" + article.getGtin(); //$NON-NLS-1$
 				Program.launch(url);
 				return null;
 			} else if (StringUtils.isNotBlank(article.getName())) {
 				// https://compendium.ch/search/BEXIN
-				String url =
-					"http://www.compendium.ch/search/products?q=" + article.getName().trim(); //$NON-NLS-1$
+				String url = "http://www.compendium.ch/search/products?q=" + article.getName().trim(); //$NON-NLS-1$
 				Program.launch(url);
 				return null;
 			}

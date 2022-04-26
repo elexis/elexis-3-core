@@ -10,9 +10,8 @@
  *******************************************************************************/
 package ch.elexis.core.model;
 
-
 public final class Messages {
-	
+
 	public static String Appointment_Normal_Appointment = ch.elexis.core.l10n.Messages.Appointment_Normal_Appointment;
 	public static String Appointment_Planned_Appointment = ch.elexis.core.l10n.Messages.Appointment_Planned_Appointment;
 	public static String Appointment_Range_Free = ch.elexis.core.l10n.Messages.Appointment_Range_Free;
@@ -23,7 +22,7 @@ public final class Messages {
 	public static String Fall_Maternity = ch.elexis.core.l10n.Messages.Fall_Maternity;
 	public static String Fall_Other = ch.elexis.core.l10n.Messages.Fall_Other;
 	public static String Fall_Prevention = ch.elexis.core.l10n.Messages.Fall_Prevention;
-	public static String MaritalStatus_ANNULLED = ch.elexis.core.l10n.Messages.	MaritalStatus_ANNULLED;
+	public static String MaritalStatus_ANNULLED = ch.elexis.core.l10n.Messages.MaritalStatus_ANNULLED;
 	public static String MaritalStatus_DIVORCED = ch.elexis.core.l10n.Messages.MaritalStatus_DIVORCED;
 	public static String MaritalStatus_DOMESTIC_PARTNER = ch.elexis.core.l10n.Messages.MaritalStatus_DOMESTIC_PARTNER;
 	public static String MaritalStatus_INTERLOCUTORY = ch.elexis.core.l10n.Messages.MaritalStatus_INTERLOCUTORY;
@@ -34,7 +33,7 @@ public final class Messages {
 	public static String MaritalStatus_UNKNOWN = ch.elexis.core.l10n.Messages.MaritalStatus_UNKNOWN;
 	public static String MaritalStatus_UNMARRIED = ch.elexis.core.l10n.Messages.MaritalStatus_UNMARRIED;
 	public static String MaritalStatus_WIDOWED = ch.elexis.core.l10n.Messages.MaritalStatus_WIDOWED;
-	
+
 	public static String InvoiceState_UNKNOWN = ch.elexis.core.l10n.Messages.InvoiceState_UNKNOWN;
 	public static String InvoiceState_BILLED = ch.elexis.core.l10n.Messages.InvoiceState_BILLED;
 	public static String InvoiceState_NOT_BILLED = ch.elexis.core.l10n.Messages.InvoiceState_NOT_BILLED;

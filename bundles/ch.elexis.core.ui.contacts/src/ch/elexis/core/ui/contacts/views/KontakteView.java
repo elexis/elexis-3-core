@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.contacts.views;
@@ -100,7 +100,8 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 				try {
 					KontaktDetailView kdv = (KontaktDetailView) getSite().getPage().showView(KontaktDetailView.ID);
 					ElexisEventDispatcher.fireSelectionEvent(obj);
-					//					kdv.kb.catchElexisEvent(new ElexisEvent(obj, obj.getClass(), ElexisEvent.EVENT_SELECTED));
+					// kdv.kb.catchElexisEvent(new ElexisEvent(obj, obj.getClass(),
+					// ElexisEvent.EVENT_SELECTED));
 				} catch (PartInitException e) {
 					ElexisStatus es = new ElexisStatus(ElexisStatus.ERROR, Activator.PLUGIN_ID, ElexisStatus.CODE_NONE,
 							"Fehler beim Öffnen", e);
@@ -131,8 +132,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	}
 
 	/**
-	 * ENTER has been pressed in the control fields, select the first listed
-	 * patient
+	 * ENTER has been pressed in the control fields, select the first listed patient
 	 */
 	// this is also implemented in PatientenListeView
 	public void selected() {
@@ -142,11 +142,10 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		if (elements != null && elements.length > 0) {
 			Object element = elements[0];
 			/*
-			 * just selecting the element in the viewer doesn't work if the
-			 * control fields are not empty (i. e. the size of items changes):
-			 * cv.setSelection(element, true); bug in TableViewer with style
-			 * VIRTUAL? work-arount: just globally select the element without
-			 * visual representation in the viewer
+			 * just selecting the element in the viewer doesn't work if the control fields
+			 * are not empty (i. e. the size of items changes): cv.setSelection(element,
+			 * true); bug in TableViewer with style VIRTUAL? work-arount: just globally
+			 * select the element without visual representation in the viewer
 			 */
 			if (element instanceof PersistentObject) {
 				// globally select this object
@@ -157,7 +156,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 

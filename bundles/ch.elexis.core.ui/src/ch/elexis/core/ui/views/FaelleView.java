@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views;
@@ -73,50 +73,48 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	private IAction konsFilterAction;
 	private IAction filterClosedAction;
 	private final FallKonsFilter filter = new FallKonsFilter();
-	
+
 	private IPatient actPatient;
-	
+
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
-	
+
 	@Inject
-	void activePatient(@Optional IPatient patient){
+	void activePatient(@Optional IPatient patient) {
 		Display.getDefault().asyncExec(() -> {
 			handleEventPatient(patient);
 		});
 	}
-	
+
 	@Optional
 	@Inject
-	void lockedPatient(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IPatient patient){
+	void lockedPatient(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IPatient patient) {
 		handleEventPatient(patient);
 	}
-	
+
 	@Optional
 	@Inject
-	void unlockedPatient(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IPatient patient){
+	void unlockedPatient(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IPatient patient) {
 		handleEventPatient(patient);
 	}
-	
-	private void handleEventPatient(IPatient patient){
+
+	private void handleEventPatient(IPatient patient) {
 		if (patient != null && CoreUiUtil.isActiveControl(tv.getControl())) {
 			if (actPatient != patient) {
 				actPatient = patient;
 				tv.refresh(true);
-				ICoverage currentFall = ContextServiceHolder.get().getRootContext()
-					.getTyped(ICoverage.class).orElse(null);
+				ICoverage currentFall = ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class)
+						.orElse(null);
 				if (currentFall != null) {
 					tv.setSelection(new StructuredSelection(currentFall));
 				}
 			}
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	void compatitbility(
-		@UIEventTopic(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY + "*") Object object){
-		if (object instanceof ICoverage
-			|| (object instanceof Class && object.equals(ICoverage.class))) {
+	void compatitbility(@UIEventTopic(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY + "*") Object object) {
+		if (object instanceof ICoverage || (object instanceof Class && object.equals(ICoverage.class))) {
 			// refresh from database if modified by po
 			if (actPatient != null) {
 				if (object instanceof ICoverage) {
@@ -127,36 +125,36 @@ public class FaelleView extends ViewPart implements IRefreshable {
 			refreshTableViewer();
 		}
 	}
-	
+
 	@Optional
 	@Inject
-	void createCoverage(@UIEventTopic(ElexisEventTopics.EVENT_CREATE) ICoverage iCoverage){
+	void createCoverage(@UIEventTopic(ElexisEventTopics.EVENT_CREATE) ICoverage iCoverage) {
 		refreshTableViewer();
 	}
-	
+
 	@Optional
 	@Inject
-	void updateCoverage(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICoverage iCoverage){
+	void updateCoverage(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICoverage iCoverage) {
 		CoreModelServiceHolder.get().refresh(actPatient);
 		refreshTableViewer();
 	}
-	
+
 	@Optional
 	@Inject
-	void deleteCoverage(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) ICoverage iCoverage){
+	void deleteCoverage(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) ICoverage iCoverage) {
 		refreshTableViewer();
 	}
-	
+
 	@Optional
 	@Inject
-	void reloadCoverage(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> iCoverage){
+	void reloadCoverage(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> iCoverage) {
 		if (ICoverage.class.equals(iCoverage)) {
 			refreshTableViewer();
 		}
 	}
 
 	@Inject
-	void activeCoverage(@Optional ICoverage iCoverage){
+	void activeCoverage(@Optional ICoverage iCoverage) {
 		Display.getDefault().syncExec(() -> {
 			if (tv != null && CoreUiUtil.isActiveControl(tv.getControl())) {
 				tv.refresh(true);
@@ -169,32 +167,31 @@ public class FaelleView extends ViewPart implements IRefreshable {
 				}
 			}
 		});
-		
+
 	}
-	
-	private void refreshTableViewer(){
+
+	private void refreshTableViewer() {
 		if (tv != null && CoreUiUtil.isActiveControl(tv.getControl())) {
 			tv.refresh(true);
 		}
 	}
-	
-	
-	public FaelleView(){
+
+	public FaelleView() {
 		makeActions();
 	}
-	
+
 	@Override
-	public void createPartControl(final Composite parent){
-		setPartName(Messages.FaelleView_partName); //$NON-NLS-1$
+	public void createPartControl(final Composite parent) {
+		setPartName(Messages.FaelleView_partName); // $NON-NLS-1$
 		parent.setLayout(new GridLayout());
 		tv = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		tv.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tv.setContentProvider(new FaelleContentProvider());
 		tv.setLabelProvider(new FaelleLabelProvider());
 		tv.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
-			public void selectionChanged(SelectionChangedEvent event){
+			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection instanceof StructuredSelection) {
 					if (!selection.isEmpty()) {
@@ -207,78 +204,74 @@ public class FaelleView extends ViewPart implements IRefreshable {
 		menus = new ViewMenus(getViewSite());
 		menus.createToolbar(neuerFallAction, konsFilterAction, filterClosedAction);
 		menus.createViewerContextMenu(tv, openFallaction, closeFallAction, null, delFallAction, reopenFallAction,
-			makeBillAction);
+				makeBillAction);
 		tv.setInput(getViewSite());
 		tv.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(DoubleClickEvent event){
+			public void doubleClick(DoubleClickEvent event) {
 				try {
-					FallDetailView pdv =
-						(FallDetailView) getSite().getPage().showView(FallDetailView.ID);
+					FallDetailView pdv = (FallDetailView) getSite().getPage().showView(FallDetailView.ID);
 				} catch (PartInitException e) {
 					ExHandler.handle(e);
 				}
 			}
 		});
-	//	ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat);
+		// ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat);
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		getSite().getPage().removePartListener(udpateOnVisible);
-	//	ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_pat);
+		// ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_pat);
 		super.dispose();
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		tv.getControl().setFocus();
 		refresh();
 	}
-	
+
 	@Override
-	public void refresh(){
+	public void refresh() {
 		handleEventPatient(ContextServiceHolder.get().getActivePatient().orElse(null));
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-	
-	private void makeActions(){
-		konsFilterAction = new Action(Messages.FaelleView_FilterConsultations, //$NON-NLS-1$
-			Action.AS_CHECK_BOX) {
+
+	private void makeActions() {
+		konsFilterAction = new Action(Messages.FaelleView_FilterConsultations, // $NON-NLS-1$
+				Action.AS_CHECK_BOX) {
 			{
-				setToolTipText(Messages.FaelleView_ShowOnlyConsOfThisCase); //$NON-NLS-1$
+				setToolTipText(Messages.FaelleView_ShowOnlyConsOfThisCase); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
 			}
-			
+
 			@Override
-			public void run(){
-				//@TODO nopo for Konsultation
+			public void run() {
+				// @TODO nopo for Konsultation
 				if (!isChecked()) {
-					ObjectFilterRegistry.getInstance().unregisterObjectFilter(Konsultation.class,
-						filter);
+					ObjectFilterRegistry.getInstance().unregisterObjectFilter(Konsultation.class, filter);
 				} else {
-					ObjectFilterRegistry.getInstance().registerObjectFilter(Konsultation.class,
-						filter);
-					filter.setFall(ContextServiceHolder.get().getRootContext()
-						.getTyped(ICoverage.class).orElse(null));
+					ObjectFilterRegistry.getInstance().registerObjectFilter(Konsultation.class, filter);
+					filter.setFall(ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class).orElse(null));
 				}
 			}
-			
+
 		};
 		filterClosedAction = new Action("", Action.AS_CHECK_BOX) {
 			private ViewerFilter closedFilter;
 			{
-				setToolTipText(Messages.FaelleView_ShowOnlyOpenCase); //$NON-NLS-1$
+				setToolTipText(Messages.FaelleView_ShowOnlyOpenCase); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_DOCUMENT_WRITE.getImageDescriptor());
 				closedFilter = new ViewerFilter() {
 					@Override
-					public boolean select(Viewer viewer, Object parentElement, Object element){
+					public boolean select(Viewer viewer, Object parentElement, Object element) {
 						if (element instanceof ICoverage) {
 							ICoverage fall = (ICoverage) element;
 							return fall.isOpen();
@@ -287,9 +280,9 @@ public class FaelleView extends ViewPart implements IRefreshable {
 					}
 				};
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				if (!isChecked()) {
 					tv.removeFilter(closedFilter);
 				} else {
@@ -298,49 +291,48 @@ public class FaelleView extends ViewPart implements IRefreshable {
 			}
 		};
 	}
-	
+
 	class FallKonsFilter implements IObjectFilterProvider, IFilter {
-		
+
 		ICoverage mine;
 		boolean bDaempfung;
-		
-		void setFall(final ICoverage fall){
+
+		void setFall(final ICoverage fall) {
 			mine = fall;
-			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
-				IEncounter.class);
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IEncounter.class);
 		}
-		
+
 		@Override
-		public void activate(){
+		public void activate() {
 			bDaempfung = true;
 			konsFilterAction.setChecked(true);
 			bDaempfung = false;
 		}
-		
+
 		@Override
-		public void changed(){
+		public void changed() {
 			// don't mind
 		}
-		
+
 		@Override
-		public void deactivate(){
+		public void deactivate() {
 			bDaempfung = true;
 			konsFilterAction.setChecked(false);
 			bDaempfung = false;
 		}
-		
+
 		@Override
-		public IFilter getFilter(){
+		public IFilter getFilter() {
 			return this;
 		}
-		
+
 		@Override
-		public String getId(){
+		public String getId() {
 			return "ch.elexis.FallFilter"; //$NON-NLS-1$
 		}
-		
+
 		@Override
-		public boolean select(final Object toTest){
+		public boolean select(final Object toTest) {
 			if (mine == null) {
 				return true;
 			}
@@ -352,6 +344,6 @@ public class FaelleView extends ViewPart implements IRefreshable {
 			}
 			return false;
 		}
-		
+
 	}
 }

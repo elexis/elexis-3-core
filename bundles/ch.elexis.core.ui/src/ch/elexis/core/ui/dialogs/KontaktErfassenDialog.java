@@ -8,7 +8,7 @@
  * Contributors:
  *    M. Imhof - initial implementation
  *    G. Weirich - added Anschrift
- * 
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
@@ -57,56 +57,52 @@ import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.TimeTool.TimeFormatException;
 
 public class KontaktErfassenDialog extends TitleAreaDialog {
-	
+
 	private Button bOrganisation, bLabor, bPerson, bPatient, bAnwender, bMandant;
-	
+
 	Kontakt newKontakt = null;
-	
+
 	String[] fld;
 	Text tName, tVorname, tZusatz, tGebDat, tStrasse, tPlz, tOrt, tTel, tFax, tEmail;
 	Combo cbSex;
 	Label lName, lVorname, lZusatz;
 	Hyperlink hlAnschrift;
-	
-	public KontaktErfassenDialog(final Shell parent, final String[] fields){
+
+	public KontaktErfassenDialog(final Shell parent, final String[] fields) {
 		super(parent);
 		fld = fields;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(final Composite parent){
+	protected Control createDialogArea(final Composite parent) {
 		Composite typeComp = new Composite(parent, SWT.NONE);
 		typeComp.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		typeComp.setLayout(new GridLayout(1, false));
-		
+
 		Composite cTypes = UiDesk.getToolkit().createComposite(typeComp, SWT.BORDER);
-		bOrganisation =
-			UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_organization, //$NON-NLS-1$
+		bOrganisation = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_organization, // $NON-NLS-1$
 				SWT.CHECK);
 		bOrganisation.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				bOrganisationChanged(bOrganisation.getSelection());
 			}
 		});
-		bLabor = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_labor,
-			SWT.CHECK); //$NON-NLS-1$
+		bLabor = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_labor, SWT.CHECK); // $NON-NLS-1$
 		bLabor.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				bLaborChanged(bLabor.getSelection());
 			}
 		});
-		bPerson = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_person,
-			SWT.CHECK); //$NON-NLS-1$
+		bPerson = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_person, SWT.CHECK); // $NON-NLS-1$
 		bPerson.setSelection(true);
 		bPerson.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				bPersonChanged(bPerson.getSelection());
 			}
 		});
-		bPatient = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_patient,
-			SWT.CHECK); //$NON-NLS-1$
+		bPatient = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_patient, SWT.CHECK); // $NON-NLS-1$
 		bPatient.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				bPatientChanged(bPatient.getSelection());
 			}
 		});
@@ -115,17 +111,15 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 				bPatient.setSelection(true);
 			}
 		}
-		bAnwender = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_user,
-			SWT.CHECK); //$NON-NLS-1$
+		bAnwender = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_user, SWT.CHECK); // $NON-NLS-1$
 		bAnwender.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				bAnwenderChanged(bAnwender.getSelection());
 			}
 		});
-		bMandant = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_mandant,
-			SWT.CHECK); //$NON-NLS-1$
+		bMandant = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_mandant, SWT.CHECK); // $NON-NLS-1$
 		bMandant.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				bMandantChanged(bMandant.getSelection());
 			}
 		});
@@ -135,40 +129,38 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			bAnwender.setEnabled(false);
 		}
 		cTypes.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		
+
 		cTypes.setLayout(new FillLayout());
-		
+
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(2, false));
-		
+
 		lName = new Label(ret, SWT.NONE);
-		lName.setText(Messages.KontaktErfassenDialog_name); //$NON-NLS-1$
+		lName.setText(Messages.KontaktErfassenDialog_name); // $NON-NLS-1$
 		tName = new Text(ret, SWT.BORDER);
 		tName.setText(fld[KontaktSelektor.HINT_NAME]);
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tName.setTextLimit(80);
-		
+
 		lVorname = new Label(ret, SWT.NONE);
-		lVorname.setText(Messages.KontaktErfassenDialog_firstName); //$NON-NLS-1$
+		lVorname.setText(Messages.KontaktErfassenDialog_firstName); // $NON-NLS-1$
 		tVorname = new Text(ret, SWT.BORDER);
-		tVorname.setText(
-			fld[KontaktSelektor.HINT_FIRSTNAME] == null ? "" : fld[KontaktSelektor.HINT_FIRSTNAME]); //$NON-NLS-1$
+		tVorname.setText(fld[KontaktSelektor.HINT_FIRSTNAME] == null ? "" : fld[KontaktSelektor.HINT_FIRSTNAME]); //$NON-NLS-1$
 		tVorname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tVorname.setTextLimit(80);
-		
+
 		lZusatz = new Label(ret, SWT.NONE);
-		lZusatz.setText(Messages.KontaktErfassenDialog_zusatz); //$NON-NLS-1$
+		lZusatz.setText(Messages.KontaktErfassenDialog_zusatz); // $NON-NLS-1$
 		tZusatz = new Text(ret, SWT.BORDER);
 		tZusatz.setText(fld.length > KontaktSelektor.HINT_ADD ? fld[KontaktSelektor.HINT_ADD] : ""); //$NON-NLS-1$
 		tZusatz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_sex);//$NON-NLS-1$
+
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_sex);// $NON-NLS-1$
 		cbSex = new Combo(ret, SWT.SINGLE);
-		cbSex.setItems(new String[] {
-			Messages.KontaktErfassenDialog_male, Messages.KontaktErfassenDialog_female
-		}); //$NON-NLS-1$ //$NON-NLS-2$
-		
+		cbSex.setItems(new String[] { Messages.KontaktErfassenDialog_male, Messages.KontaktErfassenDialog_female }); // $NON-NLS-1$
+																														// //$NON-NLS-2$
+
 		if (fld.length <= KontaktSelektor.HINT_SEX || fld[KontaktSelektor.HINT_SEX].length() == 0) {
 			if (StringTool.isNothing(fld[KontaktSelektor.HINT_FIRSTNAME])) {
 				cbSex.select(0);
@@ -178,58 +170,54 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		} else {
 			cbSex.select(fld[KontaktSelektor.HINT_SEX].equals(Person.MALE) ? 0 : 1);
 		}
-		
-		new Label(ret, SWT.NONE).setText(Messages.KontaktErfassenDialog_birthDate); //$NON-NLS-1$
+
+		new Label(ret, SWT.NONE).setText(Messages.KontaktErfassenDialog_birthDate); // $NON-NLS-1$
 		tGebDat = new Text(ret, SWT.BORDER);
-		tGebDat.setText(
-			fld[KontaktSelektor.HINT_BIRTHDATE] == null ? "" : fld[KontaktSelektor.HINT_BIRTHDATE]); //$NON-NLS-1$
+		tGebDat.setText(fld[KontaktSelektor.HINT_BIRTHDATE] == null ? "" : fld[KontaktSelektor.HINT_BIRTHDATE]); //$NON-NLS-1$
 		tGebDat.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tGebDat.setTextLimit(8);
-		
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_street); //$NON-NLS-1$
+
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_street); // $NON-NLS-1$
 		tStrasse = new Text(ret, SWT.BORDER);
-		tStrasse.setText(
-			fld.length > KontaktSelektor.HINT_STREET ? fld[KontaktSelektor.HINT_STREET] : ""); //$NON-NLS-1$
+		tStrasse.setText(fld.length > KontaktSelektor.HINT_STREET ? fld[KontaktSelektor.HINT_STREET] : ""); //$NON-NLS-1$
 		tStrasse.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tStrasse.setTextLimit(80);
-		
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_zip); //$NON-NLS-1$
+
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_zip); // $NON-NLS-1$
 		tPlz = new Text(ret, SWT.BORDER);
 		tPlz.setText(fld.length > KontaktSelektor.HINT_ZIP ? fld[KontaktSelektor.HINT_ZIP] : ""); //$NON-NLS-1$
 		tPlz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tPlz.setTextLimit(6);
-		
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_city); //$NON-NLS-1$
+
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_city); // $NON-NLS-1$
 		tOrt = new Text(ret, SWT.BORDER);
-		tOrt.setText(
-			fld.length > KontaktSelektor.HINT_PLACE ? fld[KontaktSelektor.HINT_PLACE] : ""); //$NON-NLS-1$
+		tOrt.setText(fld.length > KontaktSelektor.HINT_PLACE ? fld[KontaktSelektor.HINT_PLACE] : ""); //$NON-NLS-1$
 		tOrt.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tOrt.setTextLimit(50);
-		
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_phone); //$NON-NLS-1$
+
+		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_phone); // $NON-NLS-1$
 		tTel = new Text(ret, SWT.BORDER);
 		tTel.setText(fld.length > 6 ? fld[6] : ""); //$NON-NLS-1$
 		tTel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tTel.setTextLimit(30);
-		
-		new Label(ret, SWT.NONE).setText(Messages.KontaktErfassenDialog_fax); //$NON-NLS-1$
+
+		new Label(ret, SWT.NONE).setText(Messages.KontaktErfassenDialog_fax); // $NON-NLS-1$
 		tFax = new Text(ret, SWT.BORDER);
 		tFax.setText(fld.length > 8 ? fld[8] : ""); //$NON-NLS-1$
 		tFax.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tFax.setTextLimit(30);
-		
-		new Label(ret, SWT.NONE).setText(Messages.KontaktErfassenDialog_email); //$NON-NLS-1$
+
+		new Label(ret, SWT.NONE).setText(Messages.KontaktErfassenDialog_email); // $NON-NLS-1$
 		tEmail = new Text(ret, SWT.BORDER);
 		tEmail.setText(fld.length > 9 ? fld[9] : ""); //$NON-NLS-1$
 		tEmail.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tEmail.setTextLimit(80);
-		new Label(ret, SWT.NONE).setText(Messages.KontaktErfassenDialog_postanschrift); //$NON-NLS-1$
-		hlAnschrift = UiDesk.getToolkit().createHyperlink(ret,
-			Messages.KontaktErfassenDialog_postalempty, SWT.NONE); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.KontaktErfassenDialog_postanschrift); // $NON-NLS-1$
+		hlAnschrift = UiDesk.getToolkit().createHyperlink(ret, Messages.KontaktErfassenDialog_postalempty, SWT.NONE); // $NON-NLS-1$
 		hlAnschrift.addHyperlinkListener(new HyperlinkAdapter() {
-			
+
 			@Override
-			public void linkActivated(HyperlinkEvent e){
+			public void linkActivated(HyperlinkEvent e) {
 				createKontakt();
 				AnschriftEingabeDialog aed = new AnschriftEingabeDialog(getShell(), newKontakt);
 				aed.create();
@@ -237,51 +225,51 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 				aed.open();
 				hlAnschrift.setText(newKontakt.getPostAnschrift(false));
 			}
-			
+
 		});
 		hlAnschrift.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		return ret;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
-		setMessage(Messages.KontaktErfassenDialog_message); //$NON-NLS-1$
-		setTitle(Messages.KontaktErfassenDialog_subTitle); //$NON-NLS-1$
-		getShell().setText(Messages.KontaktErfassenDialog_title); //$NON-NLS-1$
+		setMessage(Messages.KontaktErfassenDialog_message); // $NON-NLS-1$
+		setTitle(Messages.KontaktErfassenDialog_subTitle); // $NON-NLS-1$
+		getShell().setText(Messages.KontaktErfassenDialog_title); // $NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}
-	
-	protected void bOrganisationChanged(boolean isSelected){
+
+	protected void bOrganisationChanged(boolean isSelected) {
 		bOrganisation.setSelection(isSelected);
 		if (isSelected) {
 			bPersonChanged(false);
-			lName.setText(Messages.KontaktErfassenDialog_bezeichnung);//$NON-NLS-1$
-			lVorname.setText(Messages.KontaktErfassenDialog_zusatz); //$NON-NLS-1$
-			lZusatz.setText(Messages.KontaktErfassenDialog_ansprechperson); //$NON-NLS-1$
+			lName.setText(Messages.KontaktErfassenDialog_bezeichnung);// $NON-NLS-1$
+			lVorname.setText(Messages.KontaktErfassenDialog_zusatz); // $NON-NLS-1$
+			lZusatz.setText(Messages.KontaktErfassenDialog_ansprechperson); // $NON-NLS-1$
 			cbSex.setEnabled(false);
 			lName.getParent().layout();
 		} else {
 			bLaborChanged(false);
 		}
 	}
-	
-	protected void bLaborChanged(boolean isSelected){
+
+	protected void bLaborChanged(boolean isSelected) {
 		bLabor.setSelection(isSelected);
 		if (isSelected) {
 			bOrganisationChanged(true);
-			lZusatz.setText(Messages.KontaktErfassenDialog_laborleiter); //$NON-NLS-1$
+			lZusatz.setText(Messages.KontaktErfassenDialog_laborleiter); // $NON-NLS-1$
 			lName.getParent().layout();
 		}
 	}
-	
-	protected void bPersonChanged(boolean isSelected){
+
+	protected void bPersonChanged(boolean isSelected) {
 		bPerson.setSelection(isSelected);
 		if (isSelected) {
 			bOrganisationChanged(false);
-			lName.setText(Messages.KontaktErfassenDialog_name);//$NON-NLS-1$
-			lVorname.setText(Messages.KontaktErfassenDialog_firstName); //$NON-NLS-1$
-			lZusatz.setText(Messages.KontaktErfassenDialog_zusatz); //$NON-NLS-1$
+			lName.setText(Messages.KontaktErfassenDialog_name);// $NON-NLS-1$
+			lVorname.setText(Messages.KontaktErfassenDialog_firstName); // $NON-NLS-1$
+			lZusatz.setText(Messages.KontaktErfassenDialog_zusatz); // $NON-NLS-1$
 			cbSex.setEnabled(true);
 			lName.getParent().layout();
 		} else {
@@ -290,8 +278,8 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			bPatientChanged(false);
 		}
 	}
-	
-	protected void bAnwenderChanged(boolean isSelected){
+
+	protected void bAnwenderChanged(boolean isSelected) {
 		bAnwender.setSelection(isSelected);
 		if (isSelected) {
 			bPatientChanged(false);
@@ -300,30 +288,30 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			bMandantChanged(false);
 		}
 	}
-	
-	protected void bMandantChanged(boolean isSelected){
+
+	protected void bMandantChanged(boolean isSelected) {
 		bMandant.setSelection(isSelected);
 		if (isSelected) {
 			bAnwenderChanged(true);
 		}
 	}
-	
-	protected void bPatientChanged(boolean isSelected){
+
+	protected void bPatientChanged(boolean isSelected) {
 		bPatient.setSelection(isSelected);
 		if (isSelected) {
 			bAnwenderChanged(false);
 			bPersonChanged(true);
 		}
 	}
-	
-	private void createKontakt(){
+
+	private void createKontakt() {
 		String[] ret = new String[8];
 		ret[0] = tName.getText();
 		ret[1] = tVorname.getText();
 		int idx = cbSex.getSelectionIndex();
 		if (idx == -1) {
-			SWTHelper.showError(Messages.KontaktErfassenDialog_geschlechtFehlt_title, //$NON-NLS-1$
-				Messages.KontaktErfassenDialog_geschlechtFehlt_msg); //$NON-NLS-1$
+			SWTHelper.showError(Messages.KontaktErfassenDialog_geschlechtFehlt_title, // $NON-NLS-1$
+					Messages.KontaktErfassenDialog_geschlechtFehlt_msg); // $NON-NLS-1$
 			return;
 		}
 		ret[2] = cbSex.getItem(idx);
@@ -348,8 +336,8 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 							k.set("istOrganisation", "1"); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 						if (MessageDialog.openConfirm(getShell(),
-							Messages.KontaktErfassenDialog_organisationExistiert_title, //$NON-NLS-1$
-							Messages.KontaktErfassenDialog_organisationExistiert_msg) == false) { //$NON-NLS-1$
+								Messages.KontaktErfassenDialog_organisationExistiert_title, // $NON-NLS-1$
+								Messages.KontaktErfassenDialog_organisationExistiert_msg) == false) { // $NON-NLS-1$
 							super.okPressed();
 							return;
 						}
@@ -364,15 +352,14 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 						if (bPatient.getSelection()) {
 							k.set("istPatient", "1"); //$NON-NLS-1$ //$NON-NLS-2$
 						}
-						if (MessageDialog.openConfirm(getShell(),
-							Messages.KontaktErfassenDialog_personExisitiert_title, //$NON-NLS-1$
-							Messages.KontaktErfassenDialog_personExisitiert_msg) == false) { //$NON-NLS-1$
+						if (MessageDialog.openConfirm(getShell(), Messages.KontaktErfassenDialog_personExisitiert_title, // $NON-NLS-1$
+								Messages.KontaktErfassenDialog_personExisitiert_msg) == false) { // $NON-NLS-1$
 							super.okPressed();
 							return;
 						}
 					}
 				}
-				
+
 				/**
 				 * Neuer Kontakt erstellen. Reihenfolge der Abfrage ist Wichtig, da ein Anwender
 				 * auch ein Mandant sein kann. "Organisation", - "Labor", "Person" - "Patient" -
@@ -398,48 +385,44 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 					newKontakt = new Organisation(ret[0], ret[1]);
 					newKontakt.set("Ansprechperson", tZusatz.getText()); //$NON-NLS-1$
 				} else {
-					MessageDialog.openInformation(getShell(),
-						Messages.KontaktErfassenDialog_unbekannterTyp_title, //$NON-NLS-1$
-						Messages.KontaktErfassenDialog_unbekannterTyp_msg); //$NON-NLS-1$
+					MessageDialog.openInformation(getShell(), Messages.KontaktErfassenDialog_unbekannterTyp_title, // $NON-NLS-1$
+							Messages.KontaktErfassenDialog_unbekannterTyp_msg); // $NON-NLS-1$
 					return;
 				}
 			}
 			if (LocalLockServiceHolder.get().acquireLock(newKontakt).isOk()) {
-				newKontakt.set(new String[] {
-					"Strasse", "Plz", "Ort", "Telefon1", "Fax", "E-Mail" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
-				}, new String[] {
-					ret[4], ret[5], ret[6], ret[7], tFax.getText(), tEmail.getText()
-				});
-				
+				newKontakt.set(new String[] { "Strasse", "Plz", "Ort", "Telefon1", "Fax", "E-Mail" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+				}, new String[] { ret[4], ret[5], ret[6], ret[7], tFax.getText(), tEmail.getText() });
+
 				ElexisEventDispatcher.fireSelectionEvent(newKontakt);
 				LocalLockServiceHolder.get().releaseLock(newKontakt);
 			}
 		} catch (TimeFormatException e) {
 			ExHandler.handle(e);
-			SWTHelper.showError(Messages.KontaktErfassenDialog_falschesDatum_title, //$NON-NLS-1$
-				Messages.KontaktErfassenDialog_falschesDatum_msg); //$NON-NLS-1$
+			SWTHelper.showError(Messages.KontaktErfassenDialog_falschesDatum_title, // $NON-NLS-1$
+					Messages.KontaktErfassenDialog_falschesDatum_msg); // $NON-NLS-1$
 			return;
 		}
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		createKontakt();
 		super.okPressed();
 	}
-	
+
 	/**
 	 * Use getContact()
-	 * 
+	 *
 	 * @return
 	 * @deprecated @since 3.8
 	 */
 	@Deprecated
-	public Kontakt getResult(){
+	public Kontakt getResult() {
 		return newKontakt;
 	}
-	
-	public Optional<IContact> getContact(){
+
+	public Optional<IContact> getContact() {
 		if (newKontakt != null && newKontakt.exists()) {
 			return CoreModelServiceHolder.get().load(newKontakt.getId(), IContact.class);
 		}

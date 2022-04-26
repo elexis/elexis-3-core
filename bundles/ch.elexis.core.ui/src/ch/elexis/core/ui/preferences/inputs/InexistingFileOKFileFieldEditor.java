@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.preferences.inputs;
@@ -17,24 +17,24 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * A file editor that allows an inexistent file to be chosen.
- * 
+ *
  * @author gerry
- * 
+ *
  */
 public class InexistingFileOKFileFieldEditor extends FileFieldEditor {
-	public InexistingFileOKFileFieldEditor(String name, String title, Composite parent){
+	public InexistingFileOKFileFieldEditor(String name, String title, Composite parent) {
 		super(name, title, parent);
 		setEmptyStringAllowed(true);
 	}
-	
+
 	@Override
-	public boolean isValid(){
+	public boolean isValid() {
 		return true;
 	}
-	
+
 	@Override
-	protected boolean checkState(){
+	protected boolean checkState() {
 		return true;
 	}
-	
+
 }

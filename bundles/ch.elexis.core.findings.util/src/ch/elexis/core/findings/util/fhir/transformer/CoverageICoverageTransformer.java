@@ -26,42 +26,40 @@ import ch.elexis.core.services.IModelService;
 
 @Component
 public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, ICoverage> {
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
-	
+
 	private ICoverageHelper coverageHelper;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		coverageHelper = new ICoverageHelper();
 	}
-	
+
 	@Override
-	public Optional<Coverage> getFhirObject(ICoverage localObject, SummaryEnum summaryEnum,
-		Set<Include> includes){
+	public Optional<Coverage> getFhirObject(ICoverage localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Coverage coverage = new Coverage();
-		
+
 		coverage.setId(new IdDt("Coverage", localObject.getId()));
 		coverage.addIdentifier(getElexisObjectIdentifier(localObject));
-		
+
 		coverage.setDependent(coverageHelper.getDependent(localObject));
 		coverage.setBeneficiary(coverageHelper.getBeneficiaryReference(localObject));
-		coverage
-			.setPayor(Collections.singletonList(coverageHelper.getIssuerReference(localObject)));
+		coverage.setPayor(Collections.singletonList(coverageHelper.getIssuerReference(localObject)));
 		coverage.setPeriod(coverageHelper.getPeriod(localObject));
-		
+
 		coverageHelper.getType(localObject).ifPresent(coding -> {
 			coverage.setType(coding);
 		});
-		
+
 		coverageHelper.setText(coverage, coverageHelper.getFallText(localObject));
-		
+
 		return Optional.of(coverage);
 	}
-	
+
 	@Override
-	public Optional<ICoverage> getLocalObject(Coverage fhirObject){
+	public Optional<ICoverage> getLocalObject(Coverage fhirObject) {
 		if (fhirObject != null && fhirObject.getId() != null) {
 			Optional<ICoverage> existing = modelService.load(fhirObject.getId(), ICoverage.class);
 			if (existing.isPresent()) {
@@ -70,22 +68,22 @@ public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, 
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<ICoverage> updateLocalObject(Coverage fhirObject, ICoverage localObject){
+	public Optional<ICoverage> updateLocalObject(Coverage fhirObject, ICoverage localObject) {
 		// TODO Auto-generated method stub
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<ICoverage> createLocalObject(Coverage fhirObject){
+	public Optional<ICoverage> createLocalObject(Coverage fhirObject) {
 		if (fhirObject.hasBeneficiary()) {
-			Optional<IPatient> patient = modelService.load(
-				fhirObject.getBeneficiary().getReferenceElement().getIdPart(), IPatient.class);
+			Optional<IPatient> patient = modelService
+					.load(fhirObject.getBeneficiary().getReferenceElement().getIdPart(), IPatient.class);
 			Optional<String> type = coverageHelper.getType(fhirObject);
 			if (patient.isPresent() && type.isPresent()) {
-				ICoverage created = new ICoverageBuilder(modelService, patient.get(),
-					"online created", FallConstants.TYPE_DISEASE, type.get()).buildAndSave();
+				ICoverage created = new ICoverageBuilder(modelService, patient.get(), "online created",
+						FallConstants.TYPE_DISEASE, type.get()).buildAndSave();
 				String dependent = fhirObject.getDependent();
 				if (dependent != null) {
 					coverageHelper.setBin(created, dependent);
@@ -100,16 +98,16 @@ public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, 
 				AbstractHelper.acquireAndReleaseLock(created);
 				return Optional.of(created);
 			} else {
-				LoggerFactory.getLogger(CoverageICoverageTransformer.class).warn(
-					"Could not create fall for patinet [" + patient + "] type [" + type + "]");
+				LoggerFactory.getLogger(CoverageICoverageTransformer.class)
+						.warn("Could not create fall for patinet [" + patient + "] type [" + type + "]");
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz){
+	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz) {
 		return Coverage.class.equals(fhirClazz) && ICoverage.class.equals(localClazz);
 	}
-	
+
 }

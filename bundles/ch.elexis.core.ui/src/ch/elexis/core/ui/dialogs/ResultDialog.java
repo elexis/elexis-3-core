@@ -11,8 +11,8 @@ import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 
 public class ResultDialog {
-	
-	public static void show(Result<?> result){
+
+	public static void show(Result<?> result) {
 		if (!result.getMessages().isEmpty()) {
 			if (result.isOK()) {
 				showInfo(result);
@@ -25,8 +25,8 @@ public class ResultDialog {
 			}
 		}
 	}
-	
-	private static boolean isWarnining(Result<?> result){
+
+	private static boolean isWarnining(Result<?> result) {
 		for (Result<?>.msg message : result.getMessages()) {
 			if (message.getSeverity() != SEVERITY.WARNING) {
 				return false;
@@ -34,29 +34,29 @@ public class ResultDialog {
 		}
 		return true;
 	}
-	
-	private static void showError(Result<?> result){
+
+	private static void showError(Result<?> result) {
 		MessageDialog.openError(getShell(), Messages.ResultDialog_Error, getResultMessage(result));
 	}
-	
-	private static void showWarninig(Result<?> result){
+
+	private static void showWarninig(Result<?> result) {
 		MessageDialog.openWarning(getShell(), Messages.ResultDialog_Warning, getResultMessage(result));
 	}
-	
-	private static void showInfo(Result<?> result){
+
+	private static void showInfo(Result<?> result) {
 		MessageDialog.openInformation(getShell(), Messages.ResultDialog_Info, getResultMessage(result));
 	}
-	
-	public static String getResultMessage(Result<?> result){
+
+	public static String getResultMessage(Result<?> result) {
 		StringJoiner sj = new StringJoiner("\n\n");
 		for (Result<?>.msg message : result.getMessages()) {
 			sj.add(message.getText());
 		}
 		return sj.toString();
 	}
-	
-	private static Shell getShell(){
+
+	private static Shell getShell() {
 		return Display.getDefault().getActiveShell();
 	}
-	
+
 }

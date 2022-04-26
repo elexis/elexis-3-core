@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -17,15 +17,15 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.data.PersistentObject;
 
 public class PersistentObjectConverter extends AbstractParameterValueConverter {
-	
+
 	@Override
-	public Object convertToObject(String parameterValue) throws ParameterValueConversionException{
+	public Object convertToObject(String parameterValue) throws ParameterValueConversionException {
 		return CoreHub.poFactory.createFromString(parameterValue);
 	}
-	
+
 	@Override
-	public String convertToString(Object parameterValue) throws ParameterValueConversionException{
+	public String convertToString(Object parameterValue) throws ParameterValueConversionException {
 		return ((PersistentObject) parameterValue).storeToString();
 	}
-	
+
 }

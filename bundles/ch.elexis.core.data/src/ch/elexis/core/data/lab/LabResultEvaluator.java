@@ -13,50 +13,40 @@ import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.data.LabResult;
 
 public class LabResultEvaluator {
-	
-	private LabResultEvaluationResult evaluateTextualResult(LabResult labResult,
-		final boolean isAbsoluteItem){
-		
+
+	private LabResultEvaluationResult evaluateTextualResult(LabResult labResult, final boolean isAbsoluteItem) {
+
 		String lcResult = labResult.getResult().trim();
 		Object[] ref = getReferenceValueForLabResult(labResult);
 		String refValue = (String) ref[0];
-		Description description =
-			(isAbsoluteItem) ? Description.PATHO_ABSOLUT : (Description) ref[1];
-		
+		Description description = (isAbsoluteItem) ? Description.PATHO_ABSOLUT : (Description) ref[1];
+
 		if (lcResult.equals(refValue)) {
-			return new LabResultEvaluationResult(true, false,
-				new PathologicDescription(description, lcResult));
+			return new LabResultEvaluationResult(true, false, new PathologicDescription(description, lcResult));
 		}
-		
+
 		if (isAbsoluteItem) {
-			if (lcResult.toLowerCase().startsWith("pos")
-				|| lcResult.toLowerCase().startsWith("+")) {
-				return new LabResultEvaluationResult(true, true,
-					new PathologicDescription(description, lcResult));
+			if (lcResult.toLowerCase().startsWith("pos") || lcResult.toLowerCase().startsWith("+")) {
+				return new LabResultEvaluationResult(true, true, new PathologicDescription(description, lcResult));
 			}
 		}
-		
-		String SELECTED_BASE =
-			(isAbsoluteItem) ? Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT
-					: Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_TEXT;
+
+		String SELECTED_BASE = (isAbsoluteItem) ? Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT
+				: Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_TEXT;
 		if (ConfigServiceHolder.getGlobal(
-			SELECTED_BASE
-				+ Preferences.LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC,
-			false)) {
-	
+				SELECTED_BASE + Preferences.LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC, false)) {
+
 			if (!lcResult.equalsIgnoreCase(refValue)) {
-				return new LabResultEvaluationResult(true, true,
-					new PathologicDescription(description, lcResult));
+				return new LabResultEvaluationResult(true, true, new PathologicDescription(description, lcResult));
 			}
 		}
-		
-		return new LabResultEvaluationResult(true, false,
-			new PathologicDescription(Description.UNKNOWN, lcResult));
+
+		return new LabResultEvaluationResult(true, false, new PathologicDescription(Description.UNKNOWN, lcResult));
 	}
-	
-	private Object[] getReferenceValueForLabResult(LabResult labResult){
+
+	private Object[] getReferenceValueForLabResult(LabResult labResult) {
 		Gender gender = labResult.getPatient().getGender();
-		
+
 		Description description = Description.PATHO_REF;
 		String refValue = "";
 		if (Gender.MALE == gender) {
@@ -72,16 +62,14 @@ public class LabResultEvaluator {
 				refValue = labResult.getItem().getReferenceFemale();
 			}
 		}
-		return new Object[] {
-			refValue, description
-		};
+		return new Object[] { refValue, description };
 	}
-	
-	public LabResultEvaluationResult evaluate(LabResult labResult){
+
+	public LabResultEvaluationResult evaluate(LabResult labResult) {
 		ILabItem item = labResult.getItem();
-		if(item.isNoReferenceValueItem()) {
-			return new LabResultEvaluationResult(true, false, new PathologicDescription(
-				Description.PATHO_REF_ITEM, Messages.LabResultEvaluator_LabItemNoRefValue));
+		if (item.isNoReferenceValueItem()) {
+			return new LabResultEvaluationResult(true, false, new PathologicDescription(Description.PATHO_REF_ITEM,
+					Messages.LabResultEvaluator_LabItemNoRefValue));
 		}
 		if (LabItemTyp.ABSOLUTE == item.getTyp()) {
 			return evaluateTextualResult(labResult, true);
@@ -93,5 +81,5 @@ public class LabResultEvaluator {
 		}
 		return new LabResultEvaluationResult(false);
 	}
-	
+
 }

@@ -19,37 +19,36 @@ import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.model.IXid;
 
-public class ProcedureRequest
-		extends AbstractFindingModelAdapter<ch.elexis.core.jpa.entities.ProcedureRequest>
+public class ProcedureRequest extends AbstractFindingModelAdapter<ch.elexis.core.jpa.entities.ProcedureRequest>
 		implements IProcedureRequest {
-	
-	public ProcedureRequest(ch.elexis.core.jpa.entities.ProcedureRequest entity){
+
+	public ProcedureRequest(ch.elexis.core.jpa.entities.ProcedureRequest entity) {
 		super(entity);
 	}
-	
+
 	@Override
-	public String getPatientId(){
+	public String getPatientId() {
 		return getEntity().getPatientId();
 	}
-	
+
 	@Override
-	public void setPatientId(String patientId){
+	public void setPatientId(String patientId) {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
-				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest = (org.hl7.fhir.r4.model.ServiceRequest) resource
+					.get();
 			fhirProcedureRequest.setSubject(new Reference(new IdDt("Patient", patientId)));
 			saveResource(resource.get());
 		}
 		getEntity().setPatientId(patientId);
 	}
-	
+
 	@Override
-	public List<ICoding> getCoding(){
+	public List<ICoding> getCoding() {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
-				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest = (org.hl7.fhir.r4.model.ServiceRequest) resource
+					.get();
 			CodeableConcept codeableConcept = fhirProcedureRequest.getCode();
 			if (codeableConcept != null) {
 				return ModelUtil.getCodingsFromConcept(codeableConcept);
@@ -57,13 +56,13 @@ public class ProcedureRequest
 		}
 		return Collections.emptyList();
 	}
-	
+
 	@Override
-	public void setCoding(List<ICoding> coding){
+	public void setCoding(List<ICoding> coding) {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
-				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest = (org.hl7.fhir.r4.model.ServiceRequest) resource
+					.get();
 			CodeableConcept codeableConcept = fhirProcedureRequest.getCode();
 			if (codeableConcept == null) {
 				codeableConcept = new CodeableConcept();
@@ -73,92 +72,89 @@ public class ProcedureRequest
 			saveResource(resource.get());
 		}
 	}
-	
+
 	@Override
-	public Optional<IEncounter> getEncounter(){
+	public Optional<IEncounter> getEncounter() {
 		String encounterId = getEntity().getEncounterId();
 		if (encounterId != null && !encounterId.isEmpty()) {
 			return ModelUtil.loadFinding(encounterId, IEncounter.class);
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public void setEncounter(IEncounter encounter){
+	public void setEncounter(IEncounter encounter) {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
-				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
-			fhirProcedureRequest
-				.setEncounter(new Reference(new IdDt("Encounter", encounter.getId())));
-			
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest = (org.hl7.fhir.r4.model.ServiceRequest) resource
+					.get();
+			fhirProcedureRequest.setEncounter(new Reference(new IdDt("Encounter", encounter.getId())));
+
 			saveResource(resource.get());
 		}
-		
+
 		String patientId = encounter.getPatientId();
 		if (patientId != null && !patientId.isEmpty() && getPatientId() == null) {
 			setPatientId(patientId);
 		}
-		
+
 		getEntity().setEncounterId(encounter.getId());
 	}
-	
+
 	@Override
-	public Optional<LocalDateTime> getScheduledTime(){
+	public Optional<LocalDateTime> getScheduledTime() {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
-				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest = (org.hl7.fhir.r4.model.ServiceRequest) resource
+					.get();
 			try {
 				if (fhirProcedureRequest.hasOccurrence()) {
-					return Optional.of(getLocalDateTime(
-						fhirProcedureRequest.getOccurrenceDateTimeType().getValue()));
+					return Optional.of(getLocalDateTime(fhirProcedureRequest.getOccurrenceDateTimeType().getValue()));
 				}
 			} catch (FHIRException e) {
-				LoggerFactory.getLogger(getClass())
-					.error("Could not access scheduled time.", e);
+				LoggerFactory.getLogger(getClass()).error("Could not access scheduled time.", e);
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public void setScheduledTime(LocalDateTime time){
+	public void setScheduledTime(LocalDateTime time) {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest =
-				(org.hl7.fhir.r4.model.ServiceRequest) resource.get();
+			org.hl7.fhir.r4.model.ServiceRequest fhirProcedureRequest = (org.hl7.fhir.r4.model.ServiceRequest) resource
+					.get();
 			fhirProcedureRequest.setOccurrence(new DateTimeType(getDate(time)));
-			
+
 			saveResource(resource.get());
 		}
 	}
-	
+
 	@Override
-	public RawContentFormat getRawContentFormat(){
+	public RawContentFormat getRawContentFormat() {
 		return RawContentFormat.FHIR_JSON;
 	}
-	
+
 	@Override
-	public String getRawContent(){
+	public String getRawContent() {
 		return getEntity().getContent();
 	}
-	
+
 	@Override
-	public void setRawContent(String content){
+	public void setRawContent(String content) {
 		getEntity().setContent(content);
 	}
-	
+
 	@Override
-	public boolean addXid(String domain, String id, boolean updateIfExists){
+	public boolean addXid(String domain, String id, boolean updateIfExists) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public IXid getXid(String domain){
+	public IXid getXid(String domain) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }

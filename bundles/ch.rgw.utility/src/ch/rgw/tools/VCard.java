@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.rgw.tools;
 
@@ -19,22 +19,20 @@ import java.util.Hashtable;
 
 /**
  * This class is a java representation of a vCard (http://www.imc.org/pdi/)
- * 
+ *
  */
 public class VCard {
 	Hashtable<String, String> elements = new Hashtable<String, String>();
-	
+
 	/**
-	 * Construct a VCard from an InputStream. If the stream contains more than one vCard, only one
-	 * will be loaded
-	 * 
-	 * @param in
-	 *            the Stream containing the vCard-Data
-	 * @throws VCardException
-	 *             inf the stream does not contain a valid vCard
+	 * Construct a VCard from an InputStream. If the stream contains more than one
+	 * vCard, only one will be loaded
+	 *
+	 * @param in the Stream containing the vCard-Data
+	 * @throws VCardException inf the stream does not contain a valid vCard
 	 * @throws IOException
 	 */
-	public VCard(InputStream in) throws VCardException, IOException{
+	public VCard(InputStream in) throws VCardException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String line;
 		do {
@@ -49,68 +47,66 @@ public class VCard {
 			line = br.readLine();
 		}
 	}
-	
+
 	/**
 	 * find all elements in that vCard. An Element is one line, e.g.
 	 * N;CHARSET=ISO-8859-1;ENCODING=QUOTED-PRINTABLE:Weirich;Gerry
-	 * 
+	 *
 	 * @return a list of all elements
 	 */
-	public String[] getElements(){
+	public String[] getElements() {
 		return elements.keySet().toArray(new String[0]);
 	}
-	
+
 	/**
 	 * find the named element
-	 * 
-	 * @param name
-	 *            the name of the element to find
+	 *
+	 * @param name the name of the element to find
 	 * @return the full element (with attributes and value)
 	 */
-	public String getElement(String name){
+	public String getElement(String name) {
 		return elements.get(name);
 	}
-	
+
 	/**
 	 * return all attributes of the given element
-	 * 
+	 *
 	 * @param element
 	 * @return
 	 */
-	public String[] getAttributes(String element){
+	public String[] getAttributes(String element) {
 		String[] s1 = element.split(":");
 		String[] s2 = s1[0].split(";");
 		return s2;
 	}
-	
+
 	/**
 	 * return the value of the given Element
-	 * 
+	 *
 	 * @param element
 	 * @return
 	 */
-	public String getValue(String element){
+	public String getValue(String element) {
 		String[] s1 = element.split(":");
 		return (s1.length > 1) ? s1[1] : s1[0];
 	}
-	
+
 	/**
 	 * return the value of the given named element
-	 * 
-	 * @param name
-	 *            name of the element
+	 *
+	 * @param name name of the element
 	 * @return value of the element or null
 	 */
-	public String getElementValue(String name){
+	public String getElementValue(String name) {
 		String element = getElement(name);
 		if (element != null) {
 			return getValue(element);
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("serial")
 	public static class VCardException extends Exception {
-		
+
 	}
 }

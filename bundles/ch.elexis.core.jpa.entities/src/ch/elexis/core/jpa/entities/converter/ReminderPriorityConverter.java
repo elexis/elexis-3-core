@@ -11,7 +11,7 @@ import ch.elexis.core.model.issue.Priority;
 public class ReminderPriorityConverter implements AttributeConverter<Priority, String> {
 
 	@Override
-	public String convertToDatabaseColumn(Priority attribute){
+	public String convertToDatabaseColumn(Priority attribute) {
 		if (attribute != null) {
 			return Integer.toString(attribute.numericValue());
 		}
@@ -19,7 +19,7 @@ public class ReminderPriorityConverter implements AttributeConverter<Priority, S
 	}
 
 	@Override
-	public Priority convertToEntityAttribute(String dbData){
+	public Priority convertToEntityAttribute(String dbData) {
 		if (StringUtils.isEmpty(dbData)) {
 			return Priority.LOW;
 		}

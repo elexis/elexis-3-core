@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.views.codesystems;
 
@@ -68,38 +68,38 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 	private IAction importAction;
 	private ViewMenus viewmenus;
 	private Hashtable<String, ImporterPage> importers;
-	
+
 	private DelegatingSelectionProvider delegatingSelectionProvider;
-	
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout());
 		ctab = new CTabFolder(parent, SWT.NONE);
 		importers = new Hashtable<String, ImporterPage>();
-		
+
 		addAllPages();
 		if (ctab.getItemCount() > 0) {
 			ctab.setSelection(0);
 		}
 		ctab.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				CTabItem selected = ctab.getSelection();
-				
+
 				if (selected != null) {
 					if (selected.getControl() instanceof MasterDetailsPage) {
 						MasterDetailsPage page = (MasterDetailsPage) selected.getControl();
 						if (page.getCodeSelectorFactory().hasContextMenu()) {
-							page.getCodeSelectorFactory().activateContextMenu(getSite(),
-								delegatingSelectionProvider, ID);
+							page.getCodeSelectorFactory().activateContextMenu(getSite(), delegatingSelectionProvider,
+									ID);
 						}
 					}
 				}
-				
+
 				if (selected instanceof FavoritenCTabItem || selected instanceof MakrosCTabItem) {
 					return;
 				}
-				
+
 				if (selected != null) {
 					String t = selected.getText();
 					importAction.setEnabled(importers.get(t) != null);
@@ -116,45 +116,45 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 		delegatingSelectionProvider = new DelegatingSelectionProvider();
 		getSite().setSelectionProvider(delegatingSelectionProvider);
 	}
-	
-	private void makeActions(){
-		importAction = new Action(Messages.CodeDetailView_importActionTitle) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					CTabItem it = ctab.getSelection();
-					if (it != null) {
-						ImporterPage top = importers.get(it.getText());
-						if (top != null) {
-							ImportDialog dlg = new ImportDialog(getViewSite().getShell(), top);
-							dlg.create();
-							dlg.setTitle(top.getTitle());
-							dlg.setMessage(top.getDescription());
-							dlg.getShell().setText(Messages.CodeDetailView_importerCaption); //$NON-NLS-1$
-							if (dlg.open() == Dialog.OK) {
-								top.run(false);
-							}
+
+	private void makeActions() {
+		importAction = new Action(Messages.CodeDetailView_importActionTitle) { // $NON-NLS-1$
+			@Override
+			public void run() {
+				CTabItem it = ctab.getSelection();
+				if (it != null) {
+					ImporterPage top = importers.get(it.getText());
+					if (top != null) {
+						ImportDialog dlg = new ImportDialog(getViewSite().getShell(), top);
+						dlg.create();
+						dlg.setTitle(top.getTitle());
+						dlg.setMessage(top.getDescription());
+						dlg.getShell().setText(Messages.CodeDetailView_importerCaption); // $NON-NLS-1$
+						if (dlg.open() == Dialog.OK) {
+							top.run(false);
 						}
 					}
 				}
-			};
+			}
+		};
 	}
-	
+
 	private class ImportDialog extends TitleAreaDialog {
 		ImporterPage importer;
-		
-		public ImportDialog(Shell parentShell, ImporterPage i){
+
+		public ImportDialog(Shell parentShell, ImporterPage i) {
 			super(parentShell);
 			importer = i;
 		}
-		
+
 		@Override
-		protected Control createDialogArea(Composite parent){
+		protected Control createDialogArea(Composite parent) {
 			return importer.createPage(parent);
 		}
-		
+
 	}
-	
-	private void addAllPages(){
+
+	private void addAllPages() {
 		String settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_CODES, null);
 		if (settings == null) {
 			new MakrosCTabItem(ctab, SWT.NONE);
@@ -166,37 +166,36 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 			new MakrosCTabItem(ctab, SWT.NONE);
 			addUserSpecifiedPages(settings);
 		}
-		
+
 	}
-	
-	private void addUserSpecifiedPages(String settings){
+
+	private void addUserSpecifiedPages(String settings) {
 		String[] userSettings = settings.split(",");
 		Map<Integer, IConfigurationElement> iceMap = new TreeMap<Integer, IConfigurationElement>();
-		
+
 		iceMap = collectNeededPages(ExtensionPointConstantsUi.DIAGNOSECODE, userSettings, iceMap);
-		iceMap =
-			collectNeededPages(ExtensionPointConstantsUi.VERRECHNUNGSCODE, userSettings, iceMap);
+		iceMap = collectNeededPages(ExtensionPointConstantsUi.VERRECHNUNGSCODE, userSettings, iceMap);
 		iceMap = collectNeededPages(ExtensionPointConstantsUi.GENERICCODE, userSettings, iceMap);
-		
+
 		// add favorites tab if settings desire it
 		for (int i = 0; i < userSettings.length; i++) {
 			if (userSettings[i].equals("Favoriten")) {
 				iceMap.put(i, null);
 			}
 		}
-		
+
 		for (Integer key : iceMap.keySet()) {
 			IConfigurationElement ce = iceMap.get(key);
 			if (ce == null) {
 				new FavoritenCTabItem(ctab, SWT.None);
 				continue;
 			}
-			
+
 			try {
-				IDetailDisplay detailDisplay =
-					(IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
-				CodeSelectorFactory codeSelector =
-					(CodeSelectorFactory) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+				IDetailDisplay detailDisplay = (IDetailDisplay) ce
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
+				CodeSelectorFactory codeSelector = (CodeSelectorFactory) ce
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 				String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 				ImporterPage ip = null;
 				if (a != null) {
@@ -205,63 +204,59 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 						importers.put(detailDisplay.getTitle(), ip);
 					}
 				}
-				
+
 				MasterDetailsPage page = new MasterDetailsPage(ctab, codeSelector, detailDisplay);
 				CTabItem ct = new CTabItem(ctab, SWT.NONE);
 				ct.setText(detailDisplay.getTitle());
 				ct.setControl(page);
 				ct.setData(detailDisplay);
-				
+
 				CoreUiUtil.injectServices(codeSelector);
 				CoreUiUtil.injectServices(detailDisplay);
 			} catch (Exception ex) {
 				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex);
-				ElexisStatus status =
-					new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-						"Fehler beim Initialisieren von " + ce.getName(), ex,
-						ElexisStatus.LOG_WARNINGS);
+				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+						"Fehler beim Initialisieren von " + ce.getName(), ex, ElexisStatus.LOG_WARNINGS);
 				StatusManager.getManager().handle(status, StatusManager.SHOW);
 			}
 		}
 	}
-	
-	private Map<Integer, IConfigurationElement> collectNeededPages(String point,
-		String[] userSettings, Map<Integer, IConfigurationElement> iceMap){
+
+	private Map<Integer, IConfigurationElement> collectNeededPages(String point, String[] userSettings,
+			Map<Integer, IConfigurationElement> iceMap) {
 		List<IConfigurationElement> list = Extensions.getExtensions(point);
 		for (IConfigurationElement ce : list) {
 			try {
 				if ("Artikel".equals(ce.getName())) { //$NON-NLS-1$
 					continue;
 				}
-				IDetailDisplay d =
-					(IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
+				IDetailDisplay d = (IDetailDisplay) ce
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 				for (int i = 0; i < userSettings.length; i++) {
 					if (userSettings[i].equals(d.getTitle().trim())) {
 						iceMap.put(i, ce);
 					}
 				}
 			} catch (Exception ex) {
-				ElexisStatus status =
-					new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-						"Fehler beim Initialisieren von " + ce.getName(), ex,
-						ElexisStatus.LOG_WARNINGS);
+				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+						"Fehler beim Initialisieren von " + ce.getName(), ex, ElexisStatus.LOG_WARNINGS);
 				StatusManager.getManager().handle(status, StatusManager.SHOW);
 			}
 		}
 		return iceMap;
 	}
-	
-	private void addPagesFor(String point){
+
+	private void addPagesFor(String point) {
 		List<IConfigurationElement> list = Extensions.getExtensions(point);
 		for (IConfigurationElement ce : list) {
 			try {
 				if ("Artikel".equals(ce.getName())) { //$NON-NLS-1$
 					continue;
 				}
-				IDetailDisplay detailDisplay =
-					(IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
-				CodeSelectorFactory codeSelector =
-					(CodeSelectorFactory) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+				IDetailDisplay detailDisplay = (IDetailDisplay) ce
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
+				CodeSelectorFactory codeSelector = (CodeSelectorFactory) ce
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 				String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 				ImporterPage ip = null;
 				if (a != null) {
@@ -275,54 +270,50 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 				ct.setText(detailDisplay.getTitle());
 				ct.setControl(page);
 				ct.setData(detailDisplay);
-				
+
 				CoreUiUtil.injectServicesWithContext(codeSelector);
 				CoreUiUtil.injectServicesWithContext(detailDisplay);
 			} catch (Exception ex) {
 				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex);
-				ElexisStatus status =
-					new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-						"Fehler beim Initialisieren von " + ce.getName(), ex,
-						ElexisStatus.LOG_WARNINGS);
+				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+						"Fehler beim Initialisieren von " + ce.getName(), ex, ElexisStatus.LOG_WARNINGS);
 				StatusManager.getManager().handle(status, StatusManager.SHOW);
 			}
 		}
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		if (ctab.getItemCount() > 0) {
 			ctab.setFocus();
 		}
 	}
-	
+
 	private class MasterDetailsPage extends Composite {
 		private SashForm sash;
 		private CommonViewer cv;
 		private CodeSelectorFactory master;
 		private IDetailDisplay detail;
-		
+
 		private ElexisEventListenerImpl eeli_div;
 		private ElexisEventListenerImpl eeli_mod;
-		
+
 		public MasterDetailsPage(Composite parent, CodeSelectorFactory codeSelectorFactory,
-			IDetailDisplay displayDetail){
+				IDetailDisplay displayDetail) {
 			super(parent, SWT.NONE);
-			
+
 			this.detail = displayDetail;
 			this.master = codeSelectorFactory;
 			cv = new CommonViewer();
-			eeli_div = new ElexisUiEventListenerImpl(detail.getElementClass(),
-				ElexisEvent.EVENT_SELECTED) {
+			eeli_div = new ElexisUiEventListenerImpl(detail.getElementClass(), ElexisEvent.EVENT_SELECTED) {
 				@Override
-				public void runInUi(ElexisEvent ev){
+				public void runInUi(ElexisEvent ev) {
 					detail.display(ev.getObject());
 				}
 			};
-			eeli_mod = new ElexisUiEventListenerImpl(detail.getElementClass(),
-				ElexisEvent.EVENT_UPDATE) {
+			eeli_mod = new ElexisUiEventListenerImpl(detail.getElementClass(), ElexisEvent.EVENT_UPDATE) {
 				@Override
-				public void runInUi(ElexisEvent ev){
+				public void runInUi(ElexisEvent ev) {
 					cv.notify(CommonViewer.Message.updateSingle, ev.getObject());
 				}
 			};
@@ -334,18 +325,18 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 			cv.getConfigurer().getContentProvider().startListening();
 			ElexisEventDispatcher.getInstance().addListeners(eeli_div, eeli_mod);
 		}
-		
-		public CodeSelectorFactory getCodeSelectorFactory(){
+
+		public CodeSelectorFactory getCodeSelectorFactory() {
 			return master;
 		}
-		
-		public void dispose(){
+
+		public void dispose() {
 			ElexisEventDispatcher.getInstance().removeListeners(eeli_div, eeli_mod);
 		}
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		if ((ctab != null) && (!ctab.isDisposed())) {
 			for (CTabItem ct : ctab.getItems()) {
@@ -356,11 +347,11 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 				page.dispose();
 			}
 		}
-		
+
 	}
-	
+
 	/** Vom ActivationListener */
-	public void activation(boolean mode){
+	public void activation(boolean mode) {
 		CTabItem selected = ctab.getSelection();
 		if (selected instanceof FavoritenCTabItem || selected instanceof MakrosCTabItem)
 			return;
@@ -374,14 +365,14 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 			}
 		}
 	}
-	
-	public void visible(boolean mode){
-		
+
+	public void visible(boolean mode) {
+
 	}
-	
+
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

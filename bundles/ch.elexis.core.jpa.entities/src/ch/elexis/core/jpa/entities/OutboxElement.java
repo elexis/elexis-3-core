@@ -22,92 +22,92 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 public class OutboxElement extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
+
 	@OneToOne
 	@JoinColumn(name = "patient")
 	private Kontakt patient;
-	
+
 	@OneToOne
 	@JoinColumn(name = "mandant")
 	private Kontakt mandant;
-	
+
 	@Column(length = 1)
 	private String state;
-	
+
 	@Column(length = 255)
 	private String uri;
-	
-	public Kontakt getPatient(){
+
+	public Kontakt getPatient() {
 		return patient;
 	}
-	
-	public void setPatient(Kontakt patient){
+
+	public void setPatient(Kontakt patient) {
 		this.patient = patient;
 	}
-	
-	public Kontakt getMandant(){
+
+	public Kontakt getMandant() {
 		return mandant;
 	}
-	
-	public void setMandant(Kontakt mandant){
+
+	public void setMandant(Kontakt mandant) {
 		this.mandant = mandant;
 	}
-	
-	public String getState(){
+
+	public String getState() {
 		return state;
 	}
-	
-	public void setState(String state){
+
+	public void setState(String state) {
 		this.state = state;
 	}
-	
-	public String getUri(){
+
+	public String getUri() {
 		return uri;
 	}
-	
-	public void setUri(String uri){
+
+	public void setUri(String uri) {
 		this.uri = uri;
 	}
 }

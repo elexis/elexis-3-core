@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.commands;
 
@@ -36,29 +36,29 @@ public class MahnlaufCommand extends AbstractHandler {
 	private static final String STR_MANDANT_I_D = "MandantID"; //$NON-NLS-1$
 	private static final String STR_RN_STATUS = "RnStatus"; //$NON-NLS-1$
 	public final static String ID = "bill.reminder"; //$NON-NLS-1$
-	
+
 	private Settings rnsSettings;
-	
-	public Object execute(ExecutionEvent arg0) throws ExecutionException{
+
+	public Object execute(ExecutionEvent arg0) throws ExecutionException {
 		Mandant mandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
 		Rechnungssteller rechnungssteller = mandant.getRechnungssteller();
 		rnsSettings = CoreHub.getUserSetting(rechnungssteller);
-		
+
 		Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
 		List<Mandant> allMandants = qbe.execute();
-		
+
 		for (Mandant m : allMandants) {
 			if (m.getRechnungssteller().equals(rechnungssteller))
 				performMahnlaufForMandant(m.getId());
 		}
 		return null;
 	}
-	
-	private void performMahnlaufForMandant(String mandantId){
+
+	private void performMahnlaufForMandant(String mandantId) {
 		Query<Rechnung> qbe = new Query<Rechnung>(Rechnung.class);
 		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.OFFEN_UND_GEDRUCKT)); //$NON-NLS-1$
 		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
-		
+
 		TimeTool tt = new TimeTool();
 		// Rechnung zu 1. Mahnung
 		int days = rnsSettings.get(Preferences.RNN_DAYSUNTIL1ST, 30);
@@ -67,7 +67,7 @@ public class MahnlaufCommand extends AbstractHandler {
 			betrag = new Money(rnsSettings.get(Preferences.RNN_AMOUNT1ST, "0.00")); //$NON-NLS-1$
 		} catch (ParseException ex) {
 			ExHandler.handle(ex);
-			
+
 		}
 		tt.addHours(days * 24 * -1);
 		qbe.add(STR_STATUS_DATUM, "<", tt.toString(TimeTool.DATE_COMPACT)); //$NON-NLS-1$
@@ -75,8 +75,7 @@ public class MahnlaufCommand extends AbstractHandler {
 		for (Rechnung rn : list) {
 			rn.setStatus(RnStatus.MAHNUNG_1);
 			if (!betrag.isZero()) {
-				rn.addZahlung(new Money(betrag).multiply(-1.0),
-					ch.elexis.data.Messages.Rechnung_Mahngebuehr1, null);
+				rn.addZahlung(new Money(betrag).multiply(-1.0), ch.elexis.data.Messages.Rechnung_Mahngebuehr1, null);
 			}
 		}
 		// 1. Mahnung zu 2. Mahnung
@@ -97,8 +96,7 @@ public class MahnlaufCommand extends AbstractHandler {
 		for (Rechnung rn : list) {
 			rn.setStatus(RnStatus.MAHNUNG_2);
 			if (!betrag.isZero()) {
-				rn.addZahlung(new Money(betrag).multiply(-1.0),
-					ch.elexis.data.Messages.Rechnung_Mahngebuehr2, null);
+				rn.addZahlung(new Money(betrag).multiply(-1.0), ch.elexis.data.Messages.Rechnung_Mahngebuehr2, null);
 			}
 		}
 		// 2. Mahnung zu 3. Mahnung
@@ -119,8 +117,7 @@ public class MahnlaufCommand extends AbstractHandler {
 		for (Rechnung rn : list) {
 			rn.setStatus(RnStatus.MAHNUNG_3);
 			if (!betrag.isZero()) {
-				rn.addZahlung(new Money(betrag).multiply(-1.0),
-					ch.elexis.data.Messages.Rechnung_Mahngebuehr3, null);
+				rn.addZahlung(new Money(betrag).multiply(-1.0), ch.elexis.data.Messages.Rechnung_Mahngebuehr3, null);
 			}
 		}
 	}

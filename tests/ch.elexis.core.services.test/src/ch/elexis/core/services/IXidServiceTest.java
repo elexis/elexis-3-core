@@ -14,19 +14,19 @@ import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IXidServiceTest extends AbstractServiceTest {
-	
+
 	private IXidService service = OsgiServiceUtil.getService(IXidService.class).get();
-	
+
 	@Test
-	public void addAndFindXids(){
-		IPatient patient = new IContactBuilder.PatientBuilder(coreModelService, "first", "last",
-			LocalDate.now(), Gender.FEMALE).buildAndSave();
+	public void addAndFindXids() {
+		IPatient patient = new IContactBuilder.PatientBuilder(coreModelService, "first", "last", LocalDate.now(),
+				Gender.FEMALE).buildAndSave();
 		service.addXid(patient, "domain", "domainId", true);
-		
+
 		List<IXid> xids = service.getXids(patient);
 		assertEquals("domainId", xids.get(0).getDomainId());
 		assertEquals("first", service.findObject("domain", "domainId", IPatient.class).get().getFirstName());
-		
+
 		coreModelService.remove(patient);
 	}
 }

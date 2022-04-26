@@ -8,13 +8,13 @@ import ch.elexis.core.findings.templates.service.IFindingsTemplateService;
 @Component
 public class FindingsTemplateServiceComponent {
 	private static IFindingsTemplateService templateService;
-	
+
 	@Reference(unbind = "-")
-	public void setFindingsService(IFindingsTemplateService templateService){
+	public void setFindingsService(IFindingsTemplateService templateService) {
 		FindingsTemplateServiceComponent.templateService = templateService;
 	}
-	
-	public static IFindingsTemplateService getService(){
+
+	public static IFindingsTemplateService getService() {
 		return templateService;
 	}
 }

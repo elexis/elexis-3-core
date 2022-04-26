@@ -8,11 +8,10 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.stock.dialogs.ImportArticleDialog;
 
 public class ArticleImportHandler extends AbstractHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		ImportArticleDialog importArticleDialog =
-			new ImportArticleDialog(UiDesk.getDisplay().getActiveShell());
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ImportArticleDialog importArticleDialog = new ImportArticleDialog(UiDesk.getDisplay().getActiveShell());
 		importArticleDialog.open();
 		return null;
 	}

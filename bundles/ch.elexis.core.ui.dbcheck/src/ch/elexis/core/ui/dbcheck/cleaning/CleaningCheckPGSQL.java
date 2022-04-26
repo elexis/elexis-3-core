@@ -7,14 +7,14 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 
 public class CleaningCheckPGSQL extends CleaningCheck {
-	
-	public CleaningCheckPGSQL(){
+
+	public CleaningCheckPGSQL() {
 		oklog = new StringBuilder();
 		errlog = new StringBuilder();
 	}
-	
+
 	@Override
-	public String cleanCoreTables(JdbcLink j){
+	public String cleanCoreTables(JdbcLink j) {
 		String version = CheckExec.getDBVersion();
 		String[] tables = DBModel.getTableModel(version);
 		// Iterate Tables
@@ -28,13 +28,12 @@ public class CleaningCheckPGSQL extends CleaningCheck {
 					Stm stm = j.getStatement();
 					int rsNo = stm.exec(query);
 					if (rsNo > 1)
-						errlog.append(tables[i] + ": " + description + " - # affected rows: "
-							+ rsNo);
+						errlog.append(tables[i] + ": " + description + " - # affected rows: " + rsNo);
 					oklog.append(tables[i] + ": " + description + " - # affected rows: " + rsNo);
 				}
 			}
 		}
 		return oklog.toString();
 	}
-	
+
 }

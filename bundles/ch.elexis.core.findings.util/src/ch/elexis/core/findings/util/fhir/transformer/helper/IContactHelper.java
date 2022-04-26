@@ -27,18 +27,18 @@ import ch.elexis.core.services.IXidService;
 import ch.elexis.core.types.Gender;
 
 public class IContactHelper extends AbstractHelper {
-	
+
 	private IModelService modelService;
 	private IXidService xidService;
 	private IUserService userService;
-	
-	public IContactHelper(IModelService modelService, IXidService xidService, IUserService userService){
+
+	public IContactHelper(IModelService modelService, IXidService xidService, IUserService userService) {
 		this.modelService = modelService;
 		this.xidService = xidService;
 		this.userService = userService;
 	}
-	
-	public List<HumanName> getHumanNames(IPerson person){
+
+	public List<HumanName> getHumanNames(IPerson person) {
 		List<HumanName> ret = new ArrayList<>();
 		if (person.isPerson()) {
 			HumanName humanName = new HumanName();
@@ -60,8 +60,8 @@ public class IContactHelper extends AbstractHelper {
 		}
 		return ret;
 	}
-	
-	public String getOrganizationName(IOrganization organization){
+
+	public String getOrganizationName(IOrganization organization) {
 		StringBuilder sb = new StringBuilder();
 		if (organization.isOrganization()) {
 			if (organization.getDescription1() != null) {
@@ -76,8 +76,8 @@ public class IContactHelper extends AbstractHelper {
 		}
 		return sb.toString();
 	}
-	
-	public AdministrativeGender getGender(Gender gender){
+
+	public AdministrativeGender getGender(Gender gender) {
 		if (gender == Gender.FEMALE) {
 			return AdministrativeGender.FEMALE;
 		} else if (gender == Gender.MALE) {
@@ -88,18 +88,18 @@ public class IContactHelper extends AbstractHelper {
 			return AdministrativeGender.OTHER;
 		}
 	}
-	
-	public Date getBirthDate(IPerson kontakt){
+
+	public Date getBirthDate(IPerson kontakt) {
 		LocalDateTime dateOfBirth = kontakt.getDateOfBirth();
 		if (dateOfBirth != null) {
 			return getDate(dateOfBirth);
 		}
 		return null;
 	}
-	
-	public List<Address> getAddresses(IContact contact){
+
+	public List<Address> getAddresses(IContact contact) {
 		List<Address> ret = new ArrayList<>();
-		
+
 		// main address data
 		Address address = new Address();
 		address.setUse(AddressUse.HOME);
@@ -110,11 +110,11 @@ public class IContactHelper extends AbstractHelper {
 		lines.add(new StringType(contact.getStreet()));
 		address.setLine(lines);
 		ret.add(address);
-		
+
 		return ret;
 	}
-	
-	public List<ContactPoint> getContactPoints(IContact contact){
+
+	public List<ContactPoint> getContactPoints(IContact contact) {
 		List<ContactPoint> ret = new ArrayList<>();
 		if (contact.getPhone1() != null && !contact.getPhone1().isEmpty()) {
 			ContactPoint contactPoint = new ContactPoint();
@@ -157,8 +157,8 @@ public class IContactHelper extends AbstractHelper {
 		}
 		return ret;
 	}
-	
-	public List<Identifier> getIdentifiers(IContact contact){
+
+	public List<Identifier> getIdentifiers(IContact contact) {
 		List<Identifier> ret = new ArrayList<>();
 		List<IXid> xids = xidService.getXids(contact);
 		for (IXid xid : xids) {

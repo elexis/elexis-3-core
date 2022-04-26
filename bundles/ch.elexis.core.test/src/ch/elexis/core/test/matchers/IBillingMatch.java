@@ -20,33 +20,33 @@ public class IBillingMatch {
 	public final boolean deleted;
 	public Integer vk_tp;
 	public Money vk_preis;
-	
-	public IBillingMatch(String code, double count){
+
+	public IBillingMatch(String code, double count) {
 		this(code, count, false);
 	}
-	
-	public IBillingMatch(String code, double count, boolean deleted){
+
+	public IBillingMatch(String code, double count, boolean deleted) {
 		this(code, count, 100, 100, deleted);
 	}
-	
-	public IBillingMatch(String code, double count, int scale1, int scale2, boolean deleted){
+
+	public IBillingMatch(String code, double count, int scale1, int scale2, boolean deleted) {
 		this(code, count, scale1, scale2, null, null, deleted);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param code
 	 * @param count
 	 * @param scale1
 	 * @param scale2
-	 * @param vk_tp
-	 *            if <code>null</code> do not match the price, else price matching will be performed
-	 * @param vk_preis
-	 *            if <code>null</code> do not match the price, else price matching will be performed
+	 * @param vk_tp    if <code>null</code> do not match the price, else price
+	 *                 matching will be performed
+	 * @param vk_preis if <code>null</code> do not match the price, else price
+	 *                 matching will be performed
 	 * @param deleted
 	 */
-	public IBillingMatch(String code, double count, int scale1, int scale2, Integer vk_tp,
-		Money vk_preis, boolean deleted){
+	public IBillingMatch(String code, double count, int scale1, int scale2, Integer vk_tp, Money vk_preis,
+			boolean deleted) {
 		super();
 		this.code = code;
 		this.scale1 = scale1;
@@ -56,13 +56,13 @@ public class IBillingMatch {
 		this.vk_preis = vk_preis;
 		this.deleted = deleted;
 	}
-	
-	public String getCode(){
+
+	public String getCode() {
 		return code;
 	}
-	
+
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((code == null) ? 0 : code.hashCode());
@@ -74,9 +74,9 @@ public class IBillingMatch {
 		result = prime * result + ((vk_tp == null) ? 0 : vk_tp.hashCode());
 		return result;
 	}
-	
+
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -109,29 +109,28 @@ public class IBillingMatch {
 			return false;
 		return true;
 	}
-	
+
 	@Override
-	public String toString(){
-		return "IBillingMatch [code=" + code + ", count=" + count + ", scale1=" + scale1
-			+ ", scale2=" + scale2 + ", deleted=" + deleted + ", vk_tp=" + vk_tp + ", vk_preis="
-			+ vk_preis + "]\n";
+	public String toString() {
+		return "IBillingMatch [code=" + code + ", count=" + count + ", scale1=" + scale1 + ", scale2=" + scale2
+				+ ", deleted=" + deleted + ", vk_tp=" + vk_tp + ", vk_preis=" + vk_preis + "]\n";
 	}
-	
-	public static void assertMatch(IEncounter encounter, List<IBillingMatch> matches){
+
+	public static void assertMatch(IEncounter encounter, List<IBillingMatch> matches) {
 		List<IBilled> billed = encounter.getBilled();
-		
+
 		List<IBillingMatch> existingVerrechnet = billed.stream()
-			.map(v -> new IBillingMatch(v.getBillable().getId(), v.getAmount(), v.getPrimaryScale(),
-				v.getSecondaryScale(), v.getPoints(), v.getPrice(), v.isDeleted()))
-			.collect(Collectors.toList());
-		
+				.map(v -> new IBillingMatch(v.getBillable().getId(), v.getAmount(), v.getPrimaryScale(),
+						v.getSecondaryScale(), v.getPoints(), v.getPrice(), v.isDeleted()))
+				.collect(Collectors.toList());
+
 		Set<String> dontMatchPrice = new HashSet<>();
 		for (IBillingMatch vm : matches) {
 			if (vm.vk_tp == null || vm.vk_preis == null) {
 				dontMatchPrice.add(vm.code);
 			}
 		}
-		
+
 		if (dontMatchPrice.size() > 0) {
 			for (IBillingMatch vm : existingVerrechnet) {
 				if (dontMatchPrice.contains(vm.code)) {
@@ -140,12 +139,11 @@ public class IBillingMatch {
 				}
 			}
 		}
-		
-		Collection<IBillingMatch> disjunction =
-			CollectionUtils.disjunction(existingVerrechnet, matches);
+
+		Collection<IBillingMatch> disjunction = CollectionUtils.disjunction(existingVerrechnet, matches);
 		if (disjunction.size() > 0) {
 			throw new AssertionError(disjunction);
 		}
 	}
-	
+
 }

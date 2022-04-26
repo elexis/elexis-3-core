@@ -19,22 +19,20 @@ import ch.elexis.core.ui.contacts.views.KontaktDetailView;
 import ch.elexis.core.ui.contacts.views.KontakteView;
 
 /**
- * Diese Perspektive erzeugt das Startlayout für den Auswahlknopf "Adressen" Funktion: Verknüpfung
- * vong Anschriften und Kontakten zu Adressen
+ * Diese Perspektive erzeugt das Startlayout für den Auswahlknopf "Adressen"
+ * Funktion: Verknüpfung vong Anschriften und Kontakten zu Adressen
  */
 public class AdressPerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.AdressPerspektive"; //$NON-NLS-1$
-	
-	public void createInitialLayout(IPageLayout layout){
+
+	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
-		
-		IFolderLayout oben =
-			layout.createFolder("oben", IPageLayout.TOP, 0.5f, IPageLayout.ID_EDITOR_AREA);
-		IFolderLayout details =
-			layout.createFolder("details", IPageLayout.TOP, 1.0f, IPageLayout.ID_EDITOR_AREA);
+
+		IFolderLayout oben = layout.createFolder("oben", IPageLayout.TOP, 0.5f, IPageLayout.ID_EDITOR_AREA);
+		IFolderLayout details = layout.createFolder("details", IPageLayout.TOP, 1.0f, IPageLayout.ID_EDITOR_AREA);
 		oben.addView(KontakteView.ID);
 		details.addView(KontaktDetailView.ID);
 	}
-	
+
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.text;
 
@@ -17,12 +17,12 @@ import org.eclipse.swt.events.VerifyEvent;
 
 public class ShortcutListener implements VerifyKeyListener {
 	private EnhancedTextField mine;
-	
-	public ShortcutListener(EnhancedTextField etf){
+
+	public ShortcutListener(EnhancedTextField etf) {
 		mine = etf;
 	}
-	
-	public void verifyKey(VerifyEvent event){
+
+	public void verifyKey(VerifyEvent event) {
 		if (event.stateMask == SWT.MOD1) {
 			switch (event.keyCode) {
 			// 'z'
@@ -32,9 +32,9 @@ public class ShortcutListener implements VerifyKeyListener {
 				event.doit = false;
 				break;
 			/*
-			 * already handled by StyledText itself // 'c' case 99: System.out.println("copy");
-			 * mine.text.copy(); break; // 'v' case 118: System.out.print("paste");
-			 * mine.text.paste(); break;
+			 * already handled by StyledText itself // 'c' case 99:
+			 * System.out.println("copy"); mine.text.copy(); break; // 'v' case 118:
+			 * System.out.print("paste"); mine.text.paste(); break;
 			 */
 			default:
 				System.out.println(event.toString());
@@ -45,5 +45,5 @@ public class ShortcutListener implements VerifyKeyListener {
 		} else
 			event.doit = true;
 	}
-	
+
 }

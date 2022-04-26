@@ -7,15 +7,15 @@ import ch.elexis.core.services.IBillingSystemService;
 
 @Component
 public class IBillingSystemServiceHolder {
-	
+
 	private static IBillingSystemService service;
-	
+
 	@Reference
-	public void setModelService(IBillingSystemService service){
+	public void setModelService(IBillingSystemService service) {
 		IBillingSystemServiceHolder.service = service;
 	}
-	
-	public static IBillingSystemService get(){
+
+	public static IBillingSystemService get() {
 		if (service == null) {
 			throw new IllegalStateException("No IModelService available");
 		}

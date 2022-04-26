@@ -11,17 +11,16 @@ import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 
 /**
  * Open the {@link LocalDocumentsDialog}.
- * 
+ *
  * @author thomas
  *
  */
 public class OpenLocalDocumentsHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		if (LocalDocumentServiceHolder.getService().isPresent()) {
-			LocalDocumentsDialog dialog =
-				new LocalDocumentsDialog(HandlerUtil.getActiveShell(event),
+			LocalDocumentsDialog dialog = new LocalDocumentsDialog(HandlerUtil.getActiveShell(event),
 					LocalDocumentServiceHolder.getService().get());
 			dialog.open();
 		}

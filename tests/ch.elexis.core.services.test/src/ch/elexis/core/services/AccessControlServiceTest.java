@@ -22,44 +22,42 @@ import ch.elexis.core.test.TestEntities;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class AccessControlServiceTest {
-	
+
 	private IModelService modelService = AllServiceTests.getModelService();
 	private static IAccessControlService accessControlService;
-	
+
 	@BeforeClass
-	public static void beforeClass(){
+	public static void beforeClass() {
 		accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).get();
 		accessControlService.initializeDefaults();
 	}
-	
+
 	@Test
-	public void testInitialState(){
+	public void testInitialState() {
 		List<IRight> allSystemRights = modelService.getQuery(IRight.class).execute();
-		System.out.println("Rights set: "
-			+ allSystemRights.stream().map(r -> r.getLabel()).collect(Collectors.joining(",")));
+		System.out.println(
+				"Rights set: " + allSystemRights.stream().map(r -> r.getLabel()).collect(Collectors.joining(",")));
 		assertTrue(allSystemRights.size() >= 40);
-		
+
 		IUser user = modelService.load(TestEntities.USER_USER_ID, IUser.class).get();
 		assertNotNull("User Administrator is null", user);
 		IContact assignedContact = user.getAssignedContact();
 		assertNotNull("No contact associated to user administrator", assignedContact);
-		boolean queryRightForUser =
-			accessControlService.request(user, AccessControlDefaults.AC_LOGIN);
+		boolean queryRightForUser = accessControlService.request(user, AccessControlDefaults.AC_LOGIN);
 		assertTrue("Administrator is denied login", queryRightForUser);
 		List<IRole> userUserRoles = user.getRoles();
 		assertEquals(2, userUserRoles.size());
-		
+
 		List<IRole> allSystemRoles = modelService.getQuery(IRole.class).execute();
 		assertEquals(6, allSystemRoles.size());
-		
-		IRole userRole =
-			modelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class).get();
+
+		IRole userRole = modelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class).get();
 		List<IRight> userRoleAssignedRights = userRole.getAssignedRights();
 		assertEquals(27, userRoleAssignedRights.size());
 	}
-	
+
 	@Test
-	public void testUserAddWithOKRight(){
+	public void testUserAddWithOKRight() {
 		IUser user = modelService.load(TestEntities.USER_USER_ID, IUser.class).get();
 		IRole ur = modelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class).get();
 		assertNotNull(ur);
@@ -71,32 +69,29 @@ public class AccessControlServiceTest {
 			}
 		}
 		assertTrue(assignedRoles.toString(), userHasRole);
-		
+
 		boolean roleHasRight = accessControlService.request(ur, AccessControlDefaults.AC_EXIT);
 		assertTrue(roleHasRight);
 		boolean userHasRight = accessControlService.request(user, AccessControlDefaults.AC_EXIT);
 		assertTrue(userHasRight);
 	}
-	
+
 	@Test
-	public void testUserAddWithNonOKRight(){
+	public void testUserAddWithNonOKRight() {
 		IUser user = modelService.load(TestEntities.USER_USER_ID, IUser.class).get();
 		boolean rightFalse = accessControlService.request(user, AccessControlDefaults.ADMIN_ACE);
 		assertFalse(rightFalse);
 	}
-	
+
 	@Test
-	public void testUserAddAndRevokeParentRightInvolvesChildRights(){
+	public void testUserAddAndRevokeParentRightInvolvesChildRights() {
 		IUser user = modelService.load(TestEntities.USER_USER_ID, IUser.class).get();
-		IRole userRole =
-			modelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class).get();
+		IRole userRole = modelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class).get();
 		accessControlService.grant(userRole, RoleBasedAccessControlTestACLContribution.parent);
-		boolean rightTrue = accessControlService.request(user,
-			RoleBasedAccessControlTestACLContribution.child1child1);
+		boolean rightTrue = accessControlService.request(user, RoleBasedAccessControlTestACLContribution.child1child1);
 		assertTrue(rightTrue);
 		accessControlService.revoke(userRole, RoleBasedAccessControlTestACLContribution.parent);
-		boolean rightFalse = accessControlService.request(user,
-			RoleBasedAccessControlTestACLContribution.child1child1);
+		boolean rightFalse = accessControlService.request(user, RoleBasedAccessControlTestACLContribution.child1child1);
 		assertFalse(rightFalse);
 	}
 }

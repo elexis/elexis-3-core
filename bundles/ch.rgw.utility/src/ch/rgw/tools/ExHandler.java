@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.rgw.tools;
@@ -18,31 +18,31 @@ import java.io.PrintStream;
 
 /**
  * Einfacher catch-all Exeption handler. Kann Exceptions anzeigen oder loggen
- * 
+ *
  * @author G. Weirich
  */
 
 public class ExHandler {
-	static final String Version(){
+	static final String Version() {
 		return "1.6.3";
 	}
-	
+
 	private static PrintStream out;
 	private static String[] mine = null;
-	
-	private ExHandler(){}
-	
+
+	private ExHandler() {
+	}
+
 	static {
 		out = System.err;
 	}
-	
+
 	/**
 	 * Ausgabestream für Exception-Meldungen setzen
-	 * 
-	 * @param name
-	 *            der Ausgabestream
+	 *
+	 * @param name der Ausgabestream
 	 */
-	public static void setOutput(String name){
+	public static void setOutput(String name) {
 		if ((name == null) || (name.equals("")) || (name.equals("none"))) {
 			out = System.err;
 		} else if (name.equals("sysout")) {
@@ -50,7 +50,7 @@ public class ExHandler {
 		} else {
 			try {
 				File f = new File(name);
-				
+
 				if (!f.exists()) {
 					f.createNewFile();
 				}
@@ -60,34 +60,33 @@ public class ExHandler {
 			}
 		}
 	}
-	
+
 	/** Aktuellen Output stream lesen */
-	public static PrintStream output(){
+	public static PrintStream output() {
 		return out;
 	}
-	
+
 	/**
-	 * Interessierende Klassen setzen (Präfixe). (Nur die Klassen mit dieser Präfix werden im
-	 * Stack-Trace ausgegeben. Wenn keine angegeben werden, werden alle angezeigt.
-	 * 
-	 * @param interest
-	 *            Alle interessierenden Klassen.
+	 * Interessierende Klassen setzen (Präfixe). (Nur die Klassen mit dieser Präfix
+	 * werden im Stack-Trace ausgegeben. Wenn keine angegeben werden, werden alle
+	 * angezeigt.
+	 *
+	 * @param interest Alle interessierenden Klassen.
 	 */
-	public static void setClasses(String[] interest){
+	public static void setClasses(String[] interest) {
 		mine = interest;
 	}
-	
+
 	/**
-	 * Exception behandelt. Gibt standardmässig die Exeptions-Klasse, die message der Exception und
-	 * einen Stack-Trace der interessierenden Klassen aus.
-	 * 
-	 * @param ex
-	 *            die Exception
+	 * Exception behandelt. Gibt standardmässig die Exeptions-Klasse, die message
+	 * der Exception und einen Stack-Trace der interessierenden Klassen aus.
+	 *
+	 * @param ex die Exception
 	 */
-	public static void handle(Throwable ex){ // synchronized(out)
+	public static void handle(Throwable ex) { // synchronized(out)
 		handle(null, ex);
 	}
-	
+
 	/**
 	 * @param additionalInfo
 	 * @param ex

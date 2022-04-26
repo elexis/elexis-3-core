@@ -34,34 +34,31 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 
 public class CreatePrescriptionHelper {
-	
-	public static final String MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG =
-		"medication/settings/alwaysShowSignatureDialog";
-	
-	public static final String MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION =
-		"medication/settings/signatureStdDispensation";
-	
-	public static final String MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT =
-		"medication/settings/artikelstammConvert";
-	
+
+	public static final String MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG = "medication/settings/alwaysShowSignatureDialog";
+
+	public static final String MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION = "medication/settings/signatureStdDispensation";
+
+	public static final String MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT = "medication/settings/artikelstammConvert";
+
 	private IArticle article;
 	private Shell parentShell;
-	
+
 	private boolean medicationTypeFix = false;
-	
-	public CreatePrescriptionHelper(IArticle article, Shell parentShell){
+
+	public CreatePrescriptionHelper(IArticle article, Shell parentShell) {
 		this.article = article;
 		this.parentShell = parentShell;
 	}
-	
-	public void setMedicationTypeFix(boolean value){
+
+	public void setMedicationTypeFix(boolean value) {
 		this.medicationTypeFix = value;
 	}
-	
-	public void createPrescription(){
-		Optional<IArticleDefaultSignature> defaultSignature =
-			MedicationServiceHolder.get().getDefaultSignature(article);
-		
+
+	public void createPrescription() {
+		Optional<IArticleDefaultSignature> defaultSignature = MedicationServiceHolder.get()
+				.getDefaultSignature(article);
+
 		Optional<IArticleDefaultSignature> signature = Optional.empty();
 		if (defaultSignature.isPresent()) {
 			signature = defaultSignature;
@@ -73,11 +70,10 @@ public class CreatePrescriptionHelper {
 		}
 		signature.ifPresent(s -> createPrescriptionFromSignature(s));
 	}
-	
+
 	private Optional<IArticleDefaultSignature> getSignatureWithDialog(
-		Optional<IArticleDefaultSignature> preSelectedSignature){
-		PrescriptionSignatureTitleAreaDialog dialog =
-			new PrescriptionSignatureTitleAreaDialog(parentShell, article);
+			Optional<IArticleDefaultSignature> preSelectedSignature) {
+		PrescriptionSignatureTitleAreaDialog dialog = new PrescriptionSignatureTitleAreaDialog(parentShell, article);
 		dialog.setMedicationTypeFix(medicationTypeFix);
 		preSelectedSignature.ifPresent(s -> dialog.setSignature(s));
 		if (dialog.open() != Dialog.OK) {
@@ -85,18 +81,16 @@ public class CreatePrescriptionHelper {
 		}
 		return Optional.of(dialog.getSignature());
 	}
-	
-	public void createPrescriptionFromSignature(IArticleDefaultSignature signature){
+
+	public void createPrescriptionFromSignature(IArticleDefaultSignature signature) {
 		// create medication entry
-		IPrescription prescription =
-			new IPrescriptionBuilder(CoreModelServiceHolder.get(), ContextServiceHolder.get(),
-				article, ContextServiceHolder.get().getActivePatient().get(),
-				signature.getSignatureAsDosisString()).build();
+		IPrescription prescription = new IPrescriptionBuilder(CoreModelServiceHolder.get(), ContextServiceHolder.get(),
+				article, ContextServiceHolder.get().getActivePatient().get(), signature.getSignatureAsDosisString())
+						.build();
 		prescription.setRemark(signature.getComment());
 		prescription.setEntryType(signature.getMedicationType());
 		// a new symptomatic medication can have a stop date
-		if (EntryType.SYMPTOMATIC_MEDICATION.equals(signature.getMedicationType())
-			&& signature.getEndDate() != null) {
+		if (EntryType.SYMPTOMATIC_MEDICATION.equals(signature.getMedicationType()) && signature.getEndDate() != null) {
 			prescription.setDateTo(signature.getEndDate().atTime(23, 59, 59));
 			prescription.setStopReason("Stop geplant");
 		}
@@ -112,68 +106,64 @@ public class CreatePrescriptionHelper {
 		}
 		CoreModelServiceHolder.get().save(prescription);
 	}
-	
-	public void selfDispense(IPrescription prescription){
+
+	public void selfDispense(IPrescription prescription) {
 		// add article to consultation
 		Optional<IEncounter> encounter = ContextServiceHolder.get().getTyped(IEncounter.class);
 		if (encounter.isPresent()) {
 			boolean isToday = encounter.get().getDate().equals(LocalDate.now());
 			if (isToday) {
 				IArticle dispensationArticle = prescription.getArticle();
-				if (shouldUpdateToArtikelstamm() && isArtikelstammAvailable()
-					&& !isEigenartikel(dispensationArticle)
-					&& !isArtikelstamm(dispensationArticle)) {
+				if (shouldUpdateToArtikelstamm() && isArtikelstammAvailable() && !isEigenartikel(dispensationArticle)
+						&& !isArtikelstamm(dispensationArticle)) {
 					Optional<IArticle> item = getArtikelstammItem(dispensationArticle);
 					if (item.isPresent()) {
 						prescription.setArticle(item.get());
 						MessageDialog.openInformation(parentShell,
-							Messages.CreatePrescriptionHelper_InfoDispensationArtikelstammTitel,
-							MessageFormat.format(
-								Messages.CreatePrescriptionHelper_InfoDispensationArtikelstammUpate,
-								dispensationArticle.getLabel(), item.get().getLabel()));
+								Messages.CreatePrescriptionHelper_InfoDispensationArtikelstammTitel,
+								MessageFormat.format(
+										Messages.CreatePrescriptionHelper_InfoDispensationArtikelstammUpate,
+										dispensationArticle.getLabel(), item.get().getLabel()));
 						dispensationArticle = item.get();
 					} else {
 						MessageDialog.openError(parentShell,
-							Messages.CreatePrescriptionHelper_InfoDispensationArtikelstammTitel,
-							MessageFormat.format(
-								Messages.CreatePrescriptionHelper_ErrorDispensationArtikelstammUpate,
-								dispensationArticle.getLabel()));
+								Messages.CreatePrescriptionHelper_InfoDispensationArtikelstammTitel,
+								MessageFormat.format(
+										Messages.CreatePrescriptionHelper_ErrorDispensationArtikelstammUpate,
+										dispensationArticle.getLabel()));
 						dispensationArticle = item.get();
 					}
 				}
-				Result<IBilled> result =
-					BillingServiceHolder.get().bill(dispensationArticle, encounter.get(), 1);
+				Result<IBilled> result = BillingServiceHolder.get().bill(dispensationArticle, encounter.get(), 1);
 				if (result.isOK()) {
-					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
-						encounter.get());
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter.get());
 					// work is done
 					return;
 				}
 			}
 		}
-		MessageDialog.openWarning(parentShell,
-			Messages.CreatePrescriptionHelper_WarninigNoConsTitle,
-			Messages.CreatePrescriptionHelper_WarninigNoConsText);
+		MessageDialog.openWarning(parentShell, Messages.CreatePrescriptionHelper_WarninigNoConsTitle,
+				Messages.CreatePrescriptionHelper_WarninigNoConsText);
 	}
-	
-	private boolean shouldUpdateToArtikelstamm(){
+
+	private boolean shouldUpdateToArtikelstamm() {
 		return ConfigServiceHolder.getUser(MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT, false);
 	}
-	
-	private boolean isEigenartikel(IArticle dispensationArticle){
+
+	private boolean isEigenartikel(IArticle dispensationArticle) {
 		return dispensationArticle.getCodeSystemName().equals(Constants.TYPE_NAME);
 	}
-	
-	private boolean isArtikelstamm(IArticle dispensationArticle){
+
+	private boolean isArtikelstamm(IArticle dispensationArticle) {
 		return StoreToStringServiceHolder.getStoreToString(dispensationArticle)
-			.startsWith("ch.artikelstamm.elexis.common.ArtikelstammItem");
+				.startsWith("ch.artikelstamm.elexis.common.ArtikelstammItem");
 	}
-	
-	private boolean isArtikelstammAvailable(){
+
+	private boolean isArtikelstammAvailable() {
 		return PersistentObject.tableExists("ARTIKELSTAMM_CH");
 	}
-	
-	private Optional<IArticle> getArtikelstammItem(IArticle dispensationArticle){
+
+	private Optional<IArticle> getArtikelstammItem(IArticle dispensationArticle) {
 		String gtin = dispensationArticle.getGtin();
 		Optional<IArticle> ret = Optional.empty();
 		if (gtin != null && !gtin.isEmpty()) {
@@ -187,19 +177,17 @@ public class CreatePrescriptionHelper {
 		}
 		return ret;
 	}
-	
-	private Optional<IArticle> loadArtikelWithCode(String gtin){
-		Optional<ICodeElementServiceContribution> contribution =
-			CodeElementServiceHolder.get().getContribution(CodeElementTyp.ARTICLE, "Artikelstamm");
+
+	private Optional<IArticle> loadArtikelWithCode(String gtin) {
+		Optional<ICodeElementServiceContribution> contribution = CodeElementServiceHolder.get()
+				.getContribution(CodeElementTyp.ARTICLE, "Artikelstamm");
 		if (contribution.isPresent()) {
-			Optional<ICodeElement> loadedArticle =
-				contribution.get().loadFromCode(gtin, Collections.emptyMap());
+			Optional<ICodeElement> loadedArticle = contribution.get().loadFromCode(gtin, Collections.emptyMap());
 			if (loadedArticle.isPresent()) {
 				return Optional.of((IArticle) loadedArticle.get());
 			}
 		} else {
-			LoggerFactory.getLogger(getClass())
-				.warn("No Artikelstamm ICodeElementServiceContribution available");
+			LoggerFactory.getLogger(getClass()).warn("No Artikelstamm ICodeElementServiceContribution available");
 		}
 		return Optional.empty();
 	}

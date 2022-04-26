@@ -24,15 +24,15 @@ import ch.elexis.data.Role;
 
 /**
  * Contribution of the basic system's ACLs
- * 
+ *
  * @author gerry
- * @since 3.1 changed behaviour to fetch access rights in {@link AccessControlDefaults} via
- *        reflection
+ * @since 3.1 changed behaviour to fetch access rights in
+ *        {@link AccessControlDefaults} via reflection
  */
 public class ACLContributor implements IACLContributor {
 	private static Logger log = LoggerFactory.getLogger(ACLContributor.class);
-	
-	public ACE[] getACL(){
+
+	public ACE[] getACL() {
 		try {
 			return findAllRightsThroughReflection();
 		} catch (IllegalArgumentException | IllegalAccessException e) {
@@ -40,23 +40,22 @@ public class ACLContributor implements IACLContributor {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * we collect all access rights as defined in {@link AccessControlDefaults} via reflection
-	 * 
+	 * we collect all access rights as defined in {@link AccessControlDefaults} via
+	 * reflection
+	 *
 	 * @return
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 * @since 3.1
 	 */
-	private ACE[] findAllRightsThroughReflection()
-		throws IllegalArgumentException, IllegalAccessException{
+	private ACE[] findAllRightsThroughReflection() throws IllegalArgumentException, IllegalAccessException {
 		List<ACE> list = new ArrayList<ACE>();
 		Field[] declaredFields = AccessControlDefaults.class.getFields();
 		for (Field field : declaredFields) {
 			int modifiers = field.getModifiers();
-			if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers)
-				&& Modifier.isFinal(modifiers)) {
+			if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) {
 				if (field.getType().equals(ACE.class)) {
 					list.add((ACE) field.get(null));
 				}
@@ -64,9 +63,9 @@ public class ACLContributor implements IACLContributor {
 		}
 		return list.toArray(new ACE[list.size()]);
 	}
-	
+
 	@Override
-	public void initializeDefaults(AbstractAccessControl ac){
+	public void initializeDefaults(AbstractAccessControl ac) {
 		AccessControlDefaults.initializeDefaults(ac);
 	}
 }

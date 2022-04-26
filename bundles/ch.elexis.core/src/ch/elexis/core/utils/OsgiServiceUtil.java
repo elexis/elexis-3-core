@@ -13,33 +13,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class OsgiServiceUtil {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(OsgiServiceUtil.class);
-	
+
 	private static HashMap<Object, ServiceReference<?>> serviceReferences = new HashMap<>();
-	
+
 	/**
-	 * Get a service from the OSGi service registry. <b>Always</b> release the service using the
-	 * {@link OsgiServiceUtil#ungetService(Object)} method after usage.
-	 * 
+	 * Get a service from the OSGi service registry. <b>Always</b> release the
+	 * service using the {@link OsgiServiceUtil#ungetService(Object)} method after
+	 * usage.
+	 *
 	 * @param clazz
 	 * @return
 	 */
-	public synchronized static <T extends Object> Optional<T> getService(Class<T> clazz){
+	public synchronized static <T extends Object> Optional<T> getService(Class<T> clazz) {
 		return getService(clazz, null);
 	}
-	
+
 	/**
-	 * Get a service from the OSGi service registry. <b>Always</b> release the service using the
-	 * {@link OsgiServiceUtil#ungetService(Object)} method after usage.
-	 * 
+	 * Get a service from the OSGi service registry. <b>Always</b> release the
+	 * service using the {@link OsgiServiceUtil#ungetService(Object)} method after
+	 * usage.
+	 *
 	 * @param clazz
-	 * @param filter
-	 *            provide a filter to select a specific service instance if multiple available
+	 * @param filter provide a filter to select a specific service instance if
+	 *               multiple available
 	 * @return
 	 */
-	public synchronized static <T extends Object> Optional<T> getService(Class<T> clazz,
-		String filter){
+	public synchronized static <T extends Object> Optional<T> getService(Class<T> clazz, String filter) {
 		Bundle bundle = FrameworkUtil.getBundle(clazz);
 		// fallback to our context ...
 		if (bundle == null || bundle.getBundleContext() == null) {
@@ -61,14 +62,14 @@ public class OsgiServiceUtil {
 		}
 		return Optional.empty();
 	}
-	
+
 	/**
-	 * Release a service that was acquired using the {@link OsgiServiceUtil#getService(Class)}
-	 * method.
-	 * 
+	 * Release a service that was acquired using the
+	 * {@link OsgiServiceUtil#getService(Class)} method.
+	 *
 	 * @param service
 	 */
-	public synchronized static void ungetService(Object service){
+	public synchronized static void ungetService(Object service) {
 		if (service instanceof Optional) {
 			throw new IllegalStateException("Optional is not a service");
 		}
@@ -81,16 +82,16 @@ public class OsgiServiceUtil {
 			}
 			if (bundle.getBundleContext().ungetService(reference)) {
 				serviceReferences.remove(service);
-				logger.info("Release active service [" + service + "] from "
-					+ serviceReferences.size() + " active references");
+				logger.info("Release active service [" + service + "] from " + serviceReferences.size()
+						+ " active references");
 			} else {
 				serviceReferences.remove(service);
-				logger.info("Release not active service [" + service + "] from "
-					+ serviceReferences.size() + " active references");
+				logger.info("Release not active service [" + service + "] from " + serviceReferences.size()
+						+ " active references");
 			}
 			return;
 		}
-		logger.warn("Could not release service [" + service + "] from " + serviceReferences.size()
-			+ " active references");
+		logger.warn(
+				"Could not release service [" + service + "] from " + serviceReferences.size() + " active references");
 	}
 }

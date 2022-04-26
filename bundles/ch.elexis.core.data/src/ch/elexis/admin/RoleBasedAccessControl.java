@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -33,33 +33,30 @@ import ch.rgw.tools.JdbcLink.Stm;
  * @since 3.1
  */
 public class RoleBasedAccessControl extends AbstractAccessControl {
-	
+
 	private static Logger log = LoggerFactory.getLogger(RoleBasedAccessControl.class);
-	
-	public static final String QUERY_RIGHT_FOR_USER =
-		"SELECT COUNT(*) FROM RIGHTS_PER_USER WHERE USER_ID LIKE %s AND (";
-	public static final String QUERY_RIGHT_FOR_ROLE =
-		"SELECT COUNT(*) FROM RIGHTS_PER_ROLE WHERE ROLE_ID LIKE %s AND (";
-	
+
+	public static final String QUERY_RIGHT_FOR_USER = "SELECT COUNT(*) FROM RIGHTS_PER_USER WHERE USER_ID LIKE %s AND (";
+	public static final String QUERY_RIGHT_FOR_ROLE = "SELECT COUNT(*) FROM RIGHTS_PER_ROLE WHERE ROLE_ID LIKE %s AND (";
+
 	/**
-	 * Query if user has the the provided right. Considers the entire rights chain, that is, if user
-	 * u has the parent right of a given ACE the right is granted.
-	 * 
-	 * @param u
-	 *            the {@link User}
-	 * @param ace
-	 *            the {@link ACE}
-	 * @return <code>true</code> if {@link User} u is granted the provided {@link ACE} ace
+	 * Query if user has the the provided right. Considers the entire rights chain,
+	 * that is, if user u has the parent right of a given ACE the right is granted.
+	 *
+	 * @param u   the {@link User}
+	 * @param ace the {@link ACE}
+	 * @return <code>true</code> if {@link User} u is granted the provided
+	 *         {@link ACE} ace
 	 */
-	protected static boolean queryRightForUser(@NonNull User u, @NonNull ACE ace){
+	protected static boolean queryRightForUser(@NonNull User u, @NonNull ACE ace) {
 		return queryRight(QUERY_RIGHT_FOR_USER, u.getWrappedId(), ace);
 	}
-	
-	protected static boolean queryRightForRole(Role r, ACE ace){
+
+	protected static boolean queryRightForRole(Role r, ACE ace) {
 		return queryRight(QUERY_RIGHT_FOR_ROLE, r.getWrappedId(), ace);
 	}
-	
-	protected static boolean queryRightForRoles(List<IRole> roles, @NonNull ACE ace){
+
+	protected static boolean queryRightForRoles(List<IRole> roles, @NonNull ACE ace) {
 		if (roles != null) {
 			for (IRole role : roles) {
 				if (queryRightForRole(Role.load(role.getId()), ace)) {
@@ -69,8 +66,8 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 		}
 		return false;
 	}
-	
-	private static boolean queryRight(String qs, String objId, ACE ace){
+
+	private static boolean queryRight(String qs, String objId, ACE ace) {
 		// TODO cache?
 		String queryString = String.format(qs, objId);
 		StringBuilder sb = new StringBuilder(queryString);
@@ -83,7 +80,7 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 			sb.append(" RIGHT_ID = " + JdbcLink.wrap(a.getUniqueHashFromACE()));
 		}
 		sb.append(StringConstants.CLOSEBRACKET + StringConstants.SEMICOLON);
-		
+
 		Stm stm = PersistentObject.getConnection().getStatement();
 		boolean ret = false;
 		try {
@@ -99,42 +96,40 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 		} finally {
 			PersistentObject.getConnection().releaseStatement(stm);
 		}
-		
+
 		return ret;
 	}
-	
+
 	/**
 	 * convenience method calling {@link #request(User, ACE)}
-	 * 
+	 *
 	 * @param ace
 	 * @return
 	 * @see #request(User, ACE)
 	 */
-	public boolean request(@Nullable ACE ace){
+	public boolean request(@Nullable ACE ace) {
 		return request((User) null, ace);
 	}
-	
+
 	@Override
-	public boolean request(String canonicalName){
+	public boolean request(String canonicalName) {
 		if (canonicalName == null || canonicalName.length() < 1)
 			return false;
-		
+
 		return request(ACE.getACEByCanonicalName(canonicalName));
 	}
-	
+
 	/**
-	 * 
-	 * @param user
-	 *            if <code>null</code> the user stored in the context is applied
-	 * @param ace
-	 *            if <code>null</code> always returns <code>false</code>
+	 *
+	 * @param user if <code>null</code> the user stored in the context is applied
+	 * @param ace  if <code>null</code> always returns <code>false</code>
 	 * @return <code>true</code> if access granted
 	 */
-	public boolean request(@Nullable User user, @Nullable ACE ace){
+	public boolean request(@Nullable User user, @Nullable ACE ace) {
 		if (ace == null) {
 			return false;
 		}
-		
+
 		if (user == null) {
 			IUser iUser = ContextServiceHolder.get().getActiveUser().orElse(null);
 			if (iUser == null) {
@@ -142,45 +137,44 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 				return false;
 			}
 			if (!iUser.isInternal()) {
-				return iUser.isAdministrator()
-					|| RoleBasedAccessControl.queryRightForRoles(iUser.getRoles(), ace);
+				return iUser.isAdministrator() || RoleBasedAccessControl.queryRightForRoles(iUser.getRoles(), ace);
 			}
 			user = User.load(iUser.getId());
 		}
-		
+
 		if (user.isAdministrator())
 			return true;
-		
+
 		return RoleBasedAccessControl.queryRightForUser(user, ace);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param r
 	 * @param ace
 	 * @return
 	 */
-	public boolean request(@NonNull Role r, @Nullable ACE ace){
+	public boolean request(@NonNull Role r, @Nullable ACE ace) {
 		if (ace == null)
 			return false;
-		
+
 		return RoleBasedAccessControl.queryRightForRole(r, ace);
 	}
-	
+
 	@Override
-	public void grant(Role r, ACE ace){
+	public void grant(Role r, ACE ace) {
 		r.grantAccessRight(ace);
 	}
-	
+
 	@Override
-	public void revoke(Role r, ACE ace){
+	public void revoke(Role r, ACE ace) {
 		r.revokeAccessRight(ace);
 	}
-	
+
 	@Override
-	public void grant(String id, ACE ace){
+	public void grant(String id, ACE ace) {
 		Role r = Role.load(id);
 		grant(r, ace);
 	}
-	
+
 }

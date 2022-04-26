@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
@@ -63,33 +63,32 @@ import ch.elexis.data.Brief;
 
 /**
  * Einstellungen zur Verknüpfung mit einem externen Texterstellungs-Modul
- * 
+ *
  * @author Gerry
  */
 public class Texterstellung extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-	
+
 	private ControlDecoration externPathDeco;
 	private Label allExtern;
-	
-	public Texterstellung(){
+
+	public Texterstellung() {
 		super(GRID);
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.localCfg));
 		setDescription(Messages.Texterstellung_TextProcessor);
 	}
-	
+
 	@Override
-	protected void createFieldEditors(){
-		
-		List<IConfigurationElement> list =
-			Extensions.getExtensions(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
-		addField(new BooleanFieldEditor(Preferences.P_TEXT_SUPPORT_LEGACY,
-			Messages.Texterstellung_Support_Legacy, getFieldEditorParent()));
-		addField(new BooleanFieldEditor(Preferences.P_TEXT_RENAME_WITH_F2,
-			Messages.Texterstellung_Rename_with_F2, getFieldEditorParent()));
-		
-		addField(new BooleanFieldEditor(Preferences.P_TEXT_EDIT_LOCAL,
-			Messages.Texterstellung_texteditlocaldesc, getFieldEditorParent()));
-		
+	protected void createFieldEditors() {
+
+		List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
+		addField(new BooleanFieldEditor(Preferences.P_TEXT_SUPPORT_LEGACY, Messages.Texterstellung_Support_Legacy,
+				getFieldEditorParent()));
+		addField(new BooleanFieldEditor(Preferences.P_TEXT_RENAME_WITH_F2, Messages.Texterstellung_Rename_with_F2,
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(Preferences.P_TEXT_EDIT_LOCAL, Messages.Texterstellung_texteditlocaldesc,
+				getFieldEditorParent()));
+
 		if (LocalDocumentServiceHolder.getService().isPresent()) {
 			ILocalDocumentService documentService = LocalDocumentServiceHolder.getService().get();
 			Composite compBackupDir = new Composite(getFieldEditorParent(), SWT.NONE);
@@ -104,12 +103,12 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			restore.setText("wiederherstellen");
 			restore.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					restoreLocalDocuments(documentService);
 				}
 			});
 		}
-		
+
 		String[][] rows = new String[list.size()][];
 		int i = 0;
 		for (IConfigurationElement ice : list) {
@@ -118,51 +117,49 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			rows[i][0] = Integer.toString(i) + " : " + rows[i][1]; //$NON-NLS-1$
 			i += 1;
 		}
-		addField(new RadioGroupFieldEditor(Preferences.P_TEXTMODUL,
-			Messages.Texterstellung_ExternalProgram, 2,
-			/*
-			 * new String[][] { { "&0: Keines", "none" }, { "&1: OpenOffice", "OpenOffice" }
-			 */
-			rows, getFieldEditorParent()));
-		
+		addField(new RadioGroupFieldEditor(Preferences.P_TEXTMODUL, Messages.Texterstellung_ExternalProgram, 2,
+				/*
+				 * new String[][] { { "&0: Keines", "none" }, { "&1: OpenOffice", "OpenOffice" }
+				 */
+				rows, getFieldEditorParent()));
+
 		Composite compExtern = new Composite(getFieldEditorParent(), SWT.NONE);
 		compExtern.setLayout(new GridLayout(2, false));
 		compExtern.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		
+
 		Button check = new Button(compExtern, SWT.CHECK);
 		check.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1));
 		check.setText(Messages.Texterstellung_external_save);
 		check.setSelection(ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false));
 		check.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				ConfigServiceHolder.setGlobal(Preferences.P_TEXT_EXTERN_FILE, check.getSelection());
 				allExtern.setEnabled(check.getSelection());
 				externPathDeco.hide();
 			}
 		});
-		
+
 		Composite comp = new Composite(compExtern, SWT.None);
 		comp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		
+
 		Combo comboOs = new Combo(comp, SWT.None);
 		ComboViewer cvOs = new ComboViewer(comboOs);
 		comboOs.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		cvOs.setContentProvider(ArrayContentProvider.getInstance());
 		cvOs.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				return ((CoreUtil.OS) element).name();
 			}
 		});
 		cvOs.setInput(CoreUtil.OS.values());
-		
-		URIFieldEditor storePath =
-			new URIFieldEditor(Preferences.P_TEXT_EXTERN_FILE_PATH, "", comp);
+
+		URIFieldEditor storePath = new URIFieldEditor(Preferences.P_TEXT_EXTERN_FILE_PATH, "", comp);
 		storePath.setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 		storePath.setEmptyStringAllowed(true);
 		addField(storePath);
-		
+
 		cvOs.addSelectionChangedListener(event -> {
 			CoreUtil.OS selection = (OS) event.getStructuredSelection().getFirstElement();
 			String preferenceName;
@@ -184,20 +181,20 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			storePath.setPreferenceName(preferenceName);
 			storePath.load();
 		});
-		
+
 		allExtern = new Label(compExtern, SWT.WRAP);
 		allExtern.setText(Messages.Texterstellung_save_all_letters_externally);
 		allExtern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		
+
 		cvOs.setSelection(new StructuredSelection(CoreUtil.getOperatingSystemType()));
 	}
-	
+
 	@Override
-	public void init(IWorkbench workbench){}
-	
-	private void restoreLocalDocuments(ILocalDocumentService documentService){
-		File backupDir =
-			new File(documentService.getDocumentCachePath() + File.separator + "backup");
+	public void init(IWorkbench workbench) {
+	}
+
+	private void restoreLocalDocuments(ILocalDocumentService documentService) {
+		File backupDir = new File(documentService.getDocumentCachePath() + File.separator + "backup");
 		if (backupDir.exists()) {
 			Map<File, Brief> existing = new HashMap<>();
 			for (File file : backupDir.listFiles()) {
@@ -211,36 +208,31 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			}
 			if (existing.isEmpty()) {
 				MessageDialog.openInformation(getShell(), "Briefe wiederherstellen",
-					"Es wurden keine wiederherstellbaren Briefe gefunden");
+						"Es wurden keine wiederherstellbaren Briefe gefunden");
 			} else {
-				Date fileFrom = new Date(
-					existing.keySet().stream().mapToLong(f -> f.lastModified()).min().getAsLong());
-				Date fileTo = new Date(
-					existing.keySet().stream().mapToLong(f -> f.lastModified()).max().getAsLong());
+				Date fileFrom = new Date(existing.keySet().stream().mapToLong(f -> f.lastModified()).min().getAsLong());
+				Date fileTo = new Date(existing.keySet().stream().mapToLong(f -> f.lastModified()).max().getAsLong());
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 				if (MessageDialog.openQuestion(getShell(), "Briefe wiederherstellen",
-					"Sollen die " + existing.size() + " Briefe aus Datei(en) vom "
-						+ dateFormat.format(fileFrom) + " bis " + dateFormat.format(fileTo)
-						+ " wiederhergestellt werden?")) {
+						"Sollen die " + existing.size() + " Briefe aus Datei(en) vom " + dateFormat.format(fileFrom)
+								+ " bis " + dateFormat.format(fileTo) + " wiederhergestellt werden?")) {
 					for (File backupFile : existing.keySet()) {
 						Brief brief = existing.get(backupFile);
 						try (FileInputStream fin = new FileInputStream(backupFile)) {
 							byte[] contentToStore = new byte[(int) backupFile.length()];
 							fin.read(contentToStore);
-							brief.save(contentToStore,
-								FilenameUtils.getExtension(backupFile.getName()));
+							brief.save(contentToStore, FilenameUtils.getExtension(backupFile.getName()));
 							backupFile.delete();
 						} catch (IOException e) {
-							LoggerFactory.getLogger(getClass())
-								.error("Error restoring local backup", e);
+							LoggerFactory.getLogger(getClass()).error("Error restoring local backup", e);
 						}
 					}
 				}
 			}
 		}
 	}
-	
-	private String getBriefId(File file){
+
+	private String getBriefId(File file) {
 		String filename = file.getName();
 		int startIndex = filename.lastIndexOf('[');
 		int endIndex = filename.lastIndexOf(']');

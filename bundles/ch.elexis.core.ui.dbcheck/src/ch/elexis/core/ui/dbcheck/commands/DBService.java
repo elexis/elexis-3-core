@@ -9,40 +9,40 @@ import org.eclipse.swt.widgets.Display;
 import ch.elexis.core.ui.dbcheck.ui.DBTestDialog;
 
 public class DBService implements IHandler {
-	
+
 	@Override
-	public void addHandlerListener(IHandlerListener handlerListener){
+	public void addHandlerListener(IHandlerListener handlerListener) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		DBTestDialog dbt = new DBTestDialog(Display.getCurrent().getActiveShell());
 		return dbt.open();
 	}
-	
+
 	@Override
-	public boolean isEnabled(){
+	public boolean isEnabled() {
 		// TODO Only if user has sufficient access rights
 		return true;
 	}
-	
+
 	@Override
-	public boolean isHandled(){
+	public boolean isHandled() {
 		return true;
 	}
-	
+
 	@Override
-	public void removeHandlerListener(IHandlerListener handlerListener){
+	public void removeHandlerListener(IHandlerListener handlerListener) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

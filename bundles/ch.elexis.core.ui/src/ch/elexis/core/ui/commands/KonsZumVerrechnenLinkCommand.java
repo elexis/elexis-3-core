@@ -22,19 +22,17 @@ import ch.rgw.tools.Tree;
 public class KonsZumVerrechnenLinkCommand extends AbstractHandler {
 	public static final String CMD_ID = "ch.elexis.core.command.linkViews";
 	private TreeSelectionChangedListener leftSideSelChangeListener, rightSideSelChangeListener;
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		boolean alreadyToggled = HandlerUtil.toggleCommandState(event.getCommand());
-		
-		IWorkbenchPage activePage =
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		KonsZumVerrechnenView kzvView =
-			(KonsZumVerrechnenView) activePage.findView(KonsZumVerrechnenView.ID);
-		
+
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		KonsZumVerrechnenView kzvView = (KonsZumVerrechnenView) activePage.findView(KonsZumVerrechnenView.ID);
+
 		final CommonViewer cv = kzvView.getLeftSide();
 		final TreeViewer tvSel = kzvView.getRightSide();
-		
+
 		// goes from toggled to not toggled
 		if (alreadyToggled) {
 			cv.getViewerWidget().removeSelectionChangedListener(leftSideSelChangeListener);
@@ -42,32 +40,31 @@ public class KonsZumVerrechnenLinkCommand extends AbstractHandler {
 		} else {
 			// toggled
 			leftSideSelChangeListener = new TreeSelectionChangedListener(tvSel);
-			rightSideSelChangeListener =
-				new TreeSelectionChangedListener((TreeViewer) cv.getViewerWidget());
-			
+			rightSideSelChangeListener = new TreeSelectionChangedListener((TreeViewer) cv.getViewerWidget());
+
 			cv.getViewerWidget().addSelectionChangedListener(leftSideSelChangeListener);
 			tvSel.addSelectionChangedListener(rightSideSelChangeListener);
 		}
-		
+
 		return null;
 	}
-	
+
 	class TreeSelectionChangedListener implements ISelectionChangedListener {
 		private TreeViewer treeViewer;
-		
-		public TreeSelectionChangedListener(TreeViewer treeViewer){
+
+		public TreeSelectionChangedListener(TreeViewer treeViewer) {
 			this.treeViewer = treeViewer;
 		}
-		
+
 		@Override
-		public void selectionChanged(SelectionChangedEvent event){
+		public void selectionChanged(SelectionChangedEvent event) {
 			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 			Tree treeElement = (Tree) selection.getFirstElement();
-			
+
 			if (treeElement != null) {
 				Object selObj = treeElement.contents;
 				Patient selPatient = null;
-				
+
 				// get belonging patient
 				if (selObj instanceof Patient) {
 					selPatient = (Patient) selObj;
@@ -81,7 +78,7 @@ public class KonsZumVerrechnenLinkCommand extends AbstractHandler {
 						selPatient = fall.getPatient();
 					}
 				}
-				
+
 				if (selPatient != null) {
 					for (TreeItem i : treeViewer.getTree().getItems()) {
 						Patient p = (Patient) ((Tree) i.getData()).contents;
@@ -94,5 +91,5 @@ public class KonsZumVerrechnenLinkCommand extends AbstractHandler {
 			}
 		}
 	}
-	
+
 }

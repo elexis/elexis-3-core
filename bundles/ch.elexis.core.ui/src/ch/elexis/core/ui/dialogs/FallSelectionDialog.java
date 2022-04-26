@@ -44,37 +44,37 @@ import ch.elexis.data.dto.FallDTO;
 public class FallSelectionDialog extends TitleAreaDialog {
 	private final String message;
 	private final FallDTO currentFall;
-	
+
 	private TableViewer tableViewer;
 	private Composite ret;
-	
+
 	private Optional<IFall> selectedFall = Optional.empty();
-	
-	public FallSelectionDialog(Shell parentShell, String message, FallDTO currentFall){
+
+	public FallSelectionDialog(Shell parentShell, String message, FallDTO currentFall) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		this.message = message;
 		this.currentFall = currentFall;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(final Composite parent){
+	protected Control createDialogArea(final Composite parent) {
 		selectedFall = Optional.empty();
 		ret = new Composite(parent, SWT.NONE);
 		GridLayout gd = new GridLayout(1, false);
 		gd.marginTop = 10;
 		ret.setLayout(gd);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		
+
 		Patient patient = currentFall.getPatient();
-		
+
 		if (patient == null || !patient.exists()) {
 			Label lblPatient = new Label(ret, SWT.NONE);
 			lblPatient.setText("Kein Patient ausgewählt!");
 		} else {
 			Text txtPatient = new Text(ret, SWT.READ_ONLY);
 			txtPatient.setText("Patient: " + currentFall.getPatient().getLabel());
-			
+
 			Composite part = new Composite(ret, SWT.NONE);
 			part.setLayout(new GridLayout(2, false));
 			part.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -82,52 +82,48 @@ public class FallSelectionDialog extends TitleAreaDialog {
 			btnCheck.setText("Geschlossene Fälle auch anzeigen");
 			btnCheck.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e){
+				public void widgetSelected(SelectionEvent e) {
 					refresh(btnCheck.getSelection());
 				}
 			});
-			
+
 			ToolBarManager tbManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
 			tbManager.add(new Action("Neuer Fall") {
-				
+
 				@Override
-				public ImageDescriptor getImageDescriptor(){
+				public ImageDescriptor getImageDescriptor() {
 					return Images.IMG_NEW.getImageDescriptor();
 				}
-				
+
 				@Override
-				public String getToolTipText(){
+				public String getToolTipText() {
 					return "Neuer Fall";
 				}
-				
+
 				@Override
-				public void run(){
-					NeuerFallDialog neuerFallDialog =
-						new NeuerFallDialog(getShell(), currentFall.getPatient(), true);
-					
+				public void run() {
+					NeuerFallDialog neuerFallDialog = new NeuerFallDialog(getShell(), currentFall.getPatient(), true);
+
 					if (neuerFallDialog.open() == MessageDialog.OK) {
 						Fall neuerFall = neuerFallDialog.getFall();
 						if (neuerFall != null && neuerFall.exists()) {
-							if (LocalLockServiceHolder.get().acquireLock(neuerFallDialog.getFall())
-								.isOk()) {
+							if (LocalLockServiceHolder.get().acquireLock(neuerFallDialog.getFall()).isOk()) {
 								refresh(btnCheck.getSelection());
-								
+
 								tableViewer.setSelection(new StructuredSelection(neuerFall));
-								LocalLockServiceHolder.get()
-									.releaseLock(neuerFallDialog.getFall());
+								LocalLockServiceHolder.get().releaseLock(neuerFallDialog.getFall());
 							} else {
 								MessageDialog.openWarning(getShell(), "Lock nicht erhalten",
-									"Lock nicht erhalten. Diese Operation ist derzeit nicht möglich.");
+										"Lock nicht erhalten. Diese Operation ist derzeit nicht möglich.");
 							}
 						}
 					}
-					
+
 				}
 			});
 			ToolBar toolbar = tbManager.createControl(part);
 			// align toolbar right
-			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).grab(true, false)
-				.applyTo(toolbar);
+			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).grab(true, false).applyTo(toolbar);
 			Composite tableComposite = new Composite(ret, SWT.NONE);
 			GridData gdTable = SWTHelper.getFillGridData(1, true, 1, true);
 			gdTable.heightHint = 200;
@@ -138,49 +134,48 @@ public class FallSelectionDialog extends TitleAreaDialog {
 			tableViewer.getTable().setLinesVisible(true);
 			tableViewer.setLabelProvider(new LabelProvider() {
 				@Override
-				public String getText(Object element){
+				public String getText(Object element) {
 					Fall f = (Fall) element;
 					return f.getLabel();
 				}
 			});
 			tableViewer.addDoubleClickListener(new IDoubleClickListener() {
-				
+
 				@Override
-				public void doubleClick(DoubleClickEvent event){
+				public void doubleClick(DoubleClickEvent event) {
 					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 					Object firstElement = selection.getFirstElement();
 					if (firstElement instanceof Fall) {
 						if (LocalLockServiceHolder.get().acquireLock((Fall) firstElement).isOk()) {
-							FallEditDialog fallEditDialog =
-								new FallEditDialog(getShell(), (Fall) firstElement);
+							FallEditDialog fallEditDialog = new FallEditDialog(getShell(), (Fall) firstElement);
 							fallEditDialog.open();
 							if (fallEditDialog.getFall() != null) {
 								LocalLockServiceHolder.get().releaseLock(fallEditDialog.getFall());
 							}
 						} else {
 							MessageDialog.openWarning(getShell(), "Lock nicht erhalten",
-								"Lock nicht erhalten. Diese Operation ist derzeit nicht möglich.");
+									"Lock nicht erhalten. Diese Operation ist derzeit nicht möglich.");
 						}
-						
+
 						refresh(btnCheck.getSelection());
 					}
 				}
 			});
-			
+
 			TableColumn singleColumn = new TableColumn(tableViewer.getTable(), SWT.NONE);
 			singleColumn.setText("Fälle");
 			TableColumnLayout tableColumnLayout = new TableColumnLayout();
 			tableColumnLayout.setColumnData(singleColumn, new ColumnWeightData(100));
 			tableComposite.setLayout(tableColumnLayout);
-			
+
 			refresh(btnCheck.getSelection());
 			ret.pack();
 		}
-		
+
 		return ret;
 	}
-	
-	private void refresh(boolean showClosed){
+
+	private void refresh(boolean showClosed) {
 		if (tableViewer != null && ret != null) {
 			Patient patient = currentFall.getPatient();
 			if (patient != null && patient.exists()) {
@@ -196,16 +191,16 @@ public class FallSelectionDialog extends TitleAreaDialog {
 			}
 		}
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
 		setTitle("Fallauswahl");
 		setMessage(message);
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		IStructuredSelection iSelection = (IStructuredSelection) tableViewer.getSelection();
 		if (iSelection != null) {
 			Object o = iSelection.getFirstElement();
@@ -215,9 +210,9 @@ public class FallSelectionDialog extends TitleAreaDialog {
 		}
 		super.okPressed();
 	}
-	
-	public Optional<IFall> getSelectedFall(){
+
+	public Optional<IFall> getSelectedFall() {
 		return selectedFall;
 	}
-	
+
 }

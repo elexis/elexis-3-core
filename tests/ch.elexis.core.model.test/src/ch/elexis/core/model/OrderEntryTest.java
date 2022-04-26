@@ -23,20 +23,20 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class OrderEntryTest {
 	private IModelService modelService;
-	
+
 	private IArticle article, article1;
-	
+
 	private IStock stock;
-	
+
 	private IOrder order;
-	
+
 	private LocalDateTime orderTimestamp;
-	
+
 	@Before
-	public void before(){
-		modelService = OsgiServiceUtil.getService(IModelService.class,
-			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
-		
+	public void before() {
+		modelService = OsgiServiceUtil
+				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+
 		article = modelService.create(IArticle.class);
 		article.setName("test article");
 		article.setCode("123456789");
@@ -45,7 +45,7 @@ public class OrderEntryTest {
 		article.setPackageSize(12);
 		article.setSellingSize(12);
 		modelService.save(article);
-		
+
 		article1 = modelService.create(IArticle.class);
 		article1.setName("test article 1");
 		article1.setCode("987654321");
@@ -54,44 +54,44 @@ public class OrderEntryTest {
 		article1.setPackageSize(24);
 		article1.setSellingSize(24);
 		modelService.save(article1);
-		
+
 		stock = modelService.create(IStock.class);
 		stock.setCode("TST");
 		stock.setPriority(5);
 		modelService.save(stock);
-		
+
 		orderTimestamp = LocalDateTime.now();
-		
+
 		order = modelService.create(IOrder.class);
 		order.setTimestamp(orderTimestamp);
 		order.setName("TEST");
 		modelService.save(order);
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		modelService.remove(order);
 		modelService.remove(article);
 		modelService.remove(article1);
 		modelService.remove(stock);
-		
+
 		OsgiServiceUtil.ungetService(modelService);
 		modelService = null;
 	}
-	
+
 	@Test
-	public void create(){
+	public void create() {
 		IOrderEntry entry = modelService.create(IOrderEntry.class);
 		assertNotNull(entry);
 		assertTrue(entry instanceof IOrderEntry);
-		
+
 		entry.setOrder(order);
 		entry.setStock(stock);
 		entry.setArticle(article);
 		entry.setAmount(5);
 		modelService.save(entry);
 		assertFalse(order.getEntries().isEmpty());
-		
+
 		Optional<IOrderEntry> loaded = modelService.load(entry.getId(), IOrderEntry.class);
 		assertTrue(loaded.isPresent());
 		assertFalse(entry == loaded.get());
@@ -100,7 +100,7 @@ public class OrderEntryTest {
 		assertEquals(entry.getStock(), loaded.get().getStock());
 		assertEquals(entry.getOrder(), loaded.get().getOrder());
 		assertEquals(entry.getOrder().getTimestamp(), loaded.get().getOrder().getTimestamp());
-		
+
 		IOrderEntry entry2 = modelService.create(IOrderEntry.class);
 		entry2.setStock(stock);
 		entry2.setArticle(article1);
@@ -108,38 +108,38 @@ public class OrderEntryTest {
 		entry2.setOrder(order);
 		modelService.save(entry2);
 		assertEquals(2, order.getEntries().size());
-		
+
 		IOrderEntry entry3 = order.addEntry(article1, stock, null, 3);
 		modelService.save(entry3);
 		assertEquals(4, entry3.getAmount());
 		assertEquals(entry2, entry3);
-		
+
 		// delete not allowed as FK prevents order removal
 		modelService.remove(entry);
 		modelService.remove(entry2);
 		modelService.refresh(order, true);
 		assertEquals(0, order.getEntries().size());
 	}
-	
+
 	@Test
-	public void query(){
+	public void query() {
 		IOrderEntry entry = modelService.create(IOrderEntry.class);
 		entry.setOrder(order);
 		entry.setStock(stock);
 		entry.setArticle(article);
 		entry.setAmount(5);
 		modelService.save(entry);
-		
+
 		IOrderEntry entry1 = modelService.create(IOrderEntry.class);
 		entry1.setOrder(order);
 		entry1.setStock(stock);
 		entry1.setArticle(article1);
 		entry1.setAmount(2);
 		modelService.save(entry1);
-		
+
 		String storeToString = StoreToStringServiceHolder.getStoreToString(article);
 		String[] articleParts = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
-		
+
 		IQuery<IOrderEntry> query = modelService.getQuery(IOrderEntry.class, true, false);
 		query.and("articleId", COMPARATOR.EQUALS, articleParts[1]);
 		query.and("articleType", COMPARATOR.EQUALS, articleParts[0]);
@@ -147,7 +147,7 @@ public class OrderEntryTest {
 		assertEquals(1, existing.size());
 		assertEquals(2, order.getEntries().size());
 		assertEquals(2, existing.get(0).getOrder().getEntries().size());
-		
+
 		// delete not allowed as FK prevents order removal
 		modelService.remove(entry);
 		modelService.remove(entry1);

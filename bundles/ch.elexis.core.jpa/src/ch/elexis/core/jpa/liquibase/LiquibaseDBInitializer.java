@@ -30,7 +30,7 @@ public class LiquibaseDBInitializer {
 
 	private String changelogXmlUrl;
 
-	public LiquibaseDBInitializer(DataSource dataSource){
+	public LiquibaseDBInitializer(DataSource dataSource) {
 		this.dataSource = dataSource;
 		this.changelogXmlUrl = "/db/elexisdb_master_initial.xml";
 	}
@@ -57,7 +57,8 @@ public class LiquibaseDBInitializer {
 					liquibase.changeLogSync("");
 				} catch (ValidationFailedException e) {
 					logger.info("Validation failed clear checksums and retry");
-					// removes current checksums from database, on next run checksums will be recomputed
+					// removes current checksums from database, on next run checksums will be
+					// recomputed
 					liquibase.clearCheckSums();
 					liquibase.changeLogSync("");
 				}
@@ -78,28 +79,25 @@ public class LiquibaseDBInitializer {
 			}
 		}
 	}
-	
-	private boolean isFirstStart(Connection connection){
+
+	private boolean isFirstStart(Connection connection) {
 		return !getDbTables(connection).contains("CONFIG");
 	}
-	
-	private static List<String> getDbTables(Connection con){
+
+	private static List<String> getDbTables(Connection con) {
 		List<String> ret = new ArrayList<String>();
 		ResultSet result = null;
 		try {
 			DatabaseMetaData metaData = con.getMetaData();
-			
-			result = metaData.getTables(con.getCatalog(), null, "%", new String[] {
-				"TABLE"
-			});
-			
+
+			result = metaData.getTables(con.getCatalog(), null, "%", new String[] { "TABLE" });
+
 			while (result.next()) {
 				String tableName = result.getString("TABLE_NAME");
 				ret.add(tableName.toUpperCase());
 			}
 		} catch (SQLException ex) {
-			throw new IllegalStateException(
-				"An exception occured while trying to" + "analyse the database.", ex);
+			throw new IllegalStateException("An exception occured while trying to" + "analyse the database.", ex);
 		} finally {
 			if (result != null) {
 				try {

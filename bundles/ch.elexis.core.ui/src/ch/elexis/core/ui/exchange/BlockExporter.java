@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
@@ -27,23 +27,20 @@ import ch.rgw.tools.ExHandler;
 
 public class BlockExporter extends XChangeExporter {
 	ServiceBlocksElement lbs;
-	
-	public boolean canHandle(Class<? extends PersistentObject> clazz){
+
+	public boolean canHandle(Class<? extends PersistentObject> clazz) {
 		if (clazz.equals(Leistungsblock.class)) {
 			return true;
 		}
 		return false;
 	}
-	
-	public void finalizeExport() throws XChangeException{
+
+	public void finalizeExport() throws XChangeException {
 		FileDialog fd = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
 		fd.setText(Messages.BlockContainer_Blockbeschreibung);
-		fd.setFilterExtensions(new String[] {
-			"*.xchange" //$NON-NLS-1$
+		fd.setFilterExtensions(new String[] { "*.xchange" //$NON-NLS-1$
 		});
-		fd.setFilterNames(new String[] {
-			Messages.BlockContainer_xchangefiles
-		});
+		fd.setFilterNames(new String[] { Messages.BlockContainer_xchangefiles });
 		String filename = fd.open();
 		if (filename != null) {
 			Format format = Format.getPrettyFormat();
@@ -59,23 +56,22 @@ public class BlockExporter extends XChangeExporter {
 				throw new XChangeException("Output failed " + ex.getMessage());
 			}
 		}
-		
+
 	}
-	
-	public XChangeElement store(Object output) throws XChangeException{
+
+	public XChangeElement store(Object output) throws XChangeException {
 		// create ServiceBlocksElement and attach it to the root of the container
 		if (lbs == null) {
 			lbs = (ServiceBlocksElement) new ServiceBlocksElement().asExporter(this);
 			getContainer().getRoot().addContent(lbs.getElement());
 		}
-		
+
 		if (output instanceof Leistungsblock) {
-			ServiceBlockElement sbe =
-				new ServiceBlockElement().asExporter(this, (Leistungsblock) output);
+			ServiceBlockElement sbe = new ServiceBlockElement().asExporter(this, (Leistungsblock) output);
 			lbs.add(sbe);
 			return sbe;
 		}
 		throw new XChangeException("Can't handle object type " + output.getClass().getName());
 	}
-	
+
 }

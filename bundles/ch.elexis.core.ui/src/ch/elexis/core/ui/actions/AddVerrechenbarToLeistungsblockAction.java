@@ -18,7 +18,7 @@ import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
 
 /**
- * @since 3.7 extracted from {@link UiVerrechenbarAdapter}
+ *  @since 3.7 extracted from {@link UiVerrechenbarAdapter}
  */
 public class AddVerrechenbarToLeistungsblockAction extends Action {
 
@@ -31,23 +31,23 @@ public class AddVerrechenbarToLeistungsblockAction extends Action {
 		this.named = null;
 	}
 
-	public AddVerrechenbarToLeistungsblockAction(String named){
+	public AddVerrechenbarToLeistungsblockAction(String named) {
 		super("Zu Leistungsblock...");
 		this.named = named;
 		this.clazz = null;
 	}
-	
+
 	@Override
 	public void run() {
 		AddElementToBlockDialog adb = new AddElementToBlockDialog(UiDesk.getTopShell());
 		if (adb.open() == Dialog.OK) {
-			if(adb.getResult() == null) {
+			if (adb.getResult() == null) {
 				return;
 			}
 			ICodeElementBlock block = CoreModelServiceHolder.get()
-				.load(adb.getResult().getId(), ICodeElementBlock.class).orElse(null);
+					.load(adb.getResult().getId(), ICodeElementBlock.class).orElse(null);
 			Optional<?> selected = Optional.empty();
-			if(clazz != null) {
+			if (clazz != null) {
 				if (PersistentObject.class.isAssignableFrom(clazz)) {
 					ICodeElement ice = (ICodeElement) ElexisEventDispatcher.getSelected(clazz);
 					Leistungsblock lb = adb.getResult();
@@ -55,12 +55,11 @@ public class AddVerrechenbarToLeistungsblockAction extends Action {
 					ElexisEventDispatcher.reload(Leistungsblock.class);
 				} else if (Identifiable.class.isAssignableFrom(clazz)) {
 					selected = ContextServiceHolder.get().getTyped(clazz);
-				}				
+				}
 			} else if (named != null) {
 				selected = ContextServiceHolder.get().getNamed(named);
 			}
-			if (selected.isPresent()
-				&& selected.get() instanceof ch.elexis.core.model.ICodeElement) {
+			if (selected.isPresent() && selected.get() instanceof ch.elexis.core.model.ICodeElement) {
 				block.addElement((ch.elexis.core.model.ICodeElement) selected.get());
 			}
 		}

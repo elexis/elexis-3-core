@@ -9,10 +9,9 @@ import ch.elexis.data.Script;
 
 @Component
 public class ScriptingService implements IScriptingService {
-	
+
 	@Override
-	public Object execute(String script) throws ElexisException{
-		return Script.execute(Script.getInterpreterFor(script), script, null, false,
-			new PersistentObject[0]);
+	public Object execute(String script) throws ElexisException {
+		return Script.execute(Script.getInterpreterFor(script), script, null, false, new PersistentObject[0]);
 	}
 }

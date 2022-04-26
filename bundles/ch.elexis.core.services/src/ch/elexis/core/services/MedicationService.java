@@ -27,9 +27,9 @@ import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
 @Component
 public class MedicationService implements IMedicationService {
-	
+
 	@Override
-	public float getDailyDosageAsFloat(IPrescription prescription){
+	public float getDailyDosageAsFloat(IPrescription prescription) {
 		float total = 0f;
 		List<Float> res = getDosageAsFloats(prescription);
 		for (int j = 0; j < res.size(); j++) {
@@ -37,9 +37,9 @@ public class MedicationService implements IMedicationService {
 		}
 		return total;
 	}
-	
+
 	@Override
-	public List<Float> getDosageAsFloats(IPrescription prescription){
+	public List<Float> getDosageAsFloats(IPrescription prescription) {
 		ArrayList<Float> list = new ArrayList<>();
 		ArrayList<Float> sub_list = new ArrayList<>();
 		float num = 0;
@@ -88,8 +88,8 @@ public class MedicationService implements IMedicationService {
 		}
 		return list;
 	}
-	
-	private ArrayList<Float> getDosageAsFloats(String dosis, String trennzeichen){
+
+	private ArrayList<Float> getDosageAsFloats(String dosis, String trennzeichen) {
 		ArrayList<Float> list = new ArrayList<Float>();
 		if (dosis.indexOf('-') != -1 || dosis.indexOf('/') != -1) {
 			String[] dos = dosis.split(trennzeichen);
@@ -113,10 +113,10 @@ public class MedicationService implements IMedicationService {
 		}
 		return list;
 	}
-	
+
 	private static final String special_num_at_start = "^(~|)[0-9]/[0-9][ a-zA-Z]*$";
-	
-	private float getNum(String num){
+
+	private float getNum(String num) {
 		try {
 			String n = num.trim();
 			if (n.matches(special_num_at_start)) {
@@ -124,11 +124,11 @@ public class MedicationService implements IMedicationService {
 				return value;
 			} else if (n.equalsIgnoreCase("½")) {
 				return 0.5F;
-			}else if (n.equalsIgnoreCase("¼")) {
+			} else if (n.equalsIgnoreCase("¼")) {
 				return 0.25F;
-			}else if (n.equalsIgnoreCase("1½")) {
+			} else if (n.equalsIgnoreCase("1½")) {
 				return 1.5F;
-			
+
 			} else if (n.indexOf('/') != -1) {
 				if (n.length() == 1) {
 					return 0.0f;
@@ -157,7 +157,8 @@ public class MedicationService implements IMedicationService {
 				n = n.replace(",", ".");
 				return Float.parseFloat(n);
 			}
-			// any other digit-letter combination. replaces comma with dot and removes all non-digit chars. i.e. 1,5 p. Day becomes 1.5
+			// any other digit-letter combination. replaces comma with dot and removes all
+			// non-digit chars. i.e. 1,5 p. Day becomes 1.5
 			else {
 				n = n.replace(",", ".");
 				n = n.replaceAll("[^\\d.]", "");
@@ -174,41 +175,38 @@ public class MedicationService implements IMedicationService {
 			return 0.0F;
 		}
 	}
-	
+
 	@Override
-	public Optional<IArticleDefaultSignature> getDefaultSignature(IArticle article){
-		IQuery<IArticleDefaultSignature> query =
-			CoreModelServiceHolder.get().getQuery(IArticleDefaultSignature.class);
-		query.and("article", COMPARATOR.LIKE,
-			"%" + StoreToStringServiceHolder.getStoreToString(article));
+	public Optional<IArticleDefaultSignature> getDefaultSignature(IArticle article) {
+		IQuery<IArticleDefaultSignature> query = CoreModelServiceHolder.get().getQuery(IArticleDefaultSignature.class);
+		query.and("article", COMPARATOR.LIKE, "%" + StoreToStringServiceHolder.getStoreToString(article));
 		Optional<IArticleDefaultSignature> ret = query.executeSingleResult();
 		if (!ret.isPresent()) {
 			ret = getDefaultSignature(article.getAtcCode());
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public Optional<IArticleDefaultSignature> getDefaultSignature(String atcCode){
+	public Optional<IArticleDefaultSignature> getDefaultSignature(String atcCode) {
 		if (StringUtils.isNotBlank(atcCode)) {
-			IQuery<IArticleDefaultSignature> query =
-				CoreModelServiceHolder.get().getQuery(IArticleDefaultSignature.class);
+			IQuery<IArticleDefaultSignature> query = CoreModelServiceHolder.get()
+					.getQuery(IArticleDefaultSignature.class);
 			query.and("atccode", COMPARATOR.LIKE, atcCode);
 			return query.executeSingleResult();
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public IArticleDefaultSignature getTransientDefaultSignature(IArticle article){
-		IArticleDefaultSignature ret =
-			CoreModelServiceHolder.get().create(IArticleDefaultSignature.class);
+	public IArticleDefaultSignature getTransientDefaultSignature(IArticle article) {
+		IArticleDefaultSignature ret = CoreModelServiceHolder.get().create(IArticleDefaultSignature.class);
 		ret.setArticle(article);
 		return ret;
 	}
-	
+
 	@Override
-	public IPrescription createPrescriptionCopy(IPrescription prescription){
+	public IPrescription createPrescriptionCopy(IPrescription prescription) {
 		IPrescription ret = CoreModelServiceHolder.get().create(IPrescription.class);
 		ret.setArticle(prescription.getArticle());
 		ret.setPatient(prescription.getPatient());
@@ -216,58 +214,56 @@ public class MedicationService implements IMedicationService {
 		ret.setDisposalComment(prescription.getDisposalComment());
 		ret.setEntryType(prescription.getEntryType());
 		ret.setRemark(prescription.getRemark());
-		
+
 		ret.setDateFrom(LocalDateTime.now());
 		ret.setPrescriptor(ContextServiceHolder.get().getActiveUserContact().orElse(null));
 		return ret;
 	}
-	
+
 	@Override
-	public void stopPrescription(IPrescription prescription, LocalDateTime stopDateTime,
-		String stopReason){
+	public void stopPrescription(IPrescription prescription, LocalDateTime stopDateTime, String stopReason) {
 		if (stopDateTime == null) {
 			stopDateTime = LocalDateTime.now();
 		}
 		prescription.setDateTo(stopDateTime);
 		if (ContextServiceHolder.get().getActiveUserContact().isPresent()) {
 			prescription.setExtInfo(Constants.FLD_EXT_STOPPED_BY,
-				ContextServiceHolder.get().getActiveUserContact().get().getId());
+					ContextServiceHolder.get().getActiveUserContact().get().getId());
 		}
 		if (stopReason != null) {
 			prescription.setStopReason(stopReason);
 		}
 	}
-	
+
 	@Override
-	public IRecipe createRecipe(IPatient patient, List<IPrescription> prescRecipes){
+	public IRecipe createRecipe(IPatient patient, List<IPrescription> prescRecipes) {
 		LocalDateTime now = LocalDateTime.now();
 		List<Identifiable> entries = new ArrayList<>();
 		IRecipe ret = new IRecipeBuilder(CoreModelServiceHolder.get(), patient,
-			ContextServiceHolder.get().getActiveMandator().orElse(null)).build();
+				ContextServiceHolder.get().getActiveMandator().orElse(null)).build();
 		for (int i = 0; i < prescRecipes.size(); i++) {
 			IPrescription iPrescription = prescRecipes.get(i);
 			IPrescription copy = createPrescriptionCopy(iPrescription);
 			copy.setEntryType(EntryType.RECIPE);
 			copy.setDateTo(now);
 			copy.setRecipe(ret);
-			copy.setExtInfo(Constants.FLD_EXT_RECIPE_ORDER,
-				Integer.toString(i));
+			copy.setExtInfo(Constants.FLD_EXT_RECIPE_ORDER, Integer.toString(i));
 			entries.add(copy);
 		}
 		CoreModelServiceHolder.get().save(ret);
 		CoreModelServiceHolder.get().save(entries);
 		return ret;
 	}
-	
-	private int getNextRecipeOrder(IRecipe recipe){
+
+	private int getNextRecipeOrder(IRecipe recipe) {
 		List<IPrescription> prescriptions = recipe.getPrescriptions();
 		if (prescriptions != null && !prescriptions.isEmpty()) {
 			return prescriptions.stream().mapToInt(p -> getRecipeOrder(p)).max().orElse(0) + 1;
 		}
 		return 0;
 	}
-	
-	private int getRecipeOrder(IPrescription prescription){
+
+	private int getRecipeOrder(IPrescription prescription) {
 		String orderString = (String) prescription.getExtInfo(Constants.FLD_EXT_RECIPE_ORDER);
 		if (orderString != null && !orderString.isEmpty()) {
 			try {
@@ -278,9 +274,9 @@ public class MedicationService implements IMedicationService {
 		}
 		return 0;
 	}
-	
+
 	@Override
-	public String[] getSignatureAsStringArray(String signature){
+	public String[] getSignatureAsStringArray(String signature) {
 		return Methods.getSignatureAsStringArray(signature);
 	}
 }

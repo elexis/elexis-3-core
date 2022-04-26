@@ -25,7 +25,7 @@ public class KeycloakUser implements IUser {
 	/**
 	 * Keycloak Represented User. This users data is populated via incoming JTW
 	 * token. It maps to the Elexis user world employing the core model service.
-	 * 
+	 *
 	 * @param coreModelService
 	 * @param preferredUsername jwt preferred_username
 	 * @param name              jwt name

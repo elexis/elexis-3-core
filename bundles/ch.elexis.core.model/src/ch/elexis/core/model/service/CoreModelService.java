@@ -32,37 +32,36 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IStoreToStringContribution;
 
 @Component(property = IModelService.SERVICEMODELNAME + "=ch.elexis.core.model")
-public class CoreModelService extends AbstractModelService
-		implements IModelService, IStoreToStringContribution {
-	
+public class CoreModelService extends AbstractModelService implements IModelService, IStoreToStringContribution {
+
 	@Reference(target = "(id=default)")
 	private IElexisEntityManager entityManager;
-	
+
 	@Reference
 	private EventAdmin eventAdmin;
-	
+
 	@Override
-	protected EntityManager getEntityManager(boolean managed){
+	protected EntityManager getEntityManager(boolean managed) {
 		return (EntityManager) entityManager.getEntityManager(managed);
 	}
-	
+
 	@Override
-	protected void closeEntityManager(EntityManager entityManager){
+	protected void closeEntityManager(EntityManager entityManager) {
 		this.entityManager.closeEntityManager(entityManager);
 	}
-	
+
 	@Override
-	protected EventAdmin getEventAdmin(){
+	protected EventAdmin getEventAdmin() {
 		return eventAdmin;
 	}
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		adapterFactory = CoreModelAdapterFactory.getInstance();
 	}
-	
+
 	@Override
-	public Optional<String> storeToString(Identifiable identifiable){
+	public Optional<String> storeToString(Identifiable identifiable) {
 		String classKey = null;
 		Optional<EntityWithId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
@@ -73,17 +72,17 @@ public class CoreModelService extends AbstractModelService
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public Optional<Identifiable> loadFromString(String storeToString){
+	public Optional<Identifiable> loadFromString(String storeToString) {
 		if (storeToString == null) {
 			LoggerFactory.getLogger(getClass()).warn("StoreToString is null");
 			return Optional.empty();
 		}
-		
+
 		String[] split = splitIntoTypeAndId(storeToString);
 		if (split != null && split.length == 2) {
-			
+
 			// map string to classname
 			String className = split[0];
 			String id = split[1];
@@ -93,82 +92,78 @@ public class CoreModelService extends AbstractModelService
 				EntityManager em = (EntityManager) entityManager.getEntityManager();
 				EntityWithId dbObject = em.find(clazz, id);
 				if (dbObject != null) {
-					return Optional.ofNullable(
-						adapterFactory.getModelAdapter(dbObject, interfaceClass, false).orElse(null));
+					return Optional
+							.ofNullable(adapterFactory.getModelAdapter(dbObject, interfaceClass, false).orElse(null));
 				}
 			}
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
-	public List<Identifiable> loadFromStringWithIdPart(String partialStoreToString){
+	public List<Identifiable> loadFromStringWithIdPart(String partialStoreToString) {
 		if (partialStoreToString == null) {
 			LoggerFactory.getLogger(getClass()).warn("StoreToString is null");
 			return Collections.emptyList();
 		}
-		
+
 		String[] split = splitIntoTypeAndId(partialStoreToString);
 		if (split != null && split.length == 2) {
-			
+
 			// map string to classname
 			String className = split[0];
 			String id = split[1];
 			Class<? extends EntityWithId> clazz = ElexisTypeMap.get(className);
 			if (clazz != null) {
 				EntityManager em = (EntityManager) entityManager.getEntityManager();
-				TypedQuery<? extends EntityWithId> query = em.createQuery("SELECT entity FROM "
-					+ clazz.getSimpleName() + " entity WHERE entity.id LIKE :idpart", clazz);
+				TypedQuery<? extends EntityWithId> query = em.createQuery(
+						"SELECT entity FROM " + clazz.getSimpleName() + " entity WHERE entity.id LIKE :idpart", clazz);
 				query.setParameter("idpart", id + "%");
 				List<? extends EntityWithId> found = query.getResultList();
 				if (!found.isEmpty()) {
-					return found.parallelStream()
-						.map(e -> adapterFactory.getModelAdapter(e, null, false).orElse(null))
-						.collect(Collectors.toList());
+					return found.parallelStream().map(e -> adapterFactory.getModelAdapter(e, null, false).orElse(null))
+							.collect(Collectors.toList());
 				}
 			}
 		}
 		return Collections.emptyList();
 	}
-	
+
 	@Override
-	protected ElexisEvent getCreateEvent(Identifiable identifiable){
+	protected ElexisEvent getCreateEvent(Identifiable identifiable) {
 		ElexisEvent ee = new ElexisEvent();
 		ee.setTopic(ElexisEventTopics.PERSISTENCE_EVENT_CREATE);
 		if (identifiable instanceof AbstractIdModelAdapter<?>) {
 			EntityWithId dbObject = ((AbstractIdModelAdapter<?>) identifiable).getEntity();
 			ee.getProperties().put(ElexisEventTopics.PROPKEY_ID, dbObject.getId());
-			ee.getProperties().put(ElexisEventTopics.PROPKEY_CLASS,
-				ElexisTypeMap.getKeyForObject(dbObject));
+			ee.getProperties().put(ElexisEventTopics.PROPKEY_CLASS, ElexisTypeMap.getKeyForObject(dbObject));
 		}
 		return ee;
 	}
-	
+
 	@Override
-	public <T> IQuery<T> getQuery(Class<T> clazz, boolean refreshCache, boolean includeDeleted){
-		return new CoreQuery<>(clazz, refreshCache,
-			(EntityManager) entityManager.getEntityManager(), includeDeleted);
+	public <T> IQuery<T> getQuery(Class<T> clazz, boolean refreshCache, boolean includeDeleted) {
+		return new CoreQuery<>(clazz, refreshCache, (EntityManager) entityManager.getEntityManager(), includeDeleted);
 	}
-	
+
 	@Override
-	public void clearCache(){
+	public void clearCache() {
 		entityManager.clearCache();
 	}
-	
+
 	@Override
-	public Class<?> getEntityForType(String type){
+	public Class<?> getEntityForType(String type) {
 		return ElexisTypeMap.get(type);
 	}
-	
+
 	@Override
-	public String getTypeForEntity(Object entityInstance){
+	public String getTypeForEntity(Object entityInstance) {
 		return ElexisTypeMap.getKeyForObject((EntityWithId) entityInstance);
 	}
-	
+
 	@Override
-	public String getTypeForModel(Class<?> interfaze){
-		Class<? extends EntityWithId> entityClass =
-			adapterFactory.getEntityClass(interfaze);
+	public String getTypeForModel(Class<?> interfaze) {
+		Class<? extends EntityWithId> entityClass = adapterFactory.getEntityClass(interfaze);
 		if (entityClass != null) {
 			try {
 				// modify instance to reflect different types of same entity
@@ -189,8 +184,7 @@ public class CoreModelService extends AbstractModelService
 				}
 				return getTypeForEntity(instance);
 			} catch (InstantiationException | IllegalAccessException e) {
-				LoggerFactory.getLogger(getClass())
-					.error("Error getting type for model [" + interfaze + "]", e);
+				LoggerFactory.getLogger(getClass()).error("Error getting type for model [" + interfaze + "]", e);
 			}
 		}
 		return null;

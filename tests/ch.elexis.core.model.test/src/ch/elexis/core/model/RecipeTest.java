@@ -17,39 +17,38 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.test.AbstractTest;
 
 public class RecipeTest extends AbstractTest {
-	
+
 	private IPrescription prescription;
-	
+
 	@Before
-	public void before(){
+	public void before() {
 		super.before();
 		createPatient();
 		createMandator();
 		createLocalArticle();
-		
-		prescription =
-			new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "1-0-0-1")
-			.buildAndSave();
+
+		prescription = new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "1-0-0-1")
+				.buildAndSave();
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		coreModelService.remove(prescription);
-		
+
 		super.after();
 	}
-	
+
 	@Test
-	public void create(){
+	public void create() {
 		IRecipe recipe = coreModelService.create(IRecipe.class);
 		assertNotNull(recipe);
 		assertTrue(recipe instanceof IRecipe);
-		
+
 		recipe.setDate(LocalDateTime.of(2000, 2, 2, 0, 0));
 		recipe.setPatient(patient);
 		recipe.setMandator(mandator);
 		coreModelService.save(recipe);
-		
+
 		Optional<IRecipe> loaded = coreModelService.load(recipe.getId(), IRecipe.class);
 		assertTrue(loaded.isPresent());
 		assertFalse(recipe == loaded.get());
@@ -58,30 +57,30 @@ public class RecipeTest extends AbstractTest {
 		assertEquals(recipe.getMandator(), loaded.get().getMandator());
 		assertEquals(recipe.getDate(), loaded.get().getDate());
 		assertEquals(LocalDateTime.of(2000, 2, 2, 0, 0), loaded.get().getDate());
-		
+
 		coreModelService.remove(recipe);
 	}
-	
+
 	@Test
-	public void prescriptions(){
+	public void prescriptions() {
 		IRecipe recipe = coreModelService.create(IRecipe.class);
 		assertNotNull(recipe);
 		assertTrue(recipe instanceof IRecipe);
-		
+
 		recipe.setDate(LocalDateTime.of(2000, 2, 2, 0, 0));
 		recipe.setPatient(patient);
 		recipe.setMandator(mandator);
 		coreModelService.save(recipe);
 		assertTrue(recipe.getPrescriptions().isEmpty());
-		
+
 		prescription.setEntryType(EntryType.RECIPE);
 		prescription.setRecipe(recipe);
 		coreModelService.save(prescription);
 		assertFalse(recipe.getPrescriptions().isEmpty());
-		
+
 		recipe.removePrescription(prescription);
 		assertTrue(recipe.getPrescriptions().isEmpty());
-		
+
 		coreModelService.remove(recipe);
 	}
 }

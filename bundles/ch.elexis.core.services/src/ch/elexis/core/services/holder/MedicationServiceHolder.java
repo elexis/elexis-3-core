@@ -8,13 +8,13 @@ import ch.elexis.core.services.IMedicationService;
 @Component
 public class MedicationServiceHolder {
 	private static IMedicationService medicationService;
-	
+
 	@Reference
-	public void setContextService(IMedicationService medicationService){
+	public void setContextService(IMedicationService medicationService) {
 		MedicationServiceHolder.medicationService = medicationService;
 	}
-	
-	public static IMedicationService get(){
+
+	public static IMedicationService get() {
 		return medicationService;
 	}
 }

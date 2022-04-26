@@ -32,26 +32,25 @@ import ch.elexis.core.model.issue.Visibility;
 @Entity
 @Table(name = "reminders")
 @EntityListeners(EntityWithIdListener.class)
-public class Reminder extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
-	
+public class Reminder extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+
 	public static final String ALL_RESPONSIBLE = "ALL";
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Lob
 	protected byte[] extInfo;
-	
+
 	@OneToOne
 	@JoinColumn(name = "IdentID")
 	private Kontakt kontakt;
@@ -66,7 +65,7 @@ public class Reminder extends AbstractEntityWithId
 
 	@Column(name = "Responsible", length = 25)
 	private String responsibleValue;
-	
+
 	@Column(length = 8)
 	protected LocalDate dateDue;
 
@@ -182,52 +181,52 @@ public class Reminder extends AbstractEntityWithId
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	
+
 	public String getResponsibleValue() {
 		return responsibleValue;
 	}
-	
+
 	public void setResponsibleValue(String responsibleValue) {
 		this.responsibleValue = responsibleValue;
 	}
-	
+
 	@Override
-	public byte[] getExtInfo(){
+	public byte[] getExtInfo() {
 		return extInfo;
 	}
-	
+
 	@Override
-	public void setExtInfo(byte[] extInfo){
+	public void setExtInfo(byte[] extInfo) {
 		this.extInfo = extInfo;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

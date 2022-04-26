@@ -20,37 +20,36 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.common.DBConnection;
 
 public class ElexisPoolingDataSource extends PoolingDataSource implements DataSource {
-	
+
 	private static Logger log = LoggerFactory.getLogger(ElexisPoolingDataSource.class);
-	
+
 	private DBConnection dbConnection;
-	
+
 	private Driver driver;
 	private ObjectPool<Connection> connectionPool;
-	
-	public ElexisPoolingDataSource(DBConnection dbConnection){
+
+	public ElexisPoolingDataSource(DBConnection dbConnection) {
 		this.dbConnection = dbConnection;
 	}
-	
-	public void activate()
-		throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+
+	public void activate() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		connectionPool = createConnectionPool(dbConnection);
 		if (connectionPool != null) {
 			setPool(connectionPool);
 			try (Connection conn = getConnection()) {
 				log.info("db connection pool [" + driver + ", " + dbConnection.connectionString
-					+ "] initialization success");
+						+ "] initialization success");
 			} catch (SQLException e) {
 				log.error("db connection pool [" + driver + ", " + dbConnection.connectionString
-					+ "] initialization error", e);
+						+ "] initialization error", e);
 			}
 		} else {
 			log.error("db connection pool [" + driver + ", " + dbConnection.connectionString
-				+ "] initialization failed - no connection pool");
+					+ "] initialization failed - no connection pool");
 		}
 	}
-	
-	public void deactivate(){
+
+	public void deactivate() {
 		if (connectionPool != null) {
 			try {
 				log.info("Deactivating, closing db connection pool");
@@ -60,45 +59,42 @@ public class ElexisPoolingDataSource extends PoolingDataSource implements DataSo
 			}
 		}
 	}
-	
+
 	private ObjectPool<Connection> createConnectionPool(DBConnection dbConnection)
-		throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		String driverName = StringUtils.defaultString(dbConnection.rdbmsType.driverName);
 		String username = StringUtils.defaultString(dbConnection.username);
 		String password = StringUtils.defaultString(dbConnection.password);
 		String jdbcString = StringUtils.defaultString(dbConnection.connectionString);
-		
+
 		driver = (Driver) Class.forName(driverName).newInstance();
-		
+
 		Properties properties = new Properties();
 		properties.put("user", username);
 		properties.put("password", password);
-		
-		log.debug("db connection pool [" + driver + ", " + jdbcString + ", " + username
-			+ "] initialization");
-		
-		ConnectionFactory connectionFactory =
-			new DriverConnectionFactory(driver, jdbcString, properties);
-		
+
+		log.debug("db connection pool [" + driver + ", " + jdbcString + ", " + username + "] initialization");
+
+		ConnectionFactory connectionFactory = new DriverConnectionFactory(driver, jdbcString, properties);
+
 		GenericObjectPool<Connection> connectionPool = new GenericObjectPool<>(null);
 		connectionPool.setMaxActive(32);
 		connectionPool.setMinIdle(8);
 		connectionPool.setMaxWait(10000);
 		connectionPool.setTestOnBorrow(true);
-		
-		new PoolableConnectionFactory(connectionFactory, connectionPool, null, "SELECT 1;", false,
-			true);
+
+		new PoolableConnectionFactory(connectionFactory, connectionPool, null, "SELECT 1;", false, true);
 		return connectionPool;
-		
+
 	}
-	
+
 	@Override
-	public Connection getConnection(String uname, String passwd) throws SQLException{
+	public Connection getConnection(String uname, String passwd) throws SQLException {
 		return getConnection();
 	}
-	
+
 	@Override
-	public Connection getConnection() throws SQLException{
+	public Connection getConnection() throws SQLException {
 		return super.getConnection();
 	}
 }

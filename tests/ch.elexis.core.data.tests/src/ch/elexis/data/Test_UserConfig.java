@@ -12,13 +12,13 @@ import ch.rgw.io.Settings;
 import ch.rgw.tools.JdbcLink;
 
 public class Test_UserConfig extends AbstractPersistentObjectTest {
-	
-	public Test_UserConfig(JdbcLink link){
+
+	public Test_UserConfig(JdbcLink link) {
 		super(link);
 	}
-	
+
 	@Test
-	public void testUserConfigBlob(){
+	public void testUserConfigBlob() {
 		// save content to blob
 		CoreHub.userCfg.set("test/userconfig", true);
 		CoreHub.userCfg.set("test/user", CoreHub.getLoggedInContact().getLabel());
@@ -37,5 +37,5 @@ public class Test_UserConfig extends AbstractPersistentObjectTest {
 		assertTrue(CoreHub.userCfg.get("test/userconfig", false));
 		assertEquals(CoreHub.userCfg.get("test/user", ""), CoreHub.getLoggedInContact().getLabel());
 	}
-	
+
 }

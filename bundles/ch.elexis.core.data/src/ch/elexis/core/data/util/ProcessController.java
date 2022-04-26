@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.data.util;
@@ -30,28 +30,26 @@ public class ProcessController {
 	private String proc_err;
 	private int proc_exitCode;
 	private static Logger log = LoggerFactory.getLogger(ProcessController.class.getName());
-	
-	public String getResult(){
+
+	public String getResult() {
 		return proc_result;
 	}
-	
-	public String getErrorString(){
+
+	public String getErrorString() {
 		return proc_err;
 	}
-	
-	public int getExitCode(){
+
+	public int getExitCode() {
 		return proc_exitCode;
 	}
-	
-	public boolean run(String program, String command, String inputStr){
+
+	public boolean run(String program, String command, String inputStr) {
 		Process p;
-		
+
 		log.info("executing " + program + " " + command + ", " + inputStr);
-		
+
 		try {
-			p = Runtime.getRuntime().exec(new String[] {
-				program, command
-			});
+			p = Runtime.getRuntime().exec(new String[] { program, command });
 		} catch (IOException io) {
 			ExHandler.handle(io);
 			return false;
@@ -66,28 +64,28 @@ public class ProcessController {
 				return false;
 			}
 		}
-		
+
 		ProcessStreamReader psr_stdout = new ProcessStreamReader(p.getInputStream(), "ERROR");
 		ProcessStreamReader psr_stderr = new ProcessStreamReader(p.getErrorStream(), "OUTPUT");
 		psr_stdout.start();
 		psr_stderr.start();
 		try {
-			
+
 			psr_stdout.join();
 			psr_stderr.join();
 		} catch (InterruptedException i) {
 			System.out.println("Exception at join! " + i.getMessage());
 			return false;
 		}
-		
+
 		try {
 			p.waitFor();
-			
+
 		} catch (InterruptedException i) {
 			System.out.println("Exception at waitfor! " + i.getMessage());
 			return false;
 		}
-		
+
 		try {
 			proc_exitCode = p.exitValue();
 		} catch (IllegalThreadStateException itse) {
@@ -95,51 +93,46 @@ public class ProcessController {
 		}
 		proc_result = psr_stdout.getString();
 		proc_err = psr_stderr.getString();
-		
+
 		return true;
 	}
-	
+
 	class ProcessStreamReader extends Thread {
 		InputStream is;
-		
+
 		String type;
-		
+
 		OutputStream os;
-		
+
 		String fullLine = "";
-		
+
 		/**
 		 * Constructor for the ProcessStreamReader object
-		 * 
-		 * @param is
-		 *            Description of the Parameter
-		 * @param type
-		 *            Description of the Parameter
+		 *
+		 * @param is   Description of the Parameter
+		 * @param type Description of the Parameter
 		 */
-		ProcessStreamReader(InputStream is, String type){
+		ProcessStreamReader(InputStream is, String type) {
 			this(is, type, null);
 		}
-		
+
 		/**
 		 * Constructor for the ProcessStreamReader object
-		 * 
-		 * @param is
-		 *            Description of the Parameter
-		 * @param type
-		 *            Description of the Parameter
-		 * @param redirect
-		 *            Description of the Parameter
+		 *
+		 * @param is       Description of the Parameter
+		 * @param type     Description of the Parameter
+		 * @param redirect Description of the Parameter
 		 */
-		ProcessStreamReader(InputStream is, String type, OutputStream redirect){
+		ProcessStreamReader(InputStream is, String type, OutputStream redirect) {
 			this.is = is;
 			this.type = type;
 			this.os = redirect;
 		}
-		
+
 		/**
 		 * Main processing method for the ProcessStreamReader object
 		 */
-		public void run(){
+		public void run() {
 			try {
 				InputStreamReader isr = new InputStreamReader(is);
 				BufferedReader br = new BufferedReader(isr);
@@ -147,21 +140,21 @@ public class ProcessController {
 				while ((line = br.readLine()) != null) {
 					fullLine = fullLine + line + "\n";
 				}
-				
+
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
 		}
-		
+
 		/**
 		 * Gets the string attribute of the ProcessStreamReader object
-		 * 
+		 *
 		 * @return The string value
 		 */
-		String getString(){
+		String getString() {
 			return fullLine;
 		}
-		
+
 	}
-	
+
 }

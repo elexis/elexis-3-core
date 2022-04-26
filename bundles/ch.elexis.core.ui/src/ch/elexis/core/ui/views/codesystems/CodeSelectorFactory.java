@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.views.codesystems;
@@ -77,49 +77,49 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 
 /**
- * Bereitstellung der Auswahlliste für Codes aller Art: Oben häufigste des Anwenders, in der Mitte
- * häufigste des Patienten, unten ganze Systenatik
- * 
+ * Bereitstellung der Auswahlliste für Codes aller Art: Oben häufigste des
+ * Anwenders, in der Mitte häufigste des Patienten, unten ganze Systenatik
+ *
  * @author Gerry
- * 
+ *
  */
 public abstract class CodeSelectorFactory implements IExecutableExtension {
-	private static final String CAPTION_ERROR = Messages.CodeSelectorFactory_error; //$NON-NLS-1$
+	private static final String CAPTION_ERROR = Messages.CodeSelectorFactory_error; // $NON-NLS-1$
 	/** Anzahl der in den oberen zwei Listen zu haltenden Elemente */
 	public static int ITEMS_TO_SHOW_IN_MFU_LIST = 15;
-	
+
 	private static Logger log = LoggerFactory.getLogger(CodeSelectorFactory.class);
-	
-	public CodeSelectorFactory(){}
-	
-	public void setInitializationData(IConfigurationElement config, String propertyName,
-		Object data) throws CoreException{
-		
+
+	public CodeSelectorFactory() {
 	}
-	
+
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+			throws CoreException {
+
+	}
+
 	public abstract ViewerConfigurer createViewerConfigurer(CommonViewer cv);
-	
+
 	public abstract Class<?> getElementClass();
-	
+
 	public abstract void dispose();
-	
+
 	public abstract String getCodeSystemName();
-	
-	public String getCodeSystemCode(){
+
+	public String getCodeSystemCode() {
 		return "999"; //$NON-NLS-1$
 	}
-	
+
 	/**
-	 * This method queries the <i>org.eclipse.ui.menus</i> extensions, and looks for menu
-	 * contributions with a locationURI <i>popup:classname</i>. Found contributions are added to the
-	 * {@link IMenuManager}.
-	 * 
+	 * This method queries the <i>org.eclipse.ui.menus</i> extensions, and looks for
+	 * menu contributions with a locationURI <i>popup:classname</i>. Found
+	 * contributions are added to the {@link IMenuManager}.
+	 *
 	 * @param manager
 	 * @param objects
 	 */
-	protected void addPopupCommandContributions(IMenuManager manager, Object[] selection){
-		java.util.List<IConfigurationElement> contributions =
-			Extensions.getExtensions("org.eclipse.ui.menus");
+	protected void addPopupCommandContributions(IMenuManager manager, Object[] selection) {
+		java.util.List<IConfigurationElement> contributions = Extensions.getExtensions("org.eclipse.ui.menus");
 		for (IConfigurationElement contributionElement : contributions) {
 			String locationUri = contributionElement.getAttribute("locationURI");
 			String[] parts = locationUri.split(":");
@@ -133,33 +133,30 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			}
 		}
 	}
-	
-	protected void addMenuContribution(IConfigurationElement commandElement, IMenuManager manager,
-		Object[] selection){
+
+	protected void addMenuContribution(IConfigurationElement commandElement, IMenuManager manager, Object[] selection) {
 		ContributionAction action = new ContributionAction(commandElement);
 		if (action.isValid()) {
 			action.setSelection(selection);
 			manager.add(action);
 		}
 	}
-	
-	public PersistentObject findElement(String code){
+
+	public PersistentObject findElement(String code) {
 		String s = getElementClass().getName() + StringConstants.DOUBLECOLON + code;
 		return CoreHub.poFactory.createFromString(s);
 	}
-	
-	public SelectionDialog getSelectionDialog(Shell parent, Object data){
+
+	public SelectionDialog getSelectionDialog(Shell parent, Object data) {
 		throw new UnsupportedOperationException(
-			"SelectionDialog for code system " + getCodeSystemName() + " not implemented");
+				"SelectionDialog for code system " + getCodeSystemName() + " not implemented");
 	}
-	
-	public static SelectionDialog getSelectionDialog(String codeSystemName, Shell parent,
-		Object data){
-		java.util.List<IConfigurationElement> list =
-			Extensions.getExtensions(ExtensionPointConstantsUi.GENERICCODE); //$NON-NLS-1$
-		list.addAll(Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE)); //$NON-NLS-1$
-		list.addAll(Extensions.getExtensions(ExtensionPointConstantsUi.DIAGNOSECODE)); //$NON-NLS-1$
-		
+
+	public static SelectionDialog getSelectionDialog(String codeSystemName, Shell parent, Object data) {
+		java.util.List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsUi.GENERICCODE); // $NON-NLS-1$
+		list.addAll(Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE)); // $NON-NLS-1$
+		list.addAll(Extensions.getExtensions(ExtensionPointConstantsUi.DIAGNOSECODE)); // $NON-NLS-1$
+
 		if (list != null) {
 			for (IConfigurationElement ic : list) {
 				Optional<CodeSystemDescription> systemDescription = CodeSystemDescription.of(ic);
@@ -168,50 +165,48 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 						return systemDescription.get().getSelectionDialog(parent, data);
 					}
 				}
-				systemDescription.ifPresent(description -> {});
+				systemDescription.ifPresent(description -> {
+				});
 			}
 		}
 		throw new IllegalStateException("Could not find code system " + codeSystemName);
 	}
-	
-	public static void makeTabs(CTabFolder ctab, IViewSite site, String point){
+
+	public static void makeTabs(CTabFolder ctab, IViewSite site, String point) {
 		String settings = null;
 		if (point.equals(ExtensionPointConstantsUi.VERRECHNUNGSCODE)) {
 			settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_SRV, null);
 		} else if (point.equals(ExtensionPointConstantsUi.DIAGNOSECODE)) {
 			settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_DIAGNOSE, null);
 		}
-		
+
 		java.util.List<IConfigurationElement> list = Extensions.getExtensions(point);
 		if (settings == null) {
 			addAllTabs(list, ctab, point);
 		} else {
 			addUserSpecifiedTabs(list, settings, ctab, point);
 		}
-		
+
 		if (ctab.getItemCount() > 0) {
 			ctab.setSelection(0);
 		}
 	}
-	
+
 	/**
 	 * add all available tabs as they occur (independent from any user settings)
-	 * 
-	 * @param list
-	 *            list of tabs to add
-	 * @param ctab
-	 *            parent
+	 *
+	 * @param list list of tabs to add
+	 * @param ctab parent
 	 */
-	private static void addAllTabs(java.util.List<IConfigurationElement> list, CTabFolder ctab,
-		String point){
+	private static void addAllTabs(java.util.List<IConfigurationElement> list, CTabFolder ctab, String point) {
 		ITEMS_TO_SHOW_IN_MFU_LIST = ConfigServiceHolder.getUser(Preferences.USR_MFU_LIST_SIZE, 15);
 		ctab.setSimple(false);
-		
-		//add favorites tab first
+
+		// add favorites tab first
 		if (point.equals(ExtensionPointConstantsUi.VERRECHNUNGSCODE)) {
 			new FavoritenCTabItem(ctab, SWT.None);
 		}
-		
+
 		if (list != null) {
 			for (IConfigurationElement ic : list) {
 				Optional<CodeSystemDescription> systemDescription = CodeSystemDescription.of(ic);
@@ -223,33 +218,30 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			}
 		}
 	}
-	
+
 	/**
-	 * add tabs dependent on user settings (user defines which tabs are displayed and in which
-	 * position)
-	 * 
+	 * add tabs dependent on user settings (user defines which tabs are displayed
+	 * and in which position)
+	 *
 	 * @param list
-	 * @param settings
-	 *            user defined tabs and order
-	 * @param ctab
-	 *            parent
-	 * @param point
-	 *            in case its a VERRECHNUNGSCODE add favorite tab
+	 * @param settings user defined tabs and order
+	 * @param ctab     parent
+	 * @param point    in case its a VERRECHNUNGSCODE add favorite tab
 	 */
-	private static void addUserSpecifiedTabs(java.util.List<IConfigurationElement> list,
-		String settings, CTabFolder ctab, String point){
-		
+	private static void addUserSpecifiedTabs(java.util.List<IConfigurationElement> list, String settings,
+			CTabFolder ctab, String point) {
+
 		Map<String, IConfigurationElement> allIcMap = new HashMap<String, IConfigurationElement>();
 		for (IConfigurationElement ic : list) {
 			try {
 				IDetailDisplay d = (IDetailDisplay) ic
-					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 				allIcMap.put(d.getTitle(), ic);
 			} catch (Exception e) {
 				ExHandler.handle(e);
 			}
 		}
-		
+
 		String[] userSettings = settings.split(",");
 		for (String tab : userSettings) {
 			if ("Favoriten".equals(tab)) {
@@ -270,39 +262,39 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			}
 		}
 	}
-	
+
 	/**
 	 * If the user resizes the parts of the selector, we'll remember the new size
-	 * 
+	 *
 	 * @author gerry
-	 * 
+	 *
 	 */
 	private static class ResizeListener extends ControlAdapter {
 		private final String k;
 		private final SashForm mine;
-		
-		ResizeListener(SashForm form, String key){
+
+		ResizeListener(SashForm form, String key) {
 			k = key;
 			mine = form;
 		}
-		
+
 		@Override
-		public void controlResized(ControlEvent e){
+		public void controlResized(ControlEvent e) {
 			int[] weights = mine.getWeights();
 			StringBuilder v = new StringBuilder();
 			v.append(Integer.toString(weights[0])).append(",").append(Integer.toString(weights[1])) //$NON-NLS-1$
-				.append(",").append(Integer.toString(weights[2])); //$NON-NLS-1$
+					.append(",").append(Integer.toString(weights[2])); //$NON-NLS-1$
 			ConfigServiceHolder.setUser(k, v.toString());
 		}
-		
+
 	}
-	
+
 	/**
-	 * Display page for one codesystem. Upper part: MFU user, middle part: MFU patient, lower part:
-	 * All codes
-	 * 
+	 * Display page for one codesystem. Upper part: MFU user, middle part: MFU
+	 * patient, lower part: All codes
+	 *
 	 * @author gerry
-	 * 
+	 *
 	 */
 	public static class cPage extends Composite {
 		private CodeElementStatisticsComposite userStatistics, patientStatistics;
@@ -311,42 +303,39 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		ViewerConfigurer vc;
 		int[] sashWeights = null;
 		ResizeListener resizeListener;
-		
-		private final ElexisEventListenerImpl eeli_user =
-			new ElexisUiEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
-				
-				public void runInUi(ElexisEvent ev){
-					if (patientStatistics != null && (!patientStatistics.isDisposed())) {
-						patientStatistics.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-					}
-					if (userStatistics != null && (!userStatistics.isDisposed())) {
-						userStatistics.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-					}
-					if (cv != null && cv.getViewerWidget() != null
-						&& (!cv.getViewerWidget().getControl().isDisposed())) {
-						cv.getViewerWidget().getControl()
-							.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-					}
-					userStatistics
-						.setContact(ContextServiceHolder.get().getActiveUserContact().orElse(null));
+
+		private final ElexisEventListenerImpl eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
+				ElexisEvent.EVENT_USER_CHANGED) {
+
+			public void runInUi(ElexisEvent ev) {
+				if (patientStatistics != null && (!patientStatistics.isDisposed())) {
+					patientStatistics.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 				}
-			};
-		
-		protected cPage(CTabFolder ctab){
+				if (userStatistics != null && (!userStatistics.isDisposed())) {
+					userStatistics.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
+				}
+				if (cv != null && cv.getViewerWidget() != null && (!cv.getViewerWidget().getControl().isDisposed())) {
+					cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
+				}
+				userStatistics.setContact(ContextServiceHolder.get().getActiveUserContact().orElse(null));
+			}
+		};
+
+		protected cPage(CTabFolder ctab) {
 			super(ctab, SWT.NONE);
 		}
-		
-		cPage(final CTabItem ctab, final CodeSystemDescription description){
+
+		cPage(final CTabItem ctab, final CodeSystemDescription description) {
 			super(ctab.getParent(), SWT.NONE);
 			initContent(description);
 		}
-		
-		cPage(final CTabFolder ctab, final CodeSystemDescription description){
+
+		cPage(final CTabFolder ctab, final CodeSystemDescription description) {
 			super(ctab, SWT.NONE);
 			initContent(description);
 		}
-		
-		private void initContent(CodeSystemDescription description){
+
+		private void initContent(CodeSystemDescription description) {
 			this.description = description;
 			setLayout(new FillLayout());
 			SashForm sash = new SashForm(this, SWT.VERTICAL | SWT.SMOOTH);
@@ -358,159 +347,150 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			for (String sw : sashW.split(",")) { //$NON-NLS-1$
 				sashWeights[i++] = Integer.parseInt(sw);
 			}
-			
-			userStatistics = new CodeElementStatisticsComposite(description.getElexisClassName(),
-				sash, SWT.NONE);
+
+			userStatistics = new CodeElementStatisticsComposite(description.getElexisClassName(), sash, SWT.NONE);
 			userStatistics.setTitle(Messages.CodeSelectorFactory_yourMostFrequent);
 			userStatistics.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			
-			patientStatistics = new CodeElementStatisticsComposite(description.getElexisClassName(),
-				sash, SWT.NONE);
+
+			patientStatistics = new CodeElementStatisticsComposite(description.getElexisClassName(), sash, SWT.NONE);
 			patientStatistics.setTitle(Messages.CodeSelectorFactory_patientsMostFrequent);
 			patientStatistics.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			
+
 			Group gAll = new Group(sash, SWT.NONE);
-			gAll.setText(Messages.CodeSelectorFactory_all); //$NON-NLS-1$
+			gAll.setText(Messages.CodeSelectorFactory_all); // $NON-NLS-1$
 			gAll.setLayout(new GridLayout());
 			cv = new CommonViewer();
 			// Add context medu to viewer, if actions are defined
-			Iterable<IAction> actions =
-				(Iterable<IAction>) (Iterable<?>) description.getActions(null);
+			Iterable<IAction> actions = (Iterable<IAction>) (Iterable<?>) description.getActions(null);
 			if (actions != null) {
 				MenuManager menu = new MenuManager();
 				menu.setRemoveAllWhenShown(true);
 				menu.addMenuListener(new IMenuListener() {
-					public void menuAboutToShow(IMenuManager manager){
-						Iterable<IAction> actions =
-							(Iterable<IAction>) (Iterable<?>) description.getActions(null);
+					public void menuAboutToShow(IMenuManager manager) {
+						Iterable<IAction> actions = (Iterable<IAction>) (Iterable<?>) description.getActions(null);
 						for (IAction ac : actions) {
 							manager.add(ac);
 						}
-						
+
 					}
 				});
 				cv.setContextMenu(menu);
 			}
 			vc = description.getCodeSelectorFactory().createViewerConfigurer(cv);
-			// add double click listener for generic CodeSelectorTarget, added before create of CommonViewer
+			// add double click listener for generic CodeSelectorTarget, added before create
+			// of CommonViewer
 			if (vc.getContentType() == ContentType.GENERICOBJECT) {
-				vc.setDoubleClickListener(
-					description.getCodeSelectorFactory().getDoubleClickListener());
+				vc.setDoubleClickListener(description.getCodeSelectorFactory().getDoubleClickListener());
 			}
-			
+
 			Composite cvc = new Composite(gAll, SWT.NONE);
 			cvc.setLayout(new GridLayout());
 			cvc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			cv.create(vc, cvc, SWT.NONE, this);
-			cv.getViewerWidget().getControl()
-				.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+			cv.getViewerWidget().getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			vc.getContentProvider().startListening();
-			
-			// add double click listener for PersistentObject CodeSelectorTarget, added after create of CommonViewer
+
+			// add double click listener for PersistentObject CodeSelectorTarget, added
+			// after create of CommonViewer
 			if (vc.getContentType() == ContentType.PERSISTENTOBJECT) {
-				cv.addDoubleClickListener(
-					description.getCodeSelectorFactory().getPoDoubleClickListener());
+				cv.addDoubleClickListener(description.getCodeSelectorFactory().getPoDoubleClickListener());
 			}
-			
+
 			try {
 				sash.setWeights(sashWeights);
 			} catch (Throwable t) {
 				ExHandler.handle(t);
-				sash.setWeights(new int[] {
-					20, 20, 60
-				});
+				sash.setWeights(new int[] { 20, 20, 60 });
 			}
-			
+
 			ElexisEventDispatcher.getInstance().addListeners(eeli_user);
 			refresh();
 		}
-		
+
 		/*
 		 * (Kein Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.swt.widgets.Widget#dispose()
 		 */
 		@Override
-		public void dispose(){
+		public void dispose() {
 			vc.getContentProvider().stopListening();
 			ElexisEventDispatcher.getInstance().removeListeners(eeli_user);
 			super.dispose();
 		}
-		
-		public void refresh(){
-			patientStatistics.setContact(
-				ContextServiceHolder.get().getActivePatient().orElse(null));
-			userStatistics.setContact(
-				ContextServiceHolder.get().getActiveUserContact().orElse(null));
+
+		public void refresh() {
+			patientStatistics.setContact(ContextServiceHolder.get().getActivePatient().orElse(null));
+			userStatistics.setContact(ContextServiceHolder.get().getActiveUserContact().orElse(null));
 		}
 	}
-	
+
 	/**
-	 * Test if the {@link CodeSelectorFactory} implementation has a context menu, that should be
-	 * registered with the workbench.
-	 * 
+	 * Test if the {@link CodeSelectorFactory} implementation has a context menu,
+	 * that should be registered with the workbench.
+	 *
 	 * @return
 	 */
-	public boolean hasContextMenu(){
+	public boolean hasContextMenu() {
 		return getSelectionProvider() != null && getMenuManager() != null;
 	}
-	
+
 	/**
-	 * Get the {@link ISelectionProvider} of this {@link CodeSelectorFactory}. Override this method
-	 * and {@link #getMenuManager()}, so a {@link IViewPart} can register the context menu with the
-	 * workbench using
+	 * Get the {@link ISelectionProvider} of this {@link CodeSelectorFactory}.
+	 * Override this method and {@link #getMenuManager()}, so a {@link IViewPart}
+	 * can register the context menu with the workbench using
 	 * {@link #activateContextMenu(IWorkbenchPartSite, DelegatingSelectionProvider, String)}.
-	 * 
+	 *
 	 * @return
 	 */
-	public ISelectionProvider getSelectionProvider(){
+	public ISelectionProvider getSelectionProvider() {
 		return null;
 	}
-	
+
 	/**
-	 * Get the {@link MenuManager} of this {@link MenuManager}. Override this method and
-	 * {@link #getSelectionProvider()}, so a {@link IViewPart} can register the context menu with
-	 * the workbench using
+	 * Get the {@link MenuManager} of this {@link MenuManager}. Override this method
+	 * and {@link #getSelectionProvider()}, so a {@link IViewPart} can register the
+	 * context menu with the workbench using
 	 * {@link #activateContextMenu(IWorkbenchPartSite, DelegatingSelectionProvider, String)}.
-	 * 
+	 *
 	 * @return
 	 */
-	public MenuManager getMenuManager(){
+	public MenuManager getMenuManager() {
 		return null;
 	}
-	
+
 	/**
-	 * Registers the context menu, if {@link #hasContextMenu()} returns true, with the site. The id
-	 * of the context menu is viewId plus . and {@link #getCodeSystemName()}. <br />
-	 * example ids: <i>ch.elexis.codedetailview.Block</i> or <i>ch.elexis.LeistungenView.Block</i>
-	 * 
+	 * Registers the context menu, if {@link #hasContextMenu()} returns true, with
+	 * the site. The id of the context menu is viewId plus . and
+	 * {@link #getCodeSystemName()}. <br />
+	 * example ids: <i>ch.elexis.codedetailview.Block</i> or
+	 * <i>ch.elexis.LeistungenView.Block</i>
+	 *
 	 * @param site
 	 */
-	public void activateContextMenu(IWorkbenchPartSite site,
-		DelegatingSelectionProvider selectionProvider, String viewId){
+	public void activateContextMenu(IWorkbenchPartSite site, DelegatingSelectionProvider selectionProvider,
+			String viewId) {
 		if (hasContextMenu() && site.getPart() != null) {
 			selectionProvider.setSelectionProviderDelegate(getSelectionProvider());
-			site.registerContextMenu(viewId + "." + getCodeSystemName(), getMenuManager(),
-				selectionProvider);
+			site.registerContextMenu(viewId + "." + getCodeSystemName(), getMenuManager(), selectionProvider);
 		}
 	}
-	
+
 	/**
 	 * Returns the {@link PoDoubleClickListener} used on the Viewer of this
 	 * {@link CodeSelectorFactory}. Default implementation passes the selected
 	 * {@link PersistentObject} directly to the code selector target (manage via
-	 * {@link CodeSelectorHandler}). If a {@link Leistungsblock} is selected it will pass its
-	 * contained elements to the code selector target. </br>
+	 * {@link CodeSelectorHandler}). If a {@link Leistungsblock} is selected it will
+	 * pass its contained elements to the code selector target. </br>
 	 * </br>
 	 * Should be overridden by subclasses for special behaviour.
-	 * 
+	 *
 	 * @return
 	 */
-	protected PoDoubleClickListener getPoDoubleClickListener(){
+	protected PoDoubleClickListener getPoDoubleClickListener() {
 		return new PoDoubleClickListener() {
-			public void doubleClicked(PersistentObject obj, CommonViewer cv){
-				ICodeSelectorTarget target =
-					CodeSelectorHandler.getInstance().getCodeSelectorTarget();
+			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
+				ICodeSelectorTarget target = CodeSelectorHandler.getInstance().getCodeSelectorTarget();
 				if (target != null) {
 					if (obj instanceof Leistungsblock) {
 						Leistungsblock block = (Leistungsblock) obj;
@@ -530,10 +510,9 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 								}
 								sb.append(r);
 							});
-							MessageDialog.openWarning(Display.getDefault().getActiveShell(),
-								"Warnung",
-								"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
-									+ sb.toString());
+							MessageDialog.openWarning(Display.getDefault().getActiveShell(), "Warnung",
+									"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
+											+ sb.toString());
 						}
 					} else {
 						target.codeSelected(obj);
@@ -542,29 +521,28 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			}
 		};
 	}
-	
+
 	/**
 	 * Returns the {@link IDoubleClickListener} used on the Viewer of this
-	 * {@link CodeSelectorFactory}. Default implementation passes the selected {@link Object}
-	 * directly to the code selector target (manage via {@link CodeSelectorHandler}). If a
-	 * {@link Leistungsblock} is selected it will pass its contained elements to the code selector
-	 * target. </br>
+	 * {@link CodeSelectorFactory}. Default implementation passes the selected
+	 * {@link Object} directly to the code selector target (manage via
+	 * {@link CodeSelectorHandler}). If a {@link Leistungsblock} is selected it will
+	 * pass its contained elements to the code selector target. </br>
 	 * </br>
 	 * Should be overridden by subclasses for special behaviour.
-	 * 
+	 *
 	 * @return
 	 */
-	public IDoubleClickListener getDoubleClickListener(){
+	public IDoubleClickListener getDoubleClickListener() {
 		return new IDoubleClickListener() {
-			
+
 			@Override
-			public void doubleClick(DoubleClickEvent event){
+			public void doubleClick(DoubleClickEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 					if (!structuredSelection.isEmpty()) {
-						ICodeSelectorTarget target =
-							CodeSelectorHandler.getInstance().getCodeSelectorTarget();
+						ICodeSelectorTarget target = CodeSelectorHandler.getInstance().getCodeSelectorTarget();
 						if (target != null) {
 							Object obj = structuredSelection.getFirstElement();
 							// TODO implement for block

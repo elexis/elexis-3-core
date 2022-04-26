@@ -3,7 +3,7 @@ package ch.elexis.core.data.interfaces;
 import ch.elexis.data.Mandant;
 
 public interface IStock {
-	
+
 	public String getId();
 
 	public String getCode();
@@ -18,7 +18,7 @@ public interface IStock {
 	}
 
 	public Integer getPriority();
-	
+
 	public Mandant getOwner();
-	
+
 }

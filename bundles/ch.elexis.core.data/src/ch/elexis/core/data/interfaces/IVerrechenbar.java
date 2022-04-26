@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.data.interfaces;
 
@@ -29,16 +29,18 @@ import ch.rgw.tools.Result;
 import ch.rgw.tools.TimeTool;
 
 /**
- * Das Leistungskonzept ist "pluggable" definiert. Dies, damit neue Abrechnungssysteme jederzeit
- * leicht integriert werden können. Ein Leistungssystem muss nur das Interface Verrechenbar
- * implementieren, um von Elexis ohne weitere Modifikationen genutzt werden zu können.
- * 
+ * Das Leistungskonzept ist "pluggable" definiert. Dies, damit neue
+ * Abrechnungssysteme jederzeit leicht integriert werden können. Ein
+ * Leistungssystem muss nur das Interface Verrechenbar implementieren, um von
+ * Elexis ohne weitere Modifikationen genutzt werden zu können.
+ *
  * @author gerry
- * 
+ *
  */
 public interface IVerrechenbar extends ICodeElement {
 	/**
-	 * Definition von Informationen zu der Leistung welche für die MWSt relevant sind.
+	 * Definition von Informationen zu der Leistung welche für die MWSt relevant
+	 * sind.
 	 * <p>
 	 * Schweizer MWSt (at.medevit.medelexis.vat_ch):
 	 * <li>VAT_DEFAULT ... Standard MWST Satz laut Einstellungsseite</li>
@@ -46,23 +48,23 @@ public interface IVerrechenbar extends ICodeElement {
 	 * <li>VAT_CH_ISMEDICAMENT ... Artikel ist als Medikament anerkannt</li>
 	 * <li>VAT_CH_NOTMEDICAMENT ... Artikel ist nicht als Medikament anerkannt</li>
 	 * <li>VAT_CH_ISTREATMENT ... Leistung ist als Heilbehandlung anerkannt</li>
-	 * <li>VAT_CH_NOTTREATMENT ... Leistung ist nicht als Heilbehandlung anerkannt</li>
+	 * <li>VAT_CH_NOTTREATMENT ... Leistung ist nicht als Heilbehandlung
+	 * anerkannt</li>
 	 * </p>
 	 */
 	public enum VatInfo {
-		VAT_DEFAULT, VAT_NONE, VAT_CH_ISMEDICAMENT, VAT_CH_NOTMEDICAMENT, VAT_CH_ISTREATMENT,
-			VAT_CH_NOTTREATMENT;
-		
+		VAT_DEFAULT, VAT_NONE, VAT_CH_ISMEDICAMENT, VAT_CH_NOTMEDICAMENT, VAT_CH_ISTREATMENT, VAT_CH_NOTTREATMENT;
+
 		/**
-		 * Get a String representation of a set of {@link VatInfo} elements for persisting the
-		 * information.
-		 * 
+		 * Get a String representation of a set of {@link VatInfo} elements for
+		 * persisting the information.
+		 *
 		 * @param set
 		 * @return
 		 */
-		public static String encodeAsString(EnumSet<VatInfo> set){
+		public static String encodeAsString(EnumSet<VatInfo> set) {
 			StringBuilder sb = new StringBuilder();
-			
+
 			for (VatInfo info : set) {
 				if (sb.length() == 0)
 					sb.append(info.name());
@@ -71,114 +73,115 @@ public interface IVerrechenbar extends ICodeElement {
 			}
 			return sb.toString();
 		}
-		
+
 		/**
 		 * Get an EnumSet of {@link VatInfo} from a String representation produced with
 		 * {@link VatInfo#encodeAsString(EnumSet)}.
-		 * 
+		 *
 		 * @param code
 		 * @return
 		 */
-		public static EnumSet<VatInfo> decodeFromString(String code){
+		public static EnumSet<VatInfo> decodeFromString(String code) {
 			String[] names = code.split(",");
 			EnumSet<VatInfo> ret = EnumSet.noneOf(VatInfo.class);
-			
+
 			for (int i = 0; i < names.length; i++) {
 				ret.add(VatInfo.valueOf(names[i]));
 			}
 			return ret;
 		}
 	};
-	
+
 	public static IOptifier optifier = new DefaultOptifier();
 	public static Comparator<IVerrechenbar> comparator = new IVerrechenbar.DefaultComparator();
 	public static IFilter ifilter = new IVerrechenbar.DefaultFilter();
-	
+
 	public IOptifier getOptifier();
-	
+
 	/** Einen Comparator zum Sortieren von Leistungen dieses Typs liefern */
 	public Comparator<IVerrechenbar> getComparator();
-	
+
 	/** Einen Filter liefern, um Elemente dieses Typs nach Mandant zu filtern */
 	public IFilter getFilter(Mandant m);
-	
+
 	/**
-	 * Get the (T)ax (P)oint value of the {@link IVerrechenbar}. Parameters are provided as context
-	 * to determine the correct value.
-	 * 
+	 * Get the (T)ax (P)oint value of the {@link IVerrechenbar}. Parameters are
+	 * provided as context to determine the correct value.
+	 *
 	 * @param date
 	 * @param fall
 	 * @return
 	 */
 	public int getTP(@NonNull TimeTool date, @Nullable IFall fall);
-	
+
 	/**
-	 * Get the (T)ax (P)oint value of the {@link IVerrechenbar}. Parameters are provided as context
-	 * to determine the correct value. This method was introduced because a context with
-	 * {@link Konsultation} was needed, as context with {@link IFall} was not specific enough. </br>
+	 * Get the (T)ax (P)oint value of the {@link IVerrechenbar}. Parameters are
+	 * provided as context to determine the correct value. This method was
+	 * introduced because a context with {@link Konsultation} was needed, as context
+	 * with {@link IFall} was not specific enough. </br>
 	 * </br>
-	 * If parameter kons is null, value of {@link IVerrechenbar#getTP(TimeTool, IFall)} is returned.
-	 * 
+	 * If parameter kons is null, value of
+	 * {@link IVerrechenbar#getTP(TimeTool, IFall)} is returned.
+	 *
 	 * @param date
 	 * @param kons
 	 * @return
 	 */
-	public default int getTP(@NonNull TimeTool date, @Nullable Konsultation kons){
+	public default int getTP(@NonNull TimeTool date, @Nullable Konsultation kons) {
 		if (kons != null) {
 			return getTP(date, kons.getFall());
 		}
 		return getTP(date, (IFall) null);
 	}
-	
+
 	public double getFactor(TimeTool date, IFall fall);
-	
+
 	/**
 	 * Eigene Kosten für diese Leistung
-	 * 
-	 * @param dat
-	 *            Datum, für das die Kosten geliefert werden sollen
+	 *
+	 * @param dat Datum, für das die Kosten geliefert werden sollen
 	 */
 	public Money getKosten(TimeTool dat);
-	
+
 	/** Zeitanrechnung für diese Leistung (in Minuten) */
 	public int getMinutes();
-	
+
 	public String getXidDomain();
-	
+
 	/** Die MWSt Informationen zu dieser Leistung */
 	public VatInfo getVatInfo();
-	
+
 	// public AbstractDataLoaderJob getDataloader();
 	// public String[] getDisplayedFields();
-	
+
 	public static class DefaultComparator implements Comparator<IVerrechenbar> {
-		public int compare(final IVerrechenbar v1, final IVerrechenbar v2){
+		public int compare(final IVerrechenbar v1, final IVerrechenbar v2) {
 			int i = v1.getCodeSystemName().compareTo(v2.getCodeSystemName());
 			if (i == 0) {
 				i = v1.getCode().compareTo(v2.getCode());
 			}
 			return i;
 		}
-		
+
 	}
-	
+
 	public static class DefaultFilter implements IFilter {
-		public boolean select(final Object toTest){
+		public boolean select(final Object toTest) {
 			return true;
 		}
-		
+
 	}
-	
+
 	public static class DefaultOptifier implements IOptifier {
-		
+
 		private Logger log;
 		private Verrechnet newVerrechnet;
-		
-		public Result<Object> optify(final Konsultation kons){
+
+		public Result<Object> optify(final Konsultation kons) {
 			return new Result<Object>(kons);
 		}
-		
-		public Result<IVerrechenbar> add(final IVerrechenbar code, final Konsultation kons){
+
+		public Result<IVerrechenbar> add(final IVerrechenbar code, final Konsultation kons) {
 			List<Verrechnet> old = kons.getLeistungen();
 			Verrechnet foundVerrechnet = null;
 			for (Verrechnet verrechnet : old) {
@@ -189,10 +192,10 @@ public interface IVerrechenbar extends ICodeElement {
 					if (log == null)
 						log = LoggerFactory.getLogger(DefaultOptifier.class);
 					log.error("IVerrechenbar is not resolvable in " + verrechnet.getId() + " is "
-						+ verrechnet.get(Verrechnet.CLASS) + " available?");
+							+ verrechnet.get(Verrechnet.CLASS) + " available?");
 					continue;
 				}
-				
+
 				if (vrElement.getId().equals(code.getId())) {
 					if (verrechnet.getText().equals(code.getText())) {
 						foundVerrechnet = verrechnet;
@@ -200,7 +203,7 @@ public interface IVerrechenbar extends ICodeElement {
 					}
 				}
 			}
-			
+
 			if (foundVerrechnet != null) {
 				foundVerrechnet.changeAnzahl(foundVerrechnet.getZahl() + 1);
 			} else {
@@ -209,8 +212,8 @@ public interface IVerrechenbar extends ICodeElement {
 			}
 			return new Result<IVerrechenbar>(code);
 		}
-		
-		public Result<Verrechnet> remove(final Verrechnet v, final Konsultation kons){
+
+		public Result<Verrechnet> remove(final Verrechnet v, final Konsultation kons) {
 			List<Verrechnet> old = kons.getLeistungen();
 			old.remove(v);
 			v.delete();
@@ -218,7 +221,7 @@ public interface IVerrechenbar extends ICodeElement {
 		}
 
 		@Override
-		public Verrechnet getCreatedVerrechnet(){
+		public Verrechnet getCreatedVerrechnet() {
 			return newVerrechnet;
 		}
 	}

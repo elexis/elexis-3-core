@@ -1,13 +1,13 @@
 package ch.elexis.core.test;
 
 public class TestEntities {
-	
+
 	public static final String USER_ADMINISTRATOR_ID = "Administrator";
 	public static final String USER_ADMINISTRATOR_PASS = "administrator";
-	
+
 	public static final String USER_USER_ID = "user";
 	public static final String USER_USER_PASS = "user";
-	
+
 	public static final String MANDATOR_ID = "h2c1172107ce2df95065";
 
 	public static final String PATIENT_MALE_ID = "zd8d46d1b8d44330501105";

@@ -6,11 +6,11 @@ import org.eclipse.jface.viewers.TreeSelection;
 import ch.elexis.core.model.IDocument;
 
 public class DocumentsPropertyTester extends PropertyTester {
-	
+
 	@Override
-	public boolean test(Object receiver, String property, Object[] args, Object expectedValue){
+	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if ("isMimeType".equals(property) && args != null && args.length == 1 //$NON-NLS-1$
-			&& args[0] instanceof String) {
+				&& args[0] instanceof String) {
 			if (receiver instanceof TreeSelection) {
 				receiver = ((TreeSelection) receiver).getFirstElement();
 			}

@@ -8,27 +8,27 @@ import ch.rgw.tools.JdbcLink;
 
 @Ignore
 public class Test_StockService extends AbstractPersistentObjectTest {
-	
+
 	private static IStockService stockService;
-	
-	public Test_StockService(JdbcLink link){
+
+	public Test_StockService(JdbcLink link) {
 		super(link);
 		stockService = OsgiServiceUtil.getService(IStockService.class).get();
 	}
-	
+
 	private static Stock defaultStock;
 	private static Stock stock_A_5_public;
 	private static Stock stock_B_10_private;
 	private static Mandant stock_B_10_owner;
-	
+
 	private static Artikel artikel_A;
 	private static Artikel artikel_B;
 	private static Artikel artikel_C;
-	
+
 	// TODO fix
-	
+
 //	@Before
-//	public void before(){		
+//	public void before(){
 //		Query<Stock> qre = new Query<Stock>(Stock.class);
 //		qre.add(Stock.FLD_CODE, Query.EQUALS, "A");
 //		List<Stock> execute = qre.execute();
@@ -37,7 +37,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 //		} else {
 //			stock_A_5_public = new Stock("A", 5);
 //		}
-//		
+//
 //		qre.clear();
 //		qre.add(Stock.FLD_CODE, Query.EQUALS, "PRV");
 //		execute = qre.execute();
@@ -46,17 +46,17 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 //		} else {
 //			stock_B_10_private = new Stock("PRV", 10);
 //		}
-//		
+//
 //		stock_B_10_owner = new Mandant("Mandant", "Musterfrau", "26081950", "s");
 //		stock_B_10_private.setOwner(stock_B_10_owner);
-//		
+//
 //		artikel_A = new Artikel("ArtikelA", "Eigenartikel");
 //		artikel_B = new Artikel("ArtikelB", "Eigenartikel");
 //		artikel_C = new Artikel("ArtikelC", "Eigenartikel");
-//		
+//
 //		defaultStock = Stock.load("STD");
 //		assertEquals("STD", defaultStock.getId());
-//		
+//
 //		IStockEntry stockEntry_A =
 //			stockService.storeArticleInStock(defaultStock, artikel_A.storeToString());
 //		stockEntry_A.setMinimumStock(5);
@@ -71,7 +71,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 //		IStockEntry stockEntry_B_5 =
 //			stockService.storeArticleInStock(stock_A_5_public, artikel_B.storeToString());
 //	}
-//	
+//
 //	@Test
 //	public void testCreateEditAndDeleteStock(){
 //		int size = stockService.getAllStocks(true).size();
@@ -100,7 +100,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 //		allStocks = stockService.getAllStocks(true);
 //		assertEquals(size, allStocks.size());
 //	}
-//	
+//
 //	@Test
 //	public void testDenyStockDeleteOnExistingStockEntries(){
 //		Stock stock = new Stock("TMP", 15);
@@ -108,7 +108,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 //		stockService.storeArticleInStock(stock, artikel.storeToString());
 //		stock.delete();
 //	}
-//	
+//
 //	@Test
 //	public void testStoreUnstoreFindPreferredArticleInStock(){
 //		List<? extends IStockEntry> a_entries =
@@ -123,32 +123,32 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 //		IStockEntry stockEntry_A_PUB = stockService
 //			.findStockEntryForArticleInStock(stock_A_5_public, artikel_A.storeToString());
 //		assertEquals("A", stockEntry_A_PUB.getStock().getCode().trim()); // trim() needed for postgres
-//		
+//
 //		IStockEntry stockEntry = stockService
 //			.findPreferredStockEntryForArticle(artikel_A.storeToString(), stock_B_10_owner.getId());
 //		assertEquals("PRV", stockEntry.getStock().getCode());
 //		IStockEntry stockEntry_PUB =
 //			stockService.findPreferredStockEntryForArticle(artikel_A.storeToString(), null);
 //		assertEquals("STD", stockEntry_PUB.getStock().getCode());
-//		
+//
 //		stockService.unstoreArticleFromStock(stock_B_10_private, artikel_A.storeToString());
 //		IStockEntry stockEntry_unstoredPriv = stockService
 //			.findPreferredStockEntryForArticle(artikel_A.storeToString(), stock_B_10_owner.getId());
 //		assertEquals("STD", stockEntry_unstoredPriv.getStock().getCode());
 //	}
-//	
+//
 //	@Test
 //	public void testStockAvailabilities(){
 //		Availability availability_A = stockService.getCumulatedAvailabilityForArticle(artikel_A);
 //		assertEquals(Availability.IN_STOCK, availability_A);
 //		Availability availability_B = stockService.getCumulatedAvailabilityForArticle(artikel_B);
 //		assertEquals(Availability.OUT_OF_STOCK, availability_B);
-//		
+//
 //		assertEquals(Availability.OUT_OF_STOCK, stockService
 //			.getArticleAvailabilityForStock(stock_A_5_public, artikel_A.storeToString()));
 //		assertEquals(Availability.IN_STOCK,
 //			stockService.getArticleAvailabilityForStock(defaultStock, artikel_A.storeToString()));
-//		
+//
 //		Stock stock = new Stock("TMP", 20);
 //		IStockEntry se = stockService.storeArticleInStock(stock, artikel_C.storeToString());
 //		se.setMinimumStock(5);
@@ -159,28 +159,28 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 //			stockService.getArticleAvailabilityForStock(stock, artikel_C.storeToString()));
 //		stock.removeFromDatabase();
 //	}
-//	
+//
 //	@Test
 //	public void testPerformDisposalAndReturnOfArticle(){
 //		Stock stock = new Stock("TMP", 20);
 //		IStockEntry se = stockService.storeArticleInStock(stock, artikel_C.storeToString());
 //		se.setMinimumStock(15);
 //		se.setCurrentStock(13);
-//		
+//
 //		stockService.performSingleDisposal(artikel_C, 5);
 //		IStockEntry prefSE =
 //			stockService.findPreferredStockEntryForArticle(artikel_C.storeToString(), null);
 //		assertEquals(8, prefSE.getCurrentStock());
 //		assertEquals(15, prefSE.getMinimumStock());
-//		
+//
 //		stockService.performSingleReturn(artikel_C, 3);
 //		prefSE = stockService.findPreferredStockEntryForArticle(artikel_C.storeToString(), null);
 //		assertEquals(11, prefSE.getCurrentStock());
 //		assertEquals(15, prefSE.getMinimumStock());
-//		
+//
 //		stock.removeFromDatabase();
 //	}
-//	
+//
 //	@Test
 //	public void testPerformMultipleStoreOnSingleStockForArticle(){
 //		stockService.storeArticleInStock(defaultStock, artikel_C.storeToString());
@@ -190,7 +190,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 //		assertEquals(1,
 //			stockService.findAllStockEntriesForArticle(artikel_C.storeToString()).size());
 //	}
-//	
+//
 //	@Test
 //	public void testQueryMappedExpressionNumeric(){
 //		Stock stock = new Stock("TST", 20);
@@ -214,7 +214,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 //		qbe.add(StockEntry.FLD_CURRENT, Query.LESS_OR_EQUAL, StockEntry.FLD_MIN);
 //		List<StockEntry> execute = qbe.execute();
 //		assertEquals(1, execute.size());
-//		
+//
 //		stock.removeFromDatabase();
 //	}
 }

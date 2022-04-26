@@ -20,36 +20,34 @@ import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 
 public class SetAsReserveMedicationHandler extends AbstractHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		ISelection selection =
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object firstElement = strucSelection.getFirstElement();
-			
+
 			if (firstElement instanceof MedicationTableViewerItem) {
 				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
 				IPrescription presc = mtvItem.getPrescription();
-				
+
 				if (presc != null && !(presc.getEntryType() == EntryType.RESERVE_MEDICATION)) {
 					AcquireLockUi.aquireAndRun(presc, new ILockHandler() {
-						
+
 						@Override
-						public void lockFailed(){
+						public void lockFailed() {
 							// do nothing
 						}
-						
+
 						@Override
-						public void lockAcquired(){
-							IPrescription reserveMedi =
-								MedicationServiceHolder.get().createPrescriptionCopy(presc);
+						public void lockAcquired() {
+							IPrescription reserveMedi = MedicationServiceHolder.get().createPrescriptionCopy(presc);
 							reserveMedi.setEntryType(EntryType.RESERVE_MEDICATION);
 							CoreModelServiceHolder.get().save(reserveMedi);
-							
-							MedicationServiceHolder.get().stopPrescription(presc,
-								LocalDateTime.now(), "Umgestellt auf Reserve Medikation");
+
+							MedicationServiceHolder.get().stopPrescription(presc, LocalDateTime.now(),
+									"Umgestellt auf Reserve Medikation");
 							CoreModelServiceHolder.get().save(presc);
 						}
 					});
@@ -59,5 +57,5 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 		}
 		return null;
 	}
-	
+
 }

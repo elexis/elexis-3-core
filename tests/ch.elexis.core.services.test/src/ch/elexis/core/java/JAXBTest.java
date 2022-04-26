@@ -21,10 +21,10 @@ public class JAXBTest {
 		dbc.password = "testPassword";
 		dbc.rdbmsType = DBType.H2;
 		dbc.username = "testUsername";
-		
+
 		String marshallIntoString = dbc.marshallIntoString();
 		System.out.println(marshallIntoString);
-		
+
 		DBConnection _dbc = DBConnection.unmarshall(marshallIntoString);
 		assertEquals(dbc.databaseName, _dbc.databaseName);
 		assertEquals(dbc.hostName, _dbc.hostName);
@@ -32,5 +32,4 @@ public class JAXBTest {
 		assertEquals(dbc.rdbmsType, _dbc.rdbmsType);
 	}
 
-	
 }

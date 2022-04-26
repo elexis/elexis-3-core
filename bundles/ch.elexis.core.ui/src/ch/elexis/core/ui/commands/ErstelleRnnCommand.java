@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.commands;
 
@@ -50,18 +50,19 @@ import ch.rgw.tools.Result;
 import ch.rgw.tools.Tree;
 
 /**
- * Command um Rechnungen aus einer Liste von Patienten, Fällen und Konsultationen zu erstellen Der
- * Parameter des Commands muss ein Tree sein, welcher in der ersten Ebene die Patienten, in der
- * zweiten die Fälle und in der Dritten die zu verrechnenden Konsultationen enthält.
- * 
+ * Command um Rechnungen aus einer Liste von Patienten, Fällen und
+ * Konsultationen zu erstellen Der Parameter des Commands muss ein Tree sein,
+ * welcher in der ersten Ebene die Patienten, in der zweiten die Fälle und in
+ * der Dritten die zu verrechnenden Konsultationen enthält.
+ *
  * @author gerry
- * 
+ *
  */
 public class ErstelleRnnCommand extends AbstractHandler {
 	public static final String ID = "bill.create"; //$NON-NLS-1$
-	
+
 	@SuppressWarnings("unchecked")
-	public Object execute(ExecutionEvent eev) throws ExecutionException{
+	public Object execute(ExecutionEvent eev) throws ExecutionException {
 		Tree<?> tSelection = null;
 		String px = eev.getParameter("ch.elexis.RechnungErstellen.parameter"); //$NON-NLS-1$
 		try {
@@ -82,22 +83,20 @@ public class ErstelleRnnCommand extends AbstractHandler {
 					}
 				}
 				Collection<Tree> lt = tFall.getChildren();
-				
+
 				List<Konsultation> toBill = new ArrayList<Konsultation>(lt.size() + 1);
 				for (Tree t : lt) {
 					toBill.add((Konsultation) t.contents);
 				}
-				
-				Map<Integer, List<IEncounter>> sortedByYears =
-					BillingUtil.getSortedEncountersByYear(
-						NoPoUtil.loadAsIdentifiable(toBill, IEncounter.class));
+
+				Map<Integer, List<IEncounter>> sortedByYears = BillingUtil
+						.getSortedEncountersByYear(NoPoUtil.loadAsIdentifiable(toBill, IEncounter.class));
 				if (!BillingUtil.canBillYears(new ArrayList<>(sortedByYears.keySet()))) {
 					StringJoiner sj = new StringJoiner(", ");
 					sortedByYears.keySet().forEach(i -> sj.add(Integer.toString(i)));
-					if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
-						"Rechnung Validierung",
-						"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "
-							+ sj.toString() + " erstellen?")) {
+					if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), "Rechnung Validierung",
+							"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "
+									+ sj.toString() + " erstellen?")) {
 						// bill each year separately
 						for (Integer year : sortedByYears.keySet()) {
 							res = InvoiceServiceHolder.get().invoice(sortedByYears.get(year));
@@ -106,30 +105,28 @@ public class ErstelleRnnCommand extends AbstractHandler {
 							}
 							if (!res.isOK()) {
 								ErrorDialog.openError(HandlerUtil.getActiveShell(eev),
-									Messages.KonsZumVerrechnenView_errorInInvoice,
-									
-									NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase,
-										new Object[] {
-											fall.getLabel(), fall.getPatient().getLabel()
-										}), ResultAdapter.getResultAsStatus(res));
+										Messages.KonsZumVerrechnenView_errorInInvoice,
+
+										NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase,
+												new Object[] { fall.getLabel(), fall.getPatient().getLabel() }),
+										ResultAdapter.getResultAsStatus(res));
 							} else {
 								tPat.remove(tFall);
 							}
 						}
 					}
 				} else {
-					res = InvoiceServiceHolder.get()
-						.invoice(NoPoUtil.loadAsIdentifiable(toBill, IEncounter.class));
+					res = InvoiceServiceHolder.get().invoice(NoPoUtil.loadAsIdentifiable(toBill, IEncounter.class));
 					if (monitor != null) {
 						monitor.worked(1);
 					}
 					if (!res.isOK()) {
 						ErrorDialog.openError(HandlerUtil.getActiveShell(eev),
-							Messages.KonsZumVerrechnenView_errorInInvoice,
-							
-							NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase, new Object[] {
-								fall.getLabel(), fall.getPatient().getLabel()
-							}), ResultAdapter.getResultAsStatus(res));
+								Messages.KonsZumVerrechnenView_errorInInvoice,
+
+								NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase,
+										new Object[] { fall.getLabel(), fall.getPatient().getLabel() }),
+								ResultAdapter.getResultAsStatus(res));
 					} else {
 						tPat.remove(tFall);
 					}
@@ -137,31 +134,26 @@ public class ErstelleRnnCommand extends AbstractHandler {
 			}
 			if (rejected != 0) {
 				SWTHelper.showError(Messages.ErstelleRnnCommand_BadCaseDefinition,
-					Integer.toString(rejected)
-						+ Messages.ErstelleRnnCommand_BillsNotCreatedMissingData
-						+ Messages.ErstelleRnnCommand_ErstelleRnnCheckCaseDetails);
+						Integer.toString(rejected) + Messages.ErstelleRnnCommand_BillsNotCreatedMissingData
+								+ Messages.ErstelleRnnCommand_ErstelleRnnCheckCaseDetails);
 			} else {
 				tSelection.remove(tPat);
 			}
 		}
 		return res;
 	}
-	
-	public static Object ExecuteWithParams(IViewSite origin, Tree<?> tSelection){
+
+	public static Object ExecuteWithParams(IViewSite origin, Tree<?> tSelection) {
 		IHandlerService handlerService = (IHandlerService) origin.getService(IHandlerService.class);
 		ICommandService cmdService = (ICommandService) origin.getService(ICommandService.class);
 		try {
 			Command command = cmdService.getCommand(ID);
-			Parameterization px =
-				new Parameterization(command.getParameter("ch.elexis.RechnungErstellen.parameter"), //$NON-NLS-1$
+			Parameterization px = new Parameterization(command.getParameter("ch.elexis.RechnungErstellen.parameter"), //$NON-NLS-1$
 					new TreeToStringConverter().convertToString(tSelection));
-			ParameterizedCommand parmCommand =
-				new ParameterizedCommand(command, new Parameterization[] {
-					px
-				});
-			
+			ParameterizedCommand parmCommand = new ParameterizedCommand(command, new Parameterization[] { px });
+
 			return handlerService.executeCommand(parmCommand, null);
-			
+
 		} catch (Exception ex) {
 			throw new RuntimeException("add.command not found"); //$NON-NLS-1$
 		}

@@ -22,25 +22,25 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.jdt.Nullable;
 
 public class CompositeX509KeyManager implements X509KeyManager {
-	
+
 	private KeyStore defaultStore;
-	
+
 	private final HashMap<KeyStore, List<X509KeyManager>> keyManagers = new HashMap<>();
-	
-	public CompositeX509KeyManager(){
+
+	public CompositeX509KeyManager() {
 		try {
 			defaultStore = KeyStore.getInstance(KeyStore.getDefaultType());
 		} catch (KeyStoreException e) {
 			LoggerFactory.getLogger(getClass()).error("Could not instantiate default store", e);
 		}
 	}
-	
+
 	/**
-	 * Chooses the first non-null client alias returned from the delegate {@link X509TrustManagers},
-	 * or {@code null} if there are no matches.
+	 * Chooses the first non-null client alias returned from the delegate
+	 * {@link X509TrustManagers}, or {@code null} if there are no matches.
 	 */
 	@Override
-	public @Nullable String chooseClientAlias(String[] keyType, Principal[] issuers, Socket socket){
+	public @Nullable String chooseClientAlias(String[] keyType, Principal[] issuers, Socket socket) {
 		for (List<X509KeyManager> keyManagers : keyManagers.values()) {
 			for (X509KeyManager x509KeyManager : keyManagers) {
 				String alias = x509KeyManager.chooseClientAlias(keyType, issuers, socket);
@@ -51,13 +51,13 @@ public class CompositeX509KeyManager implements X509KeyManager {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Chooses the first non-null server alias returned from the delegate {@link X509TrustManagers},
-	 * or {@code null} if there are no matches.
+	 * Chooses the first non-null server alias returned from the delegate
+	 * {@link X509TrustManagers}, or {@code null} if there are no matches.
 	 */
 	@Override
-	public @Nullable String chooseServerAlias(String keyType, Principal[] issuers, Socket socket){
+	public @Nullable String chooseServerAlias(String keyType, Principal[] issuers, Socket socket) {
 		for (List<X509KeyManager> keyManagers : keyManagers.values()) {
 			for (X509KeyManager x509KeyManager : keyManagers) {
 				String alias = x509KeyManager.chooseServerAlias(keyType, issuers, socket);
@@ -68,13 +68,13 @@ public class CompositeX509KeyManager implements X509KeyManager {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Returns the first non-null private key associated with the given alias, or {@code null} if
-	 * the alias can't be found.
+	 * Returns the first non-null private key associated with the given alias, or
+	 * {@code null} if the alias can't be found.
 	 */
 	@Override
-	public @Nullable PrivateKey getPrivateKey(String alias){
+	public @Nullable PrivateKey getPrivateKey(String alias) {
 		for (List<X509KeyManager> keyManagers : keyManagers.values()) {
 			for (X509KeyManager x509KeyManager : keyManagers) {
 				PrivateKey privateKey = x509KeyManager.getPrivateKey(alias);
@@ -85,13 +85,13 @@ public class CompositeX509KeyManager implements X509KeyManager {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Returns the first non-null certificate chain associated with the given alias, or {@code null}
-	 * if the alias can't be found.
+	 * Returns the first non-null certificate chain associated with the given alias,
+	 * or {@code null} if the alias can't be found.
 	 */
 	@Override
-	public @Nullable X509Certificate[] getCertificateChain(String alias){
+	public @Nullable X509Certificate[] getCertificateChain(String alias) {
 		for (List<X509KeyManager> keyManagers : keyManagers.values()) {
 			for (X509KeyManager x509KeyManager : keyManagers) {
 				X509Certificate[] chain = x509KeyManager.getCertificateChain(alias);
@@ -102,13 +102,13 @@ public class CompositeX509KeyManager implements X509KeyManager {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Get all matching aliases for authenticating the client side of a secure socket, or
-	 * {@code null} if there are no matches.
+	 * Get all matching aliases for authenticating the client side of a secure
+	 * socket, or {@code null} if there are no matches.
 	 */
 	@Override
-	public @Nullable String[] getClientAliases(String keyType, Principal[] issuers){
+	public @Nullable String[] getClientAliases(String keyType, Principal[] issuers) {
 		List<String> ret = new ArrayList<>();
 		for (List<X509KeyManager> keyManagers : keyManagers.values()) {
 			for (X509KeyManager x509KeyManager : keyManagers) {
@@ -117,13 +117,13 @@ public class CompositeX509KeyManager implements X509KeyManager {
 		}
 		return ret.toArray(new String[ret.size()]);
 	}
-	
+
 	/**
-	 * Get all matching aliases for authenticating the server side of a secure socket, or
-	 * {@code null} if there are no matches.
+	 * Get all matching aliases for authenticating the server side of a secure
+	 * socket, or {@code null} if there are no matches.
 	 */
 	@Override
-	public @Nullable String[] getServerAliases(String keyType, Principal[] issuers){
+	public @Nullable String[] getServerAliases(String keyType, Principal[] issuers) {
 		List<String> ret = new ArrayList<>();
 		for (List<X509KeyManager> keyManagers : keyManagers.values()) {
 			for (X509KeyManager x509KeyManager : keyManagers) {
@@ -132,12 +132,11 @@ public class CompositeX509KeyManager implements X509KeyManager {
 		}
 		return ret.toArray(new String[ret.size()]);
 	}
-	
-	public void addKeyStore(KeyStore keyStore, String keystorePass){
+
+	public void addKeyStore(KeyStore keyStore, String keystorePass) {
 		synchronized (keyManagers) {
 			try {
-				KeyManagerFactory factory =
-					KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+				KeyManagerFactory factory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 				factory.init(keyStore, keystorePass.toCharArray());
 				KeyManager[] managers = factory.getKeyManagers();
 				List<X509KeyManager> typedManagers = new ArrayList<>();
@@ -152,14 +151,14 @@ public class CompositeX509KeyManager implements X509KeyManager {
 			}
 		}
 	}
-	
-	public void removeKeyStore(KeyStore keyStore){
+
+	public void removeKeyStore(KeyStore keyStore) {
 		synchronized (keyManagers) {
 			keyManagers.remove(keyStore);
 		}
 	}
-	
-	public void addKeyManager(X509KeyManager keyManager){
+
+	public void addKeyManager(X509KeyManager keyManager) {
 		List<X509KeyManager> defaultManagers = keyManagers.get(defaultStore);
 		if (defaultManagers == null) {
 			defaultManagers = new ArrayList<>();

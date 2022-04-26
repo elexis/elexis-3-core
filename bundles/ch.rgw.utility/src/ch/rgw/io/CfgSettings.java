@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.rgw.io;
@@ -24,41 +24,40 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 
 /**
- * Settings-Implementation, die auf einem flat file basiert. Alle Schlüssel sind in der Form
- * <code>key=value</code> in je einer eigenen Zeile abgelegt. Hierarchische Schlüssel
- * (Branches/Zweige) sind einfach als <code>branch/key=value</code> abgespeichert-
- * 
+ * Settings-Implementation, die auf einem flat file basiert. Alle Schlüssel sind
+ * in der Form <code>key=value</code> in je einer eigenen Zeile abgelegt.
+ * Hierarchische Schlüssel (Branches/Zweige) sind einfach als
+ * <code>branch/key=value</code> abgespeichert-
+ *
  * @author Gerry Weirich
  */
 public class CfgSettings extends Settings {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 0xaaa34e1L;
-	
-	public static final String Version(){
+
+	public static final String Version() {
 		return "1.0.2";
 	}
-	
+
 	private transient String filename;
 	private transient String message = "CfgSettings v" + Version();
-	
-	public CfgSettings(String n, String msg){
+
+	public CfgSettings(String n, String msg) {
 		filename = n;
 		message = msg;
 		undo();
 	}
-	
+
 	/**
-	 * �ffnet Settings oder legt sie neu an, w�hlt automatisch den user.home-Pfad und den
-	 * vorgegebenen Dateinamen.
-	 * 
-	 * @param name
-	 *            Filename f�r das settings-file
-	 * @param msg
-	 *            Einzeilige Nachricht, die als Kommentar in die erste Zeile kommt
+	 * �ffnet Settings oder legt sie neu an, w�hlt automatisch den user.home-Pfad
+	 * und den vorgegebenen Dateinamen.
+	 *
+	 * @param name Filename f�r das settings-file
+	 * @param msg  Einzeilige Nachricht, die als Kommentar in die erste Zeile kommt
 	 */
-	static public Settings open(String name, String msg){
+	static public Settings open(String name, String msg) {
 		try {
 			if (exists(name)) {
 				return new CfgSettings(name, msg);
@@ -84,26 +83,25 @@ public class CfgSettings extends Settings {
 			ExHandler.handle(ex);
 			return null;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Fragt, ob ein Settings-file existiert (Pr�ft nicht auf Syntax)
-	 * 
-	 * @param name
-	 *            Dateiname
+	 *
+	 * @param name Dateiname
 	 * @return true wenn die Datei existiert
 	 */
-	
-	static public boolean exists(String name){
+
+	static public boolean exists(String name) {
 		File fi = new File(name);
 		return fi.exists();
 	}
-	
+
 	/**
 	 * @see ch.rgw.IO.Settings#flush()
 	 */
-	protected void flush_absolute(){
+	protected void flush_absolute() {
 		if (filename == null) {
 			return;
 		}
@@ -123,11 +121,11 @@ public class CfgSettings extends Settings {
 			ExHandler.handle(e1);
 		}
 	}
-	
+
 	/**
 	 * @see ch.rgw.IO.Settings#undo()
 	 */
-	public void undo(){
+	public void undo() {
 		if (filename == null) {
 			return;
 		}
@@ -156,8 +154,8 @@ public class CfgSettings extends Settings {
 			ExHandler.handle(ex);
 		}
 	}
-	
-	public void kill(){
+
+	public void kill() {
 		if (filename == null) {
 			return;
 		}

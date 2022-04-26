@@ -7,24 +7,24 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.exchange.elements;
 
 /**
  * A connection e.g. phone or mail
- * 
+ *
  * @author gerry
- * 
+ *
  */
 
 public class ConnectionElement extends XChangeElement {
 	public static final String XMLNAME = "connection";
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
+
 }

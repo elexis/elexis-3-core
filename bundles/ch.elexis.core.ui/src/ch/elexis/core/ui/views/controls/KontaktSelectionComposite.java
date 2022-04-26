@@ -24,35 +24,35 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
 
 public class KontaktSelectionComposite extends Composite implements ISelectionProvider {
-	
+
 	private ListenerList selectionListeners = new ListenerList();
-	
+
 	protected Button selectButton;
 	protected Label selectLabel;
-	
+
 	protected List<Kontakt> kontakt;
 	protected boolean multi;
-	
-	public KontaktSelectionComposite(Composite parent, int style){
+
+	public KontaktSelectionComposite(Composite parent, int style) {
 		super(parent, style);
 		multi = (style & SWT.MULTI) > 0;
 		kontakt = new ArrayList<>();
 		createContent();
 	}
-	
-	private void createContent(){
+
+	private void createContent() {
 		setLayout(new GridLayout(2, false));
-		
+
 		selectLabel = new Label(this, SWT.NONE);
 		selectLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		
+
 		selectButton = new Button(this, SWT.NONE);
 		selectButton.setText("..."); //$NON-NLS-1$
 		selectButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-		
+
 		selectButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				KontaktSelektor ksl = getKontaktSelector();
 				if (ksl.open() == Dialog.OK) {
 					Kontakt selected = (Kontakt) ksl.getSelection();
@@ -62,20 +62,19 @@ public class KontaktSelectionComposite extends Composite implements ISelectionPr
 			}
 		});
 	}
-	
-	protected KontaktSelektor getKontaktSelector(){
-		return new KontaktSelektor(getShell(), Kontakt.class,
-			Messages.KontaktSelectionComposite_title, Messages.KontaktSelectionComposite_message,
-			Kontakt.DEFAULT_SORT);
+
+	protected KontaktSelektor getKontaktSelector() {
+		return new KontaktSelektor(getShell(), Kontakt.class, Messages.KontaktSelectionComposite_title,
+				Messages.KontaktSelectionComposite_message, Kontakt.DEFAULT_SORT);
 	}
-	
+
 	/**
-	 * Set the current selected {@link Kontakt}. If style is SWT.MULTI, the {@link Kontakt} is added
-	 * to the List of selected {@link Kontakt}.
-	 * 
+	 * Set the current selected {@link Kontakt}. If style is SWT.MULTI, the
+	 * {@link Kontakt} is added to the List of selected {@link Kontakt}.
+	 *
 	 * @param kontakt
 	 */
-	public void setKontakt(Kontakt kontakt){
+	public void setKontakt(Kontakt kontakt) {
 		if (multi) {
 			this.kontakt.add(kontakt);
 		} else {
@@ -98,51 +97,51 @@ public class KontaktSelectionComposite extends Composite implements ISelectionPr
 		}
 		getParent().layout();
 	}
-	
+
 	/**
-	 * Get the selected {@link Kontakt}. Is SWT style is SWT.MULTI, the first {@link Kontakt} is
-	 * returned. Use {@link KontaktSelectionComposite#getSelection()} to access the {@link List} of
-	 * selected {@link Kontakt}.
-	 * 
+	 * Get the selected {@link Kontakt}. Is SWT style is SWT.MULTI, the first
+	 * {@link Kontakt} is returned. Use
+	 * {@link KontaktSelectionComposite#getSelection()} to access the {@link List}
+	 * of selected {@link Kontakt}.
+	 *
 	 * @return
 	 */
-	public Kontakt getKontakt(){
+	public Kontakt getKontakt() {
 		if (!kontakt.isEmpty()) {
 			return kontakt.get(0);
 		}
 		return null;
 	}
-	
-	private void callSelectionListeners(){
+
+	private void callSelectionListeners() {
 		Object[] listeners = selectionListeners.getListeners();
 		if (listeners != null && listeners.length > 0) {
 			for (Object object : listeners) {
-				((ISelectionChangedListener) object)
-					.selectionChanged(new SelectionChangedEvent(this, getSelection()));
+				((ISelectionChangedListener) object).selectionChanged(new SelectionChangedEvent(this, getSelection()));
 			}
 		}
 	}
-	
+
 	@Override
-	public void addSelectionChangedListener(ISelectionChangedListener listener){
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.add(listener);
 	}
-	
+
 	@Override
-	public void removeSelectionChangedListener(ISelectionChangedListener listener){
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.remove(listener);
 	}
-	
+
 	@Override
-	public ISelection getSelection(){
+	public ISelection getSelection() {
 		if (kontakt != null) {
 			return new StructuredSelection(kontakt);
 		}
 		return StructuredSelection.EMPTY;
 	}
-	
+
 	@Override
-	public void setSelection(ISelection selection){
+	public void setSelection(ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			if (!selection.isEmpty()) {
 				setKontakt((Kontakt) ((IStructuredSelection) selection).getFirstElement());

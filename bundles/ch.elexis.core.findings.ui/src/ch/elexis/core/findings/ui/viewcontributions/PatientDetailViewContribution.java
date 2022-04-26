@@ -18,49 +18,47 @@ import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.data.Patient;
 
 public class PatientDetailViewContribution implements IViewContribution {
-	
+
 	DiagnoseListComposite conditionsComposite;
-	
+
 	@Override
-	public void setUnlocked(boolean unlocked){
+	public void setUnlocked(boolean unlocked) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public String getLocalizedTitle(){
+	public String getLocalizedTitle() {
 		return "Diagnosen";
 	}
-	
+
 	@Override
-	public boolean isAvailable(){
+	public boolean isAvailable() {
 		return ConfigServiceHolder.getGlobal(IMigratorService.DIAGNOSE_SETTINGS_USE_STRUCTURED, false);
 	}
-	
+
 	@Override
-	public Composite initComposite(Composite parent){
+	public Composite initComposite(Composite parent) {
 		conditionsComposite = new DiagnoseListComposite(parent, SWT.NONE);
 		return conditionsComposite;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setDetailObject(Object detailObject, Object additionalData){
+	public void setDetailObject(Object detailObject, Object additionalData) {
 		if (conditionsComposite != null && FindingsServiceComponent.getService() != null
-			&& detailObject instanceof Patient) {
+				&& detailObject instanceof Patient) {
 			List<? extends IFinding> conditions = FindingsServiceComponent.getService()
-				.getPatientsFindings(((Patient) detailObject).getId(), ICondition.class);
-			conditions = conditions.stream()
-				.filter(finding -> isDiagnose(finding))
-				.collect(Collectors.toList());
+					.getPatientsFindings(((Patient) detailObject).getId(), ICondition.class);
+			conditions = conditions.stream().filter(finding -> isDiagnose(finding)).collect(Collectors.toList());
 			conditionsComposite.setInput((List<ICondition>) conditions);
 		} else if (conditionsComposite != null) {
 			conditionsComposite.setInput(Collections.emptyList());
 		}
 	}
-	
-	private boolean isDiagnose(IFinding iFinding){
+
+	private boolean isDiagnose(IFinding iFinding) {
 		return iFinding instanceof ICondition
-			&& ((ICondition) iFinding).getCategory() == ConditionCategory.PROBLEMLISTITEM;
+				&& ((ICondition) iFinding).getCategory() == ConditionCategory.PROBLEMLISTITEM;
 	}
 }

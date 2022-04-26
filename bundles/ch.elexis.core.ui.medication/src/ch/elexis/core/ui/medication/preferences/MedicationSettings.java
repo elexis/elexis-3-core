@@ -17,51 +17,46 @@ import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.core.ui.preferences.inputs.MultilineFieldEditor;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 
-public class MedicationSettings extends FieldEditorPreferencePage
-		implements IWorkbenchPreferencePage {
-	
+public class MedicationSettings extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+
 	private BooleanFieldEditor sortingFieldEditor;
-	
-	public MedicationSettings(){
+
+	public MedicationSettings() {
 		super(GRID);
 		setPreferenceStore(new ConfigServicePreferenceStore(Scope.USER));
-		getPreferenceStore().setDefault(Preferences.MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT, Messages.Medication_headerComment);
+		getPreferenceStore().setDefault(Preferences.MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT,
+				Messages.Medication_headerComment);
 	}
-	
+
 	@Override
-	protected void createFieldEditors(){
-		addField(new BooleanFieldEditor(
-			CreatePrescriptionHelper.MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG,
-			"Signatur Dialog auch bei vorhandener Std. Signatur anzeigen", getFieldEditorParent()));
-		
-		addField(new BooleanFieldEditor(
-			CreatePrescriptionHelper.MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION,
-			"Bei Signatur Dialog Abgabe vorselektieren", getFieldEditorParent()));
-		
-		addField(new BooleanFieldEditor(
-			CreatePrescriptionHelper.MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT,
-			"Beim dispensieren auf Artikelstamm prüfen, und konvertieren", getFieldEditorParent()));
-		
-		sortingFieldEditor =
-			new BooleanFieldEditor(MedicationUiTester.MEDICATION_SETTINGS_SHOW_CUSTOM_SORT,
+	protected void createFieldEditors() {
+		addField(new BooleanFieldEditor(CreatePrescriptionHelper.MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG,
+				"Signatur Dialog auch bei vorhandener Std. Signatur anzeigen", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(CreatePrescriptionHelper.MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION,
+				"Bei Signatur Dialog Abgabe vorselektieren", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(CreatePrescriptionHelper.MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT,
+				"Beim dispensieren auf Artikelstamm prüfen, und konvertieren", getFieldEditorParent()));
+
+		sortingFieldEditor = new BooleanFieldEditor(MedicationUiTester.MEDICATION_SETTINGS_SHOW_CUSTOM_SORT,
 				"Persönliche Sortierung anzeigen", getFieldEditorParent());
 		addField(sortingFieldEditor);
 		addField(new BooleanFieldEditor(Preferences.USR_SUPPRESS_INTERACTION_CHECK,
 				ch.elexis.core.l10n.Messages.UserSettings2_SuppressInteractionCheck, getFieldEditorParent()));
 
-		addField(new MultilineFieldEditor(Preferences.MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT, "Eine Bemerkung auf dem eMediplan anzeigen"
-			, getFieldEditorParent()));
+		addField(new MultilineFieldEditor(Preferences.MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT,
+				"Eine Bemerkung auf dem eMediplan anzeigen", getFieldEditorParent()));
 	}
-	
+
 	@Override
-	public void propertyChange(PropertyChangeEvent event){
+	public void propertyChange(PropertyChangeEvent event) {
 		super.propertyChange(event);
-		
+
 		// make sure custom sorting is disabled
 		if (event.getSource() == sortingFieldEditor) {
-			MedicationView view =
-				(MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage().findView(MedicationView.PART_ID);
+			MedicationView view = (MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.findView(MedicationView.PART_ID);
 			if (view != null) {
 				if (event.getNewValue() == Boolean.FALSE) {
 					view.setMedicationTableViewerComparator(ViewerSortOrder.DEFAULT);
@@ -69,7 +64,8 @@ public class MedicationSettings extends FieldEditorPreferencePage
 			}
 		}
 	}
-	
+
 	@Override
-	public void init(IWorkbench workbench){}
+	public void init(IWorkbench workbench) {
+	}
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.laboratory.views;
@@ -36,32 +36,30 @@ import ch.elexis.data.Patient;
 public class LaborblattView extends ViewPart implements ICallback {
 	public static final String ID = "ch.elexis.Laborblatt"; //$NON-NLS-1$
 	TextContainer text;
-	
-	public LaborblattView(){}
-	
+
+	public LaborblattView() {
+	}
+
 	@Override
-	public void createPartControl(Composite parent){
+	public void createPartControl(Composite parent) {
 		text = new TextContainer(getViewSite());
 		text.getPlugin().createContainer(parent, this);
-		
+
 	}
-	
+
 	@Override
-	public void setFocus(){
+	public void setFocus() {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
-	public boolean createLaborblatt(final Patient pat, final String[] header, final TreeItem[] rows){
+
+	public boolean createLaborblatt(final Patient pat, final String[] header, final TreeItem[] rows) {
 		return createLaborblatt(pat, header, rows, null);
 	}
-	
-	public boolean createLaborblatt(final Patient pat, final String[] header,
-		final TreeItem[] rows, int[] skipColumnsIndex){
-		Brief br =
-			text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER,
-				Brief.LABOR,
-				pat, null);
+
+	public boolean createLaborblatt(final Patient pat, final String[] header, final TreeItem[] rows,
+			int[] skipColumnsIndex) {
+		Brief br = text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER, Brief.LABOR, pat, null);
 		if (br == null) {
 			return false;
 		}
@@ -78,7 +76,7 @@ public class LaborblattView extends ViewPart implements ICallback {
 		}
 		colsizes[0] = Math.round(first);
 		colsizes[1] = Math.round(second);
-		
+
 		LinkedList<String[]> usedRows = new LinkedList<String[]>();
 		usedRows.add(header);
 		for (int i = 0; i < rows.length; i++) {
@@ -102,12 +100,12 @@ public class LaborblattView extends ViewPart implements ICallback {
 		}
 		String[][] fld = usedRows.toArray(new String[0][]);
 		boolean ret = text.getPlugin().insertTable("[Laborwerte]", //$NON-NLS-1$
-			ITextPlugin.FIRST_ROW_IS_HEADER, fld, colsizes);
+				ITextPlugin.FIRST_ROW_IS_HEADER, fld, colsizes);
 		text.saveBrief(br, Brief.LABOR);
 		return ret;
 	}
-	
-	private boolean skipColumn(int index, int[] skip){
+
+	private boolean skipColumn(int index, int[] skip) {
 		for (int i : skip) {
 			if (index == i) {
 				return true;
@@ -115,12 +113,9 @@ public class LaborblattView extends ViewPart implements ICallback {
 		}
 		return false;
 	}
-	
-	public boolean createLaborblatt(final Patient pat, final String[] header, final TableItem[] rows){
-		Brief br =
-			text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER,
-				Brief.LABOR,
-				pat, null);
+
+	public boolean createLaborblatt(final Patient pat, final String[] header, final TableItem[] rows) {
+		Brief br = text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER, Brief.LABOR, pat, null);
 		if (br == null) {
 			return false;
 		}
@@ -137,7 +132,7 @@ public class LaborblattView extends ViewPart implements ICallback {
 		}
 		colsizes[0] = Math.round(first);
 		colsizes[1] = Math.round(second);
-		
+
 		LinkedList<String[]> usedRows = new LinkedList<String[]>();
 		usedRows.add(header);
 		for (int i = 0; i < rows.length; i++) {
@@ -156,17 +151,15 @@ public class LaborblattView extends ViewPart implements ICallback {
 		}
 		String[][] fld = usedRows.toArray(new String[0][]);
 		boolean ret = text.getPlugin().insertTable("[Laborwerte]", //$NON-NLS-1$
-			ITextPlugin.FIRST_ROW_IS_HEADER, fld, colsizes);
+				ITextPlugin.FIRST_ROW_IS_HEADER, fld, colsizes);
 		text.saveBrief(br, Brief.LABOR);
 		return ret;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public boolean createLaborblatt(Patient pat, Document doc){
-		/* Brief br= */text.createFromTemplateName(text.getAktuelleKons(),
-			TT_LABPAPER,
-			Brief.LABOR, pat, null);
-		
+	public boolean createLaborblatt(Patient pat, Document doc) {
+		/* Brief br= */text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER, Brief.LABOR, pat, null);
+
 		ArrayList<String[]> rows = new ArrayList<String[]>();
 		Element root = doc.getRootElement();
 		String druckdat = root.getAttributeValue(Messages.LaborblattView_created);
@@ -182,17 +175,17 @@ public class LaborblattView extends ViewPart implements ICallback {
 		rows.add(firstline);
 		List groups = root.getChildren("Gruppe"); //$NON-NLS-1$
 		for (Element el : (List<Element>) groups) {
-			rows.add(new String[] {
-				el.getAttribute("Name").getValue()}); //$NON-NLS-1$
+			rows.add(new String[] { el.getAttribute("Name").getValue() }); //$NON-NLS-1$
 			List<Element> params = el.getChildren("Parameter"); //$NON-NLS-1$
 			for (Element param : params) {
 				Element ref = param.getChild("Referenz"); //$NON-NLS-1$
 				String[] row = new String[cols];
 				StringBuilder sb = new StringBuilder();
 				sb.append(param.getAttributeValue("Name")).append(" (").append( //$NON-NLS-1$ //$NON-NLS-2$
-					ref.getAttributeValue("min")).append("-").append( //$NON-NLS-1$ //$NON-NLS-2$
-					ref.getAttributeValue("max")).append(") ").append( //$NON-NLS-1$ //$NON-NLS-2$
-					param.getAttributeValue("Einheit")); //$NON-NLS-1$
+						ref.getAttributeValue("min")).append("-").append( //$NON-NLS-1$ //$NON-NLS-2$
+								ref.getAttributeValue("max")) //$NON-NLS-1$
+						.append(") ").append( //$NON-NLS-1$
+								param.getAttributeValue("Einheit")); //$NON-NLS-1$
 				row[0] = sb.toString();
 				List<Element> results = param.getChildren("Resultat"); //$NON-NLS-1$
 				int i = 1;
@@ -203,7 +196,7 @@ public class LaborblattView extends ViewPart implements ICallback {
 			}
 		}
 		if (text.getPlugin().insertTable("[Laborwerte]", //$NON-NLS-1$
-			ITextPlugin.FIRST_ROW_IS_HEADER, rows.toArray(new String[0][]), null)) {
+				ITextPlugin.FIRST_ROW_IS_HEADER, rows.toArray(new String[0][]), null)) {
 			if (text.getPlugin().isDirectOutput()) {
 				text.getPlugin().print(null, null, true);
 				getSite().getPage().hideView(this);
@@ -211,17 +204,17 @@ public class LaborblattView extends ViewPart implements ICallback {
 			}
 		}
 		return false;
-		
+
 	}
-	
+
 	@Override
-	public void save(){
+	public void save() {
 		// TODO Automatisch erstellter Methoden-Stub
-		
+
 	}
-	
+
 	@Override
-	public boolean saveAs(){
+	public boolean saveAs() {
 		// TODO Automatisch erstellter Methoden-Stub
 		return false;
 	}

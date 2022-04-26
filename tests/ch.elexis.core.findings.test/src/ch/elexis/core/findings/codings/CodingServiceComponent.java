@@ -8,17 +8,17 @@ import ch.elexis.core.findings.codes.ICodingService;
 @Component
 public class CodingServiceComponent {
 	private static ICodingService codingService;
-	
+
 	@Reference
-	public void setIFindingsService(ICodingService findingsService){
+	public void setIFindingsService(ICodingService findingsService) {
 		CodingServiceComponent.codingService = findingsService;
 	}
-	
-	public void unsetIFindingsService(ICodingService findingsService){
+
+	public void unsetIFindingsService(ICodingService findingsService) {
 		CodingServiceComponent.codingService = null;
 	}
-	
-	public static ICodingService getService(){
+
+	public static ICodingService getService() {
 		if (codingService == null) {
 			throw new IllegalStateException("No ICodingService set");
 		}

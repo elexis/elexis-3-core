@@ -7,11 +7,10 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.IModelService;
 
 public class IBilledBuilder extends AbstractBuilder<IBilled> {
-	
-	public IBilledBuilder(IModelService modelService, IBillable billable, IEncounter encounter,
-		IContact biller){
+
+	public IBilledBuilder(IModelService modelService, IBillable billable, IEncounter encounter, IContact biller) {
 		super(modelService);
-		
+
 		object = modelService.create(IBilled.class);
 		object.setEncounter(encounter);
 		object.setBillable(billable);

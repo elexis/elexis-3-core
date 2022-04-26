@@ -28,53 +28,47 @@ import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IMedicationServiceTest extends AbstractServiceTest {
-	
-	private IMedicationService medicationService =
-		OsgiServiceUtil.getService(IMedicationService.class).get();
-	
+
+	private IMedicationService medicationService = OsgiServiceUtil.getService(IMedicationService.class).get();
+
 	private IPatient patient;
-	
+
 	private List<IPrescription> createdPrescriptions;
-	
+
 	private IArticle localArticle;
-	
+
 	@Before
-	public void before(){
-		patient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "test",
-			"patient", LocalDate.of(2000, 1, 1), Gender.FEMALE).buildAndSave();
-		
+	public void before() {
+		patient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "test", "patient",
+				LocalDate.of(2000, 1, 1), Gender.FEMALE).buildAndSave();
+
 		localArticle = new IArticleBuilder(coreModelService, "test medication article", "1234567",
-			ArticleTyp.EIGENARTIKEL).build();
+				ArticleTyp.EIGENARTIKEL).build();
 		localArticle.setGtin("1111111000000");
 		localArticle.setPackageSize(2);
 		localArticle.setSellingSize(1);
 		coreModelService.save(localArticle);
-		
+
 		createdPrescriptions = new ArrayList<>();
-		createdPrescriptions
-			.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "0-1-1-0")
-				.entryType(EntryType.FIXED_MEDICATION)
-				.buildAndSave());
-		createdPrescriptions
-			.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "1-0-0-1")
+		createdPrescriptions.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "0-1-1-0")
+				.entryType(EntryType.FIXED_MEDICATION).buildAndSave());
+		createdPrescriptions.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "1-0-0-1")
 				.entryType(EntryType.SYMPTOMATIC_MEDICATION).buildAndSave());
-		createdPrescriptions
-			.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "1-0-0-0")
+		createdPrescriptions.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "1-0-0-0")
 				.entryType(EntryType.RESERVE_MEDICATION).buildAndSave());
-		createdPrescriptions
-			.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "0-0-0-1")
+		createdPrescriptions.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "0-0-0-1")
 				.entryType(EntryType.FIXED_MEDICATION).buildAndSave());
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		coreModelService.remove(createdPrescriptions);
 		coreModelService.remove(localArticle);
 		coreModelService.remove(patient);
 	}
-	
+
 	@Test
-	public void stopPatientPrescriptions(){
+	public void stopPatientPrescriptions() {
 		List<IPrescription> prescriptions = getPrescriptions(patient, "all");
 		LocalDateTime now = LocalDateTime.now();
 		for (IPrescription iPrescription : prescriptions) {
@@ -83,7 +77,7 @@ public class IMedicationServiceTest extends AbstractServiceTest {
 		// changed but not saved
 		prescriptions.forEach(pr -> assertNotNull(pr.getDateTo()));
 		createdPrescriptions.forEach(pr -> assertNull(pr.getDateTo()));
-		
+
 		coreModelService.save(prescriptions);
 		// changed and saved
 		for (IPrescription iPrescription : prescriptions) {
@@ -95,8 +89,8 @@ public class IMedicationServiceTest extends AbstractServiceTest {
 			assertNotNull(iPrescription.getDateTo());
 		}
 	}
-	
-	private List<IPrescription> getPrescriptions(IPatient patient, String medicationType){
+
+	private List<IPrescription> getPrescriptions(IPatient patient, String medicationType) {
 		if ("all".equals(medicationType)) {
 			return patient.getMedication(Collections.emptyList());
 		} else if ("fix".equals(medicationType)) {

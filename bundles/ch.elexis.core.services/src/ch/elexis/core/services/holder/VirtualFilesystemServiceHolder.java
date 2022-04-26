@@ -7,15 +7,15 @@ import ch.elexis.core.services.IVirtualFilesystemService;
 
 @Component
 public class VirtualFilesystemServiceHolder {
-	
+
 	private static IVirtualFilesystemService virtualFilesystemService;
-	
+
 	@Reference
-	public void setLocalLockService(IVirtualFilesystemService virtualFilesystemService){
+	public void setLocalLockService(IVirtualFilesystemService virtualFilesystemService) {
 		VirtualFilesystemServiceHolder.virtualFilesystemService = virtualFilesystemService;
 	}
-	
-	public static IVirtualFilesystemService get(){
+
+	public static IVirtualFilesystemService get() {
 		return virtualFilesystemService;
 	}
 }

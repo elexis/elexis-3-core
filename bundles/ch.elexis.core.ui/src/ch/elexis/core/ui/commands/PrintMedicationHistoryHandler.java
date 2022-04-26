@@ -47,38 +47,34 @@ import ch.elexis.data.Query;
 import ch.rgw.tools.TimeTool;
 
 public class PrintMedicationHistoryHandler extends AbstractHandler implements IHandler {
-	
+
 	private static final String TOOPEN = " ... ";
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		ProgressMonitorDialog progress =
-			new ProgressMonitorDialog(HandlerUtil.getActiveShell(event));
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ProgressMonitorDialog progress = new ProgressMonitorDialog(HandlerUtil.getActiveShell(event));
 		try {
 			progress.run(true, false, new IRunnableWithProgress() {
-				
+
 				@Override
-				public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException{
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("PDF erzeugen", IProgressMonitor.UNKNOWN);
 					Optional<MedicationHistoryLetter> letter = getToPrint();
 					if (letter.isPresent()) {
-						BundleContext bundleContext =
-							FrameworkUtil.getBundle(getClass()).getBundleContext();
-						ServiceReference<IFormattedOutputFactory> serviceRef =
-							bundleContext.getServiceReference(IFormattedOutputFactory.class);
+						BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
+						ServiceReference<IFormattedOutputFactory> serviceRef = bundleContext
+								.getServiceReference(IFormattedOutputFactory.class);
 						if (serviceRef != null) {
 							IFormattedOutputFactory service = bundleContext.getService(serviceRef);
-							IFormattedOutput outputter = service
-								.getFormattedOutputImplementation(ObjectType.JAXB, OutputType.PDF);
+							IFormattedOutput outputter = service.getFormattedOutputImplementation(ObjectType.JAXB,
+									OutputType.PDF);
 							ByteArrayOutputStream pdf = new ByteArrayOutputStream();
 							Map<String, String> parameters = new HashMap<>();
 							parameters.put("current-date",
-								LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-							
+									LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+
 							outputter.transform(letter.get(),
-								getClass().getResourceAsStream("/rsc/xslt/medhistory2fo.xslt"), pdf,
-								parameters);
+									getClass().getResourceAsStream("/rsc/xslt/medhistory2fo.xslt"), pdf, parameters);
 							bundleContext.ungetService(serviceRef);
 							// save and open the file ...
 							File file = null;
@@ -89,8 +85,8 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 								fout.write(pdf.toByteArray());
 							} catch (IOException e) {
 								Display.getDefault().syncExec(() -> {
-									MessageDialog.openError(HandlerUtil.getActiveShell(event),
-										"Fehler", "Fehler beim PDF anlegen.\n" + e.getMessage());
+									MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
+											"Fehler beim PDF anlegen.\n" + e.getMessage());
 								});
 								LoggerFactory.getLogger(getClass()).error("Error creating PDF", e);
 							} finally {
@@ -109,7 +105,7 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 					} else {
 						Display.getDefault().syncExec(() -> {
 							MessageDialog.openInformation(HandlerUtil.getActiveShell(event), "Info",
-								"Kein Patient ausgewählt, oder Patient hat keine Medikation.\n");
+									"Kein Patient ausgewählt, oder Patient hat keine Medikation.\n");
 						});
 					}
 					monitor.done();
@@ -117,23 +113,23 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
 			MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
-				"Fehler beim PDF erzeugen.\n" + e.getMessage());
+					"Fehler beim PDF erzeugen.\n" + e.getMessage());
 			LoggerFactory.getLogger(getClass()).error("Error creating PDF", e);
 		}
 		return null;
 	}
-	
+
 	@Override
-	public boolean isEnabled(){
+	public boolean isEnabled() {
 		return isFopServiceAvailable();
 	}
-	
-	private boolean isFopServiceAvailable(){
+
+	private boolean isFopServiceAvailable() {
 		BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
 		return bundleContext.getServiceReference(IFormattedOutputFactory.class) != null;
 	}
-	
-	public Optional<MedicationHistoryLetter> getToPrint(){
+
+	public Optional<MedicationHistoryLetter> getToPrint() {
 		Patient patient = ElexisEventDispatcher.getSelectedPatient();
 		if (patient != null) {
 			Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
@@ -145,68 +141,67 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 		}
 		return Optional.empty();
 	}
-	
+
 	@XmlRootElement(name = "medicationhistory")
 	private static class MedicationHistoryLetter {
-		
+
 		private List<MedicationHistoryItem> history;
 		@XmlElement
 		private String patientName;
 		@XmlElement
 		private String patientDob;
-		
-		private MedicationHistoryLetter(){
+
+		private MedicationHistoryLetter() {
 			// needed for jaxb
 		}
-		
-		private MedicationHistoryLetter(Patient patient){
+
+		private MedicationHistoryLetter(Patient patient) {
 			patientName = patient.getLabel(true);
 			patientDob = patient.getGeburtsdatum();
-			
+
 			history = new ArrayList<>();
 		}
-		
-		public void setHistory(List<MedicationHistoryItem> history){
+
+		public void setHistory(List<MedicationHistoryItem> history) {
 			this.history = history;
 		}
-		
-		public List<MedicationHistoryItem> getHistory(){
+
+		public List<MedicationHistoryItem> getHistory() {
 			return history;
 		}
-		
-		public static MedicationHistoryLetter of(Patient patient, List<Prescription> list){
+
+		public static MedicationHistoryLetter of(Patient patient, List<Prescription> list) {
 			MedicationHistoryLetter ret = new MedicationHistoryLetter(patient);
-			
+
 			for (Prescription prescription : list) {
 				if (prescription.getEntryType() != EntryType.RECIPE) {
 					Map<TimeTool, String> terms = prescription.getTerms();
 					TimeTool[] tts = terms.keySet().toArray(new TimeTool[0]);
 					for (int i = 0; i < tts.length - 1; i++) {
 						if (i < tts.length - 1) {
-							ret.history
-								.add(new MedicationHistoryItem(tts[i].toString(TimeTool.DATE_GER),
+							ret.history.add(new MedicationHistoryItem(tts[i].toString(TimeTool.DATE_GER),
 									tts[i + 1].toString(TimeTool.DATE_GER), prescription));
 						} else {
-							ret.history.add(new MedicationHistoryItem(
-								tts[i].toString(TimeTool.DATE_GER), TOOPEN, prescription));
+							ret.history.add(new MedicationHistoryItem(tts[i].toString(TimeTool.DATE_GER), TOOPEN,
+									prescription));
 						}
 					}
-					ret.history.add(new MedicationHistoryItem(
-						tts[tts.length - 1].toString(TimeTool.DATE_GER), TOOPEN, prescription));
+					ret.history.add(new MedicationHistoryItem(tts[tts.length - 1].toString(TimeTool.DATE_GER), TOOPEN,
+							prescription));
 				}
 			}
 			Collections.sort(ret.history);
-			
+
 			return ret;
 		}
 	}
-	
+
 	@XmlRootElement(name = "historyitem")
 	private static class MedicationHistoryItem implements Comparable<MedicationHistoryItem> {
-		
+
 		@XmlTransient
 		private TimeTool fromTool;
-		
+
 		@XmlElement
 		private String from;
 		@XmlElement
@@ -215,12 +210,12 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 		private String article;
 		@XmlElement
 		private String dosage;
-		
-		private MedicationHistoryItem(){
+
+		private MedicationHistoryItem() {
 			// needed for jaxb
 		}
-		
-		public MedicationHistoryItem(final String from, final String to, final Prescription p){
+
+		public MedicationHistoryItem(final String from, final String to, final Prescription p) {
 			this.from = from;
 			this.fromTool = new TimeTool(from);
 			this.to = to;
@@ -230,9 +225,9 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 			this.article = p.getArtikel() != null ? p.getArtikel().getLabel() : "?";
 			this.dosage = p.getDosis();
 		}
-		
+
 		@Override
-		public int compareTo(MedicationHistoryItem other){
+		public int compareTo(MedicationHistoryItem other) {
 			return other.fromTool.compareTo(fromTool);
 		}
 	}

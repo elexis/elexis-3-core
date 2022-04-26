@@ -8,15 +8,13 @@ import ch.elexis.core.services.IReferenceDataImporterService;
 @Component
 public class ReferenceDataImporterServiceHolder {
 	private static IReferenceDataImporterService referenceDataImporterService;
-	
+
 	@Reference
-	public void setReferenceDataImporterService(
-		IReferenceDataImporterService referenceDataImporterService){
-		ReferenceDataImporterServiceHolder.referenceDataImporterService =
-			referenceDataImporterService;
+	public void setReferenceDataImporterService(IReferenceDataImporterService referenceDataImporterService) {
+		ReferenceDataImporterServiceHolder.referenceDataImporterService = referenceDataImporterService;
 	}
-	
-	public static IReferenceDataImporterService get(){
+
+	public static IReferenceDataImporterService get() {
 		return referenceDataImporterService;
 	}
 }

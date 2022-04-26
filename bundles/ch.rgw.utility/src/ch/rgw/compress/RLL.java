@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.rgw.compress;
@@ -18,21 +18,21 @@ import ch.rgw.tools.IntTool;
 
 /**
  * RLL Commpressor/Decompressor
- * 
+ *
  * @author Gerry
  */
 public class RLL {
-	public static String Version(){
+	public static String Version() {
 		return "0.2.1";
 	}
-	
+
 	/**
-	 * compress the source array. use rllchar as character to indicate repetition. if rllchar is
-	 * 0x0, the least frequent character from source will be used.
-	 * 
+	 * compress the source array. use rllchar as character to indicate repetition.
+	 * if rllchar is 0x0, the least frequent character from source will be used.
+	 *
 	 * @return a newly created array with the rll compressed data.
 	 */
-	public static byte[] compress(byte rllchar, byte[] source){
+	public static byte[] compress(byte rllchar, byte[] source) {
 		if (rllchar == (byte) 0) {
 			int[] freq = HuffmanTree.constructTable(source);
 			int min = 100000;
@@ -73,17 +73,16 @@ public class RLL {
 			baos.write(source[i++]);
 		}
 		return baos.toByteArray();
-		
+
 	}
-	
+
 	/**
 	 * Expand a rll-compressed array
-	 * 
-	 * @param source
-	 *            the compressed array. First byte must be the rllchar.
+	 *
+	 * @param source the compressed array. First byte must be the rllchar.
 	 * @return a newly created array with the expanded data.
 	 */
-	public static byte[] expand(byte[] source){
+	public static byte[] expand(byte[] source) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(source.length);
 		byte rllchar = source[0];
 		int i;
@@ -102,13 +101,13 @@ public class RLL {
 			} else {
 				baos.write(source[i]);
 			}
-			
+
 		}
 		while (i < source.length) {
 			baos.write(source[i++]);
 		}
-		
+
 		return baos.toByteArray();
 	}
-	
+
 }

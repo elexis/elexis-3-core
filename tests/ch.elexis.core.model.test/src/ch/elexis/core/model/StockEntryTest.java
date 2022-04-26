@@ -23,16 +23,16 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class StockEntryTest {
 	private IModelService modelService;
-	
+
 	private IArticle article, article1;
-	
+
 	private IStock stock;
-	
+
 	@Before
-	public void before(){
-		modelService = OsgiServiceUtil.getService(IModelService.class,
-			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
-		
+	public void before() {
+		modelService = OsgiServiceUtil
+				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+
 		article = modelService.create(IArticle.class);
 		article.setName("test article");
 		article.setCode("123456789");
@@ -41,7 +41,7 @@ public class StockEntryTest {
 		article.setPackageSize(12);
 		article.setSellingSize(12);
 		modelService.save(article);
-		
+
 		article1 = modelService.create(IArticle.class);
 		article1.setName("test article 1");
 		article1.setCode("987654321");
@@ -50,36 +50,36 @@ public class StockEntryTest {
 		article1.setPackageSize(24);
 		article1.setSellingSize(24);
 		modelService.save(article1);
-		
+
 		stock = modelService.create(IStock.class);
 		stock.setCode("TST");
 		stock.setPriority(5);
 		modelService.save(stock);
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		modelService.remove(article);
 		modelService.remove(article1);
 		modelService.remove(stock);
-		
+
 		OsgiServiceUtil.ungetService(modelService);
 		modelService = null;
 	}
-	
+
 	@Test
-	public void create(){
+	public void create() {
 		IStockEntry entry = modelService.create(IStockEntry.class);
 		assertNotNull(entry);
 		assertTrue(entry instanceof IStockEntry);
-		
+
 		entry.setArticle(article);
 		entry.setStock(stock);
 		entry.setMinimumStock(2);
 		entry.setCurrentStock(1);
 		entry.setMaximumStock(5);
 		modelService.save(entry);
-		
+
 		Optional<IStockEntry> loaded = modelService.load(entry.getId(), IStockEntry.class);
 		assertTrue(loaded.isPresent());
 		assertFalse(entry == loaded.get());
@@ -87,12 +87,12 @@ public class StockEntryTest {
 		assertEquals(entry.getArticle(), loaded.get().getArticle());
 		assertEquals(entry.getStock(), loaded.get().getStock());
 		assertEquals(entry.getCurrentStock(), loaded.get().getCurrentStock());
-		
+
 		modelService.remove(entry);
 	}
-	
+
 	@Test
-	public void query(){
+	public void query() {
 		IStockEntry entry = modelService.create(IStockEntry.class);
 		entry.setArticle(article);
 		entry.setStock(stock);
@@ -100,7 +100,7 @@ public class StockEntryTest {
 		entry.setCurrentStock(1);
 		entry.setMaximumStock(5);
 		modelService.save(entry);
-		
+
 		IStockEntry entry1 = modelService.create(IStockEntry.class);
 		entry1.setArticle(article1);
 		entry1.setStock(stock);
@@ -108,22 +108,20 @@ public class StockEntryTest {
 		entry1.setCurrentStock(2);
 		entry1.setMaximumStock(4);
 		modelService.save(entry1);
-		
+
 		IQuery<IStockEntry> query = modelService.getQuery(IStockEntry.class);
 		query.and(ModelPackage.Literals.ISTOCK_ENTRY__STOCK, COMPARATOR.EQUALS, stock);
 		List<IStockEntry> existing = query.execute();
 		assertEquals(2, existing.size());
 
-		INamedQuery<Long> currentStock = modelService.getNamedQueryByName(
-			Long.class, IStockEntry.class, "StockEntry_SumCurrentStock.articleId.articleType");
+		INamedQuery<Long> currentStock = modelService.getNamedQueryByName(Long.class, IStockEntry.class,
+				"StockEntry_SumCurrentStock.articleId.articleType");
 		String storeToString = StoreToStringServiceHolder.getStoreToString(article);
 		String[] parts = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
-		List<Long> results =
-			currentStock.executeWithParameters(
-				currentStock.getParameterMap(
-				"articleId", parts[1], "articleType", parts[0]));
+		List<Long> results = currentStock
+				.executeWithParameters(currentStock.getParameterMap("articleId", parts[1], "articleType", parts[0]));
 		assertEquals((Long) results.get(0), (Long) 1L);
-		
+
 		modelService.remove(entry);
 		modelService.remove(entry1);
 	}

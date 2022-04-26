@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.rgw.tools;
@@ -17,16 +17,16 @@ package ch.rgw.tools;
  */
 @SuppressWarnings("serial")
 public class JdbcLinkException extends RuntimeException {
-	
-	public JdbcLinkException(String string, Exception cause){
+
+	public JdbcLinkException(String string, Exception cause) {
 		super(string, cause);
 	}
-	
-	public JdbcLinkException(String string){
+
+	public JdbcLinkException(String string) {
 		super(string);
 	}
-	
-	public JdbcLinkException(Exception cause){
+
+	public JdbcLinkException(Exception cause) {
 		super(cause);
 	}
 }

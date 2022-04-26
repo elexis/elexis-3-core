@@ -8,109 +8,106 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A dialog to present messages to the user.
- * 
+ *
  * @since 3.8
  */
 public class UserDialog {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(UserDialog.class);
-	
+
 	public enum MessageType {
-			INFO, WARN, ERROR, QUESTION
+		INFO, WARN, ERROR, QUESTION
 	}
-	
+
 	final public String title;
 	final public String message;
 	final public MessageType mt;
 	final public IStatus status;
-	
-	public UserDialog(MessageType mt, String title, String message){
+
+	public UserDialog(MessageType mt, String title, String message) {
 		this(mt, title, message, null);
 	}
-	
-	public UserDialog(MessageType mt, String title, String message, IStatus status){
+
+	public UserDialog(MessageType mt, String title, String message, IStatus status) {
 		this.title = title;
 		this.message = message;
 		this.mt = mt;
 		this.status = status;
 	}
-	
+
 	/**
 	 * Fire this message
 	 */
-	public boolean open(){
+	public boolean open() {
 		final Display display = Display.getDefault();
 		UserDialogRunnable runnable = new UserDialogRunnable(display);
 		display.syncExec(runnable);
 		return runnable.getResult();
 	}
-	
+
 	private class UserDialogRunnable implements Runnable {
-		
+
 		private boolean result = false;
 		private final Display display;
-		
-		public UserDialogRunnable(Display display){
+
+		public UserDialogRunnable(Display display) {
 			this.display = display;
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			logger.debug("MessageEvent [" + mt + "]  [" + title + "] [" + message + "]");
 			switch (mt) {
 			case ERROR:
-				org.eclipse.jface.dialogs.MessageDialog.openError(display.getActiveShell(), title,
-					message);
+				org.eclipse.jface.dialogs.MessageDialog.openError(display.getActiveShell(), title, message);
 				result = true;
 				break;
 			case WARN:
-				org.eclipse.jface.dialogs.MessageDialog.openWarning(display.getActiveShell(), title,
-					message);
+				org.eclipse.jface.dialogs.MessageDialog.openWarning(display.getActiveShell(), title, message);
 				result = true;
 				break;
 			case QUESTION:
 				result = MessageDialog.openQuestion(display.getActiveShell(), title, message);
 				break;
 			default:
-				org.eclipse.jface.dialogs.MessageDialog.openInformation(display.getActiveShell(),
-					title, message);
+				org.eclipse.jface.dialogs.MessageDialog.openInformation(display.getActiveShell(), title, message);
 				result = true;
 				break;
 			}
 		}
-		
-		public boolean getResult(){
+
+		public boolean getResult() {
 			return result;
 		}
-		
+
 	}
-	
-	public static void error(String title, String message){
+
+	public static void error(String title, String message) {
 		open(MessageType.ERROR, title, message, null, null, false);
 	}
-	
-	public static void error(String title, String message, Exception ex){
+
+	public static void error(String title, String message, Exception ex) {
 		open(MessageType.ERROR, title, message, null, ex, false);
 	}
-	
-	public static void loggedError(String title, String message){
+
+	public static void loggedError(String title, String message) {
 		open(MessageType.ERROR, title, message, null, null, true);
 	}
-	
-	public static void loggedError(String title, String message, Exception ex){
+
+	public static void loggedError(String title, String message, Exception ex) {
 		open(MessageType.ERROR, title, message, null, ex, true);
 	}
-	
-	public static void information(String title, String message){
+
+	public static void information(String title, String message) {
 		open(MessageType.INFO, title, message, null, null, true);
 	}
-	
-	public static boolean question(String title, String message){
+
+	public static boolean question(String title, String message) {
 		return open(MessageType.QUESTION, title, message, null, null, true);
 	}
-	
-	private static boolean open(MessageType mt, String title, String message, IStatus status,
-		Exception ex, boolean log){
+
+	private static boolean open(MessageType mt, String title, String message, IStatus status, Exception ex,
+			boolean log) {
 		if (log) {
 			String logMsg = title + " - " + message;
 			switch (mt) {
@@ -140,5 +137,5 @@ public class UserDialog {
 		}
 		return new UserDialog(mt, title, message, status).open();
 	}
-	
+
 }

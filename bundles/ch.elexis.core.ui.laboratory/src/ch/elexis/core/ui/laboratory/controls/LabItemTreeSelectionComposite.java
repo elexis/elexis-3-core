@@ -38,38 +38,38 @@ import ch.elexis.data.Query;
 public class LabItemTreeSelectionComposite extends Composite {
 	// height of laborViewer
 	private static final int LINES_TO_SHOW = 20;
-	
+
 	private ListenerList listenerList = new ListenerList();
-	
+
 	private LabItemsViewerFilter filter = new LabItemsViewerFilter();
 	private LabItemsContentProvider contentProvider = new LabItemsContentProvider();
 	private ILabelProvider labelProvider;
-	
+
 	ArrayList<GroupItem> checkState = new ArrayList<GroupItem>();
 	private ContainerCheckedTreeViewer laborViewer = null;
 	private Text filterText;
-	
+
 	private boolean addCustomGroups;
-	
-	public LabItemTreeSelectionComposite(Composite parent, ILabelProvider labelProvider, int style){
+
+	public LabItemTreeSelectionComposite(Composite parent, ILabelProvider labelProvider, int style) {
 		this(parent, labelProvider, false, style);
 	}
-	
-	public LabItemTreeSelectionComposite(Composite parent, ILabelProvider labelProvider,
-		boolean addCustomGroups, int style){
+
+	public LabItemTreeSelectionComposite(Composite parent, ILabelProvider labelProvider, boolean addCustomGroups,
+			int style) {
 		super(parent, style);
 		this.labelProvider = labelProvider;
 		this.addCustomGroups = addCustomGroups;
-		
+
 		setLayout(new GridLayout(1, false));
-		
+
 		filterText = new Text(this, SWT.SEARCH);
 		filterText.setMessage("Filter"); //$NON-NLS-1$
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		filterText.setLayoutData(data);
 		filterText.addModifyListener(new ModifyListener() {
 			@Override
-			public void modifyText(ModifyEvent e){
+			public void modifyText(ModifyEvent e) {
 				if (filterText.getText().length() > 1) {
 					filter.setSearchText(filterText.getText());
 					laborViewer.refresh();
@@ -81,12 +81,11 @@ public class LabItemTreeSelectionComposite extends Composite {
 				fireSelectionChanged();
 			}
 		});
-		
-		laborViewer = new ContainerCheckedTreeViewer(this,
-			SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+
+		laborViewer = new ContainerCheckedTreeViewer(this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		laborViewer.addCheckStateListener(new ICheckStateListener() {
 			@Override
-			public void checkStateChanged(CheckStateChangedEvent event){
+			public void checkStateChanged(CheckStateChangedEvent event) {
 				// We use an additive check state cache so we need to remove
 				// previously checked items if the user unchecked them.
 				if (!event.getChecked() && checkState != null) {
@@ -113,34 +112,34 @@ public class LabItemTreeSelectionComposite extends Composite {
 		// initially, show 10 lines
 		gd.heightHint = laborViewer.getTree().getItemHeight() * LINES_TO_SHOW;
 		laborViewer.getControl().setLayoutData(gd);
-		
+
 		ViewerFilter[] filters = new ViewerFilter[1];
 		filters[0] = filter;
 		laborViewer.setFilters(filters);
-		
+
 		laborViewer.setContentProvider(contentProvider);
-		
+
 		laborViewer.setLabelProvider(labelProvider);
-		
+
 		laborViewer.setInput(loadItems());
 	}
-	
-	public void addSelectionChangedListener(ISelectionChangedListener listener){
+
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		listenerList.add(listener);
 	}
-	
+
 	private void fireSelectionChanged() {
 		Object[] listeners = listenerList.getListeners();
 		for (Object object : listeners) {
-			if(object instanceof ISelectionChangedListener) {
+			if (object instanceof ISelectionChangedListener) {
 				SelectionChangedEvent event = new SelectionChangedEvent(laborViewer,
-					new StructuredSelection(getSelectedItems()));
+						new StructuredSelection(getSelectedItems()));
 				((ISelectionChangedListener) object).selectionChanged(event);
 			}
 		}
 	}
-	
-	private void rememberLeafCheckState(CheckStateChangedEvent event){
+
+	private void rememberLeafCheckState(CheckStateChangedEvent event) {
 		Object[] checked = laborViewer.getCheckedElements();
 		if (checkState == null) {
 			checkState = new ArrayList<GroupItem>(checked.length);
@@ -150,21 +149,20 @@ public class LabItemTreeSelectionComposite extends Composite {
 				if (!checkState.contains(checked[i])) {
 					if (checked[i] instanceof GroupItem) {
 						checkState.add((GroupItem) checked[i]);
-					} else
-						if ((checked[i] instanceof Group) && (event.getElement() == checked[i])) {
+					} else if ((checked[i] instanceof Group) && (event.getElement() == checked[i])) {
 						checkState.addAll(((Group) checked[i]).getItems());
 					}
 				}
 			}
 		}
 	}
-	
-	private void restoreLeafCheckState(){
+
+	private void restoreLeafCheckState() {
 		if (laborViewer == null || laborViewer.getTree().isDisposed())
 			return;
 		if (checkState == null)
 			return;
-			
+
 		laborViewer.setCheckedElements(new Object[0]);
 		laborViewer.setGrayedElements(new Object[0]);
 		// Now we are only going to set the check state of the leaf nodes
@@ -185,27 +183,26 @@ public class LabItemTreeSelectionComposite extends Composite {
 			laborViewer.setExpandedElements(expanded);
 		}
 	}
-	
-	public List<GroupItem> getSelectedItems(){
+
+	public List<GroupItem> getSelectedItems() {
 		return new ArrayList<GroupItem>(checkState);
 	}
-	
+
 	/**
 	 * Create a map with the groups of items
-	 * 
+	 *
 	 */
-	private Hashtable<String, Group> loadItems(){
+	private Hashtable<String, Group> loadItems() {
 		Hashtable<String, Group> allGroups = new Hashtable<String, Group>();
-		
-		Query<LabItem> query = new Query<LabItem>(LabItem.class, "LABORITEMS", false, new String[] {
-			LabItem.GROUP, LabItem.SHORTNAME, LabItem.TITLE
-		});
+
+		Query<LabItem> query = new Query<LabItem>(LabItem.class, "LABORITEMS", false,
+				new String[] { LabItem.GROUP, LabItem.SHORTNAME, LabItem.TITLE });
 		List<LabItem> lItems = query.execute();
 		if (lItems == null) {
 			// error empty map
 			return allGroups;
 		}
-		
+
 		if (!ConfigServiceHolder.getUser(LabGroupPrefs.SHOW_GROUPS_ONLY, false)) {
 			for (LabItem it : lItems) {
 				String groupName = it.getGroup();
@@ -217,20 +214,20 @@ public class LabItemTreeSelectionComposite extends Composite {
 				group.addItem(it);
 			}
 		}
-		
+
 		if (addCustomGroups) {
 			allGroups.putAll(loadCustomGroups());
 		}
-		
+
 		return allGroups;
 	}
-	
+
 	/**
 	 * Load User-defined LabGroups
 	 */
-	private Hashtable<String, Group> loadCustomGroups(){
+	private Hashtable<String, Group> loadCustomGroups() {
 		Hashtable<String, Group> customGroups = new Hashtable<String, Group>();
-			
+
 		Query<LabGroup> query = new Query<LabGroup>(LabGroup.class);
 		query.orderBy(false, "Name"); //$NON-NLS-1$
 		List<LabGroup> labGroups = query.execute();
@@ -240,20 +237,20 @@ public class LabItemTreeSelectionComposite extends Composite {
 				customGroups.put(labGroup.getName(), group);
 			}
 		}
-		
+
 		return customGroups;
 	}
-	
+
 	public static class Group {
 		String name;
 		String shortName;
 		private List<GroupItem> items;
 		private boolean sorted;
-		
-		Group(String name, List<LabItem> labItems){
+
+		Group(String name, List<LabItem> labItems) {
 			this.name = name;
 			items = createGroupItems(labItems);
-			
+
 			// shortname as in LaborView (without ordering number)
 			String[] gn = name.split(" +"); //$NON-NLS-1$
 			if (gn.length > 1) {
@@ -263,27 +260,27 @@ public class LabItemTreeSelectionComposite extends Composite {
 			}
 			sorted = false;
 		}
-		
-		public void addItem(LabItem labItem){
+
+		public void addItem(LabItem labItem) {
 			if (items == null) {
 				items = new ArrayList<GroupItem>();
 			}
 			items.add(new GroupItem(name, labItem));
 		}
-		
-		Group(LabGroup labGroup){
+
+		Group(LabGroup labGroup) {
 			this.name = labGroup.getName();
 			this.shortName = this.name;
-			
+
 			List<LabItem> labItems = labGroup.getItems();
 			items = createGroupItems(labItems);
 		}
-		
-		public List<GroupItem> getItems(){
+
+		public List<GroupItem> getItems() {
 			if (!sorted) {
 				Collections.sort(items, new Comparator<GroupItem>() {
 					@Override
-					public int compare(GroupItem left, GroupItem right){
+					public int compare(GroupItem left, GroupItem right) {
 						String prio1 = left.getLabItemPrio().orElse("");
 						String prio2 = right.getLabItemPrio().orElse("");
 						if (StringUtils.isNumeric(prio1) && StringUtils.isNumeric(prio2)) {
@@ -300,76 +297,76 @@ public class LabItemTreeSelectionComposite extends Composite {
 			}
 			return items;
 		}
-		
-		private List<GroupItem> createGroupItems(List<LabItem> labItems){
+
+		private List<GroupItem> createGroupItems(List<LabItem> labItems) {
 			List<GroupItem> groupItems = new ArrayList<GroupItem>();
 			for (LabItem labItem : labItems) {
 				groupItems.add(new GroupItem(name, labItem));
 			}
 			return groupItems;
 		}
-		
+
 		@Override
-		public String toString(){
+		public String toString() {
 			return shortName;
 		}
 	}
-	
+
 	public static class GroupItem {
 		private String groupname;
 		private LabItem labItem;
-		
-		public GroupItem(String groupname, LabItem labItem){
+
+		public GroupItem(String groupname, LabItem labItem) {
 			this.setGroupname(groupname);
 			this.setLabItem(labItem);
 		}
 
-		public LabItem getLabItem(){
+		public LabItem getLabItem() {
 			return labItem;
 		}
 
-		public void setLabItem(LabItem labItem){
+		public void setLabItem(LabItem labItem) {
 			this.labItem = labItem;
 		}
 
-		public String getGroupname(){
+		public String getGroupname() {
 			return groupname;
 		}
 
-		public void setGroupname(String groupname){
+		public void setGroupname(String groupname) {
 			this.groupname = groupname;
 		}
-		
-		public Optional<String> getLabItemPrio(){
+
+		public Optional<String> getLabItemPrio() {
 			if (labItem != null) {
 				return Optional.ofNullable(labItem.getPrio());
 			}
 			return Optional.empty();
 		}
 	}
-	
+
 	private class LabItemsViewerFilter extends ViewerFilter {
 		protected String searchString;
-		
-		public void setSearchText(String s){
+
+		public void setSearchText(String s) {
 			// Search must be a substring of the existing value
 			this.searchString = ".*" + s + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		
-		private boolean isSelect(Object leaf){
+
+		private boolean isSelect(Object leaf) {
 			String label = labelProvider.getText(leaf);
 			if (label != null && label.toLowerCase().matches(searchString.toLowerCase())) {
 				return true;
 			}
 			return false;
 		}
-		
+
 		@Override
-		public boolean select(Viewer viewer, Object parentElement, Object element){
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (searchString == null || searchString.length() == 0) {
 				return true;
 			}
-			
+
 			StructuredViewer sviewer = (StructuredViewer) viewer;
 			ITreeContentProvider provider = (ITreeContentProvider) sviewer.getContentProvider();
 			Object[] children = provider.getChildren(element);
@@ -383,25 +380,25 @@ public class LabItemTreeSelectionComposite extends Composite {
 			return isSelect(element);
 		}
 	}
-	
+
 	private static class LabItemsContentProvider implements ITreeContentProvider {
 		private Hashtable<String, Group> items;
-		
+
 		@Override
-		public Object[] getElements(Object inputElement){
+		public Object[] getElements(Object inputElement) {
 			ArrayList<Group> ret = new ArrayList<Group>();
 			ret.addAll(items.values());
 			Collections.sort(ret, new Comparator<Group>() {
 				@Override
-				public int compare(Group o1, Group o2){
+				public int compare(Group o1, Group o2) {
 					return o1.shortName.compareTo(o2.shortName);
 				}
 			});
 			return ret.toArray();
 		}
-		
+
 		@Override
-		public Object[] getChildren(Object parentElement){
+		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof Group) {
 				Group group = (Group) parentElement;
 				return group.getItems().toArray();
@@ -409,25 +406,25 @@ public class LabItemTreeSelectionComposite extends Composite {
 				return null;
 			}
 		}
-		
+
 		@Override
-		public boolean hasChildren(Object element){
+		public boolean hasChildren(Object element) {
 			return (element instanceof Group);
 		}
-		
+
 		@Override
-		public Object[] getParent(Object element){
+		public Object[] getParent(Object element) {
 			return null;
 		}
-		
+
 		@Override
-		public void dispose(){
+		public void dispose() {
 			// nothing to do
 		}
-		
+
 		@Override
 		@SuppressWarnings("unchecked")
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			if (newInput instanceof Hashtable<?, ?>) {
 				items = (Hashtable<String, Group>) newInput;
 			}

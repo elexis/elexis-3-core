@@ -8,13 +8,13 @@ import ch.elexis.core.services.IBillingService;
 @Component
 public class BillingServiceHolder {
 	private static IBillingService billingService;
-	
+
 	@Reference
-	public void setModelService(IBillingService billingService){
+	public void setModelService(IBillingService billingService) {
 		BillingServiceHolder.billingService = billingService;
 	}
-	
-	public static IBillingService get(){
+
+	public static IBillingService get() {
 		if (billingService == null) {
 			throw new IllegalStateException("No IBillingService available");
 		}

@@ -30,16 +30,16 @@ public class AUF extends AbstractEntityWithId implements EntityWithId, EntityWit
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "PatientID")
 	protected Kontakt patient;
@@ -51,13 +51,13 @@ public class AUF extends AbstractEntityWithId implements EntityWithId, EntityWit
 	@OneToOne
 	@JoinColumn(name = "BriefID")
 	protected Brief brief;
-	
+
 	@Convert(converter = IntegerStringConverter.class)
 	protected int prozent;
 
 	@Column(name = "DatumAUZ")
 	protected LocalDate date;
-	
+
 	@Column(name = "DatumVon")
 	protected LocalDate dateFrom;
 
@@ -69,34 +69,34 @@ public class AUF extends AbstractEntityWithId implements EntityWithId, EntityWit
 
 	@Column(name = "AUFZusatz", length = 254)
 	protected String note;
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
 
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
 
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
 
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
 
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
 
@@ -107,60 +107,60 @@ public class AUF extends AbstractEntityWithId implements EntityWithId, EntityWit
 	public void setPatient(Kontakt patient) {
 		this.patient = patient;
 	}
-	
-	public Fall getFall(){
+
+	public Fall getFall() {
 		return fall;
 	}
-	
-	public void setFall(Fall fall){
+
+	public void setFall(Fall fall) {
 		this.fall = fall;
 	}
-	
-	public Brief getBrief(){
+
+	public Brief getBrief() {
 		return brief;
 	}
-	
-	public void setBrief(Brief brief){
+
+	public void setBrief(Brief brief) {
 		this.brief = brief;
 	}
-	
-	public int getProzent(){
+
+	public int getProzent() {
 		return prozent;
 	}
-	
-	public void setProzent(int prozent){
+
+	public void setProzent(int prozent) {
 		this.prozent = prozent;
 	}
-	
-	public LocalDate getDate(){
+
+	public LocalDate getDate() {
 		return date;
 	}
-	
-	public void setDate(LocalDate date){
+
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	
-	public LocalDate getDateFrom(){
+
+	public LocalDate getDateFrom() {
 		return dateFrom;
 	}
-	
-	public void setDateFrom(LocalDate dateFrom){
+
+	public void setDateFrom(LocalDate dateFrom) {
 		this.dateFrom = dateFrom;
 	}
-	
-	public LocalDate getDateUntil(){
+
+	public LocalDate getDateUntil() {
 		return dateUntil;
 	}
-	
-	public void setDateUntil(LocalDate dateUntil){
+
+	public void setDateUntil(LocalDate dateUntil) {
 		this.dateUntil = dateUntil;
 	}
-	
-	public String getReason(){
+
+	public String getReason() {
 		return reason;
 	}
-	
-	public void setReason(String reason){
+
+	public void setReason(String reason) {
 		this.reason = reason;
 	}
 

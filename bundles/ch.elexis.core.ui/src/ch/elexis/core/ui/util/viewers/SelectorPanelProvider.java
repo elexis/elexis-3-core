@@ -42,9 +42,9 @@ import ch.rgw.tools.Tree;
 
 /**
  * A ControlFieldProvider that creates a SelectorPanel
- * 
+ *
  * @author Gerry Weirich
- * 
+ *
  */
 public class SelectorPanelProvider implements ControlFieldProvider {
 	private LinkedList<ControlFieldListener> listeners = new LinkedList<ControlFieldListener>();
@@ -52,31 +52,30 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 	private FieldDescriptor<?>[] fields;
 	private boolean bExclusive = false;
 	private IAction[] actions = null;
-	
+
 	private int changeDelay;
-	
-	public SelectorPanelProvider(FieldDescriptor<?>[] fields,
-		boolean bExlusive){
+
+	public SelectorPanelProvider(FieldDescriptor<?>[] fields, boolean bExlusive) {
 		this.fields = fields;
 		this.bExclusive = bExlusive;
 		this.changeDelay = -1;
 	}
-	
-	public void addActions(IAction... actions){
+
+	public void addActions(IAction... actions) {
 		this.actions = actions;
 	}
-	
-	public void addChangeListener(ControlFieldListener cl){
+
+	public void addChangeListener(ControlFieldListener cl) {
 		listeners.add(cl);
 	}
-	
-	public void clearValues(){
+
+	public void clearValues() {
 		if (panel != null) {
 			panel.clearValues();
 		}
 	}
-	
-	public Composite createControl(Composite parent){
+
+	public Composite createControl(Composite parent) {
 		if (actions == null) {
 			panel = new SelectorPanel(parent);
 		} else {
@@ -87,9 +86,8 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 			switch (field.getFieldType()) {
 			case HYPERLINK:
 			case STRING:
-				ac =
-					new TextField(panel.getFieldParent(), 0, field.getLabel(),
-						field.getAssignedListenerEventType(), field.getAssignedListener());
+				ac = new TextField(panel.getFieldParent(), 0, field.getLabel(), field.getAssignedListenerEventType(),
+						field.getAssignedListener());
 				break;
 			case CURRENCY:
 				ac = new MoneyField(panel.getFieldParent(), 0, field.getLabel());
@@ -97,16 +95,14 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 			case DATE:
 				ac = new DateField(panel.getFieldParent(), 0, field.getLabel());
 				break;
-			
+
 			case COMBO:
-				ac =
-					new ComboField(panel.getFieldParent(), 0, field.getLabel(),
-						(String[]) field.getExtension());
+				ac = new ComboField(panel.getFieldParent(), 0, field.getLabel(), (String[]) field.getExtension());
 				break;
 			case INT:
 				ac = new IntegerField(panel.getFieldParent(), 0, field.getLabel());
 			}
-			if(ac!=null) {
+			if (ac != null) {
 				ac.setData(ActiveControl.PROP_FIELDNAME, field.getFieldname());
 				ac.setData(ActiveControl.PROP_HASHNAME, field.getHashname());
 				panel.addField(ac);
@@ -117,41 +113,41 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		 */
 		panel.setExclusive(bExclusive);
 		panel.addSelectorListener(new ActiveControlListener() {
-			
-			public void contentsChanged(ActiveControl field){
+
+			public void contentsChanged(ActiveControl field) {
 				fireChangedEvent();
 			}
-			
-			public void titleClicked(ActiveControl field){
+
+			public void titleClicked(ActiveControl field) {
 				fireClickedEvent(field.getLabelText());
 			}
-			
-			public void invalidContents(ActiveControl field){
+
+			public void invalidContents(ActiveControl field) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 		return panel;
 	}
-	
-	public IFilter createFilter(){
+
+	public IFilter createFilter() {
 		return new DefaultFilter(panel);
 	}
-	
-	public void fireClickedEvent(final String fieldname){
+
+	public void fireClickedEvent(final String fieldname) {
 		for (ControlFieldListener cl : listeners) {
 			cl.reorder(fieldname);
 		}
 	}
-	
+
 	private volatile Runnable delayedChanged;
-	
-	public void fireChangedEvent(){
+
+	public void fireChangedEvent() {
 		if (changeDelay > 0) {
 			if (delayedChanged == null) {
 				delayedChanged = new Runnable() {
 					@Override
-					public void run(){
+					public void run() {
 						doFireChangedEvent();
 						delayedChanged = null;
 					}
@@ -162,21 +158,21 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 			doFireChangedEvent();
 		}
 	}
-	
-	private void doFireChangedEvent(){
+
+	private void doFireChangedEvent() {
 		HashMap<String, String> hv = panel.getValues();
 		for (ControlFieldListener cl : listeners) {
 			cl.changed(hv);
 		}
 	}
-	
-	public void fireSortEvent(String text){
+
+	public void fireSortEvent(String text) {
 		for (ControlFieldListener cl : listeners) {
 			cl.reorder(text);
 		}
 	}
-	
-	public String[] getValues(){
+
+	public String[] getValues() {
 		HashMap<String, String> vals = panel.getValues();
 		String[] ret = new String[fields.length];
 		for (int i = 0; i < ret.length; i++) {
@@ -184,8 +180,8 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		}
 		return ret;
 	}
-	
-	public boolean isEmpty(){
+
+	public boolean isEmpty() {
 		HashMap<String, String> vals = panel.getValues();
 		for (FieldDescriptor<?> fd : fields) {
 			if (vals.get(fd.getLabel()).length() > 0) {
@@ -194,12 +190,12 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		}
 		return true;
 	}
-	
-	public void removeChangeListener(ControlFieldListener cl){
+
+	public void removeChangeListener(ControlFieldListener cl) {
 		listeners.remove(cl);
 	}
-	
-	public void setFocus(){
+
+	public void setFocus() {
 		List<ActiveControl> controls = panel.getControls();
 		if (controls != null && !controls.isEmpty()) {
 			// if available set the focus on the first control
@@ -208,56 +204,54 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 			panel.setFocus();
 		}
 	}
-	
-	public void setQuery(final Query<? extends PersistentObject> q){
+
+	public void setQuery(final Query<? extends PersistentObject> q) {
 		HashMap<String, String> vals = panel.getValues();
 		for (FieldDescriptor<?> field : fields) {
 			String name = field.getFieldname();
 			String value = vals.get(name);
 			if (!StringTool.isNothing(value)) {
-				q.add(name, Query.LIKE,
-					(field.isValueToLower() ? value.toLowerCase() : value) + "%", true);
+				q.add(name, Query.LIKE, (field.isValueToLower() ? value.toLowerCase() : value) + "%", true);
 			}
 		}
 	}
-	
+
 	@Override
-	public void setQuery(IQuery<?> query){
+	public void setQuery(IQuery<?> query) {
 		HashMap<String, String> vals = panel.getValues();
 		for (FieldDescriptor<?> field : fields) {
 			String name = field.getFieldname();
 			String value = vals.get(name);
 			if (!StringTool.isNothing(value)) {
-				query.and(name, COMPARATOR.LIKE,
-					(field.isValueToLower() ? value.toLowerCase() : value) + "%",
-					field.isIgnoreCase());
+				query.and(name, COMPARATOR.LIKE, (field.isValueToLower() ? value.toLowerCase() : value) + "%",
+						field.isIgnoreCase());
 			}
 		}
 	}
-	
-	public SelectorPanel getPanel(){
+
+	public SelectorPanel getPanel() {
 		return panel;
 	}
-	
+
 	static class DefaultFilter extends ViewerFilter implements IFilter {
 		SelectorPanel slp;
-		
+
 		/**
 		 * @param fields
 		 */
 		/**
 		 * @param fields
 		 */
-		public DefaultFilter(SelectorPanel panel){
+		public DefaultFilter(SelectorPanel panel) {
 			slp = panel;
 		}
-		
+
 		@Override
-		public boolean select(Viewer viewer, Object parentElement, Object element){
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			return select(element);
 		}
-		
-		public boolean select(Object element){
+
+		public boolean select(Object element) {
 			PersistentObject po = null;
 			if (element instanceof Tree) {
 				po = (PersistentObject) ((Tree) element).contents;
@@ -281,16 +275,16 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	/**
-	 * Set the delay of calling {@link SelectorPanelProvider#fireChangedEvent()}. Setting to 0 or -1
-	 * means no delay.
-	 * 
+	 * Set the delay of calling {@link SelectorPanelProvider#fireChangedEvent()}.
+	 * Setting to 0 or -1 means no delay.
+	 *
 	 * @param delay
 	 */
-	public void setChangeDelay(int delay){
+	public void setChangeDelay(int delay) {
 		this.changeDelay = delay;
 	}
 }

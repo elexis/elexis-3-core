@@ -12,14 +12,13 @@ import gnu.io.DriverManager;
 
 @Component(service = {})
 public class RxTxActivate {
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		Logger logger = LoggerFactory.getLogger(getClass());
-		
+
 		DriverManager.getInstance().loadDrivers();
 		logger.info("RxTx activated");
-		
 
 		String[] activePorts = Connection.getComPorts();
 		logger.info("Found serial ports: " + Arrays.toString(activePorts));

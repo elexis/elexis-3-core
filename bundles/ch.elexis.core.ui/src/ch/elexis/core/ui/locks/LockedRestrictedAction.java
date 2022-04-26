@@ -43,10 +43,9 @@ abstract public class LockedRestrictedAction<T> extends RestrictedAction {
 	public abstract T getTargetedObject();
 
 	/**
-	 * 
-	 * @param element
-	 *            not <code>null</code>, where the provided element was verified
-	 *            according to the given rules
+	 *
+	 * @param element not <code>null</code>, where the provided element was verified
+	 *                according to the given rules
 	 */
 	public abstract void doRun(T element);
 }

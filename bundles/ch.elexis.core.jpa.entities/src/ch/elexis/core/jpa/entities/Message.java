@@ -19,104 +19,104 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "CH_ELEXIS_MESSAGES")
 @EntityListeners(EntityWithIdListener.class)
 public class Message extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Column(length = 25)
 	protected String origin;
-	
+
 	@Column(length = 25)
 	protected String destination;
-	
+
 	@Column
 	protected LocalDateTime dateTime;
-	
+
 	@Column
 	@Lob
 	protected String msg;
-	
+
 	@Column
 	@Lob
 	protected String messageCodes;
-	
-	public String getOrigin(){
+
+	public String getOrigin() {
 		return origin;
 	}
-	
-	public void setOrigin(String origin){
+
+	public void setOrigin(String origin) {
 		this.origin = origin;
 	}
-	
-	public String getDestination(){
+
+	public String getDestination() {
 		return destination;
 	}
-	
-	public void setDestination(String destination){
+
+	public void setDestination(String destination) {
 		this.destination = destination;
 	}
-	
-	public LocalDateTime getDateTime(){
+
+	public LocalDateTime getDateTime() {
 		return dateTime;
 	}
-	
-	public void setDateTime(LocalDateTime dateTime){
+
+	public void setDateTime(LocalDateTime dateTime) {
 		this.dateTime = dateTime;
 	}
-	
-	public String getMsg(){
+
+	public String getMsg() {
 		return msg;
 	}
-	
-	public void setMsg(String msg){
+
+	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
-	public String getMessageCodes(){
+
+	public String getMessageCodes() {
 		return messageCodes;
 	}
-	
-	public void setMessageCodes(String messageCodes){
+
+	public void setMessageCodes(String messageCodes) {
 		this.messageCodes = messageCodes;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
+
 }

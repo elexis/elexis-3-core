@@ -57,107 +57,102 @@ import ch.elexis.data.VerrechenbarFavorites;
 import ch.elexis.data.VerrechenbarFavorites.Favorite;
 
 public class FavoritenComposite extends Composite {
-	
+
 	private TableViewer tv;
-	private Transfer[] types = new Transfer[] {
-		TextTransfer.getInstance()
-	};
-	
+	private Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+
 	private Font defaultFont;
 	private Font boldFont;
-	
-	private ElexisUiEventListenerImpl reloadListener =
-		new ElexisUiEventListenerImpl(Favorite.class, ElexisEvent.EVENT_RELOAD) {
-			@Override
-			public void runInUi(ElexisEvent ev){
-				update();
-			}
-		};
-	
+
+	private ElexisUiEventListenerImpl reloadListener = new ElexisUiEventListenerImpl(Favorite.class,
+			ElexisEvent.EVENT_RELOAD) {
+		@Override
+		public void runInUi(ElexisEvent ev) {
+			update();
+		}
+	};
+
 	/**
 	 * Create the composite.
-	 * 
+	 *
 	 * @param parent
 	 * @param style
 	 */
-	public FavoritenComposite(Composite parent, int style){
+	public FavoritenComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
-		
+
 		CLabel lblHeader = new CLabel(this, SWT.NONE);
-		
+
 		lblHeader.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		lblHeader.setText("Favoriten");
 		lblHeader.setImage(Images.IMG_STAR.getImage(ImageSize._75x66_TitleDialogIconSize));
-		
+
 		Composite composite = new Composite(this, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		TableColumnLayout tcl_composite = new TableColumnLayout();
 		composite.setLayout(tcl_composite);
-		
+
 		tv = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
 		final Table table = tv.getTable();
 		table.setHeaderVisible(true);
 		table.addListener(SWT.MeasureItem, new Listener() {
-			
+
 			@Override
-			public void handleEvent(Event event){
+			public void handleEvent(Event event) {
 				int clientWidth = table.getClientArea().width;
 				event.height = (event.gc.getFontMetrics().getHeight() * 2) + 2;
 				event.width = clientWidth * 2;
 			}
 		});
-		
+
 		table.addListener(SWT.PaintItem, new Listener() {
-			
+
 			@Override
-			public void handleEvent(Event event){
+			public void handleEvent(Event event) {
 				TableItem item = (TableItem) event.item;
-				
+
 				Favorite fav = (Favorite) item.getData();
 				Optional<Identifiable> cfs = fav.getObject();
-				
+
 				String simpleName = "?";
 				String label = "?";
 				if (cfs.isPresent()) {
 					simpleName = cfs.get().getClass().getSimpleName();
 					label = cfs.get().getLabel();
 				}
-				
+
 				/* center column 1 vertically */
 				int yOffset = 0;
-				
+
 				if (defaultFont == null && boldFont == null) {
 					defaultFont = event.gc.getFont();
-					FontDescriptor boldDescriptor =
-						FontDescriptor.createFrom(defaultFont).setStyle(SWT.BOLD);
+					FontDescriptor boldDescriptor = FontDescriptor.createFrom(defaultFont).setStyle(SWT.BOLD);
 					boldFont = boldDescriptor.createFont(event.display);
 				}
-				
+
 				switch (event.index) {
 				case 0:
 					event.gc.setFont(defaultFont);
-					event.gc.drawText(fav.getMacroString() != null ? fav.getMacroString() : "",
-						event.x + 3, event.y + yOffset, true);
+					event.gc.drawText(fav.getMacroString() != null ? fav.getMacroString() : "", event.x + 3,
+							event.y + yOffset, true);
 					break;
 				case 1:
 					event.gc.setFont(boldFont);
 					event.gc.drawText(simpleName, event.x + 3, event.y + yOffset, true);
 					event.gc.setFont(defaultFont);
-					event.gc.drawText(label, event.x + 3,
-						event.y + event.gc.getFontMetrics().getHeight(), true);
+					event.gc.drawText(label, event.x + 3, event.y + event.gc.getFontMetrics().getHeight(), true);
 					break;
 				default:
 					break;
 				}
-				
+
 			}
 		});
 		tv.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(DoubleClickEvent event){
-				ICodeSelectorTarget target =
-					CodeSelectorHandler.getInstance().getCodeSelectorTarget();
+			public void doubleClick(DoubleClickEvent event) {
+				ICodeSelectorTarget target = CodeSelectorHandler.getInstance().getCodeSelectorTarget();
 				if (target != null) {
 					StructuredSelection ss = (StructuredSelection) tv.getSelection();
 					if (!ss.isEmpty()) {
@@ -170,54 +165,53 @@ public class FavoritenComposite extends Composite {
 				}
 			}
 		});
-		
+
 		TableViewerColumn tvcMacro = new TableViewerColumn(tv, SWT.NONE);
 		TableColumn tblclmnMakro = tvcMacro.getColumn();
 		tcl_composite.setColumnData(tblclmnMakro, new ColumnPixelData(50, true, true));
 		tblclmnMakro.setText("Makro");
 		tvcMacro.setEditingSupport(new EditingSupport(tvcMacro.getViewer()) {
-			
+
 			TextCellEditor editor = new TextCellEditor(table);
-			
+
 			@Override
-			protected void setValue(Object element, Object value){
+			protected void setValue(Object element, Object value) {
 				Favorite fav = (Favorite) element;
 				fav.setMacroString((String) value);
-				
+
 				VerrechenbarFavorites.storeFavorites();
 			}
-			
+
 			@Override
-			protected Object getValue(Object element){
+			protected Object getValue(Object element) {
 				Favorite fav = (Favorite) element;
 				return fav.getMacroString();
 			}
-			
+
 			@Override
-			protected CellEditor getCellEditor(Object element){
+			protected CellEditor getCellEditor(Object element) {
 				return editor;
 			}
-			
+
 			@Override
-			protected boolean canEdit(Object element){
+			protected boolean canEdit(Object element) {
 				return true;
 			}
 		});
-		
+
 		TableViewerColumn tvcElement = new TableViewerColumn(tv, SWT.NONE);
 		TableColumn tblclmnNewColumn = tvcElement.getColumn();
-		tcl_composite.setColumnData(tblclmnNewColumn,
-			new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true));
+		tcl_composite.setColumnData(tblclmnNewColumn, new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true));
 		tblclmnNewColumn.setText("Element");
-		
+
 		MenuManager mgr = new MenuManager();
 		mgr.add(new Action() {
 			{
 				setText(Messages.ToggleVerrechenbarFavoriteAction_DeFavorize);
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				StructuredSelection selection = (StructuredSelection) tv.getSelection();
 				Favorite fav = (Favorite) selection.getFirstElement();
 				fav.getObject().ifPresent(obj -> {
@@ -228,12 +222,12 @@ public class FavoritenComposite extends Composite {
 		});
 		Menu menu = mgr.createContextMenu(tv.getControl());
 		table.setMenu(menu);
-		
+
 		DragSource mine = new DragSource(tv.getControl(), DND.DROP_COPY);
 		mine.setTransfer(types);
 		mine.addDragListener(new DragSourceAdapter() {
 			@Override
-			public void dragSetData(DragSourceEvent event){
+			public void dragSetData(DragSourceEvent event) {
 				StructuredSelection ss = (StructuredSelection) tv.getSelection();
 				if (ss.isEmpty()) {
 					event.data = null;
@@ -245,37 +239,37 @@ public class FavoritenComposite extends Composite {
 					}
 				}
 			}
-			
+
 			@Override
-			public void dragStart(final DragSourceEvent event){
+			public void dragStart(final DragSourceEvent event) {
 				// TODO ...
-				//				StructuredSelection ss = (StructuredSelection) tv.getSelection();
-				//				if (ss.isEmpty()) {
-				//					PersistentObjectDragSource.setDraggedObject(null);
-				//					event.doit = false;
-				//				} else {
-				//					Favorite fav = (Favorite) ss.getFirstElement();
-				//					if (fav.getPersistentObject() instanceof Leistungsblock) {
-				//						Leistungsblock lb = (Leistungsblock) fav.getPersistentObject();
-				//						PersistentObjectDragSource.setDraggedObject(lb);
-				//					} else {
-				//						PersistentObjectDragSource
-				//							.setDraggedObject((PersistentObject) fav.getPersistentObject());
-				//					}
-				//					event.doit = true;
-				//				}
+				// StructuredSelection ss = (StructuredSelection) tv.getSelection();
+				// if (ss.isEmpty()) {
+				// PersistentObjectDragSource.setDraggedObject(null);
+				// event.doit = false;
+				// } else {
+				// Favorite fav = (Favorite) ss.getFirstElement();
+				// if (fav.getPersistentObject() instanceof Leistungsblock) {
+				// Leistungsblock lb = (Leistungsblock) fav.getPersistentObject();
+				// PersistentObjectDragSource.setDraggedObject(lb);
+				// } else {
+				// PersistentObjectDragSource
+				// .setDraggedObject((PersistentObject) fav.getPersistentObject());
+				// }
+				// event.doit = true;
+				// }
 			}
 		});
-		
+
 		tv.setContentProvider(new ArrayContentProvider());
 		tv.setLabelProvider(new ColorizedLabelProvider());
 		tv.setInput(VerrechenbarFavorites.getFavorites());
-		
+
 		ElexisEventDispatcher.getInstance().addListeners(reloadListener);
 	}
-	
+
 	@Override
-	public void dispose(){
+	public void dispose() {
 		ElexisEventDispatcher.getInstance().removeListeners(reloadListener);
 		if (defaultFont != null) {
 			defaultFont.dispose();
@@ -284,27 +278,27 @@ public class FavoritenComposite extends Composite {
 			boldFont.dispose();
 		}
 	}
-	
+
 	@Override
-	protected void checkSubclass(){
+	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-	
+
 	@Override
-	public void update(){
+	public void update() {
 		if (tv != null) {
 			tv.setInput(VerrechenbarFavorites.getFavorites());
 		}
 	}
-	
+
 	private class ColorizedLabelProvider extends LabelProvider implements IColorProvider {
 		@Override
-		public String getText(Object element){
+		public String getText(Object element) {
 			return "";
 		}
-		
+
 		@Override
-		public Color getBackground(Object element){
+		public Color getBackground(Object element) {
 			Favorite fav = (Favorite) element;
 			Optional<Identifiable> v = fav.getObject();
 			if (!v.isPresent()) {
@@ -314,18 +308,18 @@ public class FavoritenComposite extends Composite {
 			if (codeSystemName == null) {
 				return null;
 			}
-			
-			String rgbColor =
-				ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
+
+			String rgbColor = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeSystemName,
+					"ffffff");
 			return UiDesk.getColorFromRGB(rgbColor);
-			
+
 		}
-		
+
 		@Override
-		public Color getForeground(Object element){
+		public Color getForeground(Object element) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 	}
 }

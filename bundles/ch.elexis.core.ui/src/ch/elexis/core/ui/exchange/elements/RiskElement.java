@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.exchange.elements;
@@ -22,28 +22,28 @@ public class RiskElement extends XChangeElement {
 	public static final String ATTR_RELEVANCE = "relevance";
 	public static final String ATTR_TYPE = "type";
 	public static String ELEMENT_META = "meta";
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
+
 	public RiskElement asExporter(XChangeExporter parent, String name) {
 		return asExporter(parent, name, null);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param parent
 	 * @param name
-	 * @param type a specific risk type. e.g. "allergy"
+	 * @param type   a specific risk type. e.g. "allergy"
 	 * @return
 	 * @since 3.7
 	 */
-	public RiskElement asExporter(XChangeExporter parent, String name, String type){
+	public RiskElement asExporter(XChangeExporter parent, String name, String type) {
 		asExporter(parent);
 		setAttribute(ATTR_SUBSTANCE, name);
-		if(type != null) {
+		if (type != null) {
 			setAttribute(ATTR_TYPE, type);
 		}
 		parent.getContainer().addChoice(this, name);

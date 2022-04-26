@@ -22,16 +22,16 @@ public class Sticker extends AbstractEntityWithId implements EntityWithId, Entit
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "image")
 	private DbImage image;
@@ -51,20 +51,20 @@ public class Sticker extends AbstractEntityWithId implements EntityWithId, Entit
 
 	@Column(length = 255)
 	private String classes;
-	
-	public DbImage getImage(){
+
+	public DbImage getImage() {
 		return image;
 	}
 
-	public void setImage(DbImage image){
+	public void setImage(DbImage image) {
 		this.image = image;
 	}
 
-	public int getImportance(){
+	public int getImportance() {
 		return importance;
 	}
 
-	public void setImportance(int importance){
+	public void setImportance(int importance) {
 		this.importance = importance;
 	}
 
@@ -99,34 +99,34 @@ public class Sticker extends AbstractEntityWithId implements EntityWithId, Entit
 	public void setClasses(String classes) {
 		this.classes = classes;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

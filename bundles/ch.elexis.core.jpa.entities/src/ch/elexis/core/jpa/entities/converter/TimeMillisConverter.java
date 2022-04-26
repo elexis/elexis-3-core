@@ -5,13 +5,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 public class TimeMillisConverter {
-	
-	public static LocalDateTime convertOptionalMillisToLocalDateTime(Long currentTimeMillis){
+
+	public static LocalDateTime convertOptionalMillisToLocalDateTime(Long currentTimeMillis) {
 		if (currentTimeMillis == null) {
 			return null;
 		}
-		return Instant.ofEpochMilli(currentTimeMillis).atZone(ZoneId.systemDefault())
-			.toLocalDateTime();
+		return Instant.ofEpochMilli(currentTimeMillis).atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
-	
+
 }

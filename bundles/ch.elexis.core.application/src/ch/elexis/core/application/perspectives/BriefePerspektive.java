@@ -23,11 +23,11 @@ import ch.elexis.core.ui.views.textsystem.TextTemplateView;
 
 public class BriefePerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.BriefePerspektive"; //$NON-NLS-1$
-	
-	public void createInitialLayout(IPageLayout layout){
+
+	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
-		
+
 		IFolderLayout left = layout.createFolder("Links.folder", IPageLayout.LEFT, 0.3f, IPageLayout.ID_EDITOR_AREA);
 		IFolderLayout main = layout.createFolder("Haupt.Folder", IPageLayout.LEFT, 0.7f, IPageLayout.ID_EDITOR_AREA);
 		left.addView(BriefAuswahl.ID);
@@ -39,7 +39,7 @@ public class BriefePerspektive implements IPerspectiveFactory {
 		layout.addShowViewShortcut(KonsDetailView.ID);
 		layout.addShowViewShortcut(BriefAuswahl.ID);
 		layout.addShowViewShortcut(TextView.ID);
-		
+
 	}
-	
+
 }

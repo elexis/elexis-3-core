@@ -15,14 +15,14 @@ import ch.elexis.core.ui.views.FaelleView;
  * @since 3.0.0 extracted from {@link FaelleView}
  */
 public class FaelleContentProvider implements IStructuredContentProvider {
-	
+
 	private FallComparator comparator;
-	
-	public FaelleContentProvider(){
+
+	public FaelleContentProvider() {
 		comparator = new FallComparator();
 	}
-	
-	public Object[] getElements(final Object inputElement){
+
+	public Object[] getElements(final Object inputElement) {
 		IPatient act = ContextServiceHolder.get().getActivePatient().orElse(null);
 		if (act == null) {
 			return new Object[0];
@@ -31,15 +31,14 @@ public class FaelleContentProvider implements IStructuredContentProvider {
 			Arrays.sort(cases, comparator);
 			return cases;
 		}
-		
+
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 		// TODO Auto-generated method stub
 	}
-	
-	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput){
-		
+
+	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
+
 	}
 }
-	

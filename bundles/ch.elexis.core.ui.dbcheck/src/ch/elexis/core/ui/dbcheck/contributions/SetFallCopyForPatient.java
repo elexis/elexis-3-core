@@ -10,11 +10,11 @@ import ch.elexis.data.Fall.Tiers;
 import ch.elexis.data.Query;
 
 public class SetFallCopyForPatient extends ExternalMaintenance {
-	
+
 	@Override
-	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
+	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		Query<Fall> query = new Query<Fall>(Fall.class);
 		List<Fall> allFaelle = query.execute();
 		sb.append(allFaelle.size() + " Fälle insgesamt.\n");
@@ -29,18 +29,17 @@ public class SetFallCopyForPatient extends ExternalMaintenance {
 					changedFaelle++;
 				}
 				fall.setCopyForPatient(setValue);
-				
+
 			}
 			pm.worked(1);
 		}
-		sb.append("Kopie an Patienten, in " + changedFaelle + " von " + tpFaelle
-			+ " TP Fällen angepasst.");
+		sb.append("Kopie an Patienten, in " + changedFaelle + " von " + tpFaelle + " TP Fällen angepasst.");
 		return sb.toString();
 	}
-	
+
 	@Override
-	public String getMaintenanceDescription(){
+	public String getMaintenanceDescription() {
 		return "Kopie an Patienten, aller editierbaren TP Fälle setzen";
 	}
-	
+
 }

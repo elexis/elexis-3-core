@@ -22,41 +22,38 @@ import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.util.model.TransientCoding;
 
 public class PersonalAnamnesisComposite extends Composite {
-	
+
 	private StyledText textOberservation = null;
-	
+
 	protected WritableValue<AbstractBeanAdapter<IObservation>> item = new WritableValue<>();
-	
-	public PersonalAnamnesisComposite(Composite parent, int style){
+
+	public PersonalAnamnesisComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
-		textOberservation =
-			new StyledText(this, SWT.NONE | SWT.WRAP | SWT.MULTI | SWT.V_SCROLL);
-		textOberservation.setAlwaysShowScrollBars(true); //if false horizontal scrollbar blinks on typing
+		textOberservation = new StyledText(this, SWT.NONE | SWT.WRAP | SWT.MULTI | SWT.V_SCROLL);
+		textOberservation.setAlwaysShowScrollBars(true); // if false horizontal scrollbar blinks on typing
 		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd.widthHint = 100;
 		gd.heightHint = 100;
 		textOberservation.setLayoutData(gd);
 		initDataBindings();
 	}
-	
-	public void setInput(Optional<IObservation> input){
+
+	public void setInput(Optional<IObservation> input) {
 		if (textOberservation != null) {
-			item.setValue(new ObservationBeanAdapter(input.isPresent() ? input.get()
-					: FindingsServiceComponent.getService().create(IObservation.class))
-						.category(ObservationCategory.SOCIALHISTORY)
-						.coding(new TransientCoding(ObservationCode.ANAM_PERSONAL)).autoSave(true));
+			item.setValue(new ObservationBeanAdapter(
+					input.isPresent() ? input.get() : FindingsServiceComponent.getService().create(IObservation.class))
+							.category(ObservationCategory.SOCIALHISTORY)
+							.coding(new TransientCoding(ObservationCode.ANAM_PERSONAL)).autoSave(true));
 		}
 	}
-	
-	protected void initDataBindings(){
+
+	protected void initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
-		IObservableValue target =
-			WidgetProperties.text(SWT.Modify).observeDelayed(1500, textOberservation);
-		IObservableValue model =
-			PojoProperties.value(ObservationBeanAdapter.class, "text", String.class)
+		IObservableValue target = WidgetProperties.text(SWT.Modify).observeDelayed(1500, textOberservation);
+		IObservableValue model = PojoProperties.value(ObservationBeanAdapter.class, "text", String.class)
 				.observeDetail(item);
-		
+
 		bindingContext.bindValue(target, model, null, null);
 	}
 }

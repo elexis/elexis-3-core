@@ -24,49 +24,46 @@ import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.ui.icons.Images;
 
 public class LaborAttachmentAction extends Action implements IAction {
-	
+
 	private AttachmentsComposite composite;
 	private Command createRocheLaborCommand;
-	
-	public LaborAttachmentAction(AttachmentsComposite attachmentsComposite,
-		Command createRocheLaborCommand){
+
+	public LaborAttachmentAction(AttachmentsComposite attachmentsComposite, Command createRocheLaborCommand) {
 		this.composite = attachmentsComposite;
 		this.createRocheLaborCommand = createRocheLaborCommand;
 	}
-	
+
 	@Override
-	public ImageDescriptor getImageDescriptor(){
+	public ImageDescriptor getImageDescriptor() {
 		return Images.IMG_VIEW_LABORATORY.getImageDescriptor();
 	}
-	
+
 	@Override
-	public void run(){
+	public void run() {
 		// now try to call the create roche labor command, is not part of core ...
 		try {
 			HashMap<String, String> params = new HashMap<String, String>();
-			ParameterizedCommand parametrizedCommmand =
-				ParameterizedCommand.generateCommand(createRocheLaborCommand, params);
+			ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(createRocheLaborCommand,
+					params);
 			Object pdfFile = PlatformUI.getWorkbench().getService(IHandlerService.class)
-				.executeCommand(parametrizedCommmand, null);
+					.executeCommand(parametrizedCommmand, null);
 			if (pdfFile instanceof File) {
 				IPatient patient = ContextServiceHolder.get().getActivePatient().get();
-				IDocument document = BriefeDocumentStoreHolder.get().createDocument(patient.getId(),
-					"Laborblatt Mail" + (StringUtils.isNoneBlank(composite.getPostfix())
-							? " [" + composite.getPostfix() + "]"
-							: ""),
-					BriefConstants.LABOR);
+				IDocument document = BriefeDocumentStoreHolder.get().createDocument(patient.getId(), "Laborblatt Mail"
+						+ (StringUtils.isNoneBlank(composite.getPostfix()) ? " [" + composite.getPostfix() + "]" : ""),
+						BriefConstants.LABOR);
 				document.setExtension("pdf");
 				document.setStatus(DocumentStatus.SENT, true);
 				try (FileInputStream fi = new FileInputStream((File) pdfFile)) {
 					BriefeDocumentStoreHolder.get().saveDocument(document, fi);
 				}
-				
+
 				String existingDocuments = composite.getDocuments();
 				if (StringUtils.isEmpty(existingDocuments)) {
 					composite.setDocuments(StoreToStringServiceHolder.getStoreToString(document));
 				} else {
-					composite.setDocuments(existingDocuments + ":::"
-						+ StoreToStringServiceHolder.getStoreToString(document));
+					composite.setDocuments(
+							existingDocuments + ":::" + StoreToStringServiceHolder.getStoreToString(document));
 				}
 			}
 		} catch (Exception ex) {

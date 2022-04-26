@@ -31,42 +31,41 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Labor;
 
-public class HL7LabImportRulesPreferencePage extends PreferencePage
-		implements IWorkbenchPreferencePage {
-	public HL7LabImportRulesPreferencePage(){}
-	
+public class HL7LabImportRulesPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+	public HL7LabImportRulesPreferencePage() {
+	}
+
 	private ListViewer labMPathMNonPathListViewer;
-	
+
 	/**
 	 * Create contents of the preference page.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	public Control createContents(Composite parent){
+	public Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
-		
+
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		composite.setLayout(new GridLayout(2, false));
-		
+
 		Label lblLabNoPathFlagMeansNonPath = new Label(composite, SWT.WRAP);
-		lblLabNoPathFlagMeansNonPath
-			.setText(Messages.HL7LabImportRulesPreferencePage_lblLabImportRulesHeader_text);
-		
+		lblLabNoPathFlagMeansNonPath.setText(Messages.HL7LabImportRulesPreferencePage_lblLabImportRulesHeader_text);
+
 		ToolBarManager toolbarmgr = new ToolBarManager();
 		toolbarmgr.add(new AddMissingPathFlagMeansNonPathLaboratoryAction());
 		toolbarmgr.add(new RemoveMissingPathFlagMeansNonPathLaboratoryAction());
 		ToolBar toolbar = toolbarmgr.createControl(composite);
 		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
 		new Label(composite, SWT.NONE);
-		
+
 		labMPathMNonPathListViewer = new ListViewer(composite, SWT.BORDER | SWT.V_SCROLL);
 		labMPathMNonPathListViewer.setContentProvider(ArrayContentProvider.getInstance());
 		labMPathMNonPathListViewer.setLabelProvider(new LabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof Kontakt) {
 					return ((Kontakt) element).getLabel();
 				}
@@ -75,78 +74,73 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage
 		});
 		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
 		gridData.heightHint = 80;
-		labMPathMNonPathListViewer.getList()
-			.setLayoutData(gridData);
+		labMPathMNonPathListViewer.getList().setLayoutData(gridData);
 
 		labMPathMNonPathListViewer.setInput(findAllLabsWithPathFlagMissingMeansNonPathologic());
-		
+
 		return container;
 	}
-	
-	private Set<Labor> findAllLabsWithPathFlagMissingMeansNonPathologic(){
-		List<String> laboratoryIdList = ConfigServiceHolder.getGlobalAsList(
-			Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES);
-		return new HashSet<Labor>(
-			laboratoryIdList.stream().map(id -> Labor.load(id)).collect(Collectors.toList()));
+
+	private Set<Labor> findAllLabsWithPathFlagMissingMeansNonPathologic() {
+		List<String> laboratoryIdList = ConfigServiceHolder
+				.getGlobalAsList(Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES);
+		return new HashSet<Labor>(laboratoryIdList.stream().map(id -> Labor.load(id)).collect(Collectors.toList()));
 	}
-	
+
 	@Override
-	protected void performApply(){
+	protected void performApply() {
 		super.performApply();
 	}
-	
+
 	/**
 	 * Initialize the preference page.
 	 */
-	public void init(IWorkbench workbench){}
-	
+	public void init(IWorkbench workbench) {
+	}
+
 	private class AddMissingPathFlagMeansNonPathLaboratoryAction extends Action {
-		
+
 		{
 			setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 		}
-		
+
 		@Override
-		public void run(){
-			KontaktSelektor dialog =
-				new KontaktSelektor(getShell(), Labor.class, Messages.LabImporterUtil_SelectLab,
+		public void run() {
+			KontaktSelektor dialog = new KontaktSelektor(getShell(), Labor.class, Messages.LabImporterUtil_SelectLab,
 					Messages.LabImporterUtil_SelectLab, Kontakt.DEFAULT_SORT);
 			if (dialog.open() == Dialog.OK) {
 				Labor contact = (Labor) dialog.getSelection();
-				Set<Labor> findAllLabsWithPathFlagMissingMeansNonPathologic =
-					findAllLabsWithPathFlagMissingMeansNonPathologic();
+				Set<Labor> findAllLabsWithPathFlagMissingMeansNonPathologic = findAllLabsWithPathFlagMissingMeansNonPathologic();
 				if (!findAllLabsWithPathFlagMissingMeansNonPathologic.contains(contact)) {
 					findAllLabsWithPathFlagMissingMeansNonPathologic.add(contact);
 					ConfigServiceHolder.setGlobalAsList(
-						Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
-						findAllLabsWithPathFlagMissingMeansNonPathologic.stream()
-							.map(l -> l.getId()).collect(Collectors.toList()));
-					labMPathMNonPathListViewer
-						.setInput(findAllLabsWithPathFlagMissingMeansNonPathologic());
+							Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
+							findAllLabsWithPathFlagMissingMeansNonPathologic.stream().map(l -> l.getId())
+									.collect(Collectors.toList()));
+					labMPathMNonPathListViewer.setInput(findAllLabsWithPathFlagMissingMeansNonPathologic());
 				}
 			}
 		}
 	};
-	
+
 	private class RemoveMissingPathFlagMeansNonPathLaboratoryAction extends Action {
 		{
 			setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 		}
-		
-		public void run(){
+
+		public void run() {
 			IStructuredSelection selection = labMPathMNonPathListViewer.getStructuredSelection();
 			if (selection != null && !selection.isEmpty()) {
 				Labor contact = (Labor) selection.getFirstElement();
-				Set<Labor> findAllLabsWithPathFlagMissingMeansNonPathologic =
-					findAllLabsWithPathFlagMissingMeansNonPathologic();
+				Set<Labor> findAllLabsWithPathFlagMissingMeansNonPathologic = findAllLabsWithPathFlagMissingMeansNonPathologic();
 				findAllLabsWithPathFlagMissingMeansNonPathologic.remove(contact);
 				ConfigServiceHolder.setGlobalAsList(
-					Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
-					findAllLabsWithPathFlagMissingMeansNonPathologic.stream().map(l -> l.getId())
-						.collect(Collectors.toList()));
+						Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
+						findAllLabsWithPathFlagMissingMeansNonPathologic.stream().map(l -> l.getId())
+								.collect(Collectors.toList()));
 				labMPathMNonPathListViewer.remove(contact);
 			}
 		};
 	}
-	
+
 }

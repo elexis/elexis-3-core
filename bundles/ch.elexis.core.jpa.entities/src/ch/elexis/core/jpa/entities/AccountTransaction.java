@@ -25,128 +25,127 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @NamedQuery(name = "AccountTransaction.invoice", query = "SELECT at FROM AccountTransaction at WHERE at.deleted = false AND at.invoice = :invoice")
 @NamedQuery(name = "AccountTransaction.patient", query = "SELECT at FROM AccountTransaction at WHERE at.deleted = false AND at.patient = :patient")
 @NamedQuery(name = "AccountTransaction.balance.patient", query = "SELECT SUM(CAST(at.amount AS SIGNED)) FROM AccountTransaction at WHERE at.deleted = false AND at.patient = :patient")
-public class AccountTransaction extends AbstractEntityWithId
-		implements EntityWithId, EntityWithDeleted {
-	
+public class AccountTransaction extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "patientid")
 	private Kontakt patient;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "rechnungsid")
 	private Invoice invoice;
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "zahlungsid")
 	private Zahlung zahlung;
-	
+
 	@Column(length = 8, name = "betrag")
 	protected String amount;
-	
+
 	@Column(name = "datum", length = 8)
 	protected LocalDate date;
-	
+
 	@Column(name = "bemerkung", length = 80)
 	private String remark;
-	
+
 	@Column(name = "account", length = 255)
 	private String account;
-	
-	public Kontakt getPatient(){
+
+	public Kontakt getPatient() {
 		return patient;
 	}
-	
-	public void setPatient(Kontakt patient){
+
+	public void setPatient(Kontakt patient) {
 		this.patient = patient;
 	}
-	
-	public Invoice getInvoice(){
+
+	public Invoice getInvoice() {
 		return invoice;
 	}
-	
-	public void setInvoice(Invoice invoice){
+
+	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
 	}
-	
-	public Zahlung getZahlung(){
+
+	public Zahlung getZahlung() {
 		return zahlung;
 	}
-	
-	public void setZahlung(Zahlung zahlung){
+
+	public void setZahlung(Zahlung zahlung) {
 		this.zahlung = zahlung;
 	}
-	
-	public String getAmount(){
+
+	public String getAmount() {
 		return amount;
 	}
-	
-	public void setAmount(String amount){
+
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
-	
-	public LocalDate getDate(){
+
+	public LocalDate getDate() {
 		return date;
 	}
-	
-	public void setDate(LocalDate date){
+
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	
-	public String getRemark(){
+
+	public String getRemark() {
 		return remark;
 	}
-	
-	public void setRemark(String remark){
+
+	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
-	public String getAccount(){
+
+	public String getAccount() {
 		return account;
 	}
-	
-	public void setAccount(String account){
+
+	public void setAccount(String account) {
 		this.account = account;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 }

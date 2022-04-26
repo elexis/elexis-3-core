@@ -6,11 +6,11 @@ import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IModelService;
 
 public class IAppointmentBuilder extends AbstractBuilder<IAppointment> {
-	
+
 	public IAppointmentBuilder(IModelService modelService, String schedule, LocalDateTime startTime,
-		LocalDateTime endTime, String type, String state, int priority, String subjectOrPatient){
+			LocalDateTime endTime, String type, String state, int priority, String subjectOrPatient) {
 		super(modelService);
-		
+
 		object = modelService.create(IAppointment.class);
 		object.setSchedule(schedule);
 		object.setStartTime(startTime);
@@ -20,9 +20,9 @@ public class IAppointmentBuilder extends AbstractBuilder<IAppointment> {
 		object.setPriority(priority);
 		object.setSubjectOrPatient(subjectOrPatient);
 	}
-	
+
 	public IAppointmentBuilder(IModelService modelService, String schedule, LocalDateTime startTime,
-		LocalDateTime endTime, String type, String state){
+			LocalDateTime endTime, String type, String state) {
 		this(modelService, schedule, startTime, endTime, type, state, 0, null);
 	}
 }

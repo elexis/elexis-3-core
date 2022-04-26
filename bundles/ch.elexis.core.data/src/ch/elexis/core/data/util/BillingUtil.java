@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -59,269 +59,269 @@ import ch.rgw.tools.Result.msg;
 import ch.rgw.tools.TimeTool;
 
 /**
- * Util class with methods for checking and preparing {@link Konsultation}, with the goal to include
- * them in a bill {@link Rechnung#build(List)}.
- * 
+ * Util class with methods for checking and preparing {@link Konsultation}, with
+ * the goal to include them in a bill {@link Rechnung#build(List)}.
+ *
  * @author thomas
  *
  */
 public class BillingUtil {
-	
+
 	public static String BILLINGCHECK_ENABLED_CFG = "ch.elexis.core.data/billablecheck/";
-	
+
 	private static final Logger log = LoggerFactory.getLogger(BillingUtil.class);
-	
+
 	/**
-	 * Interface definition for checking a {@link Konsultation} if it can be included on a bill.
-	 * 
+	 * Interface definition for checking a {@link Konsultation} if it can be
+	 * included on a bill.
+	 *
 	 */
 	public static interface IBillableCheck {
 		/**
 		 * Get a unique id of the check.
-		 * 
+		 *
 		 * @return
 		 */
 		public String getId();
-		
+
 		/**
 		 * Get a human readable description of the check.
-		 * 
+		 *
 		 * @return
 		 */
 		public String getDescription();
-		
+
 		/**
-		 * Test if the {@link Konsultation} is bill able. If no the error is added to the
-		 * {@link Result}.
-		 * 
+		 * Test if the {@link Konsultation} is bill able. If no the error is added to
+		 * the {@link Result}.
+		 *
 		 * @param konsultation
 		 * @param result
 		 * @return
 		 */
 		public boolean isBillable(Konsultation konsultation, Result<Konsultation> result);
 	}
-	
+
 	/**
-	 * Array of {@link IBillableCheck} implementations. Implementations can be disabled or enabled
-	 * using {@link BillingUtil#setCheckEnabled(IBillableCheck, boolean)}.
-	 * 
+	 * Array of {@link IBillableCheck} implementations. Implementations can be
+	 * disabled or enabled using
+	 * {@link BillingUtil#setCheckEnabled(IBillableCheck, boolean)}.
+	 *
 	 */
 	public static IBillableCheck[] billableChecks = {
-		// Check already billed
-		new IBillableCheck() {
-			@Override
-			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
-				boolean fail = konsultation.getRechnung() != null
-					&& !Rechnung.isStorno(konsultation.getRechnung());
-				if (fail) {
-					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
-				}
-				return !fail;
-			}
-			
-			@Override
-			public String getId(){
-				return "alreadyBilled";
-			}
-			
-			@Override
-			public String getDescription(){
-				return "Behandlung ist bereits verrechnet.";
-			}
-		},
-		// Check for zero sales.
-		new IBillableCheck() {
-			@Override
-			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
-				boolean fail = getTotal(konsultation).isZero();
-				if (fail) {
-					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
-				}
-				return !fail;
-			}
-			
-			@Override
-			public String getId(){
-				return "zeroSales";
-			}
-			
-			@Override
-			public String getDescription(){
-				return "Behandlung mit Umsatz 0";
-			}
-		},
-		// Check for invalid Mandant.
-		new IBillableCheck() {
-			@Override
-			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
-				Mandant mandant = konsultation.getMandant();
-				boolean fail = (mandant == null || !mandant.isValid());
-				if (fail) {
-					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
-				}
-				return !fail;
-			}
-			
-			@Override
-			public String getId(){
-				return "invalidMandant";
-			}
-			
-			@Override
-			public String getDescription(){
-				return "Ungültiger Mandant";
-			}
-		},
-		// Check for missing coverage.
-		new IBillableCheck() {
-			@Override
-			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
-				Fall fall = konsultation.getFall();
-				boolean fail = (fall == null);
-				if (fail) {
-					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
-				}
-				return !fail;
-			}
-			
-			@Override
-			public String getId(){
-				return "noCoverage";
-			}
-			
-			@Override
-			public String getDescription(){
-				return "Fehlender Fall";
-			}
-		},
-		// Check for invalid coverage.
-		new IBillableCheck() {
-			@Override
-			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
-				Fall fall = konsultation.getFall();
-				boolean fail = (fall != null
-					&& ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)
-					&& !fall.isValid());
-				if (fail) {
-					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
-				}
-				return !fail;
-			}
-			
-			@Override
-			public String getId(){
-				return "invalidCoverage";
-			}
-			
-			@Override
-			public String getDescription(){
-				return "Fall nicht gültig";
-			}
-		},
-		// Check for missing diagnose.
-		new IBillableCheck() {
-			@Override
-			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
-				ArrayList<IDiagnose> diagnosen = konsultation.getDiagnosen();
-				boolean fail = (diagnosen == null || diagnosen.isEmpty());
-				if (fail) {
-					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
-				}
-				return !fail;
-			}
-			
-			@Override
-			public String getId(){
-				return "noDiagnose";
-			}
-			
-			@Override
-			public String getDescription(){
-				return "Keine Diagnose";
-			}
-		},
-		// Check for invalid date.
-		new IBillableCheck() {
-			private TimeTool checkTool = new TimeTool();
-			
-			@Override
-			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
-				boolean fail = (checkTool.set(konsultation.getDatum()) == false);
-				if (fail) {
-					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
-				}
-				return !fail;
-			}
-			
-			@Override
-			public String getId(){
-				return "invalidDate";
-			}
-			
-			@Override
-			public String getDescription(){
-				return "Ungültiges Datum";
-			}
-		},
-		// Check for missing diagnose in open Konsultation series. 
-		new IBillableCheck() {
-			@Override
-			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
-				boolean fail = false;
-				ArrayList<IDiagnose> diagnosen = konsultation.getDiagnosen();
-				if (diagnosen == null || diagnosen.isEmpty()) {
-					fail = true;
-					// get other open konsultation of the case
-					Query<Konsultation> query = new Query<>(Konsultation.class);
-					query.add(Konsultation.FLD_BILL_ID, Query.EQUALS, null);
-					query.add(Konsultation.FLD_CASE_ID, Query.EQUALS,
-						konsultation.getFall().getId());
-					List<Konsultation> openKonsultationen = query.execute();
-					for (Konsultation openKons : openKonsultationen) {
-						ArrayList<IDiagnose> diag = openKons.getDiagnosen();
-						if (diag != null && !diag.isEmpty()) {
-							fail = false;
-							break;
-						}
-					}
+			// Check already billed
+			new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					boolean fail = konsultation.getRechnung() != null && !Rechnung.isStorno(konsultation.getRechnung());
 					if (fail) {
 						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
 					}
+					return !fail;
 				}
-				return !fail;
-			}
-			
-			@Override
-			public String getId(){
-				return "noDiagnoseInSeries";
-			}
-			
-			@Override
-			public String getDescription(){
-				return "Keine Diagnose in der Behandlungsserie";
-			}
-		}
-	};
-	
-	public static boolean isCheckEnabled(IBillableCheck check){
+
+				@Override
+				public String getId() {
+					return "alreadyBilled";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Behandlung ist bereits verrechnet.";
+				}
+			},
+			// Check for zero sales.
+			new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					boolean fail = getTotal(konsultation).isZero();
+					if (fail) {
+						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+					}
+					return !fail;
+				}
+
+				@Override
+				public String getId() {
+					return "zeroSales";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Behandlung mit Umsatz 0";
+				}
+			},
+			// Check for invalid Mandant.
+			new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					Mandant mandant = konsultation.getMandant();
+					boolean fail = (mandant == null || !mandant.isValid());
+					if (fail) {
+						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+					}
+					return !fail;
+				}
+
+				@Override
+				public String getId() {
+					return "invalidMandant";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Ungültiger Mandant";
+				}
+			},
+			// Check for missing coverage.
+			new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					Fall fall = konsultation.getFall();
+					boolean fail = (fall == null);
+					if (fail) {
+						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+					}
+					return !fail;
+				}
+
+				@Override
+				public String getId() {
+					return "noCoverage";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Fehlender Fall";
+				}
+			},
+			// Check for invalid coverage.
+			new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					Fall fall = konsultation.getFall();
+					boolean fail = (fall != null
+							&& ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)
+							&& !fall.isValid());
+					if (fail) {
+						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+					}
+					return !fail;
+				}
+
+				@Override
+				public String getId() {
+					return "invalidCoverage";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Fall nicht gültig";
+				}
+			},
+			// Check for missing diagnose.
+			new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					ArrayList<IDiagnose> diagnosen = konsultation.getDiagnosen();
+					boolean fail = (diagnosen == null || diagnosen.isEmpty());
+					if (fail) {
+						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+					}
+					return !fail;
+				}
+
+				@Override
+				public String getId() {
+					return "noDiagnose";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Keine Diagnose";
+				}
+			},
+			// Check for invalid date.
+			new IBillableCheck() {
+				private TimeTool checkTool = new TimeTool();
+
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					boolean fail = (checkTool.set(konsultation.getDatum()) == false);
+					if (fail) {
+						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+					}
+					return !fail;
+				}
+
+				@Override
+				public String getId() {
+					return "invalidDate";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Ungültiges Datum";
+				}
+			},
+			// Check for missing diagnose in open Konsultation series.
+			new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					boolean fail = false;
+					ArrayList<IDiagnose> diagnosen = konsultation.getDiagnosen();
+					if (diagnosen == null || diagnosen.isEmpty()) {
+						fail = true;
+						// get other open konsultation of the case
+						Query<Konsultation> query = new Query<>(Konsultation.class);
+						query.add(Konsultation.FLD_BILL_ID, Query.EQUALS, null);
+						query.add(Konsultation.FLD_CASE_ID, Query.EQUALS, konsultation.getFall().getId());
+						List<Konsultation> openKonsultationen = query.execute();
+						for (Konsultation openKons : openKonsultationen) {
+							ArrayList<IDiagnose> diag = openKons.getDiagnosen();
+							if (diag != null && !diag.isEmpty()) {
+								fail = false;
+								break;
+							}
+						}
+						if (fail) {
+							result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+						}
+					}
+					return !fail;
+				}
+
+				@Override
+				public String getId() {
+					return "noDiagnoseInSeries";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Keine Diagnose in der Behandlungsserie";
+				}
+			} };
+
+	public static boolean isCheckEnabled(IBillableCheck check) {
 		return ConfigServiceHolder.getGlobal(BILLINGCHECK_ENABLED_CFG + check.getId(), true);
 	}
-	
-	public static void setCheckEnabled(IBillableCheck check, boolean enabled){
+
+	public static void setCheckEnabled(IBillableCheck check, boolean enabled) {
 		ConfigServiceHolder.setGlobal(BILLINGCHECK_ENABLED_CFG + check.getId(), enabled);
 	}
-	
+
 	/**
-	 * Test if the {@link Konsultation} can be billed, and return a {@link Result} containing
-	 * possible error messages. {@link IBillableCheck} are applied if enabled.
-	 * 
+	 * Test if the {@link Konsultation} can be billed, and return a {@link Result}
+	 * containing possible error messages. {@link IBillableCheck} are applied if
+	 * enabled.
+	 *
 	 * @param konsultation
 	 * @return
 	 */
-	public static Result<Konsultation> getBillableResult(Konsultation konsultation){
-		
+	public static Result<Konsultation> getBillableResult(Konsultation konsultation) {
+
 		Result<Konsultation> result = new Result<>(konsultation);
-		
+
 		for (IBillableCheck iBillableCheck : billableChecks) {
 			if (isCheckEnabled(iBillableCheck)) {
 				iBillableCheck.isBillable(konsultation, result);
@@ -329,38 +329,39 @@ public class BillingUtil {
 		}
 		return result;
 	}
-	
+
 	/**
-	 * Calculate the total amount of all {@link Verrechnet} of the {@link Konsultation}.
-	 * 
+	 * Calculate the total amount of all {@link Verrechnet} of the
+	 * {@link Konsultation}.
+	 *
 	 * @param konsultation
 	 * @return
 	 */
-	public static Money getTotal(Konsultation konsultation){
+	public static Money getTotal(Konsultation konsultation) {
 		IEncounter encounter = NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
 		return EncounterServiceHolder.get().getSales(encounter);
 	}
-	
+
 	/**
 	 * Remove all not bill able {@link Konsultation} from the provided {@link List}.
-	 * 
+	 *
 	 * @param konsultationen
 	 * @return filtered {@link List}
 	 */
-	public static List<Konsultation> filterNotBillable(List<Konsultation> konsultationen){
-		return konsultationen.parallelStream().filter(k -> getBillableResult(k).isOK())
-			.collect(Collectors.toList());
+	public static List<Konsultation> filterNotBillable(List<Konsultation> konsultationen) {
+		return konsultationen.parallelStream().filter(k -> getBillableResult(k).isOK()).collect(Collectors.toList());
 	}
-	
+
 	/**
-	 * Get a Map representation of bill able {@link Konsultation} instances. To be bill able the
-	 * list of {@link Konsultation} is split by {@link Rechnungssteller} and {@link Fall}.
-	 * 
+	 * Get a Map representation of bill able {@link Konsultation} instances. To be
+	 * bill able the list of {@link Konsultation} is split by
+	 * {@link Rechnungssteller} and {@link Fall}.
+	 *
 	 * @param konsultationen
 	 * @return map sorted by billing criteria
 	 */
 	public static Map<Rechnungssteller, Map<Fall, List<Konsultation>>> getGroupedBillable(
-		List<Konsultation> konsultationen){
+			List<Konsultation> konsultationen) {
 		HashMap<Rechnungssteller, Map<Fall, List<Konsultation>>> ret = new HashMap<>();
 		for (Konsultation konsultation : konsultationen) {
 			Rechnungssteller invoicer = konsultation.getMandant().getRechnungssteller();
@@ -378,36 +379,35 @@ public class BillingUtil {
 		}
 		return ret;
 	}
-	
+
 	/**
-	 * Create bills {@link Rechnung} for all {@link Konsultation} contained in the map. Returns al
-	 * list with the {@link Result} of building the bills.
-	 * 
+	 * Create bills {@link Rechnung} for all {@link Konsultation} contained in the
+	 * map. Returns al list with the {@link Result} of building the bills.
+	 *
 	 * @param toBillMap
 	 * @return
 	 */
-	public static List<Result<IInvoice>> createBills(
-		Map<Rechnungssteller, Map<Fall, List<Konsultation>>> toBillMap){
+	public static List<Result<IInvoice>> createBills(Map<Rechnungssteller, Map<Fall, List<Konsultation>>> toBillMap) {
 		List<Result<IInvoice>> ret = new ArrayList<>();
 		Set<Rechnungssteller> invoicers = toBillMap.keySet();
 		for (Rechnungssteller invoicer : invoicers) {
 			Set<Fall> faelle = toBillMap.get(invoicer).keySet();
 			for (Fall fall : faelle) {
-				List<IEncounter> encounters = NoPoUtil
-					.loadAsIdentifiable(toBillMap.get(invoicer).get(fall), IEncounter.class);
+				List<IEncounter> encounters = NoPoUtil.loadAsIdentifiable(toBillMap.get(invoicer).get(fall),
+						IEncounter.class);
 				ret.add(InvoiceServiceHolder.get().invoice(encounters));
 			}
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Returns only Konsultations from the same year
-	 * 
+	 *
 	 * @param konsultations
 	 * @return
 	 */
-	public static List<Konsultation> getKonsultationsFromSameYear(List<Konsultation> konsultations){
+	public static List<Konsultation> getKonsultationsFromSameYear(List<Konsultation> konsultations) {
 		List<Konsultation> items = new ArrayList<>();
 		// only kons from the same year can be inside in a same bill
 		int year = 0;
@@ -421,17 +421,16 @@ public class BillingUtil {
 		}
 		return items;
 	}
-	
+
 	/**
 	 * Sort the consultations by year.
-	 * 
+	 *
 	 * @deprecated
 	 * @param consultations
 	 * @return
 	 */
 	@Deprecated
-	public static Map<Integer, List<Konsultation>> getSortedByYear(
-		List<Konsultation> consultations){
+	public static Map<Integer, List<Konsultation>> getSortedByYear(List<Konsultation> consultations) {
 		Map<Integer, List<Konsultation>> ret = new HashMap<>();
 		TimeTool konsDate = new TimeTool();
 		for (Konsultation consultation : consultations) {
@@ -446,16 +445,15 @@ public class BillingUtil {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Sort the Encounters by year.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param
 	 * @return
 	 */
-	public static Map<Integer, List<IEncounter>> getSortedEncountersByYear(
-		List<IEncounter> consultations){
+	public static Map<Integer, List<IEncounter>> getSortedEncountersByYear(List<IEncounter> consultations) {
 		Map<Integer, List<IEncounter>> ret = new HashMap<>();
 		for (IEncounter consultation : consultations) {
 			Integer year = consultation.getDate().getYear();
@@ -468,12 +466,10 @@ public class BillingUtil {
 		}
 		return ret;
 	}
-	
-	private static Integer[] splitBillYears = {
-		2018
-	};
-	
-	public static boolean canBillYears(List<Integer> years){
+
+	private static Integer[] splitBillYears = { 2018 };
+
+	public static boolean canBillYears(List<Integer> years) {
 		for (Integer splitYear : splitBillYears) {
 			boolean aboveSplitYear = false;
 			boolean belowSplitYear = false;
@@ -491,26 +487,25 @@ public class BillingUtil {
 		}
 		return true;
 	}
-	
+
 	/**
-	 * Copies the actual fall, merge the copied fall with changes, transfer cons, storno the old
-	 * invoice
+	 * Copies the actual fall, merge the copied fall with changes, transfer cons,
+	 * storno the old invoice
 	 */
-	public static void doBillCorrection(InvoiceCorrectionDTO invoiceCorrectionDTO,
-		BillCallback billCallback){
-		
+	public static void doBillCorrection(InvoiceCorrectionDTO invoiceCorrectionDTO, BillCallback billCallback) {
+
 		BillCorrection billCorrection = new BillCorrection(invoiceCorrectionDTO, billCallback);
 		billCorrection.doCorrection();
-		
+
 	}
-	
+
 	public interface BillCallback {
 		public List<Konsultation> storno(Rechnung rechnung);
 	}
-	
+
 	/**
 	 * Base class for invoice correction
-	 * 
+	 *
 	 * @author med1
 	 *
 	 */
@@ -528,21 +523,21 @@ public class BillingUtil {
 		private List<Object> locks = new ArrayList<>();
 		private final InvoiceCorrectionDTO invoiceCorrectionDTO;
 		private final BillCallback billCallback;
-		
-		public BillCorrection(InvoiceCorrectionDTO invoiceCorrectionDTO, BillCallback billCallback){
+
+		public BillCorrection(InvoiceCorrectionDTO invoiceCorrectionDTO, BillCallback billCallback) {
 			this.invoiceCorrectionDTO = invoiceCorrectionDTO;
 			this.rechnung = Rechnung.load(invoiceCorrectionDTO.getId());
 			this.billCallback = billCallback;
 		}
-		
-		public void doCorrection(){
+
+		public void doCorrection() {
 			for (InvoiceHistoryEntryDTO historyEntryDTO : invoiceCorrectionDTO.getHistory()) {
 				try {
 					if (success) {
 						Object base = historyEntryDTO.getBase();
 						Object item = historyEntryDTO.getItem();
 						Object additional = historyEntryDTO.getAdditional();
-						
+
 						OperationType operationType = historyEntryDTO.getOperationType();
 						log.debug("invoice correction: processing [{}] start ", operationType);
 						// storno
@@ -603,42 +598,39 @@ public class BillingUtil {
 					log.error("invoice correction: unexpected error", e);
 					success = false;
 				} finally {
-					log.debug("invoice correction: processing [{}] [{}] ",
-						historyEntryDTO.getOperationType(),
-						historyEntryDTO.isIgnored() ? "ignored" : (success ? "success" : "failed"));
+					log.debug("invoice correction: processing [{}] [{}] ", historyEntryDTO.getOperationType(),
+							historyEntryDTO.isIgnored() ? "ignored" : (success ? "success" : "failed"));
 					historyEntryDTO.setSuccess(success);
 				}
 			}
-			
+
 			log.debug("release all locks: " + locks.size());
 			for (Object po : locks) {
 				LocalLockServiceHolder.get().releaseLock(po);
 			}
 		}
-		
-		private void removeDiagnose(Object base, Object item){
+
+		private void removeDiagnose(Object base, Object item) {
 			konsultation = Konsultation.load(((KonsultationDTO) base).getId());
 			diagnosesDTO = (DiagnosesDTO) item;
-			IEncounter encounter =
-				NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
+			IEncounter encounter = NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
 			encounter.removeDiagnosis(diagnosesDTO.getiDiagnose());
 			CoreModelServiceHolder.get().save(encounter);
-			log.debug("invoice correction: removed diagnose id [{}] from kons id [{}]",
-				diagnosesDTO.getId(), konsultation.getId());
+			log.debug("invoice correction: removed diagnose id [{}] from kons id [{}]", diagnosesDTO.getId(),
+					konsultation.getId());
 		}
-		
-		private void addDiagnose(Object base, Object item){
+
+		private void addDiagnose(Object base, Object item) {
 			konsultation = Konsultation.load(((KonsultationDTO) base).getId());
 			diagnosesDTO = (DiagnosesDTO) item;
-			IEncounter encounter =
-				NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
+			IEncounter encounter = NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
 			encounter.addDiagnosis(diagnosesDTO.getiDiagnose());
 			CoreModelServiceHolder.get().save(encounter);
-			log.debug("invoice correction: added diagnose id [{}] to kons id [{}]",
-				diagnosesDTO.getId(), konsultation.getId());
+			log.debug("invoice correction: added diagnose id [{}] to kons id [{}]", diagnosesDTO.getId(),
+					konsultation.getId());
 		}
-		
-		private void changePriceLeistung(Object item){
+
+		private void changePriceLeistung(Object item) {
 			leistungDTO = (LeistungDTO) item;
 			verrechnet = leistungDTO.getVerrechnet();
 			if (verrechnet != null) {
@@ -649,98 +641,90 @@ public class BillingUtil {
 				if (tpOld != tp) {
 					verrechnet.setPoints(tp);
 					log.debug("invoice correction: price changed to [{}] for leistung id [{}]",
-						leistungDTO.getPrice().getAmountAsString(), leistungDTO.getId());
+							leistungDTO.getPrice().getAmountAsString(), leistungDTO.getId());
 				}
 			} else {
-				log.warn(
-					"invoice correction: leistung id [{}] no verrechnet exists cannot change price",
-					leistungDTO.getId());
+				log.warn("invoice correction: leistung id [{}] no verrechnet exists cannot change price",
+						leistungDTO.getId());
 			}
 		}
-		
-		private void changeCountLeistung(Object item){
+
+		private void changeCountLeistung(Object item) {
 			leistungDTO = (LeistungDTO) item;
 			verrechnet = leistungDTO.getVerrechnet();
 			if (verrechnet != null) {
 				acquireLock(locks, verrechnet, false);
-				IStatus ret = BillingServiceHolder.get().changeAmountValidated(verrechnet,
-					leistungDTO.getCount());
-				log.debug("invoice correction: changed count from leistung id [{}]",
-					leistungDTO.getId());
+				IStatus ret = BillingServiceHolder.get().changeAmountValidated(verrechnet, leistungDTO.getCount());
+				log.debug("invoice correction: changed count from leistung id [{}]", leistungDTO.getId());
 				if (ret.isOK()) {
 					verrechnet.setSecondaryScale((int) (leistungDTO.getScale2() * 100));
 				} else {
 					addToOutput(output, ret.getMessage());
 					success = false;
-					log.warn("invoice correction: cannot change count from leistung with id [{}]",
-						leistungDTO.getId());
+					log.warn("invoice correction: cannot change count from leistung with id [{}]", leistungDTO.getId());
 				}
 			}
 		}
-		
-		public void transferKonsultation(Object base, Object item){
+
+		public void transferKonsultation(Object base, Object item) {
 			KonsultationDTO konsultationDTO = (KonsultationDTO) base;
 			Fall fallToTransfer = Fall.load(((IFall) item).getId());
-			
-			log.debug("invoice correction: transfer kons with id [{}] to fall id [{}]",
-				konsultationDTO.getId(), fallToTransfer.getId());
-			
+
+			log.debug("invoice correction: transfer kons with id [{}] to fall id [{}]", konsultationDTO.getId(),
+					fallToTransfer.getId());
+
 			Konsultation konsultation = Konsultation.load(konsultationDTO.getId());
-			
+
 			Fall oldFall = konsultation.getFall();
-			
+
 			acquireLock(locks, oldFall, false);
 			acquireLock(locks, fallToTransfer, false);
 			acquireLock(locks, konsultation, false);
-			
+
 			EncounterServiceHolder.get().transferToCoverage(
-				NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get(),
-				NoPoUtil.loadAsIdentifiable(fallToTransfer, ICoverage.class).get(), true);
-			
+					NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get(),
+					NoPoUtil.loadAsIdentifiable(fallToTransfer, ICoverage.class).get(), true);
+
 			Iterator<Konsultation> it = releasedKonsultations.iterator();
 			while (it.hasNext()) {
 				Konsultation k = it.next();
 				if (konsultation.getId().equals(k.getId())) {
 					it.remove();
-					log.debug(
-						"invoice correction: removed transfered kons with id [{}] from released konsultations",
-						k.getId());
+					log.debug("invoice correction: removed transfered kons with id [{}] from released konsultations",
+							k.getId());
 				}
 			}
-			
-			log.debug(
-				"invoice correction: transfered kons id [{}] from fall id [{}] to fall id  [{}]",
-				konsultation.getId(), oldFall.getId(), fallToTransfer.getId());
+
+			log.debug("invoice correction: transfered kons id [{}] from fall id [{}] to fall id  [{}]",
+					konsultation.getId(), oldFall.getId(), fallToTransfer.getId());
 		}
-		
-		private void transferLeistungen(Object base, Object item, Object additional){
+
+		private void transferLeistungen(Object base, Object item, Object additional) {
 			@SuppressWarnings("unchecked")
 			List<LeistungDTO> leistungenDTOs = (List<LeistungDTO>) item;
 			konsultation = Konsultation.load(((KonsultationDTO) base).getId());
 			Fall fallToTransfer = Fall.load(((IFall) additional).getId());
 			List<LeistungDTO> removedleistungDTOs = new ArrayList<>();
 			for (LeistungDTO itemLeistung : leistungenDTOs) {
-				log.debug("invoice correction: transfer leistung id [{}] from kons id [{}]",
-					itemLeistung.getId(), konsultation.getId());
+				log.debug("invoice correction: transfer leistung id [{}] from kons id [{}]", itemLeistung.getId(),
+						konsultation.getId());
 				if (itemLeistung.getVerrechnet() != null) {
-					
+
 					acquireLock(locks, itemLeistung.getVerrechnet(), false);
-					Result<?> resRemove =
-						BillingServiceHolder.get().removeBilled(itemLeistung.getVerrechnet(),
+					Result<?> resRemove = BillingServiceHolder.get().removeBilled(itemLeistung.getVerrechnet(),
 							NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get());
-					
-					log.debug("invoice correction: removed leistung id [{}] from kons id [{}]",
-						itemLeistung.getId(), konsultation.getId());
+
+					log.debug("invoice correction: removed leistung id [{}] from kons id [{}]", itemLeistung.getId(),
+							konsultation.getId());
 					if (resRemove.isOK()) {
 						itemLeistung.setVerrechnet(null);
 						removedleistungDTOs.add(itemLeistung);
 					} else {
 						addToOutput(output, "Die Leistung " + itemLeistung.getVerrechnet().getText()
-							+ " konnte nicht auf einen neuen Fall/Konsultation transferiert werden. Das Entfernen der Leistung ist fehlgeschlagen.");
+								+ " konnte nicht auf einen neuen Fall/Konsultation transferiert werden. Das Entfernen der Leistung ist fehlgeschlagen.");
 						success = false;
-						log.warn(
-							"invoice correction: cannot transfer/remove leistung with id [{}] from kons id [{}]",
-							itemLeistung.getId(), konsultation.getId());
+						log.warn("invoice correction: cannot transfer/remove leistung with id [{}] from kons id [{}]",
+								itemLeistung.getId(), konsultation.getId());
 					}
 				} else {
 					removedleistungDTOs.add(itemLeistung);
@@ -748,37 +732,33 @@ public class BillingUtil {
 			}
 			if (!removedleistungDTOs.isEmpty()) {
 				Konsultation newKons = konsultation.createCopy(fallToTransfer, rechnung);
-				IEncounter newEncounter =
-					NoPoUtil.loadAsIdentifiable(newKons, IEncounter.class).get();
+				IEncounter newEncounter = NoPoUtil.loadAsIdentifiable(newKons, IEncounter.class).get();
 				acquireLock(locks, newKons, true);
 				log.debug(
-					"invoice correction: copied kons from id [{}] to kons id [{}] and added kons to fall id [{}] ",
-					konsultation.getId(), newKons.getId(), newKons.getFall().getId());
+						"invoice correction: copied kons from id [{}] to kons id [{}] and added kons to fall id [{}] ",
+						konsultation.getId(), newKons.getId(), newKons.getFall().getId());
 				for (LeistungDTO itemLeistung : removedleistungDTOs) {
-					Result<IBilled> resAddLeistung = BillingServiceHolder.get()
-						.bill(itemLeistung.getIVerrechenbar(), newEncounter, 1.0);
-					log.debug("invoice correction: add leistung id [{}] to kons id [{}]",
-						itemLeistung.getId(), newKons.getId());
+					Result<IBilled> resAddLeistung = BillingServiceHolder.get().bill(itemLeistung.getIVerrechenbar(),
+							newEncounter, 1.0);
+					log.debug("invoice correction: add leistung id [{}] to kons id [{}]", itemLeistung.getId(),
+							newKons.getId());
 					if (resAddLeistung.isOK()) {
 						verrechnet = EncounterServiceHolder.get()
-							.getBilledByBillable(newEncounter, itemLeistung.getIVerrechenbar())
-							.stream().findFirst().orElse(null);
+								.getBilledByBillable(newEncounter, itemLeistung.getIVerrechenbar()).stream().findFirst()
+								.orElse(null);
 						if (verrechnet != null) {
 							itemLeistung.setVerrechnet(verrechnet);
 							if (verrechnet.getAmount() != itemLeistung.getCount()) {
-								IStatus ret = BillingServiceHolder.get()
-									.changeAmountValidated(verrechnet, itemLeistung.getCount());
-								log.debug(
-									"invoice correction: count changed from [{}] to {[]} - for leistung id [{}]",
-									itemLeistung.getId());
+								IStatus ret = BillingServiceHolder.get().changeAmountValidated(verrechnet,
+										itemLeistung.getCount());
+								log.debug("invoice correction: count changed from [{}] to {[]} - for leistung id [{}]",
+										itemLeistung.getId());
 								if (ret.isOK()) {
-									verrechnet
-										.setSecondaryScale((int) (itemLeistung.getScale2() * 100));
+									verrechnet.setSecondaryScale((int) (itemLeistung.getScale2() * 100));
 								} else {
 									verrechnet = null;
-									log.warn(
-										"invoice correction: cannot change count for leistung with id [{}]",
-										itemLeistung.getId());
+									log.warn("invoice correction: cannot change count for leistung with id [{}]",
+											itemLeistung.getId());
 								}
 							}
 						}
@@ -787,58 +767,50 @@ public class BillingUtil {
 						verrechnet = null;
 					}
 					if (verrechnet == null) {
-						addToOutput(output, "Die Leistung "
-							+ itemLeistung.getIVerrechenbar().getText()
-							+ " konnte nicht auf einen neuen Fall/Konsultation transferiert werden. Das Hinzufügen der Leistung ist fehlgeschlagen.");
+						addToOutput(output, "Die Leistung " + itemLeistung.getIVerrechenbar().getText()
+								+ " konnte nicht auf einen neuen Fall/Konsultation transferiert werden. Das Hinzufügen der Leistung ist fehlgeschlagen.");
 						success = false;
-						log.warn(
-							"invoice correction: cannot transfer/add leistung with id [{}] to new kons id [{}]",
-							itemLeistung.getId(), newKons.getId());
+						log.warn("invoice correction: cannot transfer/add leistung with id [{}] to new kons id [{}]",
+								itemLeistung.getId(), newKons.getId());
 					}
 				}
 			}
 			if (!success) {
-				addToOutput(output,
-					"Nicht alle Leistungen konnten erfolgreich transferiert werden.");
+				addToOutput(output, "Nicht alle Leistungen konnten erfolgreich transferiert werden.");
 				log.warn("invoice correction: not all leistungen could be transfered.");
 			}
 		}
-		
-		private void removeLeistung(Object base, Object item){
+
+		private void removeLeistung(Object base, Object item) {
 			leistungDTO = (LeistungDTO) item;
 			if (leistungDTO.getVerrechnet() != null) {
 				acquireLock(locks, leistungDTO.getVerrechnet(), false);
-				Result<?> resRemove = BillingServiceHolder.get()
-					.removeBilled(leistungDTO.getVerrechnet(), CoreModelServiceHolder.get()
-						.load(((KonsultationDTO) base).getId(), IEncounter.class).get());
-				log.debug("invoice correction: removed leistung id [{}] from kons id [{}]",
-					leistungDTO.getId(), ((KonsultationDTO) base).getId());
+				Result<?> resRemove = BillingServiceHolder.get().removeBilled(leistungDTO.getVerrechnet(),
+						CoreModelServiceHolder.get().load(((KonsultationDTO) base).getId(), IEncounter.class).get());
+				log.debug("invoice correction: removed leistung id [{}] from kons id [{}]", leistungDTO.getId(),
+						((KonsultationDTO) base).getId());
 				if (resRemove.isOK()) {
 					((LeistungDTO) item).setVerrechnet(null);
 				} else {
-					addToOutput(output, "Die Leistung " + leistungDTO.getVerrechnet().getText()
-						+ " konnte nicht entfernt werden.");
+					addToOutput(output,
+							"Die Leistung " + leistungDTO.getVerrechnet().getText() + " konnte nicht entfernt werden.");
 					success = false;
-					log.warn(
-						"invoice correction: cannot remove leistung with id [{}] from kons id [{}]",
-						leistungDTO.getId(), ((KonsultationDTO) base).getId());
+					log.warn("invoice correction: cannot remove leistung with id [{}] from kons id [{}]",
+							leistungDTO.getId(), ((KonsultationDTO) base).getId());
 				}
 			}
 		}
-		
-		private void addLeistung(Object base, Object item){
+
+		private void addLeistung(Object base, Object item) {
 			konsultation = Konsultation.load(((KonsultationDTO) base).getId());
-			IEncounter encounter =
-				NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
+			IEncounter encounter = NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
 			leistungDTO = (LeistungDTO) item;
-			Result<IBilled> res =
-				BillingServiceHolder.get().bill(leistungDTO.getIVerrechenbar(), encounter, 1.0);
-			log.debug("invoice correction: added leistung id [{}] to kons id [{}]",
-				leistungDTO.getId(), ((KonsultationDTO) base).getId());
+			Result<IBilled> res = BillingServiceHolder.get().bill(leistungDTO.getIVerrechenbar(), encounter, 1.0);
+			log.debug("invoice correction: added leistung id [{}] to kons id [{}]", leistungDTO.getId(),
+					((KonsultationDTO) base).getId());
 			if (res.isOK()) {
-				verrechnet = EncounterServiceHolder.get()
-					.getBilledByBillable(encounter, leistungDTO.getIVerrechenbar()).stream()
-					.findFirst().orElse(null);
+				verrechnet = EncounterServiceHolder.get().getBilledByBillable(encounter, leistungDTO.getIVerrechenbar())
+						.stream().findFirst().orElse(null);
 				if (verrechnet != null) {
 					leistungDTO.setVerrechnet(verrechnet);
 					acquireLock(locks, verrechnet, false);
@@ -849,28 +821,24 @@ public class BillingUtil {
 			}
 			if (verrechnet == null) {
 				addToOutput(output, "Die Leistung " + leistungDTO.getIVerrechenbar().getText()
-					+ " konnte nicht verrechnet werden.");
+						+ " konnte nicht verrechnet werden.");
 				success = false;
-				log.warn("invoice correction: cannot add leistung with id [{}] to kons id [{}]",
-					leistungDTO.getId(), konsultation.getId());
+				log.warn("invoice correction: cannot add leistung with id [{}] to kons id [{}]", leistungDTO.getId(),
+						konsultation.getId());
 			}
 		}
-		
-		private void changeMandantKonsultation(Object base){
-			Konsultation.load(((KonsultationDTO) base).getId())
-				.setMandant(((KonsultationDTO) base).getMandant());
-			log.debug("invoice correction: changed mandant of kons id [{}]",
-				((KonsultationDTO) base).getId());
+
+		private void changeMandantKonsultation(Object base) {
+			Konsultation.load(((KonsultationDTO) base).getId()).setMandant(((KonsultationDTO) base).getMandant());
+			log.debug("invoice correction: changed mandant of kons id [{}]", ((KonsultationDTO) base).getId());
 		}
-		
-		private void changeDateKonsultation(Object base){
-			Konsultation.load(((KonsultationDTO) base).getId())
-				.setDatum(((KonsultationDTO) base).getDate(), true);
-			log.debug("invoice correction: changed date of kons id [{}]",
-				((KonsultationDTO) base).getId());
+
+		private void changeDateKonsultation(Object base) {
+			Konsultation.load(((KonsultationDTO) base).getId()).setDatum(((KonsultationDTO) base).getDate(), true);
+			log.debug("invoice correction: changed date of kons id [{}]", ((KonsultationDTO) base).getId());
 		}
-		
-		private void transferKonsultations(){
+
+		private void transferKonsultations() {
 			releasedKonsultations.clear();
 			Konsultation[] consultations = srcFall.get().getBehandlungen(true);
 			if (consultations != null) {
@@ -879,76 +847,72 @@ public class BillingUtil {
 						Rechnung bill = openedKons.getRechnung();
 						if (bill == null) {
 							EncounterServiceHolder.get().transferToCoverage(
-								NoPoUtil.loadAsIdentifiable(openedKons, IEncounter.class).get(),
-								NoPoUtil.loadAsIdentifiable(copyFall.get(), ICoverage.class).get(),
-								true);
-							log.debug(
-								"invoice correction: transfered kons id [{}] to copied fall id  [{}] ",
-								openedKons.getId(), copyFall.get().getId());
+									NoPoUtil.loadAsIdentifiable(openedKons, IEncounter.class).get(),
+									NoPoUtil.loadAsIdentifiable(copyFall.get(), ICoverage.class).get(), true);
+							log.debug("invoice correction: transfered kons id [{}] to copied fall id  [{}] ",
+									openedKons.getId(), copyFall.get().getId());
 							releasedKonsultations.add(openedKons);
-							
+
 							// if validation of cons is failed the bill correction will be reseted
 							Result<?> result = BillingUtil.getBillableResult(openedKons);
 							if (!result.isOK()) {
 								StringBuilder preValidatioWarnings = new StringBuilder();
 								addToOutput(preValidatioWarnings, result);
 								log.warn(
-									"invoice correction: konsultation prevalidation failed - the invoice correction will be continued - because the current correction could fix it. Message: [{}]",
-									preValidatioWarnings.toString());
+										"invoice correction: konsultation prevalidation failed - the invoice correction will be continued - because the current correction could fix it. Message: [{}]",
+										preValidatioWarnings.toString());
 							}
 						}
 					}
 				}
 			}
 		}
-		
-		private void changeFall() throws ElexisException{
+
+		private void changeFall() throws ElexisException {
 			copyFall.get().persistDTO(invoiceCorrectionDTO.getFallDTO());
 			// at this point the fall must be opened
 			copyFall.get().setEndDatum(null);
-			log.debug("invoice correction: persisted fall changes to id  [{}] ",
-				copyFall.get().getId());
+			log.debug("invoice correction: persisted fall changes to id  [{}] ", copyFall.get().getId());
 		}
-		
-		private void copyFall(){
+
+		private void copyFall() {
 			srcFall = Optional.of(rechnung.getFall());
 			ICoverage copy = CoverageServiceHolder.get()
-				.createCopy(NoPoUtil.loadAsIdentifiable(srcFall.get(), ICoverage.class).get());
+					.createCopy(NoPoUtil.loadAsIdentifiable(srcFall.get(), ICoverage.class).get());
 			copyFall = Optional.of((Fall) NoPoUtil.loadAsPersistentObject(copy));
 			acquireLock(locks, copyFall.get(), true);
-			log.debug("invoice correction: copied fall from id [{}] to id [{}] ",
-				srcFall.get().getId(), copyFall.get().getId());
+			log.debug("invoice correction: copied fall from id [{}] to id [{}] ", srcFall.get().getId(),
+					copyFall.get().getId());
 		}
-		
-		private void createBill(InvoiceHistoryEntryDTO historyEntryDTO){
+
+		private void createBill(InvoiceHistoryEntryDTO historyEntryDTO) {
 			if (copyFall.isPresent()) {
 				if (invoiceCorrectionDTO.getFallDTO().getEndDatum() != null) {
 					copyFall.get().setEndDatum(invoiceCorrectionDTO.getFallDTO().getEndDatum());
 					acquireLock(locks, copyFall.get(), false);
 				}
-				
+
 				// close fall if no kons exists
-				if ((srcFall.get().isOpen()
-					|| new TimeTool(srcFall.get().getEndDatum()).after(new TimeTool()))
-					&& srcFall.get().getBehandlungen(true).length == 0) {
+				if ((srcFall.get().isOpen() || new TimeTool(srcFall.get().getEndDatum()).after(new TimeTool()))
+						&& srcFall.get().getBehandlungen(true).length == 0) {
 					acquireLock(locks, srcFall.get(), false);
 					srcFall.get().setEndDatum(new TimeTool().toString(TimeTool.DATE_GER));
 				}
 			}
 			if (releasedKonsultations.isEmpty()) {
 				log.debug(
-					"invoice correction: no konsultations exists for invoice id [{}]- a new invoice will not be created.",
-					rechnung.getNr());
+						"invoice correction: no konsultations exists for invoice id [{}]- a new invoice will not be created.",
+						rechnung.getNr());
 				output.append("Die Rechnung " + rechnung.getNr() + " wurde erfolgreich durch "
-					+ CoreHub.getLoggedInContact().getLabel()
-					+ " korrigiert.\nEs wurde keine neue Rechnung erstellt.");
+						+ CoreHub.getLoggedInContact().getLabel()
+						+ " korrigiert.\nEs wurde keine neue Rechnung erstellt.");
 				historyEntryDTO.setIgnored(true);
 			} else {
-				
+
 				Result<IInvoice> rechnungResult = InvoiceServiceHolder.get()
-					.invoice(NoPoUtil.loadAsIdentifiable(releasedKonsultations, IEncounter.class));
+						.invoice(NoPoUtil.loadAsIdentifiable(releasedKonsultations, IEncounter.class));
 				if (!rechnungResult.isOK()) {
-					
+
 					for (@SuppressWarnings("rawtypes")
 					msg message : rechnungResult.getMessages()) {
 						if (message.getSeverity() != SEVERITY.OK) {
@@ -960,35 +924,33 @@ public class BillingUtil {
 					}
 					success = false;
 					log.error("invoice correction: error cannot create new invoice with id "
-						+ (rechnungResult.get() != null ? rechnungResult.get().getId() : "null"));
+							+ (rechnungResult.get() != null ? rechnungResult.get().getId() : "null"));
 					log.error("invoice correction: error details: " + output.toString());
 				} else {
 					Rechnung newRechnung = Rechnung.load(rechnungResult.get().getId());
 					invoiceCorrectionDTO.setNewInvoiceNumber(newRechnung.getNr());
-					log.debug(
-						"invoice correction: create new invoice with number [{}] old invoice number [{}] ",
-						newRechnung.getNr(), rechnung.getNr());
+					log.debug("invoice correction: create new invoice with number [{}] old invoice number [{}] ",
+							newRechnung.getNr(), rechnung.getNr());
 					output.append("Die Rechnung " + rechnung.getNr() + " wurde erfolgreich durch "
-						+ CoreHub.getLoggedInContact().getLabel()
-						+ " korrigiert.\nNeue Rechnungsnummer lautet: "
-						+ invoiceCorrectionDTO.getNewInvoiceNumber());
+							+ CoreHub.getLoggedInContact().getLabel() + " korrigiert.\nNeue Rechnungsnummer lautet: "
+							+ invoiceCorrectionDTO.getNewInvoiceNumber());
 				}
 			}
 		}
-		
-		private boolean stornoBill(){
+
+		private boolean stornoBill() {
 			List<Konsultation> konsultations = billCallback.storno(rechnung);
 			if (konsultations != null) {
 				releasedKonsultations.addAll(konsultations);
 			} else {
 				success = false;
 			}
-			
+
 			log.debug("invoice correction: storno invoice with number [{}] ", rechnung.getNr());
 			return true;
 		}
-		
-		private void addToOutput(StringBuilder output, Result<?> res){
+
+		private void addToOutput(StringBuilder output, Result<?> res) {
 			StringBuilder warnings = new StringBuilder();
 			for (@SuppressWarnings("rawtypes")
 			msg message : res.getMessages()) {
@@ -1003,8 +965,8 @@ public class BillingUtil {
 				output.append(warnings.toString());
 			}
 		}
-		
-		private void addToOutput(StringBuilder output, String warning){
+
+		private void addToOutput(StringBuilder output, String warning) {
 			if (output.length() > 0) {
 				output.append("\n");
 			}
@@ -1012,9 +974,9 @@ public class BillingUtil {
 				output.append(warning);
 			}
 		}
-		
+
 		private boolean acquireLock(List<Object> currentLocks, Object persistentObjectToLock,
-			boolean forceReleaseLock){
+				boolean forceReleaseLock) {
 			if (!currentLocks.contains(persistentObjectToLock)) {
 				if (LocalLockServiceHolder.get().acquireLock(persistentObjectToLock).isOk()) {
 					if (!forceReleaseLock) {
@@ -1027,6 +989,6 @@ public class BillingUtil {
 			}
 			return false;
 		}
-		
+
 	}
 }

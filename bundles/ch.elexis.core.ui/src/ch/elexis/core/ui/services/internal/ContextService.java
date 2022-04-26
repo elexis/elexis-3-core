@@ -58,57 +58,60 @@ import ch.elexis.data.User;
 /**
  * This {@link IContextService} implementation translates events from and to the
  * {@link ElexisEventDispatcher} and the {@link IEclipseContext}.
- * 
+ *
  * <p>
  * <b>{@link ElexisEventDispatcher}</b><br/>
- * Selection, Reload and Locking Events are translated to {@link ElexisEventTopics} and posted using
- * the {@link EventAdmin}. If the event referrer to an object, the object is translated to an
- * {@link Identifiable} using the {@link StoreToStringServiceHolder}. Only events from the
- * {@link ElexisEventDispatcher} are consumed, no events are sent.
+ * Selection, Reload and Locking Events are translated to
+ * {@link ElexisEventTopics} and posted using the {@link EventAdmin}. If the
+ * event referrer to an object, the object is translated to an
+ * {@link Identifiable} using the {@link StoreToStringServiceHolder}. Only
+ * events from the {@link ElexisEventDispatcher} are consumed, no events are
+ * sent.
  * </p>
- * 
+ *
  * <p>
  * <b>{@link IEclipseContext}</b><br/>
- * On startup complete the context is initialized from the {@link MApplication} and passed to the
- * root {@link Context}. The {@link Context} will pass all set (named, typed, etc.) to the
- * applications {@link IEclipseContext}. This enables the e4 injection for changes.
+ * On startup complete the context is initialized from the {@link MApplication}
+ * and passed to the root {@link Context}. The {@link Context} will pass all set
+ * (named, typed, etc.) to the applications {@link IEclipseContext}. This
+ * enables the e4 injection for changes.
  * </p>
- * 
+ *
  * @author thomas
  *
  */
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class ContextService implements IContextService, EventHandler {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(ContextService.class);
-	
+
 	// do not use holder, if not direct dep. service is started too early
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
-	
+
 	private Context root;
-	
+
 	private ConcurrentHashMap<String, Context> contexts;
-	
+
 	private SelectionEventDispatcherListener eventDispatcherListener;
-	
+
 	private ReloadEventDispatcherListener reloadEventDispatcherListener;
-	
+
 	private LockingEventDispatcherListener lockingEventDispatcherListener;
-	
+
 	private UserChangedEventDispatcherListener userChangedEventDispatcherListener;
-	
+
 	private MandatorChangedEventDispatcherListener mandatorChangedEventDispatcherListener;
-	
+
 	private CompatibilityEventDispatcherListener compatibilityEventDispatcherListener;
-	
+
 	private IEclipseContext applicationContext;
-	
+
 	@Reference
 	private EventAdmin eventAdmin;
-	
+
 	@Activate
-	public void activate(){
+	public void activate() {
 		logger.info("ACTIVATE");
 		root = new Context();
 		contexts = new ConcurrentHashMap<>();
@@ -121,55 +124,51 @@ public class ContextService implements IContextService, EventHandler {
 		ElexisEventDispatcher elexisEventDispatcher = ElexisEventDispatcher.getInstance();
 		LoggerFactory.getLogger(getClass()).info("Attaching to " + elexisEventDispatcher);
 		elexisEventDispatcher.addListeners(eventDispatcherListener, reloadEventDispatcherListener,
-			lockingEventDispatcherListener, userChangedEventDispatcherListener,
-			mandatorChangedEventDispatcherListener, compatibilityEventDispatcherListener);
-		
+				lockingEventDispatcherListener, userChangedEventDispatcherListener,
+				mandatorChangedEventDispatcherListener, compatibilityEventDispatcherListener);
+
 		getRootContext().setNamed(IContext.STATION_IDENTIFIER, CoreHub.getStationIdentifier());
-		
+
 		registerCoreUiSuppliers();
 	}
-	
-	private void registerCoreUiSuppliers(){
-		getRootContext().setNamed("SelectFallNoObligationDialog",
-			new Supplier<ICoverage>() {
-				private ICoverage ret;
-				
-				@Override
-				public synchronized ICoverage get(){
-					ret = null;
-					Optional<?> coverage = ContextServiceHolder.get()
-						.getNamed("SelectFallNoObligationDialog.coverage");
-					Optional<?> billable = ContextServiceHolder.get()
-						.getNamed("SelectFallNoObligationDialog.billable");
-					if (coverage.isPresent() && billable.isPresent()) {
-						Display.getDefault().syncExec(() -> {
-							SelectFallNoObligationDialog dlg = new SelectFallNoObligationDialog(
-								(ICoverage) coverage.get(), (IBillable) billable.get());
-							if (dlg.open() == Dialog.OK) {
-								ret = dlg.getCoverage();
-							}
-						});
-					} else {
-						logger.warn("SelectFallNoObligationDialog missing context parameter ["
-							+ coverage + "] [" + billable + "]");
-					}
-					return ret;
+
+	private void registerCoreUiSuppliers() {
+		getRootContext().setNamed("SelectFallNoObligationDialog", new Supplier<ICoverage>() {
+			private ICoverage ret;
+
+			@Override
+			public synchronized ICoverage get() {
+				ret = null;
+				Optional<?> coverage = ContextServiceHolder.get().getNamed("SelectFallNoObligationDialog.coverage");
+				Optional<?> billable = ContextServiceHolder.get().getNamed("SelectFallNoObligationDialog.billable");
+				if (coverage.isPresent() && billable.isPresent()) {
+					Display.getDefault().syncExec(() -> {
+						SelectFallNoObligationDialog dlg = new SelectFallNoObligationDialog((ICoverage) coverage.get(),
+								(IBillable) billable.get());
+						if (dlg.open() == Dialog.OK) {
+							ret = dlg.getCoverage();
+						}
+					});
+				} else {
+					logger.warn("SelectFallNoObligationDialog missing context parameter [" + coverage + "] [" + billable
+							+ "]");
 				}
-			});
-		
+				return ret;
+			}
+		});
+
 	}
-	
+
 	@Deactivate
-	public void deactivate(){
+	public void deactivate() {
 		logger.info("DEACTIVATE");
-		ElexisEventDispatcher.getInstance().removeListeners(eventDispatcherListener,
-			reloadEventDispatcherListener, lockingEventDispatcherListener,
-			userChangedEventDispatcherListener, mandatorChangedEventDispatcherListener,
-			compatibilityEventDispatcherListener);
+		ElexisEventDispatcher.getInstance().removeListeners(eventDispatcherListener, reloadEventDispatcherListener,
+				lockingEventDispatcherListener, userChangedEventDispatcherListener,
+				mandatorChangedEventDispatcherListener, compatibilityEventDispatcherListener);
 	}
-	
+
 	@Override
-	public void handleEvent(Event event){
+	public void handleEvent(Event event) {
 		Object property = event.getProperty("org.eclipse.e4.data");
 		if (property instanceof MApplication) {
 			logger.info("APPLICATION STARTUP COMPLETE " + property);
@@ -179,45 +178,44 @@ public class ContextService implements IContextService, EventHandler {
 				logger.info("SET APPLICATION CONTEXT " + applicationContext);
 				((Context) getRootContext()).setEclipseContext(applicationContext);
 			}
-			CoreUiUtil.injectServices(ElexisEventDispatcher.getInstance(),
-				applicationContext);
+			CoreUiUtil.injectServices(ElexisEventDispatcher.getInstance(), applicationContext);
 		}
 		// set initial values for injection
 		applicationContext.set(IUser.class, getRootContext().getTyped(IUser.class).orElse(null));
 	}
-	
+
 	@Override
-	public IContext getRootContext(){
+	public IContext getRootContext() {
 		return root;
 	}
-	
+
 	@Override
-	public Optional<IContext> getNamedContext(String name){
+	public Optional<IContext> getNamedContext(String name) {
 		return Optional.ofNullable(contexts.get(name));
 	}
-	
+
 	@Override
-	public IContext createNamedContext(String name){
+	public IContext createNamedContext(String name) {
 		Context context = new Context(root, name);
 		contexts.put(name, context);
 		return context;
 	}
-	
+
 	@Override
-	public void releaseContext(String name){
+	public void releaseContext(String name) {
 		Context context = contexts.get(name);
 		if (context != null) {
 			context.setParent(null);
 			contexts.remove(name);
 		}
 	}
-	
+
 	private void postEvent(String topic, Object object, boolean synchronous) {
 		if (eventAdmin != null) {
 			Map<String, Object> properites = new HashMap<>();
 			properites.put("org.eclipse.e4.data", object);
 			Event event = new Event(topic, properites);
-			if(synchronous) {
+			if (synchronous) {
 				eventAdmin.sendEvent(event);
 			} else {
 				eventAdmin.postEvent(event);
@@ -226,25 +224,25 @@ public class ContextService implements IContextService, EventHandler {
 			throw new IllegalStateException("No EventAdmin available");
 		}
 	}
-	
+
 	@Override
-	public void postEvent(String topic, Object object){
+	public void postEvent(String topic, Object object) {
 		postEvent(topic, object, false);
 	}
-	
+
 	@Override
-	public void sendEvent(String topic, Object object){
+	public void sendEvent(String topic, Object object) {
 		postEvent(topic, object, true);
 	}
-	
+
 	private class LockingEventDispatcherListener extends ElexisEventListenerImpl {
-		public LockingEventDispatcherListener(){
+		public LockingEventDispatcherListener() {
 			super(null, null, ElexisEvent.EVENT_LOCK_AQUIRED | ElexisEvent.EVENT_LOCK_RELEASED
-				| ElexisEvent.EVENT_LOCK_PRERELEASE, 0);
+					| ElexisEvent.EVENT_LOCK_PRERELEASE, 0);
 		}
-		
+
 		@Override
-		public void catchElexisEvent(ElexisEvent ev){
+		public void catchElexisEvent(ElexisEvent ev) {
 			Object object = ev.getGenericObject();
 			if (object == null) {
 				object = ev.getObject();
@@ -253,25 +251,22 @@ public class ContextService implements IContextService, EventHandler {
 				}
 			}
 			if (ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED) {
-				postEvent(ElexisEventTopics.EVENT_LOCK_AQUIRED,
-					getModelObjectForPersistentObject(object));
+				postEvent(ElexisEventTopics.EVENT_LOCK_AQUIRED, getModelObjectForPersistentObject(object));
 			} else if (ev.getType() == ElexisEvent.EVENT_LOCK_RELEASED) {
-				postEvent(ElexisEventTopics.EVENT_LOCK_RELEASED,
-					getModelObjectForPersistentObject(object));
+				postEvent(ElexisEventTopics.EVENT_LOCK_RELEASED, getModelObjectForPersistentObject(object));
 			} else if (ev.getType() == ElexisEvent.EVENT_LOCK_PRERELEASE) {
-				postEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE,
-					getModelObjectForPersistentObject(object), true);
+				postEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE, getModelObjectForPersistentObject(object), true);
 			}
 		}
 	}
-	
+
 	private class ReloadEventDispatcherListener extends ElexisEventListenerImpl {
-		public ReloadEventDispatcherListener(){
+		public ReloadEventDispatcherListener() {
 			super(null, null, ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_UPDATE, 0);
 		}
-		
+
 		@Override
-		public void catchElexisEvent(ElexisEvent ev){
+		public void catchElexisEvent(ElexisEvent ev) {
 			Object object = ev.getGenericObject();
 			if (object == null) {
 				object = ev.getObject();
@@ -282,36 +277,32 @@ public class ContextService implements IContextService, EventHandler {
 			if (ev.getType() == ElexisEvent.EVENT_RELOAD) {
 				if (object instanceof Class<?>) {
 					Optional<Class<?>> modelClass = getCoreModelInterfaceForElexisClass((Class<?>) object);
-					if(modelClass.isPresent()) {
-						postEvent(ElexisEventTopics.EVENT_RELOAD,
-							modelClass.get());
+					if (modelClass.isPresent()) {
+						postEvent(ElexisEventTopics.EVENT_RELOAD, modelClass.get());
 					} else {
-						logger.debug(
-							"Could not get model class for [" + object + "] ignored reload event");
+						logger.debug("Could not get model class for [" + object + "] ignored reload event");
 					}
 				} else {
-					postEvent(ElexisEventTopics.EVENT_RELOAD,
-						getModelObjectForPersistentObject(object));
+					postEvent(ElexisEventTopics.EVENT_RELOAD, getModelObjectForPersistentObject(object));
 				}
 			} else if (ev.getType() == ElexisEvent.EVENT_UPDATE) {
 				Object modelObject = getModelObjectForPersistentObject(object);
-				// refresh object due to change performed by PersistentObject 
-				if(modelObject instanceof Identifiable) {
-					CoreModelServiceHolder.get().refresh((Identifiable)modelObject, true);
+				// refresh object due to change performed by PersistentObject
+				if (modelObject instanceof Identifiable) {
+					CoreModelServiceHolder.get().refresh((Identifiable) modelObject, true);
 				}
 				postEvent(ElexisEventTopics.EVENT_UPDATE, modelObject);
 			}
 		}
 	}
-	
+
 	private class CompatibilityEventDispatcherListener extends ElexisEventListenerImpl {
-		public CompatibilityEventDispatcherListener(){
-			super(null, null,
-				ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_RELOAD, 0);
+		public CompatibilityEventDispatcherListener() {
+			super(null, null, ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_RELOAD, 0);
 		}
-		
+
 		@Override
-		public void catchElexisEvent(ElexisEvent ev){
+		public void catchElexisEvent(ElexisEvent ev) {
 			Object object = ev.getGenericObject();
 			if (object == null) {
 				object = ev.getObject();
@@ -324,26 +315,26 @@ public class ContextService implements IContextService, EventHandler {
 						getModelObjectForPersistentObject(object));
 			} else if (ev.getType() == ElexisEvent.EVENT_DELETE) {
 				postEvent(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY_DELETE,
-					getModelObjectForPersistentObject(object));
+						getModelObjectForPersistentObject(object));
 			} else if (ev.getType() == ElexisEvent.EVENT_RELOAD) {
 				if (object instanceof Class<?>) {
 					postEvent(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY_RELOAD,
-						getCoreModelInterfaceForElexisClass((Class<?>) object).orElse(null));
+							getCoreModelInterfaceForElexisClass((Class<?>) object).orElse(null));
 				} else {
 					postEvent(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY_RELOAD,
-						getModelObjectForPersistentObject(object));
+							getModelObjectForPersistentObject(object));
 				}
 			}
 		}
 	}
-	
+
 	private class UserChangedEventDispatcherListener extends ElexisEventListenerImpl {
-		public UserChangedEventDispatcherListener(){
+		public UserChangedEventDispatcherListener() {
 			super(null, null, ElexisEvent.EVENT_USER_CHANGED, 0);
 		}
-		
+
 		@Override
-		public void catchElexisEvent(ElexisEvent ev){
+		public void catchElexisEvent(ElexisEvent ev) {
 			Object object = ev.getGenericObject();
 			if (object == null) {
 				object = ev.getObject();
@@ -352,25 +343,23 @@ public class ContextService implements IContextService, EventHandler {
 				}
 			}
 			if (object instanceof User) {
-				Optional<IUser> iUser =
-					coreModelService.load(((User) object).getId(), IUser.class);
+				Optional<IUser> iUser = coreModelService.load(((User) object).getId(), IUser.class);
 				iUser.ifPresent(u -> root.setTyped(u));
 			}
-			
+
 			IUser user = root.getTyped(IUser.class).orElse(null);
 			postEvent(ElexisEventTopics.EVENT_USER_CHANGED, user);
 		}
 
-
 	}
-	
+
 	private class MandatorChangedEventDispatcherListener extends ElexisEventListenerImpl {
-		public MandatorChangedEventDispatcherListener(){
+		public MandatorChangedEventDispatcherListener() {
 			super(null, null, ElexisEvent.EVENT_MANDATOR_CHANGED, 0);
 		}
-		
+
 		@Override
-		public void catchElexisEvent(ElexisEvent ev){
+		public void catchElexisEvent(ElexisEvent ev) {
 			Object object = ev.getGenericObject();
 			if (object == null) {
 				object = ev.getObject();
@@ -379,48 +368,47 @@ public class ContextService implements IContextService, EventHandler {
 				}
 			}
 			if (object instanceof Mandant) {
-				Optional<IMandator> iMandator =
-					coreModelService.load(((Mandant) object).getId(), IMandator.class);
+				Optional<IMandator> iMandator = coreModelService.load(((Mandant) object).getId(), IMandator.class);
 				iMandator.ifPresent(m -> root.setTyped(m));
 			}
 		}
 	}
-	
+
 	/**
-	 * If the object is instance of {@link PersistentObject} the {@link StoreToStringServiceHolder}
-	 * is used to reload the object as a model object. If the object is not an instance of
-	 * {@link PersistentObject} the same object is returned.
-	 * 
+	 * If the object is instance of {@link PersistentObject} the
+	 * {@link StoreToStringServiceHolder} is used to reload the object as a model
+	 * object. If the object is not an instance of {@link PersistentObject} the same
+	 * object is returned.
+	 *
 	 * @return
 	 */
-	private Object getModelObjectForPersistentObject(Object object){
+	private Object getModelObjectForPersistentObject(Object object) {
 		if (object instanceof PersistentObject) {
 			String storeToString = ((PersistentObject) object).storeToString();
-			Optional<Identifiable> loaded =
-				StoreToStringServiceHolder.get().loadFromString(storeToString);
+			Optional<Identifiable> loaded = StoreToStringServiceHolder.get().loadFromString(storeToString);
 			if (loaded.isPresent()) {
 				return loaded.get();
 			}
 		}
 		return object;
 	}
-	
+
 	private class SelectionEventDispatcherListener extends ElexisEventListenerImpl {
-		
-		public SelectionEventDispatcherListener(){
+
+		public SelectionEventDispatcherListener() {
 			super(null, null, ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED, 0);
 		}
-		
+
 		@Override
-		public void catchElexisEvent(ElexisEvent ev){
+		public void catchElexisEvent(ElexisEvent ev) {
 			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
 				addObjectToRoot(getElexisEventObject(ev));
 			} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
 				removeObjectFromRoot(getElexisEventObject(ev));
 			}
 		}
-		
-		private Object getElexisEventObject(ElexisEvent ev){
+
+		private Object getElexisEventObject(ElexisEvent ev) {
 			Object obj = ev.getObject();
 			if (obj == null) {
 				obj = ev.getGenericObject();
@@ -430,24 +418,23 @@ public class ContextService implements IContextService, EventHandler {
 			}
 			return obj;
 		}
-		
-		private void removeObjectFromRoot(Object object){
+
+		private void removeObjectFromRoot(Object object) {
 			if (object instanceof Class<?>) {
 				root.removeTyped((Class<?>) object);
-				getCoreModelInterfaceForElexisClass((Class<?>) object)
-					.ifPresent(c -> root.removeTyped(c));
+				getCoreModelInterfaceForElexisClass((Class<?>) object).ifPresent(c -> root.removeTyped(c));
 			} else if (object != null) {
 				root.removeTyped(object.getClass());
-				
+
 			}
 		}
-		
-		private void addObjectToRoot(Object object){
+
+		private void addObjectToRoot(Object object) {
 			root.setTyped(getModelObjectForPersistentObject(object));
 		}
 	}
-	
-	private Optional<Class<?>> getCoreModelInterfaceForElexisClass(Class<?> elexisClazz){
+
+	private Optional<Class<?>> getCoreModelInterfaceForElexisClass(Class<?> elexisClazz) {
 		if (elexisClazz == User.class) {
 			return Optional.of(IUser.class);
 		} else if (elexisClazz == Anwender.class) {

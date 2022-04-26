@@ -16,26 +16,26 @@ import ch.elexis.core.services.IDocumentStore;
 
 @Component
 public class DocumentStoreHolder {
-	
+
 	private static ConcurrentMap<String, IDocumentStore> services = new ConcurrentHashMap<>();
-	
+
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-	void addDocumentStore(IDocumentStore store){
+	void addDocumentStore(IDocumentStore store) {
 		services.put(store.getId(), store);
 	}
-	
-	void removeDocumentStore(IDocumentStore store){
+
+	void removeDocumentStore(IDocumentStore store) {
 		services.remove(store.getId());
 	}
-	
-	public static Optional<IDocument> getDocument(String documentStoreId, String documentId){
+
+	public static Optional<IDocument> getDocument(String documentStoreId, String documentId) {
 		if (StringUtils.isNotBlank(documentStoreId) && StringUtils.isNotBlank(documentId)) {
 			IDocumentStore store = services.get(documentStoreId);
 			if (store != null) {
 				return store.loadDocument(documentId);
 			} else {
 				LoggerFactory.getLogger(DocumentStoreHolder.class)
-					.warn("Could not get store for id [" + documentStoreId + "]");
+						.warn("Could not get store for id [" + documentStoreId + "]");
 			}
 		}
 		return Optional.empty();

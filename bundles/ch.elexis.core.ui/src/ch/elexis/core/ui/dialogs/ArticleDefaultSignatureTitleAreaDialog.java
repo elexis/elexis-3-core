@@ -16,25 +16,25 @@ import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.views.controls.ArticleDefaultSignatureComposite;
 
 public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
-	
+
 	private IArticle article;
 	private ArticleDefaultSignatureComposite adsc;
 	private IPrescription prescription;
-	
+
 	/**
 	 * Create the dialog.
-	 * 
+	 *
 	 * @param parentShell
 	 */
-	public ArticleDefaultSignatureTitleAreaDialog(Shell parentShell, IArticle article){
+	public ArticleDefaultSignatureTitleAreaDialog(Shell parentShell, IArticle article) {
 		super(parentShell);
 		this.article = article;
 	}
-	
+
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ArticleDefaultSignatureTitleAreaDialog(Shell parentShell, IPrescription prescription){
+	public ArticleDefaultSignatureTitleAreaDialog(Shell parentShell, IPrescription prescription) {
 		super(parentShell);
 		this.prescription = prescription;
 		this.article = prescription.getArticle();
@@ -42,27 +42,25 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 
 	/**
 	 * Create contents of the dialog.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	protected Control createDialogArea(Composite parent){
-		setMessage(
-			"Für diesen ATC Code oder diesen Artikel folgende Standard-Signatur hinterlegen");
+	protected Control createDialogArea(Composite parent) {
+		setMessage("Für diesen ATC Code oder diesen Artikel folgende Standard-Signatur hinterlegen");
 		setTitle("Standard-Signatur hinterlegen");
 		Composite area = (Composite) super.createDialogArea(parent);
-		
+
 		adsc = new ArticleDefaultSignatureComposite(area, SWT.None);
 		adsc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		adsc.setToolbarVisible(false);
 		adsc.initDataBindings(null);
 		adsc.setArticleToBind(article, false);
-		
-		if(prescription!=null) {
+
+		if (prescription != null) {
 			// set initial values from prescription
-			List<Float> doseAsFloats =
-				MedicationServiceHolder.get().getDosageAsFloats(prescription);
-			 for (int i = 0; i < doseAsFloats.size(); i++) {
+			List<Float> doseAsFloats = MedicationServiceHolder.get().getDosageAsFloats(prescription);
+			for (int i = 0; i < doseAsFloats.size(); i++) {
 				String val = trimTrailingZeros(Float.toString(doseAsFloats.get(i)));
 				switch (i) {
 				case 0:
@@ -83,35 +81,35 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 			}
 			adsc.setSignatureComment(prescription.getDisposalComment());
 		}
-		
+
 		return area;
 	}
-	
+
 	/**
 	 * Create contents of the button bar.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		adsc.updateModelNonDatabinding();
 		adsc.save();
-		
+
 		super.okPressed();
 	}
-	
-	private String trimTrailingZeros(String number) {
-	    if(!number.contains(".")) {
-	        return number;
-	    }
 
-	    return number.replaceAll("\\.?0*$", "");
+	private String trimTrailingZeros(String number) {
+		if (!number.contains(".")) {
+			return number;
+		}
+
+		return number.replaceAll("\\.?0*$", "");
 	}
-	
+
 }

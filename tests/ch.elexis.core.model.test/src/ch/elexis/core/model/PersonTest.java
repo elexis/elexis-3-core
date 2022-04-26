@@ -56,8 +56,7 @@ public class PersonTest extends AbstractTest {
 	public void searchPersonByBirthDate() {
 		IQuery<IPerson> query = coreModelService.getQuery(IPerson.class);
 		Date theBirthDate = new GregorianCalendar(1979, 6, 26).getTime();
-		LocalDate localDate = Instant.ofEpochMilli(theBirthDate.getTime()).atZone(ZoneId.systemDefault())
-				.toLocalDate();
+		LocalDate localDate = Instant.ofEpochMilli(theBirthDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
 		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, localDate);
 		List<IPerson> execute = query.execute();
 		assertEquals(1, execute.size());

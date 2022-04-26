@@ -3,28 +3,28 @@ package ch.elexis.core.model;
 import ch.elexis.core.jpa.entities.Kontakt;
 
 public class Organization extends Contact implements IOrganization {
-	
-	public Organization(Kontakt model){
+
+	public Organization(Kontakt model) {
 		super(model);
 	}
 
 	@Override
-	public String getInsuranceXmlName(){
+	public String getInsuranceXmlName() {
 		return getEntity().getAllergies();
 	}
 
 	@Override
-	public void setInsuranceXmlName(String value){
+	public void setInsuranceXmlName(String value) {
 		getEntityMarkDirty().setAllergies(value);
 	}
 
 	@Override
-	public String getInsuranceLawCode(){
+	public String getInsuranceLawCode() {
 		return getEntity().getTitelSuffix();
 	}
 
 	@Override
-	public void setInsuranceLawCode(String value){
+	public void setInsuranceLawCode(String value) {
 		getEntityMarkDirty().setTitelSuffix(value);
 	}
 }

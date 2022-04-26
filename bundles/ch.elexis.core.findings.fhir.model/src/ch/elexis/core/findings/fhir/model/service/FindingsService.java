@@ -26,13 +26,13 @@ import ch.elexis.core.services.INamedQuery;
 
 @Component
 public class FindingsService implements IFindingsService {
-	
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
 	private IModelService findingsModelService;
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends IFinding> List<T> getPatientsFindings(String patientId, Class<T> filter){
+	public <T extends IFinding> List<T> getPatientsFindings(String patientId, Class<T> filter) {
 		List<T> ret = new ArrayList<>();
 		if (patientId != null && !patientId.isEmpty()) {
 			if (filter.isAssignableFrom(IEncounter.class)) {
@@ -42,57 +42,49 @@ public class FindingsService implements IFindingsService {
 				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, ICondition.class));
 			}
 			if (filter.isAssignableFrom(IClinicalImpression.class)) {
-				ret.addAll((Collection<? extends T>) queryByPatientId(patientId,
-					IClinicalImpression.class));
+				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, IClinicalImpression.class));
 			}
 			if (filter.isAssignableFrom(IObservation.class)) {
-				ret.addAll(
-					(Collection<? extends T>) queryByPatientId(patientId, IObservation.class));
+				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, IObservation.class));
 			}
 			if (filter.isAssignableFrom(IProcedureRequest.class)) {
-				ret.addAll(
-					(Collection<? extends T>) queryByPatientId(patientId, IProcedureRequest.class));
+				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, IProcedureRequest.class));
 			}
 			if (filter.isAssignableFrom(IFamilyMemberHistory.class)) {
-				ret.addAll((Collection<? extends T>) queryByPatientId(patientId,
-					IFamilyMemberHistory.class));
+				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, IFamilyMemberHistory.class));
 			}
 			if (filter.isAssignableFrom(IAllergyIntolerance.class)) {
-				ret.addAll((Collection<? extends T>) queryByPatientId(patientId,
-					IAllergyIntolerance.class));
+				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, IAllergyIntolerance.class));
 			}
 		}
 		return ret;
 	}
-	
-	private <T> List<T> queryByPatientId(String patientId, Class<T> clazz){
+
+	private <T> List<T> queryByPatientId(String patientId, Class<T> clazz) {
 		if (patientId != null) {
 			INamedQuery<T> query = findingsModelService.getNamedQuery(clazz, "patientid");
 			return query.executeWithParameters(query.getParameterMap("patientid", patientId));
 		}
 		return Collections.emptyList();
 	}
-	
-	private Optional<IEncounter> getEncounter(String consultationId){
-		INamedQuery<IEncounter> query =
-			findingsModelService.getNamedQuery(IEncounter.class, "consultationid");
-		List<IEncounter> encounters =
-			query.executeWithParameters(query.getParameterMap("consultationid", consultationId));
+
+	private Optional<IEncounter> getEncounter(String consultationId) {
+		INamedQuery<IEncounter> query = findingsModelService.getNamedQuery(IEncounter.class, "consultationid");
+		List<IEncounter> encounters = query
+				.executeWithParameters(query.getParameterMap("consultationid", consultationId));
 		if (!encounters.isEmpty()) {
 			if (encounters.size() > 1) {
 				LoggerFactory.getLogger(getClass())
-					.warn("Got more than one encounter for consultation id [" + consultationId
-						+ "] using first");
+						.warn("Got more than one encounter for consultation id [" + consultationId + "] using first");
 			}
 			return Optional.of(encounters.get(0));
 		}
 		return Optional.empty();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends IFinding> List<T> getConsultationsFindings(String consultationId,
-		Class<T> filter){
+	public <T extends IFinding> List<T> getConsultationsFindings(String consultationId, Class<T> filter) {
 		List<T> ret = new ArrayList<>();
 		if (consultationId != null && !consultationId.isEmpty()) {
 			Optional<IEncounter> encounter = getEncounter(consultationId);
@@ -102,57 +94,55 @@ public class FindingsService implements IFindingsService {
 				}
 				if (filter.isAssignableFrom(IClinicalImpression.class)) {
 					ret.addAll((Collection<? extends T>) queryByEncounterId(encounter.get().getId(),
-						IClinicalImpression.class));
+							IClinicalImpression.class));
 				}
 				if (filter.isAssignableFrom(IObservation.class)) {
-					ret.addAll((Collection<? extends T>) queryByEncounterId(encounter.get().getId(),
-						IObservation.class));
+					ret.addAll(
+							(Collection<? extends T>) queryByEncounterId(encounter.get().getId(), IObservation.class));
 				}
 				if (filter.isAssignableFrom(IProcedureRequest.class)) {
 					ret.addAll((Collection<? extends T>) queryByEncounterId(encounter.get().getId(),
-						IProcedureRequest.class));
+							IProcedureRequest.class));
 				}
 			}
 		}
 		return ret;
 	}
-	
-	private <T> List<T> queryByEncounterId(String consultationId, Class<T> clazz){
+
+	private <T> List<T> queryByEncounterId(String consultationId, Class<T> clazz) {
 		if (consultationId != null) {
 			INamedQuery<T> query = findingsModelService.getNamedQuery(clazz, "encounterid");
-			return query
-				.executeWithParameters(query.getParameterMap("encounterid", consultationId));
+			return query.executeWithParameters(query.getParameterMap("encounterid", consultationId));
 		}
 		return Collections.emptyList();
 	}
-	
+
 	@Override
-	public void saveFinding(IFinding finding){
+	public void saveFinding(IFinding finding) {
 		findingsModelService.save(finding);
 	}
-	
+
 	@Override
-	public void deleteFinding(IFinding finding){
+	public void deleteFinding(IFinding finding) {
 		findingsModelService.delete(finding);
 	}
-	
+
 	@Override
-	public <T extends IFinding> T create(Class<T> type){
+	public <T extends IFinding> T create(Class<T> type) {
 		T created = findingsModelService.create(type);
 		ModelUtil.initFhir(created, type);
 		return created;
 	}
-	
+
 	@Override
-	public <T extends IFinding> Optional<T> findById(String id, Class<T> clazz, boolean skipChecks){
+	public <T extends IFinding> Optional<T> findById(String id, Class<T> clazz, boolean skipChecks) {
 		return findingsModelService.load(id, clazz, skipChecks);
 	}
-	
+
 	@Override
-	public <T extends IFinding> List<T> getDocumentFindings(String documentid, Class<T> filter){
+	public <T extends IFinding> List<T> getDocumentFindings(String documentid, Class<T> filter) {
 		if (filter.isAssignableFrom(IDocumentReference.class)) {
-			INamedQuery<T> query =
-				findingsModelService.getNamedQuery(filter, "documentid");
+			INamedQuery<T> query = findingsModelService.getNamedQuery(filter, "documentid");
 			return query.executeWithParameters(query.getParameterMap("documentid", documentid));
 		}
 		return Collections.emptyList();

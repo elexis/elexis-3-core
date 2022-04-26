@@ -37,7 +37,7 @@ import gnu.io.SerialPort;
  * A class that stores parameters for serial ports.
  */
 public class SerialParameters {
-	
+
 	private String portName;
 	private int baudRate;
 	private int flowControlIn;
@@ -45,40 +45,32 @@ public class SerialParameters {
 	private int databits;
 	private int stopbits;
 	private int parity;
-	
+
 	/**
-	 * Default constructer. Sets parameters to no port, 9600 baud, no flow control, 8 data bits, 1
-	 * stop bit, no parity.
+	 * Default constructer. Sets parameters to no port, 9600 baud, no flow control,
+	 * 8 data bits, 1 stop bit, no parity.
 	 */
-	public SerialParameters(){
-		this(
-			"", //$NON-NLS-1$
-			9600, SerialPort.FLOWCONTROL_NONE, SerialPort.FLOWCONTROL_NONE, SerialPort.DATABITS_8,
-			SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
-		
+	public SerialParameters() {
+		this("", //$NON-NLS-1$
+				9600, SerialPort.FLOWCONTROL_NONE, SerialPort.FLOWCONTROL_NONE, SerialPort.DATABITS_8,
+				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+
 	}
-	
+
 	/**
 	 * Paramaterized constructer.
-	 * 
-	 * @param portName
-	 *            The name of the port.
-	 * @param baudRate
-	 *            The baud rate.
-	 * @param flowControlIn
-	 *            Type of flow control for receiving.
-	 * @param flowControlOut
-	 *            Type of flow control for sending.
-	 * @param databits
-	 *            The number of data bits.
-	 * @param stopbits
-	 *            The number of stop bits.
-	 * @param parity
-	 *            The type of parity.
+	 *
+	 * @param portName       The name of the port.
+	 * @param baudRate       The baud rate.
+	 * @param flowControlIn  Type of flow control for receiving.
+	 * @param flowControlOut Type of flow control for sending.
+	 * @param databits       The number of data bits.
+	 * @param stopbits       The number of stop bits.
+	 * @param parity         The type of parity.
 	 */
 	public SerialParameters(final String portName, final int baudRate, final int flowControlIn,
-		final int flowControlOut, final int databits, final int stopbits, final int parity){
-		
+			final int flowControlOut, final int databits, final int stopbits, final int parity) {
+
 		this.portName = portName;
 		this.baudRate = baudRate;
 		this.flowControlIn = flowControlIn;
@@ -87,157 +79,148 @@ public class SerialParameters {
 		this.stopbits = stopbits;
 		this.parity = parity;
 	}
-	
+
 	/**
 	 * Sets port name.
-	 * 
-	 * @param portName
-	 *            New port name.
+	 *
+	 * @param portName New port name.
 	 */
-	public void setPortName(final String portName){
+	public void setPortName(final String portName) {
 		this.portName = portName;
 	}
-	
+
 	/**
 	 * Gets port name.
-	 * 
+	 *
 	 * @return Current port name.
 	 */
-	public String getPortName(){
+	public String getPortName() {
 		return portName;
 	}
-	
+
 	/**
 	 * Sets baud rate.
-	 * 
-	 * @param baudRate
-	 *            New baud rate.
+	 *
+	 * @param baudRate New baud rate.
 	 */
-	public void setBaudRate(final int baudRate){
+	public void setBaudRate(final int baudRate) {
 		this.baudRate = baudRate;
 	}
-	
+
 	/**
 	 * Sets baud rate.
-	 * 
-	 * @param baudRate
-	 *            New baud rate.
+	 *
+	 * @param baudRate New baud rate.
 	 */
-	public void setBaudRate(final String baudRate){
+	public void setBaudRate(final String baudRate) {
 		this.baudRate = Integer.parseInt(baudRate);
 	}
-	
+
 	/**
 	 * Gets baud rate as an <code>int</code>.
-	 * 
+	 *
 	 * @return Current baud rate.
 	 */
-	public int getBaudRate(){
+	public int getBaudRate() {
 		return baudRate;
 	}
-	
+
 	/**
 	 * Gets baud rate as a <code>String</code>.
-	 * 
+	 *
 	 * @return Current baud rate.
 	 */
-	public String getBaudRateString(){
+	public String getBaudRateString() {
 		return Integer.toString(baudRate);
 	}
-	
+
 	/**
 	 * Sets flow control for reading.
-	 * 
-	 * @param flowControlIn
-	 *            New flow control for reading type.
+	 *
+	 * @param flowControlIn New flow control for reading type.
 	 */
-	public void setFlowControlIn(final int flowControlIn){
+	public void setFlowControlIn(final int flowControlIn) {
 		this.flowControlIn = flowControlIn;
 	}
-	
+
 	/**
 	 * Sets flow control for reading.
-	 * 
-	 * @param flowControlIn
-	 *            New flow control for reading type.
+	 *
+	 * @param flowControlIn New flow control for reading type.
 	 */
-	public void setFlowControlIn(final String flowControlIn){
+	public void setFlowControlIn(final String flowControlIn) {
 		this.flowControlIn = stringToFlow(flowControlIn);
 	}
-	
+
 	/**
 	 * Gets flow control for reading as an <code>int</code>.
-	 * 
+	 *
 	 * @return Current flow control type.
 	 */
-	public int getFlowControlIn(){
+	public int getFlowControlIn() {
 		return flowControlIn;
 	}
-	
+
 	/**
 	 * Gets flow control for reading as a <code>String</code>.
-	 * 
+	 *
 	 * @return Current flow control type.
 	 */
-	public String getFlowControlInString(){
+	public String getFlowControlInString() {
 		return flowToString(flowControlIn);
 	}
-	
+
 	/**
 	 * Sets flow control for writing.
-	 * 
-	 * @param flowControlIn
-	 *            New flow control for writing type.
+	 *
+	 * @param flowControlIn New flow control for writing type.
 	 */
-	public void setFlowControlOut(final int flowControlOut){
+	public void setFlowControlOut(final int flowControlOut) {
 		this.flowControlOut = flowControlOut;
 	}
-	
+
 	/**
 	 * Sets flow control for writing.
-	 * 
-	 * @param flowControlIn
-	 *            New flow control for writing type.
+	 *
+	 * @param flowControlIn New flow control for writing type.
 	 */
-	public void setFlowControlOut(final String flowControlOut){
+	public void setFlowControlOut(final String flowControlOut) {
 		this.flowControlOut = stringToFlow(flowControlOut);
 	}
-	
+
 	/**
 	 * Gets flow control for writing as an <code>int</code>.
-	 * 
+	 *
 	 * @return Current flow control type.
 	 */
-	public int getFlowControlOut(){
+	public int getFlowControlOut() {
 		return flowControlOut;
 	}
-	
+
 	/**
 	 * Gets flow control for writing as a <code>String</code>.
-	 * 
+	 *
 	 * @return Current flow control type.
 	 */
-	public String getFlowControlOutString(){
+	public String getFlowControlOutString() {
 		return flowToString(flowControlOut);
 	}
-	
+
 	/**
 	 * Sets data bits.
-	 * 
-	 * @param databits
-	 *            New data bits setting.
+	 *
+	 * @param databits New data bits setting.
 	 */
-	public void setDatabits(final int databits){
+	public void setDatabits(final int databits) {
 		this.databits = databits;
 	}
-	
+
 	/**
 	 * Sets data bits.
-	 * 
-	 * @param databits
-	 *            New data bits setting.
+	 *
+	 * @param databits New data bits setting.
 	 */
-	public void setDatabits(final String databits){
+	public void setDatabits(final String databits) {
 		if (databits.equals("5")) { //$NON-NLS-1$
 			this.databits = SerialPort.DATABITS_5;
 		}
@@ -251,22 +234,22 @@ public class SerialParameters {
 			this.databits = SerialPort.DATABITS_8;
 		}
 	}
-	
+
 	/**
 	 * Gets data bits as an <code>int</code>.
-	 * 
+	 *
 	 * @return Current data bits setting.
 	 */
-	public int getDatabits(){
+	public int getDatabits() {
 		return databits;
 	}
-	
+
 	/**
 	 * Gets data bits as a <code>String</code>.
-	 * 
+	 *
 	 * @return Current data bits setting.
 	 */
-	public String getDatabitsString(){
+	public String getDatabitsString() {
 		switch (databits) {
 		case SerialPort.DATABITS_5:
 			return "5"; //$NON-NLS-1$
@@ -280,24 +263,22 @@ public class SerialParameters {
 			return "8"; //$NON-NLS-1$
 		}
 	}
-	
+
 	/**
 	 * Sets stop bits.
-	 * 
-	 * @param stopbits
-	 *            New stop bits setting.
+	 *
+	 * @param stopbits New stop bits setting.
 	 */
-	public void setStopbits(final int stopbits){
+	public void setStopbits(final int stopbits) {
 		this.stopbits = stopbits;
 	}
-	
+
 	/**
 	 * Sets stop bits.
-	 * 
-	 * @param stopbits
-	 *            New stop bits setting.
+	 *
+	 * @param stopbits New stop bits setting.
 	 */
-	public void setStopbits(final String stopbits){
+	public void setStopbits(final String stopbits) {
 		if (stopbits.equals("1")) { //$NON-NLS-1$
 			this.stopbits = SerialPort.STOPBITS_1;
 		}
@@ -308,22 +289,22 @@ public class SerialParameters {
 			this.stopbits = SerialPort.STOPBITS_2;
 		}
 	}
-	
+
 	/**
 	 * Gets stop bits setting as an <code>int</code>.
-	 * 
+	 *
 	 * @return Current stop bits setting.
 	 */
-	public int getStopbits(){
+	public int getStopbits() {
 		return stopbits;
 	}
-	
+
 	/**
 	 * Gets stop bits setting as a <code>String</code>.
-	 * 
+	 *
 	 * @return Current stop bits setting.
 	 */
-	public String getStopbitsString(){
+	public String getStopbitsString() {
 		switch (stopbits) {
 		case SerialPort.STOPBITS_1:
 			return "1"; //$NON-NLS-1$
@@ -335,24 +316,22 @@ public class SerialParameters {
 			return "1"; //$NON-NLS-1$
 		}
 	}
-	
+
 	/**
 	 * Sets parity setting.
-	 * 
-	 * @param parity
-	 *            New parity setting.
+	 *
+	 * @param parity New parity setting.
 	 */
-	public void setParity(final int parity){
+	public void setParity(final int parity) {
 		this.parity = parity;
 	}
-	
+
 	/**
 	 * Sets parity setting.
-	 * 
-	 * @param parity
-	 *            New parity setting.
+	 *
+	 * @param parity New parity setting.
 	 */
-	public void setParity(final String parity){
+	public void setParity(final String parity) {
 		if (parity.equals("None")) { //$NON-NLS-1$
 			this.parity = SerialPort.PARITY_NONE;
 		}
@@ -363,22 +342,22 @@ public class SerialParameters {
 			this.parity = SerialPort.PARITY_ODD;
 		}
 	}
-	
+
 	/**
 	 * Gets parity setting as an <code>int</code>.
-	 * 
+	 *
 	 * @return Current parity setting.
 	 */
-	public int getParity(){
+	public int getParity() {
 		return parity;
 	}
-	
+
 	/**
 	 * Gets parity setting as a <code>String</code>.
-	 * 
+	 *
 	 * @return Current parity setting.
 	 */
-	public String getParityString(){
+	public String getParityString() {
 		switch (parity) {
 		case SerialPort.PARITY_NONE:
 			return "None"; //$NON-NLS-1$
@@ -390,16 +369,15 @@ public class SerialParameters {
 			return "None"; //$NON-NLS-1$
 		}
 	}
-	
+
 	/**
-	 * Converts a <code>String</code> describing a flow control type to an <code>int</code> type
-	 * defined in <code>SerialPort</code>.
-	 * 
-	 * @param flowControl
-	 *            A <code>string</code> describing a flow control type.
+	 * Converts a <code>String</code> describing a flow control type to an
+	 * <code>int</code> type defined in <code>SerialPort</code>.
+	 *
+	 * @param flowControl A <code>string</code> describing a flow control type.
 	 * @return An <code>int</code> describing a flow control type.
 	 */
-	private int stringToFlow(final String flowControl){
+	private int stringToFlow(final String flowControl) {
 		if (flowControl.equals("None")) { //$NON-NLS-1$
 			return SerialPort.FLOWCONTROL_NONE;
 		}
@@ -417,16 +395,15 @@ public class SerialParameters {
 		}
 		return SerialPort.FLOWCONTROL_NONE;
 	}
-	
+
 	/**
-	 * Converts an <code>int</code> describing a flow control type to a <code>String</code>
-	 * describing a flow control type.
-	 * 
-	 * @param flowControl
-	 *            An <code>int</code> describing a flow control type.
+	 * Converts an <code>int</code> describing a flow control type to a
+	 * <code>String</code> describing a flow control type.
+	 *
+	 * @param flowControl An <code>int</code> describing a flow control type.
 	 * @return A <code>String</code> describing a flow control type.
 	 */
-	String flowToString(final int flowControl){
+	String flowToString(final int flowControl) {
 		switch (flowControl) {
 		case SerialPort.FLOWCONTROL_NONE:
 			return "None"; //$NON-NLS-1$

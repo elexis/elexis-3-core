@@ -34,7 +34,7 @@ public final class PrintVersionedLabelHandler extends AbstractHandler {
 			SWTHelper.showInfo("Kein Patient ausgewählt", "Bitte wählen Sie vor dem Drucken einen Patient!");
 			return null;
 		}
-		
+
 		EtiketteDruckenDialog dlg = new EtiketteDruckenDialog(
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), actPatient, TT_PATIENT_LABEL_ORDER);
 		dlg.setTitle(Messages.GlobalActions_PrintVersionedLabel);

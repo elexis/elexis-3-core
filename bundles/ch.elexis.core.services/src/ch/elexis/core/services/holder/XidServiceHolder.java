@@ -8,13 +8,13 @@ import ch.elexis.core.services.IXidService;
 @Component
 public class XidServiceHolder {
 	private static IXidService xidService;
-	
+
 	@Reference
-	public void setStoreToStringService(IXidService xidService){
+	public void setStoreToStringService(IXidService xidService) {
 		XidServiceHolder.xidService = xidService;
 	}
-	
-	public static IXidService get(){
+
+	public static IXidService get() {
 		if (xidService == null) {
 			throw new IllegalStateException("No IXidService available");
 		}

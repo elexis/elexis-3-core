@@ -3,8 +3,8 @@
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  * IBM - Initial API and implementation
  **********************************************************************/
 package ch.elexis.core.ui.exchange.elements;
@@ -19,5 +19,5 @@ public class Messages {
 	public static String MedicalElement_Medcaments = ch.elexis.core.l10n.Messages.MedicalElement_Medcaments;
 	public static String RecordElement_CreatedBy = ch.elexis.core.l10n.Messages.RecordElement_CreatedBy;
 	public static String RecordElement_EntryDate = ch.elexis.core.l10n.Messages.RecordElement_EntryDate;
-	
+
 }

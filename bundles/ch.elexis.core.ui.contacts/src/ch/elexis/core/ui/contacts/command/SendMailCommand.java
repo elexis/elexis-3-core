@@ -17,30 +17,28 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.data.Patient;
 
 public class SendMailCommand extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Patient patient = ElexisEventDispatcher.getSelectedPatient();
 		if (patient != null) {
-			ICommandService commandService = (ICommandService) HandlerUtil
-				.getActiveWorkbenchWindow(event).getService(ICommandService.class);
+			ICommandService commandService = (ICommandService) HandlerUtil.getActiveWorkbenchWindow(event)
+					.getService(ICommandService.class);
 			try {
-				Command sendMailCommand =
-					commandService.getCommand("ch.elexis.core.mail.ui.sendMail");
-				
+				Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail");
+
 				HashMap<String, String> params = new HashMap<String, String>();
-				
+
 				params.put("ch.elexis.core.mail.ui.sendMail.to", " " + patient.getMailAddress());
-				
-				ParameterizedCommand parametrizedCommmand =
-					ParameterizedCommand.generateCommand(sendMailCommand, params);
-				PlatformUI.getWorkbench().getService(IHandlerService.class)
-					.executeCommand(parametrizedCommmand, null);
+
+				ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(sendMailCommand,
+						params);
+				PlatformUI.getWorkbench().getService(IHandlerService.class).executeCommand(parametrizedCommmand, null);
 			} catch (Exception ex) {
 				throw new RuntimeException("ch.elexis.core.mail.ui.sendMail not found", ex);
 			}
 		}
 		return null;
 	}
-	
+
 }

@@ -15,37 +15,37 @@ import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.model.ITaskService;
 
 public class CreateTaskDescriptorHandler {
-	
+
 	@Execute
-	public void execute(ITaskService taskService){
+	public void execute(ITaskService taskService) {
 		try {
 			taskService.createTaskDescriptor(new IIdentifiedRunnable() {
-				
+
 				@Override
-				public String getLocalizedDescription(){
+				public String getLocalizedDescription() {
 					return "";
 				}
-				
+
 				@Override
-				public String getId(){
+				public String getId() {
 					return "";
 				}
-				
+
 				@Override
-				public Map<String, Serializable> getDefaultRunContext(){
+				public Map<String, Serializable> getDefaultRunContext() {
 					return Collections.emptyMap();
 				}
-				
+
 				@Override
 				public Map<String, Serializable> run(Map<String, Serializable> runContext,
-					IProgressMonitor progressMonitor, Logger logger) throws TaskException{
+						IProgressMonitor progressMonitor, Logger logger) throws TaskException {
 					return Collections.emptyMap();
 				}
 			});
 		} catch (TaskException e) {
 			LoggerFactory.getLogger(getClass()).warn("Could not create iTaskDescriptor", e);
 		}
-		
+
 	}
-	
+
 }

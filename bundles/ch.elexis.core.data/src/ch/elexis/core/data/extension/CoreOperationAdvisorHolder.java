@@ -8,19 +8,19 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true)
 public class CoreOperationAdvisorHolder {
-	
+
 	private static ICoreOperationAdvisor coreOperationAdvisor;
-	
+
 	@Reference
-	public void setModelService(ICoreOperationAdvisor coreOperationAdvisor){
+	public void setModelService(ICoreOperationAdvisor coreOperationAdvisor) {
 		CoreOperationAdvisorHolder.coreOperationAdvisor = coreOperationAdvisor;
 	}
-	
-	public static ICoreOperationAdvisor get(){
+
+	public static ICoreOperationAdvisor get() {
 		if (coreOperationAdvisor == null) {
 			throw new IllegalStateException("No coreOperationAdvisor available!");
 		}
 		return coreOperationAdvisor;
 	}
-	
+
 }

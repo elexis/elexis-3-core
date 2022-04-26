@@ -18,13 +18,11 @@ import ch.elexis.core.services.IConflictHandler;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 
 public class EndLocalDocumentHandler extends AbstractHandler implements IHandler {
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
-		IEclipseContext iEclipseContext =
-			PlatformUI.getWorkbench().getService(IEclipseContext.class);
-		StructuredSelection selection =
-			(StructuredSelection) iEclipseContext
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		IEclipseContext iEclipseContext = PlatformUI.getWorkbench().getService(IEclipseContext.class);
+		StructuredSelection selection = (StructuredSelection) iEclipseContext
 				.get(event.getCommand().getId().concat(".selection"));
 		iEclipseContext.remove(event.getCommand().getId().concat(".selection"));
 		if (selection != null && !selection.isEmpty()) {
@@ -35,19 +33,18 @@ public class EndLocalDocumentHandler extends AbstractHandler implements IHandler
 					if (service.contains(object)) {
 						Optional<LocalLock> lock = LocalLock.getManagedLock(object);
 						lock.ifPresent(localDocumentLock -> localDocumentLock.unlock());
-						
+
 						if (!service.save(object)) {
-							MessageDialog.openError(parentShell,
-								Messages.EndLocalDocumentHandler_errorttitle,
-								Messages.EndLocalDocumentHandler_errormessage);
+							MessageDialog.openError(parentShell, Messages.EndLocalDocumentHandler_errorttitle,
+									Messages.EndLocalDocumentHandler_errormessage);
 						}
-						
+
 						service.remove(object, new IConflictHandler() {
 							@Override
-							public Result getResult(){
+							public Result getResult() {
 								if (MessageDialog.openQuestion(parentShell,
-									Messages.EndLocalDocumentHandler_conflicttitle,
-									Messages.EndLocalDocumentHandler_conflictmessage)) {
+										Messages.EndLocalDocumentHandler_conflicttitle,
+										Messages.EndLocalDocumentHandler_conflictmessage)) {
 									return Result.OVERWRITE;
 								} else {
 									return Result.ABORT;
@@ -55,14 +52,13 @@ public class EndLocalDocumentHandler extends AbstractHandler implements IHandler
 							}
 						});
 					} else {
-						MessageDialog.openInformation(parentShell,
-							Messages.EndLocalDocumentHandler_infotitle,
-							Messages.EndLocalDocumentHandler_infomessage);
+						MessageDialog.openInformation(parentShell, Messages.EndLocalDocumentHandler_infotitle,
+								Messages.EndLocalDocumentHandler_infomessage);
 					}
 				});
 			}
 		}
 		return null;
 	}
-	
+
 }

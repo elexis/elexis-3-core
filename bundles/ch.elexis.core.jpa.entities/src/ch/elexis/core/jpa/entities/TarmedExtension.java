@@ -18,25 +18,26 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "TARMED_EXTENSION")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "TarmedExtension.code", query = "SELECT te FROM TarmedExtension te WHERE te.deleted = false AND te.code = :code")
-public class TarmedExtension extends AbstractEntityWithId implements EntityWithId,EntityWithDeleted,EntityWithExtInfo {
+public class TarmedExtension extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	public static final String EXT_FLD_F_AL_R = "F_AL_R";
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Column(length = 32)
 	private String code;
-	
+
 	@Lob
 	private byte[] limits;
 
@@ -54,11 +55,11 @@ public class TarmedExtension extends AbstractEntityWithId implements EntityWithI
 		this.code = code;
 	}
 
-	public byte[] getLimits(){
+	public byte[] getLimits() {
 		return limits;
 	}
 
-	public void setLimits(byte[] limits){
+	public void setLimits(byte[] limits) {
 		this.limits = limits;
 	}
 
@@ -77,44 +78,44 @@ public class TarmedExtension extends AbstractEntityWithId implements EntityWithI
 	public void setTech_interpret(String tech_interpret) {
 		this.tech_interpret = tech_interpret;
 	}
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
 
 	@Override
-	public byte[] getExtInfo(){
+	public byte[] getExtInfo() {
 		return getLimits();
 	}
 
 	@Override
-	public void setExtInfo(byte[] extInfo){
+	public void setExtInfo(byte[] extInfo) {
 		setLimits(extInfo);
 	}
 }

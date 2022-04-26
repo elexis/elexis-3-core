@@ -7,15 +7,15 @@ import ch.elexis.core.services.IStockService;
 
 @Component
 public class StockServiceHolder {
-	
+
 	private static IStockService stockService;
-	
+
 	@Reference
-	public void setStockService(IStockService stockService){
+	public void setStockService(IStockService stockService) {
 		StockServiceHolder.stockService = stockService;
 	}
-	
-	public static IStockService get(){
+
+	public static IStockService get() {
 		if (stockService == null) {
 			throw new IllegalStateException("No IStockService available");
 		}

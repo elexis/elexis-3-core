@@ -6,7 +6,7 @@ public interface IContactResolver<T extends IContact> {
 
 	/**
 	 * Get the contact. The message can be displayed to the user, or logged, ...
-	 * 
+	 *
 	 * @return
 	 */
 	public T getContact(String message);

@@ -13,14 +13,13 @@ import ch.rgw.tools.JdbcLink;
 import junit.framework.Assert;
 
 public class Test_BezugsKontakt extends AbstractPersistentObjectTest {
-	
-	public Test_BezugsKontakt(JdbcLink link){
+
+	public Test_BezugsKontakt(JdbcLink link) {
 		super(link);
 	}
 
-
 	@Test
-	public void TestBezugsKontakt() throws ElexisException{
+	public void TestBezugsKontakt() throws ElexisException {
 		Patient patient = new Patient("Mustermann", "Max", "1.1.2000", "m");
 		Patient kontakt = new Patient("Musterfrau", "Erika", "1.1.1970", "f");
 		Map<String, BezugsKontaktRelation> mapBezugKonktatRelation = new HashMap<>();
@@ -28,10 +27,10 @@ public class Test_BezugsKontakt extends AbstractPersistentObjectTest {
 		selectedBezugKontaktRelation.setDestRelationType(RelationshipType.FAMILY_PARENT);
 		selectedBezugKontaktRelation.setSrcRelationType(RelationshipType.FAMILY_CHILD);
 		BezugsKontakt bezugsKontakt = new BezugsKontakt(kontakt, patient, selectedBezugKontaktRelation);
-		
+
 		List<BezugsKontakt> bezugsKontakte = kontakt.getBezugsKontakte();
 		Assert.assertEquals(1, bezugsKontakte.size());
-		
+
 		BezugsKontakt bezogenerKontakt = bezugsKontakte.get(0);
 		if (Locale.getDefault().toString().equals("de_CH")) {
 			// System.out.println("found de_CH: " + savedZusatzAdresse.getLabel());
@@ -41,8 +40,9 @@ public class Test_BezugsKontakt extends AbstractPersistentObjectTest {
 			// System.out.println("found en_US: " + savedZusatzAdresse.getLabel());
 			Assert.assertTrue(bezogenerKontakt.getLabel().startsWith("child"));
 		}
-		Assert.assertTrue(bezogenerKontakt.getLabel().startsWith(ch.elexis.core.l10n.Messages.RelationshipType_FAMILY_CHILD));
+		Assert.assertTrue(
+				bezogenerKontakt.getLabel().startsWith(ch.elexis.core.l10n.Messages.RelationshipType_FAMILY_CHILD));
 		System.out.println(RelationshipType.FAMILY_CHILD.getName());
 		Assert.assertNotNull(bezogenerKontakt.getId());
-	}	
+	}
 }

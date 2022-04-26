@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.text;
@@ -28,9 +28,9 @@ import ch.rgw.tools.StringTool;
 
 /**
  * An IDocument implementation, based on a File
- * 
+ *
  * @author gerry
- * 
+ *
  */
 public class GenericDocument implements IOpaqueDocument {
 	String title;
@@ -41,25 +41,20 @@ public class GenericDocument implements IOpaqueDocument {
 	String keywords;
 	String mimetype;
 	String guid = StringTool.unique("FileDocument");
-	
+
 	/**
 	 * Create a new GenericDocument from a File.
-	 * 
-	 * @param pat
-	 *            The patient this document belongs to. Can be null
-	 * @param title
-	 *            Title for the document. Never Null and Never empty
-	 * @param category
-	 *            Category for the document. Can be null or empty
-	 * @param file
-	 *            File to import in this document
-	 * @param date
-	 *            date of creation
-	 * @param keywords
-	 *            space- or comma- separated list of keywords. May be empty or null
+	 *
+	 * @param pat      The patient this document belongs to. Can be null
+	 * @param title    Title for the document. Never Null and Never empty
+	 * @param category Category for the document. Can be null or empty
+	 * @param file     File to import in this document
+	 * @param date     date of creation
+	 * @param keywords space- or comma- separated list of keywords. May be empty or
+	 *                 null
 	 */
-	public GenericDocument(Patient pat, String title, String category, File file, String date,
-		String keywords, String mimetype) throws IOException{
+	public GenericDocument(Patient pat, String title, String category, File file, String date, String keywords,
+			String mimetype) throws IOException {
 		this.title = title;
 		this.category = category;
 		this.date = date;
@@ -73,25 +68,20 @@ public class GenericDocument implements IOpaqueDocument {
 		contents = baos.toByteArray();
 		baos.close();
 	}
-	
+
 	/**
 	 * Create a new GenericDocument from a File.
-	 * 
-	 * @param pat
-	 *            The patient this document belongs to. Can be null
-	 * @param title
-	 *            Title for the document. Never Null and Never empty
-	 * @param category
-	 *            Category for the document. Can be null or empty
-	 * @param content
-	 *            Content as byte array
-	 * @param date
-	 *            date of creation
-	 * @param keywords
-	 *            space- or comma- separated list of keywords. May be empty or null
+	 *
+	 * @param pat      The patient this document belongs to. Can be null
+	 * @param title    Title for the document. Never Null and Never empty
+	 * @param category Category for the document. Can be null or empty
+	 * @param content  Content as byte array
+	 * @param date     date of creation
+	 * @param keywords space- or comma- separated list of keywords. May be empty or
+	 *                 null
 	 */
-	public GenericDocument(Patient pat, String title, String category, byte[] content, String date,
-		String keywords, String mimetype) throws IOException{
+	public GenericDocument(Patient pat, String title, String category, byte[] content, String date, String keywords,
+			String mimetype) throws IOException {
 		this.title = title;
 		this.category = category;
 		this.date = date;
@@ -102,54 +92,54 @@ public class GenericDocument implements IOpaqueDocument {
 		contents = new byte[content.length];
 		System.arraycopy(content, 0, contents, 0, content.length);
 	}
-	
+
 	@Override
-	public String getTitle(){
+	public String getTitle() {
 		return title;
 	}
-	
+
 	@Override
-	public String getMimeType(){
+	public String getMimeType() {
 		return mimetype == null ? "binary/octet-stream" : mimetype;
 	}
-	
+
 	/**
-	 * Return the contents of this document as Stream Note: The caller must ensure that the stream
-	 * is closed after using it.
+	 * Return the contents of this document as Stream Note: The caller must ensure
+	 * that the stream is closed after using it.
 	 */
 	@Override
-	public InputStream getContentsAsStream() throws ElexisException{
+	public InputStream getContentsAsStream() throws ElexisException {
 		ByteArrayInputStream bais = new ByteArrayInputStream(contents);
 		return bais;
 	}
-	
-	public byte[] getContentsAsBytes() throws ElexisException{
+
+	public byte[] getContentsAsBytes() throws ElexisException {
 		return contents;
 	}
-	
+
 	@Override
-	public String getKeywords(){
+	public String getKeywords() {
 		return keywords;
 	}
-	
+
 	@Override
-	public String getCategory(){
+	public String getCategory() {
 		return category;
 	}
-	
+
 	@Override
-	public String getCreationDate(){
+	public String getCreationDate() {
 		return date;
 	}
-	
+
 	@Override
-	public Patient getPatient(){
+	public Patient getPatient() {
 		return pat;
 	}
-	
+
 	@Override
-	public String getGUID(){
+	public String getGUID() {
 		return guid;
 	}
-	
+
 }

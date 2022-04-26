@@ -11,24 +11,24 @@ import ch.elexis.core.jpa.model.util.compatibility.Kontakt.statL;
 import ch.elexis.core.model.Statistics;
 
 public class CompatibilityClassResolver {
-	
-	public Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException{
+
+	public Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
 		if (desc.getName().equals("ch.elexis.data.Kontakt$statL")) {
 			return CompatibilityClassResolver.class.getClassLoader()
-				.loadClass("ch.elexis.core.jpa.model.util.compatibility.Kontakt$statL");
+					.loadClass("ch.elexis.core.jpa.model.util.compatibility.Kontakt$statL");
 		}
 		if (desc.getName().equals("ch.elexis.util.MFUList")) {
 			return CompatibilityClassResolver.class.getClassLoader()
-				.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList");
+					.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList");
 		}
 		if (desc.getName().equals("ch.elexis.util.MFUList$Entry")) {
 			return CompatibilityClassResolver.class.getClassLoader()
-				.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList$Entry");
+					.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList$Entry");
 		}
 		return null;
 	}
-	
-	public static void replaceCompatibilityObjects(Hashtable<Object, Object> readObject){
+
+	public static void replaceCompatibilityObjects(Hashtable<Object, Object> readObject) {
 		Collection<Object> keys = readObject.keySet();
 		for (Object key : keys) {
 			Object value = readObject.get(key);
@@ -49,13 +49,12 @@ public class CompatibilityClassResolver {
 					readObject.put(key, replacementList);
 				}
 			} else {
-				getReplacementObject(value)
-					.ifPresent(replacement -> readObject.put(key, replacement));
+				getReplacementObject(value).ifPresent(replacement -> readObject.put(key, replacement));
 			}
 		}
 	}
-	
-	private static Optional<Object> getReplacementObject(Object object){
+
+	private static Optional<Object> getReplacementObject(Object object) {
 		if (object.getClass().getName().startsWith("ch.elexis.core.jpa.model.util.compatibility")) {
 			if (object instanceof Kontakt.statL) {
 				return Optional.of(getStatistics((Kontakt.statL) object));
@@ -63,8 +62,8 @@ public class CompatibilityClassResolver {
 		}
 		return Optional.empty();
 	}
-	
-	private static Statistics getStatistics(statL value){
+
+	private static Statistics getStatistics(statL value) {
 		Statistics ret = new Statistics(value.v);
 		ret.setCount(value.c);
 		return ret;

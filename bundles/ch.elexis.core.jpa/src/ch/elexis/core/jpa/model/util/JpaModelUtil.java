@@ -19,22 +19,21 @@ import ch.rgw.compress.CompEx;
 
 /**
  * Utility class with methods JPA Identifiable specific methods
- * 
+ *
  * @author thomas
  *
  */
 public class JpaModelUtil {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(JpaModelUtil.class);
-	
+
 	/**
 	 * Convert a Hashtable into a compressed byte array.
-	 * 
-	 * @param hash
-	 *            the hashtable to store
+	 *
+	 * @param hash the hashtable to store
 	 * @return
 	 */
-	private static byte[] flatten(final Hashtable<Object, Object> hash){
+	private static byte[] flatten(final Hashtable<Object, Object> hash) {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(hash.size() * 30);
 			ZipOutputStream zos = new ZipOutputStream(baos);
@@ -49,16 +48,16 @@ public class JpaModelUtil {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Recreate a Hashtable from a byte array as created by flatten()
-	 * 
-	 * @param flat
-	 *            the byte array
-	 * @return the original Hashtable or null if no Hashtable could be created from the array
+	 *
+	 * @param flat the byte array
+	 * @return the original Hashtable or null if no Hashtable could be created from
+	 *         the array
 	 */
 	@SuppressWarnings("unchecked")
-	private static Hashtable<Object, Object> fold(final byte[] flat){
+	private static Hashtable<Object, Object> fold(final byte[] flat) {
 		if (flat.length == 0) {
 			return null;
 		}
@@ -66,8 +65,7 @@ public class JpaModelUtil {
 			ZipEntry entry = zis.getNextEntry();
 			if (entry != null) {
 				try (CompatibilityObjectInputStream ois = new CompatibilityObjectInputStream(zis)) {
-					Hashtable<Object, Object> readObject =
-						(Hashtable<Object, Object>) ois.readObject();
+					Hashtable<Object, Object> readObject = (Hashtable<Object, Object>) ois.readObject();
 					if (ois.usedCompatibility()) {
 						CompatibilityClassResolver.replaceCompatibilityObjects(readObject);
 					}
@@ -81,30 +79,31 @@ public class JpaModelUtil {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Elexis persistence contains BLOBs of serialized {@link Hashtable<Object, Object>}. All types
-	 * of serializable data (mostly String) can be stored and loaded from these ExtInfos. This
-	 * method serializes a {@link Hashtable} in the Elexis way.
-	 * 
+	 * Elexis persistence contains BLOBs of serialized {@link Hashtable<Object,
+	 * Object>}. All types of serializable data (mostly String) can be stored and
+	 * loaded from these ExtInfos. This method serializes a {@link Hashtable} in the
+	 * Elexis way.
+	 *
 	 * @param extInfo
 	 * @return
 	 */
-	public static byte[] extInfoToBytes(Map<Object, Object> extInfo){
+	public static byte[] extInfoToBytes(Map<Object, Object> extInfo) {
 		if (extInfo != null && !extInfo.isEmpty()) {
 			Hashtable<Object, Object> ov = (Hashtable<Object, Object>) extInfo;
 			return flatten(ov);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This method loads {@link Hashtable} from the byte array in an Elexis way.
-	 * 
+	 *
 	 * @param dataValue
 	 * @return
 	 */
-	public static Map<Object, Object> extInfoFromBytes(byte[] dataValue){
+	public static Map<Object, Object> extInfoFromBytes(byte[] dataValue) {
 		if (dataValue != null) {
 			Hashtable<Object, Object> ret = fold((byte[]) dataValue);
 			if (ret == null) {
@@ -114,34 +113,34 @@ public class JpaModelUtil {
 		}
 		return new Hashtable<Object, Object>();
 	}
-	
+
 	/**
 	 * Expand the compressed bytes using the Elexis {@link CompEx} tool.
-	 * 
+	 *
 	 * @param comp
 	 * @return
 	 */
-	public static byte[] getExpanded(byte[] compacted){
+	public static byte[] getExpanded(byte[] compacted) {
 		return CompEx.expand(compacted);
 	}
-	
+
 	/**
 	 * Compress the String using the Elexis {@link CompEx} tool.
-	 * 
+	 *
 	 * @param comp
 	 * @return
 	 */
-	public static byte[] getCompressed(String value){
+	public static byte[] getCompressed(String value) {
 		return CompEx.Compress(value, CompEx.ZIP);
 	}
-	
+
 	/**
 	 * Compress the byte array using the Elexis {@link CompEx} tool.
-	 * 
+	 *
 	 * @param comp
 	 * @return
 	 */
-	public static byte[] getCompressed(byte[] value){
+	public static byte[] getCompressed(byte[] value) {
 		return CompEx.Compress(value, CompEx.ZIP);
 	}
 }

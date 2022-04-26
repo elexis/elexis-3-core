@@ -7,10 +7,10 @@ import org.hl7.fhir.r4.model.Slot.SlotStatus;
 import ch.elexis.core.model.IAppointment;
 
 public class IAppointmentHelper extends AbstractHelper {
-	
-	public SlotStatus getSlotStatus(IAppointment localObject){
+
+	public SlotStatus getSlotStatus(IAppointment localObject) {
 		String type = localObject.getType();
-		
+
 		// TODO we need a dynamic mapping in the core, like it
 		// is already present for RH, for example:
 		switch (type) {
@@ -22,18 +22,18 @@ public class IAppointmentHelper extends AbstractHelper {
 			return SlotStatus.BUSY;
 		}
 	}
-	
-	public String getDescription(IAppointment localObject){
+
+	public String getDescription(IAppointment localObject) {
 		String grund = localObject.getReason();
 		if (grund == null || grund.length() < 1) {
 			return localObject.getType();
 		}
 		return grund;
 	}
-	
-	public void mapApplyAppointmentStatus(Appointment target, IAppointment source){
+
+	public void mapApplyAppointmentStatus(Appointment target, IAppointment source) {
 		String appointmentState = source.getState();
-		
+
 		// TODO we need a dynamic mapping in the core, like it
 		// is already present for RH, for example:
 		switch (appointmentState) {
@@ -53,14 +53,14 @@ public class IAppointmentHelper extends AbstractHelper {
 			target.setStatus(AppointmentStatus.BOOKED);
 		}
 	}
-	
+
 	/**
 	 * Map and apply the source status to the target status
-	 * 
+	 *
 	 * @param target
 	 * @param source
 	 */
-	public void mapApplyAppointmentStatus(IAppointment target, Appointment source){
+	public void mapApplyAppointmentStatus(IAppointment target, Appointment source) {
 		AppointmentStatus status = source.getStatus();
 		switch (status) {
 		case FULFILLED:
@@ -78,7 +78,7 @@ public class IAppointmentHelper extends AbstractHelper {
 		default:
 			target.setState("-");
 		}
-		
+
 	}
-	
+
 }

@@ -105,154 +105,137 @@ import ch.elexis.core.model.UserConfig;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 
 public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
-	
+
 	private static CoreModelAdapterFactory INSTANCE;
-	
-	public static synchronized CoreModelAdapterFactory getInstance(){
+
+	public static synchronized CoreModelAdapterFactory getInstance() {
 		if (INSTANCE == null) {
 			INSTANCE = new CoreModelAdapterFactory();
 		}
 		return INSTANCE;
 	}
-	
-	private CoreModelAdapterFactory(){
+
+	private CoreModelAdapterFactory() {
 		super();
 	}
-	
+
 	@Override
-	protected void initializeMappings(){
+	protected void initializeMappings() {
 		addMapping(new MappingEntry(IAppointment.class, Appointment.class, Termin.class));
-		
-		addMapping(new MappingEntry(IConfig.class, Config.class,
-			ch.elexis.core.jpa.entities.Config.class));
+
+		addMapping(new MappingEntry(IConfig.class, Config.class, ch.elexis.core.jpa.entities.Config.class));
 		addMapping(new MappingEntry(IUserConfig.class, UserConfig.class, Userconfig.class));
-		
-		addMapping(new MappingEntry(IUser.class, ch.elexis.core.model.User.class,
-			ch.elexis.core.jpa.entities.User.class));
-		
+
+		addMapping(
+				new MappingEntry(IUser.class, ch.elexis.core.model.User.class, ch.elexis.core.jpa.entities.User.class));
+
 		addMapping(new MappingEntry(ISticker.class, ch.elexis.core.model.Sticker.class,
-			ch.elexis.core.jpa.entities.Sticker.class));
-		
-		addMapping(new MappingEntry(IXid.class, ch.elexis.core.model.Xid.class,
-			ch.elexis.core.jpa.entities.Xid.class));
-		addMapping(new MappingEntry(IBlob.class, ch.elexis.core.model.Blob.class,
-			ch.elexis.core.jpa.entities.Heap.class));
+				ch.elexis.core.jpa.entities.Sticker.class));
+
+		addMapping(new MappingEntry(IXid.class, ch.elexis.core.model.Xid.class, ch.elexis.core.jpa.entities.Xid.class));
+		addMapping(
+				new MappingEntry(IBlob.class, ch.elexis.core.model.Blob.class, ch.elexis.core.jpa.entities.Heap.class));
 		addMapping(new MappingEntry(IBlobSecondary.class, ch.elexis.core.model.BlobSecondary.class,
-			ch.elexis.core.jpa.entities.Heap2.class));
-		
+				ch.elexis.core.jpa.entities.Heap2.class));
+
 		addMapping(new MappingEntry(IContact.class, Contact.class, Kontakt.class)
-			.adapterInitializer(this::setContactDiscriminator));
-		addMapping(new MappingEntry(IPatient.class, Patient.class, Kontakt.class)
-			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isPatient()
-				&& ((Kontakt) adapter.getEntity()).isPerson())
-			.queryPreCondition(query -> {
-				query.and(ModelPackage.Literals.ICONTACT__PERSON, COMPARATOR.EQUALS, true);
-				query.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
-			}).adapterInitializer(this::setContactDiscriminator));
+				.adapterInitializer(this::setContactDiscriminator));
+		addMapping(new MappingEntry(IPatient.class, Patient.class, Kontakt.class).adapterPreCondition(
+				adapter -> ((Kontakt) adapter.getEntity()).isPatient() && ((Kontakt) adapter.getEntity()).isPerson())
+				.queryPreCondition(query -> {
+					query.and(ModelPackage.Literals.ICONTACT__PERSON, COMPARATOR.EQUALS, true);
+					query.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
+				}).adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(IPerson.class, Person.class, Kontakt.class)
-			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isPerson())
-			.queryPreCondition(query -> {
-				query.and(ModelPackage.Literals.ICONTACT__PERSON, COMPARATOR.EQUALS, true);
-			}).adapterInitializer(this::setContactDiscriminator));
+				.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isPerson()).queryPreCondition(query -> {
+					query.and(ModelPackage.Literals.ICONTACT__PERSON, COMPARATOR.EQUALS, true);
+				}).adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(IOrganization.class, Organization.class, Kontakt.class)
-			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isOrganisation())
-			.queryPreCondition(query -> {
-				query.and(ModelPackage.Literals.ICONTACT__ORGANIZATION, COMPARATOR.EQUALS, true);
-				query.and(ModelPackage.Literals.ICONTACT__PERSON, COMPARATOR.EQUALS, false);
-			}).adapterInitializer(this::setContactDiscriminator));
+				.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isOrganisation())
+				.queryPreCondition(query -> {
+					query.and(ModelPackage.Literals.ICONTACT__ORGANIZATION, COMPARATOR.EQUALS, true);
+					query.and(ModelPackage.Literals.ICONTACT__PERSON, COMPARATOR.EQUALS, false);
+				}).adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(ILaboratory.class, Laboratory.class, Kontakt.class)
-			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isLaboratory())
-			.queryPreCondition(query -> {
-				query.and(ModelPackage.Literals.ICONTACT__LABORATORY, COMPARATOR.EQUALS, true);
-			}).adapterInitializer(this::setContactDiscriminator));
+				.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isLaboratory())
+				.queryPreCondition(query -> {
+					query.and(ModelPackage.Literals.ICONTACT__LABORATORY, COMPARATOR.EQUALS, true);
+				}).adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(IMandator.class, Mandator.class, Kontakt.class)
-			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isMandator())
-			.queryPreCondition(query -> {
-				query.and(ModelPackage.Literals.ICONTACT__MANDATOR, COMPARATOR.EQUALS, true);
-			}).adapterInitializer(this::setContactDiscriminator));
-		
+				.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isMandator())
+				.queryPreCondition(query -> {
+					query.and(ModelPackage.Literals.ICONTACT__MANDATOR, COMPARATOR.EQUALS, true);
+				}).adapterInitializer(this::setContactDiscriminator));
+
 		addMapping(new MappingEntry(ICoverage.class, Coverage.class, Fall.class));
 		addMapping(new MappingEntry(IEncounter.class, Encounter.class, Behandlung.class));
-		
-		addMapping(new MappingEntry(IInvoice.class, Invoice.class,
-			ch.elexis.core.jpa.entities.Invoice.class));
-		addMapping(
-			new MappingEntry(IInvoiceBilled.class, InvoiceBilled.class, VerrechnetCopy.class));
-		
+
+		addMapping(new MappingEntry(IInvoice.class, Invoice.class, ch.elexis.core.jpa.entities.Invoice.class));
+		addMapping(new MappingEntry(IInvoiceBilled.class, InvoiceBilled.class, VerrechnetCopy.class));
+
 		addMapping(new MappingEntry(IAccountTransaction.class, AccountTransaction.class,
-			ch.elexis.core.jpa.entities.AccountTransaction.class));
+				ch.elexis.core.jpa.entities.AccountTransaction.class));
 		addMapping(new MappingEntry(IPayment.class, Payment.class, Zahlung.class));
-		
-		addMapping(
-			new MappingEntry(IBillingSystemFactor.class, BillingSystemFactor.class, VKPreis.class));
+
+		addMapping(new MappingEntry(IBillingSystemFactor.class, BillingSystemFactor.class, VKPreis.class));
 		addMapping(new MappingEntry(IBilled.class, Billed.class, Verrechnet.class));
 		addMapping(new MappingEntry(IArticle.class, ch.elexis.core.model.TypedArticle.class,
-			ch.elexis.core.jpa.entities.Artikel.class));
-		addMapping(
-			new MappingEntry(ICustomService.class, CustomService.class, Eigenleistung.class));
-		addMapping(new MappingEntry(ICodeElementBlock.class, CodeElementBlock.class,
-			Leistungsblock.class));
-		
-		addMapping(new MappingEntry(IArticleDefaultSignature.class,
-			ch.elexis.core.model.ArticleDefaultSignature.class,
-			ch.elexis.core.jpa.entities.DefaultSignature.class));
-		
-		addMapping(
-			new MappingEntry(IDiagnosisReference.class, DiagnosisReference.class, Diagnosis.class));
+				ch.elexis.core.jpa.entities.Artikel.class));
+		addMapping(new MappingEntry(ICustomService.class, CustomService.class, Eigenleistung.class));
+		addMapping(new MappingEntry(ICodeElementBlock.class, CodeElementBlock.class, Leistungsblock.class));
+
+		addMapping(new MappingEntry(IArticleDefaultSignature.class, ch.elexis.core.model.ArticleDefaultSignature.class,
+				ch.elexis.core.jpa.entities.DefaultSignature.class));
+
+		addMapping(new MappingEntry(IDiagnosisReference.class, DiagnosisReference.class, Diagnosis.class));
 		addMapping(new MappingEntry(IFreeTextDiagnosis.class, FreeTextDiagnosis.class,
-			ch.elexis.core.jpa.entities.FreeTextDiagnosis.class));
-		
+				ch.elexis.core.jpa.entities.FreeTextDiagnosis.class));
+
 		addMapping(new MappingEntry(IAddress.class, Address.class, ZusatzAdresse.class));
-		
-		addMapping(new MappingEntry(IRelatedContact.class, RelatedContact.class,
-			KontaktAdressJoint.class));
-		
+
+		addMapping(new MappingEntry(IRelatedContact.class, RelatedContact.class, KontaktAdressJoint.class));
+
 		addMapping(new MappingEntry(IDocumentLetter.class, DocumentLetter.class, Brief.class));
-		addMapping(
-			new MappingEntry(IDocumentTemplate.class, DocumentTemplate.class, BriefVorlage.class));
-		
+		addMapping(new MappingEntry(IDocumentTemplate.class, DocumentTemplate.class, BriefVorlage.class));
+
 		addMapping(new MappingEntry(IPrescription.class, Prescription.class,
-			ch.elexis.core.jpa.entities.Prescription.class));
-		addMapping(new MappingEntry(IRecipe.class, Recipe.class,
-			ch.elexis.core.jpa.entities.Rezept.class));
-		
-		addMapping(
-			new MappingEntry(IRole.class, Role.class, ch.elexis.core.jpa.entities.Role.class));
-		addMapping(
-			new MappingEntry(IRight.class, Right.class, ch.elexis.core.jpa.entities.Right.class));
-		
+				ch.elexis.core.jpa.entities.Prescription.class));
+		addMapping(new MappingEntry(IRecipe.class, Recipe.class, ch.elexis.core.jpa.entities.Rezept.class));
+
+		addMapping(new MappingEntry(IRole.class, Role.class, ch.elexis.core.jpa.entities.Role.class));
+		addMapping(new MappingEntry(IRight.class, Right.class, ch.elexis.core.jpa.entities.Right.class));
+
 		addMapping(new MappingEntry(ILabItem.class, ch.elexis.core.model.LabItem.class,
-			ch.elexis.core.jpa.entities.LabItem.class));
+				ch.elexis.core.jpa.entities.LabItem.class));
 		addMapping(new MappingEntry(ILabResult.class, ch.elexis.core.model.LabResult.class,
-			ch.elexis.core.jpa.entities.LabResult.class));
+				ch.elexis.core.jpa.entities.LabResult.class));
 		addMapping(new MappingEntry(ILabOrder.class, ch.elexis.core.model.LabOrder.class,
-			ch.elexis.core.jpa.entities.LabOrder.class));
+				ch.elexis.core.jpa.entities.LabOrder.class));
 		addMapping(new MappingEntry(ILabMapping.class, ch.elexis.core.model.LabMapping.class,
-			ch.elexis.core.jpa.entities.LabMapping.class));
-		
+				ch.elexis.core.jpa.entities.LabMapping.class));
+
 		addMapping(new MappingEntry(IStock.class, ch.elexis.core.model.Stock.class,
-			ch.elexis.core.jpa.entities.Stock.class));
+				ch.elexis.core.jpa.entities.Stock.class));
 		addMapping(new MappingEntry(IStockEntry.class, ch.elexis.core.model.StockEntry.class,
-			ch.elexis.core.jpa.entities.StockEntry.class));
-		
+				ch.elexis.core.jpa.entities.StockEntry.class));
+
 		addMapping(new MappingEntry(IOrder.class, ch.elexis.core.model.Order.class,
-			ch.elexis.core.jpa.entities.Bestellung.class));
+				ch.elexis.core.jpa.entities.Bestellung.class));
 		addMapping(new MappingEntry(IOrderEntry.class, ch.elexis.core.model.OrderEntry.class,
-			ch.elexis.core.jpa.entities.BestellungEntry.class));
-		
+				ch.elexis.core.jpa.entities.BestellungEntry.class));
+
 		addMapping(new MappingEntry(IImage.class, Image.class, DbImage.class));
-		
-		addMapping(new MappingEntry(IMessage.class, Message.class,
-			ch.elexis.core.jpa.entities.Message.class));
-		
+
+		addMapping(new MappingEntry(IMessage.class, Message.class, ch.elexis.core.jpa.entities.Message.class));
+
 		addMapping(new MappingEntry(ITextTemplate.class, TextTemplate.class,
-			ch.elexis.core.jpa.entities.TextTemplate.class));
-		
-		addMapping(new MappingEntry(ISickCertificate.class, SickCertificate.class,
-			ch.elexis.core.jpa.entities.AUF.class));
+				ch.elexis.core.jpa.entities.TextTemplate.class));
+
+		addMapping(
+				new MappingEntry(ISickCertificate.class, SickCertificate.class, ch.elexis.core.jpa.entities.AUF.class));
 	}
-	
-	private Object setContactDiscriminator(AbstractIdModelAdapter<?> adapter){
+
+	private Object setContactDiscriminator(AbstractIdModelAdapter<?> adapter) {
 		if (adapter instanceof IContact) {
 			IContact contact = (IContact) adapter;
 			contact.setPerson(adapter instanceof IPerson);

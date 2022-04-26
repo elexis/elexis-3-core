@@ -20,50 +20,47 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.JdbcLink;
 
 public class Test_OrderService extends AbstractPersistentObjectTest {
-	
-	public Test_OrderService(JdbcLink link){
+
+	public Test_OrderService(JdbcLink link) {
 		super(link);
 	}
-	
-	
+
 	private static IStock stock_A_5_order;
 	private static Artikel artikel_A;
 	private static IStockEntry stockEntry;
-	
-	private static IStockService stockService =
-		OsgiServiceUtil.getService(IStockService.class).get();
-	
+
+	private static IStockService stockService = OsgiServiceUtil.getService(IStockService.class).get();
+
 	@BeforeClass
-	public static void init(){
+	public static void init() {
 		stock_A_5_order = CoreModelServiceHolder.get().create(IStock.class);
 		stock_A_5_order.setCode("AOD");
 		stock_A_5_order.setPriority(5);
 		CoreModelServiceHolder.get().save(stock_A_5_order);
 		artikel_A = new Artikel("ArtikelAOrder", "Eigenartikel");
 		artikel_A.set(Artikel.FLD_TYP, ArticleTyp.EIGENARTIKEL.name());
-		
-		stockEntry = stockService.storeArticleInStock(stock_A_5_order,
-			artikel_A.storeToString());
+
+		stockEntry = stockService.storeArticleInStock(stock_A_5_order, artikel_A.storeToString());
 		assertNotNull(stockEntry);
 		stockEntry.setMinimumStock(5);
 		stockEntry.setCurrentStock(10);
 		stockEntry.setMaximumStock(15);
-		
+
 	}
-	
+
 	@AfterClass
-	public static void afterClass(){
+	public static void afterClass() {
 		CoreModelServiceHolder.get().remove(stockEntry);
 		CoreModelServiceHolder.get().remove(stock_A_5_order);
 	}
-	
+
 	@Test
-	public void testAddRefillForStockEntryToOrderAndFindOpenOrder(){
+	public void testAddRefillForStockEntryToOrderAndFindOpenOrder() {
 		Bestellung b = new Bestellung("TestBestellung", CoreHub.getLoggedInContact());
 		OrderServiceHolder.get().addRefillForStockEntryToOrder(stockEntry, b.toIOrder());
 		assertEquals(1, b.getEntries().size());
 		assertEquals(5, b.getEntries().get(0).getCount());
-		
+
 		IOrderEntry ioe = OrderServiceHolder.get().findOpenOrderEntryForStockEntry(stockEntry);
 		assertNotNull(ioe);
 	}

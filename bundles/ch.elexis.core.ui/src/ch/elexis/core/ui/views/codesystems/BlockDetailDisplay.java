@@ -96,7 +96,7 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.StringTool;
 
 public class BlockDetailDisplay implements IDetailDisplay {
-	
+
 	private ScrolledForm form;
 	private FormToolkit tk;
 	private Text tName;
@@ -106,71 +106,63 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private Button bNew, bEigen, bDiag;
 	private List<IMandator> lMandanten;
 	private DataBindingContext dbc = new DataBindingContext();
-	private WritableValue<ICodeElementBlock> master =
-		new WritableValue(null, ICodeElementBlock.class);
-	
+	private WritableValue<ICodeElementBlock> master = new WritableValue(null, ICodeElementBlock.class);
+
 	private BlockComparator comparator;
-	
+
 	private Action removeLeistung, moveUpAction, moveDownAction, editAction, countAction;
 	private TableViewerFocusCellManager focusCellManager;
-	
+
 	private final IChangeListener changeListener = (event) -> {
 		if (master.getValue() instanceof ICodeElementBlock) {
 			CoreModelServiceHolder.get().save(master.getValue());
 		}
 		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, master.getValue());
 	};
-	
+
 	@Inject
-	public void selection(
-		@org.eclipse.e4.core.di.annotations.Optional ICodeElementBlock block){
+	public void selection(@org.eclipse.e4.core.di.annotations.Optional ICodeElementBlock block) {
 		if (block != null && !form.isDisposed()) {
 			display(block);
 		}
 	}
-	
+
 	@org.eclipse.e4.core.di.annotations.Optional
 	@Inject
-	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICodeElementBlock block){
+	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICodeElementBlock block) {
 		if (block != null && master.getValue() != null && master.getValue().equals(block)) {
 			updateViewerInput(block);
 		}
 	}
-	
-	public Composite createDisplay(final Composite parent, final IViewSite site){
+
+	public Composite createDisplay(final Composite parent, final IViewSite site) {
 		tk = UiDesk.getToolkit();
 		form = tk.createScrolledForm(parent);
 		form.setData("TEST_COMP_NAME", "blkd_form"); //$NON-NLS-1$
-		
+
 		Composite body = form.getBody();
 		body.setData("TEST_COMP_NAME", "blkd_body"); //$NON-NLS-1$
 		body.setBackground(parent.getBackground());
 		body.setLayout(new GridLayout(2, false));
-		
-		tk.createLabel(body, Messages.BlockDetailDisplay_name)
-			.setBackground(parent.getBackground());
+
+		tk.createLabel(body, Messages.BlockDetailDisplay_name).setBackground(parent.getBackground());
 		tName = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
 		tName.setData("TEST_COMP_NAME", "blkd_Name_lst"); //$NON-NLS-1$
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		IObservableValue txtNameObservableUi =
-			WidgetProperties.text(SWT.Modify).observeDelayed(100, tName);
-		IObservableValue txtNameObservable =
-			PojoProperties.value("code", String.class).observeDetail(master);
+		IObservableValue txtNameObservableUi = WidgetProperties.text(SWT.Modify).observeDelayed(100, tName);
+		IObservableValue txtNameObservable = PojoProperties.value("code", String.class).observeDetail(master);
 		txtNameObservable.addChangeListener(changeListener);
 		dbc.bindValue(txtNameObservableUi, txtNameObservable);
-		
-		tk.createLabel(body, Messages.BlockDetailDisplay_macro)
-			.setBackground(parent.getBackground());
+
+		tk.createLabel(body, Messages.BlockDetailDisplay_macro).setBackground(parent.getBackground());
 		tMacro = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
 		tMacro.setData("TEST_COMP_NAME", "blkd_Makro_lst"); //$NON-NLS-1$
 		tMacro.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		IObservableValue txtMacroObservableUi =
-			WidgetProperties.text(SWT.Modify).observeDelayed(100, tMacro);
-		IObservableValue txtMacroObservable =
-			PojoProperties.value("macro", String.class).observeDetail(master);
+		IObservableValue txtMacroObservableUi = WidgetProperties.text(SWT.Modify).observeDelayed(100, tMacro);
+		IObservableValue txtMacroObservable = PojoProperties.value("macro", String.class).observeDetail(master);
 		txtMacroObservable.addChangeListener(changeListener);
 		dbc.bindValue(txtMacroObservableUi, txtMacroObservable);
-		
+
 		tk.createLabel(body, StringConstants.MANDATOR).setBackground(parent.getBackground());
 		cbMandant = new Combo(body, SWT.NONE);
 		cbMandant.setData("TEST_COMP_NAME", "blkd_Mandant_cb"); //$NON-NLS-1$
@@ -185,10 +177,9 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		}
 		cbMandant.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(final SelectionEvent e){
+			public void widgetSelected(final SelectionEvent e) {
 				int idx = cbMandant.getSelectionIndex();
-				Optional<ICodeElementBlock> selected =
-					ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
+				Optional<ICodeElementBlock> selected = ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
 				selected.ifPresent(block -> {
 					if (idx > 0) {
 						block.setMandator(lMandanten.get(idx - 1));
@@ -197,33 +188,29 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					}
 				});
 			}
-			
+
 		});
 		Group gList = new Group(body, SWT.BORDER);
-		gList.setText(Messages.BlockDetailDisplay_services); //$NON-NLS-1$
+		gList.setText(Messages.BlockDetailDisplay_services); // $NON-NLS-1$
 		gList.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 		gList.setLayout(new FillLayout());
 		tk.adapt(gList);
-		viewer =
-			new TableViewer(gList, SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+		viewer = new TableViewer(gList, SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
 		viewer.setData("TEST_COMP_NAME", "blkd_Leistung_Lst"); //$NON-NLS-1$
 		tk.adapt(viewer.getControl(), true, true);
-		
+
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
 		viewer.getTable().setHeaderVisible(true);
 		viewer.getTable().setLinesVisible(true);
 		comparator = new BlockComparator();
 		createColumns();
-		
-		updateViewerInput(
-			ContextServiceHolder.get().getTyped(ICodeElementBlock.class).orElse(null));
-		
+
+		updateViewerInput(ContextServiceHolder.get().getTyped(ICodeElementBlock.class).orElse(null));
+
 		final TextTransfer textTransfer = TextTransfer.getInstance();
-		Transfer[] types = new Transfer[] {
-			textTransfer
-		};
+		Transfer[] types = new Transfer[] { textTransfer };
 		viewer.addDropSupport(DND.DROP_COPY, types, new DropTargetListener() {
-			public void dragEnter(final DropTargetEvent event){
+			public void dragEnter(final DropTargetEvent event) {
 				if (event.data instanceof IArticle) {
 					if (((IArticle) event.data).isProduct()) {
 						event.detail = event.detail = DND.DROP_NONE;
@@ -232,16 +219,18 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				}
 				event.detail = DND.DROP_COPY;
 			}
-			
-			public void dragLeave(final DropTargetEvent event){}
-			
-			public void dragOperationChanged(final DropTargetEvent event){}
-			
-			public void dragOver(final DropTargetEvent event){}
-			
-			public void drop(final DropTargetEvent event){
-				Optional<ICodeElementBlock> block =
-					ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
+
+			public void dragLeave(final DropTargetEvent event) {
+			}
+
+			public void dragOperationChanged(final DropTargetEvent event) {
+			}
+
+			public void dragOver(final DropTargetEvent event) {
+			}
+
+			public void drop(final DropTargetEvent event) {
+				Optional<ICodeElementBlock> block = ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
 				String drp = (String) event.data;
 				String[] dl = drp.split(","); //$NON-NLS-1$
 				for (String obj : dl) {
@@ -251,29 +240,26 @@ public class BlockDetailDisplay implements IDetailDisplay {
 							b.addElement((ICodeElement) dropped);
 						});
 					} else {
-						LoggerFactory.getLogger(getClass())
-							.warn("Dropped unknown store to string [" + dl + "]");
+						LoggerFactory.getLogger(getClass()).warn("Dropped unknown store to string [" + dl + "]");
 					}
 				}
 				block.ifPresent(b -> {
 					CoreModelServiceHolder.get().save(b);
 					updateViewerInput(b);
-					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
-						ICodeElementBlock.class);
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, ICodeElementBlock.class);
 				});
 			}
-			
-			public void dropAccept(final DropTargetEvent event){
-			
+
+			public void dropAccept(final DropTargetEvent event) {
+
 			}
-			
+
 		});
 		// connect double click on column to actions
-		focusCellManager =
-			new TableViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
+		focusCellManager = new TableViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(DoubleClickEvent event){
+			public void doubleClick(DoubleClickEvent event) {
 				ViewerCell focusCell = focusCellManager.getFocusCell();
 				int columnIndex = focusCell.getColumnIndex();
 				if (columnIndex == 0) {
@@ -281,38 +267,35 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				}
 			}
 		});
-		
-		bNew = tk.createButton(body, Messages.BlockDetailDisplay_addPredefinedServices, SWT.PUSH); //$NON-NLS-1$
+
+		bNew = tk.createButton(body, Messages.BlockDetailDisplay_addPredefinedServices, SWT.PUSH); // $NON-NLS-1$
 		bNew.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		bNew.setData("TEST_COMP_NAME", "blkd_addPredefinedServices_btn"); //$NON-NLS-1$
 		bNew.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(final SelectionEvent e){
+			public void widgetSelected(final SelectionEvent e) {
 				try {
 					site.getPage().showView(LeistungenView.ID);
 				} catch (Exception ex) {
-					ElexisStatus status =
-						new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-							"Fehler beim Starten des Leistungscodes " + ex.getMessage(), ex,
-							ElexisStatus.LOG_ERRORS);
+					ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+							"Fehler beim Starten des Leistungscodes " + ex.getMessage(), ex, ElexisStatus.LOG_ERRORS);
 					StatusManager.getManager().handle(status, StatusManager.SHOW);
 				}
 			}
 		});
-		
-		bEigen =
-			tk.createButton(body, Messages.BlockDetailDisplay_addSelfDefinedServices, SWT.PUSH); //$NON-NLS-1$
+
+		bEigen = tk.createButton(body, Messages.BlockDetailDisplay_addSelfDefinedServices, SWT.PUSH); // $NON-NLS-1$
 		bEigen.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		bEigen.setData("TEST_COMP_NAME", "blkd_createPredefinedServices_btn"); //$NON-NLS-1$
 		bEigen.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(final SelectionEvent e){
+			public void widgetSelected(final SelectionEvent e) {
 				try {
 					// execute the command
 					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getService(IHandlerService.class);
-					
+							.getActiveWorkbenchWindow().getService(IHandlerService.class);
+
 					handlerService.executeCommand(CreateEigenleistungUi.COMMANDID, null);
 				} catch (Exception ex) {
 					throw new RuntimeException(CreateEigenleistungUi.COMMANDID, ex);
@@ -320,43 +303,36 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				viewer.refresh();
 			}
 		});
-		
+
 		bDiag = tk.createButton(body, "Diagnose hinzufügen", SWT.PUSH); //$NON-NLS-1$
 		bDiag.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		bDiag.setData("TEST_COMP_NAME", "btn_addDiagnosis_btn"); //$NON-NLS-1$
 		bDiag.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
-			public void widgetSelected(final SelectionEvent e){
+			public void widgetSelected(final SelectionEvent e) {
 				try {
 					site.getPage().showView(DiagnosenView.ID);
 				} catch (Exception ex) {
-					ElexisStatus status =
-						new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-							"Fehler beim Starten des Diagnosecodes " + ex.getMessage(), ex,
-							ElexisStatus.LOG_ERRORS);
+					ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
+							"Fehler beim Starten des Diagnosecodes " + ex.getMessage(), ex, ElexisStatus.LOG_ERRORS);
 					StatusManager.getManager().handle(status, StatusManager.SHOW);
 				}
 			}
 		});
-		
+
 		makeActions();
 		ViewMenus menus = new ViewMenus(site);
 		menus.createControlContextMenu(viewer.getControl(), new ViewMenus.IMenuPopulator() {
-			public IAction[] fillMenu(){
-				BlockElementViewerItem element =
-					(BlockElementViewerItem) ((IStructuredSelection) viewer.getSelection())
+			public IAction[] fillMenu() {
+				BlockElementViewerItem element = (BlockElementViewerItem) ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement();
 				if (element != null) {
 					if (element.isCodeElementInstanceOf(Eigenleistung.class)) {
-						return new IAction[] {
-							moveUpAction, moveDownAction, null, countAction, removeLeistung,
-							editAction
-						};
+						return new IAction[] { moveUpAction, moveDownAction, null, countAction, removeLeistung,
+								editAction };
 					} else {
-						return new IAction[] {
-							moveUpAction, moveDownAction, null, countAction, removeLeistung
-						};
+						return new IAction[] { moveUpAction, moveDownAction, null, countAction, removeLeistung };
 					}
 				}
 				return new IAction[0];
@@ -365,15 +341,15 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		// menus.createViewerContextMenu(lLst,moveUpAction,moveDownAction,null,removeLeistung,editAction);
 		return body;
 	}
-	
-	public Class<?> getElementClass(){
+
+	public Class<?> getElementClass() {
 		return ICodeElementBlock.class;
 	}
-	
-	public void display(final Object obj){
+
+	public void display(final Object obj) {
 		ICodeElementBlock block = (ICodeElementBlock) obj;
 		master.setValue(block);
-		
+
 		if (obj == null) {
 			bNew.setEnabled(false);
 			cbMandant.select(0);
@@ -389,27 +365,23 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		}
 		updateViewerInput(block);
 	}
-	
-	private void updateViewerInput(ICodeElementBlock block){
+
+	private void updateViewerInput(ICodeElementBlock block) {
 		viewer.setInput(BlockElementViewerItem.of(block, true));
 	}
-	
-	public String getTitle(){
-		return Messages.BlockDetailDisplay_blocks; //$NON-NLS-1$
+
+	public String getTitle() {
+		return Messages.BlockDetailDisplay_blocks; // $NON-NLS-1$
 	}
-	
-	private void createColumns(){
-		String[] titles = {
-			"Anz.", "Code", "Bezeichnung"
-		};
-		int[] bounds = {
-			45, 125, 600
-		};
-		
+
+	private void createColumns() {
+		String[] titles = { "Anz.", "Code", "Bezeichnung" };
+		int[] bounds = { 45, 125, 600 };
+
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
 					BlockElementViewerItem item = (BlockElementViewerItem) element;
 					return Integer.toString(item.getCount());
@@ -417,11 +389,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return "";
 			}
 		});
-		
+
 		col = createTableViewerColumn(titles[1], bounds[1], 1, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
 					BlockElementViewerItem item = (BlockElementViewerItem) element;
 					return item.getCode();
@@ -429,26 +401,26 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return "";
 			}
 		});
-		
+
 		col = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
 					BlockElementViewerItem item = (BlockElementViewerItem) element;
 					return item.getText();
 				}
 				return "";
 			}
-			
+
 			@Override
-			public Color getBackground(final Object element){
+			public Color getBackground(final Object element) {
 				if (element instanceof BlockElementViewerItem) {
 					BlockElementViewerItem item = (BlockElementViewerItem) element;
 					String codeSystemName = item.getCodeSystemName();
 					if (codeSystemName != null) {
 						String rgbColor = ConfigServiceHolder
-							.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
+								.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
 						return UiDesk.getColorFromRGB(rgbColor);
 					}
 				}
@@ -458,7 +430,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		TableColumn tableColumn = col.getColumn();
 		col.getColumn().addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				if (viewer.getComparator() == null) {
 					viewer.setComparator(comparator);
 					comparator.setDirection(SWT.DOWN);
@@ -477,9 +449,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 		});
 	}
-	
-	private TableViewerColumn createTableViewerColumn(String title, int bound, int colNumber,
-		int style){
+
+	private TableViewerColumn createTableViewerColumn(String title, int bound, int colNumber, int style) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, style);
 		final TableColumn column = viewerColumn.getColumn();
 		column.setText(title);
@@ -488,17 +459,15 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		column.setMoveable(false);
 		return viewerColumn;
 	}
-	
-	private void makeActions(){
-		removeLeistung = new Action(Messages.BlockDetailDisplay_remove) { //$NON-NLS-1$
+
+	private void makeActions() {
+		removeLeistung = new Action(Messages.BlockDetailDisplay_remove) { // $NON-NLS-1$
 			@Override
-			public void run(){
-				Optional<ICodeElementBlock> block =
-					ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
+			public void run() {
+				Optional<ICodeElementBlock> block = ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
 				block.ifPresent(b -> {
 					IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-					BlockElementViewerItem selectedElement =
-						(BlockElementViewerItem) sel.getFirstElement();
+					BlockElementViewerItem selectedElement = (BlockElementViewerItem) sel.getFirstElement();
 					if (selectedElement != null) {
 						selectedElement.remove();
 						updateViewerInput(b);
@@ -507,29 +476,28 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				});
 			}
 		};
-		moveUpAction = new Action(Messages.BlockDetailDisplay_moveUp) { //$NON-NLS-1$
+		moveUpAction = new Action(Messages.BlockDetailDisplay_moveUp) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				moveElement(true);
 			}
 		};
-		moveDownAction = new Action(Messages.BlockDetailDisplay_moveDown) { //$NON-NLS-1$
+		moveDownAction = new Action(Messages.BlockDetailDisplay_moveDown) { // $NON-NLS-1$
 			@Override
-			public void run(){
+			public void run() {
 				moveElement(false);
 			}
 		};
-		editAction = new Action(Messages.BlockDetailDisplay_changeAction) { //$NON-NLS-1$
+		editAction = new Action(Messages.BlockDetailDisplay_changeAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-				setToolTipText(Messages.BlockDetailDisplay_changeActionTooltip); //$NON-NLS-1$
+				setToolTipText(Messages.BlockDetailDisplay_changeActionTooltip); // $NON-NLS-1$
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-				BlockElementViewerItem selectedElement =
-					(BlockElementViewerItem) sel.getFirstElement();
+				BlockElementViewerItem selectedElement = (BlockElementViewerItem) sel.getFirstElement();
 				PersistentObject poElement = null;
 				ICodeElement firstElement = selectedElement.getFirstElement();
 				if (firstElement instanceof Identifiable) {
@@ -539,7 +507,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				}
 				if (poElement != null) {
 					EditEigenleistungUi.executeWithParams(poElement);
-					
+
 					ContextServiceHolder.get().getTyped(ICodeElementBlock.class).ifPresent(b -> {
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, b);
 					});
@@ -548,31 +516,30 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		};
 		countAction = new Action("Anzahl") {
 			@Override
-			public void run(){
+			public void run() {
 				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-				BlockElementViewerItem selectedElement =
-					(BlockElementViewerItem) sel.getFirstElement();
+				BlockElementViewerItem selectedElement = (BlockElementViewerItem) sel.getFirstElement();
 				InputDialog dlg = new InputDialog(UiDesk.getTopShell(), "Anzahl ändern", //$NON-NLS-1$
-					"Ganzzahlige neue Anzahl", //$NON-NLS-1$
-					Integer.toString(selectedElement.getCount()), new IInputValidator() {
-						@Override
-						public String isValid(String string){
-							if (string != null && !string.isEmpty()) {
-								try {
-									Integer.parseInt(string);
-								} catch (NumberFormatException e) {
-									return "Kein ganzzahliger Wert";
+						"Ganzzahlige neue Anzahl", //$NON-NLS-1$
+						Integer.toString(selectedElement.getCount()), new IInputValidator() {
+							@Override
+							public String isValid(String string) {
+								if (string != null && !string.isEmpty()) {
+									try {
+										Integer.parseInt(string);
+									} catch (NumberFormatException e) {
+										return "Kein ganzzahliger Wert";
+									}
 								}
+								return null;
 							}
-							return null;
-						}
-					});
+						});
 				if (dlg.open() == Dialog.OK) {
 					try {
 						String val = dlg.getValue();
 						selectedElement.setCount(Integer.parseInt(val));
-						Optional<ICodeElementBlock> block =
-							ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
+						Optional<ICodeElementBlock> block = ContextServiceHolder.get()
+								.getTyped(ICodeElementBlock.class);
 						block.ifPresent(b -> {
 							CoreModelServiceHolder.get().save(b);
 							updateViewerInput(b);
@@ -585,10 +552,9 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 		};
 	}
-	
-	private void moveElement(final boolean up){
-		Optional<ICodeElementBlock> block =
-			ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
+
+	private void moveElement(final boolean up) {
+		Optional<ICodeElementBlock> block = ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
 		block.ifPresent(b -> {
 			IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 			BlockElementViewerItem selectedElement = (BlockElementViewerItem) sel.getFirstElement();
@@ -599,12 +565,12 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 		});
 	}
-	
+
 	private class BlockComparator extends ViewerComparator {
-		
+
 		private int direction = 0;
-		
-		public void setDirection(int value){
+
+		public void setDirection(int value) {
 			if (value == SWT.DOWN) {
 				direction = 1;
 			} else if (value == SWT.UP) {
@@ -613,8 +579,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				direction = 0;
 			}
 		}
-		
-		public int getDirection(){
+
+		public int getDirection() {
 			if (direction == 1) {
 				return SWT.DOWN;
 			} else if (direction == -1) {
@@ -622,16 +588,15 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 			return SWT.NONE;
 		}
-		
+
 		@Override
-		public int compare(Viewer viewer, Object left, Object right){
+		public int compare(Viewer viewer, Object left, Object right) {
 			if (left instanceof BlockElementViewerItem && right instanceof BlockElementViewerItem) {
 				if (direction != 0) {
 					return ((BlockElementViewerItem) left).getText()
-						.compareTo(((BlockElementViewerItem) right).getText()) * direction;
+							.compareTo(((BlockElementViewerItem) right).getText()) * direction;
 				}
-				return ((BlockElementViewerItem) left).getText()
-					.compareTo(((BlockElementViewerItem) right).getText());
+				return ((BlockElementViewerItem) left).getText().compareTo(((BlockElementViewerItem) right).getText());
 			}
 			return super.compare(viewer, left, right);
 		}

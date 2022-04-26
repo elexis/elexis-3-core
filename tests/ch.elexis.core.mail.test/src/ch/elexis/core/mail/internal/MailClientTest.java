@@ -26,24 +26,24 @@ import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class MailClientTest {
-	
+
 	private static IMailClient client;
-	
+
 	private static SimpleSmtpServer server;
-	
+
 	@BeforeClass
 	public static void beforeClass() throws InterruptedException {
 		client = OsgiServiceUtil.getService(IMailClient.class).get();
 		server = SimpleSmtpServer.start(10025);
 	}
-	
+
 	@AfterClass
 	public static void afterClass() {
 		server.stop();
 	}
-	
+
 	@After
-	public void after(){
+	public void after() {
 		List<String> accounts = client.getAccounts();
 		for (String string : accounts) {
 			Optional<MailAccount> account = client.getAccount(string);
@@ -53,11 +53,11 @@ public class MailClientTest {
 		}
 		accounts = client.getAccounts();
 		assertTrue(accounts.isEmpty());
-		
+
 	}
-	
+
 	@Test
-	public void saveAccount(){
+	public void saveAccount() {
 		MailAccount account = new MailAccount();
 		account.setId("testAccount");
 		account.setType(TYPE.SMTP);
@@ -65,9 +65,9 @@ public class MailClientTest {
 		account.setPassword("testPassword");
 		client.saveAccount(account);
 	}
-	
+
 	@Test
-	public void getAccount(){
+	public void getAccount() {
 		MailAccount account = new MailAccount();
 		assertNotNull(account);
 		account.setId("testAccount");
@@ -75,14 +75,14 @@ public class MailClientTest {
 		account.setUsername("testUser");
 		account.setPassword("testPassword");
 		client.saveAccount(account);
-		
+
 		Optional<MailAccount> accountLoaded = client.getAccount("testAccount");
 		assertTrue(accountLoaded.isPresent());
 		assertEquals("testAccount", accountLoaded.get().getId());
 	}
-	
+
 	@Test
-	public void getAccounts(){
+	public void getAccounts() {
 		MailAccount account = new MailAccount();
 		assertNotNull(account);
 		account.setId("testSmtpAccount");
@@ -90,12 +90,12 @@ public class MailClientTest {
 		account.setUsername("testUser");
 		account.setPassword("testPassword");
 		client.saveAccount(account);
-		
+
 		List<String> loaded = client.getAccounts();
 		assertNotNull(loaded);
 		assertFalse(loaded.isEmpty());
 		assertEquals(1, loaded.size());
-		
+
 		account = new MailAccount();
 		assertNotNull(account);
 		account.setId("testImapAccount");
@@ -103,15 +103,15 @@ public class MailClientTest {
 		account.setUsername("testUser");
 		account.setPassword("testPassword");
 		client.saveAccount(account);
-		
+
 		loaded = client.getAccounts();
 		assertNotNull(loaded);
 		assertFalse(loaded.isEmpty());
 		assertEquals(2, loaded.size());
 	}
-	
+
 	@Test
-	public void testAccount() throws MessagingException{
+	public void testAccount() throws MessagingException {
 		MailAccount account = new MailAccount();
 		account.setId("testSmtpAccount");
 		account.setType(TYPE.SMTP);
@@ -119,12 +119,12 @@ public class MailClientTest {
 		account.setPassword("testPassword");
 		account.setHost("localhost");
 		account.setPort("10025");
-		
+
 		assertTrue(client.testAccount(account));
 	}
-	
+
 	@Test
-	public void sendMail() throws MessagingException{
+	public void sendMail() throws MessagingException {
 		MailAccount account = new MailAccount();
 		account.setId("testSmtpAccount");
 		account.setType(TYPE.SMTP);
@@ -132,10 +132,10 @@ public class MailClientTest {
 		account.setPassword("testPassword");
 		account.setHost("localhost");
 		account.setPort("10025");
-		
+
 		MailMessage message = new MailMessage().to("receiver@there.com").subject("subject").text("text");
 		assertTrue(client.sendMail(account, message));
-		
+
 		assertTrue(server.getReceivedEmailSize() == 1);
 		Iterator<?> emailIter = server.getReceivedEmail();
 		SmtpMessage email = (SmtpMessage) emailIter.next();

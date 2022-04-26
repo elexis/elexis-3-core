@@ -10,8 +10,8 @@ import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.ui.PlatformUI;
 
 public class PerspectiveUtil {
-	
-	public static MPerspective getActivePerspective(){
+
+	public static MPerspective getActivePerspective() {
 		EModelService modelService = getService(EModelService.class);
 		MTrimmedWindow mWindow = getActiveWindow();
 		if (mWindow != null) {
@@ -19,15 +19,15 @@ public class PerspectiveUtil {
 		}
 		return null;
 	}
-	
-	private static <T> T getService(final Class<T> clazz){
+
+	private static <T> T getService(final Class<T> clazz) {
 		return PlatformUI.getWorkbench().getService(clazz);
 	}
-	
-	public static MTrimmedWindow getActiveWindow(){
+
+	public static MTrimmedWindow getActiveWindow() {
 		EModelService modelService = getService(EModelService.class);
 		MApplication mApplication = getService(MApplication.class);
-		
+
 		MTrimmedWindow mWindow = (MTrimmedWindow) modelService.find("IDEWindow", mApplication);
 		if (mWindow == null) {
 			List<MWindow> windows = mApplication.getChildren();

@@ -16,32 +16,32 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK")
 @EntityListeners(EntityWithIdListener.class)
 public class ObservationLink extends AbstractEntityWithId implements EntityWithId {
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 
@@ -59,19 +59,19 @@ public class ObservationLink extends AbstractEntityWithId implements EntityWithI
 	@Column(length = 255)
 	private String description;
 
-	public Observation getSource(){
+	public Observation getSource() {
 		return source;
 	}
 
-	public void setSource(Observation source){
+	public void setSource(Observation source) {
 		this.source = source;
 	}
 
-	public Observation getTarget(){
+	public Observation getTarget() {
 		return target;
 	}
 
-	public void setTarget(Observation target){
+	public void setTarget(Observation target) {
 		this.target = target;
 	}
 

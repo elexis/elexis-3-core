@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.laboratory.preferences;
@@ -50,45 +50,40 @@ import ch.elexis.data.Query;
 
 public class LabSettings extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger log = LoggerFactory.getLogger(LabSettings.class);
-	
+
 	private Text txtKeepUnseen;
 	private String daysKeepUnseen;
-	
-	public LabSettings(){
+
+	public LabSettings() {
 		super(GRID);
 		setPreferenceStore(new ConfigServicePreferenceStore(Scope.USER));
 		// make sure default value is correct, in case no value is set yet
 		getPreferenceStore().setDefault(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
 	}
-	
+
 	@Override
-	protected Control createContents(final Composite parent){
+	protected Control createContents(final Composite parent) {
 		if (CoreHub.acl.request(AccessControlDefaults.LAB_SEEN)) {
 			return super.createContents(parent);
 		} else {
 			return new PrefAccessDenied(parent);
 		}
 	}
-	
+
 	@Override
-	protected void createFieldEditors(){
+	protected void createFieldEditors() {
 		addField(new BooleanFieldEditor(Preferences.LABSETTINGS_CFG_SHOW_MANDANT_ORDERS_ONLY,
-			Messages.LabSettings_showOrdersActiveMandant, getFieldEditorParent()));
-		
+				Messages.LabSettings_showOrdersActiveMandant, getFieldEditorParent()));
+
 		addField(new RadioGroupFieldEditor(Preferences.LABSETTINGS_CFG_LABNEW_HEARTRATE,
-			Messages.LabSettings_frequencyNewLabvalues, 3, new String[][] {
-				{
-					Messages.LabSettings_normal, "1" //$NON-NLS-1$
-				}, {
-					Messages.LabSettings_medium, "2" //$NON-NLS-1$
-				}, {
-					Messages.LabSettings_slow, "3" //$NON-NLS-1$
-				}
-			}, getFieldEditorParent()));
-			
+				Messages.LabSettings_frequencyNewLabvalues, 3, new String[][] { { Messages.LabSettings_normal, "1" //$NON-NLS-1$
+				}, { Messages.LabSettings_medium, "2" //$NON-NLS-1$
+				}, { Messages.LabSettings_slow, "3" //$NON-NLS-1$
+				} }, getFieldEditorParent()));
+
 		addField(new BooleanFieldEditor(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES,
-			Messages.LabSettings_useLocalLabRefValues, getFieldEditorParent()));
-		
+				Messages.LabSettings_useLocalLabRefValues, getFieldEditorParent()));
+
 		Composite area = new Composite(getFieldEditorParent(), SWT.NONE);
 		area.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		area.setLayout(new GridLayout(2, false));
@@ -97,14 +92,14 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 		txtKeepUnseen = new Text(area, SWT.BORDER);
 		txtKeepUnseen.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		txtKeepUnseen.setText(daysKeepUnseen);
-		
+
 		Button btnValidateMappings = new Button(area, SWT.PUSH);
 		btnValidateMappings.setText(Messages.LabSettings_validateMappings);
 		btnValidateMappings.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				Query<LabMapping> query = new Query<LabMapping>(LabMapping.class);
-				query.add(LabMapping.FLD_ID, Query.NOT_EQUAL, LabMapping.VERSIONID); //$NON-NLS-1$
+				query.add(LabMapping.FLD_ID, Query.NOT_EQUAL, LabMapping.VERSIONID); // $NON-NLS-1$
 				List<LabMapping> mappings = query.execute();
 				int countDeleted = 0;
 				for (LabMapping labMapping : mappings) {
@@ -114,55 +109,52 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 					}
 				}
 				MessageDialog.openInformation(getShell(), Messages.LabSettings_validateMappings,
-					MessageFormat.format(Messages.LabSettings_validateMappingsResult,
-						countDeleted));
+						MessageFormat.format(Messages.LabSettings_validateMappingsResult, countDeleted));
 			}
 		});
 		// dummy lbl
 		new Label(area, SWT.NONE);
 	}
-	
-	public void init(final IWorkbench workbench){
-		daysKeepUnseen =
-			ConfigServiceHolder.getGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS, null);
+
+	public void init(final IWorkbench workbench) {
+		daysKeepUnseen = ConfigServiceHolder.getGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS, null);
 		if (daysKeepUnseen == null || !isValidNumber(daysKeepUnseen)) {
 			ConfigServiceHolder.setGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
-				Preferences.DAYS_TO_KEEP_UNSEEN_LAB_RESULTS);
+					Preferences.DAYS_TO_KEEP_UNSEEN_LAB_RESULTS);
 			daysKeepUnseen = Preferences.DAYS_TO_KEEP_UNSEEN_LAB_RESULTS;
 		}
 	}
-	
+
 	@Override
-	public void propertyChange(PropertyChangeEvent event){
+	public void propertyChange(PropertyChangeEvent event) {
 		super.propertyChange(event);
 		if (event.getSource() instanceof FieldEditor) {
 			FieldEditor fe = ((FieldEditor) event.getSource());
 			if (Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES.equals(fe.getPreferenceName())) {
 				if (event.getNewValue().equals(Boolean.TRUE)) {
 					MessageDialog.openInformation(UiDesk.getTopShell(),
-						Messages.LabSettings_enableUseLocalLabRefValues_title,
-						Messages.LabSettings_enableUseLocalLabRefValues_text);
+							Messages.LabSettings_enableUseLocalLabRefValues_title,
+							Messages.LabSettings_enableUseLocalLabRefValues_text);
 				}
 			}
 		}
 	}
-	
+
 	@Override
-	public boolean performOk(){
+	public boolean performOk() {
 		if (isValidNumber(txtKeepUnseen.getText())) {
-			ConfigServiceHolder.setGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
-				txtKeepUnseen.getText());
+			ConfigServiceHolder.setGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS, txtKeepUnseen.getText());
 		}
 		return super.performOk();
 	}
-	
-	private boolean isValidNumber(String nrString){
+
+	private boolean isValidNumber(String nrString) {
 		try {
 			Integer.parseInt(nrString);
 			return true;
 		} catch (NumberFormatException nfe) {
-			log.warn("Can't use [" + nrString
-				+ "] for KeepUnseen in lab settings as it can't be parsed to an integer.");
+			log.warn(
+					"Can't use [" + nrString + "] for KeepUnseen in lab settings as it can't be parsed to an integer.");
 			return false;
 		}
 	}

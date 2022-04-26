@@ -33,44 +33,41 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
 
 public class PrintTakingsListHandler extends AbstractHandler {
-	
+
 	public static final String COMMAND_ID = "ch.elexis.core.ui.medication.PrintTakingsList";
-	
+
 	private static Logger log = LoggerFactory.getLogger(PrintTakingsListHandler.class);
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 		if (patient == null)
 			return null;
-		
-		String medicationType =
-			event.getParameter("ch.elexis.core.ui.medication.commandParameter.medication"); //$NON-NLS-1$
+
+		String medicationType = event.getParameter("ch.elexis.core.ui.medication.commandParameter.medication"); //$NON-NLS-1$
 		// if not set use selection
 		if (medicationType == null || medicationType.isEmpty()) {
 			medicationType = "selection";
 		}
-		
+
 		List<IPrescription> prescRecipes = getPrescriptions(patient, medicationType, event);
 		if (!prescRecipes.isEmpty()) {
 			prescRecipes = sortPrescriptions(prescRecipes, event);
 			try {
-				RezeptBlatt rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().showView(RezeptBlatt.ID);
+				RezeptBlatt rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+						.showView(RezeptBlatt.ID);
 				rpb.createEinnahmeliste((Patient) NoPoUtil.loadAsPersistentObject(patient),
-					NoPoUtil.loadAsPersistentObject(
-						prescRecipes.toArray(new IPrescription[prescRecipes.size()]),
-						Prescription.class));
+						NoPoUtil.loadAsPersistentObject(prescRecipes.toArray(new IPrescription[prescRecipes.size()]),
+								Prescription.class));
 			} catch (PartInitException e) {
 				log.error("Error outputting recipe", e);
 			}
 		}
-		
+
 		return null;
 	}
-	
-	private List<IPrescription> sortPrescriptions(List<IPrescription> prescRecipes,
-		ExecutionEvent event){
+
+	private List<IPrescription> sortPrescriptions(List<IPrescription> prescRecipes, ExecutionEvent event) {
 		SorterAdapter sorter = new SorterAdapter(event);
 		IWorkbenchPart part = HandlerUtil.getActivePart(event);
 		if (part instanceof MedicationView) {
@@ -78,19 +75,17 @@ public class PrintTakingsListHandler extends AbstractHandler {
 		}
 		return prescRecipes;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private List<IPrescription> getPrescriptions(IPatient patient, String medicationType,
-		ExecutionEvent event){
+	private List<IPrescription> getPrescriptions(IPatient patient, String medicationType, ExecutionEvent event) {
 		if ("selection".equals(medicationType)) {
-			ISelection selection =
-				HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+			ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 			if (selection != null && !selection.isEmpty()) {
 				List<IPrescription> ret = new ArrayList<IPrescription>();
 				IStructuredSelection strucSelection = (IStructuredSelection) selection;
 				if (strucSelection.getFirstElement() instanceof MedicationTableViewerItem) {
-					List<MedicationTableViewerItem> mtvItems =
-						(List<MedicationTableViewerItem>) strucSelection.toList();
+					List<MedicationTableViewerItem> mtvItems = (List<MedicationTableViewerItem>) strucSelection
+							.toList();
 					for (MedicationTableViewerItem mtvItem : mtvItems) {
 						IPrescription p = mtvItem.getPrescription();
 						if (p != null) {
@@ -103,8 +98,8 @@ public class PrintTakingsListHandler extends AbstractHandler {
 				return ret;
 			}
 		} else if ("all".equals(medicationType)) {
-			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
-				EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION));
+			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
+					EntryType.SYMPTOMATIC_MEDICATION));
 		} else if ("fix".equals(medicationType)) {
 			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
 		} else if ("reserve".equals(medicationType)) {
@@ -114,31 +109,29 @@ public class PrintTakingsListHandler extends AbstractHandler {
 		}
 		return Collections.emptyList();
 	}
-	
+
 	/**
-	 * Adpater class to use {@link ViewerSortOrder} sorter implementations to sort a list of
-	 * {@link IPrescription}. Sorting is done using the current UI state of the
-	 * {@link ViewerSortOrder} implementation.
-	 * 
+	 * Adpater class to use {@link ViewerSortOrder} sorter implementations to sort a
+	 * list of {@link IPrescription}. Sorting is done using the current UI state of
+	 * the {@link ViewerSortOrder} implementation.
+	 *
 	 * @author thomas
 	 *
 	 */
 	public static class SorterAdapter {
-		private ViewerSortOrder.ManualViewerComparator manualComparator =
-			new ViewerSortOrder.ManualViewerComparator();
-		
-		private ViewerSortOrder.DefaultViewerComparator defaultComparator =
-			new ViewerSortOrder.DefaultViewerComparator();
-		
+		private ViewerSortOrder.ManualViewerComparator manualComparator = new ViewerSortOrder.ManualViewerComparator();
+
+		private ViewerSortOrder.DefaultViewerComparator defaultComparator = new ViewerSortOrder.DefaultViewerComparator();
+
 		private enum CompareMode {
-				MANUAL, DEFAULT
+			MANUAL, DEFAULT
 		}
-		
+
 		private CompareMode mode = CompareMode.DEFAULT;
-		
-		public SorterAdapter(ExecutionEvent event){
+
+		public SorterAdapter(ExecutionEvent event) {
 			ICommandService commandService = (ICommandService) HandlerUtil.getActiveSite(event)
-				.getService(ICommandService.class);
+					.getService(ICommandService.class);
 			if (commandService != null) {
 				Command command = commandService.getCommand(ApplyCustomSortingHandler.CMD_ID);
 				State state = command.getState(ApplyCustomSortingHandler.STATE_ID);
@@ -149,10 +142,9 @@ public class PrintTakingsListHandler extends AbstractHandler {
 				}
 			}
 		}
-		
-		public List<IPrescription> getSorted(List<IPrescription> list){
-			MedicationTableViewerItem[] toSort =
-				MedicationTableViewerItem.createFromPrescriptionList(list, null)
+
+		public List<IPrescription> getSorted(List<IPrescription> list) {
+			MedicationTableViewerItem[] toSort = MedicationTableViewerItem.createFromPrescriptionList(list, null)
 					.toArray(new MedicationTableViewerItem[list.size()]);
 			// make sure properties are resolved for sorting
 			for (MedicationTableViewerItem medicationTableViewerItem : toSort) {

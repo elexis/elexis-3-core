@@ -31,34 +31,34 @@ import ch.elexis.data.LabMapping;
 import ch.elexis.data.Labor;
 
 public class LaborMappingComposite extends Composite {
-	
+
 	protected TableViewer viewer;
 	protected LabItem labItem;
-	
+
 	@SuppressWarnings("unchecked")
 	protected List<LabMapping> content = Collections.EMPTY_LIST;
-	
+
 	protected List<TransientLabMapping> transientContent = new ArrayList<TransientLabMapping>();
-	
-	public LaborMappingComposite(Composite parent, int style){
+
+	public LaborMappingComposite(Composite parent, int style) {
 		super(parent, style);
-		
+
 		createContent();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void setLabItem(LabItem labItem){
+	public void setLabItem(LabItem labItem) {
 		this.labItem = labItem;
 		refreshContent();
 	}
-	
-	public void persistTransientLabMappings(LabItem labItem){
+
+	public void persistTransientLabMappings(LabItem labItem) {
 		for (TransientLabMapping transientMapping : transientContent) {
 			transientMapping.persist(labItem);
 		}
 	}
-	
-	private void refreshContent(){
+
+	private void refreshContent() {
 		if (labItem != null) {
 			content = LabMapping.getByLabItemId(labItem.getId());
 			viewer.setInput(content);
@@ -67,33 +67,31 @@ public class LaborMappingComposite extends Composite {
 			viewer.setInput(transientContent);
 		}
 	}
-	
-	protected void createContent(){
+
+	protected void createContent() {
 		setLayout(new GridLayout(2, false));
-		
+
 		Label title = new Label(this, SWT.NONE);
 		title.setText(Messages.LaborMappingComposite_labelMappings);
 		title.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		
+
 		ToolBarManager toolbar = new ToolBarManager();
 		toolbar.add(new Action() {
 			@Override
-			public ImageDescriptor getImageDescriptor(){
+			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_NEW.getImageDescriptor();
 			}
-			
+
 			@Override
-			public void run(){
-				KontaktSelektor selektor =
-					new KontaktSelektor(getShell(), Labor.class,
+			public void run() {
+				KontaktSelektor selektor = new KontaktSelektor(getShell(), Labor.class,
 						Messages.LaborMappingComposite_labelSelektorTitle,
 						Messages.LaborMappingComposite_labelSelektorMessage, Kontakt.DEFAULT_SORT);
 				if (selektor.open() == Dialog.OK) {
 					Labor labor = (Labor) selektor.getSelection();
 					if (labItem != null) {
-						LabMapping mapping =
-							new LabMapping(labor.getId(), labItem.getKuerzel(), labItem.getId(),
-								false); //$NON-NLS-1$
+						LabMapping mapping = new LabMapping(labor.getId(), labItem.getKuerzel(), labItem.getId(),
+								false); // $NON-NLS-1$
 						refreshContent();
 					} else {
 						TransientLabMapping mapping = new TransientLabMapping();
@@ -107,12 +105,12 @@ public class LaborMappingComposite extends Composite {
 		});
 		toolbar.add(new Action() {
 			@Override
-			public ImageDescriptor getImageDescriptor(){
+			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_DELETE.getImageDescriptor();
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 				if (!selection.isEmpty()) {
 					if (selection.getFirstElement() instanceof LabMapping) {
@@ -129,20 +127,20 @@ public class LaborMappingComposite extends Composite {
 		ToolBar toolBar = toolbar.createControl(this);
 		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 		toolbar.update(true);
-		
+
 		viewer = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
 		viewer.getTable().setHeaderVisible(true);
 		viewer.getTable().setLinesVisible(true);
 		viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		
+
 		viewer.setContentProvider(new ArrayContentProvider());
-		
+
 		TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(100);
 		column.getColumn().setText(Messages.LaborMappingComposite_columnLabor);
 		column.setLabelProvider(new ColumnLabelProvider() {
-			
-			public String getText(Object element){
+
+			public String getText(Object element) {
 				if (element instanceof LabMapping) {
 					return ((LabMapping) element).getOrigin().getLabel(true);
 				} else if (element instanceof TransientLabMapping) {
@@ -151,13 +149,13 @@ public class LaborMappingComposite extends Composite {
 				return ""; //$NON-NLS-1$
 			}
 		});
-		
+
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(100);
 		column.getColumn().setText(Messages.LaborMappingComposite_columnShortname);
 		column.setLabelProvider(new ColumnLabelProvider() {
-			
-			public String getText(Object element){
+
+			public String getText(Object element) {
 				if (element instanceof LabMapping) {
 					return ((LabMapping) element).getItemName();
 				} else if (element instanceof TransientLabMapping) {
@@ -168,28 +166,28 @@ public class LaborMappingComposite extends Composite {
 		});
 		column.setEditingSupport(new ItemNameEditingSupport(viewer));
 	}
-	
+
 	protected class ItemNameEditingSupport extends EditingSupport {
-		
+
 		private final TableViewer viewer;
-		
-		public ItemNameEditingSupport(TableViewer viewer){
+
+		public ItemNameEditingSupport(TableViewer viewer) {
 			super(viewer);
 			this.viewer = viewer;
 		}
-		
+
 		@Override
-		protected CellEditor getCellEditor(Object element){
+		protected CellEditor getCellEditor(Object element) {
 			return new TextCellEditor(viewer.getTable());
 		}
-		
+
 		@Override
-		protected boolean canEdit(Object element){
+		protected boolean canEdit(Object element) {
 			return true;
 		}
-		
+
 		@Override
-		protected Object getValue(Object element){
+		protected Object getValue(Object element) {
 			if (element instanceof LabMapping) {
 				return ((LabMapping) element).getItemName();
 			} else if (element instanceof TransientLabMapping) {
@@ -197,9 +195,9 @@ public class LaborMappingComposite extends Composite {
 			}
 			return ""; //$NON-NLS-1$
 		}
-		
+
 		@Override
-		protected void setValue(Object element, Object userInputValue){
+		protected void setValue(Object element, Object userInputValue) {
 			if (element instanceof LabMapping) {
 				((LabMapping) element).setItemName(String.valueOf(userInputValue));
 			} else if (element instanceof TransientLabMapping) {
@@ -208,50 +206,50 @@ public class LaborMappingComposite extends Composite {
 			viewer.update(element, null);
 		}
 	}
-	
+
 	public class TransientLabMapping {
 		private String originId;
 		private String itemName;
 		private String labItemId;
 		private boolean charge;
-		
-		public TransientLabMapping(){
+
+		public TransientLabMapping() {
 			// TODO Auto-generated constructor stub
 		}
-		
-		public void persist(LabItem labItem){
+
+		public void persist(LabItem labItem) {
 			new LabMapping(originId, itemName, labItem.getId(), charge);
 		}
-		
-		public Kontakt getOrigin(){
+
+		public Kontakt getOrigin() {
 			return Kontakt.load(originId);
 		}
-		
-		public void setOriginId(String originId){
+
+		public void setOriginId(String originId) {
 			this.originId = originId;
 		}
-		
-		public String getItemName(){
+
+		public String getItemName() {
 			return itemName;
 		}
-		
-		public void setItemName(String itemName){
+
+		public void setItemName(String itemName) {
 			this.itemName = itemName;
 		}
-		
-		public String getLabItemId(){
+
+		public String getLabItemId() {
 			return labItemId;
 		}
-		
-		public void setLabItemId(String labItemId){
+
+		public void setLabItemId(String labItemId) {
 			this.labItemId = labItemId;
 		}
-		
-		public boolean isCharge(){
+
+		public boolean isCharge() {
 			return charge;
 		}
-		
-		public void setCharge(boolean charge){
+
+		public void setCharge(boolean charge) {
 			this.charge = charge;
 		}
 	}

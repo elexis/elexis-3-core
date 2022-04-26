@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.exchange.elements;
@@ -41,10 +41,10 @@ public class ServiceBlockElement extends XChangeElement {
 	public static final String ENCLOSING = "serviceblocks";
 	public static final String ATTR_NAME = "name";
 	static java.util.List<IConfigurationElement> codesystems;
-	
+
 	static List<ICodeElement> codeElements;
 	static HashMap<ICodeElement, CodeSelectorFactory> factories;
-	
+
 	static {
 		codesystems = Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE);
 		codeElements = new ArrayList<ICodeElement>(codesystems.size());
@@ -52,10 +52,10 @@ public class ServiceBlockElement extends XChangeElement {
 		for (IConfigurationElement ic : codesystems) {
 			try {
 				PersistentObjectFactory po = (PersistentObjectFactory) ic
-					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
-				
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
+
 				CodeSelectorFactory cs = (CodeSelectorFactory) ic
-					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 				if (cs == null) {
 					SWTHelper.alert("Fehler", "CodeSelectorFactory is null");
 				} else {
@@ -68,12 +68,12 @@ public class ServiceBlockElement extends XChangeElement {
 				}
 			} catch (CoreException ex) {
 				LoggerFactory.getLogger(ServiceBlockElement.class)
-					.warn("Could not create PersistentObject code element factory", ex);
+						.warn("Could not create PersistentObject code element factory", ex);
 			}
 		}
 	}
-	
-	public ServiceBlockElement asExporter(XChangeExporter p, Leistungsblock lb){
+
+	public ServiceBlockElement asExporter(XChangeExporter p, Leistungsblock lb) {
 		asExporter(p);
 		setAttribute(ATTR_NAME, lb.getName());
 		List<ICodeElement> ics = lb.getElementReferences();
@@ -89,13 +89,13 @@ public class ServiceBlockElement extends XChangeElement {
 		}
 		return this;
 	}
-	
-	public void doImport(){
+
+	public void doImport() {
 		String name = getAttr(ATTR_NAME);
 		if (!StringTool.isNothing(name)) {
 			Leistungsblock block = new Leistungsblock(name, CoreHub.actMandant);
-			List<ServiceElement> lService =
-				(List<ServiceElement>) getChildren(ServiceElement.XMLNAME, ServiceElement.class);
+			List<ServiceElement> lService = (List<ServiceElement>) getChildren(ServiceElement.XMLNAME,
+					ServiceElement.class);
 			for (ServiceElement se : lService) {
 				if (!importCodeElement(block, se)) {
 					importXidElement(block, se);
@@ -103,17 +103,19 @@ public class ServiceBlockElement extends XChangeElement {
 			}
 		}
 	}
-	
+
 	/**
-	 * Try loading using {@link XidElement}, if the {@link ICodeElement} referenced by the
-	 * {@link XidElement} is not present, the CodeSelectorFactory is used as lookup.
-	 * 
+	 * Try loading using {@link XidElement}, if the {@link ICodeElement} referenced
+	 * by the {@link XidElement} is not present, the CodeSelectorFactory is used as
+	 * lookup.
+	 *
 	 * @param block
 	 * @param se
-	 * 
-	 * @deprecated use {@link ServiceBlockElement#importCodeElement(Leistungsblock, ServiceElement)}
+	 *
+	 * @deprecated use
+	 *             {@link ServiceBlockElement#importCodeElement(Leistungsblock, ServiceElement)}
 	 */
-	private void importXidElement(Leistungsblock block, ServiceElement se){
+	private void importXidElement(Leistungsblock block, ServiceElement se) {
 		XidElement xid = se.getXid();
 		List<IPersistentObject> ls = xid.findObject();
 		boolean bFound = false;
@@ -150,28 +152,26 @@ public class ServiceBlockElement extends XChangeElement {
 				}
 			}
 			if (!bMatched) {
-				Eigenleistung custom =
-					new Eigenleistung(code, lname, se.getAttr("cost"), se.getAttr("price"));
+				Eigenleistung custom = new Eigenleistung(code, lname, se.getAttr("cost"), se.getAttr("price"));
 				block.addElement(custom);
 			}
 		}
 	}
-	
+
 	/**
-	 * If information of the {@link ServiceElement} includes contractName and contractCode, a new
-	 * {@link CodeElementDTO} is added to the block. This implementation does not care if the actual
-	 * {@link ICodeElement} is available.
-	 * 
+	 * If information of the {@link ServiceElement} includes contractName and
+	 * contractCode, a new {@link CodeElementDTO} is added to the block. This
+	 * implementation does not care if the actual {@link ICodeElement} is available.
+	 *
 	 * @param block
 	 * @param se
 	 * @return
 	 */
-	private boolean importCodeElement(Leistungsblock block, ServiceElement se){
+	private boolean importCodeElement(Leistungsblock block, ServiceElement se) {
 		String codeSystemName = se.getAttr("contractName");
 		String code = se.getAttr("contractCode");
 		String name = se.getAttr("name");
-		if (codeSystemName != null && !codeSystemName.isEmpty() && code != null
-			&& !code.isEmpty()) {
+		if (codeSystemName != null && !codeSystemName.isEmpty() && code != null && !code.isEmpty()) {
 			CodeElementDTO codeElement = new CodeElementDTO(codeSystemName, code);
 			if (name != null && !name.isEmpty()) {
 				codeElement.setText(name);
@@ -181,10 +181,10 @@ public class ServiceBlockElement extends XChangeElement {
 		}
 		return false;
 	}
-	
+
 	@Override
-	public String getXMLName(){
+	public String getXMLName() {
 		return XMLNAME;
 	}
-	
+
 }

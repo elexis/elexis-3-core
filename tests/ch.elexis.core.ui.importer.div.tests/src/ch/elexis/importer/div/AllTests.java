@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    N. Giger - initial implementation
- * 
+ *
  *******************************************************************************/
 
 package ch.elexis.importer.div;
@@ -28,29 +28,26 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
-	Test_HL7_parser.class, MultiFileParserTests.class, HL7InitLabItemTest.class,
-	TestPathologicDescription.class, Test_HL7Import_MPFRule.class, Test_Import_LabItemInconclusiveRefValue.class
-})
+@Suite.SuiteClasses({ Test_HL7_parser.class, MultiFileParserTests.class, HL7InitLabItemTest.class,
+		TestPathologicDescription.class, Test_HL7Import_MPFRule.class, Test_Import_LabItemInconclusiveRefValue.class })
 public class AllTests {
-	
+
 	public static Labor testLab;
-	
+
 	@BeforeClass
-	public static void beforeClass(){
+	public static void beforeClass() {
 		testLab = new Labor("HL7_Test", "HL7_Test");
-		
+
 		TimeTool timeTool = new TimeTool();
-		IPerson _mandator =
-			new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "mandator1 " + timeTool.toString(),
-				"Anton" + timeTool.toString(), timeTool.toLocalDate(), Gender.MALE).mandator()
-					.buildAndSave();
+		IPerson _mandator = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(),
+				"mandator1 " + timeTool.toString(), "Anton" + timeTool.toString(), timeTool.toLocalDate(), Gender.MALE)
+						.mandator().buildAndSave();
 		IMandator mandator = CoreModelServiceHolder.get().load(_mandator.getId(), IMandator.class).get();
 		ContextServiceHolder.get().setActiveMandator(mandator);
-		
+
 	}
-	
-	public static Test suite() throws ClassNotFoundException{
+
+	public static Test suite() throws ClassNotFoundException {
 		return new TestSuite("Importer Tests");
 	}
 }

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.util;
@@ -49,10 +49,10 @@ import ch.elexis.core.ui.locks.IUnlockable;
 public class ListDisplay<T> extends Composite implements IUnlockable {
 	public interface LDListener {
 		public void hyperlinkActivated(String l);
-		
+
 		public String getLabel(Object o);
 	}
-	
+
 	private IHyperlinkListener listen;
 	protected List list;
 	private final ArrayList<T> objects;
@@ -60,25 +60,21 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 	private final Composite cLinks;
 	private final FormToolkit tk = UiDesk.getToolkit();
 	Transfer myTransfer = TextTransfer.getInstance();
-	
-	public void toClipBoard(boolean bAsString){
+
+	public void toClipBoard(boolean bAsString) {
 		Clipboard clip = new Clipboard(UiDesk.getDisplay());
 		StringBuilder sb = new StringBuilder();
 		for (String s : list.getItems()) {
 			sb.append(s).append("\n");
 		}
-		clip.setContents(new Object[] {
-			sb.toString()
-		}, new Transfer[] {
-			myTransfer
-		});
+		clip.setContents(new Object[] { sb.toString() }, new Transfer[] { myTransfer });
 	}
-	
-	public void setDLDListener(final LDListener dld){
+
+	public void setDLDListener(final LDListener dld) {
 		dlisten = dld;
 	}
-	
-	public ListDisplay(final Composite parent, final int flags, final LDListener dld){
+
+	public ListDisplay(final Composite parent, final int flags, final LDListener dld) {
 		super(parent, flags);
 		objects = new ArrayList<T>();
 		dlisten = dld;
@@ -87,17 +83,17 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 		RowLayout rl = new RowLayout(SWT.HORIZONTAL);
 		rl.spacing = 2;
 		cLinks.setLayout(rl);
-		
+
 		list = new List(this, SWT.SINGLE | SWT.V_SCROLL);
 		list.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tk.adapt(this);
 	}
-	
-	public void addHyperlinks(final String... titles){
+
+	public void addHyperlinks(final String... titles) {
 		if (listen == null) {
 			listen = new HyperlinkAdapter() {
 				@Override
-				public void linkActivated(final HyperlinkEvent e){
+				public void linkActivated(final HyperlinkEvent e) {
 					if (dlisten != null) {
 						dlisten.hyperlinkActivated(e.getLabel());
 					}
@@ -109,13 +105,13 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 			mhl.addHyperlinkListener(listen);
 		}
 	}
-	
+
 	@Override
 	public void setUnlocked(boolean unlock) {
 		enableHyperlinks(unlock);
 	}
 
-	private void enableHyperlinks(boolean bEnable){
+	private void enableHyperlinks(boolean bEnable) {
 		cLinks.setEnabled(bEnable);
 		for (Control c : cLinks.getChildren()) {
 			Hyperlink hl = (Hyperlink) c;
@@ -128,59 +124,58 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 		}
 		cLinks.redraw();
 	}
+
 	/**
 	 * @since 3.8
 	 * @param Set text to be added to all hyperlinks
 	 */
-	public void setToolTipText(String tooltip){
+	public void setToolTipText(String tooltip) {
 		for (Control c : cLinks.getChildren()) {
 			c.setToolTipText(tooltip);
 		}
 	}
-	
+
 	/**
 	 * Ein Objekt der Liste hinzufügen
-	 * 
-	 * @param item
-	 *            das Objekt. Muss getLabel() implementieren
+	 *
+	 * @param item das Objekt. Muss getLabel() implementieren
 	 */
-	public void add(final T item){
+	public void add(final T item) {
 		objects.add(item);
 		list.add(dlisten.getLabel(item));
 	}
-	
+
 	/**
 	 * Ein Objekt aus der Liste entfernen
-	 * 
-	 * @param item
-	 *            das Objekt
+	 *
+	 * @param item das Objekt
 	 */
-	public void remove(final T item){
+	public void remove(final T item) {
 		objects.remove(item);
 		list.remove(dlisten.getLabel(item));
 	}
-	
+
 	/** Die Liste leeren */
-	public void clear(){
+	public void clear() {
 		list.removeAll();
 		objects.clear();
 	}
-	
+
 	/** Ein Kontextmenu für die Liste sezen */
-	
-	public void setMenu(final IAction... actions){
+
+	public void setMenu(final IAction... actions) {
 		MenuManager menuMgr = new MenuManager();
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager){
+			public void menuAboutToShow(IMenuManager manager) {
 				fillContextMenu(manager, actions);
 			}
 		});
 		Menu menu = menuMgr.createContextMenu(list);
 		list.setMenu(menu);
 	}
-	
-	protected void fillContextMenu(IMenuManager manager, IAction... actions){
+
+	protected void fillContextMenu(IMenuManager manager, IAction... actions) {
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		for (IAction ac : actions) {
 			if (ac == null) {
@@ -193,11 +188,11 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Das momentan ausgewählte Objekt holen
 	 */
-	public T getSelection(){
+	public T getSelection() {
 		String[] obj = list.getSelection();
 		if ((obj == null) || (obj.length == 0)) {
 			return null;
@@ -208,40 +203,38 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 			}
 		}
 		return null;
-		
+
 	}
-	
-	public void setSelection(final T object){
+
+	public void setSelection(final T object) {
 		if (object == null) {
 			list.deselectAll();
 		} else {
 			for (T t : objects) {
 				if (t.equals(object)) {
-					list.setSelection(new String[] {
-						dlisten.getLabel(t)
-					});
+					list.setSelection(new String[] { dlisten.getLabel(t) });
 					break;
 				}
 			}
 		}
 	}
-	
-	public void setSelection(final int index){
+
+	public void setSelection(final int index) {
 		list.setSelection(index);
 	}
-	
-	public java.util.List<T> getAll(){
+
+	public java.util.List<T> getAll() {
 		return objects;
 	}
-	
-	public void addListener(final SelectionListener l){
+
+	public void addListener(final SelectionListener l) {
 		list.addSelectionListener(l);
 	}
-	
-	public void removeListener(final SelectionListener l){
+
+	public void removeListener(final SelectionListener l) {
 		list.removeSelectionListener(l);
 	}
-	
+
 	/**
 	 *
 	 * @param eventType
@@ -251,5 +244,5 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 	public void addListenerToSelectionList(final int eventType, final Listener listener) {
 		list.addListener(eventType, listener);
 	}
-	
+
 }

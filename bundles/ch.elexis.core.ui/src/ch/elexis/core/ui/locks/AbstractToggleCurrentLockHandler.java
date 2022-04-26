@@ -20,53 +20,50 @@ import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 
-public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler
-		implements IElementUpdater {
-	
+public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler implements IElementUpdater {
+
 	protected ICommandService commandService;
 	private ElexisEventListenerImpl eventListener;
-	
+
 	public abstract String getCommandId();
-	
+
 	public abstract Class<?> getTemplateClass();
-	
-	public AbstractToggleCurrentLockHandler(){
-		eventListener = new ElexisUiEventListenerImpl(LockInfo.class,
-			ElexisEvent.EVENT_RELOAD) {
+
+	public AbstractToggleCurrentLockHandler() {
+		eventListener = new ElexisUiEventListenerImpl(LockInfo.class, ElexisEvent.EVENT_RELOAD) {
 			@Override
-			public void runInUi(ElexisEvent ev){
+			public void runInUi(ElexisEvent ev) {
 				if (commandService == null) {
-					commandService = (ICommandService) PlatformUI.getWorkbench()
-						.getService(ICommandService.class);
+					commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 				}
 				commandService.refreshElements(getCommandId(), null);
 			}
 		};
 		ElexisEventDispatcher.getInstance().addListeners(eventListener);
 	}
-	
+
 	@Override
-	protected void finalize() throws Throwable{
+	protected void finalize() throws Throwable {
 		ElexisEventDispatcher instance = ElexisEventDispatcher.getInstance();
 		if (instance != null) {
 			ElexisEventDispatcher.getInstance().removeListeners(eventListener);
 		}
 		super.finalize();
 	}
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		if (commandService == null) {
 			commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getService(ICommandService.class);
+					.getService(ICommandService.class);
 		}
-		
+
 		IPersistentObject po = ElexisEventDispatcher.getSelected(getTemplateClass());
 		if (po == null) {
 			commandService.refreshElements(getCommandId(), null);
 			return null;
 		}
-		
+
 		if (LocalLockServiceHolder.get().isLockedLocal(po)) {
 			LocalLockServiceHolder.get().releaseLock(po);
 		} else {
@@ -75,21 +72,21 @@ public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler
 				LockResponseHelper.showInfo(lr, po, null);
 			}
 		}
-		
+
 		commandService.refreshElements(getCommandId(), null);
-		
+
 		return null;
 	}
-	
+
 	@Override
-	public void updateElement(UIElement element, Map parameters){
+	public void updateElement(UIElement element, Map parameters) {
 		IPersistentObject po = ElexisEventDispatcher.getSelected(getTemplateClass());
 		if (po == null) {
 			element.setIcon(Images.IMG_LOCK_CLOSED.getImageDescriptor());
 			element.setChecked(false);
 			return;
 		}
-		
+
 		if (LocalLockServiceHolder.get().isLockedLocal(po)) {
 			element.setIcon(Images.IMG_LOCK_OPEN.getImageDescriptor());
 			element.setChecked(true);
@@ -98,5 +95,5 @@ public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler
 			element.setChecked(false);
 		}
 	}
-	
+
 }

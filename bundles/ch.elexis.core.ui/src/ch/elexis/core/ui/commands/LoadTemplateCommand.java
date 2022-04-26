@@ -30,13 +30,12 @@ import ch.rgw.tools.ExHandler;
 public class LoadTemplateCommand extends AbstractHandler {
 	public static String ID = "ch.elexis.core.ui.command.loadTemplate";
 	private static Logger logger = LoggerFactory.getLogger(LoadTemplateCommand.class);
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException{
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// get the selection
 		Brief template = null;
-		ISelection selection =
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object firstElement = strucSelection.getFirstElement();
@@ -45,33 +44,31 @@ public class LoadTemplateCommand extends AbstractHandler {
 				template = textTemplate.getTemplate();
 			}
 		}
-		
+
 		// show template in textview
 		try {
 			if (template == null) {
 				SWTHelper.alert(ch.elexis.core.ui.commands.Messages.LoadTemplateCommand_Error,
-					ch.elexis.core.ui.commands.Messages.LoadTemplateCommand_NoTextTemplate);
+						ch.elexis.core.ui.commands.Messages.LoadTemplateCommand_NoTextTemplate);
 				return null;
 			}
 			// try to open file if applicable
 			IDocumentTemplate documentTemplate = CoreModelServiceHolder.get()
-				.load(template.getId(), IDocumentTemplate.class).orElse(null);
+					.load(template.getId(), IDocumentTemplate.class).orElse(null);
 			if (documentTemplate != null) {
-				IVirtualFilesystemHandle handle =
-					DocumentLetterUtil.getExternalHandleIfApplicable(documentTemplate);
+				IVirtualFilesystemHandle handle = DocumentLetterUtil.getExternalHandleIfApplicable(documentTemplate);
 				Optional<File> file = handle.toFile();
 				if (file.isPresent()) {
 					Program.launch(file.get().getAbsolutePath());
 					return null;
 				}
 			}
-			// open in text view 
-			IWorkbenchPage activePage =
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			// open in text view
+			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			TextView textView = (TextView) activePage.showView(TextView.ID);
 			if (!textView.openDocument(template)) {
-				SWTHelper.alert(Messages.BriefAuswahlErrorHeading, //$NON-NLS-1$
-					Messages.BriefAuswahlCouldNotLoadText); //$NON-NLS-1$
+				SWTHelper.alert(Messages.BriefAuswahlErrorHeading, // $NON-NLS-1$
+						Messages.BriefAuswahlCouldNotLoadText); // $NON-NLS-1$
 			}
 		} catch (PartInitException e) {
 			logger.error("Could not open TextView", e);
@@ -79,5 +76,5 @@ public class LoadTemplateCommand extends AbstractHandler {
 		}
 		return null;
 	}
-	
+
 }

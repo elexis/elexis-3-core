@@ -29,178 +29,178 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "TASK")
 @Cache(expiry = 15000)
 public class Task extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
-	
+
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 32)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@Column
 	protected int state = 0;
-	
+
 	@Column
 	protected int triggerEvent = 0;
-	
+
 	@Column
 	protected Long createdAt;
-	
+
 	@Column
 	protected Long runAt;
-	
+
 	@Column
 	protected Long finishedAt;
-	
-	@JoinColumn(name="descriptor")
+
+	@JoinColumn(name = "descriptor")
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	protected TaskDescriptor taskDescriptor;
-	
+
 	@Column
 	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected String runContext;
-	
+
 	@Column
 	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected String result;
-	
+
 	@Column(length = 64)
 	protected String runner;
-	
+
 	@Column(name = "is_system")
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean system = false;
-	
+
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
-	
+
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
-	
+
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
-	
-	public void setState(int state){
+
+	public void setState(int state) {
 		this.state = state;
 	}
-	
-	public int getState(){
+
+	public int getState() {
 		return this.state;
 	}
-	
-	public boolean isSystem(){
+
+	public boolean isSystem() {
 		return system;
 	}
-	
-	public void setSystem(boolean system){
+
+	public void setSystem(boolean system) {
 		this.system = system;
 	}
-	
-	public int getTriggerEvent(){
+
+	public int getTriggerEvent() {
 		return triggerEvent;
 	}
-	
-	public void setTriggerEvent(int triggerEvent){
+
+	public void setTriggerEvent(int triggerEvent) {
 		this.triggerEvent = triggerEvent;
 	}
-	
-	public TaskDescriptor getTaskDescriptor(){
+
+	public TaskDescriptor getTaskDescriptor() {
 		return taskDescriptor;
 	}
-	
-	public void setTaskDescriptor(TaskDescriptor taskDescriptor){
+
+	public void setTaskDescriptor(TaskDescriptor taskDescriptor) {
 		this.taskDescriptor = taskDescriptor;
 	}
-	
-	public String getRunContext(){
+
+	public String getRunContext() {
 		return runContext;
 	}
-	
-	public void setRunContext(String runContext){
+
+	public void setRunContext(String runContext) {
 		this.runContext = runContext;
 	}
-	
-	public String getResult(){
+
+	public String getResult() {
 		return result;
 	}
-	
-	public void setResult(String result){
+
+	public void setResult(String result) {
 		this.result = result;
 	}
-	
-	public String getRunner(){
+
+	public String getRunner() {
 		return runner;
 	}
-	
-	public void setRunner(String runner){
+
+	public void setRunner(String runner) {
 		this.runner = runner;
 	}
-	
-	public Long getCreatedAt(){
+
+	public Long getCreatedAt() {
 		return createdAt;
 	}
-	
-	public void setCreatedAt(Long createdAt){
+
+	public void setCreatedAt(Long createdAt) {
 		this.createdAt = createdAt;
 	}
-	
+
 	@Transient
 	public LocalDateTime getCreatedAtLocalDateTime() {
 		return TimeMillisConverter.convertOptionalMillisToLocalDateTime(getCreatedAt());
 	}
-	
-	public Long getRunAt(){
+
+	public Long getRunAt() {
 		return runAt;
 	}
-	
-	public void setRunAt(Long runAt){
+
+	public void setRunAt(Long runAt) {
 		this.runAt = runAt;
 	}
-	
+
 	@Transient
 	public LocalDateTime getRunAtLocalDateTime() {
 		return TimeMillisConverter.convertOptionalMillisToLocalDateTime(getRunAt());
 	}
-	
-	public Long getFinishedAt(){
+
+	public Long getFinishedAt() {
 		return finishedAt;
 	}
-	
+
 	@Transient
 	public LocalDateTime getFinishedAtLocalDateTime() {
 		return TimeMillisConverter.convertOptionalMillisToLocalDateTime(getFinishedAt());
 	}
-	
-	public void setFinishedAt(Long finishedAt){
+
+	public void setFinishedAt(Long finishedAt) {
 		this.finishedAt = finishedAt;
 	}
-	
+
 }

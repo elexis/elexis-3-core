@@ -33,16 +33,16 @@ public class DocHandle extends AbstractEntityWithId implements EntityWithId, Ent
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
-	
+
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
+
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
-	
+
 	@OneToOne
 	@JoinColumn(name = "PatID")
 	protected Kontakt kontakt;
@@ -70,39 +70,39 @@ public class DocHandle extends AbstractEntityWithId implements EntityWithId, Ent
 
 	@Column(name = "DOCUMENT_STATUS")
 	protected int status;
-	
+
 	@Column
 	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected byte[] doc;
 
 	@Override
-	public String getId(){
+	public String getId() {
 		return id;
 	}
 
 	@Override
-	public void setId(String id){
+	public void setId(String id) {
 		this.id = id;
 	}
 
 	@Override
-	public Long getLastupdate(){
+	public Long getLastupdate() {
 		return lastupdate;
 	}
 
 	@Override
-	public void setLastupdate(Long lastupdate){
+	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
 
 	@Override
-	public boolean isDeleted(){
+	public boolean isDeleted() {
 		return deleted;
 	}
 
 	@Override
-	public void setDeleted(boolean deleted){
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
 
@@ -165,16 +165,16 @@ public class DocHandle extends AbstractEntityWithId implements EntityWithId, Ent
 	public String getPath() {
 		return path;
 	}
-	
+
 	public void setPath(String path) {
 		this.path = path;
 	}
 
-	public int getStatus(){
+	public int getStatus() {
 		return status;
 	}
-	
-	public void setStatus(int status){
+
+	public void setStatus(int status) {
 		this.status = status;
 	}
 

@@ -7,12 +7,12 @@ public class ToggleCurrentPatientLockHandler extends AbstractToggleCurrentLockHa
 	public static final String COMMAND_ID = "ch.elexis.core.ui.command.ToggleCurrentPatientLockCommand";
 
 	@Override
-	public String getCommandId(){
+	public String getCommandId() {
 		return COMMAND_ID;
 	}
 
 	@Override
-	public Class<?> getTemplateClass(){
+	public Class<?> getTemplateClass() {
 		return Patient.class;
 	}
 }

@@ -32,22 +32,22 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 
 public class ReChargeLabOpenCons extends ExternalMaintenance {
-	
+
 	private ICodeElementService codeElementService;
-	
+
 	private ServiceReference<ICodeElementService> codeServiceRef;
-	
+
 	private IBillingService billingService;
-	
+
 	private ServiceReference<IBillingService> billingServiceRef;
-	
+
 	@Override
-	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
+	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		StringJoiner sj = new StringJoiner("\n");
 		if (initCodeElementService() && initBillingService()) {
 			Query<Patient> queryPatients = new Query<>(Patient.class);
 			List<Patient> patients = queryPatients.execute();
-			
+
 			pm.beginTask("Laborwerte nach verrechnen", patients.size());
 			for (Patient patient : patients) {
 				Map<LocalDate, Konsultation> openKonsultationMap = getOpenKonsultationMap(patient);
@@ -57,32 +57,27 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 					List<LabResult> labResults = queryLabResults.execute();
 					for (LabResult labResult : labResults) {
 						if (labResult.getOrigin() != null && labResult.getItem() != null) {
-							LabMapping mapping = LabMapping.getByContactAndItemId(
-								labResult.getOrigin().getId(), labResult.getItem().getId());
+							LabMapping mapping = LabMapping.getByContactAndItemId(labResult.getOrigin().getId(),
+									labResult.getItem().getId());
 							if (mapping != null && mapping.isCharge()) {
 								String ealCode = ((LabItem) labResult.getItem()).getBillingCode();
 								if (ealCode != null && !ealCode.isEmpty()) {
 									LocalDate labResultLocalDate = getLocalDate(labResult);
-									Konsultation openKons =
-										openKonsultationMap.get(labResultLocalDate);
+									Konsultation openKons = openKonsultationMap.get(labResultLocalDate);
 									if (openKons != null) {
-										IEncounter encounter = NoPoUtil
-											.loadAsIdentifiable(openKons, IEncounter.class).get();
-										Optional<ICodeElement> matchingVerrechenbar =
-											codeElementService.loadFromString("EAL 2009", ealCode,
-												getContext(encounter));
+										IEncounter encounter = NoPoUtil.loadAsIdentifiable(openKons, IEncounter.class)
+												.get();
+										Optional<ICodeElement> matchingVerrechenbar = codeElementService
+												.loadFromString("EAL 2009", ealCode, getContext(encounter));
 										if (matchingVerrechenbar.isPresent()) {
-											if (!isAlreadyBilled(encounter,
-												matchingVerrechenbar.get())) {
-												billingService.bill(
-													(IBillable) matchingVerrechenbar.get(),
-													encounter, 1.0);
+											if (!isAlreadyBilled(encounter, matchingVerrechenbar.get())) {
+												billingService.bill((IBillable) matchingVerrechenbar.get(), encounter,
+														1.0);
 											}
 										}
 									} else {
-										sj.add("No open cons to bill [" + ealCode + "] on date ["
-											+ labResultLocalDate + "] of pat ["
-											+ patient.getPatCode() + "]");
+										sj.add("No open cons to bill [" + ealCode + "] on date [" + labResultLocalDate
+												+ "] of pat [" + patient.getPatCode() + "]");
 									}
 								}
 							}
@@ -91,37 +86,36 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 				}
 				pm.worked(1);
 			}
-			
+
 			pm.done();
 			deInitCodeElementService();
 			deInitBillingService();
 		}
 		return sj.toString();
 	}
-	
-	private LocalDate getLocalDate(LabResult labResult){
+
+	private LocalDate getLocalDate(LabResult labResult) {
 		if (labResult.getObservationTime() != null) {
 			return labResult.getObservationTime().toLocalDate();
 		} else if (labResult.getDateTime() != null) {
 			return labResult.getDateTime().toLocalDate();
 		}
-		LoggerFactory.getLogger(getClass())
-			.warn("No local date for lab result [" + labResult.getId() + "]");
+		LoggerFactory.getLogger(getClass()).warn("No local date for lab result [" + labResult.getId() + "]");
 		return LocalDate.MIN;
 	}
-	
-	private boolean isAlreadyBilled(IEncounter encounter, ICodeElement iCodeElement){
+
+	private boolean isAlreadyBilled(IEncounter encounter, ICodeElement iCodeElement) {
 		for (IBilled verrechnet : encounter.getBilled()) {
 			IBillable verrechenbar = verrechnet.getBillable();
 			if (verrechenbar.getCodeSystemName().equals(iCodeElement.getCodeSystemName())
-				&& verrechenbar.getCode().equals(iCodeElement.getCode())) {
+					&& verrechenbar.getCode().equals(iCodeElement.getCode())) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	private Map<LocalDate, Konsultation> getOpenKonsultationMap(Patient patient){
+
+	private Map<LocalDate, Konsultation> getOpenKonsultationMap(Patient patient) {
 		Map<LocalDate, Konsultation> ret = new HashMap<>();
 		for (Fall fall : patient.getFaelle()) {
 			if (fall.isOpen()) {
@@ -134,8 +128,8 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 		}
 		return ret;
 	}
-	
-	private HashMap<Object, Object> getContext(IEncounter encounter){
+
+	private HashMap<Object, Object> getContext(IEncounter encounter) {
 		HashMap<Object, Object> ret = new HashMap<>();
 		if (encounter != null) {
 			ret.put(ContextKeys.CONSULTATION, encounter);
@@ -146,19 +140,17 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 		}
 		return ret;
 	}
-	
-	private void deInitCodeElementService(){
-		BundleContext context =
-			FrameworkUtil.getBundle(ReChargeTarmedOpenCons.class).getBundleContext();
+
+	private void deInitCodeElementService() {
+		BundleContext context = FrameworkUtil.getBundle(ReChargeTarmedOpenCons.class).getBundleContext();
 		if (codeServiceRef != null) {
 			context.ungetService(codeServiceRef);
 			codeElementService = null;
 		}
 	}
-	
-	private boolean initCodeElementService(){
-		BundleContext context =
-			FrameworkUtil.getBundle(ReChargeTarmedOpenCons.class).getBundleContext();
+
+	private boolean initCodeElementService() {
+		BundleContext context = FrameworkUtil.getBundle(ReChargeTarmedOpenCons.class).getBundleContext();
 		codeServiceRef = context.getServiceReference(ICodeElementService.class);
 		if (codeServiceRef != null) {
 			codeElementService = context.getService(codeServiceRef);
@@ -167,19 +159,17 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 			return false;
 		}
 	}
-	
-	private void deInitBillingService(){
-		BundleContext context =
-			FrameworkUtil.getBundle(ReChargeTarmedOpenCons.class).getBundleContext();
+
+	private void deInitBillingService() {
+		BundleContext context = FrameworkUtil.getBundle(ReChargeTarmedOpenCons.class).getBundleContext();
 		if (billingServiceRef != null) {
 			context.ungetService(billingServiceRef);
 			billingService = null;
 		}
 	}
-	
-	private boolean initBillingService(){
-		BundleContext context =
-			FrameworkUtil.getBundle(ReChargeTarmedOpenCons.class).getBundleContext();
+
+	private boolean initBillingService() {
+		BundleContext context = FrameworkUtil.getBundle(ReChargeTarmedOpenCons.class).getBundleContext();
 		billingServiceRef = context.getServiceReference(IBillingService.class);
 		if (billingServiceRef != null) {
 			billingService = context.getService(billingServiceRef);
@@ -188,9 +178,9 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 			return false;
 		}
 	}
-	
+
 	@Override
-	public String getMaintenanceDescription(){
+	public String getMaintenanceDescription() {
 		return "Laborwerte aller offenen Konsutlationen neu verrechnen.";
 	}
 }

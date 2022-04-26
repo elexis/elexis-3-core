@@ -15,26 +15,26 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 
 public class LabResetPathologic extends ExternalMaintenance {
-	
+
 	private List<String> problems = new ArrayList<>();
-	
+
 	@Override
-	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
+	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		Query<LabResult> qlr = new Query<LabResult>(LabResult.class);
 		List<LabResult> results = qlr.execute();
 		int size = results.size();
-		pm.beginTask(getMaintenanceDescription() +" ("+size+" Laborwerte)", results.size());
+		pm.beginTask(getMaintenanceDescription() + " (" + size + " Laborwerte)", results.size());
 		int allCount = 0;
 		int changedCount = 0;
 		for (LabResult labResult : results) {
 			if (pm.isCanceled()) {
 				addProblem("Cancelled.", labResult);
-				return getProblemsString() + "\n" + changedCount + " Werte wurden geändert.\n "
-					+ allCount + " Werte insgesamt.";
+				return getProblemsString() + "\n" + changedCount + " Werte wurden geändert.\n " + allCount
+						+ " Werte insgesamt.";
 			}
-			
+
 			LockResponse result = LocalLockServiceHolder.get().acquireLockBlocking(labResult, 50,
-				new NullProgressMonitor());
+					new NullProgressMonitor());
 			if (result.isOk()) {
 				boolean wasPathologic = labResult.isFlag(LabResultConstants.PATHOLOGIC);
 				// reset patholgic by resetting ref values
@@ -44,22 +44,22 @@ public class LabResetPathologic extends ExternalMaintenance {
 				if (wasPathologic != isPathologic) {
 					changedCount++;
 				}
-				LockResponse releaseLock =
-					LocalLockServiceHolder.get().releaseLock(result.getLockInfo());
+				LockResponse releaseLock = LocalLockServiceHolder.get().releaseLock(result.getLockInfo());
 				if (!releaseLock.isOk()) {
-					addProblem("Could not release lock for LabResult [" + labResult.getLabel() + "]"
-						+ "[" + labResult.getId() + "]", labResult);
+					addProblem("Could not release lock for LabResult [" + labResult.getLabel() + "]" + "["
+							+ labResult.getId() + "]", labResult);
 				}
 			} else {
-				addProblem("Could not acquire lock for LabResult [" + labResult.getLabel() + "]"
-					+ "[" + labResult.getId() + "]", labResult);
+				addProblem("Could not acquire lock for LabResult [" + labResult.getLabel() + "]" + "["
+						+ labResult.getId() + "]", labResult);
 			}
-			
+
 			allCount++;
 			if ((allCount % 1000) == 0) {
-				// cache Map in SoftCache is a memory leak on heavy use ... so resetCache 
+				// cache Map in SoftCache is a memory leak on heavy use ... so resetCache
 				PersistentObject.resetCache();
-				pm.setTaskName(getMaintenanceDescription() +" ("+size+" Laborwerte => "+allCount +" bearbeitet)");
+				pm.setTaskName(
+						getMaintenanceDescription() + " (" + size + " Laborwerte => " + allCount + " bearbeitet)");
 			}
 			pm.worked(1);
 			try {
@@ -71,18 +71,18 @@ public class LabResetPathologic extends ExternalMaintenance {
 		pm.done();
 		return changedCount + " Werte wurden geändert.\n " + allCount + " Werte insgesamt.";
 	}
-	
-	private void addProblem(String prefix, LabResult labResult){
-		problems.add("[" + prefix + "]" + "[" + labResult.getId() + "] - [" + labResult.getLabel()
-			+ "] of [" + labResult.getPatient().getLabel() + "]");
+
+	private void addProblem(String prefix, LabResult labResult) {
+		problems.add("[" + prefix + "]" + "[" + labResult.getId() + "] - [" + labResult.getLabel() + "] of ["
+				+ labResult.getPatient().getLabel() + "]");
 	}
-	
+
 	@Override
-	public String getMaintenanceDescription(){
+	public String getMaintenanceDescription() {
 		return "Pathologisch bei allen Laborwerten neu setzen.";
 	}
-	
-	private String getProblemsString(){
+
+	private String getProblemsString() {
 		if (problems != null && !problems.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("\nProblems:\n");

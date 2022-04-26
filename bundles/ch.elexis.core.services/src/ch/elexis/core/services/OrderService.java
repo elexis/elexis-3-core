@@ -15,14 +15,13 @@ import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
 @Component
 public class OrderService implements IOrderService {
-	
-	public IOrderEntry findOpenOrderEntryForStockEntry(IStockEntry stockEntry){
+
+	public IOrderEntry findOpenOrderEntryForStockEntry(IStockEntry stockEntry) {
 		IArticle article = stockEntry.getArticle();
 		if (article != null) {
-			String[] articleStoreToStringParts = StoreToStringServiceHolder
-				.getStoreToString(article)
-				.split(IStoreToStringContribution.DOUBLECOLON);
-			
+			String[] articleStoreToStringParts = StoreToStringServiceHolder.getStoreToString(article)
+					.split(IStoreToStringContribution.DOUBLECOLON);
+
 			IQuery<IOrderEntry> query = CoreModelServiceHolder.get().getQuery(IOrderEntry.class);
 			query.and("stockid", COMPARATOR.EQUALS, stockEntry.getStock().getId());
 			query.and("articleType", COMPARATOR.EQUALS, articleStoreToStringParts[0]);
@@ -37,7 +36,7 @@ public class OrderService implements IOrderService {
 	}
 
 	@Override
-	public IOrderEntry addRefillForStockEntryToOrder(IStockEntry ise, IOrder order){
+	public IOrderEntry addRefillForStockEntryToOrder(IStockEntry ise, IOrder order) {
 		int current = ise.getCurrentStock();
 		int max = ise.getMaximumStock();
 		if (max == 0) {
@@ -45,9 +44,9 @@ public class OrderService implements IOrderService {
 		}
 		int toOrder = max - current;
 		if (toOrder > 0) {
-			 IOrderEntry orderEntry = order.addEntry(ise.getArticle(), ise.getStock(), ise.getProvider(), toOrder);
-			 CoreModelServiceHolder.get().save(orderEntry);
-			 return orderEntry;
+			IOrderEntry orderEntry = order.addEntry(ise.getArticle(), ise.getStock(), ise.getProvider(), toOrder);
+			CoreModelServiceHolder.get().save(orderEntry);
+			return orderEntry;
 		}
 		return null;
 	}

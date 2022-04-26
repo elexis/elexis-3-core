@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -38,37 +38,37 @@ import ch.elexis.core.services.IQuery;
 import ch.rgw.tools.TimeTool;
 
 public class SelectBestellungDialog extends SelectionDialog {
-	
+
 	private IStructuredContentProvider fContentProvider;
-	
+
 	private ILabelProvider fLabelProvider;
-	
+
 	private Object fInput;
-	
+
 	private TableViewer fTableViewer;
-	
+
 	private boolean fAddCancelButton = true;
-	
+
 	private int widthInChars = 55;
-	
+
 	private int heightInChars = 15;
-	
-	public SelectBestellungDialog(Shell parent){
+
+	public SelectBestellungDialog(Shell parent) {
 		super(parent);
 	}
-	
-	protected Control createDialogArea(Composite container){
+
+	protected Control createDialogArea(Composite container) {
 		Composite parent = (Composite) super.createDialogArea(container);
 		createMessageArea(parent);
 		fTableViewer = new TableViewer(parent, getTableStyle());
 		fTableViewer.setContentProvider(ArrayContentProvider.getInstance());
-		
+
 		addColumns();
-		
+
 		setComparator();
-		
+
 		fTableViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event){
+			public void doubleClick(DoubleClickEvent event) {
 				if (fAddCancelButton) {
 					okPressed();
 				}
@@ -85,21 +85,21 @@ public class SelectBestellungDialog extends SelectionDialog {
 		table.setLayoutData(gd);
 		table.setFont(container.getFont());
 		table.setHeaderVisible(true);
-		
+
 		IQuery<IOrder> query = CoreModelServiceHolder.get().getQuery(IOrder.class);
 		fTableViewer.setInput(query.execute());
-		
+
 		return parent;
 	}
-	
-	private void setComparator(){
+
+	private void setComparator() {
 		fTableViewer.setComparator(new ViewerComparator() {
-			
+
 			@Override
-			public int compare(Viewer viewer, Object b1, Object b2){
+			public int compare(Viewer viewer, Object b1, Object b2) {
 				TimeTool t1 = new TimeTool();
 				TimeTool t2 = new TimeTool();
-				
+
 				setTimeTool((IOrder) b1, t1);
 				setTimeTool((IOrder) b2, t2);
 				if (t1.after(t2)) {
@@ -108,10 +108,10 @@ public class SelectBestellungDialog extends SelectionDialog {
 					return 1;
 				}
 				return Long.valueOf(((IOrder) b1).getLastupdate())
-					.compareTo(Long.valueOf(((IOrder) b2).getLastupdate()));
+						.compareTo(Long.valueOf(((IOrder) b2).getLastupdate()));
 			}
-			
-			private void setTimeTool(IOrder order, TimeTool timeTool){
+
+			private void setTimeTool(IOrder order, TimeTool timeTool) {
 				try {
 					String[] i = order.getId().split(":"); //$NON-NLS-1$
 					timeTool.set(i[1]);
@@ -121,15 +121,15 @@ public class SelectBestellungDialog extends SelectionDialog {
 			}
 		});
 	}
-	
-	private void addColumns(){
+
+	private void addColumns() {
 		TableViewerColumn closed = new TableViewerColumn(fTableViewer, SWT.NONE);
 		closed.getColumn().setWidth(50);
 		closed.getColumn().setText("Abg.");
 		closed.setLabelProvider(new ColumnLabelProvider() {
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				IOrder order = (IOrder) element;
 				if (order.isDone()) {
 					return "*";
@@ -141,18 +141,18 @@ public class SelectBestellungDialog extends SelectionDialog {
 				}
 			}
 		});
-		
+
 		TableViewerColumn time = new TableViewerColumn(fTableViewer, SWT.NONE);
 		time.getColumn().setWidth(125);
 		time.getColumn().setText("Datum");
 		time.setLabelProvider(new ColumnLabelProvider() {
 			TimeTool date = new TimeTool();
-			
+
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				IOrder order = (IOrder) element;
 				String[] i = order.getId().split(":"); //$NON-NLS-1$
-				
+
 				if (i.length > 1) {
 					date.set(i[1]);
 					return date.toString(TimeTool.FULL_GER);
@@ -161,16 +161,16 @@ public class SelectBestellungDialog extends SelectionDialog {
 				}
 			}
 		});
-		
+
 		TableViewerColumn title = new TableViewerColumn(fTableViewer, SWT.NONE);
 		title.getColumn().setWidth(200);
 		title.getColumn().setText("Titel");
 		title.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element){
+			public String getText(Object element) {
 				IOrder order = (IOrder) element;
 				String[] i = order.getId().split(":"); //$NON-NLS-1$
-				
+
 				if (i.length > 0)
 					return i[0];
 				else
@@ -178,21 +178,20 @@ public class SelectBestellungDialog extends SelectionDialog {
 			}
 		});
 	}
-	
+
 	/**
 	 * Return the style flags for the table viewer.
-	 * 
+	 *
 	 * @return int
 	 */
-	protected int getTableStyle(){
-		return SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION
-			| SWT.VIRTUAL;
+	protected int getTableStyle() {
+		return SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL;
 	}
-	
+
 	/*
 	 * Overrides method from Dialog
 	 */
-	protected void okPressed(){
+	protected void okPressed() {
 		// Build a list of selected children.
 		IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
 		setResult(selection.toList());

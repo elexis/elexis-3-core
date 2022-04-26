@@ -40,9 +40,9 @@ import ch.rgw.tools.TimeTool;
 /**
  * Imports PDFFiles into Omnivore and adds them as a {@link LabResult} to the
  * Labor View
- * 
+ *
  * @author lucia
- * 
+ *
  */
 public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	private static final Logger log = LoggerFactory.getLogger(DefaultPDFImportStrategy.class);
@@ -62,7 +62,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	private ImportHandler defaultImportHandler;
 
 	private String pdfImportCategory;
-	
+
 	public DefaultPDFImportStrategy(ImportHandler defaultImportHandler) {
 		this.defaultImportHandler = defaultImportHandler;
 	}
@@ -70,14 +70,14 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	@Override
 	public Result<Object> execute(IVirtualFilesystemHandle fileHandle, Map<String, Object> context, HL7Parser hl7parser,
 			IPersistenceHandler persistenceHandler) {
-		
+
 		ImportHandler importHandler;
 		if (testMode) {
 			importHandler = new OverwriteAllImportHandler();
 		} else {
 			importHandler = defaultImportHandler;
 		}
-		
+
 		try {
 			initValuesFromContext(context);
 			if (!OmnivoreDocumentStoreServiceHolder.isAvailable()) {
@@ -86,7 +86,8 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 						FileImportStrategyUtil.moveAfterImport(false, fileHandle);
 					} catch (IOException e) {
 						return new Result<>(SEVERITY.ERROR, 2,
-								"Could not move after import [" + fileHandle.getAbsolutePath() + "]: "+e.getMessage(), context, true);
+								"Could not move after import [" + fileHandle.getAbsolutePath() + "]: " + e.getMessage(),
+								context, true);
 					}
 				}
 				return new Result<>(SEVERITY.ERROR, 2,
@@ -100,7 +101,8 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 					FileImportStrategyUtil.moveAfterImport(false, fileHandle);
 				} catch (IOException e) {
 					return new Result<>(SEVERITY.ERROR, 2,
-							"Could not move after import [" + fileHandle.getAbsolutePath() + "]: "+e.getMessage(), context, true);
+							"Could not move after import [" + fileHandle.getAbsolutePath() + "]: " + e.getMessage(),
+							context, true);
 				}
 			}
 			return new Result<>(SEVERITY.ERROR, 2,
@@ -120,27 +122,24 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		String titel = generatePDFTitle(fileHandle.getName(), dateTime);
 
 		String orderId = "noorder";
-		
+
 		// add doc to document manager
 		try {
-			String category =
-				StringUtils.isNotBlank(pdfImportCategory) ? pdfImportCategory : labName;
+			String category = StringUtils.isNotBlank(pdfImportCategory) ? pdfImportCategory : labName;
 			if (addDocument(titel, category, dateTime, fileHandle, fileHandle.getName())) {
-				TransientLabResult importResult =
-					new TransientLabResult.Builder(patient, myLab, labItem, titel).date(dateTime)
-						.build(LabImportUtilHolder.get());
-				
-				orderId = LabImportUtilHolder.get()
-					.importLabResults(Collections.singletonList(importResult), importHandler);
+				TransientLabResult importResult = new TransientLabResult.Builder(patient, myLab, labItem, titel)
+						.date(dateTime).build(LabImportUtilHolder.get());
+
+				orderId = LabImportUtilHolder.get().importLabResults(Collections.singletonList(importResult),
+						importHandler);
 			} else {
-				log.error("pdf [{}] already present in document manager (omnivore)",
-					fileHandle.getAbsolutePath());
+				log.error("pdf [{}] already present in document manager (omnivore)", fileHandle.getAbsolutePath());
 			}
 		} catch (IOException | IllegalStateException | ElexisException e) {
-			log.error("error saving pdf [{}] in document manager (omnivore)",
-				fileHandle.getAbsolutePath(), e);
-			return new Result<>(SEVERITY.ERROR, 2, "Could not store document ["
-				+ fileHandle.getAbsolutePath() + "]: " + e.getMessage(), context, true);
+			log.error("error saving pdf [{}] in document manager (omnivore)", fileHandle.getAbsolutePath(), e);
+			return new Result<>(SEVERITY.ERROR, 2,
+					"Could not store document [" + fileHandle.getAbsolutePath() + "]: " + e.getMessage(), context,
+					true);
 		}
 		if (moveAfterImport) {
 			try {
@@ -148,7 +147,8 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			} catch (IOException e) {
 				e.printStackTrace();
 				return new Result<>(SEVERITY.ERROR, 2,
-						"Could not move after import [" + fileHandle.getAbsolutePath() + "]: "+e.getMessage(), context, true);
+						"Could not move after import [" + fileHandle.getAbsolutePath() + "]: " + e.getMessage(),
+						context, true);
 			}
 		}
 		return new Result<>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
@@ -170,10 +170,9 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		}
 
 		if (ConfigServiceHolder.get().getLocal(HL7Parser.CFG_IMPORT_ENCDATA, false)) {
-			labName =
-				ConfigServiceHolder.get().getLocal(HL7Parser.CFG_IMPORT_ENCDATA_CATEGORY, null);
+			labName = ConfigServiceHolder.get().getLocal(HL7Parser.CFG_IMPORT_ENCDATA_CATEGORY, null);
 		}
-		
+
 		if (labName == null || labName.isEmpty()) {
 			labName = (String) context.get(IMultiFileParser.CTX_LABNAME);
 			if (labName == null) {
@@ -217,8 +216,8 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			final IVirtualFilesystemHandle fileHandle, String keywords) throws IOException, ElexisException {
 		ICategory iCategory = findOrCreateCategory(category);
 
-		List<IDocument> existing = OmnivoreDocumentStoreServiceHolder.get().getDocuments(patient.getId(), null, iCategory,
-				null);
+		List<IDocument> existing = OmnivoreDocumentStoreServiceHolder.get().getDocuments(patient.getId(), null,
+				iCategory, null);
 		existing = existing.stream().filter(d -> documentMatches(d, title, dateTime)).collect(Collectors.toList());
 
 		if (existing.isEmpty()) {
@@ -227,7 +226,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			document.setCreated(dateTime.getTime());
 			document.setExtension(FileTool.getExtension(fileHandle.getName()));
 			document.setKeywords(keywords);
-			try(InputStream is = fileHandle.openInputStream()) {
+			try (InputStream is = fileHandle.openInputStream()) {
 				OmnivoreDocumentStoreServiceHolder.get().saveDocument(document, is);
 			}
 			return true;
@@ -272,7 +271,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 
 	/**
 	 * Add the {@link ILabContactResolver} that should be used on import.
-	 * 
+	 *
 	 * @param resolver
 	 * @return
 	 */
@@ -280,8 +279,8 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		// currently no use for a contact resolver here
 		return this;
 	}
-	
-	public DefaultPDFImportStrategy setPDFImportCategory(String category){
+
+	public DefaultPDFImportStrategy setPDFImportCategory(String category) {
 		this.pdfImportCategory = category;
 		return this;
 	}

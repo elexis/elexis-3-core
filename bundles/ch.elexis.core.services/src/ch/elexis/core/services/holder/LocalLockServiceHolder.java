@@ -7,15 +7,15 @@ import ch.elexis.core.services.ILocalLockService;
 
 @Component
 public class LocalLockServiceHolder {
-	
+
 	private static ILocalLockService localLockService;
-	
+
 	@Reference
-	public void setLocalLockService(ILocalLockService localLockService){
+	public void setLocalLockService(ILocalLockService localLockService) {
 		LocalLockServiceHolder.localLockService = localLockService;
 	}
-	
-	public static ILocalLockService get(){
+
+	public static ILocalLockService get() {
 		if (localLockService == null) {
 			throw new IllegalStateException("No ILocalLockService available");
 		}

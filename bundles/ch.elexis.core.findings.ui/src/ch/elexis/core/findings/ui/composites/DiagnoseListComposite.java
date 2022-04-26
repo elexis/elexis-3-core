@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
@@ -56,127 +56,124 @@ import ch.elexis.core.ui.util.NatTableWrapper.IDoubleClickListener;
 import ch.elexis.data.Patient;
 
 /**
- * {@link Composite} implementation for managing the {@link ICondition} entries, of a
- * {@link Patient}.
- * 
+ * {@link Composite} implementation for managing the {@link ICondition} entries,
+ * of a {@link Patient}.
+ *
  * @author thomas
  *
  */
 public class DiagnoseListComposite extends Composite {
 	private NatTableWrapper natTableWrapper;
 	private ToolBarManager toolbarManager;
-	
+
 	private EventList<ICondition> dataList = new BasicEventList<>();
-	
+
 	@SuppressWarnings("deprecation")
-	public DiagnoseListComposite(Composite parent, int style){
+	public DiagnoseListComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
-		
+
 		natTableWrapper = NatTableFactory.createSingleColumnTable(this,
-			new GlazedListsDataProvider<ICondition>(dataList, new IColumnAccessor<ICondition>() {
-				@Override
-				public int getColumnCount(){
-					return 1;
-				}
-				
-				@Override
-				public Object getDataValue(ICondition condition, int columnIndex){
-					switch (columnIndex) {
-					case 0:
-						return getFormattedDescriptionText(condition);
+				new GlazedListsDataProvider<ICondition>(dataList, new IColumnAccessor<ICondition>() {
+					@Override
+					public int getColumnCount() {
+						return 1;
 					}
-					return "";
-				}
-				
-				private Object getFormattedDescriptionText(ICondition condition){
-					StringBuilder text = new StringBuilder();
-					
-					StringBuilder contentText = new StringBuilder();
-					// first display text
-					Optional<String> conditionText = condition.getText();
-					conditionText.ifPresent(t -> {
-						if (contentText.length() > 0) {
-							contentText.append("\n");
+
+					@Override
+					public Object getDataValue(ICondition condition, int columnIndex) {
+						switch (columnIndex) {
+						case 0:
+							return getFormattedDescriptionText(condition);
 						}
-						contentText.append(t);
-					});
-					// then display the coding
-					List<ICoding> codings = condition.getCoding();
-					if (codings != null && !codings.isEmpty()) {
-						for (ICoding iCoding : codings) {
+						return "";
+					}
+
+					private Object getFormattedDescriptionText(ICondition condition) {
+						StringBuilder text = new StringBuilder();
+
+						StringBuilder contentText = new StringBuilder();
+						// first display text
+						Optional<String> conditionText = condition.getText();
+						conditionText.ifPresent(t -> {
 							if (contentText.length() > 0) {
-								contentText.append(", ");
+								contentText.append("\n");
 							}
-							contentText.append("[")
-								.append(CodingServiceComponent.getService().getShortLabel(iCoding))
-								.append("] ");
+							contentText.append(t);
+						});
+						// then display the coding
+						List<ICoding> codings = condition.getCoding();
+						if (codings != null && !codings.isEmpty()) {
+							for (ICoding iCoding : codings) {
+								if (contentText.length() > 0) {
+									contentText.append(", ");
+								}
+								contentText.append("[")
+										.append(CodingServiceComponent.getService().getShortLabel(iCoding))
+										.append("] ");
+							}
 						}
+						// add additional information before content
+						text.append("<strong>");
+						ConditionStatus status = condition.getStatus();
+						text.append(status.getLocalized());
+						Optional<String> start = condition.getStart();
+						start.ifPresent(string -> text.append(" (").append(string).append(" - "));
+						Optional<String> end = condition.getEnd();
+						end.ifPresent(string -> text.append(string));
+						start.ifPresent(string -> text.append(")"));
+
+						List<String> notes = condition.getNotes();
+						if (!notes.isEmpty()) {
+							text.append(" (" + notes.size() + ")");
+						}
+						if (contentText.toString().contains("\n")) {
+							text.append("</strong>\n").append(contentText.toString());
+						} else {
+							text.append("</strong> ").append(contentText.toString());
+						}
+
+						return text.toString();
 					}
-					// add additional information before content
-					text.append("<strong>");
-					ConditionStatus status = condition.getStatus();
-					text.append(status.getLocalized());
-					Optional<String> start = condition.getStart();
-					start.ifPresent(string -> text.append(" (").append(string).append(" - "));
-					Optional<String> end = condition.getEnd();
-					end.ifPresent(string -> text.append(string));
-					start.ifPresent(string -> text.append(")"));
-					
-					List<String> notes = condition.getNotes();
-					if(!notes.isEmpty()) {
-						text.append(" (" + notes.size() + ")");
+
+					@Override
+					public void setDataValue(ICondition condition, int arg1, Object arg2) {
+						// setting data values is not enabled here.
 					}
-					if (contentText.toString().contains("\n")) {
-						text.append("</strong>\n").append(contentText.toString());
-					} else {
-						text.append("</strong> ").append(contentText.toString());
-					}
-					
-					return text.toString();
-				}
-				
-				@Override
-				public void setDataValue(ICondition condition, int arg1, Object arg2){
-					// setting data values is not enabled here.
-				}
-			
-			}), null);
+
+				}), null);
 		natTableWrapper.getNatTable().setLayoutData(new GridData(GridData.FILL_BOTH));
 		natTableWrapper.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(NatTableWrapper source, ISelection selection){
+			public void doubleClick(NatTableWrapper source, ISelection selection) {
 				if (selection instanceof StructuredSelection && !selection.isEmpty()) {
-					ICondition condition =
-						(ICondition) ((StructuredSelection) selection).getFirstElement();
-					AcquireLockBlockingUi.aquireAndRun(condition,
-						new ILockHandler() {
-							@Override
-							public void lockFailed(){
-								// do nothing
+					ICondition condition = (ICondition) ((StructuredSelection) selection).getFirstElement();
+					AcquireLockBlockingUi.aquireAndRun(condition, new ILockHandler() {
+						@Override
+						public void lockFailed() {
+							// do nothing
+						}
+
+						@Override
+						public void lockAcquired() {
+							ConditionEditDialog dialog = new ConditionEditDialog(condition,
+									Display.getDefault().getActiveShell());
+							if (dialog.open() == Dialog.OK) {
+								dialog.getCondition().ifPresent(c -> {
+									source.getNatTable().refresh();
+								});
 							}
-							
-							@Override
-							public void lockAcquired(){
-								ConditionEditDialog dialog =
-									new ConditionEditDialog(condition,
-										Display.getDefault().getActiveShell());
-								if (dialog.open() == Dialog.OK) {
-									dialog.getCondition().ifPresent(c -> {
-										source.getNatTable().refresh();
-									});
-								}
-							}
-						});
+						}
+					});
 				}
 			}
 		});
-		
+
 		final MenuManager mgr = new MenuManager();
 		mgr.setRemoveAllWhenShown(true);
 		mgr.addMenuListener(new ConditionsMenuListener());
 		natTableWrapper.getNatTable().setMenu(mgr.createContextMenu(natTableWrapper.getNatTable()));
-	
+
 		toolbarManager = new ToolBarManager();
 		toolbarManager.add(new AddConditionAction());
 		toolbarManager.add(new RemoveConditionAction());
@@ -184,15 +181,15 @@ public class DiagnoseListComposite extends Composite {
 		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
 		toolbar.setBackground(parent.getBackground());
 	}
-	
-	public void setInput(List<ICondition> conditions){
+
+	public void setInput(List<ICondition> conditions) {
 		dataList.clear();
 		conditions.sort(new Comparator<ICondition>() {
 			@Override
-			public int compare(ICondition left, ICondition right){
+			public int compare(ICondition left, ICondition right) {
 				Optional<LocalDate> lrecorded = left.getDateRecorded();
 				Optional<LocalDate> rrecorded = right.getDateRecorded();
-				if(lrecorded.isPresent() && rrecorded.isPresent()) {
+				if (lrecorded.isPresent() && rrecorded.isPresent()) {
 					return rrecorded.get().compareTo(lrecorded.get());
 				} else {
 					Optional<String> lstart = left.getStart();
@@ -207,28 +204,28 @@ public class DiagnoseListComposite extends Composite {
 		dataList.addAll(conditions);
 		natTableWrapper.getNatTable().refresh();
 	}
-	
+
 	@Override
-	public Point computeSize(int wHint, int hHint, boolean changed){
+	public Point computeSize(int wHint, int hHint, boolean changed) {
 		Point ret = toolbarManager.getControl().computeSize(wHint, hHint);
 		Point natRet = natTableWrapper.computeSize(wHint, hHint);
 		ret.y += natRet.y;
 		ret.x = natRet.x;
 		return ret;
 	}
-	
+
 	@Override
-	public void setBackground(Color color){
+	public void setBackground(Color color) {
 		super.setBackground(color);
 		if (natTableWrapper != null && !natTableWrapper.isDisposed()) {
 			natTableWrapper.getNatTable().setBackground(color);
 		}
 	}
-	
+
 	private class ConditionsMenuListener implements IMenuListener {
-		
+
 		@Override
-		public void menuAboutToShow(IMenuManager manager){
+		public void menuAboutToShow(IMenuManager manager) {
 			ISelection currentSelection = natTableWrapper.getSelection();
 			if (currentSelection instanceof StructuredSelection) {
 				StructuredSelection sSelection = (StructuredSelection) currentSelection;
@@ -236,20 +233,16 @@ public class DiagnoseListComposite extends Composite {
 					ICondition selectedCondition = (ICondition) sSelection.getFirstElement();
 					ConditionStatus selectionStatus = selectedCondition.getStatus();
 					if (selectionStatus != ConditionStatus.ACTIVE) {
-						manager
-							.add(new ToggleStatusAction(selectedCondition, ConditionStatus.ACTIVE));
+						manager.add(new ToggleStatusAction(selectedCondition, ConditionStatus.ACTIVE));
 					}
 					if (selectionStatus != ConditionStatus.RESOLVED) {
-						manager.add(
-							new ToggleStatusAction(selectedCondition, ConditionStatus.RESOLVED));
+						manager.add(new ToggleStatusAction(selectedCondition, ConditionStatus.RESOLVED));
 					}
 					if (selectionStatus != ConditionStatus.RELAPSE) {
-						manager.add(
-							new ToggleStatusAction(selectedCondition, ConditionStatus.RELAPSE));
+						manager.add(new ToggleStatusAction(selectedCondition, ConditionStatus.RELAPSE));
 					}
 					if (selectionStatus != ConditionStatus.REMISSION) {
-						manager.add(
-							new ToggleStatusAction(selectedCondition, ConditionStatus.REMISSION));
+						manager.add(new ToggleStatusAction(selectedCondition, ConditionStatus.REMISSION));
 					}
 				}
 				if (!sSelection.isEmpty()) {
@@ -258,57 +251,57 @@ public class DiagnoseListComposite extends Composite {
 			}
 		}
 	}
-	
+
 	private class ToggleStatusAction extends Action {
-		
+
 		private ConditionStatus status;
 		private ICondition condition;
-		
-		public ToggleStatusAction(ICondition condition, ConditionStatus status){
+
+		public ToggleStatusAction(ICondition condition, ConditionStatus status) {
 			this.status = status;
 			this.condition = condition;
 		}
-		
+
 		@Override
-		public String getText(){
+		public String getText() {
 			return "Status " + status.getLocalized();
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			AcquireLockUi.aquireAndRun(condition, new ILockHandler() {
 				@Override
-				public void lockFailed(){}
-				
+				public void lockFailed() {
+				}
+
 				@Override
-				public void lockAcquired(){
+				public void lockAcquired() {
 					condition.setStatus(status);
 					FindingsServiceComponent.getService().saveFinding(condition);
 				}
 			});
-			
+
 			natTableWrapper.getNatTable().refresh();
 		}
 	}
-	
+
 	private class AddConditionAction extends Action {
-		
+
 		@Override
-		public ImageDescriptor getImageDescriptor(){
+		public ImageDescriptor getImageDescriptor() {
 			return Images.IMG_NEW.getImageDescriptor();
 		}
-		
+
 		@Override
-		public String getText(){
+		public String getText() {
 			return "erstellen";
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			Patient selectedPatient = ElexisEventDispatcher.getSelectedPatient();
 			if (selectedPatient != null) {
-				ConditionEditDialog dialog =
-					new ConditionEditDialog(ConditionCategory.PROBLEMLISTITEM, getShell());
+				ConditionEditDialog dialog = new ConditionEditDialog(ConditionCategory.PROBLEMLISTITEM, getShell());
 				if (dialog.open() == Dialog.OK) {
 					dialog.getCondition().ifPresent(c -> {
 						c.setPatientId(selectedPatient.getId());
@@ -322,21 +315,21 @@ public class DiagnoseListComposite extends Composite {
 			}
 		}
 	}
-	
+
 	private class RemoveConditionAction extends Action {
-		
+
 		@Override
-		public ImageDescriptor getImageDescriptor(){
+		public ImageDescriptor getImageDescriptor() {
 			return Images.IMG_DELETE.getImageDescriptor();
 		}
-		
+
 		@Override
-		public String getText(){
+		public String getText() {
 			return "entfernen";
 		}
-		
+
 		@Override
-		public void run(){
+		public void run() {
 			ISelection selection = natTableWrapper.getSelection();
 			if (selection instanceof StructuredSelection && !selection.isEmpty()) {
 				@SuppressWarnings("unchecked")
@@ -344,10 +337,11 @@ public class DiagnoseListComposite extends Composite {
 				list.stream().forEach(c -> {
 					AcquireLockUi.aquireAndRun(c, new ILockHandler() {
 						@Override
-						public void lockFailed(){}
-						
+						public void lockFailed() {
+						}
+
 						@Override
-						public void lockAcquired(){
+						public void lockAcquired() {
 							FindingsServiceComponent.getService().deleteFinding(c);
 							dataList.remove(c);
 							natTableWrapper.getNatTable().refresh();

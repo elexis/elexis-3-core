@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *    
+ *
  *******************************************************************************/
 
 package ch.elexis.core.ui.dialogs;
@@ -27,31 +27,31 @@ public class FallEditDialog extends TitleAreaDialog {
 	Fall fall;
 	Patient pat;
 	private FallDetailBlatt2 fdb;
-	
-	public FallEditDialog(Shell shell, Fall f){
+
+	public FallEditDialog(Shell shell, Fall f) {
 		super(shell);
 		fall = f;
 	}
-	
+
 	@Override
-	protected Control createDialogArea(Composite parent){
+	protected Control createDialogArea(Composite parent) {
 		fdb = new FallDetailBlatt2(parent);
 		fdb.setFall(fall);
 		fdb.setUnlocked(true);
 		fdb.setLockUpdate(false);
 		return fdb;
 	}
-	
+
 	@Override
-	public void create(){
+	public void create() {
 		super.create();
-		setMessage(Messages.FallEditDialog_enterCaseData); //$NON-NLS-1$
-		setTitle(Messages.FallEditDialog_editCase); //$NON-NLS-1$
-		getShell().setText(Messages.FallEditDialog_editCase); //$NON-NLS-1$
+		setMessage(Messages.FallEditDialog_enterCaseData); // $NON-NLS-1$
+		setTitle(Messages.FallEditDialog_editCase); // $NON-NLS-1$
+		getShell().setText(Messages.FallEditDialog_editCase); // $NON-NLS-1$
 	}
-	
+
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
 		if (LocalLockServiceHolder.get().acquireLock(fall).isOk()) {
 			fdb.save();
 			LocalLockServiceHolder.get().releaseLock(fall);
@@ -59,13 +59,13 @@ public class FallEditDialog extends TitleAreaDialog {
 		ElexisEventDispatcher.reload(Fall.class);
 		super.okPressed();
 	}
-	
+
 	@Override
-	protected void cancelPressed(){
+	protected void cancelPressed() {
 		super.cancelPressed();
 	}
-	
-	public Fall getFall(){
+
+	public Fall getFall() {
 		return fall;
 	}
 }

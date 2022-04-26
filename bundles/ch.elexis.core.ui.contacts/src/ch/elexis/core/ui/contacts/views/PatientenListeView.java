@@ -88,21 +88,20 @@ import ch.rgw.tools.StringTool;
 
 /**
  * Display of Patients
- * 
+ *
  * @author gerry
- * 
+ *
  */
 public class PatientenListeView extends ViewPart implements IActivationListener, HeartListener {
 	private CommonViewer cv;
 	private ViewerConfigurer vc;
 	private ViewMenus menus;
 	private RestrictedAction newPatAction;
-	//	private IAction filterAction;
-	private IAction copySelectedPatInfosToClipboardAction,
-			copySelectedAddressesToClipboardAction;
+	// private IAction filterAction;
+	private IAction copySelectedPatInfosToClipboardAction, copySelectedAddressesToClipboardAction;
 	private boolean initiated = false;
 	private String[] currentUserFields;
-	//	PatListFilterBox plfb;
+	// PatListFilterBox plfb;
 	PatListeContentProvider plcp;
 	DefaultControlFieldProvider dcfp;
 	Composite parent;
@@ -110,19 +109,17 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private boolean created = false;
 
 	@Inject
-	void changedMandator(
-		@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user){
+	void changedMandator(@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
 		if (created) {
 			Display.getDefault().asyncExec(() -> {
 				userChanged();
 			});
 		}
 	}
-	
+
 	@Inject
 	@Optional
-	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD)
-	Class<?> clazz){
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
 		if (IPatient.class.equals(clazz)) {
 			if (created) {
 				Display.getDefault().asyncExec(() -> {
@@ -131,7 +128,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			}
 		}
 	}
-	
+
 	@Override
 	public void dispose() {
 		plcp.stopListening();
@@ -141,7 +138,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	/**
 	 * retrieve the patient that is currently selected in the list
-	 * 
+	 *
 	 * @return the selected patient or null if none was selected
 	 */
 	public IPatient getSelectedPatient() {
@@ -178,12 +175,12 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 		dcfp = new DefaultControlFieldProvider(cv, currentUserFields) {
 			@Override
-			public void setQuery(IQuery<?> query){
+			public void setQuery(IQuery<?> query) {
 				for (int i = 0; i < dbFields.length; i++) {
 					if (!lastFiltered[i].equals(StringTool.leer)) {
 						if ("dob".equals(dbFields[i])) {
-							query.and(dbFields[i], COMPARATOR.LIKE,
-								NoPoUtil.getElexisDateSearchString(lastFiltered[i]), true);
+							query.and(dbFields[i], COMPARATOR.LIKE, NoPoUtil.getElexisDateSearchString(lastFiltered[i]),
+									true);
 						} else {
 							query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true);
 						}
@@ -193,14 +190,13 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		};
 		updateFocusField();
 
-		vc = new ViewerConfigurer(plcp, new PatLabelProvider(), dcfp,
-			new ViewerConfigurer.DefaultButtonProvider(),
+		vc = new ViewerConfigurer(plcp, new PatLabelProvider(), dcfp, new ViewerConfigurer.DefaultButtonProvider(),
 				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.SINGLE, cv));
 		cv.create(vc, parent, SWT.NONE, getViewSite());
 		// let user select patient by pressing ENTER in the control fields
 		cv.getConfigurer().getControlFieldProvider().addChangeListener(new ControlFieldSelectionListener());
 		cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-		
+
 		plcp.startListening();
 		GlobalEventDispatcher.addActivationListener(this, this);
 
@@ -223,13 +219,12 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		getSite().setSelectionProvider(viewer);
 
 		// start with filter disabled
-		ICommandService service =
-			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = service.getCommand(StickerFilterCommand.CMD_ID);
 		if (command != null) {
 			command.getState(StickerFilterCommand.STATE_ID).setValue(false);
 		}
-		
+
 		// // ****DoubleClick Version Marlovits -> öffnet bei DoubleClick die
 		// Patienten-Detail-Ansicht
 		// cv.addDoubleClickListener(new DoubleClickListener() {
@@ -264,8 +259,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			fields.add("description1" + Query.EQUALS + Messages.PatientenListeView_PatientName); // $NON-NLS-1$
 		}
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWFIRSTNAME, true)) {
-			fields
-				.add("description2" + Query.EQUALS + Messages.PatientenListeView_PantientFirstName); // $NON-NLS-1$
+			fields.add("description2" + Query.EQUALS + Messages.PatientenListeView_PantientFirstName); // $NON-NLS-1$
 		}
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWDOB, true)) {
 			fields.add("dob" + Query.EQUALS + Messages.PatientenListeView_PatientBirthdate); // $NON-NLS-1$
@@ -273,19 +267,18 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		currentUserFields = fields.toArray(new String[fields.size()]);
 	}
 
-	private void populateViewMenu(){
+	private void populateViewMenu() {
 		menus = new ViewMenus(getViewSite());
-		
+
 		menus.createToolbar(newPatAction); // TODO filterAction ?
-		
+
 		menus.createToolbar(copySelectedPatInfosToClipboardAction);
 		menus.createToolbar(copySelectedAddressesToClipboardAction);
-		
-		PatientMenuPopulator pmp = new PatientMenuPopulator(
-				this, cv.getViewerWidget());
+
+		PatientMenuPopulator pmp = new PatientMenuPopulator(this, cv.getViewerWidget());
 		menus.createControlContextMenu(cv.getViewerWidget().getControl(), pmp);
 		menus.getContextMenu().addMenuListener(pmp);
-		
+
 		menus.createMenu(newPatAction); // TODO filterAction ?
 		menus.createMenu(copySelectedPatInfosToClipboardAction);
 		menus.createMenu(copySelectedAddressesToClipboardAction);
@@ -395,9 +388,9 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 						String current = currentUserFields[j];
 						if (current.startsWith(Patient.FLD_PATID)) {
 							dcfp.setValue(j, pat.getPatCode());
-						} else if (current.startsWith(Patient.FLD_NAME) && pat.getName()!=null) {
+						} else if (current.startsWith(Patient.FLD_NAME) && pat.getName() != null) {
 							dcfp.setValue(j, pat.getName());
-						} else if (current.startsWith(Patient.FLD_FIRSTNAME) && pat.getVorname()!=null) {
+						} else if (current.startsWith(Patient.FLD_FIRSTNAME) && pat.getVorname() != null) {
 							dcfp.setValue(j, pat.getVorname());
 						}
 					}
@@ -409,11 +402,11 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		};
 
 		/*
-		 * Copy selected PatientInfos to the clipboard, so it/they can be easily
-		 * pasted into a letter for printing. An action with identical / similar
-		 * code has also been added above, and to KontakteView.java. Detailed
-		 * comments regarding field access, and output including used newline/cr
-		 * characters are maintained only there.
+		 * Copy selected PatientInfos to the clipboard, so it/they can be easily pasted
+		 * into a letter for printing. An action with identical / similar code has also
+		 * been added above, and to KontakteView.java. Detailed comments regarding field
+		 * access, and output including used newline/cr characters are maintained only
+		 * there.
 		 */
 		copySelectedPatInfosToClipboardAction = new Action(
 				Messages.PatientenListeView_copySelectedPatInfosToClipboard) { // $NON-NLS-1$
@@ -443,9 +436,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 					Clipboard clipboard = new Clipboard(UiDesk.getDisplay());
 					TextTransfer textTransfer = TextTransfer.getInstance();
 					Transfer[] transfers = new Transfer[] { textTransfer };
-					Object[] data = new Object[] {
-						sj.toString()
-					};
+					Object[] data = new Object[] { sj.toString() };
 					clipboard.setContents(data, transfers);
 					clipboard.dispose();
 
@@ -454,11 +445,11 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		};
 
 		/*
-		 * Copy selected address(es) to the clipboard, so it/they can be easily
-		 * pasted into a letter for printing. An actions with identical /
-		 * similar code has also been added below, and to KontakteView.java.
-		 * Detailed comments regarding field access, and output including used
-		 * newline/cr characters are maintained only there.
+		 * Copy selected address(es) to the clipboard, so it/they can be easily pasted
+		 * into a letter for printing. An actions with identical / similar code has also
+		 * been added below, and to KontakteView.java. Detailed comments regarding field
+		 * access, and output including used newline/cr characters are maintained only
+		 * there.
 		 */
 		copySelectedAddressesToClipboardAction = new Action(
 				Messages.PatientenListeView_copySelectedAddressesToClipboard) { // $NON-NLS-1$
@@ -476,17 +467,14 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 					for (int i = 0; i < sel.length; i++) {
 						StringBuilder sb = new StringBuilder();
 						IPatient selectedPatient = (IPatient) sel[i];
-						sb.append(
-							AddressFormatUtil.getAddressPhoneFaxEmail(selectedPatient, true, true));
+						sb.append(AddressFormatUtil.getAddressPhoneFaxEmail(selectedPatient, true, true));
 						sj.add(sb.toString());
 					}
 
 					Clipboard clipboard = new Clipboard(UiDesk.getDisplay());
 					TextTransfer textTransfer = TextTransfer.getInstance();
 					Transfer[] transfers = new Transfer[] { textTransfer };
-					Object[] data = new Object[] {
-						sj.toString()
-					};
+					Object[] data = new Object[] { sj.toString() };
 					clipboard.setContents(data, transfers);
 					clipboard.dispose();
 				}
@@ -512,7 +500,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	@Optional
 	@Inject
-	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 
@@ -522,8 +510,8 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	}
 
 	/**
-	 * Select Patient when user presses ENTER in the control fields. If mor than
-	 * one Patients are listed, the first one is selected. (This listener only
+	 * Select Patient when user presses ENTER in the control fields. If mor than one
+	 * Patients are listed, the first one is selected. (This listener only
 	 * implements selected().)
 	 */
 	class ControlFieldSelectionListener implements ControlFieldListener {
@@ -538,8 +526,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		}
 
 		/**
-		 * ENTER has been pressed in the control fields, select the first listed
-		 * patient
+		 * ENTER has been pressed in the control fields, select the first listed patient
 		 */
 		// this is also implemented in KontakteView
 		@Override

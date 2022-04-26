@@ -8,9 +8,9 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 
 public class RefreshPartHandler {
-	
+
 	@Execute
-	public void execute(MPart part){
+	public void execute(MPart part) {
 		Object object = part.getObject();
 		if (object instanceof IRefreshablePart) {
 			((IRefreshablePart) object).refresh();
@@ -18,10 +18,10 @@ public class RefreshPartHandler {
 			throw new IllegalArgumentException(object + " is not an instance of IRefreshablePart");
 		}
 	}
-	
+
 	@CanExecute
-	public boolean canExecute(MPart part){
+	public boolean canExecute(MPart part) {
 		return true;
 	}
-	
+
 }

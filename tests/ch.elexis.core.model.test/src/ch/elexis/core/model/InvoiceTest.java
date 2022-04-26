@@ -21,30 +21,30 @@ import ch.elexis.core.test.AbstractTest;
 import ch.rgw.tools.Money;
 
 public class InvoiceTest extends AbstractTest {
-	
+
 	@Override
 	@Before
-	public void before(){
+	public void before() {
 		super.before();
 		super.createEncounter();
 	}
-	
+
 	@Override
 	@After
-	public void after(){
+	public void after() {
 		super.after();
 	}
-	
+
 	@Test
-	public void create(){
-		
+	public void create() {
+
 		IInvoice invoice = coreModelService.create(IInvoice.class);
 		invoice.setCoverage(coverage);
 		invoice.setDate(LocalDate.now());
 		invoice.setDateFrom(LocalDate.now());
 		invoice.setRemark("remark");
 		coreModelService.save(invoice);
-		
+
 		// attachments
 		assertTrue(Long.valueOf(invoice.getNumber()) > 0);
 		assertEquals(0, invoice.getAttachments().size());
@@ -55,22 +55,22 @@ public class InvoiceTest extends AbstractTest {
 		assertEquals(1, invoice.getAttachments().size());
 		invoice.removeAttachment(invoice.getAttachments().get(0));
 		assertEquals(0, invoice.getAttachments().size());
-		
+
 		coreModelService.remove(document);
 		coreModelService.remove(invoice);
 	}
-	
+
 	@Test
-	public void multiThreadMappedProperties() throws InterruptedException{
+	public void multiThreadMappedProperties() throws InterruptedException {
 		IInvoice invoice = coreModelService.create(IInvoice.class);
 		invoice.setCoverage(coverage);
 		invoice.setDate(LocalDate.now());
 		invoice.setDateFrom(LocalDate.now());
 		invoice.setRemark("remark");
 		coreModelService.save(invoice);
-		
+
 		List<Identifiable> created = new ArrayList<>();
-		
+
 		ExecutorService executor = Executors.newFixedThreadPool(3);
 		for (int i = 0; i < 100; i++) {
 			final int number = i;
@@ -87,15 +87,13 @@ public class InvoiceTest extends AbstractTest {
 				created.add(encounter);
 			});
 			executor.execute(() -> {
-				IPayment payment =
-					new IPaymentBuilder(coreModelService, invoice, new Money(number), "test")
+				IPayment payment = new IPaymentBuilder(coreModelService, invoice, new Money(number), "test")
 						.buildAndSave();
 				created.add(payment);
 			});
 			executor.execute(() -> {
-				IAccountTransaction transaction =
-					new IAccountTransactionBuilder(coreModelService, invoice, patient,
-					new Money(number), LocalDate.now(), "test").buildAndSave();
+				IAccountTransaction transaction = new IAccountTransactionBuilder(coreModelService, invoice, patient,
+						new Money(number), LocalDate.now(), "test").buildAndSave();
 				created.add(transaction);
 			});
 			executor.execute(() -> {
@@ -110,9 +108,9 @@ public class InvoiceTest extends AbstractTest {
 		assertEquals(100, invoice.getPayments().size());
 		assertEquals(100, invoice.getTransactions().size());
 		assertTrue(invoice.getRemark().startsWith("test "));
-		
+
 		coreModelService.remove(invoice);
-		
+
 		created.forEach(i -> coreModelService.remove(i));
 	}
 }

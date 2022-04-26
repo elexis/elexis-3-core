@@ -8,15 +8,15 @@ import ch.elexis.core.services.IScriptingService;
 
 @Component(service = {})
 public class ScriptingServiceHolder {
-	
+
 	private static IScriptingService iScriptingService;
-	
+
 	@Reference(unbind = "-", cardinality = ReferenceCardinality.OPTIONAL)
-	public void setScriptingService(IScriptingService iScriptingService){
+	public void setScriptingService(IScriptingService iScriptingService) {
 		ScriptingServiceHolder.iScriptingService = iScriptingService;
 	}
-	
-	public static IScriptingService getService(){
+
+	public static IScriptingService getService() {
 		return iScriptingService;
 	}
 }
