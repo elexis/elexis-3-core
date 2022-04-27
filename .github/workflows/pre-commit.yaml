@@ -14,4 +14,4 @@ jobs:
     - uses: actions/setup-python@v2
     - uses: pre-commit/action@v2.0.3
     - run: pre-commit run --all-files
-    - run: pre-commit run --hook-stage manual --all-files
+    - run: pre-commit run --hook-stage manual enforce-eclipse-format --show-diff-on-failure --verbose --all-files
