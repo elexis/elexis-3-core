@@ -152,12 +152,11 @@ public class BBSView extends ViewPart implements ISelectionChangedListener {
 		BBSEntry en = ((Tree<BBSEntry>) sel[0]).contents;
 		form.setText(en.getTopic());
 		StringBuilder sb = new StringBuilder();
-		sb.append(en.getAuthor().getLabel()).append(Messages.BBSView_15).append(en.getDate()).append( // $NON-NLS-1$
-				Messages.BBSView_16).append(en.getTime()).append(Messages.BBSView_17); // $NON-NLS-1$ //$NON-NLS-2$
+		sb.append(en.getAuthor().getLabel()).append(Messages.BBSView_15).append(en.getDate())
+				.append(Messages.BBSView_16).append(en.getTime()).append(Messages.BBSView_17);
 		origin.setText(sb.toString());
 		try {
-			msg.setText(Messages.BBSView_18 + en.getText() + Messages.BBSView_19, true, true); // $NON-NLS-1$
-																								// //$NON-NLS-2$
+			msg.setText(Messages.BBSView_18 + en.getText() + Messages.BBSView_19, true, true);
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 

@@ -52,8 +52,7 @@ public class SerialParameters {
 	 * 8 data bits, 1 stop bit, no parity.
 	 */
 	public SerialParameters() {
-		this(StringUtils.EMPTY,
-				9600, SerialPort.FLOWCONTROL_NONE, SerialPort.FLOWCONTROL_NONE, SerialPort.DATABITS_8,
+		this(StringUtils.EMPTY, 9600, SerialPort.FLOWCONTROL_NONE, SerialPort.FLOWCONTROL_NONE, SerialPort.DATABITS_8,
 				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
 	}

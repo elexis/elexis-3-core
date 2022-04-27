@@ -1449,8 +1449,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					Map<Object, Object> ht = f.getMap("extinfo"); //$NON-NLS-1$
 					if (SWTHelper.askYesNo(StringTool.leer,
 							Messages.FallDetailBlatt2_DoYouWantToDeleteThisData + key + "/" //$NON-NLS-1$
-									+ ht.get(key) + Messages.FallDetailBlatt2_reallyFromTheCase)) { // $NON-NLS-2$
-																									// //$NON-NLS-3$
+									+ ht.get(key) + Messages.FallDetailBlatt2_reallyFromTheCase)) {
 						ht.remove(key);
 						f.setMap("extinfo", ht); //$NON-NLS-1$
 						setFall(f);

@@ -48,11 +48,9 @@ public class DBImportFirstPage extends WizardPage {
 
 	public DBImportFirstPage(String pageName) {
 		super(Messages.DBImportFirstPage_connection, Messages.DBImportFirstPage_typeOfDB,
-				Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); // $NON-NLS-1$ //$NON-NLS-2$
-																							// //$NON-NLS-3$
-		setMessage(Messages.DBImportFirstPage_selectType + Messages.DBImportFirstPage_enterNameODBC); // $NON-NLS-1$
-		setDescription(Messages.DBImportFirstPage_theDesrciption); // $NON-NLS-1$
-
+				Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize));
+		setMessage(Messages.DBImportFirstPage_selectType + Messages.DBImportFirstPage_enterNameODBC);
+		setDescription(Messages.DBImportFirstPage_theDesrciption);
 	}
 
 	public DBImportFirstPage(String pageName, String title, ImageDescriptor titleImage) {

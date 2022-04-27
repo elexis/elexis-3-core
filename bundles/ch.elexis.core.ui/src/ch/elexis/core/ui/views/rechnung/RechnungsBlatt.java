@@ -543,8 +543,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					return "  - " + diagnose.getLabel(); //$NON-NLS-1$
 				} else if (element instanceof IBilled) {
 					IBilled billed = (IBilled) element;
-					return "  - " + billed.getAmount() + StringUtils.SPACE + billed.getLabel() + " (" //$NON-NLS-1$
-																										// //$NON-NLS-3$
+					return "  - " + billed.getAmount() + StringUtils.SPACE + billed.getLabel() + " (" //$NON-NLS-1$ //$NON-NLS-2$
 							+ billed.getTotal().toString() + ")"; //$NON-NLS-1$
 				} else {
 					return element.toString();
@@ -641,8 +640,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			public String getText(Object element) {
 				if (element instanceof IInvoiceBilled) {
 					IInvoiceBilled vc = (IInvoiceBilled) element;
-					return "  - " + vc.getAmount() + StringUtils.SPACE + vc.getLabel() + " (" //$NON-NLS-1$
-																								// //$NON-NLS-3$
+					return "  - " + vc.getAmount() + StringUtils.SPACE + vc.getLabel() //$NON-NLS-1$
+							+ " (" // $NON-NLS-1
 							+ vc.getTotal().toString() + ")"; //$NON-NLS-1$
 				} else if (element instanceof Konsultation) {
 					return "Konsultation " + ((Konsultation) element).getDatum();

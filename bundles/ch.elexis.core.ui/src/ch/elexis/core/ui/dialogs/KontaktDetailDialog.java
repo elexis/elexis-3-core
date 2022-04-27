@@ -161,8 +161,7 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 	protected void okPressed() {
 		if (k == null) {
 			if (type == 0) {
-				SWTHelper.showError(Messages.KontaktDetailDialog_typeOfContact, Messages.KontaktDetailDialog_enterType); // $NON-NLS-1$
-																															// //$NON-NLS-2$
+				SWTHelper.showError(Messages.KontaktDetailDialog_typeOfContact, Messages.KontaktDetailDialog_enterType);
 				return;
 			} else if (type == 1) {
 				k = new Person(liName.getText(), liVorname.getText(), liGebDat.getText(), liSex.getText());

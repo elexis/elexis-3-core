@@ -80,7 +80,6 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 				Messages.RnActions_bills); // $NON-NLS-1$ //$NON-NLS-2$
 		text.getPlugin().insertText("[Titel]", //$NON-NLS-1$
 				Messages.RnActions_billsListPrintetAt + new TimeTool().toString(TimeTool.DATE_GER) + StringUtils.LF,
-																														// //$NON-NLS-2$
 				SWT.CENTER);
 		String[][] table = new String[rnn.size() + 1][];
 		Money sum = new Money();

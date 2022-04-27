@@ -160,9 +160,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 
 		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_sex);// $NON-NLS-1$
 		cbSex = new Combo(ret, SWT.SINGLE);
-		cbSex.setItems(new String[] { Messages.KontaktErfassenDialog_male, Messages.KontaktErfassenDialog_female }); // $NON-NLS-1$
-																														// //$NON-NLS-2$
-
+		cbSex.setItems(new String[] { Messages.KontaktErfassenDialog_male, Messages.KontaktErfassenDialog_female });
 		if (fld.length <= KontaktSelektor.HINT_SEX || fld[KontaktSelektor.HINT_SEX].length() == 0) {
 			if (StringTool.isNothing(fld[KontaktSelektor.HINT_FIRSTNAME])) {
 				cbSex.select(0);

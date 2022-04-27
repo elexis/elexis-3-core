@@ -516,8 +516,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 									sb.append("Codesystem?");
 								}
 								sb.append("; ").append( //$NON-NLS-1$
-										code == null ? StringUtils.EMPTY : code)
-										.append("; ").append(text).append(";") //$NON-NLS-1$ //$NON-NLS-2$
+										code == null ? StringUtils.EMPTY : code).append("; ").append(text).append(";") //$NON-NLS-1$ //$NON-NLS-2$
 										.append(st.num).append(";").append( //$NON-NLS-1$
 												st.cost.getAmountAsString())
 										.append(";").append( //$NON-NLS-1$
@@ -548,8 +547,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 		Set<Konsultation> missingCaseKons;
 
 		KonsLoader(final Query<Konsultation> qbe) {
-			super(Messages.PatHeuteView_loadConsultations, qbe, new String[] { Messages.PatHeuteView_date }); // $NON-NLS-1$
-																												// //$NON-NLS-2$
+			super(Messages.PatHeuteView_loadConsultations, qbe, new String[] { Messages.PatHeuteView_date });
 			setPriority(Job.LONG);
 			setUser(true);
 		}
@@ -880,8 +878,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			for (int i = 0; i < kons.length; i++) {
 				table[i + 1] = new String[2];
 				Konsultation k = kons[i];
-				table[i + 1][0] = k.getFall().getPatient().getLabel() + StringUtils.LF
-						+ k.getLabel();
+				table[i + 1][0] = k.getFall().getPatient().getLabel() + StringUtils.LF + k.getLabel();
 				StringBuilder sb = new StringBuilder();
 				IEncounter encounter = NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
 				Money subsum = new Money();
@@ -897,7 +894,6 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 					}
 					subsum.addMoney(preis);
 					sb.append(b.getAmount()).append(StringUtils.SPACE).append(b.getLabel()).append(StringUtils.SPACE)
-																														// //$NON-NLS-2$
 							.append(preis.getAmountAsString()).append(StringUtils.LF);
 				}
 				sb.append(Messages.PatHeuteView_total).append(subsum.getAmountAsString()); // $NON-NLS-1$

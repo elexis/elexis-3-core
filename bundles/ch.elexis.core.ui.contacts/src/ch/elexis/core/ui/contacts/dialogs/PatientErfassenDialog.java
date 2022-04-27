@@ -84,8 +84,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		String toolTip = String.format(Messages.Patient_male_female_tooltip, Messages.Patient_male_short,
 				Messages.Patient_female_short, Messages.Patient_male_long, Messages.Patient_female_long);
 		cbSex.setToolTipText(toolTip);
-		cbSex.setItems(new String[] { Messages.Patient_male_short, Messages.Patient_female_short }); // $NON-NLS-1$
-																										// //$NON-NLS-2$
+		cbSex.setItems(new String[] { Messages.Patient_male_short, Messages.Patient_female_short });
 		if (StringTool.isNothing(getField(Patient.FLD_SEX))) {
 			cbSex.select(0);
 		} else {
@@ -163,8 +162,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 				if (k.istPerson()) {
 					k.set(Kontakt.FLD_IS_PATIENT, StringConstants.ONE);
 					if (MessageDialog.openConfirm(getShell(), Messages.PatientErfassenDialog_personExists,
-							Messages.PatientErfassenDialog_personWithThisNameExists) == false) { // $NON-NLS-1$
-																									// //$NON-NLS-2$
+							Messages.PatientErfassenDialog_personWithThisNameExists) == false) {
 						// abort dialog
 						super.cancelPressed();
 						return;

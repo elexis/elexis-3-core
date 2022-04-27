@@ -89,8 +89,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		txt = new TextContainer(getViewSite());
 		textContainer = txt.getPlugin().createContainer(parent, new SaveHandler());
 		if (textContainer == null) {
-			SWTHelper.showError(Messages.TextView_couldNotCreateTextView, Messages.TextView_couldNotLoadTextPlugin); // $NON-NLS-1$
-																														// //$NON-NLS-2$
+			SWTHelper.showError(Messages.TextView_couldNotCreateTextView, Messages.TextView_couldNotLoadTextPlugin);
 		} else {
 			makeActions();
 			menus = new ViewMenus(getViewSite());
@@ -199,8 +198,7 @@ public class TextView extends ViewPart implements IActivationListener {
 	public boolean createDocument(Brief template, String subject) {
 		log.debug("TextView.createDocument [{}]: {}", (template != null) ? template.getLabel() : "null", subject); //$NON-NLS-1$
 		if (template == null) {
-			SWTHelper.showError(Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate); // $NON-NLS-1$
-																												// //$NON-NLS-2$
+			SWTHelper.showError(Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate);
 			return false;
 		}
 		actBrief = txt.createFromTemplate(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN, null, subject);
@@ -224,8 +222,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		log.debug("TextView.createDocument [{}]: {} Kontakt", (template != null) ? template.getLabel() : "null", //$NON-NLS-1$
 				subject);
 		if (template == null) {
-			SWTHelper.showError(Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate); // $NON-NLS-1$
-																												// //$NON-NLS-2$
+			SWTHelper.showError(Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate);
 			return false;
 		}
 		actBrief = txt.createFromTemplate(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN, adressat, subject);

@@ -51,8 +51,7 @@ public class PerspectiveExportService implements IPerspectiveExportService {
 			} else if (placeholderOriginal.isEmpty()) {
 				System.out.println("NO PLACEHOLDER");
 			} else {
-				System.out.println("MORE THEN ONE PLACEHOLDER" + StringUtils.SPACE
-						+ placeholderOriginal.toString());
+				System.out.println("MORE THEN ONE PLACEHOLDER" + StringUtils.SPACE + placeholderOriginal.toString());
 				placeholderClone.setRef((placeholderOriginal.get(0).getRef()));
 			}
 		}

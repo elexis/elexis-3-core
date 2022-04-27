@@ -261,8 +261,6 @@ public class PlatzhalterView extends ViewPart {
 	@SuppressWarnings("unchecked")
 	private SortedList<PlatzhalterTreeData> getTreeData() {
 		PlatzhalterTreeData root = new PlatzhalterTreeData("Root", StringUtils.EMPTY, StringUtils.EMPTY); //$NON-NLS-1$
-																											// //$NON-NLS-3$
-
 		// Basis Platzhalter
 		PlatzhalterProperties props = new PlatzhalterProperties();
 		root.addChildren(props.getList());

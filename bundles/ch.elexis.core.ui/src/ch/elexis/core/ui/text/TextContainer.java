@@ -117,13 +117,11 @@ public class TextContainer {
 			+ "]?[a-zA-Z\\.]+:exists?:[-a-zA-Z0-9\\.]:?[^\\]]*\\]";
 	// public static final String MATCH_IDATACCESS =
 	// "\\[[-_a-zA-Z0-9]+:[-a-zA-Z0-9]+:[-a-zA-Z0-9\\.]+:[-a-zA-Z0-9\\.]:?.*\\]";
-	// //$NON-NLS-1$
 	public static final String MATCH_IDATACCESS = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
 			+ "]?[-_a-zA-Z0-9]+:[-a-zA-Z0-9]+:[-a-zA-Z0-9\\.]+:[-a-zA-Z0-9\\.]:?[^\\]]*\\]";
 	public static final String MATCH_SQLCLAUSE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?SQL[^:]*:[^\\[]+\\]"; //$NON-NLS-1$
 	public static final String DISALLOWED_SQLEXPRESSIONS = "DROP,UPDATE,CREATE,INSERT"; //$NON-NLS-1$
 	// public static final String MATCH_SCRIPT = "\\["+Script.SCRIPT_MARKER+".+\\]";
-	// //$NON-NLS-1$
 	public static final String MATCH_SCRIPT = "\\[" + Script.SCRIPT_MARKER + "[^\\[]+\\]"; //$NON-NLS-1$
 
 	public static Connection queryConn = null;

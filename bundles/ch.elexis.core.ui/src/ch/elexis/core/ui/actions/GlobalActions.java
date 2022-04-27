@@ -846,7 +846,6 @@ public class GlobalActions {
 		// from there
 		// PrinterData pd =
 		// getPrinterData(Messages.getString("GlobalActions.printersticker"));
-		// //$NON-NLS-1$
 		PrinterData pd = getPrinterData("Etiketten"); //$NON-NLS-1$
 		if (pd != null) {
 			// 25.01.2010 patch tschaller: page orientation of printer driver is

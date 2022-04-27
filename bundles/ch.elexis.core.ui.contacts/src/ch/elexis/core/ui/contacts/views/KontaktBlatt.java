@@ -76,8 +76,7 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 	}; // $NON-NLS-6$
 	static final String[] typLabels = { Messages.KontaktBlatt_Organization, Messages.KontaktBlatt_Laboratory,
 			Messages.KontaktBlatt_Person, Messages.KontaktBlatt_Patient, Messages.KontaktBlatt_User,
-			Messages.KontaktBlatt_Mandator }; // $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-												// //$NON-NLS-6$
+			Messages.KontaktBlatt_Mandator };
 	private final Button[] bTypes = new Button[types.length];
 	private final TypButtonAdapter tba = new TypButtonAdapter();
 	private final IViewSite site;

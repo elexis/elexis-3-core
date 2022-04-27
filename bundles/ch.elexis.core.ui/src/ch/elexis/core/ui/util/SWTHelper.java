@@ -241,11 +241,8 @@ public class SWTHelper {
 					// default
 					// window
 					// icon
-					message, MessageDialog.QUESTION, new String[] { Messages.SWTHelper_yes, Messages.SWTHelper_no, // $NON-NLS-1$
-																													// //$NON-NLS-2$
-																													// //$NON-NLS-3$
-							Messages.SWTHelper_cancel },
-					0);
+					message, MessageDialog.QUESTION,
+					new String[] { Messages.SWTHelper_yes, Messages.SWTHelper_no, Messages.SWTHelper_cancel }, 0);
 			// ok is the default
 			int result = dialog.open();
 			if (result != 2) {
@@ -438,8 +435,7 @@ public class SWTHelper {
 	 */
 	public static boolean blameEmptyString(final String test, final String name) {
 		if (StringTool.isNothing(test)) {
-			showError(Messages.SWTHelper_BadParameter, name + Messages.SWTHelper_HasNoValidContents); // $NON-NLS-1$
-																										// //$NON-NLS-2$
+			showError(Messages.SWTHelper_BadParameter, name + Messages.SWTHelper_HasNoValidContents);
 			return false;
 		}
 		return true;

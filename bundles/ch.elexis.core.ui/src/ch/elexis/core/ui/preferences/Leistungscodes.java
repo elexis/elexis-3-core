@@ -1876,7 +1876,6 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				// *** append options as ;-delimited list
 				options = options.replaceAll("\r\n", ITEMDELIMITER); //$NON-NLS-1$
 				options = (options.replaceAll(StringUtils.LF, ITEMDELIMITER)).replaceAll(StringUtils.CR, ITEMDELIMITER);
-																															// //$NON-NLS-2$
 				req = req + ARGUMENTSSDELIMITER + options;
 
 				// *** return result

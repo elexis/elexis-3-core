@@ -235,8 +235,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 							Kontakt.FLD_STREET };
 					KontaktSelektor ksl = new KontaktSelektor(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
 							Kontakt.class, Messages.Patientenblatt2_contactForAdditionalAddress,
-							Messages.Patientenblatt2_pleaseSelectardress, sortFields); // $NON-NLS-1$
-																						// //$NON-NLS-2$
+							Messages.Patientenblatt2_pleaseSelectardress, sortFields);
 					if (ksl.open() == Dialog.OK) {
 						Kontakt k = (Kontakt) ksl.getSelection();
 						if (k != null) {

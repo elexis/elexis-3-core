@@ -67,13 +67,11 @@ public class KontaktImporter extends ImporterPage {
 			StringBuilder s2 = new StringBuilder();
 			s1.append(found.get("Bezeichnung1")).append(", ").append(found.get("Bezeichnung2")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					.append(" - ").append(found.get("Strasse")).append(StringUtils.SPACE) //$NON-NLS-1$
-																							// //$NON-NLS-3$
-					.append(found.get("Plz")).append(StringUtils.SPACE).append(found.get("Ort")); //$NON-NLS-1$
-																									// //$NON-NLS-3$
+					.append(found.get("Plz")).append(StringUtils.SPACE) //$NON-NLS-1$
+					.append(found.get("Ort")); //$NON-NLS-1$
 
 			s2.append(name).append(", ").append(vorname).append(" - ") //$NON-NLS-1$ //$NON-NLS-2$
 					.append(strasse).append(StringUtils.SPACE).append(plz).append(StringUtils.SPACE).append(ort);
-																													// //$NON-NLS-2$
 
 			if (SWTHelper.askYesNo(Messages.KontaktImporter_AskSameTitle,
 					Messages.KontaktImporter_AskSameText1 + s1.toString() + Messages.KontaktImporter_AskSameAnd

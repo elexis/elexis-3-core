@@ -134,8 +134,7 @@ public class RnDialogs {
 				rn.addZahlung(ret, bemerkung.getText(), new TimeTool(dp.getDate().getTime()));
 				super.okPressed();
 			} else {
-				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, // $NON-NLS-1$
-																														// //$NON-NLS-2$
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat,
 						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -225,8 +224,7 @@ public class RnDialogs {
 				}
 				super.okPressed();
 			} else {
-				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, // $NON-NLS-1$
-																														// //$NON-NLS-2$
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat,
 						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -341,8 +339,7 @@ public class RnDialogs {
 				}
 				super.okPressed();
 			} else {
-				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, // $NON-NLS-1$
-																														// //$NON-NLS-2$
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat,
 						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -563,7 +560,6 @@ public class RnDialogs {
 			getShell().setText(Messages.RnDialogs_invoice + rn.getNr()); // $NON-NLS-1$
 			setTitle(Messages.RnDialogs_reallyCancel); // $NON-NLS-1$
 			// setMessage(Messages.getString("RnDialogs.reactivateConsultations"));
-			// //$NON-NLS-1$
 		}
 
 		public boolean getReopen() {

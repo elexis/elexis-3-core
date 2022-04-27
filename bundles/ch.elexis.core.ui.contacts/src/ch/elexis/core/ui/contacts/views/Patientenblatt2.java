@@ -599,8 +599,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				final String[] sortFields = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_STREET };
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
 						Messages.Patientenblatt2_contactForAdditionalAddress,
-						Messages.Patientenblatt2_pleaseSelectardress, sortFields); // $NON-NLS-1$
-																					// //$NON-NLS-2$
+						Messages.Patientenblatt2_pleaseSelectardress, sortFields);
 				if (ksl.open() == Dialog.OK && actPatient != null) {
 					Kontakt k = (Kontakt) ksl.getSelection();
 					if (k != null) {

@@ -39,7 +39,6 @@ public class PlatzhalterProperties extends AbstractProperties {
 	 */
 	public List<PlatzhalterTreeData> getList() {
 		PlatzhalterTreeData root = new PlatzhalterTreeData("root", StringUtils.EMPTY, StringUtils.EMPTY); //$NON-NLS-1$
-																											// //$NON-NLS-3$
 		PlatzhalterTreeData noKategorie = new PlatzhalterTreeData(Messages.PlatzhalterProperties_label_no_category,
 				StringUtils.EMPTY, // $NON-NLS-2$
 				Messages.PlatzhalterProperties_tooltip_no_category);
@@ -100,8 +99,7 @@ public class PlatzhalterProperties extends AbstractProperties {
 				}
 				if (categoryPtd == null) {
 					String description = katProperties.getDescription(category);
-					categoryPtd = new PlatzhalterTreeData(category, StringUtils.EMPTY,
-							description);
+					categoryPtd = new PlatzhalterTreeData(category, StringUtils.EMPTY, description);
 					catTreeMap.put(category, categoryPtd);
 					root.addChild(categoryPtd);
 				}

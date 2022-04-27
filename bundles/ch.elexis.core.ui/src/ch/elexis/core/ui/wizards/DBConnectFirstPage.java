@@ -53,8 +53,7 @@ public class DBConnectFirstPage extends WizardPage {
 
 	public DBConnectFirstPage(String pageName) {
 		super(Messages.DBConnectFirstPage_Connection, Messages.DBConnectFirstPage_typeOfDB,
-				Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); // $NON-NLS-1$ //$NON-NLS-2$
-																							// //$NON-NLS-3$
+				Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize));
 		setMessage(Messages.DBConnectFirstPage_selectType); // $NON-NLS-1$
 		setDescription(Messages.DBConnectFirstPage_theDescripotion); // $NON-NLS-1$
 

@@ -60,19 +60,12 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	// Mahnung","3. Mahnung","In Betreibung","Teilverlust","Totalverlust"};
 	final static String[] stats = { Messages.RnControlFieldProvider_all, Messages.RnControlFieldProvider_open,
 			Messages.RnControlFieldProvider_openAndPrinted, Messages.RnControlFieldProvider_partlyPaid,
-			Messages.RnControlFieldProvider_paid, Messages.RnControlFieldProvider_overpaid, // $NON-NLS-1$ //$NON-NLS-2$
-																							// //$NON-NLS-3$
-																							// //$NON-NLS-4$
-																							// //$NON-NLS-5$
-																							// //$NON-NLS-6$
+			Messages.RnControlFieldProvider_paid, Messages.RnControlFieldProvider_overpaid,
 			Messages.RnControlFieldProvider_reminder, Messages.RnControlFieldProvider_reminderPrinted,
 			Messages.RnControlFieldProvider_reminder2, Messages.RnControlFieldProvider_reminder2Printed,
-			Messages.RnControlFieldProvider_reminder3, // $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-														// //$NON-NLS-5$
-			Messages.RnControlFieldProvider_reminder3Printed, Messages.RnControlFieldProvider_enforcement,
-			Messages.RnControlFieldProvider_partlyLost, Messages.RnControlFieldProvider_totallyLost,
-			Messages.RnControlFieldProvider_storno, // $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-													// //$NON-NLS-5$
+			Messages.RnControlFieldProvider_reminder3, Messages.RnControlFieldProvider_reminder3Printed,
+			Messages.RnControlFieldProvider_enforcement, Messages.RnControlFieldProvider_partlyLost,
+			Messages.RnControlFieldProvider_totallyLost, Messages.RnControlFieldProvider_storno,
 			Messages.RnControlFieldProvider_erroneous, Messages.RnControlFieldProvider_toPrint,
 			Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind,
 			Messages.RnControlFieldProvider_writtenOff, Messages.RnControlFieldProvider_rejected };
@@ -85,8 +78,8 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 			RnStatus.ABGESCHRIEBEN, RnStatus.ZURUECKGEWIESEN };
 
 	final static int STAT_DEFAULT_INDEX = 1;
-	private final static String ALLE = Messages.RnControlFieldProvider_allPatients; // $NON-NLS-1$
-	private final static String ALL = Messages.RnControlFieldProvider_all; // $NON-NLS-1$
+	private final static String ALLE = Messages.RnControlFieldProvider_allPatients;
+	private final static String ALL = Messages.RnControlFieldProvider_all;
 
 	Combo cbStat;
 	Combo cbZType;
