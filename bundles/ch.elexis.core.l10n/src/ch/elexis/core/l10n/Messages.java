@@ -2791,6 +2791,10 @@ public class Messages extends NLS {
 	public static String DailyOrderMandantOnlyFollowing;
 	public static String DailyOrderMandantNone;
 	public static String PdfPreview_NoPDFSelected;
+	
+	public static String GenericSearchSelectionDialog_MandatorSelection;
+	public static String GenericSearchSelectionDialog_BillingSystemSelection;
+	public static String GenericSearchSelectionDialog_ChangeBillingSystemMessage;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
