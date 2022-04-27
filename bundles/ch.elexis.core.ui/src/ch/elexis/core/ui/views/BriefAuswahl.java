@@ -460,6 +460,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 						rc = b1.getCreated().compareTo(b2.getCreated());
 						if (rc == 0) {
 							rc = b2.getLastupdate().compareTo(b1.getLastupdate());
+							return rc;
 						}
 						break;
 					case 1:
