@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.medication.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,7 +72,7 @@ public class MedicationViewHelper {
 
 		double rounded = Math.round(100.0 * cost) / 100.0;
 		if (canCalculate) {
-			return TTCOST + " " + Double.toString(rounded);
+			return TTCOST + StringUtils.SPACE + Double.toString(rounded);
 		} else {
 			if (rounded == 0.0) {
 				return TTCOST + " ?";

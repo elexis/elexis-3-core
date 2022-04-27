@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -111,7 +112,7 @@ public class Rezept extends PersistentObject {
 		if (m == null) {
 			return getDate() + " (unbekannt)";
 		}
-		return getDate() + " " + m.getLabel();
+		return getDate() + StringUtils.SPACE + m.getLabel();
 	}
 
 	/**

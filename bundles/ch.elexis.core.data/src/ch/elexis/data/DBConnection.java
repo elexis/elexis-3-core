@@ -1,5 +1,6 @@
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.Connection;
@@ -120,7 +121,8 @@ public class DBConnection {
 	 * @return
 	 */
 	public boolean directConnect() {
-		String msg = "Connecting to DB using " + dbFlavor + " " + dbConnectString + " " + dbUser;
+		String msg = "Connecting to DB using " + dbFlavor + StringUtils.SPACE + dbConnectString + StringUtils.SPACE
+				+ dbUser;
 		logger.info(msg);
 
 		if (dbFlavor.equalsIgnoreCase("mysql"))

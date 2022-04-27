@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
@@ -70,7 +71,7 @@ public class NamedBlob extends PersistentObject {
 	public String getString() {
 		byte[] comp = getBinary(CONTENTS);
 		if ((comp == null) || (comp.length == 0)) {
-			return "";
+			return StringUtils.EMPTY;
 		}
 		byte[] exp = CompEx.expand(comp);
 		try {

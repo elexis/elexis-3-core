@@ -155,7 +155,7 @@ public class ConfigService implements IConfigService {
 			if (StringUtils.isEmpty(workstation)) {
 				workstation = StringUtils.abbreviate(NetTool.hostname, 40);
 			}
-			String _action = (StringUtils.isEmpty(action)) ? "" : action;
+			String _action = (StringUtils.isEmpty(action)) ? StringUtils.EMPTY : action;
 
 			String insertStatement = "INSERT INTO TRACES (logtime, workstation, username, action) VALUES("
 					+ System.currentTimeMillis() + ", '" + workstation + "', '" + username + "', '" + _action + "')";
@@ -435,7 +435,7 @@ public class ConfigService implements IConfigService {
 	 */
 	private Map<Object, Object> flattenMap(Map<Object, Object> map) {
 		Map<Object, Object> ret = new HashMap<>();
-		flattenMap(map, ret, "");
+		flattenMap(map, ret, StringUtils.EMPTY);
 		return ret;
 	}
 

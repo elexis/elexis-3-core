@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.eigenartikel;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 
 import ch.elexis.core.data.activator.CoreHub;
@@ -19,7 +20,7 @@ public class ShowEigenartikelProductsAction extends Action {
 		this.eal = eal;
 		this.eigenartikelSelector = eigenartikelSelector;
 		setImageDescriptor(Images.IMG_CARDS.getImageDescriptor());
-		setToolTipText("");
+		setToolTipText(StringUtils.EMPTY);
 		setChecked(ConfigServiceHolder.getUser(ShowEigenartikelProductsAction.FILTER_CFG, false));
 		execute();
 	}

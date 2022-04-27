@@ -1,5 +1,6 @@
 package ch.elexis.core.services.internal;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
@@ -106,7 +107,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	@Override
 	public IVirtualFilesystemHandle copyTo(IVirtualFilesystemHandle target) throws IOException {
 		if (target.isDirectory()) {
-			String targetString = this.getName().replace(" ", "%20");
+			String targetString = this.getName().replace(StringUtils.SPACE, "%20");
 			URI targetURI = target.getURI().resolve(targetString);
 			target = new VirtualFilesystemHandle(targetURI);
 			return copyTo(target);
@@ -269,7 +270,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		if (lastIndexOf > -1) {
 			return _url.substring(lastIndexOf + 1);
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	@Override
@@ -340,7 +341,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	@Override
 	public IVirtualFilesystemHandle moveTo(IVirtualFilesystemHandle target) throws IOException {
 		if (target.isDirectory()) {
-			String targetString = this.getName().replace(" ", "%20");
+			String targetString = this.getName().replace(StringUtils.SPACE, "%20");
 			URI targetURI = target.getURI().resolve(targetString);
 			target = new VirtualFilesystemHandle(targetURI);
 			return moveTo(target);

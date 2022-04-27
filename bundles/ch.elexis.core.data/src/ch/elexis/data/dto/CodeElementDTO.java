@@ -1,5 +1,6 @@
 package ch.elexis.data.dto;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.data.interfaces.ICodeElement;
 
 public class CodeElementDTO implements ICodeElement {
@@ -55,6 +56,6 @@ public class CodeElementDTO implements ICodeElement {
 
 	@Override
 	public String toString() {
-		return this.codeSystemName + " (" + this.code + ") " + (text != null ? text : "");
+		return this.codeSystemName + " (" + this.code + ") " + (text != null ? text : StringUtils.EMPTY);
 	}
 }

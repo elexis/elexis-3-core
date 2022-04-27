@@ -257,6 +257,6 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 
 	@Override
 	public String toString() {
-		return super.toString() + " " + getLabel();
+		return super.toString() + StringUtils.SPACE + getLabel();
 	}
 }

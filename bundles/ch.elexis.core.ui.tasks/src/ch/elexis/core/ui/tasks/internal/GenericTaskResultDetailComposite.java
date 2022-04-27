@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.tasks.internal;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
@@ -86,9 +87,9 @@ public class GenericTaskResultDetailComposite {
 				if (IIdentifiedRunnable.ReturnParameter.STRING_URL.equals(k)) {
 					value = IVirtualFilesystemService.hidePasswordInUrlString(value);
 				}
-				sbResult.append("- " + k + ": " + value + "\n");
+				sbResult.append("- " + k + ": " + value + StringUtils.LF);
 			} else {
-				sbResult.append("- " + k + ": " + v + "\n");
+				sbResult.append("- " + k + ": " + v + StringUtils.LF);
 			}
 		});
 		txtResult.setText(sbResult.toString());
@@ -105,7 +106,7 @@ public class GenericTaskResultDetailComposite {
 			if (IIdentifiedRunnable.RunContextParameter.STRING_URL.equals(k)) {
 				value = IVirtualFilesystemService.hidePasswordInUrlString((String) v);
 			}
-			sbRunContext.append("- " + k + ": " + value + "\n");
+			sbRunContext.append("- " + k + ": " + value + StringUtils.LF);
 		});
 		txtRunContext.setText(sbRunContext.toString());
 

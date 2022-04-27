@@ -733,8 +733,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					} else {
 						// *** simple listing, line by line
 						String tmp = result[1].replaceAll("\r\n", DEFINITIONSDELIMITER); //$NON-NLS-1$
-						tmp = tmp.replaceAll("\n", DEFINITIONSDELIMITER); //$NON-NLS-1$
-						tmp = tmp.replaceAll("\r", DEFINITIONSDELIMITER); //$NON-NLS-1$
+						tmp = tmp.replaceAll(StringUtils.LF, DEFINITIONSDELIMITER);
+						tmp = tmp.replaceAll(StringUtils.CR, DEFINITIONSDELIMITER);
 						if ((tmp.isEmpty()) || (tmp.split(DEFINITIONSDELIMITER).length < 2)) {
 							errorString = errorString + Messages.Leistungscodes_ErrorAtLeast2Items;
 						}
@@ -1149,7 +1149,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		final String tempCaseID = "marlovits-14x@8w1"; //$NON-NLS-1$
 
 		JdbcLink j = PersistentObject.getConnection();
-		String minID = ""; //$NON-NLS-1$
+		String minID = StringUtils.EMPTY;
 		try {
 			// *** get just any case
 			minID = j.queryString("select id from faelle limit 1"); //$NON-NLS-1$
@@ -1753,14 +1753,14 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				if (opt.trim().equalsIgnoreCase("(SQL)")) { //$NON-NLS-1$
 					opt = (l.length >= 4) ? "   (SQL: " + l[3].replaceAll(ITEMDELIMITER, "; ") + ")" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 							: StringTool.leer;
-					return type + " " + l[0] + opt; //$NON-NLS-1$
+					return type + StringUtils.SPACE + l[0] + opt;
 				} else {
-					return type + " " + l[0] + opt; //$NON-NLS-1$
+					return type + StringUtils.SPACE + l[0] + opt;
 				}
 			} else {
 				String opt = (l.length >= 3) ? "   (" + l[2].replaceAll(ITEMDELIMITER, "; ") + ")" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 						: StringTool.leer;
-				return "? " + " " + l[0] + opt; //$NON-NLS-1$ //$NON-NLS-2$
+				return "? " + StringUtils.SPACE + l[0] + opt; //$NON-NLS-1$
 			}
 		}
 
@@ -1787,7 +1787,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				fieldName = fields[0];
 				fieldType = fields[1];
 				optionsIn = fields.length > 2 ? fields[2] : StringTool.leer;
-				optionsIn = optionsIn.replaceAll(ITEMDELIMITER, "\n"); //$NON-NLS-1$
+				optionsIn = optionsIn.replaceAll(ITEMDELIMITER, StringUtils.LF);
 
 				if (fieldType.equalsIgnoreCase("K")) { //$NON-NLS-1$
 					ll = Messages.Leistungscodes_contactHL;
@@ -1875,7 +1875,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 
 				// *** append options as ;-delimited list
 				options = options.replaceAll("\r\n", ITEMDELIMITER); //$NON-NLS-1$
-				options = (options.replaceAll("\n", ITEMDELIMITER)).replaceAll("\r", ITEMDELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
+				options = (options.replaceAll(StringUtils.LF, ITEMDELIMITER)).replaceAll(StringUtils.CR, ITEMDELIMITER);
+																															// //$NON-NLS-2$
 				req = req + ARGUMENTSSDELIMITER + options;
 
 				// *** return result

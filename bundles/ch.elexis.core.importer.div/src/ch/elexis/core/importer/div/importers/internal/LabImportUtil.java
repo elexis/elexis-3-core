@@ -1,5 +1,6 @@
 package ch.elexis.core.importer.div.importers.internal;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -295,7 +296,7 @@ public class LabImportUtil implements ILabImportUtil {
 			// case 1 try to find mandant via orc message
 			if (orcMessage != null && !orcMessage.getNames().isEmpty()) {
 				for (String name : orcMessage.getNames()) {
-					String[] splitNames = name.split(" ");
+					String[] splitNames = name.split(StringUtils.SPACE);
 					int size = splitNames.length;
 					if (size > 1) {
 						IQuery<IMandator> query = modelService.getQuery(IMandator.class);

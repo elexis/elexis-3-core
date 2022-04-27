@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
@@ -412,7 +413,7 @@ public class SWTHelper {
 		if (lines > 1) {
 			lNum = SWT.MULTI | SWT.WRAP;
 		}
-		Text ret = tk.createText(parent, "", lNum | flags | SWT.BORDER); //$NON-NLS-1$
+		Text ret = tk.createText(parent, StringUtils.EMPTY, lNum | flags | SWT.BORDER);
 		GridData gd = getFillGridData(1, true, 1, true);
 		int h = Math.round(ret.getFont().getFontData()[0].height);
 		gd.minimumHeight = (lines + 1) * (h + 2);

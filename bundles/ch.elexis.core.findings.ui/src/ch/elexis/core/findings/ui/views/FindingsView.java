@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -154,7 +155,7 @@ public class FindingsView extends ViewPart implements IActivationListener {
 					IObservation observation = (IObservation) selection.getFirstElement();
 					sb.append(((PersistentObject) observation).storeToString()).append(","); //$NON-NLS-1$
 				}
-				event.data = sb.toString().replace(",$", ""); //$NON-NLS-1$ //$NON-NLS-2$
+				event.data = sb.toString().replace(",$", StringUtils.EMPTY); //$NON-NLS-1$
 			}
 		});
 
@@ -258,18 +259,18 @@ public class FindingsView extends ViewPart implements IActivationListener {
 					IObservation ob = (IObservation) item;
 					return ob.getEffectiveTime().isPresent()
 							? new TimeTool(ob.getEffectiveTime().get()).toString(TimeTool.FULL_GER)
-							: "";
+							: StringUtils.EMPTY;
 				}
 				break;
 
 			}
 			case 1: {
-				return item.getText().isPresent() ? item.getText().get() : "";
+				return item.getText().isPresent() ? item.getText().get() : StringUtils.EMPTY;
 			}
 			default:
 				break;
 			}
-			return "";
+			return StringUtils.EMPTY;
 		}
 	}
 
@@ -317,8 +318,8 @@ public class FindingsView extends ViewPart implements IActivationListener {
 				rc = t1.compareTo(t2);
 				break;
 			case 2:
-				String txt1 = p1.getText().orElse("");
-				String txt2 = p2.getText().orElse("");
+				String txt1 = p1.getText().orElse(StringUtils.EMPTY);
+				String txt2 = p2.getText().orElse(StringUtils.EMPTY);
 				rc = txt1.toLowerCase().compareTo(txt2.toLowerCase());
 				break;
 			default:
@@ -343,7 +344,7 @@ public class FindingsView extends ViewPart implements IActivationListener {
 
 				if (element instanceof IFinding) {
 					IFinding iFinding = (IFinding) element;
-					String text = iFinding.getText().orElse("");
+					String text = iFinding.getText().orElse(StringUtils.EMPTY);
 					if (text.toLowerCase().contains(searchText)) {
 						return true;
 					}

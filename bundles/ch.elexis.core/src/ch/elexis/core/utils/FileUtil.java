@@ -1,5 +1,6 @@
 package ch.elexis.core.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 
@@ -25,7 +26,7 @@ public class FileUtil {
 	 */
 	public static String removeInvalidChars(String filename) {
 		if (filename != null) {
-			return filename.replaceAll("[\\\\/:*?\"<>|]", "");
+			return filename.replaceAll("[\\\\/:*?\"<>|]", StringUtils.EMPTY);
 		}
 		return filename;
 	}

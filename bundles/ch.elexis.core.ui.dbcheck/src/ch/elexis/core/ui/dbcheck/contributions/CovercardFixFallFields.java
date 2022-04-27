@@ -50,8 +50,9 @@ public class CovercardFixFallFields extends ExternalMaintenance {
 					updateBillingSystem(billingSystem);
 					@SuppressWarnings("unchecked")
 					Map<String, String> fields = (Map<String, String>) infoElement;
-					fall.setInfoString("Versicherungsnummer", StringUtils.defaultIfBlank(fields.get("NUM_ASSURE"), ""));
-					fall.setInfoString("VEKANr", StringUtils.defaultIfBlank(fields.get("NUM_UE"), ""));
+					fall.setInfoString("Versicherungsnummer",
+							StringUtils.defaultIfBlank(fields.get("NUM_ASSURE"), StringUtils.EMPTY));
+					fall.setInfoString("VEKANr", StringUtils.defaultIfBlank(fields.get("NUM_UE"), StringUtils.EMPTY));
 					if (StringUtils.isBlank(fields.get("VAL_CARTE"))) {
 						fall.setInfoString("VEKAValid", "20991231");
 					} else {
@@ -97,11 +98,11 @@ public class CovercardFixFallFields extends ExternalMaintenance {
 		String requirements = BillingSystem.getRequirements("Covercard");
 		if (requirements.contains("Versicherten-Nummer:T")) {
 			if (requirements.contains(";Versicherten-Nummer:T")) {
-				requirements = requirements.replace(";Versicherten-Nummer:T", "");
+				requirements = requirements.replace(";Versicherten-Nummer:T", StringUtils.EMPTY);
 			} else if (requirements.contains("Versicherten-Nummer:T;")) {
-				requirements = requirements.replace("Versicherten-Nummer:T;", "");
+				requirements = requirements.replace("Versicherten-Nummer:T;", StringUtils.EMPTY);
 			} else {
-				requirements = requirements.replace("Versicherten-Nummer:T", "");
+				requirements = requirements.replace("Versicherten-Nummer:T", StringUtils.EMPTY);
 			}
 		}
 		ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$

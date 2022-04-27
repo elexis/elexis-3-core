@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.selectors;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -41,8 +42,8 @@ public abstract class ActiveControl extends Composite {
 	private Label lbl;
 	protected Control ctl;
 	protected Composite controllers;
-	protected String textContents = "";
-	private String labelContents = "";
+	protected String textContents = StringUtils.EMPTY;
+	private String labelContents = StringUtils.EMPTY;
 	private LinkedList<ActiveControlListener> listeners;
 	private HashMap<String, Object> properties = new HashMap<String, Object>();
 	private int flags;
@@ -83,7 +84,7 @@ public abstract class ActiveControl extends Composite {
 			setLayout(new GridLayout(2, false));
 		}
 		flags = displayBits;
-		labelContents = displayName == null ? "" : displayName;
+		labelContents = displayName == null ? StringUtils.EMPTY : displayName;
 		if ((displayBits & HIDE_LABEL) == 0) {
 			lbl = new Label(this, SWT.NONE);
 			lbl.setText(displayName);
@@ -155,7 +156,7 @@ public abstract class ActiveControl extends Composite {
 	}
 
 	public void clear() {
-		textContents = "";
+		textContents = StringUtils.EMPTY;
 		push();
 	}
 

@@ -13,6 +13,7 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -139,7 +140,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 				String msg_key_tooltip = "KontaktExtInfo_" + key + "_tooltip"; //$NON-NLS-1$ //$NON-NLS-2$
 				msg_key_tooltip = msg_key_tooltip.replaceAll("[^a-zA-Z0-9_]", "_");
 				String label_text = key;
-				String tooltip_text = "";
+				String tooltip_text = StringUtils.EMPTY;
 				try {
 					label_text = ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
 							.getString(msg_key_label);

@@ -11,6 +11,7 @@
 
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -595,7 +596,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			diagnosesDisplay.setEnabled(true);
 			if (BillingServiceHolder.get().isEditable(encounter).isOK()) {
 				text.setEnabled(true);
-				text.setToolTipText("");
+				text.setToolTipText(StringUtils.EMPTY);
 				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 				lBeh.setBackground(defaultBackground);
 			} else {
@@ -616,7 +617,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			hlMandant.setBackground(hlMandant.getParent().getBackground());
 			diagnosesDisplay.clear();
 			billedDisplay.clear();
-			text.setText(""); //$NON-NLS-1$
+			text.setText(StringUtils.EMPTY);
 			text.setEnabled(false);
 			billedDisplay.setEnabled(false);
 			diagnosesDisplay.setEnabled(false);
@@ -641,7 +642,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	void setKonsText(final IEncounter encounter, final int version) {
-		String ntext = ""; //$NON-NLS-1$
+		String ntext = StringUtils.EMPTY;
 		if ((version >= 0) && (version <= encounter.getVersionedEntry().getHeadVersion())) {
 			VersionedResource vr = encounter.getVersionedEntry();
 			ResourceItem entry = vr.getVersion(version);
@@ -653,7 +654,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 					.append(" (").append(entry.remark).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 			versionDisplayAction.setText(sb.toString());
 		} else {
-			versionDisplayAction.setText("");
+			versionDisplayAction.setText(StringUtils.EMPTY);
 		}
 		text.setText(ntext);
 		text.setKons(encounter);

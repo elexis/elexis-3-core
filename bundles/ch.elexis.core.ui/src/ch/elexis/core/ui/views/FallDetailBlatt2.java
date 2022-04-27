@@ -13,6 +13,7 @@
 
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -235,7 +236,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				boolean isDisabled = BillingSystem.isDisabled(abrechungsMethodeStr);
 				IFall fall = getSelectedFall();
 				// get previously selected item/gesetz if we need to reset
-				String gesetz = ""; //$NON-NLS-1$
+				String gesetz = StringUtils.EMPTY;
 				if (fall != null)
 					gesetz = fall.getAbrechnungsSystem();
 				if (ch.rgw.tools.StringTool.isNothing(gesetz))
@@ -637,7 +638,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		cAbrechnung.setItems(Abrechnungstypen);
 		if (f == null) {
 			form.setText(Messages.FallDetailBlatt2_NoCaseSelected); // $NON-NLS-1$
-			tBezeichnung.setText("");
+			tBezeichnung.setText(StringUtils.EMPTY);
 			tBezeichnung.setMessage(Messages.FallDetailBlatt2_29);
 			cReason.setSelection(new StructuredSelection(FallConstants.TYPE_DISEASE));
 			return;
@@ -1007,8 +1008,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	 * @param f            caseID
 	 * @param fieldList    this is the fieldList from the prefs for required OR
 	 *                     optional fields
-	 * @param TitleBarText if not "" and not null then show a bar-separator on top
-	 *                     of the fields
+	 * @param TitleBarText if not StringUtils.EMPTY and not null then show a
+	 *                     bar-separator on top of the fields
 	 * @param deletable    is this deletable? - show delete button
 	 *                     <p>
 	 *                     The fieldList param contains a ;-separated list of
@@ -1111,7 +1112,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						// r[3]);
 						String itemsStr = (String) TextContainer.replaceSQLClause("SQL:" + r[3]); //$NON-NLS-1$
 						itemsStr = itemsStr.replaceAll("\r\n", ITEMDELIMITER); //$NON-NLS-1$
-						itemsStr = (itemsStr.replaceAll("\n", ITEMDELIMITER)).replaceAll("\r", //$NON-NLS-1$//$NON-NLS-2$
+						itemsStr = (itemsStr.replaceAll(StringUtils.LF, ITEMDELIMITER)).replaceAll(StringUtils.CR, // $NON-NLS-1$
 								ITEMDELIMITER);
 						items = itemsStr.split(ITEMDELIMITER);
 					}

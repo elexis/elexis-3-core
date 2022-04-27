@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -88,7 +89,7 @@ public class BBSView extends ViewPart implements ISelectionChangedListener {
 		form = tk.createScrolledForm(sash);
 		form.getBody().setLayout(new GridLayout(1, false));
 		form.setText(Messages.BBSView_PleaseEnterSubject); // $NON-NLS-1$
-		origin = tk.createLabel(form.getBody(), ""); //$NON-NLS-1$
+		origin = tk.createLabel(form.getBody(), StringUtils.EMPTY);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		origin.setLayoutData(gd);
 		msg = tk.createFormText(form.getBody(), false);
@@ -97,7 +98,7 @@ public class BBSView extends ViewPart implements ISelectionChangedListener {
 		msg.setColor(Messages.BBSView_rot, UiDesk.getColor(UiDesk.COL_RED)); // $NON-NLS-1$
 		msg.setColor(Messages.BBSView_gruen, UiDesk.getColor(UiDesk.COL_GREEN)); // $NON-NLS-1$
 		msg.setColor(Messages.BBSView_blau, UiDesk.getColor(UiDesk.COL_BLUE)); // $NON-NLS-1$
-		input = tk.createText(form.getBody(), "", SWT.WRAP | SWT.MULTI | SWT.BORDER); //$NON-NLS-1$
+		input = tk.createText(form.getBody(), StringUtils.EMPTY, SWT.WRAP | SWT.MULTI | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		input.setLayoutData(gd);
 		Button send = tk.createButton(form.getBody(), Messages.BBSView_DoSend, SWT.PUSH); // $NON-NLS-1$

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
@@ -91,7 +92,7 @@ public class XML2Database {
 		private void writeCloseSign(boolean newLine) {
 			buffer.append(">");
 			if (newLine) {
-				buffer.append("\n");
+				buffer.append(StringUtils.LF);
 			}
 			elementOpened = false;
 		}
@@ -116,9 +117,9 @@ public class XML2Database {
 
 		private void addAttribute(final String attribute, final String value) {
 			if (elementOpened) {
-				buffer.append(" " + attribute + "=\"" + value + "\"");
+				buffer.append(StringUtils.SPACE + attribute + "=\"" + value + "\"");
 			} else {
-				throw new IllegalAddException("");
+				throw new IllegalAddException(StringUtils.EMPTY);
 			}
 		}
 
@@ -202,7 +203,7 @@ public class XML2Database {
 			String className = tableNode.getAttributes().getNamedItem(CLASS_ATTRIBUTE).getNodeValue();
 			Class javaClass = Class.forName(className);
 			String uidValue = null;
-			String uidVersion = "";
+			String uidVersion = StringUtils.EMPTY;
 
 			// Read fields
 			List<DataField> fieldList = new Vector<DataField>();

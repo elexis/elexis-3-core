@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.scripting;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -89,7 +90,7 @@ public class Counter {
 		for (ObjCounter oc : cnt) {
 			sb.append(oc.count).append("\t\t"); //$NON-NLS-1$
 			PersistentObject po = (PersistentObject) oc.obj;
-			sb.append(po.getLabel()).append("\n"); //$NON-NLS-1$
+			sb.append(po.getLabel()).append(StringUtils.LF);
 		}
 		return sb.toString();
 	}

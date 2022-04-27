@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -137,7 +138,7 @@ public class SelectBestellungDialog extends SelectionDialog {
 					if (order.isPartialDone()) {
 						return "/";
 					}
-					return "";
+					return StringUtils.EMPTY;
 				}
 			}
 		});

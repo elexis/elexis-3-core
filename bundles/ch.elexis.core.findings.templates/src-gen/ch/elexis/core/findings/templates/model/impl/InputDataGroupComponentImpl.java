@@ -2,6 +2,7 @@
  */
 package ch.elexis.core.findings.templates.model.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
@@ -73,7 +74,7 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TEXT_SEPARATOR_EDEFAULT = " ";
+	protected static final String TEXT_SEPARATOR_EDEFAULT = StringUtils.SPACE;
 
 	/**
 	 * The cached value of the '{@link #getTextSeparator() <em>Text Separator</em>}' attribute.

@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.composites;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -60,7 +61,7 @@ public class CodingComposite extends Composite {
 		if (iCoding != null) {
 			this.coding = Optional.of(iCoding);
 		} else {
-			this.coding = Optional.of(new TransientCoding("", "", ""));
+			this.coding = Optional.of(new TransientCoding(StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY));
 		}
 		transientCodingValue.setValue(this.coding.get());
 	}

@@ -5,6 +5,7 @@
 
 package ch.elexis.core.ui.dbcheck;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.ui.dbcheck.semantic.SemanticCheck;
@@ -40,12 +41,12 @@ public class SemanticCheckExec extends CheckExec {
 	public static String getOutputLog() {
 		if (sc != null)
 			return sc.getOutputLog();
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	public static String getErrorLog() {
 		if (sc != null)
 			return sc.getErrorLog();
-		return "";
+		return StringUtils.EMPTY;
 	}
 }

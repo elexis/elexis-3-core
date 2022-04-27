@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.semantic;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -43,7 +44,7 @@ public class SemanticCheckPGSQL extends SemanticCheck {
 						ResultSet rs = stm.query("SELECT * FROM " + tables[i] + " WHERE " + query);
 						while (rs.next()) {
 							errlog.append(tables[i] + ": Semantischer Fehler bei Query <<" + query + ">> auf ID "
-									+ rs.getString(1) + "\n");
+									+ rs.getString(1) + StringUtils.LF);
 						}
 					}
 				}

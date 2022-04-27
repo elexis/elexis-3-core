@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.tasks.internal.detailcontributors;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
@@ -129,7 +130,8 @@ public class HL7ImporterTaskResultDetailComposite {
 		} else {
 			text.append("Die Datei [" + fileName + "] konnte nicht automatisch importiert werden.");
 			text.append("\n\n");
-			text.append("Grund: " + task.getResultEntryTyped(ReturnParameter.RESULT_DATA, String.class) + "\n");
+			text.append(
+					"Grund: " + task.getResultEntryTyped(ReturnParameter.RESULT_DATA, String.class) + StringUtils.LF);
 		}
 		lblStatus.setText(text.toString());
 

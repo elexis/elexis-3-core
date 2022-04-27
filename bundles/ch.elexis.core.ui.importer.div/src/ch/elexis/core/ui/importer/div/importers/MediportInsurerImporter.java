@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.importer.div.importers;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -41,7 +42,7 @@ public class MediportInsurerImporter {
 		List<Organisation> insurerList = new ArrayList<Organisation>();
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(csvInStream));
-			String line = "";
+			String line = StringUtils.EMPTY;
 			int lineNo = 0;
 
 			while ((line = reader.readLine()) != null) {
@@ -76,7 +77,7 @@ public class MediportInsurerImporter {
 				contactQuery.add(Kontakt.FLD_PLACE, Query.EQUALS, city);
 				List<Kontakt> contactList = contactQuery.execute();
 				if (contactList != null && !contactList.isEmpty()) {
-					log.warn("Kontakt [" + org + " " + dept + ", " + street + ", " + city
+					log.warn("Kontakt [" + org + StringUtils.SPACE + dept + ", " + street + ", " + city
 							+ "] existiert bereits. Wird nicht imporiert.");
 					continue;
 				}

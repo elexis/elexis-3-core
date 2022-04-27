@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views.codesystems;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
@@ -386,7 +387,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					BlockElementViewerItem item = (BlockElementViewerItem) element;
 					return Integer.toString(item.getCount());
 				}
-				return "";
+				return StringUtils.EMPTY;
 			}
 		});
 
@@ -398,7 +399,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					BlockElementViewerItem item = (BlockElementViewerItem) element;
 					return item.getCode();
 				}
-				return "";
+				return StringUtils.EMPTY;
 			}
 		});
 
@@ -410,7 +411,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					BlockElementViewerItem item = (BlockElementViewerItem) element;
 					return item.getText();
 				}
-				return "";
+				return StringUtils.EMPTY;
 			}
 
 			@Override

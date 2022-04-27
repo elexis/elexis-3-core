@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.data.beans;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +55,7 @@ public enum ContactType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	MANDATOR(2, "MANDATOR", ""),
+	MANDATOR(2, "MANDATOR", StringUtils.EMPTY),
 	/**
 	 * The '<em><b>LABORATORY</b></em>' literal object. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -131,7 +132,7 @@ public enum ContactType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 *
 	 * @see #MANDATOR
-	 * @model literal=""
+	 * @model literal=StringUtils.EMPTY
 	 * @generated
 	 * @ordered
 	 */

@@ -1,5 +1,6 @@
 package ch.elexis.core.fhir;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.services.ICodeElementService;
 
@@ -8,7 +9,7 @@ public enum CodeSystem {
 	/**
 	 * {@link ICodeElement} resolvable via {@link ICodeElementService}
 	 */
-	CODEELEMENT("http://elexis.info/codeelement", "",
+	CODEELEMENT("http://elexis.info/codeelement", StringUtils.EMPTY,
 			"An ICodeElement resolvable via ICodeElementService, extends with /codeElementTyp/codeSystemName");
 
 	private String url;

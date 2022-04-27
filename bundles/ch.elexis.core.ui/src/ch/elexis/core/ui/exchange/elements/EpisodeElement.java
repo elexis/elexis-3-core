@@ -110,7 +110,7 @@ public class EpisodeElement extends XChangeElement {
 		if (text != null) {
 			return text.getText();
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	public String getDiagnosis() {
@@ -120,7 +120,7 @@ public class EpisodeElement extends XChangeElement {
 			String ret = de.getCode() + " (" + de.getCodeSystem() + ")";
 			return ret;
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	public void addMeta(String name, String value) {

@@ -12,6 +12,7 @@
 
 package ch.elexis.core.application.advisors;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.actions.GlobalActions.fixLayoutAction;
 import static ch.elexis.core.ui.actions.GlobalActions.perspectiveMenu;
 import static ch.elexis.core.ui.actions.GlobalActions.resetPerspectiveAction;
@@ -256,7 +257,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 		tbm.add(new Separator());
 		tbm.add(GlobalActions.printEtikette);
-		tbm.add(new Action("", Action.AS_DROP_DOWN_MENU) {
+		tbm.add(new Action(StringUtils.EMPTY, Action.AS_DROP_DOWN_MENU) {
 
 			private IMenuCreator menuCreator;
 

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.util.dnd;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ import ch.elexis.core.model.Identifiable;
 
 public class IdentifiableDropTarget implements DropTargetListener {
 	IReceiver receiver;
-	String name = "";
+	String name = StringUtils.EMPTY;
 
 	public IdentifiableDropTarget(Control target, IReceiver receiver) {
 		this.receiver = receiver;

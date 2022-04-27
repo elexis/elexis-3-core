@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.composites;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -101,7 +102,7 @@ public class NoteListComposite extends Composite {
 
 		@Override
 		public void run() {
-			InputDialog input = new InputDialog(getShell(), "Notiz", "Notiz erfassen", "", null);
+			InputDialog input = new InputDialog(getShell(), "Notiz", "Notiz erfassen", StringUtils.EMPTY, null);
 			if (input.open() == InputDialog.OK) {
 				if (input.getValue() != null && !input.getValue().isEmpty()) {
 					adapter.addNote(input.getValue());

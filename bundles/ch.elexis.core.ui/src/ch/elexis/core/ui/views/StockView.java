@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -143,7 +144,7 @@ public class StockView extends ViewPart implements IRefreshable {
 			}
 		});
 		ToolBarManager tbm = new ToolBarManager();
-		tbm.add(new Action("", Action.AS_CHECK_BOX) {
+		tbm.add(new Action(StringUtils.EMPTY, Action.AS_CHECK_BOX) {
 			@Override
 			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_FILTER.getImageDescriptor();
@@ -416,7 +417,7 @@ public class StockView extends ViewPart implements IRefreshable {
 						msg.append(success);
 						msg.append(" Artikel wurden erfolgreich exportiert.");
 						if (errorUnkownArticle > 0) {
-							msg.append("\n");
+							msg.append(StringUtils.LF);
 							msg.append(errorUnkownArticle);
 							msg.append(" Artikel konnten nicht exportiert werden (Unbekannte Artikel Typen).");
 						}

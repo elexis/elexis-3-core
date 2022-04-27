@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -88,12 +89,12 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		cbMarked.setLayoutData(SWTHelper.getFillGridData(4, true, 1, false));
 		cbBefore = new Button(ret, SWT.CHECK);
 		cbBefore.setText(TREATMENTBEGINBEFORE);
-		ddc1 = new DayDateCombo(ret, "", TAGEN_BZW_DEM); //$NON-NLS-1$
+		ddc1 = new DayDateCombo(ret, StringUtils.EMPTY, TAGEN_BZW_DEM);
 		ddc1.spinDaysBack();
 		cbTime = new Button(ret, SWT.CHECK);
 		cbTime.setText(TREATMENTENDBEFORE);
 
-		ddc2 = new DayDateCombo(ret, "", TAGEN_BZW_DEM); //$NON-NLS-1$
+		ddc2 = new DayDateCombo(ret, StringUtils.EMPTY, TAGEN_BZW_DEM);
 		ddc2.spinDaysBack();
 		int prev = CoreHub.localCfg.get(CONFIG + "beginBefore", 30) * -1; //$NON-NLS-1$
 		TimeTool ttNow = new TimeTool();

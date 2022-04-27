@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -65,7 +66,7 @@ public class LabService implements ILabService {
 					new TimeTool(labResult.getObservationTime()));
 		}
 
-		if (evaluationResult == null || "".equals(evaluationResult) //$NON-NLS-1$
+		if (evaluationResult == null || StringUtils.EMPTY.equals(evaluationResult)
 				|| "?formel?".equals(evaluationResult)) { //$NON-NLS-1$
 			return Result.ERROR(evaluationResult);
 		}
@@ -113,7 +114,7 @@ public class LabService implements ILabService {
 		if (formula.startsWith("SCRIPT:")) {
 			log.warn("Script elements currently not supported, returning empty String. LabItem [" + labItem.getId()
 					+ "]");
-			return "";
+			return StringUtils.EMPTY;
 		}
 		boolean bMatched = false;
 		labresults = sortResultsDescending(labresults);

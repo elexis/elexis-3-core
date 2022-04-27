@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
@@ -542,7 +543,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					return "  - " + diagnose.getLabel(); //$NON-NLS-1$
 				} else if (element instanceof IBilled) {
 					IBilled billed = (IBilled) element;
-					return "  - " + billed.getAmount() + " " + billed.getLabel() + " (" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+					return "  - " + billed.getAmount() + StringUtils.SPACE + billed.getLabel() + " (" //$NON-NLS-1$
+																										// //$NON-NLS-3$
 							+ billed.getTotal().toString() + ")"; //$NON-NLS-1$
 				} else {
 					return element.toString();
@@ -578,7 +580,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 						// prepare heading label that will look like this dd.MM.yyyy (cancelled) -
 						// amountOfMoney
 						StringBuilder sbHeadingLabel = new StringBuilder();
-						sbHeadingLabel.append(Messages.AccountView_bill + " " + actRn.getDatumRn()); //$NON-NLS-1$
+						sbHeadingLabel.append(Messages.AccountView_bill + StringUtils.SPACE + actRn.getDatumRn());
 						sbHeadingLabel.append(Messages.RechnungsBlatt_stornoLabel);
 
 						// store all verrechnetCopies and add label with sum of all cancelled items
@@ -639,7 +641,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			public String getText(Object element) {
 				if (element instanceof IInvoiceBilled) {
 					IInvoiceBilled vc = (IInvoiceBilled) element;
-					return "  - " + vc.getAmount() + " " + vc.getLabel() + " (" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+					return "  - " + vc.getAmount() + StringUtils.SPACE + vc.getLabel() + " (" //$NON-NLS-1$
+																								// //$NON-NLS-3$
 							+ vc.getTotal().toString() + ")"; //$NON-NLS-1$
 				} else if (element instanceof Konsultation) {
 					return "Konsultation " + ((Konsultation) element).getDatum();
@@ -740,7 +743,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 
 		if (actRn != null) {
 			Kontakt adressat = actRn.getFall().getInvoiceRecipient();
-			rnAdressat.setText(Messages.RechnungsBlatt_adressee + ((adressat != null) ? adressat.getLabel() : ""));
+			rnAdressat.setText(
+					Messages.RechnungsBlatt_adressee + ((adressat != null) ? adressat.getLabel() : StringUtils.EMPTY));
 			form.setText(actRn.getLabel());
 			List<String> trace = actRn.getTrace(Rechnung.STATUS_CHANGED);
 			for (String s : trace) {
@@ -758,7 +762,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				}
 				tRejects.setText(rjj.toString());
 			} else {
-				tRejects.setText("");
+				tRejects.setText(StringUtils.EMPTY);
 			}
 			List<String> outputs = actRn.getTrace(Rechnung.OUTPUT);
 			for (String o : outputs) {

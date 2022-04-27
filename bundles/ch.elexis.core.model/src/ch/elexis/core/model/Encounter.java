@@ -221,7 +221,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung> implemen
 	}
 
 	private String getInvoiceStateText() {
-		String statusText = "";
+		String statusText = StringUtils.EMPTY;
 
 		IInvoice rechnung = getInvoice();
 		if (rechnung != null) {
@@ -243,7 +243,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung> implemen
 			}
 			return head.trim();
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class MoveFallAHVNrToContact extends ExternalMaintenance {
 			String patAhvNummer = pat.getXid(XidConstants.DOMAIN_AHV);
 
 			if (patAhvNummer.length() < 1 && ahvNummer.length() > 1) {
-				output.append("Setze AHV Nummer für " + pat.getLabel() + " auf " + ahvNummer + "\n");
+				output.append("Setze AHV Nummer für " + pat.getLabel() + " auf " + ahvNummer + StringUtils.LF);
 				pat.addXid(XidConstants.DOMAIN_AHV, ahvNummer, true);
 			}
 
@@ -49,7 +50,7 @@ public class MoveFallAHVNrToContact extends ExternalMaintenance {
 			if (extinfo.containsKey(AHV_NUMMER)) {
 				extinfo.remove(AHV_NUMMER);
 				fall.setMap(Fall.FLD_EXTINFO, extinfo);
-				output.append("Entferne AHV-Nummer Eintrag aus Fall " + fall.getLabel() + "\n");
+				output.append("Entferne AHV-Nummer Eintrag aus Fall " + fall.getLabel() + StringUtils.LF);
 			}
 
 			pm.worked(1);

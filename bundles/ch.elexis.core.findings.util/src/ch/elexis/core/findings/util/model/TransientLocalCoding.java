@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util.model;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import ch.elexis.core.findings.ICoding;
@@ -24,7 +25,7 @@ public class TransientLocalCoding implements ILocalCoding {
 	public TransientLocalCoding(ObservationCode code) {
 		this.system = code.getIdentifierSystem().getSystem();
 		this.code = code.getCode();
-		this.display = "";
+		this.display = StringUtils.EMPTY;
 	}
 
 	@Override

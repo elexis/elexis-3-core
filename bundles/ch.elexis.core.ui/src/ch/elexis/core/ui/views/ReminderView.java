@@ -172,7 +172,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 						if (list.size() != 0) {
 							StringBuilder sb = new StringBuilder();
 							for (Reminder r : list) {
-								sb.append(r.getSubject() + "\n");
+								sb.append(r.getSubject() + StringUtils.LF);
 								sb.append(r.getMessage() + "\n\n");
 							}
 							SWTHelper.alert(Messages.ReminderView_importantRemindersCaption, sb.toString());
@@ -889,7 +889,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		private void applyDueDateFilter(Query<Reminder> qbe) {
 			TimeTool dueDateDays = new TimeTool();
 			dueDateDays.addDays(filterDueDateDays);
-			qbe.add(Reminder.FLD_DUE, Query.NOT_EQUAL, "");
+			qbe.add(Reminder.FLD_DUE, Query.NOT_EQUAL, StringUtils.EMPTY);
 			qbe.add(Reminder.FLD_DUE, Query.LESS_OR_EQUAL, dueDateDays.toString(TimeTool.DATE_COMPACT));
 		}
 

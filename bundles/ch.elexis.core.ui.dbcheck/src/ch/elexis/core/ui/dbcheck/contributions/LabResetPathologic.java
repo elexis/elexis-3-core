@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class LabResetPathologic extends ExternalMaintenance {
 		for (LabResult labResult : results) {
 			if (pm.isCanceled()) {
 				addProblem("Cancelled.", labResult);
-				return getProblemsString() + "\n" + changedCount + " Werte wurden geändert.\n " + allCount
+				return getProblemsString() + StringUtils.LF + changedCount + " Werte wurden geändert.\n " + allCount
 						+ " Werte insgesamt.";
 			}
 
@@ -86,9 +87,9 @@ public class LabResetPathologic extends ExternalMaintenance {
 		if (problems != null && !problems.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("\nProblems:\n");
-			problems.stream().forEach(problem -> sb.append(problem + "\n"));
+			problems.stream().forEach(problem -> sb.append(problem + StringUtils.LF));
 			return sb.toString();
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 }

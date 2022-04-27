@@ -14,6 +14,7 @@
 
 package com.tiff.common.ui.datepicker;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -418,7 +419,7 @@ public class DatePickerCombo extends Composite {
 			Date date = dp.getDate();
 
 			if (date == null) {
-				text.setText("");
+				text.setText(StringUtils.EMPTY);
 			} else {
 				text.setText(getFormat().format(date));
 				text.selectAll();
@@ -797,7 +798,7 @@ public class DatePickerCombo extends Composite {
 			text.selectAll();
 			dp.setDate(date);
 		} else {
-			text.setText("");
+			text.setText(StringUtils.EMPTY);
 		}
 
 		dp.setDate(date);
@@ -965,8 +966,9 @@ public class DatePickerCombo extends Composite {
 
 		case SWT.FocusOut: {
 			/*
-			 * // validate the text input try { if (!"".equals(this.text.getText())) { Date
-			 * date = getFormat().parse(text.getText()); String formatedText =
+			 * // validate the text input try { if
+			 * (!StringUtils.EMPTY.equals(this.text.getText())) { Date date =
+			 * getFormat().parse(text.getText()); String formatedText =
 			 * getFormat().format(date); if (text.getText().equals(formatedText)) {
 			 * text.setText(formatedText); } else { text.setText(previousDate); } }
 			 * previousDate = text.getText(); } catch (ParseException e1) {

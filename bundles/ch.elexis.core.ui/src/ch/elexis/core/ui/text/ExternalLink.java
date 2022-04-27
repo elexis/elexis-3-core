@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.text;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.IAction;
@@ -41,7 +42,7 @@ public class ExternalLink implements IKonsExtension {
 	public boolean doXRef(String refProvider, String refID) {
 		try {
 			int r = refID.lastIndexOf('.');
-			String ext = ""; //$NON-NLS-1$
+			String ext = StringUtils.EMPTY;
 			if (r != -1) {
 				ext = refID.substring(r + 1);
 			}

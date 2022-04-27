@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.laboratory.controls.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -47,7 +48,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 				}
 			}
 		}
-		return ""; //$NON-NLS-1$
+		return StringUtils.EMPTY;
 	}
 
 	private String getResultString(LabResult labResult) {
@@ -120,7 +121,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 		StringBuilder sb = new StringBuilder();
 		String comment = labResult.getComment();
 		if (!comment.isEmpty()) {
-			sb.append("\n").append(comment);
+			sb.append(StringUtils.LF).append(comment);
 		}
 		return sb.toString();
 	}
@@ -143,7 +144,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 							sb.append(" - "); //$NON-NLS-1$
 							sb.append(getResultString(labResult));
 							sb.append(getUnitAndReferenceString(labResult));
-							sb.append("\n").append(getPathologicString(labResult));
+							sb.append(StringUtils.LF).append(getPathologicString(labResult));
 							sb.append(getCommentString(labResult));
 						} else {
 							sb.append(",\n"); //$NON-NLS-1$
@@ -151,7 +152,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 							sb.append(" - "); //$NON-NLS-1$
 							sb.append(getResultString(labResult));
 							sb.append(getUnitAndReferenceString(labResult));
-							sb.append("\n").append(getPathologicString(labResult));
+							sb.append(StringUtils.LF).append(getPathologicString(labResult));
 							sb.append(getCommentString(labResult));
 						}
 					}

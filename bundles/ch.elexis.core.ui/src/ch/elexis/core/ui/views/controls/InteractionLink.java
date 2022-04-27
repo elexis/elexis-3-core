@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class InteractionLink {
 	 */
 	private Link interactionLink = null;
 	static Logger logger = LoggerFactory.getLogger(InteractionLink.class);
-	private String destUrl = "";
+	private String destUrl = StringUtils.EMPTY;
 	private static int lastUpTime;
 
 	public InteractionLink(Composite parent, int style) {
@@ -45,23 +46,23 @@ public class InteractionLink {
 	}
 
 	private void setSuppressed() {
-		interactionLink.setText(""); //$NON-NLS-1$
+		interactionLink.setText(StringUtils.EMPTY);
 		interactionLink.setToolTipText(Messages.SuppressInteractionCheckTooltip);
 		interactionLink.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLACK));
 
 	}
 
 	public String updateAtcs(List<IArticle> gtins) {
-		interactionLink.setText(""); //$NON-NLS-1$
+		interactionLink.setText(StringUtils.EMPTY);
 		if (ConfigServiceHolder.getUser(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
 			setSuppressed();
-			return ""; //$NON-NLS-1$
+			return StringUtils.EMPTY;
 		}
 
-		String severity = " "; //$NON-NLS-1$
+		String severity = StringUtils.SPACE;
 		Color color = UiDesk.getColor(UiDesk.COL_WHITE);
 		String epha = Messages.VerrDetailDialog_InteractionEpha;
-		String tooltip = ""; //$NON-NLS-1$
+		String tooltip = StringUtils.EMPTY;
 		StringBuilder buildUrl = new StringBuilder(Messages.VerrDetailDialog_InteractionBaseURL);
 
 		ArrayList<String> atcs = new ArrayList<String>();
@@ -74,10 +75,10 @@ public class InteractionLink {
 			}
 		});
 		if (atcs.size() > 1) {
-			destUrl = buildUrl.toString().replaceAll(",+$", "");
+			destUrl = buildUrl.toString().replaceAll(",+$", StringUtils.EMPTY);
 			logger.info("For {} ATCs {} set destUrl to {}", atcs.size(), atcs, destUrl);
 		} else {
-			destUrl = "";
+			destUrl = StringUtils.EMPTY;
 		}
 
 		// Reset tooltip text and color to nothing
@@ -135,7 +136,7 @@ public class InteractionLink {
 					}
 				}
 			});
-			if (!severity.contentEquals(" ")) {//$NON-NLS-1$
+			if (!severity.contentEquals(StringUtils.SPACE)) {
 				color = UiDesk.getColorFromRGB(Interaction.Colors.get(severity));
 				interactionLink.setText(epha + ": " + Interaction.Ratings.get(severity)); //$NON-NLS-1$
 				interactionLink.setBackground(color);

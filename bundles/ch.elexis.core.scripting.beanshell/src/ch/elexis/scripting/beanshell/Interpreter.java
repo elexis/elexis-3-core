@@ -1,5 +1,6 @@
 package ch.elexis.scripting.beanshell;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -49,13 +50,13 @@ public class Interpreter implements ch.elexis.core.data.interfaces.scripting.Int
 			}
 			throw (new ElexisException(Script.class, e.getMessage(), ElexisException.EE_UNEXPECTED_RESPONSE));
 		} catch (ParseException e) {
-			String msg = "";
+			String msg = StringUtils.EMPTY;
 			if (e != null) {
 				try {
 					msg = e.getMessage();
 					// msg = e.getErrorText();
 					if (msg == null) {
-						msg = "";
+						msg = StringUtils.EMPTY;
 					}
 				} catch (Exception ex) {
 					ExHandler.handle(ex);

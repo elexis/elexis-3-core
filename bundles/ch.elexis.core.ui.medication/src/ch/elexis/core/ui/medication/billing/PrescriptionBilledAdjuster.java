@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.medication.billing;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -93,7 +94,7 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 
 	private IPrescription createDispensationPrescription(IArticle article, IPatient patient, IBilled billed) {
 		IPrescription prescription = new IPrescriptionBuilder(CoreModelServiceHolder.get(), ContextServiceHolder.get(),
-				article, patient, "").build();
+				article, patient, StringUtils.EMPTY).build();
 		prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID, billed.getId());
 		billed.setExtInfo(ch.elexis.core.model.verrechnet.Constants.FLD_EXT_PRESC_ID, prescription.getId());
 		prescription.setEntryType(EntryType.SELF_DISPENSED);

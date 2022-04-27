@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.data.beans;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import ch.elexis.core.constants.StringConstants;
@@ -241,7 +242,8 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 
 	@Override
 	public String getLabel() {
-		return getDescription1() + " " + getDescription2() + ", " + getStreet() + ", " + getZip() + " " + getCity();
+		return getDescription1() + StringUtils.SPACE + getDescription2() + ", " + getStreet() + ", " + getZip()
+				+ StringUtils.SPACE + getCity();
 	}
 
 	@Override
@@ -355,7 +357,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 			vs = "u";
 			break;
 		default:
-			vs = "";
+			vs = StringUtils.EMPTY;
 		}
 		entity.set(Person.SEX, vs);
 		firePropertyChange("gender", old, value);

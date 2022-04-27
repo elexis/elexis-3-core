@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,7 +185,7 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 		TableViewerColumn tvCol = new TableViewerColumn(viewer, SWT.NONE);
 		tvCol.setLabelProvider(new ColumnLabelProvider());
 		TableColumn column = tvCol.getColumn();
-		column.setText("");
+		column.setText(StringUtils.EMPTY);
 		column.setWidth(150);
 		column.setResizable(false);
 		column.setMoveable(false);

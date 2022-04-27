@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -26,7 +27,7 @@ public class BrowserView extends ViewPart {
 	}
 
 	public void navigateTo() {
-		InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "", "Adresse eingeben",
+		InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), StringUtils.EMPTY, "Adresse eingeben",
 				browser.getUrl(), null);
 		if (dlg.open() == Window.OK) {
 			browser.setUrl(dlg.getValue());

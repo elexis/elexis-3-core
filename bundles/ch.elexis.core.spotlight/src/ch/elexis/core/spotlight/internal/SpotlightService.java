@@ -1,5 +1,6 @@
 package ch.elexis.core.spotlight.internal;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,8 @@ public class SpotlightService implements ISpotlightService {
 		}
 
 		// TODO on math operations allow resp. input
-		String[] searchTerms = searchInput.trim().toLowerCase().replaceAll("[^a-z0-9 .,=%]", "").split(" ");
+		String[] searchTerms = searchInput.trim().toLowerCase().replaceAll("[^a-z0-9 .,=%]", StringUtils.EMPTY)
+				.split(StringUtils.SPACE);
 
 		List<String> stringTerms = new ArrayList<String>(searchTerms.length);
 		List<LocalDate> dateTerms = new ArrayList<LocalDate>(searchTerms.length);

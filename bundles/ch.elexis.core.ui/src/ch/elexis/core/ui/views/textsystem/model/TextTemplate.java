@@ -144,7 +144,7 @@ public class TextTemplate {
 
 	public void setMandant(String mandantId) {
 		if (mandantId == null) {
-			mandantId = "";
+			mandantId = StringUtils.EMPTY;
 		}
 		this.mandantId = mandantId;
 		updateTemplateReference(UPDATE_TYPE.MANDANT);
@@ -154,14 +154,14 @@ public class TextTemplate {
 
 	public void setMandant(Mandant mandant) {
 		if (mandant == null) {
-			setMandant("");
+			setMandant(StringUtils.EMPTY);
 		} else {
 			setMandant(mandant.getId());
 		}
 	}
 
 	public Mandant getMandant() {
-		Mandant ret = (mandantId == "" ? null : Mandant.load(mandantId));
+		Mandant ret = (mandantId == StringUtils.EMPTY ? null : Mandant.load(mandantId));
 		if (ret != null && ret.exists()) {
 			return ret;
 		}
@@ -249,7 +249,7 @@ public class TextTemplate {
 				DocumentSelectDialog.setDontAskForAddresseeForThisTemplate(bt, !askForAddress);
 				break;
 			case SYS_TEMPLATE:
-				String sysTemplate = systemTemplate ? Brief.SYS_TEMPLATE : "";
+				String sysTemplate = systemTemplate ? Brief.SYS_TEMPLATE : StringUtils.EMPTY;
 				bt.set(Brief.FLD_KONSULTATION_ID, sysTemplate);
 				break;
 			default:

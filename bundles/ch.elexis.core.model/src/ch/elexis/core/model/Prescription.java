@@ -215,7 +215,7 @@ public class Prescription extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 
 	@Override
 	public String getLabel() {
-		return getSimpleLabel() + " " + getDosageInstruction();
+		return getSimpleLabel() + StringUtils.SPACE + getDosageInstruction();
 	}
 
 	private String getSimpleLabel() {

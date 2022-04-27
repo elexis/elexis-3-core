@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.actions;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -14,7 +15,7 @@ public class CommentAction extends Action {
 	private final Shell shell;
 
 	public CommentAction(Shell shell, String comment) {
-		super("", Action.AS_PUSH_BUTTON);
+		super(StringUtils.EMPTY, Action.AS_PUSH_BUTTON);
 		Assert.isNotNull(shell);
 		this.shell = shell;
 		this.comment = comment;

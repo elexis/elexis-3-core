@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -526,7 +527,7 @@ public class BillingProposalView extends ViewPart {
 				if (costBearer != null) {
 					item.insurerName = costBearer.getLabel(true);
 				} else {
-					item.insurerName = "";
+					item.insurerName = StringUtils.EMPTY;
 				}
 			}
 

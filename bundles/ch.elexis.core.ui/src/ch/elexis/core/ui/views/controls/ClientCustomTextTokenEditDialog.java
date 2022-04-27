@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -79,12 +80,12 @@ public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 			Patient pat = ElexisEventDispatcher.getSelectedPatient();
 
 			if (arr[1] == null || pat == null) {
-				txtTokenText.setText("");
+				txtTokenText.setText(StringUtils.EMPTY);
 				return area;
 			}
 
 			String result = pat.get(arr[1]);
-			txtTokenText.setText((result != null) ? result : "");
+			txtTokenText.setText((result != null) ? result : StringUtils.EMPTY);
 		}
 
 		return area;

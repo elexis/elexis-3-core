@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.commands;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
@@ -65,7 +66,7 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 
 					List<Brief> existing = TextTemplate.findExistingTemplates(textTemplate.isSystemTemplate(),
 							textTemplate.getName(), (String) null,
-							textTemplate.getMandant() != null ? textTemplate.getMandant().getId() : "");
+							textTemplate.getMandant() != null ? textTemplate.getMandant().getId() : StringUtils.EMPTY);
 					if (!existing.isEmpty()) {
 						if (MessageDialog.openQuestion(HandlerUtil.getActiveShell(event), "Vorlagen existieren",
 								String.format("Sollen die (%d) existierenden %s Vorlagen überschrieben werden?",

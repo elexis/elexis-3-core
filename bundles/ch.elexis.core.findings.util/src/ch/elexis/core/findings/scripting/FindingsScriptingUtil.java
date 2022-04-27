@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.scripting;
 
+import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -48,7 +49,7 @@ public class FindingsScriptingUtil {
 						if (NumberUtils.isNumber((String) result)) {
 							BigDecimal newValue = new BigDecimal((String) result);
 							iObservation.setNumericValue(applyDecimal(newValue, iObservation.getDecimalPlace()),
-									iObservation.getNumericValueUnit().orElse(""));
+									iObservation.getNumericValueUnit().orElse(StringUtils.EMPTY));
 						} else {
 							LoggerFactory.getLogger(FindingsScriptingUtil.class)
 									.debug("Could not set not numeric result [" + result + "]");
@@ -58,7 +59,7 @@ public class FindingsScriptingUtil {
 					if (iObservation.getObservationType() == ObservationType.NUMERIC) {
 						BigDecimal newValue = new BigDecimal((Double) result);
 						iObservation.setNumericValue(applyDecimal(newValue, iObservation.getDecimalPlace()),
-								iObservation.getNumericValueUnit().orElse(""));
+								iObservation.getNumericValueUnit().orElse(StringUtils.EMPTY));
 					} else if (iObservation.getObservationType() == ObservationType.TEXT) {
 						iObservation.setStringValue(new BigDecimal((Double) result).toPlainString());
 					}
@@ -66,7 +67,7 @@ public class FindingsScriptingUtil {
 					if (iObservation.getObservationType() == ObservationType.NUMERIC) {
 						BigDecimal newValue = new BigDecimal((Integer) result);
 						iObservation.setNumericValue(applyDecimal(newValue, iObservation.getDecimalPlace()),
-								iObservation.getNumericValueUnit().orElse(""));
+								iObservation.getNumericValueUnit().orElse(StringUtils.EMPTY));
 					} else if (iObservation.getObservationType() == ObservationType.TEXT) {
 						iObservation.setStringValue(new BigDecimal((Integer) result).toPlainString());
 					}
@@ -96,7 +97,7 @@ public class FindingsScriptingUtil {
 
 		// search for replacements we can satisfy with other finding values
 		while (matcher.find()) {
-			String var = matcher.group().replaceAll("[\\[\\]]", "");
+			String var = matcher.group().replaceAll("[\\[\\]]", StringUtils.EMPTY);
 
 			String value = getVarValue(var, iObservation);
 			if (value != null && !value.isEmpty()) {

@@ -13,6 +13,7 @@
 
 package ch.elexis.core.ui.laboratory.laborlink;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.Action;
@@ -76,7 +77,7 @@ public class LaborLink implements IKonsExtension {
 				LaborVerordnungDialog dialog = new LaborVerordnungDialog(UiDesk.getTopShell(), patient, date);
 				if (dialog.open() == LaborVerordnungDialog.OK) {
 					// insert XRef
-					textField.insertXRef(-1, "Labor", PROVIDER_ID, "");
+					textField.insertXRef(-1, "Labor", PROVIDER_ID, StringUtils.EMPTY);
 				}
 			}
 		};

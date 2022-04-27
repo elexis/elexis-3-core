@@ -290,7 +290,7 @@ public class TaskServiceImpl implements ITaskService {
 		String stationIdentifier = contextService.getRootContext().getStationIdentifier();
 		taskDescriptor.setRunner(StringUtils.abbreviate(stationIdentifier, 64));
 
-		taskDescriptor.setReferenceId(System.currentTimeMillis() + "");
+		taskDescriptor.setReferenceId(System.currentTimeMillis() + StringUtils.EMPTY);
 
 		contextService.getActiveUser().ifPresent(u -> taskDescriptor.setOwner(u));
 
@@ -365,7 +365,7 @@ public class TaskServiceImpl implements ITaskService {
 		StringBuilder sb = new StringBuilder();
 		sb.append(task.getLabel());
 		if (StringUtils.isNotBlank(resultText)) {
-			sb.append("\n" + resultText);
+			sb.append(StringUtils.LF + resultText);
 		}
 		message.setMessageText(sb.toString());
 

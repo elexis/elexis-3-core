@@ -1,5 +1,6 @@
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +47,7 @@ public class VerrechenbarFavorites {
 		if (favorites == null) {
 			favorites = new ArrayList<VerrechenbarFavorites.Favorite>();
 
-			String favs = ConfigServiceHolder.getUser(USER_CFG_FAVORITES, "");
+			String favs = ConfigServiceHolder.getUser(USER_CFG_FAVORITES, StringUtils.EMPTY);
 			String[] entries = favs.split(";");
 			for (int i = 0; i < entries.length; i++) {
 				String entry = entries[i];
@@ -89,7 +90,7 @@ public class VerrechenbarFavorites {
 			if (fav != null)
 				return;
 			String storeToString = StoreToStringServiceHolder.getStoreToString(object);
-			VerrechenbarFavorites.getFavorites().add(new Favorite(storeToString, "", 0));
+			VerrechenbarFavorites.getFavorites().add(new Favorite(storeToString, StringUtils.EMPTY, 0));
 		} else {
 			if (fav == null)
 				return;

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.util.List;
 
@@ -111,7 +112,8 @@ public class KonsFilterDialog extends TitleAreaDialog {
 		filter.setAsRegEx(bRegex.getSelection());
 		String cc = tBed.getText();
 		if (!StringTool.isNothing(cc)) {
-			StringTool.tokenizer tk = new StringTool.tokenizer(cc, " ", StringTool.tokenizer.DOUBLE_QUOTED_TOKENS); //$NON-NLS-1$
+			StringTool.tokenizer tk = new StringTool.tokenizer(cc, StringUtils.SPACE,
+					StringTool.tokenizer.DOUBLE_QUOTED_TOKENS); // $NON-NLS-1$
 			try {
 				List<String> tokens = tk.tokenize();
 				int last = 0;

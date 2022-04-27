@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.action;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 
 import org.eclipse.core.runtime.Assert;
@@ -22,7 +23,7 @@ public class DateAction extends Action {
 	private Label lblDateText;
 
 	public DateAction(Shell shell, LocalDateTime localDateTime, Composite composite) {
-		super("", Action.AS_PUSH_BUTTON);
+		super(StringUtils.EMPTY, Action.AS_PUSH_BUTTON);
 		Assert.isNotNull(shell);
 		this.shell = shell;
 		this.localDateTime = localDateTime == null ? LocalDateTime.now() : localDateTime;

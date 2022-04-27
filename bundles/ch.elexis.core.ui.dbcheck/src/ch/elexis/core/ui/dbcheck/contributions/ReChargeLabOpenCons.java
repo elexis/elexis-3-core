@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
-		StringJoiner sj = new StringJoiner("\n");
+		StringJoiner sj = new StringJoiner(StringUtils.LF);
 		if (initCodeElementService() && initBillingService()) {
 			Query<Patient> queryPatients = new Query<>(Patient.class);
 			List<Patient> patients = queryPatients.execute();

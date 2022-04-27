@@ -13,8 +13,8 @@ public class RunContextTextWithDefaultValue extends Text {
 			String key, String defaultValue, String configuredValue) {
 		super(compAssisted, SWT.BORDER);
 
-		setMessage(defaultValue != null ? defaultValue : "");
-		setText(configuredValue != null ? configuredValue : "");
+		setMessage(defaultValue != null ? defaultValue : StringUtils.EMPTY);
+		setText(configuredValue != null ? configuredValue : StringUtils.EMPTY);
 
 		addModifyListener(new ModifyListener() {
 

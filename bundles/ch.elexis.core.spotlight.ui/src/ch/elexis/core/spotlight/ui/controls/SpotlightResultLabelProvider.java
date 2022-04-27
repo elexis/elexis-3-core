@@ -1,5 +1,6 @@
 package ch.elexis.core.spotlight.ui.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -67,7 +68,7 @@ public class SpotlightResultLabelProvider extends LabelProvider
 				return category.name();
 			}
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 }

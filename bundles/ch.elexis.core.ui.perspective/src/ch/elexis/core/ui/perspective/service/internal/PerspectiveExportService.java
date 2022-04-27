@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.perspective.service.internal;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -50,7 +51,7 @@ public class PerspectiveExportService implements IPerspectiveExportService {
 			} else if (placeholderOriginal.isEmpty()) {
 				System.out.println("NO PLACEHOLDER");
 			} else {
-				System.out.println("MORE THEN ONE PLACEHOLDER" + " " //$NON-NLS-1$
+				System.out.println("MORE THEN ONE PLACEHOLDER" + StringUtils.SPACE
 						+ placeholderOriginal.toString());
 				placeholderClone.setRef((placeholderOriginal.get(0).getRef()));
 			}

@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.exchange;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.dialogs.KontaktSelektor.HINTSIZE;
 import static ch.elexis.core.ui.dialogs.KontaktSelektor.HINT_BIRTHDATE;
 import static ch.elexis.core.ui.dialogs.KontaktSelektor.HINT_FIRSTNAME;
@@ -238,7 +239,7 @@ public class KontaktMatcher {
 				return (Person) KontaktSelektor.showInSync(Person.class, Messages.KontaktMatcher_PersonNotFound,
 						name + StringTool.space + vorname
 								+ (StringTool.isNothing(gebdat) ? StringTool.leer : SEP + gebdat) + SEP + strasse + SEP
-								+ plz + " " + ort,
+								+ plz + StringUtils.SPACE + ort,
 						resolve1, hints);
 			}
 			return null;
@@ -249,8 +250,8 @@ public class KontaktMatcher {
 		// more than 1 hit
 		if (createMode == CreateMode.ASK) {
 			return (Person) KontaktSelektor.showInSync(Person.class, Messages.KontaktMatcher_PersonNotUnique,
-					name + " " + vorname + (StringTool.isNothing(gebdat) ? StringTool.leer : SEP + gebdat) + SEP
-							+ strasse + SEP + plz + " " + ort,
+					name + StringUtils.SPACE + vorname + (StringTool.isNothing(gebdat) ? StringTool.leer : SEP + gebdat)
+							+ SEP + strasse + SEP + plz + StringUtils.SPACE + ort,
 					resolve1, hints);
 		} else {
 			return (Person) matchAddress(found.toArray(new Kontakt[0]), strasse, plz, ort, natel);
@@ -322,13 +323,14 @@ public class KontaktMatcher {
 	 * try to figure out which part of a string is the zip and which is the place
 	 *
 	 * @param str a string containing possibly zip and possibly place
-	 * @return always a two element array, [0] is zip or "", [1] is place or ""
+	 * @return always a two element array, [0] is zip or StringUtils.EMPTY, [1] is
+	 *         place or StringUtils.EMPTY
 	 */
 	public static String[] normalizeAddress(String str) {
 		String[] ret = str.split("\\s+", 2); //$NON-NLS-1$
 		if (ret.length < 2) {
 			String[] rx = new String[2];
-			rx[0] = "";
+			rx[0] = StringUtils.EMPTY;
 			rx[1] = ret[0];
 			return rx;
 		}

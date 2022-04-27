@@ -1,5 +1,6 @@
 package ch.elexis.core.mail.ui.preference;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 
 import org.eclipse.core.databinding.Binding;
@@ -82,7 +83,7 @@ public class MailAccountComposite extends Composite {
 			if (s != null && !s.isEmpty()) {
 				return ValidationStatus.ok();
 			}
-			return ValidationStatus.error("");
+			return ValidationStatus.error(StringUtils.EMPTY);
 		});
 		Binding binding = context.bindValue(target, model, targetToModel, null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
@@ -170,7 +171,7 @@ public class MailAccountComposite extends Composite {
 			if (s != null && !s.isEmpty()) {
 				return ValidationStatus.ok();
 			}
-			return ValidationStatus.error("");
+			return ValidationStatus.error(StringUtils.EMPTY);
 		});
 		binding = context.bindValue(target, model, targetToModel, null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
@@ -187,7 +188,7 @@ public class MailAccountComposite extends Composite {
 			if (s != null && !s.isEmpty()) {
 				return ValidationStatus.ok();
 			}
-			return ValidationStatus.error("");
+			return ValidationStatus.error(StringUtils.EMPTY);
 		});
 		binding = context.bindValue(target, model, targetToModel, null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);

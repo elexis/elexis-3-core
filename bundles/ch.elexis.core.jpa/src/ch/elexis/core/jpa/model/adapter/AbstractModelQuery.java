@@ -1,5 +1,6 @@
 package ch.elexis.core.jpa.model.adapter;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -321,7 +322,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 				info.append(result.get(0).getClass().getName() + ": ");
 				for (T t : result) {
 					if (t instanceof Identifiable) {
-						info.append(((Identifiable) t).getId() + " ");
+						info.append(((Identifiable) t).getId() + StringUtils.SPACE);
 					}
 				}
 				LoggerFactory.getLogger(getClass()).warn(

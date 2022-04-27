@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.text;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -46,7 +47,7 @@ public class BlockMakro implements IKonsMakro {
 	public void addBlock(IEncounter encounter, ICodeElementBlock elementBlock) {
 		if (elementBlock != null && encounter != null) {
 			List<ch.elexis.core.model.ICodeElement> elements = elementBlock.getElements();
-			StringJoiner notOkResults = new StringJoiner("\n");
+			StringJoiner notOkResults = new StringJoiner(StringUtils.LF);
 			for (ICodeElement ice : elements) {
 				if (ice instanceof IBillable) {
 					Result<IBilled> res = BillingServiceHolder.get().bill((IBillable) ice, encounter, 1.0);
@@ -70,7 +71,7 @@ public class BlockMakro implements IKonsMakro {
 				StringBuilder sb = new StringBuilder();
 				diff.forEach(r -> {
 					if (sb.length() > 0) {
-						sb.append("\n");
+						sb.append(StringUtils.LF);
 					}
 					sb.append(r);
 				});

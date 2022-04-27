@@ -13,6 +13,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -140,12 +141,12 @@ public class LabeledInputField extends Composite {
 		switch (typ) {
 		case LINK:
 			lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE)); // $NON-NLS-1$
-			ctl = tk.createText(this, "", SWT.NONE);
+			ctl = tk.createText(this, StringUtils.EMPTY, SWT.NONE);
 			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			break;
 		case TEXT:
 		case MONEY:
-			ctl = tk.createText(this, "", SWT.BORDER);
+			ctl = tk.createText(this, StringUtils.EMPTY, SWT.BORDER);
 			((Text) ctl).setTextLimit(limit);
 			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			break;
@@ -258,7 +259,7 @@ public class LabeledInputField extends Composite {
 			List list = (List) ctl;
 			String[] sel = list.getSelection();
 			if (sel.length == 0) {
-				return "";
+				return StringUtils.EMPTY;
 			} else {
 				return StringTool.join(sel, StringConstants.COMMA);
 			}
@@ -267,7 +268,7 @@ public class LabeledInputField extends Composite {
 		} else if (ctl instanceof Button) {
 			return ((Button) ctl).getText();
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	/**
@@ -503,11 +504,11 @@ public class LabeledInputField extends Composite {
 		}
 
 		public String getLabel() {
-			return mine == null ? "" : mine.getLabel();
+			return mine == null ? StringUtils.EMPTY : mine.getLabel();
 		}
 
 		public String getText() {
-			return mine == null ? "" : mine.getText();
+			return mine == null ? StringUtils.EMPTY : mine.getText();
 		}
 
 		public void setText(String t) {
@@ -667,7 +668,7 @@ public class LabeledInputField extends Composite {
 					val = money.getCentsAsString();
 				} catch (ParseException e1) {
 					ExHandler.handle(e1);
-					val = "";
+					val = StringUtils.EMPTY;
 				}
 				// double betr=Double.parseDouble(inp.getText())*100.0;
 				// val=Long.toString(Math.round(betr));

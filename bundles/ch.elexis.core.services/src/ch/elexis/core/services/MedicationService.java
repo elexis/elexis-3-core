@@ -48,7 +48,7 @@ public class MedicationService implements IMedicationService {
 			// Match stuff like '1/2', '7/8', '~1,2'
 			// System.out.println(dosis.matches(special_num_at_start));
 			if (dosis.matches(special_num_at_start)) {
-				list.add(getNum(dosis.replace("~", "")));
+				list.add(getNum(dosis.replace("~", StringUtils.EMPTY)));
 			} else if (dosis.matches("[0-9½¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
 				String[] dose = dosis.split("[xX]"); //$NON-NLS-1$
 				float count = getNum(dose[0]);
@@ -146,7 +146,7 @@ public class MedicationService implements IMedicationService {
 			}
 			// matching for values like 2x1, 2,5x1 or 20x1
 			else if (n.toLowerCase().matches("^[0-9][,.]*[0-9]*x[0-9][,.]*[0-9]*$")) {
-				n = n.replace("\\s", "");
+				n = n.replace("\\s", StringUtils.EMPTY);
 				String[] nums = n.toLowerCase().split("x");
 				float num1 = Float.parseFloat(nums[0].replace(",", "."));
 				float num2 = Float.parseFloat(nums[1].replace(",", "."));
@@ -161,7 +161,7 @@ public class MedicationService implements IMedicationService {
 			// non-digit chars. i.e. 1,5 p. Day becomes 1.5
 			else {
 				n = n.replace(",", ".");
-				n = n.replaceAll("[^\\d.]", "");
+				n = n.replaceAll("[^\\d.]", StringUtils.EMPTY);
 				if (n.endsWith(".")) {
 					n = n.substring(0, n.length() - 1);
 				}

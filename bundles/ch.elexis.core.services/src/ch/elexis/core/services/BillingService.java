@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -131,7 +132,7 @@ public class BillingService implements IBillingService {
 		if (ok) {
 			return new Result<>(encounter);
 		} else {
-			String msg = "";
+			String msg = StringUtils.EMPTY;
 			if (!mandatorLoggedIn) {
 				msg = "Es ist kein Mandant eingeloggt";
 			} else {

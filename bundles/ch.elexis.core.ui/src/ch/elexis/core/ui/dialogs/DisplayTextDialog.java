@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -69,7 +70,7 @@ public class DisplayTextDialog extends TitleAreaDialog {
 		} else {
 			cnt = cnt.replaceAll("<", "&lt;");
 			cnt = cnt.replaceAll(">", "&gt;");
-			cnt = cnt.replaceAll("\n", "<br />");
+			cnt = cnt.replaceAll(StringUtils.LF, "<br />");
 			cnt = cnt.replaceAll("\\*\\.(.{1,30})\\.\\*", "<b>$1</b>");
 			cnt = cnt.replaceAll("\\\\\\.br\\\\", "<br/>");
 			cnt = cnt.replaceAll("\\\\\\.BR\\\\", "<br/>");

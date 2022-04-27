@@ -42,7 +42,7 @@ public class DiagnosisReference extends AbstractIdDeleteModelAdapter<ch.elexis.c
 
 	@Override
 	public String getDescription() {
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	@Override
@@ -73,6 +73,6 @@ public class DiagnosisReference extends AbstractIdDeleteModelAdapter<ch.elexis.c
 
 	@Override
 	public String getLabel() {
-		return getCode() + " " + getText();
+		return getCode() + StringUtils.SPACE + getText();
 	}
 }

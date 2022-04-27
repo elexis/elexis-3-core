@@ -1,5 +1,6 @@
 package ch.elexis.core.lock.types;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -35,7 +36,7 @@ public class LockInfo {
 	}
 
 	public LockInfo(String storeToString, String userId, String systemUuid) {
-		this(storeToString, userId, systemUuid, "", "");
+		this(storeToString, userId, systemUuid, StringUtils.EMPTY, StringUtils.EMPTY);
 	}
 
 	public LockInfo(String storeToString, String userId, String systemUuid, String stationId, String stationLabel) {

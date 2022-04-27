@@ -274,14 +274,14 @@ public class ModelUtil {
 				sb.append(kontakt.getDescription1());
 			}
 			if (StringUtils.isNotBlank(sb.toString())) {
-				sb.append(" ");
+				sb.append(StringUtils.SPACE);
 			}
 			if (StringUtils.isNoneEmpty(kontakt.getDescription2())) {
 				sb.append(kontakt.getDescription2());
 			}
 
 			if (kontakt.getDob() != null) {
-				sb.append(" ").append(defaultDateFormatter.format(kontakt.getDob()));
+				sb.append(StringUtils.SPACE).append(defaultDateFormatter.format(kontakt.getDob()));
 			}
 
 			if (StringUtils.isNoneEmpty(kontakt.getTitel())) {

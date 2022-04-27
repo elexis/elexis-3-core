@@ -33,7 +33,7 @@ public class CoverageService implements ICoverageService {
 		String reqs = BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem());
 		if (StringUtils.isNotBlank(reqs)) {
 			for (String req : reqs.split(";")) { //$NON-NLS-1$
-				String localReq = ""; //$NON-NLS-1$
+				String localReq = StringUtils.EMPTY;
 				String[] r = req.split(":"); //$NON-NLS-1$
 				if (r != null && r.length > 1) {
 					if ((r[1].equalsIgnoreCase("X")) && (r.length > 2)) { //$NON-NLS-1$

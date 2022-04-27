@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.text;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -265,7 +266,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 								if (ex != null) {
 									int length = actRef.getLength();
 									String remText = text.getTextRange(actRef.getPos(), length);
-									while (remText.endsWith("\r")) {
+									while (remText.endsWith(StringUtils.CR)) {
 										remText = text.getTextRange(actRef.getPos(), length);
 									}
 									text.replaceTextRange(actRef.getPos(), length, StringTool.leer);
@@ -626,7 +627,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 			// und wenn ja, entsprechende Formatierung anwenden.
 			else if (e.text.matches("[\\*/_]")) { //$NON-NLS-1$
 				int start = e.start;
-				String t = ""; //$NON-NLS-1$
+				String t = StringUtils.EMPTY;
 				while (--start >= 0) {
 					t = text.getTextRange(start, 1);
 					if (t.equals(e.text)) {

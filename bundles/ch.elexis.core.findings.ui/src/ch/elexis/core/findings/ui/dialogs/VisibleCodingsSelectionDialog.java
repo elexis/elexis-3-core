@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,7 +113,7 @@ public class VisibleCodingsSelectionDialog extends TitleAreaDialog {
 		@Override
 		public String getText(Object element) {
 			ICoding iCoding = (ICoding) element;
-			return iCoding != null ? iCoding.getDisplay() + " (" + iCoding.getCode() + ")" : "";
+			return iCoding != null ? iCoding.getDisplay() + " (" + iCoding.getCode() + ")" : StringUtils.EMPTY;
 		}
 
 		@Override

@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -431,11 +432,11 @@ public class StockDetailComposite extends Composite {
 		protected Object getValue(Object element) {
 			IStock stock = (IStock) element;
 			if (stock == null || wvArtikel.getValue() == null) {
-				return "";
+				return StringUtils.EMPTY;
 			}
 			IStockEntry se = stockEntries.get(stock);
 			if (se == null) {
-				return "";
+				return StringUtils.EMPTY;
 			}
 
 			int value = 0;

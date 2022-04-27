@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.contacts.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -112,7 +113,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 			mntmAddBezugsKontaktRelation.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					BezugsKontaktRelation bezugsKontaktRelation = new BezugsKontaktRelation("",
+					BezugsKontaktRelation bezugsKontaktRelation = new BezugsKontaktRelation(StringUtils.EMPTY,
 							RelationshipType.AGENERIC, RelationshipType.AGENERIC);
 					tableViewer.add(bezugsKontaktRelation);
 					tableViewer.setSelection(new StructuredSelection(bezugsKontaktRelation));
@@ -162,7 +163,8 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 						tableData = (BezugsKontaktRelation) tableItem.getData();
 						if (tableData != null && !tableData.equals(element) && !tableData.getName().isEmpty()
 								&& newName.equalsIgnoreCase(tableData.getName())) {
-							MessageDialog.openError(UiDesk.getTopShell(), "", Messages.Bezugskontakt_NameMustBeUnique);
+							MessageDialog.openError(UiDesk.getTopShell(), StringUtils.EMPTY,
+									Messages.Bezugskontakt_NameMustBeUnique);
 							return;
 						}
 					}
@@ -307,8 +309,8 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 			}
 		});
 		;
-		tableViewer.setInput(
-				loadBezugKonkaktTypes(ConfigServiceHolder.getGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, "")));
+		tableViewer.setInput(loadBezugKonkaktTypes(
+				ConfigServiceHolder.getGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, StringUtils.EMPTY)));
 		return container;
 	}
 
@@ -381,7 +383,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 		if (!updateExistingEntriesIds.contains(bezugsKontaktRelation.getId())) {
 			BezugsKontaktRelation initalBezugKonktaktRelation = getInitalBezugKontakt(bezugsKontaktRelation.getId());
 			if (initalBezugKonktaktRelation != null) {
-				boolean ret = MessageDialog.openQuestion(UiDesk.getTopShell(), "",
+				boolean ret = MessageDialog.openQuestion(UiDesk.getTopShell(), StringUtils.EMPTY,
 						Messages.Bezugskontakt_ConfirmUpdateExisting);
 				if (ret) {
 					updateExistingEntriesIds.add(bezugsKontaktRelation.getId());

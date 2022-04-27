@@ -1,5 +1,6 @@
 package ch.elexis.core.status;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -15,7 +16,7 @@ import ch.elexis.core.jdt.NonNull;
 // TODO refactor ...
 public class StatusUtil {
 	public static void printStatus(Logger log, IStatus status) {
-		print(log, "", status);
+		print(log, StringUtils.EMPTY, status);
 	}
 
 	public static void print(Logger log, String indent, IStatus status) {
@@ -31,7 +32,7 @@ public class StatusUtil {
 	}
 
 	public static void printStatus(PrintStream out, IStatus status) {
-		print(out, "", status);
+		print(out, StringUtils.EMPTY, status);
 	}
 
 	public static String printStatus(IStatus status) {
@@ -109,7 +110,7 @@ public class StatusUtil {
 			sb.append("[MULTISTATUS] ");
 		}
 		if (prependMessage != null) {
-			sb.append(prependMessage + " ");
+			sb.append(prependMessage + StringUtils.SPACE);
 		}
 		sb.append("(c" + status.getCode() + "/s" + status.getSeverity() + ") ");
 		sb.append(status.getMessage());

@@ -74,7 +74,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 					filter.setSearchText(filterText.getText());
 					laborViewer.refresh();
 				} else {
-					filter.setSearchText(""); //$NON-NLS-1$
+					filter.setSearchText(StringUtils.EMPTY);
 					laborViewer.refresh();
 				}
 				restoreLeafCheckState();
@@ -281,8 +281,8 @@ public class LabItemTreeSelectionComposite extends Composite {
 				Collections.sort(items, new Comparator<GroupItem>() {
 					@Override
 					public int compare(GroupItem left, GroupItem right) {
-						String prio1 = left.getLabItemPrio().orElse("");
-						String prio2 = right.getLabItemPrio().orElse("");
+						String prio1 = left.getLabItemPrio().orElse(StringUtils.EMPTY);
+						String prio2 = right.getLabItemPrio().orElse(StringUtils.EMPTY);
 						if (StringUtils.isNumeric(prio1) && StringUtils.isNumeric(prio2)) {
 							try {
 								return Integer.valueOf(prio1).compareTo(Integer.valueOf(prio2));

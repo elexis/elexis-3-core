@@ -13,6 +13,7 @@
 
 package ch.elexis.core.ui.importer.div.importers;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -242,8 +243,8 @@ public class Presets {
 			moni.subTask(pat.getLabel());
 			pat.set(new String[] { "Strasse", "Plz", "Ort", "Land", "Telefon1", "Telefon2", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					"Natel", "E-Mail", "Titel", "Gruppe", "Zusatz" }, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-					strasse, plz, ort, land.equalsIgnoreCase(Messages.Presets_Switzerland) ? "CH" : "", //$NON-NLS-1$//$NON-NLS-2$
-																										// //$NON-NLS-3$
+					strasse, plz, ort, land.equalsIgnoreCase(Messages.Presets_Switzerland) ? "CH" : StringUtils.EMPTY, //$NON-NLS-1$
+					// //$NON-NLS-3$
 					telp1, telp2, tel3, email, titel, arztn, zusatz);
 			if (!StringTool.isNothing(ahvnr)) {
 				pat.addXid(XidConstants.DOMAIN_AHV, ahvnr, true);
@@ -320,14 +321,16 @@ public class Presets {
 			pat.set("Natel", StringTool.getSafe(row, 7)); //$NON-NLS-1$
 			pat.set("Telefon2", StringTool.getSafe(row, 8)); //$NON-NLS-1$
 			if (!StringTool.isNothing(StringTool.getSafe(row, 10))) {
-				Organisation org = KontaktMatcher.findOrganisation(row[10], null, "", "", "", CreateMode.CREATE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				Organisation org = KontaktMatcher.findOrganisation(row[10], null, StringUtils.EMPTY, StringUtils.EMPTY,
+						StringUtils.EMPTY, CreateMode.CREATE); // $NON-NLS-1$ //$NON-NLS-2$
 				Fall fall = pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
 						Messages.Presets_KVGAbkuerzung);
 				fall.setRequiredContact(Messages.Presets_Insurance, org);
 				fall.setGarant(pat);
 			}
 			if (!StringTool.isNothing(StringTool.getSafe(row, 11))) {
-				Organisation org = KontaktMatcher.findOrganisation(row[11], null, "", "", "", CreateMode.CREATE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				Organisation org = KontaktMatcher.findOrganisation(row[11], null, StringUtils.EMPTY, StringUtils.EMPTY,
+						StringUtils.EMPTY, CreateMode.CREATE); // $NON-NLS-1$ //$NON-NLS-2$
 				Fall fall = pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
 						Messages.Presets_UVGAbkuerzung);
 				fall.setRequiredContact(Messages.Presets_Insurance, org);

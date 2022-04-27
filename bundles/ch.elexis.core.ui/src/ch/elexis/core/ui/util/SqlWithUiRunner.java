@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
@@ -46,7 +47,7 @@ public class SqlWithUiRunner {
 		sqlStrings = new ArrayList<String>();
 		for (int i = 0; i < sql.length; i++) {
 			String sqlString = sql[i];
-			sqlString = sqlString.replaceAll("\r", "");
+			sqlString = sqlString.replaceAll(StringUtils.CR, StringUtils.EMPTY);
 			String[] parts = sqlString.split("\n\n");
 			for (String part : parts) {
 				sqlStrings.add(part);

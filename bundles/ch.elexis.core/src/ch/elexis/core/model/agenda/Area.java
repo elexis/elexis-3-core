@@ -1,5 +1,6 @@
 package ch.elexis.core.model.agenda;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -43,7 +44,7 @@ public class Area {
 			try {
 				id = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(name.getBytes("UTF-8")));
 			} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-				throw new IllegalStateException("", e);
+				throw new IllegalStateException(StringUtils.EMPTY, e);
 			}
 		}
 		return id;

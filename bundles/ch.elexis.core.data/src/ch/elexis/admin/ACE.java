@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.admin;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -226,7 +227,7 @@ public class ACE implements Serializable {
 			return ACE_ROOT_LITERAL;
 		int valCan = Math.abs(getCanonicalName().hashCode());
 		int valNam = Math.abs(getName().hashCode());
-		BigInteger valI = new BigInteger(valCan + "" + valNam);
+		BigInteger valI = new BigInteger(valCan + StringUtils.EMPTY + valNam);
 		return valI.toString(16);
 	}
 
@@ -267,7 +268,7 @@ public class ACE implements Serializable {
 
 	@Override
 	public String toString() {
-		return getUniqueHashFromACE() + " " + getName() + " " + getCanonicalName();
+		return getUniqueHashFromACE() + StringUtils.SPACE + getName() + StringUtils.SPACE + getCanonicalName();
 	}
 
 	/**

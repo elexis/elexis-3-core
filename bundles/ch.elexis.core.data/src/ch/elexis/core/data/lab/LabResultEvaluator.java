@@ -48,7 +48,7 @@ public class LabResultEvaluator {
 		Gender gender = labResult.getPatient().getGender();
 
 		Description description = Description.PATHO_REF;
-		String refValue = "";
+		String refValue = StringUtils.EMPTY;
 		if (Gender.MALE == gender) {
 			refValue = labResult.getRefMale();
 			if (StringUtils.isEmpty(refValue)) {

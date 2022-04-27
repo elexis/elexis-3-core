@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.exceptions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.logging.Logger;
 
 public class ElexisException extends Exception {
@@ -35,7 +36,7 @@ public class ElexisException extends Exception {
 		super(errmsg);
 		this.clazz = clazz;
 		this.errcode = errcode;
-		log.severe(clazz.getName() + ": " + errmsg + " " + Integer.toString(errcode));
+		log.severe(clazz.getName() + ": " + errmsg + StringUtils.SPACE + Integer.toString(errcode));
 	}
 
 	public ElexisException(String errmsg, Throwable throwable) {

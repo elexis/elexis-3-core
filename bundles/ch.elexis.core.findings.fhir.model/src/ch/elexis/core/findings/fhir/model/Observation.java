@@ -410,7 +410,7 @@ public class Observation extends AbstractFindingModelAdapter<ch.elexis.core.jpa.
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
 			List<String> notes = accessor.getNotes((DomainResource) resource.get());
-			return Optional.of(String.join(" ", notes));
+			return Optional.of(String.join(StringUtils.SPACE, notes));
 		}
 		return Optional.empty();
 	}
@@ -442,7 +442,7 @@ public class Observation extends AbstractFindingModelAdapter<ch.elexis.core.jpa.
 				return splits[1].split(FORMAT_SPLITTER)[0];
 			}
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	@Override

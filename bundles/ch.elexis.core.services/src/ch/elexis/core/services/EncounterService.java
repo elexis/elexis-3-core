@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -346,7 +347,7 @@ public class EncounterService implements IEncounterService {
 
 	@Override
 	public void addDefaultDiagnosis(IEncounter encounter) {
-		String diagnosisSts = configService.getActiveUserContact(Preferences.USR_DEFDIAGNOSE, "");
+		String diagnosisSts = configService.getActiveUserContact(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);
 		if (diagnosisSts.length() > 1) {
 			Optional<Identifiable> diagnose = StoreToStringServiceHolder.get().loadFromString(diagnosisSts);
 			if (diagnose.isPresent()) {

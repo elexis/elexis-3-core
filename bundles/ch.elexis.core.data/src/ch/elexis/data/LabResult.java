@@ -12,6 +12,7 @@
 
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.model.LabResultConstants.PATHOLOGIC;
 
 import java.sql.PreparedStatement;
@@ -98,7 +99,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 				+ REFMALE + ", LW." + REFFEMALE + ", ");
 		sb.append("LI." + LabItem.GROUP + ", LI." + LabItem.SHORTNAME + ", LI." + LabItem.UNIT + ", LI." + LabItem.TITLE
 				+ ", LI." + LabItem.REF_MALE + ", LI." + LabItem.REF_FEMALE_OR_TEXT + ", LI." + LabItem.DIGITS + ", LI."
-				+ LabItem.PRIO + " ");
+				+ LabItem.PRIO + StringUtils.SPACE);
 		sb.append("FROM " + TABLENAME + " AS LW LEFT JOIN ");
 		sb.append(LabItem.LABITEMS + " AS LI ON LW." + ITEM_ID + "=LI.ID ");
 		sb.append("WHERE LW." + PATIENT_ID + " = ? AND LW.DELETED = '0'");
@@ -413,7 +414,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @since 3.1
 	 */
 	private static TimeTool translateDateTime(String time, String date) {
-		if ((time == null) || ("".equals(time))) //$NON-NLS-1$
+		if ((time == null) || (StringUtils.EMPTY.equals(time)))
 			time = "000000"; //$NON-NLS-1$
 		while (time.length() < 6) {
 			time += StringConstants.ZERO;
@@ -885,7 +886,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 		if (origin != null && origin.exists()) {
 			set(ORIGIN_ID, origin.getId());
 		} else {
-			set(ORIGIN_ID, ""); //$NON-NLS-1$
+			set(ORIGIN_ID, StringUtils.EMPTY);
 		}
 	}
 
@@ -1046,7 +1047,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	private static String getNotNull(ResultSet set, int index) throws SQLException {
 		String ret = set.getString(index);
 		if (ret == null) {
-			ret = "";
+			ret = StringUtils.EMPTY;
 		}
 		return ret;
 	}

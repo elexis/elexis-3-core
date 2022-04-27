@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +43,8 @@ public class InvoiceIEncounterTransformer implements IFhirTransformer<Invoice, I
 			+ "=ChargeItem.IBilled)")
 	private IFhirTransformer<ChargeItem, IBilled> chargeItemTransformer;
 
-	private final CodeableConcept TYPE_VIRTUAL = new CodeableConcept(new Coding("", "encounter-only", ""));
+	private final CodeableConcept TYPE_VIRTUAL = new CodeableConcept(
+			new Coding(StringUtils.EMPTY, "encounter-only", StringUtils.EMPTY));
 
 	@Override
 	public Optional<Invoice> getFhirObject(IEncounter localObject, SummaryEnum summaryEnum, Set<Include> includes) {

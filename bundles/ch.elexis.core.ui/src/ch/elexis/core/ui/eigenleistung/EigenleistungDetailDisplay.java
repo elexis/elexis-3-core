@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.eigenleistung;
 
+import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -118,11 +119,11 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 			textVKP.setText(customService.getPrice().getCentsAsString());
 			textZeit.setText(Integer.toString(customService.getMinutes()));
 		} else {
-			textCode.setText("");
-			textBezeichnung.setText("");
-			textEKP.setText("");
-			textVKP.setText("");
-			textZeit.setText("");
+			textCode.setText(StringUtils.EMPTY);
+			textBezeichnung.setText(StringUtils.EMPTY);
+			textEKP.setText(StringUtils.EMPTY);
+			textVKP.setText(StringUtils.EMPTY);
+			textZeit.setText(StringUtils.EMPTY);
 		}
 	}
 

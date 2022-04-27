@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.syntactic;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,7 +46,7 @@ public class SyntacticCheckPGSQL extends SyntacticCheck {
 				String[] fieldType = tableDetail.getFieldTypes(version);
 				for (int k = 0; k < fields.length; k++) {
 					boolean ok = false;
-					oklog.append(tables[i] + ": Erwarte " + fields[k] + " " + fieldType[k] + "...");
+					oklog.append(tables[i] + ": Erwarte " + fields[k] + StringUtils.SPACE + fieldType[k] + "...");
 
 					ResultSet rs = conn.getMetaData().getColumns(conn.getCatalog(), "%", tables[i].toLowerCase(),
 							fields[k].toLowerCase());
@@ -55,16 +56,17 @@ public class SyntacticCheckPGSQL extends SyntacticCheck {
 						if (rs.getString(4).equalsIgnoreCase(fields[k]) && isCompatible(dataType, fieldType[k])) {
 							oklog.append(" OK\n");
 						} else {
-							oklog.append(" erhalte " + rs.getString(4) + " " + dataType + "\n");
-							errlog.append(tables[i] + ": SynErr: FeldTyp " + rs.getString(4) + " " + dataType
-									+ " inkorrekt, erwarte " + fields[k] + " " + fieldType[k] + "\n");
+							oklog.append(" erhalte " + rs.getString(4) + StringUtils.SPACE + dataType + StringUtils.LF);
+							errlog.append(tables[i] + ": SynErr: FeldTyp " + rs.getString(4) + StringUtils.SPACE
+									+ dataType + " inkorrekt, erwarte " + fields[k] + StringUtils.SPACE + fieldType[k]
+									+ StringUtils.LF);
 						}
 
 					}
 					if (!ok) {
 						oklog.append(" nicht gefunden\n");
-						errlog.append(
-								tables[i] + ": SynErr: Feld " + fields[k] + " " + fieldType[k] + " nicht gefunden!\n");
+						errlog.append(tables[i] + ": SynErr: Feld " + fields[k] + StringUtils.SPACE + fieldType[k]
+								+ " nicht gefunden!\n");
 					}
 
 					rs.close();

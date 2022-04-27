@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.scripting;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
@@ -117,7 +118,7 @@ public class LeistungenExport {
 							for (IBilled v : encounter.getBilled()) {
 								String[] col = new String[cols.length];
 								for (int i = 0; i < cols.length; i++) {
-									col[i] = "";
+									col[i] = StringUtils.EMPTY;
 								}
 								col[UUID] = v.getId();
 								col[PatientID] = pat.getId();

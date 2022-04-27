@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 
 import org.eclipse.jface.action.Action;
@@ -134,8 +135,8 @@ public class FavoritenComposite extends Composite {
 				switch (event.index) {
 				case 0:
 					event.gc.setFont(defaultFont);
-					event.gc.drawText(fav.getMacroString() != null ? fav.getMacroString() : "", event.x + 3,
-							event.y + yOffset, true);
+					event.gc.drawText(fav.getMacroString() != null ? fav.getMacroString() : StringUtils.EMPTY,
+							event.x + 3, event.y + yOffset, true);
 					break;
 				case 1:
 					event.gc.setFont(boldFont);
@@ -294,7 +295,7 @@ public class FavoritenComposite extends Composite {
 	private class ColorizedLabelProvider extends LabelProvider implements IColorProvider {
 		@Override
 		public String getText(Object element) {
-			return "";
+			return StringUtils.EMPTY;
 		}
 
 		@Override

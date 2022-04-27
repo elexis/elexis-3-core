@@ -11,6 +11,7 @@
 
 package ch.elexis.core.ui.actions;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.admin.AccessControlDefaults.AC_CHANGEMANDANT;
 import static ch.elexis.admin.AccessControlDefaults.AC_CONNECT;
 import static ch.elexis.admin.AccessControlDefaults.AC_HELP;
@@ -866,7 +867,7 @@ public class GlobalActions {
 				prn.startPage();
 				FontMetrics fmt = gc.getFontMetrics();
 				String pers = k.getPostAnschrift(true);
-				String[] lines = pers.split("\n"); //$NON-NLS-1$
+				String[] lines = pers.split(StringUtils.LF);
 				for (String line : lines) {
 					gc.drawString(line, 0, y);
 					y += fmt.getHeight();

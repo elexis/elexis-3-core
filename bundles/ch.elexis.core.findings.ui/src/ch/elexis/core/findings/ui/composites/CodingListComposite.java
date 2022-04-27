@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.composites;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -96,7 +97,7 @@ public class CodingListComposite extends Composite {
 						text.append("<strong>");
 						text.append("[").append(coding.getCode()).append("]");
 						text.append("</strong>");
-						text.append(" ").append(display);
+						text.append(StringUtils.SPACE).append(display);
 
 						return text.toString();
 					}

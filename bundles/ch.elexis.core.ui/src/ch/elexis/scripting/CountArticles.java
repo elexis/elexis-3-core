@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.scripting;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
@@ -121,8 +122,8 @@ public class CountArticles {
 			StringBuilder sb = new StringBuilder();
 			sb.append("Artikelabgabe von (einschliesslich) ").append(new TimeTool(fromDate).toString(TimeTool.DATE_GER))
 					.append(" bis (einschliesslich) ").append(new TimeTool(untilDate).toString(TimeTool.DATE_GER))
-					.append(":\n").append("Bezahlte Artikel: ").append(mPaid.getAmountAsString()).append("\n")
-					.append("Unbezahlte Artikel: ").append(mUnpaid.getAmountAsString()).append("\n")
+					.append(":\n").append("Bezahlte Artikel: ").append(mPaid.getAmountAsString()).append(StringUtils.LF)
+					.append("Unbezahlte Artikel: ").append(mUnpaid.getAmountAsString()).append(StringUtils.LF)
 					.append("(Jeweils per Stichtag " + new TimeTool(referenceDate).toString(TimeTool.DATE_GER))
 					.append(")\n");
 			return sb.toString();

@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.templates.service;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -77,7 +78,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 	@Override
 	public FindingsTemplates getFindingsTemplates(String templateId) {
 		Assert.isNotNull(templateId);
-		templateId = templateId.replaceAll(" ", "_");
+		templateId = templateId.replaceAll(StringUtils.SPACE, "_");
 		Optional<IBlob> blob = coreModelService.load(FINDINGS_TEMPLATE_ID_PREFIX + templateId, IBlob.class);
 		if (blob.isPresent()) {
 			Optional<FindingsTemplates> loaded = loadFindingsTemplates(blob.get());
@@ -137,7 +138,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 			os.close();
 			return aString;
 		} catch (IOException e) {
-			LoggerFactory.getLogger(FindingsTemplateService.class).error("", e);
+			LoggerFactory.getLogger(FindingsTemplateService.class).error(StringUtils.EMPTY, e);
 		}
 		return null;
 	}
@@ -184,7 +185,8 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		if (path != null) {
 			File toImport = new File(path);
 			String xmi = FileUtils.readFileToString(toImport);
-			saveXmiToNamedBlob(xmi, FINDINGS_TEMPLATE_ID_PREFIX + "Standard Vorlagen".replaceAll(" ", "_"));
+			saveXmiToNamedBlob(xmi,
+					FINDINGS_TEMPLATE_ID_PREFIX + "Standard Vorlagen".replaceAll(StringUtils.SPACE, "_"));
 			return getFindingsTemplates("Standard Vorlagen");
 		}
 		return null;
@@ -490,7 +492,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 
 			}
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	@Override
@@ -509,7 +511,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		case DATE:
 			return "Datum";
 		default:
-			return "";
+			return StringUtils.EMPTY;
 
 		}
 	}

@@ -12,6 +12,7 @@
 
 package ch.elexis.core.data.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -527,7 +528,7 @@ public class DBUpdate {
 
 		try (InputStream inputStream = DBUpdate.class.getResourceAsStream(resourceName)) {
 			return new BufferedReader(new InputStreamReader(inputStream)).lines().filter(s -> !s.startsWith("#"))
-					.collect(Collectors.joining("\n"));
+					.collect(Collectors.joining(StringUtils.LF));
 		} catch (IOException e) {
 			log.error("Error reading input file [{}] for version [{}]." + resourceName, version);
 			return null;

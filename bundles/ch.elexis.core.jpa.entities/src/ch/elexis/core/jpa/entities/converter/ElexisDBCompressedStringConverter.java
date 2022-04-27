@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.jpa.entities.converter;
 
+import org.apache.commons.lang3.StringUtils;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
@@ -32,7 +33,7 @@ public class ElexisDBCompressedStringConverter implements AttributeConverter<Str
 	@Override
 	public String convertToEntityAttribute(byte[] dataValue) {
 		if (dataValue == null || dataValue.length == 0)
-			return "";
+			return StringUtils.EMPTY;
 		try {
 			byte[] exp = CompEx.expand(dataValue);
 			return new String(exp, "UTF-8");
@@ -40,7 +41,7 @@ public class ElexisDBCompressedStringConverter implements AttributeConverter<Str
 			e.printStackTrace();
 			// If we face an error during un-compression we simply return an empty string
 			// this should be better fixed in CompEx.expand
-			return "";
+			return StringUtils.EMPTY;
 		}
 	}
 }

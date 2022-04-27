@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -112,9 +113,9 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 	}
 
 	private boolean openRenameAccountingSysFieldDialog() {
-		accountingSystem = "";
-		currFieldName = "";
-		newFieldName = "";
+		accountingSystem = StringUtils.EMPTY;
+		currFieldName = StringUtils.EMPTY;
+		newFieldName = StringUtils.EMPTY;
 
 		final Display display = Display.getDefault();
 		display.syncExec(new Runnable() {

@@ -70,10 +70,10 @@ public class IContactHelper extends AbstractHelper {
 		String titelSuffix = person.getTitelSuffix();
 
 		if (StringUtils.isNotBlank(titel)) {
-			sb.append(titel + " ");
+			sb.append(titel + StringUtils.SPACE);
 		}
 		sb.append(firstName);
-		sb.append(" " + lastName);
+		sb.append(StringUtils.SPACE + lastName);
 		if (StringUtils.isNotBlank(titelSuffix)) {
 			sb.append(", " + titelSuffix);
 		}
@@ -88,7 +88,7 @@ public class IContactHelper extends AbstractHelper {
 			}
 			if (organization.getDescription2() != null) {
 				if (sb.length() > 0) {
-					sb.append(" ");
+					sb.append(StringUtils.SPACE);
 				}
 				sb.append(organization.getDescription2());
 			}

@@ -1,5 +1,6 @@
 package ch.elexis.core.jpa.liquibase;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -61,13 +62,13 @@ public class LiquibaseDBUpdater {
 			}
 			logger.info("Updating database [" + connection + "] with liquibase");
 			try {
-				liquibase.update("");
+				liquibase.update(StringUtils.EMPTY);
 			} catch (ValidationFailedException e) {
 				logger.info("Validation failed clear checksums and retry");
 				// removes current checksums from database, on next run checksums will be
 				// recomputed
 				liquibase.clearCheckSums();
-				liquibase.update("");
+				liquibase.update(StringUtils.EMPTY);
 			}
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on

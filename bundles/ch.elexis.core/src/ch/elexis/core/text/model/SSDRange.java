@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.text.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jdom.Element;
 
 /**
@@ -73,7 +74,7 @@ public class SSDRange {
 		typename = el.getAttributeValue(ATTR_TYPENAME);
 		position = Integer.parseInt(el.getAttributeValue(ATTR_START_OFFSET));
 		length = Integer.parseInt(el.getAttributeValue(ATTR_LENGTH));
-		// length=Integer.parseInt(el.getAttributeValue(""));
+		// length=Integer.parseInt(el.getAttributeValue(StringUtils.EMPTY));
 		hint = el.getAttributeValue(ATTR_HINT);
 		String v = el.getAttributeValue(ATTR_VIEWPORT);
 		if (v != null && v.matches("\\d+,\\d+,\\d+,\\d+")) {

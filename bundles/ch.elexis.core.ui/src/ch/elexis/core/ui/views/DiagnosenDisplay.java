@@ -293,7 +293,8 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 	}
 
 	private void createColumns() {
-		String[] titles = { "", Messages.Display_Column_Code, Messages.Display_Column_Designation, StringTool.leer };
+		String[] titles = { StringUtils.EMPTY, Messages.Display_Column_Code, Messages.Display_Column_Designation,
+				StringTool.leer };
 		int[] weights = { 0, 15, 70, 15 };
 
 		TableViewerColumn col = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
@@ -318,7 +319,7 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 					if (diagnosis instanceof IDiagnosisReference) {
 						IDiagnosisReference diagnosisRef = (IDiagnosisReference) element;
 						if (diagnosisRef.getReferredClass().toLowerCase().contains("freetext")) {
-							return "";
+							return StringUtils.EMPTY;
 						}
 					}
 					return diagnosis.getCode();

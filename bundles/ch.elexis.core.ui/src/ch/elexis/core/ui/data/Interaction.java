@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -93,7 +94,7 @@ public class Interaction extends PersistentObject {
 
 	private static Logger logger = LoggerFactory.getLogger(Interaction.class);
 	private static int notImported = 0;
-	private static String hash_from_file = "";
+	private static String hash_from_file = StringUtils.EMPTY;
 	private static int importerInteractionsCreated = 0;
 	private static final String MATRIX_CSV_URL = "https://raw.githubusercontent.com/zdavatz/oddb2xml_files/master/interactions_de_utf8.csv"; //$NON-NLS-1$
 	private static final File MATRIX_CSV_LOCAL = new File(CoreHub.getWritableUserDir(), "matrix.csv");//$NON-NLS-1$
@@ -195,17 +196,17 @@ public class Interaction extends PersistentObject {
 
 	public static String getMeasures(String ATC_1, String ATC_2) {
 		Interaction ia = getByATC(ATC_1, ATC_2);
-		return ia == null ? " " : ia.get(FLD_MEASURES);
+		return ia == null ? StringUtils.SPACE : ia.get(FLD_MEASURES);
 	}
 
 	public static String getEffects(String ATC_1, String ATC_2) {
 		Interaction ia = getByATC(ATC_1, ATC_2);
-		return ia == null ? " " : ia.get(FLD_EFFECT);
+		return ia == null ? StringUtils.SPACE : ia.get(FLD_EFFECT);
 	}
 
 	public static String getSeverity(String ATC_1, String ATC_2) {
 		Interaction ia = getByATC(ATC_1, ATC_2);
-		return ia == null ? " " : ia.get(FLD_SEVERITY);
+		return ia == null ? StringUtils.SPACE : ia.get(FLD_SEVERITY);
 	}
 
 	@Override
@@ -332,9 +333,9 @@ public class Interaction extends PersistentObject {
 							// Delete all mappings and empty last_parsed/sha
 							getDefaultConnection().exec("DELETE FROM " + TABLENAME + " WHERE ID != 'VERSION';"); //$NON-NLS-1$ //$NON-NLS-2$
 							getDefaultConnection().exec("UPDATE " + TABLENAME + " SET " //$NON-NLS-1$
-									+ FLD_ABUSE_ID_FOR_LAST_PARSED + " = '" + "" + "', " //$NON-NLS-2$ $NON-NLS-3$
-																							// $NON-NLS-4$
-									+ FLD_ABUSE_ID_FOR_SHA + " = '" + "" + "' WHERE ID = 'VERSION';"); //$NON-NLS-1$ $NON-NLS-2$
+									+ FLD_ABUSE_ID_FOR_LAST_PARSED + " = '" + StringUtils.EMPTY + "', "
+							// $NON-NLS-4$
+									+ FLD_ABUSE_ID_FOR_SHA + " = '" + StringUtils.EMPTY + "' WHERE ID = 'VERSION';");
 							notImported = 0;
 							importerInteractionsCreated = 0;
 							if (MATRIX_CSV_LOCAL.exists() && getShaFromFile()) {

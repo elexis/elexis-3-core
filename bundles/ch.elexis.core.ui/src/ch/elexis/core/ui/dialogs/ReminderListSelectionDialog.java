@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -53,7 +54,7 @@ public class ReminderListSelectionDialog extends ListSelectionDialog {
 
 				if (!arg0.getSelection().isEmpty()) {
 					Reminder reminder = (Reminder) ((IStructuredSelection) arg0.getSelection()).getFirstElement();
-					sb.append("    " + reminder.getSubject() + "\n");
+					sb.append("    " + reminder.getSubject() + StringUtils.LF);
 					sb.append("    " + reminder.getMessage());
 				}
 				detailLabel.setText(sb.toString());

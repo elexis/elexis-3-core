@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
@@ -128,7 +129,7 @@ public class ScannerPref extends FieldEditorPreferencePage implements IWorkbench
 		btnClear.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				txtTest.setText(""); //$NON-NLS-1$
+				txtTest.setText(StringUtils.EMPTY);
 				txtTest.setFocus();
 			}
 

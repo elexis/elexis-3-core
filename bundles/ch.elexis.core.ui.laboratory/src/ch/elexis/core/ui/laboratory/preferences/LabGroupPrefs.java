@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.laboratory.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -133,7 +134,8 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				InputDialog dialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						Messages.LabGroupPrefs_newLabGroup, Messages.LabGroupPrefs_selectNameForLabGroup, "", null); //$NON-NLS-1$
+						Messages.LabGroupPrefs_newLabGroup, Messages.LabGroupPrefs_selectNameForLabGroup,
+						StringUtils.EMPTY, null);
 				int rc = dialog.open();
 				if (rc == Window.OK) {
 					String name = dialog.getValue();

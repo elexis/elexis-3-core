@@ -11,6 +11,7 @@
 
 package ch.elexis.core.ui.documents.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -125,7 +126,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		new Label(ret, SWT.NONE).setText(Messages.DocumentView_keywordsColumn);
 		tKeywords = SWTHelper.createText(ret, 4, SWT.NONE);
 		tKeywords.setText(Optional.ofNullable(Objects.toString(documentReference.getKeywords(), document.getKeywords()))
-				.orElse(""));
+				.orElse(StringUtils.EMPTY));
 
 		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Author);
 		tAuthor = SWTHelper.createText(ret, 1, SWT.NONE);
@@ -150,7 +151,8 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 					if (dlg.getContact().isPresent()) {
 						AutoCompleteTextUtil.setValue(tAuthor, dlg.getContact().get());
 					} else {
-						MessageDialog.openWarning(getParentShell(), "", "Der Kontakt konnte nicht angelegt werden.");
+						MessageDialog.openWarning(getParentShell(), StringUtils.EMPTY,
+								"Der Kontakt konnte nicht angelegt werden.");
 					}
 				}
 			}

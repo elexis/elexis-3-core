@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.documents.composites;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Date;
@@ -129,7 +130,7 @@ public class CategorySelectionEditComposite extends Composite {
 				InputDialog id = new InputDialog(getShell(),
 						MessageFormat.format(Messages.DocumentMetaDataDialog_deleteCategoryConfirm,
 								((ICategory) selection).getName()),
-						Messages.DocumentMetaDataDialog_deleteCategoryText, "", null);
+						Messages.DocumentMetaDataDialog_deleteCategoryText, StringUtils.EMPTY, null);
 				if (id.open() == Dialog.OK) {
 					try {
 						document.setCategory((ICategory) selection);

@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -94,8 +95,9 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 			liSex = SWTHelper.createLabeledField(ret, LBL_SEX, LabeledInputField.Typ.TEXT);
 			if (vals != null) {
 				/*
-				 * liGebDat.setText(vals[2]==null ? "" : vals[2]); liSex.setText(vals[3]==null ?
-				 * "" : vals[3]); liStrasse.setText(vals[4]); liPlz.setText(vals[5]);
+				 * liGebDat.setText(vals[2]==null ? StringUtils.EMPTY : vals[2]);
+				 * liSex.setText(vals[3]==null ? StringUtils.EMPTY : vals[3]);
+				 * liStrasse.setText(vals[4]); liPlz.setText(vals[5]);
 				 */
 				liName.setText(StringTool.unNull(vals[0]));
 				liVorname.setText(StringTool.unNull(vals[1]));

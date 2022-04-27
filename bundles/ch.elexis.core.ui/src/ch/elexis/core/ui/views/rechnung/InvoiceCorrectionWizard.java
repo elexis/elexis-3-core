@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.rechnung;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -208,7 +209,7 @@ public class InvoiceCorrectionWizard extends Wizard {
 				int i = invoiceCorrectionDTO.getHistory().indexOf(element);
 				return String.valueOf(++i) + ".   " + ((InvoiceHistoryEntryDTO) element).getText();
 			}
-			return "";
+			return StringUtils.EMPTY;
 		}
 	}
 }

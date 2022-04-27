@@ -12,6 +12,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.wizards;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -79,20 +80,20 @@ public class DBImportFirstPage extends WizardPage {
 				case POSTGRESQL:
 					server.setEnabled(true);
 					dbName.setEnabled(true);
-					defaultUser = ""; //$NON-NLS-1$
-					defaultPassword = ""; //$NON-NLS-1$
+					defaultUser = StringUtils.EMPTY;
+					defaultPassword = StringUtils.EMPTY;
 					break;
 				case H2:
 					server.setEnabled(false);
 					dbName.setEnabled(true);
 					defaultUser = "sa";
-					defaultPassword = "";
+					defaultPassword = StringUtils.EMPTY;
 					break;
 				case ODBC:
 					server.setEnabled(false);
 					dbName.setEnabled(true);
 					defaultUser = "sa"; //$NON-NLS-1$
-					defaultPassword = ""; //$NON-NLS-1$
+					defaultPassword = StringUtils.EMPTY;
 					break;
 				default:
 					break;
@@ -107,12 +108,12 @@ public class DBImportFirstPage extends WizardPage {
 
 		tk.adapt(dbTypes, true, true);
 		tk.createLabel(body, Messages.DBImportFirstPage_serverAddress); // $NON-NLS-1$
-		server = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
+		server = tk.createText(body, StringUtils.EMPTY, SWT.BORDER);
 
 		TableWrapData twr = new TableWrapData(TableWrapData.FILL_GRAB);
 		server.setLayoutData(twr);
 		tk.createLabel(body, Messages.DBImportFirstPage_databaseName); // $NON-NLS-1$
-		dbName = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
+		dbName = tk.createText(body, StringUtils.EMPTY, SWT.BORDER);
 		TableWrapData twr2 = new TableWrapData(TableWrapData.FILL_GRAB);
 		dbName.setLayoutData(twr2);
 		if (wiz.preset != null && wiz.preset.length > 1) {

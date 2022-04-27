@@ -1,5 +1,6 @@
 package ch.elexis.core.model.agenda;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -55,7 +56,7 @@ public class RecurringAppointment {
 	 * Y early
 	 *
 	 * [SERIES_PATTERN]
-	 * daily		""
+	 * daily		StringUtils.EMPTY
 	 * weekly		Number_of_weeks_between, day { day } .
 	 * monthly		day_of_month
 	 * yearly		ddMM

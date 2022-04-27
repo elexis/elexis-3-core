@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -378,7 +379,7 @@ public class TextView extends ViewPart implements IActivationListener {
 						});
 						String filename = fdl.open();
 						if (filename != null) {
-							if (FileTool.getExtension(filename).equals("")) { //$NON-NLS-1$
+							if (FileTool.getExtension(filename).equals(StringUtils.EMPTY)) {
 								filename += ".odt"; //$NON-NLS-1$
 							}
 							File file = new File(filename);
@@ -464,7 +465,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		public boolean saveAs() {
 			log.debug("TextView.saveAs"); //$NON-NLS-1$
 			InputDialog il = new InputDialog(getViewSite().getShell(), Messages.TextView_saveText,
-					Messages.TextView_enterTitle, "", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					Messages.TextView_enterTitle, StringUtils.EMPTY, null); // $NON-NLS-1$ //$NON-NLS-2$
 			if (il.open() == Dialog.OK) {
 				actBrief.setBetreff(il.getValue());
 				return actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin().getMimeType());
@@ -493,7 +494,7 @@ public class TextView extends ViewPart implements IActivationListener {
 	}
 
 	public void setName() {
-		String n = ""; //$NON-NLS-1$
+		String n = StringUtils.EMPTY;
 		if (actBrief == null) {
 			setPartName(Messages.TextView_noLetterSelected); // $NON-NLS-1$
 		} else {

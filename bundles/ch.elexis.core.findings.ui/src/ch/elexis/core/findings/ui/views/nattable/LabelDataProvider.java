@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.views.nattable;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -37,7 +38,7 @@ public class LabelDataProvider implements IDataProvider {
 			}
 			return sb.toString();
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	@Override

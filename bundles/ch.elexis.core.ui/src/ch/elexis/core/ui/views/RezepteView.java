@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
@@ -259,8 +260,8 @@ public class RezepteView extends ViewPart implements IRefreshable {
 					if (obj instanceof IArticle) {
 						IArticle art = (IArticle) obj;
 						IPrescription ret = new IPrescriptionBuilder(CoreModelServiceHolder.get(),
-								ContextServiceHolder.get(), art, recipe.getPatient(), "").build();
-						ret.setRemark("");
+								ContextServiceHolder.get(), art, recipe.getPatient(), StringUtils.EMPTY).build();
+						ret.setRemark(StringUtils.EMPTY);
 						ret.setEntryType(EntryType.RECIPE);
 						ret.setRecipe(recipe);
 						CoreModelServiceHolder.get().save(ret);

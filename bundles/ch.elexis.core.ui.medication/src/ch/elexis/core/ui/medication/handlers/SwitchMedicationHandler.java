@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.medication.handlers;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -74,7 +75,7 @@ public class SwitchMedicationHandler extends AbstractHandler {
 		for (int i = 0; i < nameParts.length; i++) {
 			String s = nameParts[i];
 			if (i > 0) {
-				sbFilterName.append(" ");
+				sbFilterName.append(StringUtils.SPACE);
 			}
 
 			// matches upper cases, dash an probably number but not only numbers

@@ -14,6 +14,7 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
+import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -146,11 +147,11 @@ public class AccountView extends ViewPart implements IActivationListener {
 		accountArea.setLayout(new GridLayout(3, false));
 		tk.createLabel(accountArea, Messages.AccountView_account); // $NON-NLS-1$
 		tk.createLabel(accountArea, Messages.AccountView_accountAmount); // $NON-NLS-1$
-		balanceLabel = tk.createLabel(accountArea, ""); //$NON-NLS-1$
+		balanceLabel = tk.createLabel(accountArea, StringUtils.EMPTY);
 		balanceLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		tk.createLabel(accountArea, ""); // dummy //$NON-NLS-1$
+		tk.createLabel(accountArea, StringUtils.EMPTY); // dummy
 		tk.createLabel(accountArea, Messages.AccountView_goodFromBills); // $NON-NLS-1$
-		excessLabel = tk.createLabel(accountArea, ""); //$NON-NLS-1$
+		excessLabel = tk.createLabel(accountArea, StringUtils.EMPTY);
 		excessLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 		// account entries
@@ -224,11 +225,11 @@ public class AccountView extends ViewPart implements IActivationListener {
 
 			public String getColumnText(Object element, int columnIndex) {
 				if (!(element instanceof AccountTransaction)) {
-					return "";
+					return StringUtils.EMPTY;
 				}
 
 				AccountTransaction entry = (AccountTransaction) element;
-				String text = "";
+				String text = StringUtils.EMPTY;
 
 				Account account = null;
 				switch (columnIndex) {
@@ -243,7 +244,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 					if (rechnung != null && rechnung.exists()) {
 						text = rechnung.getNr();
 					} else {
-						text = ""; //$NON-NLS-1$
+						text = StringUtils.EMPTY;
 					}
 					break;
 				case REMARKS:
@@ -328,7 +329,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 		accountExcessJob.invalidate();
 		accountExcessJob.schedule();
 
-		String title = ""; //$NON-NLS-1$
+		String title = StringUtils.EMPTY;
 		if (actPatient != null) {
 			title = actPatient.getLabel();
 		} else {
@@ -350,7 +351,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 			return;
 		}
 
-		String balanceText = ""; //$NON-NLS-1$
+		String balanceText = StringUtils.EMPTY;
 		String excessText = "..."; //$NON-NLS-1$
 
 		if (actPatient != null) {
@@ -404,7 +405,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 	 * AccountEntry(TimeTool date, Money amount, String remarks) { this.date = date;
 	 * this.amount = amount; this.remarks = remarks;
 	 *
-	 * if (remarks == null) { remarks = ""; } } }
+	 * if (remarks == null) { remarks = StringUtils.EMPTY; } } }
 	 */
 
 	private void makeActions() {

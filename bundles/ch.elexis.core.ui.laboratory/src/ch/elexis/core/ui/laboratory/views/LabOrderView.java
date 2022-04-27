@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.laboratory.views;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.laboratory.LaboratoryTextTemplateRequirement.TT_LABORDERS;
 
 import java.util.ArrayList;
@@ -92,13 +93,13 @@ public class LabOrderView extends ViewPart implements ICallback {
 		for (String groupKey : keySet) {
 			List<LabOrder> gLabOrders = groupMap.get(groupKey);
 			// add group name
-			usedRows.add(createRow(groupKey, "", ""));
+			usedRows.add(createRow(groupKey, StringUtils.EMPTY, StringUtils.EMPTY));
 
 			for (LabOrder labOrder : gLabOrders) {
 				// only interested in those with status ORDERED
 				if (labOrder.getState() == State.ORDERED) {
 					LabItem labItem = labOrder.getLabItem();
-					String ref = "";
+					String ref = StringUtils.EMPTY;
 					if (Patient.FEMALE.equals(patientGender)) {
 						ref = labItem.getRefW();
 					} else {
@@ -113,22 +114,23 @@ public class LabOrderView extends ViewPart implements ICallback {
 
 	/**
 	 * Create a row with 4 places inserting the passed values. Not given fields are
-	 * field with ""
+	 * field with StringUtils.EMPTY
 	 *
 	 * @param value name [idx 0]
 	 * @param ref   reference (male or female) if given [idx 1]
 	 * @param unit  will only be displayed if reference is present [idx 1]
-	 * @return Example: {@code new String[] "Kalium", "3.5-5.5 mmol/L", "", ""}
+	 * @return Example:
+	 *         {@code new String[] "Kalium", "3.5-5.5 mmol/L", StringUtils.EMPTY, StringUtils.EMPTY}
 	 */
 	private String[] createRow(String value, String ref, String unit) {
 		// init array filled with empty strings
 		String[] row = new String[4];
-		Arrays.fill(row, "");
+		Arrays.fill(row, StringUtils.EMPTY);
 
 		row[0] = value;
 		// add ref with unit if given
 		if (!ref.isEmpty()) {
-			row[1] = ref + " " + unit;
+			row[1] = ref + StringUtils.SPACE + unit;
 		}
 		return row;
 	}

@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.util.viewers;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,7 +105,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		// this.fields=new String[fields.length];
 		lastFiltered = new String[fields.length];
 		for (int i = 0; i < flds.length; i++) {
-			lastFiltered[i] = ""; //$NON-NLS-1$
+			lastFiltered[i] = StringUtils.EMPTY;
 			if (flds[i].indexOf('=') != -1) {
 				String[] s = flds[i].split("="); //$NON-NLS-1$
 				fields[i] = s[1];
@@ -159,7 +160,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 
 		createSelectors(fields.length);
 		for (int i = 0; i < selectors.length; i++) {
-			selectors[i] = new ElexisText(tk.createText(inner, "", SWT.BORDER)); //$NON-NLS-1$
+			selectors[i] = new ElexisText(tk.createText(inner, StringUtils.EMPTY, SWT.BORDER));
 			selectors[i].addModifyListener(ml);
 			selectors[i].addSelectionListener(sl);
 			selectors[i].setToolTipText(Messages.DefaultControlFieldProvider_enterFilter); // $NON-NLS-1$

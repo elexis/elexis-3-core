@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,7 @@ public class FindingsTextUtil {
 		if (ObservationType.REF.equals(observation.getObservationType())) {
 			Optional<ICoding> coding = ModelUtil.getCodeBySystem(observation.getCoding(),
 					CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
-			String title = coding.isPresent() ? coding.get().getDisplay() : "";
+			String title = coding.isPresent() ? coding.get().getDisplay() : StringUtils.EMPTY;
 			stringBuilder.append(title + ": ");
 
 			List<IObservation> children = observation.getTargetObseravtions(ObservationLinkType.REF);
@@ -58,7 +59,7 @@ public class FindingsTextUtil {
 			}
 
 			if (observation.getComment().isPresent()) {
-				stringBuilder.append(" " + observation.getComment().get());
+				stringBuilder.append(StringUtils.SPACE + observation.getComment().get());
 			}
 		} else {
 			stringBuilder.append(getObservationText(observation, shouldSet));
@@ -75,15 +76,15 @@ public class FindingsTextUtil {
 		ObservationType observationType = component.getTypeFromExtension(ObservationType.class);
 
 		if (ObservationType.TEXT.equals(observationType)) {
-			stringBuilder.append(component.getStringValue().orElse(""));
+			stringBuilder.append(component.getStringValue().orElse(StringUtils.EMPTY));
 		} else if (ObservationType.NUMERIC.equals(observationType)) {
 			try {
 				stringBuilder.append(
 						component.getNumericValue().isPresent() ? component.getNumericValue().get().toPlainString()
-								: "");
+								: StringUtils.EMPTY);
 				if (includeUnit) {
-					stringBuilder.append(" ");
-					stringBuilder.append(component.getNumericValueUnit().orElse(""));
+					stringBuilder.append(StringUtils.SPACE);
+					stringBuilder.append(component.getNumericValueUnit().orElse(StringUtils.EMPTY));
 				}
 			} catch (NumberFormatException e) {
 				LoggerFactory.getLogger(FindingsTextUtil.class).warn("number illegal format", e);
@@ -98,24 +99,25 @@ public class FindingsTextUtil {
 
 		Optional<ICoding> coding = ModelUtil.getCodeBySystem(observation.getCoding(),
 				CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
-		String title = coding.isPresent() ? coding.get().getDisplay() : "";
+		String title = coding.isPresent() ? coding.get().getDisplay() : StringUtils.EMPTY;
 
 		if (ObservationType.TEXT.equals(observation.getObservationType())) {
 			stringBuilder.append(title);
-			stringBuilder.append(" ");
-			stringBuilder.append(observation.getStringValue().orElse(""));
+			stringBuilder.append(StringUtils.SPACE);
+			stringBuilder.append(observation.getStringValue().orElse(StringUtils.EMPTY));
 			if (observation.getComment().isPresent()) {
 				stringBuilder.append(" [" + observation.getComment().get() + "]");
 			}
 		} else if (ObservationType.NUMERIC.equals(observation.getObservationType())) {
 			try {
 				stringBuilder.append(title);
-				stringBuilder.append(" ");
+				stringBuilder.append(StringUtils.SPACE);
 				stringBuilder.append(
 						observation.getNumericValue().isPresent() ? observation.getNumericValue().get().toPlainString()
-								: "");
+								: StringUtils.EMPTY);
 				if (observation.getNumericValueUnit().isPresent()) {
-					stringBuilder.append(" " + observation.getNumericValueUnit().orElse(""));
+					stringBuilder
+							.append(StringUtils.SPACE + observation.getNumericValueUnit().orElse(StringUtils.EMPTY));
 				}
 				if (observation.getComment().isPresent()) {
 					stringBuilder.append(" [" + observation.getComment().get() + "]");
@@ -125,7 +127,7 @@ public class FindingsTextUtil {
 			}
 		} else if (ObservationType.BOOLEAN.equals(observation.getObservationType())) {
 			stringBuilder.append(title);
-			stringBuilder.append(" ");
+			stringBuilder.append(StringUtils.SPACE);
 			observation.getBooleanValue().ifPresent(value -> {
 				stringBuilder.append(value ? "Ja" : "Nein");
 			});
@@ -135,7 +137,7 @@ public class FindingsTextUtil {
 			}
 		} else if (ObservationType.DATE.equals(observation.getObservationType())) {
 			stringBuilder.append(title);
-			stringBuilder.append(" ");
+			stringBuilder.append(StringUtils.SPACE);
 			observation.getDateTimeValue().ifPresent(value -> {
 
 				stringBuilder.append(new SimpleDateFormat("dd.MM.yyyy").format(value));
@@ -145,7 +147,7 @@ public class FindingsTextUtil {
 				stringBuilder.append(" [" + observation.getComment().get() + "]");
 			}
 		} else if (ObservationType.COMP.equals(observation.getObservationType())) {
-			stringBuilder.append(title + " ");
+			stringBuilder.append(title + StringUtils.SPACE);
 
 			String textSplitter = ", ";
 			String dbTextSplitter = observation.getFormat("textSeparator");
@@ -163,7 +165,7 @@ public class FindingsTextUtil {
 				stringBuilder.append(getComponentText(component, exactUnit == null));
 			}
 			if (exactUnit != null) {
-				stringBuilder.append(" ").append(exactUnit);
+				stringBuilder.append(StringUtils.SPACE).append(exactUnit);
 			}
 			if (observation.getComment().isPresent()) {
 				stringBuilder.append(" [" + observation.getComment().get() + "]");

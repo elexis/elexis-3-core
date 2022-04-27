@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -49,7 +50,7 @@ public abstract class PagingComposite extends Composite {
 
 		ToolBar toolBar = new ToolBar(main, SWT.RIGHT | SWT.FLAT);
 		ToolItem prevToolItem = new ToolItem(toolBar, SWT.PUSH);
-		prevToolItem.setToolTipText("");
+		prevToolItem.setToolTipText(StringUtils.EMPTY);
 		prevToolItem.setImage(Images.IMG_PREVIOUS.getImage());
 		prevToolItem.addSelectionListener(new SelectionAdapter() {
 
@@ -60,11 +61,11 @@ public abstract class PagingComposite extends Composite {
 		});
 
 		textToolItem = new ToolItem(toolBar, SWT.PUSH | SWT.CENTER);
-		textToolItem.setToolTipText("");
-		textToolItem.setText("");
+		textToolItem.setToolTipText(StringUtils.EMPTY);
+		textToolItem.setText(StringUtils.EMPTY);
 
 		ToolItem nextToolItem = new ToolItem(toolBar, SWT.PUSH);
-		nextToolItem.setToolTipText("");
+		nextToolItem.setToolTipText(StringUtils.EMPTY);
 		nextToolItem.setImage(Images.IMG_NEXT.getImage());
 		nextToolItem.addSelectionListener(new SelectionAdapter() {
 

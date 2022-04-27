@@ -1,5 +1,6 @@
 package ch.elexis.hl7.v26;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -82,7 +83,7 @@ public class HL7_OML_O21 extends HL7Writer {
 		addKontaktToXPN(nk1.getNk12_Name(0), rechnungsempfaenger);
 
 		CWE cwe = nk1.getNk13_Relationship();
-		cwe.getCwe1_Identifier().setValue(""); //$NON-NLS-1$
+		cwe.getCwe1_Identifier().setValue(StringUtils.EMPTY);
 		cwe.getCwe2_Text().setValue("INVOICERECEIPT"); //$NON-NLS-1$
 
 		addAddressToXAD(nk1.getNk14_Address(0), rechnungsempfaenger);
@@ -105,15 +106,15 @@ public class HL7_OML_O21 extends HL7Writer {
 
 		// PLV-13: Aktueller Aufenthaltsort des Patienten, optional
 		// Empfehlung: Wenn vorhanden, dann ausfüllen -> In unserem Fall leer lassen
-		pv1.getPv14_AdmissionType().setValue(""); //$NON-NLS-1$
-		pv1.getPv15_PreadmitNumber().getCx1_IDNumber().setValue(""); //$NON-NLS-1$
-		pv1.getPv16_PriorPatientLocation().getPl1_PointOfCare().setValue(""); //$NON-NLS-1$
+		pv1.getPv14_AdmissionType().setValue(StringUtils.EMPTY);
+		pv1.getPv15_PreadmitNumber().getCx1_IDNumber().setValue(StringUtils.EMPTY);
+		pv1.getPv16_PriorPatientLocation().getPl1_PointOfCare().setValue(StringUtils.EMPTY);
 
 		// Fallnummer, optional (Beschreibung gemäss HL7 Standard)
 		// Empfehlung: Wenn vorhanden, dann ausfüllen -> In unserem Fall leer lassen
 		// oder den Key
 		// des Falles nehmen
-		pv1.getPv119_VisitNumber().getIDNumber().setValue(""); //$NON-NLS-1$
+		pv1.getPv119_VisitNumber().getIDNumber().setValue(StringUtils.EMPTY);
 		// ...
 		pv1.getPv144_AdmitDateTime().setValue(HL7Helper.dateToString(beginDate));
 	}

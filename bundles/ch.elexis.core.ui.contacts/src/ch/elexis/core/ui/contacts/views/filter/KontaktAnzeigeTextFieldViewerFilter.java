@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.views.filter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
@@ -36,14 +37,14 @@ public class KontaktAnzeigeTextFieldViewerFilter extends ViewerFilter {
 					return true;
 			}
 		} else {
-			String desc1 = (k.getDescription1() != null) ? k.getDescription1().toLowerCase() : "";
-			String desc2 = (k.getDescription2() != null) ? k.getDescription2().toLowerCase() : "";
+			String desc1 = (k.getDescription1() != null) ? k.getDescription1().toLowerCase() : StringUtils.EMPTY;
+			String desc2 = (k.getDescription2() != null) ? k.getDescription2().toLowerCase() : StringUtils.EMPTY;
 
 			String[] searchListComma = searchString.split(",");
 			for (String string : searchListComma) {
-				if (string.contains(" ")) {
-					String searchA = desc1 + " " + desc2;
-					String searchB = desc2 + " " + desc1;
+				if (string.contains(StringUtils.SPACE)) {
+					String searchA = desc1 + StringUtils.SPACE + desc2;
+					String searchB = desc2 + StringUtils.SPACE + desc1;
 					if (searchA.matches(".*" + string + ".*") || searchB.matches(".*" + string + ".*"))
 						return true;
 				} else if (desc1.matches(".*" + string + ".*") || desc2.matches(".*" + string + ".*")) {
@@ -62,7 +63,7 @@ public class KontaktAnzeigeTextFieldViewerFilter extends ViewerFilter {
 			searchString = s.toLowerCase(); // $NON-NLS-1$ //$NON-NLS-2$
 		// filter "dirty" characters
 		if (searchString != null)
-			searchString = searchString.replaceAll("[^#$, a-zA-Z0-9]", "");
+			searchString = searchString.replaceAll("[^#$, a-zA-Z0-9]", StringUtils.EMPTY);
 	}
 
 }

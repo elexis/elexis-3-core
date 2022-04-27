@@ -12,6 +12,7 @@
 
 package ch.elexis.core.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
@@ -91,13 +92,14 @@ public class KontaktMatcher {
 	 * try to figure out which part of a string is the zip and which is the place
 	 *
 	 * @param str a string containing possibly zip and possibly place
-	 * @return always a two element array, [0] is zip or "", [1] is place or ""
+	 * @return always a two element array, [0] is zip or StringUtils.EMPTY, [1] is
+	 *         place or StringUtils.EMPTY
 	 */
 	public static String[] normalizeAddress(String str) {
 		String[] ret = str.split("\\s+", 2); //$NON-NLS-1$
 		if (ret.length < 2) {
 			String[] rx = new String[2];
-			rx[0] = "";
+			rx[0] = StringUtils.EMPTY;
 			rx[1] = ret[0];
 			return rx;
 		}

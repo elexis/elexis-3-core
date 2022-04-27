@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.documents.handler;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -30,9 +31,9 @@ public class OpenSelectionHandler extends AbstractHandler implements IHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Shell activeShell = HandlerUtil.getActiveShell(event);
-		DocumentsSelectionDialog dialog = new DocumentsSelectionDialog(activeShell, new SelectionDialogLabelProvider(),
-				new DocumentsTreeContentProvider(null)
-						.selectFilterCategory(new StructuredSelection(new FilterCategory(null, ""))),
+		DocumentsSelectionDialog dialog = new DocumentsSelectionDialog(
+				activeShell, new SelectionDialogLabelProvider(), new DocumentsTreeContentProvider(null)
+						.selectFilterCategory(new StructuredSelection(new FilterCategory(null, StringUtils.EMPTY))),
 				SWT.NONE);
 		dialog.setInput(ContextServiceHolder.get().getActivePatient().orElse(null));
 		dialog.setComparator(new ViewerComparator() {

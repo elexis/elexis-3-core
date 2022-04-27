@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -224,8 +225,10 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener, 
 							text.setText("<form>" + getDateFromToText() + s + "</form>", true, true);
 						}
 					} else {
-						text.setText(ContextServiceHolder.get().getActivePatient().orElse(null) != null ? ""
-								: Messages.HistoryDisplay_NoPatientSelected, false, false);
+						text.setText(
+								ContextServiceHolder.get().getActivePatient().orElse(null) != null ? StringUtils.EMPTY
+										: Messages.HistoryDisplay_NoPatientSelected,
+								false, false);
 					}
 
 					text.setSize(text.computeSize(scrolledComposite.getSize().x - 10, SWT.DEFAULT));
@@ -245,7 +248,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener, 
 					return "<p><span color=\"" + UiDesk.COL_DARKGREY + "\">von " + fromDate + " bis " + toDate
 							+ "</span></p>";
 				}
-				return "";
+				return StringUtils.EMPTY;
 
 			}
 		});

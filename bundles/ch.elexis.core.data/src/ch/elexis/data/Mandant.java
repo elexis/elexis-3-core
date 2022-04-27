@@ -12,6 +12,7 @@
 
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Objects;
 
 import ch.elexis.core.constants.StringConstants;
@@ -119,7 +120,7 @@ public class Mandant extends Anwender {
 	}
 
 	public String getMandantLabel() {
-		return getName() + " " + getVorname() + " (" + getLabel() + ")";
+		return getName() + StringUtils.SPACE + getVorname() + " (" + getLabel() + ")";
 	}
 
 	@Override
