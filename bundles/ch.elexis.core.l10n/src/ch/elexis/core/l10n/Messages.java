@@ -1509,6 +1509,7 @@ public class Messages extends NLS {
 	public static String TextView_SaveNotPossibleNoCaseAndKonsSelected;
 	public static String TextView_Subject;
 	public static String TextView_Toolbar;
+	public static String TextView_To;
 	public static String TextView_couldNotCreateTextView;
 	public static String TextView_couldNotLoadTextPlugin;
 	public static String TextView_enterTitle;

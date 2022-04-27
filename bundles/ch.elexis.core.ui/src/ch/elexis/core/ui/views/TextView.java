@@ -17,10 +17,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
@@ -225,6 +228,40 @@ public class TextView extends ViewPart implements IActivationListener {
 			return false;
 		}
 		actBrief = txt.createFromTemplate(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN, adressat, subject);
+
+		String adressatLabel = null;
+		if (actBrief != null && actBrief.getAdressat() != null) {
+			String[] names = new String[3];
+			actBrief.getAdressat().get(new String[] { Kontakt.FLD_NAME2, Kontakt.FLD_NAME1, Kontakt.FLD_PLACE }, names);
+
+			List<String> nonEmptyNames = new ArrayList<>();
+			String nameValue = "";
+
+			for (int i = 0; i < names.length; i++) {
+				String name = names[i];
+				if (i == 0 && StringUtils.isNoneEmpty(name)) {
+					nameValue = nameValue + name + " ";
+				} else if (i == 1 && StringUtils.isNoneEmpty(name)) {
+					nameValue = nameValue + name;
+				} else {
+					nameValue = name;
+				}
+				if (i >= 1 && StringUtils.isNoneEmpty(nameValue)) {
+					nonEmptyNames.add(nameValue);
+				}
+			}
+
+			if (!nonEmptyNames.isEmpty()) {
+				adressatLabel = String.join(", ", nonEmptyNames);
+			}
+		}
+
+		if (adressatLabel != null) {
+			actBrief.set(new String[] { Brief.FLD_SUBJECT },
+					new String[] { subject + " " + Messages.TextView_To + " " + adressatLabel });
+		}
+
+		txt.saveBrief(actBrief, Brief.UNKNOWN);
 		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 		setName();
 		if (actBrief == null) {

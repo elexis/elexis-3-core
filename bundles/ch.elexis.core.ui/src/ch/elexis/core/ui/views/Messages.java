@@ -547,6 +547,7 @@ public class Messages {
 	public static String TextView_showMenu = ch.elexis.core.l10n.Messages.TextView_showMenu;
 	public static String TextView_showMenuBar = ch.elexis.core.l10n.Messages.TextView_showMenuBar;
 	public static String TextView_showToolbar = ch.elexis.core.l10n.Messages.TextView_showToolbar;
+	public static String TextView_To = ch.elexis.core.l10n.Messages.TextView_To;
 	public static String VerrechnungsDisplay_Orininalpackungen = ch.elexis.core.l10n.Messages.VerrechnungsDisplay_Orininalpackungen;
 	public static String VerrechnungsDisplay_PositionCanootBeRemoved = ch.elexis.core.l10n.Messages.VerrechnungsDisplay_PositionCanootBeRemoved;
 	public static String VerrechnungsDisplay_badAmountBody = ch.elexis.core.l10n.Messages.VerrechnungsDisplay_badAmountBody;
