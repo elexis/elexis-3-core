@@ -109,6 +109,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TemplateDrucker;
 import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.core.ui.views.TemplatePrintView;
+import ch.elexis.core.ui.views.controls.GenericSearchSelectionDialog;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -415,9 +416,18 @@ public class GlobalActions {
 
 			@Override
 			public void doRun() {
-				ChangeMandantDialog cmd = new ChangeMandantDialog();
-				if (cmd.open() == org.eclipse.jface.dialogs.Dialog.OK) {
-					Mandant n = cmd.result;
+				List<Mandant> lMandant;
+				Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
+				lMandant = qbe.execute();
+
+				GenericSearchSelectionDialog cmd = new GenericSearchSelectionDialog(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), lMandant,
+						Messages.GlobalActions_ChangeMandator, Messages.GlobalActions_ChangeMandator,
+						Messages.GlobalActions_ChangeMandatorMessage, null,
+						SWT.SINGLE);
+
+				if (cmd.open() == Dialog.OK) {
+					Mandant n = (Mandant) cmd.getSelection().getFirstElement();
 					if (n != null) {
 						Hub.setMandant(n);
 					}
