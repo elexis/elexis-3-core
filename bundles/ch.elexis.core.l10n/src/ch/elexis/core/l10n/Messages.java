@@ -1510,6 +1510,7 @@ public class Messages extends NLS {
 	public static String TextView_SaveNotPossibleNoCaseAndKonsSelected;
 	public static String TextView_Subject;
 	public static String TextView_Toolbar;
+	public static String TextView_To;
 	public static String TextView_couldNotCreateTextView;
 	public static String TextView_couldNotLoadTextPlugin;
 	public static String TextView_enterTitle;
@@ -1535,6 +1536,7 @@ public class Messages extends NLS {
 	public static String TextView_showMenu;
 	public static String TextView_showMenuBar;
 	public static String TextView_showToolbar;
+	public static String TextView_TextView_To;
 	public static String VerrechnungsDisplay_AddItem;
 	public static String VerrechnungsDisplay_Amount;
 	public static String VerrechnungsDisplay_no_invoice;
