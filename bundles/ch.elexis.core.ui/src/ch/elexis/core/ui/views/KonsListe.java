@@ -48,6 +48,9 @@ public class KonsListe extends ViewPart implements IRefreshable {
 	private Action filterAction;
 	private KonsFilter filter;
 
+	private ICoverage actCoverage;
+	private IEncounter actEncounter;
+	
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	@Optional
@@ -81,15 +84,19 @@ public class KonsListe extends ViewPart implements IRefreshable {
 	@Optional
 	@Inject
 	void changedCoverage(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") ICoverage iCoverage) {
-		if (iCoverage != null) {
+		if (iCoverage != null && !iCoverage.equals(actCoverage)) {
 			restart(false);
+			actCoverage = iCoverage;
 		}
 	}
 
 	@Optional
 	@Inject
 	void changedEncounter(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IEncounter iEncounter) {
-		restart(false);
+		if (iEncounter != null && !iEncounter.equals(actEncounter)) {
+			restart(false);
+			actEncounter = iEncounter;
+		}
 	}
 
 	@Override
