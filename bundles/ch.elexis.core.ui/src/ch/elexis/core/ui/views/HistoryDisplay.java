@@ -166,6 +166,21 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener, 
 		}
 	}
 
+	public void showLoading() {
+		UiDesk.getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				if (!isDisposed()) {
+					scrolledComposite.setOrigin(0, 0);
+					if (lKons.size() > 0) {
+						text.setText("wird geladen...", false, false);
+						text.setSize(text.computeSize(scrolledComposite.getSize().x - 10, SWT.DEFAULT));
+					}
+				}
+			}
+		});
+	}
+
 	/**
 	 * Loads all {@link IEncounter} for a {@link IPatient}. If the
 	 * {@link ElexisEvent} is null or the event is triggered by a {@link IPatient},
@@ -174,27 +189,12 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener, 
 	 * @param pat
 	 * @param ev
 	 */
-	public synchronized void load(IPatient pat, boolean showLoadingScreen) {
+	public synchronized void load(IPatient pat) {
 		int page = 1;
 		// remember page if patient did not change
 		if (actPatient != null && actPatient.equals(pat)) {
 			page = pagingComposite.getCurrentPage();
 		}
-		if (showLoadingScreen) {
-			UiDesk.getDisplay().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					if (!isDisposed()) {
-						scrolledComposite.setOrigin(0, 0);
-						if (lKons.size() > 0) {
-							text.setText("wird geladen...", false, false);
-							text.setSize(text.computeSize(scrolledComposite.getSize().x - 10, SWT.DEFAULT));
-						}
-					}
-				}
-			});
-		}
-
 		// lazy loading konsultations
 		if (pat != null) {
 			lKons.clear();
