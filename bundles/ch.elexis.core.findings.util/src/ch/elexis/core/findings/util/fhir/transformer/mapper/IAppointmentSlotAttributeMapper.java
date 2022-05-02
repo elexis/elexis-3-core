@@ -11,6 +11,7 @@ import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Schedule;
 import org.hl7.fhir.r4.model.Slot;
 import org.hl7.fhir.r4.model.Slot.SlotStatus;
+import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
@@ -33,8 +34,17 @@ public class IAppointmentSlotAttributeMapper implements IdentifiableDomainResour
 
 		fhir.setId(new IdDt(Slot.class.getSimpleName(), elexis.getId()));
 
-		fhir.setSchedule(new Reference(new IdType(Schedule.class.getSimpleName(),
-				appointmentService.getAreaByNameOrId(elexis.getSchedule()).getId())));
+		Area area = appointmentService.getAreaByNameOrId(elexis.getSchedule());
+		if(area != null) {
+			fhir.setSchedule(new Reference(new IdType(Schedule.class.getSimpleName(),
+					area.getId())));
+		} else {
+			// TODO the appointment has an area set, which is not configured!
+			LoggerFactory.getLogger(getClass()).warn(
+					"Appointment [{}] claims schedule id [{}] which is not configured. Not setting value.",
+					elexis.getId(), elexis.getSchedule());
+		}
+
 
 		// TODO
 		fhir.setStatus(SlotStatus.BUSY);

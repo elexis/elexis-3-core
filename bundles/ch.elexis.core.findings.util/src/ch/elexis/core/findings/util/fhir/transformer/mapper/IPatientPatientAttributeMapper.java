@@ -57,7 +57,7 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 	@Override
 	public void elexisToFhir(IPatient source, Patient target, SummaryEnum summaryEnum, Set<Include> includes) {
 
-		target.setId(new IdDt("Patient", source.getId()));
+		target.setId(new IdDt(Patient.class.getSimpleName(), source.getId()));
 		mapMetaData(source, target);
 		if (SummaryEnum.DATA != summaryEnum) {
 			mapNarrative(source, target);
