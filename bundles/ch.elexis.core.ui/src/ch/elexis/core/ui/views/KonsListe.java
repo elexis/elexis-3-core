@@ -131,7 +131,10 @@ public class KonsListe extends ViewPart implements IRefreshable {
 	private void restart(Boolean isPatientEvent) {
 		if (liste != null) {
 			liste.stop();
-			liste.load(actPatient, isPatientEvent == null || isPatientEvent.booleanValue());
+			if (isPatientEvent == null || isPatientEvent.booleanValue()) {
+				liste.showLoading();
+			}
+			liste.load(actPatient);
 			liste.start(filter);
 		}
 	}
