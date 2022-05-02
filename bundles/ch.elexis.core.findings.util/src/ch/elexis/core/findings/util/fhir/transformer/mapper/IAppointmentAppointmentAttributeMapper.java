@@ -65,11 +65,11 @@ public class IAppointmentAppointmentAttributeMapper
 		appointmentHelper.mapApplyAppointmentStateAndType(appointment, localObject, configService);
 
 		appointment.setDescription(appointmentHelper.getDescription(localObject));
-
+		
 		appointmentHelper.mapApplyStartEndMinutes(appointment, localObject);
 
 		Reference slotReference = new Reference(new IdType(Slot.class.getSimpleName(), localObject.getId()));
-		if (includes.contains(new Include("Appointment.slot"))) {
+		if (includes.contains(new Include("Appointment:slot"))) {
 			@SuppressWarnings("rawtypes")
 			Optional<IFhirTransformer> _slotTransformer = OsgiServiceUtil.getService(IFhirTransformer.class,
 					"(" + IFhirTransformer.TRANSFORMERID + "=Slot.IAppointment)");
@@ -84,38 +84,39 @@ public class IAppointmentAppointmentAttributeMapper
 		}
 		appointment.setSlot(Collections.singletonList(slotReference));
 
-		List<AppointmentParticipantComponent> participant = appointment.getParticipant();
-
 		Optional<IContact> assignedContact = appointmentService.resolveAreaAssignedContact(localObject.getSchedule());
 		if (assignedContact.isPresent() && assignedContact.get().isMandator()) {
-			AppointmentParticipantComponent hcp = new AppointmentParticipantComponent();
+			AppointmentParticipantComponent hcp = appointment.addParticipant();
 			hcp.setActor(new Reference(new IdDt(Practitioner.class.getSimpleName(), assignedContact.get().getId())));
 			hcp.setRequired(ParticipantRequired.REQUIRED);
 			hcp.setStatus(ParticipationStatus.ACCEPTED);
-			participant.add(hcp);
+			
 		}
 
 		IContact contact = localObject.getContact();
 		if (contact != null && contact.isPatient()) {
-			IPatient localPatient = coreModelService.load(contact.getId(), IPatient.class).get();
-			AppointmentParticipantComponent patient = new AppointmentParticipantComponent();
-			patient.setActor(new Reference(new IdDt(Patient.class.getSimpleName(), localPatient.getId())));
-			patient.setRequired(ParticipantRequired.REQUIRED);
-			patient.setStatus(ParticipationStatus.ACCEPTED);
+			Reference patientReference = new Reference(new IdType(Patient.class.getSimpleName(), contact.getId()));
 
-			if (includes.contains(new Include("Appointment.patient"))) {
+			if (includes.contains(new Include("Appointment:actor"))) {
 				@SuppressWarnings("rawtypes")
 				Optional<IFhirTransformer> _patientTransformer = OsgiServiceUtil.getService(IFhirTransformer.class,
 						"(" + IFhirTransformer.TRANSFORMERID + "=Patient.IPatient)");
 				if (_patientTransformer.isPresent()) {
+					IPatient localPatient = coreModelService.load(contact.getId(), IPatient.class).get();
 					@SuppressWarnings("unchecked")
 					Patient _patient = (Patient) _patientTransformer.get().getFhirObject(localPatient).get();
-					patient.getActor().setResource(_patient);
+					patientReference.setResource(_patient);
 				} else {
 					LoggerFactory.getLogger(getClass()).error("Could not get patientTransformer service");
 				}
 			}
-			participant.add(patient);
+			
+			AppointmentParticipantComponent patient = appointment.addParticipant();
+			patient.setActor(patientReference);
+			patient.setRequired(ParticipantRequired.REQUIRED);
+			patient.setStatus(ParticipationStatus.ACCEPTED);
+	
+			
 		} else {
 			// TODO there is another string inside - where to put it? is it relevant?
 			String subjectOrPatient = localObject.getSubjectOrPatient();
