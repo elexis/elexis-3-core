@@ -16,6 +16,7 @@ import org.eclipse.ui.PlatformUI;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.views.BriefAuswahl;
@@ -104,6 +105,9 @@ public class BriefNewHandler extends AbstractHandler implements IHandler {
 				}
 
 				if (dialog.getSelection() != null) {
+					if (DocumentSelectDialog
+							.getDontAskForAddresseeForThisTemplate((Brief) dialog.getSelection().getFirstElement()))
+						address = Kontakt.load("-1");
 					tv.createDocument((Brief) dialog.getSelection().getFirstElement(), subject, address);
 					tv.setName();
 
