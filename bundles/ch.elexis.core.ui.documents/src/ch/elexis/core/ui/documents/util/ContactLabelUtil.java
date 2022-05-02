@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.documents.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -8,10 +9,10 @@ public class ContactLabelUtil {
 
 	public static String[] getContactHints(String lbl) {
 		String[] hints = new String[KontaktSelektor.HINTSIZE];
-		Arrays.fill(hints, "");
+		Arrays.fill(hints, StringUtils.EMPTY);
 		String[] splits = lbl.split(",");
 		if (splits.length > 0) {
-			String[] fullNames = splits[0].split(" ");
+			String[] fullNames = splits[0].split(StringUtils.SPACE);
 			if (fullNames.length > 0) {
 				// name firstname(zusatz)
 				hints[KontaktSelektor.HINT_NAME] = fullNames[0].trim();
@@ -30,7 +31,7 @@ public class ContactLabelUtil {
 			hints[KontaktSelektor.HINT_STREET] = splits[1].trim();
 		}
 		if (splits.length > 2) {
-			String[] plzWithCity = splits[2].trim().split(" ");
+			String[] plzWithCity = splits[2].trim().split(StringUtils.SPACE);
 			hints[KontaktSelektor.HINT_ZIP] = plzWithCity[0].trim();
 			if (plzWithCity.length > 1) {
 				hints[KontaktSelektor.HINT_PLACE] = plzWithCity[1].trim();

@@ -25,7 +25,7 @@ public class PersonFormatUtil {
 		if (dob != null) {
 			return dob.format(defaultDateFormatter);
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class PersonFormatUtil {
 			sb.append(person.getLastName());
 		}
 		if (StringUtils.isNotBlank(sb.toString())) {
-			sb.append(" ");
+			sb.append(StringUtils.SPACE);
 		}
 		if (StringUtils.isNoneEmpty(person.getFirstName())) {
 			sb.append(person.getFirstName());
@@ -90,13 +90,13 @@ public class PersonFormatUtil {
 			sb.append(person.getTitel());
 		}
 		if (StringUtils.isNotBlank(sb.toString())) {
-			sb.append(" ");
+			sb.append(StringUtils.SPACE);
 		}
 		if (StringUtils.isNoneEmpty(person.getLastName())) {
 			sb.append(person.getLastName());
 		}
 		if (StringUtils.isNotBlank(sb.toString())) {
-			sb.append(" ");
+			sb.append(StringUtils.SPACE);
 		}
 		if (StringUtils.isNoneEmpty(person.getFirstName())) {
 			sb.append(person.getFirstName());
@@ -110,7 +110,7 @@ public class PersonFormatUtil {
 		} else if (person.getGender().equals(Gender.FEMALE)) {
 			return Messages.KontakteView_SalutationF;
 		} else {
-			return ""; //$NON-NLS-1$
+			return StringUtils.EMPTY;
 		}
 	}
 }

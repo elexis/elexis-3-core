@@ -1,5 +1,6 @@
 package ch.elexis.core.mail;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -87,7 +88,7 @@ public class AttachmentsUtil {
 		StringBuilder ret = new StringBuilder();
 		ret.append(iDocument.getPatient().getCode()).append("_");
 
-		ret.append(iDocument.getPatient().getLastName()).append(" ");
+		ret.append(iDocument.getPatient().getLastName()).append(StringUtils.SPACE);
 		ret.append(iDocument.getPatient().getFirstName()).append("_");
 		String title = iDocument.getTitle();
 		if (iDocument.getExtension() != null && title.endsWith(iDocument.getExtension())) {
@@ -101,7 +102,7 @@ public class AttachmentsUtil {
 		}
 		ret.append(".").append(extension);
 
-		return ret.toString().replaceAll("[^a-züäöA-ZÜÄÖ0-9 _\\.\\-]", "");
+		return ret.toString().replaceAll("[^a-züäöA-ZÜÄÖ0-9 _\\.\\-]", StringUtils.EMPTY);
 	}
 
 	/**

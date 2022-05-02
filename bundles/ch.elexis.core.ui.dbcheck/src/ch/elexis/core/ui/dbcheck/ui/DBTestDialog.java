@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.ui;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -123,7 +124,7 @@ public class DBTestDialog extends TrayDialog {
 							StringBuilder sb = new StringBuilder();
 							// TODO Call DB Check accordingly
 							SyntacticCheckExec.setJDBCLink(PersistentObject.getConnection());
-							sb.append(SyntacticCheckExec.getDBInformation() + "\n");
+							sb.append(SyntacticCheckExec.getDBInformation() + StringUtils.LF);
 							StyleRange styleDBInfo = new StyleRange();
 							styleDBInfo.start = 0;
 							styleDBInfo.length = sb.length();
@@ -141,7 +142,7 @@ public class DBTestDialog extends TrayDialog {
 
 							sb.append("--- Database Version Consistence ---\n");
 							monitor.subTask("Prüfe Datenbank Konsistenz");
-							sb.append(SyntacticCheckExec.checkDBVersionConsistence() + "\n");
+							sb.append(SyntacticCheckExec.checkDBVersionConsistence() + StringUtils.LF);
 							monitor.worked(1);
 
 							monitor.subTask("Checking Syntax");
@@ -177,11 +178,11 @@ public class DBTestDialog extends TrayDialog {
 								out.append("=== " + dateFormat.format(date) + " ===\n");
 								out.append(sb.toString());
 								out.append("--- OUTPUT LOG Syntactic Check ---\n");
-								out.append(SyntacticCheckExec.getOutputLog() + "\n");
+								out.append(SyntacticCheckExec.getOutputLog() + StringUtils.LF);
 								out.append("--- OUTPUT LOG Semantic Check ---\n");
-								out.append(SemanticCheckExec.getOutputLog() + "\n");
+								out.append(SemanticCheckExec.getOutputLog() + StringUtils.LF);
 								out.append("--- OUTPUT LOG Referential Integrity Check ---\n");
-								out.append(RefIntegrityCheckExec.getOutputLog() + "\n");
+								out.append(RefIntegrityCheckExec.getOutputLog() + StringUtils.LF);
 								out.close();
 								fos.close();
 							}

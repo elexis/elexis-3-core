@@ -166,7 +166,6 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 						"*.jpg", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
 				fd.setFilterNames(new String[] { "Portable Network Graphics", //$NON-NLS-1$
 						"Grafics Interchange Format", "JPEG", Messages.ImageChooser_allFilesDesc }); //$NON-NLS-1$ //$NON-NLS-2$
-																										// //$NON-NLS-3$
 				String filename = fd.open();
 				if (filename != null) {
 					hl.setText(filename);

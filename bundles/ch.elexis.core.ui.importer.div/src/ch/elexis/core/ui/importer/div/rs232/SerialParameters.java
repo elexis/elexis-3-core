@@ -31,6 +31,7 @@ package ch.elexis.core.ui.importer.div.rs232;
  * purposes.
  */
 
+import org.apache.commons.lang3.StringUtils;
 import gnu.io.SerialPort;
 
 /**
@@ -51,8 +52,7 @@ public class SerialParameters {
 	 * 8 data bits, 1 stop bit, no parity.
 	 */
 	public SerialParameters() {
-		this("", //$NON-NLS-1$
-				9600, SerialPort.FLOWCONTROL_NONE, SerialPort.FLOWCONTROL_NONE, SerialPort.DATABITS_8,
+		this(StringUtils.EMPTY, 9600, SerialPort.FLOWCONTROL_NONE, SerialPort.FLOWCONTROL_NONE, SerialPort.DATABITS_8,
 				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
 	}

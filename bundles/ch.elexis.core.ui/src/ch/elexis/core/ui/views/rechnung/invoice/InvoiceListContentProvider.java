@@ -92,7 +92,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	private static final String SQL_CONDITION_BILLING_SYSTEM = "FallGesetz = ?";
 	//@formatter:on
 
-	public static String orderBy = "";
+	public static String orderBy = StringUtils.EMPTY;
 	private static int queryLimit = 1000;
 
 	public Action rnFilterAction = new Action(Messages.RnActions_filterListAction, Action.AS_CHECK_BOX) {
@@ -182,7 +182,8 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 					int totalAmount = res.getInt(6);
 					String patientId = res.getString(7);
 					countPatients.add(patientId);
-					String patientName = res.getString(8) + " " + res.getString(9) + " (" + res.getString(10) + ")";
+					String patientName = res.getString(8) + StringUtils.SPACE + res.getString(9) + " ("
+							+ res.getString(10) + ")";
 					String dob = res.getString(11);
 					if (StringUtils.isNumeric(dob)) {
 						patientName += ", " + new TimeTool(dob).toString(TimeTool.DATE_GER);
@@ -274,7 +275,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				queryBuilder.setMainQuery(
 						preparedStatement.replaceAll("REPLACE_WITH_LIMIT", " LIMIT " + Integer.toString(queryLimit)));
 			} else {
-				queryBuilder.setMainQuery(preparedStatement.replaceAll("REPLACE_WITH_LIMIT", ""));
+				queryBuilder.setMainQuery(preparedStatement.replaceAll("REPLACE_WITH_LIMIT", StringUtils.EMPTY));
 			}
 		} else {
 			queryBuilder.setMainQuery(preparedStatement);
@@ -422,16 +423,16 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		String sortDirectionString = (SWT.UP == sortDirection) ? "ASC" : "DESC";
 		if (InvoiceListSqlQuery.VIEW_FLD_INVOICENO.equals(data)) {
 			orderBy = "ORDER BY LENGTH(" + InvoiceListSqlQuery.VIEW_FLD_INVOICENO + ") " + sortDirectionString + ","
-					+ InvoiceListSqlQuery.VIEW_FLD_INVOICENO + " " + sortDirectionString;
+					+ InvoiceListSqlQuery.VIEW_FLD_INVOICENO + StringUtils.SPACE + sortDirectionString;
 		} else if (Rechnung.BILL_DATE_FROM.equals(data) || InvoiceListSqlQuery.VIEW_FLD_INVOICETOTAL.equals(data)
 				|| InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT.equals(data)) {
-			orderBy = "ORDER BY " + data + " " + sortDirectionString;
+			orderBy = "ORDER BY " + data + StringUtils.SPACE + sortDirectionString;
 		} else if (Kontakt.FLD_NAME1.equals(data)) {
 			orderBy = "ORDER BY PatName1 " + sortDirectionString + ", PatName2 " + sortDirectionString;
 		} else if (InvoiceListSqlQuery.VIEW_FLD_INVOICESTATEDATE.equals(data)) {
-			orderBy = "ORDER BY " + data + " " + sortDirectionString;
+			orderBy = "ORDER BY " + data + StringUtils.SPACE + sortDirectionString;
 		} else {
-			orderBy = "";
+			orderBy = StringUtils.EMPTY;
 		}
 
 		reload();
@@ -723,17 +724,19 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 						mainQueryRet = mainQuery.replace(InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION,
 								" AND " + sbInner.toString());
 					} else {
-						mainQueryRet = mainQuery.replace(InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION, "");
+						mainQueryRet = mainQuery.replace(InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION,
+								StringUtils.EMPTY);
 					}
 					if (sbOuter.length() > 0) {
 						mainQueryRet = mainQueryRet.replace(InvoiceListSqlQuery.REPLACEMENT_OUTER_CONDITION,
 								" WHERE " + sbOuter.toString());
 					} else {
-						mainQueryRet = mainQueryRet.replace(InvoiceListSqlQuery.REPLACEMENT_OUTER_CONDITION, "");
+						mainQueryRet = mainQueryRet.replace(InvoiceListSqlQuery.REPLACEMENT_OUTER_CONDITION,
+								StringUtils.EMPTY);
 					}
 					return mainQueryRet;
 				}
-				return "";
+				return StringUtils.EMPTY;
 			}
 
 			/**

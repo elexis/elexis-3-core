@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +37,7 @@ import ch.elexis.data.PersistentObject;
  */
 public class GenericObjectDropTarget implements DropTargetListener, ICodeSelectorTarget {
 	IReceiver rc;
-	String name = "";
+	String name = StringUtils.EMPTY;
 	private final Color normalColor;
 	private final Color highlightColor;
 	private final Control mine;
@@ -71,7 +72,7 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 	}
 
 	public GenericObjectDropTarget(Control target, IReceiver r) {
-		this("", target, r, true);
+		this(StringUtils.EMPTY, target, r, true);
 	}
 
 	public GenericObjectDropTarget(String name, Control target, IReceiver r) {

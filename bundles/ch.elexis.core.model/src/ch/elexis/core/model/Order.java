@@ -1,5 +1,6 @@
 package ch.elexis.core.model;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -98,7 +99,7 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 				return parts[0];
 			}
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	@Override
@@ -113,8 +114,9 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 			throw new IllegalStateException("Can not update id without timestamp");
 		}
 		Optional<IContact> activeUser = ModelUtil.getActiveUserContact();
-		String id = (name != null ? name : "") + ":" + (timestamp != null ? timestamp.format(timestampFormatter) : "")
-				+ ":" + (activeUser.isPresent() ? activeUser.get().getId() : "");
+		String id = (name != null ? name : StringUtils.EMPTY) + ":"
+				+ (timestamp != null ? timestamp.format(timestampFormatter) : StringUtils.EMPTY) + ":"
+				+ (activeUser.isPresent() ? activeUser.get().getId() : StringUtils.EMPTY);
 		getEntityMarkDirty().setId(id);
 	}
 

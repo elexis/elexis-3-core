@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.laboratory.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -190,7 +191,7 @@ public class EditLabItem extends TitleAreaDialog {
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_OriginLaboratoryLabel);
 		originLaboratory = new Label(ret, SWT.None);
 		originLaboratory.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		originLaboratory.setText((actLabor != null) ? actLabor.getLabel() : "");
+		originLaboratory.setText((actLabor != null) ? actLabor.getLabel() : StringUtils.EMPTY);
 		originLaboratorySelection = new Button(ret, SWT.PUSH);
 		originLaboratorySelection.setText("..."); //$NON-NLS-1$
 		originLaboratorySelection.addSelectionListener(new SelectionAdapter() {
@@ -204,7 +205,7 @@ public class EditLabItem extends TitleAreaDialog {
 					originLaboratory.setText(actLabor.getLabel());
 				} else {
 					actLabor = null;
-					originLaboratory.setText("");
+					originLaboratory.setText(StringUtils.EMPTY);
 				}
 			}
 		});
@@ -283,7 +284,7 @@ public class EditLabItem extends TitleAreaDialog {
 	@Override
 	protected void okPressed() {
 		LabItemTyp typ;
-		// String refmin="",refmax;
+		// String refmin=StringUtils.EMPTY,refmax;
 		// refmax=iRef.getText();
 		if (iTitel.getText().length() < 1 && iPrio.getText().length() < 1) {
 			setErrorMessage(Messages.EditLabItem_errorNoTitle);

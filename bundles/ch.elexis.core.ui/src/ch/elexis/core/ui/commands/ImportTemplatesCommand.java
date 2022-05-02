@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.commands;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
@@ -104,7 +105,7 @@ public class ImportTemplatesCommand extends AbstractHandler {
 							// add general form tempalte
 							if (sysTemplate == null) {
 								template.setAdressat(mandant.getId());
-								TextTemplate tt = new TextTemplate(name, "", mimeType);
+								TextTemplate tt = new TextTemplate(name, StringUtils.EMPTY, mimeType);
 								tt.addFormTemplateReference(template);
 								ttView.update(tt);
 							} else {

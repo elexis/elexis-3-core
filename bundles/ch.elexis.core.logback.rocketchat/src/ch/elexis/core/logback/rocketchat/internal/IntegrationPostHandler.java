@@ -1,5 +1,6 @@
 package ch.elexis.core.logback.rocketchat.internal;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -49,7 +50,7 @@ public class IntegrationPostHandler {
 
 		ZonedDateTime eventTimeStamp = Instant.ofEpochMilli(eventObject.getTimeStamp()).atZone(ZoneId.of("GMT+1"));
 		StringBuilder sbHeader = new StringBuilder();
-		sbHeader.append(levelToEmoji(logLevel) + " " + eventTimeStamp.toLocalDateTime().format(dtf));
+		sbHeader.append(levelToEmoji(logLevel) + StringUtils.SPACE + eventTimeStamp.toLocalDateTime().format(dtf));
 		sbHeader.append(" _" + eventObject.getLoggerName() + "_\n");
 		String sbHeaderString = sbHeader.toString();
 
@@ -71,7 +72,7 @@ public class IntegrationPostHandler {
 			sbBody.append(levelToEmoji(logLevel));
 			sbBody.append(eventObject.getFormattedMessage());
 			if (exception != null) {
-				sbBody.append("\n" + exception);
+				sbBody.append(StringUtils.LF + exception);
 			}
 			rlm.setText(sbHeader + sbBody.toString());
 		}
@@ -94,16 +95,16 @@ public class IntegrationPostHandler {
 				if (j > 0) {
 					sbException.append(" at ");
 				}
-				sbException.append(stackTraceElement + "\n");
+				sbException.append(stackTraceElement + StringUtils.LF);
 				if (j == 3) {
 					break;
 				}
 			}
 			if (cause != null) {
-				sbException.append("Caused by: " + cause.getMessage() + "\n");
+				sbException.append("Caused by: " + cause.getMessage() + StringUtils.LF);
 				StackTraceElementProxy[] causeStackTraceElement = cause.getStackTraceElementProxyArray();
 				if (causeStackTraceElement != null && causeStackTraceElement.length > 0) {
-					sbException.append(" at " + causeStackTraceElement[0].getStackTraceElement() + "\n");
+					sbException.append(" at " + causeStackTraceElement[0].getStackTraceElement() + StringUtils.LF);
 				}
 			}
 			sbException.append("```");
@@ -132,7 +133,7 @@ public class IntegrationPostHandler {
 		case Level.WARN_INT:
 			return ":warning:";
 		default:
-			return "";
+			return StringUtils.EMPTY;
 		}
 	}
 

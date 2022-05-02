@@ -35,7 +35,8 @@ public class Mandator extends Contact implements IMandator {
 		if (StringUtils.isNotBlank(getDescription3())) {
 			return getDescription3();
 		} else {
-			return StringUtils.defaultString(getDescription1()) + " " + StringUtils.defaultString(getDescription2());
+			return StringUtils.defaultString(getDescription1()) + StringUtils.SPACE
+					+ StringUtils.defaultString(getDescription2());
 		}
 	}
 

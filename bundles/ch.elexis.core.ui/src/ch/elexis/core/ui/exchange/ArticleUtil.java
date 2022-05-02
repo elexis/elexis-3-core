@@ -21,7 +21,7 @@ public class ArticleUtil {
 	}
 
 	public static String getPharmaCode(IArticle article) {
-		String ret = "";
+		String ret = StringUtils.EMPTY;
 		try {
 			Method method = article.getClass().getMethod("getPHAR");
 			ret = (String) method.invoke(article);

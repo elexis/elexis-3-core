@@ -160,8 +160,8 @@ public class LabPathologicEvaluator {
 	private boolean isUsingItemRef(ILabResult labResult, Gender gender) {
 		boolean useLocalRefs = ModelUtil.isUserConfig(ModelUtil.getActiveUserContact().orElse(null),
 				Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
-		String localRef = "";
-		String ref = "";
+		String localRef = StringUtils.EMPTY;
+		String ref = StringUtils.EMPTY;
 		if (gender == Gender.MALE) {
 			localRef = labResult.getItem().getReferenceMale();
 			ref = labResult.getReferenceMale();
@@ -189,7 +189,7 @@ public class LabPathologicEvaluator {
 		Gender gender = labResult.getPatient().getGender();
 
 		Description description = Description.PATHO_REF;
-		String refValue = "";
+		String refValue = StringUtils.EMPTY;
 		if (Gender.MALE == gender) {
 			refValue = labResult.getReferenceMale();
 			if (StringUtils.isEmpty(refValue)) {

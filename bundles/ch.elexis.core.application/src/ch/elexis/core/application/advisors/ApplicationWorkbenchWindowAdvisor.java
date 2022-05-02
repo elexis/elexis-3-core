@@ -12,6 +12,7 @@
 
 package ch.elexis.core.application.advisors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
@@ -51,7 +52,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(true);
 		configurer.setShowProgressIndicator(true);
-		configurer.setTitle(Hub.APPLICATION_NAME + " " + Elexis.VERSION);
+		configurer.setTitle(Hub.APPLICATION_NAME + StringUtils.SPACE + Elexis.VERSION);
 		configurer.setShowFastViewBars(true);
 		if (CoreHub.localCfg.get(Preferences.SHOWPERSPECTIVESELECTOR, Boolean.toString(false))
 				.equals(Boolean.toString(true))) {

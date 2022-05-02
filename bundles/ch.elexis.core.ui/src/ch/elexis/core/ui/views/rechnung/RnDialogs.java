@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -133,8 +134,7 @@ public class RnDialogs {
 				rn.addZahlung(ret, bemerkung.getText(), new TimeTool(dp.getDate().getTime()));
 				super.okPressed();
 			} else {
-				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, // $NON-NLS-1$
-																														// //$NON-NLS-2$
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat,
 						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -224,8 +224,7 @@ public class RnDialogs {
 				}
 				super.okPressed();
 			} else {
-				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, // $NON-NLS-1$
-																														// //$NON-NLS-2$
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat,
 						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -340,8 +339,7 @@ public class RnDialogs {
 				}
 				super.okPressed();
 			} else {
-				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat, // $NON-NLS-1$
-																														// //$NON-NLS-2$
+				ErrorDialog.openError(getShell(), Messages.RnDialogs_amountInvalid, Messages.RnDialogs_invalidFormat,
 						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -562,7 +560,6 @@ public class RnDialogs {
 			getShell().setText(Messages.RnDialogs_invoice + rn.getNr()); // $NON-NLS-1$
 			setTitle(Messages.RnDialogs_reallyCancel); // $NON-NLS-1$
 			// setMessage(Messages.getString("RnDialogs.reactivateConsultations"));
-			// //$NON-NLS-1$
 		}
 
 		public boolean getReopen() {
@@ -676,7 +673,7 @@ public class RnDialogs {
 				}
 			});
 			tDirName = new Text(cSaveCopy, SWT.BORDER | SWT.READ_ONLY);
-			tDirName.setText(CoreHub.localCfg.get("rechnung/RnListExportDirname", "")); //$NON-NLS-1$
+			tDirName.setText(CoreHub.localCfg.get("rechnung/RnListExportDirname", StringUtils.EMPTY));
 			tDirName.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 			return ret;
 		}
@@ -746,7 +743,7 @@ public class RnDialogs {
 					Fall fall = rn.getFall();
 					Patient p = fall.getPatient();
 					String[] line = new String[header.length];
-					line[0] = ""; // 201512210402js: Leere Spalte zum Eintragen der gewünschten Aktion.
+					line[0] = StringUtils.EMPTY; // 201512210402js: Leere Spalte zum Eintragen der gewünschten Aktion.
 					line[1] = rn.getNr();
 					line[2] = rn.getDatumRn();
 					line[3] = rn.getDatumVon();
@@ -773,10 +770,11 @@ public class RnDialogs {
 					String a = statuschgs.toString();
 					if (a != null && a.length() > 1) {
 						// Die Uhrzeiten rauswerfen:
-						a = a.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-						// ", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine
+						a = a.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY);
+						// ", " durch StringUtils.LF ersetzen (Man könnte auch noch prüfen, ob danach
+						// eine
 						// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-						a = a.replaceAll(", ", "\n");
+						a = a.replaceAll(", ", StringUtils.LF);
 						// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 						line[12] = a.substring(1, a.length() - 1);
 					}
@@ -785,10 +783,11 @@ public class RnDialogs {
 						String rnStatus = rejects.toString();
 						if (rnStatus != null && rnStatus.length() > 1) {
 							// Die Uhrzeiten rauswerfen:
-							rnStatus = rnStatus.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-							// ", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine
+							rnStatus = rnStatus.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY);
+							// ", " durch StringUtils.LF ersetzen (Man könnte auch noch prüfen, ob danach
+							// eine
 							// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-							rnStatus = rnStatus.replaceAll(", ", "\n");
+							rnStatus = rnStatus.replaceAll(", ", StringUtils.LF);
 							// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 							line[13] = rnStatus.substring(1, rnStatus.length() - 1);
 						}
@@ -797,10 +796,11 @@ public class RnDialogs {
 					String rnOutput = outputs.toString();
 					if (rnOutput != null && rnOutput.length() > 1) {
 						// Die Uhrzeiten rauswerfen:
-						rnOutput = rnOutput.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-						// ", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine
+						rnOutput = rnOutput.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY);
+						// ", " durch StringUtils.LF ersetzen (Man könnte auch noch prüfen, ob danach
+						// eine
 						// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-						rnOutput = rnOutput.replaceAll(", ", "\n");
+						rnOutput = rnOutput.replaceAll(", ", StringUtils.LF);
 						// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 						line[14] = rnOutput.substring(1, rnOutput.length() - 1);
 					}
@@ -808,10 +808,11 @@ public class RnDialogs {
 					String rnPayment = payments.toString();
 					if (rnPayment != null && rnPayment.length() > 1) {
 						// Die Uhrzeiten rauswerfen:
-						rnPayment = rnPayment.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-						// ", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine
+						rnPayment = rnPayment.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY);
+						// ", " durch StringUtils.LF ersetzen (Man könnte auch noch prüfen, ob danach
+						// eine
 						// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-						rnPayment = rnPayment.replaceAll(", ", "\n");
+						rnPayment = rnPayment.replaceAll(", ", StringUtils.LF);
 						// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 						line[15] = rnPayment.substring(1, rnPayment.length() - 1);
 					}
@@ -846,9 +847,9 @@ public class RnDialogs {
 					// TODO: Prüfen, ob das eine Redundanz DORT und HIER ist vs. obenn erwähnter
 					// getKontostand(), getAccountExcess() etc.
 					// maybe called from foreign thread
-					String totalText = ""; //$NON-NLS-1$
-					String paidText = ""; //$NON-NLS-1$
-					String openText = ""; //$NON-NLS-1$
+					String totalText = StringUtils.EMPTY;
+					String paidText = StringUtils.EMPTY;
+					String openText = StringUtils.EMPTY;
 					// Davon, dass p != null ist, darf man eigentlich ausgehen, da ja Rechnungen zu
 					// p gehören etc.
 					if (p != null) {

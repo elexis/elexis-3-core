@@ -13,6 +13,7 @@
 
 package ch.elexis.core.ui.laboratory.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -102,7 +103,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				viewerFilter.setSearchText(filterTxt.getText());
 				tableViewer.refresh();
 			} else {
-				viewerFilter.setSearchText(""); //$NON-NLS-1$
+				viewerFilter.setSearchText(StringUtils.EMPTY);
 				tableViewer.refresh();
 			}
 		});
@@ -167,7 +168,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				LabItem li1 = (LabItem) e1;
 				LabItem li2 = (LabItem) e2;
-				String s1 = "", s2 = ""; //$NON-NLS-1$ //$NON-NLS-2$
+				String s1 = StringUtils.EMPTY, s2 = StringUtils.EMPTY; // $NON-NLS-1$
 				switch (sortC) {
 				case 1:
 					s1 = li1.getKuerzel();

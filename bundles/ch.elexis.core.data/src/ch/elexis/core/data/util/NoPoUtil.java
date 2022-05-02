@@ -150,7 +150,7 @@ public class NoPoUtil {
 	 */
 	public static String getElexisDateSearchString(String value) {
 		StringBuilder sb = null;
-		String ret = value.replaceAll("%", "");
+		String ret = value.replaceAll("%", StringUtils.EMPTY);
 		final String filler = "%%%%%%%%";
 		// are we looking for the year?
 		if (ret.matches("[0-9]{3,}")) {
@@ -162,7 +162,7 @@ public class NoPoUtil {
 			// as in 01.02.1932
 			int dotCount = StringUtils.countMatches(ret, ".");
 			String[] parts = ret.split("\\.");
-			StringJoiner sj = new StringJoiner("");
+			StringJoiner sj = new StringJoiner(StringUtils.EMPTY);
 			for (String string : parts) {
 				if (string.length() == 1 && Character.isDigit(string.charAt(0))) {
 					sj.add("0" + string);

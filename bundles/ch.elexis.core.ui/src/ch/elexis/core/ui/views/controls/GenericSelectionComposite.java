@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,7 +105,7 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			}
 			selectLabel.setText(sb.toString());
 		} else {
-			selectLabel.setText("");
+			selectLabel.setText(StringUtils.EMPTY);
 		}
 		getParent().layout();
 	}
@@ -229,7 +230,7 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			} else if (object != null) {
 				return object.toString();
 			} else {
-				return "";
+				return StringUtils.EMPTY;
 			}
 		}
 	}

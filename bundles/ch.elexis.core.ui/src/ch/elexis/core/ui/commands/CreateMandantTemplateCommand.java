@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.commands;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -40,7 +41,7 @@ public class CreateMandantTemplateCommand extends AbstractHandler {
 						Brief.TEMPLATE);
 				specTemplate.save(template.loadBinary(), template.getMimeType());
 
-				TextTemplate specTextTemplate = new TextTemplate(specTemplate.getBetreff(), "",
+				TextTemplate specTextTemplate = new TextTemplate(specTemplate.getBetreff(), StringUtils.EMPTY,
 						specTemplate.getMimeType());
 				specTextTemplate.addFormTemplateReference(specTemplate);
 

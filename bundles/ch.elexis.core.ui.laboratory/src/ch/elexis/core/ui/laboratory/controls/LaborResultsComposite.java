@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.laboratory.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -155,7 +156,7 @@ public class LaborResultsComposite extends Composite {
 							.append(item.getUnit()).append("]"); //$NON-NLS-1$
 					return sb.toString();
 				}
-				return ""; //$NON-NLS-1$
+				return StringUtils.EMPTY;
 			}
 		});
 
@@ -172,7 +173,7 @@ public class LaborResultsComposite extends Composite {
 						return ((LaborItemResults) element).getFirstResult().getRefFemale();
 					}
 				}
-				return ""; //$NON-NLS-1$
+				return StringUtils.EMPTY;
 			}
 		});
 
@@ -189,7 +190,7 @@ public class LaborResultsComposite extends Composite {
 		for (int i = 0; i < COLUMNS_PER_PAGE; i++) {
 			column = new TreeViewerColumn(viewer, SWT.NONE);
 			column.getColumn().setWidth(75);
-			column.getColumn().setText(""); //$NON-NLS-1$
+			column.getColumn().setText(StringUtils.EMPTY);
 			column.setLabelProvider(new LaborResultsLabelProvider(column));
 			column.getColumn().addSelectionListener(new ChangeResultsDateSelection(column, this));
 			resultColumns.add(column);
@@ -253,7 +254,7 @@ public class LaborResultsComposite extends Composite {
 
 		for (int i = 0; i < resultColumns.size(); i++) {
 			resultColumns.get(i).getColumn().setData(COLUMN_DATE_KEY, null);
-			resultColumns.get(i).getColumn().setText(""); //$NON-NLS-1$
+			resultColumns.get(i).getColumn().setText(StringUtils.EMPTY);
 		}
 
 		List<TimeTool> dates = contentProvider.getDates();
@@ -283,7 +284,7 @@ public class LaborResultsComposite extends Composite {
 		setInitialColumnOffset();
 		for (int i = 0; i < resultColumns.size(); i++) {
 			resultColumns.get(i).getColumn().setData(COLUMN_DATE_KEY, null);
-			resultColumns.get(i).getColumn().setText(""); //$NON-NLS-1$
+			resultColumns.get(i).getColumn().setText(StringUtils.EMPTY);
 		}
 
 		List<TimeTool> dates = contentProvider.getDates();

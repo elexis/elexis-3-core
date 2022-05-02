@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.text;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -56,12 +57,12 @@ public class TextTemplateComposite extends Composite {
 				if (templateText.getCaretOffset() > 0) {
 					String beforeChar = templateText.getText(templateText.getCaretOffset() - 1,
 							templateText.getCaretOffset() - 1);
-					insertSpace = !(beforeChar.equals(" ") || beforeChar.equals("\n"));
+					insertSpace = !(beforeChar.equals(StringUtils.SPACE) || beforeChar.equals(StringUtils.LF));
 				}
 				String insertText = (insertSpace ? " [" : "[") + proposal.getContent() + "]";
 				templateText.insert(insertText);
 				templateText.setCaretOffset(templateText.getCaretOffset() + insertText.length());
-				replacementProposals.setText("");
+				replacementProposals.setText(StringUtils.EMPTY);
 			}
 		});
 		replacementProposals.setMessage("Platzhalter Suche und Auswahl");
@@ -82,7 +83,7 @@ public class TextTemplateComposite extends Composite {
 			templateText.setText(template.getTemplate());
 			return;
 		}
-		templateText.setText("");
+		templateText.setText(StringUtils.EMPTY);
 	}
 
 	/**

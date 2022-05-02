@@ -61,7 +61,7 @@ public class ConditionBeanAdapter extends AbstractBeanAdapter<ICondition> {
 	}
 
 	public String getStart() {
-		return finding.getStart().orElse("");
+		return finding.getStart().orElse(StringUtils.EMPTY);
 	}
 
 	public void setEnd(String end) {
@@ -70,7 +70,7 @@ public class ConditionBeanAdapter extends AbstractBeanAdapter<ICondition> {
 	}
 
 	public String getEnd() {
-		return finding.getEnd().orElse("");
+		return finding.getEnd().orElse(StringUtils.EMPTY);
 	}
 
 	public void addNote(String text) {

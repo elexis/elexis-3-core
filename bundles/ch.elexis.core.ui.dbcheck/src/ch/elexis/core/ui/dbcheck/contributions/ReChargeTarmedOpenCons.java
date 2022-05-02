@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -214,10 +215,10 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 		if (problems != null && !problems.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("\nProblems:\n");
-			problems.stream().forEach(problem -> sb.append(problem + "\n"));
+			problems.stream().forEach(problem -> sb.append(problem + StringUtils.LF));
 			return sb.toString();
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	private void addProblem(String prefix, IEncounter cons) {

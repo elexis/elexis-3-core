@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.tasks.parts;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
@@ -218,7 +219,7 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 		tvcState.setLabelProvider(TaskResultLabelProvider.getInstance());
 		TableColumn tblclmnState = tvcState.getColumn();
 		tcLayout.setColumnData(tblclmnState, new ColumnPixelData(22, true, false));
-		tblclmnState.setText("");
+		tblclmnState.setText(StringUtils.EMPTY);
 
 		// OWNER
 		TableViewerColumn tvcOwner = new TableViewerColumn(tableViewerResults, SWT.NONE);

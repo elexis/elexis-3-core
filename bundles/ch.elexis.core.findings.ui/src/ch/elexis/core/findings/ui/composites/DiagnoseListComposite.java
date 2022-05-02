@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.findings.ui.composites;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -86,7 +87,7 @@ public class DiagnoseListComposite extends Composite {
 						case 0:
 							return getFormattedDescriptionText(condition);
 						}
-						return "";
+						return StringUtils.EMPTY;
 					}
 
 					private Object getFormattedDescriptionText(ICondition condition) {
@@ -97,7 +98,7 @@ public class DiagnoseListComposite extends Composite {
 						Optional<String> conditionText = condition.getText();
 						conditionText.ifPresent(t -> {
 							if (contentText.length() > 0) {
-								contentText.append("\n");
+								contentText.append(StringUtils.LF);
 							}
 							contentText.append(t);
 						});
@@ -127,7 +128,7 @@ public class DiagnoseListComposite extends Composite {
 						if (!notes.isEmpty()) {
 							text.append(" (" + notes.size() + ")");
 						}
-						if (contentText.toString().contains("\n")) {
+						if (contentText.toString().contains(StringUtils.LF)) {
 							text.append("</strong>\n").append(contentText.toString());
 						} else {
 							text.append("</strong> ").append(contentText.toString());

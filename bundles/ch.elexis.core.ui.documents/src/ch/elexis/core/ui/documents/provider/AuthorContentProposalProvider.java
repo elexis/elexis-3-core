@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.documents.provider;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class AuthorContentProposalProvider implements IContentProposalProvider {
 		List<IContentProposal> ret = new ArrayList<IContentProposal>();
 		if (searchString != null && !searchString.isEmpty()) {
 			if (searchString.length() > 1) {
-				int firstSpace = searchString.indexOf(" ");
+				int firstSpace = searchString.indexOf(StringUtils.SPACE);
 
 				IQuery<IContact> query = CoreModelServiceHolder.get().getQuery(IContact.class);
 				query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE,

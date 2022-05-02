@@ -12,6 +12,7 @@
 
 package ch.elexis.core.data.cache;
 
+import org.apache.commons.lang3.StringUtils;
 import java.lang.ref.SoftReference;
 import java.util.Collections;
 import java.util.HashMap;
@@ -129,13 +130,13 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 		long total = hits + misses + removed + expired;
 		if (total != 0) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("--------- cache statistics ------\n").append("Total read:\t").append(total).append("\n")
-					.append("cache hits:\t").append(hits).append(" (").append(hits * 100 / total).append("%)\n")
-					.append("object expired:\t").append(expired).append(" (").append(expired * 100 / total)
-					.append("%)\n").append("cache missed:\t").append(misses).append(" (").append(misses * 100 / total)
-					.append("%)\n").append("object removed:\t").append(removed).append(" (")
-					.append(removed * 100 / total).append("%)\n").append("Object inserts:\t").append(inserts)
-					.append("\n");
+			sb.append("--------- cache statistics ------\n").append("Total read:\t").append(total)
+					.append(StringUtils.LF).append("cache hits:\t").append(hits).append(" (").append(hits * 100 / total)
+					.append("%)\n").append("object expired:\t").append(expired).append(" (")
+					.append(expired * 100 / total).append("%)\n").append("cache missed:\t").append(misses).append(" (")
+					.append(misses * 100 / total).append("%)\n").append("object removed:\t").append(removed)
+					.append(" (").append(removed * 100 / total).append("%)\n").append("Object inserts:\t")
+					.append(inserts).append(StringUtils.LF);
 			log.log(sb.toString(), Log.INFOS);
 		}
 
@@ -162,7 +163,7 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 			// long freeAfter = Runtime.getRuntime().freeMemory();
 			// StringBuilder sb = new StringBuilder();
 			// sb.append("Cache purge: Free memore before: ").append(freeBefore)
-			// .append(", free memory after: ").append(freeAfter).append("\n");
+			// .append(", free memory after: ").append(freeAfter).append(StringUtils.LF);
 			// Hub.log.log(sb.toString(), Log.INFOS);
 			// }
 		}

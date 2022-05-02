@@ -61,7 +61,7 @@ public class TotpDialog extends TitleAreaDialog {
 //
 //		String issuer = "Elexis";
 //
-//		String selfContactId = ConfigServiceHolder.getGlobal(Preferences.SELFCONTACT_ID, "");
+//		String selfContactId = ConfigServiceHolder.getGlobal(Preferences.SELFCONTACT_ID, StringUtils.EMPTY);
 //		if (!StringUtils.isEmpty(selfContactId)) {
 //			Kontakt selfContact = Kontakt.load(selfContactId);
 //			if (selfContact.isAvailable()) {

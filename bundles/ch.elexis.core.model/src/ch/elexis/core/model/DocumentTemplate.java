@@ -35,7 +35,7 @@ public class DocumentTemplate extends AbstractIdDeleteModelAdapter<BriefVorlage>
 		implements IdentifiableWithXid, IDocumentTemplate {
 
 	private ICategory category;
-	private String storeId = "";
+	private String storeId = StringUtils.EMPTY;
 	private List<IHistory> history;
 	private String keywords;
 
@@ -284,7 +284,7 @@ public class DocumentTemplate extends AbstractIdDeleteModelAdapter<BriefVorlage>
 
 	@Override
 	public String getLabel() {
-		return new SimpleDateFormat("dd.MM.yyyy").format(getCreated()) + " " + getTitle();
+		return new SimpleDateFormat("dd.MM.yyyy").format(getCreated()) + StringUtils.SPACE + getTitle();
 	}
 
 	@Override

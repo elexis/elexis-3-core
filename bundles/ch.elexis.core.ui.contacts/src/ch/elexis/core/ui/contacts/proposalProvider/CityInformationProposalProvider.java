@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.proposalProvider;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,6 +40,6 @@ public class CityInformationProposalProvider implements IContentProposalProvider
 		List<String> result = ContactGeonames.getZipByCity(content);
 		if (result.size() >= 1)
 			return result.get(0);
-		return "";
+		return StringUtils.EMPTY;
 	}
 }

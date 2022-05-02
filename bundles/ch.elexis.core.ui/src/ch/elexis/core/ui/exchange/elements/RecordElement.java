@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.jdom.Element;
@@ -118,7 +119,7 @@ public class RecordElement extends XChangeElement {
 		sb.append(Messages.RecordElement_EntryDate).append(getAttr(ATTR_DATE)).append(Messages.RecordElement_CreatedBy)
 				.append( // $NON-NLS-1$ //$NON-NLS-2$
 						getAttr(ATTR_AUTHOR))
-				.append("\n");
+				.append(StringUtils.LF);
 		List<Element> children = getElement().getChildren();
 		if (children != null) {
 			for (Element child : children) {
@@ -126,7 +127,7 @@ public class RecordElement extends XChangeElement {
 					continue;
 				}
 				sb.append(child.getName()).append(":\n");
-				sb.append(child.getText()).append("\n");
+				sb.append(child.getText()).append(StringUtils.LF);
 			}
 		}
 		Element eText = getElement().getChild(ELEMENT_TEXT);

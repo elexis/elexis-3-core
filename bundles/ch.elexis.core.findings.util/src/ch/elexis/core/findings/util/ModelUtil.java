@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -161,8 +162,8 @@ public class ModelUtil {
 		String text = narrative.getDivAsString();
 		if (text != null) {
 			String divDecodedText = text.replaceAll("<div>|<div xmlns=\"http://www.w3.org/1999/xhtml\">|</div>|</ div>",
-					"");
-			divDecodedText = divDecodedText.replaceAll("<br/>|<br />", "\n").replaceAll("&amp;", "&")
+					StringUtils.EMPTY);
+			divDecodedText = divDecodedText.replaceAll("<br/>|<br />", StringUtils.LF).replaceAll("&amp;", "&")
 					.replaceAll("&gt;", ">").replaceAll("&lt;", "<").replaceAll("'&sect;'", "§");
 			return Optional.of(divDecodedText);
 		}

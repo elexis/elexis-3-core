@@ -106,7 +106,8 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 				}
 			}
 			return new Result<>(SEVERITY.ERROR, 2,
-					Messages.DefaultPDFImportStrategy_InitContextFailed + "\n" + ise.getMessage(), context, true);
+					Messages.DefaultPDFImportStrategy_InitContextFailed + StringUtils.LF + ise.getMessage(), context,
+					true);
 		}
 
 		// get or create LabItem and create labresult
@@ -114,8 +115,8 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		String shortname = "doc";
 		ILabItem labItem = LabImportUtilHolder.get().getLabItem(shortname, name, LabItemTyp.DOCUMENT).orElse(null);
 		if (labItem == null) {
-			labItem = LabImportUtilHolder.get().createLabItem(shortname, name, myLab, "", "", PDF, LabItemTyp.DOCUMENT,
-					group, prio);
+			labItem = LabImportUtilHolder.get().createLabItem(shortname, name, myLab, StringUtils.EMPTY,
+					StringUtils.EMPTY, PDF, LabItemTyp.DOCUMENT, group, prio);
 			log.debug("LabItem created [{}]", labItem);
 		}
 
@@ -208,7 +209,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		SimpleDateFormat sdfTitle = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
 		String title = "Laborbefund" + sdfTitle.format(dateTime.getTime()) + "." //$NON-NLS-2$
 				+ FileTool.getExtension(filename);
-		log.debug("generated labresult pdf title '" + title + "");
+		log.debug("generated labresult pdf title '" + title + StringUtils.EMPTY);
 		return title;
 	}
 

@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.actions.GlobalActions.closeFallAction;
 import static ch.elexis.core.ui.actions.GlobalActions.delFallAction;
 import static ch.elexis.core.ui.actions.GlobalActions.makeBillAction;
@@ -264,7 +265,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 			}
 
 		};
-		filterClosedAction = new Action("", Action.AS_CHECK_BOX) {
+		filterClosedAction = new Action(StringUtils.EMPTY, Action.AS_CHECK_BOX) {
 			private ViewerFilter closedFilter;
 			{
 				setToolTipText(Messages.FaelleView_ShowOnlyOpenCase); // $NON-NLS-1$

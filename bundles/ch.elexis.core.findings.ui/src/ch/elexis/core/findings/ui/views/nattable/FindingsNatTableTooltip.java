@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.views.nattable;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.jface.window.DefaultToolTip;
@@ -50,9 +51,9 @@ public class FindingsNatTableTooltip extends DefaultToolTip {
 			StringBuilder sb = new StringBuilder();
 			for (IFinding iFinding : findings) {
 				if (sb.length() > 0) {
-					sb.append("\n");
+					sb.append(StringUtils.LF);
 				}
-				sb.append(iFinding.getText().orElse(""));
+				sb.append(iFinding.getText().orElse(StringUtils.EMPTY));
 			}
 			return sb.toString();
 		}

@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.composites;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,12 +63,12 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 			this.observationType = backboneComponent.getTypeFromExtension(ObservationType.class);
 
 			if (ObservationType.TEXT.equals(observationType)) {
-				textValue = backboneComponent.getStringValue().orElse("");
+				textValue = backboneComponent.getStringValue().orElse(StringUtils.EMPTY);
 			} else if (ObservationType.NUMERIC.equals(observationType)) {
-				unit = backboneComponent.getNumericValueUnit().orElse("");
+				unit = backboneComponent.getNumericValueUnit().orElse(StringUtils.EMPTY);
 				numeric = backboneComponent.getNumericValue().isPresent()
 						? backboneComponent.getNumericValue().get().toPlainString()
-						: "";
+						: StringUtils.EMPTY;
 			}
 			codings = backboneComponent.getCoding();
 		} else if (iFinding instanceof IObservation) {
@@ -76,22 +77,22 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 			this.observationType = iObservation.getObservationType();
 
 			if (ObservationType.TEXT.equals(iObservation.getObservationType())) {
-				textValue = iObservation.getStringValue().orElse("");
+				textValue = iObservation.getStringValue().orElse(StringUtils.EMPTY);
 			} else if (ObservationType.NUMERIC.equals(iObservation.getObservationType())) {
-				unit = iObservation.getNumericValueUnit().orElse("");
+				unit = iObservation.getNumericValueUnit().orElse(StringUtils.EMPTY);
 				numeric = iObservation.getNumericValue().isPresent()
 						? iObservation.getNumericValue().get().toPlainString()
-						: "";
+						: StringUtils.EMPTY;
 			}
 			codings = iObservation.getCoding();
 		}
 
 		if (title == null && codings != null) {
 			Optional<ICoding> coding = ModelUtil.getCodeBySystem(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
-			title = coding.isPresent() ? coding.get().getDisplay() : "";
+			title = coding.isPresent() ? coding.get().getDisplay() : StringUtils.EMPTY;
 		}
 		if (title == null) {
-			title = iFinding.getText().orElse("");
+			title = iFinding.getText().orElse(StringUtils.EMPTY);
 		}
 
 		createContents(title, textValue, unit, numeric, backboneComponent != null);
@@ -148,10 +149,10 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 			GridData gdFieldText = new GridData(SWT.FILL, SWT.TOP, true, false);
 			gdFieldText.heightHint = 40;
 			fieldText.setLayoutData(gdFieldText);
-			fieldText.setText(textValue != null ? textValue : "");
+			fieldText.setText(textValue != null ? textValue : StringUtils.EMPTY);
 
 			Label lblTmp = new Label(this, SWT.NONE);
-			lblTmp.setText("");
+			lblTmp.setText(StringUtils.EMPTY);
 			GridData gdUnit = new GridData(SWT.FILL, SWT.TOP, false, false);
 			gdUnit.widthHint = 40;
 			lblTmp.setLayoutData(gdUnit);
@@ -207,7 +208,7 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 
 	@Override
 	public String getTitle() {
-		return lbl != null ? lbl.getText() : "";
+		return lbl != null ? lbl.getText() : StringUtils.EMPTY;
 	}
 
 	@Override
@@ -227,7 +228,7 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 
 	@Override
 	public String getFieldTextValue() {
-		return fieldText != null ? fieldText.getText() : "";
+		return fieldText != null ? fieldText.getText() : StringUtils.EMPTY;
 	}
 
 	@Override

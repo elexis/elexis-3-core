@@ -1,5 +1,6 @@
 package ch.elexis.core.test.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +21,7 @@ public class TestUtil {
 		}
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
+				sb.append(line + StringUtils.LF);
 			}
 		}
 		return sb.toString();

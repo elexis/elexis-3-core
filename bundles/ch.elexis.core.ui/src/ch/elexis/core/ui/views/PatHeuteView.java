@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_BILLING_LIST;
 
 import java.io.FileWriter;
@@ -327,15 +328,15 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 		Composite bottom = form.getBody();
 		bottom.setLayout(new GridLayout(2, false));
 		tk.createLabel(bottom, Messages.PatHeuteView_consultations); // $NON-NLS-1$
-		tPat = tk.createText(bottom, "", SWT.BORDER); //$NON-NLS-1$
+		tPat = tk.createText(bottom, StringUtils.EMPTY, SWT.BORDER);
 		tPat.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tPat.setEditable(false);
 		tk.createLabel(bottom, Messages.PatHeuteView_accTime); // $NON-NLS-1$
-		tTime = tk.createText(bottom, "", SWT.BORDER); //$NON-NLS-1$
+		tTime = tk.createText(bottom, StringUtils.EMPTY, SWT.BORDER);
 		tTime.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tTime.setEditable(false);
 		tk.createLabel(bottom, Messages.PatHeuteView_accAmount); // $NON-NLS-1$
-		tMoney = tk.createText(bottom, "", SWT.BORDER); //$NON-NLS-1$
+		tMoney = tk.createText(bottom, StringUtils.EMPTY, SWT.BORDER);
 		tMoney.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tMoney.setEditable(false);
 		// Group grpSel=new Group(parent,SWT.BORDER);
@@ -347,10 +348,10 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 		Composite cSel = fSel.getBody();
 		cSel.setLayout(new GridLayout(2, false));
 		tk.createLabel(cSel, Messages.PatHeuteView_accTime); // $NON-NLS-1$
-		tTime2 = tk.createText(cSel, "", SWT.BORDER); //$NON-NLS-1$
+		tTime2 = tk.createText(cSel, StringUtils.EMPTY, SWT.BORDER);
 		tTime2.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(cSel, Messages.PatHeuteView_accAmount); // $NON-NLS-1$
-		tMoney2 = tk.createText(cSel, "", SWT.BORDER); //$NON-NLS-1$
+		tMoney2 = tk.createText(cSel, StringUtils.EMPTY, SWT.BORDER);
 		tMoney2.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tTime2.setEditable(false);
 		tMoney2.setEditable(false);
@@ -398,8 +399,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 
 	private void selection(final Konsultation k) {
 		if (k == null) {
-			tTime2.setText("");
-			tMoney2.setText("");
+			tTime2.setText(StringUtils.EMPTY);
+			tMoney2.setText(StringUtils.EMPTY);
 		} else {
 			try {
 				IEncounter encounter = NoPoUtil.loadAsIdentifiable(k, IEncounter.class).get();
@@ -505,7 +506,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 									text = st.v.getText();
 								}
 								if (text == null) {
-									text = ""; //$NON-NLS-1$
+									text = StringUtils.EMPTY;
 								} else {
 									text = text.replaceAll(";", ","); //$NON-NLS-1$ //$NON-NLS-2$
 								}
@@ -515,8 +516,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 									sb.append("Codesystem?");
 								}
 								sb.append("; ").append( //$NON-NLS-1$
-										code == null ? "" : code) //$NON-NLS-1$
-										.append("; ").append(text).append(";") //$NON-NLS-1$ //$NON-NLS-2$
+										code == null ? StringUtils.EMPTY : code).append("; ").append(text).append(";") //$NON-NLS-1$ //$NON-NLS-2$
 										.append(st.num).append(";").append( //$NON-NLS-1$
 												st.cost.getAmountAsString())
 										.append(";").append( //$NON-NLS-1$
@@ -547,8 +547,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 		Set<Konsultation> missingCaseKons;
 
 		KonsLoader(final Query<Konsultation> qbe) {
-			super(Messages.PatHeuteView_loadConsultations, qbe, new String[] { Messages.PatHeuteView_date }); // $NON-NLS-1$
-																												// //$NON-NLS-2$
+			super(Messages.PatHeuteView_loadConsultations, qbe, new String[] { Messages.PatHeuteView_date });
 			setPriority(Job.LONG);
 			setUser(true);
 		}
@@ -681,16 +680,16 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 				sb.append("Folgende Konsultationen enthalten ungültige Leistungen: \n");
 				for (Konsultation k : corruptKons) {
 					sb.append(k.getLabel() + ", " + k.getFall().getPatient().getLabel());
-					sb.append("\n");
+					sb.append(StringUtils.LF);
 				}
-				sb.append("\n");
+				sb.append(StringUtils.LF);
 			}
 
 			if (missingCaseKons.size() > 0) {
 				sb.append("Folgende Konsultationen sind keinem Fall zugewiesen: \n");
 				for (Konsultation k : missingCaseKons) {
 					sb.append(k.getLabel());
-					sb.append("\n");
+					sb.append(StringUtils.LF);
 				}
 			}
 
@@ -879,8 +878,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			for (int i = 0; i < kons.length; i++) {
 				table[i + 1] = new String[2];
 				Konsultation k = kons[i];
-				table[i + 1][0] = k.getFall().getPatient().getLabel() + "\n" //$NON-NLS-1$
-						+ k.getLabel();
+				table[i + 1][0] = k.getFall().getPatient().getLabel() + StringUtils.LF + k.getLabel();
 				StringBuilder sb = new StringBuilder();
 				IEncounter encounter = NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
 				Money subsum = new Money();
@@ -895,8 +893,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 						}
 					}
 					subsum.addMoney(preis);
-					sb.append(b.getAmount()).append(" ").append(b.getLabel()).append(" ") //$NON-NLS-1$ //$NON-NLS-2$
-							.append(preis.getAmountAsString()).append("\n"); //$NON-NLS-1$
+					sb.append(b.getAmount()).append(StringUtils.SPACE).append(b.getLabel()).append(StringUtils.SPACE)
+							.append(preis.getAmountAsString()).append(StringUtils.LF);
 				}
 				sb.append(Messages.PatHeuteView_total).append(subsum.getAmountAsString()); // $NON-NLS-1$
 				total.addMoney(subsum);

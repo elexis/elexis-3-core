@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util.fhir.accessor;
 
+import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -220,7 +221,7 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 						q = (Quantity) o.getValue();
 					}
 
-					q.setUnit(component.getNumericValueUnit().orElse(""));
+					q.setUnit(component.getNumericValueUnit().orElse(StringUtils.EMPTY));
 					q.setValue(component.getNumericValue().orElse(null));
 					o.setValue(q);
 				} else if (ObservationType.TEXT.equals(observationType)) {
@@ -229,7 +230,7 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 						stringType = (StringType) o.getValue();
 
 					}
-					stringType.setValue(component.getStringValue().orElse(""));
+					stringType.setValue(component.getStringValue().orElse(StringUtils.EMPTY));
 					o.setValue(stringType);
 				}
 			}

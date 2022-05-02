@@ -1,5 +1,6 @@
 package ch.elexis.core.data.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class PatientDataAccessor implements IDataAccess {
 	@Override
 	public Result<Object> getObject(String descriptor, PersistentObject dependentObject, String dates,
 			String[] params) {
-		Result<Object> result = new Result<Object>("");
+		Result<Object> result = new Result<Object>(StringUtils.EMPTY);
 
 		Patient patient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 

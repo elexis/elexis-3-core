@@ -2,6 +2,7 @@
  */
 package ch.elexis.core.findings.templates.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.EList;
 
 /**
@@ -59,7 +60,7 @@ public interface InputDataGroupComponent extends InputData {
 
 	/**
 	 * Returns the value of the '<em><b>Text Separator</b></em>' attribute.
-	 * The default value is <code>" "</code>.
+	 * The default value is <code>StringUtils.SPACE</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Text Separator</em>' attribute isn't clear,
@@ -69,7 +70,7 @@ public interface InputDataGroupComponent extends InputData {
 	 * @return the value of the '<em>Text Separator</em>' attribute.
 	 * @see #setTextSeparator(String)
 	 * @see ch.elexis.core.findings.templates.model.ModelPackage#getInputDataGroupComponent_TextSeparator()
-	 * @model default=" "
+	 * @model default=StringUtils.SPACE
 	 * @generated
 	 */
 	String getTextSeparator();

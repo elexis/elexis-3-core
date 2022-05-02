@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.semantic;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -49,7 +50,7 @@ public class SemanticCheckMySQL extends SemanticCheck {
 							} catch (JdbcLinkSyntaxException je2) {
 								// We still did not find the table, assume its missing!
 								errlog.append(tables[i] + ": Semantischer Fehler bei Query <<" + query + ">> auf ID "
-										+ ((rs != null) ? rs.getString(1) : rs) + "\n");
+										+ ((rs != null) ? rs.getString(1) : rs) + StringUtils.LF);
 								continue;
 							}
 						}

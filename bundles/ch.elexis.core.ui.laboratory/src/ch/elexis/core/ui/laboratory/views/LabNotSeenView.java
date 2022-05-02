@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.laboratory.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.logging.Level;
 
 import javax.inject.Inject;
@@ -162,7 +163,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 
 		public String getColumnText(final Object element, final int columnIndex) {
 			if (element instanceof String) {
-				return columnIndex == 0 ? (String) element : ""; //$NON-NLS-1$
+				return columnIndex == 0 ? (String) element : StringUtils.EMPTY;
 			}
 			LabResult lr = (LabResult) element;
 			switch (columnIndex) {

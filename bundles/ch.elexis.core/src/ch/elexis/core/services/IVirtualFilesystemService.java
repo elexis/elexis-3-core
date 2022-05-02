@@ -264,7 +264,7 @@ public interface IVirtualFilesystemService {
 	 */
 	public static URI stringToURI(String value) throws URISyntaxException, MalformedURLException {
 
-		value = value.replaceAll("%20", " ");
+		value = value.replaceAll("%20", StringUtils.SPACE);
 
 		// C:\main.c++ -> file:/C:/main.c++
 		if (value.length() > 2 && value.charAt(1) == ':') {

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views.artikel;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
@@ -91,10 +92,10 @@ public class ArtikelContextMenu {
 			public void run() {
 				InputDialog inp = new InputDialog(cv.getViewerWidget().getControl().getShell(),
 						art.getClass().getName() + Messages.ArtikelContextMenu_create,
-						Messages.ArtikelContextMenu_pleaseEnterNameForArticle, "", null); //$NON-NLS-1$
+						Messages.ArtikelContextMenu_pleaseEnterNameForArticle, StringUtils.EMPTY, null);
 				if (inp.open() == InputDialog.OK) {
 					String name = inp.getValue();
-					Artikel n = new Artikel(name, art.getCodeSystemName(), ""); //$NON-NLS-1$
+					Artikel n = new Artikel(name, art.getCodeSystemName(), StringUtils.EMPTY);
 					if (add == null) {
 						EditEigenartikelUi.executeWithParams(n);
 					} else {

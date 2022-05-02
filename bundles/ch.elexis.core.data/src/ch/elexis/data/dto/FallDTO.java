@@ -142,7 +142,7 @@ public class FallDTO implements IFall {
 		if (value instanceof String) {
 			return (String) value;
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	@Override

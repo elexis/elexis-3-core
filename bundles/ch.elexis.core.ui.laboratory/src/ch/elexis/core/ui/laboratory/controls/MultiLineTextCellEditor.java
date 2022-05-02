@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.laboratory.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -64,7 +65,7 @@ public class MultiLineTextCellEditor extends DialogCellEditor {
 		if (getValue() != null) {
 			result = dialog.open(getValue().toString());
 		} else {
-			result = dialog.open(""); //$NON-NLS-1$
+			result = dialog.open(StringUtils.EMPTY);
 		}
 
 		if (result == Dialog.OK) {

@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +131,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		compositeDayTimeDosage.setLayout(layout);
 		txtSignatureMorning = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtSignatureMorning.setMessage(Messages.ArticleDefaultSignatureComposite_morning);
-		txtSignatureMorning.setToolTipText(""); //$NON-NLS-1$
+		txtSignatureMorning.setToolTipText(StringUtils.EMPTY);
 		txtSignatureMorning.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label label = new Label(compositeDayTimeDosage, SWT.None);
@@ -176,7 +177,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 					stackLayoutDosage.topControl = compositeFreeTextDosage;
 				} else {
 					stackLayoutDosage.topControl = compositeDayTimeDosage;
-					txtFreeTextDosage.setText(""); //$NON-NLS-1$
+					txtFreeTextDosage.setText(StringUtils.EMPTY);
 				}
 				stackCompositeDosage.layout();
 			};
@@ -229,7 +230,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 
 		GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
 		txtEnddate = new Text(compositeMedicationTypeDetail, SWT.BORDER | SWT.CENTER);
-		txtEnddate.setText("");
+		txtEnddate.setText(StringUtils.EMPTY);
 		gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
 		gd.widthHint = 30;
 		txtEnddate.setLayoutData(gd);
@@ -289,7 +290,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			} else if (getParent() != null) {
 				getParent().layout();
 			}
-			txtEnddate.setText("");
+			txtEnddate.setText(StringUtils.EMPTY);
 		}
 	}
 

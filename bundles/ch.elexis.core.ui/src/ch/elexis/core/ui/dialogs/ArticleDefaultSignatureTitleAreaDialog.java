@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -109,7 +110,7 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 			return number;
 		}
 
-		return number.replaceAll("\\.?0*$", "");
+		return number.replaceAll("\\.?0*$", StringUtils.EMPTY);
 	}
 
 }

@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class FixMultipleDiagnosis extends ExternalMaintenance {
 						fw.write(diagnoseSts + ";");
 					}
 					diagMap.put(konsultation.getId(), diagnosen);
-					fw.write("\n");
+					fw.write(StringUtils.LF);
 				} else {
 					sb.append("[" + konsultation.getId() + "] 0 diagnosis entries\n");
 				}
@@ -108,15 +109,15 @@ public class FixMultipleDiagnosis extends ExternalMaintenance {
 				ArrayList<IDiagnose> diagnosen = kons.getDiagnosen();
 				int should = diagnosisEntries.size();
 				if (diagnosen.size() != should) {
-					sb.append("[" + split[0] + "] # of diagnosis entries mismatch " + should + " " + diagnosen.size()
-							+ "\n");
+					sb.append("[" + split[0] + "] # of diagnosis entries mismatch " + should + StringUtils.SPACE
+							+ diagnosen.size() + StringUtils.LF);
 					resultOk = false;
 				} else {
 					for (IDiagnose iDiagnose : diagnosen) {
 						if (!diagnosisEntries.contains(
 								iDiagnose.getClass().getName() + StringConstants.DOUBLECOLON + iDiagnose.getCode())) {
 							sb.append("[" + split[0] + "] missing " + iDiagnose.getClass().getName()
-									+ StringConstants.DOUBLECOLON + iDiagnose.getCode() + "\n");
+									+ StringConstants.DOUBLECOLON + iDiagnose.getCode() + StringUtils.LF);
 							resultOk = false;
 						}
 					}
@@ -133,7 +134,7 @@ public class FixMultipleDiagnosis extends ExternalMaintenance {
 		int parseLong = Integer.parseInt(count);
 
 		sb.append("--> No of unique diagnoses matches: " + Boolean.toString(parseLong == uniqueDiagnosen.size()));
-		sb.append("Result is equivalent " + resultOk + "\n");
+		sb.append("Result is equivalent " + resultOk + StringUtils.LF);
 		return sb.toString();
 	}
 

@@ -12,6 +12,8 @@
  */
 package ch.elexis.core.constants;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Utility Class for different constants. To ensure that same things are named
  * identically in different program parts
@@ -22,15 +24,15 @@ package ch.elexis.core.constants;
 public class StringConstants {
 	public static final String SLASH = "/"; //$NON-NLS-1$
 	public static final String BACKSLASH = "\\"; //$NON-NLS-1$
-	public static final String SPACE = " "; //$NON-NLS-1$
-	public static final String EMPTY = ""; //$NON-NLS-1$
+	public static final String SPACE = StringUtils.SPACE;
+	public static final String EMPTY = StringUtils.EMPTY;
 	public static final String COMMA = ","; //$NON-NLS-1$
 	public static final String COLON = ":"; //$NON-NLS-1$
 	public static final String DASH = "-";
 	public static final String DOUBLECOLON = "::"; //$NON-NLS-1$
 	public static final String SEMICOLON = ";";
 	public static final String CRLF = "\r\n";
-	public static final String LF = "\n";
+	public static final String LF = StringUtils.LF;
 
 	public static final String VERSION_LITERAL = "VERSION"; //$NON-NLS-1$
 

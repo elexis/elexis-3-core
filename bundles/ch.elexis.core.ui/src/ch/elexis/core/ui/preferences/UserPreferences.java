@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -120,7 +121,7 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 					blob.put((Hashtable) ConfigServiceHolder.getUserAsMap());
 					SWTHelper.showInfo(Messages.UserPreferences_ConfigSaved,
 							MessageFormat.format(Messages.UserPreferences_ConfigWasSaved, name));
-					cbUserSave.setText(""); //$NON-NLS-1$
+					cbUserSave.setText(StringUtils.EMPTY);
 				}
 			}
 		});

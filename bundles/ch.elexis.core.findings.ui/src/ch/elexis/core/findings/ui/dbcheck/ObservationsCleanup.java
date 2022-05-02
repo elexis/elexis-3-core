@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.dbcheck;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +91,7 @@ public class ObservationsCleanup extends ExternalMaintenance {
 		for (IObservation iObservation : observations) {
 			String key = "[" + iObservation.getEffectiveTime().toString() + "]["
 					+ iObservation.getCoding().get(0).getSystem() + "#" + iObservation.getCoding().get(0).getCode()
-					+ "][" + iObservation.getText().orElse("") + "]";
+					+ "][" + iObservation.getText().orElse(StringUtils.EMPTY) + "]";
 			List<IObservation> list = ret.get(key);
 			if (list == null) {
 				list = new ArrayList<>();

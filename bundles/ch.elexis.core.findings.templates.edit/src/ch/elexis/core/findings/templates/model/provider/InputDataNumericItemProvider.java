@@ -2,6 +2,7 @@
  */
 package ch.elexis.core.findings.templates.model.provider;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.findings.templates.model.InputDataNumeric;
 import ch.elexis.core.findings.templates.model.ModelPackage;
 
@@ -138,7 +139,7 @@ public class InputDataNumericItemProvider extends ItemProviderAdapter
 	public String getText(Object object) {
 		String label = ((InputDataNumeric) object).getUnit();
 		return label == null || label.length() == 0 ? getString("_UI_InputDataNumeric_type")
-				: getString("_UI_InputDataNumeric_type") + " " + label;
+				: getString("_UI_InputDataNumeric_type") + StringUtils.SPACE + label;
 	}
 
 	/**

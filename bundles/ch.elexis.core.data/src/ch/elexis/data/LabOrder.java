@@ -1,5 +1,6 @@
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -173,14 +174,14 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	}
 
 	public LabResult createResult() {
-		LabResult result = new LabResult(getPatient(), null, getLabItem(), "", null);
+		LabResult result = new LabResult(getPatient(), null, getLabItem(), StringUtils.EMPTY, null);
 		result.setObservationTime(getObservationTime());
 		setLabResult(result);
 		return result;
 	}
 
 	public LabResult createResult(Kontakt origin) {
-		LabResult result = new LabResult(getPatient(), null, getLabItem(), "", null, origin);
+		LabResult result = new LabResult(getPatient(), null, getLabItem(), StringUtils.EMPTY, null, origin);
 		result.setObservationTime(getObservationTime());
 		setLabResult(result);
 		return result;

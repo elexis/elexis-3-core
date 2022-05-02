@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.fhir.po.dataaccess;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,14 +63,14 @@ public class TextUtil {
 		Optional<String> end = condition.getEnd();
 		if (start.isPresent() || end.isPresent()) {
 			sb.append("(");
-			sb.append(start.orElse("")).append(" - ");
-			sb.append(end.orElse(""));
+			sb.append(start.orElse(StringUtils.EMPTY)).append(" - ");
+			sb.append(end.orElse(StringUtils.EMPTY));
 			sb.append(") ");
 		}
 
 		Optional<String> text = condition.getText();
-		boolean multiline = text.isPresent() && text.get().contains("\n");
-		sb.append(text.orElse("")).append(multiline ? "\n" : "");
+		boolean multiline = text.isPresent() && text.get().contains(StringUtils.LF);
+		sb.append(text.orElse(StringUtils.EMPTY)).append(multiline ? StringUtils.LF : StringUtils.EMPTY);
 
 		List<ICoding> coding = condition.getCoding();
 		for (ICoding iCoding : coding) {
@@ -89,9 +90,9 @@ public class TextUtil {
 	public static String getText(IObservation observation, ICodingService codingService) {
 		StringBuilder sb = new StringBuilder();
 		if (isPersAnamnese(observation)) {
-			sb.append(observation.getText().orElse(""));
+			sb.append(observation.getText().orElse(StringUtils.EMPTY));
 		} else if (isRiskfactor(observation)) {
-			sb.append(observation.getText().orElse(""));
+			sb.append(observation.getText().orElse(StringUtils.EMPTY));
 		}
 		return sb.toString();
 	}
@@ -105,7 +106,7 @@ public class TextUtil {
 	 */
 	public static Object getText(IAllergyIntolerance allergy, ICodingService codingService) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(allergy.getText().orElse(""));
+		sb.append(allergy.getText().orElse(StringUtils.EMPTY));
 		return sb.toString();
 	}
 
@@ -118,7 +119,7 @@ public class TextUtil {
 	 */
 	public static Object getText(IFamilyMemberHistory famanam, ICodingService codingService) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(famanam.getText().orElse(""));
+		sb.append(famanam.getText().orElse(StringUtils.EMPTY));
 		return sb.toString();
 	}
 }

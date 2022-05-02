@@ -117,7 +117,7 @@ public class Xid extends PersistentObject implements IXid {
 				if (spl.length < 2) {
 					log.log("Fehler in XID-Domain " + dom, Log.ERRORS);
 				}
-				String simpleName = "";
+				String simpleName = StringUtils.EMPTY;
 				if (spl.length >= 3) {
 					simpleName = spl[2];
 				}
@@ -330,7 +330,8 @@ public class Xid extends PersistentObject implements IXid {
 			if (domain.matches(".*[;#].*")) {
 				log.log("XID Domain " + domain + " ungültig", Log.ERRORS);
 			} else {
-				domains.put(domain, new XIDDomain(domain, simpleName == null ? "" : simpleName, quality, "Kontakt"));
+				domains.put(domain,
+						new XIDDomain(domain, simpleName == null ? StringUtils.EMPTY : simpleName, quality, "Kontakt"));
 				if (simpleName != null) {
 					domainMap.put(simpleName, domain);
 				}

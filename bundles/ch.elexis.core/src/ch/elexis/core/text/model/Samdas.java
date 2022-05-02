@@ -12,6 +12,7 @@
 
 package ch.elexis.core.text.model;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.CharArrayReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,7 @@ public class Samdas {
 	public String getRecordText() {
 		Element rec = getRecordElement();
 		String ret = rec.getChildText(ELEM_TEXT, ns);
-		return ret == null ? "" : ret; //$NON-NLS-1$
+		return ret == null ? StringUtils.EMPTY : ret;
 	}
 
 	public Element getRecordElement() {

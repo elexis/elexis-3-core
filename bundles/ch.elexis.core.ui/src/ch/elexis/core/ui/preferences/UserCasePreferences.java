@@ -12,6 +12,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -92,7 +93,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		getPreferenceStore().setValue(Preferences.USR_DEFCASEREASON, Fall.getDefaultCaseReason());
 		getPreferenceStore().setValue(Preferences.USR_DEFLAW, Fall.getDefaultCaseLaw());
 		// read the sorting for this user form prefs, convert to LinkedList for editing
-		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, "");
+		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, StringUtils.EMPTY);
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
 		topItemsLinkedList = new LinkedList<String>(Arrays.asList(topItemsSorting));
 	}
@@ -129,7 +130,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		diagnoseLbl.setText(Messages.UserCasePreferences_DefaultDiagnose);
 		diagnoseTxt = new Text(diagnoseParent, SWT.BORDER);
 		diagnoseTxt.setEditable(false);
-		String diagnoseId = ConfigServiceHolder.getUser(Preferences.USR_DEFDIAGNOSE, "");
+		String diagnoseId = ConfigServiceHolder.getUser(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);
 		if (diagnoseId.length() > 1) {
 			Identifiable diagnose = StoreToStringServiceHolder.get().loadFromString(diagnoseId).orElse(null);
 			if (diagnose != null)
@@ -149,8 +150,8 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 						ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, storeToString);
 						diagnoseTxt.setText(diagnose.getLabel());
 					} else {
-						ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, "");
-						diagnoseTxt.setText("");
+						ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);
+						diagnoseTxt.setText(StringUtils.EMPTY);
 					}
 				}
 			}
@@ -160,8 +161,8 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		diagnoseDelBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, "");
-				diagnoseTxt.setText("");
+				ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);
+				diagnoseTxt.setText(StringUtils.EMPTY);
 			}
 		});
 
@@ -227,7 +228,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		infoTxt.setText(Messages.UserCasePreferences_InfoLabelForSortingBillingSystems);
 
 		Label lllabel2 = new Label(getFieldEditorParent(), SWT.NONE);
-		lllabel2.setText(""); //$NON-NLS-1$
+		lllabel2.setText(StringUtils.EMPTY);
 		Composite sorterListComp = new Composite(getFieldEditorParent(), SWT.NONE);
 		GridLayout sorterListLayout = new GridLayout();
 		sorterListLayout.marginWidth = 0;
@@ -330,7 +331,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	void moveItemToPresorted() {
 		String[] selStr = sorterList2.getSelection();
 		topItemsLinkedList.add(selStr[0]);
-		topItemsLinkedList.remove(""); //$NON-NLS-1$ // remove any empty items
+		topItemsLinkedList.remove(StringUtils.EMPTY);
 		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList, true));
 		sorterList2.select(topItemsLinkedList.size() - 1);
 		setButtonEnabling();
@@ -339,7 +340,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	void moveItemToNotPresorted() {
 		String[] selStr = sorterList2.getSelection();
 		topItemsLinkedList.remove(selStr[0]);
-		topItemsLinkedList.remove(""); //$NON-NLS-1$ // remove any empty items
+		topItemsLinkedList.remove(StringUtils.EMPTY);
 		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList, true));
 		int newSel = sorterList2.indexOf(selStr[0]);
 		sorterList2.select(newSel);
@@ -371,7 +372,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	void setButtonEnabling() {
 		// get separator and current sel position
 		int separatorPos;
-		if ((topItemsLinkedList.size() > 0) && (!topItemsLinkedList.get(0).equalsIgnoreCase(""))) //$NON-NLS-1$
+		if ((topItemsLinkedList.size() > 0) && (!topItemsLinkedList.get(0).equalsIgnoreCase(StringUtils.EMPTY)))
 			separatorPos = topItemsLinkedList.size();
 		else
 			separatorPos = -1;
@@ -399,10 +400,10 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 
 	public static int getBillingSystemsMenuSeparatorPos(String[] input) {
 		// read the sorting for this user form prefs, convert to LinkedList for editing
-		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, ""); //$NON-NLS-1$
+		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, StringUtils.EMPTY);
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
 		LinkedList<String> lTopItemsLinkedList = new LinkedList<String>(Arrays.asList(topItemsSorting));
-		if ((lTopItemsLinkedList.size() > 0) && (!lTopItemsLinkedList.get(0).equalsIgnoreCase(""))) //$NON-NLS-1$
+		if ((lTopItemsLinkedList.size() > 0) && (!lTopItemsLinkedList.get(0).equalsIgnoreCase(StringUtils.EMPTY)))
 			return lTopItemsLinkedList.size();
 		else
 			return -1;
@@ -418,7 +419,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	 */
 	public static String[] sortBillingSystems(String[] input) {
 		// read the sorting for this user form prefs, convert to LinkedList for editing
-		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, ""); //$NON-NLS-1$
+		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, StringUtils.EMPTY);
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
 		LinkedList<String> lTopItemsLinkedList = new LinkedList<String>(Arrays.asList(topItemsSorting));
 		return sortBillingSystems(input, lTopItemsLinkedList);
@@ -467,11 +468,12 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		}
 
 		// now append the sorted items to the copied top items
-		if (alwaysShowSeparator || ((topItemsSorting.size() > 0) && (!topItemsSorting.get(0).equalsIgnoreCase("")))) { //$NON-NLS-1$
+		if (alwaysShowSeparator
+				|| ((topItemsSorting.size() > 0) && (!topItemsSorting.get(0).equalsIgnoreCase(StringUtils.EMPTY)))) {
 			lTopItemsSorting.add(MENUSEPARATOR);
 		}
 		lTopItemsSorting.addAll(sortedList);
-		lTopItemsSorting.remove(""); //$NON-NLS-1$
+		lTopItemsSorting.remove(StringUtils.EMPTY);
 
 		String[] output = new String[lTopItemsSorting.size()];
 		lTopItemsSorting.toArray(output);

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.laboratory.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -78,7 +79,7 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 					destinationFilter.setSearchText(destinationFilterTxt.getText());
 					destinationItems.refresh();
 				} else {
-					destinationFilter.setSearchText(""); //$NON-NLS-1$
+					destinationFilter.setSearchText(StringUtils.EMPTY);
 					destinationItems.refresh();
 				}
 			}
@@ -106,7 +107,7 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 					sourceFilter.setSearchText(sourceFilterTxt.getText());
 					sourceItems.refresh();
 				} else {
-					sourceFilter.setSearchText(""); //$NON-NLS-1$
+					sourceFilter.setSearchText(StringUtils.EMPTY);
 					sourceItems.refresh();
 				}
 			}

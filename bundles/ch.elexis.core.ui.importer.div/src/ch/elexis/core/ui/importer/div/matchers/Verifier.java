@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.matchers;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -77,7 +78,7 @@ public class Verifier {
 			for (Kontakt k : list) {
 				TableItem it = new TableItem(table, SWT.NONE);
 				it.setText(0, k.getLabel(true));
-				it.setText(1, k.get("Strasse") + " " + k.get("Ort")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				it.setText(1, k.get("Strasse") + StringUtils.SPACE + k.get("Ort")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			return table;
 		}

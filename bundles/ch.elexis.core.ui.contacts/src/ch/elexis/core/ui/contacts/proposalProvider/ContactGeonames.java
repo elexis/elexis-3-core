@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.contacts.proposalProvider;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class ContactGeonames {
 	public static String getDialPrefix() {
 		if (currentService != null)
 			return currentService.getDialPrefix();
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	public static Country getCurrentCountryCode() {

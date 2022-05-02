@@ -145,7 +145,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin> implements
 	@Override
 	public String getSubjectOrPatient() {
 		// ids do not contain spaces, do not perform expensive load from db
-		if (getEntity().getPatId() != null && !getEntity().getPatId().contains(" ")) {
+		if (getEntity().getPatId() != null && !getEntity().getPatId().contains(StringUtils.SPACE)) {
 			IContact contact = getContact();
 			if (contact != null) {
 				if (contact.isPatient()) {
@@ -225,7 +225,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin> implements
 
 	@Override
 	public IContact getContact() {
-		return getEntity().getPatId() != null && !getEntity().getPatId().contains(" ")
+		return getEntity().getPatId() != null && !getEntity().getPatId().contains(StringUtils.SPACE)
 				? CoreModelServiceHolder.get().load(getEntity().getPatId(), IContact.class, false, false).orElse(null)
 				: null;
 	}
@@ -277,7 +277,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin> implements
 			}
 			return sb.toString();
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	private LocalDateTime fromMinutesTimeStamp(String timestamp) {
@@ -310,7 +310,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin> implements
 		LocalDateTime start = getStartTime();
 		LocalDateTime end = getEndTime();
 		sb.append(dayFormatter.format(start)).append(",");
-		sb.append(timeFormatter.format(start)).append("-").append(timeFormatter.format(end)).append(" ")
+		sb.append(timeFormatter.format(start)).append("-").append(timeFormatter.format(end)).append(StringUtils.SPACE)
 				.append(getSubjectOrPatient()).append(" (").append(getType()).append(",").append(getState())
 				.append(") ");
 		return sb.toString();

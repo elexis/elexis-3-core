@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,7 +17,7 @@ public class AccountService implements IAccountService {
 	private static final String ACCOUNTS_CONFIG = "ch.elexis.core.data/accounttransaction/accounts"; //$NON-NLS-1$
 	private static final String ACCOUNTS_SEPARATOR = "||"; //$NON-NLS-1$
 
-	public Account UNKNOWN = new Account(-1, "");
+	public Account UNKNOWN = new Account(-1, StringUtils.EMPTY);
 	private HashMap<Integer, IAccount> localCache;
 
 	@Reference
@@ -25,7 +26,7 @@ public class AccountService implements IAccountService {
 	private List<IAccount> loadAccounts() {
 		List<IAccount> ret = new ArrayList<>();
 		ret.add(UNKNOWN);
-		String accountsString = configService.get(ACCOUNTS_CONFIG, ""); //$NON-NLS-1$
+		String accountsString = configService.get(ACCOUNTS_CONFIG, StringUtils.EMPTY);
 		if (accountsString != null && !accountsString.isEmpty()) {
 			String[] accounts = accountsString.split("\\|\\|"); //$NON-NLS-1$
 			for (String string : accounts) {
@@ -74,7 +75,7 @@ public class AccountService implements IAccountService {
 
 	@Override
 	public void addAccount(IAccount newAccount) {
-		String existingString = configService.get(ACCOUNTS_CONFIG, "");
+		String existingString = configService.get(ACCOUNTS_CONFIG, StringUtils.EMPTY);
 		StringBuilder sb = new StringBuilder();
 		sb.append(existingString);
 		if (sb.length() > 0) {

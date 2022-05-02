@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.UUID;
 
@@ -146,7 +147,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		mntmAddStock.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Stock stock = new Stock("", Integer.MAX_VALUE);
+				Stock stock = new Stock(StringUtils.EMPTY, Integer.MAX_VALUE);
 				tableViewer.add(stock);
 				tableViewer.setSelection(new StructuredSelection(stock));
 			}
@@ -284,7 +285,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 				if (ret == Window.OK) {
 					Mandant p = (Mandant) ks.getSelection();
 					s.setOwner(p);
-					String label = (p != null) ? p.getLabel() : "";
+					String label = (p != null) ? p.getLabel() : StringUtils.EMPTY;
 					lblOwnerText.setText(label);
 				} else {
 					s.setOwner(null);
@@ -313,11 +314,11 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 				if (ret == Window.OK) {
 					Kontakt p = (Kontakt) ks.getSelection();
 					s.setResponsible(p);
-					String label = (p != null) ? p.getLabel() : "";
+					String label = (p != null) ? p.getLabel() : StringUtils.EMPTY;
 					lblResponsibleText.setText(label);
 				} else {
 					s.setResponsible(null);
-					lblResponsibleText.setText("");
+					lblResponsibleText.setText(StringUtils.EMPTY);
 				}
 			}
 		});
@@ -447,7 +448,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 					}
 				} else {
 					ConfigServiceHolder.setGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
-					lblDefaultArticleProvider.setText("");
+					lblDefaultArticleProvider.setText(StringUtils.EMPTY);
 				}
 			}
 		});
@@ -455,7 +456,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		lblDefaultArticleProvider = new Label(compDefaultProvider, SWT.NONE);
 		lblDefaultArticleProvider.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		String id = ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
-		lblDefaultArticleProvider.setText("");
+		lblDefaultArticleProvider.setText(StringUtils.EMPTY);
 		new Label(compDefaultProvider, SWT.NONE);
 		if (id != null) {
 			Kontakt load = Kontakt.load(id);
@@ -474,13 +475,13 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 				if (owner != null) {
 					lblOwnerText.setText(owner.getLabel());
 				} else {
-					lblOwnerText.setText("");
+					lblOwnerText.setText(StringUtils.EMPTY);
 				}
 				Kontakt responsible = stock.getResponsible();
 				if (responsible != null) {
 					lblResponsibleText.setText(responsible.getLabel());
 				} else {
-					lblResponsibleText.setText("");
+					lblResponsibleText.setText(StringUtils.EMPTY);
 				}
 				String machineUuid = stock.getDriverUuid();
 				if (machineUuid != null && !machineUuid.isEmpty()) {
@@ -488,11 +489,11 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 							.getInfoStringForDriver(UUID.fromString(machineUuid), false);
 					lblMachineuuid.setText(info);
 				} else {
-					lblMachineuuid.setText("");
+					lblMachineuuid.setText(StringUtils.EMPTY);
 				}
 			} else {
-				lblOwnerText.setText("");
-				lblResponsibleText.setText("");
+				lblOwnerText.setText(StringUtils.EMPTY);
+				lblResponsibleText.setText(StringUtils.EMPTY);
 			}
 		});
 

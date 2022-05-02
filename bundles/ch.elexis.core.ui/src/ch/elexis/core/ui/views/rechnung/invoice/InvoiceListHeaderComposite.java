@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.rechnung.invoice;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -139,7 +140,7 @@ public class InvoiceListHeaderComposite extends Composite {
 
 		lblLimitWarn = new Label(this, SWT.NONE);
 		lblLimitWarn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		lblLimitWarn.setText("");
+		lblLimitWarn.setText(StringUtils.EMPTY);
 		defaultBackgroundColor = lblLimitWarn.getBackground();
 
 		Label btnClear = new Label(this, SWT.FLAT);
@@ -280,8 +281,8 @@ public class InvoiceListHeaderComposite extends Composite {
 		actPatient = null;
 		comboViewerBillingSystem.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
 		comboViewerType.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
-		txtInvoiceno.setText("");
-		txtAmount.setText("");
+		txtInvoiceno.setText(StringUtils.EMPTY);
+		txtAmount.setText(StringUtils.EMPTY);
 		lblPatientname.setText(ALL_PATIENTS_LABEL);
 	}
 
@@ -357,8 +358,8 @@ public class InvoiceListHeaderComposite extends Composite {
 					String.format(Messages.InvoiceListHeaderComposite_queryLimit_toolTipText, queryLimit));
 			lblLimitWarn.setBackground(UiDesk.getColor(UiDesk.COL_RED));
 		} else {
-			lblLimitWarn.setText("");
-			lblLimitWarn.setToolTipText("");
+			lblLimitWarn.setText(StringUtils.EMPTY);
+			lblLimitWarn.setToolTipText(StringUtils.EMPTY);
 			lblLimitWarn.setBackground(defaultBackgroundColor);
 		}
 	}

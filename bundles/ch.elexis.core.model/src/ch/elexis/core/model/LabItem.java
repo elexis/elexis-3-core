@@ -123,7 +123,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 
 		if (formula == null || formula.isEmpty()) {
 			String[] refWEntry = StringUtils.defaultString(getEntity().getReferenceFemale()).split("##");
-			formula = refWEntry.length > 1 ? refWEntry[1] : "";
+			formula = refWEntry.length > 1 ? refWEntry[1] : StringUtils.EMPTY;
 
 			if (formula != null && !formula.isEmpty()) {
 				setFormula(formula);
@@ -177,8 +177,8 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@Override
 	public String getVariableName() {
 		String group = getGroup();
-		if (group != null && group.contains(" ")) {
-			String[] group_tokens = group.split(" ", 2);
+		if (group != null && group.contains(StringUtils.SPACE)) {
+			String[] group_tokens = group.split(StringUtils.SPACE, 2);
 			String prio = getPriority();
 			String num = (prio != null) ? prio.trim() : "9999";
 			return group_tokens[0] + "_" + num;
@@ -192,7 +192,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		StringBuilder sb = new StringBuilder();
 		sb.append(getCode() + ", " + getName());
 		if (LabItemTyp.NUMERIC == getTyp()) {
-			sb.append(" (" + getReferenceMale() + "/" + getReferenceFemale() + " " + getUnit() + ")");
+			sb.append(" (" + getReferenceMale() + "/" + getReferenceFemale() + StringUtils.SPACE + getUnit() + ")");
 		} else {
 			sb.append(" (" + getReferenceFemale() + ")");
 		}
@@ -202,6 +202,6 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 
 	@Override
 	public String toString() {
-		return super.toString() + " " + getLabel();
+		return super.toString() + StringUtils.SPACE + getLabel();
 	}
 }

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -408,7 +409,7 @@ public class StammDatenComposite extends AbstractComposite {
 			if (contact.getCode() != null) {
 				lblCode.setText("#" + contact.getCode());
 			} else {
-				lblCode.setText("");
+				lblCode.setText(StringUtils.EMPTY);
 			}
 		}
 
@@ -425,7 +426,7 @@ public class StammDatenComposite extends AbstractComposite {
 			txtFirstName.setMessage("Bezeichnung 1");
 			txtFamilyName.setMessage("Bezeichnung 2");
 			lblHeadline.setText(ORGANIZATION_LABEL);
-			lblCode.setText("");
+			lblCode.setText(StringUtils.EMPTY);
 		}
 
 		layout();
@@ -482,7 +483,7 @@ public class StammDatenComposite extends AbstractComposite {
 		public void focusLost(FocusEvent e) {
 			Text text = ((Text) e.widget);
 			if (text.getText().equalsIgnoreCase(ContactGeonames.getDialPrefix()))
-				text.setText("");
+				text.setText(StringUtils.EMPTY);
 		}
 
 		@Override

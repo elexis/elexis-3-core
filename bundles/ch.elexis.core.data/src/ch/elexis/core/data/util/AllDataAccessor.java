@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,11 +95,11 @@ public class AllDataAccessor implements IDataAccess {
 				sb.append("- " + date.toString(TimeTool.DATE_GER) + " - " + kons.getMandant().getLabel(false));
 
 				if (withFall) {
-					sb.append(" ");
+					sb.append(StringUtils.SPACE);
 					sb.append(fall.getBezeichnung());
 				}
 
-				sb.append("\n"); //$NON-NLS-1$
+				sb.append(StringUtils.LF);
 
 				Samdas samdas = new Samdas(kons.getEintrag().getHead());
 				sb.append(samdas.getRecordText());

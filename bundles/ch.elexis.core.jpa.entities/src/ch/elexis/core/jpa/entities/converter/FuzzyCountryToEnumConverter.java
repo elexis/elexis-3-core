@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.jpa.entities.converter;
 
+import org.apache.commons.lang3.StringUtils;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
@@ -27,7 +28,7 @@ public class FuzzyCountryToEnumConverter implements AttributeConverter<Country, 
 	@Override
 	public String convertToDatabaseColumn(Country objectValue) {
 		if (objectValue == null) {
-			return "";
+			return StringUtils.EMPTY;
 		}
 		Country c = (Country) objectValue;
 		return c.name();

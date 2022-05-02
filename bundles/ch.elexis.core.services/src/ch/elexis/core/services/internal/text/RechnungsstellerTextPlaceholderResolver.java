@@ -1,5 +1,6 @@
 package ch.elexis.core.services.internal.text;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -51,11 +52,11 @@ public class RechnungsstellerTextPlaceholderResolver implements ITextPlaceholder
 				return PersonFormatUtil
 						.getSalutation(CoreModelServiceHolder.get().load(iContact.getId(), IPerson.class).get());
 			} else {
-				return "";
+				return StringUtils.EMPTY;
 			}
 		case Name:
 			if (iContact.isPerson()) {
-				return iContact.getDescription2() + " " + iContact.getDescription1();
+				return iContact.getDescription2() + StringUtils.SPACE + iContact.getDescription1();
 			} else {
 				return iContact.getDescription1();
 			}

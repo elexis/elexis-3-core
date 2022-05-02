@@ -5,6 +5,7 @@
 
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,8 @@ public class FixPharmacodeLessSeven extends ExternalMaintenance {
 						missingZeros--;
 					}
 					sb.append(subId);
-					output.append("Korrigiere " + artikel.getName() + " von " + subId + " auf " + sb.toString() + "\n");
+					output.append("Korrigiere " + artikel.getName() + " von " + subId + " auf " + sb.toString()
+							+ StringUtils.LF);
 					artikel.set(Artikel.FLD_SUB_ID, sb.toString());
 					articleExtInfo.put(PHARMACODE_EXTINFO_ID, sb.toString());
 					artikel.setMap(Artikel.FLD_EXTINFO, articleExtInfo);

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -86,10 +87,10 @@ public class BezugsKontaktAuswahl extends Dialog {
 		Composite ret = (Composite) super.createDialogArea(parent);
 		new Label(ret, SWT.NONE).setText(Messages.Patientenblatt2_pleaseEnterKindOfRelationship); // $NON-NLS-1$
 
-		new Label(ret, SWT.NONE).setText(srcLabel + " " + Messages.Bezugskontakt_Is); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(srcLabel + StringUtils.SPACE + Messages.Bezugskontakt_Is);
 		cbBezugSrc = new Combo(ret, SWT.NONE);
 		cbBezugSrc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		String bez = ConfigServiceHolder.getGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, ""); //$NON-NLS-1$
+		String bez = ConfigServiceHolder.getGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, StringUtils.EMPTY);
 
 		String[] items = getBezugKonkaktTypes(bez);
 
@@ -136,13 +137,13 @@ public class BezugsKontaktAuswahl extends Dialog {
 
 		String[] bezugKontaktTypes = getBezugKontaktTypes();
 
-		new Label(dynComposite, SWT.NONE).setText(Messages.Bezugskontakt_RelationFrom + " "); //$NON-NLS-1$
+		new Label(dynComposite, SWT.NONE).setText(Messages.Bezugskontakt_RelationFrom + StringUtils.SPACE);
 		cbTypeDest = new Combo(dynComposite, SWT.READ_ONLY);
 		cbTypeDest.setEnabled(!locked);
 		cbTypeDest.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		cbTypeDest.setItems(bezugKontaktTypes);
 
-		new Label(dynComposite, SWT.NONE).setText(Messages.Bezugskontakt_RelationTo + " "); //$NON-NLS-1$
+		new Label(dynComposite, SWT.NONE).setText(Messages.Bezugskontakt_RelationTo + StringUtils.SPACE);
 		cbTypeSrc = new Combo(dynComposite, SWT.READ_ONLY);
 		cbTypeSrc.setEnabled(!locked);
 		cbTypeSrc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -209,7 +210,7 @@ public class BezugsKontaktAuswahl extends Dialog {
 		String[] items = cbBezugSrc.getItems();
 		String nitem = selectedBezugKontaktRelation.getName();
 		if (StringTool.getIndex(items, nitem) == -1) {
-			String res = ConfigServiceHolder.getGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, "")
+			String res = ConfigServiceHolder.getGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, StringUtils.EMPTY)
 					+ Patientenblatt2.SPLITTER + selectedBezugKontaktRelation.getCfgString();
 			ConfigServiceHolder.setGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, res);
 		}

@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.provider;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -47,14 +48,14 @@ public class StockEntryLabelProvider extends LabelProvider implements ITableLabe
 						return code;
 					}
 				}
-				return "";
+				return StringUtils.EMPTY;
 			case 2:
-				return (article != null) ? article.getGtin() : "";
+				return (article != null) ? article.getGtin() : StringUtils.EMPTY;
 			case 3:
-				return (article != null) ? article.getLabel() : "";
+				return (article != null) ? article.getLabel() : StringUtils.EMPTY;
 			case 4:
 				return (article != null && article.getSellingPrice() != null) ? article.getSellingPrice().toString()
-						: "";
+						: StringUtils.EMPTY;
 			case 5:
 				return Integer.toString(se.getMinimumStock());
 			case 6:

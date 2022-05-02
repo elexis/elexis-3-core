@@ -38,7 +38,7 @@ public class Trace {
 				_workstation = NetTool.hostname;
 			}
 			_workstation = (StringUtils.isEmpty(_workstation)) ? "unknown" : StringUtils.abbreviate(_workstation, 40);
-			String _action = (StringUtils.isEmpty(action)) ? "" : action;
+			String _action = (StringUtils.isEmpty(action)) ? StringUtils.EMPTY : action;
 
 			JdbcLink connection = PersistentObject.getConnection();
 

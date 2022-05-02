@@ -1,5 +1,6 @@
 package ch.elexis.core.jpa.datasource.test;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -57,7 +58,7 @@ public class TestDatabaseConnection extends DBConnection {
 		rdbmsType = DBType.H2;
 		databaseName = "elexisTest";
 		username = "sa";
-		password = "";
+		password = StringUtils.EMPTY;
 		Optional<String> fileLocation = getTestDbFile();
 
 		String testConnectionString = System.getProperty("elexis.test.db.connectionString");

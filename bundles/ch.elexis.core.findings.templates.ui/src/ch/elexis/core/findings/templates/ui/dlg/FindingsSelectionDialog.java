@@ -95,7 +95,7 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 				if (element instanceof FindingsTemplate) {
 					return ((FindingsTemplate) element).getTitle();
 				}
-				return "";
+				return StringUtils.EMPTY;
 			}
 
 			@Override

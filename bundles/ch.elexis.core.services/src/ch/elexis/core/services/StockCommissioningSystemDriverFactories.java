@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,6 @@ public class StockCommissioningSystemDriverFactories {
 				return icsdf.getName();
 			}
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 }

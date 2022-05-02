@@ -1,5 +1,6 @@
 package ch.elexis.core.eenv;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -65,7 +66,7 @@ public class KeycloakUser implements IUser {
 
 	@Override
 	public String getLabel() {
-		return name + " " + familyName + " (" + getId() + ")";
+		return name + StringUtils.SPACE + familyName + " (" + getId() + ")";
 	}
 
 	@Override

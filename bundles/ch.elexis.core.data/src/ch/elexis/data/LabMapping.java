@@ -1,5 +1,6 @@
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -251,7 +252,7 @@ public class LabMapping extends PersistentObject {
 				notImported.append(line);
 				notImported.append(" -> "); //$NON-NLS-1$
 				notImported.append(reason);
-				notImported.append("\n"); //$NON-NLS-1$
+				notImported.append(StringUtils.LF);
 				continue;
 			} else if (parts[0].equalsIgnoreCase("CONTACT_NAME")) { //$NON-NLS-1$
 				// skip description line
@@ -269,7 +270,7 @@ public class LabMapping extends PersistentObject {
 				notImported.append(line);
 				notImported.append(" -> "); //$NON-NLS-1$
 				notImported.append(reason);
-				notImported.append("\n"); //$NON-NLS-1$
+				notImported.append(StringUtils.LF);
 				continue;
 			} else {
 				labor = origins.get(0);
@@ -284,7 +285,7 @@ public class LabMapping extends PersistentObject {
 			String labItemUnit = parts[7];
 			String labItemTyp = parts[8];
 			String labItemGroup = parts[9];
-			String labItemBillingCode = "";
+			String labItemBillingCode = StringUtils.EMPTY;
 			if (parts.length > 10) {
 				labItemBillingCode = parts[10];
 			}
@@ -296,7 +297,7 @@ public class LabMapping extends PersistentObject {
 				notImported.append(line);
 				notImported.append(" -> "); //$NON-NLS-1$
 				notImported.append(reason);
-				notImported.append("\n"); //$NON-NLS-1$
+				notImported.append(StringUtils.LF);
 				continue;
 			}
 
@@ -314,7 +315,7 @@ public class LabMapping extends PersistentObject {
 				notImported.append(line);
 				notImported.append(" -> "); //$NON-NLS-1$
 				notImported.append(reason);
-				notImported.append("\n"); //$NON-NLS-1$
+				notImported.append(StringUtils.LF);
 				continue;
 			} else {
 				labItem = items.get(0);

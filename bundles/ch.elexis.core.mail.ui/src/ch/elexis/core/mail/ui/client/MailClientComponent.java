@@ -1,5 +1,6 @@
 package ch.elexis.core.mail.ui.client;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
@@ -30,7 +31,7 @@ public class MailClientComponent {
 	}
 
 	public static String getLastErrorMessage() {
-		String message = "";
+		String message = StringUtils.EMPTY;
 		if (mailClient != null) {
 			Optional<ErrorTyp> error = mailClient.getLastError();
 			if (error.isPresent()) {

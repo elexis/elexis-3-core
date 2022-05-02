@@ -76,7 +76,7 @@ public class FallUpdatesFor36 {
 							} catch (IllegalArgumentException iae) {
 								log.error("Could not resolve law [{}] from billing systeem [{}]",
 										abrechnungsSystemGesetz, abrechnungssystem);
-								errors.append("Fehler Gesetz-Konfiguration für " + abrechnungssystem + "\n");
+								errors.append("Fehler Gesetz-Konfiguration für " + abrechnungssystem + StringUtils.LF);
 							}
 						} else {
 							log.error("No gesetz constant found for billing system [{}]", abrechnungssystem);
@@ -87,10 +87,10 @@ public class FallUpdatesFor36 {
 						// Kostenträger:K;Fallnummer:T
 						if (requirements != null && requirements.contains("Kostenträger:K")) {
 							BillingSystem.moveCostBearerFromExtinfoToDBRow(abrechnungssystem, "Kostenträger");
-							requirements = requirements.replace("Kostenträger:K:;", "");
-							requirements = requirements.replace("Kostenträger:K:", "");
-							requirements = requirements.replace("Kostenträger:K;", "");
-							requirements = requirements.replace("Kostenträger:K", "");
+							requirements = requirements.replace("Kostenträger:K:;", StringUtils.EMPTY);
+							requirements = requirements.replace("Kostenträger:K:", StringUtils.EMPTY);
+							requirements = requirements.replace("Kostenträger:K;", StringUtils.EMPTY);
+							requirements = requirements.replace("Kostenträger:K", StringUtils.EMPTY);
 							ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 									+ abrechnungssystem + "/bedingungen", requirements); //$NON-NLS-1$
 						} else {

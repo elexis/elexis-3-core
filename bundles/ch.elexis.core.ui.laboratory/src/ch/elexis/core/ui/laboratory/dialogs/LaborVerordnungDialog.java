@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.laboratory.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -77,7 +78,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	}
 
 	private void selectLastSelectedUser() {
-		String id = ConfigServiceHolder.getUser(LAST_SELECTED_USER, ""); //$NON-NLS-1$
+		String id = ConfigServiceHolder.getUser(LAST_SELECTED_USER, StringUtils.EMPTY);
 		Anwender user = Anwender.load(id);
 		if (user != null && user.exists()) {
 			StructuredSelection newSelection = new StructuredSelection(user);
@@ -87,7 +88,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 
 	private void saveLastSelectedUser() {
 		Anwender user = getSelectedUser();
-		String id = ""; //$NON-NLS-1$
+		String id = StringUtils.EMPTY;
 		if (user != null) {
 			id = user.getId();
 		}
@@ -244,7 +245,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		StringBuilder message = new StringBuilder("Labor"); //$NON-NLS-1$
 		StringBuilder params = new StringBuilder();
 		if (orders != null && !orders.isEmpty()) {
-			message.append(" ")
+			message.append(StringUtils.SPACE)
 					.append(ch.elexis.core.ui.laboratory.controls.Messages.LaborOrdersComposite_columnOrdernumber)
 					.append(": ").append(orders.get(0).get(LabOrder.FLD_ORDERID)); //$NON-NLS-1$
 			params.append(LabOrder.FLD_ORDERID + "=" + orders.get(0).get(LabOrder.FLD_ORDERID));
@@ -344,12 +345,12 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	private static class NoAnwender extends Anwender {
 		@Override
 		public String getId() {
-			return "";
+			return StringUtils.EMPTY;
 		}
 
 		@Override
 		public String getLabel() {
-			return "";
+			return StringUtils.EMPTY;
 		}
 
 		@Override

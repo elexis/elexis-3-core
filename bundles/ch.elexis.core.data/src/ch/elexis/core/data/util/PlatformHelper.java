@@ -12,6 +12,7 @@
 
 package ch.elexis.core.data.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.net.URL;
 
@@ -35,7 +36,7 @@ public class PlatformHelper {
 			bundleLocation = file.getAbsolutePath();
 			return bundleLocation;
 		} catch (Throwable throwable) {
-			return "";
+			return StringUtils.EMPTY;
 		}
 	}
 }

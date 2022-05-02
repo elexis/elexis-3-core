@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.wizards;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ObjectStreamClass;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -158,11 +159,11 @@ public class DBConnectWizard extends Wizard {
 	private String parseHostname(String connectionString) {
 		int i = connectionString.indexOf("//") + 2;
 		if (i == -1)
-			return "";
+			return StringUtils.EMPTY;
 		String woHeader = connectionString.substring(i);
 		int ij = woHeader.indexOf(":");
 		if (ij == -1)
-			return "";
+			return StringUtils.EMPTY;
 		return woHeader.substring(0, ij);
 	}
 

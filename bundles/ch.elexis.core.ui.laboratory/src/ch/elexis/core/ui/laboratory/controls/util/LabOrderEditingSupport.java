@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.laboratory.controls.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
@@ -57,7 +58,8 @@ public class LabOrderEditingSupport extends EditingSupport {
 						try {
 							String editedValue = (String) value;
 							if (editedValue.startsWith(SMALLER) || editedValue.startsWith(BIGGER)) {
-								String nrValue = editedValue.replace(SMALLER, "").replace(BIGGER, "");
+								String nrValue = editedValue.replace(SMALLER, StringUtils.EMPTY).replace(BIGGER,
+										StringUtils.EMPTY);
 								editedValue = nrValue.trim();
 							}
 							Float.parseFloat(editedValue);
@@ -154,7 +156,7 @@ public class LabOrderEditingSupport extends EditingSupport {
 				}
 			}
 		}
-		return ""; //$NON-NLS-1$
+		return StringUtils.EMPTY;
 	}
 
 	@Override

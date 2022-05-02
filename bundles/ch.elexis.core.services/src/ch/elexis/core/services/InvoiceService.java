@@ -81,8 +81,8 @@ public class InvoiceService implements IInvoiceService {
 								+ encounter.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
 								+ " für\nPatient Nr. " + pat.getPatientNr() + ", " + pat.getLastName() + ", "
 								+ pat.getFirstName() + ", "
-								+ pat.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + "\n"
-								+ "enthält mindestens eine Leistung zum Preis 0.00.\n"
+								+ pat.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+								+ StringUtils.LF + "enthält mindestens eine Leistung zum Preis 0.00.\n"
 								+ "\nDie Ärztekasse würde so eine Rechnung zurückgeben.\n\n";
 						return result.add(Result.SEVERITY.WARNING, 1, msg + "Diese Rechnung wird jetzt nicht erstellt."
 								+ "\n\nBitte prüfen Sie die verrechneten Leistungen,"

@@ -15,6 +15,7 @@
 
 package ch.elexis.core.ui.contacts.views;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
@@ -330,7 +331,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 					public void displayContent(Object po, InputData ltf) {
 						Patient p = (Patient) po;
-						String result = "";
+						String result = StringUtils.EMPTY;
 						if (p.getStammarzt() != null && p.getStammarzt().exists()) {
 							Kontakt stammarzt = p.getStammarzt();
 							if (stammarzt.istPerson()) {
@@ -344,7 +345,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 							String telephoneLabel = stammarzt.getTelephoneLabel();
 							String label = stammarzt.getLabel()
-									+ ((telephoneLabel.length() > 0) ? " (" + telephoneLabel + ")" : "");
+									+ ((telephoneLabel.length() > 0) ? " (" + telephoneLabel + ")" : StringUtils.EMPTY);
 							ltf.setTooltipText(label);
 						} else {
 							ltf.setTooltipText(null);
@@ -409,10 +410,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					@Override
 					public void displayContent(Object po, InputData ltf) {
 						Patient p = (Patient) po;
-						String guardianLabel = "";
+						String guardianLabel = StringUtils.EMPTY;
 						Kontakt legalGuardian = p.getLegalGuardian();
 						if (legalGuardian != null && legalGuardian.exists()) {
-							guardianLabel = legalGuardian.get(Kontakt.FLD_NAME1) + " "
+							guardianLabel = legalGuardian.get(Kontakt.FLD_NAME1) + StringUtils.SPACE
 									+ legalGuardian.get(Kontakt.FLD_NAME2);
 						}
 						ltf.setText(guardianLabel);
@@ -428,14 +429,14 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 								Messages.Patientenblatt2_selectLegalGuardianMessage, null);
 						ks.enableEmptyFieldButton();
 						if (ks.open() == Dialog.OK) {
-							String guardianLabel = "";
+							String guardianLabel = StringUtils.EMPTY;
 							Object contactSel = ks.getSelection();
 							Kontakt legalGuardian = null;
 
 							// get legal guardian if one is defined
 							if (contactSel != null) {
 								legalGuardian = (Kontakt) contactSel;
-								guardianLabel = legalGuardian.get(Kontakt.FLD_NAME1) + " "
+								guardianLabel = legalGuardian.get(Kontakt.FLD_NAME1) + StringUtils.SPACE
 										+ legalGuardian.get(Kontakt.FLD_NAME2);
 							}
 							((Patient) po).setLegalGuardian(legalGuardian);
@@ -598,8 +599,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				final String[] sortFields = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_STREET };
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
 						Messages.Patientenblatt2_contactForAdditionalAddress,
-						Messages.Patientenblatt2_pleaseSelectardress, sortFields); // $NON-NLS-1$
-																					// //$NON-NLS-2$
+						Messages.Patientenblatt2_pleaseSelectardress, sortFields);
 				if (ksl.open() == Dialog.OK && actPatient != null) {
 					Kontakt k = (Kontakt) ksl.getSelection();
 					if (k != null) {
@@ -715,7 +715,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		for (int i = 0; i < lbExpandable.size(); i++) {
 			ec.add(WidgetFactory.createExpandableComposite(tk, form, lbExpandable.get(i)));
 			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + lbExpandable.get(i));
-			txExpandable.add(tk.createText(ec.get(i), "", SWT.MULTI)); //$NON-NLS-1$
+			txExpandable.add(tk.createText(ec.get(i), StringUtils.EMPTY, SWT.MULTI));
 			ec.get(i).setData(KEY_DBFIELD, dfExpandable.get(i));
 			ec.get(i).addExpansionListener(new ExpansionAdapter() {
 				@Override
@@ -726,7 +726,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						if (actPatient != null) {
 							tx.setText(StringTool.unNull(actPatient.get((String) src.getData(KEY_DBFIELD))));
 						} else {
-							tx.setText(""); //$NON-NLS-1$
+							tx.setText(StringUtils.EMPTY);
 						}
 					} else {
 						if (actPatient != null) {
@@ -1048,7 +1048,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 					// System.out.print("jsdebug:
 					// SelectedContactInfos.k.toString():
-					// \n"+k.toString()+"\n");
+					// \n"+k.toString()+StringUtils.LF);
 
 					// The following code is adopted from
 					// Kontakt.createStdAnschrift for a
@@ -1106,7 +1106,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						if (p.getGeschlecht().equals(Person.FEMALE)) {
 							salutation = Messages.KontakteView_SalutationF; // $NON-NLS-1$
 						} else {
-							salutation = ""; //$NON-NLS-1$
+							salutation = StringUtils.EMPTY;
 						}
 
 						if (!StringTool.isNothing(salutation)) { // salutation
@@ -1284,7 +1284,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					 */
 
 					// System.out.print("jsdebug: SelectedContactInfosText:
-					// \n"+SelectedContactInfosText+"\n");
+					// \n"+SelectedContactInfosText+StringUtils.LF);
 
 					// Adopted from BestellView.exportClipboardAction:
 					// Copy some generated object.toString() to the clipoard
@@ -1422,7 +1422,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					 */
 
 					// System.out.print("jsdebug: selectedAddressesText:
-					// \n"+selectedAddressesText+"\n");
+					// \n"+selectedAddressesText+StringUtils.LF);
 
 					// Adopted from BestellView.exportClipboardAction:
 					// Copy some generated object.toString() to the clipoard

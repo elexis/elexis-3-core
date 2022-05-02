@@ -13,6 +13,7 @@
 
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -557,7 +558,7 @@ public class BestellView extends ViewPart {
 					StringBuilder sb = new StringBuilder();
 					for (IOrderEntry noSupItem : noSupplierItems) {
 						sb.append(noSupItem.getArticle().getLabel());
-						sb.append("\n");
+						sb.append(StringUtils.LF);
 					}
 					runOrder = SWTHelper.askYesNo(Messages.BestellView_NoSupplierArticle,
 							MessageFormat.format(Messages.BestellView_NoSupplierArticleMsg, sb.toString()));

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.awt.Desktop;
 import java.net.URI;
 import java.util.ArrayList;
@@ -129,7 +130,7 @@ public class ClientCustomTextComposite extends Composite {
 			}
 		});
 
-		btnEditCustomText = toolkit.createButton(this, "", SWT.TOGGLE);
+		btnEditCustomText = toolkit.createButton(this, StringUtils.EMPTY, SWT.TOGGLE);
 		TableWrapData twd_btnEditCustomText = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_btnEditCustomText.valign = TableWrapData.MIDDLE;
 		btnEditCustomText.setLayoutData(twd_btnEditCustomText);
@@ -160,7 +161,8 @@ public class ClientCustomTextComposite extends Composite {
 	private void setClientCustomAreaContent(boolean editMode) {
 		if (editMode) {
 			// Edit the variable usage
-			txtClientCustomText.setText(ConfigServiceHolder.getGlobal(ClientCustomTextComposite.class.getName(), ""));
+			txtClientCustomText.setText(
+					ConfigServiceHolder.getGlobal(ClientCustomTextComposite.class.getName(), StringUtils.EMPTY));
 		} else {
 			ConfigServiceHolder.setGlobal(ClientCustomTextComposite.class.getName(), txtClientCustomText.getText());
 			updateClientCustomArea();
@@ -172,7 +174,7 @@ public class ClientCustomTextComposite extends Composite {
 		tokenMap.clear();
 		styleList.clear();
 		String outputParsed = findAndReplaceTemplates(
-				ConfigServiceHolder.getGlobal(ClientCustomTextComposite.class.getName(), ""));
+				ConfigServiceHolder.getGlobal(ClientCustomTextComposite.class.getName(), StringUtils.EMPTY));
 		String output = initializeStyleRanges(outputParsed);
 		txtClientCustomText.setText(output);
 		txtClientCustomText.setStyleRanges(styleList.toArray(new StyleRange[0]));
@@ -284,12 +286,12 @@ public class ClientCustomTextComposite extends Composite {
 			return "ERR";
 		if (arr[0].equalsIgnoreCase("Patient")) {
 			if (arr[1] == null)
-				return "";
+				return StringUtils.EMPTY;
 			Patient pat = ElexisEventDispatcher.getSelectedPatient();
 			if (pat == null)
-				return "";
+				return StringUtils.EMPTY;
 			String result = pat.get(arr[1]);
-			return (result != null) ? result : "";
+			return (result != null) ? result : StringUtils.EMPTY;
 		} else {
 			return "ERR";
 		}

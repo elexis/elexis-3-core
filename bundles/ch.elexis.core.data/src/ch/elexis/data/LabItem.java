@@ -12,6 +12,7 @@
 
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -416,7 +417,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 
 		if (formula == null || formula.isEmpty()) {
 			String[] refWEntry = get(REF_FEMALE_OR_TEXT).split("##");
-			formula = refWEntry.length > 1 ? refWEntry[1] : "";
+			formula = refWEntry.length > 1 ? refWEntry[1] : StringUtils.EMPTY;
 
 			if (formula != null && !formula.isEmpty()) {
 				setFormula(formula);

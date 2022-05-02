@@ -29,7 +29,7 @@ public class ContactSelectionLabelProvider extends DefaultLabelProvider {
 				label = label + " (" + dateOfBirthString + ")";
 			}
 			if (contact.isUser()) {
-				label = StringUtils.defaultString(contact.getDescription1()) + " "
+				label = StringUtils.defaultString(contact.getDescription1()) + StringUtils.SPACE
 						+ StringUtils.defaultString(contact.getDescription2()) + " - " + label;
 			}
 			return label;

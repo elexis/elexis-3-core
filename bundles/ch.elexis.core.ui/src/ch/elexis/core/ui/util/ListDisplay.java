@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 
 import org.eclipse.jface.action.GroupMarker;
@@ -65,7 +66,7 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 		Clipboard clip = new Clipboard(UiDesk.getDisplay());
 		StringBuilder sb = new StringBuilder();
 		for (String s : list.getItems()) {
-			sb.append(s).append("\n");
+			sb.append(s).append(StringUtils.LF);
 		}
 		clip.setContents(new Object[] { sb.toString() }, new Transfer[] { myTransfer });
 	}

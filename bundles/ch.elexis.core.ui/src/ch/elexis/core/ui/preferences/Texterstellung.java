@@ -155,7 +155,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		});
 		cvOs.setInput(CoreUtil.OS.values());
 
-		URIFieldEditor storePath = new URIFieldEditor(Preferences.P_TEXT_EXTERN_FILE_PATH, "", comp);
+		URIFieldEditor storePath = new URIFieldEditor(Preferences.P_TEXT_EXTERN_FILE_PATH, StringUtils.EMPTY, comp);
 		storePath.setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 		storePath.setEmptyStringAllowed(true);
 		addField(storePath);

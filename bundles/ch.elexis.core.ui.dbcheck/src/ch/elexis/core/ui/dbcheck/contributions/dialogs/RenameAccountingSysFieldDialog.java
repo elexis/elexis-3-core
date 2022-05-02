@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.contributions.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class RenameAccountingSysFieldDialog extends TitleAreaDialog {
 		cmbField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		cViewerField.setContentProvider(ArrayContentProvider.getInstance());
 		cViewerField.setLabelProvider(new LabelProvider());
-		cViewerField.setInput("");
+		cViewerField.setInput(StringUtils.EMPTY);
 
 		Label lblNewName = new Label(area, SWT.NONE);
 		lblNewName.setText("Umbenennen zu");

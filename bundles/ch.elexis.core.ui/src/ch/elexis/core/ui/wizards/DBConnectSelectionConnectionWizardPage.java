@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.wizards;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
@@ -174,10 +175,10 @@ public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage 
 	}
 
 	private void createEntityArea(Group grpEntity) {
-		String driver = "";
-		String user = "";
-		String typ = "";
-		String connection = "";
+		String driver = StringUtils.EMPTY;
+		String user = StringUtils.EMPTY;
+		String typ = StringUtils.EMPTY;
+		String connection = StringUtils.EMPTY;
 
 		Composite typArea = new Composite(grpEntity, SWT.NONE);
 		typArea.setLayout(new GridLayout(2, false));

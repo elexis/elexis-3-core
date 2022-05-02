@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,7 @@ public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 			if (fall != null && fall.exists() && fall.isOpen() && k.getDiagnosen().size() < 1) {
 				Mandant mandant = k.getMandant();
 
-				String diagnoseId = CoreHub.getUserSetting(mandant).get(Preferences.USR_DEFDIAGNOSE, "");
+				String diagnoseId = CoreHub.getUserSetting(mandant).get(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);
 				String diagnoseLabel = null;
 
 				// add the diagnose if default diagnose is defined
@@ -81,11 +82,11 @@ public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 
 			// no default diagnose set
 			if (diagnose == null) {
-				output.append(mandant.getVorname() + " " + mandant.getName() + " (" + mandant.getLabel() + "): "
-						+ result + " Konsultationen ohne Diagnose (keine Standarddiagnose definiert)\n");
+				output.append(mandant.getVorname() + StringUtils.SPACE + mandant.getName() + " (" + mandant.getLabel()
+						+ "): " + result + " Konsultationen ohne Diagnose (keine Standarddiagnose definiert)\n");
 			} else {
-				output.append(mandant.getVorname() + " " + mandant.getName() + " (" + mandant.getLabel() + "): "
-						+ result + " Konsultationen mit Standarddiagnose (" + diagnose + ") vervollständigt\n");
+				output.append(mandant.getVorname() + StringUtils.SPACE + mandant.getName() + " (" + mandant.getLabel()
+						+ "): " + result + " Konsultationen mit Standarddiagnose (" + diagnose + ") vervollständigt\n");
 			}
 		}
 		pm.worked(1);

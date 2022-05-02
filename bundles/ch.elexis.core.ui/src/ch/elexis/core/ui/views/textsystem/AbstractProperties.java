@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.textsystem;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -180,7 +181,7 @@ public abstract class AbstractProperties extends Properties {
 	 * </pre>
 	 *
 	 * specifies that the key is <code>"cheeses"</code> and the associated element
-	 * is the empty string <code>""</code>.
+	 * is the empty string <code>StringUtils.EMPTY</code>.
 	 * <p>
 	 * <p>
 	 *

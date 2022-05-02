@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.contacts.command;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -29,7 +30,7 @@ public class SendMailCommand extends AbstractHandler implements IHandler {
 
 				HashMap<String, String> params = new HashMap<String, String>();
 
-				params.put("ch.elexis.core.mail.ui.sendMail.to", " " + patient.getMailAddress());
+				params.put("ch.elexis.core.mail.ui.sendMail.to", StringUtils.SPACE + patient.getMailAddress());
 
 				ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(sendMailCommand,
 						params);

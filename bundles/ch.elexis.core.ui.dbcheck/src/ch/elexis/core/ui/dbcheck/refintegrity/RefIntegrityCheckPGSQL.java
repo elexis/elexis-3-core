@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.refintegrity;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -43,7 +44,8 @@ public class RefIntegrityCheckPGSQL extends RefIntegrityCheck {
 						Stm stm = j.getStatement();
 						ResultSet rs = stm.query(query);
 						while (rs.next()) {
-							errlog.append(tables[i] + ": " + rs.getString(1) + " " + description + "\n");
+							errlog.append(tables[i] + ": " + rs.getString(1) + StringUtils.SPACE + description
+									+ StringUtils.LF);
 						}
 					}
 				}

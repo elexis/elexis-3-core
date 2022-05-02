@@ -1,5 +1,7 @@
 package ch.elexis.core.findings;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Definition of URIs to reference other resources.
  *
@@ -7,7 +9,7 @@ package ch.elexis.core.findings;
  *
  */
 public enum UriType {
-	HTTP("http://"), DB("");
+	HTTP("http://"), DB(StringUtils.EMPTY);
 
 	private final String prefix;
 

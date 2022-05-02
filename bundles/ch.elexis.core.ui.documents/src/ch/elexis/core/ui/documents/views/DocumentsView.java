@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.documents.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -126,12 +127,12 @@ public class DocumentsView extends ViewPart {
 
 	private IStructuredSelection currentDragSelection;
 
-	private final String[] colLabels = { "", "", Messages.DocumentView_categoryColumn,
+	private final String[] colLabels = { StringUtils.EMPTY, StringUtils.EMPTY, Messages.DocumentView_categoryColumn,
 			Messages.DocumentView_titleColumn, Messages.DocumentView_dateCreatedColumn,
 			Messages.DocumentView_keywordsColumn };
 	private final String colWidth = "20,20,150,250,100,500";
 	private final String sortSettings = "0,1,-1,false";
-	private String searchTitle = "";
+	private String searchTitle = StringUtils.EMPTY;
 
 	private DocumentsViewerComparator ovComparator;
 	private Action doubleClickAction;
@@ -293,7 +294,7 @@ public class DocumentsView extends ViewPart {
 		viewerColumns.get(1).setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return "";
+				return StringUtils.EMPTY;
 			}
 
 			@Override
@@ -327,12 +328,12 @@ public class DocumentsView extends ViewPart {
 			public String getText(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
-					return bFlat ? doc.getCategory().getName() : "";
+					return bFlat ? doc.getCategory().getName() : StringUtils.EMPTY;
 				} else if (element instanceof ICategory) {
 					ICategory cat = (ICategory) element;
 					return cat.getName();
 				}
-				return "";
+				return StringUtils.EMPTY;
 			}
 
 			@Override
@@ -350,7 +351,7 @@ public class DocumentsView extends ViewPart {
 					IDocument doc = (IDocument) element;
 					return doc.getTitle();
 				}
-				return "";
+				return StringUtils.EMPTY;
 			};
 
 			@Override
@@ -373,7 +374,7 @@ public class DocumentsView extends ViewPart {
 					IDocument doc = (IDocument) element;
 					return new TimeTool(doc.getCreated()).toString(TimeTool.DATE_GER);
 				}
-				return "";
+				return StringUtils.EMPTY;
 			}
 
 			@Override
@@ -393,15 +394,15 @@ public class DocumentsView extends ViewPart {
 					List<IDocumentReference> documentReferences = FindingsServiceHolder.getiFindingsService()
 							.getDocumentFindings(doc.getId(), IDocumentReference.class);
 					if (documentReferences.isEmpty()) {
-						return java.util.Optional.ofNullable(doc.getKeywords()).orElse("");
+						return java.util.Optional.ofNullable(doc.getKeywords()).orElse(StringUtils.EMPTY);
 					} else {
 						return java.util.Optional
 								.ofNullable(
 										Objects.toString(documentReferences.get(0).getKeywords(), doc.getKeywords()))
-								.orElse("");
+								.orElse(StringUtils.EMPTY);
 					}
 				}
-				return "";
+				return StringUtils.EMPTY;
 			}
 		});
 

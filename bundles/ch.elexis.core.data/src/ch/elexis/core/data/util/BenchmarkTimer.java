@@ -1,5 +1,7 @@
 package ch.elexis.core.data.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * This class can be used for simple benchmarks.
  */
@@ -41,15 +43,15 @@ public class BenchmarkTimer {
 		if (seconds < 10)
 			sec = "0" + seconds;
 		else
-			sec = "" + seconds;
+			sec = StringUtils.EMPTY + seconds;
 		if (minutes < 10)
 			min = "0" + minutes;
 		else
-			min = "" + minutes;
+			min = StringUtils.EMPTY + minutes;
 		if (hours < 10)
 			hrs = "0" + hours;
 		else
-			hrs = "" + hours;
+			hrs = StringUtils.EMPTY + hours;
 
 		if (hours == 0)
 			return min + " min, " + sec + " sec";

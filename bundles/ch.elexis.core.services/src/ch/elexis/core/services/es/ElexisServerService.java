@@ -1,5 +1,6 @@
 package ch.elexis.core.services.es;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -125,8 +126,8 @@ public class ElexisServerService implements IElexisServerService {
 		instanceStatus.setVersion(Elexis.VERSION);
 		instanceStatus.setOperatingSystem(System.getProperty("os.name") + "/" + System.getProperty("os.version") + "/"
 				+ System.getProperty("os.arch") + "/J" + System.getProperty("java.version"));
-		String identId = configService.getLocal(Preferences.STATION_IDENT_ID, "");
-		String identTxt = configService.getLocal(Preferences.STATION_IDENT_TEXT, "");
+		String identId = configService.getLocal(Preferences.STATION_IDENT_ID, StringUtils.EMPTY);
+		String identTxt = configService.getLocal(Preferences.STATION_IDENT_TEXT, StringUtils.EMPTY);
 		instanceStatus.setIdentifier(identTxt + " [" + identId + "]");
 		IUser u = contextService.getActiveUser().orElse(null);
 		instanceStatus.setActiveUser((u != null) ? u.getId() : "NO USER ACTIVE");

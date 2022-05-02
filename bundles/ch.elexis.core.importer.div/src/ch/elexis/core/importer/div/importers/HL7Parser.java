@@ -103,7 +103,7 @@ public class HL7Parser {
 	public Result<Object> parse(final HL7Reader hl7Reader, ILabItemResolver labItemResolver,
 			ILabContactResolver labContactResolver, boolean createPatientIfNotFound) {
 		final TimeTool transmissionTime = new TimeTool();
-		String orderId = "";
+		String orderId = StringUtils.EMPTY;
 
 		ILabContactResolver labResolver = labContactResolver != null ? labContactResolver : this.labContactResolver;
 
@@ -120,7 +120,7 @@ public class HL7Parser {
 			// stop here if lab does not exist
 			if (labor == null) {
 				logger.warn("Exiting parsing process as labor is null");
-				return new Result<>(SEVERITY.ERROR, 2, "Labor contact is null", "", true);
+				return new Result<>(SEVERITY.ERROR, 2, "Labor contact is null", StringUtils.EMPTY, true);
 			}
 
 			ObservationMessage obsMessage = hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
@@ -175,8 +175,8 @@ public class HL7Parser {
 						if (hl7LabResult.isNumeric() == false) {
 							typ = LabItemTyp.TEXT;
 						}
-						String refMale = "";
-						String refFemale = "";
+						String refMale = StringUtils.EMPTY;
+						String refFemale = StringUtils.EMPTY;
 						if (pat.getGender().equals(Gender.MALE)) {
 							refMale = hl7LabResult.getRange();
 						} else {
@@ -209,7 +209,7 @@ public class HL7Parser {
 						}
 						TransientLabResult importedResult = new TransientLabResult.Builder(pat, labor, labItem, "text")
 								.date(obrDateTime)
-								.comment(StringTool.unNull(hl7LabResult.getValue()) + "\n"
+								.comment(StringTool.unNull(hl7LabResult.getValue()) + StringUtils.LF
 										+ StringTool.unNull(hl7LabResult.getComment()))
 								.flags(flag).rawAbnormalFlags(hl7LabResult.getRawAbnormalFlag())
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange()).observationTime(obrDateTime)
@@ -244,11 +244,11 @@ public class HL7Parser {
 							}
 						}
 						date = new TimeTool(hl7EncData.getDate());
-						String dateString = date.toString(TimeTool.DATETIME_XML).replace(":", "");
-						dateString = dateString.replace("-", "");
+						String dateString = date.toString(TimeTool.DATETIME_XML).replace(":", StringUtils.EMPTY);
+						dateString = dateString.replace("-", StringUtils.EMPTY);
 						String title = "Lab-" + dateString + "-" + hl7EncData.getSequence();
 
-						String fileType = "";
+						String fileType = StringUtils.EMPTY;
 						if (hl7EncData.getName().contains("/")) {
 							String[] split = hl7EncData.getName().split("/");
 							if (split.length == 2) {
@@ -263,8 +263,9 @@ public class HL7Parser {
 
 						ILabItem labItem = labImportUtil.getDocumentLabItem(liShort, liName, labor).orElse(null);
 						if (labItem == null) {
-							labItem = labImportUtil.createLabItem(liShort, liName, labor, "", "", fileType,
-									LabItemTyp.DOCUMENT, hl7EncData.getGroup(), "");
+							labItem = labImportUtil.createLabItem(liShort, liName, labor, StringUtils.EMPTY,
+									StringUtils.EMPTY, fileType, LabItemTyp.DOCUMENT, hl7EncData.getGroup(),
+									StringUtils.EMPTY);
 						}
 
 						TransientLabResult importedResult = new TransientLabResult.Builder(pat, labor, labItem, title)
@@ -292,8 +293,8 @@ public class HL7Parser {
 								.getLabItem(HL7Constants.COMMENT_CODE, HL7Constants.COMMENT_NAME, labor).orElse(null);
 						if (labItem == null) {
 							labItem = labImportUtil.createLabItem(HL7Constants.COMMENT_CODE, HL7Constants.COMMENT_NAME,
-									labor, "", "", "", LabItemTyp.TEXT, HL7Constants.COMMENT_GROUP,
-									Integer.toString(number));
+									labor, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, LabItemTyp.TEXT,
+									HL7Constants.COMMENT_GROUP, Integer.toString(number));
 						}
 
 						// add LabResult, only add comments not yet existing
@@ -319,8 +320,8 @@ public class HL7Parser {
 			if (StringUtils.isNotBlank(obsMessage.getPatientNotesAndComments())) {
 				ILabItem labItem = labImportUtil.getLabItem("NOTE", labor);
 				if (labItem == null) {
-					labItem = labImportUtil.createLabItem("NOTE", Messages.HL7Parser_LabItem_Note_Name, labor, "", "",
-							"", LabItemTyp.TEXT, "AA", "1");
+					labItem = labImportUtil.createLabItem("NOTE", Messages.HL7Parser_LabItem_Note_Name, labor,
+							StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, LabItemTyp.TEXT, "AA", "1");
 					logger.debug("LabItem created [{}]", labItem);
 				}
 
@@ -473,7 +474,7 @@ public class HL7Parser {
 				if (res == null) {
 					res = r;
 				} else {
-					res.add(r.getSeverity(), 1, "", null, true); //$NON-NLS-1$
+					res.add(r.getSeverity(), 1, StringUtils.EMPTY, null, true);
 				}
 			}
 		}

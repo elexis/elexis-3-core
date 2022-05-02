@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class NatTableCustomCellPainter extends TextPainter {
 			// draw every line by itself
 			int yStartPos = rectangle.y
 					+ CellStyleUtil.getVerticalAlignmentPadding(cellStyle, rectangle, contentHeight);
-			String[] lines = text.split("\n"); //$NON-NLS-1$
+			String[] lines = text.split(StringUtils.LF);
 			for (String line : lines) {
 				int lineContentWidth = Math.min(getLengthFromCache(gc, line), rectangle.width);
 
@@ -92,7 +93,7 @@ public class NatTableCustomCellPainter extends TextPainter {
 		if (parts != null && parts.length > 0) {
 			for (String string : parts) {
 				if (string.startsWith("<strong>")) {
-					string = string.replaceAll("<strong>", "");
+					string = string.replaceAll("<strong>", StringUtils.EMPTY);
 					ret.add(new TextPart(string, TextPart.PartStyle.BOLD));
 				} else {
 					ret.add(new TextPart(string, TextPart.PartStyle.NORMAL));

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.rs232;
 
+import org.apache.commons.lang3.StringUtils;
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
 import gnu.io.PortInUseException;
@@ -105,7 +106,8 @@ public abstract class AbstractConnection implements PortEventListener {
 					public void run() {
 						try {
 							Thread.sleep(1000);
-							final String in = FileTool.readTextFile(new File(simulate)).replaceAll("\\r\\n", "\r"); //$NON-NLS-1$ //$NON-NLS-2$
+							final String in = FileTool.readTextFile(new File(simulate)).replaceAll("\\r\\n", //$NON-NLS-1$
+									StringUtils.CR);
 							listener.gotData(mine, in.getBytes());
 						} catch (Exception ex) {
 

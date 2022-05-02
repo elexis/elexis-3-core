@@ -1,5 +1,6 @@
 package ch.elexis.core.tasks.internal.console;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
@@ -102,7 +103,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(t.getId(), 27);
 			prflp(TimeUtil.formatSafe(t.getFinishedAt()), 25);
 			prflp(TimeUtil.formatSafe(t.getCreatedAt()), 25);
-			ci.print(t.getResult() + "\n");
+			ci.print(t.getResult() + StringUtils.LF);
 		});
 	}
 
@@ -133,7 +134,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		incurredTasks.stream().forEach(td -> {
 			prflp("INC", 8);
 			prflp(td.getTriggerType().getName(), 11);
-			prflp("", 27);
+			prflp(StringUtils.EMPTY, 27);
 			prflp(td.getReferenceId(), 27);
 			prflp("NR " + (String) td.getTransientData().get("cron-next-exectime"), 25);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
@@ -152,9 +153,9 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			String state = td.isActive() ? "ACT" : "INACT";
 			prflp(state, 8);
 			prflp(td.getTriggerType().getName(), 11);
-			prflp("", 27);
-			prflp((td.isSystem() ? "S-" : "") + td.getReferenceId(), 27);
-			prflp("", 25);
+			prflp(StringUtils.EMPTY, 27);
+			prflp((td.isSystem() ? "S-" : StringUtils.EMPTY) + td.getReferenceId(), 27);
+			prflp(StringUtils.EMPTY, 25);
 			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
 			prflp(owner + " / " + formatRunner(td.getRunner()) + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
@@ -335,7 +336,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(ii.getId(), 30);
 			String classNameShortened = abbreviatePackageNames(ii.getClass().getName());
 			prflp(classNameShortened, 60);
-			ci.print(ii.getLocalizedDescription() + "\n");
+			ci.print(ii.getLocalizedDescription() + StringUtils.LF);
 		});
 	}
 

@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.importer.div.importers;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 
@@ -47,7 +48,7 @@ public class DefaultLabImportUiHandler extends ImportHandler {
 		public void run() {
 			StringBuilder message = new StringBuilder();
 			message.append("Alter Wert\n").append(oldResult.getLabel());
-			message.append("\n");
+			message.append(StringUtils.LF);
 			message.append("Neuer Wert\n").append(newResult.getLabel());
 			message.append("\n\n");
 			message.append(Messages.HL7Parser_AskOverwrite);

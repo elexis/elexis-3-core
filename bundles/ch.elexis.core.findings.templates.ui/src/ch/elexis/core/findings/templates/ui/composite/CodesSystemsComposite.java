@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.templates.ui.composite;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -205,8 +206,8 @@ public class CodesSystemsComposite extends Composite {
 		}
 		return iCoding != null
 				? iCoding.getDisplay() + " (" + iCoding.getCode() + ")"
-						+ (stringBuilder.length() > 0 ? (" [" + stringBuilder.toString() + "]") : "")
-				: "";
+						+ (stringBuilder.length() > 0 ? (" [" + stringBuilder.toString() + "]") : StringUtils.EMPTY)
+				: StringUtils.EMPTY;
 	}
 
 	private TableViewerColumn createTableViewerColumn(String title, int bound, int colNumber) {

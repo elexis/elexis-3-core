@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.wizards;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -49,7 +50,7 @@ public class TestDBConnectionGroup extends Group {
 		new Label(this, SWT.NONE);
 
 		lblTestResult = new Label(this, SWT.BORDER | SWT.WRAP);
-		lblTestResult.setText("");
+		lblTestResult.setText(StringUtils.EMPTY);
 		GridData gd_lblTestResult = new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1);
 		gd_lblTestResult.minimumHeight = 60;
 		lblTestResult.setLayoutData(gd_lblTestResult);

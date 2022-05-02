@@ -121,7 +121,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		}
 		Kontakt adressat = addressSelection ? null : (Kontakt) ElexisEventDispatcher.getSelected(Patient.class);
 		actBrief = text.createFromTemplateName(text.getAktuelleKons(), template, Brief.RP, adressat,
-				template + " " + rp.getDate());
+				template + StringUtils.SPACE + rp.getDate());
 		updateTextLock();
 		List<Prescription> lines = rp.getLines();
 		String[][] fields = new String[lines.size()][];
@@ -171,7 +171,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		TimeTool now = new TimeTool();
 		actBrief = text.createFromTemplateName(text.getAktuelleKons(), template, Brief.UNKNOWN,
 				(Patient) ElexisEventDispatcher.getSelected(Patient.class),
-				template + " " + now.toString(TimeTool.DATE_GER));
+				template + StringUtils.SPACE + now.toString(TimeTool.DATE_GER));
 		updateTextLock();
 		List<Prescription> lines = Arrays.asList(prescriptions);
 		String[][] fields = new String[lines.size()][];
@@ -239,7 +239,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 				if (patInfo == null || patInfo.isEmpty()) {
 					fields[i][1] = p.getSimpleLabel() + "\t\r" + bem; //$NON-NLS-1$
 				} else {
-					fields[i][1] = p.getSimpleLabel() + "\t\r" + bem + "\r" + patInfo; //$NON-NLS-1$
+					fields[i][1] = p.getSimpleLabel() + "\t\r" + bem + StringUtils.CR + patInfo;
 				}
 			}
 			fields[i][2] = p.getDosis();
@@ -251,7 +251,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		String[][] fields = new String[lines.size() + 1][];
 
 		fields[0] = new String[6];
-		fields[0][0] = "";
+		fields[0][0] = StringUtils.EMPTY;
 		fields[0][1] = "Medikament";
 		fields[0][2] = "Einnahme";
 		fields[0][3] = "Von bis und mit";
@@ -265,7 +265,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 					&& p.getEntryType() != EntryType.UNKNOWN) {
 				fields[i][0] = p.getEntryType().name().substring(0, 1);
 			} else {
-				fields[i][0] = "";
+				fields[i][0] = StringUtils.EMPTY;
 			}
 			fields[i][1] = StringUtils.defaultString(p.getSimpleLabel());
 			fields[i][2] = StringUtils.defaultString(p.getDosis());

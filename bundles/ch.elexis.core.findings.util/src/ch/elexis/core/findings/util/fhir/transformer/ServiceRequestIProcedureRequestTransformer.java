@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -153,7 +154,7 @@ public class ServiceRequestIProcedureRequestTransformer implements IFhirTransfor
 				Optional<String> text = iProcedureRequest.getText();
 				text.ifPresent(t -> {
 					if (ret.length() > 0) {
-						ret.append("\n");
+						ret.append(StringUtils.LF);
 					}
 					ret.append(t);
 				});
@@ -172,10 +173,10 @@ public class ServiceRequestIProcedureRequestTransformer implements IFhirTransfor
 			if (category == ConditionCategory.PROBLEMLISTITEM) {
 				boolean hasText = text.isPresent() && !text.get().isEmpty();
 				if (ret.length() > 0) {
-					ret.append("\n");
+					ret.append(StringUtils.LF);
 				}
 				if (hasText) {
-					ret.append(text.orElse(""));
+					ret.append(text.orElse(StringUtils.EMPTY));
 				}
 				if (coding != null && !coding.isEmpty()) {
 					if (hasText) {
@@ -198,9 +199,9 @@ public class ServiceRequestIProcedureRequestTransformer implements IFhirTransfor
 			if (iObservation.getCategory() == ObservationCategory.SOAP_SUBJECTIVE) {
 				Optional<String> text = iObservation.getText();
 				if (ret.length() > 0) {
-					ret.append("\n");
+					ret.append(StringUtils.LF);
 				}
-				ret.append(text.orElse(""));
+				ret.append(text.orElse(StringUtils.EMPTY));
 			}
 		}
 		return ret.toString();

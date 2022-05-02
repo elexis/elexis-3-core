@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.tasks.parts.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
@@ -121,8 +122,8 @@ public class RunnableAndContextConfigurationComposite extends AbstractTaskDescri
 			// TODO json runContextRaw
 			refreshAssistedConfigurationComposite();
 		} else {
-			txtRunnableId.setText("");
-			txtRunContextRaw.setText("");
+			txtRunnableId.setText(StringUtils.EMPTY);
+			txtRunContextRaw.setText(StringUtils.EMPTY);
 		}
 	}
 

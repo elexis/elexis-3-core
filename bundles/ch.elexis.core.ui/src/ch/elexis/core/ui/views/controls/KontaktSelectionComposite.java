@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class KontaktSelectionComposite extends Composite implements ISelectionPr
 			});
 			selectLabel.setText(sb.toString());
 		} else {
-			selectLabel.setText(""); //$NON-NLS-1$
+			selectLabel.setText(StringUtils.EMPTY);
 		}
 		getParent().layout();
 	}

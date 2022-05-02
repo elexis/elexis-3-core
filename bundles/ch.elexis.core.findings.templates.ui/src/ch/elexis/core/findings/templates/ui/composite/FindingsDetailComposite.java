@@ -207,8 +207,9 @@ public class FindingsDetailComposite extends Composite {
 		UpdateValueStrategy<String, String> targetToModel = new UpdateValueStrategy<String, String>();
 		targetToModel.setBeforeSetValidator(new IValidator<String>() {
 			public org.eclipse.core.runtime.IStatus validate(String value) {
-				Optional<FindingsTemplate> existing = FindingsServiceHolder.findingsTemplateService.getFindingsTemplate(
-						new TransientCoding(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem(), value, ""));
+				Optional<FindingsTemplate> existing = FindingsServiceHolder.findingsTemplateService
+						.getFindingsTemplate(new TransientCoding(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem(),
+								value, StringUtils.EMPTY));
 				if (existing.isPresent()) {
 					return ValidationStatus
 							.error("Eine lokale Vorlage mit dem Code [" + value + "] existiert bereits.");
@@ -224,8 +225,8 @@ public class FindingsDetailComposite extends Composite {
 	}
 
 	private void selectCode(Optional<ICodeElement> optionalCodeElement) {
-		loincCode.setText("");
-		loincCode.setToolTipText("");
+		loincCode.setText(StringUtils.EMPTY);
+		loincCode.setToolTipText(StringUtils.EMPTY);
 		if (selection != null) {
 			if (optionalCodeElement != null) {
 				if (optionalCodeElement.isPresent()) {
@@ -422,7 +423,7 @@ public class FindingsDetailComposite extends Composite {
 			modelToTarget.setConverter(new Converter(Integer.class, String.class) {
 				@Override
 				public Object convert(Object fromObject) {
-					return "" + fromObject;
+					return StringUtils.EMPTY + fromObject;
 				}
 			});
 			EMFUpdateValueStrategy targetToModel = new EMFUpdateValueStrategy();
@@ -522,7 +523,7 @@ public class FindingsDetailComposite extends Composite {
 		StringBuffer buf = new StringBuffer();
 		for (FindingsTemplate findingsTemplate : findingsTemplates) {
 			if (buf.length() > 0) {
-				buf.append("\n");
+				buf.append(StringUtils.LF);
 			}
 			buf.append(findingsTemplate.getTitle());
 		}

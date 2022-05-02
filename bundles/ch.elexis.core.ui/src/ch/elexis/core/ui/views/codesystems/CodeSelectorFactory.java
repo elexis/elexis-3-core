@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views.codesystems;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -506,7 +507,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 							StringBuilder sb = new StringBuilder();
 							diff.forEach(r -> {
 								if (sb.length() > 0) {
-									sb.append("\n");
+									sb.append(StringUtils.LF);
 								}
 								sb.append(r);
 							});

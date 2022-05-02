@@ -2,6 +2,7 @@
  */
 package ch.elexis.core.findings.templates.model.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.ModelPackage;
@@ -75,7 +76,7 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TITLE_EDEFAULT = "";
+	protected static final String TITLE_EDEFAULT = StringUtils.EMPTY;
 
 	/**
 	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute.

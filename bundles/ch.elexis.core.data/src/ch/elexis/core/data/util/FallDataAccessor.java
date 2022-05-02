@@ -1,5 +1,6 @@
 package ch.elexis.core.data.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class FallDataAccessor implements IDataAccess {
 	@Override
 	public Result<Object> getObject(String descriptor, PersistentObject dependentObject, String dates,
 			String[] params) {
-		Result<Object> result = new Result<Object>(""); //$NON-NLS-1$
+		Result<Object> result = new Result<Object>(StringUtils.EMPTY);
 
 		Fall fall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 		Kontakt costBearer = fall.getCostBearer();

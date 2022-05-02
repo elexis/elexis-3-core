@@ -1,5 +1,6 @@
 package ch.elexis.core.jpa.entities.id;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.UUID;
 
 public class ElexisIdGenerator {
@@ -11,7 +12,7 @@ public class ElexisIdGenerator {
 	 */
 	public static String generateId() {
 		String randomString = UUID.randomUUID().toString();
-		String randomStringWithoutDashes = randomString.replaceAll("-", "");
+		String randomStringWithoutDashes = randomString.replaceAll("-", StringUtils.EMPTY);
 		if (randomStringWithoutDashes.length() <= 25) {
 			return randomStringWithoutDashes;
 		}

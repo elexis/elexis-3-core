@@ -39,7 +39,7 @@ public class ObservationBeanAdapter extends AbstractBeanAdapter<IObservation> {
 	}
 
 	public String getStringValue() {
-		return finding.getStringValue().orElse("");
+		return finding.getStringValue().orElse(StringUtils.EMPTY);
 	}
 
 	public void setStringValue(String value) {

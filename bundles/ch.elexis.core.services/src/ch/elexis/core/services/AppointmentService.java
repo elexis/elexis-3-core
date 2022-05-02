@@ -192,7 +192,7 @@ public class AppointmentService implements IAppointmentService {
 		String[] flds = ds.split("\r*\n\r*"); //$NON-NLS-1$
 		for (String fld : flds) {
 			String from = fld.substring(0, 4);
-			String until = fld.replaceAll("-", "").substring(4); //$NON-NLS-1$ //$NON-NLS-2$
+			String until = fld.replaceAll("-", StringUtils.EMPTY).substring(4); //$NON-NLS-1$
 			// Lege Termine für die Tagesgrenzen an
 			IAppointment iAppointment = CoreModelServiceHolder.get().create(IAppointment.class);
 			LocalDateTime startTime = date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(from));
@@ -350,7 +350,7 @@ public class AppointmentService implements IAppointmentService {
 		ret.setSeriesEndTime(appointment.getEndTime().toLocalTime());
 
 		Optional<IPatient> patient = ContextServiceHolder.get().getActivePatient();
-		appointment.setSubjectOrPatient(patient.isPresent() ? patient.get().getId() : "");
+		appointment.setSubjectOrPatient(patient.isPresent() ? patient.get().getId() : StringUtils.EMPTY);
 		return ret;
 	}
 
@@ -384,7 +384,8 @@ public class AppointmentService implements IAppointmentService {
 		case WEEKLY:
 			Calendar cal2 = Calendar.getInstance();
 			cal2.setTime(cal.getTime());
-			int firstDay = Integer.parseInt(appointmentSeries.getSeriesPatternString().split(",")[1].charAt(0) + "");
+			int firstDay = Integer
+					.parseInt(appointmentSeries.getSeriesPatternString().split(",")[1].charAt(0) + StringUtils.EMPTY);
 			cal2.set(Calendar.DAY_OF_WEEK, firstDay);
 			TimeTool ret = new TimeTool(cal2.getTime());
 			return ret;
@@ -451,7 +452,7 @@ public class AppointmentService implements IAppointmentService {
 			for (int i = 1; i < separatedSeriesPattern[1].length(); i++) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(dateIncrementer.getTime());
-				int dayValue = Integer.parseInt(separatedSeriesPattern[1].charAt(i) + "");
+				int dayValue = Integer.parseInt(separatedSeriesPattern[1].charAt(i) + StringUtils.EMPTY);
 				cal.set(Calendar.DAY_OF_WEEK, dayValue);
 				ret.add(writeSubsequentDateEntry(appointmentSeries, new TimeTool(cal.getTime())));
 			}
@@ -471,7 +472,7 @@ public class AppointmentService implements IAppointmentService {
 				for (int j = 0; j < separatedSeriesPattern[1].length(); j++) {
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(dateIncrementer.getTime());
-					int dayValue = Integer.parseInt(separatedSeriesPattern[1].charAt(j) + "");
+					int dayValue = Integer.parseInt(separatedSeriesPattern[1].charAt(j) + StringUtils.EMPTY);
 					cal.set(Calendar.DAY_OF_WEEK, dayValue);
 					ret.add(writeSubsequentDateEntry(appointmentSeries, new TimeTool(cal.getTime())));
 				}
@@ -541,7 +542,7 @@ public class AppointmentService implements IAppointmentService {
 	public Map<String, Integer> getPreferredDurations(String areaName) {
 		Map<String, Integer> ret = new HashMap<String, Integer>();
 		if (StringUtils.isNotBlank(areaName)) {
-			String mTimes = iConfigService.get(AG_TIMEPREFERENCES + "/" + areaName, ""); //$NON-NLS-1$ //$NON-NLS-2$
+			String mTimes = iConfigService.get(AG_TIMEPREFERENCES + "/" + areaName, StringUtils.EMPTY); //$NON-NLS-1$
 			if (StringUtils.isNotBlank(mTimes)) {
 				String[] types = mTimes.split("::"); //$NON-NLS-1$
 				for (String t : types) {

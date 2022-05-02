@@ -1,5 +1,6 @@
 package ch.elexis.core.jpa.liquibase;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -80,17 +81,17 @@ public class LiquibaseDBInitializer {
 			// else sync the changelog as the db already exists
 			if (isFirstStart(connection)) {
 				logger.info("Initialize database [" + connection + "] with liquibase");
-				liquibase.update("");
+				liquibase.update(StringUtils.EMPTY);
 			} else {
 				logger.info("Synchronize liquibase log of database [" + connection + "]");
 				try {
-					liquibase.changeLogSync("");
+					liquibase.changeLogSync(StringUtils.EMPTY);
 				} catch (ValidationFailedException e) {
 					logger.info("Validation failed clear checksums and retry");
 					// removes current checksums from database, on next run checksums will be
 					// recomputed
 					liquibase.clearCheckSums();
-					liquibase.changeLogSync("");
+					liquibase.changeLogSync(StringUtils.EMPTY);
 				}
 			}
 		} catch (LiquibaseException | SQLException e) {

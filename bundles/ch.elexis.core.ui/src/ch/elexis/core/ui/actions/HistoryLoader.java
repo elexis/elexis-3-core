@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.actions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -155,11 +156,11 @@ public class HistoryLoader extends BackgroundJob {
 						// replace Windows line separator
 						s = s.replaceAll("\r\n", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
 						// replace remaining "manual" line separators
-						s = s.replaceAll("\n", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+						s = s.replaceAll(StringUtils.LF, "<br/>"); //$NON-NLS-1$
 					}
 
 				} else {
-					s = ""; //$NON-NLS-1$
+					s = StringUtils.EMPTY;
 				}
 				String label = maskHTML(k.getLabel());
 				// make kons text grey if kons Fall is not the selected Fall

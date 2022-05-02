@@ -2,6 +2,7 @@
  */
 package ch.elexis.core.findings.templates.model.provider;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.findings.templates.model.CodeElement;
 import ch.elexis.core.findings.templates.model.ModelPackage;
 
@@ -121,7 +122,7 @@ public class CodeElementItemProvider extends ItemProviderAdapter
 	public String getText(Object object) {
 		String label = ((CodeElement) object).getCode();
 		return label == null || label.length() == 0 ? getString("_UI_CodeElement_type")
-				: getString("_UI_CodeElement_type") + " " + label;
+				: getString("_UI_CodeElement_type") + StringUtils.SPACE + label;
 	}
 
 	/**

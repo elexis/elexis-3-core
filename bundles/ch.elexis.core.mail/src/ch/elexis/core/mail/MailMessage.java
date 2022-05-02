@@ -166,7 +166,7 @@ public class MailMessage implements Serializable {
 	}
 
 	public String getHtmlText() {
-		return text.replace("\n", "<br />\n");
+		return text.replace(StringUtils.LF, "<br />\n");
 	}
 
 	public void setText(String text) {

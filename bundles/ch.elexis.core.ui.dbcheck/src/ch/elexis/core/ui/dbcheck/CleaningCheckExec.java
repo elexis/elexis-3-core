@@ -4,6 +4,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.dbcheck;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.ui.dbcheck.cleaning.CleaningCheck;
 import ch.elexis.core.ui.dbcheck.cleaning.CleaningCheckPGSQL;
 
@@ -16,7 +17,7 @@ public class CleaningCheckExec extends CheckExec {
 	public static String doCleaning() {
 
 		if (sqlDriver.equalsIgnoreCase(MYSQL_DB)) {
-			return "";
+			return StringUtils.EMPTY;
 
 		}
 		if (sqlDriver.equalsIgnoreCase(POSTG_DB)) {

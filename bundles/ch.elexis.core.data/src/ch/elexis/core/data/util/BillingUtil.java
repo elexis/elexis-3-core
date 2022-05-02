@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -920,7 +921,7 @@ public class BillingUtil {
 					msg message : rechnungResult.getMessages()) {
 						if (message.getSeverity() != SEVERITY.OK) {
 							if (output.length() > 0) {
-								output.append("\n");
+								output.append(StringUtils.LF);
 							}
 							output.append(message.getText());
 						}
@@ -980,7 +981,7 @@ public class BillingUtil {
 
 		private void addToOutput(StringBuilder output, String warning) {
 			if (output.length() > 0) {
-				output.append("\n");
+				output.append(StringUtils.LF);
 			}
 			if (warning.length() > 0) {
 				output.append(warning);

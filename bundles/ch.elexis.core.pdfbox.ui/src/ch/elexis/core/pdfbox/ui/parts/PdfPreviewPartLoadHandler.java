@@ -1,5 +1,6 @@
 package ch.elexis.core.pdfbox.ui.parts;
 
+import org.apache.commons.lang3.StringUtils;
 import java.awt.image.BufferedImage;
 import java.awt.image.DirectColorModel;
 import java.awt.image.IndexColorModel;
@@ -111,7 +112,7 @@ public class PdfPreviewPartLoadHandler {
 					previewComposite.getDisplay().asyncExec(() -> {
 						if (j == 0) {
 							// reuse initialLabel
-							headLabel.setText("");
+							headLabel.setText(StringUtils.EMPTY);
 							headLabel.setImage(images[j]);
 							headLabel.addDisposeListener(dl -> images[j].dispose());
 						} else {

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
@@ -35,7 +36,7 @@ import ch.elexis.data.PersistentObject;
  */
 public class PersistentObjectDropTarget implements DropTargetListener, ICodeSelectorTarget {
 	IReceiver rc;
-	String name = "";
+	String name = StringUtils.EMPTY;
 	private final Color normalColor;
 	private final Color highlightColor;
 	private final Control mine;
@@ -70,7 +71,7 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 	}
 
 	public PersistentObjectDropTarget(Control target, IReceiver r) {
-		this("", target, r, true);
+		this(StringUtils.EMPTY, target, r, true);
 	}
 
 	public PersistentObjectDropTarget(String name, Control target, IReceiver r) {

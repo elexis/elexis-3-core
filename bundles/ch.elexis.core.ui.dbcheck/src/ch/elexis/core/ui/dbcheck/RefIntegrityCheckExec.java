@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.ui.dbcheck.refintegrity.RefIntegrityCheck;
@@ -37,12 +38,12 @@ public class RefIntegrityCheckExec extends CheckExec {
 	public static String getOutputLog() {
 		if (ric != null)
 			return ric.getOutputLog();
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	public static String getErrorLog() {
 		if (ric != null)
 			return ric.getErrorLog();
-		return "";
+		return StringUtils.EMPTY;
 	}
 }

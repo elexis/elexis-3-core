@@ -89,7 +89,7 @@ public class CodeSystemUtil {
 
 		String theSystem = CodeSystem.CODEELEMENT.getUrl() + "/" + typName + "/"
 				+ codeElement.getCodeSystemName().toLowerCase();
-		Coding coding = new Coding(theSystem, "", codeElement.getText());
+		Coding coding = new Coding(theSystem, StringUtils.EMPTY, codeElement.getText());
 		coding.setCode(codeElement.getCode());
 		return coding;
 	}

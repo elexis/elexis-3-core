@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.views.provider;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
@@ -70,7 +71,7 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 		if (contact.isOrganization()) {
 			sb = new StringBuilder();
 			if (contact.getDescription1() != null) {
-				sb.append(contact.getDescription1() + " ");
+				sb.append(contact.getDescription1() + StringUtils.SPACE);
 			}
 			if (contact.getDescription2() != null)
 				sb.append(contact.getDescription2());
@@ -81,7 +82,7 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 			IPerson person = CoreModelServiceHolder.get().load(contact.getId(), IPerson.class).get();
 			sb = new StringBuilder();
 			if (person.getTitel() != null)
-				sb.append(person.getTitel() + " ");
+				sb.append(person.getTitel() + StringUtils.SPACE);
 			sb.append(contact.getDescription1() + ", ");
 			sb.append(contact.getDescription2());
 			if (person.getTitelSuffix() != null)
@@ -106,7 +107,7 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 		case UNKNOWN:
 			return "?";
 		default:
-			return "";
+			return StringUtils.EMPTY;
 		}
 	}
 }

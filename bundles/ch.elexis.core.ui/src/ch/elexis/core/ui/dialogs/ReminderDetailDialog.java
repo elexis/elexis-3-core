@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -524,7 +525,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			due = dateDue.toString(TimeTool.DATE_GER);
 		}
 		if (reminder == null) {
-			reminder = new Reminder(null, due, Visibility.ALWAYS, "", "");
+			reminder = new Reminder(null, due, Visibility.ALWAYS, StringUtils.EMPTY, StringUtils.EMPTY);
 		}
 
 		String contactId = (btnNotPatientRelated.getSelection()) ? reminder.getCreator().getId() : patient.getId();

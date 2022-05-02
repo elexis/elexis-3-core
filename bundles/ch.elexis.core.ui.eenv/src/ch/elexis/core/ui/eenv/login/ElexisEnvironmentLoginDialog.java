@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.eenv.login;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -117,9 +118,9 @@ public class ElexisEnvironmentLoginDialog extends Dialog {
 		// https://localhost:11223/elexis-rcp-callback?session_state=67b0202a-60aa-4dee-895b-0d5e6bf759d2
 		// &code=ff725f7a-d852-4c35-b37a-892c9628fecf.67b0202a-60aa-4dee-895b-0d5e6bf759d2.55d54f98-c266-47e9-87fb-ef1a4381295c
 
-		callbackUrl = callbackUrl.replace("http://", "");
-		callbackUrl = callbackUrl.replace("https://", "");
-		callbackUrl = callbackUrl.replace("localhost:11223/elexis-rcp-callback?", "");
+		callbackUrl = callbackUrl.replace("http://", StringUtils.EMPTY);
+		callbackUrl = callbackUrl.replace("https://", StringUtils.EMPTY);
+		callbackUrl = callbackUrl.replace("localhost:11223/elexis-rcp-callback?", StringUtils.EMPTY);
 		String[] parameters = callbackUrl.split("&");
 		for (String parameter : parameters) {
 			String[] keyValue = parameter.split("=");

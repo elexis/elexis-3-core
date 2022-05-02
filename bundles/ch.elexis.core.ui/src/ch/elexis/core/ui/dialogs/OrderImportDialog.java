@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -410,11 +411,11 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 		String ean = eanText.getText().trim();
 		// remove silly characters from scanner
-		ean = ean.replaceAll(new Character(SWT.CR).toString(), "");
-		ean = ean.replaceAll(new Character(SWT.LF).toString(), "");
-		ean = ean.replaceAll(new Character((char) 0).toString(), "");
+		ean = ean.replaceAll(new Character(SWT.CR).toString(), StringUtils.EMPTY);
+		ean = ean.replaceAll(new Character(SWT.LF).toString(), StringUtils.EMPTY);
+		ean = ean.replaceAll(new Character((char) 0).toString(), StringUtils.EMPTY);
 
-		eanText.setText("");
+		eanText.setText(StringUtils.EMPTY);
 		diffSpinner.setSelection(DIFF_SPINNER_DEFAULT);
 
 		OrderElement orderElement = findOrderElementByEAN(ean);
@@ -543,7 +544,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 	private class CheckboxLabelProvider extends BaseLabelProvider {
 		public String getText(Object element) {
-			String text = "";
+			String text = StringUtils.EMPTY;
 
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
@@ -558,7 +559,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 	private class AmountLabelProvider extends BaseLabelProvider {
 		public String getText(Object element) {
-			String text = "";
+			String text = StringUtils.EMPTY;
 
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
@@ -571,7 +572,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 	private class StockLabelProvider extends BaseLabelProvider {
 		public String getText(Object element) {
-			String text = "";
+			String text = StringUtils.EMPTY;
 
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
@@ -595,7 +596,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 	private class PharamcodeLabelProvider extends BaseLabelProvider {
 		public String getText(Object element) {
-			String text = "";
+			String text = StringUtils.EMPTY;
 
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
@@ -608,7 +609,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 	private class EANLabelProvider extends BaseLabelProvider {
 		public String getText(Object element) {
-			String text = "";
+			String text = StringUtils.EMPTY;
 
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
@@ -621,7 +622,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 	private class DescriptionLabelProvider extends BaseLabelProvider {
 		public String getText(Object element) {
-			String text = "";
+			String text = StringUtils.EMPTY;
 
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;

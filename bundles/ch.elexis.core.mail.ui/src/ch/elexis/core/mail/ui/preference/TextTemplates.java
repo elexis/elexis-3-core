@@ -1,5 +1,6 @@
 package ch.elexis.core.mail.ui.preference;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,7 +76,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 				if (element instanceof ITextTemplate) {
 					return ((ITextTemplate) element).getName() + (((ITextTemplate) element).getMandator() != null
 							? " (" + ((ITextTemplate) element).getMandator().getLabel() + ")"
-							: "");
+							: StringUtils.EMPTY);
 				}
 				return super.getText(element);
 			}
