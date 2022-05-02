@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.medication.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -90,11 +91,11 @@ public class MedicationTableViewerItem {
 	}
 
 	public String getBeginDate() {
-		return dateFrom != null ? dateFormatter.format(dateFrom) : "";
+		return dateFrom != null ? dateFormatter.format(dateFrom) : StringUtils.EMPTY;
 	}
 
 	public String getEndDate() {
-		return dateUntil != null ? dateFormatter.format(dateUntil) : "";
+		return dateUntil != null ? dateFormatter.format(dateUntil) : StringUtils.EMPTY;
 	}
 
 	public Date getEndTime() {
@@ -106,7 +107,7 @@ public class MedicationTableViewerItem {
 	}
 
 	public String getDosis() {
-		return dosis != null ? dosis : "";
+		return dosis != null ? dosis : StringUtils.EMPTY;
 	}
 
 	public IPrescription getPrescription() {
@@ -311,12 +312,12 @@ public class MedicationTableViewerItem {
 			if (reason != null) {
 				item.stopReason = reason;
 			} else {
-				item.stopReason = "";
+				item.stopReason = StringUtils.EMPTY;
 			}
 		}
 
 		private void resolvePrescriptorLabel() {
-			item.prescriptorLabel = "";
+			item.prescriptorLabel = StringUtils.EMPTY;
 			if (item.prescriptor != null) {
 				item.prescriptorLabel = item.prescriptor.getLabel();
 			}
@@ -327,7 +328,7 @@ public class MedicationTableViewerItem {
 			if (comment != null) {
 				item.disposalComment = comment;
 			} else {
-				item.disposalComment = "";
+				item.disposalComment = StringUtils.EMPTY;
 			}
 		}
 	}

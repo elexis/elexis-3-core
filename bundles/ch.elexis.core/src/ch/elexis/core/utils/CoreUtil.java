@@ -96,7 +96,7 @@ public class CoreUtil {
 			}
 			ret.rdbmsType = DBType.H2;
 			ret.username = "sa";
-			ret.password = "";
+			ret.password = StringUtils.EMPTY;
 			return Optional.of(ret);
 		}
 
@@ -104,10 +104,10 @@ public class CoreUtil {
 			DBConnection dbConnection = new DBConnection();
 			dbConnection.username = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME) != null
 					? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME)
-					: "";
+					: StringUtils.EMPTY;
 			dbConnection.password = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD) != null
 					? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD)
-					: "";
+					: StringUtils.EMPTY;
 
 			if (System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR) != null) {
 				String flavorString = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR);
@@ -116,7 +116,7 @@ public class CoreUtil {
 			}
 			dbConnection.connectionString = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null
 					? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC)
-					: "";
+					: StringUtils.EMPTY;
 			if (dbConnection.connectionString.startsWith("jdbc:h2:")
 					&& System.getProperty(ElexisSystemPropertyConstants.CONN_DB_H2_AUTO_SERVER) != null) {
 				logger.info("Adding AUTO_SERVER to " + dbConnection.connectionString);
@@ -154,7 +154,7 @@ public class CoreUtil {
 				StringBuilder sb = new StringBuilder();
 				for (Object object : hConn.keySet()) {
 					if (object instanceof String) {
-						sb.append("\n").append(object).append("->").append(hConn.get(object));
+						sb.append(StringUtils.LF).append(object).append("->").append(hConn.get(object));
 					}
 				}
 				logger.error("Could not get a valid DBConnection from connection setting:" + sb.toString());

@@ -1,5 +1,6 @@
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import ch.elexis.core.jdt.Nullable;
@@ -99,7 +100,7 @@ public class ArticleDefaultSignature extends PersistentObject {
 			sb.append("ARTICLE [" + article.getLabel() + "] ");
 		}
 		sb.append(getSignatureMorning()).append("-").append(getSignatureNoon()).append("-")
-				.append(getSignatureEvening()).append("-").append(getSignatureNight()).append(" ")
+				.append(getSignatureEvening()).append("-").append(getSignatureNight()).append(StringUtils.SPACE)
 				.append(getSignatureComment());
 		return null;
 	}
@@ -228,7 +229,7 @@ public class ArticleDefaultSignature extends PersistentObject {
 
 	public void setSignatureFreeText(String text) {
 		if (text == null) {
-			text = "";
+			text = StringUtils.EMPTY;
 		}
 		setExtInfoStoredObjectByKey(EXT_FLD_FREETEXT, text);
 	}

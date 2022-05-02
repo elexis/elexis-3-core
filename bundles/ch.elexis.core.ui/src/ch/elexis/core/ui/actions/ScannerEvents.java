@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.actions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -72,9 +73,9 @@ public class ScannerEvents implements Listener {
 	 */
 	private String getBarcode(StringBuffer strBuf) {
 		String barcode = strBuf.toString();
-		barcode = barcode.replaceAll(new Character(SWT.CR).toString(), ""); //$NON-NLS-1$
-		barcode = barcode.replaceAll(new Character(SWT.LF).toString(), ""); //$NON-NLS-1$
-		barcode = barcode.replaceAll(new Character((char) 0).toString(), ""); //$NON-NLS-1$
+		barcode = barcode.replaceAll(new Character(SWT.CR).toString(), StringUtils.EMPTY);
+		barcode = barcode.replaceAll(new Character(SWT.LF).toString(), StringUtils.EMPTY);
+		barcode = barcode.replaceAll(new Character((char) 0).toString(), StringUtils.EMPTY);
 		if (barcode.length() > barcodeLength) {
 			return barcode.substring(barcode.length() - barcodeLength);
 		}

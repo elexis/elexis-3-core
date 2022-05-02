@@ -12,6 +12,7 @@
 
 package ch.elexis.core.data.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class ProcessController {
 	public boolean run(String program, String command, String inputStr) {
 		Process p;
 
-		log.info("executing " + program + " " + command + ", " + inputStr);
+		log.info("executing " + program + StringUtils.SPACE + command + ", " + inputStr);
 
 		try {
 			p = Runtime.getRuntime().exec(new String[] { program, command });
@@ -104,7 +105,7 @@ public class ProcessController {
 
 		OutputStream os;
 
-		String fullLine = "";
+		String fullLine = StringUtils.EMPTY;
 
 		/**
 		 * Constructor for the ProcessStreamReader object
@@ -138,7 +139,7 @@ public class ProcessController {
 				BufferedReader br = new BufferedReader(isr);
 				String line = null;
 				while ((line = br.readLine()) != null) {
-					fullLine = fullLine + line + "\n";
+					fullLine = fullLine + line + StringUtils.LF;
 				}
 
 			} catch (IOException ioe) {

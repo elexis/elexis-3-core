@@ -1,5 +1,6 @@
 package ch.elexis.hl7.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -57,7 +58,7 @@ public class HL7Helper {
 	}
 
 	public static String determineName(List<String> possibleNames) {
-		String ret = "";
+		String ret = StringUtils.EMPTY;
 		for (String possibleName : possibleNames) {
 			if (possibleName != null && !"null".equals(possibleName)) {
 				int possibleNonDigitCount = getNonDigitCharacters(possibleName);

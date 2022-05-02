@@ -10,6 +10,7 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -167,7 +168,7 @@ public class BillingSystem {
 				return val[1];
 			}
 		}
-		return ""; //$NON-NLS-1$
+		return StringUtils.EMPTY;
 	}
 
 	/**
@@ -202,10 +203,10 @@ public class BillingSystem {
 				+ billingSystem + "/constants";
 		String bc = ConfigServiceHolder.getGlobal(key, null); // $NON-NLS-1$
 		if (bc != null) {
-			bc = bc.replaceAll(constant, ""); //$NON-NLS-1$
+			bc = bc.replaceAll(constant, StringUtils.EMPTY);
 			bc = bc.replaceAll("##", "#"); //$NON-NLS-1$ //$NON-NLS-2$
-			bc = bc.replaceFirst("#$", ""); //$NON-NLS-1$ //$NON-NLS-2$
-			bc = bc.replaceFirst("^#", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			bc = bc.replaceFirst("#$", StringUtils.EMPTY); //$NON-NLS-1$
+			bc = bc.replaceFirst("^#", StringUtils.EMPTY); //$NON-NLS-1$
 			ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystem //$NON-NLS-1$
 					+ "/constants", bc); //$NON-NLS-1$
 		} else {
@@ -415,7 +416,7 @@ public class BillingSystem {
 	 */
 	public static String getRequirementsBySystem(String abrechnungsSystem) {
 		String req = BillingSystem.getRequirements(abrechnungsSystem);
-		return req == null ? "" : req;
+		return req == null ? StringUtils.EMPTY : req;
 	}
 
 	/**

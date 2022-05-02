@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.e4.dialog;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -111,7 +112,7 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 		} else if (object != null) {
 			return object.toString();
 		} else {
-			return "";
+			return StringUtils.EMPTY;
 		}
 	}
 

@@ -50,7 +50,7 @@ public class DBConnection implements Serializable {
 		@XmlEnumValue("MYSQL")
 		MySQL(JdbcLink.MYSQL_DRIVER_CLASS_NAME, "mySQl", "3306"), @XmlEnumValue("PostgreSQL")
 		PostgreSQL(JdbcLink.POSTGRESQL_DRIVER_CLASS_NAME, "PostgreSQL", "5432"), @XmlEnumValue("H2")
-		H2(JdbcLink.H2_DRIVER_CLASS_NAME, "H2", "");
+		H2(JdbcLink.H2_DRIVER_CLASS_NAME, "H2", StringUtils.EMPTY);
 
 		public final String driverName;
 		public final String dbType;
@@ -158,7 +158,7 @@ public class DBConnection implements Serializable {
 			m.marshal(this, sw);
 			return sw.toString();
 		} catch (JAXBException | IOException e) {
-			return "";
+			return StringUtils.EMPTY;
 		}
 	}
 

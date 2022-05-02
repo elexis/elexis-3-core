@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,7 +148,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 		for (int i = 0; i < hints.length; i++) { // make KontaktErfassenDialog
 			// happy
 			if (hints[i] == null) {
-				hints[i] = "";
+				hints[i] = StringUtils.EMPTY;
 			}
 		}
 		if (!StringTool.isNothing(hints[HINT_BIRTHDATE])) {

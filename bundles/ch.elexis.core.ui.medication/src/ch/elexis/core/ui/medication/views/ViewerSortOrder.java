@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.medication.views;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
@@ -76,10 +77,10 @@ public enum ViewerSortOrder {
 				String atc1 = p1.getAtc();
 				String atc2 = p2.getAtc();
 				if (atc1 == null) {
-					atc1 = "";
+					atc1 = StringUtils.EMPTY;
 				}
 				if (atc2 == null) {
-					atc2 = "";
+					atc2 = StringUtils.EMPTY;
 				}
 				return atc2.compareTo(atc1);
 			}
@@ -100,10 +101,10 @@ public enum ViewerSortOrder {
 				String l1 = p1.getArtikelLabel();
 				String l2 = p2.getArtikelLabel();
 				if (l1 == null) {
-					l1 = "";
+					l1 = StringUtils.EMPTY;
 				}
 				if (l2 == null) {
-					l2 = "";
+					l2 = StringUtils.EMPTY;
 				}
 				rc = l2.compareTo(l1);
 				break;
@@ -142,22 +143,22 @@ public enum ViewerSortOrder {
 			case 6:
 				String stopReason1 = p1.getStopReason();
 				if (stopReason1 == null)
-					stopReason1 = "";
+					stopReason1 = StringUtils.EMPTY;
 
 				String stopReason2 = p2.getStopReason();
 				if (stopReason2 == null)
-					stopReason2 = "";
+					stopReason2 = StringUtils.EMPTY;
 
 				rc = stopReason1.compareTo(stopReason2);
 				break;
 			case 7:
 				String prescriptor1 = p1.getPrescriptorLabel();
 				if (prescriptor1 == null)
-					prescriptor1 = "";
+					prescriptor1 = StringUtils.EMPTY;
 
 				String prescriptor2 = p2.getPrescriptorLabel();
 				if (prescriptor2 == null)
-					prescriptor2 = "";
+					prescriptor2 = StringUtils.EMPTY;
 
 				rc = prescriptor1.compareTo(prescriptor2);
 				break;

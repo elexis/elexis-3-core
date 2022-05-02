@@ -113,7 +113,7 @@ public class StickerSelectionDialog extends TitleAreaDialog {
 			@Override
 			public String getText(Object element) {
 				ISticker s = (ISticker) element;
-				return s.getImportance() + "";
+				return s.getImportance() + StringUtils.EMPTY;
 			}
 
 			@Override

@@ -1,5 +1,6 @@
 package ch.elexis.hl7;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -140,15 +141,15 @@ public enum HL7ReaderFactory {
 	}
 
 	private String[] getLines(String hl7Message) {
-		String separator = "\r";
+		String separator = StringUtils.CR;
 		String[] splitted = hl7Message.split(separator);
 		if (splitted.length < 2) {
-			separator = "\n";
+			separator = StringUtils.LF;
 			splitted = hl7Message.split(separator);
 		}
 		// make sure no new lines at beginning of string
 		for (int i = 0; i < splitted.length; i++) {
-			splitted[i] = splitted[i].replaceAll("\n", "");
+			splitted[i] = splitted[i].replaceAll(StringUtils.LF, StringUtils.EMPTY);
 		}
 		return splitted;
 	}

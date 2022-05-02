@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.tasks.parts.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -94,7 +95,7 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 			@Override
 			public String getText(Object element) {
 				if (element == null) {
-					return "";
+					return StringUtils.EMPTY;
 				}
 				OwnerTaskNotification otn = (OwnerTaskNotification) element;
 				switch (otn) {
@@ -168,17 +169,18 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 		super.setSelection(taskDescriptor);
 
 		if (taskDescriptor != null) {
-			txtReferenceId.setText(taskDescriptor.getReferenceId() != null ? taskDescriptor.getReferenceId() : "");
-			String ownerId = taskDescriptor.getOwner() != null ? taskDescriptor.getOwner().getId() : "";
+			txtReferenceId.setText(
+					taskDescriptor.getReferenceId() != null ? taskDescriptor.getReferenceId() : StringUtils.EMPTY);
+			String ownerId = taskDescriptor.getOwner() != null ? taskDescriptor.getOwner().getId() : StringUtils.EMPTY;
 			txtOwnerId.setText(ownerId);
 			txtRunner.setText(taskDescriptor.getRunner());
 			cvNotificationType.setSelection(new StructuredSelection(taskDescriptor.getOwnerNotification()));
 			btnActive.setSelection(taskDescriptor.isActive());
 			btnSingleton.setSelection(taskDescriptor.isSingleton());
 		} else {
-			txtReferenceId.setText("");
-			txtOwnerId.setText("");
-			txtRunner.setText("");
+			txtReferenceId.setText(StringUtils.EMPTY);
+			txtOwnerId.setText(StringUtils.EMPTY);
+			txtRunner.setText(StringUtils.EMPTY);
 			cvNotificationType.setSelection(null);
 			btnSingleton.setSelection(false);
 			btnActive.setSelection(false);

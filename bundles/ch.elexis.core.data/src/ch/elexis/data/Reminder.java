@@ -12,6 +12,7 @@
 
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -106,7 +107,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			} else if (text.equals(LASTNAME.toString())) {
 				return Kontakt.FLD_NAME1;
 			} else {
-				return "";
+				return StringUtils.EMPTY;
 			}
 		}
 	}
@@ -203,7 +204,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 
 		StringBuilder sb = new StringBuilder();
 		if (vals[1].length() > 0) {
-			sb.append(vals[1] + " ");
+			sb.append(vals[1] + StringUtils.SPACE);
 		}
 		sb.append("(" + getConfiguredKontaktLabel(k, isPatientRelatedReminder) + "): ");
 		sb.append((vals[3].length() > 1) ? vals[3] : vals[2]);

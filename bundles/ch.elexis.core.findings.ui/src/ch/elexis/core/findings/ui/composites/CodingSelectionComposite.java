@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.composites;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -104,7 +105,7 @@ public class CodingSelectionComposite extends Composite implements ISelectionPro
 			@Override
 			public void run() {
 				TransientCoding transientCoding = new TransientCoding(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem(),
-						selectionTxt.getSelectionText(), "");
+						selectionTxt.getSelectionText(), StringUtils.EMPTY);
 				CodingEditDialog editDialog = new CodingEditDialog(transientCoding, getShell());
 				if (editDialog.open() == CodingEditDialog.OK) {
 					CodingServiceComponent.getService().addLocalCoding(transientCoding);
@@ -179,7 +180,7 @@ public class CodingSelectionComposite extends Composite implements ISelectionPro
 				selectedCode = Optional.of(iCoding);
 			}
 		} else {
-			selectionTxt.setText("");
+			selectionTxt.setText(StringUtils.EMPTY);
 			selectedCode = Optional.empty();
 		}
 	}

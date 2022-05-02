@@ -1,6 +1,7 @@
 
 package ch.elexis.core.ui.tasks.parts.handlers;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
@@ -23,12 +24,12 @@ public class CreateTaskDescriptorHandler {
 
 				@Override
 				public String getLocalizedDescription() {
-					return "";
+					return StringUtils.EMPTY;
 				}
 
 				@Override
 				public String getId() {
-					return "";
+					return StringUtils.EMPTY;
 				}
 
 				@Override

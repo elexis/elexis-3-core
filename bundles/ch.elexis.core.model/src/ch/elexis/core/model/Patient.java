@@ -1,5 +1,6 @@
 package ch.elexis.core.model;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -132,7 +133,7 @@ public class Patient extends Person implements IPatient {
 	@Override
 	public void setDeceased(boolean value) {
 		super.setDeceased(value);
-		String configSticker = ConfigServiceHolder.get().get(Preferences.CFG_DECEASED_STICKER, "");
+		String configSticker = ConfigServiceHolder.get().get(Preferences.CFG_DECEASED_STICKER, StringUtils.EMPTY);
 		if (configSticker == null || configSticker.isEmpty()) {
 			configSticker = ch.elexis.core.model.messages.Messages.Patient_deceased;
 		}

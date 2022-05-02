@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.eigendiagnosen;
 
+import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -65,9 +66,9 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 			tblPls.reload(diag);
 			tComment.setText(diag.getDescription());
 		} else {
-			form.setText("");
+			form.setText(StringUtils.EMPTY);
 			tblPls.reload((Identifiable) null);
-			tComment.setText("");
+			tComment.setText(StringUtils.EMPTY);
 		}
 	}
 

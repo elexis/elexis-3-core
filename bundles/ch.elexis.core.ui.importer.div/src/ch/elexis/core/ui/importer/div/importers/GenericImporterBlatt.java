@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.importer.div.importers;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -295,7 +296,7 @@ public class GenericImporterBlatt extends Composite {
 			 */
 			private void loadAvailableFields() {
 				PersistentObject type = getSelectedType();
-				StringBuilder excelFieldsStrings = new StringBuilder("");
+				StringBuilder excelFieldsStrings = new StringBuilder(StringUtils.EMPTY);
 
 				inputAvailableFields = new ArrayList<Field>();
 				if (type != null) {
@@ -320,7 +321,7 @@ public class GenericImporterBlatt extends Composite {
 				if (type == null) {
 					return;
 				}
-				StringBuilder fields = new StringBuilder("");
+				StringBuilder fields = new StringBuilder(StringUtils.EMPTY);
 				for (int i = 0; i < dbAvailableFields.size(); i++) {
 					if (fields.toString().length() >= 1)
 						fields.append(",");
@@ -1068,7 +1069,7 @@ public class GenericImporterBlatt extends Composite {
 					}
 
 					public String getColumnText(Object element, int columnIndex) {
-						String text = ""; //$NON-NLS-1$
+						String text = StringUtils.EMPTY;
 
 						// commonly used variables
 						int fieldIndex;
@@ -1253,7 +1254,7 @@ public class GenericImporterBlatt extends Composite {
 				// first column: image
 				TableColumn imageColumn = new TableColumn(table, SWT.LEFT);
 				imageColumn.setWidth(IMAGE_COLUMN_WIDTH);
-				imageColumn.setText(""); //$NON-NLS-1$
+				imageColumn.setText(StringUtils.EMPTY);
 
 				if (mappingPage.isPageComplete()) {
 					int columnsCount = mappingPage.inputChosenFields.size();
@@ -1316,7 +1317,7 @@ public class GenericImporterBlatt extends Composite {
 								// get value from excel, eliminate leading and trailing white space
 								value = row.get(index).trim();
 							} else {
-								value = ""; //$NON-NLS-1$
+								value = StringUtils.EMPTY;
 							}
 							rowMap.put(key, value);
 						}
@@ -1588,7 +1589,7 @@ public class GenericImporterBlatt extends Composite {
 				}
 
 				public String getColumnText(Object element, int columnIndex) {
-					String text = ""; //$NON-NLS-1$
+					String text = StringUtils.EMPTY;
 
 					// commonly used variables
 					int fieldIndex;
@@ -1608,7 +1609,7 @@ public class GenericImporterBlatt extends Composite {
 								key = mappingPage.inputChosenFields.get(fieldIndex).name;
 								text = inputObject.get(key);
 							} else {
-								text = ""; //$NON-NLS-1$
+								text = StringUtils.EMPTY;
 							}
 							break;
 						case SyncElement.DB_ONLY:
@@ -1617,7 +1618,7 @@ public class GenericImporterBlatt extends Composite {
 								key = mappingPage.dbChosenFields.get(fieldIndex).name;
 								text = dbObject.get(key);
 							} else {
-								text = ""; //$NON-NLS-1$
+								text = StringUtils.EMPTY;
 							}
 							break;
 						case SyncElement.DIFF:

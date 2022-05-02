@@ -255,12 +255,13 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	@Override
 	public String getLabel() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(getDescription1()).append(" ").append(StringUtils.defaultString(getDescription2()));
+		sb.append(getDescription1()).append(StringUtils.SPACE).append(StringUtils.defaultString(getDescription2()));
 		if (!StringUtils.isBlank(getDescription3())) {
 			sb.append("(").append(getDescription3()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		sb.append(", ").append(StringUtils.defaultString(getStreet())).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
-				.append(StringUtils.defaultString(getZip())).append(" ").append(StringUtils.defaultString(getCity()));
+		sb.append(", ").append(StringUtils.defaultString(getStreet())).append(", ") //$NON-NLS-1$
+				.append(StringUtils.defaultString(getZip())).append(StringUtils.SPACE)
+				.append(StringUtils.defaultString(getCity()));
 		return sb.toString();
 	}
 

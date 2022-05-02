@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.model;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Map;
 
 import ch.elexis.core.findings.IFinding;
@@ -24,7 +25,7 @@ public abstract class AbstractBeanAdapter<T extends IFinding> {
 	}
 
 	public String getText() {
-		return finding.getText().orElse("");
+		return finding.getText().orElse(StringUtils.EMPTY);
 	}
 
 	public void setText(String text) {

@@ -1,5 +1,6 @@
 package ch.elexis.core.model;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
@@ -20,7 +21,7 @@ public class UserConfig extends AbstractIdModelAdapter<ch.elexis.core.jpa.entiti
 
 	@Override
 	public String getLabel() {
-		return getEntity().getOwnerId() + " " + getEntity().getParam() + " -> " + getEntity().getValue();
+		return getEntity().getOwnerId() + StringUtils.SPACE + getEntity().getParam() + " -> " + getEntity().getValue();
 	}
 
 	@Override

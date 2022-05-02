@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -59,19 +60,12 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	// Mahnung","3. Mahnung","In Betreibung","Teilverlust","Totalverlust"};
 	final static String[] stats = { Messages.RnControlFieldProvider_all, Messages.RnControlFieldProvider_open,
 			Messages.RnControlFieldProvider_openAndPrinted, Messages.RnControlFieldProvider_partlyPaid,
-			Messages.RnControlFieldProvider_paid, Messages.RnControlFieldProvider_overpaid, // $NON-NLS-1$ //$NON-NLS-2$
-																							// //$NON-NLS-3$
-																							// //$NON-NLS-4$
-																							// //$NON-NLS-5$
-																							// //$NON-NLS-6$
+			Messages.RnControlFieldProvider_paid, Messages.RnControlFieldProvider_overpaid,
 			Messages.RnControlFieldProvider_reminder, Messages.RnControlFieldProvider_reminderPrinted,
 			Messages.RnControlFieldProvider_reminder2, Messages.RnControlFieldProvider_reminder2Printed,
-			Messages.RnControlFieldProvider_reminder3, // $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-														// //$NON-NLS-5$
-			Messages.RnControlFieldProvider_reminder3Printed, Messages.RnControlFieldProvider_enforcement,
-			Messages.RnControlFieldProvider_partlyLost, Messages.RnControlFieldProvider_totallyLost,
-			Messages.RnControlFieldProvider_storno, // $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-													// //$NON-NLS-5$
+			Messages.RnControlFieldProvider_reminder3, Messages.RnControlFieldProvider_reminder3Printed,
+			Messages.RnControlFieldProvider_enforcement, Messages.RnControlFieldProvider_partlyLost,
+			Messages.RnControlFieldProvider_totallyLost, Messages.RnControlFieldProvider_storno,
 			Messages.RnControlFieldProvider_erroneous, Messages.RnControlFieldProvider_toPrint,
 			Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind,
 			Messages.RnControlFieldProvider_writtenOff, Messages.RnControlFieldProvider_rejected };
@@ -84,8 +78,8 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 			RnStatus.ABGESCHRIEBEN, RnStatus.ZURUECKGEWIESEN };
 
 	final static int STAT_DEFAULT_INDEX = 1;
-	private final static String ALLE = Messages.RnControlFieldProvider_allPatients; // $NON-NLS-1$
-	private final static String ALL = Messages.RnControlFieldProvider_all; // $NON-NLS-1$
+	private final static String ALLE = Messages.RnControlFieldProvider_allPatients;
+	private final static String ALL = Messages.RnControlFieldProvider_all;
 
 	Combo cbStat;
 	Combo cbZType;
@@ -96,7 +90,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	private HyperlinkAdapter /* hlStatus, */ hlPatient;
 	private Label /* hDateFrom, hDateUntil, */ lPatient;
 	Text tNr, tBetrag;
-	String oldSelectedBillingSystem = ""; //$NON-NLS-1$
+	String oldSelectedBillingSystem = StringUtils.EMPTY;
 
 	Patient actPatient;
 
@@ -251,7 +245,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 			ret[1] = actPatient.getId();
 		}
 		ret[2] = tNr.getText();
-		ret[3] = tBetrag.getText().replaceAll("\\.", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		ret[3] = tBetrag.getText().replaceAll("\\.", StringUtils.EMPTY); //$NON-NLS-1$
 		if (StringTool.isNothing(ret[2])) {
 			ret[2] = null;
 		} else { // Wenn RnNummer gegeben ist, alles andere auf Standard.
@@ -279,7 +273,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 
 	public void clearValues() {
 		cbStat.select(0);
-		tNr.setText(""); //$NON-NLS-1$
+		tNr.setText(StringUtils.EMPTY);
 		actPatient = null;
 		lPatient.setText(ALLE);
 	}

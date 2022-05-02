@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,7 +58,7 @@ public class MoveAllLettersToExternalStorage extends ExternalMaintenance {
 					pm.worked(1);
 				} catch (IOException e) {
 					failCount++;
-					result.append("[" + letter.getId() + "] could not export: " + e.getMessage() + "\n");
+					result.append("[" + letter.getId() + "] could not export: " + e.getMessage() + StringUtils.LF);
 				}
 			}
 		}

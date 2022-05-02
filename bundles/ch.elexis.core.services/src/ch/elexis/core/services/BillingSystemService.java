@@ -93,7 +93,7 @@ public class BillingSystemService implements IBillingSystemService {
 				return val[1];
 			}
 		}
-		return ""; //$NON-NLS-1$
+		return StringUtils.EMPTY;
 	}
 
 	@Override

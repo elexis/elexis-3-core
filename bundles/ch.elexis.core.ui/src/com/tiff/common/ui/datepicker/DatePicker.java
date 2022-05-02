@@ -12,6 +12,7 @@
  *******************************************************************************/
 package com.tiff.common.ui.datepicker;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
@@ -338,7 +339,7 @@ public class DatePicker extends Composite {
 					gc.setForeground(display.getSystemColor(dayOffset == 7 ? SWT.COLOR_RED : SWT.COLOR_BLACK));
 				}
 
-				drawTextImage(gc, "" + day, p.x, p.y, colSize, rowSize);
+				drawTextImage(gc, StringUtils.EMPTY + day, p.x, p.y, colSize, rowSize);
 				day++;
 			}
 

@@ -206,7 +206,7 @@ public class ZusatzAdresseEingabeDialog extends TitleAreaDialog {
 		try {
 			zusatzAdresse.persistDTO(zusatzAdresseDTO);
 		} catch (ElexisException e) {
-			MessageDialog.openError(getShell(), "",
+			MessageDialog.openError(getShell(), StringUtils.EMPTY,
 					"Speichern nicht möglich. Bitte diesen Dialog schließen und erneut probieren.");
 			return;
 		}

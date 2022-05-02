@@ -1,5 +1,6 @@
 package ch.elexis.core.services.eenv;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -85,7 +86,8 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 		Set<Entry<String, String>> entrySet = message.getMessageCodes().entrySet();
 		if (!entrySet.isEmpty()) {
 			header.append(" | ");
-			message.getMessageCodes().entrySet().forEach(c -> header.append(c.getKey() + ":" + c.getValue() + " "));
+			message.getMessageCodes().entrySet()
+					.forEach(c -> header.append(c.getKey() + ":" + c.getValue() + StringUtils.SPACE));
 		}
 
 		Map<String, Object> params = new HashMap<>();
@@ -134,7 +136,7 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 		case MessageCode.Value.Severity_WARN:
 			return ":warning:";
 		default:
-			return "";
+			return StringUtils.EMPTY;
 		}
 	}
 

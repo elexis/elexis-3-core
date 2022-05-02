@@ -51,7 +51,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 				methods.put(method.getName(), method);
 			} else if (method.getName().startsWith("_")) {
 				CmdAdvisor advisor = method.getDeclaredAnnotation(CmdAdvisor.class);
-				String description = (advisor != null) ? advisor.description() : "";
+				String description = (advisor != null) ? advisor.description() : StringUtils.EMPTY;
 				commandsHelp.put(method.getName().substring(1), description);
 			}
 		}
@@ -91,7 +91,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 
 		subArguments = Arrays.copyOfRange(arguments, i, arguments.length);
 
-		String joinedArguments = String.join(" ", arguments);
+		String joinedArguments = String.join(StringUtils.SPACE, arguments);
 		ci.println("--( " + new Date() + " )---[cmd: " + joinedArguments + "]"
 				+ getRelativeFixedLengthSeparator(joinedArguments, 100, "-"));
 
@@ -150,12 +150,12 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 
 	public String getRelativeFixedLengthSeparator(String value, int determinedLength, String separator) {
 		if (value == null) {
-			return "";
+			return StringUtils.EMPTY;
 		}
 		if (value.length() > determinedLength) {
 			determinedLength = value.length() + 1;
 		}
-		return String.join("", Collections.nCopies(determinedLength - value.length(), separator));
+		return String.join(StringUtils.EMPTY, Collections.nCopies(determinedLength - value.length(), separator));
 	}
 
 	public void fail(String message) {
@@ -176,7 +176,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 
 	@Override
 	public String getHelp() {
-		return getHelp("");
+		return getHelp(StringUtils.EMPTY);
 	}
 
 	public void printHelp(String... sub) {
@@ -188,7 +188,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		help.append("---"); //$NON-NLS-1$
 		help.append(header);
 		help.append("---"); //$NON-NLS-1$
-		help.append("\n");
+		help.append(StringUtils.LF);
 	}
 
 	/** Private helper method for getHelp. Formats the command descriptions. */
@@ -196,11 +196,11 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		help.append("   ");
 		help.append(command);
 		if (params != null) {
-			help.append(params + " ");
+			help.append(params + StringUtils.SPACE);
 		}
 		help.append(" - "); //$NON-NLS-1$
 		help.append(description);
-		help.append("\n");
+		help.append(StringUtils.LF);
 	}
 
 	public String getHelp(String... sub) {
@@ -209,12 +209,12 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			return printOverviewHelp();
 		}
 		if (StringUtils.isBlank(sub[0])) {
-			return "";
+			return StringUtils.EMPTY;
 		}
 		String[] methodSignatures = methods.keySet().toArray(new String[] {});
 
-		sb.append(StringUtils.join(sub, " "));
-		sb.append(" ");
+		sb.append(StringUtils.join(sub, StringUtils.SPACE));
+		sb.append(StringUtils.SPACE);
 
 		Set<String> relevant = new HashSet<>();
 		for (int i = 0; i < methodSignatures.length; i++) {
@@ -231,20 +231,20 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		}
 
 		if (relevant.isEmpty()) {
-			return "Sub/Command not found: " + StringUtils.join(sub, " ");
+			return "Sub/Command not found: " + StringUtils.join(sub, StringUtils.SPACE);
 		}
 
 		// flatten the set (prevents mulitple entries) to a list
 		List<String> helpList = new ArrayList<>(relevant);
 		Collections.sort(helpList, Comparator.naturalOrder());
 
-		sb.append("(" + helpList.stream().reduce((u, t) -> u + " | " + t).orElse("") + ")\n");
+		sb.append("(" + helpList.stream().reduce((u, t) -> u + " | " + t).orElse(StringUtils.EMPTY) + ")\n");
 		for (String string : helpList) {
 			String methodKey = "__" + StringUtils.join(sub, "_") + "_" + string;
 			Method method = methods.get(methodKey);
 			if (method != null) {
 				CmdAdvisor advisor = method.getDeclaredAnnotation(CmdAdvisor.class);
-				String _advisor = (advisor != null) ? advisor.description() : "";
+				String _advisor = (advisor != null) ? advisor.description() : StringUtils.EMPTY;
 				Parameter[] parameters = method.getParameters();
 				String params = buildParamsBNFString(parameters);
 				addCommand(string, params, _advisor, sb);
@@ -261,7 +261,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		for (Parameter cmdParam : params) {
 			CmdParam annotation = cmdParam.getAnnotation(CmdParam.class);
 			if (annotation != null) {
-				sb.append(" ");
+				sb.append(StringUtils.SPACE);
 				if (annotation.required()) {
 					sb.append(annotation.description().toUpperCase());
 				} else {
@@ -280,7 +280,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			Entry<String, String> entry = i.next();
 			String command = entry.getKey();
 			String attributes = entry.getValue();
-			addCommand(command, "", attributes, sb);
+			addCommand(command, StringUtils.EMPTY, attributes, sb);
 		}
 		return sb.toString();
 	}
@@ -303,7 +303,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		String abbreviated = StringUtils.abbreviate(value, ".. ", length);
 		ci.print(String.format("%-" + length + "s", abbreviated));
 		if (endLine) {
-			ci.print("\n");
+			ci.print(StringUtils.LF);
 		}
 	}
 

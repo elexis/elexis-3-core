@@ -1,5 +1,6 @@
 package ch.elexis.core.common;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -96,7 +97,7 @@ public class InstanceStatus {
 
 	@Override
 	public String toString() {
-		String identifier = getIdentifier() != null ? " @ " + getIdentifier() : "";
+		String identifier = getIdentifier() != null ? " @ " + getIdentifier() : StringUtils.EMPTY;
 		String ret = "[" + getUuid() + "] " + getActiveUser() + identifier + " (Version " + getVersion() + " @ "
 				+ getOperatingSystem() + ") ";
 		if (getState() != STATE.ACTIVE) {

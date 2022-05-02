@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.syntactic;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -59,7 +60,7 @@ public class SyntacticCheckMySQL extends SyntacticCheck {
 				}
 				String collation = rsColl.getString(1);
 				if (!collation.equalsIgnoreCase("utf8_general_ci")) {
-					oklog.append(" " + collation + " inkorrekt, erwarte utf8_general_ci\n");
+					oklog.append(StringUtils.SPACE + collation + " inkorrekt, erwarte utf8_general_ci\n");
 					errlog.append(tables[l] + ": Collation " + collation + " inkorrekt, erwarte utf8_general_ci\n");
 					fixScript.append(
 							"ALTER TABLE " + tables[l] + " CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;\n");
@@ -85,18 +86,18 @@ public class SyntacticCheckMySQL extends SyntacticCheck {
 				for (int k = 0; k < fields.length; k++) {
 					boolean ok = false;
 
-					oklog.append(tables[i] + ": Erwarte " + fields[k] + " " + fieldType[k] + "...");
+					oklog.append(tables[i] + ": Erwarte " + fields[k] + StringUtils.SPACE + fieldType[k] + "...");
 
 					Stm stm = j.getStatement();
 					ResultSet rs = null;
 
 					try {
-						rs = stm.query("DESCRIBE " + tables[i].toLowerCase() + " " + fields[k]);
+						rs = stm.query("DESCRIBE " + tables[i].toLowerCase() + StringUtils.SPACE + fields[k]);
 
 					} catch (JdbcLinkSyntaxException je) {
 						// We have no lowercase here, but uppercase!
 						try {
-							rs = stm.query("DESCRIBE " + tables[i] + " " + fields[k]);
+							rs = stm.query("DESCRIBE " + tables[i] + StringUtils.SPACE + fields[k]);
 						} catch (JdbcLinkSyntaxException je2) {
 							// We still did not find the table, assume its missing!
 							continue;
@@ -109,19 +110,22 @@ public class SyntacticCheckMySQL extends SyntacticCheck {
 								&& isCompatible(rs.getString(2), fieldType[k])) {
 							oklog.append(" OK\n");
 						} else {
-							oklog.append(" erhalte " + rs.getString(1) + " " + rs.getString(2) + "\n");
-							errlog.append(tables[i] + ": SynErr: FeldTyp " + rs.getString(1) + " " + rs.getString(2)
-									+ " inkorrekt, erwarte " + fields[k] + " " + fieldType[k] + "\n");
-							fixScript.append(
-									"ALTER TABLE " + tables[i] + " MODIFY " + fields[k] + " " + fieldType[k] + ";\n");
+							oklog.append(" erhalte " + rs.getString(1) + StringUtils.SPACE + rs.getString(2)
+									+ StringUtils.LF);
+							errlog.append(tables[i] + ": SynErr: FeldTyp " + rs.getString(1) + StringUtils.SPACE
+									+ rs.getString(2) + " inkorrekt, erwarte " + fields[k] + StringUtils.SPACE
+									+ fieldType[k] + StringUtils.LF);
+							fixScript.append("ALTER TABLE " + tables[i] + " MODIFY " + fields[k] + StringUtils.SPACE
+									+ fieldType[k] + ";\n");
 						}
 
 					}
 					if (!ok) {
 						oklog.append(" not found\n");
-						errlog.append(
-								tables[i] + ": SynErr: Feld " + fields[k] + " " + fieldType[k] + " nicht gefunden!\n");
-						fixScript.append("ALTER TABLE " + tables[i] + " ADD " + fields[k] + " " + fieldType[k]);
+						errlog.append(tables[i] + ": SynErr: Feld " + fields[k] + StringUtils.SPACE + fieldType[k]
+								+ " nicht gefunden!\n");
+						fixScript.append(
+								"ALTER TABLE " + tables[i] + " ADD " + fields[k] + StringUtils.SPACE + fieldType[k]);
 					}
 
 					j.releaseStatement(stm);

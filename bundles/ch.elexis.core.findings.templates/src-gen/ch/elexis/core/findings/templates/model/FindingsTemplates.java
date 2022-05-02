@@ -2,6 +2,7 @@
  */
 package ch.elexis.core.findings.templates.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -69,7 +70,7 @@ public interface FindingsTemplates extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Title</b></em>' attribute.
-	 * The default value is <code>""</code>.
+	 * The default value is <code>StringUtils.EMPTY</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Title</em>' attribute isn't clear,
@@ -79,7 +80,7 @@ public interface FindingsTemplates extends EObject {
 	 * @return the value of the '<em>Title</em>' attribute.
 	 * @see #setTitle(String)
 	 * @see ch.elexis.core.findings.templates.model.ModelPackage#getFindingsTemplates_Title()
-	 * @model default=""
+	 * @model default=StringUtils.EMPTY
 	 * @generated
 	 */
 	String getTitle();

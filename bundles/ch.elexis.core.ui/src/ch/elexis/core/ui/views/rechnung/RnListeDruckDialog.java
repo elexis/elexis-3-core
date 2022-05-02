@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.rechnung;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_LIST;
 
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 		text.createFromTemplateName(null, TT_LIST, Brief.UNKNOWN, CoreHub.getLoggedInContact(),
 				Messages.RnActions_bills); // $NON-NLS-1$ //$NON-NLS-2$
 		text.getPlugin().insertText("[Titel]", //$NON-NLS-1$
-				Messages.RnActions_billsListPrintetAt + new TimeTool().toString(TimeTool.DATE_GER) + "\n", //$NON-NLS-1$ //$NON-NLS-2$
+				Messages.RnActions_billsListPrintetAt + new TimeTool().toString(TimeTool.DATE_GER) + StringUtils.LF,
 				SWT.CENTER);
 		String[][] table = new String[rnn.size() + 1][];
 		Money sum = new Money();
@@ -97,7 +98,7 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 			table[i][2] = betrag.getAmountAsString();
 		}
 		table[i] = new String[3];
-		table[i][0] = ""; //$NON-NLS-1$
+		table[i][0] = StringUtils.EMPTY;
 		table[i][1] = Messages.RnActions_sum; // $NON-NLS-1$
 		table[i][2] = sum.getAmountAsString();
 		text.getPlugin().setFont("Helvetica", SWT.NORMAL, 9); //$NON-NLS-1$

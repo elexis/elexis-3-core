@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.e4.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.core.runtime.ListenerList;
@@ -98,7 +99,7 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			}
 			selectLabel.setText(sb.toString());
 		} else {
-			selectLabel.setText("");
+			selectLabel.setText(StringUtils.EMPTY);
 		}
 		getParent().layout();
 	}

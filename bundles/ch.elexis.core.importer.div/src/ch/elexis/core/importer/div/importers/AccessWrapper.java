@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.importer.div.importers;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -34,7 +35,7 @@ import ch.rgw.tools.JdbcLink;
  */
 public class AccessWrapper {
 	private Database db;
-	private static String ImportPrefix = "";
+	private static String ImportPrefix = StringUtils.EMPTY;
 
 	/*
 	 * Open the mdbFile using sensible default
@@ -55,7 +56,7 @@ public class AccessWrapper {
 	/*
 	 * Set a prefix for the imported tablesnames
 	 *
-	 * @param prefix prefix to be used. Default to ""
+	 * @param prefix prefix to be used. Default to StringUtils.EMPTY
 	 */
 	public void setPrefixForImportedTableNames(String prefix) {
 		ImportPrefix = prefix;
@@ -86,7 +87,7 @@ public class AccessWrapper {
 		StringBuilder sb = new StringBuilder();
 		sb.append("CREATE TABLE ").append(insertName).append("(");//$NON-NLS-1$ //$NON-NLS-2$
 		for (Column c : cols) {
-			sb.append(c.getName()).append(" ");
+			sb.append(c.getName()).append(StringUtils.SPACE);
 			switch (c.getType()) {
 			case MEMO:
 				sb.append("TEXT");//$NON-NLS-1$

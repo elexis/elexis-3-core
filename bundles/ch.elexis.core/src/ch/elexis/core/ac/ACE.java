@@ -1,5 +1,6 @@
 package ch.elexis.core.ac;
 
+import org.apache.commons.lang3.StringUtils;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +126,7 @@ public class ACE {
 			return ACE_ROOT_LITERAL;
 		int valCan = Math.abs(getCanonicalName().hashCode());
 		int valNam = Math.abs(getName().hashCode());
-		BigInteger valI = new BigInteger(valCan + "" + valNam);
+		BigInteger valI = new BigInteger(valCan + StringUtils.EMPTY + valNam);
 		return valI.toString(16);
 	}
 }

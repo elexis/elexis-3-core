@@ -1,18 +1,19 @@
 
 package ch.elexis.data.dto;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.types.AddressType;
 
 public class ZusatzAdresseDTO {
-	private String id = "";
-	private String kontaktId = "";
-	private String street1 = "";
-	private String street2 = "";
+	private String id = StringUtils.EMPTY;
+	private String kontaktId = StringUtils.EMPTY;
+	private String street1 = StringUtils.EMPTY;
+	private String street2 = StringUtils.EMPTY;
 	private AddressType addressType = AddressType.PRINCIPAL_RESIDENCE;
-	private String place = "";
-	private String zip = "";
-	private String country = "";
-	private String postalAddress = "";
+	private String place = StringUtils.EMPTY;
+	private String zip = StringUtils.EMPTY;
+	private String country = StringUtils.EMPTY;
+	private String postalAddress = StringUtils.EMPTY;
 
 	public void setId(String id) {
 		this.id = id;

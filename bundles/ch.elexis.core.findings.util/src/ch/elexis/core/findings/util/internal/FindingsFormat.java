@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util.internal;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -60,7 +61,7 @@ public abstract class FindingsFormat {
 
 		Map<String, JsonStructuralFeatureTransformation> addAfterMap = transformMap.entrySet().stream()
 				.filter(e -> e.getKey().startsWith("!addAfter!"))
-				.collect(Collectors.toMap(e -> e.getKey().replace("!addAfter!", ""), e -> e.getValue()));
+				.collect(Collectors.toMap(e -> e.getKey().replace("!addAfter!", StringUtils.EMPTY), e -> e.getValue()));
 
 		transformMap = transformMap.entrySet().stream().filter(e -> !e.getKey().startsWith("!addAfter!"))
 				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));

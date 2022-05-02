@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.rechnung.invoice;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -83,10 +84,10 @@ public class InvoiceListBottomComposite extends Composite {
 		Composite cSum = fSum.getBody();
 		cSum.setLayout(new GridLayout(2, false));
 		tk.createLabel(cSum, Messages.RechnungsListeView_patInList); // $NON-NLS-1$
-		totalPatientsInListText = tk.createText(cSum, "", SWT.BORDER | SWT.READ_ONLY); //$NON-NLS-1$
+		totalPatientsInListText = tk.createText(cSum, StringUtils.EMPTY, SWT.BORDER | SWT.READ_ONLY);
 		totalPatientsInListText.setLayoutData(new GridData(100, SWT.DEFAULT));
 		tk.createLabel(cSum, Messages.RechnungsListeView_accountsInList); // $NON-NLS-1$
-		tSumInvoiceInList = tk.createText(cSum, "", SWT.BORDER | SWT.READ_ONLY); //$NON-NLS-1$
+		tSumInvoiceInList = tk.createText(cSum, StringUtils.EMPTY, SWT.BORDER | SWT.READ_ONLY);
 		tSumInvoiceInList.setLayoutData(new GridData(100, SWT.DEFAULT));
 		tk.createLabel(cSum, Messages.RechnungsListeView_sumInList); // $NON-NLS-1$
 		tSum = SWTHelper.createText(tk, cSum, 1, SWT.BORDER | SWT.READ_ONLY);

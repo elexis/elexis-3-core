@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.templates.ui.dlg;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -37,7 +38,7 @@ public class FindingsDialog extends TitleAreaDialog {
 		findingsDetailComposite = new FindingsDetailComposite(parent, model, true);
 		findingsDetailComposite.createContents();
 		FindingsTemplate findingsTemplate = ModelFactory.eINSTANCE.createFindingsTemplate();
-		findingsTemplate.setTitle("");
+		findingsTemplate.setTitle(StringUtils.EMPTY);
 		findingsTemplate.setType(Type.OBSERVATION_VITAL);
 		findingsTemplate.setInputData(ModelFactory.eINSTANCE.createInputDataNumeric());
 		findingsDetailComposite.setSelection(model, findingsTemplate);

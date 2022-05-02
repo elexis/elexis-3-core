@@ -1,5 +1,6 @@
 package ch.elexis.hl7.model;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -13,25 +14,25 @@ public class ObservationMessage {
 	String sendingApplication; // MSH-3
 	String sendingFacility; // MSH-4
 	Date dateTimeOfMessage = null; // MSH-7
-	String messageControlID = ""; // MSH-10
+	String messageControlID = StringUtils.EMPTY; // MSH-10
 
 	// PID
 	String patientId; // PID-3
 	String alternatePatientId; // PID-4
 	String patientName; // PID-5
-	String patientLastName = ""; // PID-5-2
-	String patientFirstName = ""; // PID-5-3
-	String patientBirthdate = ""; // PID-7
-	String patientSex = ""; // PID-8
+	String patientLastName = StringUtils.EMPTY; // PID-5-2
+	String patientFirstName = StringUtils.EMPTY; // PID-5-3
+	String patientBirthdate = StringUtils.EMPTY; // PID-7
+	String patientSex = StringUtils.EMPTY; // PID-8
 	// optional NTE following PID
 	// see
 	// http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7+v2.5&segment=OBX
-	String patientNotesAndComments = "";
+	String patientNotesAndComments = StringUtils.EMPTY;
 
 	// ORC
 	String orderNumber; // ORC-2
-	String orderNumberPlacer = ""; // ORC-2
-	String orderNumberFiller = ""; // ORC-3
+	String orderNumberPlacer = StringUtils.EMPTY; // ORC-2
+	String orderNumberFiller = StringUtils.EMPTY; // ORC-3
 	Date dateTimeOfTransaction = null; // ORC-9
 
 	// OBX
@@ -64,7 +65,7 @@ public class ObservationMessage {
 		this.patientLastName = _patientLastName;
 		this.patientFirstName = _patientFirstName;
 		this.patientNotesAndComments = _patientNotesAndComments;
-		this.patientName = _patientLastName + " " + _patientFirstName;
+		this.patientName = _patientLastName + StringUtils.SPACE + _patientFirstName;
 		this.patientBirthdate = _patientBirthDate;
 		this.patientSex = _patientSex;
 		this.alternatePatientId = _alternatePatientId;

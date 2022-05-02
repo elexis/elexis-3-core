@@ -211,14 +211,15 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			IEncounter _latestEncounter = encounterService.getLatestEncounter(patient).orElse(null);
 			if (_latestEncounter != null) {
 				values[6] = util.formatDate(_latestEncounter.getDate());
-				String encounterText = _latestEncounter.getHeadVersionInPlaintext().trim().replaceAll("\n", " ");
+				String encounterText = _latestEncounter.getHeadVersionInPlaintext().trim().replaceAll(StringUtils.LF,
+						StringUtils.SPACE);
 				String[] encounterValue = new String[4];
 				final int stepWidth = 65; // TODO calculate by dimension?
 				encounterValue[0] = StringUtils.substring(encounterText, 0, stepWidth);
 				encounterValue[1] = StringUtils.substring(encounterText, stepWidth, stepWidth * 2);
 				encounterValue[2] = StringUtils.substring(encounterText, stepWidth * 2, stepWidth * 3);
 				encounterValue[3] = StringUtils.substring(encounterText, stepWidth * 3, stepWidth * 4);
-				values[7] = StringUtils.join(encounterValue, "\n");
+				values[7] = StringUtils.join(encounterValue, StringUtils.LF);
 			}
 		}
 
@@ -226,7 +227,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 
 		String text = MessageFormat.format(TEMPLATE, values);
 		StyleRange[] styleRanges = generateStyleRanges(text);
-		String replaceAll = text.replaceAll("<(.+?)>", "");
+		String replaceAll = text.replaceAll("<(.+?)>", StringUtils.EMPTY);
 
 		styledText.setText(replaceAll);
 		styledText.setStyleRanges(styleRanges);
@@ -281,7 +282,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 
 	private void clearPopulatePatientLabelComposite(IPatient patient) {
 		if (patient == null) {
-			lblPatientlabel.setText("");
+			lblPatientlabel.setText(StringUtils.EMPTY);
 		} else {
 			lblPatientlabel.setText(patient.getLabel() + " (" + patient.getAgeInYears() + " Jahre)");
 		}

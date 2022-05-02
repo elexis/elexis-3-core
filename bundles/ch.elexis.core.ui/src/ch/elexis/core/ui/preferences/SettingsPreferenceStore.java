@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.constants.Preferences.SETTINGS_PREFERENCE_STORE_DEFAULT;
 
 import java.util.LinkedList;
@@ -85,7 +86,7 @@ public class SettingsPreferenceStore implements IPreferenceStore {
 		if (z == null) {
 			z = base.get(field + SETTINGS_PREFERENCE_STORE_DEFAULT, null);
 			if (z == null) {
-				z = ""; //$NON-NLS-1$
+				z = StringUtils.EMPTY;
 			}
 		}
 		return z;

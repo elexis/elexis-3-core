@@ -13,6 +13,7 @@
 
 package ch.elexis.core.ui.importer.div.importers;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.security.MessageDigest;
@@ -83,7 +84,7 @@ public class KontaktImporterBlatt extends Composite {
 			public void widgetSelected(final SelectionEvent e) {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
 				String file = fd.open();
-				lbFileName.setText(file == null ? "" : file); //$NON-NLS-1$
+				lbFileName.setText(file == null ? StringUtils.EMPTY : file);
 				filename = lbFileName.getText();
 			}
 		});
@@ -146,7 +147,7 @@ public class KontaktImporterBlatt extends Composite {
 			if (row.length != 7) {
 				continue;
 			}
-			log.info(Messages.KontaktImporterBlatt_Importing + StringTool.join(row, " "));
+			log.info(Messages.KontaktImporterBlatt_Importing + StringTool.join(row, StringUtils.SPACE));
 			// Please keep in sync with doc/import.textile !!
 			String bagnr = StringTool.getSafe(row, 0);
 			String name = StringTool.getSafe(row, 1);
@@ -172,15 +173,15 @@ public class KontaktImporterBlatt extends Composite {
 	String[] splitAdress(final String adr) {
 		String[] ret = new String[3];
 		String[] m1 = adr.split("\\s*,\\s*"); //$NON-NLS-1$
-		String[] plzOrt = m1[m1.length - 1].split(" ", 2); //$NON-NLS-1$
+		String[] plzOrt = m1[m1.length - 1].split(StringUtils.SPACE, 2);
 		if (m1.length == 1) {
-			ret[0] = ""; //$NON-NLS-1$
+			ret[0] = StringUtils.EMPTY;
 
 		} else {
 			ret[0] = m1[0];
 		}
 		ret[1] = plzOrt[0];
-		ret[2] = plzOrt.length > 1 ? plzOrt[1] : ""; //$NON-NLS-1$
+		ret[2] = plzOrt.length > 1 ? plzOrt[1] : StringUtils.EMPTY;
 		return ret;
 	}
 
@@ -270,10 +271,10 @@ public class KontaktImporterBlatt extends Composite {
 			// Please keep in sync with doc/import.textile !!
 			VCard vcard = new VCard(new FileInputStream(file));
 			String name, vorname, tel, email, title;
-			String gebdat = ""; //$NON-NLS-1$
-			String strasse = ""; //$NON-NLS-1$
-			String plz = ""; //$NON-NLS-1$
-			String ort = ""; //$NON-NLS-1$
+			String gebdat = StringUtils.EMPTY;
+			String strasse = StringUtils.EMPTY;
+			String plz = StringUtils.EMPTY;
+			String ort = StringUtils.EMPTY;
 			String fqname = vcard.getElement("N"); //$NON-NLS-1$
 			if (fqname == null) {
 				return false;

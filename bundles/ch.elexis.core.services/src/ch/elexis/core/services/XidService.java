@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.constants.XidConstants.CH_AHV;
 import static ch.elexis.core.constants.XidConstants.CH_AHV_QUALITY;
 import static ch.elexis.core.constants.XidConstants.DOMAIN_EAN;
@@ -75,7 +76,7 @@ public class XidService implements IXidService {
 				if (spl.length < 2) {
 					logger.error("Fehler in XID-Domain " + domainString);
 				}
-				String simpleName = "";
+				String simpleName = StringUtils.EMPTY;
 				if (spl.length >= 3) {
 					simpleName = spl[2];
 				}
@@ -107,7 +108,8 @@ public class XidService implements IXidService {
 			if (domainName.matches(".*[;#].*")) {
 				logger.error("XID Domain " + domainName + " ungültig");
 			} else {
-				XidDomain created = new XidDomain(domainName, simpleName == null ? "" : simpleName, quality, "Kontakt");
+				XidDomain created = new XidDomain(domainName, simpleName == null ? StringUtils.EMPTY : simpleName,
+						quality, "Kontakt");
 				domains.put(domainName, created);
 				if (simpleName != null) {
 					domainMap.put(simpleName, domainName);

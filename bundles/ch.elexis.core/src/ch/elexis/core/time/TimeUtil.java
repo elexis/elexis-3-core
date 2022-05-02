@@ -1,5 +1,6 @@
 package ch.elexis.core.time;
 
+import org.apache.commons.lang3.StringUtils;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,7 +47,7 @@ public class TimeUtil {
 		if (localDateTime != null) {
 			return FULL_GER.format(localDateTime);
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	/**
@@ -56,19 +57,19 @@ public class TimeUtil {
 		if (date != null) {
 			return date.format(DATE_GER);
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	public static String formatSafe(LocalDate date, DateTimeFormatter formatter) {
 		if (date != null) {
 			return formatter.format(date);
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	public static String formatSafe(Long lastUpdate) {
 		if (lastUpdate == null) {
-			return "";
+			return StringUtils.EMPTY;
 		}
 		return formatSafe(toLocalDateTime(new Date(lastUpdate)));
 	}

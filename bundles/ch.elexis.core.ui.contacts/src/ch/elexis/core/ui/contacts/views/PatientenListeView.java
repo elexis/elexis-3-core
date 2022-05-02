@@ -13,6 +13,7 @@
 
 package ch.elexis.core.ui.contacts.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringJoiner;
@@ -251,7 +252,8 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	private void collectUserFields() {
 		ArrayList<String> fields = new ArrayList<String>();
-		initiated = !("".equals(ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, "")));
+		initiated = !(StringUtils.EMPTY
+				.equals(ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, StringUtils.EMPTY)));
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, false)) {
 			fields.add("code" + Query.EQUALS + Messages.PatientenListeView_PatientNr); // $NON-NLS-1$
 		}

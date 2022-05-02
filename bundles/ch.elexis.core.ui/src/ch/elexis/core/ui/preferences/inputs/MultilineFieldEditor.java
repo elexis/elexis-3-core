@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.preferences.inputs;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -80,7 +81,7 @@ public class MultilineFieldEditor extends StringFieldEditor {
 		if (textField != null) {
 			String value = getPreferenceStore().getString(getPreferenceName());
 			if (isStringList) {
-				value = value.replaceAll(",", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				value = value.replaceAll(",", StringUtils.LF); //$NON-NLS-1$
 			}
 			textField.setText(value);
 		}

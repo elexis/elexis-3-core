@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.fhir.model;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,7 +52,7 @@ public class LocalCoding extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa
 
 	@Override
 	public void setMappedCodes(List<ICoding> mappedCodes) {
-		String encoded = "";
+		String encoded = StringUtils.EMPTY;
 		if (mappedCodes != null && !mappedCodes.isEmpty()) {
 			encoded = getMappedCodingAsString(mappedCodes);
 		}
@@ -78,7 +79,7 @@ public class LocalCoding extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa
 		String[] codingParts = encoded.split("\\" + MAPPED_FIELD_SEPARATOR);
 		if (codingParts != null && codingParts.length > 1) {
 			if (codingParts.length == 2) {
-				return Optional.of(new TransientCoding(codingParts[0], codingParts[1], ""));
+				return Optional.of(new TransientCoding(codingParts[0], codingParts[1], StringUtils.EMPTY));
 			} else if (codingParts.length == 3) {
 				return Optional.of(new TransientCoding(codingParts[0], codingParts[1], codingParts[2]));
 			}

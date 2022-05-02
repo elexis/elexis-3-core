@@ -1,5 +1,6 @@
 package ch.elexis.core.model.tasks;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.rgw.tools.Result;
 
 public class TaskException extends Exception {
@@ -49,7 +50,7 @@ public class TaskException extends Exception {
 	}
 
 	public TaskException(int exceptionCode, @SuppressWarnings("rawtypes") Result result) {
-		this(exceptionCode, (result != null) ? result.toString() : "");
+		this(exceptionCode, (result != null) ? result.toString() : StringUtils.EMPTY);
 	}
 
 	public int getExceptionCode() {

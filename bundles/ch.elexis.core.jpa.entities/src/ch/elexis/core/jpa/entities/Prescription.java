@@ -1,5 +1,6 @@
 package ch.elexis.core.jpa.entities;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -128,7 +129,7 @@ public class Prescription extends AbstractEntityWithId implements EntityWithId, 
 				// not set as entry type
 				if (rezeptId.equals("Direktabgabe")) {
 					setEntryType(EntryType.SELF_DISPENSED);
-					setRezeptID("");
+					setRezeptID(StringUtils.EMPTY);
 					return EntryType.SELF_DISPENSED;
 				}
 				setEntryType(EntryType.RECIPE);

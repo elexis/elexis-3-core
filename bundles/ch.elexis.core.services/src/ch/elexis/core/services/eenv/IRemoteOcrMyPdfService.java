@@ -1,5 +1,6 @@
 package ch.elexis.core.services.eenv;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.InputStream;
 
 import javax.ws.rs.Consumes;
@@ -13,7 +14,7 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 /**
  * @see https://github.com/jbarlow83/OCRmyPDF/blob/master/misc/webservice.py
  */
-@Path("")
+@Path(StringUtils.EMPTY)
 interface IRemoteOcrMyPdfService {
 
 	@POST

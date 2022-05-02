@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.usage.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -183,7 +184,7 @@ public enum StatisticsManager {
 			os.close();
 			return aString;
 		} catch (IOException e) {
-			LoggerFactory.getLogger(StatisticsManager.class).error("", e);
+			LoggerFactory.getLogger(StatisticsManager.class).error(StringUtils.EMPTY, e);
 		}
 		return null;
 	}

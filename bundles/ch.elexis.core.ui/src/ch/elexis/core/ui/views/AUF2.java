@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Objects;
 
@@ -190,7 +191,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 					ISickCertificate auf = (ISickCertificate) selection.getFirstElement();
 					sb.append(StoreToStringServiceHolder.getStoreToString(auf)).append(","); //$NON-NLS-1$
 				}
-				event.data = sb.toString().replace(",$", ""); //$NON-NLS-1$ //$NON-NLS-2$
+				event.data = sb.toString().replace(",$", StringUtils.EMPTY); //$NON-NLS-1$
 			}
 		});
 

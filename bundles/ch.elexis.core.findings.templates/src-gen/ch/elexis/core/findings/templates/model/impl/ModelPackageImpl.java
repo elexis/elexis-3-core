@@ -2,6 +2,7 @@
  */
 package ch.elexis.core.findings.templates.model.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.findings.templates.model.CodeElement;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
@@ -643,7 +644,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(findingsTemplatesEClass, FindingsTemplates.class, "FindingsTemplates", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getFindingsTemplates_FindingsTemplates(), this.getFindingsTemplate(), null, "findingsTemplates", null, 0, -1, FindingsTemplates.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFindingsTemplates_Id(), ecorePackage.getEString(), "id", null, 0, 1, FindingsTemplates.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getFindingsTemplates_Title(), ecorePackage.getEString(), "title", "", 0, 1, FindingsTemplates.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFindingsTemplates_Title(), ecorePackage.getEString(), "title", StringUtils.EMPTY, 0, 1, FindingsTemplates.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(findingsTemplateEClass, FindingsTemplate.class, "FindingsTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getFindingsTemplate_Type(), this.getType(), "type", null, 0, 1, FindingsTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -670,7 +671,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(inputDataGroupComponentEClass, InputDataGroupComponent.class, "InputDataGroupComponent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getInputDataGroupComponent_FindingsTemplates(), this.getFindingsTemplate(), null, "findingsTemplates", null, 0, -1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getInputDataGroupComponent_DataType(), this.getDataType(), "dataType", "GROUP_COMPONENT", 0, 1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getInputDataGroupComponent_TextSeparator(), ecorePackage.getEString(), "textSeparator", " ", 0, 1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getInputDataGroupComponent_TextSeparator(), ecorePackage.getEString(), "textSeparator", StringUtils.SPACE, 0, 1, InputDataGroupComponent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(codeElementEClass, CodeElement.class, "CodeElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCodeElement_Code(), ecorePackage.getEString(), "code", null, 0, 1, CodeElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

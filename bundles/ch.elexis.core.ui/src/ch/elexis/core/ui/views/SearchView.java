@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,7 +165,7 @@ public class SearchView extends ViewPart {
 				if (element instanceof PersistentObject) {
 					PersistentObject po = (PersistentObject) element;
 					String type = "?"; //$NON-NLS-1$
-					String label = ""; //$NON-NLS-1$
+					String label = StringUtils.EMPTY;
 					if (po instanceof Konsultation) {
 						type = Messages.SearchView_consultation; // $NON-NLS-1$
 

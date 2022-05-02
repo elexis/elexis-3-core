@@ -177,7 +177,8 @@ public class FindingsUiUtil {
 					} else {
 						// numeric fields
 						BigDecimal number = NumberUtils.isNumber(text) ? new BigDecimal(text) : null;
-						iObservation.setNumericValue(number, iObservation.getNumericValueUnit().orElse(""));
+						iObservation.setNumericValue(number,
+								iObservation.getNumericValueUnit().orElse(StringUtils.EMPTY));
 					}
 
 				} catch (NumberFormatException e) {
@@ -265,7 +266,7 @@ public class FindingsUiUtil {
 	public static List<Action> createToolbarSubComponents(Composite c, IObservation iObservation, int horizontalGrap) {
 
 		List<Action> actions = new ArrayList<>();
-		String comment = iObservation.getComment().orElse("");
+		String comment = iObservation.getComment().orElse(StringUtils.EMPTY);
 
 		ToolBarManager menuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.NO_FOCUS);
 		Action commentableAction = new CommentAction(c.getShell(), comment);
@@ -316,7 +317,7 @@ public class FindingsUiUtil {
 		} else if (iFinding instanceof IProcedureRequest) {
 			return "Prozedere";
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	/**

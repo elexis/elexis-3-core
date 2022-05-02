@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.templates.ui.dlg;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,10 +63,9 @@ public class MergeLocalCodeDialog extends TitleAreaDialog {
 
 				}
 
-				return iCoding != null
-						? iCoding.getDisplay() + " (" + iCoding.getCode() + ")"
-								+ (stringBuilder.length() > 0 ? (" [" + stringBuilder.toString() + "]") : "")
-						: "";
+				return iCoding != null ? iCoding.getDisplay() + " (" + iCoding.getCode() + ")"
+						+ (stringBuilder.length() > 0 ? (" [" + stringBuilder.toString() + "]") : StringUtils.EMPTY)
+						: StringUtils.EMPTY;
 			}
 		};
 		destinationFilter = new LocalCodeViewerFilter(labelProvider);
@@ -98,7 +98,7 @@ public class MergeLocalCodeDialog extends TitleAreaDialog {
 					destinationFilter.setSearchText(destinationFilterTxt.getText());
 					destinationItems.refresh();
 				} else {
-					destinationFilter.setSearchText(""); //$NON-NLS-1$
+					destinationFilter.setSearchText(StringUtils.EMPTY);
 					destinationItems.refresh();
 				}
 			}
@@ -126,7 +126,7 @@ public class MergeLocalCodeDialog extends TitleAreaDialog {
 					sourceFilter.setSearchText(sourceFilterTxt.getText());
 					sourceItems.refresh();
 				} else {
-					sourceFilter.setSearchText(""); //$NON-NLS-1$
+					sourceFilter.setSearchText(StringUtils.EMPTY);
 					sourceItems.refresh();
 				}
 			}

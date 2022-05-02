@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,7 +120,7 @@ public class Brief extends PersistentObject {
 				bhdl = bh.getId();
 				pat = bh.getFall().getPatient().getId();
 			}
-			String dst = "";
+			String dst = StringUtils.EMPTY;
 			if (dest != null) {
 				dst = dest.getId();
 			}

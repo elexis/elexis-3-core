@@ -26,6 +26,7 @@ package ch.elexis.scripting;
  limitations under the License.
  */
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -75,7 +76,7 @@ public class CSVWriter {
 	public static final char NO_QUOTE_CHARACTER = '\u0000';
 
 	/** Default line terminator uses platform encoding. */
-	public static final String DEFAULT_LINE_END = "\n";
+	public static final String DEFAULT_LINE_END = StringUtils.LF;
 
 	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
 
@@ -108,7 +109,7 @@ public class CSVWriter {
 	 * @param quotechar the character to use for quoted elements
 	 */
 	public CSVWriter(Writer writer, char separator, char quotechar) {
-		this(writer, separator, quotechar, "\n");
+		this(writer, separator, quotechar, StringUtils.LF);
 	}
 
 	/**
@@ -186,7 +187,7 @@ public class CSVWriter {
 
 	private static String getColumnValue(ResultSet rs, int colType, int colIndex) throws SQLException, IOException {
 
-		String value = "";
+		String value = StringUtils.EMPTY;
 
 		switch (colType) {
 		case Types.BIT:
@@ -215,7 +216,7 @@ public class CSVWriter {
 		case Types.NUMERIC:
 			BigDecimal bd = rs.getBigDecimal(colIndex);
 			if (bd != null) {
-				value = "" + bd.doubleValue();
+				value = StringUtils.EMPTY + bd.doubleValue();
 			}
 			break;
 		case Types.INTEGER:
@@ -223,7 +224,7 @@ public class CSVWriter {
 		case Types.SMALLINT:
 			int intValue = rs.getInt(colIndex);
 			if (!rs.wasNull()) {
-				value = "" + intValue;
+				value = StringUtils.EMPTY + intValue;
 			}
 			break;
 		case Types.JAVA_OBJECT:
@@ -257,11 +258,11 @@ public class CSVWriter {
 			value = rs.getString(colIndex);
 			break;
 		default:
-			value = "";
+			value = StringUtils.EMPTY;
 		}
 
 		if (value == null) {
-			value = "";
+			value = StringUtils.EMPTY;
 		}
 
 		return value;

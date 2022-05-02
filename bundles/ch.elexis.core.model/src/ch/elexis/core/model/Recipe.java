@@ -1,5 +1,6 @@
 package ch.elexis.core.model;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -92,6 +93,6 @@ public class Recipe extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.enti
 		if (m == null) {
 			return dateFormat.format(getDate()) + " (unbekannt)";
 		}
-		return dateFormat.format(getDate()) + " " + m.getLabel();
+		return dateFormat.format(getDate()) + StringUtils.SPACE + m.getLabel();
 	}
 }

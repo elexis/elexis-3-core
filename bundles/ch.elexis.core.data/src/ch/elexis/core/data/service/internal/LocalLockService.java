@@ -1,5 +1,6 @@
 package ch.elexis.core.data.service.internal;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -113,7 +114,8 @@ public class LocalLockService implements ILocalLockService {
 	private LockResponse releaseLock(String storeToString) {
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		LockInfo lil = new LockInfo(storeToString, user.getId(), elexisServerService.getSystemUuid().toString(),
-				contextService.getStationIdentifier(), configService.getLocal(Preferences.STATION_IDENT_TEXT, ""));
+				contextService.getStationIdentifier(),
+				configService.getLocal(Preferences.STATION_IDENT_TEXT, StringUtils.EMPTY));
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lil);
 		return acquireOrReleaseLocks(lockRequest);
 	}
@@ -188,7 +190,8 @@ public class LocalLockService implements ILocalLockService {
 
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		LockInfo lockInfo = new LockInfo(storeToString, user.getId(), elexisServerService.getSystemUuid().toString(),
-				contextService.getStationIdentifier(), configService.getLocal(Preferences.STATION_IDENT_TEXT, ""));
+				contextService.getStationIdentifier(),
+				configService.getLocal(Preferences.STATION_IDENT_TEXT, StringUtils.EMPTY));
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.ACQUIRE, lockInfo);
 		return acquireOrReleaseLocks(lockRequest);
 	}
@@ -376,7 +379,8 @@ public class LocalLockService implements ILocalLockService {
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		String storeToString = StoreToStringServiceHolder.getStoreToString(object);
 		LockInfo lockInfo = new LockInfo(storeToString, user.getId(), elexisServerService.getSystemUuid().toString(),
-				contextService.getStationIdentifier(), configService.getLocal(Preferences.STATION_IDENT_TEXT, ""));
+				contextService.getStationIdentifier(),
+				configService.getLocal(Preferences.STATION_IDENT_TEXT, StringUtils.EMPTY));
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.INFO, lockInfo);
 
 		return isLocked(lockRequest);

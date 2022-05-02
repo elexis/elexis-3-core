@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.application;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Map;
 import java.util.Optional;
 
@@ -82,7 +83,7 @@ public class Desk implements IApplication {
 					log.error(PersistentObject.class.getName() + " po data initialization failed.");
 				}
 			} else {
-				String connstring = (connection.isPresent()) ? connection.get().connectionString : "";
+				String connstring = (connection.isPresent()) ? connection.get().connectionString : StringUtils.EMPTY;
 				log.error("Can not connect to database, datasource or connection configuration missing. Datasource ["
 						+ datasource + "] Connection [" + connstring + "]");
 			}
@@ -97,7 +98,7 @@ public class Desk implements IApplication {
 			sb.append("Message: " + pe.getMessage() + "\n\n");
 			while (pe.getCause() != null) {
 				pe = pe.getCause();
-				sb.append("Reason: " + pe.getMessage() + "\n");
+				sb.append("Reason: " + pe.getMessage() + StringUtils.LF);
 			}
 			sb.append("\n\nWould you like to re-configure the database connection?");
 			boolean retVal = MessageDialog.openQuestion(shell, "Error in database connection", sb.toString());
@@ -203,7 +204,7 @@ public class Desk implements IApplication {
 			localLock.unlock();
 		}
 		// TODO add elexis OID if available
-		CoreHub.localCfg.set(ch.elexis.core.constants.Preferences.SOFTWARE_OID, "");
+		CoreHub.localCfg.set(ch.elexis.core.constants.Preferences.SOFTWARE_OID, StringUtils.EMPTY);
 		CoreHub.localCfg.flush();
 	}
 

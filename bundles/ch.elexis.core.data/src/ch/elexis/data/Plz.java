@@ -11,6 +11,7 @@
 // $Id: Plz.java 1256 2006-11-09 13:16:10Z rgw_ch $
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import ch.rgw.tools.StringTool;
 
 // TODO is this used?
@@ -40,7 +41,7 @@ public class Plz extends PersistentObject {
 		String[] f = new String[3];
 		get(new String[] { "Plz", "Ort", "Kanton" }, f);
 		StringBuilder ret = new StringBuilder();
-		ret.append(f[0]).append(" ").append(f[1]).append(" ").append(f[2]);
+		ret.append(f[0]).append(StringUtils.SPACE).append(f[1]).append(StringUtils.SPACE).append(f[2]);
 		return ret.toString();
 	}
 

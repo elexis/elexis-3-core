@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 
 public class UtilFile {
@@ -38,7 +39,7 @@ public class UtilFile {
 	 */
 	public static String getCorrectPath(String path) throws IllegalArgumentException {
 		if (path == null) {
-			return ""; //$NON-NLS-1$
+			return StringUtils.EMPTY;
 		}
 		path = getCorrectSeparators(path);
 		path = removeMultipleSeparators(path);
@@ -68,7 +69,7 @@ public class UtilFile {
 		String correctFilenamePath = getCorrectSeparators(filenamePath);
 
 		if (correctFilenamePath.indexOf(DIRECTORY_SEPARATOR) < 0) {
-			return "";
+			return StringUtils.EMPTY;
 		}
 		return correctFilenamePath.substring(0, correctFilenamePath.lastIndexOf(DIRECTORY_SEPARATOR));
 	}

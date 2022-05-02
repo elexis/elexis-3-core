@@ -176,7 +176,7 @@ public class FindingDataAccessor implements IDataAccess {
 							iObservation.getText().ifPresent(txt -> {
 								iObservation.getEffectiveTime().ifPresent(date -> {
 									textBuilder.append(new TimeTool(date).toString(TimeTool.LARGE_GER));
-									textBuilder.append(" ");
+									textBuilder.append(StringUtils.SPACE);
 								});
 								textBuilder.append(txt);
 							});

@@ -11,6 +11,7 @@
 
 package ch.elexis.core.ui;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -149,7 +150,7 @@ public class Hub extends AbstractUIPlugin {
 		if (CoreHub.getLoggedInContact() == null) {
 			sb.append(Messages.Hub_nouserloggedin);
 		} else {
-			sb.append(" ").append(CoreHub.getLoggedInContact().getLabel()); //$NON-NLS-1$
+			sb.append(StringUtils.SPACE).append(CoreHub.getLoggedInContact().getLabel());
 		}
 		if (CoreHub.actMandant == null) {
 			sb.append(Messages.Hub_nomandantor);

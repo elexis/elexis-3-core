@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.laboratory.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -146,7 +147,7 @@ public class LaborMappingComposite extends Composite {
 				} else if (element instanceof TransientLabMapping) {
 					return ((TransientLabMapping) element).getOrigin().getLabel(true);
 				}
-				return ""; //$NON-NLS-1$
+				return StringUtils.EMPTY;
 			}
 		});
 
@@ -161,7 +162,7 @@ public class LaborMappingComposite extends Composite {
 				} else if (element instanceof TransientLabMapping) {
 					return ((TransientLabMapping) element).getItemName();
 				}
-				return ""; //$NON-NLS-1$
+				return StringUtils.EMPTY;
 			}
 		});
 		column.setEditingSupport(new ItemNameEditingSupport(viewer));
@@ -193,7 +194,7 @@ public class LaborMappingComposite extends Composite {
 			} else if (element instanceof TransientLabMapping) {
 				return ((TransientLabMapping) element).getItemName();
 			}
-			return ""; //$NON-NLS-1$
+			return StringUtils.EMPTY;
 		}
 
 		@Override

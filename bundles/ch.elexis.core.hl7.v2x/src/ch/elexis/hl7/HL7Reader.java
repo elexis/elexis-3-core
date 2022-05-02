@@ -1,5 +1,6 @@
 package ch.elexis.hl7;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 
 import org.slf4j.Logger;
@@ -78,7 +79,7 @@ public abstract class HL7Reader {
 			StringBuilder sb = new StringBuilder();
 			sb.append(Messages.HL7_NameConflictWithID).append("[" + pat.getPatientNr() + "]").append(":\n")
 					.append(Messages.HL7_Lab).append(lastName).append(StringTool.space).append(firstName).append("(")
-					.append(sex).append("),").append(birthDate).append("\n").append(Messages.HL7_Database)
+					.append(sex).append("),").append(birthDate).append(StringUtils.LF).append(Messages.HL7_Database)
 					.append(pat.getLabel());
 			pat = null;
 			logger.warn(sb.toString());
@@ -115,8 +116,8 @@ public abstract class HL7Reader {
 
 	public String parseTextValue(String value) {
 		String text = value;
-		text = text.replaceAll("\\\\.br\\\\", "\n");
-		text = text.replaceAll("\\\\.BR\\\\", "\n");
+		text = text.replaceAll("\\\\.br\\\\", StringUtils.LF);
+		text = text.replaceAll("\\\\.BR\\\\", StringUtils.LF);
 
 		// only return parsed value if it contains reasonable input
 		if (text != null && !text.isEmpty()) {
@@ -177,7 +178,7 @@ public abstract class HL7Reader {
 			if (name2 != null) {
 				orcMessage.getNames().add(name2);
 				if (name != null) {
-					orcMessage.getNames().add(name + " " + name2);
+					orcMessage.getNames().add(name + StringUtils.SPACE + name2);
 				}
 			}
 		}

@@ -144,7 +144,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		} else if (isTyp(ArticleTyp.MIGEL)) {
 			return (String) getExtInfo("unit");
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	@Override

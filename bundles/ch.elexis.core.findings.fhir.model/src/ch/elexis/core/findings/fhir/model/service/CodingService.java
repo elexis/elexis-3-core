@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.fhir.model.service;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -96,11 +97,11 @@ public class CodingService implements ICodingService {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getCodesystemShort(iCoding.getSystem()));
 		if (sb.length() > 0) {
-			sb.append(" ");
+			sb.append(StringUtils.SPACE);
 		}
 		sb.append(iCoding.getCode());
 		if (sb.length() > 0) {
-			sb.append(" ");
+			sb.append(StringUtils.SPACE);
 		}
 		String display = iCoding.getDisplay();
 		if (display == null || display.isEmpty()) {
@@ -115,7 +116,7 @@ public class CodingService implements ICodingService {
 		if (availableCodes != null && !availableCodes.isEmpty()) {
 			// do work here, build cache?
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	@Override

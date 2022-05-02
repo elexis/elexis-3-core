@@ -1,5 +1,6 @@
 package ch.elexis.core.model.prescription;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 
 import ch.elexis.core.services.IMedicationService;
@@ -9,7 +10,7 @@ public class Methods {
 	 *
 	 * @return the signature split into a string array with 4 elements; will always
 	 *         return an array of 4 elements, where empty entries are of type String
-	 *         ""
+	 *         StringUtils.EMPTY
 	 * @since 3.1.0
 	 * @since 3.2.0 relocated from Prescription
 	 * @deprecated use {@link IMedicationService} method instead.
@@ -17,7 +18,7 @@ public class Methods {
 	@Deprecated
 	public static String[] getSignatureAsStringArray(String signature) {
 		String[] daytimeSignature = new String[4];
-		Arrays.fill(daytimeSignature, "");
+		Arrays.fill(daytimeSignature, StringUtils.EMPTY);
 		if (signature != null) {
 			// Match stuff like '1/2', '7/8'
 			// if (signature.matches("^[0-9]/[0-9]$")) {
@@ -65,7 +66,7 @@ public class Methods {
 	 */
 	private static String[] getDayTimeOrFreetextSignatureArray(String[] signature) {
 		String[] values = new String[4];
-		Arrays.fill(values, "");
+		Arrays.fill(values, StringUtils.EMPTY);
 
 		String morn = signature[0];
 		String noon = signature[1];

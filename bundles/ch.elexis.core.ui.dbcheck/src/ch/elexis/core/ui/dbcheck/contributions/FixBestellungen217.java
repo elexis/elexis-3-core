@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,7 +57,7 @@ public class FixBestellungen217 extends ExternalMaintenance {
 								existingBestellung.set("Liste", content);
 								updateCnt++;
 							} else {
-								existingBestellung.set("Liste", "");
+								existingBestellung.set("Liste", StringUtils.EMPTY);
 								updateCnt++;
 							}
 						}

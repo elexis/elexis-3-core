@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -58,7 +59,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 			@Override
 			public String getText(Object element) {
 				if (element == null) {
-					return "";
+					return StringUtils.EMPTY;
 				}
 				return ((IDiagnosis) element).getLabel();
 			}
@@ -68,9 +69,10 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 			@Override
 			public String getText(Object element) {
 				if (element == null) {
-					return "";
+					return StringUtils.EMPTY;
 				}
-				return ((IDiagnosis) element).getCodeSystemName() + " " + ((IDiagnosis) element).getLabel();
+				return ((IDiagnosis) element).getCodeSystemName() + StringUtils.SPACE
+						+ ((IDiagnosis) element).getLabel();
 			}
 		});
 	}
@@ -80,7 +82,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 		String oldListLabel = WorkbenchMessages.FilteredItemsSelectionDialog_listLabel;
 
 		setMessage(Messages.DiagnoseSelektorDialog_Message);
-		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = ""; //$NON-NLS-1$
+		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = StringUtils.EMPTY;
 		Control ret = super.createDialogArea(parent);
 
 		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = oldListLabel;
@@ -163,22 +165,22 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 
 		@Override
 		public String getCodeSystemName() {
-			return "";
+			return StringUtils.EMPTY;
 		}
 
 		@Override
 		public String getCodeSystemCode() {
-			return "";
+			return StringUtils.EMPTY;
 		}
 
 		@Override
 		public String getId() {
-			return "";
+			return StringUtils.EMPTY;
 		}
 
 		@Override
 		public String getCode() {
-			return "";
+			return StringUtils.EMPTY;
 		}
 
 		@Override

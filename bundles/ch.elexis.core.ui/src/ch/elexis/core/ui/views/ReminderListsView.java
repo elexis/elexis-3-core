@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -309,7 +310,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 						if (list.size() != 0) {
 							StringBuilder sb = new StringBuilder();
 							for (Reminder r : list) {
-								sb.append(r.getSubject() + "\n");
+								sb.append(r.getSubject() + StringUtils.LF);
 								sb.append(r.getMessage() + "\n\n");
 							}
 							SWTHelper.alert(Messages.ReminderView_importantRemindersCaption, sb.toString());
@@ -694,7 +695,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 	private void applyDueDateFilter(Query<Reminder> qbe) {
 		TimeTool dueDateDays = new TimeTool();
 		dueDateDays.addDays(filterDueDateDays);
-		qbe.add(Reminder.FLD_DUE, Query.NOT_EQUAL, "");
+		qbe.add(Reminder.FLD_DUE, Query.NOT_EQUAL, StringUtils.EMPTY);
 		qbe.add(Reminder.FLD_DUE, Query.LESS_OR_EQUAL, dueDateDays.toString(TimeTool.DATE_COMPACT));
 	}
 
@@ -725,7 +726,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		viewerColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return "";
+				return StringUtils.EMPTY;
 			}
 
 			@Override
@@ -1092,7 +1093,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 
 		public void loadSelection() {
 			currentSelection.clear();
-			String[] loadedIds = CoreHub.userCfg.get(Preferences.USR_REMINDER_VIEWER_SELECTION, "").split(",");
+			String[] loadedIds = CoreHub.userCfg.get(Preferences.USR_REMINDER_VIEWER_SELECTION, StringUtils.EMPTY)
+					.split(",");
 			for (String id : loadedIds) {
 				for (IContributionItem item : manager.getItems()) {
 					if (item.getId().equals(id)) {

@@ -12,6 +12,7 @@
 
 package ch.elexis.core.data.events;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -433,7 +434,7 @@ public final class ElexisEventDispatcher implements Runnable {
 			if (filter != null && filter.getObjectClass() != null && filter.getObjectClass().getName() != null) {
 				sb.append(filter.type).append(" / ").append(filter.getObjectClass().getName());
 			}
-			sb.append("\n");
+			sb.append(StringUtils.LF);
 
 		}
 		sb.append("\n--------------\n");

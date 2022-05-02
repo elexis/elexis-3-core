@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.fhir.po.dataaccess;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class FindingsDataAccessor implements IDataAccess {
 	@Override
 	public Result<Object> getObject(String descriptor, PersistentObject dependentObject, String dates,
 			String[] params) {
-		Result<Object> result = new Result<Object>("");
+		Result<Object> result = new Result<Object>(StringUtils.EMPTY);
 
 		Patient patient = null;
 		if (dependentObject instanceof Patient) {
@@ -119,7 +120,7 @@ public class FindingsDataAccessor implements IDataAccess {
 		StringBuilder sb = new StringBuilder();
 		observations.stream().forEach(observation -> {
 			if (sb.length() > 0) {
-				sb.append("\n");
+				sb.append(StringUtils.LF);
 			}
 			sb.append(TextUtil.getText(observation, codingService));
 		});
@@ -132,7 +133,7 @@ public class FindingsDataAccessor implements IDataAccess {
 		StringBuilder sb = new StringBuilder();
 		famanams.stream().forEach(famanam -> {
 			if (sb.length() > 0) {
-				sb.append("\n");
+				sb.append(StringUtils.LF);
 			}
 			sb.append(TextUtil.getText(famanam, codingService));
 		});
@@ -145,7 +146,7 @@ public class FindingsDataAccessor implements IDataAccess {
 		StringBuilder sb = new StringBuilder();
 		allergies.stream().forEach(allergy -> {
 			if (sb.length() > 0) {
-				sb.append("\n");
+				sb.append(StringUtils.LF);
 			}
 			sb.append(TextUtil.getText(allergy, codingService));
 		});
@@ -159,7 +160,7 @@ public class FindingsDataAccessor implements IDataAccess {
 		StringBuilder sb = new StringBuilder();
 		observations.stream().forEach(observation -> {
 			if (sb.length() > 0) {
-				sb.append("\n");
+				sb.append(StringUtils.LF);
 			}
 			sb.append(TextUtil.getText(observation, codingService));
 		});
@@ -172,7 +173,7 @@ public class FindingsDataAccessor implements IDataAccess {
 		StringBuilder sb = new StringBuilder();
 		conditions.stream().forEach(condition -> {
 			if (sb.length() > 0) {
-				sb.append("\n");
+				sb.append(StringUtils.LF);
 			}
 			sb.append(TextUtil.getText(condition, codingService));
 		});

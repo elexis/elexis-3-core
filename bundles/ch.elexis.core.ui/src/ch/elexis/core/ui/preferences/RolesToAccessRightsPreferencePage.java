@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -265,7 +266,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 					cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 					break;
 				default:
-					cell.setText("");
+					cell.setText(StringUtils.EMPTY);
 					cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 				}
 			}
@@ -279,7 +280,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 			TreeColumn tc = tvc.getColumn();
 			tc.setData("role", role);
 			tc.setWidth(20);
-			tc.setText(role.getLabel().charAt(0) + "");
+			tc.setText(role.getLabel().charAt(0) + StringUtils.EMPTY);
 			String translation = role.getTranslatedLabel();
 			if (translation != null && translation.length() > 0) {
 				tc.setToolTipText(translation);
@@ -411,7 +412,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 	@Override
 	public void handleValueChange(ValueChangeEvent event) {
 		Role r = (Role) wv.getValue();
-		txtRoleName.setText((r == null) ? "" : r.getRoleName());
+		txtRoleName.setText((r == null) ? StringUtils.EMPTY : r.getRoleName());
 	}
 
 	private void refreshViewer() {

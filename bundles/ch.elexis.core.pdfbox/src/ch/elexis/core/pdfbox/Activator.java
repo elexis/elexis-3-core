@@ -1,5 +1,6 @@
 package ch.elexis.core.pdfbox;
 
+import org.apache.commons.lang3.StringUtils;
 import javax.imageio.spi.IIORegistry;
 import javax.imageio.spi.ImageReaderSpi;
 
@@ -18,8 +19,8 @@ public class Activator implements BundleActivator {
 		IIORegistry defaultInstance = IIORegistry.getDefaultInstance();
 		boolean registerServiceProvider = defaultInstance.registerServiceProvider(new JBIG2ImageReaderSpi(),
 				ImageReaderSpi.class);
-		LoggerFactory.getLogger(getClass())
-				.debug("IIORegistry registered " + JBIG2ImageReaderSpi.class.getName() + " " + registerServiceProvider);
+		LoggerFactory.getLogger(getClass()).debug("IIORegistry registered " + JBIG2ImageReaderSpi.class.getName()
+				+ StringUtils.SPACE + registerServiceProvider);
 	}
 
 	@Override

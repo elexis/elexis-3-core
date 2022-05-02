@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.tasks.parts.controls;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.ParseException;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -102,14 +103,14 @@ public class TaskTriggerTypeConfigurationComposite extends AbstractTaskDescripto
 	}
 
 	private void createCompositeParameters_CRON() {
-		String cron = (taskDescriptor != null) ? taskDescriptor.getTriggerParameters().get("cron") : "";
+		String cron = (taskDescriptor != null) ? taskDescriptor.getTriggerParameters().get("cron") : StringUtils.EMPTY;
 
 		Label label = new Label(compositeParameters, SWT.None);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		label.setText("cron");
 		Text text = new Text(compositeParameters, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		text.setText((cron != null) ? cron : "");
+		text.setText((cron != null) ? cron : StringUtils.EMPTY);
 		Label valid = new Label(compositeParameters, SWT.NONE | SWT.WRAP);
 		valid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 
@@ -136,7 +137,7 @@ public class TaskTriggerTypeConfigurationComposite extends AbstractTaskDescripto
 	}
 
 	private boolean validateAndupdateCronExpressionDescriptor(String cron, Label label) {
-		cron = (cron == null) ? "" : cron;
+		cron = (cron == null) ? StringUtils.EMPTY : cron;
 		boolean validExpression = CronExpression.isValidExpression(cron);
 		if (validExpression) {
 			try {

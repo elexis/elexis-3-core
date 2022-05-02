@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.documents.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Objects;
 
 import org.eclipse.jface.viewers.Viewer;
@@ -97,8 +98,8 @@ public class DocumentsViewerComparator extends ViewerComparator {
 				break;
 			case 5:
 				if (bFlat || cat1.equals(cat2)) {
-					rc = Objects.toString(dh1.getKeywords(), "")
-							.compareToIgnoreCase(Objects.toString(dh2.getKeywords(), ""));
+					rc = Objects.toString(dh1.getKeywords(), StringUtils.EMPTY)
+							.compareToIgnoreCase(Objects.toString(dh2.getKeywords(), StringUtils.EMPTY));
 				} else {
 					compareCategories = true;
 				}

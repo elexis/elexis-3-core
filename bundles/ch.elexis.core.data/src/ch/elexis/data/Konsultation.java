@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -294,9 +295,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		String recText = record.getText();
 		if ((pos == -1) || pos > recText.length()) {
 			pos = recText.length();
-			recText += "\n" + text;
+			recText += StringUtils.LF + text;
 		} else {
-			recText = recText.substring(0, pos) + "\n" + text + recText.substring(pos);
+			recText = recText.substring(0, pos) + StringUtils.LF + text + recText.substring(pos);
 		}
 		record.setText(recText);
 		// ++pos because \n has been added
@@ -629,7 +630,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 
 	public String getStatusText() {
-		String statusText = "";
+		String statusText = StringUtils.EMPTY;
 
 		Rechnung rechnung = getRechnung();
 		if (rechnung != null) {
@@ -652,8 +653,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 
 	public String getVerboseLabel() {
 		StringBuilder ret = new StringBuilder();
-		ret.append(getFall().getPatient().getName()).append(" ").append(getFall().getPatient().getVorname())
-				.append(", ").append(getFall().getPatient().getGeburtsdatum()).append(" - ").append(getDatum());
+		ret.append(getFall().getPatient().getName()).append(StringUtils.SPACE)
+				.append(getFall().getPatient().getVorname()).append(", ")
+				.append(getFall().getPatient().getGeburtsdatum()).append(" - ").append(getDatum());
 		return ret.toString();
 	}
 
@@ -934,7 +936,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * @return Username of the author or an empty string.
 	 */
 	public String getAuthor() {
-		String author = "";
+		String author = StringUtils.EMPTY;
 		VersionedResource resource = this.getEintrag();
 		if (resource != null) {
 			ResourceItem item = resource.getVersion(resource.getHeadVersion());
@@ -1208,7 +1210,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 
 	public static IDiagnose getDefaultDiagnose() {
 		IDiagnose ret = null;
-		String diagnoseId = ConfigServiceHolder.getUser(Preferences.USR_DEFDIAGNOSE, "");
+		String diagnoseId = ConfigServiceHolder.getUser(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);
 		if (diagnoseId.length() > 1) {
 			ret = (IDiagnose) CoreHub.poFactory.createFromString(diagnoseId);
 		}

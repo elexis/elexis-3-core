@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -105,7 +106,7 @@ public interface IMedicationService {
 	 *
 	 * @return the signature split into a string array with 4 elements; will always
 	 *         return an array of 4 elements, where empty entries are of type String
-	 *         ""
+	 *         StringUtils.EMPTY
 	 */
 	public String[] getSignatureAsStringArray(String signature);
 }

@@ -13,6 +13,7 @@
 
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -66,7 +67,7 @@ public class Query<T> {
 	private StringBuilder sql;
 	private PersistentObject template;
 	private Method load;
-	private String lastQuery = "";
+	private String lastQuery = StringUtils.EMPTY;
 	private final LinkedList<IFilter> postQueryFilters = new LinkedList<IFilter>();
 	private String ordering;
 	private final ArrayList<String> exttables = new ArrayList<String>(2);
@@ -244,7 +245,7 @@ public class Query<T> {
 		sql.append(" FROM ").append(table);
 
 		String cns = template.getConstraint();
-		if (cns.equals("")) {
+		if (cns.equals(StringUtils.EMPTY)) {
 			if (includeDeletedEntriesInQuery) {
 				link = " WHERE ";
 			} else {
@@ -341,7 +342,7 @@ public class Query<T> {
 			wert = (wert == null) ? StringConstants.EMPTY : wert;
 			if (operator.equalsIgnoreCase("LIKE") && !wert.matches("[0-9]{8,8}")) {
 				StringBuilder sb = null;
-				wert = wert.replaceAll("%", "");
+				wert = wert.replaceAll("%", StringUtils.EMPTY);
 				final String filler = "%%%%%%%%";
 				// are we looking for the year?
 				if (wert.matches("[0-9]{3,}")) {
@@ -353,7 +354,7 @@ public class Query<T> {
 					// as in 01.02.1932
 					wert = wert.replaceAll("[^0-9]([0-9])\\.", "0$1.");
 					// remove dots
-					sb = new StringBuilder(wert.replaceAll("\\.", ""));
+					sb = new StringBuilder(wert.replaceAll("\\.", StringUtils.EMPTY));
 					// String must consist of 8 or more digits (ddmmYYYY)
 					sb.append(filler);
 					// convert to YYYYmmdd format
@@ -400,7 +401,7 @@ public class Query<T> {
 		if (wert == null) {
 			if (operator.equalsIgnoreCase("is") || operator.equals("=")) {
 				// let's be a bit fault tolerant
-				operator = "";
+				operator = StringUtils.EMPTY;
 			} else if (NOT_EQUAL.equalsIgnoreCase(operator)) {
 				operator = "NOT";
 			}
@@ -479,8 +480,8 @@ public class Query<T> {
 	 *
 	 * @param fields Die Felder, die in die abfrage eingesetzt werden sollen
 	 * @param values die Werte, nach denen gesucht werden soll. Wenn values für ein
-	 *               Feld leer ist (null oder ""), dann wird dieses Feld aus der
-	 *               Abfrage weggelassen
+	 *               Feld leer ist (null oder StringUtils.EMPTY), dann wird dieses
+	 *               Feld aus der Abfrage weggelassen
 	 * @param exact  false, wenn die Abfrage mit LIKE erfolgen soll, sonst mit =
 	 * @return eine Liste mit den gefundenen Objekten
 	 */

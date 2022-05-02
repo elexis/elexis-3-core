@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +97,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 					current = new CompositeGroup((Composite) current, item, false, false, 0, 5, depth);
 
 					Group group = new Group((Composite) current, SWT.NONE);
-					group.setText("");
+					group.setText(StringUtils.EMPTY);
 
 					GridLayout gd = new GridLayout(2, false);
 					gd.marginHeight = 0;

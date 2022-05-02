@@ -49,8 +49,10 @@ public class LaborAttachmentAction extends Action implements IAction {
 					.executeCommand(parametrizedCommmand, null);
 			if (pdfFile instanceof File) {
 				IPatient patient = ContextServiceHolder.get().getActivePatient().get();
-				IDocument document = BriefeDocumentStoreHolder.get().createDocument(patient.getId(), "Laborblatt Mail"
-						+ (StringUtils.isNoneBlank(composite.getPostfix()) ? " [" + composite.getPostfix() + "]" : ""),
+				IDocument document = BriefeDocumentStoreHolder.get().createDocument(patient.getId(),
+						"Laborblatt Mail"
+								+ (StringUtils.isNoneBlank(composite.getPostfix()) ? " [" + composite.getPostfix() + "]"
+										: StringUtils.EMPTY),
 						BriefConstants.LABOR);
 				document.setExtension("pdf");
 				document.setStatus(DocumentStatus.SENT, true);

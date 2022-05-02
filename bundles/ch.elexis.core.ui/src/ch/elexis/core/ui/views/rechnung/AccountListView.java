@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -162,11 +163,11 @@ public class AccountListView extends ViewPart implements IActivationListener {
 
 			public String getColumnText(Object element, int columnIndex) {
 				if (!(element instanceof AccountListEntry)) {
-					return ""; //$NON-NLS-1$
+					return StringUtils.EMPTY;
 				}
 
 				AccountListEntry entry = (AccountListEntry) element;
-				String text = ""; //$NON-NLS-1$
+				String text = StringUtils.EMPTY;
 
 				switch (columnIndex) {
 				case NAME:

@@ -1,5 +1,6 @@
 package ch.elexis.hl7.v2x;
 
+import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class HL7ReaderV251 extends HL7Reader {
 			if (sender == null) {
 				sender = msh.getMsh3_SendingApplication().getNamespaceID().getValue();
 				if (sender == null) {
-					sender = "";
+					sender = StringUtils.EMPTY;
 				}
 			}
 		} catch (HL7Exception e) {
@@ -121,12 +122,12 @@ public class HL7ReaderV251 extends HL7Reader {
 				String commentNTE = getComments(obs, i);
 
 				// groupe and sequence
-				String group = "";
-				String sequence = "";
+				String group = StringUtils.EMPTY;
+				String sequence = StringUtils.EMPTY;
 				for (int k = 0; k < 2; k++) {
 					CE ce = obr.getObr47_FillerSupplementalServiceInformation(k);
 					if (ce != null) {
-						String code = "";
+						String code = StringUtils.EMPTY;
 						if (ce.getCe3_NameOfCodingSystem() != null)
 							code = ce.getCe3_NameOfCodingSystem().getValue();
 
@@ -176,9 +177,9 @@ public class HL7ReaderV251 extends HL7Reader {
 					AbstractPrimitive comment = oul.getSPECIMEN().getORDER(idx).getNTE(j).getNte3_Comment(0);
 					if (comment != null) {
 						if (commentNTE != null) {
-							commentNTE += "\n";
+							commentNTE += StringUtils.LF;
 						} else {
-							commentNTE = "";
+							commentNTE = StringUtils.EMPTY;
 						}
 						if (comment.getValue() != null) {
 							commentNTE += comment.getValue();
@@ -187,8 +188,8 @@ public class HL7ReaderV251 extends HL7Reader {
 				}
 			}
 			// groupe and sequence
-			String group = "";
-			String sequence = "";
+			String group = StringUtils.EMPTY;
+			String sequence = StringUtils.EMPTY;
 
 			// result
 			readOBXResults(order.getRESULT(idx).getOBX(), commentNTE, group, sequence, obrObservationDateTime);
@@ -201,7 +202,7 @@ public class HL7ReaderV251 extends HL7Reader {
 				return ce.getCe2_Text().getValue();
 			}
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	private String getSequence(String code, CE ce) {
@@ -211,15 +212,15 @@ public class HL7ReaderV251 extends HL7Reader {
 				return ce.getCe1_Identifier().getValue();
 			}
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	private void setPatient(PID pid, String orderNumber, final boolean createIfNotFound)
 			throws ParseException, HL7Exception {
 		List<? extends IPatient> list = new ArrayList<IPatient>();
-		String lastName = ""; //$NON-NLS-1$
-		String firstName = ""; //$NON-NLS-1$
-		String birthDate = ""; //$NON-NLS-1$
+		String lastName = StringUtils.EMPTY;
+		String firstName = StringUtils.EMPTY;
+		String birthDate = StringUtils.EMPTY;
 		String sex = Gender.FEMALE.value();
 		pat = null;
 
@@ -235,7 +236,7 @@ public class HL7ReaderV251 extends HL7Reader {
 						if (StringTool.isNothing(patid)) {
 							patid = patid_alternative;
 							if (patid == null) {
-								patid = "";
+								patid = StringUtils.EMPTY;
 							}
 						}
 					}
@@ -247,7 +248,7 @@ public class HL7ReaderV251 extends HL7Reader {
 			}
 
 			// String[] pidflds = patid.split("[\\^ ]+"); //$NON-NLS-1$
-			// String pid = "";
+			// String pid = StringUtils.EMPTY;
 			// if (pidflds.length > 0)
 			// pid = pidflds[pidflds.length - 1];
 
@@ -255,12 +256,12 @@ public class HL7ReaderV251 extends HL7Reader {
 				lastName = pid.getPid5_PatientName(0).getFamilyName().getFn1_Surname().getValue();
 			if (pid.getPid5_PatientName(0).getGivenName().getValue() != null)
 				firstName = pid.getPid5_PatientName(0).getGivenName().getValue();
-			String patientName = firstName + " " + lastName;
+			String patientName = firstName + StringUtils.SPACE + lastName;
 
 			String sendingApplication = msh.getMsh3_SendingApplication().getHd1_NamespaceID().getValue();
 			String sendingFacility = msh.getMsh4_SendingFacility().getHd1_NamespaceID().getValue();
 			String dateTimeOfMessage = msh.getMsh7_DateTimeOfMessage().getTs1_Time().getValue();
-			String patientNotesAndComments = "";
+			String patientNotesAndComments = StringUtils.EMPTY;
 
 			observation = new ObservationMessage(sendingApplication, sendingFacility, dateTimeOfMessage, patid,
 					patientName, patientNotesAndComments, patid_alternative, orderNumber);
@@ -344,9 +345,9 @@ public class HL7ReaderV251 extends HL7Reader {
 			AbstractPrimitive comment = nte.getNte3_Comment(0);
 			if (comment != null) {
 				if (commentNTE != null) {
-					commentNTE += "\n";
+					commentNTE += StringUtils.LF;
 				} else {
-					commentNTE = "";
+					commentNTE = StringUtils.EMPTY;
 				}
 				commentNTE += comment.getValue();
 			}
@@ -358,12 +359,12 @@ public class HL7ReaderV251 extends HL7Reader {
 	private void readOBXResults(OBX obx, String commentNTE, String group, String sequence, String defaultDateTime)
 			throws ParseException {
 		String valueType = obx.getObx2_ValueType().getValue();
-		String name = "";
-		String itemCode = "";
-		String unit = "";
-		String range = "";
+		String name = StringUtils.EMPTY;
+		String itemCode = StringUtils.EMPTY;
+		String unit = StringUtils.EMPTY;
+		String range = StringUtils.EMPTY;
 		String observationTime = obx.getObx14_DateTimeOfTheObservation().getTs1_Time().getValue();
-		String status = "";
+		String status = StringUtils.EMPTY;
 		Boolean flag;
 		String rawAbnormalFlags;
 
@@ -388,7 +389,7 @@ public class HL7ReaderV251 extends HL7Reader {
 		} else if (isTextOrNumeric(valueType)) {
 			name = determineName(obx);
 
-			String value = "";
+			String value = StringUtils.EMPTY;
 			Object tmp = obx.getObx5_ObservationValue(0).getData();
 
 			if (tmp instanceof ST) {

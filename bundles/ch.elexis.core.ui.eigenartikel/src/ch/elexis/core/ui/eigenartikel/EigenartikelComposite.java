@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.eigenartikel;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
@@ -84,7 +85,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		grpDrugPackages = new Group(this, SWT.NONE);
 		grpDrugPackages.setLayout(new GridLayout(1, false));
 		grpDrugPackages.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 2, 1));
-		grpDrugPackages.setText("");
+		grpDrugPackages.setText(StringUtils.EMPTY);
 
 		if (includeDeleteOption) {
 			Composite compDpSelector = new Composite(grpDrugPackages, SWT.NONE);

@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -141,7 +142,7 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 					}
 
 					if (fileExtension == null) {
-						fileExtension = "";
+						fileExtension = StringUtils.EMPTY;
 					}
 
 					File temp = File.createTempFile("lab" + counter, "doc." + fileExtension); //$NON-NLS-1$ //$NON-NLS-2$

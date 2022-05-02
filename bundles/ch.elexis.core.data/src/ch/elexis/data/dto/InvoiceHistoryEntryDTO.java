@@ -1,5 +1,6 @@
 package ch.elexis.data.dto;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -243,6 +244,6 @@ public class InvoiceHistoryEntryDTO {
 		if (leistungDTOs != null) {
 			return leistungDTOs.stream().map(item -> item.getText()).collect(Collectors.joining(", "));
 		}
-		return "";
+		return StringUtils.EMPTY;
 	}
 }

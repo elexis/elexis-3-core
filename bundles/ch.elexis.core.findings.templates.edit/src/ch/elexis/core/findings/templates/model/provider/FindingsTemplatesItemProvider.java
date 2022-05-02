@@ -2,6 +2,7 @@
  */
 package ch.elexis.core.findings.templates.model.provider;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Collection;
 import java.util.List;
 
@@ -151,7 +152,7 @@ public class FindingsTemplatesItemProvider extends ItemProviderAdapter
 	@Override
 	public String getText(Object object) {
 		String label = ((FindingsTemplates) object).getTitle();
-		return label == null || label.length() == 0 ? "" : label;
+		return label == null || label.length() == 0 ? StringUtils.EMPTY : label;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util.fhir.transformer.helper;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,11 +36,12 @@ public class ILabResultHelper extends AbstractHelper {
 			if (numericResult.isPresent()) {
 				Quantity qty = new Quantity();
 				qty.setValue(numericResult.get());
-				qty.setUnit(Optional.ofNullable(localObject.getUnit()).orElse(""));
+				qty.setUnit(Optional.ofNullable(localObject.getUnit()).orElse(StringUtils.EMPTY));
 				getComparator(result).ifPresent(comp -> qty.setComparator(comp));
 				return qty;
 			} else {
-				return new StringType(result + " " + (localObject.getUnit() != null ? localObject.getUnit() : ""));
+				return new StringType(result + StringUtils.SPACE
+						+ (localObject.getUnit() != null ? localObject.getUnit() : StringUtils.EMPTY));
 			}
 		} else {
 			if (localObject.getItem().getTyp() == LabItemTyp.TEXT) {
@@ -51,11 +53,11 @@ public class ILabResultHelper extends AbstractHelper {
 				}
 			}
 		}
-		return new StringType("");
+		return new StringType(StringUtils.EMPTY);
 	}
 
 	public boolean isLongText(ILabResult localObject) {
-		String resultValue = localObject.getResult().trim().replaceAll("[()]", "");
+		String resultValue = localObject.getResult().trim().replaceAll("[()]", StringUtils.EMPTY);
 		String resultComment = localObject.getComment();
 		if (resultValue != null && localObject.getItem().getTyp() == LabItemTyp.TEXT
 				&& resultValue.equalsIgnoreCase("text") && resultComment != null && !resultComment.isEmpty()) {
@@ -79,7 +81,7 @@ public class ILabResultHelper extends AbstractHelper {
 
 	private static Optional<Double> getNumericValue(String result) {
 		Double ret = null;
-		result = result.replaceAll("[\\*!,<>=]", "").replaceAll(" ", "");
+		result = result.replaceAll("[\\*!,<>=]", StringUtils.EMPTY).replaceAll(StringUtils.SPACE, StringUtils.EMPTY);
 		try {
 			ret = Double.parseDouble(result);
 		} catch (NumberFormatException nfe) {

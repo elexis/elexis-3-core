@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -199,7 +200,8 @@ public class MultiplikatorList {
 	}
 
 	private static String[] getEigenleistungUseMultiSystems() {
-		String systems = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+		String systems = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS,
+				StringUtils.EMPTY);
 		return systems.split("\\|\\|");
 	}
 
@@ -214,7 +216,8 @@ public class MultiplikatorList {
 	}
 
 	public static void setEigenleistungUseMulti(String system) {
-		String systems = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+		String systems = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS,
+				StringUtils.EMPTY);
 		if (!systems.isEmpty()) {
 			systems = systems.concat("||");
 		}

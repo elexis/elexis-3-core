@@ -1,5 +1,7 @@
 package ch.elexis.core.findings.util.fhir.accessor;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class EnumMapping {
 
 	@SuppressWarnings("rawtypes")
@@ -29,7 +31,7 @@ public class EnumMapping {
 	@SuppressWarnings("unchecked")
 	public Enum<?> getLocalEnumValueByCode(String code) {
 		try {
-			return Enum.valueOf(localEnum, code.replaceAll("-", ""));
+			return Enum.valueOf(localEnum, code.replaceAll("-", StringUtils.EMPTY));
 		} catch (IllegalArgumentException ia) {
 			return defaultLocalEnum;
 		}
@@ -43,7 +45,7 @@ public class EnumMapping {
 	@SuppressWarnings("unchecked")
 	public Enum<?> getFhirEnumValueByCode(String code) {
 		try {
-			return Enum.valueOf(fhirEnum, code.replaceAll("-", ""));
+			return Enum.valueOf(fhirEnum, code.replaceAll("-", StringUtils.EMPTY));
 		} catch (IllegalArgumentException ia) {
 			return defaultFhirEnum;
 		}

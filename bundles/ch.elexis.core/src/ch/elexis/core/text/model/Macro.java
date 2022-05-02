@@ -10,9 +10,11 @@
  ******************************************************************************/
 package ch.elexis.core.text.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Macro {
 
 	public static String resolve(String key) {
-		return "";
+		return StringUtils.EMPTY;
 	}
 }

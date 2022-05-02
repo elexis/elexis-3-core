@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -204,8 +205,8 @@ public class MediDetailDialog extends TitleAreaDialog {
 			stackLayoutDosage.topControl = compositeDayTimeDosage;
 		}
 
-		txtIntakeOrder.setText(intakeOrder == null ? "" : intakeOrder);
-		txtDisposalComment.setText(disposalComment == null ? "" : disposalComment);
+		txtIntakeOrder.setText(intakeOrder == null ? StringUtils.EMPTY : intakeOrder);
+		txtDisposalComment.setText(disposalComment == null ? StringUtils.EMPTY : disposalComment);
 	}
 
 	@Override
@@ -308,7 +309,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 	 */
 	public String[] getDosageArray(String dosage) {
 		String[] retVal = new String[4];
-		Arrays.fill(retVal, "");
+		Arrays.fill(retVal, StringUtils.EMPTY);
 		if (dosage != null) {
 			// Match stuff like '1/2', '7/8'
 			if (dosage.matches("^[0-9]/[0-9]$")) {

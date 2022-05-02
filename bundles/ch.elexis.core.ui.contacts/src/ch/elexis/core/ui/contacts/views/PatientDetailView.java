@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -234,8 +235,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 							Kontakt.FLD_STREET };
 					KontaktSelektor ksl = new KontaktSelektor(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
 							Kontakt.class, Messages.Patientenblatt2_contactForAdditionalAddress,
-							Messages.Patientenblatt2_pleaseSelectardress, sortFields); // $NON-NLS-1$
-																						// //$NON-NLS-2$
+							Messages.Patientenblatt2_pleaseSelectardress, sortFields);
 					if (ksl.open() == Dialog.OK) {
 						Kontakt k = (Kontakt) ksl.getSelection();
 						if (k != null) {
@@ -349,7 +349,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			sectDiagnosen.setText("Diagnosen");
 			sectDiagnosen.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + sectDiagnosen.getText(), false));
 
-			txtDiagnosen = toolkit.createText(sectDiagnosen, "", SWT.WRAP | SWT.MULTI);
+			txtDiagnosen = toolkit.createText(sectDiagnosen, StringUtils.EMPTY, SWT.WRAP | SWT.MULTI);
 			txtDiagnosen.addListener(SWT.Modify, new MultiLineAutoGrowListener(txtDiagnosen));
 
 			sectDiagnosen.setClient(txtDiagnosen);
@@ -366,7 +366,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			sectAnamnese.setText("Persönliche Anamnese");
 			sectAnamnese.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + sectAnamnese.getText(), false));
 
-			txtAnamnese = toolkit.createText(sectAnamnese, "", SWT.WRAP | SWT.MULTI);
+			txtAnamnese = toolkit.createText(sectAnamnese, StringUtils.EMPTY, SWT.WRAP | SWT.MULTI);
 			txtAnamnese.addListener(SWT.Modify, new MultiLineAutoGrowListener(txtAnamnese));
 			sectAnamnese.setClient(txtAnamnese);
 			sectAnamnese.addExpansionListener(new SectionExpansionHandler());
@@ -382,8 +382,8 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			sectFamAnamnese.setText("Familien-Anamnese");
 			sectFamAnamnese.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + sectFamAnamnese.getText(), false));
 
-			txtFamAnamnese = toolkit.createText(sectFamAnamnese, "", SWT.WRAP | SWT.MULTI);
-			txtFamAnamnese.setText("");
+			txtFamAnamnese = toolkit.createText(sectFamAnamnese, StringUtils.EMPTY, SWT.WRAP | SWT.MULTI);
+			txtFamAnamnese.setText(StringUtils.EMPTY);
 			txtFamAnamnese.addListener(SWT.Modify, new MultiLineAutoGrowListener(txtFamAnamnese));
 			sectFamAnamnese.setClient(txtFamAnamnese);
 			sectFamAnamnese.addExpansionListener(new SectionExpansionHandler());
@@ -399,8 +399,8 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			sectAllergien.setText("Allergien");
 			sectAllergien.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + sectAllergien.getText(), false));
 
-			txtAllergien = toolkit.createText(sectAllergien, "", SWT.WRAP | SWT.MULTI);
-			txtAllergien.setText("");
+			txtAllergien = toolkit.createText(sectAllergien, StringUtils.EMPTY, SWT.WRAP | SWT.MULTI);
+			txtAllergien.setText(StringUtils.EMPTY);
 			txtAllergien.addListener(SWT.Modify, new MultiLineAutoGrowListener(txtAllergien));
 			sectAllergien.setClient(txtAllergien);
 			sectAllergien.addExpansionListener(new SectionExpansionHandler());
@@ -416,8 +416,8 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			sectRisiken.setText("Risiken");
 			sectRisiken.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + sectRisiken.getText(), false));
 
-			txtRisiken = toolkit.createText(sectRisiken, "", SWT.WRAP | SWT.MULTI);
-			txtRisiken.setText("");
+			txtRisiken = toolkit.createText(sectRisiken, StringUtils.EMPTY, SWT.WRAP | SWT.MULTI);
+			txtRisiken.setText(StringUtils.EMPTY);
 			txtRisiken.addListener(SWT.Modify, new MultiLineAutoGrowListener(txtRisiken));
 			sectRisiken.setClient(txtRisiken);
 			sectRisiken.addExpansionListener(new SectionExpansionHandler());
@@ -433,8 +433,8 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			sectBemerkungen.setText("Bemerkungen");
 			sectBemerkungen.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + sectBemerkungen.getText(), false));
 
-			txtBemerkungen = toolkit.createText(sectBemerkungen, "", SWT.WRAP | SWT.MULTI);
-			txtBemerkungen.setText("");
+			txtBemerkungen = toolkit.createText(sectBemerkungen, StringUtils.EMPTY, SWT.WRAP | SWT.MULTI);
+			txtBemerkungen.setText(StringUtils.EMPTY);
 			txtBemerkungen.addListener(SWT.Modify, new MultiLineAutoGrowListener(txtBemerkungen));
 			sectBemerkungen.setClient(txtBemerkungen);
 			sectBemerkungen.addExpansionListener(new SectionExpansionHandler());

@@ -4,6 +4,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.dbcheck;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 
 import ch.elexis.core.data.activator.CoreHub;
@@ -32,7 +33,7 @@ public abstract class CheckExec {
 	}
 
 	public static String getDBVersion() {
-		String version = "";
+		String version = StringUtils.EMPTY;
 		if (sqlDriver.equalsIgnoreCase(MYSQL_DB)) {
 			try {
 				version = j.queryString("SELECT wert FROM config WHERE param=\"dbversion\"");

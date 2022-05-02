@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -172,7 +173,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 						null, iiv);
 				int retVal = id.open();
 				if (retVal == Dialog.OK) {
-					User newUser = new User(null, id.getValue(), "");
+					User newUser = new User(null, id.getValue(), StringUtils.EMPTY);
 					updateUserList();
 					tableViewerUsers.setSelection(new StructuredSelection(newUser));
 				}
@@ -437,7 +438,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 					Person p = (Person) ks.getSelection();
 					p.set(Anwender.FLD_IS_USER, StringConstants.ONE);
 					user.setAssignedContact(p);
-					linkContact.setText(p.getPersonalia() + " " + CHANGE_LINK);
+					linkContact.setText(p.getPersonalia() + StringUtils.SPACE + CHANGE_LINK);
 				}
 			}
 		});
@@ -503,7 +504,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 						return;
 					Mandant mand = Mandant.load(ac.getId());
 					mand.setRechnungssteller(kontakt);
-					linkRechnungssteller.setText(mand.getRechnungssteller().getLabel() + " " + CHANGE_LINK);
+					linkRechnungssteller
+							.setText(mand.getRechnungssteller().getLabel() + StringUtils.SPACE + CHANGE_LINK);
 				}
 			}
 		});
@@ -684,7 +686,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				}
 
 				Mandant m = (Mandant) element;
-				return (m.equals(stdWorkingFor) ? "* " : "") + m.getName() + " " + m.getVorname();
+				return (m.equals(stdWorkingFor) ? "* " : StringUtils.EMPTY) + m.getName() + StringUtils.SPACE
+						+ m.getVorname();
 			}
 		});
 		checkboxTableViewerAssociation.setComparator(new MandantViewerComparator(checkboxTableViewerAssociation));
@@ -733,7 +736,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			Anwender anw = user.getAssignedContact();
 			wvAnwender.setValue(anw);
 			String text = (anw != null) ? anw.getPersonalia() : "Nicht gesetzt";
-			linkContact.setText(text + " " + CHANGE_LINK);
+			linkContact.setText(text + StringUtils.SPACE + CHANGE_LINK);
 
 			userInfoLabel.setText(text + " [" + user.getId() + "]");
 
@@ -765,7 +768,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 					Rechnungssteller rs = m.getRechnungssteller();
 					String rst = (rs != null) ? rs.getLabel() : "Nicht gesetzt";
-					linkRechnungssteller.setText(rst + " " + CHANGE_LINK);
+					linkRechnungssteller.setText(rst + StringUtils.SPACE + CHANGE_LINK);
 				}
 			}
 		}

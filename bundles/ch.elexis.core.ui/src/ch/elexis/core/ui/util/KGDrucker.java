@@ -48,9 +48,6 @@ public class KGDrucker {
 					if (kgp.doPrint(actPatient, monitor) == false) {
 						ErrorDialog.openError(null, Messages.KGDrucker_errorPrinting,
 								Messages.KGDrucker_couldntprint + patient.getLabel() + Messages.KGDrucker_emr, null); // $NON-NLS-1$
-																														// //$NON-NLS-2$
-																														// //$NON-NLS-3$
-
 					}
 
 					monitor.done();

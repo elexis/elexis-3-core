@@ -9,6 +9,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.exchange.elements;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -119,7 +120,7 @@ public abstract class XChangeElement {
 	 */
 	public String getAttr(final String name) {
 		String ret = ex.getAttributeValue(name);
-		return ret == null ? "" : ret;
+		return ret == null ? StringUtils.EMPTY : ret;
 	}
 
 	/**

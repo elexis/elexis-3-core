@@ -1,5 +1,6 @@
 package ch.elexis.core.model;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -109,7 +110,7 @@ public class ArticleDefaultSignature extends AbstractIdDeleteModelAdapter<ch.ele
 	@Override
 	public void setFreeText(String value) {
 		if (value == null) {
-			value = "";
+			value = StringUtils.EMPTY;
 		}
 		setExtInfo(Constants.EXT_FLD_FREETEXT, value);
 	}

@@ -50,7 +50,7 @@ public class ArtikelAdapter extends Artikel {
 
 	@Override
 	public String getPharmaCode() {
-		String ret = "";
+		String ret = StringUtils.EMPTY;
 		try {
 			Method method = article.getClass().getMethod("getPHAR");
 			ret = (String) method.invoke(article);

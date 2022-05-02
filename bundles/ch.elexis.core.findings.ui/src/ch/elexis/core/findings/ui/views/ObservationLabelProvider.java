@@ -27,11 +27,11 @@ public class ObservationLabelProvider extends LabelProvider {
 	 * @return
 	 */
 	private String getLabelText(IObservation observation) {
-		String ret = observation.getText().orElse("").trim();
+		String ret = observation.getText().orElse(StringUtils.EMPTY).trim();
 
 		Optional<ICoding> coding = ModelUtil.getCodeBySystem(observation.getCoding(),
 				CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
-		String title = coding.isPresent() ? coding.get().getDisplay() : "";
+		String title = coding.isPresent() ? coding.get().getDisplay() : StringUtils.EMPTY;
 		if (StringUtils.isNotBlank(title) && ret.startsWith(title)) {
 			ret = ret.substring(title.length(), ret.length()).trim();
 			if (ret.startsWith(": ")) {

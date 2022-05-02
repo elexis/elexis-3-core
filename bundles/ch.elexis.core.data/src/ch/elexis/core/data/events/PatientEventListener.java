@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.data.events;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import ch.elexis.core.constants.Preferences;
@@ -43,7 +44,7 @@ public class PatientEventListener extends ElexisEventListenerImpl {
 				if (list.size() != 0) {
 					StringBuilder sb = new StringBuilder();
 					for (Reminder r : list) {
-						sb.append(r.getSubject() + "\n");
+						sb.append(r.getSubject() + StringUtils.LF);
 						sb.append(r.getMessage() + "\n\n");
 					}
 					MessageEvent.fireInformation(Messages.PatientEventListener_0, sb.toString());

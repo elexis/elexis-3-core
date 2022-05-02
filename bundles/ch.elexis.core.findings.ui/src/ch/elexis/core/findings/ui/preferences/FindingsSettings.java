@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,7 +66,7 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 		setMessage("Globale Befunde Einstellungen");
 		// initialize the model
 		if (FindingsServiceComponent.getService() != null) {
-			FindingsServiceComponent.getService().findById("", IObservation.class);
+			FindingsServiceComponent.getService().findById(StringUtils.EMPTY, IObservation.class);
 		} else {
 			getLogger().warn("FindingsService is null - not found.");
 			setErrorMessage("Befunde Service konnte nicht geladen werden.");

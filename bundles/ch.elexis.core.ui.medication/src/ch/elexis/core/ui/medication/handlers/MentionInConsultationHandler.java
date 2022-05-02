@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.medication.handlers;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,13 +44,13 @@ public class MentionInConsultationHandler extends AbstractHandler {
 				encounter.ifPresent(enc -> {
 					StringBuilder sb = new StringBuilder();
 					for (IPrescription presc : prescriptions) {
-						String articleLabel = "";
+						String articleLabel = StringUtils.EMPTY;
 						if (presc.getArticle() != null) {
 							articleLabel = presc.getArticle().getLabel();
 						}
-						sb.append("\n");
-						sb.append("Medikation: " + articleLabel + ", " + presc.getDosageInstruction() + " "
-								+ getType(presc.getEntryType()));
+						sb.append(StringUtils.LF);
+						sb.append("Medikation: " + articleLabel + ", " + presc.getDosageInstruction()
+								+ StringUtils.SPACE + getType(presc.getEntryType()));
 					}
 
 					Samdas samdas = new Samdas(enc.getVersionedEntry().getHead());
@@ -77,7 +78,7 @@ public class MentionInConsultationHandler extends AbstractHandler {
 		case RECIPE:
 			return "(Rezeptiert)";
 		default:
-			return "";
+			return StringUtils.EMPTY;
 		}
 	}
 }

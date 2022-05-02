@@ -67,13 +67,13 @@ public class SendMailDialog extends TitleAreaDialog {
 	private ComboViewer accountsViewer;
 	private MailAccount account;
 	private Text toText;
-	private String toString = "";
+	private String toString = StringUtils.EMPTY;
 	private Text ccText;
-	private String ccString = "";
+	private String ccString = StringUtils.EMPTY;
 	private Text subjectText;
-	private String subjectString = "";
+	private String subjectString = StringUtils.EMPTY;
 	private Text textText;
-	private String textString = "";
+	private String textString = StringUtils.EMPTY;
 	private AttachmentsComposite attachments;
 
 	private String accountId;
@@ -240,7 +240,7 @@ public class SendMailDialog extends TitleAreaDialog {
 					if (element instanceof ITextTemplate) {
 						return ((ITextTemplate) element).getName() + (((ITextTemplate) element).getMandator() != null
 								? " (" + ((ITextTemplate) element).getMandator().getLabel() + ")"
-								: "");
+								: StringUtils.EMPTY);
 					}
 					return super.getText(element);
 				}
@@ -259,7 +259,7 @@ public class SendMailDialog extends TitleAreaDialog {
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
 					} else {
-						textText.setText("");
+						textText.setText(StringUtils.EMPTY);
 					}
 					updateLayout();
 				}
@@ -503,7 +503,7 @@ public class SendMailDialog extends TitleAreaDialog {
 			String text = textText.getText();
 			boolean defaultSet = false;
 			if (StringUtils.isNotBlank(text)) {
-				String[] lines = text.split("\n");
+				String[] lines = text.split(StringUtils.LF);
 				if (lines.length > 12) {
 					defaultSet = true;
 					gd.heightHint = SWT.DEFAULT;

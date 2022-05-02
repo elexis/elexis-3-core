@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Hashtable;
 
 import ch.elexis.admin.AccessControlDefaults;
@@ -88,7 +89,7 @@ public class NamedBlob2 extends PersistentObject {
 	public String getString() {
 		byte[] comp = getBinary(FLD_CONTENTS);
 		if ((comp == null) || (comp.length == 0)) {
-			return "";
+			return StringUtils.EMPTY;
 		}
 		byte[] exp = CompEx.expand(comp);
 		try {

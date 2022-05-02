@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.commands;
 
+import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 								}
 								errorneousInfo.append(messages.get(i).getText());
 							}
-							errorneousInfo.append("\n");
+							errorneousInfo.append(StringUtils.LF);
 							errorneous++;
 						}
 					}

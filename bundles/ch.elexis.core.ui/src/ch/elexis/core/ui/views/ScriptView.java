@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -211,7 +212,7 @@ public class ScriptView extends ViewPart {
 						null);
 				if (inp.open() == Dialog.OK) {
 					try {
-						Script.create(inp.getValue(), "");
+						Script.create(inp.getValue(), StringUtils.EMPTY);
 					} catch (ElexisException e) {
 						ExHandler.handle(e);
 						SWTHelper.showError("Fehler bei Scripterstellung", e.getMessage());

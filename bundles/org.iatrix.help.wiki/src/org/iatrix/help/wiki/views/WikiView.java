@@ -12,6 +12,7 @@
 
 package org.iatrix.help.wiki.views;
 
+import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -85,7 +86,7 @@ public class WikiView extends ViewPart {
 			tokens[i] = tokens[i].substring(0, 1).toUpperCase() + tokens[i].substring(1);
 		}
 
-		String wikiName = StringTool.join(tokens, "");
+		String wikiName = StringTool.join(tokens, StringUtils.EMPTY);
 		return wikiName;
 	}
 

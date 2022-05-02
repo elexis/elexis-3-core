@@ -13,6 +13,7 @@ package ch.elexis.core.ui.wizards;
 
 // 17.5.2009: added H2
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Hashtable;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -52,8 +53,7 @@ public class DBConnectFirstPage extends WizardPage {
 
 	public DBConnectFirstPage(String pageName) {
 		super(Messages.DBConnectFirstPage_Connection, Messages.DBConnectFirstPage_typeOfDB,
-				Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize)); // $NON-NLS-1$ //$NON-NLS-2$
-																							// //$NON-NLS-3$
+				Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize));
 		setMessage(Messages.DBConnectFirstPage_selectType); // $NON-NLS-1$
 		setDescription(Messages.DBConnectFirstPage_theDescripotion); // $NON-NLS-1$
 
@@ -73,10 +73,10 @@ public class DBConnectFirstPage extends WizardPage {
 		FormText alt = tk.createFormText(body, false);
 		StringBuilder old = new StringBuilder();
 		old.append("<form>"); //$NON-NLS-1$
-		String driver = "";
-		String user = "";
-		String typ = "";
-		String connectString = "";
+		String driver = StringUtils.EMPTY;
+		String user = StringUtils.EMPTY;
+		String typ = StringUtils.EMPTY;
+		String connectString = StringUtils.EMPTY;
 		Hashtable<Object, Object> hConn = null;
 		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
@@ -137,7 +137,7 @@ public class DBConnectFirstPage extends WizardPage {
 					server.setEnabled(false);
 					dbName.setEnabled(true);
 					defaultUser = "sa"; //$NON-NLS-1$
-					defaultPassword = ""; //$NON-NLS-1$
+					defaultPassword = StringUtils.EMPTY;
 					break;
 				default:
 					break;
@@ -151,11 +151,11 @@ public class DBConnectFirstPage extends WizardPage {
 		});
 		tk.adapt(dbTypes, true, true);
 		tk.createLabel(body, Messages.DBConnectFirstPage_serevrAddress); // $NON-NLS-1$
-		server = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
+		server = tk.createText(body, StringUtils.EMPTY, SWT.BORDER);
 		TableWrapData twr = new TableWrapData(TableWrapData.FILL_GRAB);
 		server.setLayoutData(twr);
 		tk.createLabel(body, Messages.DBConnectFirstPage_databaseName); // $NON-NLS-1$
-		dbName = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
+		dbName = tk.createText(body, StringUtils.EMPTY, SWT.BORDER);
 		TableWrapData twr2 = new TableWrapData(TableWrapData.FILL_GRAB);
 		dbName.setLayoutData(twr2);
 		setControl(form);

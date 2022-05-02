@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.composites;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,10 +70,10 @@ public class CompositeBoolean extends Composite implements ICompositeSaveable {
 
 		if (title == null && codings != null) {
 			Optional<ICoding> coding = ModelUtil.getCodeBySystem(codings, CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
-			title = coding.isPresent() ? coding.get().getDisplay() : "";
+			title = coding.isPresent() ? coding.get().getDisplay() : StringUtils.EMPTY;
 		}
 		if (title == null) {
-			title = iFinding.getText().orElse("");
+			title = iFinding.getText().orElse(StringUtils.EMPTY);
 		}
 
 		createContents(title, value, backboneComponent != null);
@@ -135,7 +136,7 @@ public class CompositeBoolean extends Composite implements ICompositeSaveable {
 
 	@Override
 	public String getTitle() {
-		return lbl != null ? lbl.getText() : "";
+		return lbl != null ? lbl.getText() : StringUtils.EMPTY;
 	}
 
 	@Override
@@ -155,7 +156,7 @@ public class CompositeBoolean extends Composite implements ICompositeSaveable {
 
 	@Override
 	public String getFieldTextValue() {
-		return fieldButton != null ? Boolean.valueOf(fieldButton.getSelection()).toString() : "";
+		return fieldButton != null ? Boolean.valueOf(fieldButton.getSelection()).toString() : StringUtils.EMPTY;
 	}
 
 	@Override

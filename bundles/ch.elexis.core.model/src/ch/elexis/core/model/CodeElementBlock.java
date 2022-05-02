@@ -339,7 +339,7 @@ public class CodeElementBlock extends AbstractIdDeleteModelAdapter<Leistungsbloc
 
 		@Override
 		public String toString() {
-			return code + " " + StringUtils.abbreviate(text, 50) + " (" + codeSystemName + ")";
+			return code + StringUtils.SPACE + StringUtils.abbreviate(text, 50) + " (" + codeSystemName + ")";
 		}
 	}
 }

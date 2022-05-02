@@ -1,5 +1,6 @@
 package ch.elexis.core.jpa.liquibase;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +44,7 @@ public class LiquibaseDBScriptExecutor {
 			Database targetDb = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(database);
 
 			Liquibase liquibase = new Liquibase(changeId, resourceAccessor, targetDb);
-			liquibase.update("");
+			liquibase.update(StringUtils.EMPTY);
 			return true;
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.data.activator;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -342,9 +343,10 @@ public class CoreHub implements BundleActivator {
 
 	public static String getId() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(APPLICATION_NAME).append(" v.").append(Version).append("\n")
-				.append(CoreHubHelper.getRevision(true, plugin)).append("\n").append(System.getProperty("os.name"))
-				.append(StringConstants.SLASH).append(System.getProperty("os.version")).append(StringConstants.SLASH)
+		sb.append(APPLICATION_NAME).append(" v.").append(Version).append(StringUtils.LF)
+				.append(CoreHubHelper.getRevision(true, plugin)).append(StringUtils.LF)
+				.append(System.getProperty("os.name")).append(StringConstants.SLASH)
+				.append(System.getProperty("os.version")).append(StringConstants.SLASH)
 				.append(System.getProperty("os.arch")); //$NON-NLS-1$
 		return sb.toString();
 	}

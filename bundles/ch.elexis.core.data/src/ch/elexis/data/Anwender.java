@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -168,7 +169,7 @@ public class Anwender extends Person {
 			hashSet.remove(m);
 		}
 		List<String> edList = hashSet.stream().map(p -> p.getLabel()).collect(Collectors.toList());
-		setExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS, edList.isEmpty() ? "" : ts(edList));
+		setExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS, edList.isEmpty() ? StringUtils.EMPTY : ts(edList));
 	}
 
 	public void setStdExecutiveDoctorWorkingFor(Mandant m) {

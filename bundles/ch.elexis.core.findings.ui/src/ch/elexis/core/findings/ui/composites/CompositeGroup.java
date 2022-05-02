@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.composites;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class CompositeGroup extends Composite implements ICompositeSaveable {
 			if (iFinding instanceof IObservation) {
 				Optional<ICoding> coding = ModelUtil.getCodeBySystem(((IObservation) iFinding).getCoding(),
 						CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
-				txt = coding.isPresent() ? coding.get().getDisplay() : "";
+				txt = coding.isPresent() ? coding.get().getDisplay() : StringUtils.EMPTY;
 			} else {
 				txt = iFinding.getText().orElse(null);
 			}
@@ -124,7 +125,7 @@ public class CompositeGroup extends Composite implements ICompositeSaveable {
 	@Override
 	public void hideLabel(boolean all) {
 		if (lbl != null) {
-			lbl.setText("");
+			lbl.setText(StringUtils.EMPTY);
 		}
 	}
 

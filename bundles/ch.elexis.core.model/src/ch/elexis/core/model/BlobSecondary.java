@@ -1,5 +1,6 @@
 package ch.elexis.core.model;
 
+import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class BlobSecondary extends AbstractIdDeleteModelAdapter<ch.elexis.core.j
 	public String getStringContent() {
 		byte[] comp = getContent();
 		if ((comp == null) || (comp.length == 0)) {
-			return "";
+			return StringUtils.EMPTY;
 		}
 		byte[] exp = JpaModelUtil.getExpanded(comp);
 		try {

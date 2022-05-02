@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.Iterator;
 import java.util.List;
 
@@ -77,8 +78,8 @@ public class FixLeistungenKlasseReferenz extends ExternalMaintenance {
 			Artikel art = Artikel.load(leistungId);
 			if (art.exists()) {
 				ver.set(Verrechnet.CLASS, art.get(Artikel.FLD_KLASSE));
-				output.append(
-						"Fixing Klasse entry for " + ver.getLabel() + " to " + art.get(Artikel.FLD_KLASSE) + "\n");
+				output.append("Fixing Klasse entry for " + ver.getLabel() + " to " + art.get(Artikel.FLD_KLASSE)
+						+ StringUtils.LF);
 			}
 		}
 		pm.worked(1);

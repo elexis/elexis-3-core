@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -50,14 +51,14 @@ public class AccountTransaction extends PersistentObject {
 		private int numeric;
 		private String name;
 
-		public static Account UNKNOWN = new Account(-1, "");
+		public static Account UNKNOWN = new Account(-1, StringUtils.EMPTY);
 		private static HashMap<Integer, Account> localCache;
 
 		private static List<Account> loadAccounts() {
 			List<Account> ret = new ArrayList<>();
 			ret.add(UNKNOWN);
 			if (ConfigServiceHolder.isPresent()) {
-				String accountsString = ConfigServiceHolder.getGlobal(ACCOUNTS_CONFIG, ""); //$NON-NLS-1$
+				String accountsString = ConfigServiceHolder.getGlobal(ACCOUNTS_CONFIG, StringUtils.EMPTY);
 				if (accountsString != null && !accountsString.isEmpty()) {
 					String[] accounts = accountsString.split("\\|\\|"); //$NON-NLS-1$
 					for (String string : accounts) {
@@ -105,7 +106,7 @@ public class AccountTransaction extends PersistentObject {
 
 		public static void addAccount(Account newAccount) {
 			if (ConfigServiceHolder.isPresent()) {
-				String existingString = ConfigServiceHolder.getGlobal(ACCOUNTS_CONFIG, "");
+				String existingString = ConfigServiceHolder.getGlobal(ACCOUNTS_CONFIG, StringUtils.EMPTY);
 				StringBuilder sb = new StringBuilder();
 				sb.append(existingString);
 				if (sb.length() > 0) {

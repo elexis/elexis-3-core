@@ -467,8 +467,8 @@ public class Kontakt extends PersistentObject {
 	 * Convenience-Methode und einen String aus dem Infostore auszulesen.
 	 *
 	 * @param elem Name des Elements
-	 * @return Wert oder "" wenn das Element nicht vorhanden ist oder die Rechte
-	 *         nicht zum Lesen ausreichen
+	 * @return Wert oder StringUtils.EMPTY wenn das Element nicht vorhanden ist oder
+	 *         die Rechte nicht zum Lesen ausreichen
 	 */
 	public String getInfoString(String elem) {
 		return checkNull(getExtInfoStoredObjectByKey(elem));

@@ -106,7 +106,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 		new Label(getFieldEditorParent(), SWT.NONE).setText(Messages.UserSettings2_AddidtionalFields);
 		addField(new MultilineFieldEditor(Patientenblatt2.CFG_EXTRAFIELDS, StringTool.leer, 5, SWT.NONE, true,
 				getFieldEditorParent()));
-		new Label(getFieldEditorParent(), SWT.NONE).setText("");
+		new Label(getFieldEditorParent(), SWT.NONE).setText(StringUtils.EMPTY);
 		ComboFieldEditor editor = new ComboFieldEditor(Preferences.CFG_DECEASED_STICKER, "Sticker für verstorbene",
 				getStickerComboItems(), getFieldEditorParent());
 		editor.setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
@@ -161,14 +161,14 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 				migrateButton.setEnabled(editor.getCombo().getSelectionIndex() > 0);
 			}
 		});
-		migrateButton.setEnabled(
-				StringUtils.isNotBlank(ConfigServiceHolder.getGlobal(Preferences.CFG_DECEASED_STICKER, "")));
+		migrateButton.setEnabled(StringUtils
+				.isNotBlank(ConfigServiceHolder.getGlobal(Preferences.CFG_DECEASED_STICKER, StringUtils.EMPTY)));
 	}
 
 	private String[] getStickerComboItems() {
 		List<Sticker> stickers = Sticker.getStickersForClass(Patient.class);
 		List<String> stickerNames = stickers.stream().map(s -> s.getLabel()).collect(Collectors.toList());
-		stickerNames.add(0, "");
+		stickerNames.add(0, StringUtils.EMPTY);
 		return stickerNames.toArray(new String[stickerNames.size()]);
 	}
 

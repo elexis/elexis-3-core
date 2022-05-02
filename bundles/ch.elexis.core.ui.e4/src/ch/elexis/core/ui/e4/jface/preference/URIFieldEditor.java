@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.e4.jface.preference;
 
+import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -75,7 +76,7 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 
 	@Override
 	protected boolean doCheckState() {
-		setErrorMessage("");
+		setErrorMessage(StringUtils.EMPTY);
 		unmaskedValue = getTextControl().getText();
 		String uri = unmaskedValue.trim();
 		if (uri.length() == 0 && isEmptyStringAllowed()) {

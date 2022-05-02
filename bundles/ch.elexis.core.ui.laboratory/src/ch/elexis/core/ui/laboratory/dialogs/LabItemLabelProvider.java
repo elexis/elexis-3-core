@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.laboratory.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,7 +68,7 @@ public class LabItemLabelProvider extends ColumnLabelProvider implements ILabelP
 	}
 
 	private String getItemLabelField(ItemLabelFields itemLabelField, LabItem element) {
-		String ret = "";
+		String ret = StringUtils.EMPTY;
 		String[] values = ((LabItem) element).get(true, LabItem.SHORTNAME, LabItem.TITLE, LabItem.GROUP, LabItem.UNIT);
 
 		switch (itemLabelField) {

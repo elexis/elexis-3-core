@@ -37,8 +37,7 @@ public class FixPrescriptionOldArticle extends ExternalMaintenance {
 			if (StringUtils.isEmpty(prescription.get(Prescription.FLD_ARTICLE))
 					&& StringUtils.isNotEmpty(prescription.get(Prescription.FLD_ARTICLE_ID))) {
 				Optional<IArticle> loadedArtikel = CoreModelServiceHolder.get()
-						.load(prescription.get(Prescription.FLD_ARTICLE_ID),
-						IArticle.class);
+						.load(prescription.get(Prescription.FLD_ARTICLE_ID), IArticle.class);
 				if (loadedArtikel.isPresent()) {
 					if (StringUtils.isNotEmpty(loadedArtikel.get().getGtin())) {
 						Optional<ICodeElement> loaded = artikelstammContribution

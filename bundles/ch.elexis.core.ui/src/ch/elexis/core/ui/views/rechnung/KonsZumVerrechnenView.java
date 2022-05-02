@@ -13,6 +13,7 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
+import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_LIST;
 
 import java.sql.ResultSet;
@@ -284,7 +285,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 				org.eclipse.swt.widgets.Tree theWidget = (org.eclipse.swt.widgets.Tree) (event.widget);
 				TreeItem obj = theWidget.getSelection()[0];
 				TreeItem parent = obj.getParentItem();
-				String viewID = "";
+				String viewID = StringUtils.EMPTY;
 				if (parent == null) {
 					// no parent at all -> must be patient
 					viewID = UiResourceConstants.PatientDetailView2_ID;

@@ -35,7 +35,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 		implements IdentifiableWithXid, IDocumentLetter {
 
 	private ICategory category;
-	private String storeId = "";
+	private String storeId = StringUtils.EMPTY;
 	private List<IHistory> history;
 	private String keywords;
 
@@ -292,7 +292,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 
 	@Override
 	public String getLabel() {
-		return new SimpleDateFormat("dd.MM.yyyy").format(getCreated()) + " " + getTitle();
+		return new SimpleDateFormat("dd.MM.yyyy").format(getCreated()) + StringUtils.SPACE + getTitle();
 	}
 
 	@Override

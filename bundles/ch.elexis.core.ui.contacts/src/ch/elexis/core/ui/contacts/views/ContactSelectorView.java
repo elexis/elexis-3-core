@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -221,7 +222,7 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			text.setMessage("");
+			text.setMessage(StringUtils.EMPTY);
 		}
 
 		public void keyReleased(KeyEvent ke) {
@@ -242,11 +243,11 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 					try {
 						Expression expr = jexl.createExpression(formula);
 						Object result = expr.evaluate(new MapContext());
-						text.setText("");
-						text.setMessage(formula + "=" + result + "");
+						text.setText(StringUtils.EMPTY);
+						text.setMessage(formula + "=" + result + StringUtils.EMPTY);
 						result = null;
 					} catch (JexlException e) {
-						text.setText("");
+						text.setText(StringUtils.EMPTY);
 						text.setMessage("Invalid expression: " + formula);
 					}
 				}
