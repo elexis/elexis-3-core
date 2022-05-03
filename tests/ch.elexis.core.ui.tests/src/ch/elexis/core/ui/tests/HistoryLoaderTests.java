@@ -15,7 +15,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.data.service.CoreModelServiceHolder;
@@ -88,17 +87,17 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 		// consultation date
 		assertTrue(split[1].contains("20.11.2015"));
 		// check case details displayed
-		assertTrue(split[1].contains("UVG: TestAccident - TstCase1-Paal(19.11.2015- offen)"));
+		assertTrue("[" + split[1] + "]", split[1].contains("UVG: TestAccident - TstCase1-Paal(19.11.2015- offen)"));
 
 		// TestCase3 happened before TestCase2 and therefore will be at 2 position
 		// check consultation date and case details
 		assertTrue(split[2].contains("13.11.2015"));
-		assertTrue(split[2].contains("MV: TestPrevention - TstCase3-Paal(13.11.2015- offen)"));
+		assertTrue("[" + split[2] + "]", split[2].contains("MV: TestPrevention - TstCase3-Paal(13.11.2015- offen)"));
 
 		// TestCase2 is the oldest and therefore at last place
 		// check consultation date and case details
 		assertTrue(split[3].contains("01.01.2014"));
-		assertTrue(split[3].contains("KVG: TestIllness - TstCase2-Paal(01.01.2014- offen)"));
+		assertTrue("[" + split[3] + "]", split[3].contains("KVG: TestIllness - TstCase2-Paal(01.01.2014- offen)"));
 
 		// cancel job
 		loader.cancel();
@@ -139,7 +138,8 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 			String caseBeginDate = cons.getFall().getBeginnDatum();
 
 			assertTrue(caseConsInfo.contains(consDate));
-			assertTrue(caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
+			assertTrue("(" + caseBeginDate + "- offen) NOT in [" + caseConsInfo + "]",
+					caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
 		}
 
 		// cancel job
@@ -147,7 +147,6 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 	}
 
 	@Test
-	@Ignore
 	public void testExecuteFromDifferentThreads() throws InterruptedException, ExecutionException {
 		// init some test data
 		int nrConsSter = 50;
@@ -230,9 +229,7 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 		}
 	}
 
-	// TODO
 	@Test
-	@Ignore
 	public void testExecuteThreadSafeTimeTool() throws InterruptedException {
 		historyDisplaylKons = new ArrayList<Konsultation>(20);
 
@@ -272,7 +269,6 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 	}
 
 	@Test
-	@Ignore
 	public void testExecuteLikeHistoryDisplay() throws InterruptedException {
 		historyDisplaylKons = new ArrayList<Konsultation>(20);
 
@@ -397,7 +393,8 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 			}
 
 			assertTrue(caseConsInfo.contains(consDate));
-			assertTrue(caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
+			assertTrue("(" + caseBeginDate + "- offen) NOT in [" + caseConsInfo + "]",
+					caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
 		}
 	}
 

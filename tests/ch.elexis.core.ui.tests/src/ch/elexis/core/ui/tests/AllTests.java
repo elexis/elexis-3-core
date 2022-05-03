@@ -7,8 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import ch.elexis.core.ui.tests.views.invoicelist.Test_InvoiceBillState;
 
 @RunWith(Suite.class)
-@SuiteClasses({ Test_InvoiceBillState.class })
-//TODO reactivate HistoryLoaderTests.class
+@SuiteClasses({ Test_InvoiceBillState.class, HistoryLoaderTests.class })
 public class AllTests {
 
 }
