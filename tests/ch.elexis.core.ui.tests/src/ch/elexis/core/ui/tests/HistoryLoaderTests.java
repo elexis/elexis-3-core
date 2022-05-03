@@ -138,7 +138,8 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 			String caseBeginDate = cons.getFall().getBeginnDatum();
 
 			assertTrue(caseConsInfo.contains(consDate));
-			assertTrue(caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
+			assertTrue("(" + caseBeginDate + "- offen) NOT in [" + caseConsInfo + "]",
+					caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
 		}
 
 		// cancel job
@@ -392,7 +393,8 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 			}
 
 			assertTrue(caseConsInfo.contains(consDate));
-			assertTrue("[" + caseConsInfo + "]", caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
+			assertTrue("(" + caseBeginDate + "- offen) NOT in [" + caseConsInfo + "]",
+					caseConsInfo.contains("(" + caseBeginDate + "- offen)"));
 		}
 	}
 
