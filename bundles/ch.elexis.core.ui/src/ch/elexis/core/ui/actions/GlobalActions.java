@@ -40,7 +40,6 @@ import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -51,7 +50,6 @@ import org.eclipse.swt.printing.PrintDialog;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -107,13 +105,13 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TemplateDrucker;
 import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.core.ui.views.TemplatePrintView;
+import ch.elexis.core.ui.views.controls.GenericSearchSelectionDialog;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Result;
@@ -411,9 +409,18 @@ public class GlobalActions {
 
 			@Override
 			public void doRun() {
-				ChangeMandantDialog cmd = new ChangeMandantDialog();
-				if (cmd.open() == org.eclipse.jface.dialogs.Dialog.OK) {
-					Mandant n = cmd.result;
+				List<Mandant> lMandant;
+				Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
+				lMandant = qbe.execute();
+
+				GenericSearchSelectionDialog cmd = new GenericSearchSelectionDialog(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), lMandant,
+						Messages.GlobalActions_ChangeMandator, Messages.GlobalActions_ChangeMandator,
+						Messages.GlobalActions_ChangeMandatorMessage, null,
+						SWT.SINGLE);
+
+				if (cmd.open() == Dialog.OK) {
+					Mandant n = (Mandant) cmd.getSelection().getFirstElement();
 					if (n != null) {
 						Hub.setMandant(n);
 					}
@@ -932,43 +939,4 @@ public class GlobalActions {
 			handlerService.activateHandler(commandId, handler);
 		}
 	}
-
-	class ChangeMandantDialog extends TitleAreaDialog {
-		List<Mandant> lMandant;
-		org.eclipse.swt.widgets.List lbMandant;
-		Mandant result;
-
-		ChangeMandantDialog() {
-			super(mainWindow.getShell());
-		}
-
-		@Override
-		public Control createDialogArea(final Composite parent) {
-			lbMandant = new org.eclipse.swt.widgets.List(parent, SWT.BORDER | SWT.SINGLE);
-			lbMandant.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
-			lMandant = qbe.execute();
-			for (PersistentObject m : lMandant) {
-				lbMandant.add(m.getLabel());
-			}
-			return lbMandant;
-		}
-
-		@Override
-		protected void okPressed() {
-			int idx = lbMandant.getSelectionIndex();
-			if (idx > -1) {
-				result = lMandant.get(idx);
-			}
-			super.okPressed();
-		}
-
-		@Override
-		public void create() {
-			super.create();
-			setTitle(Messages.GlobalActions_ChangeMandator); // $NON-NLS-1$
-			setMessage(Messages.GlobalActions_ChangeMandatorMessage); // $NON-NLS-1$
-		}
-
-	};
 }

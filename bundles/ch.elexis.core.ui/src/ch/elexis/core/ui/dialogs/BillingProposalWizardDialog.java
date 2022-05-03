@@ -174,7 +174,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 
 		mandatorOnly = new Button(content, SWT.CHECK);
 		mandatorOnly.setText("nur von folgenden Mandanten");
-		mandatorSelector = new GenericSelectionComposite(content, SWT.NONE);
+		mandatorSelector = new GenericSelectionComposite(content, SWT.NONE,
+				ch.elexis.core.l10n.Messages.GenericSearchSelectionDialog_MandatorSelection,
+				ch.elexis.core.ui.actions.Messages.GlobalActions_ChangeMandator,
+				ch.elexis.core.ui.actions.Messages.GlobalActions_ChangeMandatorMessage);
 		mandatorSelector.setInput(new Query<>(Mandant.class).execute());
 		mandatorSelector.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		mandatorSelector.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -190,7 +193,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 
 		accountingOnly = new Button(content, SWT.CHECK);
 		accountingOnly.setText("nur von folgenden Abrechnungssystemen");
-		accountingSelector = new GenericSelectionComposite(content, SWT.NONE);
+		accountingSelector = new GenericSelectionComposite(content, SWT.NONE,
+				ch.elexis.core.l10n.Messages.GenericSearchSelectionDialog_BillingSystemSelection,
+				ch.elexis.core.l10n.Messages.GenericSearchSelectionDialog_BillingSystemSelection,
+				ch.elexis.core.l10n.Messages.GenericSearchSelectionDialog_ChangeBillingSystemMessage);
 		accountingSelector.setInput(Arrays.asList(BillingSystem.getAbrechnungsSysteme()));
 		accountingSelector.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		accountingSelector.addSelectionChangedListener(new ISelectionChangedListener() {
