@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -136,11 +137,34 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 
 	public void setKons(IEncounter encounter) {
 		if (actEncounter != null && (actEncounter.equals(encounter))) {
-			// updated triggered
+			// updated triggered, adjust cursor position if is line delimiter
+			while (lastCurserPosition > 0 && isLineDelimiter(lastCurserPosition)) {
+				lastCurserPosition--;
+			}
 			text.setCaretOffset(lastCurserPosition);
-
 		}
 		actEncounter = encounter;
+	}
+
+	/**
+	 * COPY from StyledText to prevent IllegalArgumentException: Argument not valid
+	 * on setCaretOffset
+	 * 
+	 * Returns whether the given offset is inside a multi byte line delimiter.
+	 * Example: "Line1\r\n" isLineDelimiter(5) == false but isLineDelimiter(6) ==
+	 * true
+	 *
+	 * @return true if the given offset is inside a multi byte line delimiter. false
+	 *         if the given offset is before or after a line delimiter.
+	 */
+	private boolean isLineDelimiter(int offset) {
+		int line = text.getContent().getLineAtOffset(offset);
+		int lineOffset = text.getContent().getOffsetAtLine(line);
+		int offsetInLine = offset - lineOffset;
+		// offsetInLine will be greater than line length if the line
+		// delimiter is longer than one character and the offset is set
+		// in between parts of the line delimiter.
+		return offsetInLine > text.getContent().getLine(line).length();
 	}
 
 	public void connectGlobalActions(IViewSite site) {
