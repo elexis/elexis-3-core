@@ -1,20 +1,22 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.util.DocumentLetterUtil;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -39,6 +41,9 @@ public class MoveAllLettersToExternalStorage extends ExternalMaintenance {
 		int okCount = 0;
 		int failCount = 0;
 		IQuery<IDocumentLetter> query = CoreModelServiceHolder.get().getQuery(IDocumentLetter.class);
+		if (onlyTemplates) {
+			query.and("typ", COMPARATOR.EQUALS, BriefConstants.TEMPLATE);
+		}
 		try (IQueryCursor<IDocumentLetter> letters = query.executeAsCursor()) {
 			pm.beginTask(Messages.Texterstellung_save_all_letters_externally, letters.size());
 			while (letters.hasNext()) {
