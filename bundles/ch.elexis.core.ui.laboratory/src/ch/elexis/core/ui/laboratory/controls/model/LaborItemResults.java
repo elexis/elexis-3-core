@@ -1,11 +1,13 @@
 package ch.elexis.core.ui.laboratory.controls.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
+import ch.rgw.tools.TimeTool;
 
 public class LaborItemResults implements Comparable<LaborItemResults> {
 	private HashMap<String, List<LabResult>> results;
@@ -14,6 +16,12 @@ public class LaborItemResults implements Comparable<LaborItemResults> {
 	public LaborItemResults(String item, HashMap<String, List<LabResult>> results) {
 		this.results = results;
 		this.item = item;
+
+		this.results.values().forEach(list -> {
+			Collections.sort(list, (l, r) -> {
+				return TimeTool.compare(r.getObservationTime(), l.getObservationTime());
+			});
+		});
 	}
 
 	public LabItem getLabItem() {

@@ -121,6 +121,12 @@ public class IAppointmentAppointmentAttributeMapper
 			// TODO there is another string inside - where to put it? is it relevant?
 			String subjectOrPatient = localObject.getSubjectOrPatient();
 		}
+		
+		if (appointment.getParticipant().isEmpty()) {
+			// participant is mandatory
+			AppointmentParticipantComponent participant = appointment.addParticipant();
+			participant.setStatus(ParticipationStatus.ACCEPTED);
+		}
 
 		// TODO status history??
 
