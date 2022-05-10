@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.model.adapter;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +17,16 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import javax.persistence.metamodel.SingularAttribute;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.jpa.JpaEntityManager;
+import org.eclipse.persistence.jpa.JpaQuery;
+import org.eclipse.persistence.queries.DatabaseQuery;
 import org.eclipse.persistence.queries.ScrollableCursor;
+import org.eclipse.persistence.sessions.DatabaseRecord;
+import org.eclipse.persistence.sessions.Session;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
@@ -334,6 +339,15 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		return Optional.empty();
 	}
 
+	@Override
+	public String toString() {
+		Session session = entityManager.unwrap(JpaEntityManager.class).getActiveSession();
+		DatabaseQuery databaseQuery = ((JpaQuery<?>) getTypedQuery()).getDatabaseQuery();
+		databaseQuery.prepareCall(session, new DatabaseRecord());
+		String sqlString = databaseQuery.getSQLString();
+		return sqlString;
+	}
+	
 	private class SubQuery<S> implements ISubQuery<S> {
 
 		private Subquery<? extends EntityWithId> subQuery;
