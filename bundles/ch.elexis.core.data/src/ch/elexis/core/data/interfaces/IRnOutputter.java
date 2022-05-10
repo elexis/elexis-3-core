@@ -101,4 +101,13 @@ public interface IRnOutputter {
 	 */
 	public void saveComposite();
 
+	/**
+	 * Implementations can customize the RnOutputDialog.
+	 * 
+	 * @param rnOutputDialog
+	 * @return
+	 */
+	public default void customizeDialog(Object rnOutputDialog) {
+		// do no customization
+	}
 }
