@@ -19,12 +19,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -85,12 +88,12 @@ public class RnOutputDialog extends TitleAreaDialog {
 			public void widgetSelected(SelectionEvent e) {
 				int idx = cbLo.getSelectionIndex();
 				if (idx != -1) {
+					customizeDialog(lo.get(idx));
 					stack.topControl = ctls.get(idx);
 					bottom.layout();
 					CoreHub.localCfg.set(Preferences.RNN_DEFAULTEXPORTMODE, idx);
 				}
 			}
-
 		});
 		int lastSelected = CoreHub.localCfg.get(Preferences.RNN_DEFAULTEXPORTMODE, 0);
 		if ((lastSelected < 0) || (lastSelected >= cbLo.getItemCount())) {
@@ -101,6 +104,78 @@ public class RnOutputDialog extends TitleAreaDialog {
 		stack.topControl = ctls.get(cbLo.getSelectionIndex());
 		bottom.layout();
 		return ret;
+	}
+
+	@Override
+	protected Control createContents(Composite parent) {
+		Control ret = super.createContents(parent);
+		customizeDialog(lo.get(cbLo.getSelectionIndex()));
+		return ret;
+	}
+
+	private void customizeDialog(IRnOutputter rnOutputter) {
+		resetCustomButtons();
+		resetDialog();
+		rnOutputter.customizeDialog(this);
+	}
+
+	private void resetDialog() {
+		resetOkButtonText();
+		resetCancelButtonText();
+	}
+
+	public void setOkButtonText(String text) {
+		Button button = getButton(IDialogConstants.OK_ID);
+		button.setText(text);
+		button.getParent().layout();
+	}
+
+	public void resetOkButtonText() {
+		setOkButtonText(IDialogConstants.OK_LABEL);
+	}
+
+	public void setCancelButtonText(String text) {
+		Button button = getButton(IDialogConstants.CANCEL_ID);
+		button.setText(text);
+		button.getParent().layout();
+	}
+
+	public void resetCancelButtonText() {
+		setCancelButtonText(IDialogConstants.CANCEL_LABEL);
+	}
+
+	private Composite additionalButtonParent;
+
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		if (parent.getLayout() instanceof GridLayout) {
+			((GridLayout) parent.getLayout()).numColumns++;
+			additionalButtonParent = new Composite(parent, SWT.NONE);
+			additionalButtonParent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			additionalButtonParent.setLayout(new RowLayout());
+		}
+		super.createButtonsForButtonBar(parent);
+	}
+
+	public Button addCustomButton(String text) {
+		Button ret = new Button(additionalButtonParent, SWT.PUSH);
+		ret.setText(text);
+		additionalButtonParent.getParent().requestLayout();
+		return ret;
+	}
+
+	public void resetCustomButtons() {
+		for (Control control : additionalButtonParent.getChildren()) {
+			if (control instanceof Button) {
+				control.setVisible(false);
+				control.dispose();
+			}
+		}
+		additionalButtonParent.getParent().requestLayout();
+	}
+
+	public void customButtonPressed(int buttonId) {
+		buttonPressed(buttonId);
 	}
 
 	@Override
