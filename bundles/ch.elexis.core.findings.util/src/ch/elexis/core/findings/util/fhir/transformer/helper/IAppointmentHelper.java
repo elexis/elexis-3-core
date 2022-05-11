@@ -1,16 +1,16 @@
 package ch.elexis.core.findings.util.fhir.transformer.helper;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
 
 import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.StringType;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IConfigService;
+import ch.elexis.core.time.TimeUtil;
 
 public class IAppointmentHelper extends AbstractHelper {
 
@@ -95,13 +95,13 @@ public class IAppointmentHelper extends AbstractHelper {
 	public void mapApplyStartEndMinutes(Appointment target, IAppointment source) {
 		LocalDateTime start = source.getStartTime();
 		if (start != null) {
-			Date start_ = Date.from(ZonedDateTime.of(start, ZoneId.systemDefault()).toInstant());
+			Date start_ = TimeUtil.toDate(start);
 			target.setStart(start_);
 		}
 
 		LocalDateTime end = source.getEndTime();
 		if (end != null) {
-			Date end_ = Date.from(ZonedDateTime.of(end, ZoneId.systemDefault()).toInstant());
+			Date end_ = TimeUtil.toDate(end);
 			target.setEnd(end_);
 		}
 
@@ -109,6 +109,31 @@ public class IAppointmentHelper extends AbstractHelper {
 		if (durationMinutes != null) {
 			target.setMinutesDuration(durationMinutes);
 		}
+	}
+
+	/**
+	 * FHIR -> ELEIXS: Map and apply start, end and duration
+	 * 
+	 * @param target
+	 * @param source
+	 */
+	public void mapApplyStartEndMinutes(IAppointment target, Appointment source) {
+		Date start = source.getStart();
+		if (start == null) {
+			// Elexis does not allow empty start
+			start = new Date();
+			LoggerFactory.getLogger(getClass()).warn("Appointment F->E [{}] no start time, setting now");
+		}
+		LocalDateTime start_ = TimeUtil.toLocalDateTime(start);
+		target.setStartTime(start_);
+
+		Date end = source.getEnd();
+		if (end == null) {
+			end = new Date(start.getTime() + (60 * 5 * 1000));
+			LoggerFactory.getLogger(getClass()).warn("Appointment F->E [{}] no end time, setting to start+5m");
+		}
+		LocalDateTime end_ = TimeUtil.toLocalDateTime(end);
+		target.setEndTime(end_);
 	}
 
 	// /**

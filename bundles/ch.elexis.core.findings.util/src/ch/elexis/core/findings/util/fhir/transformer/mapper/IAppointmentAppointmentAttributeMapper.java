@@ -136,6 +136,7 @@ public class IAppointmentAppointmentAttributeMapper
 	public void fhirToElexis(Appointment source, IAppointment target) {
 
 		appointmentHelper.mapApplyAppointmentStateAndType(target, source);
+		appointmentHelper.mapApplyStartEndMinutes(target, source);
 
 		target.setReason(source.getDescription());
 
