@@ -1,6 +1,5 @@
 package ch.elexis.core.time;
 
-import org.apache.commons.lang3.StringUtils;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +13,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import ch.elexis.core.jdt.Nullable;
