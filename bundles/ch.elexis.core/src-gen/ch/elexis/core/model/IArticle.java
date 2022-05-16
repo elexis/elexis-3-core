@@ -38,6 +38,7 @@ import ch.rgw.tools.Money;
  *   <li>{@link ch.elexis.core.model.IArticle#isObligation <em>Obligation</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticle#getTyp <em>Typ</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticle#getSubTyp <em>Sub Typ</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticle#getPackageSizeString <em>Package Size String</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIArticle()
@@ -357,6 +358,28 @@ public interface IArticle extends Identifiable, IBillable, Deleteable, WithExtIn
 	 * @generated
 	 */
 	void setSubTyp(ArticleSubTyp value);
+
+	/**
+	 * Returns the value of the '<em><b>Package Size String</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Package Size String</em>' attribute.
+	 * @see #setPackageSizeString(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticle_PackageSizeString()
+	 * @model
+	 * @generated
+	 */
+	String getPackageSizeString();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getPackageSizeString <em>Package Size String</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Package Size String</em>' attribute.
+	 * @see #getPackageSizeString()
+	 * @generated
+	 */
+	void setPackageSizeString(String value);
 
 	/**
 	 * <!-- begin-user-doc -->

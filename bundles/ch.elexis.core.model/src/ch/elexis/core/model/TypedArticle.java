@@ -157,6 +157,17 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	}
 
 	@Override
+	public void setPackageSizeString(String value) {
+		setExtInfo(ch.elexis.core.model.localarticle.Constants.FLD_EXT_PACKAGE_SIZE_STRING, value);
+	}
+
+	@Override
+	public String getPackageSizeString() {
+		return StringUtils.defaultString(
+				(String) getExtInfo(ch.elexis.core.model.localarticle.Constants.FLD_EXT_PACKAGE_SIZE_STRING));
+	}
+
+	@Override
 	public boolean isProduct() {
 		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
 			return getEntity().getProduct() == null;
