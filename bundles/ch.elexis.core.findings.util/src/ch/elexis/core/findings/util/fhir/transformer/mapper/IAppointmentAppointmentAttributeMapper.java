@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.Appointment.AppointmentParticipantComponent;
 import org.hl7.fhir.r4.model.Appointment.AppointmentStatus;
@@ -95,6 +96,7 @@ public class IAppointmentAppointmentAttributeMapper
 
 		IContact contact = localObject.getContact();
 		if (contact != null && contact.isPatient()) {
+			// formal patient appointment
 			Reference patientReference = new Reference(new IdType(Patient.class.getSimpleName(), contact.getId()));
 
 			if (includes.contains(new Include("Appointment:actor"))) {
@@ -118,8 +120,9 @@ public class IAppointmentAppointmentAttributeMapper
 	
 			
 		} else {
-			// TODO there is another string inside - where to put it? is it relevant?
-			String subjectOrPatient = localObject.getSubjectOrPatient();
+			// free-text-appointment
+			String subject = localObject.getSubjectOrPatient();
+			appointment.setComment(subject);
 		}
 		
 		if (appointment.getParticipant().isEmpty()) {
@@ -138,10 +141,7 @@ public class IAppointmentAppointmentAttributeMapper
 		appointmentHelper.mapApplyAppointmentStateAndType(target, source);
 		appointmentHelper.mapApplyStartEndMinutes(target, source);
 
-		target.setReason(source.getDescription());
-
 		target.setSubjectOrPatient(null);
-
 		List<AppointmentParticipantComponent> participant = source.getParticipant();
 		for (AppointmentParticipantComponent appointmentParticipantComponent : participant) {
 			Reference actorTarget = appointmentParticipantComponent.getActor();
@@ -150,6 +150,11 @@ public class IAppointmentAppointmentAttributeMapper
 				target.setSubjectOrPatient(idType.getIdPart());
 			}
 		}
+		if(StringUtils.isEmpty(target.getSubjectOrPatient())) {
+			target.setSubjectOrPatient(source.getComment());
+		}
+
+		target.setReason(source.getDescription());
 
 		// TODO what else in subject or patient if no patient set?
 	}

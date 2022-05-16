@@ -197,6 +197,38 @@ public class SWTHelper {
 		return rn.ret;
 	}
 
+	/**
+	 * Ask question with custom button labels. The index of the pressed button is
+	 * returned.
+	 * 
+	 * @param title
+	 * @param message
+	 * @param dialogButtonLabels
+	 * @return
+	 */
+	public static int ask(final String title, final String message, String... dialogButtonLabels) {
+		InSyncMulti rn = new InSyncMulti(title, message, dialogButtonLabels);
+		UiDesk.getDisplay().syncExec(rn);
+		return rn.ret;
+	}
+
+	private static class InSyncMulti implements Runnable {
+		private int ret;
+		private String title, message;
+		private String[] dialogButtonLabels;
+
+		InSyncMulti(final String title, final String message, String... dialogButtonLabels) {
+			this.title = title;
+			this.message = message;
+			this.dialogButtonLabels = dialogButtonLabels;
+		}
+
+		public void run() {
+			Shell shell = UiDesk.getTopShell();
+			ret = MessageDialog.open(MessageDialog.QUESTION, shell, title, message, SWT.SHEET, dialogButtonLabels);
+		}
+	}
+
 	private static class InSync implements Runnable {
 		boolean ret;
 		String title, message;
