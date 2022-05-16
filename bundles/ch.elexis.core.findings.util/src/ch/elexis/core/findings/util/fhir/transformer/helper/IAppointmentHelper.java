@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.Extension;
+import org.hl7.fhir.r4.model.Slot;
 import org.hl7.fhir.r4.model.StringType;
 import org.slf4j.LoggerFactory;
 
@@ -112,13 +113,26 @@ public class IAppointmentHelper extends AbstractHelper {
 	}
 
 	/**
-	 * FHIR -> ELEIXS: Map and apply start, end and duration
+	 * FHIR -> ELEXIS: Map and apply start, end and duration
 	 * 
 	 * @param target
 	 * @param source
 	 */
 	public void mapApplyStartEndMinutes(IAppointment target, Appointment source) {
-		Date start = source.getStart();
+		mapApplyStartEndMinutes(target, source.getStart(), source.getEnd());
+	}
+	
+	/**
+	 * FHIR -> ELEXIS: Map and apply start, end and duration
+	 * 
+	 * @param target
+	 * @param source
+	 */
+	public void mapApplyStartEndMinutes(IAppointment target, Slot source) {
+		mapApplyStartEndMinutes(target, source.getStart(), source.getEnd());
+	}
+	
+	public void mapApplyStartEndMinutes(IAppointment target, Date start, Date end) {
 		if (start == null) {
 			// Elexis does not allow empty start
 			start = new Date();
@@ -127,7 +141,6 @@ public class IAppointmentHelper extends AbstractHelper {
 		LocalDateTime start_ = TimeUtil.toLocalDateTime(start);
 		target.setStartTime(start_);
 
-		Date end = source.getEnd();
 		if (end == null) {
 			end = new Date(start.getTime() + (60 * 5 * 1000));
 			LoggerFactory.getLogger(getClass()).warn("Appointment F->E [{}] no end time, setting to start+5m");

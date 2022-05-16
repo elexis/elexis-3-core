@@ -20,7 +20,7 @@ public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointmen
 
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService modelService;
+	private IModelService coreModelService;
 
 	@org.osgi.service.component.annotations.Reference
 	private IAppointmentService appointmentService;
@@ -43,21 +43,24 @@ public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointmen
 	public Optional<IAppointment> getLocalObject(Slot fhirObject) {
 		String id = fhirObject.getIdElement().getIdPart();
 		if (id != null && !id.isEmpty()) {
-			return modelService.load(id, IAppointment.class);
+			return coreModelService.load(id, IAppointment.class);
 		}
 		return Optional.empty();
 	}
 
 	@Override
 	public Optional<IAppointment> updateLocalObject(Slot fhirObject, IAppointment localObject) {
-		return Optional.empty();
+		// TODO lock
+		attributeMapper.fhirToElexis(fhirObject, localObject);
+		coreModelService.save(localObject);
+		return Optional.of(localObject);
 	}
 
 	@Override
 	public Optional<IAppointment> createLocalObject(Slot fhirObject) {
-		IAppointment create = modelService.create(IAppointment.class);
+		IAppointment create = coreModelService.create(IAppointment.class);
 		attributeMapper.fhirToElexis(fhirObject, create);
-		modelService.save(create);
+		coreModelService.save(create);
 		return Optional.of(create);
 	}
 
