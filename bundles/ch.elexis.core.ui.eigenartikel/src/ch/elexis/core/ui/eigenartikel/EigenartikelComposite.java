@@ -329,16 +329,15 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 			}
 		});
 
-		// //
-		// ISWTObservableValue observeTooltipTextTxtPackageSizeStringObserveWidget =
-		// WidgetProperties.text(SWT.Modify).observe(txtPackageSizeString);
-		// IObservableValue<String>
-		// drugPackageEigenartikelPackageSizeStringObserveDetailValue =
-		// PojoProperties.value(Eigenartikel.class, "packageSizeString", String.class)
-		// .observeDetail(drugPackageEigenartikel);
-		// bindingContext.bindValue(observeTooltipTextTxtPackageSizeStringObserveWidget,
-		// drugPackageEigenartikelPackageSizeStringObserveDetailValue, null, null);
-		// //
+		//
+		ISWTObservableValue observeTooltipTextTxtPackageSizeStringObserveWidget = WidgetProperties.text(SWT.Modify)
+				.observe(txtPackageSizeString);
+		IObservableValue<String> drugPackageEigenartikelPackageSizeStringObserveDetailValue = PojoProperties
+				.value(IArticle.class, "packageSizeString", String.class).observeDetail(drugPackageEigenartikel);
+		bindingContext.bindValue(observeTooltipTextTxtPackageSizeStringObserveWidget,
+				drugPackageEigenartikelPackageSizeStringObserveDetailValue,
+				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel), null);
+		//
 		ISWTObservableValue observeSelectionBtnHiCostAbsorptionObserveWidget = WidgetProperties.selection()
 				.observe(btnHiCostAbsorption);
 		IObservableValue<Boolean> drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue = PojoProperties

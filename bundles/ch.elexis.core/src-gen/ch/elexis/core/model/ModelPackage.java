@@ -4000,13 +4000,22 @@ public interface ModelPackage extends EPackage {
 	int IARTICLE__SUB_TYP = IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
+	 * The feature id for the '<em><b>Package Size String</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE__PACKAGE_SIZE_STRING = IDENTIFIABLE_FEATURE_COUNT + 15;
+
+	/**
 	 * The number of structural features of the '<em>IArticle</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 15;
+	int IARTICLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 16;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IArticleDefaultSignature <em>IArticle Default Signature</em>}' class.
@@ -9613,6 +9622,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIArticle_SubTyp();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticle#getPackageSizeString <em>Package Size String</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Package Size String</em>'.
+	 * @see ch.elexis.core.model.IArticle#getPackageSizeString()
+	 * @see #getIArticle()
+	 * @generated
+	 */
+	EAttribute getIArticle_PackageSizeString();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IArticleDefaultSignature <em>IArticle Default Signature</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13793,6 +13813,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IARTICLE__SUB_TYP = eINSTANCE.getIArticle_SubTyp();
+
+		/**
+		 * The meta object literal for the '<em><b>Package Size String</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE__PACKAGE_SIZE_STRING = eINSTANCE.getIArticle_PackageSizeString();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IArticleDefaultSignature <em>IArticle Default Signature</em>}' class.
