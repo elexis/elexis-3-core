@@ -322,6 +322,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/obligation"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/typ"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/subTyp"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/packageSizeString"/>
       <genOperations ecoreOperation="model.ecore#//IArticle/isProduct"/>
       <genOperations ecoreOperation="model.ecore#//IArticle/getPackages"/>
       <genOperations ecoreOperation="model.ecore#//IArticle/setCode">

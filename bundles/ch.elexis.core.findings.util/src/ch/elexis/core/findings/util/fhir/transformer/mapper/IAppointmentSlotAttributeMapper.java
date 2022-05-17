@@ -16,17 +16,20 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.findings.util.fhir.transformer.helper.IAppointmentHelper;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.services.IAppointmentService;
-import ch.elexis.core.time.TimeUtil;
 
 public class IAppointmentSlotAttributeMapper implements IdentifiableDomainResourceAttributeMapper<IAppointment, Slot> {
+
+	private IAppointmentHelper appointmentHelper;
 
 	private IAppointmentService appointmentService;
 
 	public IAppointmentSlotAttributeMapper(IAppointmentService appointmentService) {
 		this.appointmentService = appointmentService;
+		appointmentHelper = new IAppointmentHelper();
 	}
 
 	@Override
@@ -35,16 +38,14 @@ public class IAppointmentSlotAttributeMapper implements IdentifiableDomainResour
 		fhir.setId(new IdDt(Slot.class.getSimpleName(), elexis.getId()));
 
 		Area area = appointmentService.getAreaByNameOrId(elexis.getSchedule());
-		if(area != null) {
-			fhir.setSchedule(new Reference(new IdType(Schedule.class.getSimpleName(),
-					area.getId())));
+		if (area != null) {
+			fhir.setSchedule(new Reference(new IdType(Schedule.class.getSimpleName(), area.getId())));
 		} else {
 			// TODO the appointment has an area set, which is not configured!
 			LoggerFactory.getLogger(getClass()).warn(
 					"Appointment [{}] claims schedule id [{}] which is not configured. Not setting value.",
 					elexis.getId(), elexis.getSchedule());
 		}
-
 
 		// TODO
 		fhir.setStatus(SlotStatus.BUSY);
@@ -74,11 +75,7 @@ public class IAppointmentSlotAttributeMapper implements IdentifiableDomainResour
 		Area areaByNameOrId = appointmentService.getAreaByNameOrId(idPart);
 		elexis.setSchedule(areaByNameOrId.getName());
 
-		Date start = fhir.getStart();
-		elexis.setStartTime(TimeUtil.toLocalDateTime(start));
-
-		Date end = fhir.getEnd();
-		elexis.setEndTime(TimeUtil.toLocalDateTime(end));
+		appointmentHelper.mapApplyStartEndMinutes(elexis, fhir);
 	}
 
 }

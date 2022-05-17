@@ -5,6 +5,6 @@
       <provide interface="ch.elexis.core.findings.util.fhir.IFhirTransformer"/>
    </service>
    <reference cardinality="1..1" field="appointmentService" interface="ch.elexis.core.services.IAppointmentService" name="appointmentService"/>
-   <reference cardinality="1..1" field="modelService" interface="ch.elexis.core.services.IModelService" name="modelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
    <implementation class="ch.elexis.core.findings.util.fhir.transformer.SlotTerminTransformer"/>
 </scr:component>

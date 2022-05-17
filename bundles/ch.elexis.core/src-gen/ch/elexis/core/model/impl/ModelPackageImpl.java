@@ -2446,6 +2446,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIArticle_PackageSizeString() {
+		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIArticleDefaultSignature() {
 		return iArticleDefaultSignatureEClass;
 	}
@@ -5127,6 +5137,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iArticleEClass, IARTICLE__OBLIGATION);
 		createEAttribute(iArticleEClass, IARTICLE__TYP);
 		createEAttribute(iArticleEClass, IARTICLE__SUB_TYP);
+		createEAttribute(iArticleEClass, IARTICLE__PACKAGE_SIZE_STRING);
 
 		iArticleDefaultSignatureEClass = createEClass(IARTICLE_DEFAULT_SIGNATURE);
 		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__ATC_CODE);
@@ -5941,6 +5952,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIArticle_Obligation(), ecorePackage.getEBoolean(), "obligation", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticle_Typ(), theTypesPackage.getArticleTyp(), "typ", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticle_SubTyp(), theTypesPackage.getArticleSubTyp(), "subTyp", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticle_PackageSizeString(), ecorePackage.getEString(), "packageSizeString", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iArticleEClass, ecorePackage.getEBoolean(), "isProduct", 0, 1, IS_UNIQUE, IS_ORDERED);
 
