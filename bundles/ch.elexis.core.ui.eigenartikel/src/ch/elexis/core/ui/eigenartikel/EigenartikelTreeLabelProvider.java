@@ -12,22 +12,15 @@ public class EigenartikelTreeLabelProvider extends LabelProvider {
 	@Override
 	public String getText(Object element) {
 		IArticle ea = (IArticle) element;
-		String name = ea.getName();
+		String text = ea.getText();
 		if (!ea.isProduct()) {
 			StringBuilder label = new StringBuilder();
-			String packageSizeString = ea.getPackageSizeString();
-			if (StringUtils.isNotBlank(packageSizeString)) {
-				label.append(packageSizeString + " ");
-			} else {
-				label.append(ea.getPackageSize() + StringUtils.SPACE
-						+ (ea.getPackageUnit() != null ? ea.getPackageUnit() : StringUtils.EMPTY));
-			}
 			Availability availability = StockServiceHolder.get().getCumulatedAvailabilityForArticle(ea);
 			if (availability != null) {
 				label.append(" (" + availability.toString() + ")");
 			}
-			return name + StringUtils.SPACE + label.toString();
+			return text + StringUtils.SPACE + label.toString();
 		}
-		return name;
+		return text;
 	}
 }
