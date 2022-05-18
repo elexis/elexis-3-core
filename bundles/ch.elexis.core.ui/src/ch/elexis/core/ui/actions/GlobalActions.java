@@ -25,14 +25,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-import javax.inject.Inject;
-
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
-import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -103,7 +102,6 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockedAction;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
 import ch.elexis.core.ui.services.EncounterServiceHolder;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.Importer;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TemplateDrucker;
@@ -278,27 +276,23 @@ public class GlobalActions {
 		savePerspectiveAsAction = ActionFactory.SAVE_PERSPECTIVE.create(window);
 
 		// ActionFactory.SAVE_PERSPECTIVE.create(window);
-		resetPerspectiveAction = new Action(Messages.GlobalActions_Home) { //$NON-NLS-1$
-			
-			@Inject
-			private EPartService partService;
-			
+		resetPerspectiveAction = new Action(Messages.GlobalActions_Home) { // $NON-NLS-1$
+
 			@Override
-			public void run(){
-				CoreUiUtil.injectServicesWithContext(this);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-					.resetPerspective();
-				
+			public void run() {
+				EModelService modelService = PlatformUI.getWorkbench().getService(EModelService.class);
+				EPartService partService = PlatformUI.getWorkbench().getService(EPartService.class);
+
 				if (partService != null) {
-					// refresh whole parts to get correct toolbar
+					// refresh whole part model to get correct toolbar
 					for (MPart part : partService.getParts()) {
-						if (part.getWidget() instanceof Composite
-							&& ((Composite) part.getWidget()).isVisible()) {
-							partService.hidePart(part);
-							partService.showPart(part, PartState.VISIBLE);
+						if (part.getWidget() instanceof Composite && ((Composite) part.getWidget()).isVisible()) {
+							modelService.deleteModelElement(part);
 						}
 					}
 				}
+
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().resetPerspective();
 			}
 			
 			@Override
