@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.findings.util.fhir.IFhirTransformerException;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IAppointmentHelper;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.agenda.Area;
@@ -73,7 +74,11 @@ public class IAppointmentSlotAttributeMapper implements IdentifiableDomainResour
 
 		String idPart = fhir.getSchedule().getReferenceElement().getIdPart();
 		Area areaByNameOrId = appointmentService.getAreaByNameOrId(idPart);
-		elexis.setSchedule(areaByNameOrId.getName());
+		if (areaByNameOrId != null) {
+			elexis.setSchedule(areaByNameOrId.getName());
+		} else {
+			throw new IFhirTransformerException("WARNING", "Referenced schedule not found", 412);
+		}
 
 		appointmentHelper.mapApplyStartEndMinutes(elexis, fhir);
 	}

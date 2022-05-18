@@ -1,6 +1,6 @@
 INSERT INTO AGNTERMINE (ID, PatId) VALUES (1, '');
 
-INSERT INTO `config` VALUES (NULL, 'agenda/bereiche', 'Praxis,Claudia Einstein,Michael Wildhauser,Arzt 1,Kiril Checkov, Julian Marti,Thomas Schellenberg');
+INSERT INTO `config` VALUES (NULL, 'agenda/bereiche','Praxis,Claudia Einstein,Michael Wildhauser,Arzt 1,Kiril Checkov,Julian Marti,Thomas Schellenberg');
 INSERT INTO `config` VALUES (NULL, 'agenda/bereich/Michael Wildhauser/type', 'CONTACT/h2c1172107ce2df95065');
 
 INSERT INTO `agntermine` VALUES ('db53461227956f74f012',1400066773685,NULL,'Praxis','20140514','0','480',NULL,'23334446;geplant','normal','-',NULL,'23334446','23334446',0,NULL,'0',NULL,NULL,NULL,NULL,NULL,NULL);
