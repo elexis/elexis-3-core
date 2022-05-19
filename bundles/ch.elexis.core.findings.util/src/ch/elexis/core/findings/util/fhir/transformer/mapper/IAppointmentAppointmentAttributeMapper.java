@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Appointment;
+import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Appointment.AppointmentParticipantComponent;
 import org.hl7.fhir.r4.model.Appointment.AppointmentStatus;
 import org.hl7.fhir.r4.model.Appointment.ParticipantRequired;
@@ -16,6 +17,7 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Slot;
+import org.hl7.fhir.r4.model.StringType;
 import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
@@ -130,8 +132,18 @@ public class IAppointmentAppointmentAttributeMapper
 			AppointmentParticipantComponent participant = appointment.addParticipant();
 			participant.setStatus(ParticipationStatus.ACCEPTED);
 		}
-
-		// TODO status history??
+		
+		String stateHistoryFormatted = localObject.getStateHistoryFormatted("dd.MM.yyyy HH:mm:ss");
+		if(StringUtils.isNotEmpty(stateHistoryFormatted)) {
+			// TODO move status history to Appointment#setNote(Annotation) in next version
+			Extension historyExtension = new Extension();
+			historyExtension.setUrl("http://elexis.info/appointment/");
+		
+			Extension _historyExtension = new Extension("history", new StringType(stateHistoryFormatted));
+			historyExtension.addExtension(_historyExtension);
+			
+			appointment.getExtension().add(historyExtension);
+		}
 
 	}
 
