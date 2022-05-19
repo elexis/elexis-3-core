@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.dialogs;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +10,7 @@ import javax.print.PrintServiceLookup;
 import javax.print.attribute.standard.Media;
 import javax.print.attribute.standard.MediaTray;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -229,5 +229,10 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 		public String toString() {
 			return name;
 		}
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 }

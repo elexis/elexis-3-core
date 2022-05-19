@@ -12,7 +12,6 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -23,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -139,6 +139,11 @@ public class RnDialogs {
 			}
 
 		}
+
+		@Override
+		protected boolean isResizable() {
+			return true;
+		}
 	}
 
 	public static class MultiGebuehrHinzuDialog extends TitleAreaDialog {
@@ -228,6 +233,11 @@ public class RnDialogs {
 						new Status(1, "ch.elexis", 1, "CurrencyFormat", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
+		}
+
+		@Override
+		protected boolean isResizable() {
+			return true;
 		}
 	}
 
@@ -345,6 +355,10 @@ public class RnDialogs {
 
 		}
 
+		@Override
+		protected boolean isResizable() {
+			return true;
+		}
 	}
 
 	public static class StatusAendernDialog extends TitleAreaDialog {
@@ -390,6 +404,10 @@ public class RnDialogs {
 			super.okPressed();
 		}
 
+		@Override
+		protected boolean isResizable() {
+			return true;
+		}
 	}
 
 	public static class MultiStatusAendernDialog extends TitleAreaDialog {
@@ -460,6 +478,11 @@ public class RnDialogs {
 				}
 			}
 			super.okPressed();
+		}
+
+		@Override
+		protected boolean isResizable() {
+			return true;
 		}
 	}
 
@@ -619,6 +642,11 @@ public class RnDialogs {
 				return getReturnCode();
 			}
 			return super.open();
+		}
+
+		@Override
+		protected boolean isResizable() {
+			return true;
 		}
 	}
 
@@ -893,5 +921,9 @@ public class RnDialogs {
 				}
 			}
 		}
+	}
+
+	protected boolean isResizable() {
+		return true;
 	}
 }

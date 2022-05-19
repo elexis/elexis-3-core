@@ -1,11 +1,11 @@
 package ch.elexis.core.ui.e4.dialog;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -114,6 +114,11 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 		} else {
 			return StringUtils.EMPTY;
 		}
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 
 }

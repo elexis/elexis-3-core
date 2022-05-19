@@ -12,10 +12,10 @@
 
 package ch.elexis.core.ui.dialogs;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -571,5 +571,10 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 
 	public void enableEmptyFieldButton() {
 		enableEmptyField = true;
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 }
