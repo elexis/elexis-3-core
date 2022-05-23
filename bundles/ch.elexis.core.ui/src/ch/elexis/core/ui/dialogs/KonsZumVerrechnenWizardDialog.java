@@ -14,6 +14,7 @@ package ch.elexis.core.ui.dialogs;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -232,5 +233,10 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		TimeTool date = new TimeTool(cal.getTime());
 
 		return date;
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 }

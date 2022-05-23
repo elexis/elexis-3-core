@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -113,6 +114,11 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 		} else {
 			return "";
 		}
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 
 }

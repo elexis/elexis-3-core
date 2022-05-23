@@ -98,4 +98,9 @@ public class AdvancedFilterDialog extends TitleAreaDialog {
 		Button btnAbbrechen = createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 		btnAbbrechen.setText("Abbrechen");
 	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

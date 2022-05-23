@@ -153,4 +153,9 @@ public class EditAUFDialog extends TitleAreaDialog {
 	public ISickCertificate getAuf() {
 		return auf;
 	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

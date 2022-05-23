@@ -169,6 +169,11 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 		}
 	}
 
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
+
 	public static class SearchDataDialog extends ViewerFilter {
 
 		private String searchString;

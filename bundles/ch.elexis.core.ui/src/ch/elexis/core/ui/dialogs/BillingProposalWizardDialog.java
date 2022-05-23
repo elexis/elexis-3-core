@@ -519,4 +519,9 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			return null;
 		}
 	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

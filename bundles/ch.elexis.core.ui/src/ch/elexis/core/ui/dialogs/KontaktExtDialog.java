@@ -183,4 +183,9 @@ public class KontaktExtDialog extends TitleAreaDialog {
 			}
 		}
 	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

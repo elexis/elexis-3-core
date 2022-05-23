@@ -199,4 +199,8 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		}
 	}
 
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

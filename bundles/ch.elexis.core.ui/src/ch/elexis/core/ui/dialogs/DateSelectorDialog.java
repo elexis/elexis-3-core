@@ -64,4 +64,8 @@ public class DateSelectorDialog extends Dialog {
 		return new TimeTool(dp.getSelection());
 	}
 
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

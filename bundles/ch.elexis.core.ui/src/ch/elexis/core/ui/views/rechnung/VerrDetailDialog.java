@@ -163,4 +163,8 @@ public class VerrDetailDialog extends TitleAreaDialog {
 		getShell().setText(Messages.VerrDetailDialog_billingData); // $NON-NLS-1$
 	}
 
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

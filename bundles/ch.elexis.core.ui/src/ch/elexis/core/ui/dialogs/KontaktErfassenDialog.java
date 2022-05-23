@@ -15,6 +15,7 @@ package ch.elexis.core.ui.dialogs;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -427,5 +428,10 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			return CoreModelServiceHolder.get().load(newKontakt.getId(), IContact.class);
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 }

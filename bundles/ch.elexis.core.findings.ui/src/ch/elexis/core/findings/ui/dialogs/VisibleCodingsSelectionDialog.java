@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -105,6 +106,11 @@ public class VisibleCodingsSelectionDialog extends TitleAreaDialog {
 		FontData fd = baseFont.getFontData()[0];
 		Font font = new Font(baseFont.getDevice(), fd.getName(), fd.getHeight(), fd.getStyle() | SWT.BOLD);
 		return font;
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 
 	private class LabelProvider extends org.eclipse.jface.viewers.LabelProvider implements ITableFontProvider {

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -396,6 +397,11 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		initialize();
 
 		return area;
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 
 	private void initialize() {

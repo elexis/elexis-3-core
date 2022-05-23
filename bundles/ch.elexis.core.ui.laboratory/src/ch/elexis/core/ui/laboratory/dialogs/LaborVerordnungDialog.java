@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -178,6 +179,11 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		btnPrint.setSelection(ConfigServiceHolder.getUser(PREV_PRINT_SETTING, false));
 
 		return composite;
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 
 	private List<IExternLaborOrder> getExternLaborOrder() {
