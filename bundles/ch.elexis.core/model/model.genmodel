@@ -708,5 +708,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISickCertificate/reason"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISickCertificate/note"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IDayMessage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDayMessage/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDayMessage/message"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDayMessage/date"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -7659,6 +7659,70 @@ public interface ModelPackage extends EPackage {
 	int ISICK_CERTIFICATE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IDayMessage <em>IDay Message</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IDayMessage
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDayMessage()
+	 * @generated
+	 */
+	int IDAY_MESSAGE = 67;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDAY_MESSAGE__DELETED = DELETEABLE__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDAY_MESSAGE__LASTUPDATE = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Title</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDAY_MESSAGE__TITLE = DELETEABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Message</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDAY_MESSAGE__MESSAGE = DELETEABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDAY_MESSAGE__DATE = DELETEABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>IDay Message</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDAY_MESSAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 4;
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12092,6 +12156,49 @@ public interface ModelPackage extends EPackage {
 	EAttribute getISickCertificate_Note();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IDayMessage <em>IDay Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IDay Message</em>'.
+	 * @see ch.elexis.core.model.IDayMessage
+	 * @generated
+	 */
+	EClass getIDayMessage();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDayMessage#getTitle <em>Title</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Title</em>'.
+	 * @see ch.elexis.core.model.IDayMessage#getTitle()
+	 * @see #getIDayMessage()
+	 * @generated
+	 */
+	EAttribute getIDayMessage_Title();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDayMessage#getMessage <em>Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Message</em>'.
+	 * @see ch.elexis.core.model.IDayMessage#getMessage()
+	 * @see #getIDayMessage()
+	 * @generated
+	 */
+	EAttribute getIDayMessage_Message();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDayMessage#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see ch.elexis.core.model.IDayMessage#getDate()
+	 * @see #getIDayMessage()
+	 * @generated
+	 */
+	EAttribute getIDayMessage_Date();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15713,6 +15820,40 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ISICK_CERTIFICATE__NOTE = eINSTANCE.getISickCertificate_Note();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IDayMessage <em>IDay Message</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IDayMessage
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDayMessage()
+		 * @generated
+		 */
+		EClass IDAY_MESSAGE = eINSTANCE.getIDayMessage();
+
+		/**
+		 * The meta object literal for the '<em><b>Title</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDAY_MESSAGE__TITLE = eINSTANCE.getIDayMessage_Title();
+
+		/**
+		 * The meta object literal for the '<em><b>Message</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDAY_MESSAGE__MESSAGE = eINSTANCE.getIDayMessage_Message();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDAY_MESSAGE__DATE = eINSTANCE.getIDayMessage_Date();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
