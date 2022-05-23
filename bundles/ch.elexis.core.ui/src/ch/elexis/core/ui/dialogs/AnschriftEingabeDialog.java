@@ -135,4 +135,8 @@ public class AnschriftEingabeDialog extends TitleAreaDialog {
 		return an;
 	}
 
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

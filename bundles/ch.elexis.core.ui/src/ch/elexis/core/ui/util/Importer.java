@@ -108,4 +108,9 @@ public class Importer extends TitleAreaDialog {
 			}
 		}
 	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

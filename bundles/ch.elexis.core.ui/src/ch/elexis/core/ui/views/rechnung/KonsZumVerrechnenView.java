@@ -13,7 +13,6 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
-import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_LIST;
 
 import java.sql.ResultSet;
@@ -23,6 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -798,6 +798,11 @@ public class KonsZumVerrechnenView extends ViewPart {
 			return toDate;
 		}
 
+		@Override
+		protected boolean isResizable() {
+			return true;
+		}
+
 	}
 
 	class SelectionPrintDialog extends TitleAreaDialog implements ICallback {
@@ -926,5 +931,9 @@ public class KonsZumVerrechnenView extends ViewPart {
 			public void partOpened(IWorkbenchPart part) {
 			}
 		});
+	}
+
+	protected boolean isResizable() {
+		return true;
 	}
 }

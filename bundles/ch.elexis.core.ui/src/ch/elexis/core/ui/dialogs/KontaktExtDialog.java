@@ -13,12 +13,12 @@
 
 package ch.elexis.core.ui.dialogs;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -175,5 +175,10 @@ public class KontaktExtDialog extends TitleAreaDialog {
 				}
 			}
 		}
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 }

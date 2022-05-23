@@ -11,7 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.stock.dialogs;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -387,5 +387,10 @@ public class ImportArticleDialog extends TitleAreaDialog {
 			}
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 }
