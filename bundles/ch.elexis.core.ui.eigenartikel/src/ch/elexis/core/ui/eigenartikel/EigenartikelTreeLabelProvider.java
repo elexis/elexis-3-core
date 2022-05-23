@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.eigenartikel;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.LabelProvider;
 
 import ch.elexis.core.data.service.StockServiceHolder;
@@ -11,16 +12,15 @@ public class EigenartikelTreeLabelProvider extends LabelProvider {
 	@Override
 	public String getText(Object element) {
 		IArticle ea = (IArticle) element;
-		String name = ea.getName();
+		String text = ea.getText();
 		if (!ea.isProduct()) {
-			String label = "";
-			label += ea.getPackageSize() + " " + (ea.getPackageUnit() != null ? ea.getPackageUnit() : "");
+			StringBuilder label = new StringBuilder();
 			Availability availability = StockServiceHolder.get().getCumulatedAvailabilityForArticle(ea);
 			if (availability != null) {
-				label += " (" + availability.toString() + ")";
+				label.append(" (" + availability.toString() + ")");
 			}
-			return name + " " + label;
+			return text + StringUtils.SPACE + label.toString();
 		}
-		return name;
+		return text;
 	}
 }

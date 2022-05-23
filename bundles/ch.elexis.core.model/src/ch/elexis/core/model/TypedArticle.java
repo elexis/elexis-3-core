@@ -70,7 +70,19 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 
 	@Override
 	public String getText() {
-		return getEntity().getName();
+		String name = getEntity().getName();
+		if (!isProduct()) {
+			StringBuilder label = new StringBuilder();
+			String packageSizeString = getPackageSizeString();
+			if (StringUtils.isNotBlank(packageSizeString)) {
+				label.append(packageSizeString + StringUtils.SPACE);
+			} else {
+				label.append(getPackageSize() + StringUtils.SPACE
+						+ (getPackageUnit() != null ? getPackageUnit() : StringUtils.EMPTY));
+			}
+			return name + StringUtils.SPACE + label.toString();
+		}
+		return name;
 	}
 
 	@Override
@@ -154,6 +166,17 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		} else if (isTyp(ArticleTyp.MIGEL)) {
 			setExtInfo("unit", value);
 		}
+	}
+
+	@Override
+	public void setPackageSizeString(String value) {
+		setExtInfo(ch.elexis.core.model.localarticle.Constants.FLD_EXT_PACKAGE_SIZE_STRING, value);
+	}
+
+	@Override
+	public String getPackageSizeString() {
+		return StringUtils.defaultString(
+				(String) getExtInfo(ch.elexis.core.model.localarticle.Constants.FLD_EXT_PACKAGE_SIZE_STRING));
 	}
 
 	@Override
@@ -361,7 +384,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 
 	@Override
 	public String getLabel() {
-		return getName();
+		return getText();
 	}
 
 	@Override
