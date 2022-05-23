@@ -10,6 +10,7 @@ import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.KontaktAdressJoint;
 import ch.elexis.core.jpa.entities.Leistungsblock;
+import ch.elexis.core.jpa.entities.TagesNachricht;
 import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.entities.Userconfig;
 import ch.elexis.core.jpa.entities.VKPreis;
@@ -30,6 +31,7 @@ import ch.elexis.core.model.Config;
 import ch.elexis.core.model.Contact;
 import ch.elexis.core.model.Coverage;
 import ch.elexis.core.model.CustomService;
+import ch.elexis.core.model.DayMessage;
 import ch.elexis.core.model.DiagnosisReference;
 import ch.elexis.core.model.DocumentLetter;
 import ch.elexis.core.model.DocumentTemplate;
@@ -49,6 +51,7 @@ import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ICustomService;
+import ch.elexis.core.model.IDayMessage;
 import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IDocumentTemplate;
@@ -122,6 +125,7 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 	@Override
 	protected void initializeMappings() {
 		addMapping(new MappingEntry(IAppointment.class, Appointment.class, Termin.class));
+		addMapping(new MappingEntry(IDayMessage.class, DayMessage.class, TagesNachricht.class));
 
 		addMapping(new MappingEntry(IConfig.class, Config.class, ch.elexis.core.jpa.entities.Config.class));
 		addMapping(new MappingEntry(IUserConfig.class, UserConfig.class, Userconfig.class));
