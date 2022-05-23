@@ -37,6 +37,10 @@ public class IAppointmentSlotAttributeMapper implements IdentifiableDomainResour
 	public void elexisToFhir(IAppointment elexis, Slot fhir, SummaryEnum summaryEnum, Set<Include> includes) {
 
 		fhir.setId(new IdDt(Slot.class.getSimpleName(), elexis.getId()));
+		
+		fhir.getMeta().setVersionId(elexis.getLastupdate().toString());
+		fhir.getMeta()
+				.setLastUpdated(appointmentHelper.getLastUpdateAsDate(elexis.getLastupdate()).orElse(null));
 
 		Area area = appointmentService.getAreaByNameOrId(elexis.getSchedule());
 		if (area != null) {
