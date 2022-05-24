@@ -58,4 +58,9 @@ public class NeueBestellungDialog extends TitleAreaDialog {
 	public String getTitle() {
 		return title;
 	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

@@ -43,6 +43,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ICustomDiagnosis;
 import ch.elexis.core.model.ICustomService;
+import ch.elexis.core.model.IDayMessage;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IDiagnosisTree;
@@ -565,6 +566,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iSickCertificateEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iDayMessageEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -4906,6 +4914,46 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getIDayMessage() {
+		return iDayMessageEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIDayMessage_Title() {
+		return (EAttribute)iDayMessageEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIDayMessage_Message() {
+		return (EAttribute)iDayMessageEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIDayMessage_Date() {
+		return (EAttribute)iDayMessageEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -5422,6 +5470,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iSickCertificateEClass, ISICK_CERTIFICATE__END);
 		createEAttribute(iSickCertificateEClass, ISICK_CERTIFICATE__REASON);
 		createEAttribute(iSickCertificateEClass, ISICK_CERTIFICATE__NOTE);
+
+		iDayMessageEClass = createEClass(IDAY_MESSAGE);
+		createEAttribute(iDayMessageEClass, IDAY_MESSAGE__TITLE);
+		createEAttribute(iDayMessageEClass, IDAY_MESSAGE__MESSAGE);
+		createEAttribute(iDayMessageEClass, IDAY_MESSAGE__DATE);
 	}
 
 	/**
@@ -5573,6 +5626,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iAppointmentSeriesEClass.getESuperTypes().add(this.getIAppointment());
 		iSickCertificateEClass.getESuperTypes().add(this.getIdentifiable());
 		iSickCertificateEClass.getESuperTypes().add(this.getDeleteable());
+		iDayMessageEClass.getESuperTypes().add(this.getDeleteable());
+		iDayMessageEClass.getESuperTypes().add(this.getIdentifiable());
+		iDayMessageEClass.getESuperTypes().add(this.getWithAssignableId());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -6390,6 +6446,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getISickCertificate_End(), theTypesPackage.getLocalDate(), "end", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getISickCertificate_Reason(), ecorePackage.getEString(), "reason", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getISickCertificate_Note(), ecorePackage.getEString(), "note", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iDayMessageEClass, IDayMessage.class, "IDayMessage", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIDayMessage_Title(), ecorePackage.getEString(), "title", null, 0, 1, IDayMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIDayMessage_Message(), ecorePackage.getEString(), "message", null, 0, 1, IDayMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIDayMessage_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IDayMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

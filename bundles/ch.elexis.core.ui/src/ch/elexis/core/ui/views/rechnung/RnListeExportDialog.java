@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.views.rechnung;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -9,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -123,6 +123,11 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 		tDirName.setText(CoreHub.localCfg.get("rechnung/RnListExportDirname", StringUtils.EMPTY));
 		tDirName.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		return ret;
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 
 	@Override

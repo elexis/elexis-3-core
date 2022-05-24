@@ -69,4 +69,9 @@ public class InputDialog extends org.eclipse.jface.dialogs.InputDialog {
 
 		return c;
 	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

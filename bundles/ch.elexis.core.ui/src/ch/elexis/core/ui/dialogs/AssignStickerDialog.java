@@ -196,6 +196,11 @@ public class AssignStickerDialog extends TitleAreaDialog {
 
 	}
 
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
+
 	private void closeDialog(boolean withOk) {
 		if (withOk) {
 			super.okPressed();

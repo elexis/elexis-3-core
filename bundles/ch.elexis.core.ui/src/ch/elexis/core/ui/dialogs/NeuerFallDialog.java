@@ -86,4 +86,8 @@ public class NeuerFallDialog extends TitleAreaDialog {
 		return fall;
 	}
 
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

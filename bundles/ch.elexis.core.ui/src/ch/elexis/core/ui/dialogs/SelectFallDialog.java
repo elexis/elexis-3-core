@@ -12,8 +12,6 @@
 
 package ch.elexis.core.ui.dialogs;
 
-import java.util.Collections;
-
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -112,4 +110,8 @@ public class SelectFallDialog extends TitleAreaDialog {
 		}
 	}
 
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 }

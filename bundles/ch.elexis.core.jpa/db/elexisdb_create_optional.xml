@@ -2387,4 +2387,22 @@ WHERE kontakt.id IN (
 			<column name="CODE" />
 		</createIndex>
 	</changeSet>
+	
+	<changeSet author="thomas" id="manual_table_CH_ELEXIS_AGENDA_DAYMSG">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="CH_ELEXIS_AGENDA_DAYMSG" />
+			</not>
+		</preConditions>	
+        <createTable tableName="CH_ELEXIS_AGENDA_DAYMSG">
+            <column name="ID" type="VARCHAR(8)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_ID_CH_ELEXIS_AGENDA_DAYMSG"/>
+            </column>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="KURZ" type="VARCHAR(80)"/>
+            <column name="MSG" type="CLOB"/>
+            <column defaultValueNumeric="0" name="LASTUPDATE" type="BIGINT"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
