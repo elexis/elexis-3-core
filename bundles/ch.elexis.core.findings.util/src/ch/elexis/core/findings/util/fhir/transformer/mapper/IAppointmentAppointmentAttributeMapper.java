@@ -60,7 +60,7 @@ public class IAppointmentAppointmentAttributeMapper
 				.setLastUpdated(appointmentHelper.getLastUpdateAsDate(localObject.getLastupdate()).orElse(null));
 
 		// narrative
-		appointmentHelper.setNarrative(appointment, localObject.getLabel());
+		appointmentHelper.setNarrative(appointment, localObject.getSubjectOrPatient());
 
 		// Currently formal status is always booked, "real" elexis status and type
 		// are transported via extension

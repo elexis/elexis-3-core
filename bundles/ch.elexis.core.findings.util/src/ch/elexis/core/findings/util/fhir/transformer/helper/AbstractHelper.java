@@ -86,6 +86,9 @@ public class AbstractHelper {
 		if (narrative == null) {
 			narrative = new Narrative();
 		}
+		if ("".equals(text)) {
+			text = "[EMPTY]";
+		}
 		String divEncodedText = text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;")
 				.replaceAll("(\r\n|\r|\n)", "<br />");
 		narrative.setDivAsString(divEncodedText);
