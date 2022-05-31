@@ -78,7 +78,6 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 	private Log log = Log.get(this.getClass().getName());
 	private boolean inUpdate = false;
 	private Table table;
-	private LabNotSeenContentProvider contentProvider;
 
 	public static LabNotSeenComparator comparator;
 
@@ -92,17 +91,9 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 
 	@Override
 	public void createPartControl(final Composite parent) {
-		contentProvider = new LabNotSeenContentProvider();
 		parent.setLayout(new FillLayout());
 		table = new Table(parent, SWT.CHECK | SWT.V_SCROLL);
 		comparator = new LabNotSeenComparator();
-		tv = new CheckboxTableViewer(table);
-		table = tv.getTable();
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		tv.setContentProvider(contentProvider);
-		tv.setComparator(comparator);
-
 		for (int i = 0; i < columnHeaders.length; i++) {
 			TableColumn tc = new TableColumn(table, SWT.NONE);
 			tc.setText(columnHeaders[i]);
