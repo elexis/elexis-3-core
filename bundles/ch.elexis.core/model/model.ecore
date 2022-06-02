@@ -126,7 +126,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maritalStatus" eType="ecore:EDataType types.ecore#//MaritalStatus"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="legalGuardian" eType="#//IPerson"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="legalGuardian" eType="#//IContact"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateOfDeath" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IOrganization" abstract="true" interface="true"
