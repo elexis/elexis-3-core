@@ -228,12 +228,12 @@ public interface IPerson extends IContact {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Legal Guardian</em>' reference.
-	 * @see #setLegalGuardian(IPerson)
+	 * @see #setLegalGuardian(IContact)
 	 * @see ch.elexis.core.model.ModelPackage#getIPerson_LegalGuardian()
 	 * @model
 	 * @generated
 	 */
-	IPerson getLegalGuardian();
+	IContact getLegalGuardian();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getLegalGuardian <em>Legal Guardian</em>}' reference.
@@ -243,7 +243,7 @@ public interface IPerson extends IContact {
 	 * @see #getLegalGuardian()
 	 * @generated
 	 */
-	void setLegalGuardian(IPerson value);
+	void setLegalGuardian(IContact value);
 
 	/**
 	 * Returns the value of the '<em><b>Date Of Death</b></em>' attribute.
