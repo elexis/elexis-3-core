@@ -12,12 +12,12 @@
 
 package ch.elexis.core.ui.laboratory.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.logging.Level;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.IAction;
@@ -33,7 +33,10 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
@@ -48,6 +51,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
+import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -73,6 +77,9 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 	private long lastUpdate = 0;
 	private Log log = Log.get(this.getClass().getName());
 	private boolean inUpdate = false;
+	private Table table;
+
+	public static LabNotSeenComparator comparator;
 
 	private static final String[] columnHeaders = { Messages.LabNotSeenView_patient, Messages.LabNotSeenView_parameter,
 			Messages.LabNotSeenView_normRange, Messages.LabNotSeenView_date, Messages.LabNotSeenView_value };
@@ -85,15 +92,18 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 	@Override
 	public void createPartControl(final Composite parent) {
 		parent.setLayout(new FillLayout());
-		Table table = new Table(parent, SWT.CHECK | SWT.V_SCROLL);
+		table = new Table(parent, SWT.CHECK | SWT.V_SCROLL);
+		comparator = new LabNotSeenComparator();
 		for (int i = 0; i < columnHeaders.length; i++) {
 			TableColumn tc = new TableColumn(table, SWT.NONE);
 			tc.setText(columnHeaders[i]);
 			tc.setWidth(colWidths[i]);
+			tc.addSelectionListener(getSelectionAdapter(tc, i));
 		}
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		tv = new CheckboxTableViewer(table);
+		tv.setComparator(comparator);
 		tv.setContentProvider(new LabNotSeenContentProvider());
 		tv.setLabelProvider(new LabNotSeenLabelProvider());
 		tv.setUseHashlookup(true);
@@ -140,6 +150,21 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 				ConfigServiceHolder.getUser(Preferences.LABSETTINGS_CFG_LABNEW_HEARTRATE, Heartbeat.FREQUENCY_HIGH));
 
 		tv.setInput(this);
+
+	}
+
+	private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index) {
+		SelectionAdapter selectionAdapter = new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				comparator.setColumn(index);
+				tv.getTable().setSortDirection(comparator.getDirection());
+				tv.getTable().setSortColumn(column);
+				tv.refresh();
+
+			}
+		};
+		return selectionAdapter;
+
 	}
 
 	@Override
@@ -300,6 +325,69 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
+	}
+
+	public class LabNotSeenComparator extends ViewerComparator {
+
+		private int propertyIndex;
+		private boolean direction = true;
+
+		public LabNotSeenComparator() {
+			this.propertyIndex = 0;
+		}
+
+		public int getDirection() {
+			return direction ? SWT.DOWN : SWT.UP;
+		}
+
+		public void setColumn(int column) {
+			if (column == this.propertyIndex) {
+				// Same column as last sort; toggle the direction
+				direction = !direction;
+			} else {
+				// New column; do an ascending sort
+				this.propertyIndex = column;
+				direction = true;
+			}
+		}
+
+		@Override
+		public int compare(Viewer viewer, Object o1, Object o2) {
+			if (o1 instanceof ILabResult && o2 instanceof ILabResult) {
+				ILabResult l1 = (ILabResult) o1;
+				ILabResult l2 = (ILabResult) o2;
+
+				int rc = 0;
+
+				switch (propertyIndex) {
+				case 0:
+					rc = l1.getLabOrder().getPatient().getLabel().compareTo(l2.getLabOrder().getPatient().getLabel());
+					break;
+
+				case 1:
+					rc = l1.getLabOrder().getLabItem().getLabel()
+							.compareToIgnoreCase(l2.getLabOrder().getLabItem().getLabel());
+					break;
+
+				case 3:
+					rc = l1.getDate().compareTo(l2.getDate());
+					break;
+
+				case 4:
+					rc = l1.getItem().getKuerzel().compareToIgnoreCase(l2.getItem().getKuerzel());
+					break;
+				}
+
+				if (direction) {
+					rc = -rc;
+				}
+				return rc;
+
+			}
+			return 0;
+
+		}
+
 	}
 
 }

@@ -30,7 +30,9 @@ import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.findings.IdentifierSystem;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IContactHelper;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IImage;
+import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.Identifiable;
@@ -39,6 +41,7 @@ import ch.elexis.core.model.MimeType;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.IXidService;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
 
@@ -97,19 +100,27 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 	private void mapRelatedContacts(IPatient source, Patient target) {
 		List<ContactComponent> contacts = new ArrayList<>();
 
-		IPerson legalGuardian = source.getLegalGuardian();
+		IContact legalGuardian = source.getLegalGuardian();
 		if (legalGuardian != null) {
 			ContactComponent _legalGuardian = new ContactComponent();
 
 			CodeableConcept addCoding = new CodeableConcept().addCoding(new Coding().setCode("N"));
 			_legalGuardian.setRelationship(Collections.singletonList(addCoding));
 			_legalGuardian.setId(legalGuardian.getId());
-			List<HumanName> humanNames = contactHelper.getHumanNames(legalGuardian);
-			_legalGuardian.setName((!humanNames.isEmpty()) ? humanNames.get(0) : null);
+			if (legalGuardian.isPerson()) {
+				IPerson legalGuardianPerson = CoreModelServiceHolder.get().load(legalGuardian.getId(), IPerson.class)
+						.get();
+				List<HumanName> humanNames = contactHelper.getHumanNames(legalGuardianPerson);
+				_legalGuardian.setName((!humanNames.isEmpty()) ? humanNames.get(0) : null);
+				AdministrativeGender gender = contactHelper.getGender(legalGuardianPerson.getGender());
+				_legalGuardian.setGender(gender);
+			} else if (legalGuardian.isOrganization()) {
+				IOrganization legalGuardianOrganization = CoreModelServiceHolder.get().load(legalGuardian.getId(), IOrganization.class)
+						.get();
+				contactHelper.getOrganizationName(legalGuardianOrganization);
+			}
 			List<Address> addresses = contactHelper.getAddresses(legalGuardian);
 			_legalGuardian.setAddress((!addresses.isEmpty()) ? addresses.get(0) : null);
-			AdministrativeGender gender = contactHelper.getGender(legalGuardian.getGender());
-			_legalGuardian.setGender(gender);
 			List<ContactPoint> contactPoints = contactHelper.getContactPoints(legalGuardian);
 			_legalGuardian.setTelecom(contactPoints);
 

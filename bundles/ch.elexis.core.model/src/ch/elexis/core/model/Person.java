@@ -125,17 +125,17 @@ public class Person extends Contact implements IPerson {
 	}
 
 	@Override
-	public IPerson getLegalGuardian() {
+	public IContact getLegalGuardian() {
 		Object legalGuardianId = getExtInfo(PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN);
 		if (legalGuardianId instanceof String) {
-			Optional<IPerson> owner = CoreModelServiceHolder.get().load((String) legalGuardianId, IPerson.class);
+			Optional<IContact> owner = CoreModelServiceHolder.get().load((String) legalGuardianId, IContact.class);
 			return owner.orElse(null);
 		}
 		return null;
 	}
 
 	@Override
-	public void setLegalGuardian(IPerson value) {
+	public void setLegalGuardian(IContact value) {
 		if (value instanceof AbstractIdDeleteModelAdapter) {
 			setExtInfo(PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN, value.getId());
 		} else if (value == null) {

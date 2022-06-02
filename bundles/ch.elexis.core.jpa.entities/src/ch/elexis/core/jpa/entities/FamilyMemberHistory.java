@@ -10,12 +10,15 @@ import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_FAMILYMEMBERHISTORY")
+@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "FamilyMemberHistory.patientid", query = "SELECT fm FROM FamilyMemberHistory fm WHERE fm.deleted = false AND fm.patientid = :patientid")
 public class FamilyMemberHistory extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
