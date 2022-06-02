@@ -370,13 +370,13 @@
             class="ch.elexis.core.ui.views.rechnung.InvoiceListView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_copy.png"
             id="ch.elexis.core.ui.views.rechnung.InvoiceListView"
-            name="Rechnungsliste (beta)">
+            name="Rechnungsliste">
       </view>
       <view
             class="ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_copy.png"
             id="ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView"
-            name="Rechnungskorrektur (beta)">
+            name="Rechnungskorrektur">
       </view>
       <view
             class="ch.elexis.core.ui.medication.views.MedicationView"
