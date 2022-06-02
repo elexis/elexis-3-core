@@ -10,12 +10,15 @@ import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST")
+@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "ProcedureRequest.patientid", query = "SELECT pr FROM ProcedureRequest pr WHERE pr.deleted = false AND pr.patientid = :patientid")
 @NamedQuery(name = "ProcedureRequest.encounterid", query = "SELECT pr FROM ProcedureRequest pr WHERE pr.deleted = false AND pr.encounterid = :encounterid")

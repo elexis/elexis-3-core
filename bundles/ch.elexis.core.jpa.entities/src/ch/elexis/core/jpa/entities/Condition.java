@@ -10,12 +10,15 @@ import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_CONDITION")
+@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Condition.patientid", query = "SELECT co FROM Condition co WHERE co.deleted = false AND co.patientid = :patientid")
 public class Condition extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {

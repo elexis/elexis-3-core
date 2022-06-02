@@ -9,11 +9,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK")
+@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 public class ObservationLink extends AbstractEntityWithId implements EntityWithId {
 
