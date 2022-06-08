@@ -11,9 +11,11 @@
 
 package ch.elexis.core.ui.contacts.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -21,7 +23,9 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -58,6 +62,7 @@ import ch.elexis.data.Labor;
 import ch.elexis.data.Organisation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
+import ch.elexis.data.Query;
 import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
 
@@ -83,6 +88,7 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 	private final ScrolledForm form;
 	private final FormToolkit tk;
 	AutoForm afDetails;
+	Listener mListener, cListener;
 
 	static final InputData[] def = new InputData[] {
 			new InputData(Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null),
@@ -200,6 +206,54 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 		bottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		actKontakt = (Kontakt) ElexisEventDispatcher.getSelected(Kontakt.class);
 		afDetails = new AutoForm(bottom, def);
+		
+		mListener = new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+				Button bMandant;
+				bMandant = bTypes[5];
+
+				if (bMandant.getSelection()) {
+					if (MessageDialog.openConfirm(getShell(), "Mandant bearbeiten",
+							"Sie nehmen Änderungen an einem Mandanten vor\nÄnderung speichern") == false) {
+						event.doit = false;
+					}
+
+					for (int i = 0; i < def.length; i++) {
+						def[i].getWidget().getControl().removeListener(SWT.KeyDown, mListener);
+					}
+				}
+			}
+		};
+
+		cListener = new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+				String tName, tVorname, tSex;
+				tName = def[0].getText();
+				tVorname = def[1].getText();
+				tSex = def[3].getText();
+
+				Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
+				qbe.add("Bezeichnung1", "=", tName); //$NON-NLS-1$ //$NON-NLS-2$
+				qbe.add("Bezeichnung2", "=", tVorname); //$NON-NLS-1$ //$NON-NLS-2$
+				qbe.add("Geschlecht", "=", tSex); //$NON-NLS-1$ //$NON-NLS-2$
+				List<Kontakt> list = qbe.execute();
+
+				if ((list != null) && (!list.isEmpty())) {
+					Kontakt k = list.get(0);
+
+					if (k.istPerson()) {
+						MessageDialog.openInformation(getShell(), "Kontakt existiert",
+								"Ein Kontakt mit diesen Daten existiert bereits in der Datenbank");
+					}
+				}
+
+			}
+		};
+
 		Composite cAnschrift = tk.createComposite(body);
 		cAnschrift.setLayout(new GridLayout(2, false));
 		cAnschrift.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -345,6 +399,22 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 		}
 		form.reflow(true);
 		setUnlocked(LocalLockServiceHolder.get().isLockedLocal(kontakt));
+
+		for (int i = 0; i < def.length; i++) {
+			def[i].getWidget().getControl().removeListener(SWT.KeyDown, mListener);
+		}
+
+		def[0].getWidget().getControl().removeListener(SWT.CHANGED, cListener);
+		def[1].getWidget().getControl().removeListener(SWT.CHANGED, cListener);
+		def[3].getWidget().getControl().removeListener(SWT.CHANGED, cListener);
+
+		for (int i = 0; i < def.length; i++) {
+			def[i].getWidget().getControl().addListener(SWT.KeyDown, mListener);
+		}
+
+		def[0].getWidget().getControl().addListener(SWT.CHANGED, cListener);
+		def[1].getWidget().getControl().addListener(SWT.CHANGED, cListener);
+		def[3].getWidget().getControl().addListener(SWT.CHANGED, cListener);
 	}
 
 	public void visible(boolean mode) {
