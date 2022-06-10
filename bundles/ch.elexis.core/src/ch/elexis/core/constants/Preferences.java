@@ -239,5 +239,7 @@ public class Preferences {
 	public static final String AG_BEREICHE = "agenda/bereiche"; //$NON-NLS-1$
 	public static final String AG_BEREICH_PREFIX = "agenda/bereich/"; //$NON-NLS-1$
 	public static final String AG_BEREICH_TYPE_POSTFIX = "/type"; //$NON-NLS-1$
+	public static final String AG_DAYPREFERENCES = "agenda/tagesvorgaben"; //$NON-NLS-1$
+	public static final String AG_DAYPREFERENCES_DAYLIMIT_DEFAULT = "0000-0800\n1800-2359"; //$NON-NLS-1$
 
 }

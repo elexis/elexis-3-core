@@ -29,6 +29,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.IContact;
@@ -157,56 +158,74 @@ public class AppointmentService implements IAppointmentService {
 		}
 		return true;
 	}
-
+	
 	@Override
-	public void updateBoundaries(String schedule, LocalDate date) {
-		IQuery<IAppointment> query = CoreModelServiceHolder.get().getQuery(IAppointment.class);
-		query.and(ModelPackage.Literals.IAPPOINTMENT__SCHEDULE, COMPARATOR.EQUALS, schedule);
-		query.and("tag", COMPARATOR.EQUALS, date);
-
-		List<IAppointment> resList = query.execute();
-
-		String typReserved = getType(AppointmentType.BOOKED);
-		String stateEmpty = getState(AppointmentState.EMPTY);
-		String stateDefault = getState(AppointmentState.DEFAULT);
-
-		for (IAppointment termin : resList) {
-			if (termin.getType().equals(typReserved)) {
-				return;
-			}
-		}
-
+	public Map<DayOfWeek, String[]> getConfiguredBlockTimesBySchedule(String schedule) {
 		@SuppressWarnings("unchecked")
 		Hashtable<String, String> map = StringTool
-				.foldStrings(iConfigService.get("agenda/tagesvorgaben" + "/" + schedule, null));
+				.foldStrings(iConfigService.get(Preferences.AG_DAYPREFERENCES + "/" + schedule, null));
 		if (map == null) {
 			map = new Hashtable<String, String>();
 		}
-
-		int d = new TimeTool(date).get(Calendar.DAY_OF_WEEK);
-		String ds = map.get(TimeTool.wdays[d - 1]);
-		if (StringTool.isNothing(ds)) {
-			// default für Tagesgrenzen falls nicht definiert
-			ds = "0000-0800\n1800-2359"; //$NON-NLS-1$
+		Map<DayOfWeek, String[]> blockTimesMap = new HashMap<DayOfWeek, String[]>(map.size());
+		int[] dayOfWeekLoc = new int[] { 7, 1, 2, 3, 4, 5, 6 }; // map our day index to DayOfWeek index
+		for (int i = 0; i <= 6; i++) {
+			DayOfWeek dayOfWeek = DayOfWeek.of(dayOfWeekLoc[i]);
+			String intraDayLimits = map.get(TimeTool.wdays[i]);
+			if (StringUtils.isEmpty(intraDayLimits)) {
+				intraDayLimits = Preferences.AG_DAYPREFERENCES_DAYLIMIT_DEFAULT;
+			}
+			String[] splitLimits = intraDayLimits.split("\r*\n\r*");
+			blockTimesMap.put(dayOfWeek, splitLimits);
 		}
-		String[] flds = ds.split("\r*\n\r*"); //$NON-NLS-1$
-		for (String fld : flds) {
-			String from = fld.substring(0, 4);
-			String until = fld.replaceAll("-", StringUtils.EMPTY).substring(4); //$NON-NLS-1$
-			// Lege Termine für die Tagesgrenzen an
-			IAppointment iAppointment = CoreModelServiceHolder.get().create(IAppointment.class);
-			LocalDateTime startTime = date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(from));
-			LocalDateTime endTime = date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(until));
-			iAppointment.setSchedule(schedule);
-			iAppointment.setStartTime(startTime);
-			iAppointment.setType(typReserved);
-			iAppointment.setState(stateEmpty);
-			iAppointment.setEndTime(endTime);
-			String ts = Integer.toString(TimeTool.getTimeInSeconds() / 60);
-			iAppointment.setCreated(ts);
-			iAppointment.setLastEdit(ts);
-			iAppointment.setStateHistory(stateDefault);
-			CoreModelServiceHolder.get().save(iAppointment);
+		return blockTimesMap;
+	}
+	
+	private void performAssertBlockTimesForSchedule(LocalDate date, String schedule) {
+		IQuery<IAppointment> query = CoreModelServiceHolder.get().getQuery(IAppointment.class);
+		query.and(ModelPackage.Literals.IAPPOINTMENT__SCHEDULE, COMPARATOR.EQUALS, schedule);
+		query.and("tag", COMPARATOR.EQUALS, date);
+		String typReserved = getType(AppointmentType.BOOKED);
+		query.and(ModelPackage.Literals.IAPPOINTMENT__TYPE, COMPARATOR.EQUALS, typReserved);
+		List<IAppointment> resList = query.execute();
+		if(resList.isEmpty()) {
+			
+			// we did not find any entries of type reserved for this day,
+			// thus we initialize them
+			String stateEmpty = getState(AppointmentState.EMPTY);
+			String stateDefault = getState(AppointmentState.DEFAULT);
+			Map<DayOfWeek, String[]> configuredBlockTimesBySchedule = getConfiguredBlockTimesBySchedule(schedule);
+			String[] flds = configuredBlockTimesBySchedule.get(date.getDayOfWeek());
+			List<IAppointment> appointmentsToSave = new ArrayList<IAppointment>();
+			for (String fld : flds) {
+				String from = fld.substring(0, 4);
+				String until = fld.replaceAll("-", StringUtils.EMPTY).substring(4); //$NON-NLS-1$
+				IAppointment iAppointment = CoreModelServiceHolder.get().create(IAppointment.class);
+				LocalDateTime startTime = date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(from));
+				LocalDateTime endTime = date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(until));
+				iAppointment.setSchedule(schedule);
+				iAppointment.setStartTime(startTime);
+				iAppointment.setType(typReserved);
+				iAppointment.setState(stateEmpty);
+				iAppointment.setEndTime(endTime);
+				String ts = Integer.toString(TimeTool.getTimeInSeconds() / 60);
+				iAppointment.setCreated(ts);
+				iAppointment.setLastEdit(ts);
+				iAppointment.setStateHistory(stateDefault);
+				appointmentsToSave.add(iAppointment);
+				
+			}
+			CoreModelServiceHolder.get().save(appointmentsToSave);
+		}
+	
+	}
+	
+	@Override
+	public void assertBlockTimes(LocalDate date, @Nullable String schedule) {
+		if (schedule != null) {
+			performAssertBlockTimesForSchedule(date, schedule);
+		} else {
+			getAreas().forEach(area -> performAssertBlockTimesForSchedule(date, area.getName()));
 		}
 	}
 

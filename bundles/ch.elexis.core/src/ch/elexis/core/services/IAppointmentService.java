@@ -1,10 +1,12 @@
 package ch.elexis.core.services;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.IContact;
@@ -36,13 +38,26 @@ public interface IAppointmentService {
 	public boolean delete(IAppointment appointment, boolean whole);
 
 	/**
-	 * Updates the boundaries and check whether the only entries are appointments if
-	 * yes also check whether some boundaries are missing
-	 *
-	 * @param schedule
-	 * @param date
+	 * Contains the configured block times for a given schedule. Every day is
+	 * populated, either by the configured setting, or the default.
+	 * 
+	 * @param schedule to lookup
+	 * @return the block times for each day. Each entry per day contains slots like
+	 *         "0000-0800"
+	 * @since 3.10
 	 */
-	public void updateBoundaries(String schedule, LocalDate date);
+	public Map<DayOfWeek, String[]> getConfiguredBlockTimesBySchedule(String schedule);
+
+	/**
+	 * Asserts that the blocked times for a given schedule and date are set.
+	 *
+	 * @param date     to assert on
+	 * @param schedule the schedule to assert for, may be <code>null</code> (which
+	 *                 will assert block times for all configured areas/schedules
+	 *                 for the given day)
+	 * @since 3.10 renamed from updateBoundaries, changed signature
+	 */
+	public void assertBlockTimes(LocalDate date, @Nullable String schedule);
 
 	/**
 	 * Get the configured type string for the specified {@link AppointmentType}.
