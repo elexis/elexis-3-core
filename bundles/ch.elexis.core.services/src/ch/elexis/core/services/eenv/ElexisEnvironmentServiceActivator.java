@@ -14,6 +14,7 @@ import ch.elexis.core.constants.ElexisEnvironmentPropertyConstants;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.services.IConfigService;
+import ch.elexis.core.services.IContextService;
 
 /**
  * Programmatically register the {@link ElexisEnvironmentService} if conditions
@@ -26,6 +27,9 @@ public class ElexisEnvironmentServiceActivator {
 
 	@Reference
 	private IConfigService configService;
+	
+	@Reference
+	private IContextService contextService;
 
 	@Activate
 	public void activate() {
@@ -45,7 +49,7 @@ public class ElexisEnvironmentServiceActivator {
 		if (StringUtils.isNotBlank(elexisEnvironmentHost)) {
 			try {
 				// activate the service
-				ElexisEnvironmentService elexisEnvironmentService = new ElexisEnvironmentService(elexisEnvironmentHost);
+				ElexisEnvironmentService elexisEnvironmentService = new ElexisEnvironmentService(elexisEnvironmentHost, contextService);
 				serviceRegistration = FrameworkUtil.getBundle(ElexisEnvironmentServiceActivator.class)
 						.getBundleContext()
 						.registerService(IElexisEnvironmentService.class, elexisEnvironmentService, null);
