@@ -27,7 +27,7 @@ public class ElexisEnvironmentServiceActivator {
 
 	@Reference
 	private IConfigService configService;
-	
+
 	@Reference
 	private IContextService contextService;
 
@@ -49,7 +49,8 @@ public class ElexisEnvironmentServiceActivator {
 		if (StringUtils.isNotBlank(elexisEnvironmentHost)) {
 			try {
 				// activate the service
-				ElexisEnvironmentService elexisEnvironmentService = new ElexisEnvironmentService(elexisEnvironmentHost, contextService);
+				ElexisEnvironmentService elexisEnvironmentService = new ElexisEnvironmentService(elexisEnvironmentHost,
+						contextService);
 				serviceRegistration = FrameworkUtil.getBundle(ElexisEnvironmentServiceActivator.class)
 						.getBundleContext()
 						.registerService(IElexisEnvironmentService.class, elexisEnvironmentService, null);

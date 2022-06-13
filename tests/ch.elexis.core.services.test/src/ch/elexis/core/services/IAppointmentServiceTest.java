@@ -46,13 +46,9 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		iConfigService.set("agenda/bereich/Arzt 1/type", "CONTACT/be5370812884c8fc5019123");
 		iConfigService.set("agenda/TerminTypen",
 				"frei,gesperrt,Notfall,Selbstzahler,Neuer Pat,Kontrolle,Termin,Checkup,OP,24h-BD / ApneaLink,Medicosearch,Sperrung,Sitzung,Reminder,Sonografie");
-		String blockedTimes = "FS1~#<ASa=A0000-0800\n"
-		+ "1200-2359~#<ADo=A0000-0800\n"
-		+ "1800-2359~#<AFr=A0000-0800\n"
-		+ "1800-2359~#<AMi=A0000-0800\n"
-		+ "1800-2359~#<ADi=A0000-0730\n"
-		+ "1900-2359~#<AMo=A0000-0800\n"
-		+ "1800-2359~#<ASo=A0000-2359";
+		String blockedTimes = "FS1~#<ASa=A0000-0800\n" + "1200-2359~#<ADo=A0000-0800\n" + "1800-2359~#<AFr=A0000-0800\n"
+				+ "1800-2359~#<AMi=A0000-0800\n" + "1800-2359~#<ADi=A0000-0730\n" + "1900-2359~#<AMo=A0000-0800\n"
+				+ "1800-2359~#<ASo=A0000-2359";
 		iConfigService.set("agenda/tagesvorgaben/Greta", blockedTimes);
 	}
 
@@ -85,11 +81,11 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		Map<DayOfWeek, String[]> configuredBlockTimes = appointmentService.getConfiguredBlockTimesBySchedule("Greta");
 		assertEquals(7, configuredBlockTimes.size());
 		String[] wednesday = configuredBlockTimes.get(DayOfWeek.WEDNESDAY);
-		assertArrayEquals(new String[] {"0000-0800", "1800-2359"}, wednesday);
+		assertArrayEquals(new String[] { "0000-0800", "1800-2359" }, wednesday);
 		String[] tuesday = configuredBlockTimes.get(DayOfWeek.TUESDAY);
-		assertArrayEquals(new String[] {"0000-0730", "1900-2359"}, tuesday);
+		assertArrayEquals(new String[] { "0000-0730", "1900-2359" }, tuesday);
 	}
-	
+
 	@Test
 	public void assertBlockTimes() {
 		// change type to OP - boundaries should be created

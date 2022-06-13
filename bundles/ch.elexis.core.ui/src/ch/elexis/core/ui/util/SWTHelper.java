@@ -200,7 +200,7 @@ public class SWTHelper {
 	/**
 	 * Ask question with custom button labels. The index of the pressed button is
 	 * returned.
-	 * 
+	 *
 	 * @param title
 	 * @param message
 	 * @param dialogButtonLabels

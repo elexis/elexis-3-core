@@ -46,7 +46,7 @@ public interface IElexisEnvironmentService {
 
 	/**
 	 * Connects to Keycloak to load the access token into the context
-	 * 
+	 *
 	 * @param username
 	 * @param password
 	 */

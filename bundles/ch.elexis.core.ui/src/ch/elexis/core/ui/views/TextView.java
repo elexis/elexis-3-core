@@ -241,7 +241,7 @@ public class TextView extends ViewPart implements IActivationListener {
 	/**
 	 * Setzt und speichert Adressangaben wie Vorname (nur bei natürliche Personen),
 	 * Nachname und Ort im Brieftitel.
-	 * 
+	 *
 	 * @param subject
 	 */
 	private void setRecipientName(String subject) {

@@ -31,7 +31,7 @@ public class LabResultTest extends AbstractTest {
 		super.before();
 		super.createPatient();
 		super.createUserSetActiveInContext();
-		
+
 		patient2 = coreModelService.create(IPatient.class);
 		patient2.setDescription1("test patient 2");
 		coreModelService.save(patient2);

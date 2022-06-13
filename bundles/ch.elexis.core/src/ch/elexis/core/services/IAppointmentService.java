@@ -40,7 +40,7 @@ public interface IAppointmentService {
 	/**
 	 * Contains the configured block times for a given schedule. Every day is
 	 * populated, either by the configured setting, or the default.
-	 * 
+	 *
 	 * @param schedule to lookup
 	 * @return the block times for each day. Each entry per day contains slots like
 	 *         "0000-0800"

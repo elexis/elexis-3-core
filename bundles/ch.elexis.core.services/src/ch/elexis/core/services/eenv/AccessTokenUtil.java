@@ -11,7 +11,7 @@ import ch.elexis.core.eenv.AccessToken;
 public class AccessTokenUtil {
 
 	/**
-	 * 
+	 *
 	 * @param token
 	 * @return
 	 * @see https://metamug.com/article/security/decode-jwt-java.html

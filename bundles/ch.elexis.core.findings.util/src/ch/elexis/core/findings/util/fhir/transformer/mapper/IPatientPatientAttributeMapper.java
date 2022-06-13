@@ -115,8 +115,8 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 				AdministrativeGender gender = contactHelper.getGender(legalGuardianPerson.getGender());
 				_legalGuardian.setGender(gender);
 			} else if (legalGuardian.isOrganization()) {
-				IOrganization legalGuardianOrganization = CoreModelServiceHolder.get().load(legalGuardian.getId(), IOrganization.class)
-						.get();
+				IOrganization legalGuardianOrganization = CoreModelServiceHolder.get()
+						.load(legalGuardian.getId(), IOrganization.class).get();
 				contactHelper.getOrganizationName(legalGuardianOrganization);
 			}
 			List<Address> addresses = contactHelper.getAddresses(legalGuardian);

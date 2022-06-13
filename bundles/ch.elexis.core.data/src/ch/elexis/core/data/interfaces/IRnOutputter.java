@@ -103,7 +103,7 @@ public interface IRnOutputter {
 
 	/**
 	 * Implementations can customize the RnOutputDialog.
-	 * 
+	 *
 	 * @param rnOutputDialog
 	 * @return
 	 */

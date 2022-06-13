@@ -68,7 +68,7 @@ public class IAppointmentAppointmentAttributeMapper
 		appointmentHelper.mapApplyAppointmentStateAndType(appointment, localObject, configService);
 
 		appointment.setDescription(appointmentHelper.getDescription(localObject));
-		
+
 		appointmentHelper.mapApplyStartEndMinutes(appointment, localObject);
 
 		Reference slotReference = new Reference(new IdType(Slot.class.getSimpleName(), localObject.getId()));
@@ -93,7 +93,7 @@ public class IAppointmentAppointmentAttributeMapper
 			hcp.setActor(new Reference(new IdDt(Practitioner.class.getSimpleName(), assignedContact.get().getId())));
 			hcp.setRequired(ParticipantRequired.REQUIRED);
 			hcp.setStatus(ParticipationStatus.ACCEPTED);
-			
+
 		}
 
 		IContact contact = localObject.getContact();
@@ -114,34 +114,33 @@ public class IAppointmentAppointmentAttributeMapper
 					LoggerFactory.getLogger(getClass()).error("Could not get patientTransformer service");
 				}
 			}
-			
+
 			AppointmentParticipantComponent patient = appointment.addParticipant();
 			patient.setActor(patientReference);
 			patient.setRequired(ParticipantRequired.REQUIRED);
 			patient.setStatus(ParticipationStatus.ACCEPTED);
-	
-			
+
 		} else {
 			// free-text-appointment
 			String subject = localObject.getSubjectOrPatient();
 			appointment.setComment(subject);
 		}
-		
+
 		if (appointment.getParticipant().isEmpty()) {
 			// participant is mandatory
 			AppointmentParticipantComponent participant = appointment.addParticipant();
 			participant.setStatus(ParticipationStatus.ACCEPTED);
 		}
-		
+
 		String stateHistoryFormatted = localObject.getStateHistoryFormatted("dd.MM.yyyy HH:mm:ss");
-		if(StringUtils.isNotEmpty(stateHistoryFormatted)) {
+		if (StringUtils.isNotEmpty(stateHistoryFormatted)) {
 			// TODO move status history to Appointment#setNote(Annotation) in next version
 			Extension historyExtension = new Extension();
 			historyExtension.setUrl("http://elexis.info/appointment/");
-		
+
 			Extension _historyExtension = new Extension("history", new StringType(stateHistoryFormatted));
 			historyExtension.addExtension(_historyExtension);
-			
+
 			appointment.getExtension().add(historyExtension);
 		}
 
@@ -162,7 +161,7 @@ public class IAppointmentAppointmentAttributeMapper
 				target.setSubjectOrPatient(idType.getIdPart());
 			}
 		}
-		if(StringUtils.isEmpty(target.getSubjectOrPatient())) {
+		if (StringUtils.isEmpty(target.getSubjectOrPatient())) {
 			target.setSubjectOrPatient(source.getComment());
 		}
 

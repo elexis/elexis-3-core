@@ -158,7 +158,7 @@ public class AppointmentService implements IAppointmentService {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public Map<DayOfWeek, String[]> getConfiguredBlockTimesBySchedule(String schedule) {
 		@SuppressWarnings("unchecked")
@@ -180,7 +180,7 @@ public class AppointmentService implements IAppointmentService {
 		}
 		return blockTimesMap;
 	}
-	
+
 	private void performAssertBlockTimesForSchedule(LocalDate date, String schedule) {
 		IQuery<IAppointment> query = CoreModelServiceHolder.get().getQuery(IAppointment.class);
 		query.and(ModelPackage.Literals.IAPPOINTMENT__SCHEDULE, COMPARATOR.EQUALS, schedule);
@@ -188,8 +188,8 @@ public class AppointmentService implements IAppointmentService {
 		String typReserved = getType(AppointmentType.BOOKED);
 		query.and(ModelPackage.Literals.IAPPOINTMENT__TYPE, COMPARATOR.EQUALS, typReserved);
 		List<IAppointment> resList = query.execute();
-		if(resList.isEmpty()) {
-			
+		if (resList.isEmpty()) {
+
 			// we did not find any entries of type reserved for this day,
 			// thus we initialize them
 			String stateEmpty = getState(AppointmentState.EMPTY);
@@ -213,13 +213,13 @@ public class AppointmentService implements IAppointmentService {
 				iAppointment.setLastEdit(ts);
 				iAppointment.setStateHistory(stateDefault);
 				appointmentsToSave.add(iAppointment);
-				
+
 			}
 			CoreModelServiceHolder.get().save(appointmentsToSave);
 		}
-	
+
 	}
-	
+
 	@Override
 	public void assertBlockTimes(LocalDate date, @Nullable String schedule) {
 		if (schedule != null) {
