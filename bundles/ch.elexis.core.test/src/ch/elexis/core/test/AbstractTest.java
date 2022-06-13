@@ -27,6 +27,7 @@ import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.IBillingSystemService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
@@ -50,6 +51,9 @@ public abstract class AbstractTest {
 		coreModelService = OsgiServiceUtil
 				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 		contextService = OsgiServiceUtil.getService(IContextService.class).get();
+
+		contextService.setActiveUser(TestDatabaseInitializer.getUser());
+		contextService.setActiveMandator(TestDatabaseInitializer.getMandant());
 	}
 
 	/**
