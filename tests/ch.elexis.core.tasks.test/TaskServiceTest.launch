@@ -74,6 +74,7 @@
         <setEntry value="org.apache.commons.collections@default:default"/>
         <setEntry value="org.apache.commons.commons-beanutils@default:default"/>
         <setEntry value="org.apache.commons.commons-collections4@default:default"/>
+        <setEntry value="org.apache.commons.commons-compress@default:default"/>
         <setEntry value="org.apache.commons.dbcp@default:default"/>
         <setEntry value="org.apache.commons.io@default:default"/>
         <setEntry value="org.apache.commons.jxpath@default:default"/>
@@ -82,9 +83,12 @@
         <setEntry value="org.apache.commons.math3@default:default"/>
         <setEntry value="org.apache.commons.pool@default:default"/>
         <setEntry value="org.apache.felix.scr@1:true"/>
+        <setEntry value="org.apache.httpcomponents.httpclient@default:default"/>
+        <setEntry value="org.apache.httpcomponents.httpcore@default:default"/>
         <setEntry value="org.apache.poi.ooxml.schemas@default:default"/>
         <setEntry value="org.apache.poi.ooxml@default:default"/>
         <setEntry value="org.apache.poi@default:default"/>
+        <setEntry value="org.apache.xmlbeans@default:default"/>
         <setEntry value="org.apache.xmlgraphics@default:default"/>
         <setEntry value="org.beanshell.bsh@default:default"/>
         <setEntry value="org.bouncycastle.bcpg@default:default"/>
@@ -190,6 +194,9 @@
         <setEntry value="org.jdom@default:default"/>
         <setEntry value="org.junit@default:default"/>
         <setEntry value="org.jvnet.mimepull@default:default"/>
+        <setEntry value="org.keycloak.keycloak-authz-client@default:default"/>
+        <setEntry value="org.keycloak.keycloak-common@default:default"/>
+        <setEntry value="org.keycloak.keycloak-core@default:default"/>
         <setEntry value="org.postgresql.jdbc@default:default"/>
         <setEntry value="org.slf4j.api@default:default"/>
         <setEntry value="org.tukaani.xz@default:default"/>
