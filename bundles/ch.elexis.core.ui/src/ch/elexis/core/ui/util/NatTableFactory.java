@@ -16,25 +16,24 @@ import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.DefaultNatTableStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.data.IRowDataProvider;
+import org.eclipse.nebula.widgets.nattable.extension.nebula.richtext.RichTextCellPainter;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
-import org.eclipse.nebula.widgets.nattable.layer.ILayer;
-import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
+import org.eclipse.nebula.widgets.nattable.painter.cell.BackgroundPainter;
 import org.eclipse.nebula.widgets.nattable.painter.layer.CellLayerPainter;
 import org.eclipse.nebula.widgets.nattable.painter.layer.ILayerPainter;
-import org.eclipse.nebula.widgets.nattable.resize.command.RowResizeCommand;
+import org.eclipse.nebula.widgets.nattable.resize.AutoResizeRowPaintListener;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.style.CellStyleAttributes;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
 import org.eclipse.nebula.widgets.nattable.style.HorizontalAlignmentEnum;
+import org.eclipse.nebula.widgets.nattable.style.SelectionStyleLabels;
 import org.eclipse.nebula.widgets.nattable.style.Style;
 import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -84,6 +83,11 @@ public class NatTableFactory {
 		if (customConfiguration != null) {
 			natTable.addConfiguration(customConfiguration);
 		}
+		AutoResizeRowPaintListener resizeRowPaintListener = new AutoResizeRowPaintListener(natTable, viewportLayer,
+				bodyDataLayer);
+		// register the AutoResizeRowPaintListener for lazy auto row resize
+		natTable.addPaintListener(resizeRowPaintListener);
+
 		natTableWrapper.setNatTable(natTable);
 		natTableWrapper.setDataProvider((IRowDataProvider<Object>) dataProvider);
 		natTableWrapper.setSelectionLayer(selectionLayer);
@@ -137,28 +141,15 @@ public class NatTableFactory {
 					Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 			selectionStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR,
 					Display.getCurrent().getSystemColor(SWT.COLOR_LIST_SELECTION));
-			selectionStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR,
-					Display.getCurrent().getSystemColor(SWT.COLOR_LIST_SELECTION));
 			selectionStyle.setAttributeValue(CellStyleAttributes.FONT, GUIHelper.DEFAULT_FONT);
+
 			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT,
-					"selectionAnchor");
+					SelectionStyleLabels.SELECTION_ANCHOR_STYLE);
 			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT);
 
-			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, new NatTableCustomCellPainter() {
-				@Override
-				public void paintCell(ILayerCell cell, GC gc, Rectangle bounds, IConfigRegistry cellConfigRegistry) {
-					int preferredHeight = getPreferredHeight(cell, gc, cellConfigRegistry);
-					if (preferredHeight != bounds.height && preferredHeight != bounds.height + 1
-							&& preferredHeight != bounds.height - 1) {
-						ILayer layer = cell.getLayer();
-						if (layer != null) {
-							cell.getLayer()
-									.doCommand(new RowResizeCommand(layer, cell.getRowPosition(), preferredHeight));
-						}
-					}
-					super.paintCell(cell, gc, bounds, cellConfigRegistry);
-				}
-			});
+			cellPainter = new RichTextCellPainter(true, false, true);
+			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER,
+					new BackgroundPainter(cellPainter));
 		}
 	}
 }

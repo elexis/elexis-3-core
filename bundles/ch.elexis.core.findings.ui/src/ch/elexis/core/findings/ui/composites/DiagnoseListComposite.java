@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -133,7 +134,7 @@ public class DiagnoseListComposite extends Composite {
 							text.append("</strong> ").append(contentText.toString());
 						}
 
-						return text.toString();
+						return text.toString().replaceAll(StringUtils.LF, "<br/>");
 					}
 
 					@Override
