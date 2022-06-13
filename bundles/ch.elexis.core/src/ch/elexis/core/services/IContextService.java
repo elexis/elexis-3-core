@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.util.Optional;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IMandator;
@@ -37,6 +38,8 @@ public interface IContextService {
 			getRootContext().setTyped(user);
 		} else {
 			getRootContext().removeTyped(IUser.class);
+			getRootContext().setNamed(IContext.ACTIVE_USERCONTACT, null);
+			getRootContext().removeTyped(AccessToken.class);
 		}
 	}
 

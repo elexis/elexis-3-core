@@ -44,6 +44,14 @@ public interface IElexisEnvironmentService {
 	 */
 	public String getProperty(String key);
 
+	/**
+	 * Connects to Keycloak to load the access token into the context
+	 * 
+	 * @param username
+	 * @param password
+	 */
+	public void loadAccessToken(String username, char[] password);
+
 	default String getBaseUrl() {
 		return "https://" + getHostname();
 	}
