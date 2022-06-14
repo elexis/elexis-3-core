@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,6 +46,10 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		iConfigService.set("agenda/bereich/Arzt 1/type", "CONTACT/be5370812884c8fc5019123");
 		iConfigService.set("agenda/TerminTypen",
 				"frei,gesperrt,Notfall,Selbstzahler,Neuer Pat,Kontrolle,Termin,Checkup,OP,24h-BD / ApneaLink,Medicosearch,Sperrung,Sitzung,Reminder,Sonografie");
+		String blockedTimes = "FS1~#<ASa=A0000-0800\n" + "1200-2359~#<ADo=A0000-0800\n" + "1800-2359~#<AFr=A0000-0800\n"
+				+ "1800-2359~#<AMi=A0000-0800\n" + "1800-2359~#<ADi=A0000-0730\n" + "1900-2359~#<AMo=A0000-0800\n"
+				+ "1800-2359~#<ASo=A0000-2359";
+		iConfigService.set("agenda/tagesvorgaben/Greta", blockedTimes);
 	}
 
 	@Before
@@ -71,11 +77,21 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 	}
 
 	@Test
-	public void testUpdateBoundaries() {
+	public void getConfiguredBlockTimesBySchedule() {
+		Map<DayOfWeek, String[]> configuredBlockTimes = appointmentService.getConfiguredBlockTimesBySchedule("Greta");
+		assertEquals(7, configuredBlockTimes.size());
+		String[] wednesday = configuredBlockTimes.get(DayOfWeek.WEDNESDAY);
+		assertArrayEquals(new String[] { "0000-0800", "1800-2359" }, wednesday);
+		String[] tuesday = configuredBlockTimes.get(DayOfWeek.TUESDAY);
+		assertArrayEquals(new String[] { "0000-0730", "1900-2359" }, tuesday);
+	}
+
+	@Test
+	public void assertBlockTimes() {
 		// change type to OP - boundaries should be created
 		savedAppointment.setType("OP");
 		coreModelService.save(savedAppointment);
-		appointmentService.updateBoundaries("Notfall", LocalDate.of(2018, 01, 02));
+		appointmentService.assertBlockTimes(LocalDate.of(2018, 01, 02), "Notfall");
 		IQuery<IAppointment> query = coreModelService.getQuery(IAppointment.class);
 		query.and("tag", COMPARATOR.EQUALS, LocalDate.of(2018, 01, 02), false);
 		List<IAppointment> results = query.execute();
@@ -97,7 +113,7 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		// check Bereich of Notfall and type is gesperrt - in that case no boundaries
 		// created
 		assertEquals(1, coreModelService.getQuery(IAppointment.class).execute().size());
-		appointmentService.updateBoundaries("Notfall", LocalDate.of(2018, 01, 02));
+		appointmentService.assertBlockTimes(LocalDate.of(2018, 01, 02), "Notfall");
 		// @todo on server its always 3
 		assertEquals(1, coreModelService.getQuery(IAppointment.class).execute().size());
 	}

@@ -149,7 +149,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	/**
 	 * COPY from StyledText to prevent IllegalArgumentException: Argument not valid
 	 * on setCaretOffset
-	 * 
+	 *
 	 * Returns whether the given offset is inside a multi byte line delimiter.
 	 * Example: "Line1\r\n" isLineDelimiter(5) == false but isLineDelimiter(6) ==
 	 * true

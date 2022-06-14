@@ -50,7 +50,7 @@ public class KonsListe extends ViewPart implements IRefreshable {
 
 	private ICoverage actCoverage;
 	private IEncounter actEncounter;
-	
+
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	@Optional

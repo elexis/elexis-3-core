@@ -114,24 +114,24 @@ public class IAppointmentHelper extends AbstractHelper {
 
 	/**
 	 * FHIR -> ELEXIS: Map and apply start, end and duration
-	 * 
+	 *
 	 * @param target
 	 * @param source
 	 */
 	public void mapApplyStartEndMinutes(IAppointment target, Appointment source) {
 		mapApplyStartEndMinutes(target, source.getStart(), source.getEnd());
 	}
-	
+
 	/**
 	 * FHIR -> ELEXIS: Map and apply start, end and duration
-	 * 
+	 *
 	 * @param target
 	 * @param source
 	 */
 	public void mapApplyStartEndMinutes(IAppointment target, Slot source) {
 		mapApplyStartEndMinutes(target, source.getStart(), source.getEnd());
 	}
-	
+
 	public void mapApplyStartEndMinutes(IAppointment target, Date start, Date end) {
 		if (start == null) {
 			// Elexis does not allow empty start

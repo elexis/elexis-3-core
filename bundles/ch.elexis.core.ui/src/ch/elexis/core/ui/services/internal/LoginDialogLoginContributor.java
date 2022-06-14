@@ -6,6 +6,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.component.annotations.Component;
 
+import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.ILoginContributor;
@@ -22,12 +23,12 @@ public class LoginDialogLoginContributor implements ILoginContributor {
 	@Override
 	public IUser performLogin(Object shell) throws LoginException {
 
-		ILoginContributor elexisEnvironmentLoginContributor = OsgiServiceUtil
-				.getService(ILoginContributor.class, "(id=login.elexisenvironment)").orElse(null);
+		IElexisEnvironmentService elexisEnvironmentService = OsgiServiceUtil
+				.getService(IElexisEnvironmentService.class, null).orElse(null);
 
 		if (shell instanceof Shell) {
 			LocalUserLoginDialog loginDialog = new LocalUserLoginDialog(new Shell((Shell) shell),
-					elexisEnvironmentLoginContributor);
+					elexisEnvironmentService);
 			loginDialog.create();
 			loginDialog.getShell().setText(Messages.LoginDialog_loginHeader);
 			loginDialog.setTitle(Messages.LoginDialog_notLoggedIn);
@@ -35,8 +36,6 @@ public class LoginDialogLoginContributor implements ILoginContributor {
 			int retval = loginDialog.open();
 			if (retval == Dialog.OK) {
 				return loginDialog.getUser();
-			} else if (elexisEnvironmentLoginContributor != null && retval == 302) {
-				return elexisEnvironmentLoginContributor.performLogin(shell);
 			}
 		}
 

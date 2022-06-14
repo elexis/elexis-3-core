@@ -85,6 +85,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.httpcore</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.osgi.services</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -166,6 +171,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>ch.qos.logback.slf4j</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.keycloak.keycloak-core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -295,6 +305,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.keycloak.keycloak-authz-client</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.equinox.common</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -360,6 +375,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.httpclient</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.apache.poi.ooxml.schemas</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -391,6 +411,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.hamcrest.core</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.keycloak.keycloak-common</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>

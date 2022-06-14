@@ -416,8 +416,7 @@ public class GlobalActions {
 				GenericSearchSelectionDialog cmd = new GenericSearchSelectionDialog(
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), lMandant,
 						Messages.GlobalActions_ChangeMandator, Messages.GlobalActions_ChangeMandator,
-						Messages.GlobalActions_ChangeMandatorMessage, null,
-						SWT.SINGLE);
+						Messages.GlobalActions_ChangeMandatorMessage, null, SWT.SINGLE);
 
 				if (cmd.open() == Dialog.OK) {
 					Mandant n = (Mandant) cmd.getSelection().getFirstElement();

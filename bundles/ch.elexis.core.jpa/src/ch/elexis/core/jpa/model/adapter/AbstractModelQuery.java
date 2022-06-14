@@ -347,7 +347,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		String sqlString = databaseQuery.getSQLString();
 		return sqlString;
 	}
-	
+
 	private class SubQuery<S> implements ISubQuery<S> {
 
 		private Subquery<? extends EntityWithId> subQuery;
