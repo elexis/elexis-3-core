@@ -2405,4 +2405,44 @@ WHERE kontakt.id IN (
             <column defaultValueNumeric="0" name="LASTUPDATE" type="BIGINT"/>
         </createTable>
     </changeSet>
+	<changeSet author="niklaus" id="manual_table_CSTGROUPS">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="CSTGROUPS" />
+			</not>
+		</preConditions>
+		<createTable tableName="CSTGROUPS">
+			<column name="ID" type="VARCHAR(8)">
+				<constraints primaryKey="true" primaryKeyName="CONSTRAINT_ID_CSTGROUPS"/>
+			</column>
+			<column name="LASTUPDATE" type="BIGINT"/>
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+			<column name="KontaktID" type="VARCHAR(25)"/>
+			<column name="MandantID" type="VARCHAR(25)"/>
+			<column name="Name" type="VARCHAR(30)"/>
+			<column name="Description" type="VARCHAR(30)"/>
+			<column name="itemsRanking" type="${blob_type}"/>
+			<column name="Icon" type="VARCHAR(25)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="niklaus" id="manual_table_CSTGROUP_LABITEM_JOINT">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="CSTGROUP_LABITEM_JOINT" />
+			</not>
+		</preConditions>
+		<createTable tableName="CSTGROUP_LABITEM_JOINT">
+			<column name="ID" type="VARCHAR(8)">
+				<constraints primaryKey="true" primaryKeyName="CONSTRAINT_ID_CSTGROUP_LABITEM_JOINT"/>
+			</column>
+			<column name="LASTUPDATE" type="BIGINT"/>
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+			<column name="GroupID" type="VARCHAR(25)"/>
+			<column name="ItemID" type="VARCHAR(25)"/>
+			<column name="DisplayOnce" type="CHAR(1)"/>
+			<column name="Comment" type="LONGTEXT"/>
+		</createTable>
+	</changeSet>
 </databaseChangeLog>
