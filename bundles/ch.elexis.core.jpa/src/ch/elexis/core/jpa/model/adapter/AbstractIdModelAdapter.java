@@ -39,7 +39,7 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 		// make sure model supports id and delete
 		if (!(entity instanceof EntityWithId)) {
 			throw new IllegalStateException(
-					"Model " + entity + " is no subclass of " + EntityWithId.class.getSimpleName());
+					"Model " + entity + " is no subclass of " + EntityWithId.class.getSimpleName()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (this instanceof WithExtInfo && entity instanceof EntityWithExtInfo) {
 			extInfoHandler = new ExtInfoHandler((AbstractIdModelAdapter<? extends EntityWithExtInfo>) this);
@@ -162,8 +162,8 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 
 	@Override
 	public String toString() {
-		return getClass().getName() + " [getEntity()=" + getEntity() + ", getId()=" + getId() + ", getLastupdate()="
-				+ getLastupdate() + "]";
+		return getClass().getName() + " [getEntity()=" + getEntity() + ", getId()=" + getId() + ", getLastupdate()=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ getLastupdate() + "]"; //$NON-NLS-1$
 	}
 
 	@Override

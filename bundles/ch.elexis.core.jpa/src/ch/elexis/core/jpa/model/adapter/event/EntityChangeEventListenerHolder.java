@@ -15,7 +15,7 @@ public class EntityChangeEventListenerHolder {
 
 	public static EntityChangeEventListener get() {
 		if (entityChangeListener == null) {
-			throw new IllegalStateException("No EntityChangeEventListener available");
+			throw new IllegalStateException("No EntityChangeEventListener available"); //$NON-NLS-1$
 		}
 		return entityChangeListener;
 	}

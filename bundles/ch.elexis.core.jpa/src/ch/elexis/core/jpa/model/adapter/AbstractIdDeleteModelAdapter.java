@@ -11,7 +11,7 @@ public abstract class AbstractIdDeleteModelAdapter<T extends EntityWithId> exten
 	public AbstractIdDeleteModelAdapter(T entity) {
 		super(entity);
 		if (!(entity instanceof EntityWithDeleted)) {
-			throw new IllegalStateException("Entity " + entity + " does not implement EntityWithDeleted");
+			throw new IllegalStateException("Entity " + entity + " does not implement EntityWithDeleted"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

@@ -94,7 +94,7 @@ public abstract class AbstractModelService implements IModelService {
 	public <T> List<T> findAllById(Collection<String> ids, Class<T> clazz) {
 		IQuery<T> query = getQuery(clazz);
 		if (ids != null && !ids.isEmpty()) {
-			query.and("id", COMPARATOR.IN, ids);
+			query.and("id", COMPARATOR.IN, ids); //$NON-NLS-1$
 			return query.execute();
 		}
 		return Collections.emptyList();
@@ -138,7 +138,7 @@ public abstract class AbstractModelService implements IModelService {
 				return BeanUtils.getProperty(dbObject, propertyName);
 			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 				LoggerFactory.getLogger(getClass())
-						.error("Could not get property [" + propertyName + "] of entity [" + dbObject + "]", e);
+						.error("Could not get property [" + propertyName + "] of entity [" + dbObject + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 		return null;
@@ -152,7 +152,7 @@ public abstract class AbstractModelService implements IModelService {
 				BeanUtils.setProperty(dbObject, propertyName, value);
 			} catch (IllegalAccessException | InvocationTargetException e) {
 				LoggerFactory.getLogger(getClass())
-						.error("Could not set property [" + propertyName + "] of entity [" + dbObject + "]", e);
+						.error("Could not set property [" + propertyName + "] of entity [" + dbObject + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 	}
@@ -204,7 +204,7 @@ public abstract class AbstractModelService implements IModelService {
 				closeEntityManager(em);
 			}
 		}
-		String message = "Could not save [" + identifiable + "]";
+		String message = "Could not save [" + identifiable + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		LoggerFactory.getLogger(getClass()).error(message);
 		throw new IllegalStateException(message);
 	}
@@ -270,7 +270,7 @@ public abstract class AbstractModelService implements IModelService {
 				closeEntityManager(em);
 			}
 		}
-		String message = "Could not save list [" + identifiables + "]";
+		String message = "Could not save list [" + identifiables + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		LoggerFactory.getLogger(getClass()).error(message);
 		throw new IllegalStateException(message);
 	}
@@ -307,7 +307,7 @@ public abstract class AbstractModelService implements IModelService {
 				closeEntityManager(em);
 			}
 		}
-		String message = "Could not remove [" + identifiable + "]";
+		String message = "Could not remove [" + identifiable + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		LoggerFactory.getLogger(getClass()).error(message);
 		throw new IllegalStateException(message);
 	}
@@ -379,7 +379,7 @@ public abstract class AbstractModelService implements IModelService {
 			Event event = new Event(ElexisEventTopics.PERSISTENCE_EVENT_ENTITYCHANGED, properites);
 			getEventAdmin().sendEvent(event);
 		} else {
-			throw new IllegalStateException("No EventAdmin available");
+			throw new IllegalStateException("No EventAdmin available"); //$NON-NLS-1$
 		}
 	}
 
@@ -415,11 +415,11 @@ public abstract class AbstractModelService implements IModelService {
 	 */
 	private void createDBLog(Identifiable identifiable) {
 		DBLog dbLog = new DBLog();
-		dbLog.setUserId(ContextServiceHolder.getActiveUserContact().map(IContact::getId).orElse("?"));
+		dbLog.setUserId(ContextServiceHolder.getActiveUserContact().map(IContact::getId).orElse("?")); //$NON-NLS-1$
 		dbLog.setOid(StoreToStringServiceHolder.getStoreToString(identifiable).orElse(identifiable.getId()));
 		dbLog.setTyp(DBLog.Type.DELETE);
 		dbLog.setDatum(LocalDate.now());
-		dbLog.setStation(Optional.ofNullable(NetTool.hostname).orElse("?"));
+		dbLog.setStation(Optional.ofNullable(NetTool.hostname).orElse("?")); //$NON-NLS-1$
 
 		EntityManager em = getEntityManager(true);
 		if (!em.getTransaction().isActive()) {
@@ -440,7 +440,7 @@ public abstract class AbstractModelService implements IModelService {
 			Event event = new Event(topic, properties);
 			getEventAdmin().postEvent(event);
 		} else {
-			throw new IllegalStateException("No EventAdmin available");
+			throw new IllegalStateException("No EventAdmin available"); //$NON-NLS-1$
 		}
 	}
 
@@ -457,7 +457,7 @@ public abstract class AbstractModelService implements IModelService {
 		if (getEventAdmin() != null) {
 			getEventAdmin().sendEvent(event);
 		} else {
-			throw new IllegalStateException("No EventAdmin available");
+			throw new IllegalStateException("No EventAdmin available"); //$NON-NLS-1$
 		}
 	}
 
@@ -499,7 +499,7 @@ public abstract class AbstractModelService implements IModelService {
 
 	protected String getNamedQueryName(Class<?> clazz, String... properties) {
 		Class<? extends EntityWithId> entityClazz = adapterFactory.getEntityClass(clazz);
-		StringJoiner queryName = new StringJoiner(".");
+		StringJoiner queryName = new StringJoiner("."); //$NON-NLS-1$
 		queryName.add(entityClazz.getSimpleName());
 		for (String string : properties) {
 			queryName.add(string);
@@ -529,7 +529,7 @@ public abstract class AbstractModelService implements IModelService {
 
 	@Override
 	public <T> long getHighestLastUpdate(Class<T> clazz) {
-		INativeQuery nativeQuery = getNativeQuery("SELECT COALESCE(MAX(LASTUPDATE),0) FROM "
+		INativeQuery nativeQuery = getNativeQuery("SELECT COALESCE(MAX(LASTUPDATE),0) FROM " //$NON-NLS-1$
 				+ getTableName(getEntityManager(true), getEntityClass(clazz)));
 		Optional<?> result = nativeQuery.executeWithParameters(Collections.emptyMap()).findFirst();
 		if (result.isPresent()) {

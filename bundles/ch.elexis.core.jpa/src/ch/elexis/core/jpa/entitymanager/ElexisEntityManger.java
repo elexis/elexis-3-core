@@ -23,6 +23,7 @@ import org.osgi.service.jpa.EntityManagerFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.jpa.Messages;
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBInitializer;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBScriptExecutor;
@@ -72,12 +73,12 @@ public class ElexisEntityManger implements IElexisEntityManager {
 
 	@Reference(service = DataSource.class, unbind = "unbindDataSource", target = "(id=default)")
 	protected synchronized void bindDataSource(DataSource dataSource) {
-		logger.debug("Binding " + dataSource.getClass().getName());
+		logger.debug("Binding " + dataSource.getClass().getName()); //$NON-NLS-1$
 		this.dataSource = dataSource;
 	}
 
 	protected synchronized void unbindDataSource(DataSource dataSource) {
-		logger.debug("Unbinding " + dataSource.getClass().getName());
+		logger.debug("Unbinding " + dataSource.getClass().getName()); //$NON-NLS-1$
 		if (this.factory != null) {
 			this.factory.close();
 			this.factory = null;
@@ -87,7 +88,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 
 	@Reference(service = EntityManagerFactoryBuilder.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC, target = "(osgi.unit.name=elexis)")
 	protected synchronized void bind(EntityManagerFactoryBuilder factoryBuilder) {
-		logger.debug("Binding " + factoryBuilder.getClass().getName());
+		logger.debug("Binding " + factoryBuilder.getClass().getName()); //$NON-NLS-1$
 		this.factoryBuilder = factoryBuilder;
 	}
 
@@ -99,14 +100,14 @@ public class ElexisEntityManger implements IElexisEntityManager {
 			if (factoryBuilder != null) {
 				if (updateProgress != null) {
 					try {
-						updateProgress.executeWithProgress("Database Init", () -> {
+						updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Init, () -> {
 							dbInit(updateProgress);
 						});
-						updateProgress.executeWithProgress("Database Update", () -> {
+						updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Update, () -> {
 							dbUpdate(updateProgress);
 						});
 					} catch (Exception e) {
-						logger.warn("Exeption executing database update with ui", e);
+						logger.warn("Exeption executing database update with ui", e); //$NON-NLS-1$
 					}
 				} else {
 					dbInit(null);
@@ -115,14 +116,14 @@ public class ElexisEntityManger implements IElexisEntityManager {
 				// initialize the entity manager factory
 				HashMap<String, Object> props = new HashMap<String, Object>();
 				props.put(PersistenceUnitProperties.DDL_GENERATION, PersistenceUnitProperties.NONE);
-				props.put("gemini.jpa.providerConnectedDataSource", dataSource);
-				props.put("javax.persistence.nonJtaDataSource", dataSource);
+				props.put("gemini.jpa.providerConnectedDataSource", dataSource); //$NON-NLS-1$
+				props.put("javax.persistence.nonJtaDataSource", dataSource); //$NON-NLS-1$
 				// we keep EntityManager instances possibly for the whole application lifecycle
 				// so enable GC to clear entities from EntityManager cache
-				props.put(EntityManagerProperties.PERSISTENCE_CONTEXT_REFERENCE_MODE, "WEAK");
+				props.put(EntityManagerProperties.PERSISTENCE_CONTEXT_REFERENCE_MODE, "WEAK"); //$NON-NLS-1$
 				this.factory = factoryBuilder.createEntityManagerFactory(props);
 			} else {
-				throw new IllegalStateException("No EntityManagerFactoryBuilder available");
+				throw new IllegalStateException("No EntityManagerFactoryBuilder available"); //$NON-NLS-1$
 			}
 		}
 
@@ -141,7 +142,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 				return factory.createEntityManager();
 			}
 		} else {
-			throw new IllegalStateException("No EntityManagerFactory available");
+			throw new IllegalStateException("No EntityManagerFactory available"); //$NON-NLS-1$
 		}
 	}
 
@@ -161,7 +162,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 	}
 
 	private EntityManager createManagedEntityManager() {
-		logger.debug("Creating new EntityManager for Thread [" + Thread.currentThread() + "]");
+		logger.debug("Creating new EntityManager for Thread [" + Thread.currentThread() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 		EntityManager em = factory.createEntityManager();
 		threadLocal.set(em);
 		threadManagerMap.put(Thread.currentThread(), em);
@@ -188,7 +189,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 			if (threadManagerMap != null && !threadManagerMap.isEmpty()) {
 				for (Thread thread : threadManagerMap.keySet().toArray(new Thread[0])) {
 					if (!thread.isAlive()) {
-						logger.debug("Closing EntityManager of non active thread [" + thread.getName() + "]");
+						logger.debug("Closing EntityManager of non active thread [" + thread.getName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 						EntityManager em = threadManagerMap.get(thread);
 						if (em != null) {
 							em.close();
@@ -202,11 +203,11 @@ public class ElexisEntityManger implements IElexisEntityManager {
 
 	@Override
 	public boolean executeSQLScript(String changeId, String sqlScript) {
-		if (CoreUtil.isTestMode() || Boolean.valueOf(System.getProperty("forceExecuteSqlScript"))) {
+		if (CoreUtil.isTestMode() || Boolean.valueOf(System.getProperty("forceExecuteSqlScript"))) { //$NON-NLS-1$
 			LiquibaseDBScriptExecutor executor = new LiquibaseDBScriptExecutor(dataSource);
 			return executor.execute(changeId, sqlScript);
 		}
-		logger.warn("Did not execute script [" + changeId + "] as system not started in mode " + CoreUtil.TEST_MODE);
+		logger.warn("Did not execute script [" + changeId + "] as system not started in mode " + CoreUtil.TEST_MODE); //$NON-NLS-1$ //$NON-NLS-2$
 		return false;
 	}
 }

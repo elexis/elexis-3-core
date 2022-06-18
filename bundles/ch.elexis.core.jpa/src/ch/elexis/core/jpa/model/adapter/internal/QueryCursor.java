@@ -32,7 +32,7 @@ public class QueryCursor<T> implements IQueryCursor<T> {
 		try {
 			cursor.close();
 		} catch (DatabaseException e) {
-			LoggerFactory.getLogger(getClass()).error("Error closing cursor", e);
+			LoggerFactory.getLogger(getClass()).error("Error closing cursor", e); //$NON-NLS-1$
 		}
 	}
 

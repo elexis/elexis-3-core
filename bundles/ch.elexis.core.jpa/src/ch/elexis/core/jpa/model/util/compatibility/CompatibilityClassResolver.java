@@ -13,17 +13,17 @@ import ch.elexis.core.model.Statistics;
 public class CompatibilityClassResolver {
 
 	public Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
-		if (desc.getName().equals("ch.elexis.data.Kontakt$statL")) {
+		if (desc.getName().equals("ch.elexis.data.Kontakt$statL")) { //$NON-NLS-1$
 			return CompatibilityClassResolver.class.getClassLoader()
-					.loadClass("ch.elexis.core.jpa.model.util.compatibility.Kontakt$statL");
+					.loadClass("ch.elexis.core.jpa.model.util.compatibility.Kontakt$statL"); //$NON-NLS-1$
 		}
-		if (desc.getName().equals("ch.elexis.util.MFUList")) {
+		if (desc.getName().equals("ch.elexis.util.MFUList")) { //$NON-NLS-1$
 			return CompatibilityClassResolver.class.getClassLoader()
-					.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList");
+					.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList"); //$NON-NLS-1$
 		}
-		if (desc.getName().equals("ch.elexis.util.MFUList$Entry")) {
+		if (desc.getName().equals("ch.elexis.util.MFUList$Entry")) { //$NON-NLS-1$
 			return CompatibilityClassResolver.class.getClassLoader()
-					.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList$Entry");
+					.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList$Entry"); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -55,7 +55,7 @@ public class CompatibilityClassResolver {
 	}
 
 	private static Optional<Object> getReplacementObject(Object object) {
-		if (object.getClass().getName().startsWith("ch.elexis.core.jpa.model.util.compatibility")) {
+		if (object.getClass().getName().startsWith("ch.elexis.core.jpa.model.util.compatibility")) { //$NON-NLS-1$
 			if (object instanceof Kontakt.statL) {
 				return Optional.of(getStatistics((Kontakt.statL) object));
 			}

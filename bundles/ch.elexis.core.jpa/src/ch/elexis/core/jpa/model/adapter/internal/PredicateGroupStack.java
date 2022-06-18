@@ -64,7 +64,7 @@ public class PredicateGroupStack {
 			return predicateGroups.push(
 					new PredicateGroup(criteriaBuilder, criteriaBuilder.and(join.getPredicate(), top.getPredicate())));
 		} else {
-			throw new IllegalStateException("At least 2 groups required for and operation");
+			throw new IllegalStateException("At least 2 groups required for and operation"); //$NON-NLS-1$
 		}
 	}
 
@@ -95,7 +95,7 @@ public class PredicateGroupStack {
 			return predicateGroups.push(
 					new PredicateGroup(criteriaBuilder, criteriaBuilder.or(join.getPredicate(), top.getPredicate())));
 		} else {
-			throw new IllegalStateException("At least 2 groups required for or operation");
+			throw new IllegalStateException("At least 2 groups required for or operation"); //$NON-NLS-1$
 		}
 	}
 

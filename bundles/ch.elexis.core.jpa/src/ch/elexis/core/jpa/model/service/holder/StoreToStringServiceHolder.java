@@ -20,7 +20,7 @@ public class StoreToStringServiceHolder {
 
 	public static IStoreToStringService get() {
 		if (storeToStringService == null) {
-			throw new IllegalStateException("No IStoreToStringService available");
+			throw new IllegalStateException("No IStoreToStringService available"); //$NON-NLS-1$
 		}
 		return storeToStringService;
 	}

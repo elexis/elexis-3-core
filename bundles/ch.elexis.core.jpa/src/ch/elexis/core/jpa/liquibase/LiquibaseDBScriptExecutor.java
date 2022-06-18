@@ -35,7 +35,7 @@ public class LiquibaseDBScriptExecutor {
 
 	public boolean execute(String changeId, String sqlScript) {
 		CustomResourceAccessor resourceAccessor = new CustomResourceAccessor();
-		changeId = changeId + ".xml";
+		changeId = changeId + ".xml"; //$NON-NLS-1$
 		resourceAccessor.setContent(changeId, sqlScript);
 		Connection connection = null;
 		try {
@@ -48,8 +48,8 @@ public class LiquibaseDBScriptExecutor {
 			return true;
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on
-			logger.warn("Exception on DB execute script [" + changeId + "]", e);
-			System.out.println("Exception on DB execute script [" + changeId + "]");
+			logger.warn("Exception on DB execute script [" + changeId + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("Exception on DB execute script [" + changeId + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -71,19 +71,19 @@ public class LiquibaseDBScriptExecutor {
 		public void setContent(String changeId, String script) {
 			this.changeId = changeId;
 			// append header
-			stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
-					+ "<databaseChangeLog xmlns=\"http://www.liquibase.org/xml/ns/dbchangelog\" xmlns:ext=\"http://www.liquibase.org/xml/ns/dbchangelog-ext\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd\">\n");
+			stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" //$NON-NLS-1$
+					+ "<databaseChangeLog xmlns=\"http://www.liquibase.org/xml/ns/dbchangelog\" xmlns:ext=\"http://www.liquibase.org/xml/ns/dbchangelog-ext\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd\">\n"); //$NON-NLS-1$
 
 			// append the changeSet including the sql script
-			stringBuilder.append("<changeSet author=\"" + getClass().getSimpleName() + "\" id=\""
-					+ changeId.substring(0, changeId.lastIndexOf('.')) + "\">\n");
-			stringBuilder.append("<sql dbms=\"h2\" splitStatements=\"true\" stripComments=\"true\">\n");
+			stringBuilder.append("<changeSet author=\"" + getClass().getSimpleName() + "\" id=\"" //$NON-NLS-1$ //$NON-NLS-2$
+					+ changeId.substring(0, changeId.lastIndexOf('.')) + "\">\n"); //$NON-NLS-1$
+			stringBuilder.append("<sql dbms=\"h2\" splitStatements=\"true\" stripComments=\"true\">\n"); //$NON-NLS-1$
 			stringBuilder.append(script);
-			stringBuilder.append("\n</sql>");
+			stringBuilder.append("\n</sql>"); //$NON-NLS-1$
 
-			stringBuilder.append("\n</changeSet>");
+			stringBuilder.append("\n</changeSet>"); //$NON-NLS-1$
 			// close header
-			stringBuilder.append("\n</databaseChangeLog>");
+			stringBuilder.append("\n</databaseChangeLog>"); //$NON-NLS-1$
 		}
 
 		@Override
