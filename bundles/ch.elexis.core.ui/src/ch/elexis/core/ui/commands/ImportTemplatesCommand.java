@@ -1,10 +1,10 @@
 package ch.elexis.core.ui.commands;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -101,7 +101,6 @@ public class ImportTemplatesCommand extends AbstractHandler {
 						} else {
 							Brief template = new Brief(name, null, CoreHub.getLoggedInContact(), null, null,
 									Brief.TEMPLATE);
-							template.save(contentToStore, mimeType);
 							// add general form tempalte
 							if (sysTemplate == null) {
 								template.setAdressat(mandant.getId());
@@ -110,9 +109,11 @@ public class ImportTemplatesCommand extends AbstractHandler {
 								ttView.update(tt);
 							} else {
 								// add system template
+								template.set(Brief.FLD_KONSULTATION_ID, Brief.SYS_TEMPLATE);
 								sysTemplate.addSystemTemplateReference(template);
 								ttView.update(sysTemplate);
 							}
+							template.save(contentToStore, mimeType);
 						}
 					}
 				}

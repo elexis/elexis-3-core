@@ -50,4 +50,8 @@ public class Messages {
 
 	public static String StartEditLocalDocumentHandler_warning = ch.elexis.core.l10n.Messages.StartEditLocalDocumentHandler_warning;
 
+	public static String GenericReallyDeleteCaption = ch.elexis.core.l10n.Messages.DocumentView_reallyDeleteCaption;
+
+	public static String GenericReallyDeleteContents = ch.elexis.core.l10n.Messages.DocumentView_reallyDeleteContents;
+
 }
