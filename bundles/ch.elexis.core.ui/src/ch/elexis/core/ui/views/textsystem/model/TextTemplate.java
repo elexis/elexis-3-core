@@ -1,12 +1,18 @@
 package ch.elexis.core.ui.views.textsystem.model;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.ISticker;
 import ch.elexis.core.model.BriefConstants;
+import ch.elexis.core.model.IDocumentTemplate;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.text.MimeTypeUtil;
 import ch.elexis.core.ui.views.textsystem.TextTemplatePrintSettings;
@@ -255,6 +261,40 @@ public class TextTemplate {
 			default:
 				break;
 			}
+		}
+	}
+
+	private byte[] documentContent = null;
+
+	/**
+	 * Load the content of the template into memory to rewrite it later. This is
+	 * needed to change the directory of the template if it is located on file
+	 * system.
+	 */
+	public void prepareRewrite() {
+		IDocumentTemplate documentTemplate = CoreModelServiceHolder.get().load(templateId, IDocumentTemplate.class)
+				.orElse(null);
+
+		if (documentTemplate != null) {
+			try {
+				documentContent = IOUtils.toByteArray(documentTemplate.getContent());
+			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass()).error("Error caching template content");
+			}
+		}
+	}
+
+	/**
+	 * Rewrite the content of the template from that has been loaded to memory
+	 * before.
+	 */
+	public void rewrite() {
+		IDocumentTemplate documentTemplate = CoreModelServiceHolder.get().load(templateId, IDocumentTemplate.class)
+				.orElse(null);
+		if (documentTemplate != null && documentContent != null) {
+			documentTemplate.setContent(null);
+			documentTemplate.setContent(new ByteArrayInputStream(documentContent));
+			documentContent = null;
 		}
 	}
 

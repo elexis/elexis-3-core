@@ -3,6 +3,7 @@ package ch.elexis.core.ui.views.textsystem;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -470,12 +471,16 @@ public class TextTemplateView extends ViewPart {
 
 			// all
 			if (index == -1) {
+				template.prepareRewrite();
 				template.setMandant("");
+				template.rewrite();
 			} else {
 				// specific mandant only
+				template.prepareRewrite();
 				Mandant mandant = mandants.get(index);
 				template.setMandant(mandant.getId());
 				template.setSystemTemplate(false);
+				template.rewrite();
 			}
 			tableViewer.update(element, null);
 		}
