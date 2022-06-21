@@ -681,6 +681,10 @@ public class Kontakt extends PersistentObject {
 		set(FLD_REMARK, b);
 	}
 
+	public boolean istMandant() {
+		return checkNull(get(FLD_IS_MANDATOR)).equals(StringConstants.ONE);
+	}
+
 	public boolean istPerson() {
 		return checkNull(get(FLD_IS_PERSON)).equals(StringConstants.ONE);
 	}
