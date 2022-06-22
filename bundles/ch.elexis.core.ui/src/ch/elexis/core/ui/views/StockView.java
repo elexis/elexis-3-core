@@ -11,17 +11,18 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -351,7 +352,6 @@ public class StockView extends ViewPart implements IRefreshable {
 		Menu menu = contextMenu.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
 
-		viewer.setInput(getViewSite());
 		comparator = new StockViewComparator();
 		viewer.setComparator(comparator);
 
@@ -773,15 +773,24 @@ public class StockView extends ViewPart implements IRefreshable {
 
 			switch (propertyIndex) {
 			case STOCK:
-				return s1.getStock().getCode().compareTo(s2.getStock().getCode()) * direction;
+				return s1.getStock().getId().compareTo(s2.getStock().getId()) * direction;
 			case PHARMACODE:
-				return s1.getId().compareTo(s2.getId()) * direction;
+				String pharmco1 = s1.getArticle().getCode();
+				String pharmco2 = s2.getArticle().getCode();
+				return Objects.compare(pharmco1, pharmco2, Comparator.nullsFirst(Comparator.naturalOrder()))
+						* direction;
 			case GTIN:
-				return s1.getStock().getId().compareTo(s2.getId()) * direction;
+				String gtin1 = s1.getArticle().getGtin();
+				String gtin2 = s2.getArticle().getGtin();
+				return Objects.compare(gtin1, gtin2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
 			case NAME:
-				return s1.getArticle().getName().compareTo(s2.getArticle().getName()) * direction;
+				String name1 = s1.getArticle().getName();
+				String name2 = s2.getArticle().getName();
+				return Objects.compare(name1, name2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
 			case VP:
-				return s1.getArticle().getSellingPrice().compareTo(s2.getArticle().getSellingPrice()) * direction;
+				Money sp1 = s1.getArticle().getSellingPrice();
+				Money sp2 = s2.getArticle().getSellingPrice();
+				return Objects.compare(sp1, sp2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
 			case MIN:
 				return Integer.compare(s1.getMinimumStock(), s2.getMinimumStock()) * direction;
 			case IST:
