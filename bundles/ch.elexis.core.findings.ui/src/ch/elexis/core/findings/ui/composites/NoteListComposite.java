@@ -2,6 +2,7 @@ package ch.elexis.core.findings.ui.composites;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -20,6 +21,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.FilterNonPrintableModifyListener;
 import ch.elexis.core.ui.util.NatTableFactory;
 import ch.elexis.core.ui.util.NatTableWrapper;
 
@@ -104,8 +106,9 @@ public class NoteListComposite extends Composite {
 			InputDialog input = new InputDialog(getShell(), "Notiz", "Notiz erfassen", "", null);
 			if (input.open() == InputDialog.OK) {
 				if (input.getValue() != null && !input.getValue().isEmpty()) {
-					adapter.addNote(input.getValue());
-					dataList.add(input.getValue());
+					String filteredInput = FilterNonPrintableModifyListener.filterNonPrintable(input.getValue());
+					adapter.addNote(filteredInput);
+					dataList.add(filteredInput);
 					natTableWrapper.getNatTable().refresh();
 				}
 			}

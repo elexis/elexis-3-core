@@ -30,6 +30,7 @@ import ch.elexis.core.findings.ui.composites.CodingListComposite.CodingAdapter;
 import ch.elexis.core.findings.ui.composites.NoteListComposite.NotesAdapter;
 import ch.elexis.core.findings.ui.model.ConditionBeanAdapter;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.ui.util.FilterNonPrintableModifyListener;
 
 public class ConditionComposite extends Composite {
 
@@ -85,6 +86,7 @@ public class ConditionComposite extends Composite {
 		textItem.setText("Text");
 		textTxt = new Text(textOrCodingFolder, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		textItem.setControl(textTxt);
+		FilterNonPrintableModifyListener.addTo(textTxt);
 
 		TabItem codingItem = new TabItem(textOrCodingFolder, SWT.NONE, 1);
 		codingItem.setText("Kodierung");
