@@ -1,9 +1,11 @@
 package ch.elexis.core.ui.commands;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -38,12 +40,14 @@ import ch.elexis.data.Brief;
 
 public class StartEditLocalDocumentHandler extends AbstractHandler implements IHandler {
 
+	public static final String CONVERT_DOCX_2_PDF = "ch.elexis.test.convertDocx2PDF"; //$NON-NLS-1$
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEclipseContext iEclipseContext = PlatformUI.getWorkbench().getService(IEclipseContext.class);
 		StructuredSelection selection = (StructuredSelection) iEclipseContext
-				.get(event.getCommand().getId().concat(".selection"));
-		iEclipseContext.remove(event.getCommand().getId().concat(".selection"));
+				.get(event.getCommand().getId().concat(".selection")); //$NON-NLS-1$
+		iEclipseContext.remove(event.getCommand().getId().concat(".selection")); //$NON-NLS-1$
 		if (selection != null && !selection.isEmpty()) {
 			List<?> selected = selection.toList();
 			Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -119,6 +123,49 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 	}
 
 	/**
+	 * Convert docx file to pdf and txt for test purposes
+	 *
+	 * @param file
+	 */
+	private void convertDocx2Pdf(Optional<File> file) {
+		for (String format : List.of("pdf", "txt")) {
+			String filePath = file.get().getAbsolutePath();
+			String storage = DocumentLetterUtil.getOperatingSystemSpecificExternalStoragePath();
+			String fullCmd = String.format("libreoffice --headless --convert-to %s --outdir %s %s", format, storage,
+					filePath);
+			LoggerFactory.getLogger(getClass()).info("Convert external file using"); //$NON-NLS-1$
+			LoggerFactory.getLogger(getClass()).info(fullCmd);
+			try {
+				// Running the above command
+				Runtime run = Runtime.getRuntime();
+				Process runner = run.exec(fullCmd);
+				while (runner.isAlive()) {
+					Thread.sleep(200);
+				}
+				LoggerFactory.getLogger(getClass()).info(" created: " + storage + File.separator //$NON-NLS-1$
+						+ file.get().getName().replace("docx", format));
+			} catch (IOException | InterruptedException e) {
+				LoggerFactory.getLogger(getClass()).error("Unable to produce pdf. Error was {}", //$NON-NLS-1$
+						e.getMessage());
+			}
+		}
+	}
+
+	/**
+	 * If the extension is a docx, then we check the property
+	 * ch.elexis.convertDocx2PDF to see whether we need additional treatment when
+	 * running GUI-tests.
+	 *
+	 * @param extension
+	 * @return whether we should convert the docx to pdf and txt using libreoffice
+	 */
+	private boolean isConvertDocx2Pdf(String extension) {
+		String convert2pdf = System.getProperty(CONVERT_DOCX_2_PDF, StringUtils.EMPTY);
+		return (extension.equalsIgnoreCase("docx") && //$NON-NLS-1$
+				!convert2pdf.equals(StringUtils.EMPTY));
+	}
+
+	/**
 	 * Opens the document with an external Program if
 	 * {@link Preferences#P_TEXT_EXTERN_FILE} is <code>true</code> and a valid path
 	 * was set
@@ -135,14 +182,19 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 			} else if (lockObject instanceof IDocumentLetter) {
 				document = (IDocumentLetter) lockObject;
 			} else {
-				LoggerFactory.getLogger(getClass()).error("Invalid argument [{}]", lockObject.getClass());
+				LoggerFactory.getLogger(getClass()).error("Invalid argument [{}]", lockObject.getClass()); //$NON-NLS-1$
 				return false;
 			}
 
 			IVirtualFilesystemHandle handle = DocumentLetterUtil.getExternalHandleIfApplicable(document);
 			Optional<File> file = handle.toFile();
 			if (file.isPresent()) {
-				Program.launch(file.get().getAbsolutePath());
+				if (isConvertDocx2Pdf(handle.getExtension())) { // $NON-NLS-1$
+					convertDocx2Pdf(file);
+				} else {
+					LoggerFactory.getLogger(getClass()).info("Open external file {}", file.get().getAbsolutePath()); //$NON-NLS-1$
+					Program.launch(file.get().getAbsolutePath());
+				}
 			} else {
 				MessageDialog.openError(UiDesk.getTopShell(), Messages.StartEditLocalDocumentHandler_errortitle,
 						Messages.StartEditLocalDocumentHandler_errormessage);
