@@ -1,10 +1,14 @@
 package ch.elexis.core.ui.commands;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.data.events.ElexisEvent;
@@ -22,14 +26,19 @@ public class DeleteTemplateCommand extends AbstractHandler {
 			Object firstElement = strucSelection.getFirstElement();
 			if (firstElement != null && firstElement instanceof TextTemplate) {
 				TextTemplate textTemplate = (TextTemplate) firstElement;
-				Brief template = textTemplate.getTemplate();
-				textTemplate.removeTemplateReference();
+				if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
+						Messages.GenericReallyDeleteCaption,
+						MessageFormat.format(Messages.GenericReallyDeleteContents, textTemplate.getName()))) {
 
-				if (template != null) {
-					template.delete();
+					Brief template = textTemplate.getTemplate();
+					textTemplate.removeTemplateReference();
 
-					ElexisEventDispatcher.getInstance().fire(
-							new ElexisEvent(Brief.class, null, ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
+					if (template != null) {
+						template.delete();
+
+						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(Brief.class, null,
+								ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
+					}
 				}
 			}
 		}

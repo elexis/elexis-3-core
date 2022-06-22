@@ -136,7 +136,9 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			public void widgetSelected(SelectionEvent e) {
 				ConfigServiceHolder.setGlobal(Preferences.P_TEXT_EXTERN_FILE, check.getSelection());
 				allExtern.setEnabled(check.getSelection());
-				externPathDeco.hide();
+				if (externPathDeco != null) {
+					externPathDeco.hide();
+				}
 			}
 		});
 
