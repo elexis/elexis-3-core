@@ -13,7 +13,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -21,6 +20,7 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -185,6 +185,9 @@ public class LabeledInputField extends Composite {
 			break;
 		default:
 			break;
+		}
+		if (ctl instanceof Text) {
+			FilterNonPrintableModifyListener.addTo((Text) ctl);
 		}
 		lbl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 	}
