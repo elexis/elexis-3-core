@@ -119,7 +119,27 @@ public class Prescription extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 
 	@Override
 	public EntryType getEntryType() {
-		return getEntity().getEntryType();
+		EntryType entryType = getEntity().getEntryType();
+		if (entryType == EntryType.UNKNOWN) {
+			String rezeptId = getEntity().getRezeptID();
+			if (rezeptId != null && !rezeptId.isEmpty()) {
+				// this is necessary due to a past impl. where self dispensed was
+				// not set as entry type
+				if (rezeptId.equals("Direktabgabe")) {
+					setEntryType(EntryType.SELF_DISPENSED);
+					getEntityMarkDirty().setRezeptID(StringUtils.EMPTY);
+					CoreModelServiceHolder.get().save(this);
+					return EntryType.SELF_DISPENSED;
+				}
+				setEntryType(EntryType.RECIPE);
+				CoreModelServiceHolder.get().save(this);
+				return EntryType.RECIPE;
+			}
+			setEntryType(EntryType.FIXED_MEDICATION);
+			CoreModelServiceHolder.get().save(this);
+			return EntryType.FIXED_MEDICATION;
+		}
+		return entryType;
 	}
 
 	@Override

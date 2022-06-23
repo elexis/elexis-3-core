@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -122,22 +121,6 @@ public class Prescription extends AbstractEntityWithId implements EntityWithId, 
 	}
 
 	public EntryType getEntryType() {
-		if (entryType == EntryType.UNKNOWN) {
-			String rezeptId = getRezeptID();
-			if (rezeptId != null && !rezeptId.isEmpty()) {
-				// this is necessary due to a past impl. where self dispensed was
-				// not set as entry type
-				if (rezeptId.equals("Direktabgabe")) {
-					setEntryType(EntryType.SELF_DISPENSED);
-					setRezeptID(StringUtils.EMPTY);
-					return EntryType.SELF_DISPENSED;
-				}
-				setEntryType(EntryType.RECIPE);
-				return EntryType.RECIPE;
-			}
-			setEntryType(EntryType.FIXED_MEDICATION);
-			return EntryType.FIXED_MEDICATION;
-		}
 		return entryType;
 	}
 
