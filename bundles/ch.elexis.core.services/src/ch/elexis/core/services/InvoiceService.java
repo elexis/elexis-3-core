@@ -304,7 +304,7 @@ public class InvoiceService implements IInvoiceService {
 				"encounter");
 		List<IInvoiceBilled> invoicebilled = query.executeWithParameters(query.getParameterMap("encounter", encounter));
 		HashSet<IInvoice> uniqueInvoices = new HashSet<IInvoice>();
-		invoicebilled.forEach(ib -> uniqueInvoices.add(ib.getInvoice()));
+		invoicebilled.stream().filter(ib -> ib.getInvoice() != null).forEach(ib -> uniqueInvoices.add(ib.getInvoice()));
 		return new ArrayList<IInvoice>(uniqueInvoices);
 	}
 
