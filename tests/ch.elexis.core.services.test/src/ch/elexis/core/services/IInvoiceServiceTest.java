@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,6 +19,7 @@ import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.IPayment;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.IEncounterBuilder;
@@ -104,5 +107,48 @@ public class IInvoiceServiceTest extends AbstractServiceTest {
 		CoreModelServiceHolder.get().remove(payment);
 		CoreModelServiceHolder.get().remove(billed.get());
 		CoreModelServiceHolder.get().remove(invoice.get());
+	}
+
+	@Test
+	public void getInvoices() {
+		ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
+		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
+		ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(),
+				ch.elexis.core.constants.Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
+
+		Result<IBilled> billed = billingService.bill(customService, testEncounters.get(0), 1.0);
+		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
+		IFreeTextDiagnosis diagnosis = coreModelService.create(IFreeTextDiagnosis.class);
+		diagnosis.setDescription("test");
+		diagnosis.setText("testText");
+		coreModelService.save(diagnosis);
+		testEncounters.get(0).addDiagnosis(diagnosis);
+		coreModelService.save(testEncounters.get(0));
+		// invoice
+		Result<IInvoice> invoice = invoiceService.invoice(testEncounters);
+		assertTrue(invoice.toString(), invoice.isOK());
+		// cancel
+		invoiceService.cancel(invoice.get(), true);
+		// invoice
+		invoice = invoiceService.invoice(testEncounters);
+
+		List<IInvoice> invoices = invoiceService.getInvoices(testEncounters.get(0));
+		assertEquals(2, invoices.size());
+
+		// test if null invoice reference is filtered
+		INamedQuery<IInvoiceBilled> query = CoreModelServiceHolder.get().getNamedQuery(IInvoiceBilled.class,
+				"encounter");
+		List<IInvoiceBilled> invoicebilled = query
+				.executeWithParameters(query.getParameterMap("encounter", testEncounters.get(0)));
+		invoicebilled.get(0).setInvoice(null);
+		coreModelService.save(invoicebilled.get(0));
+		invoices = invoiceService.getInvoices(testEncounters.get(0));
+		assertEquals(1, invoices.size());
+
+		CoreModelServiceHolder.get().remove(billed.get());
+		invoices.forEach(i -> {
+			CoreModelServiceHolder.get().remove(i);
+		});
+
 	}
 }
