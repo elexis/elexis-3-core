@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -147,16 +148,16 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textBemerkungen.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		super.setTitle(pat.getLabel());
-		textVorname.setText(pat.getFirstName());
-		textNachname.setText(pat.getLastName());
+		textVorname.setText(StringUtils.defaultString(pat.getFirstName()));
+		textNachname.setText(StringUtils.defaultString(pat.getLastName()));
 		geburtsdatum.setSelection(getGeburtsdatum());
 		comboGeschlecht.setSelection(new StructuredSelection(pat.getGender()));
-		textTelefon1.setText(pat.getPhone1());
-		textTelefon2.setText(pat.getPhone2());
-		textFax.setText(pat.getFax());
-		textHandy.setText(pat.getMobile());
-		textEmail.setText(pat.getEmail());
-		textBemerkungen.setText(pat.getComment());
+		textTelefon1.setText(StringUtils.defaultString(pat.getPhone1()));
+		textTelefon2.setText(StringUtils.defaultString(pat.getPhone2()));
+		textFax.setText(StringUtils.defaultString(pat.getFax()));
+		textHandy.setText(StringUtils.defaultString(pat.getMobile()));
+		textEmail.setText(StringUtils.defaultString(pat.getEmail()));
+		textBemerkungen.setText(StringUtils.defaultString(pat.getComment()));
 
 		setUnlocked(LocalLockServiceHolder.get().isLocked(pat));
 
