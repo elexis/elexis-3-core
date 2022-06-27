@@ -7,21 +7,22 @@
  *
  * Contributors:
  *  <office@medevit.at> - initial implementation
- *
+ *    
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -51,9 +52,12 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -124,6 +128,18 @@ public class StockView extends ViewPart implements IRefreshable {
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
+	private static final int STOCK = 0;
+	private static final int PHARMACODE = 1;
+	private static final int GTIN = 2;
+	private static final int NAME = 3;
+	private static final int VP = 4;
+	private static final int MIN = 5;
+	private static final int IST = 6;
+	private static final int MAX = 7;
+	private static final int SUPPLIER = 8;
+
+	private StockViewComparator comparator;
+
 	String[] columns = { Messages.LagerView_stock, Messages.LagerView_pharmacode, Messages.LagerView_gtin,
 			Messages.LagerView_name, Messages.LagerView_vkPreis, Messages.LagerView_minBestand,
 			Messages.LagerView_istBestand, Messages.LagerView_maxBestand, Messages.LagerView_dealer };
@@ -176,6 +192,15 @@ public class StockView extends ViewPart implements IRefreshable {
 			tc.setWidth(colwidth[i]);
 			tc.setData(i);
 			tvc.setLabelProvider(new ColumnStockEntryLabelProvider(i, labelProvider));
+
+			final int columnIndex = i;
+			tc.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					comparator.setColumn(columnIndex);
+					refresh();
+				}
+			});
 
 			ReflectiveEditingSupport poes = null;
 			if (i == 5) {
@@ -327,12 +352,16 @@ public class StockView extends ViewPart implements IRefreshable {
 		Menu menu = contextMenu.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
 
+		comparator = new StockViewComparator();
+		viewer.setComparator(comparator);
+
 		makeActions();
 		viewMenus = new ViewMenus(getViewSite());
 		viewMenus.createToolbar(refreshAction);
 		viewMenus.createMenu(exportAction);
 
 		getSite().getPage().addPartListener(udpateOnVisible);
+
 	}
 
 	@Optional
@@ -722,6 +751,66 @@ public class StockView extends ViewPart implements IRefreshable {
 				loader = new StockEntryLoader(viewer);
 				loader.schedule();
 			}
+		}
+	}
+
+	public class StockViewComparator extends ViewerComparator {
+		private int propertyIndex;
+
+		private int direction = 1;
+
+		public void setColumn(int column) {
+			if (column == propertyIndex) {
+				direction *= -1;
+			}
+			this.propertyIndex = column;
+		}
+
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			IStockEntry s1 = (IStockEntry) e1;
+			IStockEntry s2 = (IStockEntry) e2;
+
+			switch (propertyIndex) {
+			case STOCK:
+				return s1.getStock().getId().compareTo(s2.getStock().getId()) * direction;
+			case PHARMACODE:
+				String pharmco1 = s1.getArticle().getCode();
+				String pharmco2 = s2.getArticle().getCode();
+				return Objects.compare(pharmco1, pharmco2, Comparator.nullsFirst(Comparator.naturalOrder()))
+						* direction;
+			case GTIN:
+				String gtin1 = s1.getArticle().getGtin();
+				String gtin2 = s2.getArticle().getGtin();
+				return Objects.compare(gtin1, gtin2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
+			case NAME:
+				String name1 = s1.getArticle().getName();
+				String name2 = s2.getArticle().getName();
+				return Objects.compare(name1, name2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
+			case VP:
+				Money sp1 = s1.getArticle().getSellingPrice();
+				Money sp2 = s2.getArticle().getSellingPrice();
+				return Objects.compare(sp1, sp2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
+			case MIN:
+				return Integer.compare(s1.getMinimumStock(), s2.getMinimumStock()) * direction;
+			case IST:
+				return Integer.compare(s1.getCurrentStock(), s2.getCurrentStock()) * direction;
+			case MAX:
+				return Integer.compare(s1.getMaximumStock(), s2.getMaximumStock()) * direction;
+			case SUPPLIER: {
+				String lieferant1 = "";
+				String lieferant2 = "";
+				if (s1.getProvider() != null) {
+					lieferant1 = s1.getProvider().getLabel();
+				}
+				if (s2.getProvider() != null) {
+					lieferant2 = s2.getProvider().getLabel();
+				}
+				return lieferant1.compareTo(lieferant2) * direction;
+			}
+			}
+
+			return super.compare(viewer, e1, e2);
 		}
 	}
 }
