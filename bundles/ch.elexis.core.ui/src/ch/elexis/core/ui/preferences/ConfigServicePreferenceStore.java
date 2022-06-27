@@ -384,4 +384,8 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 			throw new IllegalStateException("Unknown scope " + scope);
 		}
 	}
+
+	public Scope getScope() {
+		return scope;
+	}
 }
