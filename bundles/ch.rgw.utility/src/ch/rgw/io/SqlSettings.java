@@ -209,6 +209,8 @@ public class SqlSettings extends Settings {
 						getSettingChangedListener().settingWritten(parameterName, parameterValue);
 					}
 					setLastUpdate(parameterName, timestamp);
+					logger.info(this + "[" + tbl + "] [" + constraintValue + "] insert [" + parameterName + "] ["
+							+ parameterValue + "]");
 					// sql="INSERT INTO "+tbl+" (param,wert,"+cn[0]+") VALUES
 					// ("+JdbcLink.wrap(a)+","+JdbcLink.wrap(v)+","+cn[1]+")";
 				}
