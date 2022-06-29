@@ -296,6 +296,11 @@ public class AppointmentSeries implements IAppointmentSeries {
 	}
 
 	@Override
+	public boolean isAllDay() {
+		return appointment.isAllDay();
+	}
+
+	@Override
 	public String getId() {
 		return appointment.getId();
 	}
@@ -453,4 +458,5 @@ public class AppointmentSeries implements IAppointmentSeries {
 		}
 		return sb.toString();
 	}
+
 }

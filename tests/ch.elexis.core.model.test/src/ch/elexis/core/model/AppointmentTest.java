@@ -1,11 +1,13 @@
 package ch.elexis.core.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.junit.After;
@@ -111,6 +113,25 @@ public class AppointmentTest extends AbstractTest {
 
 		assertTrue(appointment.getStateHistory().contains("started"));
 		assertTrue(appointment.getStateHistory().contains("modified"));
+
+		coreModelService.remove(appointment);
+	}
+
+	@Test
+	public void allDayAppointment() {
+		LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+		IAppointment appointment = coreModelService.create(IAppointment.class);
+		appointment.setReason("allDay");
+		appointment.setStartTime(startOfDay);
+		appointment.setEndTime(null);
+		coreModelService.save(appointment);
+		assertTrue(appointment.isAllDay());
+		assertNull(appointment.getDurationMinutes());
+
+		appointment.setEndTime(LocalDate.now().atStartOfDay().plusMinutes(25));
+		coreModelService.save(appointment);
+		assertFalse(appointment.isAllDay());
+		assertEquals(Integer.valueOf(25), appointment.getDurationMinutes());
 
 		coreModelService.remove(appointment);
 	}

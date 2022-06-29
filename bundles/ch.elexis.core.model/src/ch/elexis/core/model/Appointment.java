@@ -111,6 +111,19 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin> implements
 	}
 
 	@Override
+	public boolean isAllDay() {
+		String duration = getEntity().getDauer();
+		if (duration == null) {
+			LocalDateTime start = getStartTime();
+			LocalDate day = getEntity().getTag();
+			if (start != null && day != null) {
+				return day.atStartOfDay().equals(start);
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public Integer getDurationMinutes() {
 		try {
 			return Integer.valueOf(getEntity().getDauer());

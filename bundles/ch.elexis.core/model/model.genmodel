@@ -390,6 +390,7 @@
     <genClasses image="false" ecoreClass="model.ecore#//IPeriod">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPeriod/startTime"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPeriod/endTime"/>
+      <genOperations ecoreOperation="model.ecore#//IPeriod/isAllDay"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//WithExtInfo">
       <genOperations ecoreOperation="model.ecore#//WithExtInfo/getExtInfo">

@@ -621,6 +621,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IPeriod" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
+    <eOperations name="isAllDay" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Is all day if the startTime is at the start of day (i.e. 00:00:00.000000000) and an endTime is null"/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="startTime" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endTime" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
   </eClassifiers>

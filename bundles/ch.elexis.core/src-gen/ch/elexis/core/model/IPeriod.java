@@ -82,4 +82,15 @@ public interface IPeriod extends Identifiable, Deleteable {
 	 */
 	void setEndTime(LocalDateTime value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Is all day if the startTime is at the start of day (i.e. 00:00:00.000000000) and an endTime is null
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" required="true"
+	 * @generated
+	 */
+	boolean isAllDay();
+
 } // IPeriod

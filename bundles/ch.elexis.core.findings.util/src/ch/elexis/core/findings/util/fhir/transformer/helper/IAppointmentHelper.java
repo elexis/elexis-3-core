@@ -1,6 +1,7 @@
 package ch.elexis.core.findings.util.fhir.transformer.helper;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 
 import org.hl7.fhir.r4.model.Appointment;
@@ -98,6 +99,13 @@ public class IAppointmentHelper extends AbstractHelper {
 		if (start != null) {
 			Date start_ = TimeUtil.toDate(start);
 			target.setStart(start_);
+
+			if (source.isAllDay()) {
+				LocalDateTime endOfDay = start.toLocalDate().atTime(LocalTime.MAX);
+				Date _endOfDay = TimeUtil.toDate(endOfDay);
+				target.setEnd(_endOfDay);
+				return;
+			}
 		}
 
 		LocalDateTime end = source.getEndTime();
@@ -138,15 +146,23 @@ public class IAppointmentHelper extends AbstractHelper {
 			start = new Date();
 			LoggerFactory.getLogger(getClass()).warn("Appointment F->E [{}] no start time, setting now");
 		}
-		LocalDateTime start_ = TimeUtil.toLocalDateTime(start);
-		target.setStartTime(start_);
+		LocalDateTime _start = TimeUtil.toLocalDateTime(start);
+		target.setStartTime(_start);
 
 		if (end == null) {
 			end = new Date(start.getTime() + (60 * 5 * 1000));
 			LoggerFactory.getLogger(getClass()).warn("Appointment F->E [{}] no end time, setting to start+5m");
 		}
-		LocalDateTime end_ = TimeUtil.toLocalDateTime(end);
-		target.setEndTime(end_);
+		LocalDateTime _end = TimeUtil.toLocalDateTime(end);
+		target.setEndTime(_end);
+
+		if (_start.toLocalDate().atStartOfDay().withNano(0).equals(_start.withNano(0))
+				&& _end.toLocalDate().atTime(LocalTime.MAX).withNano(0).equals(_end.withNano(0))) {
+			// all day appointments qualify via
+			// startTime 00:00:00.000
+			// endTime 23:59:59.999
+			target.setEndTime(null);
+		}
 	}
 
 	// /**
