@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -70,6 +71,7 @@ import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
+import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -127,6 +129,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	List<Control> lReqs = new ArrayList<Control>();
 	List<Control> keepEditable = new ArrayList<Control>();
 	Button btnCopyForPatient;
+	Button btnElectronicDelivery;
 
 	Set<String> ignoreFocusreacts = new HashSet<String>();
 	List<Focusreact> focusreacts = new ArrayList<Focusreact>();
@@ -407,12 +410,25 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			public void widgetSelected(SelectionEvent e) {
 				boolean b = btnCopyForPatient.getSelection();
 				getSelectedFall().setCopyForPatient(b);
+				updateBillElectronicDelivery();
 				fireSelectedFallUpdateEvent();
 			};
 		});
+		btnCopyForPatient.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		ignoreFocusReact(Fall.FLD_EXT_COPY_FOR_PATIENT);
 
-		new Label(top, SWT.NONE);
+		btnElectronicDelivery = new Button(top, SWT.CHECK);
+		btnElectronicDelivery.setText(Messages.FallDetailBlatt2_ElectronicDelivery);
+		btnElectronicDelivery.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean b = btnElectronicDelivery.getSelection();
+				getSelectedFall().setInfoString(FallConstants.FLD_EXT_ELECTRONIC_DELIVERY, b ? "1" : "0");
+			};
+		});
+		btnElectronicDelivery.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		ignoreFocusReact(FallConstants.FLD_EXT_ELECTRONIC_DELIVERY);
+
 		hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
 		hlGarant.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -670,6 +686,10 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 		// *** set copy for patient
 		btnCopyForPatient.setSelection(f.getCopyForPatient());
+		// *** set electronic delivery allowed, only for KVG
+		btnElectronicDelivery
+				.setSelection(StringConstants.ONE.equals(f.getInfoString(FallConstants.FLD_EXT_ELECTRONIC_DELIVERY)));
+		updateBillElectronicDelivery();
 
 		// *** set Garant
 		tGarant.setBackground(null);
@@ -917,6 +937,20 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		if (lockUpdate) {
 			setUnlocked(LocalLockServiceHolder.get().isLockedLocal(actFall));
 		}
+	}
+
+	private void updateBillElectronicDelivery() {
+		IFall f = getSelectedFall();
+		if (f.getCopyForPatient() && f instanceof Fall
+				&& (BillingLaw.KVG.equals(((Fall) f).getConfiguredBillingSystemLaw()))) {
+			btnElectronicDelivery.setVisible(true);
+			((GridData) btnElectronicDelivery.getLayoutData()).exclude = false;
+		} else {
+			btnElectronicDelivery.setVisible(false);
+			((GridData) btnElectronicDelivery.getLayoutData()).exclude = true;
+		}
+		form.reflow(true);
+		form.redraw();
 	}
 
 	private void allowFieldUpdate(boolean lockEnabled) {
