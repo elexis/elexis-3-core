@@ -129,7 +129,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	List<Control> lReqs = new ArrayList<Control>();
 	List<Control> keepEditable = new ArrayList<Control>();
 	Button btnCopyForPatient;
-	Button btnElectronicDelivery;
+	Button btnNoElectronicDelivery;
 
 	Set<String> ignoreFocusreacts = new HashSet<String>();
 	List<Focusreact> focusreacts = new ArrayList<Focusreact>();
@@ -417,17 +417,17 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		btnCopyForPatient.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		ignoreFocusReact(Fall.FLD_EXT_COPY_FOR_PATIENT);
 
-		btnElectronicDelivery = new Button(top, SWT.CHECK);
-		btnElectronicDelivery.setText(Messages.FallDetailBlatt2_ElectronicDelivery);
-		btnElectronicDelivery.addSelectionListener(new SelectionAdapter() {
+		btnNoElectronicDelivery = new Button(top, SWT.CHECK);
+		btnNoElectronicDelivery.setText(Messages.FallDetailBlatt2_NoElectronicDelivery);
+		btnNoElectronicDelivery.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				boolean b = btnElectronicDelivery.getSelection();
-				getSelectedFall().setInfoString(FallConstants.FLD_EXT_ELECTRONIC_DELIVERY, b ? "1" : "0");
+				boolean b = btnNoElectronicDelivery.getSelection();
+				getSelectedFall().setInfoString(FallConstants.FLD_EXT_NO_ELECTRONIC_DELIVERY, b ? "1" : "0");
 			};
 		});
-		btnElectronicDelivery.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		ignoreFocusReact(FallConstants.FLD_EXT_ELECTRONIC_DELIVERY);
+		btnNoElectronicDelivery.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		ignoreFocusReact(FallConstants.FLD_EXT_NO_ELECTRONIC_DELIVERY);
 
 		hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
 		hlGarant.addHyperlinkListener(new HyperlinkAdapter() {
@@ -687,8 +687,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		// *** set copy for patient
 		btnCopyForPatient.setSelection(f.getCopyForPatient());
 		// *** set electronic delivery allowed, only for KVG
-		btnElectronicDelivery
-				.setSelection(StringConstants.ONE.equals(f.getInfoString(FallConstants.FLD_EXT_ELECTRONIC_DELIVERY)));
+		btnNoElectronicDelivery.setSelection(
+				StringConstants.ONE.equals(f.getInfoString(FallConstants.FLD_EXT_NO_ELECTRONIC_DELIVERY)));
 		updateBillElectronicDelivery();
 
 		// *** set Garant
@@ -943,11 +943,11 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		IFall f = getSelectedFall();
 		if (f.getCopyForPatient() && f instanceof Fall
 				&& (BillingLaw.KVG.equals(((Fall) f).getConfiguredBillingSystemLaw()))) {
-			btnElectronicDelivery.setVisible(true);
-			((GridData) btnElectronicDelivery.getLayoutData()).exclude = false;
+			btnNoElectronicDelivery.setVisible(true);
+			((GridData) btnNoElectronicDelivery.getLayoutData()).exclude = false;
 		} else {
-			btnElectronicDelivery.setVisible(false);
-			((GridData) btnElectronicDelivery.getLayoutData()).exclude = true;
+			btnNoElectronicDelivery.setVisible(false);
+			((GridData) btnNoElectronicDelivery.getLayoutData()).exclude = true;
 		}
 		form.reflow(true);
 		form.redraw();
