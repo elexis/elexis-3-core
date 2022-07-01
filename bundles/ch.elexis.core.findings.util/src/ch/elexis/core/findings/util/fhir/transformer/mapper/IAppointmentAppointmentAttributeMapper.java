@@ -7,11 +7,11 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Appointment;
-import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Appointment.AppointmentParticipantComponent;
 import org.hl7.fhir.r4.model.Appointment.AppointmentStatus;
 import org.hl7.fhir.r4.model.Appointment.ParticipantRequired;
 import org.hl7.fhir.r4.model.Appointment.ParticipationStatus;
+import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Practitioner;
@@ -53,11 +53,7 @@ public class IAppointmentAppointmentAttributeMapper
 	public void elexisToFhir(IAppointment localObject, Appointment appointment, SummaryEnum summaryEnum,
 			Set<Include> includes) {
 
-		appointment.setId(new IdDt(Appointment.class.getSimpleName(), localObject.getId()));
-
-		appointment.getMeta().setVersionId(localObject.getLastupdate().toString());
-		appointment.getMeta()
-				.setLastUpdated(appointmentHelper.getLastUpdateAsDate(localObject.getLastupdate()).orElse(null));
+		appointmentHelper.setVersionedIdPartLastUpdatedMeta(Appointment.class, appointment, localObject);
 
 		// narrative
 		appointmentHelper.setNarrative(appointment, localObject.getSubjectOrPatient());

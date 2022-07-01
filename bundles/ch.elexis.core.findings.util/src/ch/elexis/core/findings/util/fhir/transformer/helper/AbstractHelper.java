@@ -81,6 +81,13 @@ public class AbstractHelper {
 		LocalLockServiceHolder.get().releaseLock(lockInfo);
 	}
 
+	public void setVersionedIdPartLastUpdatedMeta(Class<?> resourceClass, DomainResource domainResource,
+			Identifiable localObject) {
+		domainResource.setId(new IdDt(resourceClass.getSimpleName(), localObject.getId(),
+				Long.toString(localObject.getLastupdate())));
+		domainResource.getMeta().setLastUpdated(getLastUpdateAsDate(localObject.getLastupdate()).orElse(null));
+	}
+
 	public void setNarrative(DomainResource domainResource, String text) {
 		Narrative narrative = domainResource.getText();
 		if (narrative == null) {

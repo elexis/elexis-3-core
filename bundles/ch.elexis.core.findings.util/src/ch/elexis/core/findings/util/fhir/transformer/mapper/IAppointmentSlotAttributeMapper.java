@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Set;
 
+import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Schedule;
@@ -14,7 +15,6 @@ import org.hl7.fhir.r4.model.Slot.SlotStatus;
 import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
-import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformerException;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IAppointmentHelper;
@@ -36,9 +36,8 @@ public class IAppointmentSlotAttributeMapper implements IdentifiableDomainResour
 	@Override
 	public void elexisToFhir(IAppointment elexis, Slot fhir, SummaryEnum summaryEnum, Set<Include> includes) {
 
-		fhir.setId(new IdDt(Slot.class.getSimpleName(), elexis.getId()));
+		appointmentHelper.setVersionedIdPartLastUpdatedMeta(Appointment.class, fhir, elexis);
 
-		fhir.getMeta().setVersionId(elexis.getLastupdate().toString());
 		fhir.getMeta().setLastUpdated(appointmentHelper.getLastUpdateAsDate(elexis.getLastupdate()).orElse(null));
 
 		Area area = appointmentService.getAreaByNameOrId(elexis.getSchedule());
