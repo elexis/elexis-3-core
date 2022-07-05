@@ -1,5 +1,9 @@
 package ch.elexis.core.ui.views.textsystem;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +30,17 @@ import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSourceAdapter;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -48,6 +59,8 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -69,6 +82,7 @@ import ch.elexis.core.ui.views.textsystem.provider.TextTemplateViewerComparator;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
+import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
 
 public class TextTemplateView extends ViewPart {
@@ -83,6 +97,8 @@ public class TextTemplateView extends ViewPart {
 	private TextTemplateViewerComparator comparator;
 	private List<TextTemplate> templates;
 	private List<TextTemplate> requiredTemplates;
+
+	static Logger log = LoggerFactory.getLogger(TextTemplateView.class);
 
 	private ElexisUiEventListenerImpl reloadListener = new ElexisUiEventListenerImpl(Brief.class,
 			ElexisEvent.EVENT_RELOAD) {
@@ -175,7 +191,7 @@ public class TextTemplateView extends ViewPart {
 		tableLayout = new TableColumnLayout();
 		tableArea.setLayout(tableLayout);
 
-		tableViewer = new TableViewer(tableArea, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL);
+		tableViewer = new TableViewer(tableArea, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
 		ColumnViewerToolTipSupport.enableFor(tableViewer, ToolTip.NO_RECREATE);
 		createColumns(composite);
 		table = tableViewer.getTable();
@@ -210,6 +226,43 @@ public class TextTemplateView extends ViewPart {
 		table.setMenu(popupMenu);
 		getSite().registerContextMenu(menuManager, tableViewer);
 		getSite().setSelectionProvider(tableViewer);
+
+		final Transfer[] transfer = new Transfer[] { FileTransfer.getInstance(), TextTransfer.getInstance() };
+		tableViewer.addDragSupport(DND.DROP_COPY, transfer, new DragSourceAdapter() {
+			public void dragStart(DragSourceEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
+				for (Object object : selection.toList()) {
+					TextTemplate textTemplate = (TextTemplate) object;
+					if (textTemplate.getTemplate() == null) {
+						event.doit = false;
+						log.error("Error template doesn't exist");
+					}
+				}
+			}
+
+			public void dragSetData(DragSourceEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
+				if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
+					String[] files = new String[selection.size()];
+					for (int i = 0; i < selection.size(); i++) {
+						TextTemplate textTemplate = (TextTemplate) selection.toList().get(i);
+						File file = new File(textTemplate.getName() + "." + textTemplate.getMimeType());
+						byte[] contents = textTemplate.getTemplate().loadBinary();
+
+						try (ByteArrayInputStream bais = new ByteArrayInputStream(contents);
+								FileOutputStream fos = new FileOutputStream(file);) {
+							FileTool.copyStreams(bais, fos);
+						} catch (IOException e) {
+							log.error("Error creating template", e);
+						}
+						files[i] = file.getAbsolutePath();
+						log.debug("dragSetData; isSupportedType {} data {}", file.getAbsolutePath(), //$NON-NLS-1$
+								event.data);
+					}
+					event.data = files;
+				}
+			}
+		});
 	}
 
 	private void createTextPluginMissingForm(Composite parent) {

@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.text.MimeTypeUtil;
-import ch.elexis.core.ui.views.textsystem.TextTemplateView;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.rgw.io.FileTool;
 
@@ -34,29 +33,30 @@ public class ExportTemplateCommand extends AbstractHandler {
 
 			if (firstElement != null && firstElement instanceof TextTemplate) {
 				TextTemplate textTemplate = (TextTemplate) firstElement;
-				if (textTemplate.getTemplate() != null) {
-					try {
-						FileDialog fdl = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
-						fdl.setFilterExtensions(
-								new String[] { MimeTypeUtil.getExtensions(textTemplate.getMimeType()), "*.*" });
-						fdl.setFilterNames(new String[] { textTemplate.getMimeTypePrintname(), "All files" });
 
-						String filename = fdl.open();
-						if (filename != null) {
-							File file = new File(filename);
-							byte[] contents = textTemplate.getTemplate().loadBinary();
-							ByteArrayInputStream bais = new ByteArrayInputStream(contents);
-							FileOutputStream fos = new FileOutputStream(file);
-							FileTool.copyStreams(bais, fos);
-							fos.close();
-							bais.close();
-						}
+				if (textTemplate.getTemplate() != null) {
+					FileDialog fdl = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
+					fdl.setFilterExtensions(
+							new String[] { MimeTypeUtil.getExtensions(textTemplate.getMimeType()), "*.*" });
+					fdl.setFilterNames(new String[] { textTemplate.getMimeTypePrintname(), "All files" });
+					fdl.setFileName(textTemplate.getName() + "." + textTemplate.getMimeType());
+					String fileString = fdl.open();
+					if (fileString != null) {
+					File file = new File(fileString);
+					byte[] contents = textTemplate.getTemplate().loadBinary();
+
+					try (ByteArrayInputStream bais = new ByteArrayInputStream(contents);
+							FileOutputStream fos = new FileOutputStream(file)) {
+						FileTool.copyStreams(bais, fos);
 					} catch (IOException e) {
-						logger.error("Error executing file dialog for text template export", e);
+						logger.error("Error creating template", e);
 					}
+				} else {
+					// do nothing
 				}
 			}
 		}
+	}
 		return null;
 	}
 }
