@@ -726,6 +726,8 @@ public class Messages extends NLS {
 	public static String KontaktExtDialog_value;
 	public static String KontaktExtInfo_Anrede;
 	public static String KontaktExtInfo_EAN;
+	public static String KontaktExtInfo_IBAN;
+	public static String KontaktExtInfo_IBAN_tooltip;
 	public static String KontaktExtInfo_KSK;
 	public static String KontaktExtInfo_Kanton;
 	public static String KontaktExtInfo_NIF;

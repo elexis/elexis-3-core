@@ -107,22 +107,22 @@ public class TextContainer {
 	private ITextPlugin plugin = null;
 	private static Logger log = LoggerFactory.getLogger(TextContainer.class); // $NON-NLS-1$
 	private Shell shell;
-	private static final String DONT_SHOW_REPLACEMENT_ERRORS = "*";
+	private static final String DONT_SHOW_REPLACEMENT_ERRORS = "*"; //$NON-NLS-1$
 	public static final String MATCH_TEMPLATE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
-			+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+\\]";
+			+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+\\]"; //$NON-NLS-1$
 	public static final String MATCH_INDIRECT_TEMPLATE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
-			+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+(\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+)+\\]";
-	public static final String MATCH_GENDERIZE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?[a-zA-Z]+:mwn?:[^\\[]+\\]"; //$NON-NLS-1$
+			+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+(\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+)+\\]"; //$NON-NLS-1$
+	public static final String MATCH_GENDERIZE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?[a-zA-Z]+:mwn?:[^\\[]+\\]"; //$NON-NLS-1$ //$NON-NLS-2$
 	public static final String MATCH_EXISTS = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
-			+ "]?[a-zA-Z\\.]+:exists?:[-a-zA-Z0-9\\.]:?[^\\]]*\\]";
+			+ "]?[a-zA-Z\\.]+:exists?:[-a-zA-Z0-9\\.]:?[^\\]]*\\]"; //$NON-NLS-1$
 	// public static final String MATCH_IDATACCESS =
 	// "\\[[-_a-zA-Z0-9]+:[-a-zA-Z0-9]+:[-a-zA-Z0-9\\.]+:[-a-zA-Z0-9\\.]:?.*\\]";
 	public static final String MATCH_IDATACCESS = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
-			+ "]?[-_a-zA-Z0-9]+:[-a-zA-Z0-9]+:[-a-zA-Z0-9\\.]+:[-a-zA-Z0-9\\.]:?[^\\]]*\\]";
-	public static final String MATCH_SQLCLAUSE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?SQL[^:]*:[^\\[]+\\]"; //$NON-NLS-1$
+			+ "]?[-_a-zA-Z0-9]+:[-a-zA-Z0-9]+:[-a-zA-Z0-9\\.]+:[-a-zA-Z0-9\\.]:?[^\\]]*\\]"; //$NON-NLS-1$
+	public static final String MATCH_SQLCLAUSE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?SQL[^:]*:[^\\[]+\\]"; //$NON-NLS-1$ //$NON-NLS-2$
 	public static final String DISALLOWED_SQLEXPRESSIONS = "DROP,UPDATE,CREATE,INSERT"; //$NON-NLS-1$
 	// public static final String MATCH_SCRIPT = "\\["+Script.SCRIPT_MARKER+".+\\]";
-	public static final String MATCH_SCRIPT = "\\[" + Script.SCRIPT_MARKER + "[^\\[]+\\]"; //$NON-NLS-1$
+	public static final String MATCH_SCRIPT = "\\[" + Script.SCRIPT_MARKER + "[^\\[]+\\]"; //$NON-NLS-1$ //$NON-NLS-2$
 
 	public static Connection queryConn = null;
 
@@ -415,16 +415,16 @@ public class TextContainer {
 
 	private Optional<String> readUsingDataAccessExtension(Object object, String name) {
 		List<IConfigurationElement> placeholderExtensions = Extensions
-				.getExtensions(ExtensionPointConstantsData.DATA_ACCESS, "TextPlaceHolder");
+				.getExtensions(ExtensionPointConstantsData.DATA_ACCESS, "TextPlaceHolder"); //$NON-NLS-1$
 		for (IConfigurationElement iConfigurationElement : placeholderExtensions) {
-			if (name.equals(iConfigurationElement.getAttribute("name"))
-					&& object.getClass().getName().equals(iConfigurationElement.getAttribute("type"))) {
+			if (name.equals(iConfigurationElement.getAttribute("name")) //$NON-NLS-1$
+					&& object.getClass().getName().equals(iConfigurationElement.getAttribute("type"))) { //$NON-NLS-1$
 				try {
 					ITextResolver resolver = (ITextResolver) iConfigurationElement
-							.createExecutableExtension("resolver");
+							.createExecutableExtension("resolver"); //$NON-NLS-1$
 					return resolver.resolve(object);
 				} catch (CoreException e) {
-					log.warn("Error getting resolver for name [" + name + "] object [" + object + "]");
+					log.warn("Error getting resolver for name [" + name + "] object [" + object + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			}
 		}
@@ -471,18 +471,18 @@ public class TextContainer {
 	 * @return the converted String
 	 */
 	private String executeScript(final Brief ret, final String in) {
-		String[] q = in.split(":");
+		String[] q = in.split(":"); //$NON-NLS-1$
 		if (q.length != 2) {
-			log.error("Falsches SCRIPT format: " + in);
-			return "???SYNTAX???";
+			log.error("Falsches SCRIPT format: " + in); //$NON-NLS-1$
+			return "???SYNTAX???"; //$NON-NLS-1$
 
 		}
 		try {
 			Object result = Script.executeScript(q[1], ret);
 			return result == null ? q[1] : result.toString();
 		} catch (ElexisException e) {
-			SWTHelper.showError("Fehler beim Ausführen des Scripts", e.getMessage());
-			return "??SCRIPT ERROR??";
+			SWTHelper.showError("Fehler beim Ausführen des Scripts", e.getMessage()); //$NON-NLS-1$
+			return "??SCRIPT ERROR??"; //$NON-NLS-1$
 		}
 	}
 
@@ -539,7 +539,7 @@ public class TextContainer {
 		IPersistentObject o = resolveObject(brief, q[0]);
 		if (o == null) {
 			if (showErrors) {
-				return "???";
+				return "???"; //$NON-NLS-1$
 			} else {
 				return StringUtils.EMPTY;
 			}
@@ -686,9 +686,9 @@ public class TextContainer {
 		// get fieldDelimiter and rowDelimiter from params, else provide
 		// default-values tab and newline
 		String sql = bl;
-		String sqlPrefix = sql.split(":")[0];
-		String[] sqlPrefixParts = sqlPrefix.split("\\|");
-		String fieldDelimiter = "	"; // default: tab
+		String sqlPrefix = sql.split(":")[0]; //$NON-NLS-1$
+		String[] sqlPrefixParts = sqlPrefix.split("\\|"); //$NON-NLS-1$
+		String fieldDelimiter = "	"; // default: tab //$NON-NLS-1$
 		String rowDelimiter = StringUtils.LF; // default: newline
 		if (sqlPrefixParts.length > 1) {
 			fieldDelimiter = sqlPrefixParts[1];
@@ -706,13 +706,13 @@ public class TextContainer {
 		sql = sql.substring(sqlPrefix.length() + 1);
 
 		// SAFETY: disallow clauses with DROP, UPDATE, INSERT and CREATE
-		String[] disallowedList = DISALLOWED_SQLEXPRESSIONS.split(",");
+		String[] disallowedList = DISALLOWED_SQLEXPRESSIONS.split(","); //$NON-NLS-1$
 		for (int i = 0; i < disallowedList.length; i++) {
 			String disallowed = disallowedList[i];
-			Pattern p = Pattern.compile("[^_^\\w]*" + disallowed + "\\s", Pattern.MULTILINE);
+			Pattern p = Pattern.compile("[^_^\\w]*" + disallowed + "\\s", Pattern.MULTILINE); //$NON-NLS-1$ //$NON-NLS-2$
 			Matcher m = p.matcher(sql);
 			while (m.find()) {
-				return "??? '" + disallowed + "' ist in SQL-Platzhaltern nicht erlaubt ???";
+				return "??? '" + disallowed + "' ist in SQL-Platzhaltern nicht erlaubt ???"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -720,7 +720,7 @@ public class TextContainer {
 		// enclose extinfo:<tableName>.<hashTableFieldName> with apostrophs
 		// -> query will just return the string itself without error
 		// will be processed later
-		Pattern p = Pattern.compile("extinfo:[\\w]+\\.[\\w]+[^\\w]", Pattern.MULTILINE);
+		Pattern p = Pattern.compile("extinfo:[\\w]+\\.[\\w]+[^\\w]", Pattern.MULTILINE); //$NON-NLS-1$
 		Matcher m = p.matcher(sql);
 		while (m.find()) {
 			// get extinfo
@@ -731,13 +731,13 @@ public class TextContainer {
 			String delim = part.substring(part.length() - 1);
 			// get the part <tableName> by stripping "extinfo:" and getting then
 			// the part left of "."
-			String tablePart = stringWithoutDelim.substring("extinfo:".length()).split("\\.")[0];
+			String tablePart = stringWithoutDelim.substring("extinfo:".length()).split("\\.")[0]; //$NON-NLS-1$ //$NON-NLS-2$
 			// replace the found string: don't change original, just append
 			// fieldPart to the query
 			// this way, the query returns the contents/the hashtable right
 			// after the textSpec
 			// will be processed later
-			sql = sql.replace(m.group(), "'" + stringWithoutDelim + "', " + tablePart + ".extinfo" + delim);
+			sql = sql.replace(m.group(), "'" + stringWithoutDelim + "', " + tablePart + ".extinfo" + delim); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		// execute query
@@ -758,7 +758,7 @@ public class TextContainer {
 			} catch (SQLException e) {
 			}
 			if (showErrors) {
-				return "[???" + bl + " ***" + e1.getMessage() + "*** ???]";
+				return "[???" + bl + " ***" + e1.getMessage() + "*** ???]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			} else {
 				return StringUtils.EMPTY;
 			}
@@ -783,10 +783,10 @@ public class TextContainer {
 						fieldContent = rs.getString(i);
 						// if field starts with "extinfo:" then read data from
 						// db-field extinfo/hashtable
-						if ((fieldContent.length() >= "extinfo:".length())
-								&& fieldContent.substring(0, "extinfo:".length()).equalsIgnoreCase("extinfo:")) {
-							String extInfoSpec = fieldContent.substring("extinfo:".length());
-							String extInfoField = extInfoSpec.split("\\.")[1];
+						if ((fieldContent.length() >= "extinfo:".length()) //$NON-NLS-1$
+								&& fieldContent.substring(0, "extinfo:".length()).equalsIgnoreCase("extinfo:")) { //$NON-NLS-1$ //$NON-NLS-2$
+							String extInfoSpec = fieldContent.substring("extinfo:".length()); //$NON-NLS-1$
+							String extInfoField = extInfoSpec.split("\\.")[1]; //$NON-NLS-1$
 							// the actual blob contents can be found in the
 							// following field - read blob
 							i++;
@@ -817,7 +817,7 @@ public class TextContainer {
 			} catch (SQLException e1) {
 			}
 			if (showErrors) {
-				return "[???" + bl + " ***" + e.getMessage() + "*** ???]";
+				return "[???" + bl + " ***" + e.getMessage() + "*** ???]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			} else {
 				return StringUtils.EMPTY;
 			}
@@ -851,11 +851,11 @@ public class TextContainer {
 	private String convertSpecialCharacters(final String in) {
 		// \ddd how to replace octal values?
 		String result = in;
-		result = result.replaceAll("\\\\n", StringUtils.LF);
-		result = result.replaceAll("\\\\t", "\t");
-		result = result.replaceAll("\\\\b", "\b");
-		result = result.replaceAll("\\\\r", StringUtils.CR);
-		result = result.replaceAll("\\\\f", "\f");
+		result = result.replaceAll("\\\\n", StringUtils.LF); //$NON-NLS-1$
+		result = result.replaceAll("\\\\t", "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+		result = result.replaceAll("\\\\b", "\b"); //$NON-NLS-1$ //$NON-NLS-2$
+		result = result.replaceAll("\\\\r", StringUtils.CR); //$NON-NLS-1$
+		result = result.replaceAll("\\\\f", "\f"); //$NON-NLS-1$ //$NON-NLS-2$
 		return result;
 	}
 
@@ -877,36 +877,14 @@ public class TextContainer {
 	 * @param typ   Typ des Dokuments
 	 */
 	public void saveBrief(Brief brief, final String typ) {
-		log.debug("ch.elexis.views/TextContainer.java saveBrief(Brief brief, final String typ): begin");
-
 		if (brief == null) {
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): WARNING: brief == null");
-		} else {
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief == " + brief.toString());
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief.getBetreff() == " + brief.getBetreff());
-			// 20130425js: Das hier lieber nicht machen: Das öffnet interaktiv das
-			// Dialogfenster zur
-			// Adressauswahl; unpassend als Debug-Output.
-			// log.debug("ch.elexis.views/TextContainer.java saveBrief():
-			// brief.getAdressat() == "+brief.getAdressat());
+			log.info("ch.elexis.views/TextContainer.java saveBrief(): WARNING: brief == null"); //$NON-NLS-1$
 		}
 
 		if ((brief == null) || (brief.getAdressat() == null)) {
 
-			// TODO: 20130425js added this: Nur Hinweis auf möglichen Bedienfehler im Log
-			// (Keine
-			// Konsultation beim Erstellen eines Briefes)
-			if (Konsultation.getAktuelleKons() == null) {
-				log.debug(
-						"ch.elexis.views/TextContainer.java saveBrief(): TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW");
-				log.debug(
-						"ch.elexis.views/TextContainer.java saveBrief(): WARNING: Konsultation.getAktuelleKonsultation == null");
-				log.debug(
-						"ch.elexis.views/TextContainer.java saveBrief(): WARNING: Soll hier (oder etwas früher!!) vielleicht ein Abbruch der Brief-Erstellung in den Code?");
-				log.debug(
-						"ch.elexis.views/TextContainer.java saveBrief(): TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW TODO REVIEW;");
-			} else {
-				log.debug("ch.elexis.views/TextContainer.java saveBrief(): Konsultation.getAktuelleKons()=="
+			if (Konsultation.getAktuelleKons() != null) {
+				log.debug("ch.elexis.views/TextContainer.java saveBrief(): Konsultation.getAktuelleKons()==" //$NON-NLS-1$
 						+ Konsultation.getAktuelleKons() + ": " + Konsultation.getAktuelleKons().getDatum());
 			}
 
@@ -914,18 +892,10 @@ public class TextContainer {
 					Messages.TextContainer_SelectAdresseeBody, Kontakt.DEFAULT_SORT);
 
 			if (ksl.open() == Dialog.OK) {
-				log.debug("ch.elexis.views/TextContainer.java saveBrief(): about to brief = new Brief(...)");
+				log.debug("ch.elexis.views/TextContainer.java saveBrief(): about to brief = new Brief(...)"); //$NON-NLS-1$
 				brief = new Brief(Messages.TextContainer_Letter, null, CoreHub.getLoggedInContact(),
 						(Kontakt) ksl.getSelection(), Konsultation.getAktuelleKons(), typ);
 			}
-		}
-
-		if (brief == null) {
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): WARNING: STILL: brief == null");
-		} else {
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief == " + brief.toString());
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief.getBetreff() == " + brief.getBetreff());
-			log.debug("ch.elexis.views/TextContainer.java saveBrief(): brief.getAdressat() == " + brief.getAdressat());
 		}
 
 		if (brief != null) {
@@ -939,25 +909,15 @@ public class TextContainer {
 				}
 			}
 
-			log.debug(
-					"ch.elexis.views/TextContainer.java saveBrief(): about to byte[] contents = plugin.storeToByteArray();");
-			// TODO: js: why should this variable be named "contents" here, and "arr" in
-			// "open()"
-			// below? Please refactor and use similar names for similar things.
-
 			byte[] contents = plugin.storeToByteArray();
 			if (contents == null) {
 				log.debug(
-						"ch.elexis.views/TextContainer.java saveBrief(): WARNING: contents == null - still proceding to brief.save(contents,...)...");
+						"ch.elexis.views/TextContainer.java saveBrief(): WARNING: contents == null - still proceding to brief.save(contents,...)..."); //$NON-NLS-1$
 				log.error(Messages.TextContainer_NullSaveHeader);
 			}
 
-			log.debug(
-					"ch.elexis.views/TextContainer.java saveBrief(): about to brief.save(contents,plugin.getMimeType()...");
 			brief.save(contents, plugin.getMimeType());
-
-			log.debug(
-					"ch.elexis.views/TextContainer.java saveBrief(): about to ElexisEventDispatcher.reload(Brief.class)");
+			log.info(String.format("saveBrief %s", brief.getLabel())); //$NON-NLS-1$
 			ElexisEventDispatcher.reload(Brief.class);
 		}
 	}
@@ -992,20 +952,14 @@ public class TextContainer {
 
 	/** Einen Brief einlesen */
 	public boolean open(final Brief brief) {
-		log.debug("ch.elexis.views/TextContainer.java open(final Brief brief): begin - brief==" + brief.toString()
-				+ ": " + brief.getBetreff());
-		log.debug("ch.elexisviews/TextContainer.java.open(): brief.getLabel())==" + brief.getLabel());
-		log.debug("ch.elexisviews/TextContainer.java.open(): about to byte[] arr = brief.loadBinary()...");
-
+		log.info("open: " + brief.getLabel()); //$NON-NLS-1$
 		byte[] arr = brief.loadBinary();
 		if (arr == null) {
-			log.debug("ch.elexis.views/TextContainer.java open(): WARNING: arr == null -> about to return false...");
+			log.debug("ch.elexis.views/TextContainer.java open(): WARNING: arr == null -> about to return false..."); //$NON-NLS-1$
 			log.warn(Messages.TextContainer_ErroneousLetter + brief.getLabel());
 			return false;
 		}
-
-		log.debug(
-				"ch.elexis.views/TextContainer.java open(): about to return plugin.loadFromByteArray(arr, false) and end...");
+		log.info("open: " + brief.getLabel()); //$NON-NLS-1$
 		return plugin.loadFromByteArray(arr, false);
 	}
 
