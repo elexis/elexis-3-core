@@ -137,7 +137,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException(
-					"Could not resolve attribute [" + entityAttributeName + "] of entity [" + entityClazz + "]");
+					"Could not resolve attribute [" + entityAttributeName + "] of entity [" + entityClazz + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -163,7 +163,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException(
-					"Could not resolve attribute [" + fieldOrderBy + "] of entity [" + entityClazz + "]");
+					"Could not resolve attribute [" + fieldOrderBy + "] of entity [" + entityClazz + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -183,24 +183,24 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		for (String caseInfo : caseContext.keySet()) {
 			caseInfo = caseInfo.toLowerCase();
 			Object value = caseContext.get(caseInfo);
-			if (caseInfo.startsWith("when")) {
-				String[] parts = caseInfo.split("\\|");
+			if (caseInfo.startsWith("when")) { //$NON-NLS-1$
+				String[] parts = caseInfo.split("\\|"); //$NON-NLS-1$
 				if (parts.length == 4) {
 					Optional<SingularAttribute> attribute = predicateHandler.resolveAttribute(entityClazz.getName(),
 							parts[1]);
 					if (attribute.isPresent()) {
-						if ("equals".equals(parts[2])) {
+						if ("equals".equals(parts[2])) { //$NON-NLS-1$
 							caseExpression.when(criteriaBuilder.equal(rootQuery.get(attribute.get()), parts[3]), value);
-						} else if ("like".equals(parts[2])) {
+						} else if ("like".equals(parts[2])) { //$NON-NLS-1$
 							caseExpression.when(criteriaBuilder.like(rootQuery.get(attribute.get()), parts[3]), value);
 						}
 					} else {
-						throw new IllegalStateException("[" + parts[1] + "] is not a known attribute");
+						throw new IllegalStateException("[" + parts[1] + "] is not a known attribute"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				} else {
-					throw new IllegalStateException("[" + caseInfo + "] is not in a known format");
+					throw new IllegalStateException("[" + caseInfo + "] is not in a known format"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-			} else if (caseInfo.startsWith("otherwise")) {
+			} else if (caseInfo.startsWith("otherwise")) { //$NON-NLS-1$
 				caseExpression.otherwise(value);
 			}
 		}
@@ -269,7 +269,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			if (groups == 1) {
 				criteriaQuery = criteriaQuery.where(predicateGroups.getCurrentPredicateGroup().getPredicate());
 			} else {
-				throw new IllegalStateException("Query has open groups [" + groups + "]");
+				throw new IllegalStateException("Query has open groups [" + groups + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			criteriaQuery.orderBy(orderByList);
@@ -324,14 +324,14 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (!result.isEmpty()) {
 			if (result.size() > 1) {
 				StringBuilder info = new StringBuilder();
-				info.append(result.get(0).getClass().getName() + ": ");
+				info.append(result.get(0).getClass().getName() + ": "); //$NON-NLS-1$
 				for (T t : result) {
 					if (t instanceof Identifiable) {
 						info.append(((Identifiable) t).getId() + StringUtils.SPACE);
 					}
 				}
 				LoggerFactory.getLogger(getClass()).warn(
-						"Multiple results where single expected. Returning first element of [{}]", info.toString(),
+						"Multiple results where single expected. Returning first element of [{}]", info.toString(), //$NON-NLS-1$
 						new Throwable());
 			}
 			return Optional.of(result.get(0));
@@ -383,7 +383,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 				if (groups == 1) {
 					subQuery = subQuery.where(predicateGroups.getCurrentPredicateGroup().getPredicate());
 				} else {
-					throw new IllegalStateException("Query has open groups [" + groups + "]");
+					throw new IllegalStateException("Query has open groups [" + groups + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 			return subQuery;

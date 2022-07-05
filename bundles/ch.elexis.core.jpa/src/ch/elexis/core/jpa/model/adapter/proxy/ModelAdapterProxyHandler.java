@@ -44,7 +44,7 @@ public class ModelAdapterProxyHandler implements InvocationHandler {
 			Object result = methods.get(method.getName()).invoke(target, args);
 			return result;
 		}
-		throw new IllegalStateException("Could not load target for [" + storeToString + "]");
+		throw new IllegalStateException("Could not load target for [" + storeToString + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private Map<String, Method> addToClassMethodMap(Class<? extends Object> clazz) {

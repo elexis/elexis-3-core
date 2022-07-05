@@ -145,7 +145,7 @@ public abstract class AbstractModelAdapterFactory {
 				if (testPrecondition) {
 					if (!mapping.testAdapterPrecondition((AbstractIdModelAdapter<?>) adapter)) {
 						LoggerFactory.getLogger(getClass()).error(
-								"Adapter precondition failed for [" + adapter + "] with id [" + adapter.getId() + "]");
+								"Adapter precondition failed for [" + adapter + "] with id [" + adapter.getId() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						return Optional.empty();
 					}
 				}
@@ -185,10 +185,10 @@ public abstract class AbstractModelAdapterFactory {
 				return (Identifiable) constructor.newInstance(dbObject);
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
-				throw new IllegalStateException("Error creating new AbstractModelAdapter instance", e);
+				throw new IllegalStateException("Error creating new AbstractModelAdapter instance", e); //$NON-NLS-1$
 			}
 		} else {
-			throw new IllegalStateException("No contructor for " + adapterClass + " found");
+			throw new IllegalStateException("No contructor for " + adapterClass + " found"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -205,7 +205,7 @@ public abstract class AbstractModelAdapterFactory {
 		try {
 			return adapterClass.getConstructor(new Class[] { modelClass });
 		} catch (NoSuchMethodException | SecurityException e) {
-			throw new IllegalStateException("Could not find AbstractModelAdapter constructor for " + adapterClass, e);
+			throw new IllegalStateException("Could not find AbstractModelAdapter constructor for " + adapterClass, e); //$NON-NLS-1$
 		}
 	}
 
@@ -228,13 +228,13 @@ public abstract class AbstractModelAdapterFactory {
 					return (T) ret.get();
 				} else {
 					throw new IllegalStateException(
-							"Created model " + ret.orElse(null) + " is no instance of class " + clazz);
+							"Created model " + ret.orElse(null) + " is no instance of class " + clazz); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else {
-				throw new IllegalStateException("No model class found for " + clazz);
+				throw new IllegalStateException("No model class found for " + clazz); //$NON-NLS-1$
 			}
 		} catch (InstantiationException | IllegalAccessException e) {
-			throw new IllegalStateException("Error creating adapter", e);
+			throw new IllegalStateException("Error creating adapter", e); //$NON-NLS-1$
 		}
 	}
 
@@ -253,7 +253,7 @@ public abstract class AbstractModelAdapterFactory {
 				}
 			}
 			throw new IllegalStateException(
-					"Ambiguous adapter mapping for [" + entryList.get(0).getAdapterClass() + "]");
+					"Ambiguous adapter mapping for [" + entryList.get(0).getAdapterClass() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return null;
 	}

@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.jpa.Messages;
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
 import liquibase.Liquibase;
 import liquibase.changelog.ChangeSet;
@@ -36,7 +37,7 @@ public class LiquibaseDBUpdater {
 
 	public LiquibaseDBUpdater(DataSource dataSource, IDatabaseUpdateUi updateProgress) {
 		this.dataSource = dataSource;
-		this.changelogXmlUrl = "/db/elexisdb_master_update.xml";
+		this.changelogXmlUrl = "/db/elexisdb_master_update.xml"; //$NON-NLS-1$
 		this.updateProgress = updateProgress;
 	}
 
@@ -56,15 +57,16 @@ public class LiquibaseDBUpdater {
 					@Override
 					public void willRun(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database,
 							RunStatus runStatus) {
-						updateProgress.setMessage("Update execute: " + changeSet.getDescription());
+						updateProgress
+								.setMessage(Messages.LiquibaseDBUpdater_Update_execute + changeSet.getDescription());
 					}
 				});
 			}
-			logger.info("Updating database [" + connection + "] with liquibase");
+			logger.info("Updating database [" + connection + "] with liquibase"); //$NON-NLS-1$ //$NON-NLS-2$
 			try {
 				liquibase.update(StringUtils.EMPTY);
 			} catch (ValidationFailedException e) {
-				logger.info("Validation failed clear checksums and retry");
+				logger.info("Validation failed clear checksums and retry"); //$NON-NLS-1$
 				// removes current checksums from database, on next run checksums will be
 				// recomputed
 				liquibase.clearCheckSums();
@@ -72,7 +74,7 @@ public class LiquibaseDBUpdater {
 			}
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on
-			logger.warn("Exception on DB update.", e);
+			logger.warn("Exception on DB update.", e); //$NON-NLS-1$
 			return false;
 		} finally {
 			try {

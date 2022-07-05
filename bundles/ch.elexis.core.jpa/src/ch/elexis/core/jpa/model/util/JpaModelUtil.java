@@ -37,14 +37,14 @@ public class JpaModelUtil {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(hash.size() * 30);
 			ZipOutputStream zos = new ZipOutputStream(baos);
-			zos.putNextEntry(new ZipEntry("hash"));
+			zos.putNextEntry(new ZipEntry("hash")); //$NON-NLS-1$
 			ObjectOutputStream oos = new ObjectOutputStream(zos);
 			oos.writeObject(hash);
 			zos.close();
 			baos.close();
 			return baos.toByteArray();
 		} catch (Exception ex) {
-			logger.warn("Exception flattening HashTable, returning null: " + ex.getMessage());
+			logger.warn("Exception flattening HashTable, returning null: " + ex.getMessage()); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -75,7 +75,7 @@ public class JpaModelUtil {
 				return null;
 			}
 		} catch (IOException | ClassNotFoundException ex) {
-			logger.error("Exception folding byte array", ex);
+			logger.error("Exception folding byte array", ex); //$NON-NLS-1$
 			return null;
 		}
 	}

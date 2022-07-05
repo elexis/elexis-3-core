@@ -92,7 +92,7 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		List<R> result = executeWithParameters(parameters);
 		if (!result.isEmpty()) {
 			if (result.size() > 1) {
-				LoggerFactory.getLogger(getClass()).warn("Multiple results in list where single result expected",
+				LoggerFactory.getLogger(getClass()).warn("Multiple results in list where single result expected", //$NON-NLS-1$
 						new Throwable());
 			}
 			return Optional.of(result.get(0));

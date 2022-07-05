@@ -53,7 +53,7 @@ public class PredicateHandler {
 		if (mappingAnnotation != null) {
 			// test class specific first
 			ret = mappingAnnotation.getDetails()
-					.get(entityClazz.getSimpleName() + "#" + IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME);
+					.get(entityClazz.getSimpleName() + "#" + IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME); //$NON-NLS-1$
 			if (ret == null) {
 				// fallback to direct mapping
 				ret = mappingAnnotation.getDetails().get(IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME);
@@ -83,7 +83,7 @@ public class PredicateHandler {
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException(
-					"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]");
+					"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -106,8 +106,8 @@ public class PredicateHandler {
 			predicate.ifPresent(p -> predicateGroups.getCurrentPredicateGroup().and(p));
 		} else {
 			// feature could not be resolved, mapping?
-			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName + "] of entity ["
-					+ entityClazz + "] or [" + otherEntityAttributeName + "] of entity [" + otherEntityClazz + "]");
+			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName + "] of entity [" //$NON-NLS-1$ //$NON-NLS-2$
+					+ entityClazz + "] or [" + otherEntityAttributeName + "] of entity [" + otherEntityClazz + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -123,7 +123,7 @@ public class PredicateHandler {
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException(
-					"Could not resolve attribute [" + entityAttributeName + "] of entity [" + entityClazz + "]");
+					"Could not resolve attribute [" + entityAttributeName + "] of entity [" + entityClazz + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -140,7 +140,7 @@ public class PredicateHandler {
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException(
-					"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]");
+					"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -154,7 +154,7 @@ public class PredicateHandler {
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException(
-					"Could not resolve attribute [" + entityAttributeName + "] of entity [" + entityClazz + "]");
+					"Could not resolve attribute [" + entityAttributeName + "] of entity [" + entityClazz + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -193,7 +193,7 @@ public class PredicateHandler {
 					return Optional.of(criteriaBuilder.like(rootQuery.get(attribute), (String) value));
 				}
 			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
+				throw new IllegalStateException("[" + value + "] is not a known type"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		case NOT_LIKE:
 			if (value instanceof String) {
@@ -204,7 +204,7 @@ public class PredicateHandler {
 					return Optional.of(criteriaBuilder.notLike(rootQuery.get(attribute), (String) value));
 				}
 			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
+				throw new IllegalStateException("[" + value + "] is not a known type"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		case GREATER:
 			if (value instanceof String) {
@@ -222,7 +222,7 @@ public class PredicateHandler {
 						valueRoot != null ? valueRoot.get((SingularAttribute) value)
 								: rootQuery.get((SingularAttribute) value)));
 			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
+				throw new IllegalStateException("[" + value + "] is not a known type"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		case GREATER_OR_EQUAL:
 			if (value instanceof String) {
@@ -241,7 +241,7 @@ public class PredicateHandler {
 						valueRoot != null ? valueRoot.get((SingularAttribute) value)
 								: rootQuery.get((SingularAttribute) value)));
 			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
+				throw new IllegalStateException("[" + value + "] is not a known type"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		case LESS:
 			if (value instanceof String) {
@@ -259,7 +259,7 @@ public class PredicateHandler {
 						valueRoot != null ? valueRoot.get((SingularAttribute) value)
 								: rootQuery.get((SingularAttribute) value)));
 			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
+				throw new IllegalStateException("[" + value + "] is not a known type"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		case LESS_OR_EQUAL:
 			if (value instanceof String) {
@@ -277,7 +277,7 @@ public class PredicateHandler {
 						valueRoot != null ? valueRoot.get((SingularAttribute) value)
 								: rootQuery.get((SingularAttribute) value)));
 			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
+				throw new IllegalStateException("[" + value + "] is not a known type"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		case IN:
 			if (value instanceof Iterable<?>) {
@@ -287,7 +287,7 @@ public class PredicateHandler {
 				values.forEach(p -> in.value(p));
 				return Optional.of(in);
 			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
+				throw new IllegalStateException("[" + value + "] is not a known type"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		default:
 			break;
@@ -298,7 +298,7 @@ public class PredicateHandler {
 	@SuppressWarnings("rawtypes")
 	public Optional<SingularAttribute> resolveAttribute(String entityClazzName, String featureName) {
 		try {
-			Class<?> metaClazz = getClass().getClassLoader().loadClass(entityClazzName + "_");
+			Class<?> metaClazz = getClass().getClassLoader().loadClass(entityClazzName + "_"); //$NON-NLS-1$
 			Field[] fields = metaClazz.getFields();
 			for (Field field : fields) {
 				if (field.getName().equalsIgnoreCase(featureName)) {
@@ -310,7 +310,7 @@ public class PredicateHandler {
 			}
 		} catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException e) {
 			LoggerFactory.getLogger(getClass())
-					.error("Could not find metamodel class for entity [" + entityClazzName + "]");
+					.error("Could not find metamodel class for entity [" + entityClazzName + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return Optional.empty();
 	}
