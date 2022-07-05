@@ -42,21 +42,21 @@ public class ExportTemplateCommand extends AbstractHandler {
 					fdl.setFileName(textTemplate.getName() + "." + textTemplate.getMimeType());
 					String fileString = fdl.open();
 					if (fileString != null) {
-					File file = new File(fileString);
-					byte[] contents = textTemplate.getTemplate().loadBinary();
+						File file = new File(fileString);
+						byte[] contents = textTemplate.getTemplate().loadBinary();
 
-					try (ByteArrayInputStream bais = new ByteArrayInputStream(contents);
-							FileOutputStream fos = new FileOutputStream(file)) {
-						FileTool.copyStreams(bais, fos);
-					} catch (IOException e) {
-						logger.error("Error creating template", e);
+						try (ByteArrayInputStream bais = new ByteArrayInputStream(contents);
+								FileOutputStream fos = new FileOutputStream(file)) {
+							FileTool.copyStreams(bais, fos);
+						} catch (IOException e) {
+							logger.error("Error creating template", e);
+						}
+					} else {
+						// do nothing
 					}
-				} else {
-					// do nothing
 				}
 			}
 		}
-	}
 		return null;
 	}
 }
