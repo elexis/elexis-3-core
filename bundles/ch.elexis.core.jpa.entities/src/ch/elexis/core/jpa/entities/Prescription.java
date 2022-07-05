@@ -76,6 +76,9 @@ public class Prescription extends AbstractEntityWithId implements EntityWithId, 
 	@Column(length = 25)
 	private String rezeptID;
 
+	@Column(length = 25)
+	private String artikelID;
+
 	@Column(length = 3)
 	@Convert(converter = IntegerStringConverter.class)
 	private int sortorder;
@@ -94,6 +97,10 @@ public class Prescription extends AbstractEntityWithId implements EntityWithId, 
 
 	public void setArtikel(String artikel) {
 		this.artikel = artikel;
+	}
+
+	public String getArtikelID() {
+		return artikelID;
 	}
 
 	public String getBemerkung() {
