@@ -11,7 +11,6 @@
 
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -22,6 +21,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -283,7 +283,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	@Inject
 	void lockedEncounter(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IEncounter encounter) {
 		if (created) {
-			if (Objects.equals(encounter, actEncounter)) {
+			if (encounter != null && Objects.equals(encounter, actEncounter)) {
 				IEncounter db_encounter = CoreModelServiceHolder.get()
 						.load(encounter.getId(), IEncounter.class, false, true).get();
 				long db_lastupdate = db_encounter.getLastupdate();
