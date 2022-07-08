@@ -15,13 +15,13 @@ package ch.elexis.core.ui.exchange.elements;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 
 public class RiskElement extends XChangeElement {
-	public static final String XMLNAME = "risk";
-	public static final String ATTR_CONFIRMEDBY = "confirmedBy";
-	public static final String ATTR_FIRSTMENTIONED = "firstMentioned";
-	public static final String ATTR_SUBSTANCE = "substance";
-	public static final String ATTR_RELEVANCE = "relevance";
-	public static final String ATTR_TYPE = "type";
-	public static String ELEMENT_META = "meta";
+	public static final String XMLNAME = "risk"; //$NON-NLS-1$
+	public static final String ATTR_CONFIRMEDBY = "confirmedBy"; //$NON-NLS-1$
+	public static final String ATTR_FIRSTMENTIONED = "firstMentioned"; //$NON-NLS-1$
+	public static final String ATTR_SUBSTANCE = "substance"; //$NON-NLS-1$
+	public static final String ATTR_RELEVANCE = "relevance"; //$NON-NLS-1$
+	public static final String ATTR_TYPE = "type"; //$NON-NLS-1$
+	public static String ELEMENT_META = "meta"; //$NON-NLS-1$
 
 	@Override
 	public String getXMLName() {

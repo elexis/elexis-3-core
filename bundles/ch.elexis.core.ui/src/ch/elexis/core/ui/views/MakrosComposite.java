@@ -119,10 +119,10 @@ public class MakrosComposite extends Composite {
 		PreparedStatement statement = null;
 		try {
 			statement = PersistentObject.getDefaultConnection()
-					.getPreparedStatement("SELECT Param, Value FROM USERCONFIG WHERE UserID=? AND Param LIKE ?");
+					.getPreparedStatement("SELECT Param, Value FROM USERCONFIG WHERE UserID=? AND Param LIKE ?"); //$NON-NLS-1$
 
 			statement.setString(1, actUser.getId());
-			statement.setString(2, "makros/%");
+			statement.setString(2, "makros/%"); //$NON-NLS-1$
 
 			List<MakroDTO> items = new ArrayList<>();
 			ResultSet rs = statement.executeQuery();
@@ -138,7 +138,7 @@ public class MakrosComposite extends Composite {
 			statement.close();
 			return items;
 		} catch (SQLException e) {
-			LoggerFactory.getLogger(getClass()).error("Could not fetch makros", e);
+			LoggerFactory.getLogger(getClass()).error("Could not fetch makros", e); //$NON-NLS-1$
 		} finally {
 			if (statement != null) {
 				PersistentObject.getDefaultConnection().releasePreparedStatement(statement);
@@ -178,7 +178,7 @@ public class MakrosComposite extends Composite {
 				StringBuilder name = new StringBuilder(in.getValue());
 				name.reverse();
 				MakroDetailComposite.saveMakro(new MakroDTO(CoreHub.getLoggedInContact().getId(),
-						"makros/" + name.toString(), in.getValue(), "Neues Makro"));
+						"makros/" + name.toString(), in.getValue(), "Neues Makro")); //$NON-NLS-1$
 				if (viewer != null) {
 					viewer.setInput(getUserMakros(CoreHub.getLoggedInContact()));
 				}
@@ -290,7 +290,7 @@ public class MakrosComposite extends Composite {
 
 		private boolean copyExists(MakroDTO makro) {
 			SqlSettings userSettings = new SqlSettings(PersistentObject.getDefaultConnection().getJdbcLink(),
-					"USERCONFIG", "Param", "Value", "UserID=" + JdbcLink.wrap(user.getId()));
+					"USERCONFIG", "Param", "Value", "UserID=" + JdbcLink.wrap(user.getId())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 			return userSettings.get(makro.getMakroParam(), null) != null;
 		}

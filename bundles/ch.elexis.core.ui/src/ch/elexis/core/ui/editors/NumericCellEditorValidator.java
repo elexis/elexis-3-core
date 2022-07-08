@@ -7,7 +7,7 @@ public class NumericCellEditorValidator implements ICellEditorValidator {
 	@Override
 	public String isValid(Object value) {
 		if (value instanceof String) {
-			value = ((String) value).replaceAll(",", ".");
+			value = ((String) value).replaceAll(",", "."); //$NON-NLS-1$ //$NON-NLS-2$
 			try {
 				Float.parseFloat((String) value);
 			} catch (NumberFormatException e) {

@@ -31,9 +31,9 @@ import ch.rgw.tools.XMLTool;
  *
  */
 public abstract class XChangeElement {
-	public static final String ATTR_ID = "id";
-	public static final String ATTR_DATE = "date";
-	public static final String ATTR_VALUE = "value";
+	public static final String ATTR_ID = "id"; //$NON-NLS-1$
+	public static final String ATTR_DATE = "date"; //$NON-NLS-1$
+	public static final String ATTR_VALUE = "value"; //$NON-NLS-1$
 	protected XChangeExporter sender;
 	private XChangeImporter reader;
 	protected Element ex;
@@ -210,7 +210,7 @@ public abstract class XChangeElement {
 	 *         implementation returns always "Format not supported"
 	 */
 	public Result<String> toString(final FORMAT format) {
-		return new Result<String>(Result.SEVERITY.ERROR, FORMAT_NOT_SUPPORTED, "Format not supported", null, true);
+		return new Result<String>(Result.SEVERITY.ERROR, FORMAT_NOT_SUPPORTED, "Format not supported", null, true); //$NON-NLS-1$
 	}
 
 	public void setAttribute(String attr, String value) {

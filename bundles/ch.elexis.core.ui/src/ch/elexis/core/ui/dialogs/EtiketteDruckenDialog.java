@@ -92,8 +92,8 @@ public class EtiketteDruckenDialog extends TitleAreaDialog implements ICallback 
 			return false;
 		}
 
-		String printer = CoreHub.localCfg.get("Drucker/Etiketten/Name", StringUtils.EMPTY);
-		String tray = CoreHub.localCfg.get("Drucker/Etiketten/Schacht", null);
+		String printer = CoreHub.localCfg.get("Drucker/Etiketten/Name", StringUtils.EMPTY); //$NON-NLS-1$
+		String tray = CoreHub.localCfg.get("Drucker/Etiketten/Schacht", null); //$NON-NLS-1$
 
 		return text.getPlugin().print(printer, tray, false);
 	}

@@ -99,7 +99,7 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 				String label = GenericSearchSelectionDialog.getLabel(object);
 				if (label != null && !label.isEmpty()) {
 					if (sb.length() > 0) {
-						sb.append(", ").append(label);
+						sb.append(", ").append(label); //$NON-NLS-1$
 					} else {
 						sb.append(label);
 					}

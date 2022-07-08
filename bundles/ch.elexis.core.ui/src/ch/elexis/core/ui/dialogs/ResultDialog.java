@@ -48,7 +48,7 @@ public class ResultDialog {
 	}
 
 	public static String getResultMessage(Result<?> result) {
-		StringJoiner sj = new StringJoiner("\n\n");
+		StringJoiner sj = new StringJoiner("\n\n"); //$NON-NLS-1$
 		for (Result<?>.msg message : result.getMessages()) {
 			sj.add(message.getText());
 		}

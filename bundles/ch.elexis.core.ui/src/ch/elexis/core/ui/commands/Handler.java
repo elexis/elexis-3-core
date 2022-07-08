@@ -130,7 +130,7 @@ public class Handler {
 
 	private static Object execute(IViewSite origin, String commandID, Map<String, Object> params) {
 		if (origin == null) {
-			log.error("origin is null");
+			log.error("origin is null"); //$NON-NLS-1$
 			return null;
 		}
 		IHandlerService handlerService = (IHandlerService) origin.getService(IHandlerService.class);

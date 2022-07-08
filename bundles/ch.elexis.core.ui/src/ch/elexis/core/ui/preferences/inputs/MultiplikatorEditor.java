@@ -75,7 +75,7 @@ public class MultiplikatorEditor extends Composite {
 	public void reload(final String typeName) {
 		this.typeName = typeName;
 		ArrayList<String[]> daten = new ArrayList<String[]>();
-		try (ResultSet res = stm.query("SELECT * FROM VK_PREISE WHERE TYP=" + JdbcLink.wrap(typeName))) {
+		try (ResultSet res = stm.query("SELECT * FROM VK_PREISE WHERE TYP=" + JdbcLink.wrap(typeName))) { //$NON-NLS-1$
 			while ((res != null) && (res.next() == true)) {
 				String[] row = new String[2];
 				row[0] = res.getString("DATUM_VON"); //$NON-NLS-1$

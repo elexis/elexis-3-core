@@ -202,12 +202,12 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 			aInput.add(FAVORITES);
 
 			settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_SRV, getListAsString(aInput))
-					.split(",");
+					.split(","); //$NON-NLS-1$
 			break;
 		case Diagnose:
 			aInput.addAll(findPagesFor(ExtensionPointConstantsUi.DIAGNOSECODE, null));
 			settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_DIAGNOSE, getListAsString(aInput))
-					.split(",");
+					.split(","); //$NON-NLS-1$
 			break;
 		case Codes:
 			aInput.addAll(findPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE, "Artikel"));
@@ -215,7 +215,7 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 			aInput.addAll(findPagesFor(ExtensionPointConstantsUi.GENERICCODE, "Artikel"));
 			aInput.add(FAVORITES);
 			settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_CODES, getListAsString(aInput))
-					.split(",");
+					.split(","); //$NON-NLS-1$
 			break;
 		default:
 			break;
@@ -237,7 +237,7 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 			sb.append(list.get(i));
 
 			if (i != (list.size() - 1)) {
-				sb.append(",");
+				sb.append(","); //$NON-NLS-1$
 			}
 		}
 		return sb.toString();

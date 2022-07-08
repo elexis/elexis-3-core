@@ -60,9 +60,9 @@ public class CoreUiUtil implements EventHandler {
 
 	@Override
 	public void handleEvent(Event event) {
-		logger.info("APPLICATION STARTUP COMPLETE");
+		logger.info("APPLICATION STARTUP COMPLETE"); //$NON-NLS-1$
 		synchronized (lock) {
-			Object property = event.getProperty("org.eclipse.e4.data");
+			Object property = event.getProperty("org.eclipse.e4.data"); //$NON-NLS-1$
 			if (property instanceof MApplication) {
 				MApplication application = (MApplication) property;
 				CoreUiUtil.applicationContext = application.getContext();
@@ -87,13 +87,13 @@ public class CoreUiUtil implements EventHandler {
 		try {
 			ContextInjectionFactory.inject(object, serviceContext);
 		} catch (InjectionException e) {
-			logger.warn("Service injection failure ", e);
+			logger.warn("Service injection failure ", e); //$NON-NLS-1$
 		}
 		if (applicationContext != null) {
 			try {
 				ContextInjectionFactory.inject(object, applicationContext);
 			} catch (InjectionException e) {
-				logger.warn("Application context injection failure ", e);
+				logger.warn("Application context injection failure ", e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -144,7 +144,7 @@ public class CoreUiUtil implements EventHandler {
 						Integer.parseInt(colorString.substring(2, 4), 16),
 						Integer.parseInt(colorString.substring(4, 6), 16));
 			} catch (NumberFormatException nex) {
-				logger.warn("Error parsing color string [" + colorString + "]", nex);
+				logger.warn("Error parsing color string [" + colorString + "]", nex); //$NON-NLS-1$ //$NON-NLS-2$
 				rgb = new RGB(100, 100, 100);
 			}
 			UiDesk.getColorRegistry().put(colorString, rgb);
@@ -159,12 +159,12 @@ public class CoreUiUtil implements EventHandler {
 	 * @return
 	 */
 	public static Image getImageAsIcon(IImage image) {
-		Image ret = UiDesk.getImageRegistry().get(image.getId() + "_16x16");
+		Image ret = UiDesk.getImageRegistry().get(image.getId() + "_16x16"); //$NON-NLS-1$
 		if (ret == null) {
 			Image origImage = getImage(image);
 			ret = getImageScaledTo(origImage, 16, 16, false);
 			if (ret != null) {
-				UiDesk.getImageRegistry().put(image.getId() + "_16x16", ret);
+				UiDesk.getImageRegistry().put(image.getId() + "_16x16", ret); //$NON-NLS-1$
 			}
 		}
 
@@ -189,7 +189,7 @@ public class CoreUiUtil implements EventHandler {
 					UiDesk.getImageRegistry().put(image.getId(), ret);
 				}
 			} catch (Exception ex) {
-				logger.error("Error loading image [" + image.getId() + "]", ex);
+				logger.error("Error loading image [" + image.getId() + "]", ex); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		return ret;
@@ -242,12 +242,12 @@ public class CoreUiUtil implements EventHandler {
 	 * @param objects
 	 */
 	public static void addCommandContributions(IMenuManager manager, Object[] selection, String location) {
-		java.util.List<IConfigurationElement> contributions = Extensions.getExtensions("org.eclipse.ui.menus");
+		java.util.List<IConfigurationElement> contributions = Extensions.getExtensions("org.eclipse.ui.menus"); //$NON-NLS-1$
 		List<ContributionAction> contributionActions = new ArrayList<>();
 		for (IConfigurationElement contributionElement : contributions) {
-			String locationUri = contributionElement.getAttribute("locationURI");
+			String locationUri = contributionElement.getAttribute("locationURI"); //$NON-NLS-1$
 			if (location.equals(locationUri)) {
-				IConfigurationElement[] commands = contributionElement.getChildren("command");
+				IConfigurationElement[] commands = contributionElement.getChildren("command"); //$NON-NLS-1$
 				if (commands.length > 0) {
 					for (IConfigurationElement iConfigurationElement : commands) {
 						getMenuContribution(iConfigurationElement, selection)
@@ -300,9 +300,9 @@ public class CoreUiUtil implements EventHandler {
 	 */
 	public static StructuredSelection getCommandSelection(IEclipseContext iEclipseContext, String commandId,
 			boolean remove) {
-		StructuredSelection selection = (StructuredSelection) iEclipseContext.get(commandId.concat(".selection"));
+		StructuredSelection selection = (StructuredSelection) iEclipseContext.get(commandId.concat(".selection")); //$NON-NLS-1$
 		if (remove) {
-			iEclipseContext.remove(commandId.concat(".selection"));
+			iEclipseContext.remove(commandId.concat(".selection")); //$NON-NLS-1$
 		}
 		return selection;
 	}
@@ -316,7 +316,7 @@ public class CoreUiUtil implements EventHandler {
 	 * @param selection
 	 */
 	public static void setCommandSelection(String commandId, Object[] selection) {
-		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(commandId.concat(".selection"),
+		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(commandId.concat(".selection"), //$NON-NLS-1$
 				new StructuredSelection(selection));
 	}
 
@@ -343,11 +343,11 @@ public class CoreUiUtil implements EventHandler {
 		part.setCloseable(state);
 		part.setCloseable(!state);
 		if (state) {
-			if (!part.getTags().contains("NoMove")) {
-				part.getTags().add("NoMove");
+			if (!part.getTags().contains("NoMove")) { //$NON-NLS-1$
+				part.getTags().add("NoMove"); //$NON-NLS-1$
 			}
 		} else {
-			part.getTags().remove("NoMove");
+			part.getTags().remove("NoMove"); //$NON-NLS-1$
 		}
 	}
 }

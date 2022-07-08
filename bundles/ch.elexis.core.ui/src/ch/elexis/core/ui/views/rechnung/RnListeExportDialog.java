@@ -44,7 +44,7 @@ import ch.rgw.tools.Tree;
 class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 	ArrayList<Rechnung> rnn;
 	private Logger log = LoggerFactory.getLogger(RnActions.class);
-	private String RnListExportFileName = new SimpleDateFormat("'RnListExport-'yyyyMMddHHmmss'.csv'")
+	private String RnListExportFileName = new SimpleDateFormat("'RnListExport-'yyyyMMddHHmmss'.csv'") //$NON-NLS-1$
 			.format(new Date());
 
 	// 201512211459js: Siehe auch RechnungsDrucker.java - nach dortigem Vorbild
@@ -52,7 +52,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 	// Zur Kontrolle es Ausgabeverzeichnisses, mit permanentem Speichern.
 	// ToDo: Durchgängig auf externe Konstanten umstellen, wie dort gezeigt, u.a.
 	// bei Hub.LocalCfg Zugriffen.
-	String RnListExportDirname = CoreHub.localCfg.get("rechnung/RnListExportDirname", null);
+	String RnListExportDirname = CoreHub.localCfg.get("rechnung/RnListExportDirname", null); //$NON-NLS-1$
 	Text tDirName;
 
 	public RnListeExportDialog(final Shell shell, final Object[] tree) {
@@ -114,13 +114,13 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 							Messages.RnActions_exportListDirNameMissingText);
 				} else {
 					// ToDo: Umstellen auf externe Konstante!
-					CoreHub.localCfg.set("rechnung/RnListExportDirname", RnListExportDirname);
+					CoreHub.localCfg.set("rechnung/RnListExportDirname", RnListExportDirname); //$NON-NLS-1$
 					tDirName.setText(RnListExportDirname);
 				}
 			}
 		});
 		tDirName = new Text(cSaveCopy, SWT.BORDER | SWT.READ_ONLY);
-		tDirName.setText(CoreHub.localCfg.get("rechnung/RnListExportDirname", StringUtils.EMPTY));
+		tDirName.setText(CoreHub.localCfg.get("rechnung/RnListExportDirname", StringUtils.EMPTY)); //$NON-NLS-1$
 		tDirName.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		return ret;
 	}
@@ -143,7 +143,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 	@Override
 	protected void okPressed() {
 		super.okPressed();
-		if (CoreHub.localCfg.get("rechnung/RnListExportDirname_bSaveFileAs", true))
+		if (CoreHub.localCfg.get("rechnung/RnListExportDirname_bSaveFileAs", true)) //$NON-NLS-1$
 			CSVWriteTable();
 	}
 
@@ -157,45 +157,45 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 	}
 
 	public void CSVWriteTable() {
-		String pathToSave = RnListExportDirname + "/" + RnListExportFileName;
+		String pathToSave = RnListExportDirname + "/" + RnListExportFileName; //$NON-NLS-1$
 		CSVWriter csv = null;
 		int nrLines = 0;
 		try {
 			csv = new CSVWriter(new FileWriter(pathToSave));
 			// @formatter:off
 			String[] header = new String[] {
-				"Aktion?", // line 0
-				"Re.Nr", // line 1
-				"Re.DatumRn", // line 2
-				"Re.DatumVon", // line 3
-				"Re.DatumBis", // line 4
-				"Re.Garant", // line 5
-				"Re.Total", // line 6
-				"Re.Offen", // line 7
-				"Re.StatusLastUpdate", // line 8
-				"Re.Status", // line 9
-				"Re.StatusIsActive", // line 10
-				"Re.StatusText", // line 11
-				"Re.StatusChanges", // line 12
-				"Re.Rejecteds", // line 13
-				"Re.Outputs", // line 14
-				"Re.Payments", // line 15
-				"Fall.AbrSystem", // line 16
-				"Fall.Bezeichnung", // line 17
-				"Fall.Grund", // line 18
-				"Pat.Nr", // line 10
-				"Pat.Name", // line 20
-				"Pat.Vorname", // line 21
-				"Pat.GebDat", // line 22
-				"Pat.LztKonsDat", // line 23
-				"Pat.Balance", // line 24
-				"Pat.GetAccountExcess", // line 25
-				"Pat.BillSummary.Total.", // line 26
-				"Pat.BillSummary.Paid", // line 27
-				"Pat.BillSummary.Open" // line 28
+				"Aktion?", // line 0 //$NON-NLS-1$
+				"Re.Nr", // line 1 //$NON-NLS-1$
+				"Re.DatumRn", // line 2 //$NON-NLS-1$
+				"Re.DatumVon", // line 3 //$NON-NLS-1$
+				"Re.DatumBis", // line 4 //$NON-NLS-1$
+				"Re.Garant", // line 5 //$NON-NLS-1$
+				"Re.Total", // line 6 //$NON-NLS-1$
+				"Re.Offen", // line 7 //$NON-NLS-1$
+				"Re.StatusLastUpdate", // line 8 //$NON-NLS-1$
+				"Re.Status", // line 9 //$NON-NLS-1$
+				"Re.StatusIsActive", // line 10 //$NON-NLS-1$
+				"Re.StatusText", // line 11 //$NON-NLS-1$
+				"Re.StatusChanges", // line 12 //$NON-NLS-1$
+				"Re.Rejecteds", // line 13 //$NON-NLS-1$
+				"Re.Outputs", // line 14 //$NON-NLS-1$
+				"Re.Payments", // line 15 //$NON-NLS-1$
+				"Fall.AbrSystem", // line 16 //$NON-NLS-1$
+				"Fall.Bezeichnung", // line 17 //$NON-NLS-1$
+				"Fall.Grund", // line 18 //$NON-NLS-1$
+				"Pat.Nr", // line 10 //$NON-NLS-1$
+				"Pat.Name", // line 20 //$NON-NLS-1$
+				"Pat.Vorname", // line 21 //$NON-NLS-1$
+				"Pat.GebDat", // line 22 //$NON-NLS-1$
+				"Pat.LztKonsDat", // line 23 //$NON-NLS-1$
+				"Pat.Balance", // line 24 //$NON-NLS-1$
+				"Pat.GetAccountExcess", // line 25 //$NON-NLS-1$
+				"Pat.BillSummary.Total.", // line 26 //$NON-NLS-1$
+				"Pat.BillSummary.Paid", // line 27 //$NON-NLS-1$
+				"Pat.BillSummary.Open" // line 28 //$NON-NLS-1$
 			};
 			// @formatter:on
-			log.debug("csv export started for {} with {} fields for {} invoices", pathToSave, header.length,
+			log.debug("csv export started for {} with {} fields for {} invoices", pathToSave, header.length, //$NON-NLS-1$
 					rnn.size());
 			csv.writeNext(header);
 			nrLines++;
@@ -217,15 +217,15 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				long luTime = rn.getLastUpdate();
 				Date date = new Date(luTime);
 				// TODO: Support other date formats based upon location or configured settings
-				SimpleDateFormat df2 = new SimpleDateFormat("dd.MM.yyyy");
+				SimpleDateFormat df2 = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
 				String dateText = df2.format(date);
 				line[8] = dateText.toString();
 				int st = rn.getStatus();
 				line[9] = Integer.toString(st);
 				if (RnStatus.isActive(st)) {
-					line[10] = "True";
+					line[10] = "True"; //$NON-NLS-1$
 				} else {
-					line[10] = "False";
+					line[10] = "False"; //$NON-NLS-1$
 				}
 				line[11] = RnStatus.getStatusText(st);
 				// 201512210310js: New: produce 4 fields, each with multiline content.
@@ -233,12 +233,12 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				String a = statuschgs.toString();
 				if (a != null && a.length() > 1) {
 					// Die Uhrzeiten rauswerfen:
-					a = a.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY);
+					a = a.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY); //$NON-NLS-1$
 					// ", " durch StringUtils.LF ersetzen (Man könnte auch noch prüfen, ob danach
 					// eine
 					// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-					a = a.replaceAll("\r\n", ", ");
-					a = a.replaceAll(", ", StringUtils.LF);
+					a = a.replaceAll("\r\n", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+					a = a.replaceAll(", ", StringUtils.LF); //$NON-NLS-1$
 					// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 					line[12] = a.substring(1, a.length() - 1);
 				}
@@ -247,12 +247,12 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 					String rnStatus = rejects.toString();
 					if (rnStatus != null && rnStatus.length() > 1) {
 						// Die Uhrzeiten rauswerfen:
-						rnStatus = rnStatus.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY);
+						rnStatus = rnStatus.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY); //$NON-NLS-1$
 						// ", " durch StringUtils.LF ersetzen (Man könnte auch noch prüfen, ob danach
 						// eine
 						// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-						rnStatus = rnStatus.replaceAll("\r\n", ", ");
-						rnStatus = rnStatus.replaceAll(", ", StringUtils.LF);
+						rnStatus = rnStatus.replaceAll("\r\n", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+						rnStatus = rnStatus.replaceAll(", ", StringUtils.LF); //$NON-NLS-1$
 						// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 						line[13] = rnStatus.substring(1, rnStatus.length() - 1);
 					}
@@ -261,12 +261,12 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				String rnOutput = outputs.toString();
 				if (rnOutput != null && rnOutput.length() > 1) {
 					// Die Uhrzeiten rauswerfen:
-					rnOutput = rnOutput.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY);
+					rnOutput = rnOutput.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY); //$NON-NLS-1$
 					// ", " durch StringUtils.LF ersetzen (Man könnte auch noch prüfen, ob danach
 					// eine
 					// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-					rnOutput = rnOutput.replaceAll("\r\n", ", ");
-					rnOutput = rnOutput.replaceAll(", ", StringUtils.LF);
+					rnOutput = rnOutput.replaceAll("\r\n", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+					rnOutput = rnOutput.replaceAll(", ", StringUtils.LF); //$NON-NLS-1$
 					// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 					line[14] = rnOutput.substring(1, rnOutput.length() - 1);
 				}
@@ -274,12 +274,12 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				String rnPayment = payments.toString();
 				if (rnPayment != null && rnPayment.length() > 1) {
 					// Die Uhrzeiten rauswerfen:
-					rnPayment = rnPayment.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY);
+					rnPayment = rnPayment.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringUtils.EMPTY); //$NON-NLS-1$
 					// ", " durch StringUtils.LF ersetzen (Man könnte auch noch prüfen, ob danach
 					// eine
 					// Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-					rnPayment = rnPayment.replaceAll("\r\n", ", ");
-					rnPayment = rnPayment.replaceAll(", ", StringUtils.LF);
+					rnPayment = rnPayment.replaceAll("\r\n", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+					rnPayment = rnPayment.replaceAll(", ", StringUtils.LF); //$NON-NLS-1$
 					// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 					line[15] = rnPayment.substring(1, rnPayment.length() - 1);
 				}
@@ -297,13 +297,13 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				// nk schuld sind, wenn nichts rauskommt.
 				// TODO: Na ja, eigentlich würd ich noch lieber wissen, WARUM da manchmal nichts
 				// rauskommt, obwohl eine kons sicher vhd ist.
-				String lkDatum = "p==null";
+				String lkDatum = "p==null"; //$NON-NLS-1$
 				if (p != null) {
 					Konsultation lk = p.getLetzteKons(false);
 					if (lk != null) {
 						lkDatum = (lk.getDatum());
 					} else {
-						lkDatum = "lk==null";
+						lkDatum = "lk==null"; //$NON-NLS-1$
 					}
 				}
 				line[23] = lkDatum;
@@ -355,7 +355,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				try {
 					csv.close();
 				} catch (IOException e) {
-					log.error("cannot close csv exporter", e);
+					log.error("cannot close csv exporter", e); //$NON-NLS-1$
 				}
 			}
 		}

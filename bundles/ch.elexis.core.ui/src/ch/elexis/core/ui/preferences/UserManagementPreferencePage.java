@@ -303,7 +303,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		userInfoLabel = new Label(compositeEdit, SWT.NONE);
 		userInfoLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		userInfoLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
-		userInfoLabel.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 14, SWT.BOLD));
+		userInfoLabel.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 14, SWT.BOLD)); //$NON-NLS-1$
 		userInfoLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeEdit, SWT.None);
 
@@ -686,7 +686,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				}
 
 				Mandant m = (Mandant) element;
-				return (m.equals(stdWorkingFor) ? "* " : StringUtils.EMPTY) + m.getName() + StringUtils.SPACE
+				return (m.equals(stdWorkingFor) ? "* " : StringUtils.EMPTY) + m.getName() + StringUtils.SPACE //$NON-NLS-1$
 						+ m.getVorname();
 			}
 		});
@@ -738,7 +738,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			String text = (anw != null) ? anw.getPersonalia() : "Nicht gesetzt";
 			linkContact.setText(text + StringUtils.SPACE + CHANGE_LINK);
 
-			userInfoLabel.setText(text + " [" + user.getId() + "]");
+			userInfoLabel.setText(text + " [" + user.getId() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			updateRoles();
 
@@ -756,7 +756,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				}
 			}
 
-			linkRechnungssteller.setText("- " + CHANGE_LINK);
+			linkRechnungssteller.setText("- " + CHANGE_LINK); //$NON-NLS-1$
 			lblRespPhysColor.setBackground(lblRespPhysColorDefColor);
 
 			if (anw != null) {
@@ -809,19 +809,19 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
 		IObservableValue observeSelectionBtnIsAdminObserveWidget = WidgetProperties.selection().observe(btnUserIsAdmin);
-		IObservableValue wvAdminObserveDetailValue = PojoProperties.value(User.class, "administrator", Boolean.class)
+		IObservableValue wvAdminObserveDetailValue = PojoProperties.value(User.class, "administrator", Boolean.class) //$NON-NLS-1$
 				.observeDetail(wvUser);
 		bindingContext.bindValue(observeSelectionBtnIsAdminObserveWidget, wvAdminObserveDetailValue, null, null);
 		//
 		IObservableValue observeSelectionBtnIsMandatorObserveWidget = WidgetProperties.selection()
 				.observe(btnIsExecutiveDoctor);
 		IObservableValue wvMandatorObserveDetailValue = PojoProperties
-				.value(Anwender.class, "executiveDoctor", Boolean.class).observeDetail(wvAnwender);
+				.value(Anwender.class, "executiveDoctor", Boolean.class).observeDetail(wvAnwender); //$NON-NLS-1$
 		bindingContext.bindValue(observeSelectionBtnIsMandatorObserveWidget, wvMandatorObserveDetailValue, null, null);
 		//
 		IObservableValue observeSelectionBtnIsActiveObserveWidget = WidgetProperties.selection()
 				.observe(btnUserIsLocked);
-		IObservableValue wvActiveObserveDetailValue = PojoProperties.value(User.class, "active", Boolean.class)
+		IObservableValue wvActiveObserveDetailValue = PojoProperties.value(User.class, "active", Boolean.class) //$NON-NLS-1$
 				.observeDetail(wvUser);
 		bindingContext.bindValue(observeSelectionBtnIsActiveObserveWidget, wvActiveObserveDetailValue,
 				new UpdateValueStrategy().setConverter(new BooleanNotConverter()),

@@ -55,7 +55,8 @@ public class AUFExtension implements IKonsExtension {
 			AUF auf = (AUF) o;
 			final Konsultation k = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 
-			tx.insertXRef(pos, "AUF: " + auf.getLabel(), XRefExtensionConstants.providerAUFID, auf.getId());
+			tx.insertXRef(pos, "AUF: " + auf.getLabel(), XRefExtensionConstants.providerAUFID, auf.getId()); //$NON-NLS-1$
+
 			k.updateEintrag(tx.getContentsAsXML(), false);
 			ElexisEventDispatcher.update(k);
 		}

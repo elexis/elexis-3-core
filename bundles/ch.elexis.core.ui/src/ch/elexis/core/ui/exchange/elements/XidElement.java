@@ -29,15 +29,15 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.XMLTool;
 
 public class XidElement extends XChangeElement {
-	public static final String XMLNAME = "xid";
-	public static final String ELEMENT_IDENTITY = "identity";
-	public static final String ATTR_IDENTITY_DOMAIN = "domain";
-	public static final String ATTR_IDENTITY_DOMAIN_ID = "domainID";
-	public static final String ATTR_IDENTITY_QUALITY = "quality";
-	public static final String ATTR_ISGUID = "isGUID";
+	public static final String XMLNAME = "xid"; //$NON-NLS-1$
+	public static final String ELEMENT_IDENTITY = "identity"; //$NON-NLS-1$
+	public static final String ATTR_IDENTITY_DOMAIN = "domain"; //$NON-NLS-1$
+	public static final String ATTR_IDENTITY_DOMAIN_ID = "domainID"; //$NON-NLS-1$
+	public static final String ATTR_IDENTITY_QUALITY = "quality"; //$NON-NLS-1$
+	public static final String ATTR_ISGUID = "isGUID"; //$NON-NLS-1$
 
-	public static final String[] IDENTITY_QUALITIES = { "unknownAssignment", "localAssignment", "regionalAssignment",
-			"globalAssignment" };
+	public static final String[] IDENTITY_QUALITIES = { "unknownAssignment", "localAssignment", "regionalAssignment", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"globalAssignment" }; //$NON-NLS-1$
 
 	public enum XIDMATCH {
 		NONE, POSSIBLE, SURE
@@ -73,7 +73,7 @@ public class XidElement extends XChangeElement {
 		StringBuilder domainRoot = new StringBuilder(FindingElement.XIDBASE);
 		Labor lab = ((LabItem) li).getLabor();
 		if (lab == null || (!lab.isValid())) {
-			domainRoot.append("unknown");
+			domainRoot.append("unknown"); //$NON-NLS-1$
 		} else {
 			domainRoot.append(lab.get(Kontakt.FLD_NAME1));
 		}
@@ -200,7 +200,7 @@ public class XidElement extends XChangeElement {
 			}
 		}
 		if (best == null || (!best.isGuid())) {
-			best = new Identity().asExporter(sender, XidConstants.DOMAIN_ELEXIS, StringTool.unique("xidID"),
+			best = new Identity().asExporter(sender, XidConstants.DOMAIN_ELEXIS, StringTool.unique("xidID"), //$NON-NLS-1$
 					Xid.ASSIGNMENT_LOCAL, true);
 			add(best);
 		}

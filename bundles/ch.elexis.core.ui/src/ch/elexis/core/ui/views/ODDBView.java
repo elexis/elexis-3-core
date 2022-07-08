@@ -40,7 +40,7 @@ import ch.rgw.tools.StringTool;
  * Diese View reichtet einen Browser aufs Arzneimittel-Kompendium ein.
  */
 public class ODDBView extends ViewPart {
-	public static final String ID = "ch.elexis.ODDBView";
+	public static final String ID = "ch.elexis.ODDBView"; //$NON-NLS-1$
 	Browser browser;
 
 	@Override
@@ -56,7 +56,7 @@ public class ODDBView extends ViewPart {
 
 		});
 		// browser.setUrl("http://ch.oddb.org");
-		browser.setUrl("https://just-medical.oddb.org/");
+		browser.setUrl("https://just-medical.oddb.org/"); //$NON-NLS-1$
 
 	}
 

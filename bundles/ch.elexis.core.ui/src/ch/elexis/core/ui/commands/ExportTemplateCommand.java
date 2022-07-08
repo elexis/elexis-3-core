@@ -37,9 +37,9 @@ public class ExportTemplateCommand extends AbstractHandler {
 				if (textTemplate.getTemplate() != null) {
 					FileDialog fdl = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
 					fdl.setFilterExtensions(
-							new String[] { MimeTypeUtil.getExtensions(textTemplate.getMimeType()), "*.*" });
-					fdl.setFilterNames(new String[] { textTemplate.getMimeTypePrintname(), "All files" });
-					fdl.setFileName(textTemplate.getName() + "." + textTemplate.getMimeType());
+							new String[] { MimeTypeUtil.getExtensions(textTemplate.getMimeType()), "*.*" }); //$NON-NLS-1$
+					fdl.setFilterNames(new String[] { textTemplate.getMimeTypePrintname(), "All files" }); //$NON-NLS-1$
+					fdl.setFileName(textTemplate.getName() + "." + textTemplate.getMimeType()); //$NON-NLS-1$
 					String fileString = fdl.open();
 					if (fileString != null) {
 						File file = new File(fileString);
@@ -49,7 +49,7 @@ public class ExportTemplateCommand extends AbstractHandler {
 								FileOutputStream fos = new FileOutputStream(file)) {
 							FileTool.copyStreams(bais, fos);
 						} catch (IOException e) {
-							logger.error("Error creating template", e);
+							logger.error("Error creating template", e); //$NON-NLS-1$
 						}
 					} else {
 						// do nothing

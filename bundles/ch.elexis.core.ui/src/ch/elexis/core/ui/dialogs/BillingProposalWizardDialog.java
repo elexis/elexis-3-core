@@ -231,7 +231,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				proposal = runnable.getProposal();
 			}
 		} catch (InvocationTargetException | InterruptedException e) {
-			LoggerFactory.getLogger(BillingProposalWizardDialog.class).error("Error running proposal query", e);
+			LoggerFactory.getLogger(BillingProposalWizardDialog.class).error("Error running proposal query", e); //$NON-NLS-1$
 			MessageDialog.openError(getShell(), "Fehler", "Fehler beim Ausführen des Rechnungs-Vorschlags.");
 			return;
 		}
@@ -257,11 +257,11 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		private Money excludeKonsByMoney;
 
 		public QueryProposalRunnable() {
-			query = new Query<>(Konsultation.class, "BEHANDLUNGEN", false,
+			query = new Query<>(Konsultation.class, "BEHANDLUNGEN", false, //$NON-NLS-1$
 					new String[] { Konsultation.DATE, Konsultation.FLD_TIME, Konsultation.FLD_MANDATOR_ID,
 							Konsultation.FLD_BILL_ID, Konsultation.FLD_CASE_ID });
 			query.add(Konsultation.FLD_BILL_ID, Query.EQUALS, null);
-			query.add(Konsultation.FLD_BILLABLE, Query.EQUALS, "1");
+			query.add(Konsultation.FLD_BILLABLE, Query.EQUALS, "1"); //$NON-NLS-1$
 			if (timeSpanOnly.getSelection()) {
 				IStructuredSelection selection = (IStructuredSelection) timeSpanSelection.getSelection();
 				if (selection != null && !selection.isEmpty()) {

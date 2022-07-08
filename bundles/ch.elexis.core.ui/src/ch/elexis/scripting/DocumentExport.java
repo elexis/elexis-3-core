@@ -53,7 +53,7 @@ public class DocumentExport {
 		try {
 			if (destination == null) {
 				FileDialog fd = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
-				fd.setFilterExtensions(new String[] { "*.csv" });
+				fd.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
 				fd.setFilterNames(new String[] { "Comma Separated Values (CVS)" });
 				fd.setOverwrite(true);
 				destination = fd.open();
@@ -87,7 +87,7 @@ public class DocumentExport {
 							line[2] = doc.getCategory();
 							line[3] = doc.getCreationDate();
 							line[4] = doc.getKeywords();
-							String docfilename = doc.getGUID() + "." + doc.getMimeType();
+							String docfilename = doc.getGUID() + "." + doc.getMimeType(); //$NON-NLS-1$
 							line[5] = dir.getName() + File.separator + subdir.getName() + File.separator + docfilename;
 							byte[] bin = doc.getContentsAsBytes();
 							if (bin != null) {

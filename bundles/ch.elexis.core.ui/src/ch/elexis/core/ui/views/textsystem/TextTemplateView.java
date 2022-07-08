@@ -123,7 +123,7 @@ public class TextTemplateView extends ViewPart {
 
 		// load required text templates
 		List<ITextTemplateRequirement> requirements = Extensions
-				.getClasses(ExtensionPointConstantsUi.TEXT_TEMPLATE_REQUIREMENT, "element");
+				.getClasses(ExtensionPointConstantsUi.TEXT_TEMPLATE_REQUIREMENT, "element"); //$NON-NLS-1$
 		for (ITextTemplateRequirement txtTemplateReq : requirements) {
 			String[] names = txtTemplateReq.getNamesOfRequiredTextTemplate();
 			String[] descriptions = txtTemplateReq.getDescriptionsOfRequiredTextTemplate();
@@ -235,7 +235,7 @@ public class TextTemplateView extends ViewPart {
 					TextTemplate textTemplate = (TextTemplate) object;
 					if (textTemplate.getTemplate() == null) {
 						event.doit = false;
-						log.error("Error template doesn't exist");
+						log.error("Error template doesn't exist"); //$NON-NLS-1$
 					}
 				}
 			}
@@ -246,14 +246,14 @@ public class TextTemplateView extends ViewPart {
 					String[] files = new String[selection.size()];
 					for (int i = 0; i < selection.size(); i++) {
 						TextTemplate textTemplate = (TextTemplate) selection.toList().get(i);
-						File file = new File(textTemplate.getName() + "." + textTemplate.getMimeType());
+						File file = new File(textTemplate.getName() + "." + textTemplate.getMimeType()); //$NON-NLS-1$
 						byte[] contents = textTemplate.getTemplate().loadBinary();
 
 						try (ByteArrayInputStream bais = new ByteArrayInputStream(contents);
 								FileOutputStream fos = new FileOutputStream(file);) {
 							FileTool.copyStreams(bais, fos);
 						} catch (IOException e) {
-							log.error("Error creating template", e);
+							log.error("Error creating template", e); //$NON-NLS-1$
 						}
 						files[i] = file.getAbsolutePath();
 						log.debug("dragSetData; isSupportedType {} data {}", file.getAbsolutePath(), //$NON-NLS-1$
@@ -417,7 +417,7 @@ public class TextTemplateView extends ViewPart {
 						label += printer;
 					}
 					if (tray != null) {
-						label += "/ " + tray;
+						label += "/ " + tray; //$NON-NLS-1$
 					}
 					return label;
 				}

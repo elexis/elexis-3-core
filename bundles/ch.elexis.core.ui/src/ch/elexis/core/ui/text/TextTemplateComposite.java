@@ -59,7 +59,7 @@ public class TextTemplateComposite extends Composite {
 							templateText.getCaretOffset() - 1);
 					insertSpace = !(beforeChar.equals(StringUtils.SPACE) || beforeChar.equals(StringUtils.LF));
 				}
-				String insertText = (insertSpace ? " [" : "[") + proposal.getContent() + "]";
+				String insertText = (insertSpace ? " [" : "[") + proposal.getContent() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				templateText.insert(insertText);
 				templateText.setCaretOffset(templateText.getCaretOffset() + insertText.length());
 				replacementProposals.setText(StringUtils.EMPTY);
@@ -116,7 +116,7 @@ public class TextTemplateComposite extends Composite {
 			for (ITextPlaceholderResolver resolver : replacementService.getResolvers()) {
 				List<PlaceholderAttribute> attributes = resolver.getSupportedAttributes();
 				for (PlaceholderAttribute attribute : attributes) {
-					String proposalText = attribute.getTypeName() + "." + attribute.getAttributeName();
+					String proposalText = attribute.getTypeName() + "." + attribute.getAttributeName(); //$NON-NLS-1$
 					if (proposalText.toLowerCase().contains(contents)) {
 						proposals.add(new ContentProposal(proposalText));
 					}

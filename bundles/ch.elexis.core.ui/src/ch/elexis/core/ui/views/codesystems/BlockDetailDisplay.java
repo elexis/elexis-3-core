@@ -139,34 +139,34 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	public Composite createDisplay(final Composite parent, final IViewSite site) {
 		tk = UiDesk.getToolkit();
 		form = tk.createScrolledForm(parent);
-		form.setData("TEST_COMP_NAME", "blkd_form"); //$NON-NLS-1$
+		form.setData("TEST_COMP_NAME", "blkd_form"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		Composite body = form.getBody();
-		body.setData("TEST_COMP_NAME", "blkd_body"); //$NON-NLS-1$
+		body.setData("TEST_COMP_NAME", "blkd_body"); //$NON-NLS-1$ //$NON-NLS-2$
 		body.setBackground(parent.getBackground());
 		body.setLayout(new GridLayout(2, false));
 
 		tk.createLabel(body, Messages.BlockDetailDisplay_name).setBackground(parent.getBackground());
 		tName = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
-		tName.setData("TEST_COMP_NAME", "blkd_Name_lst"); //$NON-NLS-1$
+		tName.setData("TEST_COMP_NAME", "blkd_Name_lst"); //$NON-NLS-1$ //$NON-NLS-2$
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		IObservableValue txtNameObservableUi = WidgetProperties.text(SWT.Modify).observeDelayed(100, tName);
-		IObservableValue txtNameObservable = PojoProperties.value("code", String.class).observeDetail(master);
+		IObservableValue txtNameObservable = PojoProperties.value("code", String.class).observeDetail(master); //$NON-NLS-1$
 		txtNameObservable.addChangeListener(changeListener);
 		dbc.bindValue(txtNameObservableUi, txtNameObservable);
 
 		tk.createLabel(body, Messages.BlockDetailDisplay_macro).setBackground(parent.getBackground());
 		tMacro = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
-		tMacro.setData("TEST_COMP_NAME", "blkd_Makro_lst"); //$NON-NLS-1$
+		tMacro.setData("TEST_COMP_NAME", "blkd_Makro_lst"); //$NON-NLS-1$ //$NON-NLS-2$
 		tMacro.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		IObservableValue txtMacroObservableUi = WidgetProperties.text(SWT.Modify).observeDelayed(100, tMacro);
-		IObservableValue txtMacroObservable = PojoProperties.value("macro", String.class).observeDetail(master);
+		IObservableValue txtMacroObservable = PojoProperties.value("macro", String.class).observeDetail(master); //$NON-NLS-1$
 		txtMacroObservable.addChangeListener(changeListener);
 		dbc.bindValue(txtMacroObservableUi, txtMacroObservable);
 
 		tk.createLabel(body, StringConstants.MANDATOR).setBackground(parent.getBackground());
 		cbMandant = new Combo(body, SWT.NONE);
-		cbMandant.setData("TEST_COMP_NAME", "blkd_Mandant_cb"); //$NON-NLS-1$
+		cbMandant.setData("TEST_COMP_NAME", "blkd_Mandant_cb"); //$NON-NLS-1$ //$NON-NLS-2$
 		cbMandant.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.adapt(cbMandant);
 		IQuery<IMandator> query = CoreModelServiceHolder.get().getQuery(IMandator.class);
@@ -197,7 +197,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		gList.setLayout(new FillLayout());
 		tk.adapt(gList);
 		viewer = new TableViewer(gList, SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-		viewer.setData("TEST_COMP_NAME", "blkd_Leistung_Lst"); //$NON-NLS-1$
+		viewer.setData("TEST_COMP_NAME", "blkd_Leistung_Lst"); //$NON-NLS-1$ //$NON-NLS-2$
 		tk.adapt(viewer.getControl(), true, true);
 
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
@@ -241,7 +241,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 							b.addElement((ICodeElement) dropped);
 						});
 					} else {
-						LoggerFactory.getLogger(getClass()).warn("Dropped unknown store to string [" + dl + "]");
+						LoggerFactory.getLogger(getClass()).warn("Dropped unknown store to string [" + dl + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 				block.ifPresent(b -> {
@@ -271,7 +271,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 
 		bNew = tk.createButton(body, Messages.BlockDetailDisplay_addPredefinedServices, SWT.PUSH); // $NON-NLS-1$
 		bNew.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		bNew.setData("TEST_COMP_NAME", "blkd_addPredefinedServices_btn"); //$NON-NLS-1$
+		bNew.setData("TEST_COMP_NAME", "blkd_addPredefinedServices_btn"); //$NON-NLS-1$ //$NON-NLS-2$
 		bNew.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -288,7 +288,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 
 		bEigen = tk.createButton(body, Messages.BlockDetailDisplay_addSelfDefinedServices, SWT.PUSH); // $NON-NLS-1$
 		bEigen.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		bEigen.setData("TEST_COMP_NAME", "blkd_createPredefinedServices_btn"); //$NON-NLS-1$
+		bEigen.setData("TEST_COMP_NAME", "blkd_createPredefinedServices_btn"); //$NON-NLS-1$ //$NON-NLS-2$
 		bEigen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
@@ -307,7 +307,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 
 		bDiag = tk.createButton(body, "Diagnose hinzufügen", SWT.PUSH); //$NON-NLS-1$
 		bDiag.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		bDiag.setData("TEST_COMP_NAME", "btn_addDiagnosis_btn"); //$NON-NLS-1$
+		bDiag.setData("TEST_COMP_NAME", "btn_addDiagnosis_btn"); //$NON-NLS-1$ //$NON-NLS-2$
 		bDiag.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -421,7 +421,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					String codeSystemName = item.getCodeSystemName();
 					if (codeSystemName != null) {
 						String rgbColor = ConfigServiceHolder
-								.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
+								.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff"); //$NON-NLS-1$
 						return UiDesk.getColorFromRGB(rgbColor);
 					}
 				}

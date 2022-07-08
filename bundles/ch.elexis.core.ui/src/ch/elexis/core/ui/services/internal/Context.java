@@ -19,7 +19,7 @@ public class Context implements IContext {
 	private IEclipseContext eclipseContext;
 
 	public Context() {
-		this(null, "root");
+		this(null, "root"); //$NON-NLS-1$
 	}
 
 	public Context(Context parent, String name) {
@@ -63,15 +63,15 @@ public class Context implements IContext {
 				}
 			}
 		} else {
-			throw new IllegalArgumentException("object must not be null, use #removeTyped");
+			throw new IllegalArgumentException("object must not be null, use #removeTyped"); //$NON-NLS-1$
 		}
 	}
 
 	private Optional<Class<?>> getModelInterface(Object object) {
 		Class<?>[] interfaces = object.getClass().getInterfaces();
 		for (Class<?> interfaze : interfaces) {
-			if (interfaze.getName().startsWith("ch.elexis.core.model")
-					&& !interfaze.getName().contains("Identifiable")) {
+			if (interfaze.getName().startsWith("ch.elexis.core.model") //$NON-NLS-1$
+					&& !interfaze.getName().contains("Identifiable")) { //$NON-NLS-1$
 				return Optional.of(interfaze);
 			}
 		}

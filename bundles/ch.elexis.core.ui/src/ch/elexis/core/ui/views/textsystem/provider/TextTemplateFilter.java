@@ -9,7 +9,7 @@ public class TextTemplateFilter extends ViewerFilter {
 	private String searchTerm;
 
 	public void setSearchTerm(String term) {
-		this.searchTerm = ".*" + term.toLowerCase() + ".*";
+		this.searchTerm = ".*" + term.toLowerCase() + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

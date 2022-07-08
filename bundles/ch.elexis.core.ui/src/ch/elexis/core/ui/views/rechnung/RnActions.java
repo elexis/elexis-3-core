@@ -348,7 +348,7 @@ public class RnActions {
 						if (SWTHelper.askYesNo(Messages.RnActions_transferMoneyCaption, // $NON-NLS-1$
 								"Das Konto von Patient \"" + patient.getLabel()
 										+ "\" weist ein positives Kontoguthaben auf. Wollen Sie den Betrag von "
-										+ amount.toString() + " dieser Rechnung \"" + actRn.getNr() + ": "
+										+ amount.toString() + " dieser Rechnung \"" + actRn.getNr() + ": " //$NON-NLS-2$
 										+ fall.getLabel() + "\" zuweisen?")) {
 
 							// remove amount from account and transfer it to the

@@ -112,7 +112,7 @@ public class ContextService implements IContextService, EventHandler {
 
 	@Activate
 	public void activate() {
-		logger.info("ACTIVATE");
+		logger.info("ACTIVATE"); //$NON-NLS-1$
 		root = new Context();
 		contexts = new ConcurrentHashMap<>();
 		eventDispatcherListener = new SelectionEventDispatcherListener();
@@ -122,7 +122,7 @@ public class ContextService implements IContextService, EventHandler {
 		mandatorChangedEventDispatcherListener = new MandatorChangedEventDispatcherListener();
 		compatibilityEventDispatcherListener = new CompatibilityEventDispatcherListener();
 		ElexisEventDispatcher elexisEventDispatcher = ElexisEventDispatcher.getInstance();
-		LoggerFactory.getLogger(getClass()).info("Attaching to " + elexisEventDispatcher);
+		LoggerFactory.getLogger(getClass()).info("Attaching to " + elexisEventDispatcher); //$NON-NLS-1$
 		elexisEventDispatcher.addListeners(eventDispatcherListener, reloadEventDispatcherListener,
 				lockingEventDispatcherListener, userChangedEventDispatcherListener,
 				mandatorChangedEventDispatcherListener, compatibilityEventDispatcherListener);
@@ -133,14 +133,14 @@ public class ContextService implements IContextService, EventHandler {
 	}
 
 	private void registerCoreUiSuppliers() {
-		getRootContext().setNamed("SelectFallNoObligationDialog", new Supplier<ICoverage>() {
+		getRootContext().setNamed("SelectFallNoObligationDialog", new Supplier<ICoverage>() { //$NON-NLS-1$
 			private ICoverage ret;
 
 			@Override
 			public synchronized ICoverage get() {
 				ret = null;
-				Optional<?> coverage = ContextServiceHolder.get().getNamed("SelectFallNoObligationDialog.coverage");
-				Optional<?> billable = ContextServiceHolder.get().getNamed("SelectFallNoObligationDialog.billable");
+				Optional<?> coverage = ContextServiceHolder.get().getNamed("SelectFallNoObligationDialog.coverage"); //$NON-NLS-1$
+				Optional<?> billable = ContextServiceHolder.get().getNamed("SelectFallNoObligationDialog.billable"); //$NON-NLS-1$
 				if (coverage.isPresent() && billable.isPresent()) {
 					Display.getDefault().syncExec(() -> {
 						SelectFallNoObligationDialog dlg = new SelectFallNoObligationDialog((ICoverage) coverage.get(),
@@ -150,8 +150,8 @@ public class ContextService implements IContextService, EventHandler {
 						}
 					});
 				} else {
-					logger.warn("SelectFallNoObligationDialog missing context parameter [" + coverage + "] [" + billable
-							+ "]");
+					logger.warn("SelectFallNoObligationDialog missing context parameter [" + coverage + "] [" + billable //$NON-NLS-1$ //$NON-NLS-2$
+							+ "]"); //$NON-NLS-1$
 				}
 				return ret;
 			}
@@ -161,7 +161,7 @@ public class ContextService implements IContextService, EventHandler {
 
 	@Deactivate
 	public void deactivate() {
-		logger.info("DEACTIVATE");
+		logger.info("DEACTIVATE"); //$NON-NLS-1$
 		ElexisEventDispatcher.getInstance().removeListeners(eventDispatcherListener, reloadEventDispatcherListener,
 				lockingEventDispatcherListener, userChangedEventDispatcherListener,
 				mandatorChangedEventDispatcherListener, compatibilityEventDispatcherListener);
@@ -169,13 +169,13 @@ public class ContextService implements IContextService, EventHandler {
 
 	@Override
 	public void handleEvent(Event event) {
-		Object property = event.getProperty("org.eclipse.e4.data");
+		Object property = event.getProperty("org.eclipse.e4.data"); //$NON-NLS-1$
 		if (property instanceof MApplication) {
-			logger.info("APPLICATION STARTUP COMPLETE " + property);
+			logger.info("APPLICATION STARTUP COMPLETE " + property); //$NON-NLS-1$
 			MApplication application = (MApplication) property;
 			applicationContext = application.getContext();
 			if (getRootContext() != null) {
-				logger.info("SET APPLICATION CONTEXT " + applicationContext);
+				logger.info("SET APPLICATION CONTEXT " + applicationContext); //$NON-NLS-1$
 				((Context) getRootContext()).setEclipseContext(applicationContext);
 			}
 			CoreUiUtil.injectServices(ElexisEventDispatcher.getInstance(), applicationContext);
@@ -213,7 +213,7 @@ public class ContextService implements IContextService, EventHandler {
 	private void postEvent(String topic, Object object, boolean synchronous) {
 		if (eventAdmin != null) {
 			Map<String, Object> properites = new HashMap<>();
-			properites.put("org.eclipse.e4.data", object);
+			properites.put("org.eclipse.e4.data", object); //$NON-NLS-1$
 			Event event = new Event(topic, properites);
 			if (synchronous) {
 				eventAdmin.sendEvent(event);
@@ -221,7 +221,7 @@ public class ContextService implements IContextService, EventHandler {
 				eventAdmin.postEvent(event);
 			}
 		} else {
-			throw new IllegalStateException("No EventAdmin available");
+			throw new IllegalStateException("No EventAdmin available"); //$NON-NLS-1$
 		}
 	}
 
@@ -280,7 +280,7 @@ public class ContextService implements IContextService, EventHandler {
 					if (modelClass.isPresent()) {
 						postEvent(ElexisEventTopics.EVENT_RELOAD, modelClass.get());
 					} else {
-						logger.debug("Could not get model class for [" + object + "] ignored reload event");
+						logger.debug("Could not get model class for [" + object + "] ignored reload event"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				} else {
 					postEvent(ElexisEventTopics.EVENT_RELOAD, getModelObjectForPersistentObject(object));

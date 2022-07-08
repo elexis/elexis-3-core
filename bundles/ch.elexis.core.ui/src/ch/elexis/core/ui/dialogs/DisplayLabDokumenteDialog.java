@@ -125,7 +125,7 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 				java.util.List<IOpaqueDocument> documentList = this.docManager.listDocuments(patient, null, docName,
 						null, new TimeSpan(this.date, this.date), null);
 				if (documentList == null || documentList.size() == 0) {
-					throw new IOException(MessageFormat.format("Dokument {0} nicht vorhanden!", docName));
+					throw new IOException(MessageFormat.format("Dokument {0} nicht vorhanden!", docName)); //$NON-NLS-1$
 				}
 				int counter = 0;
 				for (IOpaqueDocument document : documentList) {
@@ -149,7 +149,7 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 					temp.deleteOnExit();
 					byte[] b = document.getContentsAsBytes();
 					if (b == null) {
-						throw new IOException("Dokument ist leer!");
+						throw new IOException("Dokument ist leer!"); //$NON-NLS-1$
 					}
 					FileOutputStream fos = new FileOutputStream(temp);
 					fos.write(b);

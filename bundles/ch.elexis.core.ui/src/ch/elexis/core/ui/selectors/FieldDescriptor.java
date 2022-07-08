@@ -124,7 +124,7 @@ public class FieldDescriptor<T> {
 	 */
 	public void setAssignedListener(int eventType, Listener listener) {
 		if (listener == null) {
-			throw new IllegalArgumentException("Could not assign 'Null' listener to field: " + sAnzeige);
+			throw new IllegalArgumentException("Could not assign 'Null' listener to field: " + sAnzeige); //$NON-NLS-1$
 		}
 		this.eventType = eventType;
 		this.listener = listener;

@@ -24,18 +24,18 @@ import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.XMLTool;
 
 public class MedicationElement extends XChangeElement {
-	public static final String XMLNAME = "medication";
-	public static final String ATTRIB_BEGINDATE = "startDate";
-	public static final String ATTRIB_ENDDATE = "stopDate";
-	public static final String ATTRIB_PRODUCT = "product";
-	public static final String ATTRIB_DOSAGE = "dosage";
-	public static final String ATTRIB_UNITS = "dosageUnit";
-	public static final String ATTRIB_FREQUENCY = "frequency";
-	public static final String ATTRIB_SUBSTANCE = "substance";
-	public static final String ATTRIB_REMARK = "remark";
-	public static final String ATTRIB_TYPE = "type";
-	public static final String ELEMENT_XID = "xid";
-	public static final String ELEMENT_META = "meta";
+	public static final String XMLNAME = "medication"; //$NON-NLS-1$
+	public static final String ATTRIB_BEGINDATE = "startDate"; //$NON-NLS-1$
+	public static final String ATTRIB_ENDDATE = "stopDate"; //$NON-NLS-1$
+	public static final String ATTRIB_PRODUCT = "product"; //$NON-NLS-1$
+	public static final String ATTRIB_DOSAGE = "dosage"; //$NON-NLS-1$
+	public static final String ATTRIB_UNITS = "dosageUnit"; //$NON-NLS-1$
+	public static final String ATTRIB_FREQUENCY = "frequency"; //$NON-NLS-1$
+	public static final String ATTRIB_SUBSTANCE = "substance"; //$NON-NLS-1$
+	public static final String ATTRIB_REMARK = "remark"; //$NON-NLS-1$
+	public static final String ATTRIB_TYPE = "type"; //$NON-NLS-1$
+	public static final String ELEMENT_XID = "xid"; //$NON-NLS-1$
+	public static final String ELEMENT_META = "meta"; //$NON-NLS-1$
 
 	public String getXMLName() {
 		return XMLNAME;
@@ -98,13 +98,13 @@ public class MedicationElement extends XChangeElement {
 	 * @return the GTIN if found or <code>null</code>
 	 */
 	public String getGtin() {
-		return getXid().getIdentities().stream().filter(i -> "www.xid.ch/id/ean".equalsIgnoreCase(i.getDomain()))
+		return getXid().getIdentities().stream().filter(i -> "www.xid.ch/id/ean".equalsIgnoreCase(i.getDomain())) //$NON-NLS-1$
 				.findFirst().map(Identity::getDomainId).orElse(null);
 	}
 
 	public String getPharmacode() {
 		return getXid().getIdentities().stream()
-				.filter(i -> "www.xid.ch/id/pharmacode/ch".equalsIgnoreCase(i.getDomain())).findFirst()
+				.filter(i -> "www.xid.ch/id/pharmacode/ch".equalsIgnoreCase(i.getDomain())).findFirst() //$NON-NLS-1$
 				.map(Identity::getDomainId).orElse(null);
 	}
 }

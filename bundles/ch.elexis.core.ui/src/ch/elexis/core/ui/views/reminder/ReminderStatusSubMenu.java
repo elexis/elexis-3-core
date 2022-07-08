@@ -82,7 +82,7 @@ public class ReminderStatusSubMenu extends MenuManager {
 				ProcessStatus status = reminder.getProcessStatus();
 				if ((ProcessStatus.DUE == status || ProcessStatus.OVERDUE == status)
 						&& (ProcessStatus.OPEN == representedStatus)) {
-					return text + " (" + status.getLocaleText() + ")";
+					return text + " (" + status.getLocaleText() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				return text;
 			}

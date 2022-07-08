@@ -54,9 +54,9 @@ public class TextTemplateViewerComparator extends ViewerComparator {
 			}
 			break;
 		case 5:
-			String printertray1 = StringUtils.defaultString(template1.getPrinter()) + "/"
+			String printertray1 = StringUtils.defaultString(template1.getPrinter()) + "/" //$NON-NLS-1$
 					+ StringUtils.defaultString(template1.getTray());
-			String printertray2 = StringUtils.defaultString(template2.getPrinter()) + "/"
+			String printertray2 = StringUtils.defaultString(template2.getPrinter()) + "/" //$NON-NLS-1$
 					+ StringUtils.defaultString(template2.getTray());
 			rc = printertray1.compareTo(printertray2);
 			break;

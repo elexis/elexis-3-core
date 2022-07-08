@@ -218,11 +218,11 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener, 
 				if (!isDisposed()) {
 
 					if (s != null) {
-						int idxFrom = s.indexOf("<form>");
-						int idxTo = s.indexOf("</form>");
+						int idxFrom = s.indexOf("<form>"); //$NON-NLS-1$
+						int idxTo = s.indexOf("</form>"); //$NON-NLS-1$
 						if (idxFrom != -1 && idxTo != -1) {
-							s = s.substring(idxFrom + 6, s.indexOf("</form>"));
-							text.setText("<form>" + getDateFromToText() + s + "</form>", true, true);
+							s = s.substring(idxFrom + 6, s.indexOf("</form>")); //$NON-NLS-1$
+							text.setText("<form>" + getDateFromToText() + s + "</form>", true, true); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					} else {
 						text.setText(
@@ -240,13 +240,13 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener, 
 					IEncounter firstKons = loader.getlKons().get(loader.getlKons().size() - 1);
 					IEncounter lastKons = loader.getlKons().get(0);
 					String fromDate = firstKons != null
-							? firstKons.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-							: "-";
+							? firstKons.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) //$NON-NLS-1$
+							: "-"; //$NON-NLS-1$
 					String toDate = lastKons != null
-							? lastKons.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-							: "-";
-					return "<p><span color=\"" + UiDesk.COL_DARKGREY + "\">von " + fromDate + " bis " + toDate
-							+ "</span></p>";
+							? lastKons.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) //$NON-NLS-1$
+							: "-"; //$NON-NLS-1$
+					return "<p><span color=\"" + UiDesk.COL_DARKGREY + "\">von " + fromDate + " bis " + toDate //$NON-NLS-1$
+							+ "</span></p>"; //$NON-NLS-1$
 				}
 				return StringUtils.EMPTY;
 

@@ -83,14 +83,14 @@ public class ClientCustomTextComposite extends Composite {
 				TokenMap token = getTokenFromCarePosition(st.getCaretOffset());
 				if (token == null)
 					return;
-				String tokenAttribute = token.token.split("\\.")[1];
+				String tokenAttribute = token.token.split("\\.")[1]; //$NON-NLS-1$
 				if (tokenAttribute.equals(Kontakt.FLD_E_MAIL)) {
 					try {
-						URI uriMailTo = new URI("mailto", token.value, null);
+						URI uriMailTo = new URI("mailto", token.value, null); //$NON-NLS-1$
 						Desktop.getDesktop().mail(uriMailTo);
 					} catch (Exception xe) {
 					}
-				} else if (tokenAttribute.equals("Balance")) {
+				} else if (tokenAttribute.equals("Balance")) { //$NON-NLS-1$
 					final Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 					if (new AddBuchungDialog(getShell(), actPatient).open() == Dialog.OK) {
 						updateClientCustomArea();
@@ -218,8 +218,8 @@ public class ClientCustomTextComposite extends Composite {
 
 		// automatic styles for FLD_EMAIL and FLD_BALANCE
 		for (TokenMap tm : tokenMap) {
-			String tokenAttribute = tm.token.split("\\.")[1];
-			if (tokenAttribute.equals(Kontakt.FLD_E_MAIL) || tokenAttribute.equals("Balance")) {
+			String tokenAttribute = tm.token.split("\\.")[1]; //$NON-NLS-1$
+			if (tokenAttribute.equals(Kontakt.FLD_E_MAIL) || tokenAttribute.equals("Balance")) { //$NON-NLS-1$
 				StyleRange sr = new StyleRange();
 				sr.start = tm.start;
 				sr.length = tm.end - tm.start;
@@ -281,10 +281,10 @@ public class ClientCustomTextComposite extends Composite {
 	 * @return COMPAT Code -- ugly
 	 */
 	private String replaceValue(String replace) {
-		String[] arr = replace.split("\\.");
+		String[] arr = replace.split("\\."); //$NON-NLS-1$
 		if (arr == null || arr.length < 2)
-			return "ERR";
-		if (arr[0].equalsIgnoreCase("Patient")) {
+			return "ERR"; //$NON-NLS-1$
+		if (arr[0].equalsIgnoreCase("Patient")) { //$NON-NLS-1$
 			if (arr[1] == null)
 				return StringUtils.EMPTY;
 			Patient pat = ElexisEventDispatcher.getSelectedPatient();
@@ -293,7 +293,7 @@ public class ClientCustomTextComposite extends Composite {
 			String result = pat.get(arr[1]);
 			return (result != null) ? result : StringUtils.EMPTY;
 		} else {
-			return "ERR";
+			return "ERR"; //$NON-NLS-1$
 		}
 	}
 

@@ -499,8 +499,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 							fw.write(Messages.PatHeuteView_csvHeader); // $NON-NLS-1$
 							for (StatCounter st : sums) {
 								StringBuilder sb = new StringBuilder();
-								String code = "unknown";
-								String text = "unknown";
+								String code = "unknown"; //$NON-NLS-1$
+								String text = "unknown"; //$NON-NLS-1$
 								if (st.v != null) {
 									code = st.v.getCode();
 									text = st.v.getText();
@@ -513,7 +513,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 								if (st.v != null && st.v.getCodeSystemName() != null) {
 									sb.append(st.v.getCodeSystemName());
 								} else {
-									sb.append("Codesystem?");
+									sb.append("Codesystem?"); //$NON-NLS-1$
 								}
 								sb.append("; ").append( //$NON-NLS-1$
 										code == null ? StringUtils.EMPTY : code).append("; ").append(text).append(";") //$NON-NLS-1$ //$NON-NLS-2$
@@ -575,7 +575,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 				qbe.add("RechnungsID", StringConstants.EMPTY, null); //$NON-NLS-1$
 			}
 			if (bClosed && !bOpen) {
-				qbe.add("RechnungsID", "NOT", null); //$NON-NLS-2$
+				qbe.add("RechnungsID", "NOT", null); //$NON-NLS-1$//$NON-NLS-2$
 			}
 			if (!bClosed && !bOpen) {
 				qbe.insertFalse();
@@ -679,7 +679,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			if (corruptKons.size() > 0) {
 				sb.append("Folgende Konsultationen enthalten ungültige Leistungen: \n");
 				for (Konsultation k : corruptKons) {
-					sb.append(k.getLabel() + ", " + k.getFall().getPatient().getLabel());
+					sb.append(k.getLabel() + ", " + k.getFall().getPatient().getLabel()); //$NON-NLS-1$
 					sb.append(StringUtils.LF);
 				}
 				sb.append(StringUtils.LF);
@@ -695,7 +695,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 
 			if (sb.length() > 0) {
 				SWTHelper.showError("Achtung", "Fehlerhafte Konsultation(en) vorhanden!\n" + sb.toString());
-				log.log("The following consultations contain invalid values...\n" + sb.toString(), Log.ERRORS);
+				log.log("The following consultations contain invalid values...\n" + sb.toString(), Log.ERRORS); //$NON-NLS-1$
 			}
 
 			return Status.OK_STATUS;

@@ -211,7 +211,7 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 			String name = field.getFieldname();
 			String value = vals.get(name);
 			if (!StringTool.isNothing(value)) {
-				q.add(name, Query.LIKE, (field.isValueToLower() ? value.toLowerCase() : value) + "%", true);
+				q.add(name, Query.LIKE, (field.isValueToLower() ? value.toLowerCase() : value) + "%", true); //$NON-NLS-1$
 			}
 		}
 	}
@@ -223,7 +223,7 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 			String name = field.getFieldname();
 			String value = vals.get(name);
 			if (!StringTool.isNothing(value)) {
-				query.and(name, COMPARATOR.LIKE, (field.isValueToLower() ? value.toLowerCase() : value) + "%",
+				query.and(name, COMPARATOR.LIKE, (field.isValueToLower() ? value.toLowerCase() : value) + "%", //$NON-NLS-1$
 						field.isIgnoreCase());
 			}
 		}

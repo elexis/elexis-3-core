@@ -92,7 +92,7 @@ public class ErstelleRnnCommand extends AbstractHandler {
 				Map<Integer, List<IEncounter>> sortedByYears = BillingUtil
 						.getSortedEncountersByYear(NoPoUtil.loadAsIdentifiable(toBill, IEncounter.class));
 				if (!BillingUtil.canBillYears(new ArrayList<>(sortedByYears.keySet()))) {
-					StringJoiner sj = new StringJoiner(", ");
+					StringJoiner sj = new StringJoiner(", "); //$NON-NLS-1$
 					sortedByYears.keySet().forEach(i -> sj.add(Integer.toString(i)));
 					if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), "Rechnung Validierung",
 							"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "

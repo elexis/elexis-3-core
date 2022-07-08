@@ -177,7 +177,7 @@ public class ZusatzAdresseEingabeDialog extends TitleAreaDialog {
 		ort.setText(zusatzAdresseDTO.getPlace());
 		land.setText(zusatzAdresseDTO.getCountry());
 		comboAddressType.setSelection(new StructuredSelection(zusatzAdresseDTO.getAddressType()));
-		postanschrift.setText(zusatzAdresseDTO.getPostalAddress().replaceAll("[\\r\\n]\\n", StringTool.lf));
+		postanschrift.setText(zusatzAdresseDTO.getPostalAddress().replaceAll("[\\r\\n]\\n", StringTool.lf)); //$NON-NLS-1$
 	}
 
 	private void setFieldValues() {
@@ -192,7 +192,7 @@ public class ZusatzAdresseEingabeDialog extends TitleAreaDialog {
 			AddressType addressType = (AddressType) selection.getFirstElement();
 			zusatzAdresseDTO.setAddressType(addressType);
 		}
-		zusatzAdresseDTO.setPostalAddress(postanschrift.getText().replaceAll("\\r\\n", StringTool.lf));
+		zusatzAdresseDTO.setPostalAddress(postanschrift.getText().replaceAll("\\r\\n", StringTool.lf)); //$NON-NLS-1$
 	}
 
 	/*

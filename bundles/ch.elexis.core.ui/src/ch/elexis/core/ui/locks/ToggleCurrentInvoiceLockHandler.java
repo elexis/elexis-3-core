@@ -7,7 +7,7 @@ import ch.elexis.data.Rechnung;
 
 public class ToggleCurrentInvoiceLockHandler extends AbstractToggleCurrentLockHandler {
 
-	public static final String COMMAND_ID = "ch.elexis.core.ui.command.ToggleCurrentInvoiceLockCommand";
+	public static final String COMMAND_ID = "ch.elexis.core.ui.command.ToggleCurrentInvoiceLockCommand"; //$NON-NLS-1$
 
 	@Override
 	public String getCommandId() {

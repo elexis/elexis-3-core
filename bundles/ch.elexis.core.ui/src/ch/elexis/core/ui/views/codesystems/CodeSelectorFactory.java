@@ -120,13 +120,13 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	 * @param objects
 	 */
 	protected void addPopupCommandContributions(IMenuManager manager, Object[] selection) {
-		java.util.List<IConfigurationElement> contributions = Extensions.getExtensions("org.eclipse.ui.menus");
+		java.util.List<IConfigurationElement> contributions = Extensions.getExtensions("org.eclipse.ui.menus"); //$NON-NLS-1$
 		for (IConfigurationElement contributionElement : contributions) {
-			String locationUri = contributionElement.getAttribute("locationURI");
-			String[] parts = locationUri.split(":");
+			String locationUri = contributionElement.getAttribute("locationURI"); //$NON-NLS-1$
+			String[] parts = locationUri.split(":"); //$NON-NLS-1$
 			if (parts.length == 2) {
-				if (parts[0].equals("popup") && parts[1].equals(getClass().getName())) {
-					IConfigurationElement[] command = contributionElement.getChildren("command");
+				if (parts[0].equals("popup") && parts[1].equals(getClass().getName())) { //$NON-NLS-1$
+					IConfigurationElement[] command = contributionElement.getChildren("command"); //$NON-NLS-1$
 					if (command.length > 0) {
 						addMenuContribution(command[0], manager, selection);
 					}
@@ -150,7 +150,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 
 	public SelectionDialog getSelectionDialog(Shell parent, Object data) {
 		throw new UnsupportedOperationException(
-				"SelectionDialog for code system " + getCodeSystemName() + " not implemented");
+				"SelectionDialog for code system " + getCodeSystemName() + " not implemented"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static SelectionDialog getSelectionDialog(String codeSystemName, Shell parent, Object data) {
@@ -170,7 +170,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				});
 			}
 		}
-		throw new IllegalStateException("Could not find code system " + codeSystemName);
+		throw new IllegalStateException("Could not find code system " + codeSystemName); //$NON-NLS-1$
 	}
 
 	public static void makeTabs(CTabFolder ctab, IViewSite site, String point) {
@@ -243,9 +243,9 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			}
 		}
 
-		String[] userSettings = settings.split(",");
+		String[] userSettings = settings.split(","); //$NON-NLS-1$
 		for (String tab : userSettings) {
-			if ("Favoriten".equals(tab)) {
+			if ("Favoriten".equals(tab)) { //$NON-NLS-1$
 				if (point.equals(ExtensionPointConstantsUi.VERRECHNUNGSCODE)) {
 					new FavoritenCTabItem(ctab, SWT.NONE);
 				}
@@ -473,7 +473,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			String viewId) {
 		if (hasContextMenu() && site.getPart() != null) {
 			selectionProvider.setSelectionProviderDelegate(getSelectionProvider());
-			site.registerContextMenu(viewId + "." + getCodeSystemName(), getMenuManager(), selectionProvider);
+			site.registerContextMenu(viewId + "." + getCodeSystemName(), getMenuManager(), selectionProvider); //$NON-NLS-1$
 		}
 	}
 

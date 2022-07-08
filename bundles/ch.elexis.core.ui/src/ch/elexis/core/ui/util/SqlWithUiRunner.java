@@ -33,7 +33,7 @@ import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.JdbcLinkException;
 
 public class SqlWithUiRunner {
-	static Log log = Log.get("SqlWithUiRunner");
+	static Log log = Log.get("SqlWithUiRunner"); //$NON-NLS-1$
 
 	enum SqlStatus {
 		NONE, EXECUTE, SUCCESS, FAIL
@@ -48,7 +48,7 @@ public class SqlWithUiRunner {
 		for (int i = 0; i < sql.length; i++) {
 			String sqlString = sql[i];
 			sqlString = sqlString.replaceAll(StringUtils.CR, StringUtils.EMPTY);
-			String[] parts = sqlString.split("\n\n");
+			String[] parts = sqlString.split("\n\n"); //$NON-NLS-1$
 			for (String part : parts) {
 				sqlStrings.add(part);
 			}
@@ -134,9 +134,9 @@ public class SqlWithUiRunner {
 		private boolean optional;
 
 		protected UpdateDbSql(String sql) {
-			if (sql.startsWith("OPTIONAL:")) {
+			if (sql.startsWith("OPTIONAL:")) { //$NON-NLS-1$
 				optional = true;
-				sql = sql.substring("OPTIONAL:".length());
+				sql = sql.substring("OPTIONAL:".length()); //$NON-NLS-1$
 			} else {
 				optional = false;
 			}
@@ -153,20 +153,20 @@ public class SqlWithUiRunner {
 				statement = link.getStatement();
 				setStatus(SqlStatus.EXECUTE);
 				// do not use execScript method here as it will catch the exceptions
-				ByteArrayInputStream scriptStream = new ByteArrayInputStream(this.sql.getBytes("UTF-8"));
+				ByteArrayInputStream scriptStream = new ByteArrayInputStream(this.sql.getBytes("UTF-8")); //$NON-NLS-1$
 				String sqlString;
 				while ((sqlString = JdbcLink.readStatement(scriptStream)) != null) {
 					try {
 						statement.exec(link.translateFlavor(sqlString));
 					} catch (JdbcLinkException e) {
 						if (optional) {
-							log.log(e, "Warning " + e.getMessage() + " during db update", Log.WARNINGS);
+							log.log(e, "Warning " + e.getMessage() + " during db update", Log.WARNINGS); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
 							setStatus(SqlStatus.FAIL);
-							log.log(e, "Error " + e.getMessage() + " during db update", Log.ERRORS);
+							log.log(e, "Error " + e.getMessage() + " during db update", Log.ERRORS); //$NON-NLS-1$ //$NON-NLS-2$
 							try {
 								StatusManager.getManager().handle(new ElexisStatus(ElexisStatus.ERROR, pluginId,
-										ElexisStatus.CODE_NONE, "Error " + e.getMessage() + " during db update", e));
+										ElexisStatus.CODE_NONE, "Error " + e.getMessage() + " during db update", e)); //$NON-NLS-1$ //$NON-NLS-2$
 							} catch (AssertionFailedException appnotinit) {
 
 							}
@@ -177,9 +177,9 @@ public class SqlWithUiRunner {
 				setStatus(SqlStatus.FAIL);
 				try {
 					StatusManager.getManager().handle(new ElexisStatus(ElexisStatus.ERROR, pluginId,
-							ElexisStatus.CODE_NONE, "Error " + e.getMessage() + " during db update", e));
+							ElexisStatus.CODE_NONE, "Error " + e.getMessage() + " during db update", e)); //$NON-NLS-1$ //$NON-NLS-2$
 				} catch (AssertionFailedException appnotinit) {
-					log.log(e, "Error " + e.getMessage() + " during db update", Log.ERRORS);
+					log.log(e, "Error " + e.getMessage() + " during db update", Log.ERRORS); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				return;
 			} finally {
@@ -205,7 +205,7 @@ public class SqlWithUiRunner {
 
 	protected boolean isDisplayAvailable() {
 		try {
-			Class.forName("org.eclipse.swt.widgets.Display");
+			Class.forName("org.eclipse.swt.widgets.Display"); //$NON-NLS-1$
 		} catch (ClassNotFoundException e) {
 			return false;
 		} catch (NoClassDefFoundError e) {

@@ -368,7 +368,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 				try {
 					if (cont instanceof Patient) {
 						sql = "SELECT distinct FAELLE.ID FROM FAELLE join BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID " //$NON-NLS-1$
-								+ "WHERE BEHANDLUNGEN.RECHNUNGSID is null AND BEHANDLUNGEN.DELETED='0' AND BEHANDLUNGEN.billable='1' AND FAELLE.PATIENTID="
+								+ "WHERE BEHANDLUNGEN.RECHNUNGSID is null AND BEHANDLUNGEN.DELETED='0' AND BEHANDLUNGEN.billable='1' AND FAELLE.PATIENTID=" //$NON-NLS-1$
 								+ cont.getWrappedId(); // $NON-NLS-1$
 						if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
 							sql += " AND BEHANDLUNGEN.MANDANTID=" + CoreHub.actMandant.getWrappedId(); //$NON-NLS-1$
@@ -896,7 +896,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 			public void partActivated(IWorkbenchPart part) {
 				ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
 						.getService(ICommandService.class);
-				Command command = commandService.getCommand("ch.elexis.core.command.linkViews");
+				Command command = commandService.getCommand("ch.elexis.core.command.linkViews"); //$NON-NLS-1$
 				boolean state = (boolean) command.getState(RegistryToggleState.STATE_ID).getValue();
 
 				if (state == true) {

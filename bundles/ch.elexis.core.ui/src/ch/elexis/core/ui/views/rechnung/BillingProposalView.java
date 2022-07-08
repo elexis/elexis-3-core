@@ -74,8 +74,8 @@ public class BillingProposalView extends ViewPart {
 	private TableViewer viewer;
 	private BillingProposalViewerComparator comparator;
 
-	private Color lightRed = UiDesk.getColorFromRGB("ff8d8d");
-	private Color lightGreen = UiDesk.getColorFromRGB("a6ffaa");
+	private Color lightRed = UiDesk.getColorFromRGB("ff8d8d"); //$NON-NLS-1$
+	private Color lightGreen = UiDesk.getColorFromRGB("a6ffaa"); //$NON-NLS-1$
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -123,7 +123,7 @@ public class BillingProposalView extends ViewPart {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BillingInformation) {
-					return ((BillingInformation) element).getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+					return ((BillingInformation) element).getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")); //$NON-NLS-1$
 				} else {
 					return super.getText(element);
 				}
@@ -320,7 +320,7 @@ public class BillingProposalView extends ViewPart {
 
 	public static class LocalDateAdapter extends XmlAdapter<String, LocalDate> {
 
-		private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy"); //$NON-NLS-1$
 
 		@Override
 		public String marshal(LocalDate date) throws Exception {
@@ -436,7 +436,7 @@ public class BillingProposalView extends ViewPart {
 
 		public String getCheckResultMessage() {
 			if (!isResolved()) {
-				return "...";
+				return "..."; //$NON-NLS-1$
 			} else {
 				return checkResultMessage;
 			}
@@ -452,7 +452,7 @@ public class BillingProposalView extends ViewPart {
 
 		public String getTotal() {
 			if (!isResolved()) {
-				return "...";
+				return "..."; //$NON-NLS-1$
 			} else {
 				return amountTotal;
 			}
@@ -460,7 +460,7 @@ public class BillingProposalView extends ViewPart {
 
 		public String getAccountingSystem() {
 			if (!isResolved()) {
-				return "...";
+				return "..."; //$NON-NLS-1$
 			} else {
 				return accountingSystem;
 			}
@@ -468,7 +468,7 @@ public class BillingProposalView extends ViewPart {
 
 		public String getInsurer() {
 			if (!isResolved()) {
-				return "...";
+				return "..."; //$NON-NLS-1$
 			} else {
 				return insurerName;
 			}
@@ -507,7 +507,7 @@ public class BillingProposalView extends ViewPart {
 					msg message : result.getMessages()) {
 						if (message.getSeverity() != SEVERITY.OK) {
 							if (sb.length() > 0) {
-								sb.append(" / ");
+								sb.append(" / "); //$NON-NLS-1$
 							}
 							sb.append(message.getText());
 						}

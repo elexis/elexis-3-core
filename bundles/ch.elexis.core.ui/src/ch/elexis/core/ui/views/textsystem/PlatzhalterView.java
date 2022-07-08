@@ -270,8 +270,8 @@ public class PlatzhalterView extends ViewPart {
 				.getExtensions(ExtensionPointConstantsData.DATA_ACCESS, "TextPlaceHolder");//$NON-NLS-1$ //$NON-NLS-2$
 		for (IConfigurationElement iConfigurationElement : textPlaceHolderList) {
 			boolean found = false;
-			String name = iConfigurationElement.getAttribute("name");
-			String type = iConfigurationElement.getAttribute("type");
+			String name = iConfigurationElement.getAttribute("name"); //$NON-NLS-1$
+			String type = iConfigurationElement.getAttribute("type"); //$NON-NLS-1$
 			String typeName = type.substring(type.lastIndexOf('.') + 1);
 			if (name != null && type != null) {
 				PlatzhalterTreeData treeData = root.getChild(typeName);
@@ -287,7 +287,7 @@ public class PlatzhalterView extends ViewPart {
 				if (treeData == null) {
 					treeData = new PlatzhalterTreeData(typeName, StringUtils.EMPTY, StringUtils.EMPTY);
 				}
-				treeData.addChild(new PlatzhalterTreeData(name, "[" + typeName + "." + name + "]", StringUtils.EMPTY));
+				treeData.addChild(new PlatzhalterTreeData(name, "[" + typeName + "." + name + "]", StringUtils.EMPTY)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 

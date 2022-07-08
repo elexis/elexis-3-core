@@ -4,7 +4,7 @@ import ch.elexis.data.Patient;
 
 public class ToggleCurrentPatientLockHandler extends AbstractToggleCurrentLockHandler {
 
-	public static final String COMMAND_ID = "ch.elexis.core.ui.command.ToggleCurrentPatientLockCommand";
+	public static final String COMMAND_ID = "ch.elexis.core.ui.command.ToggleCurrentPatientLockCommand"; //$NON-NLS-1$
 
 	@Override
 	public String getCommandId() {

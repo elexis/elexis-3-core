@@ -139,11 +139,11 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				if (at.open() == Dialog.OK) {
 					String[] result = at.getResult();
 					String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + result[0]; //$NON-NLS-1$
-					log.info("Dialog.OK localized values: name {} leistung {} ausgabe {}", result[0], result[1],
+					log.info("Dialog.OK localized values: name {} leistung {} ausgabe {}", result[0], result[1], //$NON-NLS-1$
 							result[2]);
 					String leistungscode = getDbLeistungscodeName(result[1]);
 					String rnOutputter = getDbAusgabeName(result[2]);
-					log.info("Dialog.OK dbNames values: name {} leistung {} ausgabe {}", result[0], leistungscode,
+					log.info("Dialog.OK dbNames values: name {} leistung {} ausgabe {}", result[0], leistungscode, //$NON-NLS-1$
 							rnOutputter);
 
 					configService.set(key + "/name", result[0]); //$NON-NLS-1$
@@ -192,7 +192,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					for (String s1 : configService.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY, true)) {
 						if (s1.equals(ssel)) {
 							String[] pre = new String[10];
-							log.info("ssel {} cs {} rn {}", ssel, BillingSystem.getCodeSystem(s1),
+							log.info("ssel {} cs {} rn {}", ssel, BillingSystem.getCodeSystem(s1), //$NON-NLS-1$
 									BillingSystem.getDefaultPrintSystem(s1));
 							pre[0] = s1;
 							pre[1] = BillingSystem.getCodeSystem(s1);
@@ -211,12 +211,12 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 							AbrechnungsTypDialog at = new AbrechnungsTypDialog(getShell(), pre);
 							if (at.open() == Dialog.OK) {
 								String[] result = at.getResult();
-								log.info("DoubleClick Okay: name '{}'  localized leistung: '{}' ausgabe: '{}'",
+								log.info("DoubleClick Okay: name '{}'  localized leistung: '{}' ausgabe: '{}'", //$NON-NLS-1$
 										result[0], result[1], result[2]);
 								String leistungscode = getDbLeistungscodeName(result[1]);
 								String rnOutputter = getDbAusgabeName(result[2]);
 								String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + result[0]; //$NON-NLS-1$
-								log.info("Dialog.OK db values: name '{}' leistung '{}' ausgabe '{}' key '{}'",
+								log.info("Dialog.OK db values: name '{}' leistung '{}' ausgabe '{}' key '{}'", //$NON-NLS-1$
 										result[0], leistungscode, rnOutputter, key);
 								configService.set(key + "/name", result[0]); //$NON-NLS-1$
 								configService.set(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
@@ -382,9 +382,9 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	}
 
 	private String getLocalizedAusgabe(String ausgabe) {
-		String localizedName = "unknown: " + ausgabe;
+		String localizedName = "unknown: " + ausgabe; //$NON-NLS-1$
 		for (IConfigurationElement ic : list_RnOutputters) {
-			String name = ic.getAttribute("name");
+			String name = ic.getAttribute("name"); //$NON-NLS-1$
 			if (!name.contentEquals(ausgabe)) {
 				continue;
 			}
@@ -395,10 +395,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	}
 
 	private String getDbAusgabeName(String ausgabe) {
-		String dbName = "unknown: " + ausgabe;
+		String dbName = "unknown: " + ausgabe; //$NON-NLS-1$
 		for (IConfigurationElement ic : list_RnOutputters) {
-			String name = ic.getAttribute("name");
-			String localizedName = ic.getAttribute("localizedName");
+			String name = ic.getAttribute("name"); //$NON-NLS-1$
+			String localizedName = ic.getAttribute("localizedName"); //$NON-NLS-1$
 			if (!(name.contentEquals(ausgabe) || (localizedName != null && localizedName.contentEquals(ausgabe)))) {
 				continue;
 			}
@@ -408,10 +408,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	}
 
 	private String getDbLeistungscodeName(String Leistungscode) {
-		String dbName = "unknown: " + Leistungscode;
+		String dbName = "unknown: " + Leistungscode; //$NON-NLS-1$
 		for (IConfigurationElement ic : liste_CS_codes) {
-			String name = ic.getAttribute("name");
-			String localizedName = ic.getAttribute("localizedName");
+			String name = ic.getAttribute("name"); //$NON-NLS-1$
+			String localizedName = ic.getAttribute("localizedName"); //$NON-NLS-1$
 			if (!(name.contentEquals(Leistungscode)
 					|| (localizedName != null && localizedName.contentEquals(Leistungscode)))) {
 				continue;
@@ -422,9 +422,9 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	}
 
 	private String getLocalizedLeistungscode(String code) {
-		String localizedName = "unknown: " + code;
+		String localizedName = "unknown: " + code; //$NON-NLS-1$
 		for (IConfigurationElement ic : liste_CS_codes) {
-			String name = ic.getAttribute("name");
+			String name = ic.getAttribute("name"); //$NON-NLS-1$
 			if (!name.contentEquals(code)) {
 				continue;
 			}
@@ -833,7 +833,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			cbLstg.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			for (IConfigurationElement ic : liste_CS_codes) {
 				String name = ic.getAttribute("name"); //$NON-NLS-1$
-				log.trace("cbLstg name {} -> {}", name, getLocalizedLeistungscode(name));
+				log.trace("cbLstg name {} -> {}", name, getLocalizedLeistungscode(name)); //$NON-NLS-1$
 				cbLstg.add(getLocalizedLeistungscode(name));
 			}
 
@@ -853,7 +853,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			cbRechn.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			for (IConfigurationElement ic : list_RnOutputters) {
 				String name = ic.getAttribute("name"); //$NON-NLS-1$
-				log.trace("cbRechn name {} -> {}", name, getLocalizedLeistungscode(name));
+				log.trace("cbRechn name {} -> {}", name, getLocalizedLeistungscode(name)); //$NON-NLS-1$
 				cbRechn.add(getLocalizedAusgabe(name));
 			}
 
@@ -882,7 +882,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			// *** setting the values
 			String name = "default"; //$NON-NLS-1$
 			if (result != null) {
-				log.info("set values: name {} leistung {} ausgabe {}", result[0], result[1], result[2]);
+				log.info("set values: name {} leistung {} ausgabe {}", result[0], result[1], result[2]); //$NON-NLS-1$
 				tName.setText(result[0]);
 				cbLstg.setText(getLocalizedLeistungscode(result[1]));
 				cbRechn.setText(getLocalizedAusgabe(result[2]));
@@ -1075,8 +1075,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		// #6105
 		private void removeRequiredStringGesetzFromFallExtInfo() {
 			String selection = ldConstants.getSelection();
-			if (selection != null && StringUtils.containsIgnoreCase(selection, "Gesetz")) {
-				String[] split = selection.split("=");
+			if (selection != null && StringUtils.containsIgnoreCase(selection, "Gesetz")) { //$NON-NLS-1$
+				String[] split = selection.split("="); //$NON-NLS-1$
 				String message = MessageFormat.format(
 						"Remove the selected field [{0}] from all Faelle?\nPlease validate that a law is set!",
 						split[0]);
@@ -1109,7 +1109,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			result[0] = tName.getText();
 			result[1] = cbLstg.getText();
 			result[2] = cbRechn.getText();
-			log.info("localized values: name {} leistung {} ausgabe {}", tName.getText(), cbLstg.getText(),
+			log.info("localized values: name {} leistung {} ausgabe {}", tName.getText(), cbLstg.getText(), //$NON-NLS-1$
 					cbRechn.getText());
 			result[3] = StringTool.join(ldRequirements.getAll(), DEFINITIONSDELIMITER);
 			result[4] = StringTool.join(ldOptional.getAll(), DEFINITIONSDELIMITER);
@@ -1442,7 +1442,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 							String fieldType = fields[0];
 							final String fieldName = (StringUtils.isNotBlank(fields[1])) ? fields[1].trim() : null;
 							// contains e.g. Kontakt: Kostenträger\
-							if ("K".equals(fieldType.substring(0, 1)) && fieldName != null && getData() != null) {
+							if ("K".equals(fieldType.substring(0, 1)) && fieldName != null && getData() != null) { //$NON-NLS-1$
 								String message = MessageFormat.format(
 										"Move the selected field [{0}] to cost bearer table for billing systems [{1}]?",
 										fieldName, (String) getData());

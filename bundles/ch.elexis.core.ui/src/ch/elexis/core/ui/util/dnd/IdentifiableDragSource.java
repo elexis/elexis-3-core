@@ -65,7 +65,7 @@ public class IdentifiableDragSource implements DragSourceListener {
 
 	@Override
 	public void dragSetData(final DragSourceEvent event) {
-		StringJoiner sj = new StringJoiner(",");
+		StringJoiner sj = new StringJoiner(","); //$NON-NLS-1$
 		for (Identifiable identifiable : selection) {
 			Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(identifiable);
 			storeToString.ifPresent(s -> sj.add(s));

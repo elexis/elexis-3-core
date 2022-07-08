@@ -498,7 +498,7 @@ public class StockDetailComposite extends Composite {
 			CoreModelServiceHolder.get().save(stockEntry);
 			lr = LocalLockServiceHolder.get().releaseLock(stockEntry);
 			if (!lr.isOk()) {
-				log.warn("Error releasing lock for [{}]: {}", stockEntry.getId(), lr.getStatus());
+				log.warn("Error releasing lock for [{}]: {}", stockEntry.getId(), lr.getStatus()); //$NON-NLS-1$
 			}
 			getViewer().refresh();
 		}

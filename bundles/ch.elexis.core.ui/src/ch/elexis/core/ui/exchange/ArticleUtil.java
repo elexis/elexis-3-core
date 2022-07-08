@@ -12,7 +12,7 @@ public class ArticleUtil {
 	public static String getEan(IArticle article) {
 		String ret = article.getGtin();
 		if (StringUtils.isBlank(ret)) {
-			Object value = article.getExtInfo("EAN");
+			Object value = article.getExtInfo("EAN"); //$NON-NLS-1$
 			if (value instanceof String && ((String) value).length() > 11) {
 				ret = (String) value;
 			}
@@ -23,14 +23,14 @@ public class ArticleUtil {
 	public static String getPharmaCode(IArticle article) {
 		String ret = StringUtils.EMPTY;
 		try {
-			Method method = article.getClass().getMethod("getPHAR");
+			Method method = article.getClass().getMethod("getPHAR"); //$NON-NLS-1$
 			ret = (String) method.invoke(article);
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			// ignore no pharmacode available ...
 		}
 		if (StringUtils.isBlank(ret)) {
-			Object value = article.getExtInfo("Pharmacode");
+			Object value = article.getExtInfo("Pharmacode"); //$NON-NLS-1$
 			if (value instanceof String && ((String) value).length() == 7) {
 				ret = (String) value;
 			}

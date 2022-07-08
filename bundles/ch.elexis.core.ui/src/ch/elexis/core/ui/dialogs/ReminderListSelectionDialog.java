@@ -54,8 +54,8 @@ public class ReminderListSelectionDialog extends ListSelectionDialog {
 
 				if (!arg0.getSelection().isEmpty()) {
 					Reminder reminder = (Reminder) ((IStructuredSelection) arg0.getSelection()).getFirstElement();
-					sb.append("    " + reminder.getSubject() + StringUtils.LF);
-					sb.append("    " + reminder.getMessage());
+					sb.append("    " + reminder.getSubject() + StringUtils.LF); //$NON-NLS-1$
+					sb.append("    " + reminder.getMessage()); //$NON-NLS-1$
 				}
 				detailLabel.setText(sb.toString());
 				detail.getParent().layout();

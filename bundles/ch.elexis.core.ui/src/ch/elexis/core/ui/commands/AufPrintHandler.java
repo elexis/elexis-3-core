@@ -17,7 +17,7 @@ import ch.elexis.core.ui.views.AUFZeugnis;
 import ch.rgw.tools.ExHandler;
 
 public class AufPrintHandler extends AbstractHandler implements IHandler {
-	public static final String CMD_ID = "ch.elexis.core.ui.commands.AufPrint";
+	public static final String CMD_ID = "ch.elexis.core.ui.commands.AufPrint"; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {

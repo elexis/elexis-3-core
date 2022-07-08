@@ -37,7 +37,7 @@ import ch.rgw.tools.StringTool;
  */
 
 public class MedicalElement extends XChangeElement {
-	public static final String XMLNAME = "medical";
+	public static final String XMLNAME = "medical"; //$NON-NLS-1$
 	private DocumentsElement eDocuments;
 	private RisksElement eRisks;
 	private AnamnesisElement elAnamnesis;
@@ -92,14 +92,14 @@ public class MedicalElement extends XChangeElement {
 		}
 		String risks = p.get(Patient.FLD_RISKS); // $NON-NLS-1$
 		if (!StringTool.isNothing(risks)) {
-			for (String r : risks.split("[\\n\\r]+")) {
+			for (String r : risks.split("[\\n\\r]+")) { //$NON-NLS-1$
 				add(new RiskElement().asExporter(sender, r));
 			}
 		}
 		risks = p.get(Patient.FLD_ALLERGIES); // $NON-NLS-1$
 		if (!StringTool.isNothing(risks)) {
-			for (String r : risks.split("[\\n\\r]+")) {
-				add(new RiskElement().asExporter(sender, r, "allergy"));
+			for (String r : risks.split("[\\n\\r]+")) { //$NON-NLS-1$
+				add(new RiskElement().asExporter(sender, r, "allergy")); //$NON-NLS-1$
 			}
 		}
 		return this;
@@ -114,7 +114,7 @@ public class MedicalElement extends XChangeElement {
 		if (eRisks == null) {
 			eRisks = new RisksElement();
 			add(eRisks);
-			getContainer().addChoice(eRisks, "Risiken");
+			getContainer().addChoice(eRisks, "Risiken"); //$NON-NLS-1$
 		}
 		eRisks.add(re);
 	}
@@ -287,7 +287,7 @@ public class MedicalElement extends XChangeElement {
 		StringBuilder ret = new StringBuilder();
 		List<RecordElement> records = getRecords();
 		for (RecordElement record : records) {
-			ret.append("\n......\n").append(record.toString());
+			ret.append("\n......\n").append(record.toString()); //$NON-NLS-1$
 		}
 
 		return ret.toString();

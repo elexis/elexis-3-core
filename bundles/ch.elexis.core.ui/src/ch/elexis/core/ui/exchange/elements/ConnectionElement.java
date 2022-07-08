@@ -20,7 +20,7 @@ package ch.elexis.core.ui.exchange.elements;
  */
 
 public class ConnectionElement extends XChangeElement {
-	public static final String XMLNAME = "connection";
+	public static final String XMLNAME = "connection"; //$NON-NLS-1$
 
 	@Override
 	public String getXMLName() {

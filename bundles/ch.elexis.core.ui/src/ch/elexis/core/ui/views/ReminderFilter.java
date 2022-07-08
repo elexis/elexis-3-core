@@ -27,7 +27,7 @@ public class ReminderFilter extends ViewerFilter {
 				}
 			}
 			Patient act = ElexisEventDispatcher.getSelectedPatient();
-			String patientId = (act != null) ? act.getId() : "INVALID_ID";
+			String patientId = (act != null) ? act.getId() : "INVALID_ID"; //$NON-NLS-1$
 			String[] vals = check.get(true, Reminder.FLD_SUBJECT, Reminder.FLD_MESSAGE, Reminder.FLD_KONTAKT_ID,
 					Reminder.FLD_VISIBILITY);
 			if (!vals[2].equals(patientId)) {

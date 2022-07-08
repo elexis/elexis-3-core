@@ -60,8 +60,8 @@ public abstract class AllOrNoneLockRequestingAction<T extends PersistentObject> 
 		for (LockInfo lockInfo : acquiredLocks) {
 			LockResponse lockResponse = LocalLockServiceHolder.get().releaseLock(lockInfo);
 			if (!lockResponse.isOk()) {
-				log.warn("Could not release lock for [{}] with lock response [{}]",
-						lockInfo.getElementType() + "::" + lockInfo.getElementId(), lockResponse.getStatus());
+				log.warn("Could not release lock for [{}] with lock response [{}]", //$NON-NLS-1$
+						lockInfo.getElementType() + "::" + lockInfo.getElementId(), lockResponse.getStatus()); //$NON-NLS-1$
 			}
 		}
 	}

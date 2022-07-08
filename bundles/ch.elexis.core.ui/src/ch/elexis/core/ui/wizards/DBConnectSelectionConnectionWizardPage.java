@@ -94,7 +94,7 @@ public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage 
 			public String getText(Object element) {
 				DBConnection dbc = (DBConnection) element;
 				if (dbc.username != null && dbc.connectionString != null) {
-					return dbc.username + "@" + dbc.connectionString;
+					return dbc.username + "@" + dbc.connectionString; //$NON-NLS-1$
 				} else {
 					return "Neue Verbindung erstellen";
 				}

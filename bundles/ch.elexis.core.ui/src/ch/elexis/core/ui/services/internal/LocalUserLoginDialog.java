@@ -81,7 +81,7 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 		}
 
 		@SuppressWarnings("unchecked")
-		List<ILoginNews> newsModules = Extensions.getClasses(ExtensionPointConstantsUi.LOGIN_NEWS, "class");
+		List<ILoginNews> newsModules = Extensions.getClasses(ExtensionPointConstantsUi.LOGIN_NEWS, "class"); //$NON-NLS-1$
 
 		if (newsModules.size() > 0) {
 			Composite cNews = new Composite(ret, SWT.NONE);
@@ -128,17 +128,17 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 						super.okPressed();
 						return;
 					} else {
-						LoggerFactory.getLogger(getClass()).error("username: {}", username,
-								new LoginException("anwender is not a istAnwender"));
+						LoggerFactory.getLogger(getClass()).error("username: {}", username, //$NON-NLS-1$
+								new LoginException("anwender is not a istAnwender")); //$NON-NLS-1$
 					}
 				} else {
-					LoggerFactory.getLogger(getClass()).error("username: {}", username,
-							new LoginException("anwender is invalid or deleted"));
+					LoggerFactory.getLogger(getClass()).error("username: {}", username, //$NON-NLS-1$
+							new LoginException("anwender is invalid or deleted")); //$NON-NLS-1$
 				}
 
 			} else {
-				LoggerFactory.getLogger(getClass()).error("username: {}", username,
-						new LoginException("anwender is null"));
+				LoggerFactory.getLogger(getClass()).error("username: {}", username, //$NON-NLS-1$
+						new LoginException("anwender is null")); //$NON-NLS-1$
 			}
 		}
 

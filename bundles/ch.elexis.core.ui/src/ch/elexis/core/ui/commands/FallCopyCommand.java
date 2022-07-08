@@ -38,7 +38,7 @@ public class FallCopyCommand extends AbstractHandler {
 								Messages.FallCopyCommand_TransferConsultations
 										+ Messages.FallCopyCommand_AttentionTransferConsultations);
 						if (transferCons) {
-							logger.debug("trying to transfer consulations");
+							logger.debug("trying to transfer consulations"); //$NON-NLS-1$
 							for (Konsultation cons : consultations) {
 								if (cons.isEditable(false)) {
 									Result<IEncounter> result = EncounterServiceHolder.get().transferToCoverage(

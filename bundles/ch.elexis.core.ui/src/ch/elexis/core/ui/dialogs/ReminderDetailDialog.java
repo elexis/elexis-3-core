@@ -121,7 +121,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		getShell().setText(shelltitle);
 
 		setMessage(Messages.EditReminderDialog_enterDataForReminder);
-		setTitleImage(Images.lookupImage("tick_banner.png", ImageSize._75x66_TitleDialogIconSize));
+		setTitleImage(Images.lookupImage("tick_banner.png", ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$
 	}
 
 	/**

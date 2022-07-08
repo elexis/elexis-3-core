@@ -43,7 +43,7 @@ public class LocalDocumentServiceHolder {
 						brief.save(IOUtils.toByteArray(content.get()), brief.getMimeType());
 						return true;
 					} catch (IOException e) {
-						LoggerFactory.getLogger(getClass()).error("Error saving document", e);
+						LoggerFactory.getLogger(getClass()).error("Error saving document", e); //$NON-NLS-1$
 					} finally {
 						try {
 							content.get().close();
@@ -66,10 +66,10 @@ public class LocalDocumentServiceHolder {
 					if (bytes != null) {
 						return new ByteArrayInputStream(bytes);
 					}
-					LoggerFactory.getLogger(getClass()).warn("Document is empty - id: " + brief.getId());
+					LoggerFactory.getLogger(getClass()).warn("Document is empty - id: " + brief.getId()); //$NON-NLS-1$
 					return new ByteArrayInputStream(new byte[0]);
 				} catch (Exception e) {
-					LoggerFactory.getLogger(getClass()).error("Error loading document", e);
+					LoggerFactory.getLogger(getClass()).error("Error loading document", e); //$NON-NLS-1$
 				}
 				return null;
 			}
@@ -103,7 +103,7 @@ public class LocalDocumentServiceHolder {
 				try {
 					return letter.getContent();
 				} catch (Exception e) {
-					LoggerFactory.getLogger(getClass()).error("Error loading document", e);
+					LoggerFactory.getLogger(getClass()).error("Error loading document", e); //$NON-NLS-1$
 				}
 				return null;
 			}

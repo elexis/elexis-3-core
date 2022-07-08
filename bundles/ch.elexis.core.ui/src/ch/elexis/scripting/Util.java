@@ -21,7 +21,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.TimeTool;
 
 public class Util {
-	private static Log log = Log.get("Script utility");
+	private static Log log = Log.get("Script utility"); //$NON-NLS-1$
 
 	public static void display(String title, String contents) {
 		SWTHelper.showInfo(title, contents);
@@ -62,7 +62,7 @@ public class Util {
 		if (input == null) {
 			return false;
 		}
-		return input.matches("[0-9\\.]+");
+		return input.matches("[0-9\\.]+"); //$NON-NLS-1$
 	}
 
 	public static boolean isNumeric(double d) {

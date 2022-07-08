@@ -29,12 +29,12 @@ import ch.rgw.tools.VersionedResource.ResourceItem;
 import ch.rgw.tools.XMLTool;
 
 public class RecordElement extends XChangeElement {
-	static final String ELEMENT_TEXT = "text";
-	static final String ELEMENT_EPISODE = "episode";
-	static final String ATTR_AUTHOR = "author";
-	static final String ATTR_RESPONSIBLE = "responsible";
-	static final String ATTR_DATE = "date";
-	public static final String XMLNAME = "record";
+	static final String ELEMENT_TEXT = "text"; //$NON-NLS-1$
+	static final String ELEMENT_EPISODE = "episode"; //$NON-NLS-1$
+	static final String ATTR_AUTHOR = "author"; //$NON-NLS-1$
+	static final String ATTR_RESPONSIBLE = "responsible"; //$NON-NLS-1$
+	static final String ATTR_DATE = "date"; //$NON-NLS-1$
+	public static final String XMLNAME = "record"; //$NON-NLS-1$
 
 	public String getXMLName() {
 		return XMLNAME;
@@ -46,7 +46,7 @@ public class RecordElement extends XChangeElement {
 		setAttribute(ATTR_DATE, new TimeTool(k.getDatum()).toString(TimeTool.DATE_ISO));
 		Kontakt kMandant = k.getMandant();
 		if (kMandant == null) {
-			setAttribute(ATTR_RESPONSIBLE, "unknown");
+			setAttribute(ATTR_RESPONSIBLE, "unknown"); //$NON-NLS-1$
 		} else {
 			ContactElement cMandant = c.addContact(kMandant);
 			setAttribute(ATTR_RESPONSIBLE, cMandant.getID());
@@ -82,7 +82,7 @@ public class RecordElement extends XChangeElement {
 
 	private boolean shouldAddXRef(XRef xref) {
 		// only add privatnotizen of current mandant
-		if (xref.getProvider().toLowerCase().contains("privatnotizen")) {
+		if (xref.getProvider().toLowerCase().contains("privatnotizen")) { //$NON-NLS-1$
 			// return xref.getID().startsWith(CoreHub.actMandant.getId());
 			return false;
 		}
@@ -91,7 +91,7 @@ public class RecordElement extends XChangeElement {
 
 	public void addEpisodeRef(EpisodeElement episode) {
 		Element eEpisode = new Element(ELEMENT_EPISODE, getContainer().getNamespace());
-		eEpisode.setAttribute("ref", episode.getID());
+		eEpisode.setAttribute("ref", episode.getID()); //$NON-NLS-1$
 		getElement().addContent(eEpisode);
 	}
 
@@ -126,14 +126,14 @@ public class RecordElement extends XChangeElement {
 				if (child.getName().equals(ELEMENT_TEXT)) {
 					continue;
 				}
-				sb.append(child.getName()).append(":\n");
+				sb.append(child.getName()).append(":\n"); //$NON-NLS-1$
 				sb.append(child.getText()).append(StringUtils.LF);
 			}
 		}
 		Element eText = getElement().getChild(ELEMENT_TEXT);
 		if (eText != null) {
 			String text = eText.getText();
-			sb.append(text).append("\n------------------------------\n");
+			sb.append(text).append("\n------------------------------\n"); //$NON-NLS-1$
 		}
 		return sb.toString();
 	}

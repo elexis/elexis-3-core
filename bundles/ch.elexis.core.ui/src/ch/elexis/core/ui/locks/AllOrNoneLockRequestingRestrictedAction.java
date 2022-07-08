@@ -55,8 +55,8 @@ public abstract class AllOrNoneLockRequestingRestrictedAction<T extends Persiste
 		for (LockInfo lockInfo : acquiredLocks) {
 			LockResponse lockResponse = LocalLockServiceHolder.get().releaseLock(lockInfo);
 			if (!lockResponse.isOk()) {
-				log.warn("Could not release lock for [{}] with lock response [{}]",
-						lockInfo.getElementType() + "::" + lockInfo.getElementId(), lockResponse.getStatus());
+				log.warn("Could not release lock for [{}] with lock response [{}]", //$NON-NLS-1$
+						lockInfo.getElementType() + "::" + lockInfo.getElementId(), lockResponse.getStatus()); //$NON-NLS-1$
 			}
 		}
 	}

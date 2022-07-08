@@ -104,7 +104,7 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 			Display.getDefault().syncExec(runnable);
 			return;
 		}
-		log.error("Could not show info [" + title + "] [" + message + "]");
+		log.error("Could not show info [" + title + "] [" + message + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 			Display.getDefault().syncExec(runnable);
 			return runnable.getResult();
 		}
-		log.error("Could not ask question [" + title + "] [" + message + "]");
+		log.error("Could not ask question [" + title + "] [" + message + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return false;
 	}
 
@@ -165,14 +165,14 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		try {
 			user = loginEnv.performLogin(shell);
 		} catch (LoginException le) {
-			log.warn("Unable to login with loginService [{}]: {} - skipping", loginEnv.getClass().getName(),
+			log.warn("Unable to login with loginService [{}]: {} - skipping", loginEnv.getClass().getName(), //$NON-NLS-1$
 					le.getMessage(), le);
 		}
 		if (user == null) {
 			try {
 				user = loginDialog.performLogin(shell);
 			} catch (LoginException le) {
-				log.warn("Unable to login with loginService [{}]: {} - skipping", loginDialog.getClass().getName(),
+				log.warn("Unable to login with loginService [{}]: {} - skipping", loginDialog.getClass().getName(), //$NON-NLS-1$
 						le.getMessage(), le);
 			}
 		}
@@ -226,7 +226,7 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 						try {
 							pmd.run(true, true, irpwAdapter);
 						} catch (InvocationTargetException | InterruptedException e) {
-							log.error("Execution error", e);
+							log.error("Execution error", e); //$NON-NLS-1$
 						}
 					}
 				});
@@ -234,13 +234,13 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 				irwp.run(new NullProgressMonitor());
 			}
 		} catch (InvocationTargetException | InterruptedException e) {
-			log.error("Execution error", e);
+			log.error("Execution error", e); //$NON-NLS-1$
 		}
 	}
 
 	protected boolean isDisplayAvailable() {
 		try {
-			Class.forName("org.eclipse.swt.widgets.Display");
+			Class.forName("org.eclipse.swt.widgets.Display"); //$NON-NLS-1$
 		} catch (ClassNotFoundException e) {
 			return false;
 		} catch (NoClassDefFoundError e) {

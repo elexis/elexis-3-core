@@ -130,7 +130,7 @@ public class AccountsPreferencePage extends PreferencePage implements IWorkbench
 
 		@Override
 		public void run() {
-			Account newAccount = new Account(-1, "?");
+			Account newAccount = new Account(-1, "?"); //$NON-NLS-1$
 			EditAccountDialog dialog = new EditAccountDialog(getShell(), newAccount);
 
 			if (dialog.open() == Window.OK) {

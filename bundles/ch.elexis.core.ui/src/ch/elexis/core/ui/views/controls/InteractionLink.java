@@ -75,8 +75,8 @@ public class InteractionLink {
 			}
 		});
 		if (atcs.size() > 1) {
-			destUrl = buildUrl.toString().replaceAll(",+$", StringUtils.EMPTY);
-			logger.info("For {} ATCs {} set destUrl to {}", atcs.size(), atcs, destUrl);
+			destUrl = buildUrl.toString().replaceAll(",+$", StringUtils.EMPTY); //$NON-NLS-1$
+			logger.info("For {} ATCs {} set destUrl to {}", atcs.size(), atcs, destUrl); //$NON-NLS-1$
 		} else {
 			destUrl = StringUtils.EMPTY;
 		}

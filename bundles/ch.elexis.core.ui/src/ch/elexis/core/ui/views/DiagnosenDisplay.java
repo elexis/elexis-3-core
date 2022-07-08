@@ -318,7 +318,7 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 					IDiagnosis diagnosis = (IDiagnosis) element;
 					if (diagnosis instanceof IDiagnosisReference) {
 						IDiagnosisReference diagnosisRef = (IDiagnosisReference) element;
-						if (diagnosisRef.getReferredClass().toLowerCase().contains("freetext")) {
+						if (diagnosisRef.getReferredClass().toLowerCase().contains("freetext")) { //$NON-NLS-1$
 							return StringUtils.EMPTY;
 						}
 					}

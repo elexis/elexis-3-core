@@ -601,8 +601,8 @@ public class RezepteView extends ViewPart implements IRefreshable {
 		protected IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask("Recipe loading ...", IProgressMonitor.UNKNOWN);
 			if (patient != null) {
-				INamedQuery<IRecipe> query = CoreModelServiceHolder.get().getNamedQuery(IRecipe.class, "patient");
-				loaded = query.executeWithParameters(query.getParameterMap("patient", patient));
+				INamedQuery<IRecipe> query = CoreModelServiceHolder.get().getNamedQuery(IRecipe.class, "patient"); //$NON-NLS-1$
+				loaded = query.executeWithParameters(query.getParameterMap("patient", patient)); //$NON-NLS-1$
 			} else {
 				loaded = Collections.emptyList();
 			}

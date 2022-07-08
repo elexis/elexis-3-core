@@ -68,14 +68,14 @@ public class Datenbank extends PreferencePage implements IWorkbenchPreferencePag
 			conn = jdbcl.getConnection();
 			user = conn.getMetaData().getUserName();
 		} catch (SQLException e) {
-			user = "ERR: " + e.getMessage();
+			user = "ERR: " + e.getMessage(); //$NON-NLS-1$
 		} finally {
 			try {
 				if (conn != null) {
 					conn.close();
 				}
 			} catch (SQLException e) {
-				log.error("Error closing connection" + e);
+				log.error("Error closing connection" + e); //$NON-NLS-1$
 			}
 		}
 		String typ = jdbcl.dbDriver();

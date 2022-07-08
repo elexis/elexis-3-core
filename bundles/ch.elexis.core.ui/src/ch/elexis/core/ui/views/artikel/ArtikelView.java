@@ -114,7 +114,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 							selected.setControl(page);
 							selected.setData(det);
 						} catch (Exception ex) {
-							LoggerFactory.getLogger(getClass()).error("Error creating pages", ex);
+							LoggerFactory.getLogger(getClass()).error("Error creating pages", ex); //$NON-NLS-1$
 							return;
 						}
 					}
@@ -185,7 +185,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 		for (int i = 0; i < list.size(); i++) {
 			IConfigurationElement ce = list.get(i);
 			try {
-				if (!"Artikel".equals(ce.getName()))
+				if (!"Artikel".equals(ce.getName())) //$NON-NLS-1$
 					continue;
 				// The first page initializes the screen
 				if (!headerDone) {
@@ -228,7 +228,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 					CoreUiUtil.injectServicesWithContext(detailDisplay);
 				}
 			} catch (Exception ex) {
-				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex);
+				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex); //$NON-NLS-1$
 				MessageBox mb = new MessageBox(getViewSite().getShell(), SWT.ICON_ERROR | SWT.OK);
 				mb.setText(Messages.ArtikelView_errorCaption);
 				mb.setMessage(Messages.ArtikelView_errorText + ce.getName() + ":\n" //$NON-NLS-1$
@@ -327,7 +327,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 	}
 
 	public void visible(boolean mode) {
-		System.out.println(this.getClass().getName() + " visible " + mode);
+		System.out.println(this.getClass().getName() + " visible " + mode); //$NON-NLS-1$
 	}
 
 	@Optional

@@ -45,7 +45,7 @@ public class ChangePasswordDialog extends TitleAreaDialog {
 	public ChangePasswordDialog(Shell parentShell, User user) {
 		super(parentShell);
 		this.user = user;
-		disallowedPasswords.add("Vkwi42Ja");
+		disallowedPasswords.add("Vkwi42Ja"); //$NON-NLS-1$
 	}
 
 	/**

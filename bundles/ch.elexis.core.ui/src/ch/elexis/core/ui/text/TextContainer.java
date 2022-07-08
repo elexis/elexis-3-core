@@ -885,7 +885,7 @@ public class TextContainer {
 
 			if (Konsultation.getAktuelleKons() != null) {
 				log.debug("ch.elexis.views/TextContainer.java saveBrief(): Konsultation.getAktuelleKons()==" //$NON-NLS-1$
-						+ Konsultation.getAktuelleKons() + ": " + Konsultation.getAktuelleKons().getDatum());
+						+ Konsultation.getAktuelleKons() + ": " + Konsultation.getAktuelleKons().getDatum()); //$NON-NLS-1$
 			}
 
 			KontaktSelektor ksl = new KontaktSelektor(shell, Kontakt.class, Messages.TextContainer_SelectAdresseeHeader,

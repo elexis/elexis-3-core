@@ -28,27 +28,27 @@ import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.XMLTool;
 
 public class DocumentElement extends XChangeElement {
-	public static final String XMLNAME = "document";
-	public static final String ATTR_TITLE = "title";
-	public static final String ATTR_ORIGIN = "origin";
-	public static final String ATTR_DESTINATION = "destination";
-	public static final String ATTR_MIMETYPE = "mimetype";
-	public static final String ATTR_SUBJECT = "subject";
-	public static final String ATTR_PLACEMENT = "placement";
-	public static final String ATTR_DATE = "date";
-	public static final String ATTR_RECORDREF = "recordref";
+	public static final String XMLNAME = "document"; //$NON-NLS-1$
+	public static final String ATTR_TITLE = "title"; //$NON-NLS-1$
+	public static final String ATTR_ORIGIN = "origin"; //$NON-NLS-1$
+	public static final String ATTR_DESTINATION = "destination"; //$NON-NLS-1$
+	public static final String ATTR_MIMETYPE = "mimetype"; //$NON-NLS-1$
+	public static final String ATTR_SUBJECT = "subject"; //$NON-NLS-1$
+	public static final String ATTR_PLACEMENT = "placement"; //$NON-NLS-1$
+	public static final String ATTR_DATE = "date"; //$NON-NLS-1$
+	public static final String ATTR_RECORDREF = "recordref"; //$NON-NLS-1$
 
-	public static final String ATTR_DOCUMENT_TYPE = "doctype";
-	public static final String VAL_DOCUMENT_TYPE_LETTER = "letter";
-	public static final String VAL_DOCUMENT_TYPE_OMNIVORE = "omnivore";
+	public static final String ATTR_DOCUMENT_TYPE = "doctype"; //$NON-NLS-1$
+	public static final String VAL_DOCUMENT_TYPE_LETTER = "letter"; //$NON-NLS-1$
+	public static final String VAL_DOCUMENT_TYPE_OMNIVORE = "omnivore"; //$NON-NLS-1$
 
-	public static final String ELEMENT_XID = "xid";
-	public static final String ELEMENT_HINT = "hint";
-	public static final String ELEMENT_CONTENTS = "contents";
+	public static final String ELEMENT_XID = "xid"; //$NON-NLS-1$
+	public static final String ELEMENT_HINT = "hint"; //$NON-NLS-1$
+	public static final String ELEMENT_CONTENTS = "contents"; //$NON-NLS-1$
 
-	public static final String PLACEMENT_INLINE = "inline";
-	public static final String PLACEMENT_INFILE = "infile";
-	public static final String PLACEMENT_URL = "url";
+	public static final String PLACEMENT_INLINE = "inline"; //$NON-NLS-1$
+	public static final String PLACEMENT_INFILE = "infile"; //$NON-NLS-1$
+	public static final String PLACEMENT_URL = "url"; //$NON-NLS-1$
 
 	public String getXMLName() {
 		return XMLNAME;
@@ -58,9 +58,9 @@ public class DocumentElement extends XChangeElement {
 		asExporter(parent, b.getMimeType(), b.getId(), b.loadBinary(), documentType, b.getBetreff(), b.getDatum());
 
 		setDestination(b.getAdressat());
-		setOriginator(Kontakt.load(b.get("AbsenderID")));
+		setOriginator(Kontakt.load(b.get("AbsenderID"))); //$NON-NLS-1$
 
-		String idex = b.get("BehandlungsID");
+		String idex = b.get("BehandlungsID"); //$NON-NLS-1$
 		if (idex != null) {
 			setAttribute(ATTR_RECORDREF, XMLTool.idToXMLID(idex));
 		}
@@ -74,7 +74,7 @@ public class DocumentElement extends XChangeElement {
 		try (InputStream is = iDocument.getContent()) {
 			content = IOUtils.toByteArray(is);
 		} catch (IOException e) {
-			LoggerFactory.getLogger(getClass()).warn(iDocument.getId() + " Error serializing to byte array", e);
+			LoggerFactory.getLogger(getClass()).warn(iDocument.getId() + " Error serializing to byte array", e); //$NON-NLS-1$
 		}
 
 		TimeTool created = new TimeTool(iDocument.getCreated());

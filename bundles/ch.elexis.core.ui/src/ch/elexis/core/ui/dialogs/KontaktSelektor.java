@@ -160,7 +160,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 			}
 		}
 		if (!StringTool.isNothing(hints[HINT_SEX])) {
-			if (hints[HINT_SEX].toLowerCase().startsWith("m")) {
+			if (hints[HINT_SEX].toLowerCase().startsWith("m")) { //$NON-NLS-1$
 				hints[HINT_SEX] = Person.MALE;
 			} else {
 				hints[HINT_SEX] = Person.FEMALE;
@@ -201,7 +201,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 						if (bezugsKontakte != null) {
 							for (BezugsKontakt bezugsKontakt : bezugsKontakte) {
 								elements.add(bezugsKontakt);
-								addedKontakte.add(bezugsKontakt.get("otherID"));
+								addedKontakte.add(bezugsKontakt.get("otherID")); //$NON-NLS-1$
 							}
 						}
 
@@ -210,8 +210,8 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 						for (Fall fall : faelle) {
 							String reqs = fall.getRequirements();
 							if (reqs != null) {
-								for (String req : reqs.split(";")) {
-									final String[] r = req.split(":");
+								for (String req : reqs.split(";")) { //$NON-NLS-1$
+									final String[] r = req.split(":"); //$NON-NLS-1$
 
 									// no valid entry
 									if (r.length < 2) {
@@ -219,9 +219,9 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 									}
 
 									// only consider contacts
-									if (r[1].equals("K")) {
+									if (r[1].equals("K")) { //$NON-NLS-1$
 										String kontaktID = fall.getInfoString(r[0]);
-										if (!kontaktID.startsWith("**ERROR")) {
+										if (!kontaktID.startsWith("**ERROR")) { //$NON-NLS-1$
 											Kontakt kontakt = Kontakt.load(kontaktID);
 											if (kontakt.isValid()) {
 												elements.add(kontakt);
@@ -324,7 +324,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 		bOrgs.addSelectionListener(fba);
 		initContactTypeSelection();
 
-		cv.create(vc, ret, SWT.NONE, "1");
+		cv.create(vc, ret, SWT.NONE, "1"); //$NON-NLS-1$
 		((DefaultControlFieldProvider) vc.getControlFieldProvider()).setFocusField(1);
 		vc.getControlFieldProvider().setFocus();
 		GridData gd = SWTHelper.getFillGridData(1, true, 1, true);
@@ -438,7 +438,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 			selection = bKSel;
 		} else if (bKSel instanceof BezugsKontakt) {
 			BezugsKontakt bezugsKontakt = (BezugsKontakt) bKSel;
-			Kontakt kontakt = Kontakt.load(bezugsKontakt.get("otherID"));
+			Kontakt kontakt = Kontakt.load(bezugsKontakt.get("otherID")); //$NON-NLS-1$
 			if (kontakt.exists()) {
 				selection = kontakt;
 			}

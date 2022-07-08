@@ -78,7 +78,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 	};
 	private static int sortCol = 0;
 	private static boolean revert = false;
-	public static final String TOOPEN = " ... ";
+	public static final String TOOPEN = " ... "; //$NON-NLS-1$
 	MediSorter sorter = new MediSorter();
 
 	public MediVerlaufView() {

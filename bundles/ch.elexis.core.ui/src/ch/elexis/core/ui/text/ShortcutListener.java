@@ -27,7 +27,7 @@ public class ShortcutListener implements VerifyKeyListener {
 			switch (event.keyCode) {
 			// 'z'
 			case 122:
-				System.out.println("undo");
+				System.out.println("undo"); //$NON-NLS-1$
 				mine.undo();
 				event.doit = false;
 				break;

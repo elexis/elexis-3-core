@@ -128,30 +128,30 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		for (Konsultation k : dbList) {
 			// skip if no valid mandant is set
 			if (k.getMandant() == null) {
-				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, "ch.elexis", ElexisStatus.CODE_NOFEEDBACK,
+				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, "ch.elexis", ElexisStatus.CODE_NOFEEDBACK, //$NON-NLS-1$
 						Messages.Rechnungslauf_warnInvalidMandant, ElexisStatus.LOG_ERRORS);
 				StatusManager.getManager().handle(status);
-				log.warn("...skip Kons [" + k.getId() + "] with invalid mandant");
+				log.warn("...skip Kons [" + k.getId() + "] with invalid mandant"); //$NON-NLS-1$ //$NON-NLS-2$
 				continue;
 			}
 
 			// skip if fall is not set or inexisting
 			Fall fall = k.getFall();
 			if ((fall == null) || (!fall.exists())) {
-				log.warn("...skip Kons [" + k.getId() + "] fall is null/inexisting");
+				log.warn("...skip Kons [" + k.getId() + "] fall is null/inexisting"); //$NON-NLS-1$ //$NON-NLS-2$
 				continue;
 			}
 
 			Patient pat = fall.getPatient();
 			if ((pat == null) || (!pat.exists())) {
-				log.warn("...skip Kons [" + k.getId() + "] patient is null/inexisting");
+				log.warn("...skip Kons [" + k.getId() + "] patient is null/inexisting"); //$NON-NLS-1$ //$NON-NLS-2$
 				continue;
 			}
 
 			if (rsId.equals(k.getMandant().getRechnungssteller().getId())) {
 				list.add(k);
 			} else {
-				log.debug("... skip Kons [" + k.getId() + "] as rechnungssteller is divergent");
+				log.debug("... skip Kons [" + k.getId() + "] as rechnungssteller is divergent"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		return list;
@@ -166,7 +166,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	private List<Konsultation> getAllKonsultationen(IProgressMonitor monitor) {
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		qbe.add(Konsultation.FLD_BILL_ID, StringConstants.EMPTY, null);
-		qbe.add(Konsultation.FLD_BILLABLE, Query.EQUALS, "1");
+		qbe.add(Konsultation.FLD_BILLABLE, Query.EQUALS, "1"); //$NON-NLS-1$
 		monitor.beginTask(Messages.Rechnungslauf_analyzingConsultations, IProgressMonitor.UNKNOWN); // $NON-NLS-1$
 		monitor.subTask(Messages.Rechnungslauf_readingConsultations); // $NON-NLS-1$
 
@@ -180,11 +180,11 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		String today = now.toString(TimeTool.DATE_COMPACT).substring(4);
 		quarterLimit = new TimeTool();
 
-		if (today.compareTo("0930") > 0) {
+		if (today.compareTo("0930") > 0) { //$NON-NLS-1$
 			quarterLimit.set(TimeTool.MONTH, 9);
-		} else if (today.compareTo("0630") > 0) {
+		} else if (today.compareTo("0630") > 0) { //$NON-NLS-1$
 			quarterLimit.set(TimeTool.MONTH, 6);
-		} else if (today.compareTo("0331") > 0) {
+		} else if (today.compareTo("0331") > 0) { //$NON-NLS-1$
 			quarterLimit.set(TimeTool.MONTH, 3);
 		} else {
 			quarterLimit.set(TimeTool.MONTH, 1);
@@ -198,7 +198,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	 */
 	private void applyBillingFlagFilter(IProgressMonitor monitor) {
 		if (billFlagged) {
-			log.debug("filter all that are flagged for billing");
+			log.debug("filter all that are flagged for billing"); //$NON-NLS-1$
 			monitor.subTask("Filtern zum Abrechnen vorgemerkter Fälle ...");
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
@@ -231,7 +231,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	 */
 	private void applyAccountSystemFilter(IProgressMonitor monitor) {
 		if (accountSys != null) {
-			log.debug("apply filter for accounting system: " + accountSys);
+			log.debug("apply filter for accounting system: " + accountSys); //$NON-NLS-1$
 			monitor.subTask("Filtern nach Abrechnungssystem ...");
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
@@ -253,7 +253,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	 */
 	private void applyStartedFilter(IProgressMonitor monitor) {
 		if (ttFirstBefore != null) {
-			log.debug("apply start time [" + ttFirstBefore.toString(TimeTool.DATE_COMPACT) + "] filter");
+			log.debug("apply start time [" + ttFirstBefore.toString(TimeTool.DATE_COMPACT) + "] filter"); //$NON-NLS-1$ //$NON-NLS-2$
 			monitor.subTask("Filtern nach Anfangsdatum ...");
 			List<Fall> treated = new ArrayList<Fall>();
 
@@ -290,7 +290,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	 */
 	private void applyFinishedFilter(IProgressMonitor monitor) {
 		if (ttLastBefore != null) {
-			log.debug("apply finish time [" + ttLastBefore.toString(TimeTool.DATE_COMPACT) + "] filter");
+			log.debug("apply finish time [" + ttLastBefore.toString(TimeTool.DATE_COMPACT) + "] filter"); //$NON-NLS-1$ //$NON-NLS-2$
 			monitor.subTask("Filtern Enddatum ...");
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
@@ -324,7 +324,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	 */
 	private void applyTimespanFilter(IProgressMonitor monitor) {
 		if (ttFrom != null && ttTo != null) {
-			log.debug("apply filter for timestpan [" + ttFrom.toString(TimeTool.DATE_COMPACT) + " - "
+			log.debug("apply filter for timestpan [" + ttFrom.toString(TimeTool.DATE_COMPACT) + " - " //$NON-NLS-1$ //$NON-NLS-2$
 					+ ttTo.toString(TimeTool.DATE_COMPACT));
 			monitor.subTask("Filtern nach Zeitspanne ...");
 			// make sure 23:59 and 00:00 are not equal
@@ -349,7 +349,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	 */
 	private void applyMinPaymentLimit(IProgressMonitor monitor) {
 		if (lowerLimit != null) {
-			log.debug("apply filter for minimal payment amount");
+			log.debug("apply filter for minimal payment amount"); //$NON-NLS-1$
 			monitor.subTask("Filtern nach Betragshöhe ...");
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
@@ -394,7 +394,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	 */
 	private void applyQuarterFilter(IProgressMonitor monitor) {
 		if (quarterFilter) {
-			log.debug("applying quarter filter");
+			log.debug("applying quarter filter"); //$NON-NLS-1$
 			monitor.subTask("Filtern nach Quartal ...");
 			for (Konsultation k : kons) {
 				if (accepted(k)) {

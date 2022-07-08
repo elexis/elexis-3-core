@@ -393,7 +393,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 				}
 			}
 			if (LocalLockServiceHolder.get().acquireLock(newKontakt).isOk()) {
-				newKontakt.set(new String[] { "Strasse", "Plz", "Ort", "Telefon1", "Fax", "E-Mail" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+				newKontakt.set(new String[] { "Strasse", "Plz", "Ort", "Telefon1", "Fax", "E-Mail" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 				}, new String[] { ret[4], ret[5], ret[6], ret[7], tFax.getText(), tEmail.getText() });
 
 				ElexisEventDispatcher.fireSelectionEvent(newKontakt);

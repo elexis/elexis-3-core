@@ -16,7 +16,7 @@ public class EncounterServiceHolder {
 
 	public static IEncounterService get() {
 		if (encounterService == null) {
-			throw new IllegalStateException("No IEncounterService available");
+			throw new IllegalStateException("No IEncounterService available"); //$NON-NLS-1$
 		}
 		return encounterService;
 	}

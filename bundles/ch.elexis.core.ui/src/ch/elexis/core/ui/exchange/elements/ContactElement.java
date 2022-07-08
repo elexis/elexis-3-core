@@ -199,12 +199,12 @@ public class ContactElement extends XChangeElement {
 		List<MetaElement> meta = (List<MetaElement>) getChildren(MetaElement.XMLNAME, MetaElement.class);
 		if (meta != null && !meta.isEmpty()) {
 			for (MetaElement metaElement : meta) {
-				if ("stickers".equals(metaElement.getAttr(MetaElement.ATTR_NAME))) {
+				if ("stickers".equals(metaElement.getAttr(MetaElement.ATTR_NAME))) { //$NON-NLS-1$
 					String stickersString = metaElement.getAttr(MetaElement.ATTR_VALUE);
 					if (stickersString != null) {
-						String[] stickerStrings = stickersString.split("\\|");
+						String[] stickerStrings = stickersString.split("\\|"); //$NON-NLS-1$
 						for (String stickerString : stickerStrings) {
-							String[] stickerParts = stickerString.split("::");
+							String[] stickerParts = stickerString.split("::"); //$NON-NLS-1$
 							if (stickerParts != null && stickerParts.length > 1
 									&& StringUtils.isNotBlank(stickerParts[0])) {
 								Sticker sticker = getOrCreateSticker(stickerParts);
@@ -224,7 +224,7 @@ public class ContactElement extends XChangeElement {
 		query.add(Sticker.FLD_NAME, Query.EQUALS, stickerParts[0]);
 		List<Sticker> existing = query.execute();
 		if (existing.isEmpty()) {
-			Sticker ret = new Sticker(stickerParts[0], "000000", "ffffff");
+			Sticker ret = new Sticker(stickerParts[0], "000000", "ffffff"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (stickerParts.length > 1 && StringUtils.isNotBlank(stickerParts[1])) {
 				ret.set(Sticker.FLD_VALUE, stickerParts[1]);
 			}
@@ -242,10 +242,10 @@ public class ContactElement extends XChangeElement {
 
 	private void addStickersMeta(List<ISticker> stickers) {
 		if (stickers != null && !stickers.isEmpty()) {
-			StringJoiner sj = new StringJoiner("|");
+			StringJoiner sj = new StringJoiner("|"); //$NON-NLS-1$
 			stickers.stream().forEach(s -> sj
-					.add(s.getLabel() + "::" + s.getWert() + "::" + s.getForeground() + "::" + s.getBackground()));
-			addMeta("stickers", sj.toString());
+					.add(s.getLabel() + "::" + s.getWert() + "::" + s.getForeground() + "::" + s.getBackground())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			addMeta("stickers", sj.toString()); //$NON-NLS-1$
 		}
 	}
 

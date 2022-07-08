@@ -22,7 +22,7 @@ public class ZeroDefaultIntegerStringConverter extends Converter<String, Integer
 				int value = Integer.valueOf(fromObject);
 				return value;
 			} catch (NumberFormatException nfe) {
-				LoggerFactory.getLogger(getClass()).warn("Conversion error, returning 0", nfe);
+				LoggerFactory.getLogger(getClass()).warn("Conversion error, returning 0", nfe); //$NON-NLS-1$
 			}
 		}
 		return 0;

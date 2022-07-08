@@ -40,7 +40,7 @@ import ch.elexis.core.ui.views.RezeptBlatt;
  *
  */
 public class ElexisConfigurationConstants {
-	public static String CONFIG_FILE_NAME = "ElexisConfigurationConstants.properties";
+	public static String CONFIG_FILE_NAME = "ElexisConfigurationConstants.properties"; //$NON-NLS-1$
 	public static boolean extConfigFile = false;
 	private static Properties properties = null;
 
@@ -57,8 +57,8 @@ public class ElexisConfigurationConstants {
 				properties.load(istream);
 				istream.close();
 				extConfigFile = true;
-				rezeptausgabe = properties.getProperty("rezeptausgabe");
-				System.out.println("ATTENTION: External configuration file injected, overriding defaults!");
+				rezeptausgabe = properties.getProperty("rezeptausgabe"); //$NON-NLS-1$
+				System.out.println("ATTENTION: External configuration file injected, overriding defaults!"); //$NON-NLS-1$
 
 			} catch (IOException e) {
 				extConfigFile = false;

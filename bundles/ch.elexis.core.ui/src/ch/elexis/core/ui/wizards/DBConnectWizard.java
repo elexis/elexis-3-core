@@ -157,11 +157,11 @@ public class DBConnectWizard extends Wizard {
 	}
 
 	private String parseHostname(String connectionString) {
-		int i = connectionString.indexOf("//") + 2;
+		int i = connectionString.indexOf("//") + 2; //$NON-NLS-1$
 		if (i == -1)
 			return StringUtils.EMPTY;
 		String woHeader = connectionString.substring(i);
-		int ij = woHeader.indexOf(":");
+		int ij = woHeader.indexOf(":"); //$NON-NLS-1$
 		if (ij == -1)
 			return StringUtils.EMPTY;
 		return woHeader.substring(0, ij);
@@ -195,11 +195,11 @@ public class DBConnectWizard extends Wizard {
 		// ch.elexis.core.common
 		@Override
 		public Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
-			if (desc.getName().equals("ch.elexis.core.data.util.DBConnection")) {
-				return Thread.currentThread().getContextClassLoader().loadClass("ch.elexis.core.common.DBConnection");
-			} else if (desc.getName().equals("ch.elexis.core.data.util.DBConnection$DBType")) {
+			if (desc.getName().equals("ch.elexis.core.data.util.DBConnection")) { //$NON-NLS-1$
+				return Thread.currentThread().getContextClassLoader().loadClass("ch.elexis.core.common.DBConnection"); //$NON-NLS-1$
+			} else if (desc.getName().equals("ch.elexis.core.data.util.DBConnection$DBType")) { //$NON-NLS-1$
 				return Thread.currentThread().getContextClassLoader()
-						.loadClass("ch.elexis.core.common.DBConnection$DBType");
+						.loadClass("ch.elexis.core.common.DBConnection$DBType"); //$NON-NLS-1$
 			}
 			return null;
 		}
@@ -220,10 +220,10 @@ public class DBConnectWizard extends Wizard {
 				String currConnString = PersistentObject
 						.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING));
 				String user = PersistentObject.checkNull(hConn.get(Preferences.CFG_FOLDED_CONNECTION_USER));
-				String combined = user + "@" + currConnString;
+				String combined = user + "@" + currConnString; //$NON-NLS-1$
 
 				for (DBConnection dbConnection : storedConnectionList) {
-					if (combined.equalsIgnoreCase(dbConnection.username + "@" + dbConnection.connectionString)) {
+					if (combined.equalsIgnoreCase(dbConnection.username + "@" + dbConnection.connectionString)) { //$NON-NLS-1$
 						return dbConnection;
 					}
 				}
@@ -265,11 +265,11 @@ public class DBConnectWizard extends Wizard {
 
 		try {
 			String hostname = (targetedConnection.port != null)
-					? targetedConnection.hostName + ":" + targetedConnection.port
+					? targetedConnection.hostName + ":" + targetedConnection.port //$NON-NLS-1$
 					: targetedConnection.hostName;
 
 			if (targetedConnection.databaseName == null || targetedConnection.databaseName.isEmpty()) {
-				throw new IllegalArgumentException("No database name provided.");
+				throw new IllegalArgumentException("No database name provided."); //$NON-NLS-1$
 			}
 
 			switch (targetedConnection.rdbmsType) {
@@ -295,7 +295,7 @@ public class DBConnectWizard extends Wizard {
 			error = false;
 		} catch (Exception e) {
 			e.printStackTrace();
-			text = "Exception " + e.getMessage();
+			text = "Exception " + e.getMessage(); //$NON-NLS-1$
 		}
 
 		dbConnNewConnPage.getTdbg().setTestResult(error, text);

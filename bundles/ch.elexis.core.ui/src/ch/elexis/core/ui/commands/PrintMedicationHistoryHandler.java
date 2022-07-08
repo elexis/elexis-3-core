@@ -48,7 +48,7 @@ import ch.rgw.tools.TimeTool;
 
 public class PrintMedicationHistoryHandler extends AbstractHandler implements IHandler {
 
-	private static final String TOOPEN = " ... ";
+	private static final String TOOPEN = " ... "; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -70,17 +70,17 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 									OutputType.PDF);
 							ByteArrayOutputStream pdf = new ByteArrayOutputStream();
 							Map<String, String> parameters = new HashMap<>();
-							parameters.put("current-date",
-									LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+							parameters.put("current-date", //$NON-NLS-1$
+									LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))); //$NON-NLS-1$
 
 							outputter.transform(letter.get(),
-									getClass().getResourceAsStream("/rsc/xslt/medhistory2fo.xslt"), pdf, parameters);
+									getClass().getResourceAsStream("/rsc/xslt/medhistory2fo.xslt"), pdf, parameters); //$NON-NLS-1$
 							bundleContext.ungetService(serviceRef);
 							// save and open the file ...
 							File file = null;
 							FileOutputStream fout = null;
 							try {
-								file = File.createTempFile("medhistory_", ".pdf");
+								file = File.createTempFile("medhistory_", ".pdf"); //$NON-NLS-1$ //$NON-NLS-2$
 								fout = new FileOutputStream(file);
 								fout.write(pdf.toByteArray());
 							} catch (IOException e) {
@@ -88,7 +88,7 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 									MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
 											"Fehler beim PDF anlegen.\n" + e.getMessage());
 								});
-								LoggerFactory.getLogger(getClass()).error("Error creating PDF", e);
+								LoggerFactory.getLogger(getClass()).error("Error creating PDF", e); //$NON-NLS-1$
 							} finally {
 								if (fout != null) {
 									try {
@@ -114,7 +114,7 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 		} catch (InvocationTargetException | InterruptedException e) {
 			MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
 					"Fehler beim PDF erzeugen.\n" + e.getMessage());
-			LoggerFactory.getLogger(getClass()).error("Error creating PDF", e);
+			LoggerFactory.getLogger(getClass()).error("Error creating PDF", e); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -222,7 +222,7 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 			if (TOOPEN.equals(to) && StringUtils.isNotBlank(p.getEndDate())) {
 				this.to = p.getEndDate();
 			}
-			this.article = p.getArtikel() != null ? p.getArtikel().getLabel() : "?";
+			this.article = p.getArtikel() != null ? p.getArtikel().getLabel() : "?"; //$NON-NLS-1$
 			this.dosage = p.getDosis();
 		}
 

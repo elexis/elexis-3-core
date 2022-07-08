@@ -17,7 +17,7 @@ public class ZeroDefaultStringIntegerConverter extends Converter<Integer, String
 	@Override
 	public String convert(Integer fromObject) {
 		if (fromObject == null) {
-			return "0";
+			return "0"; //$NON-NLS-1$
 		}
 		return Integer.toString(fromObject);
 	}

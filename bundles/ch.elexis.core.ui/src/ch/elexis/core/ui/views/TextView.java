@@ -161,7 +161,7 @@ public class TextView extends ViewPart implements IActivationListener {
 					tmp.deleteOnExit();
 					byte[] buffer = doc.loadBinary();
 					if (buffer == null) {
-						log.warn("TextView.openDocument createTempFile [{}] -> loadBinary returned null array",
+						log.warn("TextView.openDocument createTempFile [{}] -> loadBinary returned null array", //$NON-NLS-1$
 								doc.getId());
 						return false;
 					}
@@ -196,7 +196,7 @@ public class TextView extends ViewPart implements IActivationListener {
 	 * @return true bei erfolg
 	 */
 	public boolean createDocument(Brief template, String subject) {
-		log.debug("TextView.createDocument [{}]: {}", (template != null) ? template.getLabel() : "null", subject); //$NON-NLS-1$
+		log.debug("TextView.createDocument [{}]: {}", (template != null) ? template.getLabel() : "null", subject); //$NON-NLS-1$ //$NON-NLS-2$
 		if (template == null) {
 			SWTHelper.showError(Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate);
 			return false;
@@ -204,7 +204,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		actBrief = txt.createFromTemplate(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN, null, subject);
 		setName();
 		if (actBrief == null) {
-			log.debug("TextView.createDocument: createFromTemplate -> null");
+			log.debug("TextView.createDocument: createFromTemplate -> null"); //$NON-NLS-1$
 			return false;
 		}
 		return true;
@@ -219,7 +219,7 @@ public class TextView extends ViewPart implements IActivationListener {
 	 * @return true bei erfolg
 	 */
 	public boolean createDocument(Brief template, String subject, Kontakt adressat) {
-		log.debug("TextView.createDocument [{}]: {} Kontakt", (template != null) ? template.getLabel() : "null", //$NON-NLS-1$
+		log.debug("TextView.createDocument [{}]: {} Kontakt", (template != null) ? template.getLabel() : "null", //$NON-NLS-1$ //$NON-NLS-2$
 				subject);
 		if (template == null) {
 			SWTHelper.showError(Messages.TextView_noTemplateSelected, Messages.TextView_pleaseSelectTemplate);
@@ -232,7 +232,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 		setName();
 		if (actBrief == null) {
-			log.debug("TextView.createDocument: createFromTemplate -> null");
+			log.debug("TextView.createDocument: createFromTemplate -> null"); //$NON-NLS-1$
 			return false;
 		}
 		return true;
@@ -251,12 +251,12 @@ public class TextView extends ViewPart implements IActivationListener {
 			actBrief.getAdressat().get(new String[] { Kontakt.FLD_NAME2, Kontakt.FLD_NAME1, Kontakt.FLD_PLACE }, names);
 
 			List<String> nonEmptyNames = new ArrayList<>();
-			String nameValue = "";
+			String nameValue = ""; //$NON-NLS-1$
 
 			for (int i = 0; i < names.length; i++) {
 				String name = names[i];
 				if (i == 0 && StringUtils.isNoneEmpty(name)) {
-					nameValue = nameValue + name + " ";
+					nameValue = nameValue + name + " "; //$NON-NLS-1$
 				} else if (i == 1 && StringUtils.isNoneEmpty(name)) {
 					nameValue = nameValue + name;
 				} else {
@@ -268,13 +268,13 @@ public class TextView extends ViewPart implements IActivationListener {
 			}
 
 			if (!nonEmptyNames.isEmpty()) {
-				adressatLabel = String.join(", ", nonEmptyNames);
+				adressatLabel = String.join(", ", nonEmptyNames); //$NON-NLS-1$
 			}
 		}
 
 		if (adressatLabel != null) {
 			actBrief.set(new String[] { Brief.FLD_SUBJECT },
-					new String[] { subject + " " + Messages.TextView_To + " " + adressatLabel });
+					new String[] { subject + " " + Messages.TextView_To + " " + adressatLabel }); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		txt.saveBrief(actBrief, Brief.UNKNOWN);

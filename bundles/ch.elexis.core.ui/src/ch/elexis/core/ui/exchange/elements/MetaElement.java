@@ -15,9 +15,9 @@ package ch.elexis.core.ui.exchange.elements;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 
 public class MetaElement extends XChangeElement {
-	public static final String XMLNAME = "meta";
-	public static final String ATTR_NAME = "name";
-	public static final String ATTR_VALUE = "value";
+	public static final String XMLNAME = "meta"; //$NON-NLS-1$
+	public static final String ATTR_NAME = "name"; //$NON-NLS-1$
+	public static final String ATTR_VALUE = "value"; //$NON-NLS-1$
 
 	@Override
 	public String getXMLName() {

@@ -29,7 +29,7 @@ public class Stammdatenexport {
 
 	public String doExport(String startDate) {
 		FileDialog out = new FileDialog(Hub.getActiveShell(), SWT.SAVE);
-		out.setFilterExtensions(new String[] { "*.csv" });
+		out.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
 		out.setFilterNames(new String[] { "Comma Separated Values (CVS)" });
 		out.setOverwrite(true);
 		String file = out.open();
@@ -40,9 +40,9 @@ public class Stammdatenexport {
 				String[] header = new String[] { "UUID", "Nr", "Titel", "Name", "Vorname", "Geschlecht", "Geburtsdatum",
 						"Strasse", "Plz", "Ort", "Postanschrift", "Telefon 1", "Telefon 2", "Telefon Mobil",
 						"Bemerkung" };
-				String[] fields = new String[] { "ID", Patient.FLD_PATID, "Titel", Patient.NAME, Patient.FIRSTNAME,
+				String[] fields = new String[] { "ID", Patient.FLD_PATID, "Titel", Patient.NAME, Patient.FIRSTNAME, //$NON-NLS-1$ //$NON-NLS-2$
 						Patient.SEX, Patient.FLD_DOB, Patient.FLD_STREET, Patient.FLD_ZIP, Patient.FLD_PLACE,
-						"Anschrift", Patient.FLD_PHONE1, "Telefon2", "Natel", "Bemerkung" };
+						"Anschrift", Patient.FLD_PHONE1, "Telefon2", "Natel", "Bemerkung" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				csv.writeNext(header);
 				if (startDate == null || startDate.length() == 0) {
 					for (Patient pat : new Query<Patient>(Patient.class).execute()) {
@@ -55,13 +55,13 @@ public class Stammdatenexport {
 				} else {
 					HashMap<Patient, String> patienten = new HashMap<Patient, String>();
 					Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
-					qbe.add("Datum", ">", startDate);
+					qbe.add("Datum", ">", startDate); //$NON-NLS-1$ //$NON-NLS-2$
 					List<Konsultation> lKons = qbe.execute();
 
 					for (Konsultation k : lKons) {
 						Fall fall = k.getFall();
 						Patient p = fall.getPatient();
-						patienten.put(p, "1");
+						patienten.put(p, "1"); //$NON-NLS-1$
 					}
 					for (Patient p : patienten.keySet()) {
 						String[] line = new String[header.length];

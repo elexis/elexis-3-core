@@ -155,7 +155,7 @@ public class LabeledInputField extends Composite {
 			ctl.setLayoutData(new GridData(GridData.FILL_BOTH/* |GridData.GRAB_VERTICAL */));
 			break;
 		case OBSOLETE_DATE:
-			logger.error("Please use nebula CDateTime instead!");
+			logger.error("Please use nebula CDateTime instead!"); //$NON-NLS-1$
 			break;
 		case COMBO:
 			ctl = new Combo(this, SWT.SINGLE | SWT.BORDER);
@@ -212,7 +212,7 @@ public class LabeledInputField extends Composite {
 			List list = (List) ctl;
 			list.deselectAll();
 			if (!StringTool.isNothing(text)) {
-				String[] sel = text.split(",");
+				String[] sel = text.split(","); //$NON-NLS-1$
 				int[] selidx = new int[sel.length];
 				String[] items = list.getItems();
 				for (int i = 0; i < sel.length; i++) {
@@ -696,7 +696,7 @@ public class LabeledInputField extends Composite {
 				try {
 					set(act, inp.sFeldname, val);
 				} catch (PersistenceException pe) {
-					logger.error("Could not persist [" + val + "] for field [" + inp.sAnzeige + "]\nCause: "
+					logger.error("Could not persist [" + val + "] for field [" + inp.sAnzeige + "]\nCause: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							+ pe.getCause().getMessage(), pe);
 
 					if (inp.tFeldTyp.equals(ch.elexis.core.ui.util.LabeledInputField.InputData.Typ.STRING)) {
@@ -736,7 +736,7 @@ public class LabeledInputField extends Composite {
 					BeanUtils.setProperty(object, field, value);
 				} catch (IllegalAccessException | InvocationTargetException e) {
 					LoggerFactory.getLogger(getClass())
-							.error("Error setting property [" + field + "] of [" + object + "]", e);
+							.error("Error setting property [" + field + "] of [" + object + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			}
 		}
@@ -749,7 +749,7 @@ public class LabeledInputField extends Composite {
 					return BeanUtils.getProperty(object, field);
 				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 					LoggerFactory.getLogger(getClass())
-							.error("Error getting property [" + field + "] of [" + object + "]", e);
+							.error("Error getting property [" + field + "] of [" + object + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			}
 			return null;
@@ -766,7 +766,7 @@ public class LabeledInputField extends Composite {
 					}
 				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 					LoggerFactory.getLogger(getClass())
-							.error("Error getting map property [" + field + "] of [" + object + "]", e);
+							.error("Error getting map property [" + field + "] of [" + object + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			}
 			return null;
@@ -780,7 +780,7 @@ public class LabeledInputField extends Composite {
 					PropertyUtils.setProperty(object, field, value);
 				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 					LoggerFactory.getLogger(getClass())
-							.error("Error setting map property [" + field + "] of [" + object + "]", e);
+							.error("Error setting map property [" + field + "] of [" + object + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			}
 		}
@@ -905,8 +905,8 @@ public class LabeledInputField extends Composite {
 					def[i].setText(val);
 					break;
 				case CURRENCY:
-					if (val != null && (val.contains(",") || val.contains("."))) {
-						val = val.replaceAll(",", ".");
+					if (val != null && (val.contains(",") || val.contains("."))) { //$NON-NLS-1$ //$NON-NLS-2$
+						val = val.replaceAll(",", "."); //$NON-NLS-1$ //$NON-NLS-2$
 						Money money = new Money(PersistentObject.checkZeroDouble(val));
 						def[i].setText(money.getAmountAsString());
 					} else {

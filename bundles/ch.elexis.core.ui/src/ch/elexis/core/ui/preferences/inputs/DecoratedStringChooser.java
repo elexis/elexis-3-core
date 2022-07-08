@@ -57,9 +57,9 @@ public class DecoratedStringChooser extends Composite {
 
 			String coldesc;
 			if (strings[i].getValue() != null) {
-				coldesc = ConfigServiceHolder.getUser(prefix + "/" + strings[i].getValue(), "FFFFFF"); //$NON-NLS-1$
+				coldesc = ConfigServiceHolder.getUser(prefix + "/" + strings[i].getValue(), "FFFFFF"); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				coldesc = ConfigServiceHolder.getUser(prefix + "/" + strings[i].getText(), "FFFFFF"); //$NON-NLS-1$
+				coldesc = ConfigServiceHolder.getUser(prefix + "/" + strings[i].getText(), "FFFFFF"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			Color background = UiDesk.getColorFromRGB(coldesc);
@@ -77,9 +77,9 @@ public class DecoratedStringChooser extends Composite {
 						String symbolic = UiDesk.createColor(selected);
 						l.setBackground(UiDesk.getColorFromRGB(symbolic));
 						if (l.getData() != null) {
-							ConfigServiceHolder.setUser(prefix + "/" + (String) l.getData(), symbolic);
+							ConfigServiceHolder.setUser(prefix + "/" + (String) l.getData(), symbolic); //$NON-NLS-1$
 						} else {
-							ConfigServiceHolder.setUser(prefix + "/" + l.getText(), symbolic);
+							ConfigServiceHolder.setUser(prefix + "/" + l.getText(), symbolic); //$NON-NLS-1$
 						}
 					}
 				}

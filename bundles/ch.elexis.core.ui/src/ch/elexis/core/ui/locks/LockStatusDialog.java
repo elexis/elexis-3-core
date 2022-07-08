@@ -70,24 +70,24 @@ public class LockStatusDialog extends TitleAreaDialog {
 				} else {
 					Optional<Identifiable> identifiable = StoreToStringServiceHolder.get()
 							.loadFromString(li.getElementStoreToString());
-					label = (identifiable.isPresent()) ? identifiable.get().getLabel() : "null";
+					label = (identifiable.isPresent()) ? identifiable.get().getLabel() : "null"; //$NON-NLS-1$
 				}
-				return li.getElementType() + ": " + label;
+				return li.getElementType() + ": " + label; //$NON-NLS-1$
 			}
 		});
 		checkboxTableViewer.setInput(LocalLockServiceHolder.get().getCopyOfAllHeldLocks());
 
 		Label lblSystemUuid = new Label(container, SWT.NONE);
 		lblSystemUuid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblSystemUuid.setText("System UUID: " + LocalLockServiceHolder.get().getSystemUuid());
+		lblSystemUuid.setText("System UUID: " + LocalLockServiceHolder.get().getSystemUuid()); //$NON-NLS-1$
 
 		Label lblLockStatus = new Label(container, SWT.NONE);
 		ConnectionStatus connectinStatus = ElexisServerServiceHolder.get().getConnectionStatus();
 		StringBuilder statusString = new StringBuilder();
-		statusString.append("Lock-Service: " + connectinStatus.name());
+		statusString.append("Lock-Service: " + connectinStatus.name()); //$NON-NLS-1$
 		if (connectinStatus != ConnectionStatus.STANDALONE) {
 			statusString
-					.append(" @ " + System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL));
+					.append(" @ " + System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL)); //$NON-NLS-1$
 		}
 		lblLockStatus.setText(statusString.toString());
 

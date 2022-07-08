@@ -23,7 +23,7 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
 
 public class AnamnesisElement extends XChangeElement {
-	public static final String XMLNAME = "anamnesis";
+	public static final String XMLNAME = "anamnesis"; //$NON-NLS-1$
 
 	HashMap<IDiagnose, EpisodeElement> hLink = new HashMap<IDiagnose, EpisodeElement>();
 	HashMap<Element, IDiagnose> hBacklink;

@@ -20,10 +20,10 @@ package ch.elexis.core.ui.constants;
  */
 public class UiResourceConstants {
 
-	public static final String PatientPerspektive_ID = "ch.elexis.PatientPerspective";
+	public static final String PatientPerspektive_ID = "ch.elexis.PatientPerspective"; //$NON-NLS-1$
 
-	public static final String LaborView_ID = "ch.elexis.Labor";
-	public static final String PatientenListeView_ID = "ch.elexis.PatListView";
-	public static final String PatientDetailView2_ID = "ch.elexis.PatDetail_v2";
+	public static final String LaborView_ID = "ch.elexis.Labor"; //$NON-NLS-1$
+	public static final String PatientenListeView_ID = "ch.elexis.PatListView"; //$NON-NLS-1$
+	public static final String PatientDetailView2_ID = "ch.elexis.PatDetail_v2"; //$NON-NLS-1$
 
 }

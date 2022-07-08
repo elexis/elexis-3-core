@@ -37,9 +37,9 @@ import ch.elexis.data.dto.CodeElementDTO;
 import ch.rgw.tools.StringTool;
 
 public class ServiceBlockElement extends XChangeElement {
-	public static final String XMLNAME = "serviceblock";
-	public static final String ENCLOSING = "serviceblocks";
-	public static final String ATTR_NAME = "name";
+	public static final String XMLNAME = "serviceblock"; //$NON-NLS-1$
+	public static final String ENCLOSING = "serviceblocks"; //$NON-NLS-1$
+	public static final String ATTR_NAME = "name"; //$NON-NLS-1$
 	static java.util.List<IConfigurationElement> codesystems;
 
 	static List<ICodeElement> codeElements;
@@ -68,7 +68,7 @@ public class ServiceBlockElement extends XChangeElement {
 				}
 			} catch (CoreException ex) {
 				LoggerFactory.getLogger(ServiceBlockElement.class)
-						.warn("Could not create PersistentObject code element factory", ex);
+						.warn("Could not create PersistentObject code element factory", ex); //$NON-NLS-1$
 			}
 		}
 	}
@@ -127,9 +127,9 @@ public class ServiceBlockElement extends XChangeElement {
 			}
 		}
 		if (!bFound) { // we do not have a object with matching XID
-			String contract = se.getAttr("contractName");
-			String code = se.getAttr("contractCode");
-			String lname = se.getAttr("name");
+			String contract = se.getAttr("contractName"); //$NON-NLS-1$
+			String code = se.getAttr("contractCode"); //$NON-NLS-1$
+			String lname = se.getAttr("name"); //$NON-NLS-1$
 			boolean bMatched = false;
 			for (ICodeElement ice : codeElements) {
 				if (ice.getCodeSystemName().equals(contract)) {
@@ -152,7 +152,7 @@ public class ServiceBlockElement extends XChangeElement {
 				}
 			}
 			if (!bMatched) {
-				Eigenleistung custom = new Eigenleistung(code, lname, se.getAttr("cost"), se.getAttr("price"));
+				Eigenleistung custom = new Eigenleistung(code, lname, se.getAttr("cost"), se.getAttr("price")); //$NON-NLS-1$ //$NON-NLS-2$
 				block.addElement(custom);
 			}
 		}
@@ -168,9 +168,9 @@ public class ServiceBlockElement extends XChangeElement {
 	 * @return
 	 */
 	private boolean importCodeElement(Leistungsblock block, ServiceElement se) {
-		String codeSystemName = se.getAttr("contractName");
-		String code = se.getAttr("contractCode");
-		String name = se.getAttr("name");
+		String codeSystemName = se.getAttr("contractName"); //$NON-NLS-1$
+		String code = se.getAttr("contractCode"); //$NON-NLS-1$
+		String name = se.getAttr("name"); //$NON-NLS-1$
 		if (codeSystemName != null && !codeSystemName.isEmpty() && code != null && !code.isEmpty()) {
 			CodeElementDTO codeElement = new CodeElementDTO(codeSystemName, code);
 			if (name != null && !name.isEmpty()) {

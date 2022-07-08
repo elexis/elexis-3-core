@@ -374,7 +374,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			col.getColumn().setWidth(100);
 			col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 0));
 			col.setLabelProvider(new ColumnLabelProvider() {
-				private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+				private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
 
 				@Override
 				public String getText(Object element) {
@@ -489,7 +489,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 				try {
 					handlerService.executeCommand(BriefNewHandler.CMD_ID, null);
 				} catch (Exception e) {
-					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e);
+					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e); //$NON-NLS-1$
 				}
 			}
 		};
@@ -593,7 +593,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 							.getService(ICommandService.class);
 					Command command = commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
 					PlatformUI.getWorkbench().getService(IEclipseContext.class)
-							.set(command.getId().concat(".selection"), new StructuredSelection(brief));
+							.set(command.getId().concat(".selection"), new StructuredSelection(brief)); //$NON-NLS-1$
 					try {
 						command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
@@ -624,7 +624,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					Command command = commandService.getCommand("ch.elexis.core.ui.command.endLocalDocument"); //$NON-NLS-1$
 
 					PlatformUI.getWorkbench().getService(IEclipseContext.class)
-							.set(command.getId().concat(".selection"), new StructuredSelection(brief));
+							.set(command.getId().concat(".selection"), new StructuredSelection(brief)); //$NON-NLS-1$
 					try {
 						command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
@@ -655,7 +655,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					Command command = commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument"); //$NON-NLS-1$
 
 					PlatformUI.getWorkbench().getService(IEclipseContext.class)
-							.set(command.getId().concat(".selection"), new StructuredSelection(brief));
+							.set(command.getId().concat(".selection"), new StructuredSelection(brief)); //$NON-NLS-1$
 					try {
 						command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {

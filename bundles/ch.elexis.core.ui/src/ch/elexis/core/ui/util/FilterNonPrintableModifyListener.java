@@ -15,7 +15,7 @@ public class FilterNonPrintableModifyListener implements ModifyListener {
 	}
 
 	public static String filterNonPrintable(String input) {
-		return input.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+		return input.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private Text text;

@@ -44,7 +44,7 @@ public class PatientenListeControlFieldProvider extends DefaultControlFieldProvi
 		String field1 = null;
 
 		if (lastFiltered.length >= 2 && lastFiltered[0].contains(StringUtils.SPACE)) {
-			Pattern pattern = Pattern.compile("^(\\S+) +(.*)$");
+			Pattern pattern = Pattern.compile("^(\\S+) +(.*)$"); //$NON-NLS-1$
 			Matcher matcher = pattern.matcher(lastFiltered[0]);
 			if (matcher.matches()) {
 				field0 = matcher.group(1);
@@ -83,7 +83,7 @@ public class PatientenListeControlFieldProvider extends DefaultControlFieldProvi
 		String field1 = null;
 
 		if (lastFiltered.length >= 2 && lastFiltered[0].contains(StringUtils.SPACE)) {
-			Pattern pattern = Pattern.compile("^(\\S+) +(.*)$");
+			Pattern pattern = Pattern.compile("^(\\S+) +(.*)$"); //$NON-NLS-1$
 			Matcher matcher = pattern.matcher(lastFiltered[0]);
 			if (matcher.matches()) {
 				field0 = matcher.group(1);
@@ -92,13 +92,13 @@ public class PatientenListeControlFieldProvider extends DefaultControlFieldProvi
 		}
 
 		if (field0 != null && field1 != null) {
-			query.and(dbFields[0], COMPARATOR.LIKE, field0 + "%", true);
+			query.and(dbFields[0], COMPARATOR.LIKE, field0 + "%", true); //$NON-NLS-1$
 			query.and(dbFields[1], COMPARATOR.LIKE, field0 + "%", true); //$NON-NLS-1$ //$NON-NLS-2$
 
 			// remaining fields
 			for (int i = 2; i < fields.length; i++) {
 				if (!lastFiltered[i].equals(StringTool.leer)) {
-					query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true);
+					query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true); //$NON-NLS-1$
 				}
 			}
 		} else {

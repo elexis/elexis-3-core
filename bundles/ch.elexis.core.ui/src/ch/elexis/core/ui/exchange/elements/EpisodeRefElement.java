@@ -15,7 +15,7 @@ package ch.elexis.core.ui.exchange.elements;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 
 public class EpisodeRefElement extends XChangeElement {
-	public static final String XMLNAME = "episode";
+	public static final String XMLNAME = "episode"; //$NON-NLS-1$
 
 	@Override
 	public String getXMLName() {
@@ -24,7 +24,7 @@ public class EpisodeRefElement extends XChangeElement {
 
 	public EpisodeRefElement asExporter(XChangeExporter parent, EpisodeElement episode) {
 		asExporter(parent);
-		setAttribute("ref", episode.getAttr(ATTR_ID));
+		setAttribute("ref", episode.getAttr(ATTR_ID)); //$NON-NLS-1$
 		return this;
 	}
 }

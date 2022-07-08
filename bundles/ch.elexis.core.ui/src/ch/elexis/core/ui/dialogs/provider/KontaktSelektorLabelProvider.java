@@ -15,10 +15,10 @@ public class KontaktSelektorLabelProvider extends DefaultLabelProvider {
 
 			String label = k.getLabel();
 			if (k.istPerson()) {
-				label = label + " (" + k.get(Person.BIRTHDATE) + ")";
+				label = label + " (" + k.get(Person.BIRTHDATE) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (StringConstants.ONE.equals(k.get(Kontakt.FLD_IS_USER))) {
-				label = k.get(Kontakt.FLD_NAME1) + StringUtils.SPACE + k.get(Kontakt.FLD_NAME2) + " - " + label;
+				label = k.get(Kontakt.FLD_NAME1) + StringUtils.SPACE + k.get(Kontakt.FLD_NAME2) + " - " + label; //$NON-NLS-1$
 			}
 			return label;
 		} else if (element instanceof PersistentObject) {

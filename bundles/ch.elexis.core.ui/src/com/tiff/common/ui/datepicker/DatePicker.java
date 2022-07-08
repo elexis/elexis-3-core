@@ -78,7 +78,7 @@ public class DatePicker extends Composite {
 			super(parent, style | SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE);
 
 			GC gc = new GC(this);
-			Point p = gc.stringExtent("Q");
+			Point p = gc.stringExtent("Q"); //$NON-NLS-1$
 			gc.dispose();
 			colSize = p.x * 3;
 			rowSize = (int) (p.y * 1.4);
@@ -380,7 +380,7 @@ public class DatePicker extends Composite {
 		gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gridData.heightHint = gridData.widthHint = 20;
 		prevYear.setLayoutData(gridData);
-		prevYear.setText("<<");
+		prevYear.setText("<<"); //$NON-NLS-1$
 		prevYear.setSelection(false);
 		prevYear.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -394,7 +394,7 @@ public class DatePicker extends Composite {
 		gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gridData.heightHint = gridData.widthHint = 20;
 		prevMonth.setLayoutData(gridData);
-		prevMonth.setText("<");
+		prevMonth.setText("<"); //$NON-NLS-1$
 		prevMonth.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				cal.add(Calendar.MONTH, -1);
@@ -414,7 +414,7 @@ public class DatePicker extends Composite {
 		gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		gridData.heightHint = gridData.widthHint = 20;
 		nextMonth.setLayoutData(gridData);
-		nextMonth.setText(">");
+		nextMonth.setText(">"); //$NON-NLS-1$
 		nextMonth.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				cal.add(Calendar.MONTH, 1);
@@ -427,7 +427,7 @@ public class DatePicker extends Composite {
 		gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		gridData.heightHint = gridData.widthHint = 20;
 		nextYear.setLayoutData(gridData);
-		nextYear.setText(">>");
+		nextYear.setText(">>"); //$NON-NLS-1$
 		nextYear.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				cal.roll(Calendar.YEAR, 1);
@@ -483,7 +483,7 @@ public class DatePicker extends Composite {
 	 * gets the name of the current month
 	 */
 	private String getCurrentMonthName() {
-		return getMonthName(cal.get(Calendar.MONTH)) + ", " + cal.get(Calendar.YEAR);
+		return getMonthName(cal.get(Calendar.MONTH)) + ", " + cal.get(Calendar.YEAR); //$NON-NLS-1$
 	}
 
 	/**

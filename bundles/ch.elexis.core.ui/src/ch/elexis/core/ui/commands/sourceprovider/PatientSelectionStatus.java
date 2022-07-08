@@ -30,9 +30,9 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
  */
 public class PatientSelectionStatus extends AbstractSourceProvider {
 
-	public final static String PATIENTACTIVE = "ch.elexis.commands.sourceprovider.patientSelectionActive";
-	public final static String TRUE = "TRUE";
-	public final static String FALSE = "FALSE";
+	public final static String PATIENTACTIVE = "ch.elexis.commands.sourceprovider.patientSelectionActive"; //$NON-NLS-1$
+	public final static String TRUE = "TRUE"; //$NON-NLS-1$
+	public final static String FALSE = "FALSE"; //$NON-NLS-1$
 	private boolean enabled = false;
 
 	public PatientSelectionStatus() {

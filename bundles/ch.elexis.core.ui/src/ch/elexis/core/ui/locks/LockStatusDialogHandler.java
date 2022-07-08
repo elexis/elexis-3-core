@@ -25,7 +25,7 @@ import ch.elexis.core.ui.icons.Images;
 @Component(property = org.osgi.service.event.EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.EVENT_RELOAD)
 public class LockStatusDialogHandler extends AbstractHandler implements IElementUpdater, EventHandler {
 
-	public static final String COMMAND_ID = "ch.elexis.core.ui.locks.LockStatusDialog";
+	public static final String COMMAND_ID = "ch.elexis.core.ui.locks.LockStatusDialog"; //$NON-NLS-1$
 
 	private ImageDescriptor localIcon;
 	private ImageDescriptor remoteIcon;

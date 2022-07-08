@@ -28,7 +28,7 @@ public class PerspectiveUtil {
 		EModelService modelService = getService(EModelService.class);
 		MApplication mApplication = getService(MApplication.class);
 
-		MTrimmedWindow mWindow = (MTrimmedWindow) modelService.find("IDEWindow", mApplication);
+		MTrimmedWindow mWindow = (MTrimmedWindow) modelService.find("IDEWindow", mApplication); //$NON-NLS-1$
 		if (mWindow == null) {
 			List<MWindow> windows = mApplication.getChildren();
 			if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {

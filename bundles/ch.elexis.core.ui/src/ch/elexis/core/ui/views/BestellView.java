@@ -479,8 +479,8 @@ public class BestellView extends ViewPart {
 						}
 						OrderServiceHolder.get().addRefillForStockEntryToOrder(stockEntry, actOrder);
 					} else {
-						LoggerFactory.getLogger(getClass()).warn("Could not resolve article " + stockEntry.getLabel()
-								+ " of stock entry " + stockEntry.getId());
+						LoggerFactory.getLogger(getClass()).warn("Could not resolve article " + stockEntry.getLabel() //$NON-NLS-1$
+								+ " of stock entry " + stockEntry.getId()); //$NON-NLS-1$
 					}
 				}
 				updateCheckIn();
@@ -525,7 +525,7 @@ public class BestellView extends ViewPart {
 								entries.stream().forEach(oe -> oe.setState(OrderEntryState.ORDERED));
 								tv.refresh();
 							} catch (Exception e) {
-								LoggerFactory.getLogger(getClass()).error("Error printing order", e);
+								LoggerFactory.getLogger(getClass()).error("Error printing order", e); //$NON-NLS-1$
 								MessageDialog.openError(getViewSite().getShell(), "Fehler",
 										"Beim Druck der Bestellung an " + receiver.getLabel()
 												+ " ist ein Fehler aufgetren.");
@@ -567,7 +567,7 @@ public class BestellView extends ViewPart {
 				if (runOrder) {
 					List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER);
 					for (IConfigurationElement ic : list) {
-						String handler = ic.getAttribute("type");
+						String handler = ic.getAttribute("type"); //$NON-NLS-1$
 						if (handler != null && handler.contains(Bestellung.class.getName())) {
 							try {
 								IDataSender sender = (IDataSender) ic

@@ -21,15 +21,15 @@ import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.XMLTool;
 
 public class ResultElement extends XChangeElement {
-	public static final String XMLNAME = "result";
-	public static final String ATTR_DATE = "timestamp";
-	public static final String ATTR_NORMAL = "isNormal";
-	public static final String ATTR_LABITEM = "findingRef";
-	public static final String ELEMENT_META = "meta";
-	public static final String ATTRIB_CREATOR = "creator";
-	public static final String ELEMENT_IMAGE = "image";
-	public static final String ELEMENT_TEXTRESULT = "textResult";
-	public static final String ELEMENT_DOCRESULT = "documentRef";
+	public static final String XMLNAME = "result"; //$NON-NLS-1$
+	public static final String ATTR_DATE = "timestamp"; //$NON-NLS-1$
+	public static final String ATTR_NORMAL = "isNormal"; //$NON-NLS-1$
+	public static final String ATTR_LABITEM = "findingRef"; //$NON-NLS-1$
+	public static final String ELEMENT_META = "meta"; //$NON-NLS-1$
+	public static final String ATTRIB_CREATOR = "creator"; //$NON-NLS-1$
+	public static final String ELEMENT_IMAGE = "image"; //$NON-NLS-1$
+	public static final String ELEMENT_TEXTRESULT = "textResult"; //$NON-NLS-1$
+	public static final String ELEMENT_DOCRESULT = "documentRef"; //$NON-NLS-1$
 
 	@Override
 	public String getXMLName() {
@@ -54,7 +54,7 @@ public class ResultElement extends XChangeElement {
 
 	private ResultElement asExporter(XChangeExporter home, LabResult lr) {
 		asExporter(home);
-		setAttribute("id", XMLTool.idToXMLID(lr.getId()));
+		setAttribute("id", XMLTool.idToXMLID(lr.getId())); //$NON-NLS-1$
 		setAttribute(ATTR_DATE, new TimeTool(lr.getDate()).toString(TimeTool.DATETIME_XML));
 		setAttribute(ATTR_LABITEM, XMLTool.idToXMLID(lr.getItem().getId()));
 		ResultElement eResult = new ResultElement();

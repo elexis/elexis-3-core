@@ -445,7 +445,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		billedDisplay = new VerrechnungsDisplay(getSite().getPage(), botright, SWT.NONE);
 		CoreUiUtil.injectServices(billedDisplay);
 		billedDisplay.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		getSite().registerContextMenu(ID + ".VerrechnungsDisplay", billedDisplay.getMenuManager(),
+		getSite().registerContextMenu(ID + ".VerrechnungsDisplay", billedDisplay.getMenuManager(), //$NON-NLS-1$
 				billedDisplay.getViewer());
 		getSite().setSelectionProvider(billedDisplay.getViewer());
 		diagAndChargeSash
@@ -522,7 +522,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 
 		actPat = pat;
 		if (pat != null) {
-			form.setText(pat.getLabel() + StringTool.space + "(" + pat.getAgeInYears() + ")");
+			form.setText(pat.getLabel() + StringTool.space + "(" + pat.getAgeInYears() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			stickerComposite.setPatient(pat);
 			updateFallCombo();
 		}
@@ -607,7 +607,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			if (encounter.getDate().isEqual(LocalDate.now())) {
 				text.setTextBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 			} else {
-				text.setTextBackground(UiDesk.getColorFromRGB("FAFAFA"));
+				text.setTextBackground(UiDesk.getColorFromRGB("FAFAFA")); //$NON-NLS-1$
 			}
 		} else {
 			form.setText(NO_CONS_SELECTED);
@@ -633,7 +633,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	private String getVersionRemark() {
-		String remark = "edit";
+		String remark = "edit"; //$NON-NLS-1$
 		java.util.Optional<IUser> activeUser = ContextServiceHolder.get().getRootContext().getTyped(IUser.class);
 		if (activeUser.isPresent()) {
 			remark = activeUser.get().getLabel();
@@ -771,7 +771,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			}
 			setKons(actEncounter);
 		} else {
-			log.warn("Save() actKons == null");
+			log.warn("Save() actKons == null"); //$NON-NLS-1$
 		}
 	}
 

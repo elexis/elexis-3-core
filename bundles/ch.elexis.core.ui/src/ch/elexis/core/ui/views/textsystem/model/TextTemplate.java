@@ -27,7 +27,7 @@ public class TextTemplate {
 		MANDANT, ADDRESS, SYS_TEMPLATE
 	}
 
-	public static final String DEFAULT_MANDANT = "Alle";
+	public static final String DEFAULT_MANDANT = "Alle"; //$NON-NLS-1$
 
 	private String name;
 	private String description;
@@ -279,7 +279,7 @@ public class TextTemplate {
 			try {
 				documentContent = IOUtils.toByteArray(documentTemplate.getContent());
 			} catch (IOException e) {
-				LoggerFactory.getLogger(getClass()).error("Error caching template content");
+				LoggerFactory.getLogger(getClass()).error("Error caching template content"); //$NON-NLS-1$
 			}
 		}
 	}
@@ -307,9 +307,9 @@ public class TextTemplate {
 		}
 
 		if (systemTemplate || mandantId == null || mandantId.isEmpty()) {
-			cfgTemplateBase = TextTemplatePrintSettings.TXT_TEMPLATE_PREFIX_PUBLIC + type + "/" + name;
+			cfgTemplateBase = TextTemplatePrintSettings.TXT_TEMPLATE_PREFIX_PUBLIC + type + "/" + name; //$NON-NLS-1$
 		} else {
-			cfgTemplateBase = TextTemplatePrintSettings.TXT_TEMPLATE_PREFIX_PRIVATE + mandantId + "/" + type + "/"
+			cfgTemplateBase = TextTemplatePrintSettings.TXT_TEMPLATE_PREFIX_PRIVATE + mandantId + "/" + type + "/" //$NON-NLS-1$ //$NON-NLS-2$
 					+ name;
 		}
 
@@ -392,7 +392,7 @@ public class TextTemplate {
 			qbe.startGroup();
 			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringTool.leer);
 			qbe.or();
-			qbe.addToken(Brief.FLD_DESTINATION_ID + " is NULL");
+			qbe.addToken(Brief.FLD_DESTINATION_ID + " is NULL"); //$NON-NLS-1$
 			qbe.endGroup();
 		}
 		return qbe.execute();

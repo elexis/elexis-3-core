@@ -57,13 +57,13 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 
 		choosenFields = ConfigServiceHolder
 				.getUser(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN, Reminder.LabelFields.LASTNAME.toString())
-				.split(",");
+				.split(","); //$NON-NLS-1$
 		if (choosenFields.length == 3) {
 			availableFields = new String[] {};
 		} else {
-			String defValue = Reminder.LabelFields.PAT_ID.toString() + "," + Reminder.LabelFields.FIRSTNAME.toString();
+			String defValue = Reminder.LabelFields.PAT_ID.toString() + "," + Reminder.LabelFields.FIRSTNAME.toString(); //$NON-NLS-1$
 			availableFields = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE, defValue)
-					.split(",");
+					.split(","); //$NON-NLS-1$
 		}
 
 	}
@@ -188,10 +188,10 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		for (int i = 0; i < lViewerChoosen.getList().getItems().length; i++) {
 			sb.append(lViewerChoosen.getList().getItems()[i]);
 			if (i < lViewerChoosen.getList().getItems().length - 1) {
-				sb.append(", ");
+				sb.append(", "); //$NON-NLS-1$
 			}
 		}
-		return prefixPrevLabel + ":\t\t" + sb.toString();
+		return prefixPrevLabel + ":\t\t" + sb.toString(); //$NON-NLS-1$
 	}
 
 	public void init(IWorkbench workbench) {
@@ -223,7 +223,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		StringBuilder sb = new StringBuilder();
 		for (String item : items) {
 			sb.append(item);
-			sb.append(",");
+			sb.append(","); //$NON-NLS-1$
 		}
 		return sb.toString();
 	}

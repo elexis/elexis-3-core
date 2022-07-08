@@ -85,7 +85,7 @@ public class ReflectiveEditingSupport extends EditingSupport {
 		try {
 			return BeanUtils.getProperty(element, field);
 		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			LoggerFactory.getLogger(getClass()).error("Error getting property [" + field + "] of [" + element + "]", e);
+			LoggerFactory.getLogger(getClass()).error("Error getting property [" + field + "] of [" + element + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		return null;
 	}
@@ -103,12 +103,12 @@ public class ReflectiveEditingSupport extends EditingSupport {
 					modelService.save((Identifiable) element);
 				}
 			} catch (IllegalAccessException | InvocationTargetException e) {
-				LoggerFactory.getLogger(getClass()).error("Error setting property [" + field + "] of [" + element + "]",
+				LoggerFactory.getLogger(getClass()).error("Error setting property [" + field + "] of [" + element + "]", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						e);
 			}
 			lr = LocalLockServiceHolder.get().releaseLock(element);
 			if (!lr.isOk()) {
-				log.warn("Error releasing lock for [{}]: {}", element, lr.getStatus());
+				log.warn("Error releasing lock for [{}]: {}", element, lr.getStatus()); //$NON-NLS-1$
 			}
 			getViewer().refresh(true);
 		}

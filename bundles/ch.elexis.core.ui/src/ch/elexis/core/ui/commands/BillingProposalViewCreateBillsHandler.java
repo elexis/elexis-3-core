@@ -52,7 +52,7 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 		List<Konsultation> toBill = getToBill(event);
 		Map<Integer, List<Konsultation>> sortedByYears = BillingUtil.getSortedByYear(toBill);
 		if (!BillingUtil.canBillYears(new ArrayList<>(sortedByYears.keySet()))) {
-			StringJoiner sj = new StringJoiner(", ");
+			StringJoiner sj = new StringJoiner(", "); //$NON-NLS-1$
 			sortedByYears.keySet().forEach(i -> sj.add(Integer.toString(i)));
 			if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), "Rechnung Validierung",
 					"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "
@@ -92,11 +92,11 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 						if (result.isOK()) {
 							successful++;
 						} else {
-							errorneousInfo.append(result.getSeverity()).append(" -> ");
+							errorneousInfo.append(result.getSeverity()).append(" -> "); //$NON-NLS-1$
 							List<Result<IInvoice>.msg> messages = result.getMessages();
 							for (int i = 0; i < messages.size(); i++) {
 								if (i > 0) {
-									errorneousInfo.append(" / ");
+									errorneousInfo.append(" / "); //$NON-NLS-1$
 								}
 								errorneousInfo.append(messages.get(i).getText());
 							}
@@ -121,13 +121,13 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 		} catch (InvocationTargetException | InterruptedException e) {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "Fehler",
 					"Fehler beim Ausführen der Rechnungserstelltung. Details siehe Log.");
-			LoggerFactory.getLogger(BillingProposalViewCreateBillsHandler.class).error("Error creating bills", e);
+			LoggerFactory.getLogger(BillingProposalViewCreateBillsHandler.class).error("Error creating bills", e); //$NON-NLS-1$
 		}
 	}
 
 	private List<Konsultation> getToBill(ExecutionEvent event) {
-		String selectionParameter = event.getParameter("ch.elexis.core.ui.BillingProposalViewCreateBills.selection");
-		if ("selection".equals(selectionParameter)) {
+		String selectionParameter = event.getParameter("ch.elexis.core.ui.BillingProposalViewCreateBills.selection"); //$NON-NLS-1$
+		if ("selection".equals(selectionParameter)) { //$NON-NLS-1$
 			ISelection selection = HandlerUtil.getCurrentSelection(event);
 			if (selection != null && !selection.isEmpty()) {
 				@SuppressWarnings("unchecked")

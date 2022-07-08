@@ -239,7 +239,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 				if (patInfo == null || patInfo.isEmpty()) {
 					fields[i][1] = p.getSimpleLabel() + "\t\r" + bem; //$NON-NLS-1$
 				} else {
-					fields[i][1] = p.getSimpleLabel() + "\t\r" + bem + StringUtils.CR + patInfo;
+					fields[i][1] = p.getSimpleLabel() + "\t\r" + bem + StringUtils.CR + patInfo; //$NON-NLS-1$
 				}
 			}
 			fields[i][2] = p.getDosis();
@@ -322,7 +322,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 
 	@Override
 	public String getOutputterID() {
-		return "ch.elexis.RezeptBlatt";
+		return "ch.elexis.RezeptBlatt"; //$NON-NLS-1$
 	}
 
 	@Override

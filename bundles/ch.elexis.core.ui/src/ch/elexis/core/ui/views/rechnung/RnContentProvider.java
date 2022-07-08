@@ -384,7 +384,7 @@ class RnContentProvider
 		Money total = new Money();
 		for (Zahlung z : lz) {
 			Money abzahlung = z.getBetrag();
-			if (!z.getBemerkung().equalsIgnoreCase("storno")) {
+			if (!z.getBemerkung().equalsIgnoreCase("storno")) { //$NON-NLS-1$
 				total.addMoney(abzahlung);
 			}
 		}

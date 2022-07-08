@@ -21,8 +21,8 @@ public class UiStartupHandler implements EventHandler {
 
 	@Override
 	public void handleEvent(Event event) {
-		LoggerFactory.getLogger(getClass()).info("APPLICATION STARTUP COMPLETE");
-		Object property = event.getProperty("org.eclipse.e4.data");
+		LoggerFactory.getLogger(getClass()).info("APPLICATION STARTUP COMPLETE"); //$NON-NLS-1$
+		Object property = event.getProperty("org.eclipse.e4.data"); //$NON-NLS-1$
 		if (property instanceof MApplication) {
 			MApplication application = (MApplication) property;
 
@@ -40,7 +40,7 @@ public class UiStartupHandler implements EventHandler {
 
 	private void addMandantSelectionItem(MApplication mApplication, EModelService eModelService) {
 
-		MTrimBar trimbar = (MTrimBar) eModelService.find("org.eclipse.ui.main.toolbar", mApplication);
+		MTrimBar trimbar = (MTrimBar) eModelService.find("org.eclipse.ui.main.toolbar", mApplication); //$NON-NLS-1$
 
 		if (trimbar != null) {
 			MTrimElement mTrimElement = null;
@@ -49,12 +49,12 @@ public class UiStartupHandler implements EventHandler {
 			List<MTrimElement> childrens = trimbar.getChildren();
 			for (MTrimElement element : childrens) {
 
-				if ("ch.elexis.core.ui.toolcontrol.mandantselection".equals(element.getElementId())) {
+				if ("ch.elexis.core.ui.toolcontrol.mandantselection".equals(element.getElementId())) { //$NON-NLS-1$
 					mTrimElement = element;
 				}
 
-				if (position == 0 && ("ch.elexis.toolbar1".equals(element.getElementId())
-						|| "PerspectiveSpacer".equals(element.getElementId()))) {
+				if (position == 0 && ("ch.elexis.toolbar1".equals(element.getElementId()) //$NON-NLS-1$
+						|| "PerspectiveSpacer".equals(element.getElementId()))) { //$NON-NLS-1$
 					position = i;
 				}
 				i++;
@@ -62,9 +62,9 @@ public class UiStartupHandler implements EventHandler {
 
 			if (mTrimElement == null) {
 				MToolControl mToolControl = eModelService.createModelElement(MToolControl.class);
-				mToolControl.setElementId("ch.elexis.core.ui.toolcontrol.mandantselection");
+				mToolControl.setElementId("ch.elexis.core.ui.toolcontrol.mandantselection"); //$NON-NLS-1$
 				mToolControl.setContributionURI(
-						"bundleclass://ch.elexis.core.ui/ch.elexis.core.ui.coolbar.MandantSelectionContributionItem");
+						"bundleclass://ch.elexis.core.ui/ch.elexis.core.ui.coolbar.MandantSelectionContributionItem"); //$NON-NLS-1$
 				mToolControl.setToBeRendered(true);
 				mToolControl.setVisible(true);
 

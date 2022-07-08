@@ -13,7 +13,7 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 
 public class ContactSelectionLabelProvider extends DefaultLabelProvider {
 
-	private static DateTimeFormatter dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	private static DateTimeFormatter dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy"); //$NON-NLS-1$
 
 	@Override
 	public String getText(Object element) {
@@ -25,12 +25,12 @@ public class ContactSelectionLabelProvider extends DefaultLabelProvider {
 				Optional<IPerson> person = CoreModelServiceHolder.get().load(contact.getId(), IPerson.class);
 				String dateOfBirthString = (person.get().getDateOfBirth() != null
 						? person.get().getDateOfBirth().format(dateOfBirthFormatter)
-						: "?");
-				label = label + " (" + dateOfBirthString + ")";
+						: "?"); //$NON-NLS-1$
+				label = label + " (" + dateOfBirthString + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (contact.isUser()) {
 				label = StringUtils.defaultString(contact.getDescription1()) + StringUtils.SPACE
-						+ StringUtils.defaultString(contact.getDescription2()) + " - " + label;
+						+ StringUtils.defaultString(contact.getDescription2()) + " - " + label; //$NON-NLS-1$
 			}
 			return label;
 		} else if (element instanceof Identifiable) {

@@ -61,7 +61,7 @@ public class TreeDataLoader extends PersistentObjectLoader implements ILazyTreeC
 				synchronized (qbe) {
 					PersistentObject p = (PersistentObject) l.contents;
 					if (l.getParent() == null) {
-						setQuery("NIL");
+						setQuery("NIL"); //$NON-NLS-1$
 					} else {
 						if (p == null) {
 							return false;
@@ -88,7 +88,7 @@ public class TreeDataLoader extends PersistentObjectLoader implements ILazyTreeC
 		monitor.beginTask(Messages.PersistentObjectLoader_LoadingData, IProgressMonitor.UNKNOWN); // $NON-NLS-1$
 		synchronized (qbe) {
 			root.clear();
-			setQuery("NIL");
+			setQuery("NIL"); //$NON-NLS-1$
 
 			for (PersistentObject po : qbe.execute()) {
 				new Tree<PersistentObject>(root, po);

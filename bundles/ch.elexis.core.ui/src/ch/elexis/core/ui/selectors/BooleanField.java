@@ -25,7 +25,7 @@ public class BooleanField extends ActiveControl {
 		b.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				textContents = b.getSelection() ? "1" : "0";
+				textContents = b.getSelection() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
 				fireChangedEvent();
 			}
 		});
@@ -34,7 +34,7 @@ public class BooleanField extends ActiveControl {
 
 	@Override
 	protected void push() {
-		if (textContents.equals("true")) {
+		if (textContents.equals("true")) { //$NON-NLS-1$
 			((Button) ctl).setSelection(true);
 		} else {
 			((Button) ctl).setSelection(false);

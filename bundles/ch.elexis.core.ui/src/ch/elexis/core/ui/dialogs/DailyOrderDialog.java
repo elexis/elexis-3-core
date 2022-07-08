@@ -121,7 +121,7 @@ public class DailyOrderDialog extends TitleAreaDialog {
 						limitationList.addAll(Arrays.asList(lsd.getResult()).stream().map(m -> (IMandator) m)
 								.collect(Collectors.toList()));
 						String label = Messages.DailyOrderMandantOnlyFollowing
-								+ limitationList.stream().map(m -> m.getLabel()).reduce((u, t) -> u + ", " + t)
+								+ limitationList.stream().map(m -> m.getLabel()).reduce((u, t) -> u + ", " + t) //$NON-NLS-1$
 										.orElse(Messages.DailyOrderMandantNone);
 						btnFilterMandators.setText(label);
 						modifyArticlesUsedOn(selectedDate, true); // populate new list

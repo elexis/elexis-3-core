@@ -40,8 +40,8 @@ public class StartupHandler implements EventHandler {
 
 	@Override
 	public void handleEvent(Event event) {
-		LoggerFactory.getLogger(getClass()).info("APPLICATION STARTUP COMPLETE");
-		Object property = event.getProperty("org.eclipse.e4.data");
+		LoggerFactory.getLogger(getClass()).info("APPLICATION STARTUP COMPLETE"); //$NON-NLS-1$
+		Object property = event.getProperty("org.eclipse.e4.data"); //$NON-NLS-1$
 		if (property instanceof MApplication) {
 			MApplication application = (MApplication) property;
 			StartupHandler.applicationContext = application.getContext();
@@ -76,13 +76,13 @@ public class StartupHandler implements EventHandler {
 						if (!dirtyParts.isEmpty()) {
 							for (MPart mPart : dirtyParts) {
 								if (mPart.getObject() == null && mPart.getContributionURI()
-										.endsWith("internal.e4.compatibility.CompatibilityView")) {
+										.endsWith("internal.e4.compatibility.CompatibilityView")) { //$NON-NLS-1$
 									mPart.setDirty(false);
 								}
 							}
 						}
 					} catch (IllegalStateException e) {
-						LoggerFactory.getLogger(getClass()).warn("Exception resetting dirty state", e);
+						LoggerFactory.getLogger(getClass()).warn("Exception resetting dirty state", e); //$NON-NLS-1$
 					}
 				}
 				return true;

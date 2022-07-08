@@ -117,7 +117,7 @@ public class SelectBestellungDialog extends SelectionDialog {
 					String[] i = order.getId().split(":"); //$NON-NLS-1$
 					timeTool.set(i[1]);
 				} catch (Exception e) {
-					timeTool.set("1.1.1970");
+					timeTool.set("1.1.1970"); //$NON-NLS-1$
 				}
 			}
 		});
@@ -133,10 +133,10 @@ public class SelectBestellungDialog extends SelectionDialog {
 			public String getText(Object element) {
 				IOrder order = (IOrder) element;
 				if (order.isDone()) {
-					return "*";
+					return "*"; //$NON-NLS-1$
 				} else {
 					if (order.isPartialDone()) {
-						return "/";
+						return "/"; //$NON-NLS-1$
 					}
 					return StringUtils.EMPTY;
 				}
@@ -158,7 +158,7 @@ public class SelectBestellungDialog extends SelectionDialog {
 					date.set(i[1]);
 					return date.toString(TimeTool.FULL_GER);
 				} else {
-					return "???";
+					return "???"; //$NON-NLS-1$
 				}
 			}
 		});
@@ -175,7 +175,7 @@ public class SelectBestellungDialog extends SelectionDialog {
 				if (i.length > 0)
 					return i[0];
 				else
-					return "???";
+					return "???"; //$NON-NLS-1$
 			}
 		});
 	}

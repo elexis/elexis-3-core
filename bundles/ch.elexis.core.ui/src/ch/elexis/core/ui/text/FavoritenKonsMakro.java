@@ -34,7 +34,7 @@ public class FavoritenKonsMakro implements IKonsMakro {
 						Result<IBilled> res = BillingServiceHolder.get().bill((IBillable) favObj.get(),
 								actEncounter.get(), 1.0);
 						if (!res.isOK()) {
-							MessageEvent.fireError("Error", res.toString());
+							MessageEvent.fireError("Error", res.toString()); //$NON-NLS-1$
 						} else {
 							return StringConstants.EMPTY;
 						}

@@ -136,7 +136,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 				query.startGroup();
 				for (String key : fieldFilterValues.keySet()) {
 					if (!StringUtils.isBlank(fieldFilterValues.get(key))) {
-						query.and(key, COMPARATOR.LIKE, "%" + fieldFilterValues.get(key) + "%");
+						query.and(key, COMPARATOR.LIKE, "%" + fieldFilterValues.get(key) + "%"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 				query.andJoinGroups();
@@ -207,7 +207,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 			}
 		}
 		if (!StringTool.isNothing(hints[HINT_SEX])) {
-			if (hints[HINT_SEX].toLowerCase().startsWith("m")) {
+			if (hints[HINT_SEX].toLowerCase().startsWith("m")) { //$NON-NLS-1$
 				hints[HINT_SEX] = Gender.MALE.value();
 			} else {
 				hints[HINT_SEX] = Gender.FEMALE.value();
@@ -390,7 +390,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		bOrgs.addSelectionListener(fba);
 		initContactTypeSelection();
 
-		commonViewer.create(vc, ret, SWT.NONE, "1");
+		commonViewer.create(vc, ret, SWT.NONE, "1"); //$NON-NLS-1$
 		GridData gd = SWTHelper.getFillGridData(1, true, 1, true);
 		gd.heightHint = 100;
 		commonViewer.getViewerWidget().getControl().setLayoutData(gd);
@@ -500,7 +500,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 			selection = bKSel;
 		} else if (bKSel instanceof BezugsKontakt) {
 			BezugsKontakt bezugsKontakt = (BezugsKontakt) bKSel;
-			Kontakt kontakt = Kontakt.load(bezugsKontakt.get("otherID"));
+			Kontakt kontakt = Kontakt.load(bezugsKontakt.get("otherID")); //$NON-NLS-1$
 			if (kontakt.exists()) {
 				selection = kontakt;
 			}

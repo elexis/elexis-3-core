@@ -38,13 +38,13 @@ public class MetaXid {
 	 * Construct a MetaXid from an XML Element
 	 */
 	public MetaXid(Element xidElement) {
-		id = xidElement.getAttributeValue("id");
+		id = xidElement.getAttributeValue("id"); //$NON-NLS-1$
 		List<Element> ids = xidElement.getChildren();
 		for (Element identity : ids) {
-			if (identity.getName().equalsIgnoreCase("identity")) {
-				Identity i = new Identity(identity.getAttributeValue("domain"), identity.getAttributeValue("domainID"),
-						mapQuality(identity.getAttributeValue("quality")),
-						Boolean.parseBoolean(identity.getAttributeValue("isGUID")), identity.getAttributeValue("date"));
+			if (identity.getName().equalsIgnoreCase("identity")) { //$NON-NLS-1$
+				Identity i = new Identity(identity.getAttributeValue("domain"), identity.getAttributeValue("domainID"), //$NON-NLS-1$ //$NON-NLS-2$
+						mapQuality(identity.getAttributeValue("quality")), //$NON-NLS-1$
+						Boolean.parseBoolean(identity.getAttributeValue("isGUID")), identity.getAttributeValue("date")); //$NON-NLS-1$ //$NON-NLS-2$
 				identities.add(i);
 			}
 		}
@@ -172,11 +172,11 @@ public class MetaXid {
 	}
 
 	private int mapQuality(String q) {
-		if (q.equalsIgnoreCase("local")) {
+		if (q.equalsIgnoreCase("local")) { //$NON-NLS-1$
 			return Xid.ASSIGNMENT_LOCAL;
-		} else if (q.equalsIgnoreCase("regional")) {
+		} else if (q.equalsIgnoreCase("regional")) { //$NON-NLS-1$
 			return Xid.ASSIGNMENT_REGIONAL;
-		} else if (q.equalsIgnoreCase("global")) {
+		} else if (q.equalsIgnoreCase("global")) { //$NON-NLS-1$
 			return Xid.ASSIGNMENT_GLOBAL;
 		}
 		return -1;
@@ -185,13 +185,13 @@ public class MetaXid {
 	private String mapQuality(int q) {
 		switch (q) {
 		case Xid.ASSIGNMENT_GLOBAL:
-			return "global";
+			return "global"; //$NON-NLS-1$
 		case Xid.ASSIGNMENT_LOCAL:
-			return "local";
+			return "local"; //$NON-NLS-1$
 		case Xid.ASSIGNMENT_REGIONAL:
-			return "regional";
+			return "regional"; //$NON-NLS-1$
 		default:
-			return "undefined";
+			return "undefined"; //$NON-NLS-1$
 		}
 	}
 

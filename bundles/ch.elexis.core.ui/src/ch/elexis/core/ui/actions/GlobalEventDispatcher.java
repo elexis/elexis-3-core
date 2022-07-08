@@ -69,7 +69,7 @@ public class GlobalEventDispatcher implements IPartListener2 {
 	 * @param part The workbench part to observe
 	 */
 	public static void addActivationListener(final IActivationListener l, final IWorkbenchPart part) {
-		logger.debug("addActivationListener adding " + l + " for " + part);
+		logger.debug("addActivationListener adding " + l + " for " + part); //$NON-NLS-1$ //$NON-NLS-2$
 		LinkedList<IActivationListener> list = getInstance().activationListeners.get(part);
 		if (list == null) {
 			list = new LinkedList<IActivationListener>();
@@ -129,11 +129,11 @@ public class GlobalEventDispatcher implements IPartListener2 {
 	}
 
 	public void partHidden(final IWorkbenchPartReference partRef) {
-		logger.debug("partHidden " + partRef.getPart(false));
+		logger.debug("partHidden " + partRef.getPart(false)); //$NON-NLS-1$
 		LinkedList<IActivationListener> list = activationListeners.get(partRef.getPart(false));
 		if (list != null) {
 			for (IActivationListener l : list) {
-				logger.debug("Calling partHidden listener " + l);
+				logger.debug("Calling partHidden listener " + l); //$NON-NLS-1$
 				l.visible(false);
 			}
 		}
@@ -141,11 +141,11 @@ public class GlobalEventDispatcher implements IPartListener2 {
 	}
 
 	public void partVisible(final IWorkbenchPartReference partRef) {
-		logger.debug("partVisible " + partRef.getPart(false));
+		logger.debug("partVisible " + partRef.getPart(false)); //$NON-NLS-1$
 		LinkedList<IActivationListener> list = activationListeners.get(partRef.getPart(false));
 		if (list != null) {
 			for (IActivationListener l : list) {
-				logger.debug("Calling partVisible listener " + l);
+				logger.debug("Calling partVisible listener " + l); //$NON-NLS-1$
 				l.visible(true);
 			}
 		}
