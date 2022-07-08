@@ -7,6 +7,7 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
@@ -43,6 +44,8 @@ public class ElexisProcessor {
 		updateInjectViews();
 
 		updateE4Views();
+
+		updateCloseablePlaceholder();
 	}
 
 	/**
@@ -71,6 +74,17 @@ public class ElexisProcessor {
 				if (!tags.contains("inject")) {
 					tags.add("inject");
 				}
+			}
+		}
+	}
+
+	private void updateCloseablePlaceholder() {
+		List<MPlaceholder> foundMPlaceholders = eModelService.findElements(mApplication, null, MPlaceholder.class,
+				null);
+		for (MPlaceholder mPlaceholder : foundMPlaceholders) {
+			// set closeable true
+			if (!mPlaceholder.isCloseable()) {
+				mPlaceholder.setCloseable(true);
 			}
 		}
 	}
