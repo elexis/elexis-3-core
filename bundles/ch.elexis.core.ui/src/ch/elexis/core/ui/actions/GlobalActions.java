@@ -291,6 +291,11 @@ public class GlobalActions {
 				}
 
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().resetPerspective();
+
+				// update fixedLayout
+				boolean value = ConfigServiceHolder.getUser(Preferences.USR_FIX_LAYOUT, false);
+				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, !value);
+				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, value);
 			}
 
 			@Override

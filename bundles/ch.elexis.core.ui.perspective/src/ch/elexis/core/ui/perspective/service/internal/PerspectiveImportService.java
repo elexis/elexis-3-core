@@ -42,6 +42,9 @@ import org.eclipse.ui.internal.registry.PerspectiveRegistry;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.perspective.service.IPerspectiveImportService;
 import ch.elexis.core.ui.perspective.service.IStateCallback;
 import ch.elexis.core.ui.perspective.service.IStateCallback.State;
@@ -122,6 +125,11 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		try {
 			IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			PlatformUI.getWorkbench().showPerspective(iPerspectiveDescriptor.getId(), win);
+
+			// update fixedLayout
+			boolean value = ConfigServiceHolder.getUser(Preferences.USR_FIX_LAYOUT, false);
+			ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, !value);
+			ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, value);
 		} catch (WorkbenchException e) {
 			LoggerFactory.getLogger(PerspectiveImportService.class).error("cannot open perspective [{}]",
 					iPerspectiveDescriptor.getId(), e);
