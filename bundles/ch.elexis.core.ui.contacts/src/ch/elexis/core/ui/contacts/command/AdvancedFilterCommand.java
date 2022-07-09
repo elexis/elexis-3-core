@@ -24,7 +24,7 @@ import ch.elexis.core.ui.icons.Images;
 
 public class AdvancedFilterCommand extends AbstractHandler implements IElementUpdater {
 
-	public static final String ID = "at.medevit.elexis.contacts.core.command.AdvancedFilterCommand";
+	public static final String ID = "at.medevit.elexis.contacts.core.command.AdvancedFilterCommand"; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {

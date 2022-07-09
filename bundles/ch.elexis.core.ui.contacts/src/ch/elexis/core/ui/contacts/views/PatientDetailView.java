@@ -169,7 +169,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	void setPatient(Patient p) {
 		patientObservable.setValue(p);
 		scrldfrm.setText(StringTool.unNull(p.getName()) + StringConstants.SPACE + StringTool.unNull(p.getVorname())
-				+ " (" + p.getPatCode() + ")");
+				+ " (" + p.getPatCode() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		compClientCustomText.updateClientCustomArea();
 		stickerComposite.setPatient(CoreModelServiceHolder.get().load(p.getId(), IPatient.class).orElse(null));
 		inpZusatzAdresse.clear();
@@ -525,7 +525,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		bindingContext = new DataBindingContext();
 
 		Text[] control = { txtAllergien, txtAnamnese, txtBemerkungen, txtDiagnosen, txtRisiken, txtFamAnamnese };
-		String[] property = { "allergies", "personalAnamnese", "comment", "diagnosen", "risk", "familyAnamnese" };
+		String[] property = { "allergies", "personalAnamnese", "comment", "diagnosen", "risk", "familyAnamnese" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
 		for (int i = 0; i < control.length; i++) {
 			bindValue(control[i], property[i], bindingContext);

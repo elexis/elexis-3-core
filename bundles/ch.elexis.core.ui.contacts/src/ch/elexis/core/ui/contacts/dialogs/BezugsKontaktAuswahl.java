@@ -121,10 +121,10 @@ public class BezugsKontaktAuswahl extends Dialog {
 
 				dynComposite.getShell().pack();
 				if (dynComposite.isVisible()) {
-					btn.setText("- " + Messages.BezugsKonktat_FormalerReference);
+					btn.setText("- " + Messages.BezugsKonktat_FormalerReference); //$NON-NLS-1$
 					reCalc(true);
 				} else {
-					btn.setText("+ " + Messages.BezugsKonktat_FormalerReference);
+					btn.setText("+ " + Messages.BezugsKonktat_FormalerReference); //$NON-NLS-1$
 				}
 			}
 		});

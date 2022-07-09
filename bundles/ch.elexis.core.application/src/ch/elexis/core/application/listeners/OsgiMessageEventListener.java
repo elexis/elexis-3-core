@@ -24,18 +24,18 @@ public class OsgiMessageEventListener implements EventHandler {
 			@Override
 			public void run() {
 				switch (topic) {
-				case "error":
+				case "error": //$NON-NLS-1$
 					MessageDialog.openError(UiDesk.getTopShell(), title, message);
 					break;
-				case "warn":
+				case "warn": //$NON-NLS-1$
 					MessageDialog.openWarning(UiDesk.getTopShell(), title, message);
 					break;
-				case "info":
+				case "info": //$NON-NLS-1$
 					MessageDialog.openInformation(UiDesk.getTopShell(), title, message);
 					break;
 				default:
 					LoggerFactory.getLogger(getClass())
-							.error("invalid topic [" + topic + "] for message: " + title + "/" + message);
+							.error("invalid topic [" + topic + "] for message: " + title + "/" + message); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					break;
 				}
 			}

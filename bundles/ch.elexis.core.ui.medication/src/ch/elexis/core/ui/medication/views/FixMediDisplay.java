@@ -81,7 +81,7 @@ import ch.rgw.tools.ExHandler;
  *
  */
 public class FixMediDisplay extends ListDisplay<IPrescription> {
-	public static final String ID = "ch.elexis.FixMediDisplay";
+	public static final String ID = "ch.elexis.FixMediDisplay"; //$NON-NLS-1$
 	private final LDListener dlisten;
 	private IAction stopMedicationAction, changeMedicationAction, removeMedicationAction, addDefaultSignatureAction;
 	FixMediDisplay self;
@@ -261,14 +261,14 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 					CodeSelectorHandler.getInstance().setCodeSelectorTarget(target);
 				} else if (l.equals(LISTE)) {
 					HashMap<String, String> parameterMap = new HashMap<>();
-					parameterMap.put("ch.elexis.core.ui.medication.commandParameter.medication", "fix");
+					parameterMap.put("ch.elexis.core.ui.medication.commandParameter.medication", "fix"); //$NON-NLS-1$ //$NON-NLS-2$
 					IEvaluationService evaluationService = (IEvaluationService) viewSite
 							.getService(IEvaluationService.class);
 					new PrintTakingsListHandler()
 							.execute(new ExecutionEvent(null, parameterMap, null, evaluationService.getCurrentState()));
 				} else if (l.equals(REZEPT)) {
 					HashMap<String, String> parameterMap = new HashMap<>();
-					parameterMap.put("ch.elexis.core.ui.medication.commandParameter.medication", "fix");
+					parameterMap.put("ch.elexis.core.ui.medication.commandParameter.medication", "fix"); //$NON-NLS-1$ //$NON-NLS-2$
 					IEvaluationService evaluationService = (IEvaluationService) viewSite
 							.getService(IEvaluationService.class);
 					new PrintRecipeHandler()
@@ -285,7 +285,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 		public String getLabel(Object o) {
 			if (o instanceof IPrescription) {
 				IPrescription presc = (IPrescription) o;
-				return (presc.getEntryType() == EntryType.RESERVE_MEDICATION) ? presc.getLabel() + " Res."
+				return (presc.getEntryType() == EntryType.RESERVE_MEDICATION) ? presc.getLabel() + " Res." //$NON-NLS-1$
 						: presc.getLabel();
 			}
 			return o.toString();

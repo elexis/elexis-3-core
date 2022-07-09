@@ -43,7 +43,7 @@ public class EventPerformanceStatisticHandler implements IPerformanceStatisticHa
 			long lastAverage = stat.getAvgDuration();
 			stat.setAvgDuration(lastAverage + ((durationMs - lastAverage) / stat.getValue()));
 		} else {
-			LoggerFactory.getLogger(getClass()).warn("No start stat found for " + getEventKey(ee, listener));
+			LoggerFactory.getLogger(getClass()).warn("No start stat found for " + getEventKey(ee, listener)); //$NON-NLS-1$
 		}
 	}
 
@@ -65,8 +65,8 @@ public class EventPerformanceStatisticHandler implements IPerformanceStatisticHa
 	}
 
 	private String getEventKey(ElexisEvent ee, ElexisEventListener listener) {
-		return (ee.getObjectClass() != null ? ee.getObjectClass().getName() : "noObjectClass") + "["
-				+ getEventType(ee.getType()) + ", " + getPriority(ee.getPriority()) + "] -> " + listener.getClass();
+		return (ee.getObjectClass() != null ? ee.getObjectClass().getName() : "noObjectClass") + "[" //$NON-NLS-1$ //$NON-NLS-2$
+				+ getEventType(ee.getType()) + ", " + getPriority(ee.getPriority()) + "] -> " + listener.getClass(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public Collection<? extends IStatistic> getStatistics() {
@@ -76,48 +76,48 @@ public class EventPerformanceStatisticHandler implements IPerformanceStatisticHa
 	private String getEventType(int eventType) {
 		switch (eventType) {
 		case 0x0001:
-			return "EVENT_CREATE";
+			return "EVENT_CREATE"; //$NON-NLS-1$
 		case 0x0002:
-			return "EVENT_DELETE";
+			return "EVENT_DELETE"; //$NON-NLS-1$
 		case 0x0004:
-			return "EVENT_UPDATE";
+			return "EVENT_UPDATE"; //$NON-NLS-1$
 		case 0x0008:
-			return "EVENT_RELOAD";
+			return "EVENT_RELOAD"; //$NON-NLS-1$
 		case 0x0010:
-			return "EVENT_SELECTED";
+			return "EVENT_SELECTED"; //$NON-NLS-1$
 		case 0x0020:
-			return "EVENT_DESELECTED";
+			return "EVENT_DESELECTED"; //$NON-NLS-1$
 		case 0x0040:
-			return "EVENT_USER_CHANGED";
+			return "EVENT_USER_CHANGED"; //$NON-NLS-1$
 		case 0x0080:
-			return "EVENT_MANDATOR_CHANGED";
+			return "EVENT_MANDATOR_CHANGED"; //$NON-NLS-1$
 		case 0x0100:
-			return "EVENT_ELEXIS_STATUS";
+			return "EVENT_ELEXIS_STATUS"; //$NON-NLS-1$
 		case 0x0200:
-			return "EVENT_OPERATION_PROGRESS";
+			return "EVENT_OPERATION_PROGRESS"; //$NON-NLS-1$
 		case 0x0400:
-			return "EVENT_NOTIFICATION";
+			return "EVENT_NOTIFICATION"; //$NON-NLS-1$
 		case 0x1000:
-			return "EVENT_LOCK_AQUIRED";
+			return "EVENT_LOCK_AQUIRED"; //$NON-NLS-1$
 		case 0x2000:
-			return "EVENT_LOCK_PRERELEASE";
+			return "EVENT_LOCK_PRERELEASE"; //$NON-NLS-1$
 		case 0x4000:
-			return "EVENT_LOCK_RELEASED";
+			return "EVENT_LOCK_RELEASED"; //$NON-NLS-1$
 		default:
-			return "EVENT_UNKNOWN";
+			return "EVENT_UNKNOWN"; //$NON-NLS-1$
 		}
 	}
 
 	private String getPriority(int priority) {
 		switch (priority) {
 		case 1:
-			return "PRIORITY_SYNC";
+			return "PRIORITY_SYNC"; //$NON-NLS-1$
 		case 1000:
-			return "PRIORITY_HIGH";
+			return "PRIORITY_HIGH"; //$NON-NLS-1$
 		case 10000:
-			return "PRIORITY_NORMAL";
+			return "PRIORITY_NORMAL"; //$NON-NLS-1$
 		default:
-			return "PRIORITY_UNKNOWN";
+			return "PRIORITY_UNKNOWN"; //$NON-NLS-1$
 		}
 	}
 }

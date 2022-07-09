@@ -91,7 +91,7 @@ public class TaskConfigurationPart implements IRefreshablePart {
 			@Override
 			public String getText(Object element) {
 				ITaskDescriptor td = (ITaskDescriptor) element;
-				return td.isActive() ? "ACT" : "NACT";
+				return td.isActive() ? "ACT" : "NACT"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
 
@@ -128,7 +128,7 @@ public class TaskConfigurationPart implements IRefreshablePart {
 			public String getText(Object element) {
 				ITaskDescriptor td = (ITaskDescriptor) element;
 				String ownerId = td.getOwner() != null ? td.getOwner().getId() : "NO-OWNER";
-				return ownerId + "@" + td.getRunner();
+				return ownerId + "@" + td.getRunner(); //$NON-NLS-1$
 			}
 
 			@Override
@@ -160,7 +160,7 @@ public class TaskConfigurationPart implements IRefreshablePart {
 		raccp = new RunnableAndContextConfigurationComposite(tabFolder, SWT.NONE, taskService);
 		tbtmAction.setControl(raccp);
 
-		menuService.registerContextMenu(tableDescriptors, "ch.elexis.core.ui.tasks.popupmenu.tabledescriptors");
+		menuService.registerContextMenu(tableDescriptors, "ch.elexis.core.ui.tasks.popupmenu.tabledescriptors"); //$NON-NLS-1$
 
 		refresh();
 	}

@@ -179,11 +179,11 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			public void setQuery(IQuery<?> query) {
 				for (int i = 0; i < dbFields.length; i++) {
 					if (!lastFiltered[i].equals(StringTool.leer)) {
-						if ("dob".equals(dbFields[i])) {
+						if ("dob".equals(dbFields[i])) { //$NON-NLS-1$
 							query.and(dbFields[i], COMPARATOR.LIKE, NoPoUtil.getElexisDateSearchString(lastFiltered[i]),
 									true);
 						} else {
-							query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true);
+							query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true); //$NON-NLS-1$
 						}
 					}
 				}
@@ -255,16 +255,16 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		initiated = !(StringUtils.EMPTY
 				.equals(ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, StringUtils.EMPTY)));
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, false)) {
-			fields.add("code" + Query.EQUALS + Messages.PatientenListeView_PatientNr); // $NON-NLS-1$
+			fields.add("code" + Query.EQUALS + Messages.PatientenListeView_PatientNr); // $NON-NLS-1$ //$NON-NLS-1$
 		}
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWNAME, true)) {
-			fields.add("description1" + Query.EQUALS + Messages.PatientenListeView_PatientName); // $NON-NLS-1$
+			fields.add("description1" + Query.EQUALS + Messages.PatientenListeView_PatientName); // $NON-NLS-1$ //$NON-NLS-1$
 		}
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWFIRSTNAME, true)) {
-			fields.add("description2" + Query.EQUALS + Messages.PatientenListeView_PantientFirstName); // $NON-NLS-1$
+			fields.add("description2" + Query.EQUALS + Messages.PatientenListeView_PantientFirstName); // $NON-NLS-1$ //$NON-NLS-1$
 		}
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWDOB, true)) {
-			fields.add("dob" + Query.EQUALS + Messages.PatientenListeView_PatientBirthdate); // $NON-NLS-1$
+			fields.add("dob" + Query.EQUALS + Messages.PatientenListeView_PatientBirthdate); // $NON-NLS-1$ //$NON-NLS-1$
 		}
 		currentUserFields = fields.toArray(new String[fields.size()]);
 	}

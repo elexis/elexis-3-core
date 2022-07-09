@@ -27,7 +27,7 @@ public class GenericTaskResultDetailComposite {
 	private static Font boldFont;
 
 	public GenericTaskResultDetailComposite(Composite parent, ITask task) {
-		dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm.ss");
+		dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm.ss"); //$NON-NLS-1$
 
 		Composite container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
@@ -40,8 +40,8 @@ public class GenericTaskResultDetailComposite {
 			boldFont = boldDescriptor.createFont(taskHeader.getDisplay());
 		}
 		taskHeader.setFont(boldFont);
-		taskHeader.setText(task.getState().getName() + ": " + task.getId() + " ("
-				+ task.getTaskDescriptor().getReferenceId() + ")");
+		taskHeader.setText(task.getState().getName() + ": " + task.getId() + " (" //$NON-NLS-1$ //$NON-NLS-2$
+				+ task.getTaskDescriptor().getReferenceId() + ")"); //$NON-NLS-1$
 
 		Label lblCreated = new Label(container, SWT.NONE);
 		lblCreated.setText("created ");
@@ -87,9 +87,9 @@ public class GenericTaskResultDetailComposite {
 				if (IIdentifiedRunnable.ReturnParameter.STRING_URL.equals(k)) {
 					value = IVirtualFilesystemService.hidePasswordInUrlString(value);
 				}
-				sbResult.append("- " + k + ": " + value + StringUtils.LF);
+				sbResult.append("- " + k + ": " + value + StringUtils.LF); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				sbResult.append("- " + k + ": " + v + StringUtils.LF);
+				sbResult.append("- " + k + ": " + v + StringUtils.LF); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
 		txtResult.setText(sbResult.toString());
@@ -106,7 +106,7 @@ public class GenericTaskResultDetailComposite {
 			if (IIdentifiedRunnable.RunContextParameter.STRING_URL.equals(k)) {
 				value = IVirtualFilesystemService.hidePasswordInUrlString((String) v);
 			}
-			sbRunContext.append("- " + k + ": " + value + StringUtils.LF);
+			sbRunContext.append("- " + k + ": " + value + StringUtils.LF); //$NON-NLS-1$ //$NON-NLS-2$
 		});
 		txtRunContext.setText(sbRunContext.toString());
 

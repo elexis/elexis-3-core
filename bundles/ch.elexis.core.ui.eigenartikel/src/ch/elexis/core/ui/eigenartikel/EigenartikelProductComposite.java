@@ -220,7 +220,7 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		ISWTObservableValue observeTextTxtProductNameObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observeDelayed(300, txtProductName);
 		IObservableValue<String> productEigenartikelNameObserveDetailValue = PojoProperties
-				.value(IArticle.class, "name", String.class).observeDetail(productEigenartikel);
+				.value(IArticle.class, "name", String.class).observeDetail(productEigenartikel); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtProductNameObserveWidget, productEigenartikelNameObserveDetailValue,
 				new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
 		observeTextTxtProductNameObserveWidget.addValueChangeListener(new IValueChangeListener() {
@@ -239,7 +239,7 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		IViewerObservableValue observeSingleSelectionComboViewerProductType = ViewerProperties.singleSelection()
 				.observe(comboViewerProductType);
 		IObservableValue<IArticle> productEigenartikelTypObserveDetailValue = PojoProperties
-				.value(IArticle.class, "subTyp", ArticleSubTyp.class).observeDetail(productEigenartikel);
+				.value(IArticle.class, "subTyp", ArticleSubTyp.class).observeDetail(productEigenartikel); //$NON-NLS-1$
 		bindingContext.bindValue(observeSingleSelectionComboViewerProductType, productEigenartikelTypObserveDetailValue,
 				new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
 
@@ -247,7 +247,7 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		ISWTObservableValue observeTextTxtAtcCodeObserveWidget = WidgetProperties.text(SWT.Modify).observeDelayed(300,
 				txtAtcCode);
 		IObservableValue<String> productEigenartikelATC_codeObserveDetailValue = PojoProperties
-				.value(IArticle.class, "atcCode", String.class).observeDetail(productEigenartikel);
+				.value(IArticle.class, "atcCode", String.class).observeDetail(productEigenartikel); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtAtcCodeObserveWidget, productEigenartikelATC_codeObserveDetailValue,
 				new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
 	}

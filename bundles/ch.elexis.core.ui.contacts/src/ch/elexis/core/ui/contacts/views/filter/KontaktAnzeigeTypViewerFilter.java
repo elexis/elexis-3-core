@@ -32,21 +32,21 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 	public KontaktAnzeigeTypViewerFilter(Viewer viewer) {
 		KontaktAnzeigeTypViewerFilter.viewer = viewer;
 
-		PlatformUI.getPreferenceStore().setDefault(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient",
+		PlatformUI.getPreferenceStore().setDefault(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient", //$NON-NLS-1$
 				true);
 
 		showPerson = PlatformUI.getPreferenceStore()
-				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPerson");
+				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPerson"); //$NON-NLS-1$
 		showPatient = PlatformUI.getPreferenceStore()
-				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient");
+				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient"); //$NON-NLS-1$
 		showOrganisation = PlatformUI.getPreferenceStore()
-				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showOrganisation");
+				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showOrganisation"); //$NON-NLS-1$
 		showMandant = PlatformUI.getPreferenceStore()
-				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showMandant");
+				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showMandant"); //$NON-NLS-1$
 		showAnwender = PlatformUI.getPreferenceStore()
-				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showAnwender");
+				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showAnwender"); //$NON-NLS-1$
 		showDeleted = PlatformUI.getPreferenceStore()
-				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showDeleted");
+				.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showDeleted"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 
 	public static void setShowPerson(boolean showPerson) {
 		KontaktAnzeigeTypViewerFilter.showPerson = showPerson;
-		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPerson",
+		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPerson", //$NON-NLS-1$
 				showPerson);
 		refreshViewer();
 	}
@@ -105,7 +105,7 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 
 	public static void setShowOrganisation(boolean showOrganisation) {
 		KontaktAnzeigeTypViewerFilter.showOrganisation = showOrganisation;
-		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showOrganisation",
+		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showOrganisation", //$NON-NLS-1$
 				showOrganisation);
 		refreshViewer();
 	}
@@ -116,7 +116,7 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 
 	public static void setShowPatient(boolean showPatient) {
 		KontaktAnzeigeTypViewerFilter.showPatient = showPatient;
-		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient",
+		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient", //$NON-NLS-1$
 				showPatient);
 		refreshViewer();
 	}
@@ -127,7 +127,7 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 
 	public static void setShowMandant(boolean showMandant) {
 		KontaktAnzeigeTypViewerFilter.showMandant = showMandant;
-		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showMandant",
+		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showMandant", //$NON-NLS-1$
 				showMandant);
 		refreshViewer();
 	}
@@ -138,7 +138,7 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 
 	public static void setShowAnwender(boolean showAnwender) {
 		KontaktAnzeigeTypViewerFilter.showAnwender = showAnwender;
-		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showAnwender",
+		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showAnwender", //$NON-NLS-1$
 				showAnwender);
 		refreshViewer();
 	}
@@ -149,7 +149,7 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 
 	public static void setShowDeleted(boolean showDeleted) {
 		KontaktAnzeigeTypViewerFilter.showDeleted = showDeleted;
-		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showDeleted",
+		PlatformUI.getPreferenceStore().setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showDeleted", //$NON-NLS-1$
 				showDeleted);
 		refreshViewer();
 	}

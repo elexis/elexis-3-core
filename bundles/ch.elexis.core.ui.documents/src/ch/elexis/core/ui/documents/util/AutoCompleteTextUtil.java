@@ -15,7 +15,7 @@ import ch.elexis.core.ui.documents.provider.CodingContentProposal;
 import ch.elexis.core.ui.proposals.IdentifiableContentProposal;
 
 public class AutoCompleteTextUtil {
-	private static final String PROPOSAL_RET_OBJ = "PROPOSAL_RET_OBJ";
+	private static final String PROPOSAL_RET_OBJ = "PROPOSAL_RET_OBJ"; //$NON-NLS-1$
 
 	public static <T> void addAutoCompleteSupport(Text text, IContentProposalProvider cpProvider, T defaultObject) {
 		setValue(text, defaultObject);

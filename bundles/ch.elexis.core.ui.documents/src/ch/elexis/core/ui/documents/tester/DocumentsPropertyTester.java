@@ -25,7 +25,7 @@ public class DocumentsPropertyTester extends PropertyTester {
 			} else {
 				return testIsMimeType(receiver, (String) args[0]);
 			}
-		} else if ("isExternFile".equals(property)) {
+		} else if ("isExternFile".equals(property)) { //$NON-NLS-1$
 			if (receiver instanceof TreeSelection) {
 				receiver = ((TreeSelection) receiver).getFirstElement();
 			}
@@ -51,9 +51,9 @@ public class DocumentsPropertyTester extends PropertyTester {
 	private boolean testIsExternFile(Object receiver) {
 		if (receiver instanceof IDocument) {
 			IDocument document = (IDocument) receiver;
-			if ("ch.elexis.data.store.brief".equals(document.getStoreId())) {
+			if ("ch.elexis.data.store.brief".equals(document.getStoreId())) { //$NON-NLS-1$
 				return ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false);
-			} else if ("ch.elexis.data.store.omnivore".equals(document.getStoreId())) {
+			} else if ("ch.elexis.data.store.omnivore".equals(document.getStoreId())) { //$NON-NLS-1$
 				return isOmnivoreStoreInFilesystem();
 			}
 		}
@@ -61,10 +61,10 @@ public class DocumentsPropertyTester extends PropertyTester {
 	}
 
 	private boolean isOmnivoreStoreInFilesystem() {
-		if (ConfigServiceHolder.getGlobal("ch.elexis.omnivore/store_in_fs_global", false)) {
-			return ConfigServiceHolder.getGlobal("ch.elexis.omnivore/store_in_fs", false);
+		if (ConfigServiceHolder.getGlobal("ch.elexis.omnivore/store_in_fs_global", false)) { //$NON-NLS-1$
+			return ConfigServiceHolder.getGlobal("ch.elexis.omnivore/store_in_fs", false); //$NON-NLS-1$
 		} else {
-			return ConfigServiceHolder.getLocal("ch.elexis.omnivore/store_in_fs", false);
+			return ConfigServiceHolder.getLocal("ch.elexis.omnivore/store_in_fs", false); //$NON-NLS-1$
 		}
 	}
 }

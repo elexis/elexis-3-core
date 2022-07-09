@@ -50,7 +50,7 @@ public class DefaultLabImportUiHandler extends ImportHandler {
 			message.append("Alter Wert\n").append(oldResult.getLabel());
 			message.append(StringUtils.LF);
 			message.append("Neuer Wert\n").append(newResult.getLabel());
-			message.append("\n\n");
+			message.append("\n\n"); //$NON-NLS-1$
 			message.append(Messages.HL7Parser_AskOverwrite);
 			QueryOverwriteDialog qod = new QueryOverwriteDialog(UiDesk.getTopShell(),
 					Messages.HL7Parser_LabAlreadyImported + pat.getLabel(), message.toString());

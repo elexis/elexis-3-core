@@ -27,7 +27,7 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 public class ContactPropertiesView extends PropertySheet {
 
-	public static final String ID = "ch.elexis.core.ui.contacts.views.ContactPropertiesView";
+	public static final String ID = "ch.elexis.core.ui.contacts.views.ContactPropertiesView"; //$NON-NLS-1$
 
 	public ContactPropertiesView() {
 	}

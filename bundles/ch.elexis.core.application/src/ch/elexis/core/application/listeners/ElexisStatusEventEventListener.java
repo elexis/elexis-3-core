@@ -34,7 +34,7 @@ public class ElexisStatusEventEventListener extends ElexisEventListenerImpl {
 	@Override
 	public void run(ElexisEvent ev) {
 		ElexisStatus es = (ElexisStatus) ev.getGenericObject();
-		log.info("StatusEvent [PLUGIN] " + es.getPlugin() + " [MESSAGE] " + es.getMessage() + " [EXCEPTION] "
+		log.info("StatusEvent [PLUGIN] " + es.getPlugin() + " [MESSAGE] " + es.getMessage() + " [EXCEPTION] " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ es.getException());
 		StatusManager.getManager().handle(es);
 	}

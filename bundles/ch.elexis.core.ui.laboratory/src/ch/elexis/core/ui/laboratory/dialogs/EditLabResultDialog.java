@@ -292,7 +292,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 		if (!resultTxt.getText().isEmpty() && result.getItem().getTyp() == LabItemTyp.NUMERIC) {
 			try {
 				String numeric = resultTxt.getText();
-				if (numeric.startsWith("<") || numeric.startsWith(">")) {
+				if (numeric.startsWith("<") || numeric.startsWith(">")) { //$NON-NLS-1$ //$NON-NLS-2$
 					numeric = numeric.substring(1, numeric.length());
 				}
 				Float.parseFloat(numeric);

@@ -32,7 +32,7 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 		super(observeMaps);
 	}
 
-	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
 	private StringBuilder sb;
 
 	@Override
@@ -83,13 +83,13 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 			sb = new StringBuilder();
 			if (person.getTitel() != null)
 				sb.append(person.getTitel() + StringUtils.SPACE);
-			sb.append(contact.getDescription1() + ", ");
+			sb.append(contact.getDescription1() + ", "); //$NON-NLS-1$
 			sb.append(contact.getDescription2());
 			if (person.getTitelSuffix() != null)
-				sb.append(", " + person.getTitelSuffix());
-			sb.append(" (" + geschlechtToLabel(person.getGender()) + ")");
+				sb.append(", " + person.getTitelSuffix()); //$NON-NLS-1$
+			sb.append(" (" + geschlechtToLabel(person.getGender()) + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (person.getDateOfBirth() != null)
-				sb.append(", " + person.getDateOfBirth().format(DateTimeFormatter.BASIC_ISO_DATE));
+				sb.append(", " + person.getDateOfBirth().format(DateTimeFormatter.BASIC_ISO_DATE)); //$NON-NLS-1$
 			return sb.toString();
 		}
 
@@ -98,14 +98,14 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 
 	private String geschlechtToLabel(Gender geschlecht) {
 		if (geschlecht == null)
-			return "?";
+			return "?"; //$NON-NLS-1$
 		switch (geschlecht) {
 		case MALE:
-			return "m";
+			return "m"; //$NON-NLS-1$
 		case FEMALE:
-			return "w";
+			return "w"; //$NON-NLS-1$
 		case UNKNOWN:
-			return "?";
+			return "?"; //$NON-NLS-1$
 		default:
 			return StringUtils.EMPTY;
 		}

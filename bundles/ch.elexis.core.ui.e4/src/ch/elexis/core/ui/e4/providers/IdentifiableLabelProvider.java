@@ -37,7 +37,7 @@ public class IdentifiableLabelProvider extends LabelProvider implements ITableLa
 		if (element != null) {
 			return ((Identifiable) element).getLabel();
 		}
-		return "null";
+		return "null"; //$NON-NLS-1$
 	}
 
 	@Override

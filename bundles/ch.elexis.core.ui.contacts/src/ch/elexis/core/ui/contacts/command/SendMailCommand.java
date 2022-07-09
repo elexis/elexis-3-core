@@ -26,17 +26,17 @@ public class SendMailCommand extends AbstractHandler implements IHandler {
 			ICommandService commandService = (ICommandService) HandlerUtil.getActiveWorkbenchWindow(event)
 					.getService(ICommandService.class);
 			try {
-				Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail");
+				Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail"); //$NON-NLS-1$
 
 				HashMap<String, String> params = new HashMap<String, String>();
 
-				params.put("ch.elexis.core.mail.ui.sendMail.to", StringUtils.SPACE + patient.getMailAddress());
+				params.put("ch.elexis.core.mail.ui.sendMail.to", StringUtils.SPACE + patient.getMailAddress()); //$NON-NLS-1$
 
 				ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(sendMailCommand,
 						params);
 				PlatformUI.getWorkbench().getService(IHandlerService.class).executeCommand(parametrizedCommmand, null);
 			} catch (Exception ex) {
-				throw new RuntimeException("ch.elexis.core.mail.ui.sendMail not found", ex);
+				throw new RuntimeException("ch.elexis.core.mail.ui.sendMail not found", ex); //$NON-NLS-1$
 			}
 		}
 		return null;

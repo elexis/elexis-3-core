@@ -42,12 +42,12 @@ import ch.elexis.data.Patient;
 public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 	private static Logger logger = LoggerFactory.getLogger(DocumentCrudHandler.class);
 
-	public static final String CMD_NEW_DOCUMENT = "ch.elexis.core.ui.documents.commandCreate";
-	public static final String CMD_UPDATE_DOCUMENT = "ch.elexis.core.ui.documents.commandUpdate";
-	public static final String CMD_DELETE_DOCUMENT = "ch.elexis.core.ui.documents.commandDelete";
+	public static final String CMD_NEW_DOCUMENT = "ch.elexis.core.ui.documents.commandCreate"; //$NON-NLS-1$
+	public static final String CMD_UPDATE_DOCUMENT = "ch.elexis.core.ui.documents.commandUpdate"; //$NON-NLS-1$
+	public static final String CMD_DELETE_DOCUMENT = "ch.elexis.core.ui.documents.commandDelete"; //$NON-NLS-1$
 
-	public static final String PARAM_DOC_CATEGORY = "documents.category";
-	public static final String PARAM_FILE_PATH = "documents.file.path";
+	public static final String PARAM_DOC_CATEGORY = "documents.category"; //$NON-NLS-1$
+	public static final String PARAM_FILE_PATH = "documents.file.path"; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -200,10 +200,10 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 					DocumentStoreServiceHolder.getService().saveDocument(document);
 				}
 			} catch (IOException e) {
-				logger.error("file not found", e);
+				logger.error("file not found", e); //$NON-NLS-1$
 				SWTHelper.showError(Messages.DocumentView_importErrorCaption, Messages.DocumentView_importErrorText2);
 			} catch (ElexisException e) {
-				logger.error("cannot save", e);
+				logger.error("cannot save", e); //$NON-NLS-1$
 				SWTHelper.showError(Messages.DocumentView_saveErrorCaption, Messages.DocumentView_saveErrorText);
 			}
 			// publish changes

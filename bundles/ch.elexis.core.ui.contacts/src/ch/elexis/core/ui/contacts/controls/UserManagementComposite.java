@@ -91,7 +91,7 @@ public class UserManagementComposite extends AbstractComposite {
 		DataBindingContext bindingContext = new DataBindingContext();
 
 		Text[] control = { txtUSERNAME, txtPASSWORD, txtKUERZEL };
-		String[] property = { "username", "password", "description3" };
+		String[] property = { "username", "password", "description3" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		for (int i = 0; i < control.length; i++) {
 			bindValue(control[i], property[i], bindingContext);

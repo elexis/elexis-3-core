@@ -30,7 +30,7 @@ import ch.elexis.core.ui.icons.Images;
  */
 public class MedicationTableViewerItem {
 
-	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy"); //$NON-NLS-1$
 
 	private static ExecutorService executorService = Executors.newFixedThreadPool(8);
 
@@ -121,7 +121,7 @@ public class MedicationTableViewerItem {
 				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
 			}
 		}
-		return stopReason != null ? stopReason : "...";
+		return stopReason != null ? stopReason : "..."; //$NON-NLS-1$
 	}
 
 	public String getRemark() {
@@ -135,7 +135,7 @@ public class MedicationTableViewerItem {
 				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
 			}
 		}
-		return disposalComment != null ? disposalComment : "...";
+		return disposalComment != null ? disposalComment : "..."; //$NON-NLS-1$
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class MedicationTableViewerItem {
 		if (article != null) {
 			return article.getAtcCode();
 		}
-		return "?";
+		return "?"; //$NON-NLS-1$
 	}
 
 	public EntryType getEntryType() {
@@ -177,7 +177,7 @@ public class MedicationTableViewerItem {
 				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
 			}
 		}
-		return artikelLabel != null ? artikelLabel : "...";
+		return artikelLabel != null ? artikelLabel : "..."; //$NON-NLS-1$
 	}
 
 	public void setOrder(int i) {
@@ -201,7 +201,7 @@ public class MedicationTableViewerItem {
 				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
 			}
 		}
-		return prescriptorLabel != null ? prescriptorLabel : "...";
+		return prescriptorLabel != null ? prescriptorLabel : "..."; //$NON-NLS-1$
 	}
 
 	public Image getImage() {
@@ -265,7 +265,7 @@ public class MedicationTableViewerItem {
 			if (item.article != null) {
 				item.artikelLabel = item.article.getLabel();
 			} else {
-				item.artikelLabel = "?";
+				item.artikelLabel = "?"; //$NON-NLS-1$
 			}
 		}
 

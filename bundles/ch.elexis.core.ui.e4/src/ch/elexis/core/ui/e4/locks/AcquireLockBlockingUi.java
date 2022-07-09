@@ -33,7 +33,7 @@ public class AcquireLockBlockingUi {
 				try {
 					progress.run(true, true, new AcquireLockRunnable(identifiable, handler));
 				} catch (InvocationTargetException | InterruptedException e) {
-					logger.warn("Exception during acquire lock.", e);
+					logger.warn("Exception during acquire lock.", e); //$NON-NLS-1$
 				}
 			}
 		});

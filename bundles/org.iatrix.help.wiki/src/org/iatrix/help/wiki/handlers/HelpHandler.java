@@ -56,7 +56,7 @@ public class HelpHandler extends AbstractHandler {
 		}
 
 		// TODO DEBUG
-		System.out.println("DEBUG: " + contextId);
+		System.out.println("DEBUG: " + contextId); //$NON-NLS-1$
 
 		if (contextId != null) {
 			// activate view

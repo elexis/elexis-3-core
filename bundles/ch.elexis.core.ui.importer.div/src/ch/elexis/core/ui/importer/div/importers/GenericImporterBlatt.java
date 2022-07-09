@@ -307,7 +307,7 @@ public class GenericImporterBlatt extends Composite {
 							for (int i = 0; i < excelFields.size(); i++) {
 								String name = excelFields.get(i);
 								if (excelFieldsStrings.toString().length() > 1)
-									excelFieldsStrings.append(",");
+									excelFieldsStrings.append(","); //$NON-NLS-1$
 								excelFieldsStrings.append(name);
 								inputAvailableFields.add(new Field(name));
 								inputFieldIndices.put(name, new Integer(i));
@@ -324,12 +324,12 @@ public class GenericImporterBlatt extends Composite {
 				StringBuilder fields = new StringBuilder(StringUtils.EMPTY);
 				for (int i = 0; i < dbAvailableFields.size(); i++) {
 					if (fields.toString().length() >= 1)
-						fields.append(",");
+						fields.append(","); //$NON-NLS-1$
 					fields.append(dbAvailableFields.get(i).name);
 				}
-				log.info(String.format("dbAvailableFields for %s", type.getClass().getSimpleName()));
-				log.info(String.format("  are: %s", fields.toString()));
-				log.info("excel: " + excelFieldsStrings.toString());
+				log.info(String.format("dbAvailableFields for %s", type.getClass().getSimpleName())); //$NON-NLS-1$
+				log.info(String.format("  are: %s", fields.toString())); //$NON-NLS-1$
+				log.info("excel: " + excelFieldsStrings.toString()); //$NON-NLS-1$
 			}
 
 			// choose initial set of fields
@@ -1465,7 +1465,7 @@ public class GenericImporterBlatt extends Composite {
 						}
 
 						PersistentObject po = new PersistentObjectFactory().create(typ, fields, values);
-						log.debug(String.format("Added %s %s", typ.getClass().getSimpleName(), po.getId()));
+						log.debug(String.format("Added %s %s", typ.getClass().getSimpleName(), po.getId())); //$NON-NLS-1$
 						imported.add(syncElement);
 					}
 				}

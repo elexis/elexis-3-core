@@ -31,7 +31,7 @@ public class AddMedicationHandler extends AbstractHandler {
 			medicationView.getMedicationComposite().setDropChangePrescription(null);
 
 			for (CTabItem cti : leistungenView.ctab.getItems()) {
-				if (cti.getText().equalsIgnoreCase("Artikelstamm")) {
+				if (cti.getText().equalsIgnoreCase("Artikelstamm")) { //$NON-NLS-1$
 					leistungenView.setSelected(cti);
 					leistungenView.setFocus();
 					leistungenView.ctab.setSelection(cti);
@@ -39,7 +39,7 @@ public class AddMedicationHandler extends AbstractHandler {
 			}
 
 		} catch (Exception e) {
-			getLogger().error("Error showing LeistungenView", e);
+			getLogger().error("Error showing LeistungenView", e); //$NON-NLS-1$
 		}
 		return null;
 	}

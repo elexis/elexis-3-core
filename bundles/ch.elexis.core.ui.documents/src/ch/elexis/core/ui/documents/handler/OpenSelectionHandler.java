@@ -71,7 +71,7 @@ public class OpenSelectionHandler extends AbstractHandler implements IHandler {
 				return ((ICategory) element).getName();
 			} else if (element instanceof IDocument) {
 				IDocument document = (IDocument) element;
-				return new TimeTool(document.getLastchanged()).toString(TimeTool.FULL_GER) + ", " + document.getTitle();
+				return new TimeTool(document.getLastchanged()).toString(TimeTool.FULL_GER) + ", " + document.getTitle(); //$NON-NLS-1$
 			}
 			return super.getText(element);
 		}

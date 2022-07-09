@@ -74,7 +74,7 @@ public class MedicationHistoryTableComposite extends Composite {
 					try {
 						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
 								.getActiveWorkbenchWindow().getService(IHandlerService.class);
-						handlerService.executeCommand("ch.elexis.core.ui.medication.OpenArticelDetailDialog", null);
+						handlerService.executeCommand("ch.elexis.core.ui.medication.OpenArticelDetailDialog", null); //$NON-NLS-1$
 					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
 						MessageDialog.openError(getShell(), "Fehler", "Eigenschaften konnten nicht geöffnet werden.");
 					}

@@ -22,8 +22,8 @@ import ch.elexis.core.ui.util.viewers.CommonViewerContentProvider.QueryFilter;
 
 public class StickerFilterCommand extends AbstractHandler implements IHandler {
 
-	public static final String CMD_ID = "at.medevit.elexis.contacts.core.command.StickerFilter";
-	public static final String STATE_ID = "org.eclipse.ui.commands.toggleState";
+	public static final String CMD_ID = "at.medevit.elexis.contacts.core.command.StickerFilter"; //$NON-NLS-1$
+	public static final String STATE_ID = "org.eclipse.ui.commands.toggleState"; //$NON-NLS-1$
 
 	private QueryFilter currentFilter;
 
@@ -61,7 +61,7 @@ public class StickerFilterCommand extends AbstractHandler implements IHandler {
 			Set<String> ids = new HashSet<>();
 			filterStickers.forEach(fs -> ids.addAll(StickerServiceHolder.get().getObjectsWithSticker(fs, IPatient.class)
 					.stream().map(IPatient::getId).collect(Collectors.toList())));
-			query.and("id", COMPARATOR.IN, ids);
+			query.and("id", COMPARATOR.IN, ids); //$NON-NLS-1$
 		}
 	}
 }

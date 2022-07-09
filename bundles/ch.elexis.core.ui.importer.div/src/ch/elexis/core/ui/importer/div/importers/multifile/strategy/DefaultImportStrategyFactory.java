@@ -56,8 +56,8 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 			}
 			for (IVirtualFilesystemHandle mFile : matchingFiles) {
 				String type = FileTool.getExtension(mFile.getName()).toLowerCase();
-				if ("pdf".equals(type)) {
-					log.debug("... adding [" + mFile.getName() + "] with DefaultPDFImportStrategy");
+				if ("pdf".equals(type)) { //$NON-NLS-1$
+					log.debug("... adding [" + mFile.getName() + "] with DefaultPDFImportStrategy"); //$NON-NLS-1$ //$NON-NLS-2$
 					ret.put(mFile, pdfImportStrategy);
 				}
 			}

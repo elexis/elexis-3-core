@@ -61,8 +61,8 @@ public class HL7ImporterTaskResultDetailComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Map<String, Serializable> params = Collections
-						.singletonMap("ch.elexis.laborimport.hl7.allg.importFile.fileUrl", fileUrl);
-				ParameterizedCommand command = commandService.createCommand("ch.elexis.laborimport.hl7.allg.importFile",
+						.singletonMap("ch.elexis.laborimport.hl7.allg.importFile.fileUrl", fileUrl); //$NON-NLS-1$
+				ParameterizedCommand command = commandService.createCommand("ch.elexis.laborimport.hl7.allg.importFile", //$NON-NLS-1$
 						params);
 				@SuppressWarnings("rawtypes")
 				Result result = (Result) handlerService.executeHandler(command);
@@ -88,9 +88,9 @@ public class HL7ImporterTaskResultDetailComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Map<String, Serializable> params = Collections
-						.singletonMap("ch.elexis.laborimport.hl7.allg.archiveFile.fileUrl", fileUrl);
+						.singletonMap("ch.elexis.laborimport.hl7.allg.archiveFile.fileUrl", fileUrl); //$NON-NLS-1$
 				ParameterizedCommand command = commandService
-						.createCommand("ch.elexis.laborimport.hl7.allg.archiveFile", params);
+						.createCommand("ch.elexis.laborimport.hl7.allg.archiveFile", params); //$NON-NLS-1$
 				@SuppressWarnings("rawtypes")
 				Result result = (Result) handlerService.executeHandler(command);
 				String message;
@@ -121,7 +121,7 @@ public class HL7ImporterTaskResultDetailComposite {
 			fileName = importFileHandle.getName();
 		} catch (IOException e) {
 			fileName = e.getMessage();
-			LoggerFactory.getLogger(getClass()).warn("Error parsing url", e);
+			LoggerFactory.getLogger(getClass()).warn("Error parsing url", e); //$NON-NLS-1$
 		}
 
 		StringBuilder text = new StringBuilder();

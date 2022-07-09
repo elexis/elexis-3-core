@@ -44,7 +44,7 @@ public class LabItemSelektor extends TitleAreaDialog {
 				} else if (element instanceof GroupItem) {
 					return itemLabelProvider.getText(((GroupItem) element).getLabItem());
 				}
-				return "?";
+				return "?"; //$NON-NLS-1$
 			}
 		};
 	}

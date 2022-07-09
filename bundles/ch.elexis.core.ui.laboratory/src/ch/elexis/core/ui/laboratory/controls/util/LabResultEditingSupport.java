@@ -41,8 +41,8 @@ import ch.rgw.tools.TimeTool;
 
 public class LabResultEditingSupport extends EditingSupport {
 
-	protected final String SMALLER = "<";
-	protected final String BIGGER = ">";
+	protected final String SMALLER = "<"; //$NON-NLS-1$
+	protected final String BIGGER = ">"; //$NON-NLS-1$
 
 	protected TextCellEditor textCellEditor;
 	protected TreeViewerFocusCellManager focusCell;

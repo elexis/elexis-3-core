@@ -29,7 +29,7 @@ public class StartupHandler implements EventHandler {
 
 	@Override
 	public void handleEvent(Event event) {
-		LoggerFactory.getLogger(getClass()).info("APPLICATION STARTUP COMPLETE");
+		LoggerFactory.getLogger(getClass()).info("APPLICATION STARTUP COMPLETE"); //$NON-NLS-1$
 		if (ConfigServiceHolder.getGlobal(UsageSettings.CONFIG_USAGE_STATISTICS, false)) {
 			registerNotifications();
 			StatisticsManager.INSTANCE.getStatistics().setFrom(new Date());
@@ -78,7 +78,7 @@ public class StartupHandler implements EventHandler {
 			}
 		});
 
-		b.subscribe("org/eclipse/e4/ui/model/ui/UIElement/toBeRendered/SET", new EventHandler() {
+		b.subscribe("org/eclipse/e4/ui/model/ui/UIElement/toBeRendered/SET", new EventHandler() { //$NON-NLS-1$
 			@Override
 			public void handleEvent(Event event) {
 				Object placeholder = event.getProperty(UIEvents.EventTags.ELEMENT);
@@ -100,12 +100,12 @@ public class StartupHandler implements EventHandler {
 					StatisticsManager.INSTANCE.autoExportStatistics();
 				} catch (IOException e) {
 					LoggerFactory.getLogger(StartupHandler.class)
-							.error("cannot export usage on application exist statistics", e);
+							.error("cannot export usage on application exist statistics", e); //$NON-NLS-1$
 				}
 			}
 		});
 
-		b.subscribe("org/eclipse/e4/ui/model/ui/ElementContainer/selectedElement/SET", new EventHandler() {
+		b.subscribe("org/eclipse/e4/ui/model/ui/ElementContainer/selectedElement/SET", new EventHandler() { //$NON-NLS-1$
 			@Override
 			public void handleEvent(Event event) {
 				Object stack = event.getProperty(UIEvents.EventTags.ELEMENT);

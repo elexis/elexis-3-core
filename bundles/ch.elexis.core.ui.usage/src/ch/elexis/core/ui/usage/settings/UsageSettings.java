@@ -37,7 +37,7 @@ import ch.rgw.tools.TimeTool;
 
 public class UsageSettings extends PreferencePage implements IWorkbenchPreferencePage {
 
-	public static final String CONFIG_USAGE_STATISTICS = "statistics/usage/sentUsageStatistics";
+	public static final String CONFIG_USAGE_STATISTICS = "statistics/usage/sentUsageStatistics"; //$NON-NLS-1$
 	private Button checkSentStatistics;
 
 	@Override
@@ -150,17 +150,17 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 			@Override
 			public void run() {
 				FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
-				dialog.setFilterNames(new String[] { "xml" });
-				dialog.setFilterExtensions(new String[] { "*.xml" });
+				dialog.setFilterNames(new String[] { "xml" }); //$NON-NLS-1$
+				dialog.setFilterExtensions(new String[] { "*.xml" }); //$NON-NLS-1$
 				dialog.setOverwrite(true);
 				dialog.setFilterPath(CoreHub.getWritableUserDir().getAbsolutePath()); // Windows path
-				dialog.setFileName("statistics_export.xml");
+				dialog.setFileName("statistics_export.xml"); //$NON-NLS-1$
 				String path = dialog.open();
 				if (path != null) {
 					try {
 						StatisticsManager.INSTANCE.exportStatisticsToFile(path);
 					} catch (IOException e) {
-						LoggerFactory.getLogger(UsageSettings.class).error("statistics export error", e);
+						LoggerFactory.getLogger(UsageSettings.class).error("statistics export error", e); //$NON-NLS-1$
 						MessageDialog.openError(getShell(), "Fehler",
 								"Statistik Export nicht möglich. [" + e.getMessage() + "]");
 					}

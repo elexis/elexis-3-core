@@ -28,9 +28,9 @@ import ch.rgw.tools.StringTool;
 public class SwitchMedicationHandler extends AbstractHandler {
 	private static final Logger log = LoggerFactory.getLogger(SwitchMedicationHandler.class);
 
-	private static final String UPCASES_DASH_NR_PATTERN = "[A-Z-0-9]+";
-	private static final String SPACE = "\\s";
-	private static final String NUMBERS = "[0-9]+";
+	private static final String UPCASES_DASH_NR_PATTERN = "[A-Z-0-9]+"; //$NON-NLS-1$
+	private static final String SPACE = "\\s"; //$NON-NLS-1$
+	private static final String NUMBERS = "[0-9]+"; //$NON-NLS-1$
 
 	private static MedicationView medicationView;
 	private LeistungenView leistungenView;
@@ -104,7 +104,7 @@ public class SwitchMedicationHandler extends AbstractHandler {
 		// open the LeistungenView
 		try {
 			if (StringTool.isNothing(LeistungenView.ID)) {
-				log.debug("LeistungenView.ID empty or not found");
+				log.debug("LeistungenView.ID empty or not found"); //$NON-NLS-1$
 				SWTHelper.alert("Fehler", "LeistungenView.ID");
 			}
 
@@ -117,14 +117,14 @@ public class SwitchMedicationHandler extends AbstractHandler {
 			medicationView.getMedicationComposite().setDropChangePrescription(originalPresc);
 
 			for (CTabItem cti : leistungenView.ctab.getItems()) {
-				if (cti.getText().equalsIgnoreCase("Artikelstamm")) {
+				if (cti.getText().equalsIgnoreCase("Artikelstamm")) { //$NON-NLS-1$
 					leistungenView.setSelected(cti);
 					leistungenView.setFocus();
 					leistungenView.ctab.setSelection(cti);
 				}
 			}
 		} catch (Exception e) {
-			log.error("Could not open LeistungenView from the MedicationView in order to switch medication", e);
+			log.error("Could not open LeistungenView from the MedicationView in order to switch medication", e); //$NON-NLS-1$
 		}
 	}
 }

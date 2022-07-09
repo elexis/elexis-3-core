@@ -33,7 +33,7 @@ public class TaskLogDetailPart {
 	public void postConstruct(Composite parent, MPart part) {
 		parent.setLayout(new GridLayout(1, false));
 
-		ITask task = (ITask) part.getTransientData().get("task");
+		ITask task = (ITask) part.getTransientData().get("task"); //$NON-NLS-1$
 		part.setIconURI(TaskResultLabelProvider.getInstance().getIconURI(task));
 
 		String runAt;
@@ -41,10 +41,10 @@ public class TaskLogDetailPart {
 		if (_runAt != null) {
 			runAt = TimeUtil.formatSafe(_runAt);
 		} else {
-			runAt = "queued";
+			runAt = "queued"; //$NON-NLS-1$
 		}
 
-		String partLabel = task.getTaskDescriptor().getReferenceId() + " - " + runAt;
+		String partLabel = task.getTaskDescriptor().getReferenceId() + " - " + runAt; //$NON-NLS-1$
 		part.setLabel(partLabel);
 
 		Map<String, Object> e4Services = new HashMap<String, Object>();

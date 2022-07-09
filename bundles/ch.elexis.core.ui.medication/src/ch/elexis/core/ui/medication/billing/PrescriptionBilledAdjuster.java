@@ -47,7 +47,7 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 						// lookup existing prescriptions
 						IQuery<IPrescription> query = CoreModelServiceHolder.get().getQuery(IPrescription.class);
 						query.and(ModelPackage.Literals.IPRESCRIPTION__PATIENT, COMPARATOR.EQUALS, patientOpt.get());
-						query.and("artikel", COMPARATOR.EQUALS, articleStoreToString.get());
+						query.and("artikel", COMPARATOR.EQUALS, articleStoreToString.get()); //$NON-NLS-1$
 						query.orderBy(ModelPackage.Literals.IPRESCRIPTION__DATE_FROM, ORDER.DESC);
 						List<IPrescription> existingPrescriptions = query.execute();
 

@@ -35,9 +35,9 @@ public class AbrechnungsPerspektive implements IPerspectiveFactory {
 	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
-		IFolderLayout fld = layout.createFolder("AbrechnungsFolder", IPageLayout.LEFT, 0.6f,
+		IFolderLayout fld = layout.createFolder("AbrechnungsFolder", IPageLayout.LEFT, 0.6f, //$NON-NLS-1$
 				IPageLayout.ID_EDITOR_AREA);
-		IFolderLayout frd = layout.createFolder("Detailfolder", IPageLayout.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA);
+		IFolderLayout frd = layout.createFolder("Detailfolder", IPageLayout.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
 		fld.addView(PatHeuteView.ID);
 		fld.addView(KonsZumVerrechnenView.ID);
 		fld.addView(RechnungsListeView.ID);

@@ -9,7 +9,7 @@ import ch.elexis.core.model.RoleConstants;
 public class ACLContributor implements IACLContributor {
 
 	public static final ACE EIGENARTIKEL_MODIFY = new ACE(AccessControlDefaults.DATA,
-			"ch.elexis.core.eigenartikel.Eigenartikel.modify", "Eigenartikel bearbeiten");
+			"ch.elexis.core.eigenartikel.Eigenartikel.modify", "Eigenartikel bearbeiten"); //$NON-NLS-1$
 
 	public ACLContributor() {
 	}

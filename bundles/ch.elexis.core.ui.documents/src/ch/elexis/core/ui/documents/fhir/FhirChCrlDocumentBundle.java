@@ -57,19 +57,19 @@ public class FhirChCrlDocumentBundle {
 			Date now = new Date();
 
 			this.bundle = new Bundle();
-			bundle.setId("BundleFromPractitioner");
+			bundle.setId("BundleFromPractitioner"); //$NON-NLS-1$
 			bundle.setMeta(new Meta().setLastUpdated(now).setProfile(Collections
-					.singletonList(new CanonicalType("http://fhir.ch/ig/ch-crl/StructureDefinition/ch-crl-bundle"))));
+					.singletonList(new CanonicalType("http://fhir.ch/ig/ch-crl/StructureDefinition/ch-crl-bundle")))); //$NON-NLS-1$
 			bundle.setType(BundleType.DOCUMENT);
 
 			BundleEntryComponent compositionEntry = bundle.addEntry();
 			Composition composition = new Composition();
 			compositionEntry.setResource(composition);
-			composition.setId("CompFromPractitioner");
+			composition.setId("CompFromPractitioner"); //$NON-NLS-1$
 			composition.setMeta(new Meta().setLastUpdated(now).setProfile(Collections.singletonList(
-					new CanonicalType("http://fhir.ch/ig/ch-crl/StructureDefinition/ch-crl-composition"))));
+					new CanonicalType("http://fhir.ch/ig/ch-crl/StructureDefinition/ch-crl-composition")))); //$NON-NLS-1$
 			composition.setStatus(CompositionStatus.FINAL);
-			composition.setType(new CodeableConcept(new Coding("http://loinc.org", "72134-0", "Cancer event report")));
+			composition.setType(new CodeableConcept(new Coding("http://loinc.org", "72134-0", "Cancer event report"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			composition.setDate(now);
 			composition.setTitle("Report to the Cancer Registry");
 
@@ -77,7 +77,7 @@ public class FhirChCrlDocumentBundle {
 			IFhirTransformer<Patient, IPatient> patientTransformer = (IFhirTransformer<Patient, IPatient>) FhirTransformersHolder
 					.getTransformerFor(Patient.class, IPatient.class);
 			Patient subject = patientTransformer.getFhirObject(patient)
-					.orElseThrow(() -> new IllegalStateException("Could not create subject"));
+					.orElseThrow(() -> new IllegalStateException("Could not create subject")); //$NON-NLS-1$
 			subject.getExtension().clear();
 			fixAhvIdentifier(subject);
 
@@ -87,7 +87,7 @@ public class FhirChCrlDocumentBundle {
 			IFhirTransformer<Practitioner, IMandator> practitionerTransformer = (IFhirTransformer<Practitioner, IMandator>) FhirTransformersHolder
 					.getTransformerFor(Practitioner.class, IMandator.class);
 			Practitioner practitioner = practitionerTransformer.getFhirObject(author)
-					.orElseThrow(() -> new IllegalStateException("Could not create autor"));
+					.orElseThrow(() -> new IllegalStateException("Could not create autor")); //$NON-NLS-1$
 			practitioner.getExtension().clear();
 			practitioner.getIdentifier().clear();
 			practitionerEntry.setResource(practitioner);
@@ -97,7 +97,7 @@ public class FhirChCrlDocumentBundle {
 			documentReferenceEntry.setResource(documentReference);
 			documentReference.setId(document.getId());
 			DocumentReferenceContentComponent content = documentReference.addContent();
-			content.setAttachment(new Attachment().setContentType("application/pdf")
+			content.setAttachment(new Attachment().setContentType("application/pdf") //$NON-NLS-1$
 					.setData(IOUtils.toByteArray(document.getContent())));
 
 			composition.setSubject(new Reference(subject));
@@ -105,8 +105,8 @@ public class FhirChCrlDocumentBundle {
 			SectionComponent section = composition.addSection();
 			section.addEntry(new Reference(documentReference));
 		} catch (IOException e) {
-			LoggerFactory.getLogger(getClass()).error("Error creating FHIR bundle", e);
-			throw new IllegalStateException("Error creating FHIR bundle", e);
+			LoggerFactory.getLogger(getClass()).error("Error creating FHIR bundle", e); //$NON-NLS-1$
+			throw new IllegalStateException("Error creating FHIR bundle", e); //$NON-NLS-1$
 		}
 	}
 
@@ -117,7 +117,7 @@ public class FhirChCrlDocumentBundle {
 		subject.getIdentifier().clear();
 		ahvIdentifier.ifPresent(ahvId -> {
 			Identifier identifier = new Identifier();
-			identifier.setSystem("urn:oid:2.16.756.5.32");
+			identifier.setSystem("urn:oid:2.16.756.5.32"); //$NON-NLS-1$
 			identifier.setValue(ahvId.getValue());
 			subject.addIdentifier(identifier);
 		});

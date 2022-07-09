@@ -39,10 +39,10 @@ public class PatientPerspektive implements IPerspectiveFactory {
 	public void createInitialLayout(final IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
-		IFolderLayout left = layout.createFolder("Links.folder", IPageLayout.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA);
-		IFolderLayout main = layout.createFolder("Haupt.Folder", IPageLayout.RIGHT, 0.3f, "Links.folder"); //$NON-NLS-1$
-		IFolderLayout leftbottom = layout.createFolder("links.unten", IPageLayout.BOTTOM, 0.7f, "Links.folder");
-		IFolderLayout right = layout.createFolder("Rechts.folder", IPageLayout.RIGHT, 0.7f, "Haupt.Folder");
+		IFolderLayout left = layout.createFolder("Links.folder", IPageLayout.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
+		IFolderLayout main = layout.createFolder("Haupt.Folder", IPageLayout.RIGHT, 0.3f, "Links.folder"); //$NON-NLS-1$ //$NON-NLS-2$
+		IFolderLayout leftbottom = layout.createFolder("links.unten", IPageLayout.BOTTOM, 0.7f, "Links.folder"); //$NON-NLS-1$ //$NON-NLS-2$
+		IFolderLayout right = layout.createFolder("Rechts.folder", IPageLayout.RIGHT, 0.7f, "Haupt.Folder"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		main.addView(UiResourceConstants.PatientDetailView2_ID);
 		left.addView(UiResourceConstants.PatientenListeView_ID);

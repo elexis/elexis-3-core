@@ -57,8 +57,8 @@ public class Prescription extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		Optional<Identifiable> article = ModelUtil.getFromStoreToString(getEntity().getArtikel());
 		if (article.isEmpty() && StringUtils.isNotBlank(getEntity().getArtikelID())) {
 			// fallback try to load with artikelid, include deleted, mark loaded with *
-			Optional<IArticle> loadedFallback = CoreModelServiceHolder.get()
-					.load(getEntity().getArtikelID(), IArticle.class, true);
+			Optional<IArticle> loadedFallback = CoreModelServiceHolder.get().load(getEntity().getArtikelID(),
+					IArticle.class, true);
 			loadedFallback.ifPresent(a -> a.setName(a.getName() + " *"));
 			article = (Optional<Identifiable>) (Optional<?>) loadedFallback;
 		}

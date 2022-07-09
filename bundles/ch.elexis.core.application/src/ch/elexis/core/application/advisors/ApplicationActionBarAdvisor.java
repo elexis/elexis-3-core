@@ -226,7 +226,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			public void menuAboutToShow(IMenuManager manager) {
 				IContributionItem[] items = manager.getItems();
 				for (IContributionItem iContributionItem : items) {
-					if ("viewsShortlist".equals(iContributionItem.getId())) {
+					if ("viewsShortlist".equals(iContributionItem.getId())) { //$NON-NLS-1$
 						iContributionItem.setVisible(
 								AccessControlServiceHolder.get().request(AccessControlDefaults.AC_SHOWVIEW));
 					}
@@ -236,7 +236,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 		/* helpMenu.add(testAction); */
 		helpMenu.add(GlobalActions.helpAction);
-		helpMenu.add(new Separator("additions"));
+		helpMenu.add(new Separator("additions")); //$NON-NLS-1$
 		helpMenu.add(new Separator());
 		helpMenu.add(GlobalActions.aboutAction);
 	}
@@ -303,7 +303,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 									@Override
 									public void widgetSelected(SelectionEvent e) {
 										InputDialog inputDlg = new InputDialog(Display.getDefault().getActiveShell(),
-												menuItem.getText(), "Bitte die Anzahl eingeben", "1",
+												menuItem.getText(), "Bitte die Anzahl eingeben", "1", //$NON-NLS-2$
 												new IInputValidator() {
 													@Override
 													public String isValid(String newText) {

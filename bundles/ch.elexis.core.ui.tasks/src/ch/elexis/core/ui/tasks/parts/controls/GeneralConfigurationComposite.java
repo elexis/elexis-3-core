@@ -75,7 +75,7 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 		txtOwnerId.setBounds(0, 0, 64, 19);
 
 		Link linkOwner = new Link(compOwner, SWT.NONE);
-		linkOwner.setText("<a>...</a>");
+		linkOwner.setText("<a>...</a>"); //$NON-NLS-1$
 		linkOwner.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {

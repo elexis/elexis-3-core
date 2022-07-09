@@ -15,7 +15,7 @@ public class RefreshPartHandler {
 		if (object instanceof IRefreshablePart) {
 			((IRefreshablePart) object).refresh();
 		} else {
-			throw new IllegalArgumentException(object + " is not an instance of IRefreshablePart");
+			throw new IllegalArgumentException(object + " is not an instance of IRefreshablePart"); //$NON-NLS-1$
 		}
 	}
 

@@ -293,7 +293,7 @@ public class Connection implements PortEventListener {
 					} catch (IOException ioe) {
 						// Patch for RDP forwarded serial connections
 						// see https://redmine.medelexis.ch/issues/3311
-						log.debug("Catching " + ioe.getMessage() + " | See https://redmine.medelexis.ch/issues/3311");
+						log.debug("Catching " + ioe.getMessage() + " | See https://redmine.medelexis.ch/issues/3311"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					listener.gotChunk(this, sbFrame.toString());
 					break;
@@ -391,7 +391,7 @@ public class Connection implements PortEventListener {
 		if (sPort != null) {
 			sPort.sendBreak(1000);
 		} else {
-			ExHandler.handle(new Throwable("sPort is null"));
+			ExHandler.handle(new Throwable("sPort is null")); //$NON-NLS-1$
 		}
 	}
 
@@ -418,7 +418,7 @@ public class Connection implements PortEventListener {
 		} catch (LinkageError error) {
 			SWTHelper.showError("COM Port Initialization Error",
 					error.getMessage() + "\nPlease see log file and/or https://wiki.elexis.info/SerialConfiguration.");
-			log.error("COM Port Initialization", error);
+			log.error("COM Port Initialization", error); //$NON-NLS-1$
 		}
 		return p.toArray(new String[0]);
 	}

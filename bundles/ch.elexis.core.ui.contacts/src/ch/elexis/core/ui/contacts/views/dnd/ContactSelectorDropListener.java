@@ -42,7 +42,7 @@ public class ContactSelectorDropListener extends ViewerDropAdapter {
 		if (dropLocation != LOCATION_ON)
 			return false;
 		String contactId = (String) data;
-		System.out.println("TODO");
+		System.out.println("TODO"); //$NON-NLS-1$
 		// IContact sourceContact = IContactFactory.eINSTANCE.findById(contactId);
 		//
 		// BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl();

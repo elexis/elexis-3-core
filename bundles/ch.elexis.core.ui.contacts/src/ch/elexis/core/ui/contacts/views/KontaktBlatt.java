@@ -68,7 +68,7 @@ import ch.elexis.data.Xid.XIDDomain;
 
 public class KontaktBlatt extends Composite implements IActivationListener, IUnlockable {
 
-	private static final String IS_USER = "istAnwender";
+	private static final String IS_USER = "istAnwender"; //$NON-NLS-1$
 
 	private static final String MOBIL = Messages.KontaktBlatt_MobilePhone; // $NON-NLS-1$
 	private static final String VORNAME = Messages.KontaktBlatt_FirstName; // $NON-NLS-1$
@@ -135,7 +135,7 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 								|| (k.istOrganisation() && xd.isDisplayedFor(Organisation.class))) {
 							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom); //$NON-NLS-1$
 						} else if (k.istOrganisation() && xd.isDisplayedFor(Labor.class)) {
-							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom);
+							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom); //$NON-NLS-1$
 						}
 					}
 					KontaktExtDialog dlg = new KontaktExtDialog(UiDesk.getTopShell(), (Kontakt) po,

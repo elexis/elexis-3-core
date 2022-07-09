@@ -27,9 +27,9 @@ public class CityInformationProposalProvider implements IContentProposalProvider
 		for (int i = 0; i < cities.size(); i++) {
 			String[] currCity = cities.get(i);
 			if (contents == null) {
-				cp.add(new ContentProposal(currCity[0], currCity[0] + " (" + currCity[1] + ")", null));
+				cp.add(new ContentProposal(currCity[0], currCity[0] + " (" + currCity[1] + ")", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			} else if (currCity[0].toLowerCase().startsWith(contents.toLowerCase())) {
-				cp.add(new ContentProposal(currCity[0], currCity[0] + " (" + currCity[1] + ")", null));
+				cp.add(new ContentProposal(currCity[0], currCity[0] + " (" + currCity[1] + ")", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 

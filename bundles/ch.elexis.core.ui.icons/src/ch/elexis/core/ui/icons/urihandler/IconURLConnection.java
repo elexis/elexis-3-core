@@ -32,9 +32,9 @@ public class IconURLConnection extends URLConnection {
 	}
 
 	private int getZoom() {
-		if (iconPath.toLowerCase().endsWith("@2x.png")) {
+		if (iconPath.toLowerCase().endsWith("@2x.png")) { //$NON-NLS-1$
 			return 200;
-		} else if (iconPath.toLowerCase().endsWith("@1.5x.png")) {
+		} else if (iconPath.toLowerCase().endsWith("@1.5x.png")) { //$NON-NLS-1$
 			return 150;
 		}
 		return 100;
@@ -50,7 +50,7 @@ public class IconURLConnection extends URLConnection {
 				return selectedIcon.getImageAsInputStream(ImageSize._16x16_DefaultIconSize, zoom);
 			}
 		} catch (IllegalArgumentException e) {
-			log.error("[ERROR] " + iconName + " not found, replacing with empty icon.");
+			log.error("[ERROR] " + iconName + " not found, replacing with empty icon."); //$NON-NLS-1$ //$NON-NLS-2$
 			return Images.IMG_CLEAR.getImageAsInputStream(ImageSize._16x16_DefaultIconSize);
 		}
 	}

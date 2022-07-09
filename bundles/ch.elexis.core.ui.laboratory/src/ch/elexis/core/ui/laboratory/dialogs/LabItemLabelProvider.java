@@ -57,7 +57,7 @@ public class LabItemLabelProvider extends ColumnLabelProvider implements ILabelP
 					if (sb.length() == 0) {
 						sb.append(getItemLabelField(itemLabelField, (LabItem) element));
 					} else {
-						sb.append(", ").append(getItemLabelField(itemLabelField, (LabItem) element));
+						sb.append(", ").append(getItemLabelField(itemLabelField, (LabItem) element)); //$NON-NLS-1$
 					}
 				}
 			}
@@ -77,13 +77,13 @@ public class LabItemLabelProvider extends ColumnLabelProvider implements ILabelP
 		case REFERENCES:
 			String refW = shortenString((element).getRefW());
 			String refM = shortenString((element).getRefM());
-			return refW + " / " + refM;
+			return refW + " / " + refM; //$NON-NLS-1$
 		case GROUP:
 			return values[2];
 		case NAME:
 			return values[1];
 		case UNIT:
-			return "[" + values[3] + "]";
+			return "[" + values[3] + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		default:
 			break;
 		}

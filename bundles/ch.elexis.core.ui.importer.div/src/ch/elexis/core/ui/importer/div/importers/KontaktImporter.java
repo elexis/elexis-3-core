@@ -66,7 +66,7 @@ public class KontaktImporter extends ImporterPage {
 			StringBuilder s1 = new StringBuilder();
 			StringBuilder s2 = new StringBuilder();
 			s1.append(found.get("Bezeichnung1")).append(", ").append(found.get("Bezeichnung2")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					.append(" - ").append(found.get("Strasse")).append(StringUtils.SPACE) //$NON-NLS-1$
+					.append(" - ").append(found.get("Strasse")).append(StringUtils.SPACE) //$NON-NLS-1$ //$NON-NLS-2$
 					.append(found.get("Plz")).append(StringUtils.SPACE) //$NON-NLS-1$
 					.append(found.get("Ort")); //$NON-NLS-1$
 

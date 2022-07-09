@@ -18,8 +18,8 @@ import ch.elexis.data.Query;
 public class MediportInsurerImporter {
 	private static Logger log = LoggerFactory.getLogger(MediportInsurerImporter.class);
 
-	private static final String SEPARATOR = ";";
-	private static final String MEDIPORT_CONNECTED = "an MediPort angeschlossen";
+	private static final String SEPARATOR = ";"; //$NON-NLS-1$
+	private static final String MEDIPORT_CONNECTED = "an MediPort angeschlossen"; //$NON-NLS-1$
 
 	private static final int IDX_ORGANISATION = 0;
 	private static final int IDX_DEPARTMENT = 1;
@@ -57,7 +57,7 @@ public class MediportInsurerImporter {
 				String street = parts[IDX_ADDR1];
 				String postbox = parts[IDX_ADDR2];
 				if (postbox != null && !postbox.isEmpty()) {
-					street = street + ", " + postbox;
+					street = street + ", " + postbox; //$NON-NLS-1$
 				}
 				String zip = parts[IDX_ZIP];
 				String city = parts[IDX_CITY];
@@ -77,8 +77,8 @@ public class MediportInsurerImporter {
 				contactQuery.add(Kontakt.FLD_PLACE, Query.EQUALS, city);
 				List<Kontakt> contactList = contactQuery.execute();
 				if (contactList != null && !contactList.isEmpty()) {
-					log.warn("Kontakt [" + org + StringUtils.SPACE + dept + ", " + street + ", " + city
-							+ "] existiert bereits. Wird nicht imporiert.");
+					log.warn("Kontakt [" + org + StringUtils.SPACE + dept + ", " + street + ", " + city //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							+ "] existiert bereits. Wird nicht imporiert."); //$NON-NLS-1$
 					continue;
 				}
 
@@ -88,7 +88,7 @@ public class MediportInsurerImporter {
 								Organisation.FLD_PHONE1, Organisation.FLD_E_MAIL, Organisation.FLD_WEBSITE,
 								Organisation.FLD_LAW_CODE, Organisation.FLD_XML_NAME },
 						street, zip, city, phone, email, website, lawCode, xmlInsuranceName)) {
-					log.error("Kontaktdaten konnten nicht gespeichert werden.");
+					log.error("Kontaktdaten konnten nicht gespeichert werden."); //$NON-NLS-1$
 				}
 				insurer.setAnschrift(new Anschrift(insurer));
 				insurer.getXid();

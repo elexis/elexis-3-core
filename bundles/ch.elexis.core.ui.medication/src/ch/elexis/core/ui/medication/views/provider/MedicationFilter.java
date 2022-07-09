@@ -19,8 +19,8 @@ public class MedicationFilter extends ViewerFilter {
 		if (s.equalsIgnoreCase(searchString))
 			return;
 
-		s = s.replace("*", StringUtils.EMPTY);
-		searchString = ".*" + s.toLowerCase() + ".*";
+		s = s.replace("*", StringUtils.EMPTY); //$NON-NLS-1$
+		searchString = ".*" + s.toLowerCase() + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
 
 		viewer.getControl().setRedraw(false);
 		viewer.refresh();
@@ -35,7 +35,7 @@ public class MedicationFilter extends ViewerFilter {
 		MedicationTableViewerItem p = (MedicationTableViewerItem) element;
 
 		// check match of article name
-		String mediName = "??";
+		String mediName = "??"; //$NON-NLS-1$
 
 		String label = p.getArtikelLabel();
 		if (label != null) {

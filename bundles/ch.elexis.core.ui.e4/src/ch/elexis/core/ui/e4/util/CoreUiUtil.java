@@ -47,14 +47,15 @@ public class CoreUiUtil {
 	@Optional
 	public void subscribeAppStartupComplete(@UIEventTopic(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE) Event event,
 			UISynchronize sync) {
-		logger.info("APPLICATION STARTUP COMPLETE");
+		logger.info("APPLICATION STARTUP COMPLETE"); //$NON-NLS-1$
+
 		synchronized (lock) {
-			Object property = event.getProperty("org.eclipse.e4.data");
+			Object property = event.getProperty("org.eclipse.e4.data"); //$NON-NLS-1$
 			if (property instanceof MApplication) {
 				MApplication application = (MApplication) property;
 				// A RAP application has one application context per client
 				// the resp. context service implementation considers this
-				contextService.getRootContext().setNamed("applicationContext", application.getContext());
+				contextService.getRootContext().setNamed("applicationContext", application.getContext()); //$NON-NLS-1$
 
 				if (!delayedInjection.isEmpty()) {
 					for (Object object : delayedInjection) {
@@ -73,7 +74,7 @@ public class CoreUiUtil {
 			return java.util.Optional.empty();
 		}
 		return java.util.Optional.ofNullable(
-				(IEclipseContext) contextService.getRootContext().getNamed("applicationContext").orElse(null));
+				(IEclipseContext) contextService.getRootContext().getNamed("applicationContext").orElse(null)); //$NON-NLS-1$
 	}
 
 	private static void injectServices(Object object) {
@@ -81,7 +82,7 @@ public class CoreUiUtil {
 			try {
 				ContextInjectionFactory.inject(object, getApplicationContext().get());
 			} catch (InjectionException e) {
-				logger.warn("Application context injection failure ", e);
+				logger.warn("Application context injection failure ", e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -127,11 +128,11 @@ public class CoreUiUtil {
 		part.setCloseable(state);
 		part.setCloseable(!state);
 		if (state) {
-			if (!part.getTags().contains("NoMove")) {
-				part.getTags().add("NoMove");
+			if (!part.getTags().contains("NoMove")) { //$NON-NLS-1$
+				part.getTags().add("NoMove"); //$NON-NLS-1$
 			}
 		} else {
-			part.getTags().remove("NoMove");
+			part.getTags().remove("NoMove"); //$NON-NLS-1$
 		}
 	}
 
@@ -151,7 +152,7 @@ public class CoreUiUtil {
 						Integer.parseInt(colorString.substring(2, 4), 16),
 						Integer.parseInt(colorString.substring(4, 6), 16));
 			} catch (NumberFormatException nex) {
-				logger.warn("Error parsing color string [" + colorString + "]", nex);
+				logger.warn("Error parsing color string [" + colorString + "]", nex); //$NON-NLS-1$ //$NON-NLS-2$
 				rgb = new RGB(100, 100, 100);
 			}
 			JFaceResources.getColorRegistry().put(colorString, rgb);

@@ -26,7 +26,7 @@ public class AuthorContentProposalProvider implements IContentProposalProvider {
 
 				IQuery<IContact> query = CoreModelServiceHolder.get().getQuery(IContact.class);
 				query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE,
-						(firstSpace != -1 ? searchString.substring(0, firstSpace) : searchString) + "%");
+						(firstSpace != -1 ? searchString.substring(0, firstSpace) : searchString) + "%"); //$NON-NLS-1$
 				query.limit(500);
 				List<IContact> res = query.execute();
 

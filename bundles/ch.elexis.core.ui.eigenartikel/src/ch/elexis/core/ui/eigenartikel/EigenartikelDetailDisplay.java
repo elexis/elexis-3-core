@@ -63,7 +63,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		}
 	};
 
-	private RestrictedAction toggleLockAction = new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY, "lock",
+	private RestrictedAction toggleLockAction = new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY, "lock", //$NON-NLS-1$
 			SWT.TOGGLE) {
 		{
 			setImageDescriptor(Images.IMG_LOCK_CLOSED.getImageDescriptor());
@@ -111,7 +111,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		@Override
 		public IArticle getTargetedObject() {
 			java.util.Optional<?> selected = ContextServiceHolder.get().getRootContext()
-					.getNamed("ch.elexis.core.ui.eigenartikel.selection");
+					.getNamed("ch.elexis.core.ui.eigenartikel.selection"); //$NON-NLS-1$
 			return (IArticle) selected.orElse(null);
 		}
 

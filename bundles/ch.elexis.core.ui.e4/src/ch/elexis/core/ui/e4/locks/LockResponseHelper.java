@@ -18,7 +18,7 @@ public class LockResponseHelper {
 			if (log == null) {
 				log = LoggerFactory.getLogger(LockResponseHelper.class);
 			}
-			log.warn("showInfo for null object", new Throwable());
+			log.warn("showInfo for null object", new Throwable()); //$NON-NLS-1$
 		}
 
 		if (LockResponse.Status.DENIED_PERMANENT == lr.getStatus()) {
@@ -26,13 +26,13 @@ public class LockResponseHelper {
 					Messages.DenyLockPermanent_Message);
 		} else {
 			if (log != null) {
-				log.warn("Unable to " + lr.getLockRequestType() + " acquire lock for "
-						+ ((object != null) ? getStoreToString(object) : "null") + " - " + lr.getLockInfo().getUser()
-						+ "@" + lr.getLockInfo().getSystemUuid());
+				log.warn("Unable to " + lr.getLockRequestType() + " acquire lock for " //$NON-NLS-1$ //$NON-NLS-2$
+						+ ((object != null) ? getStoreToString(object) : "null") + " - " + lr.getLockInfo().getUser() //$NON-NLS-1$ //$NON-NLS-2$
+						+ "@" + lr.getLockInfo().getSystemUuid()); //$NON-NLS-1$
 			}
 
 			String format = MessageFormat.format(Messages.DenyLock_Message, getStoreToString(object),
-					lr.getLockInfo().getUser() + "@" + lr.getLockInfo().getSystemUuid());
+					lr.getLockInfo().getUser() + "@" + lr.getLockInfo().getSystemUuid()); //$NON-NLS-1$
 			MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.DenyLock_Title, format);
 		}
 	}
@@ -40,8 +40,8 @@ public class LockResponseHelper {
 	private static String getStoreToString(Object object) {
 		if (object instanceof Identifiable) {
 			return StoreToStringServiceHolder.get().storeToString((Identifiable) object)
-					.orElseThrow(() -> new IllegalStateException("No storeToString for [" + object + "]"));
+					.orElseThrow(() -> new IllegalStateException("No storeToString for [" + object + "]")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		throw new IllegalStateException("No storeToString for [" + object + "]");
+		throw new IllegalStateException("No storeToString for [" + object + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

@@ -17,7 +17,7 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvi
 
 public class EigenartikelTreeContentProvider implements ITreeContentProvider, ICommonViewerContentProvider {
 
-	public static String FILTER_KEY = "Name";
+	public static String FILTER_KEY = "Name"; //$NON-NLS-1$
 	private CommonViewer commonViewer;
 	private String filter = null;
 
@@ -54,7 +54,7 @@ public class EigenartikelTreeContentProvider implements ITreeContentProvider, IC
 		IQuery<IArticle> query = CoreModelServiceHolder.get().getQuery(IArticle.class);
 		query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS, ArticleTyp.EIGENARTIKEL);
 		if (filter != null) {
-			query.and(ModelPackage.Literals.IARTICLE__NAME, COMPARATOR.LIKE, "%" + filter + "%", true);
+			query.and(ModelPackage.Literals.IARTICLE__NAME, COMPARATOR.LIKE, "%" + filter + "%", true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (!showProducts) {
 			query.and(ModelPackage.Literals.IARTICLE__PRODUCT, COMPARATOR.NOT_EQUALS, null);

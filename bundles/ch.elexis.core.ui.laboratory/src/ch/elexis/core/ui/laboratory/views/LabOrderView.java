@@ -105,7 +105,7 @@ public class LabOrderView extends ViewPart implements ICallback {
 					} else {
 						ref = labItem.getRefM();
 					}
-					usedRows.add(createRow("\t" + labItem.getName(), ref, labItem.getEinheit()));
+					usedRows.add(createRow("\t" + labItem.getName(), ref, labItem.getEinheit())); //$NON-NLS-1$
 				}
 			}
 		}

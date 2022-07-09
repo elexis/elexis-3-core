@@ -154,7 +154,7 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 			return true;
 		} catch (NumberFormatException nfe) {
 			log.warn(
-					"Can't use [" + nrString + "] for KeepUnseen in lab settings as it can't be parsed to an integer.");
+					"Can't use [" + nrString + "] for KeepUnseen in lab settings as it can't be parsed to an integer."); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
 	}

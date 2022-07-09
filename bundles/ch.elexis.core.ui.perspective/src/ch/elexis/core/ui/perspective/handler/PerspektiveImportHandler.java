@@ -50,15 +50,15 @@ public class PerspektiveImportHandler extends AbstractHandler {
 		try {
 			EModelService modelService = getService(EModelService.class);
 			FileDialog dialog = new FileDialog(UiDesk.getTopShell(), SWT.OPEN);
-			dialog.setFilterNames(new String[] { "XMI", "XML (Legacy)" });
-			dialog.setFilterExtensions(new String[] { "*.xmi", "*.xml" });
+			dialog.setFilterNames(new String[] { "XMI", "XML (Legacy)" }); //$NON-NLS-1$ //$NON-NLS-2$
+			dialog.setFilterExtensions(new String[] { "*.xmi", "*.xml" }); //$NON-NLS-1$ //$NON-NLS-2$
 
 			dialog.setFilterPath(CoreHub.getWritableUserDir().getAbsolutePath()); // Windows path
 
 			String path = dialog.open();
 			if (path != null) {
 				IPerspectiveDescriptor createdPd = null;
-				if (path.toLowerCase().endsWith("xml")) {
+				if (path.toLowerCase().endsWith("xml")) { //$NON-NLS-1$
 					// legacy
 
 					MPerspective mPerspective = modelService.createModelElement(MPerspective.class);
@@ -85,8 +85,8 @@ public class PerspektiveImportHandler extends AbstractHandler {
 			}
 		} catch (Exception e) {
 			MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Import",
-					"Diese Perspektive kann nicht importiert werden.");
-			LoggerFactory.getLogger(PerspektiveExportHandler.class).error("import error", e);
+					"Diese Perspektive kann nicht importiert werden."); //$NON-NLS-1$
+			LoggerFactory.getLogger(PerspektiveExportHandler.class).error("import error", e); //$NON-NLS-1$
 		}
 
 		return null;
@@ -102,7 +102,7 @@ public class PerspektiveImportHandler extends AbstractHandler {
 			pd = perspectiveRegistry.findPerspectiveWithId(perspective.getElementId());
 		} else {
 			LoggerFactory.getLogger(PerspektiveImportHandler.class)
-					.error("perspective descriptor already exists for perspective id: " + perspective.getElementId());
+					.error("perspective descriptor already exists for perspective id: " + perspective.getElementId()); //$NON-NLS-1$
 		}
 
 		return pd;
@@ -113,7 +113,7 @@ public class PerspektiveImportHandler extends AbstractHandler {
 		EModelService modelService = getService(EModelService.class);
 		EPartService partService = getService(EPartService.class);
 		MApplication mApplication = getService(MApplication.class);
-		MTrimmedWindow mWindow = (MTrimmedWindow) modelService.find("IDEWindow", mApplication);
+		MTrimmedWindow mWindow = (MTrimmedWindow) modelService.find("IDEWindow", mApplication); //$NON-NLS-1$
 		if (mWindow == null) {
 			List<MWindow> windows = mApplication.getChildren();
 			if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
@@ -129,7 +129,7 @@ public class PerspektiveImportHandler extends AbstractHandler {
 		Iterator<MUIElement> it = perspectiveParent.getChildren().iterator();
 		while (it.hasNext()) {
 			MUIElement element = it.next();
-			if (id.equals(element.getElementId()) || element.getElementId().startsWith(id + ".<")) {
+			if (id.equals(element.getElementId()) || element.getElementId().startsWith(id + ".<")) { //$NON-NLS-1$
 				it.remove();
 			}
 		}

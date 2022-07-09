@@ -38,7 +38,7 @@ public class MessageEventListener extends ElexisEventListenerImpl {
 			@Override
 			public void run() {
 				MessageEvent me = (MessageEvent) ev.getGenericObject();
-				log.debug("MessageEvent [" + me.mt + "]  [" + me.title + "] [" + me.message + "]");
+				log.debug("MessageEvent [" + me.mt + "]  [" + me.title + "] [" + me.message + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				switch (me.mt) {
 				case ERROR:
 					MessageDialog.openError(UiDesk.getTopShell(), me.title, me.message);

@@ -34,7 +34,7 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.Log;
 
 public class LaborOrderPulldownMenuCreator implements IMenuCreator {
-	private final String LAB_ORDER_SELECTED_ACTION_ID = ExtensionPointConstantsUi.LABORORDER + ".selectedId";
+	private final String LAB_ORDER_SELECTED_ACTION_ID = ExtensionPointConstantsUi.LABORORDER + ".selectedId"; //$NON-NLS-1$
 	private static Log log = Log.get("LaborOrderPulldownMenuCreator"); //$NON-NLS-1$
 
 	List<IAction> actions = new Vector<IAction>();
@@ -55,7 +55,7 @@ public class LaborOrderPulldownMenuCreator implements IMenuCreator {
 			if (action.getId() != null && action.getImageDescriptor() != null && action.getText() != null) {
 				this.actions.add(action);
 			} else {
-				log.log(MessageFormat.format("Missing #id, #imagedescriptor or #text for LaborOrder action: {0}",
+				log.log(MessageFormat.format("Missing #id, #imagedescriptor or #text for LaborOrder action: {0}", //$NON-NLS-1$
 						action.getText()), Log.WARNINGS);
 			}
 		}
@@ -147,7 +147,7 @@ public class LaborOrderPulldownMenuCreator implements IMenuCreator {
 		if (actions.size() == 1) {
 			buttonStyle = IAction.AS_PUSH_BUTTON;
 		}
-		IAction dropDownAction = new Action("Dropdown", buttonStyle) {
+		IAction dropDownAction = new Action("Dropdown", buttonStyle) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				getSelected().run();

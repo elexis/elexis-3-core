@@ -19,7 +19,7 @@ public class LabItemViewerFilter extends ViewerFilter {
 	}
 
 	private String escapeRegexCharacters(String string) {
-		return RegExUtils.replacePattern(string, "([~!@#$%^&*()_+{}\\[\\]:;,.<>/?-])", "\\\\$1");
+		return RegExUtils.replacePattern(string, "([~!@#$%^&*()_+{}\\[\\]:;,.<>/?-])", "\\\\$1"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

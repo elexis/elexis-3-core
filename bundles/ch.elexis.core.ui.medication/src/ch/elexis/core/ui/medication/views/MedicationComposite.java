@@ -83,7 +83,7 @@ import ch.elexis.core.ui.views.controls.InteractionLink;
 
 public class MedicationComposite extends Composite implements ISelectionProvider, ISelectionChangedListener {
 
-	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy"); //$NON-NLS-1$
 
 	private Composite compositeSearchFilter;
 	private Text txtSearch;
@@ -125,8 +125,8 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	private Label lblDailyTherapyCost;
 
 	private Color tagBtnColor = UiDesk.getColor(UiDesk.COL_GREEN);
-	private Color stopBGColor = UiDesk.getColorFromRGB("FF7256");
-	private Color defaultBGColor = UiDesk.getColorFromRGB("F0F0F0");
+	private Color stopBGColor = UiDesk.getColorFromRGB("FF7256"); //$NON-NLS-1$
+	private Color defaultBGColor = UiDesk.getColorFromRGB("F0F0F0"); //$NON-NLS-1$
 	private ControlDecoration ctrlDecor;
 	private IPatient patient;
 	private GenericObjectDropTarget dropTarget;
@@ -157,7 +157,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		showSearchFilterComposite(false);
 		showMedicationDetailComposite(null);
 
-		dropTarget = new GenericObjectDropTarget("Medication", this, new DropMedicationReceiver(getShell()));
+		dropTarget = new GenericObjectDropTarget("Medication", this, new DropMedicationReceiver(getShell())); //$NON-NLS-1$
 	}
 
 	private void searchFilterComposite() {
@@ -363,7 +363,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 
 			Label lblStop = new Label(compositeDayTimeDosage, SWT.HORIZONTAL);
 			lblStop.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			lblStop.setText("-");
+			lblStop.setText("-"); //$NON-NLS-1$
 
 			txtNoon = new Text(compositeDayTimeDosage, SWT.BORDER);
 			txtNoon.setTextLimit(60);
@@ -375,7 +375,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 
 			Label lblStop2 = new Label(compositeDayTimeDosage, SWT.NONE);
 			lblStop2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			lblStop2.setText("-");
+			lblStop2.setText("-"); //$NON-NLS-1$
 
 			txtEvening = new Text(compositeDayTimeDosage, SWT.BORDER);
 			txtEvening.setTextLimit(60);
@@ -399,7 +399,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 
 			Label lblStop3 = new Label(compositeDayTimeDosage, SWT.NONE);
 			lblStop3.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			lblStop3.setText("-");
+			lblStop3.setText("-"); //$NON-NLS-1$
 
 			txtNight = new Text(compositeDayTimeDosage, SWT.BORDER);
 			txtNight.setTextLimit(60);
@@ -484,7 +484,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			}
 		});
 		DataBindingContext dbc = new DataBindingContext();
-		IObservableValue dateTimeStopObservable = PojoProperties.value("endTime", Date.class)
+		IObservableValue dateTimeStopObservable = PojoProperties.value("endTime", Date.class) //$NON-NLS-1$
 				.observeDetail(selectedMedication);
 		IObservableValue timeObservable = WidgetProperties.selection().observe(timeStopped);
 		IObservableValue dateObservable = WidgetProperties.selection().observe(dateStopped);
@@ -557,7 +557,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		txtIntakeOrder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		IObservableValue txtIntakeOrderObservable = WidgetProperties.text(SWT.Modify).observeDelayed(100,
 				txtIntakeOrder);
-		IObservableValue intakeOrderObservable = PojoProperties.value("remark", String.class)
+		IObservableValue intakeOrderObservable = PojoProperties.value("remark", String.class) //$NON-NLS-1$
 				.observeDetail(selectedMedication);
 		dbc.bindValue(txtIntakeOrderObservable, intakeOrderObservable,
 				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
@@ -574,7 +574,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		txtDisposalComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		IObservableValue txtCommentObservable = WidgetProperties.text(SWT.Modify).observeDelayed(100,
 				txtDisposalComment);
-		IObservableValue commentObservable = PojoProperties.value("disposalComment", String.class)
+		IObservableValue commentObservable = PojoProperties.value("disposalComment", String.class) //$NON-NLS-1$
 				.observeDetail(selectedMedication);
 		dbc.bindValue(txtCommentObservable, commentObservable,
 				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
@@ -602,7 +602,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		txtStopComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		IObservableValue txtStopCommentObservableUi = WidgetProperties.text(SWT.Modify).observeDelayed(100,
 				txtStopComment);
-		IObservableValue txtStopCommentObservable = PojoProperties.value("stopReason", String.class)
+		IObservableValue txtStopCommentObservable = PojoProperties.value("stopReason", String.class) //$NON-NLS-1$
 				.observeDetail(selectedMedication);
 		dbc.bindValue(txtStopCommentObservableUi, txtStopCommentObservable,
 				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
@@ -832,17 +832,17 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	private String getDosisStringFromSignatureTextArray() {
 		if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
 			String[] values = new String[4];
-			values[0] = txtMorning.getText().isEmpty() ? "0" : txtMorning.getText();
-			values[1] = txtNoon.getText().isEmpty() ? "0" : txtNoon.getText();
-			values[2] = txtEvening.getText().isEmpty() ? "0" : txtEvening.getText();
-			values[3] = txtNight.getText().isEmpty() ? "0" : txtNight.getText();
+			values[0] = txtMorning.getText().isEmpty() ? "0" : txtMorning.getText(); //$NON-NLS-1$
+			values[1] = txtNoon.getText().isEmpty() ? "0" : txtNoon.getText(); //$NON-NLS-1$
+			values[2] = txtEvening.getText().isEmpty() ? "0" : txtEvening.getText(); //$NON-NLS-1$
+			values[3] = txtNight.getText().isEmpty() ? "0" : txtNight.getText(); //$NON-NLS-1$
 
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < values.length; i++) {
 				String string = values[i];
 				if (string.length() > 0) {
 					if (i > 0) {
-						sb.append("-");
+						sb.append("-"); //$NON-NLS-1$
 					}
 					sb.append(string);
 				}

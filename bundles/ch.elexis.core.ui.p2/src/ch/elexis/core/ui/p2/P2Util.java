@@ -35,7 +35,7 @@ public class P2Util {
 	 */
 	public static IStatus checkForUpdates(IProvisioningAgent agent, IProgressMonitor monitor)
 			throws OperationCanceledException {
-		System.out.println(">> checkForUpdates");
+		System.out.println(">> checkForUpdates"); //$NON-NLS-1$
 		ProvisioningSession session = new ProvisioningSession(agent);
 		UpdateOperation operation = new UpdateOperation(session);
 		SubMonitor sub = SubMonitor.convert(monitor, "Checking for application updates...", 200);
@@ -67,17 +67,17 @@ public class P2Util {
 	 * @return
 	 */
 	public static boolean addRepository(IProvisioningAgent agent, String repo) {
-		System.out.println(">> adding repository " + repo);
+		System.out.println(">> adding repository " + repo); //$NON-NLS-1$
 		IMetadataRepositoryManager metadataManager = (IMetadataRepositoryManager) agent
 				.getService(IMetadataRepositoryManager.SERVICE_NAME);
 		IArtifactRepositoryManager artifactManager = (IArtifactRepositoryManager) agent
 				.getService(IArtifactRepositoryManager.SERVICE_NAME);
 		if (metadataManager == null) {
-			System.out.println("metadataManager is null!!!");
+			System.out.println("metadataManager is null!!!"); //$NON-NLS-1$
 			return false;
 		}
 		if (artifactManager == null) {
-			System.out.println("artifactManager is null!!!");
+			System.out.println("artifactManager is null!!!"); //$NON-NLS-1$
 			return false;
 		}
 		try {
