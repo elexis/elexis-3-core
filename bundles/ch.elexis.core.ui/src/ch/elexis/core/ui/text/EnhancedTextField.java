@@ -527,7 +527,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 			int end = ((xref.getPos() + xref.getLength() >= text.getContent().getCharCount())
 					? text.getContent().getCharCount()
 					: xref.getPos() + xref.getLength());
-			System.out.println(start + "-" + end);
+			System.out.println(start + "-" + end); //$NON-NLS-1$
 			text.setSelection(start, end);
 			text.insert(updatedText);
 
@@ -681,7 +681,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 
 		private boolean isMakroEnabled(IKonsMakro extMakro) {
 			UserTextPref.setMakroEnabledDefaults();
-			return ConfigServiceHolder.getUser(EnhancedTextField.MACRO_ENABLED + "/" + extMakro.getClass().getName(),
+			return ConfigServiceHolder.getUser(EnhancedTextField.MACRO_ENABLED + "/" + extMakro.getClass().getName(), //$NON-NLS-1$
 					false);
 		}
 

@@ -115,21 +115,21 @@ public class MediDetailDialog extends TitleAreaDialog {
 		txtMorning.setTextLimit(6);
 		txtMorning.setMessage(Messages.MediDetailDialog_morning);
 		txtMorning.setLayoutData(gdSignature);
-		new Label(compositeDayTimeDosage, SWT.NONE).setText("-");
+		new Label(compositeDayTimeDosage, SWT.NONE).setText("-"); //$NON-NLS-1$
 
 		// noon
 		txtNoon = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtNoon.setTextLimit(6);
 		txtNoon.setMessage(Messages.MediDetailDialog_lunch);
 		txtNoon.setLayoutData(gdSignature);
-		new Label(compositeDayTimeDosage, SWT.NONE).setText("-");
+		new Label(compositeDayTimeDosage, SWT.NONE).setText("-"); //$NON-NLS-1$
 
 		// evening
 		txtEvening = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtEvening.setTextLimit(6);
 		txtEvening.setMessage(Messages.MediDetailDialog_evening);
 		txtEvening.setLayoutData(gdSignature);
-		new Label(compositeDayTimeDosage, SWT.NONE).setText("-");
+		new Label(compositeDayTimeDosage, SWT.NONE).setText("-"); //$NON-NLS-1$
 
 		// night
 		txtNight = new Text(compositeDayTimeDosage, SWT.BORDER);
@@ -183,7 +183,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 		stackCompositeDosage.layout();
 
 		// show or hide components dependent on caller
-		if ("FixMediDisplay".equals(executedFrom)) {
+		if ("FixMediDisplay".equals(executedFrom)) { //$NON-NLS-1$
 			btnReserveMedication.setVisible(false);
 		}
 
@@ -243,7 +243,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 						newPrescription.setDisposalComment(disposalComment);
 						CoreModelServiceHolder.get().save(newPrescription);
 						MedicationServiceHolder.get().stopPrescription(oldPrescription, LocalDateTime.now(),
-								"Geändert durch " + CoreHub.getLoggedInContact().getLabel());
+								"Geändert durch " + CoreHub.getLoggedInContact().getLabel()); //$NON-NLS-1$
 						CoreModelServiceHolder.get().save(oldPrescription);
 						ElexisEventDispatcher.getInstance()
 								.fire(new ElexisEvent(newPrescription, Prescription.class, ElexisEvent.EVENT_UPDATE));
@@ -281,17 +281,17 @@ public class MediDetailDialog extends TitleAreaDialog {
 	private String getDosage() {
 		if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
 			String[] values = new String[4];
-			values[0] = txtMorning.getText().isEmpty() ? "0" : txtMorning.getText();
-			values[1] = txtNoon.getText().isEmpty() ? "0" : txtNoon.getText();
-			values[2] = txtEvening.getText().isEmpty() ? "0" : txtEvening.getText();
-			values[3] = txtNight.getText().isEmpty() ? "0" : txtNight.getText();
+			values[0] = txtMorning.getText().isEmpty() ? "0" : txtMorning.getText(); //$NON-NLS-1$
+			values[1] = txtNoon.getText().isEmpty() ? "0" : txtNoon.getText(); //$NON-NLS-1$
+			values[2] = txtEvening.getText().isEmpty() ? "0" : txtEvening.getText(); //$NON-NLS-1$
+			values[3] = txtNight.getText().isEmpty() ? "0" : txtNight.getText(); //$NON-NLS-1$
 
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < values.length; i++) {
 				String string = values[i];
 				if (string.length() > 0) {
 					if (i > 0) {
-						sb.append("-");
+						sb.append("-"); //$NON-NLS-1$
 					}
 					sb.append(string);
 				}
@@ -312,10 +312,10 @@ public class MediDetailDialog extends TitleAreaDialog {
 		Arrays.fill(retVal, StringUtils.EMPTY);
 		if (dosage != null) {
 			// Match stuff like '1/2', '7/8'
-			if (dosage.matches("^[0-9]/[0-9]$")) {
+			if (dosage.matches("^[0-9]/[0-9]$")) { //$NON-NLS-1$
 				retVal[0] = dosage;
 			} else if (dosage.matches("[0-9Â½Â¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
-				String[] split = dosage.split("[xX]");
+				String[] split = dosage.split("[xX]"); //$NON-NLS-1$
 				System.arraycopy(split, 0, retVal, 0, split.length);
 			} else if (dosage.indexOf('-') != -1) {
 				String[] split = dosage.split("[- ]"); //$NON-NLS-1$

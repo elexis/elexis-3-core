@@ -80,8 +80,8 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 
 public class BlockSelector extends CodeSelectorFactory {
-	protected static final String BLOCK_ONLY_FILTER_ENABLED = "blockselector/blockonlyfilter";
-	protected static final String BLOCK_FILTER_ONLY_MANDATOR = "blockselector/blockfilteronlymandator";
+	protected static final String BLOCK_ONLY_FILTER_ENABLED = "blockselector/blockonlyfilter"; //$NON-NLS-1$
+	protected static final String BLOCK_FILTER_ONLY_MANDATOR = "blockselector/blockfilteronlymandator"; //$NON-NLS-1$
 
 	private IAction deleteAction, createAction, exportAction, copyAction, searchBlocksOnly, searchFilterMandator;
 	private CommonViewer cv;
@@ -130,7 +130,7 @@ public class BlockSelector extends CodeSelectorFactory {
 
 		cv.setContextMenu(mgr);
 
-		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] { new FieldDescriptor<ICodeElementBlock>("Name") };
+		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] { new FieldDescriptor<ICodeElementBlock>("Name") }; //$NON-NLS-1$
 
 		// add keyListener to search field
 		Listener keyListener = new Listener() {
@@ -199,7 +199,7 @@ public class BlockSelector extends CodeSelectorFactory {
 				String[] v = cv.getConfigurer().getControlFieldProvider().getValues();
 				if (v != null && v.length > 0 && v[0] != null && v[0].length() > 0) {
 					IQuery<ICodeElementBlock> query = CoreModelServiceHolder.get().getQuery(ICodeElementBlock.class);
-					query.and("name", COMPARATOR.EQUALS, v[0]);
+					query.and("name", COMPARATOR.EQUALS, v[0]); //$NON-NLS-1$
 					if (!query.execute().isEmpty()) {
 						MessageDialog.openError(Display.getDefault().getActiveShell(), "Fehler",
 								"Ein Block mit dem Namen [" + v[0] + "] existiert bereits");
@@ -224,7 +224,7 @@ public class BlockSelector extends CodeSelectorFactory {
 				try {
 					new ExportiereBloeckeCommand().execute(null);
 				} catch (ExecutionException e) {
-					LoggerFactory.getLogger(getClass()).error("Error exporting block", e);
+					LoggerFactory.getLogger(getClass()).error("Error exporting block", e); //$NON-NLS-1$
 				}
 			}
 		};
@@ -323,18 +323,18 @@ public class BlockSelector extends CodeSelectorFactory {
 
 		public Object[] getElements(Object inputElement) {
 			IQuery<ICodeElementBlock> query = CoreModelServiceHolder.get().getQuery(ICodeElementBlock.class);
-			query.and("id", COMPARATOR.NOT_EQUALS, "Version");
+			query.and("id", COMPARATOR.NOT_EQUALS, "Version"); //$NON-NLS-1$ //$NON-NLS-2$
 			if ((queryFilter != null && queryFilter.length() > 2)) {
 				if (selector.searchBlocksOnly.isChecked()) {
-					query.and("name", COMPARATOR.LIKE, "%" + queryFilter + "%");
+					query.and("name", COMPARATOR.LIKE, "%" + queryFilter + "%"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				} else {
 					query.startGroup();
-					query.and("name", COMPARATOR.LIKE, "%" + queryFilter + "%");
-					query.or("services", COMPARATOR.LIKE, "%" + queryFilter + "%");
+					query.and("name", COMPARATOR.LIKE, "%" + queryFilter + "%"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					query.or("services", COMPARATOR.LIKE, "%" + queryFilter + "%"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					query.andJoinGroups();
 				}
 			}
-			query.orderBy("name", ORDER.ASC);
+			query.orderBy("name", ORDER.ASC); //$NON-NLS-1$
 			blockItemMap = new HashMap<>();
 			List<BlockTreeViewerItem> list = query.execute().stream().filter(b -> applyMandatorFilter(b)).map(b -> {
 				BlockTreeViewerItem item = BlockTreeViewerItem.of(b);
@@ -364,7 +364,7 @@ public class BlockSelector extends CodeSelectorFactory {
 
 		/** Vom ControlFieldProvider */
 		public void changed(HashMap<String, String> vals) {
-			queryFilter = vals.get("Name");
+			queryFilter = vals.get("Name"); //$NON-NLS-1$
 			refreshViewer();
 		}
 
@@ -436,7 +436,7 @@ public class BlockSelector extends CodeSelectorFactory {
 
 	@Override
 	public String getCodeSystemName() {
-		return "Block";
+		return "Block"; //$NON-NLS-1$
 	}
 
 	@Override

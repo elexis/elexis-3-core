@@ -23,8 +23,8 @@ public class AbortLocalDocumentHandler extends AbstractHandler implements IHandl
 
 		IEclipseContext iEclipseContext = PlatformUI.getWorkbench().getService(IEclipseContext.class);
 		StructuredSelection selection = (StructuredSelection) iEclipseContext
-				.get(event.getCommand().getId().concat(".selection"));
-		iEclipseContext.remove(event.getCommand().getId().concat(".selection"));
+				.get(event.getCommand().getId().concat(".selection")); //$NON-NLS-1$
+		iEclipseContext.remove(event.getCommand().getId().concat(".selection")); //$NON-NLS-1$
 		if (selection != null && !selection.isEmpty()) {
 			List<?> selected = selection.toList();
 			Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();

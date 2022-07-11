@@ -13,7 +13,7 @@ public class PropertyTester extends org.eclipse.core.expressions.PropertyTester 
 
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		if ("isSCSAvailable".equals(property)) {
+		if ("isSCSAvailable".equals(property)) { //$NON-NLS-1$
 			if (isScsAvailable == null) {
 				List<IStock> allStocks = StockServiceHolder.get().getAllStocks(true);
 				Optional<IStock> scs = allStocks.stream().filter(s -> s.isCommissioningSystem()).findFirst();

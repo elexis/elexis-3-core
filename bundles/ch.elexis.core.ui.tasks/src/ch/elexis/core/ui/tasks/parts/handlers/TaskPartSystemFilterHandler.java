@@ -11,7 +11,7 @@ import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 
 public class TaskPartSystemFilterHandler {
 
-	public static final String SHOW_SYSTEM_TASKS = "sst";
+	public static final String SHOW_SYSTEM_TASKS = "sst"; //$NON-NLS-1$
 
 	@Execute
 	public void execute(MPart part, MDirectToolItem item) {

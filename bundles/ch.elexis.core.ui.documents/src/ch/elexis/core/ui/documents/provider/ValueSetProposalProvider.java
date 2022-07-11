@@ -10,8 +10,8 @@ import ch.elexis.core.findings.util.ValueSetServiceHolder;
 
 public class ValueSetProposalProvider implements IContentProposalProvider {
 
-	public static final String EPRDOCUMENT_CLASSCODE = "EprDocumentClassCode";
-	public static final String EPRDOCUMENT_PRACTICESETTINGCODE = "EprDocumentPracticeSettingCode";
+	public static final String EPRDOCUMENT_CLASSCODE = "EprDocumentClassCode"; //$NON-NLS-1$
+	public static final String EPRDOCUMENT_PRACTICESETTINGCODE = "EprDocumentPracticeSettingCode"; //$NON-NLS-1$
 
 	private final String valueSetName;
 

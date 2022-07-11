@@ -59,15 +59,15 @@ public class SortMoveHandler extends AbstractHandler implements IHandler {
 	}
 
 	private boolean moveNotPossible(int selectionIndex, TableViewer activeViewer, String direction) {
-		if ("up".equals(direction)) {
+		if ("up".equals(direction)) { //$NON-NLS-1$
 			return selectionIndex == 0;
-		} else if ("down".equals(direction)) {
+		} else if ("down".equals(direction)) { //$NON-NLS-1$
 			return selectionIndex == activeViewer.getTable().getItemCount() - 1;
 		}
 		return true;
 	}
 
 	private boolean directionIsUp(String direction) {
-		return "up".equals(direction);
+		return "up".equals(direction); //$NON-NLS-1$
 	}
 }

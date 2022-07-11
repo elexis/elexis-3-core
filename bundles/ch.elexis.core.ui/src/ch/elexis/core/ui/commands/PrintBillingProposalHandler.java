@@ -59,17 +59,17 @@ public class PrintBillingProposalHandler extends AbstractHandler implements IHan
 									OutputType.PDF);
 							ByteArrayOutputStream pdf = new ByteArrayOutputStream();
 							Map<String, String> parameters = new HashMap<>();
-							parameters.put("current-date",
-									LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+							parameters.put("current-date", //$NON-NLS-1$
+									LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))); //$NON-NLS-1$
 
-							outputter.transform(letter, getClass().getResourceAsStream("/rsc/xslt/proposal2fo.xslt"),
+							outputter.transform(letter, getClass().getResourceAsStream("/rsc/xslt/proposal2fo.xslt"), //$NON-NLS-1$
 									pdf, parameters);
 							bundleContext.ungetService(serviceRef);
 							// save and open the file ...
 							File file = null;
 							FileOutputStream fout = null;
 							try {
-								file = File.createTempFile("proposal_", ".pdf");
+								file = File.createTempFile("proposal_", ".pdf"); //$NON-NLS-1$ //$NON-NLS-2$
 								fout = new FileOutputStream(file);
 								fout.write(pdf.toByteArray());
 							} catch (IOException e) {
@@ -77,7 +77,7 @@ public class PrintBillingProposalHandler extends AbstractHandler implements IHan
 									MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
 											"Fehler beim PDF anlegen.\n" + e.getMessage());
 								});
-								LoggerFactory.getLogger(getClass()).error("Error creating PDF", e);
+								LoggerFactory.getLogger(getClass()).error("Error creating PDF", e); //$NON-NLS-1$
 							} finally {
 								if (fout != null) {
 									try {
@@ -97,7 +97,7 @@ public class PrintBillingProposalHandler extends AbstractHandler implements IHan
 			} catch (InvocationTargetException | InterruptedException e) {
 				MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
 						"Fehler beim PDF erzeugen.\n" + e.getMessage());
-				LoggerFactory.getLogger(getClass()).error("Error creating PDF", e);
+				LoggerFactory.getLogger(getClass()).error("Error creating PDF", e); //$NON-NLS-1$
 			}
 		}
 		return null;

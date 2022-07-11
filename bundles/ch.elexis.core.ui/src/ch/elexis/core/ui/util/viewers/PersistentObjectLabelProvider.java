@@ -37,7 +37,7 @@ public class PersistentObjectLabelProvider extends LabelProvider implements ITab
 		if (element != null) {
 			return ((PersistentObject) element).getLabel();
 		}
-		return "null";
+		return "null"; //$NON-NLS-1$
 	}
 
 	@Override

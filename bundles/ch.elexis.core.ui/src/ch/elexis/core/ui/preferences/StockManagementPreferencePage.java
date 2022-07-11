@@ -539,33 +539,33 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
 		IObservableValue observeTextTxtCodeObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtCode);
-		IObservableValue stockDetailCodeObserveDetailValue = PojoProperties.value(Stock.class, "code", String.class)
+		IObservableValue stockDetailCodeObserveDetailValue = PojoProperties.value(Stock.class, "code", String.class) //$NON-NLS-1$
 				.observeDetail(stockDetail);
 		bindingContext.bindValue(observeTextTxtCodeObserveWidget, stockDetailCodeObserveDetailValue, null, null);
 		//
 		IObservableValue observeTextTxtDescriptionObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtDescription);
 		IObservableValue stockDetailDescriptionObserveDetailValue = PojoProperties
-				.value(Stock.class, "description", String.class).observeDetail(stockDetail);
+				.value(Stock.class, "description", String.class).observeDetail(stockDetail); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtDescriptionObserveWidget, stockDetailDescriptionObserveDetailValue, null,
 				null);
 		//
 		IObservableValue observeTextTxtLocationObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtLocation);
 		IObservableValue stockDetailLocationObserveDetailValue = PojoProperties
-				.value(Stock.class, "location", String.class).observeDetail(stockDetail);
+				.value(Stock.class, "location", String.class).observeDetail(stockDetail); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtLocationObserveWidget, stockDetailLocationObserveDetailValue, null,
 				null);
 		//
 		IObservableValue observeTextTxtPrioObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtPrio);
 		IObservableValue stockDetailGlobalPreferenceObserveDetailValue = PojoProperties
-				.value(Stock.class, "priority", Integer.class).observeDetail(stockDetail);
+				.value(Stock.class, "priority", Integer.class).observeDetail(stockDetail); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtPrioObserveWidget, stockDetailGlobalPreferenceObserveDetailValue, null,
 				null);
 		//
 		IObservableValue observeTextTxtMachineConfigObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtMachineConfig);
 		IObservableValue stockDetailMachineConfigObserveDetailValue = PojoProperties
-				.value(Stock.class, "driverConfig", String.class).observeDetail(stockDetail);
+				.value(Stock.class, "driverConfig", String.class).observeDetail(stockDetail); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtMachineConfigObserveWidget, stockDetailMachineConfigObserveDetailValue,
 				null, null);
 		//

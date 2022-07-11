@@ -232,7 +232,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 						adrs[i][2] = new StringBuilder(v[4]).append(StringConstants.SPACE).append(v[5]).toString();
 						adrs[i][3] = v[6];
 					}
-					gpl.insertTable("[Liste]", adrs, null);
+					gpl.insertTable("[Liste]", adrs, null); //$NON-NLS-1$
 					gpl.open();
 				}
 			}

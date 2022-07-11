@@ -217,7 +217,7 @@ public class InvoiceListHeaderComposite extends Composite {
 		comboViewerType = new ComboViewer(this, SWT.SINGLE | SWT.READ_ONLY);
 		comboViewerType.setContentProvider(ArrayContentProvider.getInstance());
 		comboViewerType.setLabelProvider(new LabelProvider());
-		comboViewerType.setInput(Arrays.asList(new String[] { ALL_ELEMENTS_LABEL, "TG", "TP" }));
+		comboViewerType.setInput(Arrays.asList(new String[] { ALL_ELEMENTS_LABEL, "TG", "TP" })); //$NON-NLS-1$ //$NON-NLS-2$
 		comboViewerType.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
 
 		comboViewerType.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -353,7 +353,7 @@ public class InvoiceListHeaderComposite extends Composite {
 	public void setLimitWarning(Integer queryLimit) {
 		if (queryLimit != null) {
 			float val = queryLimit / 1000f;
-			lblLimitWarn.setText(val + "k");
+			lblLimitWarn.setText(val + "k"); //$NON-NLS-1$
 			lblLimitWarn.setToolTipText(
 					String.format(Messages.InvoiceListHeaderComposite_queryLimit_toolTipText, queryLimit));
 			lblLimitWarn.setBackground(UiDesk.getColor(UiDesk.COL_RED));

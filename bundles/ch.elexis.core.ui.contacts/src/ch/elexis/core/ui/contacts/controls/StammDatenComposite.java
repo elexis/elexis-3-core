@@ -201,7 +201,7 @@ public class StammDatenComposite extends AbstractComposite {
 					case UNDEFINED:
 						return "X";
 					default:
-						return "?";
+						return "?"; //$NON-NLS-1$
 					}
 				}
 			});
@@ -243,7 +243,7 @@ public class StammDatenComposite extends AbstractComposite {
 		}
 		{
 			txtCity = new Text(grpAddress, SWT.BORDER);
-			txtCity.setMessage("Ortschaft");
+			txtCity.setMessage("Ortschaft"); //$NON-NLS-1$
 			txtCity.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 			ContentProposalAdapter cpaCity = new ContentProposalAdapter(txtCity, new TextContentAdapter(), cityIP, null,
@@ -340,10 +340,10 @@ public class StammDatenComposite extends AbstractComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					URI uriMailTo = new URI("mailto", txtEmail.getText(), null);
+					URI uriMailTo = new URI("mailto", txtEmail.getText(), null); //$NON-NLS-1$
 					Desktop.getDesktop().mail(uriMailTo);
 				} catch (URISyntaxException | IOException ex) {
-					log.warn("Error opening URI", ex);
+					log.warn("Error opening URI", ex); //$NON-NLS-1$
 				}
 			}
 		});
@@ -361,11 +361,11 @@ public class StammDatenComposite extends AbstractComposite {
 				try {
 					URI uriURL = new URI(txtWebsite.getText());
 					if (!uriURL.isAbsolute()) {
-						uriURL = new URI("http://" + txtWebsite.getText());
+						uriURL = new URI("http://" + txtWebsite.getText()); //$NON-NLS-1$
 					}
 					Desktop.getDesktop().browse(uriURL);
 				} catch (URISyntaxException | IOException ex) {
-					log.warn("Error opening URI", ex);
+					log.warn("Error opening URI", ex); //$NON-NLS-1$
 				}
 			}
 		});
@@ -407,7 +407,7 @@ public class StammDatenComposite extends AbstractComposite {
 			txtFirstName.setMessage("Vorname");
 			txtFamilyName.setMessage("Nachname");
 			if (contact.getCode() != null) {
-				lblCode.setText("#" + contact.getCode());
+				lblCode.setText("#" + contact.getCode()); //$NON-NLS-1$
 			} else {
 				lblCode.setText(StringUtils.EMPTY);
 			}
@@ -439,8 +439,8 @@ public class StammDatenComposite extends AbstractComposite {
 				// TODO txtTitleFront, txtTitleBack
 				txtFirstName, txtFamilyName, txtZIP, txtCity, txtStreet, txtTelefon, txtTelefon2, txtFax, txtEmail,
 				txtWebsite, txtMobil, txtNotes };
-		String[] property = { "description2", "description1", "zip", "city", "street", "phone1", "phone2", "fax",
-				"email", "website", "mobile", "comment" };
+		String[] property = { "description2", "description1", "zip", "city", "street", "phone1", "phone2", "fax", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+				"email", "website", "mobile", "comment" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 		for (int i = 0; i < control.length; i++) {
 			bindValue(control[i], property[i], bindingContext);
@@ -470,7 +470,7 @@ public class StammDatenComposite extends AbstractComposite {
 
 		IObservableValue countryObserver = ViewersObservables.observeSingleSelection(comboViewerCountry);
 		bindingContext.bindValue(countryObserver,
-				PojoObservables.observeDetailValue(contactObservable, "country", Country.class), null, null);
+				PojoObservables.observeDetailValue(contactObservable, "country", Country.class), null, null); //$NON-NLS-1$
 	}
 
 	/**

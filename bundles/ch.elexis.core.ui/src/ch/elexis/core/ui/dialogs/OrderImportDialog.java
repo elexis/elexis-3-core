@@ -158,7 +158,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		diffSpinner.setSelection(DIFF_SPINNER_DEFAULT);
 
 		Label eanLabel = new Label(scannerGroup, SWT.NONE);
-		eanLabel.setText("EAN:");
+		eanLabel.setText("EAN:"); //$NON-NLS-1$
 		eanText = new ElexisText(scannerGroup, SWT.NONE);
 		eanText.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
@@ -361,13 +361,13 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 		/* Pharamcode */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
-		column.getColumn().setText("Pharmacode");
+		column.getColumn().setText("Pharmacode"); //$NON-NLS-1$
 		column.getColumn().setWidth(80);
 		column.setLabelProvider(new PharamcodeLabelProvider());
 
 		/* EAN */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
-		column.getColumn().setText("EAN");
+		column.getColumn().setText("EAN"); //$NON-NLS-1$
 		column.getColumn().setWidth(110);
 		column.setLabelProvider(new EANLabelProvider());
 
@@ -488,7 +488,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, stockEntry);
 					} else {
 						throw new IllegalStateException(
-								"Could not acquire lock for stockEntry [" + stockEntry.getArticle().getLabel() + "]");
+								"Could not acquire lock for stockEntry [" + stockEntry.getArticle().getLabel() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 			}
@@ -549,7 +549,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
 				if (orderElement.isVerified()) {
-					text = "X";
+					text = "X"; //$NON-NLS-1$
 				}
 			}
 

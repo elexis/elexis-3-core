@@ -30,11 +30,11 @@ public class CodeSystemDescription {
 		CodeSystemDescription ret = new CodeSystemDescription();
 
 		try {
-			ret.configName = configuration.getName() + " - " + configuration.getAttribute("name");
+			ret.configName = configuration.getName() + " - " + configuration.getAttribute("name"); //$NON-NLS-1$ //$NON-NLS-2$
 			ret.codeSelectorFactory = (CodeSelectorFactory) configuration
 					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 			if (ret.codeSelectorFactory == null) {
-				String error = "No CodeSelectorFactory [" + configuration.getClass().getName() + "]";
+				String error = "No CodeSelectorFactory [" + configuration.getClass().getName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 				SWTHelper.alert("Error", error); //$NON-NLS-1$
 				LoggerFactory.getLogger(CodeSystemDescription.class).error(error);
 				return Optional.empty();
@@ -48,19 +48,19 @@ public class CodeSystemDescription {
 						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
 				ret.poCodeElement = (ICodeElement) poFactory.createTemplate(ret.codeSelectorFactory.getElementClass());
 			} else {
-				String system = configuration.getAttribute("system");
+				String system = configuration.getAttribute("system"); //$NON-NLS-1$
 				if (system != null && !system.isEmpty()) {
 					ret.system = system;
 				} else {
-					String error = "No system or factory [" + ret.configName + "]";
+					String error = "No system or factory [" + ret.configName + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 					SWTHelper.alert("Error", error); //$NON-NLS-1$
 					LoggerFactory.getLogger(CodeSystemDescription.class).error(error);
 					return Optional.empty();
 				}
-				ret.elexisClassName = configuration.getAttribute("elexisClassName");
+				ret.elexisClassName = configuration.getAttribute("elexisClassName"); //$NON-NLS-1$
 			}
 		} catch (CoreException ex) {
-			LoggerFactory.getLogger(CodeSystemDescription.class).error("Error creating config", ex);
+			LoggerFactory.getLogger(CodeSystemDescription.class).error("Error creating config", ex); //$NON-NLS-1$
 			return Optional.empty();
 		}
 		return Optional.of(ret);
@@ -72,7 +72,7 @@ public class CodeSystemDescription {
 		} else if (system != null) {
 			return system;
 		}
-		throw new IllegalStateException("No system and no code element present [" + configName + "]");
+		throw new IllegalStateException("No system and no code element present [" + configName + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public CodeSelectorFactory getCodeSelectorFactory() {

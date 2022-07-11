@@ -59,7 +59,7 @@ public class DisplayTextDialog extends TitleAreaDialog {
 		form.getBody().setLayout(new ColumnLayout());
 		form.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		Control ret = null;
-		if (cnt.startsWith("<html>")) {
+		if (cnt.startsWith("<html>")) { //$NON-NLS-1$
 			ret = new Browser(form.getBody(), SWT.NONE);
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			((Browser) ret).setText(cnt);
@@ -68,13 +68,13 @@ public class DisplayTextDialog extends TitleAreaDialog {
 			}
 
 		} else {
-			cnt = cnt.replaceAll("<", "&lt;");
-			cnt = cnt.replaceAll(">", "&gt;");
-			cnt = cnt.replaceAll(StringUtils.LF, "<br />");
-			cnt = cnt.replaceAll("\\*\\.(.{1,30})\\.\\*", "<b>$1</b>");
-			cnt = cnt.replaceAll("\\\\\\.br\\\\", "<br/>");
-			cnt = cnt.replaceAll("\\\\\\.BR\\\\", "<br/>");
-			cnt = cnt.replaceAll("\\n\\n", "\\n");
+			cnt = cnt.replaceAll("<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
+			cnt = cnt.replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$
+			cnt = cnt.replaceAll(StringUtils.LF, "<br />"); //$NON-NLS-1$
+			cnt = cnt.replaceAll("\\*\\.(.{1,30})\\.\\*", "<b>$1</b>"); //$NON-NLS-1$ //$NON-NLS-2$
+			cnt = cnt.replaceAll("\\\\\\.br\\\\", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+			cnt = cnt.replaceAll("\\\\\\.BR\\\\", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+			cnt = cnt.replaceAll("\\n\\n", "\\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			ret = UiDesk.getToolkit().createFormText(form.getBody(), false);
 			((FormText) ret).setWhitespaceNormalized(hS);
@@ -87,7 +87,7 @@ public class DisplayTextDialog extends TitleAreaDialog {
 					// Do nothing
 				}
 			// ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			((FormText) ret).setText("<form><p>" + cnt + "</p></form>", true, true);
+			((FormText) ret).setText("<form><p>" + cnt + "</p></form>", true, true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		SWTHelper.center(UiDesk.getTopShell(), getShell());
 		return ret;

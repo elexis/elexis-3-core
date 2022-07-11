@@ -26,7 +26,7 @@ public class PropertyTester extends org.eclipse.core.expressions.PropertyTester 
 			return CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false);
 		} else if ("billable".equals(property)) { //$NON-NLS-1$
 			if (args != null && args.length == 1) {
-				if ("activeencounter".equals(args[0])) {
+				if ("activeencounter".equals(args[0])) { //$NON-NLS-1$
 					Konsultation selectedEncounter = (Konsultation) ElexisEventDispatcher
 							.getSelected(Konsultation.class);
 					return selectedEncounter != null && (selectedEncounter.getRechnung() == null

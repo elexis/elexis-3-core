@@ -28,7 +28,7 @@ import ch.elexis.data.Brief;
 import ch.rgw.tools.ExHandler;
 
 public class LoadTemplateCommand extends AbstractHandler {
-	public static String ID = "ch.elexis.core.ui.command.loadTemplate";
+	public static String ID = "ch.elexis.core.ui.command.loadTemplate"; //$NON-NLS-1$
 	private static Logger logger = LoggerFactory.getLogger(LoadTemplateCommand.class);
 
 	@Override
@@ -71,7 +71,7 @@ public class LoadTemplateCommand extends AbstractHandler {
 						Messages.BriefAuswahlCouldNotLoadText); // $NON-NLS-1$
 			}
 		} catch (PartInitException e) {
-			logger.error("Could not open TextView", e);
+			logger.error("Could not open TextView", e); //$NON-NLS-1$
 			ExHandler.handle(e);
 		}
 		return null;

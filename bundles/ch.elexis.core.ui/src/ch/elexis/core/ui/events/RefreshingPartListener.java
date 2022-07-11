@@ -68,7 +68,7 @@ public class RefreshingPartListener implements IPartListener2 {
 				((IRefreshable) part).refresh();
 			} else {
 				LoggerFactory.getLogger(getClass())
-						.warn("Could not refresh " + part + ", is not instance of IRefreshable");
+						.warn("Could not refresh " + part + ", is not instance of IRefreshable"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

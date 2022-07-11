@@ -29,11 +29,11 @@ public class PerspektiveExportHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		FileDialog dialog = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
-		dialog.setFilterNames(new String[] { "XMI" });
-		dialog.setFilterExtensions(new String[] { "*.xmi" });
+		dialog.setFilterNames(new String[] { "XMI" }); //$NON-NLS-1$
+		dialog.setFilterExtensions(new String[] { "*.xmi" }); //$NON-NLS-1$
 
 		dialog.setFilterPath(CoreHub.getWritableUserDir().getAbsolutePath());
-		dialog.setFileName("perspective_export.xmi");
+		dialog.setFileName("perspective_export.xmi"); //$NON-NLS-1$
 
 		String path = dialog.open();
 		if (path != null) {
@@ -44,7 +44,7 @@ public class PerspektiveExportHandler extends AbstractHandler {
 			} catch (IOException e) {
 				MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Export",
 						"Die aktuelle Perspektive kann nicht exportiert werden.");
-				LoggerFactory.getLogger(PerspektiveExportHandler.class).error("export error", e);
+				LoggerFactory.getLogger(PerspektiveExportHandler.class).error("export error", e); //$NON-NLS-1$
 			}
 		}
 		return null;

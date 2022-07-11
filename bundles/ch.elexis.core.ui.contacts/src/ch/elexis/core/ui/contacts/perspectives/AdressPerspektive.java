@@ -29,8 +29,8 @@ public class AdressPerspektive implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
 
-		IFolderLayout oben = layout.createFolder("oben", IPageLayout.TOP, 0.5f, IPageLayout.ID_EDITOR_AREA);
-		IFolderLayout details = layout.createFolder("details", IPageLayout.TOP, 1.0f, IPageLayout.ID_EDITOR_AREA);
+		IFolderLayout oben = layout.createFolder("oben", IPageLayout.TOP, 0.5f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
+		IFolderLayout details = layout.createFolder("details", IPageLayout.TOP, 1.0f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
 		oben.addView(KontakteView.ID);
 		details.addView(KontaktDetailView.ID);
 	}

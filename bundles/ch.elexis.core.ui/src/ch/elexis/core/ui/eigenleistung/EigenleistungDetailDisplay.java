@@ -113,7 +113,7 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 	public void display(Object obj) {
 		if (obj instanceof ICustomService) {
 			ICustomService customService = (ICustomService) obj;
-			textCode.setText((String) CoreModelServiceHolder.get().getEntityProperty("code", customService));
+			textCode.setText((String) CoreModelServiceHolder.get().getEntityProperty("code", customService)); //$NON-NLS-1$
 			textBezeichnung.setText(customService.getText());
 			textEKP.setText(customService.getNetPrice().getCentsAsString());
 			textVKP.setText(customService.getPrice().getCentsAsString());

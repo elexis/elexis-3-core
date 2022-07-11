@@ -97,7 +97,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout(7, false));
 
-		this.setData("org.eclipse.e4.ui.css.CssClassName", "CustomComposite");
+		this.setData("org.eclipse.e4.ui.css.CssClassName", "CustomComposite"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		signatureType = new Composite(this, SWT.NONE);
 		signatureType.setLayout(new RowLayout());
@@ -245,7 +245,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gd.widthHint = 80;
 		lblCalcEndDate.setLayoutData(gd);
-		lblCalcEndDate.setText("(" + Messages.ArticleDefaultSignatureComposite_date_none + ")");
+		lblCalcEndDate.setText("(" + Messages.ArticleDefaultSignatureComposite_date_none + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblCalcEndDate.setData(null);
 
 		txtEnddate.addModifyListener(new ModifyListener() {
@@ -264,13 +264,13 @@ public class ArticleDefaultSignatureComposite extends Composite {
 						days = 0;
 					}
 					t.addDays(days);
-					lblCalcEndDate.setText("(" + t.toString(TimeTool.DATE_GER) + ")");
+					lblCalcEndDate.setText("(" + t.toString(TimeTool.DATE_GER) + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 					lblCalcEndDate.setData(t);
 					return;
 
 				} catch (NumberFormatException ex) {
 				}
-				lblCalcEndDate.setText("(" + Messages.ArticleDefaultSignatureComposite_date_none + ")");
+				lblCalcEndDate.setText("(" + Messages.ArticleDefaultSignatureComposite_date_none + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 				lblCalcEndDate.setData(null);
 			}
 		});

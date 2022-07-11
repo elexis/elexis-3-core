@@ -33,7 +33,7 @@ import ch.elexis.data.Rezept;
 
 public class PrintRecipeHandler extends AbstractHandler {
 
-	public static final String COMMAND_ID = "ch.elexis.core.ui.medication.PrintRecipe";
+	public static final String COMMAND_ID = "ch.elexis.core.ui.medication.PrintRecipe"; //$NON-NLS-1$
 
 	private static Logger log = LoggerFactory.getLogger(PrintRecipeHandler.class);
 
@@ -46,7 +46,7 @@ public class PrintRecipeHandler extends AbstractHandler {
 		String medicationType = event.getParameter("ch.elexis.core.ui.medication.commandParameter.medication"); //$NON-NLS-1$
 		// if not set use selection
 		if (medicationType == null || medicationType.isEmpty()) {
-			medicationType = "selection";
+			medicationType = "selection"; //$NON-NLS-1$
 		}
 
 		String address = event.getParameter("ch.elexis.core.ui.medication.commandParameter.address"); //$NON-NLS-1$
@@ -62,13 +62,13 @@ public class PrintRecipeHandler extends AbstractHandler {
 				rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 						.showView(ElexisConfigurationConstants.rezeptausgabe);
 				boolean previousAddressSelection = rpb.isAddressSelection();
-				rpb.setAddressSelection("select".equals(address));
+				rpb.setAddressSelection("select".equals(address)); //$NON-NLS-1$
 				rpb.createRezept(Rezept.load(recipe.getId()));
 				rpb.setAddressSelection(previousAddressSelection);
 
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, recipe);
 			} catch (PartInitException e) {
-				log.error("Error outputting recipe", e);
+				log.error("Error outputting recipe", e); //$NON-NLS-1$
 			}
 		}
 		return null;
@@ -85,7 +85,7 @@ public class PrintRecipeHandler extends AbstractHandler {
 
 	@SuppressWarnings("unchecked")
 	private List<IPrescription> getPrescriptions(IPatient patient, String medicationType, ExecutionEvent event) {
-		if ("selection".equals(medicationType)) {
+		if ("selection".equals(medicationType)) { //$NON-NLS-1$
 			ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 			if (selection != null && !selection.isEmpty()) {
 				List<IPrescription> ret = new ArrayList<IPrescription>();
@@ -104,14 +104,14 @@ public class PrintRecipeHandler extends AbstractHandler {
 				}
 				return ret;
 			}
-		} else if ("all".equals(medicationType)) {
+		} else if ("all".equals(medicationType)) { //$NON-NLS-1$
 			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
 					EntryType.SYMPTOMATIC_MEDICATION));
-		} else if ("fix".equals(medicationType)) {
+		} else if ("fix".equals(medicationType)) { //$NON-NLS-1$
 			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
-		} else if ("reserve".equals(medicationType)) {
+		} else if ("reserve".equals(medicationType)) { //$NON-NLS-1$
 			return patient.getMedication(Arrays.asList(EntryType.RESERVE_MEDICATION));
-		} else if ("symptomatic".equals(medicationType)) {
+		} else if ("symptomatic".equals(medicationType)) { //$NON-NLS-1$
 			return patient.getMedication(Arrays.asList(EntryType.SYMPTOMATIC_MEDICATION));
 		}
 		return Collections.emptyList();

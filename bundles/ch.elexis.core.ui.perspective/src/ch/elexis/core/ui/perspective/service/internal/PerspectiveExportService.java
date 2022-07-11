@@ -49,9 +49,9 @@ public class PerspectiveExportService implements IPerspectiveExportService {
 				// element to the new element
 				placeholderClone.setRef((placeholderOriginal.get(0).getRef()));
 			} else if (placeholderOriginal.isEmpty()) {
-				System.out.println("NO PLACEHOLDER");
+				System.out.println("NO PLACEHOLDER"); //$NON-NLS-1$
 			} else {
-				System.out.println("MORE THEN ONE PLACEHOLDER" + StringUtils.SPACE + placeholderOriginal.toString());
+				System.out.println("MORE THEN ONE PLACEHOLDER" + StringUtils.SPACE + placeholderOriginal.toString()); //$NON-NLS-1$
 				placeholderClone.setRef((placeholderOriginal.get(0).getRef()));
 			}
 		}
@@ -67,7 +67,7 @@ public class PerspectiveExportService implements IPerspectiveExportService {
 			EModelService modelService = getService(EModelService.class);
 
 			MApplication mApplication = getService(MApplication.class);
-			MTrimmedWindow window = (MTrimmedWindow) modelService.find("IDEWindow", mApplication);
+			MTrimmedWindow window = (MTrimmedWindow) modelService.find("IDEWindow", mApplication); //$NON-NLS-1$
 			if (window == null) {
 				List<MWindow> windows = mApplication.getChildren();
 				if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {

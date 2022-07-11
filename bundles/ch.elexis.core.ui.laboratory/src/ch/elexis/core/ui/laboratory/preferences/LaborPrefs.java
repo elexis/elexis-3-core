@@ -210,7 +210,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
 				LabItem labItem = (LabItem) selection.getFirstElement();
 				if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
-					event.data = labItem.getKuerzel() + "," + labItem.getName() + "," + labItem.getId();
+					event.data = labItem.getKuerzel() + "," + labItem.getName() + "," + labItem.getId(); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		});
@@ -231,8 +231,8 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			String loinccode = values[2];
 			String einheit = values[3];
 			String refM = values[4];
-			String refF = values[5].split("##")[0];
-			String groupPrio = values[6] + " - " + values[7];
+			String refF = values[5].split("##")[0]; //$NON-NLS-1$
+			String groupPrio = values[6] + " - " + values[7]; //$NON-NLS-1$
 
 			switch (columnIndex) {
 			case 0:

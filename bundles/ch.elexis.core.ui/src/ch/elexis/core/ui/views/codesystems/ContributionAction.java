@@ -32,8 +32,8 @@ public class ContributionAction extends Action {
 	private Object[] selection;
 
 	public ContributionAction(IConfigurationElement command) {
-		commandId = command.getAttribute("commandId");
-		label = command.getAttribute("label");
+		commandId = command.getAttribute("commandId"); //$NON-NLS-1$
+		label = command.getAttribute("label"); //$NON-NLS-1$
 	}
 
 	public void setSelection(Object[] selection) {
@@ -57,7 +57,7 @@ public class ContributionAction extends Action {
 			ExecutionEvent ee = new ExecutionEvent(cmd, Collections.EMPTY_MAP, null, null);
 			return cmd.executeWithChecks(ee);
 		} catch (Exception e) {
-			LoggerFactory.getLogger(getClass()).error("cannot execute command with id: " + commandId, e);
+			LoggerFactory.getLogger(getClass()).error("cannot execute command with id: " + commandId, e); //$NON-NLS-1$
 		}
 		return null;
 	}

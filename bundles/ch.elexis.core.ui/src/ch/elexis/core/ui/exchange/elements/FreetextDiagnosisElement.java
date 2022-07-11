@@ -7,7 +7,7 @@ import ch.elexis.data.Patient;
 
 public class FreetextDiagnosisElement extends XChangeElement {
 
-	public static final String XML_NAME = "freetextDiagnosis";
+	public static final String XML_NAME = "freetextDiagnosis"; //$NON-NLS-1$
 
 	@Override
 	public String getXMLName() {

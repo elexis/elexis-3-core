@@ -34,7 +34,7 @@ public class FocusIntelligentSearch extends AbstractHandler {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ContactSelectorView.ID);
 		} catch (PartInitException e) {
 			Status status = new Status(IStatus.WARNING, Activator.PLUGIN_ID,
-					"Error activating intelligent search view");
+					"Error activating intelligent search view"); //$NON-NLS-1$
 			StatusManager.getManager().handle(status, StatusManager.SHOW);
 		}
 		return null;

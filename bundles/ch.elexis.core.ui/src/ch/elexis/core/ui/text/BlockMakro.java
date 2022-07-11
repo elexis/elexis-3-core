@@ -52,7 +52,7 @@ public class BlockMakro implements IKonsMakro {
 				if (ice instanceof IBillable) {
 					Result<IBilled> res = BillingServiceHolder.get().bill((IBillable) ice, encounter, 1.0);
 					if (!res.isOK()) {
-						String message = ice.getCode() + " - " + ResultDialog.getResultMessage(res);
+						String message = ice.getCode() + " - " + ResultDialog.getResultMessage(res); //$NON-NLS-1$
 						if (!notOkResults.toString().contains(message)) {
 							notOkResults.add(message);
 						}

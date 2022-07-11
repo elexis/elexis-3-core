@@ -56,7 +56,7 @@ public class ReadOnceTreeLoader extends PersistentObjectLoader implements ITreeC
 		super(cv, qbe);
 		parentColumn = parentField;
 		this.orderBy = orderBy;
-		setQuery("NIL");
+		setQuery("NIL"); //$NON-NLS-1$
 		root = qbe.execute().toArray(new PersistentObject[0]);
 	}
 

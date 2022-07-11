@@ -234,7 +234,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 				Account account = null;
 				switch (columnIndex) {
 				case DATE:
-					text = entry.get("Datum");
+					text = entry.get("Datum"); //$NON-NLS-1$
 					break;
 				case AMOUNT:
 					text = entry.getAmount().getAmountAsString();

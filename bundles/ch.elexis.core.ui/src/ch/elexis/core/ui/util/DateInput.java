@@ -54,11 +54,11 @@ public class DateInput extends Composite {
 			Date d = dpc.getDate();
 			return d == null ? null : new TimeTool(d.getTime());
 		} else {
-			if (t.matches("[0-9]{4,4}")) {
-				t = "01.01." + t;
+			if (t.matches("[0-9]{4,4}")) { //$NON-NLS-1$
+				t = "01.01." + t; //$NON-NLS-1$
 			}
-			if (t.matches("[0-9][0-9]")) {
-				t = "01.01.20" + t;
+			if (t.matches("[0-9][0-9]")) { //$NON-NLS-1$
+				t = "01.01.20" + t; //$NON-NLS-1$
 			}
 			return new TimeTool(t);
 		}

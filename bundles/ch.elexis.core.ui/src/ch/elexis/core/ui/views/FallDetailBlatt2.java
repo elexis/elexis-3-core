@@ -423,7 +423,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean b = btnNoElectronicDelivery.getSelection();
-				getSelectedFall().setInfoString(FallConstants.FLD_EXT_NO_ELECTRONIC_DELIVERY, b ? "1" : "0");
+				getSelectedFall().setInfoString(FallConstants.FLD_EXT_NO_ELECTRONIC_DELIVERY, b ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 			};
 		});
 		btnNoElectronicDelivery.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -698,7 +698,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		String garantLabel = garant.getLabel();
 		if (garant.isDeleted()) {
 			tGarant.setBackground(UiDesk.getColor(UiDesk.COL_RED));
-			garantLabel = "*** " + garantLabel;
+			garantLabel = "*** " + garantLabel; //$NON-NLS-1$
 			tGarant.setToolTipText(Messages.Contact_is_marked_deleted);
 		}
 		tGarant.setText(garantLabel);
@@ -715,7 +715,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			String label = (costBearer != null) ? costBearer.getLabel() : null;
 			if (costBearer != null && costBearer.isDeleted()) {
 				tCostBearer.setBackground(UiDesk.getColor(UiDesk.COL_RED));
-				label = "*** " + label;
+				label = "*** " + label; //$NON-NLS-1$
 				tCostBearer.setToolTipText(Messages.Contact_is_marked_deleted);
 			}
 			if (label != null) {
@@ -1206,7 +1206,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						}
 					});
 				} else {
-					throw new IllegalStateException("hl is null");
+					throw new IllegalStateException("hl is null"); //$NON-NLS-1$
 				}
 
 				((Text) dataField).setEditable(false);

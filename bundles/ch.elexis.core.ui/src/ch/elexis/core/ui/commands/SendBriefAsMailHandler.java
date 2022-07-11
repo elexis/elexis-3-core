@@ -50,13 +50,13 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 				try {
 					@SuppressWarnings("unchecked")
 					String documentsString = AttachmentsUtil.getDocumentsString((List<IDocument>) (List<?>) iDocuments);
-					Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail");
+					Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail"); //$NON-NLS-1$
 
 					HashMap<String, String> params = new HashMap<String, String>();
-					params.put("ch.elexis.core.mail.ui.sendMail.documents", documentsString);
+					params.put("ch.elexis.core.mail.ui.sendMail.documents", documentsString); //$NON-NLS-1$
 					Patient patient = ElexisEventDispatcher.getSelectedPatient();
 					if (patient != null) {
-						params.put("ch.elexis.core.mail.ui.sendMail.subject", "Patient: " + patient.getLabel());
+						params.put("ch.elexis.core.mail.ui.sendMail.subject", "Patient: " + patient.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
 					ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(sendMailCommand,
@@ -64,7 +64,7 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 					PlatformUI.getWorkbench().getService(IHandlerService.class).executeCommand(parametrizedCommmand,
 							null);
 				} catch (Exception ex) {
-					throw new RuntimeException("ch.elexis.core.mail.ui.sendMail not found", ex);
+					throw new RuntimeException("ch.elexis.core.mail.ui.sendMail not found", ex); //$NON-NLS-1$
 				}
 			}
 		}
@@ -73,9 +73,9 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 
 	private Optional<File> getTempFile(Brief brief) {
 		File tmpDir = CoreHub.getTempDir();
-		attachmentsFolder = new File(tmpDir, "_att" + System.currentTimeMillis() + "_");
+		attachmentsFolder = new File(tmpDir, "_att" + System.currentTimeMillis() + "_"); //$NON-NLS-1$ //$NON-NLS-2$
 		attachmentsFolder.mkdir();
-		File tmpFile = new File(attachmentsFolder, brief.getBetreff() + "." + brief.getMimeType());
+		File tmpFile = new File(attachmentsFolder, brief.getBetreff() + "." + brief.getMimeType()); //$NON-NLS-1$
 		try (FileOutputStream fout = new FileOutputStream(tmpFile)) {
 			byte[] arr = brief.loadBinary();
 			if (arr != null && arr.length > 0) {
@@ -84,7 +84,7 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 		} catch (IOException e) {
 			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Fehler",
 					"Brief konnte nicht exportiert werden.");
-			logger.error("Could not export Brief.", e);
+			logger.error("Could not export Brief.", e); //$NON-NLS-1$
 		}
 		if (tmpFile != null && tmpFile.exists()) {
 			return Optional.of(tmpFile);
@@ -105,7 +105,7 @@ public class SendBriefAsMailHandler extends AbstractHandler implements IHandler 
 		StringBuilder sb = new StringBuilder();
 		for (File file : attachments) {
 			if (sb.length() > 0) {
-				sb.append(":::");
+				sb.append(":::"); //$NON-NLS-1$
 			}
 			sb.append(file.getAbsolutePath());
 		}

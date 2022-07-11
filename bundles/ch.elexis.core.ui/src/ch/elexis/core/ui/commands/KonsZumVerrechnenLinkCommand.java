@@ -20,7 +20,7 @@ import ch.elexis.data.Patient;
 import ch.rgw.tools.Tree;
 
 public class KonsZumVerrechnenLinkCommand extends AbstractHandler {
-	public static final String CMD_ID = "ch.elexis.core.command.linkViews";
+	public static final String CMD_ID = "ch.elexis.core.command.linkViews"; //$NON-NLS-1$
 	private TreeSelectionChangedListener leftSideSelChangeListener, rightSideSelChangeListener;
 
 	@Override

@@ -31,7 +31,7 @@ import ch.rgw.tools.Result;
 
 public class XChangeImporter implements IDataReceiver {
 	private final XChangeContainer container = new XChangeContainer();
-	private final Log log = Log.get("xChange Importer");
+	private final Log log = Log.get("xChange Importer"); //$NON-NLS-1$
 
 	public Result finalizeImport() {
 		// TODO Auto-generated method stub
@@ -55,14 +55,14 @@ public class XChangeImporter implements IDataReceiver {
 		int matchedRestrictions = 0;
 		IConfigurationElement cand = null;
 		for (IConfigurationElement ice : container.getXChangeContributors()) {
-			String datatype = ice.getAttribute("ElementType");
+			String datatype = ice.getAttribute("ElementType"); //$NON-NLS-1$
 			if (datatype.equalsIgnoreCase(el.getXMLName())) {
 				if (cand == null) {
 					cand = ice;
 				}
-				String restriction = ice.getAttribute("restrictions");
+				String restriction = ice.getAttribute("restrictions"); //$NON-NLS-1$
 				if (restriction != null) {
-					String[] restrictions = restriction.split(",");
+					String[] restrictions = restriction.split(","); //$NON-NLS-1$
 					int matches = 0;
 					for (String r : restrictions) {
 						try {
@@ -80,7 +80,7 @@ public class XChangeImporter implements IDataReceiver {
 							}
 						} catch (JDOMException e) {
 							ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID,
-									ElexisStatus.CODE_NONE, "Parse error JDOM: " + e.getMessage(), e,
+									ElexisStatus.CODE_NONE, "Parse error JDOM: " + e.getMessage(), e, //$NON-NLS-1$
 									ElexisStatus.LOG_WARNINGS);
 							throw new ExchangeException(status);
 						}
@@ -95,7 +95,7 @@ public class XChangeImporter implements IDataReceiver {
 		}
 		if (cand != null) {
 			try {
-				return (IExchangeContributor) cand.createExecutableExtension("Actor");
+				return (IExchangeContributor) cand.createExecutableExtension("Actor"); //$NON-NLS-1$
 			} catch (CoreException ce) {
 				ExHandler.handle(ce);
 			}
@@ -106,12 +106,12 @@ public class XChangeImporter implements IDataReceiver {
 	int compareValues(IConfigurationElement ic1, IConfigurationElement ic2) {
 		int r1 = 0;
 		int r2 = 0;
-		String v1 = ic1.getAttribute("value");
-		String v2 = ic2.getAttribute("value");
-		if (v1 != null && v1.matches("[0-9]+")) {
+		String v1 = ic1.getAttribute("value"); //$NON-NLS-1$
+		String v2 = ic2.getAttribute("value"); //$NON-NLS-1$
+		if (v1 != null && v1.matches("[0-9]+")) { //$NON-NLS-1$
 			r1 = Integer.parseInt(v1);
 		}
-		if (v2 != null && v2.matches("[0-9]+")) {
+		if (v2 != null && v2.matches("[0-9]+")) { //$NON-NLS-1$
 			r2 = Integer.parseInt(v2);
 		}
 		if (r1 == r2) {

@@ -133,9 +133,9 @@ public class SelectorPanel extends Composite implements ActiveControlListener {
 		fd.right = new FormAttachment(100, 0);
 		cFields.setLayoutData(fd);
 		cFields.setLayout(new FillLayout());
-		if (parent.getData("TEST_COMP_NAME") != null) {
+		if (parent.getData("TEST_COMP_NAME") != null) { //$NON-NLS-1$
 			for (int idx = 0; idx < tb.getItemCount(); idx++) {
-				tb.getItem(idx).setData("TEST_COMP_NAME", parent.getData("TEST_COMP_NAME") + "_" + idx + "_tbi");
+				tb.getItem(idx).setData("TEST_COMP_NAME", parent.getData("TEST_COMP_NAME") + "_" + idx + "_tbi"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 		}
 		pack();

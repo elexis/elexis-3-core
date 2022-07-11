@@ -10,7 +10,7 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.rgw.tools.TimeTool;
 
 public enum ViewerSortOrder {
-	MANUAL("manuell", 0, new ManualViewerComparator()), DEFAULT("standard", 1, new DefaultViewerComparator());
+	MANUAL("manuell", 0, new ManualViewerComparator()), DEFAULT("standard", 1, new DefaultViewerComparator()); //$NON-NLS-1$ //$NON-NLS-2$
 
 	final String label;
 	final int val;

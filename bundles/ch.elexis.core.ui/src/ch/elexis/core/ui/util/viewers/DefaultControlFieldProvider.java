@@ -213,7 +213,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	 */
 	public void setFocusField(int index) {
 		if (index >= fields.length)
-			throw new IndexOutOfBoundsException("Invalid field index");
+			throw new IndexOutOfBoundsException("Invalid field index"); //$NON-NLS-1$
 		focusField = index;
 	}
 
@@ -396,7 +396,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	public void setQuery(IQuery<?> query) {
 		for (int i = 0; i < dbFields.length; i++) {
 			if (!lastFiltered[i].equals(StringTool.leer)) {
-				query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true);
+				query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true); //$NON-NLS-1$
 			}
 		}
 	}

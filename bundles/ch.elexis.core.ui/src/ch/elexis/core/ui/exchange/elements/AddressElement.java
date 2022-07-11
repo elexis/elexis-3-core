@@ -18,13 +18,13 @@ import ch.rgw.tools.StringTool;
 
 public class AddressElement extends XChangeElement {
 
-	public static final String XMLNAME = "address";
-	public static final String ATTR_STREET = "street";
-	public static final String ATTR_ZIP = "zip";
-	public static final String ATTR_CITY = "city";
-	public static final String ATTR_COUNTRY = "country";
-	public static final String ATTR_DESCRIPTION = "description";
-	public static final String VALUE_DEFAULT = "default";
+	public static final String XMLNAME = "address"; //$NON-NLS-1$
+	public static final String ATTR_STREET = "street"; //$NON-NLS-1$
+	public static final String ATTR_ZIP = "zip"; //$NON-NLS-1$
+	public static final String ATTR_CITY = "city"; //$NON-NLS-1$
+	public static final String ATTR_COUNTRY = "country"; //$NON-NLS-1$
+	public static final String ATTR_DESCRIPTION = "description"; //$NON-NLS-1$
+	public static final String VALUE_DEFAULT = "default"; //$NON-NLS-1$
 
 	public AddressElement asExporter(XChangeExporter parent, Anschrift an, String bezug) {
 		asExporter(parent);
@@ -59,7 +59,7 @@ public class AddressElement extends XChangeElement {
 
 	public String toString() {
 		StringBuilder ret = new StringBuilder();
-		ret.append(getAttr(ATTR_STREET)).append(", ").append(getAttr(ATTR_ZIP)).append(StringTool.space)
+		ret.append(getAttr(ATTR_STREET)).append(", ").append(getAttr(ATTR_ZIP)).append(StringTool.space) //$NON-NLS-1$
 				.append(getAttr(ATTR_CITY)).append(StringTool.space).append(getAttr(ATTR_COUNTRY));
 		return ret.toString();
 	}

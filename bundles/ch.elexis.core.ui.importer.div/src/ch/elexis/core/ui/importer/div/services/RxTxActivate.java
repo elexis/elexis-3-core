@@ -18,9 +18,9 @@ public class RxTxActivate {
 		Logger logger = LoggerFactory.getLogger(getClass());
 
 		DriverManager.getInstance().loadDrivers();
-		logger.info("RxTx activated");
+		logger.info("RxTx activated"); //$NON-NLS-1$
 
 		String[] activePorts = Connection.getComPorts();
-		logger.info("Found serial ports: " + Arrays.toString(activePorts));
+		logger.info("Found serial ports: " + Arrays.toString(activePorts)); //$NON-NLS-1$
 	}
 }

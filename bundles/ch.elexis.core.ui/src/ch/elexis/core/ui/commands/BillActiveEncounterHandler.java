@@ -58,7 +58,7 @@ public class BillActiveEncounterHandler extends AbstractHandler implements IHand
 		for (msg message : result.getMessages()) {
 			if (message.getSeverity() != SEVERITY.OK) {
 				if (sb.length() > 0) {
-					sb.append(" / ");
+					sb.append(" / "); //$NON-NLS-1$
 				}
 				sb.append(message.getText());
 			}

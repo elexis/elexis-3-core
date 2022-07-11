@@ -86,7 +86,7 @@ public class InvoiceCorrectionWizard extends Wizard {
 				@Override
 				public String getText(Object element) {
 					int i = invoiceCorrectionDTO.getHistory().indexOf(element);
-					return String.valueOf(++i) + ".   " + ((InvoiceHistoryEntryDTO) element).getText();
+					return String.valueOf(++i) + ".   " + ((InvoiceHistoryEntryDTO) element).getText(); //$NON-NLS-1$
 				}
 			});
 
@@ -197,9 +197,9 @@ public class InvoiceCorrectionWizard extends Wizard {
 				return UiDesk.getColor(UiDesk.COL_WHITE);
 			}
 			if (Boolean.TRUE.equals(item.isSuccess())) {
-				return UiDesk.getColorFromRGB("E2FFC3");
+				return UiDesk.getColorFromRGB("E2FFC3"); //$NON-NLS-1$
 			}
-			return UiDesk.getColorFromRGB("FFDDDD");
+			return UiDesk.getColorFromRGB("FFDDDD"); //$NON-NLS-1$
 
 		}
 
@@ -207,7 +207,7 @@ public class InvoiceCorrectionWizard extends Wizard {
 		public String getText(Object element) {
 			if (invoiceCorrectionDTO != null) {
 				int i = invoiceCorrectionDTO.getHistory().indexOf(element);
-				return String.valueOf(++i) + ".   " + ((InvoiceHistoryEntryDTO) element).getText();
+				return String.valueOf(++i) + ".   " + ((InvoiceHistoryEntryDTO) element).getText(); //$NON-NLS-1$
 			}
 			return StringUtils.EMPTY;
 		}

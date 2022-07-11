@@ -128,10 +128,10 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 	 * @param file
 	 */
 	private void convertDocx2Pdf(Optional<File> file) {
-		for (String format : List.of("pdf", "txt")) {
+		for (String format : List.of("pdf", "txt")) { //$NON-NLS-1$ //$NON-NLS-2$
 			String filePath = file.get().getAbsolutePath();
 			String storage = DocumentLetterUtil.getOperatingSystemSpecificExternalStoragePath();
-			String fullCmd = String.format("libreoffice --headless --convert-to %s --outdir %s %s", format, storage,
+			String fullCmd = String.format("libreoffice --headless --convert-to %s --outdir %s %s", format, storage, //$NON-NLS-1$
 					filePath);
 			LoggerFactory.getLogger(getClass()).info("Convert external file using"); //$NON-NLS-1$
 			LoggerFactory.getLogger(getClass()).info(fullCmd);
@@ -143,7 +143,7 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 					Thread.sleep(200);
 				}
 				LoggerFactory.getLogger(getClass()).info(" created: " + storage + File.separator //$NON-NLS-1$
-						+ file.get().getName().replace("docx", format));
+						+ file.get().getName().replace("docx", format)); //$NON-NLS-1$
 			} catch (IOException | InterruptedException e) {
 				LoggerFactory.getLogger(getClass()).error("Unable to produce pdf. Error was {}", //$NON-NLS-1$
 						e.getMessage());

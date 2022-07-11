@@ -9,7 +9,7 @@ import ch.elexis.core.ui.icons.Images;
 
 public class ShowEigenartikelProductsAction extends Action {
 
-	public static final String FILTER_CFG = "ShowEigenartikelProductsAction.showProducts";
+	public static final String FILTER_CFG = "ShowEigenartikelProductsAction.showProducts"; //$NON-NLS-1$
 
 	private EigenartikelTreeContentProvider eal;
 	private EigenartikelSelector eigenartikelSelector;

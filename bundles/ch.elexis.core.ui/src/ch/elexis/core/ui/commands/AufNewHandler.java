@@ -19,7 +19,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.Messages;
 
 public class AufNewHandler extends AbstractHandler implements IHandler {
-	public static final String CMD_ID = "ch.elexis.core.ui.commands.AufNew";
+	public static final String CMD_ID = "ch.elexis.core.ui.commands.AufNew"; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {

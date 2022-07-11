@@ -21,13 +21,13 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.NamedBlob2;
 
 public class MarkupElement extends XChangeElement {
-	public static final String XMLNAME = "markup";
-	public static final String ATTR_POS = "pos";
-	public static final String ATTR_LEN = "length";
-	public static final String ATTR_TYPE = "type";
-	public static final String ATTR_TEXT = "text";
-	public static final String ATTRIB_HINT = "hint";
-	public static final String ELEME_META = "meta";
+	public static final String XMLNAME = "markup"; //$NON-NLS-1$
+	public static final String ATTR_POS = "pos"; //$NON-NLS-1$
+	public static final String ATTR_LEN = "length"; //$NON-NLS-1$
+	public static final String ATTR_TYPE = "type"; //$NON-NLS-1$
+	public static final String ATTR_TEXT = "text"; //$NON-NLS-1$
+	public static final String ATTRIB_HINT = "hint"; //$NON-NLS-1$
+	public static final String ELEME_META = "meta"; //$NON-NLS-1$
 
 	@Override
 	public String getXMLName() {
@@ -40,7 +40,7 @@ public class MarkupElement extends XChangeElement {
 		setAttribute(ATTR_LEN, Integer.toString(xref.getLength()));
 		setAttribute(ATTR_TYPE, xref.getProvider());
 		addMeta(ATTR_ID, xref.getID());
-		addMeta("provider", xref.getProvider());
+		addMeta("provider", xref.getProvider()); //$NON-NLS-1$
 		if (shouldAddContent(xref)) {
 			addContent(home, xref);
 		}
@@ -48,23 +48,23 @@ public class MarkupElement extends XChangeElement {
 	}
 
 	private void addContent(XChangeExporter home, XRef xref) {
-		if (xref.getProvider().toLowerCase().contains("privatnotizen")) {
+		if (xref.getProvider().toLowerCase().contains("privatnotizen")) { //$NON-NLS-1$
 			NamedBlob2 contentBlob = NamedBlob2.load(xref.getID());
 			if (contentBlob != null && contentBlob.exists()) {
-				addMeta("content", contentBlob.getString());
+				addMeta("content", contentBlob.getString()); //$NON-NLS-1$
 			}
 		}
 	}
 
 	private boolean shouldAddContent(XRef xref) {
-		return xref.getProvider().toLowerCase().contains("privatnotizen");
+		return xref.getProvider().toLowerCase().contains("privatnotizen"); //$NON-NLS-1$
 	}
 
 	public void doImport(Konsultation kons) {
-		if (getMeta("content") != null) {
-			if (getMeta("provider") != null) {
-				String provider = getMeta("provider").getAttr(ATTR_VALUE);
-				importContent(kons, provider, getMeta(ATTR_ID), getMeta("content"));
+		if (getMeta("content") != null) { //$NON-NLS-1$
+			if (getMeta("provider") != null) { //$NON-NLS-1$
+				String provider = getMeta("provider").getAttr(ATTR_VALUE); //$NON-NLS-1$
+				importContent(kons, provider, getMeta(ATTR_ID), getMeta("content")); //$NON-NLS-1$
 			}
 		}
 	}
@@ -74,11 +74,11 @@ public class MarkupElement extends XChangeElement {
 		String content = metaContent.getAttr(ATTR_VALUE);
 		Integer pos = Integer.parseInt(getAttr(ATTR_POS));
 		Integer length = Integer.parseInt(getAttr(ATTR_LEN));
-		if (provider.toLowerCase().contains("privatnotizen") && id.contains(":")) {
+		if (provider.toLowerCase().contains("privatnotizen") && id.contains(":")) { //$NON-NLS-1$ //$NON-NLS-2$
 			// reset id
-			String[] idparts = id.split(":");
+			String[] idparts = id.split(":"); //$NON-NLS-1$
 			if (idparts.length > 1) {
-				id = kons.getMandant().getId() + ":" + idparts[1];
+				id = kons.getMandant().getId() + ":" + idparts[1]; //$NON-NLS-1$
 			}
 			NamedBlob2 contentBlob = NamedBlob2.create(id, false);
 			contentBlob.putString(content);

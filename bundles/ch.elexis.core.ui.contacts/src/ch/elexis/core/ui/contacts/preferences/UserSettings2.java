@@ -146,7 +146,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 						} catch (InvocationTargetException | InterruptedException ex) {
 							MessageDialog.openError(getShell(), "Verstorben Sticker",
 									"Fehler beim verstorben Information setzen.");
-							LoggerFactory.getLogger(getClass()).error("Error migration of deceased sticker", ex);
+							LoggerFactory.getLogger(getClass()).error("Error migration of deceased sticker", ex); //$NON-NLS-1$
 						}
 					}
 				} else {

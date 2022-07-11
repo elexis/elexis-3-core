@@ -7,12 +7,12 @@ import ch.elexis.core.ui.text.MimeTypeUtil;
 import ch.elexis.data.Mandant;
 
 public class TextTemplatePrintSettings {
-	public static final String TXT_TEMPLATE_PREFIX_PUBLIC = "texttemplates/public/";
-	public static final String TXT_TEMPLATE_PREFIX_PRIVATE = "texttemplates/private/";
-	public static final String TXT_TEMPLATE_PRINTER_SUFFIX = "/printer";
-	public static final String TXT_TEMPLATE_TRAY_SUFFIX = "/tray";
+	public static final String TXT_TEMPLATE_PREFIX_PUBLIC = "texttemplates/public/"; //$NON-NLS-1$
+	public static final String TXT_TEMPLATE_PREFIX_PRIVATE = "texttemplates/private/"; //$NON-NLS-1$
+	public static final String TXT_TEMPLATE_PRINTER_SUFFIX = "/printer"; //$NON-NLS-1$
+	public static final String TXT_TEMPLATE_TRAY_SUFFIX = "/tray"; //$NON-NLS-1$
 
-	private static final String SEPARATOR = "/";
+	private static final String SEPARATOR = "/"; //$NON-NLS-1$
 	private String printer;
 	private String tray;
 

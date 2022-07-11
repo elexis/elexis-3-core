@@ -75,10 +75,10 @@ public class WikiView extends ViewPart {
 	 */
 	private String getWikiName(String name) {
 		// first, replace any special characters by dots
-		String normalized = name.replaceAll("[._]+", ".");
+		String normalized = name.replaceAll("[._]+", "."); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// tokenize
-		String[] tokens = name.split("[.]");
+		String[] tokens = name.split("[.]"); //$NON-NLS-1$
 
 		// convert to upper/lowercase
 		for (int i = 0; i < tokens.length; i++) {

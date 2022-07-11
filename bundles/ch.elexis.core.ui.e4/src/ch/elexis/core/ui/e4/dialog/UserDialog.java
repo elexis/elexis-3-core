@@ -56,7 +56,7 @@ public class UserDialog {
 
 		@Override
 		public void run() {
-			logger.debug("MessageEvent [" + mt + "]  [" + title + "] [" + message + "]");
+			logger.debug("MessageEvent [" + mt + "]  [" + title + "] [" + message + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			switch (mt) {
 			case ERROR:
 				org.eclipse.jface.dialogs.MessageDialog.openError(display.getActiveShell(), title, message);
@@ -109,7 +109,7 @@ public class UserDialog {
 	private static boolean open(MessageType mt, String title, String message, IStatus status, Exception ex,
 			boolean log) {
 		if (log) {
-			String logMsg = title + " - " + message;
+			String logMsg = title + " - " + message; //$NON-NLS-1$
 			switch (mt) {
 			case ERROR:
 				if (ex == null) {

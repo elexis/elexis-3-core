@@ -39,13 +39,13 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 
 		TextTemplate textTemplate = getSelectedTextTemplate(event);
 		if (textTemplate == null) {
-			logger.warn("No TextTemplate selected - skipping template import");
+			logger.warn("No TextTemplate selected - skipping template import"); //$NON-NLS-1$
 			return null;
 		}
 
 		ITextPlugin plugin = textTemplateView.getActiveTextPlugin();
 		if (plugin == null) {
-			logger.warn("No TextPlugin found - skipping text template import");
+			logger.warn("No TextPlugin found - skipping text template import"); //$NON-NLS-1$
 			return null;
 		}
 

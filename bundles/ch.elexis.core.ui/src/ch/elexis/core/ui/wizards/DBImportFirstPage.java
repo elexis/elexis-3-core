@@ -39,7 +39,7 @@ public class DBImportFirstPage extends WizardPage {
 	String defaultUser, defaultPassword;
 	JdbcLink j = null;
 
-	static final String[] supportedDB = new String[] { "mySQl", "PostgreSQL", "H2", "ODBC" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	static final String[] supportedDB = new String[] { "mySQl", "PostgreSQL", "H2", "ODBC" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	};
 	static final int MYSQL = 0;
 	static final int POSTGRESQL = 1;
@@ -84,7 +84,7 @@ public class DBImportFirstPage extends WizardPage {
 				case H2:
 					server.setEnabled(false);
 					dbName.setEnabled(true);
-					defaultUser = "sa";
+					defaultUser = "sa"; //$NON-NLS-1$
 					defaultPassword = StringUtils.EMPTY;
 					break;
 				case ODBC:

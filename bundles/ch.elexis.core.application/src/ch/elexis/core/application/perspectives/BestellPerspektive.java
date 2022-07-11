@@ -27,7 +27,7 @@ public class BestellPerspektive implements IPerspectiveFactory {
 		layout.setFixed(false);
 
 		layout.addView(ArtikelSelektor.ID, SWT.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA);
-		IFolderLayout ifl = layout.createFolder("iflRight", SWT.RIGHT, 0.6f, IPageLayout.ID_EDITOR_AREA);
+		IFolderLayout ifl = layout.createFolder("iflRight", SWT.RIGHT, 0.6f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
 		ifl.addView(BestellView.ID);
 	}
 

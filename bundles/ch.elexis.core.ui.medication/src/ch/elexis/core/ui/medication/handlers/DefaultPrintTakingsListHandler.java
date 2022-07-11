@@ -14,7 +14,7 @@ public class DefaultPrintTakingsListHandler extends AbstractHandler implements I
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		HashMap<String, String> parameterMap = new HashMap<>();
-		parameterMap.put("ch.elexis.core.ui.medication.commandParameter.medication", "fix");
+		parameterMap.put("ch.elexis.core.ui.medication.commandParameter.medication", "fix"); //$NON-NLS-1$ //$NON-NLS-2$
 		IEvaluationService evaluationService = (IEvaluationService) HandlerUtil.getActiveSite(event)
 				.getService(IEvaluationService.class);
 		new PrintTakingsListHandler()

@@ -208,7 +208,7 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 			if (!fname.equals(NOFILESELECTED)) {
 				try {
 					File file = new File(fname);
-					result = new UiDBImage("ch.elexis.images", tTitle.getText() + ":" //$NON-NLS-1$
+					result = new UiDBImage("ch.elexis.images", tTitle.getText() + ":" //$NON-NLS-1$ //$NON-NLS-2$
 							+ file.getName(), new FileInputStream(file));
 				} catch (Exception ex) {
 					ExHandler.handle(ex);

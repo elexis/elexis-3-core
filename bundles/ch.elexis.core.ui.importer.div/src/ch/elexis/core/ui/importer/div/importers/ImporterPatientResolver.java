@@ -39,11 +39,11 @@ public class ImporterPatientResolver extends AbstractHL7PatientResolver {
 			String birthStr = convertTool.toString(TimeTool.DATE_GER);
 			if (sender != null) {
 				pat = (Patient) KontaktSelektor.showInSync(Patient.class, Messages.HL7_SelectPatient,
-						Messages.HL7_WhoIs + lastname + StringUtils.SPACE + firstname + " ," + birthStr + "?\n"
+						Messages.HL7_WhoIs + lastname + StringUtils.SPACE + firstname + " ," + birthStr + "?\n" //$NON-NLS-1$ //$NON-NLS-2$
 								+ Messages.HL7_Lab + StringUtils.SPACE + sender);
 			} else {
 				pat = (Patient) KontaktSelektor.showInSync(Patient.class, Messages.HL7_SelectPatient,
-						Messages.HL7_WhoIs + lastname + StringUtils.SPACE + firstname + " ," + birthStr + "?");
+						Messages.HL7_WhoIs + lastname + StringUtils.SPACE + firstname + " ," + birthStr + "?"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		if (pat != null) {

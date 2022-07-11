@@ -64,7 +64,7 @@ public class MedicationViewHelper {
 					canCalculate = false;
 				}
 			} catch (Exception ex) {
-				LoggerFactory.getLogger(MedicationViewHelper.class).warn("Error calculating daily cost of prescription",
+				LoggerFactory.getLogger(MedicationViewHelper.class).warn("Error calculating daily cost of prescription", //$NON-NLS-1$
 						ex);
 				canCalculate = false;
 			}
@@ -75,9 +75,9 @@ public class MedicationViewHelper {
 			return TTCOST + StringUtils.SPACE + Double.toString(rounded);
 		} else {
 			if (rounded == 0.0) {
-				return TTCOST + " ?";
+				return TTCOST + " ?"; //$NON-NLS-1$
 			} else {
-				return TTCOST + " >" + Double.toString(rounded);
+				return TTCOST + " >" + Double.toString(rounded); //$NON-NLS-1$
 			}
 		}
 	}

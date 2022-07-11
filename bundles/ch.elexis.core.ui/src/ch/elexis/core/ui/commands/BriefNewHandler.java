@@ -33,7 +33,7 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 
 public class BriefNewHandler extends AbstractHandler implements IHandler {
-	public static final String CMD_ID = "ch.elexis.core.ui.commands.BriefNew";
+	public static final String CMD_ID = "ch.elexis.core.ui.commands.BriefNew"; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -71,7 +71,7 @@ public class BriefNewHandler extends AbstractHandler implements IHandler {
 		try {
 			Query<Brief> qbe = new Query<Brief>(Brief.class);
 			qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
-			qbe.add(Brief.FLD_KONSULTATION_ID, Query.NOT_EQUAL, "SYS");
+			qbe.add(Brief.FLD_KONSULTATION_ID, Query.NOT_EQUAL, "SYS"); //$NON-NLS-1$
 			qbe.startGroup();
 			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, ElexisEventDispatcher.getSelectedMandator().getId());
 			qbe.or();
@@ -107,7 +107,7 @@ public class BriefNewHandler extends AbstractHandler implements IHandler {
 				if (dialog.getSelection() != null) {
 					if (DocumentSelectDialog
 							.getDontAskForAddresseeForThisTemplate((Brief) dialog.getSelection().getFirstElement()))
-						address = Kontakt.load("-1");
+						address = Kontakt.load("-1"); //$NON-NLS-1$
 					tv.createDocument((Brief) dialog.getSelection().getFirstElement(), subject, address);
 					tv.setName();
 

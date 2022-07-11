@@ -330,7 +330,7 @@ public abstract class AbstractConnection implements PortEventListener {
 		if (sPort != null) {
 			sPort.sendBreak(1000);
 		} else {
-			ExHandler.handle(new Throwable("sPort is null"));
+			ExHandler.handle(new Throwable("sPort is null")); //$NON-NLS-1$
 		}
 	}
 

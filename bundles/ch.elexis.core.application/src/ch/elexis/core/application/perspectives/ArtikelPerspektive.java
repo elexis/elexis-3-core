@@ -28,7 +28,7 @@ public class ArtikelPerspektive implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
 
-		IFolderLayout ifr = layout.createFolder("folder", IPageLayout.LEFT, 0.5f, IPageLayout.ID_EDITOR_AREA);
+		IFolderLayout ifr = layout.createFolder("folder", IPageLayout.LEFT, 0.5f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
 		ifr.addView(ArtikelView.ID);
 		ifr.addView(KompendiumView.ID);
 	}

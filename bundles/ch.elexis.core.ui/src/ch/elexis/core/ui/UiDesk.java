@@ -202,8 +202,8 @@ public class UiDesk {
 			getColorRegistry().put(srgb, rgb);
 			return srgb;
 		} catch (NumberFormatException nex) {
-			getColorRegistry().put("A0A0A0", new RGB(0xa0, 0xa0, 0xa0));
-			return "A0A0A0";
+			getColorRegistry().put("A0A0A0", new RGB(0xa0, 0xa0, 0xa0)); //$NON-NLS-1$
+			return "A0A0A0"; //$NON-NLS-1$
 		}
 	}
 

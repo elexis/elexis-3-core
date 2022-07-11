@@ -53,7 +53,7 @@ public class LaborOrderViewerItem {
 					executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
 				}
 			}
-			return labResultString != null ? Optional.of(labResultString) : Optional.of("...");
+			return labResultString != null ? Optional.of(labResultString) : Optional.of("..."); //$NON-NLS-1$
 		}
 		return Optional.empty();
 	}
@@ -143,7 +143,7 @@ public class LaborOrderViewerItem {
 					executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
 				}
 			}
-			return labItemLabel != null ? Optional.of(labItemLabel) : Optional.of("...");
+			return labItemLabel != null ? Optional.of(labItemLabel) : Optional.of("..."); //$NON-NLS-1$
 		}
 		return Optional.empty();
 	}

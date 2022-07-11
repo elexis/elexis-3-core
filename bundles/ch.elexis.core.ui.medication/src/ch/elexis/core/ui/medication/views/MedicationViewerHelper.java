@@ -77,7 +77,7 @@ public class MedicationViewerHelper {
 					// check if stop date is set
 					String endDate = pres.getEndDate();
 					if (endDate != null && !endDate.isEmpty()) {
-						String reason = pres.getStopReason() == null ? "?" : pres.getStopReason();
+						String reason = pres.getStopReason() == null ? "?" : pres.getStopReason(); //$NON-NLS-1$
 						label += (StringUtils.LF + MessageFormat.format(Messages.MedicationComposite_stopDateAndReason,
 								endDate, reason));
 					}
@@ -87,17 +87,17 @@ public class MedicationViewerHelper {
 					if (recipe != null || billed != null) {
 						if (recipe != null) {
 							label = MessageFormat.format(Messages.MedicationComposite_lastReceivedAt,
-									DateTimeFormatter.ofPattern("dd.MM.yyyy").format(recipe.getDate()));
+									DateTimeFormatter.ofPattern("dd.MM.yyyy").format(recipe.getDate())); //$NON-NLS-1$
 						} else if (billed != null) {
 							if (billed.getEncounter() != null) {
 								label = MessageFormat.format(Messages.MedicationComposite_lastReceivedAt,
-										DateTimeFormatter.ofPattern("dd.MM.yyyy")
+										DateTimeFormatter.ofPattern("dd.MM.yyyy") //$NON-NLS-1$
 												.format(billed.getEncounter().getDate()));
 							}
 						}
 					} else {
 						String date = pres.getEndDate();
-						String reason = pres.getStopReason() == null ? "?" : pres.getStopReason();
+						String reason = pres.getStopReason() == null ? "?" : pres.getStopReason(); //$NON-NLS-1$
 						label = MessageFormat.format(Messages.MedicationComposite_stopDateAndReason, date, reason);
 					}
 				}
@@ -273,7 +273,7 @@ public class MedicationViewerHelper {
 
 		viewer.getTable().setMenu(menu);
 		if (site != null) {
-			site.registerContextMenu("ch.elexis.core.ui.medication.tables", menuManager, viewer);
+			site.registerContextMenu("ch.elexis.core.ui.medication.tables", menuManager, viewer); //$NON-NLS-1$
 		}
 	}
 

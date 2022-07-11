@@ -136,7 +136,7 @@ import ch.rgw.tools.TimeTool;
 
 public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 
-	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView";
+	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView"; //$NON-NLS-1$
 	private InvoiceComposite invoiceComposite;
 
 	private Rechnung actualInvoice;
@@ -965,7 +965,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 						getSite().getPage().showView(LeistungenView.ID);
 						CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 					} catch (PartInitException e) {
-						LoggerFactory.getLogger(InvoiceCorrectionDTO.class).error("cannot init leistungen viewpart", e);
+						LoggerFactory.getLogger(InvoiceCorrectionDTO.class).error("cannot init leistungen viewpart", e); //$NON-NLS-1$
 					}
 				}
 			});
@@ -1036,7 +1036,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				case 2:
 					return leistungDTO.getText();
 				case 3:
-					return leistungDTO.getPrice() != null ? leistungDTO.getPrice().getAmountAsString() : "0";
+					return leistungDTO.getPrice() != null ? leistungDTO.getPrice().getAmountAsString() : "0"; //$NON-NLS-1$
 				default:
 					return StringUtils.EMPTY;
 				}
@@ -1106,7 +1106,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 
 			};
 
-			GenericObjectDropTarget dropTarget = new GenericObjectDropTarget("rechnungskorrekturBehandlungen", table,
+			GenericObjectDropTarget dropTarget = new GenericObjectDropTarget("rechnungskorrekturBehandlungen", table, //$NON-NLS-1$
 					dtr) {
 				@Override
 				protected Control getHighLightControl() {
@@ -1133,7 +1133,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 						getSite().getPage().showView(DiagnosenView.ID);
 						CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 					} catch (PartInitException e) {
-						LoggerFactory.getLogger(InvoiceCorrectionDTO.class).error("cannot init diagnose viewpart", e);
+						LoggerFactory.getLogger(InvoiceCorrectionDTO.class).error("cannot init diagnose viewpart", e); //$NON-NLS-1$
 					}
 				}
 			});
@@ -1269,7 +1269,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			btnCancel.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					log.debug("invoice correction: invoice reset");
+					log.debug("invoice correction: invoice reset"); //$NON-NLS-1$
 					reload(actualInvoice);
 					MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Rechnungskorrektur",
 							"Die Rechnung wurde erfolgreich zurückgesetzt.");
@@ -1301,12 +1301,12 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 	 * storno the old invoice
 	 */
 	private Result<String> doBillCorrection(Rechnung actualInvoice) {
-		log.debug("invoice correction: start");
+		log.debug("invoice correction: start"); //$NON-NLS-1$
 		if (actualInvoice != null && actualInvoice.isCorrectable()) {
 			if (actualInvoice.getFall() != null && invoiceCorrectionDTO != null
 					&& invoiceCorrectionDTO.getFallDTO() != null) {
 				try {
-					log.debug("invoice correction: invoice number [{}]", actualInvoice.getNr());
+					log.debug("invoice correction: invoice number [{}]", actualInvoice.getNr()); //$NON-NLS-1$
 					invoiceCorrectionDTO.updateHistory();
 
 					InvoiceCorrectionWizardDialog wizardDialog = new InvoiceCorrectionWizardDialog(getSite().getShell(),
@@ -1317,7 +1317,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 						public void pageChanged(PageChangedEvent event) {
 
 							if (event.getSelectedPage() instanceof Page2) {
-								log.debug("invoice correction: processable changes {}",
+								log.debug("invoice correction: processable changes {}", //$NON-NLS-1$
 										invoiceCorrectionDTO.getHistory().stream().map(item -> item.getOperationType())
 												.collect(Collectors.toList()));
 								Page2 page = (Page2) event.getSelectedPage();
@@ -1365,16 +1365,16 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 							txtBemerkung.append(invoiceCorrectionDTO.getOutputText());
 							actualInvoice.setBemerkung(txtBemerkung.toString());
 
-							log.debug("invoice correction: successfully finished");
+							log.debug("invoice correction: successfully finished"); //$NON-NLS-1$
 							return new Result<String>("ok");
 						}
-						log.debug("invoice correction: failed with warnings");
-						return new Result<String>(SEVERITY.WARNING, 2, "warn", null, false);
+						log.debug("invoice correction: failed with warnings"); //$NON-NLS-1$
+						return new Result<String>(SEVERITY.WARNING, 2, "warn", null, false); //$NON-NLS-1$
 					}
 				} catch (Exception e) {
-					log.error("invoice correction: failed with errors [{}]", actualInvoice.getId(), e);
+					log.error("invoice correction: failed with errors [{}]", actualInvoice.getId(), e); //$NON-NLS-1$
 					setInvoiceCorrectionInfo(actualInvoice);
-					return new Result<String>(SEVERITY.ERROR, 2, "error",
+					return new Result<String>(SEVERITY.ERROR, 2, "error", //$NON-NLS-1$
 							"Die Rechnungskorrektur konnte nicht vollständig durchgeführt werden.\nFür mehr Details, beachten Sie bitte das Log-File.",
 							false);
 				}
@@ -1417,7 +1417,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				}
 				return true;
 			} catch (ParseException ex) {
-				log.error("price changing", ex);
+				log.error("price changing", ex); //$NON-NLS-1$
 				SWTHelper.showError(Messages.VerrechnungsDisplay_badAmountCaption, // $NON-NLS-1$
 						Messages.VerrechnungsDisplay_badAmountBody); // $NON-NLS-1$
 			}
@@ -1447,8 +1447,8 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					} else if (val.indexOf('.') > 0) {
 						changeAnzahl = 1;
 						secondaryScaleFactor = Double.parseDouble(val);
-						text = leistungDTO.getIVerrechenbar().getText() + " (" + Double.toString(secondaryScaleFactor)
-								+ ")";
+						text = leistungDTO.getIVerrechenbar().getText() + " (" + Double.toString(secondaryScaleFactor) //$NON-NLS-1$
+								+ ")"; //$NON-NLS-1$
 					} else {
 						changeAnzahl = Integer.parseInt(dlg.getValue());
 					}
@@ -1458,7 +1458,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					return true;
 				}
 			} catch (NumberFormatException ne) {
-				log.error("quantity changing", ne);
+				log.error("quantity changing", ne); //$NON-NLS-1$
 				SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, // $NON-NLS-1$
 						Messages.VerrechnungsDisplay_invalidEntryBody); // $NON-NLS-1$
 			}

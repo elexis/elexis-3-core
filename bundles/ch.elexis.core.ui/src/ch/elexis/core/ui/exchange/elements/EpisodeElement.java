@@ -29,13 +29,13 @@ import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.XMLTool;
 
 public class EpisodeElement extends XChangeElement {
-	public static final String XMLNAME = "episode";
-	public static final String ATTR_BEGINDATE = "beginDate";
-	public static final String ATTR_ENDDATE = "endDate";
-	public static final String ATTR_TITLE = "name";
-	public static final String ELEMENT_DIAGNOSIS = "diagnosis";
-	public static final String ATTR_CODESYSTEM = "codesystem";
-	public static final String ATTR_CODE = "code";
+	public static final String XMLNAME = "episode"; //$NON-NLS-1$
+	public static final String ATTR_BEGINDATE = "beginDate"; //$NON-NLS-1$
+	public static final String ATTR_ENDDATE = "endDate"; //$NON-NLS-1$
+	public static final String ATTR_TITLE = "name"; //$NON-NLS-1$
+	public static final String ELEMENT_DIAGNOSIS = "diagnosis"; //$NON-NLS-1$
+	public static final String ATTR_CODESYSTEM = "codesystem"; //$NON-NLS-1$
+	public static final String ATTR_CODE = "code"; //$NON-NLS-1$
 
 	public String getXMLName() {
 		return XMLNAME;
@@ -44,7 +44,7 @@ public class EpisodeElement extends XChangeElement {
 	public EpisodeElement asExporter(XChangeExporter parent, Konsultation k, IDiagnose dg) {
 		asExporter(parent);
 		setAttribute(ATTR_BEGINDATE, new TimeTool(k.getDatum()).toString(TimeTool.DATE_ISO));
-		setAttribute(ATTR_ID, XMLTool.idToXMLID(StringTool.unique("episode")));
+		setAttribute(ATTR_ID, XMLTool.idToXMLID(StringTool.unique("episode"))); //$NON-NLS-1$
 		DiagnosisElement eDiag = new DiagnosisElement().asExporter(parent, dg);
 		add(eDiag);
 		setAttribute(ATTR_TITLE, dg.getLabel());
@@ -80,14 +80,14 @@ public class EpisodeElement extends XChangeElement {
 		Kontakt costBearer = fall.getCostBearer();
 		if (costBearer != null) {
 			parent.addContact(costBearer);
-			addMeta("costbearer", costBearer.getId());
+			addMeta("costbearer", costBearer.getId()); //$NON-NLS-1$
 		}
-		if (StringUtils.isNotEmpty((String) fall.getExtInfoStoredObjectByKey("VEKANr"))) {
-			addMeta("vekanr", (String) fall.getExtInfoStoredObjectByKey("VEKANr"));
+		if (StringUtils.isNotEmpty((String) fall.getExtInfoStoredObjectByKey("VEKANr"))) { //$NON-NLS-1$
+			addMeta("vekanr", (String) fall.getExtInfoStoredObjectByKey("VEKANr")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		if (StringUtils.isNotEmpty((String) fall.getExtInfoStoredObjectByKey("Unfalldatum"))) {
-			TimeTool timeTool = new TimeTool((String) fall.getExtInfoStoredObjectByKey("Unfalldatum"));
-			addMeta("accidentdate", timeTool.toString(TimeTool.DATE_ISO));
+		if (StringUtils.isNotEmpty((String) fall.getExtInfoStoredObjectByKey("Unfalldatum"))) { //$NON-NLS-1$
+			TimeTool timeTool = new TimeTool((String) fall.getExtInfoStoredObjectByKey("Unfalldatum")); //$NON-NLS-1$
+			addMeta("accidentdate", timeTool.toString(TimeTool.DATE_ISO)); //$NON-NLS-1$
 		}
 		return this;
 	}
@@ -106,7 +106,7 @@ public class EpisodeElement extends XChangeElement {
 	}
 
 	public String getText() {
-		Element text = getElement().getChild("text", getContainer().getNamespace());
+		Element text = getElement().getChild("text", getContainer().getNamespace()); //$NON-NLS-1$
 		if (text != null) {
 			return text.getText();
 		}
@@ -117,7 +117,7 @@ public class EpisodeElement extends XChangeElement {
 		DiagnosisElement dia = (DiagnosisElement) getChild(ELEMENT_DIAGNOSIS, DiagnosisElement.class);
 		if (dia != null) {
 			DiagnosisElement de = new DiagnosisElement();
-			String ret = de.getCode() + " (" + de.getCodeSystem() + ")";
+			String ret = de.getCode() + " (" + de.getCodeSystem() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			return ret;
 		}
 		return StringUtils.EMPTY;

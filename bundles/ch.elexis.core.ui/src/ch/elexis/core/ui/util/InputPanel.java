@@ -39,7 +39,7 @@ public class InputPanel extends Composite implements IUnlockable {
 			LabeledInputField widget = id.getWidget();
 			if (widget != null) {
 				Label lbl = widget.getLabelComponent();
-				Font lblFont = UiDesk.getFont("Helvetica", 8, SWT.ITALIC);
+				Font lblFont = UiDesk.getFont("Helvetica", 8, SWT.ITALIC); //$NON-NLS-1$
 				lbl.setFont(lblFont);
 			}
 		}

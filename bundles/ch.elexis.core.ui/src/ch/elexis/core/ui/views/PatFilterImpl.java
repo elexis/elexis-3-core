@@ -87,7 +87,7 @@ public class PatFilterImpl implements IPatFilter {
 			return REJECT;
 		} else if (o instanceof NamedBlob) {
 			NamedBlob nb = (NamedBlob) o;
-			String[] val = nb.getString().split("::");
+			String[] val = nb.getString().split("::"); //$NON-NLS-1$
 			String test = p.get(val[0]);
 			if (test == null) {
 				return DONT_HANDLE;
@@ -95,16 +95,16 @@ public class PatFilterImpl implements IPatFilter {
 			String op = val[1];
 			if (op.equals(Query.EQUALS)) {
 				return test.equalsIgnoreCase(val[2]) ? ACCEPT : REJECT;
-			} else if (op.equals("LIKE")) {
+			} else if (op.equals("LIKE")) { //$NON-NLS-1$
 				return test.toLowerCase().contains(val[2].toLowerCase()) ? ACCEPT : REJECT;
-			} else if (op.equals("Regexp")) {
+			} else if (op.equals("Regexp")) { //$NON-NLS-1$
 				return test.matches(val[2]) ? ACCEPT : REJECT;
 			}
 		} else if (o instanceof Script) {
 			Object ret;
 			try {
 				Script script = (Script) o;
-				script.setVariable("patient", p);
+				script.setVariable("patient", p); //$NON-NLS-1$
 				ret = script.execute(null, p);
 				if (ret instanceof Integer) {
 					return (Integer) ret;

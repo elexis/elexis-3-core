@@ -7,7 +7,7 @@
  *
  * Contributors:
  *  <office@medevit.at> - initial implementation
- *    
+ *
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
@@ -251,7 +251,7 @@ public class StockView extends ViewPart implements IRefreshable {
 
 						lr = LocalLockServiceHolder.get().releaseLock((se));
 						if (!lr.isOk()) {
-							log.warn("Error releasing lock for [{}]: {}", se.getId(), lr.getStatus());
+							log.warn("Error releasing lock for [{}]: {}", se.getId(), lr.getStatus()); //$NON-NLS-1$
 						}
 						getViewer().refresh();
 					}
@@ -390,11 +390,11 @@ public class StockView extends ViewPart implements IRefreshable {
 			@Override
 			public void run() {
 				FileDialog dialog = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
-				dialog.setFilterExtensions(new String[] { "*.csv" });
+				dialog.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
 				dialog.setFilterNames(new String[] { "Comma Separated Values (CSV)" });
 
 				dialog.setOverwrite(true);
-				dialog.setFileName("lager_export.csv");
+				dialog.setFileName("lager_export.csv"); //$NON-NLS-1$
 				String pathToSave = dialog.open();
 				if (pathToSave != null) {
 					CSVWriter csv = null;
@@ -402,7 +402,7 @@ public class StockView extends ViewPart implements IRefreshable {
 						int errorUnkownArticle = 0;
 						int success = 0;
 						csv = new CSVWriter(new FileWriter(pathToSave));
-						log.debug("csv export started for: " + pathToSave);
+						log.debug("csv export started for: " + pathToSave); //$NON-NLS-1$
 						String[] header = new String[] { "Name", "Pharmacode", "EAN", "Max", "Min",
 								"Aktuell Packung an Lager", "Aktuell an Lager (Anbruch)", " Stück pro Packung",
 								"Stück pro Abgabe", "Einkaufspreis", "Verkaufspreis", "Typ (P, N, ...)", "Lieferant" };
@@ -433,11 +433,11 @@ public class StockView extends ViewPart implements IRefreshable {
 								success++;
 							} else {
 								errorUnkownArticle++;
-								log.warn("cannot export: id [" + iStockEntry.getId() + "] " + iStockEntry.getLabel());
+								log.warn("cannot export: id [" + iStockEntry.getId() + "] " + iStockEntry.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						}
 						csv.close();
-						log.debug("csv export finished for: " + pathToSave);
+						log.debug("csv export finished for: " + pathToSave); //$NON-NLS-1$
 						StringBuffer msg = new StringBuffer();
 						msg.append("Der Export nach ");
 						msg.append(pathToSave);
@@ -453,14 +453,14 @@ public class StockView extends ViewPart implements IRefreshable {
 						SWTHelper.showInfo("Lager export", msg.toString());
 					} catch (Exception ex) {
 						ExHandler.handle(ex);
-						log.error("csv exporter error", ex);
+						log.error("csv exporter error", ex); //$NON-NLS-1$
 						SWTHelper.showError("Fehler", ex.getMessage());
 					} finally {
 						if (csv != null) {
 							try {
 								csv.close();
 							} catch (IOException e) {
-								log.error("cannot close csv exporter", e);
+								log.error("cannot close csv exporter", e); //$NON-NLS-1$
 							}
 						}
 					}
@@ -798,8 +798,8 @@ public class StockView extends ViewPart implements IRefreshable {
 			case MAX:
 				return Integer.compare(s1.getMaximumStock(), s2.getMaximumStock()) * direction;
 			case SUPPLIER: {
-				String lieferant1 = "";
-				String lieferant2 = "";
+				String lieferant1 = ""; //$NON-NLS-1$
+				String lieferant2 = ""; //$NON-NLS-1$
 				if (s1.getProvider() != null) {
 					lieferant1 = s1.getProvider().getLabel();
 				}

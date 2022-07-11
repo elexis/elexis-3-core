@@ -136,22 +136,20 @@ public class KontaktExtDialog extends TitleAreaDialog {
 				// KontaktExtInfo_TarmedKanton and
 				// KontaktExtInfo_TarmedKanton_tooltip
 				String msg_key_label = "KontaktExtInfo_" + key; //$NON-NLS-1$
-				msg_key_label = msg_key_label.replaceAll("[^a-zA-Z0-9_]", "_");
+				msg_key_label = msg_key_label.replaceAll("[^a-zA-Z0-9_]", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 				String msg_key_tooltip = "KontaktExtInfo_" + key + "_tooltip"; //$NON-NLS-1$ //$NON-NLS-2$
-				msg_key_tooltip = msg_key_tooltip.replaceAll("[^a-zA-Z0-9_]", "_");
+				msg_key_tooltip = msg_key_tooltip.replaceAll("[^a-zA-Z0-9_]", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 				String label_text = key;
 				String tooltip_text = StringUtils.EMPTY;
 				try {
-					label_text = ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
-							.getString(msg_key_label);
+					label_text = ResourceBundle.getBundle("").getString(msg_key_label);
 				} catch (java.util.MissingResourceException ex) {
-					logger.info("init: missing_l10n_key {}", msg_key_label);
+					logger.info("init: missing_l10n_key {}", msg_key_label); //$NON-NLS-1$
 				}
 				try {
-					tooltip_text = ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
-							.getString(msg_key_tooltip);
+					tooltip_text = ResourceBundle.getBundle("").getString(msg_key_tooltip);
 				} catch (java.util.MissingResourceException ex) {
-					logger.info("init: missing_l10n_key {}", msg_key_tooltip);
+					logger.info("init: missing_l10n_key {}", msg_key_tooltip); //$NON-NLS-1$
 				}
 				new Label(savedParent, SWT.NONE).setText(label_text);
 				values[i] = new Text(savedParent, SWT.BORDER | SWT.SINGLE);

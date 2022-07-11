@@ -32,7 +32,7 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 		List<IArticle> articlesToOrder = getArticlesToOrder(
 				HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection());
 		if (articlesToOrder.isEmpty()) {
-			log.debug("Skip handler execution as no articles are selected to add to an order!");
+			log.debug("Skip handler execution as no articles are selected to add to an order!"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -42,11 +42,11 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 			if (bestellView != null) {
 				bestellView.addItemsToOrder(articlesToOrder);
 			} else {
-				log.error("Cant't load BestellView to add articles to order");
+				log.error("Cant't load BestellView to add articles to order"); //$NON-NLS-1$
 			}
 			activePage.activate(activePart);
 		} catch (PartInitException e) {
-			log.error("Cant't load BestellView to add articles to order", e);
+			log.error("Cant't load BestellView to add articles to order", e); //$NON-NLS-1$
 		}
 		return null;
 

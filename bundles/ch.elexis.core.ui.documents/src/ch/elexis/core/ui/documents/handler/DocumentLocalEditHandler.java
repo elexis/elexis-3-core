@@ -30,10 +30,10 @@ import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 public class DocumentLocalEditHandler extends AbstractHandler implements IHandler {
 	private static Logger logger = LoggerFactory.getLogger(DocumentLocalEditHandler.class);
 
-	private static final String LOCAL_EDIT_START = "ch.elexis.core.ui.documents.commandLocalEditStart";
-	private static final String LOCAL_EDIT_ABORT = "ch.elexis.core.ui.documents.commandLocalEditAbort";
-	private static final String LOCAL_EDIT_DONE = "ch.elexis.core.ui.documents.commandLocalEditDone";
-	private static final String LOCAL_EDIT_OVERVIEW = "ch.elexis.core.ui.documents.commandLocalEditOverview";
+	private static final String LOCAL_EDIT_START = "ch.elexis.core.ui.documents.commandLocalEditStart"; //$NON-NLS-1$
+	private static final String LOCAL_EDIT_ABORT = "ch.elexis.core.ui.documents.commandLocalEditAbort"; //$NON-NLS-1$
+	private static final String LOCAL_EDIT_DONE = "ch.elexis.core.ui.documents.commandLocalEditDone"; //$NON-NLS-1$
+	private static final String LOCAL_EDIT_OVERVIEW = "ch.elexis.core.ui.documents.commandLocalEditOverview"; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -49,15 +49,15 @@ public class DocumentLocalEditHandler extends AbstractHandler implements IHandle
 					switch (event.getCommand().getId()) {
 					case LOCAL_EDIT_START:
 						sendLocalEditEvent((IDocument) document,
-								commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"));
+								commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument")); //$NON-NLS-1$
 						break;
 					case LOCAL_EDIT_ABORT:
 						sendLocalEditEvent((IDocument) document,
-								commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument"));
+								commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument")); //$NON-NLS-1$
 						break;
 					case LOCAL_EDIT_DONE:
 						sendLocalEditEvent((IDocument) document,
-								commandService.getCommand("ch.elexis.core.ui.command.endLocalDocument"));
+								commandService.getCommand("ch.elexis.core.ui.command.endLocalDocument")); //$NON-NLS-1$
 						break;
 					default:
 						break;
@@ -70,7 +70,7 @@ public class DocumentLocalEditHandler extends AbstractHandler implements IHandle
 		if (LOCAL_EDIT_OVERVIEW.equals(event.getCommand().getId())) {
 			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
 					.getService(ICommandService.class);
-			createEvent(commandService.getCommand("ch.elexis.core.ui.command.openLocalDocuments"), null);
+			createEvent(commandService.getCommand("ch.elexis.core.ui.command.openLocalDocuments"), null); //$NON-NLS-1$
 			sendReloadViewEvent(null);
 		}
 		return null;
@@ -92,12 +92,12 @@ public class DocumentLocalEditHandler extends AbstractHandler implements IHandle
 		if (po != null) {
 			iStructuredSelection = new StructuredSelection(po);
 		}
-		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(command.getId().concat(".selection"),
+		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(command.getId().concat(".selection"), //$NON-NLS-1$
 				iStructuredSelection);
 		try {
 			command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 		} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
-			logger.error("cannot executre local edit event", e);
+			logger.error("cannot executre local edit event", e); //$NON-NLS-1$
 		}
 	}
 }

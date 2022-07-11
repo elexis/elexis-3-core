@@ -28,8 +28,8 @@ public class BriefePerspektive implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
 
-		IFolderLayout left = layout.createFolder("Links.folder", IPageLayout.LEFT, 0.3f, IPageLayout.ID_EDITOR_AREA);
-		IFolderLayout main = layout.createFolder("Haupt.Folder", IPageLayout.LEFT, 0.7f, IPageLayout.ID_EDITOR_AREA);
+		IFolderLayout left = layout.createFolder("Links.folder", IPageLayout.LEFT, 0.3f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
+		IFolderLayout main = layout.createFolder("Haupt.Folder", IPageLayout.LEFT, 0.7f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
 		left.addView(BriefAuswahl.ID);
 		main.addView(TextView.ID);
 		main.addView(TextTemplateView.ID);

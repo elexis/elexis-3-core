@@ -170,7 +170,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 	}
 
 	private void addUserSpecifiedPages(String settings) {
-		String[] userSettings = settings.split(",");
+		String[] userSettings = settings.split(","); //$NON-NLS-1$
 		Map<Integer, IConfigurationElement> iceMap = new TreeMap<Integer, IConfigurationElement>();
 
 		iceMap = collectNeededPages(ExtensionPointConstantsUi.DIAGNOSECODE, userSettings, iceMap);
@@ -179,7 +179,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 
 		// add favorites tab if settings desire it
 		for (int i = 0; i < userSettings.length; i++) {
-			if (userSettings[i].equals("Favoriten")) {
+			if (userSettings[i].equals("Favoriten")) { //$NON-NLS-1$
 				iceMap.put(i, null);
 			}
 		}
@@ -214,7 +214,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 				CoreUiUtil.injectServices(codeSelector);
 				CoreUiUtil.injectServices(detailDisplay);
 			} catch (Exception ex) {
-				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex);
+				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex); //$NON-NLS-1$
 				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 						"Fehler beim Initialisieren von " + ce.getName(), ex, ElexisStatus.LOG_WARNINGS);
 				StatusManager.getManager().handle(status, StatusManager.SHOW);
@@ -274,7 +274,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 				CoreUiUtil.injectServicesWithContext(codeSelector);
 				CoreUiUtil.injectServicesWithContext(detailDisplay);
 			} catch (Exception ex) {
-				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex);
+				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex); //$NON-NLS-1$
 				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 						"Fehler beim Initialisieren von " + ce.getName(), ex, ElexisStatus.LOG_WARNINGS);
 				StatusManager.getManager().handle(status, StatusManager.SHOW);

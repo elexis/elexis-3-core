@@ -25,7 +25,7 @@ public class ElexisProcessor {
 	private MApplication mApplication;
 	private EModelService eModelService;
 
-	private static String[] removeModelElements = new String[] { "ch.elexis.SchwarzesBrett" };
+	private static String[] removeModelElements = new String[] { "ch.elexis.SchwarzesBrett" }; //$NON-NLS-1$
 
 	public ElexisProcessor() {
 	}
@@ -56,23 +56,23 @@ public class ElexisProcessor {
 	 *
 	 **/
 	private void updateToolbar() {
-		MTrimBar mTrimBar = (MTrimBar) eModelService.find("org.eclipse.ui.main.toolbar", mApplication);
+		MTrimBar mTrimBar = (MTrimBar) eModelService.find("org.eclipse.ui.main.toolbar", mApplication); //$NON-NLS-1$
 		if (mTrimBar != null && mTrimBar.getChildren() != null) {
 			mTrimBar.getChildren().clear();
 		}
 	}
 
-	private String[] e4ViewIds = { "at.medevit.elexis.agenda.ui.view.agenda",
-			"at.medevit.elexis.agenda.ui.view.parallel", "at.medevit.elexis.agenda.ui.view.week" };
+	private String[] e4ViewIds = { "at.medevit.elexis.agenda.ui.view.agenda", //$NON-NLS-1$
+			"at.medevit.elexis.agenda.ui.view.parallel", "at.medevit.elexis.agenda.ui.view.week" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private void updateInjectViews() {
 		List<MPart> foundParts = eModelService.findElements(mApplication, null, MPart.class, null);
 		for (MPart mPart : foundParts) {
 			// add inject to all compatibility views
-			if (mPart.getContributionURI().endsWith("e4.compatibility.CompatibilityView")) {
+			if (mPart.getContributionURI().endsWith("e4.compatibility.CompatibilityView")) { //$NON-NLS-1$
 				List<String> tags = mPart.getTags();
-				if (!tags.contains("inject")) {
-					tags.add("inject");
+				if (!tags.contains("inject")) { //$NON-NLS-1$
+					tags.add("inject"); //$NON-NLS-1$
 				}
 			}
 		}
@@ -94,7 +94,7 @@ public class ElexisProcessor {
 			List<MPart> foundParts = eModelService.findElements(mApplication, viewId, MPart.class, null);
 			for (MPart mPart : foundParts) {
 				// remove references to old CompatibilityView part
-				if (mPart.getContributionURI() == null || mPart.getContributionURI().endsWith("CompatibilityView")) {
+				if (mPart.getContributionURI() == null || mPart.getContributionURI().endsWith("CompatibilityView")) { //$NON-NLS-1$
 					EcoreUtil.delete((EObject) mPart);
 				}
 			}
@@ -112,20 +112,20 @@ public class ElexisProcessor {
 					if (element != null) {
 						if (element instanceof MPerspective) {
 							eModelService.removePerspectiveModel((MPerspective) element, mWindow);
-							logger.info("model element (perspective): " + modelElementId + " removed!");
+							logger.info("model element (perspective): " + modelElementId + " removed!"); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
 							MElementContainer<MUIElement> parent = element.getParent();
 							parent.getChildren().remove(element);
 							element.setToBeRendered(false);
-							logger.info("model element: " + modelElementId + " removed!");
+							logger.info("model element: " + modelElementId + " removed!"); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					}
 				}
 			} else {
-				logger.warn("cannot find active window");
+				logger.warn("cannot find active window"); //$NON-NLS-1$
 			}
 		} catch (Exception e) {
-			logger.error("unexpected exception - cannot do updates on models", e);
+			logger.error("unexpected exception - cannot do updates on models", e); //$NON-NLS-1$
 		}
 	}
 }

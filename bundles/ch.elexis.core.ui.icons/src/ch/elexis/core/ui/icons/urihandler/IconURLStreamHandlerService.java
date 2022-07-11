@@ -20,7 +20,7 @@ public class IconURLStreamHandlerService extends AbstractURLStreamHandlerService
 
 	@Activate
 	public void activate() {
-		log.debug("Icon URL handler registered.");
+		log.debug("Icon URL handler registered."); //$NON-NLS-1$
 	}
 
 	@Override

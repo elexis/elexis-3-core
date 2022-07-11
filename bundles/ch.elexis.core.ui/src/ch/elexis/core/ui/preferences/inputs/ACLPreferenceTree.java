@@ -62,7 +62,7 @@ public class ACLPreferenceTree extends Composite {
 		}
 		Tree<ACE> grandParentTree = findParent(parent);
 		if (grandParentTree == null) {
-			System.out.println("Fehler");
+			System.out.println("Fehler"); //$NON-NLS-1$
 			return new Tree<ACE>(acls, parent);
 		}
 		return new Tree<ACE>(grandParentTree, parent);
@@ -79,7 +79,7 @@ public class ACLPreferenceTree extends Composite {
 				if (parentTree != null) {
 					new Tree<ACE>(parentTree, s);
 				} else {
-					log.error("Could not find parent ACE " + s.getName());
+					log.error("Could not find parent ACE " + s.getName()); //$NON-NLS-1$
 				}
 			}
 		}

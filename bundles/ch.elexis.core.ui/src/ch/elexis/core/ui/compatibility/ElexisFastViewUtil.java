@@ -40,7 +40,7 @@ import ch.elexis.core.ui.UiDesk;
  */
 public class ElexisFastViewUtil {
 
-	private static final String ELEXIS_FASTVIEW_STACK = "fastview.elexis";
+	private static final String ELEXIS_FASTVIEW_STACK = "fastview.elexis"; //$NON-NLS-1$
 
 	/**
 	 * Adds a view to the fastview, if {@link MPartStack} not exists it will be
@@ -94,7 +94,7 @@ public class ElexisFastViewUtil {
 	}
 
 	private static MTrimmedWindow getCurrentWindow(EModelService eModelService, MApplication mApplication) {
-		MTrimmedWindow window = (MTrimmedWindow) eModelService.find("IDEWindow", mApplication);
+		MTrimmedWindow window = (MTrimmedWindow) eModelService.find("IDEWindow", mApplication); //$NON-NLS-1$
 		if (window == null) {
 			List<MWindow> windows = mApplication.getChildren();
 			if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
@@ -125,7 +125,7 @@ public class ElexisFastViewUtil {
 			menuItemClose.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					MPart part = (MPart) menu.getData("stack_selected_part");
+					MPart part = (MPart) menu.getData("stack_selected_part"); //$NON-NLS-1$
 					// save and close the current view
 					if (ePartService.savePart(part, true)) {
 						String id = part.getElementId();
@@ -166,11 +166,11 @@ public class ElexisFastViewUtil {
 			MPartStack mPartStack = eModelService.createModelElement(MPartStack.class);
 			mPartStack.setElementId(ELEXIS_FASTVIEW_STACK);
 			mPartStack.setToBeRendered(true);
-			mPartStack.getTags().add("Minimized");
+			mPartStack.getTags().add("Minimized"); //$NON-NLS-1$
 			mPartStack.setOnTop(false);
 			mPartStack.setVisible(false);
-			mPartStack.getTags().add("NoAutoCollapse");
-			mPartStack.getTags().add("active");
+			mPartStack.getTags().add("NoAutoCollapse"); //$NON-NLS-1$
+			mPartStack.getTags().add("active"); //$NON-NLS-1$
 			mPerspective.getChildren().add(0, mPartStack);
 			return mPartStack;
 		}
@@ -183,12 +183,12 @@ public class ElexisFastViewUtil {
 			MToolControl mToolControl = eModelService.createModelElement(MToolControl.class);
 			mToolControl.setElementId(getToolControlId(window, mPerspective));
 			mToolControl.setContributionURI(
-					"bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.TrimStack");
+					"bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.TrimStack"); //$NON-NLS-1$
 			mToolControl.setToBeRendered(true);
 			mToolControl.setVisible(true);
-			mToolControl.getTags().add("TrimStack");
+			mToolControl.getTags().add("TrimStack"); //$NON-NLS-1$
 			if (!hasFastViewPersistedState(mPerspective)) {
-				mToolControl.getPersistedState().put("YSize", "600");
+				mToolControl.getPersistedState().put("YSize", "600"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			mTrimBar.getChildren().add(0, mToolControl);
 			mTrimBar.setVisible(true);
@@ -204,7 +204,7 @@ public class ElexisFastViewUtil {
 	}
 
 	private static String getToolControlId(MUIElement window, String perspectiveId) {
-		return ELEXIS_FASTVIEW_STACK + "(" + perspectiveId + ")";
+		return ELEXIS_FASTVIEW_STACK + "(" + perspectiveId + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private static <T> T getService(final Class<T> clazz) {
@@ -312,7 +312,7 @@ public class ElexisFastViewUtil {
 				if (toolControl == null && workbenchWindow.getElementId() != null) {
 					// it also can be that the main view id is also a part of the stack
 					toolControl = (MToolControl) eModelService.find(
-							ELEXIS_FASTVIEW_STACK + "(" + workbenchWindow.getElementId() + ").(" + perspectiveId + ")",
+							ELEXIS_FASTVIEW_STACK + "(" + workbenchWindow.getElementId() + ").(" + perspectiveId + ")", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							trimbar);
 					if (toolControl != null) {
 						toolControl.setElementId(getToolControlId(workbenchWindow, perspectiveId));
@@ -415,13 +415,13 @@ public class ElexisFastViewUtil {
 							MToolControl copyToolcontrol = eModelService.createModelElement(MToolControl.class);
 							copyToolcontrol.setElementId(toolControl.getElementId());
 							copyToolcontrol.setContributionURI(
-									"bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.TrimStack");
+									"bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.TrimStack"); //$NON-NLS-1$
 							copyToolcontrol.setToBeRendered(true);
 							copyToolcontrol.setVisible(true);
-							copyToolcontrol.getTags().add("TrimStack");
+							copyToolcontrol.getTags().add("TrimStack"); //$NON-NLS-1$
 
 							if (!hasFastViewPersistedState(mPerspective)) {
-								copyToolcontrol.getPersistedState().put("YSize", "600");
+								copyToolcontrol.getPersistedState().put("YSize", "600"); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 							trimBarBottom.getChildren().add(0, copyToolcontrol);
 

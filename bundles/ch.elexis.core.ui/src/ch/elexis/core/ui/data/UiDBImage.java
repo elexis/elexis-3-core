@@ -50,7 +50,7 @@ public class UiDBImage {
 			iml.save(baos, SWT.IMAGE_PNG);
 			dbImage.setBinary(DBImage.FLD_IMAGE, baos.toByteArray());
 		} catch (IllegalArgumentException | SWTException e) {
-			log.error("Error setting image object on DBImage " + dbImage.getLabel(), e);
+			log.error("Error setting image object on DBImage " + dbImage.getLabel(), e); //$NON-NLS-1$
 		}
 	}
 

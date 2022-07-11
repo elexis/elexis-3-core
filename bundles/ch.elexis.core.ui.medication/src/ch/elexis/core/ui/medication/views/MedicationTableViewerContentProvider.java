@@ -125,11 +125,11 @@ public class MedicationTableViewerContentProvider implements IStructuredContentP
 
 		public void refresh() {
 			if (contentProvider != null && contentProvider.input != null) {
-				currentState.setText(contentProvider.currentPageOffset + " - "
-						+ (contentProvider.currentPageOffset + contentProvider.pageSize) + " / "
+				currentState.setText(contentProvider.currentPageOffset + " - " //$NON-NLS-1$
+						+ (contentProvider.currentPageOffset + contentProvider.pageSize) + " / " //$NON-NLS-1$
 						+ contentProvider.input.size());
 			} else {
-				currentState.setText(" / ");
+				currentState.setText(" / "); //$NON-NLS-1$
 			}
 			layout();
 			for (IContributionItem item : toolbarmgr.getItems()) {

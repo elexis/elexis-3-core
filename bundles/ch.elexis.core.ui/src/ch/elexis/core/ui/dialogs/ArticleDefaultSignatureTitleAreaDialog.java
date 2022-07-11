@@ -106,11 +106,11 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	}
 
 	private String trimTrailingZeros(String number) {
-		if (!number.contains(".")) {
+		if (!number.contains(".")) { //$NON-NLS-1$
 			return number;
 		}
 
-		return number.replaceAll("\\.?0*$", StringUtils.EMPTY);
+		return number.replaceAll("\\.?0*$", StringUtils.EMPTY); //$NON-NLS-1$
 	}
 
 }

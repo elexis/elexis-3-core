@@ -107,7 +107,7 @@ public class BlockElementViewerItem {
 		public String getText(final Object element) {
 			if (element instanceof BlockElementViewerItem) {
 				BlockElementViewerItem item = (BlockElementViewerItem) element;
-				return item.getCount() + "x " + item.getCode() + StringConstants.SPACE + item.getText();
+				return item.getCount() + "x " + item.getCode() + StringConstants.SPACE + item.getText(); //$NON-NLS-1$
 			}
 			return super.getText(element);
 		}
@@ -124,7 +124,7 @@ public class BlockElementViewerItem {
 				String codeSystemName = item.getCodeSystemName();
 				if (codeSystemName != null) {
 					String rgbColor = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeSystemName,
-							"ffffff");
+							"ffffff"); //$NON-NLS-1$
 					return UiDesk.getColorFromRGB(rgbColor);
 				}
 			}

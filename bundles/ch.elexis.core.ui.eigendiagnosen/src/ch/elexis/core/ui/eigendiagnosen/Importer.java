@@ -124,8 +124,8 @@ public class Importer extends ImporterPage {
 	}
 
 	private void importLine(final String[] line) {
-		INamedQuery<IDiagnosisTree> query = ModelServiceHolder.get().getNamedQuery(IDiagnosisTree.class, "code");
-		List<IDiagnosisTree> existing = query.executeWithParameters(query.getParameterMap("code", line[1]));
+		INamedQuery<IDiagnosisTree> query = ModelServiceHolder.get().getNamedQuery(IDiagnosisTree.class, "code"); //$NON-NLS-1$
+		List<IDiagnosisTree> existing = query.executeWithParameters(query.getParameterMap("code", line[1])); //$NON-NLS-1$
 		IDiagnosisTree diag = null;
 		if (!existing.isEmpty()) {
 			diag = existing.get(0);
@@ -133,7 +133,7 @@ public class Importer extends ImporterPage {
 			diag = ModelServiceHolder.get().create(IDiagnosisTree.class);
 		}
 		if (diag != null) {
-			List<IDiagnosisTree> parent = query.executeWithParameters(query.getParameterMap("code", line[0]));
+			List<IDiagnosisTree> parent = query.executeWithParameters(query.getParameterMap("code", line[0])); //$NON-NLS-1$
 			if (!parent.isEmpty()) {
 				diag.setParent(parent.get(0));
 			}

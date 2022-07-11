@@ -242,27 +242,27 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 			@Override
 			public void update(ViewerCell cell) {
 				TreeColumn tc = tree.getColumn(cell.getColumnIndex());
-				Role role = (Role) tc.getData("role");
+				Role role = (Role) tc.getData("role"); //$NON-NLS-1$
 				ACE ace = (ACE) cell.getElement();
 
 				int val = determineChildAndSelfStates(role, ace);
 				switch (val) {
 				case 3:
 					if (ace.getChildren(true).size() > 1) {
-						cell.setText("A");
+						cell.setText("A"); //$NON-NLS-1$
 						cell.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
 					} else {
-						cell.setText("x");
+						cell.setText("x"); //$NON-NLS-1$
 						cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 					}
 
 					break;
 				case 2:
-					cell.setText("...");
+					cell.setText("..."); //$NON-NLS-1$
 					cell.setForeground(UiDesk.getColor(UiDesk.COL_LIGHTGREY));
 					break;
 				case 1:
-					cell.setText("x");
+					cell.setText("x"); //$NON-NLS-1$
 					cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 					break;
 				default:
@@ -276,9 +276,9 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		List<Role> roles = qbe.execute();
 		for (Role role : roles) {
 			TreeViewerColumn tvc = new TreeViewerColumn(treeViewer, SWT.CENTER);
-			tvc.getViewer().setData("role", role);
+			tvc.getViewer().setData("role", role); //$NON-NLS-1$
 			TreeColumn tc = tvc.getColumn();
-			tc.setData("role", role);
+			tc.setData("role", role); //$NON-NLS-1$
 			tc.setWidth(20);
 			tc.setText(role.getLabel().charAt(0) + StringUtils.EMPTY);
 			String translation = role.getTranslatedLabel();
@@ -295,7 +295,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 					BusyIndicator.showWhile(UiDesk.getDisplay(), new Runnable() {
 						@Override
 						public void run() {
-							Role role = (Role) tc.getData("role");
+							Role role = (Role) tc.getData("role"); //$NON-NLS-1$
 							ACE ace = (ACE) element;
 							if (ace != null) {
 								boolean hasChildren = !ace.getChildren(false).isEmpty();
@@ -505,11 +505,11 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 		//
 		IObservableValue observeTextTxti18nObserveWidget = WidgetProperties.text(SWT.Modify).observe(txti18n);
 		IObservableValue wvTranslatedLabelObserveDetailValue = PojoProperties
-				.value(Role.class, "translatedLabel", String.class).observeDetail(wv);
+				.value(Role.class, "translatedLabel", String.class).observeDetail(wv); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxti18nObserveWidget, wvTranslatedLabelObserveDetailValue, null, null);
 		//
 		IObservableValue observeEnabledTxtRoleNameObserveWidget = WidgetProperties.enabled().observe(txtRoleName);
-		IObservableValue wvSystemRoleObserveDetailValue = PojoProperties.value(Role.class, "systemRole", Boolean.class)
+		IObservableValue wvSystemRoleObserveDetailValue = PojoProperties.value(Role.class, "systemRole", Boolean.class) //$NON-NLS-1$
 				.observeDetail(wv);
 		UpdateValueStrategy strategy = new UpdateValueStrategy();
 		strategy.setConverter(new BooleanNotConverter());

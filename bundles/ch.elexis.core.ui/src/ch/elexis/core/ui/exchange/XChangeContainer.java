@@ -49,17 +49,17 @@ import ch.rgw.tools.XMLTool;
 
 public class XChangeContainer {
 	public static final String Version = "2.0.0"; //$NON-NLS-1$
-	public static final String ATTR_LANGUAGE = "language";
-	private static final String ATTR_PROTOCOL_VERSION = "protocolVersion";
-	private static final String ATTR_CREATOR_VERSION = "creatorVersion";
-	private static final String ATTR_CREATOR_ID = "creatorID";
-	public static final String ATTR_CREATOR_NAME = "creatorName";
-	public static final String ATTR_RESPONSIBLE = "responsible";
-	public static final String ATTR_DESTINATION = "destination";
-	public static final String ATTR_ORIGIN = "origin";
-	private static final String XCHANGE_MAGIC = "xChange";
-	private static final String ATTR_ID = "id";
-	public static final String ATTR_TIMESTAMP = "timestamp";
+	public static final String ATTR_LANGUAGE = "language"; //$NON-NLS-1$
+	private static final String ATTR_PROTOCOL_VERSION = "protocolVersion"; //$NON-NLS-1$
+	private static final String ATTR_CREATOR_VERSION = "creatorVersion"; //$NON-NLS-1$
+	private static final String ATTR_CREATOR_ID = "creatorID"; //$NON-NLS-1$
+	public static final String ATTR_CREATOR_NAME = "creatorName"; //$NON-NLS-1$
+	public static final String ATTR_RESPONSIBLE = "responsible"; //$NON-NLS-1$
+	public static final String ATTR_DESTINATION = "destination"; //$NON-NLS-1$
+	public static final String ATTR_ORIGIN = "origin"; //$NON-NLS-1$
+	private static final String XCHANGE_MAGIC = "xChange"; //$NON-NLS-1$
+	private static final String ATTR_ID = "id"; //$NON-NLS-1$
+	public static final String ATTR_TIMESTAMP = "timestamp"; //$NON-NLS-1$
 	private static final String PLURAL = "s"; //$NON-NLS-1$
 	public static final Namespace ns = Namespace.getNamespace(XCHANGE_MAGIC, "http://informatics.sgam.ch/xChange"); //$NON-NLS-1$
 	public static final Namespace nsxsi = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XML Schema-instance"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -79,7 +79,7 @@ public class XChangeContainer {
 	public static final String ENCLOSE_EPISODES = EpisodeElement.XMLNAME + PLURAL;
 
 	private Document doc;
-	private final Element eHeader = new Element("header", ns);
+	private final Element eHeader = new Element("header", ns); //$NON-NLS-1$
 	private Element eRoot;
 	private boolean bValid = false;
 
@@ -115,12 +115,12 @@ public class XChangeContainer {
 		eRoot.setAttribute(ATTR_TIMESTAMP, new TimeTool().toString(TimeTool.DATETIME_XML));
 		eRoot.setAttribute(ATTR_ID, XMLTool.idToXMLID(StringTool.unique(XCHANGE_MAGIC)));
 		eRoot.setAttribute(ATTR_ORIGIN, XMLTool.idToXMLID(CoreHub.actMandant.getId()));
-		eRoot.setAttribute(ATTR_DESTINATION, "undefined");
+		eRoot.setAttribute(ATTR_DESTINATION, "undefined"); //$NON-NLS-1$
 		eRoot.setAttribute(ATTR_RESPONSIBLE, XMLTool.idToXMLID(CoreHub.actMandant.getId()));
 		doc.setRootElement(eRoot);
 
 		eHeader.setAttribute(ATTR_CREATOR_NAME, Hub.APPLICATION_NAME);
-		eHeader.setAttribute(ATTR_CREATOR_ID, "ch.elexis");
+		eHeader.setAttribute(ATTR_CREATOR_ID, "ch.elexis"); //$NON-NLS-1$
 		eHeader.setAttribute(ATTR_CREATOR_VERSION, CoreHub.Version);
 		eHeader.setAttribute(ATTR_PROTOCOL_VERSION, XChangeContainer.Version);
 		eHeader.setAttribute(ATTR_LANGUAGE, Locale.getDefault().toString());
@@ -136,7 +136,7 @@ public class XChangeContainer {
 	@Override
 	public String toString() {
 		Format format = Format.getPrettyFormat();
-		format.setEncoding("utf-8");
+		format.setEncoding("utf-8"); //$NON-NLS-1$
 		XMLOutputter xmlo = new XMLOutputter(format);
 		String xmlAspect = xmlo.outputString(doc);
 		return xmlAspect;

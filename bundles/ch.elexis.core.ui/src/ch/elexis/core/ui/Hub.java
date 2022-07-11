@@ -93,7 +93,7 @@ public class Hub extends AbstractUIPlugin {
 	@Override
 	public void start(final BundleContext context) throws Exception {
 		super.start(context);
-		log.debug("Starting " + this.getClass().getName());
+		log.debug("Starting " + this.getClass().getName()); //$NON-NLS-1$
 		plugin = this;
 
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_user);
@@ -105,7 +105,7 @@ public class Hub extends AbstractUIPlugin {
 	@Override
 	public void stop(final BundleContext context) throws Exception {
 		plugin = null;
-		log.debug("Stopping " + this.getClass().getName());
+		log.debug("Stopping " + this.getClass().getName()); //$NON-NLS-1$
 
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_user);
 
@@ -128,7 +128,7 @@ public class Hub extends AbstractUIPlugin {
 				try {
 					job.doit();
 				} catch (Exception e) {
-					log.error("Error starting job: " + e.getMessage());
+					log.error("Error starting job: " + e.getMessage()); //$NON-NLS-1$
 				}
 			}
 			dlg.close();

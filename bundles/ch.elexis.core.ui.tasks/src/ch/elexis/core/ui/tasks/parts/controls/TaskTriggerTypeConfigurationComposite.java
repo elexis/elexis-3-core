@@ -103,11 +103,11 @@ public class TaskTriggerTypeConfigurationComposite extends AbstractTaskDescripto
 	}
 
 	private void createCompositeParameters_CRON() {
-		String cron = (taskDescriptor != null) ? taskDescriptor.getTriggerParameters().get("cron") : StringUtils.EMPTY;
+		String cron = (taskDescriptor != null) ? taskDescriptor.getTriggerParameters().get("cron") : StringUtils.EMPTY; //$NON-NLS-1$
 
 		Label label = new Label(compositeParameters, SWT.None);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
-		label.setText("cron");
+		label.setText("cron"); //$NON-NLS-1$
 		Text text = new Text(compositeParameters, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		text.setText((cron != null) ? cron : StringUtils.EMPTY);
@@ -119,7 +119,7 @@ public class TaskTriggerTypeConfigurationComposite extends AbstractTaskDescripto
 
 			boolean isValidCron = validateAndupdateCronExpressionDescriptor(value, valid);
 			if (isValidCron) {
-				taskDescriptor.setTriggerParameter("cron", value);
+				taskDescriptor.setTriggerParameter("cron", value); //$NON-NLS-1$
 				saveTaskDescriptor();
 			}
 		});
@@ -129,7 +129,7 @@ public class TaskTriggerTypeConfigurationComposite extends AbstractTaskDescripto
 		btnEveryMinute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				text.setText("0 * * * * ?");
+				text.setText("0 * * * * ?"); //$NON-NLS-1$
 			}
 		});
 

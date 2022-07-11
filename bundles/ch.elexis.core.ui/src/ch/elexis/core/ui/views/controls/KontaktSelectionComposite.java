@@ -88,7 +88,7 @@ public class KontaktSelectionComposite extends Composite implements ISelectionPr
 			StringBuilder sb = new StringBuilder();
 			this.kontakt.stream().forEach(k -> {
 				if (sb.length() > 0) {
-					sb.append(", ");
+					sb.append(", "); //$NON-NLS-1$
 				}
 				sb.append(k.getLabel());
 			});

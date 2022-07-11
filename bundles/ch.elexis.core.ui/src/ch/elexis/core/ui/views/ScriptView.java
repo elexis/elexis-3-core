@@ -169,7 +169,7 @@ public class ScriptView extends ViewPart {
 							fw.close();
 						} catch (IOException ex) {
 							SWTHelper.showError("IO Error",
-									"Could not write file " + filename + " : " + ex.getMessage());
+									"Could not write file " + filename + " : " + ex.getMessage()); //$NON-NLS-2$
 						}
 					}
 				}
@@ -274,7 +274,7 @@ public class ScriptView extends ViewPart {
 					try {
 						String contents = script.getString();
 						ArrayList<String> vars = new ArrayList<String>();
-						Pattern var = Pattern.compile("\\$[0-9a-z]+", Pattern.CASE_INSENSITIVE);
+						Pattern var = Pattern.compile("\\$[0-9a-z]+", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 						Matcher m = var.matcher(contents);
 						while (m.find()) {
 							String varname = m.group();
@@ -321,7 +321,7 @@ public class ScriptView extends ViewPart {
 				new Label(cVars, SWT.NONE).setText(v);
 				Text text = new Text(cVars, SWT.BORDER);
 				text.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-				text.setData("varname", v);
+				text.setData("varname", v); //$NON-NLS-1$
 				inputs.add(text);
 			}
 			return ret;
@@ -339,9 +339,9 @@ public class ScriptView extends ViewPart {
 		protected void okPressed() {
 			StringBuilder sb = new StringBuilder();
 			for (Text text : inputs) {
-				String varname = (String) text.getData("varname");
+				String varname = (String) text.getData("varname"); //$NON-NLS-1$
 				String varcontents = text.getText();
-				sb.append(varname).append("=").append(varcontents).append(",");
+				sb.append(varname).append("=").append(varcontents).append(","); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			sb.deleteCharAt(sb.length() - 1);
 			result = sb.toString();

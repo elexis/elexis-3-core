@@ -72,7 +72,7 @@ import ch.rgw.tools.Tree;
  */
 public class CommonViewer implements ISelectionChangedListener, IDoubleClickListener {
 
-	private static final boolean OS_IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
+	private static final boolean OS_IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0; //$NON-NLS-1$ //$NON-NLS-2$
 
 	protected ViewerConfigurer viewerConfigurer;
 	protected StructuredViewer viewer;
@@ -105,7 +105,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	}
 
 	public CommonViewer() {
-		viewName = "unknown";
+		viewName = "unknown"; //$NON-NLS-1$
 	}
 
 	/**
@@ -168,9 +168,9 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		}
 		ControlFieldProvider cfp = viewerConfigurer.getControlFieldProvider();
 		if (cfp != null) {
-			ret.setData("TEST_COMP_NAME", "cv_ret_" + viewName); // for Jubula
+			ret.setData("TEST_COMP_NAME", "cv_ret_" + viewName); // for Jubula //$NON-NLS-1$ //$NON-NLS-2$
 			Composite ctlf = viewerConfigurer.getControlFieldProvider().createControl(ret);
-			ctlf.setData("TEST_COMP_NAME", "cv_ctlf_" + viewName); // for Jubula
+			ctlf.setData("TEST_COMP_NAME", "cv_ctlf_" + viewName); // for Jubula //$NON-NLS-1$ //$NON-NLS-2$
 			ctlf.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		}
 		viewer = viewerConfigurer.getWidgetProvider().createViewer(ret);
@@ -210,7 +210,8 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		bNew = viewerConfigurer.getButtonProvider().createButton(ret);
 		if (bNew != null) {
 			if (viewName != null) {
-				bNew.setData("TEST_COMP_NAME", "cv_bNew_" + viewName + "_btn"); // for Jubula
+				bNew.setData("TEST_COMP_NAME", "cv_bNew_" + viewName + "_btn"); // for //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+																				// Jubula
 			}
 			GridData gdNew = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 			bNew.setLayoutData(gdNew);
@@ -528,7 +529,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	private void addLimitButton(int limit) {
 		if (disableLimitBtn == null) {
 			disableLimitBtn = new Button(composite, SWT.FLAT);
-			disableLimitBtn.setText("Mehr als " + limit + " laden ...");
+			disableLimitBtn.setText("Mehr als " + limit + " laden ..."); //$NON-NLS-2$
 			disableLimitBtn.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {

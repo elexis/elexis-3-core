@@ -154,7 +154,7 @@ public class LaborOrdersComposite extends Composite {
 					if (time != null) {
 						return time.toString(TimeTool.FULL_GER);
 					} else {
-						return "???";
+						return "???"; //$NON-NLS-1$
 					}
 				}
 				return StringUtils.EMPTY;
@@ -213,7 +213,7 @@ public class LaborOrdersComposite extends Composite {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof LaborOrderViewerItem) {
-					return ((LaborOrderViewerItem) element).getLabResultString().orElse("?");
+					return ((LaborOrderViewerItem) element).getLabResultString().orElse("?"); //$NON-NLS-1$
 				}
 				return StringUtils.EMPTY;
 			}

@@ -222,14 +222,14 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		//
 		ISWTObservableValue observeTextTxtGtinObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtGtin);
 		IObservableValue<String> drugPackageEigenartikelEANObserveDetailValue = PojoProperties
-				.value(IArticle.class, "gtin", String.class).observeDetail(drugPackageEigenartikel);
+				.value(IArticle.class, "gtin", String.class).observeDetail(drugPackageEigenartikel); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtGtinObserveWidget, drugPackageEigenartikelEANObserveDetailValue,
 				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel), null);
 		//
 		ISWTObservableValue observeTextTxtPackageSizeIntObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtPackageSizeInt);
 		IObservableValue<Integer> drugPackageEigenartikelPackungsGroesseObserveDetailValue = PojoProperties
-				.value(IArticle.class, "packageSize", Integer.class).observeDetail(drugPackageEigenartikel);
+				.value(IArticle.class, "packageSize", Integer.class).observeDetail(drugPackageEigenartikel); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtPackageSizeIntObserveWidget,
 				drugPackageEigenartikelPackungsGroesseObserveDetailValue,
 				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel), null);
@@ -249,7 +249,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		ISWTObservableValue observeTextTxtExfPriceObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtExfPrice);
 		IObservableValue<String> drugPackageEigenartikelEKPreisObserveDetailValue = PojoProperties
-				.value(IArticle.class, "purchasePrice", Money.class).observeDetail(drugPackageEigenartikel);
+				.value(IArticle.class, "purchasePrice", Money.class).observeDetail(drugPackageEigenartikel); //$NON-NLS-1$
 		SavingUpdateValueStrategy target2ModelStrategy = new SavingUpdateValueStrategy(CoreModelServiceHolder.get(),
 				drugPackageEigenartikel);
 		target2ModelStrategy.setConverter(new String2MoneyConverter());
@@ -261,7 +261,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		ISWTObservableValue observeTextTxtpubPriceObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtpubPrice);
 		IObservableValue<Money> drugPackageEigenartikelVKPreisObserveDetailValue = PojoProperties
-				.value(IArticle.class, "sellingPrice", Money.class).observeDetail(drugPackageEigenartikel);
+				.value(IArticle.class, "sellingPrice", Money.class).observeDetail(drugPackageEigenartikel); //$NON-NLS-1$
 		target2ModelStrategy = new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel);
 		target2ModelStrategy.setConverter(new String2MoneyConverter());
 		model2TargetStrategy = new UpdateValueStrategy<>();
@@ -272,7 +272,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		ISWTObservableValue observeTextTxtMeasurementUnitObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtMeasurementUnit);
 		IObservableValue<String> drugPackageEigenartikelMeasurementUnitObserveDetailValue = PojoProperties
-				.value(IArticle.class, "packageUnit", String.class).observeDetail(drugPackageEigenartikel);
+				.value(IArticle.class, "packageUnit", String.class).observeDetail(drugPackageEigenartikel); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtMeasurementUnitObserveWidget,
 				drugPackageEigenartikelMeasurementUnitObserveDetailValue,
 				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel), null);
@@ -305,7 +305,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		ISWTObservableValue observeTextTxtPharmacodeObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtPharmacode);
 		IObservableValue<String> drugPackageEigenartikelPharmaCodeObserveDetailValue = PojoProperties
-				.value(ICodeElement.class, "code", String.class).observeDetail(drugPackageEigenartikel);
+				.value(ICodeElement.class, "code", String.class).observeDetail(drugPackageEigenartikel); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtPharmacodeObserveWidget,
 				drugPackageEigenartikelPharmaCodeObserveDetailValue,
 				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
@@ -314,7 +314,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		ISWTObservableValue observeTextTxtSellUnitObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtSellUnit);
 		IObservableValue<Integer> drugPackageEigenartikelSellUnitObserveDetailValue = PojoProperties
-				.value(IArticle.class, "sellingSize", Integer.class).observeDetail(drugPackageEigenartikel);
+				.value(IArticle.class, "sellingSize", Integer.class).observeDetail(drugPackageEigenartikel); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtSellUnitObserveWidget, drugPackageEigenartikelSellUnitObserveDetailValue,
 				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel), null);
 		observeTextTxtSellUnitObserveWidget.addValueChangeListener(new IValueChangeListener() {
@@ -333,7 +333,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		ISWTObservableValue observeTooltipTextTxtPackageSizeStringObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtPackageSizeString);
 		IObservableValue<String> drugPackageEigenartikelPackageSizeStringObserveDetailValue = PojoProperties
-				.value(IArticle.class, "packageSizeString", String.class).observeDetail(drugPackageEigenartikel);
+				.value(IArticle.class, "packageSizeString", String.class).observeDetail(drugPackageEigenartikel); //$NON-NLS-1$
 		bindingContext.bindValue(observeTooltipTextTxtPackageSizeStringObserveWidget,
 				drugPackageEigenartikelPackageSizeStringObserveDetailValue,
 				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel), null);
@@ -341,7 +341,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		ISWTObservableValue observeSelectionBtnHiCostAbsorptionObserveWidget = WidgetProperties.selection()
 				.observe(btnHiCostAbsorption);
 		IObservableValue<Boolean> drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue = PojoProperties
-				.value(IArticle.class, "obligation", Boolean.class).observeDetail(drugPackageEigenartikel);
+				.value(IArticle.class, "obligation", Boolean.class).observeDetail(drugPackageEigenartikel); //$NON-NLS-1$
 		bindingContext.bindValue(observeSelectionBtnHiCostAbsorptionObserveWidget,
 				drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue,
 				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel), null);

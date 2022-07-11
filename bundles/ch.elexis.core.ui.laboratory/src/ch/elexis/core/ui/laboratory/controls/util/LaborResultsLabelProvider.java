@@ -85,7 +85,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 			}
 		}
 		if (pathologicDescription != null && !(pathologicDescription.getDescription() == Description.UNKNOWN)) {
-			sb.append(" - ").append(pathologicDescription.getLabel());
+			sb.append(" - ").append(pathologicDescription.getLabel()); //$NON-NLS-1$
 		}
 		return sb.toString();
 	}
@@ -108,11 +108,11 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 
 	private String getUnitAndReferenceString(LabResult labResult) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[").append(labResult.getUnit()).append("]");
+		sb.append("[").append(labResult.getUnit()).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (labResult.getPatient().getGeschlecht().equals(Patient.MALE)) {
-			sb.append("[").append(labResult.getRefMale()).append("]");
+			sb.append("[").append(labResult.getRefMale()).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			sb.append("[").append(labResult.getRefFemale()).append("]");
+			sb.append("[").append(labResult.getRefFemale()).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return sb.toString();
 	}

@@ -26,20 +26,20 @@ import ch.elexis.core.ui.contacts.Activator;
 
 public class OpenStickerPreferencePage extends AbstractHandler {
 
-	public static final String ID = "at.medevit.elexis.contacts.core.command.OpenStickerPreferencePage";
+	public static final String ID = "at.medevit.elexis.contacts.core.command.OpenStickerPreferencePage"; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 
-		Command cmd = commandService.getCommand("org.eclipse.ui.window.preferences");
+		Command cmd = commandService.getCommand("org.eclipse.ui.window.preferences"); //$NON-NLS-1$
 		try {
 			HashMap<String, String> hm = new HashMap<String, String>();
-			hm.put("preferencePageId", "ch.elexis.prefs.sticker");
+			hm.put("preferencePageId", "ch.elexis.prefs.sticker"); //$NON-NLS-1$ //$NON-NLS-2$
 			ExecutionEvent ev = new ExecutionEvent(cmd, hm, null, null);
 			cmd.executeWithChecks(ev);
 		} catch (Exception exception) {
-			Status status = new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Error opening sticker preference page");
+			Status status = new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Error opening sticker preference page"); //$NON-NLS-1$
 			StatusManager.getManager().handle(status, StatusManager.SHOW);
 		}
 		return null;

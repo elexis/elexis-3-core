@@ -25,7 +25,7 @@ public class DBConnectWizardPage extends WizardPage {
 		super(pageName);
 
 		setImageDescriptor(
-				Images.lookupImageDescriptor("db_configure_banner.png", ImageSize._75x66_TitleDialogIconSize));
+				Images.lookupImageDescriptor("db_configure_banner.png", ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$
 	}
 
 	@Override

@@ -17,21 +17,21 @@ import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.LabItem;
 
 public class FindingElement extends XChangeElement {
-	public static final String ENCLOSING = "findings";
-	public static final String XMLNAME = "finding";
-	public static final String ATTR_NAME = "name";
-	public static final String ATTR_NORMRANGE = "normRange";
-	public static final String ATTR_TYPE = "type";
-	public static final String ATTR_UNITS = "unit";
-	public static final String ATTR_GROUP = "group";
+	public static final String ENCLOSING = "findings"; //$NON-NLS-1$
+	public static final String XMLNAME = "finding"; //$NON-NLS-1$
+	public static final String ATTR_NAME = "name"; //$NON-NLS-1$
+	public static final String ATTR_NORMRANGE = "normRange"; //$NON-NLS-1$
+	public static final String ATTR_TYPE = "type"; //$NON-NLS-1$
+	public static final String ATTR_UNITS = "unit"; //$NON-NLS-1$
+	public static final String ATTR_GROUP = "group"; //$NON-NLS-1$
 
-	public static final String ELEMENT_XID = "xid";
-	public static final String XIDBASE = "www.xid.ch/labitems/";
+	public static final String ELEMENT_XID = "xid"; //$NON-NLS-1$
+	public static final String XIDBASE = "www.xid.ch/labitems/"; //$NON-NLS-1$
 
-	public static final String TYPE_NUMERIC = "numeric";
-	public static final String TYPE_TEXT = "text";
-	public static final String TYPE_IMAGE = "image";
-	public static final String TYPE_ABSOLUTE = "absolute";
+	public static final String TYPE_NUMERIC = "numeric"; //$NON-NLS-1$
+	public static final String TYPE_TEXT = "text"; //$NON-NLS-1$
+	public static final String TYPE_IMAGE = "image"; //$NON-NLS-1$
+	public static final String TYPE_ABSOLUTE = "absolute"; //$NON-NLS-1$
 
 	public String getXMLName() {
 		return XMLNAME;

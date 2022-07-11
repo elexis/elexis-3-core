@@ -44,7 +44,7 @@ public class CreateTaskDescriptorHandler {
 				}
 			});
 		} catch (TaskException e) {
-			LoggerFactory.getLogger(getClass()).warn("Could not create iTaskDescriptor", e);
+			LoggerFactory.getLogger(getClass()).warn("Could not create iTaskDescriptor", e); //$NON-NLS-1$
 		}
 
 	}

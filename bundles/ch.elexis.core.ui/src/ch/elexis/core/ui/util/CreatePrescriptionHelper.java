@@ -35,11 +35,11 @@ import ch.rgw.tools.Result;
 
 public class CreatePrescriptionHelper {
 
-	public static final String MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG = "medication/settings/alwaysShowSignatureDialog";
+	public static final String MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG = "medication/settings/alwaysShowSignatureDialog"; //$NON-NLS-1$
 
-	public static final String MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION = "medication/settings/signatureStdDispensation";
+	public static final String MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION = "medication/settings/signatureStdDispensation"; //$NON-NLS-1$
 
-	public static final String MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT = "medication/settings/artikelstammConvert";
+	public static final String MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT = "medication/settings/artikelstammConvert"; //$NON-NLS-1$
 
 	private IArticle article;
 	private Shell parentShell;
@@ -156,11 +156,11 @@ public class CreatePrescriptionHelper {
 
 	private boolean isArtikelstamm(IArticle dispensationArticle) {
 		return StoreToStringServiceHolder.getStoreToString(dispensationArticle)
-				.startsWith("ch.artikelstamm.elexis.common.ArtikelstammItem");
+				.startsWith("ch.artikelstamm.elexis.common.ArtikelstammItem"); //$NON-NLS-1$
 	}
 
 	private boolean isArtikelstammAvailable() {
-		return PersistentObject.tableExists("ARTIKELSTAMM_CH");
+		return PersistentObject.tableExists("ARTIKELSTAMM_CH"); //$NON-NLS-1$
 	}
 
 	private Optional<IArticle> getArtikelstammItem(IArticle dispensationArticle) {
@@ -180,14 +180,14 @@ public class CreatePrescriptionHelper {
 
 	private Optional<IArticle> loadArtikelWithCode(String gtin) {
 		Optional<ICodeElementServiceContribution> contribution = CodeElementServiceHolder.get()
-				.getContribution(CodeElementTyp.ARTICLE, "Artikelstamm");
+				.getContribution(CodeElementTyp.ARTICLE, "Artikelstamm"); //$NON-NLS-1$
 		if (contribution.isPresent()) {
 			Optional<ICodeElement> loadedArticle = contribution.get().loadFromCode(gtin, Collections.emptyMap());
 			if (loadedArticle.isPresent()) {
 				return Optional.of((IArticle) loadedArticle.get());
 			}
 		} else {
-			LoggerFactory.getLogger(getClass()).warn("No Artikelstamm ICodeElementServiceContribution available");
+			LoggerFactory.getLogger(getClass()).warn("No Artikelstamm ICodeElementServiceContribution available"); //$NON-NLS-1$
 		}
 		return Optional.empty();
 	}

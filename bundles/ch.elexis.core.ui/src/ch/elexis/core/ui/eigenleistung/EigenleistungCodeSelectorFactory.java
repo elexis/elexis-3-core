@@ -62,9 +62,9 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 
 			if (!ss.isEmpty()) {
 				ICustomService ea = (ICustomService) ss.getFirstElement();
-				ContextServiceHolder.get().getRootContext().setNamed("ch.elexis.core.ui.eigenleistung.selection", ea);
+				ContextServiceHolder.get().getRootContext().setNamed("ch.elexis.core.ui.eigenleistung.selection", ea); //$NON-NLS-1$
 			} else {
-				ContextServiceHolder.get().getRootContext().setNamed("ch.elexis.core.ui.eigenleistung.selection", null);
+				ContextServiceHolder.get().getRootContext().setNamed("ch.elexis.core.ui.eigenleistung.selection", null); //$NON-NLS-1$
 			}
 		}
 	};
@@ -82,7 +82,7 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 			@Override
 			public void run() {
 				ICustomService act = (ICustomService) ContextServiceHolder.get()
-						.getNamed("ch.elexis.core.ui.eigenleistung.selection").orElse(null);
+						.getNamed("ch.elexis.core.ui.eigenleistung.selection").orElse(null); //$NON-NLS-1$
 				if (act != null && MessageDialog.openConfirm(commonViewer.getViewerWidget().getControl().getShell(),
 						ch.elexis.core.ui.eigenleistung.Messages.EigenleistungContextMenu_deleteActionConfirmCaption,
 						MessageFormat.format(
@@ -96,7 +96,7 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 
 			@Override
 			public boolean isEnabled() {
-				return ContextServiceHolder.get().getNamed("ch.elexis.core.ui.eigenleistung.selection").isPresent();
+				return ContextServiceHolder.get().getNamed("ch.elexis.core.ui.eigenleistung.selection").isPresent(); //$NON-NLS-1$
 			}
 
 		});
@@ -109,7 +109,7 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 			@Override
 			public void run() {
 				ICustomService act = (ICustomService) ContextServiceHolder.get()
-						.getNamed("ch.elexis.core.ui.eigenleistung.selection").orElse(null);
+						.getNamed("ch.elexis.core.ui.eigenleistung.selection").orElse(null); //$NON-NLS-1$
 				if (act != null) {
 					EditEigenleistungUi.executeWithParams(NoPoUtil.loadAsPersistentObject(act));
 				}
@@ -117,7 +117,7 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 
 			@Override
 			public boolean isEnabled() {
-				return ContextServiceHolder.get().getNamed("ch.elexis.core.ui.eigenleistung.selection").isPresent();
+				return ContextServiceHolder.get().getNamed("ch.elexis.core.ui.eigenleistung.selection").isPresent(); //$NON-NLS-1$
 			}
 		});
 		menu.addMenuListener(new IMenuListener() {
@@ -130,13 +130,13 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 			}
 		});
 
-		commonViewer.setNamedSelection("ch.elexis.core.ui.eigenleistung.selection");
+		commonViewer.setNamedSelection("ch.elexis.core.ui.eigenleistung.selection"); //$NON-NLS-1$
 		commonViewer.setContextMenu(menu);
 		commonViewer.setSelectionChangedListener(selChangeListener);
 
 		FieldDescriptor<?>[] fieldDescriptors = new FieldDescriptor<?>[] {
-				new FieldDescriptor<ICustomService>("Code", "code", null),
-				new FieldDescriptor<ICustomService>("Bezeichnung", "description", null) };
+				new FieldDescriptor<ICustomService>("Code", "code", null), //$NON-NLS-2$
+				new FieldDescriptor<ICustomService>("Bezeichnung", "description", null) }; //$NON-NLS-2$
 
 		SelectorPanelProvider slp = new SelectorPanelProvider(fieldDescriptors, true);
 		slp.addActions(new Action("neu erstellen") {
@@ -175,8 +175,8 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 			// apply filters from control field provider
 			controlFieldProvider.setQuery(query);
 			applyQueryFilters(query);
-			query.orderBy("description", ORDER.ASC);
-			query.orderBy("code", ORDER.ASC);
+			query.orderBy("description", ORDER.ASC); //$NON-NLS-1$
+			query.orderBy("code", ORDER.ASC); //$NON-NLS-1$
 			List<?> elements = query.execute();
 
 			return elements.toArray(new Object[elements.size()]);

@@ -76,20 +76,20 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		currentContent = null;
 	}
 
-	private static final String SQL_CONDITION_INVOICE_FALL_PATIENT = "r.fallid IN (SELECT fa.id FROM faelle fa WHERE fa.PatientID = ?)";
-	private static final String SQL_CONDITION_INVOICE_NUMBER = "r.RnNummer = ?";
-	private static final String SQL_CONDITION_INVOICE_MANDANT = "r.MandantId = ?";
-	private static final String SQL_CONDITION_INVOICE_DATE_SINCE = "r.RnDatum >= ?";
-	private static final String SQL_CONDITION_INVOICE_DATE_UNTIL = "r.RnDatum >= ? AND r.RnDatum <= ?";
-	private static final String SQL_CONDITION_INVOICE_STATEDATE_SINCE = "r.StatusDatum >= ?";
-	private static final String SQL_CONDITION_INVOICE_STATEDATE_UNTIL = "r.StatusDatum >= ? AND r.StatusDatum <= ?";
-	private static final String SQL_CONDITION_INVOICE_STATE_IN = "r.RnStatus IN ( ? )";
-	private static final String SQL_CONDITION_INVOICE_AMOUNT_UNTIL = "CAST(r.betrag AS SIGNED) >= ? AND CAST(r.betrag AS SIGNED) <= ?";
-	private static final String SQL_CONDITION_INVOICE_AMOUNT_GREATER = "CAST(r.betrag AS SIGNED) >= ?";
-	private static final String SQL_CONDITION_INVOICE_AMOUNT_LESSER = "CAST(r.betrag AS SIGNED) <= ?";
-	private static final String SQL_CONDITION_INVOICE_TYPE_TP = "FallGarantId = FallKostentrID";
-	private static final String SQL_CONDITION_INVOICE_TYPE_TG = "NOT(FallGarantId = FallKostentrID)";
-	private static final String SQL_CONDITION_BILLING_SYSTEM = "FallGesetz = ?";
+	private static final String SQL_CONDITION_INVOICE_FALL_PATIENT = "r.fallid IN (SELECT fa.id FROM faelle fa WHERE fa.PatientID = ?)"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_NUMBER = "r.RnNummer = ?"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_MANDANT = "r.MandantId = ?"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_DATE_SINCE = "r.RnDatum >= ?"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_DATE_UNTIL = "r.RnDatum >= ? AND r.RnDatum <= ?"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_STATEDATE_SINCE = "r.StatusDatum >= ?"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_STATEDATE_UNTIL = "r.StatusDatum >= ? AND r.StatusDatum <= ?"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_STATE_IN = "r.RnStatus IN ( ? )"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_AMOUNT_UNTIL = "CAST(r.betrag AS SIGNED) >= ? AND CAST(r.betrag AS SIGNED) <= ?"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_AMOUNT_GREATER = "CAST(r.betrag AS SIGNED) >= ?"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_AMOUNT_LESSER = "CAST(r.betrag AS SIGNED) <= ?"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_TYPE_TP = "FallGarantId = FallKostentrID"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_TYPE_TG = "NOT(FallGarantId = FallKostentrID)"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_BILLING_SYSTEM = "FallGesetz = ?"; //$NON-NLS-1$
 	//@formatter:on
 
 	public static String orderBy = StringUtils.EMPTY;
@@ -146,7 +146,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				}
 			} catch (SQLException e) {
 				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR, CoreHub.PLUGIN_ID,
-						ElexisStatus.CODE_NONE, "Count stats failed", e);
+						ElexisStatus.CODE_NONE, "Count stats failed", e); //$NON-NLS-1$
 				ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
 
 				System.out.println(ps); // to ease on-premise debugging
@@ -182,11 +182,11 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 					int totalAmount = res.getInt(6);
 					String patientId = res.getString(7);
 					countPatients.add(patientId);
-					String patientName = res.getString(8) + StringUtils.SPACE + res.getString(9) + " ("
-							+ res.getString(10) + ")";
+					String patientName = res.getString(8) + StringUtils.SPACE + res.getString(9) + " (" //$NON-NLS-1$
+							+ res.getString(10) + ")"; //$NON-NLS-1$
 					String dob = res.getString(11);
 					if (StringUtils.isNumeric(dob)) {
-						patientName += ", " + new TimeTool(dob).toString(TimeTool.DATE_GER);
+						patientName += ", " + new TimeTool(dob).toString(TimeTool.DATE_GER); //$NON-NLS-1$
 					}
 					String garantId = res.getString(14);
 					int openAmount = res.getInt(18);
@@ -202,7 +202,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				}
 			} catch (SQLException e) {
 				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR, CoreHub.PLUGIN_ID,
-						ElexisStatus.CODE_NONE, "Fetch results failed", e);
+						ElexisStatus.CODE_NONE, "Fetch results failed", e); //$NON-NLS-1$
 				ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
 				System.out.println(ps); // to ease on-premise debugging
 			} finally {
@@ -211,8 +211,8 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 
 			if (limitReached) {
 				invoiceListBottomComposite.update(
-						countPatients.size() + " (" + Integer.toString(countPatientsWoLimit) + ")",
-						queryLimit + " (" + Integer.toString(countInvoicesWoLimit) + ")",
+						countPatients.size() + " (" + Integer.toString(countPatientsWoLimit) + ")", //$NON-NLS-1$ //$NON-NLS-2$
+						queryLimit + " (" + Integer.toString(countInvoicesWoLimit) + ")", //$NON-NLS-1$ //$NON-NLS-2$
 						new Money(openAmounts).getAmountAsString(), new Money(owingAmounts).getAmountAsString());
 			} else {
 				invoiceListBottomComposite.update(Integer.toString(countPatientsWoLimit),
@@ -241,7 +241,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 							for (String output : outputs) {
 								if (output != null) {
 									// convert GER to ISO date
-									String[] datePart = output.split(",|\\.", 4);
+									String[] datePart = output.split(",|\\.", 4); //$NON-NLS-1$
 									if (datePart.length > 2) {
 										int date = NumberUtils.toInt(datePart[2] + datePart[1] + datePart[0]);
 										if (date >= dateFrom && (dateTo == 0 || date <= dateTo)) {
@@ -267,15 +267,15 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		QueryBuilder queryBuilder = determinePreparedStatementConditionals();
 
 		if (includeOrderReplacement) {
-			preparedStatement = preparedStatement.replaceAll("REPLACE_WITH_ORDER", orderBy);
+			preparedStatement = preparedStatement.replaceAll("REPLACE_WITH_ORDER", orderBy); //$NON-NLS-1$
 		}
 
 		if (includeLimitReplacement) {
 			if (queryLimit > 0) {
 				queryBuilder.setMainQuery(
-						preparedStatement.replaceAll("REPLACE_WITH_LIMIT", " LIMIT " + Integer.toString(queryLimit)));
+						preparedStatement.replaceAll("REPLACE_WITH_LIMIT", " LIMIT " + Integer.toString(queryLimit))); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				queryBuilder.setMainQuery(preparedStatement.replaceAll("REPLACE_WITH_LIMIT", StringUtils.EMPTY));
+				queryBuilder.setMainQuery(preparedStatement.replaceAll("REPLACE_WITH_LIMIT", StringUtils.EMPTY)); //$NON-NLS-1$
 			}
 		} else {
 			queryBuilder.setMainQuery(preparedStatement);
@@ -315,8 +315,8 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 
 				List<String> conditional = Arrays.asList(invoiceStates).stream()
 						.map(is -> Integer.toString(is.numericValue())).collect(Collectors.toList());
-				String qmreplace = conditional.stream().map(s -> "?").collect(Collectors.joining(","));
-				String replaceFirst = SQL_CONDITION_INVOICE_STATE_IN.replaceFirst("\\?", qmreplace);
+				String qmreplace = conditional.stream().map(s -> "?").collect(Collectors.joining(",")); //$NON-NLS-1$ //$NON-NLS-2$
+				String replaceFirst = SQL_CONDITION_INVOICE_STATE_IN.replaceFirst("\\?", qmreplace); //$NON-NLS-1$
 				queryBuilder.build(replaceFirst, conditional);
 			} else {
 				queryBuilder.build(SQL_CONDITION_INVOICE_STATE_IN, Integer.toString(invoiceStateNo));
@@ -338,18 +338,18 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			String boundaryAmount = null;
 
 			try {
-				if (totalAmount.startsWith(">")) {
+				if (totalAmount.startsWith(">")) { //$NON-NLS-1$
 					// greater
 					totalAmount = totalAmount.substring(1, totalAmount.length());
 					Money totalMoney = new Money(totalAmount);
 					queryBuilder.build(SQL_CONDITION_INVOICE_AMOUNT_GREATER, totalMoney.getCents());
-				} else if (totalAmount.startsWith("<")) {
+				} else if (totalAmount.startsWith("<")) { //$NON-NLS-1$
 					// lesser
 					totalAmount = totalAmount.substring(1, totalAmount.length());
 					Money totalMoney = new Money(totalAmount);
 					queryBuilder.build(SQL_CONDITION_INVOICE_AMOUNT_LESSER, totalMoney.getCents());
-				} else if (totalAmount.contains("-")) {
-					String[] split = totalAmount.split("-");
+				} else if (totalAmount.contains("-")) { //$NON-NLS-1$
+					String[] split = totalAmount.split("-"); //$NON-NLS-1$
 					Money totalMoney = null;
 
 					if (split.length > 0) {
@@ -377,7 +377,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		String type = invoiceListHeaderComposite.getSelectedInvoiceType();
 		if (type != null) {
 			QueryBuilder qb;
-			if ("TP".equals(type)) {
+			if ("TP".equals(type)) { //$NON-NLS-1$
 				qb = queryBuilder.build(SQL_CONDITION_INVOICE_TYPE_TP, (String) null);
 			} else {
 				qb = queryBuilder.build(SQL_CONDITION_INVOICE_TYPE_TG, (String) null);
@@ -420,17 +420,17 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	}
 
 	public void setSortOrderAndDirection(Object data, int sortDirection) {
-		String sortDirectionString = (SWT.UP == sortDirection) ? "ASC" : "DESC";
+		String sortDirectionString = (SWT.UP == sortDirection) ? "ASC" : "DESC"; //$NON-NLS-1$ //$NON-NLS-2$
 		if (InvoiceListSqlQuery.VIEW_FLD_INVOICENO.equals(data)) {
-			orderBy = "ORDER BY LENGTH(" + InvoiceListSqlQuery.VIEW_FLD_INVOICENO + ") " + sortDirectionString + ","
+			orderBy = "ORDER BY LENGTH(" + InvoiceListSqlQuery.VIEW_FLD_INVOICENO + ") " + sortDirectionString + "," //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					+ InvoiceListSqlQuery.VIEW_FLD_INVOICENO + StringUtils.SPACE + sortDirectionString;
 		} else if (Rechnung.BILL_DATE_FROM.equals(data) || InvoiceListSqlQuery.VIEW_FLD_INVOICETOTAL.equals(data)
 				|| InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT.equals(data)) {
-			orderBy = "ORDER BY " + data + StringUtils.SPACE + sortDirectionString;
+			orderBy = "ORDER BY " + data + StringUtils.SPACE + sortDirectionString; //$NON-NLS-1$
 		} else if (Kontakt.FLD_NAME1.equals(data)) {
-			orderBy = "ORDER BY PatName1 " + sortDirectionString + ", PatName2 " + sortDirectionString;
+			orderBy = "ORDER BY PatName1 " + sortDirectionString + ", PatName2 " + sortDirectionString; //$NON-NLS-1$ //$NON-NLS-2$
 		} else if (InvoiceListSqlQuery.VIEW_FLD_INVOICESTATEDATE.equals(data)) {
-			orderBy = "ORDER BY " + data + StringUtils.SPACE + sortDirectionString;
+			orderBy = "ORDER BY " + data + StringUtils.SPACE + sortDirectionString; //$NON-NLS-1$
 		} else {
 			orderBy = StringUtils.EMPTY;
 		}
@@ -554,7 +554,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 
 		public String getTreatmentPeriod() {
 			if (dateFrom != null && dateTo != null) {
-				return dateFrom.toString(TimeTool.DATE_GER_SHORT) + " - " + dateTo.toString(TimeTool.DATE_GER_SHORT);
+				return dateFrom.toString(TimeTool.DATE_GER_SHORT) + " - " + dateTo.toString(TimeTool.DATE_GER_SHORT); //$NON-NLS-1$
 			}
 			return null;
 		}
@@ -565,14 +565,14 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 
 		public String getPayerType() {
 			if (!isResolved()) {
-				return "...";
+				return "..."; //$NON-NLS-1$
 			}
 			return payerType;
 		}
 
 		public String getBillingSystem() {
 			if (!isResolved()) {
-				return "...";
+				return "..."; //$NON-NLS-1$
 			}
 			return billingSystem;
 		}
@@ -626,7 +626,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 
 			private void resolveGarantLabel() {
 				if (garantLabel == null) {
-					garantLabel = "?";
+					garantLabel = "?"; //$NON-NLS-1$
 					Kontakt recipient = fall.getInvoiceRecipient();
 					if (recipient != null) {
 						garantLabel = recipient.getLabel();
@@ -641,9 +641,9 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			}
 
 			private void resolvePayerType() {
-				payerType = "TG";
+				payerType = "TG"; //$NON-NLS-1$
 				if (fall != null) {
-					payerType = fall.getTiersType() == Tiers.GARANT ? "TG" : "TP";
+					payerType = fall.getTiersType() == Tiers.GARANT ? "TG" : "TP"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 
@@ -715,21 +715,21 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 					for (QueryBuilder builder : queryBuilders) {
 						StringBuilder used = builder.isInnerCondition() ? sbInner : sbOuter;
 						if (used.length() > 0) {
-							used.append(" AND ");
+							used.append(" AND "); //$NON-NLS-1$
 						}
 						used.append(builder.getCondition());
 					}
 					String mainQueryRet;
 					if (sbInner.length() > 0) {
 						mainQueryRet = mainQuery.replace(InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION,
-								" AND " + sbInner.toString());
+								" AND " + sbInner.toString()); //$NON-NLS-1$
 					} else {
 						mainQueryRet = mainQuery.replace(InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION,
 								StringUtils.EMPTY);
 					}
 					if (sbOuter.length() > 0) {
 						mainQueryRet = mainQueryRet.replace(InvoiceListSqlQuery.REPLACEMENT_OUTER_CONDITION,
-								" WHERE " + sbOuter.toString());
+								" WHERE " + sbOuter.toString()); //$NON-NLS-1$
 					} else {
 						mainQueryRet = mainQueryRet.replace(InvoiceListSqlQuery.REPLACEMENT_OUTER_CONDITION,
 								StringUtils.EMPTY);
@@ -753,7 +753,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 							.equalsIgnoreCase(PersistentObject.getDefaultConnection().getDBFlavor());
 					if (isPostgres) {
 						// replace with postgres compatible type
-						query = query.replaceAll("SIGNED", "NUMERIC");
+						query = query.replaceAll("SIGNED", "NUMERIC"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					PreparedStatement ps = dbConnection.getPreparedStatement(query);
 					int i = 1;

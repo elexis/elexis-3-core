@@ -56,41 +56,41 @@ public class ConsultationExport {
 			}
 			for (Patient pat : qbe.execute()) {
 				Element e = new Element("Patient");
-				e.setAttribute("ID", pat.getId());
-				e.setAttribute("Name", pat.get(Patient.FLD_NAME));
-				e.setAttribute("Vorname", pat.get(Patient.FLD_FIRSTNAME));
-				e.setAttribute("GebDat", pat.get(Patient.FLD_DOB));
+				e.setAttribute("ID", pat.getId()); //$NON-NLS-1$
+				e.setAttribute("Name", pat.get(Patient.FLD_NAME)); //$NON-NLS-1$
+				e.setAttribute("Vorname", pat.get(Patient.FLD_FIRSTNAME)); //$NON-NLS-1$
+				e.setAttribute("GebDat", pat.get(Patient.FLD_DOB)); //$NON-NLS-1$
 				for (Fall fall : pat.getFaelle()) {
-					Element f = new Element("Fall");
+					Element f = new Element("Fall"); //$NON-NLS-1$
 					e.addContent(f);
-					f.setAttribute("ID", fall.getId());
-					f.setAttribute("Bezeichnung", fall.getBezeichnung());
-					f.setAttribute("BeginnDatum", fall.getBeginnDatum());
-					f.setAttribute("EndDatum", fall.getEndDatum());
-					f.setAttribute("Gesetz", fall.getConfiguredBillingSystemLaw().name());
-					f.setAttribute("Abrechnungssystem", fall.getAbrechnungsSystem());
+					f.setAttribute("ID", fall.getId()); //$NON-NLS-1$
+					f.setAttribute("Bezeichnung", fall.getBezeichnung()); //$NON-NLS-1$
+					f.setAttribute("BeginnDatum", fall.getBeginnDatum()); //$NON-NLS-1$
+					f.setAttribute("EndDatum", fall.getEndDatum()); //$NON-NLS-1$
+					f.setAttribute("Gesetz", fall.getConfiguredBillingSystemLaw().name()); //$NON-NLS-1$
+					f.setAttribute("Abrechnungssystem", fall.getAbrechnungsSystem()); //$NON-NLS-1$
 					Kontakt k = fall.getGarant();
 					if (k != null) {
-						f.setAttribute("Garant", fall.getGarant().getLabel());
+						f.setAttribute("Garant", fall.getGarant().getLabel()); //$NON-NLS-1$
 					}
 					Kontakt costBearer = fall.getCostBearer();
 					if (costBearer != null) {
-						f.setAttribute("Kostentraeger", costBearer.getLabel());
-						f.setAttribute("Versicherungsnummer", fall.getRequiredString("Versicherungsnummer"));
+						f.setAttribute("Kostentraeger", costBearer.getLabel()); //$NON-NLS-1$
+						f.setAttribute("Versicherungsnummer", fall.getRequiredString("Versicherungsnummer")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					for (Konsultation kons : fall.getBehandlungen(false)) {
-						Element kel = new Element("Konsultation");
+						Element kel = new Element("Konsultation"); //$NON-NLS-1$
 						f.addContent(kel);
-						kel.setAttribute("ID", kons.getId());
-						kel.setAttribute("Datum", kons.getDatum());
-						kel.setAttribute("Label", kons.getVerboseLabel());
+						kel.setAttribute("ID", kons.getId()); //$NON-NLS-1$
+						kel.setAttribute("Datum", kons.getDatum()); //$NON-NLS-1$
+						kel.setAttribute("Label", kons.getVerboseLabel()); //$NON-NLS-1$
 						Samdas samdas = new Samdas(kons.getEintrag().getHead());
 						kel.setText(samdas.getRecordText());
 					}
 				}
 				Document doc = new Document();
 				doc.setRootElement(e);
-				FileOutputStream fout = new FileOutputStream(new File(dir, pat.getId() + ".xml"));
+				FileOutputStream fout = new FileOutputStream(new File(dir, pat.getId() + ".xml")); //$NON-NLS-1$
 				OutputStreamWriter cout = new OutputStreamWriter(fout, "UTF-8"); //$NON-NLS-1$
 				XMLOutputter xout = new XMLOutputter(Format.getPrettyFormat());
 				xout.output(doc, cout);
@@ -99,7 +99,7 @@ public class ConsultationExport {
 			}
 			return "ok";
 		} catch (Exception ex) {
-			return ex.getClass().getName() + ":" + ex.getMessage();
+			return ex.getClass().getName() + ":" + ex.getMessage(); //$NON-NLS-1$
 		}
 	}
 }

@@ -11,6 +11,6 @@ public enum ImageSize {
 	private ImageSize(int width, int height) {
 		this.width = width;
 		this.height = height;
-		this.name = width + "x" + height;
+		this.name = width + "x" + height; //$NON-NLS-1$
 	}
 }

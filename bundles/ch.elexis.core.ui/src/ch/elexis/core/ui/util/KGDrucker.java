@@ -58,7 +58,7 @@ public class KGDrucker {
 
 		} catch (Exception ex) {
 			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					Messages.KGDrucker_errorPrinting + ": " + Messages.KGDrucker_couldntShow, ex);
+					Messages.KGDrucker_errorPrinting + ": " + Messages.KGDrucker_couldntShow, ex); //$NON-NLS-1$
 			StatusManager.getManager().handle(status);
 		}
 	}

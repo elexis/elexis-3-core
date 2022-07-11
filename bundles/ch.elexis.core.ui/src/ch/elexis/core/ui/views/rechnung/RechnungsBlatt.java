@@ -330,7 +330,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				DocumentStore documentStore = OsgiServiceUtil.getService(DocumentStore.class).orElse(null);
 				if (documentStore != null) {
 					List<IDocument> documents = documentStore.getDocuments(patient.getId(), null, null, null);
-					List<IDocument> pdfDocuments = documents.stream().filter(doc -> doc.getMimeType().endsWith("pdf"))
+					List<IDocument> pdfDocuments = documents.stream().filter(doc -> doc.getMimeType().endsWith("pdf")) //$NON-NLS-1$
 							.collect(Collectors.toList());
 
 					GenericSelectionDialog gsd = new GenericSelectionDialog(getShell(), pdfDocuments,
@@ -421,13 +421,13 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					// get the command
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					ICommandService cmdService = window.getService(ICommandService.class);
-					Command cmd = cmdService.getCommand("ch.elexis.ebanking_ch.command.openESRWithInvoiceId");
+					Command cmd = cmdService.getCommand("ch.elexis.ebanking_ch.command.openESRWithInvoiceId"); //$NON-NLS-1$
 					if (cmd != null) {
 						try {
 							// create the parameter
 							HashMap<String, Object> param = new HashMap<String, Object>();
-							param.put("ch.elexis.ebanking_ch.command.openESR.InvoiceId", zahlung.getRechnung().getId());
-							param.put("ch.elexis.ebanking_ch.command.openESR.PaymentDate",
+							param.put("ch.elexis.ebanking_ch.command.openESR.InvoiceId", zahlung.getRechnung().getId()); //$NON-NLS-1$
+							param.put("ch.elexis.ebanking_ch.command.openESR.PaymentDate", //$NON-NLS-1$
 									new TimeTool(zahlung.getDatum()).toString(TimeTool.DATE_COMPACT));
 							// build the parameterized command
 							ParameterizedCommand pc = ParameterizedCommand.generateCommand(cmd, param);
@@ -437,10 +437,10 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 							handlerService.executeCommand(pc, null);
 						} catch (ExecutionException | NotDefinedException | NotEnabledException
 								| NotHandledException e) {
-							LoggerFactory.getLogger(getClass()).error("Error executing open esr command", e);
+							LoggerFactory.getLogger(getClass()).error("Error executing open esr command", e); //$NON-NLS-1$
 						}
 					} else {
-						LoggerFactory.getLogger(getClass()).warn("No open esr command found, ebanking not installed");
+						LoggerFactory.getLogger(getClass()).warn("No open esr command found, ebanking not installed"); //$NON-NLS-1$
 					}
 				}
 			}
@@ -634,14 +634,14 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		});
 		stornoViewer.setLabelProvider(new LabelProvider() {
 
-			private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+			private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy"); //$NON-NLS-1$
 
 			@Override
 			public String getText(Object element) {
 				if (element instanceof IInvoiceBilled) {
 					IInvoiceBilled vc = (IInvoiceBilled) element;
 					return "  - " + vc.getAmount() + StringUtils.SPACE + vc.getLabel() //$NON-NLS-1$
-							+ " (" // $NON-NLS-1
+							+ " (" // $NON-NLS-1 //$NON-NLS-1$
 							+ vc.getTotal().toString() + ")"; //$NON-NLS-1$
 				} else if (element instanceof Konsultation) {
 					return "Konsultation " + ((Konsultation) element).getDatum();

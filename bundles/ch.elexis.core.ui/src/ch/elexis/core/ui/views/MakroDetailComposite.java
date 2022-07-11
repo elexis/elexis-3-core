@@ -49,7 +49,7 @@ public class MakroDetailComposite extends Composite {
 		makroName.setMessage("Makro Name");
 		makroName.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		bindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(makroName),
-				PojoProperties.value("makroName").observeDetail(value));
+				PojoProperties.value("makroName").observeDetail(value)); //$NON-NLS-1$
 		makroName.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -69,7 +69,7 @@ public class MakroDetailComposite extends Composite {
 		makroContent = new StyledText(this, SWT.BORDER | SWT.MULTI);
 		makroContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		bindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(makroContent),
-				PojoProperties.value("makroContent").observeDetail(value));
+				PojoProperties.value("makroContent").observeDetail(value)); //$NON-NLS-1$
 		makroContent.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -102,7 +102,7 @@ public class MakroDetailComposite extends Composite {
 			// remove old entry first, and update the param value
 			removeMakro(makro);
 			StringBuilder name = new StringBuilder(makro.getMakroName());
-			makro.setMakroParam("makros/" + name.reverse());
+			makro.setMakroParam("makros/" + name.reverse()); //$NON-NLS-1$
 		}
 		saveMakro(makro);
 		nameDirty = false;
@@ -121,7 +121,7 @@ public class MakroDetailComposite extends Composite {
 			ConfigServiceHolder.get().set(userContact.get(), makro.getMakroParam(), makro.getMakroContent());
 		} else {
 			LoggerFactory.getLogger(MakroDetailComposite.class).warn(
-					"No user to save makro [" + makro.getMakroName() + "] userid [" + makro.getMakroUserId() + "]");
+					"No user to save makro [" + makro.getMakroName() + "] userid [" + makro.getMakroUserId() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -137,7 +137,7 @@ public class MakroDetailComposite extends Composite {
 			ConfigServiceHolder.get().set(userContact.get(), makro.getMakroParam(), null);
 		} else {
 			LoggerFactory.getLogger(MakroDetailComposite.class).warn(
-					"No user to remove makro [" + makro.getMakroName() + "] userid [" + makro.getMakroUserId() + "]");
+					"No user to remove makro [" + makro.getMakroName() + "] userid [" + makro.getMakroUserId() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 }

@@ -56,7 +56,7 @@ import ch.rgw.tools.StringTool;
  */
 public abstract class ImporterPage implements IExecutableExtension {
 	public String[] results;
-	protected Log log = Log.get("Import");
+	protected Log log = Log.get("Import"); //$NON-NLS-1$
 
 	/** Nur intern gebraucht; kann bei Bedarf überschrieben oder erweitert werden */
 	@Override
@@ -137,7 +137,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 	public static class FileBasedImporter extends Composite {
 
 		public Text tFname;
-		private String[] filterExts = { "*" };
+		private String[] filterExts = { "*" }; //$NON-NLS-1$
 		private String[] filterNames = { Messages.ImporterPage_allFiles };
 
 		public FileBasedImporter(final Composite parent, final ImporterPage home) {
@@ -152,7 +152,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 			setLayout(new GridLayout(1, false));
 			final Label lFile = new Label(this, SWT.NONE);
 			tFname = new Text(this, SWT.BORDER);
-			tFname.setText(CoreHub.localCfg.get("ImporterPage/" + home.getTitle() + "/filename", StringUtils.EMPTY)); //$NON-NLS-1$
+			tFname.setText(CoreHub.localCfg.get("ImporterPage/" + home.getTitle() + "/filename", StringUtils.EMPTY)); //$NON-NLS-1$ //$NON-NLS-2$
 			home.results = new String[1];
 			home.results[0] = tFname.getText();
 			lFile.setText(Messages.ImporterPage_file); // $NON-NLS-1$
@@ -224,7 +224,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 			lFile.setText(Messages.ImporterPage_dir); // $NON-NLS-1$
 			lFile.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tFname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			tFname.setText(CoreHub.localCfg.get("ImporterPage/" + home.getTitle() + "/dirname", StringUtils.EMPTY)); //$NON-NLS-1$
+			tFname.setText(CoreHub.localCfg.get("ImporterPage/" + home.getTitle() + "/dirname", StringUtils.EMPTY)); //$NON-NLS-1$ //$NON-NLS-2$
 			home.results = new String[1];
 			home.results[0] = tFname.getText();
 			Button bFile = new Button(this, SWT.PUSH);
@@ -267,7 +267,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 			lSource.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tSource.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tSource.setText(
-					CoreHub.localCfg.get("ImporterPage/" + home.getTitle() + "/ODBC-Source", StringUtils.EMPTY)); //$NON-NLS-1$
+					CoreHub.localCfg.get("ImporterPage/" + home.getTitle() + "/ODBC-Source", StringUtils.EMPTY)); //$NON-NLS-1$ //$NON-NLS-2$
 			home.results = new String[1];
 			home.results[0] = tSource.getText();
 			Button bSource = new Button(this, SWT.PUSH);
@@ -342,7 +342,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 				ret = JdbcLink.createMySqlLink(h.results[1], h.results[2]);
 			} else if (h.results[0].equalsIgnoreCase("postgresql")) { //$NON-NLS-1$
 				ret = JdbcLink.createPostgreSQLLink(h.results[1], h.results[2]);
-			} else if (h.results[0].equalsIgnoreCase("h2")) {
+			} else if (h.results[0].equalsIgnoreCase("h2")) { //$NON-NLS-1$
 				ret = JdbcLink.createH2Link(h.results[1]);
 			} else if (h.results[0].equalsIgnoreCase("odbc")) { //$NON-NLS-1$
 				ret = JdbcLink.createODBCLink(h.results[1]);

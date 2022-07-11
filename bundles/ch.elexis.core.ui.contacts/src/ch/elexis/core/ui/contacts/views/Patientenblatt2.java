@@ -298,7 +298,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						if (ltf.getText().length() == 0)
 							return;
 						try {
-							URI uriMailTo = new URI("mailto", ltf.getText(), null);
+							URI uriMailTo = new URI("mailto", ltf.getText(), null); //$NON-NLS-1$
 							Desktop.getDesktop().mail(uriMailTo);
 						} catch (URISyntaxException e1) {
 							Status status = new Status(IStatus.WARNING, Hub.PLUGIN_ID,
@@ -345,7 +345,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 							String telephoneLabel = stammarzt.getTelephoneLabel();
 							String label = stammarzt.getLabel()
-									+ ((telephoneLabel.length() > 0) ? " (" + telephoneLabel + ")" : StringUtils.EMPTY);
+									+ ((telephoneLabel.length() > 0) ? " (" + telephoneLabel + ")" : StringUtils.EMPTY); //$NON-NLS-1$ //$NON-NLS-2$
 							ltf.setTooltipText(label);
 						} else {
 							ltf.setTooltipText(null);
@@ -393,7 +393,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 									|| (k.istOrganisation() && xd.isDisplayedFor(Organisation.class))) {
 								extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom); //$NON-NLS-1$
 							} else if (k.istOrganisation() && xd.isDisplayedFor(Labor.class)) {
-								extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom);
+								extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom); //$NON-NLS-1$
 							}
 						}
 
@@ -555,24 +555,24 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		List<IViewContribution> filtered = ViewContributionHelper
 				.getFilteredAndPositionSortedContributions(detailComposites, 0);
 		for (IViewContribution ivc : filtered) {
-			if (ivc.getClass().getPackage().getName().startsWith("ch.elexis.core.findings.ui.viewcontributions")) {
+			if (ivc.getClass().getPackage().getName().startsWith("ch.elexis.core.findings.ui.viewcontributions")) { //$NON-NLS-1$
 				if (ivc.isAvailable()) {
 					// remove unstructured diagnosis ui
-					if (ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) {
+					if (ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_diagnosesLbl);
-						dfExpandable.remove("Diagnosen");
+						dfExpandable.remove("Diagnosen"); //$NON-NLS-1$
 					}
-					if (ivc.getClass().getSimpleName().equals("PersonalAnamnesisViewContribution")) {
+					if (ivc.getClass().getSimpleName().equals("PersonalAnamnesisViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_persAnamnesisLbl);
-						dfExpandable.remove("PersAnamnese");
+						dfExpandable.remove("PersAnamnese"); //$NON-NLS-1$
 					}
-					if (ivc.getClass().getSimpleName().equals("RiskViewContribution")) {
+					if (ivc.getClass().getSimpleName().equals("RiskViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_risksLbl);
-						dfExpandable.remove("Risiken");
+						dfExpandable.remove("Risiken"); //$NON-NLS-1$
 					}
-					if (ivc.getClass().getSimpleName().equals("AllergyIntoleranceViewContribution")) {
+					if (ivc.getClass().getSimpleName().equals("AllergyIntoleranceViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_allergiesLbl);
-						dfExpandable.remove("Allergien");
+						dfExpandable.remove("Allergien"); //$NON-NLS-1$
 					}
 				}
 			}
@@ -1076,7 +1076,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						// Nachname for physicians.
 						String thisKontaktFLD_SHORT_LABEL = k.get(k.FLD_SHORT_LABEL); // $NON-NLS-1$
 						if (!StringTool.isNothing(thisKontaktFLD_SHORT_LABEL)) {
-							SelectedContactInfosText.append(thisKontaktFLD_SHORT_LABEL).append(",")
+							SelectedContactInfosText.append(thisKontaktFLD_SHORT_LABEL).append(",") //$NON-NLS-1$
 									.append(StringTool.space);
 						}
 					}
@@ -1148,11 +1148,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						// "Zusatz" is mapped to "Bezeichnung3" in Person.java.
 						String thisPersonFLD_REMARK = p.get(p.FLD_REMARK); // $NON-NLS-1$
 						if (!StringTool.isNothing(thisPersonFLD_REMARK)) {
-							SelectedContactInfosText.append(",").append(StringTool.space).append(thisPersonFLD_REMARK);
+							SelectedContactInfosText.append(",").append(StringTool.space).append(thisPersonFLD_REMARK); //$NON-NLS-1$
 						}
 						String thisPersonFLD_NAME3 = p.get(p.FLD_NAME3); // $NON-NLS-1$
 						if (!StringTool.isNothing(thisPersonFLD_NAME3)) {
-							SelectedContactInfosText.append(",").append(StringTool.space).append(thisPersonFLD_NAME3);
+							SelectedContactInfosText.append(",").append(StringTool.space).append(thisPersonFLD_NAME3); //$NON-NLS-1$
 						}
 
 						String thisPatientBIRTHDATE = (String) p.get(p.BIRTHDATE);
@@ -1165,7 +1165,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 							// But Jürg Hamacher prefers the patient information
 							// in his letters
 							// without that term:
-							SelectedContactInfosText.append("," + StringTool.space
+							SelectedContactInfosText.append("," + StringTool.space //$NON-NLS-1$
 									+ new TimeTool(thisPatientBIRTHDATE).toString(TimeTool.DATE_GER));
 						}
 					} else { // if (k.istPerson())... else...
@@ -1191,18 +1191,18 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 					String thisAddressFLD_STREET = (String) k.get(k.FLD_STREET);
 					if (!StringTool.isNothing(thisAddressFLD_STREET)) {
-						SelectedContactInfosText.append("," + StringTool.space + thisAddressFLD_STREET);
+						SelectedContactInfosText.append("," + StringTool.space + thisAddressFLD_STREET); //$NON-NLS-1$
 					}
 
 					String thisAddressFLD_COUNTRY = (String) k.get(k.FLD_COUNTRY);
 					if (!StringTool.isNothing(thisAddressFLD_COUNTRY)) {
-						SelectedContactInfosText.append("," + StringTool.space + thisAddressFLD_COUNTRY + "-");
+						SelectedContactInfosText.append("," + StringTool.space + thisAddressFLD_COUNTRY + "-"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
 					String thisAddressFLD_ZIP = (String) k.get(k.FLD_ZIP);
 					if (!StringTool.isNothing(thisAddressFLD_ZIP)) {
 						if (StringTool.isNothing(thisAddressFLD_COUNTRY)) {
-							SelectedContactInfosText.append("," + StringTool.space);
+							SelectedContactInfosText.append("," + StringTool.space); //$NON-NLS-1$
 						}
 						;
 						SelectedContactInfosText.append(thisAddressFLD_ZIP);
@@ -1212,7 +1212,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					String thisAddressFLD_PLACE = (String) k.get(k.FLD_PLACE);
 					if (!StringTool.isNothing(thisAddressFLD_PLACE)) {
 						if (StringTool.isNothing(thisAddressFLD_COUNTRY) && StringTool.isNothing(thisAddressFLD_ZIP)) {
-							SelectedContactInfosText.append(",");
+							SelectedContactInfosText.append(","); //$NON-NLS-1$
 						}
 						;
 						SelectedContactInfosText.append(StringTool.space + thisAddressFLD_PLACE);
@@ -1221,13 +1221,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					String thisAddressFLD_PHONE1 = (String) k.get(k.FLD_PHONE1);
 					if (!StringTool.isNothing(thisAddressFLD_PHONE1)) {
 						SelectedContactInfosText
-								.append("," + StringTool.space + StringTool.space + thisAddressFLD_PHONE1);
+								.append("," + StringTool.space + StringTool.space + thisAddressFLD_PHONE1); //$NON-NLS-1$
 					}
 
 					String thisAddressFLD_PHONE2 = (String) k.get(k.FLD_PHONE2);
 					if (!StringTool.isNothing(thisAddressFLD_PHONE2)) {
 						SelectedContactInfosText
-								.append("," + StringTool.space + StringTool.space + thisAddressFLD_PHONE2);
+								.append("," + StringTool.space + StringTool.space + thisAddressFLD_PHONE2); //$NON-NLS-1$
 					}
 
 					String thisAddressFLD_MOBILEPHONE = (String) k.get(k.FLD_MOBILEPHONE);
@@ -1235,7 +1235,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						// With a colon after the label:
 						// SelectedContactInfosText.append(","+StringTool.space+k.FLD_MOBILEPHONE+":"+StringTool.space+thisAddressFLD_MOBILEPHONE);
 						// Without a colon after the label:
-						SelectedContactInfosText.append("," + StringTool.space + k.FLD_MOBILEPHONE + StringTool.space
+						SelectedContactInfosText.append("," + StringTool.space + k.FLD_MOBILEPHONE + StringTool.space //$NON-NLS-1$
 								+ thisAddressFLD_MOBILEPHONE);
 					}
 
@@ -1245,12 +1245,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						// SelectedContactInfosText.append(","+StringTool.space+k.FLD_FAX+":"+StringTool.space+thisAddressFLD_FAX);
 						// Without a colon after the label:
 						SelectedContactInfosText
-								.append("," + StringTool.space + k.FLD_FAX + StringTool.space + thisAddressFLD_FAX);
+								.append("," + StringTool.space + k.FLD_FAX + StringTool.space + thisAddressFLD_FAX); //$NON-NLS-1$
 					}
 
 					String thisAddressFLD_E_MAIL = (String) k.get(k.FLD_E_MAIL);
 					if (!StringTool.isNothing(thisAddressFLD_E_MAIL)) {
-						SelectedContactInfosText.append("," + StringTool.space + thisAddressFLD_E_MAIL);
+						SelectedContactInfosText.append("," + StringTool.space + thisAddressFLD_E_MAIL); //$NON-NLS-1$
 					}
 
 					/*

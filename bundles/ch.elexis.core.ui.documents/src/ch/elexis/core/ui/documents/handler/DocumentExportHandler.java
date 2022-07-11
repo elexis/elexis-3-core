@@ -53,7 +53,7 @@ public class DocumentExportHandler extends AbstractHandler implements IHandler {
 							Messages.DocumentView_exportErrorEmptyText);
 				}
 			} catch (ElexisException e) {
-				logger.error("cannot export file", e);
+				logger.error("cannot export file", e); //$NON-NLS-1$
 				SWTHelper.showError(Messages.DocumentView_exportErrorCaption, Messages.DocumentView_exportErrorText);
 			}
 		}
@@ -62,9 +62,9 @@ public class DocumentExportHandler extends AbstractHandler implements IHandler {
 	private String[] createExtensionFilter(IDocument document) {
 		List<String> filterExtensions = new ArrayList<>();
 		if (document.getExtension() != null && !document.getExtension().isEmpty()) {
-			filterExtensions.add("*." + document.getExtension());
+			filterExtensions.add("*." + document.getExtension()); //$NON-NLS-1$
 		}
-		filterExtensions.add("*.*");
+		filterExtensions.add("*.*"); //$NON-NLS-1$
 		return filterExtensions.toArray(new String[0]);
 	}
 }

@@ -233,7 +233,7 @@ public class KontaktImporterBlatt extends Composite {
 		// Please keep in sync with doc/import.textile !!
 		if (mediportInsuererList) {
 			if (file == null) {
-				log.warn("No file selected");
+				log.warn("No file selected"); //$NON-NLS-1$
 				SWTHelper.showError(Messages.KontaktImporterBlatt_ChoseFile, Messages.KontaktImporterBlatt_ChoseFile,
 						Messages.KontaktImporterBlatt_PleaseChooseTypeAndFile);
 				return false;
@@ -242,7 +242,7 @@ public class KontaktImporterBlatt extends Composite {
 			try {
 				// check if it's actually a csv
 				String filename = file.toLowerCase();
-				if (!filename.endsWith("csv")) {
+				if (!filename.endsWith("csv")) { //$NON-NLS-1$
 					SWTHelper.showError(Messages.KontaktImporterBlatt_DateiTyp,
 							MessageFormat.format(Messages.KontaktImporterBlatt_DatatypeErrorNoCSV, file));
 					return false;
@@ -255,7 +255,7 @@ public class KontaktImporterBlatt extends Composite {
 						.format(Messages.KontaktImporterBlatt_csvImportMediportInsurerMsg, importedInsurer.size()));
 				return true;
 			} catch (FileNotFoundException e) {
-				log.error("Error parsing expected mediport insurer csv file [" + file + "]", e);
+				log.error("Error parsing expected mediport insurer csv file [" + file + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
 				return false;
 			}
 		} else {

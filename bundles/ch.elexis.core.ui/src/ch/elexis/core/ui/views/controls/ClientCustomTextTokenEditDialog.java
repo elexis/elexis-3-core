@@ -56,7 +56,7 @@ public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		setTitle("Edit value ...");
-		String name = _token.split("\\.")[1];
+		String name = _token.split("\\.")[1]; //$NON-NLS-1$
 		setMessage("Edit " + name + " value");
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
@@ -65,18 +65,18 @@ public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 
 		lblTokenlabel = new Label(container, SWT.NONE);
 		lblTokenlabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTokenlabel.setText(_token.split("\\.")[1]);
+		lblTokenlabel.setText(_token.split("\\.")[1]); //$NON-NLS-1$
 
 		txtTokenText = new Text(container, SWT.BORDER);
 		txtTokenText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
-		String[] arr = _token.split("\\.");
+		String[] arr = _token.split("\\."); //$NON-NLS-1$
 		if (arr == null || arr.length < 2) {
-			txtTokenText.setText("ERR");
+			txtTokenText.setText("ERR"); //$NON-NLS-1$
 			return area;
 		}
 
-		if (arr[0].equalsIgnoreCase("Patient")) {
+		if (arr[0].equalsIgnoreCase("Patient")) { //$NON-NLS-1$
 			Patient pat = ElexisEventDispatcher.getSelectedPatient();
 
 			if (arr[1] == null || pat == null) {
@@ -106,7 +106,7 @@ public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 	protected void okPressed() {
 		Patient pat = ElexisEventDispatcher.getSelectedPatient();
 		if (pat != null) {
-			pat.set(_token.split("\\.")[1], txtTokenText.getText());
+			pat.set(_token.split("\\.")[1], txtTokenText.getText()); //$NON-NLS-1$
 		}
 		super.okPressed();
 	}

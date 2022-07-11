@@ -118,8 +118,8 @@ import ch.rgw.tools.TimeTool;
 
 public class DocumentsView extends ViewPart {
 
-	public static final String ID = "ch.elexis.core.ui.documents.views.DocumentsView";
-	public static final String SETTING_FLAT_VIEW = "documentsView/flatView";
+	public static final String ID = "ch.elexis.core.ui.documents.views.DocumentsView"; //$NON-NLS-1$
+	public static final String SETTING_FLAT_VIEW = "documentsView/flatView"; //$NON-NLS-1$
 
 	private static Logger logger = LoggerFactory.getLogger(DocumentsView.class);
 
@@ -130,8 +130,8 @@ public class DocumentsView extends ViewPart {
 	private final String[] colLabels = { StringUtils.EMPTY, StringUtils.EMPTY, Messages.DocumentView_categoryColumn,
 			Messages.DocumentView_titleColumn, Messages.DocumentView_dateCreatedColumn,
 			Messages.DocumentView_keywordsColumn };
-	private final String colWidth = "20,20,150,250,100,500";
-	private final String sortSettings = "0,1,-1,false";
+	private final String colWidth = "20,20,150,250,100,500"; //$NON-NLS-1$
+	private final String sortSettings = "0,1,-1,false"; //$NON-NLS-1$
 	private String searchTitle = StringUtils.EMPTY;
 
 	private DocumentsViewerComparator ovComparator;
@@ -478,7 +478,7 @@ public class DocumentsView extends ViewPart {
 								ExecutionEvent ev = new ExecutionEvent(cmd, params, null, null);
 								created = cmd.executeWithChecks(ev);
 							} catch (Exception e) {
-								logger.error("drop error", e);
+								logger.error("drop error", e); //$NON-NLS-1$
 							}
 							// handle drop from same view
 							if (currentDragSelection != null) {
@@ -517,7 +517,7 @@ public class DocumentsView extends ViewPart {
 				currentDragSelection = selection;
 				if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
 					String title = dh.getTitle();
-					int end = dh.getTitle().lastIndexOf(".");
+					int end = dh.getTitle().lastIndexOf("."); //$NON-NLS-1$
 					if (end != -1) {
 						title = (dh.getTitle()).substring(0, end);
 					}
@@ -535,7 +535,7 @@ public class DocumentsView extends ViewPart {
 					} catch (ElexisException e) {
 						event.doit = false;
 						failure = true;
-						logger.error("drag error", e);
+						logger.error("drag error", e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -569,7 +569,7 @@ public class DocumentsView extends ViewPart {
 
 			@Override
 			public void run() {
-				ParameterizedCommand cmd = commandService.createCommand("ch.elexis.core.ui.commands.BriefNew", null);
+				ParameterizedCommand cmd = commandService.createCommand("ch.elexis.core.ui.commands.BriefNew", null); //$NON-NLS-1$
 				if (cmd != null) {
 					handlerService.executeHandler(cmd);
 				}
@@ -583,13 +583,13 @@ public class DocumentsView extends ViewPart {
 
 			@Override
 			public void run() {
-				ParameterizedCommand cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufNew", null);
+				ParameterizedCommand cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufNew", null); //$NON-NLS-1$
 				if (cmd != null) {
 					Object createdAuf = handlerService.executeHandler(cmd);
 					if (createdAuf instanceof ISickCertificate) {
 						ContextServiceHolder.get().getRootContext().setTyped(createdAuf);
 						// print
-						cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufPrint", null);
+						cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufPrint", null); //$NON-NLS-1$
 						if (cmd != null) {
 							handlerService.executeHandler(cmd);
 						}
@@ -639,7 +639,7 @@ public class DocumentsView extends ViewPart {
 	}
 
 	private void applySortDirection() {
-		String[] usrSortSettings = sortSettings.split(",");
+		String[] usrSortSettings = sortSettings.split(","); //$NON-NLS-1$
 
 		/*
 		 * if (ConfigServiceHolder.getUser(PreferencePage.SAVE_SORT_DIRECTION, false)) {
@@ -667,7 +667,7 @@ public class DocumentsView extends ViewPart {
 
 	private void applyUsersColumnWidthSetting() {
 		TreeColumn[] treeColumns = viewer.getTree().getColumns();
-		String[] userColWidth = colWidth.split(",");
+		String[] userColWidth = colWidth.split(","); //$NON-NLS-1$
 		/*
 		 * if (ConfigServiceHolder.getUser(PreferencePage.SAVE_COLUM_WIDTH, false)) {
 		 * String ucw =
@@ -701,7 +701,7 @@ public class DocumentsView extends ViewPart {
 			StringBuilder sb = new StringBuilder();
 			for (TreeColumn tc : treeColumns) {
 				sb.append(tc.getWidth());
-				sb.append(",");
+				sb.append(","); //$NON-NLS-1$
 			}
 			// ConfigServiceHolder.setUser(PreferencePage.USR_COLUMN_WIDTH_SETTINGS,
 			// sb.toString());
@@ -733,9 +733,9 @@ public class DocumentsView extends ViewPart {
 					DocumentStoreServiceHolder.getService().getPersistenceObject(dh).ifPresent(po -> {
 						ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
 								.getService(ICommandService.class);
-						Command command = commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument");
+						Command command = commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
 						PlatformUI.getWorkbench().getService(IEclipseContext.class)
-								.set(command.getId().concat(".selection"), new StructuredSelection(po));
+								.set(command.getId().concat(".selection"), new StructuredSelection(po)); //$NON-NLS-1$
 						try {
 							command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, null, null));
 						} catch (ExecutionException | NotDefinedException | NotEnabledException

@@ -30,13 +30,13 @@ import ch.rgw.tools.TimeTool;
 public class ServiceElement extends XChangeElement {
 
 	private static final long serialVersionUID = 6382517263003793221L;
-	public static final String XMLNAME = "service";
-	public static final String ATTR_NAME = "name";
-	public static final String ATTR_CONTRACT_NAME = "contractName";
-	public static final String ATTR_CONTRACT_CODE = "contractCode";
-	public static final String ATTR_MINUTES = "minutes";
-	public static final String ATTR_COST = "cost";
-	public static final String ATTR_PRICE = "price";
+	public static final String XMLNAME = "service"; //$NON-NLS-1$
+	public static final String ATTR_NAME = "name"; //$NON-NLS-1$
+	public static final String ATTR_CONTRACT_NAME = "contractName"; //$NON-NLS-1$
+	public static final String ATTR_CONTRACT_CODE = "contractCode"; //$NON-NLS-1$
+	public static final String ATTR_MINUTES = "minutes"; //$NON-NLS-1$
+	public static final String ATTR_COST = "cost"; //$NON-NLS-1$
+	public static final String ATTR_PRICE = "price"; //$NON-NLS-1$
 	public static final String ELEMENT_XID = XidElement.XMLNAME;
 
 	public ServiceElement asExporter(XChangeExporter p, IVerrechenbar iv) {

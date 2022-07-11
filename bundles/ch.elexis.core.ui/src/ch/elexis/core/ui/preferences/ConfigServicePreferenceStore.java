@@ -85,7 +85,7 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 		if (value == null) {
 			value = getDefaultStringValue(name);
 		}
-		return value == null ? BOOLEAN_DEFAULT_DEFAULT : ("1".equals(value) || "true".equalsIgnoreCase(value));
+		return value == null ? BOOLEAN_DEFAULT_DEFAULT : ("1".equals(value) || "true".equalsIgnoreCase(value)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -152,18 +152,18 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 			value = configService.get(name, null);
 		} else if (scope == Scope.MANDATOR) {
 			IMandator activeMandator = contextService.getActiveMandator()
-					.orElseThrow(() -> new IllegalStateException("No active mandator"));
+					.orElseThrow(() -> new IllegalStateException("No active mandator")); //$NON-NLS-1$
 			value = configService.get(activeMandator, name, null);
 		} else if (scope == Scope.USER) {
 			IContact activeUser = contextService.getActiveUserContact()
-					.orElseThrow(() -> new IllegalStateException("No active user contact"));
+					.orElseThrow(() -> new IllegalStateException("No active user contact")); //$NON-NLS-1$
 			value = configService.get(activeUser, name, null);
 		} else if (scope == Scope.LOCAL) {
 			value = configService.getLocal(name, null);
 		} else if (contact != null) {
 			value = configService.get(contact, name, null);
 		} else {
-			throw new IllegalStateException("Unknown scope " + scope);
+			throw new IllegalStateException("Unknown scope " + scope); //$NON-NLS-1$
 		}
 		return value;
 	}
@@ -173,18 +173,18 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 			configService.set(name, value);
 		} else if (scope == Scope.MANDATOR) {
 			IMandator activeMandator = contextService.getActiveMandator()
-					.orElseThrow(() -> new IllegalStateException("No active mandator"));
+					.orElseThrow(() -> new IllegalStateException("No active mandator")); //$NON-NLS-1$
 			configService.set(activeMandator, name, value);
 		} else if (scope == Scope.USER) {
 			IContact activeUser = contextService.getActiveUserContact()
-					.orElseThrow(() -> new IllegalStateException("No active user contact"));
+					.orElseThrow(() -> new IllegalStateException("No active user contact")); //$NON-NLS-1$
 			configService.set(activeUser, name, value);
 		} else if (scope == Scope.LOCAL) {
 			configService.setLocal(name, value);
 		} else if (contact != null) {
 			configService.set(contact, name, value);
 		} else {
-			throw new IllegalStateException("Unknown scope " + scope);
+			throw new IllegalStateException("Unknown scope " + scope); //$NON-NLS-1$
 		}
 	}
 
@@ -324,18 +324,18 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 			configService.set(name, value);
 		} else if (scope == Scope.MANDATOR) {
 			IMandator activeMandator = contextService.getActiveMandator()
-					.orElseThrow(() -> new IllegalStateException("No active mandator"));
+					.orElseThrow(() -> new IllegalStateException("No active mandator")); //$NON-NLS-1$
 			configService.set(activeMandator, name, value);
 		} else if (scope == Scope.USER) {
 			IContact activeUser = contextService.getActiveUserContact()
-					.orElseThrow(() -> new IllegalStateException("No active user contact"));
+					.orElseThrow(() -> new IllegalStateException("No active user contact")); //$NON-NLS-1$
 			configService.set(activeUser, name, value);
 		} else if (scope == Scope.LOCAL) {
 			configService.setLocal(name, value);
 		} else if (contact != null) {
 			configService.set(contact, name, value);
 		} else {
-			throw new IllegalStateException("Unknown scope " + scope);
+			throw new IllegalStateException("Unknown scope " + scope); //$NON-NLS-1$
 		}
 	}
 
@@ -372,16 +372,16 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 			configService.setLocal(name, value);
 		} else if (scope == Scope.MANDATOR) {
 			IMandator activeMandator = contextService.getActiveMandator()
-					.orElseThrow(() -> new IllegalStateException("No active mandator"));
+					.orElseThrow(() -> new IllegalStateException("No active mandator")); //$NON-NLS-1$
 			configService.set(activeMandator, name, value);
 		} else if (scope == Scope.USER) {
 			IContact activeUser = contextService.getActiveUserContact()
-					.orElseThrow(() -> new IllegalStateException("No active user contact"));
+					.orElseThrow(() -> new IllegalStateException("No active user contact")); //$NON-NLS-1$
 			configService.set(activeUser, name, value);
 		} else if (contact != null) {
 			configService.set(contact, name, value);
 		} else {
-			throw new IllegalStateException("Unknown scope " + scope);
+			throw new IllegalStateException("Unknown scope " + scope); //$NON-NLS-1$
 		}
 	}
 

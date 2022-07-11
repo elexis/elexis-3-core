@@ -12,14 +12,14 @@ import com.equo.chromium.swt.Browser;
 
 public class BrowserView extends ViewPart {
 
-	public static final String ID = "ch.elexis.core.ui.chromium.views.BrowserView";
+	public static final String ID = "ch.elexis.core.ui.chromium.views.BrowserView"; //$NON-NLS-1$
 
 	private Browser browser;
 
 	@Override
 	public void createPartControl(Composite parent) {
 		browser = new Browser(parent, SWT.NONE);
-		browser.setUrl("http://www.google.com");
+		browser.setUrl("http://www.google.com"); //$NON-NLS-1$
 	}
 
 	@Override

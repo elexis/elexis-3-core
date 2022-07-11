@@ -279,7 +279,7 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 			selectionService.setSelection(selection.toList());
 		});
 
-		menuService.registerContextMenu(tableResults, "ch.elexis.core.ui.tasks.popupmenu.tableresults");
+		menuService.registerContextMenu(tableResults, "ch.elexis.core.ui.tasks.popupmenu.tableresults"); //$NON-NLS-1$
 
 		inputModel = new SetModel();
 		tableViewerResults.setInput(inputModel);
@@ -325,10 +325,10 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		ITask selectedTask = (ITask) ((StructuredSelection) event.getSelection()).getFirstElement();
-		MPart taskDetailPart = partService.createPart("ch.elexis.core.ui.tasks.partdescriptor.taskdetail");
-		taskDetailPart.getTransientData().put("task", selectedTask);
+		MPart taskDetailPart = partService.createPart("ch.elexis.core.ui.tasks.partdescriptor.taskdetail"); //$NON-NLS-1$
+		taskDetailPart.getTransientData().put("task", selectedTask); //$NON-NLS-1$
 
-		MPartStack detailPartStack = (MPartStack) modelService.find("ch.elexis.core.ui.tasks.partstack.details",
+		MPartStack detailPartStack = (MPartStack) modelService.find("ch.elexis.core.ui.tasks.partstack.details", //$NON-NLS-1$
 				application);
 		if (detailPartStack != null && detailPartStack.isVisible()) {
 			detailPartStack.getChildren().add(taskDetailPart);

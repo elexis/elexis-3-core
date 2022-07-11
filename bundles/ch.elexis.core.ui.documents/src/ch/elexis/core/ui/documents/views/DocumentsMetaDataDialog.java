@@ -83,8 +83,8 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	public DocumentsMetaDataDialog(IDocument document, Shell parent) {
 		super(parent);
 
-		Objects.requireNonNull(FindingsServiceHolder.getiFindingsService(), "Findings-Service not installed.");
-		Objects.requireNonNull(ValueSetServiceHolder.getIValueSetService(), "ValueSet-Service not installed.");
+		Objects.requireNonNull(FindingsServiceHolder.getiFindingsService(), "Findings-Service not installed."); //$NON-NLS-1$
+		Objects.requireNonNull(ValueSetServiceHolder.getIValueSetService(), "ValueSet-Service not installed."); //$NON-NLS-1$
 
 		this.document = document;
 		this.documentReference = findDocumentReference();
@@ -193,7 +193,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 				.getDocumentFindings(document.getId(), IDocumentReference.class);
 		if (documentReferences.size() > 1) {
 			LoggerFactory.getLogger(getClass()).warn(
-					"Got more than one DocumentReferences for document id [" + document.getId() + "] using first");
+					"Got more than one DocumentReferences for document id [" + document.getId() + "] using first"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (documentReferences.isEmpty()) {
 			// no document reference found - create new entry

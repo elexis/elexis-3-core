@@ -152,7 +152,7 @@ public class RunnableAndContextConfigurationComposite extends AbstractTaskDescri
 				Serializable configuredValue = configuredRunContext.get(key);
 
 				if (defaultValue == null) {
-					defaultValue = "null";
+					defaultValue = "null"; //$NON-NLS-1$
 				}
 
 				if (defaultValue instanceof Boolean) {

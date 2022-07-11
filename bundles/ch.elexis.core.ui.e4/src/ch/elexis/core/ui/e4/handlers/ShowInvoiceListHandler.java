@@ -26,7 +26,7 @@ public class ShowInvoiceListHandler {
 
 		boolean _filterPatient = (filterPatient != null) ? Boolean.valueOf(filterPatient) : false;
 
-		MPart invoiceListPart = partService.showPart("ch.elexis.core.ui.views.rechnung.InvoiceListView",
+		MPart invoiceListPart = partService.showPart("ch.elexis.core.ui.views.rechnung.InvoiceListView", //$NON-NLS-1$
 				PartState.VISIBLE);
 		if (_filterPatient) {
 			java.util.Optional<IPatient> activePatient = contextService.getActivePatient();
@@ -37,12 +37,12 @@ public class ShowInvoiceListHandler {
 			// IRefreshablePart
 			Object compatibilityViewPart = invoiceListPart.getObject();
 			try {
-				Method method = compatibilityViewPart.getClass().getMethod("getPart", (Class<?>[]) null);
+				Method method = compatibilityViewPart.getClass().getMethod("getPart", (Class<?>[]) null); //$NON-NLS-1$
 				Object invoiceListViewPart = method.invoke(compatibilityViewPart, (Object[]) null);
 				refreshablePart = (IRefreshablePart) invoiceListViewPart;
 			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
-				LoggerFactory.getLogger(getClass()).error("Error getting e3 view", e);
+				LoggerFactory.getLogger(getClass()).error("Error getting e3 view", e); //$NON-NLS-1$
 			}
 
 			if (activePatient.isPresent() && refreshablePart != null) {

@@ -81,9 +81,9 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		}
 		tb = tActions.createControl(this);
 		// For the Jubula GUI tests we create unique identifiers for all tool items
-		if (parent.getData("TEST_COMP_NAME") != null) {
+		if (parent.getData("TEST_COMP_NAME") != null) { //$NON-NLS-1$
 			for (int idx = 0; idx < tb.getItemCount(); idx++) {
-				tb.getItem(idx).setData("TEST_COMP_NAME", parent.getData("TEST_COMP_NAME") + "_" + idx + "_tbi");
+				tb.getItem(idx).setData("TEST_COMP_NAME", parent.getData("TEST_COMP_NAME") + "_" + idx + "_tbi"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 		}
 
@@ -163,7 +163,7 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 				ac.setText(BeanUtils.getProperty(actObject, field));
 			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 				LoggerFactory.getLogger(getClass())
-						.error("Error getting property [" + field + "] of [" + actObject + "]", e);
+						.error("Error getting property [" + field + "] of [" + actObject + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 		layout();
@@ -224,7 +224,7 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 							BeanUtils.setProperty(actObject, field, ac.getText());
 						} catch (IllegalAccessException | InvocationTargetException e) {
 							LoggerFactory.getLogger(getClass())
-									.error("Error setting property [" + field + "] of [" + actObject + "]", e);
+									.error("Error setting property [" + field + "] of [" + actObject + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 					}
 				}

@@ -97,7 +97,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			new Label(compBackupDir, SWT.NONE).setText(Messages.Texterstellung_backupdir);
 			Text backupDir = new Text(compBackupDir, SWT.BORDER);
 			backupDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			backupDir.setText(documentService.getDocumentCachePath() + File.separator + "backup");
+			backupDir.setText(documentService.getDocumentCachePath() + File.separator + "backup"); //$NON-NLS-1$
 			backupDir.setEditable(false);
 			Button restore = new Button(compBackupDir, SWT.PUSH);
 			restore.setText("wiederherstellen");
@@ -196,7 +196,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 	}
 
 	private void restoreLocalDocuments(ILocalDocumentService documentService) {
-		File backupDir = new File(documentService.getDocumentCachePath() + File.separator + "backup");
+		File backupDir = new File(documentService.getDocumentCachePath() + File.separator + "backup"); //$NON-NLS-1$
 		if (backupDir.exists()) {
 			Map<File, Brief> existing = new HashMap<>();
 			for (File file : backupDir.listFiles()) {
@@ -214,7 +214,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			} else {
 				Date fileFrom = new Date(existing.keySet().stream().mapToLong(f -> f.lastModified()).min().getAsLong());
 				Date fileTo = new Date(existing.keySet().stream().mapToLong(f -> f.lastModified()).max().getAsLong());
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
 				if (MessageDialog.openQuestion(getShell(), "Briefe wiederherstellen",
 						"Sollen die " + existing.size() + " Briefe aus Datei(en) vom " + dateFormat.format(fileFrom)
 								+ " bis " + dateFormat.format(fileTo) + " wiederhergestellt werden?")) {
@@ -226,7 +226,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 							brief.save(contentToStore, FilenameUtils.getExtension(backupFile.getName()));
 							backupFile.delete();
 						} catch (IOException e) {
-							LoggerFactory.getLogger(getClass()).error("Error restoring local backup", e);
+							LoggerFactory.getLogger(getClass()).error("Error restoring local backup", e); //$NON-NLS-1$
 						}
 					}
 				}

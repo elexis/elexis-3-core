@@ -173,7 +173,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 							StringBuilder sb = new StringBuilder();
 							for (Reminder r : list) {
 								sb.append(r.getSubject() + StringUtils.LF);
-								sb.append(r.getMessage() + "\n\n");
+								sb.append(r.getMessage() + "\n\n"); //$NON-NLS-1$
 							}
 							SWTHelper.alert(Messages.ReminderView_importantRemindersCaption, sb.toString());
 						}
@@ -664,13 +664,14 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		public void updateUserConfiguration() {
 			colorInProgress = UiDesk.getColorFromRGB(
 					ConfigServiceHolder.getUser(Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.IN_PROGRESS.name(), //$NON-NLS-1$
-							"FFFFFF")); // ;
+							"FFFFFF")); // ; //$NON-NLS-1$
 			colorDue = UiDesk.getColorFromRGB(ConfigServiceHolder
-					.getUser(Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.DUE.name(), "FFFFFF")); //$NON-NLS-1$ ;
+					.getUser(Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.DUE.name(), "FFFFFF")); //$NON-NLS-1$ //$NON-NLS-2$
+																											// ;
 			colorOverdue = UiDesk.getColorFromRGB(ConfigServiceHolder
-					.getUser(Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.OVERDUE.name(), "FF0000")); //$NON-NLS-1$
+					.getUser(Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.OVERDUE.name(), "FF0000")); //$NON-NLS-1$ //$NON-NLS-2$
 			colorOpen = UiDesk.getColorFromRGB(ConfigServiceHolder
-					.getUser(Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.OPEN.name(), "00FF00")); //$NON-NLS-1$
+					.getUser(Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.OPEN.name(), "00FF00")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		@Override
@@ -709,7 +710,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				Reminder reminder = (Reminder) element;
 				ProcessStatus status = reminder.getStatus();
 				if (ProcessStatus.ON_HOLD == status) {
-					return "[" + status.getLocaleText() + "] " + super.getText(element);
+					return "[" + status.getLocaleText() + "] " + super.getText(element); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 			return super.getText(element);
@@ -750,7 +751,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					}
 				}
 				Patient act = ElexisEventDispatcher.getSelectedPatient();
-				String patientId = (act != null) ? act.getId() : "INVALID_ID";
+				String patientId = (act != null) ? act.getId() : "INVALID_ID"; //$NON-NLS-1$
 				String[] vals = check.get(true, Reminder.FLD_SUBJECT, Reminder.FLD_MESSAGE, Reminder.FLD_KONTAKT_ID,
 						Reminder.FLD_VISIBILITY);
 				if (!vals[2].equals(patientId)) {

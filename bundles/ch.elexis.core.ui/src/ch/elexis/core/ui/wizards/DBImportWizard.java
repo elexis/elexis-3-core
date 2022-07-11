@@ -57,7 +57,7 @@ public class DBImportWizard extends Wizard {
 			type = "PostgreSQL"; //$NON-NLS-1$
 			break;
 		case DBImportFirstPage.H2:
-			type = "H2";
+			type = "H2"; //$NON-NLS-1$
 			break;
 		case DBImportFirstPage.ODBC:
 			type = "ODBC"; //$NON-NLS-1$

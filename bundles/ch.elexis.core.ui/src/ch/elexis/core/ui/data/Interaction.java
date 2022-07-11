@@ -76,20 +76,20 @@ public class Interaction extends PersistentObject {
 	// From https://raw.githubusercontent.com/zdavatz/oddb.org/master/src/model/epha_interaction.rb
 	public static final Map<String, String> Ratings =
 		ImmutableMap.of(
-			"A", Messages.Interaction_Class_A,
-			"B", Messages.Interaction_Class_B,
-			"C", Messages.Interaction_Class_C,
-			"D", Messages.Interaction_Class_D,
-			"X", Messages.Interaction_Class_X
+			"A", Messages.Interaction_Class_A, //$NON-NLS-1$
+			"B", Messages.Interaction_Class_B, //$NON-NLS-1$
+			"C", Messages.Interaction_Class_C, //$NON-NLS-1$
+			"D", Messages.Interaction_Class_D, //$NON-NLS-1$
+			"X", Messages.Interaction_Class_X //$NON-NLS-1$
 );
 
 	// using the same color like https://raw.githubusercontent.com/zdavatz/AmiKo-Windows/master/css/interactions_css.css
 	public static final Map<String, String> Colors = ImmutableMap.of(
-		"A", "caff70",	//$NON-NLS-1$ $NON-NLS-2$
-		"B", "ffec8b",	//$NON-NLS-1$ $NON-NLS-2$
-		"C", "ffb90f",	//$NON-NLS-1$ $NON-NLS-2$
-		"D", "ff82ab",	//$NON-NLS-1$ $NON-NLS-2$
-		"X", "ff6a6a");	//$NON-NLS-1$ $NON-NLS-2$
+		"A", "caff70",	//$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
+		"B", "ffec8b",	//$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
+		"C", "ffb90f",	//$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
+		"D", "ff82ab",	//$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
+		"X", "ff6a6a");	//$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
 	// @formatter:on
 
 	private static Logger logger = LoggerFactory.getLogger(Interaction.class);
@@ -167,7 +167,7 @@ public class Interaction extends PersistentObject {
 		if (severity.length() > 1) {
 			log.warn("Unable to import {} {} {} {} severity wrong {} {}", atc1, name1, atc2, name2, //$NON-NLS-1$
 					severity, severity.length());
-			severity = "D";
+			severity = "D"; //$NON-NLS-1$
 		}
 		if (!set(
 				new String[] { FLD_ATC1, FLD_NAME1, FLD_ATC2, FLD_NAME2, FLD_INFO, FLD_MECHANISM, FLD_EFFECT,
@@ -259,13 +259,13 @@ public class Interaction extends PersistentObject {
 
 	private static void downloadMatrix() {
 		try {
-			logger.info("Start downloading {}", MATRIX_CSV_URL);
+			logger.info("Start downloading {}", MATRIX_CSV_URL); //$NON-NLS-1$
 			FileUtils.copyURLToFile(new URL(MATRIX_CSV_URL), MATRIX_CSV_LOCAL);
-			logger.info("Finished downloading to {}", MATRIX_CSV_LOCAL);
+			logger.info("Finished downloading to {}", MATRIX_CSV_LOCAL); //$NON-NLS-1$
 		} catch (IOException e) {
-			logger.error("Unable to download {} to {}: {}", MATRIX_CSV_URL, MATRIX_CSV_LOCAL, e.getMessage());
+			logger.error("Unable to download {} to {}: {}", MATRIX_CSV_URL, MATRIX_CSV_LOCAL, e.getMessage()); //$NON-NLS-1$
 			String info = String.format("Unable to find %s", MATRIX_CSV_URL);
-			Status status = new Status(Status.ERROR, "ch.elexis.core.ui", Status.ERROR, info, null);
+			Status status = new Status(Status.ERROR, "ch.elexis.core.ui", Status.ERROR, info, null); //$NON-NLS-1$
 			ErrorDialog.openError(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(), "Unable to download",
 					null, status);
 		}
@@ -275,7 +275,7 @@ public class Interaction extends PersistentObject {
 		Interaction version = load(VERSIONID);
 		try {
 			byte[] b = Files.readAllBytes(MATRIX_CSV_LOCAL.toPath());
-			byte[] digest = MessageDigest.getInstance("SHA-256").digest(b);
+			byte[] digest = MessageDigest.getInstance("SHA-256").digest(b); //$NON-NLS-1$
 			// hash_from_file = Base64.getEncoder().encodeToString(digest);
 			hash_from_file = javax.xml.bind.DatatypeConverter.printHexBinary(digest);
 			String sha25_from_db = version.get(FLD_ABUSE_ID_FOR_SHA);
@@ -332,10 +332,10 @@ public class Interaction extends PersistentObject {
 																														// matrix_csv
 							// Delete all mappings and empty last_parsed/sha
 							getDefaultConnection().exec("DELETE FROM " + TABLENAME + " WHERE ID != 'VERSION';"); //$NON-NLS-1$ //$NON-NLS-2$
-							getDefaultConnection().exec("UPDATE " + TABLENAME + " SET " //$NON-NLS-1$
-									+ FLD_ABUSE_ID_FOR_LAST_PARSED + " = '" + StringUtils.EMPTY + "', "
+							getDefaultConnection().exec("UPDATE " + TABLENAME + " SET " //$NON-NLS-1$ //$NON-NLS-2$
+									+ FLD_ABUSE_ID_FOR_LAST_PARSED + " = '" + StringUtils.EMPTY + "', " //$NON-NLS-1$ //$NON-NLS-2$
 							// $NON-NLS-4$
-									+ FLD_ABUSE_ID_FOR_SHA + " = '" + StringUtils.EMPTY + "' WHERE ID = 'VERSION';");
+									+ FLD_ABUSE_ID_FOR_SHA + " = '" + StringUtils.EMPTY + "' WHERE ID = 'VERSION';"); //$NON-NLS-1$ //$NON-NLS-2$
 							notImported = 0;
 							importerInteractionsCreated = 0;
 							if (MATRIX_CSV_LOCAL.exists() && getShaFromFile()) {
@@ -391,17 +391,19 @@ public class Interaction extends PersistentObject {
 									}
 								}
 								getShaFromFile();
-								getDefaultConnection().exec("UPDATE " + TABLENAME + " SET " //$NON-NLS-1$
-										+ FLD_ABUSE_ID_FOR_LAST_PARSED + " = '" + today + "', " //$NON-NLS-2$ $NON-NLS-3$
+								getDefaultConnection().exec("UPDATE " + TABLENAME + " SET " //$NON-NLS-1$ //$NON-NLS-2$
+										+ FLD_ABUSE_ID_FOR_LAST_PARSED + " = '" + today + "', " //$NON-NLS-1$//$NON-NLS-2$
+																								// $NON-NLS-3$
 																								// $NON-NLS-4$
-										+ FLD_ABUSE_ID_FOR_SHA + " = '" + hash_from_file + "' WHERE ID = 'VERSION';"); //$NON-NLS-1$ $NON-NLS-2$
+										+ FLD_ABUSE_ID_FOR_SHA + " = '" + hash_from_file + "' WHERE ID = 'VERSION';"); //$NON-NLS-1$ //$NON-NLS-2$
+																														// $NON-NLS-2$
 								logger.info("Imported {} interactions setting date {} sha {}", //$NON-NLS-1$
 										importerInteractionsCreated, today, hash_from_file); // $ }
 							} catch (IOException e) {
 								info = String.format("Import aborted after %d interactions with %d failures ", //$NON-NLS-1$
 										importerInteractionsCreated, notImported);
 								logger.error(info);
-								Status status = new Status(Status.ERROR, "ch.elexis.core.ui", Status.ERROR, info, null);
+								Status status = new Status(Status.ERROR, "ch.elexis.core.ui", Status.ERROR, info, null); //$NON-NLS-1$
 								ErrorDialog.openError(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
 										"Unable to import", null, status);
 								monitor.done();
@@ -413,7 +415,7 @@ public class Interaction extends PersistentObject {
 					String info = String.format("Import aborted after %d interactions with %d failures ", //$NON-NLS-1$
 							importerInteractionsCreated, notImported);
 					logger.error(info);
-					Status status = new Status(Status.ERROR, "ch.elexis.core i", Status.ERROR, info, null);
+					Status status = new Status(Status.ERROR, "ch.elexis.core i", Status.ERROR, info, null); //$NON-NLS-1$
 					ErrorDialog.openError(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"Unable to import", null, status);
 					return;

@@ -142,7 +142,7 @@ public class CategorySelectionEditComposite extends Composite {
 						cbCategories.remove(selection);
 						cbCategories.setSelection(new StructuredSelection(document.getCategory()), true);
 					} catch (ElexisException e) {
-						LoggerFactory.getLogger(getClass()).warn("existing document references", e);
+						LoggerFactory.getLogger(getClass()).warn("existing document references", e); //$NON-NLS-1$
 						SWTHelper.showError(Messages.DocumentMetaDataDialog_deleteCategoryError,
 								Messages.DocumentMetaDataDialog_deleteCategoryErrorText);
 					}

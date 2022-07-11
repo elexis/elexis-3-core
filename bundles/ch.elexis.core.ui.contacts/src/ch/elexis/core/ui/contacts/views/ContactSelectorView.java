@@ -80,7 +80,7 @@ import ch.elexis.data.Patient;
  */
 public class ContactSelectorView extends ViewPart implements ITabbedPropertySheetPageContributor {
 
-	public static final String ID = "ch.elexis.core.ui.contacts.views.ContactSelectorView";
+	public static final String ID = "ch.elexis.core.ui.contacts.views.ContactSelectorView"; //$NON-NLS-1$
 
 	private ObservableListContentProvider contentProvider = null;
 
@@ -229,13 +229,13 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 			String txt = text.getText();
 
 			// We have a formula, if the string starts with "="
-			if (txt.startsWith("=")) {
+			if (txt.startsWith("=")) { //$NON-NLS-1$
 				String formula;
-				if (txt.contains(";")) {
-					formula = txt.substring(1, txt.indexOf(";"));
+				if (txt.contains(";")) { //$NON-NLS-1$
+					formula = txt.substring(1, txt.indexOf(";")); //$NON-NLS-1$
 
 					Map<String, Object> functions = new HashMap<>();
-					functions.put("math", Math.class);
+					functions.put("math", Math.class); //$NON-NLS-1$
 					JexlEngine jexl = new JexlEngine();
 					jexl.setLenient(false);
 					jexl.setFunctions(functions);
@@ -244,7 +244,7 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 						Expression expr = jexl.createExpression(formula);
 						Object result = expr.evaluate(new MapContext());
 						text.setText(StringUtils.EMPTY);
-						text.setMessage(formula + "=" + result + StringUtils.EMPTY);
+						text.setMessage(formula + "=" + result + StringUtils.EMPTY); //$NON-NLS-1$
 						result = null;
 					} catch (JexlException e) {
 						text.setText(StringUtils.EMPTY);

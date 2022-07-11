@@ -19,7 +19,7 @@ import ch.elexis.core.ui.contacts.views.filter.KontaktAnzeigeTypViewerFilter;
 public class ContactSelectorViewerComparator extends ViewerComparator {
 
 	public static enum sorter {
-		SORT_BY_FIRSTNAME("Vorname"), SORT_BY_FAMILYNAME("Nachname");
+		SORT_BY_FIRSTNAME("Vorname"), SORT_BY_FAMILYNAME("Nachname"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		public String label;
 

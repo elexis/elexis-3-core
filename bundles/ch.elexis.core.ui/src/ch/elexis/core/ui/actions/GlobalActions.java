@@ -216,24 +216,24 @@ public class GlobalActions {
 		mainWindow = window;
 		help = Hub.plugin.getWorkbench().getHelpSystem();
 		exitAction = ActionFactory.QUIT.create(window);
-		exitAction.setText(Messages.GlobalActions_MenuExit); // $NON-NLS-1$
+		exitAction.setText(Messages.GlobalActions_MenuExit);
 		newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
-		newWindowAction.setText(Messages.GlobalActions_NewWindow); // $NON-NLS-1$
+		newWindowAction.setText(Messages.GlobalActions_NewWindow);
 		copyAction = ActionFactory.COPY.create(window);
-		copyAction.setText(Messages.GlobalActions_Copy); // $NON-NLS-1$
+		copyAction.setText(Messages.GlobalActions_Copy);
 		cutAction = ActionFactory.CUT.create(window);
-		cutAction.setText(Messages.GlobalActions_Cut); // $NON-NLS-1$
+		cutAction.setText(Messages.GlobalActions_Cut);
 		pasteAction = ActionFactory.PASTE.create(window);
-		pasteAction.setText(Messages.GlobalActions_Paste); // $NON-NLS-1$
+		pasteAction.setText(Messages.GlobalActions_Paste);
 		aboutAction = ActionFactory.ABOUT.create(window);
-		aboutAction.setText(Messages.GlobalActions_MenuAbout); // $NON-NLS-1$
+		aboutAction.setText(Messages.GlobalActions_MenuAbout);
 		prefsAction = new OpenPreferencesAction(window);
 		prefsAction.setText(Messages.GlobalActions_Preferences);
-		savePerspectiveAction = new Action(Messages.GlobalActions_SavePerspective) { // $NON-NLS-1$
+		savePerspectiveAction = new Action(Messages.GlobalActions_SavePerspective) {
 			{
 				setId("savePerspektive"); //$NON-NLS-1$
-				setToolTipText(Messages.GlobalActions_SavePerspectiveToolTip); // $NON-NLS-1$
-				setImageDescriptor(Images.IMG_DISK.getImageDescriptor()); // $NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_SavePerspectiveToolTip);
+				setImageDescriptor(Images.IMG_DISK.getImageDescriptor());
 			}
 
 			@Override
@@ -245,10 +245,10 @@ public class GlobalActions {
 			}
 		};
 
-		helpAction = new RestrictedAction(AC_HELP, Messages.GlobalActions_ac_handbook) { // $NON-NLS-1$
+		helpAction = new RestrictedAction(AC_HELP, Messages.GlobalActions_ac_handbook) {
 			{
 				setImageDescriptor(Images.IMG_BOOK.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_ac_openhandbook); // $NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_ac_openhandbook);
 
 			}
 
@@ -261,20 +261,20 @@ public class GlobalActions {
 					try {
 						desktop.browse(new java.net.URI(url));
 					} catch (Exception e) {
-						logger.warn("failed to open default browser :" + e);
+						logger.warn("failed to open default browser :" + e); //$NON-NLS-1$
 						MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_Error,
 								Messages.GlobalActions_PreferencesHandbook_URL);
 						ExHandler.handle(e);
 					}
 				} else {
-					logger.warn("isDesktopSupported was false.");
+					logger.warn("isDesktopSupported was false."); //$NON-NLS-1$
 				}
 			}
 		};
 		savePerspectiveAsAction = ActionFactory.SAVE_PERSPECTIVE.create(window);
 
 		// ActionFactory.SAVE_PERSPECTIVE.create(window);
-		resetPerspectiveAction = new Action(Messages.GlobalActions_Home) { // $NON-NLS-1$
+		resetPerspectiveAction = new Action(Messages.GlobalActions_Home) {
 
 			@Override
 			public void run() {
@@ -305,12 +305,12 @@ public class GlobalActions {
 
 		};
 
-		homeAction = new Action(Messages.GlobalActions_Home) { // $NON-NLS-1$
+		homeAction = new Action(Messages.GlobalActions_Home) {
 			{
 				setId("home"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "home"); //$NON-NLS-1$
 				setImageDescriptor(Images.IMG_HOME.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_HomeToolTip); // $NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_HomeToolTip);
 				help.setHelp(this, "ch.elexis.globalactions.homeAction"); //$NON-NLS-1$
 			}
 
@@ -330,7 +330,7 @@ public class GlobalActions {
 				}
 			}
 		};
-		savePerspectiveAsDefaultAction = new Action(Messages.GlobalActions_saveasstartperspective) { // $NON-NLS-1$
+		savePerspectiveAsDefaultAction = new Action(Messages.GlobalActions_saveasstartperspective) {
 			{
 				setId("start"); //$NON-NLS-1$
 				// setActionDefinitionId(Hub.COMMAND_PREFIX+"startPerspective");
@@ -343,7 +343,7 @@ public class GlobalActions {
 			}
 
 		};
-		loginAction = new RestrictedAction(AC_LOGIN, Messages.GlobalActions_Login) { // $NON-NLS-1$
+		loginAction = new RestrictedAction(AC_LOGIN, Messages.GlobalActions_Login) {
 			{
 				setId("login"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "login"); //$NON-NLS-1$
@@ -374,7 +374,7 @@ public class GlobalActions {
 				}
 			}
 		};
-		importAction = new RestrictedAction(AC_IMORT, Messages.GlobalActions_Import) { // $NON-NLS-1$
+		importAction = new RestrictedAction(AC_IMORT, Messages.GlobalActions_Import) {
 			{
 				setId("import"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "import"); //$NON-NLS-1$
@@ -385,14 +385,14 @@ public class GlobalActions {
 				// cnv.open();
 				Importer imp = new Importer(mainWindow.getShell(), ExtensionPointConstantsUi.FREMDDATENIMPORT);
 				imp.create();
-				imp.setMessage(Messages.GlobalActions_ImportDlgMessage); // $NON-NLS-1$
-				imp.getShell().setText(Messages.GlobalActions_ImportDlgShelltext); // $NON-NLS-1$
-				imp.setTitle(Messages.GlobalActions_ImportDlgTitle); // $NON-NLS-1$
+				imp.setMessage(Messages.GlobalActions_ImportDlgMessage);
+				imp.getShell().setText(Messages.GlobalActions_ImportDlgShelltext);
+				imp.setTitle(Messages.GlobalActions_ImportDlgTitle);
 				imp.open();
 			}
 		};
 
-		connectWizardAction = new RestrictedAction(AC_CONNECT, Messages.GlobalActions_Connection) { // $NON-NLS-1$
+		connectWizardAction = new RestrictedAction(AC_CONNECT, Messages.GlobalActions_Connection) {
 			{
 				setId("connectWizard"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "connectWizard"); //$NON-NLS-1$
@@ -406,7 +406,7 @@ public class GlobalActions {
 
 		};
 
-		changeMandantAction = new RestrictedAction(AC_CHANGEMANDANT, Messages.GlobalActions_Mandator) { // $NON-NLS-1$
+		changeMandantAction = new RestrictedAction(AC_CHANGEMANDANT, Messages.GlobalActions_Mandator) {
 			{
 				setId("changeMandant"); //$NON-NLS-1$
 				// setActionDefinitionId(Hub.COMMAND_PREFIX+"changeMandant"); //$NON-NLS-1$
@@ -431,83 +431,83 @@ public class GlobalActions {
 				}
 			}
 		};
-		printKontaktEtikette = new Action(Messages.GlobalActions_PrintContactLabel) { // $NON-NLS-1$
+		printKontaktEtikette = new Action(Messages.GlobalActions_PrintContactLabel) {
 			{
-				setToolTipText(Messages.GlobalActions_PrintContactLabelToolTip); // $NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_PrintContactLabelToolTip);
 				setImageDescriptor(Images.IMG_ADRESSETIKETTE.getImageDescriptor());
 			}
 
 			@Override
 			public void run() {
-				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printContactLabel");
+				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printContactLabel"); //$NON-NLS-1$
 
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
 				} catch (Exception e) {
 					ExHandler.handle(e);
-					logger.error("Failed to execute command ch.elexis.core.ui.commands.printContactLabel", e);
+					logger.error("Failed to execute command ch.elexis.core.ui.commands.printContactLabel", e); //$NON-NLS-1$
 				}
 			}
 		};
 
-		printAdresse = new Action(Messages.GlobalActions_PrintAddressLabel) { // $NON-NLS-1$
+		printAdresse = new Action(Messages.GlobalActions_PrintAddressLabel) {
 			{
 				setImageDescriptor(Images.IMG_ADRESSETIKETTE.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_PrintAddressLabelToolTip); // $NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_PrintAddressLabelToolTip);
 			}
 
 			@Override
 			public void run() {
-				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printAddressLabel");
+				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printAddressLabel"); //$NON-NLS-1$
 
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
 				} catch (Exception e) {
 					ExHandler.handle(e);
-					logger.error("Failed to execute command ch.elexis.core.ui.commands.printAddressLabel", e);
+					logger.error("Failed to execute command ch.elexis.core.ui.commands.printAddressLabel", e); //$NON-NLS-1$
 				}
 			}
 		};
 
-		printVersionedEtikette = new Action(Messages.GlobalActions_PrintVersionedLabel) { // $NON-NLS-1$
+		printVersionedEtikette = new Action(Messages.GlobalActions_PrintVersionedLabel) {
 			{
-				setToolTipText(Messages.GlobalActions_PrintVersionedLabelToolTip); // $NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_PrintVersionedLabelToolTip);
 				setImageDescriptor(Images.IMG_VERSIONEDETIKETTE.getImageDescriptor());
 			}
 
 			@Override
 			public void run() {
-				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printVersionedLabel");
+				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printVersionedLabel"); //$NON-NLS-1$
 
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
 				} catch (Exception e) {
 					ExHandler.handle(e);
-					logger.error("Failed to execute command ch.elexis.core.ui.commands.printVersionedLabel", e);
+					logger.error("Failed to execute command ch.elexis.core.ui.commands.printVersionedLabel", e); //$NON-NLS-1$
 				}
 			}
 		};
 
-		printEtikette = new Action(Messages.GlobalActions_PrintLabel) { // $NON-NLS-1$
+		printEtikette = new Action(Messages.GlobalActions_PrintLabel) {
 			{
 				setImageDescriptor(Images.IMG_PATIENTETIKETTE.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_PrintLabelToolTip); // $NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_PrintLabelToolTip);
 			}
 
 			@Override
 			public void run() {
-				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printPatientLabel");
+				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printPatientLabel"); //$NON-NLS-1$
 
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
 				} catch (Exception e) {
 					ExHandler.handle(e);
-					logger.error("Failed to execute command ch.elexis.core.ui.commands.printPatientLabel", e);
+					logger.error("Failed to execute command ch.elexis.core.ui.commands.printPatientLabel", e); //$NON-NLS-1$
 				}
 			}
 		};
 
-		printBlatt = new Action(Messages.GlobalActions_PrintEMR) { // $NON-NLS-1$
+		printBlatt = new Action(Messages.GlobalActions_PrintEMR) {
 			@Override
 			public void run() {
 				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
@@ -517,7 +517,7 @@ public class GlobalActions {
 				new TemplateDrucker(TT_KG_COVER_SHEET, printer, tray).doPrint(actPatient); // $NON-NLS-1$
 			}
 		};
-		showBlatt = new Action(Messages.GlobalActions_ShowEMR) { // $NON-NLS-1$
+		showBlatt = new Action(Messages.GlobalActions_ShowEMR) {
 			@Override
 			public void run() {
 				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
@@ -528,11 +528,11 @@ public class GlobalActions {
 				} catch (PartInitException e) {
 					MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Fehler",
 							"Konnte View nicht öffnen");
-					LoggerFactory.getLogger(getClass()).error("Error showing " + TemplatePrintView.ID, e);
+					LoggerFactory.getLogger(getClass()).error("Error showing " + TemplatePrintView.ID, e); //$NON-NLS-1$
 				}
 			}
 		};
-		printRoeBlatt = new Action(Messages.GlobalActions_PrintXRay) { // $NON-NLS-1$
+		printRoeBlatt = new Action(Messages.GlobalActions_PrintXRay) {
 			@Override
 			public void run() {
 				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
@@ -543,9 +543,9 @@ public class GlobalActions {
 			}
 		};
 
-		fixLayoutAction = new Action(Messages.GlobalActions_LockPerspectives, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+		fixLayoutAction = new Action(Messages.GlobalActions_LockPerspectives, Action.AS_CHECK_BOX) {
 			{
-				setToolTipText(Messages.GlobalActions_LockPerspectivesToolTip); // $NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_LockPerspectivesToolTip);
 				boolean state = ConfigServiceHolder.getUser(Preferences.USR_FIX_LAYOUT, false);
 				setChecked(state);
 				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, state);
@@ -560,7 +560,7 @@ public class GlobalActions {
 				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, state);
 			}
 		};
-		makeBillAction = new Action(Messages.GlobalActions_MakeBill) { // $NON-NLS-1$
+		makeBillAction = new Action(Messages.GlobalActions_MakeBill) {
 			@Override
 			public void run() {
 				ICoverage actFall = ContextServiceHolder.get().getActiveCoverage().orElse(null);
@@ -579,7 +579,7 @@ public class GlobalActions {
 					}
 					Map<Integer, List<IEncounter>> sortedByYears = BillingUtil.getSortedEncountersByYear(lBehdl);
 					if (!BillingUtil.canBillYears(new ArrayList<>(sortedByYears.keySet()))) {
-						StringJoiner sj = new StringJoiner(", ");
+						StringJoiner sj = new StringJoiner(", "); //$NON-NLS-1$
 						sortedByYears.keySet().forEach(i -> sj.add(Integer.toString(i)));
 						if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), "Rechnung Validierung",
 								"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "
@@ -672,9 +672,8 @@ public class GlobalActions {
 			@Override
 			public void doRun(Konsultation element) {
 				if (element.delete(false) == false) {
-					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteKons, // $NON-NLS-1$
-							Messages.GlobalActions_CouldntDeleteKonsExplanation + // $NON-NLS-1$
-					Messages.GlobalActions_97); // $NON-NLS-1$
+					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteKons,
+							Messages.GlobalActions_CouldntDeleteKonsExplanation + Messages.GlobalActions_97);
 				}
 				ElexisEventDispatcher.clearSelection(Konsultation.class);
 				ElexisEventDispatcher.fireSelectionEvent(element.getFall());
@@ -685,7 +684,7 @@ public class GlobalActions {
 				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 			}
 		};
-		openFallaction = new Action(Messages.GlobalActions_EditCase) { // $NON-NLS-1$
+		openFallaction = new Action(Messages.GlobalActions_EditCase) {
 
 			@Override
 			public void run() {
@@ -732,10 +731,10 @@ public class GlobalActions {
 				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 			}
 		};
-		neuerFallAction = new Action(Messages.GlobalActions_NewCase) { // $NON-NLS-1$
+		neuerFallAction = new Action(Messages.GlobalActions_NewCase) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_NewCaseToolTip); // $NON-NLS-1$
+				setToolTipText(Messages.GlobalActions_NewCaseToolTip);
 			}
 
 			@Override
@@ -749,7 +748,7 @@ public class GlobalActions {
 				}
 			}
 		};
-		planeRechnungAction = new Action(Messages.GlobalActions_plaBill) { // $NON-NLS-1$
+		planeRechnungAction = new Action(Messages.GlobalActions_plaBill) {
 			public void run() {
 
 			}
@@ -771,11 +770,11 @@ public class GlobalActions {
 			if (iOrientation != -1)
 				pd.orientation = iOrientation;
 			Printer prn = new Printer(pd);
-			if (prn.startJob(Messages.GlobalActions_PrintLabelJobName) == true) { // $NON-NLS-1$
+			if (prn.startJob(Messages.GlobalActions_PrintLabelJobName) == true) {
 				GC gc = new GC(prn);
 				int y = 0;
 				prn.startPage();
-				gc.drawString(Messages.GlobalActions_PatientIDLabelText + patient.getPatCode(), 0, 0); // $NON-NLS-1$
+				gc.drawString(Messages.GlobalActions_PatientIDLabelText + patient.getPatCode(), 0, 0);
 				FontMetrics fmt = gc.getFontMetrics();
 				y += fmt.getHeight();
 				String pers = patient.getPersonalia();
@@ -794,7 +793,7 @@ public class GlobalActions {
 				prn.dispose();
 			} else {
 				MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_PrinterErrorTitle,
-						Messages.GlobalActions_PrinterErrorMessage); // $NON-NLS-1$ //$NON-NLS-2$
+						Messages.GlobalActions_PrinterErrorMessage);
 
 			}
 		}
@@ -815,7 +814,7 @@ public class GlobalActions {
 			if (iOrientation != -1)
 				pd.orientation = iOrientation;
 			Printer prn = new Printer(pd);
-			if (prn.startJob(Messages.GlobalActions_PrintLabelJobName) == true) { // $NON-NLS-1$
+			if (prn.startJob(Messages.GlobalActions_PrintLabelJobName) == true) {
 				GC gc = new GC(prn);
 				int y = 0;
 				prn.startPage();
@@ -830,9 +829,9 @@ public class GlobalActions {
 				gc.drawString(patient.getAnschrift().getEtikette(false, false), 0, y);
 				y += fmt.getHeight();
 				StringBuilder tel = new StringBuilder();
-				tel.append(Messages.GlobalActions_PhoneHomeLabelText).append(patient.get("Telefon1")) //$NON-NLS-1$ //$NON-NLS-2$
-						.append(Messages.GlobalActions_PhoneWorkLabelText).append(patient.get("Telefon2")) //$NON-NLS-1$ //$NON-NLS-2$
-						.append(Messages.GlobalActions_PhoneMobileLabelText).append(patient.get("Natel")); //$NON-NLS-1$ //$NON-NLS-2$
+				tel.append(Messages.GlobalActions_PhoneHomeLabelText).append(patient.get("Telefon1")) //$NON-NLS-1$
+						.append(Messages.GlobalActions_PhoneWorkLabelText).append(patient.get("Telefon2")) //$NON-NLS-1$
+						.append(Messages.GlobalActions_PhoneMobileLabelText).append(patient.get("Natel")); //$NON-NLS-1$
 				gc.drawString(tel.toString(), 0, y);
 				gc.dispose();
 				prn.endPage();
@@ -840,8 +839,7 @@ public class GlobalActions {
 				prn.dispose();
 			} else {
 				MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_PrinterErrorTitle,
-						Messages.GlobalActions_PrinterErrorMessage); // $NON-NLS-1$ //$NON-NLS-2$
-
+						Messages.GlobalActions_PrinterErrorMessage);
 			}
 		}
 	}
@@ -883,7 +881,7 @@ public class GlobalActions {
 				prn.dispose();
 			} else {
 				MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_PrinterErrorTitle,
-						Messages.GlobalActions_PrinterErrorMessage); // $NON-NLS-1$ //$NON-NLS-2$
+						Messages.GlobalActions_PrinterErrorMessage);
 
 			}
 

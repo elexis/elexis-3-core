@@ -70,9 +70,9 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 
 			if (!ss.isEmpty()) {
 				IArticle ea = (IArticle) ss.getFirstElement();
-				ContextServiceHolder.get().getRootContext().setNamed("ch.elexis.core.ui.eigenartikel.selection", ea);
+				ContextServiceHolder.get().getRootContext().setNamed("ch.elexis.core.ui.eigenartikel.selection", ea); //$NON-NLS-1$
 			} else {
-				ContextServiceHolder.get().getRootContext().setNamed("ch.elexis.core.ui.eigenartikel.selection", null);
+				ContextServiceHolder.get().getRootContext().setNamed("ch.elexis.core.ui.eigenartikel.selection", null); //$NON-NLS-1$
 			}
 		}
 	};
@@ -85,7 +85,7 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 		menu.add(tvfa);
 		menu.add(rearrangePackagesAction);
 
-		commonViewer.setNamedSelection("ch.elexis.core.ui.eigenartikel.selection");
+		commonViewer.setNamedSelection("ch.elexis.core.ui.eigenartikel.selection"); //$NON-NLS-1$
 		commonViewer.setContextMenu(menu);
 		commonViewer.setSelectionChangedListener(selChangeListener);
 

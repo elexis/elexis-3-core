@@ -53,7 +53,7 @@ public class BlockExporter extends XChangeExporter {
 				fos.close();
 			} catch (Exception ex) {
 				ExHandler.handle(ex);
-				throw new XChangeException("Output failed " + ex.getMessage());
+				throw new XChangeException("Output failed " + ex.getMessage()); //$NON-NLS-1$
 			}
 		}
 
@@ -71,7 +71,7 @@ public class BlockExporter extends XChangeExporter {
 			lbs.add(sbe);
 			return sbe;
 		}
-		throw new XChangeException("Can't handle object type " + output.getClass().getName());
+		throw new XChangeException("Can't handle object type " + output.getClass().getName()); //$NON-NLS-1$
 	}
 
 }

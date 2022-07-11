@@ -280,7 +280,7 @@ public enum Images {
 
 	private static void initDeviceZoom() {
 		deviceZoom = 100;
-		String deviceZoomProp = System.getProperty("org.eclipse.swt.internal.deviceZoom");
+		String deviceZoomProp = System.getProperty("org.eclipse.swt.internal.deviceZoom"); //$NON-NLS-1$
 		if (deviceZoomProp != null && !deviceZoomProp.isEmpty()) {
 			try {
 				deviceZoom = Integer.parseInt(deviceZoomProp);
@@ -398,7 +398,7 @@ public enum Images {
 	 *         example
 	 */
 	public String getIconURI() {
-		return "icon://" + name();
+		return "icon://" + name(); //$NON-NLS-1$
 	}
 
 	/**
@@ -411,9 +411,9 @@ public enum Images {
 	public InputStream getImageAsInputStream(ImageSize is) throws IOException {
 		InputStream ret = null;
 
-		ResourceBundle iconsetProperties = ResourceBundle.getBundle("iconset");
+		ResourceBundle iconsetProperties = ResourceBundle.getBundle("iconset"); //$NON-NLS-1$
 		String fileName = iconsetProperties.getString(this.name());
-		URL url = FileLocator.find(FrameworkUtil.getBundle(Images.class), new Path("icons/" + is.name + "/" + fileName),
+		URL url = FileLocator.find(FrameworkUtil.getBundle(Images.class), new Path("icons/" + is.name + "/" + fileName), //$NON-NLS-1$ //$NON-NLS-2$
 				null);
 		ret = url.openConnection().getInputStream();
 
@@ -431,10 +431,10 @@ public enum Images {
 	public InputStream getImageAsInputStream(ImageSize is, int zoom) throws IOException {
 		InputStream ret = null;
 
-		ResourceBundle iconsetProperties = ResourceBundle.getBundle("iconset");
+		ResourceBundle iconsetProperties = ResourceBundle.getBundle("iconset"); //$NON-NLS-1$
 		String fileName = iconsetProperties.getString(this.name());
 		URL url = FileLocator.find(FrameworkUtil.getBundle(Images.class),
-				new Path("icons/" + is.name + "/" + getFileNameWithZoom(fileName, zoom)), null);
+				new Path("icons/" + is.name + "/" + getFileNameWithZoom(fileName, zoom)), null); //$NON-NLS-1$ //$NON-NLS-2$
 		// fallback if no zoom icon file found
 		if (url != null) {
 			ret = url.openConnection().getInputStream();
@@ -467,17 +467,17 @@ public enum Images {
 	private static boolean addIconImageDescriptor(String name, ImageSize is) {
 		String fileName;
 		try {
-			ResourceBundle iconsetProperties = ResourceBundle.getBundle("iconset");
+			ResourceBundle iconsetProperties = ResourceBundle.getBundle("iconset"); //$NON-NLS-1$
 			fileName = iconsetProperties.getString(name);
 		} catch (MissingResourceException | IllegalArgumentException e) {
 			fileName = name;
 		}
 
-		Path path = new Path("icons/" + is.name + "/" + fileName);
+		Path path = new Path("icons/" + is.name + "/" + fileName); //$NON-NLS-1$ //$NON-NLS-2$
 		URL fileLocation = FileLocator.find(FrameworkUtil.getBundle(Images.class), path, null);
 		// lookup zoom image
 		if (getDeviceZoom() != 100) {
-			Path zoomPath = new Path("icons/" + is.name + "/" + getFileNameWithZoom(fileName, getDeviceZoom()));
+			Path zoomPath = new Path("icons/" + is.name + "/" + getFileNameWithZoom(fileName, getDeviceZoom())); //$NON-NLS-1$ //$NON-NLS-2$
 			URL zoomFileLocation = FileLocator.find(FrameworkUtil.getBundle(Images.class), zoomPath, null);
 			if (zoomFileLocation != null) {
 				fileLocation = zoomFileLocation;

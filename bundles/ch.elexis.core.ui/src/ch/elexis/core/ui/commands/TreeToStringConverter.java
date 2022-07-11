@@ -34,7 +34,7 @@ public class TreeToStringConverter extends AbstractParameterValueConverter {
 			map.put(ret, (Tree<?>) parameterValue);
 			return ret;
 		}
-		throw new ParameterValueConversionException("Parameter was not instance of Tree");
+		throw new ParameterValueConversionException("Parameter was not instance of Tree"); //$NON-NLS-1$
 	}
 
 }

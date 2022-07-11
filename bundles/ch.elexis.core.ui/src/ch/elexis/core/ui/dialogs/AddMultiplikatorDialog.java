@@ -44,7 +44,7 @@ public class AddMultiplikatorDialog extends TitleAreaDialog {
 		Label l1 = new Label(ret, SWT.NONE);
 		l1.setText(Messages.AccountView_date);
 		dpc = new CDateTime(ret, CDT.HORIZONTAL | CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
-		String value = java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("01.01.y"));
+		String value = java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("01.01.y")); //$NON-NLS-1$
 		dpc.setSelection(new TimeTool(value).getTime());
 		dpc.setToolTipText(Messages.MultiplikatorEditor_PleaseEnterBeginDate);
 		Label label = new Label(ret, SWT.NONE);

@@ -311,7 +311,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 							StringBuilder sb = new StringBuilder();
 							for (Reminder r : list) {
 								sb.append(r.getSubject() + StringUtils.LF);
-								sb.append(r.getMessage() + "\n\n");
+								sb.append(r.getMessage() + "\n\n"); //$NON-NLS-1$
 							}
 							SWTHelper.alert(Messages.ReminderView_importantRemindersCaption, sb.toString());
 						}
@@ -864,7 +864,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 				Reminder reminder = (Reminder) element;
 				List<Anwender> responsibles = reminder.getResponsibles();
 				if (responsibles != null) {
-					StringJoiner sj = new StringJoiner(", ");
+					StringJoiner sj = new StringJoiner(", "); //$NON-NLS-1$
 					responsibles.forEach(r -> sj.add(r.getLabel(true)));
 					return sj.toString();
 				}
@@ -984,9 +984,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		}
 	}
 
-	private static String SELECTIONCOMP_CURRENTPATIENT_ID = "reminderlistsview.selection.currentpatient";
-	private static String SELECTIONCOMP_GENERALPATIENT_ID = "reminderlistsview.selection.generalpatient";
-	private static String SELECTIONCOMP_GENERAL_ID = "reminderlistsview.selection.general";
+	private static String SELECTIONCOMP_CURRENTPATIENT_ID = "reminderlistsview.selection.currentpatient"; //$NON-NLS-1$
+	private static String SELECTIONCOMP_GENERALPATIENT_ID = "reminderlistsview.selection.generalpatient"; //$NON-NLS-1$
+	private static String SELECTIONCOMP_GENERAL_ID = "reminderlistsview.selection.general"; //$NON-NLS-1$
 
 	private class ViewerSelectionComposite extends Composite implements ISelectionProvider {
 
@@ -1009,10 +1009,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 				if (item.getId().equals(id)) {
 					IAction action = ((ActionContributionItem) item).getAction();
 					String text = action.getText();
-					if (text.indexOf(" (") != -1) {
-						text = text.substring(0, text.indexOf(" ("));
+					if (text.indexOf(" (") != -1) { //$NON-NLS-1$
+						text = text.substring(0, text.indexOf(" (")); //$NON-NLS-1$
 					}
-					action.setText(text + " (" + itemCount + ")");
+					action.setText(text + " (" + itemCount + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 					item.update();
 				}
 			}
@@ -1086,7 +1086,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		private void saveSelection() {
 			List<String> selectedIds = currentSelection.stream().map(action -> action.getId())
 					.collect(Collectors.toList());
-			StringJoiner sj = new StringJoiner(",");
+			StringJoiner sj = new StringJoiner(","); //$NON-NLS-1$
 			selectedIds.forEach(id -> sj.add(id));
 			CoreHub.userCfg.set(Preferences.USR_REMINDER_VIEWER_SELECTION, sj.toString());
 		}
@@ -1094,7 +1094,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		public void loadSelection() {
 			currentSelection.clear();
 			String[] loadedIds = CoreHub.userCfg.get(Preferences.USR_REMINDER_VIEWER_SELECTION, StringUtils.EMPTY)
-					.split(",");
+					.split(","); //$NON-NLS-1$
 			for (String id : loadedIds) {
 				for (IContributionItem item : manager.getItems()) {
 					if (item.getId().equals(id)) {
@@ -1243,7 +1243,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 					ProcessStatus status = reminder.getProcessStatus();
 					if ((ProcessStatus.DUE == status || ProcessStatus.OVERDUE == status)
 							&& (ProcessStatus.OPEN == representedStatus)) {
-						return text + " (" + status.getLocaleText() + ")";
+						return text + " (" + status.getLocaleText() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					return text;
 				}

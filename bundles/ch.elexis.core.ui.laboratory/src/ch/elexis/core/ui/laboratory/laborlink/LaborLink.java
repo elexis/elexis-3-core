@@ -34,9 +34,9 @@ import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
 public class LaborLink implements IKonsExtension {
-	public static final String PROVIDER_ID = "laborlink";
+	public static final String PROVIDER_ID = "laborlink"; //$NON-NLS-1$
 
-	private static final String LABOR_COLOR = "ffc8c8";
+	private static final String LABOR_COLOR = "ffc8c8"; //$NON-NLS-1$
 
 	IRichTextDisplay textField;
 

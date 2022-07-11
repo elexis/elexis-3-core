@@ -18,11 +18,11 @@ import ch.elexis.data.Kontakt;
 
 public class ContactRefElement extends XChangeElement {
 
-	public static final String CONTACTREF_DESCRIPTION = "description";
-	public static final String CONTACTREF_REFID = "refID";
+	public static final String CONTACTREF_DESCRIPTION = "description"; //$NON-NLS-1$
+	public static final String CONTACTREF_REFID = "refID"; //$NON-NLS-1$
 
 	public String getXMLName() {
-		return "contactref";
+		return "contactref"; //$NON-NLS-1$
 	}
 
 	public ContactRefElement asExporter(XChangeExporter parent, BezugsKontakt bk) {

@@ -20,7 +20,7 @@ public class HL7ImporterIdentifiedRunnableContributor implements ITaskResultDeta
 	public String getIdentifiedRunnableId() {
 		// copied from
 		// ch.elexis.core.importer.div.tasks.internal.HL7ImporterIIdentifiedRunnable#RUNNABLE_ID
-		return "hl7importer";
+		return "hl7importer"; //$NON-NLS-1$
 	}
 
 	@Override

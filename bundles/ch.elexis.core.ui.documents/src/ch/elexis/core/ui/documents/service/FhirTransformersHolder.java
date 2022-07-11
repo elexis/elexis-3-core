@@ -28,7 +28,7 @@ public class FhirTransformersHolder {
 	}
 
 	public static IFhirTransformer<?, ?> getTransformerFor(Class<?> fhirClazz, Class<?> localClazz) {
-		String lookupString = fhirClazz.getName() + "-" + localClazz.getName();
+		String lookupString = fhirClazz.getName() + "-" + localClazz.getName(); //$NON-NLS-1$
 		IFhirTransformer<?, ?> ret = cache.get(lookupString);
 		if (ret == null) {
 			for (IFhirTransformer<?, ?> iFhirTransformer : transformers) {

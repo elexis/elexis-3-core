@@ -45,7 +45,7 @@ public class ImportTemplatesCommand extends AbstractHandler {
 
 		ITextPlugin plugin = ttView.getActiveTextPlugin();
 		if (plugin == null) {
-			logger.warn("No TextPlugin found - skipping text template import");
+			logger.warn("No TextPlugin found - skipping text template import"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -96,7 +96,7 @@ public class ImportTemplatesCommand extends AbstractHandler {
 							if (equivalentTemplates instanceof List) {
 								equivalentTemplates.get(0).save(contentToStore, mimeType);
 							} else {
-								logger.error("Invalid state: equivalentTemplates is " + equivalentTemplates);
+								logger.error("Invalid state: equivalentTemplates is " + equivalentTemplates); //$NON-NLS-1$
 							}
 						} else {
 							Brief template = new Brief(name, null, CoreHub.getLoggedInContact(), null, null,
@@ -120,7 +120,7 @@ public class ImportTemplatesCommand extends AbstractHandler {
 			}
 		} catch (Throwable ex) {
 			ExHandler.handle(ex);
-			logger.error("Error during import of text templates", ex);
+			logger.error("Error during import of text templates", ex); //$NON-NLS-1$
 		}
 		ElexisEventDispatcher.getInstance()
 				.fire(new ElexisEvent(Brief.class, null, ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));

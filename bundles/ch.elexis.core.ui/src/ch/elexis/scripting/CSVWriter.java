@@ -78,9 +78,9 @@ public class CSVWriter {
 	/** Default line terminator uses platform encoding. */
 	public static final String DEFAULT_LINE_END = StringUtils.LF;
 
-	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss"); //$NON-NLS-1$
 
-	private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy");
+	private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy"); //$NON-NLS-1$
 
 	/**
 	 * Constructs CSVWriter using a comma for the separator.

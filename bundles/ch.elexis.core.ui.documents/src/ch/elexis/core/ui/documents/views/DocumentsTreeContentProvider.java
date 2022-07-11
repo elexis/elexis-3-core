@@ -81,7 +81,7 @@ public class DocumentsTreeContentProvider implements ITreeContentProvider {
 
 	public void updateElement(IDocument iDocument) {
 		// also called after category creation - that call will be ignored
-		if (iDocument != null && !"text/category".equals(iDocument.getMimeType())) {
+		if (iDocument != null && !"text/category".equals(iDocument.getMimeType())) { //$NON-NLS-1$
 			removeFromCategories(iDocument);
 			FilterCategory filterCategory = new FilterCategory(iDocument.getCategory());
 			List<IDocument> categoryDocuments = documentsMap.get(filterCategory);

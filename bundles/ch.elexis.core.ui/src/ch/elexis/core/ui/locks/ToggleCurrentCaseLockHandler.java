@@ -4,7 +4,7 @@ import ch.elexis.data.Fall;
 
 public class ToggleCurrentCaseLockHandler extends AbstractToggleCurrentLockHandler {
 
-	public static final String COMMAND_ID = "ch.elexis.core.ui.command.ToggleCurrentCaseLockCommand";
+	public static final String COMMAND_ID = "ch.elexis.core.ui.command.ToggleCurrentCaseLockCommand"; //$NON-NLS-1$
 
 	@Override
 	public String getCommandId() {

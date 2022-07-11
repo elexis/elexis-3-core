@@ -50,9 +50,9 @@ public class DocumentSendToCancerRegister extends AbstractHandler implements IHa
 					FhirChCrlDocumentBundle fhirBundle = new FhirChCrlDocumentBundle(iDocument, activePatient.get(),
 							author.get());
 					try {
-						fhirBundle.writeTo(new File(CoreHub.getWritableUserDir(), "krg_test.xml"));
+						fhirBundle.writeTo(new File(CoreHub.getWritableUserDir(), "krg_test.xml")); //$NON-NLS-1$
 					} catch (IOException e) {
-						LoggerFactory.getLogger(getClass()).error("Couldn ot create file", e);
+						LoggerFactory.getLogger(getClass()).error("Couldn ot create file", e); //$NON-NLS-1$
 						MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Senden an Krebsregister",
 								"Datei konnte nicht erstellt werden");
 					}

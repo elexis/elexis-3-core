@@ -55,12 +55,12 @@ public enum StatisticsManager {
 	 * @param type
 	 */
 	public void addCallingStatistic(String action, boolean isPerspective) {
-		String type = isPerspective ? "call: perspective" : "call: view";
+		String type = isPerspective ? "call: perspective" : "call: view"; //$NON-NLS-1$ //$NON-NLS-2$
 		IStatistic lastItem = findLastElementOfType(action, type);
 
 		if (lastItem != null) {
-			updateStastic(lastItem.getAction() + " -> " + action,
-					isPerspective ? "switch: perspective" : "switch: view");
+			updateStastic(lastItem.getAction() + " -> " + action, //$NON-NLS-1$
+					isPerspective ? "switch: perspective" : "switch: view"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		updateStastic(action, type);
@@ -73,7 +73,7 @@ public enum StatisticsManager {
 	 * @param type
 	 */
 	public void addClosingStatistic(String action, boolean isPerpsective) {
-		updateStastic(action, isPerpsective ? "close: perspective" : "close: view");
+		updateStastic(action, isPerpsective ? "close: perspective" : "close: view"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void updateStastic(String action, String type) {
@@ -118,8 +118,8 @@ public enum StatisticsManager {
 	 */
 	public void autoExportStatistics() throws IOException {
 		TimeTool t = new TimeTool(System.currentTimeMillis());
-		String dir = CoreHub.getWritableUserDir().getAbsolutePath() + File.separator + "statistics";
-		String fileName = "usage" + t.toString(TimeTool.TIMESTAMP) + ".xml";
+		String dir = CoreHub.getWritableUserDir().getAbsolutePath() + File.separator + "statistics"; //$NON-NLS-1$
+		String fileName = "usage" + t.toString(TimeTool.TIMESTAMP) + ".xml"; //$NON-NLS-1$ //$NON-NLS-2$
 		if (!disableAutoExport) {
 			try {
 				File directory = new File(dir);
@@ -130,16 +130,16 @@ public enum StatisticsManager {
 						boolean success = FileUtils.deleteQuietly(file);
 						if (!success) {
 							LoggerFactory.getLogger(getClass())
-									.warn("Cannot delete old file at: " + file.getAbsolutePath());
+									.warn("Cannot delete old file at: " + file.getAbsolutePath()); //$NON-NLS-1$
 						}
 					}
 				}
 			} catch (Exception e) {
-				LoggerFactory.getLogger(getClass()).warn("Cannot delete old files.", e);
+				LoggerFactory.getLogger(getClass()).warn("Cannot delete old files.", e); //$NON-NLS-1$
 			}
 			exportStatisticsToFile(dir + File.separator + fileName);
 			if (eventStatisticHandler != null) {
-				exportEventStatisticsToFile(dir + File.separator + "evt_" + fileName, eventStatisticHandler);
+				exportEventStatisticsToFile(dir + File.separator + "evt_" + fileName, eventStatisticHandler); //$NON-NLS-1$
 			}
 			disableAutoExport = true;
 		}
@@ -171,16 +171,16 @@ public enum StatisticsManager {
 	private String createXMI(Statistics statistics) {
 		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		Map<String, Object> m = reg.getExtensionToFactoryMap();
-		m.put("xmi", new XMIResourceFactoryImpl());
+		m.put("xmi", new XMIResourceFactoryImpl()); //$NON-NLS-1$
 		ResourceSet resSet = new ResourceSetImpl();
-		Resource resource = resSet.createResource(URI.createURI("statistics.xml"));
+		Resource resource = resSet.createResource(URI.createURI("statistics.xml")); //$NON-NLS-1$
 		resource.getContents().add(statistics);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 
 		try {
 			resource.save(os, Collections.EMPTY_MAP);
 			os.flush();
-			String aString = new String(os.toByteArray(), "UTF-8");
+			String aString = new String(os.toByteArray(), "UTF-8"); //$NON-NLS-1$
 			os.close();
 			return aString;
 		} catch (IOException e) {

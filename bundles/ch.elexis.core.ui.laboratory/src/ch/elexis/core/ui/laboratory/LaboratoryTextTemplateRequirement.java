@@ -4,10 +4,10 @@ import ch.elexis.core.ui.text.ITextTemplateRequirement;
 
 public class LaboratoryTextTemplateRequirement implements ITextTemplateRequirement {
 
-	public static final String TT_LABPAPER = "Laborblatt";
+	public static final String TT_LABPAPER = "Laborblatt"; //$NON-NLS-1$
 	public static final String TT_LABPAPER_DESC = "Tabelle mit Laborwerten (Ausgabe aus Laborblatt Elexis)";
 
-	public static final String TT_LABORDERS = "Verordnungen";
+	public static final String TT_LABORDERS = "Verordnungen"; //$NON-NLS-1$
 	public static final String TT_LABORDERS_DESC = "Tabelle mit Verordnungen (Ausf\u00fcllbare Felder f\u00fcr Datum/Uhrzeit und Laborwert";
 
 	@Override

@@ -17,7 +17,7 @@ import ch.elexis.core.ui.views.textsystem.TextTemplateView;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 
 public class TemplatePrintSettingsCommand extends AbstractHandler {
-	public static String ID = "ch.elexis.core.ui.command.templatePrintSettings";
+	public static String ID = "ch.elexis.core.ui.command.templatePrintSettings"; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {

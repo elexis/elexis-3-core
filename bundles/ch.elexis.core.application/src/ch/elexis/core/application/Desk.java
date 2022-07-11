@@ -56,7 +56,7 @@ public class Desk implements IApplication {
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		// register ElexisEvent and MessageEvent listeners
-		log.debug("Registering " + CoreEventListenerRegistrar.class.getName());
+		log.debug("Registering " + CoreEventListenerRegistrar.class.getName()); //$NON-NLS-1$
 		new CoreEventListenerRegistrar();
 
 		// Check if we "are complete" - throws Error if not
@@ -71,31 +71,31 @@ public class Desk implements IApplication {
 		Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
 		try {
 			if (PersistentObject.connect(CoreHub.localCfg) == false) {
-				log.error(PersistentObject.class.getName() + " po connect failed.");
+				log.error(PersistentObject.class.getName() + " po connect failed."); //$NON-NLS-1$
 			}
 
 			if (datasource.isPresent() && connection.isPresent()) {
 				IStatus setDBConnection = datasource.get().setDBConnection(connection.get());
 
 				if (!setDBConnection.isOK()) {
-					log.error("Error setting db connection", setDBConnection.getMessage());
+					log.error("Error setting db connection", setDBConnection.getMessage()); //$NON-NLS-1$
 				} else if (!PersistentObject.legacyPostInitDB()) {
-					log.error(PersistentObject.class.getName() + " po data initialization failed.");
+					log.error(PersistentObject.class.getName() + " po data initialization failed."); //$NON-NLS-1$
 				}
 			} else {
 				String connstring = (connection.isPresent()) ? connection.get().connectionString : StringUtils.EMPTY;
-				log.error("Can not connect to database, datasource or connection configuration missing. Datasource ["
-						+ datasource + "] Connection [" + connstring + "]");
+				log.error("Can not connect to database, datasource or connection configuration missing. Datasource [" //$NON-NLS-1$
+						+ datasource + "] Connection [" + connstring + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (Throwable pe) {
 			// error in database connection, we have to exit
-			log.error("Database connection error", pe);
+			log.error("Database connection error", pe); //$NON-NLS-1$
 			pe.printStackTrace();
 
 			Shell shell = PlatformUI.createDisplay().getActiveShell();
 			StringBuilder sb = new StringBuilder();
 			sb.append("Could not open database connection. Quitting Elexis.\n\n");
-			sb.append("Message: " + pe.getMessage() + "\n\n");
+			sb.append("Message: " + pe.getMessage() + "\n\n"); //$NON-NLS-2$
 			while (pe.getCause() != null) {
 				pe = pe.getCause();
 				sb.append("Reason: " + pe.getMessage() + StringUtils.LF);
@@ -114,7 +114,7 @@ public class Desk implements IApplication {
 		if (connection != null && connection.isPresent()) {
 			String noPoConnectString = connection.get().connectionString;
 			if (!poConnectString.equalsIgnoreCase(noPoConnectString)) {
-				String msg = String.format("Connection string differ po [%s] nopo [%s]", poConnectString,
+				String msg = String.format("Connection string differ po [%s] nopo [%s]", poConnectString, //$NON-NLS-1$
 						noPoConnectString);
 				log.error(msg);
 				System.err.println(msg);
@@ -137,7 +137,7 @@ public class Desk implements IApplication {
 		context.applicationRunning();
 
 		Optional<IElexisEntityManager> entityManager = OsgiServiceUtil.getService(IElexisEntityManager.class,
-				"(id=default)");
+				"(id=default)"); //$NON-NLS-1$
 		if (entityManager.isPresent()) {
 			if (!entityManager.get().isUpdateSuccess()) {
 				cod.openInformation("DB Update Fehler", "Beim Datenbank Update ist ein Fehler aufgetreten.\n"
@@ -169,7 +169,7 @@ public class Desk implements IApplication {
 			}
 			return IApplication.EXIT_OK;
 		} catch (Exception ex) {
-			log.error("Exception caught", ex);
+			log.error("Exception caught", ex); //$NON-NLS-1$
 			ex.printStackTrace();
 			return -1;
 		} finally {
@@ -186,7 +186,7 @@ public class Desk implements IApplication {
 			try {
 				// max 5 sek
 				if (waiting++ > 50) {
-					log.warn("No ConfigService available after 5 sec. skipping identifier init");
+					log.warn("No ConfigService available after 5 sec. skipping identifier init"); //$NON-NLS-1$
 					return;
 				}
 				Thread.sleep(100);
@@ -196,7 +196,7 @@ public class Desk implements IApplication {
 		}
 
 		if (ConfigServiceHolder.getGlobal(Preferences.INSTALLATION_TIMESTAMP, null) == null) {
-			LocalLock localLock = new LocalLock("initInstallationTimestamp");
+			LocalLock localLock = new LocalLock("initInstallationTimestamp"); //$NON-NLS-1$
 			if (localLock.tryLock()) {
 				ConfigServiceHolder.setGlobal(Preferences.INSTALLATION_TIMESTAMP,
 						Long.toString(System.currentTimeMillis()));

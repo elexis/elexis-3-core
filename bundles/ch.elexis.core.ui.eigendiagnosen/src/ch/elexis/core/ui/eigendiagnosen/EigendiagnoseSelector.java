@@ -49,12 +49,12 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 		ViewerConfigurer vc = new ViewerConfigurer(new EigendiagnoseContentProvider(commonViewer),
 				new DefaultLabelProvider(),
 				new DefaultControlFieldProvider(commonViewer,
-						new String[] { "code=" + Messages.EigendiagnoseSelector_Shortcut_Label,
-								"title=" + Messages.EigendiagnoseSelector_Text_Label }),
+						new String[] { "code=" + Messages.EigendiagnoseSelector_Shortcut_Label, //$NON-NLS-1$
+								"title=" + Messages.EigendiagnoseSelector_Text_Label }), //$NON-NLS-1$
 				new ViewerConfigurer.DefaultButtonProvider(),
 				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null));
 
-		commonViewer.setNamedSelection("ch.elexis.core.ui.eigendiagnosen.selection");
+		commonViewer.setNamedSelection("ch.elexis.core.ui.eigendiagnosen.selection"); //$NON-NLS-1$
 		vc.setContentType(ContentType.GENERICOBJECT);
 		return vc;
 	}
@@ -109,11 +109,11 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 			List<IDiagnosisTree> roots = Collections.emptyList();
 			@SuppressWarnings("unchecked")
 			IQuery<IDiagnosisTree> query = (IQuery<IDiagnosisTree>) getBaseQuery();
-			query.and("id", COMPARATOR.NOT_EQUALS, "VERSION");
+			query.and("id", COMPARATOR.NOT_EQUALS, "VERSION"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (hasActiveFilter(fieldFilterValues)) {
 				query.startGroup();
 				for (String key : fieldFilterValues.keySet()) {
-					query.and(key, COMPARATOR.LIKE, "%" + fieldFilterValues.get(key) + "%");
+					query.and(key, COMPARATOR.LIKE, "%" + fieldFilterValues.get(key) + "%"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				query.andJoinGroups();
 				if (fieldOrderBy != null) {
@@ -125,7 +125,7 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 			} else {
 				query.startGroup();
 				query.or(ModelPackage.Literals.IDIAGNOSIS_TREE__PARENT, COMPARATOR.EQUALS, null);
-				query.or(ModelPackage.Literals.IDIAGNOSIS_TREE__PARENT, COMPARATOR.EQUALS, "NIL");
+				query.or(ModelPackage.Literals.IDIAGNOSIS_TREE__PARENT, COMPARATOR.EQUALS, "NIL"); //$NON-NLS-1$
 				query.andJoinGroups();
 				if (fieldOrderBy != null) {
 					query.orderBy(fieldOrderBy, fieldOrder);

@@ -116,8 +116,8 @@ public class FavoritenComposite extends Composite {
 				Favorite fav = (Favorite) item.getData();
 				Optional<Identifiable> cfs = fav.getObject();
 
-				String simpleName = "?";
-				String label = "?";
+				String simpleName = "?"; //$NON-NLS-1$
+				String label = "?"; //$NON-NLS-1$
 				if (cfs.isPresent()) {
 					simpleName = cfs.get().getClass().getSimpleName();
 					label = cfs.get().getLabel();
@@ -311,7 +311,7 @@ public class FavoritenComposite extends Composite {
 			}
 
 			String rgbColor = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeSystemName,
-					"ffffff");
+					"ffffff"); //$NON-NLS-1$
 			return UiDesk.getColorFromRGB(rgbColor);
 
 		}

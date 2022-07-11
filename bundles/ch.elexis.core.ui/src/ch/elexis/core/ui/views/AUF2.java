@@ -227,7 +227,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 					}
 					refresh();
 				} catch (Exception e) {
-					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e);
+					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e); //$NON-NLS-1$
 				}
 			}
 		};
@@ -277,7 +277,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				try {
 					handlerService.executeCommand(AufPrintHandler.CMD_ID, null);
 				} catch (Exception e) {
-					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e);
+					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e); //$NON-NLS-1$
 				}
 			}
 		};
@@ -300,9 +300,9 @@ public class AUF2 extends ViewPart implements IRefreshable {
 
 			if (patient.isPresent()) {
 				INamedQuery<ISickCertificate> query = CoreModelServiceHolder.get().getNamedQuery(ISickCertificate.class,
-						"patient");
+						"patient"); //$NON-NLS-1$
 				List<ISickCertificate> list = query
-						.executeWithParameters(query.getParameterMap("patient", patient.get()));
+						.executeWithParameters(query.getParameterMap("patient", patient.get())); //$NON-NLS-1$
 				return list.toArray();
 			}
 			return new Object[0];

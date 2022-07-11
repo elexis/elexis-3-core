@@ -206,7 +206,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = commandService.getCommand("ch.elexis.core.ui.command.endLocalDocument"); //$NON-NLS-1$
 
-		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(command.getId().concat(".selection"),
+		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(command.getId().concat(".selection"), //$NON-NLS-1$
 				selection);
 		try {
 			command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
@@ -221,7 +221,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument"); //$NON-NLS-1$
 
-		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(command.getId().concat(".selection"),
+		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(command.getId().concat(".selection"), //$NON-NLS-1$
 				selection);
 		try {
 			command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));

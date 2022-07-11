@@ -4,7 +4,7 @@ import ch.elexis.data.Kontakt;
 
 public class ToggleCurrentKontaktLockHandler extends AbstractToggleCurrentLockHandler {
 
-	public static final String COMMAND_ID = "ch.elexis.core.ui.command.ToggleCurrentKontaktLockCommand";
+	public static final String COMMAND_ID = "ch.elexis.core.ui.command.ToggleCurrentKontaktLockCommand"; //$NON-NLS-1$
 
 	@Override
 	public String getCommandId() {

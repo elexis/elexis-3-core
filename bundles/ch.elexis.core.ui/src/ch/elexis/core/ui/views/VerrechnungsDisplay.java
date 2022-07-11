@@ -261,7 +261,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 
 		// Populate toolbar contribution manager
 		IMenuService menuService = PlatformUI.getWorkbench().getService(IMenuService.class);
-		menuService.populateContributionManager(toolBarManager, "toolbar:ch.elexis.VerrechnungsDisplay");
+		menuService.populateContributionManager(toolBarManager, "toolbar:ch.elexis.VerrechnungsDisplay"); //$NON-NLS-1$
 
 		ToolBar toolBar = toolBarManager.createControl(this);
 		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -651,7 +651,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 								Result<?> billResult = BillingServiceHolder.get().bill((IBillable) element,
 										actEncounter, 1.0);
 								if (!billResult.isOK()) {
-									String message = element.getCode() + " - "
+									String message = element.getCode() + " - " //$NON-NLS-1$
 											+ ResultDialog.getResultMessage(billResult);
 									if (!notOkResults.toString().contains(message)) {
 										notOkResults.add(message);
@@ -802,9 +802,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 												@Override
 												public void lockAcquired() {
 													if (isIndicated(billed)) {
-														billed.setExtInfo(Verrechnet.INDICATED, "false");
+														billed.setExtInfo(Verrechnet.INDICATED, "false"); //$NON-NLS-1$
 													} else {
-														billed.setExtInfo(Verrechnet.INDICATED, "true");
+														billed.setExtInfo(Verrechnet.INDICATED, "true"); //$NON-NLS-1$
 													}
 													CoreModelServiceHolder.get().save(billed);
 												}
@@ -815,7 +815,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 
 								private boolean isIndicated(IBilled billed) {
 									String value = (String) billed.getExtInfo(Verrechnet.INDICATED);
-									return "true".equalsIgnoreCase(value);
+									return "true".equalsIgnoreCase(value); //$NON-NLS-1$
 								}
 
 								@Override
@@ -826,7 +826,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						}
 					}
 					CoreUiUtil.addCommandContributions(contextMenuManager, selection.toArray(),
-							"popup:ch.elexis.VerrechnungsDisplay");
+							"popup:ch.elexis.VerrechnungsDisplay"); //$NON-NLS-1$
 				}
 			}
 		});
@@ -848,7 +848,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 								billed.setExtInfo(Verrechnet.VATSCALE, Double.toString(0.0));
 
 								int packageSize = ((IArticle) billed.getBillable()).getPackageSize();
-								String proposal = (packageSize > 0) ? "1/" + packageSize : "1";
+								String proposal = (packageSize > 0) ? "1/" + packageSize : "1"; //$NON-NLS-1$ //$NON-NLS-2$
 								changeQuantityDialog(proposal, billed);
 								Object prescriptionId = billed.getExtInfo(Verrechnet.FLD_EXT_PRESC_ID);
 								if (prescriptionId instanceof String) {

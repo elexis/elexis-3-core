@@ -17,7 +17,7 @@ public class EigenartikelTreeLabelProvider extends LabelProvider {
 			StringBuilder label = new StringBuilder();
 			Availability availability = StockServiceHolder.get().getCumulatedAvailabilityForArticle(ea);
 			if (availability != null) {
-				label.append(" (" + availability.toString() + ")");
+				label.append(" (" + availability.toString() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			return text + StringUtils.SPACE + label.toString();
 		}

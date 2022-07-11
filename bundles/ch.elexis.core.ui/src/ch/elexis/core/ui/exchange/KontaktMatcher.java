@@ -96,11 +96,11 @@ public class KontaktMatcher {
 
 		if (!StringTool.isNothing(zusatz)) {
 			qbe.startGroup();
-			qbe.add("Zusatz1", "LIKE", zusatz + "%", true); //$NON-NLS-1$ //$NON-NLS-2$
+			qbe.add("Zusatz1", "LIKE", zusatz + "%", true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			String un = StringTool.unambiguify(zusatz);
 			if (!un.equalsIgnoreCase(zusatz)) {
 				qbe.or();
-				qbe.add("Zusatz1", "LIKE", un + "%", true); //$NON-NLS-1$ //$NON-NLS-2$
+				qbe.add("Zusatz1", "LIKE", un + "%", true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			qbe.endGroup();
 		}
@@ -369,7 +369,7 @@ public class KontaktMatcher {
 		int m1l = m1.length;
 		StringBuilder m2 = new StringBuilder();
 		m2.append(m1[0]);
-		String nr = "0";
+		String nr = "0"; //$NON-NLS-1$
 		if (m1l > 1) {
 			if (m1[m1l - 1].matches("[0-9]+[a-zA-Z]")) { //$NON-NLS-1$
 				nr = m1[m1l - 1];

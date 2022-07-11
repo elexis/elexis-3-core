@@ -122,7 +122,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
-				fd.setFilterExtensions(new String[] { "*.xls" });
+				fd.setFilterExtensions(new String[] { "*.xls" }); //$NON-NLS-1$
 				String selected = fd.open();
 				tFilePath.setText(selected);
 			}
@@ -139,16 +139,16 @@ public class ImportArticleDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog fd = new FileDialog(getShell(), SWT.SAVE);
-				fd.setFilterExtensions(new String[] { "*.csv" });
-				fd.setFileName("report.csv");
+				fd.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
+				fd.setFileName("report.csv"); //$NON-NLS-1$
 				String path = fd.open();
 				if (path != null) {
 					try {
-						FileUtils.writeStringToFile(new File(path), reportBuilder.toString(), "UTF-8");
+						FileUtils.writeStringToFile(new File(path), reportBuilder.toString(), "UTF-8"); //$NON-NLS-1$
 					} catch (IOException e1) {
 						MessageDialog.openError(getShell(), "Report Error",
 								"Report konnte nicht gespeichert werden.\n\n" + e1.getMessage());
-						LoggerFactory.getLogger(ImportArticleDialog.class).error("report save error", e1);
+						LoggerFactory.getLogger(ImportArticleDialog.class).error("report save error", e1); //$NON-NLS-1$
 					}
 				}
 			}
@@ -194,7 +194,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 
 			// check src file
 			String path = tFilePath.getText();
-			if (path != null && !path.isEmpty() && path.toLowerCase().endsWith("xls")) {
+			if (path != null && !path.isEmpty() && path.toLowerCase().endsWith("xls")) { //$NON-NLS-1$
 
 				try (FileInputStream is = new FileInputStream(tFilePath.getText())) {
 					ExcelWrapper xl = new ExcelWrapper();
@@ -213,7 +213,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 				} catch (IOException e) {
 					MessageDialog.openError(getShell(), "Import error",
 							"Import fehlgeschlagen.\nDatei nicht importierbar: " + path);
-					LoggerFactory.getLogger(ImportArticleDialog.class).error("cannot import file at " + path, e);
+					LoggerFactory.getLogger(ImportArticleDialog.class).error("cannot import file at " + path, e); //$NON-NLS-1$
 				}
 			} else {
 				buf.append("Die Quelldatei ist ungültig. Bitte überprüfen Sie diese Datei.\n" + path);
@@ -268,10 +268,10 @@ public class ImportArticleDialog extends TitleAreaDialog {
 
 									articleStoreToString);
 
-							String result = "MODIFY";
+							String result = "MODIFY"; //$NON-NLS-1$
 							if (stockEntry == null) {
 								stockEntry = StockServiceHolder.get().storeArticleInStock(stock, articleStoreToString);
-								result = "ADDITION";
+								result = "ADDITION"; //$NON-NLS-1$
 							}
 
 							if (stockEntry instanceof IStockEntry) {
@@ -287,20 +287,20 @@ public class ImportArticleDialog extends TitleAreaDialog {
 										stockEntry.setMaximumStock(StringTool.parseSafeInt(stockMax));
 									}
 									importCount++;
-									addToReport("OK " + result + " '" + stock.getLabel() + "'", articleName, gtin);
+									addToReport("OK " + result + " '" + stock.getLabel() + "'", articleName, gtin); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 									CoreModelServiceHolder.get().save(stockEntry);
 									LocalLockServiceHolder.get().releaseLock(stockEntry);
 								} else {
-									addToReport("NO LOCK", articleName, gtin);
+									addToReport("NO LOCK", articleName, gtin); //$NON-NLS-1$
 									unexpectedErrors++;
 								}
 							} else {
-								addToReport("Not in Stock '" + stock.getLabel() + "'", articleName, gtin);
+								addToReport("Not in Stock '" + stock.getLabel() + "'", articleName, gtin); //$NON-NLS-1$ //$NON-NLS-2$
 								articleNotFoundInStock++;
 							}
 						} else {
 							articleNotFoundByGtin++;
-							addToReport("Not found by GTIN", articleName, gtin);
+							addToReport("Not found by GTIN", articleName, gtin); //$NON-NLS-1$
 						}
 
 						monitor.worked(1);
@@ -341,16 +341,16 @@ public class ImportArticleDialog extends TitleAreaDialog {
 
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			LoggerFactory.getLogger(ImportArticleDialog.class).warn("Exception during article to lager import.", e);
+			LoggerFactory.getLogger(ImportArticleDialog.class).warn("Exception during article to lager import.", e); //$NON-NLS-1$
 		}
 	}
 
 	private void addToReport(String col1, String col2, String col3) {
 		if (reportBuilder != null) {
 			reportBuilder.append(col1);
-			reportBuilder.append(";");
+			reportBuilder.append(";"); //$NON-NLS-1$
 			reportBuilder.append(col2);
-			reportBuilder.append(";");
+			reportBuilder.append(";"); //$NON-NLS-1$
 			reportBuilder.append(col3);
 			reportBuilder.append(StringUtils.LF);
 		}
@@ -381,7 +381,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 					return loadFromCode.map(IArticle.class::cast);
 				} else {
 					LoggerFactory.getLogger(getClass()).warn(
-							"Found article for gtin [{}] but is not castable to IArticle [{}]", scanCode,
+							"Found article for gtin [{}] but is not castable to IArticle [{}]", scanCode, //$NON-NLS-1$
 							loadFromCode.get().getClass().getName());
 				}
 			}

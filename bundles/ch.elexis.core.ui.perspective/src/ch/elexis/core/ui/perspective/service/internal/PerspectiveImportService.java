@@ -58,11 +58,11 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 
 		try {
 			if (uri != null) {
-				if (uri.toLowerCase().startsWith("http")) {
+				if (uri.toLowerCase().startsWith("http")) { //$NON-NLS-1$
 					// import from web
 					InputStream in = new URL(uri).openStream();
 					return importPerspectiveFromStream(in, iStateHandle, openPerspectiveIfAdded);
-				} else if (uri.toLowerCase().endsWith("xmi")) {
+				} else if (uri.toLowerCase().endsWith("xmi")) { //$NON-NLS-1$
 					// import from file
 					File f = new File(uri);
 					if (f != null && f.exists()) {
@@ -73,7 +73,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 
 			}
 		} catch (IOException e) {
-			LoggerFactory.getLogger(PerspectiveImportService.class).error("cannot import perspective at: " + uri, e);
+			LoggerFactory.getLogger(PerspectiveImportService.class).error("cannot import perspective at: " + uri, e); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -131,7 +131,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 			ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, !value);
 			ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, value);
 		} catch (WorkbenchException e) {
-			LoggerFactory.getLogger(PerspectiveImportService.class).error("cannot open perspective [{}]",
+			LoggerFactory.getLogger(PerspectiveImportService.class).error("cannot open perspective [{}]", //$NON-NLS-1$
 					iPerspectiveDescriptor.getId(), e);
 		}
 	}
@@ -159,7 +159,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 			idx = closePerspective(existingPerspectiveDescriptor);
 			// NOT WORKING IF PERSPECTIVE IS PREDEFINED - workaround with generics
 			iPerspectiveRegistry.deletePerspective(existingPerspectiveDescriptor);
-			PerspectiveImportService.genericInvokMethod(iPerspectiveRegistry, "removeSnippet", MSnippetContainer.class,
+			PerspectiveImportService.genericInvokMethod(iPerspectiveRegistry, "removeSnippet", MSnippetContainer.class, //$NON-NLS-1$
 					String.class, mApplication, existingPerspectiveDescriptor.getId());
 
 		}
@@ -218,7 +218,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		EModelService modelService = getService(EModelService.class);
 		MApplication mApplication = getService(MApplication.class);
 
-		MTrimmedWindow mWindow = (MTrimmedWindow) modelService.find("IDEWindow", mApplication);
+		MTrimmedWindow mWindow = (MTrimmedWindow) modelService.find("IDEWindow", mApplication); //$NON-NLS-1$
 		if (mWindow == null) {
 			List<MWindow> windows = mApplication.getChildren();
 			if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
@@ -261,9 +261,9 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		try (FileReader reader = new FileReader(new File(path))) {
 			XMLMemento memento = XMLMemento.createReadRoot(reader);
 
-			String label = memento.getChild("descriptor").getString("label");
-			String id = memento.getChild("descriptor").getString("id");
-			String descriptorId = memento.getChild("descriptor").getString("descriptor");
+			String label = memento.getChild("descriptor").getString("label"); //$NON-NLS-1$ //$NON-NLS-2$
+			String id = memento.getChild("descriptor").getString("id"); //$NON-NLS-1$ //$NON-NLS-2$
+			String descriptorId = memento.getChild("descriptor").getString("descriptor"); //$NON-NLS-1$ //$NON-NLS-2$
 			PerspectiveDescriptor pd = new PerspectiveDescriptor(id, label, null);
 
 			// sets the icon of the org descriptor to the new descriptor
@@ -282,7 +282,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 			EPartService partService = getService(EPartService.class);
 			EModelService modelService = getService(EModelService.class);
 			MApplication mApplication = getService(MApplication.class);
-			MWindow window = (MWindow) modelService.find("IDEWindow", mApplication);
+			MWindow window = (MWindow) modelService.find("IDEWindow", mApplication); //$NON-NLS-1$
 			if (window == null) {
 				List<MWindow> windows = mApplication.getChildren();
 				if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
@@ -367,7 +367,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 			method.setAccessible(true);
 			requiredObj = method.invoke(obj, parameters);
 		} catch (Exception e) {
-			LoggerFactory.getLogger(PerspectiveImportService.class).error("generic error", e);
+			LoggerFactory.getLogger(PerspectiveImportService.class).error("generic error", e); //$NON-NLS-1$
 		}
 
 		return requiredObj;

@@ -35,13 +35,13 @@ public class DocumentSendAsMailHandler extends AbstractHandler implements IHandl
 				try {
 					@SuppressWarnings("unchecked")
 					String documentsString = AttachmentsUtil.getDocumentsString((List<IDocument>) (List<?>) iDocuments);
-					Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail");
+					Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail"); //$NON-NLS-1$
 
 					HashMap<String, String> params = new HashMap<String, String>();
-					params.put("ch.elexis.core.mail.ui.sendMail.documents", documentsString);
+					params.put("ch.elexis.core.mail.ui.sendMail.documents", documentsString); //$NON-NLS-1$
 					Patient patient = ElexisEventDispatcher.getSelectedPatient();
 					if (patient != null) {
-						params.put("ch.elexis.core.mail.ui.sendMail.subject", "Patient: " + patient.getLabel());
+						params.put("ch.elexis.core.mail.ui.sendMail.subject", "Patient: " + patient.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
 					ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(sendMailCommand,
@@ -49,7 +49,7 @@ public class DocumentSendAsMailHandler extends AbstractHandler implements IHandl
 					PlatformUI.getWorkbench().getService(IHandlerService.class).executeCommand(parametrizedCommmand,
 							null);
 				} catch (Exception ex) {
-					throw new RuntimeException("ch.elexis.core.mail.ui.sendMail not found", ex);
+					throw new RuntimeException("ch.elexis.core.mail.ui.sendMail not found", ex); //$NON-NLS-1$
 				}
 			}
 		}

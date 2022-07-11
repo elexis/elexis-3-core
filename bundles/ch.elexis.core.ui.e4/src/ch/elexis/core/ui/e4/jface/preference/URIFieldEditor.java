@@ -83,7 +83,7 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 			return true;
 		}
 
-		if (uri.contains("*")) {
+		if (uri.contains("*")) { //$NON-NLS-1$
 			setErrorMessage("Passwort muss gesetzt sein");
 			return false;
 		}
@@ -104,7 +104,7 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 			try {
 				URI uri = IVirtualFilesystemService.stringToURI(unmaskedValue);
 				String maskedValue = IVirtualFilesystemService.hidePasswordInUrlString(uri.toString());
-				if (maskedValue.contains("*")) {
+				if (maskedValue.contains("*")) { //$NON-NLS-1$
 					getTextControl().setText(maskedValue);
 					oldValue = maskedValue;
 				} else {

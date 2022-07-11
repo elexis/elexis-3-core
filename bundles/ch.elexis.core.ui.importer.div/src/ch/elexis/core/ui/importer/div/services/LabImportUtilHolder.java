@@ -17,7 +17,7 @@ public class LabImportUtilHolder {
 
 	public static ILabImportUtil get() {
 		if (labImportUtil == null) {
-			throw new IllegalStateException("No ILabImportUtil available");
+			throw new IllegalStateException("No ILabImportUtil available"); //$NON-NLS-1$
 		}
 		return labImportUtil;
 	}

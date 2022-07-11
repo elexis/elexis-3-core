@@ -47,7 +47,7 @@ public class ArtikelDetailDialog extends TitleAreaDialog {
 		} else {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "Fehler",
 					"Der Artikel [" + o.getLabel() + "] konnte nicht geladen werden.");
-			throw new IllegalStateException("Could not load identifiable for article [" + o.getLabel() + "]");
+			throw new IllegalStateException("Could not load identifiable for article [" + o.getLabel() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

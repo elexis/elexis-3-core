@@ -10,7 +10,7 @@ public class ContactLabelUtil {
 	public static String[] getContactHints(String lbl) {
 		String[] hints = new String[KontaktSelektor.HINTSIZE];
 		Arrays.fill(hints, StringUtils.EMPTY);
-		String[] splits = lbl.split(",");
+		String[] splits = lbl.split(","); //$NON-NLS-1$
 		if (splits.length > 0) {
 			String[] fullNames = splits[0].split(StringUtils.SPACE);
 			if (fullNames.length > 0) {
@@ -18,7 +18,7 @@ public class ContactLabelUtil {
 				hints[KontaktSelektor.HINT_NAME] = fullNames[0].trim();
 			}
 			if (fullNames.length > 1) {
-				String[] nameWithZusatz = fullNames[1].trim().split("\\(|\\)");
+				String[] nameWithZusatz = fullNames[1].trim().split("\\(|\\)"); //$NON-NLS-1$
 				if (nameWithZusatz.length > 0) {
 					hints[KontaktSelektor.HINT_FIRSTNAME] = nameWithZusatz[0].trim();
 				}

@@ -12,8 +12,8 @@ import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.medication.views.ViewerSortOrder;
 
 public class ApplyAtcSortingHandler extends AbstractHandler {
-	public static final String CMD_ID = "ch.elexis.core.ui.medication.ApplyAtcSorting";
-	public static final String STATE_ID = "org.eclipse.ui.commands.toggleState";
+	public static final String CMD_ID = "ch.elexis.core.ui.medication.ApplyAtcSorting"; //$NON-NLS-1$
+	public static final String STATE_ID = "org.eclipse.ui.commands.toggleState"; //$NON-NLS-1$
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {

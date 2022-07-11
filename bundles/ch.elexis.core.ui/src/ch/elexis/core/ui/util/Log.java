@@ -54,7 +54,7 @@ public class Log {
 	/** Immer auszugebende Meldungen, automatisch mit einem Timestamp versehen */
 	public static final int SYNCMARK = -1;
 
-	private static String[] Levels = { "OK", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG", "TRACE" };
+	private static String[] Levels = { "OK", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG", "TRACE" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 
 	private static Logger out = null;
 
@@ -118,7 +118,7 @@ public class Log {
 			case NOTHING:
 				break;
 			case SYNCMARK:
-				out.info("SYNC: " + message);
+				out.info("SYNC: " + message); //$NON-NLS-1$
 				break;
 			case FATALS: // slf4j does not know fatal. Use error instead
 			case ERRORS:
@@ -143,8 +143,8 @@ public class Log {
 						if (doAlert == null) {
 							doAlert = UiDesk.getTopShell();
 						}
-						lastError = new StringBuilder().append(" |").append(type).append("| - ").append(prefix)
-								.append(": ").append(message).toString();
+						lastError = new StringBuilder().append(" |").append(type).append("| - ").append(prefix) //$NON-NLS-1$ //$NON-NLS-2$
+								.append(": ").append(message).toString(); //$NON-NLS-1$
 						if (doAlert != null) {
 							UiDesk.asyncExec(new Runnable() {
 								public void run() {

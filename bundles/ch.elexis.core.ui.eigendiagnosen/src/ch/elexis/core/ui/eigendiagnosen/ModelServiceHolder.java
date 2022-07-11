@@ -17,7 +17,7 @@ public class ModelServiceHolder {
 
 	public static IModelService get() {
 		if (modelService == null) {
-			throw new IllegalStateException("No ModelService available");
+			throw new IllegalStateException("No ModelService available"); //$NON-NLS-1$
 		}
 		return modelService;
 	}

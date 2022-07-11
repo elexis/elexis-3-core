@@ -12,7 +12,7 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 	private Color reserveColor;
 
 	public MedicationCellLabelProvider() {
-		reserveColor = UiDesk.getColorFromRGB("DDEFFF");
+		reserveColor = UiDesk.getColorFromRGB("DDEFFF"); //$NON-NLS-1$
 	}
 
 	@Override

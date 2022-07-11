@@ -37,7 +37,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 
 public class PatientPropertyPage extends PropertyPage implements IWorkbenchPropertyPage, IUnlockable {
 
-	public static final String ID = "at.medevit.elexis.properties.propertyPage.PatientPropertyPage";
+	public static final String ID = "at.medevit.elexis.properties.propertyPage.PatientPropertyPage"; //$NON-NLS-1$
 
 	private IPatient pat;
 	private Text textVorname;

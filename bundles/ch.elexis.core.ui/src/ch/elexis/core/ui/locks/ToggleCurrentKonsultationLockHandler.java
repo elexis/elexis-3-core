@@ -4,7 +4,7 @@ import ch.elexis.data.Konsultation;
 
 public class ToggleCurrentKonsultationLockHandler extends AbstractToggleCurrentLockHandler {
 
-	public static final String COMMAND_ID = "ch.elexis.core.ui.command.ToggleCurrentKonsultationLockCommand";
+	public static final String COMMAND_ID = "ch.elexis.core.ui.command.ToggleCurrentKonsultationLockCommand"; //$NON-NLS-1$
 
 	@Override
 	public String getCommandId() {

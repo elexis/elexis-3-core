@@ -159,8 +159,8 @@ public interface ITextPlugin extends IExecutableExtension {
 	// durcheinander
 	// und frägt 2x nach der Adresse, mit 0 bringt sie keinen Inhalt,
 	public final static int GRID_VISIBLE = 0x0002; // If set, Grid Lines will be visible
-	public final static String ENTRY_TYPE_TABLE = "TypeTable";
-	public final static String ENTRY_TYPE_TEXT = "TypeText";
+	public final static String ENTRY_TYPE_TABLE = "TypeTable"; //$NON-NLS-1$
+	public final static String ENTRY_TYPE_TEXT = "TypeText"; //$NON-NLS-1$
 
 	/**
 	 * Position text into a rectangular area.

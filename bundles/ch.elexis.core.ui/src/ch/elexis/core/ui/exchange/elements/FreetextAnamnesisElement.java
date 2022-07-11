@@ -7,10 +7,10 @@ import ch.elexis.data.Patient;
 
 public class FreetextAnamnesisElement extends XChangeElement {
 
-	public static final String XML_NAME = "freetextAnamnesis";
+	public static final String XML_NAME = "freetextAnamnesis"; //$NON-NLS-1$
 
-	public static final String ATTR_PERSONAL = "personal";
-	public static final String ATTR_FAMILY = "family";
+	public static final String ATTR_PERSONAL = "personal"; //$NON-NLS-1$
+	public static final String ATTR_FAMILY = "family"; //$NON-NLS-1$
 
 	@Override
 	public String getXMLName() {

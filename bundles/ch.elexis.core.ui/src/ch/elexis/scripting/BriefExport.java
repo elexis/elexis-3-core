@@ -45,7 +45,7 @@ public class BriefExport {
 		}
 		if (filename == null) {
 			FileDialog fd = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
-			fd.setFilterExtensions(new String[] { "*.csv" });
+			fd.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
 			fd.setFilterNames(new String[] { "Comma Separated Values (CVS)" });
 			fd.setOverwrite(true);
 			filename = fd.open();
@@ -81,7 +81,7 @@ public class BriefExport {
 							brief.get(fields, line);
 							byte[] bin = brief.loadBinary();
 							if (bin != null) {
-								File f = new File(subdir, brief.getId() + ".odt");
+								File f = new File(subdir, brief.getId() + ".odt"); //$NON-NLS-1$
 								FileOutputStream fos = new FileOutputStream(f);
 								fos.write(bin);
 								fos.close();

@@ -165,7 +165,7 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 		} else if (object != null) {
 			return object.toString();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -179,7 +179,7 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 		private String searchString;
 
 		public void setSearchText(String search) {
-			this.searchString = ".*" + search + ".*";
+			this.searchString = ".*" + search + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		@Override

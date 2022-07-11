@@ -202,7 +202,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof InvoiceEntry) {
-					return ((InvoiceEntry) element).getInvoiceStateSinceDays() + "d";
+					return ((InvoiceEntry) element).getInvoiceStateSinceDays() + "d"; //$NON-NLS-1$
 				}
 				return super.getText(element);
 			}

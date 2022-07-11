@@ -34,6 +34,7 @@ public class ElexisPoolingDataSource extends PoolingDataSource implements DataSo
 
 	public void activate() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		connectionPool = createConnectionPool(dbConnection);
+
 		if (connectionPool != null) {
 			setPool(connectionPool);
 			try (Connection conn = getConnection()) {

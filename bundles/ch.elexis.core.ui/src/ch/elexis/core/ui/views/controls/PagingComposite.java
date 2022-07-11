@@ -108,7 +108,7 @@ public abstract class PagingComposite extends Composite {
 		if (!isDisposed()) {
 			setVisible(currentPage > 0);
 			if (textToolItem != null) {
-				textToolItem.setText(currentPage + "/" + maxPage);
+				textToolItem.setText(currentPage + "/" + maxPage); //$NON-NLS-1$
 				textToolItem.setToolTipText("Gesamtanzahl: " + elementsCount);
 			}
 

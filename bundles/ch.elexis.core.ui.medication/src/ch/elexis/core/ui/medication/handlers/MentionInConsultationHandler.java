@@ -49,7 +49,7 @@ public class MentionInConsultationHandler extends AbstractHandler {
 							articleLabel = presc.getArticle().getLabel();
 						}
 						sb.append(StringUtils.LF);
-						sb.append("Medikation: " + articleLabel + ", " + presc.getDosageInstruction()
+						sb.append("Medikation: " + articleLabel + ", " + presc.getDosageInstruction() //$NON-NLS-2$
 								+ StringUtils.SPACE + getType(presc.getEntryType()));
 					}
 

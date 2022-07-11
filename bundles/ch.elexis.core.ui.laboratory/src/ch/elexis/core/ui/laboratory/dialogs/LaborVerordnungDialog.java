@@ -142,7 +142,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 					IExternLaborOrder extern = (IExternLaborOrder) element;
 					return extern.getLabel();
 				} else {
-					return "???";
+					return "???"; //$NON-NLS-1$
 				}
 			}
 		});
@@ -253,7 +253,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 			message.append(StringUtils.SPACE)
 					.append(ch.elexis.core.ui.laboratory.controls.Messages.LaborOrdersComposite_columnOrdernumber)
 					.append(": ").append(orders.get(0).get(LabOrder.FLD_ORDERID)); //$NON-NLS-1$
-			params.append(LabOrder.FLD_ORDERID + "=" + orders.get(0).get(LabOrder.FLD_ORDERID));
+			params.append(LabOrder.FLD_ORDERID + "=" + orders.get(0).get(LabOrder.FLD_ORDERID)); //$NON-NLS-1$
 		}
 		Reminder reminder = new Reminder(patient, date.toString(TimeTool.DATE_ISO), Visibility.ALWAYS,
 				params.toString(), message.toString()); // $NON-NLS-1$

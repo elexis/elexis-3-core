@@ -40,7 +40,7 @@ public class GenericDocument implements IOpaqueDocument {
 	Patient pat;
 	String keywords;
 	String mimetype;
-	String guid = StringTool.unique("FileDocument");
+	String guid = StringTool.unique("FileDocument"); //$NON-NLS-1$
 
 	/**
 	 * Create a new GenericDocument from a File.
@@ -100,7 +100,7 @@ public class GenericDocument implements IOpaqueDocument {
 
 	@Override
 	public String getMimeType() {
-		return mimetype == null ? "binary/octet-stream" : mimetype;
+		return mimetype == null ? "binary/octet-stream" : mimetype; //$NON-NLS-1$
 	}
 
 	/**
