@@ -37,6 +37,10 @@ public class ModelAdapterProxyHandler implements InvocationHandler {
 			targetReference = new WeakReference<>(target);
 		}
 		if (target != null) {
+			if ("equals".equals(method.getName()) && args.length > 0 && args[0] != null) {
+				// call equals with target to compare targets
+				return args[0].equals(target);
+			}
 			Map<String, Method> methods = classMethodMap != null ? classMethodMap.get(target.getClass()) : null;
 			if (methods == null) {
 				methods = addToClassMethodMap(target.getClass());
