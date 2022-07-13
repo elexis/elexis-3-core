@@ -13,9 +13,8 @@ package ch.elexis.core.model;
 import java.time.LocalDateTime;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IPeriod</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object
+ * '<em><b>IPeriod</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -31,13 +30,14 @@ import java.time.LocalDateTime;
  */
 public interface IPeriod extends Identifiable, Deleteable {
 	/**
-	 * Returns the value of the '<em><b>Start Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Start Time</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Start Time</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Start Time</em>' attribute isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Start Time</em>' attribute.
 	 * @see #setStartTime(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getIPeriod_StartTime()
@@ -47,9 +47,10 @@ public interface IPeriod extends Identifiable, Deleteable {
 	LocalDateTime getStartTime();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IPeriod#getStartTime <em>Start Time</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IPeriod#getStartTime
+	 * <em>Start Time</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @param value the new value of the '<em>Start Time</em>' attribute.
 	 * @see #getStartTime()
 	 * @generated
@@ -57,13 +58,14 @@ public interface IPeriod extends Identifiable, Deleteable {
 	void setStartTime(LocalDateTime value);
 
 	/**
-	 * Returns the value of the '<em><b>End Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>End Time</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>End Time</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>End Time</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>End Time</em>' attribute.
 	 * @see #setEndTime(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getIPeriod_EndTime()
@@ -74,8 +76,7 @@ public interface IPeriod extends Identifiable, Deleteable {
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IPeriod#getEndTime <em>End Time</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>End Time</em>' attribute.
 	 * @see #getEndTime()
 	 * @generated
@@ -83,11 +84,11 @@ public interface IPeriod extends Identifiable, Deleteable {
 	void setEndTime(LocalDateTime value);
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Is all day if the startTime is at the start of day (i.e. 00:00:00.000000000) and an endTime is null
-	 * <!-- end-model-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc --> <!-- begin-model-doc --> Is all
+	 * day if the startTime is at the start of day (i.e. 00:00:00.000000000) and the
+	 * endTime is a "minimum before midnight" (that is, elexis currently may store
+	 * only minutes, not seconds, hence its 23:59) <!-- end-model-doc -->
+	 * 
 	 * @model kind="operation" required="true"
 	 * @generated
 	 */
