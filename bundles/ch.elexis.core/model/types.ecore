@@ -77,6 +77,11 @@
         <details key="documentation" value="The document was sent to an external contact."/>
       </eAnnotations>
     </eLiterals>
+    <eLiterals name="NOT_FOUND_OR_NO_CONTENT" value="8" literal="NOT_FOUND_OR_NO_CONTENT">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The document could not be loaded or its content length is 0"/>
+      </eAnnotations>
+    </eLiterals>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="PathologicDescription" instanceClassName="ch.elexis.core.types.PathologicDescription"/>
   <eClassifiers xsi:type="ecore:EDataType" name="LocalDateTime" instanceClassName="java.time.LocalDateTime"/>

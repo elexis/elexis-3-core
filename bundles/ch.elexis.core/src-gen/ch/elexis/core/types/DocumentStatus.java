@@ -72,7 +72,18 @@ public enum DocumentStatus implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	SENT(4, "SENT", "SENT");
+	SENT(4, "SENT", "SENT"), /**
+	 * The '<em><b>NOT FOUND OR NO CONTENT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The document could not be loaded or its content length is 0
+	 * <!-- end-model-doc -->
+	 * @see #NOT_FOUND_OR_NO_CONTENT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	NOT_FOUND_OR_NO_CONTENT(8, "NOT_FOUND_OR_NO_CONTENT", "NOT_FOUND_OR_NO_CONTENT");
 
 	/**
 	 * The '<em><b>NEW</b></em>' literal value.
@@ -139,6 +150,20 @@ public enum DocumentStatus implements Enumerator {
 	public static final int SENT_VALUE = 4;
 
 	/**
+	 * The '<em><b>NOT FOUND OR NO CONTENT</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The document could not be loaded or its content length is 0
+	 * <!-- end-model-doc -->
+	 * @see #NOT_FOUND_OR_NO_CONTENT
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int NOT_FOUND_OR_NO_CONTENT_VALUE = 8;
+
+	/**
 	 * An array of all the '<em><b>Document Status</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -150,6 +175,7 @@ public enum DocumentStatus implements Enumerator {
 			PREPROCESSED,
 			INDEXED,
 			SENT,
+			NOT_FOUND_OR_NO_CONTENT,
 		};
 
 	/**
@@ -210,6 +236,7 @@ public enum DocumentStatus implements Enumerator {
 			case PREPROCESSED_VALUE: return PREPROCESSED;
 			case INDEXED_VALUE: return INDEXED;
 			case SENT_VALUE: return SENT;
+			case NOT_FOUND_OR_NO_CONTENT_VALUE: return NOT_FOUND_OR_NO_CONTENT;
 		}
 		return null;
 	}

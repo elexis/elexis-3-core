@@ -45,6 +45,7 @@
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/PREPROCESSED"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/INDEXED"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/SENT"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/NOT_FOUND_OR_NO_CONTENT"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//AppointmentType">
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//AppointmentType/DEFAULT"/>
