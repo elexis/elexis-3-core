@@ -17,8 +17,8 @@ public class ExtInfoHandler {
 		this.withExtInfo = withExtInfo;
 	}
 
-	private void doLoadExtInfo() {
-		if (extInfo == null) {
+	private void doLoadExtInfo(boolean reload) {
+		if (extInfo == null || reload) {
 			byte[] bytes = withExtInfo.getEntity().getExtInfo();
 			if (bytes != null) {
 				extInfo = JpaModelUtil.extInfoFromBytes(bytes);
@@ -29,13 +29,13 @@ public class ExtInfoHandler {
 	}
 
 	public Object getExtInfo(Object key) {
-		doLoadExtInfo();
+		doLoadExtInfo(false);
 
 		return extInfo.get(key);
 	}
 
 	public void setExtInfo(Object key, Object value) {
-		doLoadExtInfo();
+		doLoadExtInfo(!withExtInfo.isDirty());
 
 		if (value == null) {
 			extInfo.remove(key);
@@ -54,7 +54,7 @@ public class ExtInfoHandler {
 	 *         {@link #setExtInfo(Object, Object)} to handle persistent sets
 	 */
 	public Map<Object, Object> getMap() {
-		doLoadExtInfo();
+		doLoadExtInfo(false);
 
 		return new HashMap<>(extInfo);
 	}
