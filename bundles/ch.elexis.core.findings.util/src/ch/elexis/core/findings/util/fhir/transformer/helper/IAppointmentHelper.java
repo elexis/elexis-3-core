@@ -99,6 +99,13 @@ public class IAppointmentHelper extends AbstractHelper {
 		if (start != null) {
 			Date start_ = TimeUtil.toDate(start);
 			target.setStart(start_);
+
+			if (source.isAllDay()) {
+				LocalDateTime endOfDay = start.toLocalDate().atTime(LocalTime.MAX);
+				Date _endOfDay = TimeUtil.toDate(endOfDay);
+				target.setEnd(_endOfDay);
+				return;
+			}
 		}
 
 		LocalDateTime end = source.getEndTime();

@@ -112,16 +112,12 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin> implements
 
 	@Override
 	public boolean isAllDay() {
-		String beginn = getEntity().getBeginn();
-		if ("0".equals(beginn)) {
-			String duration = getEntity().getDauer();
-			if ("1439".equals(duration)) {
-				// 60*24-1 = 1439
-				LocalDateTime start = getStartTime();
-				LocalDate day = getEntity().getTag();
-				if (start != null && day != null) {
-					return day.atStartOfDay().equals(start);
-				}
+		String duration = getEntity().getDauer();
+		if (duration == null) {
+			LocalDateTime start = getStartTime();
+			LocalDate day = getEntity().getTag();
+			if (start != null && day != null) {
+				return day.atStartOfDay().equals(start);
 			}
 		}
 		return false;
