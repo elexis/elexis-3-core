@@ -142,6 +142,19 @@ public class NoPoUtil {
 	}
 
 	/**
+	 * Refresh {@link Identifiable} instances of the {@link PersistentObject}.
+	 * 
+	 * @param persistentObject
+	 */
+	public static void refreshIdentifiable(PersistentObject persistentObject) {
+		Optional<Identifiable> loaded = StoreToStringServiceHolder.get()
+				.loadFromString(persistentObject.storeToString());
+		loaded.ifPresent(i -> {
+			CoreModelServiceHolder.get().refresh(i, true);
+		});
+	}
+
+	/**
 	 * Get a database search String for a Elexis date database value. <br />
 	 * Used for S:D: mapped values in Query#add, copied and slightly adapted.
 	 *
