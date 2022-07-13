@@ -12,7 +12,6 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -49,6 +48,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +67,7 @@ import ch.elexis.core.data.interfaces.IXid;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.DBUpdate;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.data.util.SqlRunner;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.NonNull;
@@ -1380,6 +1381,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			extinfo.put(key, value);
 		}
 		setMap(FLD_EXTINFO, extinfo);
+
+		NoPoUtil.refreshIdentifiable(this);
 	}
 
 	/**
