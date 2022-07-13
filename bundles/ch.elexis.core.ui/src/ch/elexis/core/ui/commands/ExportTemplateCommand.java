@@ -39,10 +39,10 @@ public class ExportTemplateCommand extends AbstractHandler {
 					fdl.setFilterExtensions(
 							new String[] { MimeTypeUtil.getExtensions(textTemplate.getMimeType()), "*.*" }); //$NON-NLS-1$
 					fdl.setFilterNames(new String[] { textTemplate.getMimeTypePrintname(), "All files" }); //$NON-NLS-1$
-					fdl.setFileName(textTemplate.getName() + "." + textTemplate.getMimeType()); //$NON-NLS-1$
+					fdl.setFileName(textTemplate.getName()); // $NON-NLS-1$
 					String fileString = fdl.open();
 					if (fileString != null) {
-						File file = new File(fileString);
+						File file = new File(fileString + "." + textTemplate.getMimeType());
 						byte[] contents = textTemplate.getTemplate().loadBinary();
 
 						try (ByteArrayInputStream bais = new ByteArrayInputStream(contents);
