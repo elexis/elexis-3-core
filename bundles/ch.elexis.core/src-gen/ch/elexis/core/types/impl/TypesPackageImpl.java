@@ -950,6 +950,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(documentStatusEEnum, DocumentStatus.PREPROCESSED);
 		addEEnumLiteral(documentStatusEEnum, DocumentStatus.INDEXED);
 		addEEnumLiteral(documentStatusEEnum, DocumentStatus.SENT);
+		addEEnumLiteral(documentStatusEEnum, DocumentStatus.NOT_FOUND_OR_NO_CONTENT);
 
 		initEEnum(appointmentTypeEEnum, AppointmentType.class, "AppointmentType");
 		addEEnumLiteral(appointmentTypeEEnum, AppointmentType.DEFAULT);
