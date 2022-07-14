@@ -185,7 +185,6 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.getLoggedInContact().setInitialMandator();
-			CoreHub.userCfg = CoreHub.getUserSetting(CoreHub.getLoggedInContact());
 			CoreHub.heart.resume(true);
 
 			return true;

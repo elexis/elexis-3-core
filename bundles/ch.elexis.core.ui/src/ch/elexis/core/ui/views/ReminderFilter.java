@@ -5,9 +5,9 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.issue.Visibility;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Reminder;
 
@@ -20,7 +20,7 @@ public class ReminderFilter extends ViewerFilter {
 
 		if (element instanceof Reminder) {
 			Reminder check = (Reminder) element;
-			if (CoreHub.userCfg.get(Preferences.USR_REMINDERSOPEN, false)) {
+			if (ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN, false)) {
 				int determineDueState = Reminder.determineDueState(check.getDateDue());
 				if (determineDueState == 0) {
 					return false;

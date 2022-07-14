@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -73,6 +73,7 @@ import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -92,18 +93,18 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Reminder;
-import ch.rgw.io.Settings;
 import ch.rgw.tools.TimeTool;
 
 public class ReminderListsView extends ViewPart implements HeartListener, ISelectionProvider {
 	public static final String ID = "ch.elexis.core.ui.views.reminderlistsview"; //$NON-NLS-1$
 
-	private int filterDueDateDays = CoreHub.userCfg.get(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
-	private boolean autoSelectPatient = CoreHub.userCfg.get(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false);
-	private boolean showOnlyDueReminders = CoreHub.userCfg.get(Preferences.USR_REMINDERSOPEN, false);
-	private boolean showAllReminders = (CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false)
+	private int filterDueDateDays = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
+	private boolean autoSelectPatient = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT,
+			false);
+	private boolean showOnlyDueReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN, false);
+	private boolean showAllReminders = (ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
 			&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
-	private boolean showSelfCreatedReminders = CoreHub.userCfg.get(Preferences.USR_REMINDEROWN, false);
+	private boolean showSelfCreatedReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false);
 
 	private Composite viewParent;
 
@@ -206,7 +207,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		@Override
 		public void run() {
 			autoSelectPatient = toggleAutoSelectPatientAction.isChecked();
-			CoreHub.userCfg.set(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, autoSelectPatient);
+			ConfigServiceHolder.setUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, autoSelectPatient);
 		}
 	};
 
@@ -220,7 +221,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		@Override
 		public void doRun() {
 			showAllReminders = showOthersRemindersAction.isChecked();
-			CoreHub.userCfg.set(Preferences.USR_REMINDEROTHERS, showAllReminders);
+			ConfigServiceHolder.setUser(Preferences.USR_REMINDEROTHERS, showAllReminders);
 			refresh();
 		}
 	};
@@ -234,7 +235,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		@Override
 		public void run() {
 			showSelfCreatedReminders = showSelfCreatedReminderAction.isChecked();
-			CoreHub.userCfg.set(Preferences.USR_REMINDEROWN, showSelfCreatedReminders);
+			ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN, showSelfCreatedReminders);
 			refresh();
 		}
 	};
@@ -248,7 +249,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		@Override
 		public void run() {
 			showOnlyDueReminders = showOnlyOwnDueReminderToggleAction.isChecked();
-			CoreHub.userCfg.set(Preferences.USR_REMINDERSOPEN, showOnlyDueReminders);
+			ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN, showOnlyDueReminders);
 			refresh();
 		}
 	};
@@ -301,7 +302,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 			 * ch.elexis.core.data.events.PatientEventListener will be called on opposite
 			 * Preferences.USR_SHOWPATCHGREMINDER condition.
 			 */
-			if (!CoreHub.userCfg.get(Preferences.USR_SHOWPATCHGREMINDER, true)) {
+			if (!ConfigServiceHolder.getUser(Preferences.USR_SHOWPATCHGREMINDER, true)) {
 				UiDesk.asyncExec(new Runnable() {
 
 					public void run() {
@@ -700,10 +701,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 	}
 
 	private void refreshUserConfiguration() {
-		showOnlyOwnDueReminderToggleAction.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDERSOPEN, true));
-		showSelfCreatedReminderAction.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROWN, false));
+		showOnlyOwnDueReminderToggleAction.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN, true));
+		showSelfCreatedReminderAction.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false));
 		toggleAutoSelectPatientAction
-				.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false));
+				.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false));
 //
 //		// get state from user's configuration
 //		showOthersRemindersAction.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false));
@@ -711,11 +712,14 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 //		// update action's access rights
 //		showOthersRemindersAction.reflectRight();
 
-		Settings cfg = CoreHub.userCfg.getBranch(Preferences.USR_REMINDERCOLORS, true);
-		colorInProgress = UiDesk.getColorFromRGB(cfg.get(ProcessStatus.IN_PROGRESS.name(), "FFFFFF")); //$NON-NLS-1$ ;
-		colorDue = UiDesk.getColorFromRGB(cfg.get(ProcessStatus.DUE.name(), "FFFFFF")); //$NON-NLS-1$ ;
-		colorOverdue = UiDesk.getColorFromRGB(cfg.get(ProcessStatus.OVERDUE.name(), "FF0000")); //$NON-NLS-1$
-		colorOpen = UiDesk.getColorFromRGB(cfg.get(ProcessStatus.OPEN.name(), "00FF00")); //$NON-NLS-1$
+		colorInProgress = UiDesk.getColorFromRGB(ConfigServiceHolder
+				.getUser(Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.IN_PROGRESS.name(), "FFFFFF")); //$NON-NLS-1$ ;
+		colorDue = UiDesk.getColorFromRGB(
+				ConfigServiceHolder.getUser(Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.DUE.name(), "FFFFFF")); //$NON-NLS-1$ ;
+		colorOverdue = UiDesk.getColorFromRGB(ConfigServiceHolder
+				.getUser(Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.OVERDUE.name(), "FF0000")); //$NON-NLS-1$
+		colorOpen = UiDesk.getColorFromRGB(ConfigServiceHolder
+				.getUser(Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.OPEN.name(), "00FF00")); //$NON-NLS-1$
 	}
 
 	private TableViewerColumn createTypeColumn(TableViewer viewer, int width, int columnIndex) {
@@ -1088,13 +1092,13 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 					.collect(Collectors.toList());
 			StringJoiner sj = new StringJoiner(","); //$NON-NLS-1$
 			selectedIds.forEach(id -> sj.add(id));
-			CoreHub.userCfg.set(Preferences.USR_REMINDER_VIEWER_SELECTION, sj.toString());
+			ConfigServiceHolder.setUser(Preferences.USR_REMINDER_VIEWER_SELECTION, sj.toString());
 		}
 
 		public void loadSelection() {
 			currentSelection.clear();
-			String[] loadedIds = CoreHub.userCfg.get(Preferences.USR_REMINDER_VIEWER_SELECTION, StringUtils.EMPTY)
-					.split(","); //$NON-NLS-1$
+			String[] loadedIds = ConfigServiceHolder
+					.getUser(Preferences.USR_REMINDER_VIEWER_SELECTION, StringUtils.EMPTY).split(","); //$NON-NLS-1$
 			for (String id : loadedIds) {
 				for (IContributionItem item : manager.getItems()) {
 					if (item.getId().equals(id)) {
@@ -1159,12 +1163,12 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		@Override
 		public void run() {
 			if (isChecked()) {
-				CoreHub.userCfg.set(Preferences.USR_REMINDER_FILTER_DUE_DAYS, days);
+				ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS, days);
 				filterDueDateDays = days;
 				clearSelection();
 				refresh();
 			} else {
-				CoreHub.userCfg.set(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
+				ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
 				filterDueDateDays = -1;
 				clearSelection();
 				refresh();

@@ -8,7 +8,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +90,6 @@ public class TestOnlyCoreOperationAdvisor implements ICoreOperationAdvisor {
 
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.getLoggedInContact().setInitialMandator();
-			CoreHub.userCfg = CoreHub.getUserSetting(CoreHub.getLoggedInContact());
 			CoreHub.heart.resume(true);
 
 			return true;

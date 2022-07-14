@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -33,6 +33,7 @@ import com.opencsv.CSVReader;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -134,7 +135,7 @@ public class Interaction extends PersistentObject {
 				version.set(FLD_NAME1, VERSION);
 			}
 		}
-		if (!CoreHub.userCfg.get(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
+		if (!ConfigServiceHolder.getUser(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
 			importMappingFromCsv();
 		}
 	}

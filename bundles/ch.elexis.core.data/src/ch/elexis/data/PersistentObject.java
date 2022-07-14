@@ -468,24 +468,6 @@ public abstract class PersistentObject implements IPersistentObject {
 
 		});
 
-		CoreHub.userCfg.setSettingChangedListener(new ISettingChangedListener() {
-
-			@Override
-			public void settingRemoved(String key) {
-				String userId = (CoreHub.getLoggedInContact() != null) ? CoreHub.getLoggedInContact().getWrappedId()
-						: "null";
-				Trace.addTraceEntry("W userCfg [" + userId + "] key [" + key + "] => removed");
-			}
-
-			@Override
-			public void settingWritten(String key, String value) {
-				String userId = (CoreHub.getLoggedInContact() != null) ? CoreHub.getLoggedInContact().getWrappedId()
-						: "null";
-				Trace.addTraceEntry("W userCfg [" + userId + "] key [" + key + "] => value [" + value + "]");
-			}
-
-		});
-
 		// Zugriffskontrolle initialisieren
 		VersionInfo vi = new VersionInfo(CoreHub.globalCfg.get("dbversion", "0.0.0"));
 		log.info("Verlangte Datenbankversion: {}", CoreHub.DBVersion);

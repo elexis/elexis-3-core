@@ -10,7 +10,6 @@
  ******************************************************************************/
 package ch.elexis.core.data.activator;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -22,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.equinox.internal.app.CommandLineArgs;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -113,11 +113,21 @@ public class CoreHub implements BundleActivator {
 	 */
 	public static Settings localCfg;
 
-	/** Anwenderspezifische Einstellungen (Werden in der Datenbank gespeichert) */
-	public static Settings userCfg;
+	/**
+	 * Anwenderspezifische Einstellungen (Werden in der Datenbank gespeichert)
+	 * 
+	 * <b>Removed</b> and replaced with IConfigService, which is accessable via
+	 * ConfigServiceHolder
+	 **/
+	// public static Settings userCfg;
 
-	/** Mandantspezifische EInstellungen (Werden in der Datenbank gespeichert) */
-	public static Settings mandantCfg;
+	/**
+	 * Mandantspezifische EInstellungen (Werden in der Datenbank gespeichert)
+	 * 
+	 * <b>Removed</b> and replaced with IConfigService, which is accessable via
+	 * ConfigServiceHolder
+	 **/
+	// public static Settings mandantCfg;
 
 	/**
 	 * @deprecated please use {@link ElexisEventDispatcher#getSelectedMandator()} to
@@ -294,11 +304,6 @@ public class CoreHub implements BundleActivator {
 			stationIdentifier += "$" + instanceNo;
 		}
 
-		// Damit Anfragen auf userCfg und mandantCfg bei nicht eingeloggtem User
-		// keine NPE werfen
-		userCfg = localCfg;
-		mandantCfg = localCfg;
-
 		log.info("Basepath: " + getBasePath());
 		pin.initializeDefaultPreferences();
 
@@ -362,15 +367,6 @@ public class CoreHub implements BundleActivator {
 	}
 
 	public static void setMandant(Mandant newMandant) {
-		if (actMandant != null && mandantCfg != null) {
-			mandantCfg.flush();
-		}
-		if (newMandant == null) {
-			mandantCfg = userCfg;
-		} else {
-			mandantCfg = getUserSetting(newMandant);
-		}
-
 		actMandant = newMandant;
 
 		ElexisEventDispatcher.getInstance()
@@ -458,10 +454,6 @@ public class CoreHub implements BundleActivator {
 		if (CoreHub.getLoggedInContact() == null)
 			return;
 
-		if (CoreHub.userCfg != null) {
-			CoreHub.userCfg.flush();
-		}
-
 		LocalLockServiceHolder.get().releaseAllLocks();
 
 		CoreHub.setMandant(null);
@@ -469,7 +461,6 @@ public class CoreHub implements BundleActivator {
 		ContextServiceHolder.get().setActiveUser(null);
 		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null, IUser.class, ElexisEvent.EVENT_DESELECTED));
-		CoreHub.userCfg = CoreHub.localCfg;
 	}
 
 	public static Object getStationIdentifier() {
