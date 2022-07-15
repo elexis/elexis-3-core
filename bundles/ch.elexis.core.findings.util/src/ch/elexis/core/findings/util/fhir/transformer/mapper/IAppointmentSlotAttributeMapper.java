@@ -1,9 +1,5 @@
 package ch.elexis.core.findings.util.fhir.transformer.mapper;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Set;
 
 import org.hl7.fhir.r4.model.Appointment;
@@ -53,22 +49,7 @@ public class IAppointmentSlotAttributeMapper implements IdentifiableDomainResour
 		// TODO
 		fhir.setStatus(SlotStatus.BUSY);
 
-		LocalDateTime start = elexis.getStartTime();
-		if (start != null) {
-			Date start_ = Date.from(ZonedDateTime.of(start, ZoneId.systemDefault()).toInstant());
-			fhir.setStart(start_);
-		} else {
-			// TODO is required - what now?
-		}
-
-		LocalDateTime end = elexis.getEndTime();
-		if (end != null) {
-			Date end_ = Date.from(ZonedDateTime.of(end, ZoneId.systemDefault()).toInstant());
-			fhir.setEnd(end_);
-		} else {
-			// TODO is required - what now?
-		}
-
+		appointmentHelper.mapApplyStartEndMinutes(fhir, elexis);
 	}
 
 	@Override

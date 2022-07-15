@@ -94,6 +94,33 @@ public class IAppointmentHelper extends AbstractHelper {
 	 * @param target
 	 * @param source
 	 */
+	public void mapApplyStartEndMinutes(Slot target, IAppointment source) {
+		LocalDateTime start = source.getStartTime();
+		if (start != null) {
+			Date start_ = TimeUtil.toDate(start);
+			target.setStart(start_);
+
+			if (source.isAllDay()) {
+				LocalDateTime endOfDay = start.toLocalDate().atTime(LocalTime.MAX);
+				Date _endOfDay = TimeUtil.toDate(endOfDay);
+				target.setEnd(_endOfDay);
+				return;
+			}
+		}
+
+		LocalDateTime end = source.getEndTime();
+		if (end != null) {
+			Date end_ = TimeUtil.toDate(end);
+			target.setEnd(end_);
+		}
+	}
+
+	/**
+	 * ELEXIS -> FHIR: Map and apply start, end and duration
+	 *
+	 * @param target
+	 * @param source
+	 */
 	public void mapApplyStartEndMinutes(Appointment target, IAppointment source) {
 		LocalDateTime start = source.getStartTime();
 		if (start != null) {
