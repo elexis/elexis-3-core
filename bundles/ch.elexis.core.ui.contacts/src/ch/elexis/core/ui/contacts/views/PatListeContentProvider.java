@@ -128,9 +128,11 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 			@Override
 			public void run() {
 				TableViewer tv = (TableViewer) commonViewer.getViewerWidget();
-				tv.setItemCount(pats.length);
-				bValid = true;
-				tv.refresh();
+				if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
+					tv.setItemCount(pats.length);
+					bValid = true;
+					tv.refresh();
+				}
 				bUpdating = false;
 			}
 		});
