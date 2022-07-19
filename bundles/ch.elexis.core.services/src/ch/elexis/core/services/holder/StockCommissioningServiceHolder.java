@@ -2,20 +2,28 @@ package ch.elexis.core.services.holder;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import ch.elexis.core.services.IStockCommissioningSystemService;
 
 @Component
 public class StockCommissioningServiceHolder {
-
+	
 	private static IStockCommissioningSystemService stockService;
-
-	@Reference
-	public void setStockCommissioningSystemService(IStockCommissioningSystemService stockService) {
+	
+	// Please see info.elexis.server.core.connector.elexis.internal.services.scs.StockCommissioningSystemService
+	// for explanation
+	@Reference(policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
+	public void setStockCommissioningSystemService(IStockCommissioningSystemService stockService){
 		StockCommissioningServiceHolder.stockService = stockService;
 	}
-
-	public static IStockCommissioningSystemService get() {
+	
+	public void unsetStockCommissioningSystemService(IStockCommissioningSystemService stockService){
+		StockCommissioningServiceHolder.stockService = null;
+	}
+	
+	public static IStockCommissioningSystemService get(){
 		if (stockService == null) {
 			throw new IllegalStateException("No IStockCommissioningSystemService available");
 		}
