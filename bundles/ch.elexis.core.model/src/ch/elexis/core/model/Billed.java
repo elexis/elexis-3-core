@@ -122,14 +122,9 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 		if (isNonIntegerAmount()) {
 			throw new IllegalStateException("Can not set price if non integer amount was set");
 		} else {
-			if (!isChangedPrice() && getPrice().isZero()) {
-				setPoints(value.getCents());
-				setFactor(1.0);
-			} else {
-				setExtInfo(Constants.FLD_EXT_CHANGEDPRICE, "true");
-				setPoints(value.getCents());
-				setSecondaryScale(100);
-			}
+			setExtInfo(Constants.FLD_EXT_CHANGEDPRICE, "true");
+			setPoints(value.getCents());
+			setSecondaryScale(100);
 		}
 	}
 
