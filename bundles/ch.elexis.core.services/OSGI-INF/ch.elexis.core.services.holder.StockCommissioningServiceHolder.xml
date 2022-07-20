@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.services.holder.StockCommissioningServiceHolder">
-   <reference bind="setStockCommissioningSystemService" interface="ch.elexis.core.services.IStockCommissioningSystemService" name="StockCommissioningSystemService"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" name="ch.elexis.core.services.holder.StockCommissioningServiceHolder">
+   <reference bind="setStockCommissioningSystemService" interface="ch.elexis.core.services.IStockCommissioningSystemService" name="StockCommissioningSystemService" policy="static" policy-option="greedy" unbind="unsetStockCommissioningSystemService"/>
    <implementation class="ch.elexis.core.services.holder.StockCommissioningServiceHolder"/>
 </scr:component>
