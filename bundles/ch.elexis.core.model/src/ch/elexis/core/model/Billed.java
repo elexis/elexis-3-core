@@ -101,14 +101,10 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 			getEntityMarkDirty().setZahl((int) value);
 			setSecondaryScale(100);
 		} else {
-			if (!isChangedPrice()) {
-				// double
-				getEntityMarkDirty().setZahl(1);
-				int scale2 = (int) Math.round(value * 100);
-				setSecondaryScale(scale2);
-			} else {
-				throw new IllegalStateException("Can not set non integer amount if price was changed");
-			}
+			// double
+			getEntityMarkDirty().setZahl(1);
+			int scale2 = (int) Math.round(value * 100);
+			setSecondaryScale(scale2);
 		}
 	}
 
@@ -119,13 +115,9 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 
 	@Override
 	public void setPrice(Money value) {
-		if (isNonIntegerAmount()) {
-			throw new IllegalStateException("Can not set price if non integer amount was set");
-		} else {
-			setExtInfo(Constants.FLD_EXT_CHANGEDPRICE, "true");
-			setPoints(value.getCents());
-			setSecondaryScale(100);
-		}
+		setExtInfo(Constants.FLD_EXT_CHANGEDPRICE, "true");
+		setPoints(value.getCents());
+		setSecondaryScale(100);
 	}
 
 	@Override

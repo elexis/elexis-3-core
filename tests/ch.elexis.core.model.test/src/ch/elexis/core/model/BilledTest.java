@@ -59,14 +59,6 @@ public class BilledTest extends AbstractTest {
 		assertEquals(0.02, billed.getPrice().doubleValue(), 0.001);
 		assertEquals(2.5, billed.getAmount(), 0.001);
 		assertEquals(0.05, billed.getTotal().doubleValue(), 0.001);
-		// can not set price, as secondary scale is already used by non integer amount
-		Exception exception = null;
-		try {
-			billed.setPrice(new Money(5));
-		} catch (Exception e) {
-			exception = e;
-		}
-		assertTrue(exception instanceof IllegalStateException);
 		coreModelService.remove(billed);
 	}
 
@@ -88,16 +80,6 @@ public class BilledTest extends AbstractTest {
 		assertEquals(2.5, billed.getPrice().doubleValue(), 0.001);
 		assertEquals(1.0, billed.getAmount(), 0.001);
 		assertEquals(2.5, billed.getTotal().doubleValue(), 0.001);
-
-		// can not set non integer amount, as secondary scale is already used by changed
-		// price
-		Exception exception = null;
-		try {
-			billed.setAmount(2.5);
-		} catch (Exception e) {
-			exception = e;
-		}
-		assertTrue(exception instanceof IllegalStateException);
 		// integer amount change is still possible
 		billed.setAmount(3.0);
 		coreModelService.save(billed);
