@@ -13,7 +13,6 @@
 
 package ch.elexis.core.ui.contacts.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringJoiner;
@@ -21,6 +20,7 @@ import java.util.StringJoiner;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -111,7 +111,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	@Inject
 	void changedMandator(@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-		if (created) {
+		if (created && user != null) {
 			Display.getDefault().asyncExec(() -> {
 				userChanged();
 			});
