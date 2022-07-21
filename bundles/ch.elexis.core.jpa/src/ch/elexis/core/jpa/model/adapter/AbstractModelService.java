@@ -1,6 +1,7 @@
 package ch.elexis.core.jpa.model.adapter;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -153,6 +154,28 @@ public abstract class AbstractModelService implements IModelService {
 			} catch (IllegalAccessException | InvocationTargetException e) {
 				LoggerFactory.getLogger(getClass())
 						.error("Could not set property [" + propertyName + "] of entity [" + dbObject + "]", e);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void addToEntityList(String getterName, Identifiable value, Identifiable identifiable) {
+		EntityWithId dbObject = getDbObject(identifiable).orElse(null);
+		if (dbObject != null) {
+			EntityWithId dbValueObject = getDbObject(value).orElse(null);
+			if (dbValueObject != null) {
+				try {
+					Method getterMethod = dbObject.getClass().getMethod(getterName, (Class[]) null);
+					Object list = getterMethod.invoke(dbObject, (Object[]) null);
+					if (list instanceof List<?>) {
+						((List<Object>) list).add(dbValueObject);
+					}
+				} catch (SecurityException | IllegalArgumentException
+						| IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+					LoggerFactory.getLogger(getClass())
+							.error("Could not add to entity list [" + getterName + "] of entity [" + dbObject + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				}
 			}
 		}
 	}

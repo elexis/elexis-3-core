@@ -5,6 +5,8 @@ import java.util.List;
 
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
@@ -44,11 +46,34 @@ public class KonsultationDTO {
 		}
 	}
 
-	public IEncounter getTransientCopy() {
+	/**
+	 * Get a transient copy of the {@link KonsultationDTO} as {@link IEncounter}
+	 * with all {@link LeistungDTO} as {@link IBilled} except the specified
+	 * {@link IBillable}. This is used to calculate the price of billing that
+	 * {@link IBillable}.
+	 * 
+	 * @param iVerrechenbar
+	 * @return
+	 */
+	public IEncounter getTransientCopyWithoutBillable(IBillable iVerrechenbar) {
 		IEncounter copy = CoreModelServiceHolder.get().create(IEncounter.class);
 		copy.setDate(new TimeTool(date).toLocalDate());
 		copy.setMandator(NoPoUtil.loadAsIdentifiable(mandant, IMandator.class).get());
 		copy.setCoverage(CoreModelServiceHolder.get().load(id, IEncounter.class).get().getCoverage());
+
+		for (LeistungDTO dto : leistungDTOs) {
+			if (iVerrechenbar == null || !iVerrechenbar.equals(dto.getIVerrechenbar())) {
+				IBilled billedCopy = CoreModelServiceHolder.get().create(IBilled.class);
+				billedCopy.setBiller(copy.getMandator());
+
+				billedCopy.setAmount(dto.getCount());
+				billedCopy.setPoints(dto.getTp());
+				billedCopy.setFactor(dto.getTpw());
+				billedCopy.setBillable(dto.getIVerrechenbar());
+				billedCopy.setEncounter(copy);
+				CoreModelServiceHolder.get().addToEntityList("getBilled", billedCopy, copy);
+			}
+		}
 
 		return copy;
 	}
