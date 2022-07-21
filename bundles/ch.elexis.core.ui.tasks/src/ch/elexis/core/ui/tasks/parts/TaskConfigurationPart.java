@@ -1,8 +1,10 @@
 
 package ch.elexis.core.ui.tasks.parts;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -20,7 +22,11 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -61,6 +67,7 @@ public class TaskConfigurationPart implements IRefreshablePart {
 	private RunnableAndContextConfigurationComposite raccp;
 
 	private TableViewer tvTaskDescriptors;
+	private TaskLogComparator comparator;
 
 	// TODO only Admin should see all, else only current user
 
@@ -82,11 +89,20 @@ public class TaskConfigurationPart implements IRefreshablePart {
 		tvTaskDescriptors.setContentProvider(ArrayContentProvider.getInstance());
 		tvTaskDescriptors.addSelectionChangedListener(
 				sel -> selectionChanged((ITaskDescriptor) sel.getStructuredSelection().getFirstElement()));
+		comparator = new TaskLogComparator();
+		tvTaskDescriptors.setComparator(comparator);
 
 		TableViewerColumn tvcStatus = new TableViewerColumn(tvTaskDescriptors, SWT.NONE);
 		TableColumn tblclmnStatus = tvcStatus.getColumn();
 		tcl_composite.setColumnData(tblclmnStatus, new ColumnPixelData(16, false, true));
 		tblclmnStatus.setText("status");
+		tblclmnStatus.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				comparator.setColumn(1);
+				refresh();
+			}
+		});
 		tvcStatus.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -99,6 +115,13 @@ public class TaskConfigurationPart implements IRefreshablePart {
 		TableColumn tblclmnReferenceId = tvcReferenceId.getColumn();
 		tcl_composite.setColumnData(tblclmnReferenceId, new ColumnPixelData(150, true, true));
 		tblclmnReferenceId.setText("referenceId");
+		tblclmnReferenceId.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				comparator.setColumn(1);
+				refresh();
+			}
+		});
 		tvcReferenceId.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -111,6 +134,13 @@ public class TaskConfigurationPart implements IRefreshablePart {
 		TableColumn tblclmnRunnableId = tvcRunnableId.getColumn();
 		tcl_composite.setColumnData(tblclmnRunnableId, new ColumnPixelData(150, true, true));
 		tblclmnRunnableId.setText("runnableId");
+		tblclmnRunnableId.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				comparator.setColumn(2);
+				refresh();
+			}
+		});
 		tvcRunnableId.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -123,6 +153,13 @@ public class TaskConfigurationPart implements IRefreshablePart {
 		TableColumn tblclmnOwner = tvcOwner.getColumn();
 		tcl_composite.setColumnData(tblclmnOwner, new ColumnPixelData(150, true, true));
 		tblclmnOwner.setText("Owner");
+		tblclmnOwner.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				comparator.setColumn(3);
+				refresh();
+			}
+		});
 		tvcOwner.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -215,5 +252,55 @@ public class TaskConfigurationPart implements IRefreshablePart {
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
+	}
+
+	public class TaskLogComparator extends ViewerComparator {
+
+		private int propertyIndex;
+		private int direction = 1;
+
+		public TaskLogComparator() {
+			this.propertyIndex = 0;
+		}
+
+		public void setColumn(int column) {
+			if (column == this.propertyIndex) {
+				// Same column as last sort; so lt's toggle the direction
+				direction *= -1;
+			}
+			this.propertyIndex = column;
+		}
+
+		@Override
+		public int compare(Viewer viewer, Object o1, Object o2) {
+			ITaskDescriptor ts1 = (ITaskDescriptor) o1;
+			ITaskDescriptor ts2 = (ITaskDescriptor) o2;
+
+			switch (propertyIndex) {
+			case 0:
+				boolean status1 = ts1.isActive();
+				boolean status2 = ts2.isActive();
+				return Objects.compare(status1, status2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
+
+			case 1:
+				String ref1 = ts1.getReferenceId();
+				String ref2 = ts2.getReferenceId();
+				return Objects.compare(ref1, ref2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
+
+			case 2:
+				String run1 = ts1.getIdentifiedRunnableId() != null ? ts1.getIdentifiedRunnableId() : "";
+				String run2 = ts2.getIdentifiedRunnableId() != null ? ts2.getIdentifiedRunnableId() : "";
+				return Objects.compare(run1, run2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
+
+			case 3:
+				String own1 = ts1.getOwner() != null ? ts1.getOwner().getLabel() : "";
+				String own2 = ts2.getOwner() != null ? ts2.getOwner().getLabel() : "";
+				return Objects.compare(own1, own2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
+			}
+
+			return super.compare(viewer, o1, o2);
+
+		}
+
 	}
 }
