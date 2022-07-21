@@ -365,6 +365,18 @@ public interface IModelService {
 	public void setEntityProperty(String propertyName, Object value, Identifiable identifiable);
 
 	/**
+	 * Add the Entity of {@link Identifiable} value to the list identified by
+	 * listName of the Entity of the {@link Identifiable}. <b>IMPORTANT</b> this
+	 * method exists for compatibility with older Elexis code, therefore it
+	 * <b>should only be used in such cases</b>.
+	 * 
+	 * @param listName
+	 * @param value
+	 * @param identifiable
+	 */
+	public void addToEntityList(String listName, Identifiable value, Identifiable identifiable);
+
+	/**
 	 * Clear the whole cache.
 	 *
 	 */

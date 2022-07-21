@@ -2,6 +2,8 @@ package ch.elexis.data.dto;
 
 import java.util.Optional;
 
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
@@ -71,13 +73,16 @@ public class LeistungDTO {
 	public void calcPrice(KonsultationDTO konsultationDTO, FallDTO fallDTO) {
 		if (verrechnet == null) {
 			@SuppressWarnings("unchecked")
-			Result<IBilled> result = iVerrechenbar.getOptifier().add(iVerrechenbar, konsultationDTO.getTransientCopy(),
+			Result<IBilled> result = iVerrechenbar.getOptifier().add(iVerrechenbar,
+					konsultationDTO.getTransientCopyWithoutBillable(iVerrechenbar),
 					1.0, false);
 			if (result.isOK()) {
 				tp = result.get().getPoints();
 				tpw = result.get().getFactor();
 				scale1 = result.get().getPrimaryScaleFactor();
 				scale2 = result.get().getSecondaryScaleFactor();
+			} else {
+				LoggerFactory.getLogger(getClass()).warn("Adding billable failed [" + result.getMessages() + "]");
 			}
 		} else {
 			tpw = getFactor();
