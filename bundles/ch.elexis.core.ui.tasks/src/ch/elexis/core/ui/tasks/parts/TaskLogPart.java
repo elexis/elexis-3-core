@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.tasks.parts;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ICoreRunnable;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -334,7 +334,7 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 			detailPartStack.getChildren().add(taskDetailPart);
 			partService.activate(taskDetailPart);
 		} else {
-			partService.showPart(taskDetailPart, PartState.CREATE);
+			partService.showPart(taskDetailPart, PartState.VISIBLE);
 		}
 	}
 
