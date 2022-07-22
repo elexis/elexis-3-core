@@ -10,7 +10,6 @@
  ******************************************************************************/
 package ch.elexis.core.ui.commands;
 
-import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -62,7 +62,8 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 					createBill(sortedByYears.get(year));
 				}
 			}
-		} else {
+		} else if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), "Rechnung erstellen",
+				"Sind Sie sicher, dass Sie die Rechnung erstellen möchten?")) {
 			createBill(toBill);
 		}
 		return null;
