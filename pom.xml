@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.elexis.core</groupId>
 	<artifactId>elexis-3-core</artifactId>
@@ -10,9 +8,9 @@
 
 
 	<properties>
-		<elexis.target>2021-09-java11</elexis.target>
-    <formatterConfigFile>${env.PWD}/Elexis_formatter_2022_03.xml</formatterConfigFile>
-		<tycho.version>2.7.0</tycho.version>
+		<elexis.target>2022-06-java17</elexis.target>
+		<formatterConfigFile>${env.PWD}/Elexis_formatter_2022_03.xml</formatterConfigFile>
+		<tycho.version>2.7.4</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
 		<!-- vvv required empty vvv -->
@@ -99,24 +97,24 @@
 	</profiles>
 	<build>
 		<plugins>
-        <plugin>
-            <groupId>net.revelc.code.formatter</groupId>
-            <artifactId>formatter-maven-plugin</artifactId>
-            <version>2.18.0</version>
-            <configuration>
-                <goals>
-                  <goal>format</goal>
-                </goals>
-                <directories>
-                    <directory>${project.build.sourceDirectory}</directory>
-                    <directory>${project.basedir}/src</directory>
-                </directories>
-                <configFile>${formatterConfigFile}</configFile>
-                <lineEnding>KEEP</lineEnding>
-                <encoding>UTF-8</encoding>
-            </configuration>
-        </plugin>
-        <plugin>
+			<plugin>
+				<groupId>net.revelc.code.formatter</groupId>
+				<artifactId>formatter-maven-plugin</artifactId>
+				<version>2.18.0</version>
+				<configuration>
+					<goals>
+						<goal>format</goal>
+					</goals>
+					<directories>
+						<directory>${project.build.sourceDirectory}</directory>
+						<directory>${project.basedir}/src</directory>
+					</directories>
+					<configFile>${formatterConfigFile}</configFile>
+					<lineEnding>KEEP</lineEnding>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho.version}</version>
@@ -139,19 +137,19 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
-               <dependency-resolution>
-                   <profileProperties>
-                     <org.eclipse.justj.buildtime>true</org.eclipse.justj.buildtime>
-                   </profileProperties>
-                 </dependency-resolution>
+					<dependency-resolution>
+						<profileProperties>
+							<org.eclipse.justj.buildtime>true</org.eclipse.justj.buildtime>
+						</profileProperties>
+					</dependency-resolution>
 				</configuration>
 			</plugin>
 			<plugin>
 				<!--https://books.sonatype.com/mcookbook/reference/ch02s03.html#ex-groovy-script-ex -->
-        <groupId>org.codehaus.gmavenplus</groupId>
-        <artifactId>gmavenplus-plugin</artifactId>
-        <version>1.13.1</version>
-        <executions>
+				<groupId>org.codehaus.gmavenplus</groupId>
+				<artifactId>gmavenplus-plugin</artifactId>
+				<version>1.13.1</version>
+				<executions>
 					<execution>
 						<phase>compile</phase>
 						<goals>
@@ -160,7 +158,8 @@
 						<configuration>
 							<allowSystemExits>true</allowSystemExits>
 							<scripts>
-								<script><![CDATA[
+								<script>
+									<![CDATA[
   import java.text.SimpleDateFormat;
   HINT_GENERATED    = "#  ${project.name}: Generated from pom.xml groovy shell using gmavenplus-plugin at ${new Date()}\n"
   HINT_LAST_CHANGED = "# Last changed from pom.xml groovy shell by gmavenplus-plugin in pom.xml at ${new Date()}\n"
@@ -276,12 +275,12 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 		</plugins>
 		<pluginManagement>
 			<plugins>
-			  <plugin>
+				<plugin>
 					<groupId>net.revelc.code.formatter</groupId>
 					<artifactId>formatter-maven-plugin</artifactId>
 					<version>2.18.0</version>
 				</plugin>
-					<!--This plugin's configuration is used to store Eclipse m2e settings
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -315,17 +314,17 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 				</plugin>
 				<plugin>
 					<!-- Use compiler plugin with tycho as the adapter to the JDT compiler. -->
-					<artifactId>maven-compiler-plugin </artifactId>
-					<version>3.8</version>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.10.1</version>
 					<configuration>
-						<release>11</release>
+						<release>17</release>
 					</configuration>
 				</plugin>
 				<plugin>
 					<!-- we want to ensure that the bin directory created by the Eclipse 
 						gets cleaned, too. Without it Maven would put two versions of each class 
 						file into the jars -->
-					<artifactId>maven-clean-plugin </artifactId>
+					<artifactId>maven-clean-plugin</artifactId>
 					<version>2.5</version>
 					<configuration>
 						<filesets>
@@ -437,7 +436,8 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 					</reportSet>
 				</reportSets>
 			</plugin>
-			<plugin>				<!-- maven-jxr-plugin is needed for linkXRef -->
+			<plugin>
+				<!-- maven-jxr-plugin is needed for linkXRef -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
 				<version>2.5</version>

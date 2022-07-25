@@ -12,7 +12,7 @@
 
 package ch.elexis.core.ui.exchange;
 
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import ch.rgw.tools.Result;
 

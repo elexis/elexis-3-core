@@ -17,10 +17,10 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.xpath.XPath;
 
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
@@ -67,7 +67,7 @@ public class XChangeImporter implements IDataReceiver {
 					for (String r : restrictions) {
 						try {
 							XPath xpath = XPath.newInstance(r);
-							List<Object> nodes = xpath.selectNodes(el);
+							List<?> nodes = xpath.selectNodes(el);
 							if (nodes.size() > 0) {
 								if (++matches > matchedRestrictions) {
 									cand = ice;

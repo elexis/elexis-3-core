@@ -14,8 +14,8 @@ import java.io.FileOutputStream;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.exchange.elements.ServiceBlockElement;

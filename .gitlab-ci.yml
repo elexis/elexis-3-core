@@ -12,7 +12,7 @@ stages:
 build:
   stage: build
   tags:
-  - java11
+  - java17
   - maven
   script:
   - unset JAVA_HOME

@@ -15,7 +15,7 @@ package ch.elexis.core.ui.exchange.elements;
 import java.util.HashMap;
 import java.util.List;
 
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.ui.exchange.XChangeExporter;

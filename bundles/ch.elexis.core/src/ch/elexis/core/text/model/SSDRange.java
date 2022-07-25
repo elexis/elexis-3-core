@@ -11,8 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.text.model;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * An SSDRange is some part of a SimpleStructuredDocument. It has a position and

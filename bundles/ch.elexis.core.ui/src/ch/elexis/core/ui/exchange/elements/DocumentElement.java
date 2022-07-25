@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IDocument;

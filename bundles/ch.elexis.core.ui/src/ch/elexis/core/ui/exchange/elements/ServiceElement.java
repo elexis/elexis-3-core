@@ -12,7 +12,7 @@ package ch.elexis.core.ui.exchange.elements;
 import java.util.List;
 import java.util.Optional;
 
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.interfaces.IFall;
