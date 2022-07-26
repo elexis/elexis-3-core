@@ -126,6 +126,8 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 		filter = new SearchDataDialog();
 		structuredViewer.addFilter(filter);
 
+		structuredViewer.addDoubleClickListener(event -> okPressed());
+
 		return ret;
 	}
 
