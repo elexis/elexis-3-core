@@ -76,7 +76,7 @@
           <useUIHarness>false</useUIHarness>
           <testClass>ch.elexis.core.tasks.test.AllTests</testClass>
           <showEclipseLog>true</showEclipseLog>
-          <argLine>-ea -Delexis.test.mode=true</argLine>
+          <argLine>--add-opens java.base/java.util=ALL-UNNAMED -ea -Delexis.test.mode=true</argLine>
           <dependencies>
             <dependency>
               <type>eclipse-plugin</type>

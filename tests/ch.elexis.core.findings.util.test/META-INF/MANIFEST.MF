@@ -16,3 +16,4 @@ Require-Bundle: org.junit;bundle-version="4.0.0",
 Bundle-ClassPath: .
 Service-Component: OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.AllTransformerTests.xml
 Bundle-ActivationPolicy: lazy
+Bundle-Vendor: elexis.ch
