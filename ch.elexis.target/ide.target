@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2022-06-java17" sequenceNumber="1658898132">
+<target name="Elexis IDE 2022-06-java17" sequenceNumber="1658908201">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.3.v20220515-1416"/>
@@ -27,6 +27,7 @@
       <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
       <unit id="org.slf4j.bridge.jul" version="1.7.30.v20200204-2150"/>
       <unit id="org.slf4j.apis.jcl" version="1.7.30.v20200204-2150"/>
+      <unit id="org.slf4j.binding.log4j12" version="1.7.30.v20201108-2042"/>
       <unit id="ch.qos.logback.classic" version="1.2.3.v20200428-2012"/>
       <unit id="ch.qos.logback.core" version="1.2.3.v20200428-2012"/>
       <unit id="ch.qos.logback.slf4j" version="1.2.3.v20200428-2012"/>
