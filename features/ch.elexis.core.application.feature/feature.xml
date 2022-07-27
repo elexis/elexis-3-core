@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.application.feature"
       label="Elexis OpenSource Application Feature"
-      version="3.9.0.qualifier"
+      version="3.10.0.qualifier"
       provider-name="elexis.info">
 
    <description>
@@ -562,13 +562,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.beanshell.bsh"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.google.guava"
          download-size="0"
          install-size="0"
@@ -731,20 +724,6 @@
 
    <plugin
          id="javax.el"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons.dbcp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons.pool"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1485,6 +1464,20 @@
 
    <plugin
          id="org.apache.httpcomponents.httpcore"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.commons-dbcp2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.commons-pool2"
          download-size="0"
          install-size="0"
          version="0.0.0"

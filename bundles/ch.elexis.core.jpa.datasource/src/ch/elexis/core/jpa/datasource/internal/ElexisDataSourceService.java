@@ -8,12 +8,14 @@ import static ch.elexis.core.constants.ElexisEnvironmentPropertyConstants.DB_TYP
 import static ch.elexis.core.constants.ElexisEnvironmentPropertyConstants.DB_USERNAME;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp2.PoolingDataSource;
 import org.eclipse.core.runtime.IStatus;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceRegistration;
@@ -36,7 +38,8 @@ public class ElexisDataSourceService implements IElexisDataSource {
 	private static Logger log = LoggerFactory.getLogger(ElexisDataSourceService.class);
 
 	private static ServiceRegistration<DataSource> servReg;
-	private static ElexisPoolingDataSource currentDataSource;
+	@SuppressWarnings("rawtypes")
+	private static PoolingDataSource currentDataSource;
 
 	private IStatus connectionStatus;
 
@@ -84,14 +87,13 @@ public class ElexisDataSourceService implements IElexisDataSource {
 		try {
 			if (servReg != null) {
 				log.info("Unregistering service registration");
-				currentDataSource.deactivate();
+				currentDataSource.close();
 				servReg.unregister();
 				servReg = null;
 				currentDataSource = null;
 			}
 
-			currentDataSource = new ElexisPoolingDataSource(dbConnection);
-			currentDataSource.activate();
+			currentDataSource = ElexisPoolingDataSourceBuilder.build(dbConnection);
 			Hashtable<String, String> properties = new Hashtable<>();
 			properties.put("id", "default");
 			servReg = FrameworkUtil.getBundle(getClass()).getBundleContext().registerService(DataSource.class,
@@ -99,7 +101,7 @@ public class ElexisDataSourceService implements IElexisDataSource {
 			connectionStatus = new ObjectStatus(IStatus.OK, "ch.elexis.core.jpa.datasource", code, "ok", null,
 					dbConnection);
 			return connectionStatus;
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			// Logging might not even been initialized yet
 			// so leave the stack trace to sysout
 			e.printStackTrace();

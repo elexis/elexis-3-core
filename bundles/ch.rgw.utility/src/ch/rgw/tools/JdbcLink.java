@@ -24,6 +24,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Timer;
@@ -31,11 +32,12 @@ import java.util.TimerTask;
 import java.util.Vector;
 import java.util.logging.Level;
 
-import org.apache.commons.dbcp.ConnectionFactory;
-import org.apache.commons.dbcp.DriverConnectionFactory;
-import org.apache.commons.dbcp.PoolableConnectionFactory;
-import org.apache.commons.dbcp.PoolingDataSource;
-import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.dbcp2.ConnectionFactory;
+import org.apache.commons.dbcp2.DriverConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnection;
+import org.apache.commons.dbcp2.PoolableConnectionFactory;
+import org.apache.commons.dbcp2.PoolingDataSource;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * Weiterer Abstraktionslayer zum einfacheren Zugriff auf eine jdbc-fähige
@@ -60,7 +62,7 @@ public class JdbcLink {
 	private String sUser;
 	private String sPwd;
 	private PoolingDataSource dataSource;
-	private GenericObjectPool<Connection> connectionPool;
+	private GenericObjectPool<PoolableConnection> connectionPool;
 	// prepared statements are not released properly up until now, so keep 1
 	// connection open
 	private Connection preparedStatementConnection;
@@ -273,15 +275,23 @@ public class JdbcLink {
 			// the "real" Connections created by the ConnectionFactory with
 			// the classes that implement the pooling functionality.
 			//
-			connectionPool = new GenericObjectPool<Connection>(null);
-			// configure the connection pool
-			connectionPool.setMaxActive(32);
-			connectionPool.setMinIdle(2);
-			connectionPool.setMaxWait(10000);
-			connectionPool.setTestOnBorrow(true);
 
-			new PoolableConnectionFactory(connectionFactory, connectionPool, null, VALIDATION_QUERY, false, true);
+			PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,
+					null);
+			poolableConnectionFactory.setValidationQuery(VALIDATION_QUERY);
+			poolableConnectionFactory.setDefaultAutoCommit(true);
+			poolableConnectionFactory.setDefaultReadOnly(false);
+
+			connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
+			connectionPool.setMaxTotal(32);
+			connectionPool.setMinIdle(2);
+			connectionPool.setMaxWait(Duration.ofSeconds(10));
+			connectionPool.setTestOnBorrow(true);
+			poolableConnectionFactory.setPool(connectionPool);
+
 			dataSource = new PoolingDataSource(connectionPool);
+
+			// https://github.com/deegree/deegree3/pull/1337/files
 
 			// test establishing a connection
 			Connection conn = dataSource.getConnection();
@@ -701,7 +711,7 @@ public class JdbcLink {
 			try {
 				if (conn != null && !conn.isClosed()) {
 					conn.close();
-					connectionPool.invalidateObject(conn);
+					connectionPool.invalidateObject((PoolableConnection) conn);
 				}
 				log.log(Level.WARNING, "JdbcLink.Stm - trying reconnect");
 				conn = getConnection();
