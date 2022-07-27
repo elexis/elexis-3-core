@@ -5,7 +5,7 @@
   <parent>
     <groupId>ch.elexis.core</groupId>
     <artifactId>ch.elexis.core.tests</artifactId>
-    <version>3.9.0-SNAPSHOT</version>
+    <version>3.10.0-SNAPSHOT</version>
   </parent>
   <artifactId>ch.elexis.core.tasks.test</artifactId>
   <packaging>eclipse-test-plugin</packaging>
@@ -56,11 +56,6 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
-                <id>javax.transaction</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
                 <id>org.eclipse.persistence.oracle</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
@@ -90,7 +85,7 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.sun.jna.platform</artifactId>
+              <artifactId>org.osgi.util.measurement</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -185,11 +180,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>osgi.enterprise</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.net</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -220,7 +210,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.geronimo.specs.geronimo-jta_1.1_spec</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.jface.notifications</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.commons.commons-pool2</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -240,6 +240,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.sun.jna</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.apache.batik.i18n</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -250,12 +255,12 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.apache.commons.pool</artifactId>
+              <artifactId>org.apache.batik.constants</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.apache.batik.constants</artifactId>
+              <artifactId>com.sun.jna.platform</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -291,11 +296,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.gemini.jpa</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>com.sun.jna.platform</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -350,11 +350,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.apache.commons.logging</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.core.commands</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -405,6 +400,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.jaxen</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.databinding.property</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -441,11 +441,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.emf.ecore.xmi</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>com.sun.jna</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -500,11 +495,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.sun.jna</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.persistence.core</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -521,6 +511,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.w3c.dom.smil</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.commons.commons-dbcp2</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -555,17 +550,7 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.apache.commons.dbcp</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.ui.services</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.jdom</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -576,6 +561,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.ui.widgets</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.osgi.service.jdbc</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -600,6 +590,16 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.osgi.util.promise</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.osgi.service.jndi</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.ui.navigator.resources</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -620,17 +620,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.osgi.util.xml</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>com.healthmarketscience.jackcess</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.ui.workbench</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.beanshell.bsh</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -651,6 +651,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.ui.ide</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.commons.logging</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -676,6 +681,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.slf4j.api</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.osgi.service.prefs</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -770,6 +780,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.osgi.util.function</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.urischeme</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -830,6 +845,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.osgi.util.position</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.apache.poi</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -841,6 +861,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.filebuffers</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache-extras.beanshell.bsh</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -866,6 +891,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.ui.css.core</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.jdom2</artifactId>
               <version>0.0.0</version>
             </dependency>
           </dependencies>
