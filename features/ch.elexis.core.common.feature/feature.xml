@@ -56,7 +56,6 @@
       <import plugin="ch.elexis.core.tasks" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="com.sun.mail.jakarta.mail" version="1.6.4" match="greaterOrEqual"/>
       <import plugin="javax.activation"/>
-      <import plugin="ch.elexis.core.findings.util" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="ch.elexis.core.hapi.fhir" version="4.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import plugin="ch.elexis.core.findings" version="1.0.0" match="greaterOrEqual"/>
