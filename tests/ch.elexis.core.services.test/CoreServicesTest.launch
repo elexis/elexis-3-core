@@ -35,12 +35,12 @@
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="ch.elexis.core.services.test.AllTests"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ch.elexis.core.services.test"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delexis.test.mode=true&#10;-Djcifs.smb.client.signingPreferred=false&#10;-Djcifs.smb.client.signingEnforced=false&#10;-Djcifs.smb.client.ipcSigningEnforced=false"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="--add-opens java.base/java.lang=ALL-UNNAMED&#10;-Delexis.test.mode=true&#10;-Djcifs.smb.client.signingPreferred=false&#10;-Djcifs.smb.client.signingEnforced=false&#10;-Djcifs.smb.client.ipcSigningEnforced=false"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <stringAttribute key="product" value="ch.elexis.core.application.product"/>
     <booleanAttribute key="run_in_ui_thread" value="false"/>
@@ -128,6 +128,7 @@
         <setEntry value="org.keycloak.keycloak-authz-client@default:default"/>
         <setEntry value="org.keycloak.keycloak-common@default:default"/>
         <setEntry value="org.keycloak.keycloak-core@default:default"/>
+        <setEntry value="org.osgi.framework.system.packages.extra@default:false"/>
         <setEntry value="org.osgi.service.jdbc@default:default"/>
         <setEntry value="org.osgi.service.jndi@default:default"/>
         <setEntry value="org.osgi.service.prefs@default:default"/>
