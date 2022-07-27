@@ -291,8 +291,6 @@ public class JdbcLink {
 
 			dataSource = new PoolingDataSource(connectionPool);
 
-			// https://github.com/deegree/deegree3/pull/1337/files
-
 			// test establishing a connection
 			Connection conn = dataSource.getConnection();
 			conn.close();
