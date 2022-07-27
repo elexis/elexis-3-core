@@ -1,0 +1,195 @@
+target "Elexis IDE 2022-06-java17" with source allEnvironments
+
+location "https://download.elexis.info/elexis/target/2022-06-java17/" {
+	
+	// justj.17
+	org.eclipse.justj.openjdk.hotspot.jre.full.feature.group
+
+	// eclipse base
+	org.eclipse.platform.feature.group
+	org.eclipse.e4.rcp.feature.group
+	org.eclipse.emf.common.feature.group
+	org.eclipse.emf.common.ui.feature.group
+	org.eclipse.emf.ecore.feature.group
+	org.eclipse.emf.databinding.feature.group
+	org.eclipse.emf.edit.feature.group
+	org.eclipse.emf.edit.ui.feature.group
+	org.eclipse.ecf.core.feature.feature.group
+	org.eclipse.ecf.core.ssl.feature.feature.group
+	org.eclipse.ecf.filetransfer.feature.feature.group
+	org.eclipse.ecf.filetransfer.ssl.feature.feature.group
+	org.eclipse.ecf.filetransfer.httpclient5.feature.feature.group
+	org.eclipse.mylyn.wikitext_feature.feature.group
+	
+	org.sat4j.core
+	org.sat4j.pb
+
+	org.apache.httpcomponents.httpcore
+	org.apache.httpcomponents.httpclient
+	org.apache.httpcomponents.httpclient.win
+	
+	// logging
+	org.slf4j.api
+	// java.util.logging -> slf4j
+	org.slf4j.bridge.jul
+	org.slf4j.apis.jcl
+	org.slf4j.binding.log4j12
+	ch.qos.logback.classic
+	ch.qos.logback.core
+	ch.qos.logback.slf4j
+	
+	// JAXB
+	javax.activation
+//	com.sun.xml.bind
+//	jakarta.xml.bind
+	jaxb-api // javax.xml.bind:jaxb-api:2.3.1
+//	com.sun.xml.bind.jaxb-impl
+//	org.glassfish.jaxb.runtime
+	com.sun.xml.bind.jaxb-osgi
+	// javax.xml // -> bites with JDK java.xml
+	
+	// persistence
+	com.h2database
+	com.mysql.cj
+	org.postgresql.jdbc
+	org.eclipse.persistence.jpa.feature.group
+	org.eclipse.gemini.jpa.feature.feature.group
+	org.osgi.service.jdbc
+	org.osgi.service.jndi
+	jakarta.persistence
+	
+	org.osgi.framework.system.packages.extra
+	
+	com.eclipsesource.jaxrs.consumer lazy
+	com.eclipsesource.jaxrs.publisher lazy
+	com.eclipsesource.jaxrs.provider.gson lazy
+	com.eclipsesource.jaxrs.provider.multipart lazy
+	com.eclipsesource.jaxrs.provider.security lazy
+	com.eclipsesource.jaxrs.provider.swagger lazy
+	
+	bcprov
+	
+	// jackson
+	info.elexis.target.jackson.feature.group lazy
+	// hapi
+	info.elexis.target.hapi.fhir lazy
+	// jaxws
+	info.elexis.target.jaxws.core lazy
+	// ehealth connector
+	info.elexis.target.ehealth.connector.ch lazy
+	// swagger
+	info.elexis.target.swagger.all lazy
+	// apache commons
+	info.elexis.target.commons.feature.group lazy
+	// jax ws-rs
+	info.elexis.target.jaxwsrs.core.feature.group lazy
+	// keycloak
+	info.elexis.target.keycloak.feature.group lazy
+	// Require-Capability: osgi.extender; filter:="(osgi.extender=osgi.serviceloader.processor)"
+	org.apache.aries.spifly.dynamic.bundle
+	org.objectweb.asm
+	org.objectweb.asm.commons
+	org.objectweb.asm.tree
+	org.objectweb.asm.tree.analysis
+	org.objectweb.asm.util
+	org.jboss.logging.jboss-logging
+
+	// overridden
+	org.apache.commons.commons-dbcp2
+	org.apache.geronimo.specs.geronimo-jta_1.1_spec
+	// e
+
+	org.jdom2
+	org.jaxen
+	com.google.gson
+	com.google.guava
+	org.jsoup
+	org.apache.poi
+	org.apache.poi.ooxml
+	org.apache.poi.ooxml.schemas
+	org.apache.xmlbeans
+	org.apache-extras.beanshell.bsh
+	com.opencsv
+	com.google.protobuf
+	jakarta.mail-api
+	com.healthmarketscience.jackcess
+	com.google.zxing.core
+	com.google.zxing.javase
+	com.lowagie.itext
+	org.jfree.jcommon
+	org.jfree.chart
+	org.jfree.chart-swt
+	org.jfree.swtgraphics2d
+	xerces.Impl
+	
+	// ch.medelexis.openoffice
+	ag.ion.bion.workbench.office.editor.core
+	ag.ion.noa
+	ag.ion.noa4e.ui
+	
+	// Nebula
+	org.eclipse.nebula.cwt.feature.feature.group
+	org.eclipse.nebula.widgets.cdatetime.feature.feature.group
+	org.eclipse.nebula.widgets.tablecombo.feature.feature.group
+	org.eclipse.nebula.widgets.floatingtext.feature.feature.group
+	org.eclipse.nebula.widgets.nattable.core
+	org.eclipse.nebula.widgets.nattable.extension.e4
+	org.eclipse.nebula.widgets.nattable.extension.nebula
+	org.eclipse.nebula.widgets.nattable.extension.glazedlists
+	org.eclipse.nebula.widgets.richtext
+	ca.odell.glazedlists
+	org.eclipse.collections
+	
+	// Chromium
+	com.equo.chromium.feature.feature.group
+	com.equo.chromium.cef.feature.feature.group
+	
+	// additional jetty bundles for server
+	info.elexis.target.jetty.additions.feature.group
+
+	// Testing and IDE integration
+	org.junit
+	org.hamcrest.core
+	org.hamcrest.library
+	org.eclipse.jdt.junit.runtime
+	org.eclipse.jdt.junit4.runtime
+	org.eclipse.pde.junit.runtime
+	
+	// translation
+		org.eclipse.swt.nl_de
+	org.eclipse.swt.nl_fr
+	org.eclipse.swt.nl_it
+	org.eclipse.ui.workbench.nl_de
+	org.eclipse.ui.workbench.nl_fr
+	org.eclipse.ui.workbench.nl_it
+	org.eclipse.e4.ui.swt.gtk.nl_de
+	org.eclipse.e4.ui.swt.gtk.nl_fr
+	org.eclipse.e4.ui.swt.gtk.nl_it
+	org.eclipse.e4.ui.workbench.renderers.swt.nl_de
+	org.eclipse.e4.ui.workbench.renderers.swt.nl_fr
+	org.eclipse.e4.ui.workbench.renderers.swt.nl_it
+	org.eclipse.jface.nl_de
+	org.eclipse.jface.nl_fr
+	org.eclipse.jface.nl_it
+	org.eclipse.ui.browser.nl_de
+	org.eclipse.ui.browser.nl_fr
+	org.eclipse.ui.browser.nl_it
+	org.eclipse.ui.views.nl_de
+	org.eclipse.ui.views.nl_fr
+	org.eclipse.ui.views.nl_it
+	org.eclipse.equinox.p2.ui.nl_de
+	org.eclipse.equinox.p2.ui.nl_fr
+	org.eclipse.equinox.p2.ui.nl_it
+	org.eclipse.ui.nl_de
+	org.eclipse.ui.nl_fr
+	org.eclipse.ui.nl_it
+	org.eclipse.platform.nl_de
+	org.eclipse.platform.nl_fr
+	org.eclipse.platform.nl_it
+	org.eclipse.jdt.ui.nl_de
+	org.eclipse.jdt.ui.nl_fr
+	org.eclipse.jdt.ui.nl_it
+	org.eclipse.e4.ui.workbench.swt.nl_de
+	org.eclipse.e4.ui.workbench.swt.nl_fr
+	org.eclipse.e4.ui.workbench.swt.nl_it
+}

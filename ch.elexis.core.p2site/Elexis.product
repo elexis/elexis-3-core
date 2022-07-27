@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Elexis OpenSource" uid="Elexis3" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.10.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Elexis OpenSource" uid="Elexis3" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.10.0.qualifier" useFeatures="true" includeLaunchers="true" autoIncludeRequirements="true">
 
    <aboutInfo>
       <image path="rsc/elexislogo2.png"/>
@@ -15,7 +15,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8 -Dorg.eclipse.gemini.refreshBundles=false
+      <vmArgs>--add-opens java.base/java.util=ALL-UNNAMED -Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8 -Dorg.eclipse.gemini.refreshBundles=false
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts=false -Dfile.encoding=utf-8
       </vmArgsMac>
@@ -35,9 +35,9 @@
    </launcher>
 
    <vm>
-      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11</linux>
-      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11</macos>
-      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11</windows>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</linux>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</macos>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</windows>
    </vm>
 
    <license>

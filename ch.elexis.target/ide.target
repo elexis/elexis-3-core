@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2022-06-java17" sequenceNumber="1658908201">
+<target name="Elexis IDE 2022-06-java17" sequenceNumber="1658931546">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.3.v20220515-1416"/>
@@ -42,6 +42,7 @@
       <unit id="org.osgi.service.jdbc" version="1.0.1.202109301733"/>
       <unit id="org.osgi.service.jndi" version="1.0.1.202109301733"/>
       <unit id="jakarta.persistence" version="2.2.3"/>
+      <unit id="org.osgi.framework.system.packages.extra" version="1.0.0.202207271617"/>
       <unit id="com.eclipsesource.jaxrs.consumer" version="0.0.0"/>
       <unit id="com.eclipsesource.jaxrs.publisher" version="0.0.0"/>
       <unit id="com.eclipsesource.jaxrs.provider.gson" version="0.0.0"/>
