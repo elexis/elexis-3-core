@@ -56,7 +56,6 @@
       <import plugin="ch.elexis.core.tasks" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="com.sun.mail.jakarta.mail" version="1.6.4" match="greaterOrEqual"/>
       <import plugin="javax.activation"/>
-      <import plugin="ch.elexis.core.findings" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="ch.elexis.core.findings.util" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="ch.elexis.core.hapi.fhir" version="4.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
@@ -157,13 +156,6 @@
 
    <plugin
          id="ch.elexis.core.mail"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="ch.elexis.core.findings"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -274,6 +266,13 @@
 
    <plugin
          id="org.apache.xmlbeans"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.findings"
          download-size="0"
          install-size="0"
          version="0.0.0"
