@@ -20,7 +20,6 @@
 
    <requires>
       <import plugin="org.eclipse.osgi"/>
-      <import plugin="org.jdom"/>
       <import plugin="org.eclipse.core.expressions" version="3.4.400" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.20.100" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi.services" version="3.10.0" match="greaterOrEqual"/>
@@ -30,10 +29,8 @@
       <import plugin="ch.elexis.core.l10n" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="jakarta.ws.rs-api"/>
       <import plugin="org.apache.commons.lang3"/>
-      <import plugin="org.apache.commons.dbcp"/>
       <import plugin="org.apache.commons.io"/>
       <import plugin="org.apache.commons.logging"/>
-      <import plugin="org.apache.commons.pool"/>
       <import plugin="com.h2database"/>
       <import plugin="org.postgresql.jdbc"/>
       <import plugin="ch.elexis.core" version="3.9.0" match="greaterOrEqual"/>
@@ -49,7 +46,6 @@
       <import plugin="ch.elexis.core.jpa" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="ch.elexis.core.jpa.entities" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="jakarta.persistence"/>
-      <import plugin="org.beanshell.bsh" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="com.ibm.icu"/>
       <import plugin="ch.elexis.core.hl7.v2x" version="3.2.0" match="greaterOrEqual"/>
       <import plugin="org.apache.poi" version="3.9.0" match="greaterOrEqual"/>
@@ -77,6 +73,11 @@
       <import plugin="org.junit"/>
       <import plugin="info.elexis.target.hapi.fhir" version="4.1.0" match="greaterOrEqual"/>
       <import plugin="ch.elexis.core.serial"/>
+      <import plugin="org.apache.commons.commons-dbcp2"/>
+      <import plugin="org.apache.commons.commons-pool2"/>
+      <import plugin="org.apache-extras.beanshell.bsh"/>
+      <import plugin="org.jdom2"/>
+      <import plugin="org.jaxen"/>
    </requires>
 
    <plugin

@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.persistence.feature"
       label="Core JPA Persistence Feature"
-      version="3.9.0.qualifier"
+      version="3.10.0.qualifier"
       provider-name="medevit.at">
 
    <description url="http://www.example.com/description">
@@ -82,13 +82,6 @@
          unpack="false"/>
 
    <plugin
-         id="osgi.enterprise"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="ch.elexis.core.jpa.entities"
          download-size="0"
          install-size="0"
@@ -103,22 +96,21 @@
          unpack="false"/>
 
    <plugin
-         id="javax.transaction"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons.dbcp"
+         id="org.apache.commons.commons-dbcp2"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.apache.commons.pool"
+         id="org.apache.commons.commons-pool2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.geronimo.specs.geronimo-jta_1.1_spec"
          download-size="0"
          install-size="0"
          version="0.0.0"
