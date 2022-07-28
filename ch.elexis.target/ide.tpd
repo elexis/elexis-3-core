@@ -47,6 +47,7 @@ location "https://download.elexis.info/elexis/target/2022-06-java17/" {
 //	org.glassfish.jaxb.runtime
 	com.sun.xml.bind.jaxb-osgi
 	// javax.xml // -> bites with JDK java.xml
+	jakarta.xml.bind-api
 	
 	// persistence
 	com.h2database
