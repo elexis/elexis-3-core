@@ -74,8 +74,7 @@ public class LeistungDTO {
 		if (verrechnet == null) {
 			@SuppressWarnings("unchecked")
 			Result<IBilled> result = iVerrechenbar.getOptifier().add(iVerrechenbar,
-					konsultationDTO.getTransientCopyWithoutBillable(iVerrechenbar),
-					1.0, false);
+					konsultationDTO.getTransientCopyWithoutBillable(iVerrechenbar), 1.0, false);
 			if (result.isOK()) {
 				tp = result.get().getPoints();
 				tpw = result.get().getFactor();

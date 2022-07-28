@@ -171,8 +171,8 @@ public abstract class AbstractModelService implements IModelService {
 					if (list instanceof List<?>) {
 						((List<Object>) list).add(dbValueObject);
 					}
-				} catch (SecurityException | IllegalArgumentException
-						| IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+				} catch (SecurityException | IllegalArgumentException | IllegalAccessException
+						| InvocationTargetException | NoSuchMethodException e) {
 					LoggerFactory.getLogger(getClass())
 							.error("Could not add to entity list [" + getterName + "] of entity [" + dbObject + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}

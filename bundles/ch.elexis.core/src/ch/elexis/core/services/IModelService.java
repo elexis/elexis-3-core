@@ -369,7 +369,7 @@ public interface IModelService {
 	 * listName of the Entity of the {@link Identifiable}. <b>IMPORTANT</b> this
 	 * method exists for compatibility with older Elexis code, therefore it
 	 * <b>should only be used in such cases</b>.
-	 * 
+	 *
 	 * @param listName
 	 * @param value
 	 * @param identifiable

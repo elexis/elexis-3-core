@@ -115,7 +115,7 @@ public class CoreHub implements BundleActivator {
 
 	/**
 	 * Anwenderspezifische Einstellungen (Werden in der Datenbank gespeichert)
-	 * 
+	 *
 	 * <b>Removed</b> and replaced with IConfigService, which is accessable via
 	 * ConfigServiceHolder
 	 **/
@@ -123,7 +123,7 @@ public class CoreHub implements BundleActivator {
 
 	/**
 	 * Mandantspezifische EInstellungen (Werden in der Datenbank gespeichert)
-	 * 
+	 *
 	 * <b>Removed</b> and replaced with IConfigService, which is accessable via
 	 * ConfigServiceHolder
 	 **/

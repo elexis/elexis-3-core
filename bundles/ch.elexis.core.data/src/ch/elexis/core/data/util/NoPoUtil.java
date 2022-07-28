@@ -143,7 +143,7 @@ public class NoPoUtil {
 
 	/**
 	 * Refresh {@link Identifiable} instances of the {@link PersistentObject}.
-	 * 
+	 *
 	 * @param persistentObject
 	 */
 	public static void refreshIdentifiable(PersistentObject persistentObject) {

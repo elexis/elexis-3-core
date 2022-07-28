@@ -51,7 +51,7 @@ public class KonsultationDTO {
 	 * with all {@link LeistungDTO} as {@link IBilled} except the specified
 	 * {@link IBillable}. This is used to calculate the price of billing that
 	 * {@link IBillable}.
-	 * 
+	 *
 	 * @param iVerrechenbar
 	 * @return
 	 */
