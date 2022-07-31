@@ -24,7 +24,6 @@ public class Messages {
 	public static String Ablauf_19 = ch.elexis.core.l10n.Messages.Ablauf_19;
 	public static String Ablauf_21 = ch.elexis.core.l10n.Messages.Ablauf_21;
 	public static String Ablauf_23 = ch.elexis.core.l10n.Messages.Ablauf_23;
-	public static String Ablauf_24 = ch.elexis.core.l10n.Messages.Ablauf_24;
 	public static String Ablauf_3 = ch.elexis.core.l10n.Messages.Ablauf_3;
 	public static String Ablauf_31 = ch.elexis.core.l10n.Messages.Ablauf_31;
 	public static String Ablauf_4 = ch.elexis.core.l10n.Messages.Ablauf_4;

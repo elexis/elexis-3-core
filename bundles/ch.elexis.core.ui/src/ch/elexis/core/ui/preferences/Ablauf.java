@@ -12,10 +12,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
-import java.io.File;
-import java.nio.file.Paths;
-
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
@@ -23,8 +19,6 @@ import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -44,7 +38,7 @@ public class Ablauf extends FieldEditorPreferencePage implements IWorkbenchPrefe
 		addField(new RadioGroupFieldEditor(Preferences.ABL_LANGUAGE, Messages.Ablauf_preferredLang, 1,
 				new String[][] { { Messages.Ablauf_german, "d" //$NON-NLS-1$
 				}, { Messages.Ablauf_french, "f" //$NON-NLS-1$
-				}, { Messages.Ablauf_italian, Messages.Ablauf_24 } }, getFieldEditorParent()));
+				}, { Messages.Ablauf_italian, "i" } }, getFieldEditorParent())); //$NON-NLS-1$
 
 		addField(new IntegerFieldEditor(Preferences.ABL_CACHELIFETIME, Messages.Ablauf_cachelifetime,
 				getFieldEditorParent()));
