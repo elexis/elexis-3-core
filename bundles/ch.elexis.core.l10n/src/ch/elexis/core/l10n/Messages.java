@@ -1724,7 +1724,6 @@ public class Messages extends NLS {
 	public static String Ablauf_19;
 	public static String Ablauf_21;
 	public static String Ablauf_23;
-	public static String Ablauf_24;
 	public static String Ablauf_31;
 	public static String Ablauf_3;
 	public static String Ablauf_4;
