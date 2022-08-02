@@ -15,9 +15,11 @@ package ch.elexis.core.ui.documents.views;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -507,12 +509,11 @@ public class DocumentsView extends ViewPart {
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 				for (Object object : selection.toList()) {
 					IDocument document = (IDocument) object;
-					if (document.getContent() == null) {
+					if (document.getContentLength() < 1) {
 						event.doit = false;
-						SWTHelper.showError(
-								Messages.DocumentView_exportErrorCaption,
-								Messages.DocumentView_exportErrorText + "\nDokument: " + document.getTitle());
-						logger.error("No content for document" + document);
+						SWTHelper.showError(Messages.DocumentView_exportErrorCaption,
+								Messages.DocumentView_exportErrorEmptyText + "\nDokument: " + document.getTitle());
+						break;
 					}
 				}
 			}
@@ -523,15 +524,22 @@ public class DocumentsView extends ViewPart {
 				currentDragSelection = selection;
 				if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
 					String[] documents = new String[selection.size()];
+					Set<String> titles = new HashSet<String>();
 					for (int i = 0; i < selection.size(); i++) {
 						IDocument dh = (IDocument) selection.toList().get(i);
 						try {
-							String absPath = DocumentStoreServiceHolder.getService().saveContentToTempFile(dh,
-									dh.getTitle(), dh.getExtension(), true);
+							String _titel = dh.getTitle();
+							if (titles.contains(dh.getTitle())) {
+								_titel = dh.getTitle() + "(" + i + ")";
+							} else {
+								titles.add(dh.getTitle());
+							}
+							String absPath = DocumentStoreServiceHolder.getService().saveContentToTempFile(dh, _titel,
+									dh.getExtension(), true);
 							documents[i] = absPath;
 						} catch (ElexisException e) {
 							event.doit = false;
-							logger.error("drag error", e); //$NON-NLS-1$
+							break;
 						}
 						event.data = documents;
 					}
