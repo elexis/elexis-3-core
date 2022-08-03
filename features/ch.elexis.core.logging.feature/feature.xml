@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.logging.feature"
       label="Elexis OpenSource Common Logging Feature"
-      version="3.9.0.qualifier"
+      version="3.10.0.qualifier"
       provider-name="elexis.info">
 
    <description>
@@ -83,27 +83,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.slf4j.jcl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.slf4j.jul"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.slf4j.log4j"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="ch.qos.logback.slf4j"
          download-size="0"
          install-size="0"
@@ -124,5 +103,27 @@
          install-size="0"
          version="0.0.0"
          fragment="true"/>
+
+   <plugin
+         id="org.slf4j.apis.jcl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.slf4j.bridge.jul"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.slf4j.binding.log4j12"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
 
 </feature>

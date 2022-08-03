@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.ui.exchange.XChangeExporter;

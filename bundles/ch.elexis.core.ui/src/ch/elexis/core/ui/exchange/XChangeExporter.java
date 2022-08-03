@@ -14,8 +14,8 @@ package ch.elexis.core.ui.exchange;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.jdom.Document;
-import org.jdom.Element;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 import ch.elexis.core.ui.exchange.elements.ContactElement;
 import ch.elexis.core.ui.exchange.elements.ContactRefElement;

@@ -12,10 +12,10 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
-import org.jdom.Element;
+import org.apache.commons.lang3.StringUtils;
+import org.jdom2.Element;
 
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;

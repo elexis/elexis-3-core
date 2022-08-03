@@ -1,10 +1,44 @@
-# Helper script for Niklaus to be able to work under NixOS
-# To get into a fish shell call in this directory: nix-shell --run fish
-{ pkgs ? import <nixpkgs> {} }:
-let mvn = pkgs.maven.override { jdk = pkgs.openjdk11; };
-in pkgs.mkShell {
-  buildInputs = [ mvn pkgs.jq pkgs.adoptopenjdk-hotspot-bin-11 pkgs.ruby pkgs.rubyPackages.rugged];
-}
-# Tested with the following commands after calling nix-shell
-# mvn -V clean verify  -Dtycho.localArtifacts=ignore -DskipTests
-# ./ch.elexis.core.releng/update_changelog.rb  --force-tag=release/3.8 --with-tickets
+#! /usr/bin/env nix-shell
+# call it: nix-shell ./start_h2.sh
+# mit GDK_BACKEND=wayland läuft copy/paste zu kate nicht
+# install package at-spi2-core to avoid error
+# AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+
+with import <nixpkgs> {};
+mkShell {
+    buildInputs = [ pkgs.maven pkgs.ruby_3_0 pkgs.rubyPackages_3_0.rugged];
+    NIX_LD_LIBRARY_PATH = lib.makeLibraryPath [
+      zlib
+      dbus
+      git
+      glib
+      glib-networking
+      gnulib
+      gsettings-desktop-schemas
+      gtk3
+      nss nspr libdrm xorg.libXdamage mesa alsa-lib# for chromium
+      swt
+      gvfs
+      jdk11
+      librsvg
+      libsecret
+      libzip
+      openssl
+      stdenv
+      stdenv.cc.cc
+      unzip
+      webkitgtk
+      xorg.libXtst
+    ];
+    NIX_LD = builtins.readFile "${stdenv.cc}/nix-support/dynamic-linker";
+    shellHook = ''
+      export version=`echo ${gtk3}  | cut -d '-' -f 3`
+      export GIO_MODULE_DIR=${glib-networking}/lib/gio/modules/
+      echo GIO_MODULE_DIR are $GIO_MODULE_DIR
+      export XDG_DATA_DIRS="$XDG_DATA_DIRS:${gtk3}/share/gsettings-schemas/gtk+3-$version:${at-spi2-core}/share/dbus-1/services" # this worked! Tested using File..Open
+      export GDK_BACKEND=x11
+      export GSETTINGS_SCHEMA_DIR=${at-spi2-core}/share/dbus-1/services
+      echo GSETTINGS_SCHEMA_DIR are $GSETTINGS_SCHEMA_DIR
+      echo done shellHook version is $version with GDK_BACKEND $GDK_BACKEND
+    '';
+  }

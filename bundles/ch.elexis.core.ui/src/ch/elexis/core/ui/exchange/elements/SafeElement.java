@@ -12,8 +12,8 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
-import org.jdom.Element;
-import org.jdom.Namespace;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
 
 import ch.rgw.tools.StringTool;
 

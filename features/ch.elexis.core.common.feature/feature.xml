@@ -20,63 +20,43 @@
 
    <requires>
       <import plugin="org.eclipse.osgi"/>
-      <import plugin="org.jdom"/>
       <import plugin="org.eclipse.core.expressions" version="3.4.400" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.20.100" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi.services" version="3.10.0" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.ecore" version="2.23.0" match="greaterOrEqual"/>
-      <import plugin="ch.rgw.utility" version="3.9.100" match="greaterOrEqual"/>
-      <import plugin="ch.elexis.core.l10n" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="jakarta.ws.rs-api"/>
       <import plugin="org.apache.commons.lang3"/>
-      <import plugin="org.apache.commons.dbcp"/>
       <import plugin="org.apache.commons.io"/>
       <import plugin="org.apache.commons.logging"/>
-      <import plugin="org.apache.commons.pool"/>
       <import plugin="com.h2database"/>
       <import plugin="org.postgresql.jdbc"/>
-      <import plugin="ch.elexis.core" version="3.9.0" match="greaterOrEqual"/>
-      <import plugin="ch.elexis.core.services" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="com.google.guava"/>
       <import plugin="javax.inject"/>
       <import plugin="org.eclipse.equinox.preferences"/>
       <import plugin="org.eclipse.e4.core.di.annotations"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.equinox.app"/>
-      <import plugin="ch.elexis.core.data" version="3.10.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.security" version="1.0.0" match="compatible"/>
-      <import plugin="ch.elexis.core.jpa" version="3.9.0" match="greaterOrEqual"/>
-      <import plugin="ch.elexis.core.jpa.entities" version="3.9.0" match="greaterOrEqual"/>
-      <import plugin="jakarta.persistence"/>
-      <import plugin="org.beanshell.bsh" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="com.ibm.icu"/>
-      <import plugin="ch.elexis.core.hl7.v2x" version="3.2.0" match="greaterOrEqual"/>
       <import plugin="org.apache.poi" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="org.apache.poi.ooxml" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="org.apache.poi.ooxml.schemas" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="com.healthmarketscience.jackcess"/>
-      <import plugin="ch.elexis.core.documents" version="3.9.0" match="greaterOrEqual"/>
-      <import plugin="ch.elexis.core.tasks" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="com.sun.mail.jakarta.mail" version="1.6.4" match="greaterOrEqual"/>
       <import plugin="javax.activation"/>
-      <import plugin="ch.elexis.core.findings" version="3.9.0" match="greaterOrEqual"/>
-      <import plugin="ch.elexis.core.findings.util" version="3.9.0" match="greaterOrEqual"/>
-      <import plugin="ch.elexis.core.hapi.fhir" version="4.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
-      <import plugin="ch.elexis.core.findings" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="ch.elexis.core.findings.templates" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="ch.elexis.core.jpa.datasource" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.persistence.core"/>
-      <import plugin="ch.elexis.core.findings.util" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="com.eclipsesource.jaxrs.consumer"/>
       <import plugin="org.glassfish.jersey.core.jersey-common"/>
       <import plugin="org.glassfish.jersey.core.jersey-client"/>
       <import plugin="org.glassfish.jersey.media.jersey-media-multipart"/>
       <import plugin="bcprov"/>
       <import plugin="org.junit"/>
-      <import plugin="info.elexis.target.hapi.fhir" version="4.1.0" match="greaterOrEqual"/>
-      <import plugin="ch.elexis.core.serial"/>
+      <import plugin="org.apache-extras.beanshell.bsh"/>
+      <import plugin="org.jdom2"/>
+      <import plugin="org.jaxen"/>
+      <import feature="ch.elexis.core.persistence.feature" version="3.10.0.qualifier"/>
    </requires>
 
    <plugin
@@ -156,13 +136,6 @@
 
    <plugin
          id="ch.elexis.core.mail"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="ch.elexis.core.findings"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -273,6 +246,13 @@
 
    <plugin
          id="org.apache.xmlbeans"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.findings"
          download-size="0"
          install-size="0"
          version="0.0.0"

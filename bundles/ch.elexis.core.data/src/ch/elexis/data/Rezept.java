@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.jdom.Document;
-import org.jdom.Element;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.prescription.EntryType;
