@@ -6,7 +6,7 @@
 
 with import <nixpkgs> {};
 mkShell {
-    buildInputs = [ pkgs.maven pkgs.ruby_3_0 pkgs.rubyPackages_3_0.rugged];
+    buildInputs = with pkgs; [ maven ruby_3_0 rubyPackages_3_0.rugged];
     NIX_LD_LIBRARY_PATH = lib.makeLibraryPath [
       zlib
       dbus
@@ -19,7 +19,7 @@ mkShell {
       nss nspr libdrm xorg.libXdamage mesa alsa-lib# for chromium
       swt
       gvfs
-      jdk11
+      jdk17
       librsvg
       libsecret
       libzip
