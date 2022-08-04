@@ -12,17 +12,19 @@
 
 package ch.elexis.core.ui.documents.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -501,54 +503,47 @@ public class DocumentsView extends ViewPart {
 
 		final Transfer[] dragTransferTypes = new Transfer[] { FileTransfer.getInstance(), TextTransfer.getInstance() };
 		viewer.addDragSupport(DND.DROP_COPY, dragTransferTypes, new DragSourceAdapter() {
-			private boolean failure;
 
 			@Override
 			public void dragStart(DragSourceEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-				event.doit = selection.getFirstElement() instanceof IDocument;
+				for (Object object : selection.toList()) {
+					IDocument document = (IDocument) object;
+					if (document.getContentLength() < 1) {
+						event.doit = false;
+						SWTHelper.showError(Messages.DocumentView_exportErrorCaption,
+								Messages.DocumentView_exportErrorEmptyText + "\nDokument: " + document.getTitle());
+						break;
+					}
+				}
 			}
 
 			@Override
 			public void dragSetData(DragSourceEvent event) {
-				failure = false;
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-				IDocument dh = (IDocument) selection.getFirstElement();
 				currentDragSelection = selection;
 				if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
-					String title = dh.getTitle();
-					int end = dh.getTitle().lastIndexOf("."); //$NON-NLS-1$
-					if (end != -1) {
-						title = (dh.getTitle()).substring(0, end);
-					}
-
-					try {
-						String absPath = DocumentStoreServiceHolder.getService().saveContentToTempFile(dh, title,
-								dh.getExtension(), true);
-						if (absPath != null) {
-							event.data = new String[] { absPath };
-						} else {
+					String[] documents = new String[selection.size()];
+					Set<String> titles = new HashSet<String>();
+					for (int i = 0; i < selection.size(); i++) {
+						IDocument dh = (IDocument) selection.toList().get(i);
+						try {
+							String _titel = dh.getTitle();
+							if (titles.contains(dh.getTitle())) {
+								_titel = dh.getTitle() + "(" + i + ")";
+							} else {
+								titles.add(dh.getTitle());
+							}
+							String absPath = DocumentStoreServiceHolder.getService().saveContentToTempFile(dh, _titel,
+									dh.getExtension(), true);
+							documents[i] = absPath;
+						} catch (ElexisException e) {
 							event.doit = false;
-							failure = true;
+							break;
 						}
-
-					} catch (ElexisException e) {
-						event.doit = false;
-						failure = true;
-						logger.error("drag error", e); //$NON-NLS-1$
+						event.data = documents;
 					}
 				}
-			}
-
-			@Override
-			public void dragFinished(DragSourceEvent event) {
-				if (!failure) {
-					super.dragFinished(event);
-				} else {
-					SWTHelper.showError(Messages.DocumentView_exportErrorCaption,
-							Messages.DocumentView_exportErrorEmptyText);
-				}
-				currentDragSelection = null;
 			}
 		});
 
