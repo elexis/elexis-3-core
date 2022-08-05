@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Activate;
@@ -141,6 +142,8 @@ public class ElexisServerService implements IElexisServerService {
 				eventService.postEvent(elexisEvent);
 				return Status.OK_STATUS;
 			} catch (Exception e) {
+				LoggerFactory.getLogger(getClass()).error("Could not post event [{}]",
+						elexisEvent.getTopic() + " " + elexisEvent.getProperties(), e);
 				return new Status(Status.ERROR, Bundle.ID, e.getMessage(), e);
 			}
 		}
