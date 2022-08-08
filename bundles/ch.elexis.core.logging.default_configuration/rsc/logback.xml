@@ -58,6 +58,7 @@
 	<logger name="ch.qos.logback.classic.joran.action.LoggerAction"
 		level="INFO" />
 	<logger name="ca.uhn.hl7v2.parser" level="INFO" />
+	<logger name="at.medevit.elexis.loinc.model" level="INFO" />
 	<logger name="ch.elexis.data" level="WARN" />
 	<logger name="ch.elexis.core" level="INFO" />
 	<logger name="jcifs" level="INFO" />
