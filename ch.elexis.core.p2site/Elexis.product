@@ -15,7 +15,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>--add-opens java.base/java.util=ALL-UNNAMED -Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8 -Dorg.eclipse.gemini.refreshBundles=false
+      <vmArgs>-Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8 -Dorg.eclipse.gemini.refreshBundles=false --add-opens=java.base/java.util=ALL-UNNAMED
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts=false -Dfile.encoding=utf-8
       </vmArgsMac>
