@@ -31,8 +31,11 @@ import org.eclipse.swt.widgets.Text;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.XidServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Kontakt;
 
 /**
  * Dialog to view/modify identifiers such as EAN, AHV, SSN, OID on objects
@@ -42,7 +45,7 @@ import ch.elexis.data.Kontakt;
  */
 public class KontaktExtDialog extends TitleAreaDialog {
 	private String[] fieldDefinitions;
-	private Kontakt actKontact;
+	private IContact actKontact;
 	private ExtInfoTable infoTable;
 	/*
 	 * private HashMap<String, String> xids; private String[] fields; private Text[]
@@ -50,7 +53,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 	 */
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KontaktExtDialog.class);
 
-	public KontaktExtDialog(Shell shell, Kontakt k, String[] defvalues) {
+	public KontaktExtDialog(Shell shell, IContact k, String[] defvalues) {
 		super(shell);
 		this.actKontact = k;
 		fieldDefinitions = defvalues;
@@ -108,7 +111,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 			savedParent = params;
 		}
 
-		public void setKontakt(Kontakt k) {
+		public void setKontakt(IContact k) {
 			xids = new HashMap<String, String>();
 			fields = new String[fieldDefinitions.length];
 			savedValues = new String[fieldDefinitions.length];
@@ -123,10 +126,13 @@ public class KontaktExtDialog extends TitleAreaDialog {
 				String value = StringConstants.EMPTY;
 				String xid = xids.get(fields[i]);
 				if (xid != null) {
-					value = k.getXid(xid);
+					IXid iXid = XidServiceHolder.get().getXid(k, xid);
+					if (iXid != null) {
+						value = iXid.getDomainId();
+					}
 				}
-				if (value.length() == 0) {
-					value = (String) k.getExtInfoStoredObjectByKey(fields[i]);
+				if (StringUtils.isBlank(value)) {
+					value = (String) k.getExtInfo(fields[i]);
 				}
 				// The old implementation used fieldnames as visible label
 				// This is ugly (eg. TarmedKanton instead of Tarmed Kanton)
@@ -154,22 +160,23 @@ public class KontaktExtDialog extends TitleAreaDialog {
 				new Label(savedParent, SWT.NONE).setText(label_text);
 				values[i] = new Text(savedParent, SWT.BORDER | SWT.SINGLE);
 				values[i].setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-				values[i].setText(value == null ? StringConstants.EMPTY : value);
+				values[i].setText(StringUtils.defaultString(value));
 				values[i].setToolTipText(tooltip_text);
 				savedValues[i] = values[i].getText();
 			}
 		}
 
-		public void okPressed(Kontakt k) {
+		public void okPressed(IContact k) {
 			for (int i = 0; i < fieldDefinitions.length; i++) {
 				String value = values[i].getText();
 				if ((savedValues == null && !value.isEmpty())
 						|| (savedValues[i] != null && !savedValues[i].equals(value))) {
-					k.setExtInfoStoredObjectByKey(fields[i], value);
+					k.setExtInfo(fields[i], value);
 					String xid = xids.get(fields[i]);
 					if (xid != null) {
 						k.addXid(xid, value, true);
 					}
+					CoreModelServiceHolder.get().save(k);
 				}
 			}
 		}

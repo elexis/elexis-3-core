@@ -15,7 +15,6 @@
 
 package ch.elexis.core.ui.contacts.views;
 
-import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
@@ -31,6 +30,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -81,6 +81,7 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
@@ -397,7 +398,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 							}
 						}
 
-						KontaktExtDialog dlg = new KontaktExtDialog(UiDesk.getTopShell(), (Kontakt) po,
+						KontaktExtDialog dlg = new KontaktExtDialog(UiDesk.getTopShell(),
+								NoPoUtil.loadAsIdentifiable((Kontakt) po, IContact.class).orElse(null),
 								extFlds.toArray(new String[0]));
 						dlg.open();
 						Patient p = (Patient) po;
