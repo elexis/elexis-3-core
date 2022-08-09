@@ -38,6 +38,8 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IXid;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -132,7 +134,8 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom);
 						}
 					}
-					KontaktExtDialog dlg = new KontaktExtDialog(UiDesk.getTopShell(), (Kontakt) po,
+					KontaktExtDialog dlg = new KontaktExtDialog(UiDesk.getTopShell(),
+							NoPoUtil.loadAsIdentifiable((Kontakt) po, IContact.class).orElse(null),
 							extFlds.toArray(new String[0]));
 					dlg.open();
 
