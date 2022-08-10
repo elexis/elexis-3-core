@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.actions;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,7 +38,6 @@ import ch.elexis.data.Query;
  */
 public class FlatDataLoader extends PersistentObjectLoader implements ILazyContentProvider {
 	// private static final String LOADMESSAGE = "Lade Daten..."; //$NON-NLS-1$
-	private List<? extends PersistentObject> raw = null;
 	private List<? extends PersistentObject> filtered = null;
 
 	public FlatDataLoader(CommonViewer cv, Query<? extends PersistentObject> qbe) {
@@ -61,38 +61,33 @@ public class FlatDataLoader extends PersistentObjectLoader implements ILazyConte
 			return Status.CANCEL_STATUS;
 		}
 		final TableViewer tv = (TableViewer) cv.getViewerWidget();
-		if (filtered != null) {
-			filtered.clear();
-		}
-		filtered = null;
-		setQuery();
-		applyQueryFilters();
-		if (orderFields != null) {
-			qbe.orderBy(false, orderFields);
-		}
-		if (monitor.isCanceled()) {
-			return Status.CANCEL_STATUS;
-		}
-		raw = qbe.execute();
-		if (monitor.isCanceled()) {
-			return Status.CANCEL_STATUS;
-		}
-		UiDesk.asyncExec(new Runnable() {
-			public void run() {
-				// Avoid access to disposed table
-				if (tv != null && !tv.getTable().isDisposed()) {
-					tv.setItemCount(0);
-					filtered = raw;
-					tv.setItemCount(raw.size());
-				}
+		synchronized (this) {
+			filtered = Collections.emptyList();
+			setQuery();
+			applyQueryFilters();
+			if (orderFields != null) {
+				qbe.orderBy(false, orderFields);
 			}
-		});
+			if (monitor.isCanceled()) {
+				return Status.CANCEL_STATUS;
+			}
+			filtered = qbe.execute();
+			int itemCount = filtered.size();
+			if (monitor.isCanceled()) {
+				return Status.CANCEL_STATUS;
+			}
+			UiDesk.asyncExec(new Runnable() {
+				public void run() {
+					// Avoid access to disposed table
+					if (tv != null && !tv.getTable().isDisposed()) {
+						tv.setItemCount(0);
+						tv.setItemCount(itemCount);
+					}
+				}
+			});
+		}
 
 		return Status.OK_STATUS;
-	}
-
-	public void setResult(List<PersistentObject> res) {
-		raw = res;
 	}
 
 	/**
@@ -110,11 +105,13 @@ public class FlatDataLoader extends PersistentObjectLoader implements ILazyConte
 
 	public void updateElement(int index) {
 		if (filtered != null) {
-			if (index >= 0 && index < filtered.size()) {
-				Object o = filtered.get(index);
-				if (o != null) {
-					TableViewer tv = (TableViewer) cv.getViewerWidget();
-					tv.replace(filtered.get(index), index);
+			synchronized (this) {
+				if (index >= 0 && index < filtered.size()) {
+					Object o = filtered.get(index);
+					if (o != null) {
+						TableViewer tv = (TableViewer) cv.getViewerWidget();
+						tv.replace(filtered.get(index), index);
+					}
 				}
 			}
 		}
