@@ -239,7 +239,7 @@
       </view>
       <view
             class="ch.elexis.core.ui.views.ReminderView"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/bell__exclamation.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/bell_exclamation.png"
             id="ch.elexis.reminderview"
             name="%elexis.remindersView">
       </view>
@@ -388,7 +388,7 @@
       </view>
       <view
             class="ch.elexis.core.ui.views.ReminderListsView"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/bell__exclamation.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/bell_exclamation.png"
             id="ch.elexis.core.ui.views.reminderlistsview"
             name="Pendenzen (beta)">
       </view>
