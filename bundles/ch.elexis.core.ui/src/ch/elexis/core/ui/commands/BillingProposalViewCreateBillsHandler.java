@@ -38,6 +38,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.ui.views.rechnung.BillingProposalView;
 import ch.elexis.data.Fall;
@@ -62,8 +63,8 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 					createBill(sortedByYears.get(year));
 				}
 			}
-		} else if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), "Rechnung erstellen",
-				"Sind Sie sicher, dass Sie die Rechnung erstellen möchten?")) {
+		} else if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.KonsZumVerrechnenView2_createInvoicesAction,
+				Messages.KonsZumVerrechnenView2_createInvoicesMessageDialogQuestion)) {
 			createBill(toBill);
 		}
 		return null;
@@ -80,7 +81,7 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Rechnungen erstellen", 3);
+					monitor.beginTask(Messages.KonsZumVerrechnenView2_createInvoicesAction, 3);
 					List<Konsultation> billable = BillingUtil.filterNotBillable(toBill);
 					monitor.worked(1);
 					Map<Rechnungssteller, Map<Fall, List<Konsultation>>> toBillMap = BillingUtil

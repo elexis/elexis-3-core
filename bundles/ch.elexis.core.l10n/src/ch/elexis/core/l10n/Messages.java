@@ -161,6 +161,7 @@ public class Messages extends NLS {
 	public static String KonsZumVerrechnenView_selected;
 	public static String KonsZumVerrechnenView2_collectConsultations;
 	public static String KonsZumVerrechnenView2_createInvoicesAction;
+	public static String KonsZumVerrechnenView2_createInvoicesMessageDialogQuestion;
 	public static String KonsZumVerrechnenView2_databaseRequest;
 	public static String KonsZumVerrechnenView2_refresh;
 	public static String KonsZumVerrechnenView2_refreshList;
