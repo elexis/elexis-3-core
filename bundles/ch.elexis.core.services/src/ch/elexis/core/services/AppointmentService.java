@@ -356,6 +356,7 @@ public class AppointmentService implements IAppointmentService {
 		LocalDate monday = LocalDate.now().with(DayOfWeek.MONDAY);
 		appointment.setStartTime(LocalDateTime.of(monday, LocalTime.of(8, 0, 0)));
 		appointment.setEndTime(LocalDateTime.of(monday, LocalTime.of(8, 30, 0)));
+		appointment.setState(Messages.Appointment_Planned_Appointment);
 		// mark as recurring root
 		appointment.setLinkgroup(appointment.getId());
 		IAppointmentSeries ret = new AppointmentSeries(appointment);
