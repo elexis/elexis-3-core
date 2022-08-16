@@ -86,6 +86,7 @@ public class Messages {
 	public static String KonsZumVerrechnenView_selected = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView_selected;
 	public static String KonsZumVerrechnenView2_collectConsultations = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView2_collectConsultations;
 	public static String KonsZumVerrechnenView2_createInvoicesAction = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView2_createInvoicesAction;
+	public static String KonsZumVerrechnenView2_createInvoicesMessageDialogQuestion = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView2_createInvoicesMessageDialogQuestion;
 	public static String KonsZumVerrechnenView2_databaseRequest = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView2_databaseRequest;
 	public static String KonsZumVerrechnenView2_refresh = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView2_refresh;
 	public static String KonsZumVerrechnenView2_refreshList = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView2_refreshList;

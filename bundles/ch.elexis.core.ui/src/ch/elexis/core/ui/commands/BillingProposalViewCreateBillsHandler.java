@@ -10,7 +10,6 @@
  ******************************************************************************/
 package ch.elexis.core.ui.commands;
 
-import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -38,6 +38,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.ui.views.rechnung.BillingProposalView;
 import ch.elexis.data.Fall;
@@ -62,7 +63,8 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 					createBill(sortedByYears.get(year));
 				}
 			}
-		} else {
+		} else if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.KonsZumVerrechnenView2_createInvoicesAction,
+				Messages.KonsZumVerrechnenView2_createInvoicesMessageDialogQuestion)) {
 			createBill(toBill);
 		}
 		return null;
@@ -79,7 +81,7 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Rechnungen erstellen", 3);
+					monitor.beginTask(Messages.KonsZumVerrechnenView2_createInvoicesAction, 3);
 					List<Konsultation> billable = BillingUtil.filterNotBillable(toBill);
 					monitor.worked(1);
 					Map<Rechnungssteller, Map<Fall, List<Konsultation>>> toBillMap = BillingUtil
