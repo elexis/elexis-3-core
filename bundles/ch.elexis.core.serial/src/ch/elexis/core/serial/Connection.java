@@ -65,6 +65,8 @@ public class Connection implements SerialPortDataListener {
 	private ByteArrayOutputStream buffer;
 	private boolean excludeDelimiters = false;
 
+	private boolean writeDataBufferDebugFile = false;
+
 	public Connection(final String portName, final String port, final String settings, final ComPortListener l) {
 		listener = l;
 		myPort = port;
@@ -242,7 +244,9 @@ public class Connection implements SerialPortDataListener {
 						}
 					}
 				}
-				writeDebugBuffer();
+				if (writeDataBufferDebugFile) {
+					writeDebugBuffer();
+				}
 			} catch (Exception ex) {
 				logger.error("Exception buffering chunk", ex);
 			}
@@ -431,6 +435,11 @@ public class Connection implements SerialPortDataListener {
 	 */
 	public Connection excludeDelimiters(boolean excludeDelimiters) {
 		this.excludeDelimiters = excludeDelimiters;
+		return this;
+	}
+
+	public Connection writeDataBufferDebugFile(boolean value) {
+		this.writeDataBufferDebugFile = value;
 		return this;
 	}
 }
