@@ -8,6 +8,7 @@ Automatic-Module-Name: ch.elexis.core.serial
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ClassPath: lib/jSerialComm-2.7.0.jar,
  .
-Import-Package: org.apache.commons.lang3;version="3.7.0",
+Import-Package: ch.elexis.core.utils,
+ org.apache.commons.lang3;version="3.7.0",
  org.slf4j
 Export-Package: ch.elexis.core.serial

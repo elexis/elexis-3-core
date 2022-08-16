@@ -1,6 +1,9 @@
 package ch.elexis.core.serial;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+
+import ch.elexis.core.utils.CoreUtil;
 
 public class Connection implements SerialPortDataListener {
 
@@ -237,12 +242,24 @@ public class Connection implements SerialPortDataListener {
 						}
 					}
 				}
+				writeDebugBuffer();
 			} catch (Exception ex) {
 				logger.error("Exception buffering chunk", ex);
 			}
 		} else {
 			fireData(newData);
 		}
+	}
+
+	private void writeDebugBuffer() {
+		File userDir = CoreUtil.getWritableUserDir();
+		File bufferOutput = new File(userDir, "serailbuffer_debug.bin");
+		try (FileOutputStream fout = new FileOutputStream(bufferOutput)) {
+			fout.write(buffer.toByteArray());
+		} catch (IOException e) {
+			logger.error("Could not write serailbuffer_debug.bin", e);
+		}
+		logger.info("Wrote [" + bufferOutput.getAbsolutePath() + "] with size [" + bufferOutput.length() + "]");
 	}
 
 	protected void fireData(byte[] data) {
