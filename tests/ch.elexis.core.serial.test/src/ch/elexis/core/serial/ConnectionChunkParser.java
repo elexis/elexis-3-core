@@ -53,6 +53,21 @@ public class ConnectionChunkParser {
 	}
 	
 	@Test
+	public void testStartEndOfChunkDouble() throws IOException {
+		TestComPortListener portListener = new TestComPortListener();
+		Connection conn = new Connection("ConnectionChunkParser", "", "", portListener)
+				.withEndOfChunk(new byte[] { 0x0A }).excludeDelimiters(true);
+		byte[] bytes = AllTests.readBytes("/rsc/test_endofchunk_double");
+		// set bytes sequential
+		for (byte b : bytes) {
+			conn.setData(new byte[] { b });
+		}
+		assertEquals(2, portListener.getChunks().size());
+		assertEquals("7680494370211", portListener.getChunks().get(0));
+		assertEquals("7680494370212", portListener.getChunks().get(1));
+	}
+
+	@Test
 	public void testStartEndOfChunkMulti() throws IOException{
 		TestComPortListener portListener = new TestComPortListener();
 		Connection conn = new Connection("ConnectionChunkParser", "", "", portListener)
