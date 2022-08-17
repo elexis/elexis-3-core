@@ -1,6 +1,5 @@
 package ch.elexis.core.services;
 
-import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.constants.XidConstants.CH_AHV;
 import static ch.elexis.core.constants.XidConstants.CH_AHV_QUALITY;
 import static ch.elexis.core.constants.XidConstants.DOMAIN_EAN;
@@ -15,6 +14,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -179,6 +179,19 @@ public class XidService implements IXidService {
 			xid.setDomain(domain);
 			xid.setDomainId(id);
 			xid.setObject(identifiable);
+
+			XidDomain xidDomain = domains.get(domain);
+			if (xidDomain != null) {
+				int val = xidDomain.getQuality();
+				if (val > 9) {
+					val = (val & 7) + 4;
+				}
+				xid.setQuality(XidQuality.ofValue(val));
+			} else {
+				logger.error("XID Domain " + domain + " is not registered");
+				return false;
+			}
+
 			CoreModelServiceHolder.get().save(xid);
 			return true;
 		}
