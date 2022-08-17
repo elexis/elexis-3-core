@@ -39,10 +39,12 @@ import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IXidService;
 import ch.elexis.core.test.util.TestUtil;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.VersionedResource;
 
 public class TestDatabaseInitializer {
@@ -96,6 +98,8 @@ public class TestDatabaseInitializer {
 	private IModelService modelService;
 	private IElexisEntityManager entityManager;
 	private IConfigService configService;
+
+	private static IXidService xidService;
 
 	public TestDatabaseInitializer(IModelService modelService, IElexisEntityManager entityManager) {
 		this.modelService = modelService;
@@ -502,6 +506,9 @@ public class TestDatabaseInitializer {
 			initializePatient();
 		}
 		if (!isILabResultInitialized) {
+			getXidService().localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY,
+					"Sendende Institution", XidConstants.ASSIGNMENT_LOCAL);
+
 			laboratory = new IContactBuilder.LaboratoryBuilder(modelService, "Labor Test").build();
 			laboratory.setDescription2("Test");
 			modelService.save(laboratory);
@@ -564,6 +571,14 @@ public class TestDatabaseInitializer {
 
 			isILabResultInitialized = true;
 		}
+	}
+
+	public static IXidService getXidService() {
+		if (xidService == null) {
+			xidService = OsgiServiceUtil.getService(IXidService.class)
+					.orElseThrow(() -> new IllegalStateException("No XidService available"));
+		}
+		return xidService;
 	}
 
 	public ILabItem getILabItem() {
