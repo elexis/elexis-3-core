@@ -2,6 +2,8 @@ package ch.elexis.core.model.issue;
 
 import java.util.ResourceBundle;
 
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.interfaces.INumericEnum;
 
@@ -36,11 +38,16 @@ public enum ProcessStatus implements INumericEnum, ILocalizedEnum {
 	}
 
 	public static ProcessStatus byNumericSafe(String statusIn) {
-		int numeric = Integer.parseInt(statusIn);
-		for (ProcessStatus status : ProcessStatus.values()) {
-			if (status.numericValue() == numeric) {
-				return status;
+		try {
+			int numeric = Integer.parseInt(statusIn);
+			for (ProcessStatus status : ProcessStatus.values()) {
+				if (status.numericValue() == numeric) {
+					return status;
+				}
 			}
+		} catch (NumberFormatException e) {
+			// ignore return default
+			LoggerFactory.getLogger(ProcessStatus.class).warn("Status [" + statusIn + "] is not a number", e);
 		}
 		return ProcessStatus.OPEN;
 	}

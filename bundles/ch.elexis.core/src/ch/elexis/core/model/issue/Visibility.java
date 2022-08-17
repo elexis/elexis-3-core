@@ -2,6 +2,8 @@ package ch.elexis.core.model.issue;
 
 import java.util.ResourceBundle;
 
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.interfaces.INumericEnum;
 
@@ -28,11 +30,17 @@ public enum Visibility implements INumericEnum, ILocalizedEnum {
 	}
 
 	public static Visibility byNumericSafe(String visibilityIn) {
-		int numeric = Integer.parseInt(visibilityIn);
-		for (Visibility visibility : Visibility.values()) {
-			if (visibility.numericValue() == numeric) {
-				return visibility;
+		try {
+			int numeric = Integer.parseInt(visibilityIn);
+			for (Visibility visibility : Visibility.values()) {
+				if (visibility.numericValue() == numeric) {
+					return visibility;
+				}
 			}
+		} catch (NumberFormatException e) {
+			// ignore return default
+			LoggerFactory.getLogger(ProcessStatus.class).warn("Visibility [" + visibilityIn + "] is not a number", e);
+
 		}
 		return Visibility.ALWAYS;
 	}
