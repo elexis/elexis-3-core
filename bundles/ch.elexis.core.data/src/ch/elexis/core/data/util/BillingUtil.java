@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
+import static ch.elexis.core.constants.XidConstants.DOMAIN_AHV;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,11 +21,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IFall;
@@ -33,6 +37,8 @@ import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -300,7 +306,77 @@ public class BillingUtil {
 				public String getDescription() {
 					return "Keine Diagnose in der Behandlungsserie";
 				}
+			},
+			new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					if (konsultation.getFall() != null
+							&& konsultation.getFall().getConfiguredBillingSystemLaw() == BillingLaw.IV) {
+						ICoverage coverage = CoreModelServiceHolder.get()
+								.load(konsultation.getFall().getId(), ICoverage.class).get();
+						if (coverage.getPatient() != null) {
+							if (StringUtils.isBlank(getSSN(coverage))) {
+								result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+								return false;
+							}
+						}
+					}
+					return true;
+				}
+
+
+				@Override
+				public String getId() {
+					return "ivNoSSN";
+				}
+
+				@Override
+				public String getDescription() {
+					return "IV Fall ohne AHV Nummer";
+				}
+			}, new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					if (konsultation.getFall() != null) {
+						ICoverage coverage = CoreModelServiceHolder.get()
+								.load(konsultation.getFall().getId(), ICoverage.class).get();
+						if (coverage.getPatient() != null) {
+							String ssn = getSSN(coverage);
+							if (StringUtils.isNotBlank(ssn)) {
+								if (!ssn.matches("[0-9]{4,10}|[1-9][0-9]{10}|756[0-9]{10}|438[0-9]{10}")) {
+									result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+									return false;
+								}
+							}
+						}
+					}
+					return true;
+				}
+
+				@Override
+				public String getId() {
+					return "invalidSSN";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Fehlerhafte AHV Nummer";
+				}
 			} };
+
+	private static String getSSN(ICoverage coverage) {
+		IXid ahvXid = coverage.getPatient().getXid(DOMAIN_AHV);
+		String ahv = ahvXid != null ? ahvXid.getDomainId() : StringUtils.EMPTY;
+		if (StringUtils.isBlank(ahv)) {
+			ahv = StringUtils.defaultString((String) coverage.getPatient().getExtInfo("AHV-Nummer")); //$NON-NLS-1$
+		}
+		ahv = ahv.replaceAll("[^0-9]", StringConstants.EMPTY);// $NON-NLS-1$
+		if (StringUtils.isBlank(ahv)) {
+			ahv = CoverageServiceHolder.get().getRequiredString(coverage, "AHV-Nummer")
+					.replaceAll("[^0-9]", StringConstants.EMPTY); //$NON-NLS-1$
+		}
+		return StringUtils.isNotBlank(ahv) ? ahv : null;
+	}
 
 	public static boolean isCheckEnabled(IBillableCheck check) {
 		return ConfigServiceHolder.getGlobal(BILLINGCHECK_ENABLED_CFG + check.getId(), true);
