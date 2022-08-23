@@ -251,6 +251,16 @@ public class Patient extends Person {
 	}
 
 	/**
+	 * SymptomatischeMedikation als Text wird unter anderem fuer Platzhalter
+	 * verwendet
+	 *
+	 * @return
+	 */
+	public String getSymptomatischeMedikation() {
+		return getMedicationText(EntryType.SYMPTOMATIC_MEDICATION);
+	}
+
+	/**
 	 * ReserveMedikation als Text wird unter anderem fuer Platzhalter verwendet
 	 *
 	 * @return
