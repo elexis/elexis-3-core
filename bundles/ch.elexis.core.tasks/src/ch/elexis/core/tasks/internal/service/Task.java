@@ -289,7 +289,9 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			}
 			progressMonitor.done();
 
-		} catch (Exception e) {
+		} catch (Exception | Error e) {
+			// if we end up here, there is most certainly a bug in the IIdentifiedRunnable
+			// which will have to be handled by the programmers ...
 			setResult(Collections.singletonMap(IIdentifiedRunnable.ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE,
 					e.getMessage()));
 			Throwable throwable = (e.getCause() != null) ? e.getCause() : e;
