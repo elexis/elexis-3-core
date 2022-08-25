@@ -162,8 +162,8 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 
 	@Override
 	public String toString() {
-		return getClass().getName() + " [getEntity()=" + getEntity() + ", getId()=" + getId() + ", getLastupdate()="
-				+ getLastupdate() + "]";
+		return getClass().getName() + " [getEntity()=" + getEntity() + ", isDrity()=" + isDirty() + ", getLastupdate()=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ getLastupdate() + "]"; //$NON-NLS-1$
 	}
 
 	@Override

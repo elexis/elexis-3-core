@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
@@ -126,6 +127,9 @@ public class CodeElementServiceHolder {
 	@SuppressWarnings("unchecked")
 	public static void updateStatistics(Object element, IContact contact) {
 		if (element != null && contact != null) {
+			LoggerFactory.getLogger(CodeElementServiceHolder.class)
+					.info("Update statistics of " + contact + " with " + element);
+
 			String storeToString = null;
 			if (element instanceof Identifiable) {
 				storeToString = StoreToStringServiceHolder.get().storeToString((Identifiable) element).orElse(null);
