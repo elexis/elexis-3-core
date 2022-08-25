@@ -315,7 +315,6 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 	void deleteTask(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) ITask iTask) {
 		inputModel.removeAll(new ITask[] { iTask });
 		tableResults.deselectAll();
-		refresh();
 	}
 
 	@Override
