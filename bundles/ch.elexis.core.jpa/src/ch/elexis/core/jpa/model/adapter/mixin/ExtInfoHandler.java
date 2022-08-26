@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.model.adapter.mixin;
 
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -11,42 +10,37 @@ import ch.elexis.core.jpa.model.util.JpaModelUtil;
 public class ExtInfoHandler {
 
 	private AbstractIdModelAdapter<? extends EntityWithExtInfo> withExtInfo;
-	private Map<Object, Object> extInfo;
 
 	public ExtInfoHandler(AbstractIdModelAdapter<? extends EntityWithExtInfo> withExtInfo) {
 		this.withExtInfo = withExtInfo;
 	}
 
-	private void doLoadExtInfo(boolean reload) {
-		if (extInfo == null || reload) {
+	private Map<Object, Object> getExtInfoMap() {
+		synchronized (withExtInfo) {
 			byte[] bytes = withExtInfo.getEntity().getExtInfo();
 			if (bytes != null) {
-				extInfo = JpaModelUtil.extInfoFromBytes(bytes);
+				return JpaModelUtil.extInfoFromBytes(bytes);
 			} else {
-				extInfo = new Hashtable<>();
+				return new Hashtable<>();
 			}
 		}
 	}
 
 	public Object getExtInfo(Object key) {
-		doLoadExtInfo(false);
-
-		return extInfo.get(key);
+		return getExtInfoMap().get(key);
 	}
 
 	public void setExtInfo(Object key, Object value) {
-		doLoadExtInfo(!withExtInfo.isDirty());
+		synchronized (withExtInfo) {
+			Map<Object, Object> extInfo = getExtInfoMap();
 
-		if (value == null) {
-			extInfo.remove(key);
-		} else {
-			extInfo.put(key, value);
+			if (value == null) {
+				extInfo.remove(key);
+			} else {
+				extInfo.put(key, value);
+			}
+			withExtInfo.getEntityMarkDirty().setExtInfo(JpaModelUtil.extInfoToBytes(extInfo));
 		}
-		withExtInfo.getEntityMarkDirty().setExtInfo(JpaModelUtil.extInfoToBytes(extInfo));
-	}
-
-	public void resetExtInfo() {
-		extInfo = null;
 	}
 
 	/**
@@ -54,8 +48,6 @@ public class ExtInfoHandler {
 	 *         {@link #setExtInfo(Object, Object)} to handle persistent sets
 	 */
 	public Map<Object, Object> getMap() {
-		doLoadExtInfo(false);
-
-		return new HashMap<>(extInfo);
+		return getExtInfoMap();
 	}
 }
