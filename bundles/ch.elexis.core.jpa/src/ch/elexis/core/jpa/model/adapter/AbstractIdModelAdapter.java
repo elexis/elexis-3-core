@@ -83,9 +83,6 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	public synchronized void setEntity(EntityWithId entity, boolean resetDirty) {
 		if (!dirty || (dirty && resetDirty)) {
 			this.entity = (T) entity;
-			if (extInfoHandler != null) {
-				extInfoHandler.resetExtInfo();
-			}
 			dirty = false;
 		}
 	}
