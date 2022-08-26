@@ -122,6 +122,17 @@ public interface ITaskService {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 * Find all task descriptors that reference a specific IIdentifiedRunnable
+	 * <!-- end-model-doc -->
+	 * @model type="ch.elexis.core.types.List&lt;ch.elexis.core.tasks.model.ITaskDescriptor&gt;" many="false"
+	 * @generated
+	 */
+	List<ITaskDescriptor> findTaskDescriptorByIIdentifiedRunnableId(String runnableId);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * Find the latest execution of the provided task descriptor, ordered by execution time, newest first. Includes currently running tasks.
 	 * <!-- end-model-doc -->
 	 * @model dataType="ch.elexis.core.types.Optional&lt;ch.elexis.core.tasks.model.ITask&gt;"

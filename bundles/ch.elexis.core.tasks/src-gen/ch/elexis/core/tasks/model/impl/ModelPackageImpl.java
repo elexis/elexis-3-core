@@ -856,6 +856,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 
+		op = addEOperation(iTaskServiceEClass, null, "findTaskDescriptorByIIdentifiedRunnableId", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "runnableId", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getITaskDescriptor());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
 		op = addEOperation(iTaskServiceEClass, null, "findLatestExecution", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getITaskDescriptor(), "taskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(theTypesPackage.getOptional());

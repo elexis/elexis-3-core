@@ -277,6 +277,15 @@
       </eGenericType>
       <eParameters name="idOrReferenceId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
+    <eOperations name="findTaskDescriptorByIIdentifiedRunnableId">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Find all task descriptors that reference a specific IIdentifiedRunnable"/>
+      </eAnnotations>
+      <eGenericType eClassifier="ecore:EClass ../../ch.elexis.core/model/types.ecore#//List">
+        <eTypeArguments eClassifier="#//ITaskDescriptor"/>
+      </eGenericType>
+      <eParameters name="runnableId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
     <eOperations name="findLatestExecution">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Find the latest execution of the provided task descriptor, ordered by execution time, newest first. Includes currently running tasks."/>

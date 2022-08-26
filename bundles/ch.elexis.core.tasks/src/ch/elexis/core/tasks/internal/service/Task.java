@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,6 +29,7 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
+import ch.elexis.core.model.tasks.IIdentifiedRunnable.RunContextParameter;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.internal.model.service.ContextServiceHolder;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
@@ -175,6 +177,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public <T> T getResultEntryTyped(String key, Class<T> clazz) {
 		String json = getEntity().getResult();
 		if (json != null) {
+			@SuppressWarnings("rawtypes")
 			Map map = GSON.fromJson(json, Map.class);
 			if (!map.isEmpty()) {
 				String valueToString = GSON.toJson(map.get(key));
@@ -259,8 +262,9 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			effectiveRunContext.putAll(originTaskDescriptor.getRunContext());
 			effectiveRunContext.putAll(getRunContext());
 
+			assertRequiredRunContextParameters(effectiveRunContext);
+
 			getEntity().setRunContext(GSON.toJson(effectiveRunContext));
-			// TODO validate all required parameters are set, validate url
 			setState(TaskState.IN_PROGRESS);
 			// TODO what if it runs forever?
 			// TODO progressMonitor handling
@@ -303,6 +307,26 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				ContextServiceHolder.get().setActiveUser(null);
 				ContextServiceHolder.get().setActiveMandator(null);
 			}
+		}
+	}
+
+	/**
+	 * assert that all required run context parameters are set
+	 * 
+	 * @param effectiveRunContext
+	 * @throws TaskException
+	 */
+	private void assertRequiredRunContextParameters(Map<String, Serializable> effectiveRunContext)
+			throws TaskException {
+		// TODO validate all required parameters are set, validate url ?
+		boolean hasMissingRequiredRunContextParameter = effectiveRunContext.values()
+				.contains(RunContextParameter.VALUE_MISSING_REQUIRED);
+		if (hasMissingRequiredRunContextParameter) {
+			List<String> missingValues = effectiveRunContext.keySet().stream()
+					.filter(key -> effectiveRunContext.get(key).equals(RunContextParameter.VALUE_MISSING_REQUIRED))
+					.collect(Collectors.toList());
+			throw new TaskException(TaskException.EXECUTION_REJECTED,
+					"Missing required run-context-parameter(s): " + missingValues);
 		}
 	}
 

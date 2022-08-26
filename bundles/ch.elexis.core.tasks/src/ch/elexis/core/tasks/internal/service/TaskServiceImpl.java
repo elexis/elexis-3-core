@@ -568,6 +568,13 @@ public class TaskServiceImpl implements ITaskService {
 	}
 
 	@Override
+	public List<ITaskDescriptor> findTaskDescriptorByIIdentifiedRunnableId(String runnableId) {
+		IQuery<ITaskDescriptor> query = taskModelService.getQuery(ITaskDescriptor.class, true, false);
+		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__IDENTIFIED_RUNNABLE_ID, COMPARATOR.EQUALS, runnableId);
+		return query.execute();
+	}
+
+	@Override
 	public Optional<ITask> findLatestExecution(ITaskDescriptor taskDescriptor) {
 		IQuery<ITask> query = taskModelService.getQuery(ITask.class);
 		query.and(ModelPackage.Literals.ITASK__TASK_DESCRIPTOR, COMPARATOR.EQUALS, taskDescriptor);

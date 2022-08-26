@@ -124,8 +124,9 @@ public interface IIdentifiedRunnable {
 	/**
 	 * Return a map containing all keys, that this {@link IIdentifiedRunnable} will
 	 * consider during execution. Where possible, default values will be provided
-	 * with a key. Values that equal {@link #RCP_MISSING_REQUIRED} must be replaced
-	 * with a real value for proper execution.
+	 * with a key. Values that equal
+	 * {@link RunContextParameter#VALUE_MISSING_REQUIRED} must be replaced with a
+	 * real value for proper execution.
 	 *
 	 * @return
 	 */

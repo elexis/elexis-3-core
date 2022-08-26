@@ -13,7 +13,6 @@ package ch.elexis.core.tasks.model;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.eclipse.emf.ecore.EObject;
 import com.cronutils.model.Cron;
 
 import ch.elexis.core.model.Deleteable;
