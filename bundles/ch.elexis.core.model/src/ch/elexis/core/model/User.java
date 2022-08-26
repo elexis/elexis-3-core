@@ -45,7 +45,7 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 
 	@Override
 	public IContact getAssignedContact() {
-		return ModelUtil.getAdapter(getEntity().getKontakt(), IContact.class);
+		return ModelUtil.getAdapter(getEntity().getKontakt(), IContact.class, true);
 	}
 
 	@Override
