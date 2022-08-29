@@ -2,10 +2,6 @@ package ch.elexis.core.jpa.model.adapter.mixin;
 
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithExtInfo;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
@@ -38,7 +34,7 @@ public class ExtInfoHandler {
 		synchronized (withExtInfo) {
 			Map<Object, Object> extInfo = getExtInfoMap();
 
-			debugLog(key, value, extInfo);
+//			debugLog(key, value, extInfo);
 
 			if (value == null) {
 				extInfo.remove(key);
@@ -49,12 +45,12 @@ public class ExtInfoHandler {
 		}
 	}
 
-	private void debugLog(Object key, Object value, Map<Object, Object> extInfo) {
-		Logger logger = LoggerFactory.getLogger(getClass());
-		logger.info("Set key [" + key + "] value [" + value + "] of [" + withExtInfo + "]");
-		logger.info("Current ExtInfo " + extInfo.keySet().stream().map(k -> k + "=" + extInfo.get(k))
-				.collect(Collectors.joining(", ", "{", "}")));
-	}
+//	private void debugLog(Object key, Object value, Map<Object, Object> extInfo) {
+//		Logger logger = LoggerFactory.getLogger(getClass());
+//		logger.info("Set key [" + key + "] value [" + value + "] of [" + withExtInfo + "]");
+//		logger.info("Current ExtInfo " + extInfo.keySet().stream().map(k -> k + "=" + extInfo.get(k))
+//				.collect(Collectors.joining(", ", "{", "}")));
+//	}
 
 	/**
 	 * @return modifications to this map are not persisted. Use
