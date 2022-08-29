@@ -1,6 +1,5 @@
 package ch.elexis.core.findings.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -8,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
@@ -265,6 +265,7 @@ public class ModelUtil {
 		if (type.equals(IEncounter.class)) {
 			org.hl7.fhir.r4.model.Encounter fhirEncounter = new org.hl7.fhir.r4.model.Encounter();
 			fhirEncounter.setId(new IdType(fhirEncounter.getClass().getSimpleName(), created.getId()));
+			fhirEncounter.setClass_(new Coding("2.16.840.1.113883.1.11.13955", "AMB", "ambulatory"));
 			ModelUtil.saveResource(fhirEncounter, created);
 		} else if (type.equals(IObservation.class)) {
 			org.hl7.fhir.r4.model.Observation fhirObservation = new org.hl7.fhir.r4.model.Observation();
