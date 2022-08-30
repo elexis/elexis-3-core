@@ -12,13 +12,13 @@
 
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
@@ -32,6 +32,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceAdapter;
@@ -178,6 +179,15 @@ public class AUF2 extends ViewPart implements IRefreshable {
 			}
 		});
 		tv.setInput(getViewSite());
+
+		tv.setComparator(new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				var sickCert1 = (ISickCertificate) e1;
+				var sickCert2 = (ISickCertificate) e2;
+				return sickCert2.getLastupdate().compareTo(sickCert1.getLastupdate()); // getDate()
+			}
+		});
 
 		final Transfer[] dragTransferTypes = new Transfer[] { TextTransfer.getInstance() };
 
