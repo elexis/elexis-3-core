@@ -390,6 +390,13 @@ public class TaskServiceImpl implements ITaskService {
 	public ITask trigger(ITaskDescriptor taskDescriptor, IProgressMonitor progressMonitor, TaskTriggerType triggerType,
 			Map<String, String> runContext, boolean sync) throws TaskException {
 
+		ITaskDescriptor _taskDescriptorChanged = checkForTaskDescriptorChanges(taskDescriptor);
+		if (_taskDescriptorChanged != null) {
+			release(taskDescriptor);
+			incur(_taskDescriptorChanged);
+			return trigger(_taskDescriptorChanged, progressMonitor, triggerType, runContext, sync);
+		}
+
 		if (sync && triggerType != TaskTriggerType.MANUAL) {
 			throw new IllegalArgumentException("OnlyTriggerType MANUAL can be executed sync");
 		}
@@ -441,6 +448,38 @@ public class TaskServiceImpl implements ITaskService {
 			throw new TaskException(TaskException.EXECUTION_REJECTED, re);
 		}
 		return task;
+	}
+
+	/**
+	 * Did the taskDescriptor change in the meantime?
+	 * 
+	 * @param taskDescriptor
+	 * @return <code>null</code> if no changes detected, else the updated
+	 *         ITaskDescriptor
+	 * @throws TaskException if the ITaskDescriptor could not be loaded
+	 */
+	private ITaskDescriptor checkForTaskDescriptorChanges(ITaskDescriptor taskDescriptor) throws TaskException {
+		Optional<?> lastUpdate = taskModelService
+				.executeNativeQuery("SELECT lastupdate FROM TASKDESCRIPTOR WHERE ID = '" + taskDescriptor.getId() + "'")
+				.findFirst();
+		if (lastUpdate.isPresent() && lastUpdate.get().equals(taskDescriptor.getLastupdate())) {
+			// no changes detected
+			return null;
+		}
+
+		logger.info("[{}] detected taskDesc change [{}/{}], reloading", taskDescriptor.getTriggerType(),
+				taskDescriptor.getId(), taskDescriptor.getReferenceId());
+		ITaskDescriptor changedTaskDescriptor = taskModelService
+				.load(taskDescriptor.getId(), ITaskDescriptor.class, true, true).orElse(null);
+		if (changedTaskDescriptor == null || changedTaskDescriptor.isDeleted()) {
+			logger.warn("[{}] taskDesc not loadable or deleted [{} -> {}], releasing", taskDescriptor.getTriggerType(),
+					taskDescriptor != null ? taskDescriptor.getId() : "null",
+					changedTaskDescriptor != null ? changedTaskDescriptor.getId() : "null");
+			release(taskDescriptor);
+			throw new TaskException(TaskException.PERSISTENCE_ERROR,
+					"TaskDescriptor not loadable or deleted, releasing it");
+		}
+		return changedTaskDescriptor;
 	}
 
 	@Override

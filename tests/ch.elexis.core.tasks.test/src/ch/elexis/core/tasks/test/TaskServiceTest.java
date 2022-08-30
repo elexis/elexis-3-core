@@ -31,6 +31,7 @@ import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.services.IModelService;
 import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.internal.runnables.LogResultContextIdentifiedRunnable;
@@ -42,6 +43,7 @@ import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 import ch.elexis.core.tasks.test.runnable.TestExecutionContextRunnable;
 import ch.elexis.core.types.Gender;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class TaskServiceTest {
 
@@ -56,6 +58,7 @@ public class TaskServiceTest {
 
 	public TaskServiceTest() {
 		taskService = TaskServiceHolder.get();
+
 		IPerson contact = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "first", "last",
 				LocalDate.now(), Gender.MALE).mandator().buildAndSave();
 		owner = new IUserBuilder(CoreModelServiceHolder.get(), "testUser", contact).buildAndSave();
@@ -71,6 +74,12 @@ public class TaskServiceTest {
 	public void before() throws TaskException {
 		rwcLogContext = taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.LOGRESULTCONTEXT);
 		assertTrue(rwcLogContext instanceof LogResultContextIdentifiedRunnable);
+	}
+
+	private IModelService getTaskModelService() {
+		return OsgiServiceUtil
+				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.tasks.model)")
+				.orElse(null);
 	}
 
 	private ITaskDescriptor taskDescriptorOf(String id) throws TaskException {
@@ -121,6 +130,24 @@ public class TaskServiceTest {
 		assertEquals(TaskState.COMPLETED_MANUAL, task.getState());
 		String manualMessage = (String) task.getResult().get(TaskState.COMPLETED_MANUAL.name());
 		assertTrue(manualMessage.endsWith(":test"));
+	}
+
+	@Test(expected = TaskException.class)
+	public void reloadOnTaskDescriptorChangeDeleted() throws TaskException {
+
+		taskDescriptor = taskDescriptorOf(TestExecutionContextRunnable.ID);
+		taskDescriptor.setSingleton(true);
+		taskDescriptor.setOwner(owner);
+		taskService.setActive(taskDescriptor, true);
+		taskService.saveTaskDescriptor(taskDescriptor);
+
+		// side-lined modification of the taskdescriptor
+		String SQL = "UPDATE TASKDESCRIPTOR SET DELETED = '1', LASTUPDATE='" + System.currentTimeMillis()
+				+ "' WHERE (ID='" + taskDescriptor.getId() + "')";
+		int executeNativeUpdate = getTaskModelService().executeNativeUpdate(SQL);
+		assertEquals(1, executeNativeUpdate);
+
+		taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
 	}
 
 	/**
