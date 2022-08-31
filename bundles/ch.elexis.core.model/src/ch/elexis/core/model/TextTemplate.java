@@ -26,7 +26,7 @@ public class TextTemplate extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 
 	@Override
 	public IMandator getMandator() {
-		return ModelUtil.getAdapter(getEntity().getMandator(), IMandator.class);
+		return ModelUtil.getAdapter(getEntity().getMandator(), IMandator.class, true);
 	}
 
 	@Override

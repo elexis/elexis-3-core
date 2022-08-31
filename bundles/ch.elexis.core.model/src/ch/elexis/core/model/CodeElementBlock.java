@@ -113,7 +113,7 @@ public class CodeElementBlock extends AbstractIdDeleteModelAdapter<Leistungsbloc
 	@Override
 	public IMandator getMandator() {
 		if (getEntity().getMandator() != null) {
-			return ModelUtil.getAdapter(getEntity().getMandator(), IMandator.class);
+			return ModelUtil.getAdapter(getEntity().getMandator(), IMandator.class, true);
 		}
 		return null;
 	}

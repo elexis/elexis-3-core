@@ -1,10 +1,11 @@
 package ch.elexis.core.model;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Brief;
 import ch.elexis.core.jpa.entities.Kontakt;
@@ -38,7 +39,7 @@ public class Recipe extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.enti
 
 	@Override
 	public IMandator getMandator() {
-		return ModelUtil.getAdapter(getEntity().getMandant(), IMandator.class);
+		return ModelUtil.getAdapter(getEntity().getMandant(), IMandator.class, true);
 	}
 
 	@Override

@@ -63,7 +63,7 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 
 	@Override
 	public IMandator getMandator() {
-		return ModelUtil.getAdapter(getEntity().getMandator(), IMandator.class);
+		return ModelUtil.getAdapter(getEntity().getMandator(), IMandator.class, true);
 	}
 
 	@SuppressWarnings("unchecked")
