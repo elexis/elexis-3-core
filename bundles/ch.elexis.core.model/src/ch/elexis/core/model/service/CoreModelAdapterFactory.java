@@ -76,6 +76,7 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.IRelatedContact;
+import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISickCertificate;
@@ -100,6 +101,7 @@ import ch.elexis.core.model.Person;
 import ch.elexis.core.model.Prescription;
 import ch.elexis.core.model.Recipe;
 import ch.elexis.core.model.RelatedContact;
+import ch.elexis.core.model.Reminder;
 import ch.elexis.core.model.Right;
 import ch.elexis.core.model.Role;
 import ch.elexis.core.model.SickCertificate;
@@ -126,6 +128,9 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 	protected void initializeMappings() {
 		addMapping(new MappingEntry(IAppointment.class, Appointment.class, Termin.class));
 		addMapping(new MappingEntry(IDayMessage.class, DayMessage.class, TagesNachricht.class));
+
+		addMapping(new MappingEntry(IReminder.class, Reminder.class,
+				ch.elexis.core.jpa.entities.Reminder.class));
 
 		addMapping(new MappingEntry(IConfig.class, Config.class, ch.elexis.core.jpa.entities.Config.class));
 		addMapping(new MappingEntry(IUserConfig.class, UserConfig.class, Userconfig.class));

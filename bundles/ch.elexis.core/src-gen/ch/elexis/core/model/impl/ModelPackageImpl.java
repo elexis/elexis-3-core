@@ -73,6 +73,7 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.IRelatedContact;
+import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IService;
@@ -573,6 +574,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iDayMessageEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iReminderEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -4954,6 +4962,116 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getIReminder() {
+		return iReminderEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIReminder_Creator() {
+		return (EReference)iReminderEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIReminder_Responsible() {
+		return (EReference)iReminderEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIReminder_Contact() {
+		return (EReference)iReminderEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIReminder_Due() {
+		return (EAttribute)iReminderEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIReminder_Status() {
+		return (EAttribute)iReminderEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIReminder_Visibility() {
+		return (EAttribute)iReminderEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIReminder_Subject() {
+		return (EAttribute)iReminderEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIReminder_Message() {
+		return (EAttribute)iReminderEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIReminder_Priority() {
+		return (EAttribute)iReminderEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIReminder_Type() {
+		return (EAttribute)iReminderEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -5475,6 +5593,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iDayMessageEClass, IDAY_MESSAGE__TITLE);
 		createEAttribute(iDayMessageEClass, IDAY_MESSAGE__MESSAGE);
 		createEAttribute(iDayMessageEClass, IDAY_MESSAGE__DATE);
+
+		iReminderEClass = createEClass(IREMINDER);
+		createEReference(iReminderEClass, IREMINDER__CREATOR);
+		createEReference(iReminderEClass, IREMINDER__RESPONSIBLE);
+		createEReference(iReminderEClass, IREMINDER__CONTACT);
+		createEAttribute(iReminderEClass, IREMINDER__DUE);
+		createEAttribute(iReminderEClass, IREMINDER__STATUS);
+		createEAttribute(iReminderEClass, IREMINDER__VISIBILITY);
+		createEAttribute(iReminderEClass, IREMINDER__SUBJECT);
+		createEAttribute(iReminderEClass, IREMINDER__MESSAGE);
+		createEAttribute(iReminderEClass, IREMINDER__PRIORITY);
+		createEAttribute(iReminderEClass, IREMINDER__TYPE);
 	}
 
 	/**
@@ -5629,6 +5759,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iDayMessageEClass.getESuperTypes().add(this.getDeleteable());
 		iDayMessageEClass.getESuperTypes().add(this.getIdentifiable());
 		iDayMessageEClass.getESuperTypes().add(this.getWithAssignableId());
+		iReminderEClass.getESuperTypes().add(this.getDeleteable());
+		iReminderEClass.getESuperTypes().add(this.getIdentifiable());
+		iReminderEClass.getESuperTypes().add(this.getWithExtInfo());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -6453,6 +6586,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIDayMessage_Title(), ecorePackage.getEString(), "title", null, 0, 1, IDayMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIDayMessage_Message(), ecorePackage.getEString(), "message", null, 0, 1, IDayMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIDayMessage_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IDayMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iReminderEClass, IReminder.class, "IReminder", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIReminder_Creator(), this.getIContact(), null, "creator", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIReminder_Responsible(), this.getIContact(), null, "responsible", null, 0, -1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIReminder_Contact(), this.getIContact(), null, "contact", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIReminder_Due(), theTypesPackage.getLocalDate(), "due", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIReminder_Status(), theTypesPackage.getProcessStatus(), "status", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIReminder_Visibility(), theTypesPackage.getVisibility(), "visibility", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIReminder_Subject(), ecorePackage.getEString(), "subject", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIReminder_Message(), ecorePackage.getEString(), "message", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIReminder_Priority(), theTypesPackage.getPriority(), "priority", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIReminder_Type(), theTypesPackage.getType(), "type", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(iReminderEClass, null, "addResponsible", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIContact(), "responsible", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iReminderEClass, null, "removeResponsible", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIContact(), "responsible", 1, 1, IS_UNIQUE, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

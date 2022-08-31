@@ -89,6 +89,10 @@
     <genDataTypes ecoreDataType="types.ecore#//SeriesType"/>
     <genDataTypes ecoreDataType="types.ecore#//EndingType"/>
     <genDataTypes ecoreDataType="types.ecore#//LocalTime"/>
+    <genDataTypes ecoreDataType="types.ecore#//ProcessStatus"/>
+    <genDataTypes ecoreDataType="types.ecore#//Visibility"/>
+    <genDataTypes ecoreDataType="types.ecore#//Priority"/>
+    <genDataTypes ecoreDataType="types.ecore#//Type"/>
     <genClasses image="false" ecoreClass="types.ecore#//Comparable">
       <genTypeParameters ecoreTypeParameter="types.ecore#//Comparable/T"/>
     </genClasses>

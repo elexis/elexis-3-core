@@ -12,7 +12,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		UserConfigTest.class, XidTest.class, BillingSystemFactorTest.class, LocalServiceTest.class,
 		DiagnosisReferenceTest.class, BilledTest.class, PrescriptionTest.class, FreeTextDiagnosisTest.class,
 		RecipeTest.class, DefaultSignatureTest.class, PersonTest.class, MessageTest.class, MandatorTest.class,
-		TextTemplateTest.class, SickCertificateTest.class, InvoiceTest.class, DayMessageTest.class, BlobTest.class })
+		TextTemplateTest.class, SickCertificateTest.class, InvoiceTest.class, DayMessageTest.class, BlobTest.class,
+		ReminderTest.class })
 public class AllModelTests {
 
 }

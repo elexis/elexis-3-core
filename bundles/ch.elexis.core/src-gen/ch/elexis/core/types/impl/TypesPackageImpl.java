@@ -20,6 +20,10 @@ import ch.elexis.core.model.XidQuality;
 import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.model.issue.Priority;
+import ch.elexis.core.model.issue.ProcessStatus;
+import ch.elexis.core.model.issue.Type;
+import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.model.prescription.EntryType;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -337,6 +341,34 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType localTimeEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType processStatusEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType visibilityEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType priorityEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType typeEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -785,6 +817,46 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getProcessStatus() {
+		return processStatusEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EDataType getVisibility() {
+		return visibilityEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EDataType getPriority() {
+		return priorityEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EDataType getType() {
+		return typeEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getResult() {
 		return resultEClass;
 	}
@@ -864,6 +936,10 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		seriesTypeEDataType = createEDataType(SERIES_TYPE);
 		endingTypeEDataType = createEDataType(ENDING_TYPE);
 		localTimeEDataType = createEDataType(LOCAL_TIME);
+		processStatusEDataType = createEDataType(PROCESS_STATUS);
+		visibilityEDataType = createEDataType(VISIBILITY);
+		priorityEDataType = createEDataType(PRIORITY);
+		typeEDataType = createEDataType(TYPE);
 	}
 
 	/**
@@ -993,6 +1069,10 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(seriesTypeEDataType, SeriesType.class, "SeriesType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(endingTypeEDataType, EndingType.class, "EndingType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(localTimeEDataType, LocalTime.class, "LocalTime", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(processStatusEDataType, ProcessStatus.class, "ProcessStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(visibilityEDataType, Visibility.class, "Visibility", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(priorityEDataType, Priority.class, "Priority", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(typeEDataType, Type.class, "Type", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

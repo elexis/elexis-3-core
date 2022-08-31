@@ -20,6 +20,10 @@ import ch.elexis.core.model.XidQuality;
 import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.model.issue.Priority;
+import ch.elexis.core.model.issue.ProcessStatus;
+import ch.elexis.core.model.issue.Type;
+import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.model.prescription.EntryType;
 import java.time.LocalDateTime;
 
@@ -183,6 +187,14 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createEndingTypeFromString(eDataType, initialValue);
 			case TypesPackage.LOCAL_TIME:
 				return createLocalTimeFromString(eDataType, initialValue);
+			case TypesPackage.PROCESS_STATUS:
+				return createProcessStatusFromString(eDataType, initialValue);
+			case TypesPackage.VISIBILITY:
+				return createVisibilityFromString(eDataType, initialValue);
+			case TypesPackage.PRIORITY:
+				return createPriorityFromString(eDataType, initialValue);
+			case TypesPackage.TYPE:
+				return createTypeFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -266,6 +278,14 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertEndingTypeToString(eDataType, instanceValue);
 			case TypesPackage.LOCAL_TIME:
 				return convertLocalTimeToString(eDataType, instanceValue);
+			case TypesPackage.PROCESS_STATUS:
+				return convertProcessStatusToString(eDataType, instanceValue);
+			case TypesPackage.VISIBILITY:
+				return convertVisibilityToString(eDataType, instanceValue);
+			case TypesPackage.PRIORITY:
+				return convertPriorityToString(eDataType, instanceValue);
+			case TypesPackage.TYPE:
+				return convertTypeToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -912,6 +932,78 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertLocalTimeToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ProcessStatus createProcessStatusFromString(EDataType eDataType, String initialValue) {
+		return (ProcessStatus)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertProcessStatusToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Visibility createVisibilityFromString(EDataType eDataType, String initialValue) {
+		return (Visibility)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertVisibilityToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Priority createPriorityFromString(EDataType eDataType, String initialValue) {
+		return (Priority)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertPriorityToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Type createTypeFromString(EDataType eDataType, String initialValue) {
+		return (Type)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertTypeToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

@@ -1,13 +1,14 @@
 package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -16,6 +17,8 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.eclipse.persistence.annotations.Cache;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.ReminderPriorityConverter;
@@ -32,6 +35,7 @@ import ch.elexis.core.model.issue.Visibility;
 @Entity
 @Table(name = "reminders")
 @EntityListeners(EntityWithIdListener.class)
+@Cache(expiry = 15000)
 public class Reminder extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	public static final String ALL_RESPONSIBLE = "ALL";
@@ -59,9 +63,9 @@ public class Reminder extends AbstractEntityWithId implements EntityWithId, Enti
 	@JoinColumn(name = "OriginID")
 	private Kontakt creator;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "reminders_responsible_link", joinColumns = @JoinColumn(name = "ReminderID"), inverseJoinColumns = @JoinColumn(name = "ResponsibleID"))
-	private Set<Kontakt> responsible = new HashSet<>();
+	private List<Kontakt> responsible;
 
 	@Column(name = "Responsible", length = 25)
 	private String responsibleValue;
@@ -166,11 +170,14 @@ public class Reminder extends AbstractEntityWithId implements EntityWithId, Enti
 		this.priority = priority;
 	}
 
-	public Set<Kontakt> getResponsible() {
+	public List<Kontakt> getResponsible() {
+		if (responsible == null) {
+			responsible = new ArrayList<>();
+		}
 		return responsible;
 	}
 
-	public void setResponsible(Set<Kontakt> responsible) {
+	public void setResponsible(List<Kontakt> responsible) {
 		this.responsible = responsible;
 	}
 

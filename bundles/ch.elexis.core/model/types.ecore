@@ -125,4 +125,8 @@
   <eClassifiers xsi:type="ecore:EDataType" name="SeriesType" instanceClassName="ch.elexis.core.model.agenda.SeriesType"/>
   <eClassifiers xsi:type="ecore:EDataType" name="EndingType" instanceClassName="ch.elexis.core.model.agenda.EndingType"/>
   <eClassifiers xsi:type="ecore:EDataType" name="LocalTime" instanceClassName="java.time.LocalTime"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="ProcessStatus" instanceClassName="ch.elexis.core.model.issue.ProcessStatus"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Visibility" instanceClassName="ch.elexis.core.model.issue.Visibility"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Priority" instanceClassName="ch.elexis.core.model.issue.Priority"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Type" instanceClassName="ch.elexis.core.model.issue.Type"/>
 </ecore:EPackage>

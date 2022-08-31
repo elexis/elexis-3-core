@@ -7723,6 +7723,133 @@ public interface ModelPackage extends EPackage {
 	int IDAY_MESSAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 4;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IReminder <em>IReminder</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IReminder
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIReminder()
+	 * @generated
+	 */
+	int IREMINDER = 68;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__DELETED = DELETEABLE__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__LASTUPDATE = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Creator</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__CREATOR = DELETEABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Responsible</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__RESPONSIBLE = DELETEABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Contact</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__CONTACT = DELETEABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Due</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__DUE = DELETEABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__STATUS = DELETEABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Visibility</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__VISIBILITY = DELETEABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Subject</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__SUBJECT = DELETEABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Message</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__MESSAGE = DELETEABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Priority</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__PRIORITY = DELETEABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__TYPE = DELETEABLE_FEATURE_COUNT + 10;
+
+	/**
+	 * The number of structural features of the '<em>IReminder</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 11;
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12199,6 +12326,126 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIDayMessage_Date();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IReminder <em>IReminder</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IReminder</em>'.
+	 * @see ch.elexis.core.model.IReminder
+	 * @generated
+	 */
+	EClass getIReminder();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IReminder#getCreator <em>Creator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Creator</em>'.
+	 * @see ch.elexis.core.model.IReminder#getCreator()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EReference getIReminder_Creator();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IReminder#getResponsible <em>Responsible</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Responsible</em>'.
+	 * @see ch.elexis.core.model.IReminder#getResponsible()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EReference getIReminder_Responsible();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IReminder#getContact <em>Contact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Contact</em>'.
+	 * @see ch.elexis.core.model.IReminder#getContact()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EReference getIReminder_Contact();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IReminder#getDue <em>Due</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Due</em>'.
+	 * @see ch.elexis.core.model.IReminder#getDue()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EAttribute getIReminder_Due();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IReminder#getStatus <em>Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Status</em>'.
+	 * @see ch.elexis.core.model.IReminder#getStatus()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EAttribute getIReminder_Status();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IReminder#getVisibility <em>Visibility</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Visibility</em>'.
+	 * @see ch.elexis.core.model.IReminder#getVisibility()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EAttribute getIReminder_Visibility();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IReminder#getSubject <em>Subject</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Subject</em>'.
+	 * @see ch.elexis.core.model.IReminder#getSubject()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EAttribute getIReminder_Subject();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IReminder#getMessage <em>Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Message</em>'.
+	 * @see ch.elexis.core.model.IReminder#getMessage()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EAttribute getIReminder_Message();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IReminder#getPriority <em>Priority</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Priority</em>'.
+	 * @see ch.elexis.core.model.IReminder#getPriority()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EAttribute getIReminder_Priority();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IReminder#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see ch.elexis.core.model.IReminder#getType()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EAttribute getIReminder_Type();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15854,6 +16101,96 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IDAY_MESSAGE__DATE = eINSTANCE.getIDayMessage_Date();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IReminder <em>IReminder</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IReminder
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIReminder()
+		 * @generated
+		 */
+		EClass IREMINDER = eINSTANCE.getIReminder();
+
+		/**
+		 * The meta object literal for the '<em><b>Creator</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IREMINDER__CREATOR = eINSTANCE.getIReminder_Creator();
+
+		/**
+		 * The meta object literal for the '<em><b>Responsible</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IREMINDER__RESPONSIBLE = eINSTANCE.getIReminder_Responsible();
+
+		/**
+		 * The meta object literal for the '<em><b>Contact</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IREMINDER__CONTACT = eINSTANCE.getIReminder_Contact();
+
+		/**
+		 * The meta object literal for the '<em><b>Due</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IREMINDER__DUE = eINSTANCE.getIReminder_Due();
+
+		/**
+		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IREMINDER__STATUS = eINSTANCE.getIReminder_Status();
+
+		/**
+		 * The meta object literal for the '<em><b>Visibility</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IREMINDER__VISIBILITY = eINSTANCE.getIReminder_Visibility();
+
+		/**
+		 * The meta object literal for the '<em><b>Subject</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IREMINDER__SUBJECT = eINSTANCE.getIReminder_Subject();
+
+		/**
+		 * The meta object literal for the '<em><b>Message</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IREMINDER__MESSAGE = eINSTANCE.getIReminder_Message();
+
+		/**
+		 * The meta object literal for the '<em><b>Priority</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IREMINDER__PRIORITY = eINSTANCE.getIReminder_Priority();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IREMINDER__TYPE = eINSTANCE.getIReminder_Type();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

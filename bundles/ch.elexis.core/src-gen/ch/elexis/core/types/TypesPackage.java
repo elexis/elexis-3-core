@@ -481,6 +481,46 @@ public interface TypesPackage extends EPackage {
 	int LOCAL_TIME = 38;
 
 	/**
+	 * The meta object id for the '<em>Process Status</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.issue.ProcessStatus
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getProcessStatus()
+	 * @generated
+	 */
+	int PROCESS_STATUS = 39;
+
+	/**
+	 * The meta object id for the '<em>Visibility</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.issue.Visibility
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVisibility()
+	 * @generated
+	 */
+	int VISIBILITY = 40;
+
+	/**
+	 * The meta object id for the '<em>Priority</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.issue.Priority
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getPriority()
+	 * @generated
+	 */
+	int PRIORITY = 41;
+
+	/**
+	 * The meta object id for the '<em>Type</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.issue.Type
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getType()
+	 * @generated
+	 */
+	int TYPE = 42;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -912,6 +952,50 @@ public interface TypesPackage extends EPackage {
 	EDataType getLocalTime();
 
 	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.issue.ProcessStatus <em>Process Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Process Status</em>'.
+	 * @see ch.elexis.core.model.issue.ProcessStatus
+	 * @model instanceClass="ch.elexis.core.model.issue.ProcessStatus"
+	 * @generated
+	 */
+	EDataType getProcessStatus();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.issue.Visibility <em>Visibility</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Visibility</em>'.
+	 * @see ch.elexis.core.model.issue.Visibility
+	 * @model instanceClass="ch.elexis.core.model.issue.Visibility"
+	 * @generated
+	 */
+	EDataType getVisibility();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.issue.Priority <em>Priority</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Priority</em>'.
+	 * @see ch.elexis.core.model.issue.Priority
+	 * @model instanceClass="ch.elexis.core.model.issue.Priority"
+	 * @generated
+	 */
+	EDataType getPriority();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.issue.Type <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Type</em>'.
+	 * @see ch.elexis.core.model.issue.Type
+	 * @model instanceClass="ch.elexis.core.model.issue.Type"
+	 * @generated
+	 */
+	EDataType getType();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1322,6 +1406,46 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType LOCAL_TIME = eINSTANCE.getLocalTime();
+
+		/**
+		 * The meta object literal for the '<em>Process Status</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.issue.ProcessStatus
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getProcessStatus()
+		 * @generated
+		 */
+		EDataType PROCESS_STATUS = eINSTANCE.getProcessStatus();
+
+		/**
+		 * The meta object literal for the '<em>Visibility</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.issue.Visibility
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVisibility()
+		 * @generated
+		 */
+		EDataType VISIBILITY = eINSTANCE.getVisibility();
+
+		/**
+		 * The meta object literal for the '<em>Priority</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.issue.Priority
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getPriority()
+		 * @generated
+		 */
+		EDataType PRIORITY = eINSTANCE.getPriority();
+
+		/**
+		 * The meta object literal for the '<em>Type</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.issue.Type
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getType()
+		 * @generated
+		 */
+		EDataType TYPE = eINSTANCE.getType();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

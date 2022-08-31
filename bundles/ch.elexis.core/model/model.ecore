@@ -1135,4 +1135,24 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IReminder" abstract="true" interface="true"
+      eSuperTypes="#//Deleteable #//Identifiable #//WithExtInfo">
+    <eOperations name="addResponsible">
+      <eParameters name="responsible" lowerBound="1" eType="#//IContact"/>
+    </eOperations>
+    <eOperations name="removeResponsible">
+      <eParameters name="responsible" lowerBound="1" eType="#//IContact"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="creator" eType="#//IContact"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="responsible" upperBound="-1"
+        eType="#//IContact"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contact" eType="#//IContact"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="due" eType="ecore:EDataType types.ecore#//LocalDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EDataType types.ecore#//ProcessStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" eType="ecore:EDataType types.ecore#//Visibility"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType types.ecore#//Priority"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType types.ecore#//Type"/>
+  </eClassifiers>
 </ecore:EPackage>

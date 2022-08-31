@@ -714,5 +714,23 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDayMessage/message"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDayMessage/date"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IReminder">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IReminder/creator"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IReminder/responsible"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IReminder/contact"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/due"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/status"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/visibility"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/subject"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/message"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/priority"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/type"/>
+      <genOperations ecoreOperation="model.ecore#//IReminder/addResponsible">
+        <genParameters ecoreParameter="model.ecore#//IReminder/addResponsible/responsible"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IReminder/removeResponsible">
+        <genParameters ecoreParameter="model.ecore#//IReminder/removeResponsible/responsible"/>
+      </genOperations>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>
