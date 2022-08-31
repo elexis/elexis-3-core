@@ -88,7 +88,7 @@ public class Address extends AbstractIdDeleteModelAdapter<ZusatzAdresse> impleme
 	@Override
 	public IContact getContact() {
 		if (getEntity().getContact() != null) {
-			return ModelUtil.getAdapter(getEntity().getContact(), IContact.class);
+			return ModelUtil.getAdapter(getEntity().getContact(), IContact.class, true);
 		}
 		return null;
 	}

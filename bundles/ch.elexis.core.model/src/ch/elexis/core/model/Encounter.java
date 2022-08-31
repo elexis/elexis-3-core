@@ -51,7 +51,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung> implemen
 	@Override
 	public IPatient getPatient() {
 		if (getEntity().getFall() != null) {
-			return ModelUtil.getAdapter(getEntity().getFall().getPatient(), IPatient.class);
+			return ModelUtil.getAdapter(getEntity().getFall().getPatient(), IPatient.class, true);
 		}
 		return null;
 	}

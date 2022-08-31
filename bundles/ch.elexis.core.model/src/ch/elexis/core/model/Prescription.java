@@ -23,7 +23,7 @@ public class Prescription extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 
 	@Override
 	public IPatient getPatient() {
-		return ModelUtil.getAdapter(getEntity().getPatient(), IPatient.class);
+		return ModelUtil.getAdapter(getEntity().getPatient(), IPatient.class, true);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -38,7 +38,7 @@ public class Prescription extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 
 	@Override
 	public IContact getPrescriptor() {
-		return ModelUtil.getAdapter(getEntity().getPrescriptor(), IContact.class);
+		return ModelUtil.getAdapter(getEntity().getPrescriptor(), IContact.class, true);
 	}
 
 	@SuppressWarnings("unchecked")

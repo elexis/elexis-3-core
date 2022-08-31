@@ -37,7 +37,7 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	@Override
 	public IMandator getOwner() {
 		if (getEntity().getOwner() != null) {
-			return ModelUtil.getAdapter(getEntity().getOwner(), IMandator.class);
+			return ModelUtil.getAdapter(getEntity().getOwner(), IMandator.class, true);
 		}
 		return null;
 	}

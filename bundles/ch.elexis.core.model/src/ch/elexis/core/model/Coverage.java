@@ -38,7 +38,7 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall> implements Iden
 
 	@Override
 	public IPatient getPatient() {
-		return ModelUtil.getAdapter(getEntity().getPatient(), IPatient.class);
+		return ModelUtil.getAdapter(getEntity().getPatient(), IPatient.class, true);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -112,7 +112,7 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall> implements Iden
 
 	@Override
 	public IContact getCostBearer() {
-		return ModelUtil.getAdapter(getEntity().getKostentrKontakt(), IContact.class);
+		return ModelUtil.getAdapter(getEntity().getKostentrKontakt(), IContact.class, true);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -130,9 +130,9 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall> implements Iden
 		if (getEntity().getGarantKontakt() == null || getEntity().getGarantKontakt().isDeleted()) {
 			return getPatient();
 		}
-		IContact ret = ModelUtil.getAdapter(getEntity().getGarantKontakt(), IContact.class);
+		IContact ret = ModelUtil.getAdapter(getEntity().getGarantKontakt(), IContact.class, true);
 		if (ret != null && ret.isPatient()) {
-			ret = ModelUtil.getAdapter(getEntity().getGarantKontakt(), IPatient.class);
+			ret = ModelUtil.getAdapter(getEntity().getGarantKontakt(), IPatient.class, true);
 		}
 		return ret;
 	}
