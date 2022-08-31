@@ -279,7 +279,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 
 	@Override
 	public IContact getBiller() {
-		return ModelUtil.getAdapter(getEntity().getUser(), IContact.class);
+		return ModelUtil.getAdapter(getEntity().getUser(), IContact.class, true);
 	}
 
 	@Override
