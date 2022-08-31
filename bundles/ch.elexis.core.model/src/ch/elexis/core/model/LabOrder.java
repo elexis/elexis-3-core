@@ -96,7 +96,7 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 
 	@Override
 	public IMandator getMandator() {
-		return ModelUtil.getAdapter(getEntity().getMandator(), IMandator.class);
+		return ModelUtil.getAdapter(getEntity().getMandator(), IMandator.class, true);
 	}
 
 	@Override

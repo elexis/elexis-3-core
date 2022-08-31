@@ -299,7 +299,7 @@ public class DocumentTemplate extends AbstractIdDeleteModelAdapter<BriefVorlage>
 
 	@Override
 	public IMandator getMandator() {
-		return ModelUtil.getAdapter(getEntity().getRecipient(), IMandator.class);
+		return ModelUtil.getAdapter(getEntity().getRecipient(), IMandator.class, true);
 	}
 
 	@Override

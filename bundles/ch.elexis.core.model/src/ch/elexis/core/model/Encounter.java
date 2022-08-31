@@ -78,7 +78,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung> implemen
 
 	@Override
 	public IMandator getMandator() {
-		return ModelUtil.getAdapter(getEntity().getMandant(), IMandator.class);
+		return ModelUtil.getAdapter(getEntity().getMandant(), IMandator.class, true);
 	}
 
 	@SuppressWarnings("unchecked")
