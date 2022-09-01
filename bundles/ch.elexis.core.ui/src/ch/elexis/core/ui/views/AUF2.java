@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -185,9 +186,12 @@ public class AUF2 extends ViewPart implements IRefreshable {
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				var sickCert1 = (ISickCertificate) e1;
 				var sickCert2 = (ISickCertificate) e2;
-				return sickCert2.getLastupdate().compareTo(sickCert1.getLastupdate());
+				return Objects.compare(sickCert2.getLastupdate().toString(), sickCert1.getLastupdate().toString(),
+						Comparator.nullsFirst(Comparator.naturalOrder()));
 			}
 		});
+		
+
 
 		final Transfer[] dragTransferTypes = new Transfer[] { TextTransfer.getInstance() };
 
