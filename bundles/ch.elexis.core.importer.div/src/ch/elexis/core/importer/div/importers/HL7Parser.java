@@ -21,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.service.holder.LabImportUtilHolder;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabResult;
@@ -339,17 +338,12 @@ public class HL7Parser {
 
 			orderId = labImportUtil.importLabResults(results, importHandler);
 
-		} catch (ElexisException e) {
+		} catch (Exception e) {
 			logger.error("Parsing HL7 failed", e);
 			return new Result<>(SEVERITY.ERROR, 2, Messages.HL7Parser_ExceptionWhileProcessingData, e.getMessage(),
 					true);
 		}
 		return new Result<Object>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
-	}
-
-	private boolean importAsLongText(LabResultData hl7LabResult) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	private void initCommentDate(ObservationMessage obsMessage) {
