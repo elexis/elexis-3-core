@@ -201,6 +201,11 @@ public class HL7Parser {
 							importAsLongText = false;
 						}
 					}
+					if (!importAsLongText) {
+						if (hl7LabResult.getValue().length() > 255) {
+							importAsLongText = true;
+						}
+					}
 					if (importAsLongText) {
 
 						Integer flag = null;
@@ -339,6 +344,11 @@ public class HL7Parser {
 					true);
 		}
 		return new Result<Object>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
+	}
+
+	private boolean importAsLongText(LabResultData hl7LabResult) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	private void initCommentDate(ObservationMessage obsMessage) {
