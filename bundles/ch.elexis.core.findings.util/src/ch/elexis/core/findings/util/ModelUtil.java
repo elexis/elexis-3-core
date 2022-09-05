@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
@@ -178,7 +177,7 @@ public class ModelUtil {
 					.replaceAll("&", "&amp;").replaceAll("(\r\n|\r|\n)", "<br />");
 			narrative.setDivAsString(divEncodedText);
 			narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
-		} catch (FHIRFormatError e) {
+		} catch (Exception e) {
 			LoggerFactory.getLogger(ModelUtil.class).error("Could not set narrative text [" + text + "]");
 			throw (e);
 		}
