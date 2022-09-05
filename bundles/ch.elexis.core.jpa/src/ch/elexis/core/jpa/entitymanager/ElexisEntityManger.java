@@ -23,6 +23,7 @@ import org.osgi.service.jpa.EntityManagerFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.jpa.Messages;
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBInitializer;
@@ -58,6 +59,9 @@ public class ElexisEntityManger implements IElexisEntityManager {
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	private IDatabaseUpdateUi updateProgress;
+
+	private final boolean SKIP_LIQUIBASE = Boolean
+			.valueOf(System.getProperty(ElexisSystemPropertyConstants.CONN_SKIP_LIQUIBASE));
 
 	@Activate
 	public void activate() {
@@ -98,21 +102,28 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		if (factory == null) {
 			// try to initialize
 			if (factoryBuilder != null) {
-				if (updateProgress != null) {
-					try {
-						updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Init, () -> {
-							dbInit(updateProgress);
-						});
-						updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Update, () -> {
-							dbUpdate(updateProgress);
-						});
-					} catch (Exception e) {
-						logger.warn("Exeption executing database update with ui", e); //$NON-NLS-1$
+
+				if (!SKIP_LIQUIBASE) {
+					if (updateProgress != null) {
+						try {
+							updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Init, () -> {
+								dbInit(updateProgress);
+							});
+							updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Update, () -> {
+								dbUpdate(updateProgress);
+							});
+						} catch (Exception e) {
+							logger.warn("Exeption executing database update with ui", e); //$NON-NLS-1$
+						}
+					} else {
+						dbInit(null);
+						dbUpdate(null);
 					}
 				} else {
-					dbInit(null);
-					dbUpdate(null);
+					logger.warn("Skipping liquibase execution");
+					updateSuccess = true;
 				}
+
 				// initialize the entity manager factory
 				HashMap<String, Object> props = new HashMap<String, Object>();
 				props.put(PersistenceUnitProperties.DDL_GENERATION, PersistenceUnitProperties.NONE);

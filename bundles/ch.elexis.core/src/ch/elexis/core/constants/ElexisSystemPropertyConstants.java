@@ -17,6 +17,9 @@ public class ElexisSystemPropertyConstants {
 	public static final String CONN_DB_H2_AUTO_SERVER = "ch.elexis.dbH2AutoServer";
 	public static final String CONN_DB_SPEC = "ch.elexis.dbSpec";
 
+	// skip liquibase initialization and update
+	public static final String CONN_SKIP_LIQUIBASE = "skip.liquibase";
+
 	// Demo database related properties
 	public static final String DEMO_DB_LOCATION = "demo.database.location";
 
