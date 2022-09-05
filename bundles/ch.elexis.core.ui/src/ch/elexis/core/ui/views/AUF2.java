@@ -186,7 +186,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				var sickCert1 = (ISickCertificate) e1;
 				var sickCert2 = (ISickCertificate) e2;
-				return Objects.compare(sickCert2.getLastupdate().toString(), sickCert1.getLastupdate().toString(),
+				return Objects.compare(sickCert2.getLastupdate(), sickCert1.getLastupdate(),
 						Comparator.nullsFirst(Comparator.naturalOrder()));
 			}
 		});
