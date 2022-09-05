@@ -40,6 +40,8 @@ public class Test_Money {
 		assertEquals(1.234, Money.checkInput("1,234").doubleValue(), 0.0001);
 
 		assertEquals(12340, Money.checkInput("1.234.0").doubleValue(), 0.0001);
+
+		assertEquals(3504.43, Money.checkInput("3’504.43").doubleValue(), 0.0001);
 	}
 
 	@Test
