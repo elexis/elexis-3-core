@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
@@ -317,5 +318,21 @@ public class ModelUtil {
 		} else {
 			LoggerFactory.getLogger(ModelUtil.class).error("Could not initialize unknown type [" + type + "]");
 		}
+	}
+
+	public static boolean fixFhirResource(IFinding finding) {
+		boolean changed = false;
+		Optional<IBaseResource> resource = loadResource(finding);
+		if (resource.isPresent()) {
+			if (resource.get() instanceof org.hl7.fhir.r4.model.Encounter) {
+				org.hl7.fhir.r4.model.Encounter fhirEncounter = (Encounter) resource.get();
+				if (fhirEncounter.getClass_() == null || fhirEncounter.getClass_().getSystem() == null) {
+					fhirEncounter.setClass_(new Coding("2.16.840.1.113883.1.11.13955", "AMB", "ambulatory"));
+					ModelUtil.saveResource(fhirEncounter, finding);
+					changed = true;
+				}
+			}
+		}
+		return changed;
 	}
 }
