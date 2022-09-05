@@ -108,6 +108,14 @@ public class Money extends Number implements Comparable<Money> {
 		Number ret = format.parse(raw, parsePosition);
 		if (ret != null && parsePosition.getIndex() == raw.length())
 			return ret.doubleValue();
+		// try ch format 3’504.43
+		parsePosition = new ParsePosition(0);
+		symbols.setDecimalSeparator('.');
+		symbols.setGroupingSeparator('’');
+		format = new DecimalFormat(formatPattern, symbols);
+		ret = format.parse(raw, parsePosition);
+		if (ret != null && parsePosition.getIndex() == raw.length())
+			return ret.doubleValue();
 		// try de format 123.456,789
 		parsePosition = new ParsePosition(0);
 		symbols.setDecimalSeparator(',');
