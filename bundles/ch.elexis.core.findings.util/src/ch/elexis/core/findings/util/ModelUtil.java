@@ -14,6 +14,7 @@ import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
+import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
@@ -175,12 +176,20 @@ public class ModelUtil {
 			text = fixXhtmlContent(text);
 			String divEncodedText = text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("§", "'&sect;'")
 					.replaceAll("&", "&amp;").replaceAll("(\r\n|\r|\n)", "<br />");
+			divEncodedText = addDivToEncodedText(divEncodedText);
 			narrative.setDivAsString(divEncodedText);
 			narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
 		} catch (Exception e) {
 			LoggerFactory.getLogger(ModelUtil.class).error("Could not set narrative text [" + text + "]");
 			throw (e);
 		}
+	}
+
+	private static String addDivToEncodedText(String divEncodedText) {
+		if (!divEncodedText.startsWith("<div")) {
+			divEncodedText = "<div" + " xmlns=\"" + XhtmlNode.XMLNS + "\"" + ">" + divEncodedText + "</div>";
+		}
+		return divEncodedText;
 	}
 
 	/**

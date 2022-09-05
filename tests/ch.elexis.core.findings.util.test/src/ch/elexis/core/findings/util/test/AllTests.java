@@ -11,10 +11,11 @@ import org.junit.runners.Suite.SuiteClasses;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import ch.elexis.core.findings.util.FindingsFormatUtilTest;
+import ch.elexis.core.findings.util.ModelUtilTest;
 import ch.elexis.core.findings.util.fhir.transformer.AllTransformerTests;
 
 @RunWith(Suite.class)
-@SuiteClasses({ FindingsFormatUtilTest.class, AllTransformerTests.class })
+@SuiteClasses({ ModelUtilTest.class, FindingsFormatUtilTest.class, AllTransformerTests.class })
 public class AllTests {
 
 	private static FhirContext context3 = FhirContext.forDstu3();
