@@ -15,13 +15,20 @@ import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IFinding.RawContentFormat;
 
 public class FindingsContentHelper {
-	private static FhirContext context = FhirContext.forR4();
+	private static FhirContext context;
 
 	private IParser jsonParser;
 
+	public FhirContext getFhirContext() {
+		if (context == null) {
+			context = FhirContext.forR4();
+		}
+		return context;
+	}
+
 	public IParser getJsonParser() {
 		if (jsonParser == null) {
-			jsonParser = context.newJsonParser();
+			jsonParser = getFhirContext().newJsonParser();
 		}
 		return jsonParser;
 	}
@@ -30,7 +37,7 @@ public class FindingsContentHelper {
 
 	public IParser getXmlParser() {
 		if (xmlParser == null) {
-			xmlParser = context.newXmlParser();
+			xmlParser = getFhirContext().newXmlParser();
 		}
 		return xmlParser;
 	}

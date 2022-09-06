@@ -73,9 +73,12 @@ public class ModelUtil {
 		findingsModelService.delete(deleteable);
 	}
 
-	private static FhirContext context = FhirContext.forR4();
+	private static FhirContext context;
 
 	private static IParser getJsonParser() {
+		if (context == null) {
+			context = FhirContext.forR4();
+		}
 		return context.newJsonParser();
 	}
 
