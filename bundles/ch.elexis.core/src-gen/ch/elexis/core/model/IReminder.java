@@ -38,6 +38,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IReminder#getMessage <em>Message</em>}</li>
  *   <li>{@link ch.elexis.core.model.IReminder#getPriority <em>Priority</em>}</li>
  *   <li>{@link ch.elexis.core.model.IReminder#getType <em>Type</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IReminder#isResponsibleAll <em>Responsible All</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIReminder()
@@ -86,7 +87,7 @@ public interface IReminder extends Deleteable, Identifiable, WithExtInfo {
 	 * @return the value of the '<em>Contact</em>' reference.
 	 * @see #setContact(IContact)
 	 * @see ch.elexis.core.model.ModelPackage#getIReminder_Contact()
-	 * @model
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='kontakt'"
 	 * @generated
 	 */
 	IContact getContact();
@@ -109,6 +110,7 @@ public interface IReminder extends Deleteable, Identifiable, WithExtInfo {
 	 * @see #setDue(LocalDate)
 	 * @see ch.elexis.core.model.ModelPackage#getIReminder_Due()
 	 * @model dataType="ch.elexis.core.types.LocalDate"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='dateDue'"
 	 * @generated
 	 */
 	LocalDate getDue();
@@ -254,6 +256,28 @@ public interface IReminder extends Deleteable, Identifiable, WithExtInfo {
 	 * @generated
 	 */
 	void setType(Type value);
+
+	/**
+	 * Returns the value of the '<em><b>Responsible All</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Responsible All</em>' attribute.
+	 * @see #setResponsibleAll(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIReminder_ResponsibleAll()
+	 * @model
+	 * @generated
+	 */
+	boolean isResponsibleAll();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IReminder#isResponsibleAll <em>Responsible All</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Responsible All</em>' attribute.
+	 * @see #isResponsibleAll()
+	 * @generated
+	 */
+	void setResponsibleAll(boolean value);
 
 	/**
 	 * <!-- begin-user-doc -->

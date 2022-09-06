@@ -161,4 +161,18 @@ public class Reminder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 			getEntityMarkDirty().getResponsible().remove(contact);
 		}
 	}
+
+	@Override
+	public boolean isResponsibleAll() {
+		return ch.elexis.core.jpa.entities.Reminder.ALL_RESPONSIBLE.equals(getEntity().getResponsibleValue());
+	}
+
+	@Override
+	public void setResponsibleAll(boolean value) {
+		if (value) {
+			getEntityMarkDirty().setResponsibleValue(ch.elexis.core.jpa.entities.Reminder.ALL_RESPONSIBLE);
+		} else {
+			getEntityMarkDirty().setResponsibleValue(null);
+		}
+	}
 }

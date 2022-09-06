@@ -77,6 +77,7 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.IRelatedContact;
 import ch.elexis.core.model.IReminder;
+import ch.elexis.core.model.IReminderResponsibleLink;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISickCertificate;
@@ -102,6 +103,7 @@ import ch.elexis.core.model.Prescription;
 import ch.elexis.core.model.Recipe;
 import ch.elexis.core.model.RelatedContact;
 import ch.elexis.core.model.Reminder;
+import ch.elexis.core.model.ReminderResponsibleLink;
 import ch.elexis.core.model.Right;
 import ch.elexis.core.model.Role;
 import ch.elexis.core.model.SickCertificate;
@@ -131,6 +133,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 
 		addMapping(new MappingEntry(IReminder.class, Reminder.class,
 				ch.elexis.core.jpa.entities.Reminder.class));
+		addMapping(new MappingEntry(IReminderResponsibleLink.class, ReminderResponsibleLink.class,
+				ch.elexis.core.jpa.entities.ReminderResponsibleLink.class));
 
 		addMapping(new MappingEntry(IConfig.class, Config.class, ch.elexis.core.jpa.entities.Config.class));
 		addMapping(new MappingEntry(IUserConfig.class, UserConfig.class, Userconfig.class));

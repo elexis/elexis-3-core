@@ -7841,13 +7841,77 @@ public interface ModelPackage extends EPackage {
 	int IREMINDER__TYPE = DELETEABLE_FEATURE_COUNT + 10;
 
 	/**
+	 * The feature id for the '<em><b>Responsible All</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__RESPONSIBLE_ALL = DELETEABLE_FEATURE_COUNT + 11;
+
+	/**
 	 * The number of structural features of the '<em>IReminder</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IREMINDER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 11;
+	int IREMINDER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 12;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IReminderResponsibleLink <em>IReminder Responsible Link</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IReminderResponsibleLink
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIReminderResponsibleLink()
+	 * @generated
+	 */
+	int IREMINDER_RESPONSIBLE_LINK = 69;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER_RESPONSIBLE_LINK__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER_RESPONSIBLE_LINK__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Reminder</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER_RESPONSIBLE_LINK__REMINDER = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Responsible</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER_RESPONSIBLE_LINK__RESPONSIBLE = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>IReminder Responsible Link</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER_RESPONSIBLE_LINK_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
@@ -12446,6 +12510,49 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIReminder_Type();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IReminder#isResponsibleAll <em>Responsible All</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Responsible All</em>'.
+	 * @see ch.elexis.core.model.IReminder#isResponsibleAll()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EAttribute getIReminder_ResponsibleAll();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IReminderResponsibleLink <em>IReminder Responsible Link</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IReminder Responsible Link</em>'.
+	 * @see ch.elexis.core.model.IReminderResponsibleLink
+	 * @generated
+	 */
+	EClass getIReminderResponsibleLink();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IReminderResponsibleLink#getReminder <em>Reminder</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Reminder</em>'.
+	 * @see ch.elexis.core.model.IReminderResponsibleLink#getReminder()
+	 * @see #getIReminderResponsibleLink()
+	 * @generated
+	 */
+	EReference getIReminderResponsibleLink_Reminder();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IReminderResponsibleLink#getResponsible <em>Responsible</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Responsible</em>'.
+	 * @see ch.elexis.core.model.IReminderResponsibleLink#getResponsible()
+	 * @see #getIReminderResponsibleLink()
+	 * @generated
+	 */
+	EReference getIReminderResponsibleLink_Responsible();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16191,6 +16298,40 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IREMINDER__TYPE = eINSTANCE.getIReminder_Type();
+
+		/**
+		 * The meta object literal for the '<em><b>Responsible All</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IREMINDER__RESPONSIBLE_ALL = eINSTANCE.getIReminder_ResponsibleAll();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IReminderResponsibleLink <em>IReminder Responsible Link</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IReminderResponsibleLink
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIReminderResponsibleLink()
+		 * @generated
+		 */
+		EClass IREMINDER_RESPONSIBLE_LINK = eINSTANCE.getIReminderResponsibleLink();
+
+		/**
+		 * The meta object literal for the '<em><b>Reminder</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IREMINDER_RESPONSIBLE_LINK__REMINDER = eINSTANCE.getIReminderResponsibleLink_Reminder();
+
+		/**
+		 * The meta object literal for the '<em><b>Responsible</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IREMINDER_RESPONSIBLE_LINK__RESPONSIBLE = eINSTANCE.getIReminderResponsibleLink_Responsible();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

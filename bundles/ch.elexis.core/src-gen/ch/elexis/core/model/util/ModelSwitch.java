@@ -651,6 +651,14 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IREMINDER_RESPONSIBLE_LINK: {
+				IReminderResponsibleLink iReminderResponsibleLink = (IReminderResponsibleLink)theEObject;
+				T1 result = caseIReminderResponsibleLink(iReminderResponsibleLink);
+				if (result == null) result = caseIdentifiable(iReminderResponsibleLink);
+				if (result == null) result = caseDeleteable(iReminderResponsibleLink);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -1672,6 +1680,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIReminder(IReminder object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IReminder Responsible Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IReminder Responsible Link</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIReminderResponsibleLink(IReminderResponsibleLink object) {
 		return null;
 	}
 

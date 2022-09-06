@@ -74,6 +74,7 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.IRelatedContact;
 import ch.elexis.core.model.IReminder;
+import ch.elexis.core.model.IReminderResponsibleLink;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IService;
@@ -581,6 +582,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iReminderEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iReminderResponsibleLinkEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -5072,6 +5080,46 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIReminder_ResponsibleAll() {
+		return (EAttribute)iReminderEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getIReminderResponsibleLink() {
+		return iReminderResponsibleLinkEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIReminderResponsibleLink_Reminder() {
+		return (EReference)iReminderResponsibleLinkEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIReminderResponsibleLink_Responsible() {
+		return (EReference)iReminderResponsibleLinkEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -5605,6 +5653,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iReminderEClass, IREMINDER__MESSAGE);
 		createEAttribute(iReminderEClass, IREMINDER__PRIORITY);
 		createEAttribute(iReminderEClass, IREMINDER__TYPE);
+		createEAttribute(iReminderEClass, IREMINDER__RESPONSIBLE_ALL);
+
+		iReminderResponsibleLinkEClass = createEClass(IREMINDER_RESPONSIBLE_LINK);
+		createEReference(iReminderResponsibleLinkEClass, IREMINDER_RESPONSIBLE_LINK__REMINDER);
+		createEReference(iReminderResponsibleLinkEClass, IREMINDER_RESPONSIBLE_LINK__RESPONSIBLE);
 	}
 
 	/**
@@ -5762,6 +5815,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iReminderEClass.getESuperTypes().add(this.getDeleteable());
 		iReminderEClass.getESuperTypes().add(this.getIdentifiable());
 		iReminderEClass.getESuperTypes().add(this.getWithExtInfo());
+		iReminderResponsibleLinkEClass.getESuperTypes().add(this.getIdentifiable());
+		iReminderResponsibleLinkEClass.getESuperTypes().add(this.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -6598,12 +6653,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIReminder_Message(), ecorePackage.getEString(), "message", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIReminder_Priority(), theTypesPackage.getPriority(), "priority", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIReminder_Type(), theTypesPackage.getType(), "type", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIReminder_ResponsibleAll(), ecorePackage.getEBoolean(), "responsibleAll", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iReminderEClass, null, "addResponsible", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIContact(), "responsible", 1, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = addEOperation(iReminderEClass, null, "removeResponsible", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIContact(), "responsible", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iReminderResponsibleLinkEClass, IReminderResponsibleLink.class, "IReminderResponsibleLink", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIReminderResponsibleLink_Reminder(), this.getIReminder(), null, "reminder", null, 0, 1, IReminderResponsibleLink.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIReminderResponsibleLink_Responsible(), this.getIContact(), null, "responsible", null, 0, 1, IReminderResponsibleLink.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
@@ -6850,6 +6910,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		   source,
 		   new String[] {
 			   "attributeName", "erstelltvon"
+		   });
+		addAnnotation
+		  (getIReminder_Contact(),
+		   source,
+		   new String[] {
+			   "attributeName", "kontakt"
+		   });
+		addAnnotation
+		  (getIReminder_Due(),
+		   source,
+		   new String[] {
+			   "attributeName", "dateDue"
 		   });
 	}
 

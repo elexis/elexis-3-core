@@ -725,12 +725,17 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/message"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/priority"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/type"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/responsibleAll"/>
       <genOperations ecoreOperation="model.ecore#//IReminder/addResponsible">
         <genParameters ecoreParameter="model.ecore#//IReminder/addResponsible/responsible"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//IReminder/removeResponsible">
         <genParameters ecoreParameter="model.ecore#//IReminder/removeResponsible/responsible"/>
       </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IReminderResponsibleLink">
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//IReminderResponsibleLink/reminder"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//IReminderResponsibleLink/responsible"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
