@@ -16,7 +16,6 @@ import java.util.concurrent.RejectedExecutionException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
@@ -136,14 +135,6 @@ public class TaskServiceImpl implements ITaskService {
 		util = new TaskServiceUtil();
 	}
 
-	@Activate
-	private void activateComponent() {
-		watchServiceHolder = new WatchServiceHolder(this);
-		if (watchServiceHolder.triggerIsAvailable()) {
-			watchServiceHolder.startPolling();
-		}
-	}
-
 	@Deactivate
 	private void deactivateComponent() {
 
@@ -178,7 +169,22 @@ public class TaskServiceImpl implements ITaskService {
 
 		parallelExecutorService.shutdown();
 		perRunnableSingletonExecutorService.forEach((c, e) -> e.shutdown());
-		watchServiceHolder.stopPolling();
+
+		if (watchServiceHolder != null) {
+			watchServiceHolder.stopPolling();
+		}
+	}
+
+	/**
+	 * Assert that the watchservice is available and started
+	 */
+	private synchronized void assertWatchServiceHolder() {
+		if (watchServiceHolder == null) {
+			watchServiceHolder = new WatchServiceHolder(this);
+			if (watchServiceHolder.triggerIsAvailable()) {
+				watchServiceHolder.startPolling();
+			}
+		}
 	}
 
 	/**
@@ -242,6 +248,7 @@ public class TaskServiceImpl implements ITaskService {
 	 */
 	private void incur(ITaskDescriptor taskDescriptor) throws TaskException {
 		if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()) {
+			assertWatchServiceHolder();
 			watchServiceHolder.incur(taskDescriptor);
 		} else if (TaskTriggerType.CRON == taskDescriptor.getTriggerType()) {
 			assertQuartzExecutor();
@@ -473,8 +480,7 @@ public class TaskServiceImpl implements ITaskService {
 				.load(taskDescriptor.getId(), ITaskDescriptor.class, true, true).orElse(null);
 		if (changedTaskDescriptor == null || changedTaskDescriptor.isDeleted()) {
 			logger.warn("[{}] taskDesc not loadable or deleted [{} -> {}], releasing", taskDescriptor.getTriggerType(),
-					taskDescriptor != null ? taskDescriptor.getId() : "null",
-					changedTaskDescriptor != null ? changedTaskDescriptor.getId() : "null");
+					taskDescriptor.getId(), changedTaskDescriptor != null ? changedTaskDescriptor.getId() : "null");
 			release(taskDescriptor);
 			throw new TaskException(TaskException.PERSISTENCE_ERROR,
 					"TaskDescriptor not loadable or deleted, releasing it");
