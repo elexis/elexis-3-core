@@ -13,7 +13,6 @@
 
 package ch.elexis.core.ui.importer.div.rs232;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +29,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
 import gnu.io.CommPortIdentifier;
+import gnu.io.DriverManager;
 import gnu.io.NoSuchPortException;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
@@ -62,6 +63,14 @@ public class Connection implements PortEventListener {
 	private final StringBuilder sbFrame = new StringBuilder();
 	private final StringBuilder sbLine = new StringBuilder();
 	private Thread watchdogThread;
+	private static boolean isInitialized;
+
+	static {
+		if (!isInitialized) {
+			DriverManager.getInstance().loadDrivers();
+			isInitialized = true;
+		}
+	}
 
 	public interface ComPortListener {
 		public void gotChunk(Connection conn, String chunk);
