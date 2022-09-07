@@ -288,6 +288,7 @@ public class MailClient implements IMailClient {
 
 	@Override
 	public boolean sendMail(MailAccount account, MailMessage message) {
+		System.setProperty("mail.mime.encodeparameters", "false");
 		MailClientProperties properties = new MailClientProperties(account);
 
 		try {
