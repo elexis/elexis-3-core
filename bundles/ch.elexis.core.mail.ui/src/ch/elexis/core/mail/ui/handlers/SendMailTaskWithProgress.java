@@ -7,6 +7,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
@@ -33,11 +34,13 @@ public class SendMailTaskWithProgress {
 						}
 						monitor.done();
 					} catch (TaskException e) {
+						LoggerFactory.getLogger(getClass()).error("Error executing send mail task", e);
 						MessageDialog.openError(activeShell, "Fehler", "Versenden konnte nicht gestartet werden.");
 					}
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
+			LoggerFactory.getLogger(getClass()).error("Error executing send mail command", e);
 			MessageDialog.openError(activeShell, "Fehler", "Versenden konnte nicht gestartet werden.");
 		}
 		if (!task.isSucceeded()) {
