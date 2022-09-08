@@ -84,7 +84,7 @@ Window..Preferences:
     -   Select UTF-8 as "Textfile encoding"
     -   Select UNIX as "New text file line delimiter"
 -   Java..Code Style..Formatter
-    - Click on "Import.." and select the Eclipse_builtin.xml from the root directory of the elexis-3-core checkout
+    - Click on "Import.." and select the Elexis_formatter_2022_03.xml from the root directory of the elexis-3-core checkout
 -   Java..Code Style..Formatter and select as active profile "Eclipse [built-in]
 -   Java..Editor..Save Action
     -   Select: Perform the selected actions on save
