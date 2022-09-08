@@ -306,8 +306,7 @@ public class BillingUtil {
 				public String getDescription() {
 					return "Keine Diagnose in der Behandlungsserie";
 				}
-			},
-			new IBillableCheck() {
+			}, new IBillableCheck() {
 				@Override
 				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
 					if (konsultation.getFall() != null
@@ -323,7 +322,6 @@ public class BillingUtil {
 					}
 					return true;
 				}
-
 
 				@Override
 				public String getId() {
@@ -372,8 +370,8 @@ public class BillingUtil {
 		}
 		ahv = ahv.replaceAll("[^0-9]", StringConstants.EMPTY);// $NON-NLS-1$
 		if (StringUtils.isBlank(ahv)) {
-			ahv = CoverageServiceHolder.get().getRequiredString(coverage, "AHV-Nummer")
-					.replaceAll("[^0-9]", StringConstants.EMPTY); //$NON-NLS-1$
+			ahv = CoverageServiceHolder.get().getRequiredString(coverage, "AHV-Nummer").replaceAll("[^0-9]", //$NON-NLS-2$
+					StringConstants.EMPTY);
 		}
 		return StringUtils.isNotBlank(ahv) ? ahv : null;
 	}

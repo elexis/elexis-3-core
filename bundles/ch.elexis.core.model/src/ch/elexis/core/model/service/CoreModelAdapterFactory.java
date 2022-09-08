@@ -131,8 +131,7 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(IAppointment.class, Appointment.class, Termin.class));
 		addMapping(new MappingEntry(IDayMessage.class, DayMessage.class, TagesNachricht.class));
 
-		addMapping(new MappingEntry(IReminder.class, Reminder.class,
-				ch.elexis.core.jpa.entities.Reminder.class));
+		addMapping(new MappingEntry(IReminder.class, Reminder.class, ch.elexis.core.jpa.entities.Reminder.class));
 		addMapping(new MappingEntry(IReminderResponsibleLink.class, ReminderResponsibleLink.class,
 				ch.elexis.core.jpa.entities.ReminderResponsibleLink.class));
 

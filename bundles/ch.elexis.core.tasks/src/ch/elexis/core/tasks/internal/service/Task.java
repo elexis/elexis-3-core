@@ -312,7 +312,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 
 	/**
 	 * assert that all required run context parameters are set
-	 * 
+	 *
 	 * @param effectiveRunContext
 	 * @throws TaskException
 	 */

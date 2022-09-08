@@ -459,7 +459,7 @@ public class TaskServiceImpl implements ITaskService {
 
 	/**
 	 * Did the taskDescriptor change in the meantime?
-	 * 
+	 *
 	 * @param taskDescriptor
 	 * @return <code>null</code> if no changes detected, else the updated
 	 *         ITaskDescriptor

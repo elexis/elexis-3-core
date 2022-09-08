@@ -591,8 +591,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 	private void refreshCurrentPatientInput() {
 		if (actPatient != null) {
 			CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
-					.supplyAsync(new CurrentPatientSupplier(actPatient).showAll(
-							showAllReminders && CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS))
+					.supplyAsync(new CurrentPatientSupplier(actPatient)
+							.showAll(showAllReminders
+									&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS))
 							.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
 							.showSelfCreated(showSelfCreatedReminders));
 			currentLoader.thenRunAsync(() -> {
@@ -626,11 +627,12 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 	}
 
 	private void refreshGeneralPatientInput() {
-		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture.supplyAsync(new GeneralPatientSupplier(
-				actPatient)
-				.showAll(showAllReminders && CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS))
-				.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
-				.showSelfCreated(showSelfCreatedReminders));
+		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
+				.supplyAsync(new GeneralPatientSupplier(actPatient)
+						.showAll(
+								showAllReminders && CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS))
+						.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
+						.showSelfCreated(showSelfCreatedReminders));
 		currentLoader.thenRunAsync(() -> {
 			Display.getDefault().asyncExec(() -> {
 				if (generalPatientViewer != null && !generalPatientViewer.getTable().isDisposed()) {
@@ -1292,9 +1294,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 				public void doRun(IReminder element) {
 					element.setStatus(representedStatus);
 					CoreModelServiceHolder.get().save(element);
-					ElexisEventDispatcher.getInstance()
-							.fire(new ElexisEvent(NoPoUtil.loadAsPersistentObject(element), Reminder.class,
-									ElexisEvent.EVENT_UPDATE));
+					ElexisEventDispatcher.getInstance().fire(new ElexisEvent(NoPoUtil.loadAsPersistentObject(element),
+							Reminder.class, ElexisEvent.EVENT_UPDATE));
 				}
 			}
 		}

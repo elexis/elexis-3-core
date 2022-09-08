@@ -190,8 +190,6 @@ public class AUF2 extends ViewPart implements IRefreshable {
 						Comparator.nullsFirst(Comparator.naturalOrder()));
 			}
 		});
-		
-
 
 		final Transfer[] dragTransferTypes = new Transfer[] { TextTransfer.getInstance() };
 

@@ -18,7 +18,7 @@ import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class ModelUtilTest {
-	
+
 	private IFindingsService findingsService;
 
 	@Before

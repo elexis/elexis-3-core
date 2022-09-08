@@ -91,8 +91,7 @@ public class ReminderTest extends AbstractTest {
 		query.and(ModelPackage.Literals.IREMINDER__CONTACT, COMPARATOR.EQUALS, patient);
 
 		query.startGroup();
-		subQuery = query.createSubQuery(IReminderResponsibleLink.class,
-				coreModelService);
+		subQuery = query.createSubQuery(IReminderResponsibleLink.class, coreModelService);
 		subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
 		subQuery.and("responsible", COMPARATOR.EQUALS, mandator);
 		query.exists(subQuery);

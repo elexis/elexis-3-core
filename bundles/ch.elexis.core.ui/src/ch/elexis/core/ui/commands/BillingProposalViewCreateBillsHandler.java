@@ -63,7 +63,8 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 					createBill(sortedByYears.get(year));
 				}
 			}
-		} else if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.KonsZumVerrechnenView2_createInvoicesAction,
+		} else if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
+				Messages.KonsZumVerrechnenView2_createInvoicesAction,
 				Messages.KonsZumVerrechnenView2_createInvoicesMessageDialogQuestion)) {
 			createBill(toBill);
 		}
