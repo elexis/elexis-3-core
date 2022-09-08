@@ -92,7 +92,7 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 		defaultRunContext.put(RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT, Boolean.TRUE);
 		defaultRunContext.put(RCP_BOOLEAN_OVERWRITE_EXISTING_RESULTS, Boolean.TRUE);
 		defaultRunContext.put(RCP_BOOLEAN_IMPORT_ENCAPSULATED_DATA, Boolean.TRUE);
-		defaultRunContext.put(RCP_STRING_IMPORTER_LABNAME, "myLab");
+		defaultRunContext.put(RCP_STRING_IMPORTER_LABNAME, "Eigenlabor");
 		return defaultRunContext;
 	}
 
