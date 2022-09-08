@@ -12,6 +12,7 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Encounter;
+import org.hl7.fhir.r4.model.Enumerations.DocumentReferenceStatus;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
@@ -317,6 +318,7 @@ public class ModelUtil {
 		} else if (type.equals(IDocumentReference.class)) {
 			org.hl7.fhir.r4.model.DocumentReference fhirDocumentReference = new org.hl7.fhir.r4.model.DocumentReference();
 			fhirDocumentReference.setId(new IdType(fhirDocumentReference.getClass().getSimpleName(), created.getId()));
+			fhirDocumentReference.setStatus(DocumentReferenceStatus.CURRENT);
 			ModelUtil.saveResource(fhirDocumentReference, created);
 		} else {
 			LoggerFactory.getLogger(ModelUtil.class).error("Could not initialize unknown type [" + type + "]");
