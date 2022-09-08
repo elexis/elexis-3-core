@@ -105,7 +105,7 @@ public class DocumentReferenceIDocumentReferenceTransformer
 		if (fhirObject.getContent() != null && !fhirObject.getContent().isEmpty()) {
 			DocumentReferenceContentComponent content = fhirObject.getContent().get(0);
 			Attachment attachment = content.getAttachment();
-			if(attachment.getData() != null || attachment.getUrl() != null) {
+			if (attachment.getData() != null || attachment.getUrl() != null) {
 				if (fhirObject.getSubject() != null && fhirObject.getSubject().getId() != null) {
 					Optional<IPatient> patientKontakt = codeModelService.load(fhirObject.getSubject().getId(),
 							IPatient.class);
