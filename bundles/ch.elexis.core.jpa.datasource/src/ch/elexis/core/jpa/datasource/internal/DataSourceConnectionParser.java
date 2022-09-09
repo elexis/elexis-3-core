@@ -35,11 +35,7 @@ public class DataSourceConnectionParser {
 	 */
 	public Optional<DBConnection> parseAvailableParameters() {
 
-		// collect information
-		// does not consider CoreHub.localCfg
-		//
 		boolean isTestMode = CoreUtil.isTestMode();
-		// only works for h2; if used on other db it must be empty
 		boolean isRunFromScratch = ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
 				.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE));
 		boolean traceActivated = Boolean.parseBoolean(System.getProperty("elexis.test.dbtrace"));
@@ -68,9 +64,9 @@ public class DataSourceConnectionParser {
 		String env_dbPassword = env.get(DB_PASSWORD);
 		String env_jdbcParameterString = env.get(DB_JDBC_PARAMETER_STRING);
 
-		// 1) is isRunFromScratch activated and are no prop_* values set ? we use a
-		// fresh "in mem h2 db"
-		if (isRunFromScratch && StringUtils.isBlank(prop_dbConnSpec)) {
+		// 1) isTestMode or (isRunFromScratch activated and no prop_* values set) ?
+		// we use a fresh "in mem h2 db"
+		if (isTestMode || (isRunFromScratch && StringUtils.isBlank(prop_dbConnSpec))) {
 			logger.info("Connecting to RunFromScratch H2 DB");
 			String jdbcString = "jdbc:h2:mem:elexisFromScratch;DB_CLOSE_DELAY=-1";
 			if (traceActivated)

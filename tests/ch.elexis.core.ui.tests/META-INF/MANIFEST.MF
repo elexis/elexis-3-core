@@ -2,6 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Core Ui Tests
 Bundle-SymbolicName: ch.elexis.core.ui.tests
+Bundle-Vendor: elexis.ch
 Bundle-Version: 3.10.0.qualifier
 Fragment-Host: ch.elexis.core.ui;bundle-version="3.10.0"
 Require-Bundle: org.junit,
