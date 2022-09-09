@@ -1,12 +1,12 @@
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -232,7 +232,7 @@ public class DBConnection {
 	}
 
 	public void disconnect() {
-		if (jdbcLink.DBFlavor.startsWith("hsqldb")) {
+		if (jdbcLink.DBFlavor != null && jdbcLink.DBFlavor.startsWith("hsqldb")) {
 			jdbcLink.exec("SHUTDOWN COMPACT");
 		}
 		jdbcLink.disconnect();

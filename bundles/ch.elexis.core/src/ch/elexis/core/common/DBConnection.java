@@ -101,6 +101,16 @@ public class DBConnection implements Serializable {
 	@XmlAttribute
 	public String text;
 
+	public DBConnection(DBType rdbmsType, String jdbcString, String username, char[] password) {
+		this.rdbmsType = rdbmsType;
+		this.connectionString = jdbcString;
+		this.username = username;
+		this.password = new String(password);
+	}
+
+	public DBConnection() {
+	}
+
 	/**
 	 * are all required values for the DBConnection set?
 	 *
@@ -216,4 +226,5 @@ public class DBConnection implements Serializable {
 		}
 		return Optional.empty();
 	}
+
 }
