@@ -39,7 +39,7 @@ include REXML  # so that we don't have to prefix everything with REXML::...
 require 'ostruct'
 require 'pp'
 require 'uri'
-require 'pry-byebug'
+# require 'pry-byebug'
 require 'csv'
 require 'net/http'
 require 'json'
@@ -593,6 +593,49 @@ class I18nInfo
       end
     end
   end
+ 
+  def find_best_name(german)
+    cmd = "select key, de from translations where de == '#{german}' and ( key like 'Core_%' or key like 'Sex%' or key like 'Printing_%' or key like 'Export_while' or key like 'Script%' or key like 'UNKNOWN' or key like 'TimeTool%');"
+    res = DB.execute(cmd)
+    if res && res.first
+      puts "Best name for #{german} is #{res.first[0]}" if $VERBOSE
+      return res.first[0]
+    else
+      puts "Nothing found for #{german}" if $VERBOSE
+      cmd = "select min(key), de from translations where de == '#{german}';"
+      res = DB.execute(cmd)
+      if res && res.first
+        puts "min name for #{german} is #{res.first[0]}" if $VERBOSE
+        return res.first[0]
+      end
+    end
+    nil
+  end
+  
+  def eliminate_properties(msg_file, patches)
+    prop_files = Dir.glob(msg_file.sub('Messages.java', 'messages**.properties'))
+    prop_files.each do |prop_file|
+       puts "Patching #{prop_file}"
+       content = IO.read(prop_file, encoding: "ISO8859-1")
+       patches.each do |old_key, new_key|
+         content.gsub!(/^#{old_key}(\s*=\s*[\w\.]+)$/, '')
+       end
+        File.open(prop_file, 'w+') do |file|
+          file.write content
+        end
+    end
+  end
+  
+  def eliminate_messages_java(msg_file, patches)
+    puts "Patching #{msg_file}"
+    content = IO.read(msg_file)
+    patches.each do |old_key, new_key|
+      content.gsub!(/[^\n]*\s#{old_key}\W[^\n]*./m, '')
+    end
+    File.open(msg_file, 'w+') do |file|
+      file.write content
+    end
+  end
 
   def find_best_name(german)
     cmd = "select key, de from translations where de == '#{german}' and ( key like 'Core_%' or key like 'Sex%' or key like 'Printing_%' or key like 'Export_while' or key like 'Script%' or key like 'UNKNOWN' or key like 'TimeTool%');"
@@ -618,10 +661,12 @@ class I18nInfo
        content = IO.read(prop_file, encoding: "ISO8859-1")
        old_content = content.clone
        patches.each do |old_key, new_key|
+              binding.pry if old_key.eql?('InvoiceState_OPEN_AND_PRINTED') || new_key.eql?('InvoiceState_OPEN_AND_PRINTED')
+
          content.gsub!(/^#{old_key}(\s*=\s*[\w\.]+)$/, '')
        end
         File.open(prop_file, 'w+') do |file|
-          puts "Patched #{prop_file}"
+          puts "Patched prop #{prop_file}"
           file.write content
         end unless content.eql?(old_content)
     end
@@ -631,13 +676,14 @@ class I18nInfo
     content = IO.read(msg_file)
     old_content = content.clone
     patches.each do |old_key, new_key|
-       if content.include?(old_key) && !content.include?(new_key)
-        content.gsub!(old_key, new_key)
+       next unless content.include?(old_key)
+       if /\W#{old_key}\W/.match(content) && !/\W#{new_key}\W/.match(content)
+         content.gsub!(/(\W)#{old_key}(\W)/, "\\1#{new_key}\\2")
        end
       content.gsub!(/[^\n]*\s#{old_key}\s*=[^\n]*/, '')
     end
     File.open(msg_file, 'w+') do |file|
-      puts "Patched #{msg_file}"
+      puts "Patched Messages.java #{msg_file}"
       file.write content
     end unless content.eql?(old_content)
   end
@@ -649,10 +695,10 @@ class I18nInfo
     content = IO.read(java_file)
     old_content = content.clone
     patches.each do |old_key, new_key|
-       content.gsub!(/(.*Messages\.)(#{old_key})(\W.*)/, "\\1#{new_key}\\3")
+      content.gsub!(/(.*Messages\.)(#{old_key})(\W.*)/, "\\1#{new_key}\\3")
     end
     unless content.eql?(old_content)
-      puts "Patched #{java_file}"
+      puts "Patched java #{java_file}"
       File.open(java_file, 'w+') do |file|
         file.write content
       end
@@ -679,7 +725,7 @@ class I18nInfo
        end
     end
     patches.each do |old_key, new_key|
-      puts "Must patch #{old_key} by #{new_key}" if /AccessControlDefaults_modify.*/.match(old_key)
+      puts "Must patch #{old_key} by #{new_key}"
     end
      Dir.glob("#{main_dir}/**/Messages.java").each do |msg_java|
        eliminate_properties(msg_java, patches)

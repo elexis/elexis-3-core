@@ -2862,6 +2862,7 @@ public class Messages extends NLS {
 	public static String Sex_Male_Short;
 	public static String Sex_Man;
 	public static String Sex_Woman;
+	public static String UNKNOWN;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
