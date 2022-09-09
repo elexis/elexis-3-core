@@ -30,7 +30,14 @@ public class ElexisSystemPropertyConstants {
 	// open db selection wizard on startup
 	public static final String OPEN_DB_WIZARD = "openDBWizard";
 
-	// The Elexis run mode - from scratch
+	/**
+	 * If the property elexis-run-mode is set to RunFromScratch then the connected
+	 * database will be wiped out and initialized with default values for the
+	 * mandant (007, topsecret). For mysql and postgresql this will only work if the
+	 * database is empty! Therefore you mus call something like
+	 * StringUtils.EMPTYdrop database miniDB; create dabase miniDB;" before starting
+	 * Elexis.
+	 */
 	public static final String RUN_MODE_FROM_SCRATCH = "RunFromScratch";
 
 	/**

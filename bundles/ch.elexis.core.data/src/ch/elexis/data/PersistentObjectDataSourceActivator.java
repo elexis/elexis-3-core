@@ -8,6 +8,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisEntityManager;
 
 /**
@@ -26,6 +27,9 @@ public class PersistentObjectDataSourceActivator {
 	@Reference
 	private ICoreOperationAdvisor coreOperationAdvisor;
 
+	@Reference
+	private IContextService contextService;
+
 	@Activate
 	public void activate() {
 		elexisEntityManager.getEntityManager(true);
@@ -36,7 +40,9 @@ public class PersistentObjectDataSourceActivator {
 		}
 
 		boolean connect = PersistentObject.connect(dataSource);
-		LoggerFactory.getLogger(getClass()).warn("Activated PersistentObject " + connect);
+		LoggerFactory.getLogger(getClass()).warn("PO#connect " + connect);
+		boolean legacyPostInitDB = PersistentObject.legacyPostInitDB(coreOperationAdvisor);
+		LoggerFactory.getLogger(getClass()).warn("PO#legacyPostInitDB " + legacyPostInitDB);
 	}
 
 }

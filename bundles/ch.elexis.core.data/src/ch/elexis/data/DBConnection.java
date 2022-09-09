@@ -221,7 +221,8 @@ public class DBConnection {
 	}
 
 	public boolean isRunningFromScratch() {
-		return runningFromScratch;
+		return ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
+				.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE));
 	}
 
 	public void runFromScatch() throws IOException {
