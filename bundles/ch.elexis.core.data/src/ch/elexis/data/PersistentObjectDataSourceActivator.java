@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
-import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisEntityManager;
 
 /**
@@ -27,9 +26,6 @@ public class PersistentObjectDataSourceActivator {
 
 	@Reference
 	private ICoreOperationAdvisor coreOperationAdvisor;
-
-	@Reference
-	private IContextService contextService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -76,11 +76,13 @@ public class Desk implements IApplication {
 			cod.requestDatabaseConnectionConfiguration();
 		}
 
-		// connect to the database, will set IElexisEntityManager and
-		// activate PersistentObjectActivator
-		Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
-		elexisDataSource.setDBConnection(connection.get());
-		OsgiServiceUtil.ungetService(elexisDataSource);
+		if (connectionStatus == null) {
+			// connect to the database, will set IElexisEntityManager and
+			// activate PersistentObjectActivator
+			Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
+			elexisDataSource.setDBConnection(connection.get());
+			OsgiServiceUtil.ungetService(elexisDataSource);
+		}
 
 		// check for initialization parameters
 		args = context.getArguments();
