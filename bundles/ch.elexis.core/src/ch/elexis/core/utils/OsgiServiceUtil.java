@@ -9,6 +9,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,5 +94,39 @@ public class OsgiServiceUtil {
 		}
 		logger.warn(
 				"Could not release service [" + service + "] from " + serviceReferences.size() + " active references");
+	}
+
+	/**
+	 * Get a service from the OSGi service registry. Wait for it, it it's not
+	 * available yet. <b>Always</b> release the service using the
+	 * {@link OsgiServiceUtil#ungetService(Object)} method after usage.
+	 * 
+	 * @param clazz
+	 * @param timeout milliseconds to wait for the service to become available
+	 * @return
+	 * @since 3.10
+	 */
+	public synchronized static <T extends Object> Optional<T> getServiceWait(Class<T> clazz, long timeout) {
+		Bundle bundle = FrameworkUtil.getBundle(clazz);
+		// fallback to our context ...
+		if (bundle == null || bundle.getBundleContext() == null) {
+			bundle = FrameworkUtil.getBundle(OsgiServiceUtil.class);
+		}
+		ServiceReference<T> serviceReference = bundle.getBundleContext().getServiceReference(clazz);
+		ServiceTracker<?, T> serviceTracker = new ServiceTracker<>(bundle.getBundleContext(), serviceReference, null);
+		serviceTracker.open();
+		try {
+			T service = serviceTracker.waitForService(timeout);
+			if (service != null) {
+				ServiceReference<?> serviceReferenceTracker = serviceTracker.getServiceReference();
+				serviceReferences.put(service, serviceReferenceTracker);
+			}
+			return Optional.of(service);
+		} catch (InterruptedException e) {
+			logger.error("Could not get service", e);
+		} finally {
+			serviceTracker.close();
+		}
+		return Optional.empty();
 	}
 }

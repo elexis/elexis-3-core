@@ -18,10 +18,6 @@ import ch.rgw.tools.JdbcLink;
 
 public class Test_Konsultation extends AbstractPersistentObjectTest {
 
-	public Test_Konsultation(JdbcLink link) {
-		super(link);
-	}
-
 	private static Patient pat;
 	private static Fall fall;
 	private static Konsultation kons;

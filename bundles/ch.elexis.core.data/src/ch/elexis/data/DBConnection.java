@@ -91,6 +91,13 @@ public class DBConnection {
 		}
 	}
 
+	/**
+	 * @since 3.10
+	 */
+	public String getRawDBConnectString() {
+		return dbConnectString;
+	}
+
 	public void setDBConnectString(String connectString) {
 		this.dbConnectString = connectString;
 	}

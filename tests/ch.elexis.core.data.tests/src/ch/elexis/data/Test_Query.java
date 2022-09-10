@@ -15,7 +15,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.exceptions.PersistenceException;
-import ch.rgw.tools.JdbcLink;
 
 public class Test_Query extends AbstractPersistentObjectTest {
 
@@ -26,10 +25,6 @@ public class Test_Query extends AbstractPersistentObjectTest {
 	private Organisation org1;
 	private Organisation org2;
 	private Organisation org3;
-
-	public Test_Query(JdbcLink link) {
-		super(link);
-	}
 
 	@Before
 	public void before() {

@@ -23,6 +23,11 @@ import ch.elexis.core.utils.CoreUtil;
 
 public class DataSourceConnectionParser {
 
+	/**
+	 * System property for adding ;AUTO_SERVER=TRUE to the h2 db connection string
+	 */
+	public static final String TEST_DBSERVER = "elexis.test.db.server";
+
 	private int configSourceCode = -1;
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -39,6 +44,15 @@ public class DataSourceConnectionParser {
 		boolean isRunFromScratch = ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
 				.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE));
 		boolean traceActivated = Boolean.parseBoolean(System.getProperty("elexis.test.dbtrace"));
+		boolean isServerMode = Boolean.parseBoolean(System.getProperty(TEST_DBSERVER));
+		boolean isSkipDataSourceActivation = Boolean.parseBoolean(System.getProperty("elexis.skip.ds.activation"));
+
+		if (isSkipDataSourceActivation) {
+			// do not perform DataSource activation
+			// used e.g. by tests who need to prepare a database first,
+			// and will then care to call IElexisDataSourceService#setDBConnection
+			return Optional.empty();
+		}
 
 		String prop_dbUser = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME);
 		String prop_dbPassword = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD);
@@ -67,10 +81,14 @@ public class DataSourceConnectionParser {
 		// 1) isTestMode or (isRunFromScratch activated and no prop_* values set) ?
 		// we use a fresh "in mem h2 db"
 		if (isTestMode || (isRunFromScratch && StringUtils.isBlank(prop_dbConnSpec))) {
-			logger.info("Connecting to RunFromScratch H2 DB");
 			String jdbcString = "jdbc:h2:mem:elexisFromScratch;DB_CLOSE_DELAY=-1";
-			if (traceActivated)
+			if (isServerMode) {
+				jdbcString = "jdbc:h2:~/elexisTest/elexisTest;AUTO_SERVER=TRUE";
+			}
+			if (traceActivated) {
 				jdbcString += ";TRACE_LEVEL_SYSTEM_OUT=2";
+			}
+			logger.info("Connecting to RunFromScratch H2 DB [" + jdbcString + "]");
 			configSourceCode = 1;
 			return Optional.of(new DBConnection(DBType.H2, jdbcString, "sa", new char[] {}));
 		}
@@ -82,6 +100,7 @@ public class DataSourceConnectionParser {
 					.orElseThrow(() -> new IllegalStateException("Unknown ch.elexis.dbFlavor"));
 			if (isRunFromScratch) {
 				// TODO checkIfEmpty throw IllegalState
+				// PersistentObject#deleteAllTables
 			}
 			configSourceCode = 2;
 			return Optional.of(new DBConnection(dbType, prop_dbConnSpec, prop_dbUser, prop_dbPassword.toCharArray()));

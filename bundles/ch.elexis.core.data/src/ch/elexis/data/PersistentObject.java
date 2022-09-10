@@ -38,7 +38,6 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -62,13 +61,11 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
-import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.ISticker;
 import ch.elexis.core.data.interfaces.IXid;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
-import ch.elexis.core.data.util.DBUpdate;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.data.util.SqlRunner;
 import ch.elexis.core.exceptions.PersistenceException;
@@ -76,7 +73,6 @@ import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.data.Xid.XIDException;
 import ch.rgw.compress.CompEx;
-import ch.rgw.io.ISettingChangedListener;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SqlSettings;
 import ch.rgw.tools.ExHandler;
@@ -230,6 +226,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         die Verbindung hergestell werden konnte, werden die global Settings
 	 *         mit dieser Datenbank verbunden.
 	 * @return true für ok, false wenn keine Verbindung hergestellt werden konnte.
+	 * @deprecated since 3.10 use {@link #connect(DataSource)}
 	 */
 	public static boolean connect(final Settings cfg) {
 		DBConnection dbConnection = new DBConnection();
@@ -390,6 +387,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *
 	 * @param jdbcLink
 	 * @return
+	 * @deprecated since 3.10 use {@link #connect(DataSource)}
 	 */
 	public static boolean connect(final JdbcLink jdbcLink) {
 		DBConnection dbConnection = new DBConnection();
@@ -400,13 +398,22 @@ public abstract class PersistentObject implements IPersistentObject {
 	/**
 	 * @param dataSource
 	 * @return
+	 * @throws SQLException
 	 * @since 3.10
 	 */
-	public static boolean connect(DataSource dataSource) {
+	public static boolean connect(DataSource dataSource) throws SQLException {
 		JdbcLink jdbcLink = new JdbcLink(dataSource);
 		DBConnection dbConnection = new DBConnection();
+
 		dbConnection.setJdbcLink(jdbcLink);
+		dbConnection.setDBFlavor(dataSource.getConnection().getMetaData().getDatabaseProductName());
+		dbConnection.setDBDriver("datasource: " + dataSource.getConnection().getMetaData().getDriverName()); //$NON-NLS-1$
+		dbConnection.setDBConnectString(dataSource.getConnection().getMetaData().getURL());
+
 		defaultConnection = dbConnection;
+		if (tableExists("CONFIG")) {
+			CoreHub.globalCfg = new SqlSettings(dbConnection.getJdbcLink(), "CONFIG");
+		}
 		return true;
 	}
 
@@ -430,108 +437,6 @@ public abstract class PersistentObject implements IPersistentObject {
 			String created = CoreHub.globalCfg.get("created", null);
 			log.debug("Database version " + created);
 		}
-		return true;
-	}
-
-	public static boolean legacyPostInitDB(ICoreOperationAdvisor coreOperationAdvisor) {
-		// globalCfg is null for the firstStart
-		// created is null after aborted firstStart
-		if (CoreHub.globalCfg == null || CoreHub.globalCfg.get("created", null) == null) {
-			log.info("PO data initialization");
-			try {
-				PersistentObjectUtil.initializeGlobalCfg(defaultConnection);
-				Mandant.initializeAdministratorUser();
-				CoreHub.pin.initializeGrants();
-				CoreHub.pin.initializeGlobalPreferences();
-				Mandant bypassMandator = PersistentObjectUtil
-						.autoCreateFirstMandant(defaultConnection.isRunningFromScratch());
-
-				if (bypassMandator == null) {
-					coreOperationAdvisor.requestInitialMandatorConfiguration();
-					MessageEvent.fireInformation("Neue Datenbank", //$NON-NLS-1$
-							"Es wurde eine neue Datenbank angelegt."); //$NON-NLS-1$
-				} else {
-					// When running from Scratch or bypassing the first mandant we
-					// do not want to pop up any message dialog before
-					// Elexis finished the startup. A log entry is okay
-					log.info("Bypassed mandator initialization dialog, auto-created Mandator [{}] {}", //$NON-NLS-1$
-							bypassMandator.getId(), bypassMandator.getPersonalia());
-				}
-				CoreHub.globalCfg.flush();
-				CoreHub.localCfg.flush();
-			} catch (Throwable ex) {
-				ExHandler.handle(ex);
-				return false;
-			}
-		}
-
-		CoreHub.globalCfg.setSettingChangedListener(new ISettingChangedListener() {
-
-			@Override
-			public void settingRemoved(String key) {
-				Trace.addTraceEntry("W globalCfg key [" + key + "] => removed");
-			}
-
-			@Override
-			public void settingWritten(String key, String value) {
-				Trace.addTraceEntry("W globalCfg key [" + key + "] => value [" + value + "]");
-			}
-
-		});
-
-		// Zugriffskontrolle initialisieren
-		VersionInfo vi = new VersionInfo(CoreHub.globalCfg.get("dbversion", "0.0.0"));
-		log.info("Verlangte Datenbankversion: {}", CoreHub.DBVersion);
-		log.info("Gefundene Datenbankversion: {}", vi.version());
-		if (vi.isOlder(CoreHub.DBVersion)) {
-			log.warn("Ältere Version der Datenbank gefunden ");
-			if (!DBUpdate.doUpdate()) {
-				String msg = String.format(
-						"Datenbank '%1s':\nUpdate auf '%2s' von '%3s' schlug fehlt.\nWollen Sie trotzdem fortsetzen?",
-						defaultConnection.getDBConnectString(), vi.version().toString(), CoreHub.DBVersion);
-				log.error(msg);
-				if (!CoreOperationAdvisorHolder.get().openQuestion("Datenbank update failed ", msg)) {
-					System.exit(8);
-				} else {
-					log.error("User continues with failed Elexis database update");
-				}
-			}
-		}
-		vi = new VersionInfo(CoreHub.globalCfg.get("ElexisVersion", "0.0.0"));
-		log.info("Verlangte Elexis-Version: " + vi.version());
-		log.info("Vorhandene Elexis-Version: " + CoreHub.Version);
-		VersionInfo v2 = new VersionInfo(CoreHub.Version);
-		if (vi.isNewerMinor(v2)) {
-			String msg = String.format(
-					"Die Datenbank %1s ist für eine neuere Elexisversion '%2s' als die aufgestartete '%3s'. Wollen Sie trotzdem fortsetzen?",
-					defaultConnection.getDBConnectString(), vi.version().toString(), v2.version().toString());
-			log.error(msg);
-			if (!CoreOperationAdvisorHolder.get().openQuestion("Diskrepanz in der Datenbank-Version ", msg)) {
-				System.exit(2);
-			} else {
-				log.error("User continues with Elexis / database version mismatch");
-			}
-		}
-		// verify locale
-		Locale locale = Locale.getDefault();
-		String dbStoredLocale = CoreHub.globalCfg.get(Preferences.CFG_LOCALE, null);
-		if (dbStoredLocale == null) {
-			CoreHub.globalCfg.set(Preferences.CFG_LOCALE, locale.toString());
-			CoreHub.globalCfg.flush();
-		} else {
-			if (!locale.toString().equals(dbStoredLocale)) {
-				String msg = String.format(
-						"Your locale [%1s] does not match the required database locale [%2s] as specified in config table. Ignore?",
-						locale.toString(), dbStoredLocale);
-				log.error(msg);
-				if (!CoreOperationAdvisorHolder.get().openQuestion("Difference in locale setting ", msg)) {
-					System.exit(2);
-				} else {
-					log.error("User continues with difference locale set");
-				}
-			}
-		}
-
 		return true;
 	}
 

@@ -29,6 +29,7 @@ public class Eigenleistung extends VerrechenbarAdapter {
 
 	static {
 		addMapping(EIGENLEISTUNGEN, CODE, BEZEICHNUNG, EK_PREIS, VK_PREIS, TIME);
+		// TODO move to NoPo initialisation
 		Xid.localRegisterXIDDomainIfNotExists(XIDDOMAIN, CODESYSTEM_NAME, Xid.ASSIGNMENT_LOCAL | Xid.QUALITY_GUID);
 	}
 

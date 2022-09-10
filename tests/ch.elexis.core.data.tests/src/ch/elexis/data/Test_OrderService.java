@@ -11,19 +11,13 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
-import ch.rgw.tools.JdbcLink;
 
 public class Test_OrderService extends AbstractPersistentObjectTest {
-
-	public Test_OrderService(JdbcLink link) {
-		super(link);
-	}
 
 	private static IStock stock_A_5_order;
 	private static Artikel artikel_A;

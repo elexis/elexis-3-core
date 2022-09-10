@@ -22,13 +22,8 @@ import ch.elexis.data.Query;
 import ch.elexis.data.Right;
 import ch.elexis.data.Role;
 import ch.elexis.data.User;
-import ch.rgw.tools.JdbcLink;
 
 public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
-
-	public RoleBasedAccessControlTest(JdbcLink link) {
-		super(link);
-	}
 
 	private User user;
 

@@ -243,10 +243,13 @@ public class JdbcLink {
 	/**
 	 * 
 	 * @param dataSource
+	 * @throws SQLException
 	 * @since 3.10
 	 */
-	public JdbcLink(DataSource dataSource) {
+	public JdbcLink(DataSource dataSource) throws SQLException {
 		this.dataSource = dataSource;
+		String databaseProductName = dataSource.getConnection().getMetaData().getDatabaseProductName().toLowerCase();
+		DBFlavor = databaseProductName;
 	}
 
 	/**

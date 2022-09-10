@@ -21,8 +21,8 @@ import ch.rgw.tools.JdbcLink.Stm;
 
 public class Test_PersistentObject extends AbstractPersistentObjectTest {
 
-	public Test_PersistentObject(JdbcLink link) {
-		super(link);
+	public Test_PersistentObject() {
+		super();
 		// we need to manually call this again, as after the class
 		// was loaded static {} is not called again, though the DB changed
 		PersistentObjectImpl.initTable();

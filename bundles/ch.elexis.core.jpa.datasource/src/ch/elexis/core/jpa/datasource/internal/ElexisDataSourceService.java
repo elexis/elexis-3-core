@@ -33,6 +33,9 @@ public class ElexisDataSourceService implements IElexisDataSource {
 	}
 
 	private IStatus setDBConnection(DBConnection dbConnection, int connectionSourceCode) {
+		if (connectionStatus != null) {
+			throw new IllegalStateException("connection already set - re-set not supported, please restart");
+		}
 		try {
 			currentDataSource = ProxyPoolingDataSourceBuilder.build(dbConnection);
 			Hashtable<String, String> properties = new Hashtable<>();
@@ -56,45 +59,6 @@ public class ElexisDataSourceService implements IElexisDataSource {
 	public IStatus setDBConnection(DBConnection dbConnection) {
 		return setDBConnection(dbConnection, 0);
 	}
-
-//	private DBConnection getEnvironmentProvidedDbConnection() {
-//		Map<String, String> env = System.getenv();
-//		String dbType = env.get(DB_TYPE);
-//		String dbHost = env.get(DB_HOST);
-//		String dbDatabase = env.get(DB_DATABASE);
-//		String dbUsername = env.get(DB_USERNAME);
-//		String dbPassword = env.get(DB_PASSWORD);
-//
-//		if (isNotBlank(dbType) && isNotBlank(dbHost) && isNotBlank(dbDatabase) && isNotBlank(dbUsername)
-//				&& isNotBlank(dbPassword)) {
-//			Optional<DBType> dbTypeType = DBConnection.DBType.valueOfIgnoreCase(dbType);
-//			if (dbTypeType.isPresent()) {
-//				return new ElexisEnvironmentDBConnection(dbTypeType.get(), dbHost, dbDatabase, dbUsername, dbPassword,
-//						env.get(DB_JDBC_PARAMETER_STRING));
-//			} else {
-//				log.warn("Can not resolve dbType [{}], ignoring environment variable set connection", dbType);
-//			}
-//		}
-//		return null;
-//	}
-//
-//	private class ElexisEnvironmentDBConnection extends DBConnection {
-//
-//		private static final long serialVersionUID = -3727881455745909885L;
-//
-//		public ElexisEnvironmentDBConnection(DBType dbType, String dbHost, String dbDatabase, String dbUsername,
-//				String dbPassword, String jdbcParameterString) {
-//			rdbmsType = dbType;
-//			databaseName = dbDatabase;
-//			username = dbUsername;
-//			password = dbPassword;
-//			connectionString = "jdbc:" + dbType.dbType.toLowerCase() + "://" + dbHost + "/" + dbDatabase;
-//			if (isNotBlank(jdbcParameterString)) {
-//				connectionString += "?" + jdbcParameterString;
-//			}
-//		}
-//
-//	}
 
 	@Override
 	public ObjectStatus getCurrentConnectionStatus() {

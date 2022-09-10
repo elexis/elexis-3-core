@@ -4,13 +4,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ch.rgw.tools.JdbcLink;
-
 public class Test_Patient extends AbstractPersistentObjectTest {
-
-	public Test_Patient(JdbcLink link) {
-		super(link);
-	}
 
 	@Test
 	public void testNameWithApostrophe() {

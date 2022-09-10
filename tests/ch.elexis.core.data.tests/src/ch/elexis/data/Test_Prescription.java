@@ -11,18 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.rgw.tools.JdbcLink;
 
-@RunWith(Parameterized.class)
 public class Test_Prescription extends AbstractPersistentObjectTest {
-
-	public Test_Prescription(JdbcLink link) {
-		super(link);
-	}
 
 	private class TestItem {
 		private TestItem(String string, List<Float> asList) {

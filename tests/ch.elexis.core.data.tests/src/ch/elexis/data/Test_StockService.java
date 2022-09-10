@@ -4,15 +4,14 @@ import org.junit.Ignore;
 
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.utils.OsgiServiceUtil;
-import ch.rgw.tools.JdbcLink;
 
 @Ignore
 public class Test_StockService extends AbstractPersistentObjectTest {
 
 	private static IStockService stockService;
 
-	public Test_StockService(JdbcLink link) {
-		super(link);
+	public Test_StockService() {
+		super();
 		stockService = OsgiServiceUtil.getService(IStockService.class).get();
 	}
 

@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.localarticle.Constants;
-import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
 
 public class Test_Verrechnet extends AbstractPersistentObjectTest {
@@ -19,10 +18,6 @@ public class Test_Verrechnet extends AbstractPersistentObjectTest {
 	private static Mandant mandant;
 	private static Patient patient;
 	private static Fall fall;
-
-	public Test_Verrechnet(JdbcLink link) {
-		super(link);
-	}
 
 	@BeforeClass
 	public static void before() {

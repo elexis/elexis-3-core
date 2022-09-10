@@ -10,13 +10,13 @@
  ******************************************************************************/
 package ch.elexis.core.data.preferences;
 
-import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.constants.Preferences.SETTINGS_PREFERENCE_STORE_DEFAULT;
 
 import java.io.File;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
 import ch.elexis.admin.ACE;
@@ -27,6 +27,10 @@ import ch.elexis.data.Brief;
 import ch.elexis.data.DBConnection;
 import ch.rgw.tools.StringTool;
 
+/**
+ * Move to ch.elexis.core
+ */
+@Deprecated
 public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 
 	@Override

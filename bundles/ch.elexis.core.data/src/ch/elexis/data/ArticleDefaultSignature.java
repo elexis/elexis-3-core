@@ -1,7 +1,8 @@
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.prescription.EntryType;
@@ -34,6 +35,7 @@ public class ArticleDefaultSignature extends PersistentObject {
 
 	//@formatter:off
 	/** Definition of the database table */
+	@Deprecated(forRemoval = true)
 	static final String createDB = "CREATE TABLE " + TABLENAME
 		+ "("
 		+ "ID VARCHAR(25) primary key,"

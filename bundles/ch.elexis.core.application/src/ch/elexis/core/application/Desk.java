@@ -16,7 +16,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
@@ -32,9 +31,11 @@ import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.util.LocalLock;
+import ch.elexis.core.events.MessageEvent;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisDataSource;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.status.ObjectStatus;
+import ch.elexis.core.status.StatusUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.StatusDialog;
 import ch.elexis.core.utils.CoreUtil;
@@ -45,7 +46,6 @@ import ch.rgw.io.FileTool;
 public class Desk implements IApplication {
 
 	private Logger log = LoggerFactory.getLogger(Desk.class);
-	private Map<String, String> args = null;
 
 	/**
 	 * @since 3.0.0 log-in has been moved from ApplicationWorkbenchAdvisor to this
@@ -61,7 +61,8 @@ public class Desk implements IApplication {
 		// Check if we "are complete" - throws Error if not
 		ICoreOperationAdvisor cod = CoreOperationAdvisorHolder.get();
 
-		IElexisDataSource elexisDataSource = OsgiServiceUtil.getService(IElexisDataSource.class).orElseThrow();
+		IElexisDataSource elexisDataSource = OsgiServiceUtil.getService(IElexisDataSource.class, "(id=default)")
+				.orElseThrow();
 		ObjectStatus connectionStatus = elexisDataSource.getCurrentConnectionStatus();
 		if (connectionStatus != null && !connectionStatus.isOK()) {
 			StatusDialog.show(connectionStatus);
@@ -70,22 +71,34 @@ public class Desk implements IApplication {
 
 		if (System.getProperty(ElexisSystemPropertyConstants.OPEN_DB_WIZARD) != null) {
 			if (connectionStatus != null) {
-				// TODO already connected, so your settings won't have any effect
-				// what source is the connection from?
+				cod.openInformation("Database connection overriden",
+						"You requested to configure the database,\n"
+								+ "but there is already a connection provided by a given setting.\n"
+								+ "You're setting won't have an effect:\n" + StatusUtil.printStatus(connectionStatus));
 			}
 			cod.requestDatabaseConnectionConfiguration();
 		}
 
 		if (connectionStatus == null) {
-			// connect to the database, will set IElexisEntityManager and
-			// activate PersistentObjectActivator
+			// no connection provided by DataSource - use the connection
+			// configure in CoreHub.localCfg
 			Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
+			if (!connection.isPresent()) {
+				// none found in CoreHub.localCfg - need to configure
+				CoreOperationAdvisorHolder.get().requestDatabaseConnectionConfiguration();
+				MessageEvent.fireInformation("Datenbankverbindung geändert", "Bitte starten Sie Elexis erneut");
+				System.exit(0);
+			}
+
 			elexisDataSource.setDBConnection(connection.get());
 			OsgiServiceUtil.ungetService(elexisDataSource);
 		}
 
+		// FIXME assert PersistentObject is connected
+
 		// check for initialization parameters
-		args = context.getArguments();
+		@SuppressWarnings("unchecked")
+		Map<String, String> args = context.getArguments();
 		if (args.containsKey("--clean-all")) { //$NON-NLS-1$
 			String p = CorePreferenceInitializer.getDefaultDBPath();
 			FileTool.deltree(p);
@@ -134,33 +147,16 @@ public class Desk implements IApplication {
 	}
 
 	protected void initIdentifiers() {
-		int waiting = 0;
-		while (!ConfigServiceHolder.isPresent()) {
-			try {
-				// max 5 sek
-				if (waiting++ > 50) {
-					log.error("No ConfigService available after 5 sec. skipping identifier init"); //$NON-NLS-1$
-					MessageDialog.openError(UiDesk.getTopShell(), "Init error",
-							"No ConfigService available after 5 sec. skipping identifier init");
-					return;
-				}
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// continue waiting
-			}
-		}
-
-		if (ConfigServiceHolder.getGlobal(Preferences.INSTALLATION_TIMESTAMP, null) == null) {
+		IConfigService configService = OsgiServiceUtil.getServiceWait(IConfigService.class, 5000).orElseThrow();
+		if (configService.get(Preferences.INSTALLATION_TIMESTAMP, null) == null) {
 			LocalLock localLock = new LocalLock("initInstallationTimestamp"); //$NON-NLS-1$
 			if (localLock.tryLock()) {
-				ConfigServiceHolder.setGlobal(Preferences.INSTALLATION_TIMESTAMP,
-						Long.toString(System.currentTimeMillis()));
+				configService.set(Preferences.INSTALLATION_TIMESTAMP, Long.toString(System.currentTimeMillis()));
 			}
 			localLock.unlock();
 		}
-		// TODO add elexis OID if available
-		CoreHub.localCfg.set(ch.elexis.core.constants.Preferences.SOFTWARE_OID, StringUtils.EMPTY);
-		CoreHub.localCfg.flush();
+		configService.setLocal(ch.elexis.core.constants.Preferences.SOFTWARE_OID, StringUtils.EMPTY);
+		OsgiServiceUtil.ungetService(configService);
 	}
 
 	@Override

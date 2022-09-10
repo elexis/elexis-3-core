@@ -51,6 +51,7 @@ import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IAccessControlService;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.data.Anwender;
@@ -75,7 +76,6 @@ public class CoreHub implements BundleActivator {
 	 */
 	public static String Version = Elexis.VERSION;
 	public static final String APPLICATION_NAME = Elexis.APPLICATION_NAME; // $NON-NLS-1$
-	public static final String DBVersion = "3.7.0"; //$NON-NLS-1$
 
 	protected static Logger log = LoggerFactory.getLogger(CoreHub.class.getName());
 
@@ -104,36 +104,26 @@ public class CoreHub implements BundleActivator {
 	 */
 	static File userDir;
 
-	/** Globale Einstellungen (Werden in der Datenbank gespeichert) */
+	/**
+	 * Globale Einstellungen (Werden in der Datenbank gespeichert)
+	 * 
+	 * @deprecated use {@link IConfigService}
+	 */
 	public static Settings globalCfg;
 
 	/**
 	 * Lokale Einstellungen (Werden in userhome/localCfg_xxx.xml gespeichert) </br>
 	 * <b>WARNING: can not handle more than one / in config name!</b>
+	 * 
+	 * @deprecated use {@link IConfigService}
 	 */
 	public static Settings localCfg;
-
-	/**
-	 * Anwenderspezifische Einstellungen (Werden in der Datenbank gespeichert)
-	 *
-	 * <b>Removed</b> and replaced with IConfigService, which is accessable via
-	 * ConfigServiceHolder
-	 **/
-	// public static Settings userCfg;
-
-	/**
-	 * Mandantspezifische EInstellungen (Werden in der Datenbank gespeichert)
-	 *
-	 * <b>Removed</b> and replaced with IConfigService, which is accessable via
-	 * ConfigServiceHolder
-	 **/
-	// public static Settings mandantCfg;
 
 	/**
 	 * @deprecated please use {@link ElexisEventDispatcher#getSelectedMandator()} to
 	 *             retrieve current mandator
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public static Mandant actMandant;
 
 	/** Der Initialisierer für die Voreinstellungen */
@@ -144,7 +134,7 @@ public class CoreHub implements BundleActivator {
 	 *
 	 * @deprecated use {@link IAccessControlService}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
 
 	/**

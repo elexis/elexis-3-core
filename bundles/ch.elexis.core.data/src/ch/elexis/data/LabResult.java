@@ -12,7 +12,6 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.model.LabResultConstants.PATHOLOGIC;
 
 import java.sql.PreparedStatement;
@@ -26,6 +25,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
@@ -82,6 +82,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	private static String[] VALID_ABS_VALUES = new String[] { "positiv", "negativ", "pos.", "neg.", "pos", "neg", ">0",
 			"<0" };
 
+	@Deprecated(forRemoval = true) // move to NoPo
 	private static final String QUERY_GROUP_ORDER;
 
 	@Override

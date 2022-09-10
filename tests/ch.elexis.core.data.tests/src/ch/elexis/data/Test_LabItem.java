@@ -13,14 +13,9 @@ import org.junit.Test;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.types.LabItemTyp;
-import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.TimeTool;
 
 public class Test_LabItem extends AbstractPersistentObjectTest {
-
-	public Test_LabItem(JdbcLink link) {
-		super(link);
-	}
 
 	private Organisation org;
 
