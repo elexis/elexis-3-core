@@ -12,6 +12,7 @@
 
 package ch.elexis.core.data.events;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.slf4j.Logger;
@@ -36,9 +36,7 @@ import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -86,7 +84,6 @@ public final class ElexisEventDispatcher implements Runnable {
 	private volatile IPerformanceStatisticHandler performanceStatisticHandler;
 
 	private ScheduledExecutorService service;
-	private IElexisServerService elexisServerService;
 
 	public static synchronized ElexisEventDispatcher getInstance() {
 		if (theInstance == null) {
@@ -215,10 +212,7 @@ public final class ElexisEventDispatcher implements Runnable {
 				eventQueue.offer(ee);
 			}
 
-			if (elexisServerService == null) {
-				elexisServerService = OsgiServiceUtil.getService(IElexisServerService.class).orElseThrow();
-			}
-			if (elexisServerService.deliversRemoteEvents()) {
+			if (ElexisServerServiceHolder.get().deliversRemoteEvents()) {
 				ch.elexis.core.common.ElexisEvent mapEvent = ServerEventMapper.mapEvent(ee);
 				if (mapEvent != null) {
 					ElexisServerServiceHolder.get().postEvent(mapEvent);
