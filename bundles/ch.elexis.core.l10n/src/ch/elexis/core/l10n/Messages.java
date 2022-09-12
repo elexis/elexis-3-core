@@ -80,6 +80,8 @@ public class Messages extends NLS {
 	public static String Appointment_Range_Locked;
 	public static String Appointment_Normal_Appointment;
 	public static String Appointment_Planned_Appointment;
+	public static String Billing_Cfg_MsgTXT;
+	public static String Billing_Cfg_Msg;
 	public static String BillingDefaultMsg;
 	public static String BillingDefaultMsg_M1;
 	public static String BillingDefaultMsg_M2;
