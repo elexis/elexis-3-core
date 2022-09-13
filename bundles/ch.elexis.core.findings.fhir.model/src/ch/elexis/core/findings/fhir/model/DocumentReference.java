@@ -1,10 +1,13 @@
 package ch.elexis.core.findings.fhir.model;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.Reference;
+import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
@@ -84,6 +87,20 @@ public class DocumentReference extends AbstractFindingModelAdapter<ch.elexis.cor
 	}
 
 	@Override
+	public String getCategory() {
+		return loadResource().map(i -> accessor.getCategory((DomainResource) i).orElse(null)).orElse(null);
+	}
+
+	@Override
+	public void setCategory(String value) {
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setCategory((DomainResource) resource.get(), value);
+			saveResource(resource.get());
+		}
+	}
+
+	@Override
 	public ICoding getPracticeSetting() {
 		return loadResource().map(i -> accessor.getPracticeSetting((DomainResource) i)).get().stream().findFirst()
 				.orElse(null);
@@ -113,6 +130,35 @@ public class DocumentReference extends AbstractFindingModelAdapter<ch.elexis.cor
 			saveResource(resource.get());
 		}
 
+	}
+
+	@Override
+	public Optional<LocalDateTime> getDate() {
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.r4.model.DocumentReference fhirDocument = (org.hl7.fhir.r4.model.DocumentReference) resource
+					.get();
+			try {
+				if (fhirDocument.hasDate()) {
+					return Optional.of(getLocalDateTime(fhirDocument.getDate()));
+				}
+			} catch (FHIRException e) {
+				LoggerFactory.getLogger(getClass()).error("Could not access date.", e);
+			}
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public void setDate(LocalDateTime time) {
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			org.hl7.fhir.r4.model.DocumentReference fhirProcedureRequest = (org.hl7.fhir.r4.model.DocumentReference) resource
+					.get();
+			fhirProcedureRequest.setDate(getDate(time));
+
+			saveResource(resource.get());
+		}
 	}
 
 	@Override

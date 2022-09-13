@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IDocumentReference;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
@@ -113,7 +114,8 @@ public class DocumentReferenceIDocumentReferenceTransformer
 						IDocumentReference iDocumentReference = findingsService.create(IDocumentReference.class);
 						contentHelper.setResource(fhirObject, iDocumentReference);
 						iDocumentReference.setPatientId(patientKontakt.get().getId());
-						IDocument document = createDocument(patientKontakt.get(), attachment, null);
+						IDocument document = createDocument(patientKontakt.get(), attachment,
+								iDocumentReference.getCategory());
 						if (document != null) {
 							fhirObject.getContent().clear();
 							iDocumentReference.setDocument(document);
@@ -139,9 +141,9 @@ public class DocumentReferenceIDocumentReferenceTransformer
 		IDocument ret = omnivoreStore.createDocument(patient.getId(), attachment.getTitle(), category);
 		if (attachment.getData() != null) {
 			try (InputStream in = new ByteArrayInputStream(Base64.getDecoder().decode(attachment.getData()))) {
-				ret.setContent(in);
+				omnivoreStore.saveDocument(ret, in);
 				success = true;
-			} catch (IOException e) {
+			} catch (IOException | ElexisException e) {
 				LoggerFactory.getLogger(getClass())
 						.error("Error reading content from attachment data [" + attachment.getUrl() + "]", e);
 			}
@@ -149,9 +151,9 @@ public class DocumentReferenceIDocumentReferenceTransformer
 			try {
 				URL url = new URL(attachment.getUrl());
 				try (InputStream in = url.openStream()) {
-					ret.setContent(in);
+					omnivoreStore.saveDocument(ret, in);
 					success = true;
-				} catch (IOException e) {
+				} catch (IOException | ElexisException e) {
 					LoggerFactory.getLogger(getClass())
 							.error("Error reading content from url [" + attachment.getUrl() + "]", e);
 				}

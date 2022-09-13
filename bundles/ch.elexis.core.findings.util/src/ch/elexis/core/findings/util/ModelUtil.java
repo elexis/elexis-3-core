@@ -164,6 +164,37 @@ public class ModelUtil {
 		return Optional.empty();
 	}
 
+	public static Optional<CodeableConcept> getCodeableConceptBySystem(List<CodeableConcept> concepts,
+			CodingSystem codingSystem) {
+		for (CodeableConcept concept : concepts) {
+			Optional<ICoding> found = getCodeBySystem(getCodingsFromConcept(concept), codingSystem);
+			if (found.isPresent()) {
+				return Optional.of(concept);
+			}
+		}
+		return Optional.empty();
+	}
+
+	public static Optional<CodeableConcept> getCodeableConceptBySystem(List<CodeableConcept> concepts,
+			String codingSystem) {
+		for (CodeableConcept concept : concepts) {
+			Optional<ICoding> found = getCodeBySystem(getCodingsFromConcept(concept), codingSystem);
+			if (found.isPresent()) {
+				return Optional.of(concept);
+			}
+		}
+		return Optional.empty();
+	}
+
+	public static Optional<ICoding> getCodeBySystem(List<ICoding> coding, String codingSystem) {
+		for (ICoding iCoding : coding) {
+			if (codingSystem.equals(iCoding.getSystem())) {
+				return Optional.of(iCoding);
+			}
+		}
+		return Optional.empty();
+	}
+
 	public static Optional<String> getNarrativeAsString(Narrative narrative) {
 		String text = narrative.getDivAsString();
 		if (text != null) {

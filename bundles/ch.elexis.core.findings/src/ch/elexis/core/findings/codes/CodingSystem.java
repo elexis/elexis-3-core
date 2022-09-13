@@ -10,6 +10,7 @@ public enum CodingSystem {
 	ELEXIS_LOCAL_LABORATORY("www.elexis.info/laboratory/local"),
 	ELEXIS_LOCAL_LABORATORY_GROUP("www.elexis.info/laboratory/local/group"),
 	ELEXIS_LOCAL_LABORATORY_VITOLABKEY("www.elexis.info/laboratory/local/vitolabkey"),
+	ELEXIS_DOCUMENT_CATEGORY("www.elexis.info/document/category"),
 
 	ICD_DE_CODESYSTEM("http://hl7.org/fhir/sid/icd-10-de"), ICPC2_CODESYSTEM("http://hl7.org/fhir/sid/icpc-2"),
 

@@ -1,5 +1,8 @@
 package ch.elexis.core.findings;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import ch.elexis.core.model.IDocument;
 
 public interface IDocumentReference extends IFinding {
@@ -7,6 +10,10 @@ public interface IDocumentReference extends IFinding {
 	public IDocument getDocument();
 
 	public void setDocument(IDocument document);
+
+	public String getCategory();
+
+	public void setCategory(String value);
 
 	public ICoding getDocumentClass();
 
@@ -27,4 +34,8 @@ public interface IDocumentReference extends IFinding {
 	public String getKeywords();
 
 	public void setKeywords(String keywords);
+
+	public Optional<LocalDateTime> getDate();
+
+	public void setDate(LocalDateTime date);
 }

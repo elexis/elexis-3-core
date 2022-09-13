@@ -56,6 +56,9 @@ public class FindingsService implements IFindingsService {
 			if (filter.isAssignableFrom(IAllergyIntolerance.class)) {
 				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, IAllergyIntolerance.class));
 			}
+			if (filter.isAssignableFrom(IDocumentReference.class)) {
+				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, IDocumentReference.class));
+			}
 		}
 		return ret;
 	}
