@@ -27,8 +27,8 @@ public class LoginDialogLoginContributor implements ILoginContributor {
 				.getService(IElexisEnvironmentService.class, null).orElse(null);
 
 		if (shell instanceof Shell) {
-			LocalUserLoginDialog loginDialog = new LocalUserLoginDialog(new Shell((Shell) shell),
-					elexisEnvironmentService);
+			// login dialog creates own shell, makes it appear in taskbar
+			LocalUserLoginDialog loginDialog = new LocalUserLoginDialog(null, elexisEnvironmentService);
 			loginDialog.create();
 			loginDialog.getShell().setText(Messages.LoginDialog_loginHeader);
 			loginDialog.setTitle(Messages.LoginDialog_notLoggedIn);
