@@ -1,5 +1,7 @@
 package ch.elexis.core.tasks.internal.service;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
@@ -23,11 +25,11 @@ public class IIdentifiedRunnableFactoryServiceTracker
 
 	@Override
 	public IIdentifiedRunnableFactory addingService(ServiceReference<IIdentifiedRunnableFactory> reference) {
-		IIdentifiedRunnableFactory service = super.addingService(reference);
+		IIdentifiedRunnableFactory service = resolveContext(reference.getClass()).getService(reference);
 		try {
 			taskService.bindRunnableWithContextFactory(service);
 		} catch (Exception e) {
-			logger.error("Error binding [{}], skipping.", service.getClass().getName(), e);
+			logger.error("Error binding [{}], skipping.", service != null ? service.getClass().getName() : "null", e);
 		}
 		return service;
 	}
@@ -36,7 +38,16 @@ public class IIdentifiedRunnableFactoryServiceTracker
 	public void removedService(ServiceReference<IIdentifiedRunnableFactory> reference,
 			IIdentifiedRunnableFactory service) {
 		taskService.unbindRunnableWithContextFactory(service);
-		super.removedService(reference, service);
+		resolveContext(reference.getClass()).ungetService(reference);
+	}
+
+	private BundleContext resolveContext(@SuppressWarnings("rawtypes") Class clazz) {
+		Bundle bundle = FrameworkUtil.getBundle(clazz);
+		// fallback to our context ...
+		if (bundle == null || bundle.getBundleContext() == null) {
+			bundle = FrameworkUtil.getBundle(IIdentifiedRunnableFactoryServiceTracker.class);
+		}
+		return bundle.getBundleContext();
 	}
 
 }
