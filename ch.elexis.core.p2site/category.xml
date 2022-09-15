@@ -24,6 +24,9 @@
    <feature id="ch.elexis.core.spotlight.feature">
       <category name="divers"/>
    </feature>
+   <feature id="at.medevit.elexis.text.docx.feature">
+      <category name="divers"/>
+   </feature>
    <bundle id="ch.elexis.core.data.tests" version="0.0.0">
       <category name="test"/>
    </bundle>

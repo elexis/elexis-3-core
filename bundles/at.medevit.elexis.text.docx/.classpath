@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="lib/docx4j-JAXB-ReferenceImpl-11.2.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xalan-interpretive-11.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xalan-serializer-11.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docx4j-core-11.2.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docx4j-openxml-objects-11.2.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docx4j-openxml-objects-pml-11.2.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docx4j-openxml-objects-sml-11.2.9.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb-svg11-1.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/antlr-runtime-3.5.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/checker-qual-2.8.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-compress-1.18.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/error_prone_annotations-2.3.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpclient-4.5.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-core-2.9.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.9.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mbassador-1.3.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/stringtemplate-3.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/wmf2svg-0.9.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmlgraphics-commons-2.3.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

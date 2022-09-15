@@ -24,5 +24,6 @@
     <module>ch.elexis.core.ui.feature</module>
     <module>ch.elexis.core.ui.p2.feature</module>
     <module>ch.elexis.core.spotlight.feature</module>
+    <module>at.medevit.elexis.text.docx.feature</module>
   </modules>
 </project>

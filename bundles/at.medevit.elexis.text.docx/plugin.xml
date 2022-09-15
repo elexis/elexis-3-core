@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="ch.elexis.core.ui.Text">
+      <Texterweiterung
+            Klasse="at.medevit.elexis.text.docx.DocxTextPlugin"
+            name="Docx-Document">
+      </Texterweiterung>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="ch.elexis.preferences.Texterstellung"
+            class="at.medevit.elexis.text.docx.preference.DocxPreferencePage"
+            id="at.medevit.elexis.text.docx.preference.page"
+            name="Docx Textausgabe">
+      </page>
+      <page
+            category="at.medevit.elexis.text.docx.preference.page"
+            class="at.medevit.elexis.text.docx.preference.SignatureImagePreferencePage"
+            id="at.medevit.elexis.text.docx.preference.medesign"
+            name="MedeSign">
+      </page>
+   </extension>
+   <extension
+         point="ch.elexis.core.data.DataAccess">
+      <DataAccess
+            class="at.medevit.elexis.text.docx.dataaccess.SignatureImageDataAccess"
+            name="Signatur">
+      </DataAccess>
+   </extension>
+
+</plugin>

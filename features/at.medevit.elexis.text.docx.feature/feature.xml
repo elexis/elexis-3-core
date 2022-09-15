@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="at.medevit.elexis.text.docx.feature"
+      label="docx Dokumente Generator ohne Editor"
+      version="3.10.0.qualifier"
+      provider-name="medevit.at">
+
+   <description url="https://wikijs.medelexis.ch">
+      https://wiki.elexis.info/Auswahl.Text_Plugins
+
+https://wikijs.medelexis.ch/de/ArbeitsschritteDokumente
+
+https://wikijs.medelexis.ch/de/Dokumente/TextvorlagenManagement
+   </description>
+
+   <copyright url="http://elexis.info/de_contributers.html">
+      Medelexis AG und Medevit AG
+   </copyright>
+
+   <license url="http://www.eclipse.org/legal/epl-v10.html">
+      Eclipse Public License v1.0
+   </license>
+
+   <plugin
+         id="at.medevit.elexis.text.docx"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>
