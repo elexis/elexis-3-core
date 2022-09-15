@@ -41,6 +41,9 @@
 		<module>ch.elexis.core.tasks.test</module>
 		<module>ch.elexis.core.ui.importer.div.tests</module>
 		<module>ch.rgw.utility.tests</module>
+<!--
+    <module>at.medevit.elexis.text.docx.test</module>
+		-->
 	</modules>
 
 	<dependencies>

@@ -4,14 +4,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>ch.elexis.core.bundles</artifactId>
-    <version>3.9.0-SNAPSHOT</version>
+  <version>3.9.0-SNAPSHOT</version>
   <name>Elexis-Core bundles</name>
   <packaging>pom</packaging>
 
   <parent>
-    <groupId>ch.elexis.core</groupId>
-    <artifactId>elexis-3-core</artifactId>
-    <version>3.10.0-SNAPSHOT</version>
+	<groupId>ch.elexis.core</groupId>
+	<artifactId>elexis-3-core</artifactId>
+	<version>3.10.0-SNAPSHOT</version>
   </parent>
 
   <modules>
@@ -79,5 +79,6 @@
     <module>org.iatrix.help.wiki</module>
     <module>ch.elexis.core.pdfbox</module>
     <module>ch.elexis.core.pdfbox.ui</module>
+	<module>at.medevit.elexis.text.docx</module>
   </modules>
 </project>
