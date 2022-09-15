@@ -11,6 +11,7 @@
 package ch.elexis.core.tasks.model.impl;
 
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
+import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
 import ch.elexis.core.model.tasks.TaskException;
 
 import ch.elexis.core.tasks.model.ITask;
@@ -133,6 +134,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EDataType cronEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType iIdentifiedRunnableFactoryEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -585,6 +593,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getIIdentifiedRunnableFactory() {
+		return iIdentifiedRunnableFactoryEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -652,6 +670,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		loggerEDataType = createEDataType(LOGGER);
 		serializableEDataType = createEDataType(SERIALIZABLE);
 		cronEDataType = createEDataType(CRON);
+		iIdentifiedRunnableFactoryEDataType = createEDataType(IIDENTIFIED_RUNNABLE_FACTORY);
 	}
 
 	/**
@@ -894,6 +913,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, g1, "runContext", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEException(op, this.getTaskException());
 
+		op = addEOperation(iTaskServiceEClass, null, "bindIIdentifiedRunnableFactory", 1, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIIdentifiedRunnableFactory(), "factory", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iTaskServiceEClass, null, "unbindIIdentifiedRunnableFactory", 1, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIIdentifiedRunnableFactory(), "factory", 1, 1, IS_UNIQUE, IS_ORDERED);
+
 		// Initialize enums and add enum literals
 		initEEnum(taskTriggerTypeEEnum, TaskTriggerType.class, "TaskTriggerType");
 		addEEnumLiteral(taskTriggerTypeEEnum, TaskTriggerType.MANUAL);
@@ -926,6 +951,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEDataType(loggerEDataType, Logger.class, "Logger", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(serializableEDataType, Serializable.class, "Serializable", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(cronEDataType, Cron.class, "Cron", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(iIdentifiedRunnableFactoryEDataType, IIdentifiedRunnableFactory.class, "IIdentifiedRunnableFactory", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

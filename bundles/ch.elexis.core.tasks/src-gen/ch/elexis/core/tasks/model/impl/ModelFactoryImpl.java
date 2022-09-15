@@ -11,6 +11,7 @@
 package ch.elexis.core.tasks.model.impl;
 
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
+import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
 import ch.elexis.core.model.tasks.TaskException;
 
 import ch.elexis.core.tasks.model.*;
@@ -106,6 +107,8 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 				return createSerializableFromString(eDataType, initialValue);
 			case ModelPackage.CRON:
 				return createCronFromString(eDataType, initialValue);
+			case ModelPackage.IIDENTIFIED_RUNNABLE_FACTORY:
+				return createIIdentifiedRunnableFactoryFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -137,6 +140,8 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 				return convertSerializableToString(eDataType, instanceValue);
 			case ModelPackage.CRON:
 				return convertCronToString(eDataType, instanceValue);
+			case ModelPackage.IIDENTIFIED_RUNNABLE_FACTORY:
+				return convertIIdentifiedRunnableFactoryToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -307,6 +312,24 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	 * @generated
 	 */
 	public String convertCronToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IIdentifiedRunnableFactory createIIdentifiedRunnableFactoryFromString(EDataType eDataType, String initialValue) {
+		return (IIdentifiedRunnableFactory)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertIIdentifiedRunnableFactoryToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

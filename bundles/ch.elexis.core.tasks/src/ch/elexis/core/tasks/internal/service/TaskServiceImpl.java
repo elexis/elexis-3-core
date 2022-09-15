@@ -16,7 +16,6 @@ import java.util.concurrent.RejectedExecutionException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
@@ -61,7 +60,6 @@ public class TaskServiceImpl implements ITaskService {
 	private WatchServiceHolder watchServiceHolder;
 	private SysEventWatcher sysEventWatcher;
 	private List<ITask> triggeredTasks;
-	private IIdentifiedRunnableFactoryServiceTracker serviceTracker;
 
 	// TODO OtherTaskService -> this
 
@@ -87,7 +85,8 @@ public class TaskServiceImpl implements ITaskService {
 
 	private List<IIdentifiedRunnableFactory> runnableWithContextFactories;
 
-	protected void bindRunnableWithContextFactory(IIdentifiedRunnableFactory runnableWithContextFactory) {
+	@Override
+	public void bindIIdentifiedRunnableFactory(IIdentifiedRunnableFactory runnableWithContextFactory) {
 		if (runnableWithContextFactories == null) {
 			runnableWithContextFactories = new ArrayList<>();
 		}
@@ -110,7 +109,8 @@ public class TaskServiceImpl implements ITaskService {
 
 	}
 
-	protected void unbindRunnableWithContextFactory(IIdentifiedRunnableFactory runnableWithContextFactory) {
+	@Override
+	public void unbindIIdentifiedRunnableFactory(IIdentifiedRunnableFactory runnableWithContextFactory) {
 		logger.debug("Unbinding " + runnableWithContextFactory.getClass().getName());
 		runnableWithContextFactories.remove(runnableWithContextFactory);
 		List<IIdentifiedRunnable> providedRunnables = runnableWithContextFactory.getProvidedRunnables();
@@ -130,12 +130,6 @@ public class TaskServiceImpl implements ITaskService {
 		perRunnableSingletonExecutorService = new HashMap<>();
 		sysEventWatcher = new SysEventWatcher();
 		util = new TaskServiceUtil();
-	}
-
-	@Activate
-	private void activateComponent() {
-		serviceTracker = new IIdentifiedRunnableFactoryServiceTracker(this);
-		serviceTracker.open();
 	}
 
 	@Deactivate
@@ -176,8 +170,6 @@ public class TaskServiceImpl implements ITaskService {
 		if (watchServiceHolder != null) {
 			watchServiceHolder.stopPolling();
 		}
-
-		serviceTracker.close();
 	}
 
 	/**

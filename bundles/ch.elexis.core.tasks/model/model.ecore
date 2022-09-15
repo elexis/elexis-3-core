@@ -329,6 +329,12 @@
         </eGenericType>
       </eParameters>
     </eOperations>
+    <eOperations name="bindIIdentifiedRunnableFactory" lowerBound="1">
+      <eParameters name="factory" lowerBound="1" eType="#//IIdentifiedRunnableFactory"/>
+    </eOperations>
+    <eOperations name="unbindIIdentifiedRunnableFactory" lowerBound="1">
+      <eParameters name="factory" lowerBound="1" eType="#//IIdentifiedRunnableFactory"/>
+    </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="TaskTriggerType">
     <eLiterals name="MANUAL" literal="MANUAL"/>
@@ -392,4 +398,5 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Logger" instanceClassName="org.slf4j.Logger"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Serializable" instanceClassName="java.io.Serializable"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Cron" instanceClassName="com.cronutils.model.Cron"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="IIdentifiedRunnableFactory" instanceClassName="ch.elexis.core.model.tasks.IIdentifiedRunnableFactory"/>
 </ecore:EPackage>

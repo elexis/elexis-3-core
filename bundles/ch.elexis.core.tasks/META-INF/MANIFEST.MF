@@ -36,7 +36,9 @@ Export-Package: ch.elexis.core.tasks,
  com.cronutils.validation,
  org.quartz
 Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
- ch.elexis.core;bundle-version="3.9.0",
+ org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport,
+ ch.elexis.core;bundle-version="3.9.0";visibility:=reexport,
  ch.elexis.core.jpa;bundle-version="3.9.0",
  ch.elexis.core.jpa.entities;bundle-version="3.9.0",
  ch.elexis.core.jcifs

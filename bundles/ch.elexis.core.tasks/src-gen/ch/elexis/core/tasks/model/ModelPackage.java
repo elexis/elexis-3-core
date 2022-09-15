@@ -486,6 +486,17 @@ public interface ModelPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '<em>IIdentified Runnable Factory</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.tasks.IIdentifiedRunnableFactory
+	 * @see ch.elexis.core.tasks.model.impl.ModelPackageImpl#getIIdentifiedRunnableFactory()
+	 * @generated
+	 */
+	int IIDENTIFIED_RUNNABLE_FACTORY = 12;
+
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.tasks.model.ITaskDescriptor <em>ITask Descriptor</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -898,6 +909,17 @@ public interface ModelPackage extends EPackage {
 	EDataType getCron();
 
 	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.tasks.IIdentifiedRunnableFactory <em>IIdentified Runnable Factory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>IIdentified Runnable Factory</em>'.
+	 * @see ch.elexis.core.model.tasks.IIdentifiedRunnableFactory
+	 * @model instanceClass="ch.elexis.core.model.tasks.IIdentifiedRunnableFactory"
+	 * @generated
+	 */
+	EDataType getIIdentifiedRunnableFactory();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1247,6 +1269,16 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType CRON = eINSTANCE.getCron();
+
+		/**
+		 * The meta object literal for the '<em>IIdentified Runnable Factory</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.tasks.IIdentifiedRunnableFactory
+		 * @see ch.elexis.core.tasks.model.impl.ModelPackageImpl#getIIdentifiedRunnableFactory()
+		 * @generated
+		 */
+		EDataType IIDENTIFIED_RUNNABLE_FACTORY = eINSTANCE.getIIdentifiedRunnableFactory();
 
 	}
 

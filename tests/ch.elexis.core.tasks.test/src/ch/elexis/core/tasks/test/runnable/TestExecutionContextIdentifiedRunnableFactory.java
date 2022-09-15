@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
@@ -31,6 +32,12 @@ public class TestExecutionContextIdentifiedRunnableFactory implements IIdentifie
 		Optional<ITaskDescriptor> findTaskDescriptorByIdOrReferenceId = ((ITaskService) taskService)
 				.findTaskDescriptorByIdOrReferenceId("thisIsJustAnAccessTest");
 		assertFalse(findTaskDescriptorByIdOrReferenceId.isPresent());
+		taskService.bindIIdentifiedRunnableFactory(this);
+	}
+
+	@Deactivate
+	public void deactivate() {
+		taskService.unbindIIdentifiedRunnableFactory(this);
 	}
 
 	@Override

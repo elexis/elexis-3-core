@@ -11,6 +11,7 @@
 package ch.elexis.core.tasks.model;
 
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
+import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
 import ch.elexis.core.model.tasks.TaskException;
 
 import java.util.List;
@@ -173,5 +174,21 @@ public interface ITaskService {
 	 * @generated
 	 */
 	ITask triggerSync(ITaskDescriptor taskDescriptor, IProgressMonitor progressMonitor, TaskTriggerType trigger, Map<String, String> runContext) throws TaskException;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model factoryDataType="ch.elexis.core.tasks.model.IIdentifiedRunnableFactory" factoryRequired="true"
+	 * @generated
+	 */
+	void bindIIdentifiedRunnableFactory(IIdentifiedRunnableFactory factory);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model factoryDataType="ch.elexis.core.tasks.model.IIdentifiedRunnableFactory" factoryRequired="true"
+	 * @generated
+	 */
+	void unbindIIdentifiedRunnableFactory(IIdentifiedRunnableFactory factory);
 
 } // ITaskService
