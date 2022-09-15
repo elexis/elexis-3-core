@@ -12,8 +12,8 @@ import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 
 public class BillLabResultOnCreationTemplateTaskDescriptor {
-	
-	public static void assertTemplate(ITaskService taskService) throws TaskException{
+
+	public static void assertTemplate(ITaskService taskService) throws TaskException {
 		boolean templateRequired = taskService
 				.findTaskDescriptorByIIdentifiedRunnableId(BillLabResultOnCreationIdentifiedRunnable.RUNNABLE_ID)
 				.isEmpty();

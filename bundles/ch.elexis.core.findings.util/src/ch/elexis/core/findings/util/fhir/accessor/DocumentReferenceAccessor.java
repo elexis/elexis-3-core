@@ -94,8 +94,7 @@ public class DocumentReferenceAccessor extends AbstractFindingsAccessor {
 				CodingSystem.ELEXIS_DOCUMENT_CATEGORY);
 		if (categoryConcept.isPresent()) {
 			Optional<ICoding> categoryCoding = ModelUtil.getCodeBySystem(
-					ModelUtil.getCodingsFromConcept(categoryConcept.get()),
-					CodingSystem.ELEXIS_DOCUMENT_CATEGORY);
+					ModelUtil.getCodingsFromConcept(categoryConcept.get()), CodingSystem.ELEXIS_DOCUMENT_CATEGORY);
 			return Optional.of(categoryCoding.get().getDisplay());
 		}
 		return Optional.empty();

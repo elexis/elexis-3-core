@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Factory to register {@link IIdentifiedRunnable} to the TaskService
- * 
+ *
  * @since 3.10 removed initialize method
  */
 public interface IIdentifiedRunnableFactory {

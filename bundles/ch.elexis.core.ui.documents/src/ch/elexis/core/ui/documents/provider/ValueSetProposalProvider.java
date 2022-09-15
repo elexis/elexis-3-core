@@ -25,8 +25,8 @@ public class ValueSetProposalProvider implements IContentProposalProvider {
 		List<IContentProposal> ret = new ArrayList<IContentProposal>();
 		if (searchString != null && !searchString.isEmpty()) {
 			ret = ValueSetServiceHolder.getIValueSetService().getValueSetByName(valueSetName).stream()
-			.filter(o -> o.getDisplay().toLowerCase().contains(searchString.trim().toLowerCase()))
-			.map(o -> new CodingContentProposal(o.getDisplay(), o)).collect(Collectors.toList());
+					.filter(o -> o.getDisplay().toLowerCase().contains(searchString.trim().toLowerCase()))
+					.map(o -> new CodingContentProposal(o.getDisplay(), o)).collect(Collectors.toList());
 		}
 		return ret.toArray(new IContentProposal[ret.size()]);
 	}
