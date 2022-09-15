@@ -26,6 +26,8 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 
 public class WatchServiceHolder {
 
+	// Has to work for all VFS Links
+
 	private Logger logger;
 	private final TaskServiceImpl taskService;
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.osgi.service.component.ComponentException;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
@@ -20,8 +21,11 @@ import ch.elexis.core.tasks.internal.runnables.TriggerTaskForEveryFileInDirector
 import ch.elexis.core.tasks.internal.runnables.TriggerTaskForEveryFileInDirectoryTemplateTaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 
-@Component
+@Component(immediate = true)
 public class IdentifiedRunnableFactoryImpl implements IIdentifiedRunnableFactory {
+
+	@Reference
+	private ITaskService taskService;
 
 	@Reference
 	private IVirtualFilesystemService virtualFilsystemService;
@@ -33,6 +37,16 @@ public class IdentifiedRunnableFactoryImpl implements IIdentifiedRunnableFactory
 		taskModelService = modelService;
 	}
 
+	@Activate
+	public void activate() {
+		try {
+			TriggerTaskForEveryFileInDirectoryTemplateTaskDescriptor.assertTemplate(taskService);
+		} catch (TaskException e) {
+			LoggerFactory.getLogger(getClass()).error("initialize", e);
+			throw new ComponentException(e);
+		}
+	}
+
 	@Override
 	public List<IIdentifiedRunnable> getProvidedRunnables() {
 		List<IIdentifiedRunnable> ret = new ArrayList<>();
@@ -41,16 +55,6 @@ public class IdentifiedRunnableFactoryImpl implements IIdentifiedRunnableFactory
 		ret.add(new TriggerTaskForEveryFileInDirectoryRunnable(virtualFilsystemService));
 		ret.add(new RemoveTaskLogEntriesRunnable(taskModelService));
 		return ret;
-	}
-
-	@Override
-	public void initialize(Object taskService) {
-		try {
-			TriggerTaskForEveryFileInDirectoryTemplateTaskDescriptor.assertTemplate((ITaskService) taskService);
-		} catch (TaskException e) {
-			LoggerFactory.getLogger(getClass()).error("initialize", e);
-			throw new ComponentException(e);
-		}
 	}
 
 }

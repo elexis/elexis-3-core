@@ -16,12 +16,10 @@ import java.util.concurrent.RejectedExecutionException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +61,7 @@ public class TaskServiceImpl implements ITaskService {
 	private WatchServiceHolder watchServiceHolder;
 	private SysEventWatcher sysEventWatcher;
 	private List<ITask> triggeredTasks;
+	private IIdentifiedRunnableFactoryServiceTracker serviceTracker;
 
 	// TODO OtherTaskService -> this
 
@@ -86,19 +85,16 @@ public class TaskServiceImpl implements ITaskService {
 
 	private Map<String, IIdentifiedRunnableFactory> runnableIdToFactoryMap;
 
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY, bind = "bindRunnableWithContextFactory", unbind = "unbindRunnableWithContextFactory")
-	private volatile List<IIdentifiedRunnableFactory> runnableWithContextFactories;
+	private List<IIdentifiedRunnableFactory> runnableWithContextFactories;
 
 	protected void bindRunnableWithContextFactory(IIdentifiedRunnableFactory runnableWithContextFactory) {
 		if (runnableWithContextFactories == null) {
 			runnableWithContextFactories = new ArrayList<>();
 		}
-		logger.info("Binding " + runnableWithContextFactory.getClass().getName());
+		logger.debug("Binding " + runnableWithContextFactory.getClass().getName());
 		runnableWithContextFactories.add(runnableWithContextFactory);
 
 		try {
-			runnableWithContextFactory.initialize(this);
-
 			List<IIdentifiedRunnable> providedRunnables = runnableWithContextFactory.getProvidedRunnables();
 			for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
 				runnableIdToFactoryMap.put(iIdentifiedRunnable.getId(), runnableWithContextFactory);
@@ -115,6 +111,7 @@ public class TaskServiceImpl implements ITaskService {
 	}
 
 	protected void unbindRunnableWithContextFactory(IIdentifiedRunnableFactory runnableWithContextFactory) {
+		logger.debug("Unbinding " + runnableWithContextFactory.getClass().getName());
 		runnableWithContextFactories.remove(runnableWithContextFactory);
 		List<IIdentifiedRunnable> providedRunnables = runnableWithContextFactory.getProvidedRunnables();
 		for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
@@ -133,6 +130,12 @@ public class TaskServiceImpl implements ITaskService {
 		perRunnableSingletonExecutorService = new HashMap<>();
 		sysEventWatcher = new SysEventWatcher();
 		util = new TaskServiceUtil();
+	}
+
+	@Activate
+	private void activateComponent() {
+		serviceTracker = new IIdentifiedRunnableFactoryServiceTracker(this);
+		serviceTracker.open();
 	}
 
 	@Deactivate
@@ -173,6 +176,8 @@ public class TaskServiceImpl implements ITaskService {
 		if (watchServiceHolder != null) {
 			watchServiceHolder.stopPolling();
 		}
+
+		serviceTracker.close();
 	}
 
 	/**

@@ -71,7 +71,9 @@ public class TaskServiceTest {
 	}
 
 	@Before
-	public void before() throws TaskException {
+	public void before() throws TaskException, InterruptedException {
+		Thread.sleep(500);
+
 		rwcLogContext = taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.LOGRESULTCONTEXT);
 		assertTrue(rwcLogContext instanceof LogResultContextIdentifiedRunnable);
 	}

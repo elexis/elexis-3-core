@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.tasks.internal.service.IdentifiedRunnableFactoryImpl">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="activate" immediate="true" name="ch.elexis.core.tasks.internal.service.IdentifiedRunnableFactoryImpl">
    <service>
       <provide interface="ch.elexis.core.model.tasks.IIdentifiedRunnableFactory"/>
    </service>
    <reference bind="setModelService" interface="ch.elexis.core.services.IModelService" name="ModelService" target="(service.model.name=ch.elexis.core.tasks.model)"/>
+   <reference cardinality="1..1" field="taskService" interface="ch.elexis.core.tasks.model.ITaskService" name="taskService"/>
    <reference cardinality="1..1" field="virtualFilsystemService" interface="ch.elexis.core.services.IVirtualFilesystemService" name="virtualFilsystemService"/>
    <implementation class="ch.elexis.core.tasks.internal.service.IdentifiedRunnableFactoryImpl"/>
 </scr:component>

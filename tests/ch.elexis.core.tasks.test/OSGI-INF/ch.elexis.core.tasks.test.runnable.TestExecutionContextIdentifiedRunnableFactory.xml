@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.tasks.test.runnable.TestExecutionContextIdentifiedRunnableFactory">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="activate" immediate="true" name="ch.elexis.core.tasks.test.runnable.TestExecutionContextIdentifiedRunnableFactory">
    <service>
       <provide interface="ch.elexis.core.model.tasks.IIdentifiedRunnableFactory"/>
    </service>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
+   <reference cardinality="1..1" field="taskService" interface="ch.elexis.core.tasks.model.ITaskService" name="taskService"/>
    <implementation class="ch.elexis.core.tasks.test.runnable.TestExecutionContextIdentifiedRunnableFactory"/>
 </scr:component>

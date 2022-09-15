@@ -1,12 +1,12 @@
 package ch.elexis.core.tasks.test.runnable;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -16,15 +16,17 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 
-@Component
+@Component(immediate = true)
 public class TestExecutionContextIdentifiedRunnableFactory implements IIdentifiedRunnableFactory {
+
+	@Reference
+	private ITaskService taskService;
 
 	@Reference
 	private IContextService contextService;
 
-	@Override
-	public void initialize(Object taskService) {
-		assertTrue(taskService instanceof ITaskService);
+	@Activate
+	public void activate() {
 
 		Optional<ITaskDescriptor> findTaskDescriptorByIdOrReferenceId = ((ITaskService) taskService)
 				.findTaskDescriptorByIdOrReferenceId("thisIsJustAnAccessTest");
