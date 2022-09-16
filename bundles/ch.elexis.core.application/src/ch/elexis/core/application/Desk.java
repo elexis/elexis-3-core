@@ -41,6 +41,7 @@ import ch.elexis.core.ui.dialogs.StatusDialog;
 import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.PersistentObjectDataSourceActivator;
 import ch.rgw.io.FileTool;
 
 public class Desk implements IApplication {
@@ -94,8 +95,6 @@ public class Desk implements IApplication {
 			OsgiServiceUtil.ungetService(elexisDataSource);
 		}
 
-		// FIXME assert PersistentObject is connected
-
 		// check for initialization parameters
 		@SuppressWarnings("unchecked")
 		Map<String, String> args = context.getArguments();
@@ -108,6 +107,9 @@ public class Desk implements IApplication {
 
 		// make sure identifiers are initialized
 		initIdentifiers();
+
+		// wait for persistent object to be ready
+		OsgiServiceUtil.getServiceWait(PersistentObjectDataSourceActivator.class, 5000).orElseThrow();
 
 		// close splash
 		context.applicationRunning();
