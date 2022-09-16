@@ -102,7 +102,7 @@ public class CoreHub implements BundleActivator {
 	 * Elexis-User. In Windows wird userDir meist %USERPROFILE%\elexis sein, in
 	 * Linux ~./elexis. Es kann mit getWritableUserDir() geholt werden.
 	 */
-	static File userDir;
+	private static File userDir;
 
 	/**
 	 * Globale Einstellungen (Werden in der Datenbank gespeichert)
@@ -191,17 +191,12 @@ public class CoreHub implements BundleActivator {
 	}
 
 	/**
-	 * return a directory suitable for plugin specific configuration data. If no
-	 * such dir exists, it will be created. If it could not be created, the
-	 * application will refuse to start.
-	 *
-	 * @return a directory that exists always and is always writable and readable
-	 *         for plugins of the currently running elexis instance. Caution: this
-	 *         directory is not necessarily shared among different OS-Users. In
-	 *         Windows it is normally %USERPROFILE%\elexis, in Linux ~./elexis
+	 * Initialize the user dir on startup
+	 * 
+	 * @since 3.10 extracted from {@link #getWritableUserDir()}
 	 */
-	public static File getWritableUserDir() {
-		if (userDir == null) {
+	private static void initUserDir() {
+		if (CoreHub.userDir == null) {
 			String userhome = null;
 
 			if (localCfg != null) {
@@ -213,16 +208,30 @@ public class CoreHub implements BundleActivator {
 			if (StringTool.isNothing(userhome)) {
 				userhome = System.getProperty("java.io.tempdir"); //$NON-NLS-1$
 			}
-			userDir = new File(userhome, "elexis"); //$NON-NLS-1$
+			CoreHub.userDir = new File(userhome, "elexis"); //$NON-NLS-1$
 		}
-		if (!userDir.exists()) {
-			if (!userDir.mkdirs()) {
+		if (!CoreHub.userDir.exists()) {
+			if (!CoreHub.userDir.mkdirs()) {
 				System.err.print("fatal: could not create Userdir"); //$NON-NLS-1$
 				MessageEvent.fireLoggedError("Panic exit", "could not create userdir " + userDir.getAbsolutePath());
 				System.exit(-5);
 			}
 		}
-		return userDir;
+
+	}
+
+	/**
+	 * return a directory suitable for plugin specific configuration data. If no
+	 * such dir exists, it will be created. If it could not be created, the
+	 * application will refuse to start.
+	 *
+	 * @return a directory that exists always and is always writable and readable
+	 *         for plugins of the currently running elexis instance. Caution: this
+	 *         directory is not necessarily shared among different OS-Users. In
+	 *         Windows it is normally %USERPROFILE%\elexis, in Linux ~./elexis
+	 */
+	public static File getWritableUserDir() {
+		return CoreHub.userDir;
 	}
 
 	@Override
@@ -231,8 +240,31 @@ public class CoreHub implements BundleActivator {
 		log.debug("Starting " + CoreHub.class.getName());
 		plugin = this;
 
-		startUpBundle();
-		setUserDir(userDir);
+		// determine local config
+		String[] args = CommandLineArgs.getApplicationArgs();
+		String config = "default"; //$NON-NLS-1$
+		for (String s : args) {
+			if (s.startsWith("--use-config=")) { //$NON-NLS-1$
+				String[] c = s.split("="); //$NON-NLS-1$
+				config = c[1];
+			}
+		}
+		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
+				.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
+			config = UUID.randomUUID().toString();
+		}
+		initUserDir();
+		loadLocalCfg(config);
+
+		int instanceNo = initializeLock();
+		stationIdentifier = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, "notset_" + System.currentTimeMillis());
+		if (instanceNo > 0) {
+			stationIdentifier += "$" + instanceNo;
+		}
+
+		log.info("Basepath: " + getBasePath());
+		pin.initializeDefaultPreferences();
+
 		heart = Heartbeat.getInstance();
 
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
@@ -269,36 +301,6 @@ public class CoreHub implements BundleActivator {
 
 		plugin = null;
 		this.context = null;
-	}
-
-	private void startUpBundle() {
-		String[] args = CommandLineArgs.getApplicationArgs();
-		String config = "default"; //$NON-NLS-1$
-		for (String s : args) {
-			if (s.startsWith("--use-config=")) { //$NON-NLS-1$
-				String[] c = s.split("="); //$NON-NLS-1$
-				config = c[1];
-			}
-		}
-		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
-				.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
-			config = UUID.randomUUID().toString();
-		}
-
-		int instanceNo = initializeLock();
-
-		loadLocalCfg(config);
-
-		stationIdentifier = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, "notset_" + System.currentTimeMillis());
-		if (instanceNo > 0) {
-			stationIdentifier += "$" + instanceNo;
-		}
-
-		log.info("Basepath: " + getBasePath());
-		pin.initializeDefaultPreferences();
-
-		heart = Heartbeat.getInstance();
-
 	}
 
 	/**
@@ -347,7 +349,7 @@ public class CoreHub implements BundleActivator {
 	}
 
 	private void loadLocalCfg(String branch) {
-		LocalCfgFile = CoreHubHelper.getWritableUserDir() + "/localCfg_" + branch + ".xml";
+		LocalCfgFile = CoreHub.userDir + "/localCfg_" + branch + ".xml";
 		String msg = "loadLocalCfg: Loading branch " + branch + " from " + LocalCfgFile;
 		System.out.println(msg);
 		log.debug(msg);
