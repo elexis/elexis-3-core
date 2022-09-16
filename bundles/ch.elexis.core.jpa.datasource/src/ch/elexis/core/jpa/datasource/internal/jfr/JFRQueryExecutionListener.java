@@ -14,7 +14,7 @@ public class JFRQueryExecutionListener implements QueryExecutionListener {
 	public void beforeQuery(ExecutionInfo execInfo, List<QueryInfo> queryInfoList) {
 		event = QueryEvent.EVENT;
 		if (event.get().isEnabled()) {
-			event.get().sql = queryInfoList.get(0).getQuery();
+			event.get().sql = queryInfoList.get(0).getQuery() + " " + queryInfoList.get(0).getQueryArgsList();
 			event.get().begin();
 		}
 
