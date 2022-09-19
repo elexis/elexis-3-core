@@ -41,7 +41,10 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		// (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
 		if (refreshCache) {
 			this.query.setHint(QueryHints.REFRESH, HintValues.TRUE);
-			this.query.setHint(QueryHints.CACHE_USAGE, CacheUsage.Invalidate);
+			Map<String, Object> hints = query.getHints();
+			if (hints != null && hints.containsKey(QueryHints.QUERY_RESULTS_CACHE)) {
+				this.query.setHint(QueryHints.CACHE_USAGE, CacheUsage.Invalidate);
+			}
 		}
 	}
 
@@ -104,6 +107,9 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 				return Optional.ofNullable(orElse);
 			}
 
+		} else {
+			// query result list can contain null values, we do not want to see them
+			return (Optional<R>) query.getResultStream().findFirst();
 		}
 		return Optional.empty();
 	}
