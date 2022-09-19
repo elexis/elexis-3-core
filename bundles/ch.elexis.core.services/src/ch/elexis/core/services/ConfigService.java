@@ -306,17 +306,13 @@ public class ConfigService implements IConfigService {
 	@Override
 	public String get(IContact contact, String key, String defaultValue, boolean refreshCache) {
 		if (contact != null) {
+
 			INamedQuery<IUserConfig> configQuery = CoreModelServiceHolder.get().getNamedQuery(IUserConfig.class,
 					refreshCache, "ownerid", "param");
-			List<IUserConfig> configs = configQuery
-					.executeWithParameters(configQuery.getParameterMap("ownerid", contact.getId(), "param", key));
-			if (!configs.isEmpty()) {
-				if (configs.size() > 1) {
-					LoggerFactory.getLogger(ConfigService.class)
-							.warn("Multiple user config entries for [" + key + "] using first.");
-				}
-				String value = configs.get(0).getValue();
-				return value != null ? value : defaultValue;
+			Optional<IUserConfig> config = configQuery.executeWithParametersSingleResult(
+					configQuery.getParameterMap("ownerid", contact.getId(), "param", key));
+			if (config.isPresent()) {
+				return config.get().getValue();
 			}
 		}
 		return defaultValue;

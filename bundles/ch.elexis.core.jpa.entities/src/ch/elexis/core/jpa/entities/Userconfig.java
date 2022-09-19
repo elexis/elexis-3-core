@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
+import javax.persistence.QueryHint;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Cache;
@@ -21,7 +22,10 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @OptimisticLocking(type = OptimisticLockingType.SELECTED_COLUMNS, selectedColumns = { @Column(name = "LASTUPDATE") })
 @IdClass(UserconfigId.class)
 @Cache(expiry = 15000)
-@NamedQuery(name = "Userconfig.ownerid.param", query = "SELECT uc FROM Userconfig uc WHERE uc.ownerId = :ownerid AND uc.param = :param")
+@NamedQuery(name = "Userconfig.ownerid.param", query = "SELECT uc FROM Userconfig uc WHERE uc.ownerId = :ownerid AND uc.param = :param", hints = {
+		@QueryHint(name = "eclipselink.query-results-cache", value = "true"),
+		@QueryHint(name = "eclipselink.query-results-cache.size", value = "500"),
+		@QueryHint(name = "eclipselink.query-results-cache.expiry", value = "15000") })
 public class Userconfig extends AbstractEntityWithId implements EntityWithId {
 
 	// Transparently updated by the EntityListener
