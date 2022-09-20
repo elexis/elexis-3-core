@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.IntStream;
 
 import javax.persistence.EntityManager;
 
@@ -32,6 +34,7 @@ import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.utils.OsgiServiceUtil;
+import net.ttddyy.dsproxy.QueryCountHolder;
 
 public class CoreModelServiceTest {
 
@@ -191,6 +194,56 @@ public class CoreModelServiceTest {
 		query.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE, "%lastname %");
 		List<IPerson> results = query.execute();
 		assertTrue(results.isEmpty());
+	}
+
+	@Test
+	public void multiThreadedNoRefreshCacheOnEmptyResult() throws InterruptedException {
+		IPerson owner = modelService.create(IPerson.class);
+		modelService.save(owner);
+
+		// populate cache
+		INamedQuery<IUserConfig> configQueryA = modelService.getNamedQuery(IUserConfig.class, false, "ownerid",
+				"param");
+		configQueryA.executeWithParameters(
+				configQueryA.getParameterMap("ownerid", owner.getId(), "param", "I_DO_NOT_EXIST_THEREFORE_I_NOT_AM"));
+
+		// test 100 requests on this non-existing-value, should not perform any real db
+		// query
+		Thread.sleep(50);
+		AtomicLong selectCount = new AtomicLong();
+		IntStream stream = IntStream.range(0, 100);
+		stream.parallel().forEach(val -> {
+			long start = QueryCountHolder.getGrandTotal().getSelect();
+			INamedQuery<IUserConfig> configQuery = modelService.getNamedQuery(IUserConfig.class, false, "ownerid",
+					"param");
+			List<IUserConfig> configs = configQuery.executeWithParameters(configQuery.getParameterMap("ownerid",
+					owner.getId(), "param", "I_DO_NOT_EXIST_THEREFORE_I_NOT_AM"));
+			assertEquals(0, configs.size());
+			selectCount.addAndGet(QueryCountHolder.getGrandTotal().getSelect() - start);
+		});
+		assertEquals(0l, selectCount.get());
+
+		// same for test cache for #executeWithParametersSingleResult
+		stream = IntStream.range(0, 100);
+		stream.parallel().forEach(val -> {
+			long start = QueryCountHolder.getGrandTotal().getSelect();
+			INamedQuery<IUserConfig> configQuery = modelService.getNamedQuery(IUserConfig.class, false, "ownerid",
+					"param");
+			Optional<IUserConfig> config = configQuery.executeWithParametersSingleResult(configQuery
+					.getParameterMap("ownerid", owner.getId(), "param", "I_DO_NOT_EXIST_THEREFORE_I_NOT_AM"));
+			assertTrue(!config.isPresent());
+			selectCount.addAndGet(QueryCountHolder.getGrandTotal().getSelect() - start);
+		});
+		assertEquals(0l, selectCount.get());
+
+		// now query with refresh cache, should increase sql by 1
+		long start = QueryCountHolder.getGrandTotal().getSelect();
+		INamedQuery<IUserConfig> configQuery = modelService.getNamedQuery(IUserConfig.class, true, "ownerid", "param");
+		configQuery.executeWithParametersSingleResult(
+				configQuery.getParameterMap("ownerid", owner.getId(), "param", "I_DO_NOT_EXIST_THEREFORE_I_NOT_AM"));
+		selectCount.addAndGet(QueryCountHolder.getGrandTotal().getSelect() - start);
+		assertEquals(1l, selectCount.get());
+
 	}
 
 	@Test
