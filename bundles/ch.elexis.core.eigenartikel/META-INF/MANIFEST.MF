@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eigenartikel
 Bundle-SymbolicName: ch.elexis.core.eigenartikel;singleton:=true
-Bundle-Version: 3.9.0.qualifier
+Bundle-Version: 3.10.0.qualifier
 Bundle-Vendor: elexis.info
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
- ch.elexis.core;bundle-version="3.9.0"
+ ch.elexis.core;bundle-version="3.10.0"
 Export-Package: ch.elexis.core.eigenartikel
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.eigenartikel.service.EigenartikelCodeElementService.xml

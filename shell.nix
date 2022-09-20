@@ -3,10 +3,11 @@
 # mit GDK_BACKEND=wayland läuft copy/paste zu kate nicht
 # install package at-spi2-core to avoid error
 # AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
-
 with import <nixpkgs> {};
-mkShell {
-    buildInputs = with pkgs; [ maven ruby_3_0 rubyPackages_3_0.rugged];
+let mvn = pkgs.maven.override { jdk = pkgs.jdk17; };
+in pkgs.mkShell {
+  buildInputs = [ mvn pkgs.jq pkgs.jdk17 pkgs.ruby pkgs.rubyPackages.rugged];
+ #   buildInputs = with pkgs; [ maven ruby_3_0 rubyPackages_3_0.rugged];
     NIX_LD_LIBRARY_PATH = lib.makeLibraryPath [
       zlib
       dbus

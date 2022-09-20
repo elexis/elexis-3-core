@@ -2,18 +2,18 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Templates UI
 Bundle-SymbolicName: ch.elexis.core.findings.templates.ui;singleton:=true
-Bundle-Version: 3.9.0.qualifier
+Bundle-Version: 3.10.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
- ch.elexis.core.data;bundle-version="3.9.0",
- ch.elexis.core.findings;bundle-version="3.9.0",
- ch.elexis.core.findings.util;bundle-version="3.9.0",
- ch.elexis.core.findings.ui;bundle-version="3.9.0",
- ch.elexis.core.ui;bundle-version="3.9.0",
+ ch.elexis.core.data;bundle-version="3.10.0",
+ ch.elexis.core.findings;bundle-version="3.10.0",
+ ch.elexis.core.findings.util;bundle-version="3.10.0",
+ ch.elexis.core.findings.ui;bundle-version="3.10.0",
+ ch.elexis.core.ui;bundle-version="3.10.0",
  ch.elexis.core.ui.icons;bundle-version="3.3.0",
  org.eclipse.ui,
- ch.elexis.core.findings.templates;bundle-version="3.9.0",
- ch.elexis.core.findings.templates.edit;bundle-version="3.9.0",
+ ch.elexis.core.findings.templates;bundle-version="3.10.0",
+ ch.elexis.core.findings.templates.edit;bundle-version="3.10.0",
  org.eclipse.ui.views;bundle-version="3.8.102",
  org.eclipse.emf.edit.ui;bundle-version="2.19.0"
 Bundle-Vendor: medevit.at

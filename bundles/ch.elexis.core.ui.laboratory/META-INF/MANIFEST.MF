@@ -6,7 +6,7 @@ Bundle-Version: 3.10.0.qualifier
 Bundle-Activator: ch.elexis.core.ui.laboratory.Activator
 Bundle-Vendor: elexis.info
 Bundle-Localization: plugin
-Require-Bundle: ch.elexis.core.l10n;bundle-version="3.9.0",
+Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.9.100",
  ch.elexis.core;bundle-version="3.10.0",
  ch.elexis.core.data;bundle-version="3.10.0",

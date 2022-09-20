@@ -6,7 +6,7 @@ Bundle-Version: 3.10.0.qualifier
 Bundle-Vendor: elexis.info
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui;bundle-version="3.201.0",
- ch.elexis.core.l10n;bundle-version="3.9.0",
+ ch.elexis.core.l10n;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.9.100",
  ch.elexis.core;bundle-version="3.10.0",
  ch.elexis.core.data;bundle-version="3.10.0",

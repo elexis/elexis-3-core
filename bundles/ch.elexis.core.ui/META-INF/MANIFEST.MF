@@ -6,11 +6,11 @@ Bundle-Version: 3.10.0.qualifier
 Bundle-Activator: ch.elexis.core.ui.Hub
 Bundle-Vendor: elexis.info
 Bundle-Localization: plugin
-Require-Bundle: ch.elexis.core.ui.e4;bundle-version="3.9.0";visibility:=reexport,
- ch.elexis.core.mail;bundle-version="3.9.0",
+Require-Bundle: ch.elexis.core.ui.e4;bundle-version="3.10.0";visibility:=reexport,
+ ch.elexis.core.mail;bundle-version="3.10.0",
  ch.elexis.core.data;bundle-version="3.10.0",
- ch.elexis.core.documents;bundle-version="3.9.0",
- ch.elexis.core.ui.icons;bundle-version="3.9.0";visibility:=reexport,
+ ch.elexis.core.documents;bundle-version="3.10.0",
+ ch.elexis.core.ui.icons;bundle-version="3.10.0";visibility:=reexport,
  org.eclipse.ui;bundle-version="3.119.0";visibility:=reexport,
  org.eclipse.ui.forms;bundle-version="3.5.200";visibility:=reexport,
  org.eclipse.core.databinding;bundle-version="1.10.100";visibility:=reexport,
