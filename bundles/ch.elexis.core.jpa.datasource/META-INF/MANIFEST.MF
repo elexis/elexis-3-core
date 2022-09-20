@@ -21,5 +21,5 @@ Require-Bundle: org.eclipse.osgi.services;bundle-version="3.6.0",
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/datasource-proxy-1.8.jar,
  .
-Export-Package: ch.elexis.core.jpa.datasource.test
+Export-Package: net.ttddyy.dsproxy
 Service-Component: OSGI-INF/ch.elexis.core.jpa.datasource.internal.ElexisDataSourceService.xml

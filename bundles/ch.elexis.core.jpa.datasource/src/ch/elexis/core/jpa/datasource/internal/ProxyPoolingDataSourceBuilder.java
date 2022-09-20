@@ -16,6 +16,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import ch.elexis.core.common.DBConnection;
 import ch.elexis.core.jpa.datasource.internal.jfr.JFRQueryExecutionListener;
+import ch.elexis.core.utils.CoreUtil;
 import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 
 public class ProxyPoolingDataSourceBuilder {
@@ -53,7 +54,14 @@ public class ProxyPoolingDataSourceBuilder {
 				connectionPool);
 
 		JFRQueryExecutionListener jfrQueryExecutionListener = new JFRQueryExecutionListener();
-		return ProxyDataSourceBuilder.create(poolingDataSource).listener(jfrQueryExecutionListener).build();
+
+		ProxyDataSourceBuilder proxyDataSourceBuilder = ProxyDataSourceBuilder.create(poolingDataSource)
+				.listener(jfrQueryExecutionListener);
+		if (CoreUtil.isTestMode()) {
+			// in test mode, use QueryCountHolder to get the count state
+			proxyDataSourceBuilder.countQuery();
+		}
+		return proxyDataSourceBuilder.build();
 	}
 
 }

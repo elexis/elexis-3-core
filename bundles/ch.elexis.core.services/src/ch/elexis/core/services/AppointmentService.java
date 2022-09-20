@@ -42,6 +42,7 @@ import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.internal.model.AppointmentSeries;
@@ -70,16 +71,18 @@ public class AppointmentService implements IAppointmentService {
 	private List<String> states = null;
 
 	@Reference
-	private IConfigService iConfigService;
+	private IConfigService configService;
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService iModelService;
+	private IModelService coreModelService;
+
+	private IContextService contextService;
 
 	private LoadingCache<String, Map<String, Area>> cache;
 
 	@Override
 	public IAppointment clone(IAppointment appointment) {
-		return new IAppointmentBuilder(iModelService, appointment.getSchedule(), appointment.getStartTime(),
+		return new IAppointmentBuilder(coreModelService, appointment.getSchedule(), appointment.getStartTime(),
 				appointment.getEndTime(), appointment.getType(), appointment.getState(), appointment.getPriority(),
 				appointment.getSubjectOrPatient()).buildAndSave();
 	}
@@ -111,7 +114,7 @@ public class AppointmentService implements IAppointmentService {
 			return Collections.singletonList(orig);
 		}
 
-		IQuery<IAppointment> query = iModelService.getQuery(IAppointment.class);
+		IQuery<IAppointment> query = coreModelService.getQuery(IAppointment.class);
 		query.and(ModelPackage.Literals.IAPPOINTMENT__LINKGROUP, COMPARATOR.EQUALS, orig.getLinkgroup());
 		return query.execute();
 	}
@@ -126,7 +129,7 @@ public class AppointmentService implements IAppointmentService {
 			List<IAppointment> linked = getLinkedAppoinments(appointment);
 			if (whole) {
 				// delete whole series
-				iModelService.delete(linked);
+				coreModelService.delete(linked);
 			} else {
 				if (appointment.getId().equals(appointment.getLinkgroup())) {
 					if (linked.size() > 1) {
@@ -142,19 +145,19 @@ public class AppointmentService implements IAppointmentService {
 						// moveto.set(Termin.FLD_CREATOR, get(Termin.FLD_CREATOR));
 						moveto.setCreatedBy(appointment.getCreatedBy());
 						moveto.setExtension(appointment.getExtension());
-						iModelService.save(moveto);
+						coreModelService.save(moveto);
 
 						for (IAppointment termin : linked) {
 							termin.setLinkgroup(moveto.getId());
 						}
-						iModelService.save(linked);
+						coreModelService.save(linked);
 					}
 				}
 				// delete this
-				iModelService.delete(appointment);
+				coreModelService.delete(appointment);
 			}
 		} else {
-			iModelService.delete(appointment);
+			coreModelService.delete(appointment);
 		}
 		return true;
 	}
@@ -163,7 +166,7 @@ public class AppointmentService implements IAppointmentService {
 	public Map<DayOfWeek, String[]> getConfiguredBlockTimesBySchedule(String schedule) {
 		@SuppressWarnings("unchecked")
 		Hashtable<String, String> map = StringTool
-				.foldStrings(iConfigService.get(Preferences.AG_DAYPREFERENCES + "/" + schedule, null));
+				.foldStrings(configService.get(Preferences.AG_DAYPREFERENCES + "/" + schedule, null));
 		if (map == null) {
 			map = new Hashtable<String, String>();
 		}
@@ -267,23 +270,23 @@ public class AppointmentService implements IAppointmentService {
 	@Override
 	public void addType(String type) {
 		String tt = StringTool.join(getTypes(), ",") + "," + type;
-		iConfigService.set(AG_TERMINTYPEN, tt);
+		configService.set(AG_TERMINTYPEN, tt);
 	}
 
 	@Override
 	public void addState(String state) {
 		// TODO cannot add new states in Termin.java
 		String tt = StringTool.join(states, ",") + "," + state;
-		iConfigService.set(AG_TERMINSTATUS, tt);
-		states = iConfigService.getAsList(AG_TERMINSTATUS, null);
+		configService.set(AG_TERMINSTATUS, tt);
+		states = configService.getAsList(AG_TERMINSTATUS, null);
 	}
 
 	@Override
 	public List<Area> getAreas() {
 		List<Area> ret = new ArrayList<>();
-		List<String> areas = iConfigService.getAsList(AG_BEREICHE);
+		List<String> areas = configService.getAsList(AG_BEREICHE);
 		areas.forEach(entry -> {
-			String typeString = iConfigService.get(AG_BEREICH_PREFIX + entry + AG_BEREICH_TYPE_POSTFIX, null);
+			String typeString = configService.get(AG_BEREICH_PREFIX + entry + AG_BEREICH_TYPE_POSTFIX, null);
 			AreaType type = AreaType.GENERIC;
 			String contactId = null;
 			if (typeString != null) {
@@ -310,31 +313,50 @@ public class AppointmentService implements IAppointmentService {
 		String key = Preferences.AG_BEREICH_PREFIX + area + Preferences.AG_BEREICH_TYPE_POSTFIX;
 		switch (areaType) {
 		case CONTACT:
-			iConfigService.set(key, areaType.name() + "/" + value);
+			configService.set(key, areaType.name() + "/" + value);
 			break;
 		default:
-			iConfigService.set(key, null);
+			configService.set(key, null);
 		}
 	}
 
 	@Override
 	public List<String> getTypes() {
-		List<String> ret = new ArrayList<String>(iConfigService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
+		List<String> ret = new ArrayList<String>(configService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
 		if (ret.isEmpty() || ret.size() < 3) {
 			ret = Arrays.asList(Messages.Appointment_Range_Free, Messages.Appointment_Range_Locked,
 					Messages.Appointment_Normal_Appointment);
-			iConfigService.setFromList(AG_TERMINTYPEN, ret);
+			configService.setFromList(AG_TERMINTYPEN, ret);
 		}
 		return ret;
 	}
 
 	@Override
 	public List<String> getStates() {
-		List<String> ret = iConfigService.getAsList(AG_TERMINSTATUS, null);
+		List<String> ret = configService.getAsList(AG_TERMINSTATUS, null);
 		if (ret == null || ret.size() < 2) {
 			ret = Arrays.asList("-", Messages.Appointment_Planned_Appointment);
 		}
 		return ret;
+	}
+
+	@Override
+	public String getContactConfiguredTypeColor(IContact userContact, String appointmentType) {
+
+		if (userContact == null) {
+			userContact = contextService.getActiveUserContact().orElse(null);
+		}
+		return "#" + configService // $NON-NLS-1$
+				.get(userContact, "agenda/farben/typ/" + appointmentType, "#3a87ad", false); //$NON-NLS-1$
+	}
+
+	@Override
+	public String getContactConfiguredStateColor(IContact userContact, String appointmentState) {
+		if (userContact == null) {
+			userContact = contextService.getActiveUserContact().orElse(null);
+		}
+		return "#" + ConfigServiceHolder.get().get(userContact, //$NON-NLS-1$
+				"agenda/farben/status/" + appointmentState, "#ffffff", false); //$NON-NLS-1$
 	}
 
 	@Override
@@ -562,7 +584,7 @@ public class AppointmentService implements IAppointmentService {
 	public Map<String, Integer> getPreferredDurations(String areaName) {
 		Map<String, Integer> ret = new HashMap<String, Integer>();
 		if (StringUtils.isNotBlank(areaName)) {
-			String mTimes = iConfigService.get(AG_TIMEPREFERENCES + "/" + areaName, StringUtils.EMPTY); //$NON-NLS-1$
+			String mTimes = configService.get(AG_TIMEPREFERENCES + "/" + areaName, StringUtils.EMPTY); //$NON-NLS-1$
 			if (StringUtils.isNotBlank(mTimes)) {
 				String[] types = mTimes.split("::"); //$NON-NLS-1$
 				for (String t : types) {
@@ -591,7 +613,7 @@ public class AppointmentService implements IAppointmentService {
 	@Override
 	public Optional<IContact> resolveAreaAssignedContact(String areaName) {
 		if (areaName != null) {
-			String areaType = iConfigService.get("agenda/bereich/" + areaName + "/type", null);
+			String areaType = configService.get("agenda/bereich/" + areaName + "/type", null);
 			if (areaType != null && areaType.startsWith(AreaType.CONTACT.name())) {
 				String contactId = areaType.substring(AreaType.CONTACT.name().length() + 1);
 				return CoreModelServiceHolder.get().load(contactId, IContact.class);
