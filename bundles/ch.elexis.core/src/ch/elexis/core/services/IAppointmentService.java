@@ -132,7 +132,7 @@ public interface IAppointmentService {
 	/**
 	 * Get the appointment type color configured for the given userContact. Default
 	 * is #3a87ad.
-	 * 
+	 *
 	 * @param userContact     if <code>null</code>, take user from context
 	 * @param appointmentType the value of {@link IAppointment#getType()}
 	 * @return
@@ -143,7 +143,7 @@ public interface IAppointmentService {
 	/**
 	 * Get the appointment state color configured for the given userContact. Default
 	 * is #ffffff.
-	 * 
+	 *
 	 * @param userContact      if <code>null</code>, take user from context
 	 * @param appointmentState the value of {@link IAppointment#getState()}
 	 * @return

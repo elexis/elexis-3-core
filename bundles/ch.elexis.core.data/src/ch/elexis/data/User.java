@@ -101,7 +101,7 @@ public class User extends PersistentObject {
 	 * assigned to the role {@link Role#SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR}.
 	 *
 	 * @see https://redmine.medelexis.ch/issues/771
-	 * 
+	 *
 	 */
 	@Deprecated(forRemoval = true)
 	private static void migrateToNewStructure() {

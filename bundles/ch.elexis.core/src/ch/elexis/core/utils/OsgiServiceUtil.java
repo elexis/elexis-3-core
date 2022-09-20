@@ -100,7 +100,7 @@ public class OsgiServiceUtil {
 	 * Get a service from the OSGi service registry. Wait for it, it it's not
 	 * available yet. <b>Always</b> release the service using the
 	 * {@link OsgiServiceUtil#ungetService(Object)} method after usage.
-	 * 
+	 *
 	 * @param clazz
 	 * @param timeout milliseconds to wait for the service to become available
 	 * @return

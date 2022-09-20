@@ -154,7 +154,7 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 	}
 
 	/**
-	 *  <b>TEST ONLY:</b> If the extension is a docx, then we check the property
+	 * <b>TEST ONLY:</b> If the extension is a docx, then we check the property
 	 * ch.elexis.convertDocx2PDF to see whether we need additional treatment when
 	 * running GUI-tests.
 	 *

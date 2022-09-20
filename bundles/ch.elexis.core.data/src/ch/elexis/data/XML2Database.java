@@ -42,7 +42,7 @@ import ch.rgw.tools.Log;
  * <EAN>7680573770024</EAN> <br>
  * ... other field values <br>
  * </ARTIKEL> <br>
- * 
+ *
  * @deprecated is this used at all?
  */
 @Deprecated(forRemoval = true)

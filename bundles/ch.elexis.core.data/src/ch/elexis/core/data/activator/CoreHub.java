@@ -106,7 +106,7 @@ public class CoreHub implements BundleActivator {
 
 	/**
 	 * Globale Einstellungen (Werden in der Datenbank gespeichert)
-	 * 
+	 *
 	 * @deprecated use {@link IConfigService}
 	 */
 	public static Settings globalCfg;
@@ -114,7 +114,7 @@ public class CoreHub implements BundleActivator {
 	/**
 	 * Lokale Einstellungen (Werden in userhome/localCfg_xxx.xml gespeichert) </br>
 	 * <b>WARNING: can not handle more than one / in config name!</b>
-	 * 
+	 *
 	 * @deprecated use {@link IConfigService}
 	 */
 	public static Settings localCfg;
@@ -192,7 +192,7 @@ public class CoreHub implements BundleActivator {
 
 	/**
 	 * Initialize the user dir on startup
-	 * 
+	 *
 	 * @since 3.10 extracted from {@link #getWritableUserDir()}
 	 */
 	private static void initUserDir() {

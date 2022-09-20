@@ -14,7 +14,7 @@ import ch.elexis.core.common.DBConnection;
 
 /**
  * an h2 based test database connection
- * 
+ *
  * @deprecated
  */
 @Deprecated(forRemoval = true)

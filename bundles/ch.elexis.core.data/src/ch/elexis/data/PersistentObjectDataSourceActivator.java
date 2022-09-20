@@ -26,13 +26,13 @@ import ch.rgw.tools.ExHandler;
 /**
  * Connect PersistentObject after NoPo was properly initialized and liquibase
  * was executed (visible due to injection of coreModelService)
- * 
+ *
  * The unused references assert that we have all pre-conditions met to start
  * PersistentObject
- * 
+ *
  * If a specific service has to wait for PersistentObjec to become ready, add a
  * reference to this class
- * 
+ *
  * @since 3.10
  */
 @Component(immediate = true, service = PersistentObjectDataSourceActivator.class)
@@ -80,7 +80,7 @@ public class PersistentObjectDataSourceActivator {
 
 	/**
 	 * Extracted from PersistentObject
-	 * 
+	 *
 	 * @param coreOperationAdvisor
 	 * @return
 	 */
