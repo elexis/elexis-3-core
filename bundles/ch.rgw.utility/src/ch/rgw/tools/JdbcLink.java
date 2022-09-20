@@ -32,6 +32,8 @@ import java.util.TimerTask;
 import java.util.Vector;
 import java.util.logging.Level;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.DriverConnectionFactory;
 import org.apache.commons.dbcp2.PoolableConnection;
@@ -61,7 +63,7 @@ public class JdbcLink {
 	private String sConn;
 	private String sUser;
 	private String sPwd;
-	private PoolingDataSource dataSource;
+	private DataSource dataSource;
 	private GenericObjectPool<PoolableConnection> connectionPool;
 	// prepared statements are not released properly up until now, so keep 1
 	// connection open
@@ -239,6 +241,18 @@ public class JdbcLink {
 	}
 
 	/**
+	 * 
+	 * @param dataSource
+	 * @throws SQLException
+	 * @since 3.10
+	 */
+	public JdbcLink(DataSource dataSource) throws SQLException {
+		this.dataSource = dataSource;
+		String databaseProductName = dataSource.getConnection().getMetaData().getDatabaseProductName().toLowerCase();
+		DBFlavor = databaseProductName;
+	}
+
+	/**
 	 * Verbindung zur Datenbank herstellen
 	 *
 	 * TODO return value is always true because exception is thrown on error
@@ -248,49 +262,69 @@ public class JdbcLink {
 	 * @return errcode
 	 *
 	 * @throws JdbcLinkException
+	 * @since 3.10 considers a dataSource already being set (will ignore user and
+	 *        password in this case)
 	 */
 	public boolean connect(String user, String password) {
-		Exception cause = null;
+
+		if (dataSource == null) {
+			Exception cause = null;
+			try {
+				sUser = user;
+				sPwd = password;
+				Driver driver = (Driver) Class.forName(sDrv).newInstance();
+				verMajor = driver.getMajorVersion();
+				verMinor = driver.getMinorVersion();
+
+				log.log(Level.INFO, "Loading database driver " + sDrv);
+				log.log(Level.INFO, "Connecting with database " + sConn);
+
+				//
+				// First, we'll create a ConnectionFactory that the
+				// pool will use to create Connections.
+				//
+				Properties properties = new Properties();
+				properties.put("user", user);
+				properties.put("password", password);
+
+				ConnectionFactory connectionFactory = new DriverConnectionFactory(driver, sConn, properties);
+				//
+				// Next we'll create the PoolableConnectionFactory, which wraps
+				// the "real" Connections created by the ConnectionFactory with
+				// the classes that implement the pooling functionality.
+				//
+
+				PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,
+						null);
+				poolableConnectionFactory.setValidationQuery(VALIDATION_QUERY);
+				poolableConnectionFactory.setDefaultAutoCommit(true);
+				poolableConnectionFactory.setDefaultReadOnly(false);
+
+				connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
+				connectionPool.setMaxTotal(32);
+				connectionPool.setMinIdle(2);
+				connectionPool.setMaxWait(Duration.ofSeconds(10));
+				connectionPool.setTestOnBorrow(true);
+				poolableConnectionFactory.setPool(connectionPool);
+
+				dataSource = new PoolingDataSource(connectionPool);
+
+			} catch (ClassNotFoundException ex) {
+				lastErrorCode = CONNECT_CLASSNOTFOUND;
+				lastErrorString = "Class not found exception: " + ex.getMessage();
+				throw JdbcLinkExceptionTranslation.translateException("Connect failed: " + lastErrorString, cause);
+			} catch (IllegalAccessException e) {
+				lastErrorCode = CONNECT_UNKNOWN_ERROR;
+				lastErrorString = "Illegal access exception: " + e.getMessage();
+				throw JdbcLinkExceptionTranslation.translateException("Connect failed: " + lastErrorString, cause);
+			} catch (InstantiationException e) {
+				lastErrorCode = CONNECT_UNKNOWN_ERROR;
+				lastErrorString = "Instantiation exception: " + e.getMessage();
+				throw JdbcLinkExceptionTranslation.translateException("Connect failed: " + lastErrorString, cause);
+			}
+		}
+
 		try {
-			sUser = user;
-			sPwd = password;
-			Driver driver = (Driver) Class.forName(sDrv).newInstance();
-			verMajor = driver.getMajorVersion();
-			verMinor = driver.getMinorVersion();
-
-			log.log(Level.INFO, "Loading database driver " + sDrv);
-			log.log(Level.INFO, "Connecting with database " + sConn);
-
-			//
-			// First, we'll create a ConnectionFactory that the
-			// pool will use to create Connections.
-			//
-			Properties properties = new Properties();
-			properties.put("user", user);
-			properties.put("password", password);
-
-			ConnectionFactory connectionFactory = new DriverConnectionFactory(driver, sConn, properties);
-			//
-			// Next we'll create the PoolableConnectionFactory, which wraps
-			// the "real" Connections created by the ConnectionFactory with
-			// the classes that implement the pooling functionality.
-			//
-
-			PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,
-					null);
-			poolableConnectionFactory.setValidationQuery(VALIDATION_QUERY);
-			poolableConnectionFactory.setDefaultAutoCommit(true);
-			poolableConnectionFactory.setDefaultReadOnly(false);
-
-			connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
-			connectionPool.setMaxTotal(32);
-			connectionPool.setMinIdle(2);
-			connectionPool.setMaxWait(Duration.ofSeconds(10));
-			connectionPool.setTestOnBorrow(true);
-			poolableConnectionFactory.setPool(connectionPool);
-
-			dataSource = new PoolingDataSource(connectionPool);
-
 			// test establishing a connection
 			Connection conn = dataSource.getConnection();
 			conn.close();
@@ -299,28 +333,15 @@ public class JdbcLink {
 			lastErrorString = "Connect successful";
 			log.log("Connect successful", Log.DEBUGMSG);
 			return true;
-		} catch (ClassNotFoundException ex) {
-			lastErrorCode = CONNECT_CLASSNOTFOUND;
-			lastErrorString = "Class not found exception: " + ex.getMessage();
-			cause = ex;
-		} catch (InstantiationException e) {
-			lastErrorCode = CONNECT_UNKNOWN_ERROR;
-			lastErrorString = "Instantiation exception: " + e.getMessage();
-			cause = e;
-		} catch (IllegalAccessException e) {
-			lastErrorCode = CONNECT_UNKNOWN_ERROR;
-			lastErrorString = "Illegal access exception: " + e.getMessage();
-			cause = e;
 		} catch (SQLException e) {
 			lastErrorCode = CONNECT_UNKNOWN_ERROR;
 			lastErrorString = "SQL exception: " + e.getMessage();
-			cause = e;
+			throw JdbcLinkExceptionTranslation.translateException("Connect failed: " + lastErrorString, e);
 		} catch (IllegalStateException e) {
 			lastErrorCode = CONNECT_UNKNOWN_ERROR;
 			lastErrorString = "Illegal state exception: " + e.getMessage();
-			cause = e;
+			throw JdbcLinkExceptionTranslation.translateException("Connect failed: " + lastErrorString, e);
 		}
-		throw JdbcLinkExceptionTranslation.translateException("Connect failed: " + lastErrorString, cause);
 	}
 
 	/**

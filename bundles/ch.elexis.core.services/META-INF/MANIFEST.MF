@@ -6,7 +6,7 @@ Bundle-Version: 3.10.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.services
 Bundle-ActivationPolicy: lazy
-Require-Bundle: ch.elexis.core.jpa.entities;bundle-version="3.9.0",
+Require-Bundle: ch.elexis.core.jpa.entities;bundle-version="3.10.0",
  ch.elexis.core.l10n;bundle-version="3.9.0",
  ch.elexis.core;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.10.0"
@@ -22,6 +22,7 @@ Import-Package: bsh,
  javax.ws.rs.ext;version="2.1.6",
  jcifs,
  jcifs.smb,
+ net.ttddyy.dsproxy,
  org.apache.commons.codec;version="1.9.0",
  org.apache.commons.io;version="2.6.0",
  org.apache.commons.lang3;version="3.7.0",

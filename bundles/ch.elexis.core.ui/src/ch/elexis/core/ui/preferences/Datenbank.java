@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2013, G. Weirich and Elexis
+ * Copyright (c) 2005-2022, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *    G. Weirich - initial implementation
  *    M. Descher - Elexis 3.0 take information from real JDBC connection
+ *    			   Elexis 3.10 switch to DataSource based persistence
  *******************************************************************************/
 
 package ch.elexis.core.ui.preferences;
@@ -29,9 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.data.DBConnection;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.io.Settings;
-import ch.rgw.tools.JdbcLink;
 
 /**
  * Datenbankspezifische Einstellungen. Datenbanktyp, Connect-String, Jdbc-Klasse
@@ -59,13 +60,15 @@ public class Datenbank extends PreferencePage implements IWorkbenchPreferencePag
 		final Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(2, false));
 
-		JdbcLink jdbcl = PersistentObject.getConnection();
+		DBConnection defaultConnection = PersistentObject.getDefaultConnection();
 
-		String driver = jdbcl.getDriverName();
+		String dbDriver = defaultConnection.getDBDriver();
+		String driver = dbDriver != null ? dbDriver : "unknown";//$NON-NLS-1$
+
 		String user;
 		Connection conn = null;
 		try {
-			conn = jdbcl.getConnection();
+			conn = defaultConnection.getConnection();
 			user = conn.getMetaData().getUserName();
 		} catch (SQLException e) {
 			user = "ERR: " + e.getMessage(); //$NON-NLS-1$
@@ -78,25 +81,25 @@ public class Datenbank extends PreferencePage implements IWorkbenchPreferencePag
 				log.error("Error closing connection" + e); //$NON-NLS-1$
 			}
 		}
-		String typ = jdbcl.dbDriver();
-		String connectstring = jdbcl.getConnectString();
+		String dbConnectstring = defaultConnection.getRawDBConnectString();
+		String connectString = dbConnectstring != null ? dbConnectstring : "unknown";//$NON-NLS-1$
+
+		String flavor = defaultConnection.getDBFlavor();
 
 		new Label(ret, SWT.NONE).setText(Messages.Datenbank_databaseConnection);
 		new Text(ret, SWT.READ_ONLY).setText(driver); // $NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.Datenbank_connectString);
-		new Text(ret, SWT.READ_ONLY).setText(connectstring); // $NON-NLS-1$
+		new Text(ret, SWT.READ_ONLY).setText(connectString); // $NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.Datenbank_usernameForDatabase);
 		new Text(ret, SWT.READ_ONLY).setText(user); // $NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.Datenbank_typeOfDatabase);
-		new Text(ret, SWT.READ_ONLY).setText(typ); // $NON-NLS-1$
+		new Text(ret, SWT.READ_ONLY).setText(flavor); // $NON-NLS-1$
 
 		return ret;
 	}
 
 	@Override
 	public void init(IWorkbench workbench) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

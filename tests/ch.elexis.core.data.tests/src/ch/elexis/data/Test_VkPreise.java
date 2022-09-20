@@ -14,10 +14,6 @@ import junit.framework.Assert;
 
 public class Test_VkPreise extends AbstractPersistentObjectTest {
 
-	public Test_VkPreise(JdbcLink link) {
-		super(link);
-	}
-
 	@Test
 	public void testVKMultiplikator() throws SQLException {
 		Eigenleistung leistung = new Eigenleistung("TD999", "Leistung.xy999", "99", "10");
@@ -25,7 +21,7 @@ public class Test_VkPreise extends AbstractPersistentObjectTest {
 		leistung.setVKMultiplikator(now, null, 98.12345, "typ");
 		Assert.assertEquals(98.12345, leistung.getVKMultiplikator(now, "typ"));
 
-		ResultSet res = link.getStatement().query("SELECT ID FROM VK_PREISE WHERE TYP='typ'");
+		ResultSet res = getLink().getStatement().query("SELECT ID FROM VK_PREISE WHERE TYP='typ'");
 		if (res.next()) {
 			// checks if id is generated successfully after insert
 			Assert.assertNotNull(res.getString("ID"));
@@ -39,8 +35,8 @@ public class Test_VkPreise extends AbstractPersistentObjectTest {
 	public void testStoringVkPreiseWithSameId() {
 		try {
 			String id = String.valueOf(UUID.randomUUID()).substring(0, 20);
-			Assert.assertEquals(1, link.exec("INSERT INTO VK_PREISE (ID) VALUES (" + JdbcLink.wrap(id) + ")"));
-			link.exec("INSERT INTO VK_PREISE (ID) VALUES (" + JdbcLink.wrap(id) + ")");
+			Assert.assertEquals(1, getLink().exec("INSERT INTO VK_PREISE (ID) VALUES (" + JdbcLink.wrap(id) + ")"));
+			getLink().exec("INSERT INTO VK_PREISE (ID) VALUES (" + JdbcLink.wrap(id) + ")");
 			Assert.fail("should not happen");
 		} catch (JdbcLinkException e) {
 			Assert.assertTrue(true);
@@ -54,9 +50,9 @@ public class Test_VkPreise extends AbstractPersistentObjectTest {
 	public void testStoringVkPreiseDatumIdChar8() throws SQLException {
 		String id = String.valueOf(UUID.randomUUID()).substring(0, 20);
 		String datumVon = "2010121";
-		link.exec("INSERT INTO VK_PREISE (ID, DATUM_VON) VALUES (" + JdbcLink.wrap(id) + ", " + JdbcLink.wrap(datumVon)
-				+ ")");
-		ResultSet res = link.getStatement().query("SELECT DATUM_VON FROM VK_PREISE WHERE ID=" + JdbcLink.wrap(id));
+		getLink().exec("INSERT INTO VK_PREISE (ID, DATUM_VON) VALUES (" + JdbcLink.wrap(id) + ", "
+				+ JdbcLink.wrap(datumVon) + ")");
+		ResultSet res = getLink().getStatement().query("SELECT DATUM_VON FROM VK_PREISE WHERE ID=" + JdbcLink.wrap(id));
 		if (res.next()) {
 			Assert.assertEquals(datumVon.length(), res.getString("DATUM_VON").length());
 		} else {

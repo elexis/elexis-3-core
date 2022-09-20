@@ -7,14 +7,9 @@ import java.sql.SQLException;
 
 import org.junit.Test;
 
-import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 
 public class Test_Trace extends AbstractPersistentObjectTest {
-
-	public Test_Trace(JdbcLink link) {
-		super(link);
-	}
 
 	@Test
 	public void testAddTraceEntry() throws SQLException, InterruptedException {
@@ -22,16 +17,16 @@ public class Test_Trace extends AbstractPersistentObjectTest {
 		// trace is written async
 
 		for (int i = 0; i < 10; i++) {
-			Stm statement = link.getStatement();
+			Stm statement = getLink().getStatement();
 			ResultSet rs = statement.query("SELECT * FROM " + Trace.TABLENAME);
 			while (rs.next()) {
 				String string = rs.getString("ACTION");
 				if ("testAction".equals(string)) {
-					link.releaseStatement(statement);
+					getLink().releaseStatement(statement);
 					return;
 				}
 			}
-			link.releaseStatement(statement);
+			getLink().releaseStatement(statement);
 			Thread.sleep(100);
 		}
 		fail();

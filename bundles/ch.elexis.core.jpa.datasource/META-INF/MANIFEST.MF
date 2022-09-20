@@ -19,5 +19,7 @@ Require-Bundle: org.eclipse.osgi.services;bundle-version="3.6.0",
  com.h2database;bundle-version="1.4.200",
  org.postgresql.jdbc;bundle-version="42.2.19"
 Bundle-ActivationPolicy: lazy
-Export-Package: ch.elexis.core.jpa.datasource.test
+Bundle-ClassPath: lib/datasource-proxy-1.8.jar,
+ .
+Export-Package: net.ttddyy.dsproxy
 Service-Component: OSGI-INF/ch.elexis.core.jpa.datasource.internal.ElexisDataSourceService.xml

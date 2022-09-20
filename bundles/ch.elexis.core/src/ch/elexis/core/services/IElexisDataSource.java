@@ -15,9 +15,7 @@ public interface IElexisDataSource {
 	 *
 	 * @return <code>null</code> if no connection set, {@link ObjectStatus}
 	 *         containing a {@link DBConnection} if status is ok, or the resp. error
-	 *         message. The status code value is as follows:<br>
-	 *         1 testdb connection, 2 environment provided connection, 3
-	 *         configuration provided connection
+	 *         message.
 	 */
 	public @Nullable ObjectStatus getCurrentConnectionStatus();
 }

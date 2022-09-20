@@ -1,6 +1,5 @@
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,6 +7,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.data.beans.ContactBean;
 import ch.elexis.core.data.interfaces.ILabItem;
@@ -41,10 +42,13 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	public static final String VERSION110 = "1.1.0"; //$NON-NLS-1$
 	public static final String VERSION120 = "1.2.0"; //$NON-NLS-1$
 	public static final String VERSION130 = "1.3.0"; //$NON-NLS-1$
+	@Deprecated(forRemoval = true)
 	private static final String UPD110 = "ALTER TABLE " + TABLENAME //$NON-NLS-1$
 			+ " ADD IF NOT EXISTS groupname VARCHAR(255);"; //$NON-NLS-1$
+	@Deprecated(forRemoval = true)
 	private static final String UPD120 = "ALTER TABLE " + TABLENAME //$NON-NLS-1$
 			+ " ADD IF NOT EXISTS observationtime VARCHAR(24);"; //$NON-NLS-1$
+	@Deprecated(forRemoval = true)
 	private static final String UPD130 = "CREATE INDEX IF NOT EXISTS laborder4 ON " + TABLENAME + " (" + FLD_ORDERID //$NON-NLS-1$ //$NON-NLS-2$
 			+ ");";//$NON-NLS-1$
 
@@ -68,6 +72,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	}
 
 	// @formatter:off
+	@Deprecated(forRemoval = true)
 	static final String create =
 			"CREATE TABLE " + TABLENAME + " (" + //$NON-NLS-1$ //$NON-NLS-2$
 			"ID VARCHAR(25) primary key, " + //$NON-NLS-1$

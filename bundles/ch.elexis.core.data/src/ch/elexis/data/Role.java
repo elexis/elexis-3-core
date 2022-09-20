@@ -36,6 +36,8 @@ public class Role extends PersistentObject {
 	public Role() {
 	}
 
+	// TODO move to NoPo initialisation
+	@Deprecated(forRemoval = true)
 	protected static void initTables() {
 		if (!tableExists(TABLENAME)) {
 			executeDBInitScriptForClass(Role.class, null);

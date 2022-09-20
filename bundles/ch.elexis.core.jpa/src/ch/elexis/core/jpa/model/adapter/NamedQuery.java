@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.eclipse.persistence.config.CacheUsage;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 import org.eclipse.persistence.queries.ScrollableCursor;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.internal.QueryCursor;
@@ -41,6 +41,10 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		// (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
 		if (refreshCache) {
 			this.query.setHint(QueryHints.REFRESH, HintValues.TRUE);
+			Map<String, Object> hints = query.getHints();
+			if (hints != null && hints.containsKey(QueryHints.QUERY_RESULTS_CACHE)) {
+				this.query.setHint(QueryHints.CACHE_USAGE, CacheUsage.Invalidate);
+			}
 		}
 	}
 
@@ -89,13 +93,23 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 
 	@Override
 	public Optional<R> executeWithParametersSingleResult(Map<String, Object> parameters) {
-		List<R> result = executeWithParameters(parameters);
-		if (!result.isEmpty()) {
-			if (result.size() > 1) {
-				LoggerFactory.getLogger(getClass()).warn("Multiple results in list where single result expected", //$NON-NLS-1$
-						new Throwable());
+
+		parameters.forEach((k, v) -> {
+			v = resolveValue(v);
+			query.setParameter(k, v);
+		});
+		if (returnValueClazz.equals(interfaceClazz)) {
+			Optional<?> findFirst = query.getResultStream().findFirst();
+			if (findFirst.isPresent()) {
+				@SuppressWarnings("unchecked")
+				R orElse = (R) adapterFactory.getModelAdapter((EntityWithId) findFirst.get(), interfaceClazz, true)
+						.orElse(null);
+				return Optional.ofNullable(orElse);
 			}
-			return Optional.of(result.get(0));
+
+		} else {
+			// query result list can contain null values, we do not want to see them
+			return (Optional<R>) query.getResultStream().findFirst();
 		}
 		return Optional.empty();
 	}

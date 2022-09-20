@@ -4,32 +4,26 @@ import java.sql.Driver;
 import java.time.Duration;
 import java.util.Properties;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.DriverConnectionFactory;
 import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDataSource;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.DBConnection;
+import ch.elexis.core.jpa.datasource.internal.jfr.JFRQueryExecutionListener;
+import ch.elexis.core.utils.CoreUtil;
+import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 
-public class ElexisPoolingDataSourceBuilder {
+public class ProxyPoolingDataSourceBuilder {
 
-	private static Logger log = LoggerFactory.getLogger(ElexisPoolingDataSourceBuilder.class);
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static PoolingDataSource build(DBConnection dbConnection)
+	public static DataSource build(DBConnection dbConnection)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		ObjectPool<PoolableConnection> connectionPool = createConnectionPool(dbConnection);
-		return new PoolingDataSource(connectionPool);
-	}
 
-	private static ObjectPool<PoolableConnection> createConnectionPool(DBConnection dbConnection)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		String driverName = StringUtils.defaultString(dbConnection.rdbmsType.driverName);
 		String username = StringUtils.defaultString(dbConnection.username);
 		String password = StringUtils.defaultString(dbConnection.password);
@@ -39,9 +33,7 @@ public class ElexisPoolingDataSourceBuilder {
 
 		Properties properties = new Properties();
 		properties.put("user", username);
-		properties.put("password", password);
-
-		log.debug("db connection pool [" + driver + ", " + jdbcString + ", " + username + "] initialization");
+		properties.put("password", password.toString());
 
 		ConnectionFactory connectionFactory = new DriverConnectionFactory(driver, jdbcString, properties);
 
@@ -58,8 +50,18 @@ public class ElexisPoolingDataSourceBuilder {
 
 		poolableConnectionFactory.setPool(connectionPool);
 
-		return connectionPool;
+		PoolingDataSource<PoolableConnection> poolingDataSource = new PoolingDataSource<PoolableConnection>(
+				connectionPool);
 
+		JFRQueryExecutionListener jfrQueryExecutionListener = new JFRQueryExecutionListener();
+
+		ProxyDataSourceBuilder proxyDataSourceBuilder = ProxyDataSourceBuilder.create(poolingDataSource)
+				.listener(jfrQueryExecutionListener);
+		if (CoreUtil.isTestMode()) {
+			// in test mode, use QueryCountHolder to get the count state
+			proxyDataSourceBuilder.countQuery();
+		}
+		return proxyDataSourceBuilder.build();
 	}
 
 }

@@ -1,6 +1,5 @@
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +34,7 @@ public class LabMapping extends PersistentObject {
 	private static int importerLabItemsCreated = 0;
 
 	// @formatter:off
+	@Deprecated(forRemoval = true)
 	static final String create =
 			"CREATE TABLE " + TABLENAME + " (" + //$NON-NLS-1$ //$NON-NLS-2$
 			"ID VARCHAR(25) primary key, " + //$NON-NLS-1$

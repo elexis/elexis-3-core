@@ -22,6 +22,7 @@ import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Query;
 
+@Deprecated(forRemoval = true)
 public class FallUpdatesFor36 {
 
 	protected static Logger log = LoggerFactory.getLogger(FallUpdatesFor36.class);

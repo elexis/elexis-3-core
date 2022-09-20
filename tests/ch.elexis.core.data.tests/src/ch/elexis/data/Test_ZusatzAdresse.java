@@ -8,14 +8,9 @@ import org.junit.Test;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.types.AddressType;
 import ch.elexis.data.dto.ZusatzAdresseDTO;
-import ch.rgw.tools.JdbcLink;
 import junit.framework.Assert;
 
 public class Test_ZusatzAdresse extends AbstractPersistentObjectTest {
-
-	public Test_ZusatzAdresse(JdbcLink link) {
-		super(link);
-	}
 
 	@Test(expected = ElexisException.class)
 	public void TestZusatzAdresseWithoutKontakt() throws ElexisException {

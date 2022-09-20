@@ -55,10 +55,12 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	private static final String SEPARATOR = ":=:";
 
 	// @formatter:off
+	@Deprecated(forRemoval = true)
 	private static final String upd100 =
 			"ALTER TABLE " + TABLENAME + " ADD " + FLD_CODEELEMENTS + " TEXT;"
 			+ "INSERT INTO " + TABLENAME + " (ID, " + FLD_NAME + ") VALUES (" + JdbcLink.wrap(Leistungsblock.VERSION_ID) + ", " + JdbcLink.wrap(VERSION) + ");";
 
+	@Deprecated(forRemoval = true)
 	public static final String createDB = "CREATE TABLE " + TABLENAME + " ("
 		+"ID 					VARCHAR(25) primary key, "
 		+"lastupdate 			BIGINT,"
@@ -98,7 +100,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 				version.set(FLD_NAME, VERSION);
 			}
 		}
-
+		// TODO move to NoPo initialisation
 		Xid.localRegisterXIDDomainIfNotExists(XIDDOMAIN, XIDDOMAIN_SIMPLENAME, Xid.ASSIGNMENT_LOCAL | Xid.QUALITY_GUID);
 	}
 

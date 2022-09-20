@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.DBConnection;
 import ch.elexis.core.common.DBConnection.DBType;
-import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jdt.NonNull;
 import ch.rgw.io.Settings;
@@ -86,47 +85,6 @@ public class CoreUtil {
 	 * @return
 	 */
 	public static Optional<DBConnection> getDBConnection(Settings settings) {
-		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
-				.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
-			DBConnection ret = new DBConnection();
-			ret.connectionString = "jdbc:h2:mem:elexisFromScratch;DB_CLOSE_DELAY=-1";
-			String trace = System.getProperty("elexis.test.dbtrace");
-			if (trace != null && "true".equalsIgnoreCase(trace)) {
-				ret.connectionString += ";TRACE_LEVEL_SYSTEM_OUT=2";
-			}
-			ret.rdbmsType = DBType.H2;
-			ret.username = "sa";
-			ret.password = StringUtils.EMPTY;
-			return Optional.of(ret);
-		}
-
-		if (System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null) {
-			DBConnection dbConnection = new DBConnection();
-			dbConnection.username = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME) != null
-					? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME)
-					: StringUtils.EMPTY;
-			dbConnection.password = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD) != null
-					? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD)
-					: StringUtils.EMPTY;
-
-			if (System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR) != null) {
-				String flavorString = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR);
-				dbConnection.rdbmsType = DBType.valueOfIgnoreCase(flavorString).orElseThrow(
-						() -> new IllegalStateException("Unknown ch.elexis.dbFlavor [" + flavorString + "]"));
-			}
-			dbConnection.connectionString = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null
-					? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC)
-					: StringUtils.EMPTY;
-			if (dbConnection.connectionString.startsWith("jdbc:h2:")
-					&& System.getProperty(ElexisSystemPropertyConstants.CONN_DB_H2_AUTO_SERVER) != null) {
-				logger.info("Adding AUTO_SERVER to " + dbConnection.connectionString);
-				dbConnection.connectionString = dbConnection.connectionString + ";AUTO_SERVER=TRUE";
-
-			}
-
-			return Optional.of(dbConnection);
-		}
-
 		Hashtable<Object, Object> hConn = getConnectionHashtable(settings);
 		if (hConn != null) {
 			DBConnection ret = new DBConnection();

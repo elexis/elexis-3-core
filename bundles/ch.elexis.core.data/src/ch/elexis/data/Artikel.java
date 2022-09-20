@@ -49,6 +49,7 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 	static {
 		addMapping(TABLENAME, FLD_NAME, FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP, FLD_EXTINFO, FLD_EAN, FLD_SUB_ID,
 				EIGENNAME + "=Name_intern", FLD_CODECLASS, FLD_KLASSE, FLD_ATC_CODE, FLD_EXTID);
+		// TODO move to NoPo initialisation
 		Xid.localRegisterXIDDomainIfNotExists(XID_PHARMACODE, FLD_PHARMACODE, Xid.ASSIGNMENT_REGIONAL);
 	}
 

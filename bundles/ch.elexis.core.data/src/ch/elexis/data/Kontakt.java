@@ -94,13 +94,14 @@ public class Kontakt extends PersistentObject {
 				FLD_IS_ORGANIZATION, FLD_IS_PERSON, FLD_IS_PATIENT, FLD_IS_USER, FLD_IS_MANDATOR, FLD_IS_LAB,
 				FLD_STREET, FLD_ZIP, FLD_PLACE, FLD_COUNTRY, FLD_FAX, FLD_ANSCHRIFT, FLD_MOBILEPHONE);
 
+		// TODO move to NoPo initialisation
 		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_ANREDE, "Anrede", Xid.ASSIGNMENT_REGIONAL);
 		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_KANTON, "Kanton", Xid.ASSIGNMENT_REGIONAL);
 		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_SPEZ, "Spezialität", Xid.ASSIGNMENT_REGIONAL);
 		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_ROLLE, "Rolle", Xid.ASSIGNMENT_REGIONAL);
 		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, "Sendende Institution",
 				Xid.ASSIGNMENT_REGIONAL);
-
+		// TODO move to NoPo initialisation
 		Xid.getDomain(XidConstants.XID_KONTAKT_ANREDE).addDisplayOption(Person.class);
 		Xid.getDomain(XidConstants.XID_KONTAKT_KANTON).addDisplayOption(Person.class);
 		Xid.getDomain(XidConstants.XID_KONTAKT_SPEZ).addDisplayOption(Person.class);

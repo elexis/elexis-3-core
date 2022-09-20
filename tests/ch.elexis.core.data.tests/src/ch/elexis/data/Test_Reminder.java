@@ -13,14 +13,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
-import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.TimeTool;
 
 public class Test_Reminder extends AbstractPersistentObjectTest {
@@ -30,8 +28,8 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 
 	private Reminder reminderA, reminderB, reminderC;
 
-	public Test_Reminder(JdbcLink link) {
-		super(link);
+	public Test_Reminder() {
+		super();
 
 		User user = User.load("Administrator");
 		if (user.getAssignedContact() == null) {

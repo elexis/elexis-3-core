@@ -14,16 +14,17 @@
 
 package ch.elexis.data;
 
-//WARNING: A lot of code from this file also exists in ch.elexis.arzttarife_ch.src.TarmedRechnung.Validator.java.
-//And over there, maybe it is in a more advanced state, regarding modularization and internationalization.
-//But this file here appears to be actually used.
-
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+//WARNING: A lot of code from this file also exists in ch.elexis.arzttarife_ch.src.TarmedRechnung.Validator.java.
+//And over there, maybe it is in a more advanced state, regarding modularization and internationalization.
+//But this file here appears to be actually used.
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -842,7 +843,12 @@ public class Rechnung extends PersistentObject {
 		return null;
 	}
 
-	/** Die nächste Rechnungsnummer holen. */
+	/**
+	 * Die nächste Rechnungsnummer holen.
+	 * 
+	 * @deprecated InvoiceEntityListener
+	 */
+	@Deprecated
 	public static String getNextRnNummer() {
 		JdbcLink j = getConnection();
 		Stm stm = j.getStatement();

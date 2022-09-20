@@ -130,6 +130,27 @@ public interface IAppointmentService {
 	public List<String> getStates();
 
 	/**
+	 * Get the appointment type color configured for the given userContact. Default
+	 * is #3a87ad.
+	 * 
+	 * @param userContact     if <code>null</code>, take user from context
+	 * @param appointmentType the value of {@link IAppointment#getType()}
+	 * @return
+	 * @since 3.10
+	 */
+	public String getContactConfiguredTypeColor(IContact userContact, String appointmentType);
+
+	/**
+	 * Get the appointment state color configured for the given userContact. Default
+	 * is #ffffff.
+	 * 
+	 * @param userContact      if <code>null</code>, take user from context
+	 * @param appointmentState the value of {@link IAppointment#getState()}
+	 * @return
+	 */
+	public String getContactConfiguredStateColor(IContact userContact, String appointmentState);
+
+	/**
 	 * Get the {@link IAppointmentSeries} representation of the
 	 * {@link IAppointment}. Returns empty if {@link IAppointment#isRecurring()} is
 	 * not true.

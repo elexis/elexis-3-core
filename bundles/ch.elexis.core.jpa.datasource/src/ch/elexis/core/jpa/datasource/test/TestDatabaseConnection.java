@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.datasource.test;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,11 +8,16 @@ import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.common.DBConnection;
 
 /**
  * an h2 based test database connection
+ * 
+ * @deprecated
  */
+@Deprecated(forRemoval = true)
 public class TestDatabaseConnection extends DBConnection {
 
 	private static final long serialVersionUID = 3263914071272054090L;

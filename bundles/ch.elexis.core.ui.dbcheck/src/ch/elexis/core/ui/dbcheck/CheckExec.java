@@ -4,10 +4,10 @@
  *******************************************************************************/
 package ch.elexis.core.ui.dbcheck;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 
-import ch.elexis.core.data.activator.CoreHub;
+import org.apache.commons.lang3.StringUtils;
+
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLinkSyntaxException;
 
@@ -27,9 +27,9 @@ public abstract class CheckExec {
 
 	public static String checkDBVersionConsistence() {
 		String version = getDBVersion();
-		if (CoreHub.DBVersion.equalsIgnoreCase(version))
-			return version;
-		return "Verlangte DB: " + CoreHub.DBVersion + " Gefundene DB: " + version + "; Teste auf Version " + version;
+//		if (CoreHub.DBVersion.equalsIgnoreCase(version))
+//			return version;
+		return "Verlangte DB: liquibase Gefundene DB: " + version + "; Teste auf Version " + version;
 	}
 
 	public static String getDBVersion() {

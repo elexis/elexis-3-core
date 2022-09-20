@@ -5,13 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.rgw.tools.JdbcLink;
 
 public class Test_DBInitialState extends AbstractPersistentObjectTest {
-
-	public Test_DBInitialState(JdbcLink link) {
-		super(link, true);
-	}
 
 	@Test
 	public void testDatabaseUpdatedToRequiredVersion() {

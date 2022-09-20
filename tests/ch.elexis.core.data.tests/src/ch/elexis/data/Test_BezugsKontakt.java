@@ -9,14 +9,9 @@ import org.junit.Test;
 
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.types.RelationshipType;
-import ch.rgw.tools.JdbcLink;
 import junit.framework.Assert;
 
 public class Test_BezugsKontakt extends AbstractPersistentObjectTest {
-
-	public Test_BezugsKontakt(JdbcLink link) {
-		super(link);
-	}
 
 	@Test
 	public void TestBezugsKontakt() throws ElexisException {

@@ -12,7 +12,6 @@
 
 package ch.elexis.core.data.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +42,9 @@ import ch.rgw.tools.VersionInfo;
  * Änderungen der Datenbank im Rahmen eines update durchführen.
  *
  * @author Gerry
- *
+ * @deprecated DB updates are now done via liquibase
  */
+@Deprecated(forRemoval = true)
 public class DBUpdate {
 
 	private static final String ALTER_TABLE = "ALTER TABLE ";
@@ -499,7 +500,7 @@ public class DBUpdate {
 
 		// update version if all updates are successful
 		if (success) {
-			ConfigServiceHolder.setGlobal("dbversion", CoreHub.DBVersion);
+			ConfigServiceHolder.setGlobal("dbversion", "liquibase");
 			ConfigServiceHolder.setGlobal("ElexisVersion", CoreHub.Version);
 			// create log message
 			log.info("DBUpdate from Version " + dbv + " to Version " + versions[versions.length - 1] + " successful.");

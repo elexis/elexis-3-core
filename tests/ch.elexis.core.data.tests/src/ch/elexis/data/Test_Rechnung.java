@@ -7,14 +7,9 @@ import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
 
 public class Test_Rechnung extends AbstractPersistentObjectTest {
-
-	public Test_Rechnung(JdbcLink link) {
-		super(link);
-	}
 
 	@Test
 	public void testRemoveOpenReminders() {

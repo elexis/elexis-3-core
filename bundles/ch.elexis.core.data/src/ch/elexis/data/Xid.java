@@ -101,6 +101,7 @@ public class Xid extends PersistentObject implements IXid {
 		addMapping(TABLENAME, FLD_TYPE, FLD_OBJECT, FLD_DOMAIN, FLD_ID_IN_DOMAIN, FLD_QUALITY);
 		domains = new HashMap<String, XIDDomain>();
 		domainMap = new HashMap<String, String>();
+		// TODO move to NoPo initialisation
 		String storedDomains = CoreHub.globalCfg.get("LocalXIDDomains", null);
 		if (storedDomains == null) {
 			domains.put(ELEXIS, new XIDDomain(ELEXIS, "UUID", ELEXIS_QUALITY | QUALITY_GUID,

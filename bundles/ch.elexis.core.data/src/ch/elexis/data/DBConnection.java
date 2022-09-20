@@ -1,12 +1,12 @@
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,6 +89,13 @@ public class DBConnection {
 		} else {
 			return dbConnectString;
 		}
+	}
+
+	/**
+	 * @since 3.10
+	 */
+	public String getRawDBConnectString() {
+		return dbConnectString;
 	}
 
 	public void setDBConnectString(String connectString) {
@@ -221,7 +228,8 @@ public class DBConnection {
 	}
 
 	public boolean isRunningFromScratch() {
-		return runningFromScratch;
+		return ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
+				.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE));
 	}
 
 	public void runFromScatch() throws IOException {
@@ -232,7 +240,7 @@ public class DBConnection {
 	}
 
 	public void disconnect() {
-		if (jdbcLink.DBFlavor.startsWith("hsqldb")) {
+		if (jdbcLink.DBFlavor != null && jdbcLink.DBFlavor.startsWith("hsqldb")) {
 			jdbcLink.exec("SHUTDOWN COMPACT");
 		}
 		jdbcLink.disconnect();

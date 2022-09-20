@@ -8,13 +8,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.model.RoleConstants;
-import ch.rgw.tools.JdbcLink;
 
 public class Test_User extends AbstractPersistentObjectTest {
-
-	public Test_User(JdbcLink link) {
-		super(link);
-	}
 
 	private static Anwender anwender;
 

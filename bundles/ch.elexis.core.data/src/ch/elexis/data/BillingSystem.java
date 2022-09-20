@@ -10,9 +10,9 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,10 @@ import ch.rgw.tools.StringTool;
  * to one {@link BillingSystem} configured for it.
  *
  * @since 3.6
+ * @deprecated merge into ch.elexis.core.model.BillingSystem resp.
+ *             BillingSystemService
  */
+@Deprecated
 public class BillingSystem {
 
 	private static Logger log = LoggerFactory.getLogger(BillingSystem.class);
