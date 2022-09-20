@@ -9,7 +9,6 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Attachment;
 import org.hl7.fhir.r4.model.DocumentReference;
@@ -61,19 +60,14 @@ public class DocumentReferenceIDocumentReferenceTransformer
 		if (resource.isPresent()) {
 			DocumentReference ret = (DocumentReference) resource.get();
 			if (ret.getContent().isEmpty()) {
-				// should add content or url
 				IDocument document = localObject.getDocument();
 				if (document != null) {
-					try {
-						DocumentReferenceContentComponent content = new DocumentReferenceContentComponent();
-						Attachment attachment = new Attachment();
-						attachment.setTitle(document.getTitle());
-						attachment.setData(Base64.getEncoder().encode(IOUtils.toByteArray(document.getContent())));
-						content.setAttachment(attachment);
-						ret.addContent(content);
-					} catch (IOException e) {
-						LoggerFactory.getLogger(getClass()).error("Error reading content of document", e);
-					}
+					DocumentReferenceContentComponent content = new DocumentReferenceContentComponent();
+					Attachment attachment = new Attachment();
+					attachment.setTitle(document.getTitle());
+					attachment.setUrl(getBinaryUrl(ret));
+					content.setAttachment(attachment);
+					ret.addContent(content);
 				} else {
 					LoggerFactory.getLogger(getClass()).error("No document with content found for reference " + ret);
 				}
@@ -81,6 +75,11 @@ public class DocumentReferenceIDocumentReferenceTransformer
 			return Optional.of(ret);
 		}
 		return Optional.empty();
+	}
+
+	private String getBinaryUrl(DocumentReference ret) {
+
+		return ret.getId() + "/$binary-access-read";
 	}
 
 	@Override
@@ -106,62 +105,63 @@ public class DocumentReferenceIDocumentReferenceTransformer
 		if (fhirObject.getContent() != null && !fhirObject.getContent().isEmpty()) {
 			DocumentReferenceContentComponent content = fhirObject.getContent().get(0);
 			Attachment attachment = content.getAttachment();
-			if (attachment.getData() != null || attachment.getUrl() != null) {
-				if (fhirObject.getSubject() != null && fhirObject.getSubject().getId() != null) {
-					Optional<IPatient> patientKontakt = codeModelService.load(fhirObject.getSubject().getId(),
-							IPatient.class);
-					if (patientKontakt.isPresent()) {
-						IDocumentReference iDocumentReference = findingsService.create(IDocumentReference.class);
+			if (fhirObject.getSubject() != null && fhirObject.getSubject().getId() != null) {
+				Optional<IPatient> patientKontakt = codeModelService.load(fhirObject.getSubject().getId(),
+						IPatient.class);
+				if (patientKontakt.isPresent()) {
+					IDocumentReference iDocumentReference = findingsService.create(IDocumentReference.class);
+					contentHelper.setResource(fhirObject, iDocumentReference);
+					iDocumentReference.setPatientId(patientKontakt.get().getId());
+					IDocument document = createDocument(patientKontakt.get(), attachment,
+							iDocumentReference.getCategory());
+					if (document != null) {
+						fhirObject.getContent().clear();
 						contentHelper.setResource(fhirObject, iDocumentReference);
-						iDocumentReference.setPatientId(patientKontakt.get().getId());
-						IDocument document = createDocument(patientKontakt.get(), attachment,
-								iDocumentReference.getCategory());
-						if (document != null) {
-							fhirObject.getContent().clear();
-							iDocumentReference.setDocument(document);
-							findingsService.saveFinding(iDocumentReference);
-						}
-						return Optional.of(iDocumentReference);
-					} else {
-						LoggerFactory.getLogger(getClass())
-								.error("Patient [" + fhirObject.getSubject().getId() + "] not found");
+						iDocumentReference.setDocument(document);
 					}
+					findingsService.saveFinding(iDocumentReference);
+					return Optional.of(iDocumentReference);
 				} else {
-					LoggerFactory.getLogger(getClass()).error("No patient for document");
+					LoggerFactory.getLogger(getClass())
+							.error("Patient [" + fhirObject.getSubject().getId() + "] not found");
 				}
 			} else {
-				LoggerFactory.getLogger(getClass()).error("No attachment for document");
+				LoggerFactory.getLogger(getClass()).error("No patient for document");
 			}
 		}
 		return Optional.empty();
 	}
 
 	private IDocument createDocument(IPatient patient, Attachment attachment, String category) {
-		boolean success = false;
 		IDocument ret = omnivoreStore.createDocument(patient.getId(), attachment.getTitle(), category);
-		if (attachment.getData() != null) {
-			try (InputStream in = new ByteArrayInputStream(Base64.getDecoder().decode(attachment.getData()))) {
-				omnivoreStore.saveDocument(ret, in);
-				success = true;
-			} catch (IOException | ElexisException e) {
-				LoggerFactory.getLogger(getClass())
-						.error("Error reading content from attachment data [" + attachment.getUrl() + "]", e);
-			}
-		} else if (attachment.getUrl() != null) {
-			try {
-				URL url = new URL(attachment.getUrl());
-				try (InputStream in = url.openStream()) {
-					omnivoreStore.saveDocument(ret, in);
-					success = true;
-				} catch (IOException | ElexisException e) {
-					LoggerFactory.getLogger(getClass())
-							.error("Error reading content from url [" + attachment.getUrl() + "]", e);
+		try {
+			omnivoreStore.saveDocument(ret);
+			if (attachment != null) {
+				if (attachment.getData() != null) {
+					try (InputStream in = new ByteArrayInputStream(Base64.getDecoder().decode(attachment.getData()))) {
+						omnivoreStore.saveDocument(ret, in);
+					} catch (IOException | ElexisException e) {
+						LoggerFactory.getLogger(getClass())
+								.error("Error reading content from attachment data [" + attachment.getUrl() + "]", e);
+					}
+				} else if (attachment.getUrl() != null) {
+					try {
+						URL url = new URL(attachment.getUrl());
+						try (InputStream in = url.openStream()) {
+							omnivoreStore.saveDocument(ret, in);
+						} catch (IOException | ElexisException e) {
+							LoggerFactory.getLogger(getClass())
+									.error("Error reading content from url [" + attachment.getUrl() + "]", e);
+						}
+					} catch (MalformedURLException e) {
+						LoggerFactory.getLogger(getClass()).error("Attachment url invalid", e);
+					}
 				}
-			} catch (MalformedURLException e) {
-				LoggerFactory.getLogger(getClass()).error("Attachment url invalid", e);
 			}
+		} catch (ElexisException e) {
+			LoggerFactory.getLogger(getClass()).error("Error creating document", e);
 		}
-		return success ? ret : null;
+		return ret;
 	}
 
 	@Override
