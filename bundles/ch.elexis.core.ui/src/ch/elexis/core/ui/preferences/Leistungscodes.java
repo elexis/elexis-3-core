@@ -853,6 +853,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			cbRechn.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			for (IConfigurationElement ic : list_RnOutputters) {
 				String name = ic.getAttribute("name"); //$NON-NLS-1$
+				// skip Fall-Standard here only relevant on output
+				if (name != null && name.equals("Fall-Standard")) {
+					continue;
+				}
 				log.trace("cbRechn name {} -> {}", name, getLocalizedLeistungscode(name)); //$NON-NLS-1$
 				cbRechn.add(getLocalizedAusgabe(name));
 			}

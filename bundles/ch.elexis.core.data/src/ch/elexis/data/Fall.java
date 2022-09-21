@@ -12,12 +12,12 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.slf4j.LoggerFactory;
@@ -78,6 +78,8 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	public static final String FLD_EXT_COPY_FOR_PATIENT = "CopyForPatient"; //$NON-NLS-1$
 	public static final String FLD_EXT_KOSTENTRAEGER = "Kostenträger"; //$NON-NLS-1$
 	public static final String FLD_EXT_RECHNUNGSEMPFAENGER = "Rechnungsempfänger"; //$NON-NLS-1$
+
+	public static final String DEFAULT_RNOUTPUTTER = "QR-PDF-Rechnungsdrucker.Rechnung1"; //$NON-NLS-1$
 
 	public static enum Tiers {
 		PAYANT, GARANT
@@ -542,22 +544,38 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	}
 
 	/**
-	 * Retrieve the ooutputter for this case's billing system
+	 * Retrieve the outputter for this case's billing system
 	 *
 	 * @return the IRnOutputter that will be used or null if none was found
 	 */
 	public IRnOutputter getOutputter() {
 		String outputterName = getOutputterName();
 		if (outputterName.length() > 0) {
-			List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsData.RECHNUNGS_MANAGER); // $NON-NLS-1$
-			for (IConfigurationElement ic : list) {
-				if (ic.getAttribute("name").equals(outputterName)) { //$NON-NLS-1$
-					try {
-						IRnOutputter ret = (IRnOutputter) ic.createExecutableExtension("outputter"); //$NON-NLS-1$
-						return ret;
-					} catch (CoreException e) {
-						ExHandler.handle(e);
-					}
+			IRnOutputter ret = getRnOutputter(outputterName);
+			if (ret == null) {
+				ret = getRnOutputter(DEFAULT_RNOUTPUTTER);
+				if (ret != null) {
+					BillingSystem.setConfigurationValue(getAbrechnungsSystem(), "standardausgabe",
+							DEFAULT_RNOUTPUTTER);
+				} else {
+					LoggerFactory.getLogger(getClass())
+							.warn("Default rn outputter [" + DEFAULT_RNOUTPUTTER + "] not found");
+				}
+			}
+			return ret;
+		}
+		return null;
+	}
+
+	private IRnOutputter getRnOutputter(String extensionName) {
+		List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsData.RECHNUNGS_MANAGER); // $NON-NLS-1$
+		for (IConfigurationElement ic : list) {
+			if (ic.getAttribute("name").equals(extensionName)) { //$NON-NLS-1$
+				try {
+					IRnOutputter ret = (IRnOutputter) ic.createExecutableExtension("outputter"); //$NON-NLS-1$
+					return ret;
+				} catch (CoreException e) {
+					ExHandler.handle(e);
 				}
 			}
 		}
