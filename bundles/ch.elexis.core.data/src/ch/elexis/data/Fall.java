@@ -555,8 +555,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 			if (ret == null) {
 				ret = getRnOutputter(DEFAULT_RNOUTPUTTER);
 				if (ret != null) {
-					BillingSystem.setConfigurationValue(getAbrechnungsSystem(), "standardausgabe",
-							DEFAULT_RNOUTPUTTER);
+					BillingSystem.setConfigurationValue(getAbrechnungsSystem(), "standardausgabe", DEFAULT_RNOUTPUTTER);
 				} else {
 					LoggerFactory.getLogger(getClass())
 							.warn("Default rn outputter [" + DEFAULT_RNOUTPUTTER + "] not found");
