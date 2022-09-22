@@ -5,8 +5,8 @@ Bundle-SymbolicName: ch.elexis.core.scripting.beanshell;singleton:=true
 Bundle-Version: 3.10.0.qualifier
 Bundle-Vendor: elexis.info
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: ch.elexis.core;bundle-version="3.9.0",
+Require-Bundle: ch.elexis.core;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.9.100",
- ch.elexis.core.data;bundle-version="3.9.0"
+ ch.elexis.core.data;bundle-version="3.10.0"
 Bundle-ClassPath: .
 Import-Package: bsh

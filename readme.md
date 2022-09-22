@@ -250,14 +250,16 @@ discussed on the developers mailing list.
 
 ## Updating all versions for a newer ID
 
-We do this for all new major version, eg. 3.3 -\> 3.4. See also
+We do this for all new major version, eg. 3.9 -\> 3.10. See also
 http://www.mojohaus.org/versions-maven-plugin/usage.html
 
 Steps to follow are:
 
 -   Update the version in master pom.xml
 -   Run
-    `mvn org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=3.9.0-SNAPSHOT`
+    `mvn org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=3.10.0-SNAPSHOT`
+    `grep --files-with-match 3.9.0 bundles/*/META-INF/MANIFEST.MF | xargs sed -i 's/3.9.0/3.10.0/g'`
+
 -   Test and check whether the old version number is still present in
     other files.
 
