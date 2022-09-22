@@ -552,7 +552,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		String outputterName = getOutputterName();
 		if (outputterName.length() > 0) {
 			IRnOutputter ret = getRnOutputter(outputterName);
-			if (ret == null) {
+			if (ret == null || outputterName.equals("Fall-Standard")) {
 				ret = getRnOutputter(DEFAULT_RNOUTPUTTER);
 				if (ret != null) {
 					BillingSystem.setConfigurationValue(getAbrechnungsSystem(), "standardausgabe", DEFAULT_RNOUTPUTTER);
