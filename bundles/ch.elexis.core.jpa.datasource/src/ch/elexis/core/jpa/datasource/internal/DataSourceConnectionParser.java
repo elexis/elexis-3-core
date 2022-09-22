@@ -35,7 +35,7 @@ public class DataSourceConnectionParser {
 	 * Try to find a valid existing database configuration, according to the given
 	 * surrounding parameters. If none found (which is a valid scenario e.g. for
 	 * Elexis RCP which reads from CoreHub.localCfg) return Optional empty
-	 * 
+	 *
 	 * @return
 	 */
 	public Optional<DBConnection> parseAvailableParameters() {

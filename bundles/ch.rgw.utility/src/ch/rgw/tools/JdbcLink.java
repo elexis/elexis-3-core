@@ -241,7 +241,7 @@ public class JdbcLink {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dataSource
 	 * @throws SQLException
 	 * @since 3.10

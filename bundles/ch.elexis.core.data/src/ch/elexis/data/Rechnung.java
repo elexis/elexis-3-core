@@ -845,7 +845,7 @@ public class Rechnung extends PersistentObject {
 
 	/**
 	 * Die nächste Rechnungsnummer holen.
-	 * 
+	 *
 	 * @deprecated InvoiceEntityListener
 	 */
 	@Deprecated
