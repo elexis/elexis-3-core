@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_lmS7QIVgEeqnL-Nh_NKOsQ">
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_lmS7QIVgEeqnL-Nh_NKOsQ">
   <imports xsi:type="commands:BindingContext" xmi:id="_NvJzkIcEEeutVMzWpU7zdQ" elementId="org.eclipse.ui.contexts.dialogAndWindow"/>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_mE-bUIVgEeqnL-Nh_NKOsQ" featurename="addons" parentElementId="xpath:/">
     <elements xsi:type="application:Addon" xmi:id="_ng_GUIVgEeqnL-Nh_NKOsQ" elementId="ch.elexis.core.ui.e4.addon.coreuiutil" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.util.CoreUiUtil"/>
@@ -10,6 +10,9 @@
     <elements xsi:type="commands:Command" xmi:id="_vKmzgIcAEeutVMzWpU7zdQ" elementId="ch.elexis.core.ui.e4.command.part.show.invoicelist" commandName="%part.show.invoicelist" description="%part.show.invoicelist.description">
       <parameters xmi:id="_GUOacIcBEeutVMzWpU7zdQ" elementId="filterOnCurrentPatient" name="filter the selection to the current patient"/>
     </elements>
+    <elements xsi:type="commands:Command" xmi:id="_DkO0MD1mEe2hc6qLS9N21g" elementId="ch.elexis.core.ui.e4.command.jfr.recorder.activate" commandName="%jfr.recorder.activate">
+      <parameters xmi:id="_LVQggD1mEe2hc6qLS9N21g" elementId="booleanActivationValue" name="the boolean activation state"/>
+    </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_OS5oUI6XEeq69IgL7XvkGA" featurename="categories" parentElementId="xpath:/">
     <elements xsi:type="commands:Category" xmi:id="_Pj4vEI6XEeq69IgL7XvkGA" elementId="ch.elexis.core.ui.category.treatment.administration" name="%category.treatment.administration" description="%category.treatment.administration.description"/>
@@ -18,5 +21,14 @@
     <elements xsi:type="commands:Handler" xmi:id="_lFl9AI6XEeq69IgL7XvkGA" elementId="ch.elexis.core.ui.handler.encounter.create" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.handlers.EncounterCreateHandler" command="_HwYL8I6WEeq69IgL7XvkGA"/>
     <elements xsi:type="commands:Handler" xmi:id="_Wrv_wIGhEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.handler.part.refresh" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.handlers.RefreshPartHandler" command="_uu0MoIGgEeuh_oRSm2ExFw"/>
     <elements xsi:type="commands:Handler" xmi:id="_M-kykIcBEeutVMzWpU7zdQ" elementId="ch.elexis.core.ui.e4.handler.part.show.invoicelist" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.handlers.ShowInvoiceListHandler" command="_vKmzgIcAEeutVMzWpU7zdQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_d3hh0D1mEe2hc6qLS9N21g" elementId="ch.elexis.core.ui.e4.handler.jfr.recorder.activate" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.handlers.JavaFlightRecorderActivateHandler" command="_DkO0MD1mEe2hc6qLS9N21g"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_yTI8UD1kEe2hc6qLS9N21g" featurename="menuContributions" parentElementId="xpath:/">
+    <elements xsi:type="menu:MenuContribution" xmi:id="_NPmiwD1lEe2hc6qLS9N21g" elementId="ch.elexis.core.ui.e4.menucontribution.0" positionInParent="after=additions" parentId="help">
+      <children xsi:type="menu:Menu" xmi:id="_ywfKMD1lEe2hc6qLS9N21g" elementId="ch.elexis.core.ui.menu.help.jfr" label="Java Flight Recorder">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_SgexED1mEe2hc6qLS9N21g" elementId="ch.elexis.core.ui.menu.help.jfr.activate" label="%jfr.recorder.activate" type="Check" command="_DkO0MD1mEe2hc6qLS9N21g"/>
+        <children xsi:type="menu:DirectMenuItem" xmi:id="_HRtZQD1rEe2hc6qLS9N21g" elementId="ch.elexis.core.ui.e4.directmenuitem.jfrrecorderdumpfile" label="%jfr.recorder.dumpfile" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.handlers.JavaFlightRecorderDumpFile"/>
+      </children>
+    </elements>
   </fragments>
 </fragment:ModelFragments>

@@ -26,6 +26,7 @@ Export-Package: ch.elexis.core.ac,
  ch.elexis.core.fhir,
  ch.elexis.core.interfaces,
  ch.elexis.core.jdt,
+ ch.elexis.core.jfr,
  ch.elexis.core.lock.types,
  ch.elexis.core.model,
  ch.elexis.core.model.agenda,
@@ -64,4 +65,5 @@ Import-Package: javax.ws.rs;version="[2.0.0,2.2.0)",
  org.jdom2.input;version="2.0.6",
  org.jdom2.output;version="2.0.6"
 Bundle-Activator: ch.elexis.core.internal.Activator
-Service-Component: OSGI-INF/ch.elexis.core.console.internal.ConsoleCommandPovider.xml
+Service-Component: OSGI-INF/ch.elexis.core.console.internal.ConsoleCommandPovider.xml,
+ OSGI-INF/ch.elexis.core.jfr.JavaFlightRecorderService.xml
