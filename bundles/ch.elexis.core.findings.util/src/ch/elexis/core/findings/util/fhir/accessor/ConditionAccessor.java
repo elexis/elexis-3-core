@@ -83,10 +83,12 @@ public class ConditionAccessor extends AbstractFindingsAccessor {
 	private ConditionStatus toConditionStatus(CodeableConcept fhirStatus) {
 		if (fhirStatus != null) {
 			String code = fhirStatus.getCodingFirstRep().getCode();
-			try {
-				return ConditionStatus.valueOf(code.toUpperCase());
-			} catch (IllegalArgumentException iae) {
-				LoggerFactory.getLogger(getClass()).warn(code, iae);
+			if (code != null) {
+				try {
+					return ConditionStatus.valueOf(code.toUpperCase());
+				} catch (IllegalArgumentException iae) {
+					LoggerFactory.getLogger(getClass()).warn(code, iae);
+				}
 			}
 		}
 		return ConditionStatus.UNKNOWN;
