@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ModelPackage;
@@ -28,21 +29,17 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 	private IContextService contextService;
 	private IModelService coreModelService;
 
-	private long lastUpdateHandled;
 	private Map<String, Area> appointmentUserAreas;
 	private IAppointment nextAppointment;
 	private String nextAppointmentLabel;
 
 	private Long newLabValuesCount;
-
 	private Long newDocumentsCount;
 
 	public SpotlightReadyRefreshTimerTask(IContextService contextService, IModelService coreModelService,
 			IAppointmentService appointmentService) {
 		this.contextService = contextService;
 		this.coreModelService = coreModelService;
-
-		lastUpdateHandled = 0;
 
 		nextAppointmentLabel = NO_NEXT_APPOINTMENT_LABEL;
 		appointmentUserAreas = new HashMap<String, Area>();
@@ -56,30 +53,26 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 
 	@Override
 	public void run() {
-
 		lastRunTime = System.currentTimeMillis();
 
 		refreshNextAppointment();
 		refreshReminders();
 		refreshOpenLabValues();
 		refreshOpenDocuments();
-
-		lastUpdateHandled = lastRunTime;
 	}
 
 	private void refreshReminders() {
 		// TODO Auto-generated method stub
-
 	}
 
-	private static final String QUERY_TEMPLATE_INBOX = "SELECT COUNT(ID) FROM at_medevit_elexis_inbox WHERE deleted = '0' AND mandant ='%s' AND state = '0' AND object LIKE '%s%%'";
+	// we do not use COUNT(id), as COUNT operations on InnoDB engine are really slow
+	private static final String QUERY_TEMPLATE_INBOX = "SELECT ID FROM at_medevit_elexis_inbox WHERE deleted = '0' AND mandant ='%s' AND state = '0' AND object LIKE '%s%%' LIMIT 1001";
 
 	private void refreshOpenDocuments() {
 		String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
 		if (mandatorId != null) {
 			String query = String.format(QUERY_TEMPLATE_INBOX, mandatorId, "ch.elexis.omnivore");
-			Number result = (Number) coreModelService.executeNativeQuery(query).findFirst().orElse(null);
-			newDocumentsCount = result.longValue();
+			newDocumentsCount = coreModelService.executeNativeQuery(query).count();
 		} else {
 			newDocumentsCount = null;
 		}
@@ -90,8 +83,7 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 		String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
 		if (mandatorId != null) {
 			String query = String.format(QUERY_TEMPLATE_INBOX, mandatorId, "ch.elexis.data.labresult");
-			Number result = (Number) coreModelService.executeNativeQuery(query).findFirst().orElse(null);
-			newLabValuesCount = result.longValue();
+			newLabValuesCount = coreModelService.executeNativeQuery(query).count();
 		} else {
 			newLabValuesCount = null;
 		}
@@ -136,11 +128,23 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 		return (System.currentTimeMillis() - lastRunTime) / 1000;
 	}
 
-	public Long getNewLabValuesCount() {
+	/**
+	 * 
+	 * @return the number of new lab values. Does only exactly count up to 1000
+	 *         entries, if value is 1001 this means there are "more than 1000"
+	 *         entries
+	 */
+	public @Nullable Long getNewLabValuesCount() {
 		return newLabValuesCount;
 	}
 
-	public Long getNewDocumentsCount() {
+	/**
+	 * 
+	 * @return the number of new documents. Does only exactly count up to 1000
+	 *         entries, if value is 1001 this means there are "more than 1000"
+	 *         entries
+	 */
+	public @Nullable Long getNewDocumentsCount() {
 		return newDocumentsCount;
 	}
 

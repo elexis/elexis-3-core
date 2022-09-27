@@ -155,10 +155,20 @@ public class SpotlightReadyComposite extends Composite {
 		nextAppointment.getLink().setText(spotlightReadyService.getNextAppointmentLabel());
 		nextAppointment.setData(spotlightReadyService.getNextAppointment());
 		listViewerLastPatients.setInput(spotlightReadyService.getLastPatientSelections());
-		newLabValues.getLink()
-				.setText(String.format(NEW_LABVALUES_TEMPLATE, spotlightReadyService.getNewLabValuesCount()));
-		newDocuments.getLink()
-				.setText(String.format(NEW_DOCUMENTS_TEMPLATE, spotlightReadyService.getNewDocumentsCount()));
+
+		Long newLabValuesCount = spotlightReadyService.getNewLabValuesCount();
+		if (newLabValuesCount == null) {
+			newLabValuesCount = -1l;
+		}
+		String newLabValuesCountText = newLabValuesCount > 1000 ? "> 1000" : newLabValuesCount.toString();
+		newLabValues.getLink().setText(String.format(NEW_LABVALUES_TEMPLATE, newLabValuesCountText));
+
+		Long newDocumentsCount = spotlightReadyService.getNewDocumentsCount();
+		if (newDocumentsCount == null) {
+			newDocumentsCount = -1l;
+		}
+		String newDocumentsCountText = newDocumentsCount > 1000 ? "> 1000" : newDocumentsCount.toString();
+		newDocuments.getLink().setText(String.format(NEW_DOCUMENTS_TEMPLATE, newDocumentsCountText));
 	}
 
 }
