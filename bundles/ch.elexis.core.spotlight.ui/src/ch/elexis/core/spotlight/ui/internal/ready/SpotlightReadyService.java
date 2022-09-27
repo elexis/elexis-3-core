@@ -38,7 +38,7 @@ public class SpotlightReadyService {
 		timer = new Timer("spotlight-ready-refresh");
 		spotlightReadyRefreshTimerTask = new SpotlightReadyRefreshTimerTask(contextService, coreModelService,
 				appointmentService);
-		timer.schedule(spotlightReadyRefreshTimerTask, 1 * 1000, 10 * 1000);
+		timer.schedule(spotlightReadyRefreshTimerTask, 1 * 1000, 20 * 1000);
 	}
 
 	@Deactivate
