@@ -2445,4 +2445,17 @@ WHERE kontakt.id IN (
 			<column name="Comment" type="LONGTEXT"/>
 		</createTable>
 	</changeSet>
+	<changeSet author="marco"
+		id="manual_idx_agntermine_lastupdate">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="AGNTERMINE"
+					indexName="LASTUPDATE" />
+			</not>
+		</preConditions>
+		<createIndex indexName="LASTUPDATE"
+			tableName="AGNTERMINE">
+			<column name="LASTUPDATE" />
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>
