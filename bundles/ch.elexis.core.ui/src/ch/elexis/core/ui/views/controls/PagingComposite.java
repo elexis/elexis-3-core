@@ -13,6 +13,7 @@ package ch.elexis.core.ui.views.controls;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
@@ -32,6 +33,7 @@ public abstract class PagingComposite extends Composite {
 	private int elementsCount;
 
 	private GridData gd;
+	private ToolBar toolBar;
 
 	public PagingComposite(Composite parent, int style) {
 		super(parent, SWT.BORDER);
@@ -43,11 +45,8 @@ public abstract class PagingComposite extends Composite {
 		gd = new GridData(SWT.FILL, SWT.TOP, true, false);
 		setLayoutData(gd);
 
-		Composite main = new Composite(this, SWT.NONE);
-		main.setLayout(SWTHelper.createGridLayout(true, 1));
-		main.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, false));
-
-		ToolBar toolBar = new ToolBar(main, SWT.RIGHT | SWT.FLAT);
+		toolBar = new ToolBar(this, SWT.RIGHT | SWT.FLAT);
+		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, false));
 		ToolItem prevToolItem = new ToolItem(toolBar, SWT.PUSH);
 		prevToolItem.setToolTipText("");
 		prevToolItem.setImage(Images.IMG_PREVIOUS.getImage());
@@ -109,6 +108,10 @@ public abstract class PagingComposite extends Composite {
 			if (textToolItem != null) {
 				textToolItem.setText(currentPage + "/" + maxPage);
 				textToolItem.setToolTipText("Gesamtanzahl: " + elementsCount);
+				if(maxPage > 9) {
+					Point size = toolBar.computeSize(-1, -1);
+					((GridData)toolBar.getLayoutData()).widthHint = size.x;
+				}
 			}
 
 			gd.exclude = !(currentPage > 0);
