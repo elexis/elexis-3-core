@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2022-06-java17" sequenceNumber="1659622859">
+<target name="Elexis IDE 2022-06-java17" sequenceNumber="1664353857">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.3.v20220515-1416"/>
@@ -34,7 +34,7 @@
       <unit id="javax.activation" version="1.2.2.v20201119-1642"/>
       <unit id="jaxb-api" version="2.3.1"/>
       <unit id="com.sun.xml.bind.jaxb-osgi" version="2.3.6"/>
-      <unit id="jakarta.xml.bind-api" version="2.3.3.202207281554"/>
+      <unit id="jakarta.xml.bind-api" version="2.3.3.202209281029"/>
       <unit id="com.h2database" version="1.4.200"/>
       <unit id="com.mysql.cj" version="8.0.22"/>
       <unit id="org.postgresql.jdbc" version="42.2.19.jre7"/>
@@ -43,7 +43,7 @@
       <unit id="org.osgi.service.jdbc" version="1.0.1.202109301733"/>
       <unit id="org.osgi.service.jndi" version="1.0.1.202109301733"/>
       <unit id="jakarta.persistence" version="2.2.3"/>
-      <unit id="org.osgi.framework.system.packages.extra" version="1.0.0.202207281554"/>
+      <unit id="org.osgi.framework.system.packages.extra" version="1.0.0.202209281029"/>
       <unit id="com.eclipsesource.jaxrs.consumer" version="0.0.0"/>
       <unit id="com.eclipsesource.jaxrs.publisher" version="0.0.0"/>
       <unit id="com.eclipsesource.jaxrs.provider.gson" version="0.0.0"/>
@@ -97,10 +97,10 @@
       <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.5.0.202207061644"/>
       <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.2.0.202207061644"/>
       <unit id="org.eclipse.nebula.widgets.floatingtext.feature.feature.group" version="1.0.0.202207061644"/>
-      <unit id="org.eclipse.nebula.widgets.nattable.core" version="2.0.2.202111300816"/>
-      <unit id="org.eclipse.nebula.widgets.nattable.extension.e4" version="2.0.2.202111300816"/>
-      <unit id="org.eclipse.nebula.widgets.nattable.extension.nebula" version="2.0.2.202111300816"/>
-      <unit id="org.eclipse.nebula.widgets.nattable.extension.glazedlists" version="2.0.2.202111300816"/>
+      <unit id="org.eclipse.nebula.widgets.nattable.core" version="2.0.3.202208090440"/>
+      <unit id="org.eclipse.nebula.widgets.nattable.extension.e4" version="2.0.3.202208090440"/>
+      <unit id="org.eclipse.nebula.widgets.nattable.extension.nebula" version="2.0.3.202208090440"/>
+      <unit id="org.eclipse.nebula.widgets.nattable.extension.glazedlists" version="2.0.3.202208090440"/>
       <unit id="org.eclipse.nebula.widgets.richtext" version="1.4.0.202011020719"/>
       <unit id="ca.odell.glazedlists" version="1.11.0.v20190926-1838"/>
       <unit id="org.eclipse.collections" version="10.4.0.v20200820-2049"/>
