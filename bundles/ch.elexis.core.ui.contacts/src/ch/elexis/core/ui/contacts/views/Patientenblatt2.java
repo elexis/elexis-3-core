@@ -117,6 +117,7 @@ import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.core.ui.views.controls.StickerComposite;
+import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Kontakt;
@@ -583,6 +584,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			UserSettings.setExpandedState(ec, KEY_PATIENTENBLATT + ec.getText());
 			ec.addExpansionListener(ecExpansionListener);
 			Composite ret = ivc.initComposite(ec);
+			// MacOs specific redraw bug workaround since 3.9
+			if (CoreUtil.isMac() && ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) {
+				form.getVerticalBar().addListener(SWT.Selection, e -> ret.redraw());
+			}
+			// end
 			tk.adapt(ret);
 			ec.setClient(ret);
 		}

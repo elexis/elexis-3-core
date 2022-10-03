@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016-2019 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2016-2022 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,6 +54,7 @@ import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.util.NatTableFactory;
 import ch.elexis.core.ui.util.NatTableWrapper;
 import ch.elexis.core.ui.util.NatTableWrapper.IDoubleClickListener;
+import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Patient;
 
 /**
@@ -352,4 +353,29 @@ public class DiagnoseListComposite extends Composite {
 			}
 		}
 	}
+
+	private boolean macosx_swt_eventTimed = false;
+
+	@Override
+	public void redraw() {
+		super.redraw();
+		// MacOs specific redraw bug workaround since 3.9
+		// https://redmine.medelexis.ch/issues/24604
+		// https://github.com/eclipse-platform/eclipse.platform.swt/issues/415
+		if (CoreUtil.isMac()) {
+			if (macosx_swt_eventTimed) {
+				return;
+			}
+			macosx_swt_eventTimed = true;
+			getDisplay().timerExec(250, new Runnable() {
+				@Override
+				public void run() {
+					natTableWrapper.getNatTable().redraw();
+					macosx_swt_eventTimed = false;
+				}
+			});
+		}
+
+	}
+
 }
