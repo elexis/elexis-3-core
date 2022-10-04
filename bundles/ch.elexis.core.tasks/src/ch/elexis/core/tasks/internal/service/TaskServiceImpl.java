@@ -36,9 +36,10 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
-import ch.elexis.core.tasks.internal.service.fs.WatchServiceHolder;
+import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.tasks.internal.service.quartz.QuartzExecutor;
 import ch.elexis.core.tasks.internal.service.sysevents.SysEventWatcher;
+import ch.elexis.core.tasks.internal.service.vfs.FilesystemChangeWatcher;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
@@ -57,13 +58,9 @@ public class TaskServiceImpl implements ITaskService {
 	private ExecutorService parallelExecutorService;
 	private Map<String, ExecutorService> perRunnableSingletonExecutorService;
 	private QuartzExecutor quartzExecutor;
-	private WatchServiceHolder watchServiceHolder;
+	private FilesystemChangeWatcher fileSystemChangeWatcher;
 	private SysEventWatcher sysEventWatcher;
 	private List<ITask> triggeredTasks;
-
-	// TODO OtherTaskService -> this
-
-	// private List<ITaskDescriptor> incurredTasks;
 
 	@Reference
 	private IContextService contextService;
@@ -75,6 +72,9 @@ public class TaskServiceImpl implements ITaskService {
 	private void setModelService(IModelService modelService) {
 		taskModelService = modelService;
 	}
+
+	@Reference
+	private IVirtualFilesystemService virtualFilesystemService;
 
 	/**
 	 * do not execute these instances, they are used for documentation listing only
@@ -167,20 +167,18 @@ public class TaskServiceImpl implements ITaskService {
 		parallelExecutorService.shutdown();
 		perRunnableSingletonExecutorService.forEach((c, e) -> e.shutdown());
 
-		if (watchServiceHolder != null) {
-			watchServiceHolder.stopPolling();
+		if (fileSystemChangeWatcher != null) {
+			fileSystemChangeWatcher.stopPolling();
 		}
 	}
 
 	/**
-	 * Assert that the watchservice is available and started
+	 * Assert that the filesystem watchservice is available and started
 	 */
-	private synchronized void assertWatchServiceHolder() {
-		if (watchServiceHolder == null) {
-			watchServiceHolder = new WatchServiceHolder(this);
-			if (watchServiceHolder.triggerIsAvailable()) {
-				watchServiceHolder.startPolling();
-			}
+	private synchronized void assertFilesystemChangeWatcher() {
+		if (fileSystemChangeWatcher == null) {
+			fileSystemChangeWatcher = new FilesystemChangeWatcher(this, virtualFilesystemService);
+			fileSystemChangeWatcher.startPolling();
 		}
 	}
 
@@ -245,8 +243,8 @@ public class TaskServiceImpl implements ITaskService {
 	 */
 	private void incur(ITaskDescriptor taskDescriptor) throws TaskException {
 		if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()) {
-			assertWatchServiceHolder();
-			watchServiceHolder.incur(taskDescriptor);
+			assertFilesystemChangeWatcher();
+			fileSystemChangeWatcher.incur(taskDescriptor);
 		} else if (TaskTriggerType.CRON == taskDescriptor.getTriggerType()) {
 			assertQuartzExecutor();
 			quartzExecutor.incur(this, taskDescriptor);
@@ -270,7 +268,7 @@ public class TaskServiceImpl implements ITaskService {
 	 */
 	private void release(ITaskDescriptor taskDescriptor) throws TaskException {
 		if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()) {
-			watchServiceHolder.release(taskDescriptor);
+			fileSystemChangeWatcher.release(taskDescriptor);
 		} else if (TaskTriggerType.CRON == taskDescriptor.getTriggerType()) {
 			if (quartzExecutor != null) {
 				quartzExecutor.release(taskDescriptor);
@@ -486,17 +484,14 @@ public class TaskServiceImpl implements ITaskService {
 	}
 
 	@Override
-	public ITask trigger(String taskDescriptorReferenceId, IProgressMonitor progressMonitor,
+	public ITask trigger(String taskDescriptorIdOrReferenceId, IProgressMonitor progressMonitor,
 			TaskTriggerType triggerType, Map<String, String> runContext) throws TaskException {
-
-		IQuery<ITaskDescriptor> query = taskModelService.getQuery(ITaskDescriptor.class);
-		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__REFERENCE_ID, COMPARATOR.EQUALS, taskDescriptorReferenceId);
-		Optional<ITaskDescriptor> taskDescriptor = query.executeSingleResult();
+		Optional<ITaskDescriptor> taskDescriptor = findTaskDescriptorByIdOrReferenceId(taskDescriptorIdOrReferenceId);
 		if (taskDescriptor.isPresent()) {
 			return trigger(taskDescriptor.get(), progressMonitor, triggerType, runContext);
 		}
 		throw new TaskException(TaskException.EXECUTION_REJECTED,
-				"Could not find task descriptor reference id [" + taskDescriptorReferenceId + "]");
+				"Could not find task descriptor reference id [" + taskDescriptorIdOrReferenceId + "]");
 	}
 
 	@Override
@@ -565,6 +560,8 @@ public class TaskServiceImpl implements ITaskService {
 	private void validateTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException {
 
 		IIdentifiedRunnable runnable = instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId());
+		Map<String, Serializable> defaultRunContext = new HashMap<String, Serializable>(
+				runnable.getDefaultRunContext());
 
 		if (TaskTriggerType.OTHER_TASK == taskDescriptor.getTriggerType()) {
 			// we will not check activation here, as the required parameters
@@ -579,7 +576,12 @@ public class TaskServiceImpl implements ITaskService {
 			return;
 		}
 
-		Set<Entry<String, Serializable>> entrySet = runnable.getDefaultRunContext().entrySet();
+		if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()) {
+			// url will be provided on trigger, remove s.t. required param test considers
+			defaultRunContext.remove(IIdentifiedRunnable.RunContextParameter.STRING_URL);
+		}
+
+		Set<Entry<String, Serializable>> entrySet = defaultRunContext.entrySet();
 		for (Entry<String, Serializable> entry : entrySet) {
 			if (IIdentifiedRunnable.RunContextParameter.VALUE_MISSING_REQUIRED.equals(entry.getValue())) {
 				Serializable value = taskDescriptor.getRunContext().get(entry.getKey());

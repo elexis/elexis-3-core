@@ -91,14 +91,14 @@ public interface ITaskService {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Trigger a task by its task descriptor reference id
+	 * Trigger a task by its task descriptor id or reference id
 	 * @param progressMonitor The progress monitor to report to. If null the task will initialise its own progress monitor.
 	 * @param runContext key value pairs to add to the task run context already populated out of ITaskDescriptor#runContext (e.g. the file system trigger adds the file triggering the event)
 	 * <!-- end-model-doc -->
 	 * @model exceptions="ch.elexis.core.tasks.model.TaskException" progressMonitorDataType="ch.elexis.core.tasks.model.IProgressMonitor"
 	 * @generated
 	 */
-	ITask trigger(String taskDescriptorReferenceId, IProgressMonitor progressMonitor, TaskTriggerType trigger, Map<String, String> runContext) throws TaskException;
+	ITask trigger(String taskDescriptorIdOrReferenceId, IProgressMonitor progressMonitor, TaskTriggerType trigger, Map<String, String> runContext) throws TaskException;
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -246,7 +246,7 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Trigger a task by its task descriptor reference id"/>
       </eAnnotations>
-      <eParameters name="taskDescriptorReferenceId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eParameters name="taskDescriptorIdOrReferenceId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eParameters name="progressMonitor" eType="#//IProgressMonitor">
         <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
           <details key="documentation" value="The progress monitor to report to. If null the task will initialise its own progress monitor."/>
@@ -338,7 +338,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="TaskTriggerType">
     <eLiterals name="MANUAL" literal="MANUAL"/>
-    <eLiterals name="FILESYSTEM_CHANGE" value="1"/>
+    <eLiterals name="FILESYSTEM_CHANGE" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Watches a single directory non-recursively. Will trigger task once per file change (create/update). Will not trigger on delete. Currently implemented using polling, takes up to 30 seconds to trigger. "/>
+      </eAnnotations>
+    </eLiterals>
     <eLiterals name="CRON" value="2"/>
     <eLiterals name="SYSTEM_EVENT" value="3"/>
     <eLiterals name="OTHER_TASK" value="4"/>

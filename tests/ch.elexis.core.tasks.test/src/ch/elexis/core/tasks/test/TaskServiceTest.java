@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -32,6 +33,8 @@ import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.internal.runnables.LogResultContextIdentifiedRunnable;
@@ -39,8 +42,10 @@ import ch.elexis.core.tasks.internal.service.TaskServiceHolder;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
+import ch.elexis.core.tasks.model.ModelPackage;
 import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
+import ch.elexis.core.tasks.model.TaskTriggerTypeParameter;
 import ch.elexis.core.tasks.test.runnable.TestExecutionContextRunnable;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
@@ -197,18 +202,8 @@ public class TaskServiceTest {
 		assertEquals(TaskState.COMPLETED, task.getState());
 	}
 
-	/**
-	 * Use-Case: HL7 Import on incoming HL7 file ATTENTION: On OS X picking up
-	 * changes in the FS can take up to 10 seconds
-	 *
-	 * @throws TaskException
-	 * @throws IOException
-	 * @throws InterruptedException
-	 * @see https://www.reddit.com/r/java/comments/3vtv8i/beware_javaniofilewatchservice_is_subtly_broken/
-	 */
 	@Test
-	@Ignore
-	public void triggerFSChange() throws TaskException, IOException, InterruptedException {
+	public void triggerFilesystemChange() throws TaskException, IOException, InterruptedException {
 		IIdentifiedRunnable rwcDeleteFile = taskService
 				.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
 		taskDescriptor = taskService.createTaskDescriptor(rwcDeleteFile);
@@ -217,15 +212,44 @@ public class TaskServiceTest {
 		taskDescriptor.setTriggerType(TaskTriggerType.FILESYSTEM_CHANGE);
 		taskDescriptor.setTriggerParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
 				tempDirectory.toString());
+		taskDescriptor.setTriggerParameter(TaskTriggerTypeParameter.FILESYSTEM_CHANGE.FILE_EXTENSION_FILTER, "txt");
+		taskService.saveTaskDescriptor(taskDescriptor);
 		taskService.setActive(taskDescriptor, true);
 
-		Path createFile = Files.createTempFile(tempDirectory, "test", "txt");
+		Path createFile = Files.createTempFile(tempDirectory, "test", ".txt");
 		System.out.println(LocalDateTime.now() + " created " + createFile.toString());
 
 		Callable<Boolean> c = () -> {
 			return !createFile.toFile().exists();
 		};
 		Awaitility.await().atMost(15, TimeUnit.SECONDS).until(c);
+	}
+
+	@Test
+	@Ignore
+	public void triggerFilesystemChangeOnlyOnceOnUnchangedFile()
+			throws TaskException, IOException, InterruptedException {
+		IIdentifiedRunnable rwcLogResultContext = taskService
+				.instantiateRunnableById(IdentifiedRunnableIdConstants.LOGRESULTCONTEXT);
+		taskDescriptor = taskService.createTaskDescriptor(rwcLogResultContext);
+		taskDescriptor.setOwner(owner);
+		taskDescriptor.setRunContext(runContext);
+		taskDescriptor.setTriggerType(TaskTriggerType.FILESYSTEM_CHANGE);
+		taskDescriptor.setTriggerParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
+				tempDirectory.toString());
+		taskDescriptor.setTriggerParameter(TaskTriggerTypeParameter.FILESYSTEM_CHANGE.FILE_EXTENSION_FILTER, "txt");
+		taskService.saveTaskDescriptor(taskDescriptor);
+		taskService.setActive(taskDescriptor, true);
+
+		Path createFile = Files.createTempFile(tempDirectory, "test", ".txt");
+		System.out.println(LocalDateTime.now() + " created " + createFile.toString());
+
+		Thread.sleep(3000);
+
+		IQuery<ITask> query = getTaskModelService().getQuery(ITask.class);
+		query.and(ModelPackage.Literals.ITASK__TASK_DESCRIPTOR, COMPARATOR.EQUALS, taskDescriptor);
+		List<ITask> execute = query.execute();
+		assertEquals(1, execute.size());
 	}
 
 	/**
@@ -248,7 +272,7 @@ public class TaskServiceTest {
 		taskDescriptor.setRunContextParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
 				createFile.toString());
 		// job will run every 5 seconds
-		taskDescriptor.setTriggerParameter("cron", "0/5 * * * * ?");
+		taskDescriptor.setTriggerParameter(TaskTriggerTypeParameter.CRON.SCHEMA, "0/5 * * * * ?");
 		taskService.setActive(taskDescriptor, true);
 
 		Callable<Boolean> c = () -> {

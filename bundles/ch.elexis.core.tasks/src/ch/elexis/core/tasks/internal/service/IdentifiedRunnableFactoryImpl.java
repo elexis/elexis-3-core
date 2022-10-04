@@ -58,7 +58,7 @@ public class IdentifiedRunnableFactoryImpl implements IIdentifiedRunnableFactory
 	public List<IIdentifiedRunnable> getProvidedRunnables() {
 		List<IIdentifiedRunnable> ret = new ArrayList<>();
 		ret.add(new LogResultContextIdentifiedRunnable());
-		ret.add(new DeleteFileIdentifiedRunnable());
+		ret.add(new DeleteFileIdentifiedRunnable(virtualFilsystemService));
 		ret.add(new TriggerTaskForEveryFileInDirectoryRunnable(virtualFilsystemService));
 		ret.add(new RemoveTaskLogEntriesRunnable(taskModelService));
 		return ret;

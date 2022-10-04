@@ -25,7 +25,11 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 /**
  * Triggers a task, referenced by its task descriptor reference id, for every
  * file found and readable in the provided URL, which has to be a directory.
+ * 
+ * @deprecated @since 3.10 replace with
+ *             {@link TaskTriggerType#FILESYSTEM_CHANGE}
  */
+@Deprecated(forRemoval = true)
 public class TriggerTaskForEveryFileInDirectoryRunnable implements IIdentifiedRunnable {
 
 	public static final String RESULT_KEY_LIST_ITASK_TASKS_TRIGGERED = "tasksTriggered";
