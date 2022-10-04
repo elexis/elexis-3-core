@@ -49,6 +49,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IContact#getImage <em>Image</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getRelatedContacts <em>Related Contacts</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#isDeceased <em>Deceased</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IContact#getEmail2 <em>Email2</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIContact()
@@ -733,5 +734,27 @@ public interface IContact extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	void setDeceased(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Email2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Email2</em>' attribute.
+	 * @see #setEmail2(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIContact_Email2()
+	 * @model
+	 * @generated
+	 */
+	String getEmail2();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getEmail2 <em>Email2</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Email2</em>' attribute.
+	 * @see #getEmail2()
+	 * @generated
+	 */
+	void setEmail2(String value);
 
 } // IContact

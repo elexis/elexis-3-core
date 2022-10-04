@@ -49,6 +49,7 @@ public class Kontakt extends PersistentObject {
 	// (and, most probably, other places)
 	// public static final String FLD_KUERZEL = "Kuerzel";
 	public static final String FLD_E_MAIL = "E-Mail";
+	public static final String FLD_E_MAIL2 = "email2";
 	public static final String FLD_WEBSITE = "Website";
 	public static final String FLD_MOBILEPHONE = "NatelNr";
 	public static final String FLD_FAX = "Fax";
@@ -90,7 +91,7 @@ public class Kontakt extends PersistentObject {
 		addMapping(TABLENAME, "BezugsKontakte = JOINT:myID:otherID:KONTAKT_ADRESS_JOINT", //$NON-NLS-1$
 				"MyReminders		= LIST:IdentID:REMINDERS", //$NON-NLS-1$
 				FLD_NAME1, FLD_NAME2, FLD_NAME3, FLD_SHORT_LABEL + "= PatientNr", //$NON-NLS-1$
-				FLD_REMARK, FLD_PHONE1, FLD_PHONE2, "E-Mail=EMail", FLD_WEBSITE, FLD_EXTINFO, //$NON-NLS-1$
+				FLD_REMARK, FLD_PHONE1, FLD_PHONE2, "E-Mail=EMail", FLD_E_MAIL2, FLD_WEBSITE, FLD_EXTINFO, //$NON-NLS-1$
 				FLD_IS_ORGANIZATION, FLD_IS_PERSON, FLD_IS_PATIENT, FLD_IS_USER, FLD_IS_MANDATOR, FLD_IS_LAB,
 				FLD_STREET, FLD_ZIP, FLD_PLACE, FLD_COUNTRY, FLD_FAX, FLD_ANSCHRIFT, FLD_MOBILEPHONE);
 

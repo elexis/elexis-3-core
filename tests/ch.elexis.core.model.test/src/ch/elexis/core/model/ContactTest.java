@@ -102,6 +102,15 @@ public class ContactTest extends AbstractTest {
 	}
 
 	@Test
+	public void getSetProperties() {
+		person.setEmail("email@tst.tst");
+		person.setEmail2("email2@tst.tst");
+		coreModelService.save(person);
+		assertEquals("email@tst.tst", person.getEmail());
+		assertEquals("email2@tst.tst", person.getEmail2());
+	}
+
+	@Test
 	public void createRemoveRelatedContact() {
 		IOrganization employer = new IContactBuilder.OrganizationBuilder(coreModelService, "MEDEVIT").buildAndSave();
 		IPerson findById = coreModelService.load(person.getId(), IPerson.class).get();

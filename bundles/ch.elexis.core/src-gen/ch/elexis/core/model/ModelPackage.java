@@ -457,13 +457,22 @@ public interface ModelPackage extends EPackage {
 	int ICONTACT__DECEASED = IDENTIFIABLE_FEATURE_COUNT + 27;
 
 	/**
+	 * The feature id for the '<em><b>Email2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__EMAIL2 = IDENTIFIABLE_FEATURE_COUNT + 28;
+
+	/**
 	 * The number of structural features of the '<em>IContact</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 28;
+	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 29;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
@@ -735,6 +744,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPERSON__DECEASED = ICONTACT__DECEASED;
+
+	/**
+	 * The feature id for the '<em><b>Email2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__EMAIL2 = ICONTACT__EMAIL2;
 
 	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
@@ -1098,6 +1116,15 @@ public interface ModelPackage extends EPackage {
 	int IORGANIZATION__DECEASED = ICONTACT__DECEASED;
 
 	/**
+	 * The feature id for the '<em><b>Email2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__EMAIL2 = ICONTACT__EMAIL2;
+
+	/**
 	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1396,6 +1423,15 @@ public interface ModelPackage extends EPackage {
 	int ILABORATORY__DECEASED = IORGANIZATION__DECEASED;
 
 	/**
+	 * The feature id for the '<em><b>Email2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__EMAIL2 = IORGANIZATION__EMAIL2;
+
+	/**
 	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1692,6 +1728,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPATIENT__DECEASED = IPERSON__DECEASED;
+
+	/**
+	 * The feature id for the '<em><b>Email2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__EMAIL2 = IPERSON__EMAIL2;
 
 	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
@@ -2116,6 +2161,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IMANDATOR__DECEASED = ICONTACT__DECEASED;
+
+	/**
+	 * The feature id for the '<em><b>Email2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMANDATOR__EMAIL2 = ICONTACT__EMAIL2;
 
 	/**
 	 * The feature id for the '<em><b>Biller</b></em>' reference.
@@ -8306,6 +8360,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Deceased();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getEmail2 <em>Email2</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Email2</em>'.
+	 * @see ch.elexis.core.model.IContact#getEmail2()
+	 * @see #getIContact()
+	 * @generated
+	 */
+	EAttribute getIContact_Email2();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13066,6 +13131,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ICONTACT__DECEASED = eINSTANCE.getIContact_Deceased();
+
+		/**
+		 * The meta object literal for the '<em><b>Email2</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICONTACT__EMAIL2 = eINSTANCE.getIContact_Email2();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.

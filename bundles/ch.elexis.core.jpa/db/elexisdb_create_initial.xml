@@ -518,6 +518,7 @@
             <column name="FAX" type="VARCHAR(30)"/>
             <column name="NATELNR" type="VARCHAR(254)"/>
             <column name="EMAIL" type="VARCHAR(255)"/>
+            <column name="EMAIL2" type="VARCHAR(255)"/>
             <column name="WEBSITE" type="VARCHAR(255)"/>
             <column name="GRUPPE" type="VARCHAR(10)"/>
             <column name="PATIENTNR" type="VARCHAR(40)"/>

@@ -74,6 +74,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IContact/image"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IContact/relatedContacts"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/deceased"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/email2"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IPerson">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/dateOfBirth"/>
