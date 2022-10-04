@@ -107,6 +107,9 @@ public class Kontakt extends AbstractEntityWithId implements EntityWithId, Entit
 	@Column(length = 255)
 	protected String email;
 
+	@Column(length = 255)
+	protected String email2;
+
 	// @Basic(fetch = FetchType.LAZY)
 	@Convert(converter = ElexisDBCompressedStringConverter.class)
 	@Column(name = "famAnamnese", columnDefinition = "BLOB")
@@ -268,6 +271,14 @@ public class Kontakt extends AbstractEntityWithId implements EntityWithId, Entit
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getEmail2() {
+		return email2;
+	}
+
+	public void setEmail2(String email2) {
+		this.email2 = email2;
 	}
 
 	public String getFamilyAnamnese() {

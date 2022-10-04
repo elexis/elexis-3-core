@@ -259,6 +259,7 @@ public class Messages {
 	public static String KontaktBlatt_Laboratory = ch.elexis.core.l10n.Messages.KontaktBlatt_Laboratory;
 	public static String KontaktBlatt_LastName = ch.elexis.core.l10n.Messages.KontaktBlatt_LastName;
 	public static String KontaktBlatt_Mail = ch.elexis.core.l10n.Messages.KontaktBlatt_Mail;
+	public static String KontaktBlatt_Mail2 = ch.elexis.core.l10n.Messages.KontaktBlatt_Mail2;
 	public static String KontaktBlatt_Mandator = ch.elexis.core.l10n.Messages.KontaktBlatt_Mandator;
 	public static String KontaktBlatt_Mobile = ch.elexis.core.l10n.Messages.KontaktBlatt_Mobile;
 	public static String KontaktBlatt_MobilePhone = ch.elexis.core.l10n.Messages.KontaktBlatt_MobilePhone;

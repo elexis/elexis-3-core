@@ -1134,6 +1134,7 @@ public class Messages extends NLS {
 	public static String KontaktBlatt_Laboratory;
 	public static String KontaktBlatt_LastName;
 	public static String KontaktBlatt_Mail;
+	public static String KontaktBlatt_Mail2;
 	public static String KontaktBlatt_Mandator;
 	public static String KontaktBlatt_Mobile;
 	public static String KontaktBlatt_MobilePhone;

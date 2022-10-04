@@ -98,6 +98,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="relatedContacts" upperBound="-1"
         eType="#//IRelatedContact"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="deceased" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IPerson" abstract="true" interface="true"
       eSuperTypes="#//IContact">

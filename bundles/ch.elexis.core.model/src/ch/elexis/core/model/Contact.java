@@ -213,6 +213,16 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	}
 
 	@Override
+	public String getEmail2() {
+		return getEntity().getEmail2();
+	}
+
+	@Override
+	public void setEmail2(String value) {
+		getEntityMarkDirty().setEmail2(value);
+	}
+
+	@Override
 	public String getWebsite() {
 		return getEntity().getWebsite();
 	}
