@@ -112,11 +112,11 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 			new InputData(Messages.KontaktBlatt_Mail2, Kontakt.FLD_E_MAIL2, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null),
-			new InputData(Messages.KontaktBlatt_remark, Kontakt.FLD_REMARK, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null), // helper field
-																							// (non-visible) but needs a
-																							// resolvable value to avoid
-																							// exception
+			// (non-visible) but needs a
+			// resolvable value to avoid
+			// exception
+			new InputData(Messages.KontaktBlatt_remark, Kontakt.FLD_REMARK, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_title, Person.TITLE, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_extid, "UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
 
