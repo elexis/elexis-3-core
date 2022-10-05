@@ -45,6 +45,9 @@ public class TarmedPauschalen extends AbstractEntityWithId implements EntityWith
 	@Column(length = 8)
 	private LocalDate validTo;
 
+	@Column(length = 8)
+	private String tp;
+
 	@Column(length = 255)
 	private String chapter;
 
@@ -73,6 +76,14 @@ public class TarmedPauschalen extends AbstractEntityWithId implements EntityWith
 
 	public void setValidTo(LocalDate validTo) {
 		this.validTo = validTo;
+	}
+
+	public String getTp() {
+		return tp;
+	}
+
+	public void setTp(String tp) {
+		this.tp = tp;
 	}
 
 	public String getText() {
