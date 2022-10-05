@@ -2368,6 +2368,7 @@ WHERE kontakt.id IN (
 			<column name="TEXT" type="VARCHAR(255)" />
 			<column name="VALIDFROM" type="CHAR(8)" />
 			<column name="VALIDTO" type="CHAR(8)" />
+			<column name="TP" type="CHAR(8)" />
 		</createTable>
 		<insert tableName="CH_ELEXIS_ARZTTARIFE_CH_TARMEDPAUSCHALEN">
        		<column name="ID" value="VERSION"/>
