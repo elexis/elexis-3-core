@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2022-06-java17" sequenceNumber="1664353857">
+<target name="Elexis IDE 2022-09-java17" sequenceNumber="1665064749">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.3.v20220515-1416"/>
-      <unit id="org.eclipse.platform.feature.group" version="4.24.0.v20220607-0700"/>
-      <unit id="org.eclipse.e4.rcp.feature.group" version="4.24.0.v20220530-1036"/>
-      <unit id="org.eclipse.emf.common.feature.group" version="2.26.0.v20220325-0806"/>
+      <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="11.0.12.v20211011-1323"/>
+      <unit id="org.eclipse.platform.feature.group" version="4.25.0.v20220831-1800"/>
+      <unit id="org.eclipse.e4.rcp.feature.group" version="4.25.0.v20220829-1402"/>
+      <unit id="org.eclipse.emf.common.feature.group" version="2.27.0.v20220817-1401"/>
       <unit id="org.eclipse.emf.common.ui.feature.group" version="2.19.0.v20220226-1304"/>
-      <unit id="org.eclipse.emf.ecore.feature.group" version="2.28.0.v20220426-0617"/>
-      <unit id="org.eclipse.emf.databinding.feature.group" version="1.9.0.v20220516-1117"/>
+      <unit id="org.eclipse.emf.ecore.feature.group" version="2.29.0.v20220817-1401"/>
+      <unit id="org.eclipse.emf.databinding.feature.group" version="1.9.0.v20220517-0824"/>
       <unit id="org.eclipse.emf.edit.feature.group" version="2.18.0.v20220201-1551"/>
-      <unit id="org.eclipse.emf.edit.ui.feature.group" version="2.23.0.v20220226-1304"/>
+      <unit id="org.eclipse.emf.edit.ui.feature.group" version="2.24.0.v20220619-0533"/>
       <unit id="org.eclipse.ecf.core.feature.feature.group" version="1.6.1.v20211005-1944"/>
       <unit id="org.eclipse.ecf.core.ssl.feature.feature.group" version="1.1.501.v20210409-2301"/>
       <unit id="org.eclipse.ecf.filetransfer.feature.feature.group" version="3.14.1800.v20220215-0126"/>
       <unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="1.1.401.v20210409-2301"/>
       <unit id="org.eclipse.ecf.filetransfer.httpclient5.feature.feature.group" version="1.1.600.v20220215-0126"/>
       <unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="3.0.42.202201072301"/>
+      <unit id="org.eclipse.e4.ui.progress" version="0.3.500.v20220717-1456"/>
       <unit id="org.sat4j.core" version="2.3.6.v20201214"/>
       <unit id="org.sat4j.pb" version="2.3.6.v20201214"/>
       <unit id="org.apache.httpcomponents.httpcore" version="4.4.15.v20220209-2345"/>
@@ -34,7 +35,7 @@
       <unit id="javax.activation" version="1.2.2.v20201119-1642"/>
       <unit id="jaxb-api" version="2.3.1"/>
       <unit id="com.sun.xml.bind.jaxb-osgi" version="2.3.6"/>
-      <unit id="jakarta.xml.bind-api" version="2.3.3.202209281029"/>
+      <unit id="jakarta.xml.bind-api" version="2.3.3.202210061428"/>
       <unit id="com.h2database" version="1.4.200"/>
       <unit id="com.mysql.cj" version="8.0.22"/>
       <unit id="org.postgresql.jdbc" version="42.2.19.jre7"/>
@@ -43,7 +44,7 @@
       <unit id="org.osgi.service.jdbc" version="1.0.1.202109301733"/>
       <unit id="org.osgi.service.jndi" version="1.0.1.202109301733"/>
       <unit id="jakarta.persistence" version="2.2.3"/>
-      <unit id="org.osgi.framework.system.packages.extra" version="1.0.0.202209281029"/>
+      <unit id="org.osgi.framework.system.packages.extra" version="1.0.0.202210061428"/>
       <unit id="com.eclipsesource.jaxrs.consumer" version="0.0.0"/>
       <unit id="com.eclipsesource.jaxrs.publisher" version="0.0.0"/>
       <unit id="com.eclipsesource.jaxrs.provider.gson" version="0.0.0"/>
@@ -66,6 +67,7 @@
       <unit id="org.objectweb.asm.tree.analysis" version="9.2.0"/>
       <unit id="org.objectweb.asm.util" version="9.2.0"/>
       <unit id="org.jboss.logging.jboss-logging" version="3.4.3.Final"/>
+      <unit id="com.ibm.icu" version="67.1.0"/>
       <unit id="org.apache.commons.commons-dbcp2" version="2.9.100"/>
       <unit id="org.apache.geronimo.specs.geronimo-jta_1.1_spec" version="1.1.100"/>
       <unit id="org.jdom2" version="2.0.6.v20191125-0928"/>
@@ -93,10 +95,10 @@
       <unit id="ag.ion.bion.workbench.office.editor.core" version="2.0.14"/>
       <unit id="ag.ion.noa" version="2.2.3"/>
       <unit id="ag.ion.noa4e.ui" version="2.0.14"/>
-      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.1.0.202207061644"/>
-      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.5.0.202207061644"/>
-      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.2.0.202207061644"/>
-      <unit id="org.eclipse.nebula.widgets.floatingtext.feature.feature.group" version="1.0.0.202207061644"/>
+      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.1.0.202208171809"/>
+      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.5.0.202208171809"/>
+      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.2.0.202208171809"/>
+      <unit id="org.eclipse.nebula.widgets.floatingtext.feature.feature.group" version="1.0.0.202208171809"/>
       <unit id="org.eclipse.nebula.widgets.nattable.core" version="2.0.3.202208090440"/>
       <unit id="org.eclipse.nebula.widgets.nattable.extension.e4" version="2.0.3.202208090440"/>
       <unit id="org.eclipse.nebula.widgets.nattable.extension.nebula" version="2.0.3.202208090440"/>
@@ -106,12 +108,12 @@
       <unit id="org.eclipse.collections" version="10.4.0.v20200820-2049"/>
       <unit id="com.equo.chromium.feature.feature.group" version="88.0.6.202205201430"/>
       <unit id="com.equo.chromium.cef.feature.feature.group" version="88.0.6.202205201415"/>
-      <unit id="info.elexis.target.jetty.additions.feature.group" version="10.0.9"/>
+      <unit id="info.elexis.target.jetty.additions.feature.group" version="10.0.11"/>
       <unit id="org.junit" version="4.13.2.v20211018-1956"/>
       <unit id="org.hamcrest.core" version="1.3.0.v20180420-1519"/>
       <unit id="org.hamcrest.library" version="1.3.0.v20180524-2246"/>
-      <unit id="org.eclipse.jdt.junit.runtime" version="3.6.100.v20210708-1502"/>
-      <unit id="org.eclipse.jdt.junit4.runtime" version="1.2.0.v20210326-1251"/>
+      <unit id="org.eclipse.jdt.junit.runtime" version="3.7.0.v20220609-1843"/>
+      <unit id="org.eclipse.jdt.junit4.runtime" version="1.3.0.v20220609-1843"/>
       <unit id="org.eclipse.pde.junit.runtime" version="3.6.200.v20220523-1051"/>
       <unit id="org.eclipse.swt.nl_de" version="4.22.0.v20211218020001"/>
       <unit id="org.eclipse.swt.nl_fr" version="4.22.0.v20211218020001"/>
@@ -149,7 +151,7 @@
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_de" version="4.22.0.v20211218020001"/>
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_fr" version="4.22.0.v20211218020001"/>
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_it" version="4.22.0.v20211218020001"/>
-      <repository location="https://download.elexis.info/elexis/target/2022-06-java17/"/>
+      <repository location="https://download.elexis.info/elexis/target/2022-09-java17/"/>
     </location>
   </locations>
 </target>

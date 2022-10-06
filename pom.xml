@@ -8,9 +8,9 @@
 
 
 	<properties>
-		<elexis.target>2022-06-java17</elexis.target>
+		<elexis.target>2022-09-java17</elexis.target>
 		<formatterConfigFile>${env.PWD}/Elexis_formatter_2022_03.xml</formatterConfigFile>
-		<tycho.version>2.7.4</tycho.version>
+		<tycho.version>2.7.5</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
 		<!-- vvv required empty vvv -->
