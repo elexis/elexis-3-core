@@ -1,20 +1,19 @@
 package ch.elexis.core.ui.e4.jface.preference;
 
-import org.apache.commons.lang3.StringUtils;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.StringButtonFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
 
 import ch.elexis.core.services.IVirtualFilesystemService;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
+import ch.elexis.core.ui.e4.dialog.VirtualFilesystemUriEditorDialog;
 
 /**
  * An editor for types compatible with the {@link IVirtualFilesystemService}.
@@ -24,17 +23,8 @@ import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 public class URIFieldEditor extends StringButtonFieldEditor {
 
 	/**
-	 * Initial path for the Browse dialog.
-	 */
-	private File filterPath = null;
-
-	/**
-	 * The password-unmasked URI value
-	 */
-	private String unmaskedValue = null;
-
-	/**
-	 * Creates a new directory field editor
+	 * 
+	 * /** Creates a new directory field editor
 	 */
 	protected URIFieldEditor() {
 	}
@@ -50,107 +40,39 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 		init(name, labelText);
 		setErrorMessage(JFaceResources.getString("DirectoryFieldEditor.errorMessage"));//$NON-NLS-1$
 		setChangeButtonText(JFaceResources.getString("openBrowse"));//$NON-NLS-1$
-		setValidateStrategy(VALIDATE_ON_FOCUS_LOST);
 		createControl(parent);
-	}
-
-	@Override
-	protected String changePressed() {
-		File f = new File(getTextControl().getText());
-		if (!f.exists()) {
-			f = null;
-		}
-		File d = getDirectory(f);
-		if (d == null) {
-			return null;
-		}
-
-		unmaskedValue = d.getAbsolutePath();
-		return unmaskedValue;
-	}
-
-	@Override
-	protected void doStore() {
-		getPreferenceStore().setValue(getPreferenceName(), unmaskedValue);
-	}
-
-	@Override
-	protected boolean doCheckState() {
-		setErrorMessage(StringUtils.EMPTY);
-		unmaskedValue = getTextControl().getText();
-		String uri = unmaskedValue.trim();
-		if (uri.length() == 0 && isEmptyStringAllowed()) {
-			return true;
-		}
-
-		if (uri.contains("*")) { //$NON-NLS-1$
-			setErrorMessage("Passwort muss gesetzt sein");
-			return false;
-		}
-
-		try {
-			VirtualFilesystemServiceHolder.get().of(uri);
-			return true;
-		} catch (IOException | IllegalArgumentException e) {
-			setErrorMessage(e.getMessage());
-			return false;
-		}
+		getTextControl().setEchoChar('*');
+		getTextControl().setEnabled(false);
 	}
 
 	@Override
 	protected void doLoad() {
+		String value = getPreferenceStore().getString(getPreferenceName());
 		if (getTextControl() != null) {
-			unmaskedValue = getPreferenceStore().getString(getPreferenceName());
-			try {
-				URI uri = IVirtualFilesystemService.stringToURI(unmaskedValue);
-				String maskedValue = IVirtualFilesystemService.hidePasswordInUrlString(uri.toString());
-				if (maskedValue.contains("*")) { //$NON-NLS-1$
-					getTextControl().setText(maskedValue);
-					oldValue = maskedValue;
-				} else {
-					getTextControl().setText(unmaskedValue);
-					oldValue = unmaskedValue;
-				}
-			} catch (MalformedURLException | URISyntaxException e) {
-				setErrorMessage(e.getMessage());
-			}
+			getTextControl().setText(IVirtualFilesystemService.hidePasswordInUrlString(value));
+			oldValue = value;
 		}
 	}
 
-	/**
-	 * Helper that opens the directory chooser dialog.
-	 *
-	 * @param startingDirectory The directory the dialog will open in.
-	 * @return File File or <code>null</code>.
-	 *
-	 */
-	private File getDirectory(File startingDirectory) {
-
-		DirectoryDialog fileDialog = new DirectoryDialog(getShell(), SWT.OPEN | SWT.SHEET);
-		if (startingDirectory != null) {
-			fileDialog.setFilterPath(startingDirectory.getPath());
-		} else if (filterPath != null) {
-			fileDialog.setFilterPath(filterPath.getPath());
-		}
-		String dir = fileDialog.open();
-		if (dir != null) {
-			dir = dir.trim();
-			if (dir.length() > 0) {
-				return new File(dir);
+	@Override
+	protected String changePressed() {
+		IVirtualFilesystemService virtualFilesystemService = VirtualFilesystemServiceHolder.get();
+		URI inputUri = null;
+		try {
+			String stringValue = getStringValue();
+			if (StringUtils.isNotBlank(stringValue)) {
+				IVirtualFilesystemHandle fileHandle = virtualFilesystemService.of(getStringValue());
+				inputUri = fileHandle.toURL().toURI();
 			}
+		} catch (URISyntaxException | IOException e) {
 		}
-
+		VirtualFilesystemUriEditorDialog dialog = new VirtualFilesystemUriEditorDialog(getShell(),
+				virtualFilesystemService, inputUri);
+		int open = dialog.open();
+		if (IDialogConstants.OK_ID == open) {
+			return dialog.getValue().toString();
+		}
 		return null;
-	}
-
-	/**
-	 * Sets the initial path for the Browse dialog.
-	 *
-	 * @param path initial path for the Browse dialog
-	 * @since 3.6
-	 */
-	public void setFilterPath(File path) {
-		filterPath = path;
 	}
 
 }
