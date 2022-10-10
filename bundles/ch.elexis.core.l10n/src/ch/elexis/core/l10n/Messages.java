@@ -1439,6 +1439,7 @@ public class Messages extends NLS {
 	public static String TextContainer_SelectAdresseeHeader;
 	public static String TextContainer_SelectDestinationBody;
 	public static String TextContainer_SelectDestinationHeader;
+	public static String TextContainer_SelectNoDestinationLabel;
 	public static String TextContainer_SystemTemplate;
 	public static String TextContainer_Template;
 	public static String TextContainer_TemplateExistsBody;

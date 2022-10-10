@@ -99,6 +99,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 	private boolean isSelecting = false;
 	private final PersistentObjectLoader kl;
 	private boolean enableEmptyField = false;
+	private String emptyFieldLabel;
 
 	private Class targetClass;
 
@@ -383,7 +384,8 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 	protected void createButtonsForButtonBar(Composite parent) {
 		if (enableEmptyField) {
 			parent.setLayout(new GridLayout(3, false));
-			Button btnClear = createButton(parent, IDialogConstants.NO_ID, Messages.KontaktSelector_clearField, false);
+			Button btnClear = createButton(parent, IDialogConstants.NO_ID,
+					emptyFieldLabel != null ? emptyFieldLabel : Messages.KontaktSelector_clearField, false);
 			btnClear.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -567,6 +569,11 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 			}
 		}
 
+	}
+
+	public void enableEmptyFieldButton(String emptyFieldLabel) {
+		enableEmptyFieldButton();
+		this.emptyFieldLabel = emptyFieldLabel;
 	}
 
 	public void enableEmptyFieldButton() {

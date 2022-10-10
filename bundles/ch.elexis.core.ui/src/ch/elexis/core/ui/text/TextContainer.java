@@ -231,6 +231,7 @@ public class TextContainer {
 			KontaktSelektor ksel = new KontaktSelektor(shell, Kontakt.class,
 					Messages.TextContainer_SelectDestinationHeader, Messages.TextContainer_SelectDestinationBody,
 					Kontakt.DEFAULT_SORT);
+			ksel.enableEmptyFieldButton(Messages.TextContainer_SelectNoDestinationLabel);
 			if (ksel.open() != Dialog.OK) {
 				return null;
 			}

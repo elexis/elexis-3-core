@@ -48,6 +48,7 @@ public class Messages {
 	public static String TextContainer_SelectAdresseeHeader = ch.elexis.core.l10n.Messages.TextContainer_SelectAdresseeHeader;
 	public static String TextContainer_SelectDestinationBody = ch.elexis.core.l10n.Messages.TextContainer_SelectDestinationBody;
 	public static String TextContainer_SelectDestinationHeader = ch.elexis.core.l10n.Messages.TextContainer_SelectDestinationHeader;
+	public static String TextContainer_SelectNoDestinationLabel = ch.elexis.core.l10n.Messages.TextContainer_SelectNoDestinationLabel;
 	public static String TextContainer_SystemTemplate = ch.elexis.core.l10n.Messages.TextContainer_SystemTemplate;
 	public static String TextContainer_Template = ch.elexis.core.l10n.Messages.TextContainer_Template;
 	public static String TextContainer_TemplateExistsBody = ch.elexis.core.l10n.Messages.TextContainer_TemplateExistsBody;
