@@ -10,7 +10,7 @@
 	<properties>
 		<elexis.target>2022-09-java17</elexis.target>
 		<formatterConfigFile>${env.PWD}/Elexis_formatter_2022_03.xml</formatterConfigFile>
-		<tycho.version>2.7.5</tycho.version>
+		<tycho.version>3.0.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
 		<!-- vvv required empty vvv -->
@@ -325,7 +325,7 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 						gets cleaned, too. Without it Maven would put two versions of each class 
 						file into the jars -->
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.5</version>
+					<version>3.2.0</version>
 					<configuration>
 						<filesets>
 							<fileset>
@@ -357,7 +357,7 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 					<version>${tycho.version}</version>
 					<dependencies>
 						<dependency>
-							<groupId>org.eclipse.tycho.extras</groupId>
+							<groupId>org.eclipse.tycho</groupId>
 							<artifactId>tycho-buildtimestamp-jgit</artifactId>
 							<version>${tycho.version}</version>
 						</dependency>
