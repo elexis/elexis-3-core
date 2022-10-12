@@ -65,6 +65,21 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IContact" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable #//WithExtInfo">
+    <eOperations name="asIPerson" eType="#//IPerson">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Re-loads the given IContact as IPerson, iff it isPerson(). Returns &lt;code>null&lt;/code> if not person or could not load."/>
+      </eAnnotations>
+    </eOperations>
+    <eOperations name="asIPatient" eType="#//IPatient">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Re-loads the given IContact as IPatient, iff it isPatient(). Returns &lt;code>null&lt;/code> if not patient or could not load."/>
+      </eAnnotations>
+    </eOperations>
+    <eOperations name="asIOrganization" eType="#//IOrganization">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Re-loads the given IContact as IOrganization, iff it isOrganization(). Returns &lt;code>null&lt;/code> if not organization or could not load."/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="user" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="patient" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>

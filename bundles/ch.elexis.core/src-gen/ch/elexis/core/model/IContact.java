@@ -757,4 +757,37 @@ public interface IContact extends Identifiable, Deleteable, WithExtInfo {
 	 */
 	void setEmail2(String value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Re-loads the given IContact as IPerson, iff it isPerson(). Returns <code>null</code> if not person or could not load.
+	 * <!-- end-model-doc -->
+	 * @model
+	 * @generated
+	 */
+	IPerson asIPerson();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Re-loads the given IContact as IPatient, iff it isPatient(). Returns <code>null</code> if not patient or could not load.
+	 * <!-- end-model-doc -->
+	 * @model
+	 * @generated
+	 */
+	IPatient asIPatient();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Re-loads the given IContact as IOrganization, iff it isOrganization(). Returns <code>null</code> if not organization or could not load.
+	 * <!-- end-model-doc -->
+	 * @model
+	 * @generated
+	 */
+	IOrganization asIOrganization();
+
 } // IContact

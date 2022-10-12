@@ -365,7 +365,6 @@ public interface ILabResult extends Deleteable, Identifiable, WithExtInfo {
 	 * <!-- end-model-doc -->
 	 * @model kind="operation"
 	 * @generated
-	 * @since 3.5
 	 */
 	ILabOrder getLabOrder();
 

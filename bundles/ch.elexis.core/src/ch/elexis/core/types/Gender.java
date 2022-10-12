@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2022 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,10 @@
  ******************************************************************************/
 package ch.elexis.core.types;
 
-public enum Gender {
+import ch.elexis.core.interfaces.ILocalizedEnum;
+import ch.elexis.core.l10n.Messages;
+
+public enum Gender implements ILocalizedEnum {
 	MALE("M"), FEMALE("F"), UNKNOWN("U"), UNDEFINED("X");
 
 	private final String value;
@@ -38,5 +41,17 @@ public enum Gender {
 			}
 		}
 		return Gender.UNKNOWN;
+	}
+
+	@Override
+	public String getLocaleText() {
+		switch (this) {
+		case FEMALE:
+			return Messages.Patient_female_short;
+		case MALE:
+			return Messages.Patient_male_short;
+		default:
+			return "?";
+		}
 	}
 }

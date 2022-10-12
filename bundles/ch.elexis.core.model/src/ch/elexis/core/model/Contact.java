@@ -344,4 +344,19 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 		return relatedContacts.parallelStream().filter(f -> !f.isDeleted())
 				.map(f -> ModelUtil.getAdapter(f, IRelatedContact.class, true)).collect(Collectors.toList());
 	}
+
+	@Override
+	public IPerson asIPerson() {
+		return CoreModelServiceHolder.get().load(getId(), IPerson.class).orElse(null);
+	}
+
+	@Override
+	public IPatient asIPatient() {
+		return CoreModelServiceHolder.get().load(getId(), IPatient.class).orElse(null);
+	}
+
+	@Override
+	public IOrganization asIOrganization() {
+		return CoreModelServiceHolder.get().load(getId(), IOrganization.class).orElse(null);
+	}
 }
