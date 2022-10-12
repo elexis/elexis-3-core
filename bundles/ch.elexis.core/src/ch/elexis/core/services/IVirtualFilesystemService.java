@@ -109,19 +109,6 @@ public interface IVirtualFilesystemService {
 		public long getContentLenght() throws IOException;
 
 		/**
-		 * Returns the time that the file denoted by this abstract pathname was last
-		 * modified.
-		 * 
-		 * @return A <code>long</code> value representing the time the file was last
-		 *         modified, measured in milliseconds since the epoch (00:00:00 GMT,
-		 *         January 1, 1970), or <code>0L</code> if the file does not exist or if
-		 *         an I/O error occurs. The value may be negative indicating the number
-		 *         of milliseconds before the epoch
-		 * @throws IOException
-		 */
-		public long getLastModified() throws IOException;
-
-		/**
 		 * Copy the contents of this handle to a new handle, where the underlying
 		 * resource might not actually exist yet.
 		 *
