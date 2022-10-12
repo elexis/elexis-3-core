@@ -5,7 +5,7 @@ Bundle-SymbolicName: ch.elexis.core.services.test.ws
 Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: elexis.info
 Automatic-Module-Name: ch.elexis.core.services.test.ws
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: com.wstutorial.ws
 Import-Package: javax.jws,
  javax.xml.bind,

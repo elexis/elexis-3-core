@@ -5,7 +5,7 @@ Bundle-SymbolicName: ch.elexis.core.hl7.v2x.tests
 Bundle-Version: 3.10.0.qualifier
 Bundle-Vendor: ch.elexis
 Fragment-Host: ch.elexis.core.hl7.v2x;bundle-version="3.9.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: ch.elexis.core.services;bundle-version="3.9.0",
  ch.elexis.core.model;bundle-version="3.9.0",
  org.junit;bundle-version="[4.0.0,5.0.0)"

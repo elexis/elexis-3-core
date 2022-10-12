@@ -35,7 +35,7 @@ Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0";visibility:=reexport
  org.eclipse.core.databinding.property,
  org.eclipse.jface.databinding,
  com.ibm.icu
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Service-Component: OSGI-INF/ch.elexis.core.ui.e4.util.CoreUiUtil.xml
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.lock.types,

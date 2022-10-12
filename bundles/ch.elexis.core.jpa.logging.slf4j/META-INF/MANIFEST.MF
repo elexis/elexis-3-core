@@ -6,5 +6,5 @@ Bundle-Version: 3.10.0.qualifier
 Bundle-Vendor: medevit.at
 Fragment-Host: org.eclipse.persistence.jpa;bundle-version="2.7.1"
 Automatic-Module-Name: ch.elexis.core.jpa.logging.slf4j
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: org.slf4j

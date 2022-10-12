@@ -29,5 +29,5 @@ Import-Package: ch.elexis.admin,
  org.eclipse.e4.core.di.annotations;version="1.6.0",
  org.eclipse.e4.ui.di,
  org.eclipse.e4.ui.model.application.ui.basic
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Service-Component: OSGI-INF/ch.elexis.core.ui.medication.billing.PrescriptionBilledAdjuster.xml

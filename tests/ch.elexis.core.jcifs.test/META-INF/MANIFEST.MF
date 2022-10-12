@@ -5,7 +5,7 @@ Bundle-SymbolicName: ch.elexis.core.jcifs.test
 Bundle-Version: 2.1.6.qualifier
 Fragment-Host: ch.elexis.core.jcifs;bundle-version="2.1.6"
 Automatic-Module-Name: ch.elexis.core.jcifs.test
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.junit
 Import-Package: org.apache.commons.io,
  org.junit;version="4.12.0"
