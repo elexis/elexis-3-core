@@ -56,6 +56,11 @@
 							<level>3</level>
 							<autoStart>true</autoStart>
 						</bundle>
+						<bundle>
+							<id>ch.elexis.core.data</id>
+							<level>3</level>
+							<autoStart>true</autoStart>
+						</bundle>
 					</bundleStartLevel>
 				</configuration>
 			</plugin>
