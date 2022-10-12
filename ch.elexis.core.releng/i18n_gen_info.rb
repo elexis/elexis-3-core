@@ -39,7 +39,7 @@ include REXML  # so that we don't have to prefix everything with REXML::...
 require 'ostruct'
 require 'pp'
 require 'uri'
-require 'pry-byebug'
+# require 'pry-byebug'
 require 'csv'
 require 'net/http'
 require 'json'
@@ -53,6 +53,7 @@ L10N_MESSAGES = Dir.glob("#{ELEXIS_BASE}/**/l10n/Messages.java").first
 
 DB_NAME = File.expand_path( "translations.DB")
 DB = SQLite3::Database.new DB_NAME
+DB.execute("PRAGMA case_sensitive_like=ON;")
 # Create a table
 rows = DB.execute <<-SQL
   create table if not exists translations (
@@ -89,8 +90,7 @@ def update_uses
 		next unless m = /.*Messages.(\w+)/.match(line)
 		DB.execute "insert into t_uses values ( ?, ? , ? )",  file, m[1], index
 	  rescue => error
-#		puts error
-#		binding.pry
+#		puts error; binding.pry
 		0
 	  end
 	end
@@ -179,7 +179,6 @@ end
 
 class L10N_Cache_Entry
   def isMsg?
-	binding.pry
 	result = !!/#{TAG_SEPARATOR}/.match(self[:key])
   end
 end
@@ -257,7 +256,8 @@ class L10N_Cache
   	entry =  L10N_Cache_Entry.new
 	entry[lang.to_sym] = text
 	entries = []
-	DB.execute( "select * from translations where #{lang.to_s} = '#{text}' " ) do
+    text = '' unless text
+	DB.execute( "select * from translations where #{lang.to_s} like '#{text.gsub("'", "_")}' " ) do
 	  |row|
 	  entry = L10N_Cache_Entry.new(row.first, 
 	  row[1], row[2], row[3], row[4], row[5])
@@ -593,7 +593,148 @@ class I18nInfo
       end
     end
   end
+ 
+  def find_best_name(german)
+    cmd = "select key, de from translations where de == '#{german}' and ( key like 'Core_%' or key like 'Sex%' or key like 'Printing_%' or key like 'Export_while' or key like 'Script%' or key like 'UNKNOWN' or key like 'TimeTool%');"
+    res = DB.execute(cmd)
+    if res && res.first
+      puts "Best name for #{german} is #{res.first[0]}" if $VERBOSE
+      return res.first[0]
+    else
+      puts "Nothing found for #{german}" if $VERBOSE
+      cmd = "select min(key), de from translations where de == '#{german}';"
+      res = DB.execute(cmd)
+      if res && res.first
+        puts "min name for #{german} is #{res.first[0]}" if $VERBOSE
+        return res.first[0]
+      end
+    end
+    nil
+  end
+  
+  def eliminate_properties(msg_file, patches)
+    prop_files = Dir.glob(msg_file.sub('Messages.java', 'messages**.properties'))
+    prop_files.each do |prop_file|
+       puts "Patching #{prop_file}"
+       content = IO.read(prop_file, encoding: "ISO8859-1")
+       patches.each do |old_key, new_key|
+         content.gsub!(/^#{old_key}(\s*=\s*[\w\.]+)$/, '')
+       end
+        File.open(prop_file, 'w+') do |file|
+          file.write content
+        end
+    end
+  end
+  
+  def eliminate_messages_java(msg_file, patches)
+    puts "Patching #{msg_file}"
+    content = IO.read(msg_file)
+    patches.each do |old_key, new_key|
+      content.gsub!(/[^\n]*\s#{old_key}\W[^\n]*./m, '')
+    end
+    File.open(msg_file, 'w+') do |file|
+      file.write content
+    end
+  end
 
+  def find_best_name(german)
+    cmd = "select key, de from translations where de == '#{german}' and ( key like 'Core_%' or key like 'Sex%' or key like 'Printing_%' or key like 'Export_while' or key like 'Script%' or key like 'UNKNOWN' or key like 'TimeTool%');"
+    res = DB.execute(cmd)
+    if res && res.first
+      puts "Best name for #{german} is #{res.first[0]}" if $VERBOSE
+      return res.first[0]
+    else
+      puts "Nothing found for #{german}" if $VERBOSE
+      cmd = "select min(key), de from translations where de == '#{german}';"
+      res = DB.execute(cmd)
+      if res && res.first
+        puts "min name for #{german} is #{res.first[0]}" if $VERBOSE
+        return res.first[0]
+      end
+    end
+    nil
+  end
+
+  def eliminate_properties(msg_file, patches)
+    prop_files = Dir.glob(msg_file.sub('Messages.java', 'messages**.properties'))
+    prop_files.each do |prop_file|
+       content = IO.read(prop_file, encoding: "ISO8859-1")
+       old_content = content.clone
+       patches.each do |old_key, new_key|
+              binding.pry if old_key.eql?('InvoiceState_OPEN_AND_PRINTED') || new_key.eql?('InvoiceState_OPEN_AND_PRINTED')
+
+         content.gsub!(/^#{old_key}(\s*=\s*[\w\.]+)$/, '')
+       end
+        File.open(prop_file, 'w+') do |file|
+          puts "Patched prop #{prop_file}"
+          file.write content
+        end unless content.eql?(old_content)
+    end
+  end
+  
+  def eliminate_messages_java(msg_file, patches)
+    content = IO.read(msg_file)
+    old_content = content.clone
+    patches.each do |old_key, new_key|
+       next unless content.include?(old_key)
+       if /\W#{old_key}\W/.match(content) && !/\W#{new_key}\W/.match(content)
+         content.gsub!(/(\W)#{old_key}(\W)/, "\\1#{new_key}\\2")
+       end
+      content.gsub!(/[^\n]*\s#{old_key}\s*=[^\n]*/, '')
+    end
+    File.open(msg_file, 'w+') do |file|
+      puts "Patched Messages.java #{msg_file}"
+      file.write content
+    end unless content.eql?(old_content)
+  end
+
+  def eliminate_java(java_file, patches)
+    return if File.basename(java_file).eql?("Messages.java")
+    return if File.dirname(java_file).include?("/src-gen")
+    return if File.dirname(java_file).include?("/ch.rgw.utility")
+    content = IO.read(java_file)
+    old_content = content.clone
+    patches.each do |old_key, new_key|
+      content.gsub!(/(.*Messages\.)(#{old_key})(\W.*)/, "\\1#{new_key}\\3")
+    end
+    unless content.eql?(old_content)
+      puts "Patched java #{java_file}"
+      File.open(java_file, 'w+') do |file|
+        file.write content
+      end
+    end
+  end
+
+  def eliminate(main_dir)
+#      puts find_best_name('unbekannt')
+       main_dir = File.expand_path(main_dir)
+#   j=0; DB.execute( "select count(de) anzahl, de, min(key), max(key) from translations group by de  having anzahl > 2 order by anzahl desc" ) { |row| j=j+1; break if j == 5; p row }
+       puts "Reduce #{main_dir}"
+    patches = {}
+    DB.execute('select count(*) anzahl, key, de from translations group by de  having anzahl > 2 order by anzahl desc;' ) do |row|
+       german = row[2];
+       best = find_best_name(german);
+       puts "key #{german} => #{best}" if  $VERBOSE
+       next if german && german.size == 1
+       cmd = "select key from translations where de == '#{german}'"
+       DB.execute(cmd) do |entry|
+         next if /.*Timeout$/.match(entry.first) # skipe keys like CobasMiraAction_DefaultTimeout
+         next if entry.first.eql?(best)
+         puts "Must replace #{entry.first} by #{best}" if $VERBOSE
+         patches[entry.first] = best
+       end
+    end
+    patches.each do |old_key, new_key|
+      puts "Must patch #{old_key} by #{new_key}"
+    end
+     Dir.glob("#{main_dir}/**/Messages.java").each do |msg_java|
+       eliminate_properties(msg_java, patches)
+       eliminate_messages_java(msg_java, patches)
+     end
+     Dir.glob("#{main_dir}/**/*.java").each do |java_file|
+       eliminate_java(java_file, patches)
+     end
+  end
   #
   # analyses new messages in main_dir
   # to see whether we have already in l10n occurences with the same
@@ -723,7 +864,9 @@ public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
   end
 
   def emit_l10n
-    msg_java = Dir.glob("**/ch.elexis.core.l10n/**/Messages.java").first
+    path = "**/ch.elexis.core.l10n/**/Messages.java"
+    msg_java = Dir.glob(path).first
+    raise "Unable to find l10n Messages.java (Searched via #{path}" unless msg_java 
 	keys = L10N_Cache.keys.find_all{ |key| !/#{L10N_Cache::TAG_SEPARATOR}/.match(key)}.sort
 	emit_l10_messages_java(msg_java, keys)
 	write_translation_to_properties(msg_java, keys)
@@ -834,6 +977,7 @@ EOS
   opt :emit_l10n, "Create Messages.java + properties for l10n", :default => false, :short => '-e'
   opt :standardize, "Use some string constant from apache.commons in all java files in given subdir", :default => false, :short => '-s'
   opt :analyze_new, "Get new keys and find already existing ones", :default => false, :short => "-n"
+  opt :eliminate, "Eliminate duplicates by best name", :default => false
 end
 
 Options = Optimist::with_standard_exception_handling parser do
@@ -856,6 +1000,11 @@ saved_pwd = Dir.pwd
 ARGV.each do |dir|
 	Dir.chdir saved_pwd
 	puts "Handling #{dir}"
+    if Options[:eliminate]
+       i18n.eliminate(dir)
+       puts "Done"
+       exit
+    end
 	i18n.to_db(dir) if Options[:to_db]
 	i18n.standardize(dir) if Options[:standardize]
 	i18n.to_messages_properties(dir)  if Options[:to_messages_properties]
