@@ -1,10 +1,10 @@
 h1. Elexis SDK
 
-__MEDEVIT <office@medevit.at>__ Last update: 14.04.2021
+__MEDEVIT <office@medevit.at>__ Last update: 12.10.2022
 
 This project is used to automatically set-up an Elexis 3 development environment using the "Eclipse Oomph Installer":http://wiki.eclipse.org/Eclipse_Oomph_Installer. It integrates both core, base and "Medelexis":http://www.medelexis.ch  resources. This project is not used outside of the Oomph installer tool.
 
-This documentation was verified with Oomph v1.21.0 Build 5073 (with an embedded JRE) and used the "Eclipse IDE for RCP and RAP Developers - 2021-06". The setup file referenced in this document is located in the root of this git repository (that is @../Elexis.setup@ )
+This documentation was verified with Oomph v1.27.0 Build 5664 (with an embedded JRE) and used the "Eclipse IDE for RCP and RAP Developers - 2022-09". The setup file referenced in this document is located in the root of this git repository (that is @../Elexis.setup@ )
 
 h2. Usage
 
