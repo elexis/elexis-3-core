@@ -5,6 +5,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
     xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
+    xmlns:maven="http://www.eclipse.org/oomph/setup/maven/1.0"
     xmlns:mylyn="http://www.eclipse.org/oomph/setup/mylyn/1.0"
     xmlns:pde="http://www.eclipse.org/oomph/setup/pde/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
@@ -67,8 +68,8 @@
       name="Common">
     <setupTask
         xsi:type="jdt:JRETask"
-        version="JavaSE-11"
-        location="${jre.location-11}"/>
+        version="JavaSE-17"
+        location="${jre.location-17}"/>
     <setupTask
         xsi:type="setup:EclipseIniTask"
         option="-Xmx"
@@ -148,8 +149,6 @@
   <setupTask
       xsi:type="setup.p2:P2Task">
     <requirement
-        name="org.sonatype.tycho.m2e.feature.feature.group"/>
-    <requirement
         name="org.eclipse.mylyn.github.feature.feature.group"/>
     <requirement
         name="org.eclipse.cbi.targetplatform-feature.feature.group"/>
@@ -165,7 +164,7 @@
         name="net.jeeeyul.pdetools.feature.feature.group"
         filter=""/>
     <repository
-        url="https://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.9.0/N/LATEST/"/>
+        url="https://download.eclipse.org/technology/m2e/releases/2.0.5/" />
     <repository
         url="https://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/"/>
     <repository
@@ -240,7 +239,7 @@
   <setupTask
       xsi:type="pde:TargetPlatformTask"
       id="elexis-target.ide.target"
-      name="Elexis Target IDE 2021-09-java11"/>
+      name="Elexis Target IDE 2022-09-java17"/>
   <project name="Medelexis"
       label="">
     <setupTask
@@ -314,10 +313,22 @@
             key="/instance/org.eclipse.jdt.ui/formatter_settings_version">
           <value>record</value>
         </detail>
-      </annotation>
+        <detail
+             key="/instance/org.eclipse.jdt.ui/editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup">
+           <value>record</value>
+        </detail>
+     </annotation>
       <setupTask
           xsi:type="setup:CompoundTask"
           name="org.eclipse.jdt.ui">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.ui/cleanup.remove_trailing_whitespaces"
+            value="true"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.ui/editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup"
+            value="true"/>
         <setupTask
             xsi:type="setup:PreferenceTask"
             key="/instance/org.eclipse.jdt.ui/formatter_profile"
