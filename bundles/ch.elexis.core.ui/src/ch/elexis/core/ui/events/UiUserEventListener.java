@@ -25,13 +25,12 @@ public class UiUserEventListener extends ElexisUiEventListenerImpl {
 
 	public UiUserEventListener() {
 		// IUser
-		super(Anwender.class);
+		super(Anwender.class, ElexisEvent.EVENT_USER_CHANGED);
 	}
 
 	@Override
 	public void runInUi(final ElexisEvent ev) {
-		// Benutzer
-		if (ev.getType() == ElexisEvent.EVENT_USER_CHANGED) {
+		if (CoreHub.getLoggedInContact() != null) {
 			final List<Reminder> reminderList = Reminder.findToShowOnStartup(CoreHub.getLoggedInContact());
 
 			if (reminderList.size() > 0) {
@@ -46,5 +45,4 @@ public class UiUserEventListener extends ElexisUiEventListenerImpl {
 			}
 		}
 	}
-
 }
