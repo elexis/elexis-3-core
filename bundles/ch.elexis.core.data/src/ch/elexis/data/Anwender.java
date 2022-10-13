@@ -20,12 +20,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.model.IContact;
@@ -222,9 +221,6 @@ public class Anwender extends Person {
 		if (user.isPresent()) {
 			user.get()
 					.setAssignedContact(CoreModelServiceHolder.get().load(admin.getId(), IContact.class).orElse(null));
-			ContextServiceHolder.get().setActiveUser(user.get());
-			ElexisEventDispatcher.getInstance()
-					.fire(new ElexisEvent(admin, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 		} else {
 			throw new IllegalStateException("Incorrect DB state - No admin user found!");
 		}
