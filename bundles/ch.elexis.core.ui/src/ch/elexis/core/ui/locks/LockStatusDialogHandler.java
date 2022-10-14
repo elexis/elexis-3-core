@@ -63,7 +63,7 @@ public class LockStatusDialogHandler extends AbstractHandler implements IElement
 	@Override
 	public void handleEvent(Event event) {
 		Object property = event.getProperty(ElexisEventTopics.ECLIPSE_E4_DATA);
-		if (Objects.equals(property, ILockService.class)) {
+		if (Objects.equals(property, ILockService.class) && PlatformUI.isWorkbenchRunning()) {
 			ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 			commandService.refreshElements(COMMAND_ID, null);
 		}
