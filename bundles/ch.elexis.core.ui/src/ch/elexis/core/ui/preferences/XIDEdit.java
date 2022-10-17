@@ -1,8 +1,9 @@
 package ch.elexis.core.ui.preferences;
 
 import java.util.Comparator;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -11,6 +12,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
@@ -23,11 +25,13 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import ch.elexis.core.data.interfaces.IXid;
-import ch.elexis.core.services.IXidService.IXidDomain;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.model.IXid;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
+import ch.elexis.data.Organisation;
+import ch.elexis.data.Person;
+import ch.elexis.data.Xid;
+import ch.elexis.data.Xid.XIDDomain;
 
 public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage {
 	Table table;
@@ -35,9 +39,42 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 	XIDComparator comparator;
 	CommonViewer XIDViewer;
 
-	private static final String[] columnHeaders = { Messages.XIDEdit_ShortName, Messages.XIDEdit_DomainName,
-			Messages.XIDEdit_Display };
-	private static final int[] colWidth = new int[] { 200, 300, 50 };
+	/**
+	 * Hilfsklasse um XIDDomain vollständig (Domainname, Domainkurzname und
+	 * Anzeigetyp ob Person oder Organisation) anzuzeigen. Diese Hilfsklasse
+	 * representiert einen Zeileneintrag in der Tabelle.
+	 */
+	static class XIDRow {
+		private XIDDomain domain;
+
+		public XIDRow(XIDDomain domain) {
+			this.domain = domain;
+		}
+
+		public String getDomainName() {
+			return domain.getDomainName();
+		}
+
+		public String getDomainSimpleName() {
+			return domain.getSimpleName();
+		}
+
+		public String getDisplayedFor() {
+			XIDDomain xidDomain = Xid.getDomain(getDomainName());
+			if (xidDomain.isDisplayedFor(Person.class)) {
+				return "P";
+			}
+			if (xidDomain.isDisplayedFor(Organisation.class)) {
+				return "O";
+			}
+			return "";
+		}
+	}
+
+	@Override
+	public void init(IWorkbench workbench) {
+		comparator = new XIDComparator();
+	}
 
 	@Override
 	protected Control createContents(Composite parent) {
@@ -46,94 +83,81 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		tv.getTable().setHeaderVisible(true);
+		table.setHeaderVisible(true);
 		tv.setContentProvider(ArrayContentProvider.getInstance());
-//		tv.setComparator(comparator);
-//		tv.setLabelProvider(new ColumnLabelProvider() {
-//			@Override
-//			public String getText(Object element) {
-//				IXidDomain xid = (IXidDomain) element;
-//				return xid.getSimpleName();
-//
-//			}
-//		});
-//		
-		getQuery();
 
-		tv.setLabelProvider(new ColumnLabelProvider() {
+		Set<XIDRow> input = new HashSet<XIDEdit.XIDRow>();
+		for (String dom : Xid.getXIDDomains()) {
+			XIDDomain xdom = Xid.getDomain(dom);
+			input.add(new XIDRow(xdom));
+		}
+		tv.setInput(input);
+
+		TableViewerColumn colviewShortName = new TableViewerColumn(tv, SWT.NONE);
+		TableColumn colShortName = colviewShortName.getColumn();
+		colShortName.setWidth(200);
+		colShortName.setText(Messages.XIDEdit_ShortName);
+		colShortName.addSelectionListener(getSelectionAdapter(colShortName, 0));
+		colviewShortName.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				ch.elexis.core.model.IXid xd = (ch.elexis.core.model.IXid) element;
-				return xd.getDomainId().toString();
-//							Xid.getSimpleNameForXIDDomain((String) element);
-
+				XIDRow xid = (XIDRow) element;
+				return xid.getDomainSimpleName();
 			}
 		});
 
-		comparator = new XIDComparator();
-		for (int i = 0; i < columnHeaders.length; i++) {
-			TableColumn tvc = new TableColumn(table, SWT.NONE);
-			tvc.setWidth(colWidth[i]);
-			tvc.setText(columnHeaders[i]);
-			tvc.addSelectionListener(getSelectionAdapter(tvc, i));
-		}
+		TableViewerColumn domName = new TableViewerColumn(tv, SWT.NONE);
+		TableColumn domNameCol = domName.getColumn();
+		domNameCol.setWidth(300);
+		domNameCol.setText(Messages.XIDEdit_DomainName);
+		domNameCol.addSelectionListener(getSelectionAdapter(domNameCol, 1));
+		domName.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				XIDRow xid = (XIDRow) element;
+				return xid.getDomainName();
+			}
+		});
+
+		TableViewerColumn disp = new TableViewerColumn(tv, SWT.NONE);
+		TableColumn dispCol = disp.getColumn();
+		dispCol.setWidth(50);
+		dispCol.setText(Messages.XIDEdit_Display);
+		dispCol.addSelectionListener(getSelectionAdapter(dispCol, 2));
+		disp.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				XIDRow xid = (XIDRow) element;
+				return xid.getDisplayedFor();
+			}
+		});
 
 		tv.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = tv.getStructuredSelection();
 				if (!selection.isEmpty()) {
-					ch.elexis.core.model.IXid id = (ch.elexis.core.model.IXid) selection.getFirstElement();
+					XIDRow id = (XIDRow) selection.getFirstElement();
 					if (selection.getFirstElement() instanceof IXid) {
-						id.getDomain();
+						id.getDomainName();
 						tv.refresh();
 					}
 				}
 			}
-
 		});
-//
-//		table.addMouseListener(new MouseAdapter() {
-//
-//			@Override
-//			public void mouseDoubleClick(MouseEvent e) {
-//				TableItem[] sel = table.getSelection();
-//				if (sel != null && sel.length > 0) {
-//					new XidEditDialog(getShell(), sel[0].getText(1)).open();
-//					for (TableItem it : table.getItems()) {
-//						XIDDomain xd = Xid.getDomain(it.getText(1));
-////						 it.setText(0,Xid.getSimpleNameForXIDDomain(dom));
-//						StringBuilder sb = new StringBuilder();
-//						if (xd.isDisplayedFor(Person.class)) {
-//							sb.append("P"); //$NON-NLS-1$
-//						}
-//						if (xd.isDisplayedFor(Organisation.class)) {
-//							sb.append("O"); //$NON-NLS-1$
-//						}
-//						it.setText(2, sb.toString());
-//					}
-//					table.redraw();
-//				}
-//			}
-//
-//		});
+
+		tv.setComparator(comparator);
+		tv.refresh();
 		return table;
 
 	}
-
-	public void getQuery() {
-		List<ch.elexis.core.model.IXid> input = CoreModelServiceHolder.get().getQuery(ch.elexis.core.model.IXid.class)
-				.execute();
-
-		tv.setInput(input);
-	}
-
 
 	private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index) {
 		SelectionAdapter selectionAdapter = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				comparator.setColumn(index);
+				comparator.changeDirection();
 				int dir = comparator.getDirection();
 				tv.getTable().setSortDirection(dir);
 				tv.getTable().setSortColumn(column);
@@ -141,61 +165,47 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 			}
 		};
 		return selectionAdapter;
-
 	}
 
+	public class XIDComparator extends ViewerComparator {
+		private int propertyIndex;
+		private int direction = 1;
 
-public class XIDComparator extends ViewerComparator {
-
-	private int propertyIndex;
-	private static final int DESCENDING = 1;
-	private int direction = DESCENDING;
-
-	public XIDComparator() {
-		this.propertyIndex = 0;
-		direction = DESCENDING;
-	}
-
-	public int getDirection() {
-		return direction == 1 ? SWT.DOWN : SWT.UP;
-	}
-
-	public void setColumn(int column) {
-		if (column == this.propertyIndex) {
-			direction = 1 - direction;
-		}
-		this.propertyIndex = column;
-		direction = DESCENDING;
-	}
-
-	@Override
-	public int compare(Viewer viewer, Object e1, Object e2) {
-		var kname1 = (IXidDomain) e1;
-		var kname2 = (IXidDomain) e2;
-		int rc = 0;
-		switch (propertyIndex) {
-		case 0:
-			rc = Objects.compare(kname1.getSimpleName(), kname2.getSimpleName(),
-				Comparator.nullsFirst(Comparator.naturalOrder())) * getDirection();
-			break;
-		default:
-			rc = 0;
-
+		public int getDirection() {
+			return direction == 1 ? SWT.DOWN : SWT.UP;
 		}
 
-		if (direction == DESCENDING) {
-			rc = -rc;
+		public void changeDirection() {
+			direction *= -1;
 		}
-		return rc;
-//		return super.compare(viewer, e1, e2);
-//				kname1.getXid().getLabel().compareToIgnoreCase(kname2.getXid().getLabel());
+
+		public void setColumn(int column) {
+			this.propertyIndex = column;
+		}
+
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			var row1 = (XIDRow) e1;
+			var row2 = (XIDRow) e2;
+			int rc = 0;
+			switch (propertyIndex) {
+			case 0:
+				rc = Objects.compare(row1.getDomainSimpleName(), row2.getDomainSimpleName(),
+						Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
+				break;
+			case 1:
+				rc = Objects.compare(row1.getDomainName(), row2.getDomainName(),
+						Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
+				break;
+			case 2:
+				rc = Objects.compare(row1.getDisplayedFor(), row2.getDisplayedFor(),
+						Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
+				break;
+			default:
+				rc = 0;
+			}
+
+			return rc;
+		}
 	}
-
-}
-
-@Override
-public void init(IWorkbench workbench) {
-	// TODO Auto-generated method stub
-
-}
 }
