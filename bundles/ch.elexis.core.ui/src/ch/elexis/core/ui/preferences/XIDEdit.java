@@ -2,6 +2,7 @@ package ch.elexis.core.ui.preferences;
 
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -35,6 +36,9 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.model.IXid;
+import ch.elexis.core.services.IXidService;
+import ch.elexis.core.services.IXidService.IXidDomain;
+import ch.elexis.core.services.holder.XidServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.data.Organisation;
@@ -47,6 +51,7 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 	TableViewer tv;
 	XIDComparator comparator;
 	CommonViewer XIDViewer;
+	IXidService xidService;
 
 	/**
 	 * Hilfsklasse um XIDDomain vollständig (Domainname, Domainkurzname und
@@ -54,10 +59,12 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 	 * representiert einen Zeileneintrag in der Tabelle.
 	 */
 	static class XIDRow {
-		private XIDDomain domain;
+		public final static String DISPLAY_FOR_PERSON = "P";
+		public final static String DISPLAY_FOR_ORG = "O";
+		private IXidDomain domain;
 
-		public XIDRow(XIDDomain domain) {
-			this.domain = domain;
+		public XIDRow(IXidDomain xdom) {
+			this.domain = xdom;
 		}
 
 		public String getDomainName() {
@@ -70,19 +77,21 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 
 		public String getDisplayedFor() {
 			XIDDomain xidDomain = Xid.getDomain(getDomainName());
+			StringBuffer sb = new StringBuffer();
 			if (xidDomain.isDisplayedFor(Person.class)) {
-				return "P";
+				sb.append(DISPLAY_FOR_PERSON);
 			}
 			if (xidDomain.isDisplayedFor(Organisation.class)) {
-				return "O";
+				sb.append(DISPLAY_FOR_ORG);
 			}
-			return "";
+			return sb.toString();
 		}
 	}
 
 	@Override
 	public void init(IWorkbench workbench) {
 		comparator = new XIDComparator();
+		xidService = XidServiceHolder.get();
 	}
 
 	@Override
@@ -96,9 +105,9 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 		tv.setContentProvider(ArrayContentProvider.getInstance());
 
 		Set<XIDRow> input = new HashSet<XIDEdit.XIDRow>();
-		for (String dom : Xid.getXIDDomains()) {
-			XIDDomain xdom = Xid.getDomain(dom);
-			input.add(new XIDRow(xdom));
+		List<IXidDomain> domains = xidService.getDomains();
+		for (IXidDomain dom : domains) {
+			input.add(new XIDRow(dom));
 		}
 		tv.setInput(input);
 
@@ -161,22 +170,15 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 			public void mouseDoubleClick(MouseEvent e) {
 				TableItem[] sel = table.getSelection();
 				if (sel != null && sel.length > 0) {
-					new XidEditDialog(getShell(), sel[0].getText(1)).open();
+					XIDRow selDom = (XIDRow) sel[0].getData();
+					new XidEditDialog(getShell(), selDom).open();
 					for (TableItem it : table.getItems()) {
-						XIDDomain xd = Xid.getDomain(it.getText(1));
-						StringBuilder sb = new StringBuilder();
-						if (xd.isDisplayedFor(Person.class)) {
-							sb.append("P"); //$NON-NLS-1$
-						}
-						if (xd.isDisplayedFor(Organisation.class)) {
-							sb.append("O"); //$NON-NLS-1$
-						}
-						it.setText(2, sb.toString());
+						XIDRow xidRow = (XIDRow) it.getData();
+						it.setText(2, xidRow.getDisplayedFor());
 					}
 					table.redraw();
 				}
 			}
-
 		});
 
 		tv.setComparator(comparator);
@@ -205,9 +207,9 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 		Button bPerson, bOrg;
 		XIDDomain mine;
 
-		public XidEditDialog(Shell shell, String myDomain) {
+		public XidEditDialog(Shell shell, XIDRow xidDom) {
 			super(shell);
-			mine = Xid.getDomain(myDomain);
+			mine = Xid.getDomain(xidDom.getDomainName());
 		}
 
 		@Override
@@ -229,6 +231,8 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 			bOrg = new Button(ret, SWT.CHECK);
 			bPerson.setText(Messages.XIDEdit_Persons);
 			bOrg.setText(Messages.XIDEdit_Organizations);
+			bPerson.setSelection(false);
+			bOrg.setSelection(false);
 			if (mine.isDisplayedFor(Person.class)) {
 				bPerson.setSelection(true);
 			}
@@ -242,17 +246,21 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 		protected void okPressed() {
 			if (bPerson.getSelection()) {
 				mine.addDisplayOption(Person.class);
+			} else {
+				mine.removeDisplayOption(Person.class);
 			}
 			if (bOrg.getSelection()) {
 				mine.addDisplayOption(Organisation.class);
+			} else {
+				mine.removeDisplayOption(Organisation.class);
 			}
 			mine.setSimpleName(tShort.getText());
 			super.okPressed();
 		}
-
 	}
 
 	public class XIDComparator extends ViewerComparator {
+
 		private int propertyIndex;
 		private int direction = 1;
 
