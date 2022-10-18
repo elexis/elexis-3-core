@@ -44,6 +44,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Labor;
@@ -81,6 +82,9 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		typeComp.setLayout(new GridLayout(1, false));
 
 		Composite cTypes = UiDesk.getToolkit().createComposite(typeComp, SWT.BORDER);
+		cTypes.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		cTypes.setLayout(new FillLayout());
+
 		bOrganisation = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktErfassenDialog_organization, // $NON-NLS-1$
 				SWT.CHECK);
 		bOrganisation.addSelectionListener(new SelectionAdapter() {
@@ -129,9 +133,13 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			bMandant.setEnabled(false);
 			bAnwender.setEnabled(false);
 		}
-		cTypes.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
-		cTypes.setLayout(new FillLayout());
+		if (CoreUtil.isMac()) {
+			// workaround - see
+			// https://github.com/eclipse-platform/eclipse.platform.swt/issues/438
+			new Label(cTypes, SWT.NONE);
+			typeComp.pack();
+		}
 
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
