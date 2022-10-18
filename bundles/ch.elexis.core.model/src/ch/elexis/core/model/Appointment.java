@@ -321,11 +321,16 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin> implements
 	public String getLabel() {
 		StringBuilder sb = new StringBuilder();
 		LocalDateTime start = getStartTime();
-		LocalDateTime end = getEndTime();
 		sb.append(dayFormatter.format(start)).append(",");
-		sb.append(timeFormatter.format(start)).append("-").append(timeFormatter.format(end)).append(StringUtils.SPACE)
-				.append(getSubjectOrPatient()).append(" (").append(getType()).append(",").append(getState())
-				.append(") ");
+		if (isAllDay()) {
+			sb.append("-");
+		} else {
+			LocalDateTime end = getEndTime();
+			sb.append(timeFormatter.format(start)).append("-").append(timeFormatter.format(end));
+		}
+		sb.append(StringUtils.SPACE).append(getSubjectOrPatient()).append(" (").append(getType()).append(",")
+				.append(getState()).append(") ");
+
 		return sb.toString();
 	}
 }
