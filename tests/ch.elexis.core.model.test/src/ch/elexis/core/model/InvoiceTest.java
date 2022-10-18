@@ -61,6 +61,44 @@ public class InvoiceTest extends AbstractTest {
 	}
 
 	@Test
+	public void getSortedEncounters() throws InterruptedException {
+		IInvoice invoice = coreModelService.create(IInvoice.class);
+		invoice.setCoverage(coverage);
+		invoice.setDate(LocalDate.now());
+		invoice.setDateFrom(LocalDate.now());
+		invoice.setRemark("remark");
+		coreModelService.save(invoice);
+
+		List<Identifiable> created = new ArrayList<>();
+
+		for (int i = 0; i < 10; i++) {
+			IEncounter encounter = new IEncounterBuilder(coreModelService, coverage, mandator).build();
+			encounter.setDate(LocalDate.now().minusDays(i));
+			encounter.setInvoice(invoice);
+			coreModelService.save(encounter);
+			created.add(encounter);
+		}
+		// two encounters yesterday
+		IEncounter encounter = new IEncounterBuilder(coreModelService, coverage, mandator).build();
+		encounter.setDate(LocalDate.now().minusDays(1));
+		encounter.setInvoice(invoice);
+		coreModelService.save(encounter);
+		created.add(encounter);
+
+		// reload from db
+		invoice = coreModelService.load(invoice.getId(), IInvoice.class).get();
+		List<IEncounter> encounters = invoice.getEncounters();
+		// check if sorted as expected
+		assertEquals(11, encounters.size());
+		assertEquals(LocalDate.now(), encounters.get(10).getDate());
+		assertEquals(encounters.get(8).getDate(), encounters.get(9).getDate());
+
+		coreModelService.remove(invoice);
+
+		created.forEach(i -> coreModelService.remove(i));
+	}
+
+	@Test
 	public void multiThreadMappedProperties() throws InterruptedException {
 		IInvoice invoice = coreModelService.create(IInvoice.class);
 		invoice.setCoverage(coverage);
