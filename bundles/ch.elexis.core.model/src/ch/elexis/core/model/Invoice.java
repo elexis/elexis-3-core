@@ -95,7 +95,9 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	public List<IEncounter> getEncounters() {
 		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getEncounters().parallelStream().filter(b -> !b.isDeleted())
-				.map(b -> ModelUtil.getAdapter(b, IEncounter.class, true)).collect(Collectors.toList());
+				.map(b -> ModelUtil.getAdapter(b, IEncounter.class, true)).sorted((e1, e2) -> {
+					return e1.getDate().compareTo(e2.getDate());
+				}).collect(Collectors.toList());
 	}
 
 	@Override
