@@ -92,7 +92,7 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 			}
 
 			if (Objects.equals(Boolean.TRUE, delete) || Objects.equals(Boolean.TRUE, persistedDelete)) {
-				AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
+				AcquireLockBlockingUi.aquireAndRun(result != null ? result : order, new ILockHandler() {
 					@Override
 					public void lockFailed() {
 						// do nothing
