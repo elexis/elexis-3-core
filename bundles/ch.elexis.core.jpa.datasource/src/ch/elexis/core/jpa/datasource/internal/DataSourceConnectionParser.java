@@ -101,6 +101,14 @@ public class DataSourceConnectionParser {
 			if (isRunFromScratch) {
 				// TODO checkIfEmpty throw IllegalState
 				// PersistentObject#deleteAllTables
+			} else {
+				// When running the RCPTT-GUI Tests via maven in a settings.xml, it is impossible to add
+				// ;AUTO_SERVER=TRUE as a jdbc connection string, maven interprets it as an end of line
+				if (dbType.dbType.equalsIgnoreCase("h2") && !prop_dbConnSpec.contains("AUTO_SERVER=TRUE"))
+				{
+					prop_dbConnSpec = prop_dbConnSpec+";AUTO_SERVER=TRUE";
+					logger.info("Added AUTO_SERVER [" + prop_dbConnSpec + "]");
+				}
 			}
 			configSourceCode = 2;
 			return Optional.of(new DBConnection(dbType, prop_dbConnSpec, prop_dbUser, prop_dbPassword.toCharArray()));
