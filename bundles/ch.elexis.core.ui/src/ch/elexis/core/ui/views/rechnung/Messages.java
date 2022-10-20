@@ -33,6 +33,12 @@ public class Messages {
 	public static String AccountView_goodFromBills = ch.elexis.core.l10n.Messages.AccountView_goodFromBills;
 	public static String AccountView_remarks = ch.elexis.core.l10n.Messages.AccountView_remarks;
 	public static String AccountView_accountColumn = ch.elexis.core.l10n.Messages.AccountView_accountColumn;
+	public static String Billing_Cfg_MsgTXT = ch.elexis.core.l10n.Messages.Billing_Cfg_MsgTXT;
+	public static String Billing_Cfg_Msg = ch.elexis.core.l10n.Messages.Billing_Cfg_Msg;
+	public static String BillingDefaultMsg = ch.elexis.core.l10n.Messages.BillingDefaultMsg;
+	public static String BillingDefaultMsg_M1 = ch.elexis.core.l10n.Messages.BillingDefaultMsg_M1;
+	public static String BillingDefaultMsg_M2 = ch.elexis.core.l10n.Messages.BillingDefaultMsg_M2;
+	public static String BillingDefaultMsg_M3 = ch.elexis.core.l10n.Messages.BillingDefaultMsg_M3;
 	public static String BillSummary_NoPatientSelected = ch.elexis.core.l10n.Messages.BillSummary_NoPatientSelected;
 	public static String BillSummary_SummaryToClipboard = ch.elexis.core.l10n.Messages.BillSummary_SummaryToClipboard;
 	public static String BillSummary_amount = ch.elexis.core.l10n.Messages.BillSummary_amount;
