@@ -73,8 +73,11 @@ public class PractitionerIMandatorTransformer implements IFhirTransformer<Practi
 
 	@Override
 	public Optional<IMandator> getLocalObject(Practitioner fhirObject) {
-		// TODO Auto-generated method stub
-		return null;
+		String id = fhirObject.getIdElement().getIdPart();
+		if (id != null && !id.isEmpty()) {
+			return modelService.load(id, IMandator.class);
+		}
+		return Optional.empty();
 	}
 
 	@Override
