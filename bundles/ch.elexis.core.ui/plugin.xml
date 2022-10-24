@@ -536,16 +536,6 @@
                parentId="org.eclipse.ui.defaultAcceleratorConfiguration">
          </scheme>
          <key
-               commandId="ch.elexis.core.data.command.RequestLockCommand"
-               schemeId="ch.elexis.ui.keybindingScheme"
-               sequence="M1+L">
-         </key>
-         <key
-               commandId="ch.elexis.core.data.command.ReleaseAllLocksCommand"
-               schemeId="ch.elexis.ui.keybindingScheme"
-               sequence="M1+R">
-         </key>
-         <key
                commandId="org.eclipse.ui.views.showView"
                schemeId="ch.elexis.ui.keybindingScheme"
                sequence="M1+N">
