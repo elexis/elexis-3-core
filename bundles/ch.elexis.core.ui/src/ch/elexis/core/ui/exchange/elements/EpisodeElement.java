@@ -20,11 +20,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Element;
 
 import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
-import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.XMLTool;
 
@@ -44,7 +44,7 @@ public class EpisodeElement extends XChangeElement {
 	public EpisodeElement asExporter(XChangeExporter parent, Konsultation k, IDiagnose dg) {
 		asExporter(parent);
 		setAttribute(ATTR_BEGINDATE, new TimeTool(k.getDatum()).toString(TimeTool.DATE_ISO));
-		setAttribute(ATTR_ID, XMLTool.idToXMLID(StringTool.unique("episode"))); //$NON-NLS-1$
+		setAttribute(ATTR_ID, XMLTool.idToXMLID(ElexisIdGenerator.generateId())); // $NON-NLS-1$
 		DiagnosisElement eDiag = new DiagnosisElement().asExporter(parent, dg);
 		add(eDiag);
 		setAttribute(ATTR_TITLE, dg.getLabel());

@@ -25,12 +25,12 @@ import ch.elexis.core.jpa.entities.converter.ReminderPriorityConverter;
 import ch.elexis.core.jpa.entities.converter.ReminderProcessStatusConverter;
 import ch.elexis.core.jpa.entities.converter.ReminderTypeConverter;
 import ch.elexis.core.jpa.entities.converter.ReminderVisibilityConverter;
-import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 
 @Entity
 @Table(name = "reminders")

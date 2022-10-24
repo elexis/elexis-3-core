@@ -11,8 +11,8 @@ import javax.persistence.Table;
 import org.eclipse.persistence.annotations.Cache;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
-import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 
 @Entity
 @Table(name = "AT_MEDEVIT_ELEXIS_FREETEXTDIAGNOSE")

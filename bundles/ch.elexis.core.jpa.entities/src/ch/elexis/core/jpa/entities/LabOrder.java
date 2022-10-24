@@ -17,10 +17,10 @@ import org.eclipse.persistence.annotations.Cache;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.LabOrderStateConverter;
-import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.jpa.entities.listener.LabOrderEntityListener;
 import ch.elexis.core.model.LabOrderState;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 
 @Entity
 @Table(name = "laborder")

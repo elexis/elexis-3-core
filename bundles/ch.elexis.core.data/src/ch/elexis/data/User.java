@@ -21,8 +21,8 @@ import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.RoleConstants;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.rgw.tools.PasswordEncryptionService;
-import ch.rgw.tools.StringTool;
 
 public class User extends PersistentObject {
 
@@ -72,7 +72,7 @@ public class User extends PersistentObject {
 		create(username);
 		setAssignedContact(anw);
 		if (password == null || password.length() == 0) {
-			password = StringTool.unique("pswd");
+			password = ElexisIdGenerator.generateId();
 		}
 		setPassword(password);
 

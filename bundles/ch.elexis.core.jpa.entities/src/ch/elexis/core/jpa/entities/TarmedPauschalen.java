@@ -12,8 +12,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
-import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 
 @Entity
 @Table(name = "CH_ELEXIS_ARZTTARIFE_CH_TARMEDPAUSCHALEN")

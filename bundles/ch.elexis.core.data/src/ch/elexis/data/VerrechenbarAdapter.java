@@ -18,11 +18,11 @@ import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.MultiplikatorList;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.Money;
-import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public abstract class VerrechenbarAdapter extends PersistentObject implements IVerrechenbar {
@@ -72,7 +72,7 @@ public abstract class VerrechenbarAdapter extends PersistentObject implements IV
 		stm.exec(sql.toString());
 		sql.setLength(0);
 		sql.append("INSERT INTO VK_PREISE (ID,DATUM_VON,DATUM_BIS,MULTIPLIKATOR,TYP) VALUES (")
-				.append(JdbcLink.wrap(StringTool.unique("rtsu"))).append(",")
+				.append(JdbcLink.wrap(ElexisIdGenerator.generateId())).append(",")
 				.append(JdbcLink.wrap(von.toString(TimeTool.DATE_COMPACT))).append(",")
 				.append(JdbcLink.wrap(bis.toString(TimeTool.DATE_COMPACT))).append(",")
 				.append(JdbcLink.wrap(Double.toString(factor))).append(",").append(JdbcLink.wrap(typ)).append(");");

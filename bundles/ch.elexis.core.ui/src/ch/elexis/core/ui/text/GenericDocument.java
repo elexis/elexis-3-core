@@ -21,10 +21,9 @@ import java.io.InputStream;
 
 import ch.elexis.core.data.interfaces.text.IOpaqueDocument;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.data.Patient;
 import ch.rgw.io.FileTool;
-import ch.rgw.tools.StringTool;
 
 /**
  * An IDocument implementation, based on a File
@@ -40,7 +39,7 @@ public class GenericDocument implements IOpaqueDocument {
 	Patient pat;
 	String keywords;
 	String mimetype;
-	String guid = StringTool.unique("FileDocument"); //$NON-NLS-1$
+	String guid = ElexisIdGenerator.generateId();
 
 	/**
 	 * Create a new GenericDocument from a File.

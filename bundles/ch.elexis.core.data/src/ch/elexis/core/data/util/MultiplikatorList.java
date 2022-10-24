@@ -10,22 +10,22 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
-import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -135,7 +135,7 @@ public class MultiplikatorList {
 			StringBuilder sql = new StringBuilder();
 			sql.append("INSERT INTO ").append(table)
 					.append(" (ID,DATUM_VON,DATUM_BIS,MULTIPLIKATOR,TYP) VALUES ("
-							+ JdbcLink.wrap(StringTool.unique("prso")) + ","
+							+ JdbcLink.wrap(ElexisIdGenerator.generateId()) + ","
 							+ JdbcLink.wrap(dateFrom.toString(TimeTool.DATE_COMPACT)) + ","
 							+ JdbcLink.wrap(dateTo.toString(TimeTool.DATE_COMPACT)) + "," + JdbcLink.wrap(value) + ","
 							+ JdbcLink.wrap(typ) + ");");

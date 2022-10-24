@@ -11,7 +11,6 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
@@ -57,6 +57,7 @@ import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
@@ -717,7 +718,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				+ JdbcLink.wrap(dg.getClass().getName()) + " AND DG_CODE=" + JdbcLink.wrap(dg.getCode()));
 		StringBuilder sql = new StringBuilder(200);
 		if (StringTool.isNothing(diagnosisEntryExists)) {
-			diagnosisEntryExists = StringTool.unique("bhdl");
+			diagnosisEntryExists = ElexisIdGenerator.generateId();
 			sql.append("INSERT INTO DIAGNOSEN (ID, LASTUPDATE, DG_CODE, DG_TXT, KLASSE) VALUES (")
 					.append(JdbcLink.wrap(diagnosisEntryExists)).append(",")
 					.append(Long.toString(System.currentTimeMillis())).append(",").append(JdbcLink.wrap(dg.getCode()))
@@ -731,7 +732,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		 * @see https://redmine.medelexis.ch/issues/5629
 		 */
 		sql.append("INSERT INTO BEHDL_DG_JOINT (ID,BEHANDLUNGSID,DIAGNOSEID) VALUES (")
-				.append(JdbcLink.wrap(StringTool.unique("bhdx"))).append(",").append(getWrappedId()).append(",")
+				.append(JdbcLink.wrap(ElexisIdGenerator.generateId())).append(",").append(getWrappedId()).append(",")
 				.append(JdbcLink.wrap(diagnosisEntryExists)).append(")");
 		getDBConnection().exec(sql.toString());
 

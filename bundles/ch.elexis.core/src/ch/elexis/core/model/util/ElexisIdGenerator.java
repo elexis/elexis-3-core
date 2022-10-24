@@ -1,4 +1,4 @@
-package ch.elexis.core.jpa.entities.id;
+package ch.elexis.core.model.util;
 
 import org.apache.commons.lang3.StringUtils;
 import java.util.UUID;

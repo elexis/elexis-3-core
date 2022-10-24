@@ -4,6 +4,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.interfaces.ITransferable;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.types.AddressType;
 import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.data.dto.ZusatzAdresseDTO;
@@ -126,7 +127,7 @@ public class ZusatzAdresse extends PersistentObject implements ITransferable<Zus
 
 		// persist or update
 		if (getId() == null) {
-			create(StringTool.unique("prso"), new String[] { KONTAKT_ID },
+			create(ElexisIdGenerator.generateId(), new String[] { KONTAKT_ID },
 					new String[] { zusatzAdresseDTO.getKontaktId() });
 		}
 

@@ -19,8 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.converter.ArticleTypConverter;
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
-import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.types.ArticleTyp;
 
 @Entity

@@ -17,6 +17,7 @@ import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.IXid;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Fall;
@@ -200,7 +201,7 @@ public class XidElement extends XChangeElement {
 			}
 		}
 		if (best == null || (!best.isGuid())) {
-			best = new Identity().asExporter(sender, XidConstants.DOMAIN_ELEXIS, StringTool.unique("xidID"), //$NON-NLS-1$
+			best = new Identity().asExporter(sender, XidConstants.DOMAIN_ELEXIS, ElexisIdGenerator.generateId(),
 					Xid.ASSIGNMENT_LOCAL, true);
 			add(best);
 		}

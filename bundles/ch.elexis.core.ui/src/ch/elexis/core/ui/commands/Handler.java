@@ -28,7 +28,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.rgw.tools.StringTool;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 
 /**
  * Simplified Handler for execution of Commands
@@ -137,7 +137,7 @@ public class Handler {
 		ICommandService cmdService = (ICommandService) origin.getService(ICommandService.class);
 		try {
 			Command command = cmdService.getCommand(commandID);
-			String name = StringTool.unique("CommandHandler"); //$NON-NLS-1$
+			String name = ElexisIdGenerator.generateId(); // $NON-NLS-1$
 			paramMap.put(name, params);
 			Parameterization px = new Parameterization(new DefaultParameter(), name);
 			ParameterizedCommand parmCommand = new ParameterizedCommand(command, new Parameterization[] { px });

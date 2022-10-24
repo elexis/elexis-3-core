@@ -15,7 +15,7 @@ import java.util.HashMap;
 import org.eclipse.core.commands.AbstractParameterValueConverter;
 import org.eclipse.core.commands.ParameterValueConversionException;
 
-import ch.rgw.tools.StringTool;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.rgw.tools.Tree;
 
 public class TreeToStringConverter extends AbstractParameterValueConverter {
@@ -30,7 +30,7 @@ public class TreeToStringConverter extends AbstractParameterValueConverter {
 	@Override
 	public String convertToString(Object parameterValue) throws ParameterValueConversionException {
 		if (parameterValue instanceof Tree) {
-			String ret = StringTool.unique(getClass().getName());
+			String ret = ElexisIdGenerator.generateId();
 			map.put(ret, (Tree<?>) parameterValue);
 			return ret;
 		}

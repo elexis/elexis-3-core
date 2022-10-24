@@ -30,6 +30,7 @@ import org.jdom2.output.XMLOutputter;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.exchange.elements.ContactElement;
@@ -113,7 +114,7 @@ public class XChangeContainer {
 		eRoot.addNamespaceDeclaration(XChangeContainer.nsxsi);
 		eRoot.addNamespaceDeclaration(XChangeContainer.nsschema);
 		eRoot.setAttribute(ATTR_TIMESTAMP, new TimeTool().toString(TimeTool.DATETIME_XML));
-		eRoot.setAttribute(ATTR_ID, XMLTool.idToXMLID(StringTool.unique(XCHANGE_MAGIC)));
+		eRoot.setAttribute(ATTR_ID, XMLTool.idToXMLID(ElexisIdGenerator.generateId()));
 		eRoot.setAttribute(ATTR_ORIGIN, XMLTool.idToXMLID(CoreHub.actMandant.getId()));
 		eRoot.setAttribute(ATTR_DESTINATION, "undefined"); //$NON-NLS-1$
 		eRoot.setAttribute(ATTR_RESPONSIBLE, XMLTool.idToXMLID(CoreHub.actMandant.getId()));

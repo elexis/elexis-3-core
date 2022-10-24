@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +24,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
@@ -151,7 +152,7 @@ public class FixMultipleDiagnosis extends ExternalMaintenance {
 						+ " AND DG_CODE=" + JdbcLink.wrap(dg.getCode()));
 		StringBuilder sql = new StringBuilder(200);
 		if (StringTool.isNothing(diagnosisEntryExists)) {
-			diagnosisEntryExists = StringTool.unique("bhdl");
+			diagnosisEntryExists = ElexisIdGenerator.generateId();
 			sql.append("INSERT INTO DIAGNOSEN (ID, LASTUPDATE, DG_CODE, DG_TXT, KLASSE) VALUES (")
 					.append(JdbcLink.wrap(diagnosisEntryExists)).append(",")
 					.append(Long.toString(System.currentTimeMillis())).append(",").append(JdbcLink.wrap(dg.getCode()))
@@ -165,8 +166,8 @@ public class FixMultipleDiagnosis extends ExternalMaintenance {
 		 * @see https://redmine.medelexis.ch/issues/5629
 		 */
 		sql.append("INSERT INTO BEHDL_DG_JOINT (ID,BEHANDLUNGSID,DIAGNOSEID) VALUES (")
-				.append(JdbcLink.wrap(StringTool.unique("bhdx"))).append(",").append(kons.getWrappedId()).append(",")
-				.append(JdbcLink.wrap(diagnosisEntryExists)).append(")");
+				.append(JdbcLink.wrap(ElexisIdGenerator.generateId())).append(",").append(kons.getWrappedId())
+				.append(",").append(JdbcLink.wrap(diagnosisEntryExists)).append(")");
 		PersistentObject.getConnection().exec(sql.toString());
 	}
 

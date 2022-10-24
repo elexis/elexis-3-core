@@ -47,7 +47,6 @@ import ch.rgw.compress.GLZOutputStream;
 import ch.rgw.compress.HuffmanInputStream;
 import ch.rgw.compress.HuffmanOutputStream;
 import ch.rgw.compress.HuffmanTree;
-import ch.rgw.tools.net.NetTool;
 
 /**
  * Einige Hilfsfunktionen mit und an Strings und String-Collections
@@ -781,38 +780,6 @@ public class StringTool {
 			out[i] = (byte) ((o1 << 4) + o2);
 		}
 		return out;
-	}
-
-	/**
-	 * Gibt eine zufällige und eindeutige Zeichenfolge zurück
-	 *
-	 * @param salt Ein beliebiger String oder null
-	 */
-	public static String unique(final String salt) {
-		if (ipHash == 0) {
-			Iterator<String> it = NetTool.IPs.iterator();
-			while (it.hasNext()) {
-				ipHash += (it.next()).hashCode();
-			}
-		}
-
-		long t = System.currentTimeMillis();
-		int t1 = System.getProperty("user.name").hashCode();
-		long t2 = ((long) ipHash) << 32;
-		long t3 = Math.round(Math.random() * Long.MAX_VALUE);
-		long t4 = t + t1 + t2 + t3;
-		if (salt != null) {
-			long t0 = salt.hashCode();
-			t4 ^= t0;
-		}
-		t4 += sequence++;
-		if (sequence > 99999) {
-			sequence = 0;
-		}
-		long idx = sequence % salties.length;
-		char start = salties[(int) idx];
-		return new StringBuilder().append(start).append(Long.toHexString(t4))
-				.append(Long.toHexString((long) Math.random() * 1000)).append(sequence).toString();
 	}
 
 	/**

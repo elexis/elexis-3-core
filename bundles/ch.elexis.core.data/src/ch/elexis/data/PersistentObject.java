@@ -71,6 +71,7 @@ import ch.elexis.core.data.util.SqlRunner;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.data.Xid.XIDException;
 import ch.rgw.compress.CompEx;
 import ch.rgw.io.Settings;
@@ -512,7 +513,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	public static synchronized String lock(final String name, final boolean wait) {
 		Stm stm = getConnection().getStatement();
 		String lockname = "lock" + name;
-		String lockid = StringTool.unique("lock");
+		String lockid = ElexisIdGenerator.generateId();
 		try {
 			while (true) {
 				long timestamp = System.currentTimeMillis();
@@ -636,7 +637,7 @@ public abstract class PersistentObject implements IPersistentObject {
 
 	/** Der Konstruktor erstellt die ID */
 	protected PersistentObject() {
-		id = StringTool.unique("prso");
+		id = ElexisIdGenerator.generateId();
 	}
 
 	/**
@@ -1686,8 +1687,8 @@ public abstract class PersistentObject implements IPersistentObject {
 
 					head.append("INSERT INTO ").append(m[3]).append("(ID,").append(m[2]).append(",").append(m[1]);
 					tail.append(") VALUES (")
-							.append(getDBConnection().getJdbcLink().wrapFlavored(StringTool.unique("aij"))).append(",")
-							.append(getWrappedId()).append(",")
+							.append(getDBConnection().getJdbcLink().wrapFlavored(ElexisIdGenerator.generateId()))
+							.append(",").append(getWrappedId()).append(",")
 							.append(getDBConnection().getJdbcLink().wrapFlavored(objectId));
 					if (extra != null) {
 						for (String s : extra) {

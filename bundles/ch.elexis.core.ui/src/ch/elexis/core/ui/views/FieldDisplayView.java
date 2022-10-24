@@ -11,10 +11,10 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
@@ -46,6 +46,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -266,8 +267,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 				try {
 					String fieldtype = new SelectDataDialog().run();
 					FieldDisplayView n = (FieldDisplayView) getViewSite().getPage().showView(ID,
-							StringTool.unique("DataDisplay"), //$NON-NLS-1$
-							IWorkbenchPage.VIEW_VISIBLE);
+							ElexisIdGenerator.generateId(), IWorkbenchPage.VIEW_VISIBLE);
 					n.setField(fieldtype, false);
 					heartbeat();
 				} catch (PartInitException e) {
