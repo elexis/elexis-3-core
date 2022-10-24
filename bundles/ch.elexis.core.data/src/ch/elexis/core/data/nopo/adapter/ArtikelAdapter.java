@@ -64,7 +64,7 @@ public class ArtikelAdapter extends Artikel {
 				ret = (String) value;
 			}
 		}
-		return ret;
+		return StringUtils.defaultString(ret);
 	}
 
 	@Override
