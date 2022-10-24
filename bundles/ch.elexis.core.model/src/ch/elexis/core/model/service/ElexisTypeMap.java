@@ -22,6 +22,7 @@ import ch.elexis.core.jpa.entities.Leistungsblock;
 import ch.elexis.core.jpa.entities.PhysioLeistung;
 import ch.elexis.core.jpa.entities.Prescription;
 import ch.elexis.core.jpa.entities.Reminder;
+import ch.elexis.core.jpa.entities.Rezept;
 import ch.elexis.core.jpa.entities.Sticker;
 import ch.elexis.core.jpa.entities.StockEntry;
 import ch.elexis.core.jpa.entities.TarmedLeistung;
@@ -85,6 +86,7 @@ public class ElexisTypeMap {
 	public static final String TYPE_BESTELLUNGENTRY = "ch.elexis.data.BestellungEntry";
 	public static final String TYPE_AUF = "ch.elexis.data.AUF";
 	public static final String TYPE_STICKER = "ch.elexis.data.Sticker";
+	public static final String TYPE_REZEPT = "ch.elexis.data.Rezept";
 
 	static {
 		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
@@ -137,6 +139,8 @@ public class ElexisTypeMap {
 		classToStsMap.put(AUF.class, TYPE_AUF);
 		stsToClassMap.put(TYPE_STICKER, Sticker.class);
 		classToStsMap.put(Sticker.class, TYPE_STICKER);
+		stsToClassMap.put(TYPE_REZEPT, Rezept.class);
+		classToStsMap.put(Rezept.class, TYPE_REZEPT);
 
 		// uni-directional mappable
 		stsToClassMap.put(TYPE_ARTIKEL, Artikel.class);
