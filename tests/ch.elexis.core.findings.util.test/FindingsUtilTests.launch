@@ -40,7 +40,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ch.elexis.core.findings.util.test"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delexis.test.mode=true &#10;-ea"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delexis.test.mode=true"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <stringAttribute key="product" value="info.elexis.server.core.ElexisServer"/>
     <booleanAttribute key="run_in_ui_thread" value="false"/>
@@ -154,7 +154,8 @@
         <setEntry value="ch.elexis.core.l10n@default:default"/>
         <setEntry value="ch.elexis.core.model@default:default"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
-        <setEntry value="ch.elexis.core.test.context@default:default"/>
+        <setEntry value="ch.elexis.core.test.context@default:false"/>
+        <setEntry value="ch.elexis.core.test.logging@default:false"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
