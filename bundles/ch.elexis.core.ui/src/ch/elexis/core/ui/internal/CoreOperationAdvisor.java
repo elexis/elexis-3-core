@@ -157,7 +157,6 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 	@Override
 	public boolean performLogin(Object shell) {
 
-		CoreHub.reconfigureServices();
 		CoreHub.logoffAnwender();
 
 		// try login env first then show dialog

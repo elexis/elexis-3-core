@@ -1,5 +1,7 @@
 package ch.elexis.core.constants;
 
+import ch.elexis.core.eenv.IElexisEnvironmentService;
+
 public class ElexisSystemPropertyConstants {
 
 	public static final String LOGBACK_CONFIG_FILE = "logback.configurationFile";
@@ -41,7 +43,9 @@ public class ElexisSystemPropertyConstants {
 	public static final String RUN_MODE_FROM_SCRATCH = "RunFromScratch";
 
 	/**
-	 * REST URL of the elexis server, e.g. http://localhost:8380/services"
+	 * REST URL of the elexis server, e.g. http://localhost:8380/services" or, to
+	 * administratively disconnect, set <code>disconnected</code>. If none set, but
+	 * {@link IElexisEnvironmentService} is available, will connect against EE.
 	 */
 	public static final String ELEXIS_SERVER_REST_INTERFACE_URL = "elexisServerUrl";
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.UUID;
 
@@ -27,6 +28,7 @@ import ch.elexis.core.common.InstanceStatus;
 import ch.elexis.core.constants.Elexis;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockResponse;
@@ -37,14 +39,16 @@ import ch.elexis.core.server.ILockService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService;
+import ch.elexis.core.services.eenv.ElexisEnvironmentServiceActivator;
 import ch.elexis.core.services.internal.Bundle;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 @Component
 public class ElexisServerService implements IElexisServerService {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 	private static final UUID systemUuid = UUID.randomUUID();
-	private static boolean standalone;
+	private static boolean standalone = false;
 
 	private String restUrl;
 	private Timer timer;
@@ -59,14 +63,17 @@ public class ElexisServerService implements IElexisServerService {
 	private IConfigService configService;
 	@Reference
 	private IContextService contextService;
+	@Reference // wait for ee activator to finish
+	private ElexisEnvironmentServiceActivator eeActivator;
 
-	@Activate
-	public void activate() {
-		standalone = false;
+	public ElexisServerService() {
 		lockService = new DenyAllLockService();
 		eventService = new NoRemoteEventService();
 		instanceService = new NoRemoteInstanceService();
+	}
 
+	@Activate
+	public void activate() {
 		initializeProperties();
 
 		if (standalone) {
@@ -97,7 +104,14 @@ public class ElexisServerService implements IElexisServerService {
 
 	private void initializeProperties() {
 		restUrl = System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
-		if (restUrl != null && restUrl.length() > 0) {
+		if (StringUtils.equals(restUrl, "disconnected")) {
+			// administratively disconnected - i.e. standalone
+			standalone = true;
+			connectionStatus = ConnectionStatus.STANDALONE;
+			log.info("ES connection administratively deactivated, operating in stand-alone mode.");
+			return;
+		}
+		if (StringUtils.isNotBlank(restUrl)) {
 			try {
 				new URL(restUrl);
 			} catch (MalformedURLException e) {
@@ -105,12 +119,23 @@ public class ElexisServerService implements IElexisServerService {
 				restUrl = null;
 			}
 			connectionStatus = ConnectionStatus.LOCAL;
-			log.info("Operating against elexis-server instance on " + restUrl);
-		} else {
-			standalone = true;
-			connectionStatus = ConnectionStatus.STANDALONE;
-			log.debug("No elexis-server url provided, operating in stand-alone mode.");
+			log.info("Bound to ES " + restUrl);
+			return;
 		}
+		if (restUrl == null) {
+			// Auto-Config via EE OR Standalone
+			Optional<IElexisEnvironmentService> eeService = OsgiServiceUtil.getService(IElexisEnvironmentService.class);
+			if (eeService.isPresent()) {
+				connectionStatus = ConnectionStatus.LOCAL;
+				restUrl = eeService.get().getBaseUrl() + "/services";
+				log.info("Bound to ES via EE " + restUrl);
+				return;
+			}
+		}
+
+		standalone = true;
+		connectionStatus = ConnectionStatus.STANDALONE;
+		log.debug("No elexis-server url provided, operating in stand-alone mode.");
 	}
 
 	@Override

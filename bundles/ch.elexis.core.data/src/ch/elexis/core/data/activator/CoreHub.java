@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2016 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2015-2022 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,7 +53,6 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -428,13 +427,6 @@ public class CoreHub implements BundleActivator {
 
 	public static int getSystemLogLevel() {
 		return localCfg.get(Preferences.ABL_LOGLEVEL, Log.ERRORS);
-	}
-
-	/**
-	 * @since 3.8
-	 */
-	public static void reconfigureServices() {
-		ElexisServerServiceHolder.get().validateElexisServerConnection();
 	}
 
 	/**

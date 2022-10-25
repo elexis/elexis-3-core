@@ -20,7 +20,7 @@ import ch.elexis.core.services.IContextService;
  * Programmatically register the {@link ElexisEnvironmentService} if conditions
  * are met. That is, an Elexis-Environment host value is passed.
  */
-@Component
+@Component(service = ElexisEnvironmentServiceActivator.class)
 public class ElexisEnvironmentServiceActivator {
 
 	private ServiceRegistration<IElexisEnvironmentService> serviceRegistration;
@@ -54,12 +54,11 @@ public class ElexisEnvironmentServiceActivator {
 				serviceRegistration = FrameworkUtil.getBundle(ElexisEnvironmentServiceActivator.class)
 						.getBundleContext()
 						.registerService(IElexisEnvironmentService.class, elexisEnvironmentService, null);
-
 				log.info("Bound to EE {}@{}", elexisEnvironmentService.getVersion(),
 						elexisEnvironmentService.getHostname());
 
 			} catch (Exception e) {
-				log.warn("Initializing elexis-environment failed", e);
+				log.warn("EE initialization failed:", e);
 			}
 
 		} else {
