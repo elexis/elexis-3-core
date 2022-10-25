@@ -33,11 +33,6 @@ public class ElexisEnvironmentServiceActivator {
 
 	@Activate
 	public void activate() {
-		if (StringUtils.equalsIgnoreCase(IElexisEnvironmentService.ES_STATION_ID_DEFAULT,
-				contextService.getStationIdentifier())) {
-			return;
-		}
-
 		// 1. try via system property
 		String elexisEnvironmentHost = System.getProperty(ElexisSystemPropertyConstants.EE_HOSTNAME);
 		// 2. if empty fetch via environment variable
