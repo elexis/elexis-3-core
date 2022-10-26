@@ -19,8 +19,8 @@ import com.google.gson.Gson;
 
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 // Activated via ElexisEnvironmentServiceActivator
 public class ElexisEnvironmentService implements IElexisEnvironmentService {
@@ -29,13 +29,16 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 
 	private String elexisEnvironmentHost;
 	private IContextService contextService;
+	private IConfigService configService;
 
 	private CompletableFuture<Map<String, Object>> eeStatus;
 
 	@SuppressWarnings("unchecked")
-	public ElexisEnvironmentService(String elexisEnvironmentHost, IContextService contextService) {
+	public ElexisEnvironmentService(String elexisEnvironmentHost, IContextService contextService,
+			IConfigService configService) {
 		this.elexisEnvironmentHost = elexisEnvironmentHost;
 		this.contextService = contextService;
+		this.configService = configService;
 
 		LoggerFactory.getLogger(getClass()).info("Binding to EE {}", getHostname());
 		eeStatus = CompletableFuture.supplyAsync(() -> {
@@ -71,7 +74,7 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 		// TODO EnvironmentVariables?
 		// TODO first try via LocalProperties?
 		// THEN Config DB Table ?
-		return ConfigServiceHolder.get().get(key, null);
+		return configService.get(key, null);
 	}
 
 	@Override

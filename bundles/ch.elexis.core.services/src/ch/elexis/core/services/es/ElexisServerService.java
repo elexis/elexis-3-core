@@ -74,6 +74,15 @@ public class ElexisServerService implements IElexisServerService {
 
 	@Activate
 	public void activate() {
+		if (StringUtils.equals(contextService.getStationIdentifier(),
+				IElexisEnvironmentService.ES_STATION_ID_DEFAULT)) {
+			// this is ES do not activate
+			// ES does feature its own lock service in
+			// info.elexis.server.core.connector.elexis.internal.services.locking.LockService,
+			// not consumable from here
+			return;
+		}
+
 		initializeProperties();
 
 		if (standalone) {

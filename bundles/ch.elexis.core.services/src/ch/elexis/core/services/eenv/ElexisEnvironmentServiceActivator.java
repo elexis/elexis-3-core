@@ -50,7 +50,7 @@ public class ElexisEnvironmentServiceActivator {
 			try {
 				// activate the service
 				ElexisEnvironmentService elexisEnvironmentService = new ElexisEnvironmentService(elexisEnvironmentHost,
-						contextService);
+						contextService, configService);
 				serviceRegistration = FrameworkUtil.getBundle(ElexisEnvironmentServiceActivator.class)
 						.getBundleContext()
 						.registerService(IElexisEnvironmentService.class, elexisEnvironmentService, null);
