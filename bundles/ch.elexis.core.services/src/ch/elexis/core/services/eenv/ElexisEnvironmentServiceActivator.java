@@ -54,8 +54,6 @@ public class ElexisEnvironmentServiceActivator {
 				serviceRegistration = FrameworkUtil.getBundle(ElexisEnvironmentServiceActivator.class)
 						.getBundleContext()
 						.registerService(IElexisEnvironmentService.class, elexisEnvironmentService, null);
-				log.info("Bound to EE {}@{}", elexisEnvironmentService.getVersion(),
-						elexisEnvironmentService.getHostname());
 
 			} catch (Exception e) {
 				log.warn("EE initialization failed:", e);

@@ -37,6 +37,7 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 		this.elexisEnvironmentHost = elexisEnvironmentHost;
 		this.contextService = contextService;
 
+		LoggerFactory.getLogger(getClass()).info("Binding to EE {}", getHostname());
 		eeStatus = CompletableFuture.supplyAsync(() -> {
 			try (InputStream is = new URL("https://" + elexisEnvironmentHost + "/.status.json").openStream()) {
 				String json = IOUtils.toString(is, "UTF-8");
