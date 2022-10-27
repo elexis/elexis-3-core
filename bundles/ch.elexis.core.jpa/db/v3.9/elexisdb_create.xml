@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet author="thomas" id="manual_table_CH_ELEXIS_ARZTTARIFE_CH_PSYCHO">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_ARZTTARIFE_CH_PSYCHO" />
+			</not>
+		</preConditions>
+		<createTable tableName="CH_ELEXIS_ARZTTARIFE_CH_PSYCHO">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_ARZTTARIFE_CH_PSYCHO" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+			<column name="VALIDFROM" type="CHAR(8)" />
+			<column name="VALIDUNTIL" type="CHAR(8)" />
+			<column name="TP" type="CHAR(8)" />
+			<column name="CODE" type="VARCHAR(16)" />
+			<column name="CODETEXT" type="VARCHAR(255)" />
+			<column name="DESCRIPTION" type="CLOB" />
+			<column name="LIMITATIONS" type="CLOB" />
+			<column name="EXCLUSIONS" type="CLOB" />
+		</createTable>
+		<insert tableName="CH_ELEXIS_ARZTTARIFE_CH_PSYCHO">
+       		<column name="ID" value="VERSION"/>
+       		<column name="CODE" value="-1"/>
+    	</insert>		
+	</changeSet>
+    <changeSet author="thomas" id="manual_index_CH_ELEXIS_ARZTTARIFE_CH_PSYCHO_IDX1">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="CH_ELEXIS_ARZTTARIFE_CH_PSYCHO"
+					indexName="CH_ELEXIS_ARZTTARIFE_CH_PSYCHO_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_ARZTTARIFE_CH_PSYCHO_IDX1" tableName="CH_ELEXIS_ARZTTARIFE_CH_PSYCHO">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
