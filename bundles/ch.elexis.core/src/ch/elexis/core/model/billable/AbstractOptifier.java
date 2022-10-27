@@ -37,7 +37,7 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 		for (IBilled iBilled : existingBilled) {
 			IBillable existing = iBilled.getBillable();
 			if (existing != null && existing.equals(billable)) {
-				iBilled.setAmount(iBilled.getAmount() + amount);
+				setAmount(iBilled, iBilled.getAmount() + amount);
 				if (save) {
 					coreModelService.save(iBilled);
 				}
@@ -50,7 +50,7 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 			IContact activeUserContact = contextService.getActiveUserContact().get();
 			billed = new IBilledBuilder(coreModelService, billable, encounter, activeUserContact).build();
 			setPrice(billable, billed);
-			billed.setAmount(amount);
+			setAmount(billed, amount);
 			if (save) {
 				coreModelService.save(billed);
 			}
@@ -62,6 +62,17 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 	public Result<IBilled> remove(IBilled billed, IEncounter encounter) {
 		encounter.removeBilled(billed);
 		return new Result<IBilled>(billed);
+	}
+
+	/**
+	 * Set the amount of the {@link IBillable}, override if additional changes
+	 * should be done on change of amount.
+	 * 
+	 * @param billed
+	 * @param amount
+	 */
+	protected void setAmount(IBilled billed, double amount) {
+		billed.setAmount(amount);
 	}
 
 	/**
