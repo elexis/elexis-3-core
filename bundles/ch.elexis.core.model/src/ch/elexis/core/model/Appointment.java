@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.rgw.tools.StringTool;
 
@@ -41,6 +42,9 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin> implements
 	public void setState(String value) {
 		if (value != null && !value.equals(getState())) {
 			getEntityMarkDirty().setTerminStatus(value);
+			if (ContextServiceHolder.isAvailable() && ContextServiceHolder.get().getActiveUser().isPresent()) {
+				value += (" [" + ContextServiceHolder.get().getActiveUser().get().getLabel() + "]");
+			}
 			getEntityMarkDirty().setStatusHistory(
 					getStateHistory() + StringTool.lf + toMinutesTimeStamp(LocalDateTime.now()) + ";" + value);
 		}
