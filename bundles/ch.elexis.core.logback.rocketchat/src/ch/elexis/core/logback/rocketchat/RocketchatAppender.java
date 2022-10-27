@@ -39,7 +39,8 @@ public class RocketchatAppender extends AppenderBase<ILoggingEvent> {
 						+ postStatus.getMessage());
 			}
 		} catch (IOException ex) {
-			addError("Error posting to integrationUrl [" + getContext().getProperty("integrationUrl") + "]", ex);
+			addError("Error posting to integrationUrl [" + getContext().getProperty("integrationUrl") + "]: "
+					+ ex.getLocalizedMessage());
 		}
 	}
 
