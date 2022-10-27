@@ -419,9 +419,9 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 					def[i].getWidget().getControl().addListener(SWT.KeyDown, mandantListener);
 				}
 			} else {
-				for (int i = 0; i <= 4; i++) {
-					def[i].getWidget().getControl().addListener(SWT.CHANGED, contactListener);
-				}
+					def[0].getWidget().getControl().addListener(SWT.CHANGED, contactListener);
+					def[1].getWidget().getControl().addListener(SWT.CHANGED, contactListener);
+					def[3].getWidget().getControl().addListener(SWT.CHANGED, contactListener);
 			}
 		} catch (Exception e) {
 			// do nothing
