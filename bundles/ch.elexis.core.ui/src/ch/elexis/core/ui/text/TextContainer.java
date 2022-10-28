@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -126,6 +127,8 @@ public class TextContainer {
 
 	public static Connection queryConn = null;
 
+	private List<String> dontShowErrorFor;
+
 	/**
 	 * Der Konstruktor sucht nach dem in den Settings definierten Textplugin Wenn er
 	 * kein Textplugin findet, wählt er ein rudimentäres Standardplugin aus (das in
@@ -157,6 +160,7 @@ public class TextContainer {
 		if (plugin == null) {
 			plugin = new DefaultTextPlugin();
 		}
+		dontShowErrorFor = new ArrayList<>();
 	}
 
 	public TextContainer(final IViewSite s) {
@@ -227,73 +231,81 @@ public class TextContainer {
 	 */
 	public Brief createFromTemplate(final Konsultation kons, final Brief template, final String typ, Kontakt adressat,
 			final String subject) {
-		if (adressat == null && template.isAskForAddressee()) {
-			KontaktSelektor ksel = new KontaktSelektor(shell, Kontakt.class,
-					Messages.TextContainer_SelectDestinationHeader, Messages.TextContainer_SelectDestinationBody,
-					Kontakt.DEFAULT_SORT);
-			ksel.enableEmptyFieldButton(Messages.TextContainer_SelectNoDestinationLabel);
-			if (ksel.open() != Dialog.OK) {
-				return null;
-			}
-			adressat = (Kontakt) ksel.getSelection();
-		}
-		// Konsultation kons=getBehandlung();
-		if (template == null) {
-			if (plugin.createEmptyDocument()) {
-				Brief brief = new Brief(subject == null ? Messages.TextContainer_EmptyDocument : subject, null,
-						CoreHub.getLoggedInContact(), adressat, kons, typ);
-				addBriefToKons(brief, kons);
-				return brief;
-			}
-		} else {
-			if (plugin.loadFromByteArray(template.loadBinary(), true) == true) {
-				final Brief ret = new Brief(subject == null ? template.getBetreff() : subject, null,
-						CoreHub.getLoggedInContact(), adressat, kons, typ);
-				plugin.initTemplatePrintSettings(template.getBetreff());
+		try {
 
-				plugin.findOrReplace(MATCH_TEMPLATE, new ReplaceCallback() {
-					public Object replace(final String in) {
-						return replaceFields(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
-					}
-				});
-				plugin.findOrReplace(MATCH_INDIRECT_TEMPLATE, new ReplaceCallback() {
-					public Object replace(final String in) {
-						return replaceIndirectFields(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
-					}
-				});
-				plugin.findOrReplace(MATCH_EXISTS, new ReplaceCallback() {
-					public String replace(final String in) {
-						return exists(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
-					}
-				});
-				plugin.findOrReplace(MATCH_GENDERIZE, new ReplaceCallback() {
-					public String replace(final String in) {
-						return genderize(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
-					}
-				});
-				plugin.findOrReplace(MATCH_IDATACCESS, new ReplaceCallback() {
-					public Object replace(final String in) {
-						return ScriptUtil.loadDataFromPlugin(in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
-					}
-				});
-				plugin.findOrReplace(MATCH_SQLCLAUSE, new ReplaceCallback() {
-					public Object replace(final String in) {
-						return replaceSQLClause(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
-					}
-				});
-				plugin.findOrReplace(MATCH_SCRIPT, new ReplaceCallback() {
-
-					@Override
-					public Object replace(String in) {
-						return executeScript(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
-					}
-				});
-				saveBrief(ret, typ);
-				addBriefToKons(ret, kons);
-				return ret;
+			if (adressat == null && template.isAskForAddressee()) {
+				KontaktSelektor ksel = new KontaktSelektor(shell, Kontakt.class,
+						Messages.TextContainer_SelectDestinationHeader, Messages.TextContainer_SelectDestinationBody,
+						Kontakt.DEFAULT_SORT);
+				ksel.enableEmptyFieldButton(Messages.TextContainer_SelectNoDestinationLabel);
+				if (ksel.open() != Dialog.OK) {
+					return null;
+				}
+				adressat = (Kontakt) ksel.getSelection();
+				if (adressat == null) {
+					dontShowErrorFor.add("Adressat"); //$NON-NLS-1$
+				}
 			}
+			// Konsultation kons=getBehandlung();
+			if (template == null) {
+				if (plugin.createEmptyDocument()) {
+					Brief brief = new Brief(subject == null ? Messages.TextContainer_EmptyDocument : subject, null,
+							CoreHub.getLoggedInContact(), adressat, kons, typ);
+					addBriefToKons(brief, kons);
+					return brief;
+			}
+			} else {
+				if (plugin.loadFromByteArray(template.loadBinary(), true) == true) {
+					final Brief ret = new Brief(subject == null ? template.getBetreff() : subject, null,
+							CoreHub.getLoggedInContact(), adressat, kons, typ);
+					plugin.initTemplatePrintSettings(template.getBetreff());
+
+					plugin.findOrReplace(MATCH_TEMPLATE, new ReplaceCallback() {
+						public Object replace(final String in) {
+							return replaceFields(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
+						}
+					});
+					plugin.findOrReplace(MATCH_INDIRECT_TEMPLATE, new ReplaceCallback() {
+						public Object replace(final String in) {
+							return replaceIndirectFields(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
+						}
+					});
+					plugin.findOrReplace(MATCH_EXISTS, new ReplaceCallback() {
+						public String replace(final String in) {
+							return exists(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
+						}
+					});
+					plugin.findOrReplace(MATCH_GENDERIZE, new ReplaceCallback() {
+						public String replace(final String in) {
+							return genderize(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
+						}
+					});
+					plugin.findOrReplace(MATCH_IDATACCESS, new ReplaceCallback() {
+						public Object replace(final String in) {
+							return ScriptUtil.loadDataFromPlugin(in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
+						}
+					});
+					plugin.findOrReplace(MATCH_SQLCLAUSE, new ReplaceCallback() {
+						public Object replace(final String in) {
+							return replaceSQLClause(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
+						}
+					});
+					plugin.findOrReplace(MATCH_SCRIPT, new ReplaceCallback() {
+
+						@Override
+						public Object replace(String in) {
+							return executeScript(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
+						}
+					});
+					saveBrief(ret, typ);
+					addBriefToKons(ret, kons);
+					return ret;
+			}
+			}
+			return null;
+		} finally {
+			dontShowErrorFor.clear();
 		}
-		return null;
 	}
 
 	private Object replaceFields(final Brief brief, final String b) {
@@ -319,8 +331,8 @@ public class TextContainer {
 			return ScriptUtil.loadDataFromPlugin(bl);
 		}
 		PersistentObject o = (PersistentObject) resolveObject(brief, q[0]);
-		if (o == null) {
-			if (showErrors) {
+		if (o == null || !o.exists()) {
+			if (showErrors && !dontShowErrorFor.contains(q[0])) {
 				return WARNING_SIGN + bl + WARNING_SIGN;
 			} else {
 				return StringUtils.EMPTY;
