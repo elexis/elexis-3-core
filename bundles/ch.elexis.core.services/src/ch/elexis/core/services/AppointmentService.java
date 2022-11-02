@@ -342,12 +342,18 @@ public class AppointmentService implements IAppointmentService {
 
 	@Override
 	public String getContactConfiguredTypeColor(IContact userContact, String appointmentType) {
-
 		if (userContact == null) {
 			userContact = contextService.getActiveUserContact().orElse(null);
 		}
-		return "#" + configService // $NON-NLS-1$
-				.get(userContact, "agenda/farben/typ/" + appointmentType, "#3a87ad", false); //$NON-NLS-1$
+		String ret = "#" + configService // $NON-NLS-1$
+				.get(userContact, "agenda/farben/typ/" + appointmentType, "3a87ad", false); //$NON-NLS-1$
+		if (isValidColor(ret)) {
+			return ret;
+		} else {
+			LoggerFactory.getLogger(getClass())
+					.warn("Invalid color string [" + ret + "] configured for [" + appointmentType + "]");
+			return "#3a87ad"; //$NON-NLS-1$
+		}
 	}
 
 	@Override
@@ -355,8 +361,23 @@ public class AppointmentService implements IAppointmentService {
 		if (userContact == null) {
 			userContact = contextService.getActiveUserContact().orElse(null);
 		}
-		return "#" + ConfigServiceHolder.get().get(userContact, //$NON-NLS-1$
-				"agenda/farben/status/" + appointmentState, "#ffffff", false); //$NON-NLS-1$
+		String ret = "#" + ConfigServiceHolder.get().get(userContact, //$NON-NLS-1$
+				"agenda/farben/status/" + appointmentState, "ffffff", false); //$NON-NLS-1$
+		if (isValidColor(ret)) {
+			return ret;
+		} else {
+			LoggerFactory.getLogger(getClass())
+					.warn("Invalid color string [" + ret + "] configured for [" + appointmentState + "]");
+			return "#ffffff"; //$NON-NLS-1$
+		}
+	}
+
+	private boolean isValidColor(String colorString) {
+		if(StringUtils.isNotBlank(colorString)) {
+			// ffffff or #ffffff
+			return colorString.length() == 6 || colorString.length() == 7;
+		}
+		return false;
 	}
 
 	@Override
