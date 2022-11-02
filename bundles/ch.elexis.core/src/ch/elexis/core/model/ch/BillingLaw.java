@@ -17,6 +17,7 @@ public enum BillingLaw implements ILocalizedEnum {
 		// Militärversicherung
 	VVG, // https://www.admin.ch/opc/de/classified-compilation/19080008/index.html
 			// Versicherungsvertrag
+	ORG, // Obligationenrecht
 	privat, NONE, OTHER;
 
 	@Override
