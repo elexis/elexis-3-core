@@ -9,6 +9,8 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Attachment;
 import org.hl7.fhir.r4.model.DocumentReference;
@@ -64,7 +66,12 @@ public class DocumentReferenceIDocumentReferenceTransformer
 				if (document != null) {
 					DocumentReferenceContentComponent content = new DocumentReferenceContentComponent();
 					Attachment attachment = new Attachment();
-					attachment.setTitle(document.getTitle());
+					String title = document.getTitle();
+					String extension = FilenameUtils.getExtension(title);
+					if (StringUtils.isEmpty(extension)) {
+						title += ("." + document.getExtension());
+					}
+					attachment.setTitle(title);
 					attachment.setUrl(getBinaryUrl(ret));
 					content.setAttachment(attachment);
 					ret.addContent(content);
