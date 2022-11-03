@@ -41,7 +41,6 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
 
@@ -565,89 +564,6 @@ public class FileTool {
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return null;
-		}
-	}
-
-	/**
-	 * doesn't work because it depends on same DIRECTORY_SEPARATORs in zipper and
-	 * unzipper
-	 *
-	 * Unzips a file in the file directory
-	 */
-	public static final void unzip(final String filenamePath) throws IOException {
-		final int BUFFER = 2048;
-		int count;
-		byte data[] = new byte[BUFFER];
-
-		if (filenamePath == null || filenamePath.length() == 0) {
-			throw new IllegalArgumentException("No file to unzip!");
-		}
-
-		String baseZipDirName = getFilepath(filenamePath);
-		String unzippedDirName = getNakedFilename(filenamePath);
-		String baseUnzippedDirName = getFilepath(filenamePath) + DIRECTORY_SEPARATOR + unzippedDirName;
-		File baseUnzippedDir = new File(baseUnzippedDirName);
-		if (!baseUnzippedDir.exists()) {
-			baseUnzippedDir.mkdirs();
-		}
-
-		FileInputStream fileInputstream = null;
-		ZipInputStream zipIn = null;
-		try {
-			fileInputstream = new FileInputStream(filenamePath);
-			zipIn = new ZipInputStream(new BufferedInputStream(fileInputstream));
-			ZipEntry entry;
-			while ((entry = zipIn.getNextEntry()) != null) {
-
-				String entryFilenamePath = entry.getName();
-				if (!entryFilenamePath.startsWith(unzippedDirName)) {
-					entryFilenamePath = unzippedDirName + DIRECTORY_SEPARATOR + entryFilenamePath;
-				}
-
-				// Check entry sub directory
-				String entryPathname = getFilepath(entryFilenamePath);
-				if (entryPathname != null && entryPathname.length() > 0) {
-					File entryPath = new File(baseZipDirName + DIRECTORY_SEPARATOR + entryPathname);
-					if (!entryPath.exists()) {
-						entryPath.mkdirs();
-					}
-				}
-
-				// Check entry file
-				String entryFilename = getFilename(entryFilenamePath);
-				if (entryFilename != null && entryFilename.length() > 0) {
-					File outputFile = new File(baseZipDirName + DIRECTORY_SEPARATOR + entryFilenamePath);
-					if (!outputFile.exists()) {
-						outputFile.createNewFile();
-					}
-
-					// write the files to the disk();
-					BufferedOutputStream dest = null;
-					FileOutputStream fileOutputstream = null;
-					try {
-						fileOutputstream = new FileOutputStream(outputFile);
-						dest = new BufferedOutputStream(fileOutputstream, BUFFER);
-						while ((count = zipIn.read(data, 0, BUFFER)) != -1) {
-							dest.write(data, 0, count);
-						}
-						dest.flush();
-					} finally {
-						if (fileOutputstream != null) {
-							fileOutputstream.close();
-						}
-						if (dest != null) {
-							dest.close();
-						}
-					}
-				}
-			}
-		} finally {
-			if (fileInputstream != null) {
-				fileInputstream.close();
-			}
-			if (zipIn != null) {
-				zipIn.close();
-			}
 		}
 	}
 
