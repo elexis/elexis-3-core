@@ -68,8 +68,10 @@ public class DocumentReferenceIDocumentReferenceTransformer
 					Attachment attachment = new Attachment();
 					String title = document.getTitle();
 					String extension = FilenameUtils.getExtension(title);
-					if (StringUtils.isEmpty(extension)) {
-						title = title + "." + document.getExtension();
+					String documentExtension = document.getExtension();
+					if (StringUtils.isEmpty(extension)
+							|| (StringUtils.isNotBlank(documentExtension) && !documentExtension.equals(extension))) {
+						title = title + "." + documentExtension;
 					}
 					attachment.setTitle(title);
 					attachment.setUrl(getBinaryUrl(ret));
