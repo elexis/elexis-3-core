@@ -20,6 +20,8 @@
 
 puts "It may take some time for bundler/inline to install the dependencies"
 require 'bundler/inline'
+require 'bundler'
+Bundler.configure_gem_home_and_path "#{ENV['HOME']}/.cache"
 
 gemfile do
   source 'https://rubygems.org'
@@ -39,7 +41,6 @@ include REXML  # so that we don't have to prefix everything with REXML::...
 require 'ostruct'
 require 'pp'
 require 'uri'
-# require 'pry-byebug'
 require 'csv'
 require 'net/http'
 require 'json'
@@ -62,7 +63,8 @@ rows = DB.execute <<-SQL
 	de varchar,
 	en varchar,
 	fr varchar,
-	it varchar
+	it varchar,
+	occurences int
   );
 SQL
 
@@ -294,9 +296,9 @@ class L10N_Cache
   def self.db_insert_or_update(entry)
 	res = -1; DB.execute( "select count(*) from translations where key = '#{entry[:key]}'" ) { |row| res = row.first }
 	if res == 0
-	  DB.execute "insert into translations values ( ?, ? , ? , ? , ?, ?)", 
+	  DB.execute "insert into translations values ( ?, ? , ? , ? , ?, ?, ?)",
 		  entry[:key], entry[:java], entry[:de],
-		  entry[:en], entry[:fr], entry[:it]
+		  entry[:en], entry[:fr], entry[:it], 0
 	  @@hasChanges = true
 	else
 	  @@hasChanges = true
@@ -595,7 +597,7 @@ class I18nInfo
   end
  
   def find_best_name(german)
-    cmd = "select key, de from translations where de == '#{german}' and ( key like 'Core_%' or key like 'Sex%' or key like 'Printing_%' or key like 'Export_while' or key like 'Script%' or key like 'UNKNOWN' or key like 'TimeTool%');"
+    cmd = "select key, de from translations where de == '#{german}' and ( key like 'Core_%' or key like 'Sex%' or key like 'Printing_%' or key like 'Export_while' or key like 'Script%' or key like 'UNKNOWN' or key like 'TimeTool%' or key like 'Contact_%');"
     res = DB.execute(cmd)
     if res && res.first
       puts "Best name for #{german} is #{res.first[0]}" if $VERBOSE
@@ -615,44 +617,28 @@ class I18nInfo
   def eliminate_properties(msg_file, patches)
     prop_files = Dir.glob(msg_file.sub('Messages.java', 'messages**.properties'))
     prop_files.each do |prop_file|
-       puts "Patching #{prop_file}"
        content = IO.read(prop_file, encoding: "ISO8859-1")
+       old_content = content.clone
        patches.each do |old_key, new_key|
          content.gsub!(/^#{old_key}(\s*=\s*[\w\.]+)$/, '')
        end
-        File.open(prop_file, 'w+') do |file|
-          file.write content
-        end
+       File.open(prop_file, 'w+') do |file|
+         puts "Patched #{prop_file}"
+         file.write content
+       end unless content.eql?(old_content)
     end
   end
   
   def eliminate_messages_java(msg_file, patches)
-    puts "Patching #{msg_file}"
     content = IO.read(msg_file)
+    old_content = content.clone
     patches.each do |old_key, new_key|
       content.gsub!(/[^\n]*\s#{old_key}\W[^\n]*./m, '')
     end
     File.open(msg_file, 'w+') do |file|
+      puts "Patched #{msg_file}"
       file.write content
-    end
-  end
-
-  def find_best_name(german)
-    cmd = "select key, de from translations where de == '#{german}' and ( key like 'Core_%' or key like 'Sex%' or key like 'Printing_%' or key like 'Export_while' or key like 'Script%' or key like 'UNKNOWN' or key like 'TimeTool%');"
-    res = DB.execute(cmd)
-    if res && res.first
-      puts "Best name for #{german} is #{res.first[0]}" if $VERBOSE
-      return res.first[0]
-    else
-      puts "Nothing found for #{german}" if $VERBOSE
-      cmd = "select min(key), de from translations where de == '#{german}';"
-      res = DB.execute(cmd)
-      if res && res.first
-        puts "min name for #{german} is #{res.first[0]}" if $VERBOSE
-        return res.first[0]
-      end
-    end
-    nil
+    end unless content.eql?(old_content)
   end
 
   def eliminate_properties(msg_file, patches)
@@ -661,12 +647,10 @@ class I18nInfo
        content = IO.read(prop_file, encoding: "ISO8859-1")
        old_content = content.clone
        patches.each do |old_key, new_key|
-              binding.pry if old_key.eql?('InvoiceState_OPEN_AND_PRINTED') || new_key.eql?('InvoiceState_OPEN_AND_PRINTED')
-
          content.gsub!(/^#{old_key}(\s*=\s*[\w\.]+)$/, '')
        end
         File.open(prop_file, 'w+') do |file|
-          puts "Patched prop #{prop_file}"
+          ##puts "Patched properties    #{prop_file}"
           file.write content
         end unless content.eql?(old_content)
     end
@@ -697,12 +681,10 @@ class I18nInfo
     patches.each do |old_key, new_key|
       content.gsub!(/(.*Messages\.)(#{old_key})(\W.*)/, "\\1#{new_key}\\3")
     end
-    unless content.eql?(old_content)
-      puts "Patched java #{java_file}"
-      File.open(java_file, 'w+') do |file|
-        file.write content
-      end
-    end
+    File.open(java_file, 'w+') do |file|
+      #puts "Patched Javafile      #{java_file}"
+      file.write content
+    end unless content.eql?(old_content)
   end
 
   def eliminate(main_dir)
@@ -720,12 +702,15 @@ class I18nInfo
        DB.execute(cmd) do |entry|
          next if /.*Timeout$/.match(entry.first) # skipe keys like CobasMiraAction_DefaultTimeout
          next if entry.first.eql?(best)
-         puts "Must replace #{entry.first} by #{best}" if $VERBOSE
          patches[entry.first] = best
+         puts "Must replace #{entry.first} by #{best}" if $VERBOSE
+         nrDuplicates = DB.execute("select key from translations where de == '#{german}'").size
+         DB.execute("update translations set occurences = #{nrDuplicates} where key == '#{best}'")
+         DB.execute("update translations set occurences = -#{nrDuplicates} where de == '#{german}' and key != '#{best}'")
        end
     end
     patches.each do |old_key, new_key|
-      puts "Must patch #{old_key} by #{new_key}"
+      puts "Must patch #{old_key} by #{new_key}" if $VERBOSE
     end
      Dir.glob("#{main_dir}/**/Messages.java").each do |msg_java|
        eliminate_properties(msg_java, patches)
@@ -800,14 +785,16 @@ class I18nInfo
 	@has_non_nls = false
     Dir.glob("#{main_dir}/**/*.java").each do |javafile|
 	  content = File.read(javafile)
+      old_content = content.clone
 	  STANDARDS.each do |key, value |
 		@has_changes = true if standardize_one_item(content, key, value)
 	  end
 	  if @has_changes
 		File.open(javafile, 'w') do |file|
-		file.write(content)
-		end
-	  end
+            puts "Patched Javafile      #{java_file}"
+            file.write(content)
+        end unless content.eql?(old_content)
+        end
 	  lines = File.readlines(javafile)
 	  lines.each_with_index do |line, idx| 
 		if m = /StringUtils\..*(\s*\/\/\s*\$NON-NLS.*)/.match(line)
@@ -946,6 +933,7 @@ public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
   end
   def patch_a_messages_java(msg_java, keys)
     content = IO.read(msg_java)
+    old_content = content.clone
 	content.sub!(/^\s*(private|static) static final String BUNDLE_NAME.*/, '')
 	content.sub!(/^\s*static.*BUNDLE_NAME[^}]+}/m, '')
 	content.sub!(/^\s*private Messages[^}]+}/m, '')
@@ -955,8 +943,9 @@ public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
 	content.gsub!(/^\s*public\s+static\s+String\s+(\w+);/, '    public static String \1 = ch.elexis.core.l10n.Messages.\1;');
 #	content.gsub!(/String\s+(\w+)\w*;/, 'String \1 = ch.elexis.core.l10n.Messages.\1;');
     File.open(msg_java, 'w+') do |file|
+      puts "Patched Javafile      #{java_file}"
       file.write content
-    end
+    end unless content.eql?(old_content)
   end
 end
 	                  
