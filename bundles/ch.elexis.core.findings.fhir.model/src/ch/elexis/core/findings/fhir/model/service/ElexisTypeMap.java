@@ -3,6 +3,7 @@ package ch.elexis.core.findings.fhir.model.service;
 import java.util.HashMap;
 
 import ch.elexis.core.jpa.entities.Condition;
+import ch.elexis.core.jpa.entities.DocumentReference;
 import ch.elexis.core.jpa.entities.Encounter;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Observation;
@@ -33,6 +34,8 @@ public class ElexisTypeMap {
 		classToStsMap.put(Condition.class, "ch.elexis.core.findings.fhir.po.model.Condition");
 		stsToClassMap.put("ch.elexis.core.findings.fhir.po.model.Observation", Observation.class);
 		classToStsMap.put(Observation.class, "ch.elexis.core.findings.fhir.po.model.Observation");
+		stsToClassMap.put("ch.elexis.core.findings.fhir.po.model.DocumentReference", DocumentReference.class);
+		classToStsMap.put(DocumentReference.class, "ch.elexis.core.findings.fhir.po.model.DocumentReference");
 	}
 
 	/**
