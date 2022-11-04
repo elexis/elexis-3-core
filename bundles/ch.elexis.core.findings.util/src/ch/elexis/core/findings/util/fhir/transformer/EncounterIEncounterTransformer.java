@@ -16,6 +16,7 @@ import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.AbstractHelper;
+import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IEncounterHelper;
 import ch.elexis.core.model.IMandator;
@@ -55,9 +56,9 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 	@Override
 	public Optional<IEncounter> getLocalObject(Encounter fhirObject) {
 		if (fhirObject != null && fhirObject.getId() != null) {
-			Optional<IEncounter> existing = findingsService.findById(fhirObject.getId(), IEncounter.class);
-			if (existing.isPresent()) {
-				return Optional.of(existing.get());
+			Optional<String> localId = FhirUtil.getLocalId(fhirObject.getId());
+			if (localId.isPresent()) {
+				return findingsService.findById(localId.get(), IEncounter.class);
 			}
 		}
 		return Optional.empty();

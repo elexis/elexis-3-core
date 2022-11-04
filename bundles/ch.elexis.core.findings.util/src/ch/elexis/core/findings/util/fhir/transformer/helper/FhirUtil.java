@@ -57,4 +57,17 @@ public class FhirUtil {
 		return money;
 	}
 
+	public static Optional<String> getLocalId(String id) {
+		if (StringUtils.isNotBlank(id)) {
+			if(id.endsWith("/")) {
+				id = id.substring(0, id.length() - 1);
+			}
+			if (id.contains("/")) {
+				return Optional.of(id.substring(id.lastIndexOf('/') + 1));
+			}
+			return Optional.of(id);
+		}
+		return Optional.empty();
+	}
+
 }

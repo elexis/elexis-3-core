@@ -95,10 +95,9 @@ public class DocumentReferenceIDocumentReferenceTransformer
 	@Override
 	public Optional<IDocumentReference> getLocalObject(DocumentReference fhirObject) {
 		if (fhirObject != null && fhirObject.getId() != null) {
-			Optional<IDocumentReference> existing = findingsService.findById(fhirObject.getId(),
-					IDocumentReference.class);
-			if (existing.isPresent()) {
-				return Optional.of(existing.get());
+			Optional<String> localId = FhirUtil.getLocalId(fhirObject.getId());
+			if (localId.isPresent()) {
+				return findingsService.findById(localId.get(), IDocumentReference.class);
 			}
 		}
 		return Optional.empty();
