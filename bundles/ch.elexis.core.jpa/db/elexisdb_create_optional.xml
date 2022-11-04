@@ -1385,6 +1385,10 @@
             <column name="DATETIME" type="CHAR(14)"/>
             <column name="MSG" type="CLOB"/>
         </createTable>
+        <insert tableName="CH_ELEXIS_MESSAGES">
+       		<column name="ID" value="VERSION"/>
+       		<column name="ORIGIN" value="0.2.0"/>
+    	</insert>
     </changeSet>
 	<changeSet author="marco" id="1527175239251-24-01">
 		<preConditions onFail="MARK_RAN">
