@@ -26,6 +26,7 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IDocumentReference;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
@@ -114,9 +115,9 @@ public class DocumentReferenceIDocumentReferenceTransformer
 		if (fhirObject.getContent() != null && !fhirObject.getContent().isEmpty()) {
 			DocumentReferenceContentComponent content = fhirObject.getContent().get(0);
 			Attachment attachment = content.getAttachment();
-			if (fhirObject.getSubject() != null && fhirObject.getSubject().getId() != null) {
-				Optional<IPatient> patientKontakt = codeModelService.load(fhirObject.getSubject().getId(),
-						IPatient.class);
+			Optional<String> patientId = FhirUtil.getId(fhirObject.getSubject());
+			if (patientId.isPresent()) {
+				Optional<IPatient> patientKontakt = codeModelService.load(patientId.get(), IPatient.class);
 				if (patientKontakt.isPresent()) {
 					IDocumentReference iDocumentReference = findingsService.create(IDocumentReference.class);
 					contentHelper.setResource(fhirObject, iDocumentReference);
@@ -153,7 +154,7 @@ public class DocumentReferenceIDocumentReferenceTransformer
 						LoggerFactory.getLogger(getClass())
 								.error("Error reading content from attachment data [" + attachment.getUrl() + "]", e);
 					}
-				} else if (attachment.getUrl() != null) {
+				} else if (StringUtils.isNotBlank(attachment.getUrl()) && attachment.getUrl().contains("://")) {
 					try {
 						URL url = new URL(attachment.getUrl());
 						try (InputStream in = url.openStream()) {

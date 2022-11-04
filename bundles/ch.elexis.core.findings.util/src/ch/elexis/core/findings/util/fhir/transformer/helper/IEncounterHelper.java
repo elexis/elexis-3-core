@@ -123,7 +123,7 @@ public class IEncounterHelper extends AbstractHelper {
 			if (encounterParticipantComponent.hasIndividual()) {
 				Reference reference = encounterParticipantComponent.getIndividual();
 				if (reference.getReferenceElement().getResourceType().equals(Practitioner.class.getSimpleName())) {
-					return Optional.of(reference.getReferenceElement().getIdPart());
+					return FhirUtil.getId(reference);
 				}
 			}
 		}
@@ -131,9 +131,6 @@ public class IEncounterHelper extends AbstractHelper {
 	}
 
 	public Optional<String> getPatientId(Encounter fhirObject) {
-		if (fhirObject.getSubject() != null && fhirObject.getSubject().hasReference()) {
-			return Optional.of(fhirObject.getSubject().getReferenceElement().getIdPart());
-		}
-		return Optional.empty();
+		return FhirUtil.getId(fhirObject.getSubject());
 	}
 }
