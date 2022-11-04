@@ -17,7 +17,6 @@
 # and https://rubygems.org/gems/java_properties or https://rubygems.org/gems/properties-ruby
 # nix-shell -p bundler sqlite rubyPackages.do_sqlite3 --command fish
 
-
 puts "It may take some time for bundler/inline to install the dependencies"
 require 'bundler/inline'
 require 'bundler'
@@ -622,35 +621,8 @@ class I18nInfo
        patches.each do |old_key, new_key|
          content.gsub!(/^#{old_key}(\s*=\s*[\w\.]+)$/, '')
        end
-       File.open(prop_file, 'w+') do |file|
-         puts "Patched #{prop_file}"
-         file.write content
-       end unless content.eql?(old_content)
-    end
-  end
-  
-  def eliminate_messages_java(msg_file, patches)
-    content = IO.read(msg_file)
-    old_content = content.clone
-    patches.each do |old_key, new_key|
-      content.gsub!(/[^\n]*\s#{old_key}\W[^\n]*./m, '')
-    end
-    File.open(msg_file, 'w+') do |file|
-      puts "Patched #{msg_file}"
-      file.write content
-    end unless content.eql?(old_content)
-  end
-
-  def eliminate_properties(msg_file, patches)
-    prop_files = Dir.glob(msg_file.sub('Messages.java', 'messages**.properties'))
-    prop_files.each do |prop_file|
-       content = IO.read(prop_file, encoding: "ISO8859-1")
-       old_content = content.clone
-       patches.each do |old_key, new_key|
-         content.gsub!(/^#{old_key}(\s*=\s*[\w\.]+)$/, '')
-       end
         File.open(prop_file, 'w+') do |file|
-          ##puts "Patched properties    #{prop_file}"
+          puts "Patched properties    #{prop_file}"
           file.write content
         end unless content.eql?(old_content)
     end
@@ -681,8 +653,9 @@ class I18nInfo
     patches.each do |old_key, new_key|
       content.gsub!(/(.*Messages\.)(#{old_key})(\W.*)/, "\\1#{new_key}\\3")
     end
+    content.sub!(/import ch.elexis.core.*.Messages;/, 'import ch.elexis.core.l10n.Messages;')
     File.open(java_file, 'w+') do |file|
-      #puts "Patched Javafile      #{java_file}"
+      puts "Patched Javafile      #{java_file}"
       file.write content
     end unless content.eql?(old_content)
   end
