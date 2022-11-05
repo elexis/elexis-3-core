@@ -14,6 +14,8 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFindingsService;
+import ch.elexis.core.findings.migration.IMigratorService;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.AbstractHelper;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
@@ -22,12 +24,15 @@ import ch.elexis.core.findings.util.fhir.transformer.helper.IEncounterHelper;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.holder.EncounterServiceHolder;
+import ch.elexis.core.text.model.Samdas;
+import ch.elexis.core.text.model.Samdas.Record;
 
 @Component
 public class EncounterIEncounterTransformer implements IFhirTransformer<Encounter, IEncounter> {
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService codeModelService;
+	private IModelService coreModelService;
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
 	private IModelService findingsModelService;
@@ -35,13 +40,16 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 	@Reference
 	private IFindingsService findingsService;
 
+	@Reference
+	private IMigratorService migratorService;
+
 	private FindingsContentHelper contentHelper;
 	private IEncounterHelper encounterHelper;
 
 	@Activate
 	public void activate() {
 		contentHelper = new FindingsContentHelper();
-		encounterHelper = new IEncounterHelper(codeModelService, findingsModelService);
+		encounterHelper = new IEncounterHelper(coreModelService, findingsModelService);
 	}
 
 	@Override
@@ -66,15 +74,36 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 
 	@Override
 	public Optional<IEncounter> updateLocalObject(Encounter fhirObject, IEncounter localObject) {
+		Optional<ch.elexis.core.model.IEncounter> behandlung = coreModelService.load(localObject.getConsultationId(),
+				ch.elexis.core.model.IEncounter.class);
+		behandlung.ifPresent(cons -> {
+			if (fhirObject.hasText()) {
+				updateConsText(fhirObject, cons);
+			}
+			migratorService.migrateConsultationsFindings(localObject.getConsultationId(), IEncounter.class);
+		});
 		return Optional.empty();
+	}
+
+	private void updateConsText(Encounter fhirObject, ch.elexis.core.model.IEncounter cons) {
+		Optional<String> consText = ModelUtil.getNarrativeAsString(fhirObject.getText());
+		if (consText.isPresent()) {
+			String existingText = cons.getHeadVersionInPlaintext();
+			if (!consText.get().equals(existingText)) {
+				Samdas samdas = new Samdas(cons.getVersionedEntry().getHead());
+				Record rec = samdas.getRecord();
+				rec.setText(consText.get());
+				EncounterServiceHolder.get().updateVersionedEntry(cons, samdas);
+			}
+		}
 	}
 
 	@Override
 	public Optional<IEncounter> createLocalObject(Encounter fhirObject) {
 		// patient and performer must be present
-		Optional<IMandator> performerKontakt = codeModelService.load(encounterHelper.getMandatorId(fhirObject).get(),
+		Optional<IMandator> performerKontakt = coreModelService.load(encounterHelper.getMandatorId(fhirObject).get(),
 				IMandator.class);
-		Optional<IPatient> patientKontakt = codeModelService.load(encounterHelper.getPatientId(fhirObject).get(),
+		Optional<IPatient> patientKontakt = coreModelService.load(encounterHelper.getPatientId(fhirObject).get(),
 				IPatient.class);
 		if (performerKontakt.isPresent() && patientKontakt.isPresent()) {
 			IEncounter iEncounter = findingsService.create(IEncounter.class);
@@ -84,6 +113,9 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 			Optional<ch.elexis.core.model.IEncounter> behandlung = encounterHelper.createIEncounter(iEncounter);
 			behandlung.ifPresent(cons -> {
 				iEncounter.setConsultationId(cons.getId());
+				if (fhirObject.hasText()) {
+					updateConsText(fhirObject, cons);
+				}
 				AbstractHelper.acquireAndReleaseLock(cons);
 			});
 			findingsService.saveFinding(iEncounter);
