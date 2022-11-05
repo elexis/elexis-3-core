@@ -70,4 +70,13 @@ public class FhirUtil {
 		return Optional.empty();
 	}
 
+	public static boolean isReferenceType(Reference reference, String type) {
+		if (reference.getReferenceElement().hasResourceType()) {
+			return reference.getReferenceElement().getResourceType().equals(type);
+		} else if (reference.hasType()) {
+			return reference.getType().equals(type);
+		}
+		return false;
+	}
+
 }

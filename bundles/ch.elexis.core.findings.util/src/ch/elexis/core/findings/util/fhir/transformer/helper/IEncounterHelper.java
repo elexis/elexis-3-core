@@ -122,8 +122,7 @@ public class IEncounterHelper extends AbstractHelper {
 		for (EncounterParticipantComponent encounterParticipantComponent : participants) {
 			if (encounterParticipantComponent.hasIndividual()) {
 				Reference reference = encounterParticipantComponent.getIndividual();
-				if (reference.getReferenceElement().hasResourceType() && reference.getReferenceElement()
-						.getResourceType().equals(Practitioner.class.getSimpleName())) {
+				if (FhirUtil.isReferenceType(reference, Practitioner.class.getSimpleName())) {
 					return FhirUtil.getId(reference);
 				}
 			}
