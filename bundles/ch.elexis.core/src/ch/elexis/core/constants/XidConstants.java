@@ -60,6 +60,7 @@ public class XidConstants {
 	public static final String CH_AHV = "www.ahv.ch/xid"; // Alters- und Hinterbliebenenversicherung
 	public static final String DOMAIN_AHV = CH_AHV;
 	public static final int CH_AHV_QUALITY = ASSIGNMENT_REGIONAL;
+	public static final String DOMAIN_BSVNUM = "www.xid.ch/id/kknum";
 
 	/**
 	 * AUSTRIA
