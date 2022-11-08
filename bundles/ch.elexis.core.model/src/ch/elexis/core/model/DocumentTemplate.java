@@ -114,7 +114,7 @@ public class DocumentTemplate extends AbstractIdDeleteModelAdapter<BriefVorlage>
 
 	@Override
 	public String getMimeType() {
-		return getEntity().getMimetype();
+		return StringUtils.defaultString(getEntity().getMimetype());
 	}
 
 	@Override
