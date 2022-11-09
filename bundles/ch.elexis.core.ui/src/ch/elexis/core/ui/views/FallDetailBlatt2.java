@@ -71,6 +71,7 @@ import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
+import ch.elexis.core.model.OrganizationConstants;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -728,6 +729,19 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			tCostBearer.setText(StringConstants.EMPTY);
 		}
 
+		if (f instanceof Fall && ((Fall) f).getTiersType() == Tiers.PAYANT) {
+			Fall fall = (Fall) f;
+			String allowedBillingLaw = (String) fall.getCostBearer()
+					.getExtInfoStoredObjectByKey(OrganizationConstants.FLD_EXT_ALLOWED_BILLINGLAW);
+			if (StringUtils.isNotBlank(allowedBillingLaw)
+					&& fall.getConfiguredBillingSystemLaw() != null
+					&& !allowedBillingLaw.contains(fall.getConfiguredBillingSystemLaw().name())) {
+				tCostBearer.setBackground(UiDesk.getColorFromRGB("ff9696"));
+				tCostBearer
+						.setToolTipText("Bei dieser Organisation erlaubte Gesetze (" + allowedBillingLaw + ")");
+			}
+		}
+
 		// *** adding required fields defined in prefs
 		String reqs = BillingSystem.getRequirementsBySystem(billingSystem);
 		if ((reqs != null) && (reqs.length() > 0)) {
@@ -1078,7 +1092,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		if ((TitleBarText != null) && (!TitleBarText.isEmpty())) {
 			Composite separatorBar = new Composite(form.getBody(), SWT.NONE);
 			separatorBar.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
-			Color dangerousColor = new Color(separatorBar.getDisplay(), 255, 150, 150);
+			Color dangerousColor = UiDesk.getColorFromRGB("ff9696");
 			GridLayout gridLayout = new GridLayout(1, false);
 			gridLayout.marginTop = -1;
 			gridLayout.marginBottom = -1;
