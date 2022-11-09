@@ -12,7 +12,6 @@
 
 package ch.elexis.core.data.events;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.slf4j.Logger;
@@ -212,7 +212,7 @@ public final class ElexisEventDispatcher implements Runnable {
 				eventQueue.offer(ee);
 			}
 
-			if (ElexisServerServiceHolder.get().deliversRemoteEvents()) {
+			if (ElexisServerServiceHolder.get() != null && ElexisServerServiceHolder.get().deliversRemoteEvents()) {
 				ch.elexis.core.common.ElexisEvent mapEvent = ServerEventMapper.mapEvent(ee);
 				if (mapEvent != null) {
 					ElexisServerServiceHolder.get().postEvent(mapEvent);
