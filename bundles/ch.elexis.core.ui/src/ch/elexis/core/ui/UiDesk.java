@@ -13,7 +13,10 @@
 
 package ch.elexis.core.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.ColorRegistry;
@@ -231,5 +234,29 @@ public class UiDesk {
 	public static void syncExec(Runnable runnable) {
 		getDisplay().syncExec(runnable);
 		// BusyIndicator.showWhile(getDisplay(), runnable);
+	}
+
+	private static List<Runnable> waitForWorkbench;
+
+	public synchronized static void runIfWorkbenchRunning(Runnable runnable) {
+		if (!PlatformUI.isWorkbenchRunning()) {
+			if (waitForWorkbench == null) {
+				CompletableFuture.runAsync(() -> {
+					// wait for running workbench
+					while (!PlatformUI.isWorkbenchRunning()) {
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							// ignore
+						}
+					}
+					waitForWorkbench.forEach(r -> r.run());
+				});
+				waitForWorkbench = new ArrayList<>();
+			}
+			waitForWorkbench.add(runnable);
+		} else {
+			runnable.run();
+		}
 	}
 }
