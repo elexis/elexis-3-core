@@ -259,6 +259,10 @@ public class InvoiceService implements IInvoiceService {
 		List<IEncounter> ret = Collections.emptyList();
 		if (!InvoiceState.CANCELLED.equals(invoiceState) && !InvoiceState.DEPRECIATED.equals(invoiceState)) {
 			Money amount = invoice.getTotalAmount();
+			Money demandAmount = invoice.getDemandAmount();
+			if (!demandAmount.isZero()) {
+				amount.addMoney(demandAmount);
+			}
 			new IPaymentBuilder(CoreModelServiceHolder.get(), invoice, amount, "Storno").buildAndSave();
 			if (reopen) {
 				ret = removeEncounters(invoice);
