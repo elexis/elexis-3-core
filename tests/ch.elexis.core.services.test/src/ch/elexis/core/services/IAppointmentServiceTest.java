@@ -169,6 +169,7 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		assertFalse(appointments.get(3).isDeleted());
 		// delete series, all
 		appointmentService.delete(appointments.get(3), true);
+		assertTrue(series.getAppointments().isEmpty());
 		assertTrue(appointments.get(2).isDeleted());
 		assertTrue(appointments.get(3).isDeleted());
 		assertTrue(appointments.get(4).isDeleted());
