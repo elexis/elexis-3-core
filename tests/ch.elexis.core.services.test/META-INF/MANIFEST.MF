@@ -6,6 +6,8 @@ Bundle-Version: 3.10.0.qualifier
 Bundle-Vendor: medevit.at
 Fragment-Host: ch.elexis.core.services;bundle-version="3.9.0"
 Automatic-Module-Name: ch.elexis.core.services.test
+Bundle-ClassPath: lib/awaitility-3.1.6.jar,
+ .
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit,
  ch.elexis.core.model;bundle-version="3.9.0",

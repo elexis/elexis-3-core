@@ -36,6 +36,8 @@ public class JaxWsTest {
 //		// -> by setting System property, adding fragment jakarta.xml.ws-api-ws-fragment and updating classloader
 //		// we bind this together
 //
+		// if jakarta.xml.bind-api fragment is included in run config classloading get
+		// messed up
 
 		// Override default setting in <code>info.elexis.target.jaxws.core</code> which
 		// is wrong
