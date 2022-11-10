@@ -1,12 +1,12 @@
 package ch.elexis.core.services;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.awaitility.Awaitility;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +63,8 @@ public class IEncounterServiceTest extends AbstractServiceTest {
 		}
 		executor.shutdown();
 		executor.awaitTermination(5, TimeUnit.SECONDS);
-		Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> encounter.getBilled().size() == 100);
+		coreModelService.refresh(encounter, true);
+		assertEquals(100, encounter.getBilled().size());
 		assertTrue(encounter.getVersionedEntry().getHeadVersion() > 1);
 		// IEncounterService#updateVersionedEntry is not thread save but better than
 		// direct modify without refresh ...

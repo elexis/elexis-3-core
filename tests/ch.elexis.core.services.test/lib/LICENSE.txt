@@ -1,2 +1,0 @@
-Awaitility from https://github.com/awaitility/awaitility under Apache License 2.0
-
