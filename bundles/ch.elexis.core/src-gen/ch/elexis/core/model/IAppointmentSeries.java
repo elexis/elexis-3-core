@@ -13,6 +13,7 @@ package ch.elexis.core.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import java.util.List;
 import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.services.IAppointmentService;
@@ -251,5 +252,13 @@ public interface IAppointmentSeries extends IAppointment {
 	 * @generated
 	 */
 	String getAsSeriesExtension();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" type="ch.elexis.core.types.List&lt;ch.elexis.core.model.IAppointment&gt;" many="false"
+	 * @generated
+	 */
+	List<IAppointment> getAppointments();
 
 } // IAppointmentSeries

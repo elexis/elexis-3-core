@@ -701,6 +701,7 @@
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointmentSeries/persistent"/>
       <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//IAppointmentSeries/rootAppointment"/>
       <genOperations ecoreOperation="model.ecore#//IAppointmentSeries/getAsSeriesExtension"/>
+      <genOperations ecoreOperation="model.ecore#//IAppointmentSeries/getAppointments"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ISickCertificate">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ISickCertificate/patient"/>

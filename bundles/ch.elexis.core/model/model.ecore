@@ -1120,6 +1120,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="IAppointmentSeries" abstract="true"
       interface="true" eSuperTypes="#//IAppointment">
     <eOperations name="getAsSeriesExtension" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eOperations name="getAppointments">
+      <eGenericType eClassifier="ecore:EClass types.ecore#//List">
+        <eTypeArguments eClassifier="#//IAppointment"/>
+      </eGenericType>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="seriesType" eType="ecore:EDataType types.ecore#//SeriesType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endingType" eType="ecore:EDataType types.ecore#//EndingType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="seriesStartDate" eType="ecore:EDataType types.ecore#//LocalDate"/>

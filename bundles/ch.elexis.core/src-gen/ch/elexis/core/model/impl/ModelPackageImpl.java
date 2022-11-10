@@ -6644,6 +6644,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		addEOperation(iAppointmentSeriesEClass, ecorePackage.getEString(), "getAsSeriesExtension", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		op = addEOperation(iAppointmentSeriesEClass, null, "getAppointments", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getIAppointment());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
 		initEClass(iSickCertificateEClass, ISickCertificate.class, "ISickCertificate", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getISickCertificate_Patient(), this.getIPatient(), null, "patient", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getISickCertificate_Coverage(), this.getICoverage(), null, "coverage", null, 0, 1, ISickCertificate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
