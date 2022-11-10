@@ -401,6 +401,10 @@ public class Rechnung extends PersistentObject {
 		List<Konsultation> kons = null;
 		if (!InvoiceState.CANCELLED.equals(invoiceState) && !InvoiceState.DEPRECIATED.equals(invoiceState)) {
 			Money betrag = getBetrag();
+			Money remindersBetrag = getRemindersBetrag();
+			if (!remindersBetrag.isZero()) {
+				betrag.addMoney(remindersBetrag);
+			}
 			new Zahlung(this, betrag, "Storno", null);
 			if (reopen) {
 				kons = removeBillFromKons();
