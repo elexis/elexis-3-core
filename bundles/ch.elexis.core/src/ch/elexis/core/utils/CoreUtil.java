@@ -25,13 +25,23 @@ import ch.rgw.tools.StringTool;
 
 public class CoreUtil {
 
-	private static Logger logger = LoggerFactory.getLogger(CoreUtil.class);
-
 	public static enum OS {
 		UNSPECIFIED, MAC, LINUX, WINDOWS
 	};
 
+	/**
+	 * The system is started in basic test mode, this mode enforces:<br>
+	 * <ul>
+	 * <li>Connection against a in mem database</li>
+	 * </ul>
+	 * Requires boolean parameter.
+	 */
+	public static final String TEST_MODE = "elexis.test.mode";
+
+	private static Logger logger = LoggerFactory.getLogger(CoreUtil.class);
+
 	private static final OS osType;
+	private static final boolean testMode;
 
 	static {
 		String osName = System.getProperty("os.name");
@@ -44,25 +54,12 @@ public class CoreUtil {
 		} else {
 			osType = OS.UNSPECIFIED;
 		}
+
+		testMode = Boolean.valueOf(System.getProperty(TEST_MODE));
 	}
 
-	/**
-	 * The system is started in basic test mode, this mode enforces:<br>
-	 * <ul>
-	 * <li>Connection against a in mem database</li>
-	 * </ul>
-	 * Requires boolean parameter.
-	 */
-	public static final String TEST_MODE = "elexis.test.mode";
-
 	public static boolean isTestMode() {
-		String testMode = System.getProperty(TEST_MODE);
-		if (testMode != null && !testMode.isEmpty()) {
-			if (testMode.equalsIgnoreCase(Boolean.TRUE.toString())) {
-				return true;
-			}
-		}
-		return false;
+		return testMode;
 	}
 
 	public static Path getElexisServerHomeDirectory() {
