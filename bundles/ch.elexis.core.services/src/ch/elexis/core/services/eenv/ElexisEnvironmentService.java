@@ -1,21 +1,11 @@
 package ch.elexis.core.services.eenv;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.keycloak.authorization.client.AuthzClient;
 import org.keycloak.authorization.client.Configuration;
 import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.gson.Gson;
 
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
@@ -31,9 +21,8 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 	private IContextService contextService;
 	private IConfigService configService;
 
-	private CompletableFuture<Map<String, Object>> eeStatus;
+//	private CompletableFuture<Map<String, Object>> eeStatus;
 
-	@SuppressWarnings("unchecked")
 	public ElexisEnvironmentService(String elexisEnvironmentHost, IContextService contextService,
 			IConfigService configService) {
 		this.elexisEnvironmentHost = elexisEnvironmentHost;
@@ -41,37 +30,42 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 		this.configService = configService;
 
 		LoggerFactory.getLogger(getClass()).info("Binding to EE {}", getHostname());
-		eeStatus = CompletableFuture.supplyAsync(() -> {
-			try (InputStream is = new URL("https://" + elexisEnvironmentHost + "/.status.json").openStream()) {
-				String json = IOUtils.toString(is, "UTF-8");
-				return new Gson().fromJson(json, Map.class);
-			} catch (IOException e) {
-				logger.warn("Could not load status.json", e);
-				return Collections.emptyMap();
-			}
-		});
+//		eeStatus = CompletableFuture.supplyAsync(() -> {
+//			// FIXME WHAT IF NOT READY SET??
+//			try (InputStream is = new URL(getBaseUrl() + "/.status.json").openStream()) {
+//				String json = IOUtils.toString(is, "UTF-8");
+//				return new Gson().fromJson(json, Map.class);
+//			} catch (IOException e) {
+//				logger.warn("Could not load status.json", e);
+//				return Collections.emptyMap();
+//			}
+//		});
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public String getVersion() {
-		try {
-			Map eeMap = (Map) eeStatus.get().get("ee");
-			if (eeMap instanceof Map) {
-				Map eeMapGit = (Map) eeMap.get("git");
-				if (eeMapGit instanceof Map) {
-					return (String) eeMapGit.get("branch");
-				}
-			}
-		} catch (InterruptedException | ExecutionException e) {
-			logger.warn("", e);
-		}
+//		try {
+//			Map eeMap = (Map) eeStatus.get().get("ee");
+//			if (eeMap instanceof Map) {
+//				Map eeMapGit = (Map) eeMap.get("git");
+//				if (eeMapGit instanceof Map) {
+//					return (String) eeMapGit.get("branch");
+//				}
+//			}
+//		} catch (InterruptedException | ExecutionException e) {
+//			logger.warn("", e);
+//		}
 		return "unknown";
 	}
 
 	@Override
 	public String getProperty(String key) {
-		// TODO EnvironmentVariables?
+		// 1. check for environment variables
+		String value = System.getenv(key);
+		if (StringUtils.isNotEmpty(value)) {
+			return value;
+		}
+
 		// TODO first try via LocalProperties?
 		// THEN Config DB Table ?
 		return configService.get(key, null);
