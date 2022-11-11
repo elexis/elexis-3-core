@@ -51,24 +51,17 @@ public class MessageService implements IMessageService {
 	@Override
 	public ObjectStatus send(TransientMessage message) {
 
-		String receiver = message.getReceiver();
-		int indexOf = receiver.indexOf(':');
-		if (indexOf <= 0) {
-			return new ObjectStatus(IStatus.ERROR, Bundle.ID,
-					"No transporter uri scheme found in receiver [" + receiver + "]", null);
-		}
-
-		String uriScheme = receiver.substring(0, indexOf);
+		String transporterScheme = message.getTransporterScheme();
 		IMessageTransporter messageTransporter = null;
-		if (uriScheme.equals(INTERNAL_MESSAGE_URI_SCHEME)) {
+		if (INTERNAL_MESSAGE_URI_SCHEME.equals(transporterScheme)) {
 			messageTransporter = selectInternalSchemeTransporter();
 		} else {
-			messageTransporter = messageTransporters.get(uriScheme);
+			messageTransporter = messageTransporters.get(transporterScheme);
 		}
 
 		if (messageTransporter == null) {
-			return new ObjectStatus(IStatus.ERROR, Bundle.ID, "No transporter found for uri scheme [" + uriScheme + "]",
-					null);
+			return new ObjectStatus(IStatus.ERROR, Bundle.ID,
+					"No transporter found for uri scheme [" + transporterScheme + "]", null);
 		}
 
 		if (messageTransporter.isExternal()) {

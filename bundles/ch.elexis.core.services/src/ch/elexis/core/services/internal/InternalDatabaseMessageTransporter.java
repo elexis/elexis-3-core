@@ -28,6 +28,8 @@ public class InternalDatabaseMessageTransporter implements IMessageTransporter {
 		idbMessage.setMessagePriority(message.getMessagePriority());
 		idbMessage.setCreateDateTime(message.getCreateDateTime());
 		idbMessage.setSenderAcceptsAnswer(message.isSenderAcceptsAnswer());
+		// internaldb supports only a single receiver
+		idbMessage.addReceiver(message.getReceiver());
 
 		try {
 			CoreModelServiceHolder.get().save(idbMessage);

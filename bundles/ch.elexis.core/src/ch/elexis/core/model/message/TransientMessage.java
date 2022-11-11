@@ -4,11 +4,14 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.model.IUser;
 
 public class TransientMessage {
 
 	private final String sender;
+	private final String transporterScheme;
 	private final String receiver;
 	private boolean senderAcceptsAnswer;
 	private LocalDateTime createDateTime;
@@ -20,16 +23,34 @@ public class TransientMessage {
 	 */
 	private boolean alllowExternal = false;
 
-	public TransientMessage(String sender, String receiver) {
+	/**
+	 * 
+	 * @param sender
+	 * @param receiverUrl the transporter plus the receiver, e.g. internal:userid
+	 */
+	public TransientMessage(String sender, String receiverUrl) {
+		if (StringUtils.isEmpty(sender)) {
+			throw new IllegalArgumentException("sender must not be empty");
+		}
+		if (StringUtils.isEmpty(receiverUrl) || receiverUrl.indexOf(":") <= 0) {
+			throw new IllegalArgumentException("invalid receiverUrl");
+		}
 		this.sender = sender;
-		this.receiver = receiver;
+		int indexOf = receiverUrl.indexOf(":");
+		this.transporterScheme = receiverUrl.substring(0, indexOf);
+		this.receiver = receiverUrl.substring(indexOf + 1);
 		senderAcceptsAnswer = true;
 		createDateTime = LocalDateTime.now();
 		priority = 0;
+
 	}
 
 	public String getSender() {
 		return sender;
+	}
+
+	public String getTransporterScheme() {
+		return transporterScheme;
 	}
 
 	public String getReceiver() {
@@ -94,7 +115,8 @@ public class TransientMessage {
 
 	@Override
 	public String toString() {
-		return String.format("%s [%s -> %s] %s", createDateTime, sender, receiver, messageText);
+		return String.format("%s [%s -> %s] %s", createDateTime, sender, transporterScheme + ":" + receiver,
+				messageText);
 	}
 
 }
