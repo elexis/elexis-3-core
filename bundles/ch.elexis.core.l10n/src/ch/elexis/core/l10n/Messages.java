@@ -2860,6 +2860,7 @@ public class Messages extends NLS {
 	public static String Core_Path;
 	public static String Core_Reset;
 	public static String Core_Select_Contact;
+	public static String Core_Short_Label;
 	public static String Core_Status;
 	public static String Core_Street;
 	public static String Core_Title;
