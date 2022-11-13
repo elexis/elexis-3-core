@@ -127,10 +127,6 @@ class GoogleTranslation
     key = [what, target_language, source_language]
     value = @@translationCache.find{|x, y| x[0].eql?(what) && x[1].eql?(target_language) && x[2].eql?(source_language) }
     unless value
-      unless ENV['TRANSLATE_API_KEY']
-        puts "MISSING TRANSLATE_API_KEY #{key} #{key.first.encoding}"
-        exit(3)
-      end
       begin
         value = Translate.list_translations(what, target_language, source: source_language)
         @@translationCache[key] = value.translations.collect{|x| x.translated_text}
@@ -386,11 +382,10 @@ class I18nInfo
   end
 
   def analyse_one_message_line(project_name, lang, filename, line_nr, line)
-    key, value = get_key_value(line.chomp)
+    replace_dots = false if filename.index('/ch/elexis/core/model')
+    key, value = get_key_value(line.chomp, replace_dots_by_underscore: replace_dots)
     return unless key
     key = "#{project_name}#{L10N_Cache::TAG_SEPARATOR}#{key}" unless /^messages/i.match(File.basename(filename))
-		   binding.pry if /:/.match(key)
-
 	L10N_Cache.set_translation(key, lang, value)
   end
   
@@ -516,13 +511,18 @@ class I18nInfo
     CGI.unescapeHTML(translated)
   end
 
-  def add_csv_to_db_texts
-    puts "Adding missing entries for #{File.basename(DB_NAME)}"
+  def add_missing # aka add_csv_to_db_texts
+    unless ENV['TRANSLATE_API_KEY']
+      puts "Without an enviornment variable TRANSLATE_API_KEY we cannot translate any new string"
+      exit(3)
+    end
     inserts = {}
     idx = 0
 	size = L10N_Cache.keys.size
+    puts "Adding missing entries for #{File.expand_path(DB_NAME)} checking #{size} keys"
     L10N_Cache.keys.each do |key|
-	   entry = L10N_Cache.db_get_entry(key)
+      puts "Checking #{idx} #{key}" if $VERBOSE
+      entry = L10N_Cache.db_get_entry(key)
       idx += 1
       puts "#{Time.now}: Analysing message #{idx} of #{size}" if idx % 500 == 0
 	  binding.pry unless key.eql?(key.encode('utf-8'))
@@ -550,9 +550,6 @@ class I18nInfo
       end
     end
     puts "Inserted #{inserts.size} missing entries of #{size}"
-  end
-  def add_missing
-    add_csv_to_db_texts
   end
 
   def to_db(dir)
@@ -582,6 +579,7 @@ class I18nInfo
           end
           lang_value = translations[lang]
           lang_value = translations[L10N_Cache::JavaLanguage] if !lang_value || lang_value.empty?
+		  lang_value ||= translations['en'] if lang.eql?(:java) && translations['en']
           tag2write = tag_name.sub(project_name+L10N_Cache::TAG_SEPARATOR,'')
           next if tag2write.eql?('false')
           next unless keys.find_all{|x| /#{tag_name}$/.match(x)}.size > 0
@@ -828,6 +826,7 @@ public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
     msg_java = Dir.glob(path).first
     raise "Unable to find l10n Messages.java (Searched via #{path}" unless msg_java 
 	keys = L10N_Cache.keys.find_all{ |key| !/#{L10N_Cache::TAG_SEPARATOR}/.match(key)}.sort
+    keys.delete_if{|x| x.index('.')}
 	emit_l10_messages_java(msg_java, keys)
 	write_translation_to_properties(msg_java, keys)
   end
@@ -862,6 +861,7 @@ public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
 		  end
 		  lang_value = translations[lang]
 		  lang_value = translations[L10N_Cache::JavaLanguage] if !lang_value || lang_value.empty?
+		  lang_value ||= translations['en'] if lang.eql?(:java) && translations['en']
 		  tag2write = tag_name.sub(/.*:/,'')
 		  next if tag2write.eql?('false')
 		  if !lang_value || lang_value.empty?
