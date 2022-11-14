@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
@@ -204,10 +205,16 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		super.dispose();
 	}
 
+	private boolean isOldShown = false;
+
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
+		if (!isOldShown) {
+			MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Ansicht veraltet", "Die Ansicht "
+					+ getTitle()
+					+ " ist veraltet, und wird nicht mehr unterstützt. Bitte verwenden Sie die Rechnungsliste Ansicht.");
+			isOldShown = true;
+		}
 	}
 
 	@SuppressWarnings("unchecked")

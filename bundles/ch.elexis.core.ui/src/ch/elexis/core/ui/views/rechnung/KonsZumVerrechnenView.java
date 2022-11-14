@@ -33,6 +33,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -54,6 +55,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -315,8 +317,16 @@ public class KonsZumVerrechnenView extends ViewPart {
 		addPartActivationListener();
 	}
 
+	private boolean isOldShown = false;
+
 	@Override
 	public void setFocus() {
+		if (!isOldShown) {
+			MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Ansicht veraltet", "Die Ansicht "
+					+ getTitle()
+					+ " ist veraltet, und wird nicht mehr unterstützt. Bitte verwenden Sie die Rechnungs-Vorschlag Ansicht.");
+			isOldShown = true;
+		}
 	}
 
 	class RLazyTreeListener implements LazyTreeListener {
