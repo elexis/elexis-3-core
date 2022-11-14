@@ -16,6 +16,7 @@ package ch.elexis.core.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -126,6 +127,14 @@ public class UiDesk {
 			theDisplay = PlatformUI.createDisplay();
 		}
 		return theDisplay;
+	}
+
+	public static Optional<Display> getDisplaySafe() {
+		Display ret = getDisplay();
+		if (ret != null && !ret.isDisposed()) {
+			return Optional.of(ret);
+		}
+		return Optional.empty();
 	}
 
 	public static void updateFont(String cfgName) {
