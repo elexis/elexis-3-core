@@ -19,8 +19,8 @@ import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.core.ui.views.KonsDetailView;
 import ch.elexis.core.ui.views.PatHeuteView;
-import ch.elexis.core.ui.views.rechnung.KonsZumVerrechnenView;
-import ch.elexis.core.ui.views.rechnung.RechnungsListeView;
+import ch.elexis.core.ui.views.rechnung.BillingProposalView;
+import ch.elexis.core.ui.views.rechnung.InvoiceListView;
 import ch.elexis.core.ui.views.rechnung.RnDetailView;
 
 /**
@@ -39,17 +39,17 @@ public class AbrechnungsPerspektive implements IPerspectiveFactory {
 				IPageLayout.ID_EDITOR_AREA);
 		IFolderLayout frd = layout.createFolder("Detailfolder", IPageLayout.LEFT, 0.4f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
 		fld.addView(PatHeuteView.ID);
-		fld.addView(KonsZumVerrechnenView.ID);
-		fld.addView(RechnungsListeView.ID);
+		fld.addView(BillingProposalView.ID);
+		fld.addView(InvoiceListView.ID);
 		frd.addView(RnDetailView.ID);
 		frd.addView(KonsDetailView.ID);
 		frd.addPlaceholder(FallDetailView.ID);
 		frd.addPlaceholder(UiResourceConstants.PatientDetailView2_ID);
 		layout.addShowViewShortcut(PatHeuteView.ID);
-		layout.addShowViewShortcut(KonsZumVerrechnenView.ID);
+		layout.addShowViewShortcut(BillingProposalView.ID);
 		layout.addShowViewShortcut(RnDetailView.ID);
 		layout.addShowViewShortcut(KonsDetailView.ID);
-		layout.addShowViewShortcut(RechnungsListeView.ID);
+		layout.addShowViewShortcut(InvoiceListView.ID);
 	}
 
 }
