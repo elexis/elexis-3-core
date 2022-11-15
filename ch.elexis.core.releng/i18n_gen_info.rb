@@ -31,6 +31,7 @@ gemfile do
   gem 'pry-byebug'
   gem "java-properties"
   gem "sqlite3"
+  gem 'diff-lcs'
 end
 
 require_relative 'common_l10n'
@@ -50,8 +51,7 @@ $stdout.sync = true
 
 ELEXIS_BASE = File.expand_path(File.dirname(File.dirname(__FILE__)))
 L10N_MESSAGES = Dir.glob("#{ELEXIS_BASE}/**/l10n/Messages.java").first
-
-DB_NAME = File.expand_path( "translations.DB")
+DB_NAME = defined?(RSpec) ? File.expand_path( "rsc/test_translations.db") : File.expand_path( "translations.DB")
 DB = SQLite3::Database.new DB_NAME
 DB.execute("PRAGMA case_sensitive_like=ON;")
 # Create a table
@@ -111,7 +111,13 @@ end
 
 class GoogleTranslation
   @@updated_cache = false
-  CacheFileCSV = File.join(Dir.home, 'google_translation_cache.csv')
+  if defined?(RSpec)
+    CacheFileCSV = File.join(Dir.pwd, 'rsc/test_google_translation_cache.csv')
+    FileUtils.rm_f(CacheFileCSV, :verbose => true)
+  else
+    CacheFileCSV = File.join(Dir.home, 'google_translation_cache.csv')
+  end
+  puts "CacheFileCSV is #{CacheFileCSV}"
   BaseLanguageURL='https://translate.googleapis.com/translate_a/single?client=gtx&sl='
   Translate = Google::Apis::TranslateV2::TranslateService.new
   Translate.key = ENV['TRANSLATE_API_KEY']
@@ -190,7 +196,6 @@ class L10N_Cache
   JavaLanguage = :java
   LANGUAGE_KEYS = [ :de, :en, :fr, :it]
 
-  TRANSLATIONS_YAML_NAME = 'translations.yaml'
   TRANSLATIONS_CSV_NAME = 'translations.csv'
   Translations = Struct.new(:lang, :values)
   REGEX_TRAILING_LANG = /\.plugin$|\.(#{LANGUAGE_KEYS.join('|')})$/
@@ -306,7 +311,7 @@ class L10N_Cache
   def self.save_csv
 	destFile = DB_NAME.sub(File.extname(DB_NAME),'.csv')
 	puts "Saving DB to #{destFile} with changes? #{@@hasChanges} (Takes a few seconds)"
-	return unless @@hasChanges
+	return unless @@hasChanges || !File.exists?(destFile)
 	headers = [:key, :java, :de, :en, :fr, :it]
 	CSV.open(destFile, "w") do |csv|
 	  csv << headers
@@ -529,7 +534,10 @@ class I18nInfo
       # Ensure that we have a german translation (which is our default language)
 	  default = ''
 	  orig_lang = :en
-	  if entry[:de] && entry[:de].size > 0
+      if entry[:java] && entry[:de] && entry[:de].size == 0 && entry[:en] && entry[:en].size == 0
+		first_entry = default = entry[:java]
+		orig_lang = :de
+	  elsif entry[:de] && entry[:de].size > 0
 		first_entry = default = entry[:de]
 		orig_lang = :de
 	  elsif entry[:en] && entry[:en].size > 0
@@ -539,6 +547,12 @@ class I18nInfo
       L10N_Cache::LANGUAGE_KEYS.each do |lang|
 		current_translation = L10N_Cache.get_translation(key, lang)
 		next if current_translation && current_translation.size > 0
+        if lang.eql?(orig_lang)
+            unless current_translation && current_translation.size > 0
+                L10N_Cache.set_translation(key, lang, entry[:java])
+            end
+            next
+        end
 	    next if lang.eql?(orig_lang)
 		# puts "No translation for #{key} given" if default.size == 0
 		next if default.size == 0
@@ -956,7 +970,7 @@ if ARGV.size > 0
   raise "We expected #{ARGV.first} to be the name of an existing directory" unless File.directory?(i18n.main_dir)
 else
   i18n.main_dir = Dir.pwd
-end
+end unless defined?(RSpec)
 saved_pwd = Dir.pwd
 
 ARGV.each do |dir|
@@ -978,3 +992,4 @@ end
 	   # update_uses
 i18n.add_missing if Options[:add_missing]
 L10N_Cache.save_csv
+GoogleTranslation.save_cache
