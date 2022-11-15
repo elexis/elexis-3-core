@@ -250,6 +250,19 @@ public class JdbcLink {
 		this.dataSource = dataSource;
 		String databaseProductName = dataSource.getConnection().getMetaData().getDatabaseProductName().toLowerCase();
 		DBFlavor = databaseProductName;
+		sDrv = translateDriverName(dataSource.getConnection().getMetaData().getDriverName());
+		sConn = dataSource.getConnection().getMetaData().getURL();
+	}
+
+	private String translateDriverName(String driverName) {
+		if (driverName.toLowerCase().contains("mysql")) {
+			return MYSQL_DRIVER_CLASS_NAME;
+		} else if (driverName.toLowerCase().contains("postgre")) {
+			return POSTGRESQL_DRIVER_CLASS_NAME;
+		} else if (driverName.toLowerCase().contains("h2")) {
+			return H2_DRIVER_CLASS_NAME;
+		}
+		return driverName;
 	}
 
 	/**
