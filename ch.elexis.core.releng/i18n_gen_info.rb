@@ -678,7 +678,7 @@ class I18nInfo
 #   j=0; DB.execute( "select count(de) anzahl, de, min(key), max(key) from translations group by de  having anzahl > 2 order by anzahl desc" ) { |row| j=j+1; break if j == 5; p row }
        puts "Reduce #{main_dir}"
     patches = {}
-    DB.execute('select count(*) anzahl, key, de from translations group by de  having anzahl > 2 order by anzahl desc;' ) do |row|
+    DB.execute('select count(*) anzahl, key, de from translations group by de  having anzahl >= 2 order by anzahl desc;' ) do |row|
        german = row[2];
        best = find_best_name(german);
        puts "key #{german} => #{best}" if  $VERBOSE
@@ -841,6 +841,10 @@ public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
     raise "Unable to find l10n Messages.java (Searched via #{path}" unless msg_java 
 	keys = L10N_Cache.keys.find_all{ |key| !/#{L10N_Cache::TAG_SEPARATOR}/.match(key)}.sort
     keys.delete_if{|x| x.index('.')}
+    cmd = "select key from translations where occurences < 0"
+    rows =   DB.execute(cmd)
+    keys2del = rows.collect {|x| x.first}
+    keys.delete_if{|x| keys2del.index(x)}
 	emit_l10_messages_java(msg_java, keys)
 	write_translation_to_properties(msg_java, keys)
   end
