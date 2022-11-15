@@ -2,7 +2,6 @@ package ch.elexis.core.findings.util.fhir.transformer.mapper;
 
 import java.util.Set;
 
-import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Schedule;
@@ -32,7 +31,7 @@ public class IAppointmentSlotAttributeMapper implements IdentifiableDomainResour
 	@Override
 	public void elexisToFhir(IAppointment elexis, Slot fhir, SummaryEnum summaryEnum, Set<Include> includes) {
 
-		appointmentHelper.setVersionedIdPartLastUpdatedMeta(Appointment.class, fhir, elexis);
+		appointmentHelper.setVersionedIdPartLastUpdatedMeta(Slot.class, fhir, elexis);
 
 		fhir.getMeta().setLastUpdated(appointmentHelper.getLastUpdateAsDate(elexis.getLastupdate()).orElse(null));
 
