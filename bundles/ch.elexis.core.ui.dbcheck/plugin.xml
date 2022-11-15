@@ -106,6 +106,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixPrescriptionOldArticle">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixCancelledInvoices">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>
