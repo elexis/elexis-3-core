@@ -82,6 +82,10 @@ public class UserService implements IUserService {
 		if (StringUtils.isNotEmpty(defaultMandatorId)) {
 			return modelService.load(defaultMandatorId, IMandator.class);
 		}
+
+		if (userContact.isMandator()) {
+			return modelService.load(userContact.getId(), IMandator.class);
+		}
 		return Optional.empty();
 	}
 
