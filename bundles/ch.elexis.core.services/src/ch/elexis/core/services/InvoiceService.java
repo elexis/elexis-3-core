@@ -263,7 +263,7 @@ public class InvoiceService implements IInvoiceService {
 			if (!demandAmount.isZero()) {
 				amount.addMoney(demandAmount);
 			}
-			new IPaymentBuilder(CoreModelServiceHolder.get(), invoice, amount, "Storno").buildAndSave();
+			addPayment(invoice, amount, "Storno");
 			if (reopen) {
 				ret = removeEncounters(invoice);
 
