@@ -47,7 +47,7 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 	private static final String CONFIG = "dialogs/konszumverrechnen/"; //$NON-NLS-1$
 	private static final String ALLMARKED = Messages.KonsZumVerrechnenWizardDialog_selectCasesToCharge; // $NON-NLS-1$
 	private static final String TAGEN_BZW_DEM = Messages.KonsZumVerrechnenWizardDialog_daysOrDate; // $NON-NLS-1$
-	private static final String RECHNUNGEN_ERSTELLEN = Messages.KonsZumVerrechnenWizardDialog_createBills; // $NON-NLS-1$
+	private static final String RECHNUNGEN_ERSTELLEN = Messages.KonsZumVerrechnenView2_createInvoicesAction; // $NON-NLS-1$
 	private static final String BEHANDLUNGEN_ZUM_VERRECHNEN_AUTOMATISCH_AUSWAEHLEN = Messages.KonsZumVerrechnenWizardDialog_createProposal; // $NON-NLS-1$
 	private static final String RECHNUNGS_AUTOMATIK = Messages.KonsZumVerrechnenWizardDialog_billingAUtomation; // $NON-NLS-1$
 	private static final String TREATMENT_TRIMESTER = Messages.KonsZumVerrechnenWizardDialog_choseAllQuartal; // $NON-NLS-1$

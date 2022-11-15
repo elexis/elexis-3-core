@@ -26,11 +26,11 @@ public class Messages {
 	public static String Hub_nouserloggedin = ch.elexis.core.l10n.Messages.Hub_nouserloggedin;
 	public static String Hub_title_configuration = ch.elexis.core.l10n.Messages.Hub_title_configuration;
 	public static String LoginDialog_0 = ch.elexis.core.l10n.Messages.LoginDialog_0;
-	public static String LoginDialog_1 = ch.elexis.core.l10n.Messages.LoginDialog_1;
+	public static String AnwenderPref_passwort = ch.elexis.core.l10n.Messages.AnwenderPref_passwort;
 	public static String LoginDialog_4 = ch.elexis.core.l10n.Messages.LoginDialog_4;
-	public static String LoginDialog_login = ch.elexis.core.l10n.Messages.LoginDialog_login;
+	public static String AccessControlDefaults_logIn = ch.elexis.core.l10n.Messages.AccessControlDefaults_logIn;
 	public static String LoginDialog_terminate = ch.elexis.core.l10n.Messages.LoginDialog_terminate;
-	public static String Warning_tooManyTitle = ch.elexis.core.l10n.Messages.Warning_tooManyTitle;
+	public static String Hub_toomanyinstances = ch.elexis.core.l10n.Messages.Hub_toomanyinstances;
 	public static String Warning_tooManyMessage = ch.elexis.core.l10n.Messages.Warning_tooManyMessage;
 	public static String ReminderView_importantRemindersOnLogin = ch.elexis.core.l10n.Messages.ReminderView_importantRemindersOnLogin;
 }

@@ -46,7 +46,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	private Composite compArticle;
 
 	private RestrictedAction createAction = new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY,
-			ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_newAction) {
+			ch.elexis.core.ui.views.artikel.Messages.AUF2_new) {
 		{
 			setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 			setToolTipText(ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_createProductToolTipText);
@@ -102,7 +102,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 
 	private RestrictedAction deleteAction = new LockRequestingRestrictedAction<IArticle>(
 			ACLContributor.EIGENARTIKEL_MODIFY,
-			ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteAction) {
+			ch.elexis.core.ui.views.artikel.Messages.Core_Delete) {
 		{
 			setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 			setToolTipText(ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteProductToolTipText);

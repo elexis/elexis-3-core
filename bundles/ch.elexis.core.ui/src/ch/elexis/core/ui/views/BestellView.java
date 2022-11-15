@@ -127,7 +127,7 @@ public class BestellView extends ViewPart {
 		tv = new TableViewer(table);
 
 		TableViewerColumn tvcNumber = new TableViewerColumn(tv, SWT.CENTER);
-		tvcNumber.getColumn().setText(Messages.BestellView_Number);
+		tvcNumber.getColumn().setText(Messages.Core_Number);
 		tvcNumber.getColumn().setWidth(40);
 		ReflectiveEditingSupport poes = new ReflectiveEditingSupport(tv,
 				ModelPackage.Literals.IORDER_ENTRY__AMOUNT.getName());
@@ -139,7 +139,7 @@ public class BestellView extends ViewPart {
 		tvcArticle.getColumn().setWidth(280);
 
 		TableViewerColumn tvcDealer = new TableViewerColumn(tv, SWT.LEFT);
-		tvcDealer.getColumn().setText(Messages.BestellView_Dealer);
+		tvcDealer.getColumn().setText(Messages.Artikeldetail_lieferant);
 		tvcDealer.getColumn().setWidth(250);
 		tvcDealer.setEditingSupport(new EditingSupport(tv) {
 
@@ -351,7 +351,7 @@ public class BestellView extends ViewPart {
 				return entry.getArticle().getLabel();
 			case 2:
 				IContact k = entry.getProvider();
-				return (k != null) ? k.getLabel() : Messages.BestellView_Unknown;
+				return (k != null) ? k.getLabel() : Messages.Core_Unknown;
 			case 3:
 				IStock s = entry.getStock();
 				return (s != null) ? s.getCode() : StringConstants.EMPTY;
@@ -422,7 +422,7 @@ public class BestellView extends ViewPart {
 					setOrder(order);
 				} else {
 					if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
-						if (MessageDialog.openQuestion(getSite().getShell(), Messages.BestellView_Title,
+						if (MessageDialog.openQuestion(getSite().getShell(), Messages.BestellBlatt_TemplateName,
 								Messages.BestellView_WizardAskNewOrder)) {
 							setOrder(createOrder(Messages.BestellView_Automatic));
 						}
@@ -447,7 +447,7 @@ public class BestellView extends ViewPart {
 					setOrder(createOrder(Messages.BestellView_Automatic));
 				} else {
 					if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
-						if (MessageDialog.openQuestion(getSite().getShell(), Messages.BestellView_Title,
+						if (MessageDialog.openQuestion(getSite().getShell(), Messages.BestellBlatt_TemplateName,
 								Messages.BestellView_WizardAskNewOrder)) {
 							setOrder(createOrder(Messages.BestellView_Automatic));
 						}

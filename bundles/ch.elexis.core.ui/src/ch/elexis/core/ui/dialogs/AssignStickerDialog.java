@@ -95,7 +95,7 @@ public class AssignStickerDialog extends TitleAreaDialog {
 	private void createColumns() {
 		// first column - label
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
-		col.getColumn().setText(Messages.AssignStickerDialog_StickerName);
+		col.getColumn().setText(Messages.AccountListView_name);
 		col.getColumn().setWidth(300);
 		col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 0));
 		col.setLabelProvider(new ColumnLabelProvider() {

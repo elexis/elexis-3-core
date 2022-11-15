@@ -63,7 +63,7 @@ public class BlockMakro implements IKonsMakro {
 				}
 			}
 			if (!notOkResults.toString().isEmpty()) {
-				MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.ResultDialog_Warning,
+				MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.Core_Warning,
 						notOkResults.toString());
 			}
 			java.util.List<ICodeElement> diff = elementBlock.getDiffToReferences(elements);

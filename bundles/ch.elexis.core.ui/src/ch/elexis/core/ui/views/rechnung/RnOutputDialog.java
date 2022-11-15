@@ -189,7 +189,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 
 		} else {
 			getShell().setText(Messages.RnOutputDialog_outputBillCaption); // $NON-NLS-1$
-			setTitle(Messages.RnOutputDialog_outputBillTitle); // $NON-NLS-1$
+			setTitle(Messages.RnOutputDialog_outputBillCaption); // $NON-NLS-1$
 			setMessage(Messages.RnOutputDialog_outputBillMessage); // $NON-NLS-1$
 		}
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));

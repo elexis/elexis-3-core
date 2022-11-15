@@ -284,7 +284,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 				tabFolder.setSelection(0);
 			}
 		};
-		printAction = new Action(Messages.LaborView_print) {
+		printAction = new Action(Messages.AUF2_print) {
 			@Override
 			public void run() {
 				try {
@@ -297,7 +297,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 				}
 			}
 		};
-		importAction = new Action(Messages.LaborView_import) {
+		importAction = new Action(Messages.Core_Import_Action) {
 			{
 				setImageDescriptor(Images.IMG_IMPORT.getImageDescriptor());
 				setToolTipText(Messages.LaborView_importToolTip);
@@ -307,7 +307,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 			public void run() {
 				Importer imp = new Importer(getViewSite().getShell(), ExtensionPointConstantsUi.LABORDATENIMPORT); // $NON-NLS-1$
 				imp.create();
-				imp.setMessage(Messages.LaborView_selectDataSource);
+				imp.setMessage(Messages.GlobalActions_ImportDlgMessage);
 				imp.getShell().setText(Messages.LaborView_labImporterCaption);
 				imp.setTitle(Messages.LaborView_labImporterText);
 				imp.open();
@@ -330,21 +330,21 @@ public class LaborView extends ViewPart implements IRefreshable {
 							fout.close();
 						} catch (Exception ex) {
 							ExHandler.handle(ex);
-							SWTHelper.alert(Messages.LaborView_ErrorCaption, Messages.LaborView_couldntwrite + fname);
+							SWTHelper.alert(Messages.Core_Error, Messages.LaborView_couldntwrite + fname);
 
 						}
 					}
 				}
 			}
 		};
-		newColumnAction = new Action(Messages.LaborView_newDate) {
+		newColumnAction = new Action(Messages.LaborVerordnungDialog_shellTitle) {
 			@Override
 			public void run() {
 				tabFolder.setSelection(0);
 				resultsComposite.toggleNewColumn();
 			}
 		};
-		newAction = new Action(Messages.LaborView_newDate) {
+		newAction = new Action(Messages.LaborVerordnungDialog_shellTitle) {
 			@Override
 			public void run() {
 				Patient patient = ElexisEventDispatcher.getSelectedPatient();
@@ -358,7 +358,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 				}
 			}
 		};
-		refreshAction = new Action(Messages.LaborView_Refresh) {
+		refreshAction = new Action(Messages.GenericImporterBlatt_update) {
 			@Override
 			public void run() {
 				resultsComposite.reload();

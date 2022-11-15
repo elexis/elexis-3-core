@@ -42,13 +42,13 @@ public class AddMultiplikatorDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(2, false));
 		Label l1 = new Label(ret, SWT.NONE);
-		l1.setText(Messages.AccountView_date);
+		l1.setText(Messages.Core_Date);
 		dpc = new CDateTime(ret, CDT.HORIZONTAL | CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
 		String value = java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("01.01.y")); //$NON-NLS-1$
 		dpc.setSelection(new TimeTool(value).getTime());
 		dpc.setToolTipText(Messages.MultiplikatorEditor_PleaseEnterBeginDate);
 		Label label = new Label(ret, SWT.NONE);
-		label.setText(Messages.Leistungscodes_multiplierLabel);
+		label.setText(Messages.Leistungscodes_multiplier);
 		multi = new Text(ret, SWT.BORDER);
 		multi.setTextLimit(6);
 		multi.setToolTipText(Messages.MultiplikatorEditor_NewMultipilcator);

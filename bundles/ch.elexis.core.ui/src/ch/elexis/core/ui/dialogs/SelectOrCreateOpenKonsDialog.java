@@ -27,7 +27,7 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
-import ch.elexis.core.ui.actions.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
@@ -77,7 +77,7 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		lbl.setText("Konsultation erstellen");
 
 		ToolBarManager tbManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
-		tbManager.add(new RestrictedAction(AccessControlDefaults.KONS_CREATE, Messages.GlobalActions_NewKons) {
+		tbManager.add(new RestrictedAction(AccessControlDefaults.KONS_CREATE, Messages.Core_New_Consultation) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				setToolTipText(Messages.GlobalActions_NewKonsToolTip); // $NON-NLS-1$

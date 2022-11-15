@@ -117,13 +117,13 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 	public void init(IWorkbench workbench) {
 		String grp = ConfigServiceHolder.getGlobal(Preferences.ACC_GROUPS, Messages.Mandanten_0);
 
-		def = new InputData[] { new InputData(Messages.Mandanten_kuerzel, "Label", Typ.STRING, null), //$NON-NLS-1$
-				new InputData(Messages.Mandanten_password, PersistentObject.FLD_EXTINFO, Typ.STRING, "UsrPwd"), //$NON-NLS-1$
+		def = new InputData[] { new InputData(Messages.Core_Short_Label, "Label", Typ.STRING, null), //$NON-NLS-1$
+				new InputData(Messages.AnwenderPref_passwort, PersistentObject.FLD_EXTINFO, Typ.STRING, "UsrPwd"), //$NON-NLS-1$
 				// -> KSK, NIF und EAN gehören zu Tarmed.
 				// new InputData("KSK-Nr","ExtInfo",Typ.STRING,"KSK"),
 				// new InputData("NIF","ExtInfo",Typ.STRING,"NIF"),
 				// new InputData("EANr","ExtInfo",Typ.STRING,"EAN"),
-				new InputData(Messages.Mandanten_groups, PersistentObject.FLD_EXTINFO, "Groups", grp.split(",")), //$NON-NLS-1$ //$NON-NLS-2$
+				new InputData(Messages.Gruppen_Gruppen, PersistentObject.FLD_EXTINFO, "Groups", grp.split(",")), //$NON-NLS-1$ //$NON-NLS-2$
 				new InputData(Messages.Mandanten_biller, PersistentObject.FLD_EXTINFO, new IContentProvider() {
 
 					public void displayContent(Object po, InputData ltf) {

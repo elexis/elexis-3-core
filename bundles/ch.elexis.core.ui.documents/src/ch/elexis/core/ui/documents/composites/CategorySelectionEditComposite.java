@@ -31,7 +31,7 @@ import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.types.DocumentStatus;
-import ch.elexis.core.ui.documents.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -121,7 +121,7 @@ public class CategorySelectionEditComposite extends Composite {
 		Button bDeleteCat = new Button(this, SWT.PUSH);
 		bDeleteCat.setVisible(categoryCrudAllowed);
 		bDeleteCat.setImage(Images.IMG_DELETE.getImage());
-		bDeleteCat.setToolTipText(Messages.DocumentMetaDataDialog_deleteCategory);
+		bDeleteCat.setToolTipText(Messages.AccessControlDefaults_documentsDeleteCat);
 		bDeleteCat.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent ev) {

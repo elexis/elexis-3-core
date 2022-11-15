@@ -92,8 +92,8 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 	private IViewSite viewSite;
 	static final String REZEPT = Messages.FixMediDisplay_Prescription; // $NON-NLS-1$
 	static final String LISTE = Messages.FixMediDisplay_UsageList; // $NON-NLS-1$
-	static final String HINZU = Messages.FixMediDisplay_AddItem; // $NON-NLS-1$
-	static final String KOPIEREN = Messages.FixMediDisplay_Copy; // $NON-NLS-1$
+	static final String HINZU = Messages.Bezugskontakt_Add; // $NON-NLS-1$
+	static final String KOPIEREN = Messages.DauerMediView_copy; // $NON-NLS-1$
 
 	@Inject
 	void activePatient(@Optional IPatient patient) {
@@ -295,7 +295,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 	private void makeActions() {
 
 		changeMedicationAction = new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
-				Messages.FixMediDisplay_Change) { // $NON-NLS-1$
+				Messages.AUF2_edit) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 				setToolTipText(Messages.FixMediDisplay_Modify); // $NON-NLS-1$
@@ -401,7 +401,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 		};
 
 		removeMedicationAction = new RestrictedAction(AccessControlDefaults.DELETE_MEDICATION,
-				Messages.FixMediDisplay_Delete) { // $NON-NLS-1$
+				Messages.Core_Delete) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 				setToolTipText(Messages.FixMediDisplay_DeleteUnrecoverable); // $NON-NLS-1$

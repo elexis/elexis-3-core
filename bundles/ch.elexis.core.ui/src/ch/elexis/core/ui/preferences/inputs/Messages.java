@@ -14,10 +14,10 @@ public class Messages {
 	public static String KontaktFieldEditor_PleaseSelect = ch.elexis.core.l10n.Messages.KontaktFieldEditor_PleaseSelect;
 	public static String KontaktFieldEditor_PleaseSelectContact = ch.elexis.core.l10n.Messages.KontaktFieldEditor_PleaseSelectContact;
 	public static String KontaktFieldEditor_SelectContact = ch.elexis.core.l10n.Messages.KontaktFieldEditor_SelectContact;
-	public static String MultiplikatorEditor_BegiNDate = ch.elexis.core.l10n.Messages.MultiplikatorEditor_BegiNDate;
+	public static String Core_Date_Startdate = ch.elexis.core.l10n.Messages.Core_Date_Startdate;
 	public static String MultiplikatorEditor_NewMultipilcator = ch.elexis.core.l10n.Messages.MultiplikatorEditor_NewMultipilcator;
 	public static String MultiplikatorEditor_PleaseEnterBeginDate = ch.elexis.core.l10n.Messages.MultiplikatorEditor_PleaseEnterBeginDate;
-	public static String MultiplikatorEditor_add = ch.elexis.core.l10n.Messages.MultiplikatorEditor_add;
+	public static String LabGroupPrefs_add = ch.elexis.core.l10n.Messages.LabGroupPrefs_add;
 	public static String MultiplikatorEditor_from = ch.elexis.core.l10n.Messages.MultiplikatorEditor_from;
 	public static String PrefAccessDenied_PageLocked = ch.elexis.core.l10n.Messages.PrefAccessDenied_PageLocked;
 

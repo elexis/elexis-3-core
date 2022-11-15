@@ -147,12 +147,12 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		TableViewerColumn tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcAmount = tvc.getColumn();
 		tcLayout.setColumnData(tcAmount, new ColumnPixelData(70, false, false));
-		tcAmount.setText(Messages.DailyOrderDialog_Amount);
+		tcAmount.setText(Messages.Core_Number);
 
 		tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcArticle = tvc.getColumn();
 		tcLayout.setColumnData(tcArticle, new ColumnPixelData(300, true, true));
-		tcArticle.setText(Messages.DailyOrderDialog_Article);
+		tcArticle.setText(Messages.BestellView_Article);
 
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new OrderLabelProvider());

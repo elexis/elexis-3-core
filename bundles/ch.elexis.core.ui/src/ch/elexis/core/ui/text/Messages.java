@@ -21,7 +21,7 @@ public class Messages {
 	public static String EnhancedTextField_newMacro = ch.elexis.core.l10n.Messages.EnhancedTextField_newMacro;
 	public static String EnhancedTextField_pasteAction = ch.elexis.core.l10n.Messages.EnhancedTextField_pasteAction;
 	public static String ExternalLink_CouldNotStartFile = ch.elexis.core.l10n.Messages.ExternalLink_CouldNotStartFile;
-	public static String TextContainer_All = ch.elexis.core.l10n.Messages.TextContainer_All;
+	public static String AccessControl_GroupAll = ch.elexis.core.l10n.Messages.AccessControl_GroupAll;
 	public static String TextContainer_BadFieldDefinition = ch.elexis.core.l10n.Messages.TextContainer_BadFieldDefinition;
 	public static String TextContainer_BadVariableFormat = ch.elexis.core.l10n.Messages.TextContainer_BadVariableFormat;
 	public static String TextContainer_DontAskForAddressee = ch.elexis.core.l10n.Messages.TextContainer_DontAskForAddressee;
@@ -30,7 +30,7 @@ public class Messages {
 	public static String TextContainer_FieldTypeForContactsOnly = ch.elexis.core.l10n.Messages.TextContainer_FieldTypeForContactsOnly;
 	public static String TextContainer_FieldTypeForPersonsOnly = ch.elexis.core.l10n.Messages.TextContainer_FieldTypeForPersonsOnly;
 	public static String TextContainer_Letter = ch.elexis.core.l10n.Messages.TextContainer_Letter;
-	public static String TextContainer_Mandator = ch.elexis.core.l10n.Messages.TextContainer_Mandator;
+	public static String AccessControlDefaults_mandator = ch.elexis.core.l10n.Messages.AccessControlDefaults_mandator;
 	public static String TextContainer_NoPLugin5 = ch.elexis.core.l10n.Messages.TextContainer_NoPLugin5;
 	public static String TextContainer_NoPlugin1 = ch.elexis.core.l10n.Messages.TextContainer_NoPlugin1;
 	public static String TextContainer_NoPlugin2 = ch.elexis.core.l10n.Messages.TextContainer_NoPlugin2;

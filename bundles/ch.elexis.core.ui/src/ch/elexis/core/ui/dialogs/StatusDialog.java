@@ -29,11 +29,11 @@ public class StatusDialog {
 	}
 
 	private static void showError(IStatus status) {
-		MessageDialog.openError(getShell(), Messages.ResultDialog_Error, getStatusMessage(status));
+		MessageDialog.openError(getShell(), Messages.Core_Error, getStatusMessage(status));
 	}
 
 	private static void showWarninig(IStatus status) {
-		MessageDialog.openWarning(getShell(), Messages.ResultDialog_Warning, getStatusMessage(status));
+		MessageDialog.openWarning(getShell(), Messages.Core_Warning, getStatusMessage(status));
 	}
 
 	private static void showInfo(IStatus status) {

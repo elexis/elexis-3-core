@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Display;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.importer.div.importers.IContactResolver;
-import ch.elexis.core.importer.div.importers.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;

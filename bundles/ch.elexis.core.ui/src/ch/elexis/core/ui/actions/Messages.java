@@ -31,8 +31,8 @@ public class Messages {
 	public static String GlobalActions_Cut = ch.elexis.core.l10n.Messages.GlobalActions_Cut;
 	public static String GlobalActions_DeleteCase = ch.elexis.core.l10n.Messages.GlobalActions_DeleteCase;
 	public static String GlobalActions_DeleteKons = ch.elexis.core.l10n.Messages.GlobalActions_DeleteKons;
-	public static String GlobalActions_EditCase = ch.elexis.core.l10n.Messages.GlobalActions_EditCase;
-	public static String GlobalActions_Error = ch.elexis.core.l10n.Messages.GlobalActions_Error;
+	public static String FallEditDialog_editCase = ch.elexis.core.l10n.Messages.FallEditDialog_editCase;
+	public static String Core_Error = ch.elexis.core.l10n.Messages.Core_Error;
 	public static String GlobalActions_Home = ch.elexis.core.l10n.Messages.GlobalActions_Home;
 	public static String GlobalActions_HomeToolTip = ch.elexis.core.l10n.Messages.GlobalActions_HomeToolTip;
 	public static String GlobalActions_Import = ch.elexis.core.l10n.Messages.GlobalActions_Import;
@@ -50,9 +50,9 @@ public class Messages {
 	public static String GlobalActions_Mandator = ch.elexis.core.l10n.Messages.GlobalActions_Mandator;
 	public static String GlobalActions_MenuAbout = ch.elexis.core.l10n.Messages.GlobalActions_MenuAbout;
 	public static String GlobalActions_MenuExit = ch.elexis.core.l10n.Messages.GlobalActions_MenuExit;
-	public static String GlobalActions_NewCase = ch.elexis.core.l10n.Messages.GlobalActions_NewCase;
+	public static String FallListeView_NewCase = ch.elexis.core.l10n.Messages.FallListeView_NewCase;
 	public static String GlobalActions_NewCaseToolTip = ch.elexis.core.l10n.Messages.GlobalActions_NewCaseToolTip;
-	public static String GlobalActions_NewKons = ch.elexis.core.l10n.Messages.GlobalActions_NewKons;
+	public static String Core_New_Consultation = ch.elexis.core.l10n.Messages.Core_New_Consultation;
 	public static String GlobalActions_NewKonsToolTip = ch.elexis.core.l10n.Messages.GlobalActions_NewKonsToolTip;
 	public static String GlobalActions_NewWindow = ch.elexis.core.l10n.Messages.GlobalActions_NewWindow;
 	public static String GlobalActions_NoKonsSelected = ch.elexis.core.l10n.Messages.GlobalActions_NoKonsSelected;
@@ -66,13 +66,13 @@ public class Messages {
 	public static String GlobalActions_Preferences = ch.elexis.core.l10n.Messages.GlobalActions_Preferences;
 	public static String GlobalActions_PrintAddressLabel = ch.elexis.core.l10n.Messages.GlobalActions_PrintAddressLabel;
 	public static String GlobalActions_PrintAddressLabelToolTip = ch.elexis.core.l10n.Messages.GlobalActions_PrintAddressLabelToolTip;
-	public static String GlobalActions_PrintContactLabel = ch.elexis.core.l10n.Messages.GlobalActions_PrintContactLabel;
+
 	public static String GlobalActions_PrintContactLabelToolTip = ch.elexis.core.l10n.Messages.GlobalActions_PrintContactLabelToolTip;
 	public static String GlobalActions_PrintEMR = ch.elexis.core.l10n.Messages.GlobalActions_PrintEMR;
 	public static String GlobalActions_ShowEMR = ch.elexis.core.l10n.Messages.GlobalActions_ShowEMR;
 	public static String GlobalActions_PrintLabel = ch.elexis.core.l10n.Messages.GlobalActions_PrintLabel;
 	public static String GlobalActions_PrintLabelJobName = ch.elexis.core.l10n.Messages.GlobalActions_PrintLabelJobName;
-	public static String GlobalActions_PrintLabelToolTip = ch.elexis.core.l10n.Messages.GlobalActions_PrintLabelToolTip;
+
 	public static String GlobalActions_PrintVersionedLabel = ch.elexis.core.l10n.Messages.GlobalActions_PrintVersionedLabel;
 	public static String GlobalActions_PrintVersionedLabelToolTip = ch.elexis.core.l10n.Messages.GlobalActions_PrintVersionedLabelToolTip;
 	public static String GlobalActions_PrintXRay = ch.elexis.core.l10n.Messages.GlobalActions_PrintXRay;
@@ -89,7 +89,7 @@ public class Messages {
 	public static String HistoryLoader_LoadKonsMessage = ch.elexis.core.l10n.Messages.HistoryLoader_LoadKonsMessage;
 	public static String HistoryLoader_Sorting = ch.elexis.core.l10n.Messages.HistoryLoader_Sorting;
 	public static String ListLoader_CouldntLoadData = ch.elexis.core.l10n.Messages.ListLoader_CouldntLoadData;
-	public static String PersistentObjectLoader_LoadingData = ch.elexis.core.l10n.Messages.PersistentObjectLoader_LoadingData;
+	public static String AccountListView_loadingData = ch.elexis.core.l10n.Messages.AccountListView_loadingData;
 	public static String ToggleVerrechenbarFavoriteAction_Favorize = ch.elexis.core.l10n.Messages.ToggleVerrechenbarFavoriteAction_Favorize;
 	public static String ToggleVerrechenbarFavoriteAction_DeFavorize = ch.elexis.core.l10n.Messages.ToggleVerrechenbarFavoriteAction_DeFavorize;
 

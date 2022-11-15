@@ -293,7 +293,7 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 	}
 
 	private void createColumns() {
-		String[] titles = { StringUtils.EMPTY, Messages.Display_Column_Code, Messages.Display_Column_Designation,
+		String[] titles = { StringUtils.EMPTY, Messages.BlockDetailDisplay_code, Messages.BlockDetailDisplay_title,
 				StringTool.leer };
 		int[] weights = { 0, 15, 70, 15 };
 

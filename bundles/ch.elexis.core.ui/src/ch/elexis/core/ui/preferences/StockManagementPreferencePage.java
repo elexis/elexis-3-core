@@ -89,7 +89,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 	 * Create the preference page.
 	 */
 	public StockManagementPreferencePage() {
-		setTitle(Messages.LagerverwaltungPrefs_storageManagement);
+		setTitle(Messages.EigenartikelComposite_stockGroup_text);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		tableStocks.setMenu(menu);
 
 		MenuItem mntmAddStock = new MenuItem(menu, SWT.NONE);
-		mntmAddStock.setText(Messages.StockManagementPreferencePage_mntmNewItem_text);
+		mntmAddStock.setText(Messages.Bezugskontakt_Add);
 		mntmAddStock.setImage(Images.IMG_NEW.getImage());
 		mntmAddStock.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -154,7 +154,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		});
 
 		MenuItem mntmRemoveStock = new MenuItem(menu, SWT.NONE);
-		mntmRemoveStock.setText(Messages.StockManagementPreferencePage_mntmNewItem_text_1);
+		mntmRemoveStock.setText(Messages.Bezugskontakt_Delete);
 		mntmRemoveStock.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -173,7 +173,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		TableViewerColumn tvcPriority = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmPriority = tvcPriority.getColumn();
 		tcl_composite.setColumnData(tblclmPriority, new ColumnPixelData(30, true, true));
-		tblclmPriority.setText(Messages.StockManagementPreferencePage_tblclmnNewColumn_text);
+		tblclmPriority.setText(Messages.StockManagementPreferencePage_lblPrio_text);
 		tvcPriority.setLabelProvider(new CellLabelProvider() {
 
 			@Override
@@ -188,7 +188,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		TableViewerColumn tvcCode = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnCode = tvcCode.getColumn();
 		tcl_composite.setColumnData(tblclmnCode, new ColumnPixelData(40));
-		tblclmnCode.setText(Messages.StockManagementPreferencePage_tblclmnNewColumn_text_1);
+		tblclmnCode.setText(Messages.BlockDetailDisplay_code);
 		tvcCode.setLabelProvider(new CellLabelProvider() {
 
 			@Override
@@ -203,7 +203,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		TableViewerColumn tvcDescription = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnDescription = tvcDescription.getColumn();
 		tcl_composite.setColumnData(tblclmnDescription, new ColumnWeightData(50));
-		tblclmnDescription.setText(Messages.StockManagementPreferencePage_tblclmnNewColumn_text_3);
+		tblclmnDescription.setText(Messages.Core_Description);
 		tvcDescription.setLabelProvider(new CellLabelProvider() {
 
 			@Override
@@ -248,7 +248,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		Label lblCode = new Label(compositeDetail, SWT.NONE);
 		lblCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblCode.setToolTipText(Messages.StockManagementPreferencePage_lblCode_toolTipText);
-		lblCode.setText(Messages.StockManagementPreferencePage_lblCode_text);
+		lblCode.setText(Messages.BlockDetailDisplay_code);
 
 		txtCode = new Text(compositeDetail, SWT.BORDER);
 		GridData gd_txtCode = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -257,7 +257,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		txtCode.setTextLimit(3);
 
 		Label lblDescription = new Label(compositeDetail, SWT.NONE);
-		lblDescription.setText(Messages.StockManagementPreferencePage_lblDescription_text);
+		lblDescription.setText(Messages.Core_Description);
 
 		txtDescription = new Text(compositeDetail, SWT.BORDER);
 		txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -265,7 +265,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		Label lblLocation = new Label(compositeDetail, SWT.NONE);
 		lblLocation.setToolTipText(Messages.StockManagementPreferencePage_lblLocation_toolTipText);
 		lblLocation.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblLocation.setText(Messages.StockManagementPreferencePage_lblLocation_text);
+		lblLocation.setText(Messages.Core_City);
 
 		txtLocation = new Text(compositeDetail, SWT.BORDER);
 		txtLocation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

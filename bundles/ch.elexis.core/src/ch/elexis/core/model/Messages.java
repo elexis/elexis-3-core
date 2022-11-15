@@ -18,7 +18,7 @@ public final class Messages {
 	public static String Appointment_Range_Locked = ch.elexis.core.l10n.Messages.Appointment_Range_Locked;
 	public static String Fall_Accident = ch.elexis.core.l10n.Messages.Fall_Accident;
 	public static String Fall_Birthdefect = ch.elexis.core.l10n.Messages.Fall_Birthdefect;
-	public static String Fall_Disease = ch.elexis.core.l10n.Messages.Fall_Disease;
+	public static String FallListeView_Illness = ch.elexis.core.l10n.Messages.FallListeView_Illness;
 	public static String Fall_Maternity = ch.elexis.core.l10n.Messages.Fall_Maternity;
 	public static String Fall_Other = ch.elexis.core.l10n.Messages.Fall_Other;
 	public static String Fall_Prevention = ch.elexis.core.l10n.Messages.Fall_Prevention;
@@ -30,21 +30,21 @@ public final class Messages {
 	public static String MaritalStatus_MARRIED = ch.elexis.core.l10n.Messages.MaritalStatus_MARRIED;
 	public static String MaritalStatus_NEVER_MARRIED = ch.elexis.core.l10n.Messages.MaritalStatus_NEVER_MARRIED;
 	public static String MaritalStatus_POLYGAMOUS = ch.elexis.core.l10n.Messages.MaritalStatus_POLYGAMOUS;
-	public static String MaritalStatus_UNKNOWN = ch.elexis.core.l10n.Messages.MaritalStatus_UNKNOWN;
+	public static String Core_Unknown = ch.elexis.core.l10n.Messages.Core_Unknown;
 	public static String MaritalStatus_UNMARRIED = ch.elexis.core.l10n.Messages.MaritalStatus_UNMARRIED;
 	public static String MaritalStatus_WIDOWED = ch.elexis.core.l10n.Messages.MaritalStatus_WIDOWED;
 
-	public static String InvoiceState_UNKNOWN = ch.elexis.core.l10n.Messages.InvoiceState_UNKNOWN;
+	public static String UNKNOWN = ch.elexis.core.l10n.Messages.UNKNOWN;
 	public static String InvoiceState_BILLED = ch.elexis.core.l10n.Messages.InvoiceState_BILLED;
 	public static String InvoiceState_NOT_BILLED = ch.elexis.core.l10n.Messages.InvoiceState_NOT_BILLED;
 	public static String InvoiceState_ONGOING = ch.elexis.core.l10n.Messages.InvoiceState_ONGOING;
-	public static String InvoiceState_OPEN = ch.elexis.core.l10n.Messages.InvoiceState_OPEN;
+	public static String BillSummary_open = ch.elexis.core.l10n.Messages.BillSummary_open;
 	public static String InvoiceState_OPEN_AND_PRINTED = ch.elexis.core.l10n.Messages.InvoiceState_OPEN_AND_PRINTED;
-	public static String InvoiceState_DEMAND_NOTE_1 = ch.elexis.core.l10n.Messages.InvoiceState_DEMAND_NOTE_1;
+	public static String Core_Invoice_Reminder = ch.elexis.core.l10n.Messages.Core_Invoice_Reminder;
 	public static String InvoiceState_DEMAND_NOTE_1_PRINTED = ch.elexis.core.l10n.Messages.InvoiceState_DEMAND_NOTE_1_PRINTED;
-	public static String InvoiceState_DEMAND_NOTE_2 = ch.elexis.core.l10n.Messages.InvoiceState_DEMAND_NOTE_2;
+	public static String Core_Invoice_Reminder_2 = ch.elexis.core.l10n.Messages.Core_Invoice_Reminder_2;
 	public static String InvoiceState_DEMAND_NOTE_2_PRINTED = ch.elexis.core.l10n.Messages.InvoiceState_DEMAND_NOTE_2_PRINTED;
-	public static String InvoiceState_DEMAND_NOTE_3 = ch.elexis.core.l10n.Messages.InvoiceState_DEMAND_NOTE_3;
+	public static String Core_Invoice_Reminder_3 = ch.elexis.core.l10n.Messages.Core_Invoice_Reminder_3;
 	public static String InvoiceState_DEMAND_NOTE_3_PRINTED = ch.elexis.core.l10n.Messages.InvoiceState_DEMAND_NOTE_3_PRINTED;
 	public static String InvoiceState_IN_EXECUTION = ch.elexis.core.l10n.Messages.InvoiceState_IN_EXECUTION;
 	public static String InvoiceState_PARTIAL_LOSS = ch.elexis.core.l10n.Messages.InvoiceState_PARTIAL_LOSS;

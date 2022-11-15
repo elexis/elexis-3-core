@@ -50,7 +50,7 @@ import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
-import ch.elexis.core.ui.preferences.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.preferences.inputs.ComboFieldEditor;
 import ch.elexis.core.ui.preferences.inputs.MultilineFieldEditor;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -93,11 +93,11 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 		new Label(getFieldEditorParent(), SWT.NONE).setText(Messages.UserSettings2_FieldsInList);
 		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWPATNR, Messages.UserSettings2_PatientNr,
 				getFieldEditorParent()));
-		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWNAME, Messages.UserSettings2_PatientName,
+		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWNAME, Messages.AccountListView_name,
 				getFieldEditorParent()));
-		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWFIRSTNAME, Messages.UserSettings2_PatientFirstname,
+		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWFIRSTNAME, Messages.Core_Firstname,
 				getFieldEditorParent()));
-		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWDOB, Messages.UserSettings2_Birthdate,
+		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWDOB, Messages.AccountListView_bithdate,
 				getFieldEditorParent()));
 		addField(new ComboFieldEditor(Preferences.USR_PATLIST_FOCUSFIELD, "Fokusfeld", patlistFocusFields,
 				getFieldEditorParent()));

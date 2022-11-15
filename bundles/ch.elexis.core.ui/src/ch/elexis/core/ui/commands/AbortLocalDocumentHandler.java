@@ -36,7 +36,7 @@ public class AbortLocalDocumentHandler extends AbstractHandler implements IHandl
 
 						service.remove(object);
 					} else {
-						MessageDialog.openInformation(parentShell, Messages.AbortLocalDocumentHandler_infotitle,
+						MessageDialog.openInformation(parentShell, Messages.Core_Info,
 								Messages.AbortLocalDocumentHandler_infomessage);
 					}
 				});

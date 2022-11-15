@@ -94,7 +94,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 
 		Label lblDBName = new Label(group, SWT.NONE);
 		lblDBName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDBName.setText(Messages.DBImportFirstPage_databaseName);
+		lblDBName.setText(Messages.DBConnectFirstPage_databaseName);
 
 		txtDBName = new Text(group, SWT.BORDER);
 		txtDBName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

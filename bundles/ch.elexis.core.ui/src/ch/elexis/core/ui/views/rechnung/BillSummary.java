@@ -94,10 +94,10 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 	private static boolean bReverse = true;
 
 	private static final String[] COLUMN_TEXT = { Messages.BillSummary_number, // NUMBER //$NON-NLS-1$
-			Messages.BillSummary_date, // DATE //$NON-NLS-1$
-			Messages.BillSummary_amount, // AMOUNT //$NON-NLS-1$
+			Messages.Core_Date, // DATE //$NON-NLS-1$
+			Messages.Core_Amount, // AMOUNT //$NON-NLS-1$
 			Messages.BillSummary_open, // AMOUNT_DUE //$NON-NLS-1$
-			Messages.BillSummary_state, // STATUS //$NON-NLS-1$
+			Messages.Core_Status, // STATUS //$NON-NLS-1$
 			Messages.BillSummary_receiver, // GARANT //$NON-NLS-1$
 	};
 
@@ -204,7 +204,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 		billsViewer.setContentProvider(new IStructuredContentProvider() {
 			public Object[] getElements(Object inputElement) {
 				if (actPatient == null) {
-					return new Object[] { Messages.BillSummary_NoPatientSelected };
+					return new Object[] { Messages.AccountView_NoPatientSelected };
 				}
 
 				return getRechnungen(actPatient).toArray();
@@ -302,7 +302,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 		if (actPatient != null) {
 			title = actPatient.getLabel();
 		} else {
-			title = Messages.BillSummary_NoPatientSelected; // $NON-NLS-1$
+			title = Messages.AccountView_NoPatientSelected; // $NON-NLS-1$
 		}
 		form.setText(title);
 

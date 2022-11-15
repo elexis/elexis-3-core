@@ -50,7 +50,7 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
-import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Organisation;
 import ch.elexis.data.PersistentObject;
@@ -65,12 +65,12 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	IAction dupKontakt, delKontakt, createKontakt, printList;
 	PersistentObjectLoader loader;
 
-	private final String[] fields = { Kontakt.FLD_SHORT_LABEL + Query.EQUALS + Messages.KontakteView_shortLabel, // $NON-NLS-1$
-			Kontakt.FLD_NAME1 + Query.EQUALS + Messages.KontakteView_text1, // $NON-NLS-1$
-			Kontakt.FLD_NAME2 + Query.EQUALS + Messages.KontakteView_text2, // $NON-NLS-1$
-			Kontakt.FLD_STREET + Query.EQUALS + Messages.KontakteView_street, // $NON-NLS-1$
-			Kontakt.FLD_ZIP + Query.EQUALS + Messages.KontakteView_zip, // $NON-NLS-1$
-			Kontakt.FLD_PLACE + Query.EQUALS + Messages.KontakteView_place }; // $NON-NLS-1$
+	private final String[] fields = { Kontakt.FLD_SHORT_LABEL + Query.EQUALS + Messages.KontaktSelector_abbreviation, // $NON-NLS-1$
+			Kontakt.FLD_NAME1 + Query.EQUALS + Messages.KontaktBlatt_Bez1, // $NON-NLS-1$
+			Kontakt.FLD_NAME2 + Query.EQUALS + Messages.KontaktBlatt_Bez2, // $NON-NLS-1$
+			Kontakt.FLD_STREET + Query.EQUALS + Messages.Core_Street, // $NON-NLS-1$
+			Kontakt.FLD_ZIP + Query.EQUALS + Messages.AnschriftEingabeDialog_zip, // $NON-NLS-1$
+			Kontakt.FLD_PLACE + Query.EQUALS + Messages.Core_City }; // $NON-NLS-1$
 	private ViewMenus menu;
 
 	public KontakteView() {
@@ -162,7 +162,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 
 	private void makeActions() {
 		delKontakt = new LockedRestrictedAction<Kontakt>(AccessControlDefaults.KONTAKT_DELETE,
-				Messages.KontakteView_delete) {
+				Messages.Core_Delete) {
 			@Override
 			public void doRun(Kontakt k) {
 				if (SWTHelper.askYesNo("Wirklich löschen?", k.getLabel())) {

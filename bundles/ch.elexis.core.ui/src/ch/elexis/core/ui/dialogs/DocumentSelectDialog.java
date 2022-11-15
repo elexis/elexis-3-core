@@ -61,7 +61,7 @@ import ch.rgw.tools.StringTool;
  *
  */
 public class DocumentSelectDialog extends TitleAreaDialog {
-	private static final String DELETE_DOCUMENT = Messages.DocumentSelectDialog_deleteDocument; // $NON-NLS-1$
+	private static final String DELETE_DOCUMENT = Messages.BriefAuswahlDeleteConfirmHeading; // $NON-NLS-1$
 	private static final String DELETE_TEMPLATE = Messages.DocumentSelectDialog_deleteTemplate; // $NON-NLS-1$
 	private static final String OPEN_DOCUMENT = Messages.DocumentSelectDialog_openDocument; // $NON-NLS-1$
 	/**

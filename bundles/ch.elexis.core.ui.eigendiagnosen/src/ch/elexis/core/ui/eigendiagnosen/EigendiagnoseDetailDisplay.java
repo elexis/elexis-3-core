@@ -36,8 +36,8 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 	Form form;
 	LabeledInputField.AutoForm tblPls;
 	InputData[] data = new InputData[] {
-			new InputData(Messages.EigendiagnoseSelector_Shortcut_Label, "code", InputData.Typ.STRING, null), //$NON-NLS-1$
-			new InputData(Messages.EigendiagnoseSelector_Text_Label, "text", InputData.Typ.STRING, null) //$NON-NLS-1$
+			new InputData(Messages.Core_Short_Label, "code", InputData.Typ.STRING, null), //$NON-NLS-1$
+			new InputData(Messages.EditLabItem_labelTypText, "text", InputData.Typ.STRING, null) //$NON-NLS-1$
 
 	};
 	Text tComment;

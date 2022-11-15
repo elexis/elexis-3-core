@@ -21,7 +21,7 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.importers.IContactResolver;
 import ch.elexis.core.importer.div.importers.ILabImportUtil;
 import ch.elexis.core.importer.div.importers.ImportHandler;
-import ch.elexis.core.importer.div.importers.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.importer.div.importers.TransientLabResult;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IEncounter;

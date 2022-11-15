@@ -27,9 +27,9 @@ public class DBImportSecondPage extends WizardPage {
 
 	public DBImportSecondPage(String pageName) {
 		super("Credentials"); //$NON-NLS-1$
-		setTitle(Messages.DBImportSecondPage_userDetails); // $NON-NLS-1$
-		setMessage(Messages.DBImportSecondPage_enterUsername + // $NON-NLS-1$
-				Messages.DBImportSecondPage_enterPassword); // $NON-NLS-1$
+		setTitle(Messages.DBConnectSecondPage_Credentials); // $NON-NLS-1$
+		setMessage(Messages.DBConnectSecondPage_username1 + // $NON-NLS-1$
+				Messages.DBConnectSecondPage_username2); // $NON-NLS-1$
 	}
 
 	public DBImportSecondPage(String pageName, String title, ImageDescriptor titleImage) {

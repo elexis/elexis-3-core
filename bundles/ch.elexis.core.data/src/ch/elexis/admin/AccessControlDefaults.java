@@ -61,13 +61,13 @@ public class AccessControlDefaults {
 			Messages.AccessControlDefaults_grantRights);
 	public static final ACE ADMIN_ACE = new ACE(ACE_ACCESS, "ACE", "ACE modifizieren");
 
-	public static final ACE DELETE = new ACE(ACE.ACE_ROOT, "Löschen", Messages.AccessControlDefaults_delete); //$NON-NLS-1$
+	public static final ACE DELETE = new ACE(ACE.ACE_ROOT, "Löschen", Messages.Core_Delete); //$NON-NLS-1$
 	public final static ACE DELETE_FORCED = new ACE(DELETE, "Absolut", Messages.AccessControlDefaults_absolute); //$NON-NLS-1$
-	public static final ACE DELETE_BILLS = new ACE(DELETE, "Rechnungen", Messages.AccessControlDefaults_bills); //$NON-NLS-1$
+	public static final ACE DELETE_BILLS = new ACE(DELETE, "Rechnungen", Messages.AccessControlDefaults_Bills); //$NON-NLS-1$
 	public static final ACE DELETE_MEDICATION = new ACE(DELETE, "Dauermedikation", //$NON-NLS-1$
 			Messages.AccessControlDefaults_fixedMedication);
 	public static final ACE DELETE_LABITEMS = new ACE(DELETE, "Laborwerte", Messages.AccessControlDefaults_labValues); //$NON-NLS-1$
-	public static final ACE DELETE_CASE = new ACE(DELETE, "Delete_Case", Messages.AccessControlDefaults_deleteCase); //$NON-NLS-1$
+	public static final ACE DELETE_CASE = new ACE(DELETE, "Delete_Case", Messages.Core_Case); //$NON-NLS-1$
 	public static final ACE KONS_DELETE = new ACE(DELETE, "Konsultation", Messages.AccessControlDefaults_consultation); //$NON-NLS-1$
 
 	public static final ACE DATA = new ACE(ACE.ACE_ROOT, "Daten", Messages.AccessControlDefaults_data); //$NON-NLS-1$
@@ -75,7 +75,7 @@ public class AccessControlDefaults {
 	public static final ACE KONTAKT_DISPLAY = new ACE(KONTAKT, "Anzeigen", Messages.AccessControlDefaults_display); //$NON-NLS-1$
 	public static final ACE KONTAKT_EXPORT = new ACE(KONTAKT, "Exportieren", Messages.AccessControlDefaults_export); //$NON-NLS-1$
 	public static final ACE KONTAKT_INSERT = new ACE(KONTAKT, "Erstellen", Messages.AccessControlDefaults_create); //$NON-NLS-1$
-	public static final ACE KONTAKT_MODIFY = new ACE(KONTAKT, "Ändern", Messages.AccessControlDefaults_edit2); //$NON-NLS-1$
+	public static final ACE KONTAKT_MODIFY = new ACE(KONTAKT, "Ändern", Messages.AccessControlDefaults_change); //$NON-NLS-1$
 	public static final ACE KONTAKT_DELETE = new ACE(DELETE, "Kontakt", Messages.AccessControlDefaults_contact); //$NON-NLS-1$
 	public static final ACE KONTAKT_ETIKETTE = new ACE(KONTAKT, "etikettieren", //$NON-NLS-1$
 			Messages.AccessControlDefaults_modifySticker);
@@ -83,7 +83,7 @@ public class AccessControlDefaults {
 	public static final ACE PATIENT = new ACE(DATA, "Patient", Messages.AccessControlDefaults_main_Patient); //$NON-NLS-1$
 	public static final ACE PATIENT_DISPLAY = new ACE(PATIENT, "Anzeigen", Messages.AccessControlDefaults_show); //$NON-NLS-1$
 	public static final ACE PATIENT_INSERT = new ACE(PATIENT, "Erstellen", Messages.AccessControlDefaults_create); //$NON-NLS-1$
-	public static final ACE PATIENT_MODIFY = new ACE(PATIENT, "Ändern", Messages.AccessControlDefaults_modify); //$NON-NLS-1$
+	public static final ACE PATIENT_MODIFY = new ACE(PATIENT, "Ändern", Messages.AccessControlDefaults_change); //$NON-NLS-1$
 	public static final ACE MEDICATION_MODIFY = new ACE(PATIENT, "Medikation ändern", //$NON-NLS-1$
 			Messages.AccessControlDefaults_changeMedication);
 	public static final ACE LAB_SEEN = new ACE(PATIENT, "Labor abhaken", Messages.AccessControlDefaults_checkLabValues); //$NON-NLS-1$
@@ -93,7 +93,7 @@ public class AccessControlDefaults {
 
 	public static final ACE USER = new ACE(DATA, "Anwender", Messages.AccessControlDefaults_user); //$NON-NLS-1$
 	public static final ACE USER_CREATE = new ACE(USER, "Erstellen", Messages.AccessControlDefaults_create); //$NON-NLS-1$
-	public static final ACE USER_DELETE = new ACE(USER, "Löschen", Messages.AccessControlDefaults_delete);
+	public static final ACE USER_DELETE = new ACE(USER, "Löschen", Messages.Core_Delete);
 
 	public static final ACE LEISTUNGEN = new ACE(ACE.ACE_ROOT, "Leistungen", Messages.AccessControlDefaults_services); //$NON-NLS-1$
 	public static final ACE LSTG_VERRECHNEN = new ACE(LEISTUNGEN, "Verrechnen", //$NON-NLS-1$
@@ -104,12 +104,12 @@ public class AccessControlDefaults {
 	public static final ACE KONS = new ACE(ACE.ACE_ROOT, "Konsultation", //$NON-NLS-1$
 			Messages.AccessControlDefaults_main_consultation);
 	public static final ACE KONS_CREATE = new ACE(KONS, "Erstellen", Messages.AccessControlDefaults_create); //$NON-NLS-1$
-	public static final ACE KONS_EDIT = new ACE(KONS, "Bearbeiten", Messages.AccessControlDefaults_modify2); //$NON-NLS-1$
+	public static final ACE KONS_EDIT = new ACE(KONS, "Bearbeiten", Messages.AccessControlDefaults_edit); //$NON-NLS-1$
 	public static final ACE KONS_REASSIGN = new ACE(KONS, "zuordnen", Messages.AccessControlDefaults_assign); //$NON-NLS-1$
 
 	public static final ACE SCRIPT = new ACE(ACE.ACE_ROOT, "Script", Messages.AccessControlDefaults_script); //$NON-NLS-1$
 	public static final ACE SCRIPT_EXECUTE = new ACE(SCRIPT, "ausführen", Messages.AccessControlDefaults_execute); //$NON-NLS-1$
-	public static final ACE SCRIPT_EDIT = new ACE(SCRIPT, "bearbeiten", Messages.AccessControlDefaults_modify3); //$NON-NLS-1$
+	public static final ACE SCRIPT_EDIT = new ACE(SCRIPT, "bearbeiten", Messages.AccessControlDefaults_edit); //$NON-NLS-1$
 
 	public static final ACE CASE = new ACE(ACE.ACE_ROOT, "Fall", Messages.AccessControlDefaults_main_case); //$NON-NLS-1$
 	public static final ACE CASE_MODIFY = new ACE(CASE, "Ändern", Messages.AccessControlDefaults_change); //$NON-NLS-1$
@@ -126,7 +126,7 @@ public class AccessControlDefaults {
 	public static final ACE ADMIN_KONS = new ACE(ADMIN, "Konsultation", //$NON-NLS-1$
 			Messages.AccessControlDefaults_main_consultation);
 	public static final ACE ADMIN_REMINDERS = new ACE(ADMIN, "Reminders", Messages.AccessControlDefaults_reminders); //$NON-NLS-1$
-	public static final ACE ADMIN_BILLS = new ACE(ADMIN, "Rechnungen", Messages.AccessControlDefaults_bills); //$NON-NLS-1$
+	public static final ACE ADMIN_BILLS = new ACE(ADMIN, "Rechnungen", Messages.AccessControlDefaults_Bills); //$NON-NLS-1$
 
 	public static final ACE ADMIN_KONS_EDIT_IF_BILLED = new ACE(ADMIN_KONS, "change_billed", //$NON-NLS-1$
 			Messages.AccessControlDefaults_changeBilled);
@@ -138,7 +138,7 @@ public class AccessControlDefaults {
 	public static final ACE DOCUMENT = new ACE(ACE.ACE_ROOT, "Dokumente", Messages.AccessControlDefaults_documents); //$NON-NLS-1$
 	public static final ACE DOCUMENT_CREATE = new ACE(DOCUMENT, "create", Messages.AccessControlDefaults_create); //$NON-NLS-1$
 	public static final ACE DOCUMENT_DELETE = new ACE(DOCUMENT, "delete",
-			Messages.AccessControlDefaults_documentsDelete);
+			Messages.Core_Delete);
 	public static final ACE DOCUMENT_CATCREATE = new ACE(DOCUMENT, "createCategory", //$NON-NLS-1$
 			Messages.AccessControlDefaults_documentsCreateCat);
 	public static final ACE DOCUMENT_CATDELETE = new ACE(DOCUMENT, "deleteCategory", //$NON-NLS-1$

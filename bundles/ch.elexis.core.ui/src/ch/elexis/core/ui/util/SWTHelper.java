@@ -401,7 +401,7 @@ public class SWTHelper {
 	public static Label createHyperlink(final Composite parent, final String text, final IHyperlinkListener lis) {
 		final Label ret = new Label(parent, SWT.NONE);
 		ret.setText(text);
-		ret.setForeground(UiDesk.getColorRegistry().get(Messages.SWTHelper_blue)); // $NON-NLS-1$
+		ret.setForeground(UiDesk.getColorRegistry().get(Messages.LabeledInputField_blue)); // $NON-NLS-1$
 		ret.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(final MouseEvent e) {

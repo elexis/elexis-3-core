@@ -67,12 +67,12 @@ public class AnschriftEingabeDialog extends TitleAreaDialog {
 		plz.setText(an.getPlz());
 		plz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		Label l3 = new Label(com, SWT.NONE);
-		l3.setText(Messages.AnschriftEingabeDialog_city); // $NON-NLS-1$
+		l3.setText(Messages.Core_City); // $NON-NLS-1$
 		ort = new Text(com, SWT.BORDER);
 		ort.setText(an.getOrt());
 		ort.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		Label l4 = new Label(com, SWT.NONE);
-		l4.setText(Messages.AnschriftEingabeDialog_country); // $NON-NLS-1$
+		l4.setText(Messages.Core_Country); // $NON-NLS-1$
 		land = new Text(com, SWT.BORDER);
 		land.setText(an.getLand());
 		land.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));

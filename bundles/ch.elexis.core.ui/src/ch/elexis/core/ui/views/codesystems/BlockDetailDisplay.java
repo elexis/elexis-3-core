@@ -146,7 +146,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		body.setBackground(parent.getBackground());
 		body.setLayout(new GridLayout(2, false));
 
-		tk.createLabel(body, Messages.BlockDetailDisplay_name).setBackground(parent.getBackground());
+		tk.createLabel(body, Messages.AccountListView_name).setBackground(parent.getBackground());
 		tName = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
 		tName.setData("TEST_COMP_NAME", "blkd_Name_lst"); //$NON-NLS-1$ //$NON-NLS-2$
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -155,7 +155,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		txtNameObservable.addChangeListener(changeListener);
 		dbc.bindValue(txtNameObservableUi, txtNameObservable);
 
-		tk.createLabel(body, Messages.BlockDetailDisplay_macro).setBackground(parent.getBackground());
+		tk.createLabel(body, Messages.Core_Macro).setBackground(parent.getBackground());
 		tMacro = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
 		tMacro.setData("TEST_COMP_NAME", "blkd_Makro_lst"); //$NON-NLS-1$ //$NON-NLS-2$
 		tMacro.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -172,7 +172,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		IQuery<IMandator> query = CoreModelServiceHolder.get().getQuery(IMandator.class);
 		query.and(ModelPackage.Literals.ICONTACT__MANDATOR, COMPARATOR.EQUALS, Boolean.TRUE);
 		lMandanten = query.execute();
-		cbMandant.add(Messages.BlockDetailDisplay_all);
+		cbMandant.add(Messages.AccessControl_GroupAll);
 		for (IMandator m : lMandanten) {
 			cbMandant.add(m.getLabel());
 		}
@@ -192,7 +192,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 
 		});
 		Group gList = new Group(body, SWT.BORDER);
-		gList.setText(Messages.BlockDetailDisplay_services); // $NON-NLS-1$
+		gList.setText(Messages.AccessControlDefaults_services); // $NON-NLS-1$
 		gList.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 		gList.setLayout(new FillLayout());
 		tk.adapt(gList);
@@ -462,7 +462,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	}
 
 	private void makeActions() {
-		removeLeistung = new Action(Messages.BlockDetailDisplay_remove) { // $NON-NLS-1$
+		removeLeistung = new Action(Messages.Bezugskontakt_Delete) { // $NON-NLS-1$
 			@Override
 			public void run() {
 				Optional<ICodeElementBlock> block = ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
@@ -489,7 +489,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				moveElement(false);
 			}
 		};
-		editAction = new Action(Messages.BlockDetailDisplay_changeAction) { // $NON-NLS-1$
+		editAction = new Action(Messages.AUF2_edit) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 				setToolTipText(Messages.BlockDetailDisplay_changeActionTooltip); // $NON-NLS-1$

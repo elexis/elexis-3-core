@@ -16,9 +16,9 @@ public class Messages {
 	public static String PlatzhalterProperties_tooltip_no_category = ch.elexis.core.l10n.Messages.PlatzhalterProperties_tooltip_no_category;
 	public static String PlatzhalterView_menu_copy = ch.elexis.core.l10n.Messages.PlatzhalterView_menu_copy;
 	public static String PlatzhalterView_message_Info = ch.elexis.core.l10n.Messages.PlatzhalterView_message_Info;
-	public static String TextTemplateVeiw_NoTxtPluginTitel = ch.elexis.core.l10n.Messages.TextTemplateVeiw_NoTxtPluginTitel;
+	public static String TextContainer_NoPluginCaption = ch.elexis.core.l10n.Messages.TextContainer_NoPluginCaption;
 	public static String TextTemplateVeiw_NoTxtPluginDescription = ch.elexis.core.l10n.Messages.TextTemplateVeiw_NoTxtPluginDescription;
-	public static String TextTemplateVeiw_NoTxtPluginReason1 = ch.elexis.core.l10n.Messages.TextTemplateVeiw_NoTxtPluginReason1;
-	public static String TextTemplateVeiw_NoTxtPluginReason2 = ch.elexis.core.l10n.Messages.TextTemplateVeiw_NoTxtPluginReason2;
-	public static String TextTemplateVeiw_NoTxtPluginReason3 = ch.elexis.core.l10n.Messages.TextTemplateVeiw_NoTxtPluginReason3;
+	public static String TextContainer_Noplugin3 = ch.elexis.core.l10n.Messages.TextContainer_Noplugin3;
+	public static String TextContainer_NoPlugin4 = ch.elexis.core.l10n.Messages.TextContainer_NoPlugin4;
+	public static String TextContainer_NoPLugin5 = ch.elexis.core.l10n.Messages.TextContainer_NoPLugin5;
 }

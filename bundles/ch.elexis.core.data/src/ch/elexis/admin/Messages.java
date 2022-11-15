@@ -18,7 +18,7 @@ public class Messages {
 	public static String AccessControlDefaults_actions = ch.elexis.core.l10n.Messages.AccessControlDefaults_actions;
 	public static String AccessControlDefaults_Administration = ch.elexis.core.l10n.Messages.AccessControlDefaults_Administration;
 	public static String AccessControlDefaults_assign = ch.elexis.core.l10n.Messages.AccessControlDefaults_assign;
-	public static String AccessControlDefaults_bills = ch.elexis.core.l10n.Messages.AccessControlDefaults_bills;
+
 	public static String AccessControlDefaults_Bills = ch.elexis.core.l10n.Messages.AccessControlDefaults_Bills;
 	public static String AccessControlDefaults_CaseCopy = ch.elexis.core.l10n.Messages.AccessControlDefaults_CaseCopy;
 	public static String AccessControlDefaults_CaseSpecialFields = ch.elexis.core.l10n.Messages.AccessControlDefaults_CaseSpecialFields;
@@ -43,16 +43,16 @@ public class Messages {
 	public static String AccessControlDefaults_dataImport = ch.elexis.core.l10n.Messages.AccessControlDefaults_dataImport;
 	public static String AccessControlDefaults_documents = ch.elexis.core.l10n.Messages.AccessControlDefaults_documents;
 	public static String AccessControlDefaults_documentsCreate = ch.elexis.core.l10n.Messages.AccessControlDefaults_documentsCreate;
-	public static String AccessControlDefaults_documentsDelete = ch.elexis.core.l10n.Messages.AccessControlDefaults_documentsDelete;
+
 	public static String AccessControlDefaults_documentsCreateCat = ch.elexis.core.l10n.Messages.AccessControlDefaults_documentsCreateCat;
 	public static String AccessControlDefaults_documentsDeleteCat = ch.elexis.core.l10n.Messages.AccessControlDefaults_documentsDeleteCat;
 	public static String AccessControlDefaults_DefineCaseSpecialFields = ch.elexis.core.l10n.Messages.AccessControlDefaults_DefineCaseSpecialFields;
-	public static String AccessControlDefaults_delete = ch.elexis.core.l10n.Messages.AccessControlDefaults_delete;
-	public static String AccessControlDefaults_deleteCase = ch.elexis.core.l10n.Messages.AccessControlDefaults_deleteCase;
+	public static String Core_Delete = ch.elexis.core.l10n.Messages.Core_Delete;
+	public static String Core_Case = ch.elexis.core.l10n.Messages.Core_Case;
 	public static String AccessControlDefaults_display = ch.elexis.core.l10n.Messages.AccessControlDefaults_display;
 	public static String AccessControlDefaults_doAccount = ch.elexis.core.l10n.Messages.AccessControlDefaults_doAccount;
 	public static String AccessControlDefaults_edit = ch.elexis.core.l10n.Messages.AccessControlDefaults_edit;
-	public static String AccessControlDefaults_edit2 = ch.elexis.core.l10n.Messages.AccessControlDefaults_edit2;
+
 	public static String AccessControlDefaults_execute = ch.elexis.core.l10n.Messages.AccessControlDefaults_execute;
 	public static String AccessControlDefaults_export = ch.elexis.core.l10n.Messages.AccessControlDefaults_export;
 	public static String AccessControlDefaults_fixedMedication = ch.elexis.core.l10n.Messages.AccessControlDefaults_fixedMedication;
@@ -66,9 +66,9 @@ public class Messages {
 	public static String AccessControlDefaults_main_Patient = ch.elexis.core.l10n.Messages.AccessControlDefaults_main_Patient;
 	public static String AccessControlDefaults_mandator = ch.elexis.core.l10n.Messages.AccessControlDefaults_mandator;
 	public static String AccessControlDefaults_mergeLabItems = ch.elexis.core.l10n.Messages.AccessControlDefaults_mergeLabItems;
-	public static String AccessControlDefaults_modify = ch.elexis.core.l10n.Messages.AccessControlDefaults_modify;
-	public static String AccessControlDefaults_modify2 = ch.elexis.core.l10n.Messages.AccessControlDefaults_modify2;
-	public static String AccessControlDefaults_modify3 = ch.elexis.core.l10n.Messages.AccessControlDefaults_modify3;
+
+
+
 	public static String AccessControlDefaults_modifyBills = ch.elexis.core.l10n.Messages.AccessControlDefaults_modifyBills;
 	public static String AccessControlDefaults_modifySticker = ch.elexis.core.l10n.Messages.AccessControlDefaults_modifySticker;
 	public static String AccessControlDefaults_newWindow = ch.elexis.core.l10n.Messages.AccessControlDefaults_newWindow;

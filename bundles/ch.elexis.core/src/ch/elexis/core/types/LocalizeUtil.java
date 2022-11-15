@@ -53,11 +53,11 @@ public class LocalizeUtil {
 	 */
 	@SuppressWarnings("unused")
 	private static String ensureUseOfRelationShipMessages() {
-		return Messages.RelationshipType_A_GENERIC + Messages.RelationshipType_BUSINESS_EMPLOYER
+		return Messages.Fall_Undefined + Messages.RelationshipType_BUSINESS_EMPLOYER
 				+ Messages.RelationshipType_BUSINESS_EMPLOYEE + Messages.RelationshipType_FAMILY_PARENT
 				+ Messages.RelationshipType_FAMILY_CHILD + Messages.RelationshipType_FAMILY_GUARDIAN
 				+ Messages.RelationshipType_FAMILY_ICE + Messages.RelationshipType_FAMILY_ALTERNATIVE
-				+ Messages.RelationshipType_WELFARE_GENERAL_PRACTITIONER + Messages.RelationshipType_WELFARE_PATIENT
+				+ Messages.RelationshipType_WELFARE_GENERAL_PRACTITIONER + Messages.DefaultPDFImportStrategy_Patient
 				+ Messages.RelationshipType_WELFARE_CONSULTANT + Messages.RelationshipType_WELFARE_INSURER
 				+ Messages.RelationshipType_WELFARE_INSUREE;
 	}

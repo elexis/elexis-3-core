@@ -217,7 +217,7 @@ public class XChangeContainer {
 		ContactsElement eContacts = new ContactsElement();
 		if (ec == null) {
 			eRoot.addContent(eContacts.getElement());
-			choices.put(eContacts.getElement(), new UserChoice(true, Messages.XChangeContainer_kontakte, eContacts));
+			choices.put(eContacts.getElement(), new UserChoice(true, Messages.KontaktImporter_Title, eContacts));
 		} else {
 			eContacts.setElement(ec);
 		}

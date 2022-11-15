@@ -175,7 +175,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		mandatorOnly = new Button(content, SWT.CHECK);
 		mandatorOnly.setText("nur von folgenden Mandanten");
 		mandatorSelector = new GenericSelectionComposite(content, SWT.NONE,
-				ch.elexis.core.l10n.Messages.GenericSearchSelectionDialog_MandatorSelection,
+				ch.elexis.core.l10n.Messages.GenericSearchSelectionDialog,
 				ch.elexis.core.ui.actions.Messages.GlobalActions_ChangeMandator,
 				ch.elexis.core.ui.actions.Messages.GlobalActions_ChangeMandatorMessage);
 		mandatorSelector.setInput(new Query<>(Mandant.class).execute());

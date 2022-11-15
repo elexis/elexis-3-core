@@ -177,7 +177,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 				if (l.equals(LEISTUNG_HINZU)) {
 					try {
 						if (StringTool.isNothing(LeistungenView.ID)) {
-							SWTHelper.alert(Messages.PatHeuteView_error, // $NON-NLS-1$
+							SWTHelper.alert(Messages.Core_Error, // $NON-NLS-1$
 									"LeistungenView.ID"); //$NON-NLS-1$
 						}
 						getViewSite().getPage().showView(LeistungenView.ID);
@@ -239,7 +239,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 		cAccountingSys.setContentProvider(ArrayContentProvider.getInstance());
 		cAccountingSys.setLabelProvider(new LabelProvider());
 
-		String allCases = Messages.PatHeuteView_all;
+		String allCases = Messages.AccessControl_GroupAll;
 		List<String> faelle = Arrays.asList(BillingSystem.getAbrechnungsSysteme());
 
 		List<String> accountingSys = new ArrayList<String>();
@@ -323,7 +323,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 		cv.create(vc, parent, SWT.NONE, getViewSite());
 
 		form = tk.createForm(parent);
-		form.setText(Messages.PatHeuteView_all); // $NON-NLS-1$
+		form.setText(Messages.AccessControl_GroupAll); // $NON-NLS-1$
 		form.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		Composite bottom = form.getBody();
 		bottom.setLayout(new GridLayout(2, false));
@@ -490,7 +490,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 				public void run() {
 					FileDialog fd = new FileDialog(getSite().getShell(), SWT.SAVE);
 					fd.setFilterExtensions(new String[] { "*.csv", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
-					fd.setFilterNames(new String[] { "CSV", Messages.PatHeuteView_allFiles }); //$NON-NLS-1$ //$NON-NLS-2$
+					fd.setFilterNames(new String[] { "CSV", Messages.Core_All_Files }); //$NON-NLS-1$ //$NON-NLS-2$
 					fd.setFileName("elexis-stat.csv"); //$NON-NLS-1$
 					String fname = fd.open();
 					if (fname != null) {
@@ -547,7 +547,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 		Set<Konsultation> missingCaseKons;
 
 		KonsLoader(final Query<Konsultation> qbe) {
-			super(Messages.PatHeuteView_loadConsultations, qbe, new String[] { Messages.PatHeuteView_date });
+			super(Messages.HistoryLoader_LoadKonsMessage, qbe, new String[] { Messages.Core_Date });
 			setPriority(Job.LONG);
 			setUser(true);
 		}
@@ -559,7 +559,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			}
 			corruptKons = new HashSet<Konsultation>();
 			missingCaseKons = new HashSet<Konsultation>();
-			monitor.beginTask(Messages.PatHeuteView_loadKons, 1000); // $NON-NLS-1$
+			monitor.beginTask(Messages.HistoryLoader_LoadKonsMessage, 1000); // $NON-NLS-1$
 			qbe.clear();
 			qbe.add(Konsultation.DATE, Query.GREATER_OR_EQUAL, datVon.toString(TimeTool.DATE_COMPACT));
 			qbe.add(Konsultation.DATE, Query.LESS_OR_EQUAL, datBis.toString(TimeTool.DATE_COMPACT));
@@ -612,7 +612,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			if (list == null) {
 				result = new Konsultation[0];
 			} else {
-				if (accountSys != null && !accountSys.isEmpty() && !accountSys.equals(Messages.PatHeuteView_all)) {
+				if (accountSys != null && !accountSys.isEmpty() && !accountSys.equals(Messages.AccessControl_GroupAll)) {
 					List<Konsultation> konsRet = new ArrayList<Konsultation>();
 					for (Konsultation kons : list) {
 						if (kons.getFall().getAbrechnungsSystem().equals(accountSys)) {
@@ -794,7 +794,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 				loader.schedule();
 			}
 		};
-		printAction = new Action(Messages.PatHeuteView_printList) { // $NON-NLS-1$
+		printAction = new Action(Messages.KonsZumVerrechnenView_printListCaption) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
 				setToolTipText(Messages.PatHeuteView_printListToolTip); // $NON-NLS-1$
@@ -807,10 +807,10 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			}
 		};
 
-		reloadAction = new Action(Messages.PatHeuteView_reloadAction) { // $NON-NLS-1$
+		reloadAction = new Action(Messages.KonsZumVerrechnenView_reloadAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
-				setToolTipText(Messages.PatHeuteView_reloadToolTip); // $NON-NLS-1$
+				setToolTipText(Messages.KonsZumVerrechnenView2_refreshList); // $NON-NLS-1$
 			}
 
 			@Override
@@ -820,7 +820,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			}
 		};
 
-		filterAction = new Action(Messages.PatHeuteView_filterAction, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+		filterAction = new Action(Messages.KonsFilterDialog_filter, Action.AS_CHECK_BOX) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
 				setToolTipText(Messages.PatHeuteView_filterToolTip); // $NON-NLS-1$
@@ -872,7 +872,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 					Brief.UNKNOWN, CoreHub.getLoggedInContact(), Messages.PatHeuteView_billing); // $NON-NLS-1$
 			String[][] table = new String[kons.length + add][];
 			table[0] = new String[2];
-			table[0][0] = Messages.PatHeuteView_consultation; // $NON-NLS-1$
+			table[0][0] = Messages.AccessControlDefaults_consultation; // $NON-NLS-1$
 			table[0][1] = Messages.PatHeuteView_amountBilled; // $NON-NLS-1$
 			Money total = new Money();
 			for (int i = 0; i < kons.length; i++) {
@@ -896,7 +896,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 					sb.append(b.getAmount()).append(StringUtils.SPACE).append(b.getLabel()).append(StringUtils.SPACE)
 							.append(preis.getAmountAsString()).append(StringUtils.LF);
 				}
-				sb.append(Messages.PatHeuteView_total).append(subsum.getAmountAsString()); // $NON-NLS-1$
+				sb.append(Messages.BillSummary_total).append(subsum.getAmountAsString()); // $NON-NLS-1$
 				total.addMoney(subsum);
 				table[i + 1][1] = sb.toString();
 			}
@@ -908,7 +908,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 					table[kons.length + 2 + i] = new String[2];
 					table[kons.length + 2 + i][0] = lfiltered[i].getCode();
 					StringBuilder sb = new StringBuilder();
-					sb.append(Messages.PatHeuteView_billedTotal).append(numLeistung[i]).append( // $NON-NLS-1$
+					sb.append(Messages.InvoiceState_BILLED).append(numLeistung[i]).append( // $NON-NLS-1$
 							Messages.PatHeuteView_times).append( // $NON-NLS-1$
 									perLeistung[i].getAmountAsString());
 					table[kons.length + 2 + i][1] = sb.toString();

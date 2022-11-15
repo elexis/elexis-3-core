@@ -67,7 +67,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 	Button removeItemButton;
 
 	public LabGroupPrefs() {
-		super(Messages.LabGroupPrefs_groups);
+		super(Messages.Gruppen_Gruppen);
 	}
 
 	@Override
@@ -129,7 +129,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		groupButtonArea.setLayout(layout);
 
 		newButton = new Button(groupButtonArea, SWT.PUSH);
-		newButton.setText(Messages.LabGroupPrefs_new);
+		newButton.setText(Messages.AUF2_new);
 		newButton.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -153,7 +153,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		});
 
 		removeButton = new Button(groupButtonArea, SWT.PUSH);
-		removeButton.setText(Messages.LabGroupPrefs_delete);
+		removeButton.setText(Messages.Core_Delete);
 		removeButton.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

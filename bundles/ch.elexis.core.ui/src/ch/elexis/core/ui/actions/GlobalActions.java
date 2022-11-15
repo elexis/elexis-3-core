@@ -262,7 +262,7 @@ public class GlobalActions {
 						desktop.browse(new java.net.URI(url));
 					} catch (Exception e) {
 						logger.warn("failed to open default browser :" + e); //$NON-NLS-1$
-						MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_Error,
+						MessageDialog.openError(mainWindow.getShell(), Messages.Core_Error,
 								Messages.GlobalActions_PreferencesHandbook_URL);
 						ExHandler.handle(e);
 					}
@@ -431,7 +431,7 @@ public class GlobalActions {
 				}
 			}
 		};
-		printKontaktEtikette = new Action(Messages.GlobalActions_PrintContactLabel) {
+		printKontaktEtikette = new Action(Messages.GlobalActions_PrintAddressLabel) {
 			{
 				setToolTipText(Messages.GlobalActions_PrintContactLabelToolTip);
 				setImageDescriptor(Images.IMG_ADRESSETIKETTE.getImageDescriptor());
@@ -491,7 +491,7 @@ public class GlobalActions {
 		printEtikette = new Action(Messages.GlobalActions_PrintLabel) {
 			{
 				setImageDescriptor(Images.IMG_PATIENTETIKETTE.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_PrintLabelToolTip);
+				setToolTipText(Messages.GlobalActions_PrintLabel);
 			}
 
 			@Override
@@ -588,7 +588,7 @@ public class GlobalActions {
 							for (Integer year : sortedByYears.keySet()) {
 								Result<IInvoice> res = InvoiceServiceHolder.get().invoice(sortedByYears.get(year));
 								if (!res.isOK()) {
-									ErrorDialog.openError(mainWindow.getShell(), Messages.GlobalActions_Error,
+									ErrorDialog.openError(mainWindow.getShell(), Messages.Core_Error,
 											Messages.GlobalActions_BillErrorMessage,
 											ResultAdapter.getResultAsStatus(res));
 								}
@@ -597,7 +597,7 @@ public class GlobalActions {
 					} else {
 						Result<IInvoice> res = InvoiceServiceHolder.get().invoice(lBehdl);
 						if (!res.isOK()) {
-							ErrorDialog.openError(mainWindow.getShell(), Messages.GlobalActions_Error,
+							ErrorDialog.openError(mainWindow.getShell(), Messages.Core_Error,
 									Messages.GlobalActions_BillErrorMessage, ResultAdapter.getResultAsStatus(res));
 						}
 					}
@@ -684,7 +684,7 @@ public class GlobalActions {
 				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 			}
 		};
-		openFallaction = new Action(Messages.GlobalActions_EditCase) {
+		openFallaction = new Action(Messages.FallEditDialog_editCase) {
 
 			@Override
 			public void run() {
@@ -731,7 +731,7 @@ public class GlobalActions {
 				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 			}
 		};
-		neuerFallAction = new Action(Messages.GlobalActions_NewCase) {
+		neuerFallAction = new Action(Messages.FallListeView_NewCase) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				setToolTipText(Messages.GlobalActions_NewCaseToolTip);

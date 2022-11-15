@@ -20,7 +20,7 @@ public final class Messages {
 	public static String Fall_CaseClosedCaption = ch.elexis.core.l10n.Messages.Fall_CaseClosedCaption;
 	public static String Fall_CaseClosedText = ch.elexis.core.l10n.Messages.Fall_CaseClosedText;
 	public static String Fall_CLOSED = ch.elexis.core.l10n.Messages.Fall_CLOSED;
-	public static String Fall_Disease = ch.elexis.core.l10n.Messages.Fall_Disease;
+	public static String FallListeView_Illness = ch.elexis.core.l10n.Messages.FallListeView_Illness;
 	public static String Fall_IV_Name = ch.elexis.core.l10n.Messages.Fall_IV_Name;
 	public static String Fall_KVG_Name = ch.elexis.core.l10n.Messages.Fall_KVG_Name;
 	public static String Fall_KVGRequirements = ch.elexis.core.l10n.Messages.Fall_KVGRequirements;
@@ -31,7 +31,7 @@ public final class Messages {
 	public static String Fall_Open = ch.elexis.core.l10n.Messages.Fall_Open;
 	public static String Fall_Other = ch.elexis.core.l10n.Messages.Fall_Other;
 	public static String Fall_Prevention = ch.elexis.core.l10n.Messages.Fall_Prevention;
-	public static String Fall_Private_Name = ch.elexis.core.l10n.Messages.Fall_Private_Name;
+	public static String BillingLaw_privat = ch.elexis.core.l10n.Messages.BillingLaw_privat;
 	public static String Fall_TarmedLeistung = ch.elexis.core.l10n.Messages.Fall_TarmedLeistung;
 	public static String Fall_TarmedPrinter = ch.elexis.core.l10n.Messages.Fall_TarmedPrinter;
 	public static String Fall_Undefined = ch.elexis.core.l10n.Messages.Fall_Undefined;
@@ -42,7 +42,7 @@ public final class Messages {
 	public static String GlobalActions_DoSelectCase = ch.elexis.core.l10n.Messages.GlobalActions_DoSelectCase;
 	public static String GlobalActions_DoSelectPatient = ch.elexis.core.l10n.Messages.GlobalActions_DoSelectPatient;
 	public static String GlobalActions_casclosed = ch.elexis.core.l10n.Messages.GlobalActions_casclosed;
-	public static String GlobalActions_caseclosedexplanation = ch.elexis.core.l10n.Messages.GlobalActions_caseclosedexplanation;
+
 	public static String GlobalActions_SecondForToday = ch.elexis.core.l10n.Messages.GlobalActions_SecondForToday;
 	public static String GlobalActions_SecondForTodayQuestion = ch.elexis.core.l10n.Messages.GlobalActions_SecondForTodayQuestion;
 
@@ -56,7 +56,7 @@ public final class Messages {
 	public static String LabMapping_reasonLineNotValid = ch.elexis.core.l10n.Messages.LabMapping_reasonLineNotValid;
 	public static String LabMapping_reasonMoreContacts = ch.elexis.core.l10n.Messages.LabMapping_reasonMoreContacts;
 	public static String LabMapping_reasonMoreLabItems = ch.elexis.core.l10n.Messages.LabMapping_reasonMoreLabItems;
-	public static String LabOrder_stateDone = ch.elexis.core.l10n.Messages.LabOrder_stateDone;
+	public static String EditReminderDialog_fixed = ch.elexis.core.l10n.Messages.EditReminderDialog_fixed;
 	public static String LabOrder_stateImported = ch.elexis.core.l10n.Messages.LabOrder_stateImported;
 	public static String LabOrder_stateOrdered = ch.elexis.core.l10n.Messages.LabOrder_stateOrdered;
 	public static String LabOrder_contactOwnLabName = ch.elexis.core.l10n.Messages.LabOrder_contactOwnLabName;

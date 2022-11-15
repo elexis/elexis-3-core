@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.Viewer;
 
-import ch.elexis.core.ui.util.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -74,7 +74,7 @@ public class DefaultContentProvider implements ICommonViewerContentProvider {
 		}
 		List<PersistentObject> list = qbe.execute();
 		if (list == null) {
-			return new String[] { Messages.NoDataAvailable }; // $NON-NLS-1$
+			return new String[] { Messages.DefaultContentProvider_noData }; // $NON-NLS-1$
 		} else {
 			return list.toArray();
 		}

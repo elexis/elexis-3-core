@@ -58,15 +58,15 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	// final String[]
 	// stats={"Alle","Bezahlt","Offen","Offen&Gedruckt","1. Mahnung","2.
 	// Mahnung","3. Mahnung","In Betreibung","Teilverlust","Totalverlust"};
-	final static String[] stats = { Messages.RnControlFieldProvider_all, Messages.RnControlFieldProvider_open,
-			Messages.RnControlFieldProvider_openAndPrinted, Messages.RnControlFieldProvider_partlyPaid,
-			Messages.RnControlFieldProvider_paid, Messages.RnControlFieldProvider_overpaid,
-			Messages.RnControlFieldProvider_reminder, Messages.RnControlFieldProvider_reminderPrinted,
-			Messages.RnControlFieldProvider_reminder2, Messages.RnControlFieldProvider_reminder2Printed,
-			Messages.RnControlFieldProvider_reminder3, Messages.RnControlFieldProvider_reminder3Printed,
-			Messages.RnControlFieldProvider_enforcement, Messages.RnControlFieldProvider_partlyLost,
-			Messages.RnControlFieldProvider_totallyLost, Messages.RnControlFieldProvider_storno,
-			Messages.RnControlFieldProvider_erroneous, Messages.RnControlFieldProvider_toPrint,
+	final static String[] stats = { Messages.AccessControl_GroupAll, Messages.BillSummary_open,
+			Messages.InvoiceState_OPEN_AND_PRINTED, Messages.InvoiceState_PARTIAL_PAYMENT,
+			Messages.InvoiceState_PAID, Messages.InvoiceState_EXCESSIVE_PAYMENT,
+			Messages.Core_Invoice_Reminder, Messages.RnControlFieldProvider_reminderPrinted,
+			Messages.Core_Invoice_Reminder_2, Messages.RnControlFieldProvider_reminder2Printed,
+			Messages.Core_Invoice_Reminder_3, Messages.RnControlFieldProvider_reminder3Printed,
+			Messages.InvoiceState_IN_EXECUTION, Messages.InvoiceState_PARTIAL_LOSS,
+			Messages.InvoiceState_TOTAL_LOSS, Messages.InvoiceState_CANCELLED,
+			Messages.InvoiceState_DEFECTIVE, Messages.RnControlFieldProvider_toPrint,
 			Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind,
 			Messages.RnControlFieldProvider_writtenOff, Messages.RnControlFieldProvider_rejected };
 
@@ -79,7 +79,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 
 	final static int STAT_DEFAULT_INDEX = 1;
 	private final static String ALLE = Messages.RnControlFieldProvider_allPatients;
-	private final static String ALL = Messages.RnControlFieldProvider_all;
+	private final static String ALL = Messages.AccessControl_GroupAll;
 
 	Combo cbStat;
 	Combo cbZType;
@@ -104,7 +104,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 			public void linkActivated(final HyperlinkEvent e) {
 				Patient oldPatient = actPatient;
 				KontaktSelektor ksl = new KontaktSelektor(parent.getShell(), Patient.class,
-						Messages.RnControlFieldProvider_selectPatientCaption, // $NON-NLS-1$
+						Messages.HL7_SelectPatient, // $NON-NLS-1$
 						Messages.RnControlFieldProvider_selectPatientMessage, true); // $NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
 					actPatient = (Patient) ksl.getSelection();
@@ -129,12 +129,12 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 				fireChangedEvent();
 			}
 		};
-		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_state); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Status); // $NON-NLS-1$
 		Label lbl = SWTHelper.createHyperlink(ret, Messages.RnControlFieldProvider_patient2, hlPatient); // $NON-NLS-1$
 		lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
-		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_PaymentSystem); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Leistungscodes_billingSystemCaption); // $NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_invoideNr); // $NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_amount); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Amount); // $NON-NLS-1$
 		// / ^ labels / values
 		cbStat = new Combo(ret, SWT.READ_ONLY);
 		cbStat.setVisibleItemCount(stats.length);
@@ -306,7 +306,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		UiDesk.getDisplay().syncExec(new Runnable() {
 			public void run() {
 				HashMap<String, String> hm = new HashMap<String, String>();
-				hm.put(Messages.RnControlFieldProvider_state, StringConstants.ZERO); // $NON-NLS-1$
+				hm.put(Messages.Core_Status, StringConstants.ZERO); // $NON-NLS-1$
 				for (ControlFieldListener lis : listeners) {
 					lis.changed(hm);
 

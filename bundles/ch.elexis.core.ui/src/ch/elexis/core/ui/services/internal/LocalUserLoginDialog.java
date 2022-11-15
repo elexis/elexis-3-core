@@ -72,7 +72,7 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 		lu.setText(Messages.LoginDialog_0);
 		usr = new Text(ret, SWT.BORDER);
 		usr.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.LoginDialog_1);
+		new Label(ret, SWT.NONE).setText(Messages.AnwenderPref_passwort);
 		pwd = new Text(ret, SWT.BORDER | SWT.PASSWORD);
 		pwd.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		if (hasUsers == false) {
@@ -157,7 +157,7 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		getButton(IDialogConstants.OK_ID).setText(Messages.LoginDialog_login);
+		getButton(IDialogConstants.OK_ID).setText(Messages.AccessControlDefaults_logIn);
 		getButton(IDialogConstants.CANCEL_ID).setText(Messages.LoginDialog_terminate);
 		// getButton(IDialogConstants.OK_ID).setEnabled(false);
 

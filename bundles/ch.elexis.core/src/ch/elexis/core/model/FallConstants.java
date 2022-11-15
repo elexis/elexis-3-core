@@ -12,7 +12,7 @@ public class FallConstants {
 	public static final String FLD_EXT_KOSTENTRAEGER = "Kostenträger"; //$NON-NLS-1$
 	public static final String FLD_EXT_RECHNUNGSEMPFAENGER = "Rechnungsempfänger"; //$NON-NLS-1$
 
-	public static final String TYPE_DISEASE = Messages.Fall_Disease; // $NON-NLS-1$
+	public static final String TYPE_DISEASE = Messages.FallListeView_Illness; // $NON-NLS-1$
 	public static final String TYPE_ACCIDENT = Messages.Fall_Accident; // $NON-NLS-1$
 	public static final String TYPE_MATERNITY = Messages.Fall_Maternity; // $NON-NLS-1$
 	public static final String TYPE_PREVENTION = Messages.Fall_Prevention; // $NON-NLS-1$

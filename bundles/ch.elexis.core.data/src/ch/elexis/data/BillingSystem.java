@@ -51,7 +51,7 @@ public class BillingSystem {
 	public static final String CONST_TARMED_DRUCKER = Messages.Fall_TarmedPrinter; // $NON-NLS-1$
 	public static final String CONST_TARMED_LEISTUNG = Messages.Fall_TarmedLeistung; // $NON-NLS-1$
 	public static final String VVG_NAME = Messages.Fall_VVG_Name;
-	public static final String PRIVATE_NAME = Messages.Fall_Private_Name; // $NON-NLS-1$
+	public static final String PRIVATE_NAME = Messages.BillingLaw_privat; // $NON-NLS-1$
 
 	public static String getConfigurationValue(String billingSystemName, String attributeName,
 			String defaultIfNotDefined) {

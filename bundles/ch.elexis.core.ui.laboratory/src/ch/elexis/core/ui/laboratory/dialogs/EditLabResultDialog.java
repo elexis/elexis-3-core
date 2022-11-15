@@ -58,7 +58,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 		editComposite.setLayout(new GridLayout(2, false));
 
 		Label lbl = new Label(editComposite, SWT.NONE);
-		lbl.setText(Messages.EditLabResultDialog_labelValue);
+		lbl.setText(Messages.AssignStickerDialog_StickerWert);
 		lbl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 
 		if (result.getItem().getTyp() == LabItemTyp.TEXT) {
@@ -72,7 +72,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 		}
 
 		lbl = new Label(editComposite, SWT.NONE);
-		lbl.setText(Messages.EditLabResultDialog_labelUnit);
+		lbl.setText(Messages.EditLabItem_labelUnit);
 		lbl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 
 		unitTxt = new Text(editComposite, SWT.BORDER);
@@ -96,7 +96,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 		refFemaleTxt.setTextLimit(80);
 
 		lbl = new Label(editComposite, SWT.NONE);
-		lbl.setText(Messages.EditLabResultDialog_labelLab);
+		lbl.setText(Messages.AccessControlDefaults_GroupAdminLaboratory);
 		lbl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		originSelection = new LaborSelectionComposite(editComposite, SWT.NONE);
 		originSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

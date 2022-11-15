@@ -128,7 +128,7 @@ public class LaborOrdersComposite extends Composite {
 
 		TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(100);
-		column.getColumn().setText(Messages.LaborOrdersComposite_columnState);
+		column.getColumn().setText(Messages.Core_Status);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(0, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
 
@@ -143,7 +143,7 @@ public class LaborOrdersComposite extends Composite {
 
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(125);
-		column.getColumn().setText(Messages.LaborOrdersComposite_columnDate);
+		column.getColumn().setText(Messages.Core_Date);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(1, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
 
@@ -163,7 +163,7 @@ public class LaborOrdersComposite extends Composite {
 
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(75);
-		column.getColumn().setText(Messages.LaborOrdersComposite_columnOrdernumber);
+		column.getColumn().setText(Messages.GlobalActions_OrderID);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(2, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
 
@@ -178,7 +178,7 @@ public class LaborOrdersComposite extends Composite {
 
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(75);
-		column.getColumn().setText(Messages.LaborOrdersComposite_columnGroup);
+		column.getColumn().setText(Messages.Core_Group);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(3, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
 
@@ -193,7 +193,7 @@ public class LaborOrdersComposite extends Composite {
 
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(300);
-		column.getColumn().setText(Messages.LaborOrdersComposite_columnParameter);
+		column.getColumn().setText(Messages.KontaktExtDialog_parameter);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(4, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
 
@@ -208,7 +208,7 @@ public class LaborOrdersComposite extends Composite {
 
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(75);
-		column.getColumn().setText(Messages.LaborOrdersComposite_columnValue);
+		column.getColumn().setText(Messages.AssignStickerDialog_StickerWert);
 		column.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -221,7 +221,7 @@ public class LaborOrdersComposite extends Composite {
 
 		column.setEditingSupport(new LabOrderEditingSupport(viewer));
 
-		form.setText(Messages.LaborOrdersComposite_NoPatientSelected);
+		form.setText(Messages.AUF2_NoPatientSelected);
 	}
 
 	public void selectPatient(Patient patient) {
@@ -234,7 +234,7 @@ public class LaborOrdersComposite extends Composite {
 			}
 		} else {
 			actPatient = patient;
-			form.setText(Messages.LaborOrdersComposite_NoPatientSelected);
+			form.setText(Messages.AUF2_NoPatientSelected);
 		}
 		setRedraw(true);
 	}

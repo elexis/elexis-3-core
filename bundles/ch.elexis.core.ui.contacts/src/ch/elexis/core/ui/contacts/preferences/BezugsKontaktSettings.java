@@ -59,7 +59,7 @@ import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
-import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.BezugsKontaktRelation;
 
 public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchPreferencePage {
@@ -74,7 +74,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 
 	public BezugsKontaktSettings() {
 		noDefaultAndApplyButton();
-		setTitle(Messages.Bezugskontakt_Title);
+		setTitle(Messages.Bezugskontakt_Definition);
 		this.allowEditing = CoreHub.acl.request(AccessControlDefaults.ADMIN);
 	}
 

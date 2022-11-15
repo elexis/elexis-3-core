@@ -157,7 +157,7 @@ public class VerrDetailDialog extends TitleAreaDialog {
 		if (pat != null) {
 			setTitle(pat.getLabel());
 		} else {
-			setTitle(Messages.VerrDetailDialog_NoPatientSelected); // $NON-NLS-1$
+			setTitle(Messages.AUF2_NoPatientSelected); // $NON-NLS-1$
 		}
 		setMessage(Messages.VerrDetailDialog_detailsOfOpenKons); // $NON-NLS-1$
 		getShell().setText(Messages.VerrDetailDialog_billingData); // $NON-NLS-1$

@@ -137,7 +137,7 @@ public class LaborResultsComposite extends Composite {
 
 		TreeViewerColumn column = new TreeViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(200);
-		column.getColumn().setText(Messages.LaborResultsComposite_columnParameter);
+		column.getColumn().setText(Messages.KontaktExtDialog_parameter);
 		column.setLabelProvider(new ColumnLabelProvider() {
 			private StringBuilder sb = new StringBuilder();
 

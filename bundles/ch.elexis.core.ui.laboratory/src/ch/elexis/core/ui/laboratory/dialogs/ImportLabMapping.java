@@ -43,7 +43,7 @@ public class ImportLabMapping extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText(Messages.ImportLabMapping_shellTitle);
-		setTitle(Messages.ImportLabMapping_title);
+		setTitle(Messages.ImportLabMapping_shellTitle);
 		setMessage(Messages.ImportLabMapping_message);
 
 		Composite ret = new Composite(parent, SWT.NONE);

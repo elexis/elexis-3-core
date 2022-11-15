@@ -85,7 +85,7 @@ import ch.rgw.tools.ExHandler;
  *
  */
 public abstract class CodeSelectorFactory implements IExecutableExtension {
-	private static final String CAPTION_ERROR = Messages.CodeSelectorFactory_error; // $NON-NLS-1$
+	private static final String CAPTION_ERROR = Messages.Core_Error; // $NON-NLS-1$
 	/** Anzahl der in den oberen zwei Listen zu haltenden Elemente */
 	public static int ITEMS_TO_SHOW_IN_MFU_LIST = 15;
 
@@ -358,7 +358,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			patientStatistics.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 
 			Group gAll = new Group(sash, SWT.NONE);
-			gAll.setText(Messages.CodeSelectorFactory_all); // $NON-NLS-1$
+			gAll.setText(Messages.AccessControl_GroupAll); // $NON-NLS-1$
 			gAll.setLayout(new GridLayout());
 			cv = new CommonViewer();
 			// Add context medu to viewer, if actions are defined

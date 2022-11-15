@@ -43,7 +43,7 @@ import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.rechnung.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.rgw.tools.Result;

@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.ui.actions.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.dialogs.EtiketteDruckenDialog;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;

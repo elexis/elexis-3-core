@@ -48,7 +48,7 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
-import ch.elexis.core.ui.views.codesystems.Messages;
+import ch.elexis.core.l10n.Messages;
 
 public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 
@@ -73,10 +73,10 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 	public ViewerConfigurer createViewerConfigurer(CommonViewer commonViewer) {
 		MenuManager menu = new MenuManager();
 		menu.add(tvfa);
-		menu.add(new Action(ch.elexis.core.ui.eigenleistung.Messages.EigenleistungContextMenu_deleteAction) {
+		menu.add(new Action(ch.elexis.core.ui.eigenleistung.Messages.Core_Delete) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-				setToolTipText(ch.elexis.core.ui.eigenleistung.Messages.EigenleistungContextMenu_deleteActionToolTip);
+				setToolTipText(ch.elexis.core.ui.eigenleistung.Messages.ArtikelContextMenu_deleteActionToolTip);
 			}
 
 			@Override
@@ -84,9 +84,9 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 				ICustomService act = (ICustomService) ContextServiceHolder.get()
 						.getNamed("ch.elexis.core.ui.eigenleistung.selection").orElse(null); //$NON-NLS-1$
 				if (act != null && MessageDialog.openConfirm(commonViewer.getViewerWidget().getControl().getShell(),
-						ch.elexis.core.ui.eigenleistung.Messages.EigenleistungContextMenu_deleteActionConfirmCaption,
+						ch.elexis.core.ui.eigenleistung.Messages.ArtikelContextMenu_deleteActionConfirmCaption,
 						MessageFormat.format(
-								ch.elexis.core.ui.eigenleistung.Messages.EigenleistungContextMenu_deleteConfirmBody,
+								ch.elexis.core.ui.eigenleistung.Messages.ArtikelContextMenu_deleteConfirmBody,
 								act.getText()))) {
 					CoreModelServiceHolder.get().delete(act);
 					commonViewer.getConfigurer().getControlFieldProvider().fireChangedEvent();
@@ -100,7 +100,7 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 			}
 
 		});
-		menu.add(new Action(ch.elexis.core.ui.eigenleistung.Messages.EigenleistungContextMenu_propertiesAction) {
+		menu.add(new Action(ch.elexis.core.ui.eigenleistung.Messages.ArtikelContextMenu_propertiesAction) {
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 				setToolTipText(ch.elexis.core.ui.eigenleistung.Messages.EigenleistungContextMenu_propertiesTooltip);

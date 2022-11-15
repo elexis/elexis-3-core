@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.ui.actions.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.dialogs.EtiketteDruckenDialog;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Kontakt;
@@ -36,7 +36,7 @@ public final class PrintContactLabelHandler extends AbstractHandler {
 		}
 		EtiketteDruckenDialog dlg = new EtiketteDruckenDialog(
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), kontakt, TT_ADDRESS_LABEL);
-		dlg.setTitle(Messages.GlobalActions_PrintContactLabel);
+		dlg.setTitle(Messages.GlobalActions_PrintAddressLabel);
 		dlg.setMessage(Messages.GlobalActions_PrintContactLabelToolTip);
 		if (!CoreHub.localCfg.get("Drucker/Etiketten/Choose", true)) { //$NON-NLS-1$
 			dlg.setBlockOnOpen(false);

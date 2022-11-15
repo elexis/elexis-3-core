@@ -2,12 +2,12 @@ package ch.elexis.core.ui.documents;
 
 public class Messages {
 
-	public static String DocumentsView_Title = ch.elexis.core.l10n.Messages.DocumentsView_Title;
-	public static String DocumentView_categoryColumn = ch.elexis.core.l10n.Messages.DocumentView_categoryColumn;
+
+	public static String Core_Category = ch.elexis.core.l10n.Messages.Core_Category;
 	public static String DocumentView_lastChangedColumn = ch.elexis.core.l10n.Messages.DocumentView_lastChangedColumn;
 	public static String DocumentView_dateCreatedColumn = ch.elexis.core.l10n.Messages.DocumentView_dateCreatedColumn;
-	public static String DocumentView_stateColumn = ch.elexis.core.l10n.Messages.DocumentView_stateColumn;
-	public static String DocumentView_titleColumn = ch.elexis.core.l10n.Messages.DocumentView_titleColumn;
+	public static String Core_Status = ch.elexis.core.l10n.Messages.Core_Status;
+	public static String Core_Title = ch.elexis.core.l10n.Messages.Core_Title;
 	public static String DocumentView_keywordsColumn = ch.elexis.core.l10n.Messages.DocumentView_keywordsColumn;
 	public static String DocumentView_searchLabel = ch.elexis.core.l10n.Messages.DocumentView_searchLabel;
 	public static String DocumentView_reallyDeleteCaption = ch.elexis.core.l10n.Messages.DocumentView_reallyDeleteCaption;
@@ -19,7 +19,7 @@ public class Messages {
 	public static String DocumentView_importErrorText2 = ch.elexis.core.l10n.Messages.DocumentView_importErrorText2;
 	public static String DocumentView_saveErrorCaption = ch.elexis.core.l10n.Messages.DocumentView_saveErrorCaption;
 	public static String DocumentView_saveErrorText = ch.elexis.core.l10n.Messages.DocumentView_saveErrorText;
-	public static String DocumentView_exportErrorCaption = ch.elexis.core.l10n.Messages.DocumentView_exportErrorCaption;
+	public static String Export_while = ch.elexis.core.l10n.Messages.Export_while;
 	public static String DocumentView_exportErrorText = ch.elexis.core.l10n.Messages.DocumentView_exportErrorText;
 	public static String DocumentsView_extensionColumn = ch.elexis.core.l10n.Messages.DocumentsView_extensionColumn;
 	public static String DocumentView_exportErrorEmptyText = ch.elexis.core.l10n.Messages.DocumentView_exportErrorEmptyText;
@@ -33,7 +33,7 @@ public class Messages {
 	public static String DocumentMetaDataDialog_renameCategory = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_renameCategory;
 	public static String DocumentMetaDataDialog_renameCategoryConfirm = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_renameCategoryConfirm;
 	public static String DocumentMetaDataDialog_renameCategoryText = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_renameCategoryText;
-	public static String DocumentMetaDataDialog_deleteCategory = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_deleteCategory;
+	public static String AccessControlDefaults_documentsDeleteCat = ch.elexis.core.l10n.Messages.AccessControlDefaults_documentsDeleteCat;
 	public static String DocumentMetaDataDialog_deleteCategoryConfirm = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_deleteCategoryConfirm;
 	public static String DocumentMetaDataDialog_deleteCategoryText = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_deleteCategoryText;
 	public static String DocumentMetaDataDialog_deleteCategoryError = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_deleteCategoryError;

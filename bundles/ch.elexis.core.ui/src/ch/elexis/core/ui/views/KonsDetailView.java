@@ -381,7 +381,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 				// we want do reset to current mandant afterwards
 				Mandant currentMandant = ElexisEventDispatcher.getSelectedMandator();
 				KontaktSelektor ksl = new KontaktSelektor(getSite().getShell(), Mandant.class,
-						Messages.KonsDetailView_SelectMandatorCaption, // $NON-NLS-1$
+						Messages.GenericSearchSelectionDialog, // $NON-NLS-1$
 						Messages.KonsDetailView_SelectMandatorBody,
 						new String[] { Mandant.FLD_SHORT_LABEL, Mandant.FLD_NAME1, Mandant.FLD_NAME2 }); // $NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
@@ -809,7 +809,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 
 						if (!changeToCoverage.equals(actCoverage)) {
 							if (!changeToCoverage.isOpen()) {
-								SWTHelper.alert(Messages.KonsDetailView_CaseClosedCaption, // $NON-NLS-1$
+								SWTHelper.alert(Messages.Fall_CaseClosedCaption, // $NON-NLS-1$
 										Messages.KonsDetailView_CaseClosedBody); // $NON-NLS-1$
 							} else {
 								MessageDialog msd = new MessageDialog(getViewSite().getShell(),

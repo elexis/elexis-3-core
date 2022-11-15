@@ -100,9 +100,9 @@ public class AccountView extends ViewPart implements IActivationListener {
 	private static final int REMARKS = 3;
 	private static final int ACCOUNT = 4;
 
-	private static final String[] COLUMN_TEXT = { Messages.AccountView_date, // DATE
-			Messages.AccountView_amount, // AMOUNT
-			Messages.AccountView_bill, // BILL
+	private static final String[] COLUMN_TEXT = { Messages.Core_Date, // DATE
+			Messages.Core_Amount, // AMOUNT
+			Messages.Core_Bill, // BILL
 			Messages.AccountView_remarks, // REMARKS
 			Messages.AccountView_account, // ACCOUNT
 	};

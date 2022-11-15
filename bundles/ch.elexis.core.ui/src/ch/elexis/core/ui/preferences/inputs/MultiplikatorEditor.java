@@ -47,7 +47,7 @@ public class MultiplikatorEditor extends Composite {
 		list = new List(this, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE);
 		list.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		Button bNew = new Button(this, SWT.PUSH);
-		bNew.setText(Messages.MultiplikatorEditor_add); // $NON-NLS-1$
+		bNew.setText(Messages.LabGroupPrefs_add); // $NON-NLS-1$
 		bNew.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {

@@ -438,7 +438,7 @@ public class HL7Parser {
 			}
 			// else {
 			// ResultAdapter.displayResult(ret,
-			// ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorReading);
+			// ch.elexis.core.ui.importer.div.importers.Messages.DocumentView_importErrorCaption);
 			// }
 			// ElexisEventDispatcher.reload(LabItem.class);
 			return ret;
@@ -506,7 +506,7 @@ public class HL7Parser {
 		}
 		return ret;
 		// ResultAdapter.displayResult(ret,
-		// ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorReading);
+		// ch.elexis.core.ui.importer.div.importers.Messages.DocumentView_importErrorCaption);
 
 		// ElexisEventDispatcher.reload(LabItem.class);
 		// return ret;

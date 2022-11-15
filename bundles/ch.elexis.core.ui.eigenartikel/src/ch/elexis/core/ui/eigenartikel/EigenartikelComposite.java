@@ -128,14 +128,14 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 
 		Label lblPharmacode = new Label(compDpDetail, SWT.NONE);
 		lblPharmacode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblPharmacode.setText(Messages.EigenartikelDisplay_Pharmacode);
+		lblPharmacode.setText(Messages.Artikeldetail_Pharmacode);
 
 		txtPharmacode = new Text(compDpDetail, SWT.BORDER);
 		txtPharmacode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblPackagesint = new Label(compDpDetail, SWT.NONE);
 		lblPackagesint.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblPackagesint.setText(Messages.EigenartikelDisplay_PiecesPerPack);
+		lblPackagesint.setText(Messages.Artikeldetail_verpackungseinheit);
 
 		txtPackageSizeInt = new Text(compDpDetail, SWT.BORDER);
 		txtPackageSizeInt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

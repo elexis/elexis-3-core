@@ -23,5 +23,5 @@ public class Messages {
 	public static String KontaktMatcher_PersonNotFound = ch.elexis.core.l10n.Messages.KontaktMatcher_PersonNotFound;
 	public static String KontaktMatcher_PersonNotUnique = ch.elexis.core.l10n.Messages.KontaktMatcher_PersonNotUnique;
 	public static String XChangeContainer_kg = ch.elexis.core.l10n.Messages.XChangeContainer_kg;
-	public static String XChangeContainer_kontakte = ch.elexis.core.l10n.Messages.XChangeContainer_kontakte;
+	public static String KontaktImporter_Title = ch.elexis.core.l10n.Messages.KontaktImporter_Title;
 }

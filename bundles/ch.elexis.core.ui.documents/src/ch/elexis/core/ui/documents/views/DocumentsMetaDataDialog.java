@@ -48,7 +48,7 @@ import ch.elexis.core.services.IDocumentStore.Capability;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktErfassenDialog;
-import ch.elexis.core.ui.documents.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.documents.composites.CategorySelectionEditComposite;
 import ch.elexis.core.ui.documents.provider.AuthorContentProposalProvider;
 import ch.elexis.core.ui.documents.provider.ValueSetProposalProvider;
@@ -103,11 +103,11 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		ret.setLayout(new GridLayout());
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 
-		new Label(ret, SWT.None).setText(Messages.DocumentView_categoryColumn);
+		new Label(ret, SWT.None).setText(Messages.Core_Category);
 		csec = new CategorySelectionEditComposite(ret, SWT.NONE, document, categoryCrudAllowed);
 		csec.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
-		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Title);
+		new Label(ret, SWT.NONE).setText(Messages.Core_Title);
 		tTitle = SWTHelper.createText(ret, 1, SWT.NONE);
 		tTitle.setText(document.getTitle());
 

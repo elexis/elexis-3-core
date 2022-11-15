@@ -221,19 +221,19 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 			ret = new String[] { "code=" //$NON-NLS-1$
 					+ Messages.KontaktSelector_abbreviation,
 					"description1=" //$NON-NLS-1$
-							+ Messages.KontaktSelector_expression1 };
+							+ Messages.BlockDetailDisplay_title };
 		} else if (IPerson.class.isAssignableFrom(targetClass)) {
 			ret = new String[] { "code=" //$NON-NLS-1$
 					+ Messages.KontaktSelector_abbreviation,
 					"description1=" //$NON-NLS-1$
 							+ "Nachname",
 					"dob=" //$NON-NLS-1$
-							+ Messages.KontaktSelector_birthDate };
+							+ Messages.AccountListView_bithdate };
 		} else if (IOrganization.class.isAssignableFrom(targetClass)) {
 			ret = new String[] { "code=" //$NON-NLS-1$
 					+ Messages.KontaktSelector_abbreviation,
 					"description1=" //$NON-NLS-1$
-							+ Messages.KontaktSelector_expression1 };
+							+ Messages.BlockDetailDisplay_title };
 		}
 		return ret;
 	}
@@ -438,7 +438,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 	@Override
 	public void create() {
 		super.create();
-		getShell().setText(Messages.KontaktSelector_title);
+		getShell().setText(Messages.Core_Select_Contact);
 	}
 
 	@Override

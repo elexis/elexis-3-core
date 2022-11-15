@@ -16,10 +16,10 @@ public class Messages {
 	public static String ArticleDefaultSignatureComposite_sympomatic = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_sympomatic;
 	public static String ArticleDefaultSignatureComposite_date_none = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_date_none;
 
-	public static String KontaktSelectionComposite_message = ch.elexis.core.l10n.Messages.KontaktSelectionComposite_message;
-	public static String KontaktSelectionComposite_title = ch.elexis.core.l10n.Messages.KontaktSelectionComposite_title;
+	public static String Core_Please_Select_Contact = ch.elexis.core.l10n.Messages.Core_Please_Select_Contact;
+	public static String Core_Select_Contact = ch.elexis.core.l10n.Messages.Core_Select_Contact;
 	public static String LaborSelectionComposite_message = ch.elexis.core.l10n.Messages.LaborSelectionComposite_message;
-	public static String LaborSelectionComposite_title = ch.elexis.core.l10n.Messages.LaborSelectionComposite_title;
+	public static String LabImporterUtil_SelectLab = ch.elexis.core.l10n.Messages.LabImporterUtil_SelectLab;
 
 	public static String StockDetailComposite_availableInStock = ch.elexis.core.l10n.Messages.StockDetailComposite_availableInStock;
 }

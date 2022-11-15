@@ -63,7 +63,7 @@ public class ArtikelContextMenu {
 	}
 
 	private void makeActions(final Artikel art) {
-		deleteAction = new Action(Messages.ArtikelContextMenu_deleteAction) {
+		deleteAction = new Action(Messages.Core_Delete) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 				setToolTipText(art.getClass().getName() + Messages.ArtikelContextMenu_deleteActionToolTip);
@@ -82,7 +82,7 @@ public class ArtikelContextMenu {
 
 			}
 		};
-		createAction = new Action(Messages.ArtikelContextMenu_newAction) {
+		createAction = new Action(Messages.AUF2_new) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				setToolTipText(Messages.ArtikelContextMenu_newActionTooltip);

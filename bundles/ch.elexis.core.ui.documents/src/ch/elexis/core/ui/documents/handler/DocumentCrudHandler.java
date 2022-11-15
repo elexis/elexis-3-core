@@ -30,7 +30,7 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.ui.documents.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.documents.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.documents.views.DocumentsMetaDataDialog;

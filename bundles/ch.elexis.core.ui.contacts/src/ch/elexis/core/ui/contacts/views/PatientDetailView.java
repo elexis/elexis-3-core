@@ -74,7 +74,7 @@ import ch.elexis.core.ui.medication.views.FixMediDisplay;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.WidgetFactory;
-import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.views.controls.ClientCustomTextComposite;
 import ch.elexis.core.ui.views.controls.StickerComposite;
 import ch.elexis.data.BezugsKontakt;
@@ -90,7 +90,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 
-	private final static String FIXMEDIKATION = Messages.Patientenblatt2_fixmedication;
+	private final static String FIXMEDIKATION = Messages.FixMediDisplay_FixMedikation;
 	private static final String KEY_PATIENTENBLATT = "PatientenDetailView/"; //$NON-NLS-1$
 
 	private ScrolledForm scrldfrm;
@@ -200,7 +200,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		scrldfrm = toolkit.createScrolledForm(parent);
 		scrldfrm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		TableWrapLayout td = new TableWrapLayout();
-		scrldfrm.setText(Messages.Patientenblatt2_noPatientSelected);
+		scrldfrm.setText(Messages.AUF2_NoPatientSelected);
 		scrldfrm.getBody().setLayout(td);
 		Composite scrldfrmComposite = scrldfrm.getBody();
 
@@ -290,7 +290,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					return "?"; //$NON-NLS-1$
 				}
 			});
-			inpZusatzAdresse.addHyperlinks(Messages.Patientenblatt2_add); // $NON-NLS-1$
+			inpZusatzAdresse.addHyperlinks(Messages.Bezugskontakt_Add); // $NON-NLS-1$
 			// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
 			inpZusatzAdresse.setMenu(removeZAAction, showZAAction, showBKAction);
 
@@ -327,7 +327,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					});
 
 			// Hyperlink "Hinzu..." über der Adressliste hinzufügen
-			additionalAddresses.addHyperlinks(Messages.Patientenblatt2_add); // $NON-NLS-1$
+			additionalAddresses.addHyperlinks(Messages.Bezugskontakt_Add); // $NON-NLS-1$
 
 			// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
 

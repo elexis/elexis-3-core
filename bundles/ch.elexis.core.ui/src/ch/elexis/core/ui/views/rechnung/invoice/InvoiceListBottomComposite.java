@@ -17,14 +17,14 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.NumberInput;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.rechnung.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.Money;
 
 public class InvoiceListBottomComposite extends Composite {
 
-	private static final String REMINDER_3 = Messages.RechnungsListeView_reminder3; // $NON-NLS-1$
-	private static final String REMINDER_2 = Messages.RechnungsListeView_reminder2; // $NON-NLS-1$
+	private static final String REMINDER_3 = Messages.Core_Invoice_Reminder_3; // $NON-NLS-1$
+	private static final String REMINDER_2 = Messages.Core_Invoice_Reminder_2; // $NON-NLS-1$
 	private static final String REMINDER_1 = Messages.RechnungsListeView_reminder1; // $NON-NLS-1$
 	private Text totalPatientsInListText;
 	private Text tSumInvoiceInList;

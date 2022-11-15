@@ -20,7 +20,7 @@ public class Messages {
 	public static String Eigendiagnosen_ImportFromCsvAndExcel = ch.elexis.core.l10n.Messages.Eigendiagnosen_ImportFromCsvAndExcel;
 	public static String Eigendiagnosen_msExcelDescription = ch.elexis.core.l10n.Messages.Eigendiagnosen_msExcelDescription;
 	public static String Eigendiagnosen_UnsupportedFileFormat = ch.elexis.core.l10n.Messages.Eigendiagnosen_UnsupportedFileFormat;
-	public static String EigendiagnoseSelector_Shortcut_Label = ch.elexis.core.l10n.Messages.EigendiagnoseSelector_Shortcut_Label;
-	public static String EigendiagnoseSelector_Text_Label = ch.elexis.core.l10n.Messages.EigendiagnoseSelector_Text_Label;
+	public static String Core_Short_Label = ch.elexis.core.l10n.Messages.Core_Short_Label;
+	public static String EditLabItem_labelTypText = ch.elexis.core.l10n.Messages.EditLabItem_labelTypText;
 
 }

@@ -182,7 +182,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		popManager.add(addUserAction);
 
 		deleteUserAction = new LockedRestrictedAction<User>(AccessControlDefaults.USER_DELETE,
-				Messages.LabGroupPrefs_delete) {
+				Messages.Core_Delete) {
 
 			@Override
 			public User getTargetedObject() {

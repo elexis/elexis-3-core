@@ -200,15 +200,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 	};
 
-	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.Patientenblatt2_diagnosesLbl,
-			Messages.Patientenblatt2_persAnamnesisLbl, Messages.Patientenblatt2_allergiesLbl,
-			Messages.Patientenblatt2_risksLbl, Messages.Patientenblatt2_remarksLbk));
+	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.DiagnosenDisplay_DiagnoseTarget,
+			Messages.Patientenblatt2_persAnamnesisLbl, Messages.KontaktBlatt_Allergies,
+			Messages.Patientenblatt2_risksLbl, Messages.AccountView_remarks));
 	private final List<Text> txExpandable = new ArrayList<>();
 	private ArrayList<String> dfExpandable = new ArrayList<>(Arrays.asList("Diagnosen", "PersAnamnese", //$NON-NLS-1$ //$NON-NLS-2$
 			"Allergien", "Risiken", "Bemerkung" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	));
 	private final List<ExpandableComposite> ec = new ArrayList<>();
-	private final static String FIXMEDIKATION = Messages.Patientenblatt2_fixmedication; // $NON-NLS-1$
+	private final static String FIXMEDIKATION = Messages.FixMediDisplay_FixMedikation; // $NON-NLS-1$
 	// private final static String[] lbLists={"Fixmedikation"/*,"Reminders" */};
 	private final FormText inpAdresse;
 	private final ListDisplay<BezugsKontakt> inpZusatzAdresse;
@@ -237,10 +237,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 
 		ArrayList<InputData> fields = new ArrayList<InputData>(20);
-		fields.add(new InputData(Messages.Patientenblatt2_name, Patient.FLD_NAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
+		fields.add(new InputData(Messages.AccountListView_name, Patient.FLD_NAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(
-				new InputData(Messages.Patientenblatt2_firstname, Patient.FLD_FIRSTNAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Patientenblatt2_birthdate, Patient.BIRTHDATE, InputData.Typ.DATE, null)); // $NON-NLS-1$
+				new InputData(Messages.Core_Firstname, Patient.FLD_FIRSTNAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
+		fields.add(new InputData(Messages.AccountListView_bithdate, Patient.BIRTHDATE, InputData.Typ.DATE, null)); // $NON-NLS-1$
 		IStructuredSelectionResolver ssr = new IStructuredSelectionResolver() {
 			@Override
 			public StructuredSelection resolveStructuredSelection(String value) {
@@ -251,7 +251,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 			}
 		};
-		comboGeschlecht = new InputData(Messages.Patientenblatt2_sex, Patient.FLD_SEX, null, Typ.COMBO_VIEWER,
+		comboGeschlecht = new InputData(Messages.Sex, Patient.FLD_SEX, null, Typ.COMBO_VIEWER,
 				ArrayContentProvider.getInstance(), new LabelProvider() {
 
 					@Override
@@ -291,9 +291,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		fields.add(new InputData(Messages.Patientenblatt2_phone1, Patient.FLD_PHONE1, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_phone2, Patient.FLD_PHONE2, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Patientenblatt2_mobile, Patient.MOBILE, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Patientenblatt2_fax, Patient.FLD_FAX, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Patientenblatt2_email, Patient.FLD_E_MAIL, // $NON-NLS-1$
+		fields.add(new InputData(Messages.KontaktBlatt_MobilePhone, Patient.MOBILE, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
+		fields.add(new InputData(Messages.KontaktBlatt_Fax, Patient.FLD_FAX, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
+		fields.add(new InputData(Messages.ErsterMandantDialog_EMail, Patient.FLD_E_MAIL, // $NON-NLS-1$
 				new LabeledInputField.IExecLinkProvider() {
 					@Override
 					public void executeString(InputData ltf) {
@@ -313,8 +313,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						}
 					}
 				}));
-		fields.add(new InputData(Messages.Patientenblatt2_group, Patient.FLD_GROUP, InputData.Typ.STRING, null)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Patientenblatt2_balance, Patient.FLD_BALANCE,
+		fields.add(new InputData(Messages.Core_Group, Patient.FLD_GROUP, InputData.Typ.STRING, null)); // $NON-NLS-1$
+		fields.add(new InputData(Messages.AccountView_accountColumn, Patient.FLD_BALANCE,
 				new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
 					public void displayContent(Object po, InputData ltf) {
@@ -540,7 +540,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		});
 		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 
-		hHA = tk.createHyperlink(cPersonalien, Messages.Patientenblatt2_postal, SWT.NONE); // $NON-NLS-1$
+		hHA = tk.createHyperlink(cPersonalien, Messages.KontaktBlatt_Postal, SWT.NONE); // $NON-NLS-1$
 		hHA.addHyperlinkListener(hr);
 		hHA.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 		inpAdresse = tk.createFormText(cPersonalien, false);
@@ -562,7 +562,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				if (ivc.isAvailable()) {
 					// remove unstructured diagnosis ui
 					if (ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) { //$NON-NLS-1$
-						lbExpandable.remove(Messages.Patientenblatt2_diagnosesLbl);
+						lbExpandable.remove(Messages.DiagnosenDisplay_DiagnoseTarget);
 						dfExpandable.remove("Diagnosen"); //$NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("PersonalAnamnesisViewContribution")) { //$NON-NLS-1$
@@ -574,7 +574,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						dfExpandable.remove("Risiken"); //$NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("AllergyIntoleranceViewContribution")) { //$NON-NLS-1$
-						lbExpandable.remove(Messages.Patientenblatt2_allergiesLbl);
+						lbExpandable.remove(Messages.KontaktBlatt_Allergies);
 						dfExpandable.remove("Allergien"); //$NON-NLS-1$
 					}
 				}
@@ -666,7 +666,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		});
 
 		// Hyperlink "Hinzu..." über der Adressliste hinzufügen
-		inpZusatzAdresse.addHyperlinks(Messages.Patientenblatt2_add); // $NON-NLS-1$
+		inpZusatzAdresse.addHyperlinks(Messages.Bezugskontakt_Add); // $NON-NLS-1$
 
 		// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
 
@@ -708,7 +708,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				});
 
 		// Hyperlink "Hinzu..." über der Adressliste hinzufügen
-		additionalAddresses.addHyperlinks(Messages.Patientenblatt2_add); // $NON-NLS-1$
+		additionalAddresses.addHyperlinks(Messages.Bezugskontakt_Add); // $NON-NLS-1$
 
 		// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
 
@@ -863,7 +863,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		detailComposites.forEach(dc -> dc.setDetailObject(actPatient, null));
 
 		if (actPatient == null) {
-			form.setText(Messages.Patientenblatt2_noPatientSelected); // $NON-NLS-1$
+			form.setText(Messages.AUF2_NoPatientSelected); // $NON-NLS-1$
 			inpAdresse.setText(StringConstants.EMPTY, false, false);
 			deceasedBtn.setSelection(false);
 			increasedTreatmentBtn.setSelection(false);
@@ -1107,12 +1107,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						// "Sex missing!"
 						// Info might appear) js
 						if (p.getGeschlecht().equals(Person.MALE)) {
-							salutation = Messages.KontakteView_SalutationM; // $NON-NLS-1$
+							salutation = Messages.Contact_SalutationM; // $NON-NLS-1$
 						} else // We do not use any default salutation for
 								// unknown sex to avoid
 								// errors!
 						if (p.getGeschlecht().equals(Person.FEMALE)) {
-							salutation = Messages.KontakteView_SalutationF; // $NON-NLS-1$
+							salutation = Messages.Contact_SalutationF; // $NON-NLS-1$
 						} else {
 							salutation = StringUtils.EMPTY;
 						}

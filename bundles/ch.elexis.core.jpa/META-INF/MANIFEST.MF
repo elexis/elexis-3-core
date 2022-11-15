@@ -8,7 +8,8 @@ Automatic-Module-Name: ch.elexis.core.jpa
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: ch.elexis.core.jpa.entities;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.9.100",
- ch.elexis.core;bundle-version="3.10.0"
+ ch.elexis.core;bundle-version="3.10.0",
+ ch.elexis.core.l10n
 Import-Package: javax.activation;version="1.2.2",
  javax.persistence;version="2.2.3",
  javax.persistence.criteria;version="2.2.3",

@@ -66,8 +66,8 @@ public class KontaktImporterBlatt extends Composite {
 	public KontaktImporterBlatt(final Composite parent) {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(2, false));
-		new Label(this, SWT.NONE).setText(Messages.KontaktImporterBlatt_DateiTyp);
-		new Label(this, SWT.NONE).setText(Messages.KontaktImporterBlatt_Datei);
+		new Label(this, SWT.NONE).setText(Messages.GenericImporterBlatt_FileType);
+		new Label(this, SWT.NONE).setText(Messages.GenericImporterBlatt_File);
 		cbMethods = new Combo(this, SWT.SINGLE);
 		cbMethods.setItems(methods);
 		cbMethods.addSelectionListener(new SelectionAdapter() {
@@ -88,10 +88,10 @@ public class KontaktImporterBlatt extends Composite {
 				filename = lbFileName.getText();
 			}
 		});
-		bLoad.setText(Messages.KontaktImporterBlatt_ChoseFile);
+		bLoad.setText(Messages.GenericImporterBlatt_SelectFile);
 		lbFileName = new Label(this, SWT.NONE);
 		bLoad.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		lbFileName.setText(Messages.KontaktImporterBlatt_PleaseChooseTypeAndFile);
+		lbFileName.setText(Messages.GenericImporterBlatt_PleaseSelectFile);
 		lbFileName.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 
 		final Button btnMediportInsuranceList = new Button(this, SWT.CHECK);
@@ -234,8 +234,8 @@ public class KontaktImporterBlatt extends Composite {
 		if (mediportInsuererList) {
 			if (file == null) {
 				log.warn("No file selected"); //$NON-NLS-1$
-				SWTHelper.showError(Messages.KontaktImporterBlatt_ChoseFile, Messages.KontaktImporterBlatt_ChoseFile,
-						Messages.KontaktImporterBlatt_PleaseChooseTypeAndFile);
+				SWTHelper.showError(Messages.GenericImporterBlatt_SelectFile, Messages.GenericImporterBlatt_SelectFile,
+						Messages.GenericImporterBlatt_PleaseSelectFile);
 				return false;
 			}
 
@@ -243,7 +243,7 @@ public class KontaktImporterBlatt extends Composite {
 				// check if it's actually a csv
 				String filename = file.toLowerCase();
 				if (!filename.endsWith("csv")) { //$NON-NLS-1$
-					SWTHelper.showError(Messages.KontaktImporterBlatt_DateiTyp,
+					SWTHelper.showError(Messages.GenericImporterBlatt_FileType,
 							MessageFormat.format(Messages.KontaktImporterBlatt_DatatypeErrorNoCSV, file));
 					return false;
 				}

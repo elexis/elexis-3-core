@@ -15,5 +15,5 @@ public class Messages {
 	public static String HL7_NameConflictWithID = ch.elexis.core.l10n.Messages.HL7_NameConflictWithID;
 	public static String HL7_Database = ch.elexis.core.l10n.Messages.HL7_Database;
 	public static String HL7_Lab = ch.elexis.core.l10n.Messages.HL7_Lab;
-	public static String HL7_ExceptionWhileProcessingData = ch.elexis.core.l10n.Messages.HL7_ExceptionWhileProcessingData;
+	public static String HL7Parser_ExceptionWhileProcessingData = ch.elexis.core.l10n.Messages.HL7Parser_ExceptionWhileProcessingData;
 }

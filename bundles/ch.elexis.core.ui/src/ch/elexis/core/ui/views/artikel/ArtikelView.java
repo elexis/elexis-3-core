@@ -133,7 +133,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 	}
 
 	private void makeActions() {
-		importAction = new Action(Messages.ArtikelView_importAction) {
+		importAction = new Action(Messages.Core_Import_Action) {
 			@Override
 			public void run() {
 				CTabItem it = ctab.getSelection();
@@ -230,7 +230,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 			} catch (Exception ex) {
 				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex); //$NON-NLS-1$
 				MessageBox mb = new MessageBox(getViewSite().getShell(), SWT.ICON_ERROR | SWT.OK);
-				mb.setText(Messages.ArtikelView_errorCaption);
+				mb.setText(Messages.Core_Error);
 				mb.setMessage(Messages.ArtikelView_errorText + ce.getName() + ":\n" //$NON-NLS-1$
 						+ ex.getLocalizedMessage());
 				mb.open();

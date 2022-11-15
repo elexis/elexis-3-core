@@ -140,9 +140,9 @@ public class StockView extends ViewPart implements IRefreshable {
 
 	private StockViewComparator comparator;
 
-	String[] columns = { Messages.LagerView_stock, Messages.LagerView_pharmacode, Messages.LagerView_gtin,
-			Messages.LagerView_name, Messages.LagerView_vkPreis, Messages.LagerView_minBestand,
-			Messages.LagerView_istBestand, Messages.LagerView_maxBestand, Messages.LagerView_dealer };
+	String[] columns = { Messages.LagerView_stock, Messages.Artikeldetail_Pharmacode, Messages.LagerView_gtin,
+			Messages.AccountListView_name, Messages.LagerView_vkPreis, Messages.LagerView_minBestand,
+			Messages.LagerView_istBestand, Messages.LagerView_maxBestand, Messages.Artikeldetail_lieferant };
 	int[] colwidth = { 50, 75, 90, 250, 50, 35, 35, 35, 150 };
 
 	@Override
@@ -628,7 +628,7 @@ public class StockView extends ViewPart implements IRefreshable {
 
 		@Override
 		public String getText() {
-			return Messages.LagerView_deleteAction;
+			return Messages.Bezugskontakt_Delete;
 		}
 
 		@Override

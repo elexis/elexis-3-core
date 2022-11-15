@@ -40,7 +40,7 @@ public class KontaktImporterDialog extends TitleAreaDialog {
 		setTitle(Messages.KontaktImporterDialog_ImportingContact);
 		setMessage(Messages.KontaktImporterDialog_PleaseEnterFileTypeAndFile);
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
-		getShell().setText(Messages.KontaktImporterDialog_ImporterCaption);
+		getShell().setText(Messages.GlobalActions_ImportDlgShelltext);
 	}
 
 	@Override

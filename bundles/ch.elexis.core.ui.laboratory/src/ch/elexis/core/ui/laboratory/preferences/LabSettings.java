@@ -43,7 +43,7 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
-import ch.elexis.core.ui.preferences.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
 import ch.elexis.data.LabMapping;
 import ch.elexis.data.Query;

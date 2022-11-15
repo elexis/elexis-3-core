@@ -164,7 +164,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 		btnReserveMedication.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 
 		txtIntakeOrder = new Text(ret, SWT.BORDER);
-		txtIntakeOrder.setMessage(Messages.MediDetailDialog_intakeOrder);
+		txtIntakeOrder.setMessage(Messages.ArticleDefaultSignatureComposite_applicationInstruction);
 		txtIntakeOrder.setTextLimit(254);
 		txtIntakeOrder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
@@ -219,7 +219,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 		}
 
 		setMessage(Messages.MediDetailDialog_pleaseEnterPrescription);
-		getShell().setText(Messages.MediDetailDialog_articleDetail);
+		getShell().setText(Messages.ArtikelDetailDialog_articleDetail);
 	}
 
 	@Override

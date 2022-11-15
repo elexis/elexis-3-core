@@ -226,7 +226,7 @@ public class ScriptView extends ViewPart {
 				Messages.ScriptView_editScriptAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-				setToolTipText(Messages.ScriptView_editScriptTooltip); // $NON-NLS-1$
+				setToolTipText(Messages.ScriptView_editScriptAction); // $NON-NLS-1$
 			}
 
 			@Override
@@ -263,7 +263,7 @@ public class ScriptView extends ViewPart {
 				Messages.ScriptView_executeScriptAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_GOFURTHER.getImageDescriptor());
-				setToolTipText(Messages.ScriptView_executeScriptTooltip); // $NON-NLS-1$
+				setToolTipText(Messages.ScriptView_executeScriptAction); // $NON-NLS-1$
 			}
 
 			@Override

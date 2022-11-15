@@ -1035,7 +1035,7 @@ public class TextContainer {
 					cMands.setText(lMandator);
 				}
 			});
-			new Label(ret, SWT.NONE).setText(Messages.TextContainer_Mandator);
+			new Label(ret, SWT.NONE).setText(Messages.AccessControlDefaults_mandator);
 			Composite line = new Composite(ret, SWT.NONE);
 			GridLayout gridLayout = new GridLayout(2, false);
 			gridLayout.marginWidth = 0;
@@ -1045,7 +1045,7 @@ public class TextContainer {
 			cMands = new Combo(line, SWT.SINGLE);
 			Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
 			lMands = qbe.execute();
-			cMands.add(Messages.TextContainer_All);
+			cMands.add(Messages.AccessControl_GroupAll);
 			for (Mandant m : lMands) {
 				cMands.add(m.getLabel());
 			}

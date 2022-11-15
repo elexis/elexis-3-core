@@ -1188,7 +1188,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			}
 		}
 		if (!actFall.isOpen()) {
-			MessageEvent.fireError(Messages.GlobalActions_casclosed, Messages.GlobalActions_caseclosedexplanation);
+			MessageEvent.fireError(Messages.GlobalActions_casclosed, Messages.Fall_CaseClosedText);
 			return;
 		}
 		Konsultation actLetzte = actFall.getLetzteBehandlung();

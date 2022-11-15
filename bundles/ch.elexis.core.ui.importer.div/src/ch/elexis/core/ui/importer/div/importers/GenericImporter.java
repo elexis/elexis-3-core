@@ -28,7 +28,7 @@ import ch.elexis.core.ui.util.SWTHelper;
  *
  */
 public class GenericImporter extends ImporterPage {
-	public static final String TITLE = Messages.GenericImporter_General;
+	public static final String TITLE = Messages.Core_Common;
 
 	GenericImporterBlatt importerBlatt;
 

@@ -93,22 +93,22 @@ public class EditLabItem extends TitleAreaDialog {
 		mapping.setLayoutData(layoutData);
 		mapping.setLabItem(actLabItem);
 
-		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelShortLabel);
+		WidgetFactory.createLabel(ret, Messages.Core_Short_Label);
 		iKuerzel = new Text(ret, SWT.BORDER);
 		iKuerzel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iKuerzel.setTextLimit(80);
 
-		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelTitle);
+		WidgetFactory.createLabel(ret, Messages.Core_Title);
 		iTitel = new Text(ret, SWT.BORDER);
 		iTitel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iTitel.setTextLimit(80);
 
-		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelType);
+		WidgetFactory.createLabel(ret, Messages.Core_Type);
 		Group grp = new Group(ret, SWT.NONE);
 		grp.setLayout(new FillLayout(SWT.HORIZONTAL));
 		grp.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 		numeric = new Button(grp, SWT.RADIO);
-		numeric.setText(Messages.EditLabItem_labelTypNumber);
+		numeric.setText(Messages.Core_Number);
 		alph = new Button(grp, SWT.RADIO);
 		alph.setText(Messages.EditLabItem_labelTypText);
 		abs = new Button(grp, SWT.RADIO);
@@ -162,7 +162,7 @@ public class EditLabItem extends TitleAreaDialog {
 		iUnit = new Text(ret, SWT.BORDER);
 		iUnit.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 		iUnit.setTextLimit(25);
-		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelGroup);
+		WidgetFactory.createLabel(ret, Messages.Core_Group);
 
 		List<LabItem> labItems = LabItem.getLabItems();
 		groups.clear();
@@ -198,7 +198,7 @@ public class EditLabItem extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Labor.class,
-						Messages.EditLabItem_OriginLaboratorySelectorCaption,
+						Messages.EditLabItem_OriginLaboratorySelectorBody,
 						Messages.EditLabItem_OriginLaboratorySelectorBody, false);
 				if (ksl.open() == Dialog.OK) {
 					actLabor = (Labor) ksl.getSelection();

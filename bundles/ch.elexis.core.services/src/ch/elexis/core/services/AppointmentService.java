@@ -34,7 +34,7 @@ import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.model.agenda.AreaType;

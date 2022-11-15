@@ -75,7 +75,7 @@ public class EditAUFDialog extends TitleAreaDialog {
 		ret.setLayout(new GridLayout(2, true));
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_from); // $NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_until); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Date_Until); // $NON-NLS-1$
 		dpVon = new DatePicker(ret, SWT.NONE);
 		dpBis = new DatePicker(ret, SWT.NONE);
 		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_percent); // $NON-NLS-1$

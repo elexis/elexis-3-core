@@ -47,8 +47,8 @@ public class Presets {
 	private final static String IMPORT_XID = "elexis.ch/importPresets"; //$NON-NLS-1$
 	private final static String KONTAKTID = IMPORT_XID + "/KID"; //$NON-NLS-1$
 	private static Logger log = LoggerFactory.getLogger(Presets.class);
-	public static final String INSURANCE = Messages.Presets_Insurance;
-	public static final String INSURANCE_NUMBER = Messages.Presets_InsuranceNumber;
+	public static final String INSURANCE = Messages.FallDetailBlatt2_Guarantor;
+	public static final String INSURANCE_NUMBER = Messages.FallDetailBlatt2_InsuranceNumber;
 
 	static {
 		Xid.localRegisterXIDDomainIfNotExists(KONTAKTID, Messages.Presets_PreviousID, Xid.ASSIGNMENT_LOCAL);
@@ -256,11 +256,11 @@ public class Presets {
 				if (res.size() > 0) {
 					k = res.get(0);
 				} else {
-					k = new Organisation(kk, Messages.Presets_KKKuerzel);
-					k.set("Kuerzel", Messages.Presets_KKKuerzel); //$NON-NLS-1$
+					k = new Organisation(kk, Messages.KontaktImporterBlatt_KKKuerzel);
+					k.set("Kuerzel", Messages.KontaktImporterBlatt_KKKuerzel); //$NON-NLS-1$
 				}
 				Fall fall = pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
-						Messages.Presets_KVGAbkuerzung);
+						Messages.Fall_KVG_Name);
 				fall.setGarant(pat);
 				fall.setRequiredContact(INSURANCE, k);
 				fall.setRequiredString(INSURANCE_NUMBER, kknr);
@@ -273,11 +273,11 @@ public class Presets {
 				if (res.size() > 0) {
 					k = res.get(0);
 				} else {
-					k = new Organisation(unfallvers, Messages.Presets_UVGAbkuerzung);
-					k.set("Kuerzel", Messages.Presets_UVGAbkuerzung); //$NON-NLS-1$
+					k = new Organisation(unfallvers, Messages.Fall_UVG_Name);
+					k.set("Kuerzel", Messages.Fall_UVG_Name); //$NON-NLS-1$
 				}
-				Fall fall = pat.neuerFall(Messages.Presets_Unfall, Messages.Presets_Unfall,
-						Messages.Presets_UVGAbkuerzung);
+				Fall fall = pat.neuerFall(Messages.Presets_Unfall, Messages.Fall_Accident,
+						Messages.Fall_UVG_Name);
 				fall.setGarant(k);
 				fall.setRequiredContact(INSURANCE, k);
 				fall.setRequiredString(Messages.Presets_Unfallnummer, unfallnr);
@@ -323,16 +323,16 @@ public class Presets {
 				Organisation org = KontaktMatcher.findOrganisation(row[10], null, StringUtils.EMPTY, StringUtils.EMPTY,
 						StringUtils.EMPTY, CreateMode.CREATE); // $NON-NLS-1$ //$NON-NLS-2$
 				Fall fall = pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
-						Messages.Presets_KVGAbkuerzung);
-				fall.setRequiredContact(Messages.Presets_Insurance, org);
+						Messages.Fall_KVG_Name);
+				fall.setRequiredContact(Messages.FallDetailBlatt2_Guarantor, org);
 				fall.setGarant(pat);
 			}
 			if (!StringTool.isNothing(StringTool.getSafe(row, 11))) {
 				Organisation org = KontaktMatcher.findOrganisation(row[11], null, StringUtils.EMPTY, StringUtils.EMPTY,
 						StringUtils.EMPTY, CreateMode.CREATE); // $NON-NLS-1$ //$NON-NLS-2$
 				Fall fall = pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
-						Messages.Presets_UVGAbkuerzung);
-				fall.setRequiredContact(Messages.Presets_Insurance, org);
+						Messages.Fall_UVG_Name);
+				fall.setRequiredContact(Messages.FallDetailBlatt2_Guarantor, org);
 				fall.setGarant(org);
 			}
 			moni.worked(1);

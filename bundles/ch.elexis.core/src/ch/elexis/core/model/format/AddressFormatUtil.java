@@ -222,7 +222,7 @@ public class AddressFormatUtil {
 		}
 
 		if (StringUtils.isNotBlank(contact.getFax())) {
-			thisAddress.append(Messages.KontaktDetailDialog_labelFax + ":" + StringTool.space + contact.getFax()
+			thisAddress.append(Messages.KontaktBlatt_Fax + ":" + StringTool.space + contact.getFax()
 					+ System.lineSeparator());
 		}
 		if (StringUtils.isNotBlank(contact.getEmail())) {

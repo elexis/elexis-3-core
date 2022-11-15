@@ -32,7 +32,7 @@ public class NeueBestellungDialog extends TitleAreaDialog {
 		area.setLayout(new GridLayout(2, false));
 
 		ltTitle = new LimitedText(area, SWT.BORDER, calcMaxAllowedLength());
-		ltTitle.setText(Messages.NeueBestellungDialog_Automatic);
+		ltTitle.setText(Messages.BestellView_Automatic);
 
 		return area;
 	}

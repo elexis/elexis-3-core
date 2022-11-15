@@ -77,7 +77,7 @@ public class AccountListView extends ViewPart implements IActivationListener {
 	private static final int SALDO = 3;
 
 	private static final String[] COLUMN_TEXT = { Messages.AccountListView_name, // NAME //$NON-NLS-1$
-			Messages.AccountListView_firstname, // FIRSTNAME //$NON-NLS-1$
+			Messages.Core_Firstname, // FIRSTNAME //$NON-NLS-1$
 			Messages.AccountListView_bithdate, // BIRTHDATE //$NON-NLS-1$
 			Messages.AccountListView_balance, // SALDO //$NON-NLS-1$
 	};

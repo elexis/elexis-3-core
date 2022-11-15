@@ -86,8 +86,8 @@ public class LaborMappingComposite extends Composite {
 			@Override
 			public void run() {
 				KontaktSelektor selektor = new KontaktSelektor(getShell(), Labor.class,
-						Messages.LaborMappingComposite_labelSelektorTitle,
-						Messages.LaborMappingComposite_labelSelektorMessage, Kontakt.DEFAULT_SORT);
+						Messages.LabImporterUtil_Select,
+						Messages.LabImporterUtil_SelectLab, Kontakt.DEFAULT_SORT);
 				if (selektor.open() == Dialog.OK) {
 					Labor labor = (Labor) selektor.getSelection();
 					if (labItem != null) {
@@ -138,7 +138,7 @@ public class LaborMappingComposite extends Composite {
 
 		TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(100);
-		column.getColumn().setText(Messages.LaborMappingComposite_columnLabor);
+		column.getColumn().setText(Messages.AccessControlDefaults_GroupAdminLaboratory);
 		column.setLabelProvider(new ColumnLabelProvider() {
 
 			public String getText(Object element) {
@@ -153,7 +153,7 @@ public class LaborMappingComposite extends Composite {
 
 		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(100);
-		column.getColumn().setText(Messages.LaborMappingComposite_columnShortname);
+		column.getColumn().setText(Messages.Core_Short_Label);
 		column.setLabelProvider(new ColumnLabelProvider() {
 
 			public String getText(Object element) {
