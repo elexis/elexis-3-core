@@ -107,6 +107,50 @@ public class IInvoiceServiceTest extends AbstractServiceTest {
 	}
 
 	@Test
+	public void getInvoiceCancel() {
+		ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
+		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
+		ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(),
+				ch.elexis.core.constants.Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
+
+		Result<IBilled> billed = billingService.bill(customService, testEncounters.get(0), 1.0);
+		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
+		IFreeTextDiagnosis diagnosis = coreModelService.create(IFreeTextDiagnosis.class);
+		diagnosis.setDescription("test");
+		diagnosis.setText("testText");
+		coreModelService.save(diagnosis);
+		testEncounters.get(0).addDiagnosis(diagnosis);
+		coreModelService.save(testEncounters.get(0));
+		// invoice
+		Result<IInvoice> invoice = invoiceService.invoice(testEncounters);
+		assertTrue(invoice.toString(), invoice.isOK());
+
+		IQuery<IAccountTransaction> transactionQuery = CoreModelServiceHolder.get().getQuery(IAccountTransaction.class);
+		transactionQuery.and("invoice", COMPARATOR.EQUALS, invoice.get());
+		List<IAccountTransaction> transactions = transactionQuery.execute();
+		IQuery<IPayment> paymentQuery = CoreModelServiceHolder.get().getQuery(IPayment.class);
+		paymentQuery.and("invoice", COMPARATOR.EQUALS, invoice.get());
+		List<IPayment> payments = paymentQuery.execute();
+		assertEquals(1, transactions.size());
+		assertEquals(0, payments.size());
+		// cancel
+		invoiceService.cancel(invoice.get(), true);
+		transactions = transactionQuery.execute();
+		payments = paymentQuery.execute();
+		assertEquals(2, transactions.size());
+		assertEquals(1, payments.size());
+
+		CoreModelServiceHolder.get().remove(billed.get());
+		List<IInvoice> invoices = invoiceService.getInvoices(testEncounters.get(0));
+		assertEquals(1, invoices.size());
+
+		CoreModelServiceHolder.get().remove(billed.get());
+		invoices.forEach(i -> {
+			CoreModelServiceHolder.get().remove(i);
+		});
+	}
+
+	@Test
 	public void getInvoices() {
 		ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
 		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
