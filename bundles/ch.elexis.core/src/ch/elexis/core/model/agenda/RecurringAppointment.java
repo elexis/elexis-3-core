@@ -1,9 +1,11 @@
 package ch.elexis.core.model.agenda;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,14 +75,22 @@ public class RecurringAppointment {
 
 	public RecurringAppointment(IAppointment appointment, IModelService modelService) {
 		groupId = appointment.getLinkgroup();
-		rootTermin = modelService.load(groupId, IAppointment.class).orElseThrow(
+		rootTermin = modelService.load(groupId, IAppointment.class, true).orElseThrow(
 				() -> new IllegalStateException("Not existing root appointment with id [" + groupId + "]"));
-		contact = rootTermin.getContact();
-		if (contact == null) {
-			setFreeText(rootTermin.getSubjectOrPatient());
+		if (rootTermin.isDeleted()) {
+			setFreeText(StringUtils.EMPTY);
+			reason = StringUtils.EMPTY;
+			beginTime = Date.from(LocalDate.EPOCH.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+			endTime = Date.from(LocalDate.EPOCH.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+			seriesStartDate = Date.from(LocalDate.EPOCH.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+		} else {
+			contact = rootTermin.getContact();
+			if (contact == null) {
+				setFreeText(rootTermin.getSubjectOrPatient());
+			}
+			reason = rootTermin.getReason();
+			parseSerienTerminConfigurationString(rootTermin.getExtension());
 		}
-		reason = rootTermin.getReason();
-		parseSerienTerminConfigurationString(rootTermin.getExtension());
 	}
 
 	/**
