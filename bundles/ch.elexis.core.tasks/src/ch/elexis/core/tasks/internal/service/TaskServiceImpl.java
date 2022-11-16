@@ -236,12 +236,23 @@ public class TaskServiceImpl implements ITaskService {
 
 	/**
 	 * Become responsible for executing this task when required. This includes
-	 * asserting that the necessary execution events are generated.
+	 * asserting that the necessary execution events are generated and the runner
+	 * matches.
 	 *
 	 * @param task
 	 * @throws TaskException
 	 */
 	private void incur(ITaskDescriptor taskDescriptor) throws TaskException {
+
+		String runner = taskDescriptor.getRunner();
+		if (StringUtils.isNotBlank(runner)) {
+			boolean isBoundToRunOnThisSystem = StringUtils.equalsIgnoreCase(runner,
+					contextService.getStationIdentifier());
+			if (!isBoundToRunOnThisSystem) {
+				return;
+			}
+		}
+
 		if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()) {
 			assertFilesystemChangeWatcher();
 			fileSystemChangeWatcher.incur(taskDescriptor);
@@ -635,17 +646,28 @@ public class TaskServiceImpl implements ITaskService {
 
 	@Override
 	public List<ITaskDescriptor> getIncurredTasks() {
-		List<ITaskDescriptor> projectedTaskDescriptors = new ArrayList<ITaskDescriptor>();
+		List<ITaskDescriptor> incurredTaskDescriptors = new ArrayList<ITaskDescriptor>();
 		if (quartzExecutor != null) {
 			Set<String[]> incurred = quartzExecutor.getIncurred();
 			incurred.stream().forEach(i -> {
 				ITaskDescriptor taskDescriptor = taskModelService.load(i[0], ITaskDescriptor.class).orElse(null);
 				if (taskDescriptor != null) {
 					taskDescriptor.getTransientData().put("cron-next-exectime", i[1]);
-					projectedTaskDescriptors.add(taskDescriptor);
+					incurredTaskDescriptors.add(taskDescriptor);
 				}
 			});
 		}
-		return projectedTaskDescriptors;
+		if (fileSystemChangeWatcher != null) {
+			Set<String[]> incurred = fileSystemChangeWatcher.getIncurred();
+			incurred.stream().forEach(i -> {
+				ITaskDescriptor taskDescriptor = taskModelService.load(i[0], ITaskDescriptor.class).orElse(null);
+				if (taskDescriptor != null) {
+					taskDescriptor.getTransientData().put("url", i[1]);
+					taskDescriptor.getTransientData().put("file-extension-filter", i[2]);
+					incurredTaskDescriptors.add(taskDescriptor);
+				}
+			});
+		}
+		return incurredTaskDescriptors;
 	}
 }

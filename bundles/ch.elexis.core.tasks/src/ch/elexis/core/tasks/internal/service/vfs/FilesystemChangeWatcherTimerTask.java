@@ -3,6 +3,7 @@ package ch.elexis.core.tasks.internal.service.vfs;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -92,5 +93,12 @@ public class FilesystemChangeWatcherTimerTask extends TimerTask {
 		} catch (IllegalStateException e) {
 			throw new TaskException(TaskException.EXECUTION_ERROR, e);
 		}
+	}
+
+	public Set<String[]> getIncurred() {
+		Set<String[]> incurred = new HashSet<String[]>();
+		pollMap.entrySet()
+				.forEach(es -> incurred.add(new String[] { es.getKey(), es.getValue()[0], es.getValue()[1] }));
+		return incurred;
 	}
 }

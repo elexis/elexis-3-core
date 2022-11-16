@@ -1,10 +1,11 @@
 package ch.elexis.core.ui.tasks.parts.controls;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -24,10 +25,15 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
+import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.OwnerTaskNotification;
 
 public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigurationComposite {
@@ -39,7 +45,7 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 	private Button btnSingleton;
 	private Button btnActive;
 
-	public GeneralConfigurationComposite(Composite parent, int style) {
+	public GeneralConfigurationComposite(ITaskService taskService, Composite parent, int style) {
 		super(parent, style);
 
 		setLayout(new GridLayout(2, false));
@@ -157,8 +163,14 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 			public void widgetSelected(SelectionEvent e) {
 				boolean selection = ((Button) e.widget).getSelection();
 				if (taskDescriptor != null) {
-					taskDescriptor.setActive(selection);
-					saveTaskDescriptor();
+					try {
+						taskService.setActive(taskDescriptor, selection);
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, taskDescriptor);
+					} catch (TaskException e1) {
+						MessageDialog.openWarning(btnActive.getShell(), "Error de-/activating",
+								e1.getLocalizedMessage());
+						LoggerFactory.getLogger(getClass()).warn("Error de-/activating", e1);
+					}
 				}
 			}
 		});

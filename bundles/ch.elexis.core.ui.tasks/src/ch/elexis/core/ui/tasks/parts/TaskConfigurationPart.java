@@ -5,6 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -107,6 +109,9 @@ public class TaskConfigurationPart implements IRefreshablePart {
 			@Override
 			public String getText(Object element) {
 				ITaskDescriptor td = (ITaskDescriptor) element;
+				if (td.getTransientData().get("incurred") != null) {
+					return "INC"; //$NON-NLS-1$
+				}
 				return td.isActive() ? "ACT" : "NACT"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
@@ -182,7 +187,7 @@ public class TaskConfigurationPart implements IRefreshablePart {
 		TabItem tbtmGeneral = new TabItem(tabFolder, SWT.NONE);
 		tbtmGeneral.setText("general");
 
-		gcp = new GeneralConfigurationComposite(tabFolder, SWT.NONE);
+		gcp = new GeneralConfigurationComposite(taskService, tabFolder, SWT.NONE);
 		tbtmGeneral.setControl(gcp);
 
 		// TRIGGER
@@ -232,6 +237,15 @@ public class TaskConfigurationPart implements IRefreshablePart {
 			taskQuery.and(ModelPackage.Literals.ITASK_DESCRIPTOR__SYSTEM, COMPARATOR.EQUALS, false);
 		}
 		List<ITaskDescriptor> taskDescriptors = taskQuery.execute();
+
+		Set<String> incurredTaskIds = taskService.getIncurredTasks().stream().map(ict -> ict.getId())
+				.collect(Collectors.toSet());
+		taskDescriptors.forEach(td -> {
+			if (incurredTaskIds.contains(td.getId())) {
+				td.getTransientData().put("incurred", Boolean.TRUE.toString());
+			}
+		});
+
 		tvTaskDescriptors.setInput(taskDescriptors);
 		tvTaskDescriptors.refresh(true);
 	}

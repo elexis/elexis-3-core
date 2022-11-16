@@ -1,6 +1,8 @@
 package ch.elexis.core.tasks.internal.service.vfs;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 
 import ch.elexis.core.services.IVirtualFilesystemService;
@@ -54,6 +56,14 @@ public class FilesystemChangeWatcher {
 
 	public void release(ITaskDescriptor taskDescriptor) {
 		timerTask.release(taskDescriptor.getId());
+	}
+
+	public Set<String[]> getIncurred() {
+		Set<String[]> incurred = new HashSet<String[]>();
+		if (timerTask != null) {
+			incurred.addAll(timerTask.getIncurred());
+		}
+		return incurred;
 	}
 
 }
