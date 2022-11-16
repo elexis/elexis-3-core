@@ -75,8 +75,8 @@
         <setEntry value="org.apache.commons.commons-collections4@default:default"/>
         <setEntry value="org.apache.commons.commons-compress@default:default"/>
         <setEntry value="org.apache.commons.commons-dbcp2@default:default"/>
+        <setEntry value="org.apache.commons.commons-io@default:default"/>
         <setEntry value="org.apache.commons.commons-pool2@default:default"/>
-        <setEntry value="org.apache.commons.io@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.commons.logging*1.2.0.v20180409-1502@default:default"/>
         <setEntry value="org.apache.commons.math3@default:default"/>
@@ -118,8 +118,6 @@
         <setEntry value="org.eclipse.persistence.jpa.jpql@default:default"/>
         <setEntry value="org.eclipse.persistence.jpa@default:default"/>
         <setEntry value="org.eclipse.persistence.oracle@default:false"/>
-        <setEntry value="org.eclipse.swt.cocoa.macosx.x86_64@default:false"/>
-        <setEntry value="org.eclipse.swt@default:default"/>
         <setEntry value="org.glassfish.hk2.osgi-resource-locator@default:default"/>
         <setEntry value="org.glassfish.jersey.core.jersey-client@default:default"/>
         <setEntry value="org.glassfish.jersey.core.jersey-common@default:default"/>
@@ -132,9 +130,18 @@
         <setEntry value="org.keycloak.keycloak-authz-client@default:default"/>
         <setEntry value="org.keycloak.keycloak-common@default:default"/>
         <setEntry value="org.keycloak.keycloak-core@default:default"/>
+        <setEntry value="org.osgi.service.cm@default:default"/>
+        <setEntry value="org.osgi.service.component@default:default"/>
+        <setEntry value="org.osgi.service.device@default:default"/>
+        <setEntry value="org.osgi.service.event@default:default"/>
         <setEntry value="org.osgi.service.jdbc@default:default"/>
         <setEntry value="org.osgi.service.jndi@default:default"/>
+        <setEntry value="org.osgi.service.metatype@default:default"/>
         <setEntry value="org.osgi.service.prefs@default:default"/>
+        <setEntry value="org.osgi.service.provisioning@default:default"/>
+        <setEntry value="org.osgi.service.upnp@default:default"/>
+        <setEntry value="org.osgi.service.useradmin@default:default"/>
+        <setEntry value="org.osgi.service.wireadmin@default:default"/>
         <setEntry value="org.osgi.util.function@default:default"/>
         <setEntry value="org.osgi.util.measurement@default:default"/>
         <setEntry value="org.osgi.util.position@default:default"/>

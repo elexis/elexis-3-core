@@ -15,6 +15,13 @@
     <setAttribute key="deselected_workspace_bundles"/>
     <booleanAttribute key="includeOptional" value="false"/>
     <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.DisabledIds"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.EnabledIds"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.FilterDisabledIds"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.FilterEnabledIds"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.StatisticsDisabledIds"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.StatisticsEnabledIds"/>
+    <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
         <listEntry value="/ch.elexis.core.serial.test/src/ch/elexis/core/serial/test/AllTests.java"/>
     </listAttribute>
@@ -27,6 +34,7 @@
     <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="ch.elexis.core.serial.test.AllTests"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
@@ -44,13 +52,13 @@
         <setEntry value="com.mysql.cj@default:default"/>
         <setEntry value="com.sun.xml.bind.jaxb-osgi@default:default"/>
         <setEntry value="jakarta.ws.rs-api@default:default"/>
-        <setEntry value="jakarta.xml.bind-api@default:default"/>
+        <setEntry value="jakarta.xml.bind-api@default:false"/>
         <setEntry value="javax.activation@default:default"/>
         <setEntry value="jaxb-api@default:default"/>
         <setEntry value="org.apache.commons.codec@default:default"/>
         <setEntry value="org.apache.commons.commons-dbcp2@default:default"/>
+        <setEntry value="org.apache.commons.commons-io@default:default"/>
         <setEntry value="org.apache.commons.commons-pool2@default:default"/>
-        <setEntry value="org.apache.commons.io@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.geronimo.specs.geronimo-jta_1.1_spec@default:default"/>
         <setEntry value="org.eclipse.core.contenttype@default:default"/>
@@ -74,9 +82,23 @@
         <setEntry value="org.jdom2@default:default"/>
         <setEntry value="org.junit@default:default"/>
         <setEntry value="org.osgi.framework.system.packages.extra@default:false"/>
+        <setEntry value="org.osgi.service.cm@default:default"/>
+        <setEntry value="org.osgi.service.component@default:default"/>
+        <setEntry value="org.osgi.service.device@default:default"/>
+        <setEntry value="org.osgi.service.event@default:default"/>
+        <setEntry value="org.osgi.service.jdbc@default:default"/>
+        <setEntry value="org.osgi.service.jndi@default:default"/>
+        <setEntry value="org.osgi.service.metatype@default:default"/>
         <setEntry value="org.osgi.service.prefs@default:default"/>
+        <setEntry value="org.osgi.service.provisioning@default:default"/>
+        <setEntry value="org.osgi.service.upnp@default:default"/>
+        <setEntry value="org.osgi.service.useradmin@default:default"/>
+        <setEntry value="org.osgi.service.wireadmin@default:default"/>
         <setEntry value="org.osgi.util.function@default:default"/>
+        <setEntry value="org.osgi.util.measurement@default:default"/>
+        <setEntry value="org.osgi.util.position@default:default"/>
         <setEntry value="org.osgi.util.promise@default:default"/>
+        <setEntry value="org.osgi.util.xml@default:default"/>
         <setEntry value="org.postgresql.jdbc@default:default"/>
         <setEntry value="org.slf4j.api@default:default"/>
         <setEntry value="org.slf4j.apis.jcl@default:default"/>

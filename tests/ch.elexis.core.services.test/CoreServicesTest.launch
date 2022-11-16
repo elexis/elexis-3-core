@@ -109,7 +109,6 @@
         <setEntry value="org.eclipse.persistence.core@default:default"/>
         <setEntry value="org.eclipse.persistence.jpa.jpql@default:default"/>
         <setEntry value="org.eclipse.persistence.jpa@default:default"/>
-        <setEntry value="org.eclipse.persistence.oracle@default:false"/>
         <setEntry value="org.glassfish.hk2.api@default:default"/>
         <setEntry value="org.glassfish.hk2.external.aopalliance-repackaged@default:default"/>
         <setEntry value="org.glassfish.hk2.external.jakarta.inject@default:default"/>
@@ -128,7 +127,6 @@
         <setEntry value="org.keycloak.keycloak-authz-client@default:default"/>
         <setEntry value="org.keycloak.keycloak-common@default:default"/>
         <setEntry value="org.keycloak.keycloak-core@default:default"/>
-        <setEntry value="org.osgi.framework.system.packages.extra@default:false"/>
         <setEntry value="org.osgi.service.cm@default:default"/>
         <setEntry value="org.osgi.service.component@default:default"/>
         <setEntry value="org.osgi.service.device@default:default"/>

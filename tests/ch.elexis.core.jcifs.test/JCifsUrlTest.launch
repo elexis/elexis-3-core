@@ -13,8 +13,8 @@
     <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/pde-junit"/>
     <booleanAttribute key="default" value="false"/>
     <setAttribute key="deselected_workspace_bundles">
+        <setEntry value="at.descher.bug"/>
         <setEntry value="at.gruber.elexis.mythic22"/>
-        <setEntry value="at.medbits.elexis.labbit.ui"/>
         <setEntry value="at.medevit.atc_codes"/>
         <setEntry value="at.medevit.atc_codes.test"/>
         <setEntry value="at.medevit.ch.artikelstamm"/>
@@ -49,6 +49,7 @@
         <setEntry value="at.medevit.elexis.connect.pocketchem.test"/>
         <setEntry value="at.medevit.elexis.connect.urisys1100"/>
         <setEntry value="at.medevit.elexis.connect.z3haem"/>
+        <setEntry value="at.medevit.elexis.corona123"/>
         <setEntry value="at.medevit.elexis.curabill.core"/>
         <setEntry value="at.medevit.elexis.curabill.tests"/>
         <setEntry value="at.medevit.elexis.curabill.ui"/>
@@ -83,13 +84,20 @@
         <setEntry value="at.medevit.elexis.inbox.core.elements"/>
         <setEntry value="at.medevit.elexis.inbox.core.ui"/>
         <setEntry value="at.medevit.elexis.inbox.ui"/>
+        <setEntry value="at.medevit.elexis.kapsch.referral.ui"/>
         <setEntry value="at.medevit.elexis.laborimport.MCL"/>
         <setEntry value="at.medevit.elexis.loinc"/>
         <setEntry value="at.medevit.elexis.loinc.ui"/>
         <setEntry value="at.medevit.elexis.loinc_test"/>
+        <setEntry value="at.medevit.elexis.medforms.core"/>
+        <setEntry value="at.medevit.elexis.medforms.core.test"/>
+        <setEntry value="at.medevit.elexis.medforms.ui"/>
         <setEntry value="at.medevit.elexis.medicosearch.core"/>
         <setEntry value="at.medevit.elexis.medicosearch.core.test"/>
         <setEntry value="at.medevit.elexis.medicosearch.ui"/>
+        <setEntry value="at.medevit.elexis.medidata.box.core"/>
+        <setEntry value="at.medevit.elexis.medidata.box.core.test"/>
+        <setEntry value="at.medevit.elexis.medidata.box.ui"/>
         <setEntry value="at.medevit.elexis.medidata.core"/>
         <setEntry value="at.medevit.elexis.medidata.test"/>
         <setEntry value="at.medevit.elexis.medidata.ui"/>
@@ -117,6 +125,7 @@
         <setEntry value="at.medevit.elexis.outbox"/>
         <setEntry value="at.medevit.elexis.outbox.ui"/>
         <setEntry value="at.medevit.elexis.pdfocrmetadata"/>
+        <setEntry value="at.medevit.elexis.pdfocrmetadata.model"/>
         <setEntry value="at.medevit.elexis.pdfocrmetadata.test"/>
         <setEntry value="at.medevit.elexis.perspective"/>
         <setEntry value="at.medevit.elexis.perspective.ui"/>
@@ -172,13 +181,14 @@
         <setEntry value="ch.elexis.base.ch.labortarif.model"/>
         <setEntry value="ch.elexis.base.ch.labortarif_2009"/>
         <setEntry value="ch.elexis.base.ch.migel"/>
+        <setEntry value="ch.elexis.base.ch.migel.test"/>
         <setEntry value="ch.elexis.base.ch.ticode"/>
         <setEntry value="ch.elexis.base.konsextension.bildanzeige"/>
         <setEntry value="ch.elexis.base.konsextension.privatnotizen"/>
         <setEntry value="ch.elexis.base.messages"/>
         <setEntry value="ch.elexis.base.solr"/>
         <setEntry value="ch.elexis.base.solr.test"/>
-        <setEntry value="ch.elexis.base.textplugin"/>
+        <setEntry value="ch.elexis.base.solr.ui"/>
         <setEntry value="ch.elexis.buchhaltung.basis"/>
         <setEntry value="ch.elexis.connect.abaxis.piccolo"/>
         <setEntry value="ch.elexis.connect.abaxis.piccolo.test"/>
@@ -200,7 +210,6 @@
         <setEntry value="ch.elexis.connect.sysmex.test"/>
         <setEntry value="ch.elexis.connect.urilux"/>
         <setEntry value="ch.elexis.connector.be"/>
-        <setEntry value="ch.elexis.connector.medicosearch"/>
         <setEntry value="ch.elexis.core"/>
         <setEntry value="ch.elexis.core.application"/>
         <setEntry value="ch.elexis.core.coding"/>
@@ -225,29 +234,40 @@
         <setEntry value="ch.elexis.core.hl7.v2x"/>
         <setEntry value="ch.elexis.core.hl7.v2x.tests"/>
         <setEntry value="ch.elexis.core.importer.div"/>
+        <setEntry value="ch.elexis.core.jfr"/>
         <setEntry value="ch.elexis.core.jpa"/>
         <setEntry value="ch.elexis.core.jpa.datasource"/>
         <setEntry value="ch.elexis.core.jpa.entities"/>
         <setEntry value="ch.elexis.core.jpa.entities.test"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j"/>
         <setEntry value="ch.elexis.core.jpa.test"/>
+        <setEntry value="ch.elexis.core.jpa.ui"/>
         <setEntry value="ch.elexis.core.l10n"/>
+        <setEntry value="ch.elexis.core.logback.rocketchat"/>
+        <setEntry value="ch.elexis.core.logging.default_configuration"/>
         <setEntry value="ch.elexis.core.logging.osgi"/>
         <setEntry value="ch.elexis.core.mail"/>
         <setEntry value="ch.elexis.core.mail.test"/>
         <setEntry value="ch.elexis.core.mail.ui"/>
         <setEntry value="ch.elexis.core.model"/>
         <setEntry value="ch.elexis.core.model.test"/>
+        <setEntry value="ch.elexis.core.pdfbox"/>
+        <setEntry value="ch.elexis.core.pdfbox.ui"/>
         <setEntry value="ch.elexis.core.product"/>
         <setEntry value="ch.elexis.core.scripting.beanshell"/>
+        <setEntry value="ch.elexis.core.serial"/>
+        <setEntry value="ch.elexis.core.serial.test"/>
         <setEntry value="ch.elexis.core.services"/>
         <setEntry value="ch.elexis.core.services.test"/>
+        <setEntry value="ch.elexis.core.services.test.ws"/>
+        <setEntry value="ch.elexis.core.services.test.ws-bind"/>
+        <setEntry value="ch.elexis.core.spotlight"/>
+        <setEntry value="ch.elexis.core.spotlight.ui"/>
         <setEntry value="ch.elexis.core.tasks"/>
         <setEntry value="ch.elexis.core.tasks.test"/>
         <setEntry value="ch.elexis.core.test"/>
         <setEntry value="ch.elexis.core.test.context"/>
         <setEntry value="ch.elexis.core.ui"/>
-        <setEntry value="ch.elexis.core.ui.chromium"/>
         <setEntry value="ch.elexis.core.ui.contacts"/>
         <setEntry value="ch.elexis.core.ui.dbcheck"/>
         <setEntry value="ch.elexis.core.ui.documents"/>
@@ -268,6 +288,7 @@
         <setEntry value="ch.elexis.core.ui.tests"/>
         <setEntry value="ch.elexis.core.ui.usage"/>
         <setEntry value="ch.elexis.covercard"/>
+        <setEntry value="ch.elexis.covid.cert"/>
         <setEntry value="ch.elexis.docbox.ws.client"/>
         <setEntry value="ch.elexis.docbox.ws.client.product_key"/>
         <setEntry value="ch.elexis.docbox.ws.client.test"/>
@@ -294,8 +315,6 @@
         <setEntry value="ch.elexis.importer.vitodata.core"/>
         <setEntry value="ch.elexis.importer.vitodata.core.test"/>
         <setEntry value="ch.elexis.importer.vitodata.ui"/>
-        <setEntry value="ch.elexis.jre.linux.x86_64"/>
-        <setEntry value="ch.elexis.jre.win32.x86_64"/>
         <setEntry value="ch.elexis.kassenbuch"/>
         <setEntry value="ch.elexis.laborimport.analytica"/>
         <setEntry value="ch.elexis.laborimport.badena"/>
@@ -330,8 +349,8 @@
         <setEntry value="ch.elexis.omnivore.data.tests"/>
         <setEntry value="ch.elexis.omnivore.model"/>
         <setEntry value="ch.elexis.omnivore.ui"/>
-        <setEntry value="ch.elexis.omnivoredirect"/>
         <setEntry value="ch.elexis.pdfBills"/>
+        <setEntry value="ch.elexis.pdfBills.privat"/>
         <setEntry value="ch.elexis.pdfBills.test"/>
         <setEntry value="ch.elexis.privatrechnung"/>
         <setEntry value="ch.elexis.rezept.zurrose"/>
@@ -342,24 +361,28 @@
         <setEntry value="ch.elexis.timer"/>
         <setEntry value="ch.gpb.elexis.cst"/>
         <setEntry value="ch.itmed.fop.printing"/>
+        <setEntry value="ch.itmed.fop.printing.ui"/>
         <setEntry value="ch.itmed.lmz.risch.laborder"/>
         <setEntry value="ch.medelexis.application"/>
         <setEntry value="ch.medelexis.application.imp"/>
         <setEntry value="ch.medelexis.application.product"/>
         <setEntry value="ch.medelexis.application.provisioning"/>
         <setEntry value="ch.medelexis.application.provisioning.test"/>
+        <setEntry value="ch.medelexis.covid.cert.keys"/>
         <setEntry value="ch.medelexis.galexis"/>
         <setEntry value="ch.medelexis.gcal.sync"/>
         <setEntry value="ch.medelexis.konsliste"/>
         <setEntry value="ch.medelexis.medication.ui"/>
-        <setEntry value="ch.medelexis.messaging.ecall"/>
-        <setEntry value="ch.medelexis.messaging.ecall.test"/>
-        <setEntry value="ch.medelexis.messaging.ecall.ui"/>
+        <setEntry value="ch.medelexis.messaging.twilio"/>
+        <setEntry value="ch.medelexis.messaging.twilio.ui"/>
+        <setEntry value="ch.medelexis.omnivore.ocr.task"/>
         <setEntry value="ch.medelexis.pregnancychecklist"/>
         <setEntry value="ch.medelexis.pregnancychecklist.test"/>
         <setEntry value="ch.medelexis.pregnancychecklist.ui"/>
         <setEntry value="ch.medelexis.rockethealth"/>
-        <setEntry value="ch.medelexis.text.templator"/>
+        <setEntry value="ch.medelexis.server.connector.rockethealth"/>
+        <setEntry value="ch.medelexis.server.connector.rockethealth.jpa"/>
+        <setEntry value="ch.medelexis.server.connector.rockethealth.test"/>
         <setEntry value="ch.medelexis.twitter"/>
         <setEntry value="ch.medelexis.xchange"/>
         <setEntry value="ch.medelexis.xchange.test"/>
@@ -381,16 +404,27 @@
         <setEntry value="ch.rgw.utility.tests"/>
         <setEntry value="ch.unibe.iam.scg.archie"/>
         <setEntry value="ch.unibe.iam.scg.archie.samples"/>
-        <setEntry value="ch.weirich.templator.pages"/>
+        <setEntry value="ch.vality.dicom.viewer"/>
         <setEntry value="com.actavis.medidirect"/>
+        <setEntry value="com.helmedica.partnerintegration"/>
         <setEntry value="com.hilotec.elexis.kgview"/>
         <setEntry value="com.hilotec.elexis.messwerte.v2"/>
         <setEntry value="com.hilotec.elexis.messwerte.v2_test"/>
-        <setEntry value="com.hilotec.elexis.opendocument"/>
-        <setEntry value="com.hilotec.elexis.opendocument2omnivore"/>
         <setEntry value="com.hilotec.elexis.pluginstatistiken"/>
         <setEntry value="com.hilotec.elexis.stickerprefix"/>
-        <setEntry value="com.hilotec.elexis.toolbar"/>
+        <setEntry value="info.elexis.cups4j.console"/>
+        <setEntry value="info.elexis.server.core"/>
+        <setEntry value="info.elexis.server.core.common"/>
+        <setEntry value="info.elexis.server.core.connector.elexis"/>
+        <setEntry value="info.elexis.server.core.connector.elexis.test"/>
+        <setEntry value="info.elexis.server.core.jetty.homebundle"/>
+        <setEntry value="info.elexis.server.core.logging"/>
+        <setEntry value="info.elexis.server.core.p2"/>
+        <setEntry value="info.elexis.server.core.redmine"/>
+        <setEntry value="info.elexis.server.fhir.rest.core"/>
+        <setEntry value="info.elexis.server.fhir.rest.core.test"/>
+        <setEntry value="info.elexis.server.findings.fhir.jpa.service"/>
+        <setEntry value="info.elexis.server.setup.test"/>
         <setEntry value="net.medshare.connector.aerztekasse"/>
         <setEntry value="net.medshare.connector.aerztekasse_test"/>
         <setEntry value="net.medshare.connector.viollier"/>
@@ -398,6 +432,7 @@
         <setEntry value="net.medshare.percentile.v2"/>
         <setEntry value="net.medshare.percentile.v2_test"/>
         <setEntry value="org.apache.solr"/>
+        <setEntry value="org.cups4j"/>
         <setEntry value="org.iatrix.bestellung.pharmapool"/>
         <setEntry value="org.iatrix.bestellung.pharmapool_test"/>
         <setEntry value="org.iatrix.bestellung.rose"/>
@@ -405,7 +440,6 @@
         <setEntry value="org.iatrix.help.wiki"/>
         <setEntry value="org.iatrix.messwerte"/>
         <setEntry value="waelti.statistics"/>
-        <setEntry value="ws-api-impl-import-java9"/>
     </setAttribute>
     <booleanAttribute key="includeOptional" value="true"/>
     <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
@@ -415,6 +449,7 @@
     <setAttribute key="name.schedenig.eclipse.grepconsole.FilterEnabledIds"/>
     <setAttribute key="name.schedenig.eclipse.grepconsole.StatisticsDisabledIds"/>
     <setAttribute key="name.schedenig.eclipse.grepconsole.StatisticsEnabledIds"/>
+    <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
         <listEntry value="/ch.elexis.core.jcifs.test"/>
     </listAttribute>
@@ -425,8 +460,9 @@
     <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
     <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
     <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value=""/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ch.elexis.core.jcifs.test"/>
@@ -436,70 +472,57 @@
     <stringAttribute key="product" value="info.elexis.server.core.ElexisServer"/>
     <booleanAttribute key="run_in_ui_thread" value="false"/>
     <setAttribute key="selected_target_bundles">
-        <setEntry value="bsf@default:default"/>
-        <setEntry value="cglib.nodep@default:default"/>
         <setEntry value="ch.qos.logback.classic@default:default"/>
         <setEntry value="ch.qos.logback.core@default:default"/>
         <setEntry value="ch.qos.logback.slf4j@default:false"/>
         <setEntry value="com.ibm.icu@default:default"/>
         <setEntry value="com.jcraft.jsch@default:default"/>
-        <setEntry value="com.sun.activation.javax.activation@default:default"/>
-        <setEntry value="com.thoughtworks.xstream@default:default"/>
-        <setEntry value="groovy-all@default:default"/>
-        <setEntry value="javax.el@default:default"/>
-        <setEntry value="javax.mail.glassfish@default:default"/>
-        <setEntry value="javax.servlet.jsp@default:default"/>
-        <setEntry value="javax.servlet@default:default"/>
-        <setEntry value="javax.xml.stream.stax-api@default:default"/>
-        <setEntry value="javax.xml@default:default"/>
+        <setEntry value="javax.activation@default:default"/>
         <setEntry value="jaxb-api@default:default"/>
-        <setEntry value="jaxen@default:default"/>
-        <setEntry value="jline@default:default"/>
-        <setEntry value="org.apache.ant*1.10.7.v20190926-0324@default:default"/>
-        <setEntry value="org.apache.avalon.framework.avalon-framework-api@default:default"/>
-        <setEntry value="org.apache.commons.cli@default:default"/>
-        <setEntry value="org.apache.commons.io*2.6.0.v20190123-2029@default:default"/>
-        <setEntry value="org.apache.commons.lang@default:default"/>
-        <setEntry value="org.apache.commons.logging@default:default"/>
-        <setEntry value="org.apache.xerces@default:default"/>
-        <setEntry value="org.apache.xml.resolver@default:default"/>
-        <setEntry value="org.apache.xml.serializer@default:default"/>
+        <setEntry value="org.apache.ant@default:default"/>
+        <setEntry value="org.apache.commons.commons-io@default:default"/>
+        <setEntry value="org.apache.commons.logging*1.2.0.v20180409-1502@default:default"/>
         <setEntry value="org.bouncycastle.bcprov@default:default"/>
-        <setEntry value="org.dom4j@default:default"/>
         <setEntry value="org.eclipse.core.contenttype@default:default"/>
         <setEntry value="org.eclipse.core.jobs@default:default"/>
         <setEntry value="org.eclipse.core.runtime@default:true"/>
-        <setEntry value="org.eclipse.equinox.app"/>
+        <setEntry value="org.eclipse.equinox.app@default:default"/>
         <setEntry value="org.eclipse.equinox.common@2:true"/>
-        <setEntry value="org.eclipse.equinox.preferences"/>
-        <setEntry value="org.eclipse.equinox.registry"/>
+        <setEntry value="org.eclipse.equinox.preferences@default:default"/>
+        <setEntry value="org.eclipse.equinox.registry@default:default"/>
         <setEntry value="org.eclipse.osgi.compatibility.state@default:false"/>
         <setEntry value="org.eclipse.osgi.services@default:default"/>
         <setEntry value="org.eclipse.osgi.util@default:default"/>
         <setEntry value="org.eclipse.osgi@-1:true"/>
         <setEntry value="org.hamcrest.core@default:default"/>
-        <setEntry value="org.jdom@default:default"/>
-        <setEntry value="org.json@default:default"/>
         <setEntry value="org.junit@default:default"/>
+        <setEntry value="org.osgi.service.cm@default:default"/>
+        <setEntry value="org.osgi.service.component@default:default"/>
+        <setEntry value="org.osgi.service.device@default:default"/>
+        <setEntry value="org.osgi.service.event@default:default"/>
+        <setEntry value="org.osgi.service.jdbc@default:default"/>
+        <setEntry value="org.osgi.service.jndi@default:default"/>
+        <setEntry value="org.osgi.service.metatype@default:default"/>
+        <setEntry value="org.osgi.service.prefs@default:default"/>
+        <setEntry value="org.osgi.service.provisioning@default:default"/>
+        <setEntry value="org.osgi.service.upnp@default:default"/>
+        <setEntry value="org.osgi.service.useradmin@default:default"/>
+        <setEntry value="org.osgi.service.wireadmin@default:default"/>
+        <setEntry value="org.osgi.util.function@default:default"/>
+        <setEntry value="org.osgi.util.measurement@default:default"/>
+        <setEntry value="org.osgi.util.position@default:default"/>
+        <setEntry value="org.osgi.util.promise@default:default"/>
+        <setEntry value="org.osgi.util.xml@default:default"/>
         <setEntry value="org.slf4j.api@default:default"/>
-        <setEntry value="org.slf4j.log4j@default:default"/>
         <setEntry value="org.tukaani.xz@default:default"/>
         <setEntry value="org.w3c.dom.events@default:default"/>
-        <setEntry value="rhino.js@default:default"/>
-        <setEntry value="xalan.serializer@default:default"/>
-        <setEntry value="xalan@default:default"/>
-        <setEntry value="xom@default:default"/>
-        <setEntry value="xpp3.min@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="ch.elexis.core.jcifs.test@default:false"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
-        <setEntry value="ch.elexis.core.logback.rocketchat@default:false"/>
-        <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
         <setEntry value="ch.elexis.core.test.logging@default:false"/>
-        <setEntry value="jaxb-api-impl-import-java9@default:false"/>
     </setAttribute>
-    <booleanAttribute key="show_selected_only" value="false"/>
+    <booleanAttribute key="show_selected_only" value="true"/>
     <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>
