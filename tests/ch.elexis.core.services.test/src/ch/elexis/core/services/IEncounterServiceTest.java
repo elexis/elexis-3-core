@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.model.ICustomService;
@@ -36,6 +37,7 @@ public class IEncounterServiceTest extends AbstractServiceTest {
 		cleanup();
 	}
 
+	@Ignore("QUARANTINE #24743")
 	@Test
 	public void multiThreadUpdate() throws InterruptedException {
 
