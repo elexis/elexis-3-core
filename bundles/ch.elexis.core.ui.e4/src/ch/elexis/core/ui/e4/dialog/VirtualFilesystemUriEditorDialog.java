@@ -2,6 +2,7 @@ package ch.elexis.core.ui.e4.dialog;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,12 +19,14 @@ import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -140,6 +143,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.CLIENT_ID, "Test", false);
+		createButton(parent, 1025, JFaceResources.getString("openBrowse"), false); //$NON-NLS-1$
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 		m_bindingContext = initDataBindings();
@@ -161,6 +165,13 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 				}
 			} catch (IOException e) {
 				setErrorMessage(e.getLocalizedMessage());
+			}
+		} else if (1025 == buttonId) {
+			DirectoryDialog dirDialog = new DirectoryDialog(getShell());
+			String selectedDir = dirDialog.open();
+			if (StringUtils.isNotBlank(selectedDir)) {
+				uri.setUri(new File(selectedDir).toURI());
+				uri.setPort(null);
 			}
 		} else {
 			super.buttonPressed(buttonId);
