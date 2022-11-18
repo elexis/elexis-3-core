@@ -10,7 +10,7 @@ public class MessageServiceHolder {
 	private static IMessageService messageService;
 
 	@Reference
-	public void setAppointmentService(IMessageService messageService) {
+	public void setMessageService(IMessageService messageService) {
 		MessageServiceHolder.messageService = messageService;
 	}
 
