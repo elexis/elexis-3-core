@@ -33,6 +33,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -49,6 +50,7 @@ import ch.elexis.core.tasks.model.ModelPackage;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
+import ch.elexis.core.ui.tasks.parts.controls.AbstractTaskDescriptorConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.controls.GeneralConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.controls.RunnableAndContextConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.controls.TaskTriggerTypeConfigurationComposite;
@@ -182,6 +184,12 @@ public class TaskConfigurationPart implements IRefreshablePart {
 
 		TabFolder tabFolder = new TabFolder(parent, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.addListener(SWT.Selection, event -> {
+			Control control = ((TabItem) event.item).getControl();
+			if (control instanceof AbstractTaskDescriptorConfigurationComposite) {
+				((AbstractTaskDescriptorConfigurationComposite) control).refresh();
+			}
+		});
 
 		// GENERAL
 		TabItem tbtmGeneral = new TabItem(tabFolder, SWT.NONE);

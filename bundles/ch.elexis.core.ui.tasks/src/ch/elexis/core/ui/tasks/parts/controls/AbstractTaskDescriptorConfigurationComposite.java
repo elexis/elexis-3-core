@@ -15,6 +15,9 @@ public abstract class AbstractTaskDescriptorConfigurationComposite extends Compo
 		super(parent, style);
 	}
 
+	public void refresh() {
+	};
+
 	protected boolean saveTaskDescriptor() {
 		// TODO update resp entry in list
 		if (taskDescriptor != null) {

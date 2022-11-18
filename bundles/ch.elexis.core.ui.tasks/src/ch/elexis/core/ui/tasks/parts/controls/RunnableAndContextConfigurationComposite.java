@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.tasks.parts.controls;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
@@ -30,6 +30,7 @@ import org.eclipse.ui.dialogs.ListSelectionDialog;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
+import ch.elexis.core.tasks.model.TaskTriggerType;
 
 public class RunnableAndContextConfigurationComposite extends AbstractTaskDescriptorConfigurationComposite {
 
@@ -127,6 +128,11 @@ public class RunnableAndContextConfigurationComposite extends AbstractTaskDescri
 		}
 	}
 
+	@Override
+	public void refresh() {
+		refreshAssistedConfigurationComposite();
+	}
+
 	private void refreshAssistedConfigurationComposite() {
 		Control[] children = compAssisted.getChildren();
 		for (Control control : children) {
@@ -142,6 +148,7 @@ public class RunnableAndContextConfigurationComposite extends AbstractTaskDescri
 
 			Map<String, Serializable> defaultRunContext = selectedRunnable.getDefaultRunContext();
 			Map<String, Serializable> configuredRunContext = taskDescriptor.getRunContext();
+
 			Set<String> keySet = defaultRunContext.keySet();
 			for (String key : keySet) {
 				Label keyLabel = new Label(compAssisted, SWT.NONE);
@@ -162,8 +169,16 @@ public class RunnableAndContextConfigurationComposite extends AbstractTaskDescri
 					btnValue.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
 				} else {
+					boolean enabled = true;
+					if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()
+							&& IIdentifiedRunnable.RunContextParameter.STRING_URL.equals(key)) {
+						enabled = false;
+						defaultValue = "supplied by trigger";
+					}
+
 					RunContextTextWithDefaultValue txtValue = new RunContextTextWithDefaultValue(compAssisted, this,
-							key, Objects.toString(defaultValue, null), Objects.toString(configuredValue, null));
+							key, Objects.toString(defaultValue, null), Objects.toString(configuredValue, null),
+							enabled);
 					txtValue.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 				}
 
