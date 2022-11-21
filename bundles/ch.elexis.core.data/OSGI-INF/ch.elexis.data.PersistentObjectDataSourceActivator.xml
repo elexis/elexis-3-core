@@ -3,6 +3,7 @@
    <service>
       <provide interface="ch.elexis.data.PersistentObjectDataSourceActivator"/>
    </service>
+   <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
    <reference cardinality="1..1" field="coreOperationAdvisor" interface="ch.elexis.core.data.extension.ICoreOperationAdvisor" name="coreOperationAdvisor"/>
