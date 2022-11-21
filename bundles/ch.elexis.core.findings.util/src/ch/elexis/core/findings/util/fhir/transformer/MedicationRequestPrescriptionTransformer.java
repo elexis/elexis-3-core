@@ -20,6 +20,7 @@ import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestIntent;
 import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestPriority;
 import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestStatus;
 import org.hl7.fhir.r4.model.Narrative;
+import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Type;
@@ -147,6 +148,7 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		fhirObject.setPriority(MedicationRequestPriority.ROUTINE);
 
 		Narrative narrative = new Narrative();
+		narrative.setStatus(NarrativeStatus.GENERATED);
 		narrative.setDivAsString(textBuilder.toString());
 		fhirObject.setText(narrative);
 
