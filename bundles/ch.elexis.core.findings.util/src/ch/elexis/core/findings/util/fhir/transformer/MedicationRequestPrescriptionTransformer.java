@@ -76,6 +76,7 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 			Coding coding = medication.addCoding();
 			coding.setSystem("urn:oid:1.3.160");
 			coding.setCode(gtin);
+			coding.setDisplay(articelLabel);
 		}
 		if (atc != null) {
 			Coding coding = medication.addCoding();
