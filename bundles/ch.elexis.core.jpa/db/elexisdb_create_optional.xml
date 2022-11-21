@@ -2409,7 +2409,35 @@ WHERE kontakt.id IN (
             <column name="MSG" type="CLOB"/>
             <column defaultValueNumeric="0" name="LASTUPDATE" type="BIGINT"/>
         </createTable>
+        <insert tableName="CH_ELEXIS_AGENDA_DAYMSG">
+       		<column name="ID" value="1"/>
+       		<column name="KURZ" value="0.4.0"/>
+    	</insert>
     </changeSet>
+    
+    <changeSet author="thomas" id="manual_table_CH_ELEXIS_AGENDA_DAYMSG_update_deleted">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="CH_ELEXIS_AGENDA_DAYMSG"
+					columnName="DELETED" />
+			</not>
+		</preConditions>
+		<addColumn tableName="CH_ELEXIS_AGENDA_DAYMSG">
+			<column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+		</addColumn>
+    </changeSet>
+    <changeSet author="thomas" id="manual_table_CH_ELEXIS_AGENDA_DAYMSG_update_lastupdate">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="CH_ELEXIS_AGENDA_DAYMSG"
+					columnName="LASTUPDATE" />
+			</not>
+		</preConditions>
+		<addColumn tableName="CH_ELEXIS_AGENDA_DAYMSG">
+			<column defaultValueNumeric="0" name="LASTUPDATE" type="BIGINT"/>
+		</addColumn>
+    </changeSet>
+    
 	<changeSet author="niklaus" id="manual_table_CSTGROUPS">
 		<preConditions onFail="MARK_RAN">
 			<not>
