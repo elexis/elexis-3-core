@@ -16,6 +16,8 @@ import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.MedicationRequest;
 import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestDispenseRequestComponent;
+import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestIntent;
+import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestPriority;
 import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestStatus;
 import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Period;
@@ -140,6 +142,8 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		}
 
 		fhirObject.setStatus(statusEnum);
+		fhirObject.setIntent(MedicationRequestIntent.ORDER);
+		fhirObject.setPriority(MedicationRequestPriority.ROUTINE);
 
 		Narrative narrative = new Narrative();
 		narrative.setDivAsString(textBuilder.toString());
