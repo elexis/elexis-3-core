@@ -2,11 +2,13 @@ package ch.elexis.core.ui.e4.dialog;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.typed.BeanProperties;
@@ -17,12 +19,14 @@ import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -38,6 +42,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 	private MyURI uri;
 
 	private Text txtHost;
+	private Text txtPort;
 	private Text txtUser;
 	private Text txtPath;
 	private Text txtPassword;
@@ -89,6 +94,13 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		txtHost = new Text(container, SWT.BORDER);
 		txtHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
+		Label lblPort = new Label(container, SWT.NONE);
+		lblPort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblPort.setText("Port");
+
+		txtPort = new Text(container, SWT.BORDER);
+		txtPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
 		Label lblPath = new Label(container, SWT.NONE);
 		lblPath.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPath.setText("Path");
@@ -131,6 +143,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.CLIENT_ID, "Test", false);
+		createButton(parent, 1025, JFaceResources.getString("openBrowse"), false); //$NON-NLS-1$
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 		m_bindingContext = initDataBindings();
@@ -153,6 +166,13 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 			} catch (IOException e) {
 				setErrorMessage(e.getLocalizedMessage());
 			}
+		} else if (1025 == buttonId) {
+			DirectoryDialog dirDialog = new DirectoryDialog(getShell());
+			String selectedDir = dirDialog.open();
+			if (StringUtils.isNotBlank(selectedDir)) {
+				uri.setUri(new File(selectedDir).toURI());
+				uri.setPort(null);
+			}
 		} else {
 			super.buttonPressed(buttonId);
 		}
@@ -174,6 +194,11 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		IObservableValue<String> widget = WidgetProperties.text(SWT.Modify).observe(txtHost);
 		IObservableValue<String> model = BeanProperties.value(MyURI.class, "host", String.class).observe(uri);
 		bindingContext.bindValue(widget, model, null, null);
+
+		//
+		IObservableValue<String> widgetPort = WidgetProperties.text(SWT.Modify).observe(txtPort);
+		IObservableValue<Integer> modelPort = BeanProperties.value(MyURI.class, "port", Integer.class).observe(uri);
+		bindingContext.bindValue(widgetPort, modelPort, null, null);
 
 		//
 		IObservableValue<String> widgetPath = WidgetProperties.text(SWT.Modify).observe(txtPath);
@@ -203,6 +228,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		return bindingContext;
 	}
 
+	@SuppressWarnings("unused")
 	private class MyURI {
 
 		private String scheme;
@@ -210,13 +236,13 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		private String path;
 		private String user;
 		private String pass;
-		private int port;
+		private Integer port;
 
-		public int getPort() {
+		public Integer getPort() {
 			return port;
 		}
 
-		public void setPort(int port) {
+		public void setPort(Integer port) {
 			firePropertyChange("port", this.port, this.port = port);
 			firePropertyChange("uri", null, getUri());
 		}
@@ -268,7 +294,24 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
 		public URI getUri() {
 			try {
-				return new URI(scheme, user + ":" + pass, host, port, path, null, null);
+				URIBuilder uriBuilder = new URIBuilder();
+				if (StringUtils.isNotBlank(scheme)) {
+					uriBuilder.setScheme(scheme);
+				}
+				if (StringUtils.isNotBlank(host)) {
+					uriBuilder.setHost(host);
+				}
+				if (StringUtils.isNotBlank(path)) {
+					uriBuilder.setPath(path);
+				}
+				if (StringUtils.isNotBlank(user)) {
+					uriBuilder.setUserInfo(user, pass);
+				}
+				if (port != null && port > 0) {
+					uriBuilder.setPort(port);
+				}
+				return uriBuilder.build();
+
 			} catch (URISyntaxException e) {
 
 			}

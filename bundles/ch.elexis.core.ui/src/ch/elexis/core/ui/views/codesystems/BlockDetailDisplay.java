@@ -12,12 +12,12 @@
 
 package ch.elexis.core.ui.views.codesystems;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.IChangeListener;
@@ -368,7 +368,9 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	}
 
 	private void updateViewerInput(ICodeElementBlock block) {
-		viewer.setInput(BlockElementViewerItem.of(block, true));
+		if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+			viewer.setInput(BlockElementViewerItem.of(block, true));
+		}
 	}
 
 	public String getTitle() {

@@ -20,20 +20,23 @@ public class RunContextTextWithDefaultValue extends Text {
 	 * @wbp.parser.entryPoint
 	 */
 	public RunContextTextWithDefaultValue(Composite compAssisted, AbstractTaskDescriptorConfigurationComposite atdcc,
-			String key, String defaultValue, String configuredValue) {
+			String key, String defaultValue, String configuredValue, boolean enabled) {
 		super(compAssisted, SWT.BORDER);
 
 		setMessage(defaultValue != null ? defaultValue : StringUtils.EMPTY);
-		setText(configuredValue != null ? configuredValue : StringUtils.EMPTY);
+		setEnabled(enabled);
+		if (enabled) {
+			setText(configuredValue != null ? configuredValue : StringUtils.EMPTY);
 
-		addModifyListener(event -> {
-			if (StringUtils.isNotBlank(getText())) {
-				atdcc.taskDescriptor.setRunContextParameter(key, getText().trim());
-			} else {
-				atdcc.taskDescriptor.setRunContextParameter(key, null);
-			}
-			atdcc.saveTaskDescriptor();
-		});
+			addModifyListener(event -> {
+				if (StringUtils.isNotBlank(getText())) {
+					atdcc.taskDescriptor.setRunContextParameter(key, getText().trim());
+				} else {
+					atdcc.taskDescriptor.setRunContextParameter(key, null);
+				}
+				atdcc.saveTaskDescriptor();
+			});
+		}
 
 		addMenuDetectListener(evmdl -> {
 			IVirtualFilesystemService vfsService = OsgiServiceUtil.getService(IVirtualFilesystemService.class)

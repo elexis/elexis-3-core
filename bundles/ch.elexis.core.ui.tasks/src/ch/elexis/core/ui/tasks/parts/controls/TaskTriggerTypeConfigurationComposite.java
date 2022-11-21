@@ -1,8 +1,13 @@
 package ch.elexis.core.ui.tasks.parts.controls;
 
-import org.apache.commons.lang3.StringUtils;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -20,8 +25,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.quartz.CronExpression;
 
+import ch.elexis.core.services.IVirtualFilesystemService;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.TaskTriggerType;
+import ch.elexis.core.tasks.model.TaskTriggerTypeParameter;
+import ch.elexis.core.ui.e4.dialog.VirtualFilesystemUriEditorDialog;
 import net.redhogs.cronparser.CronExpressionDescriptor;
 
 public class TaskTriggerTypeConfigurationComposite extends AbstractTaskDescriptorConfigurationComposite {
@@ -85,7 +95,9 @@ public class TaskTriggerTypeConfigurationComposite extends AbstractTaskDescripto
 			case CRON:
 				createCompositeParameters_CRON();
 				break;
-
+			case FILESYSTEM_CHANGE:
+				createCompositeParameters_FILESYSTEM_CHANGE();
+				break;
 			default:
 				createCompositeParameters_FALLBACK();
 				break;
@@ -100,6 +112,71 @@ public class TaskTriggerTypeConfigurationComposite extends AbstractTaskDescripto
 		Label label = new Label(compositeParameters, SWT.None);
 		label.setText("Please select a trigger type");
 		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+	}
+
+	private void createCompositeParameters_FILESYSTEM_CHANGE() {
+		String url = (taskDescriptor != null)
+				? taskDescriptor.getTriggerParameters().get(TaskTriggerTypeParameter.FILESYSTEM_CHANGE.URL)
+				: StringUtils.EMPTY;
+		String fileExtension = (taskDescriptor != null)
+				? taskDescriptor.getTriggerParameters()
+						.get(TaskTriggerTypeParameter.FILESYSTEM_CHANGE.FILE_EXTENSION_FILTER)
+				: StringUtils.EMPTY;
+
+		Label label = new Label(compositeParameters, SWT.None);
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+		label.setText(TaskTriggerTypeParameter.FILESYSTEM_CHANGE.URL);
+
+		Composite vfsComposite = new Composite(compositeParameters, SWT.None);
+		GridLayout gl_compositeParameters = new GridLayout(2, false);
+		gl_compositeParameters.marginHeight = 0;
+		gl_compositeParameters.marginWidth = 0;
+		vfsComposite.setLayout(gl_compositeParameters);
+		vfsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+
+		Text urlText = new Text(vfsComposite, SWT.BORDER);
+		urlText.setText((url != null) ? url : StringUtils.EMPTY);
+		urlText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		urlText.setEnabled(false);
+
+		Button searchButton = new Button(vfsComposite, SWT.None);
+		searchButton.setText(JFaceResources.getString("openBrowse"));
+		searchButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		searchButton.addListener(SWT.Selection, (sel) -> {
+			IVirtualFilesystemService virtualFilesystemService = VirtualFilesystemServiceHolder.get();
+			URI inputUri = null;
+			try {
+				String _urlText = urlText.getText();
+				if (StringUtils.isNotBlank(_urlText)) {
+					IVirtualFilesystemHandle fileHandle = virtualFilesystemService.of(_urlText);
+					inputUri = fileHandle.toURL().toURI();
+				}
+			} catch (URISyntaxException | IOException e) {
+			}
+			VirtualFilesystemUriEditorDialog dialog = new VirtualFilesystemUriEditorDialog(getShell(),
+					virtualFilesystemService, inputUri);
+			int open = dialog.open();
+			if (IDialogConstants.OK_ID == open) {
+				String _url = dialog.getValue().toString();
+				taskDescriptor.setTriggerParameter(TaskTriggerTypeParameter.FILESYSTEM_CHANGE.URL, _url);
+				urlText.setText(_url);
+			}
+		});
+
+		Label labelFef = new Label(compositeParameters, SWT.None);
+		labelFef.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+		labelFef.setText(TaskTriggerTypeParameter.FILESYSTEM_CHANGE.FILE_EXTENSION_FILTER);
+
+		Text text = new Text(compositeParameters, SWT.BORDER);
+		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		text.setText((fileExtension != null) ? fileExtension : StringUtils.EMPTY);
+		text.addModifyListener(event -> {
+			String value = ((Text) event.widget).getText();
+			taskDescriptor.setTriggerParameter(TaskTriggerTypeParameter.FILESYSTEM_CHANGE.FILE_EXTENSION_FILTER, value);
+			saveTaskDescriptor();
+		});
+		text.setMessage("Only file ending, like 'txt' or 'pdf'");
+
 	}
 
 	private void createCompositeParameters_CRON() {

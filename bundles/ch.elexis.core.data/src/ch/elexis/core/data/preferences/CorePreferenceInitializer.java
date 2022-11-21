@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import ch.elexis.admin.ACE;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.data.Brief;
 import ch.elexis.data.DBConnection;
 import ch.rgw.tools.StringTool;
@@ -103,10 +103,12 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 	 * Diese Funktion wird nach erstem Erstellen der Datenbank (d.h. nur ein
 	 * einziges Mal) aufgerufen und belegt globale Voreinstellungen. Hier alle im
 	 * ganzen Netzwerk und für alle Benutzer gültigen Voreinstellungen eintragen
+	 * 
+	 * @param configService
 	 *
 	 */
-	public void initializeGlobalPreferences() {
-		ConfigServiceHolder.setGlobal(Preferences.ABL_TRACE + SETTINGS_PREFERENCE_STORE_DEFAULT, "none");
+	public void initializeGlobalPreferences(IConfigService configService) {
+		configService.set(Preferences.ABL_TRACE + SETTINGS_PREFERENCE_STORE_DEFAULT, "none");
 	}
 
 	/**

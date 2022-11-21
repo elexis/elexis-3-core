@@ -5,6 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -31,6 +33,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -47,6 +50,7 @@ import ch.elexis.core.tasks.model.ModelPackage;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
+import ch.elexis.core.ui.tasks.parts.controls.AbstractTaskDescriptorConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.controls.GeneralConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.controls.RunnableAndContextConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.controls.TaskTriggerTypeConfigurationComposite;
@@ -107,6 +111,9 @@ public class TaskConfigurationPart implements IRefreshablePart {
 			@Override
 			public String getText(Object element) {
 				ITaskDescriptor td = (ITaskDescriptor) element;
+				if (td.getTransientData().get("incurred") != null) {
+					return "INC"; //$NON-NLS-1$
+				}
 				return td.isActive() ? "ACT" : "NACT"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
@@ -177,12 +184,18 @@ public class TaskConfigurationPart implements IRefreshablePart {
 
 		TabFolder tabFolder = new TabFolder(parent, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.addListener(SWT.Selection, event -> {
+			Control control = ((TabItem) event.item).getControl();
+			if (control instanceof AbstractTaskDescriptorConfigurationComposite) {
+				((AbstractTaskDescriptorConfigurationComposite) control).refresh();
+			}
+		});
 
 		// GENERAL
 		TabItem tbtmGeneral = new TabItem(tabFolder, SWT.NONE);
 		tbtmGeneral.setText("general");
 
-		gcp = new GeneralConfigurationComposite(tabFolder, SWT.NONE);
+		gcp = new GeneralConfigurationComposite(taskService, tabFolder, SWT.NONE);
 		tbtmGeneral.setControl(gcp);
 
 		// TRIGGER
@@ -232,6 +245,15 @@ public class TaskConfigurationPart implements IRefreshablePart {
 			taskQuery.and(ModelPackage.Literals.ITASK_DESCRIPTOR__SYSTEM, COMPARATOR.EQUALS, false);
 		}
 		List<ITaskDescriptor> taskDescriptors = taskQuery.execute();
+
+		Set<String> incurredTaskIds = taskService.getIncurredTasks().stream().map(ict -> ict.getId())
+				.collect(Collectors.toSet());
+		taskDescriptors.forEach(td -> {
+			if (incurredTaskIds.contains(td.getId())) {
+				td.getTransientData().put("incurred", Boolean.TRUE.toString());
+			}
+		});
+
 		tvTaskDescriptors.setInput(taskDescriptors);
 		tvTaskDescriptors.refresh(true);
 	}

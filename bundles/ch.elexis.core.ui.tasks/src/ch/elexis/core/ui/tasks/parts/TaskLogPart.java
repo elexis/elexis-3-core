@@ -148,6 +148,8 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 					return Images.IMG_SYSTEM_MONITOR.getImage();
 				case OTHER_TASK:
 					return Images.IMG_TASK.getImage();
+				case FILESYSTEM_CHANGE:
+					return Images.IMG_SERVER_PENCIL.getImage();
 				default:
 					break;
 				}
@@ -158,6 +160,7 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 			public String getText(Object element) {
 				return null;
 			}
+
 		});
 		TableColumn tblclmnTrigger = tvcTrigger.getColumn();
 		tblclmnTrigger.setAlignment(SWT.CENTER);
