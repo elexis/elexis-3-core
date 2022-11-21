@@ -91,9 +91,9 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 	private MenuManager menuManager;
 	private IViewSite viewSite;
 	static final String REZEPT = Messages.FixMediDisplay_Prescription; // $NON-NLS-1$
-	static final String LISTE = Messages.FixMediDisplay_UsageList; // $NON-NLS-1$
-	static final String HINZU = Messages.Bezugskontakt_Add; // $NON-NLS-1$
-	static final String KOPIEREN = Messages.DauerMediView_copy; // $NON-NLS-1$
+	static final String LISTE = Messages.Core_List_ellipsis; // $NON-NLS-1$
+	static final String HINZU = Messages.Core_Add; // $NON-NLS-1$
+	static final String KOPIEREN = Messages.Core_Copy; // $NON-NLS-1$
 
 	@Inject
 	void activePatient(@Optional IPatient patient) {
@@ -146,7 +146,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 				null, removeMedicationAction);
 		menuManager = menu.getContextMenu();
 		setDLDListener(dlisten);
-		target = new GenericObjectDropTarget(Messages.FixMediDisplay_FixMedikation, this,
+		target = new GenericObjectDropTarget(Messages.Core_Fixed_medication, this,
 				new GenericObjectDropTarget.IReceiver() {
 
 					@Override
@@ -295,7 +295,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 	private void makeActions() {
 
 		changeMedicationAction = new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
-				Messages.AUF2_edit) { // $NON-NLS-1$
+				Messages.Core_DoChange_ellipsis) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 				setToolTipText(Messages.FixMediDisplay_Modify); // $NON-NLS-1$
@@ -313,7 +313,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 		};
 
 		stopMedicationAction = new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
-				Messages.FixMediDisplay_Stop) { // $NON-NLS-1$
+				Messages.Core_DoStop) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_REMOVEITEM.getImageDescriptor());
 				setToolTipText(Messages.FixMediDisplay_StopThisMedicament); // $NON-NLS-1$

@@ -32,7 +32,7 @@ import ch.rgw.tools.TimeTool;
 
 public class RnFilterDialog extends TitleAreaDialog {
 	static final String FROM = Messages.RnFilterDialog_fromDate; // $NON-NLS-1$
-	static final String UNTIL = Messages.KonsZumVerrechnenWizardDialog_timespanTill; // $NON-NLS-1$
+	static final String UNTIL = Messages.Core_Until; // $NON-NLS-1$
 	String[] ret;
 	MoneyInput miVon, miBis;
 	DateInput diRnVon, diRnBis, diStatVon, diStatBis, diOutVon, diOutBis;
@@ -98,7 +98,7 @@ public class RnFilterDialog extends TitleAreaDialog {
 		super.create();
 		setTitle(Messages.RnFilterDialog_billsFilterCaption);
 		setMessage(Messages.RnFilterDialog_billsFilterMessage);
-		getShell().setText(Messages.KonsZumVerrechnenView_billsList);
+		getShell().setText(Messages.Core_Invoice_List);
 	}
 
 	public TimeTool getInvoiceDateFrom() {

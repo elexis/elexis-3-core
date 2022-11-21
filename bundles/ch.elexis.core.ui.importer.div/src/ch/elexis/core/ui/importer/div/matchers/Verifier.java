@@ -70,7 +70,7 @@ public class Verifier {
 			parent.setLayout(new FillLayout());
 			table = new Table(parent, SWT.NONE);
 			TableColumn c1 = new TableColumn(table, SWT.NONE);
-			c1.setText(Messages.AccountListView_name);
+			c1.setText(Messages.Core_Name);
 			c1.setWidth(200);
 			TableColumn c2 = new TableColumn(table, SWT.NONE);
 			c2.setText(Messages.Core_Address);

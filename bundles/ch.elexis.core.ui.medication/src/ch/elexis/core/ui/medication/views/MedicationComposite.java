@@ -177,7 +177,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		});
 
 		txtSearch = new Text(compositeSearchFilter, SWT.BORDER);
-		txtSearch.setMessage(Messages.MedicationComposite_search);
+		txtSearch.setMessage(Messages.Core_DoSearch);
 		txtSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
@@ -431,7 +431,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			compositeFreeTextDosage.setLayout(gl_compositeFreeTextDosage);
 
 			txtFreeText = new Text(compositeFreeTextDosage, SWT.BORDER);
-			txtFreeText.setMessage(Messages.MediDetailDialog_freetext);
+			txtFreeText.setMessage(Messages.Core_Freetext);
 			GridData gd_txtFreeText = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 			gd_txtFreeText.widthHint = 210;
 			txtFreeText.setLayoutData(gd_txtFreeText);
@@ -456,7 +456,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 
 		Button btnDoseSwitch = new Button(compositeMedicationDetail, SWT.PUSH);
 		btnDoseSwitch.setImage(Images.IMG_SYNC.getImage());
-		btnDoseSwitch.setToolTipText(Messages.MediDetailDialog_tooltipDosageType);
+		btnDoseSwitch.setToolTipText(Messages.Core_change_freetext_activation);
 		btnDoseSwitch.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -493,7 +493,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		btnStopMedication = new Button(compositeMedicationDetail, SWT.FLAT | SWT.TOGGLE);
 		btnStopMedication.setImage(Images.IMG_STOP.getImage());
 		btnStopMedication.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		btnStopMedication.setToolTipText(Messages.FixMediDisplay_Stop);
+		btnStopMedication.setToolTipText(Messages.Core_DoStop);
 		btnStopMedication.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -553,7 +553,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		compositeMedicationTextDetails.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 5, 1));
 
 		txtIntakeOrder = new Text(compositeMedicationTextDetails, SWT.BORDER);
-		txtIntakeOrder.setMessage(Messages.ArticleDefaultSignatureComposite_applicationInstruction);
+		txtIntakeOrder.setMessage(Messages.Prescription_Instruction);
 		txtIntakeOrder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		IObservableValue txtIntakeOrderObservable = WidgetProperties.text(SWT.Modify).observeDelayed(100,
 				txtIntakeOrder);
@@ -570,7 +570,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		});
 
 		txtDisposalComment = new Text(compositeMedicationTextDetails, SWT.BORDER);
-		txtDisposalComment.setMessage(Messages.MediDetailDialog_disposalComment);
+		txtDisposalComment.setMessage(Messages.Prescription_Reason);
 		txtDisposalComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		IObservableValue txtCommentObservable = WidgetProperties.text(SWT.Modify).observeDelayed(100,
 				txtDisposalComment);

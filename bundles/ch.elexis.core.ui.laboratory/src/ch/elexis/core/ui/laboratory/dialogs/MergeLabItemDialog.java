@@ -55,8 +55,8 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText(Messages.AccessControlDefaults_mergeLabItems);
-		setTitle(Messages.AccessControlDefaults_mergeLabItems);
+		getShell().setText(Messages.Core_Merge_laboratory_parameters);
+		setTitle(Messages.Core_Merge_laboratory_parameters);
 		setMessage(Messages.MergeLabItemDialog_pleaseMergeParam);
 
 		Composite ret = new Composite(parent, SWT.NONE);

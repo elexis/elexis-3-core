@@ -119,7 +119,7 @@ public class LabImportUtil implements ILabImportUtil {
 			}
 			return xids.get(0).getObject(ILaboratory.class);
 		} else if (contactResolver != null) {
-			ret = contactResolver.getContact(Messages.LabImporterUtil_SelectLab + " [" + identifier + "]");
+			ret = contactResolver.getContact(Messages.Core_Select_Laboratory + " [" + identifier + "]");
 			if (ret != null) {
 				ret.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, identifier, true);
 			}

@@ -223,10 +223,10 @@ public class ScriptView extends ViewPart {
 
 		};
 		editScriptAction = new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
-				Messages.ScriptView_editScriptAction) { // $NON-NLS-1$
+				Messages.Core_Edit_Script) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-				setToolTipText(Messages.ScriptView_editScriptAction); // $NON-NLS-1$
+				setToolTipText(Messages.Core_Edit_Script); // $NON-NLS-1$
 			}
 
 			@Override
@@ -260,10 +260,10 @@ public class ScriptView extends ViewPart {
 			}
 		};
 		execScriptAction = new RestrictedAction(AccessControlDefaults.SCRIPT_EXECUTE,
-				Messages.ScriptView_executeScriptAction) { // $NON-NLS-1$
+				Messages.Core_Execute_Script) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_GOFURTHER.getImageDescriptor());
-				setToolTipText(Messages.ScriptView_executeScriptAction); // $NON-NLS-1$
+				setToolTipText(Messages.Core_Execute_Script); // $NON-NLS-1$
 			}
 
 			@Override

@@ -25,7 +25,7 @@ public class InvoiceListBottomComposite extends Composite {
 
 	private static final String REMINDER_3 = Messages.Core_Invoice_Reminder_3; // $NON-NLS-1$
 	private static final String REMINDER_2 = Messages.Core_Invoice_Reminder_2; // $NON-NLS-1$
-	private static final String REMINDER_1 = Messages.RechnungsListeView_reminder1; // $NON-NLS-1$
+	private static final String REMINDER_1 = Messages.Core_Invoice_Reminder_1; // $NON-NLS-1$
 	private Text totalPatientsInListText;
 	private Text tSumInvoiceInList;
 	private Text tSum;
@@ -80,7 +80,7 @@ public class InvoiceListBottomComposite extends Composite {
 		Form fSum = tk.createForm(this);
 		Form fWizard = tk.createForm(this);
 		fSum.setText(Messages.RechnungsListeView_sum); // $NON-NLS-1$
-		fWizard.setText(Messages.RechnungsListeView_dunningAutomatics); // $NON-NLS-1$
+		fWizard.setText(Messages.Invoice_reminder_automatism); // $NON-NLS-1$
 		Composite cSum = fSum.getBody();
 		cSum.setLayout(new GridLayout(2, false));
 		tk.createLabel(cSum, Messages.RechnungsListeView_patInList); // $NON-NLS-1$
@@ -89,7 +89,7 @@ public class InvoiceListBottomComposite extends Composite {
 		tk.createLabel(cSum, Messages.RechnungsListeView_accountsInList); // $NON-NLS-1$
 		tSumInvoiceInList = tk.createText(cSum, StringUtils.EMPTY, SWT.BORDER | SWT.READ_ONLY);
 		tSumInvoiceInList.setLayoutData(new GridData(100, SWT.DEFAULT));
-		tk.createLabel(cSum, Messages.RechnungsListeView_sumInList); // $NON-NLS-1$
+		tk.createLabel(cSum, Messages.Invoice_amount_due); // $NON-NLS-1$
 		tSum = SWTHelper.createText(tk, cSum, 1, SWT.BORDER | SWT.READ_ONLY);
 		tSum.setLayoutData(new GridData(100, SWT.DEFAULT));
 		tk.createLabel(cSum, Messages.RechnungsListeView_paidInList); // $NON-NLS-1$

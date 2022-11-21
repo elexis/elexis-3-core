@@ -48,7 +48,7 @@ public class GenericImporter extends ImporterPage {
 		if (importerBlatt.doImport()) {
 			return Status.OK_STATUS;
 		}
-		return new Status(Status.ERROR, "ch.elexis.import.div", 1, Messages.GenericImporter_ErrorImporting, null); //$NON-NLS-1$
+		return new Status(Status.ERROR, "ch.elexis.import.div", 1, Messages.Core_Error_while_importing, null); //$NON-NLS-1$
 	}
 
 	@Override

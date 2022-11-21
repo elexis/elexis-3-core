@@ -200,15 +200,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 	};
 
-	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.DiagnosenDisplay_DiagnoseTarget,
-			Messages.Patientenblatt2_persAnamnesisLbl, Messages.KontaktBlatt_Allergies,
-			Messages.Patientenblatt2_risksLbl, Messages.AccountView_remarks));
+	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.Core_Diagnosis,
+			Messages.Patientenblatt2_persAnamnesisLbl, Messages.Allergies,
+			Messages.Patientenblatt2_risksLbl, Messages.Core_Remarks));
 	private final List<Text> txExpandable = new ArrayList<>();
 	private ArrayList<String> dfExpandable = new ArrayList<>(Arrays.asList("Diagnosen", "PersAnamnese", //$NON-NLS-1$ //$NON-NLS-2$
 			"Allergien", "Risiken", "Bemerkung" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	));
 	private final List<ExpandableComposite> ec = new ArrayList<>();
-	private final static String FIXMEDIKATION = Messages.FixMediDisplay_FixMedikation; // $NON-NLS-1$
+	private final static String FIXMEDIKATION = Messages.Core_Fixed_medication; // $NON-NLS-1$
 	// private final static String[] lbLists={"Fixmedikation"/*,"Reminders" */};
 	private final FormText inpAdresse;
 	private final ListDisplay<BezugsKontakt> inpZusatzAdresse;
@@ -237,10 +237,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 
 		ArrayList<InputData> fields = new ArrayList<InputData>(20);
-		fields.add(new InputData(Messages.AccountListView_name, Patient.FLD_NAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
+		fields.add(new InputData(Messages.Core_Name, Patient.FLD_NAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(
 				new InputData(Messages.Core_Firstname, Patient.FLD_FIRSTNAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.AccountListView_bithdate, Patient.BIRTHDATE, InputData.Typ.DATE, null)); // $NON-NLS-1$
+		fields.add(new InputData(Messages.Core_Enter_Birthdate, Patient.BIRTHDATE, InputData.Typ.DATE, null)); // $NON-NLS-1$
 		IStructuredSelectionResolver ssr = new IStructuredSelectionResolver() {
 			@Override
 			public StructuredSelection resolveStructuredSelection(String value) {
@@ -291,9 +291,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		fields.add(new InputData(Messages.Patientenblatt2_phone1, Patient.FLD_PHONE1, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_phone2, Patient.FLD_PHONE2, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.KontaktBlatt_MobilePhone, Patient.MOBILE, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.KontaktBlatt_Fax, Patient.FLD_FAX, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.ErsterMandantDialog_EMail, Patient.FLD_E_MAIL, // $NON-NLS-1$
+		fields.add(new InputData(Messages.Core_Mobilphone, Patient.MOBILE, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
+		fields.add(new InputData(Messages.Core_Fax, Patient.FLD_FAX, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
+		fields.add(new InputData(Messages.Core_E_Mail, Patient.FLD_E_MAIL, // $NON-NLS-1$
 				new LabeledInputField.IExecLinkProvider() {
 					@Override
 					public void executeString(InputData ltf) {
@@ -314,7 +314,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					}
 				}));
 		fields.add(new InputData(Messages.Core_Group, Patient.FLD_GROUP, InputData.Typ.STRING, null)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.AccountView_accountColumn, Patient.FLD_BALANCE,
+		fields.add(new InputData(Messages.Core_Account, Patient.FLD_BALANCE,
 				new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
 					public void displayContent(Object po, InputData ltf) {
@@ -328,7 +328,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					}
 
 				}));
-		fields.add(new InputData(Messages.Patientenblatt2_regularPhysician, PatientConstants.FLD_EXTINFO_STAMMARZT,
+		fields.add(new InputData(Messages.Core_RegularPhysiscion, PatientConstants.FLD_EXTINFO_STAMMARZT,
 				new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
 					public void displayContent(Object po, InputData ltf) {
@@ -540,7 +540,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		});
 		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 
-		hHA = tk.createHyperlink(cPersonalien, Messages.KontaktBlatt_Postal, SWT.NONE); // $NON-NLS-1$
+		hHA = tk.createHyperlink(cPersonalien, Messages.Core_Postal_Address, SWT.NONE); // $NON-NLS-1$
 		hHA.addHyperlinkListener(hr);
 		hHA.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 		inpAdresse = tk.createFormText(cPersonalien, false);
@@ -562,7 +562,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				if (ivc.isAvailable()) {
 					// remove unstructured diagnosis ui
 					if (ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) { //$NON-NLS-1$
-						lbExpandable.remove(Messages.DiagnosenDisplay_DiagnoseTarget);
+						lbExpandable.remove(Messages.Core_Diagnosis);
 						dfExpandable.remove("Diagnosen"); //$NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("PersonalAnamnesisViewContribution")) { //$NON-NLS-1$
@@ -574,7 +574,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						dfExpandable.remove("Risiken"); //$NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("AllergyIntoleranceViewContribution")) { //$NON-NLS-1$
-						lbExpandable.remove(Messages.KontaktBlatt_Allergies);
+						lbExpandable.remove(Messages.Allergies);
 						dfExpandable.remove("Allergien"); //$NON-NLS-1$
 					}
 				}
@@ -666,7 +666,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		});
 
 		// Hyperlink "Hinzu..." über der Adressliste hinzufügen
-		inpZusatzAdresse.addHyperlinks(Messages.Bezugskontakt_Add); // $NON-NLS-1$
+		inpZusatzAdresse.addHyperlinks(Messages.Core_Add); // $NON-NLS-1$
 
 		// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
 
@@ -708,7 +708,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				});
 
 		// Hyperlink "Hinzu..." über der Adressliste hinzufügen
-		additionalAddresses.addHyperlinks(Messages.Bezugskontakt_Add); // $NON-NLS-1$
+		additionalAddresses.addHyperlinks(Messages.Core_Add); // $NON-NLS-1$
 
 		// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
 
@@ -863,7 +863,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		detailComposites.forEach(dc -> dc.setDetailObject(actPatient, null));
 
 		if (actPatient == null) {
-			form.setText(Messages.AUF2_NoPatientSelected); // $NON-NLS-1$
+			form.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
 			inpAdresse.setText(StringConstants.EMPTY, false, false);
 			deceasedBtn.setSelection(false);
 			increasedTreatmentBtn.setSelection(false);

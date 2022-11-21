@@ -114,19 +114,19 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 
 	private boolean validateFile(File file) {
 		if (!file.canRead()) {
-			SWTHelper.showError(Messages.DocumentView_cantReadCaption,
-					MessageFormat.format(Messages.DocumentView_cantReadText, file));
+			SWTHelper.showError(Messages.Core_Unable_to_read_file,
+					MessageFormat.format(Messages.Core_cant_read_file_0, file));
 			return false;
 		} else if (file.getName().length() > 255) {
-			SWTHelper.showError(Messages.DocumentView_cantReadCaption, Messages.DocumentView_fileNameTooLong);
+			SWTHelper.showError(Messages.Core_Unable_to_read_file, Messages.Core_Filename_too_long);
 			return false;
 		}
 		return true;
 	}
 
 	private void openDeleteDialog(Shell shell, IDocument document, int eventType) {
-		if (SWTHelper.askYesNo(Messages.DocumentView_reallyDeleteCaption,
-				MessageFormat.format(Messages.DocumentView_reallyDeleteContents, document.getTitle()))) {
+		if (SWTHelper.askYesNo(Messages.Core_Really_delete_caption,
+				MessageFormat.format(Messages.Core_Really_delete_0, document.getTitle()))) {
 
 			Optional<Identifiable> documentPo = DocumentStoreServiceHolder.getService().getPersistenceObject(document);
 			// we can only lock IPersistentObject based ...
@@ -201,10 +201,10 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 				}
 			} catch (IOException e) {
 				logger.error("file not found", e); //$NON-NLS-1$
-				SWTHelper.showError(Messages.DocumentView_importErrorCaption, Messages.DocumentView_importErrorText2);
+				SWTHelper.showError(Messages.Core_Error_while_reading, Messages.Core_Error_Reading_Please_check_log);
 			} catch (ElexisException e) {
 				logger.error("cannot save", e); //$NON-NLS-1$
-				SWTHelper.showError(Messages.DocumentView_saveErrorCaption, Messages.DocumentView_saveErrorText);
+				SWTHelper.showError(Messages.Core_Error_with_document, Messages.DocumentView_saveErrorText);
 			}
 			// publish changes
 			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, document);

@@ -135,11 +135,11 @@ public class BestellView extends ViewPart {
 		tvcNumber.setEditingSupport(poes);
 
 		TableViewerColumn tvcArticle = new TableViewerColumn(tv, SWT.LEFT);
-		tvcArticle.getColumn().setText(Messages.BestellView_Article);
+		tvcArticle.getColumn().setText(Messages.Core_Article);
 		tvcArticle.getColumn().setWidth(280);
 
 		TableViewerColumn tvcDealer = new TableViewerColumn(tv, SWT.LEFT);
-		tvcDealer.getColumn().setText(Messages.Artikeldetail_lieferant);
+		tvcDealer.getColumn().setText(Messages.Core_Article_provider);
 		tvcDealer.getColumn().setWidth(250);
 		tvcDealer.setEditingSupport(new EditingSupport(tv) {
 
@@ -422,9 +422,9 @@ public class BestellView extends ViewPart {
 					setOrder(order);
 				} else {
 					if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
-						if (MessageDialog.openQuestion(getSite().getShell(), Messages.BestellBlatt_TemplateName,
+						if (MessageDialog.openQuestion(getSite().getShell(), Messages.Core_Areas,
 								Messages.BestellView_WizardAskNewOrder)) {
-							setOrder(createOrder(Messages.BestellView_Automatic));
+							setOrder(createOrder(Messages.Core_Automatic));
 						}
 					}
 				}
@@ -444,12 +444,12 @@ public class BestellView extends ViewPart {
 			@Override
 			public void run() {
 				if (actOrder == null) {
-					setOrder(createOrder(Messages.BestellView_Automatic));
+					setOrder(createOrder(Messages.Core_Automatic));
 				} else {
 					if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
-						if (MessageDialog.openQuestion(getSite().getShell(), Messages.BestellBlatt_TemplateName,
+						if (MessageDialog.openQuestion(getSite().getShell(), Messages.Core_Areas,
 								Messages.BestellView_WizardAskNewOrder)) {
-							setOrder(createOrder(Messages.BestellView_Automatic));
+							setOrder(createOrder(Messages.Core_Automatic));
 						}
 					}
 				}

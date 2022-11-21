@@ -58,7 +58,7 @@ public class EigenLeistungDialog extends TitleAreaDialog {
 		tKurz = new Text(ret, SWT.BORDER);
 		tKurz.setData("TEST_COMP_NAME", "EigenLeistungDialog_tKurz"); //$NON-NLS-1$ //$NON-NLS-2$
 		tKurz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.AccountListView_name); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Name); // $NON-NLS-1$
 		tName = new Text(ret, SWT.BORDER);
 		tName.setData("TEST_COMP_NAME", "EigenLeistungDialog_tName"); //$NON-NLS-1$ //$NON-NLS-2$
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -76,8 +76,8 @@ public class EigenLeistungDialog extends TitleAreaDialog {
 		tTime.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		if (result instanceof Eigenleistung) {
 			Eigenleistung el = (Eigenleistung) result;
-			tName.setText(el.get(Messages.BlockDetailDisplay_title)); // $NON-NLS-1$
-			tKurz.setText(el.get(Messages.BlockDetailDisplay_code)); // $NON-NLS-1$
+			tName.setText(el.get(Messages.Core_Description)); // $NON-NLS-1$
+			tKurz.setText(el.get(Messages.Core_Code)); // $NON-NLS-1$
 			tEK.setText(el.getKosten(new TimeTool()).getCentsAsString());
 			tVK.setText(el.getPreis(new TimeTool(), null).getCentsAsString());
 			tTime.setText(el.get(Eigenleistung.TIME));

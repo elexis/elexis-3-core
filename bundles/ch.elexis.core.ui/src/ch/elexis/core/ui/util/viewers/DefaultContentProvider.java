@@ -74,7 +74,7 @@ public class DefaultContentProvider implements ICommonViewerContentProvider {
 		}
 		List<PersistentObject> list = qbe.execute();
 		if (list == null) {
-			return new String[] { Messages.DefaultContentProvider_noData }; // $NON-NLS-1$
+			return new String[] { Messages.Core_No_data_available }; // $NON-NLS-1$
 		} else {
 			return list.toArray();
 		}

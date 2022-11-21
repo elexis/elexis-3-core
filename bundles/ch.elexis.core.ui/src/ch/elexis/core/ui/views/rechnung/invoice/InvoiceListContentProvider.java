@@ -95,7 +95,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	public static String orderBy = StringUtils.EMPTY;
 	private static int queryLimit = 1000;
 
-	public Action rnFilterAction = new Action(Messages.PatientenListeView_FilteList, Action.AS_CHECK_BOX) {
+	public Action rnFilterAction = new Action(Messages.Core_Filter_List, Action.AS_CHECK_BOX) {
 		{
 			setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
 			setToolTipText(Messages.RnActions_filterLIstTooltip);

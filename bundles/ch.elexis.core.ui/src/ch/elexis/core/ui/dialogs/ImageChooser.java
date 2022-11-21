@@ -151,7 +151,7 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 		cBottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 		cBottom.setLayout(new GridLayout(2, false));
-		new Label(cBottom, SWT.NONE).setText(Messages.GenericImporterBlatt_File); // $NON-NLS-1$
+		new Label(cBottom, SWT.NONE).setText(Messages.Core_File); // $NON-NLS-1$
 		new Label(cBottom, SWT.NONE).setText(Messages.ImageChooser_imageTitle); // $NON-NLS-1$
 		hl = new Hyperlink(cBottom, SWT.NONE);
 		tTitle = new Text(cBottom, SWT.BORDER);

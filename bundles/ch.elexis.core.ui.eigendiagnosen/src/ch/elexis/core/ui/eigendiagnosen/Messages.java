@@ -13,7 +13,7 @@ package ch.elexis.core.ui.eigendiagnosen;
 
 public class Messages {
 	public static String Eigendiagnosen_CodeSystemName = ch.elexis.core.l10n.Messages.Eigendiagnosen_CodeSystemName;
-	public static String Eigendiagnosen_allFilesDescription = ch.elexis.core.l10n.Messages.Eigendiagnosen_allFilesDescription;
+	public static String Core_All_Files_Filter = ch.elexis.core.l10n.Messages.Core_All_Files_Filter;
 	public static String Eigendiagnosen_BadFileFormat = ch.elexis.core.l10n.Messages.Eigendiagnosen_BadFileFormat;
 	public static String Eigendiagnosen_CantRead = ch.elexis.core.l10n.Messages.Eigendiagnosen_CantRead;
 	public static String Eigendiagnosen_csvDescription = ch.elexis.core.l10n.Messages.Eigendiagnosen_csvDescription;
@@ -21,6 +21,6 @@ public class Messages {
 	public static String Eigendiagnosen_msExcelDescription = ch.elexis.core.l10n.Messages.Eigendiagnosen_msExcelDescription;
 	public static String Eigendiagnosen_UnsupportedFileFormat = ch.elexis.core.l10n.Messages.Eigendiagnosen_UnsupportedFileFormat;
 	public static String Core_Short_Label = ch.elexis.core.l10n.Messages.Core_Short_Label;
-	public static String EditLabItem_labelTypText = ch.elexis.core.l10n.Messages.EditLabItem_labelTypText;
+	public static String Core_Text = ch.elexis.core.l10n.Messages.Core_Text;
 
 }

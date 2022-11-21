@@ -133,7 +133,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 	@Override
 	public void create() {
 		super.create();
-		getShell().setText(Messages.KonsZumVerrechnenView_billsList);
+		getShell().setText(Messages.Core_Invoice_List);
 		setTitle(Messages.RnActions_exportListCaption);
 		setMessage(Messages.RnActions_exportListMessage);
 		getShell().setSize(900, 700);

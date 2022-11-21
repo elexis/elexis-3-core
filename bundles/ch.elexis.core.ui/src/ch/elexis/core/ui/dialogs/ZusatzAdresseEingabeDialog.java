@@ -76,7 +76,7 @@ public class ZusatzAdresseEingabeDialog extends TitleAreaDialog {
 		super.create();
 		setTitle(Messages.AnschriftEingabeDialog_enterAddress); // $NON-NLS-1$
 		setMessage(Messages.AnschriftEingabeDialog_enterData); // $NON-NLS-1$
-		getShell().setText(Messages.AnschriftEingabeDialog_postalAddress); // $NON-NLS-1$
+		getShell().setText(Messages.Core_Postal_Address); // $NON-NLS-1$
 
 		if (locked) {
 			Button btnOk = getButton(IDialogConstants.OK_ID);
@@ -123,7 +123,7 @@ public class ZusatzAdresseEingabeDialog extends TitleAreaDialog {
 		str2.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 		Label l2 = new Label(com, SWT.NONE);
-		l2.setText(Messages.AnschriftEingabeDialog_zip); // $NON-NLS-1$
+		l2.setText(Messages.Core_Postal_code); // $NON-NLS-1$
 		plz = new Text(com, SWT.BORDER);
 
 		plz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -139,7 +139,7 @@ public class ZusatzAdresseEingabeDialog extends TitleAreaDialog {
 		land.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 		Button post = new Button(com, SWT.PUSH);
-		post.setText(Messages.AnschriftEingabeDialog_postalAddress); // $NON-NLS-1$
+		post.setText(Messages.Core_Postal_Address); // $NON-NLS-1$
 		post.addSelectionListener(new SelectionAdapter() {
 
 			@Override

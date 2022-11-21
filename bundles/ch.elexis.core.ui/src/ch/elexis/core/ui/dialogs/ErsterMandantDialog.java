@@ -46,16 +46,16 @@ public class ErsterMandantDialog extends TitleAreaDialog {
 		Composite ret = new Composite(rx, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(2, false));
-		new Label(ret, SWT.NONE).setText(Messages.DBConnectWizardPage_lblUsername_1_text); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Username); // $NON-NLS-1$
 		tUsername = new Text(ret, SWT.BORDER);
 		tUsername.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.AnwenderPref_passwort); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Password); // $NON-NLS-1$
 		tPwd1 = new Text(ret, SWT.BORDER | SWT.PASSWORD);
 		tPwd1.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.ErsterMandantDialog_PasswordRepeat); // $NON-NLS-1$
 		tPwd2 = new Text(ret, SWT.BORDER | SWT.PASSWORD);
 		tPwd2.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.ErsterMandantDialog_Anrede); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Salution); // $NON-NLS-1$
 		cbAnrede = new Combo(ret, SWT.SIMPLE | SWT.SINGLE);
 		cbAnrede.setItems(anreden);
 
@@ -65,22 +65,22 @@ public class ErsterMandantDialog extends TitleAreaDialog {
 		new Label(ret, SWT.NONE).setText(Messages.Core_Firstname); // $NON-NLS-1$
 		tFirstname = new Text(ret, SWT.BORDER);
 		tFirstname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.AccountListView_name); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Name); // $NON-NLS-1$
 		tLastname = new Text(ret, SWT.BORDER);
 		tLastname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.ErsterMandantDialog_EMail); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_E_Mail); // $NON-NLS-1$
 		tEmail = new Text(ret, SWT.BORDER);
 		tEmail.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.Core_Street); // $NON-NLS-1$
 		tStreet = new Text(ret, SWT.BORDER);
 		tStreet.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.AnschriftEingabeDialog_zip); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Postal_code); // $NON-NLS-1$
 		tZip = new Text(ret, SWT.BORDER);
 		tZip.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.Core_City); // $NON-NLS-1$
 		tPlace = new Text(ret, SWT.BORDER);
 		tPlace.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.ErsterMandantDialog_phone); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Phone); // $NON-NLS-1$
 		tPhone = new Text(ret, SWT.BORDER);
 		tPhone.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.ErsterMandantDialog_fax); // $NON-NLS-1$

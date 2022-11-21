@@ -106,7 +106,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener, 
 			}
 
 		});
-		text.setText(Messages.AUF2_NoPatientSelected, false, false); // $NON-NLS-1$
+		text.setText(Messages.Core_No_patient_selected, false, false); // $NON-NLS-1$
 		addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
@@ -227,7 +227,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener, 
 					} else {
 						text.setText(
 								ContextServiceHolder.get().getActivePatient().orElse(null) != null ? StringUtils.EMPTY
-										: Messages.AUF2_NoPatientSelected,
+										: Messages.Core_No_patient_selected,
 								false, false);
 					}
 

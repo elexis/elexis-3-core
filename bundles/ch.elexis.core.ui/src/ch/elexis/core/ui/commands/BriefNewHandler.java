@@ -39,8 +39,8 @@ public class BriefNewHandler extends AbstractHandler implements IHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Patient pat = ElexisEventDispatcher.getSelectedPatient();
 		if (pat == null) {
-			MessageDialog.openInformation(UiDesk.getTopShell(), Messages.AUF2_NoPatientSelected,
-					Messages.AUF2_NoPatientSelected);
+			MessageDialog.openInformation(UiDesk.getTopShell(), Messages.Core_No_patient_selected,
+					Messages.Core_No_patient_selected);
 			return null;
 		}
 

@@ -277,10 +277,10 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 		vc = new ViewerConfigurer(
 				// new LazyContentProvider(cv,dataloader, null),
 				kl, new KontaktSelektorLabelProvider(),
-				new DefaultControlFieldProvider(cv, new String[] { "Kuerzel=" + Messages.KontaktSelector_abbreviation, //$NON-NLS-1$
-						"Bezeichnung1=" + Messages.BlockDetailDisplay_title, //$NON-NLS-1$
+				new DefaultControlFieldProvider(cv, new String[] { "Kuerzel=" + Messages.Core_Kuerzel, //$NON-NLS-1$
+						"Bezeichnung1=" + Messages.Core_Description, //$NON-NLS-1$
 						"Bezeichnung2=" + Messages.Core_Firstname, //$NON-NLS-1$
-						"Geburtsdatum=" + Messages.AccountListView_bithdate //$NON-NLS-1$
+						"Geburtsdatum=" + Messages.Core_Enter_Birthdate //$NON-NLS-1$
 				}), new ViewerConfigurer.ButtonProvider() {
 
 					public Button createButton(final Composite parent) {

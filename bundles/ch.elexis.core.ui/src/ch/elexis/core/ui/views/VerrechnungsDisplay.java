@@ -145,7 +145,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
-	private static final String CHCOUNT = Messages.BestellView_ChangeNumber;
+	private static final String CHCOUNT = Messages.Core_Change_Number;
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
@@ -181,7 +181,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		FontDescriptor boldDescriptor = FontDescriptor.createFrom(label.getFont()).setStyle(SWT.BOLD);
 		Font boldFont = boldDescriptor.createFont(label.getDisplay());
 		label.setFont(boldFont);
-		label.setText(Messages.PatHeuteView_amountBilled);
+		label.setText(Messages.Invoice_amount_billed);
 
 		billedLabel = new Text(this, SWT.WRAP);
 		billedLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
@@ -341,8 +341,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 
 	private void createColumns() {
-		String[] titles = { StringTool.leer, Messages.Display_Column_Number, Messages.BlockDetailDisplay_code,
-				Messages.BlockDetailDisplay_title, Messages.Display_Column_Price, StringTool.leer };
+		String[] titles = { StringTool.leer, Messages.Display_Column_Number, Messages.Core_Code,
+				Messages.Core_Description, Messages.Core_Price, StringTool.leer };
 		int[] weights = { 0, 8, 20, 50, 15, 7 };
 
 		partDisposalColumn = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
@@ -491,7 +491,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 			interactionLink.updateAtcs(gtins);
 			billedLabel.setText(String.format("%s %s / %s %s", //$NON-NLS-1$
-					Messages.Core_Amount, sum.getAmountAsString(), Messages.EditLabResultDialog_labelTime,
+					Messages.Core_Amount, sum.getAmountAsString(), Messages.Core_Time,
 					sumMinutes));
 		} else {
 			billedLabel.setText(StringUtils.EMPTY);
@@ -537,7 +537,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 			if (o instanceof IVerrechenbar) {
 				if (AccessControlServiceHolder.get().request(AccessControlDefaults.LSTG_VERRECHNEN) == false) {
-					SWTHelper.alert(Messages.PatientMenuPopulator_DeletePatientRefusalCaption, // $NON-NLS-1$
+					SWTHelper.alert(Messages.Core_Missing_rights, // $NON-NLS-1$
 							Messages.VerrechnungsDisplay_missingRightsBody); // $NON-NLS-1$
 				} else {
 					Result<IVerrechenbar> result = Konsultation.load(actEncounter.getId())

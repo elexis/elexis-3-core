@@ -160,7 +160,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			if (InvoiceState.CANCELLED.numericValue() == invoice.getStatus()) {
 				ltf.setLabel(Messages.RechnungsBlatt_compensateAmount);
 			} else {
-				ltf.setLabel(Messages.InvoiceListView_tblclmnOpenAmount_text);
+				ltf.setLabel(Messages.Invoice_Amount_Unpaid);
 			}
 		}
 
@@ -194,7 +194,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	private static final InputData[] rndata = {
 			new InputData(Messages.RechnungsBlatt_billNumber, Rechnung.BILL_NUMBER, Typ.STRING, null),
 			new InputData(Messages.RechnungsBlatt_billDate, Rechnung.BILL_DATE, Typ.STRING, null), new InputData(
-					Messages.InvoiceListView_tblclmnInvoiceState_text, Rechnung.BILL_STATE, new LabeledInputField.IContentProvider() {
+					Messages.Core_Invoicestate, Rechnung.BILL_STATE, new LabeledInputField.IContentProvider() {
 
 						@Override
 						public void displayContent(Object po, InputData ltf) {
@@ -216,7 +216,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			new InputData(Messages.RechnungsBlatt_treatmentsFrom, Rechnung.BILL_DATE_FROM, Typ.STRING, null),
 			new InputData(Messages.RechnungsBlatt_treatmentsUntil, Rechnung.BILL_DATE_UNTIL, Typ.STRING, null),
 			new InputData(Messages.RechnungsBlatt_amountTotal, Rechnung.BILL_AMOUNT_CENTS, Typ.CURRENCY, null),
-			new InputData(Messages.InvoiceListView_tblclmnOpenAmount_text, Rechnung.BILL_AMOUNT_CENTS, openAmountContentProvider) };
+			new InputData(Messages.Invoice_Amount_Unpaid, Rechnung.BILL_AMOUNT_CENTS, openAmountContentProvider) };
 	private LabeledInputField.AutoForm rnform;
 
 	private final ElexisEventListenerImpl eeli_rn = new ElexisUiEventListenerImpl(Rechnung.class,
@@ -494,7 +494,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		SWTHelper.setGridDataHeight(lbOutputs, 4, true);
 		tk.adapt(lbOutputs, true, true);
 
-		ecKons = WidgetFactory.createExpandableComposite(tk, form, Messages.PatHeuteView_consultations); // $NON-NLS-1$
+		ecKons = WidgetFactory.createExpandableComposite(tk, form, Messages.Core_Consultations); // $NON-NLS-1$
 		ecKons.addExpansionListener(ecExpansionListener);
 		konsultationenViewer = new ListViewer(ecKons, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		ecKons.setClient(konsultationenViewer.getList());

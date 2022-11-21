@@ -44,7 +44,7 @@ public class ResultDialog {
 	}
 
 	private static void showInfo(Result<?> result) {
-		MessageDialog.openInformation(getShell(), Messages.ResultDialog_Info, getResultMessage(result));
+		MessageDialog.openInformation(getShell(), Messages.Core_Information, getResultMessage(result));
 	}
 
 	public static String getResultMessage(Result<?> result) {

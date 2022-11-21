@@ -130,7 +130,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		layout.marginHeight = 0;
 		compositeDayTimeDosage.setLayout(layout);
 		txtSignatureMorning = new Text(compositeDayTimeDosage, SWT.BORDER);
-		txtSignatureMorning.setMessage(Messages.ArticleDefaultSignatureComposite_morning);
+		txtSignatureMorning.setMessage(Messages.Medication_Dose_Morning);
 		txtSignatureMorning.setToolTipText(StringUtils.EMPTY);
 		txtSignatureMorning.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
@@ -145,14 +145,14 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		label.setText("-"); //$NON-NLS-1$
 
 		txtSignatureEvening = new Text(compositeDayTimeDosage, SWT.BORDER);
-		txtSignatureEvening.setMessage(Messages.ArticleDefaultSignatureComposite_evening);
+		txtSignatureEvening.setMessage(Messages.Core_Evening);
 		txtSignatureEvening.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		label = new Label(compositeDayTimeDosage, SWT.None);
 		label.setText("-"); //$NON-NLS-1$
 
 		txtSignatureNight = new Text(compositeDayTimeDosage, SWT.BORDER);
-		txtSignatureNight.setMessage(Messages.ArticleDefaultSignatureComposite_night);
+		txtSignatureNight.setMessage(Messages.Medication_Dose_Night);
 		txtSignatureNight.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		compositeFreeTextDosage = new Composite(stackCompositeDosage, SWT.NONE);
@@ -163,7 +163,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		layout.marginHeight = 0;
 		compositeFreeTextDosage.setLayout(layout);
 		txtFreeTextDosage = new Text(compositeFreeTextDosage, SWT.BORDER);
-		txtFreeTextDosage.setMessage(Messages.ArticleDefaultSignatureComposite_dosage);
+		txtFreeTextDosage.setMessage(Messages.Core_Dosage);
 		txtFreeTextDosage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		// set initial control to day time dosage
 		stackLayoutDosage.topControl = compositeDayTimeDosage;
@@ -184,7 +184,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		});
 
 		txtSignatureComment = new Text(this, SWT.BORDER);
-		txtSignatureComment.setMessage(Messages.ArticleDefaultSignatureComposite_applicationInstruction);
+		txtSignatureComment.setMessage(Messages.Prescription_Instruction);
 		txtSignatureComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
 
 		medicationType = new Composite(this, SWT.NONE);

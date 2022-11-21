@@ -103,7 +103,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 	private static final String[] COLUMN_TEXT = { Messages.Core_Date, // DATE
 			Messages.Core_Amount, // AMOUNT
 			Messages.Core_Bill, // BILL
-			Messages.AccountView_remarks, // REMARKS
+			Messages.Core_Remarks, // REMARKS
 			Messages.AccountView_account, // ACCOUNT
 	};
 
@@ -193,7 +193,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 		accountViewer.setContentProvider(new IStructuredContentProvider() {
 			public Object[] getElements(Object inputElement) {
 				if (actPatient == null) {
-					return new Object[] { Messages.AccountView_NoPatientSelected };
+					return new Object[] { Messages.Core_No_patient_selected_point };
 				}
 				Query<AccountTransaction> qa = new Query<AccountTransaction>(AccountTransaction.class);
 				qa.add(AccountTransaction.FLD_PATIENT_ID, Query.EQUALS, actPatient.getId());
@@ -333,7 +333,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 		if (actPatient != null) {
 			title = actPatient.getLabel();
 		} else {
-			title = Messages.AccountView_NoPatientSelected; // $NON-NLS-1$
+			title = Messages.Core_No_patient_selected_point; // $NON-NLS-1$
 		}
 		form.setText(title);
 
@@ -409,9 +409,9 @@ public class AccountView extends ViewPart implements IActivationListener {
 	 */
 
 	private void makeActions() {
-		addPaymentAction = new Action(Messages.AccountView_addBookingCaption) { // $NON-NLS-1$
+		addPaymentAction = new Action(Messages.Invoice_Add_Payment) { // $NON-NLS-1$
 			{
-				setToolTipText(Messages.AccountView_addBookingBody); // $NON-NLS-1$
+				setToolTipText(Messages.Invoice_add_amount_as_payment); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
 			}
 

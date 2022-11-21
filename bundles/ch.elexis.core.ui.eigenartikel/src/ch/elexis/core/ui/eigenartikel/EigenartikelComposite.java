@@ -128,14 +128,14 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 
 		Label lblPharmacode = new Label(compDpDetail, SWT.NONE);
 		lblPharmacode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblPharmacode.setText(Messages.Artikeldetail_Pharmacode);
+		lblPharmacode.setText(Messages.Core_Phamacode);
 
 		txtPharmacode = new Text(compDpDetail, SWT.BORDER);
 		txtPharmacode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblPackagesint = new Label(compDpDetail, SWT.NONE);
 		lblPackagesint.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblPackagesint.setText(Messages.Artikeldetail_verpackungseinheit);
+		lblPackagesint.setText(Messages.Core_Pieces_per_pack);
 
 		txtPackageSizeInt = new Text(compDpDetail, SWT.BORDER);
 		txtPackageSizeInt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -182,7 +182,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		btnHiCostAbsorption.setText(Messages.EigenartikelComposite_btnCheckButton_text);
 
 		Group stockGroup = new Group(grpDrugPackages, SWT.NONE);
-		stockGroup.setText(Messages.EigenartikelComposite_stockGroup_text);
+		stockGroup.setText(Messages.Core_Inventory_control);
 		stockGroup.setLayout(new FillLayout(SWT.HORIZONTAL));
 		GridData gd_stockGroup = new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1);
 		gd_stockGroup.heightHint = 80;

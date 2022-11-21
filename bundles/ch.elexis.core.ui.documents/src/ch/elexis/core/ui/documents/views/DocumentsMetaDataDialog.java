@@ -123,7 +123,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	}
 
 	private void createUIDocumentReferences(Composite ret) {
-		new Label(ret, SWT.NONE).setText(Messages.DocumentView_keywordsColumn);
+		new Label(ret, SWT.NONE).setText(Messages.Core_Keywords);
 		tKeywords = SWTHelper.createText(ret, 4, SWT.NONE);
 		tKeywords.setText(Optional.ofNullable(Objects.toString(documentReference.getKeywords(), document.getKeywords()))
 				.orElse(StringUtils.EMPTY));
@@ -208,7 +208,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		super.create();
 		setTitle(document.getTitle());
 		getShell().setText(Messages.DocumentMetaDataDialog_title);
-		setMessage(Messages.DocumentMetaDataDialog_titleMessage);
+		setMessage(Messages.Core_Enter_Title_and_tags_for_document);
 	}
 
 	@Override

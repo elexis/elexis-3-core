@@ -46,12 +46,12 @@ public class Artikeldetail extends ViewPart implements IActivationListener {
 		InputData[] ret = new InputData[] {
 				new InputData(Messages.Core_Type, Artikel.FLD_TYP, Typ.STRING, null),
 				new InputData(Messages.Artikeldetail_EAN, Artikel.FLD_EAN, Typ.STRING, null),
-				new InputData(Messages.Artikeldetail_Pharmacode, Artikel.FLD_EXTINFO, Typ.STRING, "Pharmacode"), // $NON-NLS-2$ //$NON-NLS-1$
+				new InputData(Messages.Core_Phamacode, Artikel.FLD_EXTINFO, Typ.STRING, "Pharmacode"), // $NON-NLS-2$ //$NON-NLS-1$
 				new InputData(Messages.Artikeldetail_Einkaufspreis, Artikel.FLD_EK_PREIS, Typ.CURRENCY, null),
 				new InputData(Messages.Artikeldetail_Verkaufspreis, Artikel.FLD_VK_PREIS, Typ.CURRENCY, null),
-				new InputData(Messages.Artikeldetail_verpackungseinheit, Artikel.FLD_EXTINFO, Typ.INT,
+				new InputData(Messages.Core_Pieces_per_pack, Artikel.FLD_EXTINFO, Typ.INT,
 						"VerpackungsEinheit"), // $NON-NLS-2$ //$NON-NLS-1$
-				new InputData(Messages.Artikeldetail_stueckProAbgabe, Artikel.FLD_EXTINFO, Typ.INT,
+				new InputData(Messages.Core_Pieces_by_dose, Artikel.FLD_EXTINFO, Typ.INT,
 						"Verkaufseinheit") }; //$NON-NLS-1$
 		return ret;
 	}
@@ -59,11 +59,11 @@ public class Artikeldetail extends ViewPart implements IActivationListener {
 	static final public InputData[] getModelFieldDefs(final Shell shell) {
 		InputData[] ret = new InputData[] { new InputData(Messages.Core_Type, "typ", Typ.STRING, null), //$NON-NLS-1$
 				new InputData(Messages.Artikeldetail_EAN, "gtin", Typ.STRING, null), //$NON-NLS-1$
-				new InputData(Messages.Artikeldetail_Pharmacode, "extInfo", Typ.STRING, "Pharmacode"), // $NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-2$
+				new InputData(Messages.Core_Phamacode, "extInfo", Typ.STRING, "Pharmacode"), // $NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-2$
 				new InputData(Messages.Artikeldetail_Einkaufspreis, "purchasePrice", Typ.CURRENCY, null), //$NON-NLS-1$
 				new InputData(Messages.Artikeldetail_Verkaufspreis, "sellingPrice", Typ.CURRENCY, null), //$NON-NLS-1$
-				new InputData(Messages.Artikeldetail_verpackungseinheit, "extInfo", Typ.INT, "VerpackungsEinheit"), // $NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-2$
-				new InputData(Messages.Artikeldetail_stueckProAbgabe, "extInfo", Typ.INT, "Verkaufseinheit") }; //$NON-NLS-1$ //$NON-NLS-2$
+				new InputData(Messages.Core_Pieces_per_pack, "extInfo", Typ.INT, "VerpackungsEinheit"), // $NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-2$
+				new InputData(Messages.Core_Pieces_by_dose, "extInfo", Typ.INT, "Verkaufseinheit") }; //$NON-NLS-1$ //$NON-NLS-2$
 		return ret;
 	}
 

@@ -107,7 +107,7 @@ public class SearchView extends ViewPart {
 		typeGroup.setText(Messages.SearchView_dosearch); // $NON-NLS-1$
 
 		consultationRadio = new Button(typeGroup, SWT.RADIO);
-		consultationRadio.setText(Messages.PatHeuteView_consultations); // $NON-NLS-1$
+		consultationRadio.setText(Messages.Core_Consultations); // $NON-NLS-1$
 		consultationRadio.setSelection(true);
 
 		Group optionsGroup = new Group(mainOptionsArea, SWT.SHADOW_OUT);
@@ -120,7 +120,7 @@ public class SearchView extends ViewPart {
 		consultationTextRadio.setSelection(true);
 
 		searchButton = new Button(mainSearchArea, SWT.PUSH);
-		searchButton.setText(Messages.MedicationComposite_search); // $NON-NLS-1$
+		searchButton.setText(Messages.Core_DoSearch); // $NON-NLS-1$
 		GridData gd = SWTHelper.getFillGridData(1, true, 1, false);
 		gd.horizontalAlignment = GridData.END;
 		searchButton.setLayoutData(gd);
@@ -167,7 +167,7 @@ public class SearchView extends ViewPart {
 					String type = "?"; //$NON-NLS-1$
 					String label = StringUtils.EMPTY;
 					if (po instanceof Konsultation) {
-						type = Messages.AccessControlDefaults_consultation; // $NON-NLS-1$
+						type = Messages.Core_Consultation; // $NON-NLS-1$
 
 						Konsultation konsultation = (Konsultation) po;
 						Fall fall = konsultation.getFall();

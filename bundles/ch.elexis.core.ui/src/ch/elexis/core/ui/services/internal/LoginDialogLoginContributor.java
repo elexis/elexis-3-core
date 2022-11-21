@@ -30,9 +30,9 @@ public class LoginDialogLoginContributor implements ILoginContributor {
 			// login dialog creates own shell, makes it appear in taskbar
 			LocalUserLoginDialog loginDialog = new LocalUserLoginDialog(null, elexisEnvironmentService);
 			loginDialog.create();
-			loginDialog.getShell().setText(Messages.ApplicationWorkbenchAdvisor_7);
-			loginDialog.setTitle(Messages.ApplicationWorkbenchAdvisor_8);
-			loginDialog.setMessage(Messages.ApplicationWorkbenchAdvisor_9);
+			loginDialog.getShell().setText(Messages.Core_Elexis_Login);
+			loginDialog.setTitle(Messages.Core_Not_logged_in);
+			loginDialog.setMessage(Messages.Core_Please_Enter_Name_and_Password);
 			int retval = loginDialog.open();
 			if (retval == Dialog.OK) {
 				return loginDialog.getUser();

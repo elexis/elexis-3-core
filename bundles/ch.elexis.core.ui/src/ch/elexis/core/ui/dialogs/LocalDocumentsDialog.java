@@ -97,7 +97,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		TableViewerColumn tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcPatient = tvc.getColumn();
 		tcLayout.setColumnData(tcPatient, new ColumnPixelData(150, false, false));
-		tcPatient.setText(Messages.DefaultPDFImportStrategy_Patient);
+		tcPatient.setText(Messages.Core_Patient);
 		tvc.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -108,7 +108,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcDocument = tvc.getColumn();
 		tcLayout.setColumnData(tcDocument, new ColumnPixelData(250, true, true));
-		tcDocument.setText(Messages.EditLabItem_labelTypDocument);
+		tcDocument.setText(Messages.Core_Document);
 		tvc.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -213,7 +213,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 			tableViewer.setInput(service.getAll());
 		} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
 			MessageDialog.openError(getShell(), Messages.Core_Error,
-					Messages.BriefAuswahl_errorlocaleditendmessage);
+					Messages.Core_Could_not_reread_correctly_document);
 		}
 	}
 
@@ -228,7 +228,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 			tableViewer.setInput(service.getAll());
 		} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
 			MessageDialog.openError(getShell(), Messages.Core_Error,
-					Messages.BriefAuswahl_errorlocaleditabortmessage);
+					Messages.Core_Could_not_abort_editing);
 		}
 	}
 

@@ -159,14 +159,14 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		StringBuilder sbFailed = new StringBuilder();
 		patient = (IPatient) context.get(IMultiFileParser.CTX_PATIENT);
 		if (patient == null) {
-			sbFailed.append(Messages.DefaultPDFImportStrategy_Patient);
+			sbFailed.append(Messages.Core_Patient);
 			sbFailed.append("; ");
 		}
 
 		myLab = LabImportUtilHolder.get()
 				.loadCoreModel((String) context.get(IMultiFileParser.CTX_LABID), ILaboratory.class).get();
 		if (myLab == null) {
-			sbFailed.append(Messages.AccessControlDefaults_GroupAdminLaboratory);
+			sbFailed.append(Messages.Core_Laboratory);
 			sbFailed.append("; ");
 		}
 

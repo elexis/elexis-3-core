@@ -90,7 +90,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 
-	private final static String FIXMEDIKATION = Messages.FixMediDisplay_FixMedikation;
+	private final static String FIXMEDIKATION = Messages.Core_Fixed_medication;
 	private static final String KEY_PATIENTENBLATT = "PatientenDetailView/"; //$NON-NLS-1$
 
 	private ScrolledForm scrldfrm;
@@ -200,7 +200,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		scrldfrm = toolkit.createScrolledForm(parent);
 		scrldfrm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		TableWrapLayout td = new TableWrapLayout();
-		scrldfrm.setText(Messages.AUF2_NoPatientSelected);
+		scrldfrm.setText(Messages.Core_No_patient_selected);
 		scrldfrm.getBody().setLayout(td);
 		Composite scrldfrmComposite = scrldfrm.getBody();
 
@@ -290,7 +290,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					return "?"; //$NON-NLS-1$
 				}
 			});
-			inpZusatzAdresse.addHyperlinks(Messages.Bezugskontakt_Add); // $NON-NLS-1$
+			inpZusatzAdresse.addHyperlinks(Messages.Core_Add); // $NON-NLS-1$
 			// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
 			inpZusatzAdresse.setMenu(removeZAAction, showZAAction, showBKAction);
 
@@ -327,7 +327,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					});
 
 			// Hyperlink "Hinzu..." über der Adressliste hinzufügen
-			additionalAddresses.addHyperlinks(Messages.Bezugskontakt_Add); // $NON-NLS-1$
+			additionalAddresses.addHyperlinks(Messages.Core_Add); // $NON-NLS-1$
 
 			// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
 

@@ -80,7 +80,7 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		tbManager.add(new RestrictedAction(AccessControlDefaults.KONS_CREATE, Messages.Core_New_Consultation) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_NewKonsToolTip); // $NON-NLS-1$
+				setToolTipText(Messages.Core_Create_new_consultation); // $NON-NLS-1$
 			}
 
 			@Override

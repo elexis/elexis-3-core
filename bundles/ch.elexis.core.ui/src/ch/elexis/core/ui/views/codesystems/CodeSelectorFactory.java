@@ -358,7 +358,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			patientStatistics.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 
 			Group gAll = new Group(sash, SWT.NONE);
-			gAll.setText(Messages.AccessControl_GroupAll); // $NON-NLS-1$
+			gAll.setText(Messages.Core_All); // $NON-NLS-1$
 			gAll.setLayout(new GridLayout());
 			cv = new CommonViewer();
 			// Add context medu to viewer, if actions are defined

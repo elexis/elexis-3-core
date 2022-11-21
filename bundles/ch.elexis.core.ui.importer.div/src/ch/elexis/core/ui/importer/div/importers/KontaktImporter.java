@@ -43,7 +43,7 @@ public class KontaktImporter extends ImporterPage {
 		if (importer.doImport(monitor)) {
 			return Status.OK_STATUS;
 		}
-		return new Status(Status.ERROR, "ch.elexis.import.div", 1, Messages.GenericImporter_ErrorImporting, null); //$NON-NLS-1$
+		return new Status(Status.ERROR, "ch.elexis.import.div", 1, Messages.Core_Error_while_importing, null); //$NON-NLS-1$
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class KontaktImporter extends ImporterPage {
 
 	@Override
 	public String getTitle() {
-		return Messages.KontaktImporter_Title;
+		return Messages.Core_Contacts;
 	}
 
 	static Kontakt queryKontakt(final String name, final String vorname, final String strasse, final String plz,

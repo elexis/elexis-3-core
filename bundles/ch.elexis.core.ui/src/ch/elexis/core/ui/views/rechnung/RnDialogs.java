@@ -108,7 +108,7 @@ public class RnDialogs {
 			amount = new Text(ret, SWT.BORDER);
 			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.KontaktBlatt_remark); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.Core_Remark); // $NON-NLS-1$
 			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setFocus();
@@ -182,7 +182,7 @@ public class RnDialogs {
 			amount = new Text(ret, SWT.BORDER);
 			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.KontaktBlatt_remark); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.Core_Remark); // $NON-NLS-1$
 			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setFocus();
@@ -285,7 +285,7 @@ public class RnDialogs {
 			amount = new Text(ret, SWT.BORDER);
 			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.KontaktBlatt_remark); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.Core_Remark); // $NON-NLS-1$
 			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setText(rn.getOffenerBetrag().getAmountAsString());
@@ -709,7 +709,7 @@ public class RnDialogs {
 		@Override
 		public void create() {
 			super.create();
-			getShell().setText(Messages.KonsZumVerrechnenView_billsList);
+			getShell().setText(Messages.Core_Invoice_List);
 			setTitle(Messages.RnActions_exportListCaption);
 			setMessage(Messages.RnActions_exportListMessage);
 			getShell().setSize(900, 700);

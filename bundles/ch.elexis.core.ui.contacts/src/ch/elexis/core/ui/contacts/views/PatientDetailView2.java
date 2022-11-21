@@ -40,7 +40,7 @@ public class PatientDetailView2 extends ViewPart implements IActivationListener 
 	public void createPartControl(Composite parent) {
 		setTitleImage(Images.IMG_VIEW_PATIENT_DETAIL.getImage());
 
-		setPartName(Messages.PatientDetailView2_patientDetailViewName); // $NON-NLS-1$
+		setPartName(Messages.Core_Patientdetails); // $NON-NLS-1$
 		parent.setLayout(new FillLayout());
 		pb = new Patientenblatt2(parent, getViewSite());
 

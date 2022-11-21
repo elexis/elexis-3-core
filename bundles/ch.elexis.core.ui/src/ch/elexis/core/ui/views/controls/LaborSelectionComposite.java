@@ -14,7 +14,7 @@ public class LaborSelectionComposite extends KontaktSelectionComposite {
 
 	@Override
 	protected KontaktSelektor getKontaktSelector() {
-		return new KontaktSelektor(getShell(), Labor.class, Messages.LabImporterUtil_SelectLab,
+		return new KontaktSelektor(getShell(), Labor.class, Messages.Core_Select_Laboratory,
 				Messages.LaborSelectionComposite_message, Kontakt.DEFAULT_SORT);
 	}
 }

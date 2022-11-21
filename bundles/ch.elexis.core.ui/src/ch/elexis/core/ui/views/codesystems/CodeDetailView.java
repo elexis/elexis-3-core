@@ -129,7 +129,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 						dlg.create();
 						dlg.setTitle(top.getTitle());
 						dlg.setMessage(top.getDescription());
-						dlg.getShell().setText(Messages.ArtikelView_importCaption); // $NON-NLS-1$
+						dlg.getShell().setText(Messages.Core_Import_Data); // $NON-NLS-1$
 						if (dlg.open() == Dialog.OK) {
 							top.run(false);
 						}

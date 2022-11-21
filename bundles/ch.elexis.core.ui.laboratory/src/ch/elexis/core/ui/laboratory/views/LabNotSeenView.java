@@ -81,8 +81,8 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 
 	public static LabNotSeenComparator comparator;
 
-	private static final String[] columnHeaders = { Messages.DefaultPDFImportStrategy_Patient, Messages.KontaktExtDialog_parameter,
-			Messages.LabNotSeenView_normRange, Messages.Core_Date, Messages.AssignStickerDialog_StickerWert };
+	private static final String[] columnHeaders = { Messages.Core_Patient, Messages.Core_Parameter,
+			Messages.LabNotSeenView_normRange, Messages.Core_Date, Messages.Core_Value };
 	private static final int[] colWidths = new int[] { 250, 100, 60, 70, 50 };
 	private IAction markAllAction, markPersonAction;
 

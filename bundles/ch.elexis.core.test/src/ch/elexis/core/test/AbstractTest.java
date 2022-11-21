@@ -140,8 +140,8 @@ public abstract class AbstractTest {
 		assertFalse(patient.isMandator());
 	}
 
-	public static final String KVG_NAME = Messages.Fall_KVG_Name;
-	public static final String UVG_NAME = Messages.Fall_UVG_Name;
+	public static final String KVG_NAME = Messages.Case_KVG_Short;
+	public static final String UVG_NAME = Messages.Case_UVG_Short;
 	public static final String MV_NAME = Messages.Fall_MV_Name;
 	public static final String IV_NAME = Messages.Fall_IV_Name;
 	private static final String KVG_REQUIREMENTS = Messages.Fall_KVGRequirements;
@@ -149,7 +149,7 @@ public abstract class AbstractTest {
 	public static final String CONST_TARMED_DRUCKER = Messages.Fall_TarmedPrinter;
 	public static final String CONST_TARMED_LEISTUNG = Messages.Fall_TarmedLeistung;
 	public static final String VVG_NAME = Messages.Fall_VVG_Name;
-	public static final String PRIVATE_NAME = Messages.BillingLaw_privat;
+	public static final String PRIVATE_NAME = Messages.Case_Privat_Short;
 
 	public void createCoverage() {
 		IBillingSystemService billingSystemService = OsgiServiceUtil.getService(IBillingSystemService.class).get();

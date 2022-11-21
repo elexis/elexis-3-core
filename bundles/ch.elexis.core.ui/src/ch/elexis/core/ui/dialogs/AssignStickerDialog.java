@@ -95,7 +95,7 @@ public class AssignStickerDialog extends TitleAreaDialog {
 	private void createColumns() {
 		// first column - label
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
-		col.getColumn().setText(Messages.AccountListView_name);
+		col.getColumn().setText(Messages.Core_Name);
 		col.getColumn().setWidth(300);
 		col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 0));
 		col.setLabelProvider(new ColumnLabelProvider() {
@@ -120,7 +120,7 @@ public class AssignStickerDialog extends TitleAreaDialog {
 
 		// second column - value
 		col = new TableViewerColumn(viewer, SWT.NONE);
-		col.getColumn().setText(Messages.AssignStickerDialog_StickerWert);
+		col.getColumn().setText(Messages.Core_Value);
 		col.getColumn().setWidth(50);
 		col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 1));
 		col.setLabelProvider(new ColumnLabelProvider() {

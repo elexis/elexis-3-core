@@ -55,7 +55,7 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 	public PersistentObjectLoader(CommonViewer cv, Query<? extends PersistentObject> qbe) {
 		this.cv = cv;
 		this.qbe = qbe;
-		job = new Job(Messages.AccountListView_loadingData) {
+		job = new Job(Messages.Core_Load_Files_ellipsis) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				return PersistentObjectLoader.this.work(monitor, privdata);

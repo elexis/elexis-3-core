@@ -122,7 +122,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 				return doImport(monitor);
 			} catch (Exception e) {
 				return new Status(Status.ERROR, Hub.PLUGIN_ID,
-						Messages.GenericImporter_ErrorImporting + StringUtils.SPACE + e.getMessage(), e); // $NON-NLS-2$
+						Messages.Core_Error_while_importing + StringUtils.SPACE + e.getMessage(), e); // $NON-NLS-2$
 			}
 		}
 	}

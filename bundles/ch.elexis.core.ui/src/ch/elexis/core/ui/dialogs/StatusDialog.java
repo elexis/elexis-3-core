@@ -37,7 +37,7 @@ public class StatusDialog {
 	}
 
 	private static void showInfo(IStatus status) {
-		MessageDialog.openInformation(getShell(), Messages.ResultDialog_Info, getStatusMessage(status));
+		MessageDialog.openInformation(getShell(), Messages.Core_Information, getStatusMessage(status));
 	}
 
 	private static String getStatusMessage(IStatus status) {

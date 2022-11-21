@@ -91,13 +91,13 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 		new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL)
 				.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		new Label(getFieldEditorParent(), SWT.NONE).setText(Messages.UserSettings2_FieldsInList);
-		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWPATNR, Messages.UserSettings2_PatientNr,
+		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWPATNR, Messages.Core_Patient_Number,
 				getFieldEditorParent()));
-		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWNAME, Messages.AccountListView_name,
+		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWNAME, Messages.Core_Name,
 				getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWFIRSTNAME, Messages.Core_Firstname,
 				getFieldEditorParent()));
-		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWDOB, Messages.AccountListView_bithdate,
+		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWDOB, Messages.Core_Enter_Birthdate,
 				getFieldEditorParent()));
 		addField(new ComboFieldEditor(Preferences.USR_PATLIST_FOCUSFIELD, "Fokusfeld", patlistFocusFields,
 				getFieldEditorParent()));

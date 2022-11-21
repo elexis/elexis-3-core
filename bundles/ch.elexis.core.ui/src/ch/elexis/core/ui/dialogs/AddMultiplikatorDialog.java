@@ -48,7 +48,7 @@ public class AddMultiplikatorDialog extends TitleAreaDialog {
 		dpc.setSelection(new TimeTool(value).getTime());
 		dpc.setToolTipText(Messages.MultiplikatorEditor_PleaseEnterBeginDate);
 		Label label = new Label(ret, SWT.NONE);
-		label.setText(Messages.Leistungscodes_multiplier);
+		label.setText(Messages.Core_Multiplicator);
 		multi = new Text(ret, SWT.BORDER);
 		multi.setTextLimit(6);
 		multi.setToolTipText(Messages.MultiplikatorEditor_NewMultipilcator);

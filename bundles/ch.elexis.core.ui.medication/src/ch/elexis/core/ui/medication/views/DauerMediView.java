@@ -74,7 +74,7 @@ public class DauerMediView extends ViewPart implements IRefreshable {
 	}
 
 	private void makeActions() {
-		toClipBoardAction = new Action(Messages.DauerMediView_copy) { // $NON-NLS-1$
+		toClipBoardAction = new Action(Messages.Core_Copy) { // $NON-NLS-1$
 			{
 				setToolTipText(Messages.DauerMediView_copyToClipboard); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_CLIPBOARD.getImageDescriptor());

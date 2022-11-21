@@ -85,27 +85,27 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		cTypes.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		cTypes.setLayout(new FillLayout());
 
-		bOrganisation = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktBlatt_Organization, // $NON-NLS-1$
+		bOrganisation = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Organisation, // $NON-NLS-1$
 				SWT.CHECK);
 		bOrganisation.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bOrganisationChanged(bOrganisation.getSelection());
 			}
 		});
-		bLabor = UiDesk.getToolkit().createButton(cTypes, Messages.AccessControlDefaults_GroupAdminLaboratory, SWT.CHECK); // $NON-NLS-1$
+		bLabor = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Laboratory, SWT.CHECK); // $NON-NLS-1$
 		bLabor.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bLaborChanged(bLabor.getSelection());
 			}
 		});
-		bPerson = UiDesk.getToolkit().createButton(cTypes, Messages.KontaktBlatt_Person, SWT.CHECK); // $NON-NLS-1$
+		bPerson = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Person, SWT.CHECK); // $NON-NLS-1$
 		bPerson.setSelection(true);
 		bPerson.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bPersonChanged(bPerson.getSelection());
 			}
 		});
-		bPatient = UiDesk.getToolkit().createButton(cTypes, Messages.DefaultPDFImportStrategy_Patient, SWT.CHECK); // $NON-NLS-1$
+		bPatient = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Patient, SWT.CHECK); // $NON-NLS-1$
 		bPatient.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bPatientChanged(bPatient.getSelection());
@@ -116,13 +116,13 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 				bPatient.setSelection(true);
 			}
 		}
-		bAnwender = UiDesk.getToolkit().createButton(cTypes, Messages.AccessControlDefaults_user, SWT.CHECK); // $NON-NLS-1$
+		bAnwender = UiDesk.getToolkit().createButton(cTypes, Messages.Core_User, SWT.CHECK); // $NON-NLS-1$
 		bAnwender.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bAnwenderChanged(bAnwender.getSelection());
 			}
 		});
-		bMandant = UiDesk.getToolkit().createButton(cTypes, Messages.AccessControlDefaults_mandator, SWT.CHECK); // $NON-NLS-1$
+		bMandant = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Mandator, SWT.CHECK); // $NON-NLS-1$
 		bMandant.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bMandantChanged(bMandant.getSelection());
@@ -146,7 +146,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		ret.setLayout(new GridLayout(2, false));
 
 		lName = new Label(ret, SWT.NONE);
-		lName.setText(Messages.AccountListView_name); // $NON-NLS-1$
+		lName.setText(Messages.Core_Name); // $NON-NLS-1$
 		tName = new Text(ret, SWT.BORDER);
 		tName.setText(fld[KontaktSelektor.HINT_NAME]);
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -161,7 +161,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		tVorname.setTextLimit(80);
 
 		lZusatz = new Label(ret, SWT.NONE);
-		lZusatz.setText(Messages.KontaktBlatt_Addidtional); // $NON-NLS-1$
+		lZusatz.setText(Messages.Core_Additional); // $NON-NLS-1$
 		tZusatz = new Text(ret, SWT.BORDER);
 		tZusatz.setText(fld.length > KontaktSelektor.HINT_ADD ? fld[KontaktSelektor.HINT_ADD] : StringUtils.EMPTY);
 		tZusatz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -179,7 +179,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			cbSex.select(fld[KontaktSelektor.HINT_SEX].equals(Person.MALE) ? 0 : 1);
 		}
 
-		new Label(ret, SWT.NONE).setText(Messages.AccountListView_bithdate); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Enter_Birthdate); // $NON-NLS-1$
 		tGebDat = new Text(ret, SWT.BORDER);
 		tGebDat.setText(
 				fld[KontaktSelektor.HINT_BIRTHDATE] == null ? StringUtils.EMPTY : fld[KontaktSelektor.HINT_BIRTHDATE]);
@@ -193,7 +193,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		tStrasse.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tStrasse.setTextLimit(80);
 
-		new Label(ret, SWT.NONE).setText(Messages.AnschriftEingabeDialog_zip); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Postal_code); // $NON-NLS-1$
 		tPlz = new Text(ret, SWT.BORDER);
 		tPlz.setText(fld.length > KontaktSelektor.HINT_ZIP ? fld[KontaktSelektor.HINT_ZIP] : StringUtils.EMPTY);
 		tPlz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -205,13 +205,13 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		tOrt.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tOrt.setTextLimit(50);
 
-		new Label(ret, SWT.NONE).setText(Messages.ErsterMandantDialog_phone); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Phone); // $NON-NLS-1$
 		tTel = new Text(ret, SWT.BORDER);
 		tTel.setText(fld.length > 6 ? fld[6] : StringUtils.EMPTY);
 		tTel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tTel.setTextLimit(30);
 
-		new Label(ret, SWT.NONE).setText(Messages.KontaktBlatt_Fax); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Fax); // $NON-NLS-1$
 		tFax = new Text(ret, SWT.BORDER);
 		tFax.setText(fld.length > 8 ? fld[8] : StringUtils.EMPTY);
 		tFax.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -222,7 +222,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		tEmail.setText(fld.length > 9 ? fld[9] : StringUtils.EMPTY);
 		tEmail.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tEmail.setTextLimit(80);
-		new Label(ret, SWT.NONE).setText(Messages.AnschriftEingabeDialog_postalAddress); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Postal_Address); // $NON-NLS-1$
 		hlAnschrift = UiDesk.getToolkit().createHyperlink(ret, Messages.KontaktErfassenDialog_postalempty, SWT.NONE); // $NON-NLS-1$
 		hlAnschrift.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -254,9 +254,9 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		bOrganisation.setSelection(isSelected);
 		if (isSelected) {
 			bPersonChanged(false);
-			lName.setText(Messages.BlockDetailDisplay_title);// $NON-NLS-1$
-			lVorname.setText(Messages.KontaktBlatt_Addidtional); // $NON-NLS-1$
-			lZusatz.setText(Messages.KontaktBlatt_ContactPerson); // $NON-NLS-1$
+			lName.setText(Messages.Core_Description);// $NON-NLS-1$
+			lVorname.setText(Messages.Core_Additional); // $NON-NLS-1$
+			lZusatz.setText(Messages.ContactPerson); // $NON-NLS-1$
 			cbSex.setEnabled(false);
 			lName.getParent().layout();
 		} else {
@@ -268,7 +268,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		bLabor.setSelection(isSelected);
 		if (isSelected) {
 			bOrganisationChanged(true);
-			lZusatz.setText(Messages.KontaktBlatt_LabAdmin); // $NON-NLS-1$
+			lZusatz.setText(Messages.Core_Laboratory_Admin); // $NON-NLS-1$
 			lName.getParent().layout();
 		}
 	}
@@ -277,9 +277,9 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		bPerson.setSelection(isSelected);
 		if (isSelected) {
 			bOrganisationChanged(false);
-			lName.setText(Messages.AccountListView_name);// $NON-NLS-1$
+			lName.setText(Messages.Core_Name);// $NON-NLS-1$
 			lVorname.setText(Messages.Core_Firstname); // $NON-NLS-1$
-			lZusatz.setText(Messages.KontaktBlatt_Addidtional); // $NON-NLS-1$
+			lZusatz.setText(Messages.Core_Additional); // $NON-NLS-1$
 			cbSex.setEnabled(true);
 			lName.getParent().layout();
 		} else {

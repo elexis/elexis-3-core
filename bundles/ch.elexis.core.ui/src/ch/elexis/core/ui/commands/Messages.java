@@ -10,7 +10,7 @@
 package ch.elexis.core.ui.commands;
 
 public class Messages {
-	public static String AbortLocalDocumentHandler_infomessage = ch.elexis.core.l10n.Messages.AbortLocalDocumentHandler_infomessage;
+	public static String Core_Document_was_not_opened_to_edit = ch.elexis.core.l10n.Messages.Core_Document_was_not_opened_to_edit;
 
 	public static String Core_Info = ch.elexis.core.l10n.Messages.Core_Info;
 
@@ -18,7 +18,7 @@ public class Messages {
 
 	public static String EndLocalDocumentHandler_conflicttitle = ch.elexis.core.l10n.Messages.EndLocalDocumentHandler_conflicttitle;
 
-	public static String BriefAuswahl_errorlocaleditendmessage = ch.elexis.core.l10n.Messages.BriefAuswahl_errorlocaleditendmessage;
+	public static String Core_Could_not_reread_correctly_document = ch.elexis.core.l10n.Messages.Core_Could_not_reread_correctly_document;
 
 	public static String Core_Error = ch.elexis.core.l10n.Messages.Core_Error;
 
@@ -50,8 +50,8 @@ public class Messages {
 
 	public static String Core_Warning = ch.elexis.core.l10n.Messages.Core_Warning;
 
-	public static String GenericReallyDeleteCaption = ch.elexis.core.l10n.Messages.DocumentView_reallyDeleteCaption;
+	public static String GenericReallyDeleteCaption = ch.elexis.core.l10n.Messages.Core_Really_delete_caption;
 
-	public static String GenericReallyDeleteContents = ch.elexis.core.l10n.Messages.DocumentView_reallyDeleteContents;
+	public static String GenericReallyDeleteContents = ch.elexis.core.l10n.Messages.Core_Really_delete_0;
 
 }

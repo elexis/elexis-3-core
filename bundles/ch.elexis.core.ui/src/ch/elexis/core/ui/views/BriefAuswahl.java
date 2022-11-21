@@ -125,7 +125,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 		Display.getDefault().asyncExec(() -> {
 			if (form != null && !form.isDisposed()) {
 				if (patient == null) {
-					form.setText(Messages.AUF2_NoPatientSelected); // $NON-NLS-1$
+					form.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
 				} else {
 					form.setText(patient.getLabel());
 				}
@@ -260,7 +260,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 				Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 				if (form != null && !form.isDisposed()) {
 					if (pat == null) {
-						form.setText(Messages.AUF2_NoPatientSelected); // $NON-NLS-1$
+						form.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
 					} else {
 						form.setText(pat.getLabel());
 						CTabItem sel = ctab.getSelection();
@@ -303,7 +303,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					if (actPat.isPresent()) {
 						IQuery<?> query = getBaseQuery();
 						query.and(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, actPat.get());
-						if (cat.equals(Messages.AccessControl_GroupAll)) { // $NON-NLS-1$
+						if (cat.equals(Messages.Core_All)) { // $NON-NLS-1$
 							query.and(ModelPackage.Literals.IDOCUMENT__CATEGORY, COMPARATOR.NOT_EQUALS,
 									BriefConstants.TEMPLATE);
 						} else {
@@ -481,7 +481,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 	}
 
 	private void makeActions() {
-		briefNeuAction = new Action(Messages.AUF2_new) { // $NON-NLS-1$
+		briefNeuAction = new Action(Messages.Core_New_ellipsis) { // $NON-NLS-1$
 			@Override
 			public void run() {
 				IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
@@ -537,7 +537,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 		deleteAction = new LockRequestingAction<Brief>(Messages.Core_Delete) { // $NON-NLS-1$
 			@Override
 			public void doRun(Brief brief) {
-				if (brief != null && SWTHelper.askYesNo(Messages.BriefAuswahlDeleteConfirmHeading, // $NON-NLS-1$
+				if (brief != null && SWTHelper.askYesNo(Messages.Core_Delete_Document, // $NON-NLS-1$
 						Messages.BriefAuswahlDeleteConfirmText)) {
 					brief.delete();
 					CTabItem sel = ctab.getSelection();
@@ -629,7 +629,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 						command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
 						MessageDialog.openError(getSite().getShell(), Messages.Core_Error,
-								Messages.BriefAuswahl_errorlocaleditendmessage);
+								Messages.Core_Could_not_reread_correctly_document);
 					}
 				}
 				refreshSelectedViewer();
@@ -660,7 +660,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 						command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
 						MessageDialog.openError(getSite().getShell(), Messages.Core_Error,
-								Messages.BriefAuswahl_errorlocaleditabortmessage);
+								Messages.Core_Could_not_abort_editing);
 					}
 				}
 				refreshSelectedViewer();
@@ -678,7 +678,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 		editNameAction.setImageDescriptor(Images.IMG_DOCUMENT_WRITE.getImageDescriptor());
 		editNameAction.setToolTipText(Messages.BriefAuswahlRenameDocument); // $NON-NLS-1$
 		deleteAction.setImageDescriptor(Images.IMG_DOCUMENT_REMOVE.getImageDescriptor());
-		deleteAction.setToolTipText(Messages.BriefAuswahlDeleteConfirmHeading); // $NON-NLS-1$
+		deleteAction.setToolTipText(Messages.Core_Delete_Document); // $NON-NLS-1$
 	}
 
 	public IDocumentLetter getSelected() {

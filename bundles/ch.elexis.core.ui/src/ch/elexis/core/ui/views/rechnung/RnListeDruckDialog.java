@@ -77,7 +77,7 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 		text.getPlugin().showMenu(false);
 		text.getPlugin().showToolbar(false);
 		text.createFromTemplateName(null, TT_LIST, Brief.UNKNOWN, CoreHub.getLoggedInContact(),
-				Messages.AccessControlDefaults_Bills); // $NON-NLS-1$ //$NON-NLS-2$
+				Messages.Core_Invoices); // $NON-NLS-1$ //$NON-NLS-2$
 		text.getPlugin().insertText("[Titel]", //$NON-NLS-1$
 				Messages.RnActions_billsListPrintetAt + new TimeTool().toString(TimeTool.DATE_GER) + StringUtils.LF,
 				SWT.CENTER);
@@ -99,7 +99,7 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 		}
 		table[i] = new String[3];
 		table[i][0] = StringUtils.EMPTY;
-		table[i][1] = Messages.BestellBlatt_Sum; // $NON-NLS-1$
+		table[i][1] = Messages.Core_Sum; // $NON-NLS-1$
 		table[i][2] = sum.getAmountAsString();
 		text.getPlugin().setFont("Helvetica", SWT.NORMAL, 9); //$NON-NLS-1$
 		text.getPlugin().insertTable("[Liste]", 0, table, new int[] { //$NON-NLS-1$
@@ -112,9 +112,9 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 	@Override
 	public void create() {
 		super.create();
-		getShell().setText(Messages.KonsZumVerrechnenView_billsList); // $NON-NLS-1$
-		setTitle(Messages.KonsZumVerrechnenView_printListCaption); // $NON-NLS-1$
-		setMessage(Messages.KonsZumVerrechnenView_printListMessage); // $NON-NLS-1$
+		getShell().setText(Messages.Core_Invoice_List); // $NON-NLS-1$
+		setTitle(Messages.Core_Print_List); // $NON-NLS-1$
+		setMessage(Messages.Core_Print_All_Selected_Patients); // $NON-NLS-1$
 		getShell().setSize(900, 700);
 		SWTHelper.center(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(), getShell());
 	}

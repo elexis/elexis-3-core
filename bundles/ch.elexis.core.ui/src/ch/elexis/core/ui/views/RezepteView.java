@@ -391,7 +391,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 				if (coverage == null) {
 					IEncounter k = EncounterServiceHolder.get().getLatestEncounter(patient).orElse(null);
 					if (k == null) {
-						SWTHelper.alert(Messages.AUF2_noCaseSelected, // $NON-NLS-1$
+						SWTHelper.alert(Messages.Core_No_case_selected, // $NON-NLS-1$
 								Messages.RezepteView_pleaseCreateOrChooseCase); // $NON-NLS-1$
 						return;
 					}
@@ -436,7 +436,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 				doAddLine();
 			}
 		};
-		printAction = new Action(Messages.Printing_Printing) { // $NON-NLS-1$
+		printAction = new Action(Messages.Core_Print) { // $NON-NLS-1$
 			@Override
 			public void run() {
 				try {
@@ -480,7 +480,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 			}
 		};
 		changeMedicationAction = new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
-				Messages.AUF2_edit) { // $NON-NLS-1$
+				Messages.Core_DoChange_ellipsis) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 				setToolTipText(Messages.RezepteView_ChangeTooltip); // $NON-NLS-1$

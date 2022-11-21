@@ -37,7 +37,7 @@ public final class PrintAddressLabelHandler extends AbstractHandler {
 
 		EtiketteDruckenDialog dlg = new EtiketteDruckenDialog(
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), actPatient, TT_ADDRESS_LABEL);
-		dlg.setTitle(Messages.GlobalActions_PrintAddressLabel);
+		dlg.setTitle(Messages.Print_AddressLabel);
 		dlg.setMessage(Messages.GlobalActions_PrintAddressLabelToolTip);
 		if (!CoreHub.localCfg.get("Drucker/Etiketten/Choose", true)) { //$NON-NLS-1$
 			dlg.setBlockOnOpen(false);

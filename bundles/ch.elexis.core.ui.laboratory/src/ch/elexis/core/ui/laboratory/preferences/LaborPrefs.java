@@ -79,9 +79,9 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 	private TableViewer tableViewer;
 	private Table table;
 	int sortC = 1;
-	private String[] headers = { Messages.AccountListView_name, Messages.Core_Short_Label, "LOINC", //$NON-NLS-1$
-			Messages.Core_Type, Messages.EditLabItem_labelUnit, Messages.EditLabItem_labelRefMale, Messages.EditLabItem_labelRefFemale,
-			Messages.LaborPrefs_sortmode };
+	private String[] headers = { Messages.Core_Name, Messages.Core_Short_Label, "LOINC", //$NON-NLS-1$
+			Messages.Core_Type, Messages.Core_Unit, Messages.Core_Reference_Male, Messages.Core_Reference_female,
+			Messages.Core_Sortmode };
 	private int[] colwidth = { 16, 6, 6, 6, 6, 16, 16, 16 };
 
 	private LabItemViewerFilter viewerFilter;
@@ -246,13 +246,13 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				if (typ == LabItemTyp.NUMERIC) {
 					return Messages.Core_Number;
 				} else if (typ == LabItemTyp.TEXT) {
-					return Messages.EditLabItem_labelTypText;
+					return Messages.Core_Text;
 				} else if (typ == LabItemTyp.FORMULA) {
-					return Messages.EditLabItem_labelTypFormula;
+					return Messages.Core_Formula;
 				} else if (typ == LabItemTyp.DOCUMENT) {
-					return Messages.EditLabItem_labelTypDocument;
+					return Messages.Core_Document;
 				}
-				return Messages.EditLabItem_labelTypAbsolute;
+				return Messages.Core_Absolute;
 			case 4:
 				return einheit;
 			case 5:

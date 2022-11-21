@@ -164,10 +164,10 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		bottomRight.setLayoutData(SWTHelper.getFillGridData(1, true, 5, true));
 		bottomRight.setLayout(new RowLayout(SWT.VERTICAL));
 		bottomRight.setText(Messages.Stickers_useFor);
-		addAssociateButton(Messages.DefaultPDFImportStrategy_Patient, Patient.class, bottomRight);
-		addAssociateButton(Messages.AccessControlDefaults_consultation, Konsultation.class, bottomRight);
+		addAssociateButton(Messages.Core_Patient, Patient.class, bottomRight);
+		addAssociateButton(Messages.Core_Consultation, Konsultation.class, bottomRight);
 		addAssociateButton(Messages.Core_Case, Fall.class, bottomRight);
-		addAssociateButton(Messages.EditLabItem_labelTypDocument, Brief.class, bottomRight);
+		addAssociateButton(Messages.Core_Document, Brief.class, bottomRight);
 		/*
 		 * new Label(ret, SWT.SEPARATOR |
 		 * SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(2, false, 1, false));
@@ -209,7 +209,7 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		GridData gdFore = new GridData(32, 16);
 		cFore.setLayoutData(gdFore);
 		Button bFore = new Button(bottom, SWT.PUSH);
-		bFore.setText(Messages.Stickers_TextColor);
+		bFore.setText(Messages.Core_TextColour);
 		bFore.addSelectionListener(new SelectionAdapter() {
 
 			@Override

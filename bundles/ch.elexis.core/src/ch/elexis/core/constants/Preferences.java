@@ -131,7 +131,7 @@ public class Preferences {
 	public static final String USR_DEFCASELABEL = "fall/std_label"; //$NON-NLS-1$
 	public static final String USR_DEFCASELABEL_DEFAULT = Messages.Core_Common;
 	public static final String USR_DEFCASEREASON = "fall/std_grund"; //$NON-NLS-1$
-	public static final String USR_DEFCASEREASON_DEFAULT = Messages.FallListeView_Illness;
+	public static final String USR_DEFCASEREASON_DEFAULT = Messages.Core_Illness;
 	public static final String USR_DEFLAW = "fall/std_gesetz"; //$NON-NLS-1$
 	public static final String USR_DEFDIAGNOSE = "fall/std_diagnose"; //$NON-NLS-1$
 	public static final String USR_DEFLOADCONSALL = "fall/load_consall"; //$NON-NLS-1$

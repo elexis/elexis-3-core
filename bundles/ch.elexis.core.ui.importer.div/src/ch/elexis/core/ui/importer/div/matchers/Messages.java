@@ -18,6 +18,6 @@ public class Messages {
 	public static String ConflictResolveDialog_Pleaseselectbelow = ch.elexis.core.l10n.Messages.ConflictResolveDialog_Pleaseselectbelow;
 	public static String ConflictResolveDialog_whethercontainedinDatavase = ch.elexis.core.l10n.Messages.ConflictResolveDialog_whethercontainedinDatavase;
 	public static String Core_Address = ch.elexis.core.l10n.Messages.Core_Address;
-	public static String AccountListView_name = ch.elexis.core.l10n.Messages.AccountListView_name;
+	public static String Core_Name = ch.elexis.core.l10n.Messages.Core_Name;
 	public static String Verifier_PleaseSelectCorrectContact = ch.elexis.core.l10n.Messages.Verifier_PleaseSelectCorrectContact;
 }

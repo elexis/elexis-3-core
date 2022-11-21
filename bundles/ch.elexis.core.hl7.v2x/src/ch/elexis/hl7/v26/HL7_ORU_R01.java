@@ -573,7 +573,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 			if (laborWert.getResultat() != null) {
 				String trimLowercaseResult = laborWert.getResultat().trim().toLowerCase();
 				if (trimLowercaseResult.startsWith("pos") || trimLowercaseResult.startsWith("+")) { //$NON-NLS-1$ //$NON-NLS-2$
-					labResult = Messages.HL7_ORU_R01_LabResult_Abs_Pos;
+					labResult = Messages.Literal_One;
 				}
 			}
 			codedEntryType.getCwe1_Identifier().setValue(labResult);

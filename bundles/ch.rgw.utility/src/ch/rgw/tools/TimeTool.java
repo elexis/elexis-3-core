@@ -47,13 +47,13 @@ public class TimeTool extends GregorianCalendar {
 
 	/** formally enumerated days **/
 	public enum DAYS {
-		MONDAY(Calendar.MONDAY, Messages.TimeTool_monday, Messages.TimeTool_mo),
-		TUESDAY(Calendar.TUESDAY, Messages.TimeTool_tuesday, Messages.TimeTool_tu),
-		WEDNESDAY(Calendar.WEDNESDAY, Messages.TimeTool_wednesday, Messages.TimeTool_we),
-		THURSDAY(Calendar.THURSDAY, Messages.TimeTool_thursday, Messages.TimeTool_th),
-		FRIDAY(Calendar.FRIDAY, Messages.TimeTool_friday, Messages.TimeTool_fr),
-		SATURDAY(Calendar.SATURDAY, Messages.TimeTool_saturday, Messages.TimeTool_sa),
-		SUNDAY(Calendar.SUNDAY, Messages.TimeTool_sunday, Messages.TimeTool_su);
+		MONDAY(Calendar.MONDAY, Messages.Core_Monday, Messages.Core_Monday_Short),
+		TUESDAY(Calendar.TUESDAY, Messages.Core_Tuesday, Messages.Core_Tuesday_Short),
+		WEDNESDAY(Calendar.WEDNESDAY, Messages.Core_Wednesday, Messages.Core_Wednesday_Short),
+		THURSDAY(Calendar.THURSDAY, Messages.Core_Thursday, Messages.Core_Thursday_Short),
+		FRIDAY(Calendar.FRIDAY, Messages.Core_Friday, Messages.Core_Friday_Short),
+		SATURDAY(Calendar.SATURDAY, Messages.Core_Saturday, Messages.Core_Saturday_Short),
+		SUNDAY(Calendar.SUNDAY, Messages.Core_Sunday, Messages.Core_Sunday_Short);
 
 		public int numericDayValue;
 		public String fullName;
@@ -108,13 +108,13 @@ public class TimeTool extends GregorianCalendar {
 			"Nov", "Dec" };
 
 	/** Weekdays as abbreviations */
-	public final static String[] wdays = { Messages.TimeTool_su, Messages.TimeTool_mo, Messages.TimeTool_tu,
-			Messages.TimeTool_we, Messages.TimeTool_th, Messages.TimeTool_fr, Messages.TimeTool_sa // $NON-NLS-1$
+	public final static String[] wdays = { Messages.Core_Sunday_Short, Messages.Core_Monday_Short, Messages.Core_Tuesday_Short,
+			Messages.Core_Wednesday_Short, Messages.Core_Thursday_Short, Messages.Core_Friday_Short, Messages.Core_Saturday_Short // $NON-NLS-1$
 	};
 	/** weekdays as full words */
-	public final static String[] Wochentage = { Messages.TimeTool_sunday, Messages.TimeTool_monday,
-			Messages.TimeTool_tuesday, Messages.TimeTool_wednesday, Messages.TimeTool_thursday,
-			Messages.TimeTool_friday, Messages.TimeTool_saturday // $NON-NLS-1$
+	public final static String[] Wochentage = { Messages.Core_Sunday, Messages.Core_Monday,
+			Messages.Core_Tuesday, Messages.Core_Wednesday, Messages.Core_Thursday,
+			Messages.Core_Friday, Messages.Core_Saturday // $NON-NLS-1$
 	};
 
 	/**
@@ -870,7 +870,7 @@ public class TimeTool extends GregorianCalendar {
 			String format = getDaysFormat(days);
 			return String.format(format, Math.abs(days));
 		} else {
-			return Messages.TimeTool_today;
+			return Messages.Core_today;
 		}
 	}
 

@@ -284,7 +284,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 				tabFolder.setSelection(0);
 			}
 		};
-		printAction = new Action(Messages.AUF2_print) {
+		printAction = new Action(Messages.Core_Print_ellipsis) {
 			@Override
 			public void run() {
 				try {
@@ -307,7 +307,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 			public void run() {
 				Importer imp = new Importer(getViewSite().getShell(), ExtensionPointConstantsUi.LABORDATENIMPORT); // $NON-NLS-1$
 				imp.create();
-				imp.setMessage(Messages.GlobalActions_ImportDlgMessage);
+				imp.setMessage(Messages.Core_Choose_Import_Source);
 				imp.getShell().setText(Messages.LaborView_labImporterCaption);
 				imp.setTitle(Messages.LaborView_labImporterText);
 				imp.open();
@@ -337,14 +337,14 @@ public class LaborView extends ViewPart implements IRefreshable {
 				}
 			}
 		};
-		newColumnAction = new Action(Messages.LaborVerordnungDialog_shellTitle) {
+		newColumnAction = new Action(Messages.Core_prescribe_Laboratory) {
 			@Override
 			public void run() {
 				tabFolder.setSelection(0);
 				resultsComposite.toggleNewColumn();
 			}
 		};
-		newAction = new Action(Messages.LaborVerordnungDialog_shellTitle) {
+		newAction = new Action(Messages.Core_prescribe_Laboratory) {
 			@Override
 			public void run() {
 				Patient patient = ElexisEventDispatcher.getSelectedPatient();
@@ -358,7 +358,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 				}
 			}
 		};
-		refreshAction = new Action(Messages.GenericImporterBlatt_update) {
+		refreshAction = new Action(Messages.Core_Update) {
 			@Override
 			public void run() {
 				resultsComposite.reload();

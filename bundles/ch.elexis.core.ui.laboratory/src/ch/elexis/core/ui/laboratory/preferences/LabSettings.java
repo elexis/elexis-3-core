@@ -76,7 +76,7 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 				Messages.LabSettings_showOrdersActiveMandant, getFieldEditorParent()));
 
 		addField(new RadioGroupFieldEditor(Preferences.LABSETTINGS_CFG_LABNEW_HEARTRATE,
-				Messages.LabSettings_frequencyNewLabvalues, 3, new String[][] { { Messages.LabSettings_normal, "1" //$NON-NLS-1$
+				Messages.LabSettings_frequencyNewLabvalues, 3, new String[][] { { Messages.Core_Normal, "1" //$NON-NLS-1$
 				}, { Messages.LabSettings_medium, "2" //$NON-NLS-1$
 				}, { Messages.LabSettings_slow, "3" //$NON-NLS-1$
 				} }, getFieldEditorParent()));

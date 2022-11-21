@@ -52,9 +52,9 @@ public class MedicationViewerHelper {
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
 		final TableColumn tblclmnArticle = ret.getColumn();
 		layout.setColumnData(tblclmnArticle, new ColumnPixelData(250, true, true));
-		tblclmnArticle.setText(Messages.BestellView_Article);
+		tblclmnArticle.setText(Messages.Core_Article);
 		tblclmnArticle.setToolTipText(Messages.MedicationComposite_column_sortBy + StringUtils.SPACE
-				+ Messages.BestellView_Article);
+				+ Messages.Core_Article);
 		tblclmnArticle.addSelectionListener(getSelectionAdapter(viewer, tblclmnArticle, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 
@@ -151,12 +151,12 @@ public class MedicationViewerHelper {
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblclmnComment = ret.getColumn();
 		layout.setColumnData(tblclmnComment, new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true));
-		tblclmnComment.setText(Messages.ArticleDefaultSignatureComposite_applicationInstruction);
+		tblclmnComment.setText(Messages.Prescription_Instruction);
 		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + StringUtils.SPACE
-				+ Messages.ArticleDefaultSignatureComposite_applicationInstruction);
+				+ Messages.Prescription_Instruction);
 		tblclmnComment.addSelectionListener(getSelectionAdapter(viewer, tblclmnComment, columnIndex));
 		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + StringUtils.SPACE
-				+ Messages.ArticleDefaultSignatureComposite_applicationInstruction);
+				+ Messages.Prescription_Instruction);
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 
 			@Override
@@ -222,8 +222,8 @@ public class MedicationViewerHelper {
 		TableColumn tblclmnMandant = ret.getColumn();
 		ColumnWeightData mandantColumnWeightData = new ColumnWeightData(0, 50, true);
 		layout.setColumnData(tblclmnMandant, mandantColumnWeightData);
-		tblclmnMandant.setText(Messages.AccessControlDefaults_user);
-		tblclmnMandant.setToolTipText(Messages.AccessControlDefaults_user);
+		tblclmnMandant.setText(Messages.Core_User);
+		tblclmnMandant.setToolTipText(Messages.Core_User);
 		tblclmnMandant.addSelectionListener(getSelectionAdapter(viewer, tblclmnMandant, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override

@@ -17,7 +17,7 @@ public class Messages {
 	public static String Core_Date_Startdate = ch.elexis.core.l10n.Messages.Core_Date_Startdate;
 	public static String MultiplikatorEditor_NewMultipilcator = ch.elexis.core.l10n.Messages.MultiplikatorEditor_NewMultipilcator;
 	public static String MultiplikatorEditor_PleaseEnterBeginDate = ch.elexis.core.l10n.Messages.MultiplikatorEditor_PleaseEnterBeginDate;
-	public static String LabGroupPrefs_add = ch.elexis.core.l10n.Messages.LabGroupPrefs_add;
+	public static String Core_Add_ellipsis = ch.elexis.core.l10n.Messages.Core_Add_ellipsis;
 	public static String MultiplikatorEditor_from = ch.elexis.core.l10n.Messages.MultiplikatorEditor_from;
 	public static String PrefAccessDenied_PageLocked = ch.elexis.core.l10n.Messages.PrefAccessDenied_PageLocked;
 

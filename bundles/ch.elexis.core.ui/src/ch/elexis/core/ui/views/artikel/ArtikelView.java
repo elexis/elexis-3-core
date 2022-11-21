@@ -144,7 +144,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 						dlg.create();
 						dlg.setTitle(top.getTitle());
 						dlg.setMessage(top.getDescription());
-						dlg.getShell().setText(Messages.ArtikelView_importCaption);
+						dlg.getShell().setText(Messages.Core_Import_Data);
 						if (dlg.open() == Dialog.OK) {
 							top.run(false);
 						}
@@ -231,7 +231,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex); //$NON-NLS-1$
 				MessageBox mb = new MessageBox(getViewSite().getShell(), SWT.ICON_ERROR | SWT.OK);
 				mb.setText(Messages.Core_Error);
-				mb.setMessage(Messages.ArtikelView_errorText + ce.getName() + ":\n" //$NON-NLS-1$
+				mb.setMessage(Messages.Core_Error_Initialising_code_system + ce.getName() + ":\n" //$NON-NLS-1$
 						+ ex.getLocalizedMessage());
 				mb.open();
 			}

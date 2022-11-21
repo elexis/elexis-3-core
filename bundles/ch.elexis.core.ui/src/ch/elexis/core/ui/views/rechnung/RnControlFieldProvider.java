@@ -58,15 +58,15 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	// final String[]
 	// stats={"Alle","Bezahlt","Offen","Offen&Gedruckt","1. Mahnung","2.
 	// Mahnung","3. Mahnung","In Betreibung","Teilverlust","Totalverlust"};
-	final static String[] stats = { Messages.AccessControl_GroupAll, Messages.BillSummary_open,
-			Messages.InvoiceState_OPEN_AND_PRINTED, Messages.InvoiceState_PARTIAL_PAYMENT,
-			Messages.InvoiceState_PAID, Messages.InvoiceState_EXCESSIVE_PAYMENT,
+	final static String[] stats = { Messages.Core_All, Messages.Core_Is_Open,
+			Messages.Invoice_Open_and_printed, Messages.Invoice_Partially_paid,
+			Messages.Invoice_Paid, Messages.Invoice_Excessive_Payment,
 			Messages.Core_Invoice_Reminder, Messages.RnControlFieldProvider_reminderPrinted,
 			Messages.Core_Invoice_Reminder_2, Messages.RnControlFieldProvider_reminder2Printed,
 			Messages.Core_Invoice_Reminder_3, Messages.RnControlFieldProvider_reminder3Printed,
-			Messages.InvoiceState_IN_EXECUTION, Messages.InvoiceState_PARTIAL_LOSS,
-			Messages.InvoiceState_TOTAL_LOSS, Messages.InvoiceState_CANCELLED,
-			Messages.InvoiceState_DEFECTIVE, Messages.RnControlFieldProvider_toPrint,
+			Messages.Core_in_progress, Messages.Invoice_Partial_Loss,
+			Messages.Invoice_total_lost, Messages.Core_Cancelled,
+			Messages.Core_Error_is_defective, Messages.RnControlFieldProvider_toPrint,
 			Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind,
 			Messages.RnControlFieldProvider_writtenOff, Messages.RnControlFieldProvider_rejected };
 
@@ -79,7 +79,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 
 	final static int STAT_DEFAULT_INDEX = 1;
 	private final static String ALLE = Messages.RnControlFieldProvider_allPatients;
-	private final static String ALL = Messages.AccessControl_GroupAll;
+	private final static String ALL = Messages.Core_All;
 
 	Combo cbStat;
 	Combo cbZType;
@@ -104,7 +104,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 			public void linkActivated(final HyperlinkEvent e) {
 				Patient oldPatient = actPatient;
 				KontaktSelektor ksl = new KontaktSelektor(parent.getShell(), Patient.class,
-						Messages.HL7_SelectPatient, // $NON-NLS-1$
+						Messages.Core_Select_Patient, // $NON-NLS-1$
 						Messages.RnControlFieldProvider_selectPatientMessage, true); // $NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
 					actPatient = (Patient) ksl.getSelection();
@@ -132,7 +132,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		new Label(ret, SWT.NONE).setText(Messages.Core_Status); // $NON-NLS-1$
 		Label lbl = SWTHelper.createHyperlink(ret, Messages.RnControlFieldProvider_patient2, hlPatient); // $NON-NLS-1$
 		lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
-		new Label(ret, SWT.NONE).setText(Messages.Leistungscodes_billingSystemCaption); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Invoice_System); // $NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.RnControlFieldProvider_invoideNr); // $NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.Core_Amount); // $NON-NLS-1$
 		// / ^ labels / values

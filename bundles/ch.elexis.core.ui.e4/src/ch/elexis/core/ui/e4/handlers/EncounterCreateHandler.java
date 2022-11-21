@@ -76,7 +76,7 @@ public class EncounterCreateHandler extends RestrictedHandler {
 
 		// validate coverage
 		if (!coverage.isOpen()) {
-			UserDialog.error(Messages.GlobalActions_casclosed, Messages.Fall_CaseClosedText);
+			UserDialog.error(Messages.GlobalActions_casclosed, Messages.Core_Cannot_add_consultation_to_closed_case);
 			return;
 		}
 

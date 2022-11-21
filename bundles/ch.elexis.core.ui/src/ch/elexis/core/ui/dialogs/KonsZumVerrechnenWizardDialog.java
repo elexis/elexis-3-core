@@ -47,7 +47,7 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 	private static final String CONFIG = "dialogs/konszumverrechnen/"; //$NON-NLS-1$
 	private static final String ALLMARKED = Messages.KonsZumVerrechnenWizardDialog_selectCasesToCharge; // $NON-NLS-1$
 	private static final String TAGEN_BZW_DEM = Messages.KonsZumVerrechnenWizardDialog_daysOrDate; // $NON-NLS-1$
-	private static final String RECHNUNGEN_ERSTELLEN = Messages.KonsZumVerrechnenView2_createInvoicesAction; // $NON-NLS-1$
+	private static final String RECHNUNGEN_ERSTELLEN = Messages.Core_Create_Invoices; // $NON-NLS-1$
 	private static final String BEHANDLUNGEN_ZUM_VERRECHNEN_AUTOMATISCH_AUSWAEHLEN = Messages.KonsZumVerrechnenWizardDialog_createProposal; // $NON-NLS-1$
 	private static final String RECHNUNGS_AUTOMATIK = Messages.KonsZumVerrechnenWizardDialog_billingAUtomation; // $NON-NLS-1$
 	private static final String TREATMENT_TRIMESTER = Messages.KonsZumVerrechnenWizardDialog_choseAllQuartal; // $NON-NLS-1$
@@ -55,7 +55,7 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 	private static final String TREATMENTENDBEFORE = Messages.KonsZumVerrechnenWizardDialog_choseEndeDate; // $NON-NLS-1$
 	private final static String TREATMENTBEGINBEFORE = Messages.KonsZumVerrechnenWizardDialog_chooseBeginningDate; // $NON-NLS-1$
 	private final static String TREATMENT_TIMESPAN = Messages.KonsZumVerrechnenWizardDialog_timespan;
-	private final static String TREATMENT_TIMESPAN_TILL = Messages.KonsZumVerrechnenWizardDialog_timespanTill;
+	private final static String TREATMENT_TIMESPAN_TILL = Messages.Core_Until;
 	private final static String TREATMENT_ACCOUNTING_SYS = Messages.KonsZumVerrechnenWizardDialog_chooseAccountingSystem;
 
 	private static final String SKIPSELECTION = Messages.KonsZumVerrechnenWizardDialog_skipProposal; // $NON-NLS-1$

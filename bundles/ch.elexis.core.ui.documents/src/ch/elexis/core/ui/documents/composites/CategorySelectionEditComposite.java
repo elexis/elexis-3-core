@@ -86,8 +86,8 @@ public class CategorySelectionEditComposite extends Composite {
 		bNewCat.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				InputDialog id = new InputDialog(getShell(), Messages.DocumentMetaDataDialog_newCategory,
-						Messages.DocumentMetaDataDialog_newCategory, null, null);
+				InputDialog id = new InputDialog(getShell(), Messages.Core_New_Category,
+						Messages.Core_New_Category, null, null);
 				if (id.open() == Dialog.OK) {
 					addAndSelectCategory(id.getValue());
 				}
@@ -121,7 +121,7 @@ public class CategorySelectionEditComposite extends Composite {
 		Button bDeleteCat = new Button(this, SWT.PUSH);
 		bDeleteCat.setVisible(categoryCrudAllowed);
 		bDeleteCat.setImage(Images.IMG_DELETE.getImage());
-		bDeleteCat.setToolTipText(Messages.AccessControlDefaults_documentsDeleteCat);
+		bDeleteCat.setToolTipText(Messages.Core_Delete_Document_Category);
 		bDeleteCat.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent ev) {

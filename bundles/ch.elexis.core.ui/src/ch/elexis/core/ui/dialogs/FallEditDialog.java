@@ -46,8 +46,8 @@ public class FallEditDialog extends TitleAreaDialog {
 	public void create() {
 		super.create();
 		setMessage(Messages.FallEditDialog_enterCaseData); // $NON-NLS-1$
-		setTitle(Messages.FallEditDialog_editCase); // $NON-NLS-1$
-		getShell().setText(Messages.FallEditDialog_editCase); // $NON-NLS-1$
+		setTitle(Messages.Core_Edit_Case); // $NON-NLS-1$
+		getShell().setText(Messages.Core_Edit_Case); // $NON-NLS-1$
 	}
 
 	@Override

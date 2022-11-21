@@ -385,8 +385,8 @@ public class GlobalActions {
 				// cnv.open();
 				Importer imp = new Importer(mainWindow.getShell(), ExtensionPointConstantsUi.FREMDDATENIMPORT);
 				imp.create();
-				imp.setMessage(Messages.GlobalActions_ImportDlgMessage);
-				imp.getShell().setText(Messages.GlobalActions_ImportDlgShelltext);
+				imp.setMessage(Messages.Core_Choose_Import_Source);
+				imp.getShell().setText(Messages.Core_Importer);
 				imp.setTitle(Messages.GlobalActions_ImportDlgTitle);
 				imp.open();
 			}
@@ -431,7 +431,7 @@ public class GlobalActions {
 				}
 			}
 		};
-		printKontaktEtikette = new Action(Messages.GlobalActions_PrintAddressLabel) {
+		printKontaktEtikette = new Action(Messages.Print_AddressLabel) {
 			{
 				setToolTipText(Messages.GlobalActions_PrintContactLabelToolTip);
 				setImageDescriptor(Images.IMG_ADRESSETIKETTE.getImageDescriptor());
@@ -450,7 +450,7 @@ public class GlobalActions {
 			}
 		};
 
-		printAdresse = new Action(Messages.GlobalActions_PrintAddressLabel) {
+		printAdresse = new Action(Messages.Print_AddressLabel) {
 			{
 				setImageDescriptor(Images.IMG_ADRESSETIKETTE.getImageDescriptor());
 				setToolTipText(Messages.GlobalActions_PrintAddressLabelToolTip);
@@ -469,7 +469,7 @@ public class GlobalActions {
 			}
 		};
 
-		printVersionedEtikette = new Action(Messages.GlobalActions_PrintVersionedLabel) {
+		printVersionedEtikette = new Action(Messages.Core_Print_versioned_Label) {
 			{
 				setToolTipText(Messages.GlobalActions_PrintVersionedLabelToolTip);
 				setImageDescriptor(Images.IMG_VERSIONEDETIKETTE.getImageDescriptor());
@@ -488,10 +488,10 @@ public class GlobalActions {
 			}
 		};
 
-		printEtikette = new Action(Messages.GlobalActions_PrintLabel) {
+		printEtikette = new Action(Messages.Core_Print_Patient_Label) {
 			{
 				setImageDescriptor(Images.IMG_PATIENTETIKETTE.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_PrintLabel);
+				setToolTipText(Messages.Core_Print_Patient_Label);
 			}
 
 			@Override
@@ -684,7 +684,7 @@ public class GlobalActions {
 				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 			}
 		};
-		openFallaction = new Action(Messages.FallEditDialog_editCase) {
+		openFallaction = new Action(Messages.Core_Edit_Case) {
 
 			@Override
 			public void run() {
@@ -731,10 +731,10 @@ public class GlobalActions {
 				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 			}
 		};
-		neuerFallAction = new Action(Messages.FallListeView_NewCase) {
+		neuerFallAction = new Action(Messages.Core_New_Case) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_NewCaseToolTip);
+				setToolTipText(Messages.Core_Create_new_case);
 			}
 
 			@Override
@@ -820,7 +820,7 @@ public class GlobalActions {
 				prn.startPage();
 				String pid = StringTool.addModulo10(patient.getPatCode()) + "-" //$NON-NLS-1$
 						+ new TimeTool().toString(TimeTool.TIME_COMPACT);
-				gc.drawString(Messages.GlobalActions_OrderID + ": " + pid, 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+				gc.drawString(Messages.Order_ID + ": " + pid, 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 				FontMetrics fmt = gc.getFontMetrics();
 				y += fmt.getHeight();
 				String pers = patient.getPersonalia();

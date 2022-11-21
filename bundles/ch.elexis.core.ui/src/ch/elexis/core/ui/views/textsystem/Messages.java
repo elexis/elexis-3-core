@@ -16,9 +16,9 @@ public class Messages {
 	public static String PlatzhalterProperties_tooltip_no_category = ch.elexis.core.l10n.Messages.PlatzhalterProperties_tooltip_no_category;
 	public static String PlatzhalterView_menu_copy = ch.elexis.core.l10n.Messages.PlatzhalterView_menu_copy;
 	public static String PlatzhalterView_message_Info = ch.elexis.core.l10n.Messages.PlatzhalterView_message_Info;
-	public static String TextContainer_NoPluginCaption = ch.elexis.core.l10n.Messages.TextContainer_NoPluginCaption;
+	public static String Core_Unable_to_create_text = ch.elexis.core.l10n.Messages.Core_Unable_to_create_text;
 	public static String TextTemplateVeiw_NoTxtPluginDescription = ch.elexis.core.l10n.Messages.TextTemplateVeiw_NoTxtPluginDescription;
-	public static String TextContainer_Noplugin3 = ch.elexis.core.l10n.Messages.TextContainer_Noplugin3;
-	public static String TextContainer_NoPlugin4 = ch.elexis.core.l10n.Messages.TextContainer_NoPlugin4;
-	public static String TextContainer_NoPLugin5 = ch.elexis.core.l10n.Messages.TextContainer_NoPLugin5;
+	public static String Text_No_Plugin_loaded = ch.elexis.core.l10n.Messages.Text_No_Plugin_loaded;
+	public static String Text_Plugin_Not_Configured = ch.elexis.core.l10n.Messages.Text_Plugin_Not_Configured;
+	public static String Text_External_Cmd_deleted = ch.elexis.core.l10n.Messages.Text_External_Cmd_deleted;
 }

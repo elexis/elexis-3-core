@@ -63,7 +63,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 		case ORDERED:
 			return Messages.LabOrder_stateOrdered;
 		case DONE:
-			return Messages.EditReminderDialog_fixed;
+			return Messages.Core_Fixed;
 		case DONE_IMPORT:
 			return Messages.LabOrder_stateImported;
 		default:

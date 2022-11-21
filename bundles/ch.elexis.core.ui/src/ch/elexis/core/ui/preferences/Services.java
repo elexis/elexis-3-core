@@ -33,8 +33,8 @@ public class Services extends PreferencePage implements IWorkbenchPreferencePage
 		ret.setLayout(new FillLayout());
 		StyledText text = new StyledText(ret, SWT.NONE);
 		text.setWordWrap(true);
-		text.setText(Messages.Services_ExplanationLine1 + Messages.CDSSGroup_ExplanationCDSSLine2
-				+ Messages.CDSSGroup_ExplanationCDSSLine3);
+		text.setText(Messages.Services_ExplanationLine1 + Messages.Core_Preferences_only_shown_when
+				+ Messages.Core_Services_Explanation_Line_3);
 		return ret;
 	}
 

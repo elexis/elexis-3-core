@@ -44,7 +44,7 @@ public class Importer extends ImporterPage {
 		FileBasedImporter fbi = new FileBasedImporter(parent, this);
 		fbi.setFilter(new String[] { "*.csv", "*.xls", "*" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}, new String[] { Messages.Eigendiagnosen_csvDescription, Messages.Eigendiagnosen_msExcelDescription,
-				Messages.Eigendiagnosen_allFilesDescription });
+				Messages.Core_All_Files_Filter });
 		fbi.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		return fbi;
 	}

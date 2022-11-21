@@ -37,8 +37,8 @@ public final class PrintPatientLabelHandler extends AbstractHandler {
 
 		EtiketteDruckenDialog dlg = new EtiketteDruckenDialog(
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), actPatient, TT_PATIENT_LABEL);
-		dlg.setTitle(Messages.GlobalActions_PrintLabel);
-		dlg.setMessage(Messages.GlobalActions_PrintLabel);
+		dlg.setTitle(Messages.Core_Print_Patient_Label);
+		dlg.setMessage(Messages.Core_Print_Patient_Label);
 		if (!CoreHub.localCfg.get("Drucker/Etiketten/Choose", true)) { //$NON-NLS-1$
 			dlg.setBlockOnOpen(false);
 			dlg.open();

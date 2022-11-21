@@ -15,7 +15,7 @@ public class Messages {
 	public static String ImportLabMapping_errorProblems = ch.elexis.core.l10n.Messages.ImportLabMapping_errorProblems;
 	public static String ImportLabMapping_message = ch.elexis.core.l10n.Messages.ImportLabMapping_message;
 	public static String ImportLabMapping_selectFile = ch.elexis.core.l10n.Messages.ImportLabMapping_selectFile;
-	public static String ImportLabMapping_shellTitle = ch.elexis.core.l10n.Messages.ImportLabMapping_shellTitle;
+	public static String Core_Import_Laboratory_Assignment = ch.elexis.core.l10n.Messages.Core_Import_Laboratory_Assignment;
 
 	public static String ImportLabMapping_titleProblemDialog = ch.elexis.core.l10n.Messages.ImportLabMapping_titleProblemDialog;
 
@@ -27,14 +27,14 @@ public class Messages {
 	public static String EditLabItemDialog_errorRefMaleNotAbsolute = ch.elexis.core.l10n.Messages.EditLabItemDialog_errorRefMaleNotAbsolute;
 	public static String EditLabItemDialog_errorResultNotAbsolute = ch.elexis.core.l10n.Messages.EditLabItemDialog_errorResultNotAbsolute;
 	public static String EditLabResultDialog_labelAnalyse = ch.elexis.core.l10n.Messages.EditLabResultDialog_labelAnalyse;
-	public static String AccessControlDefaults_GroupAdminLaboratory = ch.elexis.core.l10n.Messages.AccessControlDefaults_GroupAdminLaboratory;
+	public static String Core_Laboratory = ch.elexis.core.l10n.Messages.Core_Laboratory;
 	public static String EditLabResultDialog_labelObservation = ch.elexis.core.l10n.Messages.EditLabResultDialog_labelObservation;
 	public static String EditLabResultDialog_labelRefFemale = ch.elexis.core.l10n.Messages.EditLabResultDialog_labelRefFemale;
 	public static String EditLabResultDialog_labelRefMale = ch.elexis.core.l10n.Messages.EditLabResultDialog_labelRefMale;
-	public static String EditLabResultDialog_labelTime = ch.elexis.core.l10n.Messages.EditLabResultDialog_labelTime;
+	public static String Core_Time = ch.elexis.core.l10n.Messages.Core_Time;
 	public static String EditLabResultDialog_labelTransmission = ch.elexis.core.l10n.Messages.EditLabResultDialog_labelTransmission;
 
-	public static String AssignStickerDialog_StickerWert = ch.elexis.core.l10n.Messages.AssignStickerDialog_StickerWert;
+	public static String Core_Value = ch.elexis.core.l10n.Messages.Core_Value;
 	public static String EditLabResultDialog_message = ch.elexis.core.l10n.Messages.EditLabResultDialog_message;
 	public static String EditLabResultDialog_shellTitle = ch.elexis.core.l10n.Messages.EditLabResultDialog_shellTitle;
 	public static String EditLabResultDialog_title = ch.elexis.core.l10n.Messages.EditLabResultDialog_title;
@@ -44,7 +44,7 @@ public class Messages {
 	public static String LaborVerordnungDialog_labelOrderNumber = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_labelOrderNumber;
 	public static String LaborVerordnungDialog_labelResponsible = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_labelResponsible;
 	public static String LaborVerordnungDialog_message = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_message;
-	public static String LaborVerordnungDialog_shellTitle = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_shellTitle;
+	public static String Core_prescribe_Laboratory = ch.elexis.core.l10n.Messages.Core_prescribe_Laboratory;
 
 	public static String LaborVerordnungDialog_printOrders = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_printOrders;
 
@@ -57,10 +57,10 @@ public class Messages {
 	public static String Core_Warning = ch.elexis.core.l10n.Messages.Core_Warning;
 	public static String MergeLabItemDialog_toolTipResultsCount = ch.elexis.core.l10n.Messages.MergeLabItemDialog_toolTipResultsCount;
 	public static String MergeLabItemDialog_pleaseMergeParam = ch.elexis.core.l10n.Messages.MergeLabItemDialog_pleaseMergeParam;
-	public static String AccessControlDefaults_mergeLabItems = ch.elexis.core.l10n.Messages.AccessControlDefaults_mergeLabItems;
+	public static String Core_Merge_laboratory_parameters = ch.elexis.core.l10n.Messages.Core_Merge_laboratory_parameters;
 
-	public static String EditLabItem_shellTitle = ch.elexis.core.l10n.Messages.EditLabItem_shellTitle;
-	public static String EditLabItem_labelExportTag = ch.elexis.core.l10n.Messages.EditLabItem_labelExportTag;
+	public static String Core_Laboratory_parameter = ch.elexis.core.l10n.Messages.Core_Laboratory_parameter;
+	public static String Core_Export_tag = ch.elexis.core.l10n.Messages.Core_Export_tag;
 	public static String EditLabItem_message = ch.elexis.core.l10n.Messages.EditLabItem_message;
 	public static String EditLabItem_errorNoTitle = ch.elexis.core.l10n.Messages.EditLabItem_errorNoTitle;
 	public static String EditLabItem_labelDecimalPlace = ch.elexis.core.l10n.Messages.EditLabItem_labelDecimalPlace;
@@ -69,21 +69,21 @@ public class Messages {
 	public static String Core_Title = ch.elexis.core.l10n.Messages.Core_Title;
 	public static String Core_Type = ch.elexis.core.l10n.Messages.Core_Type;
 	public static String Core_Number = ch.elexis.core.l10n.Messages.Core_Number;
-	public static String EditLabItem_labelTypText = ch.elexis.core.l10n.Messages.EditLabItem_labelTypText;
-	public static String EditLabItem_labelTypAbsolute = ch.elexis.core.l10n.Messages.EditLabItem_labelTypAbsolute;
-	public static String EditLabItem_labelTypFormula = ch.elexis.core.l10n.Messages.EditLabItem_labelTypFormula;
+	public static String Core_Text = ch.elexis.core.l10n.Messages.Core_Text;
+	public static String Core_Absolute = ch.elexis.core.l10n.Messages.Core_Absolute;
+	public static String Core_Formula = ch.elexis.core.l10n.Messages.Core_Formula;
 	public static String EditLabItem_titleScriptEditor = ch.elexis.core.l10n.Messages.EditLabItem_titleScriptEditor;
-	public static String EditLabItem_labelRefMale = ch.elexis.core.l10n.Messages.EditLabItem_labelRefMale;
-	public static String EditLabItem_labelRefFemale = ch.elexis.core.l10n.Messages.EditLabItem_labelRefFemale;
-	public static String EditLabItem_labelUnit = ch.elexis.core.l10n.Messages.EditLabItem_labelUnit;
+	public static String Core_Reference_Male = ch.elexis.core.l10n.Messages.Core_Reference_Male;
+	public static String Core_Reference_female = ch.elexis.core.l10n.Messages.Core_Reference_female;
+	public static String Core_Unit = ch.elexis.core.l10n.Messages.Core_Unit;
 	public static String Core_Group = ch.elexis.core.l10n.Messages.Core_Group;
-	public static String EditLabItem_tooltipGroup = ch.elexis.core.l10n.Messages.EditLabItem_tooltipGroup;
-	public static String EditLabItem_labelGroupSequence = ch.elexis.core.l10n.Messages.EditLabItem_labelGroupSequence;
-	public static String EditLabItem_labelGroupPosition = ch.elexis.core.l10n.Messages.EditLabItem_labelGroupPosition;
-	public static String EditLabItem_labelTypDocument = ch.elexis.core.l10n.Messages.EditLabItem_labelTypDocument;
-	public static String EditLabItem_title = ch.elexis.core.l10n.Messages.EditLabItem_title;
-	public static String EditLabItem_labelHintExportTag = ch.elexis.core.l10n.Messages.EditLabItem_labelHintExportTag;
+	public static String Core_Labgroup = ch.elexis.core.l10n.Messages.Core_Labgroup;
+	public static String Core_Sequence_number = ch.elexis.core.l10n.Messages.Core_Sequence_number;
+	public static String Core_Sequence_inside_group = ch.elexis.core.l10n.Messages.Core_Sequence_inside_group;
+	public static String Core_Document = ch.elexis.core.l10n.Messages.Core_Document;
+	public static String Core_Enter_new_laboratory_parameter = ch.elexis.core.l10n.Messages.Core_Enter_new_laboratory_parameter;
+	public static String Core_HL7_Tags_comma_separated = ch.elexis.core.l10n.Messages.Core_HL7_Tags_comma_separated;
 	public static String EditLabItem_OriginLaboratoryLabel = ch.elexis.core.l10n.Messages.EditLabItem_OriginLaboratoryLabel;
 
-	public static String EditLabItem_OriginLaboratorySelectorBody = ch.elexis.core.l10n.Messages.EditLabItem_OriginLaboratorySelectorBody;
+	public static String Laboratory_Please_Select_Origin = ch.elexis.core.l10n.Messages.Laboratory_Please_Select_Origin;
 }

@@ -41,7 +41,7 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 		ILabItem labItem = labResult.getItem();
 		if (labItem.getTyp().equals(LabItemTyp.TEXT) || (labResult.getComment().length() > 0)) {
 			DisplayTextDialog dlg = new DisplayTextDialog(composite.getShell(),
-					Messages.LaborResultsComposite_textResultTitle, labItem.getName(), labResult.getComment());
+					Messages.Core_Textresult, labItem.getName(), labResult.getComment());
 			// HL7 Befunde enthalten oft mit Leerzeichen formatierte Bemerkungen,
 			// die nur mit nicht-proportionalen Fonts dargestellt werden k��nnen
 			// Wir versuchen also, die Anzeige mit Courier New, ohne zu wissen ob die
@@ -66,7 +66,7 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 		} else if (labItem.getTyp().equals(LabItemTyp.DOCUMENT)) {
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			if (patient != null) {
-				new DisplayLabDokumenteDialog(composite.getShell(), Messages.LaborResultsComposite_Documents,
+				new DisplayLabDokumenteDialog(composite.getShell(), Messages.Core_Laboratory_Document,
 						Collections.singletonList(labResult)).open();// $NON-NLS-1$
 			}
 		}

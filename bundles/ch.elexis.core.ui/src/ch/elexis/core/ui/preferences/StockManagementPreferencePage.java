@@ -89,7 +89,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 	 * Create the preference page.
 	 */
 	public StockManagementPreferencePage() {
-		setTitle(Messages.EigenartikelComposite_stockGroup_text);
+		setTitle(Messages.Core_Inventory_control);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		tableStocks.setMenu(menu);
 
 		MenuItem mntmAddStock = new MenuItem(menu, SWT.NONE);
-		mntmAddStock.setText(Messages.Bezugskontakt_Add);
+		mntmAddStock.setText(Messages.Core_Add);
 		mntmAddStock.setImage(Images.IMG_NEW.getImage());
 		mntmAddStock.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -154,7 +154,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		});
 
 		MenuItem mntmRemoveStock = new MenuItem(menu, SWT.NONE);
-		mntmRemoveStock.setText(Messages.Bezugskontakt_Delete);
+		mntmRemoveStock.setText(Messages.Core_Remove);
 		mntmRemoveStock.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -173,7 +173,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		TableViewerColumn tvcPriority = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmPriority = tvcPriority.getColumn();
 		tcl_composite.setColumnData(tblclmPriority, new ColumnPixelData(30, true, true));
-		tblclmPriority.setText(Messages.StockManagementPreferencePage_lblPrio_text);
+		tblclmPriority.setText(Messages.Core_Priority);
 		tvcPriority.setLabelProvider(new CellLabelProvider() {
 
 			@Override
@@ -188,7 +188,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		TableViewerColumn tvcCode = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnCode = tvcCode.getColumn();
 		tcl_composite.setColumnData(tblclmnCode, new ColumnPixelData(40));
-		tblclmnCode.setText(Messages.BlockDetailDisplay_code);
+		tblclmnCode.setText(Messages.Core_Code);
 		tvcCode.setLabelProvider(new CellLabelProvider() {
 
 			@Override
@@ -238,7 +238,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		compositeDetail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 
 		Label lblPrio = new Label(compositeDetail, SWT.NONE);
-		lblPrio.setText(Messages.StockManagementPreferencePage_lblPrio_text);
+		lblPrio.setText(Messages.Core_Priority);
 
 		txtPrio = new Text(compositeDetail, SWT.BORDER);
 		GridData gd_txtPrio = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -248,7 +248,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		Label lblCode = new Label(compositeDetail, SWT.NONE);
 		lblCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblCode.setToolTipText(Messages.StockManagementPreferencePage_lblCode_toolTipText);
-		lblCode.setText(Messages.BlockDetailDisplay_code);
+		lblCode.setText(Messages.Core_Code);
 
 		txtCode = new Text(compositeDetail, SWT.BORDER);
 		GridData gd_txtCode = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -385,7 +385,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		lblMachineuuid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
 		Label lblMachineConfig = new Label(compositeDetail, SWT.NONE);
-		lblMachineConfig.setText(Messages.StockManagementPreferencePage_lblMachineConfig_text);
+		lblMachineConfig.setText(Messages.Core_Configuration);
 		txtMachineConfig = new Text(compositeDetail, SWT.BORDER);
 		txtMachineConfig.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 

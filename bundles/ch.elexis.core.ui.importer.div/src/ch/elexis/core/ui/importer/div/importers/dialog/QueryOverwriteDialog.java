@@ -69,12 +69,12 @@ public class QueryOverwriteDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		Button buttonNo = createButton(parent, IDialogConstants.NO_ID, IDialogConstants.OK_LABEL, true);
-		buttonNo.setText(Messages.KonsDetailView_No);
+		buttonNo.setText(Messages.Corr_No);
 		Button buttonYesToAll = createButton(parent, IDialogConstants.YES_TO_ALL_ID, IDialogConstants.CANCEL_LABEL,
 				false);
 		buttonYesToAll.setText(Messages.QueryOverwriteDialog_YESTOALL);
 		Button buttonYes = createButton(parent, IDialogConstants.YES_ID, IDialogConstants.CANCEL_LABEL, false);
-		buttonYes.setText(Messages.KonsDetailView_Yes);
+		buttonYes.setText(Messages.Core_Yes);
 	}
 
 	@Override

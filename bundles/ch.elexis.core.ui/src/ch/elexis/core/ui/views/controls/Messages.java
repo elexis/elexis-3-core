@@ -1,13 +1,13 @@
 package ch.elexis.core.ui.views.controls;
 
 public class Messages {
-	public static String ArticleDefaultSignatureComposite_applicationInstruction = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_applicationInstruction;
+	public static String Prescription_Instruction = ch.elexis.core.l10n.Messages.Prescription_Instruction;
 	public static String ArticleDefaultSignatureComposite_dispensation = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_dispensation;
-	public static String ArticleDefaultSignatureComposite_dosage = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_dosage;
-	public static String ArticleDefaultSignatureComposite_evening = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_evening;
+	public static String Core_Dosage = ch.elexis.core.l10n.Messages.Core_Dosage;
+	public static String Core_Evening = ch.elexis.core.l10n.Messages.Core_Evening;
 	public static String ArticleDefaultSignatureComposite_fix = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_fix;
-	public static String ArticleDefaultSignatureComposite_morning = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_morning;
-	public static String ArticleDefaultSignatureComposite_night = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_night;
+	public static String Medication_Dose_Morning = ch.elexis.core.l10n.Messages.Medication_Dose_Morning;
+	public static String Medication_Dose_Night = ch.elexis.core.l10n.Messages.Medication_Dose_Night;
 	public static String ArticleDefaultSignatureComposite_noon = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_noon;
 	public static String ArticleDefaultSignatureComposite_onArticle = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_onArticle;
 	public static String ArticleDefaultSignatureComposite_onAtc = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_onAtc;
@@ -19,7 +19,7 @@ public class Messages {
 	public static String Core_Please_Select_Contact = ch.elexis.core.l10n.Messages.Core_Please_Select_Contact;
 	public static String Core_Select_Contact = ch.elexis.core.l10n.Messages.Core_Select_Contact;
 	public static String LaborSelectionComposite_message = ch.elexis.core.l10n.Messages.LaborSelectionComposite_message;
-	public static String LabImporterUtil_SelectLab = ch.elexis.core.l10n.Messages.LabImporterUtil_SelectLab;
+	public static String Core_Select_Laboratory = ch.elexis.core.l10n.Messages.Core_Select_Laboratory;
 
 	public static String StockDetailComposite_availableInStock = ch.elexis.core.l10n.Messages.StockDetailComposite_availableInStock;
 }

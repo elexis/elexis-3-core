@@ -36,7 +36,7 @@ public class EndLocalDocumentHandler extends AbstractHandler implements IHandler
 
 						if (!service.save(object)) {
 							MessageDialog.openError(parentShell, Messages.Core_Error,
-									Messages.BriefAuswahl_errorlocaleditendmessage);
+									Messages.Core_Could_not_reread_correctly_document);
 						}
 
 						service.remove(object, new IConflictHandler() {
@@ -53,7 +53,7 @@ public class EndLocalDocumentHandler extends AbstractHandler implements IHandler
 						});
 					} else {
 						MessageDialog.openInformation(parentShell, Messages.Core_Info,
-								Messages.AbortLocalDocumentHandler_infomessage);
+								Messages.Core_Document_was_not_opened_to_edit);
 					}
 				});
 			}

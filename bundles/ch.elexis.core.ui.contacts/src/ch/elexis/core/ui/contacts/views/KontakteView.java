@@ -65,11 +65,11 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	IAction dupKontakt, delKontakt, createKontakt, printList;
 	PersistentObjectLoader loader;
 
-	private final String[] fields = { Kontakt.FLD_SHORT_LABEL + Query.EQUALS + Messages.KontaktSelector_abbreviation, // $NON-NLS-1$
-			Kontakt.FLD_NAME1 + Query.EQUALS + Messages.KontaktBlatt_Bez1, // $NON-NLS-1$
-			Kontakt.FLD_NAME2 + Query.EQUALS + Messages.KontaktBlatt_Bez2, // $NON-NLS-1$
+	private final String[] fields = { Kontakt.FLD_SHORT_LABEL + Query.EQUALS + Messages.Core_Kuerzel, // $NON-NLS-1$
+			Kontakt.FLD_NAME1 + Query.EQUALS + Messages.Core_Description_1, // $NON-NLS-1$
+			Kontakt.FLD_NAME2 + Query.EQUALS + Messages.Core_Description_2, // $NON-NLS-1$
 			Kontakt.FLD_STREET + Query.EQUALS + Messages.Core_Street, // $NON-NLS-1$
-			Kontakt.FLD_ZIP + Query.EQUALS + Messages.AnschriftEingabeDialog_zip, // $NON-NLS-1$
+			Kontakt.FLD_ZIP + Query.EQUALS + Messages.Core_Postal_code, // $NON-NLS-1$
 			Kontakt.FLD_PLACE + Query.EQUALS + Messages.Core_City }; // $NON-NLS-1$
 	private ViewMenus menu;
 

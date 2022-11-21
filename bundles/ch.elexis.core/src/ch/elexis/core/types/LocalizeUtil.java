@@ -57,8 +57,8 @@ public class LocalizeUtil {
 				+ Messages.RelationshipType_BUSINESS_EMPLOYEE + Messages.RelationshipType_FAMILY_PARENT
 				+ Messages.RelationshipType_FAMILY_CHILD + Messages.RelationshipType_FAMILY_GUARDIAN
 				+ Messages.RelationshipType_FAMILY_ICE + Messages.RelationshipType_FAMILY_ALTERNATIVE
-				+ Messages.RelationshipType_WELFARE_GENERAL_PRACTITIONER + Messages.DefaultPDFImportStrategy_Patient
-				+ Messages.RelationshipType_WELFARE_CONSULTANT + Messages.RelationshipType_WELFARE_INSURER
+				+ Messages.RelationshipType_WELFARE_GENERAL_PRACTITIONER + Messages.Core_Patient
+				+ Messages.Core_Doctor_Specialist + Messages.RelationshipType_WELFARE_INSURER
 				+ Messages.RelationshipType_WELFARE_INSUREE;
 	}
 

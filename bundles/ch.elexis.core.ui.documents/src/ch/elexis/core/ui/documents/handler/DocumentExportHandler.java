@@ -49,12 +49,12 @@ public class DocumentExportHandler extends AbstractHandler implements IHandler {
 		if (fname != null) {
 			try {
 				if (DocumentStoreServiceHolder.getService().saveContentToFile(document, fname) == null) {
-					SWTHelper.showError(Messages.Export_while,
+					SWTHelper.showError(Messages.Core_Error_while_exporting,
 							Messages.DocumentView_exportErrorEmptyText);
 				}
 			} catch (ElexisException e) {
 				logger.error("cannot export file", e); //$NON-NLS-1$
-				SWTHelper.showError(Messages.Export_while, Messages.DocumentView_exportErrorText);
+				SWTHelper.showError(Messages.Core_Error_while_exporting, Messages.DocumentView_exportErrorText);
 			}
 		}
 	}

@@ -46,7 +46,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	private Composite compArticle;
 
 	private RestrictedAction createAction = new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY,
-			ch.elexis.core.ui.views.artikel.Messages.AUF2_new) {
+			ch.elexis.core.ui.views.artikel.Messages.Core_New_ellipsis) {
 		{
 			setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 			setToolTipText(ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_createProductToolTipText);
@@ -118,8 +118,8 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		@Override
 		public void doRun(IArticle act) {
 			if (MessageDialog.openConfirm(site.getShell(),
-					ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteActionConfirmCaption,
-					MessageFormat.format(ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteConfirmBody,
+					ch.elexis.core.ui.views.artikel.Messages.Core_Confirm_delete,
+					MessageFormat.format(ch.elexis.core.ui.views.artikel.Messages.Core_Want_to_delete_0,
 							act.getName()))) {
 				CoreModelServiceHolder.get().delete(act);
 

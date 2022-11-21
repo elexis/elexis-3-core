@@ -76,7 +76,7 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 		menu.add(new Action(ch.elexis.core.ui.eigenleistung.Messages.Core_Delete) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-				setToolTipText(ch.elexis.core.ui.eigenleistung.Messages.ArtikelContextMenu_deleteActionToolTip);
+				setToolTipText(ch.elexis.core.ui.eigenleistung.Messages.Core_Delete);
 			}
 
 			@Override
@@ -84,9 +84,9 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 				ICustomService act = (ICustomService) ContextServiceHolder.get()
 						.getNamed("ch.elexis.core.ui.eigenleistung.selection").orElse(null); //$NON-NLS-1$
 				if (act != null && MessageDialog.openConfirm(commonViewer.getViewerWidget().getControl().getShell(),
-						ch.elexis.core.ui.eigenleistung.Messages.ArtikelContextMenu_deleteActionConfirmCaption,
+						ch.elexis.core.ui.eigenleistung.Messages.Core_Confirm_delete,
 						MessageFormat.format(
-								ch.elexis.core.ui.eigenleistung.Messages.ArtikelContextMenu_deleteConfirmBody,
+								ch.elexis.core.ui.eigenleistung.Messages.Core_Want_to_delete_0,
 								act.getText()))) {
 					CoreModelServiceHolder.get().delete(act);
 					commonViewer.getConfigurer().getControlFieldProvider().fireChangedEvent();
@@ -100,7 +100,7 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 			}
 
 		});
-		menu.add(new Action(ch.elexis.core.ui.eigenleistung.Messages.ArtikelContextMenu_propertiesAction) {
+		menu.add(new Action(ch.elexis.core.ui.eigenleistung.Messages.Core_Properities_ellipsis) {
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 				setToolTipText(ch.elexis.core.ui.eigenleistung.Messages.EigenleistungContextMenu_propertiesTooltip);

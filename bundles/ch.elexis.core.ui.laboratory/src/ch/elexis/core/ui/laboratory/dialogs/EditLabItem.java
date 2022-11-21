@@ -79,8 +79,8 @@ public class EditLabItem extends TitleAreaDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText(Messages.EditLabItem_shellTitle);
-		setTitle(Messages.EditLabItem_title);
+		getShell().setText(Messages.Core_Laboratory_parameter);
+		setTitle(Messages.Core_Enter_new_laboratory_parameter);
 		setMessage(Messages.EditLabItem_message);
 
 		Composite ret = new Composite(parent, SWT.NONE);
@@ -110,11 +110,11 @@ public class EditLabItem extends TitleAreaDialog {
 		numeric = new Button(grp, SWT.RADIO);
 		numeric.setText(Messages.Core_Number);
 		alph = new Button(grp, SWT.RADIO);
-		alph.setText(Messages.EditLabItem_labelTypText);
+		alph.setText(Messages.Core_Text);
 		abs = new Button(grp, SWT.RADIO);
-		abs.setText(Messages.EditLabItem_labelTypAbsolute);
+		abs.setText(Messages.Core_Absolute);
 		formula = new Button(grp, SWT.RADIO);
-		formula.setText(Messages.EditLabItem_labelTypFormula);
+		formula.setText(Messages.Core_Formula);
 		formula.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -130,25 +130,25 @@ public class EditLabItem extends TitleAreaDialog {
 
 		});
 		document = new Button(grp, SWT.RADIO);
-		document.setText(Messages.EditLabItem_labelTypDocument);
+		document.setText(Messages.Core_Document);
 		document.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				documentSelectionChanged();
 			}
 		});
-		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelRefMale);
+		WidgetFactory.createLabel(ret, Messages.Core_Reference_Male);
 
 		iRef = new Text(ret, SWT.BORDER);
 		iRef.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iRef.setTextLimit(80);
 		iRef.setEnabled(actLabItem == null || !actLabItem.isNoReferenceValueItem());
-		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelRefFemale);
+		WidgetFactory.createLabel(ret, Messages.Core_Reference_female);
 		iRfF = new Text(ret, SWT.BORDER);
 		iRfF.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iRfF.setTextLimit(80);
 		iRfF.setEnabled(actLabItem == null || !actLabItem.isNoReferenceValueItem());
-		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelUnit);
+		WidgetFactory.createLabel(ret, Messages.Core_Unit);
 		noRefValues = new Button(grp, SWT.CHECK);
 		noRefValues.setText(ch.elexis.core.l10n.Messages.LabResultEvaluator_LabItemNoRefValue);
 		noRefValues.addSelectionListener(new SelectionAdapter() {
@@ -180,12 +180,12 @@ public class EditLabItem extends TitleAreaDialog {
 
 		cGroup = new Combo(ret, SWT.SINGLE | SWT.DROP_DOWN);
 		cGroup.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		cGroup.setToolTipText(Messages.EditLabItem_tooltipGroup);
+		cGroup.setToolTipText(Messages.Core_Labgroup);
 		cGroup.setItems(groups.toArray(new String[0]));
-		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelGroupSequence);
+		WidgetFactory.createLabel(ret, Messages.Core_Sequence_number);
 		iPrio = new Text(ret, SWT.BORDER);
 		iPrio.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		iPrio.setToolTipText(Messages.EditLabItem_labelGroupPosition);
+		iPrio.setToolTipText(Messages.Core_Sequence_inside_group);
 		iPrio.setTextLimit(3);
 
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_OriginLaboratoryLabel);
@@ -198,8 +198,8 @@ public class EditLabItem extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Labor.class,
-						Messages.EditLabItem_OriginLaboratorySelectorBody,
-						Messages.EditLabItem_OriginLaboratorySelectorBody, false);
+						Messages.Laboratory_Please_Select_Origin,
+						Messages.Laboratory_Please_Select_Origin, false);
 				if (ksl.open() == Dialog.OK) {
 					actLabor = (Labor) ksl.getSelection();
 					originLaboratory.setText(actLabor.getLabel());
@@ -238,10 +238,10 @@ public class EditLabItem extends TitleAreaDialog {
 		visible = new Button(ret, SWT.CHECK);
 		visible.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelExportTag);
+		WidgetFactory.createLabel(ret, Messages.Core_Export_tag);
 		cExportTag = new Combo(ret, SWT.SINGLE | SWT.DROP_DOWN);
 		cExportTag.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		cExportTag.setToolTipText(Messages.EditLabItem_labelHintExportTag);
+		cExportTag.setToolTipText(Messages.Core_HL7_Tags_comma_separated);
 		cExportTag.setItems(exportTags.toArray(new String[0]));
 
 		if (actLabItem != null) {

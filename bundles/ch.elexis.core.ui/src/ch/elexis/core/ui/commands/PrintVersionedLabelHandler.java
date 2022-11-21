@@ -37,7 +37,7 @@ public final class PrintVersionedLabelHandler extends AbstractHandler {
 
 		EtiketteDruckenDialog dlg = new EtiketteDruckenDialog(
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), actPatient, TT_PATIENT_LABEL_ORDER);
-		dlg.setTitle(Messages.GlobalActions_PrintVersionedLabel);
+		dlg.setTitle(Messages.Core_Print_versioned_Label);
 		dlg.setMessage(Messages.GlobalActions_PrintVersionedLabelToolTip);
 		if (!CoreHub.localCfg.get("Drucker/Etiketten/Choose", true)) { //$NON-NLS-1$
 			dlg.setBlockOnOpen(false);
