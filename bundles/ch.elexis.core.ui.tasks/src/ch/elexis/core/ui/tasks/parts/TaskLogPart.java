@@ -306,9 +306,10 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 			if (!showSystemTasks) {
 				taskQuery.and(ch.elexis.core.tasks.model.ModelPackage.Literals.ITASK__SYSTEM, COMPARATOR.EQUALS, false);
 			}
-			
-			if(filterParameters.get("sft") != null) {
-				taskQuery.and(ch.elexis.core.tasks.model.ModelPackage.Literals.ITASK__TASK_DESCRIPTOR, COMPARATOR.EQUALS, filterParameters.get("sft"));
+
+			if (filterParameters.get("sft") != null) {
+				taskQuery.and(ch.elexis.core.tasks.model.ModelPackage.Literals.ITASK__TASK_DESCRIPTOR,
+						COMPARATOR.EQUALS, filterParameters.get("sft"));
 			}
 			List<ITask> results = taskQuery.execute();
 			inputModel.set(results.toArray());
