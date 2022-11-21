@@ -80,7 +80,7 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		}
 		if (atc != null) {
 			Coding coding = medication.addCoding();
-			coding.setSystem("urn:oid:2.16.840.1.113883.6.73‎");
+			coding.setSystem("urn:oid:2.16.840.1.113883.6.73");
 			coding.setCode(atc);
 		}
 		medication.setText(articelLabel);
