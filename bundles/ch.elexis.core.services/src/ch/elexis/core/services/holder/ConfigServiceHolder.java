@@ -1,10 +1,12 @@
 package ch.elexis.core.services.holder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
@@ -200,5 +202,29 @@ public class ConfigServiceHolder {
 
 	public static String getLocal(String key, String defaultValue) {
 		return configService.getLocal(key, defaultValue);
+	}
+
+	private static List<Runnable> waitForConfigService;
+
+	public synchronized static void runIfConfigServiceAvailable(Runnable runnable) {
+		if (configService == null) {
+			if (waitForConfigService == null) {
+				CompletableFuture.runAsync(() -> {
+					// wait for configService
+					while (configService == null) {
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							// ignore
+						}
+					}
+					waitForConfigService.forEach(r -> r.run());
+				});
+				waitForConfigService = new ArrayList<>();
+			}
+			waitForConfigService.add(runnable);
+		} else {
+			runnable.run();
+		}
 	}
 }
