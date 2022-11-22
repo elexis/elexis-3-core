@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.model.prescription.EntryType;
@@ -104,7 +106,7 @@ public class Patient extends Person implements IPatient {
 		if (filterType != null && !filterType.isEmpty()) {
 			// getEntryType is a special logic with rezeptId and direktvergabe cannot query
 			// it from DB directly
-			return iPrescriptions.parallelStream().filter(p -> filterType.contains(p.getEntryType()))
+			return iPrescriptions.stream().filter(p -> filterType.contains(p.getEntryType()))
 					.collect(Collectors.toList());
 		}
 		return iPrescriptions;
