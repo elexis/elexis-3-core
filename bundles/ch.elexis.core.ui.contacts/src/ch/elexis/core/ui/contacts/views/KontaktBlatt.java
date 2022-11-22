@@ -90,7 +90,7 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 	private final ScrolledForm form;
 	private final FormToolkit tk;
 	AutoForm afDetails;
-	Listener mandantListener, contactListener;
+	Listener mandantListener, checkIfContactExistsListener;
 
 	static final InputData[] def = new InputData[] {
 			new InputData(Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null),
@@ -226,8 +226,9 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 
 		};
 
-		contactListener = new Listener() {
-
+		checkIfContactExistsListener = new Listener() {
+			// Listener for the text fields: NAME1, NAME2 and SEX
+			
 			@Override
 			public void handleEvent(Event event) {
 				List<Kontakt> list = queryContact();
@@ -412,16 +413,16 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 
 			for (int i = 0; i < def.length; i++) {
 				def[i].getWidget().getControl().removeListener(SWT.KeyDown, mandantListener);
-				def[i].getWidget().getControl().removeListener(SWT.CHANGED, contactListener);
+				def[i].getWidget().getControl().removeListener(SWT.CHANGED, checkIfContactExistsListener);
 			}
 			if (mandatorEditGuard) {
 				for (int i = 0; i < def.length; i++) {
 					def[i].getWidget().getControl().addListener(SWT.KeyDown, mandantListener);
 				}
 			} else {
-					def[0].getWidget().getControl().addListener(SWT.CHANGED, contactListener);
-					def[1].getWidget().getControl().addListener(SWT.CHANGED, contactListener);
-					def[3].getWidget().getControl().addListener(SWT.CHANGED, contactListener);
+					def[0].getWidget().getControl().addListener(SWT.CHANGED, checkIfContactExistsListener);
+					def[1].getWidget().getControl().addListener(SWT.CHANGED, checkIfContactExistsListener);
+					def[3].getWidget().getControl().addListener(SWT.CHANGED, checkIfContactExistsListener);
 			}
 		} catch (Exception e) {
 			// do nothing
