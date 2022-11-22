@@ -1,6 +1,6 @@
 # Build script used by gitlab.medelexis.ch
 variables:
-   ORIGIN_BRANCH: "master" 
+   ORIGIN_BRANCH: "3.10"
    # Set to true in manual execution to build products
    #    see ch.elexis.core.p2site/pom.xml
    MATERIALIZE_PRODUCTS: "false"
