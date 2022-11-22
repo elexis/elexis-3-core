@@ -130,7 +130,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	private Logger log = LoggerFactory.getLogger(KonsDetailView.class);
 	Hashtable<String, IKonsExtension> hXrefs;
 	EnhancedTextField text;
-	Hyperlink hlMandant, hlDate;
+	private Hyperlink hlMandant, hlDate;
 	ComboViewer comboViewerFall;
 	private IEncounter actEncounter;
 	FormToolkit tk;
@@ -578,7 +578,6 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			comboViewerFall.getCombo().setEnabled(coverage.isOpen());
 			IMandator mandator = encounter.getMandator();
 			String encounterDate = TimeUtil.formatSafe(encounter.getDate());
-			System.out.println(encounterDate);
 			hlDate.setText(encounterDate + " (" //$NON-NLS-1$
 					+ new TimeTool(encounter.getDate()).getDurationToNowString() + ")"); //$NON-NLS-1$
 			StringBuilder sb = new StringBuilder();
