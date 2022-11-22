@@ -22,7 +22,6 @@ import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestStatus;
 import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r4.model.Period;
-import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Type;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
@@ -31,6 +30,7 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
@@ -65,7 +65,7 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		fhirObject.setId(new IdDt("MedicationRequest", localObject.getId()));
 		fhirObject.addIdentifier(getElexisObjectIdentifier(localObject));
 
-		fhirObject.setSubject(getPatientReference(localObject.getPatient()));
+		fhirObject.setSubject(FhirUtil.getReference(localObject.getPatient()));
 
 		StringBuilder textBuilder = new StringBuilder();
 
@@ -158,12 +158,6 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		elexisEntryType.setValue(new Enumeration<>(entryTypeFactory, entryType));
 		fhirObject.addExtension(elexisEntryType);
 		return Optional.of(fhirObject);
-	}
-
-	private Reference getPatientReference(IPatient patient) {
-		Reference ref = new Reference();
-		ref.setId(patient.getId());
-		return ref;
 	}
 
 	@Override
