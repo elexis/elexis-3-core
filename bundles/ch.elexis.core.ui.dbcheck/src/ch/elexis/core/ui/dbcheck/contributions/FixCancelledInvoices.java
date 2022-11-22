@@ -20,15 +20,15 @@ public class FixCancelledInvoices extends ExternalMaintenance {
 	 * Lookup {@link IPayment} with Storno remark, missing corresponding
 	 * {@link IAccountTransaction} with Storno. Due to bug #24778 of
 	 * {@link IInvoiceService} cancel.
-	 * 
+	 *
 	 */
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		StringBuilder output = new StringBuilder();
-		
+
 		int checked = 0;
 		int fixed = 0;
-		
+
 		IQuery<IPayment> paymentQuery = CoreModelServiceHolder.get().getQuery(IPayment.class);
 		paymentQuery.and("remark", COMPARATOR.EQUALS, "Storno");
 		try (IQueryCursor<IPayment> payments = paymentQuery.executeAsCursor()) {

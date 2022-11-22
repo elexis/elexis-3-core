@@ -103,7 +103,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 	 * Diese Funktion wird nach erstem Erstellen der Datenbank (d.h. nur ein
 	 * einziges Mal) aufgerufen und belegt globale Voreinstellungen. Hier alle im
 	 * ganzen Netzwerk und für alle Benutzer gültigen Voreinstellungen eintragen
-	 * 
+	 *
 	 * @param configService
 	 *
 	 */

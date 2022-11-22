@@ -253,7 +253,7 @@ public class TextContainer {
 							CoreHub.getLoggedInContact(), adressat, kons, typ);
 					addBriefToKons(brief, kons);
 					return brief;
-			}
+				}
 			} else {
 				if (plugin.loadFromByteArray(template.loadBinary(), true) == true) {
 					final Brief ret = new Brief(subject == null ? template.getBetreff() : subject, null,
@@ -300,7 +300,7 @@ public class TextContainer {
 					saveBrief(ret, typ);
 					addBriefToKons(ret, kons);
 					return ret;
-			}
+				}
 			}
 			return null;
 		} finally {

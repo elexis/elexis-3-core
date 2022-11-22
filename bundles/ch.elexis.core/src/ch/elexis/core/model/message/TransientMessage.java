@@ -24,7 +24,7 @@ public class TransientMessage {
 	private boolean alllowExternal = false;
 
 	/**
-	 * 
+	 *
 	 * @param sender
 	 * @param receiverUrl the transporter plus the receiver, e.g. internal:userid
 	 */

@@ -51,7 +51,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
 	/**
 	 * Create the dialog.
-	 * 
+	 *
 	 * @param parentShell
 	 */
 	public VirtualFilesystemUriEditorDialog(Shell parentShell, IVirtualFilesystemService virtualFilesystemService,
@@ -66,7 +66,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
 	/**
 	 * Create contents of the dialog.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
@@ -137,7 +137,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
 	/**
 	 * Create contents of the button bar.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override

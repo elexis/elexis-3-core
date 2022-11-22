@@ -373,7 +373,7 @@ public class AppointmentService implements IAppointmentService {
 	}
 
 	private boolean isValidColor(String colorString) {
-		if(StringUtils.isNotBlank(colorString)) {
+		if (StringUtils.isNotBlank(colorString)) {
 			// ffffff or #ffffff
 			return colorString.length() == 6 || colorString.length() == 7;
 		}

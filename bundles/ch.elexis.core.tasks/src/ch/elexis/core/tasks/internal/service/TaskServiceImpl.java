@@ -178,7 +178,6 @@ public class TaskServiceImpl implements ITaskService {
 	private synchronized void assertFilesystemChangeWatcher() {
 		if (fileSystemChangeWatcher == null) {
 			fileSystemChangeWatcher = new FilesystemChangeWatcher(this, virtualFilesystemService);
-			fileSystemChangeWatcher.startPolling();
 		}
 	}
 

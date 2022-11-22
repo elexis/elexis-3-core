@@ -47,7 +47,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
@@ -87,6 +86,7 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.dialogs.AssignStickerDialog;
+import ch.elexis.core.ui.dialogs.DateSelectorDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.ImageSize;
@@ -130,8 +130,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	private Logger log = LoggerFactory.getLogger(KonsDetailView.class);
 	Hashtable<String, IKonsExtension> hXrefs;
 	EnhancedTextField text;
-	private Label lBeh;
-	Hyperlink hlMandant;
+	private Hyperlink hlMandant, hlDate;
 	ComboViewer comboViewerFall;
 	private IEncounter actEncounter;
 	FormToolkit tk;
@@ -366,11 +365,23 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		cDesc = new Composite(form.getBody(), SWT.NONE);
 		cDesc.setLayout(new RowLayout(SWT.HORIZONTAL));
 		cDesc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		lBeh = tk.createLabel(cDesc, NO_CONS_SELECTED);
 		emFont = UiDesk.getFont("Helvetica", 11, SWT.BOLD); //$NON-NLS-1$
-		lBeh.setFont(emFont);
 		defaultBackground = p.getBackground();
-		// lBeh.setBackground();
+		hlDate = tk.createHyperlink(cDesc, NO_CONS_SELECTED, SWT.NONE);
+		hlDate.setFont(emFont);
+		hlDate.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
+				Konsultation kons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+
+				DateSelectorDialog dsd = new DateSelectorDialog(getSite().getShell());
+				if (dsd.open() == Dialog.OK) {
+					TimeTool date = dsd.getSelectedDate();
+					kons.setDateTime(date.toLocalDateTime(), false);
+				}
+				ElexisEventDispatcher.fireSelectionEvent(kons);
+			}
+		});
+
 		hlMandant = tk.createHyperlink(cDesc, "--", SWT.NONE); //$NON-NLS-1$
 		hlMandant.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -567,7 +578,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			comboViewerFall.getCombo().setEnabled(coverage.isOpen());
 			IMandator mandator = encounter.getMandator();
 			String encounterDate = TimeUtil.formatSafe(encounter.getDate());
-			lBeh.setText(encounterDate + " (" //$NON-NLS-1$
+			hlDate.setText(encounterDate + " (" //$NON-NLS-1$
 					+ new TimeTool(encounter.getDate()).getDurationToNowString() + ")"); //$NON-NLS-1$
 			StringBuilder sb = new StringBuilder();
 			if (mandator == null) {
@@ -597,12 +608,8 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			if (BillingServiceHolder.get().isEditable(encounter).isOK()) {
 				text.setEnabled(true);
 				text.setToolTipText(StringUtils.EMPTY);
-				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
-				lBeh.setBackground(defaultBackground);
 			} else {
 				text.setToolTipText("Konsultation geschlossen oder nicht von Ihnen");
-				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_GREY60));
-				lBeh.setBackground(UiDesk.getColor(UiDesk.COL_GREY20));
 			}
 			if (encounter.getDate().isEqual(LocalDate.now())) {
 				text.setTextBackground(UiDesk.getColor(UiDesk.COL_WHITE));
@@ -611,7 +618,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			}
 		} else {
 			form.setText(NO_CONS_SELECTED);
-			lBeh.setText("-"); //$NON-NLS-1$
+			hlDate.setText("-"); //$NON-NLS-1$
 			hlMandant.setText("--"); //$NON-NLS-1$
 			hlMandant.setEnabled(false);
 			hlMandant.setBackground(hlMandant.getParent().getBackground());

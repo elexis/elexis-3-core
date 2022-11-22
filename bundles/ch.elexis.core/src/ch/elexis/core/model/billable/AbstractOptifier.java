@@ -67,7 +67,7 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 	/**
 	 * Set the amount of the {@link IBillable}, override if additional changes
 	 * should be done on change of amount.
-	 * 
+	 *
 	 * @param billed
 	 * @param amount
 	 */

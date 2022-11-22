@@ -16,8 +16,11 @@ import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.MedicationRequest;
 import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestDispenseRequestComponent;
+import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestIntent;
+import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestPriority;
 import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestStatus;
 import org.hl7.fhir.r4.model.Narrative;
+import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Type;
@@ -74,10 +77,11 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 			Coding coding = medication.addCoding();
 			coding.setSystem("urn:oid:1.3.160");
 			coding.setCode(gtin);
+			coding.setDisplay(articelLabel);
 		}
 		if (atc != null) {
 			Coding coding = medication.addCoding();
-			coding.setSystem("urn:oid:2.16.840.1.113883.6.73‎");
+			coding.setSystem("urn:oid:2.16.840.1.113883.6.73");
 			coding.setCode(atc);
 		}
 		medication.setText(articelLabel);
@@ -140,8 +144,11 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		}
 
 		fhirObject.setStatus(statusEnum);
+		fhirObject.setIntent(MedicationRequestIntent.ORDER);
+		fhirObject.setPriority(MedicationRequestPriority.ROUTINE);
 
 		Narrative narrative = new Narrative();
+		narrative.setStatus(NarrativeStatus.GENERATED);
 		narrative.setDivAsString(textBuilder.toString());
 		fhirObject.setText(narrative);
 

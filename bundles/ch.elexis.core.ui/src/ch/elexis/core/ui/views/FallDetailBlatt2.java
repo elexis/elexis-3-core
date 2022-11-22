@@ -733,12 +733,10 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			Fall fall = (Fall) f;
 			String allowedBillingLaw = (String) fall.getCostBearer()
 					.getExtInfoStoredObjectByKey(OrganizationConstants.FLD_EXT_ALLOWED_BILLINGLAW);
-			if (StringUtils.isNotBlank(allowedBillingLaw)
-					&& fall.getConfiguredBillingSystemLaw() != null
+			if (StringUtils.isNotBlank(allowedBillingLaw) && fall.getConfiguredBillingSystemLaw() != null
 					&& !allowedBillingLaw.contains(fall.getConfiguredBillingSystemLaw().name())) {
 				tCostBearer.setBackground(UiDesk.getColorFromRGB("ff9696"));
-				tCostBearer
-						.setToolTipText("Bei dieser Organisation erlaubte Gesetze (" + allowedBillingLaw + ")");
+				tCostBearer.setToolTipText("Bei dieser Organisation erlaubte Gesetze (" + allowedBillingLaw + ")");
 			}
 		}
 
