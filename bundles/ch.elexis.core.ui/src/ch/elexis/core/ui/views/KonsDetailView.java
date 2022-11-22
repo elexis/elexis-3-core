@@ -392,7 +392,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 				// we want do reset to current mandant afterwards
 				Mandant currentMandant = ElexisEventDispatcher.getSelectedMandator();
 				KontaktSelektor ksl = new KontaktSelektor(getSite().getShell(), Mandant.class,
-						Messages.KonsDetailView_SelectMandatorCaption, // $NON-NLS-1$
+						Messages.Core_Select_Mandator, // $NON-NLS-1$
 						Messages.KonsDetailView_SelectMandatorBody,
 						new String[] { Mandant.FLD_SHORT_LABEL, Mandant.FLD_NAME1, Mandant.FLD_NAME2 }); // $NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
@@ -816,7 +816,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 
 						if (!changeToCoverage.equals(actCoverage)) {
 							if (!changeToCoverage.isOpen()) {
-								SWTHelper.alert(Messages.KonsDetailView_CaseClosedCaption, // $NON-NLS-1$
+								SWTHelper.alert(Messages.Core_Case_is_closed, // $NON-NLS-1$
 										Messages.KonsDetailView_CaseClosedBody); // $NON-NLS-1$
 							} else {
 								MessageDialog msd = new MessageDialog(getViewSite().getShell(),
@@ -824,8 +824,8 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 										Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize),
 										MessageFormat.format(Messages.KonsDetailView_ConfirmChangeConsToCase,
 												new Object[] { fallLabel, changeToCoverage.getLabel() }),
-										MessageDialog.QUESTION, new String[] { Messages.KonsDetailView_Yes, // $NON-NLS-1$
-												Messages.KonsDetailView_No },
+										MessageDialog.QUESTION, new String[] { Messages.Core_Yes, // $NON-NLS-1$
+												Messages.Corr_No },
 										0); // $NON-NLS-1$
 								if (msd.open() == Window.OK) {
 									Result<IEncounter> transferResult = EncounterServiceHolder.get()

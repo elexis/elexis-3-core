@@ -37,7 +37,7 @@ import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.BezugsKontaktRelation;
 import ch.rgw.tools.StringTool;

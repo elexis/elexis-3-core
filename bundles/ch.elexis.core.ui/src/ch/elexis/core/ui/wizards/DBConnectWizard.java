@@ -44,8 +44,8 @@ public class DBConnectWizard extends Wizard {
 
 	public DBConnectWizard() {
 		super();
-		setWindowTitle(Messages.DBConnectWizard_connectDB);
-		dbConnSelectionPage = new DBConnectSelectionConnectionWizardPage(Messages.DBConnectWizard_typeOfDB);
+		setWindowTitle(Messages.Core_Create_Connection_to_database);
+		dbConnSelectionPage = new DBConnectSelectionConnectionWizardPage(Messages.Core_Database_Type);
 		dbConnNewConnPage = new DBConnectNewOrEditConnectionWizardPage();
 		initStoredJDBCConnections();
 		targetedConnection = getCurrentConnection();

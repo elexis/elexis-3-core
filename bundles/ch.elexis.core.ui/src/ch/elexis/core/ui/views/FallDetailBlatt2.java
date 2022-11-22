@@ -99,11 +99,11 @@ import ch.rgw.tools.TimeTool;
  */
 public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	private static final String SELECT_CONTACT_BODY = Messages.FallDetailBlatt2_PleaseSelectContactFor; // $NON-NLS-1$
-	private static final String SELECT_CONTACT_CAPTION = Messages.FallDetailBlatt2_PleaseSelectCpntactCaption; // $NON-NLS-1$
-	private static final String LABEL = Messages.FallDetailBlatt2_29;
-	private static final String RECHNUNGSEMPFAENGER = Messages.FallDetailBlatt2_BillAdressee;
-	private static final String VERSICHERUNGSNUMMER = Messages.FallDetailBlatt2_InsuranceNumber;
-	private static final String KOSTENTRAEGER = Messages.FallDetailBlatt2_Guarantor;
+	private static final String SELECT_CONTACT_CAPTION = Messages.Core_Select_Contact; // $NON-NLS-1$
+	private static final String LABEL = Messages.Core_Description;
+	private static final String RECHNUNGSEMPFAENGER = Messages.Core_Invoice_Receiver;
+	private static final String VERSICHERUNGSNUMMER = Messages.Core_Insurance_Number;
+	private static final String KOSTENTRAEGER = Messages.Core_Costbearer;
 	private static final String ABRECHNUNGSMETHODE = Messages.FallDetailBlatt2_BillingMethod;
 	private static final String DEFINITIONSDELIMITER = ";"; //$NON-NLS-1$
 	private static final String ARGUMENTSSDELIMITER = ":"; //$NON-NLS-1$
@@ -243,13 +243,13 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				if (fall != null)
 					gesetz = fall.getAbrechnungsSystem();
 				if (ch.rgw.tools.StringTool.isNothing(gesetz))
-					gesetz = Messages.FallDetailBlatt2_free; // $NON-NLS-1$
+					gesetz = Messages.Core_free; // $NON-NLS-1$
 				if (i == separatorPos) {
 					// this is the separator - cannot select - simply reset to previous selection
 					cAbrechnung.select(cAbrechnung.indexOf(gesetz));
 				} else if (isDisabled) {
 					// selection not allowed - reset previous selection after message
-					SWTHelper.alert(Messages.FallDetailBlatt2_ChangeBillingSystemNotAllowedCaption, // $NON-NLS-1$
+					SWTHelper.alert(Messages.Invoice_System_cannot_be_changed, // $NON-NLS-1$
 							Messages.FallDetailBlatt2_ChangeBillingSystemNotAllowedBody); // $NON-NLS-1$
 					cAbrechnung.select(cAbrechnung.indexOf(gesetz));
 				} else {
@@ -263,7 +263,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 									return;
 								}
 							} else {
-								SWTHelper.alert(Messages.FallDetailBlatt2_CantChangeBillingSystemCaption, // $NON-NLS-1$
+								SWTHelper.alert(Messages.Invoice_System_cannot_be_changed, // $NON-NLS-1$
 										Messages.FallDetailBlatt2_CantChangeBillingSystemBody); // $NON-NLS-1$
 							}
 							cAbrechnung.select(cAbrechnung.indexOf(gesetz));
@@ -342,7 +342,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		});
 		cReason.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		tk.createLabel(top, Messages.FallDetailBlatt2_StartDate); // $NON-NLS-1$
+		tk.createLabel(top, Messages.Core_Date_Startdate); // $NON-NLS-1$
 		dpVon = new CDateTime(top, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
 		if (getSelectedFall() == null) {
 			dpVon.setSelection(new TimeTool().getTime());
@@ -653,9 +653,9 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		// *** fill billing systems into combo, set current system
 		cAbrechnung.setItems(Abrechnungstypen);
 		if (f == null) {
-			form.setText(Messages.FallDetailBlatt2_NoCaseSelected); // $NON-NLS-1$
+			form.setText(Messages.Core_No_case_selected); // $NON-NLS-1$
 			tBezeichnung.setText(StringUtils.EMPTY);
-			tBezeichnung.setMessage(Messages.FallDetailBlatt2_29);
+			tBezeichnung.setMessage(Messages.Core_Description);
 			cReason.setSelection(new StructuredSelection(FallConstants.TYPE_DISEASE));
 			return;
 		}
@@ -750,7 +750,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		// *** adding optional fields defined in prefs
 		String optionals = f.getOptionals();
 		if ((optionals != null) && (optionals.length() > 0)) {
-			setExtendedFields(f, optionals, Messages.FallDetailBlatt2_optionalData, false, false, true); // $NON-NLS-1$
+			setExtendedFields(f, optionals, Messages.Core_optional_data, false, false, true); // $NON-NLS-1$
 		}
 
 		// ****** show any other fields from extinfo - ONLY FOR ADMINS, NOT
@@ -1028,7 +1028,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	public void save() {
 		if (actFall != null) {
 			String newValue = tBezeichnung.getText();
-			if (newValue != null && !newValue.isEmpty() && !newValue.equals(Messages.FallDetailBlatt2_29)) {
+			if (newValue != null && !newValue.isEmpty() && !newValue.equals(Messages.Core_Description)) {
 				actFall.set(Fall.FLD_BEZEICHNUNG, newValue);
 			}
 

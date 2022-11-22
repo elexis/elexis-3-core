@@ -65,8 +65,8 @@ import ch.rgw.tools.TimeTool;
 public class MediVerlaufView extends ViewPart implements IActivationListener {
 	TableViewer tv;
 	ArrayList<MediAbgabe> mListe = new ArrayList<MediAbgabe>();
-	private static final String[] columns = { Messages.MediVerlaufView_dateFrom, Messages.MediVerlaufView_dateUntil,
-			Messages.MediVerlaufView_medicament, Messages.MediVerlaufView_dosage };
+	private static final String[] columns = { Messages.Core_Since, Messages.Core_Date_Until,
+			Messages.MediVerlaufView_medicament, Messages.Core_Dosage };
 	private static final int[] colwidth = { 90, 90, 300, 200 };
 
 	private ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {

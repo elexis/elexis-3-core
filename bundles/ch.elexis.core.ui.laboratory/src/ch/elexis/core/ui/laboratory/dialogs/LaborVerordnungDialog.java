@@ -211,10 +211,10 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	@Override
 	protected Control createContents(Composite parent) {
 		Control contents = super.createContents(parent);
-		setTitle(Messages.LaborVerordnungDialog_title);
+		setTitle(Messages.Core_prescribe_Laboratory);
 		setMessage(Messages.LaborVerordnungDialog_message + " verantwortliche Person aus. (Der verantwortlichen Person" //$NON-NLS-1$
 				+ " wird eine Pendenz zugeordnet.)"); //$NON-NLS-1$
-		getShell().setText(Messages.LaborVerordnungDialog_shellTitle);
+		getShell().setText(Messages.Core_prescribe_Laboratory);
 		return contents;
 	}
 
@@ -251,7 +251,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		StringBuilder params = new StringBuilder();
 		if (orders != null && !orders.isEmpty()) {
 			message.append(StringUtils.SPACE)
-					.append(ch.elexis.core.ui.laboratory.controls.Messages.LaborOrdersComposite_columnOrdernumber)
+					.append(ch.elexis.core.ui.laboratory.controls.Messages.Order_ID)
 					.append(": ").append(orders.get(0).get(LabOrder.FLD_ORDERID)); //$NON-NLS-1$
 			params.append(LabOrder.FLD_ORDERID + "=" + orders.get(0).get(LabOrder.FLD_ORDERID)); //$NON-NLS-1$
 		}

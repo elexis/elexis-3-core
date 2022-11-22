@@ -22,7 +22,7 @@ import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
-import ch.elexis.core.ui.medication.views.Messages;
+import ch.elexis.core.l10n.Messages;
 
 public class DeleteHandler extends AbstractHandler {
 

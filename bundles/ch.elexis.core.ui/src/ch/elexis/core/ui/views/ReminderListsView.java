@@ -149,10 +149,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 	private Patient actPatient;
 	private long cvHighestLastUpdate;
 
-	private Action reloadAction = new Action(Messages.PatHeuteView_reloadAction) {
+	private Action reloadAction = new Action(Messages.Core_Reload) {
 		{
 			setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
-			setToolTipText(Messages.PatHeuteView_reloadToolTip);
+			setToolTipText(Messages.Core_Reread_List);
 		}
 
 		@Override
@@ -161,7 +161,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		}
 	};
 
-	private Action deleteReminderAction = new Action(Messages.ReminderView_deleteAction) {
+	private Action deleteReminderAction = new Action(Messages.Core_Delete) {
 		{
 			setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 			setToolTipText(Messages.ReminderView_deleteToolTip);
@@ -190,7 +190,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		}
 	};
 
-	private Action newReminderAction = new Action(Messages.ReminderView_newReminderAction) {
+	private Action newReminderAction = new Action(Messages.Core_New_ellipsis) {
 		{
 			setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 			setToolTipText(Messages.ReminderView_newReminderToolTip);
@@ -226,7 +226,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 	};
 
 	private Action showOthersRemindersAction = new RestrictedAction(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS,
-			Messages.ReminderView_foreignAction, Action.AS_CHECK_BOX) {
+			Messages.Core_All, Action.AS_CHECK_BOX) {
 		{
 			setToolTipText(Messages.ReminderView_foreignTooltip);
 			setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());

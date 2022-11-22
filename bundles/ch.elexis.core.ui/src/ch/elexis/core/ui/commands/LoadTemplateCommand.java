@@ -21,7 +21,7 @@ import ch.elexis.core.model.util.DocumentLetterUtil;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.views.TextView;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.data.Brief;
@@ -48,7 +48,7 @@ public class LoadTemplateCommand extends AbstractHandler {
 		// show template in textview
 		try {
 			if (template == null) {
-				SWTHelper.alert(ch.elexis.core.ui.commands.Messages.LoadTemplateCommand_Error,
+				SWTHelper.alert(ch.elexis.core.ui.commands.Messages.Core_Error,
 						ch.elexis.core.ui.commands.Messages.LoadTemplateCommand_NoTextTemplate);
 				return null;
 			}
@@ -67,7 +67,7 @@ public class LoadTemplateCommand extends AbstractHandler {
 			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			TextView textView = (TextView) activePage.showView(TextView.ID);
 			if (!textView.openDocument(template)) {
-				SWTHelper.alert(Messages.BriefAuswahlErrorHeading, // $NON-NLS-1$
+				SWTHelper.alert(Messages.Core_Error, // $NON-NLS-1$
 						Messages.BriefAuswahlCouldNotLoadText); // $NON-NLS-1$
 			}
 		} catch (PartInitException e) {

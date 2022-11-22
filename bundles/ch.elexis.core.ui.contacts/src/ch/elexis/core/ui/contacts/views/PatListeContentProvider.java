@@ -40,7 +40,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewerContentProvider;
-import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 

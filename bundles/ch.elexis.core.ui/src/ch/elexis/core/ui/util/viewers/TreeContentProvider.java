@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.Viewer;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.JobPool;
-import ch.elexis.core.ui.util.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
 
 /**
@@ -78,7 +78,7 @@ public class TreeContentProvider implements ITreeContentProvider, BackgroundJobL
 		ch.rgw.tools.Tree result = (ch.rgw.tools.Tree) job.getData();
 		if (result == null) {
 			JobPool.getJobPool().activate(job.getJobname(), Job.SHORT);
-			return new String[] { Messages.TreeContentProvider_loadData }; // $NON-NLS-1$
+			return new String[] { Messages.Core_Load_Files_ellipsis }; // $NON-NLS-1$
 		} else {
 			if (viewer.getConfigurer().getControlFieldProvider().isEmpty()) {
 				result.setFilter(null);

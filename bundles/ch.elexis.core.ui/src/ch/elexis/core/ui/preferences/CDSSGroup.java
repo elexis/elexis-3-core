@@ -33,8 +33,8 @@ public class CDSSGroup extends PreferencePage implements IWorkbenchPreferencePag
 		ret.setLayout(new FillLayout());
 		StyledText text = new StyledText(ret, SWT.READ_ONLY);
 		text.setWordWrap(true);
-		text.setText(Messages.CDSSGroup_ExplanationCDSSLine1 + Messages.CDSSGroup_ExplanationCDSSLine2
-				+ Messages.CDSSGroup_ExplanationCDSSLine3);
+		text.setText(Messages.CDSSGroup_ExplanationCDSSLine1 + Messages.Core_Preferences_only_shown_when
+				+ Messages.Core_Services_Explanation_Line_3);
 		return ret;
 	}
 

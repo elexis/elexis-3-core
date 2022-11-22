@@ -56,7 +56,7 @@ import ch.rgw.tools.TimeTool;
 
 public class ReminderDetailDialog extends TitleAreaDialog {
 
-	private static final String TX_ALL = Messages.EditReminderDialog_all; // $NON-NLS-1$
+	private static final String TX_ALL = Messages.Core_All; // $NON-NLS-1$
 
 	private Reminder reminder = null;
 	private Patient patient = null;
@@ -235,7 +235,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 				} else {
 					patient = ElexisEventDispatcher.getSelectedPatient();
 					if (patient == null) {
-						lblRelatedPatient.setText(Messages.EditReminderDialog_noPatientSelected);
+						lblRelatedPatient.setText(Messages.Core_No_patient_selected);
 						btnNotPatientRelated.setSelection(true);
 					}
 				}
@@ -248,13 +248,13 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		});
 
 		txtSubject = new Text(compositeMessage, SWT.BORDER);
-		txtSubject.setMessage(Messages.ReminderDetailDialog_txtSubject_message);
+		txtSubject.setMessage(Messages.Core_Subject);
 		txtSubject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtSubject.setTextLimit(160);
 		txtSubject.setFocus();
 
 		txtDescription = new Text(compositeMessage, SWT.BORDER | SWT.WRAP);
-		txtDescription.setMessage(Messages.ReminderDetailDialog_txtDescription_message);
+		txtDescription.setMessage(Messages.Core_Description);
 		txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		txtDescription.setBounds(0, 0, 64, 19);
 

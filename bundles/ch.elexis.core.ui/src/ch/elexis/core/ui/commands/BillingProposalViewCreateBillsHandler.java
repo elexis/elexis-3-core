@@ -64,7 +64,7 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 				}
 			}
 		} else if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
-				Messages.KonsZumVerrechnenView2_createInvoicesAction,
+				Messages.Core_Create_Invoices,
 				Messages.KonsZumVerrechnenView2_createInvoicesMessageDialogQuestion)) {
 			createBill(toBill);
 		}
@@ -82,7 +82,7 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask(Messages.KonsZumVerrechnenView2_createInvoicesAction, 3);
+					monitor.beginTask(Messages.Core_Create_Invoices, 3);
 					List<Konsultation> billable = BillingUtil.filterNotBillable(toBill);
 					monitor.worked(1);
 					Map<Rechnungssteller, Map<Fall, List<Konsultation>>> toBillMap = BillingUtil

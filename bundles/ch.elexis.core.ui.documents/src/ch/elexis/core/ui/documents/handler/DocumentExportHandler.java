@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IDocument;
-import ch.elexis.core.ui.documents.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 
@@ -49,12 +49,12 @@ public class DocumentExportHandler extends AbstractHandler implements IHandler {
 		if (fname != null) {
 			try {
 				if (DocumentStoreServiceHolder.getService().saveContentToFile(document, fname) == null) {
-					SWTHelper.showError(Messages.DocumentView_exportErrorCaption,
+					SWTHelper.showError(Messages.Core_Error_while_exporting,
 							Messages.DocumentView_exportErrorEmptyText);
 				}
 			} catch (ElexisException e) {
 				logger.error("cannot export file", e); //$NON-NLS-1$
-				SWTHelper.showError(Messages.DocumentView_exportErrorCaption, Messages.DocumentView_exportErrorText);
+				SWTHelper.showError(Messages.Core_Error_while_exporting, Messages.DocumentView_exportErrorText);
 			}
 		}
 	}

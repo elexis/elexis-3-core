@@ -61,7 +61,7 @@ import ch.rgw.tools.StringTool;
  *
  */
 public class DocumentSelectDialog extends TitleAreaDialog {
-	private static final String DELETE_DOCUMENT = Messages.DocumentSelectDialog_deleteDocument; // $NON-NLS-1$
+	private static final String DELETE_DOCUMENT = Messages.Core_Delete_Document; // $NON-NLS-1$
 	private static final String DELETE_TEMPLATE = Messages.DocumentSelectDialog_deleteTemplate; // $NON-NLS-1$
 	private static final String OPEN_DOCUMENT = Messages.DocumentSelectDialog_openDocument; // $NON-NLS-1$
 	/**
@@ -122,9 +122,9 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 			getShell().setText(Messages.DocumentSelectDialog_schooseTemplateForLetter); // $NON-NLS-1$
 			break;
 		case TYPE_LOAD_TEMPLATE:
-			setTitle(Messages.DocumentSelectDialog_openTemplate); // $NON-NLS-1$
+			setTitle(Messages.Core_Open_Template); // $NON-NLS-1$
 			setMessage(Messages.DocumentSelectDialog_pleaseSelectTemplateFromList); // $NON-NLS-1$
-			getShell().setText(Messages.DocumentSelectDialog_openTemplate); // $NON-NLS-1$
+			getShell().setText(Messages.Core_Open_Template); // $NON-NLS-1$
 			break;
 		case TYPE_LOAD_SYSTEMPLATE:
 			setTitle(Messages.DocumentSelectDialog_loadSysTemplate); // $NON-NLS-1$
@@ -139,7 +139,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout());
 		if ((type & TEMPLATE) != 0) {
-			new Label(ret, SWT.NONE).setText(Messages.DocumentSelectDialog_subject); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.Core_Subject); // $NON-NLS-1$
 			tBetreff = SWTHelper.createText(ret, 1, SWT.NONE);
 			new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL);
 		}

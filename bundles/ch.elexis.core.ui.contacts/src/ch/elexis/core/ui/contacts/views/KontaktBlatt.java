@@ -58,7 +58,7 @@ import ch.elexis.core.ui.util.LabeledInputField.AutoForm;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Labor;
 import ch.elexis.data.Organisation;
@@ -72,18 +72,18 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 
 	private static final String IS_USER = "istAnwender"; //$NON-NLS-1$
 
-	private static final String MOBIL = Messages.KontaktBlatt_MobilePhone; // $NON-NLS-1$
-	private static final String VORNAME = Messages.KontaktBlatt_FirstName; // $NON-NLS-1$
-	private static final String NAME = Messages.KontaktBlatt_LastName; // $NON-NLS-1$
+	private static final String MOBIL = Messages.Core_Mobilphone; // $NON-NLS-1$
+	private static final String VORNAME = Messages.Core_Firstname; // $NON-NLS-1$
+	private static final String NAME = Messages.Core_Name; // $NON-NLS-1$
 	private static final String TEL_DIREKT = Messages.KontaktBlatt_OhoneDirect; // $NON-NLS-1$
-	private static final String ANSPRECHPERSON = Messages.KontaktBlatt_ContactPerson; // $NON-NLS-1$
-	private static final String ZUSATZ = Messages.KontaktBlatt_Addidtional; // $NON-NLS-1$
-	private static final String BEZEICHNUNG = Messages.KontaktBlatt_Name; // $NON-NLS-1$
+	private static final String ANSPRECHPERSON = Messages.ContactPerson; // $NON-NLS-1$
+	private static final String ZUSATZ = Messages.Core_Additional; // $NON-NLS-1$
+	private static final String BEZEICHNUNG = Messages.Core_Description; // $NON-NLS-1$
 	static final String[] types = { "istOrganisation", "istLabor", "istPerson", "istPatient", IS_USER, "istMandant" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
 	}; // $NON-NLS-6$
-	static final String[] typLabels = { Messages.KontaktBlatt_Organization, Messages.KontaktBlatt_Laboratory,
-			Messages.KontaktBlatt_Person, Messages.KontaktBlatt_Patient, Messages.KontaktBlatt_User,
-			Messages.KontaktBlatt_Mandator };
+	static final String[] typLabels = { Messages.Core_Organisation, Messages.Core_Laboratory,
+			Messages.Core_Person, Messages.Core_Patient, Messages.Core_User,
+			Messages.Core_Mandator };
 	private final Button[] bTypes = new Button[types.length];
 	private final TypButtonAdapter tba = new TypButtonAdapter();
 	private final IViewSite site;
@@ -93,31 +93,31 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 	Listener mandantListener, checkIfContactExistsListener;
 
 	static final InputData[] def = new InputData[] {
-			new InputData(Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null),
-			new InputData(Messages.KontaktBlatt_Bez2, Kontakt.FLD_NAME2, Typ.STRING, null),
+			new InputData(Messages.Core_Description_1, Kontakt.FLD_NAME1, Typ.STRING, null),
+			new InputData(Messages.Core_Description_2, Kontakt.FLD_NAME2, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_Bez3, Kontakt.FLD_NAME3, Typ.STRING, null),
-			new InputData(Messages.KontaktBlatt_Sex, Person.SEX, Typ.STRING, null),
+			new InputData(Messages.Sex, Person.SEX, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_LawCode, Person.FLD_TITLE_SUFFIX, Typ.STRING, null),
-			new InputData(Messages.KontaktBlatt_Street, Kontakt.FLD_STREET, Typ.STRING, null),
-			new InputData(Messages.KontaktBlatt_Zip, Kontakt.FLD_ZIP, Typ.STRING, null, 6),
-			new InputData(Messages.KontaktBlatt_Place, Kontakt.FLD_PLACE, Typ.STRING, null),
-			new InputData(Messages.KontaktBlatt_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null, 3),
+			new InputData(Messages.Core_Street, Kontakt.FLD_STREET, Typ.STRING, null),
+			new InputData(Messages.Core_Postal_code, Kontakt.FLD_ZIP, Typ.STRING, null, 6),
+			new InputData(Messages.Core_City, Kontakt.FLD_PLACE, Typ.STRING, null),
+			new InputData(Messages.Core_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null, 3),
 			new InputData(Messages.KontaktBlatt_XMLName, Patient.FLD_ALLERGIES, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null, 30),
-			new InputData(Messages.KontaktBlatt_Fax, Kontakt.FLD_FAX, Typ.STRING, null, 30),
+			new InputData(Messages.Core_Fax, Kontakt.FLD_FAX, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_MediportSupport, Patient.FLD_GROUP, Typ.CHECKBOX, null),
-			new InputData(Messages.KontaktBlatt_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null),
+			new InputData(Messages.Core_E_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_Mail2, Kontakt.FLD_E_MAIL2, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null),
-			new InputData(Messages.KontaktBlatt_Bez1, Kontakt.FLD_NAME1, Typ.STRING, null), // helper field
+			new InputData(Messages.Core_Description_1, Kontakt.FLD_NAME1, Typ.STRING, null), // helper field
 			// (non-visible) but needs a
 			// resolvable value to avoid
 			// exception
-			new InputData(Messages.KontaktBlatt_remark, Kontakt.FLD_REMARK, Typ.STRING, null),
-			new InputData(Messages.KontaktBlatt_title, Person.TITLE, Typ.STRING, null),
+			new InputData(Messages.Core_Remark, Kontakt.FLD_REMARK, Typ.STRING, null),
+			new InputData(Messages.Core_Title, Person.TITLE, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_extid, "UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
 
 				public void displayContent(Object po, InputData ltf) {
@@ -246,7 +246,7 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 		Composite cAnschrift = tk.createComposite(body);
 		cAnschrift.setLayout(new GridLayout(2, false));
 		cAnschrift.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		Hyperlink hAnschrift = tk.createHyperlink(cAnschrift, Messages.KontaktBlatt_Postal, SWT.NONE); // $NON-NLS-1$
+		Hyperlink hAnschrift = tk.createHyperlink(cAnschrift, Messages.Core_Postal_Address, SWT.NONE); // $NON-NLS-1$
 		hAnschrift.addHyperlinkListener(new HyperlinkAdapter() {
 
 			@Override
@@ -308,7 +308,7 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 					select("1", "1", "0", "0", "0", "0"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					def[0].setLabel(BEZEICHNUNG);
 					def[1].setLabel(ZUSATZ);
-					def[2].setLabel(Messages.KontaktBlatt_LabAdmin); // $NON-NLS-1$
+					def[2].setLabel(Messages.Core_Laboratory_Admin); // $NON-NLS-1$
 					def[10].setLabel(TEL_DIREKT);
 				} else {
 					def[0].setLabel(NAME);
