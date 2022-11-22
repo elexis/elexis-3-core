@@ -3,8 +3,8 @@ package ch.elexis.core.l10n;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-       // BUNDLE_NAME is needed for core.data
-       public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
+	// BUNDLE_NAME is needed for core.data
+	public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
 	public static String ACE_implicit;
 	public static String ACE_root;
 	public static String AUF2_NoPatientSelected;
@@ -2835,7 +2835,7 @@ public class Messages extends NLS {
 	public static String XIDEdit_ShowWith;
 	public static String XIDEdit_XidOpetions;
 	public static String Zugriff_AccessRights;
-       static { // load message values from bundle file
-               NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-       }
+	static { // load message values from bundle file
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	}
 }

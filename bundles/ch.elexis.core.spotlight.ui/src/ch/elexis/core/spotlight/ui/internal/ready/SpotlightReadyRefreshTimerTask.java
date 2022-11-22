@@ -129,7 +129,7 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the number of new lab values. Does only exactly count up to 1000
 	 *         entries, if value is 1001 this means there are "more than 1000"
 	 *         entries
@@ -139,7 +139,7 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the number of new documents. Does only exactly count up to 1000
 	 *         entries, if value is 1001 this means there are "more than 1000"
 	 *         entries

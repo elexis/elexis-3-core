@@ -22,7 +22,7 @@ public class FilesystemChangeWatcher {
 	/**
 	 * Polls every incurred location every 30 seconds. Works on all
 	 * {@link IVirtualFilesystemService} supported urls
-	 * 
+	 *
 	 * @param taskServiceImpl
 	 */
 	public FilesystemChangeWatcher(TaskServiceImpl taskService, IVirtualFilesystemService virtualFileSystemService) {

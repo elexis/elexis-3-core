@@ -59,7 +59,7 @@ public class FhirUtil {
 
 	public static Optional<String> getLocalId(String id) {
 		if (StringUtils.isNotBlank(id)) {
-			if(id.endsWith("/")) {
+			if (id.endsWith("/")) {
 				id = id.substring(0, id.length() - 1);
 			}
 			if (id.contains("/")) {

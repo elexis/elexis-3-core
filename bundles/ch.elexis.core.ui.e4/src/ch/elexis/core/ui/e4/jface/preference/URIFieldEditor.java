@@ -23,7 +23,7 @@ import ch.elexis.core.ui.e4.dialog.VirtualFilesystemUriEditorDialog;
 public class URIFieldEditor extends StringButtonFieldEditor {
 
 	/**
-	 * 
+	 *
 	 * /** Creates a new directory field editor
 	 */
 	protected URIFieldEditor() {
