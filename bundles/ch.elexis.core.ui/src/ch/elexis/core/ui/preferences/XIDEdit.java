@@ -140,7 +140,7 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 		TableViewerColumn disp = new TableViewerColumn(tv, SWT.NONE);
 		TableColumn dispCol = disp.getColumn();
 		dispCol.setWidth(50);
-		dispCol.setText(Messages.XIDEdit_Display);
+		dispCol.setText(Messages.Core_Display);
 		dispCol.addSelectionListener(getSelectionAdapter(dispCol, 2));
 		disp.setLabelProvider(new ColumnLabelProvider() {
 			@Override

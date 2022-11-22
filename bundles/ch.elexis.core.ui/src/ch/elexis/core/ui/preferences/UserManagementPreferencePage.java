@@ -142,7 +142,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 		MenuManager popManager = new MenuManager();
 
-		addUserAction = new RestrictedAction(AccessControlDefaults.USER_CREATE, Messages.LabGroupPrefs_add) {
+		addUserAction = new RestrictedAction(AccessControlDefaults.USER_CREATE, Messages.Core_Add_ellipsis) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 			}
@@ -182,7 +182,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		popManager.add(addUserAction);
 
 		deleteUserAction = new LockedRestrictedAction<User>(AccessControlDefaults.USER_DELETE,
-				Messages.LabGroupPrefs_delete) {
+				Messages.Core_Delete) {
 
 			@Override
 			public User getTargetedObject() {

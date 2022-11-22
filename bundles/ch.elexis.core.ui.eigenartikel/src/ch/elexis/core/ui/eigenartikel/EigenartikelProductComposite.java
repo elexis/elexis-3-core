@@ -68,7 +68,7 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		Label lblProductName = new Label(this, SWT.NONE);
 		lblProductName.setAlignment(SWT.RIGHT);
 		lblProductName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblProductName.setText(Messages.EigenartikelDisplay_productName);
+		lblProductName.setText(Messages.Core_Productname);
 
 		txtProductName = new Text(this, SWT.BORDER);
 		txtProductName.setTextLimit(127);

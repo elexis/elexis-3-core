@@ -211,12 +211,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		editMenu.add(GlobalActions.cutAction);
 		editMenu.add(GlobalActions.pasteAction);
 
-		GlobalActions.perspectiveMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_7, "openPerspective"); //$NON-NLS-1$
+		GlobalActions.perspectiveMenu = new MenuManager(Messages.Core_Perspectives, "openPerspective"); //$NON-NLS-1$
 		perspectiveMenu.add(resetPerspectiveAction);
 		perspectiveMenu.add(fixLayoutAction);
 		windowMenu.add(perspectiveMenu);
 
-		GlobalActions.viewMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_9);
+		GlobalActions.viewMenu = new MenuManager(Messages.Core_View);
 		GlobalActions.viewList = ContributionItemFactory.VIEWS_SHORTLIST.create(window);
 		GlobalActions.viewMenu.add(GlobalActions.viewList);
 		windowMenu.add(GlobalActions.viewMenu);

@@ -48,7 +48,7 @@ import ch.elexis.core.services.IDocumentStore.Capability;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktErfassenDialog;
-import ch.elexis.core.ui.documents.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.documents.composites.CategorySelectionEditComposite;
 import ch.elexis.core.ui.documents.provider.AuthorContentProposalProvider;
 import ch.elexis.core.ui.documents.provider.ValueSetProposalProvider;
@@ -103,11 +103,11 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		ret.setLayout(new GridLayout());
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 
-		new Label(ret, SWT.None).setText(Messages.DocumentView_categoryColumn);
+		new Label(ret, SWT.None).setText(Messages.Core_Category);
 		csec = new CategorySelectionEditComposite(ret, SWT.NONE, document, categoryCrudAllowed);
 		csec.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
-		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Title);
+		new Label(ret, SWT.NONE).setText(Messages.Core_Title);
 		tTitle = SWTHelper.createText(ret, 1, SWT.NONE);
 		tTitle.setText(document.getTitle());
 
@@ -123,7 +123,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	}
 
 	private void createUIDocumentReferences(Composite ret) {
-		new Label(ret, SWT.NONE).setText(Messages.DocumentView_keywordsColumn);
+		new Label(ret, SWT.NONE).setText(Messages.Core_Keywords);
 		tKeywords = SWTHelper.createText(ret, 4, SWT.NONE);
 		tKeywords.setText(Optional.ofNullable(Objects.toString(documentReference.getKeywords(), document.getKeywords()))
 				.orElse(StringUtils.EMPTY));
@@ -208,7 +208,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		super.create();
 		setTitle(document.getTitle());
 		getShell().setText(Messages.DocumentMetaDataDialog_title);
-		setMessage(Messages.DocumentMetaDataDialog_titleMessage);
+		setMessage(Messages.Core_Enter_Title_and_tags_for_document);
 	}
 
 	@Override

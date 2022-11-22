@@ -159,14 +159,14 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		StringBuilder sbFailed = new StringBuilder();
 		patient = (IPatient) context.get(IMultiFileParser.CTX_PATIENT);
 		if (patient == null) {
-			sbFailed.append(Messages.DefaultPDFImportStrategy_Patient);
+			sbFailed.append(Messages.Core_Patient);
 			sbFailed.append("; ");
 		}
 
 		myLab = LabImportUtilHolder.get()
 				.loadCoreModel((String) context.get(IMultiFileParser.CTX_LABID), ILaboratory.class).get();
 		if (myLab == null) {
-			sbFailed.append(Messages.DefaultPDFImportStrategy_Lab);
+			sbFailed.append(Messages.Core_Laboratory);
 			sbFailed.append("; ");
 		}
 
@@ -184,13 +184,13 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 
 		dateTime = (TimeTool) context.get(IMultiFileParser.CTX_TIME);
 		if (dateTime == null) {
-			sbFailed.append(Messages.DefaultPDFImportStrategy_Date);
+			sbFailed.append(Messages.Core_Date);
 			sbFailed.append("; ");
 		}
 
 		group = (String) context.get(IMultiFileParser.CTX_GROUP);
 		if (group == null) {
-			sbFailed.append(Messages.DefaultPDFImportStrategy_Group);
+			sbFailed.append(Messages.Core_Group);
 			sbFailed.append("; ");
 		}
 

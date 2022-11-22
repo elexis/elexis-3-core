@@ -13,9 +13,9 @@ public class Messages {
 	public static String ContactElement_Name = ch.elexis.core.l10n.Messages.ContactElement_Name;
 	public static String ContactElement_gebdat = ch.elexis.core.l10n.Messages.ContactElement_gebdat;
 	public static String ContactElement_vorname = ch.elexis.core.l10n.Messages.ContactElement_vorname;
-	public static String MedicalElement_Documents = ch.elexis.core.l10n.Messages.MedicalElement_Documents;
+	public static String Core_Documents = ch.elexis.core.l10n.Messages.Core_Documents;
 	public static String MedicalElement_EMREntries = ch.elexis.core.l10n.Messages.MedicalElement_EMREntries;
-	public static String MedicalElement_Findings = ch.elexis.core.l10n.Messages.MedicalElement_Findings;
+	public static String Core_Findings = ch.elexis.core.l10n.Messages.Core_Findings;
 	public static String MedicalElement_Medcaments = ch.elexis.core.l10n.Messages.MedicalElement_Medcaments;
 	public static String RecordElement_CreatedBy = ch.elexis.core.l10n.Messages.RecordElement_CreatedBy;
 	public static String RecordElement_EntryDate = ch.elexis.core.l10n.Messages.RecordElement_EntryDate;

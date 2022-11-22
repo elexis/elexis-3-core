@@ -37,7 +37,7 @@ import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.IKonsExtension;
-import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.views.TextView;
 import ch.elexis.data.Brief;
 import ch.rgw.tools.ExHandler;
@@ -84,8 +84,8 @@ public class XrefExtension implements IKonsExtension {
 			try {
 				command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
-				MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.BriefAuswahl_errorttile,
-						Messages.BriefAuswahl_erroreditmessage);
+				MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.Core_Error,
+						Messages.Core_Document_Not_Opened_Locally);
 			}
 		}
 	}

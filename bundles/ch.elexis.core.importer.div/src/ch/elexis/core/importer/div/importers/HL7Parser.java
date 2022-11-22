@@ -340,7 +340,7 @@ public class HL7Parser {
 
 		} catch (Exception e) {
 			logger.error("Parsing HL7 failed", e);
-			return new Result<>(SEVERITY.ERROR, 2, Messages.HL7Parser_ExceptionWhileProcessingData, e.getMessage(),
+			return new Result<>(SEVERITY.ERROR, 2, Messages.Core_Error_while_importing_HL7, e.getMessage(),
 					true);
 		}
 		return new Result<Object>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
@@ -438,7 +438,7 @@ public class HL7Parser {
 			}
 			// else {
 			// ResultAdapter.displayResult(ret,
-			// ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorReading);
+			// ch.elexis.core.ui.importer.div.importers.Messages.Core_Error_while_reading);
 			// }
 			// ElexisEventDispatcher.reload(LabItem.class);
 			return ret;
@@ -506,7 +506,7 @@ public class HL7Parser {
 		}
 		return ret;
 		// ResultAdapter.displayResult(ret,
-		// ch.elexis.core.ui.importer.div.importers.Messages.HL7Parser_ErrorReading);
+		// ch.elexis.core.ui.importer.div.importers.Messages.Core_Error_while_reading);
 
 		// ElexisEventDispatcher.reload(LabItem.class);
 		// return ret;

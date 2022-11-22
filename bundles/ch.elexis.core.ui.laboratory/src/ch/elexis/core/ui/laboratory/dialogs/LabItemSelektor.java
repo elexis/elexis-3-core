@@ -19,7 +19,7 @@ import ch.elexis.core.ui.laboratory.controls.LabItemTreeSelectionComposite;
 import ch.elexis.core.ui.laboratory.controls.LabItemTreeSelectionComposite.Group;
 import ch.elexis.core.ui.laboratory.controls.LabItemTreeSelectionComposite.GroupItem;
 import ch.elexis.core.ui.laboratory.dialogs.LabItemLabelProvider.ItemLabelFields;
-import ch.elexis.core.ui.laboratory.preferences.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.LabItem;
 
 public class LabItemSelektor extends TitleAreaDialog {

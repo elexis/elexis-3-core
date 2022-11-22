@@ -12,7 +12,7 @@
 package ch.elexis.core.ui.importer.div.importers.dialog;
 
 public class Messages {
-	public static String QueryOverwriteDialog_NO = ch.elexis.core.l10n.Messages.QueryOverwriteDialog_NO;
-	public static String QueryOverwriteDialog_YES = ch.elexis.core.l10n.Messages.QueryOverwriteDialog_YES;
+	public static String Corr_No = ch.elexis.core.l10n.Messages.Corr_No;
+	public static String Core_Yes = ch.elexis.core.l10n.Messages.Core_Yes;
 	public static String QueryOverwriteDialog_YESTOALL = ch.elexis.core.l10n.Messages.QueryOverwriteDialog_YESTOALL;
 }

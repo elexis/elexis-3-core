@@ -65,7 +65,7 @@ public class HistoryLoader extends BackgroundJob {
 
 	public HistoryLoader(final StringBuilder sb, final List<IEncounter> paramlKons, final boolean multiline,
 			final int currentPage, final int pageSize) {
-		super(Messages.HistoryLoader_LoadKonsMessage); // $NON-NLS-1$
+		super(Messages.Core_Load_Consultations); // $NON-NLS-1$
 		this.sb = sb;
 		this.lKons = new ArrayList<IEncounter>(paramlKons);
 		this.multiline = multiline;
@@ -77,7 +77,7 @@ public class HistoryLoader extends BackgroundJob {
 
 	@Override
 	public synchronized IStatus execute(final IProgressMonitor monitor) {
-		monitor.beginTask(Messages.HistoryLoader_LoadKonsMessage, lKons.size() + 100); // $NON-NLS-1$
+		monitor.beginTask(Messages.Core_Load_Consultations, lKons.size() + 100); // $NON-NLS-1$
 		monitor.subTask(Messages.HistoryLoader_Sorting); // $NON-NLS-1$
 		if (lKons.isEmpty()) {
 			return Status.OK_STATUS;

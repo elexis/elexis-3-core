@@ -97,8 +97,8 @@ public class GenericImporterBlatt extends Composite {
 	public GenericImporterBlatt(Composite parent) {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(2, false));
-		new Label(this, SWT.NONE).setText(Messages.GenericImporterBlatt_FileType);
-		new Label(this, SWT.NONE).setText(Messages.GenericImporterBlatt_File);
+		new Label(this, SWT.NONE).setText(Messages.Core_FileType);
+		new Label(this, SWT.NONE).setText(Messages.Core_File);
 		cbMethods = new Combo(this, SWT.SINGLE);
 		cbMethods.setItems(METHODS);
 		cbMethods.select(0);
@@ -121,7 +121,7 @@ public class GenericImporterBlatt extends Composite {
 				CoreHub.localCfg.set(FILENAME_KEY, filename);
 			}
 		});
-		bLoad.setText(Messages.GenericImporterBlatt_SelectFile);
+		bLoad.setText(Messages.Core_Select_File);
 		lbFileName = new Label(this, SWT.NONE);
 		lbFileName.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 
@@ -131,7 +131,7 @@ public class GenericImporterBlatt extends Composite {
 			lbFileName.setText(file);
 		} else {
 			filename = StringConstants.EMPTY;
-			lbFileName.setText(Messages.GenericImporterBlatt_PleaseSelectFile);
+			lbFileName.setText(Messages.Core_Please_Select_Type_and_File);
 		}
 	}
 
@@ -994,7 +994,7 @@ public class GenericImporterBlatt extends Composite {
 				composite.setLayout(new GridLayout(1, false));
 
 				Button refreshButton = new Button(composite, SWT.PUSH);
-				refreshButton.setText(Messages.GenericImporterBlatt_update);
+				refreshButton.setText(Messages.Core_Update);
 				refreshButton.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(SelectionEvent e) {
 						refresh();

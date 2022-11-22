@@ -106,7 +106,7 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 	private Menu createMenu(Control parent) {
 		Menu ret = new Menu(parent);
 		MenuItem item = new MenuItem(ret, SWT.NONE);
-		item.setText(Messages.ImageChooser_delete); // $NON-NLS-1$
+		item.setText(Messages.Core_Delete); // $NON-NLS-1$
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -151,7 +151,7 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 		cBottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 		cBottom.setLayout(new GridLayout(2, false));
-		new Label(cBottom, SWT.NONE).setText(Messages.ImageChooser_imageFile); // $NON-NLS-1$
+		new Label(cBottom, SWT.NONE).setText(Messages.Core_File); // $NON-NLS-1$
 		new Label(cBottom, SWT.NONE).setText(Messages.ImageChooser_imageTitle); // $NON-NLS-1$
 		hl = new Hyperlink(cBottom, SWT.NONE);
 		tTitle = new Text(cBottom, SWT.BORDER);
@@ -165,7 +165,7 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 				fd.setFilterExtensions(new String[] { "*.png", "*.gif", //$NON-NLS-1$ //$NON-NLS-2$
 						"*.jpg", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
 				fd.setFilterNames(new String[] { "Portable Network Graphics", //$NON-NLS-1$
-						"Grafics Interchange Format", "JPEG", Messages.ImageChooser_allFilesDesc }); //$NON-NLS-1$ //$NON-NLS-2$
+						"Grafics Interchange Format", "JPEG", Messages.Core_All_Files }); //$NON-NLS-1$ //$NON-NLS-2$
 				String filename = fd.open();
 				if (filename != null) {
 					hl.setText(filename);

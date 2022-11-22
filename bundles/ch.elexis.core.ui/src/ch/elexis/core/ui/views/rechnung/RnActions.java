@@ -60,7 +60,7 @@ public class RnActions {
 
 	RnActions(final RechnungsListeView view) {
 
-		printListeAction = new Action(Messages.RnActions_printListAction) { // $NON-NLS-1$
+		printListeAction = new Action(Messages.Core_Print_List) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
 				setToolTipText(Messages.RnActions_printListTooltip); // $NON-NLS-1$
@@ -72,7 +72,7 @@ public class RnActions {
 				new RnListeDruckDialog(view.getViewSite().getShell(), sel).open();
 			}
 		};
-		mahnWizardAction = new Action(Messages.RnActions_remindersAction) { // $NON-NLS-1$
+		mahnWizardAction = new Action(Messages.Invoice_reminder_automatism) { // $NON-NLS-1$
 			{
 				setToolTipText(Messages.RnActions_remindersTooltip); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_WIZARD.getImageDescriptor());
@@ -103,7 +103,7 @@ public class RnActions {
 			}
 		};
 
-		patDetailAction = new Action(Messages.RnActions_patientDetailsAction) { // $NON-NLS-1$
+		patDetailAction = new Action(Messages.Core_Patientdetails) { // $NON-NLS-1$
 			@Override
 			public void run() {
 				IWorkbenchPage rnPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -116,7 +116,7 @@ public class RnActions {
 			}
 
 		};
-		editCaseAction = new Action(Messages.RnActions_edirCaseAction) { // $NON-NLS-1$
+		editCaseAction = new Action(Messages.Core_Edit_Case) { // $NON-NLS-1$
 
 			@Override
 			public void run() {
@@ -157,7 +157,7 @@ public class RnActions {
 				}
 			}
 		};
-		expandAllAction = new Action(Messages.RnActions_expandAllAction) { // $NON-NLS-1$
+		expandAllAction = new Action(Messages.Core_Expand_All) { // $NON-NLS-1$
 			@Override
 			public void run() {
 				view.cv.getViewerWidget().getControl().setRedraw(false);
@@ -173,9 +173,9 @@ public class RnActions {
 				view.cv.getViewerWidget().getControl().setRedraw(true);
 			}
 		};
-		reloadAction = new Action(Messages.RnActions_reloadAction) { // $NON-NLS-1$
+		reloadAction = new Action(Messages.Core_Reload) { // $NON-NLS-1$
 			{
-				setToolTipText(Messages.RnActions_reloadTooltip); // $NON-NLS-1$
+				setToolTipText(Messages.Core_Reread_List); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
 			}
 
@@ -185,9 +185,9 @@ public class RnActions {
 			}
 		};
 
-		addPaymentAction = new Action(Messages.RnActions_addBookingAction) { // $NON-NLS-1$
+		addPaymentAction = new Action(Messages.Invoice_Add_Payment) { // $NON-NLS-1$
 			{
-				setToolTipText(Messages.RnActions_addBookingTooltip); // $NON-NLS-1$
+				setToolTipText(Messages.Invoice_add_amount_as_payment); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
 			}
 
@@ -363,7 +363,7 @@ public class RnActions {
 				}
 			}
 		};
-		rnFilterAction = new Action(Messages.RnActions_filterListAction, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+		rnFilterAction = new Action(Messages.Core_Filter_List, Action.AS_CHECK_BOX) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
 				setToolTipText(Messages.RnActions_filterLIstTooltip); // $NON-NLS-1$

@@ -304,7 +304,7 @@ public class TextView extends ViewPart implements IActivationListener {
 				}
 			}
 		};
-		loadTemplateAction = new Action(Messages.TextView_openTemplate) { // $NON-NLS-1$
+		loadTemplateAction = new Action(Messages.Core_Open_Template) { // $NON-NLS-1$
 			@Override
 			public void run() {
 				DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(), CoreHub.actMandant,
@@ -318,7 +318,7 @@ public class TextView extends ViewPart implements IActivationListener {
 			@Override
 			public void run() {
 				if (actBrief != null) {
-					txt.saveTemplate(actBrief.get(Messages.TextView_Subject)); // $NON-NLS-1$
+					txt.saveTemplate(actBrief.get(Messages.Core_Subject)); // $NON-NLS-1$
 				} else {
 					txt.saveTemplate(null);
 				}
@@ -430,8 +430,8 @@ public class TextView extends ViewPart implements IActivationListener {
 					setName();
 					txt.getPlugin().createEmptyDocument();
 				} else {
-					MessageDialog.openInformation(UiDesk.getTopShell(), Messages.BriefAuswahlNoPatientSelected, // $NON-NLS-1$
-							Messages.BriefAuswahlNoPatientSelected); // $NON-NLS-1$
+					MessageDialog.openInformation(UiDesk.getTopShell(), Messages.Core_No_patient_selected, // $NON-NLS-1$
+							Messages.Core_No_patient_selected); // $NON-NLS-1$
 				}
 			}
 

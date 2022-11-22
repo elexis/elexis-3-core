@@ -63,7 +63,7 @@ public class StartupHandler implements EventHandler {
 						return LocalDocumentServiceHolder.getService().get().getAll().isEmpty();
 					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
 						MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-								Messages.UiStartup_errortitle, Messages.UiStartup_errormessage);
+								Messages.Core_Error, Messages.UiStartup_errormessage);
 					}
 				}
 				// reset dirty of closed compatibility parts that would open save resources

@@ -183,7 +183,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 
 	@Override
 	public void createPartControl(final Composite parent) {
-		setPartName(Messages.FaelleView_partName); // $NON-NLS-1$
+		setPartName(Messages.Core_Cases); // $NON-NLS-1$
 		parent.setLayout(new GridLayout());
 		tv = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		tv.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
