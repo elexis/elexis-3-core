@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core Model Test
 Bundle-SymbolicName: ch.elexis.core.model.test
-Bundle-Version: 3.10.0.qualifier
+Bundle-Version: 3.11.0.qualifier
 Bundle-Vendor: medevit.at
 Fragment-Host: ch.elexis.core.model;bundle-version="3.9.0"
 Automatic-Module-Name: ch.elexis.core.model.test

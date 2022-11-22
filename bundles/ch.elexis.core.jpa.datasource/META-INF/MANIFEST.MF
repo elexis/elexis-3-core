@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JPA Datasource
 Bundle-SymbolicName: ch.elexis.core.jpa.datasource
-Bundle-Version: 3.10.0.qualifier
+Bundle-Version: 3.11.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.jpa.datasource
 Bundle-RequiredExecutionEnvironment: JavaSE-11

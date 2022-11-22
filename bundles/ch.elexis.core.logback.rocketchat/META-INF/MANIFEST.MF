@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Rocketchat Appender
 Bundle-SymbolicName: ch.elexis.core.logback.rocketchat
-Bundle-Version: 3.10.0.qualifier
+Bundle-Version: 3.11.0.qualifier
 Bundle-Vendor: elexis.ch
 Fragment-Host: ch.qos.logback.classic;bundle-version="1.0.7"
 Automatic-Module-Name: ch.elexis.core.logback.rocketchat

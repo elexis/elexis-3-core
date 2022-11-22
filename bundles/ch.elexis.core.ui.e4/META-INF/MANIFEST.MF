@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core UI for e4
 Bundle-SymbolicName: ch.elexis.core.ui.e4;singleton:=true
-Bundle-Version: 3.10.0.qualifier
+Bundle-Version: 3.11.0.qualifier
 Bundle-Vendor: medevit.at
 Export-Package: ch.elexis.core.ui.e4.controls,
  ch.elexis.core.ui.e4.dialog,
