@@ -210,7 +210,7 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 			}
 		});
 
-		dropTarget = new GenericObjectDropTarget(Messages.DiagnosenDisplay_DiagnoseTarget, table, new DropReceiver()) {
+		dropTarget = new GenericObjectDropTarget(Messages.Core_Diagnosis, table, new DropReceiver()) {
 			@Override
 			protected Control getHighLightControl() {
 				return DiagnosenDisplay.this;
@@ -293,7 +293,7 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 	}
 
 	private void createColumns() {
-		String[] titles = { StringUtils.EMPTY, Messages.Display_Column_Code, Messages.Display_Column_Designation,
+		String[] titles = { StringUtils.EMPTY, Messages.Core_Code, Messages.Core_Description,
 				StringTool.leer };
 		int[] weights = { 0, 15, 70, 15 };
 

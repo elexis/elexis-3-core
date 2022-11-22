@@ -64,9 +64,9 @@ public class TemplateDrucker {
 					Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 					if (tpw.doPrint(actPatient, template, printer, tray, monitor) == false) {
 						Status status = new Status(Status.ERROR, "ch.elexis", Status.ERROR, //$NON-NLS-1$
-								Messages.TemplateDrucker_errorPrinting, null);
-						ErrorDialog.openError(null, Messages.TemplateDrucker_errorPrinting,
-								Messages.TemplateDrucker_docname + template + Messages.TemplateDrucker_couldntPrint,
+								Messages.Core_Error_while_printing, null);
+						ErrorDialog.openError(null, Messages.Core_Error_while_printing,
+								Messages.TemplateDrucker_docname + template + Messages.Core_Backslash_could_not_be_printed,
 								status); // $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 					}
@@ -79,7 +79,7 @@ public class TemplateDrucker {
 
 		} catch (Exception ex) {
 			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-					Messages.TemplateDrucker_errorPrinting + ": " + Messages.TemplateDrucker_couldntOpen, ex); //$NON-NLS-1$
+					Messages.Core_Error_while_printing + ": " + Messages.TemplateDrucker_couldntOpen, ex); //$NON-NLS-1$
 			StatusManager.getManager().handle(status);
 		}
 	}

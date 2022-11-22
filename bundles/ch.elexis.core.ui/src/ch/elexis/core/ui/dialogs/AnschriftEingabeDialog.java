@@ -47,7 +47,7 @@ public class AnschriftEingabeDialog extends TitleAreaDialog {
 		super.create();
 		setTitle(Messages.AnschriftEingabeDialog_enterAddress); // $NON-NLS-1$
 		setMessage(Messages.AnschriftEingabeDialog_enterData); // $NON-NLS-1$
-		getShell().setText(Messages.AnschriftEingabeDialog_postalAddress); // $NON-NLS-1$
+		getShell().setText(Messages.Core_Postal_Address); // $NON-NLS-1$
 	}
 
 	@Override
@@ -62,22 +62,22 @@ public class AnschriftEingabeDialog extends TitleAreaDialog {
 		str.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 		Label l2 = new Label(com, SWT.NONE);
-		l2.setText(Messages.AnschriftEingabeDialog_zip); // $NON-NLS-1$
+		l2.setText(Messages.Core_Postal_code); // $NON-NLS-1$
 		plz = new Text(com, SWT.BORDER);
 		plz.setText(an.getPlz());
 		plz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		Label l3 = new Label(com, SWT.NONE);
-		l3.setText(Messages.AnschriftEingabeDialog_city); // $NON-NLS-1$
+		l3.setText(Messages.Core_City); // $NON-NLS-1$
 		ort = new Text(com, SWT.BORDER);
 		ort.setText(an.getOrt());
 		ort.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		Label l4 = new Label(com, SWT.NONE);
-		l4.setText(Messages.AnschriftEingabeDialog_country); // $NON-NLS-1$
+		l4.setText(Messages.Core_Country); // $NON-NLS-1$
 		land = new Text(com, SWT.BORDER);
 		land.setText(an.getLand());
 		land.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		Button post = new Button(com, SWT.PUSH);
-		post.setText(Messages.AnschriftEingabeDialog_postalAddress); // $NON-NLS-1$
+		post.setText(Messages.Core_Postal_Address); // $NON-NLS-1$
 		post.addSelectionListener(new SelectionAdapter() {
 
 			@Override

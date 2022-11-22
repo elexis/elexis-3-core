@@ -92,7 +92,7 @@ public class Datenbank extends PreferencePage implements IWorkbenchPreferencePag
 		new Text(ret, SWT.READ_ONLY).setText(connectString); // $NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.Datenbank_usernameForDatabase);
 		new Text(ret, SWT.READ_ONLY).setText(user); // $NON-NLS-1$
-		new Label(ret, SWT.NONE).setText(Messages.Datenbank_typeOfDatabase);
+		new Label(ret, SWT.NONE).setText(Messages.Core_Database_Type);
 		new Text(ret, SWT.READ_ONLY).setText(flavor); // $NON-NLS-1$
 
 		return ret;

@@ -28,7 +28,7 @@ import ch.elexis.core.ui.locks.AllOrNoneLockRequestingAction;
 import ch.elexis.core.ui.locks.AllOrNoneLockRequestingRestrictedAction;
 import ch.elexis.core.ui.locks.MultiLockRequestingAction;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.rechnung.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.views.rechnung.RnDialogs;
 import ch.elexis.core.ui.views.rechnung.RnDialogs.StornoDialog;
 import ch.elexis.core.ui.views.rechnung.RnListeDruckDialog;
@@ -69,9 +69,9 @@ public class InvoiceActions {
 			}
 		};
 
-		addPaymentAction = new Action(Messages.RnActions_addBookingAction) { // $NON-NLS-1$
+		addPaymentAction = new Action(Messages.Invoice_Add_Payment) { // $NON-NLS-1$
 			{
-				setToolTipText(Messages.RnActions_addBookingTooltip); // $NON-NLS-1$
+				setToolTipText(Messages.Invoice_add_amount_as_payment); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
 			}
 
@@ -241,7 +241,7 @@ public class InvoiceActions {
 			}
 		};
 
-		printListeAction = new Action(Messages.RnActions_printListAction) { // $NON-NLS-1$
+		printListeAction = new Action(Messages.Core_Print_List) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
 				setToolTipText(Messages.RnActions_printListTooltip); // $NON-NLS-1$
@@ -254,7 +254,7 @@ public class InvoiceActions {
 			}
 		};
 
-		mahnWizardAction = new Action(Messages.RnActions_remindersAction) { // $NON-NLS-1$
+		mahnWizardAction = new Action(Messages.Invoice_reminder_automatism) { // $NON-NLS-1$
 			{
 				setToolTipText(Messages.RnActions_remindersTooltip); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_WIZARD.getImageDescriptor());

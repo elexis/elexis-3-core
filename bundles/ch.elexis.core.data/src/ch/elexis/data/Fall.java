@@ -606,7 +606,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	/** Neue Konsultation zu diesem Fall anlegen */
 	public Konsultation neueKonsultation() {
 		if (isOpen() == false) {
-			MessageEvent.fireError(Messages.Fall_CaseClosedCaption, Messages.Fall_CaseClosedText);
+			MessageEvent.fireError(Messages.Core_Case_is_closed, Messages.Core_Cannot_add_consultation_to_closed_case);
 			return null;
 		}
 		if ((CoreHub.actMandant == null) || (!CoreHub.actMandant.exists())) {

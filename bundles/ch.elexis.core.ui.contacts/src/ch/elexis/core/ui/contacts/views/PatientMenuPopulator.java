@@ -46,7 +46,7 @@ import ch.elexis.core.ui.exchange.XChangeException;
 import ch.elexis.core.ui.locks.LockRequestingRestrictedAction;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus.IMenuPopulator;
-import ch.elexis.core.ui.views.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.rgw.tools.ExHandler;
 
 public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
@@ -69,7 +69,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 	PatientMenuPopulator(PatientenListeView plv, final StructuredViewer structuredViewer) {
 		mine = plv;
 		stickerAction = new RestrictedAction(AccessControlDefaults.KONTAKT_ETIKETTE,
-				Messages.PatientMenuPopulator_StickerAction) { // $NON-NLS-1$
+				Messages.Core_Sticker_ellipsis) { // $NON-NLS-1$
 			{
 				setToolTipText(Messages.PatientMenuPopulator_StickerToolTip); // $NON-NLS-1$
 			}
@@ -88,7 +88,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 			@Override
 			public void doRun(IPatient p) {
 				if (MessageDialog.openConfirm(mine.getViewSite().getShell(),
-						Messages.PatientMenuPopulator_DeletePatientConfirm, p.getLabel()) == true) {
+						Messages.Core_Really_delete_caption, p.getLabel()) == true) {
 					List<ICoverage> coverages = p.getCoverages();
 					if (coverages.isEmpty()) {
 						CoreModelServiceHolder.get().delete(p);
@@ -165,7 +165,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 									} catch (CoreException e1) {
 										ExHandler.handle(e1);
 									} catch (XChangeException xx) {
-										SWTHelper.showError(Messages.PatientMenuPopulator_ErrorCaption, // $NON-NLS-1$
+										SWTHelper.showError(Messages.Core_Error, // $NON-NLS-1$
 												MessageFormat.format(Messages.PatientMenuPopulator_ExportEmrFailure, // $NON-NLS-1$
 														pat.getLabel()));
 

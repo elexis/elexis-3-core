@@ -74,7 +74,7 @@ public class SearchView extends ViewPart {
 		tabFolder = new TabFolder(main, SWT.NONE);
 		tabFolder.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		mainTabItem = new TabItem(tabFolder, SWT.NONE);
-		mainTabItem.setText(Messages.SearchView_general); // $NON-NLS-1$
+		mainTabItem.setText(Messages.Core_Common); // $NON-NLS-1$
 		Composite mainSearchArea = new Composite(tabFolder, SWT.NONE);
 		mainTabItem.setControl(mainSearchArea);
 
@@ -107,7 +107,7 @@ public class SearchView extends ViewPart {
 		typeGroup.setText(Messages.SearchView_dosearch); // $NON-NLS-1$
 
 		consultationRadio = new Button(typeGroup, SWT.RADIO);
-		consultationRadio.setText(Messages.SearchView_consultations); // $NON-NLS-1$
+		consultationRadio.setText(Messages.Core_Consultations); // $NON-NLS-1$
 		consultationRadio.setSelection(true);
 
 		Group optionsGroup = new Group(mainOptionsArea, SWT.SHADOW_OUT);
@@ -120,7 +120,7 @@ public class SearchView extends ViewPart {
 		consultationTextRadio.setSelection(true);
 
 		searchButton = new Button(mainSearchArea, SWT.PUSH);
-		searchButton.setText(Messages.SearchView_searchButtonCaption); // $NON-NLS-1$
+		searchButton.setText(Messages.Core_DoSearch); // $NON-NLS-1$
 		GridData gd = SWTHelper.getFillGridData(1, true, 1, false);
 		gd.horizontalAlignment = GridData.END;
 		searchButton.setLayoutData(gd);
@@ -167,7 +167,7 @@ public class SearchView extends ViewPart {
 					String type = "?"; //$NON-NLS-1$
 					String label = StringUtils.EMPTY;
 					if (po instanceof Konsultation) {
-						type = Messages.SearchView_consultation; // $NON-NLS-1$
+						type = Messages.Core_Consultation; // $NON-NLS-1$
 
 						Konsultation konsultation = (Konsultation) po;
 						Fall fall = konsultation.getFall();
@@ -220,7 +220,7 @@ public class SearchView extends ViewPart {
 		}
 
 		Query<Konsultation> query = new Query<Konsultation>(Konsultation.class);
-		query.orderBy(false, Messages.SearchView_date); // $NON-NLS-1$
+		query.orderBy(false, Messages.Core_Date); // $NON-NLS-1$
 		List<Konsultation> konsultationen = query.execute();
 		if (konsultationen != null) {
 			for (Konsultation konsultation : konsultationen) {

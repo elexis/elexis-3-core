@@ -10,7 +10,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.preferences.Messages;
+import ch.elexis.core.l10n.Messages;
 
 /**
  * Move an entry within a structured viewer

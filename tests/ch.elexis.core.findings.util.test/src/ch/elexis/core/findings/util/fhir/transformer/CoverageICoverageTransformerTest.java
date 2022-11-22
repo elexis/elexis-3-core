@@ -40,7 +40,7 @@ public class CoverageICoverageTransformerTest {
 
 		IBillingSystemService billingSystemService = OsgiServiceUtil.getService(IBillingSystemService.class)
 				.orElseThrow();
-		billingSystemService.addOrModifyBillingSystem(Messages.Fall_UVG_Name, Messages.Fall_TarmedLeistung,
+		billingSystemService.addOrModifyBillingSystem(Messages.Case_UVG_Short, Messages.Fall_TarmedLeistung,
 				Messages.Fall_TarmedPrinter, Messages.Fall_UVGRequirements, BillingLaw.UVG);
 		billingSystemService.addOrModifyBillingSystem(Messages.Fall_IV_Name, Messages.Fall_TarmedLeistung,
 				Messages.Fall_TarmedPrinter, null, BillingLaw.IV);
@@ -77,7 +77,7 @@ public class CoverageICoverageTransformerTest {
 	@Test
 	public void getFhirObject_UVG() throws IOException {
 		ICoverage coverage_kvg = new ICoverageBuilder(CoreModelServiceHolder.get(), patient, "Label_UVG", "Unfall",
-				Messages.Fall_UVG_Name).build();
+				Messages.Case_UVG_Short).build();
 		assertNotNull(coverage_kvg);
 		assertEquals(BillingLaw.UVG, coverage_kvg.getBillingSystem().getLaw());
 		coverage_kvg.setDateFrom(LocalDate.of(2022, 01, 28));

@@ -28,7 +28,7 @@ import ch.elexis.core.ui.util.SWTHelper;
  *
  */
 public class GenericImporter extends ImporterPage {
-	public static final String TITLE = Messages.GenericImporter_General;
+	public static final String TITLE = Messages.Core_Common;
 
 	GenericImporterBlatt importerBlatt;
 
@@ -48,7 +48,7 @@ public class GenericImporter extends ImporterPage {
 		if (importerBlatt.doImport()) {
 			return Status.OK_STATUS;
 		}
-		return new Status(Status.ERROR, "ch.elexis.import.div", 1, Messages.GenericImporter_ErrorImporting, null); //$NON-NLS-1$
+		return new Status(Status.ERROR, "ch.elexis.import.div", 1, Messages.Core_Error_while_importing, null); //$NON-NLS-1$
 	}
 
 	@Override

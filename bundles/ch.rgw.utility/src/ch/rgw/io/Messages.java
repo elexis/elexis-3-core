@@ -25,5 +25,5 @@ public class Messages {
 	public static String FileTool_cantWriteTarget = ch.elexis.core.l10n.Messages.FileTool_cantWriteTarget;
 	public static String InMemorySettings_0 = ch.elexis.core.l10n.Messages.InMemorySettings_0;
 	public static String InMemorySettings_badDefinition = ch.elexis.core.l10n.Messages.InMemorySettings_badDefinition;
-	public static String InMemorySettings_1 = ch.elexis.core.l10n.Messages.InMemorySettings_1;
+	public static String Literal_Equal = ch.elexis.core.l10n.Messages.Literal_Equal;
 }

@@ -210,7 +210,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 	}
 
 	private void makeActions() {
-		newAUF = new Action(Messages.AUF2_new) { // $NON-NLS-1$
+		newAUF = new Action(Messages.Core_New_ellipsis) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				setToolTipText(Messages.AUF2_createNewCert); // $NON-NLS-1$
@@ -231,7 +231,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				}
 			}
 		};
-		delAUF = new Action(Messages.AUF2_delete) { // $NON-NLS-1$
+		delAUF = new Action(Messages.Core_Delete_ellipsis) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 				setToolTipText(Messages.AUF2_deleteCertificate); // $NON-NLS-1$
@@ -249,7 +249,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				}
 			}
 		};
-		modAUF = new Action(Messages.AUF2_edit) { // $NON-NLS-1$
+		modAUF = new Action(Messages.Core_DoChange_ellipsis) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 				setToolTipText(Messages.AUF2_editCertificate); // $NON-NLS-1$
@@ -264,7 +264,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				}
 			}
 		};
-		printAUF = new Action(Messages.AUF2_print) { // $NON-NLS-1$
+		printAUF = new Action(Messages.Core_Print_ellipsis) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
 				setToolTipText(Messages.AUF2_createPrint); // $NON-NLS-1$

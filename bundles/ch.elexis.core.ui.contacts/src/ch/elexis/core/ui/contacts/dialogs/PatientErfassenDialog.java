@@ -71,15 +71,15 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(2, false));
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_Name); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Name); // $NON-NLS-1$
 		tName = new Text(ret, SWT.BORDER);
 		tName.setText(getField(Patient.FLD_NAME));
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_firstName); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Firstname); // $NON-NLS-1$
 		tVorname = new Text(ret, SWT.BORDER);
 		tVorname.setText(getField(Patient.FLD_FIRSTNAME));
 		tVorname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_sex); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Sex); // $NON-NLS-1$
 		cbSex = new Combo(ret, SWT.SINGLE);
 		String toolTip = String.format(Messages.Patient_male_female_tooltip, Messages.Patient_male_short,
 				Messages.Patient_female_short, Messages.Patient_male_long, Messages.Patient_female_long);
@@ -90,27 +90,27 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		} else {
 			cbSex.select(StringTool.isFemale(getField(Patient.FLD_FIRSTNAME)) ? 1 : 0);
 		}
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_birthDate); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Enter_Birthdate); // $NON-NLS-1$
 		tGebDat = new Text(ret, SWT.BORDER);
 		tGebDat.setText(getField(Patient.FLD_DOB));
 		tGebDat.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_street); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Street); // $NON-NLS-1$
 		tStrasse = new Text(ret, SWT.BORDER);
 		tStrasse.setText(getField(Patient.FLD_STREET));
 		tStrasse.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_zip); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Postal_code); // $NON-NLS-1$
 		tPlz = new Text(ret, SWT.BORDER);
 		tPlz.setText(getField(Patient.FLD_ZIP));
 		tPlz.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_city); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_City); // $NON-NLS-1$
 		tOrt = new Text(ret, SWT.BORDER);
 		tOrt.setText(getField(Patient.FLD_PLACE));
 		tOrt.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
-		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_phone); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Phone); // $NON-NLS-1$
 		tTel = new Text(ret, SWT.BORDER);
 		tTel.setText(getField(Patient.FLD_PHONE1));
 		tTel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));

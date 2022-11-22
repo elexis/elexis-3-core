@@ -70,10 +70,10 @@ public class Verifier {
 			parent.setLayout(new FillLayout());
 			table = new Table(parent, SWT.NONE);
 			TableColumn c1 = new TableColumn(table, SWT.NONE);
-			c1.setText(Messages.Verifier_NameHeading);
+			c1.setText(Messages.Core_Name);
 			c1.setWidth(200);
 			TableColumn c2 = new TableColumn(table, SWT.NONE);
-			c2.setText(Messages.Verifier_AddressHeading);
+			c2.setText(Messages.Core_Address);
 			c2.setWidth(200);
 			for (Kontakt k : list) {
 				TableItem it = new TableItem(table, SWT.NONE);

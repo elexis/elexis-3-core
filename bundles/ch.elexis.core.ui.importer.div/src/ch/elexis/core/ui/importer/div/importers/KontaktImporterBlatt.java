@@ -66,8 +66,8 @@ public class KontaktImporterBlatt extends Composite {
 	public KontaktImporterBlatt(final Composite parent) {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(2, false));
-		new Label(this, SWT.NONE).setText(Messages.KontaktImporterBlatt_DateiTyp);
-		new Label(this, SWT.NONE).setText(Messages.KontaktImporterBlatt_Datei);
+		new Label(this, SWT.NONE).setText(Messages.Core_FileType);
+		new Label(this, SWT.NONE).setText(Messages.Core_File);
 		cbMethods = new Combo(this, SWT.SINGLE);
 		cbMethods.setItems(methods);
 		cbMethods.addSelectionListener(new SelectionAdapter() {
@@ -88,10 +88,10 @@ public class KontaktImporterBlatt extends Composite {
 				filename = lbFileName.getText();
 			}
 		});
-		bLoad.setText(Messages.KontaktImporterBlatt_ChoseFile);
+		bLoad.setText(Messages.Core_Select_File);
 		lbFileName = new Label(this, SWT.NONE);
 		bLoad.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		lbFileName.setText(Messages.KontaktImporterBlatt_PleaseChooseTypeAndFile);
+		lbFileName.setText(Messages.Core_Please_Select_Type_and_File);
 		lbFileName.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 
 		final Button btnMediportInsuranceList = new Button(this, SWT.CHECK);
@@ -164,7 +164,7 @@ public class KontaktImporterBlatt extends Composite {
 			kk.setInfoElement("EAN", EANInsurance); //$NON-NLS-1$
 			kk.setInfoElement("BAGNr", bagnr); //$NON-NLS-1$
 			kk.set("Bezeichnung2", zweig); //$NON-NLS-1$
-			kk.set("Kuerzel", StringTool.limitLength(Messages.KontaktImporterBlatt_KKKuerzel //$NON-NLS-1$
+			kk.set("Kuerzel", StringTool.limitLength(Messages.Core_KK_Short //$NON-NLS-1$
 					+ StringTool.getFirstWord(name), 39));
 		}
 		return true;
@@ -234,8 +234,8 @@ public class KontaktImporterBlatt extends Composite {
 		if (mediportInsuererList) {
 			if (file == null) {
 				log.warn("No file selected"); //$NON-NLS-1$
-				SWTHelper.showError(Messages.KontaktImporterBlatt_ChoseFile, Messages.KontaktImporterBlatt_ChoseFile,
-						Messages.KontaktImporterBlatt_PleaseChooseTypeAndFile);
+				SWTHelper.showError(Messages.Core_Select_File, Messages.Core_Select_File,
+						Messages.Core_Please_Select_Type_and_File);
 				return false;
 			}
 
@@ -243,7 +243,7 @@ public class KontaktImporterBlatt extends Composite {
 				// check if it's actually a csv
 				String filename = file.toLowerCase();
 				if (!filename.endsWith("csv")) { //$NON-NLS-1$
-					SWTHelper.showError(Messages.KontaktImporterBlatt_DateiTyp,
+					SWTHelper.showError(Messages.Core_FileType,
 							MessageFormat.format(Messages.KontaktImporterBlatt_DatatypeErrorNoCSV, file));
 					return false;
 				}

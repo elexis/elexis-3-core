@@ -102,7 +102,7 @@ public class BillingSystemService implements IBillingSystemService {
 		if (billingSystem.isPresent()) {
 			return billingSystem.get();
 		}
-		return addOrModifyBillingSystem(Messages.Fall_KVG_Name, Messages.Fall_TarmedLeistung,
+		return addOrModifyBillingSystem(Messages.Case_KVG_Short, Messages.Fall_TarmedLeistung,
 				Messages.Fall_TarmedPrinter, Messages.Fall_KVGRequirements, BillingLaw.KVG);
 	}
 

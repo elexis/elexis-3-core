@@ -48,7 +48,7 @@ import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory.cPage;
 
 public class LeistungenView extends ViewPart implements IActivationListener {
 
-	private static final String CAPTION_ERROR = Messages.LeistungenView_error; // $NON-NLS-1$
+	private static final String CAPTION_ERROR = Messages.Core_Error; // $NON-NLS-1$
 	public final static String ID = "ch.elexis.LeistungenView"; //$NON-NLS-1$
 	public CTabFolder ctab;
 	CTabItem selected;

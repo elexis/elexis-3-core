@@ -21,7 +21,7 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.importers.IContactResolver;
 import ch.elexis.core.importer.div.importers.ILabImportUtil;
 import ch.elexis.core.importer.div.importers.ImportHandler;
-import ch.elexis.core.importer.div.importers.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.importer.div.importers.TransientLabResult;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IEncounter;
@@ -119,7 +119,7 @@ public class LabImportUtil implements ILabImportUtil {
 			}
 			return xids.get(0).getObject(ILaboratory.class);
 		} else if (contactResolver != null) {
-			ret = contactResolver.getContact(Messages.LabImporterUtil_SelectLab + " [" + identifier + "]");
+			ret = contactResolver.getContact(Messages.Core_Select_Laboratory + " [" + identifier + "]");
 			if (ret != null) {
 				ret.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, identifier, true);
 			}

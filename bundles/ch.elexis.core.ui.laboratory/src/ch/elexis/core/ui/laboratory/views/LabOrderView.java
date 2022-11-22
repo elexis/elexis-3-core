@@ -41,7 +41,7 @@ public class LabOrderView extends ViewPart implements ICallback {
 
 	public LabOrderView() {
 		headers = new String[] { Messages.LabOrderView_Order, Messages.LabOrderView_RefValue,
-				Messages.LabOrderView_DateTime, Messages.LabOrderView_Value };
+				Messages.Core_Date_Time, Messages.LabOrderView_Value };
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Display;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.importer.div.importers.IContactResolver;
-import ch.elexis.core.importer.div.importers.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
@@ -19,7 +19,7 @@ public class DefaultLinkLabContactResolver implements IContactResolver<ILaborato
 	@Override
 	public ILaboratory getContact(String message) {
 		KontaktSelektor ks = new KontaktSelektor(Display.getDefault().getActiveShell(), Labor.class,
-				Messages.LabImporterUtil_Select, message, Kontakt.DEFAULT_SORT);
+				Messages.Core_Laboratory_Selection, message, Kontakt.DEFAULT_SORT);
 		if (ks.open() == Dialog.OK) {
 			Labor labor = (Labor) ks.getSelection();
 			labor.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, identifier, true);

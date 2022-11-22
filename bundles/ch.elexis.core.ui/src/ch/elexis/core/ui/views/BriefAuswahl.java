@@ -125,7 +125,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 		Display.getDefault().asyncExec(() -> {
 			if (form != null && !form.isDisposed()) {
 				if (patient == null) {
-					form.setText(Messages.BriefAuswahlNoPatientSelected); // $NON-NLS-1$
+					form.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
 				} else {
 					form.setText(patient.getLabel());
 				}
@@ -260,7 +260,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 				Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 				if (form != null && !form.isDisposed()) {
 					if (pat == null) {
-						form.setText(Messages.BriefAuswahlNoPatientSelected); // $NON-NLS-1$
+						form.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
 					} else {
 						form.setText(pat.getLabel());
 						CTabItem sel = ctab.getSelection();
@@ -303,7 +303,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					if (actPat.isPresent()) {
 						IQuery<?> query = getBaseQuery();
 						query.and(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, actPat.get());
-						if (cat.equals(Messages.BriefAuswahlAllLetters2)) { // $NON-NLS-1$
+						if (cat.equals(Messages.Core_All)) { // $NON-NLS-1$
 							query.and(ModelPackage.Literals.IDOCUMENT__CATEGORY, COMPARATOR.NOT_EQUALS,
 									BriefConstants.TEMPLATE);
 						} else {
@@ -370,7 +370,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 		private void createColumns() {
 			// first column - date
 			TableViewerColumn col = new TableViewerColumn(tableViewer, SWT.NONE);
-			col.getColumn().setText(Messages.BriefAuswahlColumnDate);
+			col.getColumn().setText(Messages.Core_Date);
 			col.getColumn().setWidth(100);
 			col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 0));
 			col.setLabelProvider(new ColumnLabelProvider() {
@@ -385,7 +385,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 
 			// second column - title
 			col = new TableViewerColumn(tableViewer, SWT.NONE);
-			col.getColumn().setText(Messages.BriefAuswahlColumnTitle);
+			col.getColumn().setText(Messages.Core_Title);
 			col.getColumn().setWidth(300);
 			col.getColumn().addSelectionListener(getSelectionAdapter(col.getColumn(), 1));
 			col.setLabelProvider(new ColumnLabelProvider() {
@@ -481,7 +481,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 	}
 
 	private void makeActions() {
-		briefNeuAction = new Action(Messages.BriefAuswahlNewButtonText) { // $NON-NLS-1$
+		briefNeuAction = new Action(Messages.Core_New_ellipsis) { // $NON-NLS-1$
 			@Override
 			public void run() {
 				IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
@@ -494,7 +494,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			}
 		};
 
-		briefLadenAction = new Action(Messages.BriefAuswahlOpenButtonText) { // $NON-NLS-1$
+		briefLadenAction = new Action(Messages.Core_Open) { // $NON-NLS-1$
 			@Override
 			public void run() {
 				try {
@@ -514,11 +514,11 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 									Program.launch(temp.getAbsolutePath());
 								} catch (IOException e) {
 									ExHandler.handle(e);
-									SWTHelper.alert(Messages.BriefAuswahlErrorHeading, // $NON-NLS-1$
+									SWTHelper.alert(Messages.Core_Error, // $NON-NLS-1$
 											Messages.BriefAuswahlCouldNotLoadText); // $NON-NLS-1$
 								}
 							} else if (tv.openDocument(brief) == false) {
-								SWTHelper.alert(Messages.BriefAuswahlErrorHeading, // $NON-NLS-1$
+								SWTHelper.alert(Messages.Core_Error, // $NON-NLS-1$
 										Messages.BriefAuswahlCouldNotLoadText); // $NON-NLS-1$
 							}
 						}
@@ -534,10 +534,10 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 
 			}
 		};
-		deleteAction = new LockRequestingAction<Brief>(Messages.BriefAuswahlDeleteButtonText) { // $NON-NLS-1$
+		deleteAction = new LockRequestingAction<Brief>(Messages.Core_Delete) { // $NON-NLS-1$
 			@Override
 			public void doRun(Brief brief) {
-				if (brief != null && SWTHelper.askYesNo(Messages.BriefAuswahlDeleteConfirmHeading, // $NON-NLS-1$
+				if (brief != null && SWTHelper.askYesNo(Messages.Core_Delete_Document, // $NON-NLS-1$
 						Messages.BriefAuswahlDeleteConfirmText)) {
 					brief.delete();
 					CTabItem sel = ctab.getSelection();
@@ -597,8 +597,8 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					try {
 						command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
-						MessageDialog.openError(getSite().getShell(), Messages.BriefAuswahl_errorttile,
-								Messages.BriefAuswahl_erroreditmessage);
+						MessageDialog.openError(getSite().getShell(), Messages.Core_Error,
+								Messages.Core_Document_Not_Opened_Locally);
 					}
 					refreshSelectedViewer();
 				}
@@ -628,8 +628,8 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					try {
 						command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
-						MessageDialog.openError(getSite().getShell(), Messages.BriefAuswahl_errortitle,
-								Messages.BriefAuswahl_errorlocaleditendmessage);
+						MessageDialog.openError(getSite().getShell(), Messages.Core_Error,
+								Messages.Core_Could_not_reread_correctly_document);
 					}
 				}
 				refreshSelectedViewer();
@@ -643,7 +643,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 
 			@Override
 			public String getText() {
-				return Messages.BriefAuswahl_actionlocaleditabortmessage;
+				return Messages.Core_Abort;
 			}
 
 			@Override
@@ -659,8 +659,8 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					try {
 						command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 					} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
-						MessageDialog.openError(getSite().getShell(), Messages.BriefAuswahl_errortitle,
-								Messages.BriefAuswahl_errorlocaleditabortmessage);
+						MessageDialog.openError(getSite().getShell(), Messages.Core_Error,
+								Messages.Core_Could_not_abort_editing);
 					}
 				}
 				refreshSelectedViewer();
@@ -678,7 +678,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 		editNameAction.setImageDescriptor(Images.IMG_DOCUMENT_WRITE.getImageDescriptor());
 		editNameAction.setToolTipText(Messages.BriefAuswahlRenameDocument); // $NON-NLS-1$
 		deleteAction.setImageDescriptor(Images.IMG_DOCUMENT_REMOVE.getImageDescriptor());
-		deleteAction.setToolTipText(Messages.BriefAuswahlDeleteDocument); // $NON-NLS-1$
+		deleteAction.setToolTipText(Messages.Core_Delete_Document); // $NON-NLS-1$
 	}
 
 	public IDocumentLetter getSelected() {
