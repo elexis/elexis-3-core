@@ -277,10 +277,10 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 		vc = new ViewerConfigurer(
 				// new LazyContentProvider(cv,dataloader, null),
 				kl, new KontaktSelektorLabelProvider(),
-				new DefaultControlFieldProvider(cv, new String[] { "Kuerzel=" + Messages.Core_Kuerzel, //$NON-NLS-1$
-						"Bezeichnung1=" + Messages.Core_Description, //$NON-NLS-1$
-						"Bezeichnung2=" + Messages.Core_Firstname, //$NON-NLS-1$
-						"Geburtsdatum=" + Messages.Core_Enter_Birthdate //$NON-NLS-1$
+				new DefaultControlFieldProvider(cv, new String[] { "Kuerzel=" + Messages.KontaktSelector_abbreviation, //$NON-NLS-1$
+						"Bezeichnung1=" + Messages.KontaktSelector_expression1, //$NON-NLS-1$
+						"Bezeichnung2=" + Messages.KontaktSelector_expression2, //$NON-NLS-1$
+						"Geburtsdatum=" + Messages.KontaktSelector_birthDate //$NON-NLS-1$
 				}), new ViewerConfigurer.ButtonProvider() {
 
 					public Button createButton(final Composite parent) {
@@ -377,7 +377,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 	@Override
 	public void create() {
 		super.create();
-		getShell().setText(Messages.Core_Select_Contact);
+		getShell().setText(Messages.KontaktSelector_title);
 	}
 
 	@Override

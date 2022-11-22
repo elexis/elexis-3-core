@@ -211,7 +211,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		for (int i = 0; i < fields.length; i++) {
 			Prescription p = lines.get(i);
 			fields[i] = new String[3];
-			fields[i][0] = p.get(Messages.Core_Count); // $NON-NLS-1$
+			fields[i][0] = p.get(Messages.RezeptBlatt_number); // $NON-NLS-1$
 			String bem = p.getBemerkung();
 			if (StringTool.isNothing(bem)) {
 				fields[i][1] = p.getSimpleLabel();
@@ -230,7 +230,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		for (int i = 0; i < fields.length; i++) {
 			Prescription p = lines.get(i);
 			fields[i] = new String[3];
-			fields[i][0] = p.get(Messages.Core_Count); // $NON-NLS-1$
+			fields[i][0] = p.get(Messages.RezeptBlatt_number); // $NON-NLS-1$
 			String bem = p.getBemerkung();
 			String patInfo = p.getDisposalComment();
 			if (StringTool.isNothing(bem)) {

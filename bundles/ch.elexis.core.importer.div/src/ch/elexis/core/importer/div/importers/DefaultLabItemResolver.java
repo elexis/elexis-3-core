@@ -20,7 +20,7 @@ public class DefaultLabItemResolver implements ILabItemResolver {
 
 	@Override
 	public String getTestGroupName(AbstractData data) {
-		return Messages.Core_HL7_Z_automatic + dat;
+		return Messages.HL7Parser_AutomaticAddedGroup + dat;
 	}
 
 	@Override

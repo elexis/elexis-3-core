@@ -82,7 +82,7 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
@@ -258,13 +258,13 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			fields.add("code" + Query.EQUALS + Messages.PatientenListeView_PatientNr); // $NON-NLS-1$ //$NON-NLS-1$
 		}
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWNAME, true)) {
-			fields.add("description1" + Query.EQUALS + Messages.Core_Name); // $NON-NLS-1$ //$NON-NLS-1$
+			fields.add("description1" + Query.EQUALS + Messages.PatientenListeView_PatientName); // $NON-NLS-1$ //$NON-NLS-1$
 		}
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWFIRSTNAME, true)) {
-			fields.add("description2" + Query.EQUALS + Messages.Core_Firstname); // $NON-NLS-1$ //$NON-NLS-1$
+			fields.add("description2" + Query.EQUALS + Messages.PatientenListeView_PantientFirstName); // $NON-NLS-1$ //$NON-NLS-1$
 		}
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWDOB, true)) {
-			fields.add("dob" + Query.EQUALS + Messages.Core_Enter_Birthdate); // $NON-NLS-1$ //$NON-NLS-1$
+			fields.add("dob" + Query.EQUALS + Messages.PatientenListeView_PatientBirthdate); // $NON-NLS-1$ //$NON-NLS-1$
 		}
 		currentUserFields = fields.toArray(new String[fields.size()]);
 	}

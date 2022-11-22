@@ -79,9 +79,9 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 	private TableViewer tableViewer;
 	private Table table;
 	int sortC = 1;
-	private String[] headers = { Messages.Core_Name, Messages.Core_Short_Label, "LOINC", //$NON-NLS-1$
-			Messages.Core_Type, Messages.Core_Unit, Messages.Core_Reference_Male, Messages.Core_Reference_female,
-			Messages.Core_Sortmode };
+	private String[] headers = { Messages.LaborPrefs_name, Messages.LaborPrefs_short, "LOINC", //$NON-NLS-1$
+			Messages.LaborPrefs_type, Messages.LaborPrefs_unit, Messages.LaborPrefs_refM, Messages.LaborPrefs_refF,
+			Messages.LaborPrefs_sortmode };
 	private int[] colwidth = { 16, 6, 6, 6, 6, 16, 16, 16 };
 
 	private LabItemViewerFilter viewerFilter;
@@ -244,15 +244,15 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			case 3:
 				LabItemTyp typ = li.getTyp();
 				if (typ == LabItemTyp.NUMERIC) {
-					return Messages.Core_Number;
+					return Messages.LaborPrefs_numeric;
 				} else if (typ == LabItemTyp.TEXT) {
-					return Messages.Core_Text;
+					return Messages.LaborPrefs_alpha;
 				} else if (typ == LabItemTyp.FORMULA) {
-					return Messages.Core_Formula;
+					return Messages.LaborPrefs_formula;
 				} else if (typ == LabItemTyp.DOCUMENT) {
-					return Messages.Core_Document;
+					return Messages.LaborPrefs_document;
 				}
-				return Messages.Core_Absolute;
+				return Messages.LaborPrefs_absolute;
 			case 4:
 				return einheit;
 			case 5:

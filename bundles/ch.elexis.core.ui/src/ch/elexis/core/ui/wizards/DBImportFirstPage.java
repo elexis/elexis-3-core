@@ -47,10 +47,10 @@ public class DBImportFirstPage extends WizardPage {
 	static final int H2 = 2;
 
 	public DBImportFirstPage(String pageName) {
-		super(Messages.Core_Connection, Messages.Core_Database_Type,
+		super(Messages.DBImportFirstPage_connection, Messages.DBImportFirstPage_typeOfDB,
 				Images.IMG_LOGO.getImageDescriptor(ImageSize._75x66_TitleDialogIconSize));
 		setMessage(Messages.DBImportFirstPage_selectType + Messages.DBImportFirstPage_enterNameODBC);
-		setDescription(Messages.Core_the_description);
+		setDescription(Messages.DBImportFirstPage_theDesrciption);
 	}
 
 	public DBImportFirstPage(String pageName, String title, ImageDescriptor titleImage) {
@@ -63,10 +63,10 @@ public class DBImportFirstPage extends WizardPage {
 
 		FormToolkit tk = UiDesk.getToolkit();
 		Form form = tk.createForm(parent);
-		form.setText(Messages.Core_Database_Connectiondetails); // $NON-NLS-1$
+		form.setText(Messages.DBImportFirstPage_Connection); // $NON-NLS-1$
 		Composite body = form.getBody();
 		body.setLayout(new TableWrapLayout());
-		tk.createLabel(body, Messages.Core_Enter_Typename); // $NON-NLS-1$
+		tk.createLabel(body, Messages.DBImportFirstPage_EnterType); // $NON-NLS-1$
 		dbTypes = new List(body, SWT.BORDER);
 		dbTypes.setItems(supportedDB);
 		dbTypes.addSelectionListener(new SelectionAdapter() {
@@ -110,7 +110,7 @@ public class DBImportFirstPage extends WizardPage {
 
 		TableWrapData twr = new TableWrapData(TableWrapData.FILL_GRAB);
 		server.setLayoutData(twr);
-		tk.createLabel(body, Messages.Core_Database_Name); // $NON-NLS-1$
+		tk.createLabel(body, Messages.DBImportFirstPage_databaseName); // $NON-NLS-1$
 		dbName = tk.createText(body, StringUtils.EMPTY, SWT.BORDER);
 		TableWrapData twr2 = new TableWrapData(TableWrapData.FILL_GRAB);
 		dbName.setLayoutData(twr2);

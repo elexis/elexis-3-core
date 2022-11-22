@@ -101,7 +101,7 @@ public class BBSView extends ViewPart implements ISelectionChangedListener {
 		input = tk.createText(form.getBody(), StringUtils.EMPTY, SWT.WRAP | SWT.MULTI | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		input.setLayoutData(gd);
-		Button send = tk.createButton(form.getBody(), Messages.Core_DoSend, SWT.PUSH); // $NON-NLS-1$
+		Button send = tk.createButton(form.getBody(), Messages.BBSView_DoSend, SWT.PUSH); // $NON-NLS-1$
 		send.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("unchecked")
 			@Override

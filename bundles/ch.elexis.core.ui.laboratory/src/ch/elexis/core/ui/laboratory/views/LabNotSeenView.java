@@ -81,8 +81,8 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 
 	public static LabNotSeenComparator comparator;
 
-	private static final String[] columnHeaders = { Messages.Core_Patient, Messages.Core_Parameter,
-			Messages.LabNotSeenView_normRange, Messages.Core_Date, Messages.Core_Value };
+	private static final String[] columnHeaders = { Messages.LabNotSeenView_patient, Messages.LabNotSeenView_parameter,
+			Messages.LabNotSeenView_normRange, Messages.LabNotSeenView_date, Messages.LabNotSeenView_value };
 	private static final int[] colWidths = new int[] { 250, 100, 60, 70, 50 };
 	private IAction markAllAction, markPersonAction;
 

@@ -87,7 +87,7 @@ public class ArtikelDetailDialog extends TitleAreaDialog {
 	public void create() {
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		super.create();
-		getShell().setText(Messages.Article_Detail); // $NON-NLS-1$
+		getShell().setText(Messages.ArtikelDetailDialog_articleDetail); // $NON-NLS-1$
 		setTitle(article.getLabel());
 		setMessage(Messages.ArtikelDetailDialog_enterArticleDetails); // $NON-NLS-1$
 	}

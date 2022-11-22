@@ -10,7 +10,7 @@
 package ch.elexis.core.ui;
 
 public class Messages {
-	public static final String Core_Elexis_Login = ch.elexis.core.l10n.Messages.Core_Elexis_Login;
+	public static final String LoginDialog_loginHeader = ch.elexis.core.l10n.Messages.LoginDialog_loginHeader;
 	public static String Hub_message_birthday = ch.elexis.core.l10n.Messages.Hub_message_birthday;
 	public static String Hub_message_configuration = ch.elexis.core.l10n.Messages.Hub_message_configuration;
 	public static String Hub_message_reminders = ch.elexis.core.l10n.Messages.Hub_message_reminders;
@@ -18,7 +18,7 @@ public class Messages {
 	public static String Hub_nopatientselected = ch.elexis.core.l10n.Messages.Hub_nopatientselected;
 	public static String Hub_nouserloggedin = ch.elexis.core.l10n.Messages.Hub_nouserloggedin;
 	public static String Hub_title_configuration = ch.elexis.core.l10n.Messages.Hub_title_configuration;
-	public static String Core_Not_logged_in = ch.elexis.core.l10n.Messages.Core_Not_logged_in;
-	public static String Core_Please_Enter_Name_and_Password = ch.elexis.core.l10n.Messages.Core_Please_Enter_Name_and_Password;
+	public static String LoginDialog_notLoggedIn = ch.elexis.core.l10n.Messages.LoginDialog_notLoggedIn;
+	public static String LoginDialog_enterUsernamePass = ch.elexis.core.l10n.Messages.LoginDialog_enterUsernamePass;
 
 };

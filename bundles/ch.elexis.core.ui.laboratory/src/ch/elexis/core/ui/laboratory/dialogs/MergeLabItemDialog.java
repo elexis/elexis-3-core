@@ -55,8 +55,8 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText(Messages.Core_Merge_laboratory_parameters);
-		setTitle(Messages.Core_Merge_laboratory_parameters);
+		getShell().setText(Messages.MergeLabItemDialog_title);
+		setTitle(Messages.MergeLabItemDialog_title);
 		setMessage(Messages.MergeLabItemDialog_pleaseMergeParam);
 
 		Composite ret = new Composite(parent, SWT.NONE);
@@ -150,7 +150,7 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 			return;
 		}
 
-		boolean confirm = MessageDialog.openConfirm(getShell(), Messages.Core_Warning,
+		boolean confirm = MessageDialog.openConfirm(getShell(), Messages.MergeLabItemDialog_titleWarningDialog,
 				Messages.MergeLabItemDialog_messageWarningDialog);
 
 		if (confirm) {

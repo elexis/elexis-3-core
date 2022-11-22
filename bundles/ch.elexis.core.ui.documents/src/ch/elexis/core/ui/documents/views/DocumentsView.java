@@ -103,7 +103,7 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.DocumentStatus;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.handler.DocumentCrudHandler;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.icons.Images;
@@ -129,9 +129,9 @@ public class DocumentsView extends ViewPart {
 
 	private IStructuredSelection currentDragSelection;
 
-	private final String[] colLabels = { StringUtils.EMPTY, StringUtils.EMPTY, Messages.Core_Category,
-			Messages.Core_Title, Messages.DocumentView_dateCreatedColumn,
-			Messages.Core_Keywords };
+	private final String[] colLabels = { StringUtils.EMPTY, StringUtils.EMPTY, Messages.DocumentView_categoryColumn,
+			Messages.DocumentView_titleColumn, Messages.DocumentView_dateCreatedColumn,
+			Messages.DocumentView_keywordsColumn };
 	private final String colWidth = "20,20,150,250,100,500"; //$NON-NLS-1$
 	private final String sortSettings = "0,1,-1,false"; //$NON-NLS-1$
 	private String searchTitle = StringUtils.EMPTY;
@@ -511,7 +511,7 @@ public class DocumentsView extends ViewPart {
 					IDocument document = (IDocument) object;
 					if (document.getContentLength() < 1) {
 						event.doit = false;
-						SWTHelper.showError(Messages.Core_Error_while_exporting,
+						SWTHelper.showError(Messages.DocumentView_exportErrorCaption,
 								Messages.DocumentView_exportErrorEmptyText + "\nDokument: " + document.getTitle());
 						break;
 					}

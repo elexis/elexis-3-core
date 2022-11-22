@@ -16,7 +16,7 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.ui.dialogs.EditAUFDialog;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.views.Messages;
 
 public class AufNewHandler extends AbstractHandler implements IHandler {
 	public static final String CMD_ID = "ch.elexis.core.ui.commands.AufNew"; //$NON-NLS-1$
@@ -25,7 +25,7 @@ public class AufNewHandler extends AbstractHandler implements IHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Optional<IPatient> pat = ContextServiceHolder.get().getActivePatient();
 		if (!pat.isPresent()) {
-			SWTHelper.showError(Messages.Core_No_patient_selected, // $NON-NLS-1$
+			SWTHelper.showError(Messages.AUF2_NoPatientSelected, // $NON-NLS-1$
 					Messages.AUF2_PleaseDoSelectPatient); // $NON-NLS-1$
 			return null;
 		}
@@ -44,7 +44,7 @@ public class AufNewHandler extends AbstractHandler implements IHandler {
 			}
 		}
 		if (fall == null) {
-			SWTHelper.showError(Messages.Core_No_case_selected, Messages.AUF2_selectCase); // $NON-NLS-1$ //$NON-NLS-2$
+			SWTHelper.showError(Messages.AUF2_noCaseSelected, Messages.AUF2_selectCase); // $NON-NLS-1$ //$NON-NLS-2$
 			return null;
 		}
 		EditAUFDialog dlg = new EditAUFDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), null,

@@ -34,14 +34,14 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.rechnung.InvoiceListView;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.views.rechnung.Messages;
 import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Patient;
 
 public class InvoiceListHeaderComposite extends Composite {
 
 	private final static String ALL_PATIENTS_LABEL = Messages.RnControlFieldProvider_allPatients;
-	private final static String ALL_ELEMENTS_LABEL = Messages.Core_All;
+	private final static String ALL_ELEMENTS_LABEL = Messages.RnControlFieldProvider_all;
 
 	private Text txtInvoiceno;
 	private Text txtAmount;
@@ -73,14 +73,14 @@ public class InvoiceListHeaderComposite extends Composite {
 
 		Label lblStatus = new Label(this, SWT.NONE);
 		lblStatus.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		lblStatus.setText(Messages.Core_Invoicestate);
+		lblStatus.setText(Messages.InvoiceListView_tblclmnInvoiceState_text);
 
 		HyperlinkAdapter hlPatient = new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(final HyperlinkEvent e) {
 				Patient oldPatient = actPatient;
 				KontaktSelektor ksl = new KontaktSelektor(parent.getShell(), Patient.class,
-						Messages.Core_Select_Patient, // $NON-NLS-1$
+						Messages.RnControlFieldProvider_selectPatientCaption, // $NON-NLS-1$
 						Messages.RnControlFieldProvider_selectPatientMessage, true); // $NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
 					actPatient = (Patient) ksl.getSelection();
@@ -123,10 +123,10 @@ public class InvoiceListHeaderComposite extends Composite {
 
 		Label lblBillingSystem = new Label(this, SWT.NONE);
 		lblBillingSystem.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		lblBillingSystem.setText(Messages.Invoice_System);
+		lblBillingSystem.setText(Messages.RnControlFieldProvider_PaymentSystem);
 
 		Label lblType = new Label(this, SWT.NONE);
-		lblType.setText(Messages.Core_Kind);
+		lblType.setText(Messages.InvoiceListHeaderComposite_lblType_text);
 		lblType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 
 		Label lblInvoiceno = new Label(this, SWT.NONE);
@@ -135,7 +135,7 @@ public class InvoiceListHeaderComposite extends Composite {
 
 		Label lblAmount = new Label(this, SWT.NONE);
 		lblAmount.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		lblAmount.setText(Messages.Core_Invoice_total_amount);
+		lblAmount.setText(Messages.InvoiceListHeaderComposite_txtRgTotal);
 		lblAmount.setToolTipText(Messages.InvoiceListHeaderComposite_txtAmount_toolTipText);
 
 		lblLimitWarn = new Label(this, SWT.NONE);

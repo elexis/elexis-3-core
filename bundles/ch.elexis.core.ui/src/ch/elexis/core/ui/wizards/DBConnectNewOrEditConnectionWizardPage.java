@@ -42,7 +42,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 	 * @wbp.parser.constructor
 	 */
 	public DBConnectNewOrEditConnectionWizardPage() {
-		super(Messages.Core_Connection);
+		super(Messages.DBConnectFirstPage_Connection);
 
 		setMessage(Messages.DBConnectNewOrEditConnectionWizardPage_this_message);
 		setTitle(Messages.DBConnectNewOrEditConnectionWizardPage_this_title);
@@ -61,7 +61,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 
 		Group group = new Group(container, SWT.NONE);
 		group.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		group.setText(Messages.Core_Database_Connectiondetails);
+		group.setText(Messages.DBConnectFirstPage_connectioNDetails);
 		group.setLayout(new GridLayout(4, false));
 
 		Label lblTyp = new Label(group, SWT.NONE);
@@ -94,7 +94,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 
 		Label lblDBName = new Label(group, SWT.NONE);
 		lblDBName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDBName.setText(Messages.Core_Database_Name);
+		lblDBName.setText(Messages.DBImportFirstPage_databaseName);
 
 		txtDBName = new Text(group, SWT.BORDER);
 		txtDBName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

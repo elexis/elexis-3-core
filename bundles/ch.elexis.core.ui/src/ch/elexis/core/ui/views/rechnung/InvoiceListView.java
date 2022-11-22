@@ -95,9 +95,9 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		rnStellerSettings = CoreHub.getUserSetting(currMandant.getRechnungssteller());
 	}
 
-	private Action reloadViewAction = new Action(Messages.Core_Reload) {
+	private Action reloadViewAction = new Action(Messages.RnActions_reloadAction) {
 		{
-			setToolTipText(Messages.Core_Reread_List);
+			setToolTipText(Messages.RnActions_reloadTooltip);
 			setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
 		}
 
@@ -183,7 +183,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		TableViewerColumn tvcInvoiceState = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnInvoiceState = tvcInvoiceState.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnInvoiceState, new ColumnPixelData(90, true, true));
-		tblclmnInvoiceState.setText(Messages.Core_Invoicestate);
+		tblclmnInvoiceState.setText(Messages.InvoiceListView_tblclmnInvoiceState_text);
 		tvcInvoiceState.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -197,7 +197,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		TableViewerColumn tvcInvoiceStateDateSince = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnInvoiceStateDateSince = tvcInvoiceStateDateSince.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnInvoiceStateDateSince, new ColumnPixelData(50, true, true));
-		tblclmnInvoiceStateDateSince.setText(Messages.Core_Date_Since);
+		tblclmnInvoiceStateDateSince.setText(Messages.InvoiceListView_tblclmnInvoiceStateDateSince_text);
 		tvcInvoiceStateDateSince.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -213,7 +213,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		TableViewerColumn tvcPatient = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnPatient = tvcPatient.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnPatient, new ColumnWeightData(10, 100, true));
-		tblclmnPatient.setText(Messages.Core_Patient);
+		tblclmnPatient.setText(Messages.InvoiceListView_tblclmnPatient_text);
 		tblclmnPatient.setData(Kontakt.FLD_NAME1);
 		tvcPatient.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -229,7 +229,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		TableViewerColumn tvcBillingSystem = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnLaw = tvcBillingSystem.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnLaw, new ColumnPixelData(50, true, true));
-		tblclmnLaw.setText(Messages.Core_Law_Name);
+		tblclmnLaw.setText(Messages.InvoiceListView_tblclmnLaw_text);
 		tvcBillingSystem.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -244,7 +244,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		TableViewerColumn tvcPayerType = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnType = tvcPayerType.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnType, new ColumnPixelData(50, true, true));
-		tblclmnType.setText(Messages.Core_Kind);
+		tblclmnType.setText(Messages.InvoiceListView_tblclmnType_text);
 		tvcPayerType.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -306,7 +306,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		TableViewerColumn tvcOpenAmount = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnOpenAmount = tvcOpenAmount.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnOpenAmount, new ColumnPixelData(60, true, true));
-		tblclmnOpenAmount.setText(Messages.Invoice_Amount_Unpaid);
+		tblclmnOpenAmount.setText(Messages.InvoiceListView_tblclmnOpenAmount_text);
 		tblclmnOpenAmount.setData(VIEW_FLD_OPENAMOUNT);
 		tvcOpenAmount.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -324,7 +324,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		TableColumn tblclmnTotalAmount = tvcTotalAmount.getColumn();
 		tblclmnTotalAmount.setData(VIEW_FLD_INVOICETOTAL);
 		tcl_compositeInvoiceList.setColumnData(tblclmnTotalAmount, new ColumnPixelData(60, true, true));
-		tblclmnTotalAmount.setText(Messages.Core_Invoice_total_amount);
+		tblclmnTotalAmount.setText(Messages.InvoiceListView_tblclmnTotalAmount_text);
 		tvcTotalAmount.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {

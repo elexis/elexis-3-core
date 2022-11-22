@@ -58,7 +58,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 		editComposite.setLayout(new GridLayout(2, false));
 
 		Label lbl = new Label(editComposite, SWT.NONE);
-		lbl.setText(Messages.Core_Value);
+		lbl.setText(Messages.EditLabResultDialog_labelValue);
 		lbl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 
 		if (result.getItem().getTyp() == LabItemTyp.TEXT) {
@@ -72,7 +72,7 @@ public class EditLabResultDialog extends TitleAreaDialog {
 		}
 
 		lbl = new Label(editComposite, SWT.NONE);
-		lbl.setText(Messages.Core_Unit);
+		lbl.setText(Messages.EditLabResultDialog_labelUnit);
 		lbl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 
 		unitTxt = new Text(editComposite, SWT.BORDER);
@@ -96,13 +96,13 @@ public class EditLabResultDialog extends TitleAreaDialog {
 		refFemaleTxt.setTextLimit(80);
 
 		lbl = new Label(editComposite, SWT.NONE);
-		lbl.setText(Messages.Core_Laboratory);
+		lbl.setText(Messages.EditLabResultDialog_labelLab);
 		lbl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		originSelection = new LaborSelectionComposite(editComposite, SWT.NONE);
 		originSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		lbl = new Label(editComposite, SWT.NONE);
-		lbl.setText(Messages.Core_Time);
+		lbl.setText(Messages.EditLabResultDialog_labelTime);
 		lbl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 
 		Group grp = new Group(editComposite, SWT.NONE);

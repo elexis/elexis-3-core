@@ -266,11 +266,11 @@ public class TextTemplateView extends ViewPart {
 	}
 
 	private void createTextPluginMissingForm(Composite parent) {
-		String expl = Messages.TextTemplateVeiw_NoTxtPluginDescription + Messages.Text_No_Plugin_loaded
-				+ Messages.Text_Plugin_Not_Configured + Messages.Text_External_Cmd_deleted;
+		String expl = Messages.TextTemplateVeiw_NoTxtPluginDescription + Messages.TextTemplateVeiw_NoTxtPluginReason1
+				+ Messages.TextTemplateVeiw_NoTxtPluginReason2 + Messages.TextTemplateVeiw_NoTxtPluginReason3;
 
 		Form form = UiDesk.getToolkit().createForm(parent);
-		form.setText(Messages.Core_Unable_to_create_text);
+		form.setText(Messages.TextTemplateVeiw_NoTxtPluginTitel);
 		form.setLayoutData(SWTHelper.fillGrid(parent, 1));
 		form.getBody().setLayout(new GridLayout(1, false));
 		FormText ft = UiDesk.getToolkit().createFormText(form.getBody(), false);

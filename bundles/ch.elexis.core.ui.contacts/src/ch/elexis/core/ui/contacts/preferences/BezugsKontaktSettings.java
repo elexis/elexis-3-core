@@ -59,7 +59,7 @@ import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.BezugsKontaktRelation;
 
 public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchPreferencePage {
@@ -74,7 +74,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 
 	public BezugsKontaktSettings() {
 		noDefaultAndApplyButton();
-		setTitle(Messages.Core_Reference_Definition);
+		setTitle(Messages.Bezugskontakt_Title);
 		this.allowEditing = CoreHub.acl.request(AccessControlDefaults.ADMIN);
 	}
 
@@ -87,7 +87,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 		Group group = new Group(container, SWT.NONE);
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		group.setText(Messages.Core_Reference_Definition);
+		group.setText(Messages.Bezugskontakt_Definition);
 
 		Composite composite = new Composite(group, SWT.NONE);
 		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -108,7 +108,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 			tableBezugsKontaktRelations.setMenu(menu);
 
 			MenuItem mntmAddBezugsKontaktRelation = new MenuItem(menu, SWT.NONE);
-			mntmAddBezugsKontaktRelation.setText(Messages.Core_Add);
+			mntmAddBezugsKontaktRelation.setText(Messages.Bezugskontakt_Add);
 			mntmAddBezugsKontaktRelation.setImage(Images.IMG_NEW.getImage());
 			mntmAddBezugsKontaktRelation.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -121,7 +121,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 			});
 
 			MenuItem mntmRemoveBezugsKontaktRelation = new MenuItem(menu, SWT.NONE);
-			mntmRemoveBezugsKontaktRelation.setText(Messages.Core_Remove);
+			mntmRemoveBezugsKontaktRelation.setText(Messages.Bezugskontakt_Delete);
 			mntmRemoveBezugsKontaktRelation.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -140,7 +140,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 		TableViewerColumn viewCol = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn col = viewCol.getColumn();
 		tcl_composite.setColumnData(col, new ColumnWeightData(1, 140));
-		col.setText(Messages.Core_Reference);
+		col.setText(Messages.BezugsKonktat_Reference);
 		col.setToolTipText(Messages.Bezugskontakt_ReferenceTooltip);
 		viewCol.setLabelProvider(new CellLabelProvider() {
 

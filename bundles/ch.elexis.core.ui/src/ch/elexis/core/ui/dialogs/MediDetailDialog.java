@@ -120,7 +120,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 		// noon
 		txtNoon = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtNoon.setTextLimit(6);
-		txtNoon.setMessage(Messages.Core_Midday);
+		txtNoon.setMessage(Messages.MediDetailDialog_lunch);
 		txtNoon.setLayoutData(gdSignature);
 		new Label(compositeDayTimeDosage, SWT.NONE).setText("-"); //$NON-NLS-1$
 
@@ -139,7 +139,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 
 		Button btnDoseSwitch = new Button(ret, SWT.PUSH);
 		btnDoseSwitch.setImage(Images.IMG_SYNC.getImage());
-		btnDoseSwitch.setToolTipText(Messages.Core_change_freetext_activation);
+		btnDoseSwitch.setToolTipText(Messages.MediDetailDialog_tooltipDosageType);
 		btnDoseSwitch.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -153,7 +153,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 		});
 
 		txtFreeText = new Text(compositeFreeTextDosage, SWT.BORDER);
-		txtFreeText.setMessage(Messages.Core_Freetext);
+		txtFreeText.setMessage(Messages.MediDetailDialog_freetext);
 		GridData gd_txtFreeText = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_txtFreeText.widthHint = 210;
 		txtFreeText.setLayoutData(gd_txtFreeText);
@@ -164,12 +164,12 @@ public class MediDetailDialog extends TitleAreaDialog {
 		btnReserveMedication.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 
 		txtIntakeOrder = new Text(ret, SWT.BORDER);
-		txtIntakeOrder.setMessage(Messages.Prescription_Instruction);
+		txtIntakeOrder.setMessage(Messages.MediDetailDialog_intakeOrder);
 		txtIntakeOrder.setTextLimit(254);
 		txtIntakeOrder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
 		txtDisposalComment = new Text(ret, SWT.BORDER);
-		txtDisposalComment.setMessage(Messages.Prescription_Reason);
+		txtDisposalComment.setMessage(Messages.MediDetailDialog_disposalComment);
 		txtDisposalComment.setTextLimit(254);
 		txtDisposalComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
@@ -219,7 +219,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 		}
 
 		setMessage(Messages.MediDetailDialog_pleaseEnterPrescription);
-		getShell().setText(Messages.Article_Detail);
+		getShell().setText(Messages.MediDetailDialog_articleDetail);
 	}
 
 	@Override

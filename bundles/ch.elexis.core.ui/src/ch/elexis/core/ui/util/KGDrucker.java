@@ -47,7 +47,7 @@ public class KGDrucker {
 					Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 					if (kgp.doPrint(actPatient, monitor) == false) {
 						ErrorDialog.openError(null, Messages.KGDrucker_errorPrinting,
-								Messages.KGDrucker_couldntprint + patient.getLabel() + Messages.Core_Backslash_could_not_be_printed, null); // $NON-NLS-1$
+								Messages.KGDrucker_couldntprint + patient.getLabel() + Messages.KGDrucker_emr, null); // $NON-NLS-1$
 					}
 
 					monitor.done();

@@ -122,7 +122,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 				return doImport(monitor);
 			} catch (Exception e) {
 				return new Status(Status.ERROR, Hub.PLUGIN_ID,
-						Messages.Core_Error_while_importing + StringUtils.SPACE + e.getMessage(), e); // $NON-NLS-2$
+						Messages.ImporterPage_importError + StringUtils.SPACE + e.getMessage(), e); // $NON-NLS-2$
 			}
 		}
 	}
@@ -138,7 +138,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 
 		public Text tFname;
 		private String[] filterExts = { "*" }; //$NON-NLS-1$
-		private String[] filterNames = { Messages.Core_All_Files };
+		private String[] filterNames = { Messages.ImporterPage_allFiles };
 
 		public FileBasedImporter(final Composite parent, final ImporterPage home) {
 			this(parent, home, false);

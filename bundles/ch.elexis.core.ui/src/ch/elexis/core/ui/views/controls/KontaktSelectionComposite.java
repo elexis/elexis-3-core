@@ -65,8 +65,8 @@ public class KontaktSelectionComposite extends Composite implements ISelectionPr
 	}
 
 	protected KontaktSelektor getKontaktSelector() {
-		return new KontaktSelektor(getShell(), Kontakt.class, Messages.Core_Select_Contact,
-				Messages.Core_Please_Select_Contact, Kontakt.DEFAULT_SORT);
+		return new KontaktSelektor(getShell(), Kontakt.class, Messages.KontaktSelectionComposite_title,
+				Messages.KontaktSelectionComposite_message, Kontakt.DEFAULT_SORT);
 	}
 
 	/**

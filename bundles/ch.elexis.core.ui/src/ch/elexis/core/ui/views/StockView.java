@@ -140,9 +140,9 @@ public class StockView extends ViewPart implements IRefreshable {
 
 	private StockViewComparator comparator;
 
-	String[] columns = { Messages.Core_Stock, Messages.Core_Phamacode, Messages.LagerView_gtin,
-			Messages.Core_Name, Messages.LagerView_vkPreis, Messages.LagerView_minBestand,
-			Messages.LagerView_istBestand, Messages.LagerView_maxBestand, Messages.Core_Article_provider };
+	String[] columns = { Messages.LagerView_stock, Messages.LagerView_pharmacode, Messages.LagerView_gtin,
+			Messages.LagerView_name, Messages.LagerView_vkPreis, Messages.LagerView_minBestand,
+			Messages.LagerView_istBestand, Messages.LagerView_maxBestand, Messages.LagerView_dealer };
 	int[] colwidth = { 50, 75, 90, 250, 50, 35, 35, 35, 150 };
 
 	@Override
@@ -386,7 +386,7 @@ public class StockView extends ViewPart implements IRefreshable {
 			}
 		};
 
-		exportAction = new Action(Messages.Core_export_to_csv, Images.IMG_EXPORT.getImageDescriptor()) {
+		exportAction = new Action(Messages.LagerView_exportAction, Images.IMG_EXPORT.getImageDescriptor()) {
 			@Override
 			public void run() {
 				FileDialog dialog = new FileDialog(UiDesk.getTopShell(), SWT.SAVE);
@@ -628,7 +628,7 @@ public class StockView extends ViewPart implements IRefreshable {
 
 		@Override
 		public String getText() {
-			return Messages.Core_Remove;
+			return Messages.LagerView_deleteAction;
 		}
 
 		@Override

@@ -204,7 +204,7 @@ public class Test_HL7_parser {
 		assertEquals("Lymphozyten G/l", item.getName());
 		assertEquals(LabItemTyp.TEXT, item.getTyp());
 		// assertEquals(typ.NUMERIC, item.getTyp());
-		assertTrue(item.getGroup().contains(Messages.Core_HL7_Z_automatic));
+		assertTrue(item.getGroup().contains(Messages.HL7Parser_AutomaticAddedGroup));
 		assertNotNull(res);
 		assertEquals(res.getResult(), "1.6");
 	}
@@ -287,7 +287,7 @@ public class Test_HL7_parser {
 		assertEquals("HB", aItem.getKuerzel());
 		assertTrue(aItem.getName().contains("moglobin"));
 		assertEquals(LabItemTyp.NUMERIC, aItem.getTyp());
-		assertTrue(aItem.getGroup().contains(Messages.Core_HL7_Z_automatic));
+		assertTrue(aItem.getGroup().contains(Messages.HL7Parser_AutomaticAddedGroup));
 		// dint test deprecated fields ...
 		// assertEquals("HL7_Test", aItem.getLabor().getKuerzel());
 		// assertEquals(AllTests.testLab.getId(), aItem.getLabor().getId());

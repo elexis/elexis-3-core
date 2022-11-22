@@ -8,7 +8,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.preferences.Messages;
 import ch.elexis.core.ui.medication.property.MedicationUiTester;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.medication.views.ViewerSortOrder;

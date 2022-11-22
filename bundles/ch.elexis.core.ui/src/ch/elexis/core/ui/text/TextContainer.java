@@ -1035,7 +1035,7 @@ public class TextContainer {
 					cMands.setText(lMandator);
 				}
 			});
-			new Label(ret, SWT.NONE).setText(Messages.Core_Mandator);
+			new Label(ret, SWT.NONE).setText(Messages.TextContainer_Mandator);
 			Composite line = new Composite(ret, SWT.NONE);
 			GridLayout gridLayout = new GridLayout(2, false);
 			gridLayout.marginWidth = 0;
@@ -1045,7 +1045,7 @@ public class TextContainer {
 			cMands = new Combo(line, SWT.SINGLE);
 			Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
 			lMands = qbe.execute();
-			cMands.add(Messages.Core_All);
+			cMands.add(Messages.TextContainer_All);
 			for (Mandant m : lMands) {
 				cMands.add(m.getLabel());
 			}
@@ -1160,14 +1160,14 @@ public class TextContainer {
 
 	static class DefaultTextPlugin implements ITextPlugin {
 		private static final String expl = Messages.TextContainer_NoPlugin1 + Messages.TextContainer_NoPlugin2
-				+ Messages.Text_No_Plugin_loaded + Messages.Text_Plugin_Not_Configured
-				+ Messages.Text_External_Cmd_deleted;
+				+ Messages.TextContainer_Noplugin3 + Messages.TextContainer_NoPlugin4
+				+ Messages.TextContainer_NoPLugin5;
 
 		public Composite createContainer(final Composite parent, final ITextPlugin.ICallback h) {
 			parent.setLayout(new FillLayout());
 			// Composite ret=new Composite(parent,SWT.BORDER);
 			Form form = UiDesk.getToolkit().createForm(parent);
-			form.setText(Messages.Core_Unable_to_create_text);
+			form.setText(Messages.TextContainer_NoPluginCaption);
 			form.getBody().setLayout(new FillLayout());
 			FormText ft = UiDesk.getToolkit().createFormText(form.getBody(), false);
 			ft.setText(expl, true, false);

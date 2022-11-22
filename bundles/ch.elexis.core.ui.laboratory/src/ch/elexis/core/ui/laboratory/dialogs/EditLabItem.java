@@ -79,8 +79,8 @@ public class EditLabItem extends TitleAreaDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText(Messages.Core_Laboratory_parameter);
-		setTitle(Messages.Core_Enter_new_laboratory_parameter);
+		getShell().setText(Messages.EditLabItem_shellTitle);
+		setTitle(Messages.EditLabItem_title);
 		setMessage(Messages.EditLabItem_message);
 
 		Composite ret = new Composite(parent, SWT.NONE);
@@ -93,28 +93,28 @@ public class EditLabItem extends TitleAreaDialog {
 		mapping.setLayoutData(layoutData);
 		mapping.setLabItem(actLabItem);
 
-		WidgetFactory.createLabel(ret, Messages.Core_Short_Label);
+		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelShortLabel);
 		iKuerzel = new Text(ret, SWT.BORDER);
 		iKuerzel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iKuerzel.setTextLimit(80);
 
-		WidgetFactory.createLabel(ret, Messages.Core_Title);
+		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelTitle);
 		iTitel = new Text(ret, SWT.BORDER);
 		iTitel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iTitel.setTextLimit(80);
 
-		WidgetFactory.createLabel(ret, Messages.Core_Type);
+		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelType);
 		Group grp = new Group(ret, SWT.NONE);
 		grp.setLayout(new FillLayout(SWT.HORIZONTAL));
 		grp.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 		numeric = new Button(grp, SWT.RADIO);
-		numeric.setText(Messages.Core_Number);
+		numeric.setText(Messages.EditLabItem_labelTypNumber);
 		alph = new Button(grp, SWT.RADIO);
-		alph.setText(Messages.Core_Text);
+		alph.setText(Messages.EditLabItem_labelTypText);
 		abs = new Button(grp, SWT.RADIO);
-		abs.setText(Messages.Core_Absolute);
+		abs.setText(Messages.EditLabItem_labelTypAbsolute);
 		formula = new Button(grp, SWT.RADIO);
-		formula.setText(Messages.Core_Formula);
+		formula.setText(Messages.EditLabItem_labelTypFormula);
 		formula.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -130,25 +130,25 @@ public class EditLabItem extends TitleAreaDialog {
 
 		});
 		document = new Button(grp, SWT.RADIO);
-		document.setText(Messages.Core_Document);
+		document.setText(Messages.EditLabItem_labelTypDocument);
 		document.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				documentSelectionChanged();
 			}
 		});
-		WidgetFactory.createLabel(ret, Messages.Core_Reference_Male);
+		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelRefMale);
 
 		iRef = new Text(ret, SWT.BORDER);
 		iRef.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iRef.setTextLimit(80);
 		iRef.setEnabled(actLabItem == null || !actLabItem.isNoReferenceValueItem());
-		WidgetFactory.createLabel(ret, Messages.Core_Reference_female);
+		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelRefFemale);
 		iRfF = new Text(ret, SWT.BORDER);
 		iRfF.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iRfF.setTextLimit(80);
 		iRfF.setEnabled(actLabItem == null || !actLabItem.isNoReferenceValueItem());
-		WidgetFactory.createLabel(ret, Messages.Core_Unit);
+		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelUnit);
 		noRefValues = new Button(grp, SWT.CHECK);
 		noRefValues.setText(ch.elexis.core.l10n.Messages.LabResultEvaluator_LabItemNoRefValue);
 		noRefValues.addSelectionListener(new SelectionAdapter() {
@@ -162,7 +162,7 @@ public class EditLabItem extends TitleAreaDialog {
 		iUnit = new Text(ret, SWT.BORDER);
 		iUnit.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 		iUnit.setTextLimit(25);
-		WidgetFactory.createLabel(ret, Messages.Core_Group);
+		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelGroup);
 
 		List<LabItem> labItems = LabItem.getLabItems();
 		groups.clear();
@@ -180,12 +180,12 @@ public class EditLabItem extends TitleAreaDialog {
 
 		cGroup = new Combo(ret, SWT.SINGLE | SWT.DROP_DOWN);
 		cGroup.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		cGroup.setToolTipText(Messages.Core_Labgroup);
+		cGroup.setToolTipText(Messages.EditLabItem_tooltipGroup);
 		cGroup.setItems(groups.toArray(new String[0]));
-		WidgetFactory.createLabel(ret, Messages.Core_Sequence_number);
+		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelGroupSequence);
 		iPrio = new Text(ret, SWT.BORDER);
 		iPrio.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		iPrio.setToolTipText(Messages.Core_Sequence_inside_group);
+		iPrio.setToolTipText(Messages.EditLabItem_labelGroupPosition);
 		iPrio.setTextLimit(3);
 
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_OriginLaboratoryLabel);
@@ -198,8 +198,8 @@ public class EditLabItem extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Labor.class,
-						Messages.Laboratory_Please_Select_Origin,
-						Messages.Laboratory_Please_Select_Origin, false);
+						Messages.EditLabItem_OriginLaboratorySelectorCaption,
+						Messages.EditLabItem_OriginLaboratorySelectorBody, false);
 				if (ksl.open() == Dialog.OK) {
 					actLabor = (Labor) ksl.getSelection();
 					originLaboratory.setText(actLabor.getLabel());
@@ -238,10 +238,10 @@ public class EditLabItem extends TitleAreaDialog {
 		visible = new Button(ret, SWT.CHECK);
 		visible.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		WidgetFactory.createLabel(ret, Messages.Core_Export_tag);
+		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelExportTag);
 		cExportTag = new Combo(ret, SWT.SINGLE | SWT.DROP_DOWN);
 		cExportTag.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		cExportTag.setToolTipText(Messages.Core_HL7_Tags_comma_separated);
+		cExportTag.setToolTipText(Messages.EditLabItem_labelHintExportTag);
 		cExportTag.setItems(exportTags.toArray(new String[0]));
 
 		if (actLabItem != null) {

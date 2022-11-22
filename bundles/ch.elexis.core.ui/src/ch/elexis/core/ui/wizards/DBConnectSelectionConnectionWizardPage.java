@@ -58,9 +58,9 @@ public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage 
 	 * @wbp.parser.constructor
 	 */
 	public DBConnectSelectionConnectionWizardPage(String dBConnectWizard_typeOfDB) {
-		super(Messages.Core_Connection);
+		super(Messages.DBConnectFirstPage_Connection);
 
-		setTitle(Messages.Core_Connection);
+		setTitle(Messages.DBConnectFirstPage_Connection);
 		setMessage(Messages.DBConnectSelectionConnectionWizardPage_this_message);
 	}
 

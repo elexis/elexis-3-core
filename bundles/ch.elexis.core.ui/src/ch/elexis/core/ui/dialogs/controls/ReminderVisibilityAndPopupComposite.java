@@ -20,7 +20,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.views.Messages;
 
 public class ReminderVisibilityAndPopupComposite extends Composite {
 

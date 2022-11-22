@@ -106,8 +106,8 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage implements I
 
 		@Override
 		public void run() {
-			KontaktSelektor dialog = new KontaktSelektor(getShell(), Labor.class, Messages.Core_Select_Laboratory,
-					Messages.Core_Select_Laboratory, Kontakt.DEFAULT_SORT);
+			KontaktSelektor dialog = new KontaktSelektor(getShell(), Labor.class, Messages.LabImporterUtil_SelectLab,
+					Messages.LabImporterUtil_SelectLab, Kontakt.DEFAULT_SORT);
 			if (dialog.open() == Dialog.OK) {
 				Labor contact = (Labor) dialog.getSelection();
 				Set<Labor> findAllLabsWithPathFlagMissingMeansNonPathologic = findAllLabsWithPathFlagMissingMeansNonPathologic();

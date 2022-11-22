@@ -49,15 +49,7 @@ require 'logger'
 require "sqlite3"
 $stdout.sync = true
 
-
 ELEXIS_BASE = File.expand_path(File.dirname(File.dirname(__FILE__)))
-FIX_NAME_CSV = File.dirname(__FILE__) + '/fix_names.csv'
-Fixes =  CSV.read(FIX_NAME_CSV)
-BETTER_NAMES = {}
-
-# Ignore heading
-Fixes[1..-1].each { |x| BETTER_NAMES[x[1]] = x[2] }
-
 L10N_MESSAGES = Dir.glob("#{ELEXIS_BASE}/**/l10n/Messages.java").first
 DB_NAME = defined?(RSpec) ? File.expand_path( "rsc/test_translations.db") : File.expand_path( "translations.DB")
 DB = SQLite3::Database.new DB_NAME
@@ -85,22 +77,6 @@ rows2 = DB.execute <<-SQL
 SQL
 end
 
-def get_all_used_messages(java_file)
-    keys = []
-    lines = File.readlines(java_file)
-    lines.each_with_index do | line, index |
-        next if line.index(/BUNDLE_NAME|Messages.class/) # Fix for LocalizeUtil
-        if m = REGEX_MESSAGES_REF.match(line)
-            keys << m[1]
-            while line && m && line.sub!(/Messages.#{m[1]}/, '')  do
-                keys << m[1] if m = REGEX_MESSAGES_REF.match(line)
-            end
-        end
-    end
-    keys.uniq!
-    keys.sort
-end
-
 def update_uses
   DB.execute "drop table if exists t_uses;"
   create_t_uses
@@ -112,7 +88,7 @@ def update_uses
 #	puts "Analysing #{lines.size} lines for #{file}"
 	lines.each_with_index do | line,index |
 	  begin
-		next unless m = REGEX_MESSAGES_REF.match(line)
+		next unless m = /.*Messages.(\w+)/.match(line)
 		DB.execute "insert into t_uses values ( ?, ? , ? )",  file, m[1], index
 	  rescue => error
 #		puts error; binding.pry
@@ -219,10 +195,11 @@ class L10N_Cache
   CSV_HEADER_SIZE  = L10N_Cache::CSV_HEADER_START.size
   JavaLanguage = :java
   LANGUAGE_KEYS = [ :de, :en, :fr, :it]
-  REGEX_TRAILING_LANG = /\.plugin$|\.(#{LANGUAGE_KEYS.join('|')})$/
 
   TRANSLATIONS_CSV_NAME = 'translations.csv'
   Translations = Struct.new(:lang, :values)
+  REGEX_TRAILING_LANG = /\.plugin$|\.(#{LANGUAGE_KEYS.join('|')})$/
+  KEY_REGEX_IN_MESSAGES = /String\s+(\w+)(\s*|.=.*)/
   EscapeBackslash = /\\([\\]+)/
 
   @@hasChanges = false
@@ -334,7 +311,7 @@ class L10N_Cache
   def self.save_csv
 	destFile = DB_NAME.sub(File.extname(DB_NAME),'.csv')
 	puts "Saving DB to #{destFile} with changes? #{@@hasChanges} (Takes a few seconds)"
-	# return unless @@hasChanges || !File.exists?(destFile)
+	return unless @@hasChanges || !File.exists?(destFile)
 	headers = [:key, :java, :de, :en, :fr, :it]
 	CSV.open(destFile, "w") do |csv|
 	  csv << headers
@@ -486,10 +463,6 @@ class I18nInfo
     project_xml.elements['projectDescription'].elements['name'].text
   end
 
-  def add_fixes_to_db
-    Fixes.each { |x| L10N_Cache.set_translation(x[2], :de, x[0])}
-    Fixes.each { |x| L10N_Cache.set_translation(x[2], :java, x[0])}
-  end
   def parse_plugin_and_messages
     @@directories.each do |directory|
       @main_dir = File.expand_path(directory)
@@ -528,7 +501,7 @@ class I18nInfo
   end
 
   def start_with_lang_in_parenthesis(line, lang)
-    return /^\(#{lang}/.match(line)
+  	/^\(#{lang}/.match(line)
   end
 
   def add_google_translation(source_lang, string2translate, lang)
@@ -538,8 +511,8 @@ class I18nInfo
     end
     # translate_text(what, target_language=:it, source_language=:de)
     translated = GoogleTranslation.translate_text(string2translate, lang, source_lang)
-    return unless translated
 	puts "add_google_translation #{source_lang} -> #{lang} for #{string2translate} got #{translated}"
+    return unless translated
     CGI.unescapeHTML(translated)
   end
 
@@ -548,7 +521,6 @@ class I18nInfo
       puts "Without an enviornment variable TRANSLATE_API_KEY we cannot translate any new string"
       exit(3)
     end
-    add_fixes_to_db
     inserts = {}
     idx = 0
 	size = L10N_Cache.keys.size
@@ -598,7 +570,6 @@ class I18nInfo
     @@directories = [dir]
     @gen_csv = true
     parse_plugin_and_messages
-    add_fixes_to_db
   end
 
   def generate_plugin_properties(project_name, filename)
@@ -628,24 +599,14 @@ class I18nInfo
           next unless keys.find_all{|x| /#{tag_name}$/.match(x)}.size > 0
           if !lang_value || lang_value.empty?
             puts "no #{lang} value found for #{tag2write}"
-            lang_value = "" if lang.eql?(:java) # empty for keys like AgendaDefinitionPreferencePage_mntmNewItem_text
+            next
           end
           emit_RBE_compatible_line(file, tag2write, lang_value, true)
         end
       end
     end
   end
-  def find_fix(german)
-    found = Fixes.find{ |x| x.first.eql?(german)}
-    if found
-      cmd = "update translations set key = '#{found[2]}' where key = '#{found[1]}';"
-      puts cmd
-      res = DB.execute(cmd)
-      return found[2]
-    else
-      return nil
-    end
-  end
+ 
   def find_best_name(german)
     cmd = "select key, de from translations where de == '#{german}' and ( key like 'Core_%' or key like 'Sex%' or key like 'Printing_%' or key like 'Export_while' or key like 'Script%' or key like 'UNKNOWN' or key like 'TimeTool%' or key like 'Contact_%');"
     res = DB.execute(cmd)
@@ -653,8 +614,6 @@ class I18nInfo
       puts "Best name for #{german} is #{res.first[0]}" if $VERBOSE
       return res.first[0]
     else
-      has_fix = find_fix(german)
-      return has_fix if has_fix
       puts "Nothing found for #{german}" if $VERBOSE
       cmd = "select min(key), de from translations where de == '#{german}';"
       res = DB.execute(cmd)
@@ -700,7 +659,7 @@ class I18nInfo
   def eliminate_java(java_file, patches)
     return if File.basename(java_file).eql?("Messages.java")
     return if File.dirname(java_file).include?("/src-gen")
-    # return if File.dirname(java_file).include?("/ch.rgw.utility")
+    return if File.dirname(java_file).include?("/ch.rgw.utility")
     content = IO.read(java_file)
     old_content = content.clone
     patches.each do |old_key, new_key|
@@ -714,13 +673,12 @@ class I18nInfo
   end
 
   def eliminate(main_dir)
-    main_dir = File.expand_path(main_dir)
-    puts "Reduce #{main_dir}"
+#      puts find_best_name('unbekannt')
+       main_dir = File.expand_path(main_dir)
+#   j=0; DB.execute( "select count(de) anzahl, de, min(key), max(key) from translations group by de  having anzahl > 2 order by anzahl desc" ) { |row| j=j+1; break if j == 5; p row }
+       puts "Reduce #{main_dir}"
     patches = {}
-    cmd = 'select count(*) anzahl, key, de from translations group by de  having anzahl >= 2 order by anzahl desc;'
-    rows = DB.execute(cmd)
-    puts "eliminate #{rows.size} duplicate"
-    DB.execute('select count(*) anzahl, key, de from translations group by de  having anzahl >= 2 order by anzahl desc;' ) do |row|
+    DB.execute('select count(*) anzahl, key, de from translations group by de  having anzahl > 2 order by anzahl desc;' ) do |row|
        german = row[2];
        best = find_best_name(german);
        puts "key #{german} => #{best}" if  $VERBOSE
@@ -736,14 +694,15 @@ class I18nInfo
          DB.execute("update translations set occurences = -#{nrDuplicates} where de == '#{german}' and key != '#{best}'")
        end
     end
-    allPatches = patches.merge(BETTER_NAMES)
+    patches.each do |old_key, new_key|
+      puts "Must patch #{old_key} by #{new_key}" if $VERBOSE
+    end
      Dir.glob("#{main_dir}/**/Messages.java").each do |msg_java|
-       next if msg_java.index('src/ch/elexis/core/l10n/Messages.java')
-       eliminate_properties(msg_java, allPatches)
-       eliminate_messages_java(msg_java, allPatches)
+       eliminate_properties(msg_java, patches)
+       eliminate_messages_java(msg_java, patches)
      end
      Dir.glob("#{main_dir}/**/*.java").each do |java_file|
-       eliminate_java(java_file, allPatches)
+       eliminate_java(java_file, patches)
      end
   end
   #
@@ -752,7 +711,7 @@ class I18nInfo
   # text
   def analyze_new(main_dir)
 	project_name =  get_project_name(main_dir)
-	existing_keys = get_keys_from_messages_java(L10N_MESSAGES)
+	existing_keys = get_keys_from_messages_java(L10N_MESSAGES, 'l10n')
 	update_uses
 	used_keys =  L10N_Cache.uses.clone
 	unused_keys = existing_keys.select{ |x| ! used_keys.index(x) }
@@ -760,7 +719,7 @@ class I18nInfo
 	reported = []
     Dir.glob("#{main_dir}/**/Messages.java").each do |msg_java|
 	  puts msg_java
-	  some_keys = get_keys_from_messages_java(msg_java).sort
+	  some_keys = get_keys_from_messages_java(msg_java, project_name).sort
 	   prop_file = msg_java.sub('Messages.java', 'messages.properties')
 	   analyse_one_message_file(project_name, prop_file)
 #	   puts "found #{some_keys.size} new keys in #{msg_java}"
@@ -768,8 +727,8 @@ class I18nInfo
 	end
 	puts "found #{keys.size} new keys in #{project_name}"
 	already_present = existing_keys.select{ |x| keys.index(x)}
-	newKeys = keys.select{ |x| !already_present.index(x)}
-	newKeys.each do |key|
+	new_keys = keys.select{ |x| !already_present.index(x)}
+	new_keys.each do |key|
 	  text = L10N_Cache.db_get_entry(key)[:java]
 	  entries = L10N_Cache.search_text(text, :java)
 	  entries.delete_if{|x| x[:key].eql?(key) }
@@ -837,53 +796,55 @@ class I18nInfo
 	end
   end
 
-  # reads all keys from all Messages.java found under all ARGV directories
-  # Applices BETTER_NAMES
-  # Then generates ch.elexis.core.l10n/ Messages.java and messages properties
+  def to_utf(string)
+    begin
+      /String\s+(\w+)\s*;/.match(string)
+    rescue
+      string = string.encode('UTF-8', 'ISO-8859-1')
+    end
+    string
+  end
+  OLD_MESSAGES_HEADER = 'package ch.elexis.core.l10n;
+
+import org.eclipse.osgi.util.NLS;
+
+public class Messages extends NLS {
+       // BUNDLE_NAME is needed for core.data
+       public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
+'
+  OLD_TAIL = '       static { // load message values from bundle file
+               NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+       }'
+  NEW_MESSAGES_HEADER = 'package ch.elexis.core.l10n;
+import org.eclipse.e4.core.services.nls.Message;
+public class Messages {
+	   // BUNDLE_NAME is neede for a core.data	   -import org.eclipse.osgi.util.NLS;
+public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
+
+'
+  def emit_l10_messages_java(msg_java, keys)
+	index = 0
+	File.open(msg_java, 'w') do |content|
+	  content.puts(OLD_MESSAGES_HEADER)
+	  keys.each do |key|
+		content.puts "	public static String #{key};"
+	  end
+	  content.puts OLD_TAIL
+	  content.puts('}');
+	  puts "Wrote #{keys.size} Java variables to #{msg_java}"
+	end
+  end
+
   def emit_l10n
     path = "**/ch.elexis.core.l10n/**/Messages.java"
     msg_java = Dir.glob(path).first
     raise "Unable to find l10n Messages.java (Searched via #{path}" unless msg_java 
-    l10nKeys = get_keys_from_messages_java(msg_java)
-    newKeys = []
-    ARGV.each do |dir|
-        path = "#{File.expand_path(dir)}/**/Messages.java"
-        files =  Dir.glob(path)
-        puts "emit_l10n handling #{dir} using #{path} found #{files.size} Messages.java files" # if $VERBOSE
-        files.each do |msg_java|
-          if msg_java.index('ch.elexis.core') && !msg_java.index('ch.elexis.core.l10n') &&
-              !msg_java.index('ch.elexis.core.jpa.entities') && !msg_java.index('ch.elexis.core.model')
-            newKeys += get_keys_from_messages_java(msg_java)
-          else
-            newKeys += get_keys_matching_l10n_messages(msg_java)
-          end
-        binding.pry if newKeys.index('sendingApplication')
-        binding.pry if newKeys.index('messageCodes')
-        binding.pry if newKeys.index('json')
-        binding.pry if newKeys.index('getMessageText')
-        end
-    end
-    keys = (newKeys + l10nKeys+BETTER_NAMES.values).uniq.sort
-    mine = []
-    keys.each {|key| BETTER_NAMES[key] ? mine<< BETTER_NAMES[key] : mine << key}
-    keys = mine.uniq.sort
-    puts "emit_l10n found #{keys.size} in #{ARGV.join(' ')}"
-    emit_l10_messages_java(msg_java, keys)
-    write_translation_to_properties(msg_java, keys)
+	keys = L10N_Cache.keys.find_all{ |key| !/#{L10N_Cache::TAG_SEPARATOR}/.match(key)}.sort
+    keys.delete_if{|x| x.index('.')}
+	emit_l10_messages_java(msg_java, keys)
+	write_translation_to_properties(msg_java, keys)
   end
 
-  def patch_corresponding_manifest(msg_java, project_name)
-    manifest =  msg_java[0..(msg_java.index(project_name)-1)]+project_name+'/META-INF/MANIFEST.MF'
-    content = File.read(manifest)
-    old_content = content.clone
-    unless /ch.elexis.core.l10n/.match(content)
-        content.sub!('Require-Bundle: ', "Require-Bundle: ch.elexis.core.l10n,\n ")
-    end
-    File.open(manifest, 'w+') do |file|
-        puts "Patched MANIFEST.MF   #{manifest}"
-        file.write content
-    end unless content.eql?(old_content)
-  end
   def patch_messages_java(main_dir)
     Dir.glob("#{main_dir}/**/Messages.java").each do |msg_java|
       project_name =  get_project_name(msg_java)
@@ -891,12 +852,10 @@ class I18nInfo
         puts "to_messages_properties skips project #{project_name} because its name matches 10n"
 		next
       end
-	  puts "patch_messages_java: Handling #{project_name}" if $VERBOSE
-      keys = get_keys_from_messages_java(msg_java).sort
+	  puts "Handling #{project_name}"
+      keys = get_keys_from_messages_java(msg_java, project_name).sort
       next if keys.size == 0
-	  res = patch_a_messages_java(msg_java, keys)
-      content = File.read(msg_java)
-      patch_corresponding_manifest(msg_java, project_name) if content.index('ch.elexis.core.l10n.Messages')
+	  patch_a_messages_java(msg_java, keys)
     end
   end
 
@@ -921,31 +880,20 @@ class I18nInfo
 		  next if tag2write.eql?('false')
 		  if !lang_value || lang_value.empty?
 			puts "no #{lang} value found for #{tag2write}"
-            if lang.to_s.eql?('java') then lang_value = '' else next end 
+			next
 		  end
 		  emit_RBE_compatible_line(file, tag2write, lang_value)
 		end
 	  end
 	end
   end
-
-  def get_keys_matching_l10n_messages(msg_java)
-    if /import\s+ch.elexis.core.l10n.Messages;/.match(File.read(msg_java))
-      return get_all_used_messages(msg_java)
-    else
-      regex = KEY_REGEX_MATCH_L10N_MESSAGE
-    end
+  
+  def get_keys_from_messages_java(msg_java, project_name)
 	lines = File.readlines(msg_java).collect{|line| to_utf(line) }
-    keys = lines.collect do |line|
-        m = KEY_REGEX_MATCH_L10N_MESSAGE.match(line);
-        if m
-              key = m[1]
-              BETTER_NAMES[key] ? BETTER_NAMES[key] : key
-        else nil
-        end
-    end
-    keys.compact.uniq.sort
-   end
+    keys = lines.collect{|line| m = L10N_Cache::KEY_REGEX_IN_MESSAGES.match(line); m[1] if m }.compact
+    puts "#{project_name}: where #{msg_java} has #{keys.size} keys" if $VERBOSE
+    keys
+  end
   
  # TODO: Generate properties files for all languages by default, but do correct stuff in l10n.{lang}
   def to_plugin_properties(main_dir)
@@ -978,22 +926,13 @@ class I18nInfo
 	content.sub!(/^\s*private Messages[^}]+}/m, '')
 	content.sub!(/\s*extends\s+NLS\s+/, '')
     content.gsub!(/(\s*=\s*[\w\.]+)/, '')
-    content.split("\n").each do |line|
-      if m= /^\s*public\s+static\s+String\s+(\w+);/.match(line)
-        if BETTER_NAMES[m[1]]
-          line2 = line.gsub(/^\s*public\s+static\s+String\s+(\w+);/, '    public static String \1 = ch.elexis.core.l10n.Messages.'+BETTER_NAMES[m[1]]+';');
-          puts "Patched #{m[1]} #{BETTER_NAMES[m[1]]}" 
-        else
-          line2 = line.gsub(/^\s*public\s+static\s+String\s+(\w+);/, '    public static String \1 = ch.elexis.core.l10n.Messages.\1;');
-        end
-        content.gsub!(line, line2)
-      end
-    end; 0
+#    content.gsub!(/public static String/, 'public String')
+	content.gsub!(/^\s*public\s+static\s+String\s+(\w+);/, '    public static String \1 = ch.elexis.core.l10n.Messages.\1;');
+#	content.gsub!(/String\s+(\w+)\w*;/, 'String \1 = ch.elexis.core.l10n.Messages.\1;');
     File.open(msg_java, 'w+') do |file|
-      puts "Patched Javafile      #{msg_java}"
+      puts "Patched Javafile      #{java_file}"
       file.write content
     end unless content.eql?(old_content)
-    !content.eql?(old_content)
   end
 end
 	                  
@@ -1047,9 +986,9 @@ ARGV.each do |dir|
 	i18n.to_messages_properties(dir)  if Options[:to_messages_properties]
 	i18n.to_plugin_properties(dir) if Options[:to_plugin_properties]
 	i18n.patch_messages_java(dir) if Options[:patch_messages]
+	i18n.emit_l10n if Options[:emit_l10n]
 	i18n.analyze_new(dir) if Options[:analyze_new]
 end
-i18n.emit_l10n if Options[:emit_l10n]
 	   # update_uses
 i18n.add_missing if Options[:add_missing]
 L10N_Cache.save_csv

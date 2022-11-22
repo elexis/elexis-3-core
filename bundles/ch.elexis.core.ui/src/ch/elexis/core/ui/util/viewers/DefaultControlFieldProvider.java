@@ -39,7 +39,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ElexisText;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.util.Messages;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;

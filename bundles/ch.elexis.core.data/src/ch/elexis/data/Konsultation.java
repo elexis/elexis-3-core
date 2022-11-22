@@ -1152,7 +1152,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		Fall actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 		if (actFall == null) {
 			if (actPatient == null) {
-				MessageEvent.fireError(Messages.GlobalActions_CantCreateKons, Messages.Core_Please_Select_first_a_Patient);
+				MessageEvent.fireError(Messages.GlobalActions_CantCreateKons, Messages.GlobalActions_DoSelectPatient);
 				return;
 			}
 			if (actFall == null) {
@@ -1188,7 +1188,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			}
 		}
 		if (!actFall.isOpen()) {
-			MessageEvent.fireError(Messages.GlobalActions_casclosed, Messages.Core_Cannot_add_consultation_to_closed_case);
+			MessageEvent.fireError(Messages.GlobalActions_casclosed, Messages.GlobalActions_caseclosedexplanation);
 			return;
 		}
 		Konsultation actLetzte = actFall.getLetzteBehandlung();

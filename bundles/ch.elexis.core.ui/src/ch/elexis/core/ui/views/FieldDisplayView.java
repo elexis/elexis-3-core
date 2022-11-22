@@ -256,7 +256,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 	}
 
 	private void makeActions() {
-		newViewAction = new Action(Messages.Core_New_Window) { // $NON-NLS-1$
+		newViewAction = new Action(Messages.FieldDisplayView_NewWindow) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
 				setToolTipText(Messages.FieldDisplayView_NewWindowToolTip); // $NON-NLS-1$
@@ -293,7 +293,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 	}
 
 	class SelectDataDialog extends TitleAreaDialog {
-		private final String DATATYPE = Messages.Core_Data_Type; // $NON-NLS-1$
+		private final String DATATYPE = Messages.FieldDisplayView_DataType; // $NON-NLS-1$
 		String[] nodes;
 		Combo cbNodes;
 		Button btEditable;

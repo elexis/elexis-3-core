@@ -394,7 +394,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	}
 
 	private void makeActions(final ReminderViewCommonContentProvider contentProvider) {
-		newReminderAction = new Action(Messages.Core_New_ellipsis) { // $NON-NLS-1$
+		newReminderAction = new Action(Messages.ReminderView_newReminderAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				setToolTipText(Messages.ReminderView_newReminderToolTip); // $NON-NLS-1$
@@ -419,7 +419,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				cv.notify(CommonViewer.Message.update_keeplabels);
 			}
 		};
-		deleteReminderAction = new Action(Messages.Core_Delete) {
+		deleteReminderAction = new Action(Messages.ReminderView_deleteAction) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 				setToolTipText(Messages.ReminderView_deleteToolTip);
@@ -511,7 +511,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			}
 		};
 		showOthersRemindersAction = new RestrictedAction(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS,
-				Messages.Core_All, Action.AS_CHECK_BOX) {
+				Messages.ReminderView_foreignAction, Action.AS_CHECK_BOX) {
 			{
 				setToolTipText(Messages.ReminderView_foreignTooltip);
 				setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());
@@ -575,10 +575,10 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			}
 		};
 
-		reloadAction = new Action(Messages.Core_Reload) { // $NON-NLS-1$
+		reloadAction = new Action(Messages.PatHeuteView_reloadAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
-				setToolTipText(Messages.Core_Reread_List); // $NON-NLS-1$
+				setToolTipText(Messages.PatHeuteView_reloadToolTip); // $NON-NLS-1$
 			}
 
 			@Override

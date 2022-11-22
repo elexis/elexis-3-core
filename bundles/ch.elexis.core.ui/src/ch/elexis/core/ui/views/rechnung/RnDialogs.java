@@ -100,15 +100,15 @@ public class RnDialogs {
 			Composite ret = new Composite(parent, SWT.NONE);
 			ret.setLayout(new GridLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			new Label(ret, SWT.NONE).setText(Messages.Core_Date); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); // $NON-NLS-1$
 			dp = new DatePickerCombo(ret, SWT.NONE);
 			dp.setDate(new Date());
-			new Label(ret, SWT.NONE).setText(Messages.Core_Amount); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); // $NON-NLS-1$
 			// nf=NumberFormat.getCurrencyInstance();
 			amount = new Text(ret, SWT.BORDER);
 			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.Core_Remark); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); // $NON-NLS-1$
 			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setFocus();
@@ -174,15 +174,15 @@ public class RnDialogs {
 			ret.setLayout(new GridLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 
-			new Label(ret, SWT.NONE).setText(Messages.Core_Date); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); // $NON-NLS-1$
 			dp = new DatePickerCombo(ret, SWT.NONE);
 			dp.setDate(new Date());
-			new Label(ret, SWT.NONE).setText(Messages.Core_Amount); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); // $NON-NLS-1$
 			// nf=NumberFormat.getCurrencyInstance();
 			amount = new Text(ret, SWT.BORDER);
 			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.Core_Remark); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); // $NON-NLS-1$
 			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setFocus();
@@ -277,15 +277,15 @@ public class RnDialogs {
 			Composite ret = new Composite(parent, SWT.NONE);
 			ret.setLayout(new GridLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.Core_Date); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_date); // $NON-NLS-1$
 			dp = new DatePickerCombo(ret, SWT.NONE);
 			dp.setDate(new Date());
-			new Label(ret, SWT.NONE).setText(Messages.Core_Amount); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_amount); // $NON-NLS-1$
 			// nf=NumberFormat.getCurrencyInstance();
 			amount = new Text(ret, SWT.BORDER);
 			// amount.setText(rn.getOffenerBetrag().getAmountAsString());
 			amount.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			new Label(ret, SWT.NONE).setText(Messages.Core_Remark); // $NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(Messages.RnDialogs_remark); // $NON-NLS-1$
 			bemerkung = new Text(ret, SWT.MULTI | SWT.BORDER);
 			bemerkung.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			amount.setText(rn.getOffenerBetrag().getAmountAsString());
@@ -709,7 +709,7 @@ public class RnDialogs {
 		@Override
 		public void create() {
 			super.create();
-			getShell().setText(Messages.Core_Invoice_List);
+			getShell().setText(Messages.RnActions_billsList);
 			setTitle(Messages.RnActions_exportListCaption);
 			setMessage(Messages.RnActions_exportListMessage);
 			getShell().setSize(900, 700);

@@ -25,7 +25,7 @@ import ch.elexis.core.ui.actions.AbstractDataLoaderJob;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.JobPool;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.util.Messages;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
 import ch.elexis.data.Query;

@@ -27,7 +27,7 @@ import ch.elexis.data.Anwender;
 public class FontPreference extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	public FontPreference() {
-		super(Messages.Core_Fonts, GRID);
+		super(Messages.FontPreference_schriftarten, GRID);
 		setPreferenceStore(new ConfigServicePreferenceStore(Scope.USER));
 	}
 

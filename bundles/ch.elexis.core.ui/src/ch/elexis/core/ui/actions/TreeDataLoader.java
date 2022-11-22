@@ -85,7 +85,7 @@ public class TreeDataLoader extends PersistentObjectLoader implements ILazyTreeC
 	}
 
 	public IStatus work(IProgressMonitor monitor, HashMap<String, Object> params) {
-		monitor.beginTask(Messages.Core_Load_Files_ellipsis, IProgressMonitor.UNKNOWN); // $NON-NLS-1$
+		monitor.beginTask(Messages.PersistentObjectLoader_LoadingData, IProgressMonitor.UNKNOWN); // $NON-NLS-1$
 		synchronized (qbe) {
 			root.clear();
 			setQuery("NIL"); //$NON-NLS-1$

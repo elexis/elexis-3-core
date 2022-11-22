@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.actions.Messages;
 import ch.elexis.core.ui.dialogs.EtiketteDruckenDialog;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
@@ -37,8 +37,8 @@ public final class PrintPatientLabelHandler extends AbstractHandler {
 
 		EtiketteDruckenDialog dlg = new EtiketteDruckenDialog(
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), actPatient, TT_PATIENT_LABEL);
-		dlg.setTitle(Messages.Core_Print_Patient_Label);
-		dlg.setMessage(Messages.Core_Print_Patient_Label);
+		dlg.setTitle(Messages.GlobalActions_PrintLabel);
+		dlg.setMessage(Messages.GlobalActions_PrintLabelToolTip);
 		if (!CoreHub.localCfg.get("Drucker/Etiketten/Choose", true)) { //$NON-NLS-1$
 			dlg.setBlockOnOpen(false);
 			dlg.open();

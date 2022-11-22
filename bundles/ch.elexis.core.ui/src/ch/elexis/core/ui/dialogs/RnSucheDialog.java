@@ -39,8 +39,8 @@ public class RnSucheDialog extends TitleAreaDialog {
 	protected Control createDialogArea(Composite parent) {
 		LabeledInputField.Tableau tbl = new LabeledInputField.Tableau(parent);
 		tbl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		liNummer = tbl.addComponent(Messages.Core_Number); // $NON-NLS-1$
-		liName = tbl.addComponent(Messages.Core_Name); // $NON-NLS-1$
+		liNummer = tbl.addComponent(Messages.RnSucheDialog_number); // $NON-NLS-1$
+		liName = tbl.addComponent(Messages.RnSucheDialog_name); // $NON-NLS-1$
 		return tbl;
 	}
 

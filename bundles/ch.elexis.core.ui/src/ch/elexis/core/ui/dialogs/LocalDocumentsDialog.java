@@ -97,7 +97,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		TableViewerColumn tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcPatient = tvc.getColumn();
 		tcLayout.setColumnData(tcPatient, new ColumnPixelData(150, false, false));
-		tcPatient.setText(Messages.Core_Patient);
+		tcPatient.setText(Messages.LocalDocumentsDialog_patient);
 		tvc.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -108,7 +108,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcDocument = tvc.getColumn();
 		tcLayout.setColumnData(tcDocument, new ColumnPixelData(250, true, true));
-		tcDocument.setText(Messages.Core_Document);
+		tcDocument.setText(Messages.LocalDocumentsDialog_document);
 		tvc.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -142,7 +142,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		abortAllBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (MessageDialog.openQuestion(getShell(), Messages.Core_Abort,
+				if (MessageDialog.openQuestion(getShell(), Messages.LocalDocumentsDialog_aborttitle,
 						Messages.LocalDocumentsDialog_abortquestion)) {
 					abortLocalEdit(new StructuredSelection(service.getAll()));
 					okPressed();
@@ -212,8 +212,8 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 			command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			tableViewer.setInput(service.getAll());
 		} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
-			MessageDialog.openError(getShell(), Messages.Core_Error,
-					Messages.Core_Could_not_reread_correctly_document);
+			MessageDialog.openError(getShell(), Messages.LocalDocumentsDialog_errortitle,
+					Messages.LocalDocumentsDialog_errorendmessage);
 		}
 	}
 
@@ -227,8 +227,8 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 			command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			tableViewer.setInput(service.getAll());
 		} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
-			MessageDialog.openError(getShell(), Messages.Core_Error,
-					Messages.Core_Could_not_abort_editing);
+			MessageDialog.openError(getShell(), Messages.LocalDocumentsDialog_errortitle,
+					Messages.LocalDocumentsDialog_errorabortmessage);
 		}
 	}
 

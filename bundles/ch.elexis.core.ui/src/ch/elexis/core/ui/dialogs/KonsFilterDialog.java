@@ -97,7 +97,7 @@ public class KonsFilterDialog extends TitleAreaDialog {
 		super.create();
 		setTitle(Messages.KonsFilterDialog_konsFilter); // $NON-NLS-1$
 		setMessage(Messages.KonsFilterDialog_enterFilterExpressions); // $NON-NLS-1$
-		getShell().setText(Messages.Core_Filter); // $NON-NLS-1$
+		getShell().setText(Messages.KonsFilterDialog_filter); // $NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}
 

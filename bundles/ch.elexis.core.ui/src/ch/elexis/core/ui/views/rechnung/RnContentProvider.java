@@ -305,7 +305,7 @@ class RnContentProvider
 	@SuppressWarnings("unchecked")
 	public void reload(final IProgressMonitor monitor) {
 		monitor.beginTask(Messages.RnContentProvider_collectInvoices, Math.round(PREVAL)); // $NON-NLS-1$
-		monitor.subTask(Messages.Core_Database_Query); // $NON-NLS-1$
+		monitor.subTask(Messages.RnContentProvider_prepare); // $NON-NLS-1$
 		Tree<Patient> root = new Tree<Patient>(null, null);
 		Hashtable<String, Tree<Patient>> hPats = new Hashtable<String, Tree<Patient>>(367, 0.75f);
 		Hashtable<String, Tree<Fall>> hFaelle = new Hashtable<String, Tree<Fall>>(719, 0.75f);
@@ -321,7 +321,7 @@ class RnContentProvider
 			return;
 		}
 		monitor.worked(100);
-		monitor.subTask(Messages.Core_Database_Query); // $NON-NLS-1$
+		monitor.subTask(Messages.RnContentProvider_databseRequest); // $NON-NLS-1$
 		int multiplyer = Math.round(PREVAL / rechnungen.size());
 		monitor.subTask(Messages.RnContentProvider_load); // $NON-NLS-1$
 		iPat = 0;

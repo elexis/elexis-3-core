@@ -64,21 +64,21 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 
 		Label lblVorname = new Label(comp, SWT.NONE);
 		lblVorname.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, false, 1, 1));
-		lblVorname.setText(Messages.Core_Firstname);
+		lblVorname.setText(Messages.KontaktBlatt_FirstName);
 
 		textVorname = new Text(comp, SWT.BORDER);
 		textVorname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblNachname = new Label(comp, SWT.NONE);
 		lblNachname.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNachname.setText(Messages.Core_Name);
+		lblNachname.setText(Messages.KontaktBlatt_LastName);
 
 		textNachname = new Text(comp, SWT.BORDER);
 		textNachname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblGeschlecht = new Label(comp, SWT.NONE);
 		lblGeschlecht.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblGeschlecht.setText(Messages.Sex);
+		lblGeschlecht.setText(Messages.KontaktBlatt_Sex);
 
 		String toolTip = String.format(Messages.Patient_male_female_tooltip, Messages.Patient_male_short,
 				Messages.Patient_female_short, Messages.Patient_male_long, Messages.Patient_female_long);
@@ -94,7 +94,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		comboGeschlecht.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblGeburtsdatum = new Label(comp, SWT.NONE);
-		lblGeburtsdatum.setText(Messages.Core_Enter_Birthdate);
+		lblGeburtsdatum.setText(Messages.KontaktDetailDialog_labelBirthdate);
 		geburtsdatum = new CDateTime(comp, CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TEXT_TRAIL);
 		geburtsdatum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		new Label(comp, SWT.NONE);
@@ -123,7 +123,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 
 		Label lblFax = new Label(comp, SWT.NONE);
 		lblFax.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFax.setText(Messages.Core_Fax);
+		lblFax.setText(Messages.KontaktBlatt_Fax);
 
 		textFax = new Text(comp, SWT.BORDER);
 		textFax.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -132,7 +132,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 
 		Label lblEmail = new Label(comp, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEmail.setText(Messages.Core_E_Mail);
+		lblEmail.setText(Messages.KontaktBlatt_Mail);
 
 		textEmail = new Text(comp, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -142,7 +142,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 
 		Label lblBemerkungen = new Label(comp, SWT.NONE);
 		lblBemerkungen.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
-		lblBemerkungen.setText(Messages.Core_Remark);
+		lblBemerkungen.setText(Messages.KontaktBlatt_remark);
 
 		textBemerkungen = new Text(comp, SWT.BORDER | SWT.MULTI);
 		textBemerkungen.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

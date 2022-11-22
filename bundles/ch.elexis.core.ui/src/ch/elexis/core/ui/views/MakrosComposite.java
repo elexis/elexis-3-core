@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.text.Messages;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.PersistentObject;

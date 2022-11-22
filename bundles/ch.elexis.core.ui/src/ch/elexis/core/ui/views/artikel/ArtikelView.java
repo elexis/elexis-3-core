@@ -133,7 +133,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 	}
 
 	private void makeActions() {
-		importAction = new Action(Messages.Core_Import_Action) {
+		importAction = new Action(Messages.ArtikelView_importAction) {
 			@Override
 			public void run() {
 				CTabItem it = ctab.getSelection();
@@ -144,7 +144,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 						dlg.create();
 						dlg.setTitle(top.getTitle());
 						dlg.setMessage(top.getDescription());
-						dlg.getShell().setText(Messages.Core_Import_Data);
+						dlg.getShell().setText(Messages.ArtikelView_importCaption);
 						if (dlg.open() == Dialog.OK) {
 							top.run(false);
 						}
@@ -230,8 +230,8 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 			} catch (Exception ex) {
 				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex); //$NON-NLS-1$
 				MessageBox mb = new MessageBox(getViewSite().getShell(), SWT.ICON_ERROR | SWT.OK);
-				mb.setText(Messages.Core_Error);
-				mb.setMessage(Messages.Core_Error_Initialising_code_system + ce.getName() + ":\n" //$NON-NLS-1$
+				mb.setText(Messages.ArtikelView_errorCaption);
+				mb.setMessage(Messages.ArtikelView_errorText + ce.getName() + ":\n" //$NON-NLS-1$
 						+ ex.getLocalizedMessage());
 				mb.open();
 			}

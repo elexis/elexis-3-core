@@ -63,18 +63,18 @@ public class ArtikelContextMenu {
 	}
 
 	private void makeActions(final Artikel art) {
-		deleteAction = new Action(Messages.Core_Delete) {
+		deleteAction = new Action(Messages.ArtikelContextMenu_deleteAction) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-				setToolTipText(art.getClass().getName() + Messages.Core_Delete);
+				setToolTipText(art.getClass().getName() + Messages.ArtikelContextMenu_deleteActionToolTip);
 			}
 
 			@Override
 			public void run() {
 				Artikel act = (Artikel) ElexisEventDispatcher.getSelected(art.getClass());
 				if (MessageDialog.openConfirm(cv.getViewerWidget().getControl().getShell(),
-						Messages.Core_Confirm_delete,
-						MessageFormat.format(Messages.Core_Want_to_delete_0, act.getName()))) {
+						Messages.ArtikelContextMenu_deleteActionConfirmCaption,
+						MessageFormat.format(Messages.ArtikelContextMenu_deleteConfirmBody, act.getName()))) {
 					act.delete();
 					cv.getConfigurer().getControlFieldProvider().fireChangedEvent();
 					cv.notify(CommonViewer.Message.update);
@@ -82,7 +82,7 @@ public class ArtikelContextMenu {
 
 			}
 		};
-		createAction = new Action(Messages.Core_New_ellipsis) {
+		createAction = new Action(Messages.ArtikelContextMenu_newAction) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				setToolTipText(Messages.ArtikelContextMenu_newActionTooltip);
@@ -105,7 +105,7 @@ public class ArtikelContextMenu {
 
 			}
 		};
-		editAction = new Action(Messages.Core_Properities_ellipsis) {
+		editAction = new Action(Messages.ArtikelContextMenu_propertiesAction) {
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
 				setToolTipText(Messages.ArtikelContextMenu_propertiesTooltip);

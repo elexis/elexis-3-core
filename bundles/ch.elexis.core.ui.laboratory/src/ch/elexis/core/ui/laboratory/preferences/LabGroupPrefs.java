@@ -67,7 +67,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 	Button removeItemButton;
 
 	public LabGroupPrefs() {
-		super(Messages.Core_Groups);
+		super(Messages.LabGroupPrefs_groups);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		GridData gd;
 
 		label = new Label(topArea, SWT.NONE);
-		label.setText(Messages.Core_Group_ellipsis);
+		label.setText(Messages.LabGroupPrefs_group);
 		gd = SWTHelper.getFillGridData(1, false, 1, false);
 		gd.verticalAlignment = GridData.BEGINNING;
 		label.setLayoutData(gd);
@@ -129,7 +129,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		groupButtonArea.setLayout(layout);
 
 		newButton = new Button(groupButtonArea, SWT.PUSH);
-		newButton.setText(Messages.Core_New_ellipsis);
+		newButton.setText(Messages.LabGroupPrefs_new);
 		newButton.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -153,7 +153,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		});
 
 		removeButton = new Button(groupButtonArea, SWT.PUSH);
-		removeButton.setText(Messages.Core_Delete);
+		removeButton.setText(Messages.LabGroupPrefs_delete);
 		removeButton.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -215,11 +215,11 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		buttonArea.setLayout(new GridLayout(2, true));
 
 		addItemButton = new Button(buttonArea, SWT.PUSH);
-		addItemButton.setText(Messages.Core_Add_ellipsis);
+		addItemButton.setText(Messages.LabGroupPrefs_add);
 		addItemButton.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 		removeItemButton = new Button(buttonArea, SWT.PUSH);
-		removeItemButton.setText(Messages.Core_remove);
+		removeItemButton.setText(Messages.LabGroupPrefs_remove);
 		removeItemButton.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 		addItemButton.addSelectionListener(new SelectionListener() {

@@ -59,8 +59,8 @@ public class NeuerFallDialog extends TitleAreaDialog {
 	public void create() {
 		super.create();
 		setMessage(Messages.NeuerFallDialog_enterCaseData); // $NON-NLS-1$
-		setTitle(Messages.Core_Create_new_case); // $NON-NLS-1$
-		getShell().setText(Messages.Core_New_Case); // $NON-NLS-1$
+		setTitle(Messages.NeuerFallDialog_createNewCase); // $NON-NLS-1$
+		getShell().setText(Messages.NeuerFallDialog_newCase); // $NON-NLS-1$
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.jpa.Messages;
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
 import liquibase.Liquibase;
 import liquibase.changelog.ChangeSet;

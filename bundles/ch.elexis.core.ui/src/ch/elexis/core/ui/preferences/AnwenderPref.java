@@ -98,9 +98,9 @@ public class AnwenderPref extends PreferencePage implements IWorkbenchPreference
 			mands[i] = ml.get(i).getLabel();
 		}
 		String grp = ConfigServiceHolder.getGlobal(Preferences.ACC_GROUPS, "Admin"); //$NON-NLS-1$
-		def = new InputData[] { new InputData(Messages.Core_Short_Label, "Label", Typ.STRING, null), //$NON-NLS-1$
-				new InputData(Messages.Core_Password, EXT_INFO, Typ.STRING, "UsrPwd"), //$NON-NLS-1$
-				new InputData(Messages.Core_Group, EXT_INFO, "Groups", grp.split(",")), //$NON-NLS-1$ //$NON-NLS-2$
+		def = new InputData[] { new InputData(Messages.AnwenderPref_kuerzel, "Label", Typ.STRING, null), //$NON-NLS-1$
+				new InputData(Messages.AnwenderPref_passwort, EXT_INFO, Typ.STRING, "UsrPwd"), //$NON-NLS-1$
+				new InputData(Messages.AnwenderPref_gruppe, EXT_INFO, "Groups", grp.split(",")), //$NON-NLS-1$ //$NON-NLS-2$
 				new InputData(Messages.AnwenderPref_fuerMandant, Messages.AnwenderPref_12, "Mandant", mands) //$NON-NLS-1$
 		};
 	}

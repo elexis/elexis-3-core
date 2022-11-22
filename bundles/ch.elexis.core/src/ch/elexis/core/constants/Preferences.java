@@ -12,7 +12,7 @@
 
 package ch.elexis.core.constants;
 
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.preferences.Messages;
 
 /**
  * Konstanten für die Namen der verschiedenen Einstellungen
@@ -129,9 +129,9 @@ public class Preferences {
 
 	// Persönliche Präferenzen
 	public static final String USR_DEFCASELABEL = "fall/std_label"; //$NON-NLS-1$
-	public static final String USR_DEFCASELABEL_DEFAULT = Messages.Core_Common;
+	public static final String USR_DEFCASELABEL_DEFAULT = Messages.PreferenceConstants_general;
 	public static final String USR_DEFCASEREASON = "fall/std_grund"; //$NON-NLS-1$
-	public static final String USR_DEFCASEREASON_DEFAULT = Messages.Core_Illness;
+	public static final String USR_DEFCASEREASON_DEFAULT = Messages.PreferenceConstants_illness;
 	public static final String USR_DEFLAW = "fall/std_gesetz"; //$NON-NLS-1$
 	public static final String USR_DEFDIAGNOSE = "fall/std_diagnose"; //$NON-NLS-1$
 	public static final String USR_DEFLOADCONSALL = "fall/load_consall"; //$NON-NLS-1$

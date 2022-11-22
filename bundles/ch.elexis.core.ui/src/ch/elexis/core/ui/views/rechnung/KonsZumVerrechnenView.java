@@ -343,7 +343,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 							new IRunnableWithProgress() {
 								public void run(final IProgressMonitor monitor) {
 									monitor.beginTask(Messages.KonsZumVerrechnenView_findCons, 100); // $NON-NLS-1$
-									monitor.subTask(Messages.Core_Database_Query); // $NON-NLS-1$
+									monitor.subTask(Messages.KonsZumVerrechnenView_databaseRequest); // $NON-NLS-1$
 									String sql = "SELECT distinct PATIENTID FROM FAELLE " + //$NON-NLS-1$
 									"JOIN BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID WHERE BEHANDLUNGEN.deleted='0' AND BEHANDLUNGEN.billable='1' AND BEHANDLUNGEN.RECHNUNGSID is null "; //$NON-NLS-1$
 									if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
@@ -520,10 +520,10 @@ public class KonsZumVerrechnenView extends ViewPart {
 	}
 
 	private void makeActions() {
-		billAction = new Action(Messages.Core_Create_Invoices) { // $NON-NLS-1$
+		billAction = new Action(Messages.KonsZumVerrechnenView_createInvoices) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_BILL.getImageDescriptor()); // $NON-NLS-1$
-				setToolTipText(Messages.Core_Create_Invoices); // $NON-NLS-1$
+				setToolTipText(Messages.KonsZumVerrechnenView_createInvoices); // $NON-NLS-1$
 			}
 
 			@Override
@@ -551,7 +551,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 				tvSel.refresh();
 			}
 		};
-		refreshAction = new Action(Messages.Core_Reload) { // $NON-NLS-1$
+		refreshAction = new Action(Messages.KonsZumVerrechnenView_reloadAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
 				setToolTipText(Messages.KonsZumVerrechnenView_reloadToolTip); // $NON-NLS-1$
@@ -592,7 +592,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 		printAction = new Action(Messages.KonsZumVerrechnenView_printSelection) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
-				setToolTipText(Messages.Core_Print_List); // $NON-NLS-1$
+				setToolTipText(Messages.KonsZumVerrechnenView_printToolTip); // $NON-NLS-1$
 			}
 
 			@Override
@@ -642,7 +642,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 			}
 		};
 		// expandAll action for tvSel
-		expandSelAllAction = new Action(Messages.Core_Expand_All) { // $NON-NLS-1$
+		expandSelAllAction = new Action(Messages.KonsZumVerrechnenView_expandAll) { // $NON-NLS-1$
 			@Override
 			public void run() {
 				tvSel.expandAll();
@@ -758,8 +758,8 @@ public class KonsZumVerrechnenView extends ViewPart {
 		@Override
 		public void create() {
 			super.create();
-			setTitle(Messages.Core_Choose_Period); // $NON-NLS-1$
-			setMessage(Messages.Core_Choose_Period); // $NON-NLS-1$
+			setTitle(Messages.SelectDateDialog_choosePeriodTitle); // $NON-NLS-1$
+			setMessage(Messages.SelectDateDialog_choosePeriodMessage); // $NON-NLS-1$
 			getShell().setText(Messages.SelectDateDialog_description); // $NON-NLS-1$
 		}
 
@@ -769,8 +769,8 @@ public class KonsZumVerrechnenView extends ViewPart {
 			com.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			com.setLayout(new GridLayout(2, false));
 
-			new Label(com, SWT.NONE).setText(Messages.Core_Since); // $NON-NLS-1$
-			new Label(com, SWT.NONE).setText(Messages.Core_Date_Until); // $NON-NLS-1$
+			new Label(com, SWT.NONE).setText(Messages.SelectDateDialog_from); // $NON-NLS-1$
+			new Label(com, SWT.NONE).setText(Messages.SelectDateDialog_to); // $NON-NLS-1$
 
 			dpFromDate = new CDateTime(com, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
 			dpFromDate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -833,7 +833,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 			text.getPlugin().showMenu(false);
 			text.getPlugin().showToolbar(false);
 			text.createFromTemplateName(null, TT_LIST, Brief.UNKNOWN, CoreHub.getLoggedInContact(),
-					Messages.Core_Invoices); // $NON-NLS-1$ //$NON-NLS-2$
+					Messages.KonsZumVerrechnenView_billsTitle); // $NON-NLS-1$ //$NON-NLS-2$
 			Tree[] all = (Tree[]) tSelection.getChildren().toArray(new Tree[0]);
 			String[][] table = new String[all.length][];
 
@@ -868,9 +868,9 @@ public class KonsZumVerrechnenView extends ViewPart {
 		@Override
 		public void create() {
 			super.create();
-			getShell().setText(Messages.Core_Invoice_List); // $NON-NLS-1$
-			setTitle(Messages.Core_Print_List); // $NON-NLS-1$
-			setMessage(Messages.Core_Print_All_Selected_Patients); // $NON-NLS-1$
+			getShell().setText(Messages.KonsZumVerrechnenView_billsList); // $NON-NLS-1$
+			setTitle(Messages.KonsZumVerrechnenView_printListCaption); // $NON-NLS-1$
+			setMessage(Messages.KonsZumVerrechnenView_printListMessage); // $NON-NLS-1$
 			getShell().setSize(900, 700);
 			SWTHelper.center(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(), getShell());
 		}

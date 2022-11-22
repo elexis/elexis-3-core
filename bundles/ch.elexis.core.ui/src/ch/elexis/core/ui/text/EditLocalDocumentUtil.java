@@ -18,7 +18,7 @@ import org.eclipse.ui.commands.ICommandService;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IDocumentLetter;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.Brief;
 
 public class EditLocalDocumentUtil {
@@ -45,8 +45,8 @@ public class EditLocalDocumentUtil {
 			try {
 				command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, view, null));
 			} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
-				MessageDialog.openError(view.getSite().getShell(), Messages.Core_Error,
-						Messages.Core_Document_Not_Opened_Locally);
+				MessageDialog.openError(view.getSite().getShell(), Messages.TextView_errortitle,
+						Messages.TextView_errorlocaleditmessage);
 			}
 			view.getSite().getPage().hideView(view);
 			return true;
@@ -76,8 +76,8 @@ public class EditLocalDocumentUtil {
 			try {
 				command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, view, null));
 			} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
-				MessageDialog.openError(view.getSite().getShell(), Messages.Core_Error,
-						Messages.Core_Document_Not_Opened_Locally);
+				MessageDialog.openError(view.getSite().getShell(), Messages.TextView_errortitle,
+						Messages.TextView_errorlocaleditmessage);
 			}
 			view.getSite().getPage().hideView(view);
 			return true;

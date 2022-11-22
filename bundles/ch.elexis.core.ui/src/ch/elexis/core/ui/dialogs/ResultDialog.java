@@ -36,15 +36,15 @@ public class ResultDialog {
 	}
 
 	private static void showError(Result<?> result) {
-		MessageDialog.openError(getShell(), Messages.Core_Error, getResultMessage(result));
+		MessageDialog.openError(getShell(), Messages.ResultDialog_Error, getResultMessage(result));
 	}
 
 	private static void showWarninig(Result<?> result) {
-		MessageDialog.openWarning(getShell(), Messages.Core_Warning, getResultMessage(result));
+		MessageDialog.openWarning(getShell(), Messages.ResultDialog_Warning, getResultMessage(result));
 	}
 
 	private static void showInfo(Result<?> result) {
-		MessageDialog.openInformation(getShell(), Messages.Core_Information, getResultMessage(result));
+		MessageDialog.openInformation(getShell(), Messages.ResultDialog_Info, getResultMessage(result));
 	}
 
 	public static String getResultMessage(Result<?> result) {

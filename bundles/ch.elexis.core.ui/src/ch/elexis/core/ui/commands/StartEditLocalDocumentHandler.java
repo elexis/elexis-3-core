@@ -100,15 +100,15 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 							if (!lock.tryLock()) {
 								if ((service.contains(object) && lock.hasLock(CoreHub.getLoggedInContact().getLabel()))
 										|| MessageDialog.openQuestion(parentShell,
-												Messages.Core_Warning,
+												Messages.StartEditLocalDocumentHandler_warning,
 												Messages.StartEditLocalDocumentHandler_alreadyOpenStart
 														+ lock.getLockMessage()
 														+ Messages.StartEditLocalDocumentHandler_alreadyOpenEnd)) {
 									lock.unlock();
 									if (!lock.tryLock()) {
 										MessageDialog.openError(parentShell,
-												Messages.Core_Error,
-												Messages.Core_Document_Not_Opened_Locally);
+												Messages.StartEditLocalDocumentHandler_errortitle,
+												Messages.StartEditLocalDocumentHandler_errormessage);
 										return null;
 									}
 								} else {
@@ -198,8 +198,8 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 					Program.launch(file.get().getAbsolutePath());
 				}
 			} else {
-				MessageDialog.openError(UiDesk.getTopShell(), Messages.Core_Error,
-						Messages.Core_Document_Not_Opened_Locally);
+				MessageDialog.openError(UiDesk.getTopShell(), Messages.StartEditLocalDocumentHandler_errortitle,
+						Messages.StartEditLocalDocumentHandler_errormessage);
 			}
 			return true;
 		}
@@ -229,8 +229,8 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 		if (file.isPresent()) {
 			Program.launch(file.get().getAbsolutePath());
 		} else {
-			MessageDialog.openError(parentShell, Messages.Core_Error,
-					Messages.Core_Document_Not_Opened_Locally);
+			MessageDialog.openError(parentShell, Messages.StartEditLocalDocumentHandler_errortitle,
+					Messages.StartEditLocalDocumentHandler_errormessage);
 		}
 	}
 }

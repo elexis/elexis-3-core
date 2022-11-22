@@ -34,7 +34,7 @@ import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.Messages;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.model.agenda.AreaType;
@@ -324,8 +324,8 @@ public class AppointmentService implements IAppointmentService {
 	public List<String> getTypes() {
 		List<String> ret = new ArrayList<String>(configService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
 		if (ret.isEmpty() || ret.size() < 3) {
-			ret = Arrays.asList(Messages.Core_free, Messages.Agenda_Appointement_Locked,
-					Messages.Agenda_Appointement_Normal);
+			ret = Arrays.asList(Messages.Appointment_Range_Free, Messages.Appointment_Range_Locked,
+					Messages.Appointment_Normal_Appointment);
 			configService.setFromList(AG_TERMINTYPEN, ret);
 		}
 		return ret;
@@ -335,7 +335,7 @@ public class AppointmentService implements IAppointmentService {
 	public List<String> getStates() {
 		List<String> ret = configService.getAsList(AG_TERMINSTATUS, null);
 		if (ret == null || ret.size() < 2) {
-			ret = Arrays.asList("-", Messages.Agenda_Planned_Appointement);
+			ret = Arrays.asList("-", Messages.Appointment_Planned_Appointment);
 		}
 		return ret;
 	}
@@ -399,7 +399,7 @@ public class AppointmentService implements IAppointmentService {
 		LocalDate monday = LocalDate.now().with(DayOfWeek.MONDAY);
 		appointment.setStartTime(LocalDateTime.of(monday, LocalTime.of(8, 0, 0)));
 		appointment.setEndTime(LocalDateTime.of(monday, LocalTime.of(8, 30, 0)));
-		appointment.setState(Messages.Agenda_Planned_Appointement);
+		appointment.setState(Messages.Appointment_Planned_Appointment);
 		// mark as recurring root
 		appointment.setLinkgroup(appointment.getId());
 		IAppointmentSeries ret = new AppointmentSeries(appointment);

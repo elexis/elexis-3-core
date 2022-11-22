@@ -14,7 +14,7 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.laboratory.controls.Messages;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
@@ -53,7 +53,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 
 	private String getResultString(LabResult labResult) {
 		if (labResult.getItem().getTyp() == LabItemTyp.DOCUMENT) {
-			return Messages.Core_Open;
+			return Messages.LaborResultsComposite_Open;
 		} else if (labResult.getItem().getTyp() == LabItemTyp.TEXT) {
 			return getNonEmptyResultString(labResult);
 		} else {

@@ -20,7 +20,7 @@ import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.views.BriefAuswahl;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.TextView;
 import ch.elexis.core.ui.views.controls.GenericSearchSelectionDialog;
 import ch.elexis.data.Brief;
@@ -39,8 +39,8 @@ public class BriefNewHandler extends AbstractHandler implements IHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Patient pat = ElexisEventDispatcher.getSelectedPatient();
 		if (pat == null) {
-			MessageDialog.openInformation(UiDesk.getTopShell(), Messages.Core_No_patient_selected,
-					Messages.Core_No_patient_selected);
+			MessageDialog.openInformation(UiDesk.getTopShell(), Messages.BriefAuswahlNoPatientSelected,
+					Messages.BriefAuswahlNoPatientSelected);
 			return null;
 		}
 

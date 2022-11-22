@@ -10,21 +10,21 @@
 package ch.elexis.core.ui.commands;
 
 public class Messages {
-	public static String Core_Document_was_not_opened_to_edit = ch.elexis.core.l10n.Messages.Core_Document_was_not_opened_to_edit;
+	public static String AbortLocalDocumentHandler_infomessage = ch.elexis.core.l10n.Messages.AbortLocalDocumentHandler_infomessage;
 
-	public static String Core_Info = ch.elexis.core.l10n.Messages.Core_Info;
+	public static String AbortLocalDocumentHandler_infotitle = ch.elexis.core.l10n.Messages.AbortLocalDocumentHandler_infotitle;
 
 	public static String EndLocalDocumentHandler_conflictmessage = ch.elexis.core.l10n.Messages.EndLocalDocumentHandler_conflictmessage;
 
 	public static String EndLocalDocumentHandler_conflicttitle = ch.elexis.core.l10n.Messages.EndLocalDocumentHandler_conflicttitle;
 
-	public static String Core_Could_not_reread_correctly_document = ch.elexis.core.l10n.Messages.Core_Could_not_reread_correctly_document;
+	public static String EndLocalDocumentHandler_errormessage = ch.elexis.core.l10n.Messages.EndLocalDocumentHandler_errormessage;
 
-	public static String Core_Error = ch.elexis.core.l10n.Messages.Core_Error;
+	public static String EndLocalDocumentHandler_errorttitle = ch.elexis.core.l10n.Messages.EndLocalDocumentHandler_errorttitle;
 
+	public static String EndLocalDocumentHandler_infomessage = ch.elexis.core.l10n.Messages.EndLocalDocumentHandler_infomessage;
 
-
-
+	public static String EndLocalDocumentHandler_infotitle = ch.elexis.core.l10n.Messages.EndLocalDocumentHandler_infotitle;
 
 	public static String FallPlaneRechnung_PlanBillingAfterDays = ch.elexis.core.l10n.Messages.FallPlaneRechnung_PlanBillingAfterDays;
 	public static String FallPlaneRechnung_PlanBillingHeading = ch.elexis.core.l10n.Messages.FallPlaneRechnung_PlanBillingHeading;
@@ -33,7 +33,7 @@ public class Messages {
 	public static String FallCopyCommand_RelatedConsultations = ch.elexis.core.l10n.Messages.FallCopyCommand_RelatedConsultations;
 	public static String FallCopyCommand_TransferConsultations = ch.elexis.core.l10n.Messages.FallCopyCommand_TransferConsultations;
 	public static String FallCopyCommand_AttentionTransferConsultations = ch.elexis.core.l10n.Messages.FallCopyCommand_AttentionTransferConsultations;
-
+	public static String LoadTemplateCommand_Error = ch.elexis.core.l10n.Messages.LoadTemplateCommand_Error;
 	public static String LoadTemplateCommand_NoTextTemplate = ch.elexis.core.l10n.Messages.LoadTemplateCommand_NoTextTemplate;
 
 	public static String StartEditLocalDocumentHandler_alreadyOpenEnd = ch.elexis.core.l10n.Messages.StartEditLocalDocumentHandler_alreadyOpenEnd;
@@ -44,14 +44,14 @@ public class Messages {
 
 	public static String StartEditLocalDocumentHandler_conflicttitle = ch.elexis.core.l10n.Messages.StartEditLocalDocumentHandler_conflicttitle;
 
-	public static String Core_Document_Not_Opened_Locally = ch.elexis.core.l10n.Messages.Core_Document_Not_Opened_Locally;
+	public static String StartEditLocalDocumentHandler_errormessage = ch.elexis.core.l10n.Messages.StartEditLocalDocumentHandler_errormessage;
 
+	public static String StartEditLocalDocumentHandler_errortitle = ch.elexis.core.l10n.Messages.StartEditLocalDocumentHandler_errortitle;
 
+	public static String StartEditLocalDocumentHandler_warning = ch.elexis.core.l10n.Messages.StartEditLocalDocumentHandler_warning;
 
-	public static String Core_Warning = ch.elexis.core.l10n.Messages.Core_Warning;
+	public static String GenericReallyDeleteCaption = ch.elexis.core.l10n.Messages.DocumentView_reallyDeleteCaption;
 
-	public static String GenericReallyDeleteCaption = ch.elexis.core.l10n.Messages.Core_Really_delete_caption;
-
-	public static String GenericReallyDeleteContents = ch.elexis.core.l10n.Messages.Core_Really_delete_0;
+	public static String GenericReallyDeleteContents = ch.elexis.core.l10n.Messages.DocumentView_reallyDeleteContents;
 
 }
