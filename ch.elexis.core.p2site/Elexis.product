@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Elexis OpenSource" uid="Elexis3" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.10.0.qualifier" useFeatures="true" includeLaunchers="true" autoIncludeRequirements="true">
+<product name="Elexis OpenSource" uid="Elexis3" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.11.0.qualifier" useFeatures="true" includeLaunchers="true" autoIncludeRequirements="true">
 
    <aboutInfo>
       <image path="rsc/elexislogo2.png"/>
       <text>
-         Elexis 3.9 - www.elexis.info
-         Copyright 2005-2021 G. Weirich und Elexis-Team
+         Elexis 3.11 - www.elexis.info
+         Copyright 2005-2023 G. Weirich und Elexis-Team
       </text>
    </aboutInfo>
 
@@ -15,7 +15,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8 -Dorg.eclipse.gemini.refreshBundles=false --add-opens=java.base/java.util=ALL-UNNAMED
+      <vmArgs>-Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8 -Dorg.eclipse.gemini.refreshBundles=false --add-opens=java.base/java.util=ALL-UNNAMED
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts=false -Dfile.encoding=utf-8
       </vmArgsMac>

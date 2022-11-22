@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Perspective
 Bundle-SymbolicName: ch.elexis.core.ui.perspective;singleton:=true
 Bundle-Vendor: elexis.info
-Bundle-Version: 3.10.0.qualifier
+Bundle-Version: 3.11.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: ch.elexis.core.data.activator,
  ch.elexis.core.ui,

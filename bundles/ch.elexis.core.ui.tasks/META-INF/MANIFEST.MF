@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tasks
 Bundle-SymbolicName: ch.elexis.core.ui.tasks;singleton:=true
-Bundle-Version: 3.10.0.qualifier
+Bundle-Version: 3.11.0.qualifier
 Bundle-ClassPath: lib/cron-parser-core-3.5.jar,
  lib/joda-time-2.10.10.jar,
  .
