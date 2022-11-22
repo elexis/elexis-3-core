@@ -227,8 +227,7 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 		};
 
 		checkIfContactExistsListener = new Listener() {
-			// Listener for the text fields: NAME1, NAME2 and SEX
-			
+
 			@Override
 			public void handleEvent(Event event) {
 				List<Kontakt> list = queryContact();
@@ -420,9 +419,10 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 					def[i].getWidget().getControl().addListener(SWT.KeyDown, mandantListener);
 				}
 			} else {
-					def[0].getWidget().getControl().addListener(SWT.CHANGED, checkIfContactExistsListener);
-					def[1].getWidget().getControl().addListener(SWT.CHANGED, checkIfContactExistsListener);
-					def[3].getWidget().getControl().addListener(SWT.CHANGED, checkIfContactExistsListener);
+				// Listener deliberately applied to name1, name2 and sex
+				def[0].getWidget().getControl().addListener(SWT.CHANGED, checkIfContactExistsListener);
+				def[1].getWidget().getControl().addListener(SWT.CHANGED, checkIfContactExistsListener);
+				def[3].getWidget().getControl().addListener(SWT.CHANGED, checkIfContactExistsListener);
 			}
 		} catch (Exception e) {
 			// do nothing
