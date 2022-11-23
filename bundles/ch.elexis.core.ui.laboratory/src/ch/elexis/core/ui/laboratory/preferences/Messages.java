@@ -129,7 +129,7 @@ public class Messages {
 	public static String Core_Sortmode = ch.elexis.core.l10n.Messages.Core_Sortmode;
 
 
-	public static String Core_Unknown = ch.elexis.core.l10n.Messages.Core_Unknown;
+	public static String Core_Unknown = ch.elexis.core.l10n.Messages.ArticleSubTyp_UNKNOWN;
 	public static String Core_Merge_laboratory_parameters = ch.elexis.core.l10n.Messages.Core_Merge_laboratory_parameters;
 	public static String LaborPrefs_mergeLabItems = ch.elexis.core.l10n.Messages.LaborPrefs_mergeLabItems;
 	public static String LaborPrefs_importLabMapping = ch.elexis.core.l10n.Messages.LaborPrefs_importLabMapping;

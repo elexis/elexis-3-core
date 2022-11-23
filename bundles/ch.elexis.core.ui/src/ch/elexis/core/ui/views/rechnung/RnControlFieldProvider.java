@@ -59,11 +59,11 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	// stats={"Alle","Bezahlt","Offen","Offen&Gedruckt","1. Mahnung","2.
 	// Mahnung","3. Mahnung","In Betreibung","Teilverlust","Totalverlust"};
 	final static String[] stats = { Messages.Core_All, Messages.Core_Is_Open, Messages.Invoice_Open_and_printed,
-			Messages.InvoiceState_PARTIAL_PAYMENT, Messages.Invoice_Paid, Messages.InvoiceState_EXCESSIVE_PAYMENT,
+			Messages.Invoice_Partially_paid, Messages.Invoice_Paid, Messages.InvoiceState_EXCESSIVE_PAYMENT,
 			Messages.Core_Invoice_Reminder, Messages.RnControlFieldProvider_reminderPrinted,
 			Messages.Core_Invoice_Reminder_2, Messages.RnControlFieldProvider_reminder2Printed,
 			Messages.Core_Invoice_Reminder_3, Messages.RnControlFieldProvider_reminder3Printed,
-			Messages.Core_in_progress, Messages.Invoice_Partial_Loss, Messages.Invoice_total_lost,
+			Messages.ProcessStatus_IN_PROGRESS, Messages.Invoice_Partial_Loss, Messages.InvoiceState_TOTAL_LOSS,
 			Messages.InvoiceState_CANCELLED, Messages.Core_Error_is_defective, Messages.RnControlFieldProvider_toPrint,
 			Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind,
 			Messages.RnControlFieldProvider_writtenOff, Messages.RnControlFieldProvider_rejected };

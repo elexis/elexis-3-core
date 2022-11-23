@@ -126,7 +126,7 @@ public class Messages {
 	public static String Core_Sortmode = ch.elexis.core.l10n.Messages.Core_Sortmode;
 
 
-	public static String Core_Unknown = ch.elexis.core.l10n.Messages.Core_Unknown;
+	public static String Core_Unknown = ch.elexis.core.l10n.Messages.ArticleSubTyp_UNKNOWN;
 	public static String LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder = ch.elexis.core.l10n.Messages.LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder;
 	public static String LagerverwaltungPrefs_checkForInvalid = ch.elexis.core.l10n.Messages.LagerverwaltungPrefs_checkForInvalid;
 	public static String LagerverwaltungPrefs_orderCriteria = ch.elexis.core.l10n.Messages.LagerverwaltungPrefs_orderCriteria;

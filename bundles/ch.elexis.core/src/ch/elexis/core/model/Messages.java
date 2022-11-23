@@ -30,7 +30,7 @@ public final class Messages {
 	public static String MaritalStatus_MARRIED = ch.elexis.core.l10n.Messages.MaritalStatus_MARRIED;
 	public static String MaritalStatus_NEVER_MARRIED = ch.elexis.core.l10n.Messages.MaritalStatus_NEVER_MARRIED;
 	public static String MaritalStatus_POLYGAMOUS = ch.elexis.core.l10n.Messages.MaritalStatus_POLYGAMOUS;
-	public static String Core_Unknown = ch.elexis.core.l10n.Messages.Core_Unknown;
+	public static String Core_Unknown = ch.elexis.core.l10n.Messages.ArticleSubTyp_UNKNOWN;
 	public static String MaritalStatus_UNMARRIED = ch.elexis.core.l10n.Messages.MaritalStatus_UNMARRIED;
 	public static String MaritalStatus_WIDOWED = ch.elexis.core.l10n.Messages.MaritalStatus_WIDOWED;
 

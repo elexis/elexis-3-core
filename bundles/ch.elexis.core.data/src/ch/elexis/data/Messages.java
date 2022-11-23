@@ -56,7 +56,7 @@ public final class Messages {
 	public static String LabMapping_reasonLineNotValid = ch.elexis.core.l10n.Messages.LabMapping_reasonLineNotValid;
 	public static String LabMapping_reasonMoreContacts = ch.elexis.core.l10n.Messages.LabMapping_reasonMoreContacts;
 	public static String LabMapping_reasonMoreLabItems = ch.elexis.core.l10n.Messages.LabMapping_reasonMoreLabItems;
-	public static String Core_Fixed = ch.elexis.core.l10n.Messages.Core_Fixed;
+	public static String ProcessStatus_CLOSED = ch.elexis.core.l10n.Messages.ProcessStatus_CLOSED;
 	public static String LabOrder_stateImported = ch.elexis.core.l10n.Messages.LabOrder_stateImported;
 	public static String LabOrder_stateOrdered = ch.elexis.core.l10n.Messages.LabOrder_stateOrdered;
 	public static String LabOrder_contactOwnLabName = ch.elexis.core.l10n.Messages.LabOrder_contactOwnLabName;
