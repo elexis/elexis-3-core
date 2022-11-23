@@ -217,8 +217,6 @@ public class Messages {
 
 	public static String PatientErfassenDialog_enterData = ch.elexis.core.l10n.Messages.PatientErfassenDialog_enterData;
 	public static String PatientErfassenDialog_enterPatient = ch.elexis.core.l10n.Messages.PatientErfassenDialog_enterPatient;
-	public static String PatientErfassenDialog_female = ch.elexis.core.l10n.Messages.Patient_female_short;
-
 	public static String PatientErfassenDialog_personExists = ch.elexis.core.l10n.Messages.PatientErfassenDialog_personExists;
 	public static String PatientErfassenDialog_personWithThisNameExists = ch.elexis.core.l10n.Messages.PatientErfassenDialog_personWithThisNameExists;
 

@@ -326,7 +326,6 @@ public class Messages extends NLS {
 	public static String AnalyticaLaborOrderPreferencePage_7;
 	public static String AnalyticaLaborOrderPreferencePage_group_text;
 	public static String AnalyticaLaborOrderPreferencePage_lblBenutzername_text;
-	public static String AnalyticaLaborOrderPreferencePage_text_text;
 	public static String AnalyzingBills;
 	public static String AngefangeneArbeiten_Description;
 	public static String AngefangeneArbeiten_Name;
@@ -1944,8 +1943,6 @@ public class Messages extends NLS {
 	public static String GenericImporterBlatt_PleaseSelectType;
 	public static String GenericImporterBlatt_UpdateSelectedData;
 	public static String GenericImporter_ImportGeneralText;
-	public static String GenericReallyDeleteCaption;
-	public static String GenericReallyDeleteContents;
 	public static String GenericSearchSelectionDialog_BillingSystemSelection;
 	public static String GenericSearchSelectionDialog_ChangeBillingSystemMessage;
 	public static String GlobalActions_93;
@@ -3365,7 +3362,6 @@ public class Messages extends NLS {
 	public static String PatientErfassenDialog_Sex_must_be_specified;
 	public static String PatientErfassenDialog_enterData;
 	public static String PatientErfassenDialog_enterPatient;
-	public static String PatientErfassenDialog_female;
 	public static String PatientErfassenDialog_personExists;
 	public static String PatientErfassenDialog_personWithThisNameExists;
 	public static String PatientErfassenDialog_pleaseEnterPersonalia;
