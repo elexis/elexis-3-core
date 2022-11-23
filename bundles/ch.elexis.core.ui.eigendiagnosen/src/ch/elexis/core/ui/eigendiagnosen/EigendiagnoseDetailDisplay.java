@@ -11,10 +11,10 @@
  *******************************************************************************/
 package ch.elexis.core.ui.eigendiagnosen;
 
-import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -78,7 +78,9 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 
 	@Inject
 	public void selection(@Optional @Named("ch.elexis.core.ui.eigendiagnosen.selection") IDiagnosisTree diagnose) {
-		display(diagnose);
+		if (form != null && !form.isDisposed()) {
+			display(diagnose);
+		}
 	}
 
 	public String getTitle() {
