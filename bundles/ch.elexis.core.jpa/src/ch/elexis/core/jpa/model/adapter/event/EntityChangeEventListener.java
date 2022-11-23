@@ -78,6 +78,8 @@ public class EntityChangeEventListener implements EventHandler {
 		EntityWithId entity = (EntityWithId) event.getProperty(EntityWithId.class.getName());
 		synchronized (listenerMap) {
 			List<WeakReference<AbstractIdModelAdapter<?>>> listeners = getListenersFor(entity);
+			// reset map with new entity object, old object could be no longer referenced
+			listenerMap.put(entity, listeners);
 
 			Iterator<WeakReference<AbstractIdModelAdapter<?>>> iter = listeners.iterator();
 			while (iter.hasNext()) {
