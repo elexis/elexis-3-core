@@ -3,8 +3,8 @@ package ch.elexis.core.l10n;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-       // BUNDLE_NAME is needed for core.data
-       public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
+	// BUNDLE_NAME is needed for core.data
+	public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
 	public static String ABX_CheckPath;
 	public static String ABX_ConnectionName;
 	public static String ABX_DefaultCPort;
@@ -61,8 +61,8 @@ public class Messages extends NLS {
 	public static String Ablauf_19;
 	public static String Ablauf_21;
 	public static String Ablauf_23;
-	public static String Ablauf_3;
 	public static String Ablauf_31;
+	public static String Ablauf_3;
 	public static String Ablauf_4;
 	public static String Ablauf_6;
 	public static String Ablauf_8;
@@ -345,8 +345,8 @@ public class Messages extends NLS {
 	public static String ApplicationActionBarAdvisor_5;
 	public static String ApplicationActionBarAdvisor_6;
 	public static String ApplicationWorkbenchAdvisor_0;
-	public static String ApplicationWorkbenchAdvisor_1;
 	public static String ApplicationWorkbenchAdvisor_10;
+	public static String ApplicationWorkbenchAdvisor_1;
 	public static String ApplicationWorkbenchAdvisor_2;
 	public static String AppointmentDetailComposite_delete;
 	public static String AppointmentDetailComposite_duration;
@@ -741,7 +741,6 @@ public class Messages extends NLS {
 	public static String Core_Bill;
 	public static String Core_Blue;
 	public static String Core_CSV_Full;
-	public static String Core_Cancelled;
 	public static String Core_Cannot_add_consultation_to_closed_case;
 	public static String Core_Case;
 	public static String Core_Case_is_closed;
@@ -848,7 +847,6 @@ public class Messages extends NLS {
 	public static String Core_Error_Reading_ESR;
 	public static String Core_Error_Reading_Please_check_log;
 	public static String Core_Error_While_writing;
-	public static String Core_Error_is_defective;
 	public static String Core_Error_reading_probe;
 	public static String Core_Error_while_archiving;
 	public static String Core_Error_while_exporting;
@@ -921,7 +919,6 @@ public class Messages extends NLS {
 	public static String Core_Invoicestate;
 	public static String Core_Invoicingparty;
 	public static String Core_IsActive;
-	public static String Core_Is_Open;
 	public static String Core_KK_Short;
 	public static String Core_Keywords;
 	public static String Core_Kind;
@@ -1125,7 +1122,6 @@ public class Messages extends NLS {
 	public static String Core_export_to_csv;
 	public static String Core_free;
 	public static String Core_has_read;
-	public static String Core_in_progress;
 	public static String Core_optional_data;
 	public static String Core_others;
 	public static String Core_prescribe_Laboratory;
@@ -1441,8 +1437,8 @@ public class Messages extends NLS {
 	public static String DocHandle_importErrorDirectory;
 	public static String DocHandle_importErrorDirectoryText;
 	public static String DocHandle_importErrorMessage2;
-	public static String DocHandle_importErrorText;
 	public static String DocHandle_importErrorText2;
+	public static String DocHandle_importErrorText;
 	public static String DocHandle_noPatientSelectedText;
 	public static String DocHandle_readErrorCaption2;
 	public static String DocHandle_readErrorHeading;
@@ -2157,8 +2153,8 @@ public class Messages extends NLS {
 	public static String ICalTransfer_csvFIles;
 	public static String ICalTransfer_exportAgendaMandator;
 	public static String ICalTransfer_fileToImport;
-	public static String ICalTransfer_iCalFiles;
 	public static String ICalTransfer_iCalFiles2;
+	public static String ICalTransfer_iCalFiles;
 	public static String ICalTransfer_iOError;
 	public static String ICalTransfer_mandator;
 	public static String ICalTransfer_newAppForAllMandators;
@@ -2207,8 +2203,8 @@ public class Messages extends NLS {
 	public static String ImageSlot_deleteall;
 	public static String ImageSlot_imageDel;
 	public static String ImageSlot_imagesdelete;
-	public static String ImageSlot_insufficientRights;
 	public static String ImageSlot_insufficientRights2;
+	public static String ImageSlot_insufficientRights;
 	public static String ImageSlot_newsequence;
 	public static String ImageSlot_notPermitted;
 	public static String ImageSlot_reallydelete;
@@ -2341,26 +2337,35 @@ public class Messages extends NLS {
 	public static String InvoiceOutputter_TransmissionFailed;
 	public static String InvoiceOutputter_TransmittedInvoices;
 	public static String InvoiceOutputter_TransmittedInvoicesTitle;
+	public static String InvoiceState_BILLED;
+	public static String InvoiceState_CANCELLED;
+	public static String InvoiceState_DEFECTIVE;
+	public static String InvoiceState_DEMAND_NOTE_1;
 	public static String InvoiceState_DEMAND_NOTE_1_PRINTED;
+	public static String InvoiceState_DEMAND_NOTE_2;
 	public static String InvoiceState_DEMAND_NOTE_2_PRINTED;
+	public static String InvoiceState_DEMAND_NOTE_3;
 	public static String InvoiceState_DEMAND_NOTE_3_PRINTED;
 	public static String InvoiceState_DEPRECIATED;
+	public static String InvoiceState_EXCESSIVE_PAYMENT;
 	public static String InvoiceState_FROM_TODAY;
+	public static String InvoiceState_IN_EXECUTION;
 	public static String InvoiceState_NOT_BILLED;
 	public static String InvoiceState_NOT_FROM_TODAY;
 	public static String InvoiceState_NOT_FROM_YOU;
 	public static String InvoiceState_ONGOING;
+	public static String InvoiceState_OPEN;
+	public static String InvoiceState_OPEN_AND_PRINTED;
 	public static String InvoiceState_OWING;
+	public static String InvoiceState_PAID;
+	public static String InvoiceState_PARTIAL_LOSS;
+	public static String InvoiceState_PARTIAL_PAYMENT;
 	public static String InvoiceState_REJECTED;
 	public static String InvoiceState_STOP_LEGAL_PROCEEDING;
+	public static String InvoiceState_TOTAL_LOSS;
 	public static String InvoiceState_TO_PRINT;
 	public static String Invoice_Add_Payment;
 	public static String Invoice_Amount_Unpaid;
-	public static String Invoice_Excessive_Payment;
-	public static String Invoice_Open_and_printed;
-	public static String Invoice_Paid;
-	public static String Invoice_Partial_Loss;
-	public static String Invoice_Partially_paid;
 	public static String Invoice_Please_Select_Output_Directory;
 	public static String Invoice_System;
 	public static String Invoice_System_cannot_be_changed;
@@ -2368,12 +2373,10 @@ public class Messages extends NLS {
 	public static String Invoice_add_amount_as_payment;
 	public static String Invoice_amount_billed;
 	public static String Invoice_amount_due;
-	public static String Invoice_billed;
 	public static String Invoice_date_paid;
 	public static String Invoice_overDue;
 	public static String Invoice_reminder_automatism;
 	public static String Invoice_reminder_due;
-	public static String Invoice_total_lost;
 	public static String Invoices_Error_Fetching;
 	public static String Invoices_Error_Loading;
 	public static String Invoices_export;
@@ -2391,8 +2394,8 @@ public class Messages extends NLS {
 	public static String KonsDetailView_NotYours;
 	public static String KonsDetailView_PreviousEntry;
 	public static String KonsDetailView_PurgeOldEntries;
-	public static String KonsDetailView_ReplaceKonsTextBody;
 	public static String KonsDetailView_ReplaceKonsTextBody2;
+	public static String KonsDetailView_ReplaceKonsTextBody;
 	public static String KonsDetailView_ReplaceKonsTextCaption;
 	public static String KonsDetailView_SaveEntry;
 	public static String KonsDetailView_SaveExplicit;
@@ -3287,8 +3290,8 @@ public class Messages extends NLS {
 	public static String PCHK_OEDEME;
 	public static String PCHK_OGTT;
 	public static String PCHK_P;
-	public static String PCHK_PAP;
 	public static String PCHK_PAP2;
+	public static String PCHK_PAP;
 	public static String PCHK_PARA;
 	public static String PCHK_PDFCREATE;
 	public static String PCHK_PDF_ERROR_TEXT;
@@ -3356,9 +3359,9 @@ public class Messages extends NLS {
 	public static String PatHeuteView_times;
 	public static String PatListFilterBox_ChooseSticker;
 	public static String PatListFilterBox_DoEmpty;
-	public static String PatListFilterBox_Field;
 	public static String PatListFilterBox_Field2;
 	public static String PatListFilterBox_Field3;
+	public static String PatListFilterBox_Field;
 	public static String PatListFilterBox_SetFilter;
 	public static String PatListFilterBox_removeToolTip;
 	public static String PatListeContentProvider_LoadPatients;
@@ -3801,9 +3804,9 @@ public class Messages extends NLS {
 	public static String RechnungsPrefs_ChosseInst;
 	public static String RechnungsPrefs_Font;
 	public static String RechnungsPrefs_FontSlip;
-	public static String RechnungsPrefs_FontWarning;
 	public static String RechnungsPrefs_FontWarning2;
 	public static String RechnungsPrefs_FontWarning3;
+	public static String RechnungsPrefs_FontWarning;
 	public static String RechnungsPrefs_ImagesToTrustCenter;
 	public static String RechnungsPrefs_InfoPostAccount;
 	public static String RechnungsPrefs_MandantType;
@@ -3937,8 +3940,8 @@ public class Messages extends NLS {
 	public static String ResponseAnalyzer_Pending;
 	public static String ResponseAnalyzer_PleaseResend;
 	public static String ResponseAnalyzer_Receiver;
-	public static String ResponseAnalyzer_State;
 	public static String ResponseAnalyzer_State2;
+	public static String ResponseAnalyzer_State;
 	public static String ResponseAnalyzer_StateRejected;
 	public static String RezeptBlatt_4;
 	public static String RezeptBlatt_4_Extended;
@@ -4061,8 +4064,8 @@ public class Messages extends NLS {
 	public static String RnPrintView_medicaments;
 	public static String RnPrintView_migelpoints;
 	public static String RnPrintView_otherpoints;
-	public static String RnPrintView_page;
 	public static String RnPrintView_page1;
+	public static String RnPrintView_page;
 	public static String RnPrintView_physiopoints;
 	public static String RnPrintView_prepaid;
 	public static String RnPrintView_remarksp;
@@ -4475,8 +4478,8 @@ public class Messages extends NLS {
 	public static String TarmedImporter_deleteOldData;
 	public static String TarmedImporter_enterSource;
 	public static String TarmedImporter_importLstg;
-	public static String TarmedImporter_setupSource;
 	public static String TarmedImporter_setupSource2;
+	public static String TarmedImporter_setupSource;
 	public static String TarmedImporter_singleLst;
 	public static String TarmedImporter_successMessage;
 	public static String TarmedImporter_successTitle;
@@ -4813,8 +4816,8 @@ public class Messages extends NLS {
 	public static String UtilFile_error_msg_invalidPath;
 	public static String Validator_NoCase;
 	public static String Validator_NoDiagnosis;
-	public static String Validator_NoEAN;
 	public static String Validator_NoEAN2;
+	public static String Validator_NoEAN;
 	public static String Validator_NoMandator;
 	public static String Validator_NoName;
 	public static String VerifierDialog_verify_job_name;
@@ -4930,7 +4933,7 @@ public class Messages extends NLS {
 	public static String ZuweiserUebersicht_Name;
 	public static String iMedAction_nameAction;
 	public static String xChangeContributor_thisIsAnOmnivoreDoc;
-       static { // load message values from bundle file
-               NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-       }
+	static { // load message values from bundle file
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	}
 }

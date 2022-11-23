@@ -335,7 +335,7 @@ public class Messages {
 	public static String Core_All_Files = ch.elexis.core.l10n.Messages.Core_All_Files;
 	public static String Invoice_amount_billed = ch.elexis.core.l10n.Messages.Invoice_amount_billed;
 	public static String PatHeuteView_billed = ch.elexis.core.l10n.Messages.PatHeuteView_billed;
-	public static String Invoice_billed = ch.elexis.core.l10n.Messages.Invoice_billed;
+	public static String Invoice_billed = ch.elexis.core.l10n.Messages.InvoiceState_BILLED;
 	public static String PatHeuteView_billing = ch.elexis.core.l10n.Messages.PatHeuteView_billing;
 	public static String PatHeuteView_billingList = ch.elexis.core.l10n.Messages.PatHeuteView_billingList;
 	public static String PatHeuteView_calculateStats = ch.elexis.core.l10n.Messages.PatHeuteView_calculateStats;

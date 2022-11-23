@@ -42,11 +42,10 @@ public class Messages {
 
 	public static String BillSummary_SummaryToClipboard = ch.elexis.core.l10n.Messages.BillSummary_SummaryToClipboard;
 
-
 	public static String BillSummary_exportToClipboard = ch.elexis.core.l10n.Messages.BillSummary_exportToClipboard;
 	public static String BillSummary_noBillsAvailable = ch.elexis.core.l10n.Messages.BillSummary_noBillsAvailable;
 	public static String Core_Number = ch.elexis.core.l10n.Messages.Core_Number;
-	public static String Core_Is_Open = ch.elexis.core.l10n.Messages.Core_Is_Open;
+	public static String Core_Is_Open = ch.elexis.core.l10n.Messages.InvoiceState_OPEN;
 	public static String BillSummary_open2 = ch.elexis.core.l10n.Messages.BillSummary_open2;
 	public static String BillSummary_paid = ch.elexis.core.l10n.Messages.BillSummary_paid;
 	public static String Core_Invoice_Receiver = ch.elexis.core.l10n.Messages.Core_Invoice_Receiver;
@@ -69,7 +68,6 @@ public class Messages {
 	public static String Core_Invoices = ch.elexis.core.l10n.Messages.Core_Invoices;
 	public static String KonsZumVerrechnenView_case = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView_case;
 	public static String KonsZumVerrechnenView_clearSelection = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView_clearSelection;
-
 
 	public static String KonsZumVerrechnenView_deleteList = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView_deleteList;
 	public static String KonsZumVerrechnenView_errorInInvoice = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView_errorInInvoice;
@@ -147,9 +145,7 @@ public class Messages {
 	public static String RnActions_addAccountGood = ch.elexis.core.l10n.Messages.RnActions_addAccountGood;
 	public static String RnActions_addAccountGoodTooltip = ch.elexis.core.l10n.Messages.RnActions_addAccountGoodTooltip;
 
-
 	public static String RnActions_addFineAction = ch.elexis.core.l10n.Messages.RnActions_addFineAction;
-
 
 	public static String RnActions_billsListPrintetAt = ch.elexis.core.l10n.Messages.RnActions_billsListPrintetAt;
 	public static String RnActions_changeStateAction = ch.elexis.core.l10n.Messages.RnActions_changeStateAction;
@@ -174,11 +170,8 @@ public class Messages {
 	public static String RnActions_increaseReminderLevelAction = ch.elexis.core.l10n.Messages.RnActions_increaseReminderLevelAction;
 	public static String Core_Patientdetails = ch.elexis.core.l10n.Messages.Core_Patientdetails;
 
-
-
 	public static String RnActions_printListTooltip = ch.elexis.core.l10n.Messages.RnActions_printListTooltip;
 	public static String RnActions_reactivateBillAction = ch.elexis.core.l10n.Messages.RnActions_reactivateBillAction;
-
 
 	public static String RnActions_reminderConfirmCaption = ch.elexis.core.l10n.Messages.RnActions_reminderConfirmCaption;
 	public static String RnActions_reminderConfirmMessage = ch.elexis.core.l10n.Messages.RnActions_reminderConfirmMessage;
@@ -203,15 +196,15 @@ public class Messages {
 	public static String RnControlFieldProvider_dateFrom = ch.elexis.core.l10n.Messages.RnControlFieldProvider_dateFrom;
 	public static String RnControlFieldProvider_dateUntil = ch.elexis.core.l10n.Messages.RnControlFieldProvider_dateUntil;
 	public static String RnControlFieldProvider_dontRemind = ch.elexis.core.l10n.Messages.RnControlFieldProvider_dontRemind;
-	public static String Core_in_progress = ch.elexis.core.l10n.Messages.Core_in_progress;
-	public static String Core_Error_is_defective = ch.elexis.core.l10n.Messages.Core_Error_is_defective;
+	public static String Core_in_progress = ch.elexis.core.l10n.Messages.InvoiceState_IN_EXECUTION;
+	public static String Core_Error_is_defective = ch.elexis.core.l10n.Messages.InvoiceState_DEFECTIVE;
 	public static String RnControlFieldProvider_invoideNr = ch.elexis.core.l10n.Messages.RnControlFieldProvider_invoideNr;
 
-	public static String Invoice_Open_and_printed = ch.elexis.core.l10n.Messages.Invoice_Open_and_printed;
-	public static String Invoice_Excessive_Payment = ch.elexis.core.l10n.Messages.Invoice_Excessive_Payment;
-	public static String Invoice_Paid = ch.elexis.core.l10n.Messages.Invoice_Paid;
-	public static String Invoice_Partial_Loss = ch.elexis.core.l10n.Messages.Invoice_Partial_Loss;
-	public static String Invoice_Partially_paid = ch.elexis.core.l10n.Messages.Invoice_Partially_paid;
+	public static String Invoice_Open_and_printed = ch.elexis.core.l10n.Messages.InvoiceState_OPEN_AND_PRINTED;
+	public static String InvoiceState_EXCESSIVE_PAYMENT = ch.elexis.core.l10n.Messages.InvoiceState_EXCESSIVE_PAYMENT;
+	public static String Invoice_Paid = ch.elexis.core.l10n.Messages.InvoiceState_PAID;
+	public static String Invoice_Partial_Loss = ch.elexis.core.l10n.Messages.InvoiceState_PARTIAL_LOSS;
+	public static String InvoiceState_PARTIAL_PAYMENT = ch.elexis.core.l10n.Messages.InvoiceState_PARTIAL_PAYMENT;
 	public static String RnControlFieldProvider_patient2 = ch.elexis.core.l10n.Messages.RnControlFieldProvider_patient2;
 	public static String Core_Invoice_Reminder = ch.elexis.core.l10n.Messages.Core_Invoice_Reminder;
 
@@ -222,10 +215,10 @@ public class Messages {
 	public static String Core_Select_Patient = ch.elexis.core.l10n.Messages.Core_Select_Patient;
 	public static String RnControlFieldProvider_selectPatientMessage = ch.elexis.core.l10n.Messages.RnControlFieldProvider_selectPatientMessage;
 
-	public static String Core_Cancelled = ch.elexis.core.l10n.Messages.Core_Cancelled;
+	public static String InvoiceState_CANCELLED = ch.elexis.core.l10n.Messages.InvoiceState_CANCELLED;
 	public static String RnControlFieldProvider_toBePaid = ch.elexis.core.l10n.Messages.RnControlFieldProvider_toBePaid;
 	public static String RnControlFieldProvider_toPrint = ch.elexis.core.l10n.Messages.RnControlFieldProvider_toPrint;
-	public static String Invoice_total_lost = ch.elexis.core.l10n.Messages.Invoice_total_lost;
+	public static String Invoice_total_lost = ch.elexis.core.l10n.Messages.InvoiceState_TOTAL_LOSS;
 	public static String RnControlFieldProvider_writtenOff = ch.elexis.core.l10n.Messages.RnControlFieldProvider_writtenOff;
 	public static String RnControlFieldProvider_rejected = ch.elexis.core.l10n.Messages.RnControlFieldProvider_rejected;
 	public static String RnDialogs_35 = ch.elexis.core.l10n.Messages.RnDialogs_35;
