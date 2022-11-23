@@ -743,7 +743,9 @@ public class JdbcLink {
 			try {
 				if (conn != null && !conn.isClosed()) {
 					conn.close();
-					connectionPool.invalidateObject((PoolableConnection) conn);
+					if (conn instanceof PoolableConnection) {
+						connectionPool.invalidateObject((PoolableConnection) conn);
+					}
 				}
 				log.log(Level.WARNING, "JdbcLink.Stm - trying reconnect");
 				conn = getConnection();
