@@ -74,7 +74,7 @@ public class Messages {
 	public static String Core_Fixed = ch.elexis.core.l10n.Messages.Core_Fixed;
 	public static String EditReminderDialog_noPatient = ch.elexis.core.l10n.Messages.EditReminderDialog_noPatient;
 	public static String Core_No_patient_selected = ch.elexis.core.l10n.Messages.Core_No_patient_selected;
-	public static String Core_Is_Open = ch.elexis.core.l10n.Messages.Core_Is_Open;
+	public static String Core_Is_Open = ch.elexis.core.l10n.Messages.InvoiceState_OPEN;
 	public static String Invoice_overDue = ch.elexis.core.l10n.Messages.Invoice_overDue;
 
 	public static String EditReminderDialog_reminderShellTitle = ch.elexis.core.l10n.Messages.EditReminderDialog_reminderShellTitle;
@@ -290,7 +290,7 @@ public class Messages {
 	public static String ReminderDetailDialog_btnPriorityHigh_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_btnPriorityHigh_text;
 
 
-	public static String Core_in_progress = ch.elexis.core.l10n.Messages.Core_in_progress;
+	public static String Core_in_progress = ch.elexis.core.l10n.Messages.InvoiceState_IN_EXECUTION;
 
 	public static String ReminderDetailDialog_btnOnHold_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_btnOnHold_text;
 
